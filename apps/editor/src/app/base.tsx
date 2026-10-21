@@ -1,5 +1,11 @@
 import styled from '@emotion/styled';
 import {
+  IconButton as MuiIconButton,
+  List,
+  ListItemIcon,
+  MenuItem,
+} from '@mui/material';
+import {
   CanCreateArticle,
   CanCreateArticleTemplate,
   CanCreateAuthor,
@@ -48,6 +54,9 @@ import {
   CanDeletePoll,
   CanDeleteSubscription,
   CanDeleteTag,
+  CanCreateApiToken,
+  CanGetApiTokens,
+  CanRevokeApiToken,
   CanDeleteToken,
   CanDeleteUser,
   CanDeleteUserRole,
@@ -55,6 +64,7 @@ import {
   CanGetArticle,
   CanGetArticles,
   CanGetAudienceStats,
+  CanGetAuditLogs,
   CanGetAuthor,
   CanGetAuthors,
   CanGetBanner,
@@ -72,6 +82,7 @@ import {
   CanGetMailLogs,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
+  CanGetNewsletterCampaigns,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetNavigation,
@@ -86,7 +97,6 @@ import {
   CanGetPeerArticles,
   CanGetPeers,
   CanGetPoll,
-  CanGetAuditLogs,
   CanGetSettings,
   CanGetSubscription,
   CanGetSubscriptionFlows,
@@ -105,8 +115,8 @@ import {
   CanPublishPage,
   CanSendMailTemplates,
   CanTakeActionOnComment,
-  CanUpdateArticleTemplate,
   CanUpdateBlockStyle,
+  CanUpdateArticleTemplate,
   CanUpdateBlockTemplate,
   CanUpdateCommentRatingSystem,
   CanUpdateComments,
@@ -117,16 +127,26 @@ import {
   CanUpdateExternalApp,
   CanUpdateGoodie,
   CanUpdateMailTemplates,
-  CanUpdatePageTemplate,
   CanUpdatePaywall,
+  CanUpdatePageTemplate,
   CanUpdateSettings,
   CanUpdateSystemMails,
   CanUpdateTag,
   CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
-import { PermissionControl, Version } from '@wepublish/ui/editor';
+import {
+  ClickMenu,
+  CommandPaletteTrigger,
+  FeatureControl,
+  Link,
+  PermissionControl,
+  SidebarNav,
+  SidebarNavItem,
+  SidebarNavMenu,
+  Version,
+} from '@wepublish/ui/editor';
 import { de, enUS, fr } from 'date-fns/locale';
-import { forwardRef, ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
@@ -135,9 +155,9 @@ import {
   MdAutorenew,
   MdBadge,
   MdBookOnline,
+  MdBrightnessAuto,
   MdCardGiftcard,
   MdChat,
-  MdBrightnessAuto,
   MdContentCopy,
   MdCountertops,
   MdCreditCard,
@@ -150,12 +170,14 @@ import {
   MdFileCopy,
   MdGroup,
   MdGroups,
+  MdHistory,
   MdHub,
   MdLightMode,
   MdLocationPin,
   MdLogout,
   MdMail,
   MdMenu,
+  MdNewspaper,
   MdMoney,
   MdMultilineChart,
   MdNoteAdd,
@@ -170,45 +192,24 @@ import {
   MdQueryStats,
   MdSell,
   MdSend,
-  MdHistory,
   MdSettings,
   MdSettingsInputAntenna,
   MdSignpost,
   MdStar,
   MdStyle,
   MdTranslate,
+  MdKey,
   MdVpnKey,
 } from 'react-icons/md';
-import { Link, useLocation } from 'react-router-dom';
-import {
-  Container,
-  IconButton as RIconButton,
-  Nav,
-  Navbar,
-  Sidebar as RSidebar,
-  Sidenav as RSidenav,
-} from 'rsuite';
 
 import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
-import { onlyLatestOpen } from './sidebarMenu';
+import { useSidebarMenu } from './sidebarMenu';
 import { Logo } from './ui/logo';
 
 export interface BaseProps {
   children?: ReactNode;
 }
-
-const NavLink = forwardRef<HTMLAnchorElement, any>(
-  ({ href, children, ...rest }, ref) => (
-    <Link
-      ref={ref}
-      to={href}
-      {...rest}
-    >
-      {children}
-    </Link>
-  )
-);
 
 export const AVAILABLE_LANG = [
   { id: 'en', lang: 'en_US', name: 'English', locale: enUS },
@@ -235,7 +236,7 @@ const Wrapper = styled.div`
   display: flex;
   height: 100vh;
   width: 100vw;
-  background-color: var(--wep-shell-bg);
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 
   ${mobile} {
     flex-direction: column;
@@ -243,14 +244,21 @@ const Wrapper = styled.div`
   }
 `;
 
-const Layout = styled(Container)`
+const Layout = styled('div')`
+  display: flex;
+  flex-direction: row;
   min-width: 0;
   min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
 `;
 
-const Sidebar = styled(RSidebar)`
+const Sidebar = styled('div')`
   display: flex;
   flex-direction: column;
+  width: 248px;
+  flex: 0 0 248px;
+  min-height: 0;
 
   ${mobile} {
     position: fixed;
@@ -259,7 +267,7 @@ const Sidebar = styled(RSidebar)`
     left: 0;
     z-index: 1040;
     width: min(300px, 86vw) !important;
-    background-color: var(--wep-shell-bg);
+    background-color: ${({ theme }) => theme.vars.palette.background.default};
     transform: translateX(-100%);
     transition: transform 0.2s ease-out;
 
@@ -278,7 +286,7 @@ const Backdrop = styled.div`
     position: fixed;
     inset: 0;
     z-index: 1039;
-    background-color: var(--rs-bg-backdrop);
+    background-color: rgba(0, 0, 0, 0.3);
   }
 `;
 
@@ -300,44 +308,46 @@ const Brand = styled(Link)`
   display: flex;
   align-items: center;
   padding: 22px 22px 18px;
-  color: var(--rs-text-heading);
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 
   svg {
     width: 128px;
     height: auto;
   }
 
-  svg path[fill='black'] {
+  svg :is(path, use)[fill='black'] {
     fill: currentColor;
   }
 
-  svg path[fill='white'] {
-    fill: var(--wep-shell-bg);
+  svg :is(path, use)[fill='white'] {
+    fill: ${({ theme }) => theme.vars.palette.background.default};
   }
 `;
 
-const Sidenav = styled(RSidenav)`
+const Search = styled(CommandPaletteTrigger)`
+  margin: 0 12px 10px;
+  width: calc(100% - 24px);
+`;
+
+const Sidenav = styled(List)`
   flex: 1 1 auto;
   overflow-y: auto;
   padding: 0 12px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.2s;
 
-  &,
-  .rs-sidenav-body {
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-    transition: scrollbar-color 0.2s;
+  &:hover {
+    scrollbar-color: rgb(
+        from ${({ theme }) => theme.vars.palette.text.primary} r g b / 22%
+      )
+      transparent;
   }
 
-  &:hover,
-  &:hover .rs-sidenav-body {
-    scrollbar-color: rgb(from var(--rs-text-primary) r g b / 22%) transparent;
-  }
-
-  .rs-sidenav-item,
-  .rs-sidenav-dropdown-toggle,
-  .rs-dropdown-item {
+  .MuiListItemButton-root {
     border-radius: 8px;
     font-weight: 500;
+    color: var(--wep-nav-text);
     overflow-wrap: anywhere;
 
     > svg {
@@ -345,26 +355,33 @@ const Sidenav = styled(RSidenav)`
     }
   }
 
-  && .rs-dropdown-menu {
-    margin-right: 0;
-    padding-right: 0;
+  .MuiListItemIcon-root {
+    color: inherit;
   }
 
-  .rs-sidenav-item[data-active='true'],
-  .rs-dropdown-item[data-active='true'] {
+  .MuiListItemButton-root:hover {
+    background-color: var(--wep-nav-hover-bg);
+    color: var(--wep-nav-hover-text);
+  }
+
+  .MuiListItemButton-root.Mui-selected {
     background-color: var(--wep-nav-active-bg);
     color: var(--wep-nav-active-text);
     font-weight: 600;
   }
+
+  .MuiListItemButton-root[data-contains-current='true'] {
+    font-weight: 600;
+  }
 `;
 
-const Footer = styled(Navbar)`
+const Footer = styled('div')`
   padding: 8px 12px;
   gap: 4px;
   border-top: 1px solid var(--wep-shell-border);
 `;
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   && {
     display: inline-flex;
     align-items: center;
@@ -377,7 +394,7 @@ const IconButton = styled(RIconButton)`
 
   &&:hover {
     background-color: var(--wep-nav-hover-bg);
-    color: var(--rs-text-heading);
+    color: ${({ theme }) => theme.vars.palette.text.primary};
   }
 
   svg {
@@ -394,23 +411,27 @@ const MobileBrand = styled(Brand)`
   }
 `;
 
-const ChildrenContainer = styled(Container)`
-  --wep-page-padding-top: 32px;
+const ChildrenContainer = styled('div')`
+  --wep-page-padding-y: 32px;
   --wep-page-padding-x: 32px;
+
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
   margin: 8px 8px 8px 0;
-  padding: var(--wep-page-padding-top) var(--wep-page-padding-x) 40px;
+  padding: var(--wep-page-padding-y) var(--wep-page-padding-x);
   overflow-y: auto;
   max-width: 100%;
-  background-color: var(--wep-content-bg);
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
   border: 1px solid var(--wep-shell-border);
   border-radius: 14px;
   box-shadow: var(--wep-surface-shadow);
 
   ${mobile} {
-    --wep-page-padding-top: 20px;
+    --wep-page-padding-y: 20px;
     --wep-page-padding-x: 16px;
     margin: 0;
-    padding: var(--wep-page-padding-top) var(--wep-page-padding-x) 32px;
     border: none;
     border-radius: 0;
     box-shadow: none;
@@ -426,14 +447,11 @@ const colorModeIcons = {
 const colorModePreferences: ColorModePreference[] = ['system', 'light', 'dark'];
 
 export function Base({ children }: BaseProps) {
-  const { pathname } = useLocation();
-  const path = pathname.substring(1);
-
   const { t, i18n } = useTranslation();
   const { preference: colorModePreference, setPreference: setColorMode } =
     useColorMode();
   const mobileNavigation = useMobileNavigation();
-  const [openMenus, setOpenMenus] = useState<string[]>([]);
+  const { openMenus, followsRoute, toggleMenu } = useSidebarMenu();
 
   const [uiLanguage, setUILanguage] = useStickyState(
     AVAILABLE_LANG[0].id,
@@ -448,12 +466,12 @@ export function Base({ children }: BaseProps) {
     <Wrapper>
       <MobileTopBar>
         <IconButton
-          appearance="subtle"
-          icon={<MdMenu />}
           onClick={mobileNavigation.toggle}
           aria-label={t('navbar.menu')}
           aria-expanded={mobileNavigation.open}
-        />
+        >
+          <MdMenu />
+        </IconButton>
         <MobileBrand
           to="/dashboard"
           aria-label="We.Publish"
@@ -465,10 +483,7 @@ export function Base({ children }: BaseProps) {
       {mobileNavigation.open && <Backdrop onClick={mobileNavigation.close} />}
 
       <Layout>
-        <Sidebar
-          width={248}
-          data-open={mobileNavigation.open}
-        >
+        <Sidebar data-open={mobileNavigation.open}>
           <Brand
             to="/dashboard"
             aria-label="We.Publish"
@@ -476,1108 +491,1039 @@ export function Base({ children }: BaseProps) {
             <Logo />
           </Brand>
 
-          <Sidenav
-            openKeys={openMenus}
-            onOpenChange={keys =>
-              setOpenMenus(current => onlyLatestOpen(current, keys.map(String)))
-            }
-            appearance="default"
-          >
-            <RSidenav.Body>
-              <Nav>
-                <Nav.Menu
-                  eventKey={'dashboard'}
-                  title={t('navbar.dashboard')}
+          <Search />
+
+          <Sidenav>
+            <SidebarNav>
+              <SidebarNavMenu
+                title={t('navbar.dashboard')}
+                icon={<MdPieChartOutline />}
+                open={openMenus.includes('dashboard')}
+                openIfCurrent={followsRoute}
+                onToggle={wasOpen => toggleMenu('dashboard', wasOpen)}
+              >
+                <SidebarNavItem
+                  href="/dashboard"
                   icon={<MdPieChartOutline />}
                 >
-                  <Nav.Item
-                    as={NavLink}
-                    href="/dashboard"
-                    icon={<MdPieChartOutline />}
-                    active={path === 'dashboard' || path === ''}
-                  >
-                    {t('navbar.dashboard')}
-                  </Nav.Item>
+                  {t('navbar.dashboard')}
+                </SidebarNavItem>
 
-                  <Nav.Item
-                    as={NavLink}
-                    href="/notifications"
-                    icon={<MdNotificationsNone />}
-                    active={path === 'notifications'}
+                <SidebarNavItem
+                  href="/notifications"
+                  icon={<MdNotificationsNone />}
+                >
+                  {t('navbar.notifications')}
+                </SidebarNavItem>
+
+                <PermissionControl
+                  qualifyingPermissions={[
+                    CanCreateExternalApp.id,
+                    CanUpdateExternalApp.id,
+                    CanDeleteExternalApp.id,
+                  ]}
+                >
+                  <SidebarNavItem
+                    href="/dashboard/apps"
+                    icon={<MdExtension />}
                   >
-                    {t('navbar.notifications')}
-                  </Nav.Item>
+                    {t('navbar.apps')}
+                  </SidebarNavItem>
+                </PermissionControl>
+              </SidebarNavMenu>
+
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetArticles.id,
+                  CanGetArticle.id,
+                  CanCreateArticle.id,
+                  CanDeleteArticle.id,
+                  CanPublishArticle.id,
+                  CanPreview.id,
+                  CanGetPeerArticles.id,
+                  CanGetPeerArticle.id,
+                  CanGetTags.id,
+                  CanCreatePaywall.id,
+                  CanUpdatePaywall.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.articles')}
+                  icon={<MdDescription />}
+                  open={openMenus.includes('articles')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('articles', wasOpen)}
+                >
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetArticles.id,
+                      CanGetArticle.id,
+                      CanCreateArticle.id,
+                      CanDeleteArticle.id,
+                      CanPublishArticle.id,
+                      CanPreview.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/articles"
+                      icon={<MdDescription />}
+                    >
+                      {t('navbar.articles')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
                   <PermissionControl
                     qualifyingPermissions={[
-                      CanCreateExternalApp.id,
-                      CanUpdateExternalApp.id,
-                      CanDeleteExternalApp.id,
+                      CanCreateArticleTemplate.id,
+                      CanUpdateArticleTemplate.id,
+                      CanDeleteArticleTemplate.id,
                     ]}
                   >
-                    <Nav.Item
-                      as={NavLink}
-                      href="/dashboard/apps"
-                      icon={<MdExtension />}
-                      active={path === 'dashboard/apps'}
+                    <SidebarNavItem
+                      href="/articles/templates"
+                      icon={<MdNoteAdd />}
                     >
-                      {t('navbar.apps')}
-                    </Nav.Item>
+                      {t('navbar.articleTemplates')}
+                    </SidebarNavItem>
                   </PermissionControl>
-                </Nav.Menu>
 
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetArticles.id,
-                    CanGetArticle.id,
-                    CanCreateArticle.id,
-                    CanDeleteArticle.id,
-                    CanPublishArticle.id,
-                    CanPreview.id,
-                    CanGetPeerArticles.id,
-                    CanGetPeerArticle.id,
-                    CanGetTags.id,
-                    CanCreatePaywall.id,
-                    CanUpdatePaywall.id,
-                  ]}
-                >
-                  <Nav.Menu
-                    eventKey={'articles'}
-                    title={t('navbar.articles')}
-                    icon={<MdDescription />}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetPeerArticles.id,
+                      CanGetPeerArticle.id,
+                    ]}
                   >
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetArticles.id,
-                        CanGetArticle.id,
-                        CanCreateArticle.id,
-                        CanDeleteArticle.id,
-                        CanPublishArticle.id,
-                        CanPreview.id,
-                      ]}
+                    <SidebarNavItem
+                      href="/articles/peer"
+                      icon={<MdFileCopy />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/articles"
-                        icon={<MdDescription />}
-                        active={path === 'articles'}
-                      >
-                        {t('navbar.articles')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.peerArticles')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanCreateArticleTemplate.id,
-                        CanUpdateArticleTemplate.id,
-                        CanDeleteArticleTemplate.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/articles/templates"
-                        icon={<MdNoteAdd />}
-                        active={path === 'articles/templates'}
-                      >
-                        {t('navbar.articleTemplates')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetPeerArticles.id,
-                        CanGetPeerArticle.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/articles/peer"
-                        icon={<MdFileCopy />}
-                        active={path === 'articles/peer'}
-                      >
-                        {t('navbar.peerArticles')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    <Nav.Item
-                      as={NavLink}
-                      href="/network"
-                      icon={<MdHub />}
-                      active={path === 'network'}
-                    >
-                      {t('navbar.networkContent')}
-                    </Nav.Item>
-
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetTags.id,
-                        CanCreateTag.id,
-                        CanUpdateTag.id,
-                        CanDeleteTag.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/articles/tags"
-                        icon={<MdSell />}
-                        active={path === 'articles/tags'}
-                      >
-                        {t('navbar.articleTags')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanCreatePaywall.id,
-                        CanUpdatePaywall.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/articles/paywalls"
-                        icon={<MdPayment />}
-                        active={path === 'articles/paywalls'}
-                      >
-                        {t('paywall.navbar')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
-
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetPages.id,
-                    CanGetPage.id,
-                    CanCreatePage.id,
-                    CanDeletePage.id,
-                    CanPublishPage.id,
-                    CanPreview.id,
-                    CanGetTags.id,
-                  ]}
-                >
-                  <Nav.Menu
-                    eventKey={'pages'}
-                    title={t('navbar.pages')}
-                    icon={<MdDashboard />}
+                  <SidebarNavItem
+                    href="/network"
+                    icon={<MdHub />}
                   >
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetPages.id,
-                        CanGetPage.id,
-                        CanCreatePage.id,
-                        CanDeletePage.id,
-                        CanPublishPage.id,
-                        CanPreview.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/pages"
-                        icon={<MdDashboard />}
-                        active={path === 'pages'}
-                      >
-                        {t('navbar.pages')}
-                      </Nav.Item>
-                    </PermissionControl>
+                    {t('navbar.networkContent')}
+                  </SidebarNavItem>
 
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanCreatePageTemplate.id,
-                        CanUpdatePageTemplate.id,
-                        CanDeletePageTemplate.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/pages/templates"
-                        icon={<MdNoteAdd />}
-                        active={path === 'pages/templates'}
-                      >
-                        {t('navbar.pageTemplates')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetTags.id,
-                        CanCreateTag.id,
-                        CanUpdateTag.id,
-                        CanDeleteTag.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/pages/tags"
-                        icon={<MdSell />}
-                        active={path === 'pages/tags'}
-                      >
-                        {t('navbar.pageTags')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
-
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetPoll.id,
-                    CanCreatePoll.id,
-                    CanDeletePoll.id,
-                    CanCreateBlockStyle.id,
-                    CanUpdateBlockStyle.id,
-                    CanDeleteBlockStyle.id,
-                  ]}
-                >
-                  <Nav.Menu
-                    eventKey={'block-content'}
-                    title={t('navbar.blocks.topMenu')}
-                    icon={<MdOutlineGridView />}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetTags.id,
+                      CanCreateTag.id,
+                      CanUpdateTag.id,
+                      CanDeleteTag.id,
+                    ]}
                   >
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetPoll.id,
-                        CanCreatePoll.id,
-                        CanDeletePoll.id,
-                      ]}
+                    <SidebarNavItem
+                      href="/articles/tags"
+                      icon={<MdSell />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/polls"
-                        active={path === 'polls'}
-                        icon={<MdQueryStats />}
-                      >
-                        {t('navbar.blocks.polls')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.articleTags')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetCrowdfundings.id,
-                        CanGetCrowdfunding.id,
-                        CanCreateCrowdfunding.id,
-                        CanUpdateCrowdfunding.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/crowdfundings"
-                        active={path === 'crowdfundings'}
-                        icon={<MdMoney />}
-                      >
-                        {t('navbar.blocks.crowdfundings')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanCreateBlockStyle.id,
-                        CanUpdateBlockStyle.id,
-                        CanDeleteBlockStyle.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/block-content/styles"
-                        active={path === 'block-content/styles'}
-                        icon={<MdStyle />}
-                      >
-                        {t('navbar.blocks.blockStyles')}
-                      </Nav.Item>
-                    </PermissionControl>
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanCreateBlockTemplate.id,
-                        CanUpdateBlockTemplate.id,
-                        CanDeleteBlockTemplate.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/block-content/templates"
-                        active={path === 'block-content/templates'}
-                        icon={<MdContentCopy />}
-                      >
-                        {t('navbar.blocks.blockTemplates')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
-
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetComments.id,
-                    CanGetTags.id,
-                    CanGetCommentRatingSystem.id,
-                  ]}
-                >
-                  <Nav.Menu
-                    eventKey={'comments'}
-                    title={t('navbar.comments')}
-                    icon={<MdChat />}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreatePaywall.id,
+                      CanUpdatePaywall.id,
+                    ]}
                   >
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetComments.id,
-                        CanUpdateComments.id,
-                        CanTakeActionOnComment.id,
-                      ]}
+                    <SidebarNavItem
+                      href="/articles/paywalls"
+                      icon={<MdPayment />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/comments"
-                        icon={<MdChat />}
-                        active={path === 'comments'}
-                      >
-                        {t('navbar.comments')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('paywall.navbar')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
 
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetTags.id,
-                        CanCreateTag.id,
-                        CanUpdateTag.id,
-                        CanDeleteTag.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/comments/tags"
-                        icon={<MdSell />}
-                        active={path === 'comments/tags'}
-                      >
-                        {t('navbar.commentTags')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetCommentRatingSystem.id,
-                        CanCreateCommentRatingSystem.id,
-                        CanUpdateCommentRatingSystem.id,
-                        CanDeleteCommentRatingSystem.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/comments/rating"
-                        icon={<MdStar />}
-                        active={path === 'comments/rating'}
-                      >
-                        {t('navbar.commentRating')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
-
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetEvent.id,
-                    CanGetCommentRatingSystem.id,
-                  ]}
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetPages.id,
+                  CanGetPage.id,
+                  CanCreatePage.id,
+                  CanDeletePage.id,
+                  CanPublishPage.id,
+                  CanPreview.id,
+                  CanGetTags.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.pages')}
+                  icon={<MdDashboard />}
+                  open={openMenus.includes('pages')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('pages', wasOpen)}
                 >
-                  <Nav.Menu
-                    eventKey={'events'}
-                    title={t('navbar.events')}
-                    icon={<MdEvent />}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetPages.id,
+                      CanGetPage.id,
+                      CanCreatePage.id,
+                      CanDeletePage.id,
+                      CanPublishPage.id,
+                      CanPreview.id,
+                    ]}
                   >
-                    <PermissionControl
+                    <SidebarNavItem
+                      href="/pages"
+                      icon={<MdDashboard />}
+                    >
+                      {t('navbar.pages')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreatePageTemplate.id,
+                      CanUpdatePageTemplate.id,
+                      CanDeletePageTemplate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/pages/templates"
+                      icon={<MdNoteAdd />}
+                    >
+                      {t('navbar.pageTemplates')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetTags.id,
+                      CanCreateTag.id,
+                      CanUpdateTag.id,
+                      CanDeleteTag.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/pages/tags"
+                      icon={<MdSell />}
+                    >
+                      {t('navbar.pageTags')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
+
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetPoll.id,
+                  CanCreatePoll.id,
+                  CanDeletePoll.id,
+                  CanCreateBlockStyle.id,
+                  CanUpdateBlockStyle.id,
+                  CanDeleteBlockStyle.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.blocks.topMenu')}
+                  icon={<MdOutlineGridView />}
+                  open={openMenus.includes('block-content')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('block-content', wasOpen)}
+                >
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetPoll.id,
+                      CanCreatePoll.id,
+                      CanDeletePoll.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/polls"
+                      icon={<MdQueryStats />}
+                    >
+                      {t('navbar.blocks.polls')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetCrowdfundings.id,
+                      CanGetCrowdfunding.id,
+                      CanCreateCrowdfunding.id,
+                      CanUpdateCrowdfunding.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/crowdfundings"
+                      icon={<MdMoney />}
+                    >
+                      {t('navbar.blocks.crowdfundings')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreateBlockStyle.id,
+                      CanUpdateBlockStyle.id,
+                      CanDeleteBlockStyle.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/block-content/styles"
+                      icon={<MdStyle />}
+                    >
+                      {t('navbar.blocks.blockStyles')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreateBlockTemplate.id,
+                      CanUpdateBlockTemplate.id,
+                      CanDeleteBlockTemplate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/block-content/templates"
+                      icon={<MdContentCopy />}
+                    >
+                      {t('navbar.blocks.blockTemplates')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
+
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetComments.id,
+                  CanGetTags.id,
+                  CanGetCommentRatingSystem.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.comments')}
+                  icon={<MdChat />}
+                  open={openMenus.includes('comments')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('comments', wasOpen)}
+                >
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetComments.id,
+                      CanUpdateComments.id,
+                      CanTakeActionOnComment.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/comments"
+                      icon={<MdChat />}
+                    >
+                      {t('navbar.comments')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetTags.id,
+                      CanCreateTag.id,
+                      CanUpdateTag.id,
+                      CanDeleteTag.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/comments/tags"
+                      icon={<MdSell />}
+                    >
+                      {t('navbar.commentTags')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetCommentRatingSystem.id,
+                      CanCreateCommentRatingSystem.id,
+                      CanUpdateCommentRatingSystem.id,
+                      CanDeleteCommentRatingSystem.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/comments/rating"
+                      icon={<MdStar />}
+                    >
+                      {t('navbar.commentRating')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
+
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetEvent.id,
+                  CanGetCommentRatingSystem.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.events')}
+                  icon={<MdEvent />}
+                  open={openMenus.includes('events')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('events', wasOpen)}
+                >
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetEvent.id,
+                      CanUpdateEvent.id,
+                      CanDeleteEvent.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/events"
+                      icon={<MdEvent />}
+                    >
+                      {t('navbar.events')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  {/* <PermissionControl
                       qualifyingPermissions={[
                         CanGetEvent.id,
                         CanUpdateEvent.id,
                         CanDeleteEvent.id,
                       ]}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/events"
-                        icon={<MdEvent />}
-                        active={path === 'events'}
-                      >
-                        {t('navbar.events')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* @TODO: Disabled until HTML to PM works */}
-                    {/* <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetEvent.id,
-                        CanUpdateEvent.id,
-                        CanDeleteEvent.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/events/import"
+                      <SidebarNavItem
+        href="/events/import"
                         icon={<MdEventAvailable />}
-                        active={path === 'events/import'}
                       >
                         {t('navbar.importableEvents')}
-                      </Nav.Item>
+                      </SidebarNavItem>
                     </PermissionControl> */}
 
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetTags.id,
-                        CanCreateTag.id,
-                        CanUpdateTag.id,
-                        CanDeleteTag.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/events/tags"
-                        icon={<MdSell />}
-                        active={path === 'events/tags'}
-                      >
-                        {t('navbar.eventTags')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
-
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetImages.id,
-                    CanGetImage.id,
-                    CanCreateImage.id,
-                    CanDeleteImage.id,
-                    CanGetDocuments.id,
-                    CanGetDocument.id,
-                    CanCreateDocument.id,
-                    CanDeleteDocument.id,
-                  ]}
-                >
-                  <Nav.Menu
-                    eventKey={'media'}
-                    title={t('navbar.media')}
-                    icon={<MdPhoto />}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetTags.id,
+                      CanCreateTag.id,
+                      CanUpdateTag.id,
+                      CanDeleteTag.id,
+                    ]}
                   >
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetImages.id,
-                        CanGetImage.id,
-                        CanCreateImage.id,
-                        CanDeleteImage.id,
-                      ]}
+                    <SidebarNavItem
+                      href="/events/tags"
+                      icon={<MdSell />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/images"
-                        icon={<MdPhoto />}
-                        active={path === 'images'}
-                      >
-                        {t('navbar.imageLibrary')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.eventTags')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
 
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetDocuments.id,
-                        CanGetDocument.id,
-                        CanCreateDocument.id,
-                        CanDeleteDocument.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/documents"
-                        icon={<MdDescription />}
-                        active={path === 'documents'}
-                      >
-                        {t('navbar.documentLibrary')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
-
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetNavigations.id,
-                    CanGetNavigation.id,
-                    CanCreateNavigation.id,
-                    CanDeleteNavigation.id,
-                  ]}
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetImages.id,
+                  CanGetImage.id,
+                  CanCreateImage.id,
+                  CanDeleteImage.id,
+                  CanGetDocuments.id,
+                  CanGetDocument.id,
+                  CanCreateDocument.id,
+                  CanDeleteDocument.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.media')}
+                  icon={<MdPhoto />}
+                  open={openMenus.includes('media')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('media', wasOpen)}
                 >
-                  <Nav.Item
-                    as={NavLink}
-                    href="/navigations"
-                    icon={<MdLocationPin />}
-                    active={path === 'navigations'}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetImages.id,
+                      CanGetImage.id,
+                      CanCreateImage.id,
+                      CanDeleteImage.id,
+                    ]}
                   >
-                    {t('navbar.navigations')}
-                  </Nav.Item>
-                </PermissionControl>
+                    <SidebarNavItem
+                      href="/images"
+                      icon={<MdPhoto />}
+                    >
+                      {t('navbar.imageLibrary')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetBanners.id,
-                    CanGetBanner.id,
-                    CanCreateBanner.id,
-                    CanDeleteBanner.id,
-                  ]}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetDocuments.id,
+                      CanGetDocument.id,
+                      CanCreateDocument.id,
+                      CanDeleteDocument.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/documents"
+                      icon={<MdDescription />}
+                    >
+                      {t('navbar.documentLibrary')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
+
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetNavigations.id,
+                  CanGetNavigation.id,
+                  CanCreateNavigation.id,
+                  CanDeleteNavigation.id,
+                ]}
+              >
+                <SidebarNavItem
+                  href="/navigations"
+                  icon={<MdLocationPin />}
                 >
-                  <Nav.Item
-                    as={NavLink}
-                    href="/banners"
-                    icon={<MdSignpost />}
-                    active={path === 'banners'}
-                  >
-                    {t('navbar.banners')}
-                  </Nav.Item>
-                </PermissionControl>
+                  {t('navbar.navigations')}
+                </SidebarNavItem>
+              </PermissionControl>
 
-                <PermissionControl
-                  qualifyingPermissions={[CanGetAuthors.id, CanGetTags.id]}
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetBanners.id,
+                  CanGetBanner.id,
+                  CanCreateBanner.id,
+                  CanDeleteBanner.id,
+                ]}
+              >
+                <SidebarNavItem
+                  href="/banners"
+                  icon={<MdSignpost />}
                 >
-                  <Nav.Menu
-                    eventKey={'authors'}
-                    title={t('navbar.authors')}
-                    icon={<MdGroup />}
-                  >
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetAuthors.id,
-                        CanGetAuthor.id,
-                        CanCreateAuthor.id,
-                        CanDeleteAuthor.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/authors"
-                        icon={<MdGroup />}
-                        active={path === 'authors'}
-                      >
-                        {t('navbar.authors')}
-                      </Nav.Item>
-                    </PermissionControl>
+                  {t('navbar.banners')}
+                </SidebarNavItem>
+              </PermissionControl>
 
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetTags.id,
-                        CanCreateTag.id,
-                        CanUpdateTag.id,
-                        CanDeleteTag.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/authors/tags"
-                        icon={<MdSell />}
-                        active={path === 'authors/tags'}
-                      >
-                        {t('navbar.authorTags')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
-
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetUsers.id,
-                    CanGetUser.id,
-                    CanCreateUser.id,
-                    CanDeleteUser.id,
-                    CanCreateUserRole.id,
-                    CanGetUserRole.id,
-                    CanGetUserRoles.id,
-                    CanDeleteUserRole.id,
-                    CanCreateSubscription.id,
-                    CanGetSubscriptions.id,
-                    CanGetSubscription.id,
-                    CanDeleteSubscription.id,
-                    CanGetAudienceStats.id,
-                  ]}
+              <PermissionControl
+                qualifyingPermissions={[CanGetAuthors.id, CanGetTags.id]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.authors')}
+                  icon={<MdGroup />}
+                  open={openMenus.includes('authors')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('authors', wasOpen)}
                 >
-                  <Nav.Menu
-                    eventKey={'audience'}
-                    title={t('navbar.audience')}
-                    icon={<MdGroups />}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetAuthors.id,
+                      CanGetAuthor.id,
+                      CanCreateAuthor.id,
+                      CanDeleteAuthor.id,
+                    ]}
                   >
-                    <PermissionControl
-                      qualifyingPermissions={[CanGetAudienceStats.id]}
+                    <SidebarNavItem
+                      href="/authors"
+                      icon={<MdGroup />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/audience/dashboard"
-                        active={path.includes('audience/dashboard')}
-                        icon={<MdMultilineChart />}
-                      >
-                        {t('navbar.audienceDashboard')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.authors')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                    <Nav.Item
-                      as={NavLink}
-                      href="/users"
-                      active={path === 'users'}
-                      icon={<MdAccountCircle />}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetTags.id,
+                      CanCreateTag.id,
+                      CanUpdateTag.id,
+                      CanDeleteTag.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/authors/tags"
+                      icon={<MdSell />}
                     >
-                      {t('navbar.users')}
-                    </Nav.Item>
+                      {t('navbar.authorTags')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
 
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetSubscriptions.id,
-                        CanGetSubscription.id,
-                        CanCreateSubscription.id,
-                        CanDeleteSubscription.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/subscriptions"
-                        active={path === 'subscriptions'}
-                        icon={<MdAutorenew />}
-                      >
-                        {t('navbar.subscriptions')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanCreateConsent.id,
-                        CanUpdateConsent.id,
-                        CanDeleteConsent.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/consents"
-                        active={path === 'consents'}
-                        icon={<MdApproval />}
-                      >
-                        {t('navbar.consents')}
-                      </Nav.Item>
-                      <Nav.Item
-                        as={NavLink}
-                        href="/userConsents"
-                        active={path === 'userConsents'}
-                        icon={<MdFactCheck />}
-                      >
-                        {t('navbar.userConsents')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
-
-                {/* COMMUNICATION */}
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetMailTemplates.id,
-                    CanUpdateMailTemplates.id,
-                    CanGetSystemMails.id,
-                    CanUpdateSystemMails.id,
-                    CanSendMailTemplates.id,
-                    CanGetMailLogs.id,
-                    CanGetSubscriptionFlows.id,
-                  ]}
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetUsers.id,
+                  CanGetUser.id,
+                  CanCreateUser.id,
+                  CanDeleteUser.id,
+                  CanCreateUserRole.id,
+                  CanGetUserRole.id,
+                  CanGetUserRoles.id,
+                  CanDeleteUserRole.id,
+                  CanCreateSubscription.id,
+                  CanGetSubscriptions.id,
+                  CanGetSubscription.id,
+                  CanDeleteSubscription.id,
+                  CanGetAudienceStats.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.audience')}
+                  icon={<MdGroups />}
+                  open={openMenus.includes('audience')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('audience', wasOpen)}
                 >
-                  <Nav.Menu
-                    eventKey={'communication'}
-                    title={t('navbar.communication')}
-                    icon={<MdMail />}
+                  <PermissionControl
+                    qualifyingPermissions={[CanGetAudienceStats.id]}
                   >
-                    {/* SEND MAIL */}
-                    <PermissionControl
-                      qualifyingPermissions={[CanSendMailTemplates.id]}
+                    <SidebarNavItem
+                      href="/audience/dashboard"
+                      icon={<MdMultilineChart />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/mailsend"
-                        active={path === 'mailsend'}
-                        icon={<MdSend />}
-                      >
-                        {t('navbar.mailSend')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.audienceDashboard')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                    {/* AUTOMATIC MAILS (subscription mailing + system mails) */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetSubscriptionFlows.id,
-                        CanGetSystemMails.id,
-                        CanUpdateSystemMails.id,
-                      ]}
+                  <SidebarNavItem
+                    href="/users"
+                    icon={<MdAccountCircle />}
+                  >
+                    {t('navbar.users')}
+                  </SidebarNavItem>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetSubscriptions.id,
+                      CanGetSubscription.id,
+                      CanCreateSubscription.id,
+                      CanDeleteSubscription.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/subscriptions"
+                      icon={<MdAutorenew />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/communicationflows/edit/default"
-                        active={path === 'communicationflows/edit/default'}
-                        icon={<MdOutgoingMail />}
-                      >
-                        {t('navbar.subscriptionSettings')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.subscriptions')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                    {/* MAIL TEMPLATES */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetMailTemplates.id,
-                        CanUpdateMailTemplates.id,
-                      ]}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreateConsent.id,
+                      CanUpdateConsent.id,
+                      CanDeleteConsent.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/consents"
+                      icon={<MdApproval />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/mailtemplates"
-                        active={path === 'mailtemplates'}
-                        icon={<MdMail />}
-                      >
-                        {t('navbar.mailTemplates')}
-                      </Nav.Item>
-                    </PermissionControl>
-
-                    {/* SENT MAILS */}
-                    <PermissionControl
-                      qualifyingPermissions={[CanGetMailLogs.id]}
+                      {t('navbar.consents')}
+                    </SidebarNavItem>
+                    <SidebarNavItem
+                      href="/userConsents"
+                      icon={<MdFactCheck />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/maillog"
-                        active={path === 'maillog'}
-                        icon={<MdOutgoingMail />}
-                      >
-                        {t('navbar.mailLog')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
+                      {t('navbar.userConsents')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
 
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetMemberPlans.id,
-                    CanGetMemberPlan.id,
-                    CanCreateMemberPlan.id,
-                    CanDeleteMemberPlan.id,
-                    CanGetPaymentMethods.id,
-                    CanGetPaymentMethod.id,
-                    CanCreatePaymentMethod.id,
-                    CanDeletePaymentMethod.id,
-                    CanGetSubscriptionFlows.id,
-                    CanCreateDiscountCode.id,
-                    CanUpdateDiscountCode.id,
-                    CanCreateGoodie.id,
-                    CanUpdateGoodie.id,
-                  ]}
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetMailTemplates.id,
+                  CanUpdateMailTemplates.id,
+                  CanGetSystemMails.id,
+                  CanUpdateSystemMails.id,
+                  CanSendMailTemplates.id,
+                  CanGetMailLogs.id,
+                  CanGetSubscriptionFlows.id,
+                  CanGetNewsletterCampaigns.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.communication')}
+                  icon={<MdMail />}
+                  open={openMenus.includes('communication')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('communication', wasOpen)}
                 >
-                  <Nav.Menu
-                    eventKey={'usersAndSubscriptions'}
-                    title={t('navbar.subscriptionPlans')}
-                    icon={<MdBadge />}
+                  <PermissionControl
+                    qualifyingPermissions={[CanSendMailTemplates.id]}
                   >
-                    {/* SUBSCRIPTION PLANS */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetMemberPlans.id,
-                        CanGetMemberPlan.id,
-                        CanCreateMemberPlan.id,
-                        CanDeleteMemberPlan.id,
-                      ]}
+                    <SidebarNavItem
+                      href="/mailsend"
+                      icon={<MdSend />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/memberplans"
-                        active={path === 'memberplans'}
-                        icon={<MdBookOnline />}
-                      >
-                        {t('navbar.memberPlans')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.mailSend')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                    {/* PAYMENT METHODS */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetPaymentMethods.id,
-                        CanGetPaymentMethod.id,
-                        CanCreatePaymentMethod.id,
-                        CanDeletePaymentMethod.id,
-                      ]}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetSubscriptionFlows.id,
+                      CanGetSystemMails.id,
+                      CanUpdateSystemMails.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/communicationflows/edit/default"
+                      icon={<MdOutgoingMail />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/paymentmethods"
-                        active={path === 'paymentmethods'}
-                        icon={<MdCreditCard />}
-                      >
-                        {t('navbar.paymentMethods')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.subscriptionSettings')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                    {/* DISCOUNTCODES */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanCreateDiscountCode.id,
-                        CanUpdateDiscountCode.id,
-                      ]}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetMailTemplates.id,
+                      CanUpdateMailTemplates.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/mailtemplates"
+                      icon={<MdMail />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/discountCodes"
-                        icon={<MdCountertops />}
-                        active={path === 'discountCodes'}
-                      >
-                        {t('discountCode.navbar')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.mailTemplates')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
+                  <FeatureControl feature="newsletter-editor">
                     <PermissionControl
-                      qualifyingPermissions={[
-                        CanCreateGoodie.id,
-                        CanUpdateGoodie.id,
-                      ]}
+                      qualifyingPermissions={[CanGetNewsletterCampaigns.id]}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/goodies"
-                        icon={<MdCardGiftcard />}
-                        active={path === 'goodies'}
+                      <SidebarNavItem
+                        href="/newsletter"
+                        icon={<MdNewspaper />}
                       >
-                        {t('goodie.navbar')}
-                      </Nav.Item>
+                        {t('newsletter.navbar')}
+                      </SidebarNavItem>
                     </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
+                  </FeatureControl>
 
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetPeers.id,
-                    CanGetPeer.id,
-                    CanCreatePeer.id,
-                    CanDeletePeer.id,
-                  ]}
+                  <PermissionControl
+                    qualifyingPermissions={[CanGetMailLogs.id]}
+                  >
+                    <SidebarNavItem
+                      href="/maillog"
+                      icon={<MdOutgoingMail />}
+                    >
+                      {t('navbar.mailLog')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
+
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetMemberPlans.id,
+                  CanGetMemberPlan.id,
+                  CanCreateMemberPlan.id,
+                  CanDeleteMemberPlan.id,
+                  CanGetPaymentMethods.id,
+                  CanGetPaymentMethod.id,
+                  CanCreatePaymentMethod.id,
+                  CanDeletePaymentMethod.id,
+                  CanGetSubscriptionFlows.id,
+                  CanCreateDiscountCode.id,
+                  CanUpdateDiscountCode.id,
+                  CanCreateGoodie.id,
+                  CanUpdateGoodie.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.subscriptionPlans')}
+                  icon={<MdBadge />}
+                  open={openMenus.includes('usersAndSubscriptions')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen =>
+                    toggleMenu('usersAndSubscriptions', wasOpen)
+                  }
                 >
-                  <Nav.Menu
-                    eventKey={'peering'}
-                    title={t('navbar.peering')}
-                    icon={<MdSettingsInputAntenna />}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetMemberPlans.id,
+                      CanGetMemberPlan.id,
+                      CanCreateMemberPlan.id,
+                      CanDeleteMemberPlan.id,
+                    ]}
                   >
-                    <Nav.Item
-                      as={NavLink}
-                      href="/peering"
-                      active={path === 'peering'}
-                      icon={<MdPersonAddAlt1 />}
+                    <SidebarNavItem
+                      href="/memberplans"
+                      icon={<MdBookOnline />}
                     >
-                      {t('navbar.peers')}
-                    </Nav.Item>
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetTokens.id,
-                        CanCreateToken.id,
-                        CanDeleteToken.id,
-                      ]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/tokens"
-                        active={path === 'tokens'}
-                        icon={<MdVpnKey />}
-                      >
-                        {t('navbar.tokens')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
+                      {t('navbar.memberPlans')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                {/* SETTINGS */}
-                <PermissionControl
-                  qualifyingPermissions={[
-                    CanGetSettings.id,
-                    CanUpdateSettings.id,
-                    CanGetMailTemplates.id,
-                    CanUpdateMailTemplates.id,
-                    CanGetUserRoles.id,
-                    CanGetUserRole.id,
-                    CanCreateUserRole.id,
-                    CanDeleteUserRole.id,
-                    CanGetAuditLogs.id,
-                  ]}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetPaymentMethods.id,
+                      CanGetPaymentMethod.id,
+                      CanCreatePaymentMethod.id,
+                      CanDeletePaymentMethod.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/paymentmethods"
+                      icon={<MdCreditCard />}
+                    >
+                      {t('navbar.paymentMethods')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreateDiscountCode.id,
+                      CanUpdateDiscountCode.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/discountCodes"
+                      icon={<MdCountertops />}
+                    >
+                      {t('discountCode.navbar')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreateGoodie.id,
+                      CanUpdateGoodie.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/goodies"
+                      icon={<MdCardGiftcard />}
+                    >
+                      {t('goodie.navbar')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
+
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetPeers.id,
+                  CanGetPeer.id,
+                  CanCreatePeer.id,
+                  CanDeletePeer.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  title={t('navbar.peering')}
+                  icon={<MdSettingsInputAntenna />}
+                  open={openMenus.includes('peering')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('peering', wasOpen)}
                 >
-                  <Nav.Menu
-                    eventKey={'settings'}
-                    icon={<MdSettings />}
-                    title={t('navbar.settings')}
+                  <SidebarNavItem
+                    href="/peering"
+                    icon={<MdPersonAddAlt1 />}
                   >
-                    {/* AUDIT LOG */}
-                    <PermissionControl
-                      qualifyingPermissions={[CanGetAuditLogs.id]}
+                    {t('navbar.peers')}
+                  </SidebarNavItem>
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetTokens.id,
+                      CanCreateToken.id,
+                      CanDeleteToken.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/tokens"
+                      icon={<MdVpnKey />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/audit-log"
-                        active={path === 'audit-log'}
-                        icon={<MdHistory />}
-                      >
-                        {t('navbar.auditLog')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.tokens')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
 
-                    {/* DIVERSE SETTINGS */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetSettings.id,
-                        CanUpdateSettings.id,
-                      ]}
+              <PermissionControl
+                qualifyingPermissions={[
+                  CanGetSettings.id,
+                  CanUpdateSettings.id,
+                  CanGetMailTemplates.id,
+                  CanUpdateMailTemplates.id,
+                  CanGetUserRoles.id,
+                  CanGetUserRole.id,
+                  CanCreateUserRole.id,
+                  CanDeleteUserRole.id,
+                  CanGetAuditLogs.id,
+                ]}
+              >
+                <SidebarNavMenu
+                  icon={<MdSettings />}
+                  title={t('navbar.settings')}
+                  open={openMenus.includes('settings')}
+                  openIfCurrent={followsRoute}
+                  onToggle={wasOpen => toggleMenu('settings', wasOpen)}
+                >
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetApiTokens.id,
+                      CanCreateApiToken.id,
+                      CanRevokeApiToken.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/api-tokens"
+                      icon={<MdKey />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/settings"
-                        active={path === 'settings'}
-                        icon={<MdSettings />}
-                      >
-                        {t('navbar.settings')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.apiTokens')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                    {/* USER ROLES */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetUserRoles.id,
-                        CanGetUserRole.id,
-                        CanCreateUserRole.id,
-                        CanDeleteUserRole.id,
-                      ]}
+                  <PermissionControl
+                    qualifyingPermissions={[CanGetAuditLogs.id]}
+                  >
+                    <SidebarNavItem
+                      href="/audit-log"
+                      icon={<MdHistory />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/userroles"
-                        active={path === 'userroles'}
-                        icon={<MdBadge />}
-                      >
-                        {t('navbar.userRoles')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.auditLog')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                    {/* INTEGRATIONS */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetAISettings.id,
-                        CanGetChallengeProviderSettings.id,
-                        CanGetPaymentProviderSettings.id,
-                        CanGetTrackingPixelSettings.id,
-                        CanGetMailProviderSettings.id,
-                      ]}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetSettings.id,
+                      CanUpdateSettings.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/settings"
+                      icon={<MdSettings />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/integrations"
-                        active={path === 'integrations'}
-                        icon={<MdPower />}
-                      >
-                        {t('navbar.integrations')}
-                      </Nav.Item>
-                    </PermissionControl>
+                      {t('navbar.settings')}
+                    </SidebarNavItem>
+                  </PermissionControl>
 
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetWebsiteSettings.id,
-                        CanUpdateWebsiteSettings.id,
-                      ]}
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetUserRoles.id,
+                      CanGetUserRole.id,
+                      CanCreateUserRole.id,
+                      CanDeleteUserRole.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/userroles"
+                      icon={<MdBadge />}
                     >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/settings/website"
-                        active={path.startsWith('settings/website')}
-                        icon={<MdAutoFixHigh />}
-                      >
-                        {t('websiteSettings.navbar')}
-                      </Nav.Item>
-                    </PermissionControl>
-                  </Nav.Menu>
-                </PermissionControl>
-              </Nav>
-            </RSidenav.Body>
+                      {t('navbar.userRoles')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetAISettings.id,
+                      CanGetChallengeProviderSettings.id,
+                      CanGetPaymentProviderSettings.id,
+                      CanGetTrackingPixelSettings.id,
+                      CanGetMailProviderSettings.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/integrations"
+                      icon={<MdPower />}
+                    >
+                      {t('navbar.integrations')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetWebsiteSettings.id,
+                      CanUpdateWebsiteSettings.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/settings/website"
+                      icon={<MdAutoFixHigh />}
+                    >
+                      {t('websiteSettings.navbar')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
+            </SidebarNav>
           </Sidenav>
 
-          <Footer
-            appearance="default"
-            justifyContent="start"
-          >
-            <Nav>
-              <Nav.Menu
-                placement="topStart"
-                trigger="click"
-                renderToggle={(
-                  props: object,
-                  ref: React.Ref<HTMLButtonElement>
-                ) => (
-                  <IconButton
-                    {...props}
-                    appearance="subtle"
-                    placement="left"
-                    ref={ref}
-                    icon={<MdLogout />}
-                  />
-                )}
-              >
-                <Nav.Item
-                  as={NavLink}
-                  href="/logout"
+          <Footer>
+            <ClickMenu
+              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+              transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              trigger={
+                <IconButton
+                  title={t('navbar.logout')}
+                  aria-label={t('navbar.logout')}
+                >
+                  <MdLogout />
+                </IconButton>
+              }
+            >
+              {close => (
+                <MenuItem
+                  component={Link}
+                  to="/logout"
+                  onClick={close}
                 >
                   {t('navbar.logout')}
-                </Nav.Item>
-              </Nav.Menu>
-            </Nav>
+                </MenuItem>
+              )}
+            </ClickMenu>
 
-            <Nav>
-              <Nav.Menu
-                placement="topStart"
-                trigger="click"
-                renderToggle={(
-                  props: object,
-                  ref: React.Ref<HTMLButtonElement>
-                ) => (
-                  <IconButton
-                    {...props}
-                    appearance="subtle"
-                    placement="left"
-                    ref={ref}
-                    icon={<MdTranslate />}
-                  />
-                )}
-              >
-                {AVAILABLE_LANG.map(lang => (
-                  <Nav.Item
+            <ClickMenu
+              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+              transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              trigger={
+                <IconButton
+                  title={t('navbar.language')}
+                  aria-label={t('navbar.language')}
+                >
+                  <MdTranslate />
+                </IconButton>
+              }
+            >
+              {close =>
+                AVAILABLE_LANG.map(lang => (
+                  <MenuItem
                     key={lang.id}
-                    onSelect={() => setUILanguage(lang.id)}
-                    active={lang.id === uiLanguage}
+                    selected={lang.id === i18n.language}
+                    onClick={() => {
+                      setUILanguage(lang.id);
+                      close();
+                    }}
                   >
                     {lang.name}
-                  </Nav.Item>
-                ))}
-              </Nav.Menu>
-            </Nav>
+                  </MenuItem>
+                ))
+              }
+            </ClickMenu>
 
-            <Nav>
-              <Nav.Menu
-                placement="topStart"
-                trigger="click"
-                renderToggle={(
-                  props: object,
-                  ref: React.Ref<HTMLButtonElement>
-                ) => (
-                  <IconButton
-                    {...props}
-                    appearance="subtle"
-                    placement="left"
-                    ref={ref}
-                    icon={colorModeIcons[colorModePreference]}
-                    title={t('navbar.colorMode.title')}
-                    aria-label={t('navbar.colorMode.title')}
-                  />
-                )}
-              >
-                {colorModePreferences.map(preference => (
-                  <Nav.Item
+            <ClickMenu
+              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+              transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              trigger={
+                <IconButton
+                  title={t('navbar.colorMode.title')}
+                  aria-label={t('navbar.colorMode.title')}
+                >
+                  {colorModeIcons[colorModePreference]}
+                </IconButton>
+              }
+            >
+              {close =>
+                colorModePreferences.map(preference => (
+                  <MenuItem
                     key={preference}
-                    icon={colorModeIcons[preference]}
-                    onSelect={() => setColorMode(preference)}
-                    active={preference === colorModePreference}
+                    selected={preference === colorModePreference}
+                    onClick={() => {
+                      setColorMode(preference);
+                      close();
+                    }}
                   >
+                    <ListItemIcon>{colorModeIcons[preference]}</ListItemIcon>
                     {t(`navbar.colorMode.${preference}`)}
-                  </Nav.Item>
-                ))}
-              </Nav.Menu>
-            </Nav>
+                  </MenuItem>
+                ))
+              }
+            </ClickMenu>
           </Footer>
 
           <Version />

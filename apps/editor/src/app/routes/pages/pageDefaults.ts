@@ -11,6 +11,8 @@ export const emptyPageMetadata: PageMetadata = {
   url: '',
   properties: [],
   hidden: false,
+  hideHeader: false,
+  hideFooter: false,
   image: undefined,
   socialMediaTitle: undefined,
   socialMediaDescription: undefined,

@@ -8,7 +8,7 @@ datasource db {
 }
 
 model ArticleRevision {
-  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   preTitle               String?
@@ -104,7 +104,7 @@ model ArticleRevisionSocialMediaAuthor {
 }
 
 model Article {
-  id          String    @id @default(dbgenerated("gen_random_uuid()"))
+  id          String    @id @default(dbgenerated("uuidv7()"))
   createdAt   DateTime  @default(now()) @db.Timestamptz(3)
   modifiedAt  DateTime  @updatedAt @db.Timestamptz(3)
   publishedAt DateTime? @db.Timestamptz(3)
@@ -144,7 +144,7 @@ enum TrackingPixelProviderType {
 }
 
 model ArticleTrackingPixels {
-  id                   String              @id @default(dbgenerated("gen_random_uuid()"))
+  id                   String              @id @default(dbgenerated("uuidv7()"))
   article              Article             @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId            String
   createdAt            DateTime            @default(now()) @db.Timestamptz(3)
@@ -161,7 +161,7 @@ model ArticleTrackingPixels {
 }
 
 model TrackingPixelMethod {
-  id                        String                    @id @default(dbgenerated("gen_random_uuid()"))
+  id                        String                    @id @default(dbgenerated("uuidv7()"))
   createdAt                 DateTime                  @default(now()) @db.Timestamptz(3)
   modifiedAt                DateTime                  @updatedAt @db.Timestamptz(3)
   trackingPixelProviderID   String                    @unique
@@ -187,7 +187,7 @@ model TaggedArticles {
 }
 
 model AuthorsLinks {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -202,7 +202,7 @@ model AuthorsLinks {
 }
 
 model Author {
-  id         String         @id @default(dbgenerated("gen_random_uuid()"))
+  id         String         @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime       @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime       @updatedAt @db.Timestamptz(3)
   name       String
@@ -313,6 +313,28 @@ model Document {
   @@map("documents")
 }
 
+model ApiToken {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name      String
+  tokenHash String   @unique
+  prefix    String
+  scopes    String[]
+
+  expiresAt  DateTime  @db.Timestamptz(3)
+  revokedAt  DateTime? @db.Timestamptz(3)
+  lastUsedAt DateTime? @db.Timestamptz(3)
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([createdById])
+  @@map("api-tokens.tokens")
+}
+
 enum CommentItemType {
   article @map("article")
   page    @map("page")
@@ -324,7 +346,7 @@ enum CommentRejectionReason {
 }
 
 model CommentsRevisions {
-  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   text      Json?
   slateText Json?
@@ -354,7 +376,7 @@ enum CommentAuthorType {
 }
 
 model Comment {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -398,7 +420,7 @@ model TaggedComments {
 }
 
 model CommentRatingSystem {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -414,7 +436,7 @@ enum RatingSystemType {
 }
 
 model CommentRatingSystemAnswer {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -432,7 +454,7 @@ model CommentRatingSystemAnswer {
 }
 
 model CommentRating {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -472,7 +494,7 @@ model CommentRatingOverride {
 }
 
 model InvoiceItem {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -495,7 +517,7 @@ model InvoiceItem {
 }
 
 model Invoice {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -545,7 +567,7 @@ enum MailLogType {
 }
 
 model MailLog {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -598,7 +620,7 @@ enum MailSendAudience {
 }
 
 model MailSendJob {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -657,7 +679,7 @@ enum MailSendJobRecipientState {
 /// interrupted and continued without sending anybody twice: only `pending` rows
 /// are ever picked up again.
 model MailSendJobRecipient {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -700,7 +722,7 @@ enum PaymentPeriodicity {
 }
 
 model AvailablePaymentMethod {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -715,7 +737,7 @@ model AvailablePaymentMethod {
 }
 
 model MemberPlanPeriodicityPrice {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -743,7 +765,7 @@ enum ProductType {
 }
 
 model MemberPlan {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -791,7 +813,7 @@ model MemberPlan {
 }
 
 model NavigationLink {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -815,7 +837,7 @@ model NavigationLink {
 }
 
 model Navigation {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -830,7 +852,7 @@ model Navigation {
 }
 
 model PageRevision {
-  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   publishedAt            DateTime? @db.Timestamptz(3)
@@ -865,13 +887,15 @@ model PageRevision {
 }
 
 model Page {
-  id          String    @id @default(dbgenerated("gen_random_uuid()"))
+  id          String    @id @default(dbgenerated("uuidv7()"))
   createdAt   DateTime  @default(now()) @db.Timestamptz(3)
   modifiedAt  DateTime  @updatedAt @db.Timestamptz(3)
   publishedAt DateTime? @db.Timestamptz(3)
 
   slug   String?
   hidden Boolean @default(false)
+  hideHeader Boolean @default(false)
+  hideFooter Boolean @default(false)
 
   revisions               PageRevision[]
   navigations             NavigationLink[]
@@ -934,7 +958,7 @@ view PagesRevisionDraft {
 }
 
 model PaymentMethod {
-  id                String   @id @default(dbgenerated("gen_random_uuid()"))
+  id                String   @id @default(dbgenerated("uuidv7()"))
   createdAt         DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt        DateTime @updatedAt @db.Timestamptz(3)
   name              String
@@ -967,7 +991,7 @@ enum PaymentState {
 }
 
 model Payment {
-  id           String       @id @default(dbgenerated("gen_random_uuid()"))
+  id           String       @id @default(dbgenerated("uuidv7()"))
   createdAt    DateTime     @default(now()) @db.Timestamptz(3)
   modifiedAt   DateTime     @updatedAt @db.Timestamptz(3)
   invoiceID    String
@@ -985,7 +1009,7 @@ model Payment {
 }
 
 model PeerProfile {
-  id                    String  @id @default(dbgenerated("gen_random_uuid()"))
+  id                    String  @id @default(dbgenerated("uuidv7()"))
   name                  String
   themeColor            String
   themeFontColor        String
@@ -1005,7 +1029,7 @@ model PeerProfile {
 }
 
 model Peer {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1026,7 +1050,7 @@ model Peer {
 }
 
 model Token {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1038,7 +1062,7 @@ model Token {
 }
 
 model Session {
-  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   expiresAt DateTime @db.Timestamptz(3)
   token     String   @unique
@@ -1058,7 +1082,7 @@ model Session {
 }
 
 model ImpersonationGrant {
-  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   jti       String    @unique
@@ -1070,7 +1094,7 @@ model ImpersonationGrant {
 }
 
 model SubscriptionPeriod {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1099,7 +1123,7 @@ enum SubscriptionDeactivationReason {
 }
 
 model SubscriptionDeactivation {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1113,7 +1137,7 @@ model SubscriptionDeactivation {
 }
 
 model Subscription {
-  id                 String                    @id @default(dbgenerated("gen_random_uuid()"))
+  id                 String                    @id @default(dbgenerated("uuidv7()"))
   createdAt          DateTime                  @default(now()) @db.Timestamptz(3)
   modifiedAt         DateTime                  @updatedAt @db.Timestamptz(3)
   paymentPeriodicity PaymentPeriodicity
@@ -1170,7 +1194,7 @@ model UserAddress {
 }
 
 model PaymentProviderCustomer {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1185,7 +1209,7 @@ model PaymentProviderCustomer {
 }
 
 model User {
-  id              String    @id @default(dbgenerated("gen_random_uuid()"))
+  id              String    @id @default(dbgenerated("uuidv7()"))
   createdAt       DateTime  @default(now()) @db.Timestamptz(3)
   modifiedAt      DateTime  @updatedAt @db.Timestamptz(3)
   birthday        DateTime? @db.Date
@@ -1226,13 +1250,14 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  apiTokens                 ApiToken[]
 
   @@index([createdAt])
   @@map("users")
 }
 
 model UserRole {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1245,7 +1270,7 @@ model UserRole {
 }
 
 model Setting {
-  id                 String   @id @default(dbgenerated("gen_random_uuid()"))
+  id                 String   @id @default(dbgenerated("uuidv7()"))
   createdAt          DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt         DateTime @updatedAt @db.Timestamptz(3)
   name               String   @unique
@@ -1264,7 +1289,7 @@ enum TagType {
 }
 
 model Tag {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1289,7 +1314,7 @@ model Tag {
 }
 
 model Poll {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1308,7 +1333,7 @@ model Poll {
 }
 
 model PollAnswer {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1325,7 +1350,7 @@ model PollAnswer {
 }
 
 model PollVote {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1349,7 +1374,7 @@ model PollVote {
 }
 
 model PollExternalVoteSource {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1363,7 +1388,7 @@ model PollExternalVoteSource {
 }
 
 model PollExternalVote {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1387,7 +1412,7 @@ enum EventStatus {
 }
 
 model Event {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1425,7 +1450,7 @@ model TaggedEvents {
 }
 
 model Consent {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1438,7 +1463,7 @@ model Consent {
 }
 
 model UserConsent {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1463,7 +1488,7 @@ enum UserEvent {
 }
 
 model UserFlowMail {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1487,7 +1512,7 @@ enum SubscriptionEvent {
 }
 
 model SubscriptionFlow {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1506,7 +1531,7 @@ model SubscriptionFlow {
 }
 
 model SubscriptionInterval {
-  id                 String            @id @default(dbgenerated("gen_random_uuid()"))
+  id                 String            @id @default(dbgenerated("uuidv7()"))
   createdAt          DateTime          @default(now()) @db.Timestamptz(3)
   modifiedAt         DateTime          @updatedAt @db.Timestamptz(3)
   event              SubscriptionEvent
@@ -1533,7 +1558,7 @@ enum MailTemplateContext {
 }
 
 model MailTemplate {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1563,7 +1588,7 @@ model MailTemplate {
 }
 
 model PeriodicJob {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1603,7 +1628,7 @@ enum BlockType {
 }
 
 model BlockStyle {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1614,7 +1639,7 @@ model BlockStyle {
 }
 
 model BlockTemplate {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1628,7 +1653,7 @@ model BlockTemplate {
 }
 
 model ArticleTemplate {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1640,7 +1665,7 @@ model ArticleTemplate {
 }
 
 model PageTemplate {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1651,8 +1676,29 @@ model PageTemplate {
   @@map("page_templates")
 }
 
+enum NewsletterCampaignStatus {
+  active
+  archived
+}
+
+model NewsletterCampaign {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  title    String
+  document Json
+  status   NewsletterCampaignStatus @default(active)
+
+  mailchimpCampaignId    String?
+  mailchimpCampaignWebId Int?
+
+  @@index([modifiedAt(sort: Desc)])
+  @@map("newsletter_campaigns")
+}
+
 model Banner {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1690,7 +1736,7 @@ enum LoginStatus {
 }
 
 model BannerAction {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1718,7 +1764,7 @@ enum CrowdfundingGoalType {
 }
 
 model Crowdfunding {
-  id                      String               @id @default(dbgenerated("gen_random_uuid()"))
+  id                      String               @id @default(dbgenerated("uuidv7()"))
   createdAt               DateTime             @default(now()) @db.Timestamptz(3)
   modifiedAt              DateTime             @updatedAt @db.Timestamptz(3)
   name                    String
@@ -1733,7 +1779,7 @@ model Crowdfunding {
 }
 
 model CrowdfundingGoal {
-  id          String   @id @default(dbgenerated("gen_random_uuid()"))
+  id          String   @id @default(dbgenerated("uuidv7()"))
   createdAt   DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt  DateTime @updatedAt @db.Timestamptz(3)
   title       String
@@ -1747,7 +1793,7 @@ model CrowdfundingGoal {
 }
 
 model Paywall {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1792,7 +1838,7 @@ model PaywallMemberplan {
 }
 
 model PaywallBypass {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2089,7 +2135,7 @@ enum ExternalAppsTarget {
 }
 
 model ExternalApps {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2153,7 +2199,7 @@ model SettingSyncProvider {
 }
 
 model MailchimpSyncError {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2171,7 +2217,7 @@ model MailchimpSyncError {
 }
 
 model WebsiteSettings {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2204,7 +2250,7 @@ model WebsiteSettings {
 }
 
 model DiscountCode {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2224,7 +2270,7 @@ model DiscountCode {
 }
 
 model Goodie {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2249,7 +2295,7 @@ enum NotificationSource {
 }
 
 model NotificationRead {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2263,7 +2309,7 @@ model NotificationRead {
 }
 
 model NotificationConfirmation {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2277,7 +2323,7 @@ model NotificationConfirmation {
 }
 
 model ChangelogEntry {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2304,7 +2350,7 @@ enum Locale {
 }
 
 model ChangelogEntryTranslation {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2329,6 +2375,17 @@ model OneChannelState {
   @@map("one_channel_state")
 }
 
+/// Feature toggles of this medium, as last received from We.Publish One.
+model MediumFeature {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+  key        String   @unique
+  enabled    Boolean  @default(false)
+
+  @@map("medium_features")
+}
+
 enum AuditLogAction {
   create @map("create")
   update @map("update")
@@ -2342,7 +2399,7 @@ enum AuditLogActorType {
 }
 
 model AuditLog {
-  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   mutation String

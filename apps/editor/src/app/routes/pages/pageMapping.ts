@@ -17,6 +17,8 @@ export function pageTemplateMetadataToPageMetadata(
     seoTitle: metadata.seoTitle ?? '',
     seoDescription: metadata.seoDescription ?? '',
     hidden: metadata.hidden,
+    hideHeader: metadata.hideHeader,
+    hideFooter: metadata.hideFooter,
     socialMediaTitle: metadata.socialMediaTitle ?? '',
     socialMediaDescription: metadata.socialMediaDescription ?? '',
     tags: metadata.tags.map(({ id }) => id),
@@ -39,6 +41,8 @@ export function pageToPageMetadata(page: FullPageFragment): PageMetadata {
     ...pageTemplateMetadataToPageMetadata({
       ...latest,
       hidden: page.hidden,
+      hideHeader: page.hideHeader,
+      hideFooter: page.hideFooter,
       tags: page.tags,
     }),
     slug: slug ?? '',
@@ -55,6 +59,8 @@ export function pageMetadataToMetadataInput(
     seoTitle: metadata.seoTitle || undefined,
     seoDescription: metadata.seoDescription || undefined,
     hidden: metadata.hidden ?? false,
+    hideHeader: metadata.hideHeader ?? false,
+    hideFooter: metadata.hideFooter ?? false,
     imageID: metadata.image?.id,
     tagIds: metadata.tags,
     properties: metadata.properties.map(({ key, value, public: isPublic }) => ({

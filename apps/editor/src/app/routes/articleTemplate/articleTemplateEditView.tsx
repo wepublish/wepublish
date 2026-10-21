@@ -13,13 +13,13 @@ import {
 import {
   ArticleMetadataPanel,
   createCheckedPermissionComponent,
+  enqueueSnackbar,
   mapBlockValueToBlockInput,
   useAuthorisation,
 } from '@wepublish/ui/editor';
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Message, Notification, toaster } from 'rsuite';
 
 import {
   emptyArticleMetadata,
@@ -105,17 +105,9 @@ function ArticleTemplateEditView() {
 
   useEffect(() => {
     const error = createError?.message ?? updateError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [createError, updateError]);
 
   function createInput(): CreateArticleTemplateMutationVariables {
@@ -150,14 +142,11 @@ function ArticleTemplateEditView() {
       });
 
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('articleTemplates.edit.saved')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('articleTemplates.edit.saved'),
+        autoHideDuration: 2000,
+      });
       await refetch({ id: articleTemplateId });
     } else {
       const { data } = await createArticleTemplate({ variables: input });
@@ -169,14 +158,11 @@ function ArticleTemplateEditView() {
       }
 
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('articleTemplates.edit.created')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('articleTemplates.edit.created'),
+        autoHideDuration: 2000,
+      });
     }
   }
 

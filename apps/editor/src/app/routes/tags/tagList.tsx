@@ -1,5 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
+import {
   DeleteTagDocument,
   FullTagFragment,
   TagListDocument,
@@ -14,39 +23,26 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   IconButton,
   IconButtonTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
-  ListViewFilterArea,
   ListViewHeader,
-  PaddedCell,
-  Table,
+  Pagination,
   TableWrapper,
   useListViewState,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
+import { Link as RouterLink } from 'react-router-dom';
 
 export type TagListProps = {
   type: TagType;
 };
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function TagList({ type }: TagListProps) {
   const { t } = useTranslation();
@@ -84,119 +80,122 @@ function TagList({ type }: TagListProps) {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('tags.overview.title')}</h2>
+          <PageTitle>{t('tags.overview.title')}</PageTitle>
         </ListViewHeader>
 
         <ListViewActions>
-          <Link to="create">
-            <RIconButton
-              appearance="primary"
-              icon={<MdAdd />}
-            >
-              {t('tags.overview.createTag')}
-            </RIconButton>
-          </Link>
+          <Button
+            component={RouterLink}
+            to="create"
+            variant="contained"
+            startIcon={<MdAdd />}
+          >
+            {t('tags.overview.createTag')}
+          </Button>
         </ListViewActions>
-
-        <ListViewFilterArea>
-          <InputGroup>
-            <Input
-              value={tagSearch}
-              onChange={value => {
-                setTagSearch(value);
-                setPage(1);
-              }}
-            />
-            <InputGroup.Addon>
-              <MdSearch />
-            </InputGroup.Addon>
-          </InputGroup>
-        </ListViewFilterArea>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey="tags"
+          filters={
+            <TextField
+              label={t('tags.overview.name')}
+              value={tagSearch}
+              onChange={event => {
+                setTagSearch(event.target.value);
+                setPage(1);
+              }}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <MdSearch />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          }
+          filterCount={tagSearch ? 1 : 0}
+          onResetFilters={() => {
+            setTagSearch('');
+            setPage(1);
+          }}
           data={data?.tags?.nodes ?? []}
-        >
-          <Column
-            width={300}
-            resizable
-          >
-            <HeaderCell>{t('tags.overview.name')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<FullTagFragment>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('tags.overview.name'),
+              width: 300,
+              render: rowData => (
                 <Link to={`edit/${rowData.id}`}>
                   {rowData.tag || t('untitled')}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={100}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <PaddedCell align="center">
-              {(tag: RowDataType<FullTagFragment>) => (
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: tag => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
+                    color="error"
+                    size="small"
                     onClick={() => setTagToDelete(tag as FullTagFragment)}
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.tags?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.tags?.totalCount ?? 0}
         />
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!tagToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setTagToDelete(undefined)}
       >
-        <Modal.Title>{t('tags.overview.areYouSure')}</Modal.Title>
+        <DialogTitle>{t('tags.overview.areYouSure')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {tagToDelete &&
             t('tags.overview.areYouSureBody', { tag: tagToDelete.tag })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="text"
+            onClick={() => setTagToDelete(undefined)}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
             onClick={() => {
               deleteTag({
                 variables: {
@@ -208,15 +207,8 @@ function TagList({ type }: TagListProps) {
           >
             {t('tags.overview.areYouSureConfirmation')}
           </Button>
-
-          <Button
-            appearance="subtle"
-            onClick={() => setTagToDelete(undefined)}
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

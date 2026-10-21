@@ -108,6 +108,16 @@ export class PageTemplateMetadataResolver {
     return tags.filter(Boolean);
   }
 
+  @ResolveField(() => Boolean)
+  public hideHeader(@Parent() { hideHeader }: PageTemplateMetadataInput) {
+    return hideHeader ?? false;
+  }
+
+  @ResolveField(() => Boolean)
+  public hideFooter(@Parent() { hideFooter }: PageTemplateMetadataInput) {
+    return hideFooter ?? false;
+  }
+
   @ResolveField(() => Image, { nullable: true })
   public async image(@Parent() { imageID }: PageTemplateMetadataInput) {
     return imageID ? this.imageDataloader.load(imageID) : null;

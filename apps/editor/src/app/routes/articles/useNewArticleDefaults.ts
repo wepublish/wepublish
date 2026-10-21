@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import { SettingName, SettingsListDocument } from '@wepublish/editor/api';
-import { ArticleMetadata } from '@wepublish/ui/editor';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { ArticleMetadata, useSeededState } from '@wepublish/ui/editor';
+import { Dispatch, SetStateAction } from 'react';
 
 export function useNewArticleDefaults(
   setMetadata: Dispatch<SetStateAction<ArticleMetadata>>,
@@ -9,21 +9,16 @@ export function useNewArticleDefaults(
 ) {
   const { data } = useQuery(SettingsListDocument, { skip });
 
-  useEffect(() => {
-    if (data) {
-      setMetadata(meta => ({
-        ...meta,
-        shared:
-          meta.shared ??
-          !!data.settings.find(
-            setting => setting.name === SettingName.NewArticlePeering
-          )?.value,
-        paywall:
-          meta.paywall ??
-          (data.settings.find(
-            setting => setting.name === SettingName.NewArticlePaywall
-          )?.value as string | null | undefined),
-      }));
-    }
-  }, [data, setMetadata]);
+  useSeededState(data, settings => {
+    const setting = (name: SettingName) =>
+      settings.settings.find(candidate => candidate.name === name)?.value;
+
+    setMetadata(meta => ({
+      ...meta,
+      shared: meta.shared ?? !!setting(SettingName.NewArticlePeering),
+      paywall:
+        meta.paywall ??
+        (setting(SettingName.NewArticlePaywall) as string | null | undefined),
+    }));
+  });
 }

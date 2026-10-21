@@ -4,6 +4,8 @@ fragment PageTemplateMetadata on PageTemplateMetadata {
   seoTitle
   seoDescription
   hidden
+  hideHeader
+  hideFooter
   socialMediaTitle
   socialMediaDescription
 

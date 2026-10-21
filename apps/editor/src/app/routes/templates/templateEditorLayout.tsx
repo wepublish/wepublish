@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
+import { Badge, Drawer, IconButton } from '@mui/material';
 import {
   BlockList,
   BlockMap,
   BlockValue,
+  DRAWER_WIDTHS,
   EditorHeader,
   EditorHeaderButton,
   EditorTemplate,
@@ -18,8 +20,9 @@ import {
   MdKeyboardBackspace,
   MdSave,
 } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Badge, Drawer, IconButton, Loader } from 'rsuite';
+import { Link as RouterLink } from 'react-router-dom';
+
+import { TemplateLoadingBackdrop } from './templateLoadingBackdrop';
 
 const NameInput = styled(TypographicTextArea)``;
 
@@ -84,23 +87,24 @@ export function TemplateEditorLayout({
             state={stateColor}
             stateLabel={tagTitle}
             back={
-              <Link to={backPath}>
-                <IconButton
-                  circle
-                  appearance="subtle"
-                  icon={<MdKeyboardBackspace />}
-                  title={t(`${i18nPrefix}.edit.backToList`)}
-                  aria-label={t(`${i18nPrefix}.edit.backToList`)}
-                  onClick={e => {
-                    if (!unsavedChangesDialog()) e.preventDefault();
-                  }}
-                />
-              </Link>
+              <IconButton
+                component={RouterLink}
+                to={backPath}
+                title={t(`${i18nPrefix}.edit.backToList`)}
+                aria-label={t(`${i18nPrefix}.edit.backToList`)}
+                onClick={e => {
+                  if (!unsavedChangesDialog()) {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                <MdKeyboardBackspace />
+              </IconButton>
             }
             secondaryActions={
               renderMetadata && (
                 <EditorHeaderButton
-                  appearance="subtle"
+                  variant="text"
                   icon={<MdIntegrationInstructions />}
                   label={t(`${i18nPrefix}.edit.metadata`)}
                   disabled={disabled}
@@ -112,7 +116,7 @@ export function TemplateEditorLayout({
               isNew ?
                 <PermissionControl qualifyingPermissions={[permissions.create]}>
                   <EditorHeaderButton
-                    appearance="primary"
+                    variant="contained"
                     icon={<MdSave />}
                     label={t('create')}
                     collapse={false}
@@ -121,9 +125,13 @@ export function TemplateEditorLayout({
                   />
                 </PermissionControl>
               : <PermissionControl qualifyingPermissions={[permissions.update]}>
-                  <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                  <Badge
+                    variant="dot"
+                    color="warning"
+                    invisible={!hasChanged}
+                  >
                     <EditorHeaderButton
-                      appearance="primary"
+                      variant="contained"
                       icon={<MdSave />}
                       label={t('save')}
                       collapse={false}
@@ -156,18 +164,23 @@ export function TemplateEditorLayout({
         </TemplateContent>
       </EditorTemplate>
 
-      {loadingMessage && (
-        <Loader
-          backdrop
-          vertical
-          content={loadingMessage}
-        />
-      )}
+      <TemplateLoadingBackdrop
+        open={!!loadingMessage}
+        label={loadingMessage ?? ''}
+      />
 
       {renderMetadata && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                width: DRAWER_WIDTHS[metadataDrawerSize],
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isMetaDrawerOpen}
-          size={metadataDrawerSize}
           onClose={() => setMetaDrawerOpen(false)}
         >
           {renderMetadata(() => setMetaDrawerOpen(false))}

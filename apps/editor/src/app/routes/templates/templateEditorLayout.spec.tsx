@@ -188,10 +188,10 @@ describe('TemplateEditorLayout', () => {
     unsavedChangesDialog.mockReturnValue(false);
     renderLayout({ hasChanged: true });
 
-    const back = screen.getByRole('button', {
+    const back = screen.getByRole('link', {
       name: 'thingTemplates.edit.backToList',
     });
-    expect(back.closest('a')).toHaveAttribute('href', '/things/templates');
+    expect(back).toHaveAttribute('href', '/things/templates');
 
     fireEvent.click(back);
 

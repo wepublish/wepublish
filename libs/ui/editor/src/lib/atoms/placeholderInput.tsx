@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
+import { IconButton } from '@mui/material';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
-import { IconButton } from 'rsuite';
 
 import { IconButtonTooltip } from './iconButtonTooltip';
 
@@ -14,8 +14,8 @@ const PlaceholderInputWrapper = styled.div<{
   width: 100%;
   height: 100%;
   place-items: center;
-  border-radius: var(--rs-radius-md);
-  background-color: var(--rs-bg-well);
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
   max-height: ${({ maxHeight }) => `${maxHeight}px`};
   min-height: ${({ minHeight }) => `${minHeight}px`};
 `;
@@ -61,11 +61,12 @@ export function PlaceholderInput({
       <IconButtonTooltip caption={addLabel ?? t('placeholderInput.add')}>
         <IconButton
           disabled={disabled}
-          size="sm"
+          size="small"
           aria-label={addLabel ?? t('placeholderInput.add')}
-          icon={<MdAddCircle />}
           onClick={() => onAddClick && onAddClick()}
-        />
+        >
+          <MdAddCircle />
+        </IconButton>
       </IconButtonTooltip>
     </PlaceholderInputWrapper>
   );

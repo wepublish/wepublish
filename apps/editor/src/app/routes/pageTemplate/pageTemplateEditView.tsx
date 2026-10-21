@@ -12,6 +12,7 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
   mapBlockValueToBlockInput,
   PageMetadataPanel,
   useAuthorisation,
@@ -19,7 +20,6 @@ import {
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Message, Notification, toaster } from 'rsuite';
 
 import { emptyPageMetadata } from '../pages/pageDefaults';
 import {
@@ -93,17 +93,9 @@ function PageTemplateEditView() {
 
   useEffect(() => {
     const error = createError?.message ?? updateError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [createError, updateError]);
 
   function createInput(): CreatePageTemplateMutationVariables {
@@ -137,14 +129,11 @@ function PageTemplateEditView() {
       });
 
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('pageTemplates.edit.saved')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('pageTemplates.edit.saved'),
+        autoHideDuration: 2000,
+      });
       await refetch({ id: pageTemplateId });
     } else {
       const { data } = await createPageTemplate({ variables: input });
@@ -156,14 +145,11 @@ function PageTemplateEditView() {
       }
 
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('pageTemplates.edit.created')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('pageTemplates.edit.created'),
+        autoHideDuration: 2000,
+      });
     }
   }
 

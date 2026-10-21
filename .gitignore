@@ -4,8 +4,6 @@ dist/
 node_modules
 npm-debug.log
 .media
-.changelog
-.CHANGELOG-next.md
 coverage/
 screenshots
 docs/superpowers
@@ -14,7 +12,6 @@ docs/superpowers
 tmp
 .env.local
 .nx
-lerna-debug.log
 
 # Next.js
 .next

@@ -21,6 +21,8 @@ import { ChangelogModule } from '@wepublish/changelog/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
+import { ApiTokenModule } from '@wepublish/api-token/api';
+import { NewsletterModule } from '@wepublish/newsletter/api';
 import { DocumentModule } from '@wepublish/document/api';
 import { EventModule } from '@wepublish/event/api';
 import {
@@ -73,6 +75,7 @@ import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SessionModule } from '@wepublish/session/api';
 import { OneModule } from '@wepublish/one/api';
+import { FeaturesModule } from '@wepublish/features/api';
 import {
   SettingModule,
   SettingName,
@@ -241,6 +244,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       },
     }),
 
+    FeaturesModule,
     OneModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -253,6 +257,8 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     AuditLogModule,
     ChangelogModule,
     ConsentModule,
+    ApiTokenModule,
+    NewsletterModule,
     DocumentModule,
     StatsModule,
     SettingModule,

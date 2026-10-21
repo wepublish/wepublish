@@ -1,11 +1,20 @@
 import { TypedDocumentNode } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdContentCopy, MdNoteAdd, MdSearch } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input, InputGroup, Loader, Modal } from 'rsuite';
 
 const Content = styled.div`
   display: grid;
@@ -21,26 +30,17 @@ const Options = styled.div`
 `;
 
 const Option = styled(Button)`
-  display: flex;
-  align-items: center;
   justify-content: flex-start;
-  gap: 8px;
-  width: 100%;
-`;
-
-const BlankOption = styled(Option)`
-  margin: 4px 4px 0;
-  width: calc(100% - 8px);
-`;
-
-const Search = styled(InputGroup)`
-  margin: 0 4px;
-  width: calc(100% - 8px);
 `;
 
 const NoResults = styled.p`
   margin: 0;
   text-align: center;
+`;
+
+const Loading = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const SEARCH_THRESHOLD = 5;
@@ -101,48 +101,52 @@ export function CreateFromTemplateModal<Data>({
   };
 
   return (
-    <Modal
+    <Dialog
       open={open}
       onClose={onClose}
-      onExited={() => setSearch('')}
-      size="sm"
-      overflow={false}
+      slotProps={{ transition: { onExited: () => setSearch('') } }}
+      maxWidth="sm"
+      fullWidth
     >
-      <Modal.Header>
-        <Modal.Title>{t(`${i18nPrefix}.title`)}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{t(`${i18nPrefix}.title`)}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         <Content>
-          <BlankOption
-            appearance="primary"
+          <Option
+            variant="contained"
+            startIcon={<MdNoteAdd />}
             onClick={() => create()}
           >
-            <MdNoteAdd />
             {t(`${i18nPrefix}.blank`)}
-          </BlankOption>
+          </Option>
 
           {showSearch && (
-            <Search size="sm">
-              <InputGroup.Addon>
-                <MdSearch />
-              </InputGroup.Addon>
-              <Input
-                value={search}
-                placeholder={t(`${i18nPrefix}.search`)}
-                onChange={value => setSearch(value)}
-              />
-            </Search>
+            <TextField
+              size="small"
+              value={search}
+              placeholder={t(`${i18nPrefix}.search`)}
+              onChange={event => setSearch(event.target.value)}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MdSearch />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+              fullWidth
+            />
           )}
 
           <Options>
             {templates.map(({ id, blockTemplate }) => (
               <Option
                 key={id}
-                appearance="ghost"
+                variant="outlined"
+                startIcon={<MdContentCopy />}
                 onClick={() => create(id)}
               >
-                <MdContentCopy />
                 {blockTemplate.name}
               </Option>
             ))}
@@ -151,19 +155,23 @@ export function CreateFromTemplateModal<Data>({
               <NoResults>{t(`${i18nPrefix}.noResults`)}</NoResults>
             )}
 
-            {loading && !data && <Loader center />}
+            {loading && !data && (
+              <Loading>
+                <CircularProgress size={24} />
+              </Loading>
+            )}
           </Options>
         </Content>
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
+          variant="text"
           onClick={onClose}
-          appearance="subtle"
         >
           {t('cancel')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }

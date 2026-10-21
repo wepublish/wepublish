@@ -1,7 +1,9 @@
-import type { Mock } from 'vitest';
 import { useQuery } from '@apollo/client/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 import type { ChangelogEntryFragment } from '@wepublish/editor/api';
+import { ReactNode } from 'react';
+import type { Mock } from 'vitest';
 
 import {
   ChangelogActionRequired,
@@ -60,6 +62,11 @@ const mockQuery = (
   });
 };
 
+const theme = createTheme({ cssVariables: true });
+
+const renderWithTheme = (ui: ReactNode) =>
+  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+
 beforeEach(() => {
   mockedUseQuery.mockReset();
 });
@@ -69,11 +76,11 @@ describe('ChangelogDashboard', () => {
     mockQuery(undefined, true);
     const onVisibilityChange = vi.fn();
 
-    const { container } = render(
+    const { container } = renderWithTheme(
       <ChangelogDashboard onVisibilityChange={onVisibilityChange} />
     );
 
-    expect(container.querySelector('.rs-loader')).toBeTruthy();
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
     expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
   });
 
@@ -84,7 +91,9 @@ describe('ChangelogDashboard', () => {
     ]);
     const onVisibilityChange = vi.fn();
 
-    render(<ChangelogDashboard onVisibilityChange={onVisibilityChange} />);
+    renderWithTheme(
+      <ChangelogDashboard onVisibilityChange={onVisibilityChange} />
+    );
 
     expect(screen.getByText('First')).toBeTruthy();
     expect(screen.getByText('Second')).toBeTruthy();
@@ -95,7 +104,7 @@ describe('ChangelogDashboard', () => {
     mockQuery([entry({ id: 'entry-1', title: 'Read' })]);
     const onVisibilityChange = vi.fn();
 
-    render(
+    renderWithTheme(
       <ChangelogDashboard
         readEntryIds={new Set(['entry-1'])}
         onVisibilityChange={onVisibilityChange}
@@ -110,7 +119,7 @@ describe('ChangelogDashboard', () => {
   it('shows the no-entries placeholder when the database has no entries', () => {
     mockQuery([]);
 
-    render(<ChangelogDashboard />);
+    renderWithTheme(<ChangelogDashboard />);
 
     expect(screen.getByText('changelog.noEntries')).toBeTruthy();
   });
@@ -118,7 +127,9 @@ describe('ChangelogDashboard', () => {
   it('renders nothing instead of the placeholder when hideEmptyState is set', () => {
     mockQuery([]);
 
-    const { container } = render(<ChangelogDashboard hideEmptyState />);
+    const { container } = renderWithTheme(
+      <ChangelogDashboard hideEmptyState />
+    );
 
     expect(container.firstChild).toBeNull();
   });
@@ -135,7 +146,7 @@ describe('ChangelogDashboard', () => {
     ]);
     const onVisibilityChange = vi.fn();
 
-    render(
+    renderWithTheme(
       <ChangelogDashboard
         hideUnconfirmedActionRequired
         onVisibilityChange={onVisibilityChange}
@@ -153,7 +164,7 @@ describe('ChangelogDashboard', () => {
     ]);
     const onVisibilityChange = vi.fn();
 
-    const { container } = render(
+    const { container } = renderWithTheme(
       <ChangelogDashboard
         hideUnconfirmedActionRequired
         hideEmptyState
@@ -171,7 +182,9 @@ describe('ChangelogActionRequired', () => {
     mockQuery([entry({ title: 'Do this', actionRequired: true })]);
     const onVisibilityChange = vi.fn();
 
-    render(<ChangelogActionRequired onVisibilityChange={onVisibilityChange} />);
+    renderWithTheme(
+      <ChangelogActionRequired onVisibilityChange={onVisibilityChange} />
+    );
 
     expect(screen.getByText('Do this')).toBeTruthy();
     expect(
@@ -184,7 +197,7 @@ describe('ChangelogActionRequired', () => {
     mockQuery([]);
     const onVisibilityChange = vi.fn();
 
-    const { container } = render(
+    const { container } = renderWithTheme(
       <ChangelogActionRequired onVisibilityChange={onVisibilityChange} />
     );
 

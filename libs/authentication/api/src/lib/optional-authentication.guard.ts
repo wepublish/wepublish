@@ -6,7 +6,10 @@ import { INVALID_PEER_TOKEN } from './session.strategy';
 /**
  * This Guard is to attach the user to the request
  */
-export class OptionalAuthenticationGuard extends AuthGuard('session') {
+export class OptionalAuthenticationGuard extends AuthGuard([
+  'session',
+  'api-token',
+]) {
   public override getRequest(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
     return ctx.getContext().req;

@@ -16,13 +16,19 @@ import {
   BlockValue,
   ConfirmActionModal,
   createCheckedPermissionComponent,
+  enqueueSnackbar,
   mapBlockValueToBlockInput,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Message, Notification, toaster } from 'rsuite';
 
 import { TemplateEditorLayout } from '../templates/templateEditorLayout';
 
@@ -60,27 +66,16 @@ function BlockTemplateEditView() {
     skip: !blockTemplateId,
   });
 
-  const handleChange = useCallback(
-    (blocks: React.SetStateAction<BlockValue[]>) => {
-      setBlocks(blocks);
-      setChanged(true);
-    },
-    []
-  );
+  const handleChange = useCallback((blocks: SetStateAction<BlockValue[]>) => {
+    setBlocks(blocks);
+    setChanged(true);
+  }, []);
 
   useEffect(() => {
     const error = createError?.message ?? updateError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [createError, updateError]);
 
   const hydratedRevision = useRef<string | null>(null);
@@ -126,14 +121,11 @@ function BlockTemplateEditView() {
       });
 
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('blockTemplates.edit.saved')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('blockTemplates.edit.saved'),
+        autoHideDuration: 2000,
+      });
       await refetch({ id: blockTemplateId });
     } else {
       const { data } = await createBlockTemplate({ variables: input });
@@ -144,14 +136,11 @@ function BlockTemplateEditView() {
         );
       }
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('blockTemplates.edit.created')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('blockTemplates.edit.created'),
+        autoHideDuration: 2000,
+      });
     }
   }
 

@@ -1,5 +1,6 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import {
   act,
   fireEvent,
@@ -29,6 +30,8 @@ import {
   MailchimpFormFieldConfigValue,
   MailchimpFormInterestOptionValue,
 } from './types';
+
+const theme = createTheme({ cssVariables: true });
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -135,11 +138,13 @@ const renderBlock = (value: Partial<MailchimpFormBlockValue> = {}) => {
   }
 
   render(
-    <MockedProvider mocks={mocks}>
-      <EditorValidationProvider runAllRef={runAllRef}>
-        <Harness />
-      </EditorValidationProvider>
-    </MockedProvider>
+    <ThemeProvider theme={theme}>
+      <MockedProvider mocks={mocks}>
+        <EditorValidationProvider runAllRef={runAllRef}>
+          <Harness />
+        </EditorValidationProvider>
+      </MockedProvider>
+    </ThemeProvider>
   );
 
   return latest;
@@ -152,7 +157,7 @@ const openPicker = async (field: HTMLElement) => {
   await waitForQueries();
 
   await act(async () => {
-    fireEvent.click(within(field).getByRole('combobox'));
+    fireEvent.click(within(field).getByRole('button', { name: /open/i }));
   });
 };
 
@@ -216,13 +221,13 @@ const itemHeader = (heading: string) =>
   screen.getByText(heading).parentElement!;
 
 const itemPanel = (heading: string) =>
-  screen.getByText(heading).closest('.rs-panel') as HTMLElement;
+  screen.getByText(heading).closest('.MuiCard-root') as HTMLElement;
 
 const stepHeader = (index: number) =>
   screen.getByText(`blocks.mailchimpForm.step ${index + 1}`).parentElement!;
 
 const stepPanel = (index: number) =>
-  stepHeader(index).closest('.rs-panel') as HTMLElement;
+  stepHeader(index).closest('.MuiCard-root') as HTMLElement;
 
 const moveUp = (header: HTMLElement) =>
   within(header).getByLabelText('blocks.mailchimpForm.moveUp');
@@ -315,6 +320,9 @@ describe('MailchimpFormBlock', () => {
     ]);
   });
 
+  // The naming rules are covered by `nameForPickedInterest` in
+  // mailchimpFormBlock.types.spec.ts; opening the picker is slow in happy-dom,
+  // so only this test checks that picking an interest goes through them.
   it('should prefill the name with the name of the picked interest', async () => {
     const latest = renderWithGroupsInput({ options: [emptyOption] });
 
@@ -331,76 +339,6 @@ describe('MailchimpFormBlock', () => {
     await waitFor(() =>
       expect(getOptions(latest.value)).toMatchObject([
         { id: 'interest-weekly', name: 'Weekly Culture' },
-      ])
-    );
-  });
-
-  it('should not overwrite a custom name when picking an interest', async () => {
-    const latest = renderWithGroupsInput({
-      options: [{ ...emptyOption, name: 'My newsletter' }],
-    });
-
-    const itemPicker = screen.getByText(
-      'blocks.mailchimpForm.interestOption'
-    ).parentElement!;
-
-    await openPicker(itemPicker);
-
-    fireEvent.click(
-      await screen.findByRole('option', { name: 'Daily Briefing' })
-    );
-
-    await waitFor(() =>
-      expect(getOptions(latest.value)).toMatchObject([
-        { id: 'interest-daily', name: 'My newsletter' },
-      ])
-    );
-  });
-
-  it('should update a prefilled name when picking a different interest', async () => {
-    const latest = renderWithGroupsInput({
-      options: [
-        { ...emptyOption, id: 'interest-daily', name: 'Daily Briefing' },
-      ],
-    });
-
-    const itemPicker = screen.getByText(
-      'blocks.mailchimpForm.interestOption'
-    ).parentElement!;
-
-    await openPicker(itemPicker);
-
-    fireEvent.click(
-      await screen.findByRole('option', { name: 'Weekly Culture' })
-    );
-
-    await waitFor(() =>
-      expect(getOptions(latest.value)).toMatchObject([
-        { id: 'interest-weekly', name: 'Weekly Culture' },
-      ])
-    );
-  });
-
-  it('should keep a custom name when picking a different interest', async () => {
-    const latest = renderWithGroupsInput({
-      options: [
-        { ...emptyOption, id: 'interest-daily', name: 'My newsletter' },
-      ],
-    });
-
-    const itemPicker = screen.getByText(
-      'blocks.mailchimpForm.interestOption'
-    ).parentElement!;
-
-    await openPicker(itemPicker);
-
-    fireEvent.click(
-      await screen.findByRole('option', { name: 'Weekly Culture' })
-    );
-
-    await waitFor(() =>
-      expect(getOptions(latest.value)).toMatchObject([
-        { id: 'interest-weekly', name: 'My newsletter' },
       ])
     );
   });

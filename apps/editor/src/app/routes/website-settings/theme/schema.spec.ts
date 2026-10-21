@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 
-import { paletteSchema, typographyItem } from './schema';
+import { normalizeValues, paletteSchema, typographyItem } from './schema';
 
 const messages = (result: { error?: { issues: { message: string }[] } }) =>
   result.error?.issues.map(issue => issue.message);
@@ -65,5 +65,19 @@ describe('theme schema validation messages', () => {
     expect(messages(typographyItem.shape.fontSize.safeParse('100em'))).toEqual([
       'Zwischen 0.5em und 6.5em',
     ]);
+  });
+});
+
+describe('normalizeValues colours', () => {
+  it('keeps an opaque rgb() colour opaque', () => {
+    expect(normalizeValues('rgb(237, 75, 130)', 'color')).toBe('#ED4B82');
+  });
+
+  it('converts alpha to the 0-255 hex range', () => {
+    expect(normalizeValues('rgba(0, 0, 0, 0.5)', 'color')).toBe('#00000080');
+  });
+
+  it('leaves hex colours untouched', () => {
+    expect(normalizeValues('#0288d1', 'color')).toBe('#0288d1');
   });
 });

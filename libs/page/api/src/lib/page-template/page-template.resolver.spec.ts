@@ -149,4 +149,16 @@ describe('PageTemplateMetadataResolver', () => {
       await resolver.image({ ...metadata, imageID: undefined })
     ).toBeNull();
   });
+
+  it('should resolve hiding the header and footer', () => {
+    const hiding = { ...metadata, hideHeader: true, hideFooter: true };
+
+    expect(resolver.hideHeader(hiding)).toBe(true);
+    expect(resolver.hideFooter(hiding)).toBe(true);
+  });
+
+  it('should show the header and footer for templates saved without them', () => {
+    expect(resolver.hideHeader(metadata)).toBe(false);
+    expect(resolver.hideFooter(metadata)).toBe(false);
+  });
 });

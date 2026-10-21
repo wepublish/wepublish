@@ -1,12 +1,15 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  Button as MuiButton,
-  Dialog as MuiDialog,
-  DialogActions as MuiDialogActions,
-  DialogContent as MuiDialogContent,
-  DialogContentText as MuiDialogContentText,
-  DialogTitle as MuiDialogTitle,
+  Badge,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Drawer,
+  IconButton,
 } from '@mui/material';
 import {
   CreateJwtForWebsiteLoginDocument,
@@ -20,7 +23,14 @@ import {
   RestorePageRevisionDocument,
   UpdatePageDocument,
 } from '@wepublish/editor/api';
-import { CanPreview } from '@wepublish/permissions';
+import {
+  CanCreatePage,
+  CanDeletePage,
+  CanGetPage,
+  CanGetPages,
+  CanPreview,
+  CanPublishPage,
+} from '@wepublish/permissions';
 import type { AggregatedValidation } from '@wepublish/ui/editor';
 import {
   blockForQueryBlock,
@@ -29,10 +39,12 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   DocumentUrlProvider,
+  DRAWER_WIDTHS,
   EditorHeader,
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
+  enqueueSnackbar,
   mapBlockValueToBlockInput,
   PageMetadata,
   PageMetadataPanel,
@@ -46,7 +58,13 @@ import {
   VersionHistory,
   VersionHistoryRevision,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -55,26 +73,19 @@ import {
   MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
+  MdLink,
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
 import {
-  Link,
+  Link as RouterLink,
   useNavigate,
   useParams,
   useSearchParams,
 } from 'react-router-dom';
-import {
-  Badge,
-  Drawer,
-  IconButton as RIconButton,
-  Loader,
-  Message,
-  Modal,
-  Notification,
-  toaster,
-} from 'rsuite';
 
+import { AutosaveToggle } from '../../autosaveToggle';
+import { copyLinkToClipboard } from '../../copyLink';
 import { LastSavedAt } from '../../lastSavedAt';
 import {
   PreviewControls,
@@ -82,7 +93,9 @@ import {
   PreviewFrame,
 } from '../../previewFrame';
 import { useAutosave } from '../../useAutosave';
+import { useAutosaveEnabled } from '../../useAutosaveEnabled';
 import { usePageTemplatePrefill } from '../pageTemplate/pageTemplatePrefill';
+import { TemplateLoadingBackdrop } from '../templates/templateLoadingBackdrop';
 import { emptyPageMetadata } from './pageDefaults';
 import { pageMetadataToMetadataInput, pageToPageMetadata } from './pageMapping';
 
@@ -272,20 +285,20 @@ function PageEditor() {
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = pageData?.page?.previewUrl;
+  const publishedUrl =
+    pageData?.page?.published ? pageData.page.url : undefined;
   const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
   const showPreview = isPreviewOpen && !isPreviewDisabled;
 
-  const isAuthorized = useAuthorisation('CAN_CREATE_PAGE');
+  const isAuthorized = useAuthorisation(CanCreatePage.id);
 
-  const handleChange = useCallback(
-    (blocks: React.SetStateAction<BlockValue[]>) => {
-      setBlocks(blocks);
-      changeVersion.current++;
-      setChanged(true);
-    },
-    []
-  );
+  const handleChange = useCallback((blocks: SetStateAction<BlockValue[]>) => {
+    setBlocks(blocks);
+    changeVersion.current++;
+    setChanged(true);
+  }, []);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (pageData?.page && !hasChanged && !skipRepopulate.current) {
       const { latest } = pageData.page;
@@ -298,30 +311,36 @@ function PageEditor() {
       setBlocks(latest.blocks.map(blockForQueryBlock));
     }
   }, [pageData]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
-  const [stateColor, setStateColor] = useState<StateColor>(StateColor.none);
-  const [tagTitle, setTagTitle] = useState<string>('');
+  const { stateColor, tagTitle } = (() => {
+    const pending = pageData?.page?.pending;
 
-  useEffect(() => {
-    if (pageData?.page?.pending) {
-      setStateColor(StateColor.pending);
-      setTagTitle(
-        t('pageEditor.overview.pending', {
-          date: new Date(pageData?.page?.pending?.publishedAt ?? ''),
-        })
-      );
-    } else if (pageData?.page?.latest.publishedAt) {
-      setStateColor(StateColor.published);
-      setTagTitle(
-        t('pageEditor.overview.published', {
-          date: new Date(pageData?.page?.latest?.publishedAt ?? ''),
-        })
-      );
-    } else {
-      setStateColor(StateColor.draft);
-      setTagTitle(t('pageEditor.overview.unpublished'));
+    if (pending) {
+      return {
+        stateColor: StateColor.pending,
+        tagTitle: t('pageEditor.overview.pending', {
+          date: new Date(pending.publishedAt ?? ''),
+        }),
+      };
     }
-  }, [pageData, hasChanged, t]);
+
+    const publishedAt = pageData?.page?.latest.publishedAt;
+
+    if (publishedAt) {
+      return {
+        stateColor: StateColor.published,
+        tagTitle: t('pageEditor.overview.published', {
+          date: new Date(publishedAt),
+        }),
+      };
+    }
+
+    return {
+      stateColor: StateColor.draft,
+      tagTitle: t('pageEditor.overview.unpublished'),
+    };
+  })();
 
   useEffect(() => {
     const error =
@@ -331,17 +350,9 @@ function PageEditor() {
       publishError?.message ??
       restoreError?.message ??
       discardError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [
     createError,
     updateError,
@@ -366,14 +377,11 @@ function PageEditor() {
       setChanged(false);
       await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
 
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('discardDraft.success')}
-          duration={2000}
-        />,
-        { placement: 'topEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('discardDraft.success'),
+        autoHideDuration: 2000,
+      });
     }
   }
 
@@ -396,14 +404,11 @@ function PageEditor() {
         setChanged(false);
         await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
 
-        toaster.push(
-          <Notification
-            type="success"
-            header={t('versionHistory.restored')}
-            duration={2000}
-          />,
-          { placement: 'topEnd' }
-        );
+        enqueueSnackbar('', {
+          variant: 'success',
+          title: t('versionHistory.restored'),
+          autoHideDuration: 2000,
+        });
 
         setVersionHistoryOpen(false);
       }
@@ -438,17 +443,12 @@ function PageEditor() {
       reason === 'publish' ?
         t('pageEditor.publishValidationFailed')
       : t('pageEditor.saveValidationFailed');
-    toaster.push(
-      <Message
-        type="error"
-        showIcon={false}
-        closable
-        duration={8000}
-      >
+    enqueueSnackbar(
+      <>
         <strong>{header}</strong>
         <div>{summaries || t('pageEditor.validationFailedGeneric')}</div>
-      </Message>,
-      { placement: 'topEnd' }
+      </>,
+      { variant: 'error', autoHideDuration: 8000 }
     );
     return false;
   }
@@ -465,14 +465,11 @@ function PageEditor() {
       skipRepopulate.current = false;
       markSaved();
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('pageEditor.overview.pageDraftSaved')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('pageEditor.overview.pageDraftSaved'),
+        autoHideDuration: 2000,
+      });
       await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
     } else {
       const { data } = await createPage({ variables: input });
@@ -481,14 +478,11 @@ function PageEditor() {
         navigate(`/pages/edit/${data?.createPage.id}`, { replace: true });
       }
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('pageEditor.overview.pageDraftCreated')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('pageEditor.overview.pageDraftCreated'),
+        autoHideDuration: 2000,
+      });
     }
   }
 
@@ -512,19 +506,18 @@ function PageEditor() {
       setChanged(false);
     }
 
-    toaster.push(
-      <Notification
-        type="success"
-        header={t('pageEditor.overview.pageDraftAutosaved')}
-        duration={2000}
-      />,
-      { placement: 'bottomEnd' }
-    );
+    enqueueSnackbar('', {
+      variant: 'success',
+      title: t('pageEditor.overview.pageDraftAutosaved'),
+      autoHideDuration: 2000,
+    });
     await reloadRevisions();
   }
 
+  const [autosaveEnabled] = useAutosaveEnabled();
+
   const { markSaved } = useAutosave({
-    enabled: !isDisabled && !!pageID,
+    enabled: autosaveEnabled && !isDisabled && !!pageID,
     hasChanged,
     onAutosave: handleAutosave,
   });
@@ -558,32 +551,23 @@ function PageEditor() {
     }
 
     setChanged(false);
-    toaster.push(
-      <Notification
-        type="success"
-        header={t(
-          publishedAt <= new Date() ?
-            'pageEditor.overview.pagePublished'
-          : 'pageEditor.overview.pagePending'
-        )}
-        duration={2000}
-      />,
-      { placement: 'bottomEnd' }
-    );
+    enqueueSnackbar('', {
+      variant: 'success',
+      title: t(
+        publishedAt <= new Date() ?
+          'pageEditor.overview.pagePublished'
+        : 'pageEditor.overview.pagePending'
+      ),
+      autoHideDuration: 2000,
+    });
   }
 
   useEffect(() => {
     if (isNotFound) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {t('pageEditor.overview.pageNotFound')}
-        </Message>
-      );
+      enqueueSnackbar(t('pageEditor.overview.pageNotFound'), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
     }
   }, [isNotFound, t]);
 
@@ -596,24 +580,26 @@ function PageEditor() {
             state={stateColor}
             stateLabel={tagTitle}
             meta={<LastSavedAt date={pageData?.page?.latest.createdAt} />}
+            statusAction={<AutosaveToggle disabled={isDisabled || isNew} />}
             back={
-              <Link to="/pages">
-                <RIconButton
-                  circle
-                  appearance="subtle"
-                  icon={<MdKeyboardBackspace />}
-                  title={t('back')}
-                  aria-label={t('back')}
-                  onClick={e => {
-                    if (!unsavedChangesDialog()) e.preventDefault();
-                  }}
-                />
-              </Link>
+              <IconButton
+                component={RouterLink}
+                to="/pages"
+                title={t('back')}
+                aria-label={t('back')}
+                onClick={e => {
+                  if (!unsavedChangesDialog()) {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                <MdKeyboardBackspace />
+              </IconButton>
             }
             secondaryActions={
               <>
                 <EditorHeaderButton
-                  appearance="subtle"
+                  variant="text"
                   icon={<MdIntegrationInstructions />}
                   label={t('pageEditor.overview.metadata')}
                   disabled={isDisabled}
@@ -622,9 +608,9 @@ function PageEditor() {
 
                 {!isNew && (
                   <>
-                    <PermissionControl qualifyingPermissions={['CAN_GET_PAGE']}>
+                    <PermissionControl qualifyingPermissions={[CanGetPage.id]}>
                       <EditorHeaderButton
-                        appearance="subtle"
+                        variant="text"
                         icon={<MdHistory />}
                         label={t('versionHistory.title')}
                         disabled={isDisabled}
@@ -638,12 +624,21 @@ function PageEditor() {
                       />
                     </PermissionControl>
 
+                    {publishedUrl && (
+                      <EditorHeaderButton
+                        variant="text"
+                        icon={<MdLink />}
+                        label={t('copyLink.button')}
+                        onClick={() => copyLinkToClipboard(publishedUrl, t)}
+                      />
+                    )}
+
                     {pageData?.page?.draft && pageData?.page?.published && (
                       <PermissionControl
-                        qualifyingPermissions={['CAN_CREATE_PAGE']}
+                        qualifyingPermissions={[CanCreatePage.id]}
                       >
                         <EditorHeaderButton
-                          appearance="subtle"
+                          variant="text"
                           icon={<MdDeleteOutline />}
                           label={t('discardDraft.button')}
                           disabled={isDisabled}
@@ -664,8 +659,7 @@ function PageEditor() {
                   )}
 
                   <EditorHeaderButton
-                    className="actionButton"
-                    appearance={showPreview ? 'ghost' : 'subtle'}
+                    variant="outlined"
                     icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
                     label={
                       showPreview ?
@@ -680,9 +674,9 @@ function PageEditor() {
             }
             primaryActions={
               isNew && createData == null ?
-                <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
+                <PermissionControl qualifyingPermissions={[CanCreatePage.id]}>
                   <EditorHeaderButton
-                    appearance="primary"
+                    variant="contained"
                     icon={<MdSave />}
                     label={t('create')}
                     collapse={false}
@@ -690,9 +684,14 @@ function PageEditor() {
                     onClick={handleSave}
                   />
                 </PermissionControl>
-              : <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
-                  <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+              : <PermissionControl qualifyingPermissions={[CanCreatePage.id]}>
+                  <Badge
+                    variant="dot"
+                    color="warning"
+                    invisible={!hasChanged}
+                  >
                     <EditorHeaderButton
+                      variant="outlined"
                       icon={<MdSave />}
                       label={t('save')}
                       collapse="sm"
@@ -702,17 +701,17 @@ function PageEditor() {
                   </Badge>
 
                   <PermissionControl
-                    qualifyingPermissions={['CAN_PUBLISH_PAGE']}
+                    qualifyingPermissions={[CanPublishPage.id]}
                   >
                     <Badge
-                      className={
-                        pageData?.page?.draft || !pageData?.page?.published ?
-                          'unsaved'
-                        : 'saved'
+                      variant="dot"
+                      color="warning"
+                      invisible={
+                        !pageData?.page?.draft && !!pageData?.page?.published
                       }
                     >
                       <EditorHeaderButton
-                        appearance="primary"
+                        variant="contained"
                         icon={<MdCloudUpload />}
                         label={t('pageEditor.overview.publish')}
                         collapse={false}
@@ -743,15 +742,9 @@ function PageEditor() {
               return jwtData?.createJWTForWebsiteLogin?.token;
             }}
             onSilence={() =>
-              toaster.push(
-                <Message
-                  type="warning"
-                  showIcon
-                  closable
-                >
-                  {t('previewHandshake.notResponding')}
-                </Message>
-              )
+              enqueueSnackbar(t('previewHandshake.notResponding'), {
+                variant: 'warning',
+              })
             }
           />
         )}
@@ -777,17 +770,22 @@ function PageEditor() {
         </EditorContent>
       </EditorTemplate>
 
-      {isLoadingTemplate && (
-        <Loader
-          backdrop
-          vertical
-          content={t('pageEditor.overview.loadingTemplate')}
-        />
-      )}
+      <TemplateLoadingBackdrop
+        open={isLoadingTemplate}
+        label={t('pageEditor.overview.loadingTemplate')}
+      />
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isMetaDrawerOpen}
-        size="sm"
         onClose={() => setMetaDrawerOpen(false)}
       >
         <PageMetadataPanel
@@ -815,9 +813,10 @@ function PageEditor() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={isPublishDialogOpen}
-        size="sm"
+        maxWidth="sm"
         onClose={() => setPublishDialogOpen(false)}
       >
         <PublishPagePanel
@@ -829,7 +828,7 @@ function PageEditor() {
             setPublishDialogOpen(false);
           }}
         />
-      </Modal>
+      </Dialog>
 
       <VersionHistory
         open={isVersionHistoryOpen}
@@ -858,43 +857,45 @@ function PageEditor() {
         blocks={(previewRevision?.blocks ?? []).map(blockForQueryBlock)}
       />
 
-      <MuiDialog
+      <Dialog
         open={isDiscardDialogOpen}
         onClose={() => setDiscardDialogOpen(false)}
       >
-        <MuiDialogTitle>{t('discardDraft.confirm.title')}</MuiDialogTitle>
-        <MuiDialogContent>
-          <MuiDialogContentText>
+        <DialogTitle>{t('discardDraft.confirm.title')}</DialogTitle>
+
+        <DialogContent>
+          <DialogContentText>
             {t('discardDraft.confirm.message')}
-          </MuiDialogContentText>
-        </MuiDialogContent>
-        <MuiDialogActions>
-          <MuiButton onClick={() => setDiscardDialogOpen(false)}>
+          </DialogContentText>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={() => setDiscardDialogOpen(false)}>
             {t('discardDraft.confirm.cancel')}
-          </MuiButton>
-          <MuiButton
+          </Button>
+
+          <Button
             color="error"
             variant="contained"
-            startIcon={<MdDeleteOutline />}
             onClick={() => {
               setDiscardDialogOpen(false);
               handleDiscardDraft();
             }}
           >
             {t('discardDraft.confirm.confirm')}
-          </MuiButton>
-        </MuiDialogActions>
-      </MuiDialog>
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_PAGE',
-  'CAN_GET_PAGES',
-  'CAN_CREATE_PAGE',
-  'CAN_PUBLISH_PAGE',
-  'CAN_DELETE_PAGE',
+  CanGetPage.id,
+  CanGetPages.id,
+  CanCreatePage.id,
+  CanPublishPage.id,
+  CanDeletePage.id,
   CanPreview.id,
 ])(PageEditor);
 export { CheckedPermissionComponent as PageEditor };

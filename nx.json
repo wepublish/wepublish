@@ -21,6 +21,16 @@
         }
       }
     ],
+    "typecheck": [
+      {
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/tsconfig.base.json"
+        ],
+        "cache": true
+      }
+    ],
     "lint": [
       {
         "inputs": [
@@ -61,7 +71,8 @@
         },
         "configurations": {
           "ci": {
-            "coverage": true
+            "coverage": true,
+            "maxWorkers": 1
           }
         }
       }
@@ -122,7 +133,10 @@
       "!{projectRoot}/tsconfig.storybook.json"
     ],
     "sharedGlobals": [
-      "{workspaceRoot}/babel.config.json"
+      "{workspaceRoot}/babel.config.json",
+      "{workspaceRoot}/.github/workflows/lint.yml",
+      "{workspaceRoot}/.github/workflows/test.yml",
+      "{workspaceRoot}/.github/workflows/website-typecheck.yml"
     ]
   },
   "generators": {
@@ -151,6 +165,7 @@
     }
   },
   "defaultProject": "api",
+  "defaultBase": "master",
   "nxCloudAccessToken": "YmQxYTg2ZDgtNDBlNS00MmM1LWI4MjAtZmJkMWUxM2Y1ZTJkfHJlYWQtd3JpdGU=",
   "useInferencePlugins": false,
   "analytics": false,

@@ -1,6 +1,13 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
+import {
   ActionType,
   RecentActionsDocument,
   RecentActionsQuery,
@@ -24,15 +31,8 @@ import {
   MdQueryStats,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  Checkbox,
-  IconButton,
-  Popover,
-  Tooltip,
-  Whisper,
-} from 'rsuite';
 
+import { ClickPopover } from '../../popover';
 import { AVAILABLE_LANG } from '../../utility';
 
 type Action = NonNullable<RecentActionsQuery['actions']>[number];
@@ -49,9 +49,7 @@ type ActivityItem = {
 const ICON_SIZE = 32;
 const TILE_WIDTH = 200;
 const TILE_GAP = 16;
-// Roughly what fits on one line of a tile; longer texts get cut with "…".
 const ONE_LINE = 28;
-// Holding an arrow this long switches from one step to continuous scrolling.
 const HOLD_DELAY_MS = 350;
 const HOLD_SPEED_PX_PER_MS = 0.9;
 
@@ -104,8 +102,6 @@ const FilterList = styled.div`
   min-width: 180px;
 `;
 
-// As tall as the tallest tile, never the whole card: all tiles share that
-// height, with the time at their bottom.
 const Track = styled.ol`
   display: flex;
   align-items: stretch;
@@ -118,12 +114,17 @@ const Track = styled.ol`
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
 
-  /* The timeline line: a background stripe through the icons. "local" makes
-     it span the whole scrollable width - and at least the visible width, even
-     with a single entry. */
   background: linear-gradient(
-      color-mix(in srgb, var(--rs-blue-500, #3498ff) 40%, transparent),
-      color-mix(in srgb, var(--rs-blue-500, #3498ff) 40%, transparent)
+      color-mix(
+        in srgb,
+        ${({ theme }) => theme.vars.palette.primary.main} 40%,
+        transparent
+      ),
+      color-mix(
+        in srgb,
+        ${({ theme }) => theme.vars.palette.primary.main} 40%,
+        transparent
+      )
     )
     0 ${ICON_SIZE / 2 - 1}px / 100% 2px no-repeat;
   background-attachment: local;
@@ -132,7 +133,6 @@ const Track = styled.ol`
 const Entry = styled.li`
   position: relative;
   flex: 0 0 ${TILE_WIDTH}px;
-  /* without these, a long single-line text widens its tile to fit */
   min-width: 0;
   max-width: ${TILE_WIDTH}px;
   display: flex;
@@ -149,10 +149,10 @@ const EntryIcon = styled.span`
   justify-content: center;
   width: ${ICON_SIZE}px;
   height: ${ICON_SIZE}px;
-  border: 2px solid var(--rs-blue-500, #3498ff);
+  border: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
   border-radius: 50%;
-  background: var(--rs-bg-card, #fff);
-  color: var(--rs-blue-500, #3498ff);
+  background: ${({ theme }) => theme.vars.palette.background.paper};
+  color: ${({ theme }) => theme.vars.palette.primary.main};
   font-size: 16px;
 `;
 
@@ -164,19 +164,20 @@ const Tile = styled(Link)`
   gap: 4px;
   min-height: 0;
   padding: 10px 12px;
-  border: 1px solid var(--rs-border-primary);
-  border-radius: var(--rs-radius-lg, 6px);
-  background: var(--rs-bg-card);
-  color: var(--rs-text-primary);
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
+  background: ${({ theme }) => theme.vars.palette.background.paper};
+  color: ${({ theme }) => theme.vars.palette.text.primary};
   font-size: 13px;
   line-height: 1.4;
   overflow: hidden;
+  text-decoration: none;
 
   &:hover,
   &:focus {
-    color: var(--rs-text-primary);
+    color: ${({ theme }) => theme.vars.palette.text.primary};
     text-decoration: none;
-    border-color: var(--rs-blue-500, #3498ff);
+    border-color: ${({ theme }) => theme.vars.palette.primary.main};
   }
 `;
 
@@ -188,10 +189,10 @@ const oneLine = `
 
 const Label = styled.span`
   ${oneLine}
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 
   strong {
-    color: var(--rs-text-primary);
+    color: ${({ theme }) => theme.vars.palette.text.primary};
   }
 `;
 
@@ -202,14 +203,14 @@ const Title = styled.span`
 
 const Excerpt = styled.span`
   ${oneLine}
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   font-style: italic;
 `;
 
 const Time = styled.span`
   ${oneLine}
   margin-top: auto;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   font-size: 12px;
 `;
 
@@ -223,7 +224,7 @@ const TooltipText = styled.span`
 
 const Note = styled.p`
   margin: 0;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const joinNames = (...names: (string | null | undefined)[]) =>
@@ -355,17 +356,12 @@ function ActivityEntry({ item }: { item: ActivityItem }) {
     <Entry>
       <EntryIcon aria-hidden>{item.icon}</EntryIcon>
       {isTrimmable ?
-        <Whisper
+        <Tooltip
           placement="top"
-          trigger={['hover', 'focus']}
-          speaker={
-            <Tooltip>
-              <TooltipText>{fullText}</TooltipText>
-            </Tooltip>
-          }
+          title={<TooltipText>{fullText}</TooltipText>}
         >
           {tile}
-        </Whisper>
+        </Tooltip>
       : tile}
     </Entry>
   );
@@ -384,14 +380,10 @@ export function ActivityFeed() {
     setTypes(next);
     trackRef.current?.scrollTo({ left: 0 });
 
-    try {
-      window.localStorage.setItem(
-        ACTIVITY_FILTER_STORAGE_KEY,
-        JSON.stringify(next)
-      );
-    } catch {
-      // storage unavailable - keep the filter for this visit
-    }
+    window.localStorage.setItem(
+      ACTIVITY_FILTER_STORAGE_KEY,
+      JSON.stringify(next)
+    );
   };
 
   const toggleType = (type: ActionType, shown: boolean) =>
@@ -451,7 +443,6 @@ export function ActivityFeed() {
     }
 
     if (state.scrolling && track) {
-      // let the track snap again and settle on the nearest tile
       track.style.scrollSnapType = '';
       track.style.scrollBehavior = '';
       const step = TILE_WIDTH + TILE_GAP;
@@ -523,66 +514,67 @@ export function ActivityFeed() {
   return (
     <Feed>
       <Navigation>
-        <Whisper
-          trigger="click"
-          placement="bottomEnd"
-          speaker={
-            <Popover>
-              <FilterList>
-                {ACTIVITY_TYPES.map(type => {
-                  const shown = types.includes(type);
+        <ClickPopover
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          trigger={
+            <IconButton
+              size="small"
+              aria-label={t('dashboard.activityFilter')}
+              title={t('dashboard.activityFilter')}
+            >
+              <MdFilterList />
+            </IconButton>
+          }
+        >
+          <FilterList>
+            {ACTIVITY_TYPES.map(type => {
+              const shown = types.includes(type);
 
-                  return (
+              return (
+                <FormControlLabel
+                  control={
                     <Checkbox
                       key={type}
                       checked={shown}
                       disabled={shown && types.length === 1}
-                      onChange={(_, checked) => toggleType(type, checked)}
-                    >
-                      {t(`dashboard.activityTypes.${type}`)}
-                    </Checkbox>
-                  );
-                })}
-                <Button
-                  size="xs"
-                  appearance="link"
-                  disabled={!filtered}
-                  onClick={() => changeTypes(ACTIVITY_TYPES)}
-                >
-                  {t('dashboard.activityFilterAll')}
-                </Button>
-              </FilterList>
-            </Popover>
-          }
-        >
-          <IconButton
-            size="xs"
-            icon={<MdFilterList />}
-            appearance={filtered ? 'primary' : 'default'}
-            aria-label={t('dashboard.activityFilter')}
-            title={t('dashboard.activityFilter')}
-          />
-        </Whisper>
+                      onChange={(_event, checked) => toggleType(type, checked)}
+                    />
+                  }
+                  label={t(`dashboard.activityTypes.${type}`)}
+                />
+              );
+            })}
+            <Button
+              variant="text"
+              size="small"
+              disabled={!filtered}
+              onClick={() => changeTypes(ACTIVITY_TYPES)}
+            >
+              {t('dashboard.activityFilterAll')}
+            </Button>
+          </FilterList>
+        </ClickPopover>
         <IconButton
-          size="xs"
-          icon={<MdChevronLeft />}
+          size="small"
           aria-label={t('dashboard.newerActivity')}
           title={t('dashboard.newerActivity')}
           disabled={edges.start}
           onPointerDown={() => startPress(-1)}
-          // a pointer press is handled on release, keyboard activation here
           onClick={event => event.detail === 0 && scrollByTile(-1)}
-        />
+        >
+          <MdChevronLeft />
+        </IconButton>
         <IconButton
-          size="xs"
-          icon={<MdChevronRight />}
+          size="small"
           aria-label={t('dashboard.olderActivity')}
           title={t('dashboard.olderActivity')}
           disabled={edges.end}
           onPointerDown={() => startPress(1)}
-          // a pointer press is handled on release, keyboard activation here
           onClick={event => event.detail === 0 && scrollByTile(1)}
-        />
+        >
+          <MdChevronRight />
+        </IconButton>
       </Navigation>
 
       {data && !items.length ?

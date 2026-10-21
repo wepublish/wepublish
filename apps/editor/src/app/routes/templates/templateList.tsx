@@ -1,34 +1,25 @@
 import { TypedDocumentNode } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
+import { Button, IconButton } from '@mui/material';
 import {
   ConfirmActionModal,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
-  IconButton,
-  IconButtonCell,
+  DataTable,
+  enqueueSnackbar,
   IconButtonTooltip,
   InfoTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PageTitle,
+  Pagination,
   PermissionControl,
-  Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  IconButton as RIconButton,
-  Message,
-  Pagination,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 export type TemplateRow = { id: string; blockTemplate: { name: string } };
 
@@ -52,16 +43,7 @@ export type TemplateListProps<Data> = {
 
 const onErrorToast = (error: Error) => {
   if (error?.message) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {error?.message}
-      </Message>
-    );
+    enqueueSnackbar(error.message, { variant: 'error' });
   }
 };
 
@@ -84,16 +66,7 @@ export function TemplateList<Data>({
   const [deleteTemplate] = useMutation(deleteDocument, {
     onError: onErrorToast,
     onCompleted: () =>
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.deletedSuccess')}
-        </Message>
-      ),
+      enqueueSnackbar(t('toast.deletedSuccess'), { variant: 'success' }),
   });
 
   const { data, loading, refetch, error } = useQuery(listDocument, {
@@ -111,79 +84,69 @@ export function TemplateList<Data>({
     }
   }, [error]);
 
-  useEffect(() => {
-    refetch({
-      take: limit,
-      skip: (page - 1) * limit,
-    });
-  }, [page, limit, refetch]);
-
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t(`${i18nPrefix}.list.title`)}</h2>
+          <PageTitle>{t(`${i18nPrefix}.list.title`)}</PageTitle>
+
           <InfoTooltip text={t(`${i18nPrefix}.list.info`)} />
         </ListViewHeader>
 
         <PermissionControl qualifyingPermissions={[permissions.create]}>
           <ListViewActions>
-            <Link to={`${basePath}/create`}>
-              <RIconButton
-                appearance="primary"
-                disabled={loading}
-                icon={<MdAdd />}
-              >
-                {t(`${i18nPrefix}.list.newTemplate`)}
-              </RIconButton>
-            </Link>
+            <Button
+              component={RouterLink}
+              to={`${basePath}/create`}
+              variant="contained"
+              startIcon={<MdAdd />}
+              disabled={loading}
+            >
+              {t(`${i18nPrefix}.list.newTemplate`)}
+            </Button>
           </ListViewActions>
         </PermissionControl>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey={`${i18nPrefix}-templates`}
           data={templates?.nodes ?? []}
-        >
-          <Column
-            flexGrow={1}
-            resizable
-          >
-            <HeaderCell>{t(`${i18nPrefix}.list.name`)}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<TemplateRow>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t(`${i18nPrefix}.list.name`),
+              render: rowData => (
                 <Link to={`${basePath}/edit/${rowData.id}`}>
                   {rowData.blockTemplate.name || t(`${i18nPrefix}.list.noName`)}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-          <Column
-            width={100}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell>{t(`${i18nPrefix}.list.action`)}</HeaderCell>
-            <IconButtonCell>
-              {(template: RowDataType<TemplateRow>) => (
+              ),
+            },
+            {
+              id: 'action',
+              label: t(`${i18nPrefix}.list.action`),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: template => (
                 <>
                   <PermissionControl
                     qualifyingPermissions={[permissions.create]}
                   >
                     <IconButtonTooltip caption={t(`${i18nPrefix}.list.copy`)}>
                       <IconButton
-                        icon={<MdContentCopy />}
                         aria-label={t(`${i18nPrefix}.list.copy`)}
-                        circle
-                        size="sm"
+                        size="small"
                         onClick={() =>
                           navigate(
                             `${basePath}/create?copyFrom=${encodeURIComponent(template.id)}`
                           )
                         }
-                      />
+                      >
+                        <MdContentCopy />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
@@ -192,42 +155,29 @@ export function TemplateList<Data>({
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
-                        icon={<MdDelete />}
                         aria-label={t('delete')}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
-                        onClick={() =>
-                          setTemplateDelete(template as TemplateRow)
-                        }
-                      />
+                        color="error"
+                        size="small"
+                        onClick={() => setTemplateDelete(template)}
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                 </>
-              )}
-            </IconButtonCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={templates?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
           }}
+          totalCount={templates?.totalCount ?? 0}
         />
       </TableWrapper>
 

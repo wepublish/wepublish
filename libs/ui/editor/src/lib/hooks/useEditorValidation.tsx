@@ -5,6 +5,8 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useImperativeHandle,
+  useMemo,
   useRef,
 } from 'react';
 
@@ -46,16 +48,27 @@ export function EditorValidationProvider({
     validators.current.delete(id);
   }, []);
 
-  runAllRef.current = () => {
-    const failures: { id: string; summary?: string }[] = [];
-    for (const [id, validator] of validators.current) {
-      const result = validator();
-      if (!result.ok) failures.push({ id, summary: result.summary });
-    }
-    return { ok: failures.length === 0, failures };
-  };
+  useImperativeHandle(
+    runAllRef,
+    () => () => {
+      const failures: { id: string; summary?: string }[] = [];
 
-  const value = useRef<RegistryContextValue>({ register, unregister }).current;
+      for (const [id, validator] of validators.current) {
+        const result = validator();
+        if (!result.ok) {
+          failures.push({ id, summary: result.summary });
+        }
+      }
+
+      return { ok: failures.length === 0, failures };
+    },
+    []
+  );
+
+  const value = useMemo<RegistryContextValue>(
+    () => ({ register, unregister }),
+    [register, unregister]
+  );
 
   return (
     <RegistryContext.Provider value={value}>
@@ -67,10 +80,15 @@ export function EditorValidationProvider({
 export function useRegisterValidator(id: string, validator: Validator) {
   const ctx = useContext(RegistryContext);
   const validatorRef = useRef(validator);
-  validatorRef.current = validator;
 
   useEffect(() => {
-    if (!ctx) return;
+    validatorRef.current = validator;
+  });
+
+  useEffect(() => {
+    if (!ctx) {
+      return;
+    }
     ctx.register(id, () => validatorRef.current());
     return () => ctx.unregister(id);
   }, [id, ctx]);

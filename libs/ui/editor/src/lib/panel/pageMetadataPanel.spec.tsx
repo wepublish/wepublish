@@ -1,89 +1,148 @@
-import '@testing-library/jest-dom/vitest';
-
-import { MockedProvider } from '@apollo/client/testing/react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { fireEvent, render as rtlRender, screen } from '@testing-library/react';
+import { ComponentType, ReactElement } from 'react';
 
 import { PageMetadata, PageMetadataPanel } from './pageMetadataPanel';
 
+// Translate to the raw key so assertions stay deterministic and locale-agnostic.
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
     i18n: { language: 'en' },
   }),
-  Trans: ({ children }: { children?: unknown }) => children,
-  initReactI18next: { type: '3rdParty', init: () => undefined },
+}));
+
+vi.mock('../atoms', async importOriginal => ({
+  ...(await importOriginal<typeof import('../atoms')>()),
+  createCheckedPermissionComponent:
+    () =>
+    <P extends object>(Component: ComponentType<P>) =>
+      Component,
+  useAuthorisation: () => true,
+  SelectTags: () => null,
+  ChooseEditImage: () => null,
 }));
 
 const metadata: PageMetadata = {
-  slug: 'slug',
-  title: 'Title',
-  description: 'Description',
+  slug: 'foo',
+  title: 'Foo',
+  description: '',
   seoTitle: '',
   seoDescription: '',
   tags: [],
   defaultTags: [],
   url: '',
   properties: [],
-  hidden: false,
 };
 
-const renderPanel = (isTemplate?: boolean, onCreateTemplate?: () => void) =>
-  render(
-    <MockedProvider>
-      <PageMetadataPanel
-        value={metadata}
-        isTemplate={isTemplate}
-        onCreateTemplate={onCreateTemplate}
-      />
-    </MockedProvider>
-  );
+const theme = createTheme({ cssVariables: true });
+const render = (ui: ReactElement) =>
+  rtlRender(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+
+const getCheckbox = (key: 'hideHeader' | 'hideFooter') =>
+  screen.getByRole<HTMLInputElement>('checkbox', {
+    name: new RegExp(`^pageEditor\\.panels\\.${key}\\b`),
+  });
 
 describe('PageMetadataPanel', () => {
-  it('should show the slug for pages', () => {
-    renderPanel();
+  it('shows header and footer by default', () => {
+    render(<PageMetadataPanel value={metadata} />);
 
-    expect(screen.getByDisplayValue('slug')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Description')).toBeInTheDocument();
+    expect(getCheckbox('hideHeader').checked).toBe(false);
+    expect(getCheckbox('hideFooter').checked).toBe(false);
   });
 
-  it('should hide the slug for page templates', () => {
-    renderPanel(true);
+  it('reflects a page that hides only the header', () => {
+    render(<PageMetadataPanel value={{ ...metadata, hideHeader: true }} />);
 
-    expect(screen.queryByDisplayValue('slug')).not.toBeInTheDocument();
-    expect(screen.getByDisplayValue('Title')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Description')).toBeInTheDocument();
+    expect(getCheckbox('hideHeader').checked).toBe(true);
+    expect(getCheckbox('hideFooter').checked).toBe(false);
   });
 
-  it('should create a template from the page', () => {
+  it('reflects a page that hides only the footer', () => {
+    render(<PageMetadataPanel value={{ ...metadata, hideFooter: true }} />);
+
+    expect(getCheckbox('hideHeader').checked).toBe(false);
+    expect(getCheckbox('hideFooter').checked).toBe(true);
+  });
+
+  it.each(['hideHeader', 'hideFooter'] as const)(
+    'emits only %s when toggled',
+    key => {
+      const onChange = vi.fn();
+      render(
+        <PageMetadataPanel
+          value={metadata}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(getCheckbox(key));
+
+      expect(onChange).toHaveBeenCalledWith({
+        ...metadata,
+        [key]: true,
+      });
+    }
+  );
+
+  it('shows the slug for pages', () => {
+    render(<PageMetadataPanel value={metadata} />);
+
+    expect(screen.getByDisplayValue('foo')).toBeTruthy();
+  });
+
+  it('hides the slug for page templates', () => {
+    render(
+      <PageMetadataPanel
+        value={metadata}
+        isTemplate
+      />
+    );
+
+    expect(screen.queryByDisplayValue('foo')).toBeNull();
+    expect(screen.getByDisplayValue('Foo')).toBeTruthy();
+  });
+
+  it('creates a template from the page', () => {
     const onCreateTemplate = vi.fn();
-    renderPanel(false, onCreateTemplate);
+    render(
+      <PageMetadataPanel
+        value={metadata}
+        onCreateTemplate={onCreateTemplate}
+      />
+    );
 
     fireEvent.click(
-      screen.getByRole('button', {
-        name: /pageEditor.panels.createTemplate/,
-      })
+      screen.getByRole('button', { name: /pageEditor.panels.createTemplate/ })
     );
 
     expect(onCreateTemplate).toHaveBeenCalled();
   });
 
-  it('should not offer to create a template without a handler', () => {
-    renderPanel(false);
+  it('does not offer to create a template without a handler', () => {
+    render(<PageMetadataPanel value={metadata} />);
 
     expect(
       screen.queryByRole('button', {
         name: /pageEditor.panels.createTemplate/,
       })
-    ).not.toBeInTheDocument();
+    ).toBeNull();
   });
 
-  it('should not offer to create a template from a template', () => {
-    renderPanel(true, vi.fn());
+  it('does not offer to create a template from a template', () => {
+    render(
+      <PageMetadataPanel
+        value={metadata}
+        isTemplate
+        onCreateTemplate={vi.fn()}
+      />
+    );
 
     expect(
       screen.queryByRole('button', {
         name: /pageEditor.panels.createTemplate/,
       })
-    ).not.toBeInTheDocument();
+    ).toBeNull();
   });
 });
