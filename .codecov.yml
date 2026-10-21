@@ -37,6 +37,7 @@ ignore:
   - "config"
   - "deployment"
   - "docker"
+  - "e2e"
   - "helm"
   - "tools"
   - "**/*.stories.tsx"
