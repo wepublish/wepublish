@@ -255,7 +255,7 @@ describe('ArticleEditor copy link', () => {
   });
 
   const renderEditor = () =>
-    render(
+    renderWithTheme(
       <MemoryRouter initialEntries={['/articles/edit/article-1']}>
         <Routes>
           <Route
