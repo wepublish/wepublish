@@ -14,7 +14,11 @@ import {
 import { CreatePeerInput, Peer, UpdatePeerInput } from './peer.model';
 import { PeerService } from './peer.service';
 import { RemotePeerProfile } from './peer-profile.model';
-import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import {
+  hasPermission,
+  Permissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
 import {
   CanCreatePeer,
   CanDeletePeer,
@@ -79,7 +83,7 @@ export class PeerResolver {
     @CurrentUser() user: UserSession | undefined,
     @Parent() { token }: Peer
   ) {
-    if (hasPermission(CanGetPeer, user?.roles ?? [])) {
+    if (hasPermission(CanGetPeer, permissionsOf(user))) {
       return token;
     }
 

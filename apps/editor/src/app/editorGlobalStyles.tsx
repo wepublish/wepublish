@@ -11,6 +11,7 @@ const lightTokens = css`
   --wep-nav-hover-bg: rgb(16 24 40 / 5%);
   --wep-nav-active-bg: rgb(52 152 255 / 12%);
   --wep-nav-active-text: #1675e0;
+  --wep-nav-active-ring: #1a7ee0;
   --wep-state-pending: #f8def2;
   --wep-state-published: #e1f8de;
   --wep-state-draft: #f8efde;
@@ -34,6 +35,7 @@ const darkTokens = css`
   --wep-nav-hover-bg: rgb(255 255 255 / 6%);
   --wep-nav-active-bg: rgb(52 152 255 / 18%);
   --wep-nav-active-text: #80c3ff;
+  --wep-nav-active-ring: #3498ff;
   --wep-state-pending: #46283f;
   --wep-state-published: #23402a;
   --wep-state-draft: #463a22;

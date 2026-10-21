@@ -81,6 +81,11 @@
         "confirm": "Restaurer comme brouillon"
       }
     },
+    "copyLink": {
+      "button": "Copier le lien",
+      "copied": "Lien copié dans le presse-papiers",
+      "failed": "Le lien n'a pas pu être copié"
+    },
     "discardDraft": {
       "button": "Abandonner le brouillon",
       "success": "Brouillon abandonné — retour à la version publiée",
@@ -1618,6 +1623,7 @@
       "subscriptions": "Abonnements",
       "subscriptionSettings": "E-mails automatiques",
       "tokens": "Tokens",
+      "apiTokens": "Clés API",
       "userConsents": "Consentements des utilisateur·trice·s",
       "userRoles": "Rôles des utilisateur·trice·s",
       "users": "Utilisateur·trice·s",
@@ -1747,6 +1753,10 @@
         "value": "Valeur",
         "slugInfo": "La dernière partie de l’adresse web de la page, p.ex. « a-propos ». Utilisez uniquement des minuscules, des chiffres et des tirets. Une modification ultérieure rend les liens existants invalides.",
         "hiddenInfo": "Les pages masquées n’apparaissent pas dans les listes automatiques du site, mais restent accessibles via leur lien direct.",
+        "hideHeader": "Masquer l’en-tête",
+        "hideHeaderInfo": "Masque l’en-tête du site sur cette page, p.ex. pour les landing pages.",
+        "hideFooter": "Masquer le pied de page",
+        "hideFooterInfo": "Masque le pied de page du site sur cette page, p.ex. pour les landing pages.",
         "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
       }
     },
@@ -1825,6 +1835,12 @@
     },
     "peerList": {
       "overview": {
+        "status": "Statut",
+        "active": "Actif",
+        "disabled": "Désactivé",
+        "name": "Nom",
+        "hostURL": "URL de l’API",
+        "website": "Site web",
         "disable": "Désactiver",
         "editProfile": "Modifier le profil",
         "enable": "Activer",
@@ -4124,6 +4140,277 @@
       "socialMediaDescriptionFallback": "Utilise sinon la description SEO",
       "socialMediaImageFallback": "Utilise sinon l'image de l'article.",
       "socialMediaTitleFallback": "Utilise sinon le titre SEO"
+    },
+    "commandPalette": {
+      "title": "Palette de commandes",
+      "placeholder": "Où voulez-vous aller ?",
+      "empty": "Aucun résultat pour",
+      "groups": {
+        "favourite": "Favoris",
+        "navigate": "Aller à",
+        "create": "Créer",
+        "account": "Compte"
+      },
+      "hints": {
+        "move": "pour naviguer",
+        "select": "pour ouvrir",
+        "close": "pour fermer"
+      },
+      "pages": {
+        "peerProfile": "Profil de peering"
+      },
+      "create": {
+        "article": "Créer un article",
+        "articleTag": "Créer un tag d'article",
+        "paywall": "Créer un paywall",
+        "page": "Créer une page",
+        "pageTag": "Créer un tag de page",
+        "crowdfunding": "Créer un crowdfunding",
+        "blockTemplate": "Créer un modèle de bloc",
+        "commentTag": "Créer un tag de commentaire",
+        "event": "Créer un événement",
+        "eventTag": "Créer un tag d'événement",
+        "image": "Téléverser une image",
+        "document": "Téléverser un document",
+        "navigation": "Créer une navigation",
+        "banner": "Créer une bannière",
+        "author": "Créer un auteur",
+        "authorTag": "Créer un tag d'auteur",
+        "user": "Créer un utilisateur",
+        "subscription": "Créer un abonnement",
+        "consent": "Créer un consentement",
+        "userConsent": "Créer un consentement utilisateur",
+        "mailTemplate": "Créer un modèle d'e-mail",
+        "memberPlan": "Créer un plan d'abonnement",
+        "paymentMethod": "Créer un moyen de paiement",
+        "discountCode": "Créer un code de réduction",
+        "goodie": "Créer un goodie",
+        "peer": "Créer un peer",
+        "userRole": "Créer un rôle utilisateur",
+        "token": "Générer un token",
+        "apiToken": "Générer une clé API"
+      },
+      "trigger": "Rechercher ou aller à…",
+      "keys": {
+        "escape": "échap"
+      }
+    },
+    "apiTokenList": {
+      "overview": {
+        "apiTokens": "Clés API",
+        "apiTokensInfo": "Une clé API permet à un script ou à un autre système d'utiliser l'API sans se connecter en tant que personne. Une clé ne porte que les droits que vous lui donnez.",
+        "generateToken": "Créer une clé API",
+        "name": "Nom",
+        "prefix": "Clé",
+        "scopes": "Droits",
+        "scopeCount_one": "{{count}} droit",
+        "scopeCount_other": "{{count}} droits",
+        "lastUsed": "Dernière utilisation",
+        "never": "Jamais utilisée",
+        "status": "Statut",
+        "active": "Active",
+        "revoked": "Révoquée",
+        "revoke": "Révoquer",
+        "lastUsedDate": "{{lastUsedDate, ccc PP p}}",
+        "expires": "Expire le",
+        "expired": "Expirée",
+        "expiresDate": "{{expiresDate, ccc PP p}}",
+        "owner": "Propriétaire",
+        "ownerUnknown": "Personne supprimée",
+        "filterByOwner": "Filtrer par propriétaire",
+        "anyStatus": "Tout statut"
+      },
+      "panels": {
+        "generateToken": "Créer une clé API",
+        "generate": "Créer",
+        "close": "Fermer",
+        "name": "Nom",
+        "scopes": "Droits",
+        "scopesHelp": "Vous ne pouvez accorder que les droits que vous possédez vous-même.",
+        "creationSuccess": "Votre clé API a été créée.",
+        "copy": "Copier la clé",
+        "copied": "Clé copiée",
+        "tokenWarning": "Copiez cette clé maintenant. Elle n'est affichée qu'une fois et ne peut pas être récupérée — si vous la perdez, créez-en une nouvelle.",
+        "revokeToken": "Révoquer la clé API",
+        "revokeTokenText": "Révoquer « {{name}} » ? Tout ce qui utilise cette clé cessera immédiatement de fonctionner.",
+        "cancel": "Annuler",
+        "confirm": "Révoquer",
+        "noScopes": "Choisissez au moins une autorisation.",
+        "expiresAt": "Expire le",
+        "expiresAtHelp": "Trois ans au maximum à partir d’aujourd’hui.",
+        "expiresInThePast": "Cette date est déjà passée.",
+        "in30Days": "30 jours",
+        "in90Days": "90 jours",
+        "inAYear": "Un an",
+        "in3Years": "3 ans",
+        "expiresRequired": "Choisissez une date. Une clé doit expirer.",
+        "expiresTooLate": "Une clé ne peut pas durer plus de trois ans.",
+        "longLivedWarning": "Une clé valable plus d’un an n’est pas recommandée. Plus elle existe longtemps, plus une clé divulguée reste utilisable."
+      }
+    },
+    "newsletter": {
+      "blocks": {
+        "button": {
+          "href": "Cible",
+          "label": "Bouton",
+          "text": "Libellé"
+        },
+        "condition": "Contenu dynamique (facultatif)",
+        "divider": {
+          "label": "Séparateur"
+        },
+        "footer": {
+          "label": "Pied de page",
+          "legal": "Mentions obligatoires (lien de désinscription et adresse)",
+          "lines": "Mentions légales : texte",
+          "title": "Mentions légales : titre"
+        },
+        "gutter": {
+          "article": "Article ({{size}})",
+          "intro": "Intro ({{size}})",
+          "label": "Retrait",
+          "none": "Aucun ({{size}})"
+        },
+        "heading": {
+          "label": "Titre",
+          "text": "Titre"
+        },
+        "image": {
+          "alt": "Texte alternatif",
+          "caption": "Légende (facultatif)",
+          "href": "Lien vers (facultatif)",
+          "image": "Image",
+          "label": "Image"
+        },
+        "meta": {
+          "label": "Ligne d’en-tête (libellé / date)",
+          "left": "Gauche",
+          "right": "Droite"
+        },
+        "panel": {
+          "image": "Image à gauche (facultatif)",
+          "label": "Encadré",
+          "linkHref": "Cible du lien (facultatif)",
+          "linkLabel": "Texte du lien (facultatif)",
+          "title": "Titre"
+        },
+        "preheader": "Texte d’aperçu (affiché à côté de l’objet)",
+        "rubric": {
+          "label": "Barre de rubrique",
+          "name": "Rubrique"
+        },
+        "teaser": {
+          "allTags": "Tous les tags",
+          "article": "Article",
+          "big": "Grand (avec image)",
+          "count": "{{count}} sur {{total}} articles",
+          "label": "Teaser d’article",
+          "pick": "Choisir un article …",
+          "short": "Court",
+          "tag": "Tag",
+          "variant": "Présentation"
+        },
+        "text": {
+          "body": "Texte",
+          "label": "Bloc de texte"
+        }
+      },
+      "categories": {
+        "articles": "Articles",
+        "content": "Contenu",
+        "footer": "Pied de page",
+        "header": "En-tête"
+      },
+      "condition": {
+        "always": "Toujours afficher (aucune condition)",
+        "evaluatedAtSend": "Mailchimp n’évalue la condition qu’à l’envoi. Le bloc reste visible dans l’éditeur, l’aperçu et le brouillon Mailchimp.",
+        "interests": "Groupes d’intérêt",
+        "is": "est",
+        "noValue": "Sans valeur, aucune condition ne s’applique — le bloc est envoyé à tous les destinataires.",
+        "not": "n'est pas",
+        "nothingToCompare": "L’audience Mailchimp n’a ni champs de contact ni groupes d’intérêt propres — aucune condition n’est possible.",
+        "pickGroup": "Choisir un groupe …",
+        "stored": "Enregistré dans le document",
+        "value": "Valeur"
+      },
+      "editor": {
+        "back": "Retour à l’aperçu général",
+        "createdAt": "Campagne créée à {{time}}.",
+        "loading": "Chargement …",
+        "notPushed": "Pas transféré vers Mailchimp",
+        "notSaved": "Non enregistré",
+        "openInMailchimp": "Ouvrir dans Mailchimp",
+        "pickImage": "Choisir une image de la médiathèque ({{alt}})",
+        "preview": "Aperçu",
+        "publishing": "Transfert vers Mailchimp …",
+        "pushed": "Transféré vers Mailchimp",
+        "save": "Enregistrer",
+        "savedAt": "Enregistré à {{time}}.",
+        "savedNotSynced": "Enregistré, mais pas transféré vers Mailchimp : {{reason}}",
+        "saving": "Enregistrement …",
+        "unknownBlock": "Bloc inconnu : {{type}}",
+        "updatedAt": "Campagne mise à jour à {{time}}."
+      },
+      "list": {
+        "actions": "Actions",
+        "archive": "Archiver",
+        "unarchive": "Restaurer",
+        "showArchived": "Afficher les archives",
+        "archived": "Archivé",
+        "blocks": "Blocs",
+        "createNew": "Nouveau numéro",
+        "duplicate": "Dupliquer",
+        "mailchimp": "Mailchimp",
+        "modified": "Dernière modification",
+        "name": "Titre",
+        "openDraft": "Brouillon Mailchimp",
+        "title": "Newsletters",
+        "titlePlaceholder": "Titre du numéro, p. ex. Newsletter 21.8.26"
+      },
+      "mergeTags": {
+        "fields": "Champs de contact",
+        "system": "Balises système"
+      },
+      "navbar": "Newsletter",
+      "prose": {
+        "apply": "Appliquer",
+        "bold": "G",
+        "boldTitle": "Gras (Ctrl/Cmd+B)",
+        "hint": "Entrée commence un nouveau paragraphe. Les balises de fusion ne sont remplacées que par Mailchimp — l’éditeur et l’aperçu affichent la balise elle-même.",
+        "link": "Lien",
+        "list": "Liste",
+        "listTitle": "Liste à puces",
+        "loadingTags": "Chargement des balises …",
+        "mergeTag": "Balise de fusion",
+        "mergeTagTitle": "Insérer une balise de fusion Mailchimp",
+        "noTag": "Aucune balise trouvée.",
+        "remove": "Retirer",
+        "searchTag": "Rechercher une balise …"
+      },
+      "report": {
+        "clipped": "Gmail tronque ce numéro et cache la fin — mentions légales, lien de désinscription et adresse — derrière «Message tronqué».",
+        "heading": "Vérification",
+        "measuring": "Calcul de la taille …",
+        "missingArticles_one": "{{count}} article n’est plus disponible ({{ids}}). Le transfert vers Mailchimp est refusé tant que le teaser n’est pas remplacé ou supprimé.",
+        "missingArticles_other": "{{count}} articles ne sont plus disponibles ({{ids}}). Le transfert vers Mailchimp est refusé tant que les teasers ne sont pas remplacés ou supprimés.",
+        "missingFooter": "Il manque {{missing}} dans le pied de page. Mailchimp refuse d’envoyer une campagne sans cette mention.",
+        "nearLimit": "Proche de la limite. L’envoi ajoute du poids : Mailchimp remplace chaque balise de fusion et chaque lien par une adresse de suivi plus longue.",
+        "ok": "tout est en ordre",
+        "problems_one": "{{count}} problème",
+        "problems_other": "{{count}} problèmes",
+        "room": "Encore {{size}} avant que Gmail ne tronque.",
+        "size": "{{size}} sur {{limit}} ({{percent}} %)",
+        "sizeFailed": "La taille n’a pas pu être calculée : {{error}}",
+        "stale": "dernière version enregistrée",
+        "unsaved": "Les modifications depuis le dernier enregistrement ne sont pas comptées — enregistrer recalcule.",
+        "warnings_one": "{{count}} remarque",
+        "warnings_other": "{{count}} remarques"
+      },
+      "settings": {
+        "heading": "Paramètres",
+        "title": "Titre",
+        "titleHint": "Sert aussi d’objet au brouillon Mailchimp. Pris en compte à l’enregistrement."
+      }
     }
   }
 }

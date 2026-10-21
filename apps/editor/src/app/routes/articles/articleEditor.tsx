@@ -87,11 +87,13 @@ import {
   MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
+  MdLink,
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
+import { copyLinkToClipboard } from '../../copyLink';
 import { AutosaveToggle } from '../../autosaveToggle';
 import { LastSavedAt } from '../../lastSavedAt';
 import {
@@ -346,6 +348,8 @@ function ArticleEditor() {
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = articleData?.article?.previewUrl;
+  const publishedUrl =
+    articleData?.article?.published ? articleData.article.url : undefined;
   const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
   const showPreview = isPreviewOpen && !isPreviewDisabled;
 
@@ -855,6 +859,15 @@ function ArticleEditor() {
                         }}
                       />
                     </PermissionControl>
+
+                    {publishedUrl && (
+                      <EditorHeaderButton
+                        variant="text"
+                        icon={<MdLink />}
+                        label={t('copyLink.button')}
+                        onClick={() => copyLinkToClipboard(publishedUrl, t)}
+                      />
+                    )}
 
                     {articleData?.article?.draft &&
                       articleData?.article?.published && (
