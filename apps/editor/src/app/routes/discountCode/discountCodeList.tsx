@@ -33,6 +33,7 @@ import {
   TableWrapper,
   useAuthorisation,
   useListViewState,
+  useTableExportQuery,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
@@ -61,6 +62,14 @@ function DiscountCodeList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
+  const exportDiscountCodes = useTableExportQuery(
+    DiscountCodeListDocument,
+    {
+      sort: sortField ? (sortField as DiscountCodesort) : undefined,
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    },
+    data => data.discountCodes
+  );
   const [deleteDiscountCode] = useMutation(DeleteDiscountCodeDocument, {
     onCompleted() {
       refetch();
@@ -97,6 +106,8 @@ function DiscountCodeList() {
       <TableWrapper>
         <DataTable
           storageKey="discount-codes"
+          exportRows={exportDiscountCodes}
+          exportTotalCount={data?.discountCodes?.totalCount ?? 0}
           data={data?.discountCodes.nodes ?? []}
           loading={loading}
           sortColumn={sortField}
@@ -123,6 +134,9 @@ function DiscountCodeList() {
                 ) ?
                   `✅`
                 : `❌`,
+              exportValue: rowData =>
+                new Date() > new Date(rowData.validFrom) &&
+                new Date(rowData.validTo) > new Date(),
             },
             {
               id: 'code',
@@ -134,12 +148,14 @@ function DiscountCodeList() {
                   {rowData.code.toUpperCase()}
                 </Link>
               ),
+              exportValue: rowData => rowData.code.toUpperCase(),
             },
             {
               id: 'discountpercent',
               label: t('discountCode.overview.discountPercent'),
               width: 100,
               render: rowData => `${rowData.discountPercent}%`,
+              exportValue: rowData => rowData.discountPercent,
             },
             {
               id: 'usage',
@@ -157,6 +173,11 @@ function DiscountCodeList() {
 
                 return <Link to={`usage/${rowData.id}`}>{usage}</Link>;
               },
+              exportValue: rowData =>
+                t('discountCode.overview.usageValue', {
+                  total: rowData.usageCount,
+                  paid: rowData.paidUsageCount,
+                }),
             },
             {
               id: 'memberplan',
@@ -170,12 +191,14 @@ function DiscountCodeList() {
               width: 200,
               render: rowData =>
                 `${new Date(rowData.validFrom).toDateString()}`,
+              exportValue: rowData => new Date(rowData.validFrom),
             },
             {
               id: 'validto',
               label: t('discountCode.overview.validTo'),
               width: 200,
               render: rowData => `${new Date(rowData.validTo).toDateString()}`,
+              exportValue: rowData => new Date(rowData.validTo),
             },
             {
               id: 'action',

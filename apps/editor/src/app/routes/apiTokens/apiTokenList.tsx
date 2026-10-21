@@ -43,6 +43,7 @@ import {
   useAuthorisation,
   useListViewState,
   UserSearch,
+  useTableExportQuery,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -88,6 +89,15 @@ function ApiTokenList() {
       status: status || undefined,
     },
   });
+
+  const exportApiTokens = useTableExportQuery(
+    ApiTokenListDocument,
+    {
+      createdById: owner?.id,
+      status: status || undefined,
+    },
+    data => data.apiTokens
+  );
 
   const [revokeApiToken, { loading: isRevoking, error: revokeError }] =
     useMutation(RevokeApiTokenDocument, {
@@ -184,6 +194,8 @@ function ApiTokenList() {
             setStatus('');
             setActivePage(1);
           }}
+          exportRows={exportApiTokens}
+          exportTotalCount={data?.apiTokens.totalCount ?? 0}
           data={data?.apiTokens.nodes ?? []}
           loading={isLoading}
           columns={[
@@ -211,6 +223,10 @@ function ApiTokenList() {
                     color="success"
                     label={t('apiTokenList.overview.active')}
                   />,
+              exportValue: row =>
+                row.revokedAt ? t('apiTokenList.overview.revoked')
+                : hasExpired(row.expiresAt) ? t('apiTokenList.overview.expired')
+                : t('apiTokenList.overview.active'),
             },
             {
               id: 'name',
@@ -226,6 +242,7 @@ function ApiTokenList() {
               width: 160,
               align: 'left',
               render: row => <code>{row.prefix}…</code>,
+              exportValue: false,
             },
             {
               id: 'scopes',
@@ -247,6 +264,7 @@ function ApiTokenList() {
                   </Stack>
                 </Tooltip>
               ),
+              exportValue: row => row.scopes.join(', '),
             },
             ...(seesEveryKey ?
               [
@@ -272,6 +290,8 @@ function ApiTokenList() {
                     lastUsedDate: new Date(row.lastUsedAt),
                   })
                 : never,
+              exportValue: row =>
+                row.lastUsedAt ? new Date(row.lastUsedAt) : null,
             },
             {
               id: 'expiresAt',
@@ -282,6 +302,8 @@ function ApiTokenList() {
                 t('apiTokenList.overview.expiresDate', {
                   expiresDate: new Date(row.expiresAt),
                 }),
+              exportValue: row =>
+                row.expiresAt ? new Date(row.expiresAt) : null,
             },
             {
               id: 'action',

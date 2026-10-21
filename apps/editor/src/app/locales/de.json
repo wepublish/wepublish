@@ -4116,6 +4116,19 @@
       "reload": "Editor neu laden"
     },
     "listView": {
+      "export": {
+        "download": "Herunterladen",
+        "csv": "CSV (.csv)",
+        "xlsx": "Excel (.xlsx)",
+        "scope": {
+          "title": "Was soll heruntergeladen werden?",
+          "page": "Nur diese Seite ({{count}} Einträge)",
+          "all": "Alle {{count}} Einträge"
+        },
+        "largeWarning": "{{count}} Einträge zu laden kann eine Weile dauern und ergibt eine grosse Datei.",
+        "confirm": "Herunterladen",
+        "cancel": "Abbrechen"
+      },
       "table": {
         "empty": "Nichts vorhanden"
       },

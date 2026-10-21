@@ -24,6 +24,7 @@ const { mutationFor } = vi.hoisted(() => {
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
+  useApolloClient: () => ({ query: vi.fn() }),
   useLazyQuery: () => [vi.fn(), { data: undefined }],
   useMutation: (document: unknown) => [
     mutationFor(document),

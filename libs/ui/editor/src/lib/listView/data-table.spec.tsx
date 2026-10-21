@@ -1,7 +1,24 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 
 import { DataTable, DataTableColumn } from './data-table';
+
+const { downloadTable } = vi.hoisted(() => ({
+  downloadTable: vi.fn<(typeof import('./table-export'))['downloadTable']>(
+    async () => undefined
+  ),
+}));
+
+vi.mock('./table-export', async importOriginal => ({
+  ...(await importOriginal<typeof import('./table-export')>()),
+  downloadTable,
+}));
 
 const theme = createTheme({ cssVariables: true });
 
@@ -85,6 +102,28 @@ describe('DataTable', () => {
     renderTable({ loading: true, data: [] });
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
+  });
+
+  it('keeps the loading indicator in view when the columns overflow sideways', () => {
+    renderTable({ loading: true, data: [] });
+
+    const indicator = screen.getByRole('progressbar');
+    const state = indicator.closest('[data-table-state]');
+
+    expect(screen.getByRole('table')).not.toContainElement(indicator);
+    expect(state).toHaveStyle({ position: 'sticky', left: '0px' });
+  });
+
+  it('keeps the empty message in view when the columns overflow sideways', () => {
+    renderTable({ data: [], emptyMessage: 'No articles yet' });
+
+    const message = screen.getByText('No articles yet');
+
+    expect(screen.getByRole('table')).not.toContainElement(message);
+    expect(message.closest('[data-table-state]')).toHaveStyle({
+      position: 'sticky',
+      left: '0px',
+    });
   });
 
   it('tells the user when there is nothing to show', () => {
@@ -985,5 +1024,171 @@ describe('DataTable filters', () => {
     expect(
       screen.queryByRole('button', { name: /filterableList.filter.label/ })
     ).not.toBeInTheDocument();
+  });
+});
+
+describe('DataTable export', () => {
+  beforeEach(() => {
+    downloadTable.mockClear();
+  });
+
+  const openExport = () =>
+    fireEvent.click(
+      screen.getByRole('button', { name: /listView.export.download/ })
+    );
+
+  it('offers no download to a table that cannot be exported', () => {
+    renderTable();
+
+    expect(
+      screen.queryByRole('button', { name: /listView.export.download/ })
+    ).not.toBeInTheDocument();
+  });
+
+  it('downloads every row the list hands over, not just the page', async () => {
+    const everything: Row[] = [
+      ...rows,
+      { id: '3', title: 'Gamma', author: 'Linus' },
+    ];
+    const exportRows = vi.fn(async () => everything);
+    renderTable({ exportRows, exportFilename: 'articles' });
+
+    openExport();
+    fireEvent.click(
+      screen.getByRole('menuitem', { name: /listView.export.csv/ })
+    );
+
+    await waitFor(() => expect(downloadTable).toHaveBeenCalledTimes(1));
+
+    const [{ format, rows: exported, columns: exportedColumns, filename }] =
+      downloadTable.mock.calls[0];
+
+    expect(format).toBe('csv');
+    expect(exported).toEqual(everything);
+    expect(filename).toMatch(/^articles-\d{4}-\d{2}-\d{2}$/);
+    expect(
+      exportedColumns.map((column: { header: string }) => column.header)
+    ).toEqual(['Title', 'Author']);
+  });
+
+  it('exports only the columns the user can see', async () => {
+    renderTable({
+      exportRows: async () => rows,
+      hiddenColumns: ['author'],
+    });
+
+    openExport();
+    fireEvent.click(
+      screen.getByRole('menuitem', { name: /listView.export.xlsx/ })
+    );
+
+    await waitFor(() => expect(downloadTable).toHaveBeenCalledTimes(1));
+
+    const [{ format, columns: exportedColumns }] = downloadTable.mock.calls[0];
+
+    expect(format).toBe('xlsx');
+    expect(
+      exportedColumns.map((column: { header: string }) => column.header)
+    ).toEqual(['Title']);
+  });
+});
+
+describe('DataTable export scope', () => {
+  beforeEach(() => {
+    downloadTable.mockClear();
+  });
+
+  const chooseCsv = () => {
+    fireEvent.click(
+      screen.getByRole('button', { name: /listView.export.download/ })
+    );
+    fireEvent.click(
+      screen.getByRole('menuitem', { name: /listView.export.csv/ })
+    );
+  };
+
+  it('asks whether to download the page or everything when there are more rows', () => {
+    renderTable({ exportRows: vi.fn(), exportTotalCount: 40 });
+
+    chooseCsv();
+
+    expect(
+      screen.getByRole('radio', { name: /listView.export.scope.page/ })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('radio', { name: /listView.export.scope.all/ })
+    ).toBeChecked();
+    expect(downloadTable).not.toHaveBeenCalled();
+  });
+
+  it('downloads only the rows on screen when the user picks this page', async () => {
+    const exportRows = vi.fn();
+    renderTable({ exportRows, exportTotalCount: 40 });
+
+    chooseCsv();
+    fireEvent.click(
+      screen.getByRole('radio', { name: /listView.export.scope.page/ })
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'listView.export.confirm' })
+    );
+
+    await waitFor(() => expect(downloadTable).toHaveBeenCalledTimes(1));
+    expect(downloadTable.mock.calls[0][0].rows).toEqual(rows);
+    expect(exportRows).not.toHaveBeenCalled();
+  });
+
+  it('loads every row when the user picks everything', async () => {
+    const everything = [...rows, { id: '3', title: 'Gamma', author: 'Linus' }];
+    renderTable({
+      exportRows: vi.fn(async () => everything),
+      exportTotalCount: 3,
+    });
+
+    chooseCsv();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'listView.export.confirm' })
+    );
+
+    await waitFor(() => expect(downloadTable).toHaveBeenCalledTimes(1));
+    expect(downloadTable.mock.calls[0][0].rows).toEqual(everything);
+  });
+
+  it('warns before loading more than a thousand entries', () => {
+    renderTable({ exportRows: vi.fn(), exportTotalCount: 1001 });
+
+    chooseCsv();
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'listView.export.largeWarning'
+    );
+  });
+
+  it('does not warn about a thousand entries or fewer', () => {
+    renderTable({ exportRows: vi.fn(), exportTotalCount: 1000 });
+
+    chooseCsv();
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('drops the warning once the user settles for this page', () => {
+    renderTable({ exportRows: vi.fn(), exportTotalCount: 5000 });
+
+    chooseCsv();
+    fireEvent.click(
+      screen.getByRole('radio', { name: /listView.export.scope.page/ })
+    );
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('skips the question when the page already holds every row', async () => {
+    renderTable({ exportRows: async () => rows, exportTotalCount: 2 });
+
+    chooseCsv();
+
+    await waitFor(() => expect(downloadTable).toHaveBeenCalledTimes(1));
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
   });
 });

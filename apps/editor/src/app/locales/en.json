@@ -4116,6 +4116,19 @@
       "reload": "Reload the editor"
     },
     "listView": {
+      "export": {
+        "download": "Download",
+        "csv": "CSV (.csv)",
+        "xlsx": "Excel (.xlsx)",
+        "scope": {
+          "title": "What should be downloaded?",
+          "page": "Only this page ({{count}} entries)",
+          "all": "All {{count}} entries"
+        },
+        "largeWarning": "Loading {{count}} entries can take a while and makes a large file.",
+        "confirm": "Download",
+        "cancel": "Cancel"
+      },
       "table": {
         "empty": "Nothing to show"
       },
