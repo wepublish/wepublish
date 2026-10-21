@@ -458,6 +458,92 @@ describe('MailchimpMailProvider', () => {
     });
   });
 
+  describe('listSuppressions', () => {
+    const reject = (overrides: Record<string, unknown> = {}) => ({
+      email: 'Dead@Example.com',
+      reason: 'hard-bounce',
+      detail: 'smtp;550 5.1.1 user unknown',
+      created_at: '2026-10-20 10:15:00',
+      last_event_at: '2026-10-20 10:15:00',
+      expires_at: '2026-11-20 10:15:00',
+      expired: false,
+      ...overrides,
+    });
+
+    it('asks for the whole denylist, expired entries included', async () => {
+      let sentBody: any;
+      const scope = nock(MANDRILL)
+        .post('/api/1.0/rejects/list', body => {
+          sentBody = body;
+
+          return true;
+        })
+        .reply(200, []);
+
+      await (await makeProvider()).listSuppressions();
+
+      expect(scope.isDone()).toBeTruthy();
+      expect(sentBody.include_expired).toBe(true);
+    });
+
+    it('reads a denylisted address as evidence about it, dated when it was listed', async () => {
+      nock(MANDRILL).post('/api/1.0/rejects/list').reply(200, [reject()]);
+
+      await expect(
+        (await makeProvider()).listSuppressions()
+      ).resolves.toEqual([
+        {
+          type: EmailQualityEventType.hardBounce,
+          email: 'dead@example.com',
+          detail: 'smtp;550 5.1.1 user unknown',
+          occurredAt: new Date('2026-10-20T10:15:00Z'),
+          providerEventId:
+            'mailchimp-reject:dead@example.com:2026-10-20 10:15:00',
+        },
+      ]);
+    });
+
+    it.each([
+      ['hard-bounce', EmailQualityEventType.hardBounce],
+      ['invalid', EmailQualityEventType.invalid],
+      ['spam', EmailQualityEventType.spamComplaint],
+      ['unsub', EmailQualityEventType.unsubscribed],
+      ['custom', EmailQualityEventType.blocked],
+    ])('maps the reason %s', async (reason, type) => {
+      nock(MANDRILL)
+        .post('/api/1.0/rejects/list')
+        .reply(200, [reject({ reason })]);
+
+      const [signal] = await (await makeProvider()).listSuppressions();
+
+      expect(signal.type).toBe(type);
+    });
+
+    // A soft bounce is temporary; the other reasons describe the account.
+    it.each(['soft-bounce', 'invalid-sender', 'rule', 'something-new'])(
+      'says nothing about an address listed for %s',
+      async reason => {
+        nock(MANDRILL)
+          .post('/api/1.0/rejects/list')
+          .reply(200, [reject({ reason })]);
+
+        await expect(
+          (await makeProvider()).listSuppressions()
+        ).resolves.toEqual([]);
+      }
+    );
+
+    it('fails loudly when the provider rejects the request', async () => {
+      nock(MANDRILL)
+        .post('/api/1.0/rejects/list')
+        .reply(500, { message: 'Invalid_Key' });
+
+      await expect(
+        (await makeProvider()).listSuppressions()
+      ).rejects.toBeInstanceOf(MailProviderError);
+    });
+  });
+
   describe('webhook', () => {
     const url = 'https://api.example.com/v1/mail-webhook/mailchimp';
     const body = {

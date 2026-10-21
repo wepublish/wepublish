@@ -5,6 +5,7 @@ import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { NIGHT_CLAIM_MS, PeriodicJobService } from './periodic-job.service';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
 import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
+import { SuppressionSyncService } from '../mail-send/suppression-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
 import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.service';
 
@@ -81,6 +82,10 @@ export class PeriodicJobExecutor {
     // bounce should count tonight, not tomorrow.
     await this.runStep('Mail log sync', MailLogSyncService, service =>
       service.syncOpenStates(NIGHTLY_MAIL_LOG_SYNC_LIMIT)
+    );
+    // The addresses the provider refuses for any mail, ours or not.
+    await this.runStep('Suppression sync', SuppressionSyncService, service =>
+      service.syncSuppressions()
     );
     await this.runStep('Email quality', EmailQualityService, service =>
       service.recomputeAll()

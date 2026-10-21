@@ -2,6 +2,7 @@ import { MailProviderType, PrismaClient } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import bodyParser from 'body-parser';
 import { BaseMailProvider } from './base-mail-provider';
+import { BrevoMailProvider } from './brevo-mail-provider';
 import { LogMailProvider } from './log-mail-provider';
 import { MailchimpMailProvider } from './mailchimp-mail-provider';
 import { MailgunMailProvider } from './mailgun-mail-provider';
@@ -30,6 +31,13 @@ export const createMailProvider = (
       return new MailchimpMailProvider({
         id,
         incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
+        prisma,
+        kv,
+      });
+    case MailProviderType.BREVO:
+      return new BrevoMailProvider({
+        id,
+        incomingRequestHandler: bodyParser.json(),
         prisma,
         kv,
       });
