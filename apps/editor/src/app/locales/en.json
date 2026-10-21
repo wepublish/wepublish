@@ -1629,6 +1629,7 @@
       "subscriptions": "Subscriptions",
       "subscriptionSettings": "Automatic emails",
       "tokens": "Tokens",
+      "apiTokens": "API Keys",
       "userConsents": "User Consents",
       "userRoles": "User Roles",
       "users": "Users",
@@ -1828,6 +1829,12 @@
     },
     "peerList": {
       "overview": {
+        "status": "Status",
+        "active": "Active",
+        "disabled": "Disabled",
+        "name": "Name",
+        "hostURL": "API URL",
+        "website": "Website",
         "disable": "Disable",
         "editProfile": "Edit profile",
         "enable": "Enable",
@@ -3973,6 +3980,277 @@
       "socialMediaDescriptionFallback": "Falls back to the SEO description",
       "socialMediaImageFallback": "Falls back to the article image when empty.",
       "socialMediaTitleFallback": "Falls back to the SEO title"
+    },
+    "commandPalette": {
+      "title": "Command palette",
+      "placeholder": "Where do you want to go?",
+      "empty": "Nothing matches",
+      "groups": {
+        "favourite": "Favourites",
+        "navigate": "Go to",
+        "create": "Create",
+        "account": "Account"
+      },
+      "hints": {
+        "move": "to navigate",
+        "select": "to open",
+        "close": "to close"
+      },
+      "pages": {
+        "peerProfile": "Own peer profile"
+      },
+      "create": {
+        "article": "Create article",
+        "articleTag": "Create article tag",
+        "paywall": "Create paywall",
+        "page": "Create page",
+        "pageTag": "Create page tag",
+        "crowdfunding": "Create crowdfunding",
+        "blockTemplate": "Create block template",
+        "commentTag": "Create comment tag",
+        "event": "Create event",
+        "eventTag": "Create event tag",
+        "image": "Upload image",
+        "document": "Upload document",
+        "navigation": "Create navigation",
+        "banner": "Create banner",
+        "author": "Create author",
+        "authorTag": "Create author tag",
+        "user": "Create user",
+        "subscription": "Create subscription",
+        "consent": "Create consent",
+        "userConsent": "Create user consent",
+        "mailTemplate": "Create email template",
+        "memberPlan": "Create subscription plan",
+        "paymentMethod": "Create payment method",
+        "discountCode": "Create discount code",
+        "goodie": "Create goodie",
+        "peer": "Create peer",
+        "userRole": "Create user role",
+        "token": "Generate token",
+        "apiToken": "Generate API key"
+      },
+      "trigger": "Search or jump to…",
+      "keys": {
+        "escape": "esc"
+      }
+    },
+    "apiTokenList": {
+      "overview": {
+        "apiTokens": "API Keys",
+        "apiTokensInfo": "API keys let a script or another system call the API without signing in as a person. A key only carries the permissions you give it.",
+        "generateToken": "Create API key",
+        "name": "Name",
+        "prefix": "Key",
+        "scopes": "Permissions",
+        "scopeCount_one": "{{count}} permission",
+        "scopeCount_other": "{{count}} permissions",
+        "lastUsed": "Last used",
+        "never": "Never used",
+        "status": "Status",
+        "active": "Active",
+        "revoked": "Revoked",
+        "revoke": "Revoke",
+        "lastUsedDate": "{{lastUsedDate, ccc PP p}}",
+        "expires": "Expires",
+        "expired": "Expired",
+        "expiresDate": "{{expiresDate, ccc PP p}}",
+        "owner": "Owner",
+        "ownerUnknown": "Deleted user",
+        "filterByOwner": "Filter by owner",
+        "anyStatus": "Any status"
+      },
+      "panels": {
+        "generateToken": "Create API key",
+        "generate": "Create",
+        "close": "Close",
+        "name": "Name",
+        "scopes": "Permissions",
+        "scopesHelp": "You can only grant permissions you hold yourself.",
+        "creationSuccess": "Your API key has been created.",
+        "copy": "Copy key",
+        "copied": "Key copied",
+        "tokenWarning": "Copy this key now. It is shown once and cannot be retrieved again — if you lose it, create a new one.",
+        "revokeToken": "Revoke API key",
+        "revokeTokenText": "Really revoke «{{name}}»? Anything using this key stops working immediately.",
+        "cancel": "Cancel",
+        "confirm": "Revoke",
+        "noScopes": "Pick at least one permission.",
+        "expiresAt": "Expires",
+        "expiresAtHelp": "At most three years from today.",
+        "expiresInThePast": "That date has already passed.",
+        "in30Days": "30 days",
+        "in90Days": "90 days",
+        "inAYear": "A year",
+        "in3Years": "3 years",
+        "expiresRequired": "Pick a date. A key has to expire.",
+        "expiresTooLate": "A key cannot last longer than three years.",
+        "longLivedWarning": "A key that lives longer than a year is not recommended. The longer it exists, the longer a leaked key keeps working."
+      }
+    },
+    "newsletter": {
+      "blocks": {
+        "button": {
+          "href": "Target",
+          "label": "Button",
+          "text": "Label"
+        },
+        "condition": "Dynamic content (optional)",
+        "divider": {
+          "label": "Divider"
+        },
+        "footer": {
+          "label": "Footer",
+          "legal": "Legal (unsubscribe link & address)",
+          "lines": "Imprint: text",
+          "title": "Imprint: title"
+        },
+        "gutter": {
+          "article": "Article ({{size}})",
+          "intro": "Intro ({{size}})",
+          "label": "Indent",
+          "none": "None ({{size}})"
+        },
+        "heading": {
+          "label": "Title",
+          "text": "Title"
+        },
+        "image": {
+          "alt": "Alt text",
+          "caption": "Caption (optional)",
+          "href": "Links to (optional)",
+          "image": "Image",
+          "label": "Image"
+        },
+        "meta": {
+          "label": "Header row (label / date)",
+          "left": "Left",
+          "right": "Right"
+        },
+        "panel": {
+          "image": "Image on the left (optional)",
+          "label": "Info box",
+          "linkHref": "Link target (optional)",
+          "linkLabel": "Link text (optional)",
+          "title": "Title"
+        },
+        "preheader": "Preview text (shown next to the subject)",
+        "rubric": {
+          "label": "Section bar",
+          "name": "Section"
+        },
+        "teaser": {
+          "allTags": "All tags",
+          "article": "Article",
+          "big": "Large (with image)",
+          "count": "{{count}} of {{total}} articles",
+          "label": "Article teaser",
+          "pick": "Choose article …",
+          "short": "Short",
+          "tag": "Tag",
+          "variant": "Layout"
+        },
+        "text": {
+          "body": "Text",
+          "label": "Text block"
+        }
+      },
+      "categories": {
+        "articles": "Articles",
+        "content": "Content",
+        "footer": "Footer",
+        "header": "Header"
+      },
+      "condition": {
+        "always": "Always show (no condition)",
+        "evaluatedAtSend": "Mailchimp only evaluates the condition when sending. The block stays visible in the editor, the preview and the Mailchimp draft.",
+        "interests": "Interest groups",
+        "is": "is",
+        "noValue": "Without a value there is no condition — the block goes to every recipient.",
+        "not": "is not",
+        "nothingToCompare": "The Mailchimp audience has no contact fields and no interest groups of its own — there is nothing a condition could refer to.",
+        "pickGroup": "Choose group …",
+        "stored": "Stored in the document",
+        "value": "Value"
+      },
+      "editor": {
+        "back": "Back to overview",
+        "createdAt": "Campaign created at {{time}}.",
+        "loading": "Loading …",
+        "notPushed": "Not pushed to Mailchimp",
+        "notSaved": "Not saved",
+        "openInMailchimp": "Open in Mailchimp",
+        "pickImage": "Choose an image from the media library ({{alt}})",
+        "preview": "Preview",
+        "publishing": "Pushing to Mailchimp …",
+        "pushed": "Pushed to Mailchimp",
+        "save": "Save",
+        "savedAt": "Saved at {{time}}.",
+        "savedNotSynced": "Saved, but not pushed to Mailchimp: {{reason}}",
+        "saving": "Saving …",
+        "unknownBlock": "Unknown block: {{type}}",
+        "updatedAt": "Campaign updated at {{time}}."
+      },
+      "list": {
+        "actions": "Actions",
+        "archive": "Archive",
+        "unarchive": "Restore",
+        "showArchived": "Show archived",
+        "archived": "Archived",
+        "blocks": "Blocks",
+        "createNew": "New issue",
+        "duplicate": "Duplicate",
+        "mailchimp": "Mailchimp",
+        "modified": "Last modified",
+        "name": "Title",
+        "openDraft": "Mailchimp draft",
+        "title": "Newsletters",
+        "titlePlaceholder": "Issue title, e.g. Newsletter 21.8.26"
+      },
+      "mergeTags": {
+        "fields": "Contact fields",
+        "system": "System tags"
+      },
+      "navbar": "Newsletter",
+      "prose": {
+        "apply": "Apply",
+        "bold": "B",
+        "boldTitle": "Bold (Ctrl/Cmd+B)",
+        "hint": "Enter starts a new paragraph. Merge tags are only replaced by Mailchimp — the editor and the preview show the tag itself.",
+        "link": "Link",
+        "list": "List",
+        "listTitle": "Bulleted list",
+        "loadingTags": "Loading merge tags …",
+        "mergeTag": "Merge tag",
+        "mergeTagTitle": "Insert Mailchimp merge tag",
+        "noTag": "No merge tag found.",
+        "remove": "Remove",
+        "searchTag": "Search merge tags …"
+      },
+      "report": {
+        "clipped": "Gmail clips this issue and hides its end — imprint, unsubscribe link and address — behind «Message clipped».",
+        "heading": "Checks",
+        "measuring": "Measuring size …",
+        "missingArticles_one": "{{count}} article can no longer be loaded ({{ids}}). Mailchimp transfer is refused until the teaser is replaced or removed.",
+        "missingArticles_other": "{{count}} articles can no longer be loaded ({{ids}}). Mailchimp transfer is refused until the teasers are replaced or removed.",
+        "missingFooter": "The footer is missing {{missing}}. Mailchimp refuses to send a campaign without it.",
+        "nearLimit": "Close to the limit. Sending adds size: Mailchimp fills in every merge tag and replaces every link with a longer tracking URL.",
+        "ok": "all good",
+        "problems_one": "{{count}} problem",
+        "problems_other": "{{count}} problems",
+        "room": "{{size}} left before Gmail clips.",
+        "size": "{{size}} of {{limit}} ({{percent}} %)",
+        "sizeFailed": "The size could not be measured: {{error}}",
+        "stale": "last saved version",
+        "unsaved": "Changes since the last save are not included — saving measures again.",
+        "warnings_one": "{{count}} note",
+        "warnings_other": "{{count}} notes"
+      },
+      "settings": {
+        "heading": "Settings",
+        "title": "Title",
+        "titleHint": "Also the subject line of the Mailchimp draft. Takes effect on save."
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 import { Field, InputType, Int, registerEnumType } from '@nestjs/graphql';
+import type { OutputFormat } from '@wepublish/media-transform-guard';
 
 export enum ImageRotation {
   Auto = 'auto',
@@ -34,4 +35,8 @@ export class ImageTransformation {
 
   @Field(() => Boolean, { nullable: true })
   sharpen?: boolean | null;
+}
+
+export class ServerImageTransformation extends ImageTransformation {
+  format?: OutputFormat;
 }
