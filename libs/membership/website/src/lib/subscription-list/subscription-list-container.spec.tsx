@@ -2,7 +2,6 @@ import { MockedProvider } from '@apollo/client/testing/react';
 import { composeStories, composeStory } from '@storybook/react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { actWait, addDateMock } from '@wepublish/testing';
-import { ExtendSubscriptionDocument } from '@wepublish/website/api';
 
 import meta, * as stories from './subscription-list-container.stories';
 
@@ -57,54 +56,49 @@ describe('SubscriptionList Container', () => {
     expect(screen.getByText('Jetzt verlängern')).toBeInTheDocument();
   });
 
-  it('sends the chosen payment method and absolute return urls when extending', async () => {
-    const mocks = stories.ExtendWithPaymentMethodChoice.parameters!.apolloClient
-      .mocks as Array<{ request: { query: unknown }; result: unknown }>;
-    const extendMock = mocks.find(
-      mock => mock.request.query === ExtendSubscriptionDocument
-    )!;
-    // only called when the mutation's variables match the mock's
-    const result = vi.fn(() => extendMock.result);
-    const Story = composeStory(
-      {
-        ...stories.ExtendWithPaymentMethodChoice,
-        parameters: {
-          apolloClient: {
-            mocks: mocks.map(mock =>
-              mock === extendMock ? { ...mock, result } : mock
-            ),
-          },
-        },
-      },
-      meta
-    );
+  describe('changing the payment method', () => {
+    it('shows the new payment method once a change needing no authorization is done', async () => {
+      render(<storiesCmp.ChangePaymentMethod />);
+      await actWait(200);
 
-    render(<Story />);
-    await actWait(200);
+      expect(screen.getByText('Zahlungsmethode: Rechnung')).toBeInTheDocument();
 
-    fireEvent.click(
-      screen.getByText('Jetzt verlängern', { selector: 'button' })
-    );
-    fireEvent.click(screen.getByLabelText('Online (Karte, TWINT)'));
-    fireEvent.click(
-      screen.getByText(/^Jetzt um .* verlängern$/, { selector: 'button' })
-    );
-    await actWait(200);
+      fireEvent.click(
+        screen.getByText('Zahlungsmethode ändern', { selector: 'button' })
+      );
+      await act(async () => {
+        fireEvent.click(screen.getByText('Weiter', { selector: 'button' }));
+      });
+      await actWait(200);
 
-    expect(result).toHaveBeenCalled();
-  });
+      expect(screen.getByText('Zahlungsmethode: Online')).toBeInTheDocument();
+    });
 
-  it('offers no payment method choice while the feature is switched off', async () => {
-    render(<storiesCmp.ExtendWithoutPaymentMethodChoice />);
-    await actWait(200);
+    it('asks the provider about a pending change when the reader comes back', async () => {
+      render(<storiesCmp.PaymentMethodChangeCompletedMeanwhile />);
+      await actWait(300);
 
-    fireEvent.click(
-      screen.getByText('Jetzt verlängern', { selector: 'button' })
-    );
+      expect(screen.queryByText(/ausstehend/)).not.toBeInTheDocument();
+      expect(screen.getByText('Zahlungsmethode: Online')).toBeInTheDocument();
+    });
 
-    expect(
-      screen.getByText(/^Jetzt um .* verlängern$/, { selector: 'button' })
-    ).toBeInTheDocument();
-    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
+    it('keeps the current payment method when the reader cancels the change', async () => {
+      render(<storiesCmp.PaymentMethodChangePending />);
+      await actWait(200);
+
+      expect(
+        screen.getByText(/Wechsel zu Online ausstehend/)
+      ).toBeInTheDocument();
+
+      await act(async () => {
+        fireEvent.click(
+          screen.getByText('Wechsel abbrechen', { selector: 'button' })
+        );
+      });
+      await actWait(200);
+
+      expect(screen.queryByText(/ausstehend/)).not.toBeInTheDocument();
+      expect(screen.getByText('Zahlungsmethode: Rechnung')).toBeInTheDocument();
+    });
   });
 });

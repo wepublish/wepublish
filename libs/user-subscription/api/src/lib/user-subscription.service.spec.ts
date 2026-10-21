@@ -13,7 +13,6 @@ import {
   MemberPlanDataloader,
   MemberPlanService,
 } from '@wepublish/member-plan/api';
-import { FeaturesService } from '@wepublish/features/api';
 import type { Mock } from 'vitest';
 
 describe('UserSubscriptionService', () => {
@@ -52,10 +51,6 @@ describe('UserSubscriptionService', () => {
 
   let subscriptionServiceMock: {
     reactivateSubscription: Mock;
-  };
-
-  let featuresMock: {
-    isEnabled: Mock;
   };
 
   beforeAll(() => {
@@ -120,10 +115,6 @@ describe('UserSubscriptionService', () => {
       reactivateSubscription: vi.fn(),
     };
 
-    featuresMock = {
-      isEnabled: vi.fn().mockResolvedValue(false),
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserSubscriptionService,
@@ -145,7 +136,6 @@ describe('UserSubscriptionService', () => {
         },
         { provide: PrismaClient, useValue: prismaMock },
         { provide: SubscriptionService, useValue: subscriptionServiceMock },
-        { provide: FeaturesService, useValue: featuresMock },
       ],
     }).compile();
 
@@ -409,7 +399,6 @@ describe('UserSubscriptionService', () => {
   describe('extendSubscription', () => {
     const paymentMethods: Record<string, object> = {
       currentPm: { id: 'currentPm', paymentProviderID: 'mollie' },
-      otherPm: { id: 'otherPm', paymentProviderID: 'mollie' },
     };
 
     const subscription = {
@@ -442,12 +431,9 @@ describe('UserSubscriptionService', () => {
       paymentsMock.getProviders.mockReturnValue([
         { id: 'mollie', isOffSession: async () => false },
       ]);
-      featuresMock.isEnabled.mockImplementation(
-        async (key: string) => key === 'renewal-payment-choice'
-      );
     });
 
-    it('renews with the current payment method when none is requested', async () => {
+    it("renews with the subscription's payment method", async () => {
       await service.extendSubscription('userId', {
         subscriptionId: 'subscriptionId',
       });
@@ -456,100 +442,6 @@ describe('UserSubscriptionService', () => {
       expect(paymentsMock.createPaymentWithProvider).toHaveBeenCalledWith(
         expect.objectContaining({ paymentMethodID: 'currentPm' })
       );
-    });
-
-    it('switches to the requested payment method before renewing', async () => {
-      await service.extendSubscription('userId', {
-        subscriptionId: 'subscriptionId',
-        paymentMethodID: 'otherPm',
-      });
-
-      expect(
-        memberContextMock.validateSubscriptionPaymentConfiguration
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'memberPlanId' }),
-        true,
-        PaymentPeriodicity.yearly,
-        'otherPm'
-      );
-      expect(prismaMock.subscription.update).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: { id: 'subscriptionId' },
-          data: expect.objectContaining({ paymentMethodID: 'otherPm' }),
-        })
-      );
-      expect(memberContextMock.renewSubscriptionForUser).toHaveBeenCalledWith({
-        subscription: expect.objectContaining({ paymentMethodID: 'otherPm' }),
-      });
-      expect(paymentsMock.createPaymentWithProvider).toHaveBeenCalledWith(
-        expect.objectContaining({ paymentMethodID: 'otherPm' })
-      );
-    });
-
-    it('refuses to switch the payment method while the choice is switched off', async () => {
-      featuresMock.isEnabled.mockResolvedValue(false);
-
-      await expect(
-        service.extendSubscription('userId', {
-          subscriptionId: 'subscriptionId',
-          paymentMethodID: 'otherPm',
-        })
-      ).rejects.toThrow('renewal-payment-choice');
-      expect(prismaMock.subscription.update).not.toHaveBeenCalled();
-      expect(memberContextMock.renewSubscriptionForUser).not.toHaveBeenCalled();
-    });
-
-    it('still renews without a payment method while the choice is switched off', async () => {
-      featuresMock.isEnabled.mockResolvedValue(false);
-
-      await service.extendSubscription('userId', {
-        subscriptionId: 'subscriptionId',
-      });
-
-      expect(paymentsMock.createPaymentWithProvider).toHaveBeenCalledWith(
-        expect.objectContaining({ paymentMethodID: 'currentPm' })
-      );
-    });
-
-    it('refuses a payment method the member plan does not offer', async () => {
-      memberContextMock.validateSubscriptionPaymentConfiguration.mockRejectedValue(
-        new Error('Payment configuration not allowed')
-      );
-
-      await expect(
-        service.extendSubscription('userId', {
-          subscriptionId: 'subscriptionId',
-          paymentMethodID: 'otherPm',
-        })
-      ).rejects.toThrow('Payment configuration not allowed');
-      expect(prismaMock.subscription.update).not.toHaveBeenCalled();
-      expect(memberContextMock.renewSubscriptionForUser).not.toHaveBeenCalled();
-    });
-
-    it('refuses an unknown payment method', async () => {
-      await expect(
-        service.extendSubscription('userId', {
-          subscriptionId: 'subscriptionId',
-          paymentMethodID: 'unknownPm',
-        })
-      ).rejects.toThrow();
-      expect(prismaMock.subscription.update).not.toHaveBeenCalled();
-      expect(memberContextMock.renewSubscriptionForUser).not.toHaveBeenCalled();
-    });
-
-    it('refuses a payment method of a retired provider', async () => {
-      prismaMock.settingPaymentProvider.findMany.mockResolvedValue([
-        { id: 'mollie' },
-      ]);
-
-      await expect(
-        service.extendSubscription('userId', {
-          subscriptionId: 'subscriptionId',
-          paymentMethodID: 'otherPm',
-        })
-      ).rejects.toThrow('is no longer offered');
-      expect(prismaMock.subscription.update).not.toHaveBeenCalled();
-      expect(memberContextMock.renewSubscriptionForUser).not.toHaveBeenCalled();
     });
   });
 

@@ -2027,6 +2027,8 @@
       "successTitle": "Enregistré",
       "subscriptionPlans": "Plans d’abonnement",
       "subscriptionUpgradeModel": "Lors d’une mise à niveau, facturer la différence de prix complète (au lieu du crédit restant au prorata)",
+      "subscriptionExtendWindowDays": "Fenêtre de renouvellement (jours avant l’échéance)",
+      "paymentMethodChangeExpiryDays": "Délai pour un changement de moyen de paiement (jours)",
       "warnings": {
         "askOperators": "Attention : la modification d’un ou de plusieurs des paramètres peut entraîner la rupture de la page ou avoir d’autres conséquences imprévisibles. En cas de doute, il est conseillé de consulter les opérateurs. Dans le cas contraire, vous pouvez continuer.",
         "guestCommenting": "Autoriser les commentaires des utilisateur·trice·s non authentifié·e·s.",
@@ -2058,6 +2060,8 @@
       "info": {
         "allowCommentEditing": "Les lecteur·trice·s peuvent encore modifier le texte de leurs propres commentaires après les avoir publiés.",
         "commentCharLimit": "Nombre maximal de caractères qu’un commentaire peut contenir. Les commentaires plus longs ne peuvent pas être envoyés.",
+        "subscriptionExtendWindowDays": "Combien de jours avant l’échéance d’un abonnement les lecteur·trice·s voient «Renouveler maintenant» dans leur profil. 30 = comme avant ; 365 = à tout moment, tant qu’aucune facture n’est ouverte.",
+        "paymentMethodChangeExpiryDays": "Combien de jours un changement de moyen de paiement commencé attend le paiement de la facture ouverte ou la confirmation du prestataire de paiement. Ensuite, il expire et l’abonnement garde son moyen de paiement actuel.",
         "newSubscriptionsApiPublic": "Rend les nouveaux abonnements d’une période choisie accessibles sans connexion via l’API publique, p.ex. pour afficher des chiffres en direct sur votre site. Les données sont anonymisées. Laissez cette option désactivée si vous n’en avez pas besoin.",
         "activeSubscriptionsApiPublic": "Rend tous les abonnements actuellement actifs accessibles sans connexion via l’API publique, p.ex. pour afficher des chiffres en direct sur votre site. Les données sont anonymisées. Laissez cette option désactivée si vous n’en avez pas besoin.",
         "renewingSubscriptionsApiPublic": "Rend les abonnements qui se renouvellent pendant une période choisie accessibles sans connexion via l’API publique, p.ex. pour afficher des chiffres en direct sur votre site. Les données sont anonymisées. Laissez cette option désactivée si vous n’en avez pas besoin.",
@@ -2340,6 +2344,14 @@
       }
     },
     "userSubscriptionEdit": {
+      "paymentMethodChange": {
+        "pending": "Le·la lecteur·trice passe à {{paymentMethod}} : {{waitingFor}}. D’ici là, le moyen de paiement actuel reste en place. Le changement expire le {{expiresAt, PP}}.",
+        "waitingFor": {
+          "invoicePayment": "en attente du paiement de la facture ouverte",
+          "authorization": "en attente de la confirmation du prestataire de paiement",
+          "immediate": "appliqué immédiatement"
+        }
+      },
       "autoRenew": "Renouvellement automatique",
       "autoRenewDescription": "Renouveler l’abonnement automatiquement",
       "createTitle": "Créer un abonnement",

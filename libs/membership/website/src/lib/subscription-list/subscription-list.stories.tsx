@@ -28,6 +28,8 @@ const subscription = {
   extendable: true,
   canExtend: true,
   properties: [],
+  pendingPaymentMethodChange: null,
+  canRenewPaymentMethod: false,
 } as Exact<FullSubscriptionFragment>;
 
 const invoice = {

@@ -2,6 +2,8 @@ import {
   Currency,
   Exact,
   FullSubscriptionFragment,
+  PaymentMethodChangeKind,
+  PaymentMethodChangeState,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
 } from '@wepublish/website/api';
@@ -384,44 +386,84 @@ export const WithExternalRewardLink: StoryObj = {
 const invoicePaymentMethod = mockPaymentMethod({
   id: 'invoice',
   name: 'Rechnung',
-  slug: 'bexio',
+  description: 'Per Post',
+  paymentProviderID: 'bexio',
 });
 
 const onlinePaymentMethod = mockPaymentMethod({
   id: 'online',
-  name: 'Online (Karte, TWINT)',
-  slug: 'payrexx',
+  name: 'Online',
+  description: 'Karte, TWINT',
+  paymentProviderID: 'payrexx',
 });
 
-export const ExtendWithPaymentMethodChoice: StoryObj = {
+const subscriptionWithPaymentMethods = {
+  ...subscription,
+  paymentPeriodicity: PaymentPeriodicity.Yearly,
+  paymentMethod: invoicePaymentMethod,
+  memberPlan: mockMemberPlan({
+    availablePaymentMethods: [
+      mockAvailablePaymentMethod({
+        paymentPeriodicities: [PaymentPeriodicity.Yearly],
+        paymentMethods: [invoicePaymentMethod, onlinePaymentMethod],
+      }),
+    ],
+  }),
+} as Exact<FullSubscriptionFragment>;
+
+export const ChangePaymentMethod: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paymentMethod: invoicePaymentMethod,
-    memberPlan: mockMemberPlan({
-      availablePaymentMethods: [
-        mockAvailablePaymentMethod({
-          paymentMethods: [invoicePaymentMethod, onlinePaymentMethod],
-        }),
-      ],
-    }),
-    allowPaymentMethodChoice: true,
+    ...subscriptionWithPaymentMethods,
+    changePaymentMethod: action('changePaymentMethod'),
+    cancelPaymentMethodChange: action('cancelPaymentMethodChange'),
   },
-  play: clickExtend,
 };
 
-// e.g. a subscription still billed by invoice on a plan that only offers
-// online payment to new subscribers
-export const ExtendWhenPlanOnlyOffersOnline: StoryObj = {
-  ...ExtendWithPaymentMethodChoice,
+export const ChangePaymentMethodWithOpenInvoice: StoryObj = {
+  ...ChangePaymentMethod,
   args: {
-    ...ExtendWithPaymentMethodChoice.args,
-    memberPlan: mockMemberPlan({
-      availablePaymentMethods: [
-        mockAvailablePaymentMethod({
-          paymentMethods: [onlinePaymentMethod],
-        }),
-      ],
-    }),
+    ...ChangePaymentMethod.args,
+    canExtend: false,
+    openInvoiceTotal: 12000,
+  },
+};
+
+export const PaymentMethodChangePending: StoryObj = {
+  ...ChangePaymentMethod,
+  args: {
+    ...ChangePaymentMethod.args,
+    canExtend: false,
+    pendingPaymentMethodChange: {
+      __typename: 'SubscriptionPaymentMethodChange',
+      id: 'change-1',
+      createdAt: '2026-10-21T10:00:00.000Z',
+      kind: PaymentMethodChangeKind.Authorization,
+      state: PaymentMethodChangeState.Pending,
+      amount: 1,
+      currency: Currency.Chf,
+      expiresAt: '2026-11-04T10:00:00.000Z',
+      completedAt: null,
+      paymentMethod: onlinePaymentMethod,
+    },
+  },
+};
+
+export const RenewPaymentMethod: StoryObj = {
+  ...ChangePaymentMethod,
+  args: {
+    ...ChangePaymentMethod.args,
+    paymentMethod: onlinePaymentMethod,
+    canRenewPaymentMethod: true,
+  },
+};
+
+export const RenewPaymentMethodWithOpenInvoice: StoryObj = {
+  ...RenewPaymentMethod,
+  args: {
+    ...RenewPaymentMethod.args,
+    canExtend: false,
+    openInvoiceTotal: 12000,
   },
 };

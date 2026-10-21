@@ -44,7 +44,13 @@ import { SubscriptionService } from './subscription.service';
 import { SubscriptionDataloader } from './subscription.dataloader';
 import { NotFoundException } from '@nestjs/common';
 import { SubscriptionPeriodDataloader } from './subscription-periods.dataloader';
-import { FeaturesService } from '@wepublish/features/api';
+import { SettingDataloaderService, SettingName } from '@wepublish/settings/api';
+import { PendingPaymentMethodChangeDataloader } from '../payment-method-change/pending-payment-method-change.dataloader';
+import { SubscriptionPaymentMethodChange } from '../payment-method-change/payment-method-change.model';
+import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
+
+/** Used when the SUBSCRIPTION_EXTEND_WINDOW_DAYS setting has no value. */
+const DEFAULT_EXTEND_WINDOW_DAYS = 30;
 
 @Resolver(() => PublicSubscription)
 export class PublicSubscriptionResolver {
@@ -57,7 +63,9 @@ export class PublicSubscriptionResolver {
     private deactivationDataloader: SubscriptionDeactivationDataloader,
     private periodDataloader: SubscriptionPeriodDataloader,
     private memberPlanDataloader: MemberPlanDataloader,
-    private features: FeaturesService
+    private settingDataloader: SettingDataloaderService,
+    private pendingPaymentMethodChangeDataloader: PendingPaymentMethodChangeDataloader,
+    private paymentMethodChanges: PaymentMethodChangeService
   ) {}
 
   @Permissions(CanGetSubscription)
@@ -182,13 +190,29 @@ export class PublicSubscriptionResolver {
     return this.urlAdapter.getSubscriptionURL(subscription);
   }
 
+  @ResolveField(() => SubscriptionPaymentMethodChange, {
+    nullable: true,
+    description: `A payment method change that is waiting for the reader to pay or authorize. Until it completes, the subscription keeps its payment method.`,
+  })
+  async pendingPaymentMethodChange(@Parent() subscription: Subscription) {
+    return this.pendingPaymentMethodChangeDataloader.load(subscription.id);
+  }
+
+  @ResolveField(() => Boolean, {
+    description: `Whether the reader can authorize the subscription's payment method anew, e.g. with a new card: only for payment methods renewals are charged with automatically.`,
+  })
+  async canRenewPaymentMethod(@Parent() subscription: Subscription) {
+    return this.paymentMethodChanges.canRenew(subscription.paymentMethodID);
+  }
+
   @ResolveField(() => Boolean)
   async canExtend(@Parent() subscription: Subscription) {
     const [
       deactivation,
       paymentMethod,
       unpaidAndUncanceledInvoice,
-      earlyRenewal,
+      windowSetting,
+      pendingPaymentMethodChange,
     ] = await Promise.all([
       this.deactivationDataloader.load(subscription.id),
       this.paymentMethodDataloader.load(subscription.paymentMethodID),
@@ -201,25 +225,31 @@ export class PublicSubscriptionResolver {
           canceledAt: null,
         },
       }),
-      this.features.isEnabled('early-renewal'),
+      this.settingDataloader.load(SettingName.SUBSCRIPTION_EXTEND_WINDOW_DAYS),
+      this.pendingPaymentMethodChangeDataloader.load(subscription.id),
     ]);
+
+    const windowDays =
+      typeof windowSetting?.value === 'number' ?
+        windowSetting.value
+      : DEFAULT_EXTEND_WINDOW_DAYS;
 
     /**
      * Can only extend when:
      *   Subscription is extendable
      *   Subscription is not deactivated
-     *   Subscription is about to run out (less than 1 month), unless the
-     *     medium has early renewal switched on
+     *   Subscription is about to run out (within SUBSCRIPTION_EXTEND_WINDOW_DAYS)
      *   All invoices have been paid (or cancelled)
+     *   The payment method is not being changed
      *   Not using a deprecated payment method
      */
     return !!(
       subscription.paidUntil &&
       subscription.extendable &&
       !deactivation &&
-      (earlyRenewal ||
-        +add(new Date(), { months: 1 }) > +subscription.paidUntil) &&
+      +add(new Date(), { days: windowDays }) > +subscription.paidUntil &&
       !unpaidAndUncanceledInvoice &&
+      !pendingPaymentMethodChange &&
       // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
       paymentMethod?.slug !== 'payrexx-subscription'
     );

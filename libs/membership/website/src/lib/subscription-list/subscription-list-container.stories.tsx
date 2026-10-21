@@ -2,10 +2,16 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SubscriptionListContainer } from './subscription-list-container';
 import {
   CancelSubscriptionDocument,
+  CancelSubscriptionPaymentMethodChangeDocument,
+  ChangeSubscriptionPaymentMethodDocument,
+  CheckSubscriptionPaymentMethodChangeDocument,
+  Currency,
+  FullSubscriptionPaymentMethodChangeFragment,
+  PaymentMethodChangeKind,
+  PaymentMethodChangeState,
   ReactivateSubscriptionDocument,
   Exact,
   ExtendSubscriptionDocument,
-  FeaturesDocument,
   FullInvoiceFragment,
   FullSubscriptionDeactivationFragment,
   FullSubscriptionFragment,
@@ -52,6 +58,8 @@ const subscription = {
   canRevertUpgrade: false,
   goodie: null,
   externalReward: 'https://example.com/external-reward-mock-url',
+  pendingPaymentMethodChange: null,
+  canRenewPaymentMethod: false,
   // `satisfies`, not `as`: a field missing here leaves the subscription
   // incomplete in the cache, and Apollo refetches it from a mock that is used up.
 } satisfies Exact<FullSubscriptionFragment>;
@@ -77,19 +85,6 @@ const invoice = {
   canceledAt: '2023-01-01',
   paidAt: null,
 } as Exact<FullInvoiceFragment>;
-
-// the profile asks which features are switched on for the medium
-const featuresMock = (features: string[]) => ({
-  request: {
-    query: FeaturesDocument,
-  },
-  maxUsageCount: 5,
-  result: {
-    data: {
-      features,
-    },
-  },
-});
 
 const intent = {
   intentSecret: 'https://example.com',
@@ -182,7 +177,6 @@ export const Default: StoryObj = {
             },
           },
         },
-        featuresMock([]),
       ],
     },
   },
@@ -299,99 +293,173 @@ export const CancelWithInvoiceList: StoryObj = {
 const invoicePaymentMethod = mockPaymentMethod({
   id: 'invoice',
   name: 'Rechnung',
-  slug: 'bexio',
+  description: 'Per Post',
+  paymentProviderID: 'bexio',
 });
 
 const onlinePaymentMethod = mockPaymentMethod({
   id: 'online',
-  name: 'Online (Karte, TWINT)',
-  slug: 'payrexx',
+  name: 'Online',
+  description: 'Karte, TWINT',
+  paymentProviderID: 'payrexx',
 });
 
-const subscriptionWithPaymentMethodChoice = {
+const changeableSubscription = {
   ...subscription,
+  canExtend: false,
+  paymentPeriodicity: PaymentPeriodicity.Yearly,
   paymentMethod: invoicePaymentMethod,
   memberPlan: mockMemberPlan({
     availablePaymentMethods: [
       mockAvailablePaymentMethod({
+        paymentPeriodicities: [PaymentPeriodicity.Yearly],
         paymentMethods: [invoicePaymentMethod, onlinePaymentMethod],
       }),
     ],
   }),
 } satisfies Exact<FullSubscriptionFragment>;
 
-export const ExtendWithPaymentMethodChoice: StoryObj = {
-  args: {
-    ...Default.args,
+const pendingChange = (
+  state = PaymentMethodChangeState.Pending
+): Exact<FullSubscriptionPaymentMethodChangeFragment> => ({
+  __typename: 'SubscriptionPaymentMethodChange',
+  id: 'change-1',
+  createdAt: '2026-10-21T10:00:00.000Z',
+  kind: PaymentMethodChangeKind.Authorization,
+  state,
+  amount: 1,
+  currency: Currency.Chf,
+  expiresAt: '2026-11-04T10:00:00.000Z',
+  completedAt: null,
+  paymentMethod: onlinePaymentMethod,
+});
+
+const subscriptionsMock = (subscriptions: FullSubscriptionFragment[]) => ({
+  request: {
+    query: SubscriptionsDocument,
   },
-  play: async ctx => {
-    const canvas = within(ctx.canvasElement);
-    await waitFor(() => canvas.getByText('Jetzt verlängern'), {
-      timeout: 5000,
-    });
+  result: {
+    data: {
+      userSubscriptions: subscriptions,
+    },
   },
+});
+
+const noInvoicesMock = {
+  request: {
+    query: InvoicesDocument,
+  },
+  result: {
+    data: {
+      userInvoices: [],
+    },
+  },
+};
+
+export const ChangePaymentMethod: StoryObj = {
+  ...Default,
   parameters: {
     apolloClient: {
       mocks: [
+        subscriptionsMock([changeableSubscription]),
+        noInvoicesMock,
         {
           request: {
-            query: SubscriptionsDocument,
+            query: ChangeSubscriptionPaymentMethodDocument,
           },
+          variableMatcher: () => true,
           result: {
             data: {
-              userSubscriptions: [subscriptionWithPaymentMethodChoice],
-            },
-          },
-        },
-        {
-          request: {
-            query: InvoicesDocument,
-          },
-          maxUsageCount: 2,
-          result: {
-            data: {
-              userInvoices: [
-                {
-                  ...invoice,
-                  subscription: subscriptionWithPaymentMethodChoice,
-                  paidAt: new Date('2023-01-01'),
+              changeSubscriptionPaymentMethod: {
+                __typename: 'StartedSubscriptionPaymentMethodChange',
+                change: {
+                  ...pendingChange(PaymentMethodChangeState.Completed),
+                  kind: PaymentMethodChangeKind.Immediate,
                 },
-              ],
+                intentSecret: null,
+                paymentProviderID: 'bexio',
+              },
             },
           },
         },
-        featuresMock(['renewal-payment-choice']),
-        {
-          request: {
-            query: ExtendSubscriptionDocument,
-            variables: {
-              subscriptionId: subscription.id,
-              paymentMethodID: onlinePaymentMethod.id,
-              successURL: 'https://example.com/success',
-              failureURL: 'https://example.com/fail',
-            },
-          },
-          result: {
-            data: {
-              extendUserSubscription: null,
-            },
-          },
-        },
+        subscriptionsMock([
+          { ...changeableSubscription, paymentMethod: onlinePaymentMethod },
+        ]),
       ],
     },
   },
 };
 
-export const ExtendWithoutPaymentMethodChoice: StoryObj = {
-  ...ExtendWithPaymentMethodChoice,
+export const PaymentMethodChangePending: StoryObj = {
+  ...Default,
   parameters: {
     apolloClient: {
       mocks: [
-        ...ExtendWithPaymentMethodChoice.parameters!.apolloClient.mocks.filter(
-          (mock: { request: { query: unknown } }) =>
-            mock.request.query !== FeaturesDocument
-        ),
-        featuresMock([]),
+        subscriptionsMock([
+          {
+            ...changeableSubscription,
+            pendingPaymentMethodChange: pendingChange(),
+          },
+        ]),
+        noInvoicesMock,
+        {
+          request: {
+            query: CheckSubscriptionPaymentMethodChangeDocument,
+            variables: { id: 'change-1' },
+          },
+          result: {
+            data: {
+              checkSubscriptionPaymentMethodChange: pendingChange(),
+            },
+          },
+        },
+        {
+          request: {
+            query: CancelSubscriptionPaymentMethodChangeDocument,
+            variables: { id: 'change-1' },
+          },
+          result: {
+            data: {
+              cancelSubscriptionPaymentMethodChange: pendingChange(
+                PaymentMethodChangeState.Canceled
+              ),
+            },
+          },
+        },
+        subscriptionsMock([changeableSubscription]),
+      ],
+    },
+  },
+};
+
+export const PaymentMethodChangeCompletedMeanwhile: StoryObj = {
+  ...Default,
+  parameters: {
+    apolloClient: {
+      mocks: [
+        subscriptionsMock([
+          {
+            ...changeableSubscription,
+            pendingPaymentMethodChange: pendingChange(),
+          },
+        ]),
+        noInvoicesMock,
+        {
+          request: {
+            query: CheckSubscriptionPaymentMethodChangeDocument,
+            variables: { id: 'change-1' },
+          },
+          result: {
+            data: {
+              checkSubscriptionPaymentMethodChange: pendingChange(
+                PaymentMethodChangeState.Completed
+              ),
+            },
+          },
+        },
+        subscriptionsMock([
+          { ...changeableSubscription, paymentMethod: onlinePaymentMethod },
+        ]),
       ],
     },
   },

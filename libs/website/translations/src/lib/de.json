@@ -109,6 +109,20 @@
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
   },
   "subscription": {
+    "renewPaymentMethod": "Bestehende Zahlungsmethode aktualisieren",
+    "renewPaymentMethodHint": "z.B. eine neue Karte hinterlegen",
+    "renewPaymentMethodTitle": "Bestehende Zahlungsmethode aktualisieren",
+    "renewPaymentMethodConfirmation": "Du bestätigst {paymentMethod} neu, zum Beispiel mit einer neuen Karte oder einem neuen TWINT-Konto. Bis dahin bleibt die bisherige Hinterlegung aktiv.",
+    "paymentMethod": "Zahlungsmethode: {paymentMethod}",
+    "changePaymentMethod": "Zahlungsmethode ändern",
+    "changePaymentMethodTitle": "Zahlungsmethode ändern",
+    "changePaymentMethodSubmit": "Weiter",
+    "changePaymentMethodOpenInvoice": "Die offene Rechnung über {amount} bezahlst du mit der neuen Zahlungsmethode. Erst danach wird sie für dein {type, select, Donation {Spende} other {Abo}} übernommen.",
+    "changePaymentMethodAuthorization": "Eine Online-Zahlungsmethode bestätigst du einmal beim Zahlungsanbieter. Dafür kann ein Betrag von {amount} reserviert werden, der dir nie belastet wird. Bis dahin bleibt deine bisherige Zahlungsmethode aktiv.",
+    "paymentMethodChangePending": "Wechsel zu {paymentMethod} ausstehend: {kind, select, invoicePayment {wird aktiv, sobald die offene Rechnung bezahlt ist} other {wird aktiv, sobald du die Zahlungsmethode bestätigt hast}}. Möglich bis {expiresAt}.",
+    "paymentMethodChangeContinue": "Fortsetzen",
+    "paymentMethodChangeCancel": "Wechsel abbrechen",
+    "extendChargedWith": "Belastet wird: {paymentMethod}",
     "externalReward": "{isLink, select, true {Link zu externer Belohnung} other {{externalReward}}}",
     "unpaid": "{type, select, Donation {Spende} other {Abo}} ist unbezahlt",
     "cancel": "{type, select, Donation {Spende} other {Abo}} kündigen",
@@ -118,7 +132,6 @@
     "extendBy": "Jetzt um {subscriptionDuration} verlängern",
     "extendEarly": "{type, select, Donation {Spende} other {Abo}} frühzeitig verlängern?",
     "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, Donation {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
-    "extendPaymentMethod": "Wie möchtest du bezahlen?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
     "subscribeNow": "Jetzt ein Abo lösen.",
     "startsAt": "Abgeschlossen am <time>{startsAt}</time>",
@@ -188,6 +201,7 @@
     "payNow": "Jetzt Bezahlen"
   },
   "user": {
+    "authorize": "Bestätigen",
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",
     "email": "E-Mail",
     "changeEmail": "E-Mail-Adresse ändern",

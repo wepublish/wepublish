@@ -1,16 +1,26 @@
 import {
+  AuthorizationIntent,
+  AuthorizationOutcome,
+  AuthorizationState,
   BasePaymentProvider,
+  CheckAuthorizationProps,
   CheckIntentProps,
+  CreateAuthorizationIntentProps,
   CreatePaymentIntentProps,
   Intent,
   IntentState,
   PaymentProviderProps,
+  ReleaseAuthorizationProps,
   WebhookForPaymentIntentProps,
   WebhookResponse,
 } from './payment-provider';
 import { logger } from '@wepublish/utils/api';
 import { PaymentState } from '@prisma/client';
-import createMollieClient, { SequenceType, Payment } from '@mollie/api-client';
+import createMollieClient, {
+  CaptureMethod,
+  SequenceType,
+  Payment,
+} from '@mollie/api-client';
 import { mapMolliePaymentMethods } from '../payment.methode.mapper';
 
 const erroredPaymentIntent = {
@@ -23,8 +33,30 @@ const erroredPaymentIntent = {
 
 type MolliePaymentMetadata = {
   paymentID?: string;
+  /** Set instead of paymentID on the hold of a payment method change. */
+  changeID?: string;
   mail?: string;
 };
+
+/** Held to authorize a payment method, in cents; released, never captured. */
+const AUTHORIZATION_AMOUNT = 1;
+
+const MOLLIE_API_URL = 'https://api.mollie.com/v2';
+
+export function mapMollieAuthorizationStatus(
+  status: string
+): AuthorizationOutcome {
+  switch (status) {
+    case 'authorized':
+    case 'paid':
+      return 'authorized';
+    case 'open':
+    case 'pending':
+      return 'processing';
+    default:
+      return 'failed';
+  }
+}
 
 export function mapMollieEventToPaymentStatus(event: string): PaymentState {
   switch (event) {
@@ -118,8 +150,17 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     }
     const mollieClient = await this.getMollieGateway();
     const payment = await mollieClient.payments.get(molliePaymentId);
-    const state = mapMolliePaymentToPaymentStatus(payment);
     const metadata = payment.metadata as MolliePaymentMetadata;
+
+    if (metadata?.changeID) {
+      return {
+        status: 200,
+        paymentStates: intentStates,
+        authorizationStates: [this.authorizationState(payment)],
+      };
+    }
+
+    const state = mapMolliePaymentToPaymentStatus(payment);
     if (state && metadata.paymentID) {
       let customerID: undefined | string;
 
@@ -277,6 +318,112 @@ export class MolliePaymentProvider extends BasePaymentProvider {
       paymentID: metadata.paymentID,
       paymentData: JSON.stringify(payment),
       customerID: payment.customerId ?? undefined,
+    };
+  }
+
+  override supportsAuthorization(): boolean {
+    return true;
+  }
+
+  /**
+   * A first payment with a manual capture: the reader authorizes a 0.01 hold,
+   * which creates the mandate renewals are charged with. The hold is released
+   * afterwards and never captured.
+   */
+  override async createAuthorizationIntent({
+    changeID,
+    currency,
+    customerID,
+    email,
+    successURL,
+  }: CreateAuthorizationIntentProps): Promise<AuthorizationIntent> {
+    const mollieClient = await this.getMollieGateway();
+    const config = await this.getConfig();
+
+    const customerId =
+      customerID ??
+      (
+        await mollieClient.customers.create({
+          email: email ?? '',
+          name: email ?? '',
+        })
+      ).id;
+
+    const payment = await mollieClient.payments.create({
+      customerId,
+      amount: {
+        currency,
+        value: (AUTHORIZATION_AMOUNT / 100).toFixed(2),
+      },
+      description: 'Payment method authorization',
+      redirectUrl: successURL,
+      webhookUrl: await this.generateWebhookUrl(),
+      sequenceType: SequenceType.first,
+      captureMode: CaptureMethod.manual,
+      method: mapMolliePaymentMethods(config.mollie_methods),
+      metadata: {
+        changeID,
+        mail: email,
+      },
+    });
+
+    return {
+      intentID: payment.id,
+      intentSecret: payment.getCheckoutUrl() ?? '',
+      intentData: JSON.stringify(payment),
+      state: mapMollieAuthorizationStatus(payment.status),
+      amount: AUTHORIZATION_AMOUNT,
+    };
+  }
+
+  override async checkAuthorizationStatus({
+    intentID,
+  }: CheckAuthorizationProps): Promise<AuthorizationState | null> {
+    const mollieClient = await this.getMollieGateway();
+    const payment = await mollieClient.payments.get(intentID);
+
+    if (!(payment.metadata as MolliePaymentMetadata)?.changeID) {
+      return null;
+    }
+
+    return this.authorizationState(payment);
+  }
+
+  /**
+   * The api client has no call for it yet:
+   * https://docs.mollie.com/reference/release-authorization
+   */
+  override async releaseAuthorization({
+    intentID,
+  }: ReleaseAuthorizationProps): Promise<void> {
+    const config = await this.getConfig();
+    const response = await fetch(
+      `${MOLLIE_API_URL}/payments/${intentID}/release-authorization`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.assertProperty('apiKey', config.apiKey)}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Mollie could not release the authorization ${intentID}: ${response.status} ${await response.text()}`
+      );
+    }
+  }
+
+  private authorizationState(payment: Payment): AuthorizationState {
+    const metadata = payment.metadata as MolliePaymentMetadata;
+    const state = mapMollieAuthorizationStatus(payment.status);
+
+    return {
+      changeID: metadata.changeID ?? '',
+      state,
+      customerID:
+        state === 'authorized' ? (payment.customerId ?? undefined) : undefined,
+      intentData: JSON.stringify(payment),
     };
   }
 }
