@@ -15,8 +15,8 @@ export const env = {
   // Defaults to the seed admin, which only exists on local stacks.
   adminEmail: process.env.E2E_ADMIN_EMAIL || 'dev@wepublish.ch',
   adminPassword: process.env.E2E_ADMIN_PASSWORD || '123',
-  /** Explicit opt-in so a run can never write data by accident. */
-  allowMutation: process.env.E2E_ALLOW_MUTATION === 'true',
+  /** On outside production (which is never written to); `false` opts out. */
+  allowMutation: process.env.E2E_ALLOW_MUTATION !== 'false',
   mailpitUrl: process.env.MAILPIT_URL?.replace(/\/+$/, '') || undefined,
 };
 
@@ -27,7 +27,7 @@ const requirements: Record<string, () => string | undefined> = {
   '@mutating': () =>
     isProduction ? 'never writes to production'
     : !env.apiUrl ? 'needs E2E_API_URL'
-    : !env.allowMutation ? 'needs E2E_ALLOW_MUTATION=true'
+    : !env.allowMutation ? 'disabled by E2E_ALLOW_MUTATION=false'
     : undefined,
   // The SIMULATED payment provider only exists outside production.
   '@payment': () =>

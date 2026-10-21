@@ -117,7 +117,7 @@ it with a reason instead of failing:
 
 | Tag         | Needs                                 |
 | ----------- | ------------------------------------- |
-| `@mutating` | writes data: API + opt-in, never prod |
+| `@mutating` | writes data: API, never prod         |
 | `@mail`     | reads mails: mailpit (local only)     |
 | `@payment`  | simulated payment provider (non-prod) |
 

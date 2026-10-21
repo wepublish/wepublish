@@ -33,16 +33,21 @@ a slot hosts one app at a time). `BASE_URL`, `E2E_EDITOR_URL` and
 `wepublish-site`).
 
 ```sh
-pnpm run e2e -- --app tsri --environment staging                   # tsri, both apps
-pnpm run e2e -- --app tsri --environment staging --project editor  # editor only
-pnpm run e2e -- --app bajour --environment review --review-slot 3
-pnpm run e2e -- --app tsri --environment production --project website --grep @smoke
-pnpm run e2e -- --grep @app:tsri                                   # only tsri-specific scenarios
-pnpm run e2e:report                                                # HTML report
+pnpm run e2e tsri                                         # tsri website, local
+pnpm run e2e editor                                       # editor only
+pnpm run e2e tsri,editor --environment staging            # both apps of tsri
+pnpm run e2e tsri,bajour                                  # one run per tenant
+pnpm run e2e bajour --environment review --review-slot 3
+pnpm run e2e tsri --environment production --grep @smoke
+pnpm run e2e -- --grep @app:tsri                          # only tsri-specific scenarios
+pnpm run e2e:report                                       # HTML report
 ```
 
-`--app`, `--environment` and `--review-slot` are shorthands for `E2E_APP`,
-`E2E_ENV` and `E2E_REVIEW_SLOT` (`run.mjs`); every other flag goes to
+Leading comma-separated words are targets: `editor` selects the editor
+project, a tenant name sets `E2E_APP` and selects the website project; without
+them both projects of `E2E_APP` run. `--app`, `--environment` and
+`--review-slot` are shorthands for `E2E_APP`, `E2E_ENV` and
+`E2E_REVIEW_SLOT` (`run.ts`); every other flag goes to
 `playwright test`. It is `--environment`, not `--env`: Nx's run-commands owns
 `--env`.
 
@@ -60,7 +65,7 @@ development.
 | ------------------------------------------------------------- | ----------------------- | ----------------------------------------------------------- |
 | an API URL for the target                                     | `@mutating`, `@payment` | GraphQL at `/v1`                                            |
 | `E2E_API_TOKEN` _or_ `E2E_ADMIN_EMAIL` + `E2E_ADMIN_PASSWORD` | data factories          | defaults to the seed admin `dev@wepublish.ch` / `123`       |
-| `E2E_ALLOW_MUTATION=true`                                     | `@mutating`             | explicit opt-in                                             |
+| `E2E_ALLOW_MUTATION` not `false`                              | `@mutating`             | on by default outside production; `false` opts out          |
 | `E2E_ENV` is not `production`                                 | `@mutating`, `@payment` | production is never written to; it has no simulated payment |
 | `MAILPIT_URL`                                                 | `@mail`                 | e.g. `http://localhost:8025`                                |
 
@@ -108,8 +113,7 @@ pnpm run start:docker                 # postgres, minio, dragonfly
 docker compose up -d mailpit          # SMTP :1025, UI/API :8025
 pnpm run migrate                      # migrations + seed
 
-MAILPIT_URL=http://localhost:8025 E2E_ALLOW_MUTATION=true \
-pnpm run e2e -- --app bajour
+MAILPIT_URL=http://localhost:8025 pnpm run e2e bajour
 ```
 
 With `--environment local` (the default), the run starts the dev servers it
@@ -148,5 +152,5 @@ and `API_URL` pointing at that API, and pass `BASE_URL` / `E2E_API_URL`.
   for `e2e+` users or `e2e-` slugs if a run was aborted.
 
 In GitHub: Actions → **E2E tests** → `app`, `environment` (+ `review_slot`),
-`project` (all / website / editor), optional `grep`, `allow_mutation` and URL
-overrides.
+`project` (all / website / editor), optional `grep`, `allow_mutation` (on by default; ignored for production) and
+URL overrides.

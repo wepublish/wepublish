@@ -28,8 +28,8 @@ e2e/
 
 | Goal                                      | Command                                                                   |
 | ----------------------------------------- | ------------------------------------------------------------------------- |
-| Run everything for a tenant               | `pnpm run e2e -- --app tsri --environment staging` (or `E2E_APP`/`E2E_ENV`) |
-| One application                           | `… pnpm run e2e -- --project editor` (or `website`)                       |
+| Run everything for a tenant               | `pnpm run e2e tsri,editor --environment staging` (or `E2E_APP`/`E2E_ENV`) |
+| One application                           | `pnpm run e2e editor` / `pnpm run e2e tsri` (website)                       |
 | Run by tag                                | `… pnpm run e2e -- --grep @smoke` (regex: `"@smoke\|@seo"`)               |
 | List missing steps + paste-ready snippets | `cd e2e && pnpm exec bddgen`                                              |
 | Debug headed / UI mode                    | `… pnpm run e2e -- --headed` or `-- --ui`                                 |
@@ -64,7 +64,7 @@ artifact plus the job summary. It is deliberately not an Nx `test` target, so
    (`steps/<domain>.steps.ts`; create it if needed — any `steps/**/*.ts` is
    picked up). Keep each step small; push repeated page logic into a fixture.
 5. **Run against a real site** and watch the new scenario pass:
-   `pnpm run e2e -- --app … --environment … --grep "<scenario title or tag>"`. If it fails,
+   `pnpm run e2e <tenant> --environment … --grep "<scenario title or tag>"`. If it fails,
    read the error + trace (`pnpm exec playwright show-trace <zip>`) before
    changing code. Then run the full suite once.
 6. **Typecheck** `e2e/` and report what you ran, against which URL, and the
@@ -111,8 +111,8 @@ artifact plus the job summary. It is deliberately not an Nx `test` target, so
 
 Full details and recipes: [`e2e/README.md`](../../../e2e/README.md).
 
-- **Capability tags gate scenarios.** `@mutating` (API URL +
-  `E2E_ALLOW_MUTATION=true`, never production), `@payment` (simulated
+- **Capability tags gate scenarios.** `@mutating` (API URL, never
+  production; off with `E2E_ALLOW_MUTATION=false`), `@payment` (simulated
   provider, never production), `@mail` (`MAILPIT_URL`), `@app:<name>`
   (only that tenant). The auto `capabilities` fixture skips a scenario
   with the reason when its env is missing, so production runs show these as

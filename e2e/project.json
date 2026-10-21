@@ -11,7 +11,7 @@
       "cache": false,
       "options": {
         "cwd": "e2e",
-        "commands": ["node run.mjs"],
+        "commands": ["tsx run.ts"],
         "forwardAllArgs": true
       }
     }

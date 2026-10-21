@@ -31,7 +31,7 @@ on:
         description: 'Allow journeys that write data (@mutating). Never applies to production.'
         required: false
         type: boolean
-        default: false
+        default: true
       base_url:
         description: 'Optional override of the website URL.'
         required: false

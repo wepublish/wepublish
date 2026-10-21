@@ -149,7 +149,7 @@ type WebServer = {
  * Local dev servers the run needs, for Playwright's `webServer`: reused when
  * already up, otherwise started and stopped after the run. Only for
  * `E2E_ENV=local`, only for the selected projects (`E2E_PROJECTS`, set by
- * run.mjs from `--project`), and never for a URL that was overridden — that
+ * run.ts from `--project`), and never for a URL that was overridden — that
  * server is yours to run. Docker services (database, mailpit, …) are not
  * started; see the local-stack recipe in e2e/README.md.
  */

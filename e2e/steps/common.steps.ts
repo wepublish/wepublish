@@ -26,5 +26,5 @@ When('I request {string}', async ({ request, ctx }, path: string) => {
 
 Then('the response status is {int}', async ({ ctx }, status: number) => {
   expect(ctx.response, 'no request was made in this scenario').toBeDefined();
-  expect(ctx.response!.status()).toBe(status);
+  expect(ctx.response.status()).toBe(status);
 });
