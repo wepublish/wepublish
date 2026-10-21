@@ -30,9 +30,9 @@ e2e/
 | ----------------------------------------- | ------------------------------------------------------------------------- |
 | Run everything for a tenant               | `pnpm run e2e tsri,editor --environment staging` (or `E2E_APP`/`E2E_ENV`) |
 | One application                           | `pnpm run e2e editor` / `pnpm run e2e tsri` (website)                       |
-| Run by tag                                | `… pnpm run e2e -- --grep @smoke` (regex: `"@smoke\|@seo"`)               |
+| Run by tag                                | `pnpm run e2e tsri --grep @smoke` (regex: `"@smoke\|@seo"`)              |
 | List missing steps + paste-ready snippets | `cd e2e && pnpm exec bddgen`                                              |
-| Debug headed / UI mode                    | `… pnpm run e2e -- --headed` or `-- --ui`                                 |
+| Debug headed / UI mode                    | `pnpm run e2e tsri --headed` or `--ui`                                    |
 | Open HTML report                          | `pnpm run e2e:report` (Cucumber report: `e2e/cucumber-report/index.html`) |
 | Typecheck steps                           | `pnpm exec tsc -p e2e/tsconfig.json --noEmit`                             |
 | First run on a machine                    | `pnpm exec playwright install chromium`                                   |
@@ -128,9 +128,25 @@ Full details and recipes: [`e2e/README.md`](../../../e2e/README.md).
   `data.get('reader', alias)`. Never hard-code seed content in steps.
 - **Fakes:** mail is read from mailpit (`inbox` fixture), payment goes through
   the SIMULATED provider's checkout (`checkout` fixture, Pay / Decline /
-  Cancel). Never mock Stripe or Payrexx over HTTP. Analytics, ads, Sentry and
-  tracking pixels are blocked automatically; Turnstile uses the always-pass
-  test keys and stays reachable.
+  Cancel). Analytics, ads, Sentry and tracking pixels are blocked
+  automatically; Turnstile uses the always-pass test keys and stays reachable.
+- **Any other external provider has no fake** (Mailchimp, Stripe, Payrexx, …).
+  Never mock it over HTTP and don't build a stand-in server. Either the user
+  provides a real test account (below), or the journey is not E2E-able and a
+  service spec covers it. If you hit this mid-implementation, stop and ask.
+- **New capability for a test account:** `E2E_*` env vars read in
+  `support/env.ts`, a `requirements` entry there (skip reason naming the
+  vars), a row in the README's Capabilities table, `secrets.*` in
+  `on-demand-e2e.yml`. Ask the user first. Readers' `e2e+…@example.test`
+  addresses may be rejected by real providers, and data created there (list
+  members, customers) is not deleted by `data`'s cleanup. Clean it up through
+  the provider's API too, or say it stays behind.
+- **Singleton settings** (the one mail / sync / challenge provider, global
+  settings) are shared by every scenario running in parallel. A `Given` that
+  changes them must restore what it read before (some fields, like API keys,
+  cannot be read back). The suite runs `fullyParallel`, so scenarios
+  changing the same singleton go in one feature tagged `@mode:serial`
+  (playwright-bdd serialises per feature file, not across files).
 - No secrets in feature files or steps. Credentials come from env vars read
   in `support/env.ts`, added to the workflow via `secrets.*` — ask the user
   first.

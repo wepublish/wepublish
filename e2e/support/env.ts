@@ -18,6 +18,19 @@ export const env = {
   /** On outside production (which is never written to); `false` opts out. */
   allowMutation: process.env.E2E_ALLOW_MUTATION !== 'false',
   mailpitUrl: process.env.MAILPIT_URL?.replace(/\/+$/, '') || undefined,
+  /** A real Mailchimp test audience and one of its interests: there is no fake. */
+  mailchimp:
+    (
+      process.env.E2E_MAILCHIMP_API_KEY &&
+      process.env.E2E_MAILCHIMP_LIST_ID &&
+      process.env.E2E_MAILCHIMP_INTEREST_ID
+    ) ?
+      {
+        apiKey: process.env.E2E_MAILCHIMP_API_KEY,
+        listId: process.env.E2E_MAILCHIMP_LIST_ID,
+        interestId: process.env.E2E_MAILCHIMP_INTEREST_ID,
+      }
+    : undefined,
 };
 
 const isProduction = target.environment === 'production';
@@ -35,6 +48,12 @@ const requirements: Record<string, () => string | undefined> = {
     : !env.apiUrl ? 'needs E2E_API_URL'
     : undefined,
   '@mail': () => (!env.mailpitUrl ? 'needs MAILPIT_URL' : undefined),
+  // Points the tenant's one sync provider at the test audience.
+  '@mailchimp': () =>
+    isProduction ? "never reconfigures production's Mailchimp"
+    : !env.mailchimp ?
+      'needs E2E_MAILCHIMP_API_KEY, E2E_MAILCHIMP_LIST_ID and E2E_MAILCHIMP_INTEREST_ID'
+    : undefined,
 };
 
 /**

@@ -26,11 +26,20 @@ Two entry points, same rules:
 
 ```sh
 base=$(git merge-base HEAD origin/master)
+noise=(':!**/gql/**' ':!**/graphql.ts' ':!**/schema-types.ts' ':!**/possible-types.ts'
+       ':!**/*.generated.ts' ':!**/schema-v2.graphql' ':!**/next-env.d.ts' ':!pnpm-lock.yaml')
 git log --oneline $base..HEAD
-git diff --stat $base...HEAD
-git status --short          # uncommitted work counts too
+git diff --stat $base...HEAD -- . "${noise[@]}"
+git status --short -- . ':!e2e' ':!.claude' "${noise[@]}"   # uncommitted feature work
 gh pr view --json title,body 2>/dev/null
 ```
+
+Uncommitted changes count only if they belong to the feature. Changes under
+`e2e/` and `.claude/` are test infrastructure, not the change under test. The
+same goes for a staged merge that brings the suite onto a feature branch. If
+other uncommitted files look unrelated, ask rather than guess. The exclusions
+drop generated code (codegen, schema, lockfile), which only mirrors the real
+change.
 
 Read the changed sources (not just the stat) and the PR description: the
 intent behind the change is what the journey should protect.
@@ -63,6 +72,20 @@ Budget: **0–2 new scenarios per branch.** Extending an existing journey (one
 more `Then`, one more `Examples` row) beats adding a scenario. "No E2E needed,
 because …" is a valid and common result — say it plainly and point to the unit
 or Storybook test that should cover the change instead.
+
+**Check that the suite can reach the boundary.** The only fakes are mailpit
+(mail) and the SIMULATED payment provider; Turnstile uses test keys (see
+`e2e/README.md` → "Test data and fakes"). A journey through any other external
+service (Mailchimp, Stripe, Payrexx, a CRM, …) has no fake: the local stack and
+review instances leave it unconfigured, so the feature does not even render.
+Never fake it over HTTP. Ask the user to pick one:
+
+- **a credential-backed capability**: a real test account, configured by the
+  `Given` from `E2E_*` env vars and gated by a new capability tag (step 7). It
+  only runs where those secrets exist.
+- **not E2E-able**: report it as such, and name the integration or unit test
+  that covers the provider call instead (usually a service spec that mocks the
+  provider's SDK).
 
 ## 4. Take inventory
 
@@ -120,8 +143,14 @@ it with a reason instead of failing:
 | `@mutating` | writes data: API, never prod         |
 | `@mail`     | reads mails: mailpit (local only)     |
 | `@payment`  | simulated payment provider (non-prod) |
+| `@mailchimp` | real Mailchimp test audience (`E2E_MAILCHIMP_*`, non-prod) |
 
-Read-only checks that are safe on production get no capability tag.
+Read-only checks that are safe on production get no capability tag. These are
+all the capabilities that exist (`requirements` in `e2e/support/env.ts`). A new
+one, such as a test account for an external provider, takes a
+`requirements` entry, a row in the README's Capabilities table and in this
+table, and workflow secrets. Ask the user before adding one, because it
+means credentials (see `gherkin-to-playwright`).
 
 ## 8. Validate and report
 

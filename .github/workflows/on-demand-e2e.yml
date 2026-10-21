@@ -69,6 +69,9 @@ jobs:
       # Capabilities, see e2e/README.md. No MAILPIT_URL here: @mail journeys skip.
       E2E_ALLOW_MUTATION: ${{ inputs.allow_mutation }}
       E2E_API_TOKEN: ${{ secrets.E2E_API_TOKEN }}
+      E2E_MAILCHIMP_API_KEY: ${{ secrets.E2E_MAILCHIMP_API_KEY }}
+      E2E_MAILCHIMP_LIST_ID: ${{ secrets.E2E_MAILCHIMP_LIST_ID }}
+      E2E_MAILCHIMP_INTEREST_ID: ${{ secrets.E2E_MAILCHIMP_INTEREST_ID }}
 
     steps:
       - uses: actions/checkout@v7

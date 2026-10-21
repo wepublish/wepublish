@@ -68,10 +68,15 @@ development.
 | `E2E_ALLOW_MUTATION` not `false`                              | `@mutating`             | on by default outside production; `false` opts out          |
 | `E2E_ENV` is not `production`                                 | `@mutating`, `@payment` | production is never written to; it has no simulated payment |
 | `MAILPIT_URL`                                                 | `@mail`                 | set (and mailpit started) by local runs                     |
+| `E2E_MAILCHIMP_API_KEY` + `_LIST_ID` + `_INTEREST_ID`        | `@mailchimp`            | a real test audience (no fake); never production            |
 
 Every scenario carries a domain tag (`@auth`, `@paywall`, …) and the
 capability tags it needs. The `capabilities` fixture compares them with the
 target and calls `test.skip(…, 'needs MAILPIT_URL')` when one is missing.
+The skip happens per test, after the run has migrated, seeded and started the
+local stack. A local `--grep` that only matches skipped scenarios still takes
+the full cold start (~1 min) and then reports `skipped`, not `passed`. Read the
+skip reason in the report (`pnpm run e2e:report`).
 
 ## Test data and fakes
 
@@ -92,6 +97,13 @@ target and calls `test.skip(…, 'needs MAILPIT_URL')` when one is missing.
   run with `bypassCSP`: the checkout page's CSP (`form-action 'self'`) makes
   Chrome block its redirect back to the website when API and website are
   different origins — a provider bug, see `steps/fixtures.ts`.
+- **Mailchimp** has no fake: `@mailchimp` scenarios point the tenant's one
+  Mailchimp sync provider at a real test audience (`E2E_MAILCHIMP_*`) and
+  restore its list, newsletters and `enabled` afterwards. The API key cannot be
+  read back, so the test key stays. Members the scenario adds to the audience
+  (often `pending`, with a confirmation mail) stay there; archive them in
+  Mailchimp. Scenarios that change the provider share it, so keep them in one
+  feature tagged `@mode:serial`.
 - **Third parties** (`support/third-party.ts`): analytics, ads, Sentry and
   tracking pixels are blocked in every test; Cloudflare Turnstile is not.
 - **Captcha:** the seed configures Turnstile's always-pass test keys
