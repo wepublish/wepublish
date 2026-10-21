@@ -39,19 +39,19 @@ catalog:
   '@mui/material': '^9.4.0'
   '@nestjs/apollo': '^14.0.2'
   '@nestjs/axios': '^12.0.1'
-  '@nestjs/cache-manager': '^12.0.0'
-  '@nestjs/common': '^12.1.0'
+  '@nestjs/cache-manager': '^12.0.1'
+  '@nestjs/common': '^12.1.3'
   '@nestjs/config': '^12.0.1'
-  '@nestjs/core': '^12.1.0'
+  '@nestjs/core': '^12.1.3'
   '@nestjs/graphql': '^14.0.2'
   '@nestjs/passport': '^12.0.0'
-  '@nestjs/platform-express': '^12.1.0'
+  '@nestjs/platform-express': '^12.1.3'
   '@nestjs/schedule': '^12.0.2'
   '@nestjs/terminus': '^12.1.0'
   '@node-rs/argon2': '^2.0.2'
   '@node-rs/bcrypt': '^1.10.7'
-  '@prisma/adapter-pg': 7.5.0
-  '@prisma/client': 7.5.0
+  '@prisma/adapter-pg': 7.10.1
+  '@prisma/client': 7.10.1
   '@react-email/components': '^1.0.12'
   '@sentry/nestjs': '^11.4.0'
   '@sentry/profiling-node': '^11.4.0'
@@ -83,7 +83,7 @@ catalog:
   minio: '^8.0.1'
   multer: '^2.4.0'
   nanoid: '^2.1.7'
-  nestjs-zod: '^3.0.0'
+  nestjs-zod: '^5.5.0'
   node-cache: '^5.1.2'
   node-fetch: 2.6.7
   nodemailer: '^9.0.3'
@@ -91,12 +91,12 @@ catalog:
   passport-http-bearer: '^1.0.1'
   pg: '^8.20.0'
   pino: '^6.11.0'
-  prisma: 7.5.0
+  prisma: 7.10.1
   prosemirror-model: '^1.25.8'
   qs: '^6.9.1'
   ramda: '^0.28.0'
-  react: '^19.2.7'
-  react-dom: '^19.2.7'
+  react: '^19.3.1'
+  react-dom: '^19.3.1'
   rxjs: '^7.8.0'
   sharp: '^0.33.5'
   stripe: '^8.126.0'
