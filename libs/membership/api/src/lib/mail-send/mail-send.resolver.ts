@@ -13,6 +13,7 @@ import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanGetMailLogs, CanSendMailTemplates } from '@wepublish/permissions';
 import {
+  EmailEvidenceModel,
   EmailQualityRefreshModel,
   MailAudienceInput,
   MailLogFilter,
@@ -34,6 +35,7 @@ import {
 } from './mail-send-recipient.service';
 import { MailLogSyncService } from './mail-log-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
+import { EmailEvidenceService } from './email-evidence.service';
 
 /**
  * `MailLogTemplate` and `MailLogRecipient` expose only these fields, so there is
@@ -53,7 +55,8 @@ export class MailSendResolver {
     private mailSendJobService: MailSendJobService,
     private recipientService: MailSendRecipientService,
     private mailLogSyncService: MailLogSyncService,
-    private emailQualityService: EmailQualityService
+    private emailQualityService: EmailQualityService,
+    private emailEvidenceService: EmailEvidenceService
   ) {}
 
   @Permissions(CanSendMailTemplates)
@@ -380,6 +383,14 @@ export class MailSendResolver {
     const { recomputed } = await this.emailQualityService.recomputeAll();
 
     return { ...synced, recomputed };
+  }
+
+  @Permissions(CanGetMailLogs)
+  @Query(() => EmailEvidenceModel, {
+    description: `Where the email status comes from: whether and when the mail provider reported anything. The editor warns when no provider evidence arrived for a while.`,
+  })
+  async emailEvidence(): Promise<EmailEvidenceModel> {
+    return this.emailEvidenceService.summary();
   }
 
   private paginate<T extends { id: string }>(

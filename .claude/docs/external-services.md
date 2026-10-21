@@ -29,6 +29,32 @@ mutations only succeed while none exists (the editor then shows «Einrichten»),
 and there is no delete mutation, so a medium never ends up without one. Change
 type or credentials on the existing row instead.
 
+### Email quality evidence (what providers tell us about addresses)
+
+Everything lands in `email_quality_events` through `EMAIL_QUALITY_RECORDER`
+(`EmailQualityService`, `libs/membership/api/.../email-quality/`), deduped on
+`providerEventId`; the level in `user_email_quality` is recomputed on record
+and nightly. Sources today:
+
+- Transactional mail provider (one per installation): send-time refusal
+  (Mandrill only), webhook (Mandrill, Mailgun; `mail.webhook.ts`), nightly
+  poll of open mail logs (`MailLogSyncService`, Mandrill only). SMTP, Slack
+  and Log report nothing.
+- Mailchimp audience, inside the nightly Mailchimp sync (never on a dry run):
+  `cleaned` members → `hardBounce`, `unsubscribed` → `optedOut`
+  (`mailchimp-audience-evidence.ts`), and the clickers of the last 7 days of
+  campaigns → `clicked`, dated by the campaign's send time
+  (`mailchimp-campaign-clicks.ts`). These reach every user with that address.
+- `optedOut` is not in the evaluator's `DEAD_TYPES`: leaving a newsletter does
+  not make an inbox dead. `unsubscribed` stays dead, because Mandrill and
+  Mailgun refuse every further mail to such an address.
+
+Observability: `SettingMailProvider.lastWebhookAt` (every verified webhook
+call), `lastPollAt` / `lastPollError` (every poll), shown on the mail
+integration; query `emailEvidence` (`CanGetMailLogs`) sums events per source and
+the editor warns on the communication tool and the delivery channel page when
+no provider evidence arrived for `emailQualityEvidenceWarnAfterDays` (14).
+
 ## PDF Renderer
 
 Everything letter-related ships dark behind the `paper-letters` feature

@@ -2217,12 +2217,14 @@
         "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
         "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime.",
         "emailQualityUnresponsiveAfterDays": "An email address counts as “unresponsive” when this many days passed without a login or a click in a mail, although mails were delivered. Re-evaluated nightly and via “Refresh statuses”.",
-        "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”."
+        "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”.",
+        "emailQualityEvidenceWarnAfterDays": "After this many days without a delivery report from the mail service (webhook, poll, newsletter audience), the communication tool and the delivery channel page warn that the email status rests on logins alone."
       },
       "sessionTtlDays": "Session lifetime",
       "emailQuality": "Email quality",
       "emailQualityUnresponsiveAfterDays": "“Unresponsive” after … days",
       "emailQualityMinMailsForUnresponsive": "… delivered mails",
+      "emailQualityEvidenceWarnAfterDays": "Warn without delivery reports after … days",
       "info": {
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
@@ -3232,7 +3234,16 @@
         "slackWebhookUrlInfo": "The address of a Slack incoming webhook. Instead of being delivered, every email is posted to that Slack channel – useful for testing.",
         "smtpHostInfo": "The address of the outgoing mail server, e.g. smtp.example.ch. Your email provider tells you which one to use.",
         "smtpPortInfo": "Usually 587 or 465 – see your email provider's instructions.",
-        "smtpSecureInfo": "Enable it for port 465. For port 587, leave it off – the connection is then encrypted via STARTTLS."
+        "smtpSecureInfo": "Enable it for port 465. For port 587, leave it off – the connection is then encrypted via STARTTLS.",
+        "evidence": {
+          "title": "Delivery reports",
+          "info": "Shows whether the mail service reaches We.Publish. If both stay empty, the email status of your users rests on logins and newsletter clicks alone.",
+          "lastWebhookAt": "Last report by webhook",
+          "lastPollAt": "Last poll",
+          "lastPollError": "Error on the last poll",
+          "never": "never",
+          "notReporting": "This service reports no delivery states."
+        }
       },
       "trackingPixelSettings": {
         "type": "Type",
@@ -3800,6 +3811,12 @@
         "refresh": "Refresh statuses",
         "refreshing": "Refreshing statuses …",
         "refreshed": "{{updated}} delivery states fetched from the provider ({{checked}} checked), {{recomputed}} people re-evaluated."
+      },
+      "emailEvidence": {
+        "noProviderReports": "The mail service ({{provider}}) reports no delivery states. The email status rests on logins, confirmed addresses and newsletter clicks alone.",
+        "never": "No delivery report has ever arrived from the mail service. The email status rests on logins alone. Check the webhook secret in the integrations and the nightly poll.",
+        "stale": "No delivery report from the mail service for {{days}} days (last one {{lastAt}}). Check the webhook and the nightly poll.",
+        "pollError": "The last poll of the mail service failed: {{error}}"
       },
       "endedWindow": {
         "label": "When the subscription was deactivated",

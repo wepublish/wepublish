@@ -5,6 +5,7 @@ import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailLogSyncService } from './mail-log-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
+import { EmailEvidenceService } from './email-evidence.service';
 import { MailEmailSegment, MailRecipientBase } from './mail-send.model';
 import type { Mock } from 'vitest';
 
@@ -15,17 +16,28 @@ const makeResolver = (
   jobService: any = {},
   recipientService: any = {},
   mailLogSyncService: any = {},
-  emailQualityService: any = {}
+  emailQualityService: any = {},
+  emailEvidenceService: any = {}
 ) =>
   new MailSendResolver(
     prisma as PrismaClient,
     jobService as MailSendJobService,
     recipientService as MailSendRecipientService,
     mailLogSyncService as MailLogSyncService,
-    emailQualityService as EmailQualityService
+    emailQualityService as EmailQualityService,
+    emailEvidenceService as EmailEvidenceService
   );
 
 describe('MailSendResolver', () => {
+  it('emailEvidence hands out the evidence summary', async () => {
+    const summary = { providerType: null, sources: [] };
+    const resolver = makeResolver({}, {}, {}, {}, {}, {
+      summary: vi.fn(async () => summary),
+    });
+
+    await expect(resolver.emailEvidence()).resolves.toBe(summary);
+  });
+
   // The GraphQL types for these relations are trimmed (`MailLogTemplate` exposes
   // only id+name, `MailLogRecipient` only id/email/name/firstName), so
   // `include: true` fetched whole rows — every template body, and the user's

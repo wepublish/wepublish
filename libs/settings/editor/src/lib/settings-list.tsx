@@ -95,6 +95,10 @@ const SETTINGS = {
     label: 'settingList.emailQualityMinMailsForUnresponsive',
     value: 1,
   },
+  [SettingName.EmailQualityEvidenceWarnAfterDays]: {
+    label: 'settingList.emailQualityEvidenceWarnAfterDays',
+    value: 14,
+  },
   [SettingName.SendLoginJwtExpiresMin]: {
     label: 'settingList.loginMinutes',
     value: 0,
@@ -600,6 +604,14 @@ function SettingList() {
                           t(
                             'settingList.warnings.emailQualityMinMailsForUnresponsive'
                           )
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.EmailQualityEvidenceWarnAfterDays,
+                          t(
+                            'settingList.warnings.emailQualityEvidenceWarnAfterDays'
+                          ),
+                          t('settingList.days')
                         )}
                       </Stack>
                     </CardContent>

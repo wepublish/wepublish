@@ -80,6 +80,8 @@ export type {
   Document,
   DocumentFilter,
   DocumentStorageUsage,
+  EmailEvidenceModel,
+  EmailEvidenceSourceModel,
   EmailQualityRefreshModel,
   Event,
   EventBlock,

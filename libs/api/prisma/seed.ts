@@ -241,6 +241,17 @@ const seedSettings = (prisma: PrismaClient) =>
         settingRestriction: { minValue: 1, maxValue: 100 },
       },
     }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS,
+        value: 14,
+        settingRestriction: { minValue: 1, maxValue: 365 },
+      },
+    }),
 
     prisma.settingAIProvider.upsert({
       where: {

@@ -1915,6 +1915,12 @@ model SettingMailProvider {
   smtp_secure           Boolean?
   smtp_user             String?
 
+  // When the provider last reached us and when we last asked it, so an admin
+  // can tell whether the email status rests on provider evidence at all.
+  lastWebhookAt DateTime? @db.Timestamptz(3)
+  lastPollAt    DateTime? @db.Timestamptz(3)
+  lastPollError String?
+
   @@map("settings.mailprovider")
 }
 
@@ -2552,12 +2558,16 @@ enum EmailQualityLevel {
 
 // verified / invalid are reserved for an address verification service; nothing
 // records verified yet.
+// unsubscribed: the mail provider refuses the address from now on (Mandrill's
+// rejects list, Mailgun's unsubscribes), so it is as dead as a bounce.
+// optedOut: the person left a newsletter audience; the inbox still works.
 enum EmailQualityEventType {
   hardBounce    @map("hardBounce")
   invalid       @map("invalid")
   blocked       @map("blocked")
   spamComplaint @map("spamComplaint")
   unsubscribed  @map("unsubscribed")
+  optedOut      @map("optedOut")
   clicked       @map("clicked")
   verified      @map("verified")
 }

@@ -1278,6 +1278,43 @@ export enum EditorBlockType {
   Title = 'Title'
 }
 
+/** Where the email status comes from: whether the mail provider reports anything, when it last did, and how much evidence arrived lately. */
+export type EmailEvidenceModel = {
+  __typename: 'EmailEvidenceModel';
+  /** When the provider was last asked for delivery states. */
+  lastPollAt?: Maybe<Scalars['DateTime']['output']>;
+  /** What went wrong on the last poll; null when it succeeded. */
+  lastPollError?: Maybe<Scalars['String']['output']>;
+  /** Newest evidence from any provider source. Null means the status rests on logins and confirmations alone. */
+  lastProviderEvidenceAt?: Maybe<Scalars['DateTime']['output']>;
+  /** When the provider last called the webhook with a verified request. */
+  lastWebhookAt?: Maybe<Scalars['DateTime']['output']>;
+  providerName?: Maybe<Scalars['String']['output']>;
+  /** Whether the configured provider reports delivery outcomes at all. SMTP never does. */
+  providerReportsDelivery: Scalars['Boolean']['output'];
+  providerType?: Maybe<MailProviderType>;
+  sources: Array<EmailEvidenceSourceModel>;
+  /** Days without provider evidence after which the editor warns (setting emailQualityEvidenceWarnAfterDays). */
+  warnAfterDays: Scalars['Int']['output'];
+};
+
+export type EmailEvidenceSourceModel = {
+  __typename: 'EmailEvidenceSourceModel';
+  /** Events of this source in the last 30 days. */
+  count: Scalars['Int']['output'];
+  /** When the newest event of this source arrived, ever. */
+  lastAt?: Maybe<Scalars['DateTime']['output']>;
+  source: EmailQualityEventSource;
+};
+
+/** send: the provider refused the address when a mail was sent. webhook: the provider reported it. poll: asked of the provider or read from a newsletter audience. verification: an address verification service. */
+export enum EmailQualityEventSource {
+  Poll = 'poll',
+  Send = 'send',
+  Verification = 'verification',
+  Webhook = 'webhook'
+}
+
 /** active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed. */
 export enum EmailQualityLevel {
   Active = 'active',
@@ -6297,6 +6334,8 @@ export type Query = {
   documentStorageUsage: DocumentStorageUsage;
   /** Returns a paginated list of documents based on the filters given. */
   documents: PaginatedDocuments;
+  /** Where the email status comes from: whether and when the mail provider reported anything. The editor warns when no provider evidence arrived for a while. */
+  emailEvidence: EmailEvidenceModel;
   /** Returns an event by id. */
   event: Event;
   /**
@@ -7704,6 +7743,12 @@ export type SettingMailProvider = SettingProvider & {
   fromAddress?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
+  /** When the provider was last asked for delivery states. */
+  lastPollAt?: Maybe<Scalars['DateTime']['output']>;
+  /** What went wrong on the last poll; null when it succeeded. */
+  lastPollError?: Maybe<Scalars['String']['output']>;
+  /** When the provider last called the webhook with a verified request. */
+  lastWebhookAt?: Maybe<Scalars['DateTime']['output']>;
   mailchimp_baseURL?: Maybe<Scalars['String']['output']>;
   mailgun_baseDomain?: Maybe<Scalars['String']['output']>;
   mailgun_mailDomain?: Maybe<Scalars['String']['output']>;
@@ -7730,6 +7775,7 @@ export enum SettingName {
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  EmailQualityEvidenceWarnAfterDays = 'EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS',
   EmailQualityMinMailsForUnresponsive = 'EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE',
   EmailQualityUnresponsiveAfterDays = 'EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS',
   MailProviderName = 'MAIL_PROVIDER_NAME',

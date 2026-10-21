@@ -5,6 +5,8 @@ import {
   SettingMailProvider,
   UpdateMailProviderSettingDocument,
 } from '@wepublish/editor/api';
+import { Box, Typography } from '@mui/material';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
@@ -39,6 +41,65 @@ const mailSettingsSchema = z.object({
 
 type IntegrationFormValues = z.infer<typeof mailSettingsSchema>;
 
+/** Providers that report delivery outcomes, by webhook or on request. */
+const REPORTING_TYPES = new Set([
+  MailProviderType.Mailchimp,
+  MailProviderType.Mailgun,
+]);
+
+/**
+ * When the provider last reached us and when we last asked it. Both empty
+ * means the users' email status rests on logins alone, which is what an
+ * admin wondering about the delivery channel suggestions needs to know.
+ */
+function MailEvidenceStatus({ setting }: { setting: SettingMailProvider }) {
+  const { t, i18n } = useTranslation();
+  const format = (value?: string | null) =>
+    value ?
+      new Intl.DateTimeFormat(i18n.language, {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }).format(new Date(value))
+    : t('integrations.mailSettings.evidence.never');
+
+  if (!setting.type || !REPORTING_TYPES.has(setting.type)) {
+    return (
+      <Typography
+        variant="body2"
+        sx={{ color: 'text.secondary', marginBottom: 2 }}
+      >
+        {t('integrations.mailSettings.evidence.notReporting')}
+      </Typography>
+    );
+  }
+
+  return (
+    <Box sx={{ marginBottom: 2 }}>
+      <Typography variant="subtitle2">
+        {t('integrations.mailSettings.evidence.title')}{' '}
+        <InfoTooltip text={t('integrations.mailSettings.evidence.info')} />
+      </Typography>
+      <Typography variant="body2">
+        {t('integrations.mailSettings.evidence.lastWebhookAt')}:{' '}
+        {format(setting.lastWebhookAt)}
+      </Typography>
+      <Typography variant="body2">
+        {t('integrations.mailSettings.evidence.lastPollAt')}:{' '}
+        {format(setting.lastPollAt)}
+      </Typography>
+      {setting.lastPollError && (
+        <Typography
+          variant="body2"
+          sx={{ color: 'error.main' }}
+        >
+          {t('integrations.mailSettings.evidence.lastPollError')}:{' '}
+          {setting.lastPollError}
+        </Typography>
+      )}
+    </Box>
+  );
+}
+
 export function MailIntegrationForm() {
   const { t } = useTranslation();
 
@@ -55,6 +116,7 @@ export function MailIntegrationForm() {
         })),
       }}
       schema={mailSettingsSchema}
+      renderStatus={setting => <MailEvidenceStatus setting={setting} />}
       getLogo={setting => {
         switch (setting.type) {
           case MailProviderType.Mailchimp:

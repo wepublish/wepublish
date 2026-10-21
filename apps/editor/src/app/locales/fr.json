@@ -2199,6 +2199,7 @@
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
         "emailQualityUnresponsiveAfterDays": "Une adresse e-mail est considérée « sans réaction » lorsque ce nombre de jours s’est écoulé sans connexion ni clic dans un e-mail, alors que des e-mails ont été remis. Réévalué chaque nuit et via « Actualiser les statuts ».",
         "emailQualityMinMailsForUnresponsive": "Ce nombre d’e-mails doit avoir été remis à l’adresse avant qu’elle puisse être considérée « sans réaction ».",
+        "emailQualityEvidenceWarnAfterDays": "Après ce nombre de jours sans rapport de distribution du service d’e-mail (webhook, interrogation, audience newsletter), l’outil de communication et la page du canal de distribution signalent que le statut e-mail ne repose que sur les connexions.",
         "newArticlePaywall": "N’affectera pas les articles déjà créés",
         "newArticlePeering": "N’affectera pas les articles déjà créés",
         "showPendingWhenNotPublished": "Cela exposera publiquement les articles et pages en attente (et donc aussi les robots d’indexation), même s’ils n’ont encore jamais été publiés."
@@ -2207,6 +2208,7 @@
       "emailQuality": "Qualité des e-mails",
       "emailQualityUnresponsiveAfterDays": "« Sans réaction » après … jours",
       "emailQualityMinMailsForUnresponsive": "… e-mails remis",
+      "emailQualityEvidenceWarnAfterDays": "Avertir sans rapport de distribution après … jours",
       "activeSubscriptionsApiPublic": "Rendre l’API des abonnements actifs accessible au public",
       "expectedRevenueApiPublic": "Rendre l’API des revenus attendus accessible au public",
       "newDeactivationsApiPublic": "Rendre l’API des nouvelles désactivations accessible au public",
@@ -3148,7 +3150,16 @@
         "slackWebhookUrlInfo": "L’adresse d’un webhook entrant Slack. Au lieu d’être distribué, chaque e-mail est publié dans ce canal Slack – pratique pour les tests.",
         "smtpHostInfo": "L’adresse du serveur d’envoi, p. ex. smtp.example.ch. Votre fournisseur de messagerie vous l’indique.",
         "smtpPortInfo": "Généralement 587 ou 465 – voir les indications de votre fournisseur de messagerie.",
-        "smtpSecureInfo": "À activer pour le port 465. Pour le port 587, laissez désactivé – la connexion est alors chiffrée via STARTTLS."
+        "smtpSecureInfo": "À activer pour le port 465. Pour le port 587, laissez désactivé – la connexion est alors chiffrée via STARTTLS.",
+        "evidence": {
+          "title": "Rapports de distribution",
+          "info": "Indique si le service d’e-mail atteint We.Publish. Si les deux restent vides, le statut e-mail des utilisateur·trice·s ne repose que sur les connexions et les clics dans la newsletter.",
+          "lastWebhookAt": "Dernier rapport par webhook",
+          "lastPollAt": "Dernière interrogation",
+          "lastPollError": "Erreur lors de la dernière interrogation",
+          "never": "jamais",
+          "notReporting": "Ce service ne signale aucun statut de distribution."
+        }
       },
       "trackingPixelSettings": {
         "type": "Type",
@@ -3773,6 +3784,12 @@
         "refresh": "Actualiser les statuts",
         "refreshing": "Actualisation des statuts …",
         "refreshed": "{{updated}} statuts de remise récupérés chez le fournisseur ({{checked}} vérifiés), {{recomputed}} personnes réévaluées."
+      },
+      "emailEvidence": {
+        "noProviderReports": "Le service d’e-mail ({{provider}}) ne signale aucun statut de distribution. Le statut e-mail ne repose que sur les connexions, les adresses confirmées et les clics dans la newsletter.",
+        "never": "Aucun rapport de distribution n’est jamais arrivé du service d’e-mail. Le statut e-mail ne repose que sur les connexions. Vérifiez le secret du webhook dans les intégrations et l’interrogation nocturne.",
+        "stale": "Aucun rapport de distribution du service d’e-mail depuis {{days}} jours (dernier : {{lastAt}}). Vérifiez le webhook et l’interrogation nocturne.",
+        "pollError": "La dernière interrogation du service d’e-mail a échoué : {{error}}"
       },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",

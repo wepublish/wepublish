@@ -213,8 +213,8 @@ describe('SettingList', () => {
       expect(screen.getByText('settingList.ms')).toBeInTheDocument()
     );
     expect(screen.getAllByText('settingList.minutes')).toHaveLength(2);
-    // session lifetime and the email-quality window
-    expect(screen.getAllByText('settingList.days')).toHaveLength(2);
+    // session lifetime, the email-quality window and the evidence warning
+    expect(screen.getAllByText('settingList.days')).toHaveLength(3);
   });
 
   test('spaces every card in the second column alike', async () => {
