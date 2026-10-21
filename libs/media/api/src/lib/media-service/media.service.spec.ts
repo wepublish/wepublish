@@ -57,18 +57,9 @@ class RecordingDisk extends InMemoryDisk {
   }
 }
 
-<<<<<<< HEAD
-const createService = () => {
+const createService = (publicKey?: unknown) => {
   const uploads = new RecordingDisk({});
   const transformations = new RecordingDisk({});
-=======
-const createService = (publicKey?: unknown) => {
-  const storage = new FakeStorage();
-  const config: MediaServiceConfig = {
-    uploadBucket: UPLOAD_BUCKET,
-    transformationBucket: TRANSFORMATION_BUCKET,
-  };
->>>>>>> origin/master
   const jwksClient = {
     getPublicKey: async () => {
       if (!publicKey) {
@@ -392,7 +383,6 @@ describe('MediaService images', () => {
     expect(stored.equals(image)).toBe(true);
   });
 
-<<<<<<< HEAD
   it('removes an image and its transformations', async () => {
     const { service, uploads, transformations } = createService();
     await service.saveImage('image-4', await createImage());
@@ -405,35 +395,34 @@ describe('MediaService images', () => {
 
     expect(await uploads.exists('images/image-4')).toBe(false);
     expect(await transformations.exists(uri)).toBe(false);
-=======
+  });
+
   describe('output format', () => {
     const createSigned = async () => {
       const { publicKey, privateKey } = await generateKeyPair('EdDSA');
-      const { service, storage } = createService(publicKey);
+      const { service, transformations } = createService(publicKey);
 
       const transform = async (
         imageId: string,
-        transformations: TransformationsDto
+        requestedTransformations: TransformationsDto
       ) => {
         const sig = await signImageTransformations(
           privateKey,
           imageId,
-          transformations
+          requestedTransformations
         );
         const { uri } = await service.getImageUri(imageId, {
-          ...transformations,
+          ...requestedTransformations,
           sig,
         });
 
         return {
           uri,
-          buffer: await collectStream(
-            await storage.getFile(TRANSFORMATION_BUCKET, uri)
-          ),
+          buffer: await collectStream((await transformations.get(uri)).body),
         };
       };
 
-      return { service, storage, transform };
+      return { service, transformations, transform };
     };
 
     // 6x4, two frames (red, black), made with ImageMagick — sharp cannot write a multi-frame gif from raw pixels
@@ -451,7 +440,7 @@ describe('MediaService images', () => {
     ] as const)(
       'stores a %s transformation as %s',
       async (format, contentType) => {
-        const { service, storage, transform } = await createSigned();
+        const { service, transformations, transform } = await createSigned();
         await service.saveImage('image-1', await createImage());
 
         const { uri, buffer } = await transform('image-1', {
@@ -459,9 +448,7 @@ describe('MediaService images', () => {
           format,
         });
 
-        expect(storage.contentTypeOf(TRANSFORMATION_BUCKET, uri)).toBe(
-          contentType
-        );
+        expect(await transformations.contentTypeOf(uri)).toBe(contentType);
         expect((await sharp(buffer).metadata()).format).toBe(format);
       }
     );
@@ -528,6 +515,5 @@ describe('MediaService images', () => {
 
       expect((await sharp(buffer).metadata()).pages).toBe(2);
     });
->>>>>>> origin/master
   });
 });

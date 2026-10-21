@@ -286,11 +286,12 @@ export class MediaService {
       );
 
       const { data: transformedBuffer, info } = await transformedImage.toBuffer(
-        { resolveWithObject: true }
+        {
+          resolveWithObject: true,
+        }
       );
       transformGuard.checkImageSize({ size: info.size } as sharp.Metadata);
 
-<<<<<<< HEAD
       const exists = imageExists;
       const uri =
         imageExists ?
@@ -298,34 +299,10 @@ export class MediaService {
         : `images/fallback/${transformationsKey}`;
 
       await this.transformations.put(uri, transformedBuffer, {
-        contentType: 'image/webp',
+        contentType: `image/${format}`,
         contentLength: info.size,
       });
 
-=======
-      let uri;
-      let exists = true;
-      if (imageExists) {
-        uri = `images/${imageId}/${transformationsKey}`;
-        await this.storage.saveFile(
-          this.config.transformationBucket,
-          uri,
-          transformedBuffer,
-          info.size,
-          { 'Content-Type': `image/${format}` }
-        );
-      } else {
-        exists = false;
-        uri = `images/fallback/${transformationsKey}`;
-        await this.storage.saveFile(
-          this.config.transformationBucket,
-          uri,
-          transformedBuffer,
-          info.size,
-          { 'Content-Type': `image/${format}` }
-        );
-      }
->>>>>>> origin/master
       return { uri, exists };
     } finally {
       imageStream.destroy();
