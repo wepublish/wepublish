@@ -3275,6 +3275,18 @@
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
+        "audienceWebhook": {
+          "title": "Reports from the audience",
+          "info": "Mailchimp tells We.Publish right away when a contact was cleaned (bounces, abuse) or unsubscribed. Without the webhook this arrives with the nightly sync only. We.Publish registers the webhook at Mailchimp itself; the API has to be reachable from Mailchimp for that.",
+          "registeredAt": "Registered at Mailchimp on {{date}}",
+          "notRegistered": "Not registered at Mailchimp yet.",
+          "lastReceived": "Last report",
+          "never": "none yet",
+          "register": "Register webhook at Mailchimp",
+          "renew": "Renew registration",
+          "registered": "The webhook is registered at Mailchimp.",
+          "failed": "Mailchimp refused the registration: {{error}}"
+        },
         "enabled": "Enabled",
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp List/Audience ID",

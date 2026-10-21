@@ -53,6 +53,16 @@ and nightly. Sources today:
   (`mailchimp-audience-evidence.ts`), and the clickers of the last 7 days of
   campaigns → `clicked`, dated by the campaign's send time
   (`mailchimp-campaign-clicks.ts`). These reach every user with that address.
+- Mailchimp audience webhook, `POST /audience-webhooks/mailchimp/:configId?key=…`
+  (`mailchimp-audience-webhook.ts`, membership lib): `cleaned` → hardBounce
+  (reason `abuse` → spamComplaint), `unsubscribe` → optedOut (`abuse` →
+  spamComplaint), `upemail` only logged. Mailchimp signs nothing, so the URL
+  carries a secret stored encrypted on the sync provider row
+  (`mailchimp_webhookSecret`); the api registers the webhook itself
+  (`registerMailchimpAudienceWebhook`, needs `HOST_URL`, button in the sync
+  integration), keeps `mailchimp_webhookId` and adopts one Mailchimp already
+  has. Mailchimp documents no retry, so the nightly audience pull stays the
+  fallback and the controller answers 200 to anything but a bad key.
 - `optedOut` is not in the evaluator's `DEAD_TYPES`: leaving a newsletter does
   not make an inbox dead. `unsubscribed` stays dead, because Mandrill and
   Mailgun refuse every further mail to such an address.

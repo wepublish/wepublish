@@ -2576,6 +2576,14 @@ export type MailTemplateSubscriptionOption = {
   label: Scalars['String']['output'];
 };
 
+/** The audience webhook the api registered at Mailchimp; the URL carries the secret. */
+export type MailchimpAudienceWebhook = {
+  __typename: 'MailchimpAudienceWebhook';
+  registeredAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
+  webhookId: Scalars['String']['output'];
+};
+
 export type MailchimpContactInput = {
   email: Scalars['String']['input'];
   interests?: InputMaybe<Scalars['JSONObject']['input']>;
@@ -3367,6 +3375,8 @@ export type Mutation = {
   recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult;
   /** Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now. */
   refreshEmailQuality: EmailQualityRefreshModel;
+  /** Registers (or renews) the audience webhook at Mailchimp, so cleaned and unsubscribed members reach the email quality as they happen. */
+  registerMailchimpAudienceWebhook: MailchimpAudienceWebhook;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Rejects a comment */
@@ -4497,6 +4507,11 @@ export type MutationReactivateSubscriptionArgs = {
 
 
 export type MutationReactivateUserSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationRegisterMailchimpAudienceWebhookArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -7879,11 +7894,16 @@ export type SettingSyncProvider = SettingProvider & {
   lastLoadedAt: Scalars['DateTime']['output'];
   lastSyncAt?: Maybe<Scalars['DateTime']['output']>;
   lastSyncError?: Maybe<Scalars['String']['output']>;
+  /** When the audience webhook last delivered a verified call. */
+  lastWebhookAt?: Maybe<Scalars['DateTime']['output']>;
   mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']['output']>>;
   mailchimp_extensions?: Maybe<Scalars['JSONObject']['output']>;
   mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
   mailchimp_listId?: Maybe<Scalars['String']['output']>;
   mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
+  /** Id of the audience webhook the api registered at Mailchimp. */
+  mailchimp_webhookId?: Maybe<Scalars['String']['output']>;
+  mailchimp_webhookRegisteredAt?: Maybe<Scalars['DateTime']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
   type: SyncProviderType;

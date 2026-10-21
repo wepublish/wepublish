@@ -66,4 +66,62 @@ describe('SyncProviderSettingsService', () => {
     ).rejects.toThrow('already set up');
     expect(create).not.toHaveBeenCalled();
   });
+
+  describe('audience webhook', () => {
+    test('stores the webhook secret encrypted and reads it back for the webhook', async () => {
+      const update = vi
+        .spyOn(prisma.settingSyncProvider, 'update')
+        .mockResolvedValue(existing);
+
+      await service.setMailchimpWebhook('mailchimp-sync', {
+        secret: 'plain-secret',
+        webhookId: 'wh-1',
+        registeredAt: new Date('2026-10-21T10:00:00Z'),
+      });
+
+      const stored = update.mock.calls[0][0].data as {
+        mailchimp_webhookSecret: string;
+        mailchimp_webhookId: string;
+      };
+      expect(stored.mailchimp_webhookSecret).not.toBe('plain-secret');
+      expect(stored.mailchimp_webhookId).toBe('wh-1');
+
+      vi.spyOn(prisma.settingSyncProvider, 'findUnique').mockResolvedValue({
+        ...existing,
+        mailchimp_webhookSecret: stored.mailchimp_webhookSecret,
+      });
+
+      await expect(service.getSyncConfig('mailchimp-sync')).resolves.toMatchObject(
+        { decryptedWebhookSecret: 'plain-secret', decryptedApiKey: null }
+      );
+    });
+
+    test('keeps the secret when only the registration is renewed', async () => {
+      const update = vi
+        .spyOn(prisma.settingSyncProvider, 'update')
+        .mockResolvedValue(existing);
+
+      await service.setMailchimpWebhook('mailchimp-sync', {
+        webhookId: 'wh-1',
+        registeredAt: new Date(),
+      });
+
+      expect(update.mock.calls[0][0].data).not.toHaveProperty(
+        'mailchimp_webhookSecret'
+      );
+    });
+
+    test('notes a delivered webhook call', async () => {
+      const update = vi
+        .spyOn(prisma.settingSyncProvider, 'update')
+        .mockResolvedValue(existing);
+
+      await service.noteSyncWebhook('mailchimp-sync');
+
+      expect(update).toHaveBeenCalledWith({
+        where: { id: 'mailchimp-sync' },
+        data: { lastWebhookAt: expect.any(Date) },
+      });
+    });
+  });
 });

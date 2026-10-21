@@ -3191,6 +3191,18 @@
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
+        "audienceWebhook": {
+          "title": "Rapports de l’audience",
+          "info": "Mailchimp informe We.Publish immédiatement lorsqu’un contact a été nettoyé (rebonds, abus) ou s’est désabonné. Sans webhook, cela n’arrive qu’avec la synchronisation nocturne. We.Publish enregistre lui-même le webhook auprès de Mailchimp ; l’API doit pour cela être accessible depuis Mailchimp.",
+          "registeredAt": "Enregistré auprès de Mailchimp le {{date}}",
+          "notRegistered": "Pas encore enregistré auprès de Mailchimp.",
+          "lastReceived": "Dernier rapport",
+          "never": "aucun pour l’instant",
+          "register": "Enregistrer le webhook auprès de Mailchimp",
+          "renew": "Renouveler l’enregistrement",
+          "registered": "Le webhook est enregistré auprès de Mailchimp.",
+          "failed": "Mailchimp a refusé l’enregistrement : {{error}}"
+        },
         "enabled": "Activé",
         "apiKey": "Clé API Mailchimp",
         "listId": "ID de liste/audience Mailchimp",
