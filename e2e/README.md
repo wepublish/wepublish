@@ -21,7 +21,7 @@ API URLs follow from the deploy workflows' conventions
 
 | `E2E_ENV`         | Website                                        | Editor                                | API                                |
 | ----------------- | ---------------------------------------------- | ------------------------------------- | ---------------------------------- |
-| `local` (default) | `localhost:<serve port in project.json, 4200>` | `localhost:3000`                      | `localhost:4000`                   |
+| `local` (default) | `localhost:<serve port in project.json> + 1000` | `localhost:3010`                      | `localhost:4010`                   |
 | `review`          | `review<N>.wepublish.works`                    | `editor-review<N>.wepublish.works`    | `api-review<N>.wepublish.works`    |
 | `staging`         | `custom_domain` or `<app>.wepublish.works`     | `editor-<app>.wepublish.works`        | `api-<app>.wepublish.works`        |
 | `production`      | `custom_domain` or `<app>.wepublish.cloud`     | — (set `E2E_EDITOR_URL`)              | `api-<app>.wepublish.cloud`        |
@@ -67,7 +67,7 @@ development.
 | `E2E_API_TOKEN` _or_ `E2E_ADMIN_EMAIL` + `E2E_ADMIN_PASSWORD` | data factories          | defaults to the seed admin `dev@wepublish.ch` / `123`       |
 | `E2E_ALLOW_MUTATION` not `false`                              | `@mutating`             | on by default outside production; `false` opts out          |
 | `E2E_ENV` is not `production`                                 | `@mutating`, `@payment` | production is never written to; it has no simulated payment |
-| `MAILPIT_URL`                                                 | `@mail`                 | e.g. `http://localhost:8025`                                |
+| `MAILPIT_URL`                                                 | `@mail`                 | set (and mailpit started) by local runs                     |
 
 Every scenario carries a domain tag (`@auth`, `@paywall`, …) and the
 capability tags it needs. The `capabilities` fixture compares them with the
@@ -110,35 +110,35 @@ What stays behind on purpose:
 
 ```sh
 pnpm run start:docker                 # postgres, minio, dragonfly
-docker compose up -d mailpit          # SMTP :1025, UI/API :8025
-pnpm run migrate                      # migrations + seed
-
-MAILPIT_URL=http://localhost:8025 pnpm run e2e bajour
+pnpm run e2e bajour
 ```
 
-With `--environment local` (the default), the run starts the dev servers it
-needs — `api-example` (:4000), the tenant (`--app`, its port) and the editor
-(:3000) — **unless they are already running**, in which case they are reused
-(Playwright `webServer`, `localDevServers` in `support/targets.ts`). Servers it
-started are stopped after the run. Only the selected `--project`s are served,
-and nothing is started for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
-`E2E_API_URL`). Docker services are not started. Cold starts take a while
-(API ~1–2 min, Next.js ~20 s); keep `nx serve` running yourself when iterating.
-A started Next.js dev server rewrites the app's `next-env.d.ts`, as it does
-when you serve it by hand — don't commit that.
+With `--environment local` (the default) the run uses its **own stack**, apart
+from your dev servers and dev database (`localStack` in `support/targets.ts`):
 
-Tenants serve on the port in their `project.json` (bajour 4201, gruppetto
-4202, babanews 4203, flimmer/tsri/wnti 4204, mannschaft 4205, cultur 4206,
-others 4200), which is where `E2E_ENV=local` looks. Every tenant talks to the
-same local `api-example`, so locally a tenant differs from `website-example`
-in theme and components, not in data. Ports collide (4204), so serve one
-tenant at a time.
+| Server        | Port                         | Talks to                                     |
+| ------------- | ---------------------------- | -------------------------------------------- |
+| `api-example` | 4010                         | database `wepublish_e2e`, Dragonfly db 1     |
+| tenant        | its serve port + 1000 (5204) | API :4010                                    |
+| editor        | 3010                         | API :4010                                    |
 
-Running a second stack next to your dev one: create a separate database
-(`CREATE DATABASE wepublish_e2e`), point `DATABASE_URL` at it for `migrate`,
-and start the API with `PORT`, `HOST_URL` and `WEBSITE_URL` (and the seed with
-`PORT` + `MEDIA_SERVER_URL`) on free ports; serve the website with `--port`
-and `API_URL` pointing at that API, and pass `BASE_URL` / `E2E_API_URL`.
+Before the tests, `run.ts` runs `prisma migrate deploy` against
+`wepublish_e2e` (creating it on the first run) and seeds it whenever
+migrations were applied, and starts mailpit (`docker compose`, SMTP :1025 for
+the seeded provider, mails at http://localhost:8025). `E2E_DATABASE_URL` picks another database. The
+servers are started unless already running on those ports (then reused), and
+stopped after the run. Only the selected targets are served, and nothing is
+started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
+`E2E_API_URL`). Other Docker services are not started. Cold starts take a while (API
+~1–2 min, Next.js ~20 s).
+
+- A Next.js app can only run one dev server at a time: stop your own
+  `nx serve <tenant>` of the same checkout before a run.
+- A started Next.js dev server rewrites the app's `next-env.d.ts`, as it does
+  when you serve it by hand — don't commit that.
+- Reset the e2e data with
+  `docker exec wepublish-database-1 psql -U postgres -c "DROP DATABASE wepublish_e2e"`;
+  the next run recreates it.
 
 ## Review instances
 

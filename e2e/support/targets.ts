@@ -47,6 +47,36 @@ export function websiteApps() {
   );
 }
 
+/**
+ * The local stack E2E starts for itself: its own ports, database and cache, so
+ * a run never reuses your dev servers or writes into your dev database (which
+ * may also be migrated from another branch).
+ */
+export const localStack = {
+  apiPort: 4010,
+  editorPort: 3010,
+  /** Added to the tenant's serve port: tsri 4204 → 5204. */
+  websitePortOffset: 1000,
+  database: 'wepublish_e2e',
+  /** Dragonfly database number, apart from dev's 0. */
+  redisDatabase: 1,
+};
+
+const defaultDatabaseUrl =
+  'postgresql://postgres:postgres@localhost:5432/wepublish?schema=public';
+
+/** `E2E_DATABASE_URL`, else `DATABASE_URL` (from `.env`) with the e2e database. */
+export function e2eDatabaseUrl(env: NodeJS.ProcessEnv = process.env) {
+  if (env.E2E_DATABASE_URL) {
+    return env.E2E_DATABASE_URL;
+  }
+
+  const url = new URL(env.DATABASE_URL || defaultDatabaseUrl);
+  url.pathname = `/${localStack.database}`;
+
+  return url.toString();
+}
+
 const trimSlash = (url?: string) => url?.replace(/\/+$/, '') || undefined;
 
 export function resolveTarget(env: NodeJS.ProcessEnv = process.env): Target {
@@ -89,15 +119,15 @@ function conventionUrls(
 
   switch (environment) {
     case 'local': {
-      // `pnpm nx serve <app>` uses the port from its project.json (4200 if none).
+      // The tenant's serve port from its project.json (4200 if none), shifted.
       const port =
-        readJson(join(appsDir, app, 'project.json'))?.targets?.serve?.options
-          ?.port ?? 4200;
+        (readJson(join(appsDir, app, 'project.json'))?.targets?.serve?.options
+          ?.port ?? 4200) + localStack.websitePortOffset;
 
       return {
         websiteUrl: `http://localhost:${port}`,
-        editorUrl: 'http://localhost:3000',
-        apiUrl: 'http://localhost:4000',
+        editorUrl: `http://localhost:${localStack.editorPort}`,
+        apiUrl: `http://localhost:${localStack.apiPort}`,
       };
     }
 
@@ -143,15 +173,19 @@ type WebServer = {
   command: string;
   url: string;
   timeout: number;
+  env: Record<string, string>;
 };
+
+const portOf = (url: string) => new URL(url).port;
 
 /**
  * Local dev servers the run needs, for Playwright's `webServer`: reused when
  * already up, otherwise started and stopped after the run. Only for
  * `E2E_ENV=local`, only for the selected projects (`E2E_PROJECTS`, set by
  * run.ts from `--project`), and never for a URL that was overridden — that
- * server is yours to run. Docker services (database, mailpit, …) are not
- * started; see the local-stack recipe in e2e/README.md.
+ * server is yours to run. They form the `localStack`: website and editor talk
+ * to its API, the API to its database. Docker services (database, mailpit, …)
+ * are not started; see the local-stack recipe in e2e/README.md.
  */
 export function localDevServers(
   target: Target,
@@ -165,32 +199,51 @@ export function localDevServers(
   const selected = (project: string) =>
     !projects?.length || projects.includes(project);
   const servers: WebServer[] = [];
+  const apiEnv = { API_URL: target.apiUrl ?? '', API_URL_INTERNAL: '' };
 
   if (selected('website') && !env.BASE_URL) {
     servers.push({
       name: target.app,
-      command: `pnpm nx serve ${target.app}`,
+      command: `pnpm nx serve ${target.app} --port=${portOf(target.websiteUrl)}`,
       url: target.websiteUrl,
       timeout: 180_000,
+      env: apiEnv,
     });
   }
 
   if (selected('editor') && !env.E2E_EDITOR_URL && target.editorUrl) {
     servers.push({
       name: 'editor',
-      command: 'pnpm nx serve editor',
+      command: `pnpm nx serve editor --port=${portOf(target.editorUrl)}`,
       url: `${target.editorUrl}/login`,
       timeout: 180_000,
+      env: apiEnv,
     });
   }
 
   // Both apps talk to the API.
   if (servers.length && !env.E2E_API_URL && target.apiUrl) {
+    const databaseUrl = e2eDatabaseUrl(env);
+    const redisUrl = env.REDIS_URL ? new URL(env.REDIS_URL) : undefined;
+
+    if (redisUrl) {
+      redisUrl.pathname = `/${localStack.redisDatabase}`;
+    }
+
     servers.unshift({
       name: 'api-example',
       command: 'pnpm nx serve api-example --inspect=false',
       url: `${target.apiUrl}/health/readinessProbe`,
       timeout: 300_000,
+      env: {
+        PORT: portOf(target.apiUrl),
+        DATABASE_URL: databaseUrl,
+        DIRECT_DATABASE_URL: databaseUrl,
+        HOST_URL: target.apiUrl,
+        WEBSITE_URL: target.websiteUrl,
+        ...(target.editorUrl && { EDITOR_URL: target.editorUrl }),
+        ...(redisUrl && { REDIS_URL: redisUrl.toString() }),
+      },
     });
   }
 

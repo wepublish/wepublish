@@ -37,7 +37,9 @@ e2e/
 | Typecheck steps                           | `pnpm exec tsc -p e2e/tsconfig.json --noEmit`                             |
 | First run on a machine                    | `pnpm exec playwright install chromium`                                   |
 
-Without env the target is `website-example` on the local stack. `BASE_URL`,
+Without env the target is `website-example` on the local stack: its own
+API (:4010, database `wepublish_e2e`), website and editor, started and
+migrated by the run, never your dev servers or dev database. `BASE_URL`,
 `E2E_EDITOR_URL`, `E2E_API_URL` override single URLs (`E2E_`-prefixed because
 Nx loads the root `.env`, which sets `API_URL`/`EDITOR_URL` for dev).
 In CI the suite is **manual only**: Actions → "E2E tests" (`on-demand-e2e.yml`)

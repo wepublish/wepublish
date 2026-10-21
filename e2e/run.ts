@@ -16,7 +16,7 @@
 // flags win over env vars already set. Not `--env`: Nx's run-commands owns
 // that option.
 import { spawnSync } from 'node:child_process';
-import { websiteApps } from './support/targets';
+import { e2eDatabaseUrl, websiteApps } from './support/targets';
 
 const targetFlags: Record<string, string> = {
   '--app': 'E2E_APP',
@@ -79,10 +79,14 @@ if (targets.length) {
 const run = (
   command: string,
   commandArgs: string[],
-  runEnv: NodeJS.ProcessEnv
+  runEnv: NodeJS.ProcessEnv,
+  cwd?: string
 ): number =>
-  spawnSync(command, commandArgs, { stdio: 'inherit', env: runEnv }).status ??
-  1;
+  spawnSync(command, commandArgs, { stdio: 'inherit', env: runEnv, cwd })
+    .status ?? 1;
+
+// Prisma finds its config (prisma.config.ts) only from the repo root.
+const repoRoot = '..';
 
 const playwright = (runEnv: NodeJS.ProcessEnv, extraArgs: string[]) => {
   const runArgs = [...extraArgs, ...playwrightArgs];
@@ -98,6 +102,71 @@ const playwright = (runEnv: NodeJS.ProcessEnv, extraArgs: string[]) => {
 
   return run('pnpm', ['exec', 'playwright', 'test', ...runArgs], runEnv);
 };
+
+// Local runs start their own API on the e2e database (support/targets.ts,
+// `localStack`): migrate it first, which creates it on the first run, and seed
+// it whenever migrations were applied (the seed skips what already exists).
+const prepareDatabase = () => {
+  const databaseUrl = e2eDatabaseUrl(env);
+  const dbEnv = {
+    ...env,
+    DATABASE_URL: databaseUrl,
+    DIRECT_DATABASE_URL: databaseUrl,
+  };
+
+  console.log(`[e2e] migrating ${new URL(databaseUrl).pathname.slice(1)}`);
+  const migrate = spawnSync('pnpm', ['exec', 'prisma', 'migrate', 'deploy'], {
+    env: dbEnv,
+    cwd: repoRoot,
+    encoding: 'utf8',
+  });
+
+  if (migrate.status !== 0) {
+    process.stderr.write(migrate.stdout + migrate.stderr);
+    process.exit(migrate.status ?? 1);
+  }
+
+  if (migrate.stdout.includes('No pending migrations')) {
+    return;
+  }
+
+  console.log('[e2e] seeding');
+  // The seed boots a media server: keep it off dev's port 4100.
+  const seeded = run(
+    'pnpm',
+    ['exec', 'prisma', 'db', 'seed'],
+    { ...dbEnv, PORT: '4110', MEDIA_SERVER_URL: 'http://localhost:4110' },
+    repoRoot
+  );
+
+  if (seeded !== 0) {
+    process.exit(seeded);
+  }
+};
+
+// The seeded SMTP provider sends to localhost:1025: start mailpit there (a
+// no-op when it runs) and read mails through its API, so @mail runs locally
+// without setup. A failure (port taken by another mailpit) is only a warning.
+const startMailpit = () => {
+  const started = spawnSync(
+    'docker',
+    ['compose', 'up', '--detach', '--wait', 'mailpit'],
+    { cwd: repoRoot, encoding: 'utf8' }
+  );
+
+  if (started.status !== 0) {
+    console.warn(
+      `[e2e] could not start mailpit: ${(started.stderr || started.error?.message || '').trim()}`
+    );
+  }
+
+  env.MAILPIT_URL ||= 'http://localhost:8025';
+};
+
+if ((env.E2E_ENV || 'local') === 'local' && !env.E2E_API_URL) {
+  prepareDatabase();
+  startMailpit();
+}
 
 // bddgen loads playwright.config.ts too: give it the first tenant, so it does
 // not resolve (and log) the default one.

@@ -12,7 +12,6 @@ if (!process.env.TEST_WORKER_INDEX) {
 }
 
 export default defineConfig({
-  // Local dev servers: reused if already running, else started for the run.
   webServer: localDevServers(target).map(({ name, ...server }) => ({
     ...server,
     name,
