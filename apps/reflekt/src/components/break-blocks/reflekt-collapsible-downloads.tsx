@@ -9,7 +9,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import React, { ComponentType } from 'react';
+import { ComponentType, useId } from 'react';
 
 type ReflektRichTextBlockType = ComponentType<
   BuilderRichTextBlockProps & { variant?: string }
@@ -46,7 +46,7 @@ export const CollapsibleDownloads = ({
   } = useWebsiteBuilder();
 
   const ReflektRichText = RichText as ReflektRichTextBlockType;
-  const thisId = `AC-${React.useId()}`;
+  const thisId = `AC-${useId()}`;
   const titleId = anchorId(text);
 
   return (

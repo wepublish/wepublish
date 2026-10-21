@@ -19,9 +19,9 @@ export const PageGrid = styled('div')`
 
 export const Card = styled('section')`
   min-width: 0;
-  border: 1px solid var(--rs-border-primary);
-  border-radius: var(--rs-radius-lg);
-  background-color: var(--rs-bg-card);
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
 `;
 
 export const CardHeader = styled('header')`
@@ -30,27 +30,27 @@ export const CardHeader = styled('header')`
   justify-content: space-between;
   gap: 12px;
   padding: 16px 20px;
-  border-bottom: 1px solid var(--rs-border-primary);
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
 
   h3 {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
     line-height: 1.4;
-    color: var(--rs-text-heading);
+    color: ${({ theme }) => theme.vars.palette.text.primary};
   }
 `;
 
 export const CardCount = styled('span')`
   font-size: 13px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 export const CardFooter = styled('div')`
   display: flex;
   justify-content: center;
   padding: 12px 20px;
-  border-top: 1px solid var(--rs-border-primary);
+  border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
 `;
 
 export const FilterBar = styled('div')`
@@ -60,7 +60,7 @@ export const FilterBar = styled('div')`
     repeat(2, minmax(140px, 170px));
   gap: 12px;
   padding: 16px 20px;
-  border-bottom: 1px solid var(--rs-border-primary);
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
 
   > * {
     min-width: 0;
@@ -88,7 +88,7 @@ export const ArticleRow = styled('div')`
   padding: 14px 20px;
 
   & + & {
-    border-top: 1px solid var(--rs-border-primary);
+    border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
   }
 
   @media (max-width: 640px) {
@@ -122,14 +122,14 @@ export const ArticleImage = styled('img')`
   width: 100%;
   aspect-ratio: 3 / 2;
   object-fit: cover;
-  border-radius: var(--rs-radius-md);
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
 `;
 
 export const ImagePlaceholder = styled('div')`
   width: 100%;
   aspect-ratio: 3 / 2;
-  border-radius: var(--rs-radius-md);
-  background-color: var(--rs-bg-well);
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 export const ContentArea = styled('div')`
@@ -150,19 +150,19 @@ export const ArticleTitle = styled('span')`
   font-size: 15px;
   font-weight: 600;
   line-height: 1.35;
-  color: var(--rs-text-heading);
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
 
 export const ArticleLead = styled('span')`
   ${clamped}
   font-size: 13px;
   line-height: 1.45;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 export const MetaLine = styled('span')`
   font-size: 12px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 export const ActionColumn = styled('div')`
@@ -177,7 +177,7 @@ export const PublisherName = styled('span')`
   font-size: 13px;
   font-weight: 600;
   line-height: 1.3;
-  color: var(--rs-text-primary);
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
 
 export const ConnectedBadge = styled('span')`
@@ -186,8 +186,10 @@ export const ConnectedBadge = styled('span')`
   gap: 4px;
   padding: 2px 10px;
   border-radius: 999px;
-  background-color: rgb(from var(--rs-state-success) r g b / 12%);
-  color: var(--rs-state-success);
+  background-color: rgb(
+    from ${({ theme }) => theme.vars.palette.success.main} r g b / 12%
+  );
+  color: ${({ theme }) => theme.vars.palette.success.main};
   font-size: 12px;
   font-weight: 600;
   line-height: 20px;
@@ -198,12 +200,12 @@ export const CenteredContainer = styled('div')`
   display: flex;
   justify-content: center;
   padding: 32px 20px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   text-align: center;
 `;
 
 export const ErrorText = styled('span')`
-  color: var(--rs-state-error);
+  color: ${({ theme }) => theme.vars.palette.error.main};
 `;
 
 export const ClientCard = styled('div')`
@@ -214,21 +216,21 @@ export const ClientCard = styled('div')`
   padding: 12px 20px;
 
   & + & {
-    border-top: 1px solid var(--rs-border-primary);
+    border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
   }
 `;
 
 export const ClientName = styled('div')`
   font-size: 14px;
   font-weight: 600;
-  color: var(--rs-text-heading);
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
 
 export const ClientUserInfo = styled('div')`
   overflow: hidden;
   font-size: 12px;
   line-height: 1.4;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   text-overflow: ellipsis;
   white-space: nowrap;
 `;

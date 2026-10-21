@@ -21,7 +21,6 @@ import {
   MdPushPin,
   MdWidthFull,
 } from 'react-icons/md';
-import { Button, Checkbox, IconButton, Modal } from 'rsuite';
 
 import {
   DASHBOARD_CARDS,
@@ -32,6 +31,16 @@ import {
   setDashboardCardFullWidth,
   setDashboardCardVisible,
 } from './dashboardLayout';
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  IconButton,
+} from '@mui/material';
 
 export const DASHBOARD_CARD_TITLE_KEYS: Record<DashboardCardId, string> = {
   notifications: 'dashboard.notifications',
@@ -51,31 +60,30 @@ const CardList = styled.ul`
 
 const CardRow = styled.li`
   display: grid;
-  /* fixed last column so the arrows line up in rows without the full-width switch */
   grid-template-columns: auto 1fr auto auto 30px;
   align-items: center;
   gap: 8px;
   padding: 4px 8px;
-  border: 1px solid var(--rs-border-primary);
-  border-radius: var(--rs-radius-lg, 6px);
-  background: var(--rs-bg-card);
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
+  background: ${({ theme }) => theme.vars.palette.background.paper};
 `;
 
 const Handle = styled.span`
   display: flex;
   cursor: grab;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   touch-action: none;
 `;
 
 const Pinned = styled.span`
   display: flex;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const SectionInfo = styled.p`
   margin: 16px 0 8px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 type SortableCardProps = {
@@ -121,45 +129,48 @@ function SortableCard({
         <MdDragIndicator size={20} />
       </Handle>
 
-      <Checkbox
-        checked={visible}
-        onChange={(_, checked) => onVisibleChange(checked)}
-      >
-        {t(DASHBOARD_CARD_TITLE_KEYS[id])}
-      </Checkbox>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={visible}
+            onChange={(_event, checked) => onVisibleChange(checked)}
+          />
+        }
+        label={t(DASHBOARD_CARD_TITLE_KEYS[id])}
+      />
 
       <IconButton
-        size="sm"
-        appearance="subtle"
-        icon={<MdArrowUpward />}
+        size="small"
         disabled={isFirst}
         aria-label={t('dashboard.moveUp')}
         title={t('dashboard.moveUp')}
         onClick={onMoveUp}
-      />
+      >
+        <MdArrowUpward />
+      </IconButton>
 
       <IconButton
-        size="sm"
-        appearance="subtle"
-        icon={<MdArrowDownward />}
+        size="small"
         disabled={isLast}
         aria-label={t('dashboard.moveDown')}
         title={t('dashboard.moveDown')}
         onClick={onMoveDown}
-      />
+      >
+        <MdArrowDownward />
+      </IconButton>
 
       {canSpanFullWidth ?
         <IconButton
-          size="sm"
-          appearance={fullWidth ? 'primary' : 'subtle'}
-          icon={<MdWidthFull />}
-          active={fullWidth}
+          size="small"
+          color={fullWidth ? 'primary' : 'default'}
           disabled={!visible}
           aria-pressed={fullWidth}
           aria-label={t('dashboard.fullWidth')}
           title={t('dashboard.fullWidth')}
           onClick={() => onFullWidthChange(!fullWidth)}
-        />
+        >
+          <MdWidthFull />
+        </IconButton>
       : <span />}
     </CardRow>
   );
@@ -198,16 +209,15 @@ export function DashboardConfig({
   const neighbour = (index: number) => layout.cards[index]?.id;
 
   return (
-    <Modal
+    <Dialog
+      fullWidth
       open={open}
       onClose={onClose}
-      size="sm"
+      maxWidth="sm"
     >
-      <Modal.Header>
-        <Modal.Title>{t('dashboard.configureTitle')}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{t('dashboard.configureTitle')}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         <SectionInfo>{t('dashboard.configureFixedInfo')}</SectionInfo>
         <CardList>
           {DASHBOARD_CARDS.filter(card => card.sticky).map(({ id }) => (
@@ -266,22 +276,22 @@ export function DashboardConfig({
             </CardList>
           </SortableContext>
         </DndContext>
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          appearance="subtle"
+          variant="text"
           onClick={() => onChange(defaultDashboardLayout())}
         >
           {t('dashboard.resetLayout')}
         </Button>
         <Button
-          appearance="primary"
+          variant="contained"
           onClick={onClose}
         >
           {t('dashboard.configureDone')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }

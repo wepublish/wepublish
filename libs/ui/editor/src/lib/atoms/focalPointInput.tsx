@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { useLayoutEffect, useRef, useState } from 'react';
+
+import { useLayoutEffect, useRef } from 'react';
 import { MdCropSquare } from 'react-icons/md';
-import { Panel as RPanel } from 'rsuite';
 
 import { Draggable, DraggableContainer, Point } from './draggable';
 
@@ -27,16 +27,19 @@ const DraggableContainerWrapper = styled.div`
 `;
 
 const Image = styled.img`
-  max-height: 300px;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
-const Panel = styled(RPanel)`
+const Panel = styled.div`
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100%;
   width: 100%;
+  padding: 0;
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
 `;
 
 const PanelWrapper = styled.div`
@@ -64,6 +67,14 @@ export interface FocalPointInputProps {
   onChange?: (point: Point) => void;
 }
 
+const ImageContainer = styled.div`
+  display: none;
+
+  &[data-layouted='true'] {
+    display: block;
+  }
+`;
+
 export function FocalPointInput({
   imageURL,
   imageWidth,
@@ -75,8 +86,6 @@ export function FocalPointInput({
 }: FocalPointInputProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const imageContainer = useRef<HTMLDivElement>(null);
-
-  const [layouted, setLayouted] = useState(false);
 
   useLayoutEffect(() => {
     function layout() {
@@ -100,7 +109,7 @@ export function FocalPointInput({
     }
 
     layout();
-    setLayouted(true);
+    imageContainer.current!.dataset.layouted = 'true';
 
     // TODO: Consider using ResizeObserver
     window.addEventListener('resize', handleResize);
@@ -110,28 +119,29 @@ export function FocalPointInput({
 
   return (
     <FocalPointInputWrapper ref={containerRef}>
-      <div ref={imageContainer}>
-        {layouted && (
-          <PanelWrapper>
-            <Panel>
-              <Image src={imageURL} />
-            </Panel>
-            <DraggableContainerWrapper>
-              <DraggableContainer>
-                {focalPoint && (
-                  <Draggable
-                    point={focalPoint}
-                    onChange={onChange}
-                    disabled={disabled}
-                  >
-                    <FocalPoint />
-                  </Draggable>
-                )}
-              </DraggableContainer>
-            </DraggableContainerWrapper>
-          </PanelWrapper>
-        )}
-      </div>
+      <ImageContainer ref={imageContainer}>
+        <PanelWrapper>
+          <Panel>
+            <Image
+              src={imageURL}
+              alt=""
+            />
+          </Panel>
+          <DraggableContainerWrapper>
+            <DraggableContainer>
+              {focalPoint && (
+                <Draggable
+                  point={focalPoint}
+                  onChange={onChange}
+                  disabled={disabled}
+                >
+                  <FocalPoint />
+                </Draggable>
+              )}
+            </DraggableContainer>
+          </DraggableContainerWrapper>
+        </PanelWrapper>
+      </ImageContainer>
     </FocalPointInputWrapper>
   );
 }

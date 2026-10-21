@@ -1,6 +1,17 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Autocomplete,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+} from '@mui/material';
+import {
   BlockStylesDocument,
   CreateBlockStyleDocument,
   DeleteBlockStyleDocument,
@@ -9,7 +20,13 @@ import {
   UpdateBlockStyleDocument,
 } from '@wepublish/editor/api';
 import {
+  CanCreateBlockStyle,
+  CanDeleteBlockStyle,
+  CanUpdateBlockStyle,
+} from '@wepublish/permissions';
+import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
   humanizeError,
   IconButton,
   IconButtonTooltip,
@@ -17,6 +34,7 @@ import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PageTitle,
   PermissionControl,
   TableWrapper,
 } from '@wepublish/ui/editor';
@@ -24,19 +42,10 @@ import { equals } from 'ramda';
 import { memo, useCallback, useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSave } from 'react-icons/md';
-import {
-  Button,
-  CheckPicker,
-  Form,
-  IconButton as RIconButton,
-  Loader as RLoader,
-  Message,
-  Modal,
-  Stack,
-  toaster,
-} from 'rsuite';
 
-const FlexGridSmallerMargin = styled(Stack)`
+const StyleRow = styled(Stack)`
+  flex-direction: row;
+  align-items: center;
   margin-bottom: 12px;
   width: 100%;
   gap: 12px;
@@ -51,13 +60,13 @@ const Flex = styled.div`
   flex: 0 0 auto;
 `;
 
-const FlexWrapper = styled.div`
+const NameField = styled.div`
+  flex: 1 1 220px;
   max-width: 300px;
-  flex: 1 1;
 `;
 
-const Loader = styled(RLoader)`
-  margin: 32px;
+const BlocksField = styled.div`
+  flex: 2 1 320px;
 `;
 
 enum BlockStyleListActionType {
@@ -124,16 +133,10 @@ const blockStyleFormValueReducer = (
 };
 
 const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const BlockStyleList = memo(() => {
@@ -152,13 +155,7 @@ const BlockStyleList = memo(() => {
 
   const hasEmptyStyle = Object.values(apiValue).some(style => !style.name);
 
-  const { loading, data, error } = useQuery(BlockStylesDocument);
-
-  useEffect(() => {
-    if (error) {
-      showErrors(error);
-    }
-  }, [error]);
+  const { loading, data } = useQuery(BlockStylesDocument);
 
   useEffect(() => {
     if (data) {
@@ -249,17 +246,17 @@ const BlockStyleList = memo(() => {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('blockStyles.title')}</h2>
+          <PageTitle>{t('blockStyles.title')}</PageTitle>
           <InfoTooltip text={t('blockStyles.info')} />
         </ListViewHeader>
 
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_BLOCK_STYLE']}>
+        <PermissionControl qualifyingPermissions={[CanCreateBlockStyle.id]}>
           <ListViewActions>
-            <RIconButton
+            <Button
+              variant="contained"
+              startIcon={<MdAdd />}
               type="button"
-              appearance="primary"
               data-testid="create"
-              icon={<MdAdd />}
               onClick={() =>
                 createBlockStyle({
                   variables: {
@@ -271,121 +268,135 @@ const BlockStyleList = memo(() => {
               disabled={hasEmptyStyle}
             >
               {t('blockStyles.createBlockStyle')}
-            </RIconButton>
+            </Button>
           </ListViewActions>
         </PermissionControl>
       </ListViewContainer>
 
       {loading && (
-        <Stack justifyContent="center">
-          <Loader size="lg" />
+        <Stack
+          direction="row"
+          sx={{ justifyContent: 'center' }}
+        >
+          <CircularProgress size={40} />
         </Stack>
       )}
 
       <TableWrapper>
         <Content>
           {Object.entries(formValue).map(([blockstyleId, inputValue]) => (
-            <Form key={blockstyleId}>
-              <FlexGridSmallerMargin>
-                <FlexWrapper>
-                  <Form.Control
-                    name={`name:${blockstyleId}`}
-                    value={inputValue.name}
-                    placeholder={t('blockStyles.placeholder')}
-                    onChange={(value: string) => {
-                      dispatchFormValue({
-                        type: BlockStyleListActionType.Update,
-                        payload: {
-                          ...inputValue,
-                          name: value,
-                        },
-                      });
-                    }}
-                  />
-                </FlexWrapper>
+            <StyleRow key={blockstyleId}>
+              <NameField>
+                <TextField
+                  value={inputValue.name}
+                  placeholder={t('blockStyles.placeholder')}
+                  onChange={event => {
+                    dispatchFormValue({
+                      type: BlockStyleListActionType.Update,
+                      payload: {
+                        ...inputValue,
+                        name: event.target.value,
+                      },
+                    });
+                  }}
+                  fullWidth
+                />
+              </NameField>
 
-                <FlexWrapper>
-                  <CheckPicker
-                    name={`blocks:${blockstyleId}`}
-                    block
-                    placeholder={t('blockStyles.blockTypesPlaceholder')}
-                    value={inputValue.blocks}
-                    data={Object.values(EditorBlockType).map(blockType => ({
-                      value: blockType,
-                      label: blockType,
-                    }))}
-                    onChange={blocks => {
-                      dispatchFormValue({
-                        type: BlockStyleListActionType.Update,
-                        payload: {
-                          ...inputValue,
-                          blocks,
-                        },
-                      });
-                    }}
-                    placement={'auto'}
-                  />
-                </FlexWrapper>
+              <BlocksField>
+                <Autocomplete
+                  multiple
+                  disableCloseOnSelect
+                  options={Object.values(EditorBlockType)}
+                  value={inputValue.blocks}
+                  onChange={(_event, blocks) => {
+                    dispatchFormValue({
+                      type: BlockStyleListActionType.Update,
+                      payload: {
+                        ...inputValue,
+                        blocks,
+                      },
+                    });
+                  }}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      placeholder={
+                        inputValue.blocks.length ?
+                          undefined
+                        : t('blockStyles.blockTypesPlaceholder')
+                      }
+                    />
+                  )}
+                />
+              </BlocksField>
 
-                <Flex>
-                  <PermissionControl
-                    qualifyingPermissions={['CAN_UPDATE_BLOCK_STYLE']}
-                  >
-                    <IconButtonTooltip caption={t('save')}>
-                      <IconButton
-                        aria-label={t('save')}
-                        type="submit"
-                        circle
-                        size="sm"
-                        icon={<MdSave />}
-                        onClick={() => {
-                          updateBlockStyle({
-                            variables: inputValue,
-                          });
-                        }}
-                        disabled={!shouldUpdateBlockStyle(blockstyleId)}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
+              <Flex>
+                <PermissionControl
+                  qualifyingPermissions={[CanUpdateBlockStyle.id]}
+                >
+                  <IconButtonTooltip caption={t('save')}>
+                    <IconButton
+                      aria-label={t('save')}
+                      type="submit"
+                      size="small"
+                      onClick={() => {
+                        updateBlockStyle({
+                          variables: inputValue,
+                        });
+                      }}
+                      disabled={!shouldUpdateBlockStyle(blockstyleId)}
+                    >
+                      <MdSave />
+                    </IconButton>
+                  </IconButtonTooltip>
+                </PermissionControl>
 
-                  <PermissionControl
-                    qualifyingPermissions={['CAN_DELETE_BLOCK_STYLE']}
-                  >
-                    <IconButtonTooltip caption={t('delete')}>
-                      <IconButton
-                        aria-label={t('delete')}
-                        color="red"
-                        appearance="ghost"
-                        circle
-                        size="sm"
-                        icon={<MdDelete />}
-                        onClick={() => setBlockStyleToDelete(blockstyleId)}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                </Flex>
-              </FlexGridSmallerMargin>
-            </Form>
+                <PermissionControl
+                  qualifyingPermissions={[CanDeleteBlockStyle.id]}
+                >
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      aria-label={t('delete')}
+                      color="error"
+                      size="small"
+                      onClick={() => setBlockStyleToDelete(blockstyleId)}
+                    >
+                      <MdDelete />
+                    </IconButton>
+                  </IconButtonTooltip>
+                </PermissionControl>
+              </Flex>
+            </StyleRow>
           ))}
         </Content>
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!blockstyleToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setBlockStyleToDelete(null)}
       >
-        <Modal.Title>{t('blockStyles.areYouSure')}</Modal.Title>
-        <Modal.Body>
+        <DialogTitle>{t('blockStyles.areYouSure')}</DialogTitle>
+
+        <DialogContent>
           {t('blockStyles.areYouSureBody', {
             blockStyle: formValue[blockstyleToDelete!]?.name,
           })}
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="text"
+            onClick={() => setBlockStyleToDelete(null)}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
             onClick={() => {
               deleteBlockStyle({
                 variables: {
@@ -397,22 +408,15 @@ const BlockStyleList = memo(() => {
           >
             {t('blockStyles.areYouSureConfirmation')}
           </Button>
-
-          <Button
-            appearance="subtle"
-            onClick={() => setBlockStyleToDelete(null)}
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 });
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_CREATE_BLOCK_STYLE',
-  'CAN_UPDATE_BLOCK_STYLE',
-  'CAN_DELETE_BLOCK_STYLE',
+  CanCreateBlockStyle.id,
+  CanUpdateBlockStyle.id,
+  CanDeleteBlockStyle.id,
 ])(BlockStyleList);
 export { CheckedPermissionComponent as BlockStyleList };

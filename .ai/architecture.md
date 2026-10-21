@@ -21,8 +21,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 │   └── <domain>/       # Domain modules (article, payment, membership, etc.)
 ├── deployment/         # Deployment scripts
 ├── helm/               # Kubernetes Helm charts
-├── docker/             # Docker build utilities
-└── docs/               # Project documentation
+└── docker/             # Docker build utilities
 ```
 
 ## Applications
@@ -69,7 +68,7 @@ libs/<domain>/
 
 ### Content Domain Libraries
 
-`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `banner`, `richtext`, `feed`
+`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `banner`, `richtext`, `feed`, `newsletter`
 
 **Sitemaps:** every website serves `/api/sitemap` (plus `/api/sitemap/[chunk]`:
 `news`, `pages`, `articles-YYYY` per past year, `articles-YYYY-MM` per month
@@ -90,7 +89,7 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 
 ## Database
 
-- **PostgreSQL 17** via **Prisma 5**
+- **PostgreSQL 18** via **Prisma 7**
 - Schema: `libs/api/prisma/schema.prisma`
 - Uses Prisma views for article revision states: `ArticleRevisionPublished`, `ArticleRevisionPending`, `ArticleRevisionDraft`
 - Full-text search via Prisma preview feature
@@ -121,6 +120,7 @@ Frontend (Apollo Client)
 - Decorators: `@Public()` (no auth), `@CurrentUser()` (inject session), `@Permissions(...)` (RBAC check)
 - Permission constants: `CanCreateArticle`, `CanDeleteArticle`, `CanPublishArticle`, `CanGetArticle`, etc.
 - `@PreviewMode()` for draft content access
+- Per-medium feature toggles (`libs/features`, state from We.Publish One): `@Feature('key')` in the API, `useFeature` / `FeatureControl` in the editor — see [conventions.md](conventions.md#feature-toggles-per-medium)
 
 ## Import Aliases
 

@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render } from '@testing-library/react';
 import { ConsentList } from './consent-list';
 import { BrowserRouter } from 'react-router-dom';
@@ -20,11 +21,13 @@ describe('ConsentList', () => {
 
   it('should render successfully', () => {
     const { baseElement } = render(
-      <BrowserRouter>
-        <MockedProvider>
-          <ConsentList />
-        </MockedProvider>
-      </BrowserRouter>
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <BrowserRouter>
+          <MockedProvider>
+            <ConsentList />
+          </MockedProvider>
+        </BrowserRouter>
+      </ThemeProvider>
     );
     expect(baseElement).toBeTruthy();
   });

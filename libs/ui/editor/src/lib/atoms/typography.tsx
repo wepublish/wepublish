@@ -1,5 +1,10 @@
 import * as CSS from 'csstype';
-import { ElementType, forwardRef, ReactNode } from 'react';
+import {
+  ComponentPropsWithRef,
+  ElementType,
+  forwardRef,
+  ReactNode,
+} from 'react';
 
 export type TypographyVariant =
   | 'title'
@@ -15,7 +20,7 @@ export type TypographyTextAlign = 'left' | 'center' | 'right';
 export type TypographyDisplay = 'block' | 'inline';
 export type TypographySpacing = 'small' | 'large';
 
-export interface TypographyProps extends React.ComponentPropsWithRef<'div'> {
+export interface TypographyProps extends ComponentPropsWithRef<'div'> {
   variant?: TypographyVariant;
   color?: string;
   align?: TypographyTextAlign;
@@ -96,9 +101,9 @@ export function marginForTypographySpacing(spacing: TypographySpacing): string {
 }
 
 export interface TypographyVariantCSS {
-  readonly fontSize?: CSS.Property.FontSize;
-  readonly fontWeight?: CSS.Property.FontWeight;
-  readonly fontStyle?: CSS.Property.FontStyle;
+  fontSize?: CSS.Property.FontSize;
+  fontWeight?: CSS.Property.FontWeight;
+  fontStyle?: CSS.Property.FontStyle;
 }
 
 export function stylesForTypographyVariant(

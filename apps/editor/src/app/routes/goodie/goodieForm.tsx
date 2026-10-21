@@ -1,12 +1,21 @@
 import styled from '@emotion/styled';
 import {
+  Card,
+  CardContent,
+  Drawer,
+  FormControlLabel,
+  FormLabel,
+  Stack,
+  Switch,
+  TextField,
+} from '@mui/material';
+import {
   FullImageFragment,
   FullMemberPlanFragment,
-  MutationCreateGoodieArgs,
-  MutationUpdateGoodieArgs,
 } from '@wepublish/editor/api';
 import {
   ChooseEditImage,
+  DRAWER_WIDTHS,
   ImageEditPanel,
   ImageSelectPanel,
   InfoTooltip,
@@ -15,21 +24,28 @@ import {
   SelectMemberPlans,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Drawer, Form, NumberInput, Panel, Toggle } from 'rsuite';
+import { z } from 'zod';
 
-export type GoodieFormData = (
-  | MutationCreateGoodieArgs
-  | MutationUpdateGoodieArgs
-) & {
-  image?: FullImageFragment | null;
-  memberPlans?: Pick<FullMemberPlanFragment, 'id' | 'name'>[];
-};
+export const goodieSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(1),
+  stock: z.coerce.number().int().min(0).nullish(),
+  active: z.boolean(),
+  description: z.custom<RichTextBlockValue['richText']>().nullish(),
+  memberPlanIDs: z.array(z.string()),
+  memberPlans: z
+    .array(z.custom<Pick<FullMemberPlanFragment, 'id' | 'name'>>())
+    .optional(),
+  imageID: z.string().nullish(),
+  image: z.custom<FullImageFragment>().nullish(),
+});
+
+export type GoodieFormValues = z.infer<typeof goodieSchema>;
 
 type GoodieFormProps = {
   create?: boolean;
-  goodie: Partial<GoodieFormData>;
-  onChange: (changes: Partial<GoodieFormData>) => void;
 };
 
 const GoodieFormWrapper = styled.div`
@@ -55,153 +71,219 @@ const NameStockGrid = styled.div`
   align-self: stretch;
   gap: 16px;
 
-  .rs-form-group {
-    min-width: 0;
-  }
-
-  .rs-form-control,
-  .rs-input-group {
-    width: 100%;
-  }
-
   @media (max-width: 640px) {
     grid-template-columns: minmax(0, 1fr);
   }
 `;
 
-export const GoodieForm = ({ goodie, onChange, create }: GoodieFormProps) => {
+export const GoodieForm = ({ create }: GoodieFormProps) => {
   const { t } = useTranslation();
+  const { control, setValue } = useFormContext<GoodieFormValues>();
+  const memberPlans = useWatch({ control, name: 'memberPlans' });
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+  const image = useWatch({ control, name: 'image' });
 
   return (
     <>
       <GoodieFormWrapper>
         <GoodieFormSection>
-          <Panel bordered>
-            <Form.Stack>
-              <Form.Group controlId="active">
-                <Toggle
-                  checked={!!goodie.active}
+          <Card>
+            <CardContent>
+              <Stack
+                direction="column"
+                spacing={3}
+              >
+                <FormControlLabel
+                  control={
+                    <Controller
+                      control={control}
+                      name="active"
+                      render={({ field }) => (
+                        <Switch
+                          checked={Boolean(field.value)}
+                          onChange={(_event, active) => field.onChange(active)}
+                        />
+                      )}
+                    />
+                  }
                   label={
                     <>
                       {t('goodie.form.active')}{' '}
                       <InfoTooltip text={t('goodie.form.activeInfo')} />
                     </>
                   }
-                  onChange={active => onChange({ active })}
                 />
-              </Form.Group>
 
-              <NameStockGrid>
-                <Form.Group controlId="name">
-                  <Form.Label>{t('goodie.form.name')}</Form.Label>
-
-                  <Form.Control
+                <NameStockGrid>
+                  <Controller
+                    control={control}
                     name="name"
-                    value={goodie.name ?? ''}
-                    onChange={(name: string) => onChange({ name })}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        value={field.value ?? ''}
+                        label={t('goodie.form.name')}
+                        error={Boolean(error)}
+                        helperText={error?.message}
+                        fullWidth
+                      />
+                    )}
                   />
-                </Form.Group>
 
-                <Form.Group controlId="stock">
-                  <Form.Label>
-                    {t('goodie.form.stock')}{' '}
-                    <InfoTooltip text={t('goodie.form.stockInfo')} />
-                  </Form.Label>
-
-                  <Form.Control
+                  <Controller
+                    control={control}
                     name="stock"
-                    value={goodie.stock ?? ''}
-                    min={0}
-                    placeholder={t('goodie.overview.unlimited')}
-                    onChange={(stock: string | number | null) =>
-                      onChange({
-                        stock: stock === '' || stock === null ? null : +stock,
-                      })
-                    }
-                    accepter={NumberInput}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        value={field.value ?? ''}
+                        label={
+                          <>
+                            {t('goodie.form.stock')}{' '}
+                            <InfoTooltip text={t('goodie.form.stockInfo')} />
+                          </>
+                        }
+                        type="number"
+                        slotProps={{ htmlInput: { min: 0 } }}
+                        placeholder={t('goodie.overview.unlimited')}
+                        onChange={event =>
+                          field.onChange(
+                            event.target.value === '' ?
+                              null
+                            : +event.target.value
+                          )
+                        }
+                        error={Boolean(error)}
+                        helperText={error?.message}
+                        fullWidth
+                      />
+                    )}
                   />
-                </Form.Group>
-              </NameStockGrid>
+                </NameStockGrid>
 
-              <Form.Group controlId="description">
-                <Form.Label>{t('goodie.form.description')}</Form.Label>
+                <div>
+                  <FormLabel>{t('goodie.form.description')}</FormLabel>
 
-                <RichTextBlock
-                  value={goodie.description}
-                  onChange={description =>
-                    onChange({
-                      description:
-                        description as RichTextBlockValue['richText'],
-                    })
-                  }
-                />
-              </Form.Group>
-            </Form.Stack>
-          </Panel>
+                  <Controller
+                    control={control}
+                    name="description"
+                    render={({ field }) => (
+                      <RichTextBlock
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                </div>
+              </Stack>
+            </CardContent>
+          </Card>
         </GoodieFormSection>
 
         <GoodieFormSection>
-          <Panel
-            bordered
+          <Card
+            variant="outlined"
             css={{ overflow: 'initial' }}
           >
-            <Form.Stack>
-              <Form.Group controlId="memberPlanIDs">
-                <Form.Label>
-                  {t('goodie.form.memberPlans')}{' '}
-                  <InfoTooltip text={t('goodie.form.memberPlansInfo')} />
-                </Form.Label>
+            <CardContent>
+              <Stack
+                direction="column"
+                spacing={3}
+              >
+                <div>
+                  <FormLabel>
+                    {t('goodie.form.memberPlans')}{' '}
+                    <InfoTooltip text={t('goodie.form.memberPlansInfo')} />
+                  </FormLabel>
 
-                <Form.Control
-                  name="memberPlanIDs"
-                  defaultMemberPlans={goodie.memberPlans ?? []}
-                  selectedMemberPlans={goodie.memberPlanIDs ?? []}
-                  setSelectedMemberPlans={(memberPlanIDs: string[]) =>
-                    onChange({ memberPlanIDs })
-                  }
-                  accepter={SelectMemberPlans}
-                />
-              </Form.Group>
+                  <Controller
+                    control={control}
+                    name="memberPlanIDs"
+                    render={({ field }) => (
+                      <SelectMemberPlans
+                        name="memberPlanIDs"
+                        defaultMemberPlans={memberPlans ?? []}
+                        selectedMemberPlans={field.value ?? []}
+                        setSelectedMemberPlans={field.onChange}
+                      />
+                    )}
+                  />
+                </div>
 
-              <Form.Group controlId="image">
-                <ChooseEditImage
-                  image={goodie.image}
-                  header={t('goodie.form.image')}
-                  disabled={false}
-                  openChooseModalOpen={() => setChooseModalOpen(true)}
-                  openEditModalOpen={() => setEditModalOpen(true)}
-                  removeImage={() => onChange({ imageID: null, image: null })}
-                />
-              </Form.Group>
-            </Form.Stack>
-          </Panel>
+                <div>
+                  <FormLabel>{t('goodie.form.image')}</FormLabel>
+
+                  <Controller
+                    control={control}
+                    name="image"
+                    render={({ field }) => (
+                      <ChooseEditImage
+                        onSelect={(chosen: FullImageFragment) => {
+                          setChooseModalOpen(false);
+                          setValue('imageID', chosen.id);
+                          setValue('image', chosen);
+                        }}
+                        image={field.value}
+                        disabled={false}
+                        openChooseModalOpen={() => setChooseModalOpen(true)}
+                        openEditModalOpen={() => setEditModalOpen(true)}
+                        removeImage={() => {
+                          field.onChange(null);
+                          setValue('imageID', null);
+                        }}
+                      />
+                    )}
+                  />
+                </div>
+              </Stack>
+            </CardContent>
+          </Card>
         </GoodieFormSection>
       </GoodieFormWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={(image: FullImageFragment) => {
+          onSelect={(chosen: FullImageFragment) => {
             setChooseModalOpen(false);
-            onChange({ imageID: image.id, image });
+            setValue('imageID', chosen.id);
+            setValue('image', chosen);
           }}
         />
       </Drawer>
 
-      {goodie.image && (
+      {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel
-            id={goodie.image.id}
+            id={image.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}
           />

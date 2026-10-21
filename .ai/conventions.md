@@ -76,10 +76,28 @@ export class ArticleResolver {
 | `@CurrentUser()` | Injects the current `UserSession`, or `undefined` |
 | `@Permissions(CanCreateArticle)` | Requires that specific permission |
 | `@PreviewMode()` | Checks whether the user has preview access |
+| `@Feature('key')` | Requires the feature to be switched on for this medium, **in addition** to the above |
 
 Guard every field that exposes user or payment data, and **test the deny
 path** — note the caveat about unguarded resolver specs in
 [testing.md](../.claude/docs/testing.md).
+
+### Feature toggles (per medium)
+
+Ship unfinished work on master behind a flag instead of on a deploy branch:
+
+1. Add `{key, description, stage}` to `FEATURES` in
+   `libs/features/src/lib/features.ts`.
+2. Gate the API with `@Feature('key')` (`@wepublish/features/api`).
+3. Gate the editor with `<FeatureControl feature="key">` around nav items and
+   `createCheckedFeatureComponent('key')` around routes (`@wepublish/ui/editor`).
+4. Once the CMS reports the key, staff switch it on per medium in One
+   (Clients → features); see [external-services.md](../.claude/docs/external-services.md).
+
+The schema and the migrations stay the same for every medium; only access is
+gated. When the feature is ready for every medium, delete the entry and its
+`@Feature` / `FeatureControl` checks in the same change. `FeatureKey` is typed
+from the registry, so a forgotten check fails to compile.
 
 ### Models
 
@@ -105,6 +123,45 @@ hand-write a query hook; see
 
 Frontend errors surface through the Apollo `onError` link plus per-query error
 state, and report to Sentry alongside the backend.
+
+### Editor command palette
+
+Cmd/Ctrl+K opens a command palette over the whole editor. Its commands are
+plain data, split across `navigationCommands.tsx`, `createCommands.tsx` and
+`accountCommands.tsx`, and brought together by
+[apps/editor/src/app/commandPalette/commands.tsx](../apps/editor/src/app/commandPalette/commands.tsx).
+**Add a route to `app.tsx` and you add it here**, with the same
+`qualifyingPermissions` the sidebar uses, and the same `feature` wherever the
+sidebar wraps the entry in `FeatureControl`;
+`commands.spec.ts` runs every command's `perform` against a fake `navigate`
+and fails on any route the router serves that no command reaches (routes
+needing an `:id` are excluded by name).
+
+Every command carries its own `perform(context)`; navigation is just the
+common case of one (`perform: ({navigate}) => navigate('/articles')`), not a
+shape the registry privileges, so a command that opens a dialog or fires a
+mutation fits without changing anything. `context` carries `navigate` and
+`close`.
+
+Groups (`favourite`, `navigate`, `create`, `account`) are the headings; add one
+by extending `CommandGroup` and its `commandPalette.groups.*` translations.
+`favourite` is not a list of its own — it is `favourite: true` on a command,
+which promotes it out of whichever group it was declared in. It only forms a
+block while the query is empty, and folds back into `navigate` as soon as the
+reader types.
+
+The palette itself is generic and lives in
+[libs/ui/editor/src/lib/commandPalette](../libs/ui/editor/src/lib/commandPalette).
+
+### Website shell (header / footer per route)
+
+Every tenant `_app.tsx` renders `NavBar` / `FooterContainer` only when
+`getWebsiteShell(pageProps)` says so. A route hides them by returning
+`shell: {showNavigation?, showFooter?}` in its `getStaticProps` props, so
+don't hide them with CSS. Page routes (`[slug].tsx`, `index.tsx`) build
+`shell` from the page's `hideHeader` / `hideFooter` with `getPageShell`
+([website-shell.ts](../libs/utils/website/src/lib/website-shell.ts)). A new
+tenant has to do the same.
 
 ## File naming
 

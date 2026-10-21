@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 import {
   UserDocument,
@@ -25,7 +26,6 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
-  // The permission wrappers would otherwise need an authenticated session.
   createCheckedPermissionComponent: () => (component: unknown) => component,
   PermissionControl: ({ children }: { children: React.ReactNode }) => children,
   useAuthorisation: () => true,
@@ -70,7 +70,6 @@ const subscription = {
 };
 
 const mockQueries = (results: [unknown, unknown][] = []) => {
-  // The results have to be referentially stable, the view reacts to them in effects.
   const refetch = vi.fn();
   const byDocument = new Map(
     results.map(([document, data]) => [
@@ -85,32 +84,38 @@ const mockQueries = (results: [unknown, unknown][] = []) => {
   );
 };
 
+const theme = createTheme({ cssVariables: true });
+
 const renderAt = (path: string) =>
   render(
-    <MemoryRouter initialEntries={[path]}>
-      <Routes>
-        <Route
-          path="/users/create"
-          element={<UserEditView />}
-        />
-        <Route
-          path="/users/edit/:id"
-          element={<UserEditView />}
-        />
-      </Routes>
-    </MemoryRouter>
+    <ThemeProvider theme={theme}>
+      <MemoryRouter initialEntries={[path]}>
+        <Routes>
+          <Route
+            path="/users/create"
+            element={<UserEditView />}
+          />
+          <Route
+            path="/users/edit/:id"
+            element={<UserEditView />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 beforeEach(() => mockedUseQuery.mockReset());
 afterEach(() => vi.restoreAllMocks());
 
 describe('UserEditView', () => {
-  it('keeps the empty first name field controlled while typing', () => {
+  it('keeps the empty first name field controlled while typing', async () => {
     const consoleError = vi
       .spyOn(console, 'error')
       .mockImplementation(() => undefined);
     mockQueries();
     const { container } = renderAt('/users/create');
+
+    await screen.findByText('userCreateOrEditView.userDataTitle');
 
     fireEvent.change(
       container.querySelector('input[name="firstName"]') as HTMLInputElement,
@@ -142,5 +147,92 @@ describe('UserEditView', () => {
       null
     );
     expect(screen.getByTestId('user-columns')).toBeTruthy();
+  });
+
+  it('fills both columns', async () => {
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    const columns = await screen.findByTestId('user-columns');
+    const [identity, access] = [...columns.children];
+
+    expect(identity).toContainElement(
+      screen.getByText('userCreateOrEditView.userDataTitle')
+    );
+    expect(identity).toContainElement(
+      screen.getByText('userCreateOrEditView.addressTitle')
+    );
+
+    expect(access).toContainElement(
+      screen.getByText('userCreateOrEditView.passwordHeader')
+    );
+    expect(access).toContainElement(
+      screen.getByText('userCreateOrEditView.properties')
+    );
+    expect(access).toContainElement(
+      screen.getByText('userCreateOrEditView.userRoles')
+    );
+  });
+
+  it('offers the active flag as a checkbox', async () => {
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    expect(
+      await screen.findByRole('checkbox', {
+        name: /userCreateOrEditView.active/,
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('switch', { name: /userCreateOrEditView.active/ })
+    ).not.toBeInTheDocument();
+  });
+
+  it('opens the user data with the picture on its own row', async () => {
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    const picture = await screen.findByRole('button', {
+      name: 'chooseEditImage.chooseImage',
+    });
+    const firstName = screen.getByRole('textbox', {
+      name: /userCreateOrEditView.firstName/,
+    });
+
+    expect(
+      screen.queryByText('userCreateOrEditView.selectUserImage')
+    ).not.toBeInTheDocument();
+
+    expect(
+      picture.compareDocumentPosition(firstName) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it('keeps the active flag with the rest of access', async () => {
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    const active = await screen.findByRole('checkbox', {
+      name: /userCreateOrEditView.active/,
+    });
+
+    expect(active.closest('.MuiCard-root')).toContainElement(
+      screen.getByText('userCreateOrEditView.passwordHeader')
+    );
+  });
+
+  it('keeps sending and what was sent in one panel', async () => {
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    const mails = await screen.findByText('userMail.title');
+    const panel = mails.closest('.MuiCard-root');
+
+    expect(panel).toContainElement(
+      screen.getByRole('combobox', { name: 'userMail.selectTemplate' })
+    );
+    expect(screen.queryByText('userMail.logTitle')).not.toBeInTheDocument();
+    expect(screen.queryByText('userMail.sendTitle')).not.toBeInTheDocument();
   });
 });

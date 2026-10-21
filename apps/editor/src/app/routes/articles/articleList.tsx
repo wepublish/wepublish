@@ -1,5 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Alert,
+  AlertTitle,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   ArticleFilter,
   ArticleListDocument,
   ArticleListQuery,
@@ -12,54 +21,53 @@ import {
   TagType,
   UnpublishArticleDocument,
 } from '@wepublish/editor/api';
-import { CanPreview } from '@wepublish/permissions';
 import {
-  ColumnConfigurator,
+  CanCreateArticle,
+  CanDeleteArticle,
+  CanGetArticle,
+  CanGetArticles,
+  CanPreview,
+  CanPublishArticle,
+  CanUpdateComments,
+} from '@wepublish/permissions';
+import {
+  clearFilters,
+  countActiveFilters,
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   DescriptionList,
   DescriptionListItem,
+  formatArticleAuthors,
   IconButton,
-  IconButtonCell,
   IconButtonTooltip,
+  Link,
+  ListColumn,
   ListFilters,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
+  PageTitle,
+  Pagination,
   PeerAvatar,
   PermissionControl,
   StatusBadge,
-  formatArticleAuthors,
-  Table,
   TableWrapper,
-  ListColumn,
-  renderListColumns,
-  useColumnConfig,
   useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdd,
-  MdComment,
+  MdAddComment,
   MdContentCopy,
   MdDelete,
+  MdLink,
   MdUnpublished,
 } from 'react-icons/md';
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
-import type { RowDataType } from 'rsuite-table';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
-const { Column, HeaderCell } = RTable;
+import { copyLinkToClipboard } from '../../copyLink';
 
 interface State {
   state: string;
@@ -71,6 +79,20 @@ enum ConfirmAction {
   Unpublish = 'unpublish',
   Duplicate = 'duplicate',
 }
+
+const ARTICLE_FILTER_FIELDS = [
+  'title',
+  'preTitle',
+  'lead',
+  'draft',
+  'authors',
+  'tags',
+  'pending',
+  'published',
+  'publicationDate',
+  'includeHidden',
+  'peerId',
+] as const;
 
 function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
   switch (columnField) {
@@ -136,6 +158,8 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
   const [createComment] = useMutation(CreateCommentDocument);
 
   const articles = useMemo(() => data?.articles?.nodes ?? [], [data]);
+
+  type ArticleRow = (typeof articles)[number];
   const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -146,12 +170,12 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     return () => clearTimeout(timerID);
   }, [highlightedRowId]);
 
-  const dataColumns = useMemo<ListColumn<FullArticleFragment>[]>(
+  const dataColumns = useMemo<ListColumn<ArticleRow>[]>(
     () => [
       {
         id: 'states',
         label: t('articles.overview.states'),
-        width: 190,
+        width: 150,
         resizable: false,
         alwaysVisible: true,
         render: article => {
@@ -160,12 +184,14 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
           if (article.draft) {
             states.push({ state: 'draft', text: t('articles.overview.draft') });
           }
+
           if (article.pending) {
             states.push({
               state: 'pending',
               text: t('articles.overview.pending'),
             });
           }
+
           if (article.published) {
             states.push({
               state: 'published',
@@ -198,6 +224,12 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             </Link>
           </PeerAvatar>
         ),
+      },
+      {
+        id: 'slug',
+        label: t('articles.overview.slug'),
+        width: 210,
+        render: article => article.slug,
       },
       {
         id: 'authors',
@@ -237,140 +269,135 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     [t]
   );
 
-  const { isVisible, toggle, configurableColumns } = useColumnConfig(
-    'articles',
-    dataColumns
-  );
-
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('articles.overview.articles')}</h2>
-
-          <ColumnConfigurator
-            columns={configurableColumns}
-            isVisible={isVisible}
-            onToggle={toggle}
-          />
+          <PageTitle>{t('articles.overview.articles')}</PageTitle>
         </ListViewHeader>
 
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+        <PermissionControl qualifyingPermissions={[CanCreateArticle.id]}>
           <ListViewActions>
-            <Link to="/articles/create">
-              <RIconButton
-                appearance="primary"
-                disabled={isLoading}
-                icon={<MdAdd />}
-              >
-                {t('articles.overview.newArticle')}
-              </RIconButton>
-            </Link>
+            <Button
+              component={RouterLink}
+              to="/articles/create"
+              variant="contained"
+              startIcon={<MdAdd />}
+            >
+              {t('articles.overview.newArticle')}
+            </Button>
           </ListViewActions>
         </PermissionControl>
-
-        <ListFilters
-          fields={[
-            'title',
-            'preTitle',
-            'lead',
-            'draft',
-            'authors',
-            'tags',
-            'pending',
-            'published',
-            'publicationDate',
-            'includeHidden',
-            'peerId',
-          ]}
-          filter={filter}
-          isLoading={isLoading}
-          onSetFilter={filter => {
-            setFilter(filter);
-            setPage(1);
-          }}
-          tagType={TagType.Article}
-        />
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
+        <DataTable
+          filters={
+            <ListFilters
+              fields={ARTICLE_FILTER_FIELDS}
+              filter={filter}
+              isLoading={isLoading}
+              onSetFilter={filter => {
+                setFilter(filter);
+                setPage(1);
+              }}
+              tagType={TagType.Article}
+            />
+          }
+          filterCount={countActiveFilters(ARTICLE_FILTER_FIELDS, filter)}
+          onResetFilters={() =>
+            setFilter(clearFilters(ARTICLE_FILTER_FIELDS, filter))
+          }
           loading={isLoading}
           data={articles}
           sortColumn={sortField}
-          sortType={sortOrder}
+          sortOrder={sortOrder}
+          sortable={dataColumns
+            .filter(column => column.sortable)
+            .map(column => column.dataKey ?? column.id)}
+          onSort={(column, order) => {
+            setSort(column, order);
+            setPage(1);
+          }}
           rowClassName={rowData =>
             rowData?.id === highlightedRowId ? 'highlighted-row' : ''
           }
-          onSortColumn={(sortColumn, sortType) => {
-            setSort(sortColumn, sortType ?? 'asc');
-            setPage(1);
-          }}
-        >
-          {renderListColumns(dataColumns, isVisible)}
-
-          <Column
-            width={220}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <IconButtonCell>
-              {(rowData: RowDataType<FullArticleFragment>) => (
+          storageKey="articles"
+          columns={[
+            ...dataColumns.map(column => ({
+              ...column,
+              sortKey: column.dataKey,
+              resizable: column.resizable ?? true,
+            })),
+            {
+              id: 'action',
+              label: t('action'),
+              width: 260,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
                 <>
+                  <IconButtonTooltip caption={t('copyLink.button')}>
+                    <IconButton
+                      aria-label={t('copyLink.button')}
+                      disabled={!rowData.published}
+                      size="small"
+                      onClick={() => copyLinkToClipboard(rowData.url, t)}
+                    >
+                      <MdLink />
+                    </IconButton>
+                  </IconButtonTooltip>
+
                   <PermissionControl
-                    qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}
+                    qualifyingPermissions={[CanPublishArticle.id]}
                   >
                     <IconButtonTooltip
                       caption={t('articleEditor.overview.unpublish')}
                     >
                       <IconButton
                         aria-label={t('articleEditor.overview.unpublish')}
-                        icon={<MdUnpublished />}
-                        circle
                         disabled={!(rowData.published || rowData.pending)}
-                        size="sm"
+                        size="small"
                         onClick={e => {
                           setCurrentArticle(rowData as FullArticleFragment);
                           setConfirmAction(ConfirmAction.Unpublish);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdUnpublished />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
                   <PermissionControl
-                    qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                    qualifyingPermissions={[CanCreateArticle.id]}
                   >
                     <IconButtonTooltip
                       caption={t('articleEditor.overview.duplicate')}
                     >
                       <IconButton
                         aria-label={t('articleEditor.overview.duplicate')}
-                        icon={<MdContentCopy />}
-                        circle
-                        size="sm"
+                        size="small"
                         onClick={() => {
                           setCurrentArticle(rowData as FullArticleFragment);
                           setConfirmAction(ConfirmAction.Duplicate);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdContentCopy />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
                   <PermissionControl
-                    qualifyingPermissions={['CAN_UPDATE_COMMENTS']}
+                    qualifyingPermissions={[CanUpdateComments.id]}
                   >
                     <IconButtonTooltip
                       caption={t('articleEditor.overview.createComment')}
                     >
                       <IconButton
                         aria-label={t('articleEditor.overview.createComment')}
-                        icon={<MdComment />}
-                        circle
-                        size="sm"
+                        size="small"
                         onClick={() => {
                           createComment({
                             variables: {
@@ -384,72 +411,65 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                             },
                           });
                         }}
-                      />
+                      >
+                        <MdAddComment />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
                   <PermissionControl
-                    qualifyingPermissions={['CAN_DELETE_ARTICLE']}
+                    qualifyingPermissions={[CanDeleteArticle.id]}
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         aria-label={t('delete')}
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
+                        size="small"
+                        color="error"
                         onClick={() => {
                           setCurrentArticle(rowData as FullArticleFragment);
                           setConfirmAction(ConfirmAction.Delete);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                 </>
-              )}
-            </IconButtonCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.articles.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.articles.totalCount ?? 0}
         />
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={isConfirmationDialogOpen}
-        size="sm"
+        maxWidth="sm"
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>
-            {confirmAction === ConfirmAction.Unpublish ?
-              t('articles.panels.unpublishArticle')
-            : confirmAction === ConfirmAction.Delete ?
-              t('articles.panels.deleteArticle')
-            : t('articles.panels.duplicateArticle')}
-          </Modal.Title>
-        </Modal.Header>
+        <DialogTitle>
+          {confirmAction === ConfirmAction.Unpublish ?
+            t('articles.panels.unpublishArticle')
+          : confirmAction === ConfirmAction.Delete ?
+            t('articles.panels.deleteArticle')
+          : t('articles.panels.duplicateArticle')}
+        </DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('articles.panels.title')}>
               {currentArticle?.latest.title || t('articles.panels.untitled')}
@@ -484,21 +504,28 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             )}
           </DescriptionList>
 
-          <Message
-            showIcon
-            type="warning"
-            title={t('articleEditor.overview.warningLabel')}
-          >
-            {t('articleEditor.overview.unpublishWarningMessage')}
-          </Message>
-        </Modal.Body>
+          <Alert severity="warning">
+            <AlertTitle>{t('articleEditor.overview.warningLabel')}</AlertTitle>
 
-        <Modal.Footer>
+            {t('articleEditor.overview.unpublishWarningMessage')}
+          </Alert>
+        </DialogContent>
+
+        <DialogActions>
           <Button
-            appearance="primary"
+            variant="text"
+            onClick={() => setConfirmationDialogOpen(false)}
+          >
+            {t('articles.panels.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
             disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
-              if (!currentArticle) return;
+              if (!currentArticle) {
+                return;
+              }
 
               switch (confirmAction) {
                 case ConfirmAction.Delete:
@@ -510,7 +537,9 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                         variables: articleListVariables,
                       });
 
-                      if (!query) return;
+                      if (!query) {
+                        return;
+                      }
 
                       cache.writeQuery<ArticleListQuery>({
                         query: ArticleListDocument,
@@ -546,7 +575,9 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                         variables: articleListVariables,
                       });
 
-                      if (!query) return;
+                      if (!query) {
+                        return;
+                      }
                       cache.writeQuery<ArticleListQuery>({
                         query: ArticleListDocument,
                         data: {
@@ -576,23 +607,17 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
           >
             {t('articles.panels.confirm')}
           </Button>
-          <Button
-            onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
-          >
-            {t('articles.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_ARTICLES',
-  'CAN_GET_ARTICLE',
-  'CAN_CREATE_ARTICLE',
-  'CAN_DELETE_ARTICLE',
+  CanGetArticles.id,
+  CanGetArticle.id,
+  CanCreateArticle.id,
+  CanDeleteArticle.id,
   CanPreview.id,
 ])(ArticleList);
 export { CheckedPermissionComponent as ArticleList };

@@ -14,7 +14,11 @@ import {
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { CanGetAISettings } from '@wepublish/permissions';
-import { IconButtonTooltip, PermissionControl } from '@wepublish/ui/editor';
+import {
+  IconButtonTooltip,
+  PageTitle,
+  PermissionControl,
+} from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -27,7 +31,7 @@ import {
   MdOutlineFontDownload,
   MdWarning,
 } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { z } from 'zod';
 
 import { ThemeColorItem } from './theme/palette-list-item';
@@ -47,7 +51,7 @@ const WebsiteSettingsListWrapper = styled.div`
   }
 `;
 
-const Title = styled.h3`
+const Title = styled(PageTitle)`
   grid-column: -1/1;
 `;
 
@@ -209,6 +213,7 @@ export const WebsiteSettingsList = () => {
   return (
     <WebsiteSettingsListWrapper>
       <Title>{t('websiteSettings.list.title')}</Title>
+
       {settings.map(category => (
         <PermissionControl
           key={category.title}
@@ -219,7 +224,7 @@ export const WebsiteSettingsList = () => {
             sx={{
               display: 'flex',
               flexFlow: 'column',
-              borderRadius: 'var(--rs-radius-lg)',
+              borderRadius: 1,
             }}
           >
             <CardContent sx={{ flex: 1 }}>
@@ -247,7 +252,7 @@ export const WebsiteSettingsList = () => {
                       role="img"
                       aria-label={t('websiteSettings.list.statusMissingKey')}
                     >
-                      <MdWarning color={theme.palette.error.main} />
+                      <MdWarning color={theme.vars.palette.error.main} />
                     </StatusIcon>
                   </IconButtonTooltip>
                   {integration.text}
@@ -276,7 +281,7 @@ export const WebsiteSettingsList = () => {
                       role="img"
                       aria-label={t('websiteSettings.list.statusActive')}
                     >
-                      <MdCheck color={theme.palette.success.main} />
+                      <MdCheck color={theme.vars.palette.success.main} />
                     </StatusIcon>
                   </IconButtonTooltip>
                   {integration.text}
@@ -305,7 +310,7 @@ export const WebsiteSettingsList = () => {
                       role="img"
                       aria-label={t('websiteSettings.list.statusInactive')}
                     >
-                      <MdClose color={theme.palette.info.main} />
+                      <MdClose color={theme.vars.palette.info.main} />
                     </StatusIcon>
                   </IconButtonTooltip>
                   {integration.text}
@@ -327,9 +332,13 @@ export const WebsiteSettingsList = () => {
             </CardContent>
 
             <CardActions>
-              <Link to={category.path}>
-                <Button size="small">{t('edit')}</Button>
-              </Link>
+              <Button
+                component={RouterLink}
+                to={category.path}
+                size="small"
+              >
+                {t('edit')}
+              </Button>
             </CardActions>
           </Card>
         </PermissionControl>

@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useState } from 'react';
+import { Drawer } from '@mui/material';
+import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Drawer } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { ChooseEditImage } from '../atoms/chooseEditImage';
 import { FieldProps, ListInput } from '../atoms/listInput';
 import { TypographicTextArea } from '../atoms/typographicTextArea';
+import { DRAWER_WIDTHS } from '../drawer';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import { isFunctionalUpdate } from '../utility';
@@ -64,7 +65,7 @@ export function ListicleItemElement({
   const { t } = useTranslation();
 
   const handleRichTextChange = useCallback(
-    (richText: React.SetStateAction<RichTextBlockValue['richText']>) =>
+    (richText: SetStateAction<RichTextBlockValue['richText']>) =>
       onChange(value => ({
         ...value,
         richText:
@@ -78,7 +79,10 @@ export function ListicleItemElement({
       <ListicleWrapper>
         <ImageWrapper>
           <ChooseEditImage
-            header={''}
+            onSelect={image => {
+              setChooseModalOpen(false);
+              onChange(value => ({ ...value, image }));
+            }}
             image={image}
             disabled={false}
             openChooseModalOpen={() => setChooseModalOpen(true)}
@@ -106,8 +110,16 @@ export function ListicleItemElement({
       </ListicleWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -120,8 +132,18 @@ export function ListicleItemElement({
       </Drawer>
       {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel

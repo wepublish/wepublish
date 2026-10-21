@@ -1,45 +1,152 @@
 import { createEditorTheme } from './theme';
 
+const theme = createEditorTheme();
+
 describe('createEditorTheme', () => {
-  it('keeps the brand blue as primary colour in light mode', () => {
-    const theme = createEditorTheme('light');
-
-    expect(theme.palette.mode).toBe('light');
-    expect(theme.palette.primary.main).toBe('#3498ff');
+  it('builds both colour schemes into one theme', () => {
+    expect(theme.colorSchemes.light).toBeDefined();
+    expect(theme.colorSchemes.dark).toBeDefined();
   });
 
-  it('uses the rsuite dark surfaces in dark mode', () => {
-    const theme = createEditorTheme('dark');
-
-    expect(theme.palette.mode).toBe('dark');
-    expect(theme.palette.background.default).toBe('#0f131a');
-    expect(theme.palette.background.paper).toBe('#1a1d24');
+  it('exposes its palette as CSS variables', () => {
+    expect(theme.vars).toBeDefined();
+    expect(theme.vars?.palette.primary.main).toMatch(/^var\(--/);
   });
 
-  it('uses the same font as the rsuite components', () => {
-    const theme = createEditorTheme('light');
+  it('switches scheme on an attribute rather than the media query alone', () => {
+    expect(theme.colorSchemeSelector).toBe('data-mui-color-scheme');
+  });
 
+  it('keeps the brand blue as primary colour', () => {
+    expect(theme.colorSchemes.light?.palette.primary.main).toBe('#3498ff');
+  });
+
+  it('uses the dark surfaces for the dark scheme', () => {
+    const { background } = theme.colorSchemes.dark!.palette!;
+
+    expect(background?.default).toBe('#0a0d12');
+    expect(background?.paper).toBe('#14181f');
+  });
+
+  it('lifts paper off the page in the light scheme too', () => {
+    const { background } = theme.colorSchemes.light!.palette!;
+
+    expect(background?.default).toBe('#f3f4f7');
+    expect(background?.paper).toBe('#ffffff');
+  });
+
+  it('uses the editor font throughout', () => {
     expect(theme.typography.fontFamily).toMatch(/^'Inter'/);
   });
 
-  it.each(['light', 'dark'] as const)(
-    'draws %s table grid lines in the rsuite border colour',
-    mode => {
-      const theme = createEditorTheme(mode);
+  it('keeps headings at the sizes the editor chrome uses', () => {
+    expect(theme.typography.h1.fontSize).toBe('1.875rem');
+    expect(theme.typography.h6.fontSize).toBe('0.875rem');
+  });
 
-      expect(theme.components?.MuiTableCell?.styleOverrides?.root).toEqual(
-        expect.objectContaining({
-          borderBottomColor: 'var(--rs-border-primary)',
-        })
-      );
+  it('defaults the editor inputs to the small size', () => {
+    expect(theme.components?.MuiTextField?.defaultProps?.size).toBe('small');
+    expect(theme.components?.MuiSelect?.defaultProps?.size).toBe('small');
+  });
+
+  it('renders a card title as a block element', () => {
+    expect(
+      (
+        theme.components?.MuiCardHeader?.defaultProps?.slotProps?.title as
+          | { component?: string }
+          | undefined
+      )?.component
+    ).toBe('div');
+  });
+
+  it('leaves MuiFormControl without a margin of its own', () => {
+    expect(theme.components?.MuiFormControl?.defaultProps?.margin).toBe('none');
+  });
+
+  it.each(['MuiInputBase', 'MuiInputLabel', 'MuiFormHelperText'])(
+    'does not densify %s',
+    name => {
+      expect(theme.components?.[name as 'MuiInputBase']).toBeUndefined();
     }
   );
 
-  it('rounds cards like the rsuite panels', () => {
-    const theme = createEditorTheme('light');
+  it('turns the touch ripple off', () => {
+    expect(
+      theme.components?.MuiButtonBase?.defaultProps?.disableTouchRipple
+    ).toBe(true);
+  });
 
-    expect(theme.components?.MuiCard?.styleOverrides?.root).toEqual(
-      expect.objectContaining({ borderRadius: 'var(--rs-radius-lg)' })
-    );
+  it('lays every drawer out as a column so its header stays put', () => {
+    expect(theme.components?.MuiDrawer?.styleOverrides?.paper).toMatchObject({
+      display: 'flex',
+      flexDirection: 'column',
+    });
+  });
+
+  describe('alert colours', () => {
+    const alertStyle = (severity: string, variant = 'filled') => {
+      const root = theme.components?.MuiAlert?.styleOverrides?.root as (args: {
+        ownerState: { severity: string; variant: string };
+        theme: typeof theme;
+      }) => Record<string, unknown>;
+
+      return root({ ownerState: { severity, variant }, theme });
+    };
+
+    it.each(['success', 'warning', 'error', 'info'])('softens %s', severity => {
+      const hex = alertStyle(severity)?.backgroundColor as string;
+
+      expect(hex).toMatch(/^#[0-9a-f]{6}$/);
+      expect(
+        [1, 3, 5].every(i => parseInt(hex.slice(i, i + 2), 16) > 0xd0)
+      ).toBe(true);
+    });
+
+    it('uses the published pill colour for success', () => {
+      expect(alertStyle('success')?.backgroundColor).toBe('#e1f8de');
+    });
+
+    it('uses the draft pill colour for warning', () => {
+      expect(alertStyle('warning')?.backgroundColor).toBe('#f8efde');
+    });
+
+    it('colours the standard variant to match the filled one', () => {
+      expect(alertStyle('success', 'standard')?.backgroundColor).toBe(
+        alertStyle('success', 'filled')?.backgroundColor
+      );
+    });
+
+    it('tints the border rather than the surface when outlined', () => {
+      const outlined = alertStyle('success', 'outlined');
+
+      expect(outlined.backgroundColor).toBeUndefined();
+      expect(outlined).toMatchObject({ color: '#2f6b2a' });
+    });
+
+    it('carries the dark tint in the same rule', () => {
+      expect(JSON.stringify(alertStyle('success'))).toContain('#23402a');
+    });
+  });
+});
+
+describe('tabs', () => {
+  const override = (component: 'MuiTabs' | 'MuiTab') => {
+    const theme = createEditorTheme();
+    const root = theme.components?.[component]?.styleOverrides?.root;
+
+    return typeof root === 'function' ?
+        (root({ theme } as never) as Record<string, unknown>)
+      : (root as Record<string, unknown>);
+  };
+
+  it('keeps every tab bar on one compact row', () => {
+    expect(override('MuiTabs')).toMatchObject({ minHeight: 40 });
+    expect(override('MuiTab')).toMatchObject({ minHeight: 40 });
+  });
+
+  it('gives a scroll arrow no room while it has nothing to scroll', () => {
+    expect(
+      override('MuiTabs')['& .MuiTabs-scrollButtons.Mui-disabled']
+    ).toMatchObject({ display: 'none' });
   });
 });

@@ -193,7 +193,6 @@ export const LengthSlider = forwardRef<HTMLInputElement, CssLengthSliderProps>(
           name={`${name}.input`}
           error={!!error}
           value={num}
-          size="small"
           type="number"
           onChange={handleTextChange}
           onBlur={onBlur}
@@ -203,7 +202,6 @@ export const LengthSlider = forwardRef<HTMLInputElement, CssLengthSliderProps>(
         <StyledSelect
           name={`${name}.unit`}
           value={unit}
-          size="small"
           onChange={handleUnitChange}
           onBlur={onBlur}
           disabled={disabled}
