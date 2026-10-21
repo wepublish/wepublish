@@ -8,7 +8,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { PropsWithChildren, useEffect, useMemo, useRef } from 'react';
-import { Controller, DeepPartial, useForm } from 'react-hook-form';
+import { Control, Controller, DeepPartial, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { ApiAlert } from '@wepublish/errors/website';
 import { userCountryNames } from '@wepublish/user';
@@ -162,7 +162,7 @@ export function RegistrationForm<
       onSubmit={onSubmit}
     >
       <UserForm
-        control={control}
+        control={control as Control<any>}
         fields={fields}
       />
 
