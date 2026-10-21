@@ -417,26 +417,30 @@ describe('DataTable virtualisation', () => {
     author: 'Ada',
   }));
 
-  const realOffsetHeight = Object.getOwnPropertyDescriptor(
-    HTMLElement.prototype,
-    'offsetHeight'
+  const measured = ['offsetHeight', 'clientHeight'] as const;
+  const realHeights = measured.map(property =>
+    Object.getOwnPropertyDescriptor(HTMLElement.prototype, property)
   );
 
   beforeEach(() => {
-    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
-      configurable: true,
-      get: () => 800,
-    });
+    for (const property of measured) {
+      Object.defineProperty(HTMLElement.prototype, property, {
+        configurable: true,
+        get: () => 800,
+      });
+    }
   });
 
   afterEach(() => {
-    if (realOffsetHeight) {
-      Object.defineProperty(
-        HTMLElement.prototype,
-        'offsetHeight',
-        realOffsetHeight
-      );
-    }
+    measured.forEach((property, index) => {
+      const real = realHeights[index];
+
+      if (real) {
+        Object.defineProperty(HTMLElement.prototype, property, real);
+      } else {
+        delete (HTMLElement.prototype as Partial<HTMLElement>)[property];
+      }
+    });
   });
 
   it('renders every row when it is switched off', () => {
