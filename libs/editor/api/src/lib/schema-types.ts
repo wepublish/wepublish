@@ -82,16 +82,16 @@ export type ApiToken = {
   /** The user who created this token. Null once that user is deleted. */
   createdBy?: Maybe<User>;
   createdById?: Maybe<Scalars['String']['output']>;
-  /** When the token stops working. Every token has one. */
+  /** When the token stops working. */
   expiresAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   lastUsedAt?: Maybe<Scalars['DateTime']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
-  /** The non-secret start of the token, so a key can be told apart from another without revealing it. */
+  /** The non-secret start of the token */
   prefix: Scalars['String']['output'];
   revokedAt?: Maybe<Scalars['DateTime']['output']>;
-  /** The permissions this token carries. Bounded at creation by what its creator holds. */
+  /** The permissions this token carries. */
   scopes: Array<Scalars['String']['output']>;
 };
 
@@ -918,7 +918,7 @@ export type CreateSubscriptionInfo = {
 export type CreatedApiToken = {
   __typename: 'CreatedApiToken';
   apiToken: ApiToken;
-  /** The secret. Store it now — it is never shown again. */
+  /** The secret. */
   token: Scalars['String']['output'];
 };
 
@@ -3124,6 +3124,8 @@ export type Mutation = {
   updatePoll: FullPoll;
   /** Update the comment rating system. */
   updateRatingSystem: CommentRatingSystem;
+  /** Marks an SEO checklist item as done or not done and returns all completed items. */
+  updateSeoChecklistItem: Array<SeoChecklistItem>;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Updates an existing subscription. */
@@ -4624,6 +4626,12 @@ export type MutationUpdateRatingSystemArgs = {
 };
 
 
+export type MutationUpdateSeoChecklistItemArgs = {
+  completed: Scalars['Boolean']['input'];
+  itemId: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateSettingArgs = {
   name: SettingName;
   value?: InputMaybe<Scalars['GraphQLSettingValueType']['input']>;
@@ -6105,6 +6113,8 @@ export type Query = {
    *
    */
   revenue: Array<DashboardInvoice>;
+  /** Returns a checklist of the SEO setup of the website. */
+  seoChecklist: SeoChecklist;
   /**
    *
    *       Returns a single setting by name.
@@ -7109,6 +7119,47 @@ export type SensitiveDataUser = BaseUser & {
   /** Whether this user is exempt from the two-factor authentication requirement. */
   totpExempt: Scalars['Boolean']['output'];
   userImageID?: Maybe<Scalars['String']['output']>;
+};
+
+export type SeoCheck = {
+  __typename: 'SeoCheck';
+  detail?: Maybe<Scalars['String']['output']>;
+  id: SeoCheckId;
+  status: SeoCheckStatus;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+export enum SeoCheckId {
+  ArticleMarkup = 'ArticleMarkup',
+  Feed = 'Feed',
+  NewsSitemap = 'NewsSitemap',
+  PublicationMetadata = 'PublicationMetadata',
+  Sitemap = 'Sitemap'
+}
+
+export enum SeoCheckStatus {
+  Error = 'Error',
+  Info = 'Info',
+  Ok = 'Ok',
+  Warning = 'Warning'
+}
+
+export type SeoChecklist = {
+  __typename: 'SeoChecklist';
+  atomFeedUrl: Scalars['String']['output'];
+  checks: Array<SeoCheck>;
+  completedItems: Array<SeoChecklistItem>;
+  jsonFeedUrl: Scalars['String']['output'];
+  rssFeedUrl: Scalars['String']['output'];
+  sitemapUrl: Scalars['String']['output'];
+  websiteUrl: Scalars['String']['output'];
+};
+
+export type SeoChecklistItem = {
+  __typename: 'SeoChecklistItem';
+  completedAt: Scalars['DateTime']['output'];
+  completedBy?: Maybe<Scalars['String']['output']>;
+  itemId: Scalars['String']['output'];
 };
 
 export type SessionWithToken = {
