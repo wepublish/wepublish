@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import { cucumberReporter, defineBddProject } from 'playwright-bdd';
 import { blockThirdPartiesArg } from './support/third-party';
-import { describeTarget, localDevServers } from './support/targets';
+import { describeTarget, localDevServers, nextDev } from './support/targets';
 import { target } from './support/env';
 
 const isCI = !!process.env.CI;
@@ -20,6 +20,7 @@ export default defineConfig({
     stdout: 'ignore',
     stderr: 'pipe',
   })),
+  ...(nextDev() && { timeout: 120_000 }),
   fullyParallel: true,
   forbidOnly: isCI,
   retries: isCI ? 1 : 0,

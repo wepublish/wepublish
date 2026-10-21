@@ -34,6 +34,8 @@ a slot hosts one app at a time). `BASE_URL`, `E2E_EDITOR_URL` and
 
 ```sh
 pnpm run e2e tsri                                         # tsri website, local
+pnpm run e2e tsri --dev                                   # same, on `next dev` (hot reload)
+pnpm run e2e:dev tsri                                     # start:docker, then --dev --ui
 pnpm run e2e editor                                       # editor only
 pnpm run e2e tsri,editor --environment staging            # both apps of tsri
 pnpm run e2e tsri,bajour                                  # one run per tenant
@@ -142,12 +144,17 @@ servers are started unless already running on those ports (then reused), and
 stopped after the run. Only the selected targets are served, and nothing is
 started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
 `E2E_API_URL`). Other Docker services are not started. Cold starts take a while (API
-~1–2 min, Next.js ~20 s).
+~1–2 min).
 
-- A Next.js app can only run one dev server at a time: stop your own
-  `nx serve <tenant>` of the same checkout before a run.
-- A started Next.js dev server rewrites the app's `next-env.d.ts`, as it does
-  when you serve it by hand — don't commit that.
+- The tenant is a production build (`nx build --skip-nx-cache
+  --experimentalBuildMode=compile` into `dist/apps/<tenant>`, overwriting what
+  is there), started like the Docker image from `.next/standalone`: `next dev`
+  compiles each route on its first request, which outlasts test timeouts.
+- `--dev` (`E2E_DEV=true`) serves it with `next dev` instead, for hot reload
+  while writing tests; the test timeout goes up to 2 min to cover first-request
+  compiles. Ignored when `CI` is set. A Next.js app runs one dev server at a
+  time, so stop your own `nx serve <tenant>` first, and don't commit the
+  `next-env.d.ts` it rewrites.
 - Reset the e2e data with
   `docker exec wepublish-database-1 psql -U postgres -c "DROP DATABASE wepublish_e2e"`;
   the next run recreates it.

@@ -178,6 +178,42 @@ type WebServer = {
 
 const portOf = (url: string) => new URL(url).port;
 
+export const nextDev = (env: NodeJS.ProcessEnv = process.env) =>
+  env.E2E_DEV === 'true' && !env.CI;
+
+function nextDevServer(target: Target, apiEnv: Record<string, string>): WebServer {
+  return {
+    name: target.app,
+    command: `pnpm nx serve ${target.app} --port=${portOf(target.websiteUrl)}`,
+    url: target.websiteUrl,
+    timeout: 180_000,
+    env: apiEnv,
+  };
+}
+
+function nextProdServer(target: Target, apiEnv: Record<string, string>): WebServer {
+  const dist = `dist/apps/${target.app}`;
+  const standalone = `${dist}/.next/standalone/apps/${target.app}`;
+
+  return {
+    name: target.app,
+    command: [
+      `pnpm nx build ${target.app} --skip-nx-cache --experimentalBuildMode=compile`,
+      `mkdir -p ${standalone}/public/_next/static`,
+      `cp -R ${dist}/public/. ${standalone}/public`,
+      `cp -R ${dist}/.next/static/. ${standalone}/public/_next/static`,
+      `node ${standalone}/server.js`,
+    ].join(' && '),
+    url: target.websiteUrl,
+    timeout: 600_000,
+    env: {
+      ...apiEnv,
+      PORT: portOf(target.websiteUrl),
+      HOSTNAME: 'localhost',
+    },
+  };
+}
+
 /**
  * Local dev servers the run needs, for Playwright's `webServer`: reused when
  * already up, otherwise started and stopped after the run. Only for
@@ -202,13 +238,9 @@ export function localDevServers(
   const apiEnv = { API_URL: target.apiUrl ?? '', API_URL_INTERNAL: '' };
 
   if (selected('website') && !env.BASE_URL) {
-    servers.push({
-      name: target.app,
-      command: `pnpm nx serve ${target.app} --port=${portOf(target.websiteUrl)}`,
-      url: target.websiteUrl,
-      timeout: 180_000,
-      env: apiEnv,
-    });
+    servers.push(
+      nextDev(env) ? nextDevServer(target, apiEnv) : nextProdServer(target, apiEnv)
+    );
   }
 
   if (selected('editor') && !env.E2E_EDITOR_URL && target.editorUrl) {

@@ -5,6 +5,7 @@
 //   pnpm run e2e editor                     # editor only
 //   pnpm run e2e tsri,editor --environment staging --grep @smoke
 //   pnpm run e2e tsri,bajour                # one run per tenant, in turn
+//   pnpm run e2e:dev tsri                   # docker services, `next dev`, UI mode
 //
 // Leading comma-separated words are targets: `editor` selects the editor
 // project, any other word an `apps/<name>` tenant (E2E_APP) and its website
@@ -34,6 +35,15 @@ const playwrightArgs: string[] = [];
 const targets: string[] = [];
 const args = process.argv.slice(2);
 
+// Switches that may precede the targets: `pnpm run e2e:dev tsri` runs
+// `run.ts --dev --ui tsri`.
+const leadingSwitches = ['--dev', '--ui'];
+const leading: string[] = [];
+
+while (leadingSwitches.includes(args[0])) {
+  leading.push(args.shift()!);
+}
+
 while (args.length && isTargets(args[0])) {
   targets.push(...args.shift()!.split(','));
 }
@@ -44,9 +54,16 @@ if (args[0] && !args[0].startsWith('-')) {
   );
 }
 
+args.unshift(...leading);
+
 for (let i = 0; i < args.length; i++) {
   const [flag, inlineValue] = args[i].split(/=(.*)/s);
   const variable = targetFlags[flag];
+
+  if (flag === '--dev') {
+    env.E2E_DEV = 'true';
+    continue;
+  }
 
   if (!variable) {
     playwrightArgs.push(args[i]);

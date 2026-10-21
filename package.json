@@ -24,6 +24,7 @@
     "test-backend": "nx run-many --target=test --parallel=10 --exclude='*website*'",
     "test-website": "nx run-many --target=test --parallel=3 --projects=*website*",
     "e2e": "nx run e2e:e2e",
+    "e2e:dev": "pnpm run start:docker && pnpm run e2e --dev --ui",
     "e2e:report": "playwright show-report e2e/playwright-report",
     "watch:editor": "nx serve editor",
     "watch:api-example": "nx serve api-example",
