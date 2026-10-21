@@ -45,6 +45,7 @@ type IntegrationFormValues = z.infer<typeof mailSettingsSchema>;
 const REPORTING_TYPES = new Set([
   MailProviderType.Mailchimp,
   MailProviderType.Mailgun,
+  MailProviderType.Brevo,
 ]);
 
 /**

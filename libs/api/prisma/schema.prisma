@@ -1888,6 +1888,7 @@ model PaywallBypass {
 enum MailProviderType {
   MAILGUN   @map("mailgun")
   MAILCHIMP @map("mailchimp")
+  BREVO     @map("brevo")
   SLACK     @map("slack")
   SMTP      @map("smtp")
   LOG       @map("log")

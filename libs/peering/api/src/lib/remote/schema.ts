@@ -2335,6 +2335,7 @@ export type MailProviderModel = {
 };
 
 export enum MailProviderType {
+  Brevo = 'BREVO',
   Log = 'LOG',
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',

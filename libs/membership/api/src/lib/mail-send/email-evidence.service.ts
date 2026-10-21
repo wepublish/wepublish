@@ -18,6 +18,7 @@ const RECENT_DAYS = 30;
 const REPORTING_PROVIDERS = new Set<MailProviderType>([
   MailProviderType.MAILCHIMP,
   MailProviderType.MAILGUN,
+  MailProviderType.BREVO,
 ]);
 
 /** Everything but a verification is the word of a provider. */

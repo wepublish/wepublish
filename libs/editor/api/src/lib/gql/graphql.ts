@@ -873,6 +873,7 @@ export enum MailLogType {
 }
 
 export enum MailProviderType {
+  Brevo = 'BREVO',
   Log = 'LOG',
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',

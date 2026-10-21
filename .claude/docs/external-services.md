@@ -21,7 +21,11 @@
 ## Email Provider
 
 - Mailgun
-- Mailchimp
+- Mailchimp (Mandrill)
+- Brevo (`brevo-mail-provider.ts`, plain `fetch` against api.brevo.com; mail
+  log id in the `X-Mailin-custom` header; the webhook URL in Brevo carries
+  `?key=<webhookEndpointSecret>` since Brevo signs nothing; blocked contacts
+  are its suppression list, the events endpoint its poll)
 
 Mail, challenge (captcha) and Mailchimp sync run with exactly one provider
 each: the runtime uses the first non-deleted row. Their `create*Setting`
@@ -37,14 +41,15 @@ Everything lands in `email_quality_events` through `EMAIL_QUALITY_RECORDER`
 and nightly. Sources today:
 
 - Transactional mail provider (one per installation): send-time refusal
-  (Mandrill only), webhook (Mandrill, Mailgun; `mail.webhook.ts`), nightly
-  poll of open mail logs (`MailLogSyncService`; Mandrill `messages/info`,
-  Mailgun events API by the Message-Id kept from the send answer). SMTP, Slack
-  and Log report nothing.
+  (Mandrill only), webhook (Mandrill, Mailgun, Brevo; `mail.webhook.ts`),
+  nightly poll of open mail logs (`MailLogSyncService`; Mandrill
+  `messages/info`, Mailgun events API by the Message-Id kept from the send
+  answer, Brevo `smtp/statistics/events`). SMTP, Slack and Log report nothing.
 - Provider suppression lists, nightly after the mail log poll and on the
   refresh button (`SuppressionSyncService` → `provider.listSuppressions()`):
   Mandrill's rejects denylist (expired entries included), Mailgun's bounces,
-  complaints and unsubscribes of the sending domain. Account-wide, so they
+  complaints and unsubscribes of the sending domain, Brevo's blocked
+  contacts (every reason code blocks transactional mail). Account-wide, so they
   cover mails sent outside We.Publish. A Mailgun unsubscribe from a tag is
   `optedOut`; domain-wide (`*`) it is `unsubscribed`. Entries already stored
   (by `providerEventId`) are skipped so nobody is re-evaluated for nothing.

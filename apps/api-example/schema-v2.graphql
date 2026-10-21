@@ -2348,6 +2348,7 @@ type MailProviderModel {
 }
 
 enum MailProviderType {
+  BREVO
   LOG
   MAILCHIMP
   MAILGUN
