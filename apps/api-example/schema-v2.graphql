@@ -2362,6 +2362,13 @@ enum MailchimpContactStatus {
   Subscribed
 }
 
+type MailchimpDraft {
+  editUrl: String!
+  id: String!
+  title: String!
+  webId: Int!
+}
+
 type MailchimpFormBlock implements BaseBlock {
   autoFocus: Boolean!
   blockStyle: String
@@ -2879,6 +2886,9 @@ type Mutation {
   """Approves a comment"""
   approveComment(id: String!): Comment!
 
+  """Hides the campaign from the default list. Campaigns are never deleted."""
+  archiveNewsletterCampaign(id: String!): NewsletterCampaign!
+
   """
   Stop a running send job. Unsent recipients stay open and can be continued.
   """
@@ -3017,9 +3027,10 @@ type Mutation {
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+  createNewsletterCampaign(document: JSONObject, title: String!): NewsletterCampaign!
 
   """Creates an page."""
-  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
@@ -3277,6 +3288,11 @@ type Mutation {
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!
 
+  """
+  A new campaign with the given one's document. The Mailchimp draft is not copied.
+  """
+  duplicateNewsletterCampaign(id: String!): NewsletterCampaign!
+
   """Duplicates an page."""
   duplicatePage(id: String!): Page!
 
@@ -3339,6 +3355,7 @@ type Mutation {
 
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
+  publishNewsletterCampaign(id: String!): NewsletterPublishResult!
 
   """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
@@ -3459,6 +3476,7 @@ type Mutation {
 
   """Triggers a mailchimp sync in the background."""
   triggerMailchimpSync(id: String!): Boolean!
+  unarchiveNewsletterCampaign(id: String!): NewsletterCampaign!
 
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
@@ -3553,9 +3571,10 @@ type Mutation {
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+  updateNewsletterCampaign(document: JSONObject!, id: String!, title: String): NewsletterCampaign!
 
   """Updates an page."""
-  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
@@ -3585,6 +3604,11 @@ type Mutation {
 
   """Update the comment rating system."""
   updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
+
+  """
+  Marks an SEO checklist item as done or not done and returns all completed items.
+  """
+  updateSeoChecklistItem(completed: Boolean!, itemId: String!): [SeoChecklistItem!]!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
@@ -3676,6 +3700,55 @@ enum NavigationLinkType {
   Page
 }
 
+type NewsletterCampaign {
+  blockCount: Int!
+  createdAt: DateTime!
+  document: JSONObject!
+  id: String!
+  images: [Image!]!
+  mailchimpCampaignId: String
+  mailchimpCampaignWebId: Int
+  mailchimpEditUrl: String
+  modifiedAt: DateTime!
+  status: NewsletterCampaignStatus!
+  title: String!
+}
+
+enum NewsletterCampaignStatus {
+  active
+  archived
+}
+
+type NewsletterInterestCategory {
+  groups: [String!]!
+  title: String!
+}
+
+type NewsletterMergeFields {
+  error: String
+  fields: [NewsletterMergeTag!]!
+  interests: [NewsletterInterestCategory!]!
+}
+
+type NewsletterMergeTag {
+  description: String!
+  kind: String
+  label: String!
+  tag: String!
+}
+
+type NewsletterPublishResult {
+  campaign: MailchimpDraft!
+  created: Boolean!
+  report: NewsletterReport!
+}
+
+type NewsletterReport {
+  bytes: Int!
+  missingArticles: [String!]!
+  missingFooter: [String!]!
+}
+
 type NotificationConfirmation {
   confirmedByUserId: String
   createdAt: DateTime!
@@ -3730,6 +3803,8 @@ type Page {
   createdAt: DateTime!
   draft: PageRevision
   hidden: Boolean!
+  hideFooter: Boolean!
+  hideHeader: Boolean!
   id: String!
   latest: PageRevision!
   modifiedAt: DateTime!
@@ -4946,6 +5021,13 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  newsletterCampaign(id: String!): NewsletterCampaign!
+
+  """The stored issue rendered as the HTML Mailchimp receives."""
+  newsletterCampaignPreview(id: String!): String!
+  newsletterCampaignReport(id: String!): NewsletterReport!
+  newsletterCampaigns(includeArchived: Boolean! = false): [NewsletterCampaign!]!
+  newsletterMergeFields: NewsletterMergeFields!
 
   """
   Returns the instance-wide notification confirmations. Requires authentication.
@@ -5041,6 +5123,9 @@ type Query {
 
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """Returns a checklist of the SEO setup of the website."""
+  seoChecklist: SeoChecklist!
 
   "\n      Returns a single setting by name.\n    "
   setting(name: String!): Setting!
@@ -5272,6 +5357,44 @@ type SensitiveDataUser implements BaseUser {
   """
   totpExempt: Boolean!
   userImageID: String
+}
+
+type SeoCheck {
+  detail: String
+  id: SeoCheckId!
+  status: SeoCheckStatus!
+  url: String
+}
+
+enum SeoCheckId {
+  ArticleMarkup
+  Feed
+  NewsSitemap
+  PublicationMetadata
+  Sitemap
+}
+
+enum SeoCheckStatus {
+  Error
+  Info
+  Ok
+  Warning
+}
+
+type SeoChecklist {
+  atomFeedUrl: String!
+  checks: [SeoCheck!]!
+  completedItems: [SeoChecklistItem!]!
+  jsonFeedUrl: String!
+  rssFeedUrl: String!
+  sitemapUrl: String!
+  websiteUrl: String!
+}
+
+type SeoChecklistItem {
+  completedAt: DateTime!
+  completedBy: String
+  itemId: String!
 }
 
 type SessionWithToken {

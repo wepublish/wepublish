@@ -932,6 +932,8 @@ model Page {
 
   slug   String?
   hidden Boolean @default(false)
+  hideHeader Boolean @default(false)
+  hideFooter Boolean @default(false)
 
   revisions               PageRevision[]
   navigations             NavigationLink[]
@@ -1286,6 +1288,7 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  seoChecklistItems         SeoChecklistItem[]
   apiTokens                 ApiToken[]
 
   @@index([createdAt])
@@ -1717,6 +1720,27 @@ model BlockTemplate {
   blocks Json
 
   @@map("block_templates")
+}
+
+enum NewsletterCampaignStatus {
+  active
+  archived
+}
+
+model NewsletterCampaign {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  title    String
+  document Json
+  status   NewsletterCampaignStatus @default(active)
+
+  mailchimpCampaignId    String?
+  mailchimpCampaignWebId Int?
+
+  @@index([modifiedAt(sort: Desc)])
+  @@map("newsletter_campaigns")
 }
 
 model Banner {
@@ -2419,6 +2443,18 @@ model NotificationConfirmation {
 
   @@unique([source, itemId])
   @@map("notifications.confirmations")
+}
+
+model SeoChecklistItem {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  itemId            String  @unique
+  completedByUserId String?
+  completedBy       User?   @relation(fields: [completedByUserId], references: [id], onDelete: SetNull)
+
+  @@map("seo.checklist_items")
 }
 
 model ChangelogEntry {
