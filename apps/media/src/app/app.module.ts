@@ -6,6 +6,7 @@ import {
   JwtAuthModule,
   UPLOAD_DISK,
   TRANSFORMATION_DISK,
+  createStorageFetch,
 } from '@wepublish/media/api';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
@@ -45,6 +46,9 @@ import { CacheModule } from '@nestjs/cache-manager';
             accessKeyId: config.getOrThrow('S3_ACCESS_KEY'),
             secretAccessKey: config.getOrThrow('S3_SECRET_KEY'),
           },
+          // One bounded dispatcher for both disks, so the socket cap covers
+          // the whole R2 origin. See gotchas.md.
+          fetch: createStorageFetch(),
         };
 
         return {
