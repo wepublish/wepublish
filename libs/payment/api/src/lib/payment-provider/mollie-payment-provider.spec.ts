@@ -16,6 +16,7 @@ import { PrismaClient } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { mapMolliePaymentMethods } from '../payment.methode.mapper';
 import type { Mock } from 'vitest';
+import { Logger } from '@nestjs/common';
 const mollieApiPaymentGet = {
   status: 'paid',
   price: 22,
@@ -330,6 +331,30 @@ describe('MolliePaymentProvider', () => {
   });
 
   describe('createGatewayIntent', () => {
+    it('logs the mollie status and field when creating the payment fails', async () => {
+      const error = Object.assign(new Error('The amount is invalid'), {
+        statusCode: 422,
+        field: 'amount.value',
+      });
+
+      vi.spyOn(mollieOnSession, 'getMollieGateway').mockResolvedValue({
+        payments: { create: vi.fn().mockRejectedValue(error) },
+      } as never);
+      const logged = vi
+        .spyOn(Logger.prototype, 'error')
+        .mockImplementation(() => undefined);
+
+      await mollieOnSession.createGatewayIntent(
+        defaultCreatePaymentIntentProps
+      );
+
+      expect(logged).toHaveBeenCalledWith(
+        'Error while creating Mollie Intent for paymentProvider mollie: Error: The amount is invalid (status=422 field=amount.value)',
+        error.stack
+      );
+      logged.mockRestore();
+    });
+
     it('should return payment url for offsession', async () => {
       expect(
         await mollieOffSession.createGatewayIntent(

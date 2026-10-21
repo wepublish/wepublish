@@ -8,7 +8,7 @@ import {
   WebhookForPaymentIntentProps,
   WebhookResponse,
 } from './payment-provider';
-import { logger } from '@wepublish/utils/api';
+import { Logger } from '@nestjs/common';
 import { PaymentState } from '@prisma/client';
 import createMollieClient, { SequenceType, Payment } from '@mollie/api-client';
 import { mapMolliePaymentMethods } from '../payment.methode.mapper';
@@ -69,6 +69,8 @@ export function calculateAndFormatAmount(invoice: {
 }
 
 export class MolliePaymentProvider extends BasePaymentProvider {
+  private readonly logger = new Logger(MolliePaymentProvider.name);
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }
@@ -197,10 +199,9 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     } catch (err) {
       const error: any = err;
 
-      logger('molliePaymentProvider').error(
-        error,
-        'Error while creating Mollie Intent for paymentProvider %s',
-        this.id
+      this.logger.error(
+        `Error while creating Mollie Intent for paymentProvider ${this.id}: ${error} (status=${error?.statusCode} field=${error?.field})`,
+        error instanceof Error ? error.stack : undefined
       );
       return erroredPaymentIntent;
     }
@@ -264,10 +265,8 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     const metadata = payment.metadata as MolliePaymentMetadata;
 
     if (!metadata.paymentID) {
-      logger('molliePaymentProvider').error(
-        'Mollie payment with ID: %s for paymentProvider %s returned with empty paymentID',
-        payment.id,
-        this.id
+      this.logger.error(
+        `Mollie payment with ID: ${payment.id} for paymentProvider ${this.id} returned with empty paymentID`
       );
       throw new Error('empty paymentID');
     }

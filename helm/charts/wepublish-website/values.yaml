@@ -49,3 +49,20 @@ website:
       cpu: 500m
 
 labels: {}
+
+# OpenTelemetry (opt-in). When enabled, every long-running Node container gets
+# the OTEL_* env and wepublish.ch/{tenant,component,environment} pod labels.
+# Logs, traces and metrics are all pushed over OTLP; nothing is scraped. Env
+# names already set in env, deployment.env or dynamicEnv are left to the
+# user's value.
+observability:
+  enabled: false
+  # OTLP/HTTP receiver for logs, traces and metrics, e.g.
+  # http://otel-collector.wepublish-observability.svc:4318
+  otlpEndpoint: ""
+  # Defaults to deployment.env.APP_NAME; required when enabled if that is unset.
+  tenant: ""
+  # staging | production. Defaults to deployment.env.APP_ENVIRONMENT.
+  environment: ""
+  # Website only: also export Next.js traces (OTEL_WEBSITE_TRACES).
+  websiteTraces: false

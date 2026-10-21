@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import {
   extractLinks,
@@ -35,11 +36,13 @@ const sendProps = {
 describe('LogMailProvider', () => {
   it('writes the mail to the log instead of sending it', async () => {
     const provider = await makeProvider();
-    const info = vi.spyOn(provider['log'], 'info').mockImplementation();
+    const info = vi
+      .spyOn(Logger.prototype, 'log')
+      .mockImplementation(() => undefined);
 
     await provider.sendMail(sendProps);
 
-    const [payload, message] = info.mock.calls[0];
+    const [message, payload] = info.mock.calls[0];
 
     expect(message).toBe('Mail to user@example.com: Your login link');
     expect(payload).toMatchObject({
@@ -55,18 +58,20 @@ describe('LogMailProvider', () => {
 
   it('falls back to the html body when there is no plain text', async () => {
     const provider = await makeProvider();
-    const info = vi.spyOn(provider['log'], 'info').mockImplementation();
+    const info = vi
+      .spyOn(Logger.prototype, 'log')
+      .mockImplementation(() => undefined);
 
     await provider.sendMail({ ...sendProps, message: undefined });
 
-    expect(info.mock.calls[0][0]).toMatchObject({
+    expect(info.mock.calls[0][1]).toMatchObject({
       body: 'Open https://example.com/articles/1',
     });
   });
 
   it('reports no message id, so nothing is polled for a delivery state', async () => {
     const provider = await makeProvider();
-    vi.spyOn(provider['log'], 'info').mockImplementation();
+    vi.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
 
     await expect(provider.sendMail(sendProps)).resolves.toEqual({});
   });
@@ -85,7 +90,9 @@ describe('LogMailProvider', () => {
 
   it('blanks the login token in the logged body and links', async () => {
     const provider = await makeProvider();
-    const info = vi.spyOn(provider['log'], 'info').mockImplementation();
+    const info = vi
+      .spyOn(Logger.prototype, 'log')
+      .mockImplementation(() => undefined);
 
     await provider.sendMail({
       ...sendProps,
@@ -93,8 +100,9 @@ describe('LogMailProvider', () => {
       messageHtml: undefined,
     });
 
-    const [payload] = info.mock.calls[0];
+    const [message, payload] = info.mock.calls[0];
 
+    expect(message).not.toContain(jwt);
     expect(JSON.stringify(payload)).not.toContain(jwt);
     expect(payload).toMatchObject({
       body: 'Log in: https://example.com/login?jwt=[redacted]&next=/abo',

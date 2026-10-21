@@ -1,4 +1,5 @@
 import './instrument.ts';
+import { createNestLogger } from '@wepublish/utils/api/otel/logger';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './nestapp/app.module';
@@ -18,8 +19,10 @@ import { graphqlUploadExpress } from 'graphql-upload';
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
 
+  const logger = createNestLogger();
   const nestApp = await NestFactory.create(AppModule, {
     bodyParser: false,
+    logger,
   });
   nestApp.enableCors({
     origin: true,

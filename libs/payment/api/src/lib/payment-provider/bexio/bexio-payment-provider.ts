@@ -7,7 +7,8 @@ import {
   User,
   UserAddress,
 } from '@prisma/client';
-import { addErrorContext, describeError, logger } from '@wepublish/utils/api';
+import { Logger } from '@nestjs/common';
+import { addErrorContext, describeError } from '@wepublish/utils/api';
 import Bexio, { ContactsStatic, InvoicesStatic } from 'bexio';
 import { MappedReplacer } from 'mapped-replacer';
 import {
@@ -38,6 +39,8 @@ import {
 import fetch, { RequestInit } from 'node-fetch';
 
 export class BexioPaymentProvider extends BasePaymentProvider {
+  private readonly logger = new Logger(BexioPaymentProvider.name);
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }
@@ -109,9 +112,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     });
 
     if (!invoice) {
-      logger('bexioPaymentProvider').error(
-        "Subscription invoice doesn't exist or is already paid/cancelled: %s",
-        props.subscription.id
+      this.logger.error(
+        `Subscription invoice doesn't exist or is already paid/cancelled: ${props.subscription.id}`
       );
       return;
     }
@@ -137,10 +139,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     await Promise.all(
       payments.map(async payment => {
         if (!payment.intentID || isNaN(+payment.intentID)) {
-          logger('bexioPaymentProvider').error(
-            'Payment (id: %s) intentID is not a number: %s',
-            payment.id,
-            payment.intentID
+          this.logger.error(
+            `Payment (id: ${payment.id}) intentID is not a number: ${payment.intentID}`
           );
 
           return;
@@ -149,10 +149,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         try {
           await bexio.invoices.cancel(+payment.intentID);
         } catch (error) {
-          logger('bexioPaymentProvider').error(
-            'Error to cancel invoice for payment (id: %s): %s',
-            payment.id,
-            describeError(error)
+          this.logger.error(
+            `Error to cancel invoice for payment (id: ${payment.id}): ${describeError(error)}`
           );
         }
       })
@@ -192,10 +190,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     });
 
     if (response.status !== 200) {
-      logger('bexioPaymentProvider').error(
-        'Bexio response for intent %s is NOK with status %s',
-        intentID,
-        response.status
+      this.logger.error(
+        `Bexio response for intent ${intentID} is NOK with status ${response.status}`
       );
       throw new ResponseNOK(response.status);
     }
@@ -207,11 +203,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     );
 
     if (!intentStatus) {
-      logger('bexioPaymentProvider').error(
-        'Bexio intent with ID: %s for paymentProvider %s returned with an unknown state %s',
-        intentID,
-        this.id,
-        intentStatus
+      this.logger.error(
+        `Bexio intent with ID: ${intentID} for paymentProvider ${this.id} returned with an unknown state ${intentStatus}`
       );
       throw new UnknownIntentState();
     }
@@ -306,11 +299,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         e,
         `Bexio failed while ${step} for invoice ${invoiceId}`
       );
-      logger('bexioPaymentProvider').error(
-        'Failed to create Bexio invoice for invoiceId %s (renewal: %s): %s',
-        invoiceId,
-        isRenewal,
-        error.message
+      this.logger.error(
+        `Failed to create Bexio invoice for invoiceId ${invoiceId} (renewal: ${isRenewal}): ${error.message}`
       );
       throw error;
     }
@@ -462,10 +452,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       attach_pdf: true,
     });
 
-    logger('bexioPaymentProvider').info(
-      'Created Bexio invoice with ID: %s for paymentProvider %s',
-      invoiceUpdated.id,
-      this.id
+    this.logger.log(
+      `Created Bexio invoice with ID: ${invoiceUpdated.id} for paymentProvider ${this.id}`
     );
     if (!sentInvoice.success) {
       throw new SendingInvoiceError(sentInvoice);

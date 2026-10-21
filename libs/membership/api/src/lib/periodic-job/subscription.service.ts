@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import {
@@ -29,7 +30,6 @@ import { Action } from '../subscription-event-dictionary/subscription-event-dict
 import {
   calculatePeriodAmount,
   describeError,
-  logger,
   mapPaymentPeriodToMonths,
 } from '@wepublish/utils/api';
 
@@ -54,6 +54,9 @@ interface PeriodBounds {
 
 @Injectable()
 export class SubscriptionService {
+  private readonly logger = new Logger(SubscriptionService.name);
+  private readonly offSessionPaymentLogger = new Logger('offSessionPayment');
+
   constructor(
     private prismaService: PrismaClient,
     private payments: PaymentsService,
@@ -520,10 +523,8 @@ export class SubscriptionService {
           );
 
         if (!paymentProvider) {
-          logger('checkInvoiceState').warn(
-            'No payment provider found for payment <%s> with payment method %s, skipping intent check',
-            payment.id,
-            payment.paymentMethodID
+          this.logger.warn(
+            `No payment provider found for payment <${payment.id}> with payment method ${payment.paymentMethodID}, skipping intent check`
           );
           continue;
         }
@@ -543,12 +544,9 @@ export class SubscriptionService {
       } catch (e) {
         // A single payment's status check must never abort the whole periodic
         // job. Log and continue with the remaining payments.
-        logger('checkInvoiceState').error(
-          'Checking payment <%s> with intent %s on payment method %s failed with error: %s',
-          payment.id,
-          payment.intentID,
-          payment.paymentMethodID,
-          describeError(e)
+        this.logger.error(
+          `Checking payment <${payment.id}> with intent ${payment.intentID} on payment method ${payment.paymentMethodID} failed with error: ${describeError(e)}`,
+          e instanceof Error ? e.stack : undefined
         );
       }
     }
@@ -668,11 +666,9 @@ export class SubscriptionService {
         errorCode: 'user-action-required',
       };
     } catch (e) {
-      logger('offSessionPayment').error(
-        'Charging invoice %s with payment %s failed: %s',
-        invoice.id,
-        payment.id,
-        describeError(e)
+      this.offSessionPaymentLogger.error(
+        `Charging invoice ${invoice.id} with payment ${payment.id} failed: ${describeError(e)}`,
+        e instanceof Error ? e.stack : undefined
       );
       await this.prismaService.payment.update({
         where: { id: payment.id },

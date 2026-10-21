@@ -1,7 +1,7 @@
+import { Logger } from '@nestjs/common';
 import { Currency, Invoice, PaymentState, Subscription } from '@prisma/client';
 import {
   calculatePeriodAmount,
-  logger,
   mapPaymentPeriodToMonths,
 } from '@wepublish/utils/api';
 import * as crypto from 'crypto';
@@ -39,6 +39,7 @@ function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
 }
 
 export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
+  private readonly logger = new Logger(PayrexxSubscriptionPaymentProvider.name);
   override readonly remoteManagedSubscription: boolean;
 
   constructor(props: PaymentProviderProps) {
@@ -118,7 +119,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       const subscription =
         await this.findSubscriptionByExternalId(subscriptionId);
       if (!subscription) {
-        logger('payrexxSubscriptionPaymentProvider').warn(
+        this.logger.warn(
           `Subscription ${subscriptionId} received from payrexx webhook not found!`
         );
         return;
@@ -146,7 +147,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       // Skip if subscription is already renewed
       if (maxSubscriptionExtensionLength <= startOfDay(longestPeriod.endsAt)) {
-        logger('payrexxSubscriptionPaymentProvider').warn(
+        this.logger.warn(
           `Received webhook for subscription ${subscriptionId} which is already renewed: ${maxSubscriptionExtensionLength.toISOString()} <= ${startOfDay(
             longestPeriod.endsAt
           ).toISOString()}`
@@ -182,7 +183,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           subscription.paymentPeriodicity
         ) - 100; // -1CHF to ensure that imported rounding differences are no issue
       if (payedAmount < minPayment) {
-        logger('payrexxSubscriptionPaymentProvider').warn(
+        this.logger.warn(
           `Payrexx Subscription ${subscription.id} payment ${payedAmount} lower than min payment ${minPayment}`
         );
         return;
@@ -252,13 +253,11 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           paidUntil: newSubscriptionValidUntil,
         },
       });
-      logger('payrexxSubscriptionPaymentProvider').info(
+      this.logger.log(
         `Subscription ${subscription.id} for user ${user.email} successfully renewed.`
       );
     } else {
-      logger('payrexxSubscriptionPaymentProvider').info(
-        'External Auto renewal failed!'
-      );
+      this.logger.log('External Auto renewal failed!');
     }
   }
 
@@ -294,16 +293,12 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     const resJSON = await res.json();
 
     if (res.status === 200 && resJSON.status === 'success') {
-      logger('payrexxSubscriptionPaymentProvider').info(
-        'Payrexx response for subscription %s updated',
-        subscriptionId
+      this.logger.log(
+        `Payrexx response for subscription ${subscriptionId} updated`
       );
     } else {
-      logger('payrexxSubscriptionPaymentProvider').error(
-        'Payrexx subscription update response for subscription %s is NOK with status %s and message %s',
-        subscriptionId,
-        res.status,
-        resJSON.message
+      this.logger.error(
+        `Payrexx subscription update response for subscription ${subscriptionId} is NOK with status ${res.status} and message ${resJSON.message}`
       );
       throw new Error(
         `Payrexx response is NOK with status ${res.status} and message: ${resJSON.message}`
@@ -332,16 +327,12 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
     const resJSON = await res.json();
     if (res.status === 200 && resJSON.status === 'success') {
-      logger('payrexxSubscriptionPaymentProvider').info(
-        'Payrexx response for subscription %s canceled',
-        subscriptionId
+      this.logger.log(
+        `Payrexx response for subscription ${subscriptionId} canceled`
       );
     } else {
-      logger('payrexxSubscriptionPaymentProvider').error(
-        'Payrexx subscription cancel response for subscription %s is NOK with status %s and message %s ',
-        subscriptionId,
-        res.status,
-        resJSON.message
+      this.logger.error(
+        `Payrexx subscription cancel response for subscription ${subscriptionId} is NOK with status ${res.status} and message ${resJSON.message} `
       );
       throw new Error(
         `Payrexx response is NOK with status ${res.status} and message: ${resJSON.message}`

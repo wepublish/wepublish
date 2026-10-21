@@ -139,8 +139,146 @@ services:
     volumes:
       - storage:/data
 
+  otel-collector:
+    profiles:
+      - observability
+    image: otel/opentelemetry-collector-contrib:0.163.1
+    command:
+      - --config=/etc/otelcol-contrib/config.yaml
+    ports:
+      - '127.0.0.1:4317:4317'
+      - '127.0.0.1:4318:4318'
+    expose:
+      - '8888'
+      - '13133'
+    volumes:
+      - ./docker/observability/otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      logstash:
+        condition: service_started
+      prometheus:
+        condition: service_started
+    networks:
+      - app-tier
+
+  elasticsearch:
+    profiles:
+      - observability
+    image: elasticsearch:9.5.5
+    ports:
+      - '127.0.0.1:9200:9200'
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: 'false'
+      xpack.security.enrollment.enabled: 'false'
+      ES_JAVA_OPTS: -Xms1g -Xmx1g
+      cluster.routing.allocation.disk.threshold_enabled: 'false'
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -fs 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s' >/dev/null
+      interval: 10s
+      timeout: 10s
+      retries: 30
+    networks:
+      - app-tier
+
+  logstash:
+    profiles:
+      - observability
+    image: logstash:9.5.5
+    environment:
+      LS_JAVA_OPTS: -Xms256m -Xmx256m
+      XPACK_MONITORING_ENABLED: 'false'
+    expose:
+      - '8080'
+    volumes:
+      - ./docker/observability/logstash/pipeline:/usr/share/logstash/pipeline:ro
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - app-tier
+
+  kibana:
+    profiles:
+      - observability
+    image: kibana:9.5.5
+    ports:
+      - '127.0.0.1:5601:5601'
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      TELEMETRY_OPTIN: 'false'
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - app-tier
+
+  kibana-setup:
+    profiles:
+      - observability
+    image: curlimages/curl:8.22.0
+    restart: on-failure
+    entrypoint:
+      - /bin/sh
+      - /setup.sh
+    volumes:
+      - ./docker/observability/kibana/setup.sh:/setup.sh:ro
+    depends_on:
+      - kibana
+    networks:
+      - app-tier
+
+  prometheus:
+    profiles:
+      - observability
+    image: prom/prometheus:v3.14.0
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=2d
+      - --web.enable-lifecycle
+      - --web.enable-otlp-receiver
+    ports:
+      - '127.0.0.1:9090:9090'
+    volumes:
+      - ./docker/observability/prometheus:/etc/prometheus:ro
+      - prometheus:/prometheus
+    networks:
+      - app-tier
+
+  grafana:
+    profiles:
+      - observability
+    image: grafana/grafana:13.2.4
+    ports:
+      - '127.0.0.1:3001:3000'
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_ANALYTICS_REPORTING_ENABLED: 'false'
+    volumes:
+      - ./docker/observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./docker/observability/grafana/dashboards:/etc/grafana/dashboards:ro
+      - grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - app-tier
+
 volumes:
   database:
     driver: local
   storage:
+    driver: local
+  elasticsearch:
+    driver: local
+  prometheus:
+    driver: local
+  grafana:
     driver: local

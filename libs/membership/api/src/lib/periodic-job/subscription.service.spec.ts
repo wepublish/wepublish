@@ -7,6 +7,7 @@ import {
 } from '@prisma/client';
 import nock from 'nock';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Logger } from '@nestjs/common';
 
 import { InvoicePaidNotifier, PaymentsModule } from '@wepublish/payment/api';
 import { add, sub } from 'date-fns';
@@ -17,33 +18,11 @@ import {
   registerPaymentMethodModule,
 } from '../testing/module-registrars';
 import { SubscriptionService } from './subscription.service';
-import type { Mock } from 'vitest';
-
-const { loggerError } = vi.hoisted(() => ({ loggerError: vi.fn() }));
-
-vi.mock('@wepublish/utils/api', async importOriginal => {
-  const original =
-    await importOriginal<typeof import('@wepublish/utils/api')>();
-
-  return {
-    ...original,
-    logger: (name: string) => {
-      const log = original.logger(name);
-
-      return {
-        ...log,
-        error: (...args: unknown[]) => {
-          loggerError(...args);
-        },
-        warn: log.warn.bind(log),
-        info: log.info.bind(log),
-      };
-    },
-  };
-});
+import type { Mock, MockInstance } from 'vitest';
 
 describe('SubscriptionPaymentsService', () => {
   let subscriptionService: SubscriptionService;
+  let loggerError: MockInstance;
   let prismaMock: {
     subscription: {
       [method in keyof PrismaClient['subscription']]?: Mock;
@@ -88,6 +67,9 @@ describe('SubscriptionPaymentsService', () => {
   };
 
   beforeEach(async () => {
+    loggerError = vi
+      .spyOn(Logger.prototype, 'error')
+      .mockImplementation(() => undefined);
     await nock.disableNetConnect();
 
     prismaMock = {
@@ -145,6 +127,7 @@ describe('SubscriptionPaymentsService', () => {
   });
 
   afterEach(async () => {
+    loggerError.mockRestore();
     await nock.cleanAll();
     await nock.enableNetConnect();
   });
@@ -868,11 +851,8 @@ describe('SubscriptionPaymentsService', () => {
     } as never);
 
     expect(loggerError).toHaveBeenCalledWith(
-      expect.any(String),
-      'pay-1',
-      'pi_1',
-      'bexio-method',
-      '401 Unauthorized'
+      'Checking payment <pay-1> with intent pi_1 on payment method bexio-method failed with error: 401 Unauthorized',
+      undefined
     );
   });
 
@@ -919,10 +899,8 @@ describe('SubscriptionPaymentsService', () => {
       })
     );
     expect(loggerError).toHaveBeenCalledWith(
-      expect.any(String),
-      'invoice-1',
-      'pay-1',
-      '401 Unauthorized'
+      'Charging invoice invoice-1 with payment pay-1 failed: 401 Unauthorized',
+      undefined
     );
     expect(status.errorCode).toBe('payment-provider-error');
   });

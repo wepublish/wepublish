@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { BexioPaymentProvider } from '../bexio/bexio-payment-provider';
 import {
   Currency,
@@ -43,12 +44,9 @@ vi.mock('node-fetch', () => ({
   ),
 }));
 
-const mockLoggerError = vi.fn();
-
-vi.mock('@wepublish/utils/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/utils/api')>()),
-  logger: () => ({ error: mockLoggerError, warn: vi.fn(), info: vi.fn() }),
-}));
+const mockLoggerError = vi
+  .spyOn(Logger.prototype, 'error')
+  .mockImplementation(() => undefined);
 
 const mockBexioInvoiceCancel = vi.fn();
 const mockBexioContactSearch = vi.fn();
@@ -155,10 +153,7 @@ describe('BexioPaymentProvider', () => {
         'Bexio failed while searching the contact for invoice inv-1: 401 Unauthorized'
       );
       expect(mockLoggerError).toHaveBeenCalledWith(
-        expect.any(String),
-        'inv-1',
-        true,
-        'Bexio failed while searching the contact for invoice inv-1: 401 Unauthorized'
+        'Failed to create Bexio invoice for invoiceId inv-1 (renewal: true): Bexio failed while searching the contact for invoice inv-1: 401 Unauthorized'
       );
     });
 
@@ -181,9 +176,7 @@ describe('BexioPaymentProvider', () => {
       } as never);
 
       expect(mockLoggerError).toHaveBeenCalledWith(
-        'Error to cancel invoice for payment (id: %s): %s',
-        'pay-1',
-        '401 Unauthorized'
+        'Error to cancel invoice for payment (id: pay-1): 401 Unauthorized'
       );
     });
   });

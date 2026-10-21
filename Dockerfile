@@ -179,6 +179,7 @@ FROM ${PLAIN_BUILD_IMAGE} AS editor-setup
 WORKDIR /wepublish
 COPY --chown=1001:0 --from=build-editor /wepublish/dist/apps/editor/main.js /wepublish/main.js
 COPY --chown=1001:0 --from=build-editor /wepublish/dist/apps/editor/browser dist/apps/editor/browser
+COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=1001:0 --from=build-editor /deploy/node_modules ./node_modules
 RUN chmod -R g=u /wepublish
 
@@ -277,6 +278,7 @@ RUN pnpm exec nx build media --skip-nx-cache && \
 FROM ${PLAIN_BUILD_IMAGE} AS media-setup
 WORKDIR /wepublish
 COPY --chown=1001:0 --from=build-media /wepublish/dist/apps/media/ .
+COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=1001:0 --from=build-media /deploy/node_modules ./node_modules
 RUN chmod -R g=u /wepublish
 

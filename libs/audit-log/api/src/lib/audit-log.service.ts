@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { getMaxTake, logger, SortOrder } from '@wepublish/utils/api';
+import { getMaxTake, SortOrder } from '@wepublish/utils/api';
 import { AuditLogFilter, AuditLogListArgs } from './audit-log.model';
 
 export type CreateAuditLogEntry = Prisma.AuditLogCreateInput;
@@ -72,13 +72,15 @@ export const createAuditLogFilter = (
 
 @Injectable()
 export class AuditLogService {
+  private readonly logger = new Logger(AuditLogService.name);
+
   constructor(private prisma: PrismaClient) {}
 
   async record(entry: CreateAuditLogEntry) {
     try {
       await this.prisma.auditLog.create({ data: entry });
     } catch (error) {
-      logger('audit-log').error(
+      this.logger.error(
         `Could not write audit log entry for ${entry.mutation}: ${
           (error as Error).message
         }`
@@ -129,7 +131,7 @@ export class AuditLogService {
     try {
       return { ...(await this.getAuditLogs(args)), supported: true };
     } catch (error) {
-      logger('audit-log').warn(
+      this.logger.warn(
         `Could not read audit logs: ${(error as Error).message}`
       );
 

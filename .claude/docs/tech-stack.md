@@ -21,7 +21,9 @@ Align all code suggestions, architecture recommendations, and technical solution
 - **PostgreSQL 18** as the database
 - **Prisma 7** as ORM — schema at `libs/api/prisma/schema.prisma`
 - **Apollo Server** for GraphQL API (code-first approach with NestJS decorators)
-- **Pino** for structured logging
+- **Nest `ConsoleLogger`** for logging (JSON lines in production via
+  `createNestLogger()` in `libs/utils/api/src/lib/otel/logger.ts`, bridged to
+  OTLP when OTel logs are on; see `docker/observability/README.md`)
 - **Sentry** for error tracking
 
 ## Monorepo & Build
