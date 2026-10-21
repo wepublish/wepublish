@@ -108,9 +108,11 @@ skip reason in the report (`pnpm run e2e:report`).
   feature tagged `@mode:serial`.
 - **Third parties** (`support/third-party.ts`): analytics, ads, Sentry and
   tracking pixels are blocked in every test; Cloudflare Turnstile is not.
-- **Captcha:** the seed configures Turnstile's always-pass test keys
-  (`1x00000000000000000000AA`). The API still calls Cloudflare to verify, so
-  it needs outbound internet.
+- **Captcha:** the seed creates the Turnstile provider without keys, so the
+  `challenge` query fails. Steps that need a captcha call
+  `data.ensureChallengeKeys()`, which sets Cloudflare's always-pass test keys
+  (`1x00000000000000000000AA`) only when none are configured, and keeps them.
+  The API still calls Cloudflare to verify, so it needs outbound internet.
 
 What stays behind on purpose:
 

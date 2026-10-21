@@ -52,7 +52,7 @@ artifact plus the job summary. It is deliberately not an Nx `test` target, so
 
 1. **Read the feature.** If you are writing it, describe behaviour in the
    user's language (`Given I open the article "…"`), not UI mechanics
-   (`When I click the div with class …`). One behaviour per scenario. Tag every
+   (`When I click the div with class …`). One user journey (persona + goal) per scenario, as long as the goal needs. Tag every
    scenario (`@smoke`, `@seo`, `@paywall`, …) so it can be filtered.
 2. **Generate and watch it fail.** Run `cd e2e && pnpm exec bddgen`. It fails
    with "Missing step definitions" and prints snippets — that is the expected

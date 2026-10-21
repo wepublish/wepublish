@@ -162,6 +162,37 @@ export class TestData {
   }
 
   /**
+   * Registration needs a captcha. A freshly seeded stack has the Turnstile
+   * provider without keys, so the challenge query fails; it then gets
+   * Cloudflare's always-pass test keys and keeps them. Configured keys are
+   * never touched.
+   */
+  async ensureChallengeKeys(providerId = 'turnstile') {
+    const api = await this.api();
+    const configured = await api
+      .gql<{ challenge: { challengeID: string } }>(
+        `query { challenge { challengeID } }`
+      )
+      .then(({ challenge }) => !!challenge.challengeID)
+      .catch(() => false);
+
+    if (configured) {
+      return;
+    }
+
+    await api.gql(
+      `mutation UpdateChallengeKeys($id: String, $siteKey: String, $secret: String) {
+        updateChallengeProviderSetting(id: $id, siteKey: $siteKey, secret: $secret) { id }
+      }`,
+      {
+        id: providerId,
+        siteKey: '1x00000000000000000000AA',
+        secret: '1x0000000000000000000000000000000AA',
+      }
+    );
+  }
+
+  /**
    * Subscriptions do not cascade with the user, so they go first. Their
    * invoices stay behind (mail `e2e+…`): subscription periods outlive the
    * subscription and block deleting them, and the API cannot delete periods.

@@ -111,8 +111,14 @@ one next to it.
 - **When** is one coherent run of user actions.
 - **Then** checks outcomes the user can observe — what the reader sees or
   receives — never database state.
-- ~10 steps max. Declarative language: no selectors, no copy that exists in
-  one tenant only, no field-by-field checks.
+- **Length follows the goal, not a step count.** Few journeys means each one
+  runs until the persona reaches the goal in the title, alternating
+  `When`/`Then` along the way (blocked → registers → reads again). Don't cut a
+  journey short or split it to stay short. Split only when the goal changes,
+  or when a later part needs a capability tag (`@mail`, `@payment`) the
+  earlier part does not.
+- Declarative language: no selectors, no copy that exists in one tenant only,
+  no field-by-field checks.
 - `Background` only for shared `Given`s; `Scenario Outline` only when the
   variants _behave_ differently (CHF vs EUR plan is not a different behaviour;
   pay vs decline is).
