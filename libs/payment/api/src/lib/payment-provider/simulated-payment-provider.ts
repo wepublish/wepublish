@@ -1,4 +1,4 @@
-import { PaymentState } from '@prisma/client';
+import { PaymentMethodChangeState, PaymentState } from '@prisma/client';
 import {
   AuthorizationIntent,
   AuthorizationState,
@@ -21,6 +21,19 @@ const OUTCOMES = {
 
 type Outcome = keyof typeof OUTCOMES;
 
+// An own-property check, not `in`: `in` also accepts inherited names such as
+// `constructor`.
+const isOutcome = (action: string): action is Outcome =>
+  Object.prototype.hasOwnProperty.call(OUTCOMES, action);
+
+/** A payment can only be settled once; afterwards the page refuses it. */
+const OPEN_PAYMENT_STATES: PaymentState[] = [
+  PaymentState.created,
+  PaymentState.submitted,
+  PaymentState.requiresUserAction,
+  PaymentState.processing,
+];
+
 const AUTHORIZATION_OUTCOMES = ['authorized', 'failed'] as const;
 
 type AuthorizationOutcomeAction = (typeof AUTHORIZATION_OUTCOMES)[number];
@@ -35,6 +48,63 @@ const escapeHtml = (value: string) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+
+type ReturnURLs = { successURL?: string; failureURL?: string };
+
+/**
+ * The return URLs are fixed when the payment or change is created and kept in
+ * its `intentData`. They never travel through the checkout link or form, so
+ * the page cannot be used to redirect to an arbitrary site.
+ */
+const storeReturnURLs = ({ successURL, failureURL }: ReturnURLs) =>
+  JSON.stringify({ successURL, failureURL });
+
+const readReturnURLs = (intentData: string | null | undefined): ReturnURLs => {
+  try {
+    const { successURL, failureURL } = JSON.parse(intentData ?? '') ?? {};
+
+    return {
+      successURL: typeof successURL === 'string' ? successURL : undefined,
+      failureURL: typeof failureURL === 'string' ? failureURL : undefined,
+    };
+  } catch {
+    return {};
+  }
+};
+
+/**
+ * Express parses `a[]=1` and `a[b]=1` into arrays and objects. Every field this
+ * page reads must be a string; `null` marks one that is present but is not.
+ */
+const readFields = <Key extends string>(
+  source: unknown,
+  keys: readonly Key[]
+): Record<Key, string | undefined> | null => {
+  const record = (source ?? {}) as Record<string, unknown>;
+  const fields = {} as Record<Key, string | undefined>;
+
+  for (const key of keys) {
+    const value = record[key];
+
+    if (value !== undefined && typeof value !== 'string') {
+      return null;
+    }
+
+    fields[key] = value as string | undefined;
+  }
+
+  return fields;
+};
+
+const BAD_REQUEST: WebhookResponse = {
+  status: 400,
+  message: 'Malformed simulated payment request',
+};
+
+const NOT_FOUND = (what: string): WebhookResponse => ({
+  status: 404,
+  message: `${what} not found`,
+});
 
 const hidden = (name: string, value: string) =>
   `<input type="hidden" name="${name}" value="${escapeHtml(value)}">`;
@@ -59,6 +129,8 @@ const submit = (value: string, label: string) =>
  * hold a real provider would place and stores a customer when authorized.
  *
  * No money moves: anyone reaching the checkout page can mark a payment paid.
+ * That is limited to open payments and pending changes of this provider, and
+ * the provider never runs on production (`isSimulatedPaymentAllowed`).
  */
 export class SimulatedPaymentProvider extends BasePaymentProvider {
   constructor(props: PaymentProviderProps) {
@@ -95,19 +167,21 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
       };
     }
 
+    return {
+      intentID,
+      intentSecret: this.checkoutURL('paymentID', paymentID),
+      intentData: storeReturnURLs({ successURL, failureURL }),
+      state: PaymentState.processing,
+    };
+  }
+
+  private checkoutURL(key: 'paymentID' | 'changeID', id: string): string {
     const checkout = new URL(
       `${process.env['HOST_URL'] ?? 'http://localhost:4000'}/payment-webhooks/${this.id}`
     );
-    checkout.searchParams.set('paymentID', paymentID);
-    checkout.searchParams.set('successURL', successURL ?? '');
-    checkout.searchParams.set('failureURL', failureURL ?? '');
+    checkout.searchParams.set(key, id);
 
-    return {
-      intentID,
-      intentSecret: checkout.toString(),
-      intentData: '',
-      state: PaymentState.processing,
-    };
+    return checkout.toString();
   }
 
   override supportsAuthorization(): boolean {
@@ -119,16 +193,10 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
     successURL,
     failureURL,
   }: CreateAuthorizationIntentProps): Promise<AuthorizationIntent> {
-    const checkout = new URL(
-      `${process.env['HOST_URL'] ?? 'http://localhost:4000'}/payment-webhooks/${this.id}`
-    );
-    checkout.searchParams.set('changeID', changeID);
-    checkout.searchParams.set('successURL', successURL ?? '');
-    checkout.searchParams.set('failureURL', failureURL ?? '');
-
     return {
       intentID: `simulated_authorization_${changeID}`,
-      intentSecret: checkout.toString(),
+      intentSecret: this.checkoutURL('changeID', changeID),
+      intentData: storeReturnURLs({ successURL, failureURL }),
       state: 'processing',
       amount: AUTHORIZATION_AMOUNT,
     };
@@ -138,34 +206,52 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
     req,
   }: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     if (req.method === 'GET') {
-      const query = req.query as Record<string, string>;
+      const query = readFields(req.query, ['paymentID', 'changeID']);
 
-      return query['changeID'] ?
-          this.authorizationPage(query)
-        : this.checkoutPage(query);
+      if (!query) {
+        return BAD_REQUEST;
+      }
+
+      return query.changeID ?
+          this.authorizationPage(query.changeID)
+        : this.checkoutPage(query.paymentID ?? '');
     }
 
-    const { paymentID, changeID, action, successURL, failureURL } = (req.body ??
-      {}) as Record<string, string>;
+    const body = readFields(req.body, ['paymentID', 'changeID', 'action']);
+
+    if (!body) {
+      return BAD_REQUEST;
+    }
+
+    const { paymentID, changeID, action = '' } = body;
 
     if (changeID) {
-      return this.authorizationOutcome(
-        changeID,
-        action,
-        successURL,
-        failureURL
-      );
+      return this.authorizationOutcome(changeID, action);
     }
 
-    if (!paymentID || !(action in OUTCOMES)) {
+    if (!paymentID || !isOutcome(action)) {
       return {
         status: 400,
         message: `Unknown simulated payment outcome "${action}"`,
       };
     }
 
-    const state = OUTCOMES[action as Outcome];
+    const payment = await this.findOwnPayment(paymentID);
+
+    if (!payment) {
+      return NOT_FOUND(`Payment ${paymentID}`);
+    }
+
+    if (!OPEN_PAYMENT_STATES.includes(payment.state)) {
+      return {
+        status: 409,
+        message: `Payment ${paymentID} is already ${payment.state}`,
+      };
+    }
+
+    const state = OUTCOMES[action];
     const paid = state === PaymentState.paid;
+    const { successURL, failureURL } = readReturnURLs(payment.intentData);
 
     const intentState: IntentState = {
       paymentID,
@@ -184,6 +270,30 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
     };
   }
 
+  /** The payment, if it is one this provider handles. */
+  private async findOwnPayment(paymentID: string) {
+    const payment = await this.prisma.payment.findUnique({
+      where: { id: paymentID },
+      include: { paymentMethod: true },
+    });
+
+    return payment?.paymentMethod?.paymentProviderID === this.id ?
+        payment
+      : null;
+  }
+
+  /** The change, if it moves to a payment method of this provider. */
+  private async findOwnChange(changeID: string) {
+    const change = await this.prisma.subscriptionPaymentMethodChange.findUnique(
+      {
+        where: { id: changeID },
+        include: { paymentMethod: true },
+      }
+    );
+
+    return change?.paymentMethod?.paymentProviderID === this.id ? change : null;
+  }
+
   /**
    * The outcome only ever arrives through the checkout page, so there is
    * nothing to poll.
@@ -194,12 +304,10 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
     return null;
   }
 
-  private authorizationOutcome(
+  private async authorizationOutcome(
     changeID: string,
-    action: string,
-    successURL?: string,
-    failureURL?: string
-  ): WebhookResponse {
+    action: string
+  ): Promise<WebhookResponse> {
     if (
       !AUTHORIZATION_OUTCOMES.includes(action as AuthorizationOutcomeAction)
     ) {
@@ -209,6 +317,20 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
       };
     }
 
+    const change = await this.findOwnChange(changeID);
+
+    if (!change) {
+      return NOT_FOUND(`Payment method change ${changeID}`);
+    }
+
+    if (change.state !== PaymentMethodChangeState.pending) {
+      return {
+        status: 409,
+        message: `Payment method change ${changeID} is already ${change.state}`,
+      };
+    }
+
+    const { successURL, failureURL } = readReturnURLs(change.intentData);
     const authorized = action === 'authorized';
     const authorizationState: AuthorizationState =
       authorized ?
@@ -226,8 +348,11 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
     };
   }
 
-  private authorizationPage(query: Record<string, string>): WebhookResponse {
-    const { changeID = '', successURL = '', failureURL = '' } = query;
+  private async authorizationPage(changeID: string): Promise<WebhookResponse> {
+    if (!(await this.findOwnChange(changeID))) {
+      return NOT_FOUND(`Payment method change ${changeID}`);
+    }
+
     const amount = (AUTHORIZATION_AMOUNT / 100).toFixed(2);
 
     return {
@@ -238,8 +363,6 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
         'No money moves. A real provider holds this amount to check the payment method and releases it again; it is never charged.',
         [
           hidden('changeID', changeID),
-          hidden('successURL', successURL),
-          hidden('failureURL', failureURL),
           submit('authorized', 'Authorize'),
           submit('failed', 'Fail'),
         ]
@@ -274,14 +397,8 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
 </html>`;
   }
 
-  private async checkoutPage(
-    query: Record<string, string>
-  ): Promise<WebhookResponse> {
-    const { paymentID = '', successURL = '', failureURL = '' } = query;
-
-    const payment = await this.prisma.payment.findUnique({
-      where: { id: paymentID },
-    });
+  private async checkoutPage(paymentID: string): Promise<WebhookResponse> {
+    const payment = await this.findOwnPayment(paymentID);
     const invoice =
       payment &&
       (await this.prisma.invoice.findUnique({
@@ -290,7 +407,7 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
       }));
 
     if (!invoice) {
-      return { status: 404, message: `Payment ${paymentID} not found` };
+      return NOT_FOUND(`Payment ${paymentID}`);
     }
 
     const cents = invoice.items.reduce(
@@ -307,8 +424,6 @@ export class SimulatedPaymentProvider extends BasePaymentProvider {
         'No money moves. Pick the outcome the payment should have.',
         [
           hidden('paymentID', paymentID),
-          hidden('successURL', successURL),
-          hidden('failureURL', failureURL),
           submit('paid', 'Pay'),
           submit('declined', 'Decline'),
           submit('canceled', 'Cancel'),
