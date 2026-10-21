@@ -1,0 +1,129 @@
+name: E2E tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: 'Tenant app to test (apps/<name>), eg. tsri or bajour.'
+        required: true
+        type: string
+      environment:
+        description: 'Which deployment of the app. URLs follow the deploy workflows (see e2e/support/targets.ts).'
+        required: true
+        type: choice
+        options: [review, staging, production]
+        default: staging
+      review_slot:
+        description: 'For environment=review: the N of the review_<N>_<app> label.'
+        required: false
+        type: string
+      project:
+        description: 'Which application to test.'
+        required: true
+        type: choice
+        options: [all, website, editor]
+        default: all
+      grep:
+        description: 'Optional tag/title filter, eg. @smoke or @smoke|@paywall. Leave empty to run everything.'
+        required: false
+        type: string
+      allow_mutation:
+        description: 'Allow journeys that write data (@mutating). Never applies to production.'
+        required: false
+        type: boolean
+        default: false
+      base_url:
+        description: 'Optional override of the website URL.'
+        required: false
+        type: string
+      editor_url:
+        description: 'Optional override of the editor URL (production has no convention, so set it there).'
+        required: false
+        type: string
+      api_url:
+        description: 'Optional override of the API origin.'
+        required: false
+        type: string
+
+concurrency:
+  group: e2e-${{ github.ref }}-${{ inputs.app }}-${{ inputs.environment }}${{ inputs.review_slot }}
+  cancel-in-progress: false
+
+jobs:
+  e2e:
+    name: E2E (${{ inputs.app }} · ${{ inputs.environment }}${{ inputs.review_slot }} · ${{ inputs.project }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: true
+      NX_NO_CLOUD: true
+      # Target, see e2e/support/targets.ts.
+      E2E_APP: ${{ inputs.app }}
+      E2E_ENV: ${{ inputs.environment }}
+      E2E_REVIEW_SLOT: ${{ inputs.review_slot }}
+      BASE_URL: ${{ inputs.base_url }}
+      E2E_EDITOR_URL: ${{ inputs.editor_url }}
+      E2E_API_URL: ${{ inputs.api_url }}
+      PROJECT: ${{ inputs.project }}
+      GREP: ${{ inputs.grep }}
+      # Capabilities, see e2e/README.md. No MAILPIT_URL here: @mail journeys skip.
+      E2E_ALLOW_MUTATION: ${{ inputs.allow_mutation }}
+      E2E_API_TOKEN: ${{ secrets.E2E_API_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: |
+          ARGS=()
+          [ "$PROJECT" != "all" ] && ARGS+=(--project "$PROJECT")
+          [ -n "$GREP" ] && ARGS+=(--grep "$GREP")
+          pnpm run e2e -- "${ARGS[@]}"
+
+      - name: Upload reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-report
+          path: |
+            e2e/playwright-report
+            e2e/cucumber-report
+            e2e/test-results
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Write job summary
+        if: ${{ !cancelled() }}
+        run: |
+          RESULTS=e2e/test-results/results.json
+          {
+            echo "## E2E results"
+            echo
+            echo "Target: \`$E2E_APP\` · \`$E2E_ENV$E2E_REVIEW_SLOT\` · project \`$PROJECT\`${GREP:+ · filter: \`$GREP\`} · mutation allowed: \`$E2E_ALLOW_MUTATION\`"
+            echo
+            if [ ! -f "$RESULTS" ]; then
+              echo "No results file was produced. Check the \"Run E2E tests\" step log (bddgen fails here when step definitions are missing)."
+              exit 0
+            fi
+            jq -r '.stats | "| Passed | Failed | Flaky | Skipped | Duration |\n| --- | --- | --- | --- | --- |\n| \(.expected) | \(.unexpected) | \(.flaky) | \(.skipped) | \((.duration / 1000) | floor)s |"' "$RESULTS"
+            FAILED=$(jq -r '[.. | objects | select(has("specs")) | .specs[] | select(.ok == false) | "- \(.title)"] | unique | .[]' "$RESULTS")
+            if [ -n "$FAILED" ]; then
+              echo
+              echo "### Failed scenarios"
+              echo "$FAILED"
+            fi
+            echo
+            echo "Download the **e2e-report** artifact for the Playwright HTML report (with traces), the Cucumber HTML report and the raw results. Open a trace with \`pnpm exec playwright show-trace <trace.zip>\`."
+          } >> "$GITHUB_STEP_SUMMARY"

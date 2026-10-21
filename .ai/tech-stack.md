@@ -37,20 +37,21 @@ before you start.
    integration, or convention — or makes something written here wrong (paths
    renamed, a framework swapped). Skip the update for routine bug fixes,
    refactors that don't change shape, dependency bumps, and copy/UI tweaks. The
-   test: *would the next agent be misled by the current text?* If yes, fix it in
+   test: _would the next agent be misled by the current text?_ If yes, fix it in
    the same change. If you burned real time on a subtle failure, add a
    [gotchas.md](.claude/docs/gotchas.md) entry so nobody repeats it.
 
 ## Right runner, right command
 
-| You are editing | Runner | Verify with |
-| --- | --- | --- |
-| `libs/*/api` (NestJS) | Vitest | `pnpm nx test <domain>-api` |
-| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils` | Vitest | `pnpm nx test <domain>-website` |
-| `apps/<tenant>` (Next.js) | Vitest + tsc | `pnpm tsc -p ./apps/<app> --noEmit` |
-| `libs/api/prisma` | — | `pnpm prisma migrate dev --name ...` |
+| You are editing                                            | Runner                      | Verify with                                                            |
+| ---------------------------------------------------------- | --------------------------- | ---------------------------------------------------------------------- |
+| `libs/*/api` (NestJS)                                      | Vitest                      | `pnpm nx test <domain>-api`                                            |
+| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils` | Vitest                      | `pnpm nx test <domain>-website`                                        |
+| `apps/<tenant>` (Next.js)                                  | Vitest + tsc                | `pnpm tsc -p ./apps/<app> --noEmit`                                    |
+| `libs/api/prisma`                                          | —                           | `pnpm prisma migrate dev --name ...`                                   |
+| `e2e/` (Gherkin E2E)                                       | Playwright + playwright-bdd | `pnpm run e2e -- --app <tenant> --environment <env> [--project website\|editor]` — specs from a diff: `gherkin-from-changes`; steps: `gherkin-to-playwright` |
 
-Every project runs on Vitest — use `vi.fn()` / `vi.mock()` everywhere. NestJS
+Every project except `e2e/` runs on Vitest — use `vi.fn()` / `vi.mock()` everywhere. NestJS
 libs get their config from `createVitestConfig({nest: true})`.
 
 ## Detailed guidance
@@ -63,7 +64,7 @@ to run before claiming something is done.
 **Keep the whole set under ~60 KB** (it is ~109 KB today — over budget,
 mostly [gotchas.md](.claude/docs/gotchas.md) at 44 KB; prune before adding).
 This is context every task pays for, so a new doc earns its place by
-changing what an agent *does*.
+changing what an agent _does_.
 Prose restating what a competent reader already knows about Nest, React or
 Prisma does not. Prefer editing an existing file over adding one, and when a
 fact would land in two files, put it in one and link to it — duplicated facts
