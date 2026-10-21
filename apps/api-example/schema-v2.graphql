@@ -2850,7 +2850,7 @@ type Mutation {
   createNewsletterCampaign(document: JSONObject, title: String!): NewsletterCampaign!
 
   """Creates an page."""
-  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
@@ -3359,7 +3359,7 @@ type Mutation {
   updateNewsletterCampaign(document: JSONObject!, id: String!, title: String): NewsletterCampaign!
 
   """Updates an page."""
-  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
@@ -3580,6 +3580,8 @@ type Page {
   createdAt: DateTime!
   draft: PageRevision
   hidden: Boolean!
+  hideFooter: Boolean!
+  hideHeader: Boolean!
   id: String!
   latest: PageRevision!
   modifiedAt: DateTime!

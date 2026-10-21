@@ -81,6 +81,11 @@
         "confirm": "Restaurer comme brouillon"
       }
     },
+    "copyLink": {
+      "button": "Copier le lien",
+      "copied": "Lien copié dans le presse-papiers",
+      "failed": "Le lien n'a pas pu être copié"
+    },
     "discardDraft": {
       "button": "Abandonner le brouillon",
       "success": "Brouillon abandonné — retour à la version publiée",
@@ -1748,6 +1753,10 @@
         "value": "Valeur",
         "slugInfo": "La dernière partie de l’adresse web de la page, p.ex. « a-propos ». Utilisez uniquement des minuscules, des chiffres et des tirets. Une modification ultérieure rend les liens existants invalides.",
         "hiddenInfo": "Les pages masquées n’apparaissent pas dans les listes automatiques du site, mais restent accessibles via leur lien direct.",
+        "hideHeader": "Masquer l’en-tête",
+        "hideHeaderInfo": "Masque l’en-tête du site sur cette page, p.ex. pour les landing pages.",
+        "hideFooter": "Masquer le pied de page",
+        "hideFooterInfo": "Masque le pied de page du site sur cette page, p.ex. pour les landing pages.",
         "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
       }
     },

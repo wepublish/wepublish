@@ -3482,6 +3482,8 @@ export type MutationCreatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']['input']>;
   hidden: Scalars['Boolean']['input'];
+  hideFooter?: Scalars['Boolean']['input'];
+  hideHeader?: Scalars['Boolean']['input'];
   imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
@@ -4498,6 +4500,8 @@ export type MutationUpdatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']['input']>;
   hidden: Scalars['Boolean']['input'];
+  hideFooter?: Scalars['Boolean']['input'];
+  hideHeader?: Scalars['Boolean']['input'];
   id: Scalars['String']['input'];
   imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
@@ -4939,6 +4943,8 @@ export type Page = {
   createdAt: Scalars['DateTime']['output'];
   draft?: Maybe<PageRevision>;
   hidden: Scalars['Boolean']['output'];
+  hideFooter: Scalars['Boolean']['output'];
+  hideHeader: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   latest: PageRevision;
   modifiedAt: Scalars['DateTime']['output'];
