@@ -5,6 +5,7 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
+import { HauptstadtContentFullWidth } from '@wepublish/tenant/hauptstadt';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
   FullSessionWithTokenWithoutUserFragment,
@@ -17,8 +18,6 @@ import { add } from 'date-fns';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
-
-import { HauptstadtContentFullWidth } from '../src/components/hauptstadt-content-wrapper';
 
 type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 

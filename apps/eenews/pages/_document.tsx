@@ -1,11 +1,10 @@
+import { eenewsTheme as theme } from '@wepublish/tenant/eenews';
 import {
   documentGetInitialProps,
   DocumentHeadTags,
   DocumentProps,
 } from '@wepublish/utils/website';
 import { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
-
-import theme from '../src/theme';
 
 export default function Document(props: DocumentProps) {
   return (

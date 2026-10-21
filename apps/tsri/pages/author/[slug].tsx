@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
+import { TsriAuthorLinks, tsriTheme as theme } from '@wepublish/tenant/tsri';
 import { AuthorPage } from '@wepublish/utils/website';
-
-import { TsriAuthorLinks } from '../../src/components/tsri-author-links';
-import theme from '../../src/theme';
 
 const TsriAuthorPage = styled(AuthorPage)`
   & > h2.MuiTypography-root {

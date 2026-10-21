@@ -63,7 +63,7 @@ jobs:
         if: matrix.shard == 1 && (success() || failure())
         run: |
           status=0
-          for lib in libs/image/api libs/block-content/api; do
+          for lib in libs/image/api libs/block-content/api libs/mocks/website; do
             pnpm exec vitest run --config "$lib/vitest.config.ts" --coverage.enabled --maxWorkers=1 || status=1
           done
           exit "$status"
