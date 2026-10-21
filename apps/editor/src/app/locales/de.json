@@ -77,6 +77,11 @@
         "confirm": "Als Entwurf wiederherstellen"
       }
     },
+    "copyLink": {
+      "button": "Link kopieren",
+      "copied": "Link in die Zwischenablage kopiert",
+      "failed": "Link konnte nicht kopiert werden"
+    },
     "discardDraft": {
       "button": "Entwurf verwerfen",
       "success": "Entwurf verworfen – zur veröffentlichten Version zurückgekehrt",
@@ -1754,6 +1759,10 @@
         "value": "Wert",
         "slugInfo": "Der letzte Teil der Webadresse der Seite, z.B. «ueber-uns». Verwende nur Kleinbuchstaben, Zahlen und Bindestriche. Eine spätere Änderung macht bestehende Links ungültig.",
         "hiddenInfo": "Ausgeblendete Seiten erscheinen nicht in automatischen Listen auf der Website, bleiben aber über ihren direkten Link erreichbar.",
+        "hideHeader": "Header ausblenden",
+        "hideHeaderInfo": "Blendet den Header der Website auf dieser Seite aus, z.B. für Landingpages.",
+        "hideFooter": "Footer ausblenden",
+        "hideFooterInfo": "Blendet den Footer der Website auf dieser Seite aus, z.B. für Landingpages.",
         "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
       }
     },
@@ -1832,6 +1841,12 @@
     },
     "peerList": {
       "overview": {
+        "status": "Status",
+        "active": "Aktiv",
+        "disabled": "Deaktiviert",
+        "name": "Name",
+        "hostURL": "API-URL",
+        "website": "Website",
         "disable": "Deaktivieren",
         "editProfile": "Profil bearbeiten",
         "enable": "Aktivieren",
@@ -3900,6 +3915,225 @@
         "attemptsHelp": "Wie oft versucht wurde, diese E-Mail zu verschicken. Mehr als 1 heisst: Sie wurde nach einem Fehler oder Unterbruch erneut versucht."
       }
     },
+    "seoChecklist": {
+      "navbar": "SEO",
+      "title": "SEO-Checkliste",
+      "description": "Praktische Schritte, damit deine Inhalte gut gefunden werden und beim Teilen gut aussehen. Punkte mit Status werden automatisch gegen deine Live-Website geprüft.",
+      "websiteUrl": "Website",
+      "refresh": "Erneut prüfen",
+      "copyUrl": "URL kopieren",
+      "detail": "Details",
+      "progress": "{{done}} von {{total}} erledigt",
+      "completedBy": "Abgehakt von {{name}} am {{date}}",
+      "completedAt": "Abgehakt am {{date}}",
+      "guide": {
+        "show": "So gelingt es",
+        "good": "Gutes Beispiel",
+        "bad": "Schwaches Beispiel"
+      },
+      "status": {
+        "Ok": "OK",
+        "Warning": "Warnung",
+        "Error": "Fehler",
+        "Info": "Info"
+      },
+      "checkStatus": {
+        "Ok": "Geprüft",
+        "Warning": "Handlungsbedarf",
+        "Error": "Funktioniert nicht",
+        "Info": "Nicht verfügbar"
+      },
+      "sections": {
+        "searchConsole": {
+          "title": "Google Search Console",
+          "description": "Das kostenlose Tool von Google, das zeigt, wie deine Website in der Suche abschneidet."
+        },
+        "sitemapsFeeds": {
+          "title": "Sitemaps und Feeds",
+          "description": "Wie Suchmaschinen und Aggregatoren deine Artikel finden."
+        },
+        "content": {
+          "title": "Inhalte",
+          "description": "Gewohnheiten, die Artikel leichter auffindbar und verständlich machen."
+        },
+        "presentation": {
+          "title": "Darstellung und Teilen",
+          "description": "Wie deine Inhalte in Suchergebnissen, sozialen Medien und Messengern aussehen."
+        }
+      },
+      "items": {
+        "gsc-verify": {
+          "title": "Website in der Google Search Console bestätigen",
+          "description": "Füge deine Domain als «Domain»-Property hinzu und bestätige sie mit einem DNS-Eintrag. So erhältst du Indexierungs- und Leistungsdaten für alle Subdomains.",
+          "action": "Search Console öffnen"
+        },
+        "gsc-sitemap": {
+          "title": "Sitemap einreichen",
+          "description": "Reiche unter «Sitemaps» einmalig die untenstehende Sitemap-URL ein. Google prüft sie danach regelmässig auf neue Artikel.",
+          "action": "Search Console öffnen"
+        },
+        "gsc-pages": {
+          "title": "Indexierungsbericht regelmässig prüfen",
+          "description": "Der Bericht «Seiten» zeigt, welche Seiten nicht indexiert sind und warum. Schau ihn monatlich an und behebe wiederkehrende Probleme.",
+          "action": "Search Console öffnen"
+        },
+        "gsc-performance": {
+          "title": "Aus Suchanfragen lernen",
+          "description": "Der Bericht «Leistung» zeigt die Suchanfragen, über die Leserinnen und Leser zu dir finden. Nutze ihn, um Themen und Formulierungen zu finden, nach denen gesucht wird.",
+          "action": "Search Console öffnen"
+        },
+        "gsc-inspect": {
+          "title": "Indexierung wichtiger Artikel beantragen",
+          "description": "Prüfe wichtige Artikel mit der «URL-Prüfung» und beantrage nach dem Publizieren oder grösseren Updates die Indexierung.",
+          "action": "Search Console öffnen"
+        },
+        "sitemap": {
+          "title": "Sitemap",
+          "description": "Die Sitemap wird automatisch erstellt und listet deine neuesten Artikel und Seiten für Suchmaschinen auf.",
+          "detail": "Anzahl URLs"
+        },
+        "news-sitemap": {
+          "title": "Google-News-Einträge",
+          "description": "Artikel in der Sitemap enthalten Google-News-Metadaten. Das hilft, in Google News und bei «Top-Meldungen» zu erscheinen."
+        },
+        "feeds": {
+          "title": "RSS-, Atom- und JSON-Feeds",
+          "description": "Über Feeds können News-Aggregatoren, Feedreader und Newsletter-Tools deine Artikel übernehmen. Gib die RSS-URL an Aggregatoren weiter, in denen du erscheinen möchtest."
+        },
+        "seo-titles": {
+          "title": "Präzise SEO-Titel schreiben",
+          "description": "Nenne das Hauptthema zuerst und bleib unter etwa 60 Zeichen. Beschreibe, worum es geht, statt nur anzuteasern.",
+          "guide": {
+            "tips": {
+              "topicFirst": "Beginne mit dem Hauptthema, also den Wörtern, die Leserinnen und Leser bei Google eingeben würden, z. B. ein Ort, eine Person oder ein Ereignis.",
+              "length": "Bleib bei 50–60 Zeichen. Google schneidet längere Titel ab, und der Name der Publikation braucht ebenfalls Platz.",
+              "specific": "Sei konkret: wer, was, wo. «Berner Stadtrat» funktioniert besser als «Politik».",
+              "noClickbait": "Sag, worum es geht, statt nur anzuteasern. Wer sich getäuscht fühlt, springt schnell ab, und Google bemerkt das.",
+              "unique": "Gib jedem Artikel einen eigenen Titel. Folgeartikel brauchen einen Titel, der zeigt, was neu ist.",
+              "siteName": "Füge den Namen der Publikation nicht hinzu, er wird automatisch angehängt."
+            },
+            "good": "Berner Stadtrat beschliesst 20 km neue Velowege",
+            "bad": "Sie werden nicht glauben, was der Stadtrat entschieden hat"
+          }
+        },
+        "meta-descriptions": {
+          "title": "Meta-Beschreibungen schreiben",
+          "description": "Fasse den Artikel in ein bis zwei Sätzen zusammen (etwa 150 Zeichen). Ohne Beschreibung wird der Lead oder der erste Absatz verwendet.",
+          "guide": {
+            "tips": {
+              "summarize": "Fasse die Kernaussage des Artikels in ein bis zwei ganzen Sätzen zusammen.",
+              "length": "Bleib bei 120–158 Zeichen. Längere Beschreibungen werden in Google abgeschnitten.",
+              "addToTitle": "Ergänze Informationen, die nicht im Titel stehen, statt ihn zu wiederholen.",
+              "details": "Nenne konkrete Details wie Zahlen, Orte und Daten, und schreib aktiv.",
+              "forPeople": "Schreib für Menschen, nicht für Suchmaschinen: keine Stichwortlisten oder Wiederholungen.",
+              "fallback": "Google zeigt manchmal einen eigenen Ausschnitt, mit einer guten Beschreibung wird aber viel eher deine verwendet."
+            },
+            "good": "Das neue Velokonzept des Stadtrats sieht bis 2027 20 km neue Velowege vor und kostet 12 Millionen Franken. Die Gegner prüfen ein Referendum.",
+            "bad": "Hier lesen Sie alles zum Velokonzept. Velo, Velowege, Bern, Stadtrat, News."
+          }
+        },
+        "structure": {
+          "title": "Längere Texte strukturieren",
+          "description": "Verwende einen klaren Lead, Zwischentitel und kurze Absätze. Das hilft Leserinnen, Lesern und Suchmaschinen, den Inhalt zu verstehen."
+        },
+        "internal-links": {
+          "title": "Verwandte Artikel verlinken",
+          "description": "Verlinke frühere Berichte und Hintergrundartikel. Interne Links führen Leserinnen und Leser tiefer und helfen Suchmaschinen, ältere Inhalte zu finden."
+        },
+        "stable-slugs": {
+          "title": "Slugs kurz und stabil halten",
+          "description": "Verwende einen kurzen Slug mit dem Hauptthema und ändere ihn nach dem Publizieren nicht mehr, sonst gehen bestehende Links und Rankings verloren."
+        },
+        "author-pages": {
+          "title": "Autorenseiten pflegen",
+          "description": "Autorenseiten mit Name, Bild und kurzer Biografie zeigen, wer hinter deinem Journalismus steht, und schaffen Vertrauen.",
+          "action": "Autor:innen bearbeiten"
+        },
+        "share-images": {
+          "title": "Für jeden Artikel ein Teilen-Bild setzen",
+          "description": "Wähle ein aussagekräftiges Bild im Querformat (mindestens 1200 px breit). Es wird in sozialen Medien, Messengern und in Google Discover angezeigt."
+        },
+        "image-descriptions": {
+          "title": "Bilder beschreiben",
+          "description": "Die Bildbeschreibung wird als Alternativtext verwendet. Beschreibe, was zu sehen ist; das hilft der Barrierefreiheit und der Bildersuche.",
+          "action": "Bildbibliothek öffnen"
+        },
+        "social-texts": {
+          "title": "Social-Media-Texte nutzen",
+          "description": "Ein eigener Social-Media-Titel und eine eigene Beschreibung dürfen persönlicher formuliert sein als die SEO-Texte, ohne reisserisch zu werden."
+        },
+        "preview-before-publishing": {
+          "title": "Vorschauen vor dem Publizieren prüfen",
+          "description": "Der Reiter «SEO» in den Artikeleinstellungen zeigt, wie der Artikel in Google, in sozialen Medien und in Messengern aussieht."
+        },
+        "publication-profile": {
+          "title": "Name und Logo der Publikation",
+          "description": "Name und Logo deiner Publikation werden im Peering-Profil gepflegt und in Vorschauen und strukturierten Daten verwendet.",
+          "detail": "Fehlt",
+          "action": "Profil bearbeiten"
+        }
+      }
+    },
+    "seoTab": {
+      "title": "SEO"
+    },
+    "seoDocumentChecklist": {
+      "title": "Checkliste für diesen Inhalt",
+      "reasons": {
+        "seo-titles": {
+          "missing": "Kein SEO-Titel gesetzt. Stattdessen wird der Titel verwendet.",
+          "tooLong": "Der SEO-Titel ist länger als {{limit}} Zeichen und wird in Google eventuell abgeschnitten."
+        },
+        "meta-descriptions": {
+          "missing": "Keine Meta-Beschreibung gesetzt. Stattdessen wird der Lead oder der erste Absatz verwendet.",
+          "tooLong": "Die Meta-Beschreibung ist länger als {{limit}} Zeichen und wird in Google eventuell abgeschnitten."
+        },
+        "structure": {
+          "missing": "Dieser längere Text hat keine Zwischentitel.",
+          "short": "Kurzer Text, Zwischentitel sind optional."
+        },
+        "internal-links": {
+          "missing": "Der Text enthält keine Links.",
+          "unknown": "Der Inhalt konnte nicht geprüft werden."
+        },
+        "stable-slugs": {
+          "missing": "Kein Slug gesetzt.",
+          "tooLong": "Der Slug ist länger als {{limit}} Zeichen."
+        },
+        "share-images": {
+          "missing": "Kein Teilen-Bild gesetzt und der Inhalt enthält kein Bild.",
+          "tooSmall": "Das Teilen-Bild ist schmaler als {{limit}} px."
+        },
+        "image-descriptions": {
+          "missing": "{{count}} Bild(er) ohne Beschreibung.",
+          "none": "Der Inhalt enthält keine Bilder."
+        }
+      }
+    },
+    "seoPreviews": {
+      "info": "Ungefähre Vorschauen anhand der aktuellen Einstellungen. Die Plattformen bestimmen die endgültige Darstellung und können Texte kürzen oder Bilder zuschneiden.",
+      "pageIgnoresSeoFields": "Die Website verwendet SEO-Titel und SEO-Beschreibung von Seiten derzeit nicht. Die Vorschauen zeigen, was tatsächlich verwendet wird.",
+      "google": "Google-Suche",
+      "googleTitleTooLong": "Länger als {{limit}} Zeichen, Google kürzt ihn wahrscheinlich",
+      "facebook": "Facebook",
+      "linkedIn": "LinkedIn",
+      "whatsApp": "WhatsApp",
+      "discord": "Discord",
+      "xLarge": "X (Twitter) – Karte mit grossem Bild",
+      "xLargeUsed": "wird von der Website verwendet",
+      "xSummary": "X (Twitter) – Zusammenfassungskarte",
+      "xSummaryUnused": "zum Vergleich, wird von der Website nicht verwendet"
+    },
+    "seoAnalysis": {
+      "title": "SEO-Analyse",
+      "description": "Kennzahlen zum Inhalt, die für Suchmaschinen wichtig sind.",
+      "stats": {
+        "wordCount": "Wörter",
+        "headingCount": "Zwischentitel",
+        "linkCount": "Links",
+        "imagesWithoutDescription": "Bilder ohne Beschreibung"
+      }
+    },
     "auditLogList": {
       "overview": {
         "title": "Audit-Log",
@@ -4154,6 +4388,170 @@
         "expiresRequired": "Wähle ein Datum. Ein Schlüssel muss ablaufen.",
         "expiresTooLate": "Ein Schlüssel darf nicht länger als drei Jahre gültig sein.",
         "longLivedWarning": "Ein Schlüssel mit mehr als einem Jahr Laufzeit ist nicht empfohlen. Je länger er existiert, desto länger funktioniert er auch, wenn er abhandenkommt."
+      }
+    },
+    "newsletter": {
+      "blocks": {
+        "button": {
+          "href": "Ziel",
+          "label": "Button",
+          "text": "Beschriftung"
+        },
+        "condition": "Dynamischer Inhalt (optional)",
+        "divider": {
+          "label": "Trennlinie"
+        },
+        "footer": {
+          "label": "Fusszeile",
+          "legal": "Rechtliches (Abmeldelink & Adresse)",
+          "lines": "Impressum: Text",
+          "title": "Impressum: Titel"
+        },
+        "gutter": {
+          "article": "Artikel ({{size}})",
+          "intro": "Intro ({{size}})",
+          "label": "Einzug",
+          "none": "Keiner ({{size}})"
+        },
+        "heading": {
+          "label": "Titel",
+          "text": "Titel"
+        },
+        "image": {
+          "alt": "Alt-Text",
+          "caption": "Bildlegende (optional)",
+          "href": "Verlinkt auf (optional)",
+          "image": "Bild",
+          "label": "Bild"
+        },
+        "meta": {
+          "label": "Kopfzeile (Label / Datum)",
+          "left": "Links",
+          "right": "Rechts"
+        },
+        "panel": {
+          "image": "Bild links (optional)",
+          "label": "Info-Box",
+          "linkHref": "Link-Ziel (optional)",
+          "linkLabel": "Link-Text (optional)",
+          "title": "Titel"
+        },
+        "preheader": "Vorschautext (erscheint neben dem Betreff)",
+        "rubric": {
+          "label": "Rubrik-Balken",
+          "name": "Rubrik"
+        },
+        "teaser": {
+          "allTags": "Alle Tags",
+          "article": "Artikel",
+          "big": "Gross (mit Bild)",
+          "count": "{{count}} von {{total}} Artikeln",
+          "label": "Artikel-Teaser",
+          "pick": "Artikel wählen …",
+          "short": "Kurz",
+          "tag": "Tag",
+          "variant": "Darstellung"
+        },
+        "text": {
+          "body": "Text",
+          "label": "Textblock"
+        }
+      },
+      "categories": {
+        "articles": "Artikel",
+        "content": "Inhalt",
+        "footer": "Fusszeile",
+        "header": "Kopfzeile"
+      },
+      "condition": {
+        "always": "Immer anzeigen (keine Bedingung)",
+        "evaluatedAtSend": "Mailchimp wertet die Bedingung erst beim Versand aus. Im Editor, in der Vorschau und im Mailchimp-Entwurf bleibt der Block sichtbar.",
+        "interests": "Interessengruppen",
+        "is": "ist",
+        "noValue": "Ohne Wert gilt keine Bedingung — der Block geht an alle Empfänger.",
+        "not": "ist nicht",
+        "nothingToCompare": "Das Mailchimp-Publikum hat keine eigenen Kontaktfelder und keine Interessengruppen — es gibt nichts, worauf sich eine Bedingung beziehen könnte.",
+        "pickGroup": "Gruppe wählen …",
+        "stored": "Im Dokument gespeichert",
+        "value": "Wert"
+      },
+      "editor": {
+        "back": "Zurück zur Übersicht",
+        "createdAt": "Kampagne erstellt um {{time}}.",
+        "loading": "Wird geladen …",
+        "notPushed": "Nicht an Mailchimp übertragen",
+        "notSaved": "Nicht gespeichert",
+        "openInMailchimp": "In Mailchimp öffnen",
+        "pickImage": "Bild aus der Medienbibliothek wählen ({{alt}})",
+        "preview": "Vorschau",
+        "publishing": "Wird an Mailchimp übertragen …",
+        "pushed": "An Mailchimp übertragen",
+        "save": "Speichern",
+        "savedAt": "Gespeichert um {{time}}.",
+        "savedNotSynced": "Gespeichert, aber nicht an Mailchimp übertragen: {{reason}}",
+        "saving": "Wird gespeichert …",
+        "unknownBlock": "Unbekannter Block: {{type}}",
+        "updatedAt": "Kampagne aktualisiert um {{time}}."
+      },
+      "list": {
+        "actions": "Aktionen",
+        "archive": "Archivieren",
+        "unarchive": "Wiederherstellen",
+        "showArchived": "Archivierte anzeigen",
+        "archived": "Archiviert",
+        "blocks": "Blöcke",
+        "createNew": "Neue Ausgabe",
+        "duplicate": "Duplizieren",
+        "mailchimp": "Mailchimp",
+        "modified": "Zuletzt geändert",
+        "name": "Titel",
+        "openDraft": "Mailchimp-Entwurf",
+        "title": "Newsletter",
+        "titlePlaceholder": "Titel der Ausgabe, z.B. Newsletter 21.8.26"
+      },
+      "mergeTags": {
+        "fields": "Kontaktfelder",
+        "system": "System-Tags"
+      },
+      "navbar": "Newsletter",
+      "prose": {
+        "apply": "Übernehmen",
+        "bold": "F",
+        "boldTitle": "Fett (Strg/Cmd+B)",
+        "hint": "Enter beginnt einen neuen Absatz. Merge-Tags werden erst von Mailchimp ersetzt — im Editor und in der Vorschau bleibt der Tag stehen.",
+        "link": "Link",
+        "list": "Liste",
+        "listTitle": "Aufzählung",
+        "loadingTags": "Merge-Tags werden geladen …",
+        "mergeTag": "Merge-Tag",
+        "mergeTagTitle": "Mailchimp-Merge-Tag einfügen",
+        "noTag": "Kein Merge-Tag gefunden.",
+        "remove": "Entfernen",
+        "searchTag": "Merge-Tag suchen …"
+      },
+      "report": {
+        "clipped": "Gmail schneidet die Ausgabe ab und versteckt den Schluss — Impressum, Abmeldelink und Adresse — hinter «Nachricht gekürzt».",
+        "heading": "Prüfung",
+        "measuring": "Grösse wird bestimmt …",
+        "missingArticles_one": "{{count}} Artikel wird nicht mehr geliefert ({{ids}}). Die Übertragung an Mailchimp wird abgelehnt, bis der Teaser ersetzt oder entfernt ist.",
+        "missingArticles_other": "{{count}} Artikel werden nicht mehr geliefert ({{ids}}). Die Übertragung an Mailchimp wird abgelehnt, bis die Teaser ersetzt oder entfernt sind.",
+        "missingFooter": "In der Fusszeile fehlt {{missing}}. Mailchimp verweigert den Versand einer Kampagne ohne diese Angabe.",
+        "nearLimit": "Nahe an der Grenze. Beim Versand kommt Grösse dazu: Mailchimp setzt jedes Merge-Tag ein und ersetzt jeden Link durch eine längere Tracking-Adresse.",
+        "ok": "in Ordnung",
+        "problems_one": "{{count}} Problem",
+        "problems_other": "{{count}} Probleme",
+        "room": "Bis Gmail kürzt, sind noch {{size}} frei.",
+        "size": "{{size}} von {{limit}} ({{percent}} %)",
+        "sizeFailed": "Grösse konnte nicht bestimmt werden: {{error}}",
+        "stale": "gespeicherter Stand",
+        "unsaved": "Die Änderungen seit dem Speichern sind nicht eingerechnet — Speichern rechnet neu.",
+        "warnings_one": "{{count}} Hinweis",
+        "warnings_other": "{{count}} Hinweise"
+      },
+      "settings": {
+        "heading": "Einstellungen",
+        "title": "Titel",
+        "titleHint": "Zugleich die Betreffzeile des Mailchimp-Entwurfs. Wird beim Speichern übernommen."
       }
     }
   }

@@ -68,7 +68,7 @@ libs/<domain>/
 
 ### Content Domain Libraries
 
-`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `banner`, `richtext`, `feed`
+`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `banner`, `richtext`, `feed`, `newsletter`
 
 **Sitemaps:** every website serves `/api/sitemap` (plus `/api/sitemap/[chunk]`:
 `news`, `pages`, `articles-YYYY` per past year, `articles-YYYY-MM` per month

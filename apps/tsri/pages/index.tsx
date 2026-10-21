@@ -5,7 +5,11 @@ import mailchimp, {
 import { captureException } from '@sentry/nextjs';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
+import {
+  getApiUrl,
+  getPageShell,
+  revalidateFor,
+} from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -92,7 +96,10 @@ export const getStaticProps: GetStaticProps = async () => {
   const { campaigns = [] } =
     (mailchimpResponse as campaigns.CampaignsSuccessResponse) ?? {};
 
-  const props = addClientCacheToProps(client, { campaigns });
+  const props = addClientCacheToProps(client, {
+    campaigns,
+    shell: getPageShell(page.data?.page),
+  });
 
   return {
     props,
