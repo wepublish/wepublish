@@ -6,6 +6,7 @@ import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailLogSyncService } from './mail-log-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
 import { EmailEvidenceService } from './email-evidence.service';
+import { SuppressionSyncService } from './suppression-sync.service';
 import { MailEmailSegment, MailRecipientBase } from './mail-send.model';
 import type { Mock } from 'vitest';
 
@@ -17,7 +18,10 @@ const makeResolver = (
   recipientService: any = {},
   mailLogSyncService: any = {},
   emailQualityService: any = {},
-  emailEvidenceService: any = {}
+  emailEvidenceService: any = {},
+  suppressionSyncService: any = {
+    syncSuppressions: async () => ({ listed: 0, recorded: 0 }),
+  }
 ) =>
   new MailSendResolver(
     prisma as PrismaClient,
@@ -25,7 +29,8 @@ const makeResolver = (
     recipientService as MailSendRecipientService,
     mailLogSyncService as MailLogSyncService,
     emailQualityService as EmailQualityService,
-    emailEvidenceService as EmailEvidenceService
+    emailEvidenceService as EmailEvidenceService,
+    suppressionSyncService as SuppressionSyncService
   );
 
 describe('MailSendResolver', () => {
@@ -282,6 +287,13 @@ describe('MailSendResolver', () => {
         return { recomputed: 7 };
       }),
     };
+    const suppressionSyncService = {
+      syncSuppressions: vi.fn(async () => {
+        order.push('suppressions');
+
+        return { listed: 0, recorded: 0 };
+      }),
+    };
 
     await expect(
       makeResolver(
@@ -289,11 +301,32 @@ describe('MailSendResolver', () => {
         {},
         {},
         mailLogSyncService,
-        emailQualityService
+        emailQualityService,
+        {},
+        suppressionSyncService
       ).refreshEmailQuality()
     ).resolves.toEqual({ checked: 5, updated: 2, recomputed: 7 });
 
-    expect(order).toEqual(['sync', 'recompute']);
+    expect(order).toEqual(['sync', 'suppressions', 'recompute']);
+  });
+
+  it('refreshEmailQuality still re-evaluates when the suppression lists cannot be read', async () => {
+    const emailQualityService = {
+      recomputeAll: vi.fn(async () => ({ recomputed: 1 })),
+    };
+
+    await expect(
+      makeResolver(
+        {},
+        {},
+        {},
+        { syncOpenStates: async () => ({ checked: 0, updated: 0 }) },
+        emailQualityService,
+        {},
+        { syncSuppressions: vi.fn().mockRejectedValue(new Error('Invalid_Key')) }
+      ).refreshEmailQuality()
+    ).resolves.toEqual({ checked: 0, updated: 0, recomputed: 1 });
+    expect(emailQualityService.recomputeAll).toHaveBeenCalled();
   });
 
   describe('mailSendJobs', () => {

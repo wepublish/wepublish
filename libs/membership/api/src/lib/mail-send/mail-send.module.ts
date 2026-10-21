@@ -7,6 +7,7 @@ import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailSendJobExecutor } from './mail-send-job.executor';
 import { MailLogSyncService } from './mail-log-sync.service';
+import { SuppressionSyncService } from './suppression-sync.service';
 import { MailSendJobResolver } from './mail-send-job.resolver';
 import { MailSendJobOutcomeService } from './mail-send-job-outcome.service';
 
@@ -20,6 +21,7 @@ import { MailSendJobOutcomeService } from './mail-send-job-outcome.service';
     MailSendRecipientService,
     MailSendJobExecutor,
     MailLogSyncService,
+    SuppressionSyncService,
     EmailEvidenceService,
   ],
   exports: [MailSendRecipientService],

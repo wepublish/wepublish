@@ -38,8 +38,16 @@ and nightly. Sources today:
 
 - Transactional mail provider (one per installation): send-time refusal
   (Mandrill only), webhook (Mandrill, Mailgun; `mail.webhook.ts`), nightly
-  poll of open mail logs (`MailLogSyncService`, Mandrill only). SMTP, Slack
+  poll of open mail logs (`MailLogSyncService`; Mandrill `messages/info`,
+  Mailgun events API by the Message-Id kept from the send answer). SMTP, Slack
   and Log report nothing.
+- Provider suppression lists, nightly after the mail log poll and on the
+  refresh button (`SuppressionSyncService` → `provider.listSuppressions()`):
+  Mandrill's rejects denylist (expired entries included), Mailgun's bounces,
+  complaints and unsubscribes of the sending domain. Account-wide, so they
+  cover mails sent outside We.Publish. A Mailgun unsubscribe from a tag is
+  `optedOut`; domain-wide (`*`) it is `unsubscribed`. Entries already stored
+  (by `providerEventId`) are skipped so nobody is re-evaluated for nothing.
 - Mailchimp audience, inside the nightly Mailchimp sync (never on a dry run):
   `cleaned` members → `hardBounce`, `unsubscribed` → `optedOut`
   (`mailchimp-audience-evidence.ts`), and the clickers of the last 7 days of

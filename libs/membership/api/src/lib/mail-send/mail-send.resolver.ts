@@ -36,6 +36,7 @@ import {
 import { MailLogSyncService } from './mail-log-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
 import { EmailEvidenceService } from './email-evidence.service';
+import { SuppressionSyncService } from './suppression-sync.service';
 
 /**
  * `MailLogTemplate` and `MailLogRecipient` expose only these fields, so there is
@@ -56,7 +57,8 @@ export class MailSendResolver {
     private recipientService: MailSendRecipientService,
     private mailLogSyncService: MailLogSyncService,
     private emailQualityService: EmailQualityService,
-    private emailEvidenceService: EmailEvidenceService
+    private emailEvidenceService: EmailEvidenceService,
+    private suppressionSyncService: SuppressionSyncService
   ) {}
 
   @Permissions(CanSendMailTemplates)
@@ -380,6 +382,9 @@ export class MailSendResolver {
   })
   async refreshEmailQuality(): Promise<EmailQualityRefreshModel> {
     const synced = await this.mailLogSyncService.syncOpenStates();
+    // The suppression lists are read whole, so a failure here is the
+    // provider's and the recompute is still worth running.
+    await this.suppressionSyncService.syncSuppressions().catch(() => undefined);
     const { recomputed } = await this.emailQualityService.recomputeAll();
 
     return { ...synced, recomputed };
