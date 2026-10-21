@@ -1,6 +1,10 @@
 import { ForbiddenException } from '@nestjs/common';
 import { GateMode } from '@prisma/client';
-import { AuthSession } from '@wepublish/authentication/api';
+import {
+  ApiTokenSession,
+  AuthSession,
+  AuthSessionType,
+} from '@wepublish/authentication/api';
 import {
   CanCreateBanner,
   CanCreateContentGate,
@@ -53,7 +57,14 @@ export function assertGatePermission(
     return;
   }
 
-  if (!session || !hasPermission(permission, session.roles)) {
+  if (
+    session?.type === AuthSessionType.ApiToken ||
+    !session ||
+    !hasPermission(
+      permission,
+      (session as Exclude<AuthSession, ApiTokenSession>).roles
+    )
+  ) {
     throw new ForbiddenException(`Missing permission ${permission.id}`);
   }
 }

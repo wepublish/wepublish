@@ -1,5 +1,9 @@
 import { Gate, LoginStatus } from '@prisma/client';
-import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
+import {
+  AuthSessionType,
+  AuthSession,
+  ApiTokenSession,
+} from '@wepublish/authentication/api';
 import { matchesAudience } from '@wepublish/gate/api';
 import { CanGetArticle } from '@wepublish/permissions';
 import { hasPermission } from '@wepublish/permissions/api';
@@ -23,7 +27,11 @@ export async function isContentGated({
 
   if (
     session?.type === AuthSessionType.Token ||
-    (session && hasPermission(CanGetArticle, session.roles))
+    (session &&
+      hasPermission(
+        CanGetArticle,
+        (session as Exclude<AuthSession, ApiTokenSession>).roles
+      ))
   ) {
     return false;
   }
