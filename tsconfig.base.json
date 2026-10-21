@@ -70,7 +70,6 @@
       "@wepublish/health": ["libs/health/api/src/index.ts"],
       "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/image/website": ["libs/image/website/src/index.ts"],
-      "@wepublish/jobs": ["libs/jobs/src/index.ts"],
       "@wepublish/kv-ttl-cache/api": ["libs/kv-ttl-cache/api/src/index.ts"],
       "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
       "@wepublish/media-transform-guard": [
@@ -86,6 +85,12 @@
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
       "@wepublish/features": ["libs/features/src/index.ts"],
       "@wepublish/features/api": ["libs/features/api/src/index.ts"],
+      "@wepublish/newsletter/api": ["libs/newsletter/api/src/index.ts"],
+      "@wepublish/newsletter/editor": ["libs/newsletter/editor/src/index.ts"],
+      "@wepublish/newsletter/email": ["libs/newsletter/email/src/index.ts"],
+      "@wepublish/newsletter/email/render": [
+        "libs/newsletter/email/src/render.ts"
+      ],
       "@wepublish/one/api": ["libs/one/api/src/index.ts"],
       "@wepublish/page/api": ["libs/page/api/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
@@ -133,17 +138,16 @@
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
-      "@wepublish/utils/sentry": ["libs/utils/sentry/instrumentation.ts"],
-      "@wepublish/utils/sentry/client": [
-        "libs/utils/sentry/instrumentation.client.ts"
-      ],
-      "@wepublish/utils/sentry/nestjs": [
-        "libs/utils/sentry/instrumentation.nestjs.ts"
-      ],
-      "@wepublish/utils/sentry/nextjs": [
-        "libs/utils/sentry/instrumentation.nextjs.ts"
+      "@wepublish/utils/api/sentry": [
+        "libs/utils/api/src/lib/sentry/instrumentation.ts"
       ],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
+      "@wepublish/utils/website/sentry": [
+        "libs/utils/website/src/lib/sentry/instrumentation.ts"
+      ],
+      "@wepublish/utils/website/sentry/client": [
+        "libs/utils/website/src/lib/sentry/instrumentation.client.ts"
+      ],
       "@wepublish/versionInformation/api": [
         "libs/versionInformation/api/src/index.ts"
       ],

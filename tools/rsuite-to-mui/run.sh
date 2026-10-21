@@ -9,8 +9,8 @@
 # 'rsuite', so a file already migrated is skipped.
 #
 # Run from the workspace root. Afterwards:
-#   npx nx typecheck editor
-#   npx nx run-many -t test lint -p ui-editor editor ...
+#   pnpm nx typecheck editor
+#   pnpm nx run-many -t test lint -p ui-editor editor ...
 set -euo pipefail
 
 cd "$(dirname "$0")/../.."
@@ -125,5 +125,5 @@ node "$CM/editor-conventions.mjs" "${FILES[@]}"
 
 echo
 echo "done — now run:"
-echo "  npx nx typecheck editor"
-echo "  npx nx run-many -t test lint -p ui-editor editor membership-editor settings-editor"
+echo "  pnpm nx typecheck editor"
+echo "  pnpm nx run-many -t test lint -p ui-editor editor membership-editor settings-editor"

@@ -102,19 +102,20 @@ The second is a data-exposure guard, not a style preference. If you need
 
 ### ⚠️ Four apps are excluded from the typecheck CI job
 
-[tools/typecheck-websites.sh](../../tools/typecheck-websites.sh) skips
-`api-example`, `editor`, `bka`, and `media` — they do not currently typecheck
-cleanly, and `website-typecheck.yml` runs this script as-is.
+`website-typecheck.yml` runs the Nx `typecheck` target of every app that has
+one. `api-example`, `media` and `bka` have no such target, and `editor` (whose
+target checks its own `tsconfig.app.json`/`tsconfig.server.json`) is passed to
+`--exclude`. They do not currently typecheck cleanly against the website setup.
+No Nx plugin infers this target here (`@nx/vite` only does it for projects with
+a `vite.config.*`), so each website app declares it in its `project.json`. A new
+app needs one too, or CI silently skips it.
 
 Two failure modes to avoid:
 
-1. Do not "fix" the exclusion list as a side quest — those apps fail for
-   unrelated pre-existing reasons.
-2. Do not let your change push a **new** app onto that list. If an app you touched
-   stops typechecking, fix the app, not the script.
-
-Note the script uses `set -uo pipefail` (no `-e`) and collects failures, so it
-reports every failing app rather than stopping at the first.
+1. Do not "fix" the exclusion as a side quest — those apps fail for unrelated
+   pre-existing reasons.
+2. Do not drop an app's `typecheck` target to get CI green. If an app you
+   touched stops typechecking, fix the app.
 
 ---
 
@@ -126,7 +127,7 @@ reports every failing app rather than stopping at the first.
 running the API in dev — never by hand.
 
 If codegen produces stale types, the fix is to **start the API** so the SDL is
-rewritten, then run `npm run generate-api`. Editing the `.graphql` file directly
+rewritten, then run `pnpm run generate-api`. Editing the `.graphql` file directly
 gets silently overwritten on the next dev boot. See
 [graphql-prisma.md](graphql-prisma.md).
 
@@ -330,10 +331,10 @@ not true. Pinned by `page-cache.spec.ts` and `page-cache-handler.spec.ts`.
 `Cache-Control` already set (`pages-handler.js`); without it Next still sends
 `s-maxage=1` for `notFound`, and a 500 (api down while a page renders for the
 first time) went out as `public, s-maxage=59` (verified end-to-end 2026-10-02).
-`register()` in `instrumentation.nextjs.ts` makes every 404 and 5xx `private,
-no-store, max-age=0` (`libs/utils/sentry/error-no-store.ts`) so Cloudflare
-never keeps one. Pinned by `error-no-store.spec.ts`; nothing checks the wiring
-in CI (verified end-to-end 2026-10-01).
+`register()` in `libs/utils/website/src/lib/sentry/instrumentation.ts` makes
+every 404 and 5xx `private, no-store, max-age=0` (`error-no-store.ts`, same
+folder) so Cloudflare never keeps one. Pinned by `error-no-store.spec.ts`;
+nothing checks the wiring in CI (verified end-to-end 2026-10-01).
 
 ---
 
@@ -379,9 +380,9 @@ Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts
 ### ⚠️ The Sentry packages must move as one, and must stay on 11+
 
 [package.json](../../package.json) keeps `@sentry/nestjs`, `@sentry/nextjs`,
-`@sentry/react` and `@sentry/profiling-node` on one major;
-[apps/media/package.json](../../apps/media/package.json) repeats the two it
-ships into its own image.
+`@sentry/react` and `@sentry/profiling-node` on one major; the ones the api and
+media images ship are `catalog:` entries in
+[pnpm-workspace.yaml](../../pnpm-workspace.yaml).
 
 **Why 11+.** On 10 the API died on boot: `TypeError: Cannot redefine property:
 Cron`. `@nestjs/schedule` 12 is ESM only, so its decorator exports are
@@ -401,12 +402,14 @@ v11 renames: `beforeSendSpan` gets a streamed span with `attributes`, not
 — a subpath export node10 `moduleResolution` cannot see, so every app needs
 `moduleResolution: bundler`.
 
-**The API boots with a warning, and it is accurate — leave it:** _"Failed to
+**Diagnostics-channel spans need a plain `node` process.** v11 instruments
+`express`, `graphql`, `@nestjs/*`, `pg` and Prisma via diagnostics channels
+injected by runtime module hooks. Until 2026-10-20 the API shipped as a
+`@yao-pkg/pkg` binary, which cannot register them, and booted with _"Failed to
 register diagnostics-channel injection hooks, so channel-based integrations
-will not record spans."_ v11 instruments `express`, `graphql`, `@nestjs/*`,
-`pg` and Prisma via diagnostics channels injected by runtime module hooks,
-which the `@yao-pkg/pkg` binary cannot register. Errors still report; span
-detail is lost. Two fixes failed on 2026-10-05 — do not redo them:
+will not record spans."_ It now runs under plain `node`; if that warning comes
+back, the cause is something else. Two build-time workarounds failed on
+2026-10-05 — do not redo them:
 
 - `sentryOrchestrionWebpackPlugin` (build-time injection) builds clean and
   injects **nothing**: `@nx/webpack` externalizes node_modules, so webpack
@@ -416,64 +419,34 @@ detail is lost. Two fixes failed on 2026-10-05 — do not redo them:
 - Bundling them instead (`externalDependencies` listing only native/Prisma/pg)
   dies on Nest's dynamic loaders: `Can't resolve 'class-transformer/cjs/storage'`
   plus critical-dependency warnings from `load-package.util.js`,
-  `load-adapter.js`, `optional-require.js` — the `platform-express` failure
-  below, multiplied.
+  `load-adapter.js`, `optional-require.js`.
 
 `enableRuntimeChannelInjection: false` silences the warning without restoring
-spans, so it is deliberately unset. Unverified lead: Sentry uses in-process
-`module.registerHooks()` only on Node >=24.13, which may work in a snapshot.
+spans, so it is deliberately unset.
 
-Pinned by [libs/utils/sentry/instrumentation.nestjs.spec.ts](../../libs/utils/sentry/instrumentation.nestjs.spec.ts),
+Pinned by [libs/utils/api/src/lib/sentry/instrumentation.spec.ts](../../libs/utils/api/src/lib/sentry/instrumentation.spec.ts),
 which guards the options shape but not the versions.
 
 ---
 
-### ⚠️ Optional peer dependencies and the pkg binary: two different failures
+### ⚠️ Optional peers the bundle never names
 
-The API ships as a `@yao-pkg/pkg` snapshot, and libraries reach optional peers
-in two ways that both break there — with error messages that blame a missing
-install while the package is sitting in `node_modules`.
+`apps/<app>/package.json` lists what the webpack bundle `require()`s (see
+[infrastructure.md](infrastructure.md)). Libraries that resolve an optional
+peer at runtime — Nest's `loadPackage` / `loadAdapter`, `ApolloDriver`,
+terminus's `import.meta.resolve` + `await import(...)` — never show up there,
+so unless the peer is listed too, `pnpm deploy` leaves it out and the image
+dies on boot with `No driver (HTTP) has been selected` or _The "<pkg>" package
+is missing_. The API lists three such peers: `@nestjs/platform-express`
+(`@nestjs/core`), `@as-integrations/express5` (`@nestjs/apollo`) and
+`@nestjs/axios` (`@nestjs/terminus`). `docker/check-runtime-deps.js` accepts a
+listed package the bundle never loads when a loaded package declares it as a
+peer (`peerDependencies` or `peerDependenciesMeta`), so they pass the check.
 
-**1. Dynamic require, invisible to webpack.** Nest's `loadPackage` /
-`loadAdapter` never enters the bundle, so the binary dies with
-`No driver (HTTP) has been selected ... install "@nestjs/platform-express"`.
-Fixable by naming the dependency statically so webpack emits a real
-`require(...)` — hence `new ExpressAdapter()` passed to `NestFactory.create` in
-[main.ts](../../apps/api-example/src/main.ts). Verify by grepping the built
-bundle for `require("<pkg>")`.
-
-**2. ESM resolution, which a static require does NOT fix.** Terminus checks its
-peer with `import.meta.resolve('@nestjs/axios')` and loads it with
-`await import(...)`. Neither works inside a snapshot, and no amount of
-bundling changes that — adding `HttpModule` to the health module was tried on
-2026-10-05 and the binary still aborted on boot with _The "@nestjs/axios"
-package is missing_. `@nestjs/axios` was installed and working the whole time;
-`HttpService` is used normally via DI in provider-registry, user, image and
-event-import. The fix is to not instantiate the indicator at all:
-[http-ping.health.ts](../../libs/health/api/src/lib/http-ping.health.ts)
-reimplements the ping on `HealthIndicatorService` + global `fetch`, which is
-what the terminus docs now show anyway.
-
-**Before adding any library that lazily resolves an optional peer, check which
-of the two it does** — `grep` it for `import.meta.resolve` and `await import(`
-as well as `loadPackage`. Only the first kind is bundleable.
-
-Three have bitten so far: `@nestjs/platform-express`, `@nestjs/axios` and
-`@as-integrations/express5` (_The "@as-integrations/express5" package is
-missing_, from `ApolloDriver`). The last one also sat in **devDependencies**
-even though GraphQLModule needs it at runtime — a runtime peer belongs in
-`dependencies`, and a sweep that only reads `dependencies` will not see it.
-
-To sweep for the first kind: scan node_modules for
-`loadPackage`/`assertPackages`/`loadAdapter` string literals, keep those in
-`dependencies` **or `devDependencies`**, and check each against the bundle.
-Re-run it after dependency changes — it is a point-in-time check, not a
-guarantee. As of 2026-10-06 only `@apollo/subgraph` and `@apollo/gateway`
-remain unbundled, unreachable because the API uses `ApolloDriver`, not the
-federation or gateway drivers.
-
-**Nothing type-checks or tests either failure** — both only appear in the
-packaged binary.
+**Before adding a library that lazily resolves an optional peer** — grep it for
+`loadPackage`, `assertPackages`, `loadAdapter`, `import.meta.resolve` and
+`await import(` — add that peer to the app's `package.json` as well. Nothing
+type-checks or tests this; only booting the image shows it.
 
 ---
 
@@ -898,6 +871,29 @@ Pinned by `apps/editor/src/app/routes/dashboard/dashboardConfig.spec.tsx`,
 which reads the _emitted_ rule rather than the computed value — jsdom resolves
 `var(--mui-palette-background-paper, #fff)` to the light fallback baked into
 it, so `getComputedStyle` cannot tell the two apart.
+
+---
+
+### ⚠️ The newsletter renderer is shared, and several things keep it working
+
+`libs/newsletter/email` draws the Puck canvas *and* the mail. Load-bearing:
+`renderNewsletter` lives behind `@wepublish/newsletter/email/render`, outside
+the barrel, so the editor bundle never pulls in `react-dom/server`; and
+`apps/api-example/tsconfig.app.json` sets `jsx: react-jsx`, or the API build
+fails on the lib's TSX. The editor loads
+the newsletter routes with `React.lazy`: Puck's stylesheet `@import`s a font
+from rsms.me, and eagerly bundled it held up every editor page. Mail
+images are asked for as `format: 'jpeg'` (png/gif kept): the media server's
+default WebP is an empty frame in Outlook. `format` is deliberately not in the
+GraphQL `ImageTransformation`, so the public API cannot multiply cached variants.
+
+Pinned by `render.spec.tsx`, `newsletter-render.service.spec.ts`,
+`media.service.spec.ts` and `novaMediaAdapter.spec.ts`; Nx's
+`enforce-module-boundaries` rejects any static import of the lazy-loaded
+`newsletter-editor` in the editor app. The renderer's runtime packages (`react`,
+`react-dom`, `@react-email/components`, and `tslib`, because the API's webpack
+gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
+`apps/api-example/package.json` — see [infrastructure.md](infrastructure.md).
 
 ---
 

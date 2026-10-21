@@ -18,5 +18,6 @@ export const toCommand =
     keywords: searchAliases(i18n, definition.titleKey),
     icon: definition.icon,
     permissions: definition.permissions,
+    feature: definition.feature,
     perform: definition.perform,
   });

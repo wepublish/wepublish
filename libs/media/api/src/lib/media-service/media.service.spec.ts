@@ -1,7 +1,11 @@
 import { Logger } from '@nestjs/common';
 import sharp from 'sharp';
 import { Readable } from 'stream';
-import { TransformationsDto } from '@wepublish/media-transform-guard';
+import {
+  signImageTransformations,
+  TransformationsDto,
+} from '@wepublish/media-transform-guard';
+import { generateKeyPair } from 'jose';
 import { JwksClientService } from '../authentication/jwks-client.service';
 import { StorageClient } from '../storage-client/storage-client.service';
 import { MediaService, MediaServiceConfig } from './media.service';
@@ -138,7 +142,7 @@ class FakeStorage {
   }
 }
 
-const createService = () => {
+const createService = (publicKey?: unknown) => {
   const storage = new FakeStorage();
   const config: MediaServiceConfig = {
     uploadBucket: UPLOAD_BUCKET,
@@ -146,7 +150,11 @@ const createService = () => {
   };
   const jwksClient = {
     getPublicKey: async () => {
-      throw new Error('The public key must not be needed');
+      if (!publicKey) {
+        throw new Error('The public key must not be needed');
+      }
+
+      return publicKey;
     },
   };
 
@@ -458,5 +466,129 @@ describe('MediaService images', () => {
       await storage.getFile(UPLOAD_BUCKET, 'images/image-3')
     );
     expect(stored.equals(image)).toBe(true);
+  });
+
+  describe('output format', () => {
+    const createSigned = async () => {
+      const { publicKey, privateKey } = await generateKeyPair('EdDSA');
+      const { service, storage } = createService(publicKey);
+
+      const transform = async (
+        imageId: string,
+        transformations: TransformationsDto
+      ) => {
+        const sig = await signImageTransformations(
+          privateKey,
+          imageId,
+          transformations
+        );
+        const { uri } = await service.getImageUri(imageId, {
+          ...transformations,
+          sig,
+        });
+
+        return {
+          uri,
+          buffer: await collectStream(
+            await storage.getFile(TRANSFORMATION_BUCKET, uri)
+          ),
+        };
+      };
+
+      return { service, storage, transform };
+    };
+
+    // 6x4, two frames (red, black), made with ImageMagick — sharp cannot write a multi-frame gif from raw pixels
+    const createAnimation = async () =>
+      Buffer.from(
+        'R0lGODlhBgAEAPAAAP8AAAAAACH5BAAKAAAAIf8LTkVUU0NBUEUyLjADAQAAACwAAAAABgAEAAACBISPqVcAIfkEAAoAAAAsAAAAAAYABACAAAAAAAAAAgSEj6lXADs=',
+        'base64'
+      );
+
+    it.each([
+      ['jpeg', 'image/jpeg'],
+      ['png', 'image/png'],
+      ['gif', 'image/gif'],
+      ['webp', 'image/webp'],
+    ] as const)(
+      'stores a %s transformation as %s',
+      async (format, contentType) => {
+        const { service, storage, transform } = await createSigned();
+        await service.saveImage('image-1', await createImage());
+
+        const { uri, buffer } = await transform('image-1', {
+          quality: 80,
+          format,
+        });
+
+        expect(storage.contentTypeOf(TRANSFORMATION_BUCKET, uri)).toBe(
+          contentType
+        );
+        expect((await sharp(buffer).metadata()).format).toBe(format);
+      }
+    );
+
+    it('keeps each format apart in the cache', async () => {
+      const { service, transform } = await createSigned();
+      await service.saveImage('image-1', await createImage());
+
+      const jpeg = await transform('image-1', { quality: 80, format: 'jpeg' });
+      const webp = await transform('image-1', { quality: 80 });
+
+      expect(jpeg.uri).not.toBe(webp.uri);
+    });
+
+    it('puts a transparent image on white for jpeg', async () => {
+      const { service, transform } = await createSigned();
+      await service.saveImage(
+        'transparent',
+        await sharp({
+          create: {
+            width: 4,
+            height: 4,
+            channels: 4,
+            background: { r: 0, g: 0, b: 0, alpha: 0 },
+          },
+        })
+          .png()
+          .toBuffer()
+      );
+
+      const { buffer } = await transform('transparent', {
+        quality: 80,
+        format: 'jpeg',
+      });
+      const { data } = await sharp(buffer)
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+
+      expect([...data.subarray(0, 3)]).toEqual([255, 255, 255]);
+    });
+
+    it('renders the first frame of an animation as jpeg', async () => {
+      const { service, transform } = await createSigned();
+      await service.saveImage('animated', await createAnimation());
+
+      const { buffer } = await transform('animated', {
+        quality: 80,
+        format: 'jpeg',
+      });
+      const metadata = await sharp(buffer).metadata();
+
+      expect(metadata.height).toBe(4);
+      expect(metadata.pages ?? 1).toBe(1);
+    });
+
+    it('keeps an animation animated as gif', async () => {
+      const { service, transform } = await createSigned();
+      await service.saveImage('animated', await createAnimation());
+
+      const { buffer } = await transform('animated', {
+        quality: 80,
+        format: 'gif',
+      });
+
+      expect((await sharp(buffer).metadata()).pages).toBe(2);
+    });
   });
 });
