@@ -41,6 +41,8 @@ const subscription = {
   },
   memberPlan: mockMemberPlan(),
   extendable: true,
+  pendingPaymentMethodChange: null,
+  canRenewPaymentMethod: false,
 } as Exact<FullSubscriptionFragment>;
 
 const invoice = {

@@ -26,6 +26,8 @@ const subscription = {
     slug: 'foo',
   },
   memberPlan: mockMemberPlan(),
+  pendingPaymentMethodChange: null,
+  canRenewPaymentMethod: false,
 } as Exact<FullSubscriptionFragment>;
 
 const invoice = {

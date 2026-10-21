@@ -1007,10 +1007,12 @@ model PaymentMethod {
   image   Image?  @relation(fields: [imageId], references: [id])
   imageId String?
 
-  Subscription      Subscription[]
-  Payment           Payment[]
-  subscriptionFlows SubscriptionFlow[]
-  migrateFromPlans  MemberPlan[]       @relation("PaymentMethodMigration")
+  Subscription             Subscription[]
+  Payment                  Payment[]
+  subscriptionFlows        SubscriptionFlow[]
+  migrateFromPlans         MemberPlan[]                      @relation("PaymentMethodMigration")
+  paymentMethodChangesFrom SubscriptionPaymentMethodChange[] @relation("PaymentMethodChangeFrom")
+  paymentMethodChangesTo   SubscriptionPaymentMethodChange[] @relation("PaymentMethodChangeTo")
 
   @@map("payment.methods")
 }
@@ -1039,6 +1041,8 @@ model Payment {
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
+
+  paymentMethodChanges SubscriptionPaymentMethodChange[]
 
   @@index([intentID])
   @@map("payments")
@@ -1205,9 +1209,68 @@ model Subscription {
 
   mailSendJobEntries MailSendJobRecipient[]
 
+  paymentMethodChanges SubscriptionPaymentMethodChange[]
+
   @@index([userID])
   @@index([memberPlanID, createdAt, id])
   @@map("subscriptions")
+}
+
+enum PaymentMethodChangeKind {
+  /// The open invoice is paid with the new payment method.
+  invoicePayment @map("invoicePayment")
+  /// The reader authorizes the new payment method without being charged.
+  authorization  @map("authorization")
+  /// The new payment method needs no authorization (e.g. invoice).
+  immediate      @map("immediate")
+}
+
+enum PaymentMethodChangeState {
+  pending   @map("pending")
+  completed @map("completed")
+  failed    @map("failed")
+  expired   @map("expired")
+  canceled  @map("canceled")
+}
+
+/// A reader's request to move a subscription to another payment method. The
+/// subscription keeps its current payment method until the change completes.
+model SubscriptionPaymentMethodChange {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  kind  PaymentMethodChangeKind
+  state PaymentMethodChangeState @default(pending)
+
+  subscriptionID String
+  subscription   Subscription @relation(fields: [subscriptionID], references: [id], onDelete: Cascade)
+
+  fromPaymentMethodID String
+  fromPaymentMethod   PaymentMethod @relation("PaymentMethodChangeFrom", fields: [fromPaymentMethodID], references: [id])
+
+  paymentMethodID String
+  paymentMethod   PaymentMethod @relation("PaymentMethodChangeTo", fields: [paymentMethodID], references: [id])
+
+  /// The payment of the open invoice (kind invoicePayment).
+  paymentID String?
+  payment   Payment? @relation(fields: [paymentID], references: [id], onDelete: SetNull)
+
+  /// The provider's authorization (kind authorization), never captured.
+  intentID     String?
+  intentSecret String?
+  intentData   String?
+  /// Amount held for the authorization, in cents.
+  amount       Int      @default(0)
+  currency     Currency
+
+  expiresAt   DateTime  @db.Timestamptz(3)
+  completedAt DateTime? @db.Timestamptz(3)
+
+  @@index([subscriptionID, state])
+  @@index([intentID])
+  @@index([paymentID])
+  @@map("subscriptions.payment-method-changes")
 }
 
 model UserAddress {

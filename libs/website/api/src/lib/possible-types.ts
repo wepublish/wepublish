@@ -209,7 +209,8 @@
     ],
     "HasPaymentMethod": [
       "Payment",
-      "PublicSubscription"
+      "PublicSubscription",
+      "SubscriptionPaymentMethodChange"
     ],
     "HasPoll": [
       "PollStartedAction"

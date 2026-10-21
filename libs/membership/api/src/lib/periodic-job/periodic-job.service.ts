@@ -27,6 +27,7 @@ import {
   MailProviderRecipientError,
 } from '@wepublish/mail/api';
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
+import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
 import {
   add,
   addDays,
@@ -99,7 +100,8 @@ export class PeriodicJobService {
     private subscriptionController: SubscriptionService,
     private payments: PaymentsService,
     private invoicePaidNotifier: InvoicePaidNotifier,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private paymentMethodChanges: PaymentMethodChangeService
   ) {}
 
   async isRunning(job: RunState) {
@@ -258,6 +260,10 @@ export class PeriodicJobService {
       await this.createMissingInvoicesForActiveSubscriptions(
         periodicJobRunObject
       );
+      this.logger.log('Processing expiry of payment method changes...');
+      // by the clock, not the run date: a catch-up run of an earlier day must
+      // not keep changes alive that have expired since
+      await this.paymentMethodChanges.expirePending(new Date());
       this.logger.log('Processing charge of invoices...');
       await this.chargeUnpaidDueInvoices(periodicJobRunObject);
       this.logger.log(

@@ -94,10 +94,58 @@ export interface Intent {
   errorCode?: string;
 }
 
+/**
+ * Outcome of authorizing a payment method without charging it: the reader
+ * confirms the payment method once so later renewals can be charged off
+ * session. Some providers need a small hold for that, which is released and
+ * never captured.
+ */
+export type AuthorizationOutcome = 'authorized' | 'processing' | 'failed';
+
+export interface AuthorizationState {
+  /** The SubscriptionPaymentMethodChange the authorization belongs to. */
+  changeID: string;
+  state: AuthorizationOutcome;
+  /** Token to charge renewals with, stored like the customer of a payment. */
+  customerID?: string;
+  intentData?: string;
+}
+
+export interface CreateAuthorizationIntentProps {
+  changeID: string;
+  currency: Currency;
+  /** A customer the provider already knows, to attach the authorization to. */
+  customerID?: string;
+  /** The reader's e-mail, for providers that create a customer with it. */
+  email?: string;
+  successURL?: string;
+  failureURL?: string;
+}
+
+export interface AuthorizationIntent {
+  intentID: string;
+  /** A redirect URL or, for Stripe, the SetupIntent's client secret. */
+  intentSecret: string;
+  state: AuthorizationOutcome;
+  /** Amount held for the authorization in cents; never captured. */
+  amount: number;
+  intentData?: string;
+}
+
+export interface CheckAuthorizationProps {
+  intentID: string;
+  changeID: string;
+}
+
+export interface ReleaseAuthorizationProps {
+  intentID: string;
+}
+
 export type WebhookResponse = {
   status: number;
   message?: string;
   paymentStates?: IntentState[];
+  authorizationStates?: AuthorizationState[];
   /** Answer with this page instead of `message` (a provider's own checkout). */
   html?: string;
   /** Send the browser here once the payment states are applied. */
@@ -135,6 +183,23 @@ export interface PaymentProvider {
   isOffSession(): Promise<boolean>;
 
   getName(): Promise<string | null>;
+
+  /** Whether the provider can authorize a payment method without a charge. */
+  supportsAuthorization(): boolean;
+
+  createAuthorizationIntent(
+    props: CreateAuthorizationIntentProps
+  ): Promise<AuthorizationIntent>;
+
+  checkAuthorizationStatus(
+    props: CheckAuthorizationProps
+  ): Promise<AuthorizationState | null>;
+
+  /** Releases the hold of an authorization, if the provider placed one. */
+  releaseAuthorization(props: ReleaseAuthorizationProps): Promise<void>;
+
+  /** Stores the token renewals of this user are charged with. */
+  saveCustomer(userID: string, customerID: string): Promise<void>;
 }
 
 export interface PaymentProviderProps {
@@ -240,6 +305,28 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   }
 
   async createRemoteInvoice(props: CreateRemoteInvoiceProps): Promise<void> {
+    return;
+  }
+
+  supportsAuthorization(): boolean {
+    return false;
+  }
+
+  async createAuthorizationIntent(
+    props: CreateAuthorizationIntentProps
+  ): Promise<AuthorizationIntent> {
+    throw new Error(
+      `PaymentProvider ${this.id} cannot authorize a payment method`
+    );
+  }
+
+  async checkAuthorizationStatus(
+    props: CheckAuthorizationProps
+  ): Promise<AuthorizationState | null> {
+    return null;
+  }
+
+  async releaseAuthorization(props: ReleaseAuthorizationProps): Promise<void> {
     return;
   }
 
@@ -362,7 +449,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
     // update payment provider
     if (intentState.customerID && payment.invoiceID) {
-      await this.updatePaymentProvider(subscription, intentState.customerID);
+      await this.saveCustomer(subscription.userID, intentState.customerID);
     }
 
     return updatedPayment;
@@ -370,32 +457,18 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
   /**
    * adding or updating paymentProvider customer ID for user
-   *
-   * @param subscription
-   * @param customerID
-   * @private
    */
-  private async updatePaymentProvider(
-    subscription: Subscription,
-    customerID: string
-  ) {
-    if (!subscription) {
-      throw new Error(
-        'Empty subscription within updatePaymentProvider method.'
-      );
-    }
-
+  async saveCustomer(userID: string, customerID: string) {
     const user = await this.prisma.user.findUnique({
       where: {
-        id: subscription.userID,
+        id: userID,
       },
       include: {
         paymentProviderCustomers: true,
       },
     });
 
-    if (!user)
-      throw new Error(`User with ID ${subscription.userID} does not exist`);
+    if (!user) throw new Error(`User with ID ${userID} does not exist`);
 
     await this.prisma.user.update({
       where: {

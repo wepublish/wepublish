@@ -225,4 +225,86 @@ describe('SimulatedPaymentProvider', () => {
       expect(response.paymentStates).toBeUndefined();
     });
   });
+
+  describe('authorization', () => {
+    it('supports authorizing a payment method without a charge', () => {
+      expect(provider.supportsAuthorization()).toBe(true);
+    });
+
+    it('sends the customer to the simulated authorization page', async () => {
+      const intent = await provider.createAuthorizationIntent({
+        changeID: 'change-1',
+        currency: Currency.CHF,
+        successURL: 'https://site.example.com/success',
+        failureURL: 'https://site.example.com/failure',
+      });
+
+      expect(intent.state).toBe('processing');
+      expect(intent.intentID).toBe('simulated_authorization_change-1');
+      expect(intent.amount).toBe(1);
+
+      const url = new URL(intent.intentSecret);
+      expect(`${url.origin}${url.pathname}`).toBe(
+        'https://api.example.com/payment-webhooks/simulated'
+      );
+      expect(url.searchParams.get('changeID')).toBe('change-1');
+      expect(url.searchParams.get('successURL')).toBe(
+        'https://site.example.com/success'
+      );
+    });
+
+    it('shows the held amount and that it is never charged', async () => {
+      const response = await request('GET', { changeID: 'change-1' });
+
+      expect(response.status).toBe(200);
+      expect(response.html).toContain('0.01');
+      expect(response.html).toContain('value="authorized"');
+      expect(response.html).toContain('value="failed"');
+      expect(response.html).toContain('name="changeID" value="change-1"');
+    });
+
+    const outcome = (action: string) =>
+      request(
+        'POST',
+        {},
+        {
+          changeID: 'change-1',
+          action,
+          successURL: 'https://site.example.com/success',
+          failureURL: 'https://site.example.com/failure',
+        }
+      );
+
+    it('authorizes, stores a customer and returns to the success page', async () => {
+      const response = await outcome('authorized');
+
+      expect(response.status).toBe(200);
+      expect(response.paymentStates).toBeUndefined();
+      expect(response.authorizationStates).toEqual([
+        {
+          changeID: 'change-1',
+          state: 'authorized',
+          customerID: 'simulated_change-1',
+        },
+      ]);
+      expect(response.redirectUrl).toBe('https://site.example.com/success');
+    });
+
+    it('fails and returns to the failure page', async () => {
+      const response = await outcome('failed');
+
+      expect(response.authorizationStates).toEqual([
+        { changeID: 'change-1', state: 'failed' },
+      ]);
+      expect(response.redirectUrl).toBe('https://site.example.com/failure');
+    });
+
+    it('has nothing to release', async () => {
+      await expect(
+        provider.releaseAuthorization({
+          intentID: 'simulated_authorization_change-1',
+        })
+      ).resolves.toBeUndefined();
+    });
+  });
 });

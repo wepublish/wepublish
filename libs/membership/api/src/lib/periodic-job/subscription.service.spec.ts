@@ -1,6 +1,8 @@
 import {
   Currency,
   PaymentPeriodicity,
+  PaymentMethodChangeKind,
+  PaymentMethodChangeState,
   PrismaClient,
   SubscriptionDeactivationReason,
   SubscriptionEvent,
@@ -270,6 +272,28 @@ describe('SubscriptionPaymentsService', () => {
     );
     expect(invoicesToCharge.length).toEqual(1);
     expect(prismaMock.invoice.findMany).toHaveBeenCalled();
+  });
+
+  it('does not charge invoices a reader is paying with a new payment method', async () => {
+    prismaMock.invoice.findMany!.mockResolvedValue([]);
+
+    await subscriptionService.findUnpaidDueInvoices(new Date());
+
+    expect(prismaMock.invoice.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          subscription: {
+            confirmed: true,
+            paymentMethodChanges: {
+              none: {
+                state: PaymentMethodChangeState.pending,
+                kind: PaymentMethodChangeKind.invoicePayment,
+              },
+            },
+          },
+        }),
+      })
+    );
   });
 
   it('skips invoices without subscription', async () => {

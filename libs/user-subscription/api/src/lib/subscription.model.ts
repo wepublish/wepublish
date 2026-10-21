@@ -108,11 +108,4 @@ export class ExtendSubscriptionArgs {
 
   @Field({ nullable: true })
   failureURL?: string;
-
-  @Field({
-    nullable: true,
-    description:
-      'Switch the subscription to another payment method of its member plan before renewing, e.g. from invoice to online payment.',
-  })
-  paymentMethodID?: string;
 }

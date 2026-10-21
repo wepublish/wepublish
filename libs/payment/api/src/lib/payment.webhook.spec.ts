@@ -2,6 +2,7 @@ import type { Mock } from 'vitest';
 import { PaymentState } from '@prisma/client';
 import { Request, Response } from 'express';
 import { InvoicePaidNotifier } from './invoice-paid.listener';
+import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
 import { PaymentMethodConfig } from './payment-method/payment-method.config';
 import { PaymentProvider } from './payment-provider/payment-provider';
 import { PaymentWebhookController } from './payment.webhook';
@@ -47,7 +48,8 @@ describe('PaymentWebhookController.receiveWebhook', () => {
     const config = { paymentProviders: [provider] } as PaymentMethodConfig;
     const controller = new PaymentWebhookController(
       config,
-      notifier as unknown as InvoicePaidNotifier
+      notifier as unknown as InvoicePaidNotifier,
+      new PaymentAuthorizationNotifier()
     );
     const res = fakeResponse();
 
@@ -66,7 +68,8 @@ describe('PaymentWebhookController.receiveWebhook', () => {
     const config = { paymentProviders: [provider] } as PaymentMethodConfig;
     const controller = new PaymentWebhookController(
       config,
-      notifier as unknown as InvoicePaidNotifier
+      notifier as unknown as InvoicePaidNotifier,
+      new PaymentAuthorizationNotifier()
     );
     const res = fakeResponse();
 
@@ -86,7 +89,8 @@ describe('PaymentWebhookController.receiveWebhook', () => {
     const config = { paymentProviders: [provider] } as PaymentMethodConfig;
     const controller = new PaymentWebhookController(
       config,
-      notifier as unknown as InvoicePaidNotifier
+      notifier as unknown as InvoicePaidNotifier,
+      new PaymentAuthorizationNotifier()
     );
     const res = fakeResponse();
 
@@ -111,7 +115,8 @@ describe('PaymentWebhookController.receiveWebhook', () => {
     const notifier = { notify: vi.fn().mockResolvedValue(undefined) };
     const controller = new PaymentWebhookController(
       { paymentProviders: [provider] } as PaymentMethodConfig,
-      notifier as unknown as InvoicePaidNotifier
+      notifier as unknown as InvoicePaidNotifier,
+      new PaymentAuthorizationNotifier()
     );
     const res = fakeResponse();
 
@@ -134,7 +139,8 @@ describe('PaymentWebhookController.receiveWebhook', () => {
     });
     const controller = new PaymentWebhookController(
       { paymentProviders: [provider] } as PaymentMethodConfig,
-      { notify: vi.fn() } as unknown as InvoicePaidNotifier
+      { notify: vi.fn() } as unknown as InvoicePaidNotifier,
+      new PaymentAuthorizationNotifier()
     );
     const res = fakeResponse();
 
@@ -143,5 +149,70 @@ describe('PaymentWebhookController.receiveWebhook', () => {
     expect(res.type).toHaveBeenCalledWith('html');
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.send).toHaveBeenCalledWith('<html>checkout</html>');
+  });
+
+  describe('authorization states', () => {
+    const authorizingProvider = (response: Record<string, unknown>) =>
+      ({
+        id: 'stripe',
+        webhookForPaymentIntent: vi
+          .fn()
+          .mockResolvedValue({ status: 200, ...response }),
+        updatePaymentWithIntentState: vi.fn(),
+      }) as unknown as PaymentProvider;
+
+    it('hands each authorization state to the authorization listeners', async () => {
+      const state = {
+        changeID: 'change-1',
+        state: 'authorized',
+        customerID: 'cus_1',
+      };
+      const provider = authorizingProvider({ authorizationStates: [state] });
+      const authorizations = new PaymentAuthorizationNotifier();
+      const listener = {
+        onAuthorization: vi.fn().mockResolvedValue(undefined),
+      };
+      authorizations.register(listener);
+      const invoicePaid = { notify: vi.fn() };
+      const controller = new PaymentWebhookController(
+        { paymentProviders: [provider] } as PaymentMethodConfig,
+        invoicePaid as unknown as InvoicePaidNotifier,
+        authorizations
+      );
+      const res = fakeResponse();
+
+      await controller.receiveWebhook('stripe', fakeRequest(), res);
+
+      expect(listener.onAuthorization).toHaveBeenCalledWith('stripe', state);
+      expect(provider.updatePaymentWithIntentState).not.toHaveBeenCalled();
+      expect(invoicePaid.notify).not.toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it('redirects after applying the authorization states when the provider asks for it', async () => {
+      const provider = authorizingProvider({
+        authorizationStates: [{ changeID: 'change-1', state: 'failed' }],
+        redirectUrl: 'https://example.com/failure',
+      });
+      const authorizations = new PaymentAuthorizationNotifier();
+      const listener = {
+        onAuthorization: vi.fn().mockResolvedValue(undefined),
+      };
+      authorizations.register(listener);
+      const controller = new PaymentWebhookController(
+        { paymentProviders: [provider] } as PaymentMethodConfig,
+        { notify: vi.fn() } as unknown as InvoicePaidNotifier,
+        authorizations
+      );
+      const res = fakeResponse();
+
+      await controller.receiveWebhook('stripe', fakeRequest(), res);
+
+      expect(listener.onAuthorization).toHaveBeenCalled();
+      expect(res.redirect).toHaveBeenCalledWith(
+        303,
+        'https://example.com/failure'
+      );
+    });
   });
 });
