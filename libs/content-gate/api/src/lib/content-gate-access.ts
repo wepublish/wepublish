@@ -1,5 +1,9 @@
 import { Gate, LoginStatus } from '@prisma/client';
-import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
+import {
+  AuthSessionType,
+  AuthSession,
+  ApiTokenSession,
+} from '@wepublish/authentication/api';
 import { matchesAudience } from '@wepublish/gate/api';
 import { CanGetArticle } from '@wepublish/permissions';
 import { hasPermission } from '@wepublish/permissions/api';
@@ -11,11 +15,6 @@ export type ContentGateAccessInput = {
   hasActiveSubscription: () => Promise<boolean>;
 };
 
-/**
- * Whether the reader only gets the preview of an article.
- * The meter (free/soft/hard) runs on the website, the server only knows
- * whether the reader is someone the gate is meant for at all.
- */
 export async function isContentGated({
   gate,
   article,
@@ -28,7 +27,11 @@ export async function isContentGated({
 
   if (
     session?.type === AuthSessionType.Token ||
-    (session && hasPermission(CanGetArticle, session.roles))
+    (session &&
+      hasPermission(
+        CanGetArticle,
+        (session as Exclude<AuthSession, ApiTokenSession>).roles
+      ))
   ) {
     return false;
   }
@@ -37,7 +40,6 @@ export async function isContentGated({
 
   return matchesAudience(gate.audience, {
     loggedIn,
-    // Logging in already lifts a registration gate.
     hasSubscription:
       loggedIn &&
       gate.audience !== LoginStatus.LOGGED_OUT &&
