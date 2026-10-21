@@ -41,6 +41,7 @@ import {
   MdSettings,
   MdShare,
   MdTrackChanges,
+  MdTravelExplore,
 } from 'react-icons/md';
 import { z } from 'zod';
 
@@ -73,6 +74,10 @@ import { ArticleAuthor, ArticleAuthorList } from './articleAuthorList';
 import { AuthorCheckPicker } from './authorCheckPicker';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
+import { SeoBlockContext } from './seoBlockContext';
+import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
+import { SocialPreviews } from './seoPreviews';
+import { SeoTab } from './seoTab';
 
 const ValueInput = styled(TextField)`
   width: 60%;
@@ -143,7 +148,9 @@ export interface ArticleMetadataPanelProps {
   peerId: string | null | undefined;
   value: ArticleMetadata;
   infoData: InfoData;
+  seoContext?: SeoBlockContext;
 
+  onSave?(): void;
   onClose?(): void;
   onChange?(value: ArticleMetadata): void;
 }
@@ -153,6 +160,8 @@ function ArticleMetadataPanel({
   peerId,
   value,
   infoData,
+  seoContext,
+  onSave,
   onClose,
   onChange,
 }: ArticleMetadataPanelProps) {
@@ -239,6 +248,20 @@ function ArticleMetadataPanel({
         undefined
       : t('errorMessages.invalidUrlErrorMessage');
   }, [canonicalUrl, t]);
+
+  const seoMetadata = {
+    title,
+    lead,
+    seoTitle,
+    seoDescription,
+    socialMediaTitle,
+    socialMediaDescription,
+    canonicalUrl,
+    url: value.url,
+    image,
+    socialMediaImage,
+    slug,
+  };
 
   function currentContent() {
     switch (activeKey) {
@@ -330,6 +353,14 @@ function ArticleMetadataPanel({
                 }
               />
             </FormControl>
+
+            <SocialPreviews
+              data={getSeoPreviewData(
+                SeoContentType.Article,
+                seoMetadata,
+                seoContext ?? {}
+              )}
+            />
           </FormFields>
         );
       case MetaDataType.General:
@@ -411,7 +442,7 @@ function ArticleMetadataPanel({
                     <Trans i18nKey={'articleEditor.panels.seoTitleHelpBlock'}>
                       text{' '}
                       <a
-                        href="https://wepublish.ch/just-another-page/"
+                        href="/settings/seo"
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -682,6 +713,15 @@ function ArticleMetadataPanel({
           </FormFields>
         );
 
+      case MetaDataType.Seo:
+        return (
+          <SeoTab
+            type={SeoContentType.Article}
+            metadata={seoMetadata}
+            seoContext={seoContext}
+          />
+        );
+
       case MetaDataType.Properties:
         return (
           <Stack
@@ -776,6 +816,14 @@ function ArticleMetadataPanel({
 
         <DrawerActions>
           <PermissionControl qualifyingPermissions={[CanCreateArticle.id]}>
+            {onSave && (
+              <Button
+                variant="outlined"
+                onClick={() => !canonicalUrlError && onSave()}
+              >
+                {t('save')}
+              </Button>
+            )}
             <Button
               variant="contained"
               type="submit"
@@ -803,6 +851,12 @@ function ArticleMetadataPanel({
           icon={<MdShare />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.socialMedia')}</>}
+        />
+        <Tab
+          value={MetaDataType.Seo}
+          icon={<MdTravelExplore />}
+          iconPosition="start"
+          label={<>{t('seoTab.title')}</>}
         />
         <Tab
           value={MetaDataType.Properties}

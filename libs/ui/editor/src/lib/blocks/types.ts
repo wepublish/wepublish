@@ -342,6 +342,7 @@ export enum MetaDataType {
   Properties = 'properties',
   Comments = 'Comments',
   Tracking = 'Tracking',
+  Seo = 'seo',
 }
 
 export interface ArticleTeaserLink {

@@ -44,6 +44,7 @@ import {
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
+  getSeoBlockContext,
   enqueueSnackbar,
   mapBlockValueToBlockInput,
   PageMetadata,
@@ -62,6 +63,7 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -169,6 +171,11 @@ function PageEditor() {
 
   const isNew = id === undefined;
   const [blocks, setBlocks] = useState<BlockValue[]>([]);
+
+  const seoContext = useMemo(
+    () => (isMetaDrawerOpen ? getSeoBlockContext(blocks) : undefined),
+    [blocks, isMetaDrawerOpen]
+  );
 
   const pageID = id || createData?.createPage.id;
 
@@ -825,7 +832,9 @@ function PageEditor() {
         onClose={() => setMetaDrawerOpen(false)}
       >
         <PageMetadataPanel
+          seoContext={seoContext}
           value={metadata}
+          onSave={() => handleSave()}
           onClose={() => {
             handleSave();
             setMetaDrawerOpen(false);
