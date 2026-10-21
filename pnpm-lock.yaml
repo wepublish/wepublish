@@ -320,9 +320,6 @@ catalogs:
     mapped-replacer:
       specifier: ^1.2.1
       version: 1.2.1
-    minio:
-      specifier: ^8.0.1
-      version: 8.0.1
     multer:
       specifier: ^2.4.0
       version: 2.4.0
@@ -526,6 +523,9 @@ importers:
       '@nestjs/schedule':
         specifier: 'catalog:'
         version: 12.0.2(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.1.1)
+      '@nestjs/storage':
+        specifier: ^0.0.3
+        version: 0.0.3(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.1.1)(reflect-metadata@0.1.14)
       '@nestjs/terminus':
         specifier: 'catalog:'
         version: 12.1.0(@grpc/grpc-js@1.14.4)(@grpc/proto-loader@0.8.1)(@nestjs/axios@12.0.1(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(axios@1.18.1(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))(rxjs@7.8.2))(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.1.1)(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(typescript@6.0.3))(reflect-metadata@0.1.14)(rxjs@7.8.2)
@@ -793,9 +793,6 @@ importers:
       mapped-replacer:
         specifier: 'catalog:'
         version: 1.2.1
-      minio:
-        specifier: 'catalog:'
-        version: 8.0.1
       multer:
         specifier: 'catalog:'
         version: 2.4.0
@@ -1701,6 +1698,9 @@ importers:
       '@nestjs/platform-express':
         specifier: 'catalog:'
         version: 12.1.1(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.1.1)(supports-color@8.1.1)
+      '@nestjs/storage':
+        specifier: ^0.0.3
+        version: 0.0.3(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.1.1)(reflect-metadata@0.1.14)
       '@sentry/nestjs':
         specifier: 'catalog:'
         version: 11.4.0(@babel/core@7.29.7(supports-color@8.1.1))(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.1.1)(rollup@4.64.0)(webpack@5.108.4)
@@ -1719,9 +1719,6 @@ importers:
       jose:
         specifier: 'catalog:'
         version: 5.10.0
-      minio:
-        specifier: 'catalog:'
-        version: 8.0.1
       multer:
         specifier: 'catalog:'
         version: 2.4.0
@@ -5086,6 +5083,14 @@ packages:
     peerDependenciesMeta:
       prettier:
         optional: true
+
+  '@nestjs/storage@0.0.3':
+    resolution: {integrity: sha512-ATS6ZAdyn1VdqGCfneJk48KhEoWt1Wq0V9CHxNMkp2k4Jx91HruH2clV2qOlaCVK9fnPkttzMzKY294q8PiV4A==}
+    engines: {node: '>=20.19.0'}
+    peerDependencies:
+      '@nestjs/common': ^12.1.0
+      '@nestjs/core': ^12.1.0
+      reflect-metadata: ^0.1.13 || ^0.2.0
 
   '@nestjs/terminus@12.1.0':
     resolution: {integrity: sha512-bag1KT1Pk2KpDhXh6fhf3F7IpRGs8IMSdPaD1+9hclP3hSAIkCYN/YUhkAY+2G7OuoUmyDuKVb7MgNw+L5ZBbQ==}
@@ -9425,9 +9430,6 @@ packages:
     resolution: {integrity: sha512-nrUSn7hzt7J6JWgWGz78ZYI8wj+gdIJdk0Ynjpp8l+trkn58Uqsf6RYrYkEK+3X18EX+TNdtJI0WxAtc+L84SQ==}
     hasBin: true
 
-  '@zxing/text-encoding@0.9.0':
-    resolution: {integrity: sha512-U/4aVJ2mxI0aDNI8Uq0wEhMgY+u4CNtEb0om3+y3+niDAsoTCOB33UF0sxpzqzdqXLqmvc+vZyAt4O8pPdfkwA==}
-
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
@@ -9914,9 +9916,6 @@ packages:
   blob-util@2.0.2:
     resolution: {integrity: sha512-T7JQa+zsXXEa6/8ZhHcQEW1UFfVM49Ts65uBkFL6fz2QmrElqmbajIDJvuA0tEhRe5eIjpV9ZF+0RfZR9voJFQ==}
 
-  block-stream2@2.1.0:
-    resolution: {integrity: sha512-suhjmLI57Ewpmq00qaygS8UgEq2ly2PCItenIyhMqVjo4t4pGzqMvfgJuX8iWTeSDdfSSqS6j38fL4ToNL7Pfg==}
-
   bluebird@3.7.2:
     resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
 
@@ -9979,9 +9978,6 @@ packages:
   browser-image-compression@1.0.17:
     resolution: {integrity: sha512-TMDh3gyNlVA5Vvn0D0AdWr33s2ftIeokHK406z8cYlLJ4ANAq1x6eMaSzqedDoZwUGyTVB+0rhNVaSFgM3YAZg==}
 
-  browser-or-node@2.1.1:
-    resolution: {integrity: sha512-8CVjaLJGuSKMVTxJ2DpBl5XnlNDiT4cQFeuCJJrvJmts9YrTZDizTX7PjC2s6W4x+MBGZeEY6dGMrF04/6Hgqg==}
-
   browserify-aes@1.2.0:
     resolution: {integrity: sha512-+7CHXqGuspUn/Sl5aO7Ea0xWGAtETPXNSAjHo48JfLdPWcMng33Xe4znFvQweqc/uzk5zSOI3H52CYnjCfb5hA==}
 
@@ -10009,10 +10005,6 @@ packages:
 
   bser@2.1.1:
     resolution: {integrity: sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==}
-
-  buffer-crc32@1.0.0:
-    resolution: {integrity: sha512-Db1SbgBS/fg/392AblrMJk97KggmvYhr4pB5ZIMTWtaivCPMWLkmb7m21cJvpvgK+J3nsU2CmmixNBZx4vFj/w==}
-    engines: {node: '>=8.0.0'}
 
   buffer-equal-constant-time@1.0.1:
     resolution: {integrity: sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==}
@@ -11781,10 +11773,6 @@ packages:
 
   fast-wrap-ansi@0.2.2:
     resolution: {integrity: sha512-7F2Fl+TjRSenLqlU3UjSH0iyqopqoZIu7eZVpEirP2g1GtWa2G/ecEmBdgz31+Mxr+ELclgg6sokpSFIQiZ02Q==}
-
-  fast-xml-parser@4.5.3:
-    resolution: {integrity: sha512-RKihhV+SHsIUGXObeVy9AXiBbFwkVk7Syp8XgwN5U3JV416+Gwp/GO9i0JYKmikykgz/UHRrrV4ROuZEo/T0ig==}
-    hasBin: true
 
   fastq@1.15.0:
     resolution: {integrity: sha512-wBrocU2LCXXa+lWBt8RoIRD89Fi8OdABODa/kEnyeyjS5aZO5/GNvI5sEINADqP/h8M29UHTHUb53sUu5Ihqdw==}
@@ -14139,10 +14127,6 @@ packages:
       uglify-js:
         optional: true
 
-  minio@8.0.1:
-    resolution: {integrity: sha512-FzDO6yGnqLtm8sp3mXafWtiRUOslJSSg/aI0v9YbN5vjw5KLoODKAROCyi766NIvTSxcfHBrbhCSGk1A+MOzDg==}
-    engines: {node: ^16 || ^18 || >=20}
-
   minipass-collect@1.0.2:
     resolution: {integrity: sha512-6T6lH0H8OG9kITm/Jm6tdooIbogG9e0tLgpY6mphXSm/A9u8Nq1ryBG+Qspiub9LjWlBPsPS3tWQ/Botq4FdxA==}
     engines: {node: '>= 8'}
@@ -15434,10 +15418,6 @@ packages:
     resolution: {integrity: sha512-XDxAeVmpfu1/6IjyT/gXHOl+S0vQ9owggJ30hhWKdHAsNPOcasn5o9BW0eejZqL2e4vMjhAxoW3jVHcD6mbcYw==}
     engines: {node: '>=6'}
 
-  query-string@7.1.3:
-    resolution: {integrity: sha512-hh2WYhq4fi8+b+/2Kg9CEge4fDPvHS534aOOvOZeQ3+Vf2mCFsaFBYj0i+iXcAq6I9Vzp5fjMFBlONvayDC1qg==}
-    engines: {node: '>=6'}
-
   querystring-es3@0.2.1:
     resolution: {integrity: sha512-773xhDQnZBMFobEiztv8LIl70ch5MSF/jUQVlhwFyBILqq96anmoctVIYz+ZRp0qbCKATTn6ev02M3r7Ga5vqA==}
     engines: {node: '>=0.4.x'}
@@ -16576,9 +16556,6 @@ packages:
   stream-browserify@3.0.0:
     resolution: {integrity: sha512-H73RAHsVBapbim0tU2JwwOiXUj+fikfiaoYAKHF3VJfA0pe2BCzkhAHBlLG6REzE+2WNZcxOXjK7lkso+9euLA==}
 
-  stream-chain@2.2.5:
-    resolution: {integrity: sha512-1TJmBx6aSWqZ4tx7aTpBDXK0/e2hhcNSTV8+CbFJtDjbb+I1mZ8lHit0Grw9GRT+6JbIrrDd8esncgBi8aBXGA==}
-
   stream-composer@1.0.2:
     resolution: {integrity: sha512-bnBselmwfX5K10AH6L4c8+S5lgZMWI7ZYrz2rvYjCPB2DIMC4Ig8OpxGpNJSxRZ58oti7y1IcNvjBAz9vW5m4w==}
 
@@ -16587,9 +16564,6 @@ packages:
 
   stream-http@3.2.0:
     resolution: {integrity: sha512-Oq1bLqisTyK3TSCXpPbT4sdeYNdmyZJv1LxpEm2vu1ZhK89kSE5YXwZc3cWk0MagGaKriBh9mCFbVGtO+vY29A==}
-
-  stream-json@1.8.0:
-    resolution: {integrity: sha512-HZfXngYHUAr1exT4fxlbc1IOce1RYxp2ldeaf97LYCOPSoOqY/1Psp7iGvpb+6JIOgkra9zDYnPX01hGAHzEPw==}
 
   stream-parser@0.3.1:
     resolution: {integrity: sha512-bJ/HgKq41nlKvlhccD5kaCr/P+Hu0wPNKPJOH7en+YrJu/9EgqUF+88w5Jb6KNcjOFMhfX4B2asfeAtIGuHObQ==}
@@ -16720,9 +16694,6 @@ packages:
   stripe@8.222.0:
     resolution: {integrity: sha512-hrA79fjmN2Eb6K3kxkDzU4ODeVGGjXQsuVaAPSUro6I9MM3X+BvIsVqdphm3BXWfimAGFvUqWtPtHy25mICY1w==}
     engines: {node: ^8.1 || >=10.*}
-
-  strnum@1.1.2:
-    resolution: {integrity: sha512-vrN+B7DBIoTTZjnPNewwhx6cBA/H+IS7rfW68n7XxC1y7uoiGQBxaKzqucGUgavX15dJgiGztLJ8vxuEzwqBdA==}
 
   strtok3@10.3.5:
     resolution: {integrity: sha512-ki4hZQfh5rX0QDLLkOCj+h+CVNkqmp/CMf8v8kZpkNVK6jGQooMytqzLZYUVYIZcFZ6yDB70EfD8POcFXiF5oA==}
@@ -17737,9 +17708,6 @@ packages:
     resolution: {integrity: sha512-ZzxBf288iALJseijWelmECm/1x7ZwQn3sMYIkDr2VvZp7r6SEKuT8D0O9Wiq6L9Nl5mazrOMcmiZE/2NCenaxw==}
     engines: {node: '>=8.10.0'}
 
-  web-encoding@1.1.5:
-    resolution: {integrity: sha512-HYLeVCdJ0+lBYV2FvNZmv3HJ2Nt0QYXqZojk3d9FJOLkwnuhzM9tmamh8d7HPM8QqjKH8DeHkFTx+CFlWpZZDA==}
-
   web-resource-inliner@5.0.0:
     resolution: {integrity: sha512-AIihwH+ZmdHfkJm7BjSXiEClVt4zUFqX4YlFAzjL13wLtDuUneSaFvDBTbdYRecs35SiU7iNKbMnN+++wVfb6A==}
     engines: {node: '>=10.0.0'}
@@ -17987,10 +17955,6 @@ packages:
 
   xml2js@0.4.23:
     resolution: {integrity: sha512-ySPiMjM0+pLDftHgXY4By0uswI3SPKLDw/i3UXbnO8M/p28zqexCUoPmQFrYD+/1BzhGJSs2i1ERWKJAtiLrug==}
-    engines: {node: '>=4.0.0'}
-
-  xml2js@0.5.0:
-    resolution: {integrity: sha512-drPFnkQJik/O+uPKpqSgr22mpuFHqKdbS835iAQrUC73L2F5WkboIRd63ai/2Yg6I1jzifPFKH2NTK+cfglkIA==}
     engines: {node: '>=4.0.0'}
 
   xmlbuilder@11.0.1:
@@ -22041,6 +22005,12 @@ snapshots:
       prettier: 3.6.2
     transitivePeerDependencies:
       - chokidar
+
+  '@nestjs/storage@0.0.3(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.1.1)(reflect-metadata@0.1.14)':
+    dependencies:
+      '@nestjs/common': 12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1)
+      '@nestjs/core': 12.1.1(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/platform-express@12.1.1)(reflect-metadata@0.1.14)(rxjs@7.8.2)
+      reflect-metadata: 0.1.14
 
   '@nestjs/terminus@12.1.0(@grpc/grpc-js@1.14.4)(@grpc/proto-loader@0.8.1)(@nestjs/axios@12.0.1(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(axios@1.18.1(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))(rxjs@7.8.2))(@nestjs/common@12.1.1(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.1.1)(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(typescript@6.0.3))(reflect-metadata@0.1.14)(rxjs@7.8.2)':
     dependencies:
@@ -26943,9 +26913,6 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  '@zxing/text-encoding@0.9.0':
-    optional: true
-
   abort-controller@3.0.0:
     dependencies:
       event-target-shim: 5.0.1
@@ -27517,10 +27484,6 @@ snapshots:
 
   blob-util@2.0.2: {}
 
-  block-stream2@2.1.0:
-    dependencies:
-      readable-stream: 3.6.2
-
   bluebird@3.7.2: {}
 
   bn.js@4.12.5: {}
@@ -27617,8 +27580,6 @@ snapshots:
       core-js: 3.36.1
       uzip: 0.20201231.0
 
-  browser-or-node@2.1.1: {}
-
   browserify-aes@1.2.0:
     dependencies:
       buffer-xor: 1.0.3
@@ -27675,8 +27636,6 @@ snapshots:
   bser@2.1.1:
     dependencies:
       node-int64: 0.4.0
-
-  buffer-crc32@1.0.0: {}
 
   buffer-equal-constant-time@1.0.1: {}
 
@@ -29867,10 +29826,6 @@ snapshots:
   fast-wrap-ansi@0.2.2:
     dependencies:
       fast-string-width: 3.0.2
-
-  fast-xml-parser@4.5.3:
-    dependencies:
-      strnum: 1.1.2
 
   fastq@1.15.0:
     dependencies:
@@ -32937,23 +32892,6 @@ snapshots:
       html-minifier-terser: 6.1.0
       postcss: 8.5.28
 
-  minio@8.0.1:
-    dependencies:
-      async: 3.2.6
-      block-stream2: 2.1.0
-      browser-or-node: 2.1.1
-      buffer-crc32: 1.0.0
-      eventemitter3: 5.0.4
-      fast-xml-parser: 4.5.3
-      ipaddr.js: 2.4.0
-      lodash: 4.18.1
-      mime-types: 2.1.35
-      query-string: 7.1.3
-      stream-json: 1.8.0
-      through2: 4.0.2
-      web-encoding: 1.1.5
-      xml2js: 0.5.0
-
   minipass-collect@1.0.2:
     dependencies:
       minipass: 3.3.6
@@ -34517,13 +34455,6 @@ snapshots:
       split-on-first: 1.1.0
       strict-uri-encode: 2.0.0
 
-  query-string@7.1.3:
-    dependencies:
-      decode-uri-component: 0.2.2
-      filter-obj: 1.1.0
-      split-on-first: 1.1.0
-      strict-uri-encode: 2.0.0
-
   querystring-es3@0.2.1: {}
 
   queue-microtask@1.2.3: {}
@@ -35870,8 +35801,6 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
 
-  stream-chain@2.2.5: {}
-
   stream-composer@1.0.2:
     dependencies:
       streamx: 2.15.6
@@ -35886,10 +35815,6 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
       xtend: 4.0.2
-
-  stream-json@1.8.0:
-    dependencies:
-      stream-chain: 2.2.5
 
   stream-parser@0.3.1(supports-color@8.1.1):
     dependencies:
@@ -36047,8 +35972,6 @@ snapshots:
     dependencies:
       '@types/node': 22.20.1
       qs: 6.16.0
-
-  strnum@1.1.2: {}
 
   strtok3@10.3.5:
     dependencies:
@@ -37067,12 +36990,6 @@ snapshots:
 
   weakmap-polyfill@2.0.4: {}
 
-  web-encoding@1.1.5:
-    dependencies:
-      util: 0.12.5
-    optionalDependencies:
-      '@zxing/text-encoding': 0.9.0
-
   web-resource-inliner@5.0.0(encoding@0.1.13):
     dependencies:
       ansi-colors: 4.1.3
@@ -37397,11 +37314,6 @@ snapshots:
       sax: 1.6.1
 
   xml2js@0.4.23:
-    dependencies:
-      sax: 1.6.1
-      xmlbuilder: 11.0.1
-
-  xml2js@0.5.0:
     dependencies:
       sax: 1.6.1
       xmlbuilder: 11.0.1
