@@ -512,7 +512,8 @@
         "showGoodies": "Afficher la sélection de goodies",
         "showDiscountCodes": "Afficher le champ de code de réduction",
         "goodieMinValue": {
-          "label": "Montant de paiement minimal requis pour bénéficier d’un goodie :"
+          "label": "Montant minimal pour un goodie",
+          "hint": "Les lecteurs qui paient moins ne peuvent pas choisir de goodie. Laisser vide pour aucun minimum."
         },
         "goodieMinValueAppliesToUpgrade": "Appliquer ce montant minimum aussi aux mises à niveau",
         "hideRepeatGoodieOnUpgrade": "Masquer lors d’une mise à niveau si un goodie a déjà été reçu",
@@ -550,6 +551,8 @@
         },
         "planAmountsTitle": "Montant minimum / cible / maximum",
         "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page.",
+        "amountLayout": "Saisie du montant",
+        "planAmountTarget": "cible {{amount}}",
         "defaultPlanLabel": "Par défaut",
         "dragToReorder": "Glisser pour modifier l’ordre",
         "renderStylesHelp": "Faites glisser les plans dans l’ordre dans lequel ils apparaissent sur le site. Pour chaque plan, choisissez comment le montant est saisi et quel plan est présélectionné."

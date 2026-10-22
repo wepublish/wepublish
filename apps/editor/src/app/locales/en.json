@@ -512,7 +512,8 @@
         "showGoodies": "Show goodie selection",
         "showDiscountCodes": "Show discount code input",
         "goodieMinValue": {
-          "label": "Require minimum payment amount to be eligible for a goodie:"
+          "label": "Minimum amount for a goodie",
+          "hint": "Readers who pay less do not get to choose a goodie. Leave empty for no minimum."
         },
         "goodieMinValueAppliesToUpgrade": "Apply this minimum to upgrades too",
         "hideRepeatGoodieOnUpgrade": "Hide on upgrade when a goodie was already received",
@@ -550,6 +551,8 @@
         },
         "planAmountsTitle": "Minimum / target / maximum amount",
         "defaultPlanTitle": "Selected by default — this subscription plan is preselected after the page loads.",
+        "amountLayout": "Amount entry",
+        "planAmountTarget": "target {{amount}}",
         "defaultPlanLabel": "Default",
         "dragToReorder": "Drag to change the order",
         "renderStylesHelp": "Drag the plans into the order in which they appear on the website. For each plan, choose how readers enter the amount and which plan is preselected."
