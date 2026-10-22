@@ -464,6 +464,18 @@ too.**
 
 ---
 
+### ⚠️ Tenant request interceptors are `proxy.ts`, never `middleware.ts`
+
+A `middleware.ts` runs on the Edge runtime, and since Next 16.4 (#3195) its
+bundle also pulls in our `cacheHandler`
+(`libs/utils/website/src/lib/page-cache/page-cache-handler.js`). That brings in
+`@keyv/redis` → `@redis/client` → `@node-rs/xxhash`, whose browser build needs
+the uninstalled `@node-rs/xxhash-wasm32-wasi`, so `nx build <tenant>` fails
+with _Module not found_. `proxy.ts` (`export function proxy`) runs on Node and
+builds fine; every tenant uses it.
+
+---
+
 ### ⚠️ Express 5 has no bare `*` route
 
 [apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
