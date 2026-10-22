@@ -388,12 +388,12 @@
         "reload": "Vorlagen neu laden"
       },
       "crowdfunding": {
-        "edit": "Bearbeiten",
+        "edit": "Crowdfunding-Block bearbeiten",
         "label": "Crowdfunding",
         "title": "Crowdfunding auswählen",
         "name": "Name des Crowdfundings",
         "select": "Auswählen",
-        "open": "öffnen",
+        "open": "Öffnen",
         "crowdfundingName": "Crowdfunding {{name}}"
       },
       "comment": {
@@ -591,7 +591,8 @@
         "label": "Listicle"
       },
       "poll": {
-        "edit": "Bearbeiten",
+        "open": "Öffnen",
+        "edit": "Umfrage-Block bearbeiten",
         "label": "Umfrage",
         "select": "Auswählen",
         "title": "Umfrageblock bearbeiten",

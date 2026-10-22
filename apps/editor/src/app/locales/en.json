@@ -389,12 +389,12 @@
       },
       "crowdfunding": {
         "crowdfundingName": "Crowdfunding {{name}}",
-        "edit": "Edit",
+        "edit": "Edit crowdfunding block",
         "label": "Crowdfunding",
         "title": "Select Crowdfunding",
         "name": "Name",
         "select": "Select",
-        "open": "open"
+        "open": "Open"
       },
       "comment": {
         "cherryPick": "Select specific comments",
@@ -591,6 +591,7 @@
         "label": "Listicle"
       },
       "poll": {
+        "open": "Open",
         "edit": "Edit poll block",
         "label": "Poll",
         "select": "Select",

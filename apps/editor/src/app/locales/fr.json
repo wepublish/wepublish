@@ -388,12 +388,12 @@
         "reload": "Recharger les modèles"
       },
       "crowdfunding": {
-        "edit": "Modifier",
+        "edit": "Modifier le bloc de financement participatif",
         "label": "Crowdfunding",
         "title": "Sélectionner le crowdfunding",
         "name": "Nom du crowdfunding",
         "select": "Sélectionner",
-        "open": "ouvrir",
+        "open": "Ouvrir",
         "crowdfundingName": "Crowdfunding {{name}}"
       },
       "comment": {
@@ -591,6 +591,7 @@
         "label": "Listicle"
       },
       "poll": {
+        "open": "Ouvrir",
         "edit": "Modifier le bloc de sondage",
         "label": "Sondage",
         "select": "Sélectionner",
