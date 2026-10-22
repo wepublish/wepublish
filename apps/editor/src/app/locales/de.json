@@ -173,6 +173,7 @@
         "lead": "Lead",
         "loading": "Wird geladen …",
         "loadMore": "Mehr laden",
+        "search": "Nach Titel suchen",
         "noDataToDisplay": "Keine Daten zum Anzeigen",
         "metadata": "Metadaten",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",

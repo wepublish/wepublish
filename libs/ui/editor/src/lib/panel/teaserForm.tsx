@@ -97,6 +97,17 @@ const Preview = styled('div')`
   background-color: ${({ theme }) => theme.vars.palette.background.default};
   background-size: cover;
   background-position: center;
+
+  &:not([style]) {
+    aspect-ratio: auto;
+    min-height: ${({ theme }) => theme.spacing(16)};
+    color: ${({ theme }) => theme.vars.palette.text.primary};
+  }
+
+  &:not([style]) > div:last-of-type {
+    color: inherit;
+    background: none;
+  }
 `;
 
 const PreviewText = styled('div')`
@@ -160,14 +171,23 @@ export function TeaserForm({ teaser, values, onChange }: TeaserFormProps) {
 
         <PreviewText>
           {preview.preTitle && (
-            <Typography variant="caption">{preview.preTitle}</Typography>
+            <Typography
+              variant="caption"
+              color="inherit"
+            >
+              {preview.preTitle}
+            </Typography>
           )}
-          <Typography variant="subtitle1">
+          <Typography
+            variant="subtitle1"
+            color="inherit"
+          >
             {preview.title || t('articleEditor.panels.untitled')}
           </Typography>
           {preview.lead && (
             <Typography
               variant="body2"
+              color="inherit"
               sx={{ opacity: 0.8 }}
             >
               {preview.lead}

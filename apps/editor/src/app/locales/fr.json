@@ -173,6 +173,7 @@
         "lead": "Chapeau",
         "loading": "Chargement …",
         "loadMore": "Charger plus",
+        "search": "Rechercher par titre",
         "noDataToDisplay": "Pas de données à afficher",
         "metadata": "Métadonnées",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
