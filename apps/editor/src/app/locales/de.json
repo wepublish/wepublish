@@ -380,6 +380,7 @@
     "blocks": {
       "blockTemplate": {
         "editTemplate": "Vorlage bearbeiten",
+        "linkedInfo": "Änderungen an der Vorlage erscheinen hier automatisch.",
         "label": "Blockvorlage",
         "select": "Blockvorlage auswählen",
         "useContent": "Inhalt übernehmen",

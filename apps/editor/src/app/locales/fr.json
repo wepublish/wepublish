@@ -380,6 +380,7 @@
     "blocks": {
       "blockTemplate": {
         "editTemplate": "Modifier le modèle",
+        "linkedInfo": "Les modifications du modèle apparaissent ici automatiquement.",
         "label": "Modèle de bloc",
         "select": "Sélectionner un modèle de bloc",
         "useContent": "Utiliser le contenu",

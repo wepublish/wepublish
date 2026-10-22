@@ -380,6 +380,7 @@
     "blocks": {
       "blockTemplate": {
         "editTemplate": "Edit template",
+        "linkedInfo": "Changes to the template show up here automatically.",
         "label": "Block Template",
         "select": "Select a block template",
         "useContent": "Use content",
