@@ -452,10 +452,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     !getPlanPeriodicities(selectedMemberPlan).includes(requiredPeriodicity);
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
-  // A lifetime subscription never runs out, so there is nothing to renew.
-  const isRenewable =
-    !!selectedMemberPlan?.extendable &&
-    selectedPaymentPeriodicity !== PaymentPeriodicity.Lifetime;
 
   const selectedRenderSetting = findMemberPlanRenderSetting(
     memberPlanRenderSettings,
@@ -615,16 +611,18 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   }, [challenge, setValue]);
 
   useEffect(() => {
-    // back to the default once a renewable offer is picked again, e.g. when
-    // switching from a lifetime offer to a yearly one
-    setValue<'autoRenew'>('autoRenew', isRenewable);
-  }, [isRenewable, setValue]);
-
-  useEffect(() => {
-    if (selectedAvailablePaymentMethod?.forceAutoRenewal && isRenewable) {
+    if (selectedAvailablePaymentMethod?.forceAutoRenewal) {
       setValue<'autoRenew'>('autoRenew', true);
     }
-  }, [selectedAvailablePaymentMethod?.forceAutoRenewal, isRenewable, setValue]);
+
+    if (!selectedMemberPlan?.extendable) {
+      setValue<'autoRenew'>('autoRenew', false);
+    }
+  }, [
+    selectedAvailablePaymentMethod?.forceAutoRenewal,
+    selectedMemberPlan?.extendable,
+    setValue,
+  ]);
 
   useEffect(() => {
     if (
@@ -970,7 +968,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             )}
 
             {!selectedAvailablePaymentMethod?.forceAutoRenewal &&
-              isRenewable && (
+              selectedMemberPlan?.extendable && (
                 <Controller
                   name={'autoRenew'}
                   control={control}

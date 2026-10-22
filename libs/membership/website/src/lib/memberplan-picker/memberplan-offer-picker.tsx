@@ -159,6 +159,7 @@ export const MemberPlanOfferPicker = forwardRef<
                 }
                 paymentPeriodicity={offer.paymentPeriodicity}
                 showPeriodicity={offer.showPeriodicity}
+                isOffer
                 amountLayout={
                   findMemberPlanRenderSetting(
                     memberPlanRenderSettings,
