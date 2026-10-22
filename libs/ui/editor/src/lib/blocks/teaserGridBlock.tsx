@@ -87,7 +87,7 @@ export const IconWrapper = styled('div')`
 
   .MuiIconButton-root {
     margin: 0;
-    padding: 4px;
+    padding: 3px;
     color: #fff;
   }
 `;
