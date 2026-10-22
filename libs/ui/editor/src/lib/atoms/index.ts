@@ -27,6 +27,7 @@ export * from './descriptionList';
 export * from './descriptionListwithMessage';
 export * from './draggable';
 export * from './editorHeader';
+export * from './statePill';
 export * from './editorTemplate';
 export * from './fileDropInput';
 export * from './focalPointInput';

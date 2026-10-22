@@ -52,12 +52,12 @@
     },
     "versionHistory": {
       "title": "Versionsverlauf",
+      "today": "Heute",
+      "yesterday": "Gestern",
       "subtitle": "{{count}} Versionen",
       "close": "Schliessen",
       "empty": "Noch keine Versionen.",
       "untitled": "Ohne Titel",
-      "created": "Erstellt {{date}}",
-      "published": "veröffentlicht {{date}}",
       "currentVersion": "Aktuelle Version",
       "restore": "Wiederherstellen",
       "restored": "Version als neuer Entwurf wiederhergestellt",
@@ -3812,6 +3812,12 @@
         "empty": "Keine Einträge für diesen Filter.",
         "attemptsHelp": "Wie oft versucht wurde, diese E-Mail zu verschicken. Mehr als 1 heisst: Sie wurde nach einem Fehler oder Unterbruch erneut versucht."
       }
+    },
+    "publishDialog": {
+      "checklist": "Vor dem Veröffentlichen",
+      "options": "Optionen",
+      "publish": "Veröffentlichen",
+      "schedule": "Planen"
     },
     "seoChecklist": {
       "navbar": "SEO",

@@ -52,12 +52,12 @@
     },
     "versionHistory": {
       "title": "Historique des versions",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
       "subtitle": "{{count}} version(s)",
       "close": "Fermer",
       "empty": "Aucune version pour l’instant.",
       "untitled": "Sans titre",
-      "created": "Créé le {{date}}",
-      "published": "publié le {{date}}",
       "currentVersion": "Version actuelle",
       "restore": "Restaurer",
       "restored": "Version restaurée en tant que nouveau brouillon",
@@ -3804,6 +3804,12 @@
         "empty": "Aucune entrée pour ce filtre.",
         "attemptsHelp": "Nombre de tentatives d’envoi de cet e-mail. Plus de 1 signifie qu’il a été réessayé après une erreur ou une interruption."
       }
+    },
+    "publishDialog": {
+      "checklist": "Avant de publier",
+      "options": "Options",
+      "publish": "Publier",
+      "schedule": "Programmer"
     },
     "seoChecklist": {
       "navbar": "SEO",

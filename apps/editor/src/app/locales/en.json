@@ -52,12 +52,12 @@
     },
     "versionHistory": {
       "title": "Version history",
+      "today": "Today",
+      "yesterday": "Yesterday",
       "subtitle": "{{count}} versions",
       "close": "Close",
       "empty": "No versions yet.",
       "untitled": "Untitled",
-      "created": "Created {{date}}",
-      "published": "published {{date}}",
       "currentVersion": "Current version",
       "restore": "Restore",
       "restored": "Version restored as a new draft",
@@ -3831,6 +3831,12 @@
         "empty": "No entries for this filter.",
         "attemptsHelp": "How often sending this email was attempted. More than 1 means it was tried again after an error or an interruption."
       }
+    },
+    "publishDialog": {
+      "checklist": "Before you publish",
+      "options": "Options",
+      "publish": "Publish",
+      "schedule": "Schedule"
     },
     "seoChecklist": {
       "navbar": "SEO",
