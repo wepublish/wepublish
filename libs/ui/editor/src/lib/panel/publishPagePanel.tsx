@@ -52,7 +52,9 @@ function PublishPagePanel({
           </Alert>
         )}
 
-        <div style={{ maxWidth: '200px' }}>
+        {/* room for the field's floating label, which the dialog content
+            would clip as it has no top padding below the title */}
+        <div style={{ maxWidth: '200px', paddingTop: '12px' }}>
           <DateTimePicker
             dateTime={publishedAt}
             label={t('pageEditor.panels.publishDate')}
