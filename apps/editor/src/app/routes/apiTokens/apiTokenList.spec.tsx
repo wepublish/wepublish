@@ -178,6 +178,30 @@ describe('ApiTokenList', () => {
     ).toBeTruthy();
   });
 
+  it('warns ahead of time about a key that is about to expire', async () => {
+    listing({
+      ...apiToken,
+      expiresAt: new Date(Date.now() + 10 * 86_400_000).toISOString(),
+    });
+    renderList();
+
+    expect(
+      await screen.findByText('apiTokenList.overview.expiresInDays:10')
+    ).toBeTruthy();
+    expect(screen.queryByText('apiTokenList.overview.active')).toBeNull();
+  });
+
+  it('keeps a key with plenty of time left plainly active', async () => {
+    renderList();
+
+    expect(
+      await screen.findByText('apiTokenList.overview.active')
+    ).toBeTruthy();
+    expect(
+      screen.queryByText(/apiTokenList\.overview\.expiresInDays/)
+    ).toBeNull();
+  });
+
   it('marks a key whose expiry has passed as expired, not active', async () => {
     listing({ ...apiToken, expiresAt: '2020-01-01T10:00:00.000Z' });
     renderList();

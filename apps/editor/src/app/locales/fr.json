@@ -4227,6 +4227,8 @@
         "lastUsedDate": "{{lastUsedDate, ccc PP p}}",
         "expires": "Expire le",
         "expired": "Expirée",
+        "expiresInDays_one": "Expire dans {{count}} jour",
+        "expiresInDays_other": "Expire dans {{count}} jours",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Propriétaire",
         "ownerUnknown": "Personne supprimée",

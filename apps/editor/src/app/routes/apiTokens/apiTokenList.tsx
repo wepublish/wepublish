@@ -50,6 +50,9 @@ import { useTranslation } from 'react-i18next';
 import { MdBlock, MdGeneratingTokens } from 'react-icons/md';
 import { Link as RouterLink, Outlet, useNavigate } from 'react-router-dom';
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+const EXPIRY_WARNING_DAYS = 30;
+
 const Filters = styled.div`
   display: grid;
   grid-template-columns: minmax(180px, 220px) 1fr;
@@ -118,6 +121,9 @@ function ApiTokenList() {
 
   const hasExpired = (expiresAt?: string | null) =>
     Boolean(expiresAt && new Date(expiresAt).getTime() <= Date.now());
+
+  const daysLeft = (expiresAt: string) =>
+    Math.ceil((new Date(expiresAt).getTime() - Date.now()) / DAY_MS);
 
   return (
     <>
@@ -203,7 +209,7 @@ function ApiTokenList() {
               id: 'status',
               alwaysVisible: true,
               label: t('apiTokenList.overview.status'),
-              width: 130,
+              width: 160,
               align: 'left',
               render: row =>
                 row.revokedAt ?
@@ -217,6 +223,15 @@ function ApiTokenList() {
                     size="small"
                     color="warning"
                     label={t('apiTokenList.overview.expired')}
+                  />
+                : daysLeft(row.expiresAt) <= EXPIRY_WARNING_DAYS ?
+                  <Chip
+                    size="small"
+                    color="warning"
+                    variant="outlined"
+                    label={t('apiTokenList.overview.expiresInDays', {
+                      count: daysLeft(row.expiresAt),
+                    })}
                   />
                 : <Chip
                     size="small"
