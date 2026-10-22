@@ -5,7 +5,9 @@
   "engines": {
     "node": "^22.20.0"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "**/libs/utils/api/src/lib/sentry/instrumentation.ts"
+  ],
   "scripts": {
     "migrate": "prisma migrate deploy && prisma db seed && pnpm run changelog:sync",
     "changelog:sync": "tsx -r dotenv/config libs/changelog/api/src/lib/sync/run-sync-changelogs.ts",
