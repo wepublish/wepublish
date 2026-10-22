@@ -36,11 +36,16 @@ const Empty = styled(ButtonBase)`
   }
 `;
 
-const Card = styled('div')`
+const Card = styled('div', {
+  shouldForwardProp: prop => prop !== 'inset',
+})<{ inset?: boolean }>`
   display: grid;
   border: 1px solid ${({ theme }) => theme.vars.palette.divider};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-  background-color: ${({ theme }) => theme.vars.palette.background.paper};
+  background-color: ${({ theme, inset }) =>
+    inset ?
+      theme.vars.palette.background.default
+    : theme.vars.palette.background.paper};
   overflow: hidden;
 `;
 
@@ -76,6 +81,7 @@ export type BlockPreviewCardProps = {
   title?: ReactNode;
   subtitle?: ReactNode;
   actions?: ReactNode;
+  inset?: boolean;
   disabled?: boolean;
   children?: ReactNode;
 };
@@ -88,6 +94,7 @@ export function BlockPreviewCard({
   title,
   subtitle,
   actions,
+  inset,
   disabled,
   children,
 }: BlockPreviewCardProps) {
@@ -104,7 +111,7 @@ export function BlockPreviewCard({
   }
 
   return (
-    <Card>
+    <Card inset={inset}>
       <Header>
         <HeaderText>
           {title && (

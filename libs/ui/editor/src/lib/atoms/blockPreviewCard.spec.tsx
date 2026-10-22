@@ -52,4 +52,27 @@ describe('BlockPreviewCard', () => {
 
     expect(screen.getByRole('button', { name: 'Choose poll' })).toBeDisabled();
   });
+
+  it('can sit inset inside another card', () => {
+    const surfaces = createTheme({
+      cssVariables: true,
+      palette: { background: { default: '#111111', paper: '#222222' } },
+    });
+
+    const { container } = render(
+      <ThemeProvider theme={surfaces}>
+        <BlockPreviewCard
+          isEmpty={false}
+          inset
+          emptyLabel="Choose poll"
+          editLabel="Edit poll"
+          onEdit={vi.fn()}
+        />
+      </ThemeProvider>
+    );
+
+    expect(container.firstElementChild).toHaveStyle({
+      'background-color': '#111111',
+    });
+  });
 });
