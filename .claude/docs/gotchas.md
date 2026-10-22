@@ -450,6 +450,20 @@ type-checks or tests this; only booting the image shows it.
 
 ---
 
+### ⚠️ Root `sideEffects` must list the API's Sentry instrumentation
+
+The root `package.json` marks every repo file side-effect free, so webpack
+drops bare imports like `import '@wepublish/utils/api/sentry'` (api-example and
+media `instrument.ts`). Dropping it compiles the import to `0;`, and the API
+then boots without `Sentry.init`. It started being dropped with the dependency
+bump in #3195 (webpack 5.108 → 5.112), and `docker/check-runtime-deps.js` then
+failed the image build on the now-unused `@sentry/profiling-node`. The array form keeps
+`libs/utils/api/src/lib/sentry/instrumentation.ts` and leaves everything else
+tree-shakeable. **A new file loaded only by a bare import needs an entry here
+too.**
+
+---
+
 ### ⚠️ Express 5 has no bare `*` route
 
 [apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
