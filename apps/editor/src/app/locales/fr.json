@@ -150,6 +150,7 @@
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "Ceci peut être utilisé pour faire référence à des articles qui seront publiés ultérieurement. Par exemple, lorsque des posts pour les réseaux sociaux sont programmés pour être publiés le lendemain matin.",
         "displayOptions": "Options d’affichage",
+        "displayOptionsHint": "Laissez un champ vide pour utiliser le texte original.",
         "dontChangeSlug": "Veuillez ne pas changer le slug une fois l’article publié.",
         "draft": "Brouillon",
         "chooseFile": "Choisir un fichier",

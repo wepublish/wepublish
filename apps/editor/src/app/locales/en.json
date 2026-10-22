@@ -150,6 +150,7 @@
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. It is helpful, for example, when scheduling social media posts in advance for the next morning.",
         "displayOptions": "Display Options",
+        "displayOptionsHint": "Leave a field empty to use the original text.",
         "dontChangeSlug": "Please don't change the slug once the article is published.",
         "draft": "Draft",
         "chooseFile": "Choose file",
