@@ -104,6 +104,32 @@ describe('getAdvertisedYearlyAmount', () => {
     );
   });
 
+  it('shows the yearly price of plans priced per year', () => {
+    const yearly = {
+      periodicityPricing: [
+        price(PaymentPeriodicity.Monthly, 1600),
+        price(PaymentPeriodicity.Yearly, 10000),
+      ],
+    };
+
+    expect(getAdvertisedYearlyAmount(yearly, PaymentPeriodicity.Yearly)).toBe(
+      100
+    );
+  });
+
+  it('ignores a yearly row without a minimum amount', () => {
+    const labelOnly = {
+      periodicityPricing: [
+        price(PaymentPeriodicity.Monthly, 1600),
+        { ...price(PaymentPeriodicity.Yearly, 0), amountMin: null },
+      ],
+    };
+
+    expect(
+      getAdvertisedYearlyAmount(labelOnly, PaymentPeriodicity.Yearly)
+    ).toBe(192);
+  });
+
   it('shows the price of the whole period for a single offer', () => {
     const monthly = {
       periodicityPricing: [price(PaymentPeriodicity.Monthly, 1600)],
