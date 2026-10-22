@@ -13,13 +13,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
-import {
-  Button,
-  Card,
-  CardContent,
-  Drawer,
-  IconButton as MuiIconButton,
-} from '@mui/material';
+import { Drawer, IconButton as MuiIconButton } from '@mui/material';
 import { FullImageFragment, TeaserType } from '@wepublish/editor/api';
 import nanoid from 'nanoid';
 import { ChangeEvent, ReactNode, useState } from 'react';
@@ -49,14 +43,17 @@ const SortableContainerComponent = styled.div<{ numColumns: number }>`
   user-select: none;
 `;
 
-const Panel = styled(Card, {
+const Panel = styled('div', {
   shouldForwardProp: prop => prop !== 'showGrabCursor',
 })<{ showGrabCursor: boolean }>`
+  position: relative;
   display: grid;
   cursor: ${({ showGrabCursor }) => showGrabCursor && 'grab'};
   height: 300px;
   overflow: hidden;
   z-index: 1;
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const Teaser = styled.div`
@@ -76,11 +73,23 @@ const TeaserImage = styled.img`
   object-fit: cover;
 `;
 
-export const IconWrapper = styled.div`
+export const IconWrapper = styled('div')`
   position: absolute;
-  z-index: 1;
-  right: 0;
-  top: 0;
+  z-index: 2;
+  top: ${({ theme }) => theme.spacing(1)};
+  right: ${({ theme }) => theme.spacing(1)};
+  display: flex;
+  gap: ${({ theme }) => theme.spacing(0.25)};
+  padding: ${({ theme }) => theme.spacing(0.25)};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+
+  .MuiIconButton-root {
+    margin: 0;
+    padding: 4px;
+    color: #fff;
+  }
 `;
 
 const PeerInfo = styled.div`
@@ -317,57 +326,51 @@ export function TeaserBlock({
 }: TeaserBlockProps) {
   const { t } = useTranslation();
   return (
-    <Panel
-      variant="outlined"
-      showGrabCursor={showGrabCursor}
-    >
-      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
-        <PlaceholderInput
-          onAddClick={onChoose}
-          addLabel={t('blocks.flexTeaser.chooseTeaser')}
-        >
-          {teaser && (
-            <Teaser>
-              <ContentForTeaser
-                teaser={teaser}
-                numColumns={numColumns}
-              />
-              <IconWrapper>
-                <IconButtonTooltip
-                  caption={t('blocks.flexTeaser.chooseTeaser')}
+    <Panel showGrabCursor={showGrabCursor}>
+      <PlaceholderInput
+        onAddClick={onChoose}
+        addLabel={t('blocks.flexTeaser.chooseTeaser')}
+      >
+        {teaser && (
+          <Teaser>
+            <ContentForTeaser
+              teaser={teaser}
+              numColumns={numColumns}
+            />
+            <IconWrapper>
+              <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
+                <IconButton
+                  size="small"
+                  aria-label={t('blocks.flexTeaser.chooseTeaser')}
+                  onClick={onChoose}
                 >
-                  <Button
-                    variant="outlined"
-                    startIcon={<MdArticle />}
-                    aria-label={t('blocks.flexTeaser.chooseTeaser')}
-                    onClick={onChoose}
-                  ></Button>
-                </IconButtonTooltip>
+                  <MdArticle />
+                </IconButton>
+              </IconButtonTooltip>
 
-                <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
-                  <Button
-                    variant="outlined"
-                    startIcon={<MdEdit />}
-                    aria-label={t('blocks.flexTeaser.editTeaser')}
-                    onClick={onEdit}
-                  ></Button>
-                </IconButtonTooltip>
-
-                <IconButtonTooltip
-                  caption={t('blocks.flexTeaser.deleteTeaser')}
+              <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
+                <IconButton
+                  size="small"
+                  aria-label={t('blocks.flexTeaser.editTeaser')}
+                  onClick={onEdit}
                 >
-                  <Button
-                    variant="outlined"
-                    startIcon={<MdDelete />}
-                    aria-label={t('blocks.flexTeaser.deleteTeaser')}
-                    onClick={onRemove}
-                  ></Button>
-                </IconButtonTooltip>
-              </IconWrapper>
-            </Teaser>
-          )}
-        </PlaceholderInput>
-      </CardContent>
+                  <MdEdit />
+                </IconButton>
+              </IconButtonTooltip>
+
+              <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
+                <IconButton
+                  size="small"
+                  aria-label={t('blocks.flexTeaser.deleteTeaser')}
+                  onClick={onRemove}
+                >
+                  <MdDelete />
+                </IconButton>
+              </IconButtonTooltip>
+            </IconWrapper>
+          </Teaser>
+        )}
+      </PlaceholderInput>
     </Panel>
   );
 }
@@ -481,6 +484,8 @@ const OverlayComponent = styled(Overlay)<{ isDisabled?: boolean }>`
   bottom: 0;
   width: 100%;
   padding: 10px;
+  border-bottom-left-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  border-bottom-right-radius: ${({ theme }) => theme.shape.borderRadius}px;
   height: ${({ isDisabled }) => (isDisabled ? '100%' : 'auto')};
 `;
 
