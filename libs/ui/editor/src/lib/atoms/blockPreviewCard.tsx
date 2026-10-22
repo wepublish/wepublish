@@ -13,7 +13,7 @@ const Empty = styled(ButtonBase)`
   padding: ${({ theme }) => theme.spacing(3)};
   border: 1px dashed ${({ theme }) => theme.vars.palette.action.disabled};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-  background-color: ${({ theme }) => theme.vars.palette.background.default};
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
   color: ${({ theme }) => theme.vars.palette.text.secondary};
   transition: ${({ theme }) =>
     theme.transitions.create(['border-color', 'background-color', 'color'])};
@@ -40,7 +40,7 @@ const Card = styled('div')`
   display: grid;
   border: 1px solid ${({ theme }) => theme.vars.palette.divider};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-  background-color: ${({ theme }) => theme.vars.palette.background.default};
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
   overflow: hidden;
 `;
 
