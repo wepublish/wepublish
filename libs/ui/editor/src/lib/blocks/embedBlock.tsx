@@ -1,11 +1,10 @@
 import styled from '@emotion/styled';
-import { Button, Card, CardContent, Drawer } from '@mui/material';
+import { Drawer } from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdEdit } from 'react-icons/md';
 
 import { BlockProps } from '../atoms/blockList';
-import { PlaceholderInput } from '../atoms/placeholderInput';
+import { BlockPreviewCard } from '../atoms/blockPreviewCard';
 import { DRAWER_WIDTHS } from '../drawer';
 import { EmbedEditPanel } from '../panel/embedEditPanel';
 import { BildwurfAdEmbed } from './embeds/bildwurfAd';
@@ -21,33 +20,17 @@ import { VimeoVideoEmbed } from './embeds/vimeo';
 import { YouTubeVideoEmbed } from './embeds/youTube';
 import { EmbedBlockValue, EmbedType } from './types';
 
-const Panel = styled(Card, {
-  shouldForwardProp: prop => prop !== 'isEmpty',
-})<{ isEmpty: boolean }>`
+const Preview = styled('div')`
   display: grid;
-  height: ${({ isEmpty }) => (isEmpty ? '300px' : undefined)};
-  padding: 0;
+  justify-items: center;
   overflow: hidden;
-  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
-const Wrapper = styled.div`
-  position: relative;
-  width: 100%;
-`;
-
-const IconWrapper = styled.div`
-  position: absolute;
-  z-index: 100;
-  height: 100%;
-  right: 0;
-`;
-
-// TODO: Handle disabled prop
 export function EmbedBlock({
   value,
   onChange,
   autofocus,
+  disabled,
 }: BlockProps<EmbedBlockValue>) {
   const isEmpty = value.type === EmbedType.Other && value.url === undefined;
   const { t } = useTranslation();
@@ -57,35 +40,19 @@ export function EmbedBlock({
 
   return (
     <>
-      <Panel
-        variant="outlined"
+      <BlockPreviewCard
         isEmpty={isEmpty}
+        emptyLabel={t('blocks.embeds.overview.editEmbed')}
+        editLabel={t('blocks.embeds.overview.editEmbed')}
+        onEdit={() => setEmbedDialogOpen(true)}
+        title={t('blocks.embeds.label')}
+        disabled={disabled}
       >
-        <CardContent>
-          <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
-            <PlaceholderInput
-              onAddClick={() => setEmbedDialogOpen(true)}
-              addLabel={t('blocks.embeds.overview.editEmbed')}
-            >
-              {!isEmpty && (
-                <Wrapper>
-                  <IconWrapper>
-                    <Button
-                      variant="outlined"
-                      startIcon={<MdEdit />}
-                      size="large"
-                      onClick={() => setEmbedDialogOpen(true)}
-                    >
-                      {t('blocks.embeds.overview.editEmbed')}
-                    </Button>
-                  </IconWrapper>
-                  <EmbedPreview value={value} />
-                </Wrapper>
-              )}
-            </PlaceholderInput>
-          </CardContent>
-        </CardContent>
-      </Panel>
+        <Preview>
+          <EmbedPreview value={value} />
+        </Preview>
+      </BlockPreviewCard>
+
       <Drawer
         anchor="right"
         slotProps={{
