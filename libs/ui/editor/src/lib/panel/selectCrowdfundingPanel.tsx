@@ -16,9 +16,7 @@ import { DataTable } from '../listView/data-table';
 
 export type SelectCrowdfundingPanelProps = {
   selectedCrowdfunding:
-    | CrowdfundingBlockValue['crowdfunding']
-    | null
-    | undefined;
+    CrowdfundingBlockValue['crowdfunding'] | null | undefined;
   onClose(): void;
   onSelect(
     crowdfunding: CrowdfundingBlockValue['crowdfunding'] | null | undefined
@@ -41,7 +39,7 @@ export function SelectCrowdfundingPanel({
 
         <DrawerActions>
           <Button
-            variant="outlined"
+            variant="text"
             onClick={() => onClose()}
           >
             {t('close')}
