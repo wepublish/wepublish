@@ -52,56 +52,16 @@ import { useTranslation } from 'react-i18next';
 import { MdDragIndicator, MdPriceCheck } from 'react-icons/md';
 
 import { BlockProps } from '../atoms/blockList';
+import {
+  BlockSection,
+  BlockSectionHeader,
+  BlockSections,
+} from '../atoms/blockSection';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { InfoTooltip, InfoTrigger } from '../atoms/infoTooltip';
 import { ClickPopover } from '../popover';
 import { getMonthlyEquivalentRange } from '../utility';
 import { SubscribeBlockValue } from './types';
-
-const Root = styled('div')`
-  display: grid;
-`;
-
-const Section = styled('section')`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(2)};
-  padding-block: ${({ theme }) => theme.spacing(3)};
-
-  &:first-of-type {
-    padding-top: 0;
-  }
-
-  &:last-of-type {
-    padding-bottom: 0;
-  }
-
-  & + & {
-    border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
-  }
-`;
-
-const SectionHeader = styled('header')`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(0.5)};
-`;
-
-const SectionTitle = ({ children }: { children: ReactNode }) => (
-  <Typography
-    variant="h6"
-    component="h3"
-  >
-    {children}
-  </Typography>
-);
-
-const SectionDescription = ({ children }: { children: ReactNode }) => (
-  <Typography
-    variant="body2"
-    color="text.secondary"
-  >
-    {children}
-  </Typography>
-);
 
 const PlanList = styled('ul')`
   container-type: inline-size;
@@ -984,11 +944,9 @@ export const SubscribeBlock = ({
     memberPlanId;
 
   return (
-    <Root>
-      <Section>
-        <SectionHeader>
-          <SectionTitle>{t('blocks.subscribe.selectMemberPlans')}</SectionTitle>
-        </SectionHeader>
+    <BlockSections>
+      <BlockSection>
+        <BlockSectionHeader title={t('blocks.subscribe.selectMemberPlans')} />
 
         <Autocomplete
           multiple
@@ -1016,18 +974,14 @@ export const SubscribeBlock = ({
             />
           )}
         />
-      </Section>
+      </BlockSection>
 
       {!!value.memberPlanRenderSettings.length && (
-        <Section>
-          <SectionHeader>
-            <SectionTitle>
-              {t('blocks.subscribe.renderStylesHeading')}
-            </SectionTitle>
-            <SectionDescription>
-              {t('blocks.subscribe.renderStylesHelp')}
-            </SectionDescription>
-          </SectionHeader>
+        <BlockSection>
+          <BlockSectionHeader
+            title={t('blocks.subscribe.renderStylesHeading')}
+            description={t('blocks.subscribe.renderStylesHelp')}
+          />
 
           <DndContext
             sensors={sensors}
@@ -1319,15 +1273,11 @@ export const SubscribeBlock = ({
               </PlanList>
             </SortableContext>
           </DndContext>
-        </Section>
+        </BlockSection>
       )}
 
-      <Section>
-        <SectionHeader>
-          <SectionTitle>
-            {t('blocks.subscribe.periodicityDisplay')}
-          </SectionTitle>
-        </SectionHeader>
+      <BlockSection>
+        <BlockSectionHeader title={t('blocks.subscribe.periodicityDisplay')} />
 
         <FormControl disabled={disabled}>
           <RadioGroup
@@ -1378,12 +1328,10 @@ export const SubscribeBlock = ({
             })}
           </Alert>
         )}
-      </Section>
+      </BlockSection>
 
-      <Section>
-        <SectionHeader>
-          <SectionTitle>{t('blocks.subscribe.goodiesHeading')}</SectionTitle>
-        </SectionHeader>
+      <BlockSection>
+        <BlockSectionHeader title={t('blocks.subscribe.goodiesHeading')} />
 
         <div>
           <FormControlLabel
@@ -1466,14 +1414,12 @@ export const SubscribeBlock = ({
             </SubSettings>
           </Collapse>
         </div>
-      </Section>
+      </BlockSection>
 
-      <Section>
-        <SectionHeader>
-          <SectionTitle>
-            {t('blocks.subscribe.discountCodesHeading')}
-          </SectionTitle>
-        </SectionHeader>
+      <BlockSection>
+        <BlockSectionHeader
+          title={t('blocks.subscribe.discountCodesHeading')}
+        />
 
         <FormControlLabel
           control={
@@ -1491,12 +1437,10 @@ export const SubscribeBlock = ({
             </Typography>
           }
         />
-      </Section>
+      </BlockSection>
 
-      <Section>
-        <SectionHeader>
-          <SectionTitle>{t('blocks.subscribe.selectFields')}</SectionTitle>
-        </SectionHeader>
+      <BlockSection>
+        <BlockSectionHeader title={t('blocks.subscribe.selectFields')} />
 
         <Autocomplete
           multiple
@@ -1513,7 +1457,7 @@ export const SubscribeBlock = ({
             />
           )}
         />
-      </Section>
-    </Root>
+      </BlockSection>
+    </BlockSections>
   );
 };
