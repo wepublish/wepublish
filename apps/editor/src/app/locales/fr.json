@@ -4111,6 +4111,9 @@
     "colorPicker": {
       "pickColor": "Choisir la couleur"
     },
+    "flexTile": {
+      "moreActions": "Plus d’actions"
+    },
     "listInput": {
       "dragToReorder": "Glisser pour modifier l’ordre",
       "add": "Ajouter une entrée"

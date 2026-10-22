@@ -4111,6 +4111,9 @@
     "colorPicker": {
       "pickColor": "Pick color"
     },
+    "flexTile": {
+      "moreActions": "More actions"
+    },
     "listInput": {
       "dragToReorder": "Drag to change the order",
       "add": "Add entry"
