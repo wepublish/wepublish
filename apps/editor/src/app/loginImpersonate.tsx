@@ -1,8 +1,10 @@
+import { Typography } from '@mui/material';
 import { useMutation } from '@apollo/client/react';
 import {
   CreateSessionWithJwtDocument,
   LocalStorageKey,
 } from '@wepublish/editor/api';
+import { CanLoginEditor } from '@wepublish/permissions';
 import {
   AuthDispatchActionType,
   AuthDispatchContext,
@@ -51,7 +53,7 @@ export function LoginImpersonate() {
           role.permissions.map(permission => permission.id)
         );
 
-        if (!permissions.includes('CAN_LOGIN_EDITOR')) {
+        if (!permissions.includes(CanLoginEditor.id)) {
           setError(t('login.unauthorized'));
           return;
         }
@@ -74,7 +76,7 @@ export function LoginImpersonate() {
 
   return (
     <LoginTemplate backgroundChildren={<Background />}>
-      <p>{error ?? t('login.impersonate.pending')}</p>
+      <Typography>{error ?? t('login.impersonate.pending')}</Typography>
     </LoginTemplate>
   );
 }

@@ -1,5 +1,6 @@
 import type { DailySubscriptionStats } from '@wepublish/editor/api';
-import type { DateRange } from 'rsuite/esm/DateRangePicker';
+
+export type DateRange = [Date, Date];
 
 export type TimeResolution = 'daily' | 'monthly';
 
@@ -104,7 +105,7 @@ export function preDefinedDates(from: Date = new Date()): PreDefinedDates {
 
 export type DateRangePresetKey = Exclude<keyof PreDefinedDates, 'today'>;
 
-const DATE_RANGE_PRESET_KEYS: DateRangePresetKey[] = [
+export const DATE_RANGE_PRESET_KEYS: DateRangePresetKey[] = [
   'lastWeek',
   'lastMonth',
   'lastQuarter',
@@ -226,12 +227,7 @@ export function encodeAudienceFilter(
       .join(',')
   );
 
-  params.set(
-    'show',
-    (['chart', 'table'] as const)
-      .filter(component => state.componentFilter[component])
-      .join(',')
-  );
+  params.set('show', state.componentFilter.table ? 'table' : 'chart');
 
   return params;
 }
@@ -289,10 +285,12 @@ const decodeComponentFilter = (
 
   const visible = new Set(raw.split(',').filter(Boolean));
 
+  const table = visible.has('table') && !visible.has('chart');
+
   return {
     ...fallback,
-    chart: visible.has('chart'),
-    table: visible.has('table'),
+    chart: !table,
+    table,
   };
 };
 

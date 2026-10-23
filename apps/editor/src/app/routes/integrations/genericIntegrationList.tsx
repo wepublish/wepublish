@@ -1,5 +1,12 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import { SettingProvider } from '@wepublish/editor/api';
 import { humanizeError } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
@@ -7,7 +14,6 @@ import { useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdSearch } from 'react-icons/md';
-import { Input, InputGroup, Loader, Message } from 'rsuite';
 
 import {
   GenericIntegrationFormProps,
@@ -24,9 +30,9 @@ interface GenericIntegrationListProps<
   TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
 > extends Omit<
-    GenericIntegrationFormProps<TSetting, TFormValues>,
-    'setting' | 'renderActions'
-  > {
+  GenericIntegrationFormProps<TSetting, TFormValues>,
+  'setting' | 'renderActions'
+> {
   query: DocumentNode;
   dataKey: string;
 
@@ -49,7 +55,7 @@ interface GenericIntegrationListProps<
   };
 }
 
-const StyledInputGroup = styled(InputGroup)`
+const StyledSearch = styled(TextField)`
   margin-bottom: 20px;
 `;
 
@@ -102,11 +108,22 @@ export function GenericIntegrationList<
   }, [settings, searchValue]);
 
   if (loading) {
-    return <Loader center />;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
-    return <Message type="error">{humanizeError(error)}</Message>;
+    return <Alert severity="error">{humanizeError(error)}</Alert>;
   }
 
   const addButton = registry && (
@@ -121,11 +138,11 @@ export function GenericIntegrationList<
   if (!settings?.length) {
     return (
       <>
-        <Message type="warning">
+        <Alert severity="warning">
           {setup ?
             t('integrations.setUpHint')
           : t('integrations.noSettingsFound')}
-        </Message>
+        </Alert>
 
         {(addButton || fixedProvider || setup) && (
           <Toolbar>
@@ -161,18 +178,20 @@ export function GenericIntegrationList<
       {addButton && <Toolbar>{addButton}</Toolbar>}
 
       {settings?.length > 3 && (
-        <StyledInputGroup>
-          <InputGroup.Addon>
-            <MdSearch />
-          </InputGroup.Addon>
-
-          <Input
-            value={searchValue}
-            onChange={setSearchValue}
-            placeholder={t('search')}
-            size="lg"
-          />
-        </StyledInputGroup>
+        <StyledSearch
+          value={searchValue}
+          onChange={event => setSearchValue(event.target.value)}
+          placeholder={t('search')}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <MdSearch />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
       )}
 
       <GenericIntegrationGrid>

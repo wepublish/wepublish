@@ -39,7 +39,7 @@ const AppIconBox = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.palette?.primary?.main};
+  color: ${({ theme }) => theme.vars.palette.primary.main};
 `;
 
 const EmptyText = styled(Typography)`

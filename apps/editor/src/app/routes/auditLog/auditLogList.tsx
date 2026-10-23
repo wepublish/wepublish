@@ -1,42 +1,40 @@
-import styled from '@emotion/styled';
 import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
+import {
+  Alert,
+  Checkbox,
+  Chip,
+  FormControlLabel,
+  InputAdornment,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import {
   AuditLogAction,
   AuditLogActorType,
   AuditLogFilter,
+  AuditLogListDocument,
   AuditLogSort,
   FullAuditLogFragment,
-  AuditLogListDocument,
   SortOrder,
 } from '@wepublish/editor/api';
+import { CanGetAuditLogs } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
+  DateRangeFilter,
   IconButtonTooltip,
   InfoTooltip,
   ListViewContainer,
   ListViewHeader,
-  Table,
+  Pagination,
   TableWrapper,
+  PageTitle,
+  useTableExportQuery,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFilterAlt, MdPersonSearch } from 'react-icons/md';
-import {
-  Checkbox,
-  DateRangePicker,
-  Input,
-  InputGroup,
-  Message,
-  Pagination,
-  Table as RTable,
-  SelectPicker,
-  Tag as RTag,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
 
 const FilterBar = styled.div`
   display: flex;
@@ -47,8 +45,12 @@ const FilterBar = styled.div`
   width: 100%;
 `;
 
-const SearchInput = styled(InputGroup)`
+const SearchInput = styled(TextField)`
   max-width: 320px;
+`;
+
+const ActionSelect = styled(TextField)`
+  min-width: 220px;
 `;
 
 const Monospace = styled.span`
@@ -58,7 +60,7 @@ const Monospace = styled.span`
 `;
 
 const Muted = styled.span`
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const Truncate = styled.span`
@@ -71,12 +73,12 @@ const Truncate = styled.span`
 
 const actionColors: Record<
   AuditLogAction,
-  'green' | 'blue' | 'red' | 'violet'
+  'success' | 'primary' | 'error' | 'secondary'
 > = {
-  [AuditLogAction.Create]: 'green',
-  [AuditLogAction.Update]: 'blue',
-  [AuditLogAction.Delete]: 'red',
-  [AuditLogAction.Other]: 'violet',
+  [AuditLogAction.Create]: 'success',
+  [AuditLogAction.Update]: 'primary',
+  [AuditLogAction.Delete]: 'error',
+  [AuditLogAction.Other]: 'secondary',
 };
 
 function AuditLogList() {
@@ -87,7 +89,6 @@ function AuditLogList() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [auditLogs, setAuditLogs] = useState<FullAuditLogFragment[]>([]);
 
   const { data, loading: isLoading } = useQuery(AuditLogListDocument, {
     variables: {
@@ -100,6 +101,18 @@ function AuditLogList() {
     fetchPolicy: 'cache-and-network',
   });
 
+  const auditLogs = data?.auditLogs?.nodes ?? [];
+
+  const exportAuditLogs = useTableExportQuery(
+    AuditLogListDocument,
+    {
+      filter,
+      sort: AuditLogSort.CreatedAt,
+      order: sortOrder === 'asc' ? SortOrder.Ascending : SortOrder.Descending,
+    },
+    data => data.auditLogs
+  );
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setFilter(current => ({ ...current, search: search || undefined }));
@@ -109,15 +122,10 @@ function AuditLogList() {
     return () => clearTimeout(timeout);
   }, [search]);
 
-  useEffect(() => {
-    if (data?.auditLogs?.nodes) {
-      setAuditLogs(data.auditLogs.nodes);
-
-      if (Math.ceil(data.auditLogs.totalCount / limit) < page) {
-        setPage(1);
-      }
-    }
-  }, [data?.auditLogs, limit, page]);
+  const totalPages = Math.ceil((data?.auditLogs?.totalCount ?? 0) / limit);
+  if (totalPages > 0 && page > totalPages) {
+    setPage(1);
+  }
 
   const updateFilter = (partial: Partial<AuditLogFilter>) => {
     setFilter(current => ({ ...current, ...partial }));
@@ -148,16 +156,11 @@ function AuditLogList() {
       <>
         <ListViewContainer>
           <ListViewHeader>
-            <h2>{t('auditLogList.overview.title')}</h2>
+            <PageTitle>{t('auditLogList.overview.title')}</PageTitle>
           </ListViewHeader>
         </ListViewContainer>
 
-        <Message
-          type="info"
-          showIcon
-        >
-          {t('auditLogList.overview.notSupported')}
-        </Message>
+        <Alert severity="info">{t('auditLogList.overview.notSupported')}</Alert>
       </>
     );
   }
@@ -166,167 +169,185 @@ function AuditLogList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>
+          <PageTitle>
             {t('auditLogList.overview.title')}{' '}
             <InfoTooltip text={t('auditLogList.overview.titleInfo')} />
-          </h2>
+          </PageTitle>
         </ListViewHeader>
 
         <FilterBar>
-          <SearchInput inside>
-            <Input
-              value={search}
-              placeholder={t('auditLogList.filter.searchPlaceholder')}
-              onChange={value => setSearch(value)}
-            />
-            <InputGroup.Addon>
-              <MdPersonSearch />
-            </InputGroup.Addon>
-          </SearchInput>
-
-          <SelectPicker
-            data={Object.values(AuditLogAction).map(action => ({
-              label: t(`auditLogList.action.${action}`),
-              value: action,
-            }))}
-            value={filter.actions?.[0] ?? null}
-            placeholder={t('auditLogList.filter.action')}
-            onChange={value =>
-              updateFilter({ actions: value ? [value] : undefined })
-            }
-            searchable={false}
-            style={{ width: 160 }}
+          <SearchInput
+            value={search}
+            placeholder={t('auditLogList.filter.searchPlaceholder')}
+            onChange={event => setSearch(event.target.value)}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <MdPersonSearch />
+                  </InputAdornment>
+                ),
+              },
+            }}
           />
 
-          <Input
+          <ActionSelect
+            select
+            label={t('auditLogList.filter.action')}
+            value={filter.actions?.[0] ?? ''}
+            onChange={event => {
+              const value = event.target.value as AuditLogAction;
+              updateFilter({ actions: value ? [value] : undefined });
+            }}
+            slotProps={{
+              select: { displayEmpty: true },
+              inputLabel: { shrink: true },
+            }}
+          >
+            <MenuItem value="">{t('auditLogList.filter.anyAction')}</MenuItem>
+
+            {Object.values(AuditLogAction).map(action => (
+              <MenuItem
+                key={action}
+                value={action}
+              >
+                {t(`auditLogList.action.${action}`)}
+              </MenuItem>
+            ))}
+          </ActionSelect>
+
+          <TextField
             value={filter.entity ?? ''}
             placeholder={t('auditLogList.filter.entity')}
-            onChange={value => updateFilter({ entity: value || undefined })}
+            onChange={event =>
+              updateFilter({ entity: event.target.value || undefined })
+            }
             style={{ width: 160 }}
           />
 
-          <Input
+          <TextField
             value={filter.sessionId ?? ''}
             placeholder={t('auditLogList.filter.session')}
-            onChange={value => updateFilter({ sessionId: value || undefined })}
+            onChange={event =>
+              updateFilter({ sessionId: event.target.value || undefined })
+            }
             style={{ width: 240 }}
           />
 
-          <DateRangePicker
-            value={
-              filter.from && filter.to ?
-                [new Date(filter.from), new Date(filter.to)]
-              : null
-            }
-            placeholder={t('auditLogList.filter.dateRange')}
-            onChange={range =>
+          <DateRangeFilter
+            label={t('auditLogList.filter.dateFrom')}
+            value={{
+              from: filter.from ? new Date(filter.from) : null,
+              to: filter.to ? new Date(filter.to) : null,
+            }}
+            onChange={({ from, to }) =>
               updateFilter({
-                from: range?.[0]?.toISOString(),
-                to: range?.[1]?.toISOString(),
+                from: from?.toISOString(),
+                to: to?.toISOString(),
               })
             }
           />
 
-          <Checkbox
-            checked={filter.success === false}
-            onChange={(_, checked) =>
-              updateFilter({ success: checked ? false : undefined })
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={filter.success === false}
+                onChange={(_event, checked) =>
+                  updateFilter({ success: checked ? false : undefined })
+                }
+              />
             }
-          >
-            {t('auditLogList.filter.failuresOnly')}
-          </Checkbox>
+            label={t('auditLogList.filter.failuresOnly')}
+          />
 
-          <Checkbox
-            checked={Boolean(filter.impersonatedOnly)}
-            onChange={(_, checked) =>
-              updateFilter({ impersonatedOnly: checked || undefined })
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={Boolean(filter.impersonatedOnly)}
+                onChange={(_event, checked) =>
+                  updateFilter({ impersonatedOnly: checked || undefined })
+                }
+              />
             }
-          >
-            {t('auditLogList.filter.impersonatedOnly')}{' '}
-            <InfoTooltip text={t('auditLogList.filter.impersonatedOnlyInfo')} />
-          </Checkbox>
+            label={
+              <>
+                {t('auditLogList.filter.impersonatedOnly')}{' '}
+                <InfoTooltip
+                  text={t('auditLogList.filter.impersonatedOnlyInfo')}
+                />
+              </>
+            }
+          />
         </FilterBar>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={isLoading}
+        <DataTable
+          storageKey="audit-log"
+          exportRows={exportAuditLogs}
+          exportTotalCount={data?.auditLogs.totalCount ?? 0}
           data={auditLogs}
-          sortColumn="createdAt"
-          sortType={sortOrder}
-          onSortColumn={(_, sortType) => setSortOrder(sortType ?? 'desc')}
-        >
-          <Column
-            width={180}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('auditLogList.overview.createdAt')}</HeaderCell>
-            <RCell dataKey="createdAt">
-              {({ createdAt }: RowDataType<FullAuditLogFragment>) =>
+          loading={isLoading}
+          columns={[
+            {
+              id: 'createdat',
+              alwaysVisible: true,
+              label: t('auditLogList.overview.createdAt'),
+              width: 180,
+              align: 'left',
+              render: ({ createdAt }) =>
                 t('auditLogList.overview.createdAtDate', {
                   createdAtDate: new Date(createdAt),
-                })
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={240}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('auditLogList.overview.actor')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullAuditLogFragment>) => {
+                }),
+              exportValue: ({ createdAt }) => new Date(createdAt),
+            },
+            {
+              id: 'actor',
+              label: t('auditLogList.overview.actor'),
+              width: 240,
+              align: 'left',
+              render: rowData => {
                 const actor = describeActor(rowData as FullAuditLogFragment);
 
                 return <Truncate title={actor}>{actor}</Truncate>;
-              }}
-            </RCell>
-          </Column>
-
-          <Column
-            width={110}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('auditLogList.overview.action')}</HeaderCell>
-            <RCell>
-              {({ action }: RowDataType<FullAuditLogFragment>) => (
-                <RTag color={actionColors[action as AuditLogAction]}>
-                  {t(`auditLogList.action.${action}`)}
-                </RTag>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>
-              {t('auditLogList.overview.mutation')}{' '}
-              <InfoTooltip text={t('auditLogList.overview.mutationInfo')} />
-            </HeaderCell>
-            <RCell>
-              {({ mutation }: RowDataType<FullAuditLogFragment>) => (
+              },
+              exportValue: rowData =>
+                describeActor(rowData as FullAuditLogFragment),
+            },
+            {
+              id: 'action',
+              label: t('auditLogList.overview.action'),
+              width: 110,
+              align: 'left',
+              render: ({ action }) => (
+                <Chip
+                  color={actionColors[action as AuditLogAction]}
+                  label={t(`auditLogList.action.${action}`)}
+                />
+              ),
+              exportValue: ({ action }) => t(`auditLogList.action.${action}`),
+            },
+            {
+              id: 'mutation',
+              label: (
+                <>
+                  {t('auditLogList.overview.mutation')}{' '}
+                  <InfoTooltip text={t('auditLogList.overview.mutationInfo')} />
+                </>
+              ),
+              width: 200,
+              align: 'left',
+              render: ({ mutation }) => (
                 <Truncate title={mutation}>{mutation}</Truncate>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={280}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('auditLogList.overview.record')}</HeaderCell>
-            <RCell>
-              {({ entity, recordId }: RowDataType<FullAuditLogFragment>) =>
+              ),
+              exportValue: ({ mutation }) => mutation,
+            },
+            {
+              id: 'record',
+              label: t('auditLogList.overview.record'),
+              width: 280,
+              align: 'left',
+              render: ({ entity, recordId }) =>
                 entity ?
                   <Truncate
                     title={recordId ? `${entity} · ${recordId}` : entity}
@@ -339,22 +360,21 @@ function AuditLogList() {
                       </>
                     )}
                   </Truncate>
-                : <Muted>—</Muted>
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>
-              {t('auditLogList.overview.session')}{' '}
-              <InfoTooltip text={t('auditLogList.overview.sessionInfo')} />
-            </HeaderCell>
-            <RCell>
-              {({ sessionId }: RowDataType<FullAuditLogFragment>) =>
+                : <Muted>—</Muted>,
+              exportValue: ({ entity, recordId }) =>
+                entity && recordId ? `${entity} · ${recordId}` : entity,
+            },
+            {
+              id: 'session',
+              label: (
+                <>
+                  {t('auditLogList.overview.session')}{' '}
+                  <InfoTooltip text={t('auditLogList.overview.sessionInfo')} />
+                </>
+              ),
+              width: 200,
+              align: 'left',
+              render: ({ sessionId }) =>
                 sessionId ?
                   <IconButtonTooltip
                     caption={t('auditLogList.overview.filterBySession')}
@@ -366,49 +386,39 @@ function AuditLogList() {
                       {sessionId.slice(0, 8)}… <MdFilterAlt />
                     </Monospace>
                   </IconButtonTooltip>
-                : <Muted>—</Muted>
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={220}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('auditLogList.overview.status')}</HeaderCell>
-            <RCell>
-              {({
-                success,
-                errorMessage,
-              }: RowDataType<FullAuditLogFragment>) =>
+                : <Muted>—</Muted>,
+              exportValue: ({ sessionId }) => sessionId,
+            },
+            {
+              id: 'status',
+              label: t('auditLogList.overview.status'),
+              width: 220,
+              align: 'left',
+              render: ({ success, errorMessage }) =>
                 success ?
-                  <RTag color="green">
-                    {t('auditLogList.overview.succeeded')}
-                  </RTag>
+                  <Chip
+                    color="success"
+                    label={t('auditLogList.overview.succeeded')}
+                  />
                 : <IconButtonTooltip caption={errorMessage ?? ''}>
-                    <RTag color="red">{t('auditLogList.overview.failed')}</RTag>
-                  </IconButtonTooltip>
-              }
-            </RCell>
-          </Column>
-        </Table>
+                    <Chip
+                      color="error"
+                      label={t('auditLogList.overview.failed')}
+                    />
+                  </IconButtonTooltip>,
+              exportValue: ({ success }) => success,
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.auditLogs.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
+          }}
+          totalCount={data?.auditLogs.totalCount ?? 0}
         />
       </TableWrapper>
     </>
@@ -416,6 +426,6 @@ function AuditLogList() {
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_AUDIT_LOGS',
+  CanGetAuditLogs.id,
 ])(AuditLogList);
 export { CheckedPermissionComponent as AuditLogList };

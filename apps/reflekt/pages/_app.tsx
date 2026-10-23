@@ -14,8 +14,10 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   RoutedAdminBar,
+  WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -157,9 +159,11 @@ function PlausibleConversionEvents() {
   return null;
 }
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -181,6 +185,8 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -261,12 +267,14 @@ function CustomApp({
               </Head>
 
               <Spacer>
-                <NavBar
-                  categorySlugs={[['main']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                />
+                {shell.showNavigation && (
+                  <NavBar
+                    categorySlugs={[['main']]}
+                    slug="main"
+                    headerSlug="header"
+                    iconSlug="icons"
+                  />
+                )}
 
                 <main>
                   <MainSpacer maxWidth="lg">
@@ -274,11 +282,13 @@ function CustomApp({
                   </MainSpacer>
                 </main>
 
-                <FooterContainer
-                  slug="footer"
-                  categorySlugs={[['footer']]}
-                  iconSlug="icons"
-                />
+                {shell.showFooter && (
+                  <FooterContainer
+                    slug="footer"
+                    categorySlugs={[['footer']]}
+                    iconSlug="icons"
+                  />
+                )}
               </Spacer>
 
               <RoutedAdminBar />

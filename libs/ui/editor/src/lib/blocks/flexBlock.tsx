@@ -2,36 +2,42 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
 import styled from '@emotion/styled';
+import {
+  Button,
+  Card,
+  Drawer,
+  IconButton as MuiIconButton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { BlockType } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
-import i18next, { TFunction } from 'i18next';
+import { TFunction } from 'i18next';
 import nanoid from 'nanoid';
-import React, {
+import {
   ComponentType,
   PropsWithChildren,
+  SetStateAction,
   useCallback,
   useEffect,
+  useId,
   useState,
 } from 'react';
 import GridLayoutWithoutChildren, {
   ReactGridLayoutProps,
+  WidthProvider,
 } from 'react-grid-layout';
 import { useTranslation } from 'react-i18next';
 import {
-  MdAddBox,
+  MdAdd,
   MdArticle,
   MdDelete,
   MdEdit,
   MdLock,
   MdLockOpen,
+  MdVisibility,
+  MdVisibilityOff,
 } from 'react-icons/md';
-import {
-  Button,
-  ButtonToolbar as RButtonToolbar,
-  Drawer,
-  IconButton as RIconButton,
-  Panel as RPanel,
-} from 'rsuite';
 
 import {
   type BlockListValue,
@@ -43,11 +49,19 @@ import {
 } from '../atoms/blockList';
 import { BlockMapType, BlockProps } from '../atoms/blockList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import {
+  FLEX_TILE_DRAG_CANCEL,
+  FLEX_TILE_ROW_HEIGHT,
+  FlexGrid,
+  FlexTile,
+  FlexTileAction,
+} from '../atoms/flexTile';
 import { PlaceholderInput } from '../atoms/placeholderInput';
+import { DRAWER_WIDTHS } from '../drawer';
+import { useSeededState } from '../hooks/use-seeded-state';
 import { BlockSelectAndEditPanel } from '../panel/blockSelectAndEditPanel';
 import { isFunctionalUpdate, isValueConstructor } from '../utility';
 import { BlockMap } from './blockMap';
-import { IconWrapper } from './teaserGridBlock';
 import {
   BlockValue,
   EmbedBlockValue,
@@ -57,7 +71,7 @@ import {
   FlexBlockWithAlignment,
 } from './types';
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   margin: 10px;
 `;
 
@@ -65,7 +79,9 @@ const Block = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: rgb(from var(--rs-text-primary) r g b / 0.025);
+  background-color: rgb(
+    from ${({ theme }) => theme.vars.palette.text.primary} r g b / 0.025
+  );
   display: grid;
   grid-template-rows: auto min-content;
 `;
@@ -73,7 +89,12 @@ const Block = styled.div`
 // Fixes that pre React 18, all components had the children prop.
 // With React 18 this is not the case anymore, so some types are wrong
 const GridLayout: ComponentType<PropsWithChildren<ReactGridLayoutProps>> =
-  GridLayoutWithoutChildren;
+  WidthProvider(GridLayoutWithoutChildren);
+
+const AddTileBar = styled('div')`
+  display: flex;
+  margin-block: ${({ theme }) => theme.spacing(1)};
+`;
 
 const GridLayoutStyled = styled(GridLayout)`
   .react-resizable-handle {
@@ -81,13 +102,13 @@ const GridLayoutStyled = styled(GridLayout)`
   }
 
   & .react-grid-item[data-is-editing='true'] {
-    ${Block} {
-      background-color: rgb(from var(--rs-primary-500) r g b / 0.25);
-    }
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
+    border-radius: ${({ theme }) => theme.shape.borderRadius}px;
   }
 `;
 
-const ButtonToolbar = styled(RButtonToolbar)`
+const ButtonToolbar = styled(Stack)`
   top: 0;
   left: 0;
   position: absolute;
@@ -104,7 +125,7 @@ const ButtonToolbar = styled(RButtonToolbar)`
   gap: 0.1rem;
 `;
 
-const ToolbarButton = styled(RIconButton)`
+const ToolbarButton = styled(MuiIconButton)`
   aspect-ratio: 1;
   padding: 0.15rem !important;
   width: 1.5rem;
@@ -118,7 +139,7 @@ const ToolbarButton = styled(RIconButton)`
   justify-content: center;
   align-items: center;
   pointer-events: all;
-  background-color: var(--rs-bg-well);
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 
   & svg {
     display: block;
@@ -133,7 +154,7 @@ const ToolbarButton = styled(RIconButton)`
   }
 `;
 
-const Panel = styled(RPanel, {
+const Panel = styled(Card, {
   shouldForwardProp: prop => prop !== 'showGrabCursor',
 })<{ showGrabCursor: boolean }>`
   display: grid;
@@ -148,93 +169,129 @@ const Panel = styled(RPanel, {
   bottom: 0;
 `;
 
-const NestedBlockEditPanel = styled('div')`
-  margin: 0 -25px;
-  box-shadow: 1px 0 11px 4px rgb(from var(--rs-primary-500) r g b / 0.25);
-  border-radius: var(--rs-radius-lg);
-  padding: 4px;
+const NestedBlockEditPanel = styled('section')`
+  display: grid;
+  margin-top: ${({ theme }) => theme.spacing(2)};
+  border: 1px solid ${({ theme }) => theme.vars.palette.primary.main};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
+`;
+
+const NestedBlockEditHeader = styled('header')`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(1, 2)};
+  align-items: center;
+  justify-content: space-between;
+  padding: ${({ theme }) => theme.spacing(1, 1, 1, 2)};
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
+`;
+
+const NestedBlockEditActions = styled('div')`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing(1)};
+  align-items: center;
+`;
+
+const NestedBlockEditTitle = styled(Typography)`
+  display: inline-flex;
+  gap: ${({ theme }) => theme.spacing(1)};
+  align-items: center;
+`;
+
+const NestedBlockEditBody = styled('div')`
+  padding: ${({ theme }) => theme.spacing(2)};
 
   ${ListItem} {
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: min-content auto;
-    row-gap: 10px;
-  }
-
-  ${BlockStyleIconWrapper} {
-    justify-self: end;
-  }
-
-  ${PanelWrapper} {
-    order: 2;
-
-    & > div:first-of-type {
-      border-width: 0;
-      border-top-width: 1px;
-      border-radius: 0;
-    }
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: ${({ theme }) => theme.spacing(1)};
   }
 
   ${LeftButtonsWrapper} {
     display: none;
   }
+
+  ${BlockStyleIconWrapper} {
+    position: static;
+    order: -1;
+    flex-direction: row;
+    align-items: center;
+    justify-self: end;
+    margin: 0;
+  }
+
+  ${PanelWrapper} {
+    flex-direction: column;
+  }
 `;
 
 export function FlexItem({
   block,
-  showGrabCursor,
+  locked,
   onEdit,
   onChoose,
   onRemove,
+  onRemoveTile,
+  onToggleLock,
 }: FlexItemProps) {
+  const { t } = useTranslation();
+
+  const actions: FlexTileAction[] = [
+    ...(block ?
+      [
+        {
+          label: t('blocks.flexBlock.chooseNestedBlock'),
+          icon: <MdArticle />,
+          onClick: onChoose,
+        },
+        {
+          label: t('blocks.flexBlock.editNestedBlock'),
+          icon: <MdEdit />,
+          onClick: onEdit,
+        },
+        {
+          label: t('blocks.flexBlock.deleteNestedBlock'),
+          icon: <MdDelete />,
+          onClick: onRemove,
+        },
+      ]
+    : [
+        {
+          label: t('blocks.flexBlock.removeNestedBlock'),
+          icon: <MdDelete />,
+          onClick: onRemoveTile,
+          disabled: locked,
+        },
+      ]),
+    {
+      label:
+        locked ?
+          t('blocks.flexBlock.unlockNestedBlock')
+        : t('blocks.flexBlock.lockNestedBlock'),
+      icon: locked ? <MdLockOpen /> : <MdLock />,
+      onClick: onToggleLock,
+    },
+  ];
+
   return (
-    <Panel
-      bodyFill
-      showGrabCursor={showGrabCursor}
+    <FlexTile
+      locked={locked}
+      empty={!block}
+      dimmed={!!block?.value?.disabled}
+      actions={actions}
     >
-      <PlaceholderInput
-        onAddClick={onChoose}
-        addLabel={i18next.t('blocks.flexBlock.chooseNestedBlock')}
-      >
-        {block && (
-          <Block>
-            <ContentForFlexBlock block={block} />
-
-            <IconWrapper>
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexBlock.chooseNestedBlock')}
-              >
-                <IconButton
-                  aria-label={i18next.t('blocks.flexBlock.chooseNestedBlock')}
-                  icon={<MdArticle />}
-                  onClick={onChoose}
-                />
-              </IconButtonTooltip>
-
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexBlock.editNestedBlock')}
-              >
-                <IconButton
-                  aria-label={i18next.t('blocks.flexBlock.editNestedBlock')}
-                  icon={<MdEdit />}
-                  onClick={onEdit}
-                />
-              </IconButtonTooltip>
-
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexBlock.deleteNestedBlock')}
-              >
-                <IconButton
-                  aria-label={i18next.t('blocks.flexBlock.deleteNestedBlock')}
-                  icon={<MdDelete />}
-                  onClick={onRemove}
-                />
-              </IconButtonTooltip>
-            </IconWrapper>
-          </Block>
-        )}
-      </PlaceholderInput>
-    </Panel>
+      {block ?
+        <Block>
+          <ContentForFlexBlock block={block} />
+        </Block>
+      : <PlaceholderInput
+          onAddClick={onChoose}
+          addLabel={t('blocks.flexBlock.chooseNestedBlock')}
+          minHeight={0}
+        />
+      }
+    </FlexTile>
   );
 }
 
@@ -261,7 +318,9 @@ const getContentHintForFlexBlockNestedBlock = (
   block: BlockListValue,
   t: TFunction
 ) => {
-  if (!block) return '';
+  if (!block) {
+    return '';
+  }
 
   if (block.type === 'TeaserSlots') {
     return block.value?.title || t('blocks.teaserSlots.label');
@@ -271,7 +330,9 @@ const getContentHintForFlexBlockNestedBlock = (
   }
   if (block.type === 'Embed') {
     const embed = block.value as EmbedBlockValue | undefined;
-    if (!embed) return t('blocks.embeds.label');
+    if (!embed) {
+      return t('blocks.embeds.label');
+    }
 
     switch (embed.type) {
       case EmbedType.YouTubeVideo:
@@ -346,15 +407,22 @@ const oEmbedUrlForEmbed = (embed: EmbedBlockValue): string | null => {
 const embedTitleCache = new Map<string, string>();
 
 const useEmbedTitle = (embed: EmbedBlockValue | undefined): string | null => {
-  const [title, setTitle] = useState<string | null>(null);
   const oEmbedUrl = embed ? oEmbedUrlForEmbed(embed) : null;
+  const [title, setTitle] = useState<string | null>(
+    () => (oEmbedUrl && embedTitleCache.get(oEmbedUrl)) || null
+  );
+  useSeededState(
+    oEmbedUrl ? (embedTitleCache.get(oEmbedUrl) ?? null) : null,
+    setTitle,
+    oEmbedUrl
+  );
 
   useEffect(() => {
-    if (!oEmbedUrl) return;
+    if (!oEmbedUrl) {
+      return;
+    }
 
-    const cached = embedTitleCache.get(oEmbedUrl);
-    if (cached) {
-      setTitle(cached);
+    if (embedTitleCache.has(oEmbedUrl)) {
       return;
     }
 
@@ -393,6 +461,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const nestedBlockTitleId = useId();
 
   const blockMap = BlockMap as BlockMapType;
   const { blocks } = value;
@@ -495,9 +564,11 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   };
 
   const handleItemChange = useCallback(
-    (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
+    (index: number, itemValue: SetStateAction<BlockListValue>) => {
       const current = value.blocks[index]?.block as BlockValue | null;
-      if (!current) return;
+      if (!current) {
+        return;
+      }
 
       const resolved =
         isFunctionalUpdate(itemValue) ?
@@ -539,95 +610,70 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
 
   return (
     <>
-      <IconButtonTooltip caption={t('blocks.flexBlock.addNestedBlock')}>
-        <RIconButton
-          aria-label={t('blocks.flexBlock.addNestedBlock')}
-          icon={<MdAddBox />}
-          appearance="primary"
-          circle
-          size="md"
+      <FlexGrid>
+        <GridLayoutStyled
+          onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
+          onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
+          resizeHandles={['se']}
+          onDragStop={layout => {
+            setIsDragging(false);
+            handleLayoutChange(layout as FlexAlignment[]);
+          }}
+          onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
+          cols={12}
+          rowHeight={FLEX_TILE_ROW_HEIGHT}
+          containerPadding={[0, 0]}
+          draggableCancel={FLEX_TILE_DRAG_CANCEL}
+          layout={blocks.map(ft => ft.alignment) as FlexAlignment[]}
+        >
+          {blocks.map((block, index) => (
+            <div
+              key={block.alignment.i}
+              data-is-editing={
+                isEditModalOpen && index === editIndex ? 'true' : 'false'
+              }
+            >
+              <FlexItem
+                block={block.block}
+                locked={!!block.alignment.static}
+                onEdit={() => {
+                  setEditIndex(index);
+                  setEditModalOpen(true);
+                }}
+                onChoose={() => {
+                  setEditIndex(index);
+                  setChooseModalOpen(true);
+                  setEditModalOpen(false);
+                }}
+                onRemove={() => handleRemoveBlock(block.alignment.i)}
+                onRemoveTile={() => handleRemoveNestedBlock(block.alignment.i)}
+                onToggleLock={() => handlePinNestedBlock(block.alignment.i)}
+              />
+            </div>
+          ))}
+        </GridLayoutStyled>
+      </FlexGrid>
+
+      <AddTileBar>
+        <Button
+          variant="text"
+          startIcon={<MdAdd />}
           onClick={handleAddNestedBlock}
-        />
-      </IconButtonTooltip>
-      <GridLayoutStyled
-        onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
-        onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
-        className="layout"
-        resizeHandles={['se']}
-        onDragStop={layout => {
-          setIsDragging(false);
-          handleLayoutChange(layout as FlexAlignment[]);
-        }}
-        onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
-        cols={12}
-        rowHeight={30}
-        layout={blocks.map(ft => ft.alignment) as FlexAlignment[]}
-        width={640}
-      >
-        {blocks.map((block, index) => (
-          <div
-            key={index}
-            data-is-editing={
-              isEditModalOpen && index === editIndex ? 'true' : 'false'
-            }
-          >
-            <FlexItem
-              block={block.block}
-              showGrabCursor={!block.alignment.static}
-              onEdit={() => {
-                setEditIndex(index);
-                setEditModalOpen(true);
-              }}
-              onChoose={() => {
-                setEditIndex(index);
-                setChooseModalOpen(true);
-                setEditModalOpen(false);
-              }}
-              onRemove={() => handleRemoveBlock(block.alignment.i)}
-            />
-
-            <ButtonToolbar>
-              {!block.block && (
-                <IconButtonTooltip
-                  caption={t('blocks.flexBlock.removeNestedBlock')}
-                >
-                  <ToolbarButton
-                    aria-label={t('blocks.flexBlock.removeNestedBlock')}
-                    disabled={block.alignment.static as unknown as boolean}
-                    block
-                    appearance="subtle"
-                    icon={<MdDelete />}
-                    onClick={() => handleRemoveNestedBlock(block.alignment.i)}
-                  />
-                </IconButtonTooltip>
-              )}
-
-              <IconButtonTooltip
-                caption={
-                  !block.alignment.static ?
-                    t('blocks.flexBlock.lockNestedBlock')
-                  : t('blocks.flexBlock.unlockNestedBlock')
-                }
-              >
-                <ToolbarButton
-                  block
-                  appearance="subtle"
-                  aria-label={
-                    !block.alignment.static ?
-                      t('blocks.flexBlock.lockNestedBlock')
-                    : t('blocks.flexBlock.unlockNestedBlock')
-                  }
-                  icon={block.alignment.static ? <MdLockOpen /> : <MdLock />}
-                  onClick={() => handlePinNestedBlock(block.alignment.i)}
-                />
-              </IconButtonTooltip>
-            </ButtonToolbar>
-          </div>
-        ))}
-      </GridLayoutStyled>
+        >
+          {t('blocks.flexBlock.addNestedBlock')}
+        </Button>
+      </AddTileBar>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.xs,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="xs"
         onClose={handleClose}
       >
         <BlockSelectAndEditPanel
@@ -643,40 +689,87 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
           const blockWithAlignment = value.blocks[editIndex];
           const currentBlock = blockWithAlignment?.block;
 
-          if (!currentBlock) return null;
+          if (!currentBlock) {
+            return null;
+          }
 
           return (
-            <NestedBlockEditPanel>
-              <Button
-                appearance={'subtle'}
-                onClick={handleClose}
-              >
-                {t('blocks.flexBlock.close')}
-              </Button>
+            <NestedBlockEditPanel aria-labelledby={nestedBlockTitleId}>
+              <NestedBlockEditHeader>
+                <NestedBlockEditTitle
+                  id={nestedBlockTitleId}
+                  variant="subtitle2"
+                >
+                  {blockMap[currentBlock.type].icon}
+                  {t(blockMap[currentBlock.type].label)}
+                </NestedBlockEditTitle>
 
-              <BlockListItem
-                itemId={blockWithAlignment.alignment.i}
-                index={editIndex}
-                value={{
-                  value: currentBlock.value,
-                  key: currentBlock.key,
-                  type: currentBlock.type,
-                }}
-                icon={blockMap[currentBlock.type].icon}
-                autofocus={false}
-                disabled={false}
-                children={blockMap[currentBlock.type].field}
-                onChange={handleItemChange}
-                onDelete={() => {
-                  // will never happen here
-                }}
-                onMoveUp={() => {
-                  // will never happen here
-                }}
-                onMoveDown={() => {
-                  // will never happen here
-                }}
-              />
+                <NestedBlockEditActions>
+                  <IconButtonTooltip
+                    caption={
+                      currentBlock.value.disabled ?
+                        t('blockList.showBlock')
+                      : t('blockList.hideBlock')
+                    }
+                  >
+                    <MuiIconButton
+                      size="small"
+                      aria-label={
+                        currentBlock.value.disabled ?
+                          t('blockList.showBlock')
+                        : t('blockList.hideBlock')
+                      }
+                      onClick={() =>
+                        handleItemChange(editIndex, block => ({
+                          ...block,
+                          value: {
+                            ...block.value,
+                            disabled: !block.value.disabled,
+                          },
+                        }))
+                      }
+                    >
+                      {currentBlock.value.disabled ?
+                        <MdVisibilityOff />
+                      : <MdVisibility />}
+                    </MuiIconButton>
+                  </IconButtonTooltip>
+
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={handleClose}
+                  >
+                    {t('blocks.flexBlock.close')}
+                  </Button>
+                </NestedBlockEditActions>
+              </NestedBlockEditHeader>
+
+              <NestedBlockEditBody>
+                <BlockListItem
+                  itemId={blockWithAlignment.alignment.i}
+                  index={editIndex}
+                  value={{
+                    value: currentBlock.value,
+                    key: currentBlock.key,
+                    type: currentBlock.type,
+                  }}
+                  icon={blockMap[currentBlock.type].icon}
+                  autofocus={false}
+                  disabled={false}
+                  children={blockMap[currentBlock.type].field}
+                  onChange={handleItemChange}
+                  onDelete={() => {
+                    // will never happen here
+                  }}
+                  onMoveUp={() => {
+                    // will never happen here
+                  }}
+                  onMoveDown={() => {
+                    // will never happen here
+                  }}
+                />
+              </NestedBlockEditBody>
             </NestedBlockEditPanel>
           );
         })()}
@@ -686,10 +779,12 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
 
 interface FlexItemProps {
   block: BlockValue | null | undefined;
-  showGrabCursor: boolean;
+  locked: boolean;
   onEdit: () => void;
   onChoose: () => void;
   onRemove: () => void;
+  onRemoveTile: () => void;
+  onToggleLock: () => void;
 }
 
 export const isBlockValue = (obj: unknown): obj is BlockValue => {

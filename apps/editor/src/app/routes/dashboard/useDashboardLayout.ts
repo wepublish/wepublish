@@ -29,9 +29,7 @@ export const useDashboardLayout = () => {
         DASHBOARD_LAYOUT_STORAGE_KEY,
         JSON.stringify(next)
       );
-    } catch {
-      // storage unavailable (private mode, quota) - keep the layout for this visit
-    }
+    } catch {}
   }, []);
 
   return [layout, updateLayout] as const;

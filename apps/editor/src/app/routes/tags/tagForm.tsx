@@ -1,23 +1,35 @@
 import styled from '@emotion/styled';
 import {
-  MutationCreateTagArgs,
-  MutationUpdateTagArgs,
-} from '@wepublish/editor/api';
+  Card,
+  CardContent,
+  Checkbox,
+  FormControlLabel,
+  FormLabel,
+  Stack,
+  TextField,
+} from '@mui/material';
 import {
   ColorPicker,
   InfoTooltip,
   RichTextBlock,
   RichTextBlockValue,
 } from '@wepublish/ui/editor';
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Checkbox, Form, Panel } from 'rsuite';
 
-type TagFormData = MutationCreateTagArgs | MutationUpdateTagArgs;
+import { useWebsiteThemeColors } from '../website-settings/theme/theme-colors';
 
-type TagFormProps = {
-  create?: boolean;
-  tag: TagFormData;
-  onChange: (changes: Partial<TagFormData>) => void;
+export type TagFormValues = {
+  id?: string;
+  tag?: string | null;
+  color?: string | null;
+  description?: RichTextBlockValue['richText'] | null;
+  main?: boolean | null;
+};
+
+type TagFormProps<Values extends FieldValues> = {
+  control: Control<Values>;
+  disabled?: boolean;
 };
 
 const TagFormWrapper = styled.div`
@@ -27,64 +39,99 @@ const TagFormWrapper = styled.div`
   gap: 12px;
 `;
 
-export const TagForm = ({ tag, onChange }: TagFormProps) => {
+export const TagForm = <Values extends TagFormValues & FieldValues>({
+  control,
+  disabled,
+}: TagFormProps<Values>) => {
   const { t } = useTranslation();
+  const themeColors = useWebsiteThemeColors();
 
   return (
     <TagFormWrapper>
-      <Panel bordered>
-        <Form.Stack fluid>
-          <Form.Group controlId="name">
-            <Form.Label>{t('tags.overview.name')}</Form.Label>
-            <Form.Control
-              name="name"
-              value={tag.tag ?? ''}
-              onChange={(tag: string) => onChange({ tag })}
+      <Card>
+        <CardContent>
+          <Stack
+            direction="column"
+            spacing={3}
+          >
+            <Controller
+              control={control}
+              name={'tag' as Path<Values>}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  label={t('tags.overview.name')}
+                  disabled={disabled}
+                  error={Boolean(fieldState.error)}
+                  helperText={fieldState.error?.message}
+                  fullWidth
+                />
+              )}
             />
-          </Form.Group>
 
-          <Form.Group controlId="color">
-            <Form.Label>
-              {t('tags.overview.color')}{' '}
-              <InfoTooltip text={t('tags.overview.colorInfo')} />
-            </Form.Label>
-            <ColorPicker
-              setColor={color => {
-                onChange({ color });
-              }}
-              currentColor={tag.color || '#000000'}
+            <Controller
+              control={control}
+              name={'color' as Path<Values>}
+              render={({ field }) => (
+                <div>
+                  <FormLabel>
+                    {t('tags.overview.color')}{' '}
+                    <InfoTooltip text={t('tags.overview.colorInfo')} />
+                  </FormLabel>
+
+                  <ColorPicker
+                    {...field}
+                    value={field.value ?? ''}
+                    disabled={disabled}
+                    presetColors={themeColors}
+                  />
+                </div>
+              )}
             />
-          </Form.Group>
 
-          <Form.Group controlId="description">
-            <Form.Label>
-              {t('tags.overview.description')}{' '}
-              <InfoTooltip text={t('tags.overview.descriptionInfo')} />
-            </Form.Label>
+            <Controller
+              control={control}
+              name={'description' as Path<Values>}
+              render={({ field }) => (
+                <div>
+                  <FormLabel>
+                    {t('tags.overview.description')}{' '}
+                    <InfoTooltip text={t('tags.overview.descriptionInfo')} />
+                  </FormLabel>
 
-            <Form.Control
-              name="description"
-              value={tag.description}
-              onChange={(description: RichTextBlockValue['richText']) =>
-                onChange({ description })
-              }
-              accepter={RichTextBlock}
+                  <RichTextBlock
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </div>
+              )}
             />
-          </Form.Group>
 
-          <Form.Group controlId="main">
-            <Form.Control
-              name="main"
-              checked={!!tag.main}
-              onChange={() => onChange({ main: !tag.main })}
-              accepter={Checkbox}
-            >
-              {t('tags.overview.markAsMain')}{' '}
-              <InfoTooltip text={t('tags.overview.markAsMainInfo')} />
-            </Form.Control>
-          </Form.Group>
-        </Form.Stack>
-      </Panel>
+            <Controller
+              control={control}
+              name={'main' as Path<Values>}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={Boolean(field.value)}
+                      onChange={(_event, checked) => field.onChange(checked)}
+                      disabled={disabled}
+                    />
+                  }
+                  label={
+                    <>
+                      {t('tags.overview.markAsMain')}{' '}
+                      <InfoTooltip text={t('tags.overview.markAsMainInfo')} />
+                    </>
+                  }
+                />
+              )}
+            />
+          </Stack>
+        </CardContent>
+      </Card>
     </TagFormWrapper>
   );
 };

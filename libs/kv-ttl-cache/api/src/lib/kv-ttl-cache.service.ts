@@ -823,7 +823,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
       return 'not-configured';
     }
 
-    const written = await this.atomic.setRaw(
+    const written = await this.atomic.probe(
       HEALTH_PROBE_KEY,
       String(Date.now()),
       HEALTH_PROBE_TTL_MS

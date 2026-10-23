@@ -14,6 +14,10 @@ import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
 
 import { ComponentType, createElement, memo } from 'react';
 import possibleTypes from './possible-types';
+import { queryErrorLink } from './query-errors';
+
+export { queryErrorLink, setQueryErrorHandler } from './query-errors';
+export type { QueryErrorHandler } from './query-errors';
 
 export enum ElementID {
   Settings = 'settings',
@@ -21,14 +25,14 @@ export enum ElementID {
 }
 
 export interface ClientSettings {
-  readonly apiURL: string;
-  readonly wepOneURL: string;
-  readonly medium?: string;
-  readonly peerByDefault: boolean;
-  readonly imgMinSizeToCompress: number;
-  readonly sentryDSN?: string;
-  readonly appName?: string;
-  readonly appEnvironment?: string;
+  apiURL: string;
+  wepOneURL: string;
+  medium?: string;
+  peerByDefault: boolean;
+  imgMinSizeToCompress: number;
+  sentryDSN?: string;
+  appName?: string;
+  appEnvironment?: string;
 }
 
 export enum LocalStorageKey {
@@ -59,7 +63,7 @@ let settings: ClientSettings;
 export function getSettings(): ClientSettings {
   if (!settings) {
     const defaultSettings = {
-      apiURL: 'http://localhost:4000',
+      apiURL: process.env.API_URL || 'http://localhost:4000',
       wepOneURL: 'https://one-admin.wepublish.cloud',
       medium: '',
       imgMinSizeToCompress: 10,
@@ -84,8 +88,8 @@ let client: ApolloClient;
 const isFile = (value: unknown): boolean =>
   Boolean(
     (typeof File !== 'undefined' && value instanceof File) ||
-      (typeof Blob !== 'undefined' && value instanceof Blob) ||
-      (value && typeof value === 'object' && Object.values(value).some(isFile))
+    (typeof Blob !== 'undefined' && value instanceof Blob) ||
+    (value && typeof value === 'object' && Object.values(value).some(isFile))
   );
 
 export function getApiClientV2() {
@@ -102,7 +106,8 @@ export function getApiClientV2() {
     );
 
     client = new ApolloClient({
-      link: authLink
+      link: queryErrorLink
+        .concat(authLink)
         .concat(new RemoveTypenameFromVariablesLink({}))
         .concat(httpLink),
 
@@ -116,10 +121,7 @@ export function getApiClientV2() {
         },
         watchQuery: {
           fetchPolicy: 'network-only',
-          refetchOn: {
-            online: false,
-            windowFocus: false,
-          },
+          refetchOn: false,
         },
       },
     });

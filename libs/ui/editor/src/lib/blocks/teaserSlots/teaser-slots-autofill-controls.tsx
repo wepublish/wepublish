@@ -2,7 +2,13 @@
 
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import GearIcon from '@rsuite/icons/Gear';
+import {
+  Button,
+  Checkbox,
+  Chip,
+  FormControlLabel,
+  Typography,
+} from '@mui/material';
 import {
   TagListDocument,
   TeaserListBlockSort,
@@ -10,7 +16,7 @@ import {
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Panel, Tag, Toggle } from 'rsuite';
+import { MdSettings } from 'react-icons/md';
 
 import { InfoTooltip } from '../../atoms/infoTooltip';
 import { TeaserSlotsAutofillDialog } from './teaser-slots-autofill-dialog';
@@ -22,32 +28,33 @@ interface TeaserSlotsContorlsProps {
   onConfigChange: (config: TeaserSlotsAutofillConfigInput) => void;
 }
 
-const ControlsContainer = styled(Panel)`
-  margin-bottom: 16px;
-  border-radius: var(--rs-radius-lg);
-  background-color: var(--rs-bg-well);
-  padding: 12px;
-`;
-
-const ControlsSection = styled('div')`
-  align-items: center;
-  display: flex;
-  gap: 16px;
-`;
-
-const ToggleRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const SummarySection = styled.div``;
-
-const TagsContainer = styled.div`
+const ControlsContainer = styled('div')`
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 4px;
+  gap: ${({ theme }) => theme.spacing(1, 2)};
+  align-items: center;
+  justify-content: space-between;
+  padding: ${({ theme }) => theme.spacing(1, 2, 1, 1)};
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
+`;
+
+const Summary = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  min-width: 0;
+`;
+
+const SummaryText = styled(Typography)`
+  padding-left: ${({ theme }) => theme.spacing(5.25)};
+`;
+
+const TagsContainer = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  padding-left: ${({ theme }) => theme.spacing(5.25)};
 `;
 
 export function TeaserSlotsAutofillControls({
@@ -89,61 +96,74 @@ export function TeaserSlotsAutofillControls({
     setConfigDialogOpen(false);
   };
 
-  return (
-    <ControlsContainer bordered>
-      <ControlsSection>
-        <ToggleRow>
-          <Toggle
-            checked={config.enabled}
-            onChange={handleToggleChange}
-            label={
-              <>
-                {t('blocks.teaserSlots.autoLoadingToggle')}{' '}
-                <InfoTooltip text={t('blocks.teaserSlots.autoLoadingHelp')} />
-              </>
-            }
-          />
+  const selectedTags =
+    tagsData?.tags?.nodes.filter(tag =>
+      config.filter?.tags?.includes(tag.id)
+    ) ?? [];
 
-          {config.enabled && (
-            <Button
-              appearance="ghost"
-              size="sm"
-              onClick={() => setConfigDialogOpen(true)}
-            >
-              <GearIcon style={{ marginRight: '4px' }} />
-              {t('blocks.teaserSlots.configure')}
-            </Button>
-          )}
-        </ToggleRow>
-        <SummarySection>
+  return (
+    <ControlsContainer>
+      <Summary>
+        <FormControlLabel
+          sx={{ m: 0 }}
+          control={
+            <Checkbox
+              checked={config.enabled}
+              onChange={(_event, checked) => handleToggleChange(checked)}
+            />
+          }
+          label={
+            <>
+              {t('blocks.teaserSlots.autoLoadingToggle')}{' '}
+              <InfoTooltip text={t('blocks.teaserSlots.autoLoadingHelp')} />
+            </>
+          }
+        />
+
+        <SummaryText
+          variant="caption"
+          color="text.secondary"
+        >
           {config.enabled ?
             <>
-              {tagsData?.tags && tagsData.tags.nodes.length > 0 ?
-                <TagsContainer>
-                  {tagsData.tags.nodes
-                    .filter(tag => config.filter?.tags?.includes(tag.id))
-                    .map((tag, index) => (
-                      <Tag
-                        key={index}
-                        color="blue"
-                      >
-                        {tag.tag}
-                      </Tag>
-                    ))}
-                </TagsContainer>
-              : <Tag color="green">{t('blocks.teaserSlots.latest')}</Tag>}
-              <span style={{ marginLeft: '8px' }}>
-                {loadedTeasers}
-                {loadedTeasers < autofillSlots ? `/${autofillSlots}` : ``}{' '}
-                {t('blocks.teaserSlots.teasersLoaded')}{' '}
-              </span>
+              {loadedTeasers}
+              {loadedTeasers < autofillSlots ? `/${autofillSlots}` : ''}{' '}
+              {t('blocks.teaserSlots.teasersLoaded')}
             </>
-          : <span style={{ color: 'var(--rs-text-secondary)' }}>
-              {t('blocks.teaserSlots.fillManually')}
-            </span>
-          }
-        </SummarySection>
-      </ControlsSection>
+          : t('blocks.teaserSlots.fillManually')}
+        </SummaryText>
+
+        {config.enabled && (
+          <TagsContainer>
+            {selectedTags.length ?
+              selectedTags.map(tag => (
+                <Chip
+                  key={tag.id}
+                  size="small"
+                  color="primary"
+                  label={tag.tag}
+                />
+              ))
+            : <Chip
+                size="small"
+                color="success"
+                label={t('blocks.teaserSlots.latest')}
+              />
+            }
+          </TagsContainer>
+        )}
+      </Summary>
+
+      {config.enabled && (
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<MdSettings />}
+          onClick={() => setConfigDialogOpen(true)}
+        >
+          {t('blocks.teaserSlots.configure')}
+        </Button>
+      )}
 
       <TeaserSlotsAutofillDialog
         open={configDialogOpen}

@@ -36,7 +36,7 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
       <Stack
         sx={{
           gap: 5,
-          borderRadius: 'var(--rs-radius-md)',
+          borderRadius: 0.75,
           bgcolor: 'action.hover',
           p: 3,
           mb: 2,

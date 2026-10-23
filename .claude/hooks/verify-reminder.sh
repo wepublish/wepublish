@@ -17,9 +17,9 @@ marker="${TMPDIR:-/tmp}/claude-verify-${session}"
 [ -f "$marker" ] && exit 0
 : > "$marker"
 
-cmd='npx nx affected -t lint test --uncommitted'
+cmd='pnpm nx affected -t lint test --uncommitted'
 if printf '%s\n' "$changed" | grep -qE '[[:space:]]apps/'; then
-  cmd="$cmd, then npx tsc -p ./apps/<app> --noEmit for each touched app"
+  cmd="$cmd, then pnpm tsc -p ./apps/<app> --noEmit for each touched app"
 fi
 
 count=$(printf '%s\n' "$changed" | wc -l | tr -d ' ')

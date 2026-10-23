@@ -1,0 +1,38 @@
+[
+  {
+    "from": "ButtonToolbar",
+    "to": "Stack",
+    "defaults": "direction=\"row\" spacing={1} sx={{ flexWrap: 'wrap' }}"
+  },
+  {
+    "from": "ButtonGroup",
+    "rename": {
+      "justified": "fullWidth"
+    },
+    "values": {
+      "size": {
+        "xs": "small",
+        "sm": "small",
+        "md": "medium",
+        "lg": "large"
+      }
+    },
+    "drop": [
+      "vertical"
+    ]
+  },
+  {
+    "from": "Divider",
+    "drop": [
+      "vertical"
+    ]
+  },
+  {
+    "from": "IconButton",
+    "drop": [
+      "block",
+      "circle",
+      "appearance"
+    ]
+  }
+]
