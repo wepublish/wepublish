@@ -158,6 +158,8 @@ is exactly the capability the new permissions and the Agenda-Admin role are for.
 
 ## D4 — `CanPublishEvent` decides who needs validating
 
+> **Updated by [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) and [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it).** Karl decided on 2026-10-24 that the predefined editor role holds `CanPublishEvent` and the other event permissions, scoped to its own organisations' events and the events it owns; only admin and the new `agenda-admin` role hold the cross-organisation permissions. Whether a button shows for a given event comes from `Event.viewerCan`, not from the role alone (awaiting Karl's confirmation).
+
 > **Updated by [D48](#d48--publishing-stays-with-the-organising-organisation), [D49](#d49--deleting-an-event-needs-membership-or-the-cross-organisation-delete-permission) and [D55](#d55--place-writes-reuse-the-organisation-permissions), awaiting Karl's confirmation.** Publishing also needs a link to the event's organisation (`canPublishEvent`); deleting needs membership or `CanDeleteOtherOrganizationEvents`, with no owner branch; places have no permissions of their own and reuse `CanUpdateOrganization` / `CanUpdateOtherOrganizations`.
 
 **Context.** [D3](#d3--validation-is-cross-organisation-publishing-not-a-publication-state)
@@ -216,6 +218,8 @@ per the brief.
 ---
 
 ## D5 — "Ready for review" is an explicit action backed by a field on the event
+
+> **Updated by [D69](#d69--a-review-request-can-be-withdrawn) and [D75](#d75--the-review-queue-is-a-filter-a-sort-and-a-dashboard-card-for-whoever-can-publish), awaiting Karl's confirmation.** A request can be withdrawn. The queue is the list's Review requested filter, oldest first, with a dashboard card for everyone who can list events and publish.
 
 > **Updated by [D58](#d58--a-review-request-is-a-state-stamped-once), awaiting Karl's confirmation.** "Cannot publish" means `canPublishEvent` is false for this event, not that the caller lacks `CanPublishEvent`. Asking again keeps the first `reviewRequestedAt`.
 
@@ -652,6 +656,8 @@ expensive to reverse after data is migrated.
 ---
 
 ## D15 — The two-year cap is a validation rule, not a refreshing window
+
+> **Updated by [D76](#d76--ends-in-n-days-marks-weekly-series-only-in-zurich-calendar-days), awaiting Karl's confirmation.** The editor list marks weekly series whose last date is at most 30 Zurich days away ("Ends in N days") and offers **Extend**, so a series running into the cap does not lapse unseen.
 
 > **Updated by [D38](#d38--a-weekly-schedule-needs-at-least-one-weekday), [D40](#d40--the-two-year-cap-counts-whole-days-in-zurich) and [D43](#d43--weekdays-outside-monday-to-sunday-are-rejected-on-input).** The same input check (`validateScheduleInput`) also rejects a weekly schedule with no weekdays, or with weekday values outside 1–7. The cap counts whole days: the last date may fall anywhere on the Zurich calendar day two years after the save.
 >
@@ -1542,6 +1548,8 @@ before ZUERST shuts down at the end of 2026.**
 
 ## D35 — An event's owner reaches it without an organisation
 
+> **Updated by [D92](#d92--only-the-events-owner-may-take-it-out-of-every-organisation), awaiting Karl's confirmation.** An owner who is also a member may take the event out of every organisation; a member who does not own it may not.
+
 > **Updated by [D47](#d47--who-may-set-an-events-organisation-and-owner), [D48](#d48--publishing-stays-with-the-organising-organisation) and [D49](#d49--deleting-an-event-needs-membership-or-the-cross-organisation-delete-permission), awaiting Karl's confirmation.** The open item below is answered by D47. The owner of an orphan event may publish it with `CanPublishEvent` (D48), and owners cannot delete their events (D49).
 
 Updates [D19](#d19--an-organiser-sees-only-their-own-organisations-events-in-the-editor) and
@@ -1559,9 +1567,9 @@ with or without an organisation.**
 
 - `editorEventsWhere` is `organisation ∪ owner`; `canModifyEvent` is
   `owner ∪ organisation ∪ venue organisation ∪ CanUpdateOtherOrganizationEvents`
-  (`libs/event/api/src/lib/event-scope.ts:109-130`).
+  (`libs/event/api/src/lib/event-scope.ts:163-178,209-213`).
 - "Owner" means a **user** session whose user id equals `ownerId` (`isEventOwner`,
-  `event-scope.ts:56-63`). API keys and peer tokens own nothing: their sessions carry no user, so a token id that happens to equal an `ownerId` matches
+  `event-scope.ts:57-61`). API keys and peer tokens own nothing: their sessions carry no user, so a token id that happens to equal an `ownerId` matches
   nothing.
 - D20 still holds for everyone else: an orphan event (no organisation) is listed only to its owner
   and to holders of `CanGetOtherOrganizationEvents`, and editable only by its owner, its venue's
@@ -1616,12 +1624,12 @@ can only touch its own organisation's events.**
   **platform key** and behaves as before: only its scopes limit it.
 - `ApiTokenSession.organizationId` carries it (`libs/authentication/api/src/lib/auth-session.ts:29-36`,
   set in `libs/api-token/api/src/lib/api-token.strategy.ts:18-28`), and `organizationIdsOf` returns
-  it (`libs/event/api/src/lib/event-scope.ts:43-54`). The scope module therefore treats a bound key as a member of
+  it (`libs/event/api/src/lib/event-scope.ts:41-52`). The scope module therefore treats a bound key as a member of
   that one organisation, through the same functions the user path uses.
 - **Least privilege comes from intersecting the two.** Every right a member exercises goes through a
   resolver guarded by `@Permissions`, and for a key that guard checks the key's scopes. A bound key
   needs both the scope and the organisation. The scope module also **ignores cross-organisation
-  permissions on a bound key** (`holdsAcrossOrganizations`, `event-scope.ts:29-34`), so it cannot reach past its
+  permissions on a bound key** (`holdsAcrossOrganizations`, `event-scope.ts:30-32`), so it cannot reach past its
   organisation even if its row somehow carried one.
 - **Who may bind a key to which organisation.** `createApiToken(organizationId)` accepts an
   organisation the creator is a member of, or any organisation for a holder of
@@ -1700,7 +1708,7 @@ data is public. Follow the `SensitiveDataUser` pattern.**
 
 - `organization` and `organizations` are `@Public()` and return `BaseOrganization`
   (`organization.resolver.ts:27-48`). Its `resolveType` picks the type **per row and per caller**
-  with `canReadOrganizationSensitiveData` (`libs/event/api/src/lib/event-scope.ts:94-100`): a member
+  with `canReadOrganizationSensitiveData` (`libs/event/api/src/lib/event-scope.ts:91-97`): a member
   of that organisation, or a holder of `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations`,
   gets `SensitiveDataOrganization`; everyone else gets `Organization`. API keys go through the same
   check ([D36](#d36--an-api-key-can-belong-to-one-organisation)).
@@ -1712,7 +1720,7 @@ data is public. Follow the `SensitiveDataUser` pattern.**
   FORBIDDEN (`organization.service.ts:362-379`). Sorting by `CreatedAt`/`ModifiedAt` stays public.
 - Anonymous callers see enabled organisations only; a member also sees their own disabled ones; a
   holder of either cross-organisation organisation permission sees all
-  (`visibleOrganizationsWhere`, `event-scope.ts:72-86`).
+  (`visibleOrganizationsWhere`, `event-scope.ts:69-83`).
 - A new permission, `CanGetOtherOrganizations` (`libs/permissions/src/lib/permissions.ts:793-797`),
   reads the sensitive data without granting any write. The predefined admin role gets it through
   `AllPermissions` (`libs/permissions/api/src/lib/predefined-permissions.ts:16-22`); the editor and
@@ -1799,6 +1807,8 @@ be explained. Expansion stays tolerant so the migration and any old row cannot c
 ---
 
 ## D39 — The event has no `startTime` or `endTime`
+
+> **Updated by [D79](#d79--the-date-editor-takes-zurich-wall-clock-dates-and-times-and-never-expands-what-it-cannot-save), awaiting Karl's confirmation.** In the editor an explicit date row whose end time is earlier than its start time also ends on the next day, as a weekly sitting does.
 
 Updates [D24](#d24--the-revision-carries-what-an-editor-writes-the-event-carries-what-the-event-is).
 
@@ -2010,7 +2020,7 @@ no occurrences.
   (`libs/event/api/src/lib/event-occurrences.ts:40-70`). A save that does not change the dates
   writes nothing.
 - `unpublishEvent` keeps the rows. Public reads of occurrences go through `publicEventsWhere` on the
-  event (`event-scope.ts:154-156`), so occurrences of drafts and unpublished events stay invisible.
+  event (`event-scope.ts:159-161`), so occurrences of drafts and unpublished events stay invisible.
 - `publishEvent` invalidates the `events` cache at once and schedules a second invalidation at
   `publishAt` (`event.service.ts:626-627`). `EventScheduleWatcher` also watches revision
   `publishedAt` in its look-ahead window (`event-schedule.watcher.ts:48-65`), so a restart in
@@ -2046,6 +2056,8 @@ no occurrences.
 
 ## D46 — Editor mode needs the preview header, an event permission and reach
 
+> **Updated by [D71](#d71--the-editor-list-filters-by-publication-review-and-last-date-and-lookups-by-id-use-reach), awaiting Karl's confirmation.** `events` and `agenda` with a non-empty `filter.ids` are scoped by `reachableEventsWhere` in editor mode, like a single event, and `draft`, `pending` and `reviewRequested` filters are dropped outside editor mode.
+
 Updates [D19](#d19--an-organiser-sees-only-their-own-organisations-events-in-the-editor).
 
 **Status.** Built in `181c71168` and tightened in `e3dd54e34`. Awaiting Karl's confirmation.
@@ -2063,11 +2075,11 @@ D19 split the public scope from the editor scope but did not say how a request p
   `CanPreview` plays no part.
 - Editor mode scopes lists with `editorEventsWhere` and a single event with `reachableEventsWhere`,
   which adds the venue's organisation so the link in a validation mail opens
-  (`event-scope.ts:175-195`, `event.service.ts:184-191`). Every other request uses
+  (`event-scope.ts:180-200`, `event.service.ts:184-191`). Every other request uses
   `publicEventsWhere`.
 - The draft view is decided **per event**. `latest`, `name`, `description` and `image` resolve from
   `draft ?? pending ?? published` only in editor mode and only for an event the caller can reach
-  (`canReachEvent`, `event-scope.ts:197-202`, through `canReachLoadedEvent`, `event-reach.ts:9-25`).
+  (`canReachEvent`, `event-scope.ts:202-207`, through `canReachLoadedEvent`, `event-reach.ts:9-25`).
   Otherwise they resolve from `published`.
 - `draft`, `pending`, `ownerId`, `reviewRequestedAt`, `reviewRequestedById` and `legacyId` need
   `CanGetEvent` and reach, checked in the resolver body (`mayReadEditorView`,
@@ -2099,6 +2111,8 @@ D19 split the public scope from the editor scope but did not say how a request p
 
 ## D47 — Who may set an event's organisation and owner
 
+> **Updated by [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it), [D81](#d81--on-a-new-event-the-organisation-picker-offers-your-own-organisations-and-the-owner-is-you) and [D92](#d92--only-the-events-owner-may-take-it-out-of-every-organisation), awaiting Karl's confirmation.** Taking an event out of every organisation needs you to own it, or `CanUpdateOtherOrganizationEvents` (D92). `Event.viewerCan` reports `moveOrganization`, `clearOrganization` and `reassignOwner`, and the editor's pickers follow them.
+
 Updates [D35](#d35--an-events-owner-reaches-it-without-an-organisation) and answers its open item. Updates [D20](#d20--organisation-is-optional-and-proposed-organisations-become-real-ones).
 
 **Status.** Built in `181c71168`. Awaiting Karl's confirmation.
@@ -2110,18 +2124,17 @@ over.
 
 **Decision.**
 - **Creating.** The organisation must be one you belong to, or none, unless you hold
-  `CanUpdateOtherOrganizationEvents` (`mayAssignEventOrganization`, `event-scope.ts:220-226`). A key
+  `CanUpdateOtherOrganizationEvents` (`mayAssignEventOrganization`, `event-scope.ts:225-231`). A key
   bound to an organisation files under that organisation by default (`boundOrganizationIdOf`,
-  `:255-258`). The owner defaults to the creating user, and naming anyone else needs
-  `CanUpdateOtherOrganizationEvents` (`mayAssignEventOwner`, `:228-230`).
+  `:262-265`). The owner defaults to the creating user, and naming anyone else needs
+  `CanUpdateOtherOrganizationEvents` (`mayAssignEventOwner`, `:233-235`).
 - **Moving.** Changing an event's organisation needs you to hold the event now (as a member of its
   organisation, or as the owner of an event with none) and to belong to the target, unless you hold
-  `CanUpdateOtherOrganizationEvents` (`mayMoveEventToOrganization`, `:232-250`). A venue member does
+  `CanUpdateOtherOrganizationEvents` (`mayMoveEventToOrganization`, `:237-257`). A venue member does
   not hold the event, so cannot move it. Taking the event out of every organisation also needs you to
-  own it, because a member who does not own it would lose it from their agenda and could not undo the
-  change (found in the slice F verification).
+  own it ([D92](#d92--only-the-events-owner-may-take-it-out-of-every-organisation)).
 - **Changing the owner** of an existing event needs `CanUpdateOtherOrganizationEvents`
-  (`mayReassignEventOwner`, `:252-253`).
+  (`mayReassignEventOwner`, `:259-260`).
 - A key bound to an organisation never counts as holding the cross-organisation permission
   ([D36](#d36--an-api-key-can-belong-to-one-organisation)).
 
@@ -2139,6 +2152,8 @@ D20's recovery chain expects.
 
 ## D48 — Publishing stays with the organising organisation
 
+> **Updated by [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) and [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it), awaiting Karl's confirmation.** The predefined editor role now holds `CanPublishEvent`, so its members publish their organisations' events and their own orphan events. `Event.viewerCan.publish` is `canPublishEvent`, which the editor reads to choose between Publish and Ready for review.
+
 Updates [D3](#d3--validation-is-cross-organisation-publishing-not-a-publication-state), [D4](#d4--canpublishevent-decides-who-needs-validating) and [D35](#d35--an-events-owner-reaches-it-without-an-organisation).
 
 **Status.** Built in `181c71168`. Awaiting Karl's confirmation.
@@ -2150,7 +2165,7 @@ edit, including a venue member editing another organiser's event through D19's v
 
 **Decision.** `canPublishEvent(session, event)` is `CanPublishEvent` **and** one of: membership of
 the organising organisation; ownership of an event that has no organisation;
-`CanUpdateOtherOrganizationEvents` (`event-scope.ts:210-214`). It gates both `publishEvent` and
+`CanUpdateOtherOrganizationEvents` (`event-scope.ts:215-219`). It gates both `publishEvent` and
 `unpublishEvent` (`event.service.ts:567,636`).
 
 **Why.**
@@ -2175,7 +2190,7 @@ Updates [D4](#d4--canpublishevent-decides-who-needs-validating) and [D35](#d35--
 **Status.** Built in `181c71168`. Awaiting Karl's confirmation.
 
 **Decision.** `canDeleteEvent(session, event)` is membership of the organising organisation, or
-`CanDeleteOtherOrganizationEvents` (`event-scope.ts:216-218`), behind
+`CanDeleteOtherOrganizationEvents` (`event-scope.ts:221-223`), behind
 `@Permissions(CanDeleteEvent)`. There is no owner branch and no venue branch.
 
 **Why.** No decision gives owners deletion: D35 gives an owner list and edit access. The venue
@@ -2329,10 +2344,10 @@ the admin event form restricts private places, through `findActiveAndNotPrivate`
 - `Place` is one GraphQL type with no sensitive split, and `place` and `places` are public.
 - Which places are listed follows the organisation rule: anonymous callers see enabled places,
   members also see their own disabled ones, and holders of `CanGetOtherOrganizations` or
-  `CanUpdateOtherOrganizations` see all (`visiblePlacesWhere`, `event-scope.ts:109-125`).
+  `CanUpdateOtherOrganizations` see all (`visiblePlacesWhere`, `event-scope.ts:114-130`).
 - Which place an event may be filed at is a separate rule, enforced by `createEvent` and by
   `updateEvent` when the venue changes: the place must be enabled, and either not private or one of
-  your organisations' (`selectablePlacesWhere`, `event-scope.ts:127-144`; `assertPlaceSelectable`,
+  your organisations' (`selectablePlacesWhere`, `event-scope.ts:132-149`; `assertPlaceSelectable`,
   `event.service.ts:884-901`). Holders of `CanUpdateOtherOrganizationEvents` may pick any enabled
   place, private ones included. Disabled places are never selectable.
   `places(filter: { selectable: true })` gives the editor the same list.
@@ -2354,6 +2369,8 @@ changes keeps events at a venue that was disabled later editable.
 
 ## D55 — Place writes reuse the organisation permissions
 
+> **Updated by [D73](#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine) and [D87](#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan), awaiting Karl's confirmation.** `Place.viewerCan` reports `update` and `delete` from `CanUpdateOrganization` and `canManagePlace`, and `places` gains the `mine` filter. The predefined editor role holds no organisation permission (D66), so editor-role members see their venues read-only.
+
 Updates [D4](#d4--canpublishevent-decides-who-needs-validating).
 
 **Status.** Built in `595956a6f`. Awaiting Karl's confirmation.
@@ -2366,7 +2383,7 @@ members edit them (`research/bka-06-security-auth-roles.md:268,471-472`).
 - `createPlace`, `updatePlace` and `deletePlace` carry `@Permissions(CanUpdateOrganization)`
   (`libs/event/api/src/lib/place/place.resolver.ts`). The service then requires `canManagePlace`:
   membership of the place's organisation, or `CanUpdateOtherOrganizations`, which alone may act on a
-  place with no organisation (`event-scope.ts:146-152`).
+  place with no organisation (`event-scope.ts:151-157`).
 - `deletePlace` refuses a place that still has an occurrence ending in the future
   (`place/place.service.ts:217-240`), as BKa's `PlaceController.php:167-172` does. Otherwise
   `Event.place` would silently become null on live events.
@@ -2386,6 +2403,8 @@ more thing to grant for no gain the build could see.
 ---
 
 ## D56 — Taxonomies are read-only for now, and the SQL migration seeds nothing
+
+> **Updated by [D93](#d93--taxonomy-screens-are-not-part-of-slice-f), awaiting Karl's confirmation.** Creating and editing regions, audiences and affiliations did not land in slice F; it waits until the slice G import fills the tables.
 
 > **Updated by [D72](#d72--organisation-tags-affiliations-and-contacts-are-public-and-written-through-the-organisation), awaiting Karl's confirmation.** An organisation's tags, affiliations and contacts now have public GraphQL fields and are written through the organisation inputs.
 
@@ -2445,6 +2464,8 @@ organiser's organisation.
 
 ## D58 — A review request is a state, stamped once
 
+> **Updated by [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it), [D69](#d69--a-review-request-can-be-withdrawn) and [D85](#d85--ready-for-review-and-withdraw-request-follow-viewercan-and-name-who-can-publish), awaiting Karl's confirmation.** A request can be withdrawn by anyone who may edit the event (`withdrawEventReview`). `viewerCan.requestReview` and `viewerCan.withdrawReview` decide which button shows, and the confirmation names who can publish without promising a notification until slice E.
+
 Updates [D5](#d5--ready-for-review-is-an-explicit-action-backed-by-a-field-on-the-event).
 
 **Status.** Built in `595956a6f`. Awaiting Karl's confirmation.
@@ -2466,6 +2487,8 @@ the queue by age, so stamping again would send a waiting event to the back each 
 ---
 
 ## D59 — Event filters match the venue, and `false` means "not flagged"
+
+> **Updated by [D71](#d71--the-editor-list-filters-by-publication-review-and-last-date-and-lookups-by-id-use-reach), awaiting Karl's confirmation.** `EventFilter` also takes `draft`, `pending`, `published`, `reviewRequested`, `endsBefore` and `endsAfter`; `draft`, `pending` and `reviewRequested` are dropped outside editor mode.
 
 Updates [D42](#d42--the-public-event-partner-filter-stays).
 
@@ -2522,6 +2545,8 @@ one unnecessary.
 ---
 
 ## D61 — The old editor event screens are removed until slice F
+
+> **Updated by [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role), [D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first), [D84](#d84--the-event-editor-is-the-article-editors-shell-with-four-metadata-tabs-kept-in-the-address) and [D87](#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan).** Slice F brought the event screens back, built per design 3: the Agenda section with Events, Organisations, Venues and Tags, the event editor, and the `events`, `createEvent`, `organizations`, `venues`, `createOrganization` and `createVenue` commands. The activity feed links new events again. The predefined editor role holds `CanGetEvents` and `CanPublishEvent` (Karl, 2026-10-24).
 
 Updates [D27](#d27--the-events-domain-ships-to-every-tenant).
 
@@ -2658,8 +2683,14 @@ Reusing the `events.tagged-events` name and `TagType.Event` keeps the tag model 
 
 Updates [D4](#d4--canpublishevent-decides-who-needs-validating) and [D61](#d61--the-old-editor-event-screens-are-removed-until-slice-f).
 
-**Status.** Built in slice F stage 1. Follows Karl's call of 2026-10-24. The Agenda-Admin set and the
-role's existence on every tenant are awaiting Karl's confirmation.
+**Status.** Built in slice F stage 1 (`89503d801`). The scoping of the editor role is Karl's decision
+of 2026-10-24 and is settled. The Agenda-Admin set and the role's existence on every tenant are
+awaiting Karl's confirmation.
+
+**Karl's decision (2026-10-24).** The predefined editor role gets the event permissions, scoped to
+its own events: its organisations' events plus the events it owns, through `event-scope.ts`. Seeing
+**all** events is a separate permission, `CanGetOtherOrganizationEvents`, together with the other
+cross-organisation permissions, and only admin and the Agenda-Admin role hold them.
 
 **Context.** D61 left the predefined editor role without `CanGetEvents` or `CanPublishEvent`, so an
 editor could neither list event drafts nor publish. Karl decided that the editor role gets the event
@@ -2693,6 +2724,9 @@ events.
 **Consequences.**
 - Editor-role users can now list their drafts and publish; D61's "deploy as it is" question
   narrows to the dropped rows.
+- `agenda-admin` reaches existing tenants at their next `pnpm migrate`, which runs `prisma db seed`
+  after the migrations; the upsert leaves an existing row alone. A local database has no such role
+  until `prisma db seed` runs.
 - Open: whether the editor role should also hold `CanUpdateOrganization`, without which it cannot
   edit its organisation or venues (D55).
 
@@ -2727,7 +2761,7 @@ not know the session's memberships, so it cannot work out which buttons to offer
 - `Event.viewerCan` returns `update`, `publish`, `delete`, `duplicate`, `requestReview`,
   `withdrawReview`, `moveOrganization`, `clearOrganization` and `reassignOwner`. Each flag is the permission the
   mutation's guard checks **and** the record rule the service checks (`eventViewerPermissions`,
-  `event-scope.ts:263`): `update` is `CanUpdateEvent` and `canModifyEvent`; `delete` is
+  `event-scope.ts:267-295`): `update` is `CanUpdateEvent` and `canModifyEvent`; `delete` is
   `CanDeleteEvent` and `canDeleteEvent`; `duplicate` is `CanCreateEvent`, `canModifyEvent` and
   `mayAssignEventOrganization`; `requestReview` needs `update`, no `publish`, a draft and no pending
   request; `withdrawReview` needs `update` and a pending request.
@@ -3273,6 +3307,8 @@ instead of failing on save, as for events (D68).
   the message changes, the dialog falls back to showing it as it is.
 - Regions and affiliations are read-only lists (D56) and empty until slice G imports them, so both
   pickers are empty on a fresh tenant.
+- Contacts are organisation fields, edited here, and the event form has none: design 1 §11 attaches
+  them to the organisation, as BKa's `OrganizationType` does.
 
 ---
 
@@ -3388,6 +3424,67 @@ disabled button with no tooltip").
 
 **Consequences.** The same pattern would help the article and page editors' disabled buttons; that
 is not part of this slice.
+
+---
+
+## D92 — Only the event's owner may take it out of every organisation
+
+Updates [D47](#d47--who-may-set-an-events-organisation-and-owner), [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it) and [D81](#d81--on-a-new-event-the-organisation-picker-offers-your-own-organisations-and-the-owner-is-you).
+
+**Status.** Built in the slice F verification round (`27185a677`). Awaiting Karl's confirmation.
+
+**Context.** D47 let anyone who holds an event, as a member of its organisation, move it to another
+organisation they belong to, and the target could be none. A member who does not own the event could
+therefore clear its organisation. The event then dropped out of their agenda (`editorEventsWhere`
+lists organisation events and owned events only), and they could not undo the change.
+
+**Decision.**
+- `mayMoveEventToOrganization(session, event, null)` needs the caller to own the event, unless they
+  hold `CanUpdateOtherOrganizationEvents` (`event-scope.ts:237-257`). Moving between organisations the
+  caller belongs to is unchanged.
+- `Event.viewerCan.clearOrganization` is `update` and that rule (`eventViewerPermissions`,
+  `event-scope.ts:291-292`). `moveOrganization` now checks against the event's current organisation,
+  which gives the same answer as before in every case.
+- The editor's organisation picker offers clearing only when `viewerCan.clearOrganization` holds
+  (`OrganizationSelectPicker` gains an optional `disableClearable`, which also blocks clearing with
+  Backspace). Otherwise its help text says that only the owner can leave the event without an
+  organisation, because it would drop out of the member's agenda.
+
+**Why.** A member who clears the organisation of an event they do not own loses it with no way back,
+and the organisation loses it too. The owner keeps reaching an orphan event (D35), so the owner can
+always undo.
+
+**Consequences.**
+- Checked live as an editor-role member: moving an admin-owned event between two of their
+  organisations works; clearing it is refused, by the API and in the picker. Clearing an event they
+  own works, and it stays reachable.
+- The API's refusal for a non-owner who clears through the API reads "You may only move events
+  between organisations you belong to.", which names the wrong reason. The editor never sends that
+  request. A message of its own is open.
+
+---
+
+## D93 — Taxonomy screens are not part of slice F
+
+Updates [D56](#d56--taxonomies-are-read-only-for-now-and-the-sql-migration-seeds-nothing) and design 3 §2.
+
+**Status.** Slice F shipped without them. Awaiting Karl's confirmation.
+
+**Context.** D56 called the create and edit screens for regions, audiences and affiliations slice F
+work, and design 3 §2 puts a Taxonomies entry under Agenda. Slice F's scope named events,
+organisations and venues only.
+
+**Decision.** No Taxonomies menu entry, route or mutation. Regions, audiences and affiliations stay
+read-only queries, used by the event and organisation pickers. Event tags stay where they are, as
+**Tags** under Agenda ([D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first)).
+
+**Why.** The tables are empty on every tenant until the slice G import fills them with BKa's 13
+regions, 4 audiences and 7 affiliations (D56). Screens built now would have nothing to show.
+
+**Consequences.**
+- The region, audience and affiliation pickers are empty on a fresh tenant.
+- Open: whether the screens come with slice G, or whether the imported lists are edited in the
+  database until someone needs a screen.
 
 ---
 
@@ -3554,14 +3651,18 @@ Open, no decision needed, folded into later slices:
 - The occurrence repair command and the migration backfill are not built (slice G, [D45](#d45--occurrences-are-written-whenever-the-schedule-is-saved)).
 - The slice G import writes straight to the database, so it must invalidate the `events` cache when
   it finishes ([D45](#d45--occurrences-are-written-whenever-the-schedule-is-saved)).
-- The editor's review queue query is slice F; the column is indexed ([D58](#d58--a-review-request-is-a-state-stamped-once)).
-- Taxonomy create and edit is slice F, and the taxonomy tables stay empty until slice G
+- ~~The editor's review queue query is slice F.~~ Built as the `reviewRequested` filter and the
+  `ReviewRequestedAt` sort ([D71](#d71--the-editor-list-filters-by-publication-review-and-last-date-and-lookups-by-id-use-reach), [D75](#d75--the-review-queue-is-a-filter-a-sort-and-a-dashboard-card-for-whoever-can-publish)).
+- Taxonomy create and edit did not land in slice F ([D93](#d93--taxonomy-screens-are-not-part-of-slice-f)), and the taxonomy tables stay empty until slice G
   ([D56](#d56--taxonomies-are-read-only-for-now-and-the-sql-migration-seeds-nothing)).
 
 ### Raised by the slice F build
 
-Slice F builds the agenda editor. Its build choices are recorded as decisions from
-[D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) on. **Each needs a yes, or the change Karl wants:**
+Slice F built the agenda editor (commits `89503d801` to `27185a677`). Karl decided on 2026-10-24
+that the predefined editor role gets the event permissions scoped to its own events, and that seeing
+every event stays a separate permission held only by admin and Agenda-Admin; that call is settled
+and recorded in [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role). The build choices are recorded as decisions
+[D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) to [D93](#d93--taxonomy-screens-are-not-part-of-slice-f). **Each needs a yes, or the change Karl wants:**
 
 1. [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role): the Agenda-Admin set, the role on every tenant, and whether the editor role should
    also hold `CanUpdateOrganization`.
@@ -3602,3 +3703,36 @@ Slice F builds the agenda editor. Its build choices are recorded as decisions fr
     2.97:1 contrast of the theme's primary buttons.
 25. [D91](#d91--an-unavailable-action-says-why-and-stays-reachable): Publish and Ready for review stay focusable and explain why they are unavailable,
     instead of being disabled or hidden.
+26. [D92](#d92--only-the-events-owner-may-take-it-out-of-every-organisation): only the owner (or `CanUpdateOtherOrganizationEvents`) may take an event out of every
+    organisation; a member who does not own it may still move it between their organisations.
+27. [D93](#d93--taxonomy-screens-are-not-part-of-slice-f): no taxonomy screens in slice F. Do they come with slice G, or not at all until
+    someone needs them?
+28. [D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker) in the editor: Agenda-Admin holds `CanUpdateOtherOrganizationEvents`, so its venue picker
+    offers private venues. Keep that?
+
+Open, no decision needed, from the slice F build:
+
+- The API's refusal for a non-owner who clears an event's organisation names the wrong reason
+  ([D92](#d92--only-the-events-owner-may-take-it-out-of-every-organisation)); it needs its own message and a spec.
+- The 125-character caption limit is enforced by the editor only ([D80](#d80--event-images-caption-on-the-event-alt-text-on-the-image-one-main-image)).
+- "Ends in N days" counts from the schedule's `dateTo` (the Last day field), not from the last actual
+  occurrence: a weekly series whose last day is not one of its weekdays shows a few days too many
+  ([D76](#d76--ends-in-n-days-marks-weekly-series-only-in-zurich-calendar-days)).
+- `duplicateEvent` copies stored blocks without checking them, so an event written before
+  [D70](#d70--event-content-takes-only-the-blocks-the-agenda-can-show) can pass disallowed blocks to its copy.
+- The development database's `BlockType` enum still holds `teaserGrid1` and `teaserGrid6`, so
+  `prisma migrate diff` keeps proposing to rebuild it. The drift predates slice F and needs a change of
+  its own.
+- Nx reports `event-api:test` as flaky although every test passes. Two specs have failed once each
+  under load (an organisation-relations resolver spec and a "next date of an event that is over"
+  case); the shared state or timing behind them is not found yet.
+- The same Autocomplete-in-Drawer problem fixed for the event drawer ([D90](#d90--the-agenda-screens-were-audited-for-accessibility-what-was-fixed-and-what-belongs-to-the-house)) still affects the article
+  and page Metadata drawers (`.claude/docs/gotchas.md`).
+- VoiceOver and NVDA have not been tried on the live regions, the drag-and-drop instructions or the
+  native date and time pickers; that needs a person with assistive technology.
+- At 1440 px the event table scrolls sideways and the pinned Actions column covers part of the
+  Publication column. The house lists behave the same way (`DataTable`).
+- Editor polish from the verification: errors show on schedule and price fields before they are
+  touched; the publish dialog's copy still mentions two kinds of save; the organisation members panel
+  shows US-format dates and help text that does not match what it does; 13 non-null-assertion lint
+  warnings in the `event-editor` specs.

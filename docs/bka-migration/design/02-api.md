@@ -104,7 +104,7 @@ fields, `Organization` implements it with nothing more, and `SensitiveDataOrgani
 (`libs/event/api/src/lib/organization/organization.model.ts:27-107`). Because the same public query
 serves anonymous visitors, members and admins, `BaseOrganization.resolveType` picks the type **per
 row and per caller** with `canReadOrganizationSensitiveData`
-(`libs/event/api/src/lib/event-scope.ts:86-92`): a member of that organisation, or a holder of
+(`libs/event/api/src/lib/event-scope.ts:91-97`): a member of that organisation, or a holder of
 `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations`, gets the sensitive type. API keys go
 through the same check: a key bound to the organisation gets the sensitive type as a member does, and
 a platform key follows its scopes ([D36](../decisions.md)). The writes return `SensitiveDataOrganization`
@@ -129,8 +129,8 @@ they need `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations` and otherw
 
 Which rows are visible is a separate rule: anonymous callers see enabled organisations, members
 also see their own disabled ones, and holders of either permission above see all
-(`visibleOrganizationsWhere`, `event-scope.ts:64-78`). Changing `partner` or `enabled` needs
-`CanUpdateOtherOrganizations` (`organization.service.ts:269-283`). `BaseOrganization.region`
+(`visibleOrganizationsWhere`, `event-scope.ts:69-83`). Changing `partner` or `enabled` needs
+`CanUpdateOtherOrganizations` (`assertMayChangePrivilegedFields`, `organization.service.ts:413-427`). `BaseOrganization.region`
 resolves the organisation's region (`organization/organization-region.resolver.ts`). Its tags
 (event tags, at most 3), affiliations and contacts (at most 6, each with an email or a phone) are
 public, resolved by `organization/organization-relations.resolver.ts`, and written through
@@ -351,12 +351,12 @@ BKa spread its visibility rule across four Doctrine query extensions plus a vote
 that they have **already drifted out of agreement**. That is the failure mode to design against.
 
 One module is the only place the rule lives: `libs/event/api/src/lib/event-scope.ts`. Every
-function takes `AuthSession | null | undefined` (`event-scope.ts:12`), so a user, an API key, a peer
+function takes `AuthSession | null | undefined` (`event-scope.ts:19`), so a user, an API key, a peer
 token and an anonymous caller all go through the same code; there is no `UserSession`-only variant.
 
 The event rule is two functions, because "what the public may read" and "what you may manage" are
 different questions ([D19](../decisions.md)) — conflating them is how an organiser ends up browsing a
-rival's programme. As built (`event-scope.ts:154-208`):
+rival's programme. As built (`event-scope.ts:159-213`):
 
 ```ts
 export const publicEventsWhere = (): Prisma.EventWhereInput => ({
@@ -386,32 +386,34 @@ export const canModifyEvent = (session: Session, event: EventOwnership) =>
 ```
 
 `EventOwnership` is `{ organizationId; ownerId; place?: { organizationId } }`, with `ownerId`
-required so a caller cannot forget to load it (`event-scope.ts:16-20`).
+required so a caller cannot forget to load it (`event-scope.ts:21-25`).
 
 The helpers the event, place and organisation services share:
 
 | Function | Answers | Line |
 | --- | --- | --- |
-| `organizationIdsOf(session)` | the user's memberships, a bound key's one organisation, otherwise none | `:36-47` |
-| `holdsAcrossOrganizations(session, p)` *(module-private)* | holds `p` and is not a bound key ([D36](../decisions.md)) | `:25-27` |
-| `isEventOwner(session, event)` | a user session whose user id equals `ownerId` ([D35](../decisions.md)) | `:52-56` |
-| `isOrganizationMember(session, id)` | `id` is in `organizationIdsOf` | `:58-62` |
-| `mayReadAnyOrganization` / `mayUpdateAnyOrganization` | `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations` / only the latter | `:29-34` |
-| `visibleOrganizationsWhere(session)` | which organisations a caller can list (§2.1.1) | `:64-78` |
-| `memberOrganizationsWhere(session)` | the `mine` filter | `:80-84` |
-| `canReadOrganizationSensitiveData(session, id)` | member, or `mayReadAnyOrganization` ([D37](../decisions.md)) | `:86-92` |
-| `canManageOrganization(session, id)` | member, or `mayUpdateAnyOrganization` | `:94-99` |
-| `canSeeOrganization(session, org)` | enabled, member, or `mayReadAnyOrganization`; a hidden organisation resolves to null on `Event.organization` and `Place.organization` | `:101-107` |
-| `visiblePlacesWhere(session)` | anonymous: enabled places; members also their own disabled ones; `mayReadAnyOrganization`: all | `:109-125` |
-| `selectablePlacesWhere(session)` | venues an event may be filed at: enabled and (not private or own organisation); any enabled place with `CanUpdateOtherOrganizationEvents` | `:127-144` |
-| `canManagePlace(session, organizationId)` | `canManageOrganization`, or `mayUpdateAnyOrganization` for a place without an organisation | `:146-152` |
-| `reachableEventsWhere(session)` | the editor-mode single-event read: `canModifyEvent` as a `where`, venue branch included | `:175-195` |
-| `canReachEvent(session, event)` | `reachableEventsWhere` as a predicate; gates the editor view of one event's fields | `:197-202` |
-| `canPublishEvent(session, event)` | `CanPublishEvent` and (member of the organising organisation, owner of an orphan event, or `CanUpdateOtherOrganizationEvents`); also gates `unpublishEvent` | `:210-214` |
-| `canDeleteEvent(session, event)` | member of the organising organisation, or `CanDeleteOtherOrganizationEvents`; no owner or venue branch | `:216-218` |
-| `mayAssignEventOrganization` / `mayMoveEventToOrganization` | file under, or move to, an organisation you belong to, unless `CanUpdateOtherOrganizationEvents`; moving to none needs you to own the event | `:220-250` |
-| `mayAssignEventOwner` / `mayReassignEventOwner` | only `CanUpdateOtherOrganizationEvents` may make someone else the owner | `:228-253` |
-| `boundOrganizationIdOf(session)` | a bound key's organisation, the default for `createEvent` | `:255-258` |
+| `organizationIdsOf(session)` | the user's memberships, a bound key's one organisation, otherwise none | `:41-52` |
+| `holdsAcrossOrganizations(session, p)` *(module-private)* | holds `p` and is not a bound key ([D36](../decisions.md)) | `:30-32` |
+| `isEventOwner(session, event)` | a user session whose user id equals `ownerId` ([D35](../decisions.md)) | `:57-61` |
+| `isOrganizationMember(session, id)` | `id` is in `organizationIdsOf` | `:63-67` |
+| `mayReadAnyOrganization` / `mayUpdateAnyOrganization` | `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations` / only the latter | `:34-39` |
+| `visibleOrganizationsWhere(session)` | which organisations a caller can list (§2.1.1) | `:69-83` |
+| `memberOrganizationsWhere(session)` | the `mine` filter | `:85-89` |
+| `canReadOrganizationSensitiveData(session, id)` | member, or `mayReadAnyOrganization` ([D37](../decisions.md)) | `:91-97` |
+| `canManageOrganization(session, id)` | member, or `mayUpdateAnyOrganization` | `:99-104` |
+| `canSeeOrganization(session, org)` | enabled, member, or `mayReadAnyOrganization`; a hidden organisation resolves to null on `Event.organization` and `Place.organization` | `:106-112` |
+| `visiblePlacesWhere(session)` | anonymous: enabled places; members also their own disabled ones; `mayReadAnyOrganization`: all | `:114-130` |
+| `selectablePlacesWhere(session)` | venues an event may be filed at: enabled and (not private or own organisation); any enabled place with `CanUpdateOtherOrganizationEvents` | `:132-149` |
+| `canManagePlace(session, organizationId)` | `canManageOrganization`, or `mayUpdateAnyOrganization` for a place without an organisation | `:151-157` |
+| `reachableEventsWhere(session)` | the editor-mode single-event read: `canModifyEvent` as a `where`, venue branch included | `:180-200` |
+| `canReachEvent(session, event)` | `reachableEventsWhere` as a predicate; gates the editor view of one event's fields | `:202-207` |
+| `canPublishEvent(session, event)` | `CanPublishEvent` and (member of the organising organisation, owner of an orphan event, or `CanUpdateOtherOrganizationEvents`); also gates `unpublishEvent` | `:215-219` |
+| `canDeleteEvent(session, event)` | member of the organising organisation, or `CanDeleteOtherOrganizationEvents`; no owner or venue branch | `:221-223` |
+| `mayAssignEventOrganization` / `mayMoveEventToOrganization` | file under, or move to, an organisation you belong to, unless `CanUpdateOtherOrganizationEvents`; moving to none needs you to own the event | `:225-231`, `:237-257` |
+| `mayAssignEventOwner` / `mayReassignEventOwner` | only `CanUpdateOtherOrganizationEvents` may make someone else the owner | `:233-235`, `:259-260` |
+| `boundOrganizationIdOf(session)` | a bound key's organisation, the default for `createEvent` | `:262-265` |
+| `eventViewerPermissions(session, event, hasDraft)` | `Event.viewerCan`: each flag is the guard's permission and the record rule; `clearOrganization` is `mayMoveEventToOrganization(…, null)` ([D68](../decisions.md#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it), [D92](../decisions.md#d92--only-the-events-owner-may-take-it-out-of-every-organisation)) | `:267-295` |
+| `organizationViewerPermissions` / `placeViewerPermissions` | `viewerCan` on organisations and places ([D73](../decisions.md#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine)) | `:297-322` |
 
 The assignment, publish and delete rules are [D47](../decisions.md#d47--who-may-set-an-events-organisation-and-owner), [D48](../decisions.md#d48--publishing-stays-with-the-organising-organisation) and [D49](../decisions.md#d49--deleting-an-event-needs-membership-or-the-cross-organisation-delete-permission), and the
 editor-mode read is [D46](../decisions.md#d46--editor-mode-needs-the-preview-header-an-event-permission-and-reach), all awaiting Karl's confirmation.
@@ -467,10 +469,11 @@ a draft that belongs to another organisation, which `publishEvent` already does 
 The queue is a query, not a table: drafts where `reviewRequestedAt IS NOT NULL`, ordered oldest
 first, scoped by `editorEventsWhere`.
 
-**Built** as `canPublishEvent` (`event-scope.ts:210-214`, [D48](../decisions.md#d48--publishing-stays-with-the-organising-organisation)) behind `@Permissions(CanPublishEvent)`. A
+**Built** as `canPublishEvent` (`event-scope.ts:215-219`, [D48](../decisions.md#d48--publishing-stays-with-the-organising-organisation)) behind `@Permissions(CanPublishEvent)`. A
 venue member reaches a foreign event and can edit it, but publishes it only with the
-cross-organisation permission. The queue query itself is editor work (slice F); the column is
-indexed.
+cross-organisation permission. The queue is built as the `reviewRequested` filter with the
+`ReviewRequestedAt` sort ([D71](../decisions.md#d71--the-editor-list-filters-by-publication-review-and-last-date-and-lookups-by-id-use-reach)),
+used by the editor's list and dashboard card ([D75](../decisions.md#d75--the-review-queue-is-a-filter-a-sort-and-a-dashboard-card-for-whoever-can-publish)); the column is indexed.
 
 ---
 
