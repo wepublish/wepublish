@@ -149,6 +149,9 @@ const setup = async () => {
     tag: {
       count: vi.fn(async ({ where }) => where.id.in.length),
     },
+    place: {
+      count: vi.fn().mockResolvedValue(1),
+    },
     occurrence: {
       findMany: vi.fn().mockResolvedValue([]),
       deleteMany: vi.fn(),
@@ -1218,5 +1221,415 @@ describe('EventService.getPublicEventsForBlock', () => {
     });
 
     expect(events.map(({ id }) => id)).toEqual(['a', 'c']);
+  });
+});
+
+describe('EventService place choice', () => {
+  it('lets a member file an event at a place they may choose', async () => {
+    const { service, prisma } = await setup();
+
+    await service.createEvent(facts({ placeId: 'place-1' }), content(), member);
+
+    expect(prisma.place.count).toHaveBeenCalledWith({
+      where: {
+        AND: [
+          { id: 'place-1' },
+          {
+            enabled: true,
+            OR: [{ private: false }, { organizationId: { in: ['org-a'] } }],
+          },
+        ],
+      },
+    });
+    expect(prisma.event.create.mock.calls[0][0].data.placeId).toBe('place-1');
+  });
+
+  it('refuses a place that is disabled, missing or private to another organisation', async () => {
+    const { service, prisma } = await setup();
+    prisma.place.count.mockResolvedValue(0);
+
+    await expect(
+      service.createEvent(facts({ placeId: 'place-x' }), content(), member)
+    ).rejects.toBeInstanceOf(BadRequestException);
+    expect(prisma.event.create).not.toHaveBeenCalled();
+  });
+
+  it('checks a place only when an update changes it', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma, { placeId: 'place-1' });
+
+    await service.updateEvent('event-1', { placeId: 'place-1' }, member);
+    await service.updateEvent('event-1', { placeId: null }, member);
+
+    expect(prisma.place.count).not.toHaveBeenCalled();
+
+    prisma.place.count.mockResolvedValue(0);
+
+    await expect(
+      service.updateEvent('event-1', { placeId: 'place-2' }, member)
+    ).rejects.toBeInstanceOf(BadRequestException);
+  });
+});
+
+describe('EventService.duplicateEvent', () => {
+  const sourceRevision = {
+    id: 'rev-1',
+    eventId: 'event-1',
+    createdAt: NOW,
+    name: 'Konzert',
+    printDescription: 'Kurz',
+    blocks: [{ type: 'richText', richText: { type: 'doc', content: [] } }],
+    descriptionText: 'Ein Abend mit Musik',
+    publishedAt: NOW,
+    archivedAt: null,
+    userId: 'someone',
+    images: [
+      {
+        revisionId: 'rev-1',
+        imageId: 'img-1',
+        caption: 'Bühne',
+        sortOrder: 0,
+        isMain: true,
+        createdAt: NOW,
+      },
+    ],
+  };
+
+  const source = (prisma: any, overrides: Partial<Event> = {}) => {
+    prisma.event.findUnique.mockResolvedValue({
+      ...eventRow({
+        slug: 'konzert',
+        status: EventStatus.SoldOut,
+        placeId: 'place-1',
+        audienceId: 'audience-1',
+        ticketingUrl: 'https://tickets.example.com',
+        showInPrint: true,
+        scheduleType: EventScheduleType.Explicit,
+        dateFrom: null,
+        dateTo: null,
+        seoTitle: 'SEO',
+        socialMediaImageID: 'img-social',
+        publishedAt: NOW,
+        reviewRequestedAt: NOW,
+        reviewRequestedById: 'owner',
+        legacyId: BigInt(5),
+        legacyProposedBy: { email: 'x@example.com' },
+        ...overrides,
+      }),
+      dates: [
+        {
+          id: 'date-1',
+          dateFrom: new Date('2026-11-05T18:00:00.000Z'),
+          dateTo: new Date('2026-11-05T20:00:00.000Z'),
+          openingTime: '17:30',
+          sortOrder: 0,
+          legacyEventId: BigInt(77),
+        },
+      ],
+      rates: [{ price: '25.-', designation: 'Normal', sortOrder: 0 }],
+      tags: [{ tagId: 'tag-1' }, { tagId: 'tag-2' }],
+      place: { organizationId: 'org-v' },
+    });
+    prisma.eventRevision.findFirst.mockResolvedValue(sourceRevision);
+  };
+
+  it('copies the facts, the dates, the rates and the tags into a fresh event', async () => {
+    const { service, prisma } = await setup();
+    source(prisma);
+
+    await service.duplicateEvent('event-1', member);
+
+    const { data } = prisma.event.create.mock.calls[0][0];
+
+    expect(data).toMatchObject({
+      status: EventStatus.SoldOut,
+      organizationId: 'org-a',
+      placeId: 'place-1',
+      audienceId: 'audience-1',
+      ticketingUrl: 'https://tickets.example.com',
+      showInPrint: true,
+      scheduleType: EventScheduleType.Explicit,
+      dateFrom: null,
+      dateTo: null,
+      weekDays: [],
+      openingTime: null,
+      ownerId: 'member',
+      slug: null,
+      publishedAt: null,
+      reviewRequestedAt: null,
+      reviewRequestedById: null,
+      firstDateAt: new Date('2026-11-05T18:00:00.000Z'),
+      lastDateAt: new Date('2026-11-05T20:00:00.000Z'),
+      dates: {
+        createMany: {
+          data: [
+            {
+              dateFrom: new Date('2026-11-05T18:00:00.000Z'),
+              dateTo: new Date('2026-11-05T20:00:00.000Z'),
+              openingTime: '17:30',
+              sortOrder: 0,
+            },
+          ],
+        },
+      },
+      rates: {
+        createMany: {
+          data: [{ price: '25.-', designation: 'Normal', sortOrder: 0 }],
+        },
+      },
+      tags: { createMany: { data: [{ tagId: 'tag-1' }, { tagId: 'tag-2' }] } },
+    });
+    expect(data).not.toHaveProperty('legacyId');
+    expect(data).not.toHaveProperty('legacyProposedBy');
+    expect(data).not.toHaveProperty('socialMediaImageID');
+    expect(data).not.toHaveProperty('seoTitle');
+  });
+
+  it('copies the latest revision as a new draft, named as a copy', async () => {
+    const { service, prisma } = await setup();
+    source(prisma);
+
+    await service.duplicateEvent('event-1', member);
+
+    expect(prisma.eventRevision.findFirst).toHaveBeenCalledWith({
+      where: { eventId: 'event-1', archivedAt: null },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      include: { images: { orderBy: { sortOrder: 'asc' } } },
+    });
+
+    const revision = prisma.event.create.mock.calls[0][0].data.revisions.create;
+
+    expect(revision).toEqual({
+      name: 'Kopie von Konzert',
+      printDescription: 'Kurz',
+      blocks: sourceRevision.blocks,
+      descriptionText: 'Ein Abend mit Musik',
+      userId: 'member',
+      images: {
+        createMany: {
+          data: [
+            { imageId: 'img-1', caption: 'Bühne', sortOrder: 0, isMain: true },
+          ],
+        },
+      },
+    });
+  });
+
+  it('keeps the copied name within 130 characters', async () => {
+    const { service, prisma } = await setup();
+    source(prisma);
+    prisma.eventRevision.findFirst.mockResolvedValue({
+      ...sourceRevision,
+      name: 'x'.repeat(130),
+    });
+
+    await service.duplicateEvent('event-1', member);
+
+    const { name } = prisma.event.create.mock.calls[0][0].data.revisions.create;
+
+    expect(name).toHaveLength(130);
+    expect(name.startsWith('Kopie von x')).toBe(true);
+  });
+
+  it('expands the occurrences of the copy and resets the draft cache', async () => {
+    const { service, prisma, cache } = await setup();
+    source(prisma);
+
+    await service.duplicateEvent('event-1', member);
+
+    expect(prisma.occurrence.createMany).toHaveBeenCalledWith({
+      data: expandOccurrences({
+        scheduleType: EventScheduleType.Explicit,
+        dateFrom: null,
+        dateTo: null,
+        weekDays: [],
+        openingTime: null,
+        dates: [
+          {
+            dateFrom: new Date('2026-11-05T18:00:00.000Z'),
+            dateTo: new Date('2026-11-05T20:00:00.000Z'),
+            openingTime: '17:30',
+            sortOrder: 0,
+            legacyEventId: null,
+          },
+        ],
+      }).map(occurrence => ({ ...occurrence, eventId: 'event-1' })),
+    });
+    expect(cache.invalidateDraft).toHaveBeenCalledWith('events');
+    expect(cache.invalidate).not.toHaveBeenCalled();
+  });
+
+  it('lets the owner copy an event without organisation', async () => {
+    const { service, prisma } = await setup();
+    source(prisma, { organizationId: null });
+
+    await service.duplicateEvent('event-1', owner);
+
+    expect(prisma.event.create.mock.calls[0][0].data).toMatchObject({
+      organizationId: null,
+      ownerId: 'owner',
+    });
+  });
+
+  it('gives a copy made by an api key no owner', async () => {
+    const { service, prisma } = await setup();
+    source(prisma);
+
+    await service.duplicateEvent('event-1', organizationKey('org-a'));
+
+    expect(prisma.event.create.mock.calls[0][0].data.ownerId).toBeNull();
+  });
+
+  it.each([
+    ['someone who may not modify the event', user('stranger', ['org-z'])],
+    [
+      "the venue's organisation, which may not file events under the organiser",
+      venueMember,
+    ],
+  ])('refuses %s', async (_n, session) => {
+    const { service, prisma } = await setup();
+    source(prisma);
+
+    await expect(
+      service.duplicateEvent('event-1', session)
+    ).rejects.toBeInstanceOf(ForbiddenException);
+    expect(prisma.event.create).not.toHaveBeenCalled();
+  });
+
+  it('is NotFound for a missing event', async () => {
+    const { service, prisma } = await setup();
+    prisma.event.findUnique.mockResolvedValue(null);
+
+    await expect(
+      service.duplicateEvent('missing', member)
+    ).rejects.toBeInstanceOf(NotFoundException);
+  });
+});
+
+describe('EventService.requestEventReview', () => {
+  const draftRevision = {
+    id: 'rev-draft',
+    publishedAt: null,
+    archivedAt: null,
+  };
+
+  it('stamps the request on an event with a draft', async () => {
+    const { service, prisma, cache } = await setup();
+    existing(prisma);
+    prisma.eventRevision.findFirst.mockResolvedValue(draftRevision);
+
+    await service.requestEventReview('event-1', member);
+
+    expect(prisma.eventRevision.findFirst).toHaveBeenCalledWith({
+      where: { eventId: 'event-1', archivedAt: null, publishedAt: null },
+    });
+    expect(prisma.event.update).toHaveBeenCalledWith({
+      where: { id: 'event-1' },
+      data: { reviewRequestedAt: NOW, reviewRequestedById: 'member' },
+    });
+    expect(cache.invalidateDraft).toHaveBeenCalledWith('events');
+  });
+
+  it('is a BadRequest without a draft', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma, { publishedAt: NOW });
+    prisma.eventRevision.findFirst.mockResolvedValue(null);
+
+    await expect(
+      service.requestEventReview('event-1', member)
+    ).rejects.toBeInstanceOf(BadRequestException);
+    expect(prisma.event.update).not.toHaveBeenCalled();
+  });
+
+  it('tells someone who may publish the event to publish it instead', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma);
+    prisma.eventRevision.findFirst.mockResolvedValue(draftRevision);
+
+    await expect(
+      service.requestEventReview(
+        'event-1',
+        user('publisher', ['org-a'], CanPublishEvent.id)
+      )
+    ).rejects.toThrow('publish');
+    expect(prisma.event.update).not.toHaveBeenCalled();
+  });
+
+  it("lets the venue's organisation ask, even with CAN_PUBLISH_EVENT, since it may not publish this event", async () => {
+    const { service, prisma } = await setup();
+    existing(
+      prisma,
+      { placeId: 'place-1' },
+      { place: { organizationId: 'org-v' } }
+    );
+    prisma.eventRevision.findFirst.mockResolvedValue(draftRevision);
+
+    await service.requestEventReview(
+      'event-1',
+      user('venue', ['org-v'], CanPublishEvent.id)
+    );
+
+    expect(prisma.event.update).toHaveBeenCalled();
+  });
+
+  it('refuses someone who may not modify the event', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma);
+    prisma.eventRevision.findFirst.mockResolvedValue(draftRevision);
+
+    await expect(
+      service.requestEventReview('event-1', user('stranger', ['org-z']))
+    ).rejects.toBeInstanceOf(ForbiddenException);
+    expect(prisma.event.update).not.toHaveBeenCalled();
+  });
+
+  it('lets an owner without organisation ask (D35)', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma, { organizationId: null });
+    prisma.eventRevision.findFirst.mockResolvedValue(draftRevision);
+
+    await service.requestEventReview('event-1', owner);
+
+    expect(prisma.event.update.mock.calls[0][0].data).toEqual({
+      reviewRequestedAt: NOW,
+      reviewRequestedById: 'owner',
+    });
+  });
+
+  it('records no requester for an api key', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma);
+    prisma.eventRevision.findFirst.mockResolvedValue(draftRevision);
+
+    await service.requestEventReview('event-1', organizationKey('org-a'));
+
+    expect(
+      prisma.event.update.mock.calls[0][0].data.reviewRequestedById
+    ).toBeNull();
+  });
+
+  it('keeps the first request, so the queue keeps its age', async () => {
+    const { service, prisma } = await setup();
+    const requestedAt = new Date('2026-10-01T10:00:00.000Z');
+    existing(prisma, {
+      reviewRequestedAt: requestedAt,
+      reviewRequestedById: 'owner',
+    });
+    prisma.eventRevision.findFirst.mockResolvedValue(draftRevision);
+
+    const event = await service.requestEventReview('event-1', member);
+
+    expect(prisma.event.update).not.toHaveBeenCalled();
+    expect(event.reviewRequestedAt).toEqual(requestedAt);
+    expect(event).not.toHaveProperty('dates');
+  });
+
+  it('is NotFound for a missing event', async () => {
+    const { service, prisma } = await setup();
+    prisma.event.findUnique.mockResolvedValue(null);
+
+    await expect(
+      service.requestEventReview('missing', member)
+    ).rejects.toBeInstanceOf(NotFoundException);
   });
 });

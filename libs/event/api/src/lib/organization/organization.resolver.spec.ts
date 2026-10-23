@@ -442,15 +442,15 @@ describe('OrganizationResolver', () => {
 
       expect(base.kind).toBe('INTERFACE');
       expect(base.fields.map((f: { name: string }) => f.name).sort()).toEqual(
-        [...PUBLIC_FIELDS].sort()
+        [...PUBLIC_FIELDS, 'region'].sort()
       );
       expect(open.fields.map((f: { name: string }) => f.name).sort()).toEqual(
-        [...PUBLIC_FIELDS].sort()
+        [...PUBLIC_FIELDS, 'region'].sort()
       );
       expect(open.interfaces).toEqual([{ name: 'BaseOrganization' }]);
       expect(
         sensitive.fields.map((f: { name: string }) => f.name).sort()
-      ).toEqual([...PUBLIC_FIELDS, ...SENSITIVE_FIELDS].sort());
+      ).toEqual([...PUBLIC_FIELDS, 'region', ...SENSITIVE_FIELDS].sort());
       expect(sensitive.interfaces).toEqual([{ name: 'BaseOrganization' }]);
     });
 

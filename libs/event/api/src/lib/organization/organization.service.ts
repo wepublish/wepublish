@@ -23,6 +23,7 @@ import {
   memberOrganizationsWhere,
   visibleOrganizationsWhere,
 } from '../event-scope';
+import { assertValidLocation } from '../location-rules';
 import { OrganizationDataloaderService } from './organization-dataloader.service';
 import {
   CreateOrganizationInput,
@@ -37,7 +38,6 @@ import {
 type Session = AuthSession | null | undefined;
 
 const MAX_NAME_LENGTH = 100;
-const MAX_ZIP_LENGTH = 4;
 
 @Injectable()
 export class OrganizationService {
@@ -298,17 +298,7 @@ export class OrganizationService {
       );
     }
 
-    if (merged.zip && merged.zip.length > MAX_ZIP_LENGTH) {
-      throw new BadRequestException(
-        `Zip must not be longer than ${MAX_ZIP_LENGTH} characters.`
-      );
-    }
-
-    if ((merged.latitude == null) !== (merged.longitude == null)) {
-      throw new BadRequestException(
-        'Latitude and longitude must be given together.'
-      );
-    }
+    assertValidLocation(merged);
 
     if (input.regionId != null && input.regionId !== existing?.regionId) {
       const region = await this.prisma.region.findUnique({

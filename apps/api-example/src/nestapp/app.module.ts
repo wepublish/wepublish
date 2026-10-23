@@ -24,7 +24,12 @@ import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
 import { ApiTokenModule } from '@wepublish/api-token/api';
 import { NewsletterModule } from '@wepublish/newsletter/api';
 import { DocumentModule } from '@wepublish/document/api';
-import { EventModule, OrganizationModule } from '@wepublish/event/api';
+import {
+  EventModule,
+  EventTaxonomyModule,
+  OrganizationModule,
+  PlaceModule,
+} from '@wepublish/event/api';
 import { ExternalAppsModule } from '@wepublish/external-apps/api';
 import {
   GoogleAnalyticsDbConfig,
@@ -261,6 +266,8 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     ExternalAppsModule,
     EventModule,
     OrganizationModule,
+    PlaceModule,
+    EventTaxonomyModule,
     PageModule,
     PeerModule.registerAsync({
       imports: [ConfigModule],

@@ -382,6 +382,24 @@ describe('EventResolver', () => {
     });
   });
 
+  it.each(['duplicateEvent', 'requestEventReview'] as const)(
+    '%s passes the id and the session on',
+    async mutation => {
+      service[mutation]?.mockResolvedValue(event);
+      revisions.load.mockResolvedValue({ draft });
+
+      const res = await send(
+        `mutation { ${mutation}(id: "event-1") { id } }`,
+        {},
+        { 'x-session': 'editor' }
+      ).expect(200);
+
+      expect(res.body.errors).toBeUndefined();
+      expect(res.body.data[mutation]).toEqual({ id: 'event-1' });
+      expect(service[mutation]).toHaveBeenCalledWith('event-1', editor);
+    }
+  );
+
   it.each([
     ['createEvent', [CanCreateEvent]],
     ['updateEvent', [CanUpdateEvent]],
@@ -389,6 +407,8 @@ describe('EventResolver', () => {
     ['publishEvent', [CanPublishEvent]],
     ['unpublishEvent', [CanPublishEvent]],
     ['deleteEvent', [CanDeleteEvent]],
+    ['duplicateEvent', [CanCreateEvent]],
+    ['requestEventReview', [CanUpdateEvent]],
     ['draft', [CanGetEvent]],
     ['pending', [CanGetEvent]],
     ['ownerId', [CanGetEvent]],

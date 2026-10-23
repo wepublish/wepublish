@@ -98,6 +98,59 @@ export const canManageOrganization = (
   isOrganizationMember(session, organizationId) ||
   mayUpdateAnyOrganization(session);
 
+export const canSeeOrganization = (
+  session: Session,
+  organization: { id: string; enabled: boolean }
+) =>
+  organization.enabled ||
+  isOrganizationMember(session, organization.id) ||
+  mayReadAnyOrganization(session);
+
+export const visiblePlacesWhere = (
+  session: Session
+): Prisma.PlaceWhereInput => {
+  if (mayReadAnyOrganization(session)) {
+    return {};
+  }
+
+  const organizationIds = organizationIdsOf(session);
+
+  if (!organizationIds.length) {
+    return { enabled: true };
+  }
+
+  return {
+    OR: [{ enabled: true }, { organizationId: { in: organizationIds } }],
+  };
+};
+
+export const selectablePlacesWhere = (
+  session: Session
+): Prisma.PlaceWhereInput => {
+  if (holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents)) {
+    return { enabled: true };
+  }
+
+  const organizationIds = organizationIdsOf(session);
+
+  if (!organizationIds.length) {
+    return { enabled: true, private: false };
+  }
+
+  return {
+    enabled: true,
+    OR: [{ private: false }, { organizationId: { in: organizationIds } }],
+  };
+};
+
+export const canManagePlace = (
+  session: Session,
+  organizationId: string | null
+) =>
+  organizationId == null ?
+    mayUpdateAnyOrganization(session)
+  : canManageOrganization(session, organizationId);
+
 export const publicEventsWhere = (): Prisma.EventWhereInput => ({
   published: { isNot: null },
 });

@@ -428,6 +428,7 @@ interface BaseOrganization {
   legalStatus: String
   longitude: Float
   name: String!
+  region: EventRegion
   regionId: String
   slug: Slug
   subTitle: String
@@ -1160,6 +1161,7 @@ enum EditorBlockType {
 }
 
 type Event {
+  audience: EventAudience
   audienceId: String
   createdAt: DateTime!
   dateFrom: DateTime
@@ -1178,9 +1180,11 @@ type Event {
   modifiedAt: DateTime!
   name: String
   openingTime: String
+  organization: BaseOrganization
   organizationId: String
   ownerId: String
   pending: EventRevision
+  place: Place
   placeId: String
   published: EventRevision
   publishedAt: DateTime
@@ -1202,6 +1206,18 @@ type Event {
   ticketingUrl: String
   url: String
   weekDays: [Int!]!
+}
+
+type EventAffiliation {
+  id: String!
+  name: String!
+  slug: Slug
+}
+
+type EventAudience {
+  id: String!
+  name: String!
+  slug: Slug
 }
 
 type EventBlock implements BaseBlock {
@@ -1314,6 +1330,16 @@ type EventRate {
 input EventRateInput {
   designation: String
   price: String!
+}
+
+type EventRegion {
+  """
+  A disabled region takes no new organisations or places. Listed only to holders of CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  enabled: Boolean!
+  id: String!
+  name: String!
+  slug: Slug
 }
 
 type EventRevision {
@@ -1514,6 +1540,16 @@ type FullPoll {
   infoText: RichText
   opensAt: DateTime!
   question: String
+}
+
+input GeoBoundingBox {
+  northEast: GeoPointInput!
+  southWest: GeoPointInput!
+}
+
+input GeoPointInput {
+  latitude: Float!
+  longitude: Float!
 }
 
 type Goodie implements HasImage {
@@ -1928,6 +1964,11 @@ enum InvoiceSort {
   ModifiedAt
   PaidAt
 }
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
 
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
@@ -3022,6 +3063,34 @@ type Mutation {
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
 
+  """
+  Creates a place for an organisation you are a member of, or for any or none with CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  createPlace(
+    about: String
+    address: String!
+    capacity: String
+    city: String!
+    enabled: Boolean
+    latitude: Float
+    longitude: Float
+    name: String!
+
+    """
+    An organisation you are a member of. Any organisation, or none, needs CAN_UPDATE_OTHER_ORGANIZATIONS.
+    """
+    organizationId: String
+    private: Boolean
+    proInfirmisIdSource: String
+    regionId: String
+    slug: Slug
+    website: String
+    wheelchairAccessible: Boolean
+    wheelchairAccessibleParking: Boolean
+    wheelchairAccessibleToilets: Boolean
+    zip: String!
+  ): Place!
+
   """Creates a new poll."""
   createPoll(closedAt: DateTime, infoText: RichText, opensAt: DateTime!, question: String): FullPoll!
 
@@ -3186,6 +3255,11 @@ type Mutation {
   """Deletes an existing peer."""
   deletePeer(id: String!): String!
 
+  """
+  Deletes a place without upcoming events, of an organisation you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  deletePlace(id: String!): Place!
+
   """Deletes an existing poll."""
   deletePoll(id: String!): FullPoll!
 
@@ -3248,6 +3322,11 @@ type Mutation {
 
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!
+
+  """
+  Copies an event you may file under its organisation into a new unpublished event that you own.
+  """
+  duplicateEvent(id: String!): Event!
 
   """
   A new campaign with the given one's document. The Mailchimp draft is not copied.
@@ -3360,6 +3439,11 @@ type Mutation {
   Requests an email change. A confirmation link is sent to the current email address.
   """
   requestEmailChange(newEmail: String!): Boolean!
+
+  """
+  Asks the validators to review the draft of an event you may edit but not publish.
+  """
+  requestEventReview(id: String!): Event!
 
   """Resets the password of a user."""
   resetPassword(id: String!, password: String): SensitiveDataUser!
@@ -3582,6 +3666,35 @@ type Mutation {
   """Updates the peer profile of the current media."""
   updatePeerProfile(callToActionImageID: String!, callToActionImageURL: String, callToActionText: RichText, callToActionURL: String!, logoID: String!, name: String!, squareLogoId: String!, themeColor: Color!, themeFontColor: Color!): PeerProfile!
 
+  """
+  Updates a place of an organisation you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  updatePlace(
+    about: String
+    address: String
+    capacity: String
+    city: String
+    enabled: Boolean
+    id: String!
+    latitude: Float
+    longitude: Float
+    name: String
+
+    """
+    An organisation you are a member of. Any organisation, or none, needs CAN_UPDATE_OTHER_ORGANIZATIONS.
+    """
+    organizationId: String
+    private: Boolean
+    proInfirmisIdSource: String
+    regionId: String
+    slug: Slug
+    website: String
+    wheelchairAccessible: Boolean
+    wheelchairAccessibleParking: Boolean
+    wheelchairAccessibleToilets: Boolean
+    zip: String
+  ): Place!
+
   """Updates an existing poll."""
   updatePoll(answers: [PollAnswerInput!]!, closedAt: DateTime, externalVoteSources: [PollExternalVoteSourceInput!]!, id: String!, infoText: RichText, opensAt: DateTime, question: String): FullPoll!
 
@@ -3782,6 +3895,7 @@ type Organization implements BaseOrganization {
   legalStatus: String
   longitude: Float
   name: String!
+  region: EventRegion
   regionId: String
   slug: Slug
   subTitle: String
@@ -4080,6 +4194,12 @@ type PaginatedPages {
 
 type PaginatedPeerArticles {
   nodes: [PeerArticle!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedPlaces {
+  nodes: [Place!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4467,6 +4587,59 @@ type Permission {
 type Phrase {
   articles: PaginatedArticles!
   pages: PaginatedPages!
+}
+
+type Place {
+  about: String
+  address: String!
+  capacity: String
+  city: String!
+  createdAt: DateTime!
+  enabled: Boolean!
+  id: String!
+  latitude: Float
+  longitude: Float
+  modifiedAt: DateTime!
+  name: String!
+  organization: BaseOrganization
+  organizationId: String
+
+  """
+  A private place is offered in the event form only to members of its organisation. It stays publicly readable.
+  """
+  private: Boolean!
+  proInfirmisDetailUrl: String
+  proInfirmisIdSource: String
+  proInfirmisPictograms: JSON
+  region: EventRegion
+  regionId: String
+  slug: Slug
+  website: String
+  wheelchairAccessible: Boolean!
+  wheelchairAccessibleParking: Boolean!
+  wheelchairAccessibleToilets: Boolean!
+  zip: String!
+}
+
+input PlaceFilter {
+  enabled: Boolean
+  geoBoundingBox: GeoBoundingBox
+  organizationId: String
+  regionId: String
+
+  """Matches the name."""
+  search: String
+
+  """
+  Only the places you may file an event at: enabled ones that are not private or belong to your organisation.
+  """
+  selectable: Boolean
+}
+
+enum PlaceSort {
+  CreatedAt
+  ModifiedAt
+  Name
 }
 
 type PolisConversationBlock implements BaseBlock {
@@ -4866,6 +5039,17 @@ type Query {
   """
   event(id: String, slug: Slug): Event!
 
+  """Returns the affiliations an organisation can have."""
+  eventAffiliations: [EventAffiliation!]!
+
+  """Returns the audiences an event can be for."""
+  eventAudiences: [EventAudience!]!
+
+  """
+  Returns the enabled regions, and the disabled ones too for CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  eventRegions: [EventRegion!]!
+
   """
   Returns a paginated list of published events. With the preview header and CAN_GET_EVENTS it lists the events you manage.
   """
@@ -5102,6 +5286,14 @@ type Query {
   This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones.
   """
   phrase(articleSort: ArticleSort! = PublishedAt, order: SortOrder! = Descending, pageSort: PageSort! = PublishedAt, query: String!, skip: Int! = 0, take: Int! = 10): Phrase!
+
+  """
+  Returns a place by id or slug. Disabled places are returned to members of their organisation and to whoever may read any organisation.
+  """
+  place(id: String, slug: Slug): Place!
+
+  """Returns a paginated list of places based on the filters given."""
+  places(cursorId: String, filter: PlaceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PlaceSort = Name, take: Int = 10): PaginatedPlaces!
   poll(id: String!): FullPoll!
 
   """Returns a paginated list of poll votes"""
@@ -5345,6 +5537,7 @@ type SensitiveDataOrganization implements BaseOrganization {
   name: String!
   partner: Boolean!
   postOfficeBox: String
+  region: EventRegion
   regionId: String
   slug: Slug
   subTitle: String

@@ -175,6 +175,28 @@ export class EventResolver {
     return this.eventService.deleteEvent(id, session);
   }
 
+  @Permissions(CanCreateEvent)
+  @Mutation(() => Event, {
+    description: `Copies an event you may file under its organisation into a new unpublished event that you own.`,
+  })
+  public duplicateEvent(
+    @Args('id') id: string,
+    @CurrentUser() session: Session
+  ) {
+    return this.eventService.duplicateEvent(id, session);
+  }
+
+  @Permissions(CanUpdateEvent)
+  @Mutation(() => Event, {
+    description: `Asks the validators to review the draft of an event you may edit but not publish.`,
+  })
+  public requestEventReview(
+    @Args('id') id: string,
+    @CurrentUser() session: Session
+  ) {
+    return this.eventService.requestEventReview(id, session);
+  }
+
   @ResolveField(() => EventRevision, { nullable: true })
   async latest(
     @Parent() event: PEvent,

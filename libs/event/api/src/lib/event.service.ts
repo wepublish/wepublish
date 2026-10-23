@@ -9,6 +9,7 @@ import { AuthSession } from '@wepublish/authentication/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import {
   blocksPlainText,
+  EVENT_NAME_MAX_LENGTH,
   EventSchedule,
   scheduleBounds,
 } from '@wepublish/event/schedule';
@@ -40,6 +41,7 @@ import {
   mayReassignEventOwner,
   publicEventsWhere,
   reachableEventsWhere,
+  selectablePlacesWhere,
   userIdOf,
 } from './event-scope';
 import {
@@ -86,6 +88,9 @@ const ratesData = (rates: EventRateInput[]) =>
   }));
 
 const tagsData = (tagIds: string[]) => tagIds.map(tagId => ({ tagId }));
+
+const copyName = (name: string) =>
+  Array.from(`Kopie von ${name}`).slice(0, EVENT_NAME_MAX_LENGTH).join('');
 
 const scheduleOfInput = (
   input: Pick<
@@ -338,6 +343,7 @@ export class EventService {
     const revision = contentRevision(content);
     await this.assertEventTags(input.tagIds);
     await this.assertSlugAvailable(input.slug);
+    await this.assertPlaceSelectable(input.placeId, session);
 
     const event = await this.prisma.$transaction(async tx => {
       const created = await tx.event.create({
@@ -432,6 +438,10 @@ export class EventService {
 
     if (input.slug != null && input.slug !== existing.slug) {
       await this.assertSlugAvailable(input.slug, id);
+    }
+
+    if (input.placeId !== existing.placeId) {
+      await this.assertPlaceSelectable(input.placeId, session);
     }
 
     const event = await this.prisma.$transaction(async tx => {
@@ -621,6 +631,162 @@ export class EventService {
     return event;
   }
 
+  @PrimeDataLoader(EventDataloaderService)
+  async duplicateEvent(id: string, session: Session) {
+    const source = await this.prisma.event.findUnique({
+      where: { id },
+      include: {
+        dates: { orderBy: { sortOrder: 'asc' } },
+        rates: { orderBy: { sortOrder: 'asc' } },
+        tags: { select: { tagId: true } },
+        place: { select: { organizationId: true } },
+      },
+    });
+
+    if (!source) {
+      throw new NotFoundException(`Event ${id} was not found.`);
+    }
+
+    if (
+      !canModifyEvent(session, source) ||
+      !mayAssignEventOrganization(session, source.organizationId)
+    ) {
+      throw new ForbiddenException(
+        'You may only copy events you may file under their organisation.'
+      );
+    }
+
+    const revision = await this.prisma.eventRevision.findFirst({
+      where: { eventId: id, archivedAt: null },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      include: { images: { orderBy: { sortOrder: 'asc' } } },
+    });
+
+    if (!revision) {
+      throw new BadRequestException('The event has no content to copy.');
+    }
+
+    const dates = source.dates.map(
+      ({ dateFrom, dateTo, openingTime, sortOrder }) => ({
+        dateFrom,
+        dateTo,
+        openingTime,
+        sortOrder,
+      })
+    );
+    const schedule = eventSchedule(
+      source,
+      dates.map(date => ({ ...date, legacyEventId: null }))
+    );
+
+    assertValidSchedule(schedule, new Date());
+
+    const event = await this.prisma.$transaction(async tx => {
+      const created = await tx.event.create({
+        data: {
+          status: source.status,
+          organizationId: source.organizationId,
+          placeId: source.placeId,
+          audienceId: source.audienceId,
+          ticketingUrl: source.ticketingUrl,
+          showInPrint: source.showInPrint,
+          scheduleType: source.scheduleType,
+          dateFrom: source.dateFrom,
+          dateTo: source.dateTo,
+          weekDays: source.weekDays,
+          openingTime: source.openingTime,
+          ownerId: userIdOf(session),
+          slug: null,
+          publishedAt: null,
+          reviewRequestedAt: null,
+          reviewRequestedById: null,
+          ...scheduleBounds(schedule),
+          dates: { createMany: { data: dates } },
+          rates: {
+            createMany: {
+              data: source.rates.map(({ price, designation, sortOrder }) => ({
+                price,
+                designation,
+                sortOrder,
+              })),
+            },
+          },
+          tags: {
+            createMany: { data: source.tags.map(({ tagId }) => ({ tagId })) },
+          },
+          revisions: {
+            create: {
+              name: copyName(revision.name),
+              printDescription: revision.printDescription,
+              blocks: revision.blocks as Prisma.InputJsonValue,
+              descriptionText: revision.descriptionText,
+              userId: userIdOf(session),
+              images: {
+                createMany: {
+                  data: revision.images.map(
+                    ({ imageId, caption, sortOrder, isMain }) => ({
+                      imageId,
+                      caption,
+                      sortOrder,
+                      isMain,
+                    })
+                  ),
+                },
+              },
+            },
+          },
+        },
+      });
+
+      await syncOccurrences(tx, created.id, schedule);
+
+      return created;
+    });
+
+    await this.publicContentCache.invalidateDraft('events');
+
+    return event;
+  }
+
+  @PrimeDataLoader(EventDataloaderService)
+  async requestEventReview(id: string, session: Session) {
+    const existing = await this.findEventOrFail(id);
+
+    if (!canModifyEvent(session, existing)) {
+      throw new ForbiddenException('You may not modify this event.');
+    }
+
+    if (canPublishEvent(session, existing)) {
+      throw new BadRequestException(
+        'You may publish this event yourself; publish it instead of requesting a review.'
+      );
+    }
+
+    const draft = await this.prisma.eventRevision.findFirst({
+      where: { eventId: id, archivedAt: null, publishedAt: null },
+    });
+
+    if (!draft) {
+      throw new BadRequestException('The event has no draft to review.');
+    }
+
+    if (existing.reviewRequestedAt) {
+      return withoutRelations(existing);
+    }
+
+    const event = await this.prisma.event.update({
+      where: { id },
+      data: {
+        reviewRequestedAt: new Date(),
+        reviewRequestedById: userIdOf(session),
+      },
+    });
+
+    await this.publicContentCache.invalidateDraft('events');
+
+    return event;
+  }
+
   async deleteEvent(id: string, session: Session) {
     const existing = await this.findEventOrFail(id);
 
@@ -673,6 +839,25 @@ export class EventService {
 
     if (found !== new Set(tagIds).size) {
       throw new BadRequestException('Every tag must be an existing event tag.');
+    }
+  }
+
+  private async assertPlaceSelectable(
+    placeId: string | null | undefined,
+    session: Session
+  ) {
+    if (!placeId) {
+      return;
+    }
+
+    const selectable = await this.prisma.place.count({
+      where: { AND: [{ id: placeId }, selectablePlacesWhere(session)] },
+    });
+
+    if (!selectable) {
+      throw new BadRequestException(
+        `Place ${placeId} does not exist, is disabled or is private to another organisation.`
+      );
     }
   }
 

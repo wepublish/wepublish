@@ -16,6 +16,8 @@ import {
 import {
   canDeleteEvent,
   canManageOrganization,
+  canManagePlace,
+  canSeeOrganization,
   canModifyEvent,
   canPublishEvent,
   canReadOrganizationSensitiveData,
@@ -32,7 +34,9 @@ import {
   mayUpdateAnyOrganization,
   memberOrganizationsWhere,
   organizationIdsOf,
+  selectablePlacesWhere,
   visibleOrganizationsWhere,
+  visiblePlacesWhere,
 } from './event-scope';
 
 const user = (
@@ -1017,5 +1021,163 @@ describe('boundOrganizationIdOf', () => {
     expect(boundOrganizationIdOf(apiKey())).toBeNull();
     expect(boundOrganizationIdOf(user(['a']))).toBeNull();
     expect(boundOrganizationIdOf(undefined)).toBeNull();
+  });
+});
+
+describe('visiblePlacesWhere', () => {
+  it.each([
+    ['nobody', undefined, { enabled: true }],
+    ['a user without membership', user([]), { enabled: true }],
+    ['a peer', peer(), { enabled: true }],
+    ['a platform key', apiKey(), { enabled: true }],
+    [
+      'a member',
+      user(['a']),
+      { OR: [{ enabled: true }, { organizationId: { in: ['a'] } }] },
+    ],
+    [
+      'a bound key, whatever its scopes',
+      organizationKey('a', CanGetOtherOrganizations.id),
+      { OR: [{ enabled: true }, { organizationId: { in: ['a'] } }] },
+    ],
+    ['CAN_GET_OTHER_ORGANIZATIONS', user([], CanGetOtherOrganizations.id), {}],
+    [
+      'CAN_UPDATE_OTHER_ORGANIZATIONS',
+      user([], CanUpdateOtherOrganizations.id),
+      {},
+    ],
+    [
+      'a peer with CAN_GET_OTHER_ORGANIZATIONS',
+      peer(CanGetOtherOrganizations.id),
+      {},
+    ],
+    [
+      'a platform key with CAN_GET_OTHER_ORGANIZATIONS',
+      apiKey(CanGetOtherOrganizations.id),
+      {},
+    ],
+  ] as const)('%s', (_name, session, where) => {
+    expect(visiblePlacesWhere(session)).toEqual(where);
+  });
+});
+
+describe('selectablePlacesWhere', () => {
+  it.each([
+    ['nobody', undefined, { enabled: true, private: false }],
+    ['a user without membership', user([]), { enabled: true, private: false }],
+    ['a peer', peer(), { enabled: true, private: false }],
+    [
+      'a platform key without cross-organisation scopes',
+      apiKey(CanGetOtherOrganizations.id),
+      { enabled: true, private: false },
+    ],
+    [
+      'a member, who also picks the private places of their organisation',
+      user(['a']),
+      {
+        enabled: true,
+        OR: [{ private: false }, { organizationId: { in: ['a'] } }],
+      },
+    ],
+    [
+      'a bound key with cross-organisation scopes',
+      organizationKey('a', CanUpdateOtherOrganizationEvents.id),
+      {
+        enabled: true,
+        OR: [{ private: false }, { organizationId: { in: ['a'] } }],
+      },
+    ],
+    [
+      'CAN_UPDATE_OTHER_ORGANIZATION_EVENTS, who files events at any enabled place',
+      user([], CanUpdateOtherOrganizationEvents.id),
+      { enabled: true },
+    ],
+    [
+      'a platform key with CAN_UPDATE_OTHER_ORGANIZATION_EVENTS',
+      apiKey(CanUpdateOtherOrganizationEvents.id),
+      { enabled: true },
+    ],
+  ] as const)('%s', (_name, session, where) => {
+    expect(selectablePlacesWhere(session)).toEqual(where);
+  });
+});
+
+describe('canManagePlace', () => {
+  it.each([
+    ['nobody', undefined, 'a', false],
+    ['a member of the place organisation', user(['a']), 'a', true],
+    ['a member of another organisation', user(['b']), 'a', false],
+    ['a bound key of the place organisation', organizationKey('a'), 'a', true],
+    [
+      'a bound key of another organisation, whatever its scopes',
+      organizationKey('b', CanUpdateOtherOrganizations.id),
+      'a',
+      false,
+    ],
+    ['a peer', peer(), 'a', false],
+    ['a platform key', apiKey(), 'a', false],
+    [
+      'CAN_UPDATE_OTHER_ORGANIZATIONS',
+      user([], CanUpdateOtherOrganizations.id),
+      'a',
+      true,
+    ],
+    [
+      'a peer with CAN_UPDATE_OTHER_ORGANIZATIONS',
+      peer(CanUpdateOtherOrganizations.id),
+      'a',
+      true,
+    ],
+    [
+      'CAN_GET_OTHER_ORGANIZATIONS, which only reads',
+      user([], CanGetOtherOrganizations.id),
+      'a',
+      false,
+    ],
+    ['a member, for a place without organisation', user(['a']), null, false],
+    [
+      'a bound key, for a place without organisation',
+      organizationKey('a'),
+      null,
+      false,
+    ],
+    [
+      'CAN_UPDATE_OTHER_ORGANIZATIONS, for a place without organisation',
+      user([], CanUpdateOtherOrganizations.id),
+      null,
+      true,
+    ],
+  ] as const)('%s', (_name, session, organizationId, allowed) => {
+    expect(canManagePlace(session, organizationId)).toBe(allowed);
+  });
+});
+
+describe('canSeeOrganization', () => {
+  const enabled = { id: 'a', enabled: true };
+  const disabled = { id: 'a', enabled: false };
+
+  it('shows an enabled organisation to everybody', () => {
+    expect(canSeeOrganization(undefined, enabled)).toBe(true);
+    expect(canSeeOrganization(peer(), enabled)).toBe(true);
+  });
+
+  it.each([
+    ['nobody', undefined, false],
+    ['a peer', peer(), false],
+    ['a member of another organisation', user(['b']), false],
+    ['a member', user(['a']), true],
+    ['a bound key of the organisation', organizationKey('a'), true],
+    [
+      'a bound key of another organisation, whatever its scopes',
+      organizationKey('b', CanGetOtherOrganizations.id),
+      false,
+    ],
+    [
+      'CAN_GET_OTHER_ORGANIZATIONS',
+      user([], CanGetOtherOrganizations.id),
+      true,
+    ],
+  ] as const)('a disabled organisation: %s', (_name, session, visible) => {
+    expect(canSeeOrganization(session, disabled)).toBe(visible);
   });
 });

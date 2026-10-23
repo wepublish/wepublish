@@ -13,6 +13,7 @@ import { AuthSession } from '@wepublish/authentication/api';
 import { User } from '@wepublish/user/api';
 import { GraphQLSlug, PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { canReadOrganizationSensitiveData } from '../event-scope';
+import { EventRegion } from '../taxonomy/event-taxonomy.model';
 
 export enum OrganizationSort {
   Name = 'Name',
@@ -75,6 +76,9 @@ export class BaseOrganization {
 
   @Field(() => String, { nullable: true })
   regionId?: string | null;
+
+  @Field(() => EventRegion, { nullable: true })
+  region?: EventRegion | null;
 }
 
 @ObjectType({

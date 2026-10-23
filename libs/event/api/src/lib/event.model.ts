@@ -13,6 +13,9 @@ import { BlockContentInput } from '@wepublish/block-content/api';
 import { Image } from '@wepublish/image/api';
 import { Tag } from '@wepublish/tag/api';
 import { GraphQLSlug, PaginatedType, SortOrder } from '@wepublish/utils/api';
+import { BaseOrganization } from './organization/organization.model';
+import { Place } from './place/place.model';
+import { EventAudience } from './taxonomy/event-taxonomy.model';
 
 export enum EventSort {
   CreatedAt = 'CreatedAt',
@@ -152,11 +155,20 @@ export class Event {
   @Field(() => String, { nullable: true })
   organizationId?: string | null;
 
+  @Field(() => BaseOrganization, { nullable: true })
+  organization?: BaseOrganization | null;
+
   @Field(() => String, { nullable: true })
   placeId?: string | null;
 
+  @Field(() => Place, { nullable: true })
+  place?: Place | null;
+
   @Field(() => String, { nullable: true })
   audienceId?: string | null;
+
+  @Field(() => EventAudience, { nullable: true })
+  audience?: EventAudience | null;
 
   @Field(() => String, { nullable: true })
   ticketingUrl?: string | null;

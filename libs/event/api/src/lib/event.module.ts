@@ -24,7 +24,10 @@ import {
   HasOptionalEventLcResolver,
   HasOptionalEventResolver,
 } from './has-event/has-event.resolver';
-import { PlaceDataloaderService } from './place/place-dataloader.service';
+import { EventRelationsResolver } from './event-relations.resolver';
+import { OrganizationModule } from './organization/organization.module';
+import { PlaceModule } from './place/place.module';
+import { EventTaxonomyModule } from './taxonomy/event-taxonomy.module';
 
 @Module({
   imports: [
@@ -32,6 +35,9 @@ import { PlaceDataloaderService } from './place/place-dataloader.service';
     PrismaModule,
     ImageModule,
     TagModule,
+    OrganizationModule,
+    PlaceModule,
+    EventTaxonomyModule,
     forwardRef(() => BlockContentModule),
   ],
   providers: [
@@ -41,9 +47,9 @@ import { PlaceDataloaderService } from './place/place-dataloader.service';
     EventDatesDataloader,
     EventRatesDataloader,
     EventRevisionImagesDataloader,
-    PlaceDataloaderService,
     EventService,
     EventResolver,
+    EventRelationsResolver,
     EventRevisionResolver,
     EventImageResolver,
     HasEventResolver,
