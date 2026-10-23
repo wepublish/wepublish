@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { MdExtension } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
+import { ApiKeyWarning } from '../externalApps/apiKeyWarning';
 import { ICON_REGISTRY } from '../externalApps/iconRegistry';
 import { openExternalApp } from '../externalApps/openExternalApp';
 import { useMintExternalAppToken } from '../externalApps/useExternalAppSrc';
@@ -167,6 +168,7 @@ export function ExternalAppsDashboard() {
                     </Typography>
                   </Tooltip>
                 )}
+                <ApiKeyWarning apiToken={app.apiToken} />
               </AppBox>
             </CardActionArea>
           </Card>

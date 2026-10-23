@@ -332,6 +332,8 @@ model ApiToken {
   createdById String?
   createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
+  externalApps ExternalApps[]
+
   @@index([createdAt])
   @@index([createdById])
   @@map("api-tokens.tokens")
@@ -2331,6 +2333,12 @@ model ExternalApps {
   target      ExternalAppsTarget
   icon        String?
 
+  /// The API key the app reads the We.Publish API with, so the editor can
+  /// show when it expires. The secret itself is only in the app.
+  apiTokenId String?
+  apiToken   ApiToken? @relation(fields: [apiTokenId], references: [id], onDelete: SetNull)
+
+  @@index([apiTokenId])
   @@map("apps.external")
 }
 

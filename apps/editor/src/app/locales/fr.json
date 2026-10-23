@@ -3362,6 +3362,11 @@
       "saveSuccess": "Les paramètres du site ont été enregistrés avec succès"
     },
     "externalApps": {
+      "apiKey": {
+        "expiresSoon": "La clé API «{{name}}» expire le {{expiresAt, PP}}. Créez une nouvelle clé, enregistrez-la dans l’app et associez-la ici.",
+        "expired": "La clé API «{{name}}» a expiré le {{expiresAt, PP}} – l’app ne peut plus lire de données.",
+        "revoked": "La clé API «{{name}}» a été révoquée – l’app ne peut plus lire de données."
+      },
       "apps": "Applications",
       "noAppsFound": "Aucune application externe configurée.",
       "notFound": "Application externe introuvable",
@@ -3369,6 +3374,11 @@
       "noToken": "L’application n’a pas pu être ouverte : aucun jeton d’accès n’a été émis."
     },
     "externalAppForm": {
+      "apiKey": "Clé API",
+      "apiKeyOption": "{{name}} ({{prefix}}…)",
+      "noApiKey": "Aucune clé API",
+      "apiKeyHelp": "La clé API avec laquelle l’app lit l’API We.Publish. L’éditeur indique alors quand elle expire ou a été révoquée. La clé elle-même est enregistrée dans l’app.",
+      "apiKeyDetails": "{{prefix}}… · {{scopes}} autorisations · expire le {{expiresAt, PP}}",
       "create": "Créer",
       "update": "Mettre à jour",
       "delete": "Supprimer",

@@ -39,6 +39,12 @@ export class ExternalApp {
 
   @Field(type => String, { nullable: true })
   icon?: string | null;
+
+  @Field(type => String, {
+    nullable: true,
+    description: `The API key the app reads the We.Publish API with.`,
+  })
+  apiTokenId?: string | null;
 }
 
 @InputType()
@@ -70,6 +76,12 @@ export class CreateExternalAppInput {
 
   @Field(type => String, { nullable: true })
   icon?: string;
+
+  @Field(type => String, {
+    nullable: true,
+    description: `An API key you may see that has neither expired nor been revoked.`,
+  })
+  apiTokenId?: string | null;
 }
 
 @ObjectType()
@@ -99,4 +111,10 @@ export class UpdateExternalAppInput {
 
   @Field(type => String, { nullable: true })
   icon?: string;
+
+  @Field(type => String, {
+    nullable: true,
+    description: `An API key you may see that has neither expired nor been revoked; null unlinks the key.`,
+  })
+  apiTokenId?: string | null;
 }

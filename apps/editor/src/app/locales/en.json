@@ -3430,6 +3430,11 @@
       "saveSuccess": "Successfully saved the website settings"
     },
     "externalApps": {
+      "apiKey": {
+        "expiresSoon": "The API key “{{name}}” expires on {{expiresAt, PP}}. Create a new one, store it in the app and link it here.",
+        "expired": "The API key “{{name}}” expired on {{expiresAt, PP}} – the app can no longer read any data.",
+        "revoked": "The API key “{{name}}” has been revoked – the app can no longer read any data."
+      },
       "apps": "Apps",
       "noAppsFound": "No external apps configured.",
       "notFound": "External app not found",
@@ -3437,6 +3442,11 @@
       "noToken": "The app could not be opened: no access token was issued."
     },
     "externalAppForm": {
+      "apiKey": "API key",
+      "apiKeyOption": "{{name}} ({{prefix}}…)",
+      "noApiKey": "No API key",
+      "apiKeyHelp": "The API key the app reads the We.Publish API with. The editor then shows when it expires or has been revoked. The key itself is stored in the app.",
+      "apiKeyDetails": "{{prefix}}… · {{scopes}} permissions · expires on {{expiresAt, PP}}",
       "create": "Create",
       "update": "Update",
       "delete": "Delete",

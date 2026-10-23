@@ -865,6 +865,8 @@ input CreateCrowdfundingMemberPlan {
 }
 
 input CreateExternalAppInput {
+  """An API key you may see that has neither expired nor been revoked."""
+  apiTokenId: String
   description: String
   icon: String
   name: String!
@@ -1246,6 +1248,13 @@ input EventTeaserInput {
 }
 
 type ExternalApp {
+  """
+  The linked API key, for editors who may see it in the API keys list. Never contains the secret.
+  """
+  apiToken: ApiToken
+
+  """The API key the app reads the We.Publish API with."""
+  apiTokenId: String
   createdAt: DateTime!
   description: String
   icon: String
@@ -3587,7 +3596,18 @@ type Mutation {
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
 
   """Updates an existing external app."""
-  updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
+  updateExternalApp(
+    """
+    An API key you may see that has neither expired nor been revoked; null unlinks the key.
+    """
+    apiTokenId: String
+    description: String
+    icon: String
+    id: String!
+    name: String
+    target: ExternalAppsTarget
+    url: String
+  ): ExternalApp!
 
   """Updates an existing goodie."""
   updateGoodie(active: Boolean, description: RichText, id: String!, imageID: String, memberPlanIDs: [String!], name: String, stock: Int): Goodie!

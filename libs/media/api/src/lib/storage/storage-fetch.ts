@@ -19,13 +19,31 @@ import { Agent, fetch } from 'undici';
  */
 export const DEFAULT_MAX_CONNECTIONS = 50;
 
+export const DEFAULT_RESPONSE_TIMEOUT = 30_000;
+
+export type StorageFetchOptions = {
+  responseTimeout?: number;
+};
+
 /**
  * Builds the `fetch` the `S3Disk`s use for R2/S3. It is undici's own `fetch`,
  * not the global one: Node bundles a different undici major, and a dispatcher
  * from one major is not guaranteed to work with the other's `fetch`.
  */
-export function createStorageFetch(): typeof globalThis.fetch {
-  const dispatcher = new Agent({ connections: DEFAULT_MAX_CONNECTIONS });
+export function createStorageFetch({
+  responseTimeout = DEFAULT_RESPONSE_TIMEOUT,
+}: StorageFetchOptions = {}): typeof globalThis.fetch {
+  const dispatcher = new Agent({
+    connections: DEFAULT_MAX_CONNECTIONS,
+    headersTimeout: responseTimeout,
+    bodyTimeout: responseTimeout,
+  }).compose(
+    dispatch => (options, handler) =>
+      dispatch(
+        options.method === 'HEAD' ? { ...options, reset: false } : options,
+        handler
+      )
+  );
   const storageFetch: typeof fetch = (input, init) =>
     fetch(input, { ...init, dispatcher });
 

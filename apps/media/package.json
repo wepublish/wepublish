@@ -14,6 +14,7 @@
     "express": "catalog:",
     "helmet": "catalog:",
     "jose": "catalog:",
+    "keyv": "catalog:",
     "multer": "catalog:",
     "nestjs-zod": "catalog:",
     "sharp": "catalog:",
