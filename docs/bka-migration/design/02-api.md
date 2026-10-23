@@ -314,8 +314,9 @@ organiser believing they had asked for something.
 | `requestEventReview` | `CanUpdateEvent` | `canModifyEvent`; BadRequest when `canPublishEvent` already holds or there is no unpublished draft; stamps `reviewRequestedAt`/`ById` once |
 | `withdrawEventReview` | `CanUpdateEvent` | `canModifyEvent`; clears `reviewRequestedAt`/`ById`, or returns the event unchanged when nothing is pending |
 
-Event content takes only the blocks in `EVENT_BLOCK_TYPES` (rich text, image, quote and the embed
-family), checked by `assertValidContent` ([D70](../decisions.md#d70--event-content-takes-only-the-blocks-the-agenda-can-show)).
+Event content takes every `BlockContentInput` type an article takes. `assertValidContent` checks
+only the 6,400-character description limit, which counts rich text alone
+([D70](../decisions.md#d70--event-content-takes-only-the-blocks-the-agenda-can-show), reversed).
 
 Facts saved on a published event call `invalidate('events')`; on an unpublished one
 `invalidateDraft('events')`. Tags must be of type `Event`, and the venue must pass

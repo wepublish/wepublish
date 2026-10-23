@@ -31,6 +31,8 @@ import {
 import { CanCreateEvent, CanGetEvent } from '@wepublish/permissions';
 import {
   BlockList,
+  BlockMap,
+  BlockValue,
   createCheckedPermissionComponent,
   DRAWER_WIDTHS,
   EditorHeader,
@@ -62,7 +64,6 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import { EventBlockMap, EventBlockValue } from '../event-block-map';
 import {
   emptyEventForm,
   eventDescriptionLength,
@@ -76,10 +77,7 @@ import {
 import { eventEditPath } from '../event-list/event-paths';
 import { translateFormError } from '../form-error';
 import { VisuallyHidden } from '../visually-hidden';
-import {
-  droppedEventBlockTypes,
-  eventFormFromEvent,
-} from './event-form-mapping';
+import { eventFormFromEvent } from './event-form-mapping';
 import {
   EventMetadataPanel,
   EventMetadataTab,
@@ -242,7 +240,6 @@ function EventEditorForm({ id }: { id: string | undefined }) {
   const tab = isEventMetadataTab(tabParam) ? tabParam : null;
   const focus = searchParams.get('focus');
   const readOnly = event?.viewerCan?.update === false;
-  const droppedBlocks = event ? droppedEventBlockTypes(event) : [];
 
   const openTab = (next: EventMetadataTab) =>
     setSearchParams(
@@ -582,14 +579,6 @@ function EventEditorForm({ id }: { id: string | undefined }) {
 
             {notice}
 
-            {droppedBlocks.length > 0 && (
-              <Alert severity="warning">
-                {t('agenda.editor.droppedBlocks', {
-                  count: droppedBlocks.length,
-                })}
-              </Alert>
-            )}
-
             <Controller
               control={control}
               name="name"
@@ -622,7 +611,7 @@ function EventEditorForm({ id }: { id: string | undefined }) {
 
                 return (
                   <div>
-                    <BlockList<EventBlockValue>
+                    <BlockList<BlockValue>
                       itemId={id}
                       value={field.value}
                       onChange={next =>
@@ -633,7 +622,7 @@ function EventEditorForm({ id }: { id: string | undefined }) {
                         )
                       }
                       disabled={readOnly || busy}
-                      blockMap={EventBlockMap}
+                      blockMap={BlockMap}
                     />
 
                     <Typography

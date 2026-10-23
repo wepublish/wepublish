@@ -18,13 +18,12 @@ import {
   eventRateSchema,
   eventScheduleProblems,
   eventTagIdsSchema,
-  isEventBlockType,
   TICKETING_URL_SCHEMES,
   ticketingUrlSchema,
 } from '@wepublish/event/schedule';
+import { BlockValue } from '@wepublish/ui/editor';
 import { z } from 'zod';
 
-import { eventBlockApiType, EventBlockValue } from './event-block-map';
 import { SchedulePreviewProblem } from './schedule/occurrence-preview';
 import { emptyScheduleForm, scheduleFromForm } from './schedule/schedule-form';
 import {
@@ -96,21 +95,17 @@ const printDescriptionField = z.string().superRefine((value, ctx) => {
   }
 });
 
-const richTextOf = (block: EventBlockValue) =>
+const richTextOf = (block: BlockValue) =>
   block.type === EditorBlockType.RichText ?
     [{ type: 'richText', richText: block.value.richText }]
   : [];
 
-export const eventDescriptionLength = (blocks: EventBlockValue[]) =>
+export const eventDescriptionLength = (blocks: BlockValue[]) =>
   blocksTextLength(blocks.flatMap(richTextOf));
 
 const blocksField = z
-  .array(z.custom<EventBlockValue>())
+  .array(z.custom<BlockValue>())
   .superRefine((blocks, ctx) => {
-    if (blocks.some(({ type }) => !isEventBlockType(eventBlockApiType(type)))) {
-      fail(ctx, 'agenda.form.errors.blockNotAllowed');
-    }
-
     if (eventDescriptionLength(blocks) > EVENT_DESCRIPTION_MAX_LENGTH) {
       fail(ctx, 'agenda.form.errors.descriptionTooLong');
     }

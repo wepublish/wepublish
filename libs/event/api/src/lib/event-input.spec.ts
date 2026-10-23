@@ -198,16 +198,20 @@ describe('assertValidContent', () => {
     ).toBeInstanceOf(BadRequestException);
   });
 
-  it('names the block type the agenda cannot show', () => {
-    const error = rejection(() =>
+  it.each([
+    ['teaserGrid', { type: 'teaserGrid', teasers: [], numColumns: 3 }],
+    ['teaserSlots', { type: 'teaserSlots', slots: [] }],
+    ['poll', { type: 'poll', pollId: 'poll-1' }],
+    ['event', { type: 'event', filter: {} }],
+    ['html', { type: 'html', html: '<p>hi</p>' }],
+    ['title', { type: 'title', title: 'Programm' }],
+  ])('accepts a %s block, like an article does', (_type, block) => {
+    expect(() =>
       assertValidContent({
         name: 'Concert',
-        blocks: [richText('ok'), { type: 'teaserGrid', teasers: [] }],
+        blocks: [richText('ok'), block],
         images: [],
       })
-    );
-
-    expect(error).toBeInstanceOf(BadRequestException);
-    expect((error as Error).message).toContain('teaserGrid');
+    ).not.toThrow();
   });
 });

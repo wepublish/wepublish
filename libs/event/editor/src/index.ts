@@ -1,7 +1,6 @@
 export * from './lib/event-editor/event-editor';
 export * from './lib/event-list/event-list';
 export * from './lib/event-list/review-queue-card';
-export * from './lib/event-block-map';
 export * from './lib/event-form-schema';
 export * from './lib/facts/event-audience-field';
 export * from './lib/facts/event-organization-field';

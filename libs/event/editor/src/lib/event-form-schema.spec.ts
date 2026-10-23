@@ -188,7 +188,7 @@ describe('eventFormSchema', () => {
     ]);
   });
 
-  it('refuses a block the agenda cannot show', () => {
+  it('accepts a block an article may hold, such as a poll', () => {
     expect(
       issuesOf({
         ...valid(),
@@ -200,9 +200,7 @@ describe('eventFormSchema', () => {
           } as unknown as EventFormValues['blocks'][number],
         ],
       })
-    ).toEqual([
-      { path: 'blocks', message: 'agenda.form.errors.blockNotAllowed' },
-    ]);
+    ).toEqual([]);
   });
 
   it('gives each length message its limit', () => {

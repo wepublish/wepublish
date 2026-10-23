@@ -34,6 +34,7 @@ import {
   useLocation,
   useNavigationType,
 } from 'react-router-dom';
+import { BlockMap } from '@wepublish/ui/editor';
 import type { Mock } from 'vitest';
 
 import { renderWith } from '../event-list/test-helpers';
@@ -234,7 +235,7 @@ describe('EventEditor', () => {
     ).toBeTruthy();
   });
 
-  it('offers only the four blocks an event description may hold', async () => {
+  it('offers every block the article editor offers', async () => {
     renderEditor();
     await nameField();
 
@@ -242,7 +243,9 @@ describe('EventEditor', () => {
       screen.getAllByRole('button', { name: 'blockList.addBlock' })[0]
     );
 
-    expect(screen.getAllByRole('menuitem')).toHaveLength(4);
+    expect(screen.getAllByRole('menuitem')).toHaveLength(
+      Object.keys(BlockMap).length
+    );
   });
 
   it('has one Save button and no autosave', async () => {

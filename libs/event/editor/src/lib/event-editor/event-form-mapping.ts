@@ -11,7 +11,6 @@ import {
 import nanoid from 'nanoid';
 import { equals } from 'ramda';
 
-import { EventBlockMap, EventBlockValue } from '../event-block-map';
 import { emptyEventForm, EventFormValues } from '../event-form-schema';
 import { userDisplayName } from '../facts/event-owner-field';
 import { eventImagesInput, imageRefOf } from '../images/event-images-field';
@@ -25,24 +24,13 @@ const blankToNull = (value: string) => value.trim() || null;
 const bySortOrder = <T extends { sortOrder: number }>(items: T[]) =>
   [...items].sort((a, b) => a.sortOrder - b.sortOrder);
 
-const isEventBlock = (block: { type: string }): block is EventBlockValue =>
-  block.type in EventBlockMap;
-
-const latestBlocks = (event: EditorEventFragment) =>
-  (event.latest?.blocks ?? []).map(blockForQueryBlock);
-
-export const droppedEventBlockTypes = (event: EditorEventFragment) =>
-  latestBlocks(event)
-    .filter(block => !isEventBlock(block))
-    .map(({ type }) => type);
-
 export const eventFormFromEvent = (
   event: EditorEventFragment
 ): EventFormValues => ({
   ...emptyEventForm(),
   name: event.latest?.name ?? '',
   printDescription: event.latest?.printDescription ?? '',
-  blocks: latestBlocks(event).filter(isEventBlock),
+  blocks: (event.latest?.blocks ?? []).map(blockForQueryBlock),
   images: bySortOrder(event.latest?.images ?? []).flatMap(
     ({ image, caption, isMain }) =>
       image ?

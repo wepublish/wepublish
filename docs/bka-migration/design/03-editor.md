@@ -256,20 +256,14 @@ still sent, and the page says what was saved and keeps the rest dirty. Publish, 
 Withdraw save unsaved changes first. Alt text is `Image.description`, so unlike the rest of
 General it is live on save, for every use of the image.
 
-### 4.2 Blocks need a restricted palette
+### 4.2 Blocks: the full article palette
 
-An event description is a paragraph or two. The full article palette — teasers, polls, embeds,
-image galleries — makes no sense here and invites content the agenda's public rendering cannot
-show.
+The first design restricted the event canvas to richtext, image, embed and quote, on the grounds
+that an event description is a paragraph or two. That restriction was built and then reversed.
 
-The event canvas offers **richtext, image, embed, quote**. Nothing else.
-
-**As built.** No framework addition was needed: `BlockList` already takes its block map as a prop,
-so the event editor passes a subset map (`event-block-map.ts`). The same list,
-`EVENT_BLOCK_TYPES`, lives in `@wepublish/event/schedule`, and the API refuses any other block type
-in event content, so an API key cannot post blocks the agenda cannot render
-([D70](../decisions.md)). Older content holding other blocks is left off the canvas with a warning
-([D84](../decisions.md)).
+Karl decided events take every block an article takes. The event editor passes the article
+`BlockMap` to `BlockList`, and the API no longer checks block types in event content
+([D70](../decisions.md#d70--event-content-takes-only-the-blocks-the-agenda-can-show), reversed). The description counter still counts rich text only.
 
 ---
 
@@ -592,7 +586,7 @@ change of their own.
 | `KeyboardSensor` on `ListInput` | Two lines; fixes the whole editor, not just the agenda (§5.1) | built |
 | `ListInput` polish | Row index, denser rows, duplicate action | built |
 | The date editor | No equivalent anywhere in the editor — the only genuinely new control | built |
-| Per-entity block allow-list | If it does not already exist (§4.1) | built as a subset block map plus the API check (§4.2) |
+| Per-entity block allow-list | If it does not already exist (§4.1) | built, then removed: events take every block (§4.2) |
 | Review-state top-bar control | New, but small | built |
 | Dashboard card for the review queue | Extends the existing configurable dashboard | built |
 
@@ -607,8 +601,8 @@ publication controls. The agenda should look like a part of this editor that was
 1. **Is `Agenda` the right nav label?** It matches BKa's public vocabulary but is new to
    We.Publish, and other media adopting this ([D14c](../decisions.md)) may call it something else.
 2. *(Resolved — [D70](../decisions.md): it needed no framework addition. `BlockList` takes the
-   block map as a prop, the event editor passes the four allowed blocks, and the API refuses the
-   rest, §4.2.)*
+   block map as a prop. The restriction was later reversed: the event editor passes the article
+   block map and the API accepts every block, §4.2.)*
 3. *(Resolved — [D19](../decisions.md): no. An organiser sees only their own organisation's events;
    seeing others requires the cross-organisation permissions that Agenda-Admin carries.)*
 4. *(Resolved — [D40](../decisions.md): whole day. The API counts the whole Zurich calendar day the

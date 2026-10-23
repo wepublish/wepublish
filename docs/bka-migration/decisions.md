@@ -2796,7 +2796,13 @@ who may edit it may ask.
 
 ## D70 — Event content takes only the blocks the agenda can show
 
-**Status.** Built in slice F stage 1. Awaiting Karl's confirmation.
+> **Reversed by Karl: events take every block an article takes.** `EVENT_BLOCK_TYPES`, the
+> block-type check in `eventBlocksSchema` and `assertValidContent`, and the editor's subset map
+> `EventBlockMap` are gone. The event editor passes the article `BlockMap`, and the API checks only
+> the 6,400-character description limit, which counts rich text alone. The agenda's pages and
+> print export must render, or skip, whatever blocks an event holds.
+
+**Status.** Built in slice F stage 1, then reversed.
 
 **Context.** Design 3 §4.2 restricts the event canvas to rich text, image, embed and quote, and asks
 (§13 Q2) whether that is an editor-only restriction.
@@ -3144,9 +3150,8 @@ Follows [D53](#d53--the-shared-input-rules-live-in-the-schedule-library) and des
 - Every field belongs to exactly one of `CONTENT_FIELDS` (name, print blurb, blocks, images, sent
   with `updateEventContent`) or `FACT_FIELDS` (everything else, sent with `updateEvent`), so stage 5
   can send only the dirty group.
-- The canvas offers `EventBlockMap`: the article editor's RichText, Image, Embed and Quote blocks,
-  checked against `EVENT_BLOCK_TYPES` by a spec. A stored block outside it fails the form with
-  "The description holds a block the agenda cannot show".
+- The canvas offers the article editor's `BlockMap`, every block an article offers
+  ([D70](#d70--event-content-takes-only-the-blocks-the-agenda-can-show), reversed).
 - Tags use `SelectTags`, which gains `label`, `helperText`, `error` and `maxTags` (unpicked tags
   are disabled at the limit). The venue picker queries `places(filter: {selectable: true})` and
   explains when there is none. Audience is a select with "Not specified".
@@ -3196,9 +3201,9 @@ Implements design 3 §4.
 **Decision.**
 - Routes `/events/create` and `/events/edit/:id`, outside the sidebar layout as the article editor
   is; the form is keyed by the id, so duplicating or creating loads the new event fresh.
-- The canvas is a fixed name field (`n/130`) above the restricted block list, with a description
-  counter (`n/6,400`). Blocks outside the four (D70) are left off the canvas with a warning that
-  saving the text drops them; saving only facts keeps them.
+- The canvas is a fixed name field (`n/130`) above the article editor's block list, with a
+  description counter (`n/6,400`) that counts rich text only. Every stored block is shown (D70,
+  reversed).
 - The Metadata drawer has **General** (print blurb, images, status, venue, tags, audience,
   organisation, owner, show in print), **Dates** (the date editor and 20 upcoming dates at a time),
   **Pricing** (prices, special rate, ticket link) and **Social Media** (slug, SEO and social fields,
@@ -3669,7 +3674,7 @@ and recorded in [D66](#d66--the-editor-role-files-and-publishes-its-own-events-a
 2. [D67](#d67--events-keep-bkas-special-rate-as-a-nullable-enum): `Event.specialRate`, or drop the special rate.
 3. [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it): `viewerCan` as guard permission plus record rule.
 4. [D69](#d69--a-review-request-can-be-withdrawn): anyone who may edit may withdraw a review request.
-5. [D70](#d70--event-content-takes-only-the-blocks-the-agenda-can-show): the server refuses non-agenda blocks in event content.
+5. [D70](#d70--event-content-takes-only-the-blocks-the-agenda-can-show): answered. Events take every block an article takes, and the restriction is removed.
 6. [D71](#d71--the-editor-list-filters-by-publication-review-and-last-date-and-lookups-by-id-use-reach): lookups by id use reach, and the count includes the next date.
 7. [D72](#d72--organisation-tags-affiliations-and-contacts-are-public-and-written-through-the-organisation): organisation tags, affiliations and contacts are public; contacts capped at 6, tags at 3,
    affiliations uncapped.
@@ -3689,8 +3694,8 @@ and recorded in [D66](#d66--the-editor-role-files-and-publishes-its-own-events-a
 16. [D82](#d82--the-event-form-schema-reuses-the-shared-rules-and-splits-fields-into-facts-and-content): `showInPrint` checked by default on new events, as in BKa.
 17. [D83](#d83--one-save-sends-only-what-changed-and-a-partial-failure-keeps-what-was-not-saved): one Save that sends only the changed facts and content, no autosave for events, and
     unsaved changes saved before Publish or Ready for review.
-18. [D84](#d84--the-event-editor-is-the-article-editors-shell-with-four-metadata-tabs-kept-in-the-address): no Properties, Tracking, History or Preview for events for now; blocks outside the four
-    left off the canvas and dropped on the next text save.
+18. [D84](#d84--the-event-editor-is-the-article-editors-shell-with-four-metadata-tabs-kept-in-the-address): no Properties, Tracking, History or Preview for events for now. Every stored block is
+    shown, since events take every block an article takes ([D70](#d70--event-content-takes-only-the-blocks-the-agenda-can-show), reversed).
 19. [D85](#d85--ready-for-review-and-withdraw-request-follow-viewercan-and-name-who-can-publish): the review confirmation names the organisation (or the agenda team) and promises no
     notification until slice E.
 20. [D86](#d86--the-seo-preview-treats-an-event-like-an-article): event SEO fields preferred over name and print blurb, as for articles.
@@ -3718,8 +3723,6 @@ Open, no decision needed, from the slice F build:
 - "Ends in N days" counts from the schedule's `dateTo` (the Last day field), not from the last actual
   occurrence: a weekly series whose last day is not one of its weekdays shows a few days too many
   ([D76](#d76--ends-in-n-days-marks-weekly-series-only-in-zurich-calendar-days)).
-- `duplicateEvent` copies stored blocks without checking them, so an event written before
-  [D70](#d70--event-content-takes-only-the-blocks-the-agenda-can-show) can pass disallowed blocks to its copy.
 - The development database's `BlockType` enum still holds `teaserGrid1` and `teaserGrid6`, so
   `prisma migrate diff` keeps proposing to rebuild it. The drift predates slice F and needs a change of
   its own.

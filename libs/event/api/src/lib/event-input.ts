@@ -7,7 +7,6 @@ import {
   EVENT_TAGS_MIN,
   EventSchedule,
   EventScheduleProblem,
-  disallowedEventBlockTypes,
   eventBlocksSchema,
   eventNameSchema,
   eventPrintDescriptionSchema,
@@ -122,13 +121,6 @@ export const assertValidContent = ({
     printDescription,
     `printDescription must be at most ${EVENT_PRINT_DESCRIPTION_MAX_LENGTH} characters.`
   );
-  const disallowed = disallowedEventBlockTypes(blocks);
-
-  if (disallowed.length) {
-    throw new BadRequestException(
-      `An event cannot contain ${disallowed.join(', ')} blocks.`
-    );
-  }
 
   assertMatches(
     eventBlocksSchema,

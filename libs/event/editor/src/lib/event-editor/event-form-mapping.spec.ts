@@ -9,7 +9,6 @@ import { EventFormValues } from '../event-form-schema';
 import {
   changedAltTexts,
   changedFactInput,
-  droppedEventBlockTypes,
   eventContentInput,
   eventCreateInput,
   eventFormFromEvent,
@@ -83,7 +82,7 @@ describe('eventFormFromEvent', () => {
     ]);
   });
 
-  it('leaves blocks the agenda cannot show off the canvas and names them', () => {
+  it('keeps every block on the canvas, teasers included', () => {
     const event = testEvent();
     const withTeasers = testEvent({
       latest: { ...event.latest!, blocks: [richText, teaserGrid] },
@@ -91,10 +90,7 @@ describe('eventFormFromEvent', () => {
 
     expect(
       eventFormFromEvent(withTeasers).blocks.map(({ type }) => type)
-    ).toEqual([EditorBlockType.RichText]);
-    expect(droppedEventBlockTypes(withTeasers)).toEqual([
-      EditorBlockType.TeaserGrid1,
-    ]);
+    ).toEqual([EditorBlockType.RichText, EditorBlockType.TeaserGrid1]);
   });
 });
 
