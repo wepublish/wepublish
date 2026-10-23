@@ -1,5 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { ApiToken, PrismaClient } from '@prisma/client';
+import { CanGetAllApiTokens, CanGetApiTokens } from '@wepublish/permissions';
+import { hasPermission } from '@wepublish/permissions/api';
 import {
   CreateExternalAppInput,
   UpdateExternalAppInput,
@@ -17,7 +23,23 @@ type ExternalApps = {
   url: string;
   target: string;
   icon: string | null;
+  apiTokenId: string | null;
 };
+
+/** Who reads or links an api key, as in the api keys list. */
+export type ApiTokenReader = {
+  userId?: string;
+  permissions: string[];
+};
+
+const canSeeApiToken = (
+  apiToken: Pick<ApiToken, 'createdById'>,
+  { userId, permissions }: ApiTokenReader
+) =>
+  hasPermission(CanGetAllApiTokens, permissions) ||
+  (hasPermission(CanGetApiTokens, permissions) &&
+    !!userId &&
+    apiToken.createdById === userId);
 
 @Injectable()
 export class ExternalAppsService {
@@ -47,10 +69,55 @@ export class ExternalAppsService {
     return data;
   }
 
+  /** The linked api key, if the reader may see it. */
+  async linkedApiToken(
+    { apiTokenId }: Pick<ExternalApps, 'apiTokenId'>,
+    reader: ApiTokenReader
+  ): Promise<ApiToken | null> {
+    if (!apiTokenId) {
+      return null;
+    }
+
+    const apiToken = await this.prisma.apiToken.findUnique({
+      where: { id: apiTokenId },
+    });
+
+    return apiToken && canSeeApiToken(apiToken, reader) ? apiToken : null;
+  }
+
+  /** Only a key the editor may see, and that still works, can be linked. */
+  private async assertLinkableApiToken(
+    apiTokenId: string,
+    reader: ApiTokenReader
+  ) {
+    const apiToken = await this.prisma.apiToken.findUnique({
+      where: { id: apiTokenId },
+    });
+
+    if (!apiToken || !canSeeApiToken(apiToken, reader)) {
+      throw new BadRequestException(`API key ${apiTokenId} not found`);
+    }
+
+    if (apiToken.revokedAt) {
+      throw new BadRequestException(
+        `API key ${apiToken.name} has been revoked`
+      );
+    }
+
+    if (apiToken.expiresAt <= new Date()) {
+      throw new BadRequestException(`API key ${apiToken.name} has expired`);
+    }
+  }
+
   @PrimeDataLoader(ExternalAppsDataloaderService, 'id')
   async createExternalApp(
-    input: CreateExternalAppInput
+    input: CreateExternalAppInput,
+    reader: ApiTokenReader
   ): Promise<ExternalApps> {
+    if (input.apiTokenId) {
+      await this.assertLinkableApiToken(input.apiTokenId, reader);
+    }
+
     const returnValue = await this.prisma.externalApps.create({
       data: input,
     });
@@ -59,9 +126,14 @@ export class ExternalAppsService {
 
   @PrimeDataLoader(ExternalAppsDataloaderService, 'id')
   async updateExternalApp(
-    input: UpdateExternalAppInput
+    input: UpdateExternalAppInput,
+    reader: ApiTokenReader
   ): Promise<ExternalApps> {
     const { id, ...updateData } = input;
+
+    if (updateData.apiTokenId) {
+      await this.assertLinkableApiToken(updateData.apiTokenId, reader);
+    }
 
     const existingApp = await this.prisma.externalApps.findUnique({
       where: { id },

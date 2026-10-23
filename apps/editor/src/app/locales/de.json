@@ -48,12 +48,12 @@
     },
     "versionHistory": {
       "title": "Versionsverlauf",
+      "today": "Heute",
+      "yesterday": "Gestern",
       "subtitle": "{{count}} Versionen",
       "close": "Schliessen",
       "empty": "Noch keine Versionen.",
       "untitled": "Ohne Titel",
-      "created": "Erstellt {{date}}",
-      "published": "veröffentlicht {{date}}",
       "currentVersion": "Aktuelle Version",
       "restore": "Wiederherstellen",
       "restored": "Version als neuer Entwurf wiederhergestellt",
@@ -146,6 +146,7 @@
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z.B. hilfreich, wenn Beiträge in sozialen Medien für den nächsten Morgen im Voraus geplant werden.",
         "displayOptions": "Anzeigeoptionen",
+        "displayOptionsHint": "Ein Feld leer lassen, um den ursprünglichen Text zu verwenden.",
         "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern.",
         "draft": "Entwurf",
         "dropImage": "Bild hier ablegen",
@@ -167,6 +168,7 @@
         "lead": "Lead",
         "loading": "Wird geladen …",
         "loadMore": "Mehr laden",
+        "search": "Nach Titel suchen",
         "noDataToDisplay": "Keine Daten zum Anzeigen",
         "metadata": "Metadaten",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
@@ -376,6 +378,7 @@
     "blocks": {
       "blockTemplate": {
         "editTemplate": "Vorlage bearbeiten",
+        "linkedInfo": "Änderungen an der Vorlage erscheinen hier automatisch.",
         "label": "Blockvorlage",
         "select": "Blockvorlage auswählen",
         "useContent": "Inhalt übernehmen",
@@ -384,12 +387,12 @@
         "reload": "Vorlagen neu laden"
       },
       "crowdfunding": {
-        "edit": "Bearbeiten",
+        "edit": "Crowdfunding-Block bearbeiten",
         "label": "Crowdfunding",
         "title": "Crowdfunding auswählen",
         "name": "Name des Crowdfundings",
         "select": "Auswählen",
-        "open": "öffnen",
+        "open": "Öffnen",
         "crowdfundingName": "Crowdfunding {{name}}"
       },
       "comment": {
@@ -508,7 +511,8 @@
         "showGoodies": "Goodie-Auswahl anzeigen",
         "showDiscountCodes": "Rabattcode-Eingabe anzeigen",
         "goodieMinValue": {
-          "label": "Goodie-Mindestbetrag:"
+          "label": "Mindestbetrag für ein Goodie",
+          "hint": "Wer weniger bezahlt, kann kein Goodie auswählen. Leer lassen für keinen Mindestbetrag."
         },
         "goodieMinValueAppliesToUpgrade": "Mindestbetrag auch bei Upgrades anwenden",
         "hideRepeatGoodieOnUpgrade": "Bei Upgrade: kein erneutes Goodie",
@@ -546,6 +550,8 @@
         },
         "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag",
         "defaultPlanTitle": "Standardmässig ausgewählt – dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt.",
+        "amountLayout": "Betragseingabe",
+        "planAmountTarget": "Ziel {{amount}}",
         "defaultPlanLabel": "Standard",
         "dragToReorder": "Ziehen, um die Reihenfolge zu ändern",
         "renderStylesHelp": "Ziehe die Abo-Pläne in die Reihenfolge, in der sie auf der Website erscheinen. Wähle pro Plan, wie der Betrag eingegeben wird und welcher Plan vorausgewählt ist."
@@ -584,7 +590,8 @@
         "label": "Listicle"
       },
       "poll": {
-        "edit": "Bearbeiten",
+        "open": "Öffnen",
+        "edit": "Umfrage-Block bearbeiten",
         "label": "Umfrage",
         "select": "Auswählen",
         "title": "Umfrageblock bearbeiten",
@@ -642,7 +649,8 @@
         "syncProviderPlaceholder": "Konto auswählen",
         "list": "Liste",
         "listPlaceholder": "Liste auswählen",
-        "interests": "Voreingestellte Interessen. Diese werden allen Abonnent:innen automatisch hinzugefügt",
+        "interests": "Voreingestellte Interessen",
+        "interestsHelp": "Diese werden allen Abonnent:innen automatisch hinzugefügt.",
         "interestsPlaceholder": "Interessen auswählen",
         "autoFocus": "Automatischer Fokus",
         "doubleOptIn": "Double-Opt-In",
@@ -3344,12 +3352,22 @@
       "saveSuccess": "Die Website-Einstellungen wurden erfolgreich gespeichert"
     },
     "externalApps": {
+      "apiKey": {
+        "expiresSoon": "Der API-Schlüssel «{{name}}» läuft am {{expiresAt, PP}} ab. Erstelle einen neuen, hinterlege ihn in der App und verknüpfe ihn hier.",
+        "expired": "Der API-Schlüssel «{{name}}» ist am {{expiresAt, PP}} abgelaufen – die App kann keine Daten mehr lesen.",
+        "revoked": "Der API-Schlüssel «{{name}}» wurde widerrufen – die App kann keine Daten mehr lesen."
+      },
       "apps": "Apps",
       "noAppsFound": "Keine externen Apps konfiguriert.",
       "notFound": "Externe App nicht gefunden",
       "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab."
     },
     "externalAppForm": {
+      "apiKey": "API-Schlüssel",
+      "apiKeyOption": "{{name}} ({{prefix}}…)",
+      "noApiKey": "Kein API-Schlüssel",
+      "apiKeyHelp": "Der API-Schlüssel, mit dem die App die We.Publish-API liest. Der Editor zeigt dann an, wann er abläuft oder widerrufen wurde. Den Schlüssel selbst hinterlegst du in der App.",
+      "apiKeyDetails": "{{prefix}}… · {{scopes}} Berechtigungen · läuft am {{expiresAt, PP}} ab",
       "create": "Erstellen",
       "update": "Aktualisieren",
       "delete": "Löschen",
@@ -3896,6 +3914,12 @@
         "attemptsHelp": "Wie oft versucht wurde, diese E-Mail zu verschicken. Mehr als 1 heisst: Sie wurde nach einem Fehler oder Unterbruch erneut versucht."
       }
     },
+    "publishDialog": {
+      "checklist": "Vor dem Veröffentlichen",
+      "options": "Optionen",
+      "publish": "Veröffentlichen",
+      "schedule": "Planen"
+    },
     "seoChecklist": {
       "navbar": "SEO",
       "title": "SEO-Checkliste",
@@ -4194,6 +4218,9 @@
     "placeholderInput": {
       "add": "Hinzufügen"
     },
+    "flexTile": {
+      "moreActions": "Weitere Aktionen"
+    },
     "listInput": {
       "dragToReorder": "Ziehen, um die Reihenfolge zu ändern",
       "add": "Eintrag hinzufügen"
@@ -4238,6 +4265,19 @@
       "reload": "Editor neu laden"
     },
     "listView": {
+      "export": {
+        "download": "Herunterladen",
+        "csv": "CSV (.csv)",
+        "xlsx": "Excel (.xlsx)",
+        "scope": {
+          "title": "Was soll heruntergeladen werden?",
+          "page": "Nur diese Seite ({{count}} Einträge)",
+          "all": "Alle {{count}} Einträge"
+        },
+        "largeWarning": "{{count}} Einträge zu laden kann eine Weile dauern und ergibt eine grosse Datei.",
+        "confirm": "Herunterladen",
+        "cancel": "Abbrechen"
+      },
       "table": {
         "empty": "Nichts vorhanden"
       },
@@ -4337,6 +4377,8 @@
         "lastUsedDate": "{{lastUsedDate, ccc PP p}}",
         "expires": "Läuft ab",
         "expired": "Abgelaufen",
+        "expiresInDays_one": "Läuft in {{count}} Tag ab",
+        "expiresInDays_other": "Läuft in {{count}} Tagen ab",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Besitzer",
         "ownerUnknown": "Gelöschte Person",

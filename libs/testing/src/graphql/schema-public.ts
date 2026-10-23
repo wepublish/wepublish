@@ -901,6 +901,8 @@ export type CreateCrowdfundingMemberPlan = {
 };
 
 export type CreateExternalAppInput = {
+  /** An API key you may see that has neither expired nor been revoked. */
+  apiTokenId?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
@@ -1290,6 +1292,10 @@ export type EventTeaserInput = {
 
 export type ExternalApp = {
   __typename?: 'ExternalApp';
+  /** The linked API key, for editors who may see it in the API keys list. Never contains the secret. */
+  apiToken?: Maybe<ApiToken>;
+  /** The API key the app reads the We.Publish API with. */
+  apiTokenId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   icon?: Maybe<Scalars['String']['output']>;
@@ -4586,6 +4592,7 @@ export type MutationUpdateEventArgs = {
 
 
 export type MutationUpdateExternalAppArgs = {
+  apiTokenId?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];

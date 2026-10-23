@@ -33,6 +33,7 @@ import {
   Pagination,
   TableWrapper,
   useListViewState,
+  useTableExportQuery,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
@@ -70,6 +71,12 @@ function TagList({ type }: TagListProps) {
   const { data, loading, refetch } = useQuery(TagListDocument, {
     variables: tagListVariables,
   });
+  const exportTags = useTableExportQuery(
+    TagListDocument,
+    { filter: tagListVariables.filter },
+    data => data.tags
+  );
+
   const [deleteTag] = useMutation(DeleteTagDocument, {
     onCompleted() {
       refetch();
@@ -123,6 +130,9 @@ function TagList({ type }: TagListProps) {
             setPage(1);
           }}
           data={data?.tags?.nodes ?? []}
+          exportRows={exportTags}
+          exportTotalCount={data?.tags?.totalCount ?? 0}
+          exportFilename={`tags-${type.toLowerCase()}`}
           loading={loading}
           columns={[
             {
@@ -135,6 +145,7 @@ function TagList({ type }: TagListProps) {
                   {rowData.tag || t('untitled')}
                 </Link>
               ),
+              exportValue: rowData => rowData.tag,
             },
             {
               id: 'action',

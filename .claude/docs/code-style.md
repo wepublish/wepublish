@@ -85,7 +85,12 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   the available width (`listView/fit-column-widths.ts`) and releases `fixed`
   columns under 600 px — so don't hand-tune column widths to a screen size.
   List pages use that table, not a hand-rolled one, or columns don't fill the
-  width.
+  width. Data lists (users, comments, invoices, audit log… — not config or
+  content lists like tags, blocks or navigations) pass `exportRows` (CSV/Excel
+  download, via `useTableExportQuery` for paginated queries, plus
+  `exportTotalCount` so the user is asked page-or-all and warned above 1000);
+  columns that render JSX need an `exportValue`, a JSX `label` needs a
+  `columnLabel`, and secrets get `exportValue: false`.
 - **Drawers scroll only `DrawerBody`.** `DrawerHeader`/`DrawerBody` are the
   shared styled elements from `@wepublish/ui/editor`; the body is the flex
   child that scrolls. Don't give it a fixed height — a hard-coded
