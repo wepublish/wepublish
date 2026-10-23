@@ -2,6 +2,8 @@ import {
   Currency,
   Exact,
   FullSubscriptionFragment,
+  PaymentMethodChangeKind,
+  PaymentMethodChangeState,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
 } from '@wepublish/website/api';
@@ -9,7 +11,11 @@ import { SubscriptionListItem } from './subscription-list-item';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { action } from 'storybook/actions';
 import { userEvent, within } from 'storybook/test';
-import { mockMemberPlan } from '@wepublish/storybook/mocks';
+import {
+  mockAvailablePaymentMethod,
+  mockMemberPlan,
+  mockPaymentMethod,
+} from '@wepublish/storybook/mocks';
 
 export default {
   component: SubscriptionListItem,
@@ -374,5 +380,90 @@ export const WithExternalRewardLink: StoryObj = {
       ...subscription,
       externalReward: 'https://example.com',
     },
+  },
+};
+
+const invoicePaymentMethod = mockPaymentMethod({
+  id: 'invoice',
+  name: 'Rechnung',
+  description: 'Per Post',
+  paymentProviderID: 'bexio',
+});
+
+const onlinePaymentMethod = mockPaymentMethod({
+  id: 'online',
+  name: 'Online',
+  description: 'Karte, TWINT',
+  paymentProviderID: 'payrexx',
+});
+
+const subscriptionWithPaymentMethods = {
+  ...subscription,
+  paymentPeriodicity: PaymentPeriodicity.Yearly,
+  paymentMethod: invoicePaymentMethod,
+  memberPlan: mockMemberPlan({
+    availablePaymentMethods: [
+      mockAvailablePaymentMethod({
+        paymentPeriodicities: [PaymentPeriodicity.Yearly],
+        paymentMethods: [invoicePaymentMethod, onlinePaymentMethod],
+      }),
+    ],
+  }),
+} as Exact<FullSubscriptionFragment>;
+
+export const ChangePaymentMethod: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    ...subscriptionWithPaymentMethods,
+    changePaymentMethod: action('changePaymentMethod'),
+    cancelPaymentMethodChange: action('cancelPaymentMethodChange'),
+  },
+};
+
+export const ChangePaymentMethodWithOpenInvoice: StoryObj = {
+  ...ChangePaymentMethod,
+  args: {
+    ...ChangePaymentMethod.args,
+    canExtend: false,
+    openInvoiceTotal: 12000,
+  },
+};
+
+export const PaymentMethodChangePending: StoryObj = {
+  ...ChangePaymentMethod,
+  args: {
+    ...ChangePaymentMethod.args,
+    canExtend: false,
+    pendingPaymentMethodChange: {
+      __typename: 'SubscriptionPaymentMethodChange',
+      id: 'change-1',
+      createdAt: '2026-10-21T10:00:00.000Z',
+      kind: PaymentMethodChangeKind.Authorization,
+      state: PaymentMethodChangeState.Pending,
+      amount: 1,
+      currency: Currency.Chf,
+      expiresAt: '2026-11-04T10:00:00.000Z',
+      completedAt: null,
+      paymentMethod: onlinePaymentMethod,
+    },
+  },
+};
+
+export const RenewPaymentMethod: StoryObj = {
+  ...ChangePaymentMethod,
+  args: {
+    ...ChangePaymentMethod.args,
+    paymentMethod: onlinePaymentMethod,
+    canRenewPaymentMethod: true,
+  },
+};
+
+export const RenewPaymentMethodWithOpenInvoice: StoryObj = {
+  ...RenewPaymentMethod,
+  args: {
+    ...RenewPaymentMethod.args,
+    canExtend: false,
+    openInvoiceTotal: 12000,
   },
 };

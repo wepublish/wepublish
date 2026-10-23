@@ -23,6 +23,8 @@ export const SubscriptionList = ({
   onReactivate,
   onRevertUpgrade,
   onExtend,
+  onChangePaymentMethod,
+  onCancelPaymentMethodChange,
   className,
   subscribeUrl,
 }: BuilderSubscriptionListProps) => {
@@ -52,6 +54,21 @@ export const SubscriptionList = ({
           key={subscription.id}
           {...subscription}
           extend={async () => await onExtend?.(subscription.id)}
+          changePaymentMethod={
+            onChangePaymentMethod ?
+              async paymentMethodId =>
+                await onChangePaymentMethod(subscription.id, paymentMethodId)
+            : undefined
+          }
+          cancelPaymentMethodChange={onCancelPaymentMethodChange}
+          openInvoiceTotal={
+            invoices.data?.userInvoices.find(
+              invoice =>
+                invoice.subscriptionID === subscription.id &&
+                !invoice.paidAt &&
+                !invoice.canceledAt
+            )?.total
+          }
           cancel={async () => await onCancel?.(subscription.id)}
           reactivate={
             onReactivate ?

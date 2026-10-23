@@ -2757,8 +2757,14 @@ export type Mutation = {
   cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
   cancelSubscription: PublicSubscription;
+  /** Cancels a pending payment method change; the subscription keeps its current payment method. */
+  cancelSubscriptionPaymentMethodChange: SubscriptionPaymentMethodChange;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
+  /** Moves one of the authenticated user's subscriptions to another payment method. With an open invoice, the invoice is paid with the new payment method; otherwise the new payment method is authorized without a charge. The subscription keeps its current payment method until then. */
+  changeSubscriptionPaymentMethod: StartedSubscriptionPaymentMethodChange;
+  /** Asks the payment provider whether the reader finished paying or authorizing, for when they return before the provider reported it. */
+  checkSubscriptionPaymentMethodChange: SubscriptionPaymentMethodChange;
   /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
   confirmChangelogEntry: ChangelogEntry;
   /** Confirms a pending email change for the logged-in user. */
@@ -3220,7 +3226,25 @@ export type MutationCancelSubscriptionArgs = {
 };
 
 
+export type MutationCancelSubscriptionPaymentMethodChangeArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationCancelUserSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationChangeSubscriptionPaymentMethodArgs = {
+  failureURL?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodId: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
+  successURL?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCheckSubscriptionPaymentMethodChangeArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -5297,6 +5321,21 @@ export type PaymentMethod = HasImageLc & {
   slug: Scalars['Slug']['output'];
 };
 
+/** How the reader proves the new payment method: by paying the open invoice with it, by authorizing it without a charge, or not at all. */
+export enum PaymentMethodChangeKind {
+  Authorization = 'authorization',
+  Immediate = 'immediate',
+  InvoicePayment = 'invoicePayment'
+}
+
+export enum PaymentMethodChangeState {
+  Canceled = 'canceled',
+  Completed = 'completed',
+  Expired = 'expired',
+  Failed = 'failed',
+  Pending = 'pending'
+}
+
 export enum PaymentMethodMollie {
   Alma = 'ALMA',
   Applepay = 'APPLEPAY',
@@ -5786,6 +5825,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean']['output'];
   canExtend: Scalars['Boolean']['output'];
+  /** Whether the reader can authorize the subscription's payment method anew, e.g. with a new card: only for payment methods renewals are charged with automatically. */
+  canRenewPaymentMethod: Scalars['Boolean']['output'];
   /** Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet. */
   canRevertUpgrade: Scalars['Boolean']['output'];
   confirmed: Scalars['Boolean']['output'];
@@ -5805,6 +5846,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   paymentMethod: PaymentMethod;
   paymentMethodID: Scalars['String']['output'];
   paymentPeriodicity: PaymentPeriodicity;
+  /** A payment method change that is waiting for the reader to pay or authorize. Until it completes, the subscription keeps its payment method. */
+  pendingPaymentMethodChange?: Maybe<SubscriptionPaymentMethodChange>;
   periods: Array<SubscriptionPeriod>;
   properties: Array<Property>;
   startsAt: Scalars['DateTime']['output'];
@@ -7301,11 +7344,13 @@ export enum SettingName {
   MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
   NewArticlePaywall = 'NEW_ARTICLE_PAYWALL',
   NewArticlePeering = 'NEW_ARTICLE_PEERING',
+  PaymentMethodChangeExpiryDays = 'PAYMENT_METHOD_CHANGE_EXPIRY_DAYS',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   SessionTtlDays = 'SESSION_TTL_DAYS',
   ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',
+  SubscriptionExtendWindowDays = 'SUBSCRIPTION_EXTEND_WINDOW_DAYS',
   SubscriptionUpgradeBillsFullDifference = 'SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE'
 }
 
@@ -7436,6 +7481,14 @@ export type SoundCloudTrackBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   trackID?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type StartedSubscriptionPaymentMethodChange = {
+  __typename?: 'StartedSubscriptionPaymentMethodChange';
+  change: SubscriptionPaymentMethodChange;
+  /** Where the reader pays or authorizes: a redirect URL, or the client secret for Stripe. */
+  intentSecret?: Maybe<Scalars['String']['output']>;
+  paymentProviderID: Scalars['String']['output'];
 };
 
 export type Stats = {
@@ -7673,6 +7726,24 @@ export type SubscriptionInterval = {
   event: SubscriptionEvent;
   id: Scalars['String']['output'];
   mailTemplate?: Maybe<MailTemplateRef>;
+};
+
+/** A reader's request to move a subscription to another payment method. The subscription keeps its current payment method until the change is completed. */
+export type SubscriptionPaymentMethodChange = HasPaymentMethod & {
+  __typename?: 'SubscriptionPaymentMethodChange';
+  /** Amount in cents held to authorize the payment method. It is released again and never charged. */
+  amount: Scalars['Int']['output'];
+  completedAt?: Maybe<Scalars['DateTime']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  currency: Currency;
+  expiresAt: Scalars['DateTime']['output'];
+  fromPaymentMethodID: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  kind: PaymentMethodChangeKind;
+  paymentMethod: PaymentMethod;
+  paymentMethodID: Scalars['String']['output'];
+  state: PaymentMethodChangeState;
+  subscriptionID: Scalars['String']['output'];
 };
 
 export type SubscriptionPeriod = {

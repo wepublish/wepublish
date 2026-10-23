@@ -106,6 +106,20 @@
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Image : {source})</ImageSource>}}"
   },
   "subscription": {
+    "renewPaymentMethod": "Mettre à jour le moyen de paiement actuel",
+    "renewPaymentMethodHint": "p.ex. enregistrer une nouvelle carte",
+    "renewPaymentMethodTitle": "Mettre à jour le moyen de paiement actuel",
+    "renewPaymentMethodConfirmation": "Vous confirmez à nouveau {paymentMethod}, par exemple avec une nouvelle carte ou un nouveau compte TWINT. D'ici là, l'enregistrement actuel reste actif.",
+    "paymentMethod": "Moyen de paiement : {paymentMethod}",
+    "changePaymentMethod": "Changer de moyen de paiement",
+    "changePaymentMethodTitle": "Changer de moyen de paiement",
+    "changePaymentMethodSubmit": "Continuer",
+    "changePaymentMethodOpenInvoice": "Vous payez la facture ouverte de {amount} avec le nouveau moyen de paiement. Ce n'est qu'ensuite qu'il sera repris pour votre {type, select, Donation {don} other {abonnement}}.",
+    "changePaymentMethodAuthorization": "Vous confirmez une fois un moyen de paiement en ligne auprès du prestataire de paiement. Un montant de {amount} peut être réservé à cet effet, il ne vous sera jamais débité. D'ici là, votre moyen de paiement actuel reste actif.",
+    "paymentMethodChangePending": "Changement vers {paymentMethod} en attente : {kind, select, invoicePayment {actif dès que la facture ouverte est payée} other {actif dès que vous avez confirmé le moyen de paiement}}. Possible jusqu'au {expiresAt}.",
+    "paymentMethodChangeContinue": "Continuer",
+    "paymentMethodChangeCancel": "Annuler le changement",
+    "extendChargedWith": "Débité via : {paymentMethod}",
     "externalReward": "{isLink, select, true {Lien vers une récompense externe} other {{externalReward}}}",
     "unpaid": "{type, select, Donation {Don} other {Abonnement}} impayé",
     "cancel": "Résilier {type, select, Donation {le don} other {l'abonnement}}",
@@ -184,6 +198,7 @@
     "payNow": "Payer maintenant"
   },
   "user": {
+    "authorize": "Confirmer",
     "changeEmailRequest": "Cliquez ici pour modifier votre adresse e-mail",
     "email": "E-Mail",
     "changeEmail": "Modifier l'adresse e-mail",

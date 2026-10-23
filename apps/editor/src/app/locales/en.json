@@ -2066,6 +2066,8 @@
       "newArticlePaywall": "Freshly created articles will require a subscription by default",
       "subscriptionPlans": "Subscription Plans",
       "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
+      "subscriptionExtendWindowDays": "Renewal window (days before the end)",
+      "paymentMethodChangeExpiryDays": "Payment method change waiting time (days)",
       "warnings": {
         "askOperators": "Warning: changing one or more of the settings may break the page or have other unpredictable consequences. If you are unsure, please try talking to the operators first. If you are sure, feel free to continue.",
         "guestCommenting": "Allow guest visitors (not logged in) to write and publish comments on articles.",
@@ -2082,6 +2084,8 @@
       "info": {
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
+        "subscriptionExtendWindowDays": "How many days before a subscription ends readers see \"Renew now\" in their profile. 30 = as before; 365 = any time, as long as no invoice is open.",
+        "paymentMethodChangeExpiryDays": "How many days a started payment method change waits for the open invoice to be paid or for the payment provider to confirm it. After that it expires and the subscription keeps its current payment method.",
         "newSubscriptionsApiPublic": "Makes the new subscriptions of a chosen period available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
         "activeSubscriptionsApiPublic": "Makes all currently active subscriptions available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
         "renewingSubscriptionsApiPublic": "Makes the subscriptions that renew in a chosen period available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
@@ -2411,6 +2415,14 @@
       }
     },
     "userSubscriptionEdit": {
+      "paymentMethodChange": {
+        "pending": "The reader is switching to {{paymentMethod}}: {{waitingFor}}. Until then the current payment method stays. The change expires on {{expiresAt, PP}}.",
+        "waitingFor": {
+          "invoicePayment": "waiting for the open invoice to be paid",
+          "authorization": "waiting for the payment provider to confirm it",
+          "immediate": "applied straight away"
+        }
+      },
       "autoRenew": "Auto Renew",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",

@@ -33,6 +33,8 @@ const subscription = {
   extendable: true,
   canExtend: true,
   externalReward: 'https://example.com/external-reward-mock-url',
+  pendingPaymentMethodChange: null,
+  canRenewPaymentMethod: false,
 } as Exact<FullSubscriptionFragment>;
 
 const invoice = {

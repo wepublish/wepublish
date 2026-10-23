@@ -253,6 +253,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     });
 
   const [canRevertUpgrade, setCanRevertUpgrade] = useState(false);
+  const [pendingPaymentMethodChange, setPendingPaymentMethodChange] =
+    useState<FullSubscriptionFragment['pendingPaymentMethodChange']>(null);
 
   const loadSubscription = useCallback(async () => {
     try {
@@ -264,6 +266,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         const subscription = data?.subscription;
 
         setCanRevertUpgrade(!!subscription?.canRevertUpgrade);
+        setPendingPaymentMethodChange(
+          subscription?.pendingPaymentMethodChange ?? null
+        );
 
         if (subscription) {
           return {
@@ -783,6 +788,18 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                   ),
                 }
               )}
+            </Alert>
+          )}
+
+          {pendingPaymentMethodChange && (
+            <Alert severity="info">
+              {t('userSubscriptionEdit.paymentMethodChange.pending', {
+                paymentMethod: pendingPaymentMethodChange.paymentMethod.name,
+                waitingFor: t(
+                  `userSubscriptionEdit.paymentMethodChange.waitingFor.${pendingPaymentMethodChange.kind}`
+                ),
+                expiresAt: new Date(pendingPaymentMethodChange.expiresAt),
+              })}
             </Alert>
           )}
 
