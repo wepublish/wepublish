@@ -71,6 +71,7 @@ import {
   CanGetCrowdfundings,
   CanGetDocument,
   CanGetDocuments,
+  CanGetEvents,
   CanGetImage,
   CanGetImages,
   CanGetMailLogs,
@@ -814,6 +815,7 @@ export function Base({ children }: BaseProps) {
 
               <PermissionControl
                 qualifyingPermissions={[
+                  CanGetEvents.id,
                   CanGetTags.id,
                   CanCreateTag.id,
                   CanUpdateTag.id,
@@ -821,12 +823,21 @@ export function Base({ children }: BaseProps) {
                 ]}
               >
                 <SidebarNavMenu
-                  title={t('navbar.events')}
+                  title={t('navbar.agenda')}
                   icon={<MdEvent />}
                   open={openMenus.includes('events')}
                   openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('events', wasOpen)}
                 >
+                  <PermissionControl qualifyingPermissions={[CanGetEvents.id]}>
+                    <SidebarNavItem
+                      href="/events"
+                      icon={<MdEvent />}
+                    >
+                      {t('navbar.events')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
                   <PermissionControl
                     qualifyingPermissions={[
                       CanGetTags.id,

@@ -489,7 +489,6 @@ export type {
   Permission,
   Phrase,
   Place,
-  PlaceFilter,
   PlaceViewerPermissions,
   PolisConversationBlock,
   Poll,

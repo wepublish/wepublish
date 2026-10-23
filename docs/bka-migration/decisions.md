@@ -2879,6 +2879,143 @@ lists every enabled venue, so an organiser's venue list needs `mine` to show the
 
 ---
 
+## D74 — The agenda editor lives in `libs/event/editor`, and the list comes first
+
+Follows [D61](#d61--the-old-editor-event-screens-are-removed-until-slice-f) and [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role).
+
+**Status.** Built in slice F stage 3. Awaiting Karl's confirmation.
+
+**Decision.**
+- The agenda screens live in a new library, `libs/event/editor` (`@wepublish/event/editor`, project
+  `event-editor`), set up like `crowdfunding-editor`. It depends on `ui-editor`, `editor-api`,
+  `@wepublish/event/schedule` and `@wepublish/permissions`. `apps/editor` only wires the route,
+  the navigation, the command and the dashboard card.
+- The sidebar section is **Agenda** (design 3 §2), with Events (`CanGetEvents`) and the existing
+  event Tags. Organisations and Venues follow in stage 6. The command palette gets `events` under
+  the Agenda section.
+- `/events` lists the caller's editor view of the events (`EditorEventList`, sent with the preview
+  header, so editor mode and `editorEventsWhere` apply). Its columns are name, next date with
+  "+N more dates", venue, organisation, status, publication, last date and last change. Rows can be
+  unpublished (`viewerCan.publish`, published or scheduled events) and deleted
+  (`viewerCan.delete`), each after a confirmation.
+- Event names are plain text, and the list has no "New event" or duplicate action, until the event
+  editor exists (stage 5). No command or link points at a route that does not exist yet.
+- The publication column uses the composite states articles use, each with a mark so colour is
+  never the only signal: ○ draft, ◐ review requested (with how long ago), ◔ scheduled, ● published.
+  A published event with unpublished changes shows both ○ and ●.
+- Dates are shown in Zurich time with `Intl.DateTimeFormat` in the editor language, whatever the
+  browser's zone (`event-format.ts`).
+- Filters: search, organisation (the caller's own, unless they hold
+  `CanGetOtherOrganizationEvents`), venue, tags, status, publication, dates, end of run (Ending
+  within 30 days / Ended) and review requested. The list stores the filter in the browser like
+  every other list, but keeps "end of run" as a choice and computes its instants from the time the
+  page loads, so a stored filter never goes stale.
+
+**Why.** Design 2 §1 names the library, and the crowdfunding and banner editors are the precedent.
+Building the list before the editor keeps every commit free of dangling routes, which
+`commands.spec.ts` enforces.
+
+---
+
+## D75 — The review queue is a filter, a sort and a dashboard card for whoever can publish
+
+Follows [D5](#d5--ready-for-review-is-an-explicit-action-backed-by-a-field-on-the-event) and [D71](#d71--the-editor-list-filters-by-publication-review-and-last-date-and-lookups-by-id-use-reach).
+
+**Status.** Built in slice F stage 3. Awaiting Karl's confirmation.
+
+**Decision.**
+- Turning on "Review requested" in the filters also sorts by `ReviewRequestedAt`, oldest first;
+  turning it off goes back to the latest change first.
+- The dashboard has a configurable **Review queue** card with the count and a link to
+  `/events?review=1`. That parameter shows the queue whatever filter the browser had stored, and the
+  first filter or sort change drops it. It is read during render, not copied into state.
+- The card is shown to holders of `CanGetEvents` who also hold `CanPublishEvent` or a
+  cross-organisation event permission (`useReviewQueueAccess`). The count is scoped by
+  `editorEventsWhere`, so an editor-role member counts the requests of their own organisations'
+  events, which they may publish (D48). Without `CanGetEvents` the API would ignore
+  `reviewRequested` and count public events, so those users never get the card. Users without
+  access do not see it in the grid or in the dashboard settings.
+
+**Why.** Design 3 §3 puts the queue in the Filters panel and its discovery on the dashboard. Since
+D66, every editor-role member may publish their organisation's events, so limiting the card to the
+cross-organisation permissions would hide the queue from the people who answer most requests.
+
+---
+
+## D76 — "Ends in N days" marks weekly series only, in Zurich calendar days
+
+Updates design 3 §9.
+
+**Status.** Built in slice F stage 3. Awaiting Karl's answer on the scope.
+
+**Decision.**
+- The list marks a **weekly** event whose last date is still to come and at most 30 Zurich calendar
+  days away: "Ends in 12 days", or "Ends today" (`event-expiry.ts`). The day count compares Zurich
+  dates, not 24-hour periods.
+- Single dates, consecutive-day runs and explicit date lists are never marked: they end when they
+  were meant to.
+- Design 3 §9's *Past* tab is the **Ended** filter (last date before now), and "Ending within
+  30 days" is a filter too.
+- "Extend" (open the Dates tab with the end date focused) waits for the event editor (stage 5).
+
+**Why.** The warning exists because D15 caps open-ended weekly series at two years with no
+auto-extension. Marking every event that ends within a month would mark almost every concert.
+
+---
+
+## D77 — Empty lists say why, and organisers who cannot publish get a simple stack
+
+Updates design 3 §2, §3.1 and §10.
+
+**Status.** Built in slice F stage 3. Awaiting Karl's confirmation.
+
+**Decision.**
+- An empty list explains itself (`event-list-empty-state.tsx`):
+  - an empty review queue: "Nothing waiting for review";
+  - any other filter: "No events match these filters", the search repeated, and "Clear filters";
+  - no events, no membership and no `CanCreateEvent`: "You are not a member of any organisation
+    yet", with whom to ask;
+  - otherwise: "No events yet" and what the agenda is for, plus, for someone without a membership
+    and without the cross-organisation read permission, that an organisation's events appear once
+    they are a member. Stage 5 adds "Create your first event" here.
+- Membership is read with `organizations(filter: {mine: true}, take: 1)`, only for callers who do
+  not see every event.
+- The list becomes a stack of cards (name, publication, next date, venue) when the caller lacks
+  `CanPublishEvent` (checked with `=== false`, so nothing changes while roles load), no filter is
+  active, and the caller has between 1 and 10 events, all loaded.
+
+**Why.** Design 2 §2 asks for the membership message, but on a tenant without organisations an
+editor files events of their own (D66), and the message would send them looking for a membership
+they do not need. Since D66 the editor role can publish, so the stack now serves custom organiser
+roles, as design 3 §3.1's organiser is someone who cannot publish.
+
+---
+
+## D78 — `ListInput` reorders by keyboard
+
+Implements design 3 §5.1.
+
+**Status.** Built in slice F stage 3.
+
+**Decision.**
+- `ListInput` registers a `KeyboardSensor` with `sortableKeyboardCoordinates` beside the pointer
+  sensor: Space or Enter on the handle picks a row up, the arrow keys move it, Space or Enter drops
+  it, Escape cancels. The moves are announced in the editor language
+  (`listInput.announcements.*`).
+- The sortable attributes and listeners sit on the handle button itself, so each row has one tab
+  stop and no button inside a button. The rows are an ordered list.
+- New props for the agenda: `showIndex`, `dense`, `addLabel`, `maxItems` (hides Add and Duplicate
+  at the limit), and `duplicateLastLabel` with an optional `duplicateValue`, which appends a copy of
+  the last row under a new id.
+- `useListViewState` gains `update`, which writes filter, sort and limit in one go; two setters in
+  a row overwrote each other.
+
+**Why.** Without the keyboard sensor the handle announced an affordance it did not provide. The fix
+applies to every `ListInput` in the editor (teaser grid, teaser slots, subscribe block, metadata
+properties and others).
+
+---
+
 ## Open questions
 
 Recorded as they surface; resolved ones become decisions above.
@@ -3061,3 +3198,10 @@ Slice F builds the agenda editor. Its build choices are recorded as decisions fr
 7. [D72](#d72--organisation-tags-affiliations-and-contacts-are-public-and-written-through-the-organisation): organisation tags, affiliations and contacts are public; contacts capped at 6, tags at 3,
    affiliations uncapped.
 8. [D73](#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine): `viewerCan` on organisations and places, and `PlaceFilter.mine`.
+9. [D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first): the Agenda section, the list's columns and filters, and "Tags" staying under Agenda
+   (design 3 §2 puts tags under Content Blocks).
+10. [D75](#d75--the-review-queue-is-a-filter-a-sort-and-a-dashboard-card-for-whoever-can-publish): the review-queue card for every holder of `CanPublishEvent`, not only the cross-organisation
+    permissions.
+11. [D76](#d76--ends-in-n-days-marks-weekly-series-only-in-zurich-calendar-days): "Ends in N days" for weekly series only, or for every event.
+12. [D77](#d77--empty-lists-say-why-and-organisers-who-cannot-publish-get-a-simple-stack): the membership message only for those who cannot file events, and the stack's trigger
+    (cannot publish, no filter, at most 10 events).

@@ -24,6 +24,7 @@ import {
   LocalStorageKey,
   TagType,
 } from '@wepublish/editor/api';
+import { EventList } from '@wepublish/event/editor';
 import {
   MailLogList,
   MailSendPage,
@@ -557,6 +558,14 @@ export function App() {
             />
 
             {/* Events Routes */}
+            <Route
+              path="events"
+              element={
+                <Base>
+                  <EventList />
+                </Base>
+              }
+            />
             <Route
               path="events/tags"
               element={

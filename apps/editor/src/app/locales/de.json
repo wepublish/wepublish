@@ -951,7 +951,8 @@
       "goToNetwork": "Zum Netzwerk",
       "welcome": "Willkommen im Dashboard!",
       "externalAppsInfo": "Verknüpfungen zu Tools, die dein Team neben We.Publish nutzt. Admins verwalten sie unter «Apps».",
-      "networkContentInfo": "Die neuesten Artikel anderer Medien im We.Publish-Netzwerk. Du kannst sie in deinen Editor übernehmen (importieren) und auf deiner Website veröffentlichen."
+      "networkContentInfo": "Die neuesten Artikel anderer Medien im We.Publish-Netzwerk. Du kannst sie in deinen Editor übernehmen (importieren) und auf deiner Website veröffentlichen.",
+      "reviewQueue": "Zur Prüfung"
     },
     "dateTimePicker": {
       "yesterday": "Gestern",
@@ -1652,7 +1653,8 @@
       "mailLog": "Gesendete E-Mails",
       "communication": "Kommunikation",
       "auditLog": "Audit-Log",
-      "language": "Sprache"
+      "language": "Sprache",
+      "agenda": "Agenda"
     },
     "navigation": {
       "overview": {
@@ -4135,7 +4137,14 @@
     },
     "listInput": {
       "dragToReorder": "Ziehen, um die Reihenfolge zu ändern",
-      "add": "Eintrag hinzufügen"
+      "add": "Eintrag hinzufügen",
+      "announcements": {
+        "instructions": "Zum Umsortieren Leertaste oder Enter auf dem Griff drücken, mit den Pfeiltasten verschieben und mit Leertaste oder Enter ablegen. Escape bricht ab.",
+        "start": "Eintrag {{position}} von {{total}} aufgenommen.",
+        "over": "Auf Position {{position}} von {{total}} verschoben.",
+        "end": "Auf Position {{position}} von {{total}} abgelegt.",
+        "cancel": "Umsortieren abgebrochen, die Reihenfolge bleibt."
+      }
     },
     "errorBoundary": {
       "title": "Auf dieser Seite ist etwas schiefgelaufen",
@@ -4456,6 +4465,81 @@
         "heading": "Einstellungen",
         "title": "Titel",
         "titleHint": "Zugleich die Betreffzeile des Mailchimp-Entwurfs. Wird beim Speichern übernommen."
+      }
+    },
+    "agenda": {
+      "status": {
+        "Confirmed": "Findet statt",
+        "Cancelled": "Abgesagt",
+        "Postponed": "Verschoben",
+        "SoldOut": "Ausverkauft"
+      },
+      "publication": {
+        "draft": "Entwurf",
+        "pending": "Geplant",
+        "published": "Veröffentlicht",
+        "reviewRequested": "Prüfung angefragt",
+        "reviewRequestedAgo": "Prüfung angefragt · {{time}}"
+      },
+      "list": {
+        "title": "Events",
+        "untitled": "Event ohne Titel",
+        "name": "Name",
+        "nextDate": "Nächstes Datum",
+        "venue": "Veranstaltungsort",
+        "organization": "Organisation",
+        "status": "Status",
+        "publication": "Veröffentlichung",
+        "lastDate": "Letztes Datum",
+        "modified": "Zuletzt geändert",
+        "noUpcomingDates": "Keine kommenden Daten",
+        "moreDates_one": "+{{count}} weiteres Datum",
+        "moreDates_other": "+{{count}} weitere Daten",
+        "endsIn_one": "Endet in {{count}} Tag",
+        "endsIn_other": "Endet in {{count}} Tagen",
+        "endsToday": "Endet heute",
+        "endsInHint": "Das letzte Datum dieser wöchentlichen Serie rückt näher. Ergänze spätere Daten, damit sie in der Agenda bleibt.",
+        "unpublish": "Veröffentlichung zurückziehen",
+        "unpublishTitle": "Veröffentlichung zurückziehen?",
+        "unpublishBody": "«{{name}}» verschwindet aus der öffentlichen Agenda. Der Inhalt bleibt als Entwurf erhalten.",
+        "confirmUnpublish": "Zurückziehen",
+        "deleteTitle": "Event löschen?",
+        "deleteBody": "«{{name}}» und alle seine Daten werden gelöscht. Das lässt sich nicht rückgängig machen.",
+        "confirmDelete": "Event löschen",
+        "filter": {
+          "search": "Suchen",
+          "organization": "Organisation",
+          "place": "Veranstaltungsort",
+          "tags": "Tags",
+          "status": "Status",
+          "publication": "Veröffentlichung",
+          "dates": "Daten",
+          "ending": "Laufzeitende",
+          "endingAny": "Alle",
+          "endingSoon": "Endet in den nächsten 30 Tagen",
+          "endingEnded": "Beendet",
+          "reviewRequested": "Prüfung angefragt"
+        },
+        "empty": {
+          "noEventsTitle": "Noch keine Events",
+          "noEventsBody": "Die Agenda zeigt, was läuft: Konzerte, Ausstellungen, Aufführungen. Events erscheinen hier, sobald sie erstellt sind.",
+          "noEventsMembershipHint": "Die Events einer Organisation erscheinen hier, sobald du Mitglied bist.",
+          "noMembershipTitle": "Du bist noch in keiner Organisation Mitglied",
+          "noMembershipBody": "Diese Liste zeigt die Events deiner Organisationen und die Events, die dir gehören. Bitte die Agenda-Administration, dich deiner Organisation hinzuzufügen.",
+          "noResultsTitle": "Keine Events passen zu diesen Filtern",
+          "noResultsSearch": "Nichts gefunden für «{{search}}».",
+          "clearFilters": "Filter zurücksetzen",
+          "queueEmptyTitle": "Nichts wartet auf Prüfung",
+          "queueEmptyBody": "Alle zur Prüfung eingereichten Events sind erledigt."
+        }
+      },
+      "reviewQueue": {
+        "title": "Zur Prüfung",
+        "info": "Entwürfe, deren Veranstalter um Prüfung und Veröffentlichung gebeten haben, die ältesten zuerst.",
+        "count_one": "{{count}} Event wartet auf Prüfung",
+        "count_other": "{{count}} Events warten auf Prüfung",
+        "empty": "Nichts wartet auf Prüfung",
+        "open": "Zur Liste"
       }
     }
   }

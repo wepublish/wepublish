@@ -19,6 +19,10 @@ routes and menu item, now gated on tag permissions, and the event pickers in the
 teaser panels, which read the `EventList` query. Until this design is built (slice F), events can be
 created and edited only through the API ([design 2](02-api.md) §8.1).
 
+Slice F stage 3 brought back the list: the **Agenda** section with `/events`, its filters and the
+review-queue dashboard card, in `libs/event/editor` ([D74](../decisions.md) to [D78](../decisions.md)). Event names are not yet
+links; the event editor follows in stage 5.
+
 ---
 
 ## 1. Who uses this, and what for

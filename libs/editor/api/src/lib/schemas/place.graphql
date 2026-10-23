@@ -1,0 +1,16 @@
+fragment TinyPlace on Place {
+  id
+  name
+  zip
+  city
+}
+
+query TinyPlaceList($filter: PlaceFilter, $take: Int, $skip: Int) {
+  places(filter: $filter, take: $take, skip: $skip) {
+    nodes {
+      ...TinyPlace
+    }
+
+    totalCount
+  }
+}

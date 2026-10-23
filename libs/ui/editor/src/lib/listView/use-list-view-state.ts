@@ -99,6 +99,13 @@ export const useListViewState = <TFilter = Record<string, unknown>>(
     [setState, value]
   );
 
+  const update = useCallback(
+    (patch: Partial<PersistedListViewState<TFilter>>) => {
+      setState({ ...value, ...patch });
+    },
+    [setState, value]
+  );
+
   const reset = useCallback(() => {
     remove();
   }, [remove]);
@@ -111,6 +118,7 @@ export const useListViewState = <TFilter = Record<string, unknown>>(
     setSort,
     limit: value.limit,
     setLimit,
+    update,
     reset,
   } as const;
 };

@@ -951,7 +951,8 @@
       "goToNetwork": "Aller au réseau",
       "welcome": "Bienvenue sur le tableau de bord !",
       "externalAppsInfo": "Raccourcis vers les outils que votre équipe utilise en plus de We.Publish. Les admins les gèrent sous « Apps ».",
-      "networkContentInfo": "Les derniers articles d’autres médias du réseau We.Publish. Vous pouvez les reprendre dans votre éditeur (importer) et les publier sur votre site."
+      "networkContentInfo": "Les derniers articles d’autres médias du réseau We.Publish. Vous pouvez les reprendre dans votre éditeur (importer) et les publier sur votre site.",
+      "reviewQueue": "À valider"
     },
     "dateTimePicker": {
       "yesterday": "Hier",
@@ -1652,7 +1653,8 @@
         "polls": "Sondages",
         "topMenu": "Blocs de contenu"
       },
-      "language": "Langue"
+      "language": "Langue",
+      "agenda": "Agenda"
     },
     "navigation": {
       "overview": {
@@ -4135,7 +4137,14 @@
     },
     "listInput": {
       "dragToReorder": "Glisser pour modifier l’ordre",
-      "add": "Ajouter une entrée"
+      "add": "Ajouter une entrée",
+      "announcements": {
+        "instructions": "Pour réordonner, appuyez sur Espace ou Entrée sur la poignée, déplacez avec les flèches, puis appuyez à nouveau sur Espace ou Entrée. Échap annule.",
+        "start": "Entrée {{position}} sur {{total}} saisie.",
+        "over": "Déplacée en position {{position}} sur {{total}}.",
+        "end": "Déposée en position {{position}} sur {{total}}.",
+        "cancel": "Réorganisation annulée, l’ordre reste inchangé."
+      }
     },
     "errorBoundary": {
       "title": "Un problème est survenu sur cette page",
@@ -4456,6 +4465,81 @@
         "heading": "Paramètres",
         "title": "Titre",
         "titleHint": "Sert aussi d’objet au brouillon Mailchimp. Pris en compte à l’enregistrement."
+      }
+    },
+    "agenda": {
+      "status": {
+        "Confirmed": "Confirmé",
+        "Cancelled": "Annulé",
+        "Postponed": "Reporté",
+        "SoldOut": "Complet"
+      },
+      "publication": {
+        "draft": "Brouillon",
+        "pending": "Programmé",
+        "published": "Publié",
+        "reviewRequested": "Validation demandée",
+        "reviewRequestedAgo": "Validation demandée · {{time}}"
+      },
+      "list": {
+        "title": "Événements",
+        "untitled": "Événement sans titre",
+        "name": "Nom",
+        "nextDate": "Prochaine date",
+        "venue": "Lieu",
+        "organization": "Organisation",
+        "status": "Statut",
+        "publication": "Publication",
+        "lastDate": "Dernière date",
+        "modified": "Dernière modification",
+        "noUpcomingDates": "Aucune date à venir",
+        "moreDates_one": "+{{count}} autre date",
+        "moreDates_other": "+{{count}} autres dates",
+        "endsIn_one": "Se termine dans {{count}} jour",
+        "endsIn_other": "Se termine dans {{count}} jours",
+        "endsToday": "Se termine aujourd’hui",
+        "endsInHint": "La dernière date de cette série hebdomadaire approche. Ajoutez des dates ultérieures pour qu’elle reste dans l’agenda.",
+        "unpublish": "Dépublier",
+        "unpublishTitle": "Dépublier l’événement ?",
+        "unpublishBody": "« {{name}} » disparaît de l’agenda public. Son contenu reste en brouillon.",
+        "confirmUnpublish": "Dépublier",
+        "deleteTitle": "Supprimer l’événement ?",
+        "deleteBody": "« {{name}} » et toutes ses dates sont supprimés. Cette action est irréversible.",
+        "confirmDelete": "Supprimer l’événement",
+        "filter": {
+          "search": "Rechercher",
+          "organization": "Organisation",
+          "place": "Lieu",
+          "tags": "Tags",
+          "status": "Statut",
+          "publication": "Publication",
+          "dates": "Dates",
+          "ending": "Fin",
+          "endingAny": "Tous",
+          "endingSoon": "Se termine dans les 30 jours",
+          "endingEnded": "Terminé",
+          "reviewRequested": "Validation demandée"
+        },
+        "empty": {
+          "noEventsTitle": "Aucun événement pour l’instant",
+          "noEventsBody": "L’agenda présente ce qui se passe : concerts, expositions, spectacles. Les événements apparaissent ici dès leur création.",
+          "noEventsMembershipHint": "Les événements d’une organisation apparaissent ici dès que vous en êtes membre.",
+          "noMembershipTitle": "Vous n’êtes encore membre d’aucune organisation",
+          "noMembershipBody": "Cette liste montre les événements de vos organisations et ceux qui vous appartiennent. Demandez à l’administration de l’agenda de vous ajouter à votre organisation.",
+          "noResultsTitle": "Aucun événement ne correspond à ces filtres",
+          "noResultsSearch": "Aucun résultat pour « {{search}} ».",
+          "clearFilters": "Effacer les filtres",
+          "queueEmptyTitle": "Rien en attente de validation",
+          "queueEmptyBody": "Tous les événements soumis à validation ont été traités."
+        }
+      },
+      "reviewQueue": {
+        "title": "À valider",
+        "info": "Brouillons dont les organisateurs ont demandé la validation et la publication, les plus anciens d’abord.",
+        "count_one": "{{count}} événement en attente de validation",
+        "count_other": "{{count}} événements en attente de validation",
+        "empty": "Rien en attente de validation",
+        "open": "Ouvrir la liste"
       }
     }
   }

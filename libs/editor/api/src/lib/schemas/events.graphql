@@ -49,3 +49,78 @@ query EventList(
     totalCount
   }
 }
+
+fragment EditorEventListItem on Event {
+  id
+  name
+  status
+  scheduleType
+  lastDateAt
+  modifiedAt
+  reviewRequestedAt
+  draft {
+    id
+  }
+  pending {
+    id
+    publishedAt
+  }
+  published {
+    id
+    publishedAt
+  }
+  nextOccurrence {
+    id
+    dateFrom
+    dateTo
+  }
+  upcomingOccurrenceCount
+  place {
+    id
+    name
+  }
+  organization {
+    id
+    name
+  }
+  viewerCan {
+    update
+    publish
+    delete
+    duplicate
+  }
+}
+
+query EditorEventList(
+  $filter: EventFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: EventSort
+) {
+  events(filter: $filter, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...EditorEventListItem
+    }
+
+    totalCount
+  }
+}
+
+query EventReviewQueueCount {
+  events(filter: { reviewRequested: true }, take: 1) {
+    totalCount
+  }
+}
+
+mutation UnpublishEvent($id: String!) {
+  unpublishEvent(id: $id) {
+    ...EditorEventListItem
+  }
+}
+
+mutation DeleteEvent($id: String!) {
+  deleteEvent(id: $id) {
+    id
+  }
+}

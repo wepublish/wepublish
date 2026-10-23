@@ -951,7 +951,8 @@
       "goToNetwork": "Go to Network",
       "welcome": "Welcome to the dashboard!",
       "externalAppsInfo": "Shortcuts to tools your team uses alongside We.Publish. Admins manage them under «Apps».",
-      "networkContentInfo": "The latest articles from other media in the We.Publish network. You can take them over into your editor (import) and publish them on your website."
+      "networkContentInfo": "The latest articles from other media in the We.Publish network. You can take them over into your editor (import) and publish them on your website.",
+      "reviewQueue": "Review queue"
     },
     "dateTimePicker": {
       "yesterday": "Yesterday",
@@ -1653,7 +1654,8 @@
       "mailLog": "Sent emails",
       "communication": "Communication",
       "auditLog": "Audit log",
-      "language": "Language"
+      "language": "Language",
+      "agenda": "Agenda"
     },
     "navigation": {
       "overview": {
@@ -4135,7 +4137,14 @@
     },
     "listInput": {
       "dragToReorder": "Drag to change the order",
-      "add": "Add entry"
+      "add": "Add entry",
+      "announcements": {
+        "instructions": "To reorder, press Space or Enter on the handle, move with the arrow keys, then press Space or Enter again. Escape cancels.",
+        "start": "Picked up entry {{position}} of {{total}}.",
+        "over": "Moved to position {{position}} of {{total}}.",
+        "end": "Dropped at position {{position}} of {{total}}.",
+        "cancel": "Reordering cancelled, the order is unchanged."
+      }
     },
     "errorBoundary": {
       "title": "Something went wrong on this page",
@@ -4456,6 +4465,81 @@
         "heading": "Settings",
         "title": "Title",
         "titleHint": "Also the subject line of the Mailchimp draft. Takes effect on save."
+      }
+    },
+    "agenda": {
+      "status": {
+        "Confirmed": "Confirmed",
+        "Cancelled": "Cancelled",
+        "Postponed": "Postponed",
+        "SoldOut": "Sold out"
+      },
+      "publication": {
+        "draft": "Draft",
+        "pending": "Scheduled",
+        "published": "Published",
+        "reviewRequested": "Review requested",
+        "reviewRequestedAgo": "Review requested · {{time}}"
+      },
+      "list": {
+        "title": "Events",
+        "untitled": "Untitled event",
+        "name": "Name",
+        "nextDate": "Next date",
+        "venue": "Venue",
+        "organization": "Organisation",
+        "status": "Status",
+        "publication": "Publication",
+        "lastDate": "Last date",
+        "modified": "Last changed",
+        "noUpcomingDates": "No upcoming dates",
+        "moreDates_one": "+{{count}} more date",
+        "moreDates_other": "+{{count}} more dates",
+        "endsIn_one": "Ends in {{count}} day",
+        "endsIn_other": "Ends in {{count}} days",
+        "endsToday": "Ends today",
+        "endsInHint": "The last date of this weekly series is near. Add later dates so it stays in the agenda.",
+        "unpublish": "Unpublish",
+        "unpublishTitle": "Unpublish event?",
+        "unpublishBody": "“{{name}}” disappears from the public agenda. Its content stays as a draft.",
+        "confirmUnpublish": "Unpublish",
+        "deleteTitle": "Delete event?",
+        "deleteBody": "“{{name}}” and all its dates are deleted. This cannot be undone.",
+        "confirmDelete": "Delete event",
+        "filter": {
+          "search": "Search",
+          "organization": "Organisation",
+          "place": "Venue",
+          "tags": "Tags",
+          "status": "Status",
+          "publication": "Publication",
+          "dates": "Dates",
+          "ending": "End of run",
+          "endingAny": "Any",
+          "endingSoon": "Ending within 30 days",
+          "endingEnded": "Ended",
+          "reviewRequested": "Review requested"
+        },
+        "empty": {
+          "noEventsTitle": "No events yet",
+          "noEventsBody": "The agenda lists what happens: concerts, exhibitions, performances. Events appear here as soon as they are created.",
+          "noEventsMembershipHint": "Events of an organisation appear here once you are a member of it.",
+          "noMembershipTitle": "You are not a member of any organisation yet",
+          "noMembershipBody": "This list shows the events of your organisations and the events you own. Ask an agenda administrator to add you to your organisation.",
+          "noResultsTitle": "No events match these filters",
+          "noResultsSearch": "Nothing found for “{{search}}”.",
+          "clearFilters": "Clear filters",
+          "queueEmptyTitle": "Nothing waiting for review",
+          "queueEmptyBody": "Every event sent for review has been dealt with."
+        }
+      },
+      "reviewQueue": {
+        "title": "Review queue",
+        "info": "Drafts whose organisers asked for them to be checked and published, oldest first.",
+        "count_one": "{{count}} event awaiting review",
+        "count_other": "{{count}} events awaiting review",
+        "empty": "Nothing waiting for review",
+        "open": "Open queue"
       }
     }
   }
