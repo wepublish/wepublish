@@ -3119,6 +3119,105 @@ mutation each field belongs to.
 
 ---
 
+## D83 — One Save sends only what changed, and a partial failure keeps what was not saved
+
+Implements design 3 §4.1 and §10. Follows [D82](#d82--the-event-form-schema-reuses-the-shared-rules-and-splits-fields-into-facts-and-content).
+
+**Status.** Built in slice F stage 5. Awaiting Karl's confirmation.
+
+**Decision.**
+- The event editor (`libs/event/editor/src/lib/event-editor/`) has one Save button and no autosave.
+  Save compares the form with what was loaded (`event-form-mapping.ts`) and sends, in this order:
+  `updateEvent` with only the changed facts (the schedule always goes whole, and a non-explicit
+  schedule sends `dates: []` so old explicit dates do not linger), `updateEventContent` when the
+  name, print blurb, blocks or images changed, and `updateImage` for each image whose alt text
+  changed (with its focal point, because `updateImage` resets an omitted focal point to 0.5).
+  A new event is one `createEvent(input, content)`, then the alt texts, and the page is replaced by
+  `/events/edit/:id`.
+- An alt-text change alone is not a content change, so it creates no new revision.
+- When one part fails, the others are still sent. The page and the open drawer show what was saved,
+  what was not and the API's reason, and the form keeps the unsaved part dirty
+  (`defaultsAfterSave` moves only the saved groups into the form's defaults), so the next Save
+  retries only that.
+- A save that does not pass the form schema opens the Metadata tab with the first problem (or
+  focuses the name) and says that fields are marked; nothing is sent.
+- Publish, Ready for review and Withdraw save unsaved changes first and stop if that fails.
+
+**Why.** Facts go live on save (D24), so autosaving them would publish half-typed dates; sending
+only the changed facts also keeps a venue member who may edit a foreign event from resending fields
+the API checks separately (organisation, owner). Design 3 §10: a failed save never loses the draft.
+
+---
+
+## D84 — The event editor is the article editor's shell with four Metadata tabs kept in the address
+
+Implements design 3 §4.
+
+**Status.** Built in slice F stage 5. Awaiting Karl's confirmation.
+
+**Decision.**
+- Routes `/events/create` and `/events/edit/:id`, outside the sidebar layout as the article editor
+  is; the form is keyed by the id, so duplicating or creating loads the new event fresh.
+- The canvas is a fixed name field (`n/130`) above the restricted block list, with a description
+  counter (`n/6,400`). Blocks outside the four (D70) are left off the canvas with a warning that
+  saving the text drops them; saving only facts keeps them.
+- The Metadata drawer has **General** (print blurb, images, status, venue, tags, audience,
+  organisation, owner, show in print), **Dates** (the date editor and 20 upcoming dates at a time),
+  **Pricing** (prices, special rate, ticket link) and **Social Media** (slug, SEO and social fields,
+  social image, previews). Properties and Tracking are left out: events have neither. The open tab
+  is the `tab` query parameter, so `?tab=dates&focus=dateTo` (the list's **Extend**) opens Dates
+  with the end date focused.
+- The top bar has the state chip (Draft / Published / Published · unpublished changes / Scheduled
+  for … / Review requested · …), "Last saved" (the later of the event's change and its latest
+  revision), Metadata, Duplicate (when `viewerCan.duplicate`), Save, and the publication control.
+  There is no History or Preview yet: no event revision listing exists, and the website's event page
+  does not read drafts.
+- A read-only event (`viewerCan.update` false) says who can change it and hides Save; the drawer
+  fields are disabled.
+- Publish opens a dialog: now, or a moment typed as Swiss time (refused in the past). Publish is
+  disabled while there is nothing new to publish.
+- The list's names link to the editor; the list gains **New event**, a **Duplicate** row action and
+  **Extend** beside "Ends in N days"; the empty list offers **Create your first event**; the
+  activity feed links new events again; the command palette has **Create event**.
+
+**Why.** Design 3 §4: an event is content and is edited like an article. The address-held tab
+makes Extend a plain link and survives a reload.
+
+---
+
+## D85 — Ready for review and Withdraw request follow `viewerCan`, and name who can publish
+
+Implements design 3 §7 and [D5](#d5--ready-for-review-is-an-explicit-action-backed-by-a-field-on-the-event) / [D58](#d58--a-review-request-is-a-state-stamped-once).
+
+**Status.** Built in slice F stage 5. Awaiting Karl's confirmation.
+
+**Decision.**
+- Nothing renders while `viewerCan` is unknown. With `viewerCan.publish` the control offers
+  Publish (and Unpublish when the event is public). Without it, it offers **Ready for review** when
+  `viewerCan.requestReview` holds and **Withdraw request** when a request is pending and
+  `viewerCan.withdrawReview` holds.
+- The confirmation names who can then publish: the event's organisation, or "the agenda team" when
+  it has none. It promises no notification, because mail is slice E.
+- The state is repeated in a polite live region, so a screen reader hears "Review requested" or
+  "Draft" after the action.
+
+**Why.** D58 makes publishing a per-event rule, so the role alone cannot decide which button shows.
+Promising a notification before slice E sends one would be a lie.
+
+---
+
+## D86 — The SEO preview treats an event like an article
+
+**Status.** Built in slice F stage 5. Awaiting Karl's confirmation.
+
+**Decision.** `SeoContentType.Event` previews the SEO title before the name and the SEO description
+before the print blurb, as articles do. Pages ignore their SEO fields; events do not.
+
+**Why.** The website's event page does not render SEO fields yet; when it does, it should prefer
+them, as the article page does.
+
+---
+
 ## Open questions
 
 Recorded as they surface; resolved ones become decisions above.
@@ -3314,3 +3413,10 @@ Slice F builds the agenda editor. Its build choices are recorded as decisions fr
     held by the editor only (should the API refuse it too?).
 15. [D81](#d81--on-a-new-event-the-organisation-picker-offers-your-own-organisations-and-the-owner-is-you): the organisation and owner pickers on a new event.
 16. [D82](#d82--the-event-form-schema-reuses-the-shared-rules-and-splits-fields-into-facts-and-content): `showInPrint` checked by default on new events, as in BKa.
+17. [D83](#d83--one-save-sends-only-what-changed-and-a-partial-failure-keeps-what-was-not-saved): one Save that sends only the changed facts and content, no autosave for events, and
+    unsaved changes saved before Publish or Ready for review.
+18. [D84](#d84--the-event-editor-is-the-article-editors-shell-with-four-metadata-tabs-kept-in-the-address): no Properties, Tracking, History or Preview for events for now; blocks outside the four
+    left off the canvas and dropped on the next text save.
+19. [D85](#d85--ready-for-review-and-withdraw-request-follow-viewercan-and-name-who-can-publish): the review confirmation names the organisation (or the agenda team) and promises no
+    notification until slice E.
+20. [D86](#d86--the-seo-preview-treats-an-event-like-an-article): event SEO fields preferred over name and print blurb, as for articles.

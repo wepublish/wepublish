@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { EditorEventListItemFragment } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { MdWarningAmber } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 import { eventExpiry } from './event-expiry';
 import { formatEventDateTime } from './event-format';
@@ -32,9 +33,10 @@ export interface EventNextDateProps {
     'nextOccurrence' | 'upcomingOccurrenceCount' | 'scheduleType' | 'lastDateAt'
   >;
   now: Date;
+  extendTo?: string;
 }
 
-export function EventNextDate({ event, now }: EventNextDateProps) {
+export function EventNextDate({ event, now, extendTo }: EventNextDateProps) {
   const { t, i18n } = useTranslation();
   const expiry = eventExpiry(event, now);
   const more = event.upcomingOccurrenceCount - 1;
@@ -57,6 +59,12 @@ export function EventNextDate({ event, now }: EventNextDateProps) {
           {expiry.daysLeft === 0 ?
             t('agenda.list.endsToday')
           : t('agenda.list.endsIn', { count: expiry.daysLeft })}
+          {extendTo && (
+            <>
+              {' · '}
+              <Link to={extendTo}>{t('agenda.list.extend')}</Link>
+            </>
+          )}
         </Expiry>
       )}
     </Wrapper>

@@ -31,6 +31,24 @@ const renderEmpty = (
 };
 
 describe('EventListEmptyState', () => {
+  it('offers to create the first event to someone who may', () => {
+    renderEmpty({ canCreate: true });
+
+    expect(
+      screen
+        .getByRole('link', { name: 'agenda.list.empty.createFirst' })
+        .getAttribute('href')
+    ).toBe('/events/create');
+  });
+
+  it('offers no create action to someone who may not', () => {
+    renderEmpty({ canCreate: false });
+
+    expect(
+      screen.queryByRole('link', { name: 'agenda.list.empty.createFirst' })
+    ).toBeNull();
+  });
+
   it('tells someone without an organisation who cannot file events why the list is empty', () => {
     renderEmpty({ hasMembership: false, canCreate: false });
 

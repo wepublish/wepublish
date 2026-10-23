@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import {
   DeleteEventDocument,
+  DuplicateEventDocument,
   EditorEventListDocument,
   EditorEventListItemFragment,
   TinyOrganizationListDocument,
@@ -27,7 +28,9 @@ import {
   humanizeError,
   IconButton,
   IconButtonTooltip,
+  Link,
   ListColumn,
+  ListViewActions,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
@@ -39,8 +42,12 @@ import {
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdDelete, MdUnpublished } from 'react-icons/md';
-import { useSearchParams } from 'react-router-dom';
+import { MdAdd, MdContentCopy, MdDelete, MdUnpublished } from 'react-icons/md';
+import {
+  Link as RouterLink,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 
 import { formatEventDateTime } from './event-format';
 import { EventListEmptyState } from './event-list-empty-state';
@@ -54,6 +61,7 @@ import {
 } from './event-list-filter';
 import { EventListFilters } from './event-list-filters';
 import { EventNextDate } from './event-next-date';
+import { eventEditPath, eventExtendPath } from './event-paths';
 import { EventPublicationChip } from './event-publication-chip';
 import { EventStackList, shouldShowEventStack } from './event-stack-list';
 
@@ -66,6 +74,7 @@ const DEFAULT_SORT = { sortField: 'modifiedAt', sortOrder: 'desc' } as const;
 
 function EventList() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [now] = useState(() => new Date());
   const [searchParams, setSearchParams] = useSearchParams();
   const view = useListViewState<EventListFilterState>('events', {
@@ -108,6 +117,9 @@ function EventList() {
     UnpublishEventDocument
   );
   const [deleteEvent, { loading: deleting }] = useMutation(DeleteEventDocument);
+  const [duplicateEvent, { loading: duplicating }] = useMutation(
+    DuplicateEventDocument
+  );
 
   const events = data?.events.nodes ?? [];
   const totalCount = data?.events.totalCount ?? 0;
@@ -166,6 +178,18 @@ function EventList() {
     setPendingAction(null);
   };
 
+  const duplicate = async (event: EditorEventListItemFragment) => {
+    try {
+      const { data } = await duplicateEvent({ variables: { id: event.id } });
+
+      if (data?.duplicateEvent) {
+        navigate(eventEditPath(data.duplicateEvent.id));
+      }
+    } catch (error) {
+      enqueueSnackbar(humanizeError(error as Error), { variant: 'error' });
+    }
+  };
+
   const emptyState = (
     <EventListEmptyState
       filter={filter}
@@ -182,7 +206,11 @@ function EventList() {
       label: t('agenda.list.name'),
       width: 220,
       alwaysVisible: true,
-      render: event => event.name || t('agenda.list.untitled'),
+      render: event => (
+        <Link to={eventEditPath(event.id)}>
+          {event.name || t('agenda.list.untitled')}
+        </Link>
+      ),
       exportValue: event => event.name ?? '',
     },
     {
@@ -193,6 +221,9 @@ function EventList() {
         <EventNextDate
           event={event}
           now={now}
+          extendTo={
+            event.viewerCan?.update ? eventExtendPath(event.id) : undefined
+          }
         />
       ),
       exportValue: event =>
@@ -263,6 +294,19 @@ function EventList() {
         <ListViewHeader>
           <PageTitle>{t('agenda.list.title')}</PageTitle>
         </ListViewHeader>
+
+        {canCreate && (
+          <ListViewActions>
+            <Button
+              component={RouterLink}
+              to="/events/create"
+              variant="contained"
+              startIcon={<MdAdd />}
+            >
+              {t('agenda.list.newEvent')}
+            </Button>
+          </ListViewActions>
+        )}
       </ListViewContainer>
 
       {showStack ?
@@ -300,11 +344,24 @@ function EventList() {
               {
                 id: 'action',
                 label: t('action'),
-                width: 100,
+                width: 132,
                 align: 'center',
                 fixed: true,
                 render: event => (
                   <>
+                    {event.viewerCan?.duplicate && (
+                      <IconButtonTooltip caption={t('agenda.list.duplicate')}>
+                        <IconButton
+                          size="small"
+                          aria-label={t('agenda.list.duplicate')}
+                          disabled={duplicating}
+                          onClick={() => duplicate(event)}
+                        >
+                          <MdContentCopy />
+                        </IconButton>
+                      </IconButtonTooltip>
+                    )}
+
                     {event.viewerCan?.publish &&
                       (event.published || event.pending) && (
                         <IconButtonTooltip caption={t('agenda.list.unpublish')}>

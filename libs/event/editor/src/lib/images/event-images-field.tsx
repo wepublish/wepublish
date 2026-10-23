@@ -50,13 +50,15 @@ const withOneMain = (rows: ListValue<EventImageForm>[]) => {
   }));
 };
 
-const imageRefOf = ({
+export const imageRefOf = ({
   id,
   title,
   filename,
   thumbURL,
   squareURL,
   description,
+  focalPointX,
+  focalPointY,
 }: FullImageFragment): EventImageRef => ({
   id,
   title,
@@ -64,6 +66,8 @@ const imageRefOf = ({
   thumbURL,
   squareURL,
   description,
+  focalPointX,
+  focalPointY,
 });
 
 const RowLayout = styled.div`

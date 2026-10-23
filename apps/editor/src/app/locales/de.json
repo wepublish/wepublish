@@ -4530,8 +4530,12 @@
           "noResultsSearch": "Nichts gefunden für «{{search}}».",
           "clearFilters": "Filter zurücksetzen",
           "queueEmptyTitle": "Nichts wartet auf Prüfung",
-          "queueEmptyBody": "Alle zur Prüfung eingereichten Events sind erledigt."
-        }
+          "queueEmptyBody": "Alle zur Prüfung eingereichten Events sind erledigt.",
+          "createFirst": "Ersten Anlass erstellen"
+        },
+        "newEvent": "Neuer Anlass",
+        "duplicate": "Duplizieren",
+        "extend": "Verlängern"
       },
       "reviewQueue": {
         "title": "Zur Prüfung",
@@ -4663,6 +4667,107 @@
           "tagsDistinct": "Wähle jeden Tag nur einmal.",
           "ratePrice": "Gib einen Preis an oder entferne die Zeile.",
           "ticketingUrl": "Der Link muss mit einem davon beginnen: {{schemes}}."
+        }
+      },
+      "editor": {
+        "name": "Name",
+        "namePlaceholder": "Wie heisst der Anlass?",
+        "nameCount": "{{current}}/{{max}} Zeichen",
+        "descriptionCount": "Beschreibung: {{current}}/{{max}} Zeichen",
+        "metadata": "Metadaten",
+        "back": "Zurück zu den Anlässen",
+        "duplicate": "Duplizieren",
+        "lastChanged": "Zuletzt gespeichert {{date}}",
+        "readOnly": "Sie können diesen Anlass ansehen, aber nicht ändern. Das können Mitglieder von {{organization}} mit Bearbeitungsrechten und die Agenda-Administration.",
+        "agendaTeam": "das Agenda-Team",
+        "invalid": "Einige Felder brauchen Ihre Aufmerksamkeit, bevor der Anlass gespeichert werden kann. Sie sind rot markiert.",
+        "droppedBlocks_one": "Die Beschreibung enthält {{count}} Block, den die Agenda nicht anzeigen kann. Er wird hier nicht gezeigt und beim nächsten Speichern des Textes entfernt.",
+        "droppedBlocks_other": "Die Beschreibung enthält {{count}} Blöcke, die die Agenda nicht anzeigen kann. Sie werden hier nicht gezeigt und beim nächsten Speichern des Textes entfernt.",
+        "saved": "Anlass gespeichert",
+        "created": "Anlass erstellt",
+        "createdWithProblems": "Der Anlass wurde erstellt, aber nicht alles konnte gespeichert werden: {{problems}}",
+        "saveResult": {
+          "saved": "Gespeichert: {{groups}}.",
+          "notSaved": "Nicht gespeichert: {{groups}}.",
+          "kept": "Ihre Änderungen sind noch da. Beheben Sie das Problem und speichern Sie erneut."
+        },
+        "saveGroups": {
+          "facts": "Daten, Spielort und weitere Angaben",
+          "content": "Name, Text und Bilder",
+          "altText": "Alternativtexte"
+        },
+        "tabs": {
+          "general": "Allgemein",
+          "dates": "Daten",
+          "pricing": "Preise",
+          "social": "Social Media"
+        },
+        "sections": {
+          "content": "Text und Bilder",
+          "facts": "Angaben",
+          "search": "Suchmaschinen",
+          "social": "Social Media"
+        },
+        "printDescription": "Kurztext für den Druck",
+        "printDescriptionHelp": "Ein kurzer Text für die gedruckte Agenda. {{current}}/{{max}} Zeichen",
+        "status": "Status",
+        "statusHelp": "Ob der Anlass noch stattfindet. Ein abgesagter Anlass bleibt sichtbar und ist als abgesagt markiert.",
+        "showInPrint": "In der gedruckten Agenda zeigen",
+        "ticketingUrl": "Ticket-Link",
+        "ticketingUrlHelp": "Wo man Tickets kauft. Beginnt mit {{schemes}}.",
+        "social": {
+          "slug": "Slug",
+          "slugHelp": "Der letzte Teil der Adresse des Anlasses. Leer lassen, um ihn aus dem Namen zu bilden.",
+          "seoTitle": "SEO-Titel",
+          "seoTitleHelp": "Wird von Suchmaschinen gezeigt. Leer lassen, um den Namen zu verwenden.",
+          "seoDescription": "SEO-Beschreibung",
+          "seoDescriptionHelp": "Wird von Suchmaschinen gezeigt. Leer lassen, um den Kurztext zu verwenden.",
+          "socialMediaTitle": "Social-Media-Titel",
+          "socialMediaTitleHelp": "Wird beim Teilen gezeigt. Leer lassen, um den SEO-Titel oder den Namen zu verwenden.",
+          "socialMediaDescription": "Social-Media-Beschreibung",
+          "socialMediaDescriptionHelp": "Wird beim Teilen gezeigt. Leer lassen, um die SEO-Beschreibung oder den Kurztext zu verwenden.",
+          "socialMediaImage": "Social-Media-Bild"
+        },
+        "state": {
+          "new": "Neuer Anlass",
+          "scheduled": "Geplant für {{date}}",
+          "publishedWithDraft": "Publiziert · unveröffentlichte Änderungen"
+        },
+        "publish": {
+          "button": "Publizieren",
+          "title": "Anlass publizieren",
+          "body": "Name, Text und Bilder gehen live. Daten und Angaben sind bereits live.",
+          "now": "Jetzt",
+          "later": "Zu einem späteren Zeitpunkt",
+          "at": "Datum und Uhrzeit (Schweizer Zeit)",
+          "atHelp": "Der Anlass erscheint zu diesem Zeitpunkt in der öffentlichen Agenda.",
+          "inThePast": "Dieser Zeitpunkt ist vorbei. Wählen Sie einen in der Zukunft oder publizieren Sie jetzt.",
+          "confirm": "Publizieren",
+          "published": "Anlass publiziert",
+          "scheduled": "Publikation geplant",
+          "nothingNew": "Nichts Neues zu publizieren. Ändern Sie zuerst Name, Text oder Bilder."
+        },
+        "unpublish": {
+          "button": "Zurückziehen",
+          "title": "Anlass zurückziehen?",
+          "body": "Der Anlass verschwindet aus der öffentlichen Agenda. Sein Inhalt bleibt als Entwurf erhalten.",
+          "confirm": "Zurückziehen",
+          "done": "Anlass zurückgezogen"
+        },
+        "review": {
+          "request": "Bereit zur Prüfung",
+          "withdraw": "Anfrage zurückziehen",
+          "confirmTitle": "Anlass zur Prüfung senden?",
+          "confirmBody": "{{organization}} kann den Anlass dann prüfen und publizieren. Bis dahin bleibt er ein Entwurf, und Sie können die Anfrage zurückziehen.",
+          "confirmBodyAgendaTeam": "Das Agenda-Team kann den Anlass dann prüfen und publizieren. Bis dahin bleibt er ein Entwurf, und Sie können die Anfrage zurückziehen.",
+          "confirm": "Zur Prüfung senden",
+          "requested": "Prüfung angefragt",
+          "withdrawn": "Anfrage zurückgezogen"
+        },
+        "occurrences": {
+          "title_one": "{{count}} kommendes Datum",
+          "title_other": "{{count}} kommende Daten",
+          "none": "Kein Datum liegt in der Zukunft. Gespeicherte Daten erscheinen hier."
         }
       }
     }

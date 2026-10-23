@@ -91,4 +91,19 @@ describe('EventStackList', () => {
 
     expect(screen.getByText('agenda.list.untitled')).toBeTruthy();
   });
+
+  it('links each event to its editor', () => {
+    render(
+      renderWith(
+        <EventStackList
+          events={[listItem()]}
+          now={new Date('2026-10-23T08:00:00.000Z')}
+        />
+      )
+    );
+
+    expect(
+      screen.getByRole('link', { name: 'Qui-vive' }).getAttribute('href')
+    ).toBe('/events/edit/event-1');
+  });
 });

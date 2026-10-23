@@ -320,6 +320,7 @@ const toActivityItem = (action: Action, t: TFunction): ActivityItem | null => {
       return {
         icon: <MdEvent />,
         labelKey: 'dashboard.newEvent',
+        link: `/events/edit/${action.event.id}`,
         date: action.date,
         title: action.event.name ?? undefined,
         excerpt: action.event.location ?? undefined,

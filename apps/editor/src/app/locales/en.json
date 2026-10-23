@@ -4530,8 +4530,12 @@
           "noResultsSearch": "Nothing found for “{{search}}”.",
           "clearFilters": "Clear filters",
           "queueEmptyTitle": "Nothing waiting for review",
-          "queueEmptyBody": "Every event sent for review has been dealt with."
-        }
+          "queueEmptyBody": "Every event sent for review has been dealt with.",
+          "createFirst": "Create your first event"
+        },
+        "newEvent": "New event",
+        "duplicate": "Duplicate",
+        "extend": "Extend"
       },
       "reviewQueue": {
         "title": "Review queue",
@@ -4663,6 +4667,107 @@
           "tagsDistinct": "Pick each tag only once.",
           "ratePrice": "Enter a price, or remove the row.",
           "ticketingUrl": "Start the link with one of: {{schemes}}."
+        }
+      },
+      "editor": {
+        "name": "Name",
+        "namePlaceholder": "What is the event called?",
+        "nameCount": "{{current}}/{{max}} characters",
+        "descriptionCount": "Description: {{current}}/{{max}} characters",
+        "metadata": "Metadata",
+        "back": "Back to the events",
+        "duplicate": "Duplicate",
+        "lastChanged": "Last saved {{date}}",
+        "readOnly": "You can look at this event but not change it. Members of {{organization}} with editing rights can, and so can the agenda administrators.",
+        "agendaTeam": "the agenda team",
+        "invalid": "Some fields need your attention before the event can be saved. They are marked in red.",
+        "droppedBlocks_one": "The description holds {{count}} block the agenda cannot show. It is not shown here and is removed the next time the text is saved.",
+        "droppedBlocks_other": "The description holds {{count}} blocks the agenda cannot show. They are not shown here and are removed the next time the text is saved.",
+        "saved": "Event saved",
+        "created": "Event created",
+        "createdWithProblems": "The event was created, but not everything could be saved: {{problems}}",
+        "saveResult": {
+          "saved": "Saved: {{groups}}.",
+          "notSaved": "Not saved: {{groups}}.",
+          "kept": "Your changes are still here. Fix the problem and save again."
+        },
+        "saveGroups": {
+          "facts": "dates, venue and other details",
+          "content": "name, text and images",
+          "altText": "alt texts"
+        },
+        "tabs": {
+          "general": "General",
+          "dates": "Dates",
+          "pricing": "Pricing",
+          "social": "Social Media"
+        },
+        "sections": {
+          "content": "Text and images",
+          "facts": "Details",
+          "search": "Search engines",
+          "social": "Social media"
+        },
+        "printDescription": "Print blurb",
+        "printDescriptionHelp": "A short text for the printed agenda. {{current}}/{{max}} characters",
+        "status": "Status",
+        "statusHelp": "Whether the event still takes place. A cancelled event stays visible, marked as cancelled.",
+        "showInPrint": "Show in the printed agenda",
+        "ticketingUrl": "Ticket link",
+        "ticketingUrlHelp": "Where people buy tickets. Starts with {{schemes}}.",
+        "social": {
+          "slug": "Slug",
+          "slugHelp": "The last part of the event’s address. Leave empty to have one made from the name.",
+          "seoTitle": "SEO title",
+          "seoTitleHelp": "Shown by search engines. Leave empty to use the name.",
+          "seoDescription": "SEO description",
+          "seoDescriptionHelp": "Shown by search engines. Leave empty to use the print blurb.",
+          "socialMediaTitle": "Social media title",
+          "socialMediaTitleHelp": "Shown when the event is shared. Leave empty to use the SEO title or the name.",
+          "socialMediaDescription": "Social media description",
+          "socialMediaDescriptionHelp": "Shown when the event is shared. Leave empty to use the SEO description or the print blurb.",
+          "socialMediaImage": "Social media image"
+        },
+        "state": {
+          "new": "New event",
+          "scheduled": "Scheduled for {{date}}",
+          "publishedWithDraft": "Published · unpublished changes"
+        },
+        "publish": {
+          "button": "Publish",
+          "title": "Publish event",
+          "body": "The name, text and images go live. Dates and details are live already.",
+          "now": "Now",
+          "later": "At a later moment",
+          "at": "Date and time (Swiss time)",
+          "atHelp": "The event appears in the public agenda at this moment.",
+          "inThePast": "This moment has passed. Choose one in the future, or publish now.",
+          "confirm": "Publish",
+          "published": "Event published",
+          "scheduled": "Publication scheduled",
+          "nothingNew": "Nothing new to publish. Change the name, text or images first."
+        },
+        "unpublish": {
+          "button": "Unpublish",
+          "title": "Unpublish event?",
+          "body": "The event disappears from the public agenda. Its content stays as a draft.",
+          "confirm": "Unpublish",
+          "done": "Event unpublished"
+        },
+        "review": {
+          "request": "Ready for review",
+          "withdraw": "Withdraw request",
+          "confirmTitle": "Send the event for review?",
+          "confirmBody": "{{organization}} can then check the event and publish it. It stays a draft until then, and you can withdraw the request.",
+          "confirmBodyAgendaTeam": "The agenda team can then check the event and publish it. It stays a draft until then, and you can withdraw the request.",
+          "confirm": "Send for review",
+          "requested": "Review requested",
+          "withdrawn": "Review request withdrawn"
+        },
+        "occurrences": {
+          "title_one": "{{count}} upcoming date",
+          "title_other": "{{count}} upcoming dates",
+          "none": "No date lies ahead. Saved dates show here."
         }
       }
     }

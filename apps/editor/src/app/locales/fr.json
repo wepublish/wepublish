@@ -4530,8 +4530,12 @@
           "noResultsSearch": "Aucun résultat pour « {{search}} ».",
           "clearFilters": "Effacer les filtres",
           "queueEmptyTitle": "Rien en attente de validation",
-          "queueEmptyBody": "Tous les événements soumis à validation ont été traités."
-        }
+          "queueEmptyBody": "Tous les événements soumis à validation ont été traités.",
+          "createFirst": "Créer votre premier événement"
+        },
+        "newEvent": "Nouvel événement",
+        "duplicate": "Dupliquer",
+        "extend": "Prolonger"
       },
       "reviewQueue": {
         "title": "À valider",
@@ -4663,6 +4667,107 @@
           "tagsDistinct": "Choisissez chaque tag une seule fois.",
           "ratePrice": "Indiquez un prix ou supprimez la ligne.",
           "ticketingUrl": "Le lien doit commencer par l’un de ceux-ci : {{schemes}}."
+        }
+      },
+      "editor": {
+        "name": "Nom",
+        "namePlaceholder": "Comment s’appelle l’événement ?",
+        "nameCount": "{{current}}/{{max}} caractères",
+        "descriptionCount": "Description : {{current}}/{{max}} caractères",
+        "metadata": "Métadonnées",
+        "back": "Retour aux événements",
+        "duplicate": "Dupliquer",
+        "lastChanged": "Dernier enregistrement {{date}}",
+        "readOnly": "Vous pouvez consulter cet événement, mais pas le modifier. Les membres de {{organization}} ayant les droits d’édition le peuvent, tout comme l’administration de l’agenda.",
+        "agendaTeam": "l’équipe de l’agenda",
+        "invalid": "Certains champs demandent votre attention avant que l’événement puisse être enregistré. Ils sont marqués en rouge.",
+        "droppedBlocks_one": "La description contient {{count}} bloc que l’agenda ne peut pas afficher. Il n’est pas montré ici et sera supprimé au prochain enregistrement du texte.",
+        "droppedBlocks_other": "La description contient {{count}} blocs que l’agenda ne peut pas afficher. Ils ne sont pas montrés ici et seront supprimés au prochain enregistrement du texte.",
+        "saved": "Événement enregistré",
+        "created": "Événement créé",
+        "createdWithProblems": "L’événement a été créé, mais tout n’a pas pu être enregistré : {{problems}}",
+        "saveResult": {
+          "saved": "Enregistré : {{groups}}.",
+          "notSaved": "Non enregistré : {{groups}}.",
+          "kept": "Vos modifications sont toujours là. Corrigez le problème et enregistrez à nouveau."
+        },
+        "saveGroups": {
+          "facts": "dates, lieu et autres informations",
+          "content": "nom, texte et images",
+          "altText": "textes alternatifs"
+        },
+        "tabs": {
+          "general": "Général",
+          "dates": "Dates",
+          "pricing": "Prix",
+          "social": "Réseaux sociaux"
+        },
+        "sections": {
+          "content": "Texte et images",
+          "facts": "Informations",
+          "search": "Moteurs de recherche",
+          "social": "Réseaux sociaux"
+        },
+        "printDescription": "Texte court pour l’impression",
+        "printDescriptionHelp": "Un texte court pour l’agenda imprimé. {{current}}/{{max}} caractères",
+        "status": "Statut",
+        "statusHelp": "Si l’événement a toujours lieu. Un événement annulé reste visible et est marqué comme annulé.",
+        "showInPrint": "Afficher dans l’agenda imprimé",
+        "ticketingUrl": "Lien de billetterie",
+        "ticketingUrlHelp": "Où acheter des billets. Commence par {{schemes}}.",
+        "social": {
+          "slug": "Slug",
+          "slugHelp": "La dernière partie de l’adresse de l’événement. Laisser vide pour la former à partir du nom.",
+          "seoTitle": "Titre SEO",
+          "seoTitleHelp": "Affiché par les moteurs de recherche. Laisser vide pour utiliser le nom.",
+          "seoDescription": "Description SEO",
+          "seoDescriptionHelp": "Affichée par les moteurs de recherche. Laisser vide pour utiliser le texte court.",
+          "socialMediaTitle": "Titre pour les réseaux sociaux",
+          "socialMediaTitleHelp": "Affiché lors d’un partage. Laisser vide pour utiliser le titre SEO ou le nom.",
+          "socialMediaDescription": "Description pour les réseaux sociaux",
+          "socialMediaDescriptionHelp": "Affichée lors d’un partage. Laisser vide pour utiliser la description SEO ou le texte court.",
+          "socialMediaImage": "Image pour les réseaux sociaux"
+        },
+        "state": {
+          "new": "Nouvel événement",
+          "scheduled": "Prévu pour le {{date}}",
+          "publishedWithDraft": "Publié · modifications non publiées"
+        },
+        "publish": {
+          "button": "Publier",
+          "title": "Publier l’événement",
+          "body": "Le nom, le texte et les images sont mis en ligne. Les dates et les informations le sont déjà.",
+          "now": "Maintenant",
+          "later": "À un moment ultérieur",
+          "at": "Date et heure (heure suisse)",
+          "atHelp": "L’événement apparaît dans l’agenda public à ce moment.",
+          "inThePast": "Ce moment est passé. Choisissez-en un dans le futur, ou publiez maintenant.",
+          "confirm": "Publier",
+          "published": "Événement publié",
+          "scheduled": "Publication prévue",
+          "nothingNew": "Rien de nouveau à publier. Modifiez d’abord le nom, le texte ou les images."
+        },
+        "unpublish": {
+          "button": "Dépublier",
+          "title": "Dépublier l’événement ?",
+          "body": "L’événement disparaît de l’agenda public. Son contenu reste en brouillon.",
+          "confirm": "Dépublier",
+          "done": "Événement dépublié"
+        },
+        "review": {
+          "request": "Prêt pour relecture",
+          "withdraw": "Retirer la demande",
+          "confirmTitle": "Envoyer l’événement en relecture ?",
+          "confirmBody": "{{organization}} pourra alors vérifier l’événement et le publier. D’ici là, il reste un brouillon, et vous pouvez retirer la demande.",
+          "confirmBodyAgendaTeam": "L’équipe de l’agenda pourra alors vérifier l’événement et le publier. D’ici là, il reste un brouillon, et vous pouvez retirer la demande.",
+          "confirm": "Envoyer en relecture",
+          "requested": "Relecture demandée",
+          "withdrawn": "Demande de relecture retirée"
+        },
+        "occurrences": {
+          "title_one": "{{count}} date à venir",
+          "title_other": "{{count}} dates à venir",
+          "none": "Aucune date à venir. Les dates enregistrées apparaissent ici."
         }
       }
     }

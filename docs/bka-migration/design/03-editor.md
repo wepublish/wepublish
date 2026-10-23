@@ -28,6 +28,12 @@ route: the date editor (§5), the images field (§6), prices and special rate, t
 organisation and owner, the restricted block map (§4.2) and the form schema
 ([D79](../decisions.md) to [D82](../decisions.md)).
 
+Stage 5 mounted them: the event editor at `/events/create` and `/events/edit/:id` with the name and
+restricted canvas, the Metadata drawer (General, Dates, Pricing, Social Media), one Save that sends
+only what changed, publish / publish at / unpublish, Ready for review and Withdraw request, and
+Duplicate. The list gained its links, New event, Duplicate and Extend
+([D83](../decisions.md) to [D86](../decisions.md)). History and Preview are not built yet.
+
 ---
 
 ## 1. Who uses this, and what for

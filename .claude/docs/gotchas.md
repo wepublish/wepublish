@@ -1062,6 +1062,16 @@ gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
 
 ---
 
+### ⚠️ `updateImage` resets an omitted focal point to the centre
+
+`focalPointX` and `focalPointY` default to `0.5` in the GraphQL signature, so a
+mutation that only means to change `description` (the event editor's alt text)
+silently moves the focal point of every article using that image. Send the
+image's current focal point along, as `UpdateEventImageAltText` does.
+
+Pinned by `libs/event/editor/src/lib/event-editor/event-save.spec.ts` (the alt
+text update carries the focal point). Nothing guards other callers.
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell _why_ the obvious

@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import { EditorEventListItemFragment } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import { EventNextDate } from './event-next-date';
+import { eventEditPath } from './event-paths';
 import { EventPublicationChip } from './event-publication-chip';
 
 export const EVENT_STACK_LIMIT = 10;
@@ -70,7 +72,11 @@ export function EventStackList({ events, now }: EventStackListProps) {
     <Stack>
       {events.map(event => (
         <Item key={event.id}>
-          <Name>{event.name || t('agenda.list.untitled')}</Name>
+          <Name>
+            <Link to={eventEditPath(event.id)}>
+              {event.name || t('agenda.list.untitled')}
+            </Link>
+          </Name>
           <EventPublicationChip
             event={event}
             now={now}

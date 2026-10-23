@@ -5,6 +5,46 @@ import { getDomain, getSeoPreviewData, SeoContentType } from './seoPreviewData';
 const image = (id: string) => ({ id }) as unknown as FullImageFragment;
 
 describe('getSeoPreviewData', () => {
+  describe('events', () => {
+    test('prefers the SEO fields, then the name and the print blurb', () => {
+      expect(
+        getSeoPreviewData(
+          SeoContentType.Event,
+          {
+            title: 'Qui-vive',
+            lead: 'Dance by Equilibre',
+            seoTitle: '',
+            seoDescription: '',
+            url: 'https://www.example.com/event/qui-vive',
+          },
+          { firstParagraph: 'First paragraph' }
+        )
+      ).toMatchObject({
+        title: 'Qui-vive',
+        description: 'Dance by Equilibre',
+        socialTitle: 'Qui-vive',
+        socialDescription: 'Dance by Equilibre',
+        domain: 'example.com',
+        ignoredFields: [],
+      });
+
+      expect(
+        getSeoPreviewData(
+          SeoContentType.Event,
+          {
+            title: 'Qui-vive',
+            seoTitle: 'Qui-vive in Fribourg',
+            seoDescription: 'Tickets and dates',
+          },
+          {}
+        )
+      ).toMatchObject({
+        title: 'Qui-vive in Fribourg',
+        description: 'Tickets and dates',
+      });
+    });
+  });
+
   describe('articles', () => {
     test('prefers the SEO and social media fields like the website', () => {
       expect(

@@ -9,12 +9,23 @@ const LOCALES: Record<string, string> = {
 const localeOf = (language: string) =>
   LOCALES[language.split('-')[0]] ?? LOCALES['en'];
 
+export const formatEventNumber = (value: number, language: string) =>
+  new Intl.NumberFormat(localeOf(language)).format(value);
+
 export const formatEventDateTime = (date: string | Date, language: string) =>
   new Intl.DateTimeFormat(localeOf(language), {
     timeZone: EVENT_TIME_ZONE,
     weekday: 'short',
     day: 'numeric',
     month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).format(new Date(date));
+
+export const formatEventTime = (date: string | Date, language: string) =>
+  new Intl.DateTimeFormat(localeOf(language), {
+    timeZone: EVENT_TIME_ZONE,
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23',

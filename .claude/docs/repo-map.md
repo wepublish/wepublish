@@ -29,7 +29,7 @@ Example: `libs/event/schedule` (`@wepublish/event/schedule`), the BKa event
 occurrence expansion, the two-year schedule cap and the shared event input
 rules. `libs/event/api` holds the agenda's Nest modules (events, organisations,
 places, taxonomies) and `event-scope.ts`; `libs/event/editor` holds the agenda
-screens of the editor (the event list so far). There is no `libs/event/import` yet.
+screens of the editor (the event list and the event editor). There is no `libs/event/import` yet.
 
 **A change usually belongs in one layer.** A new GraphQL field is `api`. Rendering
 it is `website` or `editor`. If a change spans layers, do the `api` side first —

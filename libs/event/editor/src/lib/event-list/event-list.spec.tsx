@@ -8,7 +8,9 @@ import {
 } from '@testing-library/react';
 import {
   DeleteEventDocument,
+  DuplicateEventDocument,
   EditorEventListDocument,
+  EventScheduleType,
   EventSort,
   SortOrder,
   TinyOrganizationListDocument,
@@ -20,6 +22,7 @@ import {
   CanGetEvents,
   CanPublishEvent,
 } from '@wepublish/permissions';
+import { useLocation } from 'react-router-dom';
 import type { Mock } from 'vitest';
 
 import { EventList } from './event-list';
@@ -53,6 +56,7 @@ let events = [listItem()];
 let memberships = 1;
 const unpublishEvent = vi.fn();
 const deleteEvent = vi.fn();
+const duplicateEvent = vi.fn();
 const refetch = vi.fn();
 
 beforeEach(() => {
@@ -61,6 +65,9 @@ beforeEach(() => {
   memberships = 1;
   unpublishEvent.mockReset().mockResolvedValue({});
   deleteEvent.mockReset().mockResolvedValue({});
+  duplicateEvent
+    .mockReset()
+    .mockResolvedValue({ data: { duplicateEvent: { id: 'event-copy' } } });
   refetch.mockReset();
   mockedUseQuery.mockReset();
   mockedUseApolloClient.mockReturnValue({
@@ -87,16 +94,31 @@ beforeEach(() => {
   mockedUseMutation.mockImplementation(document => [
     document === UnpublishEventDocument ? unpublishEvent
     : document === DeleteEventDocument ? deleteEvent
+    : document === DuplicateEventDocument ? duplicateEvent
     : vi.fn(),
     { loading: false },
   ]);
 });
 
+function LocationProbe() {
+  const location = useLocation();
+
+  return <output data-testid="location">{location.pathname}</output>;
+}
+
 const renderList = ({
   permissions = EDITOR,
   route = '/events',
 }: { permissions?: string[]; route?: string } = {}) =>
-  render(renderWith(<EventList />, { permissions, route }));
+  render(
+    renderWith(
+      <>
+        <EventList />
+        <LocationProbe />
+      </>,
+      { permissions, route }
+    )
+  );
 
 const lastListCall = () =>
   mockedUseQuery.mock.calls
@@ -168,10 +190,82 @@ describe('EventList', () => {
     expect(screen.getByText('agenda.status.Confirmed')).toBeTruthy();
   });
 
-  it('does not link to the event editor, which does not exist yet', () => {
-    const { container } = renderList();
+  it('links each event name to its editor', () => {
+    renderList();
 
-    expect(container.querySelector('a[href*="/events/"]')).toBeNull();
+    expect(
+      screen.getByRole('link', { name: 'Qui-vive' }).getAttribute('href')
+    ).toBe('/events/edit/event-1');
+  });
+
+  it('offers New event to those who may create events', () => {
+    renderList();
+
+    expect(
+      screen
+        .getByRole('link', { name: 'agenda.list.newEvent' })
+        .getAttribute('href')
+    ).toBe('/events/create');
+  });
+
+  it('offers no New event without the permission to create', () => {
+    renderList({ permissions: [CanGetEvents.id, CanPublishEvent.id] });
+
+    expect(
+      screen.queryByRole('link', { name: 'agenda.list.newEvent' })
+    ).toBeNull();
+  });
+
+  it('duplicates an event and opens the copy', async () => {
+    renderList();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'agenda.list.duplicate' })
+    );
+
+    await waitFor(() =>
+      expect(duplicateEvent).toHaveBeenCalledWith({
+        variables: { id: 'event-1' },
+      })
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId('location')).toHaveTextContent(
+        '/events/edit/event-copy'
+      )
+    );
+  });
+
+  it('offers no duplicate where viewerCan says no', () => {
+    events = [
+      listItem({
+        viewerCan: { ...listItem().viewerCan!, duplicate: false },
+      }),
+    ];
+
+    renderList();
+
+    expect(
+      screen.queryByRole('button', { name: 'agenda.list.duplicate' })
+    ).toBeNull();
+  });
+
+  it('links an ending weekly series to its end date in the editor', () => {
+    events = [
+      listItem({
+        scheduleType: EventScheduleType.Weekly,
+        lastDateAt: new Date(
+          Date.now() + 12 * 24 * 60 * 60 * 1000
+        ).toISOString(),
+      }),
+    ];
+
+    renderList();
+
+    expect(
+      screen
+        .getByRole('link', { name: 'agenda.list.extend' })
+        .getAttribute('href')
+    ).toBe('/events/edit/event-1?tab=dates&focus=dateTo');
   });
 
   it('offers unpublish and delete where viewerCan allows them', () => {

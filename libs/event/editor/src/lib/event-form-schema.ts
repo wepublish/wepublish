@@ -3,6 +3,7 @@ import {
   EventScheduleType,
   EventSpecialRate,
   EventStatus,
+  FullImageFragment,
 } from '@wepublish/editor/api';
 import {
   blocksTextLength,
@@ -41,6 +42,8 @@ export type EventImageRef = {
   title?: string | null;
   filename?: string | null;
   description?: string | null;
+  focalPointX?: number | null;
+  focalPointY?: number | null;
 };
 
 export type EventOrganizationOption = { id: string; name: string };
@@ -220,7 +223,7 @@ export const eventFormSchema = (now: Date) =>
     seoDescription: z.string(),
     socialMediaTitle: z.string(),
     socialMediaDescription: z.string(),
-    socialMediaImage: z.custom<EventImageRef>().nullable(),
+    socialMediaImage: z.custom<FullImageFragment>().nullable(),
   });
 
 export type EventFormValues = z.infer<ReturnType<typeof eventFormSchema>>;

@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { MdAdd } from 'react-icons/md';
+import { Link as RouterLink } from 'react-router-dom';
 
 import {
   activeEventFilterCount,
@@ -91,6 +93,17 @@ export function EventListEmptyState({
       <Body>{t('agenda.list.empty.noEventsBody')}</Body>
       {withoutMembership && (
         <Body>{t('agenda.list.empty.noEventsMembershipHint')}</Body>
+      )}
+      {canCreate && (
+        <Button
+          component={RouterLink}
+          to="/events/create"
+          variant="contained"
+          size="small"
+          startIcon={<MdAdd />}
+        >
+          {t('agenda.list.empty.createFirst')}
+        </Button>
       )}
     </Wrapper>
   );

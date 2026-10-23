@@ -1,3 +1,4 @@
+export * from './lib/event-editor/event-editor';
 export * from './lib/event-list/event-list';
 export * from './lib/event-list/review-queue-card';
 export * from './lib/event-block-map';

@@ -99,7 +99,7 @@ describe('ActivityFeed', () => {
     );
   });
 
-  it('shows a new event without linking to an editor route that does not exist yet', () => {
+  it('shows a new event linking to its edit page', () => {
     mockedUseQuery.mockReturnValue({
       data: {
         actions: [
@@ -118,7 +118,9 @@ describe('ActivityFeed', () => {
     const [tile] = within(screen.getByRole('list')).getAllByRole('listitem');
 
     expect(within(tile).getByText('Dampfzentrale')).toBeTruthy();
-    expect(within(tile).queryByRole('link')).toBeNull();
+    expect(within(tile).getByRole('link').getAttribute('href')).toBe(
+      '/events/edit/event-1'
+    );
   });
 
   it('shows who commented and the comment, with the full text in a tooltip', async () => {
