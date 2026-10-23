@@ -200,13 +200,11 @@ const pageUrls = async (
       changefreq: 'daily',
       priority: 1,
     },
-    ...config.pageUrls.map(
-      (path): SitemapUrl => ({
-        loc: `${siteUrl}${path}`,
-        changefreq: 'weekly',
-        priority: 0.8,
-      })
-    ),
+    ...config.pageUrls.map((path): SitemapUrl => ({
+      loc: `${siteUrl}${path}`,
+      changefreq: 'weekly',
+      priority: 0.8,
+    })),
     ...pages
       .filter(({ slug }) => slug !== config.homepageSlug)
       .map(page => ({

@@ -146,8 +146,8 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: '/mitmachen',
-        destination: '/crowdfunding',
+        source: '/crowdfunding',
+        destination: '/mitmachen',
         permanent: false,
       },
     ];
