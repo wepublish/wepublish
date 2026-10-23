@@ -16,6 +16,7 @@ import {
   CanCreateCrowdfunding,
   CanCreateDiscountCode,
   CanCreateDocument,
+  CanCreateEvent,
   CanCreateExternalApp,
   CanCreateGoodie,
   CanCreateImage,
@@ -51,6 +52,7 @@ import {
   CanDeleteTag,
   CanCreateApiToken,
   CanGetApiTokens,
+  CanGetOtherOrganizations,
   CanRevokeApiToken,
   CanDeleteToken,
   CanDeleteUser,
@@ -120,6 +122,8 @@ import {
   CanUpdateExternalApp,
   CanUpdateGoodie,
   CanUpdateMailTemplates,
+  CanUpdateOrganization,
+  CanUpdateOtherOrganizations,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
@@ -142,6 +146,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
+  MdApartment,
   MdApproval,
   MdAutoFixHigh,
   MdAutorenew,
@@ -179,6 +184,7 @@ import {
   MdPersonAddAlt1,
   MdPhoto,
   MdPieChartOutline,
+  MdPlace,
   MdPower,
   MdQueryStats,
   MdSell,
@@ -816,6 +822,10 @@ export function Base({ children }: BaseProps) {
               <PermissionControl
                 qualifyingPermissions={[
                   CanGetEvents.id,
+                  CanCreateEvent.id,
+                  CanUpdateOrganization.id,
+                  CanGetOtherOrganizations.id,
+                  CanUpdateOtherOrganizations.id,
                   CanGetTags.id,
                   CanCreateTag.id,
                   CanUpdateTag.id,
@@ -835,6 +845,38 @@ export function Base({ children }: BaseProps) {
                       icon={<MdEvent />}
                     >
                       {t('navbar.events')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetOtherOrganizations.id,
+                      CanUpdateOtherOrganizations.id,
+                      CanUpdateOrganization.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/organizations"
+                      icon={<MdApartment />}
+                    >
+                      {t('navbar.organizations')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetEvents.id,
+                      CanCreateEvent.id,
+                      CanUpdateOrganization.id,
+                      CanGetOtherOrganizations.id,
+                      CanUpdateOtherOrganizations.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/venues"
+                      icon={<MdPlace />}
+                    >
+                      {t('navbar.venues')}
                     </SidebarNavItem>
                   </PermissionControl>
 

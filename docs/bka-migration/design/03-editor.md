@@ -34,6 +34,11 @@ only what changed, publish / publish at / unpublish, Ready for review and Withdr
 Duplicate. The list gained its links, New event, Duplicate and Extend
 ([D83](../decisions.md) to [D86](../decisions.md)). History and Preview are not built yet.
 
+Stage 6 built §8: `/organizations` and `/venues` with their create and edit pages, the No members
+marker and filter, members management, the organisation's venues, private labelled by its effect,
+the accessibility self-declaration and the read-only ProInfirmis summary
+([D87](../decisions.md) to [D89](../decisions.md)). There is no "Last synced" time yet (D88).
+
 ---
 
 ## 1. Who uses this, and what for

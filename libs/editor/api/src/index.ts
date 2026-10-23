@@ -427,7 +427,6 @@ export type {
   OneChannelStatus,
   Organization,
   OrganizationContact,
-  OrganizationContactInput,
   OrganizationMember,
   OrganizationViewerPermissions,
   OverriddenRating,
@@ -721,7 +720,6 @@ export {
   MailchimpContactStatus,
   NavigationLinkType,
   PaymentState,
-  PlaceSort,
 } from './lib/schema-types';
 
 export { default as possibleTypes } from './lib/possible-types';

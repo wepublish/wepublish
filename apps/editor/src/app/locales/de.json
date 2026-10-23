@@ -1613,6 +1613,8 @@
       "dashboard": "Dashboard",
       "notifications": "Mitteilungen",
       "events": "Events",
+      "organizations": "Organisationen",
+      "venues": "Veranstaltungsorte",
       "eventTags": "Tags",
       "documentLibrary": "Dokumente",
       "imageLibrary": "Bilder",
@@ -4219,6 +4221,8 @@
         "commentTag": "Kommentar-Tag erstellen",
         "event": "Event erstellen",
         "eventTag": "Event-Tag erstellen",
+        "organization": "Organisation erstellen",
+        "venue": "Veranstaltungsort erstellen",
         "image": "Bild hochladen",
         "document": "Dokument hochladen",
         "navigation": "Navigation erstellen",
@@ -4667,7 +4671,8 @@
           "tagsDistinct": "Wähle jeden Tag nur einmal.",
           "ratePrice": "Gib einen Preis an oder entferne die Zeile.",
           "ticketingUrl": "Der Link muss mit einem davon beginnen: {{schemes}}."
-        }
+        },
+        "placeCreate": "Veranstaltungsort erstellen (öffnet in neuem Tab)"
       },
       "editor": {
         "name": "Name",
@@ -4769,6 +4774,213 @@
           "title_other": "{{count}} kommende Daten",
           "none": "Kein Datum liegt in der Zukunft. Gespeicherte Daten erscheinen hier."
         }
+      },
+      "organizations": {
+        "list": {
+          "title": "Organisationen",
+          "create": "Neue Organisation",
+          "name": "Name",
+          "location": "PLZ und Ort",
+          "status": "Status",
+          "markers": "Hinweise",
+          "active": "Aktiv",
+          "inactive": "Inaktiv",
+          "empty": "Noch keine Organisationen. Organisationen führen Veranstaltungen durch und verwalten Veranstaltungsorte.",
+          "emptyMine": "Sie sind noch in keiner Organisation Mitglied. Schalten Sie «Nur meine Organisationen» aus, um die anderen zu sehen, oder bitten Sie das Agenda-Team, Sie hinzuzufügen.",
+          "emptyFiltered": "Keine Organisation entspricht diesen Filtern.",
+          "deleteTitle": "Organisation löschen?",
+          "deleteBody": "«{{name}}» wird gelöscht. Ihre Veranstaltungen und Orte bleiben bestehen, ohne Organisation. Das lässt sich nicht rückgängig machen.",
+          "confirmDelete": "Organisation löschen"
+        },
+        "filter": {
+          "search": "Nach Name suchen",
+          "mine": "Nur meine Organisationen",
+          "enabled": "Status",
+          "members": "Mitglieder",
+          "membersSome": "Mit Mitgliedern",
+          "membersNone": "Ohne Mitglieder",
+          "partner": "Partner",
+          "migrated": "Aus der Migration",
+          "yes": "Ja",
+          "no": "Nein"
+        },
+        "markers": {
+          "noMembers": "Keine Mitglieder",
+          "noMembersHint": "Niemand erhält die Benachrichtigungen zu ihren Veranstaltungen und Orten.",
+          "partner": "Partner",
+          "migrated": "Aus der Migration",
+          "migratedHint": "Bei der Datenübernahme aus der alten Agenda angelegt. Angaben prüfen."
+        },
+        "form": {
+          "createTitle": "Neue Organisation",
+          "editTitle": "Organisation: {{name}}",
+          "saved": "Organisation gespeichert",
+          "created": "Organisation erstellt",
+          "delete": "Löschen",
+          "readOnly": "Sie können diese Organisation ansehen, aber nicht ändern. Das können ihre Mitglieder mit Bearbeitungsrechten und die Agenda-Administration.",
+          "sections": {
+            "details": "Angaben",
+            "address": "Adresse",
+            "categories": "Kategorien und Mitgliedschaften",
+            "contacts": "Kontakte",
+            "status": "Status"
+          },
+          "name": "Name",
+          "subTitle": "Untertitel",
+          "about": "Beschreibung",
+          "website": "Website",
+          "legalStatus": "Rechtsform",
+          "legalStatusNone": "Keine Angabe",
+          "address": "Strasse und Hausnummer",
+          "postOfficeBox": "Postfach",
+          "zip": "PLZ",
+          "city": "Ort",
+          "region": "Region",
+          "regionNone": "Keine Region",
+          "tags": "Kategorien",
+          "tagsHelp": "Bis zu {{max}} Kategorien, dieselben wie bei Veranstaltungen.",
+          "tagsAtMax": "Das sind die maximal {{max}} Kategorien. Entfernen Sie eine, um eine andere zu wählen.",
+          "affiliations": "Mitgliedschaften und Vergünstigungen",
+          "affiliationsHelp": "Welche Ausweise und Ermässigungen die Organisation akzeptiert, etwa die Kulturlegi.",
+          "enabled": "Aktiv",
+          "enabledHelp": "Inaktive Organisationen sind öffentlich nicht sichtbar und können keine Veranstaltungen erfassen.",
+          "partner": "Partner – Veranstaltungen erscheinen in der Printausgabe",
+          "partnerHelp": "Jede Veranstaltung dieser Organisation kann in der gedruckten Agenda erscheinen.",
+          "privilegedLocked": "Nur die Agenda-Administration kann das ändern."
+        },
+        "contacts": {
+          "add": "Kontakt hinzufügen",
+          "help": "Bis zu {{max}} E-Mail-Adressen und Telefonnummern, jeweils mit optionaler Bezeichnung.",
+          "atMax": "Das sind die maximal {{max}} Kontakte.",
+          "labelLabel": "Bezeichnung",
+          "emailLabel": "E-Mail",
+          "phoneLabel": "Telefon",
+          "label": "Bezeichnung von Kontakt {{position}}",
+          "email": "E-Mail von Kontakt {{position}}",
+          "phone": "Telefon von Kontakt {{position}}"
+        },
+        "members": {
+          "title": "Mitglieder",
+          "add": "Mitglied hinzufügen",
+          "addHelp": "Personen nach Name oder E-Mail suchen. Mitglieder bearbeiten die Veranstaltungen und Orte der Organisation und erhalten ihre Benachrichtigungen.",
+          "remove": "{{name}} entfernen",
+          "since": "Mitglied seit {{date}}",
+          "noneTitle": "Diese Organisation hat keine Mitglieder",
+          "noneBody": "Benachrichtigungen zu ihren Veranstaltungen und Orten erreichen niemanden. Fügen Sie mindestens eine zuständige Person hinzu.",
+          "manageLocked": "Nur die Agenda-Administration kann Mitglieder hinzufügen oder entfernen."
+        },
+        "venues": {
+          "title": "Veranstaltungsorte",
+          "none": "Diese Organisation hat noch keinen Veranstaltungsort. Veranstaltungen brauchen einen Ort, ihre Mitglieder können also erst etwas erfassen, wenn einer existiert.",
+          "create": "Veranstaltungsort für diese Organisation erstellen"
+        },
+        "errors": {
+          "nameRequired": "Geben Sie der Organisation einen Namen.",
+          "nameTooLong": "Höchstens {{max}} Zeichen.",
+          "zipTooLong": "Höchstens {{max}} Zeichen.",
+          "tagsTooMany": "Höchstens {{max}} Kategorien.",
+          "contactsTooMany": "Höchstens {{max}} Kontakte.",
+          "contactNeedsEmailOrPhone": "Geben Sie eine E-Mail-Adresse oder eine Telefonnummer an.",
+          "contactEmailInvalid": "Das ist keine gültige E-Mail-Adresse.",
+          "contactLabelTooLong": "Höchstens {{max}} Zeichen."
+        },
+        "legalStatus": {
+          "association": "Verein",
+          "entreprise_individuelle": "Einzelunternehmen",
+          "societe_simple": "Einfache Gesellschaft",
+          "societe_collectif": "Kollektivgesellschaft",
+          "societe_commandite": "Kommanditgesellschaft",
+          "societe_anonyme": "Aktiengesellschaft (AG)",
+          "societe_responsabilite_limitee": "Gesellschaft mit beschränkter Haftung (GmbH)",
+          "societe_cooperative": "Genossenschaft",
+          "fondation": "Stiftung",
+          "collectif": "Kollektiv"
+        }
+      },
+      "venues": {
+        "list": {
+          "title": "Veranstaltungsorte",
+          "create": "Neuer Veranstaltungsort",
+          "name": "Name",
+          "address": "Adresse",
+          "organization": "Organisation",
+          "status": "Status",
+          "active": "Aktiv",
+          "inactive": "Inaktiv",
+          "empty": "Noch keine Veranstaltungsorte. Jede Veranstaltung findet an einem Ort statt.",
+          "emptyMine": "Ihre Organisationen haben noch keine Veranstaltungsorte. Schalten Sie «Nur Orte meiner Organisationen» aus, um alle zu sehen.",
+          "emptyFiltered": "Kein Veranstaltungsort entspricht diesen Filtern."
+        },
+        "filter": {
+          "search": "Nach Name suchen",
+          "mine": "Nur Orte meiner Organisationen",
+          "enabled": "Status"
+        },
+        "markers": {
+          "private": "Privat"
+        },
+        "form": {
+          "createTitle": "Neuer Veranstaltungsort",
+          "editTitle": "Veranstaltungsort: {{name}}",
+          "saved": "Veranstaltungsort gespeichert",
+          "created": "Veranstaltungsort erstellt",
+          "readOnly": "Sie können diesen Ort ansehen, aber nicht ändern. Das können die Mitglieder seiner Organisation mit Bearbeitungsrechten und die Agenda-Administration.",
+          "sections": {
+            "details": "Angaben",
+            "address": "Adresse",
+            "accessibility": "Zugänglichkeit",
+            "organization": "Organisation und Sichtbarkeit"
+          },
+          "name": "Name",
+          "about": "Beschreibung",
+          "capacity": "Kapazität",
+          "website": "Website",
+          "address": "Strasse und Hausnummer",
+          "zip": "PLZ",
+          "city": "Ort",
+          "region": "Region",
+          "regionNone": "Keine Region",
+          "organization": "Organisation",
+          "organizationMineHelp": "Eine Ihrer Organisationen. Ihre Mitglieder verwalten den Ort.",
+          "organizationAnyHelp": "Die Organisation, deren Mitglieder den Ort verwalten. Leer lassen für einen Ort ohne Verwaltung.",
+          "enabled": "Aktiv",
+          "enabledHelp": "Veranstaltungen lassen sich nur an aktiven Orten erfassen.",
+          "private": "Nur die Organisation dieses Orts kann hier Veranstaltungen erfassen",
+          "privateHelp": "Der Ort bleibt auf der Website sichtbar. Die Agenda-Administration kann hier weiterhin Veranstaltungen erfassen.",
+          "accessibility": "Zugänglichkeit – Selbstdeklaration (optional)",
+          "accessibilityHelp": "Was der Ort über sich selbst angibt. Die ProInfirmis-Daten unten werden unabhängig geprüft.",
+          "wheelchairAccessible": "Rollstuhlgängig",
+          "wheelchairAccessibleToilets": "Rollstuhlgängige Toiletten",
+          "wheelchairAccessibleParking": "Rollstuhlgängige Parkplätze"
+        },
+        "proInfirmis": {
+          "title": "Zugänglichkeit laut ProInfirmis",
+          "none": "Mit diesem Ort ist kein ProInfirmis-Eintrag verknüpft.",
+          "readOnly": "Von ProInfirmis (Ginto) übernommen. Hier nicht bearbeitbar, weil die nächste Synchronisation es überschreiben würde.",
+          "pictograms": "Merkmale der Zugänglichkeit",
+          "noPictograms": "Der Eintrag nennt keine Merkmale der Zugänglichkeit.",
+          "open": "Eintrag in Ginto öffnen"
+        },
+        "delete": {
+          "action": "Löschen",
+          "title": "Veranstaltungsort löschen?",
+          "body": "«{{name}}» wird gelöscht. Das lässt sich nicht rückgängig machen.",
+          "confirm": "Veranstaltungsort löschen",
+          "upcoming_one": "An diesem Ort findet noch {{count}} kommende Veranstaltung statt, deshalb lässt er sich nicht löschen. Verlegen Sie sie an einen anderen Ort oder warten Sie, bis ihr letzter Termin vorbei ist.",
+          "upcoming_other": "An diesem Ort finden noch {{count}} kommende Veranstaltungen statt, deshalb lässt er sich nicht löschen. Verlegen Sie sie an einen anderen Ort oder warten Sie, bis ihre letzten Termine vorbei sind."
+        },
+        "errors": {
+          "nameRequired": "Geben Sie dem Ort einen Namen.",
+          "nameTooLong": "Höchstens {{max}} Zeichen.",
+          "addressRequired": "Geben Sie Strasse und Hausnummer an.",
+          "zipRequired": "Geben Sie die PLZ an.",
+          "zipTooLong": "Höchstens {{max}} Zeichen.",
+          "cityRequired": "Geben Sie den Ort an.",
+          "organizationRequired": "Wählen Sie eine Ihrer Organisationen."
+        }
+      },
+      "filters": {
+        "any": "Alle"
       }
     }
   }

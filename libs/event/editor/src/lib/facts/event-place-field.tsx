@@ -2,11 +2,14 @@ import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Autocomplete, TextField, Typography } from '@mui/material';
 import { TinyPlaceListDocument } from '@wepublish/editor/api';
+import { CanUpdateOrganization } from '@wepublish/permissions';
+import { Link, useAuthorisation } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { EventFormValues, EventPlaceOption } from '../event-form-schema';
+import { venueCreatePath } from '../venue/venue-paths';
 
 const Option = styled.li`
   display: grid !important;
@@ -20,6 +23,7 @@ export function EventPlaceField() {
   const { t } = useTranslation();
   const { control } = useFormContext<EventFormValues>();
   const [search, setSearch] = useState('');
+  const mayCreateVenue = useAuthorisation(CanUpdateOrganization.id) === true;
 
   const { data, loading } = useQuery(TinyPlaceListDocument, {
     variables: {
@@ -75,7 +79,18 @@ export function EventPlaceField() {
               label={t('agenda.form.place')}
               helperText={
                 noneSelectable ?
-                  t('agenda.form.placeNone')
+                  <>
+                    {t('agenda.form.placeNone')}{' '}
+                    {mayCreateVenue && (
+                      <Link
+                        to={venueCreatePath()}
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        {t('agenda.form.placeCreate')}
+                      </Link>
+                    )}
+                  </>
                 : t('agenda.form.placeHelp')
               }
             />

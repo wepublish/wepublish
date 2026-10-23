@@ -3218,6 +3218,97 @@ them, as the article page does.
 
 ---
 
+## D87 — Organisations and venues are list-and-edit records, gated on `viewerCan`
+
+Implements design 3 §8. Uses [D72](#d72--organisation-tags-affiliations-and-contacts-are-public-and-written-through-the-organisation) and [D73](#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine).
+
+**Status.** Built in slice F stage 6. Awaiting Karl's confirmation.
+
+**Decision.**
+- Routes `/organizations`, `/organizations/create`, `/organizations/edit/:id`, `/venues`,
+  `/venues/create` and `/venues/edit/:id`, inside the sidebar layout, in `libs/event/editor`
+  (`organization/`, `venue/`). The Agenda menu lists Events, Organisations, Venues and Tags; the
+  command palette has `organizations`, `venues`, `createOrganization` and `createVenue`.
+- Organisations appear for `CanGetOtherOrganizations`, `CanUpdateOtherOrganizations` or
+  `CanUpdateOrganization`; venues also for `CanGetEvents` and `CanCreateEvent`, because an
+  organiser needs to see where they can file. Creating a venue needs `CanUpdateOrganization`
+  ([D55](#d55--place-writes-reuse-the-organisation-permissions)), creating an organisation
+  `CanCreateOrganization`.
+- Both lists start on the caller's own organisations (`mine`) unless they hold a cross-organisation
+  organisation permission, and both offer the toggle. The organisation list shows **No members**,
+  **Partner** and **From the migration** markers and filters for members, partner and migration
+  only to holders of `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations`, and only on rows
+  of the sensitive type ([D37](#d37--organisations-are-public-their-sensitive-fields-are-not),
+  [D18](#d18--mail-with-no-user-recipient-is-skipped-and-the-gap-is-shown-in-the-editor)).
+- The organisation form edits name, subtitle, about, website, legal form (BKa's ten, stored as
+  BKa's keys), street, PO box, postcode, city, region, categories (event tags, at most 3),
+  memberships and discounts (affiliations) and up to six contacts. Partner is labelled by its
+  effect ("Partner — events qualify for the print edition"); partner and enabled are disabled with
+  "Only the agenda administrators can change this" unless `viewerCan.updatePrivileged` (or, on
+  create, `CanUpdateOtherOrganizations`), and the whole form, including unchanged partner and
+  enabled, is sent on save. Latitude and longitude are not edited; the API keeps them.
+- The edit page shows the members, with add and remove only for `viewerCan.manageMembers`, and
+  the D18 warning when there are none; and the organisation's venues, with a "no venues" message
+  that links to `/venues/create?organizationId=…`, which preselects the organisation.
+- The venue form labels `private` by its effect ("Only this venue's organisation can file events
+  here") with a note that the venue stays public and the agenda administrators can still file there
+  ([D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker)). The accessibility
+  self-declaration is a labelled group of three checkboxes. A member must pick one of their
+  organisations; a holder of `CanUpdateOtherOrganizations` may leave it empty.
+- A read-only organisation or venue (`viewerCan.update` false) says who can change it and disables
+  Save. Delete is offered only where `viewerCan.delete` holds; a refused venue delete keeps the
+  dialog open and says how many upcoming events block it and what to do.
+- The event venue picker's "no venues" message links to `/venues/create` in a new tab for callers
+  holding `CanUpdateOrganization`, so an unsaved event is not lost.
+
+**Why.** Design 3 §8: these are records, not content. `viewerCan` lets the forms explain a limit
+instead of failing on save, as for events (D68).
+
+**Consequences.**
+- The refused-delete count is read from the API's message (`still has N upcoming events`); if
+  the message changes, the dialog falls back to showing it as it is.
+- Regions and affiliations are read-only lists (D56) and empty until slice G imports them, so both
+  pickers are empty on a fresh tenant.
+
+---
+
+## D88 — ProInfirmis data is shown read-only, without a sync time
+
+Implements design 3 §8 in part.
+
+**Status.** Built in slice F stage 6. Awaiting Karl's confirmation.
+
+**Decision.** The venue page shows the ProInfirmis entry read-only: the pictogram names (read from
+strings or `name`/`title` fields, since the JSON shape is still open, D54) and a link to the Ginto
+entry, or "No ProInfirmis entry is linked". `proInfirmisIdSource` is not editable in the editor.
+
+**Why.** Synced data that an editor could change would be overwritten on the next sync (design 3
+§8).
+
+**Consequences.**
+- Design 3 asks for a "Last synced" time. `Place` has no sync timestamp, so none is shown. It
+  belongs with the Ginto sync ([D7](#d7--proinfirmis-is-in-scope-and-we-build-against-ginto), D21): add a
+  nullable `proInfirmisSyncedAt` when the sync is built.
+
+---
+
+## D89 — Organisation and venue limits are mirrored in the editor
+
+**Status.** Built in slice F stage 6. Awaiting Karl's confirmation.
+
+**Decision.** The forms reuse the shared contact and tag rules from `@wepublish/event/schedule`
+(`organizationContactSchema`, the caps). The name and postcode limits (organisation name 100,
+venue name 90, postcode 4) live only in the API services, so the editor schemas repeat them.
+
+**Why.** Moving three constants into the schedule library would touch the API for no behaviour
+change in this stage.
+
+**Consequences.** If an API limit changes, `organization-form-schema.ts` and
+`venue-form-schema.ts` need the same change; moving the constants to the schedule library (D53)
+would remove that.
+
+---
+
 ## Open questions
 
 Recorded as they surface; resolved ones become decisions above.
@@ -3420,3 +3511,8 @@ Slice F builds the agenda editor. Its build choices are recorded as decisions fr
 19. [D85](#d85--ready-for-review-and-withdraw-request-follow-viewercan-and-name-who-can-publish): the review confirmation names the organisation (or the agenda team) and promises no
     notification until slice E.
 20. [D86](#d86--the-seo-preview-treats-an-event-like-an-article): event SEO fields preferred over name and print blurb, as for articles.
+21. [D87](#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan): who sees the Organisations and Venues screens, both lists starting on your own
+    organisations, and members of an organisation (with `CanUpdateOrganization`) editing its tags,
+    contacts and venues while partner, enabled and the member list stay with the agenda administrators.
+22. [D88](#d88--proinfirmis-data-is-shown-read-only-without-a-sync-time): no "Last synced" time until the Ginto sync adds one.
+23. [D89](#d89--organisation-and-venue-limits-are-mirrored-in-the-editor): the name and postcode limits repeated in the editor, or moved to the schedule library.

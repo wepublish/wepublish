@@ -4,3 +4,18 @@ query EventAudiences {
     name
   }
 }
+
+query EventRegions {
+  eventRegions {
+    id
+    name
+    enabled
+  }
+}
+
+query EventAffiliations {
+  eventAffiliations {
+    id
+    name
+  }
+}

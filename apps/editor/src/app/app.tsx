@@ -24,7 +24,16 @@ import {
   LocalStorageKey,
   TagType,
 } from '@wepublish/editor/api';
-import { EventEditor, EventList } from '@wepublish/event/editor';
+import {
+  CreateOrganization,
+  CreateVenue,
+  EditOrganization,
+  EditVenue,
+  EventEditor,
+  EventList,
+  OrganizationList,
+  VenueList,
+} from '@wepublish/event/editor';
 import {
   MailLogList,
   MailSendPage,
@@ -573,6 +582,54 @@ export function App() {
             <Route
               path="events/edit/:id"
               element={<EventEditor />}
+            />
+            <Route
+              path="organizations"
+              element={
+                <Base>
+                  <OrganizationList />
+                </Base>
+              }
+            />
+            <Route
+              path="organizations/create"
+              element={
+                <Base>
+                  <CreateOrganization />
+                </Base>
+              }
+            />
+            <Route
+              path="organizations/edit/:id"
+              element={
+                <Base>
+                  <EditOrganization />
+                </Base>
+              }
+            />
+            <Route
+              path="venues"
+              element={
+                <Base>
+                  <VenueList />
+                </Base>
+              }
+            />
+            <Route
+              path="venues/create"
+              element={
+                <Base>
+                  <CreateVenue />
+                </Base>
+              }
+            />
+            <Route
+              path="venues/edit/:id"
+              element={
+                <Base>
+                  <EditVenue />
+                </Base>
+              }
             />
             <Route
               path="events/tags"

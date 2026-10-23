@@ -14,6 +14,7 @@ import {
   CanCreateMailTemplates,
   CanCreateMemberPlan,
   CanCreateNavigation,
+  CanCreateOrganization,
   CanCreatePage,
   CanCreatePaymentMethod,
   CanCreatePaywall,
@@ -24,9 +25,11 @@ import {
   CanCreateUser,
   CanCreateUserConsent,
   CanCreateUserRole,
+  CanUpdateOrganization,
 } from '@wepublish/permissions';
 import {
   MdAccountCircle,
+  MdApartment,
   MdApproval,
   MdAutorenew,
   MdBadge,
@@ -47,6 +50,7 @@ import {
   MdPayment,
   MdPersonAddAlt1,
   MdPhoto,
+  MdPlace,
   MdSell,
   MdSignpost,
   MdVpnKey,
@@ -117,6 +121,20 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdEvent />,
     permissions: [CanCreateEvent.id],
     perform: ({ navigate }) => navigate('/events/create'),
+  },
+  {
+    id: 'createOrganization',
+    titleKey: 'commandPalette.create.organization',
+    icon: <MdApartment />,
+    permissions: [CanCreateOrganization.id],
+    perform: ({ navigate }) => navigate('/organizations/create'),
+  },
+  {
+    id: 'createVenue',
+    titleKey: 'commandPalette.create.venue',
+    icon: <MdPlace />,
+    permissions: [CanUpdateOrganization.id],
+    perform: ({ navigate }) => navigate('/venues/create'),
   },
   {
     id: 'createEventTag',

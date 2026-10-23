@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import { fireEvent, screen } from '@testing-library/react';
 import { TinyPlaceListDocument } from '@wepublish/editor/api';
+import { CanUpdateOrganization } from '@wepublish/permissions';
 import type { Mock } from 'vitest';
 
 import { formValues, renderInForm } from '../test-helpers';
@@ -70,5 +71,28 @@ describe('EventPlaceField', () => {
     renderInForm(<EventPlaceField />);
 
     expect(screen.getByText('agenda.form.placeNone')).toBeInTheDocument();
+  });
+
+  it('links to creating a venue, in a new tab, when none can be picked and the caller may create one', () => {
+    withPlaces([]);
+    renderInForm(<EventPlaceField />, {
+      permissions: [CanUpdateOrganization.id],
+    });
+
+    const link = screen.getByRole('link', {
+      name: /agenda.form.placeCreate/,
+    });
+
+    expect(link).toHaveAttribute('href', '/venues/create');
+    expect(link).toHaveAttribute('target', '_blank');
+  });
+
+  it('offers no create link to a caller who may not create venues', () => {
+    withPlaces([]);
+    renderInForm(<EventPlaceField />);
+
+    expect(
+      screen.queryByRole('link', { name: /agenda.form.placeCreate/ })
+    ).not.toBeInTheDocument();
   });
 });

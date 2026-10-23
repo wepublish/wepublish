@@ -1614,6 +1614,8 @@
       "dashboard": "Dashboard",
       "notifications": "Notifications",
       "events": "Events",
+      "organizations": "Organisations",
+      "venues": "Venues",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
       "imageLibrary": "Images",
@@ -4219,6 +4221,8 @@
         "commentTag": "Create comment tag",
         "event": "Create event",
         "eventTag": "Create event tag",
+        "organization": "Create organisation",
+        "venue": "Create venue",
         "image": "Upload image",
         "document": "Upload document",
         "navigation": "Create navigation",
@@ -4667,7 +4671,8 @@
           "tagsDistinct": "Pick each tag only once.",
           "ratePrice": "Enter a price, or remove the row.",
           "ticketingUrl": "Start the link with one of: {{schemes}}."
-        }
+        },
+        "placeCreate": "Create a venue (opens in a new tab)"
       },
       "editor": {
         "name": "Name",
@@ -4769,6 +4774,213 @@
           "title_other": "{{count}} upcoming dates",
           "none": "No date lies ahead. Saved dates show here."
         }
+      },
+      "organizations": {
+        "list": {
+          "title": "Organisations",
+          "create": "New organisation",
+          "name": "Name",
+          "location": "Postcode and city",
+          "status": "Status",
+          "markers": "Notes",
+          "active": "Active",
+          "inactive": "Inactive",
+          "empty": "No organisations yet. Organisations run events and own venues.",
+          "emptyMine": "You are not a member of any organisation. Turn off “Only my organisations” to see the others, or ask the agenda team to add you to yours.",
+          "emptyFiltered": "No organisation matches these filters.",
+          "deleteTitle": "Delete organisation?",
+          "deleteBody": "“{{name}}” is deleted. Its events and venues stay, without an organisation. This cannot be undone.",
+          "confirmDelete": "Delete organisation"
+        },
+        "filter": {
+          "search": "Search by name",
+          "mine": "Only my organisations",
+          "enabled": "Status",
+          "members": "Members",
+          "membersSome": "Has members",
+          "membersNone": "No members",
+          "partner": "Partner",
+          "migrated": "Created by the migration",
+          "yes": "Yes",
+          "no": "No"
+        },
+        "markers": {
+          "noMembers": "No members",
+          "noMembersHint": "Nobody receives the notifications about its events and venues.",
+          "partner": "Partner",
+          "migrated": "From the migration",
+          "migratedHint": "Created by the data migration from the old agenda. Check its details."
+        },
+        "form": {
+          "createTitle": "New organisation",
+          "editTitle": "Organisation: {{name}}",
+          "saved": "Organisation saved",
+          "created": "Organisation created",
+          "delete": "Delete",
+          "readOnly": "You can look at this organisation but not change it. Its members with editing rights can, and so can the agenda administrators.",
+          "sections": {
+            "details": "Details",
+            "address": "Address",
+            "categories": "Categories and memberships",
+            "contacts": "Contacts",
+            "status": "Status"
+          },
+          "name": "Name",
+          "subTitle": "Subtitle",
+          "about": "About",
+          "website": "Website",
+          "legalStatus": "Legal form",
+          "legalStatusNone": "Not specified",
+          "address": "Street and number",
+          "postOfficeBox": "PO box",
+          "zip": "Postcode",
+          "city": "City",
+          "region": "Region",
+          "regionNone": "No region",
+          "tags": "Categories",
+          "tagsHelp": "Up to {{max}} categories, the same ones events use.",
+          "tagsAtMax": "That is the maximum of {{max}} categories. Remove one to pick another.",
+          "affiliations": "Memberships and discounts",
+          "affiliationsHelp": "Which passes and discounts the organisation accepts, such as Kulturlegi.",
+          "enabled": "Active",
+          "enabledHelp": "Inactive organisations are hidden from the public and cannot file events.",
+          "partner": "Partner — events qualify for the print edition",
+          "partnerHelp": "Every event this organisation runs can appear in the printed agenda.",
+          "privilegedLocked": "Only the agenda administrators can change this."
+        },
+        "contacts": {
+          "add": "Add contact",
+          "help": "Up to {{max}} email addresses and phone numbers, each with an optional label.",
+          "atMax": "That is the maximum of {{max}} contacts.",
+          "labelLabel": "Label",
+          "emailLabel": "Email",
+          "phoneLabel": "Phone",
+          "label": "Label of contact {{position}}",
+          "email": "Email of contact {{position}}",
+          "phone": "Phone of contact {{position}}"
+        },
+        "members": {
+          "title": "Members",
+          "add": "Add a member",
+          "addHelp": "Search people by name or email. Members can edit the organisation’s events and venues and receive its notifications.",
+          "remove": "Remove {{name}}",
+          "since": "Member since {{date}}",
+          "noneTitle": "This organisation has no members",
+          "noneBody": "Notifications about its events and venues reach nobody. Add at least one person who looks after it.",
+          "manageLocked": "Only the agenda administrators can add or remove members."
+        },
+        "venues": {
+          "title": "Venues",
+          "none": "This organisation has no venues yet. Events need a venue, so its members cannot file any until one exists.",
+          "create": "Create a venue for this organisation"
+        },
+        "errors": {
+          "nameRequired": "Give the organisation a name.",
+          "nameTooLong": "At most {{max}} characters.",
+          "zipTooLong": "At most {{max}} characters.",
+          "tagsTooMany": "At most {{max}} categories.",
+          "contactsTooMany": "At most {{max}} contacts.",
+          "contactNeedsEmailOrPhone": "Enter an email address or a phone number.",
+          "contactEmailInvalid": "This is not a valid email address.",
+          "contactLabelTooLong": "At most {{max}} characters."
+        },
+        "legalStatus": {
+          "association": "Association",
+          "entreprise_individuelle": "Sole proprietorship",
+          "societe_simple": "Simple partnership",
+          "societe_collectif": "General partnership",
+          "societe_commandite": "Limited partnership",
+          "societe_anonyme": "Public limited company (AG)",
+          "societe_responsabilite_limitee": "Limited liability company (GmbH)",
+          "societe_cooperative": "Cooperative",
+          "fondation": "Foundation",
+          "collectif": "Collective"
+        }
+      },
+      "venues": {
+        "list": {
+          "title": "Venues",
+          "create": "New venue",
+          "name": "Name",
+          "address": "Address",
+          "organization": "Organisation",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive",
+          "empty": "No venues yet. Every event takes place at a venue.",
+          "emptyMine": "Your organisations have no venues yet. Turn off “Only my organisations’ venues” to see all of them.",
+          "emptyFiltered": "No venue matches these filters."
+        },
+        "filter": {
+          "search": "Search by name",
+          "mine": "Only my organisations’ venues",
+          "enabled": "Status"
+        },
+        "markers": {
+          "private": "Private"
+        },
+        "form": {
+          "createTitle": "New venue",
+          "editTitle": "Venue: {{name}}",
+          "saved": "Venue saved",
+          "created": "Venue created",
+          "readOnly": "You can look at this venue but not change it. Members of its organisation with editing rights can, and so can the agenda administrators.",
+          "sections": {
+            "details": "Details",
+            "address": "Address",
+            "accessibility": "Accessibility",
+            "organization": "Organisation and visibility"
+          },
+          "name": "Name",
+          "about": "Description",
+          "capacity": "Capacity",
+          "website": "Website",
+          "address": "Street and number",
+          "zip": "Postcode",
+          "city": "City",
+          "region": "Region",
+          "regionNone": "No region",
+          "organization": "Organisation",
+          "organizationMineHelp": "One of your organisations. Its members manage the venue.",
+          "organizationAnyHelp": "The organisation whose members manage the venue. Leave empty for a venue nobody manages.",
+          "enabled": "Active",
+          "enabledHelp": "Events can only be filed at active venues.",
+          "private": "Only this venue’s organisation can file events here",
+          "privateHelp": "The venue stays visible on the website. The agenda administrators can still file events here.",
+          "accessibility": "Accessibility — self-declaration (optional)",
+          "accessibilityHelp": "What the venue declares about itself. ProInfirmis data below is checked independently.",
+          "wheelchairAccessible": "Wheelchair accessible",
+          "wheelchairAccessibleToilets": "Wheelchair-accessible toilets",
+          "wheelchairAccessibleParking": "Wheelchair-accessible parking"
+        },
+        "proInfirmis": {
+          "title": "ProInfirmis accessibility data",
+          "none": "No ProInfirmis entry is linked to this venue.",
+          "readOnly": "Synced from ProInfirmis (Ginto). It cannot be edited here, because the next sync would overwrite it.",
+          "pictograms": "Accessibility features",
+          "noPictograms": "The entry lists no accessibility features.",
+          "open": "Open the entry in Ginto"
+        },
+        "delete": {
+          "action": "Delete",
+          "title": "Delete venue?",
+          "body": "“{{name}}” is deleted. This cannot be undone.",
+          "confirm": "Delete venue",
+          "upcoming_one": "This venue still has {{count}} upcoming event, so it cannot be deleted. Move that event to another venue, or wait until its last date has passed.",
+          "upcoming_other": "This venue still has {{count}} upcoming events, so it cannot be deleted. Move those events to another venue, or wait until their last dates have passed."
+        },
+        "errors": {
+          "nameRequired": "Give the venue a name.",
+          "nameTooLong": "At most {{max}} characters.",
+          "addressRequired": "Enter the street and number.",
+          "zipRequired": "Enter the postcode.",
+          "zipTooLong": "At most {{max}} characters.",
+          "cityRequired": "Enter the city.",
+          "organizationRequired": "Pick one of your organisations."
+        }
+      },
+      "filters": {
+        "any": "Any"
       }
     }
   }
