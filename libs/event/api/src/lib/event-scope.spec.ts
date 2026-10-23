@@ -6,6 +6,7 @@ import {
 } from '@wepublish/authentication/api';
 import {
   CanDeleteOtherOrganizationEvents,
+  CanGetEvent,
   CanGetOtherOrganizationEvents,
   CanGetOtherOrganizations,
   CanPublishEvent,
@@ -20,6 +21,7 @@ import {
   canSeeOrganization,
   canModifyEvent,
   canPublishEvent,
+  canReachEvent,
   canReadOrganizationSensitiveData,
   editorEventsWhere,
   EventOwnership,
@@ -1179,5 +1181,26 @@ describe('canSeeOrganization', () => {
     ],
   ] as const)('a disabled organisation: %s', (_name, session, visible) => {
     expect(canSeeOrganization(session, disabled)).toBe(visible);
+  });
+});
+
+describe('canReachEvent', () => {
+  it('agrees with reachableEventsWhere for every caller and event', () => {
+    for (const session of Object.values(sessions)) {
+      for (const event of Object.values(events)) {
+        expect(canReachEvent(session, event)).toBe(
+          matches(reachableEventsWhere(session), event)
+        );
+      }
+    }
+  });
+
+  it('refuses a member of another organisation, even with CAN_GET_EVENT', () => {
+    expect(
+      canReachEvent(
+        as('user-b', ['b'], CanGetEvent.id),
+        events["somebody else's event at a venue"]
+      )
+    ).toBe(false);
   });
 });

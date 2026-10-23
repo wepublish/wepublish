@@ -324,7 +324,7 @@ token and an anonymous caller all go through the same code; there is no `UserSes
 
 The event rule is two functions, because "what the public may read" and "what you may manage" are
 different questions ([D19](../decisions.md)) — conflating them is how an organiser ends up browsing a
-rival's programme. As built (`event-scope.ts:154-201`):
+rival's programme. As built (`event-scope.ts:154-208`):
 
 ```ts
 export const publicEventsWhere = (): Prisma.EventWhereInput => ({
@@ -374,11 +374,12 @@ The helpers the event, place and organisation services share:
 | `selectablePlacesWhere(session)` | venues an event may be filed at: enabled and (not private or own organisation); any enabled place with `CanUpdateOtherOrganizationEvents` | `:127-144` |
 | `canManagePlace(session, organizationId)` | `canManageOrganization`, or `mayUpdateAnyOrganization` for a place without an organisation | `:146-152` |
 | `reachableEventsWhere(session)` | the editor-mode single-event read: `canModifyEvent` as a `where`, venue branch included | `:175-195` |
-| `canPublishEvent(session, event)` | `CanPublishEvent` and (member of the organising organisation, owner of an orphan event, or `CanUpdateOtherOrganizationEvents`); also gates `unpublishEvent` | `:203-207` |
-| `canDeleteEvent(session, event)` | member of the organising organisation, or `CanDeleteOtherOrganizationEvents`; no owner or venue branch | `:209-211` |
-| `mayAssignEventOrganization` / `mayMoveEventToOrganization` | file under, or move to, an organisation you belong to, unless `CanUpdateOtherOrganizationEvents` | `:213-243` |
-| `mayAssignEventOwner` / `mayReassignEventOwner` | only `CanUpdateOtherOrganizationEvents` may make someone else the owner | `:221-246` |
-| `boundOrganizationIdOf(session)` | a bound key's organisation, the default for `createEvent` | `:248-251` |
+| `canReachEvent(session, event)` | `reachableEventsWhere` as a predicate; gates the editor view of one event's fields | `:197-202` |
+| `canPublishEvent(session, event)` | `CanPublishEvent` and (member of the organising organisation, owner of an orphan event, or `CanUpdateOtherOrganizationEvents`); also gates `unpublishEvent` | `:210-214` |
+| `canDeleteEvent(session, event)` | member of the organising organisation, or `CanDeleteOtherOrganizationEvents`; no owner or venue branch | `:216-218` |
+| `mayAssignEventOrganization` / `mayMoveEventToOrganization` | file under, or move to, an organisation you belong to, unless `CanUpdateOtherOrganizationEvents` | `:220-250` |
+| `mayAssignEventOwner` / `mayReassignEventOwner` | only `CanUpdateOtherOrganizationEvents` may make someone else the owner | `:228-253` |
+| `boundOrganizationIdOf(session)` | a bound key's organisation, the default for `createEvent` | `:255-258` |
 
 The publish, delete and assignment rules are pending Karl's confirmation
 ([decision log, slice C+D items 2–4](../decisions.md#raised-by-the-slice-cd-build)).
@@ -434,7 +435,7 @@ a draft that belongs to another organisation, which `publishEvent` already does 
 The queue is a query, not a table: drafts where `reviewRequestedAt IS NOT NULL`, ordered oldest
 first, scoped by `editorEventsWhere`.
 
-**Built** as `canPublishEvent` (`event-scope.ts:203-207`) behind `@Permissions(CanPublishEvent)`. A
+**Built** as `canPublishEvent` (`event-scope.ts:210-214`) behind `@Permissions(CanPublishEvent)`. A
 venue member reaches a foreign event and can edit it, but publishes it only with the
 cross-organisation permission. The queue query itself is editor work (slice F); the column is
 indexed.
@@ -739,7 +740,13 @@ regenerated at publish. They are now written on save (§5), but the columns stay
 As built, `description` is the first richtext block of the chosen revision, `latest` resolves
 `draft ?? pending ?? published` in editor mode and `published` otherwise, and the editor-only fields
 (`ownerId`, `reviewRequestedAt`/`ById`, `legacyId`, `draft`, `pending`) carry
-`@Permissions(CanGetEvent)` (`libs/event/api/src/lib/event.resolver.ts:218-382`). `url` is
+`@Permissions(CanGetEvent)` (`libs/event/api/src/lib/event.resolver.ts:216-399`). Editor mode is
+decided per event, not per permission: the preview header and `CanGetEvent` unlock the draft view
+only for an event the caller can reach (`canReachEvent`, through `canReachLoadedEvent` in
+`event-reach.ts`, which loads the venue only when needed). Anyone else gets the published view and
+null editor-only fields, so an organiser browsing the public lists or the agenda never sees another
+organisation's draft or scheduled revision ([D19](../decisions.md)). `HasOptionalEvent.event` applies
+the same check before it returns an unpublished event in preview (`has-event/has-event.resolver.ts:47-74`). `url` is
 `/event/<slug>`, or `/event/id/<id>` without a slug (`libs/nest-modules/src/lib/urls/url-adapter.ts:52-54`).
 
 One accepted semantic change: for `Weekly` and `Explicit` schedules `endsAt` is the **end of the

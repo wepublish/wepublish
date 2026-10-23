@@ -194,6 +194,13 @@ export const reachableEventsWhere = (
   };
 };
 
+export const canReachEvent = (session: Session, event: EventOwnership) =>
+  holdsAcrossOrganizations(session, CanGetOtherOrganizationEvents) ||
+  holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents) ||
+  isOrganizationMember(session, event.organizationId) ||
+  isOrganizationMember(session, event.place?.organizationId) ||
+  isEventOwner(session, event);
+
 export const canModifyEvent = (session: Session, event: EventOwnership) =>
   isEventOwner(session, event) ||
   isOrganizationMember(session, event.organizationId) ||

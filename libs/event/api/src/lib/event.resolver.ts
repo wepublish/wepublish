@@ -40,6 +40,7 @@ import {
 } from './event-details.dataloader';
 import { EventDataloaderService } from './event-dataloader.service';
 import { EventEditorMode } from './event-editor-mode.decorator';
+import { canReachLoadedEvent } from './event-reach';
 import { EventRevisionDataloaderService } from './event-revisions.dataloader';
 import {
   Event,
@@ -62,9 +63,6 @@ import {
 import { PlaceDataloaderService } from './place/place-dataloader.service';
 
 type Session = AuthSession | undefined;
-
-const mayReadEditorFields = (session: Session) =>
-  hasPermission(CanGetEvent, permissionsOf(session));
 
 const firstRichText = (blocks: unknown): RichtextJSONDocument | null => {
   const block = (Array.isArray(blocks) ? blocks : []).find(
@@ -218,9 +216,10 @@ export class EventResolver {
   @ResolveField(() => EventRevision, { nullable: true })
   async latest(
     @Parent() event: PEvent,
-    @EventEditorMode(CanGetEvent) editorMode: boolean
+    @EventEditorMode(CanGetEvent) editorMode: boolean,
+    @CurrentUser() session: Session
   ) {
-    return this.displayedRevision(event, editorMode);
+    return this.displayedRevision(event, editorMode, session);
   }
 
   @ResolveField(() => EventRevision, { nullable: true })
@@ -231,7 +230,7 @@ export class EventResolver {
   @Permissions(CanGetEvent)
   @ResolveField(() => EventRevision, { nullable: true })
   async draft(@Parent() event: PEvent, @CurrentUser() session: Session) {
-    if (!mayReadEditorFields(session)) {
+    if (!(await this.mayReadEditorView(event, session))) {
       return null;
     }
 
@@ -241,7 +240,7 @@ export class EventResolver {
   @Permissions(CanGetEvent)
   @ResolveField(() => EventRevision, { nullable: true })
   async pending(@Parent() event: PEvent, @CurrentUser() session: Session) {
-    if (!mayReadEditorFields(session)) {
+    if (!(await this.mayReadEditorView(event, session))) {
       return null;
     }
 
@@ -251,27 +250,32 @@ export class EventResolver {
   @ResolveField(() => String, { nullable: true })
   async name(
     @Parent() event: PEvent,
-    @EventEditorMode(CanGetEvent) editorMode: boolean
+    @EventEditorMode(CanGetEvent) editorMode: boolean,
+    @CurrentUser() session: Session
   ) {
-    return (await this.displayedRevision(event, editorMode))?.name ?? null;
+    return (
+      (await this.displayedRevision(event, editorMode, session))?.name ?? null
+    );
   }
 
   @ResolveField(() => GraphQLRichText, { nullable: true })
   async description(
     @Parent() event: PEvent,
-    @EventEditorMode(CanGetEvent) editorMode: boolean
+    @EventEditorMode(CanGetEvent) editorMode: boolean,
+    @CurrentUser() session: Session
   ) {
     return firstRichText(
-      (await this.displayedRevision(event, editorMode))?.blocks
+      (await this.displayedRevision(event, editorMode, session))?.blocks
     );
   }
 
   @ResolveField(() => Image, { nullable: true })
   async image(
     @Parent() event: PEvent,
-    @EventEditorMode(CanGetEvent) editorMode: boolean
+    @EventEditorMode(CanGetEvent) editorMode: boolean,
+    @CurrentUser() session: Session
   ) {
-    const revision = await this.displayedRevision(event, editorMode);
+    const revision = await this.displayedRevision(event, editorMode, session);
 
     if (!revision) {
       return null;
@@ -333,41 +337,64 @@ export class EventResolver {
 
   @Permissions(CanGetEvent)
   @ResolveField(() => String, { nullable: true })
-  ownerId(@Parent() event: PEvent, @CurrentUser() session: Session) {
-    return mayReadEditorFields(session) ? event.ownerId : null;
+  async ownerId(@Parent() event: PEvent, @CurrentUser() session: Session) {
+    return (await this.mayReadEditorView(event, session)) ?
+        event.ownerId
+      : null;
   }
 
   @Permissions(CanGetEvent)
   @ResolveField(() => Date, { nullable: true })
-  reviewRequestedAt(@Parent() event: PEvent, @CurrentUser() session: Session) {
-    return mayReadEditorFields(session) ? event.reviewRequestedAt : null;
-  }
-
-  @Permissions(CanGetEvent)
-  @ResolveField(() => String, { nullable: true })
-  reviewRequestedById(
+  async reviewRequestedAt(
     @Parent() event: PEvent,
     @CurrentUser() session: Session
   ) {
-    return mayReadEditorFields(session) ? event.reviewRequestedById : null;
+    return (await this.mayReadEditorView(event, session)) ?
+        event.reviewRequestedAt
+      : null;
   }
 
   @Permissions(CanGetEvent)
   @ResolveField(() => String, { nullable: true })
-  legacyId(@Parent() event: PEvent, @CurrentUser() session: Session) {
-    return mayReadEditorFields(session) && event.legacyId != null ?
-        event.legacyId.toString()
+  async reviewRequestedById(
+    @Parent() event: PEvent,
+    @CurrentUser() session: Session
+  ) {
+    return (await this.mayReadEditorView(event, session)) ?
+        event.reviewRequestedById
       : null;
+  }
+
+  @Permissions(CanGetEvent)
+  @ResolveField(() => String, { nullable: true })
+  async legacyId(@Parent() event: PEvent, @CurrentUser() session: Session) {
+    if (!(await this.mayReadEditorView(event, session))) {
+      return null;
+    }
+
+    return event.legacyId?.toString() ?? null;
+  }
+
+  private async mayReadEditorView(event: PEvent, session: Session) {
+    return (
+      hasPermission(CanGetEvent, permissionsOf(session)) &&
+      (await canReachLoadedEvent(session, event, this.places))
+    );
   }
 
   private async displayedRevision(
     event: PEvent,
-    editorMode: boolean
+    editorMode: boolean,
+    session: Session
   ): Promise<PEventRevision | null> {
     const { draft, pending, published } =
       (await this.revisions.load(event.id)) ?? {};
+    const showsEditorView =
+      editorMode && (await canReachLoadedEvent(session, event, this.places));
 
-    return (editorMode ? (draft ?? pending ?? published) : published) ?? null;
+    return (
+      (showsEditorView ? (draft ?? pending ?? published) : published) ?? null
+    );
   }
 }
 

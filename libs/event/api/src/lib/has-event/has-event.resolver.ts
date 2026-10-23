@@ -1,4 +1,5 @@
 import { Context, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { AuthSession } from '@wepublish/authentication/api';
 import { CanGetEvent } from '@wepublish/permissions';
 import {
   HasEvent,
@@ -10,6 +11,8 @@ import { Event } from '../event.model';
 import { EventDataloaderService } from '../event-dataloader.service';
 import { EventRevisionDataloaderService } from '../event-revisions.dataloader';
 import { isEventEditorRequest } from '../event-editor-mode.decorator';
+import { canReachLoadedEvent } from '../event-reach';
+import { PlaceDataloaderService } from '../place/place-dataloader.service';
 
 type EventReference = Partial<
   HasOptionalEvent & HasEvent & HasOptionalEventLc & HasEventLc
@@ -40,7 +43,8 @@ export class HasEventLcResolver extends HasEventResolver {}
 export class HasOptionalEventResolver {
   constructor(
     protected dataloader: EventDataloaderService,
-    protected revisions: EventRevisionDataloaderService
+    protected revisions: EventRevisionDataloaderService,
+    protected places: PlaceDataloaderService
   ) {}
 
   @ResolveField(() => Event, { nullable: true })
@@ -54,15 +58,22 @@ export class HasOptionalEventResolver {
       return null;
     }
 
-    if (!isEventEditorRequest(context?.req, CanGetEvent)) {
-      const { published } = (await this.revisions.load(id)) ?? {};
+    const { published } = (await this.revisions.load(id)) ?? {};
 
-      if (!published) {
-        return null;
-      }
+    if (published) {
+      return this.dataloader.load(id);
     }
 
-    return this.dataloader.load(id);
+    if (!isEventEditorRequest(context?.req, CanGetEvent)) {
+      return null;
+    }
+
+    const event = await this.dataloader.load(id);
+    const session = context?.req?.user as AuthSession | undefined;
+
+    return event && (await canReachLoadedEvent(session, event, this.places)) ?
+        event
+      : null;
   }
 }
 

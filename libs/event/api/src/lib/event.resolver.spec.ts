@@ -42,7 +42,34 @@ const editor: AuthSession = {
   expiresAt: NOW,
 } as unknown as AuthSession;
 
-const sessions: Record<string, AuthSession | undefined> = { editor };
+const foreignMember: AuthSession = {
+  ...editor,
+  id: 'session-foreign',
+  user: { id: 'foreign' },
+  organizationIds: ['org-b'],
+} as unknown as AuthSession;
+
+const foreignKey: AuthSession = {
+  type: AuthSessionType.ApiToken,
+  id: 'key-b',
+  name: 'Venue app',
+  token: 'token',
+  permissions: [CanGetEvent.id, CanGetEvents.id],
+  organizationId: 'org-b',
+};
+
+const venueMember: AuthSession = {
+  ...foreignMember,
+  id: 'session-venue',
+  organizationIds: ['org-venue'],
+} as unknown as AuthSession;
+
+const sessions: Record<string, AuthSession | undefined> = {
+  editor,
+  foreignMember,
+  foreignKey,
+  venueMember,
+};
 
 const event: Event = {
   id: 'event-1',
@@ -147,7 +174,12 @@ describe('EventResolver', () => {
     revisions = { load: vi.fn() };
     images = { load: vi.fn() };
     imageLoader = { load: vi.fn(async (id: string) => ({ id })) };
-    places = { load: vi.fn(async () => ({ name: 'Dampfzentrale' })) };
+    places = {
+      load: vi.fn(async () => ({
+        name: 'Dampfzentrale',
+        organizationId: 'org-venue',
+      })),
+    };
     eventLoader = { load: vi.fn(async (id: string) => ({ ...event, id })) };
 
     const module = await Test.createTestingModule({
@@ -297,6 +329,80 @@ describe('EventResolver', () => {
       editor,
       true
     );
+  });
+
+  it.each(['foreignMember', 'foreignKey'])(
+    'gives %s of another organisation only the published view of an event it cannot reach',
+    async session => {
+      service.getEvent?.mockResolvedValue(event);
+      revisions.load.mockResolvedValue({
+        draft,
+        pending: revision('rev-pending', 'Pending name', 'pending'),
+        published,
+      });
+
+      const res = await send(
+        eventQuery,
+        { slug: 'konzert' },
+        { preview: 'true', 'x-session': session }
+      ).expect(200);
+
+      expect(res.body.data.event).toMatchObject({
+        name: 'Published name',
+        description: doc('published'),
+        latest: { id: 'rev-published', name: 'Published name' },
+        published: { id: 'rev-published' },
+        draft: null,
+        pending: null,
+        ownerId: null,
+        legacyId: null,
+      });
+      expect(images.load).not.toHaveBeenCalledWith('rev-draft');
+    }
+  );
+
+  it("gives a member of the venue's organisation the editor view", async () => {
+    service.getEvent?.mockResolvedValue(event);
+    revisions.load.mockResolvedValue({ draft, published });
+
+    const res = await send(
+      eventQuery,
+      { id: 'event-1' },
+      { preview: 'true', 'x-session': 'venueMember' }
+    ).expect(200);
+
+    expect(res.body.data.event).toMatchObject({
+      name: 'Draft name',
+      draft: { id: 'rev-draft' },
+      ownerId: 'owner-1',
+    });
+  });
+
+  it('keeps the agenda of another organisation on the published view', async () => {
+    service.getAgenda?.mockResolvedValue({
+      nodes: [
+        {
+          id: 'occ-1',
+          eventId: 'event-1',
+          dateFrom: new Date('2026-11-02T18:00:00.000Z'),
+          dateTo: null,
+          openingTime: null,
+        },
+      ],
+      totalCount: 1,
+      pageInfo: { hasPreviousPage: false, hasNextPage: false },
+    });
+    revisions.load.mockResolvedValue({ draft, published });
+
+    const res = await send(
+      `query { agenda { nodes { event { name draft { id } } } } }`,
+      {},
+      { preview: 'true', 'x-session': 'foreignMember' }
+    ).expect(200);
+
+    expect(res.body.data.agenda.nodes).toEqual([
+      { event: { name: 'Published name', draft: null } },
+    ]);
   });
 
   it('stays public without the preview header, even for an editor', async () => {

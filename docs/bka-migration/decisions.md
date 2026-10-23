@@ -2102,14 +2102,14 @@ is built and needs Karl's confirmation before it becomes a decision.** Paths are
    organisation. Moving an existing event needs you to hold it (as a member of its organisation, or
    as the owner of an orphan event) and to belong to the target. The owner defaults to the creating
    user, and only `CanUpdateOtherOrganizationEvents` may hand an event to someone else
-   (`event-scope.ts:213-246`).
+   (`event-scope.ts:220-253`).
 3. **Publishing** needs `CanPublishEvent` plus membership of the organising organisation,
    ownership of an event that has no organisation, or `CanUpdateOtherOrganizationEvents`
-   (`canPublishEvent`, `event-scope.ts:203-207`). `unpublishEvent` uses the same rule. So a venue
+   (`canPublishEvent`, `event-scope.ts:210-214`). `unpublishEvent` uses the same rule. So a venue
    member can edit and validate a foreign event only if they hold the cross-organisation
    permission. An owner holding `CanPublishEvent` may publish their own orphan event.
 4. **Deleting** needs membership of the organising organisation or
-   `CanDeleteOtherOrganizationEvents` (`canDeleteEvent`, `event-scope.ts:209-211`). There is no
+   `CanDeleteOtherOrganizationEvents` (`canDeleteEvent`, `event-scope.ts:216-218`). There is no
    owner branch and no venue branch: [D35](#d35--an-events-owner-reaches-it-without-an-organisation)
    gives owners list and edit access only.
 5. **Slugs** are a nullable, indexed, non-unique column. Uniqueness among published events is
