@@ -52,12 +52,12 @@
     },
     "versionHistory": {
       "title": "Version history",
+      "today": "Today",
+      "yesterday": "Yesterday",
       "subtitle": "{{count}} versions",
       "close": "Close",
       "empty": "No versions yet.",
       "untitled": "Untitled",
-      "created": "Created {{date}}",
-      "published": "published {{date}}",
       "currentVersion": "Current version",
       "restore": "Restore",
       "restored": "Version restored as a new draft",
@@ -150,6 +150,7 @@
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. It is helpful, for example, when scheduling social media posts in advance for the next morning.",
         "displayOptions": "Display Options",
+        "displayOptionsHint": "Leave a field empty to use the original text.",
         "dontChangeSlug": "Please don't change the slug once the article is published.",
         "draft": "Draft",
         "chooseFile": "Choose file",
@@ -172,6 +173,7 @@
         "lead": "Lead",
         "loading": "Loading...",
         "loadMore": "Load More",
+        "search": "Search by title",
         "noDataToDisplay": "No data to display",
         "metadata": "Metadata",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
@@ -380,6 +382,7 @@
     "blocks": {
       "blockTemplate": {
         "editTemplate": "Edit template",
+        "linkedInfo": "Changes to the template show up here automatically.",
         "label": "Block Template",
         "select": "Select a block template",
         "useContent": "Use content",
@@ -389,12 +392,12 @@
       },
       "crowdfunding": {
         "crowdfundingName": "Crowdfunding {{name}}",
-        "edit": "Edit",
+        "edit": "Edit crowdfunding block",
         "label": "Crowdfunding",
         "title": "Select Crowdfunding",
         "name": "Name",
         "select": "Select",
-        "open": "open"
+        "open": "Open"
       },
       "comment": {
         "cherryPick": "Select specific comments",
@@ -512,7 +515,8 @@
         "showGoodies": "Show goodie selection",
         "showDiscountCodes": "Show discount code input",
         "goodieMinValue": {
-          "label": "Require minimum payment amount to be eligible for a goodie:"
+          "label": "Minimum amount for a goodie",
+          "hint": "Readers who pay less do not get to choose a goodie. Leave empty for no minimum."
         },
         "goodieMinValueAppliesToUpgrade": "Apply this minimum to upgrades too",
         "hideRepeatGoodieOnUpgrade": "Hide on upgrade when a goodie was already received",
@@ -550,6 +554,8 @@
         },
         "planAmountsTitle": "Minimum / target / maximum amount",
         "defaultPlanTitle": "Selected by default — this subscription plan is preselected after the page loads.",
+        "amountLayout": "Amount entry",
+        "planAmountTarget": "target {{amount}}",
         "defaultPlanLabel": "Default",
         "dragToReorder": "Drag to change the order",
         "renderStylesHelp": "Drag the plans into the order in which they appear on the website. For each plan, choose how readers enter the amount and which plan is preselected."
@@ -588,6 +594,7 @@
         "label": "Listicle"
       },
       "poll": {
+        "open": "Open",
         "edit": "Edit poll block",
         "label": "Poll",
         "select": "Select",
@@ -646,7 +653,8 @@
         "syncProviderPlaceholder": "Select account",
         "list": "List",
         "listPlaceholder": "Select list",
-        "interests": "Preset interests. These are automatically added for every subscriber",
+        "interests": "Preset interests",
+        "interestsHelp": "These are automatically added for every subscriber.",
         "interestsPlaceholder": "Select interests",
         "autoFocus": "Autofocus",
         "doubleOptIn": "Double opt-in",
@@ -3824,6 +3832,12 @@
         "attemptsHelp": "How often sending this email was attempted. More than 1 means it was tried again after an error or an interruption."
       }
     },
+    "publishDialog": {
+      "checklist": "Before you publish",
+      "options": "Options",
+      "publish": "Publish",
+      "schedule": "Schedule"
+    },
     "seoChecklist": {
       "navbar": "SEO",
       "title": "SEO checklist",
@@ -4105,6 +4119,9 @@
     },
     "colorPicker": {
       "pickColor": "Pick color"
+    },
+    "flexTile": {
+      "moreActions": "More actions"
     },
     "listInput": {
       "dragToReorder": "Drag to change the order",

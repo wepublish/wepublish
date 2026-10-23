@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Button, Card, CardContent, Drawer } from '@mui/material';
+import { Button, Drawer, Typography } from '@mui/material';
 import { PollDocument } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdEdit } from 'react-icons/md';
+import { MdOpenInNew } from 'react-icons/md';
 
 import { BlockProps } from '../atoms/blockList';
-import { PlaceholderInput } from '../atoms/placeholderInput';
+import { BlockPreviewCard } from '../atoms/blockPreviewCard';
 import {
   CopyPollAnswerVoteUrlButton,
   usePollAnswerVoteUrl,
@@ -16,57 +16,26 @@ import { DRAWER_WIDTHS } from '../drawer';
 import { SelectPollPanel } from '../panel/selectPollPanel';
 import { PollBlockValue } from '.';
 
-const IconWrapper = styled.div`
-  position: absolute;
-  z-index: 100;
-  height: 100%;
-  right: 0;
-`;
-
-const Poll = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-`;
-
-const Content = styled.div`
+const Answers = styled('ul')`
   display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 12px;
-  height: 100%;
-  padding: 24px 24px 32px;
-`;
-
-const Question = styled.div`
-  font-weight: bold;
-  text-align: center;
-`;
-
-const Answers = styled.div`
-  display: grid;
-  gap: 4px;
-  justify-items: center;
-`;
-
-const Answer = styled.div`
-  align-items: center;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
-  gap: 8px;
-`;
-
-const Panel = styled(Card)`
-  display: grid;
-  min-height: 200px;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  margin: 0;
   padding: 0;
-  background-color: ${({ theme }) => theme.vars.palette.background.default};
+  list-style: none;
+`;
+
+const Answer = styled('li')`
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(1)};
+  align-items: center;
 `;
 
 export const PollBlock = ({
   value: { poll },
   onChange,
   autofocus,
+  disabled,
 }: BlockProps<PollBlockValue>) => {
   const [isDialogOpen, setIsDialogOpen] = useState(
     () => Boolean(autofocus) && !poll
@@ -83,49 +52,41 @@ export const PollBlock = ({
 
   return (
     <>
-      <Panel variant="outlined">
-        <CardContent>
-          <CardContent>
-            <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
-              <PlaceholderInput
-                onAddClick={() => setIsDialogOpen(true)}
-                addLabel={t('blocks.poll.choosePoll')}
-              >
-                {poll && (
-                  <Poll>
-                    <IconWrapper>
-                      <Button
-                        variant="outlined"
-                        startIcon={<MdEdit />}
-                        size="large"
-                        onClick={() => setIsDialogOpen(true)}
-                      >
-                        {t('blocks.poll.edit')}
-                      </Button>
-                    </IconWrapper>
+      <BlockPreviewCard
+        isEmpty={!poll}
+        emptyLabel={t('blocks.poll.choosePoll')}
+        editLabel={t('blocks.poll.edit')}
+        onEdit={() => setIsDialogOpen(true)}
+        title={poll?.question}
+        disabled={disabled}
+        actions={
+          poll && (
+            <Button
+              size="small"
+              href={`/polls/edit/${poll.id}`}
+              target="_blank"
+              endIcon={<MdOpenInNew />}
+              sx={{ mr: 1 }}
+            >
+              {t('blocks.poll.open')}
+            </Button>
+          )
+        }
+      >
+        {!!answers.length && (
+          <Answers>
+            {answers.map(answer => (
+              <Answer key={answer.id}>
+                <CopyPollAnswerVoteUrlButton
+                  voteUrl={buildVoteUrl(answer.id)}
+                />
 
-                    <Content>
-                      <Question>{poll.question}</Question>
-
-                      <Answers>
-                        {answers.map(answer => (
-                          <Answer key={answer.id}>
-                            <span>{answer.answer}</span>
-
-                            <CopyPollAnswerVoteUrlButton
-                              voteUrl={buildVoteUrl(answer.id)}
-                            />
-                          </Answer>
-                        ))}
-                      </Answers>
-                    </Content>
-                  </Poll>
-                )}
-              </PlaceholderInput>
-            </CardContent>
-          </CardContent>
-        </CardContent>
-      </Panel>
+                <Typography variant="body2">{answer.answer}</Typography>
+              </Answer>
+            ))}
+          </Answers>
+        )}
+      </BlockPreviewCard>
 
       <Drawer
         anchor="right"

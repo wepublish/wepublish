@@ -1,23 +1,9 @@
-import {
-  Alert,
-  Button,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@mui/material';
 import { CanPublishPage } from '@wepublish/permissions';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import {
-  createCheckedPermissionComponent,
-  DateTimePicker,
-  DescriptionList,
-  DescriptionListItem,
-  DescriptionListItemWithMessage,
-  InfoColor,
-} from '../atoms';
+import { createCheckedPermissionComponent } from '../atoms';
 import { PageMetadata } from './pageMetadataPanel';
+import { PublishDialogContent } from './publishDialogContent';
 
 export interface PublishPagePanelProps {
   publishedAtDate?: Date;
@@ -33,130 +19,69 @@ function PublishPagePanel({
   onClose,
   onConfirm,
 }: PublishPagePanelProps) {
-  const now = new Date();
-  const [publishedAt, setPublishedAt] = useState<Date | undefined>(
-    publishedAtDate ?? now
-  );
   const { t } = useTranslation();
 
   return (
-    <>
-      <DialogTitle>{t('pageEditor.panels.publishPage')}</DialogTitle>
-
-      <DialogContent>
-        {publishedAt && publishedAt > now && (
-          <Alert severity="warning">
-            {t('pageEditor.panels.pagePending', {
-              pendingPublishDate: publishedAt,
-            })}
-          </Alert>
-        )}
-
-        {/* room for the field's floating label, which the dialog content
-            would clip as it has no top padding below the title */}
-        <div style={{ maxWidth: '200px', paddingTop: '12px' }}>
-          <DateTimePicker
-            dateTime={publishedAt}
-            label={t('pageEditor.panels.publishDate')}
-            changeDate={date => setPublishedAt(date)}
-          />
-        </div>
-
-        <DescriptionList>
-          <DescriptionListItem label={t('pageEditor.panels.url')}>
-            {metadata?.url ?
-              <a
-                href={metadata.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {metadata.url}
-              </a>
-            : '-'}
-          </DescriptionListItem>
-          <DescriptionListItemWithMessage
-            label={t('pageEditor.panels.title')}
-            message={t('pageEditor.panels.enterTitle')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.title || '-'}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItemWithMessage
-            label={t('pageEditor.panels.description')}
-            message={t('pageEditor.panels.enterDescription')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.description || '-'}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItem label={t('pageEditor.panels.seoTitle')}>
-            {metadata.seoTitle || '-'}
-          </DescriptionListItem>
-
-          <DescriptionListItem label={t('pageEditor.panels.seoDescription')}>
-            {metadata.seoDescription || '-'}
-          </DescriptionListItem>
-
-          <DescriptionListItem label={t('pageEditor.panels.slug')}>
-            {metadata.slug || '-'}
-          </DescriptionListItem>
-
-          <DescriptionListItem label={t('pageEditor.panels.tags')}>
-            {metadata.tags.join(', ') || '-'}
-          </DescriptionListItem>
-
-          <DescriptionListItemWithMessage
-            label={t('pageEditor.panels.image')}
-            message={t('pageEditor.panels.enterImage')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.image?.filename}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItemWithMessage
-            label={t('pageEditor.panels.socialMediaTitle')}
-            message={t('pageEditor.panels.enterSocialMediaTitle')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.socialMediaTitle}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItemWithMessage
-            label={t('pageEditor.panels.socialMediaDescription')}
-            message={t('pageEditor.panels.enterSocialMediaDescription')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.socialMediaDescription}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItemWithMessage
-            label={t('pageEditor.panels.socialMediaImage')}
-            message={t('pageEditor.panels.enterSocialMediaImage')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.socialMediaImage?.filename}
-          </DescriptionListItemWithMessage>
-        </DescriptionList>
-      </DialogContent>
-
-      <DialogActions>
-        <Button
-          variant="text"
-          onClick={() => onClose()}
-        >
-          {t('pageEditor.panels.close')}
-        </Button>
-
-        <Button
-          variant="contained"
-          disabled={!publishedAt}
-          onClick={() => onConfirm(publishedAt!)}
-        >
-          {t('pageEditor.panels.confirm')}
-        </Button>
-      </DialogActions>
-    </>
+    <PublishDialogContent
+      title={t('pageEditor.panels.publishPage')}
+      url={metadata.url}
+      publishedAtDate={publishedAtDate}
+      dateLabel={t('pageEditor.panels.publishDate')}
+      pendingMessage={pendingPublishDate =>
+        t('pageEditor.panels.pagePending', { pendingPublishDate })
+      }
+      closeLabel={t('pageEditor.panels.close')}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      checks={[
+        {
+          label: t('pageEditor.panels.title'),
+          value: metadata.title,
+          missing: t('pageEditor.panels.enterTitle'),
+        },
+        {
+          label: t('pageEditor.panels.description'),
+          value: metadata.description,
+          missing: t('pageEditor.panels.enterDescription'),
+        },
+        {
+          label: t('pageEditor.panels.seoTitle'),
+          value: metadata.seoTitle,
+        },
+        {
+          label: t('pageEditor.panels.seoDescription'),
+          value: metadata.seoDescription,
+        },
+        {
+          label: t('pageEditor.panels.slug'),
+          value: metadata.slug,
+        },
+        {
+          label: t('pageEditor.panels.tags'),
+          value: metadata.tags.join(', '),
+        },
+        {
+          label: t('pageEditor.panels.image'),
+          value: metadata.image?.filename,
+          missing: t('pageEditor.panels.enterImage'),
+        },
+        {
+          label: t('pageEditor.panels.socialMediaTitle'),
+          value: metadata.socialMediaTitle,
+          missing: t('pageEditor.panels.enterSocialMediaTitle'),
+        },
+        {
+          label: t('pageEditor.panels.socialMediaDescription'),
+          value: metadata.socialMediaDescription,
+          missing: t('pageEditor.panels.enterSocialMediaDescription'),
+        },
+        {
+          label: t('pageEditor.panels.socialMediaImage'),
+          value: metadata.socialMediaImage?.filename,
+          missing: t('pageEditor.panels.enterSocialMediaImage'),
+        },
+      ]}
+    />
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
