@@ -399,6 +399,34 @@ describe('PlaceService.createPlace', () => {
     }
   );
 
+  it('lets a member create a place that is private, and enabled as by default', async () => {
+    const { service, prisma } = await setup();
+
+    await service.createPlace(input({ private: true, enabled: true }), member);
+
+    expect(prisma.place.create.mock.calls[0][0].data).toMatchObject({
+      private: true,
+      enabled: true,
+    });
+  });
+
+  it('refuses a member creating a disabled place, as for organisations', async () => {
+    const { service, prisma } = await setup();
+
+    await expect(
+      service.createPlace(input({ enabled: false }), member)
+    ).rejects.toThrow(ForbiddenException);
+    expect(prisma.place.create).not.toHaveBeenCalled();
+  });
+
+  it('lets CAN_UPDATE_OTHER_ORGANIZATIONS create a disabled place', async () => {
+    const { service, prisma } = await setup();
+
+    await service.createPlace(input({ enabled: false }), admin);
+
+    expect(prisma.place.create.mock.calls[0][0].data.enabled).toBe(false);
+  });
+
   it('refuses an organisation that does not exist', async () => {
     const { service, prisma } = await setup();
     prisma.organization.findUnique.mockResolvedValue(null);
@@ -569,6 +597,59 @@ describe('PlaceService.updatePlace', () => {
 
     expect(prisma.region.findUnique).not.toHaveBeenCalled();
     expect(prisma.place.update).toHaveBeenCalled();
+  });
+
+  it.each([
+    ['disable', true, false],
+    ['enable', false, true],
+  ])(
+    'refuses a member who tries to %s their place, as for organisations',
+    async (_n, stored, requested) => {
+      const { service, prisma, cache } = await setup();
+      prisma.place.findUnique.mockResolvedValue(placeRow({ enabled: stored }));
+
+      await expect(
+        service.updatePlace({ id: 'place-1', enabled: requested }, member)
+      ).rejects.toThrow(ForbiddenException);
+      expect(prisma.place.update).not.toHaveBeenCalled();
+      expect(cache.invalidate).not.toHaveBeenCalled();
+    }
+  );
+
+  it('refuses a bound key changing enabled, whatever its scopes', async () => {
+    const { service, prisma } = await setup();
+    prisma.place.findUnique.mockResolvedValue(placeRow());
+
+    await expect(
+      service.updatePlace(
+        { id: 'place-1', enabled: false },
+        organizationKey('org-a', CanUpdateOtherOrganizations.id)
+      )
+    ).rejects.toThrow(ForbiddenException);
+  });
+
+  it('lets a member resend the stored enabled and change private', async () => {
+    const { service, prisma } = await setup();
+    prisma.place.findUnique.mockResolvedValue(placeRow({ enabled: false }));
+
+    await service.updatePlace(
+      { id: 'place-1', enabled: false, private: true },
+      member
+    );
+
+    expect(prisma.place.update.mock.calls[0][0].data).toMatchObject({
+      enabled: false,
+      private: true,
+    });
+  });
+
+  it('lets CAN_UPDATE_OTHER_ORGANIZATIONS disable a place', async () => {
+    const { service, prisma } = await setup();
+    prisma.place.findUnique.mockResolvedValue(placeRow());
+
+    await service.updatePlace({ id: 'place-1', enabled: false }, admin);
+
+    expect(prisma.place.update.mock.calls[0][0].data.enabled).toBe(false);
   });
 
   it('keeps its own slug', async () => {

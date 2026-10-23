@@ -6150,6 +6150,8 @@ export type PlaceViewerPermissions = {
   /** A place with upcoming events is still refused on delete. */
   delete: Scalars['Boolean']['output'];
   update: Scalars['Boolean']['output'];
+  /** Whether you may also switch the place on and off. */
+  updatePrivileged: Scalars['Boolean']['output'];
 };
 
 export type PolisConversationBlock = BaseBlock & {

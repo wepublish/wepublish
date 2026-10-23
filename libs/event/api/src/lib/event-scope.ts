@@ -250,6 +250,19 @@ export const mayAssignEventOrganization = (
   isOrganizationMember(session, organizationId) ||
   holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents);
 
+export const mayDuplicateEvent = (session: Session, event: EventOwnership) =>
+  holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents) ||
+  (event.organizationId == null ?
+    isEventOwner(session, event)
+  : isOrganizationMember(session, event.organizationId));
+
+export const mayChangeShowInPrint = (
+  session: Session,
+  organization: { partner: boolean } | null
+) =>
+  organization?.partner === true ||
+  holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents);
+
 export const mayAssignEventOwner = (session: Session, ownerId: string | null) =>
   (ownerId != null && ownerId === userIdOf(session)) ||
   holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents);
@@ -301,8 +314,7 @@ export const eventViewerPermissions = (
       hasPermission(CanDeleteEvent, granted) && canDeleteEvent(session, event),
     duplicate:
       hasPermission(CanCreateEvent, granted) &&
-      canModifyEvent(session, event) &&
-      mayAssignEventOrganization(session, event.organizationId),
+      mayDuplicateEvent(session, event),
     requestReview: update && !publish && hasDraft && !event.reviewRequestedAt,
     withdrawReview: update && !!event.reviewRequestedAt,
     moveOrganization:
@@ -338,5 +350,9 @@ export const placeViewerPermissions = (
     hasPermission(CanUpdateOrganization, permissionsOf(session)) &&
     canManagePlace(session, place.organizationId);
 
-  return { update: manages, delete: manages };
+  return {
+    update: manages,
+    updatePrivileged: manages && mayUpdateAnyOrganization(session),
+    delete: manages,
+  };
 };

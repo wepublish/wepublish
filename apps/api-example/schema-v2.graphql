@@ -4804,6 +4804,9 @@ type PlaceViewerPermissions {
   """A place with upcoming events is still refused on delete."""
   delete: Boolean!
   update: Boolean!
+
+  """Whether you may also switch the place on and off."""
+  updatePrivileged: Boolean!
 }
 
 type PolisConversationBlock implements BaseBlock {

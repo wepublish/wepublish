@@ -72,11 +72,11 @@ Columns: **Anon** = anonymous · **No org** = logged in, no organisation · **Ev
 | Publish at creation [E4] | BKa: ✗ / WeP: ✗ | BKa: ✗ / WeP: ✗ | BKa: ✓ even at a foreign venue; venue is only told afterwards / WeP: ✗ always a draft first ⚠Q6 | — | — | — | BKa: ✓ / WeP: draft first, then publish ⚠Q6 |
 | Edit facts (dates, venue, prices) [E5] | BKa: ✗ / WeP: ✗ | BKa: proposed only / WeP: owned ⚠Q1 | BKa: ✓ / WeP: ✓ | BKa: ✓ live at once / WeP: ✓ live at once | BKa: ✓ / WeP: ✓ | BKa: ✓ / WeP: — ⚠Q1 | BKa: ✓ / WeP: ✓ |
 | Edit content (texts, images) [E6] | BKa: ✗ / WeP: ✗ | BKa: proposed, live at once / WeP: owned, saved as draft ⚠Q7 | BKa: ✓ live at once / WeP: ✓ draft; live after publish ⚠Q7 | BKa: ✓ live at once / WeP: ✓ draft; cannot make it live ⚠Q7 | BKa: ✓ live / WeP: ✓ draft ⚠Q7 | BKa: ✓ live / WeP: — ⚠Q1 | BKa: ✓ live / WeP: ✓ draft, then publish ⚠Q7 |
-| Print fields [E7] | BKa: ✗ / WeP: ✗ | BKa: only with member flag / WeP: ✓ ⚠Q8 | BKa: only with member flag / WeP: ✓ ⚠Q8 | BKa: only with member flag / WeP: ✓ ⚠Q8 | BKa: only with member flag / WeP: ✓ ⚠Q8 | BKa: ✗ (form accounts have no flag) / WeP: — | BKa: ✓ / WeP: ✓ |
+| Print fields [E7] | BKa: ✗ / WeP: ✗ | BKa: only with member flag / WeP: ✗ (no organisation, so no partner) ⚠Q8 | BKa: only with member flag / WeP: only if the organisation is a partner ⚠Q8 | BKa: only with member flag / WeP: only if the event's organisation is a partner ⚠Q8 | BKa: only with member flag / WeP: only if the event's organisation is a partner ⚠Q8 | BKa: ✗ (form accounts have no flag) / WeP: — | BKa: ✓ / WeP: ✓ |
 | Publish / unpublish [E8] | BKa: ✗ / WeP: ✗ | BKa: ✗ / WeP: own organisation-less event, with `CAN_PUBLISH_EVENT` ⚠Q3 | BKa: ✓ / WeP: ✓ with `CAN_PUBLISH_EVENT` | BKa: ✓ (this is BKa's validation) / WeP: ✗, requests review ⚠Q9 | BKa: ✓ even if filed under another organisation / WeP: only organisation-less events ⚠Q10 | BKa: ✗ (copy loophole, conditional) / WeP: — | BKa: ✓ / WeP: ✓ |
 | Send for review (`to_validate`) [E9] | BKa: ✓ every public-form submission / WeP: ✗ ⚠Q5 | BKa: ✗ / WeP: on owned events they cannot publish ⚠Q3 | BKa: ✓ by choosing the status / WeP: only if they cannot publish ⚠Q11 | BKa: not needed, may publish / WeP: ✓ their only route ⚠Q9 | BKa: ✓ / WeP: only if they cannot publish ⚠Q11 | BKa: ✗ (status locked) / WeP: — | BKa: ✓ / WeP: ✗ (refused, can publish) ⚠Q11 |
 | Delete [E10] | BKa: ✗ / WeP: ✗ | BKa: proposed events / WeP: ✗ ⚠Q13 | BKa: ✓ / WeP: ✓ | BKa: ✓ / WeP: ✗ ⚠Q12 | BKa: ✓ / WeP: ✗ unless in the event's organisation ⚠Q13 | BKa: ✓ (though they cannot publish) / WeP: — ⚠Q13 | BKa: ✓ / WeP: ✓ |
-| Duplicate [E11] | BKa: ✗ / WeP: ✗ | BKa: proposed events (but cannot save the copy) / WeP: owned organisation-less events ⚠Q3 | BKa: ✓ copier owns a draft / WeP: ✓ same | BKa: ✓ copy stays under the other organisation / WeP: ✗ (except organisation-less events) ⚠Q14 | BKa: ✓ / WeP: only if organisation-less or a member ⚠Q14 | BKa: ✓ / WeP: — | BKa: ✓ / WeP: ✓ |
+| Duplicate [E11] | BKa: ✗ / WeP: ✗ | BKa: proposed events (but cannot save the copy) / WeP: owned organisation-less events ⚠Q3 | BKa: ✓ copier owns a draft / WeP: ✓ same | BKa: ✓ copy stays under the other organisation / WeP: ✗ ⚠Q14 | BKa: ✓ / WeP: only if organisation-less or a member ⚠Q14 | BKa: ✓ / WeP: — | BKa: ✓ / WeP: ✓ |
 | Change event's organisation [E12] | BKa: ✗ / WeP: ✗ | BKa: ✗ / WeP: ✗ (only "none") | BKa: ✓ between own organisations / WeP: ✓ same, **or to none** ⚠Q3 | BKa: ✓ can pull it into their own organisation / WeP: ✗ (D47) ⚠Q15 | BKa: ✓ into own organisations / WeP: only an organisation-less event ⚠Q15 | BKa: ✗ (field locked) / WeP: — | BKa: ✓ except past events / WeP: ✓ any ⚠Q16 |
 | Change venue [E13] | BKa: ✗ / WeP: ✗ | BKa: enabled, public venues / WeP: same | BKa: enabled, public or own / WeP: same | BKa: same / WeP: same | BKa: same / WeP: same | BKa: same / WeP: — | BKa: any incl. disabled / WeP: not disabled ⚠Q4 |
 | Change owner [E14] | BKa: ✗ / WeP: ✗ | BKa: ✗ / WeP: ✗ | BKa: ✗ / WeP: ✗ | BKa: ✗ / WeP: ✗ | BKa: ✗ / WeP: ✗ | BKa: ✗ / WeP: — | BKa: ✗ (no field anywhere) / WeP: ✓ ⚠Q17 |
@@ -90,11 +90,11 @@ Columns: **Anon** = anonymous · **No org** = logged in, no organisation · **Ev
 - **E4.** BKa: `EventType.php:850` (`can_publish` defaults to true), `EventController.php:438` (create passes no `can_publish`), `:454-457` (mail 1a to the creator at a foreign or organisation-less venue, whatever the status), `:460-466` (1b if `to_validate`, else 3b to the venue's organisation), `:516` (admins skip all mails); `docs/bka-migration/research/bka-03-emails.md:28,33`. **So BKa does not enforce validation at create.** WeP: `event.service.ts:351-419` (create never publishes); D3 `decisions.md:77`, D4 `:159`.
 - **E5.** BKa: `EventVoter.php:68-102`; `EventController.php:485-488,494,500` (archived fields are admin-only, after the last end date); `EventType.php:126-132,235-246,701-720`. The relaxed organisation field exists only on proposed events, so a no-organisation owner cannot save their own event. Inconsistency: the BKa archive list hides the edit icon for published past events, for admins too, but the route stays open (`themes/bka/templates/datatables/event-archived-actions.html.twig:8`). WeP: `event-scope.ts:204-208` (`canModifyEvent`); `event.service.ts:425`; `decisions.md:1570-1585`.
 - **E6.** BKa: one form, one save (`EventController.php:488`). WeP: `event.service.ts:530-551`; `event.resolver.ts:152-162`.
-- **E7.** BKa: `EventController.php:436,494`; `EventType.php:136,251`. WeP: `event.service.ts:400,493` (`showInPrint` is written without a check).
+- **E7.** BKa: `EventController.php:436,494`; `EventType.php:136,251,433` (`showInPrint` and `printDescription`). WeP: `event-scope.ts:259-264` (`mayChangeShowInPrint`: the event's organisation is a partner, or `CanUpdateOtherOrganizationEvents`); `event.service.ts:976-1003`; D95. `printDescription` is not gated.
 - **E8.** BKa: `EventVoter.php:87-105`; `EventController.php:501`; `EventType.php:564-569`; validation mails `EventController.php:520-531,557-562`. Proposer copy loophole: `src/Event/EventDuplicator.php:57-58,72-77`. It works only if an admin already set an organisation on the original (the form never does) or the proposer belongs to an organisation (`EventDuplicator.php:58,88-90`; `EventType.php:126-132,235-246`). WeP: `event-scope.ts:210-214`; `event.service.ts:567,633-640`; `event.resolver.ts:164,177`; D48 `decisions.md:2136-2163`.
 - **E9.** BKa: `EventType.php:564-569,850`; `EventController.php:454-462`; `ProposeEventController.php:258`; 90 of 109 `to_validate` rows come from the public form (`bka-02-live-data-profile.md:606-633`). WeP: `event.service.ts:791-827` (refused for those who can publish, `:798-802`); `event.resolver.ts:205`; D58 `decisions.md:2440`.
 - **E10.** BKa: `EventController.php:638-643` (no delete attribute; delete reuses edit; a GET link with no CSRF, bka-06:1111). Inconsistency: the upcoming list shows the delete icon to edit holders (`templates/datatables/event-actions.html.twig:2,27`), the archive list only to admins (`themes/bka/templates/datatables/event-archived-actions.html.twig:14`), and the route is open to edit holders either way. WeP: `event-scope.ts:216-218`; `event.resolver.ts:188`; D49 `decisions.md:2167-2183`.
-- **E11.** BKa: `EventController.php:593-606`; `EventDuplicator.php:57-58,72-77,88-90`. Not available in either API. WeP: `event.service.ts:674-696,727-737`; `event-scope.ts:204-208,220-226` (a venue member can copy an organisation-less event at their venue); D57 `decisions.md:2412`.
+- **E11.** BKa: `EventController.php:593-606`; `EventDuplicator.php:57-58,72-77,88-90`. Not available in either API. WeP: `event.service.ts:724-748` (the copy's venue must still be selectable); `event-scope.ts:253-257` (`mayDuplicateEvent`); D57, D95.
 - **E12.** BKa: `EventType.php:121-132` (admin: all, `:122-124`), `:199-248` + `EventController.php:500` (past events: organisation and place become read-only archived fields, even for admins), `:701-720` (locked for non-admins on proposed events). WeP: `event-scope.ts:232-250` (null target allowed, `:246-249`); `event.service.ts:429-437`; D47 `decisions.md:2098`.
 - **E13.** BKa: `PlaceRepository.php:87-112`; `EventType.php:212-222`. WeP: `event-scope.ts:127-144`; `event.service.ts:884-901`.
 - **E14.** BKa: `EventController.php:416`; `EventDuplicator.php:72-73`; `EventType.php:118-250` (no user field); `ApiEventController.php:355-401` and `src/ApiResource/EventApi.php:609-610` (APIs set no owner); deleting a user nulls `event.user_id` (bka-06:645-650). WeP: `event-scope.ts:228-230,252-253`; `event.service.ts:358-374,439-447`.
@@ -143,7 +143,7 @@ Columns: **Anon** · **No org** · **Member** = member of the venue's organisati
 | Create [P3] | BKa: ✗ / WeP: ✗ | BKa: one hidden venue at sign-up / WeP: ✗ ⚠Q21 | BKa: ✗ / WeP: ✓ with `CAN_UPDATE_ORGANIZATION` (not in editor role) ⚠Q25 | BKa: ✓ / WeP: ✓ (also with no organisation) |
 | Edit [P4] | BKa: ✗ / WeP: ✗ | BKa: ✗ / WeP: ✗ | BKa: ✓ / WeP: ✓ with `CAN_UPDATE_ORGANIZATION` | BKa: ✓ / WeP: ✓ |
 | Move to another organisation [P5] | — | — | BKa: ✗ / WeP: ✓ between own organisations ⚠Q26 | BKa: ✓ / WeP: ✓ |
-| Private / enabled [P6] | — | — | BKa: ✓ / WeP: ✓ | BKa: ✓ / WeP: ✓ |
+| Private / enabled [P6] | — | — | BKa: ✓ both / WeP: private ✓, enabled ✗ ⚠Q22 | BKa: ✓ / WeP: ✓ |
 | Delete [P7] | — | — | BKa: ✗ / WeP: ✓ (no future dates) ⚠Q27 | BKa: ✓ if no upcoming events / WeP: ✓ if no future dates |
 
 **Footnotes**
@@ -153,7 +153,7 @@ Columns: **Anon** · **No org** · **Member** = member of the venue's organisati
 - **P3.** BKa: `PlaceController.php:88-92`; `EventController.php:212-223` (onboarding venue, created disabled). WeP: `place.resolver.ts:58`; `place.service.ts:145`; `event-scope.ts:146-152`; D55 `decisions.md:2351`.
 - **P4.** BKa: `src/Security/Voters/PlaceVoter.php:51-66`; `PlaceController.php:128`. WeP: `place.service.ts:176-190`.
 - **P5.** BKa: `src/Form/PlaceType.php:282-293` (admin only). WeP: `place.service.ts:182-190`.
-- **P6.** BKa: `PlaceType.php:112-124`. `private` only narrows the event-form and public-form pickers, and both APIs ignore it (`PlaceRepository.php:94-96`; bka-04:1150). WeP: `place.service.ts:202-203`; `event-scope.ts:127-144`.
+- **P6.** BKa: `PlaceType.php:112-124`. `private` only narrows the event-form and public-form pickers, and both APIs ignore it (`PlaceRepository.php:94-96`; bka-04:1150). WeP: `place.service.ts:253-266` (`enabled` needs `CanUpdateOtherOrganizations`, as an organisation's does); `event-scope.ts:127-144`; D95.
 - **P7.** BKa: `PlaceController.php:160-172`. WeP: `place.service.ts:220-237`.
 
 ---
@@ -223,11 +223,11 @@ Columns: **With org** = BKa token of a `ROLE_USER` who is in organisations / WeP
 
 1. A member, or an organisation-bound key, can move an event to "no organisation" (`event-scope.ts:246-249`). After that only its owner or a cross-organisation user can reach it.
 2. ~~A key with `CAN_CREATE_EVENT` creates events with no owner. A platform key's events also have no organisation, and it cannot edit them afterwards (`event-scope.ts:204-208,220-226`). BKa v2 has the same flaw.~~ Closed by D94: a key acts as its creator, who owns what it creates.
-3. `duplicateEvent` copies `placeId` without the venue check (`event.service.ts:728`).
-4. A venue member can duplicate an organisation-less event at their venue (`event.service.ts:689-696`; `event-scope.ts:220-226`), which contradicts the D57 cell.
-5. Place `enabled` and `private` are free for any place manager (`place.service.ts:202-203`), while organisation `enabled` is privileged.
+3. ~~`duplicateEvent` copies `placeId` without the venue check (`event.service.ts:728`).~~ Closed by D95: the copy's venue must be selectable.
+4. ~~A venue member can duplicate an organisation-less event at their venue (`event.service.ts:689-696`; `event-scope.ts:220-226`), which contradicts the D57 cell.~~ Closed by D95 (`mayDuplicateEvent`).
+5. ~~Place `enabled` and `private` are free for any place manager (`place.service.ts:202-203`), while organisation `enabled` is privileged.~~ Closed by D95: place `enabled` is privileged like the organisation's; `private` stays with the managers, as in BKa.
 6. The editor role holds `CAN_GET_ALL_API_TOKENS` and `CAN_REVOKE_ALL_API_TOKENS` (`permissions.ts:1537-1541`).
-7. `showInPrint` is not gated (`event.service.ts:400,493`).
+7. ~~`showInPrint` is not gated (`event.service.ts:400,493`).~~ Closed by D95: only for a partner organisation's event, or with `CanUpdateOtherOrganizationEvents`. `printDescription` stays ungated.
 
 Also BKa-side, for context. Destructive admin actions are GET links with no CSRF: event delete and copy, organisation, place, user and token delete (bka-06:1111). 2,558 events have no owner, organisation or place, so no non-admin can reach them. Nobody holds `ROLE_BROADCAST_PARTNER` or `ROLE_SUPER_ADMIN`.
 
@@ -256,7 +256,7 @@ Also BKa-side, for context. Destructive admin actions are GET links with no CSRF
 19. **Q19** Should the list of organisations and venues (names, addresses, websites) be visible to everyone on the public site and API? Today it is visible only to logged-in partners.
 20. **Q20** Do organisers need to see other organisations and venues that have been switched off, as they do in today's admin lists?
 21. **Q21** Should new users keep the ability to create their own organisation (and a first, hidden venue) themselves when they sign up, or should BKa create organisations?
-22. **Q22** Should an organisation be able to switch itself off (hide itself), or only BKa?
+22. **Q22** Should an organisation be able to switch itself and its venues off (hide them), or only BKa?
 23. **Q23** Is "member" (partner) a property of a person, as today, or of the whole organisation?
 24. **Q24** Should an organisation ever be able to delete itself, or only BKa?
 25. **Q25** Should organisations be able to add new venues themselves, or only BKa?

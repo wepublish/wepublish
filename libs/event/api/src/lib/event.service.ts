@@ -39,6 +39,8 @@ import {
   editorEventsWhere,
   mayAssignEventOrganization,
   mayAssignEventOwner,
+  mayChangeShowInPrint,
+  mayDuplicateEvent,
   mayMoveEventToOrganization,
   mayReassignEventOwner,
   publicEventsWhere,
@@ -416,6 +418,12 @@ export class EventService {
     await this.assertEventTags(input.tagIds);
     await this.assertSlugAvailable(input.slug);
     await this.assertPlaceSelectable(input.placeId, session);
+    await this.assertMayChangeShowInPrint(
+      input.showInPrint,
+      false,
+      organizationId,
+      session
+    );
 
     const event = await this.prisma.$transaction(async tx => {
       const created = await tx.event.create({
@@ -515,6 +523,15 @@ export class EventService {
     if (input.placeId !== existing.placeId) {
       await this.assertPlaceSelectable(input.placeId, session);
     }
+
+    await this.assertMayChangeShowInPrint(
+      input.showInPrint,
+      existing.showInPrint,
+      input.organizationId !== undefined ?
+        input.organizationId
+      : existing.organizationId,
+      session
+    );
 
     const event = await this.prisma.$transaction(async tx => {
       const updated = await tx.event.update({
@@ -719,14 +736,13 @@ export class EventService {
       throw new NotFoundException(`Event ${id} was not found.`);
     }
 
-    if (
-      !canModifyEvent(session, source) ||
-      !mayAssignEventOrganization(session, source.organizationId)
-    ) {
+    if (!mayDuplicateEvent(session, source)) {
       throw new ForbiddenException(
         'You may only copy events you may file under their organisation.'
       );
     }
+
+    await this.assertPlaceSelectable(source.placeId, session);
 
     const revision = await this.prisma.eventRevision.findFirst({
       where: { eventId: id, archivedAt: null },
@@ -953,6 +969,35 @@ export class EventService {
     if (!selectable) {
       throw new BadRequestException(
         `Place ${placeId} does not exist, is disabled or is private to another organisation.`
+      );
+    }
+  }
+
+  private async assertMayChangeShowInPrint(
+    requested: boolean | null | undefined,
+    current: boolean,
+    organizationId: string | null,
+    session: Session
+  ) {
+    if (
+      requested == null ||
+      requested === current ||
+      mayChangeShowInPrint(session, null)
+    ) {
+      return;
+    }
+
+    const organization =
+      organizationId ?
+        await this.prisma.organization.findUnique({
+          where: { id: organizationId },
+          select: { partner: true },
+        })
+      : null;
+
+    if (!mayChangeShowInPrint(session, organization)) {
+      throw new ForbiddenException(
+        'Only events of partner organisations can be marked for print.'
       );
     }
   }

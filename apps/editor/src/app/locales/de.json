@@ -4949,6 +4949,7 @@
           "organizationAnyHelp": "Die Organisation, deren Mitglieder den Ort verwalten. Leer lassen für einen Ort ohne Verwaltung.",
           "enabled": "Aktiv",
           "enabledHelp": "Veranstaltungen lassen sich nur an aktiven Orten erfassen.",
+          "privilegedLocked": "Nur die Agenda-Administration kann einen Ort aktivieren oder deaktivieren.",
           "private": "Nur die Organisation dieses Orts kann hier Veranstaltungen erfassen",
           "privateHelp": "Der Ort bleibt auf der Website sichtbar. Die Agenda-Administration kann hier weiterhin Veranstaltungen erfassen.",
           "accessibility": "Zugänglichkeit – Selbstdeklaration (optional)",

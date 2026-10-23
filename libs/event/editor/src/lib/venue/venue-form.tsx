@@ -79,7 +79,7 @@ function VenueTextField({
 
 export interface VenueFormProps {
   isNew: boolean;
-  viewerCan?: { update: boolean } | null;
+  viewerCan?: { update: boolean; updatePrivileged: boolean } | null;
   aside?: ReactNode;
 }
 
@@ -92,6 +92,8 @@ export function VenueForm({ isNew, viewerCan, aside }: VenueFormProps) {
   const { data: regionData } = useQuery(EventRegionsDocument);
 
   const readOnly = !isNew && viewerCan?.update === false;
+  const mayChangeEnabled =
+    isNew ? mayUseAnyOrganization : viewerCan?.updatePrivileged === true;
   const regions = regionData?.eventRegions ?? [];
 
   return (
@@ -264,13 +266,15 @@ export function VenueForm({ isNew, viewerCan, aside }: VenueFormProps) {
                       <Switch
                         name={field.name}
                         checked={field.value}
-                        disabled={readOnly}
+                        disabled={readOnly || !mayChangeEnabled}
                         onChange={(_event, checked) => field.onChange(checked)}
                       />
                     }
                   />
                   <FormHelperText>
-                    {t('agenda.venues.form.enabledHelp')}
+                    {mayChangeEnabled ?
+                      t('agenda.venues.form.enabledHelp')
+                    : t('agenda.venues.form.privilegedLocked')}
                   </FormHelperText>
                 </div>
               )}

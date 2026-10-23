@@ -15,6 +15,7 @@ import {
 } from '@wepublish/utils/api';
 import {
   canManagePlace,
+  mayUpdateAnyOrganization,
   organizationIdsOf,
   selectablePlacesWhere,
   visiblePlacesWhere,
@@ -152,6 +153,7 @@ export class PlaceService {
       );
     }
 
+    this.assertMayChangeEnabled(input.enabled, true, session);
     await this.validate(input, null);
 
     const place = await this.prisma.place.create({
@@ -193,6 +195,7 @@ export class PlaceService {
       );
     }
 
+    this.assertMayChangeEnabled(input.enabled, existing.enabled, session);
     await this.validate(input, existing);
 
     const place = await this.prisma.place.update({
@@ -245,6 +248,22 @@ export class PlaceService {
     await this.publicContentCache.invalidate('events');
 
     return place;
+  }
+
+  private assertMayChangeEnabled(
+    requested: boolean | null | undefined,
+    current: boolean,
+    session: Session
+  ) {
+    if (
+      requested != null &&
+      requested !== current &&
+      !mayUpdateAnyOrganization(session)
+    ) {
+      throw new ForbiddenException(
+        'Changing enabled needs CAN_UPDATE_OTHER_ORGANIZATIONS.'
+      );
+    }
   }
 
   private async findPlaceOrFail(id: string) {

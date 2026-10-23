@@ -4949,6 +4949,7 @@
           "organizationAnyHelp": "L’organisation dont les membres gèrent le lieu. Laissez vide pour un lieu sans gestionnaire.",
           "enabled": "Actif",
           "enabledHelp": "Seuls les lieux actifs peuvent accueillir de nouveaux événements.",
+          "privilegedLocked": "Seule l’administration de l’agenda peut activer ou désactiver un lieu.",
           "private": "Seule l’organisation de ce lieu peut y saisir des événements",
           "privateHelp": "Le lieu reste visible sur le site. L’administration de l’agenda peut toujours y saisir des événements.",
           "accessibility": "Accessibilité — autodéclaration (facultatif)",

@@ -2273,6 +2273,8 @@ cannot disagree about what the description says.
 
 ## D52 — `ticketingUrl` and `showInPrint` are facts on the event
 
+> **Updated by [D95](#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules), awaiting Karl's confirmation.** Changing `showInPrint` needs the event's organisation to be a partner, or `CanUpdateOtherOrganizationEvents`.
+
 Updates [D24](#d24--the-revision-carries-what-an-editor-writes-the-event-carries-what-the-event-is).
 
 **Status.** Built in `181c71168`. Awaiting Karl's confirmation.
@@ -2370,6 +2372,8 @@ changes keeps events at a venue that was disabled later editable.
 
 ## D55 — Place writes reuse the organisation permissions
 
+> **Updated by [D95](#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules), awaiting Karl's confirmation.** Changing a place's `enabled` needs `CanUpdateOtherOrganizations`, as for organisations; `private` stays with the place's managers, and `Place.viewerCan` gains `updatePrivileged`.
+
 > **Updated by [D73](#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine) and [D87](#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan), awaiting Karl's confirmation.** `Place.viewerCan` reports `update` and `delete` from `CanUpdateOrganization` and `canManagePlace`, and `places` gains the `mine` filter. The predefined editor role holds no organisation permission (D66), so editor-role members see their venues read-only.
 
 Updates [D4](#d4--canpublishevent-decides-who-needs-validating).
@@ -2436,6 +2440,8 @@ Updates [D27](#d27--the-events-domain-ships-to-every-tenant).
 ---
 
 ## D57 — `duplicateEvent` copies the way BKa's duplicator does
+
+> **Updated by [D95](#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules), awaiting Karl's confirmation.** The check is now `mayDuplicateEvent`, which also refuses a venue member an event without organisation, and the copy's venue must still be selectable.
 
 **Status.** Built in `595956a6f`. Awaiting Karl's confirmation.
 
@@ -3535,6 +3541,49 @@ calls keeps "acts as its creator" from becoming "is its creator".
 - A key keeps acting for a creator whose account was deactivated (`active: false`). Open.
 
 ---
+
+## D95 — Copies, venue switches and the print flag follow the organisation rules
+
+Updates [D52](#d52--ticketingurl-and-showinprint-are-facts-on-the-event), [D55](#d55--place-writes-reuse-the-organisation-permissions), [D57](#d57--duplicateevent-copies-the-way-bkas-duplicator-does) and [D87](#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan). Closes gaps 3, 4, 5 and 7 of [permissions.md](permissions.md) §8.
+
+**Status.** Built in the permission-gap round. Awaiting Karl's confirmation.
+
+**Decision.**
+- **Copying (gaps 3 and 4).** `duplicateEvent` and `Event.viewerCan.duplicate` use
+  `mayDuplicateEvent` (`event-scope.ts`): a member of the source's organisation, the owner of a
+  source with no organisation, or a holder of `CanUpdateOtherOrganizationEvents`. A venue member is
+  refused whether or not the event has an organisation, as D57 says. The copy's venue goes through
+  `assertPlaceSelectable`, as on `createEvent`, so a disabled venue, or one private to another
+  organisation, refuses the copy.
+- **Venue switches (gap 5).** Changing a place's `enabled` needs `CanUpdateOtherOrganizations`, on
+  create and update (`place.service.ts`, `assertMayChangeEnabled`); resending the stored value, or
+  `true` on create, is allowed. `private` stays with anyone who manages the place.
+  `Place.viewerCan.updatePrivileged` reports it, and the venue form disables the switch with
+  "Only the agenda administrators can switch a venue on or off" unless it holds (or, on create,
+  `CanUpdateOtherOrganizations`).
+- **Print flag (gap 7).** Changing `showInPrint` on `createEvent` or `updateEvent` needs the event's
+  organisation, after the update, to be a partner, or `CanUpdateOtherOrganizationEvents`, which a
+  key bound to an organisation never counts as holding (`mayChangeShowInPrint`). Resending the
+  stored value is allowed. `duplicateEvent` still copies the flag unchanged.
+
+**Why.** BKa lets members switch both their organisation and their venues on and off
+(`OrganizationType.php:91-98`, `PlaceType.php:112-124`). We.Publish already reserves the
+organisation switch for the agenda administrators (D37, open as Q22), and disabling a venue has the
+same effect: it disappears from the public lists and from the venue picker. One rule for both keeps
+the answer to Q22 in one place. `private` decides only who else may file events at the venue (D54),
+which is the organisation's own business, so it stays with the members, as in BKa. BKa shows its
+print fields only to users with the member flag and to admins (`EventType.php:136,251,433`). The
+flag is now `Organization.partner` (D11, D14a), so print eligibility follows the organisation that
+runs the event, not the person typing.
+
+**Consequences.**
+- Open: BKa's print section also holds `printDescription`, which stays ungated here because it is
+  revision content.
+- Open: the editor's print checkbox is not yet locked for events of organisations that are not
+  partners, so such a save fails with "Only events of partner organisations can be marked for
+  print."
+- Moving an event marked for print to an organisation that is not a partner keeps the flag.
+- Copying an event whose venue was disabled since now fails, where it used to copy the venue.
 
 ## Open questions
 

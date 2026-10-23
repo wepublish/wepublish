@@ -35,6 +35,7 @@ export const testPlace = (
   viewerCan: {
     __typename: 'PlaceViewerPermissions',
     update: true,
+    updatePrivileged: false,
     delete: true,
   },
   ...overrides,

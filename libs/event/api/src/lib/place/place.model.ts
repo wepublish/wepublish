@@ -32,6 +32,11 @@ export class PlaceViewerPermissions {
   update!: boolean;
 
   @Field({
+    description: `Whether you may also switch the place on and off.`,
+  })
+  updatePrivileged!: boolean;
+
+  @Field({
     description: `A place with upcoming events is still refused on delete.`,
   })
   delete!: boolean;

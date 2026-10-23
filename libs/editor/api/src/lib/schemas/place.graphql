@@ -82,6 +82,7 @@ fragment EditorPlace on Place {
   modifiedAt
   viewerCan {
     update
+    updatePrivileged
     delete
   }
 }

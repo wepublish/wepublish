@@ -345,4 +345,22 @@ describe('PlaceResolver', () => {
       });
     }
   );
+
+  it.each<[string, string, boolean]>([
+    ['a member with CAN_UPDATE_ORGANIZATION', 'organiser', false],
+    ['a cross-organisation editor', 'crossOrg', true],
+  ])(
+    'tells %s whether it may switch the place on and off',
+    async (_, session, may) => {
+      service.getPlace.mockResolvedValue(place);
+
+      const res = await send(
+        `query { place(id: "place-1") { viewerCan { updatePrivileged } } }`,
+        { 'x-session': session }
+      ).expect(200);
+
+      expect(res.body.errors).toBeUndefined();
+      expect(res.body.data.place.viewerCan.updatePrivileged).toBe(may);
+    }
+  );
 });

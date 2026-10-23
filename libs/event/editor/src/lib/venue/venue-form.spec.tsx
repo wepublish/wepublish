@@ -218,6 +218,42 @@ describe('EditVenue', () => {
     );
   });
 
+  it('locks enabled for a member and says who can change it', async () => {
+    renderEdit();
+    await nameField();
+
+    expect(
+      screen.getByRole('switch', { name: 'agenda.venues.form.enabled' })
+    ).toBeDisabled();
+    expect(
+      screen.getByText('agenda.venues.form.privilegedLocked')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('checkbox', { name: 'agenda.venues.form.private' })
+    ).toBeEnabled();
+  });
+
+  it('lets an agenda administrator switch the venue off', async () => {
+    place = testPlace({
+      viewerCan: {
+        __typename: 'PlaceViewerPermissions',
+        update: true,
+        updatePrivileged: true,
+        delete: true,
+      },
+    });
+    renderEdit(AGENDA_ADMIN);
+    await nameField();
+
+    fireEvent.click(
+      screen.getByRole('switch', { name: 'agenda.venues.form.enabled' })
+    );
+    fireEvent.click(screen.getByTestId('saveButton'));
+
+    await waitFor(() => expect(updatePlace).toHaveBeenCalled());
+    expect(updatePlace.mock.calls[0][0].variables.enabled).toBe(false);
+  });
+
   it('says at the top of the form when fields need attention before saving', async () => {
     renderEdit();
 
@@ -272,6 +308,7 @@ describe('EditVenue', () => {
       viewerCan: {
         __typename: 'PlaceViewerPermissions',
         update: false,
+        updatePrivileged: false,
         delete: false,
       },
     });
@@ -316,6 +353,23 @@ describe('CreateVenue', () => {
         private: false,
       })
     );
+  });
+
+  it('locks enabled on a new venue unless the caller is an agenda administrator', async () => {
+    const { unmount } = renderCreate();
+    await nameField();
+
+    expect(
+      screen.getByRole('switch', { name: 'agenda.venues.form.enabled' })
+    ).toBeDisabled();
+
+    unmount();
+    renderCreate(AGENDA_ADMIN);
+    await nameField();
+
+    expect(
+      screen.getByRole('switch', { name: 'agenda.venues.form.enabled' })
+    ).toBeEnabled();
   });
 
   it('asks a member for one of their organisations', async () => {

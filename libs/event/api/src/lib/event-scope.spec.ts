@@ -31,6 +31,8 @@ import {
   boundOrganizationIdOf,
   mayAssignEventOrganization,
   mayAssignEventOwner,
+  mayChangeShowInPrint,
+  mayDuplicateEvent,
   mayMoveEventToOrganization,
   mayReassignEventOwner,
   publicEventsWhere,
@@ -1002,6 +1004,83 @@ describe('mayAssignEventOrganization', () => {
   });
 });
 
+describe('mayDuplicateEvent', () => {
+  const event = (
+    organizationId: string | null,
+    placeOrganizationId: string | null = null,
+    ownerId: string | null = null
+  ): EventOwnership => ({
+    organizationId,
+    ownerId,
+    place: { organizationId: placeOrganizationId },
+  });
+
+  it("lets a member of the event's organisation copy it", () => {
+    expect(mayDuplicateEvent(user(['a']), event('a', 'v'))).toBe(true);
+  });
+
+  it("refuses a member of the venue's organisation (D57)", () => {
+    expect(mayDuplicateEvent(user(['v']), event('a', 'v'))).toBe(false);
+  });
+
+  it("refuses a member of the venue's organisation an event without organisation (D57)", () => {
+    expect(mayDuplicateEvent(user(['v']), event(null, 'v'))).toBe(false);
+    expect(
+      mayDuplicateEvent(organizationKey('v', 'any'), event(null, 'v'))
+    ).toBe(false);
+  });
+
+  it('lets the owner copy their event without organisation', () => {
+    expect(mayDuplicateEvent(user([]), event(null, 'v', 'user-1'))).toBe(true);
+  });
+
+  it('refuses an owner who left the organisation of their event', () => {
+    expect(mayDuplicateEvent(user([]), event('a', null, 'user-1'))).toBe(false);
+  });
+
+  it('lets CAN_UPDATE_OTHER_ORGANIZATION_EVENTS copy any event', () => {
+    const agendaAdmin = user([], CanUpdateOtherOrganizationEvents.id);
+
+    expect(mayDuplicateEvent(agendaAdmin, event('a', 'v'))).toBe(true);
+    expect(mayDuplicateEvent(agendaAdmin, event(null, 'v'))).toBe(true);
+  });
+
+  it('refuses everyone else', () => {
+    expect(mayDuplicateEvent(user(['x']), event('a', 'v'))).toBe(false);
+    expect(mayDuplicateEvent(undefined, event(null))).toBe(false);
+  });
+});
+
+describe('mayChangeShowInPrint', () => {
+  it("lets anyone change it on a partner organisation's event", () => {
+    expect(mayChangeShowInPrint(user(['a']), { partner: true })).toBe(true);
+    expect(mayChangeShowInPrint(organizationKey('a'), { partner: true })).toBe(
+      true
+    );
+  });
+
+  it('refuses it for an organisation that is not a partner, or no organisation', () => {
+    expect(mayChangeShowInPrint(user(['a']), { partner: false })).toBe(false);
+    expect(mayChangeShowInPrint(user(['a']), null)).toBe(false);
+  });
+
+  it('lets CAN_UPDATE_OTHER_ORGANIZATION_EVENTS change it on any event', () => {
+    const agendaAdmin = user([], CanUpdateOtherOrganizationEvents.id);
+
+    expect(mayChangeShowInPrint(agendaAdmin, { partner: false })).toBe(true);
+    expect(mayChangeShowInPrint(agendaAdmin, null)).toBe(true);
+  });
+
+  it('refuses a bound key, whatever its scopes, outside a partner', () => {
+    expect(
+      mayChangeShowInPrint(
+        organizationKey('a', CanUpdateOtherOrganizationEvents.id),
+        { partner: false }
+      )
+    ).toBe(false);
+  });
+});
+
 describe('mayAssignEventOwner', () => {
   it('lets a user make themselves the owner', () => {
     expect(mayAssignEventOwner(user([]), 'user-1')).toBe(true);
@@ -1402,8 +1481,9 @@ describe('organizationViewerPermissions', () => {
 });
 
 describe('placeViewerPermissions', () => {
-  const none = { update: false, delete: false };
-  const both = { update: true, delete: true };
+  const none = { update: false, updatePrivileged: false, delete: false };
+  const both = { update: true, updatePrivileged: false, delete: true };
+  const all = { update: true, updatePrivileged: true, delete: true };
 
   it.each<[string, AuthSession | undefined, string | null, typeof none]>([
     ['an anonymous caller', undefined, 'org-a', none],
@@ -1425,13 +1505,19 @@ describe('placeViewerPermissions', () => {
       'a cross-organisation editor',
       user([], CanUpdateOrganization.id, CanUpdateOtherOrganizations.id),
       'org-a',
-      both,
+      all,
     ],
     [
       'a cross-organisation editor, for a place without organisation',
       user([], CanUpdateOrganization.id, CanUpdateOtherOrganizations.id),
       null,
-      both,
+      all,
+    ],
+    [
+      'a holder of CAN_UPDATE_OTHER_ORGANIZATIONS alone',
+      user([], CanUpdateOtherOrganizations.id),
+      'org-a',
+      none,
     ],
     [
       'an api key of the organisation',

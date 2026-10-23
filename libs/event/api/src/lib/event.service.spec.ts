@@ -169,6 +169,9 @@ const setup = async () => {
     place: {
       count: vi.fn().mockResolvedValue(1),
     },
+    organization: {
+      findUnique: vi.fn().mockResolvedValue({ partner: false }),
+    },
     occurrence: {
       findMany: vi.fn().mockResolvedValue([]),
       count: vi.fn().mockResolvedValue(0),
@@ -1571,6 +1574,121 @@ describe('EventService place choice', () => {
   });
 });
 
+describe('EventService print flag', () => {
+  it('refuses marking an event for print when its organisation is not a partner', async () => {
+    const { service, prisma } = await setup();
+
+    await expect(
+      service.createEvent(facts({ showInPrint: true }), content(), member)
+    ).rejects.toBeInstanceOf(ForbiddenException);
+    expect(prisma.organization.findUnique).toHaveBeenCalledWith({
+      where: { id: 'org-a' },
+      select: { partner: true },
+    });
+    expect(prisma.event.create).not.toHaveBeenCalled();
+  });
+
+  it('refuses marking an event without organisation for print', async () => {
+    const { service, prisma } = await setup();
+
+    await expect(
+      service.createEvent(
+        facts({ organizationId: null, showInPrint: true }),
+        content(),
+        owner
+      )
+    ).rejects.toBeInstanceOf(ForbiddenException);
+    expect(prisma.event.create).not.toHaveBeenCalled();
+  });
+
+  it("lets a member mark a partner organisation's event for print", async () => {
+    const { service, prisma } = await setup();
+    prisma.organization.findUnique.mockResolvedValue({ partner: true });
+
+    await service.createEvent(facts({ showInPrint: true }), content(), member);
+
+    expect(prisma.event.create.mock.calls[0][0].data.showInPrint).toBe(true);
+  });
+
+  it('lets CAN_UPDATE_OTHER_ORGANIZATION_EVENTS mark any event for print', async () => {
+    const { service, prisma } = await setup();
+
+    await service.createEvent(
+      facts({ showInPrint: true }),
+      content(),
+      validator
+    );
+
+    expect(prisma.event.create.mock.calls[0][0].data.showInPrint).toBe(true);
+  });
+
+  it('lets anyone leave the flag off on a new event', async () => {
+    const { service, prisma } = await setup();
+
+    await service.createEvent(facts({ showInPrint: false }), content(), member);
+
+    expect(prisma.event.create).toHaveBeenCalled();
+  });
+
+  it.each([
+    ['set', false, true],
+    ['clear', true, false],
+  ])(
+    'refuses a member who tries to %s it on an event of an organisation that is not a partner',
+    async (_n, stored, requested) => {
+      const { service, prisma } = await setup();
+      existing(prisma, { showInPrint: stored });
+
+      await expect(
+        service.updateEvent('event-1', { showInPrint: requested }, member)
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(prisma.event.update).not.toHaveBeenCalled();
+    }
+  );
+
+  it('lets a member resend the stored flag', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma, { showInPrint: true });
+
+    await service.updateEvent('event-1', { showInPrint: true }, member);
+
+    expect(prisma.organization.findUnique).not.toHaveBeenCalled();
+    expect(prisma.event.update).toHaveBeenCalled();
+  });
+
+  it('checks the organisation the event moves to', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma);
+    prisma.organization.findUnique.mockResolvedValue({ partner: true });
+
+    await service.updateEvent(
+      'event-1',
+      { organizationId: 'org-b', showInPrint: true },
+      user('member', ['org-a', 'org-b'])
+    );
+
+    expect(prisma.organization.findUnique).toHaveBeenCalledWith({
+      where: { id: 'org-b' },
+      select: { partner: true },
+    });
+    expect(prisma.event.update.mock.calls[0][0].data.showInPrint).toBe(true);
+  });
+
+  it("lets the venue's organisation mark a partner organisation's event for print", async () => {
+    const { service, prisma } = await setup();
+    existing(
+      prisma,
+      { placeId: 'place-1' },
+      { place: { organizationId: 'org-v' } }
+    );
+    prisma.organization.findUnique.mockResolvedValue({ partner: true });
+
+    await service.updateEvent('event-1', { showInPrint: true }, venueMember);
+
+    expect(prisma.event.update.mock.calls[0][0].data.showInPrint).toBe(true);
+  });
+});
+
 describe('EventService.duplicateEvent', () => {
   const sourceRevision = {
     id: 'rev-1',
@@ -1787,6 +1905,46 @@ describe('EventService.duplicateEvent', () => {
     await service.duplicateEvent('event-1', organizationKey('org-a'));
 
     expect(prisma.event.create.mock.calls[0][0].data.ownerId).toBeNull();
+  });
+
+  it("refuses the venue's organisation an event without organisation, as D57 says", async () => {
+    const { service, prisma } = await setup();
+    source(prisma, { organizationId: null });
+
+    await expect(
+      service.duplicateEvent('event-1', venueMember)
+    ).rejects.toBeInstanceOf(ForbiddenException);
+    expect(prisma.event.create).not.toHaveBeenCalled();
+  });
+
+  it('checks that the caller may still choose the venue of the copy', async () => {
+    const { service, prisma } = await setup();
+    source(prisma);
+
+    await service.duplicateEvent('event-1', member);
+
+    expect(prisma.place.count).toHaveBeenCalledWith({
+      where: {
+        AND: [
+          { id: 'place-1' },
+          {
+            enabled: true,
+            OR: [{ private: false }, { organizationId: { in: ['org-a'] } }],
+          },
+        ],
+      },
+    });
+  });
+
+  it('refuses a copy at a venue that is disabled or private to another organisation', async () => {
+    const { service, prisma } = await setup();
+    source(prisma);
+    prisma.place.count.mockResolvedValue(0);
+
+    await expect(
+      service.duplicateEvent('event-1', member)
+    ).rejects.toBeInstanceOf(BadRequestException);
+    expect(prisma.event.create).not.toHaveBeenCalled();
   });
 
   it.each([

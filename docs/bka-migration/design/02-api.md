@@ -90,7 +90,9 @@ public and batched, and `specialRate` is a fact ([D67](../decisions.md#d67--even
 `places` takes `search`, `regionId`, `organizationId`, `enabled`, `selectable`, `mine` (the places of
 the caller's organisations) and `geoBoundingBox`, sorted by `Name`, `CreatedAt` or `ModifiedAt`. Its
 rows follow `visiblePlacesWhere` (§3.2). `Place.viewerCan` tells the editor whether the caller may
-update or delete it ([D73](../decisions.md#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine)). Place
+update or delete it, and `updatePrivileged` whether they may switch it on and off ([D73](../decisions.md#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine), [D95](../decisions.md#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules)). Changing a
+place's `enabled` needs `CanUpdateOtherOrganizations`, as for organisations; `private` stays with the
+place's managers. Place
 has no public/sensitive split ([D54](../decisions.md#d54--places-are-public-and-private-only-narrows-the-venue-picker), [design 1](01-data-model.md) §9), and
 `proInfirmisPictograms` is the `JSON` scalar. `eventRegions` hides disabled
 regions from everyone without `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations`.
@@ -304,13 +306,13 @@ organiser believing they had asked for something.
 
 | Mutation | `@Permissions` | Record check, then behaviour |
 | --- | --- | --- |
-| `createEvent` | `CanCreateEvent` | organisation and owner assignment (§3.2); writes the event, its dates, rates, tags, the first draft revision and the occurrences in one transaction |
-| `updateEvent` | `CanUpdateEvent` | `canModifyEvent`; `UpdateEventInput` is partial, and `dates`, `rates` and `tagIds` replace the stored lists when given; recomputes `firstDateAt`/`lastDateAt` and syncs occurrences |
+| `createEvent` | `CanCreateEvent` | organisation and owner assignment (§3.2); `showInPrint` only for a partner organisation's event or with `CanUpdateOtherOrganizationEvents` ([D95](../decisions.md#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules)); writes the event, its dates, rates, tags, the first draft revision and the occurrences in one transaction |
+| `updateEvent` | `CanUpdateEvent` | `canModifyEvent`; changing `showInPrint` follows the `createEvent` rule for the organisation the event ends up in; `UpdateEventInput` is partial, and `dates`, `rates` and `tagIds` replace the stored lists when given; recomputes `firstDateAt`/`lastDateAt` and syncs occurrences |
 | `updateEventContent` | `CanUpdateEvent` | `canModifyEvent`; archives the open draft and writes a new draft revision with `descriptionText`; never writes an `Event` column |
 | `publishEvent` | `CanPublishEvent` | `canPublishEvent`; needs an unpublished revision, re-checks the horizon and the slug, archives superseded pending revisions, sets `Event.publishedAt` following the article rule, clears the review fields, re-syncs occurrences, and schedules a cache invalidation at `publishAt` |
 | `unpublishEvent` | `CanPublishEvent` | `canPublishEvent`; archives the published revisions, keeps the latest as draft, clears `Event.publishedAt`, keeps the occurrences |
 | `deleteEvent` | `CanDeleteEvent` | `canDeleteEvent` |
-| `duplicateEvent` | `CanCreateEvent` | `canModifyEvent` on the source, and the caller may file under its organisation; copies facts, dates, rates, tags and the newest revision as a "Kopie von …" draft, with no slug and the caller as owner |
+| `duplicateEvent` | `CanCreateEvent` | `mayDuplicateEvent`: a member of the source's organisation, its owner when it has none, or `CanUpdateOtherOrganizationEvents`; the venue must still be selectable ([D95](../decisions.md#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules)); copies facts, dates, rates, tags and the newest revision as a "Kopie von …" draft, with no slug and the caller as owner |
 | `requestEventReview` | `CanUpdateEvent` | `canModifyEvent`; BadRequest when `canPublishEvent` already holds or there is no unpublished draft; stamps `reviewRequestedAt`/`ById` once |
 | `withdrawEventReview` | `CanUpdateEvent` | `canModifyEvent`; clears `reviewRequestedAt`/`ById`, or returns the event unchanged when nothing is pending |
 
