@@ -158,6 +158,8 @@ is exactly the capability the new permissions and the Agenda-Admin role are for.
 
 ## D4 — `CanPublishEvent` decides who needs validating
 
+> **Superseded in part by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).** Karl, 2026-10-24: the predefined editor role holds no agenda permission at all for now, `CanPublishEvent` included. Admin, `agenda-admin` and custom roles file and publish events.
+
 > **Updated by [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) and [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it).** Karl decided on 2026-10-24 that the predefined editor role holds `CanPublishEvent` and the other event permissions, scoped to its own organisations' events and the events it owns; only admin and the new `agenda-admin` role hold the cross-organisation permissions. Whether a button shows for a given event comes from `Event.viewerCan`, not from the role alone (awaiting Karl's confirmation).
 
 > **Updated by [D48](#d48--publishing-stays-with-the-organising-organisation), [D49](#d49--deleting-an-event-needs-membership-or-the-cross-organisation-delete-permission) and [D55](#d55--place-writes-reuse-the-organisation-permissions), awaiting Karl's confirmation.** Publishing also needs a link to the event's organisation (`canPublishEvent`); deleting needs membership or `CanDeleteOtherOrganizationEvents`, with no owner branch; places have no permissions of their own and reuse `CanUpdateOrganization` / `CanUpdateOtherOrganizations`.
@@ -2153,6 +2155,8 @@ D20's recovery chain expects.
 
 ## D48 — Publishing stays with the organising organisation
 
+> **Superseded in part by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).** The predefined editor role no longer holds `CanPublishEvent` or any other event permission. The rule itself is unchanged for the roles that do.
+
 > **Updated by [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) and [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it), awaiting Karl's confirmation.** The predefined editor role now holds `CanPublishEvent`, so its members publish their organisations' events and their own orphan events. `Event.viewerCan.publish` is `canPublishEvent`, which the editor reads to choose between Publish and Ready for review.
 
 Updates [D3](#d3--validation-is-cross-organisation-publishing-not-a-publication-state), [D4](#d4--canpublishevent-decides-who-needs-validating) and [D35](#d35--an-events-owner-reaches-it-without-an-organisation).
@@ -2333,6 +2337,8 @@ Prisma, and `libs/event/schedule` is already the pure library both of them use.
 
 ## D54 — Places are public, and `private` only narrows the venue picker
 
+> **Confirmed by Karl ([D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)).** Holders of `CanUpdateOtherOrganizationEvents`, Agenda-Admin among them, may file events at private venues.
+
 Updates [D37](#d37--organisations-are-public-their-sensitive-fields-are-not), whose consequences asked for a public/sensitive call on places.
 
 **Status.** Built in `595956a6f`. Awaiting Karl's confirmation on the cross-organisation case.
@@ -2373,6 +2379,8 @@ changes keeps events at a venue that was disabled later editable.
 ## D55 — Place writes reuse the organisation permissions
 
 > **Updated by [D95](#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules), awaiting Karl's confirmation.** Changing a place's `enabled` needs `CanUpdateOtherOrganizations`, as for organisations; `private` stays with the place's managers, and `Place.viewerCan` gains `updatePrivileged`.
+
+> **Updated by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).** The predefined editor role holds no agenda permission, so editor-only users no longer see the Venues screen at all.
 
 > **Updated by [D73](#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine) and [D87](#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan), awaiting Karl's confirmation.** `Place.viewerCan` reports `update` and `delete` from `CanUpdateOrganization` and `canManagePlace`, and `places` gains the `mine` filter. The predefined editor role holds no organisation permission (D66), so editor-role members see their venues read-only.
 
@@ -2553,6 +2561,8 @@ one unnecessary.
 
 ## D61 — The old editor event screens are removed until slice F
 
+> **Updated by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).** The predefined editor role holds no agenda permission again, so editor-only users see no Agenda section and no agenda commands.
+
 > **Updated by [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role), [D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first), [D84](#d84--the-event-editor-is-the-article-editors-shell-with-four-metadata-tabs-kept-in-the-address) and [D87](#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan).** Slice F brought the event screens back, built per design 3: the Agenda section with Events, Organisations, Venues and Tags, the event editor, and the `events`, `createEvent`, `organizations`, `venues`, `createOrganization` and `createVenue` commands. The activity feed links new events again. The predefined editor role holds `CanGetEvents` and `CanPublishEvent` (Karl, 2026-10-24).
 
 Updates [D27](#d27--the-events-domain-ships-to-every-tenant).
@@ -2688,6 +2698,8 @@ Reusing the `events.tagged-events` name and `TagType.Event` keeps the tag model 
 
 ## D66 — The editor role files and publishes its own events; Agenda-Admin is a predefined role
 
+> **Superseded in part by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).** Karl, 2026-10-24: the predefined editor role gets **no** agenda permission for now. The six event permissions below are gone from `EditorPermissions`. The Agenda-Admin set and the role on every tenant are confirmed as built.
+
 Updates [D4](#d4--canpublishevent-decides-who-needs-validating) and [D61](#d61--the-old-editor-event-screens-are-removed-until-slice-f).
 
 **Status.** Built in slice F stage 1 (`89503d801`). The scoping of the editor role is Karl's decision
@@ -2785,6 +2797,8 @@ the two from drifting.
 
 ## D69 — A review request can be withdrawn
 
+> **Confirmed by Karl ([D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)).** Anyone who may edit the event may withdraw, not only the person who asked. The editor now offers Withdraw request to anyone `viewerCan.withdrawReview` allows, people who may publish included.
+
 Updates [D58](#d58--a-review-request-is-a-state-stamped-once).
 
 **Status.** Built in slice F stage 1. Awaiting Karl's confirmation.
@@ -2797,7 +2811,7 @@ Updates [D58](#d58--a-review-request-is-a-state-stamped-once).
 who may edit it may ask.
 
 **Consequences.**
-- Open: whether only the person who asked should be able to withdraw.
+- ~~Open: whether only the person who asked should be able to withdraw.~~ Answered by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers): no.
 
 ---
 
@@ -2929,6 +2943,8 @@ lists every enabled venue, so an organiser's venue list needs `mine` to show the
 ---
 
 ## D74 — The agenda editor lives in `libs/event/editor`, and the list comes first
+
+> **Updated by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).** Tags under Agenda confirmed by Karl. The Agenda section no longer opens for a tag permission alone, and its Tags entry also needs `CanGetEvents` or `CanCreateEvent`.
 
 Follows [D61](#d61--the-old-editor-event-screens-are-removed-until-slice-f) and [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role).
 
@@ -3098,6 +3114,8 @@ they are met; expanding an invalid or unbounded schedule would show a wrong numb
 
 ## D80 — Event images: caption on the event, alt text on the image, one main image
 
+> **Confirmed by Karl ([D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)).** Alt text stays on the shared `Image.description`.
+
 Implements design 3 §6. Follows design 1 §11.1.
 
 **Status.** Built in slice F stage 4. Awaiting Karl's confirmation.
@@ -3236,6 +3254,8 @@ makes Extend a plain link and survives a reload.
 ---
 
 ## D85 — Ready for review and Withdraw request follow `viewerCan`, and name who can publish
+
+> **Updated by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).** Withdraw request now shows whenever a request is pending and `viewerCan.withdrawReview` holds, next to Publish for someone who may publish. Ready for review is unchanged.
 
 Implements design 3 §7 and [D5](#d5--ready-for-review-is-an-explicit-action-backed-by-a-field-on-the-event) / [D58](#d58--a-review-request-is-a-state-stamped-once).
 
@@ -3585,6 +3605,48 @@ runs the event, not the person typing.
 - Moving an event marked for print to an organisation that is not a partner keeps the flag.
 - Copying an event whose venue was disabled since now fails, where it used to copy the venue.
 
+## D96 — The editor role holds no agenda permission for now, and Karl's other slice F answers
+
+Updates [D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker), [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role), [D69](#d69--a-review-request-can-be-withdrawn), [D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first), [D80](#d80--event-images-caption-on-the-event-alt-text-on-the-image-one-main-image) and [D85](#d85--ready-for-review-and-withdraw-request-follow-viewercan-and-name-who-can-publish).
+
+**Status.** Karl's answers of 2026-10-24 to the slice F questions. Built.
+
+**Decision.**
+- **Editor role.** `EditorPermissions` holds no agenda permission: none of the six event
+  permissions, none of the organisation permissions and none of `CrossOrganizationPermissions`
+  (`libs/permissions/src/lib/permissions.ts`, `predefined-permissions.spec.ts`). Places have no
+  permissions of their own (D55), so there is nothing else to remove. The tag permissions stay,
+  because articles, pages, comments and authors use them. Events are filed by admin, `agenda-admin`
+  and custom roles that carry the event permissions. This reverses D66's editor scoping "for now".
+- **Agenda-Admin** stays as built in D66.
+- **Navigation.** The Agenda section shows for `AGENDA_PERMISSIONS` (`CanGetEvents`,
+  `CanCreateEvent`, `CanUpdateOrganization`, `CanGetOtherOrganizations`,
+  `CanUpdateOtherOrganizations`, in `apps/editor/src/app/agendaPermissions.ts`), no longer for a tag
+  permission. Its **Tags** entry, and the `eventTags` and `createEventTag` commands, need a tag
+  permission **and** `CanGetEvents` or `CanCreateEvent`. Commands express that second group with
+  `Command.alsoPermissions` (`libs/ui/editor/src/lib/commandPalette/allowedCommands.ts`). An
+  editor-only user sees no Agenda section and no agenda command, and keeps every other tag screen.
+- **Withdrawing a review request.** Anyone who may edit the event (`CanUpdateEvent` and
+  `canModifyEvent`) may withdraw it, not only the person who asked, as D69 built. The editor's
+  Withdraw request follows `viewerCan.withdrawReview` alone, so it also shows next to Publish.
+- **Confirmed unchanged.** Event tags stay as Tags under Agenda (D74, D93). Alt text is written to
+  the shared `Image.description` (D80). Holders of `CanUpdateOtherOrganizationEvents`, Agenda-Admin
+  among them, may file events at private venues (D54, `selectablePlacesWhere`).
+
+**Why.** Karl's call. Event tags only classify events, so someone who can neither see nor file events
+has no use for them, and an Agenda section holding nothing but Tags would lead to screens they cannot
+use. Before, someone who could publish never saw Withdraw request, although the API let them withdraw.
+
+**Consequences.**
+- Editor-role users can no longer list, open, create or publish events, and lose the events they
+  own. Their review-queue card (D75) and simple stack (D77) are gone with them.
+- D66's open question, whether the editor role should also hold `CanUpdateOrganization`, is moot
+  for now.
+- Open: which role BKa's organisers (`ROLE_USER`) get at the slice G import. The editor role no
+  longer fits, so either a custom organiser role on each tenant or a new predefined one.
+
+---
+
 ## Open questions
 
 Recorded as they surface; resolved ones become decisions above.
@@ -3728,7 +3790,7 @@ the change he wants:**
 7. [D51](#d51--the-revision-keeps-its-description-as-plain-text-for-search): the `EventRevision.descriptionText` column, with paragraphs running together.
 8. [D52](#d52--ticketingurl-and-showinprint-are-facts-on-the-event): `ticketingUrl` and `showInPrint` on `Event`. Port BKa's `print_category_id` as an
    event-tag reference, or drop it?
-9. [D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker): holders of `CanUpdateOtherOrganizationEvents` may file events at private venues.
+9. ~~[D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker): holders of `CanUpdateOtherOrganizationEvents` may file events at private venues.~~ Confirmed by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).
 10. [D55](#d55--place-writes-reuse-the-organisation-permissions): members may create and delete their own organisation's places. Keep that, or add
     dedicated place permissions?
 11. [D57](#d57--duplicateevent-copies-the-way-bkas-duplicator-does): the "Kopie von …" name, and refusing a venue member.
@@ -3761,18 +3823,18 @@ every event stays a separate permission held only by admin and Agenda-Admin; tha
 and recorded in [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role). The build choices are recorded as decisions
 [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) to [D93](#d93--taxonomy-screens-are-not-part-of-slice-f). **Each needs a yes, or the change Karl wants:**
 
-1. [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role): the Agenda-Admin set, the role on every tenant, and whether the editor role should
-   also hold `CanUpdateOrganization`.
+1. ~~[D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role): the Agenda-Admin set, the role on every tenant, and whether the editor role should
+   also hold `CanUpdateOrganization`.~~ Answered by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers): Agenda-Admin stays as built; the editor role holds no agenda permission at all for now.
 2. [D67](#d67--events-keep-bkas-special-rate-as-a-nullable-enum): `Event.specialRate`, or drop the special rate.
 3. [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it): `viewerCan` as guard permission plus record rule.
-4. [D69](#d69--a-review-request-can-be-withdrawn): anyone who may edit may withdraw a review request.
+4. ~~[D69](#d69--a-review-request-can-be-withdrawn): anyone who may edit may withdraw a review request.~~ Confirmed by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).
 5. [D70](#d70--event-content-takes-only-the-blocks-the-agenda-can-show): answered. Events take every block an article takes, and the restriction is removed.
 6. [D71](#d71--the-editor-list-filters-by-publication-review-and-last-date-and-lookups-by-id-use-reach): lookups by id use reach, and the count includes the next date.
 7. [D72](#d72--organisation-tags-affiliations-and-contacts-are-public-and-written-through-the-organisation): organisation tags, affiliations and contacts are public; contacts capped at 6, tags at 3,
    affiliations uncapped.
 8. [D73](#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine): `viewerCan` on organisations and places, and `PlaceFilter.mine`.
 9. [D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first): the Agenda section, the list's columns and filters, and "Tags" staying under Agenda
-   (design 3 §2 puts tags under Content Blocks).
+   (design 3 §2 puts tags under Content Blocks). Tags under Agenda confirmed by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).
 10. [D75](#d75--the-review-queue-is-a-filter-a-sort-and-a-dashboard-card-for-whoever-can-publish): the review-queue card for every holder of `CanPublishEvent`, not only the cross-organisation
     permissions.
 11. [D76](#d76--ends-in-n-days-marks-weekly-series-only-in-zurich-calendar-days): "Ends in N days" for weekly series only, or for every event.
@@ -3780,7 +3842,7 @@ and recorded in [D66](#d66--the-editor-role-files-and-publishes-its-own-events-a
     (cannot publish, no filter, at most 10 events).
 13. [D79](#d79--the-date-editor-takes-zurich-wall-clock-dates-and-times-and-never-expands-what-it-cannot-save): an explicit row ending before it starts runs into the next day, and Duplicate last
     moves the copy to the following day.
-14. [D80](#d80--event-images-caption-on-the-event-alt-text-on-the-image-one-main-image): alt text written to the shared `Image.description`, and the 125-character caption limit
+14. [D80](#d80--event-images-caption-on-the-event-alt-text-on-the-image-one-main-image): alt text written to the shared `Image.description` (confirmed by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)), and the 125-character caption limit
     held by the editor only (should the API refuse it too?).
 15. [D81](#d81--on-a-new-event-the-organisation-picker-offers-your-own-organisations-and-the-owner-is-you): the organisation and owner pickers on a new event.
 16. [D82](#d82--the-event-form-schema-reuses-the-shared-rules-and-splits-fields-into-facts-and-content): `showInPrint` checked by default on new events, as in BKa.

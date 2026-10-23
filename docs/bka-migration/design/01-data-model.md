@@ -1083,12 +1083,10 @@ for any place and for places without an organisation ([D55](../decisions.md#d55-
 `CanGetOtherOrganizations` is what a read-only API key needs ([D37](../decisions.md),
 [design 2 §2.1.1](02-api.md)). The predefined admin role gets all of them through `AllPermissions`
 (`libs/permissions/api/src/lib/predefined-permissions.ts`); the editor and peer roles get none
-of the organisation permissions. The predefined editor role holds the six scoped event permissions,
-`CanGetEvent`, `CanGetEvents`, `CanCreateEvent`, `CanUpdateEvent`, `CanDeleteEvent` and
-`CanPublishEvent`, and none of the cross-organisation ones (`libs/permissions/src/lib/permissions.ts:1513-1591`).
-`event-scope.ts` keeps it to its organisations' events and the events it owns, so an editor-role user
-on a tenant without organisations files, lists and publishes the events it owns
-([D66](../decisions.md#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role), awaiting Karl's confirmation of the details).
+of the organisation permissions. The predefined editor role holds no event permission either, for
+now ([D96](../decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers), Karl, 2026-10-24, reversing D66's editor scoping). Events are filed by admin, the
+`agenda-admin` role and custom roles that carry the event permissions; `event-scope.ts` keeps those
+to their organisations' events and the events they own.
 
 The five permissions that reach past your own organisations (`CanGetOtherOrganizationEvents`,
 `CanUpdateOtherOrganizationEvents`, `CanDeleteOtherOrganizationEvents`, `CanGetOtherOrganizations`,

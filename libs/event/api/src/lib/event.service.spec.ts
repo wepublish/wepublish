@@ -2231,6 +2231,21 @@ describe('EventService.withdrawEventReview', () => {
     expect(cache.invalidateDraft).toHaveBeenCalledWith('events');
   });
 
+  it('lets anyone who may edit the event withdraw a request someone else made', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma, {
+      reviewRequestedAt: requestedAt,
+      reviewRequestedById: 'someone-else',
+    });
+
+    await service.withdrawEventReview('event-1', member);
+
+    expect(prisma.event.update).toHaveBeenCalledWith({
+      where: { id: 'event-1' },
+      data: { reviewRequestedAt: null, reviewRequestedById: null },
+    });
+  });
+
   it("lets the venue's organisation withdraw what it asked for", async () => {
     const { service, prisma } = await setup();
     existing(

@@ -2,9 +2,9 @@
 
 **How to read this**
 
-- **BKa** means the Symfony admin in `/Users/itrulia/Documents/insitu-admin`. BKa paths below are relative to that folder. **WeP** means HEAD `8128d3eb7` of `f/bka-backend-migration`, with paths relative to the repo root. The slice F editor-role change is still in progress and is not in HEAD.
+- **BKa** means the Symfony admin in `/Users/itrulia/Documents/insitu-admin`. BKa paths below are relative to that folder. **WeP** means HEAD `8128d3eb7` of `f/bka-backend-migration`, with paths relative to the repo root. Section 2 and the gap list in section 8 are kept current with later decisions ([D96](decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers) for the editor role).
 - In the event, organisation and place tables, BKa cells describe the **admin UI and its voters**. BKa's two APIs often behave differently, so they have their own table (6). Where it matters, a cell names the BKa surface: UI (list or form), voter, v1 (OAuth/FOSRest) or v2 (API Platform).
-- In WeP, what you may do is **role permission × relationship to the record**. The member, venue and owner columns assume a role that holds the event permission the row needs. Section 2 lists what the predefined editor role actually holds today.
+- In WeP, what you may do is **role permission × relationship to the record**. The member, venue and owner columns assume a role that holds the event permission the row needs. Section 2 lists what the predefined editor role actually holds today: no agenda permission at all.
 - ✓ yes · ✗ no · — not applicable, or no such actor on that side · **⚠Qn** means BKa and WeP differ here; see question n at the end.
 
 ---
@@ -14,13 +14,13 @@
 | BKa role / relationship | Production (BKa snapshot) | Closest in WeP | Gap |
 | --- | --- | --- | --- |
 | Anonymous visitor | — | anonymous | BKa: login, password reset, `/img`, the public proposal form, API docs. No anonymous data API.¹ WeP: the public GraphQL API. |
-| `ROLE_USER` (organiser) | 397 users hold only this role. 412 are in ≥1 organisation, 87 in ≥2, 15 in none. 103 still have the onboarding flag `org_creation=needed`.² | predefined **editor** role + `OrganizationMember` | BKa scopes everything by organisation membership. WeP does the same through `event-scope.ts`. |
+| `ROLE_USER` (organiser) | 397 users hold only this role. 412 are in ≥1 organisation, 87 in ≥2, 15 in none. 103 still have the onboarding flag `org_creation=needed`.² | a custom organiser role carrying the event permissions + `OrganizationMember`. The predefined **editor** role holds no agenda permission ([D96](decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)) | BKa scopes everything by organisation membership. WeP does the same through `event-scope.ts`. Which role BKa's organisers get at import is open. |
 | Member of the **venue's** organisation (BKa's "validator") | no separate role | editor + membership of the place's organisation | BKa: may edit, publish and delete foreign events at the venue. WeP: may edit and request review, but not publish or delete (D3, D48). |
 | Event **owner** (`event.user_id`) | 21,378 of 34,279 events have one³ | `Event.ownerId` (D35) | Set to the creator or copier. Neither BKa API sets it. |
 | Event **proposer** (`proposedBy.email`) | 329 events are reachable only this way⁴ | none (D2, D8, D32) | Public-form submitters get a `ROLE_USER` login with no organisation. |
 | `user.member` flag | 269 of 427 users⁵ (D11 says 279 of 670: different dump, reconcile before quoting) | `Organization.partner` (D11, D14a): a data flag, not a role | BKa: the flag is per person and only unlocks print fields and the admin-only members list. WeP: per organisation, sensitive (D37), grants nothing. |
 | `ROLE_BROADCAST_PARTNER` | 0 users⁶ | none (a key with read scopes comes closest) | BKa: read-only, sees all published events and previews drafts. |
-| `ROLE_ADMIN` ("Super-admin" in the UI) | 30 users⁶ | WeP **admin** (AllPermissions). The planned Agenda-Admin role (D3, D4) **is not built**. | — |
+| `ROLE_ADMIN` ("Super-admin" in the UI) | 30 users⁶ | WeP **admin** (AllPermissions), or the predefined **agenda-admin** role (D66): every event and organisation permission, nothing outside the agenda. | — |
 | `ROLE_SUPER_ADMIN` | 0 users; exists only in the hierarchy | — | Only route to impersonation, so nobody can impersonate. |
 | API v1 OAuth2 token | 7, minted on the command line | `ApiToken` with scopes, optional `organizationId` (D36, D41) | BKa tokens act as their owner user with all its roles. No organisation binding. |
 | API v2 `UserToken` (JWT) | 5, self-service | same | 3 of 4 partner integrations (guidle, punktzwei, bka-frontend) use **admin-owned** tokens.⁷ |
@@ -45,18 +45,20 @@ BKa has no single rule. The same user sees a different set of events depending o
 
 ---
 
-## 2. The We.Publish editor role today (HEAD)
+## 2. The We.Publish editor role today
 
 | Permission | Editor role | Effect |
 | --- | --- | --- |
-| `CAN_GET_EVENT`, `CAN_CREATE_EVENT`, `CAN_UPDATE_EVENT`, `CAN_DELETE_EVENT` | ✓ | Opens, creates, edits and deletes events it can reach (own organisation, its venues, owned). Deletes only own-organisation events. |
-| `CAN_GET_EVENTS` | ✗ | The events list stays the public, published-only list. **Slice F (in progress):** list own organisation's and own events. |
-| `CAN_PUBLISH_EVENT` | ✗ | Can only request a review. **Slice F (in progress):** publish own organisation's events, not foreign ones. |
-| any `CAN_*_OTHER_ORGANIZATION_*` | ✗ | Never crosses organisations. `CAN_GET_OTHER_ORGANIZATION_EVENTS` already exists as the "see all" permission. |
+| `CAN_GET_EVENT`, `CAN_GET_EVENTS`, `CAN_CREATE_EVENT`, `CAN_UPDATE_EVENT`, `CAN_DELETE_EVENT`, `CAN_PUBLISH_EVENT` | ✗ | No agenda access at all for now ([D96](decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers), Karl, 2026-10-24). No Agenda section or agenda commands in the editor. |
+| any `CAN_*_OTHER_ORGANIZATION_*` | ✗ | Never crosses organisations. Admin and `agenda-admin` hold these. |
 | `CAN_CREATE/UPDATE/DELETE_ORGANIZATION` | ✗ | Cannot manage organisations or venues. |
+| `CAN_GET_TAGS`, `CAN_CREATE_TAG`, `CAN_UPDATE_TAG`, `CAN_DELETE_TAG` | ✓ | For articles, pages, comments and authors. Event tags under Agenda also need `CAN_GET_EVENTS` or `CAN_CREATE_EVENT`, so the editor role does not see them. |
 | `CAN_CREATE_API_TOKEN`, `CAN_GET_ALL_API_TOKENS`, `CAN_REVOKE_ALL_API_TOKENS` | ✓ | Mints keys, **and sees and revokes every user's keys**. |
 
-Source: `libs/permissions/src/lib/permissions.ts:1513-1592` (tokens 1537-1541, events 1568-1571, `CanGetOtherOrganizationEvents` 751-755); `libs/permissions/api/src/lib/predefined-permissions.ts:16-22` (admin = AllPermissions).
+The member, venue and owner columns below therefore describe a custom organiser role that holds the
+event permissions, not the predefined editor role.
+
+Source: `libs/permissions/src/lib/permissions.ts` (`EditorPermissions`, `AgendaAdminPermissions`); `libs/permissions/api/src/lib/predefined-permissions.ts` (admin = AllPermissions); `apps/editor/src/app/agendaPermissions.ts`.
 
 ---
 

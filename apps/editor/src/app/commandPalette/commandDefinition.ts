@@ -9,6 +9,7 @@ export interface CommandDefinition {
   sectionKey?: string;
   icon: ReactNode;
   permissions?: string[];
+  alsoPermissions?: string[];
   feature?: FeatureKey;
   perform(context: CommandContext): void;
 }

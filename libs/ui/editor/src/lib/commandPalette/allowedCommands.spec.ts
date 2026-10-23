@@ -42,6 +42,30 @@ describe('allowedCommands', () => {
     expect(allowedCommands(commands, granted, features)).toEqual([]);
   });
 
+  it('drops a command that also needs a permission from a second group the session lacks', () => {
+    const commands = [
+      command({
+        id: 'eventTags',
+        permissions: ['CAN_GET_ARTICLES'],
+        alsoPermissions: ['CAN_GET_EVENTS'],
+      }),
+    ];
+
+    expect(allowedCommands(commands, granted, features)).toEqual([]);
+  });
+
+  it('keeps a command once one permission of each group is granted', () => {
+    const commands = [
+      command({
+        id: 'eventTags',
+        permissions: ['CAN_GET_ARTICLES'],
+        alsoPermissions: ['CAN_CREATE_EVENT', 'CAN_GET_ARTICLES'],
+      }),
+    ];
+
+    expect(allowedCommands(commands, granted, features)).toEqual(commands);
+  });
+
   it('drops a command whose feature is off for this medium', () => {
     const commands = [command({ id: 'crowdfunding', feature: 'crowdfunding' })];
 

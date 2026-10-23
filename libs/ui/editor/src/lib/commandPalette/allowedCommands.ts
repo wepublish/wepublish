@@ -5,15 +5,16 @@ export function allowedCommands(
   grantedPermissions: ReadonlySet<string> | undefined,
   enabledFeatures: ReadonlySet<string> | undefined
 ): Command[] {
-  return commands.filter(({ permissions, feature }) => {
+  const grantsOneOf = (permissions: string[] | undefined) =>
+    !permissions?.length ||
+    !grantedPermissions ||
+    permissions.some(permission => grantedPermissions.has(permission));
+
+  return commands.filter(({ permissions, alsoPermissions, feature }) => {
     if (feature && !enabledFeatures?.has(feature)) {
       return false;
     }
 
-    if (!permissions?.length || !grantedPermissions) {
-      return true;
-    }
-
-    return permissions.some(permission => grantedPermissions.has(permission));
+    return grantsOneOf(permissions) && grantsOneOf(alsoPermissions);
   });
 }

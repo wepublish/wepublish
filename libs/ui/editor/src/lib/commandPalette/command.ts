@@ -16,6 +16,7 @@ export interface Command {
   keywords?: string[];
   icon: ReactNode;
   permissions?: string[];
+  alsoPermissions?: string[];
   feature?: FeatureKey;
   perform(context: CommandContext): void;
 }

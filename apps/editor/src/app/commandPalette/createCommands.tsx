@@ -56,6 +56,7 @@ import {
   MdVpnKey,
 } from 'react-icons/md';
 
+import { EVENT_PERMISSIONS } from '../agendaPermissions';
 import type { CommandDefinition } from './commandDefinition';
 
 export const CREATE_COMMANDS: CommandDefinition[] = [
@@ -141,6 +142,7 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     titleKey: 'commandPalette.create.eventTag',
     icon: <MdSell />,
     permissions: [CanCreateTag.id],
+    alsoPermissions: EVENT_PERMISSIONS,
     perform: ({ navigate }) => navigate('/events/tags/create'),
   },
   {

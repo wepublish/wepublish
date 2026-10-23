@@ -14,9 +14,8 @@ Screens below were designed against the **running editor**, not inferred from so
 **State of the editor: built (slice F).** Everything below is built in `libs/event/editor`
 (`@wepublish/event/editor`); `apps/editor` only wires the routes, the Agenda menu, the commands and
 the dashboard card. The build choices are [D66](../decisions.md#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) to [D93](../decisions.md#d93--taxonomy-screens-are-not-part-of-slice-f), all awaiting Karl's confirmation except
-Karl's own call of 2026-10-24 in D66: the predefined editor role holds the event permissions, scoped
-to its organisations' events and the events it owns, and seeing every event stays with admin and the
-new Agenda-Admin role. Where the build departs from the text below, an **As built** note in that
+Karl's answers of 2026-10-24 in [D96](../decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers): the predefined editor role holds **no** agenda permission for
+now, Agenda-Admin stays as built, and seeing every event stays with admin and Agenda-Admin. Where the build departs from the text below, an **As built** note in that
 section says so. In short:
 
 | Screen | Route | Built as |
@@ -57,9 +56,9 @@ will fail for them, every time.
 The Agenda-Admin is the opposite: high volume, high familiarity, and their enemy is clicks. The
 same screen must not slow them down to help the organiser.
 
-**As built.** The predefined editor role publishes its own organisations' events and the events it
-owns ([D66](../decisions.md#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role), Karl's call), so "Can publish? No" now describes custom organiser roles and the dormant
-accounts of D8. Agenda-Admin is the predefined role `agenda-admin`. A venue admin publishes their own
+**As built.** The predefined editor role holds no agenda permission for now ([D96](../decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers), Karl's call), so
+organisers need a custom role that carries the event permissions; "Can publish? No" describes such
+roles without `CanPublishEvent` and the dormant accounts of D8. Agenda-Admin is the predefined role `agenda-admin`. A venue admin publishes their own
 organisation's events; for another organisation's event at their venue they get Ready for review
 ([D48](../decisions.md#d48--publishing-stays-with-the-organising-organisation)).
 
@@ -93,8 +92,10 @@ is empty.
 
 **As built.** Agenda holds **Events**, **Organisations**, **Venues** and **Tags** (the event tags,
 kept under Agenda rather than Content Blocks, [D74](../decisions.md#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first)). There is no Taxonomies entry ([D93](../decisions.md#d93--taxonomy-screens-are-not-part-of-slice-f)).
-Organisations show for `CanUpdateOrganization` or a cross-organisation organisation permission;
-Venues also for `CanGetEvents` and `CanCreateEvent` ([D87](../decisions.md#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan)). The membership message shows only to
+The section shows for `AGENDA_PERMISSIONS` (`apps/editor/src/app/agendaPermissions.ts`), not for a
+tag permission alone. Organisations show for `CanUpdateOrganization` or a cross-organisation organisation permission;
+Venues also for `CanGetEvents` and `CanCreateEvent` ([D87](../decisions.md#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan)). Tags need a tag permission and
+`CanGetEvents` or `CanCreateEvent`, so an editor-only user sees no Agenda section ([D96](../decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)). The membership message shows only to
 someone who has no organisation, cannot create events and cannot see every event; anyone who can
 file events gets "No events yet" ([D77](../decisions.md#d77--empty-lists-say-why-and-organisers-who-cannot-publish-get-a-simple-stack)).
 
@@ -160,8 +161,8 @@ each event, its next date, its state, and one obvious action. Same route, same c
 affordances.
 
 **As built** ([D77](../decisions.md#d77--empty-lists-say-why-and-organisers-who-cannot-publish-get-a-simple-stack)): the stack shows when the caller lacks `CanPublishEvent`, no filter is active,
-and they have between 1 and 10 events. Since the editor role publishes ([D66](../decisions.md#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role)), only custom organiser
-roles see it.
+and they have between 1 and 10 events. The editor role holds no event permission ([D96](../decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)), so only
+custom organiser roles see it.
 
 ---
 
@@ -455,7 +456,8 @@ Publish needs `viewerCan.publish`, which is false for a venue member on another 
 even when they hold `CanPublishEvent`, so they get Ready for review. Nothing renders while `viewerCan`
 is loading. The confirmation names who can then publish ("Equilibre can then check the event and
 publish it", or the agenda team for an event with no organisation) and promises no notification,
-because mail is slice E. Anyone who may edit the event may withdraw the request. When there is nothing new to send,
+because mail is slice E. Anyone who may edit the event may withdraw the request, and Withdraw request
+shows next to Publish for someone who may publish ([D96](../decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)). When there is nothing new to send,
 Ready for review stays focusable and says why.
 
 ---

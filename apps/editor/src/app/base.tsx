@@ -16,7 +16,6 @@ import {
   CanCreateCrowdfunding,
   CanCreateDiscountCode,
   CanCreateDocument,
-  CanCreateEvent,
   CanCreateExternalApp,
   CanCreateGoodie,
   CanCreateImage,
@@ -200,6 +199,7 @@ import {
   MdVpnKey,
 } from 'react-icons/md';
 
+import { AGENDA_PERMISSIONS, EVENT_PERMISSIONS } from './agendaPermissions';
 import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
 import { useSidebarMenu } from './sidebarMenu';
@@ -819,19 +819,7 @@ export function Base({ children }: BaseProps) {
                 </SidebarNavMenu>
               </PermissionControl>
 
-              <PermissionControl
-                qualifyingPermissions={[
-                  CanGetEvents.id,
-                  CanCreateEvent.id,
-                  CanUpdateOrganization.id,
-                  CanGetOtherOrganizations.id,
-                  CanUpdateOtherOrganizations.id,
-                  CanGetTags.id,
-                  CanCreateTag.id,
-                  CanUpdateTag.id,
-                  CanDeleteTag.id,
-                ]}
-              >
+              <PermissionControl qualifyingPermissions={AGENDA_PERMISSIONS}>
                 <SidebarNavMenu
                   title={t('navbar.agenda')}
                   icon={<MdEvent />}
@@ -863,15 +851,7 @@ export function Base({ children }: BaseProps) {
                     </SidebarNavItem>
                   </PermissionControl>
 
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      CanGetEvents.id,
-                      CanCreateEvent.id,
-                      CanUpdateOrganization.id,
-                      CanGetOtherOrganizations.id,
-                      CanUpdateOtherOrganizations.id,
-                    ]}
-                  >
+                  <PermissionControl qualifyingPermissions={AGENDA_PERMISSIONS}>
                     <SidebarNavItem
                       href="/venues"
                       icon={<MdPlace />}
@@ -880,20 +860,22 @@ export function Base({ children }: BaseProps) {
                     </SidebarNavItem>
                   </PermissionControl>
 
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      CanGetTags.id,
-                      CanCreateTag.id,
-                      CanUpdateTag.id,
-                      CanDeleteTag.id,
-                    ]}
-                  >
-                    <SidebarNavItem
-                      href="/events/tags"
-                      icon={<MdSell />}
+                  <PermissionControl qualifyingPermissions={EVENT_PERMISSIONS}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetTags.id,
+                        CanCreateTag.id,
+                        CanUpdateTag.id,
+                        CanDeleteTag.id,
+                      ]}
                     >
-                      {t('navbar.eventTags')}
-                    </SidebarNavItem>
+                      <SidebarNavItem
+                        href="/events/tags"
+                        icon={<MdSell />}
+                      >
+                        {t('navbar.eventTags')}
+                      </SidebarNavItem>
+                    </PermissionControl>
                   </PermissionControl>
                 </SidebarNavMenu>
               </PermissionControl>

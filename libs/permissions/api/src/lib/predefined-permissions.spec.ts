@@ -3,9 +3,11 @@ import {
   CanCreateEvent,
   CanCreateImage,
   CanCreateOrganization,
+  CanCreateTag,
   CanDeleteEvent,
   CanDeleteOrganization,
   CanDeleteOtherOrganizationEvents,
+  CanDeleteTag,
   CanGetEvent,
   CanGetEvents,
   CanGetImage,
@@ -21,6 +23,7 @@ import {
   CanUpdateOrganization,
   CanUpdateOtherOrganizationEvents,
   CanUpdateOtherOrganizations,
+  CanUpdateTag,
   CrossOrganizationPermissions,
 } from '@wepublish/permissions';
 
@@ -47,15 +50,6 @@ const organizationPermissionIds = ids([
   CanDeleteOrganization,
   CanUpdateOtherOrganizations,
   CanGetOtherOrganizations,
-]);
-
-const scopedEventPermissionIds = ids([
-  CanGetEvent,
-  CanGetEvents,
-  CanCreateEvent,
-  CanUpdateEvent,
-  CanDeleteEvent,
-  CanPublishEvent,
 ]);
 
 const permissionsOfRole = (id: string) =>
@@ -92,20 +86,23 @@ describe('addPredefinedPermissions', () => {
     );
   });
 
-  it('gives the editor the event permissions scoped to its own events', () => {
-    expect(permissionsOfRole('editor')).toEqual(
-      expect.arrayContaining(scopedEventPermissionIds)
-    );
-  });
-
-  it('gives the editor no cross-organisation and no organisation permission', () => {
+  it('gives the editor no agenda permission at all', () => {
     const editor = permissionsOfRole('editor');
     const forbidden = [
-      ...ids(CrossOrganizationPermissions),
+      ...eventPermissionIds,
       ...organizationPermissionIds,
+      ...ids(CrossOrganizationPermissions),
     ];
 
     expect(forbidden.filter(id => editor.includes(id))).toEqual([]);
+  });
+
+  it('keeps the tag permissions the editor needs for articles', () => {
+    expect(permissionsOfRole('editor')).toEqual(
+      expect.arrayContaining(
+        ids([CanGetTags, CanCreateTag, CanUpdateTag, CanDeleteTag])
+      )
+    );
   });
 
   it('lists each editor permission once', () => {

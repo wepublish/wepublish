@@ -185,7 +185,7 @@ export function EventPublicationControl({
         />
       )}
 
-      {reviewing && viewerCan.withdrawReview && event.reviewRequestedAt && (
+      {viewerCan.withdrawReview && event.reviewRequestedAt && (
         <EditorHeaderButton
           variant="outlined"
           icon={<MdUndo />}

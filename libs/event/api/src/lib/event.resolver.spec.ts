@@ -917,6 +917,15 @@ describe('EventResolver', () => {
       expect(can.withdrawReview).toBe(true);
     });
 
+    it('offers withdrawing to an editor of the event who did not ask', async () => {
+      const can = await viewerCan('organiser', {
+        reviewRequestedAt: NOW,
+        reviewRequestedById: 'someone-else',
+      });
+
+      expect(can.withdrawReview).toBe(true);
+    });
+
     it("lets the venue's member edit and ask, but not publish, delete, copy or move", async () => {
       expect(await viewerCan('venueEditor')).toEqual({
         ...none,

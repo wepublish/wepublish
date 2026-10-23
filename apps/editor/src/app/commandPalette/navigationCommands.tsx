@@ -10,7 +10,6 @@ import {
   CanCreateCrowdfunding,
   CanCreateDiscountCode,
   CanCreateDocument,
-  CanCreateEvent,
   CanCreateExternalApp,
   CanCreateGoodie,
   CanCreateImage,
@@ -185,6 +184,7 @@ import {
   MdVpnKey,
 } from 'react-icons/md';
 
+import { AGENDA_PERMISSIONS, EVENT_PERMISSIONS } from '../agendaPermissions';
 import type { CommandDefinition } from './commandDefinition';
 
 const TAG_PERMISSIONS = [
@@ -392,13 +392,7 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     titleKey: 'navbar.venues',
     sectionKey: 'navbar.agenda',
     icon: <MdPlace />,
-    permissions: [
-      CanGetEvents.id,
-      CanCreateEvent.id,
-      CanUpdateOrganization.id,
-      CanGetOtherOrganizations.id,
-      CanUpdateOtherOrganizations.id,
-    ],
+    permissions: AGENDA_PERMISSIONS,
     perform: ({ navigate }) => navigate('/venues'),
   },
   {
@@ -407,6 +401,7 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     sectionKey: 'navbar.agenda',
     icon: <MdSell />,
     permissions: TAG_PERMISSIONS,
+    alsoPermissions: EVENT_PERMISSIONS,
     perform: ({ navigate }) => navigate('/events/tags'),
   },
   {

@@ -234,4 +234,46 @@ describe('EventPublicationControl', () => {
 
     expect(onWithdrawReview).toHaveBeenCalled();
   });
+
+  it('offers Withdraw request next to Publish to someone who may publish', () => {
+    const onWithdrawReview = vi.fn();
+    render(
+      ui(
+        testEvent({
+          reviewRequestedAt: '2026-10-21T08:00:00.000Z',
+          viewerCan: {
+            ...ORGANISER,
+            publish: true,
+            requestReview: false,
+            withdrawReview: true,
+          },
+        }),
+        { onWithdrawReview }
+      )
+    );
+
+    expect(button('agenda.editor.publish.button')).toBeInTheDocument();
+
+    fireEvent.click(button('agenda.editor.review.withdraw')!);
+
+    expect(onWithdrawReview).toHaveBeenCalled();
+  });
+
+  it('offers no Withdraw request without the permission to withdraw', () => {
+    render(
+      ui(
+        testEvent({
+          reviewRequestedAt: '2026-10-21T08:00:00.000Z',
+          viewerCan: {
+            ...ORGANISER,
+            publish: true,
+            requestReview: false,
+            withdrawReview: false,
+          },
+        })
+      )
+    );
+
+    expect(button('agenda.editor.review.withdraw')).toBeNull();
+  });
 });
