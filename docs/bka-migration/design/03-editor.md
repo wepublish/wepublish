@@ -23,6 +23,11 @@ Slice F stage 3 brought back the list: the **Agenda** section with `/events`, it
 review-queue dashboard card, in `libs/event/editor` ([D74](../decisions.md) to [D78](../decisions.md)). Event names are not yet
 links; the event editor follows in stage 5.
 
+Stage 4 built the fields the event editor composes, each on its own and tested, not yet mounted on a
+route: the date editor (§5), the images field (§6), prices and special rate, tags, venue, audience,
+organisation and owner, the restricted block map (§4.2) and the form schema
+([D79](../decisions.md) to [D82](../decisions.md)).
+
 ---
 
 ## 1. Who uses this, and what for

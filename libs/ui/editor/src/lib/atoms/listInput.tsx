@@ -91,11 +91,12 @@ export interface ListFieldProps<T = any> {
   // field.onChange can be passed as well as a state setter.
   onChange: (value: ListValue<T>[]) => void;
   label?: string;
-  defaultValue: T | (() => T);
+  defaultValue?: T;
   disabled?: boolean;
   showIndex?: boolean;
   dense?: boolean;
   addLabel?: string;
+  onAdd?: () => void;
   duplicateLastLabel?: string;
   duplicateValue?: (value: T) => T;
   maxItems?: number;
@@ -231,6 +232,7 @@ export function ListInput<T>({
   showIndex,
   dense,
   addLabel,
+  onAdd,
   duplicateLastLabel,
   duplicateValue,
   maxItems,
@@ -288,6 +290,11 @@ export function ListInput<T>({
   }
 
   function handleAdd() {
+    if (onAdd) {
+      onAdd();
+      return;
+    }
+
     onChange([...value, { id: nanoid(), value: defaultValue as T }]);
   }
 

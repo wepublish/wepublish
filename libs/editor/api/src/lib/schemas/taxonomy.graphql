@@ -1,0 +1,6 @@
+query EventAudiences {
+  eventAudiences {
+    id
+    name
+  }
+}

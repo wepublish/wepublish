@@ -182,6 +182,16 @@ describe('ListInput', () => {
     expect(screen.getByRole('button', { name: 'Add date' })).toBeTruthy();
   });
 
+  it('hands Add to onAdd instead of appending a default row', () => {
+    const onAdd = vi.fn();
+    const onChange = renderList({ addLabel: 'Add images', onAdd });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Add images' }));
+
+    expect(onAdd).toHaveBeenCalledTimes(1);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it('gives the fields the whole width of the row', () => {
     render(
       <ThemeProvider theme={createTheme({ cssVariables: true })}>

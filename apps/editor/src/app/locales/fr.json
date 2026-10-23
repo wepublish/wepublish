@@ -4540,6 +4540,130 @@
         "count_other": "{{count}} événements en attente de validation",
         "empty": "Rien en attente de validation",
         "open": "Ouvrir la liste"
+      },
+      "schedule": {
+        "legend": "Quand cela a-t-il lieu ?",
+        "modes": {
+          "Continuous": {
+            "label": "Une fois, ou sur des jours consécutifs",
+            "example": "Un concert, un vernissage, la durée d’une exposition"
+          },
+          "Weekly": {
+            "label": "Chaque semaine, certains jours",
+            "example": "Une exposition ouverte du jeudi au dimanche"
+          },
+          "Explicit": {
+            "label": "À des dates précises",
+            "example": "Plusieurs représentations aux dates de votre choix"
+          }
+        },
+        "span": {
+          "continuous": {
+            "dateFrom": "Date de début",
+            "timeFrom": "Heure de début",
+            "dateTo": "Date de fin",
+            "timeTo": "Heure de fin"
+          },
+          "weekly": {
+            "dateFrom": "Premier jour",
+            "timeFrom": "Chaque date commence à",
+            "dateTo": "Dernier jour",
+            "timeTo": "Chaque date finit à"
+          }
+        },
+        "overnight": "Une heure de fin antérieure au début se prolonge jusqu’au lendemain matin.",
+        "openingTime": "Ouverture des portes",
+        "optional": "Facultatif",
+        "weekDays": "Ces jours-là",
+        "horizon": "Les dates peuvent aller jusqu’au {{date}}. Pour une durée plus longue, ajoutez les dates suivantes plus tard.",
+        "countWeekly_one": "→ {{count}} date, {{from}}–{{to}}",
+        "countWeekly_other": "→ {{count}} dates, chacune {{from}}–{{to}}",
+        "countExplicit_one": "→ {{count}} date",
+        "countExplicit_other": "→ {{count}} dates",
+        "addDate": "Ajouter une date",
+        "duplicateLast": "Dupliquer la dernière",
+        "row": {
+          "date": "Date",
+          "timeFrom": "De",
+          "timeTo": "À",
+          "openingTime": "Portes"
+        },
+        "rowDate": "Date de l’entrée {{position}}",
+        "rowTimeFrom": "Heure de début de l’entrée {{position}}",
+        "rowTimeTo": "Heure de fin de l’entrée {{position}}",
+        "rowOpeningTime": "Ouverture des portes de l’entrée {{position}}",
+        "problems": {
+          "MissingDateRange": "Indiquez une date et une heure pour le début et la fin.",
+          "MissingDates": "Ajoutez au moins une date.",
+          "IncompleteDates": "Chaque entrée a besoin d’une date, d’une heure de début et d’une heure de fin.",
+          "DateToBeforeDateFrom": "La fin précède le début.",
+          "InvalidOpeningTime": "Écrivez l’heure d’ouverture au format HH:MM, par exemple 19:30.",
+          "MissingWeekDays": "Choisissez au moins un jour",
+          "InvalidWeekDays": "Choisissez des jours du lundi au dimanche, chacun une seule fois.",
+          "BeyondScheduleHorizon": "Les dates peuvent aller jusqu’au {{date}}. Terminez la série ce jour-là ou avant, et ajoutez les dates suivantes plus tard.",
+          "SpanTooLongToPreview": "Cette période dépasse dix ans, ses dates ne sont donc pas comptées. Vérifiez le premier jour."
+        }
+      },
+      "images": {
+        "title": "Images",
+        "add": "Ajouter des images",
+        "main": "Image principale",
+        "caption": "Légende",
+        "captionHelp": "Affichée sous l’image, par exemple le crédit photo.",
+        "altText": "Texte alternatif",
+        "altTextHelp": "Décrit l’image pour les personnes qui ne la voient pas. Tous les articles qui utilisent cette image le partagent.",
+        "altTextMissing": "Pas encore de texte alternatif : les personnes qui utilisent un lecteur d’écran ne sauront pas ce que montre l’image.",
+        "altTextLong": "Limitez le texte alternatif à {{max}} caractères ; les lecteurs d’écran le lisent d’une traite."
+      },
+      "rates": {
+        "title": "Prix",
+        "add": "Ajouter un prix",
+        "priceLabel": "Prix",
+        "pricePlaceholder": "CHF 25",
+        "designationLabel": "Pour qui",
+        "designationPlaceholder": "Réduit, étudiant·e·s, …",
+        "price": "Prix {{position}}",
+        "designation": "Bénéficiaires du prix {{position}}",
+        "specialRate": "Tarif spécial",
+        "special": {
+          "none": "Aucun",
+          "FreeEntry": "Entrée libre (gratuite)",
+          "FreePrice": "Prix libre ou collecte"
+        }
+      },
+      "form": {
+        "tags": "Tags",
+        "tagsHelp": "Choisissez de un à {{max}} tags.",
+        "tagsAtMax": "Un événement a au plus {{max}} tags. Retirez-en un pour en choisir un autre.",
+        "place": "Lieu",
+        "placeHelp": "Les lieux où vous pouvez saisir des événements.",
+        "placeNone": "Il n’y a encore aucun lieu où vous pouvez saisir des événements. L’agenda classe les événements par lieu : demandez à l’administration de l’agenda d’ajouter le vôtre.",
+        "audience": "Public",
+        "audienceNone": "Non précisé",
+        "organization": "Organisation",
+        "organizationHelpMine": "Une de vos organisations. Ses membres peuvent modifier l’événement.",
+        "organizationHelpAll": "L’organisation qui organise l’événement. Ses membres peuvent le modifier.",
+        "organizationLocked": "Seul·e un·e membre de l’organisation de l’événement peut le déplacer, et uniquement vers une de ses organisations. L’administration de l’agenda peut déplacer tout événement.",
+        "owner": "Propriétaire",
+        "ownerYou": "Vous",
+        "ownerYouHelp": "Les événements que vous créez vous appartiennent ; vous pouvez les modifier sans faire partie d’une organisation.",
+        "ownerNone": "Aucun·e propriétaire",
+        "ownerLocked": "Seule l’administration de l’agenda peut confier un événement à quelqu’un d’autre.",
+        "ownerPickHelp": "Laissez vide pour en être propriétaire.",
+        "ownerReassignHelp": "La ou le propriétaire peut modifier l’événement sans faire partie de son organisation.",
+        "errors": {
+          "nameRequired": "Donnez un nom à l’événement.",
+          "nameTooLong": "{{max}} caractères au maximum.",
+          "printDescriptionTooLong": "{{max}} caractères au maximum.",
+          "descriptionTooLong": "La description peut compter au plus {{max}} caractères.",
+          "blockNotAllowed": "La description contient un bloc que l’agenda ne peut pas afficher. Retirez-le pour enregistrer.",
+          "captionTooLong": "{{max}} caractères au maximum.",
+          "tagsRequired": "Choisissez au moins {{min}} tag.",
+          "tagsTooMany": "Choisissez au plus {{max}} tags.",
+          "tagsDistinct": "Choisissez chaque tag une seule fois.",
+          "ratePrice": "Indiquez un prix ou supprimez la ligne.",
+          "ticketingUrl": "Le lien doit commencer par l’un de ceux-ci : {{schemes}}."
+        }
       }
     }
   }

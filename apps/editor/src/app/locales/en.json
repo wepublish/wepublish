@@ -4540,6 +4540,130 @@
         "count_other": "{{count}} events awaiting review",
         "empty": "Nothing waiting for review",
         "open": "Open queue"
+      },
+      "schedule": {
+        "legend": "When does it happen?",
+        "modes": {
+          "Continuous": {
+            "label": "Once, or over consecutive days",
+            "example": "A concert, a vernissage, the run of an exhibition"
+          },
+          "Weekly": {
+            "label": "Every week on certain days",
+            "example": "An exhibition open Thursdays to Sundays"
+          },
+          "Explicit": {
+            "label": "On specific dates",
+            "example": "Several performances on dates you choose"
+          }
+        },
+        "span": {
+          "continuous": {
+            "dateFrom": "Start date",
+            "timeFrom": "Start time",
+            "dateTo": "End date",
+            "timeTo": "End time"
+          },
+          "weekly": {
+            "dateFrom": "First day",
+            "timeFrom": "Each date starts at",
+            "dateTo": "Last day",
+            "timeTo": "Each date ends at"
+          }
+        },
+        "overnight": "An end time earlier than the start runs into the next morning.",
+        "openingTime": "Doors open",
+        "optional": "Optional",
+        "weekDays": "On these days",
+        "horizon": "Dates can be set up to {{date}}. For a longer run, add the later dates nearer the time.",
+        "countWeekly_one": "→ {{count}} date, {{from}}–{{to}}",
+        "countWeekly_other": "→ {{count}} dates, each {{from}}–{{to}}",
+        "countExplicit_one": "→ {{count}} date",
+        "countExplicit_other": "→ {{count}} dates",
+        "addDate": "Add date",
+        "duplicateLast": "Duplicate last",
+        "row": {
+          "date": "Date",
+          "timeFrom": "From",
+          "timeTo": "To",
+          "openingTime": "Doors"
+        },
+        "rowDate": "Date of entry {{position}}",
+        "rowTimeFrom": "Start time of entry {{position}}",
+        "rowTimeTo": "End time of entry {{position}}",
+        "rowOpeningTime": "Door time of entry {{position}}",
+        "problems": {
+          "MissingDateRange": "Enter a date and a time for the start and the end.",
+          "MissingDates": "Add at least one date.",
+          "IncompleteDates": "Every entry needs a date, a start time and an end time.",
+          "DateToBeforeDateFrom": "The end is before the start.",
+          "InvalidOpeningTime": "Write the door time as HH:MM, for example 19:30.",
+          "MissingWeekDays": "Pick at least one day",
+          "InvalidWeekDays": "Pick days from Monday to Sunday, each once.",
+          "BeyondScheduleHorizon": "Dates can be set up to {{date}}. End the run on that day or earlier, and add later dates nearer the time.",
+          "SpanTooLongToPreview": "This run is longer than ten years, so its dates are not counted. Check the first day."
+        }
+      },
+      "images": {
+        "title": "Images",
+        "add": "Add images",
+        "main": "Main image",
+        "caption": "Caption",
+        "captionHelp": "Shown below the image, for example the photo credit.",
+        "altText": "Alt text",
+        "altTextHelp": "Describes the image for people who cannot see it. Every article that uses this image shares it.",
+        "altTextMissing": "No alt text yet: screen reader users will not know what the image shows.",
+        "altTextLong": "Keep alt text to {{max}} characters; screen readers read it in one go."
+      },
+      "rates": {
+        "title": "Prices",
+        "add": "Add price",
+        "priceLabel": "Price",
+        "pricePlaceholder": "CHF 25",
+        "designationLabel": "For whom",
+        "designationPlaceholder": "Reduced, students, …",
+        "price": "Price {{position}}",
+        "designation": "Who price {{position}} is for",
+        "specialRate": "Special rate",
+        "special": {
+          "none": "None",
+          "FreeEntry": "Free entry",
+          "FreePrice": "Pay what you like, or a collection"
+        }
+      },
+      "form": {
+        "tags": "Tags",
+        "tagsHelp": "Pick one to {{max}} tags.",
+        "tagsAtMax": "An event has at most {{max}} tags. Remove one to pick another.",
+        "place": "Venue",
+        "placeHelp": "The venues you may file events at.",
+        "placeNone": "There is no venue you can file events at yet. The agenda lists events by venue, so ask an agenda administrator to add yours.",
+        "audience": "Audience",
+        "audienceNone": "Not specified",
+        "organization": "Organisation",
+        "organizationHelpMine": "One of your organisations. Its members can edit the event.",
+        "organizationHelpAll": "The organisation that runs the event. Its members can edit it.",
+        "organizationLocked": "Only a member of the event’s organisation can move it, and only to an organisation of their own. Agenda administrators can move any event.",
+        "owner": "Owner",
+        "ownerYou": "You",
+        "ownerYouHelp": "You own the events you create and can edit them without being in an organisation.",
+        "ownerNone": "No owner",
+        "ownerLocked": "Only agenda administrators can hand an event to another owner.",
+        "ownerPickHelp": "Leave empty to own the event yourself.",
+        "ownerReassignHelp": "The owner can edit the event without being in its organisation.",
+        "errors": {
+          "nameRequired": "Give the event a name.",
+          "nameTooLong": "Use at most {{max}} characters.",
+          "printDescriptionTooLong": "Use at most {{max}} characters.",
+          "descriptionTooLong": "The description may have at most {{max}} characters.",
+          "blockNotAllowed": "The description holds a block the agenda cannot show. Remove it to save.",
+          "captionTooLong": "Use at most {{max}} characters.",
+          "tagsRequired": "Pick at least {{min}} tag.",
+          "tagsTooMany": "Pick at most {{max}} tags.",
+          "tagsDistinct": "Pick each tag only once.",
+          "ratePrice": "Enter a price, or remove the row.",
+          "ticketingUrl": "Start the link with one of: {{schemes}}."
+        }
       }
     }
   }

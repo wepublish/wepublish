@@ -57,3 +57,28 @@ export const formatRelativeTime = (
 
   return format.format(-Math.round(elapsed / MONTH), 'month');
 };
+
+export const formatCalendarDay = (
+  { year, month, day }: { year: number; month: number; day: number },
+  language: string
+) =>
+  new Intl.DateTimeFormat(localeOf(language), {
+    timeZone: 'UTC',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(Date.UTC(year, month - 1, day)));
+
+const A_MONDAY = Date.UTC(2024, 0, 1);
+
+export const formatWeekday = (
+  isoWeekday: number,
+  language: string,
+  width: 'long' | 'short'
+) =>
+  new Intl.DateTimeFormat(localeOf(language), {
+    timeZone: 'UTC',
+    weekday: width,
+  })
+    .format(new Date(A_MONDAY + (isoWeekday - 1) * 24 * 60 * 60 * 1000))
+    .replace(/\.$/, '');

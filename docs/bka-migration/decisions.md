@@ -3016,6 +3016,109 @@ properties and others).
 
 ---
 
+## D79 — The date editor takes Zurich wall-clock dates and times, and never expands what it cannot save
+
+Implements design 3 §5. Updates [D39](#d39--the-event-has-no-starttime-or-endtime).
+
+**Status.** Built in slice F stage 4. Awaiting Karl's confirmation.
+
+**Decision.**
+- Dates and times are native `date` and `time` inputs whose values are read as **Zurich wall clock**
+  and turned into instants with `zurichWallClockToInstant` (`schedule-form.ts`). The browser's own
+  time zone plays no part, which the house `DatePicker` (local `Date`) could not promise.
+- Each mode keeps its own values (`continuous`, `weekly`, `explicit`), so switching modes and back
+  loses nothing; only the chosen mode is sent.
+- **An explicit row whose end time is earlier than its start time ends on the next day**, as a
+  weekly series does (D39) and as BKa's sub-event form already did (it adds a day when the end time
+  wraps past midnight, research `bka-09` §7.2). Without it, 22:00–01:00 could not be entered.
+- **Duplicate last** copies the last row's times onto the **following day**: the case it exists
+  for is the same show on consecutive evenings.
+- New schedules start at 20:00–23:30, BKa's defaults.
+- The `→ N dates` count runs `eventScheduleProblems` first and calls `expandOccurrences` only when
+  there are none (`occurrence-preview.ts`). An incomplete explicit row (`IncompleteDates`) and a
+  span longer than ten years (`SpanTooLongToPreview`, which catches a year still being typed) are
+  editor-side problems that also stop the expansion. Years before 1000 are treated as not entered.
+- Problems show at their field (`schedule-problems.ts`) once the schedule has been changed or the
+  form submitted, and the form resolver refuses the same problems on save. The horizon line names
+  `lastSchedulableDay(now)` as a date without a time (D40) and turns into the error when it is hit.
+
+**Why.** Design 3 asks for the consequence before it is committed and for limits explained where
+they are met; expanding an invalid or unbounded schedule would show a wrong number or hang the tab.
+
+---
+
+## D80 — Event images: caption on the event, alt text on the image, one main image
+
+Implements design 3 §6. Follows design 1 §11.1.
+
+**Status.** Built in slice F stage 4. Awaiting Karl's confirmation.
+
+**Decision.**
+- Each image row has a thumbnail, a **Main image** radio (exactly one is main; removing it makes
+  the first remaining image main), a caption and an alt text, each with its own help and a `n/125`
+  counter.
+- The caption is refused above 125 characters (BKa's `legend` limit). **The API does not enforce
+  this yet**; the rule lives in the editor's form schema.
+- The alt text is `Image.description`, prefilled from it and saved through `updateImage` in stage 5.
+  Its help says every article using the image shares it. An empty or over-long alt text gets a
+  warning and never blocks saving.
+- Adding opens the image library in a drawer (`ListInput` gains `onAdd`, and `defaultValue` becomes
+  optional). An image already on the event is not added twice.
+
+**Why.** Blocking on alt text teaches people to type `x` (design 3 §6). The caption limit keeps
+what the editor writes inside what BKa's data and print layout assume.
+
+---
+
+## D81 — On a new event the organisation picker offers your own organisations and the owner is you
+
+Implements [D47](#d47--who-may-set-an-events-organisation-and-owner) in the editor.
+
+**Status.** Built in slice F stage 4. Awaiting Karl's confirmation.
+
+**Decision.**
+- **Organisation.** Without `CanUpdateOtherOrganizationEvents` the picker lists `mine` only, on
+  create and on move, because D47 only lets you file or move an event into an organisation you
+  belong to. On an existing event it is enabled only when `viewerCan.moveOrganization` is true; when
+  that is false it says who can move the event, and while it loads it is disabled without a reason.
+- **Owner.** On a new event it reads "You" and is read-only, unless the caller holds
+  `CanUpdateOtherOrganizationEvents`, who gets a user picker (empty means "you"). On an existing
+  event it shows the owner, or "No owner", read-only with the reason, unless
+  `viewerCan.reassignOwner` is true. The user list is queried only when the picker shows, so the
+  editor role, which lacks `CanGetUsers`, never sends a query it would be refused.
+
+**Why.** `viewerCan` belongs to an existing event and does not exist on `/events/create`; gating
+only on it would have offered every organisation and every user on create, and the API would have
+refused the save (critique of the slice F plan).
+
+---
+
+## D82 — The event form schema reuses the shared rules and splits fields into facts and content
+
+Follows [D53](#d53--the-shared-input-rules-live-in-the-schedule-library) and design 3 §4.1.
+
+**Status.** Built in slice F stage 4. Awaiting Karl's confirmation.
+
+**Decision.**
+- `eventFormSchema(now)` (`event-form-schema.ts`) wraps the rules of `@wepublish/event/schedule`
+  (name, print blurb, description length, tags, ticketing URL, rates, the schedule problems) and
+  replaces their English messages with translation keys; `formErrorValues` supplies the limits.
+- Every field belongs to exactly one of `CONTENT_FIELDS` (name, print blurb, blocks, images, sent
+  with `updateEventContent`) or `FACT_FIELDS` (everything else, sent with `updateEvent`), so stage 5
+  can send only the dirty group.
+- The canvas offers `EventBlockMap`: the article editor's RichText, Image, Embed and Quote blocks,
+  checked against `EVENT_BLOCK_TYPES` by a spec. A stored block outside it fails the form with
+  "The description holds a block the agenda cannot show".
+- Tags use `SelectTags`, which gains `label`, `helperText`, `error` and `maxTags` (unpicked tags
+  are disabled at the limit). The venue picker queries `places(filter: {selectable: true})` and
+  explains when there is none. Audience is a select with "Not specified".
+- `showInPrint` starts checked on a new event, as BKa does.
+
+**Why.** One source for the rules (D53), and the split save of design 3 §4.1 needs to know which
+mutation each field belongs to.
+
+---
+
 ## Open questions
 
 Recorded as they surface; resolved ones become decisions above.
@@ -3205,3 +3308,9 @@ Slice F builds the agenda editor. Its build choices are recorded as decisions fr
 11. [D76](#d76--ends-in-n-days-marks-weekly-series-only-in-zurich-calendar-days): "Ends in N days" for weekly series only, or for every event.
 12. [D77](#d77--empty-lists-say-why-and-organisers-who-cannot-publish-get-a-simple-stack): the membership message only for those who cannot file events, and the stack's trigger
     (cannot publish, no filter, at most 10 events).
+13. [D79](#d79--the-date-editor-takes-zurich-wall-clock-dates-and-times-and-never-expands-what-it-cannot-save): an explicit row ending before it starts runs into the next day, and Duplicate last
+    moves the copy to the following day.
+14. [D80](#d80--event-images-caption-on-the-event-alt-text-on-the-image-one-main-image): alt text written to the shared `Image.description`, and the 125-character caption limit
+    held by the editor only (should the API refuse it too?).
+15. [D81](#d81--on-a-new-event-the-organisation-picker-offers-your-own-organisations-and-the-owner-is-you): the organisation and owner pickers on a new event.
+16. [D82](#d82--the-event-form-schema-reuses-the-shared-rules-and-splits-fields-into-facts-and-content): `showInPrint` checked by default on new events, as in BKa.
