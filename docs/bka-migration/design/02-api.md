@@ -78,6 +78,15 @@ resolves the flat fields from `draft ?? pending ?? published`. Every other reque
 `publicEventsWhere` and the published revision. Tying editor mode to the event permissions rather
 than `CanPreview` lets an organiser role without `CanPreview` list its own drafts.
 
+With a non-empty `filter.ids`, editor mode scopes `events` and `agenda` by `reachableEventsWhere`, as a
+single event, so the editor can page through the dates of an event it reached by its venue
+([D71](../decisions.md#d71--the-editor-list-filters-by-publication-review-and-last-date-and-lookups-by-id-use-reach)).
+
+For the editor, `Event` also carries `viewerCan` (what the caller may do, by the guards' permissions
+and the service's record rules, [D68](../decisions.md#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it)), `owner` and `reviewRequestedBy`, all null outside
+the event's editor view. `nextOccurrence` and `upcomingOccurrenceCount` (the next date included) are
+public and batched, and `specialRate` is a fact ([D67](../decisions.md#d67--events-keep-bkas-special-rate-as-a-nullable-enum)). `EventSort` gains `ReviewRequestedAt`.
+
 `places` takes `search`, `regionId`, `organizationId`, `enabled`, `selectable` and `geoBoundingBox`,
 sorted by `Name`, `CreatedAt` or `ModifiedAt`. Its rows follow `visiblePlacesWhere` (§3.2). Place
 has no public/sensitive split ([D54](../decisions.md#d54--places-are-public-and-private-only-narrows-the-venue-picker), [design 1](01-data-model.md) §9), and
@@ -160,6 +169,14 @@ input EventFilter {
   partner: Boolean                    # D11 — public; what it reveals is accepted (D42)
   showInPrint: Boolean
   eventStatus: [EventStatus!]
+
+  # editor (D71) — draft, pending and reviewRequested only apply in editor mode
+  draft: Boolean
+  pending: Boolean
+  published: Boolean
+  reviewRequested: Boolean
+  endsBefore: DateTime                # on lastDateAt: "Ended"
+  endsAfter: DateTime                 # with endsBefore: "Ending soon"
 }
 ```
 
@@ -255,6 +272,7 @@ updateEventContent(id: String!, input: EventContentInput!): Event!   # name, pri
 publishEvent(id: String!, publishAt: DateTime): Event!   # publishAt => pending
 unpublishEvent(id: String!): Event!
 requestEventReview(id: String!): Event!                  # D5, D58
+withdrawEventReview(id: String!): Event!                 # D69
 
 createOrganization / updateOrganization / deleteOrganization
 createPlace / updatePlace / deletePlace
@@ -286,6 +304,10 @@ organiser believing they had asked for something.
 | `deleteEvent` | `CanDeleteEvent` | `canDeleteEvent` |
 | `duplicateEvent` | `CanCreateEvent` | `canModifyEvent` on the source, and the caller may file under its organisation; copies facts, dates, rates, tags and the newest revision as a "Kopie von …" draft, with no slug and the caller as owner |
 | `requestEventReview` | `CanUpdateEvent` | `canModifyEvent`; BadRequest when `canPublishEvent` already holds or there is no unpublished draft; stamps `reviewRequestedAt`/`ById` once |
+| `withdrawEventReview` | `CanUpdateEvent` | `canModifyEvent`; clears `reviewRequestedAt`/`ById`, or returns the event unchanged when nothing is pending |
+
+Event content takes only the blocks in `EVENT_BLOCK_TYPES` (rich text, image, quote and the embed
+family), checked by `assertValidContent` ([D70](../decisions.md#d70--event-content-takes-only-the-blocks-the-agenda-can-show)).
 
 Facts saved on a published event call `invalidate('events')`; on an unpublished one
 `invalidateDraft('events')`. Tags must be of type `Event`, and the venue must pass

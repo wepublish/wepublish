@@ -1,5 +1,6 @@
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -33,14 +34,17 @@ import {
 import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { EventTagDataloader, Tag } from '@wepublish/tag/api';
+import { User, UserDataloaderService } from '@wepublish/user/api';
 import {
   EventDatesDataloader,
   EventRatesDataloader,
   EventRevisionImagesDataloader,
 } from './event-details.dataloader';
 import { EventDataloaderService } from './event-dataloader.service';
+import { EventOccurrenceSummaryDataloader } from './event-occurrence-summary.dataloader';
 import { EventEditorMode } from './event-editor-mode.decorator';
 import { canReachLoadedEvent } from './event-reach';
+import { eventViewerPermissions } from './event-scope';
 import { EventRevisionDataloaderService } from './event-revisions.dataloader';
 import {
   Event,
@@ -51,6 +55,7 @@ import {
   EventListArgs,
   EventRate,
   EventRevision,
+  EventViewerPermissions,
   PaginatedEvents,
   UpdateEventInput,
 } from './event.model';
@@ -86,6 +91,8 @@ export class EventResolver {
     private tagDataloader: EventTagDataloader,
     private datesDataloader: EventDatesDataloader,
     private ratesDataloader: EventRatesDataloader,
+    private occurrenceSummaries: EventOccurrenceSummaryDataloader,
+    private users: UserDataloaderService,
     private urlAdapter: URLAdapter
   ) {}
 
@@ -211,6 +218,17 @@ export class EventResolver {
     @CurrentUser() session: Session
   ) {
     return this.eventService.requestEventReview(id, session);
+  }
+
+  @Permissions(CanUpdateEvent)
+  @Mutation(() => Event, {
+    description: `Withdraws the pending review request of an event you may edit.`,
+  })
+  public withdrawEventReview(
+    @Args('id') id: string,
+    @CurrentUser() session: Session
+  ) {
+    return this.eventService.withdrawEventReview(id, session);
   }
 
   @ResolveField(() => EventRevision, { nullable: true })
@@ -363,6 +381,64 @@ export class EventResolver {
     return (await this.mayReadEditorView(event, session)) ?
         event.reviewRequestedById
       : null;
+  }
+
+  @Permissions(CanGetEvent)
+  @ResolveField(() => User, { nullable: true })
+  async owner(@Parent() event: PEvent, @CurrentUser() session: Session) {
+    if (!event.ownerId || !(await this.mayReadEditorView(event, session))) {
+      return null;
+    }
+
+    return this.users.load(event.ownerId);
+  }
+
+  @Permissions(CanGetEvent)
+  @ResolveField(() => User, { nullable: true })
+  async reviewRequestedBy(
+    @Parent() event: PEvent,
+    @CurrentUser() session: Session
+  ) {
+    if (
+      !event.reviewRequestedById ||
+      !(await this.mayReadEditorView(event, session))
+    ) {
+      return null;
+    }
+
+    return this.users.load(event.reviewRequestedById);
+  }
+
+  @Permissions(CanGetEvent)
+  @ResolveField(() => EventViewerPermissions, {
+    nullable: true,
+    description: `What you may do with this event. Null outside its editor view.`,
+  })
+  async viewerCan(@Parent() event: PEvent, @CurrentUser() session: Session) {
+    if (!(await this.mayReadEditorView(event, session))) {
+      return null;
+    }
+
+    const place =
+      event.placeId ? ((await this.places.load(event.placeId)) ?? null) : null;
+    const draft = (await this.revisions.load(event.id))?.draft;
+
+    return eventViewerPermissions(session, { ...event, place }, !!draft);
+  }
+
+  @ResolveField(() => Occurrence, {
+    nullable: true,
+    description: `The earliest occurrence that has not ended.`,
+  })
+  async nextOccurrence(@Parent() { id }: PEvent) {
+    return (await this.occurrenceSummaries.load(id))?.next ?? null;
+  }
+
+  @ResolveField(() => Int, {
+    description: `How many occurrences have not ended, the next one included.`,
+  })
+  async upcomingOccurrenceCount(@Parent() { id }: PEvent) {
+    return (await this.occurrenceSummaries.load(id))?.upcomingCount ?? 0;
   }
 
   @Permissions(CanGetEvent)

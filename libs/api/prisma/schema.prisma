@@ -2573,6 +2573,11 @@ enum EventStatus {
   SoldOut   @map("soldOut")
 }
 
+enum EventSpecialRate {
+  FreeEntry @map("freeEntry")
+  FreePrice @map("freePrice")
+}
+
 enum EventScheduleType {
   Continuous @map("continuous")
   Weekly     @map("weekly")
@@ -2604,7 +2609,8 @@ model Event {
   audience   Audience? @relation(fields: [audienceId], references: [id], onDelete: SetNull)
 
   ticketingUrl String?
-  showInPrint  Boolean @default(false)
+  showInPrint  Boolean          @default(false)
+  specialRate  EventSpecialRate?
 
   seoTitle               String?
   seoDescription         String?

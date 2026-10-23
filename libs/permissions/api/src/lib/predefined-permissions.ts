@@ -1,5 +1,6 @@
 import { UserRole } from '@prisma/client';
 import {
+  AgendaAdminPermissions,
   AllPermissions,
   EditorPermissions,
   PeerPermissions,
@@ -31,6 +32,13 @@ export const addPredefinedPermissions = <
       permissionIDs = [
         ...role.permissionIDs,
         ...PeerPermissions.map(permission => permission.id),
+      ];
+      break;
+    }
+    case 'agenda-admin': {
+      permissionIDs = [
+        ...role.permissionIDs,
+        ...AgendaAdminPermissions.map(permission => permission.id),
       ];
       break;
     }

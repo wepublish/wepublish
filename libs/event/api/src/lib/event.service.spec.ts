@@ -7,6 +7,7 @@ import { Test } from '@nestjs/testing';
 import {
   Event,
   EventScheduleType,
+  EventSpecialRate,
   EventStatus,
   PrismaClient,
   TagType,
@@ -23,7 +24,7 @@ import {
 import { SortOrder } from '@wepublish/utils/api';
 import { EventDataloaderService } from './event-dataloader.service';
 import { EventContentInput, EventInput, EventSort } from './event.model';
-import { EventService } from './event.service';
+import { createEventOrder, EventService } from './event.service';
 
 const NOW = new Date('2026-10-23T10:00:00.000Z');
 
@@ -94,6 +95,7 @@ const eventRow = (overrides: Partial<Event> = {}): Event => ({
   reviewRequestedById: null,
   legacyId: null,
   legacyProposedBy: null,
+  specialRate: null,
   ...overrides,
 });
 
@@ -1880,5 +1882,242 @@ describe('EventService.requestEventReview', () => {
     await expect(
       service.requestEventReview('missing', member)
     ).rejects.toBeInstanceOf(NotFoundException);
+  });
+});
+
+describe('createEventOrder', () => {
+  it('orders the review queue by the request, oldest first, with the id as tiebreak', () => {
+    expect(
+      createEventOrder(EventSort.ReviewRequestedAt, SortOrder.Ascending)
+    ).toEqual([
+      { reviewRequestedAt: { sort: 'asc', nulls: 'last' } },
+      { id: 'asc' },
+    ]);
+  });
+});
+
+describe('EventService editor-only filters', () => {
+  it.each([
+    ['draft', { draft: true }],
+    ['pending', { pending: true }],
+    ['reviewRequested', { reviewRequested: true }],
+  ])('ignores %s for the public', async (_name, filter) => {
+    const { service, prisma } = await setup();
+
+    await service.getEvents({ filter }, undefined, false);
+
+    expect(prisma.event.findMany.mock.calls[0][0].where.AND[1]).toEqual({
+      AND: [],
+    });
+  });
+
+  it('applies the publication and review filters in editor mode', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getEvents(
+      { filter: { draft: true, reviewRequested: true } },
+      member,
+      true
+    );
+
+    expect(prisma.event.findMany.mock.calls[0][0].where.AND[1]).toEqual({
+      AND: [{ draft: { isNot: null } }, { reviewRequestedAt: { not: null } }],
+    });
+  });
+
+  it('keeps the published filter for the public', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getEvents({ filter: { published: true } }, undefined, false);
+
+    expect(prisma.event.findMany.mock.calls[0][0].where.AND[1]).toEqual({
+      AND: [{ published: { isNot: null } }],
+    });
+  });
+});
+
+describe('EventService lookups by id in editor mode', () => {
+  const reachable = {
+    OR: [
+      { organizationId: { in: ['org-v'] } },
+      { place: { organizationId: { in: ['org-v'] } } },
+      { ownerId: 'venue' },
+    ],
+  };
+
+  it("lists the occurrences of a venue's event the venue member opened", async () => {
+    const { service, prisma } = await setup();
+
+    await service.getAgenda(
+      { filter: { ids: ['event-1'] } },
+      venueMember,
+      true
+    );
+
+    expect(
+      prisma.occurrence.findMany.mock.calls[0][0].where.AND[0].event.is.AND[0]
+    ).toEqual(reachable);
+  });
+
+  it('finds named events by reach as a single event does', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getEvents(
+      { filter: { ids: ['event-1'] } },
+      venueMember,
+      true
+    );
+
+    expect(prisma.event.findMany.mock.calls[0][0].where.AND[0]).toEqual(
+      reachable
+    );
+  });
+
+  it('keeps unnamed editor lists to the editor scope', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getAgenda({ filter: { ids: [] } }, venueMember, true);
+
+    expect(
+      prisma.occurrence.findMany.mock.calls[0][0].where.AND[0].event.is.AND[0]
+    ).toEqual({
+      OR: [{ organizationId: { in: ['org-v'] } }, { ownerId: 'venue' }],
+    });
+  });
+
+  it('keeps public lookups by id on published events', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getAgenda({ filter: { ids: ['event-1'] } }, undefined, false);
+
+    expect(
+      prisma.occurrence.findMany.mock.calls[0][0].where.AND[0].event.is.AND[0]
+    ).toEqual({ published: { isNot: null } });
+  });
+});
+
+describe('EventService.withdrawEventReview', () => {
+  const requestedAt = new Date('2026-10-01T10:00:00.000Z');
+
+  it('clears the request and resets the draft caches', async () => {
+    const { service, prisma, cache } = await setup();
+    existing(prisma, {
+      reviewRequestedAt: requestedAt,
+      reviewRequestedById: 'owner',
+    });
+
+    await service.withdrawEventReview('event-1', member);
+
+    expect(prisma.event.update).toHaveBeenCalledWith({
+      where: { id: 'event-1' },
+      data: { reviewRequestedAt: null, reviewRequestedById: null },
+    });
+    expect(cache.invalidateDraft).toHaveBeenCalledWith('events');
+  });
+
+  it("lets the venue's organisation withdraw what it asked for", async () => {
+    const { service, prisma } = await setup();
+    existing(
+      prisma,
+      { placeId: 'place-1', reviewRequestedAt: requestedAt },
+      { place: { organizationId: 'org-v' } }
+    );
+
+    await service.withdrawEventReview('event-1', venueMember);
+
+    expect(prisma.event.update).toHaveBeenCalled();
+  });
+
+  it('does nothing when no review was requested', async () => {
+    const { service, prisma, cache } = await setup();
+    existing(prisma);
+
+    const event = await service.withdrawEventReview('event-1', member);
+
+    expect(prisma.event.update).not.toHaveBeenCalled();
+    expect(cache.invalidateDraft).not.toHaveBeenCalled();
+    expect(event.id).toBe('event-1');
+    expect(event).not.toHaveProperty('dates');
+  });
+
+  it('refuses someone who may not modify the event', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma, { reviewRequestedAt: requestedAt });
+
+    await expect(
+      service.withdrawEventReview('event-1', user('stranger', ['org-z']))
+    ).rejects.toBeInstanceOf(ForbiddenException);
+    expect(prisma.event.update).not.toHaveBeenCalled();
+  });
+
+  it('is NotFound for a missing event', async () => {
+    const { service, prisma } = await setup();
+    prisma.event.findUnique.mockResolvedValue(null);
+
+    await expect(
+      service.withdrawEventReview('missing', member)
+    ).rejects.toBeInstanceOf(NotFoundException);
+  });
+});
+
+describe('EventService special rate', () => {
+  it('writes the special rate on create', async () => {
+    const { service, prisma } = await setup();
+
+    await service.createEvent(
+      facts({ specialRate: EventSpecialRate.FreeEntry }),
+      content(),
+      member
+    );
+
+    expect(prisma.event.create.mock.calls[0][0].data.specialRate).toBe(
+      EventSpecialRate.FreeEntry
+    );
+  });
+
+  it('changes and clears the special rate on update, and leaves it when omitted', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma, { specialRate: EventSpecialRate.FreeEntry });
+
+    await service.updateEvent(
+      'event-1',
+      { specialRate: EventSpecialRate.FreePrice },
+      member
+    );
+    await service.updateEvent('event-1', { specialRate: null }, member);
+    await service.updateEvent(
+      'event-1',
+      { status: EventStatus.Cancelled },
+      member
+    );
+
+    expect(
+      prisma.event.update.mock.calls.map(([{ data }]: any) => data.specialRate)
+    ).toEqual([EventSpecialRate.FreePrice, null, undefined]);
+  });
+
+  it('copies the special rate into a duplicate', async () => {
+    const { service, prisma } = await setup();
+    prisma.event.findUnique.mockResolvedValue({
+      ...eventRow({ specialRate: EventSpecialRate.FreePrice }),
+      dates: [],
+      rates: [],
+      tags: [{ tagId: 'tag-1' }],
+      place: null,
+    });
+    prisma.eventRevision.findFirst.mockResolvedValue({
+      id: 'rev-1',
+      name: 'Konzert',
+      printDescription: null,
+      blocks: [],
+      descriptionText: '',
+      images: [],
+    });
+
+    await service.duplicateEvent('event-1', member);
+
+    expect(prisma.event.create.mock.calls[0][0].data.specialRate).toBe(
+      EventSpecialRate.FreePrice
+    );
   });
 });

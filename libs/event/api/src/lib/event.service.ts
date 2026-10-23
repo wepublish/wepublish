@@ -50,6 +50,7 @@ import {
   EventArgs,
   EventContentInput,
   EventDateInput,
+  EventFilter,
   EventInput,
   EventListArgs,
   EventRateInput,
@@ -142,11 +143,41 @@ const contentRevision = (content: EventContentInput) => {
   };
 };
 
+const publicFilter = (filter: EventFilter | null | undefined) =>
+  filter && {
+    ...filter,
+    draft: undefined,
+    pending: undefined,
+    reviewRequested: undefined,
+  };
+
+const listScope = (
+  filter: EventFilter | null | undefined,
+  session: Session,
+  editorMode: boolean
+): Prisma.EventWhereInput => {
+  if (!editorMode) {
+    return publicEventsWhere();
+  }
+
+  return filter?.ids?.length ?
+      reachableEventsWhere(session)
+    : editorEventsWhere(session);
+};
+
 export const createEventOrder = (
   sort: EventSort,
   order: SortOrder
 ): Prisma.EventOrderByWithRelationInput[] => {
   const direction = graphQLSortOrderToPrisma(order);
+
+  if (sort === EventSort.ReviewRequestedAt) {
+    return [
+      { reviewRequestedAt: { sort: direction, nulls: 'last' } },
+      { id: direction },
+    ];
+  }
+
   const column = {
     [EventSort.CreatedAt]: 'createdAt',
     [EventSort.ModifiedAt]: 'modifiedAt',
@@ -201,7 +232,7 @@ export class EventService {
   @PrimeDataLoader(EventDataloaderService)
   async getEvents(
     {
-      filter,
+      filter: requestedFilter,
       cursorId,
       sort = EventSort.StartsAt,
       order = SortOrder.Ascending,
@@ -211,6 +242,7 @@ export class EventService {
     session: Session,
     editorMode: boolean
   ) {
+    const filter = editorMode ? requestedFilter : publicFilter(requestedFilter);
     const searchIds = await searchEventIds(
       this.prisma,
       filter?.search,
@@ -218,7 +250,7 @@ export class EventService {
     );
     const where: Prisma.EventWhereInput = {
       AND: [
-        editorMode ? editorEventsWhere(session) : publicEventsWhere(),
+        listScope(filter, session, editorMode),
         createEventWhere(filter, new Date()),
         ...(searchIds ? [{ id: { in: searchIds } }] : []),
       ],
@@ -254,7 +286,7 @@ export class EventService {
 
   async getAgenda(
     {
-      filter,
+      filter: requestedFilter,
       cursorId,
       order = SortOrder.Ascending,
       take = 10,
@@ -263,7 +295,8 @@ export class EventService {
     session: Session,
     editorMode: boolean
   ) {
-    const scope = editorMode ? editorEventsWhere(session) : publicEventsWhere();
+    const filter = editorMode ? requestedFilter : publicFilter(requestedFilter);
+    const scope = listScope(filter, session, editorMode);
     const searchIds = await searchEventIds(
       this.prisma,
       filter?.search,
@@ -729,6 +762,7 @@ export class EventService {
           audienceId: source.audienceId,
           ticketingUrl: source.ticketingUrl,
           showInPrint: source.showInPrint,
+          specialRate: source.specialRate,
           scheduleType: source.scheduleType,
           dateFrom: source.dateFrom,
           dateTo: source.dateTo,
@@ -826,6 +860,28 @@ export class EventService {
     return event;
   }
 
+  @PrimeDataLoader(EventDataloaderService)
+  async withdrawEventReview(id: string, session: Session) {
+    const existing = await this.findEventOrFail(id);
+
+    if (!canModifyEvent(session, existing)) {
+      throw new ForbiddenException('You may not modify this event.');
+    }
+
+    if (!existing.reviewRequestedAt) {
+      return withoutRelations(existing);
+    }
+
+    const event = await this.prisma.event.update({
+      where: { id },
+      data: { reviewRequestedAt: null, reviewRequestedById: null },
+    });
+
+    await this.publicContentCache.invalidateDraft('events');
+
+    return event;
+  }
+
   async deleteEvent(id: string, session: Session) {
     const existing = await this.findEventOrFail(id);
 
@@ -847,6 +903,7 @@ export class EventService {
       placeId: input.placeId,
       audienceId: input.audienceId,
       ticketingUrl: input.ticketingUrl,
+      specialRate: input.specialRate,
       seoTitle: input.seoTitle,
       seoDescription: input.seoDescription,
       socialMediaTitle: input.socialMediaTitle,

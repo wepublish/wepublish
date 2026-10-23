@@ -1218,9 +1218,12 @@ export type Event = {
   location?: Maybe<Scalars['String']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
+  /** The earliest occurrence that has not ended. */
+  nextOccurrence?: Maybe<Occurrence>;
   openingTime?: Maybe<Scalars['String']['output']>;
   organization?: Maybe<BaseOrganization>;
   organizationId?: Maybe<Scalars['String']['output']>;
+  owner?: Maybe<User>;
   ownerId?: Maybe<Scalars['String']['output']>;
   pending?: Maybe<EventRevision>;
   place?: Maybe<Place>;
@@ -1229,6 +1232,7 @@ export type Event = {
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
   rates: Array<EventRate>;
   reviewRequestedAt?: Maybe<Scalars['DateTime']['output']>;
+  reviewRequestedBy?: Maybe<User>;
   reviewRequestedById?: Maybe<Scalars['String']['output']>;
   scheduleType: EventScheduleType;
   seoDescription?: Maybe<Scalars['String']['output']>;
@@ -1239,11 +1243,16 @@ export type Event = {
   socialMediaImage?: Maybe<Image>;
   socialMediaImageID?: Maybe<Scalars['String']['output']>;
   socialMediaTitle?: Maybe<Scalars['String']['output']>;
+  specialRate?: Maybe<EventSpecialRate>;
   startsAt?: Maybe<Scalars['DateTime']['output']>;
   status: EventStatus;
   tags: Array<Tag>;
   ticketingUrl?: Maybe<Scalars['String']['output']>;
+  /** How many occurrences have not ended, the next one included. */
+  upcomingOccurrenceCount: Scalars['Int']['output'];
   url?: Maybe<Scalars['String']['output']>;
+  /** What you may do with this event. Null outside its editor view. */
+  viewerCan?: Maybe<EventViewerPermissions>;
   weekDays: Array<Scalars['Int']['output']>;
 };
 
@@ -1323,6 +1332,12 @@ export type EventFilter = {
   /** Pro Infirmis pictogram ids; the venue needs at least one of them. */
   accessibilityProInfirmis?: InputMaybe<Array<Scalars['Int']['input']>>;
   audienceId?: InputMaybe<Scalars['String']['input']>;
+  /** Events with an unpublished draft. Editor mode only. */
+  draft?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Events whose last date ends at or after this instant. */
+  endsAfter?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Events whose last date ends before this instant. */
+  endsBefore?: InputMaybe<Scalars['DateTime']['input']>;
   eventStatus?: InputMaybe<Array<EventStatus>>;
   from?: InputMaybe<Scalars['DateTime']['input']>;
   /** Matches the coordinates of the venue. */
@@ -1330,9 +1345,15 @@ export type EventFilter = {
   ids?: InputMaybe<Array<Scalars['String']['input']>>;
   organizationIds?: InputMaybe<Array<Scalars['String']['input']>>;
   partner?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Events with a revision scheduled for publication. Editor mode only. */
+  pending?: InputMaybe<Scalars['Boolean']['input']>;
   placeIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Events with a published revision. */
+  published?: InputMaybe<Scalars['Boolean']['input']>;
   /** Matches the region of the venue. */
   regionId?: InputMaybe<Scalars['String']['input']>;
+  /** Events whose draft waits for review. Editor mode only. */
+  reviewRequested?: InputMaybe<Scalars['Boolean']['input']>;
   /** Matches name and description, ignoring accents and case. */
   search?: InputMaybe<Scalars['String']['input']>;
   showInPrint?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1376,6 +1397,7 @@ export type EventInput = {
   socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
   socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
   socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  specialRate?: InputMaybe<EventSpecialRate>;
   status?: InputMaybe<EventStatus>;
   tagIds: Array<Scalars['String']['input']>;
   ticketingUrl?: InputMaybe<Scalars['String']['input']>;
@@ -1427,7 +1449,13 @@ export enum EventSort {
   EndsAt = 'EndsAt',
   ModifiedAt = 'ModifiedAt',
   PublishedAt = 'PublishedAt',
+  ReviewRequestedAt = 'ReviewRequestedAt',
   StartsAt = 'StartsAt'
+}
+
+export enum EventSpecialRate {
+  FreeEntry = 'FreeEntry',
+  FreePrice = 'FreePrice'
 }
 
 export enum EventStatus {
@@ -1455,6 +1483,19 @@ export type EventTeaserInput = {
   lead?: InputMaybe<Scalars['String']['input']>;
   preTitle?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** What the caller may do with an event, by the same rules the mutations apply. */
+export type EventViewerPermissions = {
+  __typename?: 'EventViewerPermissions';
+  delete: Scalars['Boolean']['output'];
+  duplicate: Scalars['Boolean']['output'];
+  moveOrganization: Scalars['Boolean']['output'];
+  publish: Scalars['Boolean']['output'];
+  reassignOwner: Scalars['Boolean']['output'];
+  requestReview: Scalars['Boolean']['output'];
+  update: Scalars['Boolean']['output'];
+  withdrawReview: Scalars['Boolean']['output'];
 };
 
 export type ExternalApp = {
@@ -3355,6 +3396,8 @@ export type Mutation = {
   uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
+  /** Withdraws the pending review request of an event you may edit. */
+  withdrawEventReview: Event;
 };
 
 
@@ -5115,6 +5158,11 @@ export type MutationUploadUserProfileImageArgs = {
 
 export type MutationVoteOnPollArgs = {
   answerId: Scalars['String']['input'];
+};
+
+
+export type MutationWithdrawEventReviewArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type Navigation = {
@@ -8507,6 +8555,7 @@ export type UpdateEventInput = {
   socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
   socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
   socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  specialRate?: InputMaybe<EventSpecialRate>;
   status?: InputMaybe<EventStatus>;
   tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
   ticketingUrl?: InputMaybe<Scalars['String']['input']>;

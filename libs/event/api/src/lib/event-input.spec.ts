@@ -197,4 +197,17 @@ describe('assertValidContent', () => {
       )
     ).toBeInstanceOf(BadRequestException);
   });
+
+  it('names the block type the agenda cannot show', () => {
+    const error = rejection(() =>
+      assertValidContent({
+        name: 'Concert',
+        blocks: [richText('ok'), { type: 'teaserGrid', teasers: [] }],
+        images: [],
+      })
+    );
+
+    expect(error).toBeInstanceOf(BadRequestException);
+    expect((error as Error).message).toContain('teaserGrid');
+  });
 });

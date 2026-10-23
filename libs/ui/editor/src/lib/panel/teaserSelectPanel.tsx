@@ -46,6 +46,7 @@ import {
   DrawerTitle,
 } from '../drawer';
 import { enqueueSnackbar } from '../snackbar';
+import { publicEventsContext } from './publicEventsContext';
 import { TeaserForm, TeaserFormValues } from './teaserForm';
 
 const SearchField = styled(TextField)`
@@ -161,6 +162,7 @@ export function TeaserSelectPanel({
     loading: isEventListLoading,
   } = useQuery(EventListDocument, {
     variables: eventVariables,
+    context: publicEventsContext,
   });
 
   const events = eventListData?.events?.nodes ?? [];
@@ -268,6 +270,7 @@ export function TeaserSelectPanel({
         ...eventVariables,
         cursorId: eventListData?.events?.pageInfo.endCursor,
       },
+      context: publicEventsContext,
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult?.events) {
           return prev;

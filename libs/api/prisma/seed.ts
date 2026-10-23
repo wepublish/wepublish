@@ -271,7 +271,7 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
   ] as const;
 
-const seedRoles = (prisma: PrismaClient) =>
+export const seedRoles = (prisma: PrismaClient) =>
   [
     prisma.userRole.upsert({
       where: {
@@ -309,6 +309,19 @@ const seedRoles = (prisma: PrismaClient) =>
         systemRole: true,
         name: 'Peer',
         description: 'Peer Role',
+        permissionIDs: [],
+      },
+    }),
+    prisma.userRole.upsert({
+      where: {
+        id: 'agenda-admin',
+      },
+      update: {},
+      create: {
+        id: 'agenda-admin',
+        systemRole: true,
+        name: 'Agenda-Admin',
+        description: 'Agenda Administrator Role',
         permissionIDs: [],
       },
     }),

@@ -562,6 +562,30 @@ creates the `unaccent` extension, which a managed database has to allow.
 
 ---
 
+### ⚠️ A predefined role lives in three places, and the seed is positional
+
+The system roles `admin`, `editor`, `peer` and `agenda-admin` are seeded with
+empty `permissionIDs` in `libs/api/prisma/seed.ts` (`seedRoles`). Their real
+sets come from code, in two switches that must agree:
+`addPredefinedPermissions` (`libs/permissions/api`), which the session uses,
+and `UserRoleResolver.permissions` (`libs/user/api`), which the editor's role
+screen shows. A role added to one switch only is silently empty on the other
+side. `seed()` returns the `$transaction` result and `apps/api-example`
+destructures it by position, so a new role is appended last.
+
+---
+
+### ⚠️ An editor query that sets `context.headers` loses the session token
+
+`authLink` in `libs/editor/api/src/lib/setup.tsx` spreads `...context` after
+building `headers`, so a query passing `context: { headers }` replaces the
+`authorization` and `preview` headers instead of adding to them. The event
+pickers rely on that: `publicEventsContext` sends `preview: ''`, which runs the
+query anonymously and outside editor mode, so they list published events of
+every organisation.
+
+---
+
 ### ⚠️ The editor's `refetchOn` config does nothing; a refocus reload is `AuthProvider`
 
 [setup.tsx](../../libs/editor/api/src/lib/setup.tsx) sets

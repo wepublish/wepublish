@@ -15,6 +15,43 @@ export const TICKETING_URL_SCHEMES = [
   'tel',
 ] as const;
 
+export const EVENT_BLOCK_TYPES = [
+  'richText',
+  'image',
+  'quote',
+  'embed',
+  'facebookPost',
+  'facebookVideo',
+  'instagramPost',
+  'twitterTweet',
+  'vimeoVideo',
+  'youTubeVideo',
+  'soundCloudTrack',
+  'polisConversation',
+  'tikTokVideo',
+  'bildwurfAd',
+  'streamableVideo',
+] as const;
+
+export type EventBlockType = (typeof EVENT_BLOCK_TYPES)[number];
+
+const blockTypeOf = (block: unknown): unknown =>
+  block && typeof block === 'object' ?
+    (block as { type?: unknown }).type
+  : undefined;
+
+export const isEventBlockType = (type: unknown): type is EventBlockType =>
+  (EVENT_BLOCK_TYPES as readonly unknown[]).includes(type);
+
+export const disallowedEventBlockTypes = (blocks: unknown[]): string[] => [
+  ...new Set(
+    blocks
+      .map(blockTypeOf)
+      .filter(type => !isEventBlockType(type))
+      .map(type => (typeof type === 'string' ? type : 'unknown'))
+  ),
+];
+
 const OPENING_TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 const atMostCharacters = (limit: number) => (value: string) =>
@@ -56,6 +93,9 @@ export const eventPrintDescriptionSchema = z
 
 export const eventBlocksSchema = z
   .array(z.unknown())
+  .refine(blocks => disallowedEventBlockTypes(blocks).length === 0, {
+    message: `Only ${EVENT_BLOCK_TYPES.join(', ')} blocks are allowed`,
+  })
   .refine(
     blocks => blocksTextLength(blocks) <= EVENT_DESCRIPTION_MAX_LENGTH,
     tooLong(EVENT_DESCRIPTION_MAX_LENGTH)

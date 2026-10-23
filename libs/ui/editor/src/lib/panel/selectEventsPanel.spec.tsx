@@ -78,6 +78,14 @@ describe('SelectEventPanel', () => {
     });
   });
 
+  it('lists published events only, by leaving editor mode', () => {
+    renderPanel();
+
+    expect(eventListCalls().at(-1)?.[1]?.context).toEqual({
+      headers: { preview: '' },
+    });
+  });
+
   it('lists the event without linking to the removed edit route', () => {
     const { container } = renderPanel();
 

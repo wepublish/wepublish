@@ -459,6 +459,12 @@ export type EventFilter = {
   /** Pro Infirmis pictogram ids; the venue needs at least one of them. */
   accessibilityProInfirmis?: Array<number> | null | undefined;
   audienceId?: string | null | undefined;
+  /** Events with an unpublished draft. Editor mode only. */
+  draft?: boolean | null | undefined;
+  /** Events whose last date ends at or after this instant. */
+  endsAfter?: string | null | undefined;
+  /** Events whose last date ends before this instant. */
+  endsBefore?: string | null | undefined;
   eventStatus?: Array<EventStatus> | null | undefined;
   from?: string | null | undefined;
   /** Matches the coordinates of the venue. */
@@ -466,9 +472,15 @@ export type EventFilter = {
   ids?: Array<string> | null | undefined;
   organizationIds?: Array<string> | null | undefined;
   partner?: boolean | null | undefined;
+  /** Events with a revision scheduled for publication. Editor mode only. */
+  pending?: boolean | null | undefined;
   placeIds?: Array<string> | null | undefined;
+  /** Events with a published revision. */
+  published?: boolean | null | undefined;
   /** Matches the region of the venue. */
   regionId?: string | null | undefined;
+  /** Events whose draft waits for review. Editor mode only. */
+  reviewRequested?: boolean | null | undefined;
   /** Matches name and description, ignoring accents and case. */
   search?: string | null | undefined;
   showInPrint?: boolean | null | undefined;
@@ -490,6 +502,7 @@ export enum EventSort {
   EndsAt = 'EndsAt',
   ModifiedAt = 'ModifiedAt',
   PublishedAt = 'PublishedAt',
+  ReviewRequestedAt = 'ReviewRequestedAt',
   StartsAt = 'StartsAt'
 }
 

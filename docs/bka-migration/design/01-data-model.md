@@ -1053,8 +1053,8 @@ Those get reported, not silently written as empty strings.
 
 ## 13. Permissions and the Agenda-Admin role
 
-Eight event permissions ([D4](../decisions.md)) in `libs/permissions/src/lib/permissions.ts`, all in
-`AllPermissions`:
+Nine event permissions ([D4](../decisions.md), whose table lists `CanGetEvent` and `CanGetEvents` in
+one row) in `libs/permissions/src/lib/permissions.ts`, all in `AllPermissions`:
 
 ```ts
 CanGetEvent · CanGetEvents · CanCreateEvent · CanUpdateEvent · CanDeleteEvent
@@ -1082,11 +1082,13 @@ for any place and for places without an organisation ([D55](../decisions.md#d55-
 
 `CanGetOtherOrganizations` is what a read-only API key needs ([D37](../decisions.md),
 [design 2 §2.1.1](02-api.md)). The predefined admin role gets all of them through `AllPermissions`
-(`libs/permissions/api/src/lib/predefined-permissions.ts:16-22`); the editor and peer roles get none
-of the organisation permissions. The predefined editor role keeps the four old event permissions
-but not `CanGetEvents` or `CanPublishEvent` (`libs/permissions/src/lib/permissions.ts:1513-1592`).
-So an editor-role user on a non-agenda tenant can neither list event drafts nor publish an event
-until the role is extended ([D61](../decisions.md#d61--the-old-editor-event-screens-are-removed-until-slice-f)).
+(`libs/permissions/api/src/lib/predefined-permissions.ts`); the editor and peer roles get none
+of the organisation permissions. The predefined editor role holds the six scoped event permissions,
+`CanGetEvent`, `CanGetEvents`, `CanCreateEvent`, `CanUpdateEvent`, `CanDeleteEvent` and
+`CanPublishEvent`, and none of the cross-organisation ones (`libs/permissions/src/lib/permissions.ts:1513-1591`).
+`event-scope.ts` keeps it to its organisations' events and the events it owns, so an editor-role user
+on a tenant without organisations files, lists and publishes the events it owns
+([D66](../decisions.md#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role), awaiting Karl's confirmation of the details).
 
 The five permissions that reach past your own organisations (`CanGetOtherOrganizationEvents`,
 `CanUpdateOtherOrganizationEvents`, `CanDeleteOtherOrganizationEvents`, `CanGetOtherOrganizations`,
@@ -1104,12 +1106,15 @@ Three facts from the research shape how they are used:
    user without it can still call any mutation they hold a permission for. It cannot be relied on
    as a boundary.
 
-**Agenda-Admin** gets all eight plus `CanLoginEditor` and `CanPreview`. Two mechanics matter:
+**Agenda-Admin** is built as the predefined system role `agenda-admin` (`AgendaAdminPermissions`,
+`permissions.ts:1607-1629`): the nine event and five organisation permissions, `CanLoginEditor`,
+`CanPreview`, and `CanGetTags`, `CanGetImage`, `CanGetImages`, `CanCreateImage` and `CanGetUsers` for
+its pickers ([D66](../decisions.md#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role)). Two mechanics matter:
 
-- Default roles are seeded in `libs/api/prisma/seed.ts` with **empty `permissionIDs`**; the real
-  sets are injected at request time by `addPredefinedPermissions`, a switch on the literal ids
-  `'admin' | 'editor' | 'peer'`. Adding a role means touching both, and `UserRoleResolver` mirrors
-  the same switch.
+- Default roles are seeded in `libs/api/prisma/seed.ts` (`seedRoles`) with **empty
+  `permissionIDs`**; the real sets are injected at request time by `addPredefinedPermissions`, a
+  switch on the literal ids `'admin' | 'editor' | 'peer' | 'agenda-admin'`. Adding a role means
+  touching both, and `UserRoleResolver` mirrors the same switch.
 - `seed()` returns a `$transaction` array that callers **destructure positionally**. New roles are
   appended at the end or existing installs break.
 

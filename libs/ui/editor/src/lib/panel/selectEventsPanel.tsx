@@ -27,6 +27,7 @@ import {
 } from '../drawer';
 import { DataTable } from '../listView/data-table';
 import { Pagination } from '../listView/pagination';
+import { publicEventsContext } from './publicEventsContext';
 
 export type SelectEventPanelProps = {
   selectedFilter: EventBlockValue['filter'];
@@ -60,6 +61,7 @@ export function SelectEventPanel({
         tagIds: tagFilter,
       },
     },
+    context: publicEventsContext,
   });
 
   const saveSelection = () => {

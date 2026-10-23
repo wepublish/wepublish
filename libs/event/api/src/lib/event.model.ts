@@ -8,7 +8,11 @@ import {
   PartialType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { EventScheduleType, EventStatus } from '@prisma/client';
+import {
+  EventScheduleType,
+  EventSpecialRate,
+  EventStatus,
+} from '@prisma/client';
 import { BlockContentInput } from '@wepublish/block-content/api';
 import { Image } from '@wepublish/image/api';
 import { Tag } from '@wepublish/tag/api';
@@ -24,6 +28,7 @@ export enum EventSort {
   StartsAt = 'StartsAt',
   EndsAt = 'EndsAt',
   PublishedAt = 'PublishedAt',
+  ReviewRequestedAt = 'ReviewRequestedAt',
 }
 
 registerEnumType(SortOrder, {
@@ -40,6 +45,10 @@ registerEnumType(EventStatus, {
 
 registerEnumType(EventScheduleType, {
   name: 'EventScheduleType',
+});
+
+registerEnumType(EventSpecialRate, {
+  name: 'EventSpecialRate',
 });
 
 @ObjectType()
@@ -121,6 +130,35 @@ export class EventRate {
   sortOrder!: number;
 }
 
+@ObjectType({
+  description: `What the caller may do with an event, by the same rules the mutations apply.`,
+})
+export class EventViewerPermissions {
+  @Field()
+  update!: boolean;
+
+  @Field()
+  publish!: boolean;
+
+  @Field()
+  delete!: boolean;
+
+  @Field()
+  duplicate!: boolean;
+
+  @Field()
+  requestReview!: boolean;
+
+  @Field()
+  withdrawReview!: boolean;
+
+  @Field()
+  moveOrganization!: boolean;
+
+  @Field()
+  reassignOwner!: boolean;
+}
+
 @ObjectType()
 export class Event {
   @Field()
@@ -176,6 +214,9 @@ export class Event {
 
   @Field()
   showInPrint!: boolean;
+
+  @Field(() => EventSpecialRate, { nullable: true })
+  specialRate?: EventSpecialRate | null;
 
   @Field(() => String, { nullable: true })
   seoTitle?: string | null;
@@ -298,6 +339,42 @@ export class EventFilter {
 
   @Field(() => [EventStatus], { nullable: true })
   eventStatus?: EventStatus[] | null;
+
+  @Field(() => Boolean, {
+    nullable: true,
+    description: `Events with an unpublished draft. Editor mode only.`,
+  })
+  draft?: boolean | null;
+
+  @Field(() => Boolean, {
+    nullable: true,
+    description: `Events with a revision scheduled for publication. Editor mode only.`,
+  })
+  pending?: boolean | null;
+
+  @Field(() => Boolean, {
+    nullable: true,
+    description: `Events with a published revision.`,
+  })
+  published?: boolean | null;
+
+  @Field(() => Boolean, {
+    nullable: true,
+    description: `Events whose draft waits for review. Editor mode only.`,
+  })
+  reviewRequested?: boolean | null;
+
+  @Field(() => Date, {
+    nullable: true,
+    description: `Events whose last date ends before this instant.`,
+  })
+  endsBefore?: Date | null;
+
+  @Field(() => Date, {
+    nullable: true,
+    description: `Events whose last date ends at or after this instant.`,
+  })
+  endsAfter?: Date | null;
 }
 
 @ArgsType()
@@ -397,6 +474,9 @@ export class EventInput {
 
   @Field(() => Boolean, { nullable: true })
   showInPrint?: boolean | null;
+
+  @Field(() => EventSpecialRate, { nullable: true })
+  specialRate?: EventSpecialRate | null;
 
   @Field(() => String, { nullable: true })
   seoTitle?: string | null;

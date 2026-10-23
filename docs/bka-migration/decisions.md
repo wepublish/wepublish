@@ -2648,6 +2648,162 @@ Reusing the `events.tagged-events` name and `TagType.Event` keeps the tag model 
 
 ---
 
+## D66 — The editor role files and publishes its own events; Agenda-Admin is a predefined role
+
+Updates [D4](#d4--canpublishevent-decides-who-needs-validating) and [D61](#d61--the-old-editor-event-screens-are-removed-until-slice-f).
+
+**Status.** Built in slice F stage 1. Follows Karl's call of 2026-10-24. The Agenda-Admin set and the
+role's existence on every tenant are awaiting Karl's confirmation.
+
+**Context.** D61 left the predefined editor role without `CanGetEvents` or `CanPublishEvent`, so an
+editor could neither list event drafts nor publish. Karl decided that the editor role gets the event
+permissions, scoped to its own events, and that seeing every event stays with admin and an
+Agenda-Admin role, which did not exist.
+
+**Decision.**
+- `EditorPermissions` holds `CanGetEvent`, `CanGetEvents`, `CanCreateEvent`, `CanUpdateEvent`,
+  `CanDeleteEvent` and `CanPublishEvent`, and none of `CrossOrganizationPermissions` or the
+  organisation permissions (`libs/permissions/src/lib/permissions.ts:1513-1591`). Its duplicate
+  `CanCreateEvent`, `CanGetComments` and `CanUpdateComments` entries are gone. The scope comes from
+  `event-scope.ts` unchanged: its organisations' events plus the events it owns.
+- `AgendaAdminPermissions` (`permissions.ts:1607-1629`) holds the nine event permissions, the five
+  organisation permissions, `CanLoginEditor`, `CanPreview`, and what its screens need:
+  `CanGetTags`, `CanGetImage`, `CanGetImages`, `CanCreateImage` and `CanGetUsers` (owner and member
+  pickers).
+- `agenda-admin` is a system role on every tenant. It is seeded last in `seedRoles`
+  (`libs/api/prisma/seed.ts`), because `apps/api-example` destructures the seed result by position,
+  and mirrored in `addPredefinedPermissions` and `UserRoleResolver.permissions`.
+- The `EventBlock` and event-teaser pickers run their `events` query with an empty `preview` header
+  (`libs/ui/editor/src/lib/panel/publicEventsContext.ts`), so they stay on the public list.
+  Otherwise an editor-role journalist would see only their own organisation's events, drafts
+  included.
+
+**Why.** `editorEventsWhere`, `canPublishEvent` and `canDeleteEvent` already scope by membership and
+ownership, so no scope code changes. An editor on a tenant without organisations files events that
+it owns and may publish them through D48's owner branch. A `published: true` filter would not have
+been enough for the pickers, since editor mode also drops every other organisation's published
+events.
+
+**Consequences.**
+- Editor-role users can now list their drafts and publish; D61's "deploy as it is" question
+  narrows to the dropped rows.
+- Open: whether the editor role should also hold `CanUpdateOrganization`, without which it cannot
+  edit its organisation or venues (D55).
+
+---
+
+## D67 — Events keep BKa's special rate as a nullable enum
+
+**Status.** Built in slice F stage 1 (migration `20261024100000_add_event_special_rate`). Awaiting
+Karl's confirmation.
+
+**Context.** Design 3's Pricing tab has BKa's special rate (`free_entry`, `free_price`), and the data
+model had no column for it.
+
+**Decision.** `Event.specialRate` is a nullable `EventSpecialRate` enum, `FreeEntry` or `FreePrice`,
+mapped to `freeEntry` and `freePrice`. `EventInput` and `UpdateEventInput` take it as a fact (live on
+save), and `duplicateEvent` copies it.
+
+**Why.** It is a fact about the event, like the rates, and BKa's two values are all there is.
+
+---
+
+## D68 — The event tells the editor what the caller may do with it
+
+Updates [D47](#d47--who-may-set-an-events-organisation-and-owner), [D48](#d48--publishing-stays-with-the-organising-organisation) and [D58](#d58--a-review-request-is-a-state-stamped-once).
+
+**Status.** Built in slice F stage 1. Awaiting Karl's confirmation.
+
+**Context.** D48 and D58 made publishing and asking for review per-event rules, and the editor does
+not know the session's memberships, so it cannot work out which buttons to offer.
+
+**Decision.**
+- `Event.viewerCan` returns `update`, `publish`, `delete`, `duplicate`, `requestReview`,
+  `withdrawReview`, `moveOrganization` and `reassignOwner`. Each flag is the permission the
+  mutation's guard checks **and** the record rule the service checks (`eventViewerPermissions`,
+  `event-scope.ts:263`): `update` is `CanUpdateEvent` and `canModifyEvent`; `delete` is
+  `CanDeleteEvent` and `canDeleteEvent`; `duplicate` is `CanCreateEvent`, `canModifyEvent` and
+  `mayAssignEventOrganization`; `requestReview` needs `update`, no `publish`, a draft and no pending
+  request; `withdrawReview` needs `update` and a pending request.
+- `viewerCan`, `owner` and `reviewRequestedBy` (both `User`) are null outside the event's editor view,
+  under the same reach check as `draft` ([D46](#d46--editor-mode-needs-the-preview-header-an-event-permission-and-reach)).
+- `viewerCan` describes an existing event. A form creating one has no event to ask, so it gates the
+  organisation and owner pickers on the caller's permissions instead.
+
+**Why.** Computing the flags from the scope helpers alone would offer Save and Delete to a member
+with a read-only role, and the API would refuse them. Using the same functions as the mutations keeps
+the two from drifting.
+
+---
+
+## D69 — A review request can be withdrawn
+
+Updates [D58](#d58--a-review-request-is-a-state-stamped-once).
+
+**Status.** Built in slice F stage 1. Awaiting Karl's confirmation.
+
+**Decision.** `withdrawEventReview(id)` (`@Permissions(CanUpdateEvent)`) needs `canModifyEvent`, clears
+`reviewRequestedAt` and `reviewRequestedById`, and resets the events draft cache
+(`event.service.ts:864`). Without a pending request it returns the event unchanged.
+
+**Why.** Design 3 §7 offers "Withdraw request". Anyone who may edit the event may withdraw, as anyone
+who may edit it may ask.
+
+**Consequences.**
+- Open: whether only the person who asked should be able to withdraw.
+
+---
+
+## D70 — Event content takes only the blocks the agenda can show
+
+**Status.** Built in slice F stage 1. Awaiting Karl's confirmation.
+
+**Context.** Design 3 §4.2 restricts the event canvas to rich text, image, embed and quote, and asks
+(§13 Q2) whether that is an editor-only restriction.
+
+**Decision.** `EVENT_BLOCK_TYPES` in `@wepublish/event/schedule` lists `richText`, `image`, `quote`,
+`embed` and the embed family the editor's embed block produces (`facebookPost`, `facebookVideo`,
+`instagramPost`, `twitterTweet`, `vimeoVideo`, `youTubeVideo`, `soundCloudTrack`,
+`polisConversation`, `tikTokVideo`, `bildwurfAd`, `streamableVideo`)
+(`event-input-rules.ts:18-34`). `eventBlocksSchema` refuses anything else, and `assertValidContent`
+answers BadRequest naming the refused type. The editor's restricted block map will read the same
+list.
+
+**Why.** API keys post content too, and the agenda's pages and print export cannot render teasers,
+polls or event blocks. One list keeps the editor and the server in step.
+
+**Consequences.**
+- `duplicateEvent` copies stored blocks without checking them, so an event written before this
+  check keeps its blocks until it is next saved.
+
+---
+
+## D71 — The editor list filters by publication, review and last date, and lookups by id use reach
+
+Updates [D46](#d46--editor-mode-needs-the-preview-header-an-event-permission-and-reach) and [D59](#d59--event-filters-match-the-venue-and-false-means-not-flagged).
+
+**Status.** Built in slice F stage 1. Awaiting Karl's confirmation.
+
+**Decision.**
+- `EventFilter` gains `draft`, `pending` and `published` (an existing row in the matching revision
+  view, `false` meaning none), `reviewRequested`, and `endsBefore` / `endsAfter` on `lastDateAt`
+  (`event-filter.ts`). `draft`, `pending` and `reviewRequested` are dropped outside editor mode, so
+  the public cannot probe which events have unpublished work.
+- `EventSort.ReviewRequestedAt` orders the queue by `reviewRequestedAt` with nulls last, then by id.
+- `Event.nextOccurrence` is the earliest occurrence that has not ended, and
+  `Event.upcomingOccurrenceCount` counts every occurrence that has not ended, **the next one
+  included** ("+3 more dates" is the count minus one). Both come from one batched `groupBy` plus one
+  fetch (`event-occurrence-summary.dataloader.ts`).
+- In editor mode, `events` and `agenda` with a non-empty `filter.ids` are scoped by
+  `reachableEventsWhere`, as a single `event` is, rather than by `editorEventsWhere`.
+
+**Why.** The list needs the publication and review chips, the review queue oldest first ([D5](#d5--ready-for-review-is-an-explicit-action-backed-by-a-field-on-the-event)), and
+"Ending soon" and "Ended" (design 3 §9), which `upcoming` and `to` cannot express because they match
+occurrences. Naming events by id is a lookup, not a list: a venue member who opens a foreign event
+through D19's venue branch would otherwise see none of its dates.
+
+---
+
 ## Open questions
 
 Recorded as they surface; resolved ones become decisions above.
@@ -2814,3 +2970,16 @@ Open, no decision needed, folded into later slices:
 - The editor's review queue query is slice F; the column is indexed ([D58](#d58--a-review-request-is-a-state-stamped-once)).
 - Taxonomy create and edit is slice F, and the taxonomy tables stay empty until slice G
   ([D56](#d56--taxonomies-are-read-only-for-now-and-the-sql-migration-seeds-nothing)).
+
+### Raised by the slice F build
+
+Slice F builds the agenda editor. Its build choices are recorded as decisions from
+[D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) on. **Each needs a yes, or the change Karl wants:**
+
+1. [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role): the Agenda-Admin set, the role on every tenant, and whether the editor role should
+   also hold `CanUpdateOrganization`.
+2. [D67](#d67--events-keep-bkas-special-rate-as-a-nullable-enum): `Event.specialRate`, or drop the special rate.
+3. [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it): `viewerCan` as guard permission plus record rule.
+4. [D69](#d69--a-review-request-can-be-withdrawn): anyone who may edit may withdraw a review request.
+5. [D70](#d70--event-content-takes-only-the-blocks-the-agenda-can-show): the server refuses non-agenda blocks in event content.
+6. [D71](#d71--the-editor-list-filters-by-publication-review-and-last-date-and-lookups-by-id-use-reach): lookups by id use reach, and the count includes the next date.

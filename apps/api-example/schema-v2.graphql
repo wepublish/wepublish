@@ -1179,9 +1179,13 @@ type Event {
   location: String
   modifiedAt: DateTime!
   name: String
+
+  """The earliest occurrence that has not ended."""
+  nextOccurrence: Occurrence
   openingTime: String
   organization: BaseOrganization
   organizationId: String
+  owner: User
   ownerId: String
   pending: EventRevision
   place: Place
@@ -1190,6 +1194,7 @@ type Event {
   publishedAt: DateTime
   rates: [EventRate!]!
   reviewRequestedAt: DateTime
+  reviewRequestedBy: User
   reviewRequestedById: String
   scheduleType: EventScheduleType!
   seoDescription: String
@@ -1200,11 +1205,18 @@ type Event {
   socialMediaImage: Image
   socialMediaImageID: String
   socialMediaTitle: String
+  specialRate: EventSpecialRate
   startsAt: DateTime
   status: EventStatus!
   tags: [Tag!]!
   ticketingUrl: String
+
+  """How many occurrences have not ended, the next one included."""
+  upcomingOccurrenceCount: Int!
   url: String
+
+  """What you may do with this event. Null outside its editor view."""
+  viewerCan: EventViewerPermissions
   weekDays: [Int!]!
 }
 
@@ -1278,6 +1290,15 @@ input EventFilter {
   """Pro Infirmis pictogram ids; the venue needs at least one of them."""
   accessibilityProInfirmis: [Int!]
   audienceId: String
+
+  """Events with an unpublished draft. Editor mode only."""
+  draft: Boolean
+
+  """Events whose last date ends at or after this instant."""
+  endsAfter: DateTime
+
+  """Events whose last date ends before this instant."""
+  endsBefore: DateTime
   eventStatus: [EventStatus!]
   from: DateTime
 
@@ -1286,10 +1307,19 @@ input EventFilter {
   ids: [String!]
   organizationIds: [String!]
   partner: Boolean
+
+  """Events with a revision scheduled for publication. Editor mode only."""
+  pending: Boolean
   placeIds: [String!]
+
+  """Events with a published revision."""
+  published: Boolean
 
   """Matches the region of the venue."""
   regionId: String
+
+  """Events whose draft waits for review. Editor mode only."""
+  reviewRequested: Boolean
 
   """Matches name and description, ignoring accents and case."""
   search: String
@@ -1334,6 +1364,7 @@ input EventInput {
   socialMediaDescription: String
   socialMediaImageID: String
   socialMediaTitle: String
+  specialRate: EventSpecialRate
   status: EventStatus
   tagIds: [String!]!
   ticketingUrl: String
@@ -1384,7 +1415,13 @@ enum EventSort {
   EndsAt
   ModifiedAt
   PublishedAt
+  ReviewRequestedAt
   StartsAt
+}
+
+enum EventSpecialRate {
+  FreeEntry
+  FreePrice
 }
 
 enum EventStatus {
@@ -1411,6 +1448,20 @@ input EventTeaserInput {
   lead: String
   preTitle: String
   title: String
+}
+
+"""
+What the caller may do with an event, by the same rules the mutations apply.
+"""
+type EventViewerPermissions {
+  delete: Boolean!
+  duplicate: Boolean!
+  moveOrganization: Boolean!
+  publish: Boolean!
+  reassignOwner: Boolean!
+  requestReview: Boolean!
+  update: Boolean!
+  withdrawReview: Boolean!
 }
 
 type ExternalApp {
@@ -3791,6 +3842,9 @@ type Mutation {
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
   """
   voteOnPoll(answerId: String!): PollVote
+
+  """Withdraws the pending review request of an event you may edit."""
+  withdrawEventReview(id: String!): Event!
 }
 
 type Navigation {
@@ -6495,6 +6549,7 @@ input UpdateEventInput {
   socialMediaDescription: String
   socialMediaImageID: String
   socialMediaTitle: String
+  specialRate: EventSpecialRate
   status: EventStatus
   tagIds: [String!]
   ticketingUrl: String

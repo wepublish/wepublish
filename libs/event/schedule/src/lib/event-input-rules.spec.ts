@@ -5,6 +5,7 @@ import {
   EVENT_PRINT_DESCRIPTION_MAX_LENGTH,
   EVENT_TAGS_MAX,
   EVENT_TAGS_MIN,
+  EVENT_BLOCK_TYPES,
   eventBlocksSchema,
   eventContentInputSchema,
   eventNameSchema,
@@ -110,6 +111,50 @@ describe('eventPrintDescriptionSchema', () => {
 });
 
 describe('eventBlocksSchema', () => {
+  it('allows rich text, images, quotes and the embed family', () => {
+    expect([...EVENT_BLOCK_TYPES].sort()).toEqual(
+      [
+        'richText',
+        'image',
+        'quote',
+        'embed',
+        'facebookPost',
+        'facebookVideo',
+        'instagramPost',
+        'twitterTweet',
+        'vimeoVideo',
+        'youTubeVideo',
+        'soundCloudTrack',
+        'polisConversation',
+        'tikTokVideo',
+        'bildwurfAd',
+        'streamableVideo',
+      ].sort()
+    );
+  });
+
+  it.each([
+    ['richText', richTextBlock('Ein Abend')],
+    ['image', { type: 'image', imageID: 'img-1', caption: null }],
+    ['quote', { type: 'quote', quote: 'Grossartig', author: 'Bund' }],
+    ['embed', { type: 'embed', url: 'https://example.com' }],
+    ['youTubeVideo', { type: 'youTubeVideo', videoID: 'abc' }],
+  ])('accepts a %s block', (_type, block) => {
+    expect(accepts(eventBlocksSchema, [block])).toBe(true);
+  });
+
+  it.each([
+    ['teaserGrid', { type: 'teaserGrid', teasers: [], numColumns: 3 }],
+    ['poll', { type: 'poll', pollId: 'poll-1' }],
+    ['event', { type: 'event', filter: {} }],
+    ['html', { type: 'html', html: '<p>hi</p>' }],
+    ['untyped', { richText: {} }],
+  ])('rejects a %s block', (_type, block) => {
+    expect(accepts(eventBlocksSchema, [richTextBlock('ok'), block])).toBe(
+      false
+    );
+  });
+
   it('accepts 6,400 characters of text and rejects 6,401', () => {
     expect(accepts(eventBlocksSchema, [richTextBlock('a'.repeat(6400))])).toBe(
       true
@@ -123,7 +168,7 @@ describe('eventBlocksSchema', () => {
     expect(
       accepts(eventBlocksSchema, [
         richTextBlock('a'.repeat(6400)),
-        { type: 'html', html: 'b'.repeat(10000) },
+        { type: 'quote', quote: 'b'.repeat(10000) },
       ])
     ).toBe(true);
   });

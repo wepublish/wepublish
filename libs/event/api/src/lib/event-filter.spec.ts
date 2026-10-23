@@ -24,6 +24,24 @@ describe('eventAttributeClauses', () => {
         eventStatus: [],
       })
     ).toEqual([]);
+    expect(
+      eventAttributeClauses({
+        draft: null,
+        pending: null,
+        published: null,
+        reviewRequested: null,
+        endsBefore: null,
+        endsAfter: null,
+      })
+    ).toEqual([]);
+  });
+
+  it('bounds the last date from both sides for events ending soon', () => {
+    const soon = new Date('2026-11-22T10:00:00.000Z');
+
+    expect(eventAttributeClauses({ endsAfter: NOW, endsBefore: soon })).toEqual(
+      [{ lastDateAt: { lt: soon } }, { lastDateAt: { gte: NOW } }]
+    );
   });
 
   it.each([
@@ -82,6 +100,24 @@ describe('eventAttributeClauses', () => {
       { eventStatus: [EventStatus.Cancelled, EventStatus.SoldOut] },
       { status: { in: [EventStatus.Cancelled, EventStatus.SoldOut] } },
     ],
+    ['draft true', { draft: true }, { draft: { isNot: null } }],
+    ['draft false', { draft: false }, { draft: { is: null } }],
+    ['pending true', { pending: true }, { pending: { isNot: null } }],
+    ['pending false', { pending: false }, { pending: { is: null } }],
+    ['published true', { published: true }, { published: { isNot: null } }],
+    ['published false', { published: false }, { published: { is: null } }],
+    [
+      'reviewRequested true',
+      { reviewRequested: true },
+      { reviewRequestedAt: { not: null } },
+    ],
+    [
+      'reviewRequested false',
+      { reviewRequested: false },
+      { reviewRequestedAt: null },
+    ],
+    ['endsBefore', { endsBefore: NOW }, { lastDateAt: { lt: NOW } }],
+    ['endsAfter', { endsAfter: NOW }, { lastDateAt: { gte: NOW } }],
   ])('matches %s on the event', (_, filter, clause) => {
     expect(eventAttributeClauses(filter)).toEqual([clause]);
   });

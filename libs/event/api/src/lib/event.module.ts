@@ -4,7 +4,9 @@ import { ImageModule } from '@wepublish/image/api';
 import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { TagModule } from '@wepublish/tag/api';
+import { UserModule } from '@wepublish/user/api';
 import { EventDataloaderService } from './event-dataloader.service';
+import { EventOccurrenceSummaryDataloader } from './event-occurrence-summary.dataloader';
 import {
   EventDatesDataloader,
   EventRatesDataloader,
@@ -35,6 +37,7 @@ import { EventTaxonomyModule } from './taxonomy/event-taxonomy.module';
     PrismaModule,
     ImageModule,
     TagModule,
+    UserModule,
     OrganizationModule,
     PlaceModule,
     EventTaxonomyModule,
@@ -47,6 +50,7 @@ import { EventTaxonomyModule } from './taxonomy/event-taxonomy.module';
     EventDatesDataloader,
     EventRatesDataloader,
     EventRevisionImagesDataloader,
+    EventOccurrenceSummaryDataloader,
     EventService,
     EventResolver,
     OccurrenceResolver,

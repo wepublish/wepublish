@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { seedProviders } from './seed';
+import { seedProviders, seedRoles } from './seed';
 
 type Row = { id: string };
 
@@ -73,5 +73,40 @@ describe('seedProviders', () => {
     expect(db.settingChallengeProvider.ids()).toEqual(['default-turnstile']);
     expect(db.settingTrackingPixel.ids()).toEqual([]);
     expect(db.settingSyncProvider.ids()).toEqual([]);
+  });
+});
+
+describe('seedRoles', () => {
+  it('seeds admin, editor, peer and agenda-admin, in the order callers destructure', () => {
+    const upsert = vi.fn(args => args);
+    const roles = seedRoles({
+      userRole: { upsert },
+    } as unknown as PrismaClient);
+
+    expect(roles.map(({ create }: any) => create.id)).toEqual([
+      'admin',
+      'editor',
+      'peer',
+      'agenda-admin',
+    ]);
+  });
+
+  it('seeds the agenda admin as a system role whose permissions come from code', () => {
+    const upsert = vi.fn(args => args);
+    const [, , , agendaAdmin] = seedRoles({
+      userRole: { upsert },
+    } as unknown as PrismaClient) as unknown as any[];
+
+    expect(agendaAdmin).toEqual({
+      where: { id: 'agenda-admin' },
+      update: {},
+      create: {
+        id: 'agenda-admin',
+        systemRole: true,
+        name: 'Agenda-Admin',
+        description: 'Agenda Administrator Role',
+        permissionIDs: [],
+      },
+    });
   });
 });

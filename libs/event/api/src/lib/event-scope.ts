@@ -1,10 +1,13 @@
 import { Prisma } from '@prisma/client';
 import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
 import {
+  CanCreateEvent,
+  CanDeleteEvent,
   CanDeleteOtherOrganizationEvents,
   CanGetOtherOrganizationEvents,
   CanGetOtherOrganizations,
   CanPublishEvent,
+  CanUpdateEvent,
   CanUpdateOtherOrganizationEvents,
   CanUpdateOtherOrganizations,
   Permission,
@@ -256,3 +259,30 @@ export const boundOrganizationIdOf = (session: Session): string | null =>
   session?.type === AuthSessionType.ApiToken ?
     (session.organizationId ?? null)
   : null;
+
+export const eventViewerPermissions = (
+  session: Session,
+  event: EventOwnership & { reviewRequestedAt?: Date | null },
+  hasDraft: boolean
+) => {
+  const granted = permissionsOf(session);
+  const update =
+    hasPermission(CanUpdateEvent, granted) && canModifyEvent(session, event);
+  const publish = canPublishEvent(session, event);
+
+  return {
+    update,
+    publish,
+    delete:
+      hasPermission(CanDeleteEvent, granted) && canDeleteEvent(session, event),
+    duplicate:
+      hasPermission(CanCreateEvent, granted) &&
+      canModifyEvent(session, event) &&
+      mayAssignEventOrganization(session, event.organizationId),
+    requestReview: update && !publish && hasDraft && !event.reviewRequestedAt,
+    withdrawReview: update && !!event.reviewRequestedAt,
+    moveOrganization:
+      update && mayMoveEventToOrganization(session, event, null),
+    reassignOwner: update && mayReassignEventOwner(session),
+  };
+};

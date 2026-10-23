@@ -7,6 +7,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import {
+  AgendaAdminPermissions,
   AllPermissions,
   CanCreateUserRole,
   CanDeleteUserRole,
@@ -86,6 +87,8 @@ export class UserRoleResolver {
         return EditorPermissions;
       case 'peer':
         return PeerPermissions;
+      case 'agenda-admin':
+        return AgendaAdminPermissions;
       default:
         return AllPermissions.filter(permission =>
           permissionIDs.includes(permission.id)

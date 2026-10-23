@@ -13,6 +13,13 @@ const flagWhere = (
   where: Prisma.EventWhereInput
 ): Prisma.EventWhereInput => (value ? where : { NOT: where });
 
+const revisionWhere = (
+  relation: 'draft' | 'pending' | 'published',
+  present: boolean
+): Prisma.EventWhereInput => ({
+  [relation]: present ? { isNot: null } : { is: null },
+});
+
 export const eventAttributeClauses = (
   filter: Filter
 ): Prisma.EventWhereInput[] => {
@@ -81,6 +88,32 @@ export const eventAttributeClauses = (
 
   if (filter.eventStatus?.length) {
     clauses.push({ status: { in: filter.eventStatus } });
+  }
+
+  if (filter.draft != null) {
+    clauses.push(revisionWhere('draft', filter.draft));
+  }
+
+  if (filter.pending != null) {
+    clauses.push(revisionWhere('pending', filter.pending));
+  }
+
+  if (filter.published != null) {
+    clauses.push(revisionWhere('published', filter.published));
+  }
+
+  if (filter.reviewRequested != null) {
+    clauses.push({
+      reviewRequestedAt: filter.reviewRequested ? { not: null } : null,
+    });
+  }
+
+  if (filter.endsBefore) {
+    clauses.push({ lastDateAt: { lt: filter.endsBefore } });
+  }
+
+  if (filter.endsAfter) {
+    clauses.push({ lastDateAt: { gte: filter.endsAfter } });
   }
 
   return clauses;
