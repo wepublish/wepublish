@@ -3,6 +3,9 @@ import QRCodeStyling from 'qr-code-styling';
 import { useEffect, useMemo, useRef } from 'react';
 import markUrl from './wepublish-mark.png';
 
+const markSrc: string =
+  typeof markUrl === 'string' ? markUrl : (markUrl as { src: string }).src;
+
 const Wrapper = styled('div')`
   display: flex;
   justify-content: center;
@@ -25,7 +28,7 @@ export function TotpQrCode({ uri }: { uri: string }) {
         type: 'svg',
         data: uri,
         margin: 10,
-        image: markUrl.src,
+        image: markSrc,
         qrOptions: { errorCorrectionLevel: 'H' },
         dotsOptions: { type: 'extra-rounded', color: '#000000' },
         cornersSquareOptions: { type: 'extra-rounded', color: '#000000' },

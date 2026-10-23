@@ -36,6 +36,7 @@ export function Tag({
   const {
     Head,
     ArticleList,
+    Head,
     elements: { Alert, Pagination, H2 },
     blocks: { RichText },
   } = useWebsiteBuilder();
