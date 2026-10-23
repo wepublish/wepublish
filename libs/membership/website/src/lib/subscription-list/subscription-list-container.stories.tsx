@@ -366,8 +366,8 @@ export const ChangePaymentMethod: StoryObj = {
         {
           request: {
             query: ChangeSubscriptionPaymentMethodDocument,
+            variables: () => true,
           },
-          variableMatcher: () => true,
           result: {
             data: {
               changeSubscriptionPaymentMethod: {
