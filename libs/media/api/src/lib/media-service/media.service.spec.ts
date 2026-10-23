@@ -14,7 +14,7 @@ import {
 } from '@wepublish/media-transform-guard';
 import { generateKeyPair } from 'jose';
 import { JwksClientService } from '../authentication/jwks-client.service';
-import { MediaService } from './media.service';
+import { MAX_CONCURRENT_TRANSFORMS, MediaService } from './media.service';
 
 const STORAGE_DEFAULT_CONTENT_TYPE = 'binary/octet-stream';
 
@@ -23,11 +23,14 @@ class RecordingDisk extends InMemoryDisk {
 
   public readonly reads: string[] = [];
 
+  public readonly putBodies: StorageBody[] = [];
+
   public override async put(
     key: string,
     body: StorageBody,
     options?: StoragePutOptions
   ) {
+    this.putBodies.push(body);
     const result = await super.put(key, body, options);
     this.writes.push(key);
     return result;
@@ -57,8 +60,10 @@ class RecordingDisk extends InMemoryDisk {
   }
 }
 
-const createService = (publicKey?: unknown) => {
-  const uploads = new RecordingDisk({});
+const createService = (
+  publicKey?: unknown,
+  uploads: RecordingDisk = new RecordingDisk({})
+) => {
   const transformations = new RecordingDisk({});
   const jwksClient = {
     getPublicKey: async () => {
@@ -241,6 +246,20 @@ describe('MediaService documents', () => {
     expect(transformations.writes).toEqual(['documents/doc-5/payload.json']);
   });
 
+  it('reads the whole document before copying it to the public disk', async () => {
+    const { service, transformations } = createService();
+    await service.saveDocument(
+      'doc-10',
+      Buffer.from('{}'),
+      'application/json',
+      'payload.json'
+    );
+
+    await service.getDocumentUri('doc-10');
+
+    expect(Buffer.isBuffer(transformations.putBodies[0])).toBe(true);
+  });
+
   it('renders a page preview for a pdf whose filename carries no extension', async () => {
     const { service, uploads } = createService();
     await service.saveDocument(
@@ -395,6 +414,123 @@ describe('MediaService images', () => {
 
     expect(await uploads.exists('images/image-4')).toBe(false);
     expect(await transformations.exists(uri)).toBe(false);
+  });
+
+  it('rejects when the original breaks off mid-download', async () => {
+    class BreakingDisk extends RecordingDisk {
+      public override async get(
+        key: string,
+        options?: StorageGetOptions
+      ): Promise<StorageDownload> {
+        const download = await super.get(key, options);
+        const body = new Readable({
+          read() {
+            this.push(Buffer.alloc(16));
+            this.destroy(new TypeError('terminated'));
+          },
+        });
+
+        return { ...download, body };
+      }
+    }
+    const { service } = createService(undefined, new BreakingDisk({}));
+    await service.saveImage('image-8', await createImage());
+
+    await expect(
+      service.getImageUri('image-8', {} as TransformationsDto)
+    ).rejects.toThrow('terminated');
+  });
+
+  it(`transforms at most ${MAX_CONCURRENT_TRANSFORMS} images at once`, async () => {
+    let downloading = 0;
+    let mostAtOnce = 0;
+    class SlowDisk extends RecordingDisk {
+      public override async get(
+        key: string,
+        options?: StorageGetOptions
+      ): Promise<StorageDownload> {
+        downloading++;
+        mostAtOnce = Math.max(mostAtOnce, downloading);
+        await new Promise(resolve => setTimeout(resolve, 10));
+        downloading--;
+
+        return super.get(key, options);
+      }
+    }
+    const { service } = createService(undefined, new SlowDisk({}));
+    const image = await createImage();
+    const ids = Array.from(
+      { length: MAX_CONCURRENT_TRANSFORMS * 3 },
+      (_, i) => `many-${i}`
+    );
+    for (const id of ids) {
+      await service.saveImage(id, image);
+    }
+
+    await Promise.all(
+      ids.map(id => service.getImageUri(id, {} as TransformationsDto))
+    );
+
+    expect(mostAtOnce).toBe(MAX_CONCURRENT_TRANSFORMS);
+  });
+
+  describe('signed transformations', () => {
+    it('does not download the original when the signature is invalid', async () => {
+      const { publicKey } = await generateKeyPair('EdDSA');
+      const { service, uploads } = createService(publicKey);
+      await service.saveImage('image-5', await createImage());
+
+      await expect(
+        service.getImageUri('image-5', {
+          quality: 80,
+          sig: 'invalid',
+        } as TransformationsDto)
+      ).rejects.toThrow('Invalid signature!');
+
+      expect(uploads.reads).toEqual([]);
+    });
+
+    it('downloads and transforms concurrent requests for one variant once', async () => {
+      const { publicKey, privateKey } = await generateKeyPair('EdDSA');
+      const { service, uploads, transformations } = createService(publicKey);
+      await service.saveImage('image-6', await createImage());
+      const requested = { quality: 80 } as TransformationsDto;
+      const sig = await signImageTransformations(
+        privateKey,
+        'image-6',
+        requested
+      );
+
+      const results = await Promise.all(
+        Array.from({ length: 5 }, () =>
+          service.getImageUri('image-6', { ...requested, sig })
+        )
+      );
+
+      expect(new Set(results.map(({ uri }) => uri)).size).toBe(1);
+      expect(uploads.reads).toEqual(['images/image-6']);
+      expect(transformations.writes).toEqual([results[0].uri]);
+    });
+
+    it('transforms a variant again after a failed attempt', async () => {
+      const { publicKey, privateKey } = await generateKeyPair('EdDSA');
+      const { service } = createService(publicKey);
+      await service.saveImage('image-7', await createImage());
+      const requested = { quality: 80 } as TransformationsDto;
+      const sig = await signImageTransformations(
+        privateKey,
+        'image-7',
+        requested
+      );
+
+      await expect(
+        service.getImageUri('image-7', { ...requested, sig: 'invalid' })
+      ).rejects.toThrow('Invalid signature!');
+
+      expect(
+        (await service.getImageUri('image-7', { ...requested, sig })).exists
+      ).toBe(true);
+    });
   });
 
   describe('output format', () => {

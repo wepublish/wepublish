@@ -7,6 +7,7 @@ import {
   UPLOAD_DISK,
   TRANSFORMATION_DISK,
   createStorageFetch,
+  createLinkCacheOptions,
 } from '@wepublish/media/api';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
@@ -21,8 +22,7 @@ import { CacheModule } from '@nestjs/cache-manager';
       cache: true,
     }),
     CacheModule.register({
-      ttl: 259200,
-      max: 50000,
+      ...createLinkCacheOptions(),
       isGlobal: true,
     }),
     MulterModule.register({
