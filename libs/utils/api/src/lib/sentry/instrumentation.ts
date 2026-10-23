@@ -6,6 +6,7 @@ import {
   setCommonTags,
   withoutKeySpans,
 } from '@wepublish/utils';
+import { getOtelConfig } from '@wepublish/utils/otel';
 
 Sentry.init({
   ...getServerConfig(),
@@ -13,6 +14,7 @@ Sentry.init({
     ...withoutKeySpans(defaults),
     nodeProfilingIntegration(),
     Sentry.prismaIntegration(),
+    ...(getOtelConfig() ? [Sentry.openTelemetryIntegration()] : []),
   ],
   // `profilesSampleRate` was removed in Sentry 11.
   profileLifecycle: 'trace',

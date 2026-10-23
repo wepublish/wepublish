@@ -19,7 +19,6 @@ import { unselectPassword } from '@wepublish/authentication/api';
 import { InvoiceWithItems, PaymentProvider } from '@wepublish/payment/api';
 import {
   calculatePeriodAmount,
-  logger,
   ONE_DAY_IN_MILLISECONDS,
   ONE_MONTH_IN_MILLISECONDS,
 } from '@wepublish/utils/api';
@@ -32,6 +31,7 @@ import { add, format } from 'date-fns';
 import {
   BadRequestException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
 
@@ -128,6 +128,9 @@ export function calculateAmountForPeriodicity(
 }
 
 export class MemberContext implements MemberContextInterface {
+  private readonly logger = new Logger(MemberContext.name);
+  private readonly mutationLogger = new Logger('mutation.public');
+
   paymentProviders: PaymentProvider[];
   prisma: PrismaClient;
 
@@ -217,9 +220,8 @@ export class MemberContext implements MemberContextInterface {
       const { periods = [], paidUntil, deactivation } = subscription;
 
       if (deactivation) {
-        logger('memberContext').info(
-          'Subscription with id %s is deactivated and will not be renewed',
-          subscription.id
+        this.logger.log(
+          `Subscription with id ${subscription.id} is deactivated and will not be renewed`
         );
         return null;
       }
@@ -281,10 +283,7 @@ export class MemberContext implements MemberContextInterface {
       });
 
       if (!user) {
-        logger('memberContext').info(
-          'User with id "%s" not found',
-          subscription.userID
-        );
+        this.logger.log(`User with id "${subscription.userID}" not found`);
         return null;
       }
 
@@ -300,9 +299,8 @@ export class MemberContext implements MemberContextInterface {
       );
 
       if (!subscriptionFlowActionDeactivationUnpaid) {
-        logger('memberContext').info(
-          'Subscription flow for subscription with id "%s" not found',
-          subscription.id
+        this.logger.log(
+          `Subscription flow for subscription with id "${subscription.id}" not found`
         );
         return null;
       }
@@ -371,17 +369,15 @@ export class MemberContext implements MemberContextInterface {
         },
       });
 
-      logger('memberContext').info(
-        'Renewed or created fresh subscription with id %s',
-        subscription.id
+      this.logger.log(
+        `Renewed or created fresh subscription with id ${subscription.id}`
       );
 
       return newInvoice;
     } catch (error) {
-      logger('memberContext').error(
-        error as Error,
-        'Error while renewing subscription with id %s',
-        subscription.id
+      this.logger.error(
+        `Error while renewing subscription with id ${subscription.id}: ${error}`,
+        error instanceof Error ? error.stack : undefined
       );
     }
 
@@ -412,9 +408,8 @@ export class MemberContext implements MemberContextInterface {
       .map(method => method.id);
 
     if (!paymentMethodIDs.includes(paymentMethodID)) {
-      logger('memberContext').warn(
-        'PaymentMethod %s does not support off session payments',
-        paymentMethodID
+      this.logger.warn(
+        `PaymentMethod ${paymentMethodID} does not support off session payments`
       );
 
       return false;
@@ -424,10 +419,7 @@ export class MemberContext implements MemberContextInterface {
       method => method.id === paymentMethodID
     );
     if (!paymentMethod) {
-      logger('memberContext').error(
-        'PaymentMethod %s does not exist',
-        paymentMethodID
-      );
+      this.logger.error(`PaymentMethod ${paymentMethodID} does not exist`);
 
       return false;
     }
@@ -437,9 +429,8 @@ export class MemberContext implements MemberContextInterface {
     );
 
     if (!paymentProvider) {
-      logger('memberContext').error(
-        'PaymentProvider %s does not exist',
-        paymentMethod.paymentProviderID
+      this.logger.error(
+        `PaymentProvider ${paymentMethod.paymentProviderID} does not exist`
       );
 
       return false;
@@ -476,9 +467,8 @@ export class MemberContext implements MemberContextInterface {
 
     if (intent.state === PaymentState.requiresUserAction) {
       if (!invoice.subscriptionID) {
-        logger('memberContext').error(
-          'Invoice %s has no associated subscriptionID',
-          invoice.id
+        this.logger.error(
+          `Invoice ${invoice.id} has no associated subscriptionID`
         );
         return false;
       }
@@ -488,9 +478,8 @@ export class MemberContext implements MemberContextInterface {
       });
 
       if (!subscription) {
-        logger('memberContext').error(
-          'No subscription found with ID %s',
-          invoice.subscriptionID
+        this.logger.error(
+          `No subscription found with ID ${invoice.subscriptionID}`
         );
         return false;
       }
@@ -512,9 +501,8 @@ export class MemberContext implements MemberContextInterface {
           mailType: mailLogType.UserFlow,
         });
       } else {
-        logger('memberContext').info(
-          'No remote template found for subscription %s and event RENEWAL_FAILED',
-          subscription.id
+        this.logger.log(
+          `No remote template found for subscription ${subscription.id} and event RENEWAL_FAILED`
         );
       }
 
@@ -847,9 +835,8 @@ export class MemberContext implements MemberContextInterface {
     });
 
     if (!subscription) {
-      logger('mutation.public').error(
-        'Could not create new subscription for userID "%s"',
-        userID
+      this.mutationLogger.error(
+        `Could not create new subscription for userID "${userID}"`
       );
 
       throw new InternalServerErrorException();
@@ -1005,9 +992,8 @@ export class MemberContext implements MemberContextInterface {
     });
 
     if (!subscription) {
-      logger('mutation.public').error(
-        'Could not create new subscription for userID "%s"',
-        userID
+      this.mutationLogger.error(
+        `Could not create new subscription for userID "${userID}"`
       );
       throw new InternalServerErrorException();
     }
@@ -1108,7 +1094,7 @@ export class MemberContext implements MemberContextInterface {
     });
 
     if (!user) {
-      logger('MemberContext').warn(`User not found %s`, subscription.userID);
+      this.logger.warn(`User not found ${subscription.userID}`);
       return;
     }
 
@@ -1118,10 +1104,8 @@ export class MemberContext implements MemberContextInterface {
     );
 
     if (!remoteTemplate) {
-      logger('MemberContext').warn(
-        `RemoteTemplate <%s> for subscription <%s> not found!`,
-        subscriptionEvent,
-        subscription.id
+      this.logger.warn(
+        `RemoteTemplate <${subscriptionEvent}> for subscription <${subscription.id}> not found!`
       );
 
       return;

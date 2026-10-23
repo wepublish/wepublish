@@ -154,6 +154,21 @@ const nextConfig = {
     '@mui/x-date-pickers',
     '@mui/x-internals',
   ],
+  serverExternalPackages: [
+    '@opentelemetry/api',
+    '@opentelemetry/api-logs',
+    '@opentelemetry/sdk-node',
+    '@opentelemetry/sdk-logs',
+    '@opentelemetry/sdk-metrics',
+    '@opentelemetry/sdk-trace-node',
+    '@opentelemetry/resources',
+    '@opentelemetry/exporter-metrics-otlp-http',
+    '@opentelemetry/exporter-logs-otlp-http',
+    '@opentelemetry/exporter-trace-otlp-http',
+    '@opentelemetry/instrumentation',
+    '@opentelemetry/instrumentation-runtime-node',
+    '@opentelemetry/instrumentation-undici',
+  ],
 };
 
 module.exports = nextConfig;

@@ -9,10 +9,8 @@ import { Logger, NestApplicationOptions } from '@nestjs/common';
 sharp.cache({ memory: 50, items: 20 });
 sharp.concurrency(2);
 
-export async function bootstrap(logger?: NestApplicationOptions['logger']) {
-  const app = await NestFactory.create(AppModule, {
-    logger,
-  });
+export async function bootstrap(options?: NestApplicationOptions) {
+  const app = await NestFactory.create(AppModule, options);
   app.useGlobalPipes(new ZodValidationPipe());
   app.enableCors({
     origin: true,

@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { PrismaClient, User, UserEvent } from '@prisma/client';
 import { InvalidCredentialsError, NotActiveError } from './session.errors';
 import nanoid from 'nanoid/generate';
@@ -21,7 +26,6 @@ import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { Validator } from './validator';
 import { UserService } from '@wepublish/user/api';
 import {
-  logger,
   ONE_MINUTE_IN_MILLISECONDS,
   USER_PROPERTY_LAST_LOGIN_LINK_SEND,
 } from '@wepublish/utils/api';
@@ -36,6 +40,8 @@ export const SESSION_TTL_TOKEN = 'SESSION_TTL_TOKEN';
 
 @Injectable()
 export class SessionService {
+  private readonly logger = new Logger(SessionService.name);
+
   constructor(
     private prisma: PrismaClient,
     @Inject(SESSION_TTL_TOKEN) private sessionTTL: number,
@@ -346,9 +352,8 @@ export class SessionService {
       parseInt(lastSendTimeStamp.value) >
         Date.now() - ONE_MINUTE_IN_MILLISECONDS
     ) {
-      logger('mutation.public').warn(
-        'User with ID %s requested Login Link multiple times in one minute time window',
-        user.id
+      this.logger.warn(
+        `User with ID ${user.id} requested Login Link multiple times in one minute time window`
       );
 
       return email;

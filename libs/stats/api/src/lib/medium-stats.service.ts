@@ -5,8 +5,7 @@ import {
   type MigrationRow,
   type MigrationSummary,
 } from './migrations';
-import { Injectable } from '@nestjs/common';
-import { logger } from '@wepublish/utils/api';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { DashboardInvoiceService } from '@wepublish/membership/api';
 import {
@@ -146,6 +145,8 @@ export const summariseErrors = (
 
 @Injectable()
 export class MediumStatsService {
+  private readonly logger = new Logger(MediumStatsService.name);
+
   constructor(
     private prisma: PrismaClient,
     private dashboardInvoice: DashboardInvoiceService
@@ -297,7 +298,7 @@ export class MediumStatsService {
     } catch (error) {
       // A database without the table (or without permission to read it) must
       // not take the whole stats call down.
-      logger('medium-stats').warn(
+      this.logger.warn(
         `Could not read _prisma_migrations: ${(error as Error).message}`
       );
 
@@ -332,7 +333,7 @@ export class MediumStatsService {
         confirmedByEmail: confirmedBy?.email ?? null,
       }));
     } catch (error) {
-      logger('medium-stats').warn(
+      this.logger.warn(
         `Could not read changelog entries: ${(error as Error).message}`
       );
 
@@ -360,7 +361,7 @@ export class MediumStatsService {
     } catch (error) {
       // A CMS whose database predates the changelog tables must still answer
       // the rest of the stats.
-      logger('medium-stats').warn(
+      this.logger.warn(
         `Could not read changelog entries: ${(error as Error).message}`
       );
 
@@ -532,7 +533,7 @@ export class MediumStatsService {
           ),
       };
     } catch (error) {
-      logger('medium-stats').warn(
+      this.logger.warn(
         `Could not read audit logs: ${(error as Error).message}`
       );
 

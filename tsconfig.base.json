@@ -138,9 +138,16 @@
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
+      "@wepublish/utils/api/otel": [
+        "libs/utils/api/src/lib/otel/instrumentation.ts"
+      ],
+      "@wepublish/utils/api/otel/logger": [
+        "libs/utils/api/src/lib/otel/logger.ts"
+      ],
       "@wepublish/utils/api/sentry": [
         "libs/utils/api/src/lib/sentry/instrumentation.ts"
       ],
+      "@wepublish/utils/otel": ["libs/utils/src/lib/otel/index.ts"],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
       "@wepublish/utils/website/sentry": [
         "libs/utils/website/src/lib/sentry/instrumentation.ts"

@@ -1,0 +1,35 @@
+groups:
+  - name: wepublish-http
+    rules:
+      - record: service:http_server_requests:rate1m
+        expr: sum by (service_namespace, service_name) (rate(http_server_request_duration_count[1m]))
+
+      - record: service_instance:http_server_requests:rate1m
+        expr: sum by (service_namespace, service_name, service_instance_id) (rate(http_server_request_duration_count[1m]))
+
+      - record: service:http_server_request_duration:p95
+        expr: histogram_quantile(0.95, sum by (service_namespace, service_name, le) (rate(http_server_request_duration_bucket[5m])))
+
+      - record: service:http_server_errors:ratio5m
+        expr: |
+          sum by (service_namespace, service_name) (rate(http_server_request_duration_count{http_response_status_code=~"5.."}[5m]))
+          /
+          sum by (service_namespace, service_name) (rate(http_server_request_duration_count[5m]))
+
+  - name: wepublish-instances
+    rules:
+      - record: service_instance:reporting
+        expr: group by (service_namespace, service_name, service_instance_id) (last_over_time(target_info{service_name!=""}[2m]))
+
+      - record: service:reporting_instances:count
+        expr: count by (service_namespace, service_name) (service_instance:reporting)
+
+  - name: wepublish-alerts
+    rules:
+      - alert: ApiDown
+        expr: absent_over_time(target_info{service_name="wepublish-api"}[2m])
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'No API instance has pushed metrics for 2 minutes'

@@ -1,3 +1,4 @@
+import './src/otel';
 import * as path from 'path';
 
 import { createApp } from './src/server-app';
