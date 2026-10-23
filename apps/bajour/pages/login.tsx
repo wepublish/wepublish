@@ -8,11 +8,11 @@ import {
 } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { BajourContainer as Container } from '@wepublish/tenant/bajour';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  getApiUrl,
   getSessionTokenProps,
   handleJwtLogin,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 import {
   FullSessionWithTokenWithoutUserFragment,
   getApiClient,

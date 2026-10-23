@@ -22,12 +22,14 @@ import {
   authLink,
   getWebsiteShell,
   initWePublishTranslator,
-  RoutedAdminBar,
-  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
   WebsiteShellProps,
 } from '@wepublish/utils/website';
+import {
+  RoutedAdminBar,
+  withBuilderRouter,
+} from '@wepublish/utils/website/next';
 import { TenantProviders } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {

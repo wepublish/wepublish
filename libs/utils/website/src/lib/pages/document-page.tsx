@@ -13,13 +13,7 @@ import {
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { getApiUrl } from '../api-url';
 import { googleFontsUrl } from '../google-fonts';
-
-declare global {
-  interface Window {
-    WEBSITE_SETTINGS: WebsiteSettingsFragment | undefined;
-    PUBLIC_ENV: PublicEnv | undefined;
-  }
-}
+import '../website-globals';
 
 export type DocumentProps = DocumentHeadTagsProps & {
   websiteSettings: WebsiteSettingsFragment | undefined;

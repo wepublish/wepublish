@@ -184,6 +184,9 @@
       "@wepublish/utils/website/link": [
         "libs/utils/website/src/lib/next-wepublish-link.tsx"
       ],
+      "@wepublish/utils/website/next": [
+        "libs/utils/website/src/next.ts"
+      ],
       "@wepublish/utils/website/sentry": [
         "libs/utils/website/src/lib/sentry/instrumentation.ts"
       ],

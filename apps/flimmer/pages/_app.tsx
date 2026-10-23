@@ -18,10 +18,10 @@ import {
   getWebsiteShell,
   initWePublishTranslator,
   WebsiteShellProps,
-  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
+import { withBuilderRouter } from '@wepublish/utils/website/next';
 import { TenantProviders } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {

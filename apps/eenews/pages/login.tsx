@@ -7,7 +7,8 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { EenewsPageShell } from '@wepublish/tenant/eenews';
-import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
+import { getApiUrl } from '@wepublish/utils/website';
+import { handleJwtLogin } from '@wepublish/utils/website/next';
 import {
   FullSessionWithTokenWithoutUserFragment,
   getApiClient,

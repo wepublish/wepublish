@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { tsriTheme as theme } from '@wepublish/tenant/tsri';
-import { ProfilePage } from '@wepublish/utils/website';
+import { ProfilePage } from '@wepublish/utils/website/next';
 
 const TsriProfilePage = styled(ProfilePage)`
   &:is(SubscriptionsWrapper) {
