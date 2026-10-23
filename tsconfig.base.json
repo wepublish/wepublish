@@ -61,6 +61,7 @@
       "@wepublish/event/import/editor": [
         "libs/event/import/editor/src/index.ts"
       ],
+      "@wepublish/event/schedule": ["libs/event/schedule/src/index.ts"],
       "@wepublish/event/website": ["libs/event/website/src/index.ts"],
       "@wepublish/external-apps/api": ["libs/external-apps/api/src/index.ts"],
       "@wepublish/feed/website": ["libs/feed/website/src/index.ts"],
