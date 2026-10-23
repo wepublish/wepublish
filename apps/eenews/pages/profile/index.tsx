@@ -1,4 +1,4 @@
-import { ProfilePage, withAuthGuard } from '@wepublish/utils/website';
+import { ProfilePage, withAuthGuard } from '@wepublish/utils/website/next';
 import { NextPage } from 'next';
 
 import { EenewsPageShell } from '../../src/components/eenews-page-shell';

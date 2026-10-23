@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { AuthorPage } from '@wepublish/utils/website';
+import { AuthorPage } from '@wepublish/utils/website/next';
 
 import { TsriAuthorLinks } from '../../src/components/tsri-author-links';
 import theme from '../../src/theme';
@@ -27,5 +27,5 @@ const TsriAuthorPage = styled(AuthorPage)`
 export {
   getAuthorStaticPaths as getStaticPaths,
   getAuthorStaticProps as getStaticProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 export { TsriAuthorPage as default };

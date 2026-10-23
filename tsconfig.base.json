@@ -142,6 +142,9 @@
         "libs/utils/api/src/lib/sentry/instrumentation.ts"
       ],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
+      "@wepublish/utils/website/next": [
+        "libs/utils/website/src/next.ts"
+      ],
       "@wepublish/utils/website/sentry": [
         "libs/utils/website/src/lib/sentry/instrumentation.ts"
       ],

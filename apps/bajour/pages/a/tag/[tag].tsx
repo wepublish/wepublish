@@ -1,4 +1,4 @@
-import { TagPage } from '@wepublish/utils/website';
+import { TagPage } from '@wepublish/utils/website/next';
 import { ComponentProps } from 'react';
 
 import { Container } from '../../../src/components/layout/container';
@@ -16,4 +16,4 @@ export default function ArticleListByTag(
 export {
   TagPageGetStaticPaths as getStaticPaths,
   TagPageGetStaticProps as getStaticProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';

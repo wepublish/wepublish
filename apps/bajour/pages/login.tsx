@@ -7,11 +7,11 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  getApiUrl,
   getSessionTokenProps,
   handleJwtLogin,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 import {
   FullSessionWithTokenWithoutUserFragment,
   getApiClient,

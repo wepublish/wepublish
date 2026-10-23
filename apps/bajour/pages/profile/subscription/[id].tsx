@@ -1,4 +1,4 @@
-import { SubscriptionPage } from '@wepublish/utils/website';
+import { SubscriptionPage } from '@wepublish/utils/website/next';
 
 import { Container } from '../../../src/components/layout/container';
 

@@ -1,5 +1,5 @@
 import { css, Global } from '@emotion/react';
-import { TagPage } from '@wepublish/utils/website';
+import { TagPage } from '@wepublish/utils/website/next';
 
 import theme from '../../../src/theme';
 
@@ -24,4 +24,4 @@ export default function TsriTagPage(props: Parameters<typeof TagPage>[0]) {
 export {
   TagPageGetStaticPaths as getStaticPaths,
   TagPageGetStaticProps as getStaticProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
