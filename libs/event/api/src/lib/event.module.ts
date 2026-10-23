@@ -16,7 +16,7 @@ import {
 } from './event-revision.resolver';
 import { EventRevisionDataloaderService } from './event-revisions.dataloader';
 import { EventScheduleWatcher } from './event-schedule.watcher';
-import { EventResolver } from './event.resolver';
+import { EventResolver, OccurrenceResolver } from './event.resolver';
 import { EventService } from './event.service';
 import {
   HasEventLcResolver,
@@ -49,6 +49,7 @@ import { EventTaxonomyModule } from './taxonomy/event-taxonomy.module';
     EventRevisionImagesDataloader,
     EventService,
     EventResolver,
+    OccurrenceResolver,
     EventRelationsResolver,
     EventRevisionResolver,
     EventImageResolver,

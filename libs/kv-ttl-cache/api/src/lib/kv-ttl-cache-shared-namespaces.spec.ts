@@ -38,6 +38,12 @@ describe('shared namespaces', () => {
     );
   });
 
+  it('shares the event drafts, so every replica retires draft answers after an event save', () => {
+    expect(SHARED_NAMESPACES).toEqual(
+      expect.arrayContaining(['content:events'])
+    );
+  });
+
   it('refuses to share any integration settings namespace', () => {
     expect(() =>
       assertSharedNamespaces([...SHARED_NAMESPACES, 'settings:newprovider'])

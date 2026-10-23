@@ -154,9 +154,11 @@ const setup = async () => {
     },
     occurrence: {
       findMany: vi.fn().mockResolvedValue([]),
+      count: vi.fn().mockResolvedValue(0),
       deleteMany: vi.fn(),
       createMany: vi.fn(),
     },
+    $queryRaw: vi.fn().mockResolvedValue([]),
   };
   prisma.$transaction = vi.fn(async (run: (tx: unknown) => unknown) =>
     run(prisma)
@@ -168,16 +170,18 @@ const setup = async () => {
     invalidateAt: vi.fn(),
   };
 
+  const dataloader = { prime: vi.fn() };
+
   const module = await Test.createTestingModule({
     providers: [
       EventService,
       { provide: PrismaClient, useValue: prisma },
       { provide: PublicContentCacheInvalidator, useValue: cache },
-      { provide: EventDataloaderService, useValue: { prime: vi.fn() } },
+      { provide: EventDataloaderService, useValue: dataloader },
     ],
   }).compile();
 
-  return { service: module.get(EventService), prisma, cache };
+  return { service: module.get(EventService), prisma, cache, dataloader };
 };
 
 const existing = (prisma: any, overrides: Partial<Event> = {}, extra = {}) =>
@@ -1158,6 +1162,251 @@ describe('EventService.getEvents', () => {
         endCursor: 'b',
       },
     });
+  });
+});
+
+describe('EventService.getEvents search and filters', () => {
+  it('ANDs the ids of a public search over the published revisions', async () => {
+    const { service, prisma } = await setup();
+    prisma.$queryRaw.mockResolvedValue([{ eventId: 'e1' }]);
+
+    await service.getEvents(
+      { filter: { search: 'theatre' } },
+      undefined,
+      false
+    );
+
+    expect(prisma.$queryRaw.mock.calls[0][0].sql).toContain(
+      '"events.events.revisions.published"'
+    );
+    expect(prisma.event.findMany.mock.calls[0][0].where.AND).toContainEqual({
+      id: { in: ['e1'] },
+    });
+  });
+
+  it('searches the open revisions in editor mode', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getEvents({ filter: { search: 'theatre' } }, member, true);
+
+    expect(prisma.$queryRaw.mock.calls[0][0].sql).toContain(
+      '"archivedAt" IS NULL'
+    );
+    expect(prisma.event.findMany.mock.calls[0][0].where.AND).toContainEqual({
+      id: { in: [] },
+    });
+  });
+
+  it('runs no search for a blank term', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getEvents({ filter: { search: '   ' } }, undefined, false);
+
+    expect(prisma.$queryRaw).not.toHaveBeenCalled();
+    expect(prisma.event.findMany.mock.calls[0][0].where.AND).toHaveLength(2);
+  });
+
+  it('combines tags, search and status with AND', async () => {
+    const { service, prisma } = await setup();
+    prisma.$queryRaw.mockResolvedValue([{ eventId: 'e1' }]);
+
+    await service.getEvents(
+      {
+        filter: {
+          tagIds: ['t1'],
+          search: 'theatre',
+          eventStatus: [EventStatus.Cancelled],
+        },
+      },
+      undefined,
+      false
+    );
+
+    const { where } = prisma.event.findMany.mock.calls[0][0];
+
+    expect(where).toEqual({
+      AND: [
+        { published: { isNot: null } },
+        {
+          AND: [
+            { tags: { some: { tagId: { in: ['t1'] } } } },
+            { status: { in: [EventStatus.Cancelled] } },
+          ],
+        },
+        { id: { in: ['e1'] } },
+      ],
+    });
+    expect(prisma.event.count.mock.calls[0][0].where).toEqual(where);
+  });
+});
+
+describe('EventService.getAgenda', () => {
+  const occurrence = (id: string, eventId = 'event-1') => ({
+    id,
+    eventId,
+    dateFrom: new Date('2026-11-01T18:00:00.000Z'),
+    dateTo: new Date('2026-11-01T21:00:00.000Z'),
+    openingTime: null,
+    legacyEventId: null,
+    event: eventRow({ id: eventId }),
+  });
+
+  it('lists occurrences of published events, ordered by date and id', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getAgenda({}, undefined, false);
+
+    expect(prisma.occurrence.findMany.mock.calls[0][0]).toMatchObject({
+      where: {
+        AND: [{ event: { is: { AND: [{ published: { isNot: null } }] } } }],
+      },
+      orderBy: [{ dateFrom: 'asc' }, { id: 'asc' }],
+    });
+  });
+
+  it('reverses the order for Descending', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getAgenda({ order: SortOrder.Descending }, undefined, false);
+
+    expect(prisma.occurrence.findMany.mock.calls[0][0].orderBy).toEqual([
+      { dateFrom: 'desc' },
+      { id: 'desc' },
+    ]);
+  });
+
+  it('keeps time flat on the occurrence and the editor scope on its event', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getAgenda(
+      { filter: { upcoming: true, tagIds: ['t1'] } },
+      member,
+      true
+    );
+
+    expect(prisma.occurrence.findMany.mock.calls[0][0].where).toEqual({
+      AND: [
+        { dateTo: { gte: NOW } },
+        {
+          event: {
+            is: {
+              AND: [
+                {
+                  OR: [
+                    { organizationId: { in: ['org-a'] } },
+                    { ownerId: 'member' },
+                  ],
+                },
+                { tags: { some: { tagId: { in: ['t1'] } } } },
+              ],
+            },
+          },
+        },
+      ],
+    });
+  });
+
+  it('narrows the events by a search', async () => {
+    const { service, prisma } = await setup();
+    prisma.$queryRaw.mockResolvedValue([{ eventId: 'e1' }]);
+
+    await service.getAgenda(
+      { filter: { search: 'theatre' } },
+      undefined,
+      false
+    );
+
+    expect(prisma.occurrence.findMany.mock.calls[0][0].where).toEqual({
+      AND: [
+        {
+          event: {
+            is: {
+              AND: [
+                {
+                  AND: [{ published: { isNot: null } }, { id: { in: ['e1'] } }],
+                },
+              ],
+            },
+          },
+        },
+      ],
+    });
+  });
+
+  it('returns one row per occurrence with five-slot pagination', async () => {
+    const { service, prisma } = await setup();
+    prisma.occurrence.count.mockResolvedValue(5);
+    prisma.occurrence.findMany.mockResolvedValue([
+      occurrence('o1'),
+      occurrence('o2'),
+      occurrence('o3'),
+    ]);
+
+    const result = await service.getAgenda(
+      { take: 2, skip: 1, cursorId: 'o0' },
+      undefined,
+      false
+    );
+
+    expect(prisma.occurrence.findMany.mock.calls[0][0]).toMatchObject({
+      take: 3,
+      skip: 1,
+      cursor: { id: 'o0' },
+      include: { event: true },
+    });
+    expect(prisma.occurrence.count.mock.calls[0][0].where).toEqual(
+      prisma.occurrence.findMany.mock.calls[0][0].where
+    );
+    expect(result.totalCount).toBe(5);
+    expect(result.nodes.map(({ id }) => id)).toEqual(['o1', 'o2']);
+    expect(result.nodes[0]).not.toHaveProperty('event');
+    expect(result.pageInfo).toEqual({
+      hasPreviousPage: true,
+      hasNextPage: true,
+      startCursor: 'o1',
+      endCursor: 'o2',
+    });
+  });
+
+  it('says there is no next page on the last page', async () => {
+    const { service, prisma } = await setup();
+    prisma.occurrence.count.mockResolvedValue(2);
+    prisma.occurrence.findMany.mockResolvedValue([
+      occurrence('o1'),
+      occurrence('o2'),
+    ]);
+
+    const result = await service.getAgenda({ take: 2 }, undefined, false);
+
+    expect(result.pageInfo).toMatchObject({
+      hasPreviousPage: false,
+      hasNextPage: false,
+    });
+  });
+
+  it('lists a weekly series once per sitting and primes each event once loaded', async () => {
+    const { service, prisma, dataloader } = await setup();
+    prisma.occurrence.findMany.mockResolvedValue([
+      occurrence('o1', 'weekly'),
+      occurrence('o2', 'weekly'),
+      occurrence('o3', 'other'),
+    ]);
+
+    const result = await service.getAgenda({}, undefined, false);
+
+    expect(result.nodes.map(({ eventId }) => eventId)).toEqual([
+      'weekly',
+      'weekly',
+      'other',
+    ]);
+    expect(dataloader.prime).toHaveBeenCalledWith(
+      'weekly',
+      eventRow({ id: 'weekly' })
+    );
+    expect(dataloader.prime).toHaveBeenCalledWith(
+      'other',
+      eventRow({ id: 'other' })
+    );
   });
 });
 

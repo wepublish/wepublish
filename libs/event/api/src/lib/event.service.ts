@@ -28,7 +28,9 @@ import {
   assertValidSchedule,
   assertWithinHorizon,
 } from './event-input';
+import { createEventWhere, createOccurrenceWhere } from './event-filter';
 import { eventSchedule, syncOccurrences } from './event-occurrences';
+import { searchEventIds } from './event-search';
 import {
   boundOrganizationIdOf,
   canDeleteEvent,
@@ -48,13 +50,13 @@ import {
   EventArgs,
   EventContentInput,
   EventDateInput,
-  EventFilter,
   EventInput,
   EventListArgs,
   EventRateInput,
   EventSort,
   UpdateEventInput,
 } from './event.model';
+import { AgendaListArgs } from './occurrence.model';
 
 type Session = AuthSession | null | undefined;
 
@@ -156,39 +158,12 @@ export const createEventOrder = (
   return [{ [column]: direction }, { id: direction }];
 };
 
-export const createEventFilter = (
-  filter: EventFilter | null | undefined,
-  now: Date
-): Prisma.EventWhereInput => {
-  const lowerBound = [filter?.upcoming ? now : null, filter?.from ?? null]
-    .filter((date): date is Date => date != null)
-    .reduce<Date | null>(
-      (latest, date) => (latest && latest > date ? latest : date),
-      null
-    );
-  const occurrence: Prisma.OccurrenceWhereInput = {
-    ...(lowerBound ? { dateTo: { gte: lowerBound } } : {}),
-    ...(filter?.to ? { dateFrom: { lte: filter.to } } : {}),
-  };
-
-  return {
-    AND: [
-      filter?.ids?.length ? { id: { in: filter.ids } } : {},
-      filter?.tagIds?.length ?
-        { tags: { some: { tagId: { in: filter.tagIds } } } }
-      : {},
-      Object.keys(occurrence).length ?
-        { occurrences: { some: occurrence } }
-      : {},
-    ].filter(clause => Object.keys(clause).length),
-  };
-};
-
 @Injectable()
 export class EventService {
   constructor(
     private prisma: PrismaClient,
-    private publicContentCache: PublicContentCacheInvalidator
+    private publicContentCache: PublicContentCacheInvalidator,
+    private eventDataloader: EventDataloaderService
   ) {}
 
   @PrimeDataLoader(EventDataloaderService)
@@ -236,10 +211,16 @@ export class EventService {
     session: Session,
     editorMode: boolean
   ) {
+    const searchIds = await searchEventIds(
+      this.prisma,
+      filter?.search,
+      editorMode ? 'editor' : 'public'
+    );
     const where: Prisma.EventWhereInput = {
       AND: [
         editorMode ? editorEventsWhere(session) : publicEventsWhere(),
-        createEventFilter(filter, new Date()),
+        createEventWhere(filter, new Date()),
+        ...(searchIds ? [{ id: { in: searchIds } }] : []),
       ],
     };
     const orderBy = createEventOrder(sort, order);
@@ -267,6 +248,64 @@ export class EventService {
         hasNextPage: events.length > nodes.length,
         startCursor: firstEvent?.id,
         endCursor: lastEvent?.id,
+      },
+    };
+  }
+
+  async getAgenda(
+    {
+      filter,
+      cursorId,
+      order = SortOrder.Ascending,
+      take = 10,
+      skip,
+    }: AgendaListArgs,
+    session: Session,
+    editorMode: boolean
+  ) {
+    const scope = editorMode ? editorEventsWhere(session) : publicEventsWhere();
+    const searchIds = await searchEventIds(
+      this.prisma,
+      filter?.search,
+      editorMode ? 'editor' : 'public'
+    );
+    const where = createOccurrenceWhere(
+      filter,
+      new Date(),
+      searchIds ? { AND: [scope, { id: { in: searchIds } }] } : scope
+    );
+    const direction = graphQLSortOrderToPrisma(order);
+
+    const [totalCount, occurrences] = await Promise.all([
+      this.prisma.occurrence.count({ where }),
+      this.prisma.occurrence.findMany({
+        where,
+        skip,
+        take: getMaxTake(take) + 1,
+        orderBy: [{ dateFrom: direction }, { id: direction }],
+        cursor: cursorId ? { id: cursorId } : undefined,
+        include: { event: true },
+      }),
+    ]);
+
+    const nodes = occurrences
+      .slice(0, getMaxTake(take))
+      .map(({ event, ...occurrence }) => {
+        this.eventDataloader.prime(event.id, event);
+
+        return occurrence;
+      });
+    const firstOccurrence = nodes[0];
+    const lastOccurrence = nodes[nodes.length - 1];
+
+    return {
+      nodes,
+      totalCount,
+      pageInfo: {
+        hasPreviousPage: Boolean(skip),
+        hasNextPage: occurrences.length > nodes.length,
+        startCursor: firstOccurrence?.id,
+        endCursor: lastOccurrence?.id,
       },
     };
   }

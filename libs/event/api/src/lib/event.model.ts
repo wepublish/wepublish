@@ -13,6 +13,7 @@ import { BlockContentInput } from '@wepublish/block-content/api';
 import { Image } from '@wepublish/image/api';
 import { Tag } from '@wepublish/tag/api';
 import { GraphQLSlug, PaginatedType, SortOrder } from '@wepublish/utils/api';
+import { GeoBoundingBox } from './geo-bounding-box';
 import { BaseOrganization } from './organization/organization.model';
 import { Place } from './place/place.model';
 import { EventAudience } from './taxonomy/event-taxonomy.model';
@@ -235,20 +236,68 @@ export class EventArgs {
 
 @InputType()
 export class EventFilter {
-  @Field(() => [String], { nullable: true })
-  ids?: string[];
+  @Field(() => String, {
+    nullable: true,
+    description: `Matches name and description, ignoring accents and case.`,
+  })
+  search?: string | null;
 
   @Field(() => [String], { nullable: true })
-  tagIds?: string[];
+  ids?: string[] | null;
 
-  @Field({ nullable: true })
-  upcoming?: boolean;
+  @Field(() => [String], { nullable: true })
+  tagIds?: string[] | null;
 
-  @Field({ nullable: true })
-  from?: Date;
+  @Field(() => Boolean, {
+    nullable: true,
+    description: `Only events with an occurrence that has not ended yet.`,
+  })
+  upcoming?: boolean | null;
 
-  @Field({ nullable: true })
-  to?: Date;
+  @Field(() => Date, { nullable: true })
+  from?: Date | null;
+
+  @Field(() => Date, { nullable: true })
+  to?: Date | null;
+
+  @Field(() => String, { nullable: true })
+  audienceId?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description: `Matches the region of the venue.`,
+  })
+  regionId?: string | null;
+
+  @Field(() => [String], { nullable: true })
+  organizationIds?: string[] | null;
+
+  @Field(() => [String], { nullable: true })
+  placeIds?: string[] | null;
+
+  @Field(() => GeoBoundingBox, {
+    nullable: true,
+    description: `Matches the coordinates of the venue.`,
+  })
+  geoBoundingBox?: GeoBoundingBox | null;
+
+  @Field(() => Boolean, { nullable: true })
+  wheelchairAccessible?: boolean | null;
+
+  @Field(() => [Int], {
+    nullable: true,
+    description: `Pro Infirmis pictogram ids; the venue needs at least one of them.`,
+  })
+  accessibilityProInfirmis?: number[] | null;
+
+  @Field(() => Boolean, { nullable: true })
+  partner?: boolean | null;
+
+  @Field(() => Boolean, { nullable: true })
+  showInPrint?: boolean | null;
+
+  @Field(() => [EventStatus], { nullable: true })
+  eventStatus?: EventStatus[] | null;
 }
 
 @ArgsType()

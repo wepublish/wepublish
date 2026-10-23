@@ -38,6 +38,7 @@ import {
   EventRatesDataloader,
   EventRevisionImagesDataloader,
 } from './event-details.dataloader';
+import { EventDataloaderService } from './event-dataloader.service';
 import { EventEditorMode } from './event-editor-mode.decorator';
 import { EventRevisionDataloaderService } from './event-revisions.dataloader';
 import {
@@ -53,6 +54,11 @@ import {
   UpdateEventInput,
 } from './event.model';
 import { EventService } from './event.service';
+import {
+  AgendaListArgs,
+  Occurrence,
+  PaginatedOccurrences,
+} from './occurrence.model';
 import { PlaceDataloaderService } from './place/place-dataloader.service';
 
 type Session = AuthSession | undefined;
@@ -107,6 +113,18 @@ export class EventResolver {
     @EventEditorMode(CanGetEvents) editorMode: boolean
   ) {
     return this.eventService.getEvents(args, session, editorMode);
+  }
+
+  @Public()
+  @Query(() => PaginatedOccurrences, {
+    description: `Returns the agenda: one row per occurrence of a published event, ordered by its start. With the preview header and CAN_GET_EVENTS it lists the occurrences of the events you manage.`,
+  })
+  public agenda(
+    @Args() args: AgendaListArgs,
+    @CurrentUser() session: Session,
+    @EventEditorMode(CanGetEvents) editorMode: boolean
+  ) {
+    return this.eventService.getAgenda(args, session, editorMode);
   }
 
   @Permissions(CanCreateEvent)
@@ -350,5 +368,15 @@ export class EventResolver {
       (await this.revisions.load(event.id)) ?? {};
 
     return (editorMode ? (draft ?? pending ?? published) : published) ?? null;
+  }
+}
+
+@Resolver(() => Occurrence)
+export class OccurrenceResolver {
+  constructor(private events: EventDataloaderService) {}
+
+  @ResolveField(() => Event)
+  event(@Parent() { eventId }: Occurrence) {
+    return this.events.load(eventId);
   }
 }

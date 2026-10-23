@@ -23,8 +23,9 @@ import {
   EventRatesDataloader,
   EventRevisionImagesDataloader,
 } from './event-details.dataloader';
+import { EventDataloaderService } from './event-dataloader.service';
 import { EventRevisionDataloaderService } from './event-revisions.dataloader';
-import { EventResolver } from './event.resolver';
+import { EventResolver, OccurrenceResolver } from './event.resolver';
 import { EventService } from './event.service';
 import { PlaceDataloaderService } from './place/place-dataloader.service';
 
@@ -139,6 +140,7 @@ describe('EventResolver', () => {
   let images: { load: ReturnType<typeof vi.fn> };
   let imageLoader: { load: ReturnType<typeof vi.fn> };
   let places: { load: ReturnType<typeof vi.fn> };
+  let eventLoader: { load: ReturnType<typeof vi.fn> };
 
   beforeAll(async () => {
     service = createMock(EventService);
@@ -146,6 +148,7 @@ describe('EventResolver', () => {
     images = { load: vi.fn() };
     imageLoader = { load: vi.fn(async (id: string) => ({ id })) };
     places = { load: vi.fn(async () => ({ name: 'Dampfzentrale' })) };
+    eventLoader = { load: vi.fn(async (id: string) => ({ ...event, id })) };
 
     const module = await Test.createTestingModule({
       imports: [
@@ -159,7 +162,9 @@ describe('EventResolver', () => {
       ],
       providers: [
         EventResolver,
+        OccurrenceResolver,
         { provide: EventService, useValue: service },
+        { provide: EventDataloaderService, useValue: eventLoader },
         { provide: EventRevisionDataloaderService, useValue: revisions },
         { provide: EventRevisionImagesDataloader, useValue: images },
         { provide: ImageDataloaderService, useValue: imageLoader },
@@ -191,6 +196,7 @@ describe('EventResolver', () => {
   beforeEach(() => {
     service.getEvent?.mockReset();
     service.getEvents?.mockReset();
+    service.getAgenda?.mockReset();
     revisions.load.mockReset();
     images.load.mockReset();
     images.load.mockResolvedValue([]);
@@ -379,6 +385,149 @@ describe('EventResolver', () => {
       location: null,
       startsAt: null,
       endsAt: null,
+    });
+  });
+
+  const agendaQuery = `
+    query Agenda($filter: EventFilter, $take: Int) {
+      agenda(filter: $filter, take: $take) {
+        nodes {
+          id
+          dateFrom
+          dateTo
+          openingTime
+          eventId
+          event { id name }
+        }
+        totalCount
+        pageInfo { hasNextPage endCursor }
+      }
+    }
+  `;
+
+  const agendaPage = {
+    nodes: [
+      {
+        id: 'occ-1',
+        eventId: 'weekly',
+        dateFrom: new Date('2026-11-02T18:00:00.000Z'),
+        dateTo: new Date('2026-11-02T21:00:00.000Z'),
+        openingTime: '19:30',
+      },
+      {
+        id: 'occ-2',
+        eventId: 'weekly',
+        dateFrom: new Date('2026-11-09T18:00:00.000Z'),
+        dateTo: new Date('2026-11-09T21:00:00.000Z'),
+        openingTime: null,
+      },
+    ],
+    totalCount: 2,
+    pageInfo: {
+      hasPreviousPage: false,
+      hasNextPage: false,
+      startCursor: 'occ-1',
+      endCursor: 'occ-2',
+    },
+  };
+
+  it('lists the agenda as one row per occurrence with its event', async () => {
+    service.getAgenda?.mockResolvedValue(agendaPage);
+    revisions.load.mockResolvedValue({ published });
+
+    const res = await send(agendaQuery, {
+      filter: { search: 'theatre', upcoming: true },
+      take: 5,
+    }).expect(200);
+
+    expect(res.body.errors).toBeUndefined();
+    expect(res.body.data.agenda).toEqual({
+      nodes: [
+        {
+          id: 'occ-1',
+          dateFrom: '2026-11-02T18:00:00.000Z',
+          dateTo: '2026-11-02T21:00:00.000Z',
+          openingTime: '19:30',
+          eventId: 'weekly',
+          event: { id: 'weekly', name: 'Published name' },
+        },
+        {
+          id: 'occ-2',
+          dateFrom: '2026-11-09T18:00:00.000Z',
+          dateTo: '2026-11-09T21:00:00.000Z',
+          openingTime: null,
+          eventId: 'weekly',
+          event: { id: 'weekly', name: 'Published name' },
+        },
+      ],
+      totalCount: 2,
+      pageInfo: { hasNextPage: false, endCursor: 'occ-2' },
+    });
+    expect(service.getAgenda).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filter: expect.objectContaining({ search: 'theatre', upcoming: true }),
+        take: 5,
+        skip: 0,
+        order: 'Ascending',
+      }),
+      undefined,
+      false
+    );
+    expect(eventLoader.load).toHaveBeenCalledWith('weekly');
+  });
+
+  it('lists the agenda in editor mode for an editor previewing', async () => {
+    service.getAgenda?.mockResolvedValue({ ...agendaPage, nodes: [] });
+
+    await send(
+      agendaQuery,
+      {},
+      { 'x-session': 'editor', preview: 'true' }
+    ).expect(200);
+
+    expect(service.getAgenda).toHaveBeenCalledWith(
+      expect.anything(),
+      editor,
+      true
+    );
+  });
+
+  it('accepts the full event filter', async () => {
+    service.getEvents?.mockResolvedValue({
+      nodes: [],
+      totalCount: 0,
+      pageInfo: { hasPreviousPage: false, hasNextPage: false },
+    });
+
+    const res = await send(
+      `query Events($filter: EventFilter) { events(filter: $filter) { totalCount } }`,
+      {
+        filter: {
+          search: 'theatre',
+          tagIds: ['t1'],
+          audienceId: 'a1',
+          regionId: 'r1',
+          organizationIds: ['o1'],
+          placeIds: ['p1'],
+          geoBoundingBox: {
+            southWest: { latitude: 46.9, longitude: 7.3 },
+            northEast: { latitude: 47, longitude: 7.5 },
+          },
+          wheelchairAccessible: true,
+          accessibilityProInfirmis: [8],
+          partner: true,
+          showInPrint: false,
+          eventStatus: ['Cancelled'],
+        },
+      }
+    ).expect(200);
+
+    expect(res.body.errors).toBeUndefined();
+    expect(service.getEvents?.mock.calls[0][0].filter).toMatchObject({
+      search: 'theatre',
+      accessibilityProInfirmis: [8],
+      eventStatus: ['Cancelled'],
+      geoBoundingBox: { southWest: { latitude: 46.9, longitude: 7.3 } },
     });
   });
 

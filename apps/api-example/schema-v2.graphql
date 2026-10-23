@@ -1275,11 +1275,31 @@ input EventDateInput {
 }
 
 input EventFilter {
+  """Pro Infirmis pictogram ids; the venue needs at least one of them."""
+  accessibilityProInfirmis: [Int!]
+  audienceId: String
+  eventStatus: [EventStatus!]
   from: DateTime
+
+  """Matches the coordinates of the venue."""
+  geoBoundingBox: GeoBoundingBox
   ids: [String!]
+  organizationIds: [String!]
+  partner: Boolean
+  placeIds: [String!]
+
+  """Matches the region of the venue."""
+  regionId: String
+
+  """Matches name and description, ignoring accents and case."""
+  search: String
+  showInPrint: Boolean
   tagIds: [String!]
   to: DateTime
+
+  """Only events with an occurrence that has not ended yet."""
   upcoming: Boolean
+  wheelchairAccessible: Boolean
 }
 
 type EventImage {
@@ -3866,6 +3886,15 @@ enum NotificationSource {
   PERIODIC_JOB
 }
 
+type Occurrence {
+  dateFrom: DateTime!
+  dateTo: DateTime!
+  event: Event!
+  eventId: String!
+  id: String!
+  openingTime: String
+}
+
 enum OneChannelConnectionState {
   Connected
   Failing
@@ -4170,6 +4199,12 @@ type PaginatedMailSendRecipient {
 
 type PaginatedMemberPlans {
   nodes: [MemberPlan!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedOccurrences {
+  nodes: [Occurrence!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4831,6 +4866,11 @@ type Query {
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
+
+  """
+  Returns the agenda: one row per occurrence of a published event, ordered by its start. With the preview header and CAN_GET_EVENTS it lists the occurrences of the events you manage.
+  """
+  agenda(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, take: Int = 10): PaginatedOccurrences!
 
   """Returns a single AI provider setting by id."""
   aiSetting(id: String!): SettingAIProvider!
