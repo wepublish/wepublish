@@ -903,8 +903,13 @@ it, so `getComputedStyle` cannot tell the two apart.
 Both `S3Disk`s in [`app.module.ts`](../../apps/media/src/app/app.module.ts) get
 `fetch: createStorageFetch()`
 ([`storage-fetch.ts`](../../libs/media/api/src/lib/storage/storage-fetch.ts)):
-undici's `fetch` over an `Agent` with `connections: 50` per origin. The rest is
-undici's defaults — connects time out after 10 s, idle keep-alive after 4 s.
+undici's `fetch` over an `Agent` with `connections: 50` per origin and a 30 s
+`headersTimeout`/`bodyTimeout` (undici's default is 300 s, so one stalled R2
+response held a capped socket for five minutes). Connects time out after 10 s,
+idle keep-alive after 4 s (undici defaults). The cap only helps if every R2
+body is consumed or destroyed: `MediaService.transformImage` validates the
+signature *before* `uploads.get`, and destroys the stream in a `finally` —
+opening it first leaked a socket per bad-signature request.
 
 **What failed.** The media pod periodically lost IPv4 connectivity to Cloudflare
 R2 (`*.eu.r2.cloudflarestorage.com`); its last log line was a burst of
@@ -940,8 +945,18 @@ package: Node 22 bundles undici 6, and a v7 dispatcher is not guaranteed to work
 with the global `fetch`. The `as unknown as typeof globalThis.fetch` cast is
 only there because undici's types and `@types/node`'s don't line up.
 
-Pinned by `storage-fetch.spec.ts`, which checks the cap through the real `fetch`
-against a local server. The wiring in `app.module.ts` is not tested.
+Pinned by `storage-fetch.spec.ts`, which checks the cap and the timeouts through
+the real `fetch` against a local server. The wiring in `app.module.ts` is not tested.
+
+### ⚠️ cache-manager 7 TTLs are milliseconds, and `max` is ignored
+
+`CacheModule.register({ttl, max})` without `stores` builds a plain Keyv `Map`:
+`ttl` is **milliseconds** (the media server's `259200` meant 3 days but was
+4.3 min, so nearly every image hit R2 again) and `max` is silently dropped, so
+the map grew with every variant ever requested. The media server uses
+`createLinkCacheOptions()` ([`link-cache.ts`](../../libs/media/api/src/lib/link-cache/link-cache.ts)):
+a Keyv over a `Map` that evicts the least recently written entry beyond
+50 000, with `LINK_TTL`/`MISSING_LINK_TTL` in ms.
 
 ---
 

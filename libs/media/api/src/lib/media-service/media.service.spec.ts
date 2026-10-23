@@ -397,6 +397,65 @@ describe('MediaService images', () => {
     expect(await transformations.exists(uri)).toBe(false);
   });
 
+  describe('signed transformations', () => {
+    it('does not download the original when the signature is invalid', async () => {
+      const { publicKey } = await generateKeyPair('EdDSA');
+      const { service, uploads } = createService(publicKey);
+      await service.saveImage('image-5', await createImage());
+
+      await expect(
+        service.getImageUri('image-5', {
+          quality: 80,
+          sig: 'invalid',
+        } as TransformationsDto)
+      ).rejects.toThrow('Invalid signature!');
+
+      expect(uploads.reads).toEqual([]);
+    });
+
+    it('downloads and transforms concurrent requests for one variant once', async () => {
+      const { publicKey, privateKey } = await generateKeyPair('EdDSA');
+      const { service, uploads, transformations } = createService(publicKey);
+      await service.saveImage('image-6', await createImage());
+      const requested = { quality: 80 } as TransformationsDto;
+      const sig = await signImageTransformations(
+        privateKey,
+        'image-6',
+        requested
+      );
+
+      const results = await Promise.all(
+        Array.from({ length: 5 }, () =>
+          service.getImageUri('image-6', { ...requested, sig })
+        )
+      );
+
+      expect(new Set(results.map(({ uri }) => uri)).size).toBe(1);
+      expect(uploads.reads).toEqual(['images/image-6']);
+      expect(transformations.writes).toEqual([results[0].uri]);
+    });
+
+    it('transforms a variant again after a failed attempt', async () => {
+      const { publicKey, privateKey } = await generateKeyPair('EdDSA');
+      const { service } = createService(publicKey);
+      await service.saveImage('image-7', await createImage());
+      const requested = { quality: 80 } as TransformationsDto;
+      const sig = await signImageTransformations(
+        privateKey,
+        'image-7',
+        requested
+      );
+
+      await expect(
+        service.getImageUri('image-7', { ...requested, sig: 'invalid' })
+      ).rejects.toThrow('Invalid signature!');
+
+      expect(
+        (await service.getImageUri('image-7', { ...requested, sig })).exists
+      ).toBe(true);
+    });
+  });
+
   describe('output format', () => {
     const createSigned = async () => {
       const { publicKey, privateKey } = await generateKeyPair('EdDSA');
