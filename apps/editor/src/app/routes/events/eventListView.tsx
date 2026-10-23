@@ -31,6 +31,7 @@ import {
   PermissionControl,
   TableWrapper,
   useListViewState,
+  useTableExportQuery,
 } from '@wepublish/ui/editor';
 import { format as formatDate } from 'date-fns';
 import { useState } from 'react';
@@ -95,6 +96,14 @@ function EventListView() {
     },
   });
 
+  const exportEvents = useTableExportQuery(
+    EventListDocument,
+    {
+      filter: filter || undefined,
+    },
+    data => data.events
+  );
+
   return (
     <>
       <ListViewContainer>
@@ -135,6 +144,8 @@ function EventListView() {
             setFilter(clearFilters(EVENT_FILTER_FIELDS, filter))
           }
           storageKey="events"
+          exportRows={exportEvents}
+          exportTotalCount={data?.events?.totalCount ?? 0}
           data={data?.events?.nodes || []}
           loading={isLoading}
           columns={[
@@ -146,6 +157,7 @@ function EventListView() {
               render: rowData => (
                 <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>
               ),
+              exportValue: rowData => rowData.name,
             },
             {
               id: 'startsatheader',
@@ -154,12 +166,15 @@ function EventListView() {
               render: rowData => (
                 <EventStartsAtView startsAt={rowData.startsAt} />
               ),
+              exportValue: rowData => new Date(rowData.startsAt),
             },
             {
               id: 'endsatheader',
               label: t('event.list.endsAtHeader'),
               width: 250,
               render: rowData => <EventEndsAtView endsAt={rowData.endsAt} />,
+              exportValue: rowData =>
+                rowData.endsAt ? new Date(rowData.endsAt) : null,
             },
             {
               id: 'source',

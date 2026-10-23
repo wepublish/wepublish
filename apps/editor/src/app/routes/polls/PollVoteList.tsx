@@ -4,6 +4,7 @@ import { Button, Checkbox } from '@mui/material';
 import {
   PollQuery,
   PollQueryVariables,
+  PollVoteListDocument,
   PollVoteListQuery,
   PollVoteListQueryVariables,
 } from '@wepublish/editor/api';
@@ -21,6 +22,7 @@ import {
   TableWrapper,
   useLoader,
   useSelectableList,
+  useTableExportQuery,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useMemo } from 'react';
@@ -74,6 +76,16 @@ export function PollVoteList({
   const { selectedItems, allSelected, someSelected, toggleItem, toggleAll } =
     useSelectableList({ ids });
 
+  const exportPollVotes = useTableExportQuery(
+    PollVoteListDocument,
+    {
+      filter: listQuery.variables?.filter,
+      sort: listQuery.variables?.sort,
+      order: listQuery.variables?.order,
+    },
+    data => data.pollVotes
+  );
+
   return (
     <>
       <ListViewContainer>
@@ -111,6 +123,8 @@ export function PollVoteList({
             setFilter(clearFilters(POLL_VOTE_FILTER_FIELDS, filter ?? {}))
           }
           storageKey="poll-votes"
+          exportRows={exportPollVotes}
+          exportTotalCount={listQuery?.data?.pollVotes?.totalCount}
           data={listQuery?.data?.pollVotes?.nodes ?? []}
           loading={listQuery.loading}
           sortColumn={sortField ?? 'createdAt'}
@@ -153,6 +167,7 @@ export function PollVoteList({
                 `${new Date(createdAt).toLocaleDateString()} ${new Date(
                   createdAt
                 ).toLocaleTimeString()}`,
+              exportValue: ({ createdAt }) => new Date(createdAt),
             },
             {
               id: 'answerid',
@@ -164,6 +179,7 @@ export function PollVoteList({
             },
             {
               id: 'userid',
+              columnLabel: t('pollVoteList.userId'),
               label: (
                 <>
                   {t('pollVoteList.userId')}
@@ -179,6 +195,7 @@ export function PollVoteList({
             },
             {
               id: 'fingerprint',
+              columnLabel: t('pollVoteList.fingerprint'),
               label: (
                 <>
                   {t('pollVoteList.fingerprint')}

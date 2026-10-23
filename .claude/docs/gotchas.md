@@ -475,6 +475,32 @@ on the region names of the running Node»), which loads the module with an
 
 ---
 
+### ⚠️ Root `sideEffects` must list the API's Sentry instrumentation
+
+The root `package.json` marks every repo file side-effect free, so webpack
+drops bare imports like `import '@wepublish/utils/api/sentry'` (api-example and
+media `instrument.ts`). Dropping it compiles the import to `0;`, and the API
+then boots without `Sentry.init`. It started being dropped with the dependency
+bump in #3195 (webpack 5.108 → 5.112), and `docker/check-runtime-deps.js` then
+failed the image build on the now-unused `@sentry/profiling-node`. The array form keeps
+`libs/utils/api/src/lib/sentry/instrumentation.ts` and leaves everything else
+tree-shakeable. **A new file loaded only by a bare import needs an entry here
+too.**
+
+---
+
+### ⚠️ Tenant request interceptors are `proxy.ts`, never `middleware.ts`
+
+A `middleware.ts` runs on the Edge runtime, and since Next 16.4 (#3195) its
+bundle also pulls in our `cacheHandler`
+(`libs/utils/website/src/lib/page-cache/page-cache-handler.js`). That brings in
+`@keyv/redis` → `@redis/client` → `@node-rs/xxhash`, whose browser build needs
+the uninstalled `@node-rs/xxhash-wasm32-wasi`, so `nx build <tenant>` fails
+with _Module not found_. `proxy.ts` (`export function proxy`) runs on Node and
+builds fine; every tenant uses it.
+
+---
+
 ### ⚠️ Express 5 has no bare `*` route
 
 [apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
@@ -934,6 +960,51 @@ Pinned by `apps/editor/src/app/routes/dashboard/dashboardConfig.spec.tsx`,
 which reads the _emitted_ rule rather than the computed value — jsdom resolves
 `var(--mui-palette-background-paper, #fff)` to the light fallback baked into
 it, so `getComputedStyle` cannot tell the two apart.
+
+### ⚠️ The R2 client must bound its sockets
+
+Both `S3Disk`s in [`app.module.ts`](../../apps/media/src/app/app.module.ts) get
+`fetch: createStorageFetch()`
+([`storage-fetch.ts`](../../libs/media/api/src/lib/storage/storage-fetch.ts)):
+undici's `fetch` over an `Agent` with `connections: 50` per origin. The rest is
+undici's defaults — connects time out after 10 s, idle keep-alive after 4 s.
+
+**What failed.** The media pod periodically lost IPv4 connectivity to Cloudflare
+R2 (`*.eu.r2.cloudflarestorage.com`); its last log line was a burst of
+`AggregateError [ETIMEDOUT]` — every IPv4 address `ETIMEDOUT`, every IPv6
+`ENETUNREACH`. With no socket cap, each image/document request opened another
+connect that hung and piled up until the pod stopped answering `/health`:
+readiness dropped it (a **502** from the OpenShift route, which the API's
+`/health` reports as `media-server: down`) and liveness killed it (**exit 137**).
+`tsri` restarted 15× in 13d, `bajour` 18× in 29d (verified 2026-10-20, still on
+the minio client, whose default agent had no connect timeout either).
+
+**The trigger is egress, not the app.** Every media pod egresses through one NAT
+IP (`116.202.165.28`, FRA/DE — `cloudflare.com/cdn-cgi/trace` returns it from
+three pods across two nodes), so ~30 media instances share one source IP to R2
+and the busiest are the canaries. The cap is defence-in-depth so a storage blip
+queues requests instead of killing the pod. The shared-egress bottleneck lives
+outside this repo, and nothing here guards it.
+
+**Why the cap, not just timeouts.** Node's global `fetch` dispatcher opens a
+socket per concurrent request, without limit. A connect timeout bounds how long
+each hung socket lives, not how many there are — that scales with traffic (×3
+with `S3Disk`'s retries). Only the cap bounds it regardless of load.
+
+**Forcing `family: 4` is not needed.** It looks like the fix for the
+`ENETUNREACH` noise but changes nothing in an outage: the IPv6 attempts fail in
+~0 ms, Happy Eyeballs abandons every address but the last after 250 ms, and the
+last one hangs until the connect timeout either way (measured on Node 22.16).
+
+**Load-bearing:** `fetch: createStorageFetch()` sits in the options _shared_ by
+both disks — one dispatcher, so the cap covers the whole R2 origin (a fetch per
+disk would double it). `fetch` and `Agent` must both come from the `undici`
+package: Node 22 bundles undici 6, and a v7 dispatcher is not guaranteed to work
+with the global `fetch`. The `as unknown as typeof globalThis.fetch` cast is
+only there because undici's types and `@types/node`'s don't line up.
+
+Pinned by `storage-fetch.spec.ts`, which checks the cap through the real `fetch`
+against a local server. The wiring in `app.module.ts` is not tested.
 
 ---
 

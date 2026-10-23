@@ -1,11 +1,12 @@
-import { Button, Card, CardContent, Drawer, Typography } from '@mui/material';
+import styled from '@emotion/styled';
+import { Drawer, Typography } from '@mui/material';
 import { FullEventFragment } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdEdit } from 'react-icons/md';
+import { MdEvent } from 'react-icons/md';
 
 import { BlockProps } from '../atoms/blockList';
-import { PlaceholderInput } from '../atoms/placeholderInput';
+import { BlockPreviewCard } from '../atoms/blockPreviewCard';
 import { DRAWER_WIDTHS } from '../drawer';
 import { SelectEventPanel } from '../panel/selectEventsPanel';
 import { EventBlockValue } from './types';
@@ -31,57 +32,92 @@ export function EventEndsAtView({
   return <>{t('event.list.endsAtNone')}</>;
 }
 
+const EventList = styled('ul')`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: ${({ theme }) => theme.spacing(1.5)};
+  margin: 0;
+  padding: 0;
+  list-style: none;
+`;
+
+const EventItem = styled('li')`
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(1.5)};
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing(1)};
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
+`;
+
+const EventImage = styled('img')`
+  width: 72px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px / 2)`};
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
+`;
+
+const EventImagePlaceholder = styled('div')`
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 54px;
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px / 2)`};
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
+  color: ${({ theme }) => theme.vars.palette.text.disabled};
+  font-size: 24px;
+`;
+
+const EventText = styled('div')`
+  display: grid;
+  min-width: 0;
+`;
+
 const EventPreview = ({ event }: { event: FullEventFragment }) => (
-  <Card
-    variant="outlined"
-    key={event.id}
-    sx={{
-      bgcolor: 'background.paper',
-      display: 'grid',
-      alignItems: 'center',
-    }}
-  >
-    <CardContent>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 2fr',
-          gap: '12px',
-          alignItems: 'center',
-        }}
+  <EventItem>
+    {event.image?.previewURL ?
+      <EventImage
+        src={event.image.previewURL}
+        alt={event.image.description ?? ''}
+      />
+    : <EventImagePlaceholder aria-hidden>
+        <MdEvent />
+      </EventImagePlaceholder>
+    }
+
+    <EventText>
+      <Typography
+        variant="subtitle2"
+        noWrap
       >
-        <img
-          src={event.image?.previewURL ?? '/static/placeholder-240x240.png'}
-          alt={event.image?.description ?? ''}
-          height={event.image?.height}
-          width={event.image?.width}
-          style={{
-            width: '100%',
-            height: 'auto',
-            borderRadius: 0.75,
-          }}
-        />
+        {event.name}
+      </Typography>
 
-        <div style={{ display: 'grid' }}>
-          {event.name}
+      <Typography
+        variant="caption"
+        color="text.secondary"
+      >
+        <EventStartsAtView startsAt={event.startsAt} />
+      </Typography>
 
-          <small>
-            <EventStartsAtView startsAt={event.startsAt} />
-          </small>
-
-          <small>
-            <EventEndsAtView endsAt={event.endsAt} />
-          </small>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+      >
+        <EventEndsAtView endsAt={event.endsAt} />
+      </Typography>
+    </EventText>
+  </EventItem>
 );
 
 export const EventBlock = ({
   value: { filter, events },
   onChange,
   autofocus,
+  disabled,
 }: BlockProps<EventBlockValue>) => {
   const { t } = useTranslation();
 
@@ -93,76 +129,25 @@ export const EventBlock = ({
 
   return (
     <>
-      <Card
-        variant="outlined"
-        style={{
-          minHeight: 150,
-          overflow: 'hidden',
-          backgroundColor: 'background.default',
-          display: 'grid',
-        }}
+      <BlockPreviewCard
+        isEmpty={isEmpty}
+        emptyLabel={t('blocks.event.chooseEvents')}
+        editLabel={t('blocks.event.edit')}
+        onEdit={() => setIsDialogOpen(true)}
+        title={t('blocks.event.events', {
+          count: events.length || (filter.events?.length ?? 0),
+        })}
+        disabled={disabled}
       >
-        <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
-          <PlaceholderInput
-            onAddClick={() => setIsDialogOpen(true)}
-            addLabel={t('blocks.event.chooseEvents')}
-          >
-            {!isEmpty && (
-              <div
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                }}
-              >
-                <div
-                  style={{
-                    position: 'absolute',
-                    zIndex: 100,
-                    height: '100%',
-                    right: 0,
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    startIcon={<MdEdit />}
-                    size="large"
-                    onClick={() => setIsDialogOpen(true)}
-                  >
-                    {t('blocks.event.edit')}
-                  </Button>
-                </div>
-
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '12px',
-                    padding: '24px',
-                  }}
-                >
-                  {eventsToDisplay.map(event => (
-                    <EventPreview
-                      key={event.id}
-                      event={event}
-                    />
-                  ))}
-                </div>
-
-                <Typography
-                  style={{ marginBottom: '12px', textAlign: 'center' }}
-                >
-                  {t('blocks.event.events', {
-                    count:
-                      events.length ?
-                        events.length
-                      : (filter.events?.length ?? 0),
-                  })}
-                </Typography>
-              </div>
-            )}
-          </PlaceholderInput>
-        </CardContent>
-      </Card>
+        <EventList>
+          {eventsToDisplay.map(event => (
+            <EventPreview
+              key={event.id}
+              event={event}
+            />
+          ))}
+        </EventList>
+      </BlockPreviewCard>
 
       <Drawer
         anchor="right"
