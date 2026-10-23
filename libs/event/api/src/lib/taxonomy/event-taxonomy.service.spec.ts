@@ -29,6 +29,7 @@ const organizationKey = (...permissions: string[]): AuthSession => ({
   token: 'token',
   permissions,
   organizationId: 'org-a',
+  user: null,
 });
 
 const BY_NAME = [{ name: 'asc' }, { id: 'asc' }];

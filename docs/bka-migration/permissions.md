@@ -222,7 +222,7 @@ Columns: **With org** = BKa token of a `ROLE_USER` who is in organisations / WeP
 ## 8. Gaps in our build found while comparing (for us, not for BKa)
 
 1. A member, or an organisation-bound key, can move an event to "no organisation" (`event-scope.ts:246-249`). After that only its owner or a cross-organisation user can reach it.
-2. A key with `CAN_CREATE_EVENT` creates events with no owner. A platform key's events also have no organisation, and it cannot edit them afterwards (`event-scope.ts:204-208,220-226`). BKa v2 has the same flaw.
+2. ~~A key with `CAN_CREATE_EVENT` creates events with no owner. A platform key's events also have no organisation, and it cannot edit them afterwards (`event-scope.ts:204-208,220-226`). BKa v2 has the same flaw.~~ Closed by D94: a key acts as its creator, who owns what it creates.
 3. `duplicateEvent` copies `placeId` without the venue check (`event.service.ts:728`).
 4. A venue member can duplicate an organisation-less event at their venue (`event.service.ts:689-696`; `event-scope.ts:220-226`), which contradicts the D57 cell.
 5. Place `enabled` and `private` are free for any place manager (`place.service.ts:202-203`), while organisation `enabled` is privileged.

@@ -4,8 +4,11 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiToken, Prisma, PrismaClient } from '@prisma/client';
-import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
+import { ApiToken, Prisma, PrismaClient, User } from '@prisma/client';
+import {
+  EXPIRED_API_TOKEN,
+  unselectPassword,
+} from '@wepublish/authentication/api';
 import {
   CanUpdateOtherOrganizations,
   CrossOrganizationPermissions,
@@ -30,6 +33,8 @@ export interface CreateApiTokenInput {
   expiresAt: Date;
   organizationId?: string | null;
 }
+
+export type ResolvedApiToken = ApiToken & { createdBy: User | null };
 
 export interface ApiTokenCreator {
   userId: string;
@@ -128,9 +133,10 @@ export class ApiTokenService {
     return { apiToken, token };
   }
 
-  async resolveToken(token: string): Promise<ApiToken | null> {
+  async resolveToken(token: string): Promise<ResolvedApiToken | null> {
     const apiToken = await this.prisma.apiToken.findUnique({
       where: { tokenHash: hashApiToken(token) },
+      include: { createdBy: { select: unselectPassword } },
     });
 
     if (!apiToken || apiToken.revokedAt) {

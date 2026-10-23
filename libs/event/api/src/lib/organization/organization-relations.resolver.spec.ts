@@ -46,6 +46,7 @@ const organizationKey = (
   token: 'token',
   permissions,
   organizationId,
+  user: null,
 });
 
 const sessions: Record<string, AuthSession | undefined> = {

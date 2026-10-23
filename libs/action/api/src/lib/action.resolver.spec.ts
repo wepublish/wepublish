@@ -15,6 +15,7 @@ vi.mock('@wepublish/authentication/api', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/authentication/api')>()),
   ScopedJwtVerifier: vi.fn(),
   UserSession: vi.fn(),
+  AuthSession: vi.fn(),
   CurrentUser: vi.fn(() => {
     return (
       data: unknown,

@@ -3,7 +3,10 @@ import {
   ForbiddenException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
+import {
+  EXPIRED_API_TOKEN,
+  unselectPassword,
+} from '@wepublish/authentication/api';
 import {
   CanCreateApiToken,
   CanDeleteOtherOrganizationEvents,
@@ -354,6 +357,23 @@ describe('resolveToken', () => {
     const resolved = await service(prisma).resolveToken(token);
 
     expect(resolved?.scopes).toEqual(['CAN_GET_EVENTS']);
+  });
+
+  it('loads the creator with the token, without the password', async () => {
+    const prisma = prismaMock();
+    prisma.store.push({
+      ...valid,
+      id: 'a',
+      tokenHash: hashApiToken('wep_x'),
+      createdById: 'u1',
+    });
+
+    await service(prisma).resolveToken('wep_x');
+
+    expect(prisma.apiToken.findUnique).toHaveBeenCalledWith({
+      where: { tokenHash: hashApiToken('wep_x') },
+      include: { createdBy: { select: unselectPassword } },
+    });
   });
 
   it('rejects an unknown token', async () => {

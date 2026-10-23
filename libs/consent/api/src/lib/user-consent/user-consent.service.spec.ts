@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserConsentService } from './user-consent.service';
 import { PrismaClient } from '@prisma/client';
-import { UserSession } from '@wepublish/authentication/api';
+import { AuthSessionType, UserSession } from '@wepublish/authentication/api';
 
 const mockPrisma = {
   userConsent: {
@@ -187,7 +187,10 @@ describe('UserConsentService', () => {
     mockPrisma.userConsent.update.mockResolvedValue(mockValue);
     const userConsent = false;
 
-    const user = { user: { roleIDs: ['admin'] } } as UserSession;
+    const user = {
+      type: AuthSessionType.User,
+      user: { roleIDs: ['admin'] },
+    } as UserSession;
 
     const result = await service.updateUserConsent(
       idToUpdate,
@@ -219,7 +222,10 @@ describe('UserConsentService', () => {
 
     mockPrisma.userConsent.delete.mockResolvedValue(mockValue);
 
-    const user = { user: { roleIDs: ['admin'] } } as UserSession;
+    const user = {
+      type: AuthSessionType.User,
+      user: { roleIDs: ['admin'] },
+    } as UserSession;
 
     const result = await service.deleteUserConsent(idToDelete, user);
     expect(result).toMatchObject({

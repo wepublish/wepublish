@@ -23,7 +23,10 @@ const apiToken = {
   lastUsedAt: null,
   createdById: null,
   organizationId: null,
+  createdBy: null,
 } as any;
+
+const creator = { id: 'user-1', email: 'editor@example.com' } as any;
 
 describe('apiTokenSession', () => {
   it('is its own session type, not a user or peer token session', () => {
@@ -52,6 +55,33 @@ describe('apiTokenSession', () => {
 
   it('carries no organisation for a platform key', () => {
     expect(apiTokenSession(apiToken, 'wep_secret').organizationId).toBeNull();
+  });
+
+  it('acts as the user who created the key', () => {
+    expect(
+      apiTokenSession(
+        { ...apiToken, createdById: 'user-1', createdBy: creator },
+        'wep_secret'
+      ).user
+    ).toBe(creator);
+  });
+
+  it('acts as nobody once its creator is deleted', () => {
+    expect(apiTokenSession(apiToken, 'wep_secret').user).toBeNull();
+  });
+
+  it('keeps the key scopes as its permissions, never the creator roles', () => {
+    const session = apiTokenSession(
+      {
+        ...apiToken,
+        createdById: 'user-1',
+        createdBy: { ...creator, roleIDs: ['admin'] },
+      },
+      'wep_secret'
+    );
+
+    expect(session.permissions).toEqual(['CAN_GET_EVENT']);
+    expect(session).not.toHaveProperty('roles');
   });
 });
 
@@ -88,6 +118,16 @@ describe('ApiTokenStrategy', () => {
       'WWW-Authenticate',
       'Bearer error="invalid_token", error_description="The API key has expired"'
     );
+  });
+
+  it('builds a session that acts as the creator', async () => {
+    const session = await strategy(async () => ({
+      ...apiToken,
+      createdById: 'user-1',
+      createdBy: creator,
+    })).validate(request(), 'wep_secret');
+
+    expect(session).toMatchObject({ id: 'tok-1', user: creator });
   });
 
   it('leaves tokens that are not api keys to the other strategies', async () => {

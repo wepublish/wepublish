@@ -95,6 +95,46 @@ describe('describeActor', () => {
     });
   });
 
+  it('records an api key as a token that acts as its creator', () => {
+    expect(
+      describeActor({
+        type: AuthSessionType.ApiToken,
+        id: 'key-1',
+        name: 'Print Import',
+        token: 'wep_secret',
+        permissions: [],
+        organizationId: null,
+        user,
+      })
+    ).toEqual({
+      actorType: AuditLogActorType.token,
+      userId: 'user-1',
+      userEmail: 'editor@example.com',
+      tokenName: 'Print Import',
+      sessionId: 'key-1',
+      impersonatedBy: null,
+    });
+  });
+
+  it('records an api key whose creator was deleted as the key alone', () => {
+    expect(
+      describeActor({
+        type: AuthSessionType.ApiToken,
+        id: 'key-1',
+        name: 'Print Import',
+        token: 'wep_secret',
+        permissions: [],
+        organizationId: null,
+        user: null,
+      })
+    ).toMatchObject({
+      actorType: AuditLogActorType.token,
+      userId: null,
+      userEmail: null,
+      tokenName: 'Print Import',
+    });
+  });
+
   it('describes an absent session without throwing', () => {
     expect(describeActor(undefined)).toMatchObject({
       userId: null,

@@ -44,6 +44,7 @@ const organizationKey = (
   token: 'token',
   permissions,
   organizationId,
+  user: null,
 });
 
 const member = user(['org-a']);

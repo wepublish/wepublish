@@ -46,6 +46,7 @@ const apiKey = (...permissions: string[]): AuthSession => ({
   token: 'token',
   permissions,
   organizationId: null,
+  user: null,
 });
 
 const organizationKey = (
@@ -58,6 +59,7 @@ const organizationKey = (
   token: 'token',
   permissions,
   organizationId,
+  user: null,
 });
 
 const crossOrg = user([], CanUpdateOtherOrganizations.id);
@@ -377,6 +379,16 @@ describe('OrganizationService', () => {
     it('refuses an api key that could not manage what it creates', async () => {
       await expect(
         service.createOrganization({ name: 'Dampfzentrale' }, apiKey())
+      ).rejects.toThrow(ForbiddenException);
+      expect(prisma.organization.create).not.toHaveBeenCalled();
+    });
+
+    it('refuses an api key even though it acts as its creator, as the key still could not manage it', async () => {
+      await expect(
+        service.createOrganization({ name: 'Dampfzentrale' }, {
+          ...apiKey(),
+          user: { id: 'user-1' },
+        } as AuthSession)
       ).rejects.toThrow(ForbiddenException);
       expect(prisma.organization.create).not.toHaveBeenCalled();
     });

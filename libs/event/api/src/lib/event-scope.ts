@@ -1,5 +1,9 @@
 import { Prisma } from '@prisma/client';
-import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
+import {
+  actingUserOf,
+  AuthSession,
+  AuthSessionType,
+} from '@wepublish/authentication/api';
 import {
   CanCreateEvent,
   CanDeleteEvent,
@@ -52,12 +56,29 @@ export const organizationIdsOf = (session: Session): string[] => {
 };
 
 export const userIdOf = (session: Session): string | null =>
-  session?.type === AuthSessionType.User ? session.user.id : null;
+  actingUserOf(session)?.id ?? null;
 
 export const isEventOwner = (session: Session, event: EventOwnership) => {
   const userId = userIdOf(session);
 
-  return userId != null && event.ownerId === userId;
+  if (userId == null || event.ownerId !== userId) {
+    return false;
+  }
+
+  return (
+    !isOrganizationKey(session) ||
+    isOrganizationMember(session, event.organizationId)
+  );
+};
+
+const ownedEventsWhere = (session: Session): Prisma.EventWhereInput[] => {
+  const userId = userIdOf(session);
+
+  if (userId == null || isOrganizationKey(session)) {
+    return [];
+  }
+
+  return [{ ownerId: userId }];
 };
 
 export const isOrganizationMember = (
@@ -168,13 +189,13 @@ export const editorEventsWhere = (session: Session): Prisma.EventWhereInput => {
   const organizationEvents = {
     organizationId: { in: organizationIdsOf(session) },
   };
-  const userId = userIdOf(session);
+  const ownedEvents = ownedEventsWhere(session);
 
-  if (userId == null) {
+  if (!ownedEvents.length) {
     return organizationEvents;
   }
 
-  return { OR: [organizationEvents, { ownerId: userId }] };
+  return { OR: [organizationEvents, ...ownedEvents] };
 };
 
 export const reachableEventsWhere = (
@@ -188,13 +209,12 @@ export const reachableEventsWhere = (
   }
 
   const organizationIds = organizationIdsOf(session);
-  const userId = userIdOf(session);
 
   return {
     OR: [
       { organizationId: { in: organizationIds } },
       { place: { organizationId: { in: organizationIds } } },
-      ...(userId != null ? [{ ownerId: userId }] : []),
+      ...ownedEventsWhere(session),
     ],
   };
 };

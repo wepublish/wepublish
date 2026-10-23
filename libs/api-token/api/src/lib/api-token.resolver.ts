@@ -7,7 +7,12 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  actingUserOf,
+  AuthSession,
+  CurrentUser,
+  requireUserSession,
+} from '@wepublish/authentication/api';
 import {
   CanCreateApiToken,
   CanGetAllApiTokens,
@@ -15,7 +20,11 @@ import {
   CanRevokeAllApiTokens,
   CanRevokeApiToken,
 } from '@wepublish/permissions';
-import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import {
+  hasPermission,
+  Permissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
 import { User, UserDataloaderService } from '@wepublish/user/api';
 
 import {
@@ -52,15 +61,17 @@ export class ApiTokenResolver {
   })
   public async apiTokens(
     @Args() args: ApiTokenListArgs,
-    @CurrentUser() session: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    if (!session?.user) {
+    const user = actingUserOf(session);
+
+    if (!user) {
       throw new UnauthorizedException();
     }
 
     return this.service.getApiTokens(args, {
-      userId: session.user.id,
-      canSeeAll: hasPermission(CanGetAllApiTokens, session.roles),
+      userId: user.id,
+      canSeeAll: hasPermission(CanGetAllApiTokens, permissionsOf(session)),
     });
   }
 
@@ -70,11 +81,13 @@ export class ApiTokenResolver {
   })
   public async createApiToken(
     @Args() args: CreateApiTokenArgs,
-    @CurrentUser() session: UserSession | undefined
+    @CurrentUser() currentSession: AuthSession | undefined
   ) {
-    if (!session?.user) {
+    if (!currentSession) {
       throw new UnauthorizedException();
     }
+
+    const session = requireUserSession(currentSession);
 
     return this.service.createToken(args, {
       userId: session.user.id,
@@ -89,15 +102,20 @@ export class ApiTokenResolver {
   })
   public async revokeApiToken(
     @Args('id') id: string,
-    @CurrentUser() session: UserSession | undefined
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    if (!session?.user) {
+    const user = actingUserOf(session);
+
+    if (!user) {
       throw new UnauthorizedException();
     }
 
     return this.service.revokeToken(id, {
-      userId: session.user.id,
-      canRevokeAll: hasPermission(CanRevokeAllApiTokens, session.roles),
+      userId: user.id,
+      canRevokeAll: hasPermission(
+        CanRevokeAllApiTokens,
+        permissionsOf(session)
+      ),
     });
   }
 }

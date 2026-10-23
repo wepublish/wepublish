@@ -33,6 +33,7 @@ export type ApiTokenSession = {
   token: string;
   permissions: string[];
   organizationId: string | null;
+  user: User | null;
 };
 
 export const EXPIRED_API_TOKEN = 'expired-api-token';

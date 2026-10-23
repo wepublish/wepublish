@@ -1570,7 +1570,7 @@ with or without an organisation.**
   (`libs/event/api/src/lib/event-scope.ts:163-178,209-213`).
 - "Owner" means a **user** session whose user id equals `ownerId` (`isEventOwner`,
   `event-scope.ts:57-61`). API keys and peer tokens own nothing: their sessions carry no user, so a token id that happens to equal an `ownerId` matches
-  nothing.
+  nothing. ~~API keys own nothing~~ Superseded by [D94](#d94--an-api-key-acts-as-the-user-who-created-it): a key acts as its creator.
 - D20 still holds for everyone else: an orphan event (no organisation) is listed only to its owner
   and to holders of `CanGetOtherOrganizationEvents`, and editable only by its owner, its venue's
   organisation and holders of `CanUpdateOtherOrganizationEvents`.
@@ -2146,7 +2146,8 @@ D20's recovery chain expects.
 **Consequences.**
 - An owner who is not a member of the event's organisation cannot move it anywhere.
 - An API key owns nothing (D35). A key creates events without an owner unless it holds the
-  cross-organisation permission and names one, which a bound key never can.
+  cross-organisation permission and names one, which a bound key never can. Superseded by
+  [D94](#d94--an-api-key-acts-as-the-user-who-created-it): a key's events are owned by its creator.
 
 ---
 
@@ -3490,6 +3491,48 @@ regions, 4 audiences and 7 affiliations (D56). Screens built now would have noth
 - The region, audience and affiliation pickers are empty on a fresh tenant.
 - Open: whether the screens come with slice G, or whether the imported lists are edited in the
   database until someone needs a screen.
+
+---
+
+## D94 — An API key acts as the user who created it
+
+Updates [D35](#d35--an-events-owner-reaches-it-without-an-organisation), [D36](#d36--an-api-key-can-belong-to-one-organisation) and [D47](#d47--who-may-set-an-events-organisation-and-owner). Closes gap 2 of [permissions.md](permissions.md) §8.
+
+**Status.** Karl, 2026-10-23: a key acts as its creator everywhere (profile, subscriptions,
+ownership). Its permissions stay its scopes.
+
+**Context.** `ApiTokenSession` carried no user. Events created by a key had no owner, a platform
+key could not edit them afterwards, and every resolver that reads `session.user` crashed for a key.
+BKa's tokens act as their owner user (permissions.md, row T3 and K3).
+
+**Decision.**
+- `resolveToken` loads `createdBy` without the password (`unselectPassword`), and
+  `ApiTokenSession.user` is that user, or null once the creator is deleted
+  (`api-token.service.ts`, `api-token.strategy.ts`). `actingUserOf(session)` in
+  `libs/authentication/api` returns the user of a user session or a key session.
+- **Permissions never come from the creator.** `permissionsOf` reads the key's scopes. The consent
+  "admin" shortcut (`holdsAdminRole`) only counts user sessions, and `me.permissions` on the creator
+  lists the key's scopes.
+- **Event scope.** `userIdOf` is the acting user, so a key creates and copies events owned by its
+  creator, writes revisions as its creator, and reaches its creator's events. A bound key owns an
+  event only inside its organisation (`isEventOwner`), so it cannot take an event out of every
+  organisation unless its creator owns it, and it never lists its creator's events elsewhere.
+- **Audit log.** A key call records `actorType token`, the key's name, and the creator's id and email.
+- **Things that would hand out the creator's whole account are refused for keys**
+  (`requireUserSession`): `createApiToken`, `updatePassword`, `requestEmailChange`,
+  `confirmEmailChange`, `generateTotpSetup`, `enableTotp`, `createJWTForWebsiteLogin` and
+  `createExternalAppToken`. `revokeActiveSession` answers false for a key.
+
+**Why.** A key that changes the password or email, mints a login JWT, or mints a longer-lived or
+unbound key would turn its narrow scopes into every role its creator holds. Refusing those few
+calls keeps "acts as its creator" from becoming "is its creator".
+
+**Consequences.**
+- Organisation creation is unchanged: a platform key still cannot create an organisation, because
+  the key itself would not be a member of it.
+- A key whose creator was deleted acts as nobody. Resolvers that destructure `{ user }` throw a
+  TypeError for it, as they did for every key before.
+- A key keeps acting for a creator whose account was deactivated (`active: false`). Open.
 
 ---
 

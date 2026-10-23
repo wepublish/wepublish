@@ -11,7 +11,7 @@ import {
   UserConsentFilter,
   UserConsentInput,
 } from './user-consent.model';
-import { UserConsentService } from './user-consent.service';
+import { holdsAdminRole, UserConsentService } from './user-consent.service';
 
 import { ForbiddenException } from '@nestjs/common';
 import {
@@ -64,10 +64,7 @@ export class UserConsentResolver {
     @Args() userConsent: UserConsentInput
   ) {
     // only allow creating for admin or affected user
-    if (
-      !user.user.roleIDs.includes('admin') &&
-      user.user.id !== userConsent.userId
-    ) {
+    if (!holdsAdminRole(user) && user.user.id !== userConsent.userId) {
       throw new ForbiddenException();
     }
 

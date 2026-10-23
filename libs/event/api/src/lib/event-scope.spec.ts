@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import {
   AuthSession,
   AuthSessionType,
@@ -26,6 +26,7 @@ import {
   canReadOrganizationSensitiveData,
   editorEventsWhere,
   EventOwnership,
+  isEventOwner,
   isOrganizationMember,
   boundOrganizationIdOf,
   mayAssignEventOrganization,
@@ -40,6 +41,7 @@ import {
   organizationViewerPermissions,
   placeViewerPermissions,
   selectablePlacesWhere,
+  userIdOf,
   visibleOrganizationsWhere,
   visiblePlacesWhere,
 } from './event-scope';
@@ -74,6 +76,7 @@ const apiKey = (...permissions: string[]): AuthSession => ({
   token: 'token',
   permissions,
   organizationId: null,
+  user: null,
 });
 
 const organizationKey = (
@@ -86,6 +89,21 @@ const organizationKey = (
   token: 'token',
   permissions,
   organizationId,
+  user: null,
+});
+
+const creatorKey = (
+  creatorId: string,
+  organizationId: string | null,
+  ...permissions: string[]
+): AuthSession => ({
+  type: AuthSessionType.ApiToken,
+  id: 'key-3',
+  name: 'Personal import',
+  token: 'token',
+  permissions,
+  organizationId,
+  user: { id: creatorId } as User,
 });
 
 describe('organizationIdsOf', () => {
@@ -102,6 +120,42 @@ describe('organizationIdsOf', () => {
 
   it('is the organisation an api key is bound to', () => {
     expect(organizationIdsOf(organizationKey('a'))).toEqual(['a']);
+  });
+});
+
+describe('userIdOf', () => {
+  it('is the signed-in user', () => {
+    expect(userIdOf(user(['a']))).toBe('user-1');
+  });
+
+  it('is the creator of an api key, bound or not', () => {
+    expect(userIdOf(creatorKey('user-7', null))).toBe('user-7');
+    expect(userIdOf(creatorKey('user-7', 'a'))).toBe('user-7');
+  });
+
+  it('is nobody for a key whose creator was deleted, a peer, or no session', () => {
+    expect(userIdOf(apiKey())).toBeNull();
+    expect(userIdOf(peer())).toBeNull();
+    expect(userIdOf(undefined)).toBeNull();
+  });
+});
+
+describe('isEventOwner', () => {
+  const owned = (organizationId: string | null): EventOwnership => ({
+    organizationId,
+    ownerId: 'user-7',
+  });
+
+  it('treats a platform key as its creator', () => {
+    expect(isEventOwner(creatorKey('user-7', null), owned(null))).toBe(true);
+    expect(isEventOwner(creatorKey('user-7', null), owned('a'))).toBe(true);
+    expect(isEventOwner(creatorKey('user-8', null), owned(null))).toBe(false);
+  });
+
+  it('keeps a bound key to its creator‘s events inside its organisation', () => {
+    expect(isEventOwner(creatorKey('user-7', 'a'), owned('a'))).toBe(true);
+    expect(isEventOwner(creatorKey('user-7', 'a'), owned('b'))).toBe(false);
+    expect(isEventOwner(creatorKey('user-7', 'a'), owned(null))).toBe(false);
   });
 });
 
@@ -406,6 +460,12 @@ const sessions: Record<string, AuthSession | null | undefined> = {
       CanGetOtherOrganizationEvents.id,
       CanUpdateOtherOrganizationEvents.id
     ),
+  "the submitter's api key": creatorKey(submitter, null),
+  "the submitter's api key of the organising body": creatorKey(submitter, 'a'),
+  "the submitter's api key of an unrelated organisation": creatorKey(
+    submitter,
+    'x'
+  ),
 };
 
 const events: Record<string, EventOwnership> = {
@@ -442,16 +502,21 @@ const matches = (
   where: Prisma.EventWhereInput,
   event: EventOwnership
 ): boolean => {
-  if (where.OR) {
-    return (where.OR as Prisma.EventWhereInput[]).some(branch =>
+  if (
+    where.OR &&
+    !(where.OR as Prisma.EventWhereInput[]).some(branch =>
       matches(branch, event)
-    );
+    )
+  ) {
+    return false;
   }
 
   if (where.organizationId) {
     const { in: ids } = where.organizationId as { in: string[] };
 
-    return event.organizationId != null && ids.includes(event.organizationId);
+    if (event.organizationId == null || !ids.includes(event.organizationId)) {
+      return false;
+    }
   }
 
   if (where.place) {
@@ -460,11 +525,13 @@ const matches = (
     };
     const venue = event.place?.organizationId;
 
-    return venue != null && organizationId.in.includes(venue);
+    if (venue == null || !organizationId.in.includes(venue)) {
+      return false;
+    }
   }
 
-  if (where.ownerId !== undefined) {
-    return event.ownerId === where.ownerId;
+  if (where.ownerId !== undefined && event.ownerId !== where.ownerId) {
+    return false;
   }
 
   return true;
@@ -560,6 +627,9 @@ describe('editorEventsWhere', () => {
       'an api key of an unrelated organisation with every cross-organisation permission',
       none,
     ],
+    ["the submitter's api key", allowed(...own)],
+    ["the submitter's api key of the organising body", allowed(...organised)],
+    ["the submitter's api key of an unrelated organisation", none],
   ])('lists for %s', (sessionName, expected) => {
     const where = editorEventsWhere(sessions[sessionName]);
 
@@ -742,6 +812,9 @@ describe('reachableEventsWhere', () => {
       'an api key of an unrelated organisation with every cross-organisation permission',
       none,
     ],
+    ["the submitter's api key", allowed(...own)],
+    ["the submitter's api key of the organising body", allowed(...organised)],
+    ["the submitter's api key of an unrelated organisation", none],
   ])('lets %s open', (sessionName, expected) => {
     const where = reachableEventsWhere(sessions[sessionName]);
 
@@ -803,6 +876,15 @@ describe('canPublishEvent', () => {
       CanPublishEvent.id,
       CanUpdateOtherOrganizationEvents.id
     ),
+    "the owner's platform key with CAN_PUBLISH_EVENT": creatorKey(
+      submitter,
+      null,
+      CanPublishEvent.id
+    ),
+    "the owner's platform key without CAN_PUBLISH_EVENT": creatorKey(
+      submitter,
+      null
+    ),
   };
 
   it.each([
@@ -820,6 +902,11 @@ describe('canPublishEvent', () => {
       allowed(...organised),
     ],
     ["a key of the venue's organisation with every permission", none],
+    [
+      "the owner's platform key with CAN_PUBLISH_EVENT",
+      allowed("the submitter's orphan"),
+    ],
+    ["the owner's platform key without CAN_PUBLISH_EVENT", none],
   ])('lets %s publish', (sessionName, expected) => {
     expect(
       Object.fromEntries(
@@ -938,6 +1025,15 @@ describe('mayAssignEventOwner', () => {
     ).toBe(true);
   });
 
+  it('lets an api key make its creator the owner, and nobody else', () => {
+    expect(mayAssignEventOwner(creatorKey('user-7', null), 'user-7')).toBe(
+      true
+    );
+    expect(mayAssignEventOwner(creatorKey('user-7', null), 'user-8')).toBe(
+      false
+    );
+  });
+
   it('never lets an api key of an organisation assign an owner', () => {
     expect(
       mayAssignEventOwner(
@@ -1012,6 +1108,27 @@ describe('mayMoveEventToOrganization', () => {
         organised,
         'b'
       )
+    ).toBe(false);
+  });
+
+  it('does not let an organisation key take an event out of every organisation unless its creator owns it', () => {
+    expect(
+      mayMoveEventToOrganization(creatorKey('user-2', 'a'), organised, null)
+    ).toBe(false);
+    expect(
+      mayMoveEventToOrganization(organizationKey('a'), organised, null)
+    ).toBe(false);
+    expect(
+      mayMoveEventToOrganization(creatorKey('user-1', 'a'), organised, null)
+    ).toBe(true);
+  });
+
+  it('lets a platform key put its creator‘s orphan nowhere but where it already is', () => {
+    expect(
+      mayMoveEventToOrganization(creatorKey('user-1', null), orphan, null)
+    ).toBe(true);
+    expect(
+      mayMoveEventToOrganization(creatorKey('user-1', null), orphan, 'b')
     ).toBe(false);
   });
 });

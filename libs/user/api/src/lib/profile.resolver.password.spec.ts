@@ -9,6 +9,7 @@ describe('ProfileResolver updatePassword', () => {
     const resolver = new ProfileResolver(userService as any, {} as any);
 
     await resolver.updatePassword('a-new-Password-123', 'a-new-Password-123', {
+      type: 'user',
       id: 'session-1',
       user: { id: 'user-1' },
     } as any);

@@ -866,7 +866,8 @@ arrives in its own migration, `20261023130000_add_api_token_organization`, kept 
 `20261023120000_add_event_organizations` ([D44](../decisions.md)).
 
 `ApiTokenStrategy` builds an `ApiTokenSession` — `{ type: ApiToken, id, name, token, permissions,
-organizationId }`, where `permissions` are the key's scopes
+organizationId, user }`, where `permissions` are the key's scopes and `user` is its creator, who the
+key acts as ([D94](../decisions.md))
 (`libs/authentication/api/src/lib/auth-session.ts:29-36`, `api-token.strategy.ts:18-28`) — and
 `organizationIdsOf` returns its `organizationId`, so §3.2's functions treat a bound key as a member of its
 organisation with no separate rule. That is the point of doing it this way: one authorisation rule,

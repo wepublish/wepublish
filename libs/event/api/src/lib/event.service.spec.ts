@@ -11,8 +11,13 @@ import {
   EventStatus,
   PrismaClient,
   TagType,
+  User,
 } from '@prisma/client';
-import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
+import {
+  ApiTokenSession,
+  AuthSession,
+  AuthSessionType,
+} from '@wepublish/authentication/api';
 import { BlockContentInput } from '@wepublish/block-content/api';
 import { expandOccurrences } from '@wepublish/event/schedule';
 import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
@@ -54,6 +59,16 @@ const organizationKey = (
   token: 'token',
   permissions,
   organizationId,
+  user: null,
+});
+
+const creatorKey = (
+  creatorId: string,
+  organizationId: string | null,
+  ...permissions: string[]
+): AuthSession => ({
+  ...(organizationKey(organizationId, ...permissions) as ApiTokenSession),
+  user: { id: creatorId } as User,
 });
 
 const member = user('member', ['org-a']);
@@ -254,7 +269,22 @@ describe('EventService.createEvent', () => {
     expect(prisma.event.create.mock.calls[0][0].data.ownerId).toBe('member');
   });
 
-  it('gives an event created by an api key no owner', async () => {
+  it('makes the creator of an api key the owner of the events it creates', async () => {
+    const { service, prisma } = await setup();
+
+    await service.createEvent(
+      facts({ organizationId: undefined }),
+      content(),
+      creatorKey('member', null)
+    );
+
+    const { data } = prisma.event.create.mock.calls[0][0];
+
+    expect(data.ownerId).toBe('member');
+    expect(data.revisions.create.userId).toBe('member');
+  });
+
+  it('gives an event created by an api key whose creator was deleted no owner', async () => {
     const { service, prisma } = await setup();
 
     await service.createEvent(
@@ -1741,7 +1771,16 @@ describe('EventService.duplicateEvent', () => {
     });
   });
 
-  it('gives a copy made by an api key no owner', async () => {
+  it('makes the creator of an api key the owner of its copy', async () => {
+    const { service, prisma } = await setup();
+    source(prisma);
+
+    await service.duplicateEvent('event-1', creatorKey('member', 'org-a'));
+
+    expect(prisma.event.create.mock.calls[0][0].data.ownerId).toBe('member');
+  });
+
+  it('gives a copy made by an api key whose creator was deleted no owner', async () => {
     const { service, prisma } = await setup();
     source(prisma);
 

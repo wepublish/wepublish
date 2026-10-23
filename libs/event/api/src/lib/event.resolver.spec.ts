@@ -66,6 +66,7 @@ const foreignKey: AuthSession = {
   token: 'token',
   permissions: [CanGetEvent.id, CanGetEvents.id],
   organizationId: 'org-b',
+  user: null,
 };
 
 const venueMember: AuthSession = {

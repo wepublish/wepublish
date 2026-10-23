@@ -52,6 +52,7 @@ const apiKey = (...permissions: string[]): AuthSession => ({
   token: 'token',
   permissions,
   organizationId: null,
+  user: null,
 });
 
 const organization = {
