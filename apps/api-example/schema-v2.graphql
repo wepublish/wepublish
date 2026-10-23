@@ -1462,6 +1462,7 @@ input EventTeaserInput {
 What the caller may do with an event, by the same rules the mutations apply.
 """
 type EventViewerPermissions {
+  clearOrganization: Boolean!
   delete: Boolean!
   duplicate: Boolean!
   moveOrganization: Boolean!

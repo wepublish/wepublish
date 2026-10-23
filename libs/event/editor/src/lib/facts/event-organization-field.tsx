@@ -13,17 +13,19 @@ export function EventOrganizationField({
   viewerCan,
 }: {
   isNew: boolean;
-  viewerCan?: { moveOrganization: boolean } | null;
+  viewerCan?: { moveOrganization: boolean; clearOrganization: boolean } | null;
 }) {
   const { t } = useTranslation();
   const { control } = useFormContext<EventFormValues>();
   const mayChooseAny =
     useAuthorisation(CanUpdateOtherOrganizationEvents.id) === true;
   const locked = !isNew && viewerCan?.moveOrganization !== true;
+  const keepsOrganization = !isNew && viewerCan?.clearOrganization !== true;
 
   const helperText =
     viewerCan?.moveOrganization === false ? t('agenda.form.organizationLocked')
     : locked ? undefined
+    : keepsOrganization ? t('agenda.form.organizationKeep')
     : mayChooseAny ? t('agenda.form.organizationHelpAll')
     : t('agenda.form.organizationHelpMine');
 
@@ -37,6 +39,7 @@ export function EventOrganizationField({
           label={t('agenda.form.organization')}
           mine={!mayChooseAny}
           disabled={locked}
+          disableClearable={keepsOrganization}
           helperText={helperText}
           value={field.value}
           onChange={field.onChange}

@@ -409,7 +409,7 @@ The helpers the event, place and organisation services share:
 | `canReachEvent(session, event)` | `reachableEventsWhere` as a predicate; gates the editor view of one event's fields | `:197-202` |
 | `canPublishEvent(session, event)` | `CanPublishEvent` and (member of the organising organisation, owner of an orphan event, or `CanUpdateOtherOrganizationEvents`); also gates `unpublishEvent` | `:210-214` |
 | `canDeleteEvent(session, event)` | member of the organising organisation, or `CanDeleteOtherOrganizationEvents`; no owner or venue branch | `:216-218` |
-| `mayAssignEventOrganization` / `mayMoveEventToOrganization` | file under, or move to, an organisation you belong to, unless `CanUpdateOtherOrganizationEvents` | `:220-250` |
+| `mayAssignEventOrganization` / `mayMoveEventToOrganization` | file under, or move to, an organisation you belong to, unless `CanUpdateOtherOrganizationEvents`; moving to none needs you to own the event | `:220-250` |
 | `mayAssignEventOwner` / `mayReassignEventOwner` | only `CanUpdateOtherOrganizationEvents` may make someone else the owner | `:228-253` |
 | `boundOrganizationIdOf(session)` | a bound key's organisation, the default for `createEvent` | `:255-258` |
 

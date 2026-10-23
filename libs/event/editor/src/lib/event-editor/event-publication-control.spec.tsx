@@ -23,6 +23,7 @@ const ORGANISER: EditorEventFragment['viewerCan'] = {
   requestReview: true,
   withdrawReview: false,
   moveOrganization: false,
+  clearOrganization: false,
   reassignOwner: false,
 };
 

@@ -638,6 +638,25 @@ describe('EventService.updateEvent', () => {
     ).rejects.toBeInstanceOf(ForbiddenException);
   });
 
+  it('refuses a member who does not own the event taking it out of every organisation', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma);
+
+    await expect(
+      service.updateEvent('event-1', { organizationId: null }, member)
+    ).rejects.toBeInstanceOf(ForbiddenException);
+    expect(prisma.event.update).not.toHaveBeenCalled();
+  });
+
+  it('lets a member who owns the event take it out of every organisation', async () => {
+    const { service, prisma } = await setup();
+    existing(prisma, { ownerId: 'member' });
+
+    await service.updateEvent('event-1', { organizationId: null }, member);
+
+    expect(prisma.event.update).toHaveBeenCalled();
+  });
+
   it("refuses the venue's organisation adopting the event", async () => {
     const { service, prisma } = await setup();
     existing(prisma, {}, { place: { organizationId: 'org-v' } });

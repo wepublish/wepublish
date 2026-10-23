@@ -231,6 +231,7 @@ fragment EditorEvent on Event {
     requestReview
     withdrawReview
     moveOrganization
+    clearOrganization
     reassignOwner
   }
 }

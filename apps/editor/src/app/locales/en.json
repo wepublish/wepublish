@@ -4654,6 +4654,7 @@
         "organizationHelpMine": "One of your organisations. Its members can edit the event.",
         "organizationHelpAll": "The organisation that runs the event. Its members can edit it.",
         "organizationLocked": "Only a member of the event’s organisation can move it, and only to an organisation of their own. Agenda administrators can move any event.",
+        "organizationKeep": "You can move the event to another of your organisations. Only its owner can leave it without an organisation, because it would drop out of your agenda.",
         "owner": "Owner",
         "ownerYou": "You",
         "ownerYouHelp": "You own the events you create and can edit them without being in an organisation.",

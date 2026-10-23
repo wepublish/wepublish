@@ -4654,6 +4654,7 @@
         "organizationHelpMine": "Eine deiner Organisationen. Ihre Mitglieder können den Event bearbeiten.",
         "organizationHelpAll": "Die Organisation, die den Event durchführt. Ihre Mitglieder können ihn bearbeiten.",
         "organizationLocked": "Nur ein Mitglied der Organisation des Events kann ihn verschieben, und nur in eine eigene Organisation. Die Agenda-Administration kann jeden Event verschieben.",
+        "organizationKeep": "Du kannst den Event in eine andere deiner Organisationen verschieben. Ohne Organisation lassen kann ihn nur seine Besitzerin oder sein Besitzer, weil er sonst aus deiner Agenda verschwindet.",
         "owner": "Besitzer:in",
         "ownerYou": "Du",
         "ownerYouHelp": "Die Events, die du erstellst, gehören dir. Du kannst sie auch ohne Organisation bearbeiten.",

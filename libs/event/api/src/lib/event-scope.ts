@@ -250,7 +250,9 @@ export const mayMoveEventToOrganization = (
 
   return (
     holdsEvent &&
-    (organizationId == null || isOrganizationMember(session, organizationId))
+    (organizationId == null ?
+      isEventOwner(session, event)
+    : isOrganizationMember(session, organizationId))
   );
 };
 
@@ -284,6 +286,9 @@ export const eventViewerPermissions = (
     requestReview: update && !publish && hasDraft && !event.reviewRequestedAt,
     withdrawReview: update && !!event.reviewRequestedAt,
     moveOrganization:
+      update &&
+      mayMoveEventToOrganization(session, event, event.organizationId),
+    clearOrganization:
       update && mayMoveEventToOrganization(session, event, null),
     reassignOwner: update && mayReassignEventOwner(session),
   };

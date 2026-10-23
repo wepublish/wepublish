@@ -4654,6 +4654,7 @@
         "organizationHelpMine": "Une de vos organisations. Ses membres peuvent modifier l’événement.",
         "organizationHelpAll": "L’organisation qui organise l’événement. Ses membres peuvent le modifier.",
         "organizationLocked": "Seul·e un·e membre de l’organisation de l’événement peut le déplacer, et uniquement vers une de ses organisations. L’administration de l’agenda peut déplacer tout événement.",
+        "organizationKeep": "Vous pouvez déplacer l’événement vers une autre de vos organisations. Seule la personne propriétaire peut le laisser sans organisation, sinon il disparaîtrait de votre agenda.",
         "owner": "Propriétaire",
         "ownerYou": "Vous",
         "ownerYouHelp": "Les événements que vous créez vous appartiennent ; vous pouvez les modifier sans faire partie d’une organisation.",

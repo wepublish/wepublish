@@ -846,6 +846,7 @@ describe('EventResolver', () => {
             requestReview
             withdrawReview
             moveOrganization
+            clearOrganization
             reassignOwner
           }
         }
@@ -860,6 +861,7 @@ describe('EventResolver', () => {
       requestReview: false,
       withdrawReview: false,
       moveOrganization: false,
+      clearOrganization: false,
       reassignOwner: false,
     };
 
@@ -893,6 +895,14 @@ describe('EventResolver', () => {
       });
     });
 
+    it('lets a member clear the organisation only of an event they own', async () => {
+      expect((await viewerCan('organiser')).clearOrganization).toBe(false);
+      expect(
+        (await viewerCan('organiser', { ownerId: 'organiser' }))
+          .clearOrganization
+      ).toBe(true);
+    });
+
     it('offers no review request without a draft', async () => {
       expect(
         (await viewerCan('organiser', {}, { published })).requestReview
@@ -921,6 +931,7 @@ describe('EventResolver', () => {
         publish: true,
         duplicate: true,
         moveOrganization: true,
+        clearOrganization: true,
       });
     });
 
@@ -935,6 +946,7 @@ describe('EventResolver', () => {
         requestReview: false,
         withdrawReview: true,
         moveOrganization: true,
+        clearOrganization: true,
         reassignOwner: true,
       });
     });

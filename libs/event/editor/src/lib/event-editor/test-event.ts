@@ -139,6 +139,7 @@ export const testEvent = (
     requestReview: false,
     withdrawReview: false,
     moveOrganization: true,
+    clearOrganization: true,
     reassignOwner: false,
   },
   ...overrides,

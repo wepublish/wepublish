@@ -23,6 +23,8 @@ const organizationFilter = () =>
     ([document]) => document === TinyOrganizationListDocument
   )?.[1].variables.filter;
 
+const dampfzentrale = { id: 'org-a', name: 'Dampfzentrale' };
+
 const field = () =>
   screen.getByRole('combobox', { name: 'agenda.form.organization' });
 
@@ -58,7 +60,7 @@ describe('EventOrganizationField', () => {
       renderInForm(
         <EventOrganizationField
           isNew={false}
-          viewerCan={{ moveOrganization: false }}
+          viewerCan={{ moveOrganization: false, clearOrganization: false }}
         />
       );
 
@@ -81,12 +83,43 @@ describe('EventOrganizationField', () => {
       renderInForm(
         <EventOrganizationField
           isNew={false}
-          viewerCan={{ moveOrganization: true }}
+          viewerCan={{ moveOrganization: true, clearOrganization: true }}
         />
       );
 
       expect(field()).toBeEnabled();
       expect(organizationFilter()).toEqual({ mine: true });
+    });
+
+    it('keeps a member who does not own the event from leaving it without organisation', () => {
+      renderInForm(
+        <EventOrganizationField
+          isNew={false}
+          viewerCan={{ moveOrganization: true, clearOrganization: false }}
+        />,
+        { defaultValues: { organization: dampfzentrale } }
+      );
+
+      expect(field()).toBeEnabled();
+      expect(screen.queryByTitle('Clear')).not.toBeInTheDocument();
+      expect(
+        screen.getByText('agenda.form.organizationKeep')
+      ).toBeInTheDocument();
+    });
+
+    it('lets the caller clear the organisation when they keep the event without it', () => {
+      renderInForm(
+        <EventOrganizationField
+          isNew={false}
+          viewerCan={{ moveOrganization: true, clearOrganization: true }}
+        />,
+        { defaultValues: { organization: dampfzentrale } }
+      );
+
+      expect(screen.getByTitle('Clear')).toBeInTheDocument();
+      expect(
+        screen.getByText('agenda.form.organizationHelpMine')
+      ).toBeInTheDocument();
     });
   });
 });

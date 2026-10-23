@@ -2117,7 +2117,9 @@ over.
 - **Moving.** Changing an event's organisation needs you to hold the event now (as a member of its
   organisation, or as the owner of an event with none) and to belong to the target, unless you hold
   `CanUpdateOtherOrganizationEvents` (`mayMoveEventToOrganization`, `:232-250`). A venue member does
-  not hold the event, so cannot move it.
+  not hold the event, so cannot move it. Taking the event out of every organisation also needs you to
+  own it, because a member who does not own it would lose it from their agenda and could not undo the
+  change (found in the slice F verification).
 - **Changing the owner** of an existing event needs `CanUpdateOtherOrganizationEvents`
   (`mayReassignEventOwner`, `:252-253`).
 - A key bound to an organisation never counts as holding the cross-organisation permission
@@ -2723,7 +2725,7 @@ not know the session's memberships, so it cannot work out which buttons to offer
 
 **Decision.**
 - `Event.viewerCan` returns `update`, `publish`, `delete`, `duplicate`, `requestReview`,
-  `withdrawReview`, `moveOrganization` and `reassignOwner`. Each flag is the permission the
+  `withdrawReview`, `moveOrganization`, `clearOrganization` and `reassignOwner`. Each flag is the permission the
   mutation's guard checks **and** the record rule the service checks (`eventViewerPermissions`,
   `event-scope.ts:263`): `update` is `CanUpdateEvent` and `canModifyEvent`; `delete` is
   `CanDeleteEvent` and `canDeleteEvent`; `duplicate` is `CanCreateEvent`, `canModifyEvent` and
@@ -3081,6 +3083,8 @@ Implements [D47](#d47--who-may-set-an-events-organisation-and-owner) in the edit
   create and on move, because D47 only lets you file or move an event into an organisation you
   belong to. On an existing event it is enabled only when `viewerCan.moveOrganization` is true; when
   that is false it says who can move the event, and while it loads it is disabled without a reason.
+  It offers clearing only when `viewerCan.clearOrganization` is true (D47: the owner, or
+  `CanUpdateOtherOrganizationEvents`); otherwise it says why the organisation must stay.
 - **Owner.** On a new event it reads "You" and is read-only, unless the caller holds
   `CanUpdateOtherOrganizationEvents`, who gets a user picker (empty means "you"). On an existing
   event it shows the owner, or "No owner", read-only with the reason, unless

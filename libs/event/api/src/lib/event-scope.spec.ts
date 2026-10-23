@@ -985,6 +985,16 @@ describe('mayMoveEventToOrganization', () => {
     expect(mayMoveEventToOrganization(user([]), organised, null)).toBe(false);
   });
 
+  it('refuses a member who does not own the event taking it out of every organisation', () => {
+    expect(
+      mayMoveEventToOrganization(as('user-2', ['a']), organised, null)
+    ).toBe(false);
+  });
+
+  it('lets a member who owns the event take it out of every organisation', () => {
+    expect(mayMoveEventToOrganization(user(['a']), organised, null)).toBe(true);
+  });
+
   it('lets CAN_UPDATE_OTHER_ORGANIZATION_EVENTS move anything anywhere', () => {
     expect(
       mayMoveEventToOrganization(

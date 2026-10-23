@@ -1494,6 +1494,7 @@ export type EventTeaserInput = {
 /** What the caller may do with an event, by the same rules the mutations apply. */
 export type EventViewerPermissions = {
   __typename: 'EventViewerPermissions';
+  clearOrganization: Scalars['Boolean']['output'];
   delete: Scalars['Boolean']['output'];
   duplicate: Scalars['Boolean']['output'];
   moveOrganization: Scalars['Boolean']['output'];

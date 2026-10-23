@@ -27,7 +27,13 @@ const reitschule = {
   name: 'Reitschule',
 };
 
-function Picker({ mine }: { mine?: boolean }) {
+function Picker({
+  mine,
+  disableClearable,
+}: {
+  mine?: boolean;
+  disableClearable?: boolean;
+}) {
   const [organization, setOrganization] =
     useState<TinyOrganizationFragment | null>(null);
 
@@ -35,16 +41,20 @@ function Picker({ mine }: { mine?: boolean }) {
     <OrganizationSelectPicker
       label="organization"
       mine={mine}
+      disableClearable={disableClearable}
       value={organization}
       onChange={setOrganization}
     />
   );
 }
 
-const renderPicker = (mine?: boolean) =>
+const renderPicker = (mine?: boolean, disableClearable?: boolean) =>
   render(
     <ThemeProvider theme={theme}>
-      <Picker mine={mine} />
+      <Picker
+        mine={mine}
+        disableClearable={disableClearable}
+      />
     </ThemeProvider>
   );
 
@@ -106,5 +116,15 @@ describe('OrganizationSelectPicker', () => {
     fireEvent.click(screen.getByTitle('Clear'));
 
     await waitFor(() => expect(combobox().value).toBe(''));
+  });
+
+  it('offers no way to clear it when clearing is not allowed', async () => {
+    renderPicker(false, true);
+
+    fireEvent.mouseDown(combobox());
+    fireEvent.click(await screen.findByText('Reitschule'));
+    await waitFor(() => expect(combobox().value).toBe('Reitschule'));
+
+    expect(screen.queryByTitle('Clear')).not.toBeInTheDocument();
   });
 });

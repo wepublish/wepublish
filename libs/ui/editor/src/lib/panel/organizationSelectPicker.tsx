@@ -16,6 +16,7 @@ export interface OrganizationSelectPickerProps {
   helperText?: ReactNode;
   error?: boolean;
   mine?: boolean;
+  disableClearable?: boolean;
   value: OrganizationOption | null;
   onChange(organization: OrganizationOption | null): void;
 }
@@ -28,6 +29,7 @@ export function OrganizationSelectPicker({
   helperText,
   error,
   mine,
+  disableClearable,
   value,
   onChange,
 }: OrganizationSelectPickerProps) {
@@ -65,6 +67,7 @@ export function OrganizationSelectPicker({
         setSearch(reason === 'input' ? input : '')
       }
       disabled={disabled}
+      disableClearable={disableClearable}
       className={className}
       renderInput={params => (
         <TextField

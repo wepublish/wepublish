@@ -156,6 +156,9 @@ export class EventViewerPermissions {
   moveOrganization!: boolean;
 
   @Field()
+  clearOrganization!: boolean;
+
+  @Field()
   reassignOwner!: boolean;
 }
 
