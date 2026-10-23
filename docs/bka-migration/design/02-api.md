@@ -40,7 +40,7 @@ Each follows the canonical file set — `*.module.ts`, `*.model.ts`, `*.service.
 ### 2.1 Queries
 
 ```graphql
-event(id: String, slug: Slug): Event!     # built as non-null: missing = NOT_FOUND, as for article
+event(id: String, slug: Slug): Event!     # non-null: missing = NOT_FOUND, as for article (D64)
 events(filter: EventFilter, sort: EventSort = StartsAt, order: SortOrder = Ascending,
        take: Int = 10, skip: Int = 0, cursorId: String): PaginatedEvents!
 
@@ -50,10 +50,10 @@ agenda(filter: EventFilter, order: SortOrder = Ascending,
 
 # public; resolves to SensitiveDataOrganization per row for members and
 # CanGetOtherOrganizations / CanUpdateOtherOrganizations holders — §2.1.1
-organization(id: ID, slug: Slug): BaseOrganization
+organization(id: String, slug: Slug): BaseOrganization
 organizations(filter: OrganizationFilter, ...): PaginatedOrganizations!   # nodes: [BaseOrganization!]!
 
-place(id: ID, slug: Slug): Place
+place(id: String, slug: Slug): Place!     # non-null, as event (D64)
 places(filter: PlaceFilter, ...): PaginatedPlaces!
 
 # tags come from the platform `tags` query, filtered to `type: Event` — §10.1 of design 1
@@ -66,13 +66,13 @@ eventAffiliations: [EventAffiliation!]! # 7
 
 The five-slot args shape (`filter` / `sort` / `order` / `take` / `skip` / `cursorId`) is the house
 convention and is followed exactly. The taxonomies are unpaginated — all four fit in one response
-and are effectively static.
+and are effectively static. Ids are `String` throughout, as in the rest of the schema, not `ID`.
 
 **Built** (`libs/event/api/src/lib/event.resolver.ts:94-128`, `place/place.resolver.ts:42-57`,
 `taxonomy/event-taxonomy.resolver.ts:18-40`). All of these queries are `@Public()`. A request runs
 in **editor mode** when it carries the `preview` header, which the editor always sends, and the
 caller holds `CanGetEvent` for `event` or `CanGetEvents` for `events` and `agenda`
-(`event-editor-mode.decorator.ts`). Editor mode scopes lists by `editorEventsWhere` and a single
+(`event-editor-mode.decorator.ts`). This is [D46](../decisions.md#d46--editor-mode-needs-the-preview-header-an-event-permission-and-reach). Editor mode scopes lists by `editorEventsWhere` and a single
 event by `reachableEventsWhere`, which adds the venue branch so a validation link opens. It
 resolves the flat fields from `draft ?? pending ?? published`. Every other request uses
 `publicEventsWhere` and the published revision. Tying editor mode to the event permissions rather
@@ -80,7 +80,8 @@ than `CanPreview` lets an organiser role without `CanPreview` list its own draft
 
 `places` takes `search`, `regionId`, `organizationId`, `enabled`, `selectable` and `geoBoundingBox`,
 sorted by `Name`, `CreatedAt` or `ModifiedAt`. Its rows follow `visiblePlacesWhere` (§3.2). Place
-has no public/sensitive split ([design 1](01-data-model.md) §9). `eventRegions` hides disabled
+has no public/sensitive split ([D54](../decisions.md#d54--places-are-public-and-private-only-narrows-the-venue-picker), [design 1](01-data-model.md) §9), and
+`proInfirmisPictograms` is the `JSON` scalar. `eventRegions` hides disabled
 regions from everyone without `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations`.
 
 ### 2.1.1 Public and sensitive organisation data
@@ -129,7 +130,7 @@ has real callers.
 
 ```graphql
 input EventFilter {
-  ids: [ID!]                         # built; the EventBlock's cherry-picked ids
+  ids: [String!]                     # the EventBlock's cherry-picked ids
 
   # text
   search: String                     # unaccent + ILIKE across name and description
@@ -140,13 +141,13 @@ input EventFilter {
   upcoming: Boolean
 
   # taxonomy
-  tagIds: [ID!]
-  audienceId: ID
-  regionId: ID
+  tagIds: [String!]
+  audienceId: String
+  regionId: String                   # the venue's region (D59)
 
   # relations
-  organizationIds: [ID!]
-  placeIds: [ID!]
+  organizationIds: [String!]
+  placeIds: [String!]
 
   # geography
   geoBoundingBox: GeoBoundingBox      # northEast + southWest lat/lng
@@ -181,7 +182,7 @@ scope under `event`. `upcoming` means an occurrence whose `dateTo` has not passe
 `geoBoundingBox`, `wheelchairAccessible` and `accessibilityProInfirmis` match the **venue**:
 `proInfirmisPictograms` contains an object with that `Id`, BKa's `$[*].Id` shape. `false` for
 `wheelchairAccessible` or `partner` means "not flagged". The regionId choice and the `false`
-meaning are pending confirmation ([decision log, slice C+D item 13](../decisions.md#raised-by-the-slice-cd-build)).
+meaning are [D59](../decisions.md#d59--event-filters-match-the-venue-and-false-means-not-flagged), awaiting Karl's confirmation.
 
 ### 2.1 Two list shapes, because BKa has two
 
@@ -218,7 +219,7 @@ The detail most likely to go wrong: `unaccent()` is not immutable by default, so
 indexed directly without an immutable wrapper. A test asserts that searching an unaccented term
 finds an accented row, and an `EXPLAIN` in review confirms the index is actually used.
 
-**Built.** The index sits on the **revision** table, over
+**Built** ([D51](../decisions.md#d51--the-revision-keeps-its-description-as-plain-text-for-search)). The index sits on the **revision** table, over
 `events_unaccent(coalesce("name", '') || ' ' || coalesce("descriptionText", ''))`, because the
 description now lives in blocks ([design 1](01-data-model.md) §6). `EVENT_SEARCH_EXPRESSION`
 (`libs/event/api/src/lib/event-search.ts:9`) is that exact text. The query is parameterised, escapes
@@ -241,19 +242,19 @@ rules: facts take effect immediately, prose waits for publication.
 ```graphql
 # facts — take effect on save
 createEvent(input: EventInput!, content: EventContentInput!): Event!
-updateEvent(id: ID!, input: UpdateEventInput!): Event!   # schedule, place, organisation,
-                                                         # status, tags, rates, owner
-deleteEvent(id: ID!): Event!
-duplicateEvent(id: ID!): Event!
+updateEvent(id: String!, input: UpdateEventInput!): Event!   # schedule, place, organisation,
+                                                             # status, tags, rates, owner
+deleteEvent(id: String!): Event!
+duplicateEvent(id: String!): Event!
 
 # prose — lands in the draft revision
-updateEventContent(id: ID!, input: EventContentInput!): Event!   # name, printDescription,
-                                                                 # blocks, images
+updateEventContent(id: String!, input: EventContentInput!): Event!   # name, printDescription,
+                                                                     # blocks, images
 
 # publication
-publishEvent(id: ID!, publishAt: DateTime): Event!   # publishAt => pending
-unpublishEvent(id: ID!): Event!
-requestEventReview(id: ID!): Event!                  # D5
+publishEvent(id: String!, publishAt: DateTime): Event!   # publishAt => pending
+unpublishEvent(id: String!): Event!
+requestEventReview(id: String!): Event!                  # D5, D58
 
 createOrganization / updateOrganization / deleteOrganization
 createPlace / updatePlace / deletePlace
@@ -288,11 +289,12 @@ organiser believing they had asked for something.
 
 Facts saved on a published event call `invalidate('events')`; on an unpublished one
 `invalidateDraft('events')`. Tags must be of type `Event`, and the venue must pass
-`selectablePlacesWhere`. Several of these rules are pending Karl's confirmation
-([decision log, slice C+D](../decisions.md#raised-by-the-slice-cd-build)).
+`selectablePlacesWhere`. The record checks are [D47](../decisions.md#d47--who-may-set-an-events-organisation-and-owner) (organisation and owner),
+[D48](../decisions.md#d48--publishing-stays-with-the-organising-organisation) (publish), [D49](../decisions.md#d49--deleting-an-event-needs-membership-or-the-cross-organisation-delete-permission) (delete), [D54](../decisions.md#d54--places-are-public-and-private-only-narrows-the-venue-picker) (venue), [D57](../decisions.md#d57--duplicateevent-copies-the-way-bkas-duplicator-does) (duplicate) and
+[D58](../decisions.md#d58--a-review-request-is-a-state-stamped-once) (review), all awaiting Karl's confirmation. Occurrences follow [D45](../decisions.md#d45--occurrences-are-written-whenever-the-schedule-is-saved).
 
 `createPlace`, `updatePlace` and `deletePlace` need `CanUpdateOrganization` and pass
-`canManagePlace`. They validate the place fields with the organisation's location rules
+`canManagePlace` ([D55](../decisions.md#d55--place-writes-reuse-the-organisation-permissions)). They validate the place fields with the organisation's location rules
 (`location-rules.ts`), refuse a disabled region, refuse to delete a place with upcoming events,
 and call `invalidate('events')`, because `place.name` is the events' `location`.
 
@@ -381,8 +383,8 @@ The helpers the event, place and organisation services share:
 | `mayAssignEventOwner` / `mayReassignEventOwner` | only `CanUpdateOtherOrganizationEvents` may make someone else the owner | `:228-253` |
 | `boundOrganizationIdOf(session)` | a bound key's organisation, the default for `createEvent` | `:255-258` |
 
-The publish, delete and assignment rules are pending Karl's confirmation
-([decision log, slice C+D items 2–4](../decisions.md#raised-by-the-slice-cd-build)).
+The assignment, publish and delete rules are [D47](../decisions.md#d47--who-may-set-an-events-organisation-and-owner), [D48](../decisions.md#d48--publishing-stays-with-the-organising-organisation) and [D49](../decisions.md#d49--deleting-an-event-needs-membership-or-the-cross-organisation-delete-permission), and the
+editor-mode read is [D46](../decisions.md#d46--editor-mode-needs-the-preview-header-an-event-permission-and-reach), all awaiting Karl's confirmation.
 
 Both read the owner from a **user** session only; an API key or a peer token carries no user and
 owns nothing. An API key bound to an organisation ([D36](../decisions.md)) is a member of that
@@ -435,7 +437,7 @@ a draft that belongs to another organisation, which `publishEvent` already does 
 The queue is a query, not a table: drafts where `reviewRequestedAt IS NOT NULL`, ordered oldest
 first, scoped by `editorEventsWhere`.
 
-**Built** as `canPublishEvent` (`event-scope.ts:210-214`) behind `@Permissions(CanPublishEvent)`. A
+**Built** as `canPublishEvent` (`event-scope.ts:210-214`, [D48](../decisions.md#d48--publishing-stays-with-the-organising-organisation)) behind `@Permissions(CanPublishEvent)`. A
 venue member reaches a foreign event and can edit it, but publishes it only with the
 cross-organisation permission. The queue query itself is editor work (slice F); the column is
 indexed.
@@ -485,7 +487,7 @@ returns every problem it finds as `'MissingWeekDays'`, `'InvalidWeekDays'` and/o
 `'BeyondScheduleHorizon'` (`libs/event/schedule/src/lib/schedule-input.ts:4-28`).
 `eventScheduleProblems(schedule, now)` adds `'MissingDateRange'`, `'MissingDates'`,
 `'DateToBeforeDateFrom'` and `'InvalidOpeningTime'` in front of those
-(`libs/event/schedule/src/lib/event-input-rules.ts`). The same file holds the limits and the zod v3
+(`libs/event/schedule/src/lib/event-input-rules.ts`, [D53](../decisions.md#d53--the-shared-input-rules-live-in-the-schedule-library)). The same file holds the limits and the zod v3
 schemas for the other rules above, so the editor (slice F) and the migration (slice G) can use them
 without Nest. `libs/event/api/src/lib/event-input.ts` runs them and turns each problem into a
 `BadRequestException`. The description is measured with `blocksTextLength` over the richtext
@@ -533,8 +535,7 @@ type ExpandedOccurrence = {
   occurrences ([D38](../decisions.md)). There is no `startTime`/`endTime` ([D39](../decisions.md)).
 - `Explicit` → map the stored list, sorted by date.
 
-**As built, pending Karl's confirmation**
-([decision log, slice C+D item 1](../decisions.md#raised-by-the-slice-cd-build)): `syncOccurrences`
+**As built ([D45](../decisions.md#d45--occurrences-are-written-whenever-the-schedule-is-saved)), awaiting Karl's confirmation:** `syncOccurrences`
 (`libs/event/api/src/lib/event-occurrences.ts:39-70`) runs inside the write transaction of
 `createEvent`, `updateEvent` (when the schedule changes), `duplicateEvent` and `publishEvent`. It
 writes nothing when the stored rows already equal the expansion (`sameOccurrences`).
@@ -662,7 +663,9 @@ where the build went further than the list or chose between options.
    `events` column entry.
 2. The old `Event` and `TaggedEvents` rows and the old `EventStatus` type. Per Karl, existing
    event rows are **dropped, not migrated** — so there is no value-level `CASE` mapping and no
-   rescue path for old `lead` strings. Everything in §8.3 depends on this being literal.
+   rescue path for old `lead` strings. Everything in §8.3 depends on this being literal. The
+   migration creates `EventStatus` and `events.tagged-events` again under the same names, against
+   the new tables ([D65](../decisions.md#d65--one-migration-replaces-the-old-event-tables-in-place)).
 3. `Event.lead`, `Event.slateDescription`, `Event.externalSourceName`, `Event.externalSourceId`.
    `lead` goes because [Karl settled that `lead` is just `description`](../decisions.md) — the two
    were one concept, and the website already treats them that way as a fallback chain
@@ -674,7 +677,7 @@ where the build went further than the list or chose between options.
    be thrown away when [design 3](03-editor.md) replaces it. The Event tags routes and nav item
    stay, now gated on tag permissions. The editor keeps only the `FullEvent` fragment and the
    `EventList` query, for the EventBlock and teaser pickers. Until slice F the editor cannot create or
-   edit events ([decision log, slice C+D item 15](../decisions.md#raised-by-the-slice-cd-build)).
+   edit events ([D61](../decisions.md#d61--the-old-editor-event-screens-are-removed-until-slice-f)).
 
 ### 8.2 Re-pointed, not deleted
 
@@ -686,7 +689,7 @@ where the build went further than the list or chose between options.
 | `ui/editor` `eventBlock`, `selectEventsPanel`, `teaserSelectPanel`, `TeaserCard` | filter-key renames and null guards |
 | 21 tenant `/event` routes | `[id].tsx` → `[slug].tsx` plus `id/[id].tsx`; 16 of 21 are byte-identical scaffolding |
 
-As built:
+As built ([D62](../decisions.md#d62--websites-read-events-by-slug-and-keep-a-lean-list-fragment), [D63](../decisions.md#d63--status-badges-are-german-and-soldout-stays-scheduled-in-seo)):
 
 - **Website documents** (`libs/website/api/src/lib/schemas/event.graphql`): `FullEvent` is the lean
   list fragment (slug, status, scheduleType and the nullable flat fields, no blocks).
@@ -740,8 +743,10 @@ regenerated at publish. They are now written on save (§5), but the columns stay
 As built, `description` is the first richtext block of the chosen revision, `latest` resolves
 `draft ?? pending ?? published` in editor mode and `published` otherwise, and the editor-only fields
 (`ownerId`, `reviewRequestedAt`/`ById`, `legacyId`, `draft`, `pending`) carry
-`@Permissions(CanGetEvent)` (`libs/event/api/src/lib/event.resolver.ts:216-399`). Editor mode is
-decided per event, not per permission: the preview header and `CanGetEvent` unlock the draft view
+`@Permissions(CanGetEvent)` (`libs/event/api/src/lib/event.resolver.ts:216-399`). That is metadata
+only: the app registers no `fieldResolverEnhancers`, so the resolver body checks `CanGetEvent` and
+reach itself (`mayReadEditorView`). Editor mode is decided per event, not per permission
+([D46](../decisions.md#d46--editor-mode-needs-the-preview-header-an-event-permission-and-reach)): the preview header and `CanGetEvent` unlock the draft view
 only for an event the caller can reach (`canReachEvent`, through `canReachLoadedEvent` in
 `event-reach.ts`, which loads the venue only when needed). Anyone else gets the published view and
 null editor-only fields, so an organiser browsing the public lists or the agenda never sees another
@@ -766,8 +771,8 @@ at deleted rows simply renders nothing. The editor warns; the website renders an
 
 **Built** as `EventService.getPublicEventsForBlock` (`event.service.ts:318-348`). The stored filter
 keys `tags` and `events` are unchanged. Cherry-picked ids keep the editor's order, and tag matches
-are ordered by `firstDateAt` and capped at `getMaxTake`, past events included (pending, decision log
-item 12). An empty result renders no wrapper on the website. Teasers go through
+are ordered by `firstDateAt` and capped at `getMaxTake`, past events included ([D60](../decisions.md#d60--the-eventblock-keeps-its-stored-filter), awaiting
+confirmation). An empty result renders no wrapper on the website. Teasers go through
 `getPublicEvents({ filter: { tagIds } })`. Block-content now imports the event library and the
 event library imports block-content back (for `BlockContent` and `SlotTeasersLoader`), so both
 sides use `forwardRef` (`.claude/docs/gotchas.md`).
@@ -885,7 +890,7 @@ path, which is how an unguarded mutation reaches production.
 2. ~~**How is the tenant regression sequenced?**~~ (§8) Built in one go: websites, tenants and the
    editor pickers moved with the API. What remains is that the migration drops existing tenant event
    rows and the editor has no event form until slice F
-   ([decision log, slice C+D item 15](../decisions.md#raised-by-the-slice-cd-build)).
+   ([D61](../decisions.md#d61--the-old-editor-event-screens-are-removed-until-slice-f)).
 3. ~~**Is `partner` public?**~~ (§2.2) The event filter stays public; what it reveals is accepted
    ([D42](../decisions.md)).
 4. ~~**Is the two-year horizon an instant or a whole day?**~~ (§4) Whole day in Europe/Zurich

@@ -297,7 +297,7 @@ would silently drop the door time for ~2,400 dates. It is carried here instead.
 
 Derived state, owned by the entity ([D10](../decisions.md)).
 
-**As built, pending Karl's confirmation** ([decision log, slice C+D item 1](../decisions.md#raised-by-the-slice-cd-build)):
+**As built ([D45](../decisions.md#d45--occurrences-are-written-whenever-the-schedule-is-saved)), awaiting Karl's confirmation:**
 occurrences are rewritten on **every save that changes the schedule** — `createEvent`,
 `updateEvent`, `duplicateEvent` — and re-synced on `publishEvent`. `unpublishEvent` keeps them.
 That is BKa's on-save behaviour after all. It follows from D24: the schedule is a fact on the
@@ -366,8 +366,8 @@ model Event {
 
   audienceId String?   // one per event — §10.2
 
-  ticketingUrl String?                  // design 2 §4; BKa's scalar ticketing link (§12)
-  showInPrint  Boolean @default(false)  // design 2 §2.2 filter
+  ticketingUrl String?                  // D52; design 2 §4; BKa's scalar ticketing link (§12)
+  showInPrint  Boolean @default(false)  // D52; design 2 §2.2 filter
 
   // the platform SEO/social set — §7.1
   seoTitle               String?
@@ -442,7 +442,7 @@ manage them, so a later `prisma migrate diff` must be checked for attempts to dr
 `descriptionText` is written by `createEvent`, `updateEventContent` and `duplicateEvent` from
 `blocksPlainText` (`libs/event/schedule/src/lib/blocks-plain-text.ts`). It is new: the description
 lives in `blocks` JSON, which cannot be indexed sensibly, and `blocks::text` would also match JSON
-keys. It needs Karl's confirmation ([decision log, slice C+D item 6](../decisions.md#raised-by-the-slice-cd-build)).
+keys. It is [D51](../decisions.md#d51--the-revision-keeps-its-description-as-plain-text-for-search), awaiting Karl's confirmation.
 
 `archivedAt` is not decoration. The platform's draft view is
 `WHERE "archivedAt" IS NULL AND "publishedAt" IS NULL`
@@ -517,7 +517,7 @@ suffixes. We.Publish: slugs are unique **only among published rows**; any number
 share one.
 
 These rules are incompatible, and the We.Publish rule is the right one to keep — it is what makes
-drafts cheap. **As built**, the column is non-unique and indexed. `createEvent`, `updateEvent` and
+drafts cheap. **As built** ([D50](../decisions.md#d50--event-slugs-are-unique-among-published-events-only)), the column is non-unique and indexed. `createEvent`, `updateEvent` and
 `publishEvent` refuse a slug that another published event already uses, and a slug lookup prefers
 the published event (`libs/event/api/src/lib/event.service.ts:184-191,903-926`). Two drafts may
 share a slug, but the second one to publish is refused. `Article` has no such check.
@@ -742,13 +742,17 @@ model Place {
 ```
 
 **Built** (`libs/api/prisma/schema.prisma:2449-2490`), with the API in `libs/event/api/src/lib/place/`
-([design 2](02-api.md) §2.1). There is no public/sensitive split: `private` hides nothing in BKa, and
-every field is in BKa's item groups (`../research/bka-04-api-v2-apiplatform.md:465-490,1150`).
-`private` only narrows which venues an event form may pick (`selectablePlacesWhere`).
+([design 2](02-api.md) §2.1). There is no public/sensitive split ([D54](../decisions.md#d54--places-are-public-and-private-only-narrows-the-venue-picker)): `private` hides
+nothing in BKa, and every field is in BKa's item groups
+(`../research/bka-04-api-v2-apiplatform.md:465-490,1150`). `private` only narrows which venues an
+event may be filed at (`selectablePlacesWhere`), and the server enforces that on `createEvent` and
+`updateEvent`. Writes reuse the organisation permissions ([D55](../decisions.md#d55--place-writes-reuse-the-organisation-permissions), §13).
 
 `proInfirmisPictograms` keeps the **legacy numeric ids** even though we sync from Ginto
-([D7](../decisions.md)), because those ids are part of BKa's public API contract. The Ginto string
-`key` → numeric id mapping ports with the integration.
+([D7](../decisions.md)), because those ids were part of BKa's public API contract. That contract is
+switched off at cutover ([D31](../decisions.md)), so whether the ids are still wanted is an open
+question. The Ginto string `key` → numeric id mapping ports with the integration. GraphQL exposes
+the column as the `JSON` scalar, so the API does not commit to a shape before that is settled.
 
 1,260 of 1,369 places are geocoded, and `geoNorthEast`/`geoSouthWest` bounding-box search is a live
 filter on four public endpoints. The composite index above supports it. **As built**, there is no
@@ -810,7 +814,7 @@ schema constraint — the schema cannot express it, and `Tag` must not grow an e
 | `Audience` | 4 | One per event, a closed and stable set — a lookup, not a folksonomy. `Event.audienceId` ([D24](../decisions.md)) — who an event is for is a fact about the event. |
 | `Affiliation` | 7 | Organisations only; same reasoning as `Region`. |
 
-They are **not** seeded by the SQL migration. [D27](../decisions.md) ships the tables to every tenant
+They are **not** seeded by the SQL migration ([D56](../decisions.md#d56--taxonomies-are-read-only-for-now-and-the-sql-migration-seeds-nothing)). [D27](../decisions.md) ships the tables to every tenant
 but seeds BKa's reference data only for agenda tenants, which a migration applied everywhere cannot
 do. The data arrives with the BKa import (slice G) or an opt-in seed. In this slice they are
 read-only public queries — `eventRegions`, `eventAudiences`, `eventAffiliations`
@@ -1074,8 +1078,7 @@ Five organisation permissions are built (`permissions.ts:769-797`):
 
 Places have no permissions of their own. `createPlace`, `updatePlace` and `deletePlace` need
 `CanUpdateOrganization` as a member of the place's organisation, or `CanUpdateOtherOrganizations`
-for any place and for places without an organisation. This is pending Karl's confirmation
-([decision log, slice C+D item 8](../decisions.md#raised-by-the-slice-cd-build)).
+for any place and for places without an organisation ([D55](../decisions.md#d55--place-writes-reuse-the-organisation-permissions), awaiting Karl's confirmation).
 
 `CanGetOtherOrganizations` is what a read-only API key needs ([D37](../decisions.md),
 [design 2 §2.1.1](02-api.md)). The predefined admin role gets all of them through `AllPermissions`
@@ -1083,7 +1086,7 @@ for any place and for places without an organisation. This is pending Karl's con
 of the organisation permissions. The predefined editor role keeps the four old event permissions
 but not `CanGetEvents` or `CanPublishEvent` (`libs/permissions/src/lib/permissions.ts:1513-1592`).
 So an editor-role user on a non-agenda tenant can neither list event drafts nor publish an event
-until the role is extended ([decision log, slice C+D item 15](../decisions.md#raised-by-the-slice-cd-build)).
+until the role is extended ([D61](../decisions.md#d61--the-old-editor-event-screens-are-removed-until-slice-f)).
 
 The five permissions that reach past your own organisations (`CanGetOtherOrganizationEvents`,
 `CanUpdateOtherOrganizationEvents`, `CanDeleteOtherOrganizationEvents`, `CanGetOtherOrganizations`,
@@ -1129,7 +1132,7 @@ All four open questions from the first draft are now settled in
 | Is the sub-event collapse acceptable? (§4.3) | **Yes.** The data shows a sub-event *is* an occurrence — see §4.3. |
 
 Nothing in this document is still open except venue proposals (§12) and the choices the build
-made that await Karl's confirmation ([decision log, slice C+D](../decisions.md#raised-by-the-slice-cd-build)). The remaining uncertainty
+made that await Karl's confirmation ([D45](../decisions.md#d45--occurrences-are-written-whenever-the-schedule-is-saved) to [D65](../decisions.md#d65--one-migration-replaces-the-old-event-tables-in-place)). The remaining uncertainty
 sits in [design 4](04-migration.md): switching off BKa's old API ([D31](../decisions.md)) means
 telling every client in time, and nobody yet knows which clients are still active.
 
@@ -1138,7 +1141,8 @@ telling every client in time, and nobody yet knows which clients are still activ
 ## 15. What this commits us to
 
 - One contiguous block in `schema.prisma`, tables prefixed `events.`
-- Events are revisioned like articles; occurrences are entity-level derived state
+- Events are revisioned like articles; occurrences are entity-level derived state, written on every
+  save that changes the schedule ([D45](../decisions.md#d45--occurrences-are-written-whenever-the-schedule-is-saved))
 - Sub-events cease to exist as entities
 - Organisations and membership are built from scratch, and membership reaches the session
 - Per-record authorisation lives in service bodies, behind one shared predicate builder
