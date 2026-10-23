@@ -19,6 +19,7 @@ import {
   PeriodicJobService,
 } from './periodic-job.service';
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
+import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import {
   MailContext,
@@ -192,6 +193,10 @@ const createMockInvoicePaidNotifier = () => ({
   notify: vi.fn().mockResolvedValue(undefined),
 });
 
+const createMockPaymentMethodChanges = () => ({
+  expirePending: vi.fn().mockResolvedValue(0),
+});
+
 type FakeLock = { lost: boolean; release: () => Promise<void> };
 
 const createDragonflyLocks = () => {
@@ -238,6 +243,9 @@ describe('PeriodicJobService', () => {
   let mockMailContext: ReturnType<typeof createMockMailContext>;
   let mockPaymentsService: ReturnType<typeof createMockPaymentsService>;
   let mockInvoicePaidNotifier: ReturnType<typeof createMockInvoicePaidNotifier>;
+  let mockPaymentMethodChanges: ReturnType<
+    typeof createMockPaymentMethodChanges
+  >;
   let locks: ReturnType<typeof createDragonflyLocks>;
 
   beforeEach(async () => {
@@ -247,6 +255,7 @@ describe('PeriodicJobService', () => {
     mockMailContext = createMockMailContext();
     mockPaymentsService = createMockPaymentsService();
     mockInvoicePaidNotifier = createMockInvoicePaidNotifier();
+    mockPaymentMethodChanges = createMockPaymentMethodChanges();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -260,6 +269,10 @@ describe('PeriodicJobService', () => {
           useValue: mockInvoicePaidNotifier,
         },
         { provide: KvTtlCacheService, useValue: locks },
+        {
+          provide: PaymentMethodChangeService,
+          useValue: mockPaymentMethodChanges,
+        },
       ],
     }).compile();
 
@@ -268,6 +281,27 @@ describe('PeriodicJobService', () => {
 
   it('is defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('expires unfinished payment method changes before charging invoices', async () => {
+    const calls: string[] = [];
+    mockPaymentMethodChanges.expirePending.mockImplementation(async () => {
+      calls.push('expire');
+      return 0;
+    });
+    mockSubscriptionController.findUnpaidDueInvoices.mockImplementation(
+      async () => {
+        calls.push('charge');
+        return [];
+      }
+    );
+
+    await service.execute(new Date('2026-10-21T03:00:00Z'));
+
+    expect(mockPaymentMethodChanges.expirePending).toHaveBeenCalledWith(
+      expect.any(Date)
+    );
+    expect(calls).toEqual(['expire', 'charge']);
   });
 
   it('create invoice', async () => {
@@ -1501,7 +1535,8 @@ describe('PeriodicJobService', () => {
         mockSubscriptionController as unknown as SubscriptionService,
         mockPaymentsService as unknown as PaymentsService,
         mockInvoicePaidNotifier as unknown as InvoicePaidNotifier,
-        kv as unknown as KvTtlCacheService
+        kv as unknown as KvTtlCacheService,
+        mockPaymentMethodChanges as unknown as PaymentMethodChangeService
       );
 
     const holdFirstRun = () => {

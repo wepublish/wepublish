@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CardContent,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
@@ -22,6 +23,7 @@ import {
 import { humanizeError } from '../humanizeError';
 import { enqueueSnackbar } from '../snackbar';
 import { getOperationNameFromDocument } from '../utility';
+import { TokenRolePicker } from './tokenRolePicker';
 
 export interface TokenGeneratePanelProps {
   onClose?(): void;
@@ -29,6 +31,7 @@ export interface TokenGeneratePanelProps {
 
 function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   const [name, setName] = useState('');
+  const [roleIDs, setRoleIDs] = useState<string[]>([]);
 
   const [createToken, { data, loading: isCreating, error: createError }] =
     useMutation(CreateTokenDocument, {
@@ -51,7 +54,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   }, [createError]);
 
   async function handleSave() {
-    await createToken({ variables: { name } });
+    await createToken({ variables: { name, roleIDs } });
   }
 
   return (
@@ -91,14 +94,26 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
               {t('tokenList.panels.tokenWarning')}
             </Alert>
           </>
-        : <TextField
-            placeholder={t('tokenList.panels.name')}
-            value={name}
-            disabled={isDisabled}
-            onChange={event => {
-              setName(event.target.value);
-            }}
-          />
+        : <Stack spacing={2}>
+            <TextField
+              placeholder={t('tokenList.panels.name')}
+              value={name}
+              disabled={isDisabled}
+              onChange={event => {
+                setName(event.target.value);
+              }}
+            />
+            <TokenRolePicker
+              value={roleIDs}
+              disabled={isDisabled}
+              onChange={setRoleIDs}
+            />
+            {roleIDs.length === 0 && (
+              <Alert severity="info">
+                {t('tokenList.panels.noRolesWarning')}
+              </Alert>
+            )}
+          </Stack>
         }
       </DrawerBody>
     </>

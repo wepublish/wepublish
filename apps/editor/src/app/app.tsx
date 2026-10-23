@@ -28,6 +28,8 @@ import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailLogList,
   MailSendPage,
+  LetterLayoutEdit,
+  LetterLayoutList,
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
@@ -155,6 +157,12 @@ const Logout = () => {
     />
   );
 };
+
+// Stationery only exists for letters, which ship dark.
+const PaperLetterLayoutList =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutList);
+const PaperLetterLayoutEdit =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutEdit);
 
 export function App() {
   const { session } = useContext(AuthContext);
@@ -1071,6 +1079,30 @@ export function App() {
               element={
                 <Base>
                   <MailTemplateEdit />
+                </Base>
+              }
+            />
+            <Route
+              path="letterlayouts"
+              element={
+                <Base>
+                  <PaperLetterLayoutList />
+                </Base>
+              }
+            />
+            <Route
+              path="letterlayouts/create"
+              element={
+                <Base>
+                  <PaperLetterLayoutEdit />
+                </Base>
+              }
+            />
+            <Route
+              path="letterlayouts/edit/:id"
+              element={
+                <Base>
+                  <PaperLetterLayoutEdit />
                 </Base>
               }
             />

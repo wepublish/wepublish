@@ -195,6 +195,8 @@ export const mockSubscription = ({
       years: 1,
     })
     .toISOString(),
+  pendingPaymentMethodChange = null,
+  canRenewPaymentMethod = false,
 }: Partial<PublicSubscription> = {}): PublicSubscription => ({
   __typename: 'PublicSubscription',
   id,
@@ -216,6 +218,8 @@ export const mockSubscription = ({
   userID,
   startsAt,
   paidUntil,
+  pendingPaymentMethodChange,
+  canRenewPaymentMethod,
 });
 
 export const mockInvoiceItem = ({

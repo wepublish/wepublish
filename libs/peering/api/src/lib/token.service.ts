@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { SessionCacheInvalidator } from '@wepublish/authentication/api';
-import { CreateTokenInput } from './token.model';
+import { CreateTokenInput, UpdateTokenInput } from './token.model';
 import * as crypto from 'crypto';
 
 export function generateToken() {
@@ -19,10 +19,30 @@ export class TokenService {
     return this.prisma.token.findMany({});
   }
 
-  async createToken(input: CreateTokenInput) {
+  async createToken({ name, roleIDs = [] }: CreateTokenInput) {
+    await this.assertRolesExist(roleIDs);
+
     return this.prisma.token.create({
-      data: { ...input, token: generateToken() },
+      data: { name, roleIDs, token: generateToken() },
     });
+  }
+
+  async updateToken({ id, name, roleIDs }: UpdateTokenInput) {
+    if (roleIDs) {
+      await this.assertRolesExist(roleIDs);
+    }
+
+    const token = await this.prisma.token.update({
+      where: { id },
+      data: {
+        ...(name !== undefined && { name }),
+        ...(roleIDs !== undefined && { roleIDs }),
+      },
+    });
+    // peer sessions are cached with their roles; changed roles apply at once
+    await this.sessionCache.invalidate();
+
+    return token;
   }
 
   async deleteToken(id: string) {
@@ -32,5 +52,22 @@ export class TokenService {
     await this.sessionCache.invalidate();
 
     return token;
+  }
+
+  private async assertRolesExist(roleIDs: string[]) {
+    if (!roleIDs.length) {
+      return;
+    }
+
+    const found = await this.prisma.userRole.findMany({
+      where: { id: { in: roleIDs } },
+      select: { id: true },
+    });
+    const known = new Set(found.map(role => role.id));
+    const unknown = roleIDs.filter(id => !known.has(id));
+
+    if (unknown.length) {
+      throw new BadRequestException(`Unknown user role: ${unknown.join(', ')}`);
+    }
   }
 }

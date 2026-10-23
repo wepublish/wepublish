@@ -209,7 +209,8 @@
     ],
     "HasPaymentMethod": [
       "Payment",
-      "PublicSubscription"
+      "PublicSubscription",
+      "SubscriptionPaymentMethodChange"
     ],
     "HasPoll": [
       "PollStartedAction"
@@ -227,8 +228,10 @@
       "SettingAIProvider",
       "SettingAnalyticsProvider",
       "SettingChallengeProvider",
+      "SettingLetterProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
+      "SettingPdfRenderer",
       "SettingSyncProvider",
       "SettingTrackingPixelProvider"
     ],
