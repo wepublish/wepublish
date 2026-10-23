@@ -875,7 +875,12 @@ key acts as ([D94](../decisions.md))
 organisation with no separate rule. That is the point of doing it this way: one authorisation rule,
 two ways of arriving at it. The key's scopes still gate every resolver through `@Permissions`, so a
 bound key can do what its scopes allow, and only inside its organisation
-([D36](../decisions.md)).
+([D36](../decisions.md)); it owns its creator's events only when they are in that organisation
+([D97](../decisions.md)). A key call is audited as `actorType token` with the key's name and the
+creator's id and email (`describeActor`), superseding D28's token-only audit rows
+([D94](../decisions.md)). Keys are refused the calls that would hand them the creator's account:
+password, email, two-factor setup, login JWT, external-app tokens and new keys
+(`requireUserSession`, [D97](../decisions.md)).
 
 `createApiToken` takes an optional `organizationId`. A member may bind a key to their own
 organisation; any other organisation needs `CanUpdateOtherOrganizations`, the permission that also

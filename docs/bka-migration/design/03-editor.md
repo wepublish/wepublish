@@ -95,7 +95,7 @@ kept under Agenda rather than Content Blocks, [D74](../decisions.md#d74--the-age
 The section shows for `AGENDA_PERMISSIONS` (`apps/editor/src/app/agendaPermissions.ts`), not for a
 tag permission alone. Organisations show for `CanUpdateOrganization` or a cross-organisation organisation permission;
 Venues also for `CanGetEvents` and `CanCreateEvent` ([D87](../decisions.md#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan)). Tags need a tag permission and
-`CanGetEvents` or `CanCreateEvent`, so an editor-only user sees no Agenda section ([D96](../decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)). The membership message shows only to
+`CanGetEvents` or `CanCreateEvent`, so an editor-only user sees no Agenda section ([D96](../decisions.md#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers), [D98](../decisions.md#d98--the-agenda-menu-needs-an-agenda-permission-and-event-tags-need-event-access)). The membership message shows only to
 someone who has no organisation, cannot create events and cannot see every event; anyone who can
 file events gets "No events yet" ([D77](../decisions.md#d77--empty-lists-say-why-and-organisers-who-cannot-publish-get-a-simple-stack)).
 

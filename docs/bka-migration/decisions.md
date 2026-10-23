@@ -1324,6 +1324,8 @@ Not architectural decisions — how the work itself is carried out.
 
 > **Superseded by [D31](#d31--bkas-old-api-is-switched-off-at-cutover-there-is-no-interim-layer).** There is no proxy, so there is no proxy token. Its "`ApiToken` gains no `organizationId`" consequence is reversed by [D36](#d36--an-api-key-can-belong-to-one-organisation).
 
+> **Audit part superseded by [D94](#d94--an-api-key-acts-as-the-user-who-created-it).** Karl, 2026-10-24: a key acts as its creator, and the audit log records both. A key call now writes the creator's `userId` and `userEmail` next to the key's `tokenName`, so "the audit log shows the token, and that is accepted" below no longer holds.
+
 **Context.** [D26](#d26--the-compatibility-stub-stays-in-the-php-application-and-calls-wepublish)
 makes the surviving Symfony app a proxy in front of We.Publish, which made it the busiest caller of
 the new API — and nothing in the authorisation model fitted it. `ApiToken` carries no
@@ -1550,6 +1552,8 @@ before ZUERST shuts down at the end of 2026.**
 
 ## D35 — An event's owner reaches it without an organisation
 
+> **Updated by [D94](#d94--an-api-key-acts-as-the-user-who-created-it) (Karl, 2026-10-24) and [D97](#d97--a-key-never-gets-its-creators-credentials-and-a-bound-key-owns-only-inside-its-organisation), awaiting Karl's confirmation for D97.** An API key acts as its creator, so the events it creates and copies are owned by the creator, and it reaches the creator's events. A key bound to an organisation owns an event only when the event is in that organisation (D97).
+
 > **Updated by [D92](#d92--only-the-events-owner-may-take-it-out-of-every-organisation), awaiting Karl's confirmation.** An owner who is also a member may take the event out of every organisation; a member who does not own it may not.
 
 > **Updated by [D47](#d47--who-may-set-an-events-organisation-and-owner), [D48](#d48--publishing-stays-with-the-organising-organisation) and [D49](#d49--deleting-an-event-needs-membership-or-the-cross-organisation-delete-permission), awaiting Karl's confirmation.** The open item below is answered by D47. The owner of an orphan event may publish it with `CanPublishEvent` (D48), and owners cannot delete their events (D49).
@@ -1605,6 +1609,8 @@ publication state, on purpose:
 ---
 
 ## D36 — An API key can belong to one organisation
+
+> **Updated by [D94](#d94--an-api-key-acts-as-the-user-who-created-it) (Karl, 2026-10-24) and [D97](#d97--a-key-never-gets-its-creators-credentials-and-a-bound-key-owns-only-inside-its-organisation), awaiting Karl's confirmation for D97.** A key acts as its creator, with its scopes as its permissions. A bound key still reaches only its organisation: its creator's events elsewhere stay out of its reach.
 
 > **Updated by [D41](#d41--an-organisations-api-keys-stay-with-their-creator) and confirmed by [D44](#d44--the-api-key-organisation-keeps-its-own-migration).** Members do not see or revoke the organisation's keys, and a key disabled by its creator leaving still shows as `Active`; both accepted. The column stays in its own migration.
 
@@ -1887,6 +1893,8 @@ D15's reasons (pure expansion, an honest limit, no rows nobody typed) all still 
 
 ## D41 — An organisation's API keys stay with their creator
 
+> **Updated by [D94](#d94--an-api-key-acts-as-the-user-who-created-it) (Karl, 2026-10-24).** A key now acts as its creator. A deleted creator still disables a bound key; a platform key keeps working with nobody behind it. A key cannot mint another key ([D97](#d97--a-key-never-gets-its-creators-credentials-and-a-bound-key-owns-only-inside-its-organisation), awaiting Karl's confirmation).
+
 Updates [D36](#d36--an-api-key-can-belong-to-one-organisation) and closes both of its open items.
 
 **Context.** D36 binds a key to an organisation and disables it as soon as its creator could no
@@ -2112,6 +2120,8 @@ D19 split the public scope from the editor scope but did not say how a request p
 ---
 
 ## D47 — Who may set an event's organisation and owner
+
+> **Updated by [D94](#d94--an-api-key-acts-as-the-user-who-created-it) (Karl, 2026-10-24) and [D97](#d97--a-key-never-gets-its-creators-credentials-and-a-bound-key-owns-only-inside-its-organisation), awaiting Karl's confirmation for D97.** "You" includes an API key, which acts as its creator: a new event's default owner is the key's creator. A bound key may take an event out of every organisation only when the event is in its organisation and its creator owns it.
 
 > **Updated by [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it), [D81](#d81--on-a-new-event-the-organisation-picker-offers-your-own-organisations-and-the-owner-is-you) and [D92](#d92--only-the-events-owner-may-take-it-out-of-every-organisation), awaiting Karl's confirmation.** Taking an event out of every organisation needs you to own it, or `CanUpdateOtherOrganizationEvents` (D92). `Event.viewerCan` reports `moveOrganization`, `clearOrganization` and `reassignOwner`, and the editor's pickers follow them.
 
@@ -2371,8 +2381,8 @@ changes keeps events at a venue that was disabled later editable.
 - `Event.organization` and `Place.organization` resolve to null for an organisation the caller may
   not see (`canSeeOrganization`).
 - `JSON` is unmapped in codegen, as `JSONObject` is, so clients get it untyped.
-- Open: BKa's form applies `findActiveAndNotPrivate` to everyone, while the build lets an
-  Agenda-Admin pick a private venue.
+- ~~Open: BKa's form applies `findActiveAndNotPrivate` to everyone, while the build lets an
+  Agenda-Admin pick a private venue.~~ Closed by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers): Karl keeps it.
 
 ---
 
@@ -2944,7 +2954,7 @@ lists every enabled venue, so an organiser's venue list needs `mine` to show the
 
 ## D74 — The agenda editor lives in `libs/event/editor`, and the list comes first
 
-> **Updated by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).** Tags under Agenda confirmed by Karl. The Agenda section no longer opens for a tag permission alone, and its Tags entry also needs `CanGetEvents` or `CanCreateEvent`.
+> **Updated by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers) and [D98](#d98--the-agenda-menu-needs-an-agenda-permission-and-event-tags-need-event-access).** Tags under Agenda confirmed by Karl (D96). The Agenda section no longer opens for a tag permission alone, and its Tags entry also needs `CanGetEvents` or `CanCreateEvent` (D98, awaiting Karl's confirmation).
 
 Follows [D61](#d61--the-old-editor-event-screens-are-removed-until-slice-f) and [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role).
 
@@ -3290,6 +3300,8 @@ them, as the article page does.
 
 ## D87 — Organisations and venues are list-and-edit records, gated on `viewerCan`
 
+> **Updated by [D95](#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules), awaiting Karl's confirmation.** A venue's On switch is now locked like the organisation's: it follows `Place.viewerCan.updatePrivileged`, and only holders of `CanUpdateOtherOrganizations` change it. `private` stays with the venue's managers.
+
 Implements design 3 §8. Uses [D72](#d72--organisation-tags-affiliations-and-contacts-are-public-and-written-through-the-organisation) and [D73](#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine).
 
 **Status.** Built in slice F stage 6. Awaiting Karl's confirmation.
@@ -3522,14 +3534,17 @@ regions, 4 audiences and 7 affiliations (D56). Screens built now would have noth
 
 ## D94 — An API key acts as the user who created it
 
-Updates [D35](#d35--an-events-owner-reaches-it-without-an-organisation), [D36](#d36--an-api-key-can-belong-to-one-organisation) and [D47](#d47--who-may-set-an-events-organisation-and-owner). Closes gap 2 of [permissions.md](permissions.md) §8.
+Updates [D35](#d35--an-events-owner-reaches-it-without-an-organisation), [D36](#d36--an-api-key-can-belong-to-one-organisation), [D41](#d41--an-organisations-api-keys-stay-with-their-creator) and [D47](#d47--who-may-set-an-events-organisation-and-owner). Supersedes the audit-log consequence of [D28](#d28--the-php-proxy-authenticates-with-one-admin-api-token-and-keeps-its-own-voters). Closes gap 2 of [permissions.md](permissions.md) §8. What a key may still not do as its creator is [D97](#d97--a-key-never-gets-its-creators-credentials-and-a-bound-key-owns-only-inside-its-organisation).
 
-**Status.** Karl, 2026-10-23: a key acts as its creator everywhere (profile, subscriptions,
-ownership). Its permissions stay its scopes.
+**Status.** Karl, 2026-10-24: a key acts as its creator everywhere (profile, subscriptions,
+ownership), and the audit log records both the key and its creator. Its permissions stay its
+scopes. Built in `37402f32f`.
 
 **Context.** `ApiTokenSession` carried no user. Events created by a key had no owner, a platform
 key could not edit them afterwards, and every resolver that reads `session.user` crashed for a key.
-BKa's tokens act as their owner user (permissions.md, row T3 and K3).
+The audit log recorded a key call with the key's name and no person, which D28 accepted while the
+PHP proxy was to be the only key; D31 removed the proxy. BKa's tokens act as their owner user
+(permissions.md, rows T3 and K3).
 
 **Decision.**
 - `resolveToken` loads `createdBy` without the password (`unselectPassword`), and
@@ -3540,28 +3555,28 @@ BKa's tokens act as their owner user (permissions.md, row T3 and K3).
   "admin" shortcut (`holdsAdminRole`) only counts user sessions, and `me.permissions` on the creator
   lists the key's scopes.
 - **Event scope.** `userIdOf` is the acting user, so a key creates and copies events owned by its
-  creator, writes revisions as its creator, and reaches its creator's events. A bound key owns an
-  event only inside its organisation (`isEventOwner`), so it cannot take an event out of every
-  organisation unless its creator owns it, and it never lists its creator's events elsewhere.
-- **Audit log.** A key call records `actorType token`, the key's name, and the creator's id and email.
-- **Things that would hand out the creator's whole account are refused for keys**
-  (`requireUserSession`): `createApiToken`, `updatePassword`, `requestEmailChange`,
-  `confirmEmailChange`, `generateTotpSetup`, `enableTotp`, `createJWTForWebsiteLogin` and
-  `createExternalAppToken`. `revokeActiveSession` answers false for a key. `updateCurrentUser`
-  still lets a key edit its creator's profile, but refuses its `password` argument for a key; for a
-  signed-in user it validates and hashes that password through `updateUserPassword`, where it was
-  written unhashed before (`user.resolver.ts`).
+  creator, writes revisions as its creator, and reaches and edits its creator's events. It publishes
+  its creator's events that have no organisation when it holds `CanPublishEvent` (D48's owner
+  branch). A key bound to an organisation does all this only inside that organisation (D97).
+- **Audit log.** A key call records `actorType token`, the key's name (`tokenName`), the key's
+  session id, and the creator's `userId` and `userEmail` (`describeActor`,
+  `libs/audit-log/api/src/lib/audit-log.interceptor.ts`). This replaces D28's "the audit log shows
+  the token, and that is accepted", which wrote `userId: null`. `impersonatedBy` stays null for keys.
+- **Profile.** Profile reads, the profile image and `updateCurrentUser` act on the
+  creator. The calls that would hand the key its creator's account are refused (D97).
 
-**Why.** A key that changes the password or email, mints a login JWT, or mints a longer-lived or
-unbound key would turn its narrow scopes into every role its creator holds. Refusing those few
-calls keeps "acts as its creator" from becoming "is its creator".
+**Why.** Karl's call. BKa's integrations expect what they create to belong to someone, and an audit
+row with no person behind it cannot say who made a change. Keeping the permissions on the scopes
+keeps a key no stronger than its creator made it when minting it (D23).
 
 **Consequences.**
-- Organisation creation is unchanged: a platform key still cannot create an organisation, because
-  the key itself would not be a member of it.
-- A key whose creator was deleted acts as nobody. Resolvers that destructure `{ user }` throw a
-  TypeError for it, as they did for every key before.
-- A key keeps acting for a creator whose account was deactivated (`active: false`). Open.
+- Once the creator is deleted, the key acts as nobody: its events get no owner, its audit rows carry
+  only the key's name, and resolvers that destructure `{ user }` throw a TypeError (500) for it, as
+  they did for every key before. Open.
+- A key keeps acting for a creator whose account was deactivated (`active: false`), because
+  `isSessionValid` checks only user sessions. Open.
+- For a key, `me.roles` lists the creator's roles while `me.permissions` lists the key's scopes
+  (`sensitive-data-user.resolver.ts`). Open: return no roles for a key, or accept it.
 
 ---
 
@@ -3569,7 +3584,7 @@ calls keeps "acts as its creator" from becoming "is its creator".
 
 Updates [D52](#d52--ticketingurl-and-showinprint-are-facts-on-the-event), [D55](#d55--place-writes-reuse-the-organisation-permissions), [D57](#d57--duplicateevent-copies-the-way-bkas-duplicator-does) and [D87](#d87--organisations-and-venues-are-list-and-edit-records-gated-on-viewercan). Closes gaps 3, 4, 5 and 7 of [permissions.md](permissions.md) §8.
 
-**Status.** Built in the permission-gap round. Awaiting Karl's confirmation.
+**Status.** Built in the permission-gap round (`702d76f1c`). Awaiting Karl's confirmation.
 
 **Decision.**
 - **Copying (gaps 3 and 4).** `duplicateEvent` and `Event.viewerCan.duplicate` use
@@ -3607,12 +3622,15 @@ runs the event, not the person typing.
   print."
 - Moving an event marked for print to an organisation that is not a partner keeps the flag.
 - Copying an event whose venue was disabled since now fails, where it used to copy the venue.
+- If BKa answers Q22 with "members may", the organisation and the venue switch change together.
+
+---
 
 ## D96 — The editor role holds no agenda permission for now, and Karl's other slice F answers
 
-Updates [D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker), [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role), [D69](#d69--a-review-request-can-be-withdrawn), [D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first), [D80](#d80--event-images-caption-on-the-event-alt-text-on-the-image-one-main-image) and [D85](#d85--ready-for-review-and-withdraw-request-follow-viewercan-and-name-who-can-publish).
+Updates [D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker), [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role), [D69](#d69--a-review-request-can-be-withdrawn), [D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first), [D80](#d80--event-images-caption-on-the-event-alt-text-on-the-image-one-main-image) and [D85](#d85--ready-for-review-and-withdraw-request-follow-viewercan-and-name-who-can-publish). The navigation that follows from it is [D98](#d98--the-agenda-menu-needs-an-agenda-permission-and-event-tags-need-event-access).
 
-**Status.** Karl's answers of 2026-10-24 to the slice F questions. Built.
+**Status.** Karl's answers of 2026-10-24 to the slice F questions. Built in `dc88bd535`.
 
 **Decision.**
 - **Editor role.** `EditorPermissions` holds no agenda permission: none of the six event
@@ -3620,25 +3638,21 @@ Updates [D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker)
   (`libs/permissions/src/lib/permissions.ts`, `predefined-permissions.spec.ts`). Places have no
   permissions of their own (D55), so there is nothing else to remove. The tag permissions stay,
   because articles, pages, comments and authors use them. Events are filed by admin, `agenda-admin`
-  and custom roles that carry the event permissions. This reverses D66's editor scoping "for now".
-- **Agenda-Admin** stays as built in D66.
-- **Navigation.** The Agenda section shows for `AGENDA_PERMISSIONS` (`CanGetEvents`,
-  `CanCreateEvent`, `CanUpdateOrganization`, `CanGetOtherOrganizations`,
-  `CanUpdateOtherOrganizations`, in `apps/editor/src/app/agendaPermissions.ts`), no longer for a tag
-  permission. Its **Tags** entry, and the `eventTags` and `createEventTag` commands, need a tag
-  permission **and** `CanGetEvents` or `CanCreateEvent`. Commands express that second group with
-  `Command.alsoPermissions` (`libs/ui/editor/src/lib/commandPalette/allowedCommands.ts`). An
-  editor-only user sees no Agenda section and no agenda command, and keeps every other tag screen.
+  and custom roles that carry the event permissions. The predefined editor role is a CMS role. This
+  supersedes D66's editor part "for now".
+- **Agenda-Admin** stays a predefined system role on every tenant, with the set D66 built
+  (`AgendaAdminPermissions`, seeded by `seedRoles`). This confirms D66's Agenda-Admin part.
 - **Withdrawing a review request.** Anyone who may edit the event (`CanUpdateEvent` and
-  `canModifyEvent`) may withdraw it, not only the person who asked, as D69 built. The editor's
-  Withdraw request follows `viewerCan.withdrawReview` alone, so it also shows next to Publish.
-- **Confirmed unchanged.** Event tags stay as Tags under Agenda (D74, D93). Alt text is written to
-  the shared `Image.description` (D80). Holders of `CanUpdateOtherOrganizationEvents`, Agenda-Admin
-  among them, may file events at private venues (D54, `selectablePlacesWhere`).
+  `canModifyEvent`) may withdraw it, not only the person who asked. The API already allowed that
+  (D69); the editor's Withdraw request now follows `viewerCan.withdrawReview` alone, so it also shows
+  next to Publish.
+- **Confirmed unchanged.** Event tags stay as **Tags** under Agenda (D74, D93), not under Content
+  Blocks. Alt text is written to the shared `Image.description` (D80). Holders of
+  `CanUpdateOtherOrganizationEvents`, Agenda-Admin among them, may file events at private venues
+  (`selectablePlacesWhere`), which closes D54's open point.
 
-**Why.** Karl's call. Event tags only classify events, so someone who can neither see nor file events
-has no use for them, and an Agenda section holding nothing but Tags would lead to screens they cannot
-use. Before, someone who could publish never saw Withdraw request, although the API let them withdraw.
+**Why.** Karl's call. Before, someone who could publish never saw Withdraw request, although the API
+let them withdraw.
 
 **Consequences.**
 - Editor-role users can no longer list, open, create or publish events, and lose the events they
@@ -3647,6 +3661,83 @@ use. Before, someone who could publish never saw Withdraw request, although the 
   for now.
 - Open: which role BKa's organisers (`ROLE_USER`) get at the slice G import. The editor role no
   longer fits, so either a custom organiser role on each tenant or a new predefined one.
+
+---
+
+## D97 — A key never gets its creator's credentials, and a bound key owns only inside its organisation
+
+Updates [D94](#d94--an-api-key-acts-as-the-user-who-created-it) and [D41](#d41--an-organisations-api-keys-stay-with-their-creator).
+
+**Status.** Built in `37402f32f` and `59616a085`. Awaiting Karl's confirmation.
+
+**Context.** Karl said a key acts as its creator everywhere (D94). A few calls on the current user
+would make it more than that: changing the password or email, setting up two-factor login, minting
+a login JWT, an external-app token or another key. Before D94 every one of them crashed or threw
+Unauthorized for a key, so refusing them takes nothing away. D94 also left open what ownership means
+for a key bound to an organisation whose creator owns events elsewhere.
+
+**Decision.**
+- **Refused for keys** with a ForbiddenException (`requireUserSession`, in
+  `libs/authentication/api`): `createApiToken`, `updatePassword`, `requestEmailChange`,
+  `confirmEmailChange`, `generateTotpSetup`, `enableTotp`, `createJWTForWebsiteLogin` and
+  `createExternalAppToken`. `revokeActiveSession` answers false for a key.
+- **`updateCurrentUser`** lets a key edit its creator's profile fields but refuses its `password`
+  argument. For a signed-in user that argument is now validated and hashed through
+  `updateUserPassword`, which keeps the current session; it used to be written unhashed
+  (`user.resolver.ts`).
+- **A bound key owns an event only inside its organisation.** `isEventOwner` holds for a bound key
+  only when its creator owns the event and the event is in the key's organisation, and
+  `ownedEventsWhere` adds nothing for a bound key, so its list and reach stay its organisation's
+  (`event-scope.ts`). It can take an event out of every organisation (D92) only for an event of its
+  organisation that its creator owns.
+- **A platform key still cannot create an organisation.** `organizationIdsOf` is empty for a
+  platform key, so it could not manage the organisation it created. Acting as the creator covers
+  ownership, not membership.
+
+**Why.** Each refused call would turn the key's scopes into every role its creator holds, or let a
+bound key outlive its organisation binding and its expiry. Refusing them keeps "acts as its creator"
+from becoming "is its creator". Inside its organisation the owner clause adds nothing to the
+membership clause, so leaving it out of a bound key's queries gives the same result and keeps the
+key away from its creator's events elsewhere.
+
+**Consequences.**
+- A signed-in user who sets a password through `updateCurrentUser` is now signed out on their other
+  devices, as `updatePassword` does. The profile write and the password write are two calls, so a
+  failure in the second leaves the profile saved.
+- Open: whether this list matches what Karl meant by "profile". Profile reads, the profile image
+  and the profile fields of `updateCurrentUser` act as the creator.
+
+---
+
+## D98 — The Agenda menu needs an agenda permission, and event tags need event access
+
+Updates [D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first) and design 3 §2. Follows [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).
+
+**Status.** Built in `dc88bd535`. Awaiting Karl's confirmation.
+
+**Context.** D96 took every agenda permission from the editor role, which keeps its tag permissions
+for articles. The Agenda section also opened for a tag permission, so an editor-only user would still
+have seen an Agenda section holding nothing but event tags.
+
+**Decision.**
+- The Agenda section shows for `AGENDA_PERMISSIONS` (`CanGetEvents`, `CanCreateEvent`,
+  `CanUpdateOrganization`, `CanGetOtherOrganizations`, `CanUpdateOtherOrganizations`, in
+  `apps/editor/src/app/agendaPermissions.ts`), no longer for a tag permission.
+- Its **Tags** entry, and the `eventTags` and `createEventTag` commands, need a tag permission
+  **and** `CanGetEvents` or `CanCreateEvent`. Commands express the second group with the optional
+  `Command.alsoPermissions` (`libs/ui/editor/src/lib/commandPalette/allowedCommands.ts`,
+  `.ai/conventions.md`), which keeps the palette in step with the sidebar's nested
+  `PermissionControl`.
+- An editor-only user sees no Agenda section and no agenda command, and keeps every other tag screen.
+
+**Why.** Event tags only classify events, so someone who can neither see nor file events has no use
+for them, and an Agenda section holding nothing but Tags leads to screens they cannot use. The
+palette could only check "any one of these permissions"; a second list says "and one of these"
+without special-casing two commands.
+
+**Consequences.**
+- The sidebar was not checked in a running editor. The command palette spec covers the same
+  permission lists, and the editor build and `tsc` pass.
 
 ---
 
@@ -3820,10 +3911,10 @@ Open, no decision needed, folded into later slices:
 
 ### Raised by the slice F build
 
-Slice F built the agenda editor (commits `89503d801` to `27185a677`). Karl decided on 2026-10-24
-that the predefined editor role gets the event permissions scoped to its own events, and that seeing
-every event stays a separate permission held only by admin and Agenda-Admin; that call is settled
-and recorded in [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role). The build choices are recorded as decisions
+Slice F built the agenda editor (commits `89503d801` to `27185a677`). Karl first gave the
+predefined editor role the event permissions scoped to its own events ([D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role)), then, on 2026-10-24,
+took every agenda permission away from it again: the editor role is a CMS role for now, and
+Agenda-Admin stays a predefined role on every tenant ([D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)). The build choices are recorded as decisions
 [D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) to [D93](#d93--taxonomy-screens-are-not-part-of-slice-f). **Each needs a yes, or the change Karl wants:**
 
 1. ~~[D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role): the Agenda-Admin set, the role on every tenant, and whether the editor role should
@@ -3869,8 +3960,8 @@ and recorded in [D66](#d66--the-editor-role-files-and-publishes-its-own-events-a
     organisation; a member who does not own it may still move it between their organisations.
 27. [D93](#d93--taxonomy-screens-are-not-part-of-slice-f): no taxonomy screens in slice F. Do they come with slice G, or not at all until
     someone needs them?
-28. [D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker) in the editor: Agenda-Admin holds `CanUpdateOtherOrganizationEvents`, so its venue picker
-    offers private venues. Keep that?
+28. ~~[D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker) in the editor: Agenda-Admin holds `CanUpdateOtherOrganizationEvents`, so its venue picker
+    offers private venues. Keep that?~~ Kept, confirmed by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).
 
 Open, no decision needed, from the slice F build:
 
@@ -3896,3 +3987,37 @@ Open, no decision needed, from the slice F build:
   touched; the publish dialog's copy still mentions two kinds of save; the organisation members panel
   shows US-format dates and help text that does not match what it does; 13 non-null-assertion lint
   warnings in the `event-editor` specs.
+
+### Raised by the API key and permission-gap round
+
+Karl's calls of 2026-10-24 are recorded as [D94](#d94--an-api-key-acts-as-the-user-who-created-it) (a key acts as its creator, and the audit log
+records both, superseding D28's audit part) and [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers) (the editor role holds no agenda permission,
+Agenda-Admin stays on every tenant, tags stay under Agenda, anyone who may edit an event may withdraw
+its review request, alt text stays shared, Agenda-Admin may file at private venues). Built in
+`37402f32f`, `702d76f1c`, `dc88bd535` and `59616a085`. **The choices this round made need a yes, or
+the change Karl wants:**
+
+1. [D95](#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules): copying needs membership of the source's organisation (or ownership of an
+   organisation-less source) and a venue that is still selectable; a venue's `enabled` needs
+   `CanUpdateOtherOrganizations`, like an organisation's; `showInPrint` changes only for a partner
+   organisation's event, or with `CanUpdateOtherOrganizationEvents`.
+2. [D97](#d97--a-key-never-gets-its-creators-credentials-and-a-bound-key-owns-only-inside-its-organisation): keys are refused the password, email, two-factor, login-JWT,
+   external-app-token and key-minting calls, and `updateCurrentUser`'s password; a bound key owns
+   only inside its organisation; a platform key still cannot create an organisation.
+3. [D98](#d98--the-agenda-menu-needs-an-agenda-permission-and-event-tags-need-event-access): the Agenda section needs an agenda permission, and event tags also need
+   `CanGetEvents` or `CanCreateEvent`.
+4. [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers): which role BKa's organisers get at the slice G import, now that the editor role
+   holds no agenda permission.
+
+Open, no decision needed, from this round:
+
+- A key whose creator was deleted acts as nobody, and resolvers that destructure `{ user }` throw a
+  TypeError for it; a key keeps acting for a deactivated creator; `me.roles` lists the creator's
+  roles for a key ([D94](#d94--an-api-key-acts-as-the-user-who-created-it)).
+- The editor's print checkbox is not locked for events of organisations that are not partners;
+  `printDescription` is ungated; a move to an organisation that is not a partner, and
+  `duplicateEvent`, keep `showInPrint` ([D95](#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules)).
+- Gap 6 of [permissions.md](permissions.md) §8 (the editor role managing every user's API keys) is
+  fixed on master by PR #3221 and reaches this branch with the next master merge.
+- No nx target type-checks spec files; `api-token.service.spec.ts` already has type errors that
+  predate this round.
