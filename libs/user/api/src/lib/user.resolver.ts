@@ -33,6 +33,7 @@ import { NotFoundException } from '@nestjs/common';
 import {
   Authenticated,
   CurrentUser,
+  requireUserSession,
   UserSession,
 } from '@wepublish/authentication/api';
 import { User as PUser } from '@prisma/client';
@@ -97,13 +98,26 @@ export class UserResolver {
   @Mutation(() => SensitiveDataUser, {
     description: `Updates the current logged in user.`,
   })
-  public updateCurrentUser(
-    @Args() input: UpdateCurrentUserInput,
-    @CurrentUser() { user }: UserSession
+  public async updateCurrentUser(
+    @Args() { password, ...input }: UpdateCurrentUserInput,
+    @CurrentUser() session: UserSession
   ) {
-    return this.service.updateUser({
+    if (password == null) {
+      return this.service.updateUser({
+        ...input,
+        id: session.user.id,
+      });
+    }
+
+    const { id: sessionId, user } = requireUserSession(session);
+    await this.service.validatePassword(password);
+    await this.service.updateUser({
       ...input,
       id: user.id,
+    });
+
+    return this.service.updateUserPassword(user.id, password, {
+      keepSessionId: sessionId,
     });
   }
 

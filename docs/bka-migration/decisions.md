@@ -3547,7 +3547,10 @@ BKa's tokens act as their owner user (permissions.md, row T3 and K3).
 - **Things that would hand out the creator's whole account are refused for keys**
   (`requireUserSession`): `createApiToken`, `updatePassword`, `requestEmailChange`,
   `confirmEmailChange`, `generateTotpSetup`, `enableTotp`, `createJWTForWebsiteLogin` and
-  `createExternalAppToken`. `revokeActiveSession` answers false for a key.
+  `createExternalAppToken`. `revokeActiveSession` answers false for a key. `updateCurrentUser`
+  still lets a key edit its creator's profile, but refuses its `password` argument for a key; for a
+  signed-in user it validates and hashes that password through `updateUserPassword`, where it was
+  written unhashed before (`user.resolver.ts`).
 
 **Why.** A key that changes the password or email, mints a login JWT, or mints a longer-lived or
 unbound key would turn its narrow scopes into every role its creator holds. Refusing those few
