@@ -1672,6 +1672,8 @@ can only touch its own organisation's events.**
 
 ## D37 — Organisations are public; their sensitive fields are not
 
+> **Updated by [D72](#d72--organisation-tags-affiliations-and-contacts-are-public-and-written-through-the-organisation), awaiting Karl's confirmation.** Tags, affiliations and contacts are public fields of `BaseOrganization`.
+>
 > **Updated by [D42](#d42--the-public-event-partner-filter-stays).** The public `partner` filter on events stays, and revealing partner status through it is accepted. `partner` itself stays sensitive on the organisation.
 >
 > **Updated by [D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker).** Places get no public/sensitive split: every place field is public, visibility follows the organisation rule, and `private` only narrows which venues an event may be filed at.
@@ -2383,6 +2385,8 @@ more thing to grant for no gain the build could see.
 
 ## D56 — Taxonomies are read-only for now, and the SQL migration seeds nothing
 
+> **Updated by [D72](#d72--organisation-tags-affiliations-and-contacts-are-public-and-written-through-the-organisation), awaiting Karl's confirmation.** An organisation's tags, affiliations and contacts now have public GraphQL fields and are written through the organisation inputs.
+
 Updates [D27](#d27--the-events-domain-ships-to-every-tenant).
 
 **Status.** Built in `595956a6f`. Follows D27; recorded for reference.
@@ -2804,6 +2808,77 @@ through D19's venue branch would otherwise see none of its dates.
 
 ---
 
+## D72 — Organisation tags, affiliations and contacts are public, and written through the organisation
+
+Updates [D37](#d37--organisations-are-public-their-sensitive-fields-are-not) and [D56](#d56--taxonomies-are-read-only-for-now-and-the-sql-migration-seeds-nothing).
+
+**Status.** Built in slice F stage 2. Awaiting Karl's confirmation.
+
+**Context.** D56 left an organisation's tags, affiliations and contacts as Prisma relations with no
+GraphQL fields, and D37 asked for a public/sensitive call on each when it lands. Design 3 §8's
+organisation form edits all three.
+
+**Decision.**
+- `BaseOrganization` gains `tags` (`Tag`, event tags), `affiliations` (`EventAffiliation`) and
+  `contacts` (`OrganizationContact`: `id`, `label`, `email`, `phone`). All three are **public**: an
+  anonymous caller reads them on `Organization` as a member reads them on
+  `SensitiveDataOrganization`. They are resolved by `OrganizationRelationsResolver` through one
+  batched dataloader each (`organization/organization-relations.resolver.ts`,
+  `organization-relations.dataloader.ts`), so `OrganizationResolver` stays unchanged, as D56 asked.
+- Tags and affiliations come back by name, contacts in the order they were written. None of the three
+  join tables has a sort column.
+- `createOrganization` and `updateOrganization` take `tagIds`, `affiliationIds` and `contacts`
+  (`OrganizationContactInput`). A list given replaces the stored one wholesale; a list left out, or
+  `null`, leaves it untouched; `[]` clears it. Whoever may update the organisation may change them
+  (members and `CanUpdateOtherOrganizations`, as for the other fields).
+- The rules live in `@wepublish/event/schedule` (`organization-input-rules.ts`), for the editor form
+  to reuse: at most 3 distinct tags, which must be existing `Event` tags; distinct, existing
+  affiliations; at most 6 contacts, each with an email or a phone, a valid email and a label of at
+  most 24 characters. Blank strings are stored as null. A broken rule answers BadRequest.
+- `updateOrganization` and `deleteOrganization` reset the events response cache, since cached
+  `events` responses embed the organisation.
+
+**Why.** bka.ch shows an organisation's categories and contacts (phone, email) on its public page
+(D37's evidence), so hiding them would break what the website must render. BKa uses one category
+list for organisations and events (`research/bka-09-admin-feature-inventory.md` §8), and caps
+categories at 3 and contacts at 6.
+
+**Consequences.**
+- Open: whether contacts (phone, email) should be sensitive instead.
+- Open: whether affiliations need a cap; BKa has 7 and sets none.
+
+---
+
+## D73 — Organisations and places tell the editor what the caller may do, and places filter by `mine`
+
+Follows [D68](#d68--the-event-tells-the-editor-what-the-caller-may-do-with-it). Updates [D55](#d55--place-writes-reuse-the-organisation-permissions).
+
+**Status.** Built in slice F stage 2. Awaiting Karl's confirmation.
+
+**Decision.**
+- `BaseOrganization.viewerCan` (`OrganizationViewerPermissions`) returns `update`
+  (`CanUpdateOrganization` and `canManageOrganization`), `updatePrivileged` (`update` and
+  `CanUpdateOtherOrganizations`, for `partner` and `enabled`), `delete` (`CanDeleteOrganization` and
+  `canManageOrganization`) and `manageMembers` (`CanUpdateOtherOrganizations`, never for a key bound
+  to an organisation, which cannot hold it anyway). `Place.viewerCan` (`PlaceViewerPermissions`)
+  returns `update` and `delete`, both `CanUpdateOrganization` and `canManagePlace`. Both are built in
+  `event-scope.ts` (`organizationViewerPermissions`, `placeViewerPermissions`) and are non-null:
+  an anonymous caller gets all false.
+- `Place.viewerCan.delete` does not look at upcoming events; the API still refuses that delete and
+  says why.
+- `PlaceFilter.mine` keeps the places of the caller's organisations, nothing for a caller with none,
+  and combines with every other filter.
+
+**Why.** As for events (D68), the forms disable fields with a reason instead of failing on save, and
+using the guards' permissions plus the services' rules keeps the two in step. `places` is public and
+lists every enabled venue, so an organiser's venue list needs `mine` to show their own.
+
+**Consequences.**
+- The response cache serves only anonymous requests, so a cached `places` answer never carries
+  someone else's `viewerCan`.
+
+---
+
 ## Open questions
 
 Recorded as they surface; resolved ones become decisions above.
@@ -2983,3 +3058,6 @@ Slice F builds the agenda editor. Its build choices are recorded as decisions fr
 4. [D69](#d69--a-review-request-can-be-withdrawn): anyone who may edit may withdraw a review request.
 5. [D70](#d70--event-content-takes-only-the-blocks-the-agenda-can-show): the server refuses non-agenda blocks in event content.
 6. [D71](#d71--the-editor-list-filters-by-publication-review-and-last-date-and-lookups-by-id-use-reach): lookups by id use reach, and the count includes the next date.
+7. [D72](#d72--organisation-tags-affiliations-and-contacts-are-public-and-written-through-the-organisation): organisation tags, affiliations and contacts are public; contacts capped at 6, tags at 3,
+   affiliations uncapped.
+8. [D73](#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine): `viewerCan` on organisations and places, and `PlaceFilter.mine`.

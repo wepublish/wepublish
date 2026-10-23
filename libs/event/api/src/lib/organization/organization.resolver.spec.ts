@@ -100,6 +100,14 @@ const PUBLIC_FIELDS = [
   'regionId',
 ];
 
+const PUBLIC_RELATIONS = [
+  'region',
+  'tags',
+  'affiliations',
+  'contacts',
+  'viewerCan',
+];
+
 const SENSITIVE_FIELDS = [
   'createdAt',
   'modifiedAt',
@@ -442,15 +450,17 @@ describe('OrganizationResolver', () => {
 
       expect(base.kind).toBe('INTERFACE');
       expect(base.fields.map((f: { name: string }) => f.name).sort()).toEqual(
-        [...PUBLIC_FIELDS, 'region'].sort()
+        [...PUBLIC_FIELDS, ...PUBLIC_RELATIONS].sort()
       );
       expect(open.fields.map((f: { name: string }) => f.name).sort()).toEqual(
-        [...PUBLIC_FIELDS, 'region'].sort()
+        [...PUBLIC_FIELDS, ...PUBLIC_RELATIONS].sort()
       );
       expect(open.interfaces).toEqual([{ name: 'BaseOrganization' }]);
       expect(
         sensitive.fields.map((f: { name: string }) => f.name).sort()
-      ).toEqual([...PUBLIC_FIELDS, 'region', ...SENSITIVE_FIELDS].sort());
+      ).toEqual(
+        [...PUBLIC_FIELDS, ...PUBLIC_RELATIONS, ...SENSITIVE_FIELDS].sort()
+      );
       expect(sensitive.interfaces).toEqual([{ name: 'BaseOrganization' }]);
     });
 

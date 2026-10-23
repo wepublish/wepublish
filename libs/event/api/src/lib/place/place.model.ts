@@ -24,6 +24,19 @@ registerEnumType(PlaceSort, {
   name: 'PlaceSort',
 });
 
+@ObjectType({
+  description: `What the caller may do with a place, by the same rules the mutations apply.`,
+})
+export class PlaceViewerPermissions {
+  @Field()
+  update!: boolean;
+
+  @Field({
+    description: `A place with upcoming events is still refused on delete.`,
+  })
+  delete!: boolean;
+}
+
 @ObjectType()
 export class Place {
   @Field()
@@ -102,6 +115,9 @@ export class Place {
 
   @Field(() => BaseOrganization, { nullable: true })
   organization?: BaseOrganization | null;
+
+  @Field(() => PlaceViewerPermissions)
+  viewerCan?: PlaceViewerPermissions;
 }
 
 @ObjectType()
@@ -126,6 +142,12 @@ export class PlaceFilter {
     description: `Only the places you may file an event at: enabled ones that are not private or belong to your organisation.`,
   })
   selectable?: boolean;
+
+  @Field({
+    nullable: true,
+    description: `Only the places of the organisations you are a member of.`,
+  })
+  mine?: boolean;
 
   @Field(() => GeoBoundingBox, { nullable: true })
   geoBoundingBox?: GeoBoundingBox;

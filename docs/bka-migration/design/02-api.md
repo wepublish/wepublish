@@ -87,8 +87,10 @@ and the service's record rules, [D68](../decisions.md#d68--the-event-tells-the-e
 the event's editor view. `nextOccurrence` and `upcomingOccurrenceCount` (the next date included) are
 public and batched, and `specialRate` is a fact ([D67](../decisions.md#d67--events-keep-bkas-special-rate-as-a-nullable-enum)). `EventSort` gains `ReviewRequestedAt`.
 
-`places` takes `search`, `regionId`, `organizationId`, `enabled`, `selectable` and `geoBoundingBox`,
-sorted by `Name`, `CreatedAt` or `ModifiedAt`. Its rows follow `visiblePlacesWhere` (§3.2). Place
+`places` takes `search`, `regionId`, `organizationId`, `enabled`, `selectable`, `mine` (the places of
+the caller's organisations) and `geoBoundingBox`, sorted by `Name`, `CreatedAt` or `ModifiedAt`. Its
+rows follow `visiblePlacesWhere` (§3.2). `Place.viewerCan` tells the editor whether the caller may
+update or delete it ([D73](../decisions.md#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine)). Place
 has no public/sensitive split ([D54](../decisions.md#d54--places-are-public-and-private-only-narrows-the-venue-picker), [design 1](01-data-model.md) §9), and
 `proInfirmisPictograms` is the `JSON` scalar. `eventRegions` hides disabled
 regions from everyone without `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations`.
@@ -110,7 +112,7 @@ directly, as the user mutations return `SensitiveDataUser`.
 
 | Public (`BaseOrganization`) | Sensitive only (`SensitiveDataOrganization`) |
 | --- | --- |
-| `id`, `name`, `slug`, `subTitle`, `about`, `website`, `legalStatus`, `enabled`, `address`, `zip`, `city`, `latitude`, `longitude`, `regionId` | `createdAt`, `modifiedAt`, `partner`, `createdByMigration`, `postOfficeBox`, `members` |
+| `id`, `name`, `slug`, `subTitle`, `about`, `website`, `legalStatus`, `enabled`, `address`, `zip`, `city`, `latitude`, `longitude`, `regionId`, `region`, `tags`, `affiliations`, `contacts`, `viewerCan` | `createdAt`, `modifiedAt`, `partner`, `createdByMigration`, `postOfficeBox`, `members` |
 
 Evidence, checked on 2026-10-23: bka.ch's own `/api/organizations` list (the anonymous JSON behind
 the `/organizations/` page) returns `id, slug, name, enabled, sub_title, categories, latitude,
@@ -129,8 +131,14 @@ Which rows are visible is a separate rule: anonymous callers see enabled organis
 also see their own disabled ones, and holders of either permission above see all
 (`visibleOrganizationsWhere`, `event-scope.ts:64-78`). Changing `partner` or `enabled` needs
 `CanUpdateOtherOrganizations` (`organization.service.ts:269-283`). `BaseOrganization.region`
-resolves the organisation's region (`organization/organization-region.resolver.ts`); its tags,
-affiliations and contacts have Prisma relations but no GraphQL fields yet.
+resolves the organisation's region (`organization/organization-region.resolver.ts`). Its tags
+(event tags, at most 3), affiliations and contacts (at most 6, each with an email or a phone) are
+public, resolved by `organization/organization-relations.resolver.ts`, and written through
+`tagIds`, `affiliationIds` and `contacts` on the organisation inputs, a given list replacing the
+stored one ([D72](../decisions.md#d72--organisation-tags-affiliations-and-contacts-are-public-and-written-through-the-organisation)). The rules live in `@wepublish/event/schedule`
+(`organization-input-rules.ts`). `viewerCan` returns `update`, `updatePrivileged` (partner and
+enabled), `delete` and `manageMembers`, by the guards' permissions and the service's rules
+([D73](../decisions.md#d73--organisations-and-places-tell-the-editor-what-the-caller-may-do-and-places-filter-by-mine)).
 
 ### 2.2 The event filter
 

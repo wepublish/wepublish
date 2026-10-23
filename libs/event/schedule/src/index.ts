@@ -7,3 +7,4 @@ export * from './lib/schedule-bounds';
 export * from './lib/occurrences-equal';
 export * from './lib/blocks-plain-text';
 export * from './lib/event-input-rules';
+export * from './lib/organization-input-rules';

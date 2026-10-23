@@ -6,7 +6,10 @@ import {
   AuthSessionType,
   SessionCacheInvalidator,
 } from '@wepublish/authentication/api';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import {
+  KvTtlCacheModule,
+  PublicContentCacheInvalidator,
+} from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { OrganizationDataloaderService } from './organization-dataloader.service';
 import { OrganizationService } from './organization.service';
@@ -44,6 +47,10 @@ describe('session cache after organisation membership changes', () => {
         AuthenticationService,
         SessionCacheInvalidator,
         OrganizationService,
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: { invalidate: vi.fn() },
+        },
         {
           provide: OrganizationDataloaderService,
           useValue: { prime: vi.fn() },

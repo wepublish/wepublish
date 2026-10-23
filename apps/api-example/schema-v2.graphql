@@ -421,7 +421,11 @@ interface BaseNavigationLink {
 interface BaseOrganization {
   about: String
   address: String
+  affiliations: [EventAffiliation!]!
   city: String
+
+  """At most 6."""
+  contacts: [OrganizationContact!]!
   enabled: Boolean!
   id: String!
   latitude: Float
@@ -432,6 +436,10 @@ interface BaseOrganization {
   regionId: String
   slug: Slug
   subTitle: String
+
+  """Event tags, at most 3."""
+  tags: [Tag!]!
+  viewerCan: OrganizationViewerPermissions!
   website: String
   zip: String
 }
@@ -3092,7 +3100,13 @@ type Mutation {
   createOrganization(
     about: String
     address: String
+
+    """Replaces the stored ones."""
+    affiliationIds: [String!]
     city: String
+
+    """At most 6, each with an email or a phone. Replaces the stored ones."""
+    contacts: [OrganizationContactInput!]
 
     """Needs CAN_UPDATE_OTHER_ORGANIZATIONS to change."""
     enabled: Boolean
@@ -3107,6 +3121,9 @@ type Mutation {
     regionId: String
     slug: Slug
     subTitle: String
+
+    """Event tags, at most 3. Replaces the stored ones."""
+    tagIds: [String!]
     website: String
     zip: String
   ): SensitiveDataOrganization!
@@ -3694,7 +3711,13 @@ type Mutation {
   updateOrganization(
     about: String
     address: String
+
+    """Replaces the stored ones."""
+    affiliationIds: [String!]
     city: String
+
+    """At most 6, each with an email or a phone. Replaces the stored ones."""
+    contacts: [OrganizationContactInput!]
 
     """Needs CAN_UPDATE_OTHER_ORGANIZATIONS to change."""
     enabled: Boolean
@@ -3710,6 +3733,9 @@ type Mutation {
     regionId: String
     slug: Slug
     subTitle: String
+
+    """Event tags, at most 3. Replaces the stored ones."""
+    tagIds: [String!]
     website: String
     zip: String
   ): SensitiveDataOrganization!
@@ -3971,7 +3997,11 @@ type OneChannelStatus {
 type Organization implements BaseOrganization {
   about: String
   address: String
+  affiliations: [EventAffiliation!]!
   city: String
+
+  """At most 6."""
+  contacts: [OrganizationContact!]!
   enabled: Boolean!
   id: String!
   latitude: Float
@@ -3982,8 +4012,25 @@ type Organization implements BaseOrganization {
   regionId: String
   slug: Slug
   subTitle: String
+
+  """Event tags, at most 3."""
+  tags: [Tag!]!
+  viewerCan: OrganizationViewerPermissions!
   website: String
   zip: String
+}
+
+type OrganizationContact {
+  email: String
+  id: String!
+  label: String
+  phone: String
+}
+
+input OrganizationContactInput {
+  email: String
+  label: String
+  phone: String
 }
 
 input OrganizationFilter {
@@ -4019,6 +4066,20 @@ enum OrganizationSort {
   CreatedAt
   ModifiedAt
   Name
+}
+
+"""
+What the caller may do with an organisation, by the same rules the mutations apply.
+"""
+type OrganizationViewerPermissions {
+  delete: Boolean!
+
+  """Adding and removing members."""
+  manageMembers: Boolean!
+  update: Boolean!
+
+  """Changing partner and enabled."""
+  updatePrivileged: Boolean!
 }
 
 type OverriddenRating {
@@ -4703,6 +4764,7 @@ type Place {
   region: EventRegion
   regionId: String
   slug: Slug
+  viewerCan: PlaceViewerPermissions!
   website: String
   wheelchairAccessible: Boolean!
   wheelchairAccessibleParking: Boolean!
@@ -4713,6 +4775,9 @@ type Place {
 input PlaceFilter {
   enabled: Boolean
   geoBoundingBox: GeoBoundingBox
+
+  """Only the places of the organisations you are a member of."""
+  mine: Boolean
   organizationId: String
   regionId: String
 
@@ -4729,6 +4794,15 @@ enum PlaceSort {
   CreatedAt
   ModifiedAt
   Name
+}
+
+"""
+What the caller may do with a place, by the same rules the mutations apply.
+"""
+type PlaceViewerPermissions {
+  """A place with upcoming events is still refused on delete."""
+  delete: Boolean!
+  update: Boolean!
 }
 
 type PolisConversationBlock implements BaseBlock {
@@ -5618,7 +5692,11 @@ Only resolved for members of the organization and for whoever may read or update
 type SensitiveDataOrganization implements BaseOrganization {
   about: String
   address: String
+  affiliations: [EventAffiliation!]!
   city: String
+
+  """At most 6."""
+  contacts: [OrganizationContact!]!
   createdAt: DateTime!
   createdByMigration: Boolean!
   enabled: Boolean!
@@ -5635,6 +5713,10 @@ type SensitiveDataOrganization implements BaseOrganization {
   regionId: String
   slug: Slug
   subTitle: String
+
+  """Event tags, at most 3."""
+  tags: [Tag!]!
+  viewerCan: OrganizationViewerPermissions!
   website: String
   zip: String
 }

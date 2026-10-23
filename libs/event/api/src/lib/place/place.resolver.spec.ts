@@ -4,7 +4,10 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { Test } from '@nestjs/testing';
 import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
 import { ONE_OF_METADATA_KEY } from '@wepublish/nest-modules';
-import { CanUpdateOrganization } from '@wepublish/permissions';
+import {
+  CanUpdateOrganization,
+  CanUpdateOtherOrganizations,
+} from '@wepublish/permissions';
 import {
   PERMISSIONS_METADATA_KEY,
   PermissionsGuard,
@@ -26,7 +29,26 @@ const member: AuthSession = {
   expiresAt: new Date(),
 } as unknown as AuthSession;
 
-const sessions: Record<string, AuthSession | undefined> = { member };
+const sessionWith = (
+  organizationIds: string[],
+  ...permissionIDs: string[]
+): AuthSession =>
+  ({
+    ...member,
+    roles: [{ id: 'role', permissionIDs }],
+    organizationIds,
+  }) as unknown as AuthSession;
+
+const sessions: Record<string, AuthSession | undefined> = {
+  member,
+  organiser: sessionWith(['org-a'], CanUpdateOrganization.id),
+  stranger: sessionWith(['org-b'], CanUpdateOrganization.id),
+  crossOrg: sessionWith(
+    [],
+    CanUpdateOrganization.id,
+    CanUpdateOtherOrganizations.id
+  ),
+};
 
 const place = {
   id: 'place-1',
@@ -80,7 +102,14 @@ describe('PlaceResolver authorisation wiring', () => {
     );
 
     expect(own.sort()).toEqual(
-      ['place', 'places', 'region', 'organization', ...MUTATIONS].sort()
+      [
+        'place',
+        'places',
+        'region',
+        'organization',
+        'viewerCan',
+        ...MUTATIONS,
+      ].sort()
     );
   });
 });
@@ -285,4 +314,35 @@ describe('PlaceResolver', () => {
     );
     expect(service.deletePlace).toHaveBeenCalledWith('place-1', member);
   });
+
+  it.each<[string, string | undefined, string | null, boolean]>([
+    ['an anonymous caller', undefined, 'org-a', false],
+    ['a member without CAN_UPDATE_ORGANIZATION', 'member', 'org-a', false],
+    ['a member with it', 'organiser', 'org-a', true],
+    ['a non-member', 'stranger', 'org-a', false],
+    ['a member, for a place without organisation', 'organiser', null, false],
+    ['a cross-organisation editor', 'crossOrg', 'org-a', true],
+    [
+      'a cross-organisation editor, for a place without organisation',
+      'crossOrg',
+      null,
+      true,
+    ],
+  ])(
+    'tells %s whether it may update and delete the place',
+    async (_, session, organizationId, may) => {
+      service.getPlace.mockResolvedValue({ ...place, organizationId });
+
+      const res = await send(
+        `query { place(id: "place-1") { viewerCan { update delete } } }`,
+        session ? { 'x-session': session } : {}
+      ).expect(200);
+
+      expect(res.body.errors).toBeUndefined();
+      expect(res.body.data.place.viewerCan).toEqual({
+        update: may,
+        delete: may,
+      });
+    }
+  );
 });

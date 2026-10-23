@@ -3,11 +3,13 @@ import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
 import {
   CanCreateEvent,
   CanDeleteEvent,
+  CanDeleteOrganization,
   CanDeleteOtherOrganizationEvents,
   CanGetOtherOrganizationEvents,
   CanGetOtherOrganizations,
   CanPublishEvent,
   CanUpdateEvent,
+  CanUpdateOrganization,
   CanUpdateOtherOrganizationEvents,
   CanUpdateOtherOrganizations,
   Permission,
@@ -285,4 +287,31 @@ export const eventViewerPermissions = (
       update && mayMoveEventToOrganization(session, event, null),
     reassignOwner: update && mayReassignEventOwner(session),
   };
+};
+
+export const organizationViewerPermissions = (
+  session: Session,
+  organizationId: string
+) => {
+  const granted = permissionsOf(session);
+  const manages = canManageOrganization(session, organizationId);
+  const update = hasPermission(CanUpdateOrganization, granted) && manages;
+
+  return {
+    update,
+    updatePrivileged: update && mayUpdateAnyOrganization(session),
+    delete: hasPermission(CanDeleteOrganization, granted) && manages,
+    manageMembers: mayUpdateAnyOrganization(session),
+  };
+};
+
+export const placeViewerPermissions = (
+  session: Session,
+  place: { organizationId: string | null }
+) => {
+  const manages =
+    hasPermission(CanUpdateOrganization, permissionsOf(session)) &&
+    canManagePlace(session, place.organizationId);
+
+  return { update: manages, delete: manages };
 };

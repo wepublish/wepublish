@@ -4,12 +4,21 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Organization, Prisma, PrismaClient } from '@prisma/client';
+import { Organization, Prisma, PrismaClient, TagType } from '@prisma/client';
 import {
   AuthSession,
   AuthSessionType,
   SessionCacheInvalidator,
 } from '@wepublish/authentication/api';
+import {
+  ORGANIZATION_CONTACT_LABEL_MAX_LENGTH,
+  ORGANIZATION_CONTACTS_MAX,
+  ORGANIZATION_TAGS_MAX,
+  organizationAffiliationIdsSchema,
+  organizationContactsSchema,
+  organizationTagIdsSchema,
+} from '@wepublish/event/schedule';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -28,6 +37,7 @@ import { OrganizationDataloaderService } from './organization-dataloader.service
 import {
   CreateOrganizationInput,
   OrganizationArgs,
+  OrganizationContactInput,
   OrganizationFilter,
   OrganizationListArgs,
   OrganizationMemberArgs,
@@ -39,11 +49,49 @@ type Session = AuthSession | null | undefined;
 
 const MAX_NAME_LENGTH = 100;
 
+type OrganizationRelationsInput = Pick<
+  CreateOrganizationInput,
+  'tagIds' | 'affiliationIds' | 'contacts'
+>;
+
+const blankToNull = (value: string | null | undefined) => value?.trim() || null;
+
+const contactData = (contacts: OrganizationContactInput[]) =>
+  contacts.map(({ label, email, phone }) => ({
+    label: blankToNull(label),
+    email: blankToNull(email),
+    phone: blankToNull(phone),
+  }));
+
+const relationsData = (
+  { tagIds, affiliationIds, contacts }: OrganizationRelationsInput,
+  replace: boolean
+) => {
+  const write = <T>(data: T[] | undefined) =>
+    data === undefined ? undefined
+    : replace ? { deleteMany: {}, createMany: { data } }
+    : { createMany: { data } };
+
+  return {
+    tags: write(tagIds?.map(tagId => ({ tagId }))),
+    affiliations: write(
+      affiliationIds?.map(affiliationId => ({ affiliationId }))
+    ),
+    contacts: write(contacts ? contactData(contacts) : undefined),
+  };
+};
+
+const withoutUndefined = <T extends Record<string, unknown>>(value: T) =>
+  Object.fromEntries(
+    Object.entries(value).filter(([, entry]) => entry !== undefined)
+  ) as Partial<T>;
+
 @Injectable()
 export class OrganizationService {
   constructor(
     private prisma: PrismaClient,
-    private sessionCache: SessionCacheInvalidator
+    private sessionCache: SessionCacheInvalidator,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   @PrimeDataLoader(OrganizationDataloaderService)
@@ -116,7 +164,14 @@ export class OrganizationService {
 
   @PrimeDataLoader(OrganizationDataloaderService)
   async createOrganization(
-    { enabled, partner, ...input }: CreateOrganizationInput,
+    {
+      enabled,
+      partner,
+      tagIds,
+      affiliationIds,
+      contacts,
+      ...input
+    }: CreateOrganizationInput,
     session: Session
   ) {
     const mayUpdateAny = mayUpdateAnyOrganization(session);
@@ -136,9 +191,17 @@ export class OrganizationService {
     );
     await this.validate(input, null);
 
+    const relations = this.presentRelations({
+      tagIds,
+      affiliationIds,
+      contacts,
+    });
+    await this.assertValidRelations(relations);
+
     const organization = await this.prisma.organization.create({
       data: {
         ...input,
+        ...withoutUndefined(relationsData(relations, false)),
         enabled: enabled ?? undefined,
         partner: partner ?? undefined,
         members:
@@ -157,7 +220,15 @@ export class OrganizationService {
 
   @PrimeDataLoader(OrganizationDataloaderService)
   async updateOrganization(
-    { id, enabled, partner, ...input }: UpdateOrganizationInput,
+    {
+      id,
+      enabled,
+      partner,
+      tagIds,
+      affiliationIds,
+      contacts,
+      ...input
+    }: UpdateOrganizationInput,
     session: Session
   ) {
     const existing = await this.findOrganizationOrFail(id);
@@ -175,15 +246,26 @@ export class OrganizationService {
     );
     await this.validate(input, existing);
 
-    return this.prisma.organization.update({
+    const relations = this.presentRelations({
+      tagIds,
+      affiliationIds,
+      contacts,
+    });
+    await this.assertValidRelations(relations);
+
+    const organization = await this.prisma.organization.update({
       where: { id },
       data: {
         ...input,
+        ...withoutUndefined(relationsData(relations, true)),
         name: input.name ?? undefined,
         enabled: enabled ?? undefined,
         partner: partner ?? undefined,
       },
     });
+    await this.publicContentCache.invalidate('events');
+
+    return organization;
   }
 
   async deleteOrganization(id: string, session: Session) {
@@ -199,6 +281,7 @@ export class OrganizationService {
       where: { id },
     });
     await this.sessionCache.invalidate();
+    await this.publicContentCache.invalidate('events');
 
     return organization;
   }
@@ -264,6 +347,67 @@ export class OrganizationService {
     }
 
     return organization;
+  }
+
+  private presentRelations({
+    tagIds,
+    affiliationIds,
+    contacts,
+  }: OrganizationRelationsInput) {
+    return {
+      tagIds: tagIds ?? undefined,
+      affiliationIds: affiliationIds ?? undefined,
+      contacts: contacts ?? undefined,
+    };
+  }
+
+  private async assertValidRelations({
+    tagIds,
+    affiliationIds,
+    contacts,
+  }: OrganizationRelationsInput) {
+    if (tagIds && !organizationTagIdsSchema.safeParse(tagIds).success) {
+      throw new BadRequestException(
+        `An organization takes at most ${ORGANIZATION_TAGS_MAX} distinct tags.`
+      );
+    }
+
+    if (
+      affiliationIds &&
+      !organizationAffiliationIdsSchema.safeParse(affiliationIds).success
+    ) {
+      throw new BadRequestException('Affiliations must be distinct.');
+    }
+
+    if (contacts && !organizationContactsSchema.safeParse(contacts).success) {
+      throw new BadRequestException(
+        `An organization takes at most ${ORGANIZATION_CONTACTS_MAX} contacts, each with an email address or a phone number, a valid email and a label of at most ${ORGANIZATION_CONTACT_LABEL_MAX_LENGTH} characters.`
+      );
+    }
+
+    if (tagIds?.length) {
+      const found = await this.prisma.tag.count({
+        where: { id: { in: tagIds }, type: TagType.Event },
+      });
+
+      if (found !== tagIds.length) {
+        throw new BadRequestException(
+          'Every tag must be an existing event tag.'
+        );
+      }
+    }
+
+    if (affiliationIds?.length) {
+      const found = await this.prisma.affiliation.count({
+        where: { id: { in: affiliationIds } },
+      });
+
+      if (found !== affiliationIds.length) {
+        throw new BadRequestException(
+          'Every affiliation must be an existing one.'
+        );
+      }
+    }
   }
 
   private assertMayChangePrivilegedFields(

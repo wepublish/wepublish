@@ -10,10 +10,14 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { AuthSession } from '@wepublish/authentication/api';
+import { Tag } from '@wepublish/tag/api';
 import { User } from '@wepublish/user/api';
 import { GraphQLSlug, PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { canReadOrganizationSensitiveData } from '../event-scope';
-import { EventRegion } from '../taxonomy/event-taxonomy.model';
+import {
+  EventAffiliation,
+  EventRegion,
+} from '../taxonomy/event-taxonomy.model';
 
 export enum OrganizationSort {
   Name = 'Name',
@@ -24,6 +28,50 @@ export enum OrganizationSort {
 registerEnumType(OrganizationSort, {
   name: 'OrganizationSort',
 });
+
+@ObjectType()
+export class OrganizationContact {
+  @Field()
+  id!: string;
+
+  @Field(() => String, { nullable: true })
+  label?: string | null;
+
+  @Field(() => String, { nullable: true })
+  email?: string | null;
+
+  @Field(() => String, { nullable: true })
+  phone?: string | null;
+}
+
+@InputType()
+export class OrganizationContactInput {
+  @Field(() => String, { nullable: true })
+  label?: string | null;
+
+  @Field(() => String, { nullable: true })
+  email?: string | null;
+
+  @Field(() => String, { nullable: true })
+  phone?: string | null;
+}
+
+@ObjectType({
+  description: `What the caller may do with an organisation, by the same rules the mutations apply.`,
+})
+export class OrganizationViewerPermissions {
+  @Field()
+  update!: boolean;
+
+  @Field({ description: `Changing partner and enabled.` })
+  updatePrivileged!: boolean;
+
+  @Field()
+  delete!: boolean;
+
+  @Field({ description: `Adding and removing members.` })
+  manageMembers!: boolean;
+}
 
 @InterfaceType({
   resolveType: (
@@ -79,6 +127,18 @@ export class BaseOrganization {
 
   @Field(() => EventRegion, { nullable: true })
   region?: EventRegion | null;
+
+  @Field(() => [Tag], { description: `Event tags, at most 3.` })
+  tags?: Tag[];
+
+  @Field(() => [EventAffiliation])
+  affiliations?: EventAffiliation[];
+
+  @Field(() => [OrganizationContact], { description: `At most 6.` })
+  contacts?: OrganizationContact[];
+
+  @Field(() => OrganizationViewerPermissions)
+  viewerCan?: OrganizationViewerPermissions;
 }
 
 @ObjectType({
@@ -261,6 +321,24 @@ export class CreateOrganizationInput {
 
   @Field(() => String, { nullable: true })
   regionId?: string | null;
+
+  @Field(() => [String], {
+    nullable: true,
+    description: `Event tags, at most 3. Replaces the stored ones.`,
+  })
+  tagIds?: string[] | null;
+
+  @Field(() => [String], {
+    nullable: true,
+    description: `Replaces the stored ones.`,
+  })
+  affiliationIds?: string[] | null;
+
+  @Field(() => [OrganizationContactInput], {
+    nullable: true,
+    description: `At most 6, each with an email or a phone. Replaces the stored ones.`,
+  })
+  contacts?: OrganizationContactInput[] | null;
 }
 
 @ArgsType()

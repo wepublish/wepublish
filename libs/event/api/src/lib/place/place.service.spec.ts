@@ -271,6 +271,55 @@ describe('PlaceService.getPlaces', () => {
     });
   });
 
+  it("limits mine to the places of the caller's organisations", async () => {
+    const { service, prisma } = await setup();
+
+    await service.getPlaces({ filter: { mine: true } }, member);
+
+    expect(prisma.place.findMany.mock.calls[0][0].where.AND).toContainEqual({
+      organizationId: { in: ['org-a'] },
+    });
+  });
+
+  it('finds nothing as mine for a caller without organisations', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getPlaces({ filter: { mine: true } }, undefined);
+
+    expect(prisma.place.findMany.mock.calls[0][0].where.AND).toContainEqual({
+      organizationId: { in: [] },
+    });
+  });
+
+  it('combines mine and selectable', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getPlaces(
+      { filter: { mine: true, selectable: true } },
+      member
+    );
+
+    expect(prisma.place.findMany.mock.calls[0][0].where.AND).toEqual(
+      expect.arrayContaining([
+        { organizationId: { in: ['org-a'] } },
+        {
+          enabled: true,
+          OR: [{ private: false }, { organizationId: { in: ['org-a'] } }],
+        },
+      ])
+    );
+  });
+
+  it('ignores mine when it is false', async () => {
+    const { service, prisma } = await setup();
+
+    await service.getPlaces({ filter: { mine: false } }, member);
+
+    expect(prisma.place.findMany.mock.calls[0][0].where.AND).toEqual([
+      { OR: [{ enabled: true }, { organizationId: { in: ['org-a'] } }] },
+    ]);
+  });
+
   it('rejects a bounding box with only one corner', async () => {
     const { service } = await setup();
 

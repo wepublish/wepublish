@@ -5,6 +5,7 @@ import {
   UserSession,
 } from '@wepublish/authentication/api';
 import {
+  CanDeleteOrganization,
   CanDeleteOtherOrganizationEvents,
   CanGetEvent,
   CanGetOtherOrganizationEvents,
@@ -36,6 +37,8 @@ import {
   mayUpdateAnyOrganization,
   memberOrganizationsWhere,
   organizationIdsOf,
+  organizationViewerPermissions,
+  placeViewerPermissions,
   selectablePlacesWhere,
   visibleOrganizationsWhere,
   visiblePlacesWhere,
@@ -1202,5 +1205,116 @@ describe('canReachEvent', () => {
         events["somebody else's event at a venue"]
       )
     ).toBe(false);
+  });
+});
+
+describe('organizationViewerPermissions', () => {
+  const none = {
+    update: false,
+    updatePrivileged: false,
+    delete: false,
+    manageMembers: false,
+  };
+
+  it.each<[string, AuthSession | undefined, typeof none]>([
+    ['an anonymous caller', undefined, none],
+    ['a member without organisation permissions', user(['org-a']), none],
+    [
+      'a member with CAN_UPDATE_ORGANIZATION',
+      user(['org-a'], CanUpdateOrganization.id),
+      { ...none, update: true },
+    ],
+    [
+      'a member who may also delete',
+      user(['org-a'], CanUpdateOrganization.id, CanDeleteOrganization.id),
+      { ...none, update: true, delete: true },
+    ],
+    [
+      'a non-member with CAN_UPDATE_ORGANIZATION',
+      user(['org-b'], CanUpdateOrganization.id, CanDeleteOrganization.id),
+      none,
+    ],
+    [
+      'a reader of every organisation',
+      user([], CanGetOtherOrganizations.id),
+      none,
+    ],
+    [
+      'a holder of CAN_UPDATE_OTHER_ORGANIZATIONS alone',
+      user([], CanUpdateOtherOrganizations.id),
+      { ...none, manageMembers: true },
+    ],
+    [
+      'a cross-organisation editor',
+      user(
+        [],
+        CanUpdateOrganization.id,
+        CanDeleteOrganization.id,
+        CanUpdateOtherOrganizations.id
+      ),
+      {
+        update: true,
+        updatePrivileged: true,
+        delete: true,
+        manageMembers: true,
+      },
+    ],
+    [
+      'an api key of the organisation',
+      organizationKey('org-a', CanUpdateOrganization.id),
+      { ...none, update: true },
+    ],
+    [
+      'an api key of another organisation',
+      organizationKey('org-b', CanUpdateOrganization.id),
+      none,
+    ],
+  ])('answers for %s', (_, session, expected) => {
+    expect(organizationViewerPermissions(session, 'org-a')).toEqual(expected);
+  });
+});
+
+describe('placeViewerPermissions', () => {
+  const none = { update: false, delete: false };
+  const both = { update: true, delete: true };
+
+  it.each<[string, AuthSession | undefined, string | null, typeof none]>([
+    ['an anonymous caller', undefined, 'org-a', none],
+    [
+      'a member with CAN_UPDATE_ORGANIZATION',
+      user(['org-a'], CanUpdateOrganization.id),
+      'org-a',
+      both,
+    ],
+    ['a member without it', user(['org-a']), 'org-a', none],
+    ['a non-member', user(['org-b'], CanUpdateOrganization.id), 'org-a', none],
+    [
+      'a member, for a place without organisation',
+      user(['org-a'], CanUpdateOrganization.id),
+      null,
+      none,
+    ],
+    [
+      'a cross-organisation editor',
+      user([], CanUpdateOrganization.id, CanUpdateOtherOrganizations.id),
+      'org-a',
+      both,
+    ],
+    [
+      'a cross-organisation editor, for a place without organisation',
+      user([], CanUpdateOrganization.id, CanUpdateOtherOrganizations.id),
+      null,
+      both,
+    ],
+    [
+      'an api key of the organisation',
+      organizationKey('org-a', CanUpdateOrganization.id),
+      'org-a',
+      both,
+    ],
+  ])('answers for %s', (_, session, organizationId, expected) => {
+    expect(placeViewerPermissions(session, { organizationId })).toEqual(
+      expected
+    );
   });
 });

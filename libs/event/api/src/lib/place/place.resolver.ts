@@ -14,7 +14,7 @@ import {
 } from '@wepublish/authentication/api';
 import { CanUpdateOrganization } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
-import { canSeeOrganization } from '../event-scope';
+import { canSeeOrganization, placeViewerPermissions } from '../event-scope';
 import { OrganizationDataloaderService } from '../organization/organization-dataloader.service';
 import { BaseOrganization } from '../organization/organization.model';
 import { RegionDataloader } from '../taxonomy/event-taxonomy.dataloader';
@@ -25,6 +25,7 @@ import {
   Place,
   PlaceArgs,
   PlaceListArgs,
+  PlaceViewerPermissions,
   UpdatePlaceInput,
 } from './place.model';
 import { PlaceService } from './place.service';
@@ -104,5 +105,12 @@ export class PlaceResolver {
     return organization && canSeeOrganization(session, organization) ?
         organization
       : null;
+  }
+
+  @ResolveField(() => PlaceViewerPermissions, {
+    description: `What you may do with this place.`,
+  })
+  public viewerCan(@Parent() place: PPlace, @CurrentUser() session: Session) {
+    return placeViewerPermissions(session, place);
   }
 }

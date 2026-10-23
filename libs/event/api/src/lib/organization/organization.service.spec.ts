@@ -10,6 +10,7 @@ import {
   AuthSessionType,
   SessionCacheInvalidator,
 } from '@wepublish/authentication/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import {
   CanGetOtherOrganizations,
   CanUpdateOtherOrganizations,
@@ -205,6 +206,7 @@ describe('OrganizationService', () => {
   let service: OrganizationService;
   let prisma: any;
   let sessionCache: { invalidate: ReturnType<typeof vi.fn> };
+  let publicContentCache: { invalidate: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     prisma = {
@@ -224,14 +226,25 @@ describe('OrganizationService', () => {
       },
       region: { findUnique: vi.fn() },
       user: { findUnique: vi.fn() },
+      tag: {
+        count: vi.fn(async ({ where }) => where.id.in.length),
+      },
+      affiliation: {
+        count: vi.fn(async ({ where }) => where.id.in.length),
+      },
     };
     sessionCache = { invalidate: vi.fn() };
+    publicContentCache = { invalidate: vi.fn() };
 
     const module = await Test.createTestingModule({
       providers: [
         OrganizationService,
         { provide: PrismaClient, useValue: prisma },
         { provide: SessionCacheInvalidator, useValue: sessionCache },
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: publicContentCache,
+        },
         {
           provide: OrganizationDataloaderService,
           useValue: { prime: vi.fn() },
@@ -749,6 +762,178 @@ describe('OrganizationService', () => {
       ).rejects.toThrow(NotFoundException);
       expect(prisma.organizationMember.delete).not.toHaveBeenCalled();
       expect(sessionCache.invalidate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('tags, affiliations and contacts', () => {
+    const kasse = { label: 'Kasse', email: 'kasse@dampfzentrale.ch' };
+
+    beforeEach(() => {
+      prisma.organization.findUnique.mockImplementation(
+        async ({ where }: Prisma.OrganizationFindUniqueArgs) =>
+          where.id === 'org-1' ? organization() : null
+      );
+    });
+
+    it('creates an organisation with its tags, affiliations and contacts', async () => {
+      await service.createOrganization(
+        {
+          name: 'Dampfzentrale',
+          tagIds: ['tag-1', 'tag-2'],
+          affiliationIds: ['aff-1'],
+          contacts: [kasse, { phone: ' 031 311 05 05 ', email: '' }],
+        },
+        crossOrg
+      );
+
+      const [{ data }] = prisma.organization.create.mock.calls[0];
+      expect(data.tags).toEqual({
+        createMany: { data: [{ tagId: 'tag-1' }, { tagId: 'tag-2' }] },
+      });
+      expect(data.affiliations).toEqual({
+        createMany: { data: [{ affiliationId: 'aff-1' }] },
+      });
+      expect(data.contacts).toEqual({
+        createMany: {
+          data: [
+            { label: 'Kasse', email: 'kasse@dampfzentrale.ch', phone: null },
+            { label: null, email: null, phone: '031 311 05 05' },
+          ],
+        },
+      });
+      expect(prisma.tag.count).toHaveBeenCalledWith({
+        where: { id: { in: ['tag-1', 'tag-2'] }, type: 'Event' },
+      });
+    });
+
+    it('refuses tags that are not existing event tags', async () => {
+      prisma.tag.count.mockResolvedValue(1);
+
+      await expect(
+        service.createOrganization(
+          { name: 'Dampfzentrale', tagIds: ['tag-1', 'article-tag'] },
+          crossOrg
+        )
+      ).rejects.toThrow(BadRequestException);
+      expect(prisma.organization.create).not.toHaveBeenCalled();
+    });
+
+    it('refuses an unknown affiliation', async () => {
+      prisma.affiliation.count.mockResolvedValue(0);
+
+      await expect(
+        service.updateOrganization(
+          { id: 'org-1', affiliationIds: ['nope'] },
+          crossOrg
+        )
+      ).rejects.toThrow(BadRequestException);
+      expect(prisma.organization.update).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ['four tags', { tagIds: ['a', 'b', 'c', 'd'] }],
+      ['a repeated tag', { tagIds: ['a', 'a'] }],
+      ['a repeated affiliation', { affiliationIds: ['a', 'a'] }],
+      ['seven contacts', { contacts: Array.from({ length: 7 }, () => kasse) }],
+      [
+        'a contact with neither email nor phone',
+        { contacts: [{ label: 'X' }] },
+      ],
+      ['an email that is not one', { contacts: [{ email: 'foo@' }] }],
+      [
+        'a label of 25 characters',
+        { contacts: [{ ...kasse, label: 'a'.repeat(25) }] },
+      ],
+    ])('refuses %s', async (_, input) => {
+      await expect(
+        service.updateOrganization({ id: 'org-1', ...input }, crossOrg)
+      ).rejects.toThrow(BadRequestException);
+      expect(prisma.organization.update).not.toHaveBeenCalled();
+    });
+
+    it('replaces tags, affiliations and contacts wholesale', async () => {
+      await service.updateOrganization(
+        {
+          id: 'org-1',
+          tagIds: ['tag-3'],
+          affiliationIds: [],
+          contacts: [kasse],
+        },
+        crossOrg
+      );
+
+      const [{ data }] = prisma.organization.update.mock.calls[0];
+      expect(data.tags).toEqual({
+        deleteMany: {},
+        createMany: { data: [{ tagId: 'tag-3' }] },
+      });
+      expect(data.affiliations).toEqual({
+        deleteMany: {},
+        createMany: { data: [] },
+      });
+      expect(data.contacts).toEqual({
+        deleteMany: {},
+        createMany: {
+          data: [
+            { label: 'Kasse', email: 'kasse@dampfzentrale.ch', phone: null },
+          ],
+        },
+      });
+    });
+
+    it('leaves them untouched when the fields are left out or null', async () => {
+      await service.updateOrganization(
+        { id: 'org-1', name: 'B', tagIds: null, contacts: null },
+        crossOrg
+      );
+
+      const [{ data }] = prisma.organization.update.mock.calls[0];
+      expect(data).toEqual({ name: 'B' });
+      expect(prisma.tag.count).not.toHaveBeenCalled();
+      expect(prisma.affiliation.count).not.toHaveBeenCalled();
+    });
+
+    it('lets a member change them on their own organisation', async () => {
+      await service.updateOrganization(
+        {
+          id: 'org-1',
+          tagIds: ['tag-1'],
+          affiliationIds: ['aff-1'],
+          contacts: [kasse],
+        },
+        user(['org-1'])
+      );
+
+      expect(prisma.organization.update).toHaveBeenCalled();
+    });
+
+    it('refuses a non-member without CAN_UPDATE_OTHER_ORGANIZATIONS', async () => {
+      await expect(
+        service.updateOrganization(
+          { id: 'org-1', tagIds: ['tag-1'] },
+          user(['org-2'], CanGetOtherOrganizations.id)
+        )
+      ).rejects.toThrow(ForbiddenException);
+      expect(prisma.tag.count).not.toHaveBeenCalled();
+      expect(prisma.organization.update).not.toHaveBeenCalled();
+    });
+
+    it('resets the events cache after an update, which shows the organisation', async () => {
+      await service.updateOrganization(
+        { id: 'org-1', tagIds: ['tag-1'] },
+        crossOrg
+      );
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledWith('events');
+      expect(
+        prisma.organization.update.mock.invocationCallOrder[0]
+      ).toBeLessThan(publicContentCache.invalidate.mock.invocationCallOrder[0]);
+    });
+
+    it('resets the events cache after a delete', async () => {
+      await service.deleteOrganization('org-1', crossOrg);
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledWith('events');
     });
   });
 });

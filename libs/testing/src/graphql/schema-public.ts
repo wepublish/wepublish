@@ -442,7 +442,10 @@ export type BaseNavigationLink = {
 export type BaseOrganization = {
   about?: Maybe<Scalars['String']['output']>;
   address?: Maybe<Scalars['String']['output']>;
+  affiliations: Array<EventAffiliation>;
   city?: Maybe<Scalars['String']['output']>;
+  /** At most 6. */
+  contacts: Array<OrganizationContact>;
   enabled: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   latitude?: Maybe<Scalars['Float']['output']>;
@@ -453,6 +456,9 @@ export type BaseOrganization = {
   regionId?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['Slug']['output']>;
   subTitle?: Maybe<Scalars['String']['output']>;
+  /** Event tags, at most 3. */
+  tags: Array<Tag>;
+  viewerCan: OrganizationViewerPermissions;
   website?: Maybe<Scalars['String']['output']>;
   zip?: Maybe<Scalars['String']['output']>;
 };
@@ -3713,7 +3719,9 @@ export type MutationCreateNewsletterCampaignArgs = {
 export type MutationCreateOrganizationArgs = {
   about?: InputMaybe<Scalars['String']['input']>;
   address?: InputMaybe<Scalars['String']['input']>;
+  affiliationIds?: InputMaybe<Array<Scalars['String']['input']>>;
   city?: InputMaybe<Scalars['String']['input']>;
+  contacts?: InputMaybe<Array<OrganizationContactInput>>;
   enabled?: InputMaybe<Scalars['Boolean']['input']>;
   latitude?: InputMaybe<Scalars['Float']['input']>;
   legalStatus?: InputMaybe<Scalars['String']['input']>;
@@ -3724,6 +3732,7 @@ export type MutationCreateOrganizationArgs = {
   regionId?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['Slug']['input']>;
   subTitle?: InputMaybe<Scalars['String']['input']>;
+  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
   website?: InputMaybe<Scalars['String']['input']>;
   zip?: InputMaybe<Scalars['String']['input']>;
 };
@@ -4802,7 +4811,9 @@ export type MutationUpdateNewsletterCampaignArgs = {
 export type MutationUpdateOrganizationArgs = {
   about?: InputMaybe<Scalars['String']['input']>;
   address?: InputMaybe<Scalars['String']['input']>;
+  affiliationIds?: InputMaybe<Array<Scalars['String']['input']>>;
   city?: InputMaybe<Scalars['String']['input']>;
+  contacts?: InputMaybe<Array<OrganizationContactInput>>;
   enabled?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['String']['input'];
   latitude?: InputMaybe<Scalars['Float']['input']>;
@@ -4814,6 +4825,7 @@ export type MutationUpdateOrganizationArgs = {
   regionId?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['Slug']['input']>;
   subTitle?: InputMaybe<Scalars['String']['input']>;
+  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
   website?: InputMaybe<Scalars['String']['input']>;
   zip?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5298,7 +5310,10 @@ export type Organization = BaseOrganization & {
   __typename?: 'Organization';
   about?: Maybe<Scalars['String']['output']>;
   address?: Maybe<Scalars['String']['output']>;
+  affiliations: Array<EventAffiliation>;
   city?: Maybe<Scalars['String']['output']>;
+  /** At most 6. */
+  contacts: Array<OrganizationContact>;
   enabled: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   latitude?: Maybe<Scalars['Float']['output']>;
@@ -5309,8 +5324,25 @@ export type Organization = BaseOrganization & {
   regionId?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['Slug']['output']>;
   subTitle?: Maybe<Scalars['String']['output']>;
+  /** Event tags, at most 3. */
+  tags: Array<Tag>;
+  viewerCan: OrganizationViewerPermissions;
   website?: Maybe<Scalars['String']['output']>;
   zip?: Maybe<Scalars['String']['output']>;
+};
+
+export type OrganizationContact = {
+  __typename?: 'OrganizationContact';
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  label?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
+};
+
+export type OrganizationContactInput = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  label?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type OrganizationFilter = {
@@ -5343,6 +5375,17 @@ export enum OrganizationSort {
   ModifiedAt = 'ModifiedAt',
   Name = 'Name'
 }
+
+/** What the caller may do with an organisation, by the same rules the mutations apply. */
+export type OrganizationViewerPermissions = {
+  __typename?: 'OrganizationViewerPermissions';
+  delete: Scalars['Boolean']['output'];
+  /** Adding and removing members. */
+  manageMembers: Scalars['Boolean']['output'];
+  update: Scalars['Boolean']['output'];
+  /** Changing partner and enabled. */
+  updatePrivileged: Scalars['Boolean']['output'];
+};
 
 export type OverriddenRating = {
   __typename?: 'OverriddenRating';
@@ -6073,6 +6116,7 @@ export type Place = {
   region?: Maybe<EventRegion>;
   regionId?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['Slug']['output']>;
+  viewerCan: PlaceViewerPermissions;
   website?: Maybe<Scalars['String']['output']>;
   wheelchairAccessible: Scalars['Boolean']['output'];
   wheelchairAccessibleParking: Scalars['Boolean']['output'];
@@ -6083,6 +6127,8 @@ export type Place = {
 export type PlaceFilter = {
   enabled?: InputMaybe<Scalars['Boolean']['input']>;
   geoBoundingBox?: InputMaybe<GeoBoundingBox>;
+  /** Only the places of the organisations you are a member of. */
+  mine?: InputMaybe<Scalars['Boolean']['input']>;
   organizationId?: InputMaybe<Scalars['String']['input']>;
   regionId?: InputMaybe<Scalars['String']['input']>;
   /** Matches the name. */
@@ -6096,6 +6142,14 @@ export enum PlaceSort {
   ModifiedAt = 'ModifiedAt',
   Name = 'Name'
 }
+
+/** What the caller may do with a place, by the same rules the mutations apply. */
+export type PlaceViewerPermissions = {
+  __typename?: 'PlaceViewerPermissions';
+  /** A place with upcoming events is still refused on delete. */
+  delete: Scalars['Boolean']['output'];
+  update: Scalars['Boolean']['output'];
+};
 
 export type PolisConversationBlock = BaseBlock & {
   __typename?: 'PolisConversationBlock';
@@ -7585,7 +7639,10 @@ export type SensitiveDataOrganization = BaseOrganization & {
   __typename?: 'SensitiveDataOrganization';
   about?: Maybe<Scalars['String']['output']>;
   address?: Maybe<Scalars['String']['output']>;
+  affiliations: Array<EventAffiliation>;
   city?: Maybe<Scalars['String']['output']>;
+  /** At most 6. */
+  contacts: Array<OrganizationContact>;
   createdAt: Scalars['DateTime']['output'];
   createdByMigration: Scalars['Boolean']['output'];
   enabled: Scalars['Boolean']['output'];
@@ -7602,6 +7659,9 @@ export type SensitiveDataOrganization = BaseOrganization & {
   regionId?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['Slug']['output']>;
   subTitle?: Maybe<Scalars['String']['output']>;
+  /** Event tags, at most 3. */
+  tags: Array<Tag>;
+  viewerCan: OrganizationViewerPermissions;
   website?: Maybe<Scalars['String']['output']>;
   zip?: Maybe<Scalars['String']['output']>;
 };

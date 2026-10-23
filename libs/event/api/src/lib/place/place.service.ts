@@ -15,6 +15,7 @@ import {
 } from '@wepublish/utils/api';
 import {
   canManagePlace,
+  organizationIdsOf,
   selectablePlacesWhere,
   visiblePlacesWhere,
 } from '../event-scope';
@@ -62,6 +63,9 @@ export const createPlaceFilter = (
       filter?.organizationId ? { organizationId: filter.organizationId } : {},
       filter?.enabled != null ? { enabled: filter.enabled } : {},
       filter?.selectable ? selectablePlacesWhere(session) : {},
+      filter?.mine ?
+        { organizationId: { in: organizationIdsOf(session) } }
+      : {},
       geoBoundingBoxWhere(filter?.geoBoundingBox),
     ].filter(clause => Object.keys(clause).length),
   ],
