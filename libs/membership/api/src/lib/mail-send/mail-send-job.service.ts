@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
+import { FeaturesService } from '@wepublish/features/api';
 import {
   MailChannel,
   MailSendAudience,
@@ -95,8 +101,22 @@ export class MailSendJobService {
     private prisma: PrismaClient,
     private mailContext: MailContext,
     private letterContext: LetterContext,
-    private recipientService: MailSendRecipientService
+    private recipientService: MailSendRecipientService,
+    private features: FeaturesService
   ) {}
+
+  /**
+   * Letters ship dark. The channel is an argument, so `@Feature` on the
+   * resolver cannot see it; refuse here instead, for sends and previews alike.
+   */
+  private async assertChannelAllowed(channel?: MailChannel | null) {
+    if (
+      channel === MailChannel.letter &&
+      !(await this.features.isEnabled('paper-letters'))
+    ) {
+      throw new ForbiddenException('Letters are not enabled for this medium.');
+    }
+  }
 
   /**
    * Manually send a template to a single user. Runs inline (one mail), but is
@@ -160,6 +180,8 @@ export class MailSendJobService {
     },
     currentUserId: string
   ): Promise<MailSendJob> {
+    await this.assertChannelAllowed(input.channel);
+
     const template = await this.loadTemplate(input.mailTemplateId);
 
     const totalCount = await this.recipientService.count(
@@ -728,6 +750,8 @@ export class MailSendJobService {
     pdf?: string;
     recipient: MailRecipient | null;
   }> {
+    await this.assertChannelAllowed(input.channel);
+
     const template = await this.loadTemplate(input.mailTemplateId);
     const recipient = await this.findPreviewRecipient(
       input.audience,

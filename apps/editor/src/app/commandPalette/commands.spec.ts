@@ -20,9 +20,11 @@ const catalogs = {
 const lookup = (catalog: Catalog, key: string) =>
   key
     .split('.')
-    .reduce<
-      string | Catalog | undefined
-    >((value, part) => (value && typeof value !== 'string' ? value[part] : undefined), catalog);
+    .reduce<string | Catalog | undefined>(
+      (value, part) =>
+        value && typeof value !== 'string' ? value[part] : undefined,
+      catalog
+    );
 
 const pathOf = (tag: ts.JsxOpeningLikeElement) => {
   if (tag.tagName.getText() !== 'Route') {
@@ -134,6 +136,15 @@ describe('editor command registry', () => {
 
   it('leaves a command that acts rather than navigates out of the routes', () => {
     expect(commandPaths().length).toBeLessThanOrEqual(allCommands.length);
+  });
+
+  it.each([
+    ['letterLayouts', 'paper-letters'],
+    ['createLetterLayout', 'paper-letters'],
+  ])('offers %s only where %s is switched on', (id, feature) => {
+    expect(allCommands.find(command => command.id === id)?.feature).toBe(
+      feature
+    );
   });
 
   it('marks the three favourites, and nothing else', () => {

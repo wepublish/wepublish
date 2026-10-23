@@ -368,10 +368,7 @@ export interface CustomTeaserLink extends BaseTeaser {
 }
 
 export type TeaserLink =
-  | ArticleTeaserLink
-  | PageTeaserLink
-  | CustomTeaserLink
-  | EventTeaserLink;
+  ArticleTeaserLink | PageTeaserLink | CustomTeaserLink | EventTeaserLink;
 
 export interface BaseTeaser {
   image?: FullImageFragment | null;
@@ -1406,9 +1403,7 @@ export function blockForQueryBlock(
           teaserType: block.teaserType ?? TeaserType.Article,
           teasers: block.teasers.map((rawTeaser, index) => {
             const teaser = rawTeaser as
-              | FullTeaserFragmentWithTypename
-              | null
-              | undefined;
+              FullTeaserFragmentWithTypename | null | undefined;
 
             return [
               `${index}`,

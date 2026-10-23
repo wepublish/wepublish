@@ -337,8 +337,8 @@ function ArticleEditor() {
   const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     articleData?.article?.draft ||
-      articleData?.article?.published ||
-      articleData?.article?.pending
+    articleData?.article?.published ||
+    articleData?.article?.pending
   );
 
   const [hasChanged, setChanged] = useState(false);
