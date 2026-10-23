@@ -1,9 +1,10 @@
 fragment FullEvent on Event {
   id
+  slug
   name
-  lead
   description
   status
+  scheduleType
   location
   image {
     ...FullImage
@@ -14,6 +15,16 @@ fragment FullEvent on Event {
   startsAt
   endsAt
   url
+}
+
+fragment FullEventDetail on Event {
+  ...FullEvent
+  latest {
+    id
+    blocks {
+      ...FullBlock
+    }
+  }
 }
 
 query EventList(
@@ -47,8 +58,8 @@ query EventList(
   }
 }
 
-query Event($id: String!) {
-  event(id: $id) {
-    ...FullEvent
+query Event($id: String, $slug: Slug) {
+  event(id: $id, slug: $slug) {
+    ...FullEventDetail
   }
 }

@@ -62,11 +62,9 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
   });
 
   const { data: eventData, loading: eventLoading } = useQuery(EventDocument, {
-    skip: !id || !router.asPath.startsWith('/event'),
+    skip: (!slug && !id) || !router.asPath.startsWith('/event'),
     fetchPolicy: 'cache-only',
-    variables: {
-      id: id as string,
-    },
+    variables: id ? { id: id as string } : { slug: slug as string },
   });
 
   const { data: searchData, loading: searchLoading } = useQuery(
@@ -98,7 +96,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
       };
     }
 
-    if (id && !eventLoading && eventData?.event?.name) {
+    if ((slug || id) && !eventLoading && eventData?.event?.name) {
       return {
         pageType: PageType.Event,
         Event: { name: eventData.event?.name },

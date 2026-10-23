@@ -17,6 +17,8 @@ export type Scalars = {
   DateTime: { input: string; output: string; }
   /** Setting Value */
   GraphQLSettingValueType: { input: unknown; output: unknown; }
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: { input: unknown; output: unknown; }
   /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSONObject: { input: unknown; output: unknown; }
   RichText: { input: RichtextJSONDocument; output: RichtextJSONDocument; }
@@ -447,6 +449,7 @@ export type BaseOrganization = {
   legalStatus?: Maybe<Scalars['String']['output']>;
   longitude?: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
+  region?: Maybe<EventRegion>;
   regionId?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['Slug']['output']>;
   subTitle?: Maybe<Scalars['String']['output']>;
@@ -1197,22 +1200,65 @@ export enum EditorBlockType {
 
 export type Event = {
   __typename?: 'Event';
+  audience?: Maybe<EventAudience>;
+  audienceId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  dateFrom?: Maybe<Scalars['DateTime']['output']>;
+  dateTo?: Maybe<Scalars['DateTime']['output']>;
+  dates: Array<EventDate>;
   description?: Maybe<Scalars['RichText']['output']>;
+  draft?: Maybe<EventRevision>;
   endsAt?: Maybe<Scalars['DateTime']['output']>;
-  externalSourceId?: Maybe<Scalars['String']['output']>;
-  externalSourceName?: Maybe<Scalars['String']['output']>;
+  firstDateAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
   image?: Maybe<Image>;
-  imageId?: Maybe<Scalars['String']['output']>;
-  lead?: Maybe<Scalars['String']['output']>;
+  lastDateAt?: Maybe<Scalars['DateTime']['output']>;
+  latest?: Maybe<EventRevision>;
+  legacyId?: Maybe<Scalars['String']['output']>;
   location?: Maybe<Scalars['String']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
-  name: Scalars['String']['output'];
-  startsAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  openingTime?: Maybe<Scalars['String']['output']>;
+  organization?: Maybe<BaseOrganization>;
+  organizationId?: Maybe<Scalars['String']['output']>;
+  ownerId?: Maybe<Scalars['String']['output']>;
+  pending?: Maybe<EventRevision>;
+  place?: Maybe<Place>;
+  placeId?: Maybe<Scalars['String']['output']>;
+  published?: Maybe<EventRevision>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  rates: Array<EventRate>;
+  reviewRequestedAt?: Maybe<Scalars['DateTime']['output']>;
+  reviewRequestedById?: Maybe<Scalars['String']['output']>;
+  scheduleType: EventScheduleType;
+  seoDescription?: Maybe<Scalars['String']['output']>;
+  seoTitle?: Maybe<Scalars['String']['output']>;
+  showInPrint: Scalars['Boolean']['output'];
+  slug?: Maybe<Scalars['Slug']['output']>;
+  socialMediaDescription?: Maybe<Scalars['String']['output']>;
+  socialMediaImage?: Maybe<Image>;
+  socialMediaImageID?: Maybe<Scalars['String']['output']>;
+  socialMediaTitle?: Maybe<Scalars['String']['output']>;
+  startsAt?: Maybe<Scalars['DateTime']['output']>;
   status: EventStatus;
-  tags?: Maybe<Array<Tag>>;
-  url: Scalars['String']['output'];
+  tags: Array<Tag>;
+  ticketingUrl?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+  weekDays: Array<Scalars['Int']['output']>;
+};
+
+export type EventAffiliation = {
+  __typename?: 'EventAffiliation';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  slug?: Maybe<Scalars['Slug']['output']>;
+};
+
+export type EventAudience = {
+  __typename?: 'EventAudience';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  slug?: Maybe<Scalars['Slug']['output']>;
 };
 
 export type EventBlock = BaseBlock & {
@@ -1243,6 +1289,13 @@ export type EventBlockInput = {
   filter: EventBlockFilterInput;
 };
 
+export type EventContentInput = {
+  blocks: Array<BlockContentInput>;
+  images?: InputMaybe<Array<EventImageInput>>;
+  name: Scalars['String']['input'];
+  printDescription?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type EventCreatedAction = BaseAction & HasEventLc & {
   __typename?: 'EventCreatedAction';
   actionType: ActionType;
@@ -1251,44 +1304,137 @@ export type EventCreatedAction = BaseAction & HasEventLc & {
   eventId: Scalars['String']['output'];
 };
 
-export type EventFilter = {
-  from?: InputMaybe<Scalars['DateTime']['input']>;
-  location?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  tags?: InputMaybe<Array<Scalars['String']['input']>>;
-  to?: InputMaybe<Scalars['DateTime']['input']>;
-  upcomingOnly?: InputMaybe<Scalars['Boolean']['input']>;
+export type EventDate = {
+  __typename?: 'EventDate';
+  dateFrom: Scalars['DateTime']['output'];
+  dateTo: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  openingTime?: Maybe<Scalars['String']['output']>;
+  sortOrder: Scalars['Int']['output'];
 };
 
-export type EventFromSource = {
-  __typename?: 'EventFromSource';
-  createdAt: Scalars['DateTime']['output'];
-  description?: Maybe<Scalars['RichText']['output']>;
-  endsAt?: Maybe<Scalars['DateTime']['output']>;
-  externalSourceId?: Maybe<Scalars['String']['output']>;
-  externalSourceName?: Maybe<Scalars['String']['output']>;
-  id: Scalars['String']['output'];
-  imageUrl?: Maybe<Scalars['String']['output']>;
-  lead?: Maybe<Scalars['String']['output']>;
-  location?: Maybe<Scalars['String']['output']>;
-  modifiedAt: Scalars['DateTime']['output'];
-  name: Scalars['String']['output'];
-  startsAt: Scalars['DateTime']['output'];
-  status: EventStatus;
+export type EventDateInput = {
+  dateFrom: Scalars['DateTime']['input'];
+  dateTo: Scalars['DateTime']['input'];
+  openingTime?: InputMaybe<Scalars['String']['input']>;
 };
+
+export type EventFilter = {
+  /** Pro Infirmis pictogram ids; the venue needs at least one of them. */
+  accessibilityProInfirmis?: InputMaybe<Array<Scalars['Int']['input']>>;
+  audienceId?: InputMaybe<Scalars['String']['input']>;
+  eventStatus?: InputMaybe<Array<EventStatus>>;
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Matches the coordinates of the venue. */
+  geoBoundingBox?: InputMaybe<GeoBoundingBox>;
+  ids?: InputMaybe<Array<Scalars['String']['input']>>;
+  organizationIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  partner?: InputMaybe<Scalars['Boolean']['input']>;
+  placeIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Matches the region of the venue. */
+  regionId?: InputMaybe<Scalars['String']['input']>;
+  /** Matches name and description, ignoring accents and case. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  showInPrint?: InputMaybe<Scalars['Boolean']['input']>;
+  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Only events with an occurrence that has not ended yet. */
+  upcoming?: InputMaybe<Scalars['Boolean']['input']>;
+  wheelchairAccessible?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type EventImage = {
+  __typename?: 'EventImage';
+  caption?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<Image>;
+  imageId: Scalars['String']['output'];
+  isMain: Scalars['Boolean']['output'];
+  sortOrder: Scalars['Int']['output'];
+};
+
+export type EventImageInput = {
+  caption?: InputMaybe<Scalars['String']['input']>;
+  imageId: Scalars['String']['input'];
+  isMain?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type EventInput = {
+  audienceId?: InputMaybe<Scalars['String']['input']>;
+  dateFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  dateTo?: InputMaybe<Scalars['DateTime']['input']>;
+  dates?: InputMaybe<Array<EventDateInput>>;
+  openingTime?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  ownerId?: InputMaybe<Scalars['String']['input']>;
+  placeId?: InputMaybe<Scalars['String']['input']>;
+  rates?: InputMaybe<Array<EventRateInput>>;
+  scheduleType: EventScheduleType;
+  seoDescription?: InputMaybe<Scalars['String']['input']>;
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  showInPrint?: InputMaybe<Scalars['Boolean']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
+  socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<EventStatus>;
+  tagIds: Array<Scalars['String']['input']>;
+  ticketingUrl?: InputMaybe<Scalars['String']['input']>;
+  weekDays?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+export type EventRate = {
+  __typename?: 'EventRate';
+  designation?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  price: Scalars['String']['output'];
+  sortOrder: Scalars['Int']['output'];
+};
+
+export type EventRateInput = {
+  designation?: InputMaybe<Scalars['String']['input']>;
+  price: Scalars['String']['input'];
+};
+
+export type EventRegion = {
+  __typename?: 'EventRegion';
+  /** A disabled region takes no new organisations or places. Listed only to holders of CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS. */
+  enabled: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  slug?: Maybe<Scalars['Slug']['output']>;
+};
+
+export type EventRevision = {
+  __typename?: 'EventRevision';
+  archivedAt?: Maybe<Scalars['DateTime']['output']>;
+  blocks: Array<BlockContent>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  images: Array<EventImage>;
+  name: Scalars['String']['output'];
+  printDescription?: Maybe<Scalars['String']['output']>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export enum EventScheduleType {
+  Continuous = 'Continuous',
+  Explicit = 'Explicit',
+  Weekly = 'Weekly'
+}
 
 export enum EventSort {
   CreatedAt = 'CreatedAt',
   EndsAt = 'EndsAt',
   ModifiedAt = 'ModifiedAt',
+  PublishedAt = 'PublishedAt',
   StartsAt = 'StartsAt'
 }
 
 export enum EventStatus {
   Cancelled = 'Cancelled',
+  Confirmed = 'Confirmed',
   Postponed = 'Postponed',
-  Rescheduled = 'Rescheduled',
-  Scheduled = 'Scheduled'
+  SoldOut = 'SoldOut'
 }
 
 export type EventTeaser = BaseTeaser & HasImage & HasOptionalEvent & {
@@ -1464,6 +1610,16 @@ export type FullPoll = {
   infoText?: Maybe<Scalars['RichText']['output']>;
   opensAt: Scalars['DateTime']['output'];
   question?: Maybe<Scalars['String']['output']>;
+};
+
+export type GeoBoundingBox = {
+  northEast: GeoPointInput;
+  southWest: GeoPointInput;
+};
+
+export type GeoPointInput = {
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
 };
 
 export type Goodie = HasImage & {
@@ -1815,21 +1971,6 @@ export type ImportArticleOptions = {
   importContentImages?: InputMaybe<Scalars['Boolean']['input']>;
   importTags?: InputMaybe<Scalars['Boolean']['input']>;
 };
-
-export type ImportedEventFilter = {
-  from?: InputMaybe<Scalars['String']['input']>;
-  location?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  providers?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  to?: InputMaybe<Scalars['String']['input']>;
-};
-
-export enum ImportedEventSort {
-  CreatedAt = 'CREATED_AT',
-  EndsAt = 'ENDS_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  StartsAt = 'STARTS_AT'
-}
 
 export type InstagramPostBlock = BaseBlock & {
   __typename?: 'InstagramPostBlock';
@@ -2817,7 +2958,7 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new discountCode. */
   createDiscountCode: DiscountCode;
-  /** Creates a new event. */
+  /** Creates an event with its facts and a first draft of its content. */
   createEvent: Event;
   /** Creates a new external app. */
   createExternalApp: ExternalApp;
@@ -2857,6 +2998,8 @@ export type Mutation = {
   createPaywall: Paywall;
   /** Creates a new peer. */
   createPeer: Peer;
+  /** Creates a place for an organisation you are a member of, or for any or none with CAN_UPDATE_OTHER_ORGANIZATIONS. */
+  createPlace: Place;
   /** Creates a new poll. */
   createPoll: FullPoll;
   /** Creates a new poll answer. */
@@ -2920,7 +3063,7 @@ export type Mutation = {
   deleteDiscountCode: DiscountCode;
   /** Deletes an existing document. */
   deleteDocument: Scalars['String']['output'];
-  /** Deletes an existing event. */
+  /** Deletes an event. */
   deleteEvent: Event;
   /** Deletes an external app. */
   deleteExternalApp: ExternalApp;
@@ -2950,6 +3093,8 @@ export type Mutation = {
   deletePaywall: Paywall;
   /** Deletes an existing peer. */
   deletePeer: Scalars['String']['output'];
+  /** Deletes a place without upcoming events, of an organisation you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS. */
+  deletePlace: Place;
   /** Deletes an existing poll. */
   deletePoll: FullPoll;
   /** Deletes an existing poll answer. */
@@ -2993,6 +3138,8 @@ export type Mutation = {
   dryRunMailchimpSync: MailchimpSyncDryRunResult;
   /** Duplicates an article. */
   duplicateArticle: Article;
+  /** Copies an event you may file under its organisation into a new unpublished event that you own. */
+  duplicateEvent: Event;
   /** A new campaign with the given one's document. The Mailchimp draft is not copied. */
   duplicateNewsletterCampaign: NewsletterCampaign;
   /** Duplicates an page. */
@@ -3003,13 +3150,6 @@ export type Mutation = {
   extendUserSubscription: Payment;
   /** Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration. */
   generateTotpSetup: TotpSetup;
-  /**
-   *
-   *       Creates and event based on data from importable events list and an id and provider.
-   *       Also, uploads an image to WePublish Image library.
-   *
-   */
-  importEvent: Scalars['String']['output'];
   /** Import HTML/subject from the mail provider, overwriting local content */
   importMailTemplatesFromProvider: Scalars['Int']['output'];
   /** Imports an article from a peer as a draft. */
@@ -3024,6 +3164,8 @@ export type Mutation = {
   markNotificationRead: NotificationRead;
   /** Publishes an article at the given time. */
   publishArticle: Article;
+  /** Publishes the draft of an event, at publishAt when given. */
+  publishEvent: Event;
   publishNewsletterCampaign: NewsletterPublishResult;
   /** Publishes an page at the given time. */
   publishPage: Page;
@@ -3047,6 +3189,8 @@ export type Mutation = {
   requestChangesOnComment: Comment;
   /** Requests an email change. A confirmation link is sent to the current email address. */
   requestEmailChange: Scalars['Boolean']['output'];
+  /** Asks the validators to review the draft of an event you may edit but not publish. */
+  requestEventReview: Event;
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
   /** Resets the password using a token from the password reset email. Does not create a session. */
@@ -3089,6 +3233,8 @@ export type Mutation = {
   unarchiveNewsletterCampaign: NewsletterCampaign;
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
+  /** Unpublishes an event. Its latest revision stays as draft. */
+  unpublishEvent: Event;
   /** Unpublishes all revisions of an page. */
   unpublishPage: Page;
   /** Updates an existing AI provider setting. */
@@ -3122,8 +3268,10 @@ export type Mutation = {
   updateDiscountCode: DiscountCode;
   /** Updates an existing document. */
   updateDocument: Document;
-  /** Updates an existing event. */
+  /** Updates the facts of an event. They take effect immediately. */
   updateEvent: Event;
+  /** Writes the content of an event into a new draft revision. */
+  updateEventContent: Event;
   /** Updates an existing external app. */
   updateExternalApp: ExternalApp;
   /** Updates an existing goodie. */
@@ -3157,6 +3305,8 @@ export type Mutation = {
   updatePeer: Peer;
   /** Updates the peer profile of the current media. */
   updatePeerProfile: PeerProfile;
+  /** Updates a place of an organisation you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS. */
+  updatePlace: Place;
   /** Updates an existing poll. */
   updatePoll: FullPoll;
   /** Update the comment rating system. */
@@ -3407,15 +3557,8 @@ export type MutationCreateDiscountCodeArgs = {
 
 
 export type MutationCreateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']['input']>;
-  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
-  imageId?: InputMaybe<Scalars['String']['input']>;
-  lead?: InputMaybe<Scalars['String']['input']>;
-  location?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  startsAt: Scalars['DateTime']['input'];
-  status?: EventStatus;
-  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  content: EventContentInput;
+  input: EventInput;
 };
 
 
@@ -3640,6 +3783,28 @@ export type MutationCreatePeerArgs = {
   name: Scalars['String']['input'];
   slug: Scalars['String']['input'];
   token: Scalars['String']['input'];
+};
+
+
+export type MutationCreatePlaceArgs = {
+  about?: InputMaybe<Scalars['String']['input']>;
+  address: Scalars['String']['input'];
+  capacity?: InputMaybe<Scalars['String']['input']>;
+  city: Scalars['String']['input'];
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  latitude?: InputMaybe<Scalars['Float']['input']>;
+  longitude?: InputMaybe<Scalars['Float']['input']>;
+  name: Scalars['String']['input'];
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  private?: InputMaybe<Scalars['Boolean']['input']>;
+  proInfirmisIdSource?: InputMaybe<Scalars['String']['input']>;
+  regionId?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
+  website?: InputMaybe<Scalars['String']['input']>;
+  wheelchairAccessible?: InputMaybe<Scalars['Boolean']['input']>;
+  wheelchairAccessibleParking?: InputMaybe<Scalars['Boolean']['input']>;
+  wheelchairAccessibleToilets?: InputMaybe<Scalars['Boolean']['input']>;
+  zip: Scalars['String']['input'];
 };
 
 
@@ -3950,6 +4115,11 @@ export type MutationDeletePeerArgs = {
 };
 
 
+export type MutationDeletePlaceArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeletePollArgs = {
   id: Scalars['String']['input'];
 };
@@ -4046,6 +4216,11 @@ export type MutationDuplicateArticleArgs = {
 };
 
 
+export type MutationDuplicateEventArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDuplicateNewsletterCampaignArgs = {
   id: Scalars['String']['input'];
 };
@@ -4070,12 +4245,6 @@ export type MutationExtendUserSubscriptionArgs = {
 
 export type MutationGenerateTotpSetupArgs = {
   website?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-
-export type MutationImportEventArgs = {
-  id: Scalars['String']['input'];
-  source: Scalars['String']['input'];
 };
 
 
@@ -4121,6 +4290,12 @@ export type MutationMarkNotificationReadArgs = {
 export type MutationPublishArticleArgs = {
   id: Scalars['String']['input'];
   publishedAt: Scalars['DateTime']['input'];
+};
+
+
+export type MutationPublishEventArgs = {
+  id: Scalars['String']['input'];
+  publishAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
@@ -4189,6 +4364,11 @@ export type MutationRequestChangesOnCommentArgs = {
 
 export type MutationRequestEmailChangeArgs = {
   newEmail: Scalars['String']['input'];
+};
+
+
+export type MutationRequestEventReviewArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -4294,6 +4474,11 @@ export type MutationUnarchiveNewsletterCampaignArgs = {
 
 
 export type MutationUnpublishArticleArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUnpublishEventArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -4447,16 +4632,14 @@ export type MutationUpdateDocumentArgs = {
 
 
 export type MutationUpdateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']['input']>;
-  endsAt?: InputMaybe<Scalars['DateTime']['input']>;
   id: Scalars['String']['input'];
-  imageId?: InputMaybe<Scalars['String']['input']>;
-  lead?: InputMaybe<Scalars['String']['input']>;
-  location?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  startsAt?: InputMaybe<Scalars['DateTime']['input']>;
-  status?: InputMaybe<EventStatus>;
-  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  input: UpdateEventInput;
+};
+
+
+export type MutationUpdateEventContentArgs = {
+  id: Scalars['String']['input'];
+  input: EventContentInput;
 };
 
 
@@ -4700,6 +4883,29 @@ export type MutationUpdatePeerProfileArgs = {
   squareLogoId: Scalars['String']['input'];
   themeColor: Scalars['Color']['input'];
   themeFontColor: Scalars['Color']['input'];
+};
+
+
+export type MutationUpdatePlaceArgs = {
+  about?: InputMaybe<Scalars['String']['input']>;
+  address?: InputMaybe<Scalars['String']['input']>;
+  capacity?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['String']['input'];
+  latitude?: InputMaybe<Scalars['Float']['input']>;
+  longitude?: InputMaybe<Scalars['Float']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  private?: InputMaybe<Scalars['Boolean']['input']>;
+  proInfirmisIdSource?: InputMaybe<Scalars['String']['input']>;
+  regionId?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
+  website?: InputMaybe<Scalars['String']['input']>;
+  wheelchairAccessible?: InputMaybe<Scalars['Boolean']['input']>;
+  wheelchairAccessibleParking?: InputMaybe<Scalars['Boolean']['input']>;
+  wheelchairAccessibleToilets?: InputMaybe<Scalars['Boolean']['input']>;
+  zip?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -5013,6 +5219,16 @@ export enum NotificationSource {
   PeriodicJob = 'PERIODIC_JOB'
 }
 
+export type Occurrence = {
+  __typename?: 'Occurrence';
+  dateFrom: Scalars['DateTime']['output'];
+  dateTo: Scalars['DateTime']['output'];
+  event: Event;
+  eventId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  openingTime?: Maybe<Scalars['String']['output']>;
+};
+
 export enum OneChannelConnectionState {
   Connected = 'Connected',
   Failing = 'Failing',
@@ -5041,6 +5257,7 @@ export type Organization = BaseOrganization & {
   legalStatus?: Maybe<Scalars['String']['output']>;
   longitude?: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
+  region?: Maybe<EventRegion>;
   regionId?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['Slug']['output']>;
   subTitle?: Maybe<Scalars['String']['output']>;
@@ -5289,13 +5506,6 @@ export type PaginatedEvents = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type PaginatedEventsFromSources = {
-  __typename?: 'PaginatedEventsFromSources';
-  nodes: Array<EventFromSource>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
 export type PaginatedGoodies = {
   __typename?: 'PaginatedGoodies';
   nodes: Array<Goodie>;
@@ -5345,6 +5555,13 @@ export type PaginatedMemberPlans = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type PaginatedOccurrences = {
+  __typename?: 'PaginatedOccurrences';
+  nodes: Array<Occurrence>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type PaginatedOrganizations = {
   __typename?: 'PaginatedOrganizations';
   nodes: Array<BaseOrganization>;
@@ -5369,6 +5586,13 @@ export type PaginatedPages = {
 export type PaginatedPeerArticles = {
   __typename?: 'PaginatedPeerArticles';
   nodes: Array<PeerArticle>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedPlaces = {
+  __typename?: 'PaginatedPlaces';
+  nodes: Array<Place>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -5778,6 +6002,53 @@ export type Phrase = {
   pages: PaginatedPages;
 };
 
+export type Place = {
+  __typename?: 'Place';
+  about?: Maybe<Scalars['String']['output']>;
+  address: Scalars['String']['output'];
+  capacity?: Maybe<Scalars['String']['output']>;
+  city: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  enabled: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  latitude?: Maybe<Scalars['Float']['output']>;
+  longitude?: Maybe<Scalars['Float']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  organization?: Maybe<BaseOrganization>;
+  organizationId?: Maybe<Scalars['String']['output']>;
+  /** A private place is offered in the event form only to members of its organisation. It stays publicly readable. */
+  private: Scalars['Boolean']['output'];
+  proInfirmisDetailUrl?: Maybe<Scalars['String']['output']>;
+  proInfirmisIdSource?: Maybe<Scalars['String']['output']>;
+  proInfirmisPictograms?: Maybe<Scalars['JSON']['output']>;
+  region?: Maybe<EventRegion>;
+  regionId?: Maybe<Scalars['String']['output']>;
+  slug?: Maybe<Scalars['Slug']['output']>;
+  website?: Maybe<Scalars['String']['output']>;
+  wheelchairAccessible: Scalars['Boolean']['output'];
+  wheelchairAccessibleParking: Scalars['Boolean']['output'];
+  wheelchairAccessibleToilets: Scalars['Boolean']['output'];
+  zip: Scalars['String']['output'];
+};
+
+export type PlaceFilter = {
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  geoBoundingBox?: InputMaybe<GeoBoundingBox>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  regionId?: InputMaybe<Scalars['String']['input']>;
+  /** Matches the name. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** Only the places you may file an event at: enabled ones that are not private or belong to your organisation. */
+  selectable?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export enum PlaceSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
+
 export type PolisConversationBlock = BaseBlock & {
   __typename?: 'PolisConversationBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -5977,6 +6248,8 @@ export type Query = {
    *
    */
   activeSubscribers: Array<DashboardSubscription>;
+  /** Returns the agenda: one row per occurrence of a published event, ordered by its start. With the preview header and CAN_GET_EVENTS it lists the occurrences of the events you manage. */
+  agenda: PaginatedOccurrences;
   /** Returns a single AI provider setting by id. */
   aiSetting: SettingAiProvider;
   /** Returns all AI provider settings. */
@@ -6061,15 +6334,15 @@ export type Query = {
   documentStorageUsage: DocumentStorageUsage;
   /** Returns a paginated list of documents based on the filters given. */
   documents: PaginatedDocuments;
-  /** Returns an event by id. */
+  /** Returns a published event by id or slug. With the preview header and CAN_GET_EVENT it returns any event you may open in the editor. */
   event: Event;
-  /**
-   *
-   *       Returns a list of Importable Event Providers
-   *
-   */
-  eventProviders: Array<Scalars['String']['output']>;
-  /** Returns a paginated list of events based on the filters given. */
+  /** Returns the affiliations an organisation can have. */
+  eventAffiliations: Array<EventAffiliation>;
+  /** Returns the audiences an event can be for. */
+  eventAudiences: Array<EventAudience>;
+  /** Returns the enabled regions, and the disabled ones too for CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS. */
+  eventRegions: Array<EventRegion>;
+  /** Returns a paginated list of published events. With the preview header and CAN_GET_EVENTS it lists the events you manage. */
   events: PaginatedEvents;
   /**
    *
@@ -6103,24 +6376,6 @@ export type Query = {
   impersonationEnabled: Scalars['Boolean']['output'];
   impersonationSearchUsers: Array<ImpersonationUser>;
   impersonationSessions: Array<ImpersonationSessionInfo>;
-  /**
-   *
-   *       Returns a more detailed version of a single importable event, by id and source.
-   *
-   */
-  importedEvent: EventFromSource;
-  /**
-   *
-   *       Returns a list of imported events from external sources, transformed to match our model.
-   *
-   */
-  importedEvents: PaginatedEventsFromSources;
-  /**
-   *
-   *       Returns a list of external source ids of already imported events.
-   *
-   */
-  importedEventsIds: Array<Scalars['String']['output']>;
   /** Returns a invoice by id. */
   invoice: Invoice;
   /** The mail markInvoiceAsPaid would send for this invoice, or why it sends none. */
@@ -6243,6 +6498,10 @@ export type Query = {
   permissions: Array<Permission>;
   /** This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones. */
   phrase: Phrase;
+  /** Returns a place by id or slug. Disabled places are returned to members of their organisation and to whoever may read any organisation. */
+  place: Place;
+  /** Returns a paginated list of places based on the filters given. */
+  places: PaginatedPlaces;
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
@@ -6351,6 +6610,15 @@ export type Query = {
 
 export type QueryActionsArgs = {
   types?: InputMaybe<Array<ActionType>>;
+};
+
+
+export type QueryAgendaArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<EventFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6578,7 +6846,8 @@ export type QueryDocumentsArgs = {
 
 
 export type QueryEventArgs = {
-  id: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
 };
 
 
@@ -6652,20 +6921,6 @@ export type QueryImagesArgs = {
 export type QueryImpersonationSearchUsersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   query: Scalars['String']['input'];
-};
-
-
-export type QueryImportedEventArgs = {
-  filter: SingleEventFilter;
-};
-
-
-export type QueryImportedEventsArgs = {
-  filter?: InputMaybe<ImportedEventFilter>;
-  order?: InputMaybe<Scalars['Int']['input']>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<ImportedEventSort>;
-  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6963,6 +7218,22 @@ export type QueryPhraseArgs = {
   query: Scalars['String']['input'];
   skip?: Scalars['Int']['input'];
   take?: Scalars['Int']['input'];
+};
+
+
+export type QueryPlaceArgs = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
+};
+
+
+export type QueryPlacesArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<PlaceFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<PlaceSort>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -7279,6 +7550,7 @@ export type SensitiveDataOrganization = BaseOrganization & {
   name: Scalars['String']['output'];
   partner: Scalars['Boolean']['output'];
   postOfficeBox?: Maybe<Scalars['String']['output']>;
+  region?: Maybe<EventRegion>;
   regionId?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['Slug']['output']>;
   subTitle?: Maybe<Scalars['String']['output']>;
@@ -7599,11 +7871,6 @@ export type SettingTrackingPixelProvider = SettingProvider & {
   prolitteris_usePublisherInternalKey?: Maybe<Scalars['Boolean']['output']>;
   prolitteris_username?: Maybe<Scalars['String']['output']>;
   type: TrackingPixelProviderType;
-};
-
-export type SingleEventFilter = {
-  id: Scalars['String']['input'];
-  source: Scalars['String']['input'];
 };
 
 export enum SortOrder {
@@ -8220,6 +8487,30 @@ export type UpdateCrowdfundingInput = {
   id: Scalars['String']['input'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateEventInput = {
+  audienceId?: InputMaybe<Scalars['String']['input']>;
+  dateFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  dateTo?: InputMaybe<Scalars['DateTime']['input']>;
+  dates?: InputMaybe<Array<EventDateInput>>;
+  openingTime?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  ownerId?: InputMaybe<Scalars['String']['input']>;
+  placeId?: InputMaybe<Scalars['String']['input']>;
+  rates?: InputMaybe<Array<EventRateInput>>;
+  scheduleType?: InputMaybe<EventScheduleType>;
+  seoDescription?: InputMaybe<Scalars['String']['input']>;
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  showInPrint?: InputMaybe<Scalars['Boolean']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
+  socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<EventStatus>;
+  tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  ticketingUrl?: InputMaybe<Scalars['String']['input']>;
+  weekDays?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
 export type UpdateUserSubscriptionInput = {

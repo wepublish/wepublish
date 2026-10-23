@@ -8,11 +8,15 @@ import {
   mockArticleRevisionAuthor,
   mockArticleTeaser,
   mockAuthor,
+  mockEvent,
+  mockEventTeaser,
 } from '@wepublish/storybook/mocks';
 
 import {
   selectTeaserAuthors,
   selectTeaserAuthorsWithRole,
+  selectTeaserDate,
+  selectTeaserLead,
 } from './base-teaser';
 import * as stories from './base-teaser.stories';
 import * as articleStories from './base-teaser.article.stories';
@@ -63,6 +67,51 @@ describe('Teaser', () => {
       it(`should render ${story}`, () => {
         render(<Component />);
       });
+    });
+  });
+
+  describe('Event teaser', () => {
+    const description = {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', text: 'Beschreibung des Anlasses' }],
+        },
+      ],
+    };
+
+    it('uses the teaser lead first', () => {
+      expect(
+        selectTeaserLead(
+          mockEventTeaser({
+            lead: 'Teaser Lead',
+            event: mockEvent({ description }),
+          })
+        )
+      ).toBe('Teaser Lead');
+    });
+
+    it('falls back to the event description', () => {
+      expect(
+        selectTeaserLead(
+          mockEventTeaser({ lead: null, event: mockEvent({ description }) })
+        )
+      ).toBe('Beschreibung des Anlasses');
+    });
+
+    it('has no date when the event has none', () => {
+      expect(
+        selectTeaserDate(
+          mockEventTeaser({ event: mockEvent({ startsAt: null }) })
+        )
+      ).toBeNull();
+    });
+
+    it('renders no date when the event has none', () => {
+      const { container } = render(<eventStoriesCmp.WithoutEventNameAndDate />);
+
+      expect(container.querySelector('time')).toBeNull();
     });
   });
 

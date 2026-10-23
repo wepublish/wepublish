@@ -9,17 +9,12 @@ import {
 import {
   ArticleFilter,
   DateFilterComparison,
-  EventFilter,
-  EventProvidersDocument,
   FullAuthorFragment,
-  ImportedEventFilter,
-  InputMaybe,
   PageFilter,
   PeerArticleFilter,
   PeerListDocument,
   PollDocument,
   PollVoteFilter,
-  Scalars,
   TagType,
   UserFilter,
   UserRoleListDocument,
@@ -95,28 +90,18 @@ type Field =
   | 'peerId'
   | 'publicationDate'
   | 'dates'
-  | 'providers'
   | 'userRole'
   | 'text'
   | 'name'
-  | 'location'
   | 'includeHidden'
   | 'answerIds'
   | 'fingerprint'
   | 'tags';
 
-export type ImportableEventFilter = {
-  startsAt?: InputMaybe<Scalars['String']['input']>;
-  endsAt?: InputMaybe<Scalars['String']['input']>;
-  providers?: ImportedEventFilter['providers'];
-};
-
 type Filter = ArticleFilter &
   PeerArticleFilter &
   PageFilter &
   UserFilter &
-  EventFilter &
-  ImportableEventFilter &
   PollVoteFilter;
 
 export interface ListViewFiltersProps {
@@ -136,11 +121,6 @@ export function ListViewFilters({
   tagType,
 }: ListViewFiltersProps) {
   const { t } = useTranslation();
-  const [providersFetch, { data: providersData }] = useLazyQuery(
-    EventProvidersDocument,
-    {}
-  );
-
   const [userRoleFetch, { data: userRoleData }] =
     useLazyQuery(UserRoleListDocument);
 
@@ -155,7 +135,6 @@ export function ListViewFilters({
 
   // check whether or not we need to get some data based on which filters are required
   const isAnswerFilter = fields.includes('answerIds');
-  const isProviderFilter = fields.includes('providers');
   const isUserRoleFilter = fields.includes('userRole');
   const isPeerFilter = fields.includes('peerId');
 
@@ -175,12 +154,6 @@ export function ListViewFilters({
       });
     }
   }, [isUserRoleFilter, userRoleFetch]);
-
-  useEffect(() => {
-    if (isProviderFilter) {
-      providersFetch();
-    }
-  }, [isProviderFilter, providersFetch]);
 
   useEffect(() => {
     if (isAnswerFilter && filter.pollId) {
@@ -347,16 +320,6 @@ export function ListViewFilters({
         </div>
       )}
 
-      {fields.includes('location') && (
-        <div>
-          <TextField
-            value={filter.location || ''}
-            placeholder={t('filterableList.filter.location')}
-            onChange={event => updateFilter({ location: event.target.value })}
-          />
-        </div>
-      )}
-
       {fields.includes('authors') && (
         <div>
           <AuthorCheckPicker
@@ -378,25 +341,6 @@ export function ListViewFilters({
             tagType={tagType ?? TagType.Article}
             setSelectedTags={tags => updateFilter({ tags })}
             placeholder={t('navbar.articleTags')}
-          />
-        </div>
-      )}
-
-      {fields.includes('providers') && (
-        <div>
-          <MultiSelectFilter
-            label={t('filterableList.filter.providers')}
-            options={(providersData?.eventProviders ?? [])
-              .filter((provider): provider is string => Boolean(provider))
-              .map(provider => ({ value: provider, label: provider }))}
-            value={(filter.providers ?? []).filter(
-              (provider): provider is string => Boolean(provider)
-            )}
-            onChange={providers =>
-              updateFilter({
-                providers: providers.length ? providers : undefined,
-              })
-            }
           />
         </div>
       )}

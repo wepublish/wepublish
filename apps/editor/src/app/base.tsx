@@ -39,7 +39,6 @@ import {
   CanDeleteCommentRatingSystem,
   CanDeleteConsent,
   CanDeleteDocument,
-  CanDeleteEvent,
   CanDeleteExternalApp,
   CanDeleteImage,
   CanDeleteMemberPlan,
@@ -72,7 +71,6 @@ import {
   CanGetCrowdfundings,
   CanGetDocument,
   CanGetDocuments,
-  CanGetEvent,
   CanGetImage,
   CanGetImages,
   CanGetMailLogs,
@@ -118,7 +116,6 @@ import {
   CanUpdateConsent,
   CanUpdateCrowdfunding,
   CanUpdateDiscountCode,
-  CanUpdateEvent,
   CanUpdateExternalApp,
   CanUpdateGoodie,
   CanUpdateMailTemplates,
@@ -817,8 +814,10 @@ export function Base({ children }: BaseProps) {
 
               <PermissionControl
                 qualifyingPermissions={[
-                  CanGetEvent.id,
-                  CanGetCommentRatingSystem.id,
+                  CanGetTags.id,
+                  CanCreateTag.id,
+                  CanUpdateTag.id,
+                  CanDeleteTag.id,
                 ]}
               >
                 <SidebarNavMenu
@@ -828,21 +827,6 @@ export function Base({ children }: BaseProps) {
                   openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('events', wasOpen)}
                 >
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      CanGetEvent.id,
-                      CanUpdateEvent.id,
-                      CanDeleteEvent.id,
-                    ]}
-                  >
-                    <SidebarNavItem
-                      href="/events"
-                      icon={<MdEvent />}
-                    >
-                      {t('navbar.events')}
-                    </SidebarNavItem>
-                  </PermissionControl>
-
                   <PermissionControl
                     qualifyingPermissions={[
                       CanGetTags.id,

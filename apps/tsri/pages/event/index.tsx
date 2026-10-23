@@ -290,7 +290,7 @@ export const getStaticProps: GetStaticProps = async () => {
       variables: {
         take,
         skip: 0,
-        filter: { upcomingOnly: true },
+        filter: { upcoming: true },
         sort: EventSort.StartsAt,
         order: SortOrder.Ascending,
       },

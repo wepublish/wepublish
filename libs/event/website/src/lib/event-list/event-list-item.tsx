@@ -5,6 +5,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { MdDateRange } from 'react-icons/md';
+import { EventStatusBadge } from '../event-status/event-status';
 
 export const eventListItemStyles = css`
   display: grid;
@@ -33,7 +34,7 @@ export const EventListItemContent = styled('div')`
 
 export const EventListItemMeta = styled('div')`
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-auto-flow: column;
   gap: ${({ theme }) => theme.spacing(1)};
   justify-content: flex-start;
   align-items: center;
@@ -52,21 +53,21 @@ export const EventListItem = ({
   url,
   description,
   name,
-  lead,
+  status,
   image,
   startsAt,
   endsAt,
   className,
 }: BuilderEventListItemProps) => {
   const {
-    elements: { H4, Link, Image, Paragraph },
+    elements: { H4, Link, Image },
     blocks: { RichText },
     date,
   } = useWebsiteBuilder();
 
   return (
     <Link
-      href={url}
+      href={url ?? undefined}
       css={eventListItemStyles}
     >
       <EventListItemWrapper className={className}>
@@ -76,17 +77,19 @@ export const EventListItem = ({
 
         <EventListItemContent>
           <EventListItemMeta>
-            <EventListItemDate>
-              <MdDateRange />
-              <time
-                suppressHydrationWarning
-                dateTime={startsAt}
-              >
-                {date.format(new Date(startsAt))}
-              </time>
-            </EventListItemDate>
+            {startsAt && (
+              <EventListItemDate>
+                <MdDateRange />
+                <time
+                  suppressHydrationWarning
+                  dateTime={startsAt}
+                >
+                  {date.format(new Date(startsAt))}
+                </time>
+              </EventListItemDate>
+            )}
 
-            {endsAt && (
+            {startsAt && endsAt && (
               <>
                 &ndash;{' '}
                 <time
@@ -97,12 +100,12 @@ export const EventListItem = ({
                 </time>
               </>
             )}
+
+            <EventStatusBadge status={status} />
           </EventListItemMeta>
 
-          <H4 component="h1">{name}</H4>
-          {lead ?
-            <Paragraph>{lead}</Paragraph>
-          : <RichText richText={description} />}
+          {name && <H4 component="h1">{name}</H4>}
+          <RichText richText={description} />
         </EventListItemContent>
       </EventListItemWrapper>
     </Link>

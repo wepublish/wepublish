@@ -19,7 +19,7 @@ import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  EventFilter,
+  EventStatus,
   EventListDocument,
   PageFilter,
   PageListDocument,
@@ -150,7 +150,7 @@ export function TeaserSelectPanel({
    * EVENTS
    */
   const eventVariables = {
-    filter: { upcomingOnly: eventFilter } as EventFilter,
+    filter: { upcoming: eventFilter },
     take: 20,
   };
 
@@ -499,10 +499,11 @@ export function TeaserSelectPanel({
                   key={event.id}
                   title={event.name || t('articleEditor.panels.untitled')}
                   details={[
-                    t('event.list.startsAt', {
-                      startsAt: new Date(event.startsAt),
-                    }),
-                    event.status &&
+                    event.startsAt &&
+                      t('event.list.startsAt', {
+                        startsAt: new Date(event.startsAt),
+                      }),
+                    event.status !== EventStatus.Confirmed &&
                       t(`event.form.${event.status.toLowerCase()}`),
                   ]
                     .filter(Boolean)

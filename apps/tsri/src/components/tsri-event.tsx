@@ -79,10 +79,12 @@ export const TsriEvent = ({ data, className }: BuilderEventProps) => {
   }
 
   const event = data.event;
-  const startDate = new Date(event.startsAt);
+  const startDate = event.startsAt ? new Date(event.startsAt) : null;
   const endDate = event.endsAt ? new Date(event.endsAt) : null;
   const endsOnOtherDay =
-    !!endDate && startDate.toDateString() !== endDate.toDateString();
+    !!startDate &&
+    !!endDate &&
+    startDate.toDateString() !== endDate.toDateString();
 
   return (
     <TsriEventWrapper
@@ -92,41 +94,40 @@ export const TsriEvent = ({ data, className }: BuilderEventProps) => {
     >
       <EventSEO event={event} />
 
-      <Title
-        title={event.name}
-        lead={event.lead ?? undefined}
-      />
+      <Title title={event.name ?? null} />
 
       <TsriEventMeta>
-        <TsriEventMetaRow>
-          <MdCalendarToday />
-          <div>
-            <time
-              suppressHydrationWarning
-              dateTime={event.startsAt}
-            >
-              {date.format(startDate)}
-            </time>
-            {endDate && (
-              <>
-                {' '}
-                &ndash;{' '}
-                <time
-                  suppressHydrationWarning
-                  dateTime={event.endsAt ?? undefined}
-                >
-                  {endsOnOtherDay ?
-                    date.format(endDate)
-                  : endDate.toLocaleTimeString('de-CH', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })
-                  }
-                </time>
-              </>
-            )}
-          </div>
-        </TsriEventMetaRow>
+        {startDate && (
+          <TsriEventMetaRow>
+            <MdCalendarToday />
+            <div>
+              <time
+                suppressHydrationWarning
+                dateTime={startDate.toISOString()}
+              >
+                {date.format(startDate)}
+              </time>
+              {endDate && (
+                <>
+                  {' '}
+                  &ndash;{' '}
+                  <time
+                    suppressHydrationWarning
+                    dateTime={event.endsAt ?? undefined}
+                  >
+                    {endsOnOtherDay ?
+                      date.format(endDate)
+                    : endDate.toLocaleTimeString('de-CH', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })
+                    }
+                  </time>
+                </>
+              )}
+            </div>
+          </TsriEventMetaRow>
+        )}
 
         <TsriEventMetaRow>
           <MdLocationOn size="1.25rem" />

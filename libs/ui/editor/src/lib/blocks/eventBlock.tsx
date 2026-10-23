@@ -96,19 +96,23 @@ const EventPreview = ({ event }: { event: FullEventFragment }) => (
         {event.name}
       </Typography>
 
-      <Typography
-        variant="caption"
-        color="text.secondary"
-      >
-        <EventStartsAtView startsAt={event.startsAt} />
-      </Typography>
+      {event.startsAt && (
+        <>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+          >
+            <EventStartsAtView startsAt={event.startsAt} />
+          </Typography>
 
-      <Typography
-        variant="caption"
-        color="text.secondary"
-      >
-        <EventEndsAtView endsAt={event.endsAt} />
-      </Typography>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+          >
+            <EventEndsAtView endsAt={event.endsAt} />
+          </Typography>
+        </>
+      )}
     </EventText>
   </EventItem>
 );

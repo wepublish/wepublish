@@ -138,14 +138,14 @@ function getFilter(params: {
   from?: Date;
   to?: Date;
   upcomingOnly?: boolean;
-}): { from?: string; to?: string; upcomingOnly?: boolean } {
+}): { from?: string; to?: string; upcoming?: boolean } {
   if (params.from && params.to) {
     return { from: params.from.toISOString(), to: params.to.toISOString() };
   }
   if (params.upcomingOnly === false) {
     return {};
   }
-  return { upcomingOnly: true };
+  return { upcoming: true };
 }
 
 export default function EventList() {
@@ -297,7 +297,7 @@ export const getStaticProps: GetStaticProps = async () => {
       variables: {
         take,
         skip: 0,
-        filter: { upcomingOnly: true },
+        filter: { upcoming: true },
         sort: EventSort.StartsAt,
         order: SortOrder.Ascending,
       },

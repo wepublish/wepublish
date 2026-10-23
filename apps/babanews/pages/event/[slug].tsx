@@ -5,24 +5,16 @@ import {
   addClientCacheToProps,
   EventDocument,
   getApiClient,
-  NavigationListDocument,
-  PeerProfileDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 
-import { Container } from '../../src/components/layout/container';
-
-export default function EventById() {
+export default function EventBySlug() {
   const {
-    query: { id },
+    query: { slug },
   } = useRouter();
 
-  return (
-    <Container>
-      <EventContainer id={id as string} />
-    </Container>
-  );
+  return <EventContainer slug={slug as string} />;
 }
 
 export const getStaticPaths = () => ({
@@ -31,27 +23,18 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const id = params!.id!.toString();
+  const slug = params!.slug!.toString();
   const client = getApiClient(getApiUrl(), []);
-
-  const event = await Promise.all([
-    client.query({
-      query: EventDocument,
-      variables: {
-        id,
-      },
-    }),
-    client.query({
-      query: NavigationListDocument,
-    }),
-    client.query({
-      query: PeerProfileDocument,
-    }),
-  ]);
+  const event = await client.query({
+    query: EventDocument,
+    variables: {
+      slug,
+    },
+  });
 
   const is404 =
-    CombinedGraphQLErrors.is(event[0].error) &&
-    event[0].error.errors.find(({ extensions }) => extensions?.status === 404);
+    CombinedGraphQLErrors.is(event.error) &&
+    event.error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {

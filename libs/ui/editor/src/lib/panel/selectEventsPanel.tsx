@@ -6,7 +6,6 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  IconButton,
   Switch,
 } from '@mui/material';
 import {
@@ -14,15 +13,10 @@ import {
   FullEventFragment,
   TagType,
 } from '@wepublish/editor/api';
-import { CanUpdateEvent } from '@wepublish/permissions';
 import { useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdEdit } from 'react-icons/md';
-import { Link as RouterLink } from 'react-router-dom';
 
-import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { InfoTooltip } from '../atoms/infoTooltip';
-import { PermissionControl } from '../atoms/permissionControl';
 import { SelectTags } from '../atoms/tag/selectTags';
 import { EventBlockValue } from '../blocks/types';
 import {
@@ -63,7 +57,7 @@ export function SelectEventPanel({
       take: limit,
       skip: (page - 1) * limit,
       filter: {
-        tags: tagFilter,
+        tagIds: tagFilter,
       },
     },
   });
@@ -189,28 +183,6 @@ export function SelectEventPanel({
               label: t('event.list.name'),
               width: 250,
               render: row => row.name,
-            },
-            {
-              id: 'action',
-              label: t('action'),
-              width: 100,
-              align: 'center',
-              fixed: true,
-              render: row => (
-                <PermissionControl qualifyingPermissions={[CanUpdateEvent.id]}>
-                  <IconButtonTooltip caption={t('event.list.edit')}>
-                    <IconButton
-                      component={RouterLink}
-                      target="_blank"
-                      to={`/events/edit/${row.id}`}
-                      aria-label={t('event.list.edit')}
-                      size="small"
-                    >
-                      <MdEdit />
-                    </IconButton>
-                  </IconButtonTooltip>
-                </PermissionControl>
-              ),
             },
           ]}
         />

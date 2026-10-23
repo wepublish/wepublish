@@ -1,9 +1,10 @@
 fragment FullEvent on Event {
   id
+  slug
   name
-  lead
   description
   status
+  scheduleType
   location
   image {
     ...FullImage
@@ -16,8 +17,6 @@ fragment FullEvent on Event {
   createdAt
   modifiedAt
   url
-  externalSourceName
-  externalSourceId
 }
 
 query EventList(
@@ -48,69 +47,5 @@ query EventList(
     }
 
     totalCount
-  }
-}
-
-query Event($id: String!) {
-  event(id: $id) {
-    ...FullEvent
-  }
-}
-
-mutation CreateEvent(
-  $name: String!
-  $lead: String
-  $description: RichText
-  $location: String
-  $startsAt: DateTime!
-  $endsAt: DateTime
-  $imageId: String
-  $tagIds: [String!]
-) {
-  createEvent(
-    name: $name
-    lead: $lead
-    description: $description
-    location: $location
-    startsAt: $startsAt
-    endsAt: $endsAt
-    imageId: $imageId
-    tagIds: $tagIds
-  ) {
-    ...FullEvent
-  }
-}
-
-mutation UpdateEvent(
-  $id: String!
-  $name: String
-  $lead: String
-  $description: RichText
-  $status: EventStatus
-  $location: String
-  $startsAt: DateTime
-  $endsAt: DateTime
-  $imageId: String
-  $tagIds: [String!]
-) {
-  updateEvent(
-    id: $id
-    name: $name
-    lead: $lead
-    description: $description
-    status: $status
-    location: $location
-    startsAt: $startsAt
-    endsAt: $endsAt
-    imageId: $imageId
-    tagIds: $tagIds
-  ) {
-    ...FullEvent
-  }
-}
-
-mutation DeleteEvent($id: String!) {
-  deleteEvent(id: $id) {
-    ...FullEvent
   }
 }

@@ -69,9 +69,6 @@ import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { DocumentList } from './routes/documents/documentList';
-import { EventCreateView } from './routes/events/eventCreateView';
-import { EventEditView } from './routes/events/eventEditView';
-import { EventListView } from './routes/events/eventListView';
 import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
 import { GoodieCreateView } from './routes/goodie/goodieCreateView';
@@ -560,33 +557,6 @@ export function App() {
             />
 
             {/* Events Routes */}
-            <Route
-              path="events"
-              element={
-                <Base>
-                  <EventListView />
-                </Base>
-              }
-            />
-
-            <Route
-              path="events/create"
-              element={
-                <Base>
-                  <EventCreateView />
-                </Base>
-              }
-            />
-
-            <Route
-              path="events/edit/:id"
-              element={
-                <Base>
-                  <EventEditView />
-                </Base>
-              }
-            />
-
             <Route
               path="events/tags"
               element={
