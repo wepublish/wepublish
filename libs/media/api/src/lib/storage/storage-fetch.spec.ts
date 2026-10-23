@@ -69,4 +69,20 @@ describe('createStorageFetch', () => {
 
     await expect(res.text()).rejects.toThrow();
   });
+
+  it('reuses connections across HEAD requests', async () => {
+    let sockets = 0;
+    const url = await listen((_req, res) => {
+      res.writeHead(200, { 'content-length': '0' });
+      res.end();
+    });
+    server?.on('connection', () => sockets++);
+
+    const storageFetch = createStorageFetch();
+    for (let i = 0; i < 10; i++) {
+      await storageFetch(url, { method: 'HEAD' });
+    }
+
+    expect(sockets).toBeLessThanOrEqual(2);
+  });
 });

@@ -19,11 +19,6 @@ import { Agent, fetch } from 'undici';
  */
 export const DEFAULT_MAX_CONNECTIONS = 50;
 
-/**
- * How long a socket may wait for response headers, or between two body
- * chunks, before undici aborts it. undici's own default is 300 s, so a
- * stalled R2 response held one of the capped sockets for five minutes.
- */
 export const DEFAULT_RESPONSE_TIMEOUT = 30_000;
 
 export type StorageFetchOptions = {
@@ -42,7 +37,13 @@ export function createStorageFetch({
     connections: DEFAULT_MAX_CONNECTIONS,
     headersTimeout: responseTimeout,
     bodyTimeout: responseTimeout,
-  });
+  }).compose(
+    dispatch => (options, handler) =>
+      dispatch(
+        options.method === 'HEAD' ? { ...options, reset: false } : options,
+        handler
+      )
+  );
   const storageFetch: typeof fetch = (input, init) =>
     fetch(input, { ...init, dispatcher });
 
