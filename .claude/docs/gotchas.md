@@ -906,10 +906,28 @@ Both `S3Disk`s in [`app.module.ts`](../../apps/media/src/app/app.module.ts) get
 undici's `fetch` over an `Agent` with `connections: 50` per origin and a 30 s
 `headersTimeout`/`bodyTimeout` (undici's default is 300 s, so one stalled R2
 response held a capped socket for five minutes). Connects time out after 10 s,
-idle keep-alive after 4 s (undici defaults). The cap only helps if every R2
-body is consumed or destroyed: `MediaService.transformImage` validates the
-signature *before* `uploads.get`, and destroys the stream in a `finally` —
-opening it first leaked a socket per bad-signature request.
+idle keep-alive after 4 s (undici defaults).
+
+The dispatcher is composed to send every `HEAD` with `reset: false`. undici
+closes the socket after each HEAD by default (`client-h1.js`, "interop with
+misbehaving servers" that send a body), and `exists()`/`stat()` are HEADs on
+every cache miss, so each one cost a new TLS connection to R2.
+
+The cap only helps if every R2 body is read to the end. `MediaService` never
+streams an R2 body into anything: it reads it with `getBuffer()` first. Two ways
+this went wrong:
+- `.pipe()` into sharp left the source with no `'error'` listener, so a body that
+  broke off (reset, `bodyTimeout`) was an uncaught exception that killed the pod.
+  sharp buffers the whole input anyway, so streaming saved nothing.
+- Copying a document by passing the GET body to `put()` held the GET socket,
+  paused, while the PUT waited for one from the same pool. undici's `bodyTimeout`
+  never fires on a paused body, so 50 of those deadlock the pool for good.
+
+The signature is validated before the download, and image transforms and PDF
+renders run at most `MAX_CONCURRENT_TRANSFORMS` (4) at a time. Each one holds
+its original in memory, and sharp's work shares libuv's thread pool with the
+`dns.lookup` behind every R2 connect, so the media image sets
+`UV_THREADPOOL_SIZE=16`.
 
 **What failed.** The media pod periodically lost IPv4 connectivity to Cloudflare
 R2 (`*.eu.r2.cloudflarestorage.com`); its last log line was a burst of

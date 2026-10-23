@@ -6,15 +6,19 @@ import {
 } from '@nestjs/storage';
 import sharp from 'sharp';
 import { TransformGuard } from './transform.guard';
+import { createConcurrencyLimit } from './concurrency-limit';
 import { createHash } from 'crypto';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
-import { Readable } from 'stream';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
 const execFileAsync = promisify(execFile);
+
+export const MAX_CONCURRENT_TRANSFORMS = 4;
+
+const PDF_RENDER_TIMEOUT = 15_000;
 import {
   removeSignatureFromTransformations,
   getTransformationKey,
@@ -98,6 +102,10 @@ export type ImageURIObject = {
 export class MediaService {
   private readonly pendingImages = new Map<string, Promise<ImageURIObject>>();
 
+  private readonly limitTransforms = createConcurrencyLimit(
+    MAX_CONCURRENT_TRANSFORMS
+  );
+
   constructor(
     @InjectDisk(UPLOAD_DISK) private uploads: StorageDisk,
     @InjectDisk(TRANSFORMATION_DISK) private transformations: StorageDisk,
@@ -156,12 +164,16 @@ export class MediaService {
     transformations: TransformationsDto
   ): Promise<ImageURIObject> {
     if (!(await this.transformations.exists(objectUri))) {
-      return await this.transformImage(imageId, transformations);
+      return await this.limitTransforms(() =>
+        this.transformImage(imageId, transformations)
+      );
     }
     return { uri: objectUri, exists: true };
   }
 
-  private getFallbackImage(transformations: TransformationsDto): Readable {
+  private async getFallbackImage(
+    transformations: TransformationsDto
+  ): Promise<Buffer> {
     // Modify transformations based on resize properties
     if (transformations.resize) {
       const hasWidth = 'width' in transformations.resize;
@@ -193,7 +205,7 @@ export class MediaService {
       'assets',
       'fallback-image.webp'
     );
-    return fs.createReadStream(defaultImagePath);
+    return await fs.promises.readFile(defaultImagePath);
   }
 
   private hasTransformations(t: TransformationsDto): boolean {
@@ -219,14 +231,14 @@ export class MediaService {
       );
     }
 
-    let imageStream: Readable;
+    let image: Buffer;
     let imageExists = true;
     try {
-      imageStream = (await this.uploads.get(`images/${imageId}`)).body;
+      image = await this.uploads.getBuffer(`images/${imageId}`);
     } catch (e: any) {
       if (e instanceof StorageFileNotFoundError) {
         imageExists = false;
-        imageStream = this.getFallbackImage(
+        image = await this.getFallbackImage(
           removeSignatureFromTransformations(transformations)
         );
       } else {
@@ -238,98 +250,90 @@ export class MediaService {
       removeSignatureFromTransformations(transformations)
     );
 
-    try {
-      if (
-        !imageExists &&
-        (await this.transformations.exists(
-          `images/fallback/${transformationsKey}`
-        ))
-      ) {
-        return { uri: `images/fallback/${transformationsKey}`, exists: false };
-      }
-
-      const format = transformations.format ?? 'webp';
-      const sharpInstance = imageStream.pipe(
-        sharp({
-          animated: ANIMATED_FORMATS.includes(format),
-          failOn: 'error',
-        })
-      );
-
-      const metadata = await sharpInstance.metadata();
-
-      const effort = transformGuard.checkDimensions(metadata, transformations);
-      transformGuard.checkQuality(transformations);
-
-      if (transformations.extend) {
-        sharpInstance.extend(transformations.extend);
-      }
-
-      if (transformations.resize) {
-        // Prevent animated image from enlarging (DOS prevention)
-        if (transformGuard.isAnimatedImage(metadata)) {
-          transformations.resize.withoutEnlargement = true;
-        }
-        sharpInstance.resize(transformations.resize);
-      }
-
-      if (transformations.blur) {
-        sharpInstance.blur(transformations.blur);
-      }
-
-      if (transformations.sharpen) {
-        sharpInstance.sharpen();
-      }
-
-      if (transformations.flip) {
-        sharpInstance.flip(transformations.flip);
-      }
-
-      if (transformations.flop) {
-        sharpInstance.flop(transformations.flop);
-      }
-
-      if (transformations.rotate) {
-        sharpInstance.rotate(transformations.rotate);
-      }
-
-      if (transformations.negate) {
-        sharpInstance.negate(transformations.negate);
-      }
-
-      if (transformations.grayscale) {
-        sharpInstance.grayscale(transformations.grayscale);
-      }
-
-      const transformedImage = encode(
-        sharpInstance,
-        format,
-        transformations.quality,
-        effort
-      );
-
-      const { data: transformedBuffer, info } = await transformedImage.toBuffer(
-        {
-          resolveWithObject: true,
-        }
-      );
-      transformGuard.checkImageSize({ size: info.size } as sharp.Metadata);
-
-      const exists = imageExists;
-      const uri =
-        imageExists ?
-          `images/${imageId}/${transformationsKey}`
-        : `images/fallback/${transformationsKey}`;
-
-      await this.transformations.put(uri, transformedBuffer, {
-        contentType: `image/${format}`,
-        contentLength: info.size,
-      });
-
-      return { uri, exists };
-    } finally {
-      imageStream.destroy();
+    if (
+      !imageExists &&
+      (await this.transformations.exists(
+        `images/fallback/${transformationsKey}`
+      ))
+    ) {
+      return { uri: `images/fallback/${transformationsKey}`, exists: false };
     }
+
+    const format = transformations.format ?? 'webp';
+    const sharpInstance = sharp(image, {
+      animated: ANIMATED_FORMATS.includes(format),
+      failOn: 'error',
+    });
+
+    const metadata = await sharpInstance.metadata();
+
+    const effort = transformGuard.checkDimensions(metadata, transformations);
+    transformGuard.checkQuality(transformations);
+
+    if (transformations.extend) {
+      sharpInstance.extend(transformations.extend);
+    }
+
+    if (transformations.resize) {
+      // Prevent animated image from enlarging (DOS prevention)
+      if (transformGuard.isAnimatedImage(metadata)) {
+        transformations.resize.withoutEnlargement = true;
+      }
+      sharpInstance.resize(transformations.resize);
+    }
+
+    if (transformations.blur) {
+      sharpInstance.blur(transformations.blur);
+    }
+
+    if (transformations.sharpen) {
+      sharpInstance.sharpen();
+    }
+
+    if (transformations.flip) {
+      sharpInstance.flip(transformations.flip);
+    }
+
+    if (transformations.flop) {
+      sharpInstance.flop(transformations.flop);
+    }
+
+    if (transformations.rotate) {
+      sharpInstance.rotate(transformations.rotate);
+    }
+
+    if (transformations.negate) {
+      sharpInstance.negate(transformations.negate);
+    }
+
+    if (transformations.grayscale) {
+      sharpInstance.grayscale(transformations.grayscale);
+    }
+
+    const transformedImage = encode(
+      sharpInstance,
+      format,
+      transformations.quality,
+      effort
+    );
+
+    const { data: transformedBuffer, info } = await transformedImage.toBuffer({
+      resolveWithObject: true,
+    });
+    transformGuard.checkImageSize({ size: info.size } as sharp.Metadata);
+
+    const exists = imageExists;
+    const uri =
+      imageExists ?
+        `images/${imageId}/${transformationsKey}`
+      : `images/fallback/${transformationsKey}`;
+
+    await this.transformations.put(uri, transformedBuffer, {
+      contentType: `image/${format}`,
+      contentLength: info.size,
+    });
+
+    return { uri, exists };
   }
 
   public async saveImage(imageId: string, image: Buffer) {
@@ -396,11 +400,11 @@ export class MediaService {
 
     // Copy from upload bucket to transformation bucket on first request
     try {
-      const document = await this.uploads.get(objectUri);
+      const document = await this.uploads.getBuffer(objectUri);
 
-      await this.transformations.put(objectUri, document.body, {
+      await this.transformations.put(objectUri, document, {
         contentType,
-        contentLength: document.size,
+        contentLength: document.length,
       });
 
       return { uri: objectUri, exists: true };
@@ -475,7 +479,9 @@ export class MediaService {
 
     // For PDFs, generate a preview of the first page
     if (category === 'pdf') {
-      return this.generatePdfThumbnail(documentId, objectKey, thumbnailUri);
+      return this.limitTransforms(() =>
+        this.generatePdfThumbnail(documentId, objectKey, thumbnailUri)
+      );
     }
 
     // For all other types, use a static icon based on file category
@@ -519,21 +525,15 @@ export class MediaService {
     objectKey: string,
     thumbnailUri: string
   ): Promise<ImageURIObject> {
-    let pdfStream: Readable;
+    let pdfBuffer: Buffer;
     try {
-      pdfStream = (await this.uploads.get(objectKey)).body;
+      pdfBuffer = await this.uploads.getBuffer(objectKey);
     } catch (e: any) {
       if (e instanceof StorageFileNotFoundError) {
         return { uri: thumbnailUri, exists: false };
       }
       throw e;
     }
-
-    const chunks: Buffer[] = [];
-    for await (const chunk of pdfStream) {
-      chunks.push(Buffer.from(chunk));
-    }
-    const pdfBuffer = Buffer.concat(chunks);
 
     // Create a secure temp directory for this operation
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'media-thumb-'));
@@ -556,17 +556,21 @@ export class MediaService {
     try {
       fs.writeFileSync(tmpPdf, pdfBuffer);
 
-      await execFileAsync('pdftoppm', [
-        '-png',
-        '-f',
-        '1',
-        '-l',
-        '1',
-        '-scale-to',
-        '600',
-        tmpPdf,
-        tmpOutPrefix,
-      ]);
+      await execFileAsync(
+        'pdftoppm',
+        [
+          '-png',
+          '-f',
+          '1',
+          '-l',
+          '1',
+          '-scale-to',
+          '600',
+          tmpPdf,
+          tmpOutPrefix,
+        ],
+        { timeout: PDF_RENDER_TIMEOUT, killSignal: 'SIGKILL' }
+      );
 
       const thumbPath = `${tmpOutPrefix}-1.png`;
       if (!fs.existsSync(thumbPath)) {
