@@ -52,9 +52,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const client = getApiClient(getApiUrl(), []);
 
   let mailchimpResponse:
-    | mailchimp.campaigns.CampaignsSuccessResponse
-    | ErrorResponse
-    | null = null;
+    mailchimp.campaigns.CampaignsSuccessResponse | ErrorResponse | null = null;
   try {
     mailchimpResponse = await mailchimp.campaigns.list({
       count: 4,

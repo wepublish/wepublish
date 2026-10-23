@@ -33,6 +33,14 @@ type or credentials on the existing row instead.
 
 ## PDF Renderer
 
+Everything letter-related ships dark behind the `paper-letters` feature
+(`libs/features`): the letter provider and pdf renderer integrations, letter
+layouts, `letterChannelAvailable` / letter previews, and the letter channel of
+the communication tool (`MailSendJobService.assertChannelAllowed`). The editor
+asks `letterChannelAvailable` only through `useLetterChannel()`
+(`libs/membership/editor/.../use-letter-channel.ts`), which skips the query while
+the feature is off — the api refuses it then. Locally: `WEP_FEATURES=paper-letters`.
+
 Renders letters to pdf. One `settings.pdfrenderer` row; editors switch by its
 `type` (which clears the other type's credentials).
 

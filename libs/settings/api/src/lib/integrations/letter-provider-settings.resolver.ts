@@ -5,6 +5,7 @@ import {
   CanGetLetterProviderSettings,
   CanUpdateLetterProviderSettings,
 } from '@wepublish/permissions';
+import { Feature } from '@wepublish/features/api';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   CreateSettingLetterProviderInput,
@@ -15,6 +16,8 @@ import {
 import { LetterProviderSettingsService } from './letter-provider-settings.service';
 import { LetterProviderSettingsDataloaderService } from './letter-provider-settings-dataloader.service';
 
+// Letters ship dark: the integration stays invisible until the feature is on.
+@Feature('paper-letters')
 @Resolver()
 export class LetterProviderSettingsResolver {
   constructor(

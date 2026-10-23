@@ -29,7 +29,6 @@ import {
   MailTemplatePreviewInput,
   MailTemplatePreviewQuery,
   MailTemplatePreviewQueryVariables,
-  LetterChannelAvailableDocument,
   LetterLayoutsDocument,
   MailTemplateSubscriptionsDocument,
   SendTestMailTemplateDocument,
@@ -61,6 +60,7 @@ import {
 import { MailColorPicker } from './color-picker';
 import { LetterAppendixPicker } from './letter-appendix-picker';
 import { LetterPreview } from './letter-preview';
+import { useLetterChannel } from './use-letter-channel';
 import { MailPreview } from './mail-preview';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
 import { PlaceholderPicker } from './placeholder-picker';
@@ -154,8 +154,7 @@ function MailTemplateEdit() {
   const [letterPdf, setLetterPdf] = useState<string | null>(null);
   const [letterLoading, setLetterLoading] = useState(false);
   // Without a letter integration there is nothing to render a letter with.
-  const { data: letterChannelData } = useQuery(LetterChannelAvailableDocument);
-  const letterAvailable = !!letterChannelData?.letterChannelAvailable;
+  const { letterAvailable } = useLetterChannel();
   const { data: letterLayoutData } = useQuery(LetterLayoutsDocument, {
     skip: !letterAvailable,
   });
