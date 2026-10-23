@@ -8,7 +8,6 @@ import { ContentWrapper } from '@wepublish/content/website';
 import { ArticleListWrapper } from '@wepublish/article/website';
 import { useMemo } from 'react';
 import { capitalize } from '@mui/material';
-import Head from 'next/head';
 import { useTranslation } from 'react-i18next';
 
 export const TagWrapper = styled(ContentWrapper)`
@@ -36,6 +35,7 @@ export function Tag({
 }: BuilderTagProps) {
   const {
     ArticleList,
+    Head,
     elements: { Alert, Pagination, H2 },
     blocks: { RichText },
   } = useWebsiteBuilder();

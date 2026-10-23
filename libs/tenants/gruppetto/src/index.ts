@@ -1,3 +1,5 @@
+export { GruppettoBreakBlock } from './components/gruppetto-break-block';
+export { GruppettoFooter } from './components/gruppetto-footer';
 export {
   GruppettoMainSpacer,
   GruppettoNavBar,
