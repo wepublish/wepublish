@@ -11,6 +11,14 @@ design language per `/material-3`, implementation per `/material-ui-theming`
 
 Screens below were designed against the **running editor**, not inferred from source.
 
+**State of the editor while this is unbuilt.** Slices C and D replaced the event API, and the old
+event list, create and edit views went with it (`apps/editor/src/app/routes/events/*`, their routes,
+the `Events` nav item and the `events`/`createEvent` commands). Adapting them to schedules,
+revisions and rates would have been thrown away by this design. What survives: the Event tags
+routes and menu item, now gated on tag permissions, and the event pickers in the EventBlock and
+teaser panels, which read the `EventList` query. Until this design is built (slice F), events can be
+created and edited only through the API ([design 2](02-api.md) §8.1).
+
 ---
 
 ## 1. Who uses this, and what for

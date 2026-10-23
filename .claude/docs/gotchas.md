@@ -506,12 +506,16 @@ Pinned by [apps/editor/src/server-app.spec.ts](../../apps/editor/src/server-app.
 
 ---
 
-### ⚠️ `block-content` injects anything from `article` or `page` through `forwardRef`
+### ⚠️ `block-content` injects anything from `article`, `page` or `event` through `forwardRef`
 
-`libs/article/api` and `libs/page/api` import `@wepublish/block-content/api`,
-and block-content imports them back. Every block-content provider that takes
-`ArticleService`, `PageService` or `HOT_AND_TRENDING_DATA_SOURCE` therefore
-uses `@Inject(forwardRef(() => …))` — see
+`libs/article/api`, `libs/page/api` and `libs/event/api` import
+`@wepublish/block-content/api`, and block-content imports them back. Every
+block-content provider that takes `ArticleService`, `PageService`,
+`EventService` or `HOT_AND_TRENDING_DATA_SOURCE` therefore uses
+`@Inject(forwardRef(() => …))`, and `BlockContentModule` imports those modules
+through `forwardRef`. The event side does the same in reverse: `EventModule`
+imports `forwardRef(() => BlockContentModule)` and `EventRevisionResolver`
+injects `forwardRef(() => SlotTeasersLoader)`. See
 [teaser-list.resolver.ts](../../libs/block-content/api/src/lib/teaser/teaser-list.resolver.ts)
 and [slot-teasers-loader.ts](../../libs/block-content/api/src/lib/teaser/slot-teasers-loader.ts).
 
@@ -525,10 +529,36 @@ happened to import `ArticleModule` early enough to hide two missing
 **Load-bearing:** the `forwardRef` wrappers. Removing or reordering a module in
 `app.module.ts` can make a cycle that "worked" fail at the next start.
 
-Guarded for `SlotTeasersLoader` only: `slot-teasers-loader.spec.ts` starts with
-`import './article.service';`, which enters the cycle from the article side and
-reproduces the boot error in a unit test. A new injection site needs the same
-trick or nothing catches it before `nx serve api-example`.
+Guarded by specs that import the *other* library first, which enters the cycle
+from that side and reproduces the boot error in a unit test:
+`slot-teasers-loader.spec.ts` (`import './article.service';`, in article-api),
+`block-content/api/src/lib/teaser/event-cycle.spec.ts` and
+`event/event-block.resolver.spec.ts` (`import '@wepublish/event/api';`), and
+`event/api/src/lib/event-revision.resolver.spec.ts`
+(`import '@wepublish/block-content/api';`). The import has to be the spec's
+first line. A new injection site needs the same trick or nothing catches it
+before `nx serve api-example`. block-content/api is `.nxignore`d, so its specs
+run only through `pnpm vitest run --config libs/block-content/api/vitest.config.ts`.
+
+---
+
+### ⚠️ The event search expression is written twice and must stay identical
+
+The trigram index in migration `20261023140000_replace_events_with_agenda`
+and the query in
+[event-search.ts](../../libs/event/api/src/lib/event-search.ts)
+(`EVENT_SEARCH_EXPRESSION`) both spell
+`events_unaccent(coalesce("name", '') || ' ' || coalesce("descriptionText", ''))`.
+Postgres uses an expression index only for a byte-identical expression, so a
+"harmless" tidy-up of either side turns every search into a sequential scan
+with no error. `event-search.spec.ts` asserts the migration contains the
+constant's text, and `event-search.db.spec.ts` checks the `EXPLAIN` plan.
+Changing the expression means a new migration that drops and recreates the
+index, plus the constant.
+
+`events_unaccent` is an `IMMUTABLE` wrapper around `public.unaccent`, because
+`unaccent()` itself is only `STABLE` and cannot be indexed. The migration
+creates the `unaccent` extension, which a managed database has to allow.
 
 ---
 
@@ -764,8 +794,8 @@ not re-render every cell. The deps have to include `columnDefs`: a cell may
 draw from something outside its row (a second query's answer), and that reaches
 the table as a new `columns` array while `rows` keeps its identity.
 
-Left out, the import-events list never redrew its "imported" buttons when the
-ids query landed, which read as a flaky test rather than a bug. A drag is
+Left out, the import-events list (since removed) never redrew its "imported"
+buttons when the ids query landed, which read as a flaky test rather than a bug. A drag is
 unaffected by the extra dep, because the sizing state is the table's own and
 leaves the caller's `columns` untouched.
 

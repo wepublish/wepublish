@@ -34,9 +34,13 @@ a user belonging to one: `organization` returns **zero hits** in `schema.prisma`
 [D3](../decisions.md), [D4](../decisions.md), [D5](../decisions.md) and
 [D8](../decisions.md) all stand on it.
 
-That was the state before the port. `Region`, `Organization`, `OrganizationMember` and membership on
-the session are now built (`libs/api/prisma/schema.prisma:2418-2479`, §8); places, events and the
-rest are still design.
+That was the state before the port. The data model in this document is now built except the
+`Video` entity, the technical-sheet `Document` reference on `Place`, the ProInfirmis sync and the
+Agenda-Admin role (§11.2, §9, §13): `Region`, `Organization`, `OrganizationMember` and membership
+on the session (§8), then places, audiences, affiliations, contacts, events, revisions, dates,
+occurrences, images and rates (`libs/api/prisma/schema.prisma:2379-2780`, migration
+`20261023140000_replace_events_with_agenda`). Where the build differs from a sketch below, the
+section says so.
 
 ---
 
@@ -69,7 +73,7 @@ Read it as three layers:
 
 1. **Who** — `User`, `Organization`, and the membership between them. New to We.Publish.
 2. **Where** — `Place` and `Region`, with accessibility data from ProInfirmis.
-3. **What** — `Event`, its revisions, and the occurrences the published revision expands into.
+3. **What** — `Event`, its revisions, and the occurrences its schedule expands into.
 
 What an editor *writes* lives on the **revision** — the name, the print blurb, the body blocks and
 the images. What the event *is* lives on the **entity** — when it happens, where, who runs it, what
@@ -291,17 +295,28 @@ Note `openingTime`, which BKa's `event_occurrence` table does **not** have — i
 event/sub-event row. 2,434 sub-events carry one, so collapsing into BKa's occurrence shape unchanged
 would silently drop the door time for ~2,400 dates. It is carried here instead.
 
-Derived state, owned by the entity ([D10](../decisions.md)). Regenerated on publish and unpublish
-— **not on every save**, which is where we deliberately diverge from BKa. BKa re-expands on save
-because it has no drafts; we only ever expand what is published, and drafts expand in memory for
-preview.
+Derived state, owned by the entity ([D10](../decisions.md)).
 
-Two guards this needs: a repair command (BKa's `EventsCalculateOccurrencesCommand` equivalent) and
-a test asserting re-expansion is idempotent.
+**As built, pending Karl's confirmation** ([decision log, slice C+D item 1](../decisions.md#raised-by-the-slice-cd-build)):
+occurrences are rewritten on **every save that changes the schedule** — `createEvent`,
+`updateEvent`, `duplicateEvent` — and re-synced on `publishEvent`. `unpublishEvent` keeps them.
+That is BKa's on-save behaviour after all. It follows from D24: the schedule is a fact on the
+entity, so a date fix has to reach the public agenda without publishing. Drafts are not exposed by
+this, because the public agenda joins `publicEventsWhere` on the event. It also closes the
+scheduled-publication gap: the rows exist before `publishAt`, and the published view switches over
+at that instant. `syncOccurrences` (`libs/event/api/src/lib/event-occurrences.ts:39-70`) compares the
+stored rows with `expandOccurrences(schedule)` through `sameOccurrences` and only deletes and
+re-inserts when they differ, inside the caller's transaction. The first design said "regenerated on
+publish and unpublish, not on every save", with drafts expanded in memory. That is superseded
+here if Karl confirms.
+
+Two guards this needs: a repair command (BKa's `EventsCalculateOccurrencesCommand` equivalent, not
+built yet) and a test asserting re-expansion is idempotent (built, `event-occurrences.spec.ts`).
 
 **Unbounded recurrences are capped at input** ([D15](../decisions.md)). An event's last date must fall
-on or before the Zurich calendar day two years after the save ([D40](../decisions.md)); expansion then materialises everything the schedule describes,
-once, at publish. There is **no scheduled job and no refreshing window** — expansion stays a pure,
+on or before the Zurich calendar day two years after the save ([D40](../decisions.md)); expansion
+then materialises everything the schedule describes. There is **no scheduled job and no refreshing
+window** — expansion stays a pure,
 idempotent function of the event's schedule (which sits on the entity since
 [D24](../decisions.md)), and no occurrence ever appears that an organiser did not type.
 
@@ -335,7 +350,7 @@ model Event {
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  slug   String?     @unique
+  slug   String?     // not unique: unique among published events, checked in the service (§6.2)
   status EventStatus @default(Confirmed)
 
   organizationId String?       // nullable — D20; 19% of BKa events have none
@@ -350,6 +365,9 @@ model Event {
   openingTime  String?
 
   audienceId String?   // one per event — §10.2
+
+  ticketingUrl String?                  // design 2 §4; BKa's scalar ticketing link (§12)
+  showInPrint  Boolean @default(false)  // design 2 §2.2 filter
 
   // the platform SEO/social set — §7.1
   seoTitle               String?
@@ -368,19 +386,25 @@ model Event {
   legacyId         BigInt?  @unique
   legacyProposedBy Json?    // D6/D8 provenance
 
-  organization Organization? @relation(fields: [organizationId], references: [id])
-  place        Place?        @relation(fields: [placeId], references: [id])
-  audience     Audience?     @relation(fields: [audienceId], references: [id])
-  socialMediaImage Image?    @relation("eventSocialMediaImage", fields: [socialMediaImageID], references: [id])
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  place        Place?        @relation(fields: [placeId], references: [id], onDelete: SetNull)
+  owner        User?         @relation("eventOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  audience     Audience?     @relation(fields: [audienceId], references: [id], onDelete: SetNull)
+  socialMediaImage Image?    @relation("eventSocialMediaImage", fields: [socialMediaImageID], references: [id], onDelete: SetNull)
   tags         TaggedEvents[] // §10.1 — BKa called these categories; explicit join, kept
   rates        Rate[]        // §11
   dates        EventDate[]
   occurrences  Occurrence[]
   revisions    EventRevision[]
+  published    EventRevisionPublished?   // the three views, as Article has them
+  pending      EventRevisionPending?
+  draft        EventRevisionDraft?
 
+  @@index([slug])
   @@index([organizationId])
   @@index([reviewRequestedAt])
   @@index([status])
+  @@index([firstDateAt])
   @@map("events.events")
 }
 
@@ -393,17 +417,32 @@ model EventRevision {
   name             String
   printDescription String?   // max 256 chars, written for print — §7
   blocks           Json
+  descriptionText  String @default("")   // plain text of the richtext blocks — search and the 6,400 rule
 
   publishedAt DateTime? @db.Timestamptz(3)
   archivedAt  DateTime? @db.Timestamptz(3)
   userId      String?   // who wrote this revision
 
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  @@index([eventId])
+  @@index([publishedAt])
+  @@index([eventId, createdAt(sort: Desc), id(sort: Desc)])
   @@map("events.events.revisions")
 }
 ```
+
+As built: `libs/api/prisma/schema.prisma:2575-2700`, abridged above (the built model also indexes
+`createdAt`, `modifiedAt`, `placeId`, `ownerId`, `audienceId`, `publishedAt` and `lastDateAt`, and
+`reviewRequestedBy` is a `SetNull` relation to `User`). The views
+`events.events.revisions.published` / `.pending` / `.draft` and their partial indexes are copied
+from the article migration into `20261023140000_replace_events_with_agenda`. Prisma does not
+manage them, so a later `prisma migrate diff` must be checked for attempts to drop them.
+
+`descriptionText` is written by `createEvent`, `updateEventContent` and `duplicateEvent` from
+`blocksPlainText` (`libs/event/schedule/src/lib/blocks-plain-text.ts`). It is new: the description
+lives in `blocks` JSON, which cannot be indexed sensibly, and `blocks::text` would also match JSON
+keys. It needs Karl's confirmation ([decision log, slice C+D item 6](../decisions.md#raised-by-the-slice-cd-build)).
 
 `archivedAt` is not decoration. The platform's draft view is
 `WHERE "archivedAt" IS NULL AND "publishedAt" IS NULL`
@@ -478,7 +517,12 @@ suffixes. We.Publish: slugs are unique **only among published rows**; any number
 share one.
 
 These rules are incompatible, and the We.Publish rule is the right one to keep — it is what makes
-drafts cheap. The consequence lands on the migration: 39,978 BKa slugs must be de-duplicated
+drafts cheap. **As built**, the column is non-unique and indexed. `createEvent`, `updateEvent` and
+`publishEvent` refuse a slug that another published event already uses, and a slug lookup prefers
+the published event (`libs/event/api/src/lib/event.service.ts:184-191,903-926`). Two drafts may
+share a slug, but the second one to publish is refused. `Article` has no such check.
+
+The consequence lands on the migration: 39,978 BKa slugs must be de-duplicated
 against the published-only constraint. Old slugs no longer need a lookup: the compatibility stub
 that would have resolved them is gone ([D31](../decisions.md)).
 
@@ -537,8 +581,9 @@ Nothing migrates into them; they start empty and the editor fills them in over t
 ## 8. Organisations, membership and ownership
 
 New to We.Publish, and the foundation for every permission decision. **Built**: the snippet matches
-`libs/api/prisma/schema.prisma:2433-2479` and migration `20261023120000_add_event_organizations`,
-except the relations marked *planned*, which arrive with their models.
+`libs/api/prisma/schema.prisma:2395-2447` and migration `20261023120000_add_event_organizations`.
+The relations to places, events, contacts, tags and affiliations arrived with their models in
+`20261023140000_replace_events_with_agenda`.
 
 ```prisma
 model Organization {
@@ -569,7 +614,11 @@ model Organization {
 
   members   OrganizationMember[]
   apiTokens ApiToken[]          // keys bound to this organisation, deleted with it (D36)
-  // planned: places Place[], events Event[], contacts Contact[], tags Tag[], affiliations Affiliation[]
+  places       Place[]
+  events       Event[]
+  contacts     Contact[]
+  tags         TaggedOrganizations[]      // events.organizations.tags
+  affiliations OrganizationAffiliation[]  // events.organizations.affiliations
 
   @@index([createdAt])
   @@index([name])
@@ -678,21 +727,33 @@ model Place {
   proInfirmisPictograms Json?     // D7 — legacy numeric rating ids
 
   regionId       String?
+  region         Region?       @relation(fields: [regionId], references: [id], onDelete: Restrict)
   organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
   legacyId       BigInt? @unique
 
+  events Event[]
+
+  @@index([regionId])
+  @@index([organizationId])
   @@index([latitude, longitude])
   @@map("events.places")
 }
 ```
+
+**Built** (`libs/api/prisma/schema.prisma:2449-2490`), with the API in `libs/event/api/src/lib/place/`
+([design 2](02-api.md) §2.1). There is no public/sensitive split: `private` hides nothing in BKa, and
+every field is in BKa's item groups (`../research/bka-04-api-v2-apiplatform.md:465-490,1150`).
+`private` only narrows which venues an event form may pick (`selectablePlacesWhere`).
 
 `proInfirmisPictograms` keeps the **legacy numeric ids** even though we sync from Ginto
 ([D7](../decisions.md)), because those ids are part of BKa's public API contract. The Ginto string
 `key` → numeric id mapping ports with the integration.
 
 1,260 of 1,369 places are geocoded, and `geoNorthEast`/`geoSouthWest` bounding-box search is a live
-filter on four public endpoints. The composite index above supports it; whether that is enough or
-PostGIS is warranted is an API-design question.
+filter on four public endpoints. The composite index above supports it. **As built**, there is no
+PostGIS: `geoBoundingBox` on places and events is a `gte`/`lte` pair on `latitude` and `longitude`
+(`libs/event/api/src/lib/geo-bounding-box.ts`), and a box with only one corner is a BadRequest.
 
 ---
 
@@ -749,8 +810,13 @@ schema constraint — the schema cannot express it, and `Tag` must not grow an e
 | `Audience` | 4 | One per event, a closed and stable set — a lookup, not a folksonomy. `Event.audienceId` ([D24](../decisions.md)) — who an event is for is a fact about the event. |
 | `Affiliation` | 7 | Organisations only; same reasoning as `Region`. |
 
-They are seeded by migration so every environment starts consistent — unlike BKa, whose reference
-data is hard-coded SQL fixtures that have already drifted from production.
+They are **not** seeded by the SQL migration. [D27](../decisions.md) ships the tables to every tenant
+but seeds BKa's reference data only for agenda tenants, which a migration applied everywhere cannot
+do. The data arrives with the BKa import (slice G) or an opt-in seed. In this slice they are
+read-only public queries — `eventRegions`, `eventAudiences`, `eventAffiliations`
+(`libs/event/api/src/lib/taxonomy/event-taxonomy.resolver.ts:18-40`) — and a disabled region is
+listed only to holders of `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations`. Creating and
+editing them is editor work for slice F.
 
 ```prisma
 model Region {
@@ -764,7 +830,7 @@ model Region {
   legacyId BigInt?  @unique
 
   organizations Organization[]
-  places        Place[]           // planned, with Place
+  places        Place[]
 
   @@map("events.regions")
 }
@@ -875,10 +941,19 @@ model EventImage {
   sortOrder  Int
   isMain     Boolean   @default(false)
 
+  revision EventRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+  image    Image         @relation(fields: [imageId], references: [id], onDelete: Cascade)
+
   @@id([revisionId, imageId])
+  @@index([imageId])
   @@map("events.events.revisions.images")
 }
 ```
+
+Both relations cascade. Every other `Image` relation in the schema is optional with `SetNull`, and
+`image-upload.service.ts` deletes images with a plain `prisma.image.delete`. A `Restrict` default
+would make any image that ever appeared in an event revision, archived ones included, impossible to
+delete. Deleting an image drops it from those revisions instead.
 
 A further wrinkle for the migration: roughly 30% of the 11,821 German legends are photo credits
 ("© Joana Magalhaes"), which belong in `Image.source`. That needs a heuristic split, specified in
@@ -991,16 +1066,24 @@ Five organisation permissions are built (`permissions.ts:769-797`):
 
 | Permission | Grants |
 | --- | --- |
-| `CanCreateOrganization` | Create an organisation; a user without `CanUpdateOtherOrganizations` becomes its member (`organization.service.ts:119-155`) |
+| `CanCreateOrganization` | Create an organisation; a user without `CanUpdateOtherOrganizations` becomes its member (`organization.service.ts:118-157`) |
 | `CanUpdateOrganization` | Update an organisation you are a member of |
 | `CanDeleteOrganization` | Delete an organisation you are a member of |
 | `CanUpdateOtherOrganizations` | Update any organisation, change `partner`/`enabled`, add and remove members |
 | `CanGetOtherOrganizations` | Read the sensitive data and members of any organisation, and see disabled ones, without changing anything |
 
+Places have no permissions of their own. `createPlace`, `updatePlace` and `deletePlace` need
+`CanUpdateOrganization` as a member of the place's organisation, or `CanUpdateOtherOrganizations`
+for any place and for places without an organisation. This is pending Karl's confirmation
+([decision log, slice C+D item 8](../decisions.md#raised-by-the-slice-cd-build)).
+
 `CanGetOtherOrganizations` is what a read-only API key needs ([D37](../decisions.md),
 [design 2 §2.1.1](02-api.md)). The predefined admin role gets all of them through `AllPermissions`
 (`libs/permissions/api/src/lib/predefined-permissions.ts:16-22`); the editor and peer roles get none
-of the organisation permissions.
+of the organisation permissions. The predefined editor role keeps the four old event permissions
+but not `CanGetEvents` or `CanPublishEvent` (`libs/permissions/src/lib/permissions.ts:1513-1592`).
+So an editor-role user on a non-agenda tenant can neither list event drafts nor publish an event
+until the role is extended ([decision log, slice C+D item 15](../decisions.md#raised-by-the-slice-cd-build)).
 
 The five permissions that reach past your own organisations (`CanGetOtherOrganizationEvents`,
 `CanUpdateOtherOrganizationEvents`, `CanDeleteOtherOrganizationEvents`, `CanGetOtherOrganizations`,
@@ -1045,7 +1128,8 @@ All four open questions from the first draft are now settled in
 | Do these tables belong in every tenant's database? (§3) | **Yes.** Other media are expected to adopt the agenda; empty tables cost nothing. |
 | Is the sub-event collapse acceptable? (§4.3) | **Yes.** The data shows a sub-event *is* an occurrence — see §4.3. |
 
-Nothing in this document is still open except venue proposals (§12). The remaining uncertainty
+Nothing in this document is still open except venue proposals (§12) and the choices the build
+made that await Karl's confirmation ([decision log, slice C+D](../decisions.md#raised-by-the-slice-cd-build)). The remaining uncertainty
 sits in [design 4](04-migration.md): switching off BKa's old API ([D31](../decisions.md)) means
 telling every client in time, and nobody yet knows which clients are still active.
 

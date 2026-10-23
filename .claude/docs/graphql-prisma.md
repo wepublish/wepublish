@@ -44,6 +44,12 @@ pnpm run migrate                            # migrate deploy + seed (deploy path
 - Adding an index or a nullable column is cheap; renaming or dropping a column
   on a live table needs a staged migration. Flag destructive migrations to the
   user rather than generating them silently.
+- The revision views (`articles.revisions.*`, `pages.revisions.*`,
+  `events.events.revisions.*`), their partial indexes and the event search
+  function and trigram index (`events_unaccent`) are hand-written SQL that
+  Prisma does not manage. After generating a migration, read it for `DROP VIEW`
+  or `DROP INDEX` on them, and check `pnpm prisma migrate diff --from-migrations
+  … --to-schema …` for the same.
 
 ## GraphQL — code-first
 

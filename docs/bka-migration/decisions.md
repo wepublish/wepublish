@@ -451,6 +451,8 @@ tables already named this way.
 
 > **Partly superseded by [D24](#d24--the-revision-carries-what-an-editor-writes-the-event-carries-what-the-event-is).**
 > Occurrences staying entity-scoped still holds. The recurrence *rule* moved to the entity with them.
+>
+> **Built differently, pending Karl's confirmation** ([open questions, slice C+D](#raised-by-the-slice-cd-build)). Occurrences are re-expanded on every save that changes the schedule and re-synced on publish, not only on publish and unpublish. Unpublishing keeps them; the public agenda hides them through `publicEventsWhere`.
 
 **Context.** This was the port's central open question. A BKa `mainevent` with a recurrence
 materialises 128,489 `event_occurrence` rows, and BKa regenerates **all** of an event's
@@ -644,6 +646,8 @@ expensive to reverse after data is migrated.
 ## D15 — The two-year cap is a validation rule, not a refreshing window
 
 > **Updated by [D38](#d38--a-weekly-schedule-needs-at-least-one-weekday), [D40](#d40--the-two-year-cap-counts-whole-days-in-zurich) and [D43](#d43--weekdays-outside-monday-to-sunday-are-rejected-on-input).** The same input check (`validateScheduleInput`) also rejects a weekly schedule with no weekdays, or with weekday values outside 1–7. The cap counts whole days: the last date may fall anywhere on the Zurich calendar day two years after the save.
+>
+> **Built differently, pending Karl's confirmation** ([open questions, slice C+D](#raised-by-the-slice-cd-build)). Expansion runs on every save that changes the schedule, not once at publish. The cap, the purity and the idempotence are unchanged.
 
 **Context.** [D14b](#d14--data-model-answers-partner-recurrence-horizon-shared-schema-sub-events)
 capped expansion at `now + 2 years` and accepted a periodic job to extend the window as time
@@ -685,6 +689,8 @@ describes, once, at publish. **No scheduled job, no refreshing window.**
 ---
 
 ## D16 — Accent-insensitive search gets a real index
+
+> **Built.** Migration `20261023140000_replace_events_with_agenda` creates `unaccent`, an `IMMUTABLE` wrapper `events_unaccent(text)` and the GIN index `event_revisions_search_trgm_idx` on the revision's name and `descriptionText`. The query uses the same text (`EVENT_SEARCH_EXPRESSION`, `libs/event/api/src/lib/event-search.ts:9`). `event-search.db.spec.ts` runs it against a real database, including the unaccented-finds-accented test. The `descriptionText` column is pending confirmation ([open questions, slice C+D](#raised-by-the-slice-cd-build)).
 
 **Context.** BKa's event search is `unaccent()` + `ILIKE '%…%'` across the event name and
 description, with no index. Bernese venue and production names are full of accents, so a search
@@ -1974,11 +1980,14 @@ Raised by the completeness critic, to be resolved in the design:
   was written before D18; the only alternative it pointed at is the one D18 names and rejects.
 - ~~The compatibility stub has no target research, and GraphQL already occupies `path: 'v1'`.~~
   Resolved by [D26](#d26--the-compatibility-stub-stays-in-the-php-application-and-calls-wepublish).
-- **Unowned cross-cutting subjects:** fr|de multilingual content, the four reference taxonomies
-  (Category/Region/Audience/Affiliation), BKa's ~30 feature flags vs `Setting`/`@Feature`,
-  Europe/Zurich wall-clock behaviour across DST, accent-insensitive search, geo bounding-box
-  search, validation parity, and event duplication. (`user.member` is resolved by
-  [D11](#d11--bkas-member-flag-is-called-partner).)
+- **Unowned cross-cutting subjects:** BKa's ~30 feature flags vs `Setting`/`@Feature`.
+  The rest is settled or built: fr|de content by [D33](#d33--bka-has-no-french-content-d13s-premise-is-corrected);
+  categories are event tags and region, audience and affiliation are tables with read-only queries
+  (`libs/event/api/src/lib/taxonomy/`); the Zurich wall clock in `@wepublish/event/schedule`;
+  accent-insensitive search ([D16](#d16--accent-insensitive-search-gets-a-real-index)); the geo
+  bounding box (`geo-bounding-box.ts`, on places and events); validation parity
+  (`libs/event/schedule/src/lib/event-input-rules.ts`, [design 2](design/02-api.md) §4); and
+  `duplicateEvent`. (`user.member` is resolved by [D11](#d11--bkas-member-flag-is-called-partner).)
 - ~~**Multi-tenancy.** The new tables land in the schema shared by ~20 tenant sites.~~
   Resolved by [D27](#d27--the-events-domain-ships-to-every-tenant).
 
@@ -2016,13 +2025,15 @@ Mechanical gaps, no decision needed — fold into the build:
   [design 1 §8](design/01-data-model.md).
 - `MailTemplateContext` is a closed enum of seven membership contexts
   (`libs/api/prisma/schema.prisma`). Events need a new member and a branch in `assembleMailData`.
-- `PublicContent` is a six-member union with no `'events'`
-  (`libs/kv-ttl-cache/api/src/lib/graphql-response-cache.plugin.ts`). The new public queries need
-  a cache namespace and an invalidation point.
+- ~~`PublicContent` is a six-member union with no `'events'`.~~ Built: `'events'` is a
+  `PublicContent` member and a shared namespace, versioned by drafts, and `agenda`, `event`,
+  `events`, `place`, `places` and the three taxonomy queries are cacheable
+  (`graphql-response-cache.plugin.ts:29-30,81-114,129-133`, `kv-ttl-cache-shared-namespaces.ts:39`, both in `libs/kv-ttl-cache/api/src/lib/`).
 - ~~`libs/api-token/api` now exists and differs from what design 2 describes.~~ Reconciled:
   design 2 §9 describes the built library, and there is no proxy ([D31](#d31--bkas-old-api-is-switched-off-at-cutover-there-is-no-interim-layer)).
-- Scheduled publication produces an event with **zero occurrences**: `publishEvent(id, publishAt)`
-  flips a view, and nothing expands the schedule at that moment.
+- ~~Scheduled publication produces an event with **zero occurrences**.~~ Closed by the build, if
+  Karl confirms the occurrence write path below: occurrences already exist before `publishAt`, and
+  `publishEvent` schedules a cache invalidation for that moment.
 
 Raised by D31–D34:
 
@@ -2039,8 +2050,9 @@ Raised by D31–D34:
 Raised by D35:
 
 - **Who may change an event's owner or organisation.** Owner access must not let a submitter move
-  their event into an organisation they do not belong to, or hand it to another user. Settle it
-  with `updateEvent`. **Needs a decision.**
+  their event into an organisation they do not belong to, or hand it to another user. Built as
+  proposed; see item 2 of [the slice C+D list](#raised-by-the-slice-cd-build). **Needs
+  confirmation.**
 
 Raised by D36:
 
@@ -2066,3 +2078,82 @@ Raised by D40:
   `scheduleHorizon` (23:59:59.999 Zurich) would make every occurrence end at 23:59. Move the date to
   `lastSchedulableDay` and keep the time of day; settle the detail when
   [design 4](design/04-migration.md) §4.7 is built.
+
+### Raised by the slice C+D build
+
+Slices C and D replaced the old event model with the agenda domain end to end (commits `b2a151771`
+to `f5e738261`). Where the design left a choice open, the build took the proposal below. **Each one
+is built and needs Karl's confirmation before it becomes a decision.** Paths are relative to
+`libs/event/api/src/lib/` unless stated.
+
+1. **Occurrences are written on save, not only at publish.** `createEvent`, `updateEvent` and
+   `duplicateEvent` expand the schedule and rewrite the event's occurrences in the same
+   transaction. `publishEvent` re-syncs them, and `unpublishEvent` keeps them
+   (`event.service.ts:411,518,621,780`). `syncOccurrences` skips the write when nothing changed
+   (`event-occurrences.ts:39-70`). The public agenda shows only occurrences of published events,
+   through `publicEventsWhere`. This differs from [D10](#d10--occurrences-belong-to-the-entity-the-recurrence-rule-belongs-to-the-revision),
+   [D15](#d15--the-two-year-cap-is-a-validation-rule-not-a-refreshing-window) and design 1 §5.2
+   ("regenerated on publish and unpublish"). The reasons: D24 says a date fix reaches the public
+   agenda without publishing, the zero-occurrence gap for scheduled publication closes, and the
+   editor gets real dates for drafts. Expansion is still a pure function of the schedule, so it
+   stays idempotent.
+2. **Who may set the organisation and the owner.** On create, the organisation must be one you
+   belong to, unless you hold `CanUpdateOtherOrganizationEvents`. A bound key defaults to its own
+   organisation. Moving an existing event needs you to hold it (as a member of its organisation, or
+   as the owner of an orphan event) and to belong to the target. The owner defaults to the creating
+   user, and only `CanUpdateOtherOrganizationEvents` may hand an event to someone else
+   (`event-scope.ts:213-246`).
+3. **Publishing** needs `CanPublishEvent` plus membership of the organising organisation,
+   ownership of an event that has no organisation, or `CanUpdateOtherOrganizationEvents`
+   (`canPublishEvent`, `event-scope.ts:203-207`). `unpublishEvent` uses the same rule. So a venue
+   member can edit and validate a foreign event only if they hold the cross-organisation
+   permission. An owner holding `CanPublishEvent` may publish their own orphan event.
+4. **Deleting** needs membership of the organising organisation or
+   `CanDeleteOtherOrganizationEvents` (`canDeleteEvent`, `event-scope.ts:209-211`). There is no
+   owner branch and no venue branch: [D35](#d35--an-events-owner-reaches-it-without-an-organisation)
+   gives owners list and edit access only.
+5. **Slugs** are a nullable, indexed, non-unique column. Uniqueness among published events is
+   checked on create, update and publish (`event.service.ts:903-926`). A slug lookup prefers the
+   published event (`:185-191`). This follows design 1 §6.2's prose, not the `@unique` in its own
+   sketch.
+6. **`EventRevision.descriptionText`** holds the plain text of the revision's richtext blocks
+   (`blocksPlainText`, `libs/event/schedule/src/lib/blocks-plain-text.ts`). The trigram index uses
+   it, and so does the 6,400-character rule. Paragraphs inside one richtext block run together,
+   as BKa's `strip_tags` count did.
+7. **`Event.ticketingUrl` and `Event.showInPrint`** were added as facts, because design 2 filters
+   and validates them. BKa's `print_category_id` (`research/bka-01-data-model.md:415-443`) is not
+   ported. Port it as an event-tag reference, or drop it?
+8. **Place writes** reuse the organisation permissions. A member holding `CanUpdateOrganization`
+   may create, update and delete their organisation's places. `CanUpdateOtherOrganizations` may
+   act on any place, including places without an organisation (`canManagePlace`,
+   `event-scope.ts:146-152`). BKa reserves place creation and deletion for admins.
+   `deletePlace` refuses a place that still has upcoming events (`place/place.service.ts:217-240`).
+9. **Selectable venues** on event writes are enabled places that are not private or belong to
+   your own organisation (`selectablePlacesWhere`, `event-scope.ts:127-144`). Holders of
+   `CanUpdateOtherOrganizationEvents` may pick any enabled place, private ones included.
+10. **`duplicateEvent`** copies the facts, dates, rates, tags and the newest revision as a draft
+    named "Kopie von …" (`event.service.ts:95`). The copy has no slug, the caller becomes its
+    owner and the review fields are cleared. A venue member may not duplicate a foreign event.
+11. **`requestEventReview`** called again keeps the first `reviewRequestedAt`
+    (`event.service.ts:812-814`).
+12. **`EventBlock` by tag** returns published events ordered by `firstDateAt` and capped at
+    `getMaxTake`, past events included. Cherry-picked ids keep the editor's order
+    (`getPublicEventsForBlock`, `event.service.ts:318-348`).
+13. **Event filter semantics.** `regionId` matches the venue's region, not the organisation's
+    (`event-filter.ts:37-38`). `false` for `wheelchairAccessible` or `partner` means "not
+    flagged" (`event-filter.ts:11-14`).
+14. **Status badge labels** are Abgesagt, Verschoben and Ausverkauft, with no badge for Confirmed
+    (`libs/event/website/src/lib/event-status/event-status.tsx:4-9`). BKa wrote "Annuliert".
+15. **The old editor event routes are removed until slice F**, along with their nav item and
+    commands. Event tags stay. The migration drops every tenant's existing event rows, and tsri and
+    ganzgraz have custom event pages. The predefined editor role has no `CanPublishEvent` or
+    `CanGetEvents`. Confirm this is acceptable for all tenants ([D27](#d27--the-events-domain-ships-to-every-tenant)),
+    or hold the deploy until slice F.
+16. **Tenant `/event` lists stay on the `events` catalogue** rather than moving to `agenda`.
+17. **Organisation tags, affiliations and contacts** have Prisma relations only. Only
+    `BaseOrganization.region` is exposed in GraphQL.
+18. **`event(id, slug)` returns `Event!`.** A missing or unpublished event is a NotFound error, as
+    for `article`. Design 2 sketches it as nullable.
+19. **`unaccent` is a deployment prerequisite on every tenant database.** The migration runs
+    `CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA public` ([D16](#d16--accent-insensitive-search-gets-a-real-index)),
+    so a managed database that does not allow it fails the deploy.
