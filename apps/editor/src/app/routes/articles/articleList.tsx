@@ -54,6 +54,7 @@ import {
   StatusBadge,
   TableWrapper,
   useListViewState,
+  useTableExportQuery,
 } from '@wepublish/ui/editor';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -62,9 +63,12 @@ import {
   MdAddComment,
   MdContentCopy,
   MdDelete,
+  MdLink,
   MdUnpublished,
 } from 'react-icons/md';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
+import { copyLinkToClipboard } from '../../copyLink';
 
 interface State {
   state: string;
@@ -152,6 +156,15 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
   } = useQuery(ArticleListDocument, {
     variables: articleListVariables,
   });
+  const exportArticles = useTableExportQuery(
+    ArticleListDocument,
+    {
+      filter,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    },
+    data => data.articles
+  );
   const [createComment] = useMutation(CreateCommentDocument);
 
   const articles = useMemo(() => data?.articles?.nodes ?? [], [data]);
@@ -202,6 +215,14 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             </StatusBadge>
           );
         },
+        exportValue: article =>
+          [
+            article.draft && t('articles.overview.draft'),
+            article.pending && t('articles.overview.pending'),
+            article.published && t('articles.overview.published'),
+          ]
+            .filter(Boolean)
+            .join(' / '),
       },
       {
         id: 'preTitle',
@@ -221,6 +242,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             </Link>
           </PeerAvatar>
         ),
+        exportValue: article => article.latest.title,
       },
       {
         id: 'slug',
@@ -250,6 +272,12 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
               publishedAtIfPending: new Date(article.pending.publishedAt),
             })
           : t('articles.overview.notPublished'),
+        exportValue: article => {
+          const publishedAt =
+            article.published?.publishedAt ?? article.pending?.publishedAt;
+
+          return publishedAt ? new Date(publishedAt) : null;
+        },
       },
       {
         id: 'updated',
@@ -261,6 +289,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
           t('articleEditor.overview.modifiedAt', {
             modificationDate: new Date(article.modifiedAt),
           }),
+        exportValue: article => new Date(article.modifiedAt),
       },
     ],
     [t]
@@ -320,6 +349,8 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             rowData?.id === highlightedRowId ? 'highlighted-row' : ''
           }
           storageKey="articles"
+          exportRows={exportArticles}
+          exportTotalCount={data?.articles.totalCount ?? 0}
           columns={[
             ...dataColumns.map(column => ({
               ...column,
@@ -329,11 +360,22 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             {
               id: 'action',
               label: t('action'),
-              width: 220,
+              width: 260,
               align: 'center',
               fixed: true,
               render: rowData => (
                 <>
+                  <IconButtonTooltip caption={t('copyLink.button')}>
+                    <IconButton
+                      aria-label={t('copyLink.button')}
+                      disabled={!rowData.published}
+                      size="small"
+                      onClick={() => copyLinkToClipboard(rowData.url, t)}
+                    >
+                      <MdLink />
+                    </IconButton>
+                  </IconButtonTooltip>
+
                   <PermissionControl
                     qualifyingPermissions={[CanPublishArticle.id]}
                   >

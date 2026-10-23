@@ -30,6 +30,7 @@ import {
   mapTableSortTypeToGraphQLSortOrder,
   Pagination,
   TableWrapper,
+  useTableExportQuery,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
@@ -56,6 +57,14 @@ function GoodieList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
+  const exportGoodies = useTableExportQuery(
+    GoodieListDocument,
+    {
+      sort: sortField,
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    },
+    data => data.goodies
+  );
   const [deleteGoodie] = useMutation(DeleteGoodieDocument, {
     onCompleted() {
       refetch();
@@ -92,6 +101,8 @@ function GoodieList() {
       <TableWrapper>
         <DataTable
           storageKey="goodies"
+          exportRows={exportGoodies}
+          exportTotalCount={data?.goodies?.totalCount ?? 0}
           data={data?.goodies.nodes ?? []}
           loading={loading}
           sortColumn={sortField}
@@ -107,6 +118,7 @@ function GoodieList() {
               label: t('goodie.overview.active'),
               width: 75,
               render: rowData => (rowData.active ? `✅` : `❌`),
+              exportValue: rowData => rowData.active,
             },
             {
               id: 'name',
@@ -116,6 +128,7 @@ function GoodieList() {
               render: rowData => (
                 <Link to={`edit/${rowData.id}`}>{rowData.name}</Link>
               ),
+              exportValue: rowData => rowData.name,
             },
             {
               id: 'memberplans',
@@ -135,6 +148,7 @@ function GoodieList() {
             },
             {
               id: 'availablestock',
+              columnLabel: t('goodie.overview.availableStock'),
               label: (
                 <>
                   {t('goodie.overview.availableStock')}{' '}
@@ -151,6 +165,7 @@ function GoodieList() {
               width: 200,
               render: rowData =>
                 `${new Date(rowData.createdAt).toDateString()}`,
+              exportValue: rowData => new Date(rowData.createdAt),
             },
             {
               id: 'action',

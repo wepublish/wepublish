@@ -33,4 +33,6 @@ export type ApiTokenSession = {
   permissions: string[];
 };
 
+export const EXPIRED_API_TOKEN = 'expired-api-token';
+
 export type AuthSession = TokenSession | UserSession | ApiTokenSession;

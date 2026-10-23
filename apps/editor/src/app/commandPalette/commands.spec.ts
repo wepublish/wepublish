@@ -1,3 +1,5 @@
+import { allowedCommands } from '@wepublish/ui/editor';
+import type { i18n as I18n, TFunction } from 'i18next';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import ts from 'typescript';
@@ -5,7 +7,7 @@ import ts from 'typescript';
 import de from '../locales/de.json';
 import en from '../locales/en.json';
 import fr from '../locales/fr.json';
-import { allCommands } from './commands';
+import { allCommands, editorCommands } from './commands';
 
 type Catalog = { [key: string]: string | Catalog };
 
@@ -18,9 +20,11 @@ const catalogs = {
 const lookup = (catalog: Catalog, key: string) =>
   key
     .split('.')
-    .reduce<
-      string | Catalog | undefined
-    >((value, part) => (value && typeof value !== 'string' ? value[part] : undefined), catalog);
+    .reduce<string | Catalog | undefined>(
+      (value, part) =>
+        value && typeof value !== 'string' ? value[part] : undefined,
+      catalog
+    );
 
 const pathOf = (tag: ts.JsxOpeningLikeElement) => {
   if (tag.tagName.getText() !== 'Route') {
@@ -114,6 +118,20 @@ describe('editor command registry', () => {
     );
 
     expect(dangling).toEqual([]);
+  });
+
+  it('hides the newsletter while its feature is off, as the sidebar does', () => {
+    const t = ((key: string) => key) as TFunction;
+    const i18n = { getFixedT: () => t } as unknown as I18n;
+    const ids = (features: string[]) =>
+      allowedCommands(
+        editorCommands(t, i18n),
+        undefined,
+        new Set(features)
+      ).map(({ id }) => id);
+
+    expect(ids([])).not.toContain('newsletter');
+    expect(ids(['newsletter-editor'])).toContain('newsletter');
   });
 
   it('leaves a command that acts rather than navigates out of the routes', () => {

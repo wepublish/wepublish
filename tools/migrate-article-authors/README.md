@@ -43,7 +43,7 @@ make the article fail loudly instead of losing content.
 
 ## Usage
 
-Everything runs from the repository root with `npx tsx`.
+Everything runs from the repository root with `pnpm tsx`.
 
 ```sh
 # credentials: either an API token (Editor → Settings → Tokens; role must allow
@@ -59,18 +59,18 @@ export WEPUBLISH_API_URL=https://api-hauptstadt.wepublish.cloud/v1
 
 # 1. analyse and write the plan (read only; works before the API change is deployed)
 #    writes plan.json (machine readable, used by apply) and plan.html (report)
-npx tsx tools/migrate-article-authors/main.ts analyze --out plan.json [--html report.html]
+pnpm tsx tools/migrate-article-authors/main.ts analyze --out plan.json [--html report.html]
 
 # 2. review plan.html / plan.json; adjust OVERRIDES and ALIASES in main.ts if needed, re-run analyze
 
 # 3. dry run, then a single article, then everything
-npx tsx tools/migrate-article-authors/main.ts apply --plan plan.json --dry-run
-npx tsx tools/migrate-article-authors/main.ts apply --plan plan.json --only <article-slug>
-npx tsx tools/migrate-article-authors/main.ts apply --plan plan.json
+pnpm tsx tools/migrate-article-authors/main.ts apply --plan plan.json --dry-run
+pnpm tsx tools/migrate-article-authors/main.ts apply --plan plan.json --only <article-slug>
+pnpm tsx tools/migrate-article-authors/main.ts apply --plan plan.json
 
 # 4. delete the merged authors
-npx tsx tools/migrate-article-authors/main.ts cleanup --plan plan.json --dry-run
-npx tsx tools/migrate-article-authors/main.ts cleanup --plan plan.json
+pnpm tsx tools/migrate-article-authors/main.ts cleanup --plan plan.json --dry-run
+pnpm tsx tools/migrate-article-authors/main.ts cleanup --plan plan.json
 ```
 
 ### Output of `analyze`

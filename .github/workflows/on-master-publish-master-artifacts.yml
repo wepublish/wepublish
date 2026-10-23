@@ -1,14 +1,13 @@
-name: Publish master or development artifacts
+name: Publish master artifacts
 
 on:
   push:
     branches:
       - master
-      - development
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   date_sha_tag:
@@ -25,7 +24,7 @@ jobs:
       matrix: ${{ steps.set-matrix-with-tdl.outputs.matrix }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up matrix
         id: set-matrix
@@ -47,7 +46,6 @@ jobs:
 
   publish-docker-base-image:
     name: Docker base image
-    if: ${{ needs.date_sha_tag.result == 'success' }}
     needs: date_sha_tag
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
     secrets: inherit
@@ -81,7 +79,7 @@ jobs:
 
   publish_master_docker_website:
     name: Website
-    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker, publish-docker-base-image]
+    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker ]
     if: ${{ needs.publish_master_docker.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
@@ -90,7 +88,7 @@ jobs:
     with:
       website_project: ${{ matrix.target }}
       api_url: https://api-${{ matrix.target }}.wepublish.works
-      environment: ${{ github.ref_name == 'master' && 'staging' || github.ref_name == 'development' && 'development' || 'staging' }}
+      environment: staging
       prerender: ${{ matrix.has_staging }}
       has_staging: ${{ matrix.has_staging }}
       website_tags: |

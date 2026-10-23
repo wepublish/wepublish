@@ -258,6 +258,7 @@ export const EenewsArticle = ({
   const {
     blocks: { Teaser },
     Share,
+    ArticleSEO,
   } = useWebsiteBuilder();
 
   const article = data?.article;
@@ -319,6 +320,8 @@ export const EenewsArticle = ({
   return (
     <ArticlePropertiesContext.Provider value={properties}>
       <Wrapper className={className}>
+        <ArticleSEO article={article} />
+
         <BackLink href="/">
           <MdChevronLeft size={18} />
           <Typography variant="pageCrumb">Zurück zur Übersicht</Typography>

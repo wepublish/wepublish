@@ -70,8 +70,8 @@ const Header = styled('button', {
   border: none;
   border-radius: ${({ isOpen, theme }) =>
     isOpen ?
-      `calc(${theme.shape.borderRadius} - 1px) calc(${theme.shape.borderRadius} - 1px) 0 0`
-    : `calc(${theme.shape.borderRadius} - 1px)`};
+      `calc(${theme.shape.borderRadius}px - 1px) calc(${theme.shape.borderRadius}px - 1px) 0 0`
+    : `calc(${theme.shape.borderRadius}px - 1px)`};
   transition:
     border-radius 0ms ${({ isOpen }) => (isOpen ? '0ms' : '250ms')},
     background 0.15s;

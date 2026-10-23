@@ -202,6 +202,7 @@ export const createVitestConfig = ({
       // Was a `--passWithNoTests` CLI flag on every project's test command;
       // it belongs to the config now that targets use the @nx/vitest executor.
       passWithNoTests: true,
+      server: { deps: { inline: ['i18next-icu'] } },
       // Jest ran every project in band, vitest runs test files in parallel
       // workers, so individual tests see more contention than the 5s default.
       testTimeout: 15_000,
@@ -226,7 +227,7 @@ export const createVitestConfig = ({
       reporters: process.env['CI'] ? ['default', 'github-actions'] : ['default'],
       coverage: {
         provider: 'v8',
-        reporter: ['html', 'text', 'lcov'],
+        reporter: ['html', 'text', ['lcov', { projectRoot: workspaceRoot }]],
         // A leaf folder per project: Vitest empties `reportsDirectory` when a run
         // starts, so `coverage/libs/richtext` would wipe the files of the
         // `libs/richtext/api` run going on in parallel inside it.

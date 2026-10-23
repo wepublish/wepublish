@@ -52,6 +52,7 @@ import {
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
+  getSeoBlockContext,
   enqueueSnackbar,
   InfoData,
   ListicleBlockListValue,
@@ -86,11 +87,13 @@ import {
   MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
+  MdLink,
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
+import { copyLinkToClipboard } from '../../copyLink';
 import { AutosaveToggle } from '../../autosaveToggle';
 import { LastSavedAt } from '../../lastSavedAt';
 import {
@@ -229,6 +232,11 @@ function ArticleEditor() {
     isNew ? InitialArticleBlocks : []
   );
 
+  const seoContext = useMemo(
+    () => (isMetaDrawerOpen ? getSeoBlockContext(blocks) : undefined),
+    [blocks, isMetaDrawerOpen]
+  );
+
   const articleID = id || createData?.createArticle.id;
 
   const {
@@ -329,8 +337,8 @@ function ArticleEditor() {
   const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     articleData?.article?.draft ||
-      articleData?.article?.published ||
-      articleData?.article?.pending
+    articleData?.article?.published ||
+    articleData?.article?.pending
   );
 
   const [hasChanged, setChanged] = useState(false);
@@ -340,6 +348,8 @@ function ArticleEditor() {
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = articleData?.article?.previewUrl;
+  const publishedUrl =
+    articleData?.article?.published ? articleData.article.url : undefined;
   const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
   const showPreview = isPreviewOpen && !isPreviewDisabled;
 
@@ -850,6 +860,15 @@ function ArticleEditor() {
                       />
                     </PermissionControl>
 
+                    {publishedUrl && (
+                      <EditorHeaderButton
+                        variant="text"
+                        icon={<MdLink />}
+                        label={t('copyLink.button')}
+                        onClick={() => copyLinkToClipboard(publishedUrl, t)}
+                      />
+                    )}
+
                     {articleData?.article?.draft &&
                       articleData?.article?.published && (
                         <PermissionControl
@@ -1001,10 +1020,12 @@ function ArticleEditor() {
         onClose={() => setMetaDrawerOpen(false)}
       >
         <ArticleMetadataPanel
+          seoContext={seoContext}
           peerId={articleData?.article.peer?.id}
           articleID={articleID}
           value={metadata}
           infoData={infoData}
+          onSave={() => handleSave()}
           onClose={() => {
             handleSave();
             setMetaDrawerOpen(false);

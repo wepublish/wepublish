@@ -901,6 +901,8 @@ export type CreateCrowdfundingMemberPlan = {
 };
 
 export type CreateExternalAppInput = {
+  /** An API key you may see that has neither expired nor been revoked. */
+  apiTokenId?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
@@ -1290,6 +1292,10 @@ export type EventTeaserInput = {
 
 export type ExternalApp = {
   __typename?: 'ExternalApp';
+  /** The linked API key, for editors who may see it in the API keys list. Never contains the secret. */
+  apiToken?: Maybe<ApiToken>;
+  /** The API key the app reads the We.Publish API with. */
+  apiTokenId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   icon?: Maybe<Scalars['String']['output']>;
@@ -2365,6 +2371,14 @@ export enum MailchimpContactStatus {
   Subscribed = 'Subscribed'
 }
 
+export type MailchimpDraft = {
+  __typename?: 'MailchimpDraft';
+  editUrl: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  webId: Scalars['Int']['output'];
+};
+
 export type MailchimpFormBlock = BaseBlock & {
   __typename?: 'MailchimpFormBlock';
   autoFocus: Scalars['Boolean']['output'];
@@ -2871,6 +2885,8 @@ export type Mutation = {
   applyMediumFeatures: Array<Scalars['String']['output']>;
   /** Approves a comment */
   approveComment: Comment;
+  /** Hides the campaign from the default list. Campaigns are never deleted. */
+  archiveNewsletterCampaign: NewsletterCampaign;
   /** Stop a running send job. Unsent recipients stay open and can be continued. */
   cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
@@ -2939,6 +2955,7 @@ export type Mutation = {
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
   createNavigation: Navigation;
+  createNewsletterCampaign: NewsletterCampaign;
   /** Creates an page. */
   createPage: Page;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
@@ -3095,6 +3112,8 @@ export type Mutation = {
   dryRunMailchimpSync: MailchimpSyncDryRunResult;
   /** Duplicates an article. */
   duplicateArticle: Article;
+  /** A new campaign with the given one's document. The Mailchimp draft is not copied. */
+  duplicateNewsletterCampaign: NewsletterCampaign;
   /** Duplicates an page. */
   duplicatePage: Page;
   /** Enables two-factor authentication for the current user after verifying the TOTP token. */
@@ -3124,6 +3143,7 @@ export type Mutation = {
   markNotificationRead: NotificationRead;
   /** Publishes an article at the given time. */
   publishArticle: Article;
+  publishNewsletterCampaign: NewsletterPublishResult;
   /** Publishes an page at the given time. */
   publishPage: Page;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
@@ -3183,6 +3203,7 @@ export type Mutation = {
   testSystemMail: Scalars['Boolean']['output'];
   /** Triggers a mailchimp sync in the background. */
   triggerMailchimpSync: Scalars['Boolean']['output'];
+  unarchiveNewsletterCampaign: NewsletterCampaign;
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
   /** Unpublishes all revisions of an page. */
@@ -3240,6 +3261,7 @@ export type Mutation = {
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
   updateNavigation: Navigation;
+  updateNewsletterCampaign: NewsletterCampaign;
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
@@ -3260,6 +3282,8 @@ export type Mutation = {
   updatePoll: FullPoll;
   /** Update the comment rating system. */
   updateRatingSystem: CommentRatingSystem;
+  /** Marks an SEO checklist item as done or not done and returns all completed items. */
+  updateSeoChecklistItem: Array<SeoChecklistItem>;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Updates an existing subscription. */
@@ -3327,6 +3351,11 @@ export type MutationApplyMediumFeaturesArgs = {
 
 
 export type MutationApproveCommentArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationArchiveNewsletterCampaignArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -3622,10 +3651,18 @@ export type MutationCreateNavigationArgs = {
 };
 
 
+export type MutationCreateNewsletterCampaignArgs = {
+  document?: InputMaybe<Scalars['JSONObject']['input']>;
+  title: Scalars['String']['input'];
+};
+
+
 export type MutationCreatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']['input']>;
   hidden: Scalars['Boolean']['input'];
+  hideFooter?: Scalars['Boolean']['input'];
+  hideHeader?: Scalars['Boolean']['input'];
   imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
@@ -4146,6 +4183,11 @@ export type MutationDuplicateArticleArgs = {
 };
 
 
+export type MutationDuplicateNewsletterCampaignArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDuplicatePageArgs = {
   id: Scalars['String']['input'];
 };
@@ -4216,6 +4258,11 @@ export type MutationMarkNotificationReadArgs = {
 export type MutationPublishArticleArgs = {
   id: Scalars['String']['input'];
   publishedAt: Scalars['DateTime']['input'];
+};
+
+
+export type MutationPublishNewsletterCampaignArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -4368,6 +4415,11 @@ export type MutationTestSystemMailArgs = {
 
 
 export type MutationTriggerMailchimpSyncArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUnarchiveNewsletterCampaignArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -4540,6 +4592,7 @@ export type MutationUpdateEventArgs = {
 
 
 export type MutationUpdateExternalAppArgs = {
+  apiTokenId?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
@@ -4664,10 +4717,19 @@ export type MutationUpdateNavigationArgs = {
 };
 
 
+export type MutationUpdateNewsletterCampaignArgs = {
+  document: Scalars['JSONObject']['input'];
+  id: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationUpdatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']['input']>;
   hidden: Scalars['Boolean']['input'];
+  hideFooter?: Scalars['Boolean']['input'];
+  hideHeader?: Scalars['Boolean']['input'];
   id: Scalars['String']['input'];
   imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
@@ -4800,6 +4862,12 @@ export type MutationUpdateRatingSystemArgs = {
   answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswerInput>>;
   id: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateSeoChecklistItemArgs = {
+  completed: Scalars['Boolean']['input'];
+  itemId: Scalars['String']['input'];
 };
 
 
@@ -5011,6 +5079,61 @@ export enum NavigationLinkType {
   Page = 'Page'
 }
 
+export type NewsletterCampaign = {
+  __typename?: 'NewsletterCampaign';
+  blockCount: Scalars['Int']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  document: Scalars['JSONObject']['output'];
+  id: Scalars['String']['output'];
+  images: Array<Image>;
+  mailchimpCampaignId?: Maybe<Scalars['String']['output']>;
+  mailchimpCampaignWebId?: Maybe<Scalars['Int']['output']>;
+  mailchimpEditUrl?: Maybe<Scalars['String']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  status: NewsletterCampaignStatus;
+  title: Scalars['String']['output'];
+};
+
+export enum NewsletterCampaignStatus {
+  Active = 'active',
+  Archived = 'archived'
+}
+
+export type NewsletterInterestCategory = {
+  __typename?: 'NewsletterInterestCategory';
+  groups: Array<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+};
+
+export type NewsletterMergeFields = {
+  __typename?: 'NewsletterMergeFields';
+  error?: Maybe<Scalars['String']['output']>;
+  fields: Array<NewsletterMergeTag>;
+  interests: Array<NewsletterInterestCategory>;
+};
+
+export type NewsletterMergeTag = {
+  __typename?: 'NewsletterMergeTag';
+  description: Scalars['String']['output'];
+  kind?: Maybe<Scalars['String']['output']>;
+  label: Scalars['String']['output'];
+  tag: Scalars['String']['output'];
+};
+
+export type NewsletterPublishResult = {
+  __typename?: 'NewsletterPublishResult';
+  campaign: MailchimpDraft;
+  created: Scalars['Boolean']['output'];
+  report: NewsletterReport;
+};
+
+export type NewsletterReport = {
+  __typename?: 'NewsletterReport';
+  bytes: Scalars['Int']['output'];
+  missingArticles: Array<Scalars['String']['output']>;
+  missingFooter: Array<Scalars['String']['output']>;
+};
+
 export type NotificationConfirmation = {
   __typename?: 'NotificationConfirmation';
   confirmedByUserId?: Maybe<Scalars['String']['output']>;
@@ -5067,6 +5190,8 @@ export type Page = {
   createdAt: Scalars['DateTime']['output'];
   draft?: Maybe<PageRevision>;
   hidden: Scalars['Boolean']['output'];
+  hideFooter: Scalars['Boolean']['output'];
+  hideHeader: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   latest: PageRevision;
   modifiedAt: Scalars['DateTime']['output'];
@@ -6175,6 +6300,12 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  newsletterCampaign: NewsletterCampaign;
+  /** The stored issue rendered as the HTML Mailchimp receives. */
+  newsletterCampaignPreview: Scalars['String']['output'];
+  newsletterCampaignReport: NewsletterReport;
+  newsletterCampaigns: Array<NewsletterCampaign>;
+  newsletterMergeFields: NewsletterMergeFields;
   /** Returns the instance-wide notification confirmations. Requires authentication. */
   notificationConfirmations: Array<NotificationConfirmation>;
   /** Returns the current user's read notifications. Requires authentication. */
@@ -6244,6 +6375,8 @@ export type Query = {
    *
    */
   revenue: Array<DashboardInvoice>;
+  /** Returns a checklist of the SEO setup of the website. */
+  seoChecklist: SeoChecklist;
   /**
    *
    *       Returns a single setting by name.
@@ -6849,6 +6982,26 @@ export type QueryNewSubscribersArgs = {
 };
 
 
+export type QueryNewsletterCampaignArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryNewsletterCampaignPreviewArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryNewsletterCampaignReportArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryNewsletterCampaignsArgs = {
+  includeArchived?: Scalars['Boolean']['input'];
+};
+
+
 export type QueryPageArgs = {
   id?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -7265,6 +7418,47 @@ export type SensitiveDataUser = BaseUser & {
   /** Whether this user is exempt from the two-factor authentication requirement. */
   totpExempt: Scalars['Boolean']['output'];
   userImageID?: Maybe<Scalars['String']['output']>;
+};
+
+export type SeoCheck = {
+  __typename?: 'SeoCheck';
+  detail?: Maybe<Scalars['String']['output']>;
+  id: SeoCheckId;
+  status: SeoCheckStatus;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+export enum SeoCheckId {
+  ArticleMarkup = 'ArticleMarkup',
+  Feed = 'Feed',
+  NewsSitemap = 'NewsSitemap',
+  PublicationMetadata = 'PublicationMetadata',
+  Sitemap = 'Sitemap'
+}
+
+export enum SeoCheckStatus {
+  Error = 'Error',
+  Info = 'Info',
+  Ok = 'Ok',
+  Warning = 'Warning'
+}
+
+export type SeoChecklist = {
+  __typename?: 'SeoChecklist';
+  atomFeedUrl: Scalars['String']['output'];
+  checks: Array<SeoCheck>;
+  completedItems: Array<SeoChecklistItem>;
+  jsonFeedUrl: Scalars['String']['output'];
+  rssFeedUrl: Scalars['String']['output'];
+  sitemapUrl: Scalars['String']['output'];
+  websiteUrl: Scalars['String']['output'];
+};
+
+export type SeoChecklistItem = {
+  __typename?: 'SeoChecklistItem';
+  completedAt: Scalars['DateTime']['output'];
+  completedBy?: Maybe<Scalars['String']['output']>;
+  itemId: Scalars['String']['output'];
 };
 
 export type SessionWithToken = {
@@ -8395,13 +8589,12 @@ export type YouTubeVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']['input']>;
 };
 
-
-      export interface PossibleTypesResultData {
-        possibleTypes: {
-          [key: string]: string[]
-        }
-      }
-      const result: PossibleTypesResultData = {
+export interface PossibleTypesResultData {
+  possibleTypes: {
+    [key: string]: string[]
+  }
+}
+const result: PossibleTypesResultData = {
   "possibleTypes": {
     "Action": [
       "ArticleCreatedAction",
@@ -8643,5 +8836,4 @@ export type YouTubeVideoBlockInput = {
     ]
   }
 };
-      export default result;
-    
+export default result;

@@ -207,11 +207,23 @@ describe('BlockTemplateBlock', () => {
       expect(blocks.map(({ value }) => value.disabled)).toEqual([false, true]);
     });
 
+    it('should only show the select label once while nothing is selected', () => {
+      renderBlock({ value: { template: null } });
+
+      expect(screen.getByRole('combobox')).not.toHaveTextContent(
+        'blocks.blockTemplate.select'
+      );
+    });
+
     it('should not preview anything when no template is selected', () => {
       renderBlock({ value: { template: null } });
 
       expect(screen.queryByDisplayValue('First Title')).not.toBeInTheDocument();
-      expect(useContentButton()).toBeDisabled();
+      expect(
+        screen.queryByRole('button', {
+          name: 'blocks.blockTemplate.useContent',
+        })
+      ).not.toBeInTheDocument();
     });
 
     it('should preview the up-to-date template when it has been modified elsewhere', () => {
@@ -248,6 +260,40 @@ describe('BlockTemplateBlock', () => {
       });
 
       expect(screen.getByDisplayValue('First Title')).toBeInTheDocument();
+    });
+  });
+
+  describe('layout', () => {
+    it('should only offer the template actions once a template is picked', () => {
+      renderBlock({ value: { template: null } });
+
+      expect(
+        screen.queryByRole('link', {
+          name: 'blocks.blockTemplate.editTemplate',
+        })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', {
+          name: 'blocks.blockTemplate.useContent',
+        })
+      ).not.toBeInTheDocument();
+    });
+
+    it('should show the template actions as text buttons', () => {
+      renderBlock();
+
+      expect(
+        screen.getByRole('link', { name: 'blocks.blockTemplate.editTemplate' })
+      ).toHaveClass('MuiButton-text');
+      expect(useContentButton()).toHaveClass('MuiButton-text');
+    });
+
+    it('should explain that the block stays linked to the template', () => {
+      renderBlock();
+
+      expect(
+        screen.getByText('blocks.blockTemplate.linkedInfo')
+      ).toBeInTheDocument();
     });
   });
 

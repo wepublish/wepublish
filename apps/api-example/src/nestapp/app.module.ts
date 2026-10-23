@@ -23,6 +23,7 @@ import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
 import { ApiTokenModule } from '@wepublish/api-token/api';
+import { NewsletterModule } from '@wepublish/newsletter/api';
 import { DocumentModule } from '@wepublish/document/api';
 import { EventModule } from '@wepublish/event/api';
 import {
@@ -77,6 +78,7 @@ import { SessionModule } from '@wepublish/session/api';
 import { OneModule } from '@wepublish/one/api';
 import { FeaturesModule } from '@wepublish/features/api';
 import {
+  SeoChecklistModule,
   SettingModule,
   SettingName,
   WebsiteSettingsModule,
@@ -274,6 +276,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     ChangelogModule,
     ConsentModule,
     ApiTokenModule,
+    NewsletterModule,
     DocumentModule,
     StatsModule,
     SettingModule,
@@ -390,6 +393,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     }),
     PaywallModule,
     WebsiteSettingsModule,
+    SeoChecklistModule,
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [

@@ -803,6 +803,37 @@ describe('article pages', () => {
     }
   );
 
+  it.each([
+    ['/a/one', '/a/one'],
+    ['/a/id/123', '/a/id/123'],
+  ])(
+    'marks %s stale when that article changes, under the route cache key Next 16.3 gives it',
+    async (path, normalized) => {
+      const key = `/route-cache/PAGES/${'f'.repeat(64)}/$${normalized}`;
+      const { clock, shared, cache } = await rendered(key);
+      shared.versions.set(`website:path:${path}`, 'p1');
+      clock.advance(2001);
+
+      await expect(cache.get(key, PAGES)).resolves.toMatchObject({
+        lastModified: 1,
+      });
+    }
+  );
+
+  it.each(['/index/index/a/one', '/index'])(
+    'does not treat the route cache key of %s as an article page',
+    async normalized => {
+      const key = `/route-cache/PAGES/${'f'.repeat(64)}/$${normalized}`;
+      const { clock, shared, cache } = await rendered(key);
+      shared.versions.set('website:path:/a/one', 'p1');
+      clock.advance(2001);
+
+      await expect(cache.get(key, PAGES)).resolves.toMatchObject({
+        lastModified: clock.perfNow(),
+      });
+    }
+  );
+
   it('keeps an article page fresh when another article changes', async () => {
     const { clock, shared, cache } = await rendered('/a/one');
     shared.versions.set('website:path:/a/two', 'p1');
