@@ -53,7 +53,7 @@ export function CommandPaletteProvider({
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (!isHotkey(event)) {
+      if (event.defaultPrevented || !isHotkey(event)) {
         return;
       }
 
