@@ -1,88 +1,123 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createCache } from 'cache-manager';
 import {
-  BoundedMemoryStore,
-  createLinkCacheOptions,
+  KvTtlCacheService,
+  MemoryAtomicStore,
+} from '@wepublish/kv-ttl-cache/api/core';
+import {
+  LINK_CACHE_CONFIG,
+  LinkCache,
   MISSING_LINK_TTL,
+  REJECTED_VARIANT_TTL,
 } from './link-cache';
 
-describe('BoundedMemoryStore', () => {
-  it('drops the least recently written entry beyond its limit', () => {
-    const store = new BoundedMemoryStore(2);
+class SharedStore extends MemoryAtomicStore {
+  override readonly shared = true;
+}
 
-    store.set('a', 1);
-    store.set('b', 2);
-    store.set('a', 1);
-    store.set('c', 3);
+const replica = (store: SharedStore) =>
+  new LinkCache(new KvTtlCacheService(createCache(), store, LINK_CACHE_CONFIG));
 
-    expect([...store.keys()]).toEqual(['a', 'c']);
-  });
-});
+const link = { uri: 'images/1', exists: true };
+const missing = { uri: 'images/fallback/{}', exists: false };
 
-describe('createLinkCacheOptions', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
+describe('LinkCache', () => {
+  const originalRelease = process.env['APP_RELEASE_ID'];
 
   afterEach(() => {
+    process.env['APP_RELEASE_ID'] = originalRelease;
     vi.useRealTimers();
   });
 
-  it('keeps a link for longer than an hour', async () => {
-    const cache = createCache(createLinkCacheOptions());
+  it('serves a link that another replica stored', async () => {
+    const store = new SharedStore();
 
-    await cache.set('image', { uri: 'images/1', exists: true });
-    vi.advanceTimersByTime(60 * 60 * 1000);
+    await replica(store).set('image', link);
 
-    expect(await cache.get('image')).toEqual({ uri: 'images/1', exists: true });
+    expect(await replica(store).get('image')).toEqual(link);
   });
 
-  it('drops a link after three days', async () => {
-    const cache = createCache(createLinkCacheOptions());
+  it('keeps links when a new release starts', async () => {
+    const store = new SharedStore();
+    process.env['APP_RELEASE_ID'] = 'release-1';
+    await replica(store).set('image', link);
 
-    await cache.set('image', { uri: 'images/1', exists: true });
-    vi.advanceTimersByTime(3 * 24 * 60 * 60 * 1000 + 1);
+    process.env['APP_RELEASE_ID'] = 'release-2';
 
-    expect(await cache.get('image')).toBeUndefined();
+    expect(await replica(store).get('image')).toEqual(link);
+  });
+
+  it('keeps missing links on the replica that saw them', async () => {
+    const store = new SharedStore();
+    const cache = replica(store);
+
+    await cache.set('image', missing, MISSING_LINK_TTL);
+
+    expect(await cache.get('image')).toEqual(missing);
+    expect(await replica(store).get('image')).toBeUndefined();
   });
 
   it('drops a missing link after four hours', async () => {
-    const cache = createCache(createLinkCacheOptions());
+    vi.useFakeTimers({ toFake: ['Date'] });
+    const cache = replica(new SharedStore());
 
-    await cache.set(
-      'image',
-      { uri: 'images/1', exists: false },
-      MISSING_LINK_TTL
-    );
-    vi.advanceTimersByTime(4 * 60 * 60 * 1000 + 1);
+    await cache.set('image', missing, MISSING_LINK_TTL);
+    vi.advanceTimersByTime(MISSING_LINK_TTL + 1);
 
     expect(await cache.get('image')).toBeUndefined();
   });
 
-  it('keeps a missing link for longer than a minute', async () => {
-    const cache = createCache(createLinkCacheOptions());
+  it('serves a link once the object it was missing for exists', async () => {
+    const cache = replica(new SharedStore());
 
-    await cache.set(
-      'image',
-      { uri: 'images/1', exists: false },
-      MISSING_LINK_TTL
-    );
-    vi.advanceTimersByTime(60 * 1000);
+    await cache.set('image', missing, MISSING_LINK_TTL);
+    await cache.set('image', link);
 
-    expect(await cache.get('image')).toEqual({
-      uri: 'images/1',
-      exists: false,
-    });
+    expect(await cache.get('image')).toEqual(link);
   });
 
-  it('holds a bounded number of links', async () => {
-    const store = new BoundedMemoryStore(3);
-    const cache = createCache(createLinkCacheOptions(store));
+  it('stores any link under a key of fixed length', async () => {
+    const store = new SharedStore();
+    const writes = vi.spyOn(store, 'setRaw');
+    const cache = replica(store);
 
-    for (let i = 0; i < 10; i++) {
-      await cache.set(`image-${i}`, { uri: `images/${i}`, exists: true });
-    }
+    await cache.set('a', link);
+    await cache.set('b'.repeat(10_000), link);
 
-    expect(store.size).toBe(3);
+    const [short, long] = writes.mock.calls
+      .map(([key]) => key)
+      .filter(key => key.startsWith('val:'));
+    expect(short.length).toBeLessThan(200);
+    expect(long).toHaveLength(short.length);
+  });
+
+  it('shares a rejected variant between replicas', async () => {
+    const store = new SharedStore();
+
+    await replica(store).reject('image', 'Transformation exceeds pixel limit!');
+
+    expect(await replica(store).rejection('image')).toBe(
+      'Transformation exceeds pixel limit!'
+    );
+  });
+
+  it('checks a rejected variant again when a new release starts', async () => {
+    const store = new SharedStore();
+    process.env['APP_RELEASE_ID'] = 'release-1';
+    await replica(store).reject('image', 'Transformation exceeds pixel limit!');
+
+    process.env['APP_RELEASE_ID'] = 'release-2';
+
+    expect(await replica(store).rejection('image')).toBeUndefined();
+  });
+
+  it('forgets a rejected variant after an hour', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    const cache = replica(new SharedStore());
+
+    await cache.reject('image', 'Transformation exceeds pixel limit!');
+    vi.advanceTimersByTime(REJECTED_VARIANT_TTL + 1);
+
+    expect(await cache.rejection('image')).toBeUndefined();
   });
 });

@@ -1,4 +1,6 @@
 export * from './lib/kv-ttl-cache.module';
+export * from './lib/kv-ttl-cache-core.module';
+export * from './lib/kv-ttl-cache-config';
 export * from './lib/kv-ttl-cache.service';
 export * from './lib/kv-ttl-cache-lock';
 export * from './lib/kv-ttl-cache-mock.service';

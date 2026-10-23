@@ -1689,6 +1689,9 @@ importers:
 
   apps/media:
     dependencies:
+      '@keyv/redis':
+        specifier: 'catalog:'
+        version: 5.1.6(@node-rs/xxhash@1.7.6)(@opentelemetry/api@1.9.1)(keyv@5.6.0)
       '@nestjs/cache-manager':
         specifier: 'catalog:'
         version: 12.0.1(@nestjs/common@12.2.0(reflect-metadata@0.1.14)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.2.0)(cache-manager@7.2.9)(keyv@5.6.0)(rxjs@7.8.2)

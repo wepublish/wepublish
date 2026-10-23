@@ -2,6 +2,7 @@
   "name": "@wepublish/media",
   "private": true,
   "dependencies": {
+    "@keyv/redis": "catalog:",
     "@nestjs/cache-manager": "catalog:",
     "@nestjs/common": "catalog:",
     "@nestjs/config": "catalog:",

@@ -966,15 +966,66 @@ only there because undici's types and `@types/node`'s don't line up.
 Pinned by `storage-fetch.spec.ts`, which checks the cap and the timeouts through
 the real `fetch` against a local server. The wiring in `app.module.ts` is not tested.
 
-### ⚠️ cache-manager 7 TTLs are milliseconds, and `max` is ignored
+### ⚠️ cache-manager 7: TTLs are milliseconds, `max` is ignored, tiers don't backfill
 
-`CacheModule.register({ttl, max})` without `stores` builds a plain Keyv `Map`:
-`ttl` is **milliseconds** (the media server's `259200` meant 3 days but was
-4.3 min, so nearly every image hit R2 again) and `max` is silently dropped, so
-the map grew with every variant ever requested. The media server uses
-`createLinkCacheOptions()` ([`link-cache.ts`](../../libs/media/api/src/lib/link-cache/link-cache.ts)):
-a Keyv over a `Map` that evicts the least recently written entry beyond
-50 000, with `LINK_TTL`/`MISSING_LINK_TTL` in ms.
+`CacheModule.register({ttl, max})` without `stores` builds a plain Keyv `Map`.
+`ttl` is in **milliseconds**: the media server's old `259200` was meant as 3 days
+but gave 4.3 min, so nearly every image went back to R2. `max` is silently
+dropped, so the map grew with every variant ever requested.
+
+Layered `stores: [memory, redis]` don't work as a two-level cache either
+(`cache-manager/dist/index.mjs` `get`):
+- A hit in a later store is never copied into an earlier one, so every replica
+  would ask Redis on every request.
+- `nonBlocking` races the stores. The memory store answers `undefined` first
+  and Redis is never asked.
+
+`KvTtlCacheService` is the two-level cache instead: cache-manager holds only the
+in-process tier, and Dragonfly is reached through `KvAtomicStore`.
+
+### ⚠️ `kv-ttl-cache` has a Prisma-free core, and the media server uses it
+
+`KvTtlCacheCoreModule.register(config)`
+([`kv-ttl-cache-core.module.ts`](../../libs/kv-ttl-cache/api/src/lib/kv-ttl-cache-core.module.ts))
+holds the providers and the boot/shutdown logic. `KvTtlCacheModule`, which the
+API imports, is only `KvTtlCacheCoreModule.register({ decimal: prismaDecimalCodec })`.
+The serializer takes the Decimal codec as an argument, because importing
+`@prisma/client` there would make it a runtime dependency of the media image.
+
+The media server imports `@wepublish/kv-ttl-cache/api/core`, never the
+`@wepublish/kv-ttl-cache/api` barrel. The barrel pulls in Apollo and Prisma,
+which the media image does not ship, so `check-runtime-deps.js` fails the build.
+
+`config.sharedNamespaces` adds namespaces to `SHARED_NAMESPACES`, and the
+integration-settings guard applies to them too. Each one can set:
+- `localCopyMs`: how long a replica keeps its local copy of a shared value.
+  The default is 2 s, because `delNs` only clears the local copy on the
+  replica that calls it. Set it only for namespaces nobody deletes per key.
+- `acrossReleases`: the value's Dragonfly key leaves out `APP_RELEASE_ID`, so
+  the value survives a deploy.
+
+The media server's
+[`LinkCache`](../../libs/media/api/src/lib/link-cache/link-cache.ts) is an
+adapter over it. Media deploys with the API on the same `APP_RELEASE_ID`, so
+its `announceRelease()` changes nothing. It uses three namespaces:
+- `media:links`: links to objects that exist. Shared, 3 days, kept locally for
+  3 days and across releases.
+- `media:rejected-variants`: variants the guard rejects (400). Shared, 1 h,
+  scoped to the release, because a deploy can change the guard's limits. Only
+  signed requests get that far.
+- `media:missing-links`: links to objects that don't exist. 4 h and **local
+  only**.
+
+**Load-bearing:** anyone can request random image or document ids without a
+signature, and production Dragonfly never evicts and is shared by every
+medium. Sharing misses would let one medium's media server fill it for all of
+them, and so would keys as long as the request line. That is why misses stay
+local and every key is a sha256. Hits are not written back (no sliding TTL).
+While Dragonfly is unreachable, `KvTtlCacheService` keeps every value for
+only 30 s, misses included, so the media server goes back to R2 more often
+for the length of the outage.
+A Dragonfly misconfiguration crash-loops the media pod, as it does the API's,
+so the media image ships `/wepublish/ca.crt` for `NODE_EXTRA_CA_CERTS`.
 
 ---
 

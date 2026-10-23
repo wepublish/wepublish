@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 import { Keyv } from 'keyv';
 import { createCache } from 'cache-manager';
 import { createKvTtlCacheOptions } from './kv-ttl-cache-options';
+import { prismaDecimalCodec } from './kv-ttl-cache-prisma-decimal';
 import { LruMap } from './kv-ttl-cache-lru-map';
 import { KvTtlCacheService } from './kv-ttl-cache.service';
 import { FakeDragonfly } from './kv-ttl-cache.testing';
@@ -33,7 +34,7 @@ describe('createKvTtlCacheOptions', () => {
   });
 
   it('keeps decimals of cached payment provider settings usable', async () => {
-    const cache = createCache(createKvTtlCacheOptions());
+    const cache = createCache(createKvTtlCacheOptions(prismaDecimalCodec));
 
     await cache.set(
       'payrexx',

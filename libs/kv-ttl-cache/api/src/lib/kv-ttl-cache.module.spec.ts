@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { KvTtlCacheModule } from './kv-ttl-cache.module';
@@ -26,6 +27,18 @@ describe('KvTtlCacheModule', () => {
   it('does not see the REDIS_URL that nx loads from .env', () => {
     expect(originalEnv['REDIS_URL']).toBeUndefined();
     expect(originalEnv['REDIS_KEY_PREFIX']).toBeUndefined();
+  });
+
+  it('keeps decimals of cached values usable', async () => {
+    delete process.env['REDIS_URL'];
+    delete process.env['REDIS_KEY_PREFIX'];
+    const service = await createService();
+
+    await service.set('payrexx', { vat: new Prisma.Decimal('0.081') }, 60);
+    const cached = await service.get<{ vat: Prisma.Decimal }>('payrexx');
+
+    expect(Prisma.Decimal.isDecimal(cached?.vat)).toBe(true);
+    expect(cached?.vat.toString()).toBe('0.081');
   });
 
   it('caches in memory when REDIS_URL is not set', async () => {

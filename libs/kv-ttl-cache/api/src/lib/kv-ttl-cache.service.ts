@@ -26,10 +26,15 @@ import {
   findSecretField,
   isPageContentNamespace,
   isSharedNamespace,
+  assertSharedNamespaces,
   isWebsiteLayoutNamespace,
   websitePathNamespace,
 } from './kv-ttl-cache-shared-namespaces';
 import { traceCacheGet } from './kv-ttl-cache-tracing';
+import {
+  KV_TTL_CACHE_CONFIG,
+  type KvTtlCacheConfig,
+} from './kv-ttl-cache-config';
 
 const VERSION_REFRESH_MS = 2000;
 const RESYNC_INTERVAL_MS = 5000;
@@ -80,13 +85,21 @@ export class KvTtlCacheService implements OnModuleDestroy {
   private deletes = 0;
   private versionWrites = new Map<string, number>();
   private deletedAt = new LruMap<string, number>(REMEMBERED_DELETES);
+  private configuredShared: Set<string>;
 
   constructor(
     @Inject(CACHE_MANAGER) private cache: Cache,
     @Optional()
     @Inject(KV_ATOMIC_STORE)
-    private atomic: KvAtomicStore = new MemoryAtomicStore()
-  ) {}
+    private atomic: KvAtomicStore = new MemoryAtomicStore(),
+    @Optional()
+    @Inject(KV_TTL_CACHE_CONFIG)
+    private config: KvTtlCacheConfig = {}
+  ) {
+    this.configuredShared = new Set(
+      assertSharedNamespaces(Object.keys(config.sharedNamespaces ?? {}))
+    );
+  }
 
   private versionKey(namespace: string): string {
     return `nsv:${namespace}`;
@@ -569,7 +582,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
       );
     }
 
-    const cached = await this.readShared<T>(fullKey);
+    const cached = await this.readShared<T>(namespace, fullKey);
     if (cached !== undefined && cached !== null) {
       return cached;
     }
@@ -699,7 +712,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
     }
 
     const texts = await this.atomic.getManyRaw(
-      remote.map(fullKey => this.sharedKey(fullKey))
+      remote.map(fullKey => this.sharedKey(namespace, fullKey))
     );
     const remoteValues = new Map<string, T>();
 
@@ -711,14 +724,21 @@ export class KvTtlCacheService implements OnModuleDestroy {
           return;
         }
 
-        const value = deserializeCacheValueIfPossible<T>(text);
+        const value = deserializeCacheValueIfPossible<T>(
+          text,
+          this.config.decimal
+        );
 
         if (value === undefined) {
           return;
         }
 
         remoteValues.set(fullKey, value);
-        await this.cache.set(fullKey, value as any, VERSION_REFRESH_MS);
+        await this.cache.set(
+          fullKey,
+          value as any,
+          this.localCopyMs(namespace)
+        );
       })
     );
 
@@ -765,7 +785,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
     const fullKey = this.namespacedKey(namespace, version, key);
 
     if (this.isShared(namespace)) {
-      return this.readShared<T>(fullKey);
+      return this.readShared<T>(namespace, fullKey);
     }
 
     return this.get<T>(fullKey);
@@ -811,7 +831,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
       await this.del(fullKey);
 
       if (this.isShared(namespace)) {
-        await this.atomic.delRaw(this.sharedKey(fullKey));
+        await this.atomic.delRaw(this.sharedKey(namespace, fullKey));
       }
     }
   }
@@ -928,31 +948,46 @@ export class KvTtlCacheService implements OnModuleDestroy {
   }
 
   private isShared(namespace: string): boolean {
-    return this.atomic.shared && isSharedNamespace(namespace);
+    return (
+      this.atomic.shared &&
+      (isSharedNamespace(namespace) || this.configuredShared.has(namespace))
+    );
   }
 
-  private sharedKey(fullKey: string): string {
-    return `val:${this.release}:${fullKey}`;
+  private sharedKey(namespace: string, fullKey: string): string {
+    return this.config.sharedNamespaces?.[namespace]?.acrossReleases ?
+        `val:${fullKey}`
+      : `val:${this.release}:${fullKey}`;
   }
 
-  private async readShared<T>(fullKey: string): Promise<T | undefined> {
+  private localCopyMs(namespace: string): number {
+    return (
+      this.config.sharedNamespaces?.[namespace]?.localCopyMs ??
+      VERSION_REFRESH_MS
+    );
+  }
+
+  private async readShared<T>(
+    namespace: string,
+    fullKey: string
+  ): Promise<T | undefined> {
     const local = await this.cache.get<T>(fullKey);
     if (local !== undefined && local !== null) {
       return local;
     }
 
-    const text = await this.atomic.getRaw(this.sharedKey(fullKey));
+    const text = await this.atomic.getRaw(this.sharedKey(namespace, fullKey));
     if (text === undefined) {
       return undefined;
     }
 
-    const value = deserializeCacheValueIfPossible<T>(text);
+    const value = deserializeCacheValueIfPossible<T>(text, this.config.decimal);
 
     if (value === undefined) {
       return undefined;
     }
 
-    await this.cache.set(fullKey, value as any, VERSION_REFRESH_MS);
+    await this.cache.set(fullKey, value as any, this.localCopyMs(namespace));
 
     return value;
   }
@@ -964,7 +999,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
     ttlSeconds: number
   ): Promise<void> {
     const ttlMs = ttlSeconds * 1000;
-    const text = serializeCacheValueIfPossible(value);
+    const text = serializeCacheValueIfPossible(value, this.config.decimal);
     const secret = findSecretField(value);
 
     if (secret && !this.reportedSecrets.has(namespace)) {
@@ -982,9 +1017,13 @@ export class KvTtlCacheService implements OnModuleDestroy {
     const shared =
       shareable &&
       this.atomic.isAvailable() &&
-      (await this.atomic.setRaw(this.sharedKey(fullKey), text, ttlMs));
+      (await this.atomic.setRaw(
+        this.sharedKey(namespace, fullKey),
+        text,
+        ttlMs
+      ));
     const localTtlMs =
-      shared ? VERSION_REFRESH_MS
+      shared ? this.localCopyMs(namespace)
       : shareable ? UNSHARED_FALLBACK_TTL_MS
       : ttlMs;
 

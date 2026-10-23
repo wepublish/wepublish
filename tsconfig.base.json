@@ -71,6 +71,9 @@
       "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/image/website": ["libs/image/website/src/index.ts"],
       "@wepublish/kv-ttl-cache/api": ["libs/kv-ttl-cache/api/src/index.ts"],
+      "@wepublish/kv-ttl-cache/api/core": [
+        "libs/kv-ttl-cache/api/src/core.ts"
+      ],
       "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
       "@wepublish/media-transform-guard": [
         "libs/media-transform-guard/api/src/index.ts"
