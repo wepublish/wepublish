@@ -3309,6 +3309,84 @@ would remove that.
 
 ---
 
+## D90 — The agenda screens were audited for accessibility; what was fixed, and what belongs to the house
+
+Implements design 3 §11, and §10's "No permission" row in part (see D91).
+
+**Status.** Built in slice F stage 7. Awaiting Karl's confirmation.
+
+**Decision.** The automated scan (`accesslint`, WCAG 2.2 AA) and a manual keyboard and
+accessibility-tree pass were run on 2026-10-23 against `/events`, `/events/edit/:id`,
+`/organizations/edit/:id` and `/venues/edit/:id` in the running editor, as an administrator and as
+an organiser without `CanPublishEvent`. Every finding in agenda code was fixed, with a spec first:
+
+| Finding | Fix |
+| --- | --- |
+| The list's tags filter was labelled by its placeholder only | it has a label (`event-list-filters.tsx`) |
+| The event editor had no level-one heading | a visually hidden `h1`, "Event: name" or "New event" |
+| The Metadata drawer was a dialog without a name | it is named by its "Metadata" title |
+| Inside the drawer, every autocomplete's option list (venue, tags, organisation, owner) was missing from the accessibility tree: MUI portals the list to `body`, outside the `aria-modal` dialog, so a screen reader heard no options | the drawer gives its autocompletes `disablePortal`, so the list renders inside the dialog |
+| Explicit dates: five "Delete" and five "Drag to change the order" buttons with nothing to tell them apart | a numbered `ListInput` names its row: "Delete entry 2", "Move entry 2" |
+| A disabled Publish button hid its reason in a `title` that no keyboard or touch user could reach | D91 |
+| A long organisation or venue form that failed validation said so only at the fields, possibly below the fold | a warning at the top of the form says fields need attention |
+
+Confirmed as working, with no change: focus order in the top bar and the drawer, Escape closing
+the drawer and returning focus to Metadata, tabs moving with the arrow keys, weekday toggles as
+named checkboxes inside a fieldset with a legend, the "→ N dates" count updating in a polite live
+region, keyboard reordering of explicit dates with its announcements, the review state in a live
+region, status marks beside the words, and no horizontal scrolling at 320 CSS pixels.
+
+**Why.** Design 3 §11: non-negotiable for a product that catalogues wheelchair access.
+
+**Consequences.** Five findings belong to the shell every editor screen shares, not to the agenda,
+and are left for a change of their own:
+- Contained primary buttons fail text contrast: white on `#3498ff` is 2.97:1 (needs 4.5:1). This
+  is the theme's primary colour on every screen; fixing it is a theme decision.
+- No `main` landmark and no skip link on any editor page (`Base`, `EditorTemplate`).
+- The sidebar menu is a `ul` whose children are `div`s.
+- The version status dot in the sidebar is `role="img"` without a name.
+- The table's row actions read "Duplicate" and "Delete" without the event's name; a screen reader
+  user gets the row from table navigation, and the house lists all do the same.
+
+One scanner finding was not reproducible: the list toolbar's Filters and Columns buttons measured
+1.11:1 in a headless background tab, caught mid-way through their 250 ms colour transition. In a
+foreground tab they resolve to the dark scheme's secondary text colour.
+
+What needs a person with assistive technology: whether VoiceOver and NVDA announce the
+live regions and the drag-and-drop instructions as intended, and whether the date fields'
+native pickers are usable with a screen reader.
+
+---
+
+## D91 — An unavailable action says why, and stays reachable
+
+Implements design 3 §10 ("No permission: why the action is unavailable and who to ask, not a
+disabled button with no tooltip").
+
+**Status.** Built in slice F stage 7. Awaiting Karl's confirmation.
+
+**Decision.**
+- When there is nothing new to publish, Publish stays focusable with `aria-disabled`, its reason
+  ("Nothing new to publish. Change the name, text or images first.") as its accessible description
+  and as a tooltip on hover and focus, and a click does nothing. It used to be `disabled`, which
+  swallowed the pointer and took it out of the tab order, so the `title` holding the reason was
+  never shown.
+- Ready for review behaves the same way when the event has nothing unpublished to review: it is
+  shown, with "Nothing new to send for review. Change the event and save it first." It used to
+  disappear. It becomes available as soon as the form has unsaved changes, because Ready for review
+  saves them first (D83).
+- Someone who may not change the event at all gets no publication button; the read-only notice
+  already names who can change it (D84). The organisation and venue forms keep their read-only
+  notices and the explained partner, enabled and member-management locks from D87.
+
+**Why.** A disabled button cannot be focused or hovered, so whatever explains it is unreachable.
+`aria-disabled` keeps the control in the tab order and lets its reason be read and seen.
+
+**Consequences.** The same pattern would help the article and page editors' disabled buttons; that
+is not part of this slice.
+
+---
+
 ## Open questions
 
 Recorded as they surface; resolved ones become decisions above.
@@ -3516,3 +3594,7 @@ Slice F builds the agenda editor. Its build choices are recorded as decisions fr
     contacts and venues while partner, enabled and the member list stay with the agenda administrators.
 22. [D88](#d88--proinfirmis-data-is-shown-read-only-without-a-sync-time): no "Last synced" time until the Ginto sync adds one.
 23. [D89](#d89--organisation-and-venue-limits-are-mirrored-in-the-editor): the name and postcode limits repeated in the editor, or moved to the schedule library.
+24. [D90](#d90--the-agenda-screens-were-audited-for-accessibility-what-was-fixed-and-what-belongs-to-the-house): the five shell findings left for a change of their own, above all the
+    2.97:1 contrast of the theme's primary buttons.
+25. [D91](#d91--an-unavailable-action-says-why-and-stays-reachable): Publish and Ready for review stay focusable and explain why they are unavailable,
+    instead of being disabled or hidden.

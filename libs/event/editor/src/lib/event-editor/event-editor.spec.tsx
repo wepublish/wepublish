@@ -192,6 +192,38 @@ describe('EventEditor', () => {
     );
   });
 
+  it('names the page with a level-one heading', async () => {
+    renderEditor();
+    await nameField();
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'agenda.editor.heading Qui-vive',
+      })
+    ).toBeInTheDocument();
+  });
+
+  it('names a new event page with a level-one heading', async () => {
+    renderEditor({ route: '/events/create' });
+    await nameField();
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'agenda.editor.headingNew',
+      })
+    ).toBeInTheDocument();
+  });
+
+  it('names the Metadata drawer after its title', async () => {
+    renderEditor({ route: '/events/edit/event-1?tab=dates' });
+
+    expect(
+      await screen.findByRole('dialog', { name: 'agenda.editor.metadata' })
+    ).toBeInTheDocument();
+  });
+
   it('counts the name against 130 and the description against 6,400 characters', async () => {
     renderEditor();
     await nameField();

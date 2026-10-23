@@ -18,7 +18,7 @@ and its path reused — the tables are `events.*`, so the library should be `eve
 | --- | --- | --- |
 | `libs/event/api` | **replaced, built** | `EventModule`, `OrganizationModule`, `PlaceModule`, `EventTaxonomyModule`, and the scope module `event-scope.ts` (§3.2) |
 | `libs/event/schedule` | **new, built** | `@wepublish/event/schedule`: occurrence expansion, the two-year horizon, schedule bounds, the shared input rules and plain-text measuring (§4, §5). Pure functions, no Nest or Prisma |
-| `libs/event/editor` | **new** | design 3, slice F |
+| `libs/event/editor` | **new, built** | `@wepublish/event/editor` (project `event-editor`): the agenda screens of design 3 — event list, event editor and its fields, organisations, venues ([D74](../decisions.md)). `apps/editor` only wires routes, menu, commands and the dashboard card |
 | `libs/event/website` | **adapted, built** | public rendering — kept and re-pointed, not rewritten (§8) |
 | `libs/event/import/*` | **deleted** | out of scope per the brief; gone with its editor route and `CanGetImportedEvents` |
 | `libs/api-token/api` | **new** | §9 |

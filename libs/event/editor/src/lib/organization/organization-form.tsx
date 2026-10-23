@@ -19,7 +19,7 @@ import { ORGANIZATION_TAGS_MAX } from '@wepublish/event/schedule';
 import { CanUpdateOtherOrganizations } from '@wepublish/permissions';
 import { SelectTags, useAuthorisation } from '@wepublish/ui/editor';
 import { ReactNode } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useFormState } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { translateFormError } from '../form-error';
@@ -139,6 +139,9 @@ export function OrganizationForm({
 }: OrganizationFormProps) {
   const { t } = useTranslation();
   const { control } = useFormContext<OrganizationFormValues>();
+  const { errors, submitCount } = useFormState<OrganizationFormValues>({
+    control,
+  });
   const mayUpdateAny =
     useAuthorisation(CanUpdateOtherOrganizations.id) === true;
 
@@ -155,6 +158,10 @@ export function OrganizationForm({
     <Stack spacing={2}>
       {readOnly && (
         <Alert severity="info">{t('agenda.organizations.form.readOnly')}</Alert>
+      )}
+
+      {submitCount > 0 && Object.keys(errors).length > 0 && (
+        <Alert severity="warning">{t('agenda.form.invalid')}</Alert>
       )}
 
       <FormLayout>

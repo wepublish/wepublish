@@ -218,6 +218,16 @@ describe('EditVenue', () => {
     );
   });
 
+  it('says at the top of the form when fields need attention before saving', async () => {
+    renderEdit();
+
+    fireEvent.change(await nameField(), { target: { value: '' } });
+    fireEvent.click(screen.getByTestId('saveButton'));
+
+    expect(await screen.findByText('agenda.form.invalid')).toBeInTheDocument();
+    expect(updatePlace).not.toHaveBeenCalled();
+  });
+
   it("explains a refused delete with the API's reason about future dates", async () => {
     deletePlace.mockRejectedValue(
       new Error('Place place-1 still has 3 upcoming events.')

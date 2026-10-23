@@ -1118,6 +1118,15 @@ its pickers ([D66](../decisions.md#d66--the-editor-role-files-and-publishes-its-
 - `seed()` returns a `$transaction` array that callers **destructure positionally**. New roles are
   appended at the end or existing installs break.
 
+**In the editor, as built (slice F).** An editor-role user sees Agenda › Events, Venues and Tags: its
+own organisations' events and the events it owns, which it may publish; its organisations' venues,
+read-only, because place writes need `CanUpdateOrganization` ([D55](../decisions.md)); and no
+Organisations screen, which needs `CanUpdateOrganization` or a cross-organisation organisation
+permission. An Agenda-Admin sees all four, every event and organisation, the review-queue card, and
+the No members marker. What a user may do with a given record comes from the record's `viewerCan`
+([D68](../decisions.md), [D73](../decisions.md)), so the editor never offers an action the API
+would refuse.
+
 The dormant accounts from [D8](../decisions.md) get a minimal organiser role: editor login and
 their own organisation's events, explicitly **without** `CanPublishEvent`, so their events need
 validating — exactly the class [D3](../decisions.md) describes, with no special case.

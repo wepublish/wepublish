@@ -4146,7 +4146,9 @@
         "over": "Moved to position {{position}} of {{total}}.",
         "end": "Dropped at position {{position}} of {{total}}.",
         "cancel": "Reordering cancelled, the order is unchanged."
-      }
+      },
+      "reorderItem": "Move entry {{index}}",
+      "deleteItem": "Delete entry {{index}}"
     },
     "errorBoundary": {
       "title": "Something went wrong on this page",
@@ -4672,7 +4674,8 @@
           "ratePrice": "Enter a price, or remove the row.",
           "ticketingUrl": "Start the link with one of: {{schemes}}."
         },
-        "placeCreate": "Create a venue (opens in a new tab)"
+        "placeCreate": "Create a venue (opens in a new tab)",
+        "invalid": "Some fields need your attention before saving. They are marked in red."
       },
       "editor": {
         "name": "Name",
@@ -4767,13 +4770,16 @@
           "confirmBodyAgendaTeam": "The agenda team can then check the event and publish it. It stays a draft until then, and you can withdraw the request.",
           "confirm": "Send for review",
           "requested": "Review requested",
-          "withdrawn": "Review request withdrawn"
+          "withdrawn": "Review request withdrawn",
+          "nothingNew": "Nothing new to send for review. Change the event and save it first."
         },
         "occurrences": {
           "title_one": "{{count}} upcoming date",
           "title_other": "{{count}} upcoming dates",
           "none": "No date lies ahead. Saved dates show here."
-        }
+        },
+        "heading": "Event: {{name}}",
+        "headingNew": "New event"
       },
       "organizations": {
         "list": {

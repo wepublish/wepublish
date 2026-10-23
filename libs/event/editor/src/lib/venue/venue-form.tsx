@@ -19,7 +19,7 @@ import {
   useAuthorisation,
 } from '@wepublish/ui/editor';
 import { ReactNode } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useFormState } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { translateFormError } from '../form-error';
@@ -86,6 +86,7 @@ export interface VenueFormProps {
 export function VenueForm({ isNew, viewerCan, aside }: VenueFormProps) {
   const { t } = useTranslation();
   const { control } = useFormContext<VenueFormValues>();
+  const { errors, submitCount } = useFormState<VenueFormValues>({ control });
   const mayUseAnyOrganization =
     useAuthorisation(CanUpdateOtherOrganizations.id) === true;
   const { data: regionData } = useQuery(EventRegionsDocument);
@@ -97,6 +98,10 @@ export function VenueForm({ isNew, viewerCan, aside }: VenueFormProps) {
     <Stack spacing={2}>
       {readOnly && (
         <Alert severity="info">{t('agenda.venues.form.readOnly')}</Alert>
+      )}
+
+      {submitCount > 0 && Object.keys(errors).length > 0 && (
+        <Alert severity="warning">{t('agenda.form.invalid')}</Alert>
       )}
 
       <FormLayout>

@@ -83,12 +83,71 @@ describe('EventPublicationControl', () => {
       },
     });
     const { rerender } = render(ui(published));
+    const publish = button('agenda.editor.publish.button')!;
 
-    expect(button('agenda.editor.publish.button')).toBeDisabled();
+    expect(publish).toHaveAttribute('aria-disabled', 'true');
+    expect(publish).toHaveAccessibleDescription(
+      'agenda.editor.publish.nothingNew'
+    );
+    expect(publish).not.toBeDisabled();
+
+    fireEvent.click(publish);
+
+    expect(button('agenda.editor.publish.confirm')).toBeNull();
 
     rerender(ui(published, { hasChanges: true }));
 
-    expect(button('agenda.editor.publish.button')).toBeEnabled();
+    expect(button('agenda.editor.publish.button')).not.toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+    expect(
+      button('agenda.editor.publish.button')
+    ).not.toHaveAccessibleDescription();
+  });
+
+  it('says why Ready for review is unavailable while there is nothing new to review', () => {
+    const onRequestReview = vi.fn();
+    const unchanged = testEvent({
+      draft: null,
+      published: {
+        __typename: 'EventRevision',
+        id: 'rev-0',
+        publishedAt: '2026-10-01T00:00:00.000Z',
+      },
+      viewerCan: { ...ORGANISER, requestReview: false },
+    });
+    const { rerender } = render(ui(unchanged, { onRequestReview }));
+    const review = button('agenda.editor.review.request')!;
+
+    expect(review).toHaveAttribute('aria-disabled', 'true');
+    expect(review).toHaveAccessibleDescription(
+      'agenda.editor.review.nothingNew'
+    );
+
+    fireEvent.click(review);
+
+    expect(button('agenda.editor.review.confirm')).toBeNull();
+    expect(onRequestReview).not.toHaveBeenCalled();
+
+    rerender(ui(unchanged, { onRequestReview, hasChanges: true }));
+
+    expect(button('agenda.editor.review.request')).not.toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
+
+  it('offers no review button to someone who may not change the event', () => {
+    render(
+      ui(
+        testEvent({
+          viewerCan: { ...ORGANISER, update: false, requestReview: false },
+        })
+      )
+    );
+
+    expect(button('agenda.editor.review.request')).toBeNull();
   });
 
   it('offers Unpublish once the event is published', () => {

@@ -161,6 +161,15 @@ function ListItem({
     isDragging,
   } = useSortable({ id: value.id, disabled: itemDisabled });
 
+  const handleLabel =
+    showIndex ?
+      t('listInput.reorderItem', { index: itemIndex + 1 })
+    : t('listInput.dragToReorder');
+  const deleteLabel =
+    showIndex ?
+      t('listInput.deleteItem', { index: itemIndex + 1 })
+    : t('delete');
+
   function handleValueChange(fieldValue: SetStateAction<any>) {
     onChange(itemIndex, value => ({
       ...value,
@@ -185,13 +194,13 @@ function ListItem({
       }}
     >
       <DragHandleWrapper>
-        <IconButtonTooltip caption={t('listInput.dragToReorder')}>
+        <IconButtonTooltip caption={handleLabel}>
           <IconButton
             ref={setActivatorNodeRef}
             size="small"
             {...attributes}
             {...listeners}
-            aria-label={t('listInput.dragToReorder')}
+            aria-label={handleLabel}
             disabled={itemDisabled}
           >
             <MdDragIndicator />
@@ -208,11 +217,11 @@ function ListItem({
       </ChildrenWrapper>
 
       <IconButtonWrapper>
-        <IconButtonTooltip caption={t('delete')}>
+        <IconButtonTooltip caption={deleteLabel}>
           <IconButton
             size="small"
             color="error"
-            aria-label={t('delete')}
+            aria-label={deleteLabel}
             onClick={handleRemove}
             disabled={itemDisabled}
           >

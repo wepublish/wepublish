@@ -6,7 +6,10 @@ import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 import { ListInput, ListValue } from './listInput';
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({
+    t: (key: string, options?: { index?: number }) =>
+      options?.index ? `${key} ${options.index}` : key,
+  }),
 }));
 
 const theme = createTheme({ cssVariables: true });
@@ -122,6 +125,29 @@ describe('ListInput', () => {
     expect(
       screen.getAllByTestId('list-input-index').map(node => node.textContent)
     ).toEqual(['1', '2', '3']);
+  });
+
+  it('names each numbered row in its drag handle and delete button', () => {
+    renderList({ showIndex: true });
+
+    expect(
+      screen
+        .getAllByRole('button', { name: /^listInput\.reorderItem/ })
+        .map(button => button.getAttribute('aria-label'))
+    ).toEqual([
+      'listInput.reorderItem 1',
+      'listInput.reorderItem 2',
+      'listInput.reorderItem 3',
+    ]);
+    expect(
+      screen
+        .getAllByRole('button', { name: /^listInput\.deleteItem/ })
+        .map(button => button.getAttribute('aria-label'))
+    ).toEqual([
+      'listInput.deleteItem 1',
+      'listInput.deleteItem 2',
+      'listInput.deleteItem 3',
+    ]);
   });
 
   it('shows no row numbers by default', () => {

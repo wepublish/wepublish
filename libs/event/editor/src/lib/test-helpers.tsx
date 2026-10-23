@@ -108,7 +108,7 @@ export const press = async (
 
 export const moveFirstRowDown = async () => {
   const [handle] = screen.getAllByRole('button', {
-    name: 'listInput.dragToReorder',
+    name: /^listInput\.(dragToReorder|reorderItem)/,
   });
 
   handle.focus();

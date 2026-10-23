@@ -4146,7 +4146,9 @@
         "over": "Auf Position {{position}} von {{total}} verschoben.",
         "end": "Auf Position {{position}} von {{total}} abgelegt.",
         "cancel": "Umsortieren abgebrochen, die Reihenfolge bleibt."
-      }
+      },
+      "reorderItem": "Eintrag {{index}} verschieben",
+      "deleteItem": "Eintrag {{index}} löschen"
     },
     "errorBoundary": {
       "title": "Auf dieser Seite ist etwas schiefgelaufen",
@@ -4672,7 +4674,8 @@
           "ratePrice": "Gib einen Preis an oder entferne die Zeile.",
           "ticketingUrl": "Der Link muss mit einem davon beginnen: {{schemes}}."
         },
-        "placeCreate": "Veranstaltungsort erstellen (öffnet in neuem Tab)"
+        "placeCreate": "Veranstaltungsort erstellen (öffnet in neuem Tab)",
+        "invalid": "Einige Felder brauchen Ihre Aufmerksamkeit, bevor gespeichert werden kann. Sie sind rot markiert."
       },
       "editor": {
         "name": "Name",
@@ -4767,13 +4770,16 @@
           "confirmBodyAgendaTeam": "Das Agenda-Team kann den Anlass dann prüfen und publizieren. Bis dahin bleibt er ein Entwurf, und Sie können die Anfrage zurückziehen.",
           "confirm": "Zur Prüfung senden",
           "requested": "Prüfung angefragt",
-          "withdrawn": "Anfrage zurückgezogen"
+          "withdrawn": "Anfrage zurückgezogen",
+          "nothingNew": "Nichts Neues zur Prüfung. Ändern und speichern Sie den Anlass zuerst."
         },
         "occurrences": {
           "title_one": "{{count}} kommendes Datum",
           "title_other": "{{count}} kommende Daten",
           "none": "Kein Datum liegt in der Zukunft. Gespeicherte Daten erscheinen hier."
-        }
+        },
+        "heading": "Anlass: {{name}}",
+        "headingNew": "Neuer Anlass"
       },
       "organizations": {
         "list": {

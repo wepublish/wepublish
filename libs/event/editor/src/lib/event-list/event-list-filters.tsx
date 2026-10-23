@@ -188,7 +188,7 @@ export function EventListFilters({
           setSelectedTags={tagIds =>
             update({ tagIds: tagIds.length ? tagIds : null })
           }
-          placeholder={t('agenda.list.filter.tags')}
+          label={t('agenda.list.filter.tags')}
         />
       </div>
 

@@ -4146,7 +4146,9 @@
         "over": "Déplacée en position {{position}} sur {{total}}.",
         "end": "Déposée en position {{position}} sur {{total}}.",
         "cancel": "Réorganisation annulée, l’ordre reste inchangé."
-      }
+      },
+      "reorderItem": "Déplacer l’entrée {{index}}",
+      "deleteItem": "Supprimer l’entrée {{index}}"
     },
     "errorBoundary": {
       "title": "Un problème est survenu sur cette page",
@@ -4672,7 +4674,8 @@
           "ratePrice": "Indiquez un prix ou supprimez la ligne.",
           "ticketingUrl": "Le lien doit commencer par l’un de ceux-ci : {{schemes}}."
         },
-        "placeCreate": "Créer un lieu (s’ouvre dans un nouvel onglet)"
+        "placeCreate": "Créer un lieu (s’ouvre dans un nouvel onglet)",
+        "invalid": "Certains champs demandent votre attention avant l’enregistrement. Ils sont marqués en rouge."
       },
       "editor": {
         "name": "Nom",
@@ -4767,13 +4770,16 @@
           "confirmBodyAgendaTeam": "L’équipe de l’agenda pourra alors vérifier l’événement et le publier. D’ici là, il reste un brouillon, et vous pouvez retirer la demande.",
           "confirm": "Envoyer en relecture",
           "requested": "Relecture demandée",
-          "withdrawn": "Demande de relecture retirée"
+          "withdrawn": "Demande de relecture retirée",
+          "nothingNew": "Rien de nouveau à faire vérifier. Modifiez et enregistrez d’abord l’événement."
         },
         "occurrences": {
           "title_one": "{{count}} date à venir",
           "title_other": "{{count}} dates à venir",
           "none": "Aucune date à venir. Les dates enregistrées apparaissent ici."
-        }
+        },
+        "heading": "Événement : {{name}}",
+        "headingNew": "Nouvel événement"
       },
       "organizations": {
         "list": {

@@ -11,33 +11,25 @@ design language per `/material-3`, implementation per `/material-ui-theming`
 
 Screens below were designed against the **running editor**, not inferred from source.
 
-**State of the editor while this is unbuilt.** Slices C and D replaced the event API, and the old
-event list, create and edit views went with it (`apps/editor/src/app/routes/events/*`, their routes,
-the `Events` nav item and the `events`/`createEvent` commands). Adapting them to schedules,
-revisions and rates would have been thrown away by this design. What survives: the Event tags
-routes and menu item, now gated on tag permissions, and the event pickers in the EventBlock and
-teaser panels, which read the `EventList` query. Until this design is built (slice F), events can be
-created and edited only through the API ([design 2](02-api.md) §8.1).
+**State of the editor: built (slice F).** Everything below is built in `libs/event/editor`
+(`@wepublish/event/editor`); `apps/editor` only wires the routes, the Agenda menu, the commands and
+the dashboard card. The build choices are [D66](../decisions.md) to [D91](../decisions.md), all
+awaiting Karl's confirmation. In short:
 
-Slice F stage 3 brought back the list: the **Agenda** section with `/events`, its filters and the
-review-queue dashboard card, in `libs/event/editor` ([D74](../decisions.md) to [D78](../decisions.md)). Event names are not yet
-links; the event editor follows in stage 5.
+| Screen | Route | Built as |
+| --- | --- | --- |
+| Event list (§3) | `/events` | house list with filters for search, organisation, venue, tags, status, publication, dates, end of run and review requested; Next date with "+N more dates"; ○ ◔ ◐ ● publication marks; review-queue filter and dashboard card ([D74](../decisions.md)–[D77](../decisions.md)) |
+| Event editor (§4–§7) | `/events/create`, `/events/edit/:id` | article-editor shell: name and the four-block canvas, Metadata drawer with General, Dates, Pricing and Social Media kept in `?tab=`, one Save that sends only what changed, publish / publish at / unpublish, Ready for review and Withdraw request on `viewerCan`, Duplicate ([D79](../decisions.md)–[D86](../decisions.md)) |
+| Organisations (§8) | `/organizations`, `/organizations/create`, `/organizations/edit/:id` | list-and-edit records; No members, Partner and From the migration markers for the cross-organisation readers; members and venues on the edit page ([D87](../decisions.md)) |
+| Venues (§8) | `/venues`, `/venues/create`, `/venues/edit/:id` | list-and-edit records; private labelled by its effect; read-only ProInfirmis summary without a sync time ([D87](../decisions.md), [D88](../decisions.md)) |
 
-Stage 4 built the fields the event editor composes, each on its own and tested, not yet mounted on a
-route: the date editor (§5), the images field (§6), prices and special rate, tags, venue, audience,
-organisation and owner, the restricted block map (§4.2) and the form schema
-([D79](../decisions.md) to [D82](../decisions.md)).
+Not built, each recorded with its reason: History and Preview in the event top bar, Properties and
+Tracking tabs, and autosave ([D83](../decisions.md), [D84](../decisions.md)); taxonomy screens, since
+regions, audiences and affiliations stay read-only until slice G ([D56](../decisions.md)); the
+"Last synced" time ([D88](../decisions.md)). Event tags stay under Agenda as **Tags** rather than
+under Content Blocks ([D74](../decisions.md)).
 
-Stage 5 mounted them: the event editor at `/events/create` and `/events/edit/:id` with the name and
-restricted canvas, the Metadata drawer (General, Dates, Pricing, Social Media), one Save that sends
-only what changed, publish / publish at / unpublish, Ready for review and Withdraw request, and
-Duplicate. The list gained its links, New event, Duplicate and Extend
-([D83](../decisions.md) to [D86](../decisions.md)). History and Preview are not built yet.
-
-Stage 6 built §8: `/organizations` and `/venues` with their create and edit pages, the No members
-marker and filter, members management, the organisation's venues, private labelled by its effect,
-the accessibility self-declaration and the read-only ProInfirmis summary
-([D87](../decisions.md) to [D89](../decisions.md)). There is no "Last synced" time yet (D88).
+The screens were audited for accessibility on the running editor (§11, [D90](../decisions.md)).
 
 ---
 
@@ -225,10 +217,14 @@ An event description is a paragraph or two. The full article palette — teasers
 image galleries — makes no sense here and invites content the agenda's public rendering cannot
 show.
 
-The event canvas offers **richtext, image, embed, quote**. Nothing else. This needs per-entity
-block allow-listing, which [`../research/wp-04-block-content-framework.md`](../research/wp-04-block-content-framework.md)
-should be checked for before implementation; if it does not exist, it is a small addition and
-worth making properly rather than hiding blocks in CSS.
+The event canvas offers **richtext, image, embed, quote**. Nothing else.
+
+**As built.** No framework addition was needed: `BlockList` already takes its block map as a prop,
+so the event editor passes a subset map (`event-block-map.ts`). The same list,
+`EVENT_BLOCK_TYPES`, lives in `@wepublish/event/schedule`, and the API refuses any other block type
+in event content, so an API key cannot post blocks the agenda cannot render
+([D70](../decisions.md)). Older content holding other blocks is left off the canvas with a warning
+([D84](../decisions.md)).
 
 ---
 
@@ -340,6 +336,11 @@ landing as its own change, ahead of and independent of this work.
 Beyond the sensor, the component wants the polish the agenda will expose: a row index, denser
 layout for many rows, and a duplicate action (§5).
 
+**Done** ([D78](../decisions.md)): `ListInput` registers the `KeyboardSensor`, announces moves in
+the editor's language, keeps one tab stop per drag handle, and gained a row index, a dense layout,
+Duplicate last, a custom Add label and a row limit. A numbered list names each row in its handle
+and delete button ("Move entry 2", "Delete entry 2"), [D90](../decisions.md).
+
 ---
 
 ## 6. Images
@@ -446,9 +447,12 @@ see their organisation's keys, and a key disabled by its creator leaving still s
 series eventually runs out. Silent expiry would drop an event from the public agenda with no
 signal to anyone.
 
-- The event list marks events whose last occurrence falls within 30 days: `Ends in 12 days`.
-- The *Past* tab holds what has already lapsed, so it is recoverable rather than lost.
-- Extending is one action from the list — it opens the Dates tab with the end date focused.
+- The event list marks weekly series whose last date falls within 30 days: `Ends in 12 days`,
+  counted in Zurich calendar days ([D76](../decisions.md)).
+- There is no *Past* tab, since the list has no tabs (§3). The **End of run** filter offers *Ending
+  within 30 days* and *Ended*, so lapsed events stay findable rather than lost.
+- Extending is one action from the list — *Extend* opens the Dates tab with the end date focused
+  (`/events/edit/:id?tab=dates&focus=dateTo`).
 
 No email. A notification nobody asked for, about an event that still has a month to run, trains
 people to ignore notifications.
@@ -472,6 +476,15 @@ The states BKa handles poorly, and what each should say.
 The current Events list shows `Nothing to show` for a feature with zero rows, which tells a
 first-time user nothing at all. That is the baseline to beat.
 
+**As built**, row by row: the empty list explains itself and offers *Create your first event*
+([D77](../decisions.md)); no search results show the query and *Clear filters*; the empty queue
+reads *Nothing waiting for review*; an organisation with no venues links to creating one; a failed
+or partly failed save says what was saved, what was not and why, and keeps the input
+([D83](../decisions.md)), and a long organisation or venue form that fails validation says so at
+the top; a read-only event, organisation or venue names who can change it, and an unavailable
+Publish or Ready for review stays focusable and gives its reason ([D91](../decisions.md)); the
+occurrence list pages 20 dates at a time.
+
 ---
 
 ## 11. Accessibility
@@ -486,18 +499,27 @@ Non-negotiable for a product that catalogues wheelchair access.
 - Status is never colour alone — the `●` / `○` / `◐` marks carry it too, which also survives the
   dark/light theme switch the editor already has.
 
+**Audited** on 2026-10-23 against the running editor ([D90](../decisions.md)): every point above
+holds, and the findings in agenda code were fixed — the tags filter label, a level-one heading in
+the event editor, the Metadata drawer's name, autocomplete option lists that fell outside the modal
+drawer's accessibility tree, row names in numbered lists, an unreachable reason on a disabled
+Publish ([D91](../decisions.md)), and a top-of-form warning when a long form fails validation. Five
+findings belong to the shell every screen shares (primary-button contrast, no `main` landmark,
+the sidebar list markup, an unnamed status dot, unnamed row actions) and are listed in D90 for a
+change of their own.
+
 ---
 
 ## 12. What has to be built
 
-| | Why |
-| --- | --- |
-| `KeyboardSensor` on `ListInput` | Two lines; fixes the whole editor, not just the agenda (§5.1) |
-| `ListInput` polish | Row index, denser rows, duplicate action |
-| The date editor | No equivalent anywhere in the editor — the only genuinely new control |
-| Per-entity block allow-list | If it does not already exist (§4.1) |
-| Review-state top-bar control | New, but small |
-| Dashboard card for the review queue | Extends the existing configurable dashboard |
+| | Why | Status |
+| --- | --- | --- |
+| `KeyboardSensor` on `ListInput` | Two lines; fixes the whole editor, not just the agenda (§5.1) | built |
+| `ListInput` polish | Row index, denser rows, duplicate action | built |
+| The date editor | No equivalent anywhere in the editor — the only genuinely new control | built |
+| Per-entity block allow-list | If it does not already exist (§4.1) | built as a subset block map plus the API check (§4.2) |
+| Review-state top-bar control | New, but small | built |
+| Dashboard card for the review queue | Extends the existing configurable dashboard | built |
 
 Everything else is reused unchanged: the list pattern with Filters and Columns, the block canvas,
 the Metadata drawer, `ListInput`, the image picker, character counters, status chips and the
@@ -509,8 +531,9 @@ publication controls. The agenda should look like a part of this editor that was
 
 1. **Is `Agenda` the right nav label?** It matches BKa's public vocabulary but is new to
    We.Publish, and other media adopting this ([D14c](../decisions.md)) may call it something else.
-2. **Does per-entity block allow-listing exist?** (§4.1) Changes whether that is a small
-   configuration or a framework addition.
+2. *(Resolved — [D70](../decisions.md): it needed no framework addition. `BlockList` takes the
+   block map as a prop, the event editor passes the four allowed blocks, and the API refuses the
+   rest, §4.2.)*
 3. *(Resolved — [D19](../decisions.md): no. An organiser sees only their own organisation's events;
    seeing others requires the cross-organisation permissions that Agenda-Admin carries.)*
 4. *(Resolved — [D40](../decisions.md): whole day. The API counts the whole Zurich calendar day the

@@ -586,6 +586,27 @@ every organisation.
 
 ---
 
+### ⚠️ An Autocomplete inside a Drawer is invisible to screen readers
+
+MUI 9's temporary `Drawer` paper is `role="dialog"` with `aria-modal="true"`,
+and `Autocomplete` portals its option list to `body`. Chrome prunes everything
+outside an `aria-modal` dialog from the accessibility tree, so the listbox and
+the option `aria-activedescendant` points at do not exist for a screen reader:
+it hears the combobox and no options. The keyboard still works, so nothing
+looks wrong (found on the event Metadata drawer, 2026-10-23). `Select` menus are
+unaffected; they open their own modal.
+
+The event drawer fixes it by giving its subtree a theme whose
+`MuiAutocomplete.defaultProps.disablePortal` is true
+([event-metadata-panel.tsx](../../libs/event/editor/src/lib/event-editor/event-metadata-panel.tsx)),
+so the list renders inside the dialog; Popper still flips it at the edge. The
+article and page Metadata drawers still have the problem.
+
+Pinned by `event-metadata-panel.spec.tsx` ("opens the option lists inside the
+drawer").
+
+---
+
 ### ⚠️ The editor's `refetchOn` config does nothing; a refocus reload is `AuthProvider`
 
 [setup.tsx](../../libs/editor/api/src/lib/setup.tsx) sets

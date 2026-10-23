@@ -160,6 +160,18 @@ describe('EventList', () => {
     });
   });
 
+  it('labels the tags filter instead of relying on its placeholder', () => {
+    renderList();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'filterableList.filter.label' })
+    );
+
+    expect(
+      screen.getByRole('combobox', { name: 'agenda.list.filter.tags' })
+    ).toBeInTheDocument();
+  });
+
   it('opens the review queue from the dashboard link, whatever filter was stored', () => {
     localStorage.setItem(
       'wepublish:editor:listState:events',

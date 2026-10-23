@@ -92,7 +92,7 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 - **PostgreSQL 18** via **Prisma 7**
 - Schema: `libs/api/prisma/schema.prisma`
 - Uses Prisma views for revision states: `ArticleRevisionPublished`/`Pending`/`Draft`, the same for pages, and `EventRevisionPublished`/`Pending`/`Draft` for agenda events
-- Agenda events (`libs/event/api`: `EventModule`, `OrganizationModule`, `PlaceModule`, `EventTaxonomyModule`; tables `events.*`) keep facts on `Event` (live on save) and prose on `EventRevision` (published like articles). `Occurrence` rows are expanded from the schedule by `@wepublish/event/schedule` on every save that changes it; `events` lists events and `agenda` lists occurrences. Design and decisions: `docs/bka-migration/`
+- Agenda events (`libs/event/api`: `EventModule`, `OrganizationModule`, `PlaceModule`, `EventTaxonomyModule`; tables `events.*`) keep facts on `Event` (live on save) and prose on `EventRevision` (published like articles). `Occurrence` rows are expanded from the schedule by `@wepublish/event/schedule` on every save that changes it; `events` lists events and `agenda` lists occurrences. The editor screens live in `libs/event/editor` and gate every action on the record's `viewerCan` (events, organisations, places), not on raw permissions. Design and decisions: `docs/bka-migration/`
 - Full-text search via Prisma preview feature
 - Metadata stored as key-value `Property` relations on articles, pages, subscriptions, users
 

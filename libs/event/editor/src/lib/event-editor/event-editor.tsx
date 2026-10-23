@@ -75,6 +75,7 @@ import {
 } from '../event-list/event-format';
 import { eventEditPath } from '../event-list/event-paths';
 import { translateFormError } from '../form-error';
+import { VisuallyHidden } from '../visually-hidden';
 import {
   droppedEventBlockTypes,
   eventFormFromEvent,
@@ -83,6 +84,7 @@ import {
   EventMetadataPanel,
   EventMetadataTab,
   isEventMetadataTab,
+  METADATA_TITLE_ID,
 } from './event-metadata-panel';
 import {
   eventEditorState,
@@ -561,6 +563,12 @@ function EventEditorForm({ id }: { id: string | undefined }) {
       >
         {!isLoading && (
           <Canvas>
+            <VisuallyHidden as="h1">
+              {event ?
+                t('agenda.editor.heading', { name: event.latest?.name ?? '' })
+              : t('agenda.editor.headingNew')}
+            </VisuallyHidden>
+
             {loadError && <Alert severity="error">{loadError}</Alert>}
 
             {readOnly && (
@@ -657,7 +665,10 @@ function EventEditorForm({ id }: { id: string | undefined }) {
         open={!!tab && !isLoading}
         onClose={closeDrawer}
         slotProps={{
-          paper: { sx: { width: DRAWER_WIDTHS.md, maxWidth: '100vw' } },
+          paper: {
+            'aria-labelledby': METADATA_TITLE_ID,
+            sx: { width: DRAWER_WIDTHS.md, maxWidth: '100vw' },
+          },
         }}
       >
         {tab && (

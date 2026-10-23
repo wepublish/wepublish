@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import {
   Button,
   Dialog,
@@ -6,10 +5,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Tooltip,
 } from '@mui/material';
 import { EditorEventFragment } from '@wepublish/editor/api';
-import { EditorHeaderButton, StateColor } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import {
+  EditorHeaderButton,
+  EditorHeaderButtonProps,
+  StateColor,
+} from '@wepublish/ui/editor';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdCloudOff, MdCloudUpload, MdDoneAll, MdUndo } from 'react-icons/md';
 
@@ -17,6 +21,7 @@ import {
   formatEventDateTime,
   formatRelativeTime,
 } from '../event-list/event-format';
+import { VisuallyHidden } from '../visually-hidden';
 import { PublishEventDialog } from './publish-event-dialog';
 
 type Translate = (key: string, options?: Record<string, unknown>) => string;
@@ -67,16 +72,48 @@ export const eventEditorState = (
   return { color: StateColor.draft, label: t('agenda.publication.draft') };
 };
 
-const VisuallyHidden = styled.span`
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-`;
-
 type Confirming = 'review' | 'unpublish' | null;
+
+function ExplainedHeaderButton({
+  unavailableReason,
+  onClick,
+  sx,
+  ...props
+}: EditorHeaderButtonProps & { unavailableReason?: string }) {
+  const reasonId = useId();
+
+  if (!unavailableReason) {
+    return (
+      <EditorHeaderButton
+        {...props}
+        sx={sx}
+        onClick={onClick}
+      />
+    );
+  }
+
+  return (
+    <>
+      <Tooltip
+        title={unavailableReason}
+        describeChild
+      >
+        <EditorHeaderButton
+          {...props}
+          aria-disabled
+          aria-describedby={reasonId}
+          sx={{
+            ...sx,
+            opacity: 0.6,
+            cursor: 'not-allowed',
+          }}
+          onClick={event => event.preventDefault()}
+        />
+      </Tooltip>
+      <VisuallyHidden id={reasonId}>{unavailableReason}</VisuallyHidden>
+    </>
+  );
+}
 
 export interface EventPublicationControlProps {
   event: EditorEventFragment;
@@ -112,6 +149,7 @@ export function EventPublicationControl({
   const isPublic = !!event.published || !!event.pending;
   const reviewing = viewerCan.publish === false;
   const nothingToPublish = !event.draft && !event.pending && !hasChanges;
+  const nothingToReview = !viewerCan.requestReview && !hasChanges;
 
   return (
     <>
@@ -134,15 +172,15 @@ export function EventPublicationControl({
       )}
 
       {viewerCan.publish && (
-        <EditorHeaderButton
+        <ExplainedHeaderButton
           variant="contained"
           icon={<MdCloudUpload />}
           label={t('agenda.editor.publish.button')}
-          title={
+          collapse={false}
+          disabled={disabled}
+          unavailableReason={
             nothingToPublish ? t('agenda.editor.publish.nothingNew') : undefined
           }
-          collapse={false}
-          disabled={disabled || nothingToPublish}
           onClick={() => setPublishing(true)}
         />
       )}
@@ -158,13 +196,16 @@ export function EventPublicationControl({
         />
       )}
 
-      {reviewing && viewerCan.requestReview && !event.reviewRequestedAt && (
-        <EditorHeaderButton
+      {reviewing && viewerCan.update && !event.reviewRequestedAt && (
+        <ExplainedHeaderButton
           variant="contained"
           icon={<MdDoneAll />}
           label={t('agenda.editor.review.request')}
           collapse={false}
           disabled={disabled}
+          unavailableReason={
+            nothingToReview ? t('agenda.editor.review.nothingNew') : undefined
+          }
           onClick={() => setConfirming('review')}
         />
       )}

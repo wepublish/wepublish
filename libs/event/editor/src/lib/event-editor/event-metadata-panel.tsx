@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Box, Button, Tab, Tabs } from '@mui/material';
+import { Box, Button, Tab, Tabs, Theme, ThemeProvider } from '@mui/material';
 import { EditorEventFragment } from '@wepublish/editor/api';
 import {
   DrawerActions,
@@ -25,6 +25,8 @@ export const EVENT_METADATA_TABS = [
 
 export type EventMetadataTab = (typeof EVENT_METADATA_TABS)[number];
 
+export const METADATA_TITLE_ID = 'event-metadata-title';
+
 export const isEventMetadataTab = (
   value: string | null
 ): value is EventMetadataTab =>
@@ -36,6 +38,20 @@ const TAB_ICONS: Record<EventMetadataTab, ReactElement> = {
   pricing: <MdPayments />,
   social: <MdShare />,
 };
+
+const withInlinePoppers = (outer: Theme): Theme => ({
+  ...outer,
+  components: {
+    ...outer.components,
+    MuiAutocomplete: {
+      ...outer.components?.MuiAutocomplete,
+      defaultProps: {
+        ...outer.components?.MuiAutocomplete?.defaultProps,
+        disablePortal: true,
+      },
+    },
+  },
+});
 
 const Fieldset = styled.fieldset`
   margin: 0;
@@ -72,9 +88,11 @@ export function EventMetadataPanel({
   const { t } = useTranslation();
 
   return (
-    <>
+    <ThemeProvider theme={withInlinePoppers}>
       <DrawerHeader>
-        <DrawerTitle>{t('agenda.editor.metadata')}</DrawerTitle>
+        <DrawerTitle id={METADATA_TITLE_ID}>
+          {t('agenda.editor.metadata')}
+        </DrawerTitle>
 
         <DrawerActions>
           {readOnly ?
@@ -136,6 +154,6 @@ export function EventMetadataPanel({
           {tab === 'social' && <EventSocialTab event={event} />}
         </Fieldset>
       </DrawerBody>
-    </>
+    </ThemeProvider>
   );
 }

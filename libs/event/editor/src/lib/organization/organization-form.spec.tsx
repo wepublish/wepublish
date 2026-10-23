@@ -287,6 +287,16 @@ describe('EditOrganization', () => {
     );
   });
 
+  it('says at the top of the form when fields need attention before saving', async () => {
+    renderEdit();
+
+    fireEvent.change(await nameField(), { target: { value: '' } });
+    fireEvent.click(screen.getByTestId('saveButton'));
+
+    expect(await screen.findByText('agenda.form.invalid')).toBeInTheDocument();
+    expect(updateOrganization).not.toHaveBeenCalled();
+  });
+
   it('explains a read-only organisation instead of offering Save', async () => {
     organization = testOrganization({
       viewerCan: {

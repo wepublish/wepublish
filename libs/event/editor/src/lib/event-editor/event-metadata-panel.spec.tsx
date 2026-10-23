@@ -64,6 +64,21 @@ describe('EventMetadataPanel', () => {
     expect(onSaveAndClose).toHaveBeenCalled();
   });
 
+  it('opens the option lists inside the drawer, so they stay in the modal dialog', () => {
+    renderPanel();
+
+    const venue = screen.getByRole('combobox', { name: 'agenda.form.place' });
+    fireEvent.mouseDown(venue);
+    fireEvent.keyDown(venue, { key: 'ArrowDown' });
+
+    const popper = document.querySelector('.MuiAutocomplete-popper');
+
+    expect(popper).not.toBeNull();
+    expect(screen.getByRole('tablist').closest('form')).toContainElement(
+      popper as HTMLElement
+    );
+  });
+
   it('switches tabs through the caller, which keeps the tab in the address', () => {
     const { onTabChange } = renderPanel();
 
