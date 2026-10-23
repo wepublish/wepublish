@@ -16,13 +16,15 @@ and its path reused — the tables are `events.*`, so the library should be `eve
 
 | Library | Status | Contains |
 | --- | --- | --- |
-| `libs/event/api` | **replaced** | `EventModule`, `OrganizationModule`, `PlaceModule`, `EventTaxonomyModule` |
+| `libs/event/api` | **replaced** | `EventModule`, `OrganizationModule` (built), `PlaceModule`, `EventTaxonomyModule`, and the scope module `event-scope.ts` (built, §3.2) |
+| `libs/event/schedule` | **new, built** | `@wepublish/event/schedule`: occurrence expansion, the two-year horizon and schedule input validation (§4, §5). Pure functions, no Nest |
 | `libs/event/editor` | **new** | design 3 |
 | `libs/event/website` | **adapted** | public rendering — kept and re-pointed, not rewritten (§8) |
 | `libs/event/import/*` | **deleted** | out of scope per the brief |
 | `libs/api-token/api` | **new** | §9 |
 
-One library, four Nest modules. Organisations, places and taxonomies are separate *modules* but
+One Nest library, four Nest modules. The schedule code is a separate library because it has no Nest
+or Prisma dependency and the migration needs it as much as the API does. Organisations, places and taxonomies are separate *modules* but
 not separate *libraries*: they have no meaning outside the agenda, and four path aliases for one
 cohesive domain buys nothing. If an organisation ever becomes a cross-domain concept it can be
 lifted out then.
@@ -46,8 +48,10 @@ events(filter: EventFilter, sort: EventSort = StartsAt, order: SortOrder = Ascen
 agenda(filter: EventFilter, order: SortOrder = Ascending,
        take: Int = 10, skip: Int = 0, cursorId: String): PaginatedOccurrences!
 
-organization(id: ID, slug: Slug): Organization
-organizations(filter: OrganizationFilter, ...): PaginatedOrganizations!
+# public; resolves to SensitiveDataOrganization per row for members and
+# CanGetOtherOrganizations / CanUpdateOtherOrganizations holders — §2.1.1
+organization(id: ID, slug: Slug): BaseOrganization
+organizations(filter: OrganizationFilter, ...): PaginatedOrganizations!   # nodes: [BaseOrganization!]!
 
 place(id: ID, slug: Slug): Place
 places(filter: PlaceFilter, ...): PaginatedPlaces!
@@ -63,6 +67,43 @@ eventAffiliations: [EventAffiliation!]! # 7
 The five-slot args shape (`filter` / `sort` / `order` / `take` / `skip` / `cursorId`) is the house
 convention and is followed exactly. The taxonomies are unpaginated — all four fit in one response
 and are effectively static.
+
+### 2.1.1 Public and sensitive organisation data
+
+Organisations are readable without login (bka.ch lists them at `/organizations/` and renders a
+page per organisation), but not every field is public ([D37](../decisions.md)). The split follows the
+`SensitiveDataUser` pattern in `libs/user/api`: an interface `BaseOrganization` carries the public
+fields, `Organization` implements it with nothing more, and `SensitiveDataOrganization` adds the rest
+(`libs/event/api/src/lib/organization/organization.model.ts:27-107`). Because the same public query
+serves anonymous visitors, members and admins, `BaseOrganization.resolveType` picks the type **per
+row and per caller** with `canReadOrganizationSensitiveData`
+(`libs/event/api/src/lib/event-scope.ts:94-100`): a member of that organisation, or a holder of
+`CanGetOtherOrganizations` or `CanUpdateOtherOrganizations`, gets the sensitive type. API keys go
+through the same check: a key bound to the organisation gets the sensitive type as a member does, and
+a platform key follows its scopes ([D36](../decisions.md)). The writes return `SensitiveDataOrganization`
+directly, as the user mutations return `SensitiveDataUser`.
+
+| Public (`BaseOrganization`) | Sensitive only (`SensitiveDataOrganization`) |
+| --- | --- |
+| `id`, `name`, `slug`, `subTitle`, `about`, `website`, `legalStatus`, `enabled`, `address`, `zip`, `city`, `latitude`, `longitude`, `regionId` | `createdAt`, `modifiedAt`, `partner`, `createdByMigration`, `postOfficeBox`, `members` |
+
+Evidence, checked on 2026-10-23: bka.ch's own `/api/organizations` list (the anonymous JSON behind
+the `/organizations/` page) returns `id, slug, name, enabled, sub_title, categories, latitude,
+longitude, labels{about, subTitle}`; detail pages render name, categories, address, zip and city,
+region, about, contacts, website, `Rechtsform` (legal status, on 5 of 79 sampled pages) and
+`Aktivitätsstatus` (enabled), plus coordinates for the map. Neither the v1 `default`/`reader`
+groups nor v2 `OrganizationApi` serialise `member`/`partner`. `postOfficeBox` appears only in
+the authenticated item groups (v1 `reader`, v2 `Org-I`). Only 8 of 741 organisations have one,
+though, so the sample cannot prove the detail page never shows it.
+
+The filters `partner`, `createdByMigration` and `hasMembers` would leak the sensitive fields, so
+they need `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations` and otherwise return FORBIDDEN
+(`organization.service.ts:362-379`). Sorting by `CreatedAt` or `ModifiedAt` stays public.
+
+Which rows are visible is a separate rule: anonymous callers see enabled organisations, members
+also see their own disabled ones, and holders of either permission above see all
+(`visibleOrganizationsWhere`, `event-scope.ts:72-86`). Changing `partner` or `enabled` needs
+`CanUpdateOtherOrganizations` (`organization.service.ts:266-280`).
 
 ### 2.2 The event filter
 
@@ -96,13 +137,19 @@ input EventFilter {
   accessibilityProInfirmis: [Int!]    # legacy numeric pictogram ids
 
   # agenda-specific
-  partner: Boolean                    # D11
+  partner: Boolean                    # D11 — public; what it reveals is accepted (D42)
   showInPrint: Boolean
   eventStatus: [EventStatus!]
 }
 ```
 
 Two things to get right:
+
+**`partner` stays public on events** ([D42](../decisions.md)). BKa's `member` parameter is public,
+and this filter keeps it so, with no permission check, although it reveals which organisations are
+partners. That is accepted. It does not contradict [D37](../decisions.md): `Organization.partner`
+stays on `SensitiveDataOrganization`, and filtering *organisations* by it still needs
+`CanGetOtherOrganizations` / `CanUpdateOtherOrganizations` (§2.1.1).
 
 **Date filtering matches occurrences, not events.** "What is on next Saturday" is a question about
 occurrences. The query filters `occurrences` and returns distinct events, which is why the
@@ -205,38 +252,68 @@ BKa spread its visibility rule across four Doctrine query extensions plus a vote
 [`../research/bka-04-api-v2-apiplatform.md`](../research/bka-04-api-v2-apiplatform.md) §19.3 records
 that they have **already drifted out of agreement**. That is the failure mode to design against.
 
-A single exported function is the only place the rule lives:
+One module is the only place the rule lives: `libs/event/api/src/lib/event-scope.ts`. Every
+function takes `AuthSession | null | undefined` (`event-scope.ts:12`), so a user, an API key, a peer
+token and an anonymous caller all go through the same code; there is no `UserSession`-only variant.
 
-Two functions, because "what the public may read" and "what you may manage" are different
-questions ([D19](../decisions.md)) — conflating them is how an organiser ends up browsing a rival's
-programme:
+The event rule is two functions, because "what the public may read" and "what you may manage" are
+different questions ([D19](../decisions.md)) — conflating them is how an organiser ends up browsing a
+rival's programme. As built (`event-scope.ts:109-130`), apart from `publicEventsWhere`, which waits
+for the `Event` model:
 
 ```ts
-// libs/event/api/src/lib/event-scope.ts
-
-/** Public agenda — website and public API. Published events, full stop. */
+// planned, with the Event model
 export const publicEventsWhere = (): Prisma.EventWhereInput =>
   ({ published: { isNot: null } });
 
-/** Editor — what this user may see and manage. Own organisations only,
- *  unless they hold the cross-organisation permission. */
-export const editorEventsWhere = (session: UserSession): Prisma.EventWhereInput =>
-  hasPermission(CanGetOtherOrganizationEvents, session.roles)
-    ? {}
-    : { organizationId: { in: session.organizationIds } };
+// built
+export const editorEventsWhere = (session: Session): EventScopeWhere => {
+  if (holdsAcrossOrganizations(session, CanGetOtherOrganizationEvents)) {
+    return {};
+  }
 
-/** Whether this session may modify this specific event. Membership of the
- *  organising body OR of the venue's organisation — the second branch is what
- *  makes D3's validation mail land on something the recipient can open. */
-export const canModifyEvent = (
-  session: UserSession,
-  event: Event & { place: { organizationId: string | null } | null }
-): boolean =>
-  session.organizationIds.includes(event.organizationId) ||
-  (event.place?.organizationId != null &&
-    session.organizationIds.includes(event.place.organizationId)) ||
-  hasPermission(CanUpdateOtherOrganizationEvents, session.roles);
+  const organizationEvents = { organizationId: { in: organizationIdsOf(session) } };
+  const userId = userIdOf(session);
+
+  if (userId == null) {
+    return organizationEvents;
+  }
+
+  return { OR: [organizationEvents, { ownerId: userId }] };
+};
+
+export const canModifyEvent = (session: Session, event: EventOwnership) =>
+  isEventOwner(session, event) ||
+  isOrganizationMember(session, event.organizationId) ||
+  isOrganizationMember(session, event.place?.organizationId) ||
+  holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents);
 ```
+
+`EventOwnership` is `{ organizationId; ownerId; place?: { organizationId } }`, with `ownerId`
+required so a caller cannot forget to load it (`event-scope.ts:14-18`). `EventScopeWhere` is a
+structural type (`:20-27`) rather than `Prisma.EventWhereInput`, because the new `Event` model does
+not exist yet.
+
+The helpers the event and organisation services share:
+
+| Function | Answers | Line |
+| --- | --- | --- |
+| `organizationIdsOf(session)` | the user's memberships, a bound key's one organisation, otherwise none | `:43-54` |
+| `holdsAcrossOrganizations(session, p)` | holds `p` and is not a bound key ([D36](../decisions.md)) | `:29-34` |
+| `isEventOwner(session, event)` | a user session whose user id equals `ownerId` ([D35](../decisions.md)) | `:56-63` |
+| `isOrganizationMember(session, id)` | `id` is in `organizationIdsOf` | `:65-70` |
+| `mayReadAnyOrganization` / `mayUpdateAnyOrganization` | `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations` / only the latter | `:36-41` |
+| `visibleOrganizationsWhere(session)` | which organisations a caller can list (§2.1.1) | `:72-86` |
+| `memberOrganizationsWhere(session)` | the `mine` filter | `:88-92` |
+| `canReadOrganizationSensitiveData(session, id)` | member, or `mayReadAnyOrganization` ([D37](../decisions.md)) | `:94-100` |
+| `canManageOrganization(session, id)` | member, or `mayUpdateAnyOrganization` | `:102-107` |
+
+Both read the owner from a **user** session only; an API key or a peer token carries no user and
+owns nothing. An API key bound to an organisation ([D36](../decisions.md)) is a member of that
+organisation for both functions, and `holdsAcrossOrganizations` is false for it whatever its scopes,
+so it never reaches another organisation's events. Neither looks at the publication state: per [D35](../decisions.md) the owner keeps
+access once the event is published or validated, because editing writes the draft revision and
+publishing still needs `CanPublishEvent`, which ownership never grants.
 
 Note that the two functions scope **differently on purpose**, and this is the one place the port
 must not simplify. `editorEventsWhere` is organising-body only; `canModifyEvent` also accepts the
@@ -248,10 +325,10 @@ voter (`own ∪ org ∪ place-org ∪ proposer`) disagree by that same branch
 (`research/bka-06-security-auth-roles.md:453`, which found *five* different definitions of "my
 event" across BKa's five implementations).
 
-An organiser therefore sees **only their own organisation's events** in the editor — matching BKa,
-where `LIST_OWN_EVENTS_ONLY=true` in production. A user with no membership and no cross-organisation
-permission sees an empty list, and the empty state must say why rather than implying the agenda is
-empty.
+An organiser therefore sees **only their own organisation's events, plus the ones they own**, in the
+editor — matching BKa, where `LIST_OWN_EVENTS_ONLY=true` lists `org ∪ proposer` in production. A
+user with no membership, no events of their own and no cross-organisation permission sees an empty
+list, and the empty state must say why rather than implying the agenda is empty.
 
 Per-record checks live in **service bodies**, following the nearest existing pattern
 (`comment.service.ts`: load, compare, throw `NotAuthorisedError`). The rule is tested once against
@@ -260,8 +337,11 @@ the builder rather than once per resolver.
 ### 3.3 Membership on the session
 
 `editorEventsWhere` needs `session.organizationIds`, so membership must be loaded with the
-session rather than fetched per check. `AuthenticationService.loadUserSession` already assembles
-roles; it gains a join on `events.organizations.members`.
+session rather than fetched per check. **Built:** `UserSession.organizationIds`
+(`libs/authentication/api/src/lib/auth-session.ts:22`) comes from a join on
+`events.organizations.members` in the same query that loads the session's user
+(`authentication.service.ts:52-83`). The organisation service invalidates the cached session when
+membership changes (`SessionCacheInvalidator`, `libs/authentication/api/src/lib/session-cache.ts`; called from `organization.service.ts`).
 
 That is a cost paid on **every** authenticated request, including the ~19 tenants with no agenda.
 It is one indexed lookup returning a handful of ids, and it is cached for the session's lifetime —
@@ -274,7 +354,7 @@ a draft that belongs to another organisation, which `publishEvent` already does 
 `CanUpdateOtherOrganizationEvents` when the actor is not a member of the owning organisation.
 
 The queue is a query, not a table: drafts where `reviewRequestedAt IS NOT NULL`, ordered oldest
-first, scoped by `visibleEventsWhere`.
+first, scoped by `editorEventsWhere`.
 
 ---
 
@@ -298,7 +378,9 @@ description         ≤ 6,400 characters after HTML-stripping and entity-decodin
 printDescription    ≤ 256 characters, same measurement
 tags                1 ≤ n ≤ 3
 dateFrom ≤ dateTo   on every span and every explicit date
-last date           ≤ now + 2 years                              (D15)
+weekDays            at least one when scheduleType = Weekly      (D38)
+weekDays            each an integer 1–7, no repeats              (D43)
+last date           on or before the Zurich day two years on     (D15, D40)
 ticketingUrl        scheme in {http, https, mailto, tel}
 geo coordinates     both latitude and longitude, or neither
 zip                 ≤ 4 characters
@@ -311,8 +393,17 @@ markup, so a 6,400-character limit on the raw HTML would reject content BKa acce
 ([design 1](01-data-model.md) §7) the equivalent is the concatenated text of the richtext nodes.
 
 **The two-year cap is the validation form of [D15](../decisions.md).** It is checked at save time
-against the latest date the revision describes, so a draft that sits for a year is re-checked when
+against the latest date the schedule describes, so a draft that sits for a year is re-checked when
 it is finally published rather than grandfathered in.
+
+The schedule rules are built in `libs/event/schedule`: `validateScheduleInput(schedule, now)`
+returns every problem it finds as `'MissingWeekDays'`, `'InvalidWeekDays'` and/or
+`'BeyondScheduleHorizon'` (`libs/event/schedule/src/lib/schedule-input.ts:4-28`), and the event
+mutations turn each code into a `BadRequestException`. Nothing calls it yet, because the mutations
+do not exist. The horizon counts whole days ([D40](../decisions.md)): `scheduleHorizon(now)` is the
+last millisecond of `lastSchedulableDay(now)`, today's Zurich date two years on
+(`schedule-horizon.ts:19-41`), so an evening date on that day is accepted whatever the time of the
+save, and an end at 00:00 the next day is not.
 
 ---
 
@@ -320,18 +411,35 @@ it is finally published rather than grandfathered in.
 
 One function, three inputs, one output — the heart of the agenda.
 
+Built in `libs/event/schedule` (`libs/event/schedule/src/lib/expand-occurrences.ts:100-115`). It
+reads the schedule fields of the **entity** ([D24](../decisions.md)), passed as a plain value rather
+than a Prisma row (`event-schedule.ts:3-25`):
+
 ```ts
-expandOccurrences(revision: EventRevision): Array<{
+expandOccurrences(schedule: EventSchedule): ExpandedOccurrence[]
+
+type EventSchedule = {
+  scheduleType: 'Continuous' | 'Weekly' | 'Explicit'
+  dateFrom: Date | null
+  dateTo: Date | null
+  weekDays: readonly number[]
+  openingTime: string | null
+  dates: readonly EventScheduleDate[]   // dateFrom, dateTo, openingTime, sortOrder, legacyEventId
+}
+
+type ExpandedOccurrence = {
   dateFrom: Date
   dateTo: Date
   openingTime: string | null
   legacyEventId: bigint | null
-}>
+}
 ```
 
 - `Continuous` → one occurrence.
-- `Weekly` → walk the span, emit on each selected weekday.
-- `Explicit` → map the stored list.
+- `Weekly` → walk the span, emit on each selected weekday, from `dateFrom`'s wall-clock time to
+  `dateTo`'s, ending the next day when the end time is earlier than the start. No weekdays → no
+  occurrences ([D38](../decisions.md)). There is no `startTime`/`endTime` ([D39](../decisions.md)).
+- `Explicit` → map the stored list, sorted by date.
 
 Called from exactly two places — `publishEvent` and `unpublishEvent` — plus a backfill for the
 migration and a repair command (BKa's `EventsCalculateOccurrencesCommand` equivalent). Drafts
@@ -346,6 +454,10 @@ Three tests this needs, written first:
 1. Re-expanding a published event is idempotent.
 2. A weekly series spanning the last Sunday in March keeps its local time.
 3. An event whose last date exceeds two years is rejected at save, not truncated at expand.
+
+The pure halves of 1–3 are in `libs/event/schedule` (`expand-occurrences.spec.ts`,
+`schedule-horizon.spec.ts`, `schedule-input.spec.ts`); the save-time rejection still needs a test on
+the mutation.
 
 ---
 
@@ -526,21 +638,59 @@ The brief asks for BKa's API tokens reimplemented separately from We.Publish's `
 
 ```prisma
 model ApiToken {
-  id             String    @id @default(dbgenerated("gen_random_uuid()"))
-  name           String
-  tokenHash      String    @unique
-  organizationId String?           // scope: null = all organisations
-  lastUsedAt     DateTime?
-  expiresAt      DateTime?
-  revokedAt      DateTime?
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
+  name      String
+  tokenHash String   @unique
+  prefix    String
+  scopes    String[]
+
+  expiresAt  DateTime  @db.Timestamptz(3)
+  revokedAt  DateTime? @db.Timestamptz(3)
+  lastUsedAt DateTime? @db.Timestamptz(3)
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  organizationId String?        // null = platform key, limited by its scopes alone (D36)
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([createdById])
+  @@index([organizationId])
   @@map("api-tokens.tokens")
 }
 ```
 
-A Nest guard resolves the token to a scope and populates the same `session.organizationIds` the
-user path uses — so §3.2's predicate builder works unchanged for token callers. That is the point
-of doing it this way: one authorisation rule, two ways of arriving at it.
+As built (`libs/api/prisma/schema.prisma:316-339`). The base table is on master; `organizationId`
+arrives in its own migration, `20261023130000_add_api_token_organization`, kept separate from
+`20261023120000_add_event_organizations` ([D44](../decisions.md)).
+
+`ApiTokenStrategy` builds an `ApiTokenSession` — `{ type: ApiToken, id, name, token, permissions,
+organizationId }`, where `permissions` are the key's scopes
+(`libs/authentication/api/src/lib/auth-session.ts:29-36`, `api-token.strategy.ts:18-28`) — and
+`organizationIdsOf` returns its `organizationId`, so §3.2's functions treat a bound key as a member of its
+organisation with no separate rule. That is the point of doing it this way: one authorisation rule,
+two ways of arriving at it. The key's scopes still gate every resolver through `@Permissions`, so a
+bound key can do what its scopes allow, and only inside its organisation
+([D36](../decisions.md)).
+
+`createApiToken` takes an optional `organizationId`. A member may bind a key to their own
+organisation; any other organisation needs `CanUpdateOtherOrganizations`, the permission that also
+guards `addOrganizationMember`. A bound key may not carry any of `CrossOrganizationPermissions`
+(`assertMayBindToOrganization`, `api-token.service.ts:221-257`). `ApiToken.organization` is resolved
+in `libs/event/api` (`api-token-organization.resolver.ts`), so `libs/api-token/api` does not depend on
+the events domain.
+
+A bound key works only while its creator could still bind it. On every request `resolveToken`
+checks that the creator is still a member of the key's organisation, or still holds
+`CanUpdateOtherOrganizations` through their roles; otherwise the key resolves to nothing, like a
+revoked one (`api-token.service.ts:131-154`, `creatorMayStillBind` at `:259-301`). A deleted creator
+(`createdById` null) disables the key. Platform keys skip the check. Such a key still lists as
+`Active`, and members do not see or revoke their organisation's keys; only the creator and holders
+of `CanGetAllApiTokens` / `CanRevokeAllApiTokens` do. Both accepted ([D41](../decisions.md)).
 
 Tokens are stored **hashed**. BKa's five live tokens are not recoverable from the migration and
 must be reissued; two of them are named `Print Import` and `Printimport V2`, so whoever runs that
@@ -559,7 +709,7 @@ The tests that carry the most weight:
 | Area | Test |
 | --- | --- |
 | Expansion | idempotent re-expansion; DST wall-clock stability; two-year rejection |
-| Scope | `publicEventsWhere` and `editorEventsWhere` for anonymous / member / cross-org, as a table |
+| Scope | `publicEventsWhere`, `editorEventsWhere` and `canModifyEvent` for anonymous / owner / member / venue member / cross-org / peer / platform API key / API key bound to an organisation (with and without cross-organisation scopes), as a table |
 | Permissions | the **deny** path for every guarded resolver |
 | Mail | each of the six triggers fires exactly once, to the right recipients |
 | Validation | each limit in §4, at and over the boundary |
@@ -575,6 +725,10 @@ path, which is how an unguarded mutation reaches production.
    on a shared path used by every tenant.
 2. **How is the tenant regression sequenced?** (§8) 17 sites lose their event rendering before the
    replacement is ready for them.
+3. ~~**Is `partner` public?**~~ (§2.2) The event filter stays public; what it reveals is accepted
+   ([D42](../decisions.md)).
+4. ~~**Is the two-year horizon an instant or a whole day?**~~ (§4) Whole day in Europe/Zurich
+   ([D40](../decisions.md)).
 
 ---
 

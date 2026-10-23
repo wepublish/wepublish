@@ -56,9 +56,11 @@ Each entry is permission-gated. An organiser with no cross-organisation permissi
 Venues; Organisations and Taxonomies are administrative.
 
 Scoping is strict ([D19](../decisions.md)): an organiser's event list contains **only their own
-organisation's events**. Someone with no membership sees an empty list, and the empty state has to
-say *why* — "You are not a member of any organisation yet" — rather than the bare `Nothing to show`
-that would imply the agenda itself is empty.
+organisation's events, plus the events they own** ([D35](../decisions.md)), so a submitter from the
+public form finds their own draft with no organisation at all. Someone with no membership and no
+events of their own sees an empty list, and the empty state has to say *why* — "You are not a member
+of any organisation yet" — rather than the bare `Nothing to show` that would imply the agenda itself
+is empty.
 
 ---
 
@@ -228,9 +230,10 @@ label describes a mechanism rather than a situation.
      An exhibition open Thursdays to Sundays
      ┌──────────────────────────────────────────────┐
      │ [M][T][W][T*][F*][S*][S*]                     │
-     │ From [01.04.2028] to [30.06.2028]             │
-     │ [20:00] – [22:00]   Doors [19:30]             │
-     │ → 39 dates                                    │
+     │ From  [01.04.2028]  [20:00]                   │
+     │ To    [30.06.2028]  [22:00]                   │
+     │ Doors open  [19:30]  (optional)               │
+     │ → 39 dates, each 20:00–22:00                  │
      └──────────────────────────────────────────────┘
 
  ( ) On specific dates
@@ -241,6 +244,12 @@ label describes a mechanism rather than a situation.
      │ + Add date            ⧉ Duplicate last        │
      └──────────────────────────────────────────────┘
 ```
+
+The weekly mode has no separate start and end time fields ([D39](../decisions.md)). The times typed
+beside From and To are the times of every sitting: each date runs from the From time to the To time,
+into the next morning when the To time is earlier. The preview line repeats them so nobody has to
+work that out. The mode cannot be saved with no day ticked ([D38](../decisions.md)); the inline
+message says *"Pick at least one day"* at the day toggles rather than on save.
 
 Four decisions here, each with a reason:
 
@@ -258,9 +267,14 @@ makes people give up and enter one date instead — which is how BKa ends up wit
 data. One button removes it.
 
 **The two-year cap is explained where it is hit** ([D15](../decisions.md)). Not a validation error
-on save, but inline at the point of entry: *"Dates can be set up to 30 October 2028. For a longer
+on save, but inline at the point of entry: *"Dates can be set up to 23 October 2028. For a longer
 run, add the later dates nearer the time."* A limit the user cannot see is a trap; a limit with a
 reason is a constraint.
+
+The date is `lastSchedulableDay(now)` from `@wepublish/event/schedule`, today's Zurich date two
+years on (the example assumes today is 23 October 2026). The API counts that whole day
+([D40](../decisions.md)), so the copy names no time: an event may end at any time up to 23:59 on it.
+An end at midnight belongs to the next day and is refused.
 
 ### 5.1 Reuse `ListInput`, and make it keyboard-reorderable
 
@@ -368,15 +382,33 @@ content.
 ([D11](../decisions.md)) controls print eligibility for every event the organisation runs, so it
 is labelled by its effect, not its name — *"Partner — events qualify for the print edition"*.
 
+`partner` and `enabled` are shown as editable only to holders of `CanUpdateOtherOrganizations`; the
+API refuses a member who changes them (`libs/event/api/src/lib/organization/organization.service.ts:266-280`).
+`partner`, `createdByMigration`, the post-office box and the member list are sensitive data
+([D37](../decisions.md)): a member sees them for their own organisation, and only holders of
+`CanGetOtherOrganizations` or `CanUpdateOtherOrganizations` see them for others. The same goes for the
+filters on them.
+
 **Memberless organisations are surfaced** ([D18](../decisions.md)). 315 of 781 — **40%** — have no
 members, which means notifications about their venues reach nobody. The list shows a `No members`
-marker and offers a filter for it. BKa redirected that mail to a catch-all address so the problem
+marker and offers a filter for it. Both need `CanGetOtherOrganizations` or
+`CanUpdateOtherOrganizations`, since membership is sensitive data; the Agenda-Admin has them. BKa redirected that mail to a catch-all address so the problem
 stayed invisible for years; making it visible is the substance of D18, not decoration.
 
 **Venues** carry accessibility data from ProInfirmis ([D7](../decisions.md)), which is
 **read-only** in the editor with a "Last synced" timestamp and a link to the Ginto entry. It is
 synced data, and an editable field that silently loses its value on the next sync is worse than a
 read-only one.
+
+**API keys** are not an agenda screen, but the agenda changes them ([D36](../decisions.md)). Built:
+the generate panel has an organisation picker (`libs/ui/editor/src/lib/panel/apiTokenGeneratePanel.tsx`,
+`organizationSelectPicker.tsx`) listing the creator's own organisations, or all of them for a holder
+of `CanUpdateOtherOrganizations`. Once one is picked, the panel stops offering the cross-organisation
+permissions and drops any already chosen, as the API would refuse them. The key list shows the key's
+organisation, or "Platform key" (`apps/editor/src/app/routes/apiTokens/apiTokenList.tsx`).
+It lists only the caller's own keys, or all keys to a holder of `CanGetAllApiTokens`; members do not
+see their organisation's keys, and a key disabled by its creator leaving still shows as `Active`
+([D41](../decisions.md)).
 
 ---
 
@@ -453,6 +485,8 @@ publication controls. The agenda should look like a part of this editor that was
    configuration or a framework addition.
 3. *(Resolved — [D19](../decisions.md): no. An organiser sees only their own organisation's events;
    seeing others requires the cross-organisation permissions that Agenda-Admin carries.)*
+4. *(Resolved — [D40](../decisions.md): whole day. The API counts the whole Zurich calendar day the
+   copy names.)*
 
 ---
 

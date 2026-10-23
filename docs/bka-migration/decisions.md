@@ -496,6 +496,8 @@ revision. The expansion is derived state, so it belongs to the entity and must b
 
 ## D11 — BKa's `member` flag is called `partner`
 
+> **Updated by [D37](#d37--organisations-are-public-their-sensitive-fields-are-not) and [D42](#d42--the-public-event-partner-filter-stays).** `partner` is sensitive organisation data: anonymous callers can neither read it nor filter organisations by it. The public event filter on `partner` stays, and what it reveals is accepted.
+
 **Context.** 279 of BKa's 670 users carry `member = true`. It gates three real behaviours: the
 print fields on the event form, the admin-only `/events/members-only` list, and the `member`
 search parameter exposed through both public APIs. We.Publish already uses "member" for an
@@ -641,6 +643,8 @@ expensive to reverse after data is migrated.
 
 ## D15 — The two-year cap is a validation rule, not a refreshing window
 
+> **Updated by [D38](#d38--a-weekly-schedule-needs-at-least-one-weekday), [D40](#d40--the-two-year-cap-counts-whole-days-in-zurich) and [D43](#d43--weekdays-outside-monday-to-sunday-are-rejected-on-input).** The same input check (`validateScheduleInput`) also rejects a weekly schedule with no weekdays, or with weekday values outside 1–7. The cap counts whole days: the last date may fall anywhere on the Zurich calendar day two years after the save.
+
 **Context.** [D14b](#d14--data-model-answers-partner-recurrence-horizon-shared-schema-sub-events)
 capped expansion at `now + 2 years` and accepted a periodic job to extend the window as time
 passed. Karl proposed the inverse: **forbid entering dates more than two years ahead**, and let an
@@ -778,6 +782,8 @@ than papering over it with a redirect.
 
 ## D19 — An organiser sees only their own organisation's events in the editor
 
+> **Updated by [D35](#d35--an-events-owner-reaches-it-without-an-organisation) and [D36](#d36--an-api-key-can-belong-to-one-organisation).** The event's owner also sees and edits their own events, with or without an organisation, and a key bound to an organisation counts as a member of it. The scope functions take any `AuthSession`, not only a `UserSession`.
+
 **Context.** [Design 2](design/02-api.md) §3.2 originally scoped the editor's event list as
 "everything published, plus everything my organisation owns":
 
@@ -841,6 +847,8 @@ export const editorEventsWhere = (session: UserSession): Prisma.EventWhereInput 
 ---
 
 ## D20 — Organisation is optional, and proposed organisations become real ones
+
+> **Updated by [D35](#d35--an-events-owner-reaches-it-without-an-organisation) and [D37](#d37--organisations-are-public-their-sensitive-fields-are-not).** An orphan event is also listed to, and editable by, its owner; it stays invisible to every other organiser. The migration-created mark is `Organization.createdByMigration`, which is sensitive data.
 
 **Context.** 7,576 events (19%) have no `organization_id`. [Design 1](design/01-data-model.md)
 made `Event.organizationId` required, because [D19](#d19--an-organiser-sees-only-their-own-organisations-events-in-the-editor)
@@ -1060,6 +1068,8 @@ whether anything still called the old APIs, and the restored environment has no 
 
 ## D23 — API keys are opaque, hashed, scoped and shown once
 
+> **Updated by [D36](#d36--an-api-key-can-belong-to-one-organisation).** A key can now be bound to one organisation.
+
 **Context.** The brief asks for BKa's API tokens re-implemented as a separate library with its
 own table prefix. BKa issues them as **JWTs stored in plaintext** (7 live tokens, ~920 characters
 each), re-displayable from the admin forever, inheriting the full permissions of the user who owns
@@ -1095,6 +1105,8 @@ them. We are not porting that design.
 ---
 
 ## D24 — The revision carries what an editor writes; the event carries what the event *is*
+
+> **Updated by [D39](#d39--the-event-has-no-starttime-or-endtime).** The schedule has no `startTime`/`endTime`. The time of day comes from `dateFrom`/`dateTo`, so "times" in the table below now means `openingTime` only.
 
 **Supersedes the second half of [D10](#d10--occurrences-belong-to-the-entity-the-recurrence-rule-belongs-to-the-revision).**
 
@@ -1150,6 +1162,8 @@ whether it is still on — lives on the **entity** and changes immediately.
 ---
 
 ## D25 — Every table carries `createdAt`; every non-revision table also carries `modifiedAt`
+
+> **As built:** `OrganizationMember` carries `modifiedAt` as well (`libs/api/prisma/schema.prisma:2468-2479`), so it follows the general rule rather than the join-table exception below.
 
 **Context.** The first cut gave timestamps to `Event`, `Organization` and `Video` but not to
 `Occurrence`, `EventDate`, `Place`, `Tag`, `EventImage` or `EventRevision`, and gave
@@ -1278,7 +1292,7 @@ Not architectural decisions — how the work itself is carried out.
 
 ## D28 — The PHP proxy authenticates with one admin API token, and keeps its own voters
 
-> **Superseded by [D31](#d31--bkas-old-api-is-switched-off-at-cutover-there-is-no-interim-layer).** There is no proxy, so there is no proxy token.
+> **Superseded by [D31](#d31--bkas-old-api-is-switched-off-at-cutover-there-is-no-interim-layer).** There is no proxy, so there is no proxy token. Its "`ApiToken` gains no `organizationId`" consequence is reversed by [D36](#d36--an-api-key-can-belong-to-one-organisation).
 
 **Context.** [D26](#d26--the-compatibility-stub-stays-in-the-php-application-and-calls-wepublish)
 makes the surviving Symfony app a proxy in front of We.Publish, which made it the busiest caller of
@@ -1404,6 +1418,8 @@ choice.
 
 ## D31 — BKa's old API is switched off at cutover; there is no interim layer
 
+> **Updated by [D36](#d36--an-api-key-can-belong-to-one-organisation).** The We.Publish API key a client receives can be bound to that client's organisation.
+
 Supersedes [D22](#d22--the-v1v2-compatibility-stub-is-required),
 [D26](#d26--the-compatibility-stub-stays-in-the-php-application-and-calls-wepublish),
 [D28](#d28--the-php-proxy-authenticates-with-one-admin-api-token-and-keeps-its-own-voters) and
@@ -1500,6 +1516,439 @@ before ZUERST shuts down at the end of 2026.**
 
 ---
 
+## D35 — An event's owner reaches it without an organisation
+
+Updates [D19](#d19--an-organiser-sees-only-their-own-organisations-events-in-the-editor) and
+[D20](#d20--organisation-is-optional-and-proposed-organisations-become-real-ones).
+
+**Context.** [D32](#d32--the-public-submission-form-stays-it-creates-the-account-first-then-the-event)
+keeps the public form: it creates the account, then a draft owned by that account. D19 scopes the
+editor by organisation only, so a submitter who belongs to no organisation would log in and see
+nothing, and could not edit the event they just submitted. D20 names that failure as the reason not
+to park events in a catch-all organisation, but its fix (create the organisation the proposer named)
+only covers migrated proposers who typed a name.
+
+**Decision.** Karl, 2026-10-23: **the owner (`Event.ownerId`) can list and edit their own events,
+with or without an organisation.**
+
+- `editorEventsWhere` is `organisation ∪ owner`; `canModifyEvent` is
+  `owner ∪ organisation ∪ venue organisation ∪ CanUpdateOtherOrganizationEvents`
+  (`libs/event/api/src/lib/event-scope.ts:109-130`).
+- "Owner" means a **user** session whose user id equals `ownerId` (`isEventOwner`,
+  `event-scope.ts:56-63`). API keys and peer tokens own nothing: their sessions carry no user, so a token id that happens to equal an `ownerId` matches
+  nothing.
+- D20 still holds for everyone else: an orphan event (no organisation) is listed only to its owner
+  and to holders of `CanGetOtherOrganizationEvents`, and editable only by its owner, its venue's
+  organisation and holders of `CanUpdateOtherOrganizationEvents`.
+
+**Owner rights survive publication and validation.** `canModifyEvent` does not look at the
+publication state, on purpose:
+
+- Editing is not publishing. Prose lands in the draft revision
+  ([D24](#d24--the-revision-carries-what-an-editor-writes-the-event-carries-what-the-event-is)), and
+  publishing it needs `CanPublishEvent` ([D4](#d4--canpublishevent-decides-who-needs-validating)).
+  Ownership never grants that permission, and a submitter's role does not hold it
+  ([D8](#d8--former-proposers-become-dormant-user-accounts), D32), so every change an owner makes to
+  a validated event goes back through validation. The scope module has no publish check; it stays
+  on the publish mutation (design 2 §3.4).
+- BKa does the same. Its edit voter's `own` branch ignores the status, and mail `4b`
+  (`eventModifiedByEventOwner`, [D3](#d3--validation-is-cross-organisation-publishing-not-a-publication-state))
+  exists for exactly this case: the owner edits an event the venue has already validated.
+- Facts (dates, status, place) take effect on save. That is D24's accepted cost, the same as for an
+  organiser without `CanPublishEvent` (design 2 §2.3).
+- An owner who cannot publish may call `requestEventReview` (D5), since they can edit the event.
+
+**Consequences.**
+- The list matches BKa's `org ∪ proposer` and the edit check gains BKa's `own` branch
+  (`research/bka-06-security-auth-roles.md` §6.1).
+- **Open for the event service:** who may change `ownerId` and `organizationId` through
+  `updateEvent`. Owner-only access must not let an owner move their event into an organisation
+  they do not belong to, or hand it to another user. Not decided here.
+
+---
+
+## D36 — An API key can belong to one organisation
+
+> **Updated by [D41](#d41--an-organisations-api-keys-stay-with-their-creator) and confirmed by [D44](#d44--the-api-key-organisation-keeps-its-own-migration).** Members do not see or revoke the organisation's keys, and a key disabled by its creator leaving still shows as `Active`; both accepted. The column stays in its own migration.
+
+Updates [D23](#d23--api-keys-are-opaque-hashed-scoped-and-shown-once). Replaces the "`ApiToken`
+gains no `organizationId`" consequence of
+[D28](#d28--the-php-proxy-authenticates-with-one-admin-api-token-and-keeps-its-own-voters), which
+[D31](#d31--bkas-old-api-is-switched-off-at-cutover-there-is-no-interim-layer) already superseded.
+
+**Context.** Under D31, BKa's API clients move to the We.Publish GraphQL API with We.Publish API
+keys. Two of the four registered OAuth clients are a venue and an agency. A D23 key carries scopes
+and nothing else, and the scope module treated every key as belonging to no organisation. So a
+venue's key could reach its own events only through a cross-organisation permission, and that
+permission reaches every organisation's events.
+
+**Decision.** Karl, 2026-10-23: **API keys are tied to an organisation, so a venue's or agency's key
+can only touch its own organisation's events.**
+
+- `ApiToken.organizationId` is a nullable foreign key to `Organization`. A key without one is a
+  **platform key** and behaves as before: only its scopes limit it.
+- `ApiTokenSession.organizationId` carries it (`libs/authentication/api/src/lib/auth-session.ts:29-36`,
+  set in `libs/api-token/api/src/lib/api-token.strategy.ts:18-28`), and `organizationIdsOf` returns
+  it (`libs/event/api/src/lib/event-scope.ts:43-54`). The scope module therefore treats a bound key as a member of
+  that one organisation, through the same functions the user path uses.
+- **Least privilege comes from intersecting the two.** Every right a member exercises goes through a
+  resolver guarded by `@Permissions`, and for a key that guard checks the key's scopes. A bound key
+  needs both the scope and the organisation. The scope module also **ignores cross-organisation
+  permissions on a bound key** (`holdsAcrossOrganizations`, `event-scope.ts:29-34`), so it cannot reach past its
+  organisation even if its row somehow carried one.
+- **Who may bind a key to which organisation.** `createApiToken(organizationId)` accepts an
+  organisation the creator is a member of, or any organisation for a holder of
+  `CanUpdateOtherOrganizations`. A bound key gets a member's rights, and granting membership
+  (`addOrganizationMember`) is guarded by that same permission. `CanCreateApiToken` alone does not
+  count, and neither do the event-level cross-organisation permissions. The organisation must exist
+  (`assertMayBindToOrganization`, `libs/api-token/api/src/lib/api-token.service.ts:221-257`).
+- **A bound key cannot carry cross-organisation permissions.** Creation refuses any of
+  `CrossOrganizationPermissions` (`libs/permissions/src/lib/permissions.ts:1603-1609`) on a bound key and names them. Refusing is
+  better than silently ignoring them, because the key's listed scopes then say what it can really
+  do. A platform key may still carry them.
+- **One membership right has no permission behind it: reading the organisation's sensitive data**
+  (`SensitiveDataOrganization`, including `members`). A bound key gets it, as a member does. That
+  is accepted: it is the organisation's own data, and the creator could read it.
+- **`onDelete: Cascade`.** Deleting an organisation deletes its keys. `SetNull` would silently turn
+  an organisation's key into a platform key, which widens it from one organisation to "whatever its
+  scopes allow". `Restrict` would make any organisation that ever had a key undeletable, because
+  revoking only stamps `revokedAt`. The cost is that the key rows go with the organisation. The
+  audit log keeps the key's name, since it stores `tokenName` and has no foreign key to the key.
+- The column arrives in its own migration, `20261023130000_add_api_token_organization`, because
+  `ApiToken` is already on master.
+- **Editor.** The generate panel has an organisation picker. It lists the creator's own
+  organisations, or all of them for a holder of `CanUpdateOtherOrganizations`. Once an organisation
+  is picked, the panel stops offering cross-organisation permissions and drops any already picked.
+  The list shows the key's organisation, or "Platform key".
+
+**Consequences.**
+- D35 is unchanged. A bound key owns no events. It cannot create organisations either:
+  `createOrganization` refuses a caller with no user and no `CanUpdateOtherOrganizations`.
+- A bound key holding `CanDeleteOrganization` can delete its own organisation, and that deletes the
+  key.
+- **A bound key works only while its creator could still bind it.** `resolveToken`
+  (`libs/api-token/api/src/lib/api-token.service.ts:131-154`, via `creatorMayStillBind` at
+  `:259-301`) checks, on every request, that the creator is
+  still a member of the key's organisation, or still holds `CanUpdateOtherOrganizations` through
+  their roles. Otherwise the key resolves to nothing, exactly like a revoked one. So removing a
+  member, deleting the creator (`createdById` becomes null) or taking the permission away disables
+  their bound keys at once, and re-adding the member brings them back. The row is not touched, so
+  nothing is revoked behind anyone's back. The cost is one membership lookup per request for a
+  bound key, plus a role lookup when the creator is not a member. Platform keys skip the check and
+  still keep the scopes their creator had at creation, as in D23.
+- ~~**Open:** the list still reports such a key as `Active`, because `status` only reads `revokedAt`
+  and `expiresAt`. And should members of an organisation see and revoke its keys? Today the list
+  shows your own keys, or everyone's with `CanGetAllApiTokens`.~~ Settled by [D41](#d41--an-organisations-api-keys-stay-with-their-creator): the
+  `Active` status is accepted, and members do not see or revoke the organisation's keys.
+
+---
+
+## D37 — Organisations are public; their sensitive fields are not
+
+> **Updated by [D42](#d42--the-public-event-partner-filter-stays).** The public `partner` filter on events stays, and revealing partner status through it is accepted. `partner` itself stays sensitive on the organisation.
+
+Updates [D11](#d11--bkas-member-flag-is-called-partner) and
+[D20](#d20--organisation-is-optional-and-proposed-organisations-become-real-ones).
+
+**Context.** The first cut of the organisation module returned one `Organization` type, so a
+query either exposed every field or required a login. bka.ch reads organisations without login:
+the `/organizations/` page fetches `/api/organizations` anonymously and renders a page per
+organisation. But not every column is shown there, and BKa's own APIs keep some fields behind a
+login (`research/bka-05-api-v1-legacy.md`, `research/bka-04-api-v2-apiplatform.md` §6.3).
+
+**Decision.** Karl, 2026-10-23: **organisations can be read without login, but not all of their
+data is public. Follow the `SensitiveDataUser` pattern.**
+
+- An interface `BaseOrganization` carries the public fields, `Organization` implements it with
+  nothing more, and `SensitiveDataOrganization` adds the rest
+  (`libs/event/api/src/lib/organization/organization.model.ts:27-107`).
+
+  | Public (`BaseOrganization`) | Sensitive only (`SensitiveDataOrganization`) |
+  | --- | --- |
+  | `id`, `name`, `slug`, `subTitle`, `about`, `website`, `legalStatus`, `enabled`, `address`, `zip`, `city`, `latitude`, `longitude`, `regionId` | `createdAt`, `modifiedAt`, `partner`, `createdByMigration`, `postOfficeBox`, `members` |
+
+- `organization` and `organizations` are `@Public()` and return `BaseOrganization`
+  (`organization.resolver.ts:27-48`). Its `resolveType` picks the type **per row and per caller**
+  with `canReadOrganizationSensitiveData` (`libs/event/api/src/lib/event-scope.ts:94-100`): a member
+  of that organisation, or a holder of `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations`,
+  gets `SensitiveDataOrganization`; everyone else gets `Organization`. API keys go through the same
+  check ([D36](#d36--an-api-key-can-belong-to-one-organisation)).
+- The writes (`createOrganization`, `updateOrganization`, `deleteOrganization`) return
+  `SensitiveDataOrganization` directly (`organization.resolver.ts:50-81`), as the user mutations
+  return `SensitiveDataUser`. `members` is resolved by `sensitive-data-organization.resolver.ts`.
+- The filters `partner`, `createdByMigration` and `hasMembers` would reveal sensitive values, so
+  they need `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations` and otherwise return
+  FORBIDDEN (`organization.service.ts:362-379`). Sorting by `CreatedAt`/`ModifiedAt` stays public.
+- Anonymous callers see enabled organisations only; a member also sees their own disabled ones; a
+  holder of either cross-organisation organisation permission sees all
+  (`visibleOrganizationsWhere`, `event-scope.ts:72-86`).
+- A new permission, `CanGetOtherOrganizations` (`libs/permissions/src/lib/permissions.ts:793-797`),
+  reads the sensitive data without granting any write. The predefined admin role gets it through
+  `AllPermissions` (`libs/permissions/api/src/lib/predefined-permissions.ts:16-22`); the editor and
+  peer roles do not.
+
+**Why.**
+- `SensitiveDataUser` is the house precedent for the same problem, so readers and the codegen
+  clients already know the shape.
+- One query serves the website, the editor and API keys. A list can mix the caller's own
+  organisations with other ones, which is why the type is resolved per row rather than per query.
+  The same resolution covers `OrganizationMember.organization` and, later, `Event.organization`.
+- The split follows what BKa shows in public, checked on 2026-10-23. The anonymous
+  `/api/organizations` list returns `id, slug, name, enabled, sub_title, categories, latitude,
+  longitude, labels{about, subTitle}`. Detail pages (79 sampled) render name, categories, address,
+  zip and city, region, about, contacts, website, `Aktivitätsstatus` and, on 5 pages, `Rechtsform`
+  (legal status). Neither BKa API serialises `member`/`partner`, and `postOfficeBox` appears only in
+  the authenticated item groups (v1 `reader`, v2 `Org-I`).
+- A read-only permission lets a read-only key (the print pipeline needs `partner`) see the data
+  without update rights.
+
+**Consequences.**
+- `legalStatus` is public because bka.ch prints it as *Rechtsform*.
+- `postOfficeBox` is sensitive on weaker evidence: only 8 of 741 organisations have one, so 79
+  sampled pages cannot prove bka.ch never shows it.
+- `createdAt`/`modifiedAt` sit on the sensitive type, as they do on `SensitiveDataUser`.
+- Changing `partner` or `enabled` needs `CanUpdateOtherOrganizations`; resending the stored values
+  is allowed (`assertMayChangePrivilegedFields`, `organization.service.ts:266-280`).
+- [D18](#d18--mail-with-no-user-recipient-is-skipped-and-the-gap-is-shown-in-the-editor)'s "No
+  members" filter (`hasMembers`) is therefore only available to holders of a cross-organisation
+  organisation permission, which the Agenda-Admin is.
+- bka.ch also shows categories, images, contacts (phone, email) and assigned places publicly. None
+  of these is on `Organization` yet; each needs the same public/sensitive call when it lands.
+- ~~**Open:** [design 2](design/02-api.md) §2.2 plans a public `partner` filter on events (BKa's
+  public `member` parameter). It would reveal which organisations are partners. Either `partner`
+  counts as public and moves to `BaseOrganization`, or the event filter needs the same permission.~~
+  Settled by [D42](#d42--the-public-event-partner-filter-stays): the event filter stays public and `partner` stays sensitive here.
+
+---
+
+## D38 — A weekly schedule needs at least one weekday
+
+> **Updated by [D40](#d40--the-two-year-cap-counts-whole-days-in-zurich) and [D43](#d43--weekdays-outside-monday-to-sunday-are-rejected-on-input).** The horizon counts whole Zurich days, and weekday values outside 1–7 (or repeated) are rejected as `'InvalidWeekDays'`.
+
+Updates [D15](#d15--the-two-year-cap-is-a-validation-rule-not-a-refreshing-window).
+
+**Context.** BKa stores `recurrence_week_days` as a JSON array, and `[]` is common: 2,855 of the
+3,611 non-null values are empty (`research/bka-02-live-data-profile.md:686-692`). A weekly
+schedule with no weekdays expands to **no occurrences** (`expandWeekly`,
+`libs/event/schedule/src/lib/expand-occurrences.ts:58-60`), so an event saved that way would
+publish and then never appear in the agenda, with nothing telling the organiser why.
+
+**Decision.** Karl, 2026-10-23: **reject a weekly schedule with empty `weekDays` on input.** Stored
+rows that already have one are tolerated, not crashed on.
+
+- `hasRequiredWeekDays(schedule)` is false only for `scheduleType: 'Weekly'` with no weekdays, and
+  `validateScheduleInput(schedule, now)` returns every problem it finds as `'MissingWeekDays'`
+  and/or `'BeyondScheduleHorizon'` (`libs/event/schedule/src/lib/schedule-input.ts:4-28`). One
+  entry point runs both input checks, so a mutation cannot run one and forget the other.
+- `expandOccurrences` is unchanged and still returns `[]` for such a row.
+
+**Why.** An input that the system accepts and then silently turns into nothing is the failure D15
+already rejected for dates past the horizon: the limit belongs at the point of entry, where it can
+be explained. Expansion stays tolerant so the migration and any old row cannot crash a publish.
+
+**Consequences.**
+- Nothing calls `validateScheduleInput` yet. `createEvent`/`updateEvent` must call it and turn each
+  code into a `BadRequestException` when the event mutations land.
+- The migration imports BKa rows as they are and lists weekly events with no weekdays in its report
+  ([design 4](design/04-migration.md) §4.7). How many of the 2,855 empty arrays sit on `week` rows
+  rather than `none` rows is for `migrate-bka analyze` to establish.
+- The editor's weekly mode needs at least one day ticked before it can save
+  ([design 3](design/03-editor.md) §5).
+- ~~**Open:** weekday values outside ISO 1–7 (`[0]`, `[8]`) are still accepted and also expand to
+  nothing. Reject them too?~~ Yes: [D43](#d43--weekdays-outside-monday-to-sunday-are-rejected-on-input).
+- ~~**Open (from D15):** the two-year horizon is measured to the **exact instant**: `scheduleHorizon`
+  takes the current Zurich wall-clock time two years ahead
+  (`libs/event/schedule/src/lib/schedule-horizon.ts:12-19`), and `isWithinScheduleHorizon` compares
+  the last date against it (`:38-45`). So on the horizon day itself an evening date is rejected
+  after a morning save. The editor copy in design 3 §5 promises a whole day ("Dates can be set up to
+  30 October 2028"). One of the two has to change.~~ Settled by [D40](#d40--the-two-year-cap-counts-whole-days-in-zurich): the API counts the whole day, as the copy does.
+
+---
+
+## D39 — The event has no `startTime` or `endTime`
+
+Updates [D24](#d24--the-revision-carries-what-an-editor-writes-the-event-carries-what-the-event-is).
+
+**Context.** [Design 1](design/01-data-model.md) §5 and §6 sketched `startTime String?` and
+`endTime String?` on `Event` beside `dateFrom`/`dateTo`. BKa has no such columns: its `event` table
+has `date_from` and `date_to` as `timestamptz` and a free-text `opening_time varchar(5)`
+(`research/bka-01-data-model.md:388-390`). A timestamp already carries the time of day, so the two
+string fields would have been a second, possibly disagreeing, source for it.
+
+**Decision.** Karl, 2026-10-23: **`startTime` and `endTime` go.** He asked whether the times could
+generate the dates instead; that is what expansion already does with the times inside `dateFrom` and
+`dateTo`:
+
+- `Continuous`: one occurrence from `dateFrom` to `dateTo`.
+- `Weekly`: each occurrence starts at `dateFrom`'s Zurich wall-clock time and ends at `dateTo`'s,
+  on the next day when the end time is earlier than the start, as for a club night
+  (`libs/event/schedule/src/lib/expand-occurrences.ts:53-98`, overnight test at `:63-64`).
+- `Explicit`: each `EventDate` carries its own `dateFrom`/`dateTo`.
+- `openingTime` stays: it is the door time, an `HH:MM` string, and BKa has it.
+
+**Consequences.**
+- The schedule types in `libs/event/schedule` have no time fields besides `openingTime`
+  (`libs/event/schedule/src/lib/event-schedule.ts:3-18`), and neither will the Prisma model.
+- The editor enters a weekly series' times with its From and To dates rather than in separate time
+  fields ([design 3](design/03-editor.md) §5).
+- The migration has nothing to map: BKa's times are already inside its timestamps.
+
+---
+
+## D40 — The two-year cap counts whole days in Zurich
+
+Updates [D15](#d15--the-two-year-cap-is-a-validation-rule-not-a-refreshing-window) and closes the
+horizon question left open in [D38](#d38--a-weekly-schedule-needs-at-least-one-weekday).
+
+**Context.** `scheduleHorizon` took the current Zurich wall-clock time two years ahead, so the cap
+was measured to the instant. On the last allowed day an evening date was refused after a morning
+save, while the editor copy in [design 3](design/03-editor.md) §5 names a date ("Dates can be set up
+to …"), which reads as the whole day.
+
+**Decision.** Karl, 2026-10-23: **whole day.** The last allowed date is a Zurich calendar day, and
+anything on that day is accepted.
+
+- `lastSchedulableDay(now)` returns that day: today's Zurich date, two years on
+  (`libs/event/schedule/src/lib/schedule-horizon.ts:19-26`).
+- `scheduleHorizon(now)` returns the last millisecond of that day, one millisecond before the next
+  Zurich midnight (`schedule-horizon.ts:28-41`). `isWithinScheduleHorizon` still accepts a last date
+  at or before it (`:60-67`), unchanged.
+- On 23 October 2026 the last allowed day is 23 October 2028, whatever the time of the save. An
+  event ending at 20:00 or 23:30 that day is accepted; anything ending on 24 October is refused.
+- **Midnight belongs to the next day.** An end at exactly 00:00 on 24 October is refused, so the
+  latest end on the last day is 23:59.
+- **29 February falls back to 28 February**, as before. Two years after a leap day is never a leap
+  year, and the only alternative, 1 March, would allow more than two calendar years and put the
+  limit in a different month from the one the editor names. Temporal's default and date-fns
+  `addYears` do the same.
+- **Clock changes need no special case.** Zurich changes its clocks at 02:00/03:00, so midnight is
+  never skipped or doubled; the next midnight minus 1 ms ends a 23-hour or 25-hour day correctly,
+  and the offset used is the limit day's, not today's (`schedule-horizon.spec.ts:76-123`).
+
+**Why.** The editor tells an organiser a date, not a time. A limit that refuses part of the day it
+names is the kind of hidden rule D15 set out to avoid. The cap stays a ceiling checked at save, so
+D15's reasons (pure expansion, an honest limit, no rows nobody typed) all still hold.
+
+**Consequences.**
+- The editor message shows `lastSchedulableDay(now)` directly ([design 3](design/03-editor.md) §5).
+- **The migration clip must not move a weekly event's end time.** [Design 4](design/04-migration.md)
+  §4.7 clips to the API's horizon. `scheduleHorizon` is now 23:59:59.999 Zurich time, and a weekly
+  event's `dateTo` carries the end time of every occurrence ([D39](#d39--the-event-has-no-starttime-or-endtime)),
+  so clipping `dateTo` to that instant would make every occurrence end at 23:59. The clip should
+  move the date to `lastSchedulableDay` and keep the original time of day; settled in detail when
+  §4.7 is built.
+
+---
+
+## D41 — An organisation's API keys stay with their creator
+
+Updates [D36](#d36--an-api-key-can-belong-to-one-organisation) and closes both of its open items.
+
+**Context.** D36 binds a key to an organisation and disables it as soon as its creator could no
+longer bind it. That left two questions: should the organisation's other members see and revoke
+its keys, and is it a problem that such a disabled key still shows as `Active`?
+
+**Decision.** Karl, 2026-10-23:
+
+- **Members of an organisation do not see or revoke its API keys.** The list shows a caller's own
+  keys, or every key to a holder of `CanGetAllApiTokens`; revoking works the same way with
+  `CanRevokeAllApiTokens` (`libs/api-token/api/src/lib/api-token.resolver.ts:61-64`, `:98-101`).
+  Binding a key to an organisation changes what the key can reach, not who manages it.
+- **A bound key that stops working because its creator left keeps showing as `Active`.** Accepted.
+  `status` reads only `revokedAt` and `expiresAt`, and the row is never touched when the creator
+  leaves (D36).
+
+**Why.** Membership already decides what a bound key can do. Letting it also decide who manages the
+key would hand every member control of keys someone else created, and their secrets were shown only
+to that creator anyway (D23). The status is a fact about the key row; the creator check is a rule
+applied per request, and re-adding the member brings the key back without any change to the row.
+
+**Consequences.**
+- When a member leaves, the organisation cannot see which keys stopped working. A holder of
+  `CanGetAllApiTokens` sees them all and can reissue one for the organisation.
+- The editor's key list needs no change ([design 3](design/03-editor.md) §8).
+
+---
+
+## D42 — The public event `partner` filter stays
+
+Updates [D37](#d37--organisations-are-public-their-sensitive-fields-are-not) and closes its open
+item. Read with D37's public/sensitive table.
+
+**Context.** D37 keeps `Organization.partner` on `SensitiveDataOrganization` and puts the
+organisation filter on it behind `CanGetOtherOrganizations` / `CanUpdateOtherOrganizations`.
+[Design 2](design/02-api.md) §2.2 plans a public `partner: Boolean` filter on events, the
+successor of BKa's public `member` parameter. Filtering events by it reveals which organisations
+are partners, so the two looked contradictory.
+
+**Decision.** Karl, 2026-10-23: **the event filter stays public, as designed, and revealing partner
+status through it is accepted.** D37 is otherwise unchanged:
+
+| Surface | Who |
+| --- | --- |
+| Reading `Organization.partner` | members, and holders of `CanGetOtherOrganizations` / `CanUpdateOtherOrganizations` (D37) |
+| Filtering organisations by `partner` | holders of those two permissions (D37) |
+| Filtering **events** by `partner` | everyone, without login (this decision) |
+| Changing `partner` | holders of `CanUpdateOtherOrganizations` (D37) |
+
+**Why.** BKa's public `member` parameter answers the same question today, so the filter reveals
+nothing that is not public already, and its callers keep working. D37 keeps the field off the
+public organisation type because neither BKa API serialises it, which is a decision about the
+organisation's shape, not a claim that partner status is secret.
+
+**Consequences.**
+- `partner` does not move to `BaseOrganization`. A public caller can work out an organisation's
+  partner status only from its published events, and only by filtering.
+- The event filter's spec carries no permission check ([design 2](design/02-api.md) §2.2).
+
+---
+
+## D43 — Weekdays outside Monday to Sunday are rejected on input
+
+Updates [D38](#d38--a-weekly-schedule-needs-at-least-one-weekday) and closes its weekday item.
+
+**Context.** D38 rejects an empty weekly `weekDays` on input, but `[0]` or `[8]` passed and also
+expanded to nothing.
+
+**Decision.** Karl, 2026-10-23: **reject weekday values outside ISO 1–7 on input.**
+
+- `hasValidWeekDays(schedule)` accepts only whole numbers from 1 to 7 (Monday to Sunday), with no
+  repeats (`libs/event/schedule/src/lib/schedule-input.ts:9-17`).
+- `validateScheduleInput` reports it as `'InvalidWeekDays'`, between `'MissingWeekDays'` and
+  `'BeyondScheduleHorizon'` (`schedule-input.ts:19-28`).
+- The check applies to every schedule type. An empty list passes it, because `hasRequiredWeekDays`
+  already covers that case.
+- **Repeats are rejected too.** Ticking days in the editor can never produce `[1, 1]`, so a repeat
+  from an API client points to a bug, and rejecting it keeps the stored arrays tidy.
+- **Stored rows are tolerated**, as D38 promised. `expandOccurrences` is unchanged: `[0, 1, 1, 8]`
+  gives only the Mondays, once each, and `[0, 8, 1.5]` gives nothing without throwing
+  (`libs/event/schedule/src/lib/schedule-input.spec.ts:91-107`).
+
+**Why.** The same reason as D38: a value the system accepts and then silently turns into nothing
+belongs refused at the point of entry.
+
+**Consequences.**
+- `createEvent`/`updateEvent` map `'InvalidWeekDays'` to a `BadRequestException` alongside the other
+  two codes when the event mutations land ([design 2](design/02-api.md) §4).
+- The editor's day toggles cannot produce an invalid value, so it needs no new message.
+
+---
+
+## D44 — The API key organisation keeps its own migration
+
+Confirms the migration split stated in [D36](#d36--an-api-key-can-belong-to-one-organisation).
+
+**Decision.** Karl, 2026-10-23: **two migrations.** `ApiToken.organizationId` stays in
+`20261023130000_add_api_token_organization` and is not folded into
+`20261023120000_add_event_organizations`.
+
+**Why.** `20261023120000` creates the events domain's organisation tables; `20261023130000` changes
+`ApiToken`, which is already on master. One migration per topic keeps each reviewable on its own.
+The order is fixed by the foreign key: the key's organisation can only be added once
+`Organization` exists.
+
+---
+
 ## Open questions
 
 Recorded as they surface; resolved ones become decisions above.
@@ -1511,14 +1960,14 @@ notably on `to_validate`, which `bka-02` and `bka-04` map to *pending* while
 
 Raised by the completeness critic, to be resolved in the design:
 
-- **We.Publish has no concept of an organisation.** `organization` returns zero hits in
-  `schema.prisma` and zero across `libs/**/*.ts`. D3, D4, D5 and D8 all stand on it, so the
-  entity, user↔organisation membership, and carrying membership onto the session must all be
-  designed from scratch.
-- **Per-record authorisation has no home.** There is no object scoping anywhere; the guard chain
-  sees only metadata and `req.user.roles`. Ownership checks must live in the resolver or service
-  body, and list scoping needs a single shared `where`-predicate builder rather than BKa's four
-  drifted query extensions.
+- ~~**We.Publish has no concept of an organisation.**~~ Built: `Region`, `Organization` and
+  `OrganizationMember` (`libs/api/prisma/schema.prisma:2418-2479`, migration
+  `20261023120000_add_event_organizations`), and membership on the session as
+  `UserSession.organizationIds` (`libs/authentication/api/src/lib/auth-session.ts:22`, loaded in
+  `authentication.service.ts:59-83`).
+- ~~**Per-record authorisation has no home.**~~ Built: one shared scope module,
+  `libs/event/api/src/lib/event-scope.ts`, typed against `AuthSession` so users, API keys and peer
+  tokens go through the same functions ([design 2](design/02-api.md) §3.2).
 - ~~Mail to non-users is blocked by the schema.~~ Resolved by
   [D18](#d18--mail-with-no-user-recipient-is-skipped-and-the-gap-is-shown-in-the-editor), which
   decided the schema does not change and the send is skipped. The question survived here because it
@@ -1570,8 +2019,8 @@ Mechanical gaps, no decision needed — fold into the build:
 - `PublicContent` is a six-member union with no `'events'`
   (`libs/kv-ttl-cache/api/src/lib/graphql-response-cache.plugin.ts`). The new public queries need
   a cache namespace and an invalidation point.
-- `libs/api-token/api` now exists and differs from what design 2 describes. Reconcile before
-  building the proxy's credential.
+- ~~`libs/api-token/api` now exists and differs from what design 2 describes.~~ Reconciled:
+  design 2 §9 describes the built library, and there is no proxy ([D31](#d31--bkas-old-api-is-switched-off-at-cutover-there-is-no-interim-layer)).
 - Scheduled publication produces an event with **zero occurrences**: `publishEvent(id, publishAt)`
   flips a view, and nothing expands the schedule at that moment.
 
@@ -1587,3 +2036,33 @@ Raised by D31–D34:
 - **`/events/agenda/similar`.** No We.Publish equivalent exists. Build one, or tell clients it goes
   away? **Needs a decision.**
 
+Raised by D35:
+
+- **Who may change an event's owner or organisation.** Owner access must not let a submitter move
+  their event into an organisation they do not belong to, or hand it to another user. Settle it
+  with `updateEvent`. **Needs a decision.**
+
+Raised by D36:
+
+- ~~**Who sees and revokes an organisation's API keys.**~~ Resolved by [D41](#d41--an-organisations-api-keys-stay-with-their-creator): only the
+  creator and holders of `CanGetAllApiTokens` / `CanRevokeAllApiTokens`. A key that went dark when
+  its creator left keeps showing as `Active`, which is accepted.
+
+Raised by D37–D39:
+
+- ~~**Is `partner` public after all?**~~ Resolved by [D42](#d42--the-public-event-partner-filter-stays): the public event filter stays
+  as designed, revealing partner status through it is accepted, and the field stays sensitive on
+  the organisation.
+- **Is `postOfficeBox` really private?** Classed sensitive because it appears only in BKa's
+  login-only groups; 8 of 741 organisations have one, too few to confirm from sampled pages.
+- ~~**Exact instant or whole day for the two-year horizon?**~~ Resolved by [D40](#d40--the-two-year-cap-counts-whole-days-in-zurich): whole
+  day in Europe/Zurich.
+- ~~**Weekday values outside 1–7.**~~ Resolved by [D43](#d43--weekdays-outside-monday-to-sunday-are-rejected-on-input): rejected on input as
+  `'InvalidWeekDays'`, repeats included.
+
+Raised by D40:
+
+- **The migration clip keeps each weekly event's end time.** Clipping a weekly `dateTo` to
+  `scheduleHorizon` (23:59:59.999 Zurich) would make every occurrence end at 23:59. Move the date to
+  `lastSchedulableDay` and keep the time of day; settle the detail when
+  [design 4](design/04-migration.md) §4.7 is built.

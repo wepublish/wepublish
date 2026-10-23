@@ -169,8 +169,22 @@ before cutover and expensive after.
 
 ### 4.7 Dates beyond the horizon
 
-20 events run past 2030, one to 2099 ([D15](../decisions.md)). Clipped to `now + 2 years` and
-**listed in the report**, never silently shortened.
+20 events run past 2030, one to 2099 ([D15](../decisions.md)). Clipped to the last allowed day and
+**listed in the report**, never silently shortened. The clip uses the API's own horizon from
+`@wepublish/event/schedule`, so a migrated event passes the same check on its next save. That
+horizon counts whole Zurich days ([D40](../decisions.md)): `scheduleHorizon` is 23:59:59.999 on
+`lastSchedulableDay`. A weekly event's `dateTo` also carries every occurrence's end time
+([D39](../decisions.md)), so the clip should move the date to `lastSchedulableDay` and keep the original
+time of day, rather than setting `dateTo` to `scheduleHorizon` and ending every occurrence at 23:59.
+Details settled when this step is built.
+
+**Weekly events with no weekdays** are imported as they are and listed in the report
+([D38](../decisions.md)). Expansion gives them no occurrences, and their next save in the editor
+asks for a day. 2,855 BKa rows store `[]` (`../research/bka-02-live-data-profile.md:686-692`); how
+many of them are `week` rows is for `migrate-bka analyze` to count.
+
+Times need no mapping: BKa keeps them inside `date_from`/`date_to`, which is where the new schedule
+keeps them too ([D39](../decisions.md)).
 
 ### 4.8 Slugs
 
@@ -233,8 +247,10 @@ Three rules on the creation:
   moves the distinct count only from 1,911 to 1,870, so fuzzy matching buys almost nothing while
   risking the merge of two genuinely different groups — much harder to undo than merging
   duplicates afterwards.
-- **Marked as migration-created**, so the 1,221 single-event organisations can be found, reviewed
-  and merged by an Agenda-Admin rather than disappearing into the list.
+- **Marked as migration-created** (`Organization.createdByMigration`,
+  `libs/api/prisma/schema.prisma:2446`), so the 1,221 single-event organisations can be found,
+  reviewed and merged by an Agenda-Admin rather than disappearing into the list. The flag and its
+  filter are sensitive data ([D37](../decisions.md)), visible to the Agenda-Admin but not the public.
 - **No fabricated details.** They have no address, region or contact; those stay empty rather than
   being invented.
 
