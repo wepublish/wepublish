@@ -15,6 +15,14 @@ vi.mock('./poll.model', () => ({
     ModifiedAt: 'ModifiedAt',
     OpensAt: 'OpensAt',
   },
+  // emitDecoratorMetadata turns every decorated parameter type into a runtime
+  // reference, so the classes poll.service.ts imports have to exist on the
+  // mock even though the tests never touch them.
+  PollFilter: class {},
+  PollListArgs: class {},
+  CreatePollInput: class {},
+  UpdatePollInput: class {},
+  CreatePollExternalVoteSourceInput: class {},
 }));
 vi.mock('./poll-answer.model', () => ({}));
 vi.mock('./poll-vote.model', () => ({

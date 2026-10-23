@@ -145,6 +145,21 @@
       "@wepublish/utils/website/next": [
         "libs/utils/website/src/next.ts"
       ],
+      "@wepublish/utils/website/tanstack": [
+        "libs/utils/website/src/tanstack.ts"
+      ],
+      "@wepublish/utils/website/tanstack/page-cache": [
+        "libs/utils/website/src/tanstack/page-cache.ts"
+      ],
+      "@wepublish/utils/website/tanstack/server": [
+        "libs/utils/website/src/tanstack-server.ts"
+      ],
+      "@wepublish/utils/website/tanstack/sentry": [
+        "libs/utils/website/src/tanstack/sentry/instrumentation.ts"
+      ],
+      "@wepublish/utils/website/tanstack/sentry/client": [
+        "libs/utils/website/src/tanstack/sentry/instrumentation.client.ts"
+      ],
       "@wepublish/utils/website/next/sentry": [
         "libs/utils/website/src/next/sentry/instrumentation.ts"
       ],
