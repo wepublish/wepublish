@@ -843,21 +843,6 @@ export function Base({ children }: BaseProps) {
                     </SidebarNavItem>
                   </PermissionControl>
 
-                  {/* <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetEvent.id,
-                        CanUpdateEvent.id,
-                        CanDeleteEvent.id,
-                      ]}
-                    >
-                      <SidebarNavItem
-        href="/events/import"
-                        icon={<MdEventAvailable />}
-                      >
-                        {t('navbar.importableEvents')}
-                      </SidebarNavItem>
-                    </PermissionControl> */}
-
                   <PermissionControl
                     qualifyingPermissions={[
                       CanGetTags.id,

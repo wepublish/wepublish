@@ -12,6 +12,7 @@ import {
   CanGetEvent,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
+import { AuthSession, CurrentUser } from '@wepublish/authentication/api';
 
 @Resolver(() => Action)
 export class ActionResolver {
@@ -34,8 +35,9 @@ export class ActionResolver {
       nullable: true,
       description: 'Only these kinds of actions. Empty or omitted means all.',
     })
-    types?: ActionType[] | null
+    types: ActionType[] | null | undefined,
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    return this.actionService.getActions(types);
+    return this.actionService.getActions(types, session);
   }
 }

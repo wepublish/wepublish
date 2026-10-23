@@ -24,7 +24,6 @@ import {
   LocalStorageKey,
   TagType,
 } from '@wepublish/editor/api';
-import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailLogList,
   MailSendPage,
@@ -609,15 +608,6 @@ export function App() {
               element={
                 <Base>
                   <TagEditView />
-                </Base>
-              }
-            />
-
-            <Route
-              path="events/import"
-              element={
-                <Base>
-                  <ImportableEventListView />
                 </Base>
               }
             />

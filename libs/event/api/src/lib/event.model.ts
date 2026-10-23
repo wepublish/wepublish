@@ -4,21 +4,22 @@ import {
   InputType,
   Int,
   ObjectType,
+  OmitType,
   PartialType,
-  PickType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { EventStatus } from '@prisma/client';
+import { EventScheduleType, EventStatus } from '@prisma/client';
+import { BlockContentInput } from '@wepublish/block-content/api';
 import { Image } from '@wepublish/image/api';
-import type { RichtextJSONDocument } from '@wepublish/richtext';
-import { GraphQLRichText } from '@wepublish/richtext/api';
-import { PaginatedType, SortOrder } from '@wepublish/utils/api';
+import { Tag } from '@wepublish/tag/api';
+import { GraphQLSlug, PaginatedType, SortOrder } from '@wepublish/utils/api';
 
 export enum EventSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt',
   StartsAt = 'StartsAt',
   EndsAt = 'EndsAt',
+  PublishedAt = 'PublishedAt',
 }
 
 registerEnumType(SortOrder, {
@@ -33,6 +34,89 @@ registerEnumType(EventStatus, {
   name: 'EventStatus',
 });
 
+registerEnumType(EventScheduleType, {
+  name: 'EventScheduleType',
+});
+
+@ObjectType()
+export class EventImage {
+  @Field()
+  imageId!: string;
+
+  @Field(() => String, { nullable: true })
+  caption?: string | null;
+
+  @Field(() => Int)
+  sortOrder!: number;
+
+  @Field()
+  isMain!: boolean;
+
+  @Field(() => Image, { nullable: true })
+  image?: Image;
+}
+
+@ObjectType()
+export class EventRevision {
+  @Field()
+  id!: string;
+
+  @Field()
+  createdAt!: Date;
+
+  @Field()
+  name!: string;
+
+  @Field(() => String, { nullable: true })
+  printDescription?: string | null;
+
+  @Field(() => Date, { nullable: true })
+  publishedAt?: Date | null;
+
+  @Field(() => Date, { nullable: true })
+  archivedAt?: Date | null;
+
+  @Field(() => [EventImage])
+  images!: EventImage[];
+
+  eventId!: string;
+  blocks!: unknown;
+  userId?: string | null;
+}
+
+@ObjectType()
+export class EventDate {
+  @Field()
+  id!: string;
+
+  @Field()
+  dateFrom!: Date;
+
+  @Field()
+  dateTo!: Date;
+
+  @Field(() => String, { nullable: true })
+  openingTime?: string | null;
+
+  @Field(() => Int)
+  sortOrder!: number;
+}
+
+@ObjectType()
+export class EventRate {
+  @Field()
+  id!: string;
+
+  @Field()
+  price!: string;
+
+  @Field(() => String, { nullable: true })
+  designation?: string | null;
+
+  @Field(() => Int)
+  sortOrder!: number;
+}
+
 @ObjectType()
 export class Event {
   @Field()
@@ -44,119 +128,266 @@ export class Event {
   @Field()
   modifiedAt!: Date;
 
-  @Field()
-  startsAt!: Date;
+  @Field(() => GraphQLSlug, { nullable: true })
+  slug?: string | null;
 
-  @Field({ nullable: true })
-  endsAt?: Date;
-
-  @Field()
-  name!: string;
-
-  @Field({ nullable: true })
-  lead?: string;
-
-  @Field({ nullable: true })
-  location?: string;
-
-  @Field(type => GraphQLRichText, { nullable: true })
-  description?: RichtextJSONDocument;
-
-  @Field(type => EventStatus)
+  @Field(() => EventStatus)
   status!: EventStatus;
 
-  @Field({ nullable: true })
-  imageId?: string;
+  @Field(() => EventScheduleType)
+  scheduleType!: EventScheduleType;
 
-  @Field(type => Image, { nullable: true })
-  image?: Image;
+  @Field(() => Date, { nullable: true })
+  dateFrom?: Date | null;
 
-  @Field({ nullable: true })
-  externalSourceId?: string;
+  @Field(() => Date, { nullable: true })
+  dateTo?: Date | null;
 
-  @Field({ nullable: true })
-  externalSourceName?: string;
+  @Field(() => [Int])
+  weekDays!: number[];
+
+  @Field(() => String, { nullable: true })
+  openingTime?: string | null;
+
+  @Field(() => String, { nullable: true })
+  organizationId?: string | null;
+
+  @Field(() => String, { nullable: true })
+  placeId?: string | null;
+
+  @Field(() => String, { nullable: true })
+  audienceId?: string | null;
+
+  @Field(() => String, { nullable: true })
+  ticketingUrl?: string | null;
 
   @Field()
-  url!: string;
+  showInPrint!: boolean;
+
+  @Field(() => String, { nullable: true })
+  seoTitle?: string | null;
+
+  @Field(() => String, { nullable: true })
+  seoDescription?: string | null;
+
+  @Field(() => String, { nullable: true })
+  socialMediaTitle?: string | null;
+
+  @Field(() => String, { nullable: true })
+  socialMediaDescription?: string | null;
+
+  @Field(() => String, { nullable: true })
+  socialMediaImageID?: string | null;
+
+  @Field(() => Image, { nullable: true })
+  socialMediaImage?: Image | null;
+
+  @Field(() => Date, { nullable: true })
+  publishedAt?: Date | null;
+
+  @Field(() => Date, { nullable: true })
+  firstDateAt?: Date | null;
+
+  @Field(() => Date, { nullable: true })
+  lastDateAt?: Date | null;
+
+  @Field(() => [EventDate])
+  dates!: EventDate[];
+
+  @Field(() => [EventRate])
+  rates!: EventRate[];
+
+  @Field(() => [Tag])
+  tags!: Tag[];
+
+  @Field(() => String, { nullable: true })
+  url?: string | null;
+
+  ownerId?: string | null;
+  reviewRequestedAt?: Date | null;
+  reviewRequestedById?: string | null;
+  legacyId?: bigint | null;
 }
 
 @ObjectType()
 export class PaginatedEvents extends PaginatedType(Event) {}
 
+@ArgsType()
+export class EventArgs {
+  @Field({ nullable: true })
+  id?: string;
+
+  @Field(() => GraphQLSlug, { nullable: true })
+  slug?: string;
+}
+
 @InputType()
 export class EventFilter {
+  @Field(() => [String], { nullable: true })
+  ids?: string[];
+
+  @Field(() => [String], { nullable: true })
+  tagIds?: string[];
+
   @Field({ nullable: true })
-  upcomingOnly?: boolean;
+  upcoming?: boolean;
 
   @Field({ nullable: true })
   from?: Date;
 
   @Field({ nullable: true })
   to?: Date;
-
-  @Field(type => [String], { nullable: true })
-  tags?: string[];
-
-  @Field({ nullable: true })
-  name?: string;
-
-  @Field({ nullable: true })
-  location?: string;
 }
 
 @ArgsType()
 export class EventListArgs {
-  @Field(type => EventFilter, { nullable: true })
+  @Field(() => EventFilter, { nullable: true })
   filter?: EventFilter;
 
-  @Field(type => EventSort, {
+  @Field(() => EventSort, {
     nullable: true,
     defaultValue: EventSort.StartsAt,
   })
   sort?: EventSort;
 
-  @Field(type => SortOrder, {
+  @Field(() => SortOrder, {
     nullable: true,
     defaultValue: SortOrder.Ascending,
   })
   order?: SortOrder;
 
-  @Field(type => Int, { nullable: true, defaultValue: 10 })
+  @Field(() => Int, { nullable: true, defaultValue: 10 })
   take?: number;
 
-  @Field(type => Int, { nullable: true, defaultValue: 0 })
+  @Field(() => Int, { nullable: true, defaultValue: 0 })
   skip?: number;
 
   @Field({ nullable: true })
   cursorId?: string;
 }
 
-@ArgsType()
-export class CreateEventInput extends PickType(
-  Event,
-  [
-    'name',
-    'lead',
-    'description',
-    'location',
-    'imageId',
-    'startsAt',
-    'endsAt',
-  ] as const,
-  ArgsType
-) {
-  @Field(type => [String], { nullable: true })
-  tagIds?: string[];
+@InputType()
+export class EventDateInput {
+  @Field()
+  dateFrom!: Date;
 
-  @Field(type => EventStatus, {
-    defaultValue: EventStatus.Scheduled,
-  })
-  status?: EventStatus;
+  @Field()
+  dateTo!: Date;
+
+  @Field(() => String, { nullable: true })
+  openingTime?: string | null;
 }
 
-@ArgsType()
-export class UpdateEventInput extends PartialType(CreateEventInput, ArgsType) {
+@InputType()
+export class EventRateInput {
   @Field()
-  id!: string;
+  price!: string;
+
+  @Field(() => String, { nullable: true })
+  designation?: string | null;
+}
+
+@InputType()
+export class EventInput {
+  @Field(() => GraphQLSlug, { nullable: true })
+  slug?: string | null;
+
+  @Field(() => EventStatus, { nullable: true })
+  status?: EventStatus | null;
+
+  @Field(() => EventScheduleType)
+  scheduleType!: EventScheduleType;
+
+  @Field(() => Date, { nullable: true })
+  dateFrom?: Date | null;
+
+  @Field(() => Date, { nullable: true })
+  dateTo?: Date | null;
+
+  @Field(() => [Int], { nullable: true })
+  weekDays?: number[] | null;
+
+  @Field(() => String, { nullable: true })
+  openingTime?: string | null;
+
+  @Field(() => [EventDateInput], { nullable: true })
+  dates?: EventDateInput[] | null;
+
+  @Field(() => [String])
+  tagIds!: string[];
+
+  @Field(() => [EventRateInput], { nullable: true })
+  rates?: EventRateInput[] | null;
+
+  @Field(() => String, { nullable: true })
+  organizationId?: string | null;
+
+  @Field(() => String, { nullable: true })
+  placeId?: string | null;
+
+  @Field(() => String, { nullable: true })
+  audienceId?: string | null;
+
+  @Field(() => String, { nullable: true })
+  ownerId?: string | null;
+
+  @Field(() => String, { nullable: true })
+  ticketingUrl?: string | null;
+
+  @Field(() => Boolean, { nullable: true })
+  showInPrint?: boolean | null;
+
+  @Field(() => String, { nullable: true })
+  seoTitle?: string | null;
+
+  @Field(() => String, { nullable: true })
+  seoDescription?: string | null;
+
+  @Field(() => String, { nullable: true })
+  socialMediaTitle?: string | null;
+
+  @Field(() => String, { nullable: true })
+  socialMediaDescription?: string | null;
+
+  @Field(() => String, { nullable: true })
+  socialMediaImageID?: string | null;
+}
+
+@InputType()
+export class UpdateEventInput extends PartialType(
+  OmitType(EventInput, ['scheduleType', 'tagIds'] as const),
+  InputType
+) {
+  @Field(() => EventScheduleType, { nullable: true })
+  scheduleType?: EventScheduleType | null;
+
+  @Field(() => [String], { nullable: true })
+  tagIds?: string[] | null;
+}
+
+@InputType()
+export class EventImageInput {
+  @Field()
+  imageId!: string;
+
+  @Field(() => String, { nullable: true })
+  caption?: string | null;
+
+  @Field(() => Boolean, { nullable: true })
+  isMain?: boolean | null;
+}
+
+@InputType()
+export class EventContentInput {
+  @Field()
+  name!: string;
+
+  @Field(() => String, { nullable: true })
+  printDescription?: string | null;
+
+  @Field(() => [BlockContentInput])
+  blocks!: BlockContentInput[];
+
+  @Field(() => [EventImageInput], { nullable: true })
+  images?: EventImageInput[] | null;
 }

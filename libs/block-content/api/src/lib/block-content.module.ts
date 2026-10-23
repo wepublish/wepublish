@@ -31,7 +31,7 @@ import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.
     ImageModule,
     forwardRef(() => ArticleModule),
     forwardRef(() => PageModule),
-    EventModule,
+    forwardRef(() => EventModule),
     PeerModule,
     CommentModule,
     TagModule,

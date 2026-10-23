@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ActionService } from './action.service';
 import { ActionType } from './action.model';
 import { PrismaClient } from '@prisma/client';
+import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
 
 describe('ActionService', () => {
   let service: ActionService;
@@ -104,5 +105,37 @@ describe('ActionService', () => {
         commentId: '3',
       },
     ]);
+  });
+
+  it('scopes event actions to the events the session manages', async () => {
+    prismaMock.event.findMany.mockResolvedValueOnce([]);
+    const session = {
+      type: AuthSessionType.User,
+      user: { id: 'user-1' },
+      roles: [],
+      organizationIds: [],
+    } as unknown as AuthSession;
+
+    const actions = await service.getActions(
+      [ActionType.EventCreated],
+      session
+    );
+
+    expect(prismaMock.event.findMany).toHaveBeenCalledWith({
+      where: { OR: [{ organizationId: { in: [] } }, { ownerId: 'user-1' }] },
+      take: 50,
+      orderBy: { createdAt: 'desc' },
+    });
+    expect(actions).toEqual([]);
+  });
+
+  it('shows no event actions to a session without any event scope', async () => {
+    prismaMock.event.findMany.mockResolvedValueOnce([]);
+
+    await service.getActions([ActionType.EventCreated], undefined);
+
+    expect(prismaMock.event.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { organizationId: { in: [] } } })
+    );
   });
 });

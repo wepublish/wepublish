@@ -281,8 +281,10 @@ model Image {
   peerId String?
 
   users          User[]
-  events         Event[]
   paymentMethods PaymentMethod[]
+
+  eventImages            EventImage[]
+  eventSocialMediaImages Event[]      @relation("eventSocialMediaImage")
 
   banners               Banner[]
   peerProfileLogo       PeerProfile[] @relation("logo")
@@ -1258,6 +1260,9 @@ model User {
   seoChecklistItems         SeoChecklistItem[]
   apiTokens                 ApiToken[]
   organizationMemberships   OrganizationMember[]
+  ownedEvents               Event[]                    @relation("eventOwner")
+  reviewRequestedEvents     Event[]                    @relation("eventReviewRequestedBy")
+  eventRevisions            EventRevision[]
 
   @@index([createdAt])
   @@map("users")
@@ -1310,11 +1315,12 @@ model Tag {
   peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId String?
 
-  comments TaggedComments[]
-  events   TaggedEvents[]
-  authors  TaggedAuthors[]
-  articles TaggedArticles[]
-  pages    TaggedPages[]
+  comments      TaggedComments[]
+  events        TaggedEvents[]
+  authors       TaggedAuthors[]
+  articles      TaggedArticles[]
+  pages         TaggedPages[]
+  organizations TaggedOrganizations[]
 
   @@unique([type, tag])
   @@map("tags")
@@ -1409,51 +1415,6 @@ model PollExternalVote {
 
   @@unique([answerId, sourceId])
   @@map("polls.external-votes")
-}
-
-enum EventStatus {
-  Cancelled   @map("cancelled")
-  Rescheduled @map("rescheduled")
-  Postponed   @map("postponed")
-  Scheduled   @map("scheduled")
-}
-
-model Event {
-  id         String   @id @default(dbgenerated("uuidv7()"))
-  createdAt  DateTime @default(now()) @db.Timestamptz(3)
-  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
-
-  name             String
-  lead             String?
-  description      Json?
-  slateDescription Json?
-  status           EventStatus @default(Scheduled)
-
-  imageId String?
-  image   Image?  @relation(fields: [imageId], references: [id])
-
-  location String?
-  startsAt DateTime  @db.Timestamptz(3)
-  endsAt   DateTime? @db.Timestamptz(3)
-
-  externalSourceName String?
-  externalSourceId   String?
-
-  tags TaggedEvents[]
-
-  @@map("events")
-}
-
-model TaggedEvents {
-  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId    String
-  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
-  tagId      String
-  createdAt  DateTime @default(now()) @db.Timestamptz(3)
-  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
-
-  @@id([eventId, tagId])
-  @@map("events.tagged-events")
 }
 
 model Consent {
@@ -2433,6 +2394,7 @@ model Region {
   legacyId BigInt? @unique
 
   organizations Organization[]
+  places        Place[]
 
   @@map("events.regions")
 }
@@ -2463,8 +2425,13 @@ model Organization {
   region   Region? @relation(fields: [regionId], references: [id], onDelete: Restrict)
   legacyId BigInt? @unique
 
-  members   OrganizationMember[]
-  apiTokens ApiToken[]
+  members      OrganizationMember[]
+  apiTokens    ApiToken[]
+  places       Place[]
+  events       Event[]
+  contacts     Contact[]
+  tags         TaggedOrganizations[]
+  affiliations OrganizationAffiliation[]
 
   @@index([createdAt])
   @@index([name])
@@ -2484,4 +2451,337 @@ model OrganizationMember {
   @@id([userId, organizationId])
   @@index([organizationId])
   @@map("events.organizations.members")
+}
+
+model Place {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name    String
+  slug    String? @unique
+  enabled Boolean @default(true)
+  private Boolean @default(false)
+
+  address   String
+  zip       String
+  city      String
+  latitude  Float?
+  longitude Float?
+  about     String?
+  capacity  String?
+  website   String?
+
+  wheelchairAccessible        Boolean @default(false)
+  wheelchairAccessibleToilets Boolean @default(false)
+  wheelchairAccessibleParking Boolean @default(false)
+
+  proInfirmisIdSource   String?
+  proInfirmisDetailUrl  String?
+  proInfirmisPictograms Json?
+
+  regionId       String?
+  region         Region?       @relation(fields: [regionId], references: [id], onDelete: Restrict)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  legacyId       BigInt?       @unique
+
+  events Event[]
+
+  @@index([createdAt])
+  @@index([name])
+  @@index([regionId])
+  @@index([organizationId])
+  @@index([latitude, longitude])
+  @@map("events.places")
+}
+
+model Audience {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name     String
+  slug     String? @unique
+  legacyId BigInt? @unique
+
+  events Event[]
+
+  @@map("events.audiences")
+}
+
+model Affiliation {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name     String
+  slug     String? @unique
+  legacyId BigInt? @unique
+
+  organizations OrganizationAffiliation[]
+
+  @@map("events.affiliations")
+}
+
+model OrganizationAffiliation {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  affiliationId  String
+  affiliation    Affiliation  @relation(fields: [affiliationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  modifiedAt     DateTime     @updatedAt @db.Timestamptz(3)
+
+  @@id([organizationId, affiliationId])
+  @@index([affiliationId])
+  @@map("events.organizations.affiliations")
+}
+
+model TaggedOrganizations {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  tagId          String
+  tag            Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  modifiedAt     DateTime     @updatedAt @db.Timestamptz(3)
+
+  @@id([organizationId, tagId])
+  @@index([tagId])
+  @@map("events.organizations.tags")
+}
+
+model Contact {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  label          String?
+  email          String?
+  phone          String?
+  legacyId       BigInt?      @unique
+
+  @@index([organizationId])
+  @@map("events.contacts")
+}
+
+enum EventStatus {
+  Confirmed @map("confirmed")
+  Cancelled @map("cancelled")
+  Postponed @map("postponed")
+  SoldOut   @map("soldOut")
+}
+
+enum EventScheduleType {
+  Continuous @map("continuous")
+  Weekly     @map("weekly")
+  Explicit   @map("explicit")
+}
+
+model Event {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  slug   String?
+  status EventStatus @default(Confirmed)
+
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  placeId        String?
+  place          Place?        @relation(fields: [placeId], references: [id], onDelete: SetNull)
+  ownerId        String?
+  owner          User?         @relation("eventOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+
+  scheduleType EventScheduleType
+  dateFrom     DateTime?         @db.Timestamptz(3)
+  dateTo       DateTime?         @db.Timestamptz(3)
+  weekDays     Int[]
+  openingTime  String?
+
+  audienceId String?
+  audience   Audience? @relation(fields: [audienceId], references: [id], onDelete: SetNull)
+
+  ticketingUrl String?
+  showInPrint  Boolean @default(false)
+
+  seoTitle               String?
+  seoDescription         String?
+  socialMediaTitle       String?
+  socialMediaDescription String?
+  socialMediaImageID     String?
+  socialMediaImage       Image?  @relation("eventSocialMediaImage", fields: [socialMediaImageID], references: [id], onDelete: SetNull)
+
+  publishedAt DateTime? @db.Timestamptz(3)
+  firstDateAt DateTime? @db.Timestamptz(3)
+  lastDateAt  DateTime? @db.Timestamptz(3)
+
+  reviewRequestedAt   DateTime? @db.Timestamptz(3)
+  reviewRequestedById String?
+  reviewRequestedBy   User?     @relation("eventReviewRequestedBy", fields: [reviewRequestedById], references: [id], onDelete: SetNull)
+
+  legacyId         BigInt? @unique
+  legacyProposedBy Json?
+
+  tags        TaggedEvents[]
+  rates       Rate[]
+  dates       EventDate[]
+  occurrences Occurrence[]
+  revisions   EventRevision[]
+  published   EventRevisionPublished?
+  pending     EventRevisionPending?
+  draft       EventRevisionDraft?
+
+  @@index([createdAt])
+  @@index([modifiedAt])
+  @@index([slug])
+  @@index([organizationId])
+  @@index([placeId])
+  @@index([ownerId])
+  @@index([audienceId])
+  @@index([status])
+  @@index([reviewRequestedAt])
+  @@index([publishedAt])
+  @@index([firstDateAt])
+  @@index([lastDateAt])
+  @@map("events.events")
+}
+
+model EventRevision {
+  id        String   @id @default(dbgenerated("uuidv7()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  name             String
+  printDescription String?
+  blocks           Json
+  descriptionText  String  @default("")
+
+  publishedAt DateTime? @db.Timestamptz(3)
+  archivedAt  DateTime? @db.Timestamptz(3)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  images      EventImage[]
+  publishedIn EventRevisionPublished[]
+  pendingIn   EventRevisionPending[]
+  draftIn     EventRevisionDraft[]
+
+  @@index([publishedAt])
+  @@index([eventId, createdAt(sort: Desc), id(sort: Desc)])
+  @@map("events.events.revisions")
+}
+
+view EventRevisionPublished {
+  id       String        @unique
+  revision EventRevision @relation(fields: [id], references: [id])
+
+  eventId String @unique
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  @@map("events.events.revisions.published")
+}
+
+view EventRevisionPending {
+  id       String        @unique
+  revision EventRevision @relation(fields: [id], references: [id])
+
+  eventId String @unique
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  @@map("events.events.revisions.pending")
+}
+
+view EventRevisionDraft {
+  id       String        @unique
+  revision EventRevision @relation(fields: [id], references: [id])
+
+  eventId String @unique
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  @@map("events.events.revisions.draft")
+}
+
+model EventImage {
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  revisionId String
+  revision   EventRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+  imageId    String
+  image      Image         @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  caption    String?
+  sortOrder  Int
+  isMain     Boolean       @default(false)
+
+  @@id([revisionId, imageId])
+  @@index([imageId])
+  @@map("events.events.revisions.images")
+}
+
+model EventDate {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  eventId       String
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  dateFrom      DateTime @db.Timestamptz(3)
+  dateTo        DateTime @db.Timestamptz(3)
+  openingTime   String?
+  sortOrder     Int
+  legacyEventId BigInt?
+
+  @@index([eventId])
+  @@map("events.events.dates")
+}
+
+model Occurrence {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  eventId       String
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  dateFrom      DateTime @db.Timestamptz(3)
+  dateTo        DateTime @db.Timestamptz(3)
+  openingTime   String?
+  legacyEventId BigInt?
+
+  @@index([eventId])
+  @@index([dateFrom])
+  @@index([dateTo])
+  @@map("events.occurrences")
+}
+
+model Rate {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  eventId     String
+  event       Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  price       String
+  designation String?
+  sortOrder   Int     @default(0)
+  legacyId    BigInt? @unique
+
+  @@index([eventId])
+  @@map("events.rates")
+}
+
+model TaggedEvents {
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId    String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@id([eventId, tagId])
+  @@index([tagId])
+  @@map("events.tagged-events")
 }

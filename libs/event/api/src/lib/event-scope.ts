@@ -1,8 +1,10 @@
 import { Prisma } from '@prisma/client';
 import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
 import {
+  CanDeleteOtherOrganizationEvents,
   CanGetOtherOrganizationEvents,
   CanGetOtherOrganizations,
+  CanPublishEvent,
   CanUpdateOtherOrganizationEvents,
   CanUpdateOtherOrganizations,
   Permission,
@@ -16,15 +18,6 @@ export type EventOwnership = {
   ownerId: string | null;
   place?: { organizationId: string | null } | null;
 };
-
-type OrganizationEventsWhere = { organizationId: { in: string[] } };
-type OwnEventsWhere = { ownerId: string };
-
-export type EventScopeWhere =
-  | Record<string, never>
-  | OrganizationEventsWhere
-  | OwnEventsWhere
-  | { OR: Array<OrganizationEventsWhere | OwnEventsWhere> };
 
 const isOrganizationKey = (session: Session) =>
   session?.type === AuthSessionType.ApiToken && session.organizationId != null;
@@ -53,7 +46,7 @@ export const organizationIdsOf = (session: Session): string[] => {
   }
 };
 
-const userIdOf = (session: Session): string | null =>
+export const userIdOf = (session: Session): string | null =>
   session?.type === AuthSessionType.User ? session.user.id : null;
 
 export const isEventOwner = (session: Session, event: EventOwnership) => {
@@ -105,7 +98,11 @@ export const canManageOrganization = (
   isOrganizationMember(session, organizationId) ||
   mayUpdateAnyOrganization(session);
 
-export const editorEventsWhere = (session: Session): EventScopeWhere => {
+export const publicEventsWhere = (): Prisma.EventWhereInput => ({
+  published: { isNot: null },
+});
+
+export const editorEventsWhere = (session: Session): Prisma.EventWhereInput => {
   if (holdsAcrossOrganizations(session, CanGetOtherOrganizationEvents)) {
     return {};
   }
@@ -122,8 +119,80 @@ export const editorEventsWhere = (session: Session): EventScopeWhere => {
   return { OR: [organizationEvents, { ownerId: userId }] };
 };
 
+export const reachableEventsWhere = (
+  session: Session
+): Prisma.EventWhereInput => {
+  if (
+    holdsAcrossOrganizations(session, CanGetOtherOrganizationEvents) ||
+    holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents)
+  ) {
+    return {};
+  }
+
+  const organizationIds = organizationIdsOf(session);
+  const userId = userIdOf(session);
+
+  return {
+    OR: [
+      { organizationId: { in: organizationIds } },
+      { place: { organizationId: { in: organizationIds } } },
+      ...(userId != null ? [{ ownerId: userId }] : []),
+    ],
+  };
+};
+
 export const canModifyEvent = (session: Session, event: EventOwnership) =>
   isEventOwner(session, event) ||
   isOrganizationMember(session, event.organizationId) ||
   isOrganizationMember(session, event.place?.organizationId) ||
   holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents);
+
+export const canPublishEvent = (session: Session, event: EventOwnership) =>
+  hasPermission(CanPublishEvent, permissionsOf(session)) &&
+  (isOrganizationMember(session, event.organizationId) ||
+    (event.organizationId == null && isEventOwner(session, event)) ||
+    holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents));
+
+export const canDeleteEvent = (session: Session, event: EventOwnership) =>
+  isOrganizationMember(session, event.organizationId) ||
+  holdsAcrossOrganizations(session, CanDeleteOtherOrganizationEvents);
+
+export const mayAssignEventOrganization = (
+  session: Session,
+  organizationId: string | null
+) =>
+  organizationId == null ||
+  isOrganizationMember(session, organizationId) ||
+  holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents);
+
+export const mayAssignEventOwner = (session: Session, ownerId: string | null) =>
+  (ownerId != null && ownerId === userIdOf(session)) ||
+  holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents);
+
+export const mayMoveEventToOrganization = (
+  session: Session,
+  event: EventOwnership,
+  organizationId: string | null
+) => {
+  if (holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents)) {
+    return true;
+  }
+
+  const holdsEvent =
+    event.organizationId == null ?
+      isEventOwner(session, event)
+    : isOrganizationMember(session, event.organizationId);
+
+  return (
+    holdsEvent &&
+    (organizationId == null || isOrganizationMember(session, organizationId))
+  );
+};
+
+export const mayReassignEventOwner = (session: Session) =>
+  holdsAcrossOrganizations(session, CanUpdateOtherOrganizationEvents);
+
+export const boundOrganizationIdOf = (session: Session): string | null =>
+  session?.type === AuthSessionType.ApiToken ?
+    (session.organizationId ?? null)
+  : null;

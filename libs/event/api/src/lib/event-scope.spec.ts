@@ -1,9 +1,11 @@
+import { Prisma } from '@prisma/client';
 import {
   AuthSession,
   AuthSessionType,
   UserSession,
 } from '@wepublish/authentication/api';
 import {
+  CanDeleteOtherOrganizationEvents,
   CanGetOtherOrganizationEvents,
   CanGetOtherOrganizations,
   CanPublishEvent,
@@ -12,13 +14,21 @@ import {
   CanUpdateOtherOrganizations,
 } from '@wepublish/permissions';
 import {
+  canDeleteEvent,
   canManageOrganization,
   canModifyEvent,
+  canPublishEvent,
   canReadOrganizationSensitiveData,
   editorEventsWhere,
   EventOwnership,
-  EventScopeWhere,
   isOrganizationMember,
+  boundOrganizationIdOf,
+  mayAssignEventOrganization,
+  mayAssignEventOwner,
+  mayMoveEventToOrganization,
+  mayReassignEventOwner,
+  publicEventsWhere,
+  reachableEventsWhere,
   mayUpdateAnyOrganization,
   memberOrganizationsWhere,
   organizationIdsOf,
@@ -419,19 +429,32 @@ const events: Record<string, EventOwnership> = {
 
 const eventNames = Object.keys(events);
 
-const matches = (where: EventScopeWhere, event: EventOwnership): boolean => {
-  if ('OR' in where) {
-    return where.OR.some(branch => matches(branch, event));
-  }
-
-  if ('organizationId' in where) {
-    return (
-      event.organizationId != null &&
-      where.organizationId.in.includes(event.organizationId)
+const matches = (
+  where: Prisma.EventWhereInput,
+  event: EventOwnership
+): boolean => {
+  if (where.OR) {
+    return (where.OR as Prisma.EventWhereInput[]).some(branch =>
+      matches(branch, event)
     );
   }
 
-  if ('ownerId' in where) {
+  if (where.organizationId) {
+    const { in: ids } = where.organizationId as { in: string[] };
+
+    return event.organizationId != null && ids.includes(event.organizationId);
+  }
+
+  if (where.place) {
+    const { organizationId } = where.place as {
+      organizationId: { in: string[] };
+    };
+    const venue = event.place?.organizationId;
+
+    return venue != null && organizationId.in.includes(venue);
+  }
+
+  if (where.ownerId !== undefined) {
     return event.ownerId === where.ownerId;
   }
 
@@ -685,4 +708,314 @@ describe('canModifyEvent', () => {
       ).toBe(false);
     }
   );
+});
+
+describe('publicEventsWhere', () => {
+  it('matches the events with a published revision', () => {
+    expect(publicEventsWhere()).toEqual({ published: { isNot: null } });
+  });
+});
+
+describe('reachableEventsWhere', () => {
+  it.each([
+    ['anonymous', none],
+    ['the submitter, without organisation', allowed(...own)],
+    ['a stranger without organisation', none],
+    ['a member of the organising body', allowed(...organised)],
+    ["a member of the venue's organisation", allowed(...organised)],
+    ['a cross-organisation reader', all],
+    ['a cross-organisation editor', all],
+    ['a peer', none],
+    ['an api key', none],
+    ['an api key with CAN_GET_OTHER_ORGANIZATION_EVENTS', all],
+    ["an api key of the venue's organisation", allowed(...organised)],
+    [
+      'an api key of an unrelated organisation with every cross-organisation permission',
+      none,
+    ],
+  ])('lets %s open', (sessionName, expected) => {
+    const where = reachableEventsWhere(sessions[sessionName]);
+
+    expect(
+      Object.fromEntries(
+        eventNames.map(name => [name, matches(where, events[name])])
+      )
+    ).toEqual(expected);
+  });
+
+  it('opens whatever the list shows or canModifyEvent accepts, and nothing else', () => {
+    for (const session of Object.values(sessions)) {
+      for (const event of Object.values(events)) {
+        expect(matches(reachableEventsWhere(session), event)).toBe(
+          matches(editorEventsWhere(session), event) ||
+            canModifyEvent(session, event)
+        );
+      }
+    }
+  });
+});
+
+describe('canPublishEvent', () => {
+  const publishing: Record<string, AuthSession | null | undefined> = {
+    anonymous: undefined,
+    'the owner without CAN_PUBLISH_EVENT': as(submitter, []),
+    'the owner with CAN_PUBLISH_EVENT': as(submitter, [], CanPublishEvent.id),
+    'a member without CAN_PUBLISH_EVENT': as('user-member', ['a']),
+    'a member with CAN_PUBLISH_EVENT': as(
+      'user-member',
+      ['a'],
+      CanPublishEvent.id
+    ),
+    'a venue member with CAN_PUBLISH_EVENT': as(
+      'user-venue',
+      ['v'],
+      CanPublishEvent.id
+    ),
+    'a validator': as(
+      'user-validator',
+      [],
+      CanPublishEvent.id,
+      CanUpdateOtherOrganizationEvents.id
+    ),
+    'a peer validator': peer(
+      CanPublishEvent.id,
+      CanUpdateOtherOrganizationEvents.id
+    ),
+    'a platform key validator': apiKey(
+      CanPublishEvent.id,
+      CanUpdateOtherOrganizationEvents.id
+    ),
+    'a key of the organising body with CAN_PUBLISH_EVENT': organizationKey(
+      'a',
+      CanPublishEvent.id
+    ),
+    "a key of the venue's organisation with every permission": organizationKey(
+      'v',
+      CanPublishEvent.id,
+      CanUpdateOtherOrganizationEvents.id
+    ),
+  };
+
+  it.each([
+    ['anonymous', none],
+    ['the owner without CAN_PUBLISH_EVENT', none],
+    ['the owner with CAN_PUBLISH_EVENT', allowed("the submitter's orphan")],
+    ['a member without CAN_PUBLISH_EVENT', none],
+    ['a member with CAN_PUBLISH_EVENT', allowed(...organised)],
+    ['a venue member with CAN_PUBLISH_EVENT', none],
+    ['a validator', all],
+    ['a peer validator', all],
+    ['a platform key validator', all],
+    [
+      'a key of the organising body with CAN_PUBLISH_EVENT',
+      allowed(...organised),
+    ],
+    ["a key of the venue's organisation with every permission", none],
+  ])('lets %s publish', (sessionName, expected) => {
+    expect(
+      Object.fromEntries(
+        eventNames.map(name => [
+          name,
+          canPublishEvent(publishing[sessionName], events[name]),
+        ])
+      )
+    ).toEqual(expected);
+  });
+});
+
+describe('canDeleteEvent', () => {
+  const deleting: Record<string, AuthSession | null | undefined> = {
+    ...sessions,
+    'a cross-organisation deleter': as(
+      'user-deleter',
+      [],
+      CanDeleteOtherOrganizationEvents.id
+    ),
+    'a peer with CAN_DELETE_OTHER_ORGANIZATION_EVENTS': peer(
+      CanDeleteOtherOrganizationEvents.id
+    ),
+    'a platform key with CAN_DELETE_OTHER_ORGANIZATION_EVENTS': apiKey(
+      CanDeleteOtherOrganizationEvents.id
+    ),
+    'a key of an unrelated organisation with CAN_DELETE_OTHER_ORGANIZATION_EVENTS':
+      organizationKey('x', CanDeleteOtherOrganizationEvents.id),
+  };
+
+  it.each([
+    ['anonymous', none],
+    ['the submitter, without organisation', none],
+    ['a member of the organising body', allowed(...organised)],
+    ["a member of the venue's organisation", none],
+    ['a cross-organisation editor', none],
+    ['a cross-organisation deleter', all],
+    ['a peer', none],
+    ['a peer with CAN_DELETE_OTHER_ORGANIZATION_EVENTS', all],
+    ['a platform key with CAN_DELETE_OTHER_ORGANIZATION_EVENTS', all],
+    ['an api key of the organising body', allowed(...organised)],
+    ["an api key of the venue's organisation", none],
+    [
+      'a key of an unrelated organisation with CAN_DELETE_OTHER_ORGANIZATION_EVENTS',
+      none,
+    ],
+  ])('lets %s delete', (sessionName, expected) => {
+    expect(
+      Object.fromEntries(
+        eventNames.map(name => [
+          name,
+          canDeleteEvent(deleting[sessionName], events[name]),
+        ])
+      )
+    ).toEqual(expected);
+  });
+});
+
+describe('mayAssignEventOrganization', () => {
+  it('lets members assign their own organisation and nobody else', () => {
+    expect(mayAssignEventOrganization(user(['a']), 'a')).toBe(true);
+    expect(mayAssignEventOrganization(user(['a']), 'b')).toBe(false);
+    expect(mayAssignEventOrganization(user([]), 'a')).toBe(false);
+  });
+
+  it('lets anybody leave the organisation empty', () => {
+    expect(mayAssignEventOrganization(user([]), null)).toBe(true);
+  });
+
+  it('lets CAN_UPDATE_OTHER_ORGANIZATION_EVENTS assign any organisation', () => {
+    expect(
+      mayAssignEventOrganization(
+        user([], CanUpdateOtherOrganizationEvents.id),
+        'b'
+      )
+    ).toBe(true);
+    expect(
+      mayAssignEventOrganization(
+        apiKey(CanUpdateOtherOrganizationEvents.id),
+        'b'
+      )
+    ).toBe(true);
+  });
+
+  it('keeps an api key of an organisation to it, whatever its scopes', () => {
+    expect(mayAssignEventOrganization(organizationKey('a'), 'a')).toBe(true);
+    expect(
+      mayAssignEventOrganization(
+        organizationKey('a', CanUpdateOtherOrganizationEvents.id),
+        'b'
+      )
+    ).toBe(false);
+  });
+});
+
+describe('mayAssignEventOwner', () => {
+  it('lets a user make themselves the owner', () => {
+    expect(mayAssignEventOwner(user([]), 'user-1')).toBe(true);
+  });
+
+  it('refuses handing the event to somebody else, or to nobody', () => {
+    expect(mayAssignEventOwner(user(['a']), 'user-2')).toBe(false);
+    expect(mayAssignEventOwner(user(['a']), null)).toBe(false);
+    expect(mayAssignEventOwner(apiKey(), 'user-2')).toBe(false);
+  });
+
+  it('lets CAN_UPDATE_OTHER_ORGANIZATION_EVENTS assign any owner', () => {
+    expect(
+      mayAssignEventOwner(user([], CanUpdateOtherOrganizationEvents.id), null)
+    ).toBe(true);
+    expect(
+      mayAssignEventOwner(
+        user([], CanUpdateOtherOrganizationEvents.id),
+        'user-2'
+      )
+    ).toBe(true);
+  });
+
+  it('never lets an api key of an organisation assign an owner', () => {
+    expect(
+      mayAssignEventOwner(
+        organizationKey('a', CanUpdateOtherOrganizationEvents.id),
+        'user-2'
+      )
+    ).toBe(false);
+  });
+});
+
+describe('mayMoveEventToOrganization', () => {
+  const organised: EventOwnership = {
+    organizationId: 'a',
+    ownerId: 'user-1',
+    place: { organizationId: 'v' },
+  };
+  const orphan: EventOwnership = {
+    organizationId: null,
+    ownerId: 'user-1',
+    place: null,
+  };
+
+  it('lets a member move the event to another organisation of theirs', () => {
+    expect(mayMoveEventToOrganization(user(['a', 'b']), organised, 'b')).toBe(
+      true
+    );
+  });
+
+  it('refuses moving it into an organisation the actor does not belong to', () => {
+    expect(mayMoveEventToOrganization(user(['a']), organised, 'b')).toBe(false);
+  });
+
+  it("refuses the venue's organisation adopting the event", () => {
+    expect(
+      mayMoveEventToOrganization(as('user-v', ['v']), organised, 'v')
+    ).toBe(false);
+  });
+
+  it('lets the owner of an orphan put it into their organisation, and nowhere else', () => {
+    expect(mayMoveEventToOrganization(user(['b']), orphan, 'b')).toBe(true);
+    expect(mayMoveEventToOrganization(user([]), orphan, 'b')).toBe(false);
+  });
+
+  it('refuses an owner moving an organisation event they are not a member of', () => {
+    expect(mayMoveEventToOrganization(user([]), organised, null)).toBe(false);
+  });
+
+  it('lets CAN_UPDATE_OTHER_ORGANIZATION_EVENTS move anything anywhere', () => {
+    expect(
+      mayMoveEventToOrganization(
+        user([], CanUpdateOtherOrganizationEvents.id),
+        organised,
+        'b'
+      )
+    ).toBe(true);
+  });
+
+  it('keeps an api key of an organisation inside it', () => {
+    expect(
+      mayMoveEventToOrganization(
+        organizationKey('a', CanUpdateOtherOrganizationEvents.id),
+        organised,
+        'b'
+      )
+    ).toBe(false);
+  });
+});
+
+describe('mayReassignEventOwner', () => {
+  it('is CAN_UPDATE_OTHER_ORGANIZATION_EVENTS only, even for taking an event over', () => {
+    expect(mayReassignEventOwner(user(['a']))).toBe(false);
+    expect(
+      mayReassignEventOwner(user([], CanUpdateOtherOrganizationEvents.id))
+    ).toBe(true);
+    expect(
+      mayReassignEventOwner(
+        organizationKey('a', CanUpdateOtherOrganizationEvents.id)
+      )
+    ).toBe(false);
+  });
+});
+
+describe('boundOrganizationIdOf', () => {
+  it('is the organisation of a bound api key, and nothing for anyone else', () => {
+    expect(boundOrganizationIdOf(organizationKey('a'))).toBe('a');
+    expect(boundOrganizationIdOf(apiKey())).toBeNull();
+    expect(boundOrganizationIdOf(user(['a']))).toBeNull();
+    expect(boundOrganizationIdOf(undefined)).toBeNull();
+  });
 });

@@ -19,7 +19,6 @@ const setup = ({
   const prisma = {
     author: model(),
     commentsRevisions: model(),
-    event: model(),
     peerProfile: model(),
     peer: model(),
     poll: model(),
@@ -50,18 +49,21 @@ const setup = ({
   );
 
   const resets = (): Reset[] => [
-    ...publicContentCache.invalidate.mock.calls.map(
-      (args): Reset => ['invalidate', ...args]
-    ),
-    ...publicContentCache.invalidateComments.mock.calls.map(
-      (args): Reset => ['invalidateComments', ...args]
-    ),
+    ...publicContentCache.invalidate.mock.calls.map((args): Reset => [
+      'invalidate',
+      ...args,
+    ]),
+    ...publicContentCache.invalidateComments.mock.calls.map((args): Reset => [
+      'invalidateComments',
+      ...args,
+    ]),
     ...publicContentCache.invalidateArticleLayout.mock.calls.map(
       (args): Reset => ['invalidateArticleLayout', ...args]
     ),
-    ...kv.resetNamespace.mock.calls.map(
-      (args): Reset => ['resetNamespace', ...args]
-    ),
+    ...kv.resetNamespace.mock.calls.map((args): Reset => [
+      'resetNamespace',
+      ...args,
+    ]),
   ];
 
   return { migrator, prisma, resets };
@@ -76,7 +78,6 @@ const PAGES: Reset[] = [['invalidate', 'pages']];
 const MIGRATIONS: Array<[keyof SlateToPmMigrator, Reset[]]> = [
   ['migrateAuthors', [['invalidate', 'authors']]],
   ['migrateComments', [['invalidateComments', true]]],
-  ['migrateEvents', [['invalidate']]],
   ['migratePeerProfiles', [['resetNamespace', 'peer-profile']]],
   ['migratePeers', [['resetNamespace', 'peering:remote-profiles']]],
   ['migratePolls', [['invalidate', 'polls']]],
@@ -95,6 +96,22 @@ const MIGRATIONS: Array<[keyof SlateToPmMigrator, Reset[]]> = [
 
 const run = (migrator: SlateToPmMigrator, method: keyof SlateToPmMigrator) =>
   (migrator[method] as () => Promise<void>).call(migrator);
+
+describe('SlateToPmMigrator and events', () => {
+  it('has no events job, as the old events table is gone', () => {
+    expect('migrateEvents' in SlateToPmMigrator.prototype).toBe(false);
+  });
+
+  it('never re-migrates a column of the old events table', () => {
+    expect(
+      (
+        SlateToPmMigrator as unknown as {
+          BUGGY_ENTITY_COLUMNS: Array<{ table: string }>;
+        }
+      ).BUGGY_ENTITY_COLUMNS.map(({ table }) => table)
+    ).not.toContain('events');
+  });
+});
 
 describe('SlateToPmMigrator caches', () => {
   it.each(MIGRATIONS)(
@@ -196,7 +213,6 @@ describe('SlateToPmMigrator caches', () => {
 
     it.each<[string, Reset[]]>([
       ['comments.revisions', [['invalidateComments', true]]],
-      ['events', [['invalidate']]],
       ['peerProfiles', [['resetNamespace', 'peer-profile']]],
       ['peers', [['resetNamespace', 'peering:remote-profiles']]],
       ['polls', [['invalidate', 'polls']]],

@@ -233,8 +233,6 @@
         "libs/errors/**/*",
         "libs/errors/website/**/*",
         "libs/event/api/**/*",
-        "libs/event/import/api/**/*",
-        "libs/event/import/editor/**/*",
         "libs/event/website/**/*",
         "libs/external-apps/api/**/*",
         "libs/feed/website/**/*",

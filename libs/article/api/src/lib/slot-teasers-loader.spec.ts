@@ -250,7 +250,7 @@ const revisionBlocks: BaseBlock<BlockType>[] = [
 ];
 
 const mockEventService = {
-  getEvents: vi.fn().mockResolvedValue({ nodes: [] }),
+  getPublicEvents: vi.fn().mockResolvedValue({ nodes: [] }),
 };
 
 // simulate database with a fixed pool of articles

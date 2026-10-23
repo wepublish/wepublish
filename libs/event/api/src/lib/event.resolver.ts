@@ -7,93 +7,326 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import {
+  Event as PEvent,
+  EventRevision as PEventRevision,
+} from '@prisma/client';
+import {
+  AuthSession,
+  CurrentUser,
+  Public,
+} from '@wepublish/authentication/api';
+import { Image, ImageDataloaderService } from '@wepublish/image/api';
+import { URLAdapter } from '@wepublish/nest-modules';
+import {
   CanCreateEvent,
   CanDeleteEvent,
+  CanGetEvent,
+  CanGetEvents,
+  CanPublishEvent,
   CanUpdateEvent,
 } from '@wepublish/permissions';
-import { Public } from '@wepublish/authentication/api';
 import {
-  CreateEventInput,
+  hasPermission,
+  Permissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
+import { GraphQLRichText } from '@wepublish/richtext/api';
+import { EventTagDataloader, Tag } from '@wepublish/tag/api';
+import {
+  EventDatesDataloader,
+  EventRatesDataloader,
+  EventRevisionImagesDataloader,
+} from './event-details.dataloader';
+import { EventEditorMode } from './event-editor-mode.decorator';
+import { EventRevisionDataloaderService } from './event-revisions.dataloader';
+import {
   Event,
+  EventArgs,
+  EventContentInput,
+  EventDate,
+  EventInput,
   EventListArgs,
+  EventRate,
+  EventRevision,
   PaginatedEvents,
   UpdateEventInput,
 } from './event.model';
 import { EventService } from './event.service';
-import { Image, ImageDataloaderService } from '@wepublish/image/api';
-import { EventDataloaderService } from './event-dataloader.service';
-import { EventTagDataloader, Tag } from '@wepublish/tag/api';
-import { URLAdapter } from '@wepublish/nest-modules';
-import { Event as PEvent } from '@prisma/client';
-import { Permissions } from '@wepublish/permissions/api';
-import { NotFoundException } from '@nestjs/common';
+import { PlaceDataloaderService } from './place/place-dataloader.service';
+
+type Session = AuthSession | undefined;
+
+const mayReadEditorFields = (session: Session) =>
+  hasPermission(CanGetEvent, permissionsOf(session));
+
+const firstRichText = (blocks: unknown): RichtextJSONDocument | null => {
+  const block = (Array.isArray(blocks) ? blocks : []).find(
+    candidate =>
+      candidate &&
+      typeof candidate === 'object' &&
+      (candidate as { type?: unknown }).type === 'richText'
+  ) as { richText?: RichtextJSONDocument } | undefined;
+
+  return block?.richText ?? null;
+};
 
 @Resolver(() => Event)
 export class EventResolver {
   constructor(
     private eventService: EventService,
-    private eventDataloader: EventDataloaderService,
-    private urlAdapter: URLAdapter,
-    private tagDataLoader: EventTagDataloader,
-    private imageDataloaderService: ImageDataloaderService
+    private revisions: EventRevisionDataloaderService,
+    private revisionImages: EventRevisionImagesDataloader,
+    private imageDataloader: ImageDataloaderService,
+    private places: PlaceDataloaderService,
+    private tagDataloader: EventTagDataloader,
+    private datesDataloader: EventDatesDataloader,
+    private ratesDataloader: EventRatesDataloader,
+    private urlAdapter: URLAdapter
   ) {}
 
   @Public()
-  @Query(() => PaginatedEvents, {
-    description: `Returns a paginated list of events based on the filters given.`,
+  @Query(() => Event, {
+    description: `Returns a published event by id or slug. With the preview header and CAN_GET_EVENT it returns any event you may open in the editor.`,
   })
-  public events(@Args() filter: EventListArgs) {
-    return this.eventService.getEvents(filter);
+  public event(
+    @Args() args: EventArgs,
+    @CurrentUser() session: Session,
+    @EventEditorMode(CanGetEvent) editorMode: boolean
+  ) {
+    return this.eventService.getEvent(args, session, editorMode);
   }
 
   @Public()
-  @Query(() => Event, { description: `Returns an event by id.` })
-  public async event(@Args('id') id: string) {
-    const event = await this.eventDataloader.load(id);
-
-    if (!event) {
-      throw new NotFoundException(`Event with id ${id} was not found.`);
-    }
-
-    return event;
+  @Query(() => PaginatedEvents, {
+    description: `Returns a paginated list of published events. With the preview header and CAN_GET_EVENTS it lists the events you manage.`,
+  })
+  public events(
+    @Args() args: EventListArgs,
+    @CurrentUser() session: Session,
+    @EventEditorMode(CanGetEvents) editorMode: boolean
+  ) {
+    return this.eventService.getEvents(args, session, editorMode);
   }
 
   @Permissions(CanCreateEvent)
-  @Mutation(returns => Event, { description: `Creates a new event.` })
-  public createEvent(@Args() event: CreateEventInput) {
-    return this.eventService.createEvent(event);
+  @Mutation(() => Event, {
+    description: `Creates an event with its facts and a first draft of its content.`,
+  })
+  public createEvent(
+    @Args('input') input: EventInput,
+    @Args('content') content: EventContentInput,
+    @CurrentUser() session: Session
+  ) {
+    return this.eventService.createEvent(input, content, session);
   }
 
   @Permissions(CanUpdateEvent)
-  @Mutation(returns => Event, { description: `Updates an existing event.` })
-  public updateEvent(@Args() event: UpdateEventInput) {
-    return this.eventService.updateEvent(event);
+  @Mutation(() => Event, {
+    description: `Updates the facts of an event. They take effect immediately.`,
+  })
+  public updateEvent(
+    @Args('id') id: string,
+    @Args('input') input: UpdateEventInput,
+    @CurrentUser() session: Session
+  ) {
+    return this.eventService.updateEvent(id, input, session);
+  }
+
+  @Permissions(CanUpdateEvent)
+  @Mutation(() => Event, {
+    description: `Writes the content of an event into a new draft revision.`,
+  })
+  public updateEventContent(
+    @Args('id') id: string,
+    @Args('input') input: EventContentInput,
+    @CurrentUser() session: Session
+  ) {
+    return this.eventService.updateEventContent(id, input, session);
+  }
+
+  @Permissions(CanPublishEvent)
+  @Mutation(() => Event, {
+    description: `Publishes the draft of an event, at publishAt when given.`,
+  })
+  public publishEvent(
+    @Args('id') id: string,
+    @Args('publishAt', { type: () => Date, nullable: true })
+    publishAt: Date | null | undefined,
+    @CurrentUser() session: Session
+  ) {
+    return this.eventService.publishEvent(id, publishAt, session);
+  }
+
+  @Permissions(CanPublishEvent)
+  @Mutation(() => Event, {
+    description: `Unpublishes an event. Its latest revision stays as draft.`,
+  })
+  public unpublishEvent(
+    @Args('id') id: string,
+    @CurrentUser() session: Session
+  ) {
+    return this.eventService.unpublishEvent(id, session);
   }
 
   @Permissions(CanDeleteEvent)
-  @Mutation(returns => Event, { description: `Deletes an existing event.` })
-  public deleteEvent(@Args('id') id: string) {
-    return this.eventService.deleteEvent(id);
+  @Mutation(() => Event, { description: `Deletes an event.` })
+  public deleteEvent(@Args('id') id: string, @CurrentUser() session: Session) {
+    return this.eventService.deleteEvent(id, session);
   }
 
-  @ResolveField(() => Image, { nullable: true })
-  public image(@Parent() event: Event) {
-    const { imageId } = event;
+  @ResolveField(() => EventRevision, { nullable: true })
+  async latest(
+    @Parent() event: PEvent,
+    @EventEditorMode(CanGetEvent) editorMode: boolean
+  ) {
+    return this.displayedRevision(event, editorMode);
+  }
 
-    if (!imageId) {
+  @ResolveField(() => EventRevision, { nullable: true })
+  async published(@Parent() event: PEvent) {
+    return (await this.revisions.load(event.id))?.published ?? null;
+  }
+
+  @Permissions(CanGetEvent)
+  @ResolveField(() => EventRevision, { nullable: true })
+  async draft(@Parent() event: PEvent, @CurrentUser() session: Session) {
+    if (!mayReadEditorFields(session)) {
       return null;
     }
 
-    return this.imageDataloaderService.load(imageId);
+    return (await this.revisions.load(event.id))?.draft ?? null;
   }
 
-  @ResolveField(() => [Tag], { nullable: true })
-  async tags(@Parent() parent: Event) {
-    return this.tagDataLoader.load(parent.id);
+  @Permissions(CanGetEvent)
+  @ResolveField(() => EventRevision, { nullable: true })
+  async pending(@Parent() event: PEvent, @CurrentUser() session: Session) {
+    if (!mayReadEditorFields(session)) {
+      return null;
+    }
+
+    return (await this.revisions.load(event.id))?.pending ?? null;
   }
 
   @ResolveField(() => String, { nullable: true })
-  async url(@Parent() parent: PEvent) {
-    return this.urlAdapter.getEventURL(parent);
+  async name(
+    @Parent() event: PEvent,
+    @EventEditorMode(CanGetEvent) editorMode: boolean
+  ) {
+    return (await this.displayedRevision(event, editorMode))?.name ?? null;
+  }
+
+  @ResolveField(() => GraphQLRichText, { nullable: true })
+  async description(
+    @Parent() event: PEvent,
+    @EventEditorMode(CanGetEvent) editorMode: boolean
+  ) {
+    return firstRichText(
+      (await this.displayedRevision(event, editorMode))?.blocks
+    );
+  }
+
+  @ResolveField(() => Image, { nullable: true })
+  async image(
+    @Parent() event: PEvent,
+    @EventEditorMode(CanGetEvent) editorMode: boolean
+  ) {
+    const revision = await this.displayedRevision(event, editorMode);
+
+    if (!revision) {
+      return null;
+    }
+
+    const images = (await this.revisionImages.load(revision.id)) ?? [];
+    const main =
+      images.find(({ isMain }) => isMain) ??
+      [...images].sort((a, b) => a.sortOrder - b.sortOrder)[0];
+
+    return main ? this.imageDataloader.load(main.imageId) : null;
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  async location(@Parent() { placeId }: PEvent) {
+    if (!placeId) {
+      return null;
+    }
+
+    return (await this.places.load(placeId))?.name ?? null;
+  }
+
+  @ResolveField(() => Date, { nullable: true })
+  startsAt(@Parent() { firstDateAt }: PEvent) {
+    return firstDateAt;
+  }
+
+  @ResolveField(() => Date, { nullable: true })
+  endsAt(@Parent() { lastDateAt }: PEvent) {
+    return lastDateAt;
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  url(@Parent() event: PEvent) {
+    return this.urlAdapter.getEventURL(event);
+  }
+
+  @ResolveField(() => [Tag])
+  async tags(@Parent() { id }: PEvent) {
+    return (await this.tagDataloader.load(id)) ?? [];
+  }
+
+  @ResolveField(() => [EventDate])
+  async dates(@Parent() { id }: PEvent) {
+    return (await this.datesDataloader.load(id)) ?? [];
+  }
+
+  @ResolveField(() => [EventRate])
+  async rates(@Parent() { id }: PEvent) {
+    return (await this.ratesDataloader.load(id)) ?? [];
+  }
+
+  @ResolveField(() => Image, { nullable: true })
+  socialMediaImage(@Parent() { socialMediaImageID }: PEvent) {
+    return socialMediaImageID ?
+        this.imageDataloader.load(socialMediaImageID)
+      : null;
+  }
+
+  @Permissions(CanGetEvent)
+  @ResolveField(() => String, { nullable: true })
+  ownerId(@Parent() event: PEvent, @CurrentUser() session: Session) {
+    return mayReadEditorFields(session) ? event.ownerId : null;
+  }
+
+  @Permissions(CanGetEvent)
+  @ResolveField(() => Date, { nullable: true })
+  reviewRequestedAt(@Parent() event: PEvent, @CurrentUser() session: Session) {
+    return mayReadEditorFields(session) ? event.reviewRequestedAt : null;
+  }
+
+  @Permissions(CanGetEvent)
+  @ResolveField(() => String, { nullable: true })
+  reviewRequestedById(
+    @Parent() event: PEvent,
+    @CurrentUser() session: Session
+  ) {
+    return mayReadEditorFields(session) ? event.reviewRequestedById : null;
+  }
+
+  @Permissions(CanGetEvent)
+  @ResolveField(() => String, { nullable: true })
+  legacyId(@Parent() event: PEvent, @CurrentUser() session: Session) {
+    return mayReadEditorFields(session) && event.legacyId != null ?
+        event.legacyId.toString()
+      : null;
+  }
+
+  private async displayedRevision(
+    event: PEvent,
+    editorMode: boolean
+  ): Promise<PEventRevision | null> {
+    const { draft, pending, published } =
+      (await this.revisions.load(event.id)) ?? {};
+
+    return (editorMode ? (draft ?? pending ?? published) : published) ?? null;
   }
 }

@@ -800,12 +800,6 @@ export const CanGetOtherOrganizations: Permission = {
   deprecated: false,
 };
 
-export const CanGetImportedEvents: Permission = {
-  id: 'CAN_GET_IMPORTED_EVENTS',
-  description: 'Allows to get imported events',
-  deprecated: false,
-};
-
 export const CanGetConsent: Permission = {
   id: 'CAN_GET_CONSENT',
   description: 'Allows to get a consent',
@@ -1432,7 +1426,6 @@ export const AllPermissions = [
   CanGetEvent,
   CanUpdateEvent,
   CanDeleteEvent,
-  CanGetImportedEvents,
   CanCreateConsent,
   CanUpdateConsent,
   CanDeleteConsent,

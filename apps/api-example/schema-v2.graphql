@@ -1160,22 +1160,48 @@ enum EditorBlockType {
 }
 
 type Event {
+  audienceId: String
   createdAt: DateTime!
+  dateFrom: DateTime
+  dateTo: DateTime
+  dates: [EventDate!]!
   description: RichText
+  draft: EventRevision
   endsAt: DateTime
-  externalSourceId: String
-  externalSourceName: String
+  firstDateAt: DateTime
   id: String!
   image: Image
-  imageId: String
-  lead: String
+  lastDateAt: DateTime
+  latest: EventRevision
+  legacyId: String
   location: String
   modifiedAt: DateTime!
-  name: String!
-  startsAt: DateTime!
+  name: String
+  openingTime: String
+  organizationId: String
+  ownerId: String
+  pending: EventRevision
+  placeId: String
+  published: EventRevision
+  publishedAt: DateTime
+  rates: [EventRate!]!
+  reviewRequestedAt: DateTime
+  reviewRequestedById: String
+  scheduleType: EventScheduleType!
+  seoDescription: String
+  seoTitle: String
+  showInPrint: Boolean!
+  slug: Slug
+  socialMediaDescription: String
+  socialMediaImage: Image
+  socialMediaImageID: String
+  socialMediaTitle: String
+  startsAt: DateTime
   status: EventStatus!
-  tags: [Tag!]
-  url: String!
+  tags: [Tag!]!
+  ticketingUrl: String
+  url: String
+  weekDays: [Int!]!
 }
 
 type EventBlock implements BaseBlock {
@@ -1204,6 +1230,13 @@ input EventBlockInput {
   filter: EventBlockFilterInput!
 }
 
+input EventContentInput {
+  blocks: [BlockContentInput!]!
+  images: [EventImageInput!]
+  name: String!
+  printDescription: String
+}
+
 type EventCreatedAction implements BaseAction & HasEventLc {
   actionType: ActionType!
   date: DateTime!
@@ -1211,43 +1244,108 @@ type EventCreatedAction implements BaseAction & HasEventLc {
   eventId: String!
 }
 
-input EventFilter {
-  from: DateTime
-  location: String
-  name: String
-  tags: [String!]
-  to: DateTime
-  upcomingOnly: Boolean
+type EventDate {
+  dateFrom: DateTime!
+  dateTo: DateTime!
+  id: String!
+  openingTime: String
+  sortOrder: Int!
 }
 
-type EventFromSource {
-  createdAt: DateTime!
-  description: RichText
-  endsAt: DateTime
-  externalSourceId: String
-  externalSourceName: String
+input EventDateInput {
+  dateFrom: DateTime!
+  dateTo: DateTime!
+  openingTime: String
+}
+
+input EventFilter {
+  from: DateTime
+  ids: [String!]
+  tagIds: [String!]
+  to: DateTime
+  upcoming: Boolean
+}
+
+type EventImage {
+  caption: String
+  image: Image
+  imageId: String!
+  isMain: Boolean!
+  sortOrder: Int!
+}
+
+input EventImageInput {
+  caption: String
+  imageId: String!
+  isMain: Boolean
+}
+
+input EventInput {
+  audienceId: String
+  dateFrom: DateTime
+  dateTo: DateTime
+  dates: [EventDateInput!]
+  openingTime: String
+  organizationId: String
+  ownerId: String
+  placeId: String
+  rates: [EventRateInput!]
+  scheduleType: EventScheduleType!
+  seoDescription: String
+  seoTitle: String
+  showInPrint: Boolean
+  slug: Slug
+  socialMediaDescription: String
+  socialMediaImageID: String
+  socialMediaTitle: String
+  status: EventStatus
+  tagIds: [String!]!
+  ticketingUrl: String
+  weekDays: [Int!]
+}
+
+type EventRate {
+  designation: String
   id: String!
-  imageUrl: String
-  lead: String
-  location: String
-  modifiedAt: DateTime!
+  price: String!
+  sortOrder: Int!
+}
+
+input EventRateInput {
+  designation: String
+  price: String!
+}
+
+type EventRevision {
+  archivedAt: DateTime
+  blocks: [BlockContent!]!
+  createdAt: DateTime!
+  id: String!
+  images: [EventImage!]!
   name: String!
-  startsAt: DateTime!
-  status: EventStatus!
+  printDescription: String
+  publishedAt: DateTime
+}
+
+enum EventScheduleType {
+  Continuous
+  Explicit
+  Weekly
 }
 
 enum EventSort {
   CreatedAt
   EndsAt
   ModifiedAt
+  PublishedAt
   StartsAt
 }
 
 enum EventStatus {
   Cancelled
+  Confirmed
   Postponed
-  Rescheduled
-  Scheduled
+  SoldOut
 }
 
 type EventTeaser implements BaseTeaser & HasImage & HasOptionalEvent {
@@ -1754,21 +1852,6 @@ input ImportArticleOptions {
   importAuthors: Boolean
   importContentImages: Boolean
   importTags: Boolean
-}
-
-input ImportedEventFilter {
-  from: String
-  location: String
-  name: String
-  providers: [String]
-  to: String
-}
-
-enum ImportedEventSort {
-  CREATED_AT
-  ENDS_AT
-  MODIFIED_AT
-  STARTS_AT
 }
 
 type InstagramPostBlock implements BaseBlock {
@@ -2854,8 +2937,8 @@ type Mutation {
   """Creates a new discountCode."""
   createDiscountCode(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): DiscountCode!
 
-  """Creates a new event."""
-  createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
+  """Creates an event with its facts and a first draft of its content."""
+  createEvent(content: EventContentInput!, input: EventInput!): Event!
 
   """Creates a new external app."""
   createExternalApp(input: CreateExternalAppInput!): ExternalApp!
@@ -3056,7 +3139,7 @@ type Mutation {
   """Deletes an existing document."""
   deleteDocument(id: String!): String!
 
-  """Deletes an existing event."""
+  """Deletes an event."""
   deleteEvent(id: String!): Event!
 
   """Deletes an external app."""
@@ -3192,9 +3275,6 @@ type Mutation {
     website: Boolean
   ): TotpSetup!
 
-  "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
-  importEvent(id: String!, source: String!): String!
-
   """Import HTML/subject from the mail provider, overwriting local content"""
   importMailTemplatesFromProvider: Int!
 
@@ -3233,6 +3313,9 @@ type Mutation {
 
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
+
+  """Publishes the draft of an event, at publishAt when given."""
+  publishEvent(id: String!, publishAt: DateTime): Event!
   publishNewsletterCampaign(id: String!): NewsletterPublishResult!
 
   """Publishes an page at the given time."""
@@ -3362,6 +3445,9 @@ type Mutation {
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
 
+  """Unpublishes an event. Its latest revision stays as draft."""
+  unpublishEvent(id: String!): Event!
+
   """Unpublishes all revisions of an page."""
   unpublishPage(id: String!): Page!
 
@@ -3405,8 +3491,11 @@ type Mutation {
   """Updates an existing document."""
   updateDocument(description: String, id: String!, title: String): Document!
 
-  """Updates an existing event."""
-  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
+  """Updates the facts of an event. They take effect immediately."""
+  updateEvent(id: String!, input: UpdateEventInput!): Event!
+
+  """Writes the content of an event into a new draft revision."""
+  updateEventContent(id: String!, input: EventContentInput!): Event!
 
   """Updates an existing external app."""
   updateExternalApp(
@@ -3925,12 +4014,6 @@ type PaginatedDocuments {
 
 type PaginatedEvents {
   nodes: [Event!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PaginatedEventsFromSources {
-  nodes: [EventFromSource!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4778,13 +4861,14 @@ type Query {
   """Returns a paginated list of documents based on the filters given."""
   documents(cursorId: String, filter: DocumentFilter, order: SortOrder = Descending, skip: Int = 0, sort: DocumentSort = ModifiedAt, take: Int = 10): PaginatedDocuments!
 
-  """Returns an event by id."""
-  event(id: String!): Event!
+  """
+  Returns a published event by id or slug. With the preview header and CAN_GET_EVENT it returns any event you may open in the editor.
+  """
+  event(id: String, slug: Slug): Event!
 
-  "\n      Returns a list of Importable Event Providers\n    "
-  eventProviders: [String!]!
-
-  """Returns a paginated list of events based on the filters given."""
+  """
+  Returns a paginated list of published events. With the preview header and CAN_GET_EVENTS it lists the events you manage.
+  """
   events(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
@@ -4839,15 +4923,6 @@ type Query {
   impersonationEnabled: Boolean!
   impersonationSearchUsers(limit: Int, query: String!): [ImpersonationUser!]!
   impersonationSessions: [ImpersonationSessionInfo!]!
-
-  "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
-  importedEvent(filter: SingleEventFilter!): EventFromSource!
-
-  "\n      Returns a list of imported events from external sources, transformed to match our model.\n    "
-  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): PaginatedEventsFromSources!
-
-  "\n      Returns a list of external source ids of already imported events.\n    "
-  importedEventsIds: [String!]!
 
   """Returns a invoice by id."""
   invoice(id: String!): Invoice!
@@ -5587,11 +5662,6 @@ type SettingTrackingPixelProvider implements SettingProvider {
   type: TrackingPixelProviderType!
 }
 
-input SingleEventFilter {
-  id: String!
-  source: String!
-}
-
 scalar Slug
 
 enum SortOrder {
@@ -6172,6 +6242,30 @@ input UpdateCrowdfundingInput {
   id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String
+}
+
+input UpdateEventInput {
+  audienceId: String
+  dateFrom: DateTime
+  dateTo: DateTime
+  dates: [EventDateInput!]
+  openingTime: String
+  organizationId: String
+  ownerId: String
+  placeId: String
+  rates: [EventRateInput!]
+  scheduleType: EventScheduleType
+  seoDescription: String
+  seoTitle: String
+  showInPrint: Boolean
+  slug: Slug
+  socialMediaDescription: String
+  socialMediaImageID: String
+  socialMediaTitle: String
+  status: EventStatus
+  tagIds: [String!]
+  ticketingUrl: String
+  weekDays: [Int!]
 }
 
 input UpdateUserSubscriptionInput {

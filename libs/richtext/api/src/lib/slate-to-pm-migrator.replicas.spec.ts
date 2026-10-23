@@ -6,7 +6,6 @@ const FIVE_SECONDS = 5_000;
 const JOBS: Array<[keyof SlateToPmMigrator, string, number]> = [
   ['migrateAuthors', 'slate.migrateAuthors', TEN_SECONDS],
   ['migrateComments', 'slate.migrateComments', TEN_SECONDS],
-  ['migrateEvents', 'slate.migrateEvents', TEN_SECONDS],
   ['migratePeerProfiles', 'slate.migratePeerProfiles', TEN_SECONDS],
   ['migratePeers', 'slate.migratePeers', TEN_SECONDS],
   ['migratePolls', 'slate.migratePolls', TEN_SECONDS],

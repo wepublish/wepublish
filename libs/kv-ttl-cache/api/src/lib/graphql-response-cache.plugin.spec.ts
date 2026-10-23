@@ -423,6 +423,23 @@ describe('PublicContentCacheInvalidator', () => {
     expect(loader).toHaveBeenCalledTimes(2);
   });
 
+  it('clears the cached events', async () => {
+    const { kv, invalidator } = setup();
+    const before = await kv.getNamespaceVersion('content:events');
+    const answersBefore = await kv.getNamespaceVersion(
+      PUBLIC_CONTENT_NAMESPACE
+    );
+
+    await invalidator.invalidate('events');
+
+    await expect(kv.getNamespaceVersion('content:events')).resolves.not.toBe(
+      before
+    );
+    await expect(
+      kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE)
+    ).resolves.not.toBe(answersBefore);
+  });
+
   it('retires anonymous answers again once other replicas caught up', async () => {
     vi.useFakeTimers();
     const { kv, invalidator } = setup();

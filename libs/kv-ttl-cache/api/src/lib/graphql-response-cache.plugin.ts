@@ -27,12 +27,7 @@ export const PUBLIC_COMMENTS_NAMESPACE = 'graphql:comments';
 export type ArticlePage = { id: string; slug?: string | null };
 
 export type PublicContent =
-  | 'articles'
-  | 'pages'
-  | 'authors'
-  | 'images'
-  | 'paywalls'
-  | 'polls';
+  'articles' | 'pages' | 'authors' | 'images' | 'paywalls' | 'polls' | 'events';
 
 export const contentCacheNamespace = (content: PublicContent) =>
   `content:${content}`;
@@ -128,6 +123,7 @@ const DRAFT_FIELDS = new Set(['draft', 'pending']);
 const VERSIONED_BY_DRAFTS = [
   contentCacheNamespace('articles'),
   contentCacheNamespace('pages'),
+  contentCacheNamespace('events'),
 ];
 
 const selectsDrafts = ({ operation, document }: RequestContext) => {
