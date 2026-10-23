@@ -546,6 +546,14 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     perform: ({ navigate }) => navigate('/mailtemplates'),
   },
   {
+    id: 'letterLayouts',
+    titleKey: 'navbar.letterLayouts',
+    sectionKey: 'navbar.communication',
+    icon: <MdDescription />,
+    permissions: [CanGetMailTemplates.id, CanUpdateMailTemplates.id],
+    perform: ({ navigate }) => navigate('/letterlayouts'),
+  },
+  {
     id: 'newsletter',
     titleKey: 'newsletter.navbar',
     sectionKey: 'navbar.communication',

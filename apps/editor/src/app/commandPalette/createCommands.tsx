@@ -203,6 +203,13 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     perform: ({ navigate }) => navigate('/mailtemplates/create'),
   },
   {
+    id: 'createLetterLayout',
+    titleKey: 'commandPalette.create.letterLayout',
+    icon: <MdDescription />,
+    permissions: [CanCreateMailTemplates.id],
+    perform: ({ navigate }) => navigate('/letterlayouts/create'),
+  },
+  {
     id: 'createMemberPlan',
     titleKey: 'commandPalette.create.memberPlan',
     icon: <MdBookOnline />,

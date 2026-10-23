@@ -1159,6 +1159,20 @@ export function Base({ children }: BaseProps) {
                   </FeatureControl>
 
                   <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetMailTemplates.id,
+                      CanUpdateMailTemplates.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/letterlayouts"
+                      icon={<MdDescription />}
+                    >
+                      {t('navbar.letterLayouts')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
                     qualifyingPermissions={[CanGetMailLogs.id]}
                   >
                     <SidebarNavItem

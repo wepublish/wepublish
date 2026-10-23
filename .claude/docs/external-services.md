@@ -31,6 +31,34 @@ mutations only succeed while none exists (the editor then shows «Einrichten»),
 and there is no delete mutation, so a medium never ends up without one. Change
 type or credentials on the existing row instead.
 
+## PDF Renderer
+
+Renders letters to pdf. One `settings.pdfrenderer` row; editors switch by its
+`type` (which clears the other type's credentials).
+
+- Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
+- Cloudflare Browser Rendering
+
+A template's `letterAppendixId` (an uploaded pdf `Document`, e.g. a static
+QR-bill) is appended after rendering by `appendPdf` (pdf-lib, renderer-agnostic)
+— CH recipients only, padded to an odd page for duplex (Pingen's QR paper rules).
+
+### Letter layouts (Briefpapier)
+
+`LetterLayout` rows (`letter_layouts`, CRUD in `libs/letter/api/src/lib/letter-layout/`,
+editor under `/letterlayouts`) hold header and footer HTML plus their band
+heights. A letter prints on the template's `letterLayoutId`, else on the row
+with `isDefault`, else bare (`LetterContext.resolveLayout`). The bands are
+`position: fixed` so Chromium repeats them on every page, and the body sits in
+a table whose repeated `thead`/`tfoot` spacers keep the text out of them; see
+`composeLetter` in `libs/letter/api/src/lib/letter-renderer.ts`. Bands are
+capped at 40mm so a header cannot reach Pingen's franking zone, and the page 1
+address window stays at 60mm whatever the header height. Header and footer
+HTML take the same `{{placeholders}}` as the body. Images must be absolute
+URLs the renderer can fetch (Gotenberg in docker cannot resolve `localhost`),
+with a fixed `height` so the logo stays inside its band. Mails never see a
+layout: only the letter path consults it.
+
 ## Analytics Provider
 
 - Google Analytics

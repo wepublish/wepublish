@@ -6,12 +6,7 @@ export type TableExportFormat = 'csv' | 'xlsx';
 export type TableExportScope = 'page' | 'all';
 
 export type TableExportValue =
-  | string
-  | number
-  | boolean
-  | Date
-  | null
-  | undefined;
+  string | number | boolean | Date | null | undefined;
 
 export type ExportableColumn<Row> = {
   id: string;

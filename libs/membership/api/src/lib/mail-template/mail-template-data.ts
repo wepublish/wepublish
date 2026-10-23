@@ -97,6 +97,9 @@ export const SAMPLE_USER = {
   createdAt: day('2025-03-01T12:00:00.000Z'),
 };
 
+// The sample address lives with the letter renderer, which previews need too.
+export { SAMPLE_LETTER_ADDRESS } from '@wepublish/letter/api';
+
 export const SAMPLE_SUBSCRIPTION = {
   id: 'cklmn456def0002',
   monthlyAmount: 1000,

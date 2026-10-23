@@ -307,6 +307,8 @@ model Document {
   fileSize    Int
   extension   String
 
+  mailTemplates MailTemplate[]
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([title])
@@ -559,6 +561,17 @@ enum MailLogState {
   deferred  @map("deferred")
   bounced   @map("bounced")
   rejected  @map("rejected")
+
+  // Letter-only outcomes. A letter is handed to a print vendor, so it passes
+  // through states a mail has no equivalent for.
+  dispatched    @map("dispatched")
+  undeliverable @map("undeliverable")
+  canceled      @map("canceled")
+}
+
+enum MailChannel {
+  mail   @map("mail")
+  letter @map("letter")
 }
 
 enum MailLogType {
@@ -596,6 +609,20 @@ model MailLog {
   // always set it.
   type MailLogType?
 
+  // How this went out. Everything below is set for letters only and stays null
+  // for mail.
+  channel MailChannel @default(mail)
+
+  // Id the print vendor assigned to the letter, and what it reported back about
+  // the physical piece.
+  providerLetterID String? @unique
+  trackingNumber   String?
+  pageCount        Int?
+
+  // What was printed on the envelope. The recipient's address may change after
+  // the letter is on its way, so the record keeps its own copy.
+  addressSnapshot Json?
+
   // Set only for mails produced by a manual bulk send job.
   mailSendJob   MailSendJob? @relation(fields: [mailSendJobId], references: [id], onDelete: SetNull)
   mailSendJobId String?
@@ -604,6 +631,7 @@ model MailLog {
   @@index([recipientID, sentDate(sort: Desc)])
   @@index([mailSendJobId])
   @@index([mailProviderMessageID])
+  @@index([channel])
   @@map("mail.log")
 }
 
@@ -634,6 +662,16 @@ model MailSendJob {
 
   status   MailSendJobState @default(queued)
   audience MailSendAudience
+
+  // Mail or letter, decided once per send. Any template can go out either way —
+  // the words are the template's, the medium is the job's.
+  channel MailChannel @default(mail)
+
+  // How a letter job is printed and posted. Ignored for mail.
+  addressPosition LetterAddressPosition @default(left)
+  deliveryProduct LetterDeliveryProduct @default(cheap)
+  printMode       LetterPrintMode       @default(simplex)
+  printSpectrum   LetterPrintSpectrum   @default(grayscale)
 
   // Frozen audit snapshot of the resolved filter criteria. Opaque record, not
   // queried per-element; the concrete recipients are MailSendJobRecipient rows.
@@ -1579,6 +1617,10 @@ model MailTemplate {
   // installs migrating from the remote-template model. Not used for sending.
   externalMailTemplateId String? @unique
 
+  // Uploaded pdf printed after the letter pages (e.g. a static QR-bill).
+  letterAppendixId String?
+  letterAppendix   Document? @relation(fields: [letterAppendixId], references: [id], onDelete: SetNull)
+
   subscriptionIntervals SubscriptionInterval[]
 
   userFlowMails UserFlowMail[]
@@ -1587,7 +1629,37 @@ model MailTemplate {
 
   mailSendJobs MailSendJob[]
 
+  // Stationery a letter printed from this template is set on. Null means the
+  // default layout; the medium is still the send job's choice.
+  letterLayout   LetterLayout? @relation(fields: [letterLayoutId], references: [id])
+  letterLayoutId String?
+
   @@map("mail_templates")
+}
+
+// Stationery for printed letters: a header and a footer repeated on every
+// page of the pdf. Independent of the template, which only carries the words,
+// so the same words can still go out as a mail without any of this.
+model LetterLayout {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name String @unique
+
+  headerHtml String @default("")
+  footerHtml String @default("")
+
+  // Height of the band reserved for each, in millimetres from the sheet edge.
+  headerHeightMm Int @default(30)
+  footerHeightMm Int @default(20)
+
+  // The layout templates without one of their own are printed with.
+  isDefault Boolean @default(false)
+
+  mailTemplates MailTemplate[]
+
+  @@map("letter_layouts")
 }
 
 model PeriodicJob {
@@ -1858,6 +1930,83 @@ model SettingMailProvider {
   smtp_user             String?
 
   @@map("settings.mailprovider")
+}
+
+enum LetterProviderType {
+  pingen
+}
+
+enum LetterProviderEnvironment {
+  production
+  staging
+}
+
+model SettingLetterProvider {
+  id           String   @id
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
+
+  type        LetterProviderType
+  environment LetterProviderEnvironment @default(staging)
+  name        String?
+
+  clientId          String?
+  clientSecret      String?
+  organisationId    String?
+  webhookSigningKey String?
+
+  autoSend                 Boolean @default(false)
+  placeholderEmailContains String?
+
+  @@map("settings.letterprovider")
+}
+
+enum PdfRendererType {
+  cloudflare
+  gotenberg
+}
+
+model SettingPdfRenderer {
+  id           String   @id
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt   DateTime @updatedAt @db.Timestamptz(3)
+  lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
+
+  type PdfRendererType
+  name String?
+
+  cloudflare_accountId String?
+  cloudflare_apiToken  String?
+  gotenberg_url        String?
+  gotenberg_username   String?
+  gotenberg_password   String?
+  timeoutMs            Int?
+
+  @@map("settings.pdfrenderer")
+}
+
+enum LetterAddressPosition {
+  left
+  right
+}
+
+enum LetterDeliveryProduct {
+  fast
+  cheap
+  bulk
+  premium
+  registered
+}
+
+enum LetterPrintMode {
+  simplex
+  duplex
+}
+
+enum LetterPrintSpectrum {
+  color
+  grayscale
 }
 
 model SettingTrackingPixel {
