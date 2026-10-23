@@ -3359,12 +3359,22 @@
       "saveSuccess": "Die Website-Einstellungen wurden erfolgreich gespeichert"
     },
     "externalApps": {
+      "apiKey": {
+        "expiresSoon": "Der API-Schlüssel «{{name}}» läuft am {{expiresAt, PP}} ab. Erstelle einen neuen, hinterlege ihn in der App und verknüpfe ihn hier.",
+        "expired": "Der API-Schlüssel «{{name}}» ist am {{expiresAt, PP}} abgelaufen – die App kann keine Daten mehr lesen.",
+        "revoked": "Der API-Schlüssel «{{name}}» wurde widerrufen – die App kann keine Daten mehr lesen."
+      },
       "apps": "Apps",
       "noAppsFound": "Keine externen Apps konfiguriert.",
       "notFound": "Externe App nicht gefunden",
       "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab."
     },
     "externalAppForm": {
+      "apiKey": "API-Schlüssel",
+      "apiKeyOption": "{{name}} ({{prefix}}…)",
+      "noApiKey": "Kein API-Schlüssel",
+      "apiKeyHelp": "Der API-Schlüssel, mit dem die App die We.Publish-API liest. Der Editor zeigt dann an, wann er abläuft oder widerrufen wurde. Den Schlüssel selbst hinterlegst du in der App.",
+      "apiKeyDetails": "{{prefix}}… · {{scopes}} Berechtigungen · läuft am {{expiresAt, PP}} ab",
       "create": "Erstellen",
       "update": "Aktualisieren",
       "delete": "Löschen",

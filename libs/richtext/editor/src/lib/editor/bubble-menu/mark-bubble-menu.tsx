@@ -7,8 +7,7 @@ import {
 } from '@tiptap/react';
 import { BubbleMenu } from '@tiptap/react/menus';
 import { equals } from 'ramda';
-import { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useRef, useState } from 'react';
 import {
   MdFormatBold,
   MdFormatItalic,
@@ -53,6 +52,20 @@ export function MarkBubbleMenu() {
     selector: selectMarkState,
     equalityFn: equals,
   });
+
+  useEffect(() => {
+    const openLinkMenu = () => {
+      if (!editor.state.selection.empty && editor.can().setMark('link')) {
+        setLinkOpen(true);
+      }
+    };
+
+    editor.on('openLinkMenu', openLinkMenu);
+
+    return () => {
+      editor.off('openLinkMenu', openLinkMenu);
+    };
+  }, [editor]);
 
   if (!editorState) {
     return null;
@@ -169,24 +182,20 @@ export function MarkBubbleMenu() {
           <MdSuperscript size={18} />
         </ToggleButton>
 
-        {editorState.isLink && (
-          <>
-            <ToggleButton
-              ref={linkButtonRef}
-              value="link"
-              aria-label={t('richtext.menuBar.link')}
-              onClick={() => setLinkOpen(true)}
-            >
-              <MdLink size={18} />
-            </ToggleButton>
+        <ToggleButton
+          ref={linkButtonRef}
+          value="link"
+          aria-label={t('richtext.menuBar.link')}
+          onClick={() => setLinkOpen(true)}
+        >
+          <MdLink size={18} />
+        </ToggleButton>
 
-            <LinkPopover
-              open={linkOpen}
-              anchorEl={() => linkButtonRef.current!}
-              onClose={() => setLinkOpen(false)}
-            />
-          </>
-        )}
+        <LinkPopover
+          open={linkOpen}
+          anchorEl={() => linkButtonRef.current!}
+          onClose={() => setLinkOpen(false)}
+        />
       </ToggleButtonGroup>
     </BubbleMenu>
   );

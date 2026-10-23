@@ -290,6 +290,7 @@ LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 ENV NODE_OPTIONS="--max-old-space-size=512"
+ENV UV_THREADPOOL_SIZE=16
 COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-linux-gnu/
 COPY --from=build-media /poppler-dist/bin/pdftoppm /usr/bin/pdftoppm
 COPY --from=build-media /usr/share/fonts/ /usr/share/fonts/
