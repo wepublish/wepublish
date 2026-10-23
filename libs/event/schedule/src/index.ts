@@ -3,3 +3,7 @@ export * from './lib/expand-occurrences';
 export * from './lib/zurich-time';
 export * from './lib/schedule-horizon';
 export * from './lib/schedule-input';
+export * from './lib/schedule-bounds';
+export * from './lib/occurrences-equal';
+export * from './lib/blocks-plain-text';
+export * from './lib/event-input-rules';
