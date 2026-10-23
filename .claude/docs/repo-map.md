@@ -22,6 +22,12 @@ The dominant shape. A domain (`article`, `comments`, `payment`, `membership`,
 Not every domain has all three. `libs/article` has `api` + `website`;
 `libs/consent` has `api` + `editor`.
 
+Framework-free domain logic that both `api` and `editor` call goes in a
+non-layer sublib with no Nest, React or Node imports (`"types": []` in its
+`tsconfig.lib.json`), never in the `api` lib, which the editor cannot bundle.
+Example: `libs/event/schedule` (`@wepublish/event/schedule`), the BKa event
+occurrence expansion and the two-year schedule cap.
+
 **A change usually belongs in one layer.** A new GraphQL field is `api`. Rendering
 it is `website` or `editor`. If a change spans layers, do the `api` side first —
 the schema and generated types flow downstream from it.

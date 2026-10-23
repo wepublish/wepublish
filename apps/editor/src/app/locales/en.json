@@ -4260,7 +4260,9 @@
         "owner": "Owner",
         "ownerUnknown": "Deleted user",
         "filterByOwner": "Filter by owner",
-        "anyStatus": "Any status"
+        "anyStatus": "Any status",
+        "organization": "Organization",
+        "platformKey": "Platform key"
       },
       "panels": {
         "generateToken": "Create API key",
@@ -4269,6 +4271,8 @@
         "name": "Name",
         "scopes": "Permissions",
         "scopesHelp": "You can only grant permissions you hold yourself.",
+        "organization": "Organization",
+        "organizationHelp": "The key can then only reach this organization and its events. Leave empty for a platform key that only its permissions limit.",
         "creationSuccess": "Your API key has been created.",
         "copy": "Copy key",
         "copied": "Key copied",

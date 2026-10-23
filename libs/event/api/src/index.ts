@@ -5,3 +5,9 @@ export * from './lib/event-dataloader.service';
 
 export * from './lib/has-event/has-event.model';
 export * from './lib/has-event/has-event.resolver';
+
+export * from './lib/event-scope';
+export * from './lib/organization/organization.module';
+export * from './lib/organization/organization.model';
+export * from './lib/organization/organization.service';
+export * from './lib/organization/organization-dataloader.service';

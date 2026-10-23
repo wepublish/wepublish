@@ -25,6 +25,7 @@ const userSession: UserSession = {
   expiresAt: new Date(),
   user,
   roles: [],
+  organizationIds: [],
 };
 
 type ContextOverrides = {

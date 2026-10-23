@@ -153,6 +153,13 @@ written to a `date` column lands on the previous day outside UTC (verified
 row). `toDbDate`/`fromDbDate` in `periodic-job.service.ts` convert at the
 database boundary.
 
+Event recurrences are walked on the Europe/Zurich wall clock through
+`@wepublish/event/schedule` (`zurich-time.ts`, plain `Intl`, no date library).
+Adding 24 hours in UTC moves a Saturday 11:00 series to 10:00 for half the year.
+Its DST rules copy PHP's, which BKa expanded with: a time in the spring gap
+moves forward and the moved time sticks for the rest of the series, and an
+ambiguous autumn time keeps the UTC offset of the day it was reached from.
+
 ---
 
 ### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
@@ -214,7 +221,7 @@ Sessions, page data, articles, pages, authors, images, polls, readers'
 comments and anonymous GraphQL answers are cached for 5 min — for logged-in
 requests too. Writers call
 `kv.resetNamespace(...)`, `SessionCacheInvalidator` (user, role, session, peer
-token) or `PublicContentCacheInvalidator` (`invalidate` for public changes,
+token, organisation membership) or `PublicContentCacheInvalidator` (`invalidate` for public changes,
 `invalidateDraft` for drafts, `invalidateComments`); otherwise stale data shows
 until the TTL ends, in the editor as well. A field joins `CACHEABLE_QUERIES`
 only if its anonymous answer is the same for every visitor; see the

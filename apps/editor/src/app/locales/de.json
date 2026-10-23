@@ -4260,7 +4260,9 @@
         "owner": "Besitzer",
         "ownerUnknown": "Gelöschte Person",
         "filterByOwner": "Nach Besitzer filtern",
-        "anyStatus": "Jeder Status"
+        "anyStatus": "Jeder Status",
+        "organization": "Organisation",
+        "platformKey": "Plattform-Schlüssel"
       },
       "panels": {
         "generateToken": "API-Schlüssel erstellen",
@@ -4269,6 +4271,8 @@
         "name": "Name",
         "scopes": "Rechte",
         "scopesHelp": "Sie können nur Rechte vergeben, die Sie selbst haben.",
+        "organization": "Organisation",
+        "organizationHelp": "Der Schlüssel erreicht dann nur diese Organisation und ihre Events. Leer lassen für einen Plattform-Schlüssel, den nur seine Rechte begrenzen.",
         "creationSuccess": "Ihr API-Schlüssel wurde erstellt.",
         "copy": "Schlüssel kopieren",
         "copied": "Schlüssel kopiert",

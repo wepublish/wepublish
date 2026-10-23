@@ -22,6 +22,7 @@ const apiToken = {
   revokedAt: null,
   lastUsedAt: null,
   createdById: null,
+  organizationId: null,
 } as any;
 
 describe('apiTokenSession', () => {
@@ -40,6 +41,17 @@ describe('apiTokenSession', () => {
 
   it('names the key, so the audit log can attribute actions to it', () => {
     expect(apiTokenSession(apiToken, 'wep_secret').name).toBe('Print Import');
+  });
+
+  it('carries the organisation the key is bound to', () => {
+    expect(
+      apiTokenSession({ ...apiToken, organizationId: 'org-a' }, 'wep_secret')
+        .organizationId
+    ).toBe('org-a');
+  });
+
+  it('carries no organisation for a platform key', () => {
+    expect(apiTokenSession(apiToken, 'wep_secret').organizationId).toBeNull();
   });
 });
 

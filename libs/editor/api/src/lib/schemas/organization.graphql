@@ -1,0 +1,26 @@
+fragment TinyOrganization on BaseOrganization {
+  id
+  name
+}
+
+query TinyOrganizationList(
+  $filter: OrganizationFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: OrganizationSort
+) {
+  organizations(
+    filter: $filter
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...TinyOrganization
+    }
+
+    totalCount
+  }
+}

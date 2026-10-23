@@ -7,6 +7,11 @@ import {
 import { ApiToken, Prisma, PrismaClient } from '@prisma/client';
 import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
 import {
+  CanUpdateOtherOrganizations,
+  CrossOrganizationPermissions,
+} from '@wepublish/permissions';
+import { addPredefinedPermissions } from '@wepublish/permissions/api';
+import {
   getMaxTake,
   graphQLSortOrderToPrisma,
   SortOrder,
@@ -23,11 +28,13 @@ export interface CreateApiTokenInput {
   name: string;
   scopes: string[];
   expiresAt: Date;
+  organizationId?: string | null;
 }
 
 export interface ApiTokenCreator {
   userId: string;
   permissions: string[];
+  organizationIds: string[];
 }
 
 export interface ApiTokenReader {
@@ -73,7 +80,7 @@ export class ApiTokenService {
   constructor(private prisma: PrismaClient) {}
 
   async createToken(
-    { name, scopes, expiresAt }: CreateApiTokenInput,
+    { name, scopes, expiresAt, organizationId }: CreateApiTokenInput,
     creator: ApiTokenCreator
   ): Promise<{ apiToken: ApiToken; token: string }> {
     const ungranted = scopes.filter(
@@ -100,6 +107,10 @@ export class ApiTokenService {
       );
     }
 
+    if (organizationId != null) {
+      await this.assertMayBindToOrganization(organizationId, scopes, creator);
+    }
+
     const token = generateApiToken();
 
     const apiToken = await this.prisma.apiToken.create({
@@ -110,6 +121,7 @@ export class ApiTokenService {
         tokenHash: hashApiToken(token),
         prefix: prefixOf(token),
         createdById: creator.userId,
+        organizationId: organizationId ?? null,
       },
     });
 
@@ -130,6 +142,10 @@ export class ApiTokenService {
         `The API key expired on ${apiToken.expiresAt.toISOString()}`,
         { cause: EXPIRED_API_TOKEN }
       );
+    }
+
+    if (!(await this.creatorMayStillBind(apiToken))) {
+      return null;
     }
 
     await this.touch(apiToken);
@@ -200,6 +216,88 @@ export class ApiTokenService {
       where: { id },
       data: { revokedAt: new Date() },
     });
+  }
+
+  private async assertMayBindToOrganization(
+    organizationId: string,
+    scopes: string[],
+    creator: ApiTokenCreator
+  ) {
+    const isMember = creator.organizationIds.includes(organizationId);
+    const mayUpdateAny = creator.permissions.includes(
+      CanUpdateOtherOrganizations.id
+    );
+
+    if (!isMember && !mayUpdateAny) {
+      throw new ForbiddenException(
+        `You may only bind a token to an organization you are a member of.`
+      );
+    }
+
+    const crossOrganization = scopes.filter(scope =>
+      CrossOrganizationPermissions.some(({ id }) => id === scope)
+    );
+
+    if (crossOrganization.length) {
+      throw new BadRequestException(
+        `A token bound to an organization cannot reach other organizations: ${crossOrganization.join(', ')}`
+      );
+    }
+
+    const organization = await this.prisma.organization.findUnique({
+      where: { id: organizationId },
+      select: { id: true },
+    });
+
+    if (!organization) {
+      throw new BadRequestException(
+        `Organization ${organizationId} does not exist.`
+      );
+    }
+  }
+
+  private async creatorMayStillBind({
+    organizationId,
+    createdById,
+  }: ApiToken): Promise<boolean> {
+    if (organizationId == null) {
+      return true;
+    }
+
+    if (createdById == null) {
+      return false;
+    }
+
+    const membership = await this.prisma.organizationMember.findUnique({
+      where: {
+        userId_organizationId: { userId: createdById, organizationId },
+      },
+      select: { userId: true },
+    });
+
+    if (membership) {
+      return true;
+    }
+
+    const creator = await this.prisma.user.findUnique({
+      where: { id: createdById },
+      select: { roleIDs: true },
+    });
+
+    if (!creator) {
+      return false;
+    }
+
+    const roles = await this.prisma.userRole.findMany({
+      where: { id: { in: creator.roleIDs } },
+      select: { id: true, permissionIDs: true },
+    });
+
+    return roles
+      .map(addPredefinedPermissions)
+      .some(role =>
+        role.permissionIDs.includes(CanUpdateOtherOrganizations.id)
+      );
   }
 
   private async touch(apiToken: ApiToken): Promise<void> {

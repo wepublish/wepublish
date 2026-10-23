@@ -24,7 +24,7 @@ import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
 import { ApiTokenModule } from '@wepublish/api-token/api';
 import { NewsletterModule } from '@wepublish/newsletter/api';
 import { DocumentModule } from '@wepublish/document/api';
-import { EventModule } from '@wepublish/event/api';
+import { EventModule, OrganizationModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
   EventsImportModule,
@@ -265,6 +265,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     SettingModule,
     ExternalAppsModule,
     EventModule,
+    OrganizationModule,
     PageModule,
     PeerModule.registerAsync({
       imports: [ConfigModule],

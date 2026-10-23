@@ -133,6 +133,106 @@ describe('AuthenticationService', () => {
     expect(result).toBeFalsy();
   });
 
+  describe('organisation membership', () => {
+    const sessionOf = (organizationIds: string[]) => ({
+      id: 'session-1',
+      token: 'secret-token',
+      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+      expiresAt: new Date('2030-01-01T00:00:00.000Z'),
+      impersonatedBy: null,
+      user: {
+        id: 'user-1',
+        roleIDs: [],
+        organizationMemberships: organizationIds.map(organizationId => ({
+          organizationId,
+        })),
+      },
+    });
+
+    beforeEach(() => {
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+    });
+
+    it('carries the organisations the user belongs to', async () => {
+      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
+        sessionOf(['org-1', 'org-2']) as any
+      );
+
+      const session = await service.getUserSession('secret-token');
+
+      expect(
+        session?.type === AuthSessionType.User && session.organizationIds
+      ).toEqual(['org-1', 'org-2']);
+    });
+
+    it('has no organisations when the user belongs to none', async () => {
+      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
+        sessionOf([]) as any
+      );
+
+      const session = await service.getUserSession('secret-token');
+
+      expect(
+        session?.type === AuthSessionType.User && session.organizationIds
+      ).toEqual([]);
+    });
+
+    it('loads memberships in the same query as the session', async () => {
+      const sessionSpy = vi
+        .spyOn(prisma.session, 'findFirst')
+        .mockResolvedValue(sessionOf(['org-1']) as any);
+      const membershipSpy = vi.spyOn(prisma.organizationMember, 'findMany');
+
+      await service.getUserSession('secret-token');
+
+      const [args] = sessionSpy.mock.calls[0] as any;
+      expect(args.include.user.select.organizationMemberships).toEqual({
+        select: { organizationId: true },
+      });
+      expect(args.relationLoadStrategy).toBe('join');
+      expect(membershipSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not put membership rows on session.user', async () => {
+      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
+        sessionOf(['org-1']) as any
+      );
+
+      const session = await service.getUserSession('secret-token');
+
+      expect(
+        session?.type === AuthSessionType.User && session.user
+      ).not.toHaveProperty('organizationMemberships');
+    });
+
+    it('caches the organisation ids with the session', async () => {
+      const sessionSpy = vi
+        .spyOn(prisma.session, 'findFirst')
+        .mockResolvedValue(sessionOf(['org-1']) as any);
+
+      const first = await service.getUserSession('secret-token');
+      const second = await service.getUserSession('secret-token');
+
+      expect(sessionSpy).toHaveBeenCalledTimes(1);
+      expect(
+        second?.type === AuthSessionType.User && second.organizationIds
+      ).toEqual(first?.type === AuthSessionType.User && first.organizationIds);
+    });
+
+    it('gives peer sessions no organisations', async () => {
+      vi.spyOn(prisma.token, 'findFirst').mockResolvedValue({
+        id: 'token-1',
+        name: 'Peer',
+        token: 'peer-token',
+        roleIDs: [],
+      } as any);
+
+      const session = await service.getPeerSession('peer-token');
+
+      expect(session).not.toHaveProperty('organizationIds');
+    });
+  });
+
   describe('session cache', () => {
     const userSession = {
       id: 'session-1',

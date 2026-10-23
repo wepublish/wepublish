@@ -4260,7 +4260,9 @@
         "owner": "Propriétaire",
         "ownerUnknown": "Personne supprimée",
         "filterByOwner": "Filtrer par propriétaire",
-        "anyStatus": "Tout statut"
+        "anyStatus": "Tout statut",
+        "organization": "Organisation",
+        "platformKey": "Clé de plateforme"
       },
       "panels": {
         "generateToken": "Créer une clé API",
@@ -4269,6 +4271,8 @@
         "name": "Nom",
         "scopes": "Droits",
         "scopesHelp": "Vous ne pouvez accorder que les droits que vous possédez vous-même.",
+        "organization": "Organisation",
+        "organizationHelp": "La clé n’atteint alors que cette organisation et ses événements. Laisser vide pour une clé de plateforme, limitée seulement par ses droits.",
         "creationSuccess": "Votre clé API a été créée.",
         "copy": "Copier la clé",
         "copied": "Clé copiée",

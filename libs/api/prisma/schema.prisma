@@ -331,9 +331,12 @@ model ApiToken {
   createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   externalApps ExternalApps[]
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([createdAt])
   @@index([createdById])
+  @@index([organizationId])
   @@map("api-tokens.tokens")
 }
 
@@ -1254,6 +1257,7 @@ model User {
   notificationConfirmations NotificationConfirmation[]
   seoChecklistItems         SeoChecklistItem[]
   apiTokens                 ApiToken[]
+  organizationMemberships   OrganizationMember[]
 
   @@index([createdAt])
   @@map("users")
@@ -2416,4 +2420,68 @@ model AuditLog {
   @@index([sessionId])
   @@index([entity, recordId])
   @@map("audit_logs")
+}
+
+model Region {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name     String
+  slug     String? @unique
+  enabled  Boolean @default(true)
+  legacyId BigInt? @unique
+
+  organizations Organization[]
+
+  @@map("events.regions")
+}
+
+model Organization {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name               String
+  slug               String? @unique
+  subTitle           String?
+  about              String?
+  website            String?
+  legalStatus        String?
+  enabled            Boolean @default(true)
+  partner            Boolean @default(false)
+  createdByMigration Boolean @default(false)
+
+  address       String?
+  postOfficeBox String?
+  zip           String?
+  city          String?
+  latitude      Float?
+  longitude     Float?
+
+  regionId String?
+  region   Region? @relation(fields: [regionId], references: [id], onDelete: Restrict)
+  legacyId BigInt? @unique
+
+  members   OrganizationMember[]
+  apiTokens ApiToken[]
+
+  @@index([createdAt])
+  @@index([name])
+  @@index([regionId])
+  @@map("events.organizations")
+}
+
+model OrganizationMember {
+  userId         String
+  organizationId String
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt     DateTime @updatedAt @db.Timestamptz(3)
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@id([userId, organizationId])
+  @@index([organizationId])
+  @@map("events.organizations.members")
 }

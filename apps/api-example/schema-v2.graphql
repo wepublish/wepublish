@@ -73,6 +73,14 @@ type ApiToken {
   modifiedAt: DateTime!
   name: String!
 
+  """The organization this token is bound to. Null for a platform token."""
+  organization: BaseOrganization
+
+  """
+  The organization this token is bound to. A bound token acts as a member of that organization and of no other. Null for a platform token, which only its scopes limit.
+  """
+  organizationId: String
+
   """The non-secret start of the token"""
   prefix: String!
   revokedAt: DateTime
@@ -408,6 +416,23 @@ interface BaseNavigationLink {
   label: String!
   modifiedAt: DateTime!
   type: NavigationLinkType!
+}
+
+interface BaseOrganization {
+  about: String
+  address: String
+  city: String
+  enabled: Boolean!
+  id: String!
+  latitude: Float
+  legalStatus: String
+  longitude: Float
+  name: String!
+  regionId: String
+  slug: Slug
+  subTitle: String
+  website: String
+  zip: String
 }
 
 interface BaseTeaser implements HasImage {
@@ -2725,6 +2750,9 @@ type Mutation {
   """Subscribes a contact to a Mailchimp list."""
   addMailchimpContact(input: MailchimpContactInput!): MailchimpSubscribeResult!
 
+  """Makes a user a member of an organization."""
+  addOrganizationMember(organizationId: String!, userId: String!): OrganizationMember!
+
   """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 
@@ -2786,6 +2814,11 @@ type Mutation {
     """When the token stops working."""
     expiresAt: DateTime!
     name: String!
+
+    """
+    Binds the token to an organization you are a member of, or to any with CAN_UPDATE_OTHER_ORGANIZATIONS. A bound token cannot carry cross-organization permissions.
+    """
+    organizationId: String
 
     """The permissions this token carries."""
     scopes: [String!]!
@@ -2857,6 +2890,31 @@ type Mutation {
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
   createNewsletterCampaign(document: JSONObject, title: String!): NewsletterCampaign!
+
+  """
+  Creates an organization. A creator without CAN_UPDATE_OTHER_ORGANIZATIONS becomes its member.
+  """
+  createOrganization(
+    about: String
+    address: String
+    city: String
+
+    """Needs CAN_UPDATE_OTHER_ORGANIZATIONS to change."""
+    enabled: Boolean
+    latitude: Float
+    legalStatus: String
+    longitude: Float
+    name: String!
+
+    """Needs CAN_UPDATE_OTHER_ORGANIZATIONS to change."""
+    partner: Boolean
+    postOfficeBox: String
+    regionId: String
+    slug: Slug
+    subTitle: String
+    website: String
+    zip: String
+  ): SensitiveDataOrganization!
 
   """Creates an page."""
   createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
@@ -3024,6 +3082,11 @@ type Mutation {
 
   """Deletes an existing navigation."""
   deleteNavigation(id: String!): Navigation!
+
+  """
+  Deletes an organization you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  deleteOrganization(id: String!): SensitiveDataOrganization!
 
   """Deletes an page."""
   deletePage(id: String!): String!
@@ -3201,6 +3264,9 @@ type Mutation {
   """
   reloadProviders: Boolean!
 
+  """Removes a user from an organization."""
+  removeOrganizationMember(organizationId: String!, userId: String!): OrganizationMember!
+
   """Renews a subscription."""
   renewSubscription(id: String!): PublicSubscription!
 
@@ -3377,6 +3443,32 @@ type Mutation {
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
   updateNewsletterCampaign(document: JSONObject!, id: String!, title: String): NewsletterCampaign!
+
+  """
+  Updates an organization you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  updateOrganization(
+    about: String
+    address: String
+    city: String
+
+    """Needs CAN_UPDATE_OTHER_ORGANIZATIONS to change."""
+    enabled: Boolean
+    id: String!
+    latitude: Float
+    legalStatus: String
+    longitude: Float
+    name: String
+
+    """Needs CAN_UPDATE_OTHER_ORGANIZATIONS to change."""
+    partner: Boolean
+    postOfficeBox: String
+    regionId: String
+    slug: Slug
+    subTitle: String
+    website: String
+    zip: String
+  ): SensitiveDataOrganization!
 
   """Updates an page."""
   updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
@@ -3589,6 +3681,58 @@ type OneChannelStatus {
   No successful heartbeat for longer than the outage threshold. Always false while the connector is not configured.
   """
   unreachable: Boolean!
+}
+
+type Organization implements BaseOrganization {
+  about: String
+  address: String
+  city: String
+  enabled: Boolean!
+  id: String!
+  latitude: Float
+  legalStatus: String
+  longitude: Float
+  name: String!
+  regionId: String
+  slug: Slug
+  subTitle: String
+  website: String
+  zip: String
+}
+
+input OrganizationFilter {
+  """Needs CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS."""
+  createdByMigration: Boolean
+  enabled: Boolean
+
+  """
+  Organizations with or without members. Needs CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  hasMembers: Boolean
+  ids: [String!]
+
+  """Only the organizations you are a member of."""
+  mine: Boolean
+  name: String
+
+  """Needs CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS."""
+  partner: Boolean
+  regionId: String
+}
+
+type OrganizationMember {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  organization: BaseOrganization
+  organizationId: String!
+  user: User
+  userId: String!
+}
+
+enum OrganizationSort {
+  CreatedAt
+  ModifiedAt
+  Name
 }
 
 type OverriddenRating {
@@ -3829,6 +3973,12 @@ type PaginatedMailSendRecipient {
 
 type PaginatedMemberPlans {
   nodes: [MemberPlan!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedOrganizations {
+  nodes: [BaseOrganization!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4814,6 +4964,14 @@ type Query {
   notificationReads: [NotificationRead!]!
   oneChannelStatus: OneChannelStatus!
 
+  """
+  Returns an organization by id or slug. Members and whoever may read any organization get a SensitiveDataOrganization.
+  """
+  organization(id: String, slug: Slug): BaseOrganization
+
+  """Returns a paginated list of organizations based on the filters given."""
+  organizations(cursorId: String, filter: OrganizationFilter, order: SortOrder = Ascending, skip: Int = 0, sort: OrganizationSort = Name, take: Int = 10): PaginatedOrganizations!
+
   """Returns an page by id or slug."""
   page(id: String, slug: String): Page!
 
@@ -5091,6 +5249,32 @@ input SendTestMailTemplateInput {
   subject: String!
   subscriptionId: String
   textContent: String
+}
+
+"""
+Only resolved for members of the organization and for whoever may read or update any organization.
+"""
+type SensitiveDataOrganization implements BaseOrganization {
+  about: String
+  address: String
+  city: String
+  createdAt: DateTime!
+  createdByMigration: Boolean!
+  enabled: Boolean!
+  id: String!
+  latitude: Float
+  legalStatus: String
+  longitude: Float
+  members: [OrganizationMember!]!
+  modifiedAt: DateTime!
+  name: String!
+  partner: Boolean!
+  postOfficeBox: String
+  regionId: String
+  slug: Slug
+  subTitle: String
+  website: String
+  zip: String
 }
 
 type SensitiveDataUser implements BaseUser {

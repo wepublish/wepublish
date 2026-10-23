@@ -32,3 +32,37 @@ describe('createdBy', () => {
     expect(loader.load).not.toHaveBeenCalled();
   });
 });
+
+describe('createApiToken', () => {
+  it('hands the service the organisations its creator belongs to', async () => {
+    const createToken = vi.fn(async () => ({}));
+    const session = {
+      type: 'user',
+      user: { id: 'u1' },
+      roles: [{ permissionIDs: ['CAN_UPDATE_ORGANIZATION'] }],
+      organizationIds: ['org-a'],
+    };
+
+    await new ApiTokenResolver(
+      { createToken } as never,
+      dataloader(null) as never
+    ).createApiToken(
+      {
+        name: 'Dampfzentrale import',
+        scopes: ['CAN_UPDATE_ORGANIZATION'],
+        expiresAt: new Date(),
+        organizationId: 'org-a',
+      },
+      session as never
+    );
+
+    expect(createToken).toHaveBeenCalledWith(
+      expect.objectContaining({ organizationId: 'org-a' }),
+      {
+        userId: 'u1',
+        permissions: ['CAN_UPDATE_ORGANIZATION'],
+        organizationIds: ['org-a'],
+      }
+    );
+  });
+});

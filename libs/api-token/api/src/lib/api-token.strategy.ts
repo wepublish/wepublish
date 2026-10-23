@@ -24,6 +24,7 @@ export const apiTokenSession = (
   name: apiToken.name,
   token,
   permissions: apiToken.scopes,
+  organizationId: apiToken.organizationId ?? null,
 });
 
 @Injectable()

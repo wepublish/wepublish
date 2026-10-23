@@ -1,5 +1,18 @@
-import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
+import {
+  CanCreateApiToken,
+  CanDeleteOtherOrganizationEvents,
+  CanGetOtherOrganizationEvents,
+  CanGetOtherOrganizations,
+  CanUpdateOrganization,
+  CanUpdateOtherOrganizationEvents,
+  CanUpdateOtherOrganizations,
+} from '@wepublish/permissions';
 
 import { API_TOKEN_PREFIX, hashApiToken } from './api-token.crypto';
 import { ApiTokenStatus } from './api-token.model';
@@ -7,9 +20,50 @@ import { ApiTokenService } from './api-token.service';
 
 const prismaMock = () => {
   const store: any[] = [];
+  const organizations = [{ id: 'org-a' }, { id: 'org-b' }];
+  const users: Array<{ id: string; roleIDs: string[] }> = [];
+  const memberships: Array<{ userId: string; organizationId: string }> = [];
+  const roles = [
+    { id: 'admin', permissionIDs: [] },
+    { id: 'editor', permissionIDs: [] },
+    {
+      id: 'organisation-admin',
+      permissionIDs: [CanUpdateOtherOrganizations.id],
+    },
+  ];
 
   return {
     store,
+    users,
+    memberships,
+    organization: {
+      findUnique: vi.fn(
+        async ({ where }: any) =>
+          organizations.find(organization => organization.id === where.id) ??
+          null
+      ),
+    },
+    organizationMember: {
+      findUnique: vi.fn(
+        async ({ where: { userId_organizationId } }: any) =>
+          memberships.find(
+            membership =>
+              membership.userId === userId_organizationId.userId &&
+              membership.organizationId === userId_organizationId.organizationId
+          ) ?? null
+      ),
+    },
+    user: {
+      findUnique: vi.fn(
+        async ({ where }: any) =>
+          users.find(user => user.id === where.id) ?? null
+      ),
+    },
+    userRole: {
+      findMany: vi.fn(async ({ where }: any) =>
+        roles.filter(role => where.id.in.includes(role.id))
+      ),
+    },
     apiToken: {
       create: vi.fn(async ({ data }: any) => {
         const row = { id: `id-${store.length}`, ...data };
@@ -35,13 +89,17 @@ const inDays = (days: number) =>
   new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 
 describe('createToken', () => {
-  const creator = { userId: 'u1', permissions: ['CAN_GET_EVENTS'] };
+  const creator = {
+    userId: 'u1',
+    permissions: ['CAN_GET_EVENTS'],
+    organizationIds: [],
+  };
 
   it('refuses a token that never expires', async () => {
     await expect(
       service(prismaMock()).createToken(
         { name: 'Forever', scopes: [], expiresAt: null as never },
-        { userId: 'u1', permissions: [] }
+        { userId: 'u1', permissions: [], organizationIds: [] }
       )
     ).rejects.toThrow(/expiry/i);
   });
@@ -50,7 +108,7 @@ describe('createToken', () => {
     await expect(
       service(prismaMock()).createToken(
         { name: 'Too long', scopes: [], expiresAt: inDays(366 * 3 + 2) },
-        { userId: 'u1', permissions: [] }
+        { userId: 'u1', permissions: [], organizationIds: [] }
       )
     ).rejects.toThrow(/three years/i);
   });
@@ -59,7 +117,7 @@ describe('createToken', () => {
     await expect(
       service(prismaMock()).createToken(
         { name: 'Stale', scopes: [], expiresAt: inDays(-1) },
-        { userId: 'u1', permissions: [] }
+        { userId: 'u1', permissions: [], organizationIds: [] }
       )
     ).rejects.toThrow(/future/i);
   });
@@ -88,7 +146,11 @@ describe('createToken', () => {
         scopes: ['CAN_GET_EVENTS'],
         expiresAt: inDays(30),
       },
-      { userId: 'u1', permissions: ['CAN_GET_EVENTS'] }
+      {
+        userId: 'u1',
+        permissions: ['CAN_GET_EVENTS'],
+        organizationIds: [],
+      }
     );
 
     expect(token).toMatch(new RegExp(`^${API_TOKEN_PREFIX}`));
@@ -101,7 +163,7 @@ describe('createToken', () => {
 
     const { token } = await service(prisma).createToken(
       { name: 'k', scopes: [], expiresAt: inDays(30) },
-      { userId: 'u1', permissions: [] }
+      { userId: 'u1', permissions: [], organizationIds: [] }
     );
 
     expect(token.startsWith(prisma.store[0].prefix)).toBe(true);
@@ -113,7 +175,11 @@ describe('createToken', () => {
     await expect(
       service(prisma).createToken(
         { name: 'escalate', scopes: ['CAN_DELETE_ARTICLE'] },
-        { userId: 'u1', permissions: ['CAN_GET_EVENTS'] }
+        {
+          userId: 'u1',
+          permissions: ['CAN_GET_EVENTS'],
+          organizationIds: [],
+        }
       )
     ).rejects.toBeInstanceOf(ForbiddenException);
   });
@@ -124,9 +190,145 @@ describe('createToken', () => {
     await expect(
       service(prisma).createToken(
         { name: 'escalate', scopes: ['CAN_DELETE_ARTICLE'] },
-        { userId: 'u1', permissions: [] }
+        { userId: 'u1', permissions: [], organizationIds: [] }
       )
     ).rejects.toThrow(/CAN_DELETE_ARTICLE/);
+  });
+});
+
+describe('binding a key to an organisation', () => {
+  const create = (
+    prisma: any,
+    organizationId: string | null | undefined,
+    creator: {
+      permissions?: string[];
+      organizationIds?: string[];
+      scopes?: string[];
+    } = {}
+  ) =>
+    service(prisma).createToken(
+      {
+        name: 'Dampfzentrale import',
+        scopes: creator.scopes ?? [CanUpdateOrganization.id],
+        expiresAt: inDays(30),
+        organizationId,
+      },
+      {
+        userId: 'u1',
+        permissions: creator.permissions ?? [CanUpdateOrganization.id],
+        organizationIds: creator.organizationIds ?? [],
+      }
+    );
+
+  it('keeps a key without an organisation a platform key', async () => {
+    const prisma = prismaMock();
+
+    await create(prisma, undefined);
+
+    expect(prisma.store[0].organizationId).toBeNull();
+  });
+
+  it('lets a member bind a key to their organisation', async () => {
+    const prisma = prismaMock();
+
+    const { apiToken } = await create(prisma, 'org-a', {
+      organizationIds: ['org-a'],
+    });
+
+    expect(apiToken.organizationId).toBe('org-a');
+    expect(prisma.store[0].organizationId).toBe('org-a');
+  });
+
+  it('refuses to bind a key to an organisation the creator does not belong to', async () => {
+    const prisma = prismaMock();
+
+    await expect(
+      create(prisma, 'org-b', { organizationIds: ['org-a'] })
+    ).rejects.toBeInstanceOf(ForbiddenException);
+    expect(prisma.apiToken.create).not.toHaveBeenCalled();
+  });
+
+  it('does not let CAN_CREATE_API_TOKEN alone bind a key to a foreign organisation', async () => {
+    const prisma = prismaMock();
+
+    await expect(
+      create(prisma, 'org-b', {
+        permissions: [CanCreateApiToken.id, CanUpdateOrganization.id],
+      })
+    ).rejects.toBeInstanceOf(ForbiddenException);
+  });
+
+  it('lets whoever may update any organisation bind a key to any of them', async () => {
+    const prisma = prismaMock();
+
+    const { apiToken } = await create(prisma, 'org-b', {
+      permissions: [CanUpdateOtherOrganizations.id, CanUpdateOrganization.id],
+    });
+
+    expect(apiToken.organizationId).toBe('org-b');
+  });
+
+  it('does not count reading or editing other organisations‘ events as leave to bind', async () => {
+    const prisma = prismaMock();
+
+    await expect(
+      create(prisma, 'org-b', {
+        permissions: [
+          CanGetOtherOrganizations.id,
+          CanUpdateOtherOrganizationEvents.id,
+          CanUpdateOrganization.id,
+        ],
+      })
+    ).rejects.toBeInstanceOf(ForbiddenException);
+  });
+
+  it('refuses an organisation that does not exist', async () => {
+    const prisma = prismaMock();
+
+    await expect(
+      create(prisma, 'org-gone', {
+        permissions: [CanUpdateOtherOrganizations.id, CanUpdateOrganization.id],
+      })
+    ).rejects.toBeInstanceOf(BadRequestException);
+    expect(prisma.apiToken.create).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    CanGetOtherOrganizationEvents,
+    CanUpdateOtherOrganizationEvents,
+    CanDeleteOtherOrganizationEvents,
+    CanGetOtherOrganizations,
+    CanUpdateOtherOrganizations,
+  ])(
+    'refuses to give a bound key $id, which would reach past its organisation',
+    async permission => {
+      const prisma = prismaMock();
+
+      await expect(
+        create(prisma, 'org-a', {
+          organizationIds: ['org-a'],
+          permissions: [permission.id],
+          scopes: [permission.id],
+        })
+      ).rejects.toThrow(
+        expect.objectContaining({
+          constructor: BadRequestException,
+          message: expect.stringContaining(permission.id),
+        })
+      );
+      expect(prisma.apiToken.create).not.toHaveBeenCalled();
+    }
+  );
+
+  it('still lets a platform key carry cross-organisation permissions', async () => {
+    const prisma = prismaMock();
+
+    await expect(
+      create(prisma, null, {
+        permissions: [CanUpdateOtherOrganizationEvents.id],
+        scopes: [CanUpdateOtherOrganizationEvents.id],
+      })
+    ).resolves.toBeTruthy();
   });
 });
 
@@ -142,7 +344,11 @@ describe('resolveToken', () => {
     const prisma = prismaMock();
     const { token } = await service(prisma).createToken(
       { name: 'k', scopes: ['CAN_GET_EVENTS'], expiresAt: inDays(30) },
-      { userId: 'u1', permissions: ['CAN_GET_EVENTS', 'CAN_DELETE_ARTICLE'] }
+      {
+        userId: 'u1',
+        permissions: ['CAN_GET_EVENTS', 'CAN_DELETE_ARTICLE'],
+        organizationIds: [],
+      }
     );
 
     const resolved = await service(prisma).resolveToken(token);
@@ -221,6 +427,79 @@ describe('resolveToken', () => {
     await service(prisma).resolveToken('wep_x');
 
     expect(prisma.apiToken.update).toHaveBeenCalled();
+  });
+
+  describe('a key bound to an organisation', () => {
+    const bound = (
+      prisma: ReturnType<typeof prismaMock>,
+      createdById: string | null
+    ) =>
+      prisma.store.push({
+        ...valid,
+        id: 'a',
+        tokenHash: hashApiToken('wep_x'),
+        organizationId: 'org-a',
+        createdById,
+      });
+
+    it('works while its creator is still a member of the organisation', async () => {
+      const prisma = prismaMock();
+      prisma.users.push({ id: 'u1', roleIDs: [] });
+      prisma.memberships.push({ userId: 'u1', organizationId: 'org-a' });
+      bound(prisma, 'u1');
+
+      expect(await service(prisma).resolveToken('wep_x')).not.toBeNull();
+    });
+
+    it('stops working once its creator has left the organisation', async () => {
+      const prisma = prismaMock();
+      prisma.users.push({ id: 'u1', roleIDs: ['editor'] });
+      prisma.memberships.push({ userId: 'u1', organizationId: 'org-b' });
+      bound(prisma, 'u1');
+
+      expect(await service(prisma).resolveToken('wep_x')).toBeNull();
+      expect(prisma.apiToken.update).not.toHaveBeenCalled();
+    });
+
+    it('stops working once its creator has been deleted', async () => {
+      const prisma = prismaMock();
+      bound(prisma, null);
+
+      expect(await service(prisma).resolveToken('wep_x')).toBeNull();
+    });
+
+    it.each(['organisation-admin', 'admin'])(
+      'keeps working for a creator outside the organisation whose role %s may update any organisation',
+      async role => {
+        const prisma = prismaMock();
+        prisma.users.push({ id: 'u1', roleIDs: [role] });
+        bound(prisma, 'u1');
+
+        expect(await service(prisma).resolveToken('wep_x')).not.toBeNull();
+      }
+    );
+
+    it('stops working once a creator outside the organisation loses leave to update any organisation', async () => {
+      const prisma = prismaMock();
+      prisma.users.push({ id: 'u1', roleIDs: ['editor'] });
+      bound(prisma, 'u1');
+
+      expect(await service(prisma).resolveToken('wep_x')).toBeNull();
+    });
+
+    it('does not look up memberships for a platform key', async () => {
+      const prisma = prismaMock();
+      prisma.store.push({
+        ...valid,
+        id: 'a',
+        tokenHash: hashApiToken('wep_x'),
+        organizationId: null,
+        createdById: null,
+      });
+
+      expect(await service(prisma).resolveToken('wep_x')).not.toBeNull();
+      expect(prisma.organizationMember.findUnique).not.toHaveBeenCalled();
+    });
   });
 });
 

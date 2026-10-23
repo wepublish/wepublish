@@ -736,6 +736,70 @@ export const CanDeleteEvent: Permission = {
   deprecated: false,
 };
 
+export const CanGetEvents: Permission = {
+  id: 'CAN_GET_EVENTS',
+  description: 'Allows to get events',
+  deprecated: false,
+};
+
+export const CanPublishEvent: Permission = {
+  id: 'CAN_PUBLISH_EVENT',
+  description: 'Allows to publish events without validation',
+  deprecated: false,
+};
+
+export const CanGetOtherOrganizationEvents: Permission = {
+  id: 'CAN_GET_OTHER_ORGANIZATION_EVENTS',
+  description: 'Allows to get events of organizations you are not a member of',
+  deprecated: false,
+};
+
+export const CanUpdateOtherOrganizationEvents: Permission = {
+  id: 'CAN_UPDATE_OTHER_ORGANIZATION_EVENTS',
+  description:
+    'Allows to update and validate events of organizations you are not a member of',
+  deprecated: false,
+};
+
+export const CanDeleteOtherOrganizationEvents: Permission = {
+  id: 'CAN_DELETE_OTHER_ORGANIZATION_EVENTS',
+  description:
+    'Allows to delete events of organizations you are not a member of',
+  deprecated: false,
+};
+
+export const CanCreateOrganization: Permission = {
+  id: 'CAN_CREATE_ORGANIZATION',
+  description: 'Allows to create an organization',
+  deprecated: false,
+};
+
+export const CanUpdateOrganization: Permission = {
+  id: 'CAN_UPDATE_ORGANIZATION',
+  description: 'Allows to update organizations you are a member of',
+  deprecated: false,
+};
+
+export const CanDeleteOrganization: Permission = {
+  id: 'CAN_DELETE_ORGANIZATION',
+  description: 'Allows to delete organizations you are a member of',
+  deprecated: false,
+};
+
+export const CanUpdateOtherOrganizations: Permission = {
+  id: 'CAN_UPDATE_OTHER_ORGANIZATIONS',
+  description:
+    'Allows to update any organization, its members, partner and enabled state',
+  deprecated: false,
+};
+
+export const CanGetOtherOrganizations: Permission = {
+  id: 'CAN_GET_OTHER_ORGANIZATIONS',
+  description:
+    'Allows to get the private data and members of organizations you are not a member of',
+  deprecated: false,
+};
+
 export const CanGetImportedEvents: Permission = {
   id: 'CAN_GET_IMPORTED_EVENTS',
   description: 'Allows to get imported events',
@@ -1441,6 +1505,16 @@ export const AllPermissions = [
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
   CanGetAuditLogs,
+  CanGetEvents,
+  CanPublishEvent,
+  CanGetOtherOrganizationEvents,
+  CanUpdateOtherOrganizationEvents,
+  CanDeleteOtherOrganizationEvents,
+  CanCreateOrganization,
+  CanUpdateOrganization,
+  CanDeleteOrganization,
+  CanUpdateOtherOrganizations,
+  CanGetOtherOrganizations,
 ] as const;
 
 export const EditorPermissions = [
@@ -1526,4 +1600,12 @@ export const PeerPermissions = [
   CanGetPeerProfile,
   CanGetSharedArticle,
   CanGetSharedArticles,
+] as const;
+
+export const CrossOrganizationPermissions = [
+  CanGetOtherOrganizationEvents,
+  CanUpdateOtherOrganizationEvents,
+  CanDeleteOtherOrganizationEvents,
+  CanGetOtherOrganizations,
+  CanUpdateOtherOrganizations,
 ] as const;

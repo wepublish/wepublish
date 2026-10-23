@@ -79,6 +79,7 @@ export class ApiTokenResolver {
     return this.service.createToken(args, {
       userId: session.user.id,
       permissions: session.roles.flatMap(role => role.permissionIDs),
+      organizationIds: session.organizationIds,
     });
   }
 

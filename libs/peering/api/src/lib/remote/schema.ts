@@ -88,6 +88,10 @@ export type ApiToken = {
   lastUsedAt?: Maybe<Scalars['DateTime']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** The organization this token is bound to. Null for a platform token. */
+  organization?: Maybe<BaseOrganization>;
+  /** The organization this token is bound to. A bound token acts as a member of that organization and of no other. Null for a platform token, which only its scopes limit. */
+  organizationId?: Maybe<Scalars['String']['output']>;
   /** The non-secret start of the token */
   prefix: Scalars['String']['output'];
   revokedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -431,6 +435,23 @@ export type BaseNavigationLink = {
   label: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   type: NavigationLinkType;
+};
+
+export type BaseOrganization = {
+  about?: Maybe<Scalars['String']['output']>;
+  address?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  enabled: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  latitude?: Maybe<Scalars['Float']['output']>;
+  legalStatus?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['Float']['output']>;
+  name: Scalars['String']['output'];
+  regionId?: Maybe<Scalars['String']['output']>;
+  slug?: Maybe<Scalars['Slug']['output']>;
+  subTitle?: Maybe<Scalars['String']['output']>;
+  website?: Maybe<Scalars['String']['output']>;
+  zip?: Maybe<Scalars['String']['output']>;
 };
 
 export type BaseTeaser = {
@@ -2745,6 +2766,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Subscribes a contact to a Mailchimp list. */
   addMailchimpContact: MailchimpSubscribeResult;
+  /** Makes a user a member of an organization. */
+  addOrganizationMember: OrganizationMember;
   /** Adds a new comment made by you. */
   addUserComment: Comment;
   /** Called by We.Publish One. Replaces the feature state of this medium and returns the features now switched on. */
@@ -2818,6 +2841,8 @@ export type Mutation = {
   /** Creates a new navigation. */
   createNavigation: Navigation;
   createNewsletterCampaign: NewsletterCampaign;
+  /** Creates an organization. A creator without CAN_UPDATE_OTHER_ORGANIZATIONS becomes its member. */
+  createOrganization: SensitiveDataOrganization;
   /** Creates an page. */
   createPage: Page;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
@@ -2913,6 +2938,8 @@ export type Mutation = {
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
   deleteNavigation: Navigation;
+  /** Deletes an organization you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS. */
+  deleteOrganization: SensitiveDataOrganization;
   /** Deletes an page. */
   deletePage: Scalars['String']['output'];
   /** Deletes an existing payment method. */
@@ -3012,6 +3039,8 @@ export type Mutation = {
   rejectComment: Comment;
   /** Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API. */
   reloadProviders: Scalars['Boolean']['output'];
+  /** Removes a user from an organization. */
+  removeOrganizationMember: OrganizationMember;
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
@@ -3112,6 +3141,8 @@ export type Mutation = {
   /** Updates an existing navigation. */
   updateNavigation: Navigation;
   updateNewsletterCampaign: NewsletterCampaign;
+  /** Updates an organization you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS. */
+  updateOrganization: SensitiveDataOrganization;
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
@@ -3179,6 +3210,12 @@ export type Mutation = {
 
 export type MutationAddMailchimpContactArgs = {
   input: MailchimpContactInput;
+};
+
+
+export type MutationAddOrganizationMemberArgs = {
+  organizationId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
@@ -3265,6 +3302,7 @@ export type MutationCreateAnalyticsProviderSettingArgs = {
 export type MutationCreateApiTokenArgs = {
   expiresAt: Scalars['DateTime']['input'];
   name: Scalars['String']['input'];
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   scopes: Array<Scalars['String']['input']>;
 };
 
@@ -3483,6 +3521,25 @@ export type MutationCreateNavigationArgs = {
 export type MutationCreateNewsletterCampaignArgs = {
   document?: InputMaybe<Scalars['JSONObject']['input']>;
   title: Scalars['String']['input'];
+};
+
+
+export type MutationCreateOrganizationArgs = {
+  about?: InputMaybe<Scalars['String']['input']>;
+  address?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  latitude?: InputMaybe<Scalars['Float']['input']>;
+  legalStatus?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['Float']['input']>;
+  name: Scalars['String']['input'];
+  partner?: InputMaybe<Scalars['Boolean']['input']>;
+  postOfficeBox?: InputMaybe<Scalars['String']['input']>;
+  regionId?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
+  subTitle?: InputMaybe<Scalars['String']['input']>;
+  website?: InputMaybe<Scalars['String']['input']>;
+  zip?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3863,6 +3920,11 @@ export type MutationDeleteNavigationArgs = {
 };
 
 
+export type MutationDeleteOrganizationArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeletePageArgs = {
   id: Scalars['String']['input'];
 };
@@ -4105,6 +4167,12 @@ export type MutationRegisterMemberArgs = {
 export type MutationRejectCommentArgs = {
   id: Scalars['String']['input'];
   rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationRemoveOrganizationMemberArgs = {
+  organizationId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
@@ -4502,6 +4570,26 @@ export type MutationUpdateNewsletterCampaignArgs = {
   document: Scalars['JSONObject']['input'];
   id: Scalars['String']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateOrganizationArgs = {
+  about?: InputMaybe<Scalars['String']['input']>;
+  address?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['String']['input'];
+  latitude?: InputMaybe<Scalars['Float']['input']>;
+  legalStatus?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['Float']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  partner?: InputMaybe<Scalars['Boolean']['input']>;
+  postOfficeBox?: InputMaybe<Scalars['String']['input']>;
+  regionId?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
+  subTitle?: InputMaybe<Scalars['String']['input']>;
+  website?: InputMaybe<Scalars['String']['input']>;
+  zip?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4942,6 +5030,55 @@ export type OneChannelStatus = {
   unreachable: Scalars['Boolean']['output'];
 };
 
+export type Organization = BaseOrganization & {
+  __typename?: 'Organization';
+  about?: Maybe<Scalars['String']['output']>;
+  address?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  enabled: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  latitude?: Maybe<Scalars['Float']['output']>;
+  legalStatus?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['Float']['output']>;
+  name: Scalars['String']['output'];
+  regionId?: Maybe<Scalars['String']['output']>;
+  slug?: Maybe<Scalars['Slug']['output']>;
+  subTitle?: Maybe<Scalars['String']['output']>;
+  website?: Maybe<Scalars['String']['output']>;
+  zip?: Maybe<Scalars['String']['output']>;
+};
+
+export type OrganizationFilter = {
+  /** Needs CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS. */
+  createdByMigration?: InputMaybe<Scalars['Boolean']['input']>;
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Organizations with or without members. Needs CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS. */
+  hasMembers?: InputMaybe<Scalars['Boolean']['input']>;
+  ids?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Only the organizations you are a member of. */
+  mine?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Needs CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS. */
+  partner?: InputMaybe<Scalars['Boolean']['input']>;
+  regionId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type OrganizationMember = {
+  __typename?: 'OrganizationMember';
+  createdAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  organization?: Maybe<BaseOrganization>;
+  organizationId: Scalars['String']['output'];
+  user?: Maybe<User>;
+  userId: Scalars['String']['output'];
+};
+
+export enum OrganizationSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
+
 export type OverriddenRating = {
   __typename?: 'OverriddenRating';
   answerId: Scalars['String']['output'];
@@ -5204,6 +5341,13 @@ export type PaginatedMailSendRecipient = {
 export type PaginatedMemberPlans = {
   __typename?: 'PaginatedMemberPlans';
   nodes: Array<MemberPlan>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedOrganizations = {
+  __typename?: 'PaginatedOrganizations';
+  nodes: Array<BaseOrganization>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -6060,6 +6204,10 @@ export type Query = {
   /** Returns the current user's read notifications. Requires authentication. */
   notificationReads: Array<NotificationRead>;
   oneChannelStatus: OneChannelStatus;
+  /** Returns an organization by id or slug. Members and whoever may read any organization get a SensitiveDataOrganization. */
+  organization?: Maybe<BaseOrganization>;
+  /** Returns a paginated list of organizations based on the filters given. */
+  organizations: PaginatedOrganizations;
   /** Returns an page by id or slug. */
   page: Page;
   /** Returns a single page revision including its full content. */
@@ -6720,6 +6868,22 @@ export type QueryNewsletterCampaignsArgs = {
 };
 
 
+export type QueryOrganizationArgs = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['Slug']['input']>;
+};
+
+
+export type QueryOrganizationsArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<OrganizationFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<OrganizationSort>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryPageArgs = {
   id?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -7095,6 +7259,31 @@ export type SendTestMailTemplateInput = {
   subject: Scalars['String']['input'];
   subscriptionId?: InputMaybe<Scalars['String']['input']>;
   textContent?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Only resolved for members of the organization and for whoever may read or update any organization. */
+export type SensitiveDataOrganization = BaseOrganization & {
+  __typename?: 'SensitiveDataOrganization';
+  about?: Maybe<Scalars['String']['output']>;
+  address?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  createdByMigration: Scalars['Boolean']['output'];
+  enabled: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  latitude?: Maybe<Scalars['Float']['output']>;
+  legalStatus?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['Float']['output']>;
+  members: Array<OrganizationMember>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  partner: Scalars['Boolean']['output'];
+  postOfficeBox?: Maybe<Scalars['String']['output']>;
+  regionId?: Maybe<Scalars['String']['output']>;
+  slug?: Maybe<Scalars['Slug']['output']>;
+  subTitle?: Maybe<Scalars['String']['output']>;
+  website?: Maybe<Scalars['String']['output']>;
+  zip?: Maybe<Scalars['String']['output']>;
 };
 
 export type SensitiveDataUser = BaseUser & {
@@ -8325,6 +8514,10 @@ const result: PossibleTypesResultData = {
       "ArticleNavigationLink",
       "ExternalNavigationLink",
       "PageNavigationLink"
+    ],
+    "BaseOrganization": [
+      "Organization",
+      "SensitiveDataOrganization"
     ],
     "BaseTeaser": [
       "ArticleTeaser",

@@ -66,6 +66,12 @@ export class ApiToken {
 
   @Field(() => String, { nullable: true })
   createdById?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description: `The organization this token is bound to. A bound token acts as a member of that organization and of no other. Null for a platform token, which only its scopes limit.`,
+  })
+  organizationId?: string | null;
 }
 
 @ObjectType({
@@ -122,4 +128,10 @@ export class CreateApiTokenArgs extends PickType(
   ApiToken,
   ['name', 'scopes', 'expiresAt'] as const,
   ArgsType
-) {}
+) {
+  @Field(() => String, {
+    nullable: true,
+    description: `Binds the token to an organization you are a member of, or to any with CAN_UPDATE_OTHER_ORGANIZATIONS. A bound token cannot carry cross-organization permissions.`,
+  })
+  organizationId?: string | null;
+}

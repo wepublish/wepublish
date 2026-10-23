@@ -41,6 +41,7 @@ exports[`AuthenticationService > should return a user session 1`] = `
   "expiresAt": undefined,
   "id": undefined,
   "impersonatedBy": undefined,
+  "organizationIds": [],
   "roles": [],
   "token": "1234",
   "type": "user",
@@ -69,6 +70,11 @@ exports[`AuthenticationService > should return a user session 2`] = `
           "modifiedAt": true,
           "name": true,
           "note": true,
+          "organizationMemberships": {
+            "select": {
+              "organizationId": true,
+            },
+          },
           "password": false,
           "paymentProviderCustomers": true,
           "pendingEmail": true,
@@ -82,6 +88,7 @@ exports[`AuthenticationService > should return a user session 2`] = `
         },
       },
     },
+    "relationLoadStrategy": "join",
     "where": {
       "token": "1234",
     },
@@ -120,6 +127,11 @@ exports[`AuthenticationService > should return null if user can't be found 1`] =
           "modifiedAt": true,
           "name": true,
           "note": true,
+          "organizationMemberships": {
+            "select": {
+              "organizationId": true,
+            },
+          },
           "password": false,
           "paymentProviderCustomers": true,
           "pendingEmail": true,
@@ -133,6 +145,7 @@ exports[`AuthenticationService > should return null if user can't be found 1`] =
         },
       },
     },
+    "relationLoadStrategy": "join",
     "where": {
       "token": "1234",
     },
