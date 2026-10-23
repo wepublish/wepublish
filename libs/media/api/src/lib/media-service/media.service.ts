@@ -96,6 +96,8 @@ export type ImageURIObject = {
 
 @Injectable()
 export class MediaService {
+  private readonly pendingImages = new Map<string, Promise<ImageURIObject>>();
+
   constructor(
     @InjectDisk(UPLOAD_DISK) private uploads: StorageDisk,
     @InjectDisk(TRANSFORMATION_DISK) private transformations: StorageDisk,
@@ -131,6 +133,28 @@ export class MediaService {
       removeSignatureFromTransformations(transformations)
     );
     const objectUri = `images/${imageId}/${transformationsKey}`;
+    const pendingKey = `${objectUri}#${transformations.sig ?? ''}`;
+
+    const pending = this.pendingImages.get(pendingKey);
+    if (pending) {
+      return await pending;
+    }
+
+    const request = this.resolveImageUri(
+      imageId,
+      objectUri,
+      transformations
+    ).finally(() => this.pendingImages.delete(pendingKey));
+    this.pendingImages.set(pendingKey, request);
+
+    return await request;
+  }
+
+  private async resolveImageUri(
+    imageId: string,
+    objectUri: string,
+    transformations: TransformationsDto
+  ): Promise<ImageURIObject> {
     if (!(await this.transformations.exists(objectUri))) {
       return await this.transformImage(imageId, transformations);
     }
@@ -182,6 +206,19 @@ export class MediaService {
     transformations: TransformationsDto
   ): Promise<ImageURIObject> {
     const originalTransformations = structuredClone(transformations);
+    const transformGuard = new TransformGuard();
+
+    // Validate signature when transformations are requested.
+    // Raw image requests without any parameters skip signature validation.
+    if (this.hasTransformations(originalTransformations)) {
+      const publicKey = await this.jwksClient.getPublicKey();
+      await transformGuard.validateSignature(
+        publicKey,
+        imageId,
+        originalTransformations
+      );
+    }
+
     let imageStream: Readable;
     let imageExists = true;
     try {
@@ -201,38 +238,24 @@ export class MediaService {
       removeSignatureFromTransformations(transformations)
     );
 
-    if (!imageExists) {
+    try {
       if (
-        await this.transformations.exists(
+        !imageExists &&
+        (await this.transformations.exists(
           `images/fallback/${transformationsKey}`
-        )
+        ))
       ) {
         return { uri: `images/fallback/${transformationsKey}`, exists: false };
       }
-    }
 
-    const transformGuard = new TransformGuard();
-
-    // Validate signature when transformations are requested.
-    // Raw image requests without any parameters skip signature validation.
-    if (this.hasTransformations(originalTransformations)) {
-      const publicKey = await this.jwksClient.getPublicKey();
-      await transformGuard.validateSignature(
-        publicKey,
-        imageId,
-        originalTransformations
+      const format = transformations.format ?? 'webp';
+      const sharpInstance = imageStream.pipe(
+        sharp({
+          animated: ANIMATED_FORMATS.includes(format),
+          failOn: 'error',
+        })
       );
-    }
 
-    const format = transformations.format ?? 'webp';
-    const sharpInstance = imageStream.pipe(
-      sharp({
-        animated: ANIMATED_FORMATS.includes(format),
-        failOn: 'error',
-      })
-    );
-
-    try {
       const metadata = await sharpInstance.metadata();
 
       const effort = transformGuard.checkDimensions(metadata, transformations);
