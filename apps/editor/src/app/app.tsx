@@ -38,10 +38,11 @@ import {
   AuthContext,
   AuthDispatchActionType,
   AuthDispatchContext,
+  createCheckedFeatureComponent,
   SnackbarHost,
   useReportQueryErrors,
 } from '@wepublish/ui/editor';
-import { useContext, useEffect } from 'react';
+import { lazy, Suspense, useContext, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { Base } from './base';
@@ -95,6 +96,7 @@ import { PeerList } from './routes/peers/peerList';
 import { PollEditView } from './routes/polls/pollEditView';
 import { PollList } from './routes/polls/pollList';
 import { PollVoteListContainer } from './routes/polls/PollVotesListContainer';
+import { SeoChecklist } from './routes/seo/seoChecklist';
 import { SubscriptionEditView } from './routes/subscriptions/subscriptionEditView';
 import { SubscriptionList } from './routes/subscriptions/subscriptionList';
 import { TagCreateView } from './routes/tags/tagCreateView';
@@ -109,6 +111,21 @@ import { UserList } from './routes/users/userList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
+
+// For the time being, lazy load the newsletter editor.
+// Checked outside the lazy so the chunk is not even fetched while it is off.
+const newsletter = () => import('@wepublish/newsletter/editor');
+const withNewsletterFeature =
+  createCheckedFeatureComponent('newsletter-editor');
+const NewsletterCampaignList = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignList })))
+);
+const NewsletterCampaignEditor = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignEditor })))
+);
+const NewsletterCampaignPreview = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignPreview })))
+);
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -680,6 +697,33 @@ export function App() {
                 </Base>
               }
             />
+            {/* Newsletter Routes */}
+            <Route
+              path="newsletter"
+              element={
+                <Base>
+                  <Suspense>
+                    <NewsletterCampaignList />
+                  </Suspense>
+                </Base>
+              }
+            />
+            <Route
+              path="newsletter/edit/:id"
+              element={
+                <Suspense>
+                  <NewsletterCampaignEditor />
+                </Suspense>
+              }
+            />
+            <Route
+              path="newsletter/preview/:id"
+              element={
+                <Suspense>
+                  <NewsletterCampaignPreview />
+                </Suspense>
+              }
+            />
             <Route
               path="banners"
               element={
@@ -1166,6 +1210,14 @@ export function App() {
               element={
                 <Base>
                   <WebsiteSettingsItem />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/seo"
+              element={
+                <Base>
+                  <SeoChecklist />
                 </Base>
               }
             />

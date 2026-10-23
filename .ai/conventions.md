@@ -146,7 +146,8 @@ plain data, split across `navigationCommands.tsx`, `createCommands.tsx` and
 `accountCommands.tsx`, and brought together by
 [apps/editor/src/app/commandPalette/commands.tsx](../apps/editor/src/app/commandPalette/commands.tsx).
 **Add a route to `app.tsx` and you add it here**, with the same
-`qualifyingPermissions` the sidebar uses;
+`qualifyingPermissions` the sidebar uses, and the same `feature` wherever the
+sidebar wraps the entry in `FeatureControl`;
 `commands.spec.ts` runs every command's `perform` against a fake `navigate`
 and fails on any route the router serves that no command reaches (routes
 needing an `:id` are excluded by name).
@@ -166,6 +167,16 @@ reader types.
 
 The palette itself is generic and lives in
 [libs/ui/editor/src/lib/commandPalette](../libs/ui/editor/src/lib/commandPalette).
+
+### Website shell (header / footer per route)
+
+Every tenant `_app.tsx` renders `NavBar` / `FooterContainer` only when
+`getWebsiteShell(pageProps)` says so. A route hides them by returning
+`shell: {showNavigation?, showFooter?}` in its `getStaticProps` props, so
+don't hide them with CSS. Page routes (`[slug].tsx`, `index.tsx`) build
+`shell` from the page's `hideHeader` / `hideFooter` with `getPageShell`
+([website-shell.ts](../libs/utils/website/src/lib/website-shell.ts)). A new
+tenant has to do the same.
 
 ## File naming
 

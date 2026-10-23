@@ -330,6 +330,8 @@ model ApiToken {
   createdById String?
   createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
+  externalApps ExternalApps[]
+
   @@index([createdAt])
   @@index([createdById])
   @@map("api-tokens.tokens")
@@ -894,6 +896,8 @@ model Page {
 
   slug   String?
   hidden Boolean @default(false)
+  hideHeader Boolean @default(false)
+  hideFooter Boolean @default(false)
 
   revisions               PageRevision[]
   navigations             NavigationLink[]
@@ -1311,6 +1315,7 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  seoChecklistItems         SeoChecklistItem[]
   apiTokens                 ApiToken[]
 
   @@index([createdAt])
@@ -1708,6 +1713,27 @@ model BlockTemplate {
   blocks Json
 
   @@map("block_templates")
+}
+
+enum NewsletterCampaignStatus {
+  active
+  archived
+}
+
+model NewsletterCampaign {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  title    String
+  document Json
+  status   NewsletterCampaignStatus @default(active)
+
+  mailchimpCampaignId    String?
+  mailchimpCampaignWebId Int?
+
+  @@index([modifiedAt(sort: Desc)])
+  @@map("newsletter_campaigns")
 }
 
 model Banner {
@@ -2158,6 +2184,12 @@ model ExternalApps {
   target      ExternalAppsTarget
   icon        String?
 
+  /// The API key the app reads the We.Publish API with, so the editor can
+  /// show when it expires. The secret itself is only in the app.
+  apiTokenId String?
+  apiToken   ApiToken? @relation(fields: [apiTokenId], references: [id], onDelete: SetNull)
+
+  @@index([apiTokenId])
   @@map("apps.external")
 }
 
@@ -2333,6 +2365,18 @@ model NotificationConfirmation {
 
   @@unique([source, itemId])
   @@map("notifications.confirmations")
+}
+
+model SeoChecklistItem {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  itemId            String  @unique
+  completedByUserId String?
+  completedBy       User?   @relation(fields: [completedByUserId], references: [id], onDelete: SetNull)
+
+  @@map("seo.checklist_items")
 }
 
 model ChangelogEntry {

@@ -116,7 +116,10 @@ one upload per Nx project, flagged with the project name, and a failed upload
 fails the job. `.codecov.yml` turns on carryforward for every flag, so a project
 that a run skipped keeps its last coverage instead of dropping to 0%. lcov paths
 are repo-relative (`projectRoot: workspaceRoot` in `vitest.shared.ts`); without
-that, every project's `src/index.ts` collides at Codecov.
+that, every project's `src/index.ts` collides at Codecov. The script skips
+reports with no lines outside the `.codecov.yml` `ignore` list (every `apps/*`
+project, libs without real tests): Codecov rejects those as `REPORT_EMPTY`, and
+one errored upload hides the whole commit's coverage ("incomplete uploads").
 
 ## Reporting results
 

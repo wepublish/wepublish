@@ -7,17 +7,19 @@
     "@nestjs/config": "catalog:",
     "@nestjs/core": "catalog:",
     "@nestjs/platform-express": "catalog:",
+    "@nestjs/storage": "^0.0.3",
     "@sentry/nestjs": "catalog:",
     "@sentry/profiling-node": "catalog:",
     "cache-manager": "catalog:",
     "express": "catalog:",
     "helmet": "catalog:",
     "jose": "catalog:",
-    "minio": "catalog:",
+    "keyv": "catalog:",
     "multer": "catalog:",
     "nestjs-zod": "catalog:",
     "sharp": "catalog:",
     "tslib": "catalog:",
+    "undici": "catalog:",
     "zod": "catalog:"
   }
 }

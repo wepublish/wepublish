@@ -958,6 +958,36 @@ export const CanDeleteBlockTemplate: Permission = {
   deprecated: false,
 };
 
+export const CanGetNewsletterCampaigns: Permission = {
+  id: 'CAN_GET_NEWSLETTER_CAMPAIGNS',
+  description: 'Allows to get newsletter campaigns',
+  deprecated: false,
+};
+
+export const CanCreateNewsletterCampaign: Permission = {
+  id: 'CAN_CREATE_NEWSLETTER_CAMPAIGN',
+  description: 'Allows to create a newsletter campaign',
+  deprecated: false,
+};
+
+export const CanUpdateNewsletterCampaign: Permission = {
+  id: 'CAN_UPDATE_NEWSLETTER_CAMPAIGN',
+  description: 'Allows to update a newsletter campaign',
+  deprecated: false,
+};
+
+export const CanDeleteNewsletterCampaign: Permission = {
+  id: 'CAN_DELETE_NEWSLETTER_CAMPAIGN',
+  description: 'Allows to delete a newsletter campaign',
+  deprecated: false,
+};
+
+export const CanPublishNewsletterCampaign: Permission = {
+  id: 'CAN_PUBLISH_NEWSLETTER_CAMPAIGN',
+  description: 'Allows to push a newsletter campaign into a Mailchimp draft',
+  deprecated: false,
+};
+
 /**
  * Paywall
  */
@@ -1366,6 +1396,11 @@ export const AllPermissions = [
   CanCreateBlockTemplate,
   CanUpdateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanGetNewsletterCampaigns,
+  CanCreateNewsletterCampaign,
+  CanUpdateNewsletterCampaign,
+  CanDeleteNewsletterCampaign,
+  CanPublishNewsletterCampaign,
   CanCreatePaywall,
   CanUpdatePaywall,
   CanDeletePaywall,
@@ -1479,6 +1514,11 @@ export const EditorPermissions = [
   CanCreateBlockTemplate,
   CanUpdateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanGetNewsletterCampaigns,
+  CanCreateNewsletterCampaign,
+  CanUpdateNewsletterCampaign,
+  CanDeleteNewsletterCampaign,
+  CanPublishNewsletterCampaign,
   CanPreview,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,

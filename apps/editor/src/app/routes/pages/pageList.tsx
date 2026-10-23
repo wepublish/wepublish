@@ -51,6 +51,7 @@ import {
   StatusBadge,
   TableWrapper,
   useListViewState,
+  useTableExportQuery,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useMemo, useState } from 'react';
@@ -60,9 +61,12 @@ import {
   MdComment,
   MdContentCopy,
   MdDelete,
+  MdLink,
   MdUnpublished,
 } from 'react-icons/md';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
+import { copyLinkToClipboard } from '../../copyLink';
 
 interface State {
   state: string;
@@ -143,6 +147,16 @@ function PageList() {
 
   const pages = useMemo(() => data?.pages?.nodes ?? [], [data]);
 
+  const exportPages = useTableExportQuery(
+    PageListDocument,
+    {
+      filter: filter || undefined,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    },
+    data => data.pages
+  );
+
   type PageRow = (typeof pages)[number];
 
   const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null);
@@ -191,6 +205,14 @@ function PageList() {
             </StatusBadge>
           );
         },
+        exportValue: page =>
+          [
+            page.draft && t('pages.overview.draft'),
+            page.pending && t('pages.overview.pending'),
+            page.published && t('pages.overview.published'),
+          ]
+            .filter(Boolean)
+            .join(' / '),
       },
       {
         id: 'title',
@@ -202,6 +224,7 @@ function PageList() {
             {page.latest.title || t('pages.overview.untitled')}
           </Link>
         ),
+        exportValue: page => page.latest.title,
       },
       {
         id: 'description',
@@ -232,6 +255,11 @@ function PageList() {
               publishedAtIfPending: new Date(page.pending.publishedAt),
             })
           : t('pages.overview.notPublished'),
+        exportValue: page => {
+          const publishedAt =
+            page.published?.publishedAt ?? page.pending?.publishedAt;
+          return publishedAt ? new Date(publishedAt) : null;
+        },
       },
       {
         id: 'modifiedAt',
@@ -243,6 +271,7 @@ function PageList() {
           t('pageEditor.overview.modifiedAt', {
             modificationDate: new Date(page.modifiedAt),
           }),
+        exportValue: page => new Date(page.modifiedAt),
       },
     ],
     [t]
@@ -302,6 +331,8 @@ function PageList() {
             rowData?.id === highlightedRowId ? 'highlighted-row' : ''
           }
           storageKey="pages"
+          exportRows={exportPages}
+          exportTotalCount={data?.pages.totalCount ?? 0}
           columns={[
             ...dataColumns.map(column => ({
               ...column,
@@ -311,11 +342,22 @@ function PageList() {
             {
               id: 'action',
               label: t('action'),
-              width: 220,
+              width: 260,
               align: 'center',
               fixed: true,
               render: rowData => (
                 <>
+                  <IconButtonTooltip caption={t('copyLink.button')}>
+                    <IconButton
+                      aria-label={t('copyLink.button')}
+                      disabled={!rowData.published}
+                      size="small"
+                      onClick={() => copyLinkToClipboard(rowData.url, t)}
+                    >
+                      <MdLink />
+                    </IconButton>
+                  </IconButtonTooltip>
+
                   <PermissionControl
                     qualifyingPermissions={[CanPublishPage.id]}
                   >

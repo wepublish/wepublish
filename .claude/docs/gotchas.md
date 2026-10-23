@@ -450,6 +450,32 @@ type-checks or tests this; only booting the image shows it.
 
 ---
 
+### ⚠️ Root `sideEffects` must list the API's Sentry instrumentation
+
+The root `package.json` marks every repo file side-effect free, so webpack
+drops bare imports like `import '@wepublish/utils/api/sentry'` (api-example and
+media `instrument.ts`). Dropping it compiles the import to `0;`, and the API
+then boots without `Sentry.init`. It started being dropped with the dependency
+bump in #3195 (webpack 5.108 → 5.112), and `docker/check-runtime-deps.js` then
+failed the image build on the now-unused `@sentry/profiling-node`. The array form keeps
+`libs/utils/api/src/lib/sentry/instrumentation.ts` and leaves everything else
+tree-shakeable. **A new file loaded only by a bare import needs an entry here
+too.**
+
+---
+
+### ⚠️ Tenant request interceptors are `proxy.ts`, never `middleware.ts`
+
+A `middleware.ts` runs on the Edge runtime, and since Next 16.4 (#3195) its
+bundle also pulls in our `cacheHandler`
+(`libs/utils/website/src/lib/page-cache/page-cache-handler.js`). That brings in
+`@keyv/redis` → `@redis/client` → `@node-rs/xxhash`, whose browser build needs
+the uninstalled `@node-rs/xxhash-wasm32-wasi`, so `nx build <tenant>` fails
+with _Module not found_. `proxy.ts` (`export function proxy`) runs on Node and
+builds fine; every tenant uses it.
+
+---
+
 ### ⚠️ Express 5 has no bare `*` route
 
 [apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
@@ -876,6 +902,107 @@ Pinned by `apps/editor/src/app/routes/dashboard/dashboardConfig.spec.tsx`,
 which reads the _emitted_ rule rather than the computed value — jsdom resolves
 `var(--mui-palette-background-paper, #fff)` to the light fallback baked into
 it, so `getComputedStyle` cannot tell the two apart.
+
+### ⚠️ The R2 client must bound its sockets
+
+Both `S3Disk`s in [`app.module.ts`](../../apps/media/src/app/app.module.ts) get
+`fetch: createStorageFetch()`
+([`storage-fetch.ts`](../../libs/media/api/src/lib/storage/storage-fetch.ts)):
+undici's `fetch` over an `Agent` with `connections: 50` per origin and a 30 s
+`headersTimeout`/`bodyTimeout` (undici's default is 300 s, so one stalled R2
+response held a capped socket for five minutes). Connects time out after 10 s,
+idle keep-alive after 4 s (undici defaults).
+
+The dispatcher is composed to send every `HEAD` with `reset: false`. undici
+closes the socket after each HEAD by default (`client-h1.js`, "interop with
+misbehaving servers" that send a body), and `exists()`/`stat()` are HEADs on
+every cache miss, so each one cost a new TLS connection to R2.
+
+The cap only helps if every R2 body is read to the end. `MediaService` never
+streams an R2 body into anything: it reads it with `getBuffer()` first. Two ways
+this went wrong:
+- `.pipe()` into sharp left the source with no `'error'` listener, so a body that
+  broke off (reset, `bodyTimeout`) was an uncaught exception that killed the pod.
+  sharp buffers the whole input anyway, so streaming saved nothing.
+- Copying a document by passing the GET body to `put()` held the GET socket,
+  paused, while the PUT waited for one from the same pool. undici's `bodyTimeout`
+  never fires on a paused body, so 50 of those deadlock the pool for good.
+
+The signature is validated before the download, and image transforms and PDF
+renders run at most `MAX_CONCURRENT_TRANSFORMS` (4) at a time. Each one holds
+its original in memory, and sharp's work shares libuv's thread pool with the
+`dns.lookup` behind every R2 connect, so the media image sets
+`UV_THREADPOOL_SIZE=16`.
+
+**What failed.** The media pod periodically lost IPv4 connectivity to Cloudflare
+R2 (`*.eu.r2.cloudflarestorage.com`); its last log line was a burst of
+`AggregateError [ETIMEDOUT]` — every IPv4 address `ETIMEDOUT`, every IPv6
+`ENETUNREACH`. With no socket cap, each image/document request opened another
+connect that hung and piled up until the pod stopped answering `/health`:
+readiness dropped it (a **502** from the OpenShift route, which the API's
+`/health` reports as `media-server: down`) and liveness killed it (**exit 137**).
+`tsri` restarted 15× in 13d, `bajour` 18× in 29d (verified 2026-10-20, still on
+the minio client, whose default agent had no connect timeout either).
+
+**The trigger is egress, not the app.** Every media pod egresses through one NAT
+IP (`116.202.165.28`, FRA/DE — `cloudflare.com/cdn-cgi/trace` returns it from
+three pods across two nodes), so ~30 media instances share one source IP to R2
+and the busiest are the canaries. The cap is defence-in-depth so a storage blip
+queues requests instead of killing the pod. The shared-egress bottleneck lives
+outside this repo, and nothing here guards it.
+
+**Why the cap, not just timeouts.** Node's global `fetch` dispatcher opens a
+socket per concurrent request, without limit. A connect timeout bounds how long
+each hung socket lives, not how many there are — that scales with traffic (×3
+with `S3Disk`'s retries). Only the cap bounds it regardless of load.
+
+**Forcing `family: 4` is not needed.** It looks like the fix for the
+`ENETUNREACH` noise but changes nothing in an outage: the IPv6 attempts fail in
+~0 ms, Happy Eyeballs abandons every address but the last after 250 ms, and the
+last one hangs until the connect timeout either way (measured on Node 22.16).
+
+**Load-bearing:** `fetch: createStorageFetch()` sits in the options _shared_ by
+both disks — one dispatcher, so the cap covers the whole R2 origin (a fetch per
+disk would double it). `fetch` and `Agent` must both come from the `undici`
+package: Node 22 bundles undici 6, and a v7 dispatcher is not guaranteed to work
+with the global `fetch`. The `as unknown as typeof globalThis.fetch` cast is
+only there because undici's types and `@types/node`'s don't line up.
+
+Pinned by `storage-fetch.spec.ts`, which checks the cap and the timeouts through
+the real `fetch` against a local server. The wiring in `app.module.ts` is not tested.
+
+### ⚠️ cache-manager 7 TTLs are milliseconds, and `max` is ignored
+
+`CacheModule.register({ttl, max})` without `stores` builds a plain Keyv `Map`:
+`ttl` is **milliseconds** (the media server's `259200` meant 3 days but was
+4.3 min, so nearly every image hit R2 again) and `max` is silently dropped, so
+the map grew with every variant ever requested. The media server uses
+`createLinkCacheOptions()` ([`link-cache.ts`](../../libs/media/api/src/lib/link-cache/link-cache.ts)):
+a Keyv over a `Map` that evicts the least recently written entry beyond
+50 000, with `LINK_TTL`/`MISSING_LINK_TTL` in ms.
+
+---
+
+### ⚠️ The newsletter renderer is shared, and several things keep it working
+
+`libs/newsletter/email` draws the Puck canvas *and* the mail. Load-bearing:
+`renderNewsletter` lives behind `@wepublish/newsletter/email/render`, outside
+the barrel, so the editor bundle never pulls in `react-dom/server`; and
+`apps/api-example/tsconfig.app.json` sets `jsx: react-jsx`, or the API build
+fails on the lib's TSX. The editor loads
+the newsletter routes with `React.lazy`: Puck's stylesheet `@import`s a font
+from rsms.me, and eagerly bundled it held up every editor page. Mail
+images are asked for as `format: 'jpeg'` (png/gif kept): the media server's
+default WebP is an empty frame in Outlook. `format` is deliberately not in the
+GraphQL `ImageTransformation`, so the public API cannot multiply cached variants.
+
+Pinned by `render.spec.tsx`, `newsletter-render.service.spec.ts`,
+`media.service.spec.ts` and `novaMediaAdapter.spec.ts`; Nx's
+`enforce-module-boundaries` rejects any static import of the lazy-loaded
+`newsletter-editor` in the editor app. The renderer's runtime packages (`react`,
+`react-dom`, `@react-email/components`, and `tslib`, because the API's webpack
+gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
+`apps/api-example/package.json` — see [infrastructure.md](infrastructure.md).
 
 ---
 
