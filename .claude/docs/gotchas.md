@@ -506,11 +506,11 @@ and block-content imports them back. Every block-content provider that takes
 `ArticleService`, `PageService` or `HOT_AND_TRENDING_DATA_SOURCE` therefore
 uses `@Inject(forwardRef(() => …))` — see
 [teaser-list.resolver.ts](../../libs/block-content/api/src/lib/teaser/teaser-list.resolver.ts)
-and [slot-teasers-loader.ts](../../libs/block-content/api/src/lib/teaser/slot-teasers-loader.ts).
+and [block-tree-loader.ts](../../libs/block-content/api/src/lib/block-tree/block-tree-loader.ts).
 
 Without it the class or token is still `undefined` when the decorator runs,
 and the API dies at boot: `Nest can't resolve dependencies of the
-SlotTeasersLoader (EventService, ?, BlockTemplateDataloaderService)`. Whether
+BlockTreeLoader (EventService, ?, BlockTemplateDataloaderService)`. Whether
 it dies depends on module load order: until 2026-10-07 the `ActionModule`
 happened to import `ArticleModule` early enough to hide two missing
 `forwardRef`s; deleting that module exposed both.
@@ -518,7 +518,7 @@ happened to import `ArticleModule` early enough to hide two missing
 **Load-bearing:** the `forwardRef` wrappers. Removing or reordering a module in
 `app.module.ts` can make a cycle that "worked" fail at the next start.
 
-Guarded for `SlotTeasersLoader` only: `slot-teasers-loader.spec.ts` starts with
+Guarded for `BlockTreeLoader` only: `block-tree-loader.spec.ts` starts with
 `import './article.service';`, which enters the cycle from the article side and
 reproduces the boot error in a unit test. A new injection site needs the same
 trick or nothing catches it before `nx serve api-example`.

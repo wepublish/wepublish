@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 // entering the article <-> block-content import cycle from the article side,
 // the way the api app does, leaves ArticleService undefined inside
-// slot-teasers-loader unless it is injected through a forwardRef
+// block-tree-loader unless it is injected through a forwardRef
 import './article.service';
 import {
-  SlotTeasersLoader,
+  BlockTreeLoader,
   BlockType,
   BaseBlock,
   TeaserType,
@@ -14,6 +14,7 @@ import {
   isFlexBlock,
   isTeaserSlotsBlock,
   Teaser,
+  BlockTemplate,
   BlockTemplateBlock,
   BlockTemplateDataloaderService,
 } from '@wepublish/block-content/api';
@@ -29,8 +30,8 @@ import nanoid from 'nanoid';
  *
  *
  *
- *  TESTS FOR SLOT TEASERS LOADER
- *  lib/block-content/api/src/lib/teaser/slot-teasers-loader.ts
+ *  TESTS FOR BLOCK TREE LOADER
+ *  lib/block-content/api/src/lib/block-tree/block-tree-loader.ts
  *
  *  block-content-api project had to be ingored in ./nxignore because of
  *  circular dependency issues therefore these tests are located in article-api project.
@@ -300,14 +301,14 @@ const mockBlockTemplateDataloader = {
   load: vi.fn(async (id: string) => mockTemplates[id] ?? null),
 };
 
-describe('SlotTeasersLoader', () => {
-  let service: SlotTeasersLoader;
+describe('BlockTreeLoader', () => {
+  let service: BlockTreeLoader;
 
   beforeEach(async () => {
     vi.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        SlotTeasersLoader,
+        BlockTreeLoader,
         { provide: EventService, useValue: mockEventService },
         { provide: ArticleService, useValue: mockArticleService },
         {
@@ -317,7 +318,7 @@ describe('SlotTeasersLoader', () => {
       ],
     }).compile();
 
-    service = await module.resolve<SlotTeasersLoader>(SlotTeasersLoader);
+    service = await module.resolve<BlockTreeLoader>(BlockTreeLoader);
   });
 
   const extractTeasers = (block: FullTeaserSlotsBlockFragment): string[] => {
@@ -363,8 +364,11 @@ describe('SlotTeasersLoader', () => {
     return [];
   };
 
+  const load = (blocks: BaseBlock<BlockType>[]) =>
+    service.loadBlocks(blocks, { onlyDisplayed: false });
+
   const loadTeaserIds = async (blocks: BaseBlock<BlockType>[]) =>
-    (await service.loadSlotTeasersIntoBlocks(blocks)).flatMap(block =>
+    (await load(blocks)).flatMap(block =>
       processBlock(block as BaseBlock<BlockType>)
     );
 
@@ -384,7 +388,7 @@ describe('SlotTeasersLoader', () => {
       ({ ...block, disabled: true }) as T;
 
     it('should autofill teasers that are only placed manually in hidden blocks', async () => {
-      const [, visible] = await service.loadSlotTeasersIntoBlocks([
+      const [, visible] = await load([
         hide(mockManualTeaserSlotsBlock('article_pool_1')),
         mockTeaserSlotsBlock(),
       ]);
@@ -393,7 +397,7 @@ describe('SlotTeasersLoader', () => {
     });
 
     it('should not take autofill teasers away from visible blocks', async () => {
-      const [hidden, visible] = await service.loadSlotTeasersIntoBlocks([
+      const [hidden, visible] = await load([
         hide(mockTeaserSlotsBlock()),
         mockTeaserSlotsBlock(),
       ]);
@@ -411,7 +415,7 @@ describe('SlotTeasersLoader', () => {
         },
       };
 
-      const result = await service.loadSlotTeasersIntoBlocks([
+      const result = await load([
         hide(
           mockFlexBlock({
             blocks: [
@@ -449,6 +453,176 @@ describe('SlotTeasersLoader', () => {
     });
   });
 
+  describe('blocks outside their timing', () => {
+    const offAir = <T extends BaseBlock<BlockType>>(block: T) =>
+      ({ ...block, timing: { from: new Date('2100-01-01T00:00:00Z') } }) as T;
+
+    it('should autofill teasers that are only placed manually in off-air blocks', async () => {
+      const [, visible] = await load([
+        offAir(mockManualTeaserSlotsBlock('article_pool_1')),
+        mockTeaserSlotsBlock(),
+      ]);
+
+      expect(processBlock(visible as BaseBlock<BlockType>)).toEqual(pool(1, 8));
+    });
+
+    it('should not take autofill teasers away from visible blocks', async () => {
+      const [offAirBlock, visible] = await load([
+        offAir(mockTeaserSlotsBlock()),
+        mockTeaserSlotsBlock(),
+      ]);
+
+      expect(processBlock(offAirBlock as BaseBlock<BlockType>)).toEqual(
+        pool(1, 8)
+      );
+      expect(processBlock(visible as BaseBlock<BlockType>)).toEqual(pool(1, 8));
+    });
+
+    it('should treat blocks nested in off-air flex blocks as off air', async () => {
+      const [, visible] = await load([
+        offAir(
+          mockFlexBlock({
+            blocks: [
+              mockBlockWithAlignment({
+                block: mockManualTeaserSlotsBlock('article_pool_1'),
+              }),
+            ],
+          })
+        ),
+        mockTeaserSlotsBlock(),
+      ]);
+
+      expect(processBlock(visible as BaseBlock<BlockType>)).toEqual(pool(1, 8));
+    });
+  });
+
+  it('loads the same blocks only once', async () => {
+    const blocks = [mockTeaserSlotsBlock()] as BaseBlock<BlockType>[];
+
+    await load(blocks);
+    await service.loadBlocks(blocks, { onlyDisplayed: true });
+    await service.nextChange(blocks);
+
+    expect(mockArticleService.getArticles).toHaveBeenCalledTimes(1);
+  });
+
+  describe('onlyDisplayed', () => {
+    const hide = <T extends BaseBlock<BlockType>>(block: T) =>
+      ({ ...block, disabled: true }) as T;
+
+    beforeEach(() => {
+      mockTemplates = {
+        mixed: {
+          id: 'mixed',
+          blocks: [
+            mockTeaserSlotsBlock(),
+            hide(mockManualTeaserSlotsBlock('article_pool_1')),
+          ],
+        },
+      };
+    });
+
+    it('drops hidden blocks', async () => {
+      const blocks = await service.loadBlocks(
+        [mockTeaserSlotsBlock(), hide(mockTeaserSlotsBlock())],
+        { onlyDisplayed: true }
+      );
+
+      expect(blocks).toHaveLength(1);
+    });
+
+    it('drops blocks that are outside their timing', async () => {
+      const timed = {
+        ...mockTeaserSlotsBlock(),
+        timing: { from: new Date('2100-01-01T00:00:00Z') },
+      } as BaseBlock<BlockType>;
+
+      expect(
+        await service.loadBlocks([timed], { onlyDisplayed: true })
+      ).toEqual([]);
+    });
+
+    it('leaves the full tree intact for a later request of every block', async () => {
+      const blocks = [
+        mockFlexBlock({
+          blocks: [
+            mockBlockWithAlignment(),
+            mockBlockWithAlignment({
+              block: hide(mockManualTeaserSlotsBlock('article_pool_1')),
+            }),
+          ],
+        }),
+      ];
+
+      await service.loadBlocks(blocks, { onlyDisplayed: true });
+      const [flex] = (await load(blocks)) as FlexBlock[];
+
+      expect(flex.blocks).toHaveLength(2);
+    });
+
+    it('serves a filtered template its blocks without loading it again', async () => {
+      const [block] = (await service.loadBlocks(
+        [mockBlockTemplateBlock('mixed')],
+        { onlyDisplayed: true }
+      )) as BlockTemplateBlock[];
+      const template = block.template as BlockTemplate;
+      const calls = mockArticleService.getArticles.mock.calls.length;
+
+      expect(
+        await service.loadTemplateBlocks(template, { onlyDisplayed: true })
+      ).toHaveLength(1);
+      expect(
+        await service.loadTemplateBlocks(template, { onlyDisplayed: false })
+      ).toHaveLength(2);
+      expect(mockArticleService.getArticles).toHaveBeenCalledTimes(calls);
+    });
+  });
+
+  describe('nextChange', () => {
+    it('is null while no block is timed', async () => {
+      expect(await service.nextChange([mockTeaserSlotsBlock()])).toBeNull();
+    });
+
+    it('works out the next change of the same blocks only once', () => {
+      const blocks = [mockTeaserSlotsBlock()];
+
+      expect(service.nextChange(blocks)).toBe(service.nextChange(blocks));
+    });
+
+    it('does not load teasers', async () => {
+      await service.nextChange([mockTeaserSlotsBlock()]);
+
+      expect(mockArticleService.getArticles).not.toHaveBeenCalled();
+    });
+
+    it('reads timings stored as strings', async () => {
+      const at = new Date(service.now.getTime() + 60 * 60 * 1000);
+
+      expect(
+        await service.nextChange([
+          {
+            ...mockTeaserSlotsBlock(),
+            timing: { from: at.toISOString() },
+          } as unknown as BaseBlock<BlockType>,
+        ])
+      ).toEqual(at);
+    });
+
+    it('sees the timing of blocks inside templates', async () => {
+      const at = new Date(service.now.getTime() + 60 * 60 * 1000);
+      mockTemplates = {
+        timed: {
+          id: 'timed',
+          blocks: [{ ...mockTeaserSlotsBlock(), timing: { from: at } }],
+        },
+      };
+
+      expect(
+        await service.nextChange([mockBlockTemplateBlock('timed')])
+      ).toEqual(at);
+    });
+  });
+
   describe('block templates', () => {
     beforeEach(() => {
       mockTemplates = {
@@ -476,7 +650,7 @@ describe('SlotTeasersLoader', () => {
     });
 
     it('should populate the teaser slots of a template', async () => {
-      const [block] = (await service.loadSlotTeasersIntoBlocks([
+      const [block] = (await load([
         mockBlockTemplateBlock('slots'),
       ])) as BlockTemplateBlock[];
 
@@ -486,8 +660,10 @@ describe('SlotTeasersLoader', () => {
         'article_pool_9',
       ]);
       expect(
-        !!block.template && service.isPopulatedTemplate(block.template)
-      ).toBe(true);
+        await service.loadTemplateBlocks(block.template as BlockTemplate, {
+          onlyDisplayed: false,
+        })
+      ).toBe(block.template?.blocks);
     });
 
     it('should not repeat teasers between templates and surrounding blocks', async () => {
@@ -521,7 +697,7 @@ describe('SlotTeasersLoader', () => {
     });
 
     it('should not expand circular templates', async () => {
-      const [block] = (await service.loadSlotTeasersIntoBlocks([
+      const [block] = (await load([
         mockBlockTemplateBlock('circular'),
       ])) as BlockTemplateBlock[];
 
@@ -532,7 +708,7 @@ describe('SlotTeasersLoader', () => {
     });
 
     it('should keep unknown templates to be resolved as null', async () => {
-      const [block] = (await service.loadSlotTeasersIntoBlocks([
+      const [block] = (await load([
         mockBlockTemplateBlock('deleted'),
       ])) as BlockTemplateBlock[];
 
@@ -542,8 +718,9 @@ describe('SlotTeasersLoader', () => {
     it('should populate a template queried on its own without sharing loaded teasers', async () => {
       expect(await loadTeaserIds([mockTeaserSlotsBlock()])).toEqual(pool(1, 8));
 
-      const templateBlocks = await service.loadSlotTeasersIntoTemplateBlocks(
-        mockTemplates['slots'].blocks as BaseBlock<BlockType>[]
+      const templateBlocks = await service.loadTemplateBlocks(
+        mockTemplates['slots'] as unknown as BlockTemplate,
+        { onlyDisplayed: false }
       );
 
       expect(
@@ -559,7 +736,7 @@ describe('SlotTeasersLoader', () => {
   });
 
   it('should return unique teasers', async () => {
-    const result = await service.loadSlotTeasersIntoBlocks(revisionBlocks);
+    const result = await load(revisionBlocks);
     const shouldBeUniqueTeaserIds: string[] = [];
 
     for (const block of result as BaseBlock<BlockType>[]) {

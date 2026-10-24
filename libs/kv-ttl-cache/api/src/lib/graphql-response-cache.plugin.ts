@@ -27,12 +27,7 @@ export const PUBLIC_COMMENTS_NAMESPACE = 'graphql:comments';
 export type ArticlePage = { id: string; slug?: string | null };
 
 export type PublicContent =
-  | 'articles'
-  | 'pages'
-  | 'authors'
-  | 'images'
-  | 'paywalls'
-  | 'polls';
+  'articles' | 'pages' | 'authors' | 'images' | 'paywalls' | 'polls';
 
 export const contentCacheNamespace = (content: PublicContent) =>
   `content:${content}`;
@@ -226,10 +221,28 @@ const asksOnlyCacheableQueries = asksOnly(CACHEABLE_QUERIES);
 const asksOnlySameForEveryoneQueries = asksOnly(SAME_FOR_EVERYONE_QUERIES);
 
 const answersNotToStore = new WeakSet<object>();
+const answerStaleAt = new WeakMap<object, number>();
 
 export const skipAnswerCache = (context: object | null | undefined) => {
   if (context) {
     answersNotToStore.add(context);
+  }
+};
+
+export const limitAnswerCache = (
+  context: object | null | undefined,
+  staleAt: Date
+) => {
+  const time = staleAt.getTime();
+
+  if (!context || Number.isNaN(time)) {
+    return;
+  }
+
+  const limit = answerStaleAt.get(context);
+
+  if (limit === undefined || time < limit) {
+    answerStaleAt.set(context, time);
   }
 };
 
@@ -425,13 +438,26 @@ export class GraphqlResponseCachePlugin implements ApolloServerPlugin<Context> {
           return;
         }
 
+        const staleAt = answerStaleAt.get(contextValue);
+        const secondsLeft =
+          staleAt === undefined ? Infinity : (
+            Math.floor((staleAt - Date.now()) / 1000)
+          );
+
+        if (secondsLeft < 1) {
+          return;
+        }
+
         await kv.setNs(
           RESPONSE_NAMESPACE,
           key,
           result,
-          hasLiveBlock(result.data) ?
-            LIVE_RESPONSE_TTL_SECONDS
-          : RESPONSE_TTL_SECONDS
+          Math.min(
+            hasLiveBlock(result.data) ?
+              LIVE_RESPONSE_TTL_SECONDS
+            : RESPONSE_TTL_SECONDS,
+            secondsLeft
+          )
         );
       },
     };

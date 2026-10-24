@@ -17,6 +17,7 @@ export * from './addBlockInput';
 export * from './blockGroups';
 export * from './blockList';
 export * from './blockSection';
+export * from './blockTiming';
 export * from './chooseEditImage';
 export * from './colorPicker';
 export * from './currencyInput';

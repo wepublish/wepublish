@@ -1,6 +1,7 @@
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
+  BlockTimingInput,
   BlockWithAlignment,
   CommentBlockCommentFragment,
   EditorBlockType,
@@ -63,6 +64,8 @@ type FullTeaserFragmentWithTypename =
 export interface BaseBlockValue {
   blockStyle?: string | null;
   disabled?: boolean | null;
+  timing?: BlockTimingInput | null;
+  shouldDisplay?: boolean | null;
 }
 
 export interface RichTextBlockValue extends BaseBlockValue {
@@ -565,6 +568,18 @@ export type BlockValue =
 export function mapBlockValueToBlockInput(
   block: BlockValue
 ): BlockContentInput {
+  const input = mapBlockValueToContentInput(block);
+  const [kind, value] = Object.entries(input)[0] as [
+    keyof BlockContentInput,
+    object,
+  ];
+
+  return {
+    [kind]: { ...value, timing: block.value.timing ?? null },
+  } as BlockContentInput;
+}
+
+function mapBlockValueToContentInput(block: BlockValue): BlockContentInput {
   switch (block.type) {
     case EditorBlockType.Comment:
       return {
@@ -1064,6 +1079,25 @@ export function mapTeaserToTeaserInput(
 }
 
 export function blockForQueryBlock(
+  block: FullBlockFragment | null
+): BlockValue {
+  const mapped = mapQueryBlockToBlockValue(block);
+  const base = block as {
+    timing?: BlockTimingInput | null;
+    shouldDisplay?: boolean | null;
+  } | null;
+
+  return {
+    ...mapped,
+    value: {
+      ...mapped.value,
+      timing: base?.timing ?? null,
+      shouldDisplay: base?.shouldDisplay ?? true,
+    },
+  } as BlockValue;
+}
+
+function mapQueryBlockToBlockValue(
   block: FullBlockFragment | null
 ): BlockValue {
   const key: string = nanoid();
