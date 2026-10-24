@@ -12,7 +12,6 @@ import { initWePublishTranslator } from '@wepublish/utils/website';
 import {
   ApolloRouterContext,
   prefetchShared,
-  prefetchWebsiteSettings,
   WepublishApolloProvider,
 } from '@wepublish/utils/website/tanstack';
 import { PublicEnv, WebsiteSettingsFragment } from '@wepublish/website/api';
@@ -62,9 +61,8 @@ export const Route = createRootRouteWithContext<ApolloRouterContext>()({
    */
   loader: async ({ context: { apolloClient } }) => {
     const [websiteSettings, publicEnv] = await Promise.all([
-      prefetchWebsiteSettings(apolloClient),
-      getPublicEnvFn(),
       prefetchShared(apolloClient),
+      getPublicEnvFn(),
     ]);
 
     return { websiteSettings, publicEnv };
