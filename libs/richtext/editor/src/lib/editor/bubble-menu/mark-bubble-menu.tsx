@@ -8,6 +8,7 @@ import {
 import { BubbleMenu } from '@tiptap/react/menus';
 import { equals } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   MdFormatBold,
   MdFormatItalic,
