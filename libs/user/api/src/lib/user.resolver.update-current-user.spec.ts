@@ -1,4 +1,3 @@
-import { ForbiddenException } from '@nestjs/common';
 import { AuthSessionType } from '@wepublish/authentication/api';
 
 import { UserResolver } from './user.resolver';
@@ -45,38 +44,5 @@ describe('UserResolver updateCurrentUser', () => {
       name: 'Muster',
       id: 'user-1',
     });
-  });
-
-  it('refuses to let an api key change the password of its creator', async () => {
-    const { resolver, service } = setup();
-
-    await expect(
-      resolver.updateCurrentUser(
-        { name: 'Muster', password: 'a-new-Password-123' } as never,
-        keySession
-      )
-    ).rejects.toThrow(ForbiddenException);
-    expect(service.updateUser).not.toHaveBeenCalled();
-    expect(service.updateUserPassword).not.toHaveBeenCalled();
-  });
-
-  it('never writes the password of a signed-in user unhashed', async () => {
-    const { resolver, service } = setup();
-
-    await resolver.updateCurrentUser(
-      { name: 'Muster', password: 'a-new-Password-123' } as never,
-      userSession
-    );
-
-    expect(service.updateUser).toHaveBeenCalledWith({
-      name: 'Muster',
-      id: 'user-1',
-    });
-    expect(service.validatePassword).toHaveBeenCalledWith('a-new-Password-123');
-    expect(service.updateUserPassword).toHaveBeenCalledWith(
-      'user-1',
-      'a-new-Password-123',
-      { keepSessionId: 'session-1' }
-    );
   });
 });

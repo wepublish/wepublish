@@ -4659,11 +4659,9 @@ export type MutationUpdateCrowdfundingArgs = {
 export type MutationUpdateCurrentUserArgs = {
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  challengeAnswer?: InputMaybe<ChallengeInput>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   flair?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
 };
 
 
