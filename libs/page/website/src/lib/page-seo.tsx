@@ -5,7 +5,7 @@ import {
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
-import { stripQueryAndHash, seoImageObject } from '@wepublish/utils';
+import { stripQueryAndHash } from '@wepublish/utils';
 import {
   FullImageBlockFragment,
   FullImageFragment,
@@ -16,6 +16,7 @@ import {
 import {
   BuilderPageSEOProps,
   useWebsiteBuilder,
+  seoImageObject,
 } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 

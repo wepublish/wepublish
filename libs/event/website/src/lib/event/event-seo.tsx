@@ -1,6 +1,6 @@
 import type { Event, WithContext } from 'schema-dts';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
-import { stripQueryAndHash, seoImageObject } from '@wepublish/utils';
+import { stripQueryAndHash } from '@wepublish/utils';
 import {
   EventStatus,
   FullEventFragment,
@@ -9,6 +9,7 @@ import {
 import {
   BuilderEventSEOProps,
   useWebsiteBuilder,
+  seoImageObject,
 } from '@wepublish/website/builder';
 import { formatISO, formatISODuration, intervalToDuration } from 'date-fns';
 import { useMemo } from 'react';

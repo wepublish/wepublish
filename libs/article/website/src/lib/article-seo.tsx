@@ -5,11 +5,12 @@ import {
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext, toPlaintext } from '@wepublish/richtext';
-import { stripQueryAndHash, seoImageObject } from '@wepublish/utils';
+import { stripQueryAndHash } from '@wepublish/utils';
 import { FullArticleFragment, FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderArticleSEOProps,
   useWebsiteBuilder,
+  seoImageObject,
 } from '@wepublish/website/builder';
 import { Fragment, useMemo } from 'react';
 
