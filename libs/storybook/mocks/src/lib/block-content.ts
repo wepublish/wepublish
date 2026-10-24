@@ -726,6 +726,8 @@ export const mockSubscribeBlock = ({
   goodieMinValue = null,
   goodieMinValueAppliesToUpgrade = false,
   hideRepeatGoodieOnUpgrade = false,
+  giftCodeOffers = [],
+  giftCodeOfferIds = giftCodeOffers.map(({ id }) => id),
 }: Partial<FullSubscribeBlockFragment> = {}): FullSubscribeBlockFragment => ({
   type: BlockType.Subscribe,
   __typename: 'SubscribeBlock',
@@ -741,6 +743,8 @@ export const mockSubscribeBlock = ({
   goodieMinValue,
   goodieMinValueAppliesToUpgrade,
   hideRepeatGoodieOnUpgrade,
+  giftCodeOfferIds,
+  giftCodeOffers,
 });
 export const mockMailchimpFormInterestOption = ({
   id = nanoid(),

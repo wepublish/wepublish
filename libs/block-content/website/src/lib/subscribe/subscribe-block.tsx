@@ -1,3 +1,5 @@
+import styled from '@emotion/styled';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import {
   FullBlockFragment,
   FullSubscribeBlockFragment,
@@ -7,19 +9,33 @@ import {
   BuilderRouterContext,
   BuilderSubscribeBlockProps,
   BuilderSubscribeProps,
+  GiftCodePurchase,
   Subscribe,
   Upgrade,
 } from '@wepublish/website/builder';
 import { replace, toLower } from 'ramda';
 import { useCallback, useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSubscribeBlock } from './subscribe-block.context';
 import { PaymentForm } from '@wepublish/payment/website';
+import { GiftCodePurchaseFailure } from '@wepublish/membership/website';
 
 export const isSubscribeBlock = (
   block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullSubscribeBlockFragment => block.__typename === 'SubscribeBlock';
 
 const lowercase = replace(/^./, toLower);
+
+export enum SubscribeMode {
+  Subscribe = 'subscribe',
+  Gift = 'gift',
+}
+
+export const SubscribeModeToggle = styled(ToggleButtonGroup)`
+  display: flex;
+  justify-content: center;
+  margin-bottom: ${({ theme }) => theme.spacing(3)};
+`;
 
 export const SubscribeBlock = ({
   className,
@@ -32,10 +48,13 @@ export const SubscribeBlock = ({
   goodieMinValueAppliesToUpgrade,
   hideRepeatGoodieOnUpgrade,
   periodicityDisplay,
+  giftCodeOffers,
 }: BuilderSubscribeBlockProps) => {
+  const { t } = useTranslation();
   const {
     register: [register],
     subscribe,
+    purchaseGiftCode,
     resubscribe: [resubscribe],
     upgrade,
     upgradeInfo: [fetchUpgradeInfo, upgradeInfo],
@@ -56,7 +75,9 @@ export const SubscribeBlock = ({
       userId,
       discountCode,
       periodicity,
+      mode,
     },
+    replaceQuery,
   } = useContext(BuilderRouterContext);
 
   const defaultPaymentPeriodicity = useMemo(
@@ -75,6 +96,13 @@ export const SubscribeBlock = ({
         subscription.isActive && subscription.id === upgradeSubscriptionId
     );
   }, [upgradeSubscriptionId, userSubscriptions.data?.userSubscriptions]);
+
+  const hasGiftCodeOffers = !!giftCodeOffers?.length;
+  const isGiftMode =
+    hasGiftCodeOffers && !subscriptionToUpgrade && mode === SubscribeMode.Gift;
+  const lowercaseFields = fields.map(
+    lowercase
+  ) as BuilderSubscribeProps['fields'];
 
   const memberPlansObj = useMemo(
     () =>
@@ -121,12 +149,72 @@ export const SubscribeBlock = ({
         redirectPages={redirectPages}
       />
 
-      {!subscriptionToUpgrade && (
+      {hasGiftCodeOffers && !subscriptionToUpgrade && (
+        <SubscribeModeToggle
+          exclusive
+          value={isGiftMode ? SubscribeMode.Gift : SubscribeMode.Subscribe}
+          aria-label={t('subscribe.mode.label')}
+          onChange={(_, value: SubscribeMode | null) => {
+            if (value) {
+              replaceQuery?.({
+                mode: value === SubscribeMode.Gift ? value : undefined,
+              });
+            }
+          }}
+        >
+          <ToggleButton value={SubscribeMode.Subscribe}>
+            {t('subscribe.mode.subscribe')}
+          </ToggleButton>
+
+          <ToggleButton value={SubscribeMode.Gift}>
+            {t('subscribe.mode.gift')}
+          </ToggleButton>
+        </SubscribeModeToggle>
+      )}
+
+      {isGiftMode && <GiftCodePurchaseFailure />}
+
+      {isGiftMode && (
+        <GiftCodePurchase
+          className={className}
+          offers={giftCodeOffers}
+          challenge={subscribeProps.challenge}
+          fields={lowercaseFields}
+          onPurchase={async formData => {
+            const result = await purchaseGiftCode({
+              variables: formData,
+            });
+
+            if (result.error) {
+              throw result.error;
+            }
+          }}
+          onPurchaseWithRegister={async formData => {
+            const { error: registerError } = await register({
+              variables: formData.register,
+            });
+
+            if (registerError) {
+              throw registerError;
+            }
+
+            const result = await purchaseGiftCode({
+              variables: formData.purchase,
+            });
+
+            if (result.error) {
+              throw result.error;
+            }
+          }}
+        />
+      )}
+
+      {!subscriptionToUpgrade && !isGiftMode && (
         <Subscribe
           {...subscribeProps}
           className={className}
           memberPlans={memberPlansObj}
-          fields={fields.map(lowercase) as BuilderSubscribeProps['fields']}
+          fields={lowercaseFields}
           memberPlanRenderSettings={memberPlanRenderSettings}
           showGoodies={showGoodies}
           showDiscountCodes={showDiscountCodes}

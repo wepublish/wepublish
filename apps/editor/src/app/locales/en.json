@@ -512,6 +512,9 @@
         "periodicityDisplayDropdownIgnoredRows_other": "Note: the plans “{{plans}}” have prices configured for payment intervals that are ignored in “Select field” mode.",
         "goodiesHeading": "Goodies",
         "discountCodesHeading": "Discount codes",
+        "giftCodesHeading": "Gift codes",
+        "giftCodeOffers": "Gift offers",
+        "giftCodeOffersHint": "Readers can buy these offers as a gift. Only active offers can be chosen.",
         "showGoodies": "Show goodie selection",
         "showDiscountCodes": "Show discount code input",
         "goodieMinValue": {
@@ -2944,6 +2947,102 @@
         "availableStockInfo": "How many pieces can still be given away: the stock minus the goodies already chosen by subscribers. ∞ means unlimited."
       }
     },
+    "giftCodeOffer": {
+      "navbar": "Gift offers",
+      "form": {
+        "createTitle": "Create gift offer",
+        "editTitle": "Edit gift offer \"{{ offer }}\"",
+        "name": "Name",
+        "description": "Description",
+        "image": "Image",
+        "active": "Active",
+        "memberPlan": "Subscription plan",
+        "periodicity": "Duration",
+        "periodicityHelp": "Only durations the subscription plan has a price for can be chosen.",
+        "currentPrice": "Buyers currently pay {{ price }}",
+        "redemptionWindowMonths": "Redeemable for (months)",
+        "redemptionWindowMonthsHelp": "Counted from the payment. Leave empty to let the code be redeemed at any time.",
+        "redemptionWindowMonthsInvalid": "Enter a whole number of at least 1",
+        "paymentMethods": "Payment methods",
+        "paymentMethodsHelp": "Buyers can pay the gift with these methods. Not every payment provider supports single purchases.",
+        "paymentMethodsRequired": "Choose at least one payment method",
+        "issueBeforePayment": "Issue the code before payment",
+        "issueBeforePaymentHelp": "The buyer gets the code right after ordering, before the money has arrived. If the payment never comes, the code is canceled, but it may have been redeemed by then."
+      },
+      "overview": {
+        "title": "Gift offers",
+        "createOffer": "New gift offer",
+        "active": "Active",
+        "name": "Name",
+        "memberPlan": "Subscription plan",
+        "periodicity": "Duration",
+        "price": "Price",
+        "redemptionWindow": "Redeemable for",
+        "months_one": "{{ count }} month",
+        "months_other": "{{ count }} months",
+        "unlimited": "Unlimited",
+        "issueBeforePayment": "Code before payment",
+        "paymentMethods": "Payment methods",
+        "modifiedAt": "Last edited",
+        "modifiedAtDate": "{{modifiedAt, ccc PP p}}",
+        "areYouSure": "Delete gift offer?",
+        "areYouSureBody": "The gift offer \"{{ offer }}\" will be deleted permanently. Offers that already sold codes cannot be deleted; set them inactive instead.",
+        "areYouSureConfirmation": "Delete gift offer"
+      }
+    },
+    "giftCode": {
+      "navbar": "Gift codes",
+      "list": {
+        "title": "Gift codes",
+        "code": "Code",
+        "noCodeYet": "Not issued yet",
+        "status": "Status",
+        "unpaid": "Unpaid",
+        "paid": "Paid",
+        "buyer": "Buyer",
+        "buyerEmail": "Buyer email",
+        "recipient": "Recipient",
+        "offer": "Offer",
+        "amount": "Amount",
+        "createdAt": "Ordered",
+        "issuedAt": "Issued",
+        "expiresAt": "Expires",
+        "redeemedAt": "Redeemed",
+        "canceledAt": "Canceled",
+        "date": "{{date, PP}}"
+      },
+      "filters": {
+        "search": "Code, recipient or buyer email",
+        "status": "Status",
+        "offer": "Offer",
+        "memberPlan": "Subscription plan",
+        "createdAt": "Ordered between"
+      },
+      "status": {
+        "ordered": "Ordered",
+        "issued": "Issued",
+        "redeemed": "Redeemed",
+        "expired": "Expired",
+        "canceled": "Canceled"
+      },
+      "cancellationReason": {
+        "manual": "Canceled by an editor",
+        "invoiceCanceled": "Not paid in time",
+        "chargeback": "Payment reversed"
+      },
+      "actions": {
+        "cancel": "Cancel gift code",
+        "markAsPaid": "Mark as paid"
+      },
+      "dialogs": {
+        "cancelTitle": "Cancel gift code?",
+        "cancelBody": "The gift code for {{ giftCode }} can no longer be redeemed. Refunds are not handled here; settle them with the payment provider.",
+        "cancelConfirm": "Cancel gift code",
+        "markAsPaidTitle": "Mark as paid?",
+        "markAsPaidBody": "The invoice for {{ giftCode }} is marked as paid. If the code has not been issued yet, it is issued now. Only do this once the money has arrived.",
+        "markAsPaidConfirm": "Mark as paid"
+      }
+    },
     "paymentMethodEditPanel": {
       "gracePeriod": "Grace Period",
       "gracePeriodHelpText": "If you use the paywall, allow users to read immediately after ordering a subscription, even if they have not paid yet. This is useful for payments via bank transfer, for instance.",
@@ -4228,7 +4327,8 @@
         "peer": "Create peer",
         "userRole": "Create user role",
         "token": "Generate token",
-        "apiToken": "Generate API key"
+        "apiToken": "Generate API key",
+        "giftCodeOffer": "Create gift offer"
       },
       "trigger": "Search or jump to…",
       "keys": {

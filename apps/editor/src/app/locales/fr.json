@@ -512,6 +512,9 @@
         "periodicityDisplayDropdownIgnoredRows_other": "Remarque : les plans « {{plans}} » ont des prix configurés pour des intervalles de paiement qui sont ignorés en mode « Champ de sélection ».",
         "goodiesHeading": "Goodies",
         "discountCodesHeading": "Codes de réduction",
+        "giftCodesHeading": "Codes cadeaux",
+        "giftCodeOffers": "Offres cadeaux",
+        "giftCodeOffersHint": "Les lecteur·rice·s peuvent offrir ces offres. Seules les offres actives peuvent être choisies.",
         "showGoodies": "Afficher la sélection de goodies",
         "showDiscountCodes": "Afficher le champ de code de réduction",
         "goodieMinValue": {
@@ -2876,6 +2879,102 @@
         "availableStockInfo": "Nombre de pièces encore disponibles : le stock moins les goodies déjà choisis par les abonné·e·s. ∞ signifie illimité."
       }
     },
+    "giftCodeOffer": {
+      "navbar": "Offres cadeaux",
+      "form": {
+        "createTitle": "Créer une offre cadeau",
+        "editTitle": "Modifier l’offre cadeau « {{ offer }} »",
+        "name": "Nom",
+        "description": "Description",
+        "image": "Image",
+        "active": "Active",
+        "memberPlan": "Plan d’abonnement",
+        "periodicity": "Durée",
+        "periodicityHelp": "Seules les durées pour lesquelles le plan d’abonnement a un prix peuvent être choisies.",
+        "currentPrice": "Les acheteur·euse·s paient actuellement {{ price }}",
+        "redemptionWindowMonths": "Utilisable pendant (mois)",
+        "redemptionWindowMonthsHelp": "Compté à partir du paiement. Laissez vide pour que le code puisse être utilisé à tout moment.",
+        "redemptionWindowMonthsInvalid": "Saisissez un nombre entier d’au moins 1",
+        "paymentMethods": "Méthodes de paiement",
+        "paymentMethodsHelp": "Les acheteur·euse·s peuvent payer le cadeau avec ces méthodes. Tous les fournisseurs de paiement ne prennent pas en charge les achats uniques.",
+        "paymentMethodsRequired": "Choisissez au moins une méthode de paiement",
+        "issueBeforePayment": "Émettre le code avant le paiement",
+        "issueBeforePaymentHelp": "L’acheteur·euse reçoit le code juste après la commande, avant l’arrivée de l’argent. Si le paiement n’arrive jamais, le code est annulé, mais il a peut-être déjà été utilisé."
+      },
+      "overview": {
+        "title": "Offres cadeaux",
+        "createOffer": "Nouvelle offre cadeau",
+        "active": "Active",
+        "name": "Nom",
+        "memberPlan": "Plan d’abonnement",
+        "periodicity": "Durée",
+        "price": "Prix",
+        "redemptionWindow": "Utilisable pendant",
+        "months_one": "{{ count }} mois",
+        "months_other": "{{ count }} mois",
+        "unlimited": "Illimité",
+        "issueBeforePayment": "Code avant paiement",
+        "paymentMethods": "Méthodes de paiement",
+        "modifiedAt": "Dernière modification",
+        "modifiedAtDate": "{{modifiedAt, ccc PP p}}",
+        "areYouSure": "Supprimer l’offre cadeau ?",
+        "areYouSureBody": "L’offre cadeau « {{ offer }} » sera supprimée définitivement. Les offres dont des codes ont déjà été vendus ne peuvent pas être supprimées ; désactivez-les plutôt.",
+        "areYouSureConfirmation": "Supprimer l’offre cadeau"
+      }
+    },
+    "giftCode": {
+      "navbar": "Codes cadeaux",
+      "list": {
+        "title": "Codes cadeaux",
+        "code": "Code",
+        "noCodeYet": "Pas encore émis",
+        "status": "Statut",
+        "unpaid": "Non payé",
+        "paid": "Payé",
+        "buyer": "Acheteur·euse",
+        "buyerEmail": "E-mail acheteur·euse",
+        "recipient": "Destinataire",
+        "offer": "Offre",
+        "amount": "Montant",
+        "createdAt": "Commandé",
+        "issuedAt": "Émis",
+        "expiresAt": "Expire",
+        "redeemedAt": "Utilisé",
+        "canceledAt": "Annulé",
+        "date": "{{date, PP}}"
+      },
+      "filters": {
+        "search": "Code, destinataire ou e-mail de l’acheteur·euse",
+        "status": "Statut",
+        "offer": "Offre",
+        "memberPlan": "Plan d’abonnement",
+        "createdAt": "Commandé entre"
+      },
+      "status": {
+        "ordered": "Commandé",
+        "issued": "Émis",
+        "redeemed": "Utilisé",
+        "expired": "Expiré",
+        "canceled": "Annulé"
+      },
+      "cancellationReason": {
+        "manual": "Annulé par la rédaction",
+        "invoiceCanceled": "Pas payé à temps",
+        "chargeback": "Paiement contesté"
+      },
+      "actions": {
+        "cancel": "Annuler le code cadeau",
+        "markAsPaid": "Marquer comme payé"
+      },
+      "dialogs": {
+        "cancelTitle": "Annuler le code cadeau ?",
+        "cancelBody": "Le code cadeau pour {{ giftCode }} ne pourra plus être utilisé. Les remboursements ne se font pas ici, mais auprès du fournisseur de paiement.",
+        "cancelConfirm": "Annuler le code cadeau",
+        "markAsPaidTitle": "Marquer comme payé ?",
+        "markAsPaidBody": "La facture pour {{ giftCode }} est marquée comme payée. Si le code n’a pas encore été émis, il l’est maintenant. Ne le faites qu’une fois l’argent reçu.",
+        "markAsPaidConfirm": "Marquer comme payé"
+      }
+    },
     "paymentMethodEditPanel": {
       "gracePeriod": "Délai de paiement",
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement après avoir commandé un abonnement, même s’ils n’ont pas encore payé, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
@@ -4228,7 +4327,8 @@
         "peer": "Créer un peer",
         "userRole": "Créer un rôle utilisateur",
         "token": "Générer un token",
-        "apiToken": "Générer une clé API"
+        "apiToken": "Générer une clé API",
+        "giftCodeOffer": "Créer une offre cadeau"
       },
       "trigger": "Rechercher ou aller à…",
       "keys": {

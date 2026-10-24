@@ -3,11 +3,14 @@ import {
   Challenge,
   Currency,
   FullAvailablePaymentMethodFragment,
+  FullGiftCodeFragment,
+  FullGiftCodeOfferFragment,
   FullGoodieFragment,
   FullInvoiceFragment,
   FullInvoiceItemFragment,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
+  GiftCodeStatus,
   PaymentPeriodicity,
   ProductType,
   PublicSubscription,
@@ -277,4 +280,104 @@ export const mockInvoice = ({
   mail,
   total: items[0].total,
   description,
+});
+
+export const mockGiftCodeOffer = ({
+  id = faker.string.nanoid(),
+  name = 'Jahresabo verschenken',
+  description = mockShortRichText(),
+  periodicity = PaymentPeriodicity.Yearly,
+  redemptionWindowMonths = 12,
+  image = mockImage(),
+  memberPlan = {
+    __typename: 'MemberPlan',
+    id: faker.string.nanoid(),
+    name: 'Jahresabo',
+  },
+  price = {
+    __typename: 'GiftCodePrice',
+    amount: 12000,
+    currency: Currency.Chf,
+  },
+  paymentMethods = [
+    mockPaymentMethod({ name: 'Kreditkarte', paymentProviderID: 'stripe' }),
+    mockPaymentMethod({ name: 'Twint', paymentProviderID: 'payrexx' }),
+  ],
+  issueBeforePayment = false,
+}: Partial<FullGiftCodeOfferFragment> = {}): FullGiftCodeOfferFragment => ({
+  __typename: 'GiftCodeOffer',
+  id,
+  name,
+  description,
+  periodicity,
+  redemptionWindowMonths,
+  image,
+  memberPlan,
+  price,
+  paymentMethods,
+  issueBeforePayment,
+});
+
+export const mockGiftCode = ({
+  id = faker.string.nanoid(),
+  status = GiftCodeStatus.Issued,
+  paid = status !== GiftCodeStatus.Ordered,
+  code = (
+    status === GiftCodeStatus.Issued || status === GiftCodeStatus.Redeemed
+  ) ?
+    'ABCD-EFGH-JKMN'
+  : null,
+  recipientName = 'Anna Muster',
+  message = 'Alles Gute zum Geburtstag!',
+  periodicity = PaymentPeriodicity.Yearly,
+  redemptionWindowMonths = 12,
+  memberPlan = {
+    __typename: 'MemberPlan',
+    id: faker.string.nanoid(),
+    name: 'Jahresabo',
+  },
+  offer = {
+    __typename: 'GiftCodeOffer',
+    id: faker.string.nanoid(),
+    name: 'Jahresabo verschenken',
+    paymentMethods: [
+      mockPaymentMethod({ name: 'Kreditkarte', paymentProviderID: 'stripe' }),
+    ],
+  },
+  amount = 12000,
+  currency = Currency.Chf,
+  invoiceId = faker.string.nanoid(),
+  createdAt = new Date('2026-01-01T10:00:00.000Z').toISOString(),
+  issuedAt = status === GiftCodeStatus.Ordered ?
+    null
+  : new Date('2026-01-02T10:00:00.000Z').toISOString(),
+  expiresAt = issuedAt ?
+    new Date('2027-01-02T10:00:00.000Z').toISOString()
+  : null,
+  redeemedAt = status === GiftCodeStatus.Redeemed ?
+    new Date('2026-02-01T10:00:00.000Z').toISOString()
+  : null,
+  canceledAt = status === GiftCodeStatus.Canceled ?
+    new Date('2026-01-20T10:00:00.000Z').toISOString()
+  : null,
+}: Partial<FullGiftCodeFragment> = {}): FullGiftCodeFragment => ({
+  __typename: 'GiftCode',
+  id,
+  code,
+  status,
+  paid,
+  recipientName,
+  message,
+  periodicity,
+  redemptionWindowMonths,
+  memberPlan,
+  offer,
+  amount,
+  currency,
+  invoiceId,
+  createdAt,
+  issuedAt,
+  expiresAt,
+  redeemedAt,
+  canceledAt,
 });

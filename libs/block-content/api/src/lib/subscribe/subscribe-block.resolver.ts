@@ -10,6 +10,8 @@ import {
   MemberPlanService,
 } from '@wepublish/member-plan/api';
 import { forwardRef, Inject } from '@nestjs/common';
+import { FeaturesService } from '@wepublish/features/api';
+import { GiftCodeOffer, GiftCodeOfferService } from '@wepublish/gift-code/api';
 import { ascend, sortWith } from 'ramda';
 
 @Resolver(() => SubscribeBlock)
@@ -18,8 +20,22 @@ export class SubscribeBlockResolver {
     @Inject(forwardRef(() => MemberPlanDataloader))
     private memberPlanDataloader: MemberPlanDataloader,
     @Inject(forwardRef(() => MemberPlanService))
-    private memberPlanService: MemberPlanService
+    private memberPlanService: MemberPlanService,
+    @Inject(forwardRef(() => GiftCodeOfferService))
+    private giftCodeOfferService: GiftCodeOfferService,
+    private featuresService: FeaturesService
   ) {}
+
+  @ResolveField(() => [GiftCodeOffer])
+  async giftCodeOffers(@Parent() parent: SubscribeBlock) {
+    const ids = parent.giftCodeOfferIds ?? [];
+
+    if (!ids.length || !(await this.featuresService.isEnabled('gift-codes'))) {
+      return [];
+    }
+
+    return this.giftCodeOfferService.getActiveOffersByIds(ids);
+  }
 
   @ResolveField(() => [MemberPlan])
   async memberPlans(@Parent() parent: SubscribeBlock) {

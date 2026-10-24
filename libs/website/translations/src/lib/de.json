@@ -74,6 +74,11 @@
       "confirmationTitle": "Bist du dir sicher?",
       "openInvoices": "Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem <Link href=\"/profile\">Profil</Link> anschauen.",
       "alreadyHasSubscription": "Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem <Link href=\"/profile\">Profil</Link> anschauen."
+    },
+    "mode": {
+      "label": "Abonnieren oder verschenken",
+      "subscribe": "Abonnieren",
+      "gift": "Verschenken"
     }
   },
   "login": {
@@ -185,6 +190,48 @@
     "bexioWarning": "Du erhältst eine PDF-Rechnung per E-Mail zugeschickt.",
     "payrexxWarning": "Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet. Es wird automatisch angepasst wenn du auf \"Jetzt Bezahlen\" drückst.",
     "payNow": "Jetzt Bezahlen"
+  },
+  "giftCode": {
+    "duration": "{periodicity, select, monthly {1 Monat} quarterly {3 Monate} biannual {6 Monate} yearly {1 Jahr} biennial {2 Jahre} lifetime {Lebenslang} other {}}",
+    "redemptionWindow": "{months, plural, one {Einlösbar während # Monat} other {Einlösbar während # Monaten}}",
+    "purchase": {
+      "chooseOffer": "Geschenk wählen",
+      "recipientTitle": "Wen beschenkst du?",
+      "recipientName": "Name der beschenkten Person",
+      "message": "Persönliche Nachricht (optional)",
+      "choosePaymentMethod": "Zahlungsmethode wählen",
+      "noPaymentMethods": "Für dieses Geschenk ist zurzeit keine Zahlungsmethode verfügbar.",
+      "deliveryNote": "Den Gutscheincode erhältst du, sobald die Zahlung bestätigt ist. Bei Zahlung per Rechnung kann das einige Tage dauern.",
+      "issueBeforePaymentNote": "Den Gutscheincode findest du direkt nach dem Kauf unter «Meine Gutscheine» in deinem Profil.",
+      "spamProtection": "Spam-Schutz",
+      "captcha": "Captcha",
+      "button": "Gutschein für {formattedAmount} kaufen",
+      "success": "Danke für deinen Kauf! Deinen Gutschein findest du unter «Meine Gutscheine».",
+      "failure": "Die Zahlung konnte nicht abgeschlossen werden. Falls deine Bestellung erstellt wurde, kannst du sie unter «Meine Gutscheine» in deinem Profil erneut bezahlen."
+    },
+    "list": {
+      "title": "Meine Gutscheine",
+      "recipient": "Für",
+      "duration": "Dauer",
+      "amount": "Betrag",
+      "createdAt": "Gekauft am",
+      "expiresAt": "Einlösbar bis",
+      "redeemedAt": "Eingelöst am",
+      "canceledAt": "Storniert am",
+      "code": "Gutscheincode",
+      "copy": "Code kopieren",
+      "copied": "Kopiert",
+      "pay": "Bezahlen",
+      "unpaid": "Noch nicht bezahlt",
+      "orderedNote": "Sobald die Zahlung bestätigt ist, erscheint hier dein Gutscheincode. Bei Zahlung per Rechnung kann das einige Tage dauern."
+    },
+    "status": {
+      "ordered": "Bestellt",
+      "issued": "Bereit zum Verschenken",
+      "redeemed": "Eingelöst",
+      "canceled": "Storniert",
+      "expired": "Abgelaufen"
+    }
   },
   "user": {
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",

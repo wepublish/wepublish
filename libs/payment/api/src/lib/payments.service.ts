@@ -5,6 +5,7 @@ import {
 import {
   MemberPlan,
   Payment,
+  PaymentMethod,
   PaymentState,
   PrismaClient,
   Subscription,
@@ -15,7 +16,12 @@ import {
   PaymentFromInvoiceInput,
   PaymentFromSubscriptionArgs,
 } from './payment.model';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
@@ -23,6 +29,12 @@ import {
 import { InvoicePaidNotifier } from './invoice-paid.listener';
 import { ErrorCode } from '@wepublish/errors';
 import { logger } from '@wepublish/utils/api';
+import {
+  isPaymentMethodRetired,
+  retiredPaymentProviderIds,
+} from './payment-provider/retired-payment-providers';
+import { isSellableInvoice, sellableTotal } from './sellable/sellable-invoice';
+import { SellableRegistry } from './sellable/sellable-registry.service';
 
 interface CreatePaymentWithProvider {
   paymentMethodID: string;
@@ -34,6 +46,31 @@ interface CreatePaymentWithProvider {
   migrateToTargetPaymentMethodID?: string;
 }
 
+interface StartIntent {
+  paymentProvider: PaymentProvider;
+  paymentMethod: PaymentMethod;
+  invoice: InvoiceWithItems;
+  saveCustomer: boolean;
+  customerID?: string;
+  successURL?: string;
+  failureURL?: string;
+}
+
+export interface CreateStandaloneInvoicePayment {
+  invoice: InvoiceWithItems;
+  paymentMethodID: string;
+  successURL?: string;
+  failureURL?: string;
+}
+
+export interface StandalonePaymentMethod {
+  paymentMethod: PaymentMethod;
+  paymentProvider: PaymentProvider;
+}
+
+const STANDALONE_PAYMENT_METHOD_REJECTED =
+  'Payment method cannot be used for this purchase';
+
 @Injectable()
 export class PaymentsService {
   private readonly paymentProviders = this.config.paymentProviders;
@@ -42,7 +79,8 @@ export class PaymentsService {
     private prisma: PrismaClient,
     @Inject(PAYMENT_METHOD_CONFIG)
     private config: PaymentMethodConfig,
-    private invoicePaidNotifier: InvoicePaidNotifier
+    private invoicePaidNotifier: InvoicePaidNotifier,
+    private sellables: SellableRegistry
   ) {}
 
   getProviders() {
@@ -123,8 +161,24 @@ export class PaymentsService {
       },
     });
 
-    if (!invoice || !invoice.subscriptionID) {
+    if (!invoice) {
       throw new BadRequestException(`Invoice not found ${invoiceID}`);
+    }
+
+    if (!invoice.subscriptionID) {
+      if (
+        invoice.userID !== userId ||
+        !(await isSellableInvoice(this.prisma, invoice))
+      ) {
+        throw new BadRequestException(`Invoice not found ${invoiceID}`);
+      }
+
+      return this.createStandaloneInvoicePayment({
+        invoice,
+        paymentMethodID: paymentMethod.id,
+        successURL,
+        failureURL,
+      });
     }
 
     if (invoice.paidAt || invoice.canceledAt) {
@@ -148,6 +202,21 @@ export class PaymentsService {
       throw new BadRequestException(`Invoice not found ${invoiceID}`);
     }
 
+    await this.assertNoRunningPayment(invoiceID);
+
+    return await this.createPaymentWithProvider({
+      paymentMethodID: paymentMethod.id,
+      invoice,
+      saveCustomer: true,
+      successURL,
+      failureURL,
+      userId,
+      migrateToTargetPaymentMethodID:
+        subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined,
+    });
+  }
+
+  private async assertNoRunningPayment(invoiceID: string) {
     // Prevent multiple payment of same invoice!
     const blockingPayment = await this.prisma.payment.findFirst({
       where: {
@@ -170,17 +239,137 @@ export class PaymentsService {
       );
       throw new BadRequestException(ErrorCode.PaymentAlreadyRunning);
     }
+  }
 
-    return await this.createPaymentWithProvider({
-      paymentMethodID: paymentMethod.id,
-      invoice,
-      saveCustomer: true,
-      successURL,
-      failureURL,
-      userId,
-      migrateToTargetPaymentMethodID:
-        subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined,
+  async assertStandalonePaymentMethod(
+    paymentMethodId: string
+  ): Promise<StandalonePaymentMethod> {
+    const paymentMethod = await this.prisma.paymentMethod.findUnique({
+      where: {
+        id: paymentMethodId,
+        active: true,
+      },
     });
+    const paymentProvider =
+      paymentMethod &&
+      this.paymentProviders.find(
+        pp => pp.id === paymentMethod.paymentProviderID
+      );
+
+    if (
+      !paymentMethod ||
+      !paymentProvider ||
+      (await isPaymentMethodRetired(this.prisma, paymentMethod)) ||
+      !paymentProvider.supportsStandaloneInvoices
+    ) {
+      throw new BadRequestException(STANDALONE_PAYMENT_METHOD_REJECTED);
+    }
+
+    return { paymentMethod, paymentProvider };
+  }
+
+  async getStandalonePaymentMethods(ids: string[]): Promise<PaymentMethod[]> {
+    if (!ids.length) {
+      return [];
+    }
+
+    const [paymentMethods, retired] = await Promise.all([
+      this.prisma.paymentMethod.findMany({
+        where: {
+          id: { in: ids },
+          active: true,
+        },
+      }),
+      retiredPaymentProviderIds(this.prisma),
+    ]);
+
+    return paymentMethods
+      .filter(
+        ({ paymentProviderID }) =>
+          !retired.has(paymentProviderID) &&
+          this.paymentProviders.some(
+            pp => pp.id === paymentProviderID && pp.supportsStandaloneInvoices
+          )
+      )
+      .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+  }
+
+  async createStandaloneInvoicePayment({
+    invoice,
+    paymentMethodID,
+    successURL,
+    failureURL,
+  }: CreateStandaloneInvoicePayment): Promise<Payment> {
+    if (invoice.subscriptionID) {
+      throw new BadRequestException(
+        `Invoice ${invoice.id} belongs to a subscription`
+      );
+    }
+
+    if (!invoice.userID) {
+      throw new BadRequestException(`Invoice ${invoice.id} has no buyer`);
+    }
+
+    if (!(await isSellableInvoice(this.prisma, invoice))) {
+      throw new BadRequestException(`Invoice ${invoice.id} sells nothing`);
+    }
+
+    if (invoice.paidAt || invoice.canceledAt) {
+      throw new BadRequestException(
+        `Invoice with id ${invoice.id} is already paid or canceled!`
+      );
+    }
+
+    if (sellableTotal(invoice.items) <= 0) {
+      throw new BadRequestException(
+        'Zero totals are not supported by checkout'
+      );
+    }
+
+    const { paymentMethod, paymentProvider } =
+      await this.assertStandalonePaymentMethod(paymentMethodID);
+
+    await this.assertSellablesAvailable(invoice);
+    await this.assertSellablesAllowPaymentMethod(invoice, paymentMethod.id);
+    await this.assertNoRunningPayment(invoice.id);
+
+    return this.startIntent({
+      paymentProvider,
+      paymentMethod,
+      invoice,
+      saveCustomer: false,
+      customerID: undefined,
+      successURL: this.decorateUrlWithInvoiceInformation(successURL, invoice),
+      failureURL: this.decorateUrlWithInvoiceInformation(failureURL, invoice),
+    });
+  }
+
+  private async assertSellablesAvailable(invoice: InvoiceWithItems) {
+    for (const item of invoice.items) {
+      const handler =
+        item.sellableKind && this.sellables.get(item.sellableKind);
+
+      if (handler?.isAvailable && !(await handler.isAvailable())) {
+        throw new ForbiddenException(
+          'This purchase is currently not available'
+        );
+      }
+    }
+  }
+
+  private async assertSellablesAllowPaymentMethod(
+    invoice: InvoiceWithItems,
+    paymentMethodId: string
+  ) {
+    for (const item of invoice.items) {
+      const handler =
+        item.sellableKind && this.sellables.get(item.sellableKind);
+      const allowed = await handler?.allowedPaymentMethodIds?.(item, invoice);
+
+      if (allowed && !allowed.includes(paymentMethodId)) {
+        throw new BadRequestException(STANDALONE_PAYMENT_METHOD_REJECTED);
+      }
+    }
   }
 
   async createPaymentFromSubscription(
@@ -260,6 +449,34 @@ export class PaymentsService {
     return parsedUrl.toString();
   }
 
+  private decorateUrlWithInvoiceInformation(
+    url: string | undefined,
+    invoice: InvoiceWithItems
+  ) {
+    let parsedUrl: URL;
+
+    try {
+      parsedUrl = new URL(url ?? '');
+    } catch {
+      return url;
+    }
+
+    parsedUrl.searchParams.set('invoiceId', invoice.id);
+    parsedUrl.searchParams.set(
+      'amount',
+      (sellableTotal(invoice.items) / 100).toString()
+    );
+    parsedUrl.searchParams.set('currency', invoice.currency);
+
+    const sellableKind = invoice.items[0]?.sellableKind;
+
+    if (sellableKind) {
+      parsedUrl.searchParams.set('sellableKind', sellableKind);
+    }
+
+    return parsedUrl.toString();
+  }
+
   async createPaymentWithProvider({
     paymentMethodID,
     invoice,
@@ -319,14 +536,6 @@ export class PaymentsService {
       },
     });
 
-    const payment = await this.prisma.payment.create({
-      data: {
-        paymentMethodID: paymentMethod.id,
-        invoiceID: invoice.id,
-        state: PaymentState.created,
-      },
-    });
-
     const customer =
       userId ?
         await this.prisma.paymentProviderCustomer.findFirst({
@@ -337,15 +546,12 @@ export class PaymentsService {
         })
       : null;
 
-    if (!paymentProvider) {
-      throw new Error('Payment provider is undefined');
-    }
-
-    const intent = await paymentProvider.createIntent({
-      paymentID: payment.id,
+    return this.startIntent({
+      paymentProvider,
+      paymentMethod,
       invoice,
-      currency: invoice.currency,
       saveCustomer,
+      customerID: customer?.customerID,
       successURL: this.decorateUrlWithSubscriptionInformation(
         successURL,
         subscription,
@@ -356,7 +562,34 @@ export class PaymentsService {
         subscription,
         invoice
       ),
-      customerID: customer?.customerID,
+    });
+  }
+
+  private async startIntent({
+    paymentProvider,
+    paymentMethod,
+    invoice,
+    saveCustomer,
+    customerID,
+    successURL,
+    failureURL,
+  }: StartIntent): Promise<Payment> {
+    const payment = await this.prisma.payment.create({
+      data: {
+        paymentMethodID: paymentMethod.id,
+        invoiceID: invoice.id,
+        state: PaymentState.created,
+      },
+    });
+
+    const intent = await paymentProvider.createIntent({
+      paymentID: payment.id,
+      invoice,
+      currency: invoice.currency,
+      saveCustomer,
+      successURL,
+      failureURL,
+      customerID,
     });
 
     const updatedPayment = await this.prisma.payment.update({
@@ -373,7 +606,7 @@ export class PaymentsService {
     });
 
     // Mark invoice as paid
-    if (intent.state === PaymentState.paid && paymentProvider) {
+    if (intent.state === PaymentState.paid) {
       const intentState = await paymentProvider.checkIntentStatus({
         intentID: updatedPayment.intentID ?? '',
         paymentID: updatedPayment.id,

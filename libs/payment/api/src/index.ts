@@ -14,6 +14,15 @@ export * from './lib/payments.module';
 export * from './lib/payment.model';
 export * from './lib/invoice-paid.listener';
 
+export * from './lib/sellable/sellable.model';
+export * from './lib/sellable/sellable-handler';
+export * from './lib/sellable/sellable-registry.service';
+export * from './lib/sellable/sellable-invoice';
+export * from './lib/sellable/sellable-fulfilment.service';
+export * from './lib/sellable/sellable-checkout.service';
+export * from './lib/sellable/sellable-reconciliation.service';
+export * from './lib/sellable/sellable.module';
+
 export * from './lib/payrexx/gateway-client';
 export * from './lib/payrexx/transaction-client';
 export * from './lib/payrexx/payrexx-client';

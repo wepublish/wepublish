@@ -1,6 +1,7 @@
 // directories
 export * from './comment';
 export * from './dashboard';
+export * from './giftCodeOffer/selectGiftCodeOffers';
 export * from './memberPlan/selectMemberPlan';
 export * from './memberPlan/selectMemberPlans';
 export * from './notification/confirmActionModal';

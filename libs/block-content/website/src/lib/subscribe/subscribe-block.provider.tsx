@@ -10,7 +10,11 @@ import {
   SubscriptionsDocument,
   UpgradeSubscriptionInfoDocument,
 } from '@wepublish/website/api';
-import { useSubscribe, useUpgrade } from '@wepublish/payment/website';
+import {
+  usePurchaseGiftCode,
+  useSubscribe,
+  useUpgrade,
+} from '@wepublish/payment/website';
 
 export function SubscribeBlockProvider({ children }: PropsWithChildren) {
   const { hasUser } = useUser();
@@ -25,6 +29,8 @@ export function SubscribeBlockProvider({ children }: PropsWithChildren) {
     useSubscribe();
   const [upgrade, upgradeRedirectPages, upgradeStripeClientSecret] =
     useUpgrade();
+  const [purchaseGiftCode, giftCodeRedirectPages, giftCodeStripeClientSecret] =
+    usePurchaseGiftCode();
   const upgradeInfo = useLazyQuery(UpgradeSubscriptionInfoDocument, {
     fetchPolicy: 'cache-first',
   });
@@ -41,11 +47,17 @@ export function SubscribeBlockProvider({ children }: PropsWithChildren) {
         userInvoices,
         subscribe,
         upgrade,
+        purchaseGiftCode,
         upgradeInfo,
         subscribeInfo,
-        redirectPages: subscribeRedirectPages ?? upgradeRedirectPages,
+        redirectPages:
+          subscribeRedirectPages ??
+          upgradeRedirectPages ??
+          giftCodeRedirectPages,
         stripeClientSecret:
-          subscribeStripeClientSecret ?? upgradeStripeClientSecret,
+          subscribeStripeClientSecret ??
+          upgradeStripeClientSecret ??
+          giftCodeStripeClientSecret,
         register,
         challenge,
         resubscribe,

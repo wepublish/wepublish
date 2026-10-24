@@ -2,9 +2,15 @@ import { useMutation } from '@apollo/client/react';
 import {
   FullMemberPlanFragment,
   FullPaymentFragment,
+  PayGiftCodeDocument,
+  PayGiftCodeMutation,
+  PayGiftCodeMutationVariables,
   PayInvoiceDocument,
   PayInvoiceMutation,
   PayInvoiceMutationVariables,
+  PurchaseGiftCodeDocument,
+  PurchaseGiftCodeMutation,
+  PurchaseGiftCodeMutationVariables,
   SubscribeDocument,
   SubscribeMutation,
   SubscribeMutationVariables,
@@ -205,6 +211,138 @@ export const usePayInvoice = (
   return [callback, redirectPages, stripeClientSecret] as const;
 };
 
+const withQueryParam = (url: string, key: string, value: string) => {
+  const result = new URL(url);
+  result.searchParams.set(key, value);
+
+  return result.toString();
+};
+
+const giftCodeRedirectPages = (): RedirectPages => ({
+  successUrl: withQueryParam(
+    relativeToAbsolute('/profile'),
+    'giftCodePurchase',
+    'success'
+  ),
+  failUrl: withQueryParam(window.location.href, 'giftCodePurchase', 'failure'),
+});
+
+export const usePurchaseGiftCode = (
+  ...params: [
+    options?: useMutation.Options<
+      PurchaseGiftCodeMutation,
+      PurchaseGiftCodeMutationVariables
+    >,
+  ]
+) => {
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>();
+  const [redirectPages, setRedirectPages] = useState<RedirectPages>();
+
+  const [result] = useMutation(PurchaseGiftCodeDocument, {
+    ...params[0],
+  });
+
+  const callback = useCallback(
+    async (...callbackParams: Parameters<typeof result>) => {
+      const { successUrl, failUrl } = giftCodeRedirectPages();
+
+      setRedirectPages({
+        successUrl,
+        failUrl,
+      });
+
+      return result({
+        ...callbackParams[0],
+        ...(callbackParams[0]?.variables ?
+          {
+            variables: {
+              ...callbackParams[0].variables,
+              successURL: successUrl,
+              failureURL: failUrl,
+            },
+          }
+        : {}),
+        onCompleted: data => {
+          callbackParams[0]?.onCompleted?.(data);
+          handlePayment({
+            intent: data.purchaseGiftCode ?? undefined,
+            successUrl,
+            failUrl,
+            setStripeClientSecret,
+          });
+        },
+        onError: error =>
+          (window.location.href = withQueryParam(
+            failUrl,
+            'error',
+            error.message
+          )),
+      });
+    },
+    [result]
+  );
+
+  return [callback, redirectPages, stripeClientSecret] as const;
+};
+
+export const usePayGiftCode = (
+  ...params: [
+    options?: useMutation.Options<
+      PayGiftCodeMutation,
+      PayGiftCodeMutationVariables
+    >,
+  ]
+) => {
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>();
+  const [redirectPages, setRedirectPages] = useState<RedirectPages>();
+
+  const [result] = useMutation(PayGiftCodeDocument, {
+    ...params[0],
+  });
+
+  const callback = useCallback(
+    async (...callbackParams: Parameters<typeof result>) => {
+      const { successUrl, failUrl } = giftCodeRedirectPages();
+
+      setRedirectPages({
+        successUrl,
+        failUrl,
+      });
+
+      return result({
+        ...callbackParams[0],
+        ...(callbackParams[0]?.variables ?
+          {
+            variables: {
+              ...callbackParams[0].variables,
+              successURL: successUrl,
+              failureURL: failUrl,
+            },
+          }
+        : {}),
+        onCompleted: data => {
+          callbackParams[0]?.onCompleted?.(data);
+          handlePayment({
+            intent: data.payGiftCode ?? undefined,
+            successUrl,
+            failUrl,
+            setStripeClientSecret,
+          });
+        },
+        onError: error =>
+          (window.location.href = withQueryParam(
+            failUrl,
+            'error',
+            error.message
+          )),
+      });
+    },
+    [result]
+  );
+
+  return [callback, redirectPages, stripeClientSecret] as const;
+};
+
 const handlePayment = ({
   intent,
   successUrl,
@@ -217,9 +355,11 @@ const handlePayment = ({
   setStripeClientSecret?: (secret: string | undefined) => void;
 }) => {
   if (!intent) {
-    window.location.href = `${failUrl}?error=${encodeURIComponent(
+    window.location.href = withQueryParam(
+      failUrl,
+      'error',
       'Intent konnte nicht gefunden werden.'
-    )}`;
+    );
     return;
   }
 

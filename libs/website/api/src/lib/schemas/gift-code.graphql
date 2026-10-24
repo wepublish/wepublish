@@ -1,0 +1,105 @@
+fragment FullGiftCodeOffer on GiftCodeOffer {
+  id
+  name
+  description
+  periodicity
+  redemptionWindowMonths
+  issueBeforePayment
+
+  image {
+    ...FullImage
+  }
+
+  memberPlan {
+    id
+    name
+  }
+
+  price {
+    amount
+    currency
+  }
+
+  paymentMethods {
+    ...FullPaymentMethod
+  }
+}
+
+fragment FullGiftCode on GiftCode {
+  id
+  code
+  status
+  paid
+  recipientName
+  message
+  periodicity
+  redemptionWindowMonths
+
+  memberPlan {
+    id
+    name
+  }
+
+  offer {
+    id
+    name
+    paymentMethods {
+      ...FullPaymentMethod
+    }
+  }
+
+  amount
+  currency
+  invoiceId
+  createdAt
+  issuedAt
+  expiresAt
+  redeemedAt
+  canceledAt
+}
+
+mutation PurchaseGiftCode(
+  $offerId: String!
+  $recipientName: String!
+  $message: String
+  $paymentMethodId: String
+  $paymentMethodSlug: Slug
+  $successURL: String
+  $failureURL: String
+) {
+  purchaseGiftCode(
+    offerId: $offerId
+    recipientName: $recipientName
+    message: $message
+    paymentMethodId: $paymentMethodId
+    paymentMethodSlug: $paymentMethodSlug
+    successURL: $successURL
+    failureURL: $failureURL
+  ) {
+    ...FullPayment
+  }
+}
+
+mutation PayGiftCode(
+  $id: String!
+  $paymentMethodId: String
+  $paymentMethodSlug: Slug
+  $successURL: String
+  $failureURL: String
+) {
+  payGiftCode(
+    id: $id
+    paymentMethodId: $paymentMethodId
+    paymentMethodSlug: $paymentMethodSlug
+    successURL: $successURL
+    failureURL: $failureURL
+  ) {
+    ...FullPayment
+  }
+}
+
+query MyGiftCodes {
+  myGiftCodes {
+    ...FullGiftCode
+  }
+}

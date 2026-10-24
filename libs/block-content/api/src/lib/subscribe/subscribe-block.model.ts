@@ -10,6 +10,7 @@ import {
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { MemberPlan } from '@wepublish/member-plan/api';
+import { GiftCodeOffer } from '@wepublish/gift-code/api';
 import { PaymentPeriodicity } from '@prisma/client';
 
 export enum SubscribeBlockField {
@@ -192,12 +193,23 @@ export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
 
   @Field(() => [MemberPlan])
   memberPlans!: MemberPlan[];
+
+  @Field(() => [String], { defaultValue: [] })
+  giftCodeOfferIds?: string[];
+
+  @Field(() => [GiftCodeOffer])
+  giftCodeOffers!: GiftCodeOffer[];
 }
 
 @InputType()
 export class SubscribeBlockInput extends OmitType(
   SubscribeBlock,
-  ['type', 'memberPlans', 'memberPlanRenderSettings'] as const,
+  [
+    'type',
+    'memberPlans',
+    'giftCodeOffers',
+    'memberPlanRenderSettings',
+  ] as const,
   InputType
 ) {
   @Field(() => [SubscribeBlockMemberPlanRenderSettingInput])

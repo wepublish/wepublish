@@ -56,6 +56,43 @@ describe('PaymentWebhookController.receiveWebhook', () => {
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
+  it('notifies with the payment invoiceID when the intent is charged back', async () => {
+    const provider = fakeProvider('mollie', PaymentState.chargeback, {
+      id: 'payment-1',
+      invoiceID: 'invoice-1',
+    });
+    const notifier = { notify: vi.fn().mockResolvedValue(undefined) };
+    const controller = new PaymentWebhookController(
+      { paymentProviders: [provider] } as PaymentMethodConfig,
+      notifier as unknown as InvoicePaidNotifier
+    );
+    const res = fakeResponse();
+
+    await controller.receiveWebhook('mollie', fakeRequest(), res);
+
+    expect(notifier.notify).toHaveBeenCalledWith('invoice-1');
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it.each([PaymentState.declined, PaymentState.canceled])(
+    'does not notify when the intent is %s',
+    async state => {
+      const provider = fakeProvider('mollie', state, {
+        id: 'payment-1',
+        invoiceID: 'invoice-1',
+      });
+      const notifier = { notify: vi.fn().mockResolvedValue(undefined) };
+      const controller = new PaymentWebhookController(
+        { paymentProviders: [provider] } as PaymentMethodConfig,
+        notifier as unknown as InvoicePaidNotifier
+      );
+
+      await controller.receiveWebhook('mollie', fakeRequest(), fakeResponse());
+
+      expect(notifier.notify).not.toHaveBeenCalled();
+    }
+  );
+
   it('does not notify when the intent state is not paid', async () => {
     const provider = fakeProvider('stripe', PaymentState.submitted, {
       id: 'payment-1',

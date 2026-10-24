@@ -6,6 +6,7 @@ import {
   CreateSubscriptionInfoQuery,
   CreateSubscriptionInfoQueryVariables,
   Currency,
+  FullGiftCodeOfferFragment,
   FullGoodieFragment,
   FullInvoiceFragment,
   FullMemberPlanFragment,
@@ -14,7 +15,9 @@ import {
   FullSubscriptionFragment,
   InvoicesQuery,
   MemberPlanListQuery,
+  MyGiftCodesQuery,
   PaymentPeriodicity,
+  PurchaseGiftCodeMutationVariables,
   RegisterMutationVariables,
   SubscribeMutationVariables,
   SubscribePeriodicityDisplay,
@@ -309,4 +312,40 @@ export type BuilderUpgradeProps = {
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;
+};
+
+export type BuilderGiftCodePurchaseVariables = Omit<
+  PurchaseGiftCodeMutationVariables,
+  'successURL' | 'failureURL'
+>;
+
+export type BuilderGiftCodePurchaseProps<
+  T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
+    BuilderUserFormFields,
+    'flair'
+  >,
+> = {
+  offers: FullGiftCodeOfferFragment[];
+  challenge: Pick<
+    useQuery.Result<ChallengeQuery, OperationVariables, 'complete' | 'empty'>,
+    'data' | 'loading' | 'error'
+  >;
+  defaults?: Partial<{
+    offerId: string;
+  }>;
+  className?: string;
+  termsOfServiceUrl?: string;
+  onPurchase?: (data: BuilderGiftCodePurchaseVariables) => Promise<void>;
+  onPurchaseWithRegister?: (data: {
+    purchase: BuilderGiftCodePurchaseVariables;
+    register: RegisterMutationVariables;
+  }) => Promise<void>;
+} & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
+
+export type BuilderGiftCodeListProps = Pick<
+  useQuery.Result<MyGiftCodesQuery, OperationVariables, 'complete' | 'empty'>,
+  'data' | 'loading' | 'error'
+> & {
+  className?: string;
+  onPay?: (giftCodeId: string, paymentMethodId: string) => Promise<void>;
 };

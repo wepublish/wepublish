@@ -1,10 +1,12 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
+  GiftCodeOfferListDocument,
   PaymentPeriodicity,
   ProductType,
   SubscribeBlockRenderLayout,
 } from '@wepublish/editor/api';
+import { CanGetGiftCodes } from '@wepublish/permissions';
 import { SetStateAction, useState } from 'react';
 
 import { SubscribeBlock } from './subscribeBlock';
@@ -45,18 +47,45 @@ const plan = (
   ],
 });
 
+const { features, permissions } = vi.hoisted(() => ({
+  features: new Set<string>(),
+  permissions: new Set<string>(),
+}));
+
+vi.mock('../featureContext', () => ({
+  useFeature: (feature: string) => features.has(feature),
+}));
+
+vi.mock('../atoms/permissionControl', async importOriginal => ({
+  ...(await importOriginal<typeof import('../atoms/permissionControl')>()),
+  useAuthorisation: (permission: string) => permissions.has(permission),
+}));
+
 vi.mock('@apollo/client/react', () => ({
-  useQuery: () => ({
-    loading: false,
-    data: {
-      memberPlans: {
-        nodes: [
-          plan('small', 'Kleines Abo', 500),
-          plan('big', 'Grosse Gönnerschaft', 2500, 3000, 10000),
-        ],
+  useQuery: (document: unknown) =>
+    document === GiftCodeOfferListDocument ?
+      {
+        loading: false,
+        data: {
+          giftCodeOffers: {
+            nodes: [
+              { id: 'offer-1', name: 'Ein Jahr schenken' },
+              { id: 'offer-2', name: 'Ein Monat schenken' },
+            ],
+          },
+        },
+      }
+    : {
+        loading: false,
+        data: {
+          memberPlans: {
+            nodes: [
+              plan('small', 'Kleines Abo', 500),
+              plan('big', 'Grosse Gönnerschaft', 2500, 3000, 10000),
+            ],
+          },
+        },
       },
-    },
-  }),
 }));
 
 const renderSetting = (
@@ -87,6 +116,7 @@ const initialValue = (
   goodieMinValue: null,
   goodieMinValueAppliesToUpgrade: false,
   hideRepeatGoodieOnUpgrade: false,
+  giftCodeOfferIds: [],
   ...overrides,
 });
 
@@ -110,6 +140,11 @@ const Harness = ({ value: start }: { value: SubscribeBlockValue }) => {
 
 const planRow = (name: string) =>
   screen.getByRole('listitem', { name: new RegExp(name) });
+
+beforeEach(() => {
+  features.clear();
+  permissions.clear();
+});
 
 describe('SubscribeBlock', () => {
   it('offers every amount layout as a labelled segmented choice', () => {
@@ -224,5 +259,40 @@ describe('SubscribeBlock', () => {
     );
 
     expect(latest().showDiscountCodes).toBe(true);
+  });
+
+  it('hides the gift offers while gift codes are switched off', () => {
+    render(<Harness value={initialValue()} />);
+
+    expect(
+      screen.queryByRole('combobox', {
+        name: 'blocks.subscribe.giftCodeOffers',
+      })
+    ).not.toBeInTheDocument();
+  });
+
+  it('hides the gift offers from editors who cannot read them', () => {
+    features.add('gift-codes');
+    render(<Harness value={initialValue({ giftCodeOfferIds: ['offer-1'] })} />);
+
+    expect(
+      screen.queryByRole('combobox', {
+        name: 'blocks.subscribe.giftCodeOffers',
+      })
+    ).not.toBeInTheDocument();
+    expect(latest().giftCodeOfferIds).toEqual(['offer-1']);
+  });
+
+  it('writes the chosen gift offers into the block', () => {
+    features.add('gift-codes');
+    permissions.add(CanGetGiftCodes.id);
+    render(<Harness value={initialValue()} />);
+
+    fireEvent.mouseDown(
+      screen.getByRole('combobox', { name: 'blocks.subscribe.giftCodeOffers' })
+    );
+    fireEvent.click(screen.getByRole('option', { name: 'Ein Monat schenken' }));
+
+    expect(latest().giftCodeOfferIds).toEqual(['offer-2']);
   });
 });

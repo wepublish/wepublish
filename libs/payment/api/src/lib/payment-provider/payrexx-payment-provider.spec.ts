@@ -10,9 +10,11 @@ import { PayrexxFactoryProps } from '../payrexx/payrexx-factory';
 
 function mockInstance<Type = unknown>(implementation?: PartialDeep<Type>) {
   // vi.fn with a `function` implementation so it can be called with `new`
-  return new (vi.fn(function () {
-    return implementation;
-  }) as unknown as new () => Type)();
+  return new (
+    vi.fn(function () {
+      return implementation;
+    }) as unknown as new () => Type
+  )();
 }
 
 describe('PayrexxPaymentProvider', () => {
@@ -329,6 +331,53 @@ describe('PayrexxPaymentProvider', () => {
       ).toHaveBeenCalled();
       expect(result.intentID).toBe('4');
       expect(result.intentSecret).toBe('https://payrexx/gateway-link');
+    });
+  });
+
+  describe('createIntent tokenization', () => {
+    const invoice = {
+      items: [{ amount: 120, quantity: 3 }],
+    } as unknown as InvoiceWithItems;
+
+    beforeEach(() => {
+      gatewayClient.createGateway = vi.fn().mockResolvedValue({
+        id: 5,
+        link: 'https://payrexx/gateway-link',
+      } as Partial<Gateway>);
+    });
+
+    it('does not pre-authorize a one-time purchase in off-session mode', async () => {
+      await payrexx.createIntent({
+        invoice,
+        paymentID: '456',
+        successURL: 'https://success',
+        failureURL: 'https://failure',
+        currency: Currency.CHF,
+        saveCustomer: false,
+      });
+
+      const [gateway] = vi.mocked(gatewayClient.createGateway).mock.calls[0];
+
+      expect(gateway).not.toHaveProperty('preAuthorization');
+      expect(gateway).not.toHaveProperty('chargeOnAuthorization');
+    });
+
+    it('pre-authorizes when the customer is saved in off-session mode', async () => {
+      await payrexx.createIntent({
+        invoice,
+        paymentID: '456',
+        successURL: 'https://success',
+        failureURL: 'https://failure',
+        currency: Currency.CHF,
+        saveCustomer: true,
+      });
+
+      expect(gatewayClient.createGateway).toHaveBeenCalledWith(
+        expect.objectContaining({
+          preAuthorization: true,
+          chargeOnAuthorization: true,
+        })
+      );
     });
   });
 

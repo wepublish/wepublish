@@ -2,6 +2,7 @@ import { Cron } from '@nestjs/schedule';
 import { Injectable, Logger } from '@nestjs/common';
 import { ContextIdFactory, ModuleRef } from '@nestjs/core';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SellableReconciliationService } from '@wepublish/payment/api';
 import { NIGHT_CLAIM_MS, PeriodicJobService } from './periodic-job.service';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
 
@@ -76,6 +77,24 @@ export class PeriodicJobExecutor {
       await mailchimpSyncService.executeAllSync();
     } catch (error) {
       this.logger.error('Mailchimp sync failed during periodic job:', error);
+    }
+
+    try {
+      const reconciliation = await this.moduleRef.resolve(
+        SellableReconciliationService,
+        ContextIdFactory.create(),
+        { strict: false }
+      );
+      const { polled, canceled, resynced, failed } =
+        await reconciliation.reconcile();
+      this.logger.log(
+        `Sellable reconciliation: ${polled} polled, ${canceled} canceled, ${resynced} resynced, ${failed} failed`
+      );
+    } catch (error) {
+      this.logger.error(
+        'Sellable reconciliation failed during periodic job:',
+        error
+      );
     }
   }
 }

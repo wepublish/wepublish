@@ -41,6 +41,7 @@ import {
   CanDeleteDocument,
   CanDeleteEvent,
   CanDeleteExternalApp,
+  CanDeleteGiftCodes,
   CanDeleteImage,
   CanDeleteMemberPlan,
   CanDeleteNavigation,
@@ -73,6 +74,8 @@ import {
   CanGetDocument,
   CanGetDocuments,
   CanGetEvent,
+  CanGetGiftCodes,
+  CanUpdateGiftCodes,
   CanGetImage,
   CanGetImages,
   CanGetMailLogs,
@@ -153,6 +156,7 @@ import {
   MdCardGiftcard,
   MdChat,
   MdContentCopy,
+  MdConfirmationNumber,
   MdCountertops,
   MdCreditCard,
   MdDarkMode,
@@ -183,6 +187,7 @@ import {
   MdPieChartOutline,
   MdPower,
   MdQueryStats,
+  MdRedeem,
   MdSell,
   MdSend,
   MdSettings,
@@ -1186,6 +1191,9 @@ export function Base({ children }: BaseProps) {
                   CanUpdateDiscountCode.id,
                   CanCreateGoodie.id,
                   CanUpdateGoodie.id,
+                  CanGetGiftCodes.id,
+                  CanUpdateGiftCodes.id,
+                  CanDeleteGiftCodes.id,
                 ]}
               >
                 <SidebarNavMenu
@@ -1256,6 +1264,34 @@ export function Base({ children }: BaseProps) {
                       {t('goodie.navbar')}
                     </SidebarNavItem>
                   </PermissionControl>
+
+                  <FeatureControl feature="gift-codes">
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetGiftCodes.id,
+                        CanUpdateGiftCodes.id,
+                        CanDeleteGiftCodes.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/giftCodeOffers"
+                        icon={<MdRedeem />}
+                      >
+                        {t('giftCodeOffer.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetGiftCodes.id]}
+                    >
+                      <SidebarNavItem
+                        href="/giftCodes"
+                        icon={<MdConfirmationNumber />}
+                      >
+                        {t('giftCode.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
                 </SidebarNavMenu>
               </PermissionControl>
 

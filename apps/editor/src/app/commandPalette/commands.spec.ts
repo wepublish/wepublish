@@ -20,9 +20,11 @@ const catalogs = {
 const lookup = (catalog: Catalog, key: string) =>
   key
     .split('.')
-    .reduce<
-      string | Catalog | undefined
-    >((value, part) => (value && typeof value !== 'string' ? value[part] : undefined), catalog);
+    .reduce<string | Catalog | undefined>(
+      (value, part) =>
+        value && typeof value !== 'string' ? value[part] : undefined,
+      catalog
+    );
 
 const pathOf = (tag: ts.JsxOpeningLikeElement) => {
   if (tag.tagName.getText() !== 'Route') {
@@ -130,6 +132,21 @@ describe('editor command registry', () => {
 
     expect(ids([])).not.toContain('newsletter');
     expect(ids(['newsletter-editor'])).toContain('newsletter');
+  });
+
+  it('hides gift codes while their feature is off, as the sidebar does', () => {
+    const t = ((key: string) => key) as TFunction;
+    const i18n = { getFixedT: () => t } as unknown as I18n;
+    const ids = (features: string[]) =>
+      allowedCommands(
+        editorCommands(t, i18n),
+        undefined,
+        new Set(features)
+      ).map(({ id }) => id);
+    const giftCommands = ['giftCodeOffers', 'giftCodes', 'createGiftCodeOffer'];
+
+    expect(ids([]).filter(id => giftCommands.includes(id))).toEqual([]);
+    expect(ids(['gift-codes'])).toEqual(expect.arrayContaining(giftCommands));
   });
 
   it('leaves a command that acts rather than navigates out of the routes', () => {

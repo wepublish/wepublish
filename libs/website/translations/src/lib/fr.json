@@ -71,6 +71,11 @@
       "confirmationTitle": "Êtes-vous sûr ?",
       "openInvoices": "Vous avez déjà un abonnement avec des factures impayées. Vous pouvez consulter vos factures impayées dans votre <Link href=\"/profile\">profil</Link>.",
       "alreadyHasSubscription": "Vous avez déjà cet abonnement, êtes-vous sûr ? Vous pouvez consulter vos abonnements dans votre <Link href=\"/profile\">profil</Link>."
+    },
+    "mode": {
+      "label": "S'abonner ou offrir",
+      "subscribe": "S'abonner",
+      "gift": "Offrir"
     }
   },
   "login": {
@@ -182,6 +187,48 @@
     "bexioWarning": "Vous recevrez une facture PDF par e-mail.",
     "payrexxWarning": "Nous avons récemment mis à jour le système des membres et votre abonnement est obsolète. Il sera automatiquement mis à jour lorsque vous cliquerez sur \"Payer maintenant\".",
     "payNow": "Payer maintenant"
+  },
+  "giftCode": {
+    "duration": "{periodicity, select, monthly {1 mois} quarterly {3 mois} biannual {6 mois} yearly {1 an} biennial {2 ans} lifetime {À vie} other {}}",
+    "redemptionWindow": "{months, plural, one {Utilisable pendant # mois} other {Utilisable pendant # mois}}",
+    "purchase": {
+      "chooseOffer": "Choisir un cadeau",
+      "recipientTitle": "À qui offrez-vous ce cadeau ?",
+      "recipientName": "Nom de la personne bénéficiaire",
+      "message": "Message personnel (facultatif)",
+      "choosePaymentMethod": "Choisir le mode de paiement",
+      "noPaymentMethods": "Aucun mode de paiement n'est actuellement disponible pour ce cadeau.",
+      "deliveryNote": "Vous recevrez le code cadeau dès que le paiement sera confirmé. En cas de paiement par facture, cela peut prendre quelques jours.",
+      "issueBeforePaymentNote": "Vous trouverez le code cadeau immédiatement après l'achat sous « Mes bons cadeaux » dans votre profil.",
+      "spamProtection": "Protection anti-spam",
+      "captcha": "Captcha",
+      "button": "Acheter le bon cadeau pour {formattedAmount}",
+      "success": "Merci pour votre achat ! Vous trouverez votre bon cadeau sous « Mes bons cadeaux ».",
+      "failure": "Le paiement n'a pas pu être effectué. Si votre commande a été créée, vous pouvez la payer à nouveau sous « Mes bons cadeaux » dans votre profil."
+    },
+    "list": {
+      "title": "Mes bons cadeaux",
+      "recipient": "Pour",
+      "duration": "Durée",
+      "amount": "Montant",
+      "createdAt": "Acheté le",
+      "expiresAt": "Utilisable jusqu'au",
+      "redeemedAt": "Utilisé le",
+      "canceledAt": "Annulé le",
+      "code": "Code cadeau",
+      "copy": "Copier le code",
+      "copied": "Copié",
+      "pay": "Payer",
+      "unpaid": "Pas encore payé",
+      "orderedNote": "Votre code cadeau apparaîtra ici dès que le paiement sera confirmé. En cas de paiement par facture, cela peut prendre quelques jours."
+    },
+    "status": {
+      "ordered": "Commandé",
+      "issued": "Prêt à offrir",
+      "redeemed": "Utilisé",
+      "canceled": "Annulé",
+      "expired": "Expiré"
+    }
   },
   "user": {
     "changeEmailRequest": "Cliquez ici pour modifier votre adresse e-mail",
