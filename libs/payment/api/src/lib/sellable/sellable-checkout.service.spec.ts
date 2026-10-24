@@ -140,6 +140,18 @@ describe('SellableCheckoutService', () => {
     });
   });
 
+  it('writes the discount code of a line onto its invoice item', async () => {
+    const { service, tx } = setup();
+
+    await service.checkout(
+      input({ lines: [line({ amount: 4500, discountCodeId: 'dc-1' })] })
+    );
+
+    expect(tx.invoiceItem.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ amount: 4500, discountCodeId: 'dc-1' }),
+    });
+  });
+
   it('starts the payment with the reloaded invoice after the commit', async () => {
     const { service, prisma, payments } = setup();
 

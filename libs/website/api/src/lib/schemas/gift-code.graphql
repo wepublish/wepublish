@@ -5,6 +5,7 @@ fragment FullGiftCodeOffer on GiftCodeOffer {
   periodicity
   redemptionWindowMonths
   issueBeforePayment
+  allowDiscountCodes
 
   image {
     ...FullImage
@@ -62,6 +63,7 @@ mutation PurchaseGiftCode(
   $offerId: String!
   $recipientName: String!
   $message: String
+  $discountCode: String
   $paymentMethodId: String
   $paymentMethodSlug: Slug
   $successURL: String
@@ -71,6 +73,7 @@ mutation PurchaseGiftCode(
     offerId: $offerId
     recipientName: $recipientName
     message: $message
+    discountCode: $discountCode
     paymentMethodId: $paymentMethodId
     paymentMethodSlug: $paymentMethodSlug
     successURL: $successURL

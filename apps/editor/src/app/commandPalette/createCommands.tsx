@@ -238,7 +238,7 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdRedeem />,
     permissions: [CanUpdateGiftCodes.id],
     feature: 'gift-codes',
-    perform: ({ navigate }) => navigate('/giftCodeOffers/create'),
+    perform: ({ navigate }) => navigate('/gift-codes/offers/create'),
   },
   {
     id: 'createPeer',

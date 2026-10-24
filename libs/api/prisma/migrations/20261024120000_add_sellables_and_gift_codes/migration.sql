@@ -25,6 +25,7 @@ CREATE TABLE "gift-codes.offers" (
     "periodicity" "PaymentPeriodicity" NOT NULL,
     "redemptionWindowMonths" INTEGER,
     "issueBeforePayment" BOOLEAN NOT NULL DEFAULT false,
+    "allowDiscountCodes" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "gift-codes.offers_pkey" PRIMARY KEY ("id")
 );
@@ -64,7 +65,7 @@ CREATE TABLE "_GiftCodeOfferToPaymentMethod" (
 );
 
 -- CreateIndex
-CREATE INDEX "gift-codes.offers_memberPlanId_idx" ON "gift-codes.offers"("memberPlanId");
+CREATE UNIQUE INDEX "gift-codes.offers_memberPlanId_key" ON "gift-codes.offers"("memberPlanId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "gift-codes_code_key" ON "gift-codes"("code");

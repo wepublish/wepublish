@@ -63,6 +63,7 @@ const offer = {
   description: null,
   active: true,
   issueBeforePayment: true,
+  allowDiscountCodes: false,
   periodicity: PaymentPeriodicity.Yearly,
   redemptionWindowMonths: null,
   imageID: null,
@@ -134,6 +135,19 @@ describe('GiftCodeOfferList', () => {
     expect(
       within(row).getByText('giftCodeOffer.overview.unlimited')
     ).toBeInTheDocument();
+  });
+
+  it('shows whether an offer takes discount codes', () => {
+    renderList();
+
+    const row = screen
+      .getByText('Ein Jahr schenken')
+      .closest('tr') as HTMLElement;
+
+    expect(
+      screen.getByText('giftCodeOffer.overview.allowDiscountCodes')
+    ).toBeInTheDocument();
+    expect(within(row).getAllByText('❌')).toHaveLength(1);
   });
 
   it('only lets who may delete offers delete them', () => {

@@ -79,14 +79,14 @@ model GiftCodeOffer {
   active                 Boolean            @default(true)
   imageID                String?
   image                  Image?             @relation(fields: [imageID], references: [id], onDelete: SetNull)
-  memberPlanId           String
+  memberPlanId           String             @unique
   memberPlan             MemberPlan         @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   periodicity            PaymentPeriodicity
   redemptionWindowMonths Int?
   issueBeforePayment     Boolean            @default(false)
+  allowDiscountCodes     Boolean            @default(false)
   paymentMethods         PaymentMethod[]
   giftCodes              GiftCode[]
-  @@index([memberPlanId])
   @@map("gift-codes.offers")
 }
 ```
@@ -96,6 +96,11 @@ periodicity (`amountTarget ?? amountMin`, see
 [D18](decisions.md#d18-price-is-amounttarget-falling-back-to-amountmin)), so
 editors maintain it in one place. `redemptionWindowMonths` null means the code
 never expires.
+
+`memberPlanId` is unique: a member plan has at most one gift offer
+([D29](decisions.md#d29-one-gift-offer-per-member-plan)). Create and update
+check it first and also map a P2002 from a concurrent write to the same
+BadRequest ("This member plan already has a gift offer.").
 
 `paymentMethods` is an implicit many-to-many (back-relation
 `PaymentMethod.giftCodeOffers`): the editor picks the methods per offer. Only
@@ -107,6 +112,13 @@ methods that are active, not retired and run by a provider with
 (`issuedAt` now, `expiresAt` from the window), so the buyer can hand it over
 before the invoice is paid. The later payment is a no-op for the code, and an
 unpaid timeout or a chargeback still cancels it.
+
+`allowDiscountCodes` true lets the buyer enter a discount code of the offer's
+member plan at purchase
+([D30](decisions.md#d30-discount-codes-on-gift-purchases-opt-in-per-offer)).
+The discount lowers the gift's `InvoiceItem.amount`, and the item's existing
+`discountCodeId` points at the code, as on a discounted subscription invoice.
+Nothing about the discount is stored on `GiftCode`.
 
 ## GiftCode (`gift-codes`)
 

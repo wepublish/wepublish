@@ -38,6 +38,7 @@ const mapApiDataToInput = (
   description: offer.description,
   active: offer.active,
   issueBeforePayment: offer.issueBeforePayment,
+  allowDiscountCodes: offer.allowDiscountCodes,
   memberPlanId: offer.memberPlanId,
   memberPlan: offer.memberPlan,
   periodicity: offer.periodicity,

@@ -26,14 +26,14 @@ and its existing invoice permission.
 | --- | --- | --- |
 | `giftCodeOffers(filter, sort, order, cursorId, take, skip): PaginatedGiftCodeOffers` | `@Permissions(CanGetGiftCodes, CanUpdateGiftCodes, CanDeleteGiftCodes)` (any of them) | Filter `{memberPlanId, active, name}`, sort `CreatedAt`, `ModifiedAt` (default), `Name` |
 | `giftCodeOffer(id): GiftCodeOffer` | `@Permissions(CanGetGiftCodes, CanUpdateGiftCodes, CanDeleteGiftCodes)` | NotFound when missing |
-| `createGiftCodeOffer(...)` | `@Permissions(CanUpdateGiftCodes)` | Flat args, goodie style. `issueBeforePayment` is a required argument here. |
+| `createGiftCodeOffer(...)` | `@Permissions(CanUpdateGiftCodes)` | Flat args, goodie style. `issueBeforePayment` is a required argument here; `allowDiscountCodes` is optional and defaults to false. |
 | `updateGiftCodeOffer(id, ...)` | `@Permissions(CanUpdateGiftCodes)` | |
 | `deleteGiftCodeOffer(id)` | `@Permissions(CanDeleteGiftCodes)` | BadRequest "This offer has sold gift codes. Deactivate it instead." |
 
 `GiftCodeOffer` implements `HasImage` and `HasMemberPlanLc`. Fields: `id`,
 `createdAt`, `modifiedAt`, `name`, `description` (rich text), `active`,
 `memberPlanId`, `periodicity`, `redemptionWindowMonths`, `issueBeforePayment`,
-`imageID`, plus three field resolvers: `price: GiftCodePrice {amount,
+`allowDiscountCodes`, `imageID`, plus three field resolvers: `price: GiftCodePrice {amount,
 currency}`, `paymentMethods: [PaymentMethod]` (the offer's methods filtered
 through `getStandalonePaymentMethods`) and `paymentMethodIds: [String]` (as
 configured, for the editor form). The offer reads accept any of the three
@@ -42,7 +42,8 @@ reachable with any of them. Every field is safe to show the public,
 because offers reach the website through the subscribe block.
 
 Create and update take `paymentMethodIds: [String!]!` (set semantics on
-update) and reject (BadRequest): a plan that does not exist, a periodicity
+update) and reject (BadRequest): a plan that already has another offer, a
+plan that does not exist, a periodicity
 without a price above 0 on the plan, a window of 0 or less, an empty
 `paymentMethodIds`, and any method that is missing, inactive, retired or run
 by a provider without standalone support ("Payment method <name> cannot be
@@ -83,8 +84,8 @@ early-issued code (`issued`, unpaid) from a paid one.
 ### purchaseGiftCode
 
 Args: `offerId!`, `recipientName!` (trimmed, 1 to 200 characters), `message`
-(up to 1000), exactly one of `paymentMethodId` or `paymentMethodSlug`,
-`successURL`, `failureURL`.
+(up to 1000), `discountCode` (trimmed; empty means none), exactly one of
+`paymentMethodId` or `paymentMethodSlug`, `successURL`, `failureURL`.
 
 `GiftCodeService.purchase`:
 
@@ -92,19 +93,41 @@ Args: `offerId!`, `recipientName!` (trimmed, 1 to 200 characters), `message`
    `createPaymentFromInvoice`, and a recipient name or message out of bounds.
    An empty message is stored as null.
 2. Loads the offer with the plan's pricing. BadRequest "Gift code offer is
-   not available" unless both offer and plan are active.
+   not available" unless both offer and plan are active. A discount code on
+   an offer without `allowDiscountCodes` is rejected with "Discount codes
+   cannot be used for this gift."
 3. Looks the method up among the active ones by id or slug. It must be one of
    the offer's methods after the `getStandalonePaymentMethods` filter,
    otherwise "Payment method cannot be used for this purchase".
 4. Takes the price from `GiftCodeOfferService.getPrice`; it must be above 0.
-5. Calls `SellableCheckoutService.checkout` with one line (`kind: giftCode`,
-   `quantity: 1`, `amount` = price, description "plan name (periodicity)").
+5. With a discount code, looks it up like the subscription checkout does:
+   lower-cased, for the offer's member plan
+   (`@@unique([code, memberPlanId])`), between `validFrom` and `validTo`.
+   Otherwise BadRequest "DiscountCode is invalid." or "DiscountCode has
+   expired.", the same messages as `createSubscription`. The discount is
+   `Math.round(price * discountPercent / 100)`, the formula in
+   `user-subscription.service.ts`. A code that brings the amount to 0 is
+   rejected with "This discount code makes the gift free, which is not
+   supported.", because checkout refuses zero totals. Free gifts through a
+   100 % code are not supported yet.
+6. Calls `SellableCheckoutService.checkout` with one line (`kind: giftCode`,
+   `quantity: 1`, `amount` = price minus discount, `discountCodeId` when a
+   code was used, description "plan name (periodicity)").
    Its `attach` creates the `GiftCode` with a generated code, the snapshot
    fields, `buyerId` and the recipient fields. When the offer has
    `issueBeforePayment`, the code is created issued (`issuedAt` now,
    `expiresAt` from the window).
-6. Returns the `Payment`, which the website hands to the shared payment
+7. Returns the `Payment`, which the website hands to the shared payment
    handling (redirect, Stripe Elements, or paid at once).
+
+The lookup lives in `GiftCodeService` and does not call
+`DiscountCodeService.getValidDiscountCode`. Importing `DiscountCodeModule`
+from `@wepublish/membership/api` closes the loop gift-code → membership →
+member-plan → page → block-content → gift-code, and `DiscountCodeService`
+then resolves to `undefined` when Nest builds the module. The website checks
+a code before submit with the existing public
+`createSubscriptionInfo(memberPlanId, discountCode)` query, which uses the
+same rules.
 
 ### payGiftCode
 

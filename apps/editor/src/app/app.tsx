@@ -1003,7 +1003,7 @@ export function App() {
               }
             />
             <Route
-              path="giftCodeOffers"
+              path="gift-codes/offers"
               element={
                 <Base>
                   <GiftCodeOfferList />
@@ -1011,7 +1011,7 @@ export function App() {
               }
             />
             <Route
-              path="giftCodeOffers/create"
+              path="gift-codes/offers/create"
               element={
                 <Base>
                   <GiftCodeOfferCreateView />
@@ -1019,7 +1019,7 @@ export function App() {
               }
             />
             <Route
-              path="giftCodeOffers/edit/:id"
+              path="gift-codes/offers/edit/:id"
               element={
                 <Base>
                   <GiftCodeOfferEditView />
@@ -1027,7 +1027,7 @@ export function App() {
               }
             />
             <Route
-              path="giftCodes"
+              path="gift-codes"
               element={
                 <Base>
                   <GiftCodeList />

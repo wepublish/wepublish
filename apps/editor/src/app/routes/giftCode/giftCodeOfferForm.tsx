@@ -4,13 +4,13 @@ import {
   Autocomplete,
   Card,
   CardContent,
+  Checkbox,
   Drawer,
   FormControlLabel,
   FormHelperText,
   FormLabel,
   MenuItem,
   Stack,
-  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -42,6 +42,7 @@ export const createGiftCodeOfferSchema = (t: TFunction) =>
     description: z.custom<RichTextBlockValue['richText']>().nullish(),
     active: z.boolean(),
     issueBeforePayment: z.boolean(),
+    allowDiscountCodes: z.boolean(),
     memberPlanId: z
       .string()
       .min(1, t('errorMessages.noMemberPlanErrorMessage')),
@@ -75,6 +76,7 @@ export const EMPTY_GIFT_CODE_OFFER: GiftCodeOfferFormValues = {
   description: null,
   active: true,
   issueBeforePayment: false,
+  allowDiscountCodes: false,
   memberPlanId: '',
   memberPlan: null,
   periodicity: null,
@@ -177,22 +179,6 @@ export const GiftCodeOfferForm = () => {
                 direction="column"
                 spacing={3}
               >
-                <FormControlLabel
-                  control={
-                    <Controller
-                      control={control}
-                      name="active"
-                      render={({ field }) => (
-                        <Switch
-                          checked={Boolean(field.value)}
-                          onChange={(_event, active) => field.onChange(active)}
-                        />
-                      )}
-                    />
-                  }
-                  label={t('giftCodeOffer.form.active')}
-                />
-
                 <Controller
                   control={control}
                   name="name"
@@ -390,6 +376,22 @@ export const GiftCodeOfferForm = () => {
                   )}
                 />
 
+                <FormControlLabel
+                  control={
+                    <Controller
+                      control={control}
+                      name="active"
+                      render={({ field }) => (
+                        <Checkbox
+                          checked={Boolean(field.value)}
+                          onChange={(_event, active) => field.onChange(active)}
+                        />
+                      )}
+                    />
+                  }
+                  label={t('giftCodeOffer.form.active')}
+                />
+
                 <Controller
                   control={control}
                   name="issueBeforePayment"
@@ -397,7 +399,7 @@ export const GiftCodeOfferForm = () => {
                     <div>
                       <FormControlLabel
                         control={
-                          <Switch
+                          <Checkbox
                             checked={Boolean(field.value)}
                             onChange={(_event, checked) =>
                               field.onChange(checked)
@@ -409,6 +411,30 @@ export const GiftCodeOfferForm = () => {
 
                       <FormHelperText>
                         {t('giftCodeOffer.form.issueBeforePaymentHelp')}
+                      </FormHelperText>
+                    </div>
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="allowDiscountCodes"
+                  render={({ field }) => (
+                    <div>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={Boolean(field.value)}
+                            onChange={(_event, checked) =>
+                              field.onChange(checked)
+                            }
+                          />
+                        }
+                        label={t('giftCodeOffer.form.allowDiscountCodes')}
+                      />
+
+                      <FormHelperText>
+                        {t('giftCodeOffer.form.allowDiscountCodesHelp')}
                       </FormHelperText>
                     </div>
                   )}

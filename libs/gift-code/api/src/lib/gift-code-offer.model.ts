@@ -57,6 +57,9 @@ export class GiftCodeOffer extends HasImage {
 
   @Field()
   issueBeforePayment!: boolean;
+
+  @Field()
+  allowDiscountCodes!: boolean;
 }
 
 @InputType()
@@ -135,6 +138,9 @@ export class CreateGiftCodeOfferInput extends PickType(
 ) {
   @Field(() => [String])
   paymentMethodIds!: string[];
+
+  @Field({ nullable: true })
+  allowDiscountCodes?: boolean;
 }
 
 @ArgsType()

@@ -461,7 +461,7 @@ function GiftCodeList() {
               width: 240,
               render: giftCode => (
                 <div>
-                  <Link to={`/giftCodeOffers/edit/${giftCode.offer.id}`}>
+                  <Link to={`/gift-codes/offers/edit/${giftCode.offer.id}`}>
                     {giftCode.offer.name}
                   </Link>
 

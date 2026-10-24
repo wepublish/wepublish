@@ -612,7 +612,7 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
   {
     id: 'giftCodeOffers',
     titleKey: 'giftCodeOffer.navbar',
-    sectionKey: 'navbar.subscriptionPlans',
+    sectionKey: 'navbar.gifts',
     icon: <MdRedeem />,
     permissions: [
       CanGetGiftCodes.id,
@@ -620,16 +620,16 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
       CanDeleteGiftCodes.id,
     ],
     feature: 'gift-codes',
-    perform: ({ navigate }) => navigate('/giftCodeOffers'),
+    perform: ({ navigate }) => navigate('/gift-codes/offers'),
   },
   {
     id: 'giftCodes',
     titleKey: 'giftCode.navbar',
-    sectionKey: 'navbar.subscriptionPlans',
+    sectionKey: 'navbar.gifts',
     icon: <MdConfirmationNumber />,
     permissions: [CanGetGiftCodes.id],
     feature: 'gift-codes',
-    perform: ({ navigate }) => navigate('/giftCodes'),
+    perform: ({ navigate }) => navigate('/gift-codes'),
   },
   {
     id: 'peers',

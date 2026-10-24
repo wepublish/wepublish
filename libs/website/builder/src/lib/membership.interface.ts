@@ -332,7 +332,20 @@ export type BuilderGiftCodePurchaseProps<
   >;
   defaults?: Partial<{
     offerId: string;
+    discountCode: string;
   }>;
+  subscribeInfo?: Pick<
+    useQuery.Result<
+      CreateSubscriptionInfoQuery,
+      OperationVariables,
+      'complete' | 'empty' | 'streaming'
+    >,
+    'data' | 'loading' | 'error'
+  >;
+  fetchSubscribeInfo?: useLazyQuery.ExecFunction<
+    CreateSubscriptionInfoQuery,
+    CreateSubscriptionInfoQueryVariables
+  >;
   className?: string;
   termsOfServiceUrl?: string;
   onPurchase?: (data: BuilderGiftCodePurchaseVariables) => Promise<void>;

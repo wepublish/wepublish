@@ -1,6 +1,11 @@
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import {
+  FormControlLabel,
+  FormHelperText,
+  Radio,
+  RadioGroup,
+} from '@mui/material';
 import {
   BuilderChallengeRef,
   Challenge,
@@ -26,6 +31,7 @@ import {
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { MdCheck, MdError } from 'react-icons/md';
 import { z } from 'zod';
 import { formatCurrency } from '../formatters/format-currency';
 
@@ -33,6 +39,7 @@ export const giftCodePurchaseSchema = z.object({
   offerId: z.string().min(1),
   recipientName: z.string().trim().min(1).max(200),
   message: z.string().max(1000).nullish(),
+  discountCode: z.string().nullish(),
   paymentMethodId: z.string().min(1),
 });
 
@@ -97,6 +104,16 @@ export const GiftCodeOfferCardMeta = styled('div')`
 `;
 
 export const GiftCodeOfferCardPrice = styled('strong')``;
+
+export const GiftCodeDiscountCode = styled('div')`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+const discountedAmount = (amount: number, discountPercent: number) =>
+  amount - Math.round((amount * Math.round(discountPercent * 100)) / 100);
 
 type GiftCodeOfferPickerProps = {
   offers: FullGiftCodeOfferFragment[];
@@ -179,6 +196,8 @@ export const GiftCodePurchase = <
   fields = ['firstName', 'password', 'passwordRepeated', 'address'] as T[],
   schema = defaultRegisterSchema,
   className,
+  subscribeInfo,
+  fetchSubscribeInfo,
   onPurchase,
   onPurchaseWithRegister,
 }: BuilderGiftCodePurchaseProps<T>) => {
@@ -244,6 +263,7 @@ export const GiftCodePurchase = <
       offerId: defaultOffer?.id ?? '',
       recipientName: '',
       message: '',
+      discountCode: defaults?.discountCode ?? '',
       paymentMethodId: defaultOffer?.paymentMethods[0]?.id ?? '',
     },
     mode: 'onTouched',
@@ -261,6 +281,36 @@ export const GiftCodePurchase = <
     [selectedOffer]
   );
 
+  const discountCode = useWatch({ control, name: 'discountCode' });
+  const allowsDiscountCodes = !!selectedOffer?.allowDiscountCodes;
+  const appliedDiscountCode =
+    allowsDiscountCodes ? (discountCode?.trim() ?? '') : '';
+  const discountMemberPlanId = selectedOffer?.memberPlan.id;
+
+  useEffect(() => {
+    if (appliedDiscountCode && discountMemberPlanId) {
+      fetchSubscribeInfo?.({
+        variables: {
+          memberPlanId: discountMemberPlanId,
+          discountCode: appliedDiscountCode,
+        },
+      });
+    }
+  }, [fetchSubscribeInfo, discountMemberPlanId, appliedDiscountCode]);
+
+  const discountInfo =
+    appliedDiscountCode ?
+      subscribeInfo?.data?.createSubscriptionInfo
+    : undefined;
+  const discountPercent = discountInfo?.discountPercent ?? 0;
+  const discountCodeInvalid = discountInfo?.discountCodeValid === false;
+  const amount =
+    selectedOffer ?
+      discountedAmount(selectedOffer.price.amount, discountPercent)
+    : 0;
+  const discountMakesGiftFree = !!discountPercent && amount <= 0;
+  const purchaseBlocked = discountCodeInvalid || discountMakesGiftFree;
+
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
       setValue<'challengeAnswer.challengeID'>(
@@ -276,11 +326,16 @@ export const GiftCodePurchase = <
   ) => {
     challengeRef.current?.reset();
 
+    if (purchaseBlocked) {
+      return;
+    }
+
     const purchase: BuilderGiftCodePurchaseVariables = {
       offerId: data.offerId,
       recipientName: data.recipientName,
       message: data.message || null,
       paymentMethodId: data.paymentMethodId,
+      discountCode: appliedDiscountCode || undefined,
     };
 
     if (hasUser) {
@@ -312,11 +367,7 @@ export const GiftCodePurchase = <
 
   const formattedAmount =
     selectedOffer ?
-      formatCurrency(
-        selectedOffer.price.amount / 100,
-        selectedOffer.price.currency,
-        locale
-      )
+      formatCurrency(amount / 100, selectedOffer.price.currency, locale)
     : '';
 
   return (
@@ -380,6 +431,62 @@ export const GiftCodePurchase = <
             )}
           />
         </GiftCodePurchaseSection>
+
+        {allowsDiscountCodes && (
+          <GiftCodePurchaseSection>
+            <Controller
+              name={'discountCode'}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <div>
+                  <GiftCodeDiscountCode>
+                    <TextField
+                      {...field}
+                      value={field.value ?? ''}
+                      label={t('subscribe.discountCode.label')}
+                      error={!!error || discountCodeInvalid}
+                      autoComplete="off"
+                      sx={{ maxWidth: 200 }}
+                    />
+
+                    {!!discountPercent && !discountMakesGiftFree && (
+                      <Alert
+                        severity="success"
+                        icon={<MdCheck />}
+                      >
+                        {t('subscribe.discountCode.discountApplied', {
+                          discountPercent: Math.round(discountPercent * 100),
+                        })}
+                      </Alert>
+                    )}
+
+                    {discountCodeInvalid && (
+                      <Alert
+                        severity="error"
+                        icon={<MdError />}
+                      >
+                        {t('subscribe.discountCode.invalid')}
+                      </Alert>
+                    )}
+
+                    {discountMakesGiftFree && (
+                      <Alert
+                        severity="error"
+                        icon={<MdError />}
+                      >
+                        {t('giftCode.purchase.discountCodeFree')}
+                      </Alert>
+                    )}
+                  </GiftCodeDiscountCode>
+
+                  {!!error && (
+                    <FormHelperText error>{error.message}</FormHelperText>
+                  )}
+                </div>
+              )}
+            />
+          </GiftCodePurchaseSection>
+        )}
 
         {!hasUser && (
           <GiftCodePurchaseSection>
@@ -462,7 +569,12 @@ export const GiftCodePurchase = <
           <GiftCodePurchaseButton
             size={'large'}
             type="submit"
-            disabled={challenge.loading || loading || !paymentMethods.length}
+            disabled={
+              challenge.loading ||
+              loading ||
+              !paymentMethods.length ||
+              purchaseBlocked
+            }
           >
             {t('giftCode.purchase.button', { formattedAmount })}
           </GiftCodePurchaseButton>

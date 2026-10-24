@@ -156,6 +156,63 @@ export const GiftMode = {
   },
 };
 
+const discountGiftCodeOffer = mockGiftCodeOffer({
+  id: 'gift-offer-discount',
+  allowDiscountCodes: true,
+});
+const purchaseDiscountedGiftCode = fn(async () => ({ data: undefined }));
+
+export const GiftModeWithDiscountCode = {
+  args: mockSubscribeBlock({ giftCodeOffers: [discountGiftCodeOffer] }),
+  decorators: [
+    WithUserDecorator({} as any),
+    WithSubscribeBlockDecorators({
+      purchaseGiftCode: purchaseDiscountedGiftCode,
+      challenge: {
+        data: undefined,
+        loading: false,
+      },
+      subscribeInfoResult: {
+        data: {
+          __typename: 'Query',
+          createSubscriptionInfo: {
+            __typename: 'CreateSubscriptionInfo',
+            discountPercent: 0.5,
+            discountCodeValid: true,
+          },
+        },
+      },
+    }),
+    WithRouterDecorator({ query: { mode: 'gift', discountCode: 'HALB' } }),
+  ],
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.getByText('50% Rabatt angewendet')).toBeTruthy();
+
+    await userEvent.type(
+      canvas.getByLabelText('Name der beschenkten Person', {
+        selector: 'input',
+        exact: false,
+      }),
+      'Anna Muster'
+    );
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Gutschein für CHF 60.- kaufen' })
+    );
+
+    expect(purchaseDiscountedGiftCode).toHaveBeenCalledWith({
+      variables: {
+        offerId: discountGiftCodeOffer.id,
+        recipientName: 'Anna Muster',
+        message: null,
+        paymentMethodId: discountGiftCodeOffer.paymentMethods[0].id,
+        discountCode: 'HALB',
+      },
+    });
+  },
+};
+
 export const GiftModePaymentFailed = {
   args: subscribeBlockWithGiftCodes,
   decorators: [

@@ -184,6 +184,13 @@ function GiftCodeOfferList() {
               exportValue: offer => offer.issueBeforePayment,
             },
             {
+              id: 'allowdiscountcodes',
+              label: t('giftCodeOffer.overview.allowDiscountCodes'),
+              width: 160,
+              render: offer => (offer.allowDiscountCodes ? '✅' : '❌'),
+              exportValue: offer => offer.allowDiscountCodes,
+            },
+            {
               id: 'paymentmethods',
               label: t('giftCodeOffer.overview.paymentMethods'),
               width: 200,

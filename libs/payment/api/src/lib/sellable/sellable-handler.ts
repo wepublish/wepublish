@@ -28,5 +28,6 @@ export type SellableLineDraft = {
   description?: string;
   amount: number;
   quantity: number;
+  discountCodeId?: string;
   attach(tx: Prisma.TransactionClient, item: InvoiceItem): Promise<void>;
 };

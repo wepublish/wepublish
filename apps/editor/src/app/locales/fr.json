@@ -1631,6 +1631,7 @@
       "peers": "Peers",
       "settings": "Paramètres",
       "subscriptionPlans": "Plans d’abonnement",
+      "gifts": "Cadeaux",
       "subscriptions": "Abonnements",
       "subscriptionSettings": "E-mails automatiques",
       "tokens": "Tokens",
@@ -2899,7 +2900,9 @@
         "paymentMethodsHelp": "Les acheteur·euse·s peuvent payer le cadeau avec ces méthodes. Tous les fournisseurs de paiement ne prennent pas en charge les achats uniques.",
         "paymentMethodsRequired": "Choisissez au moins une méthode de paiement",
         "issueBeforePayment": "Émettre le code avant le paiement",
-        "issueBeforePaymentHelp": "L’acheteur·euse reçoit le code juste après la commande, avant l’arrivée de l’argent. Si le paiement n’arrive jamais, le code est annulé, mais il a peut-être déjà été utilisé."
+        "issueBeforePaymentHelp": "L’acheteur·euse reçoit le code juste après la commande, avant l’arrivée de l’argent. Si le paiement n’arrive jamais, le code est annulé, mais il a peut-être déjà été utilisé.",
+        "allowDiscountCodes": "Autoriser les codes de réduction",
+        "allowDiscountCodesHelp": "Les acheteur·euses peuvent saisir un code de réduction de cet abonnement lors de l’achat du cadeau. Un code qui rendrait le cadeau gratuit est refusé."
       },
       "overview": {
         "title": "Offres cadeaux",
@@ -2914,6 +2917,7 @@
         "months_other": "{{ count }} mois",
         "unlimited": "Illimité",
         "issueBeforePayment": "Code avant paiement",
+        "allowDiscountCodes": "Codes de réduction",
         "paymentMethods": "Méthodes de paiement",
         "modifiedAt": "Dernière modification",
         "modifiedAtDate": "{{modifiedAt, ccc PP p}}",

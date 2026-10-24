@@ -59,6 +59,7 @@ export class GiftCodeService {
 
     const recipientName = input.recipientName.trim();
     const message = input.message?.trim() || null;
+    const discountCode = input.discountCode?.trim() || null;
 
     if (
       !recipientName ||
@@ -84,6 +85,12 @@ export class GiftCodeService {
       throw new BadRequestException('Gift code offer is not available');
     }
 
+    if (discountCode && !offer.allowDiscountCodes) {
+      throw new BadRequestException(
+        'Discount codes cannot be used for this gift.'
+      );
+    }
+
     const paymentMethodId = await this.resolveOfferPaymentMethod(
       offer.id,
       input
@@ -92,6 +99,21 @@ export class GiftCodeService {
 
     if (amount <= 0) {
       throw new BadRequestException('Gift code offer has no price');
+    }
+
+    const discount =
+      discountCode ?
+        await this.getValidDiscountCode(discountCode, offer.memberPlanId)
+      : null;
+    const lineAmount =
+      discount ?
+        amount - Math.round((amount * discount.discountPercent) / 100)
+      : amount;
+
+    if (lineAmount <= 0) {
+      throw new BadRequestException(
+        'This discount code makes the gift free, which is not supported.'
+      );
     }
 
     const { payment } = await this.checkout.checkout({
@@ -107,8 +129,9 @@ export class GiftCodeService {
           kind: SellableKind.giftCode,
           name: offer.name,
           description: `${offer.memberPlan.name} (${offer.periodicity})`,
-          amount,
+          amount: lineAmount,
           quantity: 1,
+          discountCodeId: discount?.id,
           attach: async (tx, item) => {
             const issuedAt = offer.issueBeforePayment ? new Date() : null;
 
@@ -323,6 +346,25 @@ export class GiftCodeService {
       where: { buyerId: userId },
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  private async getValidDiscountCode(code: string, memberPlanId: string) {
+    const discountCode = await this.prisma.discountCode.findUnique({
+      where: {
+        code_memberPlanId: { code: code.toLowerCase(), memberPlanId },
+      },
+    });
+    const now = new Date();
+
+    if (!discountCode || discountCode.validFrom > now) {
+      throw new BadRequestException('DiscountCode is invalid.');
+    }
+
+    if (now > discountCode.validTo) {
+      throw new BadRequestException('DiscountCode has expired.');
+    }
+
+    return discountCode;
   }
 
   private async resolveOfferPaymentMethod(

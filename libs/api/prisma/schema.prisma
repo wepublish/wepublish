@@ -830,7 +830,7 @@ model MemberPlan {
   paywalls       PaywallMemberplan[]
   discountCodes  DiscountCode[]
   goodies        Goodie[]
-  giftCodeOffers GiftCodeOffer[]
+  giftCodeOffer  GiftCodeOffer?
   giftCodes      GiftCode[]
 
   @@index([name])
@@ -2456,15 +2456,15 @@ model GiftCodeOffer {
   active                 Boolean            @default(true)
   imageID                String?
   image                  Image?             @relation(fields: [imageID], references: [id], onDelete: SetNull)
-  memberPlanId           String
+  memberPlanId           String             @unique
   memberPlan             MemberPlan         @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   periodicity            PaymentPeriodicity
   redemptionWindowMonths Int?
   issueBeforePayment     Boolean            @default(false)
+  allowDiscountCodes     Boolean            @default(false)
   paymentMethods         PaymentMethod[]
   giftCodes              GiftCode[]
 
-  @@index([memberPlanId])
   @@map("gift-codes.offers")
 }
 

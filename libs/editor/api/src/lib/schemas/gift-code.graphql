@@ -7,6 +7,7 @@ fragment FullGiftCodeOffer on GiftCodeOffer {
   description
   active
   issueBeforePayment
+  allowDiscountCodes
   periodicity
   redemptionWindowMonths
 
@@ -77,6 +78,7 @@ mutation CreateGiftCodeOffer(
   $description: RichText
   $active: Boolean!
   $issueBeforePayment: Boolean!
+  $allowDiscountCodes: Boolean
   $memberPlanId: String!
   $periodicity: PaymentPeriodicity!
   $redemptionWindowMonths: Int
@@ -88,6 +90,7 @@ mutation CreateGiftCodeOffer(
     description: $description
     active: $active
     issueBeforePayment: $issueBeforePayment
+    allowDiscountCodes: $allowDiscountCodes
     memberPlanId: $memberPlanId
     periodicity: $periodicity
     redemptionWindowMonths: $redemptionWindowMonths
@@ -104,6 +107,7 @@ mutation UpdateGiftCodeOffer(
   $description: RichText
   $active: Boolean
   $issueBeforePayment: Boolean
+  $allowDiscountCodes: Boolean
   $memberPlanId: String
   $periodicity: PaymentPeriodicity
   $redemptionWindowMonths: Int
@@ -116,6 +120,7 @@ mutation UpdateGiftCodeOffer(
     description: $description
     active: $active
     issueBeforePayment: $issueBeforePayment
+    allowDiscountCodes: $allowDiscountCodes
     memberPlanId: $memberPlanId
     periodicity: $periodicity
     redemptionWindowMonths: $redemptionWindowMonths

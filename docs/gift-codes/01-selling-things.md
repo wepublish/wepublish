@@ -46,9 +46,15 @@ export type SellableLineDraft = {
   description?: string;
   amount: number;
   quantity: number;
+  discountCodeId?: string;
   attach(tx: Prisma.TransactionClient, item: InvoiceItem): Promise<void>;
 };
 ```
+
+`amount` is what the buyer pays for one unit, after any discount. A product
+that applied a discount code passes its id as `discountCodeId`, and checkout
+writes it onto the `InvoiceItem`, the same column a discounted subscription
+invoice uses.
 
 Three rules come with it:
 

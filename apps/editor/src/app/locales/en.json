@@ -1640,6 +1640,7 @@
       "peers": "Peers",
       "settings": "Settings",
       "subscriptionPlans": "Subscription Plans",
+      "gifts": "Gifts",
       "subscriptions": "Subscriptions",
       "subscriptionSettings": "Automatic emails",
       "tokens": "Tokens",
@@ -2967,7 +2968,9 @@
         "paymentMethodsHelp": "Buyers can pay the gift with these methods. Not every payment provider supports single purchases.",
         "paymentMethodsRequired": "Choose at least one payment method",
         "issueBeforePayment": "Issue the code before payment",
-        "issueBeforePaymentHelp": "The buyer gets the code right after ordering, before the money has arrived. If the payment never comes, the code is canceled, but it may have been redeemed by then."
+        "issueBeforePaymentHelp": "The buyer gets the code right after ordering, before the money has arrived. If the payment never comes, the code is canceled, but it may have been redeemed by then.",
+        "allowDiscountCodes": "Allow discount codes",
+        "allowDiscountCodesHelp": "Buyers can enter a discount code of this member plan when buying the gift. A code that would make the gift free is rejected."
       },
       "overview": {
         "title": "Gift offers",
@@ -2982,6 +2985,7 @@
         "months_other": "{{ count }} months",
         "unlimited": "Unlimited",
         "issueBeforePayment": "Code before payment",
+        "allowDiscountCodes": "Discount codes",
         "paymentMethods": "Payment methods",
         "modifiedAt": "Last edited",
         "modifiedAtDate": "{{modifiedAt, ccc PP p}}",

@@ -5,8 +5,8 @@ contract under it. D1 to D17 come from the design review, where three
 competing designs were scored and the risk-first one was built with two parts
 taken from the others. D18 to D26 are defaults chosen for open questions. They
 are built that way now and are marked "default, confirm with Karl" until he
-answers; [open-questions.md](open-questions.md) lists them as questions. D19,
-D27 and D28 are Karl's changes after the design.
+answers; [open-questions.md](open-questions.md) lists them as questions. D19
+and D27 to D30 are Karl's changes after the design.
 
 ## D1: Standalone sellable invoices with a guarded early return
 
@@ -460,3 +460,58 @@ the user changes it.
 
 Consequences. When the buyer's account is deleted (`SetNull`), the code no
 longer has an address.
+
+## D29: One gift offer per member plan
+
+Decided by Karl.
+
+Context. Nothing stopped an editor from creating several offers for the same
+member plan, for example one per periodicity. The subscribe block would then
+show offers that differ only in their name.
+
+Decision. `GiftCodeOffer.memberPlanId` is unique. `createGiftCodeOffer` and
+`updateGiftCodeOffer` check for another offer on the plan first and reject
+with BadRequest "This member plan already has a gift offer." A P2002 from a
+concurrent write is mapped to the same message.
+
+Why. With one offer per plan, the subscribe block never shows two gifts that
+differ only in their name, and a plan's gift offer can be looked up by plan.
+
+Consequences.
+- Gifting a second periodicity of the same plan needs a second member plan.
+- Moving an offer to another plan fails when that plan already has one.
+
+## D30: Discount codes on gift purchases, opt-in per offer
+
+Decided by Karl.
+
+Context. Media hand out discount codes per member plan. A buyer gifting that
+plan should be able to use the same code, but not every medium wants
+discounted gifts.
+
+Decision. `GiftCodeOffer.allowDiscountCodes` (default false). When it is set,
+`purchaseGiftCode` takes a `discountCode` and checks it with the subscription
+rules: same member plan, stored lower-case, inside `validFrom` and `validTo`.
+The discount is `Math.round(price * discountPercent / 100)`, the gift's
+`InvoiceItem.amount` is the price minus that, and the item's `discountCodeId`
+points at the code. `SellableLineDraft` got an optional `discountCodeId` that
+checkout writes onto the item, so the next product can reuse it. A code on an
+offer without the switch is rejected. The website checks the code with the
+existing `createSubscriptionInfo` query before submit.
+
+Why. Codes are already scoped to a member plan, and a gift offer has exactly
+one plan, so no new code type or scope was needed. The per-offer switch keeps
+discounted gifts off unless a medium asks for them.
+
+Consequences.
+- A 100 % code is rejected ("This discount code makes the gift free, which
+  is not supported."). Checkout refuses zero totals, because there is nothing
+  to pay and no settlement path to issue the code. Free gifts through a
+  discount are not supported yet.
+- The lookup is a copy of `DiscountCodeService.getValidDiscountCode` inside
+  `GiftCodeService`. Importing the membership module would close the
+  gift-code → membership → member-plan → page → block-content → gift-code
+  loop. When the rules for discount codes change, both places need the
+  change.
+- Discount code usage counts in the editor come from invoice items, so a
+  gift purchase counts as a use of the code.

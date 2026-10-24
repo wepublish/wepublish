@@ -147,6 +147,9 @@ export class PurchaseGiftCodeInput {
   message?: string;
 
   @Field({ nullable: true })
+  discountCode?: string;
+
+  @Field({ nullable: true })
   paymentMethodId?: string;
 
   @Field(() => GraphQLSlug, { nullable: true })

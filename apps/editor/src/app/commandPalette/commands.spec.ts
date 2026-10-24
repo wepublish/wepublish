@@ -149,6 +149,31 @@ describe('editor command registry', () => {
     expect(ids(['gift-codes'])).toEqual(expect.arrayContaining(giftCommands));
   });
 
+  it('files gifts under their own section, below /gift-codes', () => {
+    const giftNavigation = allCommands.filter(({ id }) =>
+      ['giftCodeOffers', 'giftCodes'].includes(id)
+    );
+    const giftPaths = (
+      allCommands.filter(({ id }) =>
+        ['giftCodeOffers', 'giftCodes', 'createGiftCodeOffer'].includes(id)
+      ) as typeof allCommands
+    ).map(({ perform }) => {
+      let path = '';
+      perform({ navigate: to => (path = to), close: () => undefined });
+      return path;
+    });
+
+    expect(giftNavigation.map(({ sectionKey }) => sectionKey)).toEqual([
+      'navbar.gifts',
+      'navbar.gifts',
+    ]);
+    expect(giftPaths).toEqual([
+      '/gift-codes/offers',
+      '/gift-codes',
+      '/gift-codes/offers/create',
+    ]);
+  });
+
   it('leaves a command that acts rather than navigates out of the routes', () => {
     expect(commandPaths().length).toBeLessThanOrEqual(allCommands.length);
   });

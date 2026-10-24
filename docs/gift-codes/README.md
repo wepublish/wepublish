@@ -18,7 +18,8 @@ This change covers buying a gift code:
 
 - offers in the editor (plan, periodicity, name, description, image, active,
   optional redemption window in months, the payment methods buyers can use,
-  and whether the code is issued before payment)
+  whether the code is issued before payment, and whether buyers may enter a
+  discount code). Each member plan has at most one offer.
 - an "Abonnieren / Verschenken" toggle on the subscribe block and a purchase
   form in gift mode
 - a standalone invoice per purchase, paid through the existing payment
@@ -93,7 +94,7 @@ are inert until something creates an invoice with a sellable item.
 
 ## Files
 
-- [decisions.md](decisions.md): decision log, D1 to D28, including the
+- [decisions.md](decisions.md): decision log, D1 to D30, including the
   defaults picked for open questions and Karl's later changes.
 - [01-selling-things.md](01-selling-things.md): the sellable contract in
   `libs/payment/api` and how to sell a new kind of thing.

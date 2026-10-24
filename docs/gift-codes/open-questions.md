@@ -23,6 +23,10 @@ Issuing the code before payment is a per-offer switch
 ([D27](decisions.md#d27-codes-can-be-issued-before-payment-per-offer)), and
 the payment methods are configured per offer
 ([D19](decisions.md#d19-payment-methods-are-configured-per-offer-filtered-by-capability)).
+A member plan has at most one gift offer
+([D29](decisions.md#d29-one-gift-offer-per-member-plan)), and each offer
+decides whether buyers may use a discount code
+([D30](decisions.md#d30-discount-codes-on-gift-purchases-opt-in-per-offer)).
 Only providers that support standalone invoices are accepted, so there is no
 Bexio invoice payment in V1
 ([D7](decisions.md#d7-supportsstandaloneinvoices-is-opt-in)). Enabling Bexio
@@ -41,6 +45,8 @@ means subscription-less invoice support in its provider, then flipping
   This holds for every feature, not only this one.
 - Paying an open code from "Meine Gutscheine" lands on the same "Danke für
   deinen Kauf" alert as a new purchase.
+- A 100 % discount code is rejected for gifts, because checkout refuses zero
+  totals. Should a free gift be issued at once instead, without a payment?
 
 ## For the redemption step
 

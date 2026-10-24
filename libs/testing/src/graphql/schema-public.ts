@@ -1494,6 +1494,7 @@ export type GiftCodeFilter = {
 export type GiftCodeOffer = HasImage & HasMemberPlanLc & {
   __typename?: 'GiftCodeOffer';
   active: Scalars['Boolean']['output'];
+  allowDiscountCodes: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['RichText']['output']>;
   id: Scalars['String']['output'];
@@ -3511,6 +3512,7 @@ export type MutationCreateExternalAppTokenArgs = {
 
 export type MutationCreateGiftCodeOfferArgs = {
   active: Scalars['Boolean']['input'];
+  allowDiscountCodes?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['RichText']['input']>;
   imageID?: InputMaybe<Scalars['String']['input']>;
   issueBeforePayment: Scalars['Boolean']['input'];
@@ -4219,6 +4221,7 @@ export type MutationPublishPageArgs = {
 
 
 export type MutationPurchaseGiftCodeArgs = {
+  discountCode?: InputMaybe<Scalars['String']['input']>;
   failureURL?: InputMaybe<Scalars['String']['input']>;
   message?: InputMaybe<Scalars['String']['input']>;
   offerId: Scalars['String']['input'];
@@ -4561,6 +4564,7 @@ export type MutationUpdateExternalAppArgs = {
 
 export type MutationUpdateGiftCodeOfferArgs = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
+  allowDiscountCodes?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['RichText']['input']>;
   id: Scalars['String']['input'];
   imageID?: InputMaybe<Scalars['String']['input']>;

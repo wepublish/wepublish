@@ -37,7 +37,18 @@ const offer = (overrides: Record<string, unknown> = {}) => ({
   periodicity: PaymentPeriodicity.yearly,
   redemptionWindowMonths: 12,
   issueBeforePayment: false,
+  allowDiscountCodes: false,
   memberPlan,
+  ...overrides,
+});
+
+const discountCode = (overrides: Record<string, unknown> = {}) => ({
+  id: 'dc-1',
+  code: 'sommer',
+  memberPlanId: 'plan-1',
+  discountPercent: 25,
+  validFrom: new Date('2026-10-01T00:00:00.000Z'),
+  validTo: new Date('2026-10-31T00:00:00.000Z'),
   ...overrides,
 });
 
@@ -99,6 +110,9 @@ const setup = () => {
     },
     invoice: {
       updateMany: vi.fn().mockResolvedValue({ count: 1 }),
+    },
+    discountCode: {
+      findUnique: vi.fn().mockResolvedValue(discountCode()),
     },
     $transaction: vi.fn(async (run: (client: typeof tx) => unknown) => run(tx)),
   };
@@ -370,6 +384,128 @@ describe('GiftCodeService', () => {
         BadRequestException
       );
       expect(checkout.checkout).not.toHaveBeenCalled();
+    });
+
+    describe('with a discount code', () => {
+      const discountOffer = () => offer({ allowDiscountCodes: true });
+
+      it.each([
+        ['a missing', undefined],
+        ['an empty', ''],
+        ['a blank', '   '],
+      ])('ignores %s code', async (_, code) => {
+        const { service, prisma, checkout } = setup();
+        prisma.giftCodeOffer.findUnique.mockResolvedValue(discountOffer());
+
+        await service.purchase(buyer, purchaseInput({ discountCode: code }));
+
+        expect(prisma.discountCode.findUnique).not.toHaveBeenCalled();
+        expect(checkoutLine(checkout).amount).toBe(12000);
+        expect(checkoutLine(checkout).discountCodeId).toBeUndefined();
+      });
+
+      it('rejects a code when the offer does not allow discount codes', async () => {
+        const { service, prisma, checkout } = setup();
+
+        await expect(
+          service.purchase(buyer, purchaseInput({ discountCode: 'SOMMER' }))
+        ).rejects.toThrow(
+          new BadRequestException(
+            'Discount codes cannot be used for this gift.'
+          )
+        );
+        expect(prisma.discountCode.findUnique).not.toHaveBeenCalled();
+        expect(checkout.checkout).not.toHaveBeenCalled();
+      });
+
+      it('looks the code up in lower case for the member plan of the offer', async () => {
+        const { service, prisma } = setup();
+        prisma.giftCodeOffer.findUnique.mockResolvedValue(discountOffer());
+
+        await service.purchase(
+          buyer,
+          purchaseInput({ discountCode: ' SOMMER ' })
+        );
+
+        expect(prisma.discountCode.findUnique).toHaveBeenCalledWith({
+          where: {
+            code_memberPlanId: { code: 'sommer', memberPlanId: 'plan-1' },
+          },
+        });
+      });
+
+      it.each([
+        ['an unknown code', null, 'DiscountCode is invalid.'],
+        [
+          'a code that is not valid yet',
+          discountCode({ validFrom: new Date('2026-10-25T00:00:00.000Z') }),
+          'DiscountCode is invalid.',
+        ],
+        [
+          'an expired code',
+          discountCode({ validTo: new Date('2026-10-24T11:00:00.000Z') }),
+          'DiscountCode has expired.',
+        ],
+      ])('rejects %s', async (_, found, message) => {
+        const { service, prisma, checkout } = setup();
+        prisma.giftCodeOffer.findUnique.mockResolvedValue(discountOffer());
+        prisma.discountCode.findUnique.mockResolvedValue(found);
+
+        await expect(
+          service.purchase(buyer, purchaseInput({ discountCode: 'SOMMER' }))
+        ).rejects.toThrow(new BadRequestException(message));
+        expect(checkout.checkout).not.toHaveBeenCalled();
+      });
+
+      it('reduces the line amount and links the code to it', async () => {
+        const { service, prisma, checkout } = setup();
+        prisma.giftCodeOffer.findUnique.mockResolvedValue(discountOffer());
+
+        await service.purchase(
+          buyer,
+          purchaseInput({ discountCode: 'SOMMER' })
+        );
+
+        expect(checkoutLine(checkout)).toEqual(
+          expect.objectContaining({ amount: 9000, discountCodeId: 'dc-1' })
+        );
+      });
+
+      it('rounds the discount like the subscription checkout', async () => {
+        const { service, prisma, offers, checkout } = setup();
+        prisma.giftCodeOffer.findUnique.mockResolvedValue(discountOffer());
+        prisma.discountCode.findUnique.mockResolvedValue(
+          discountCode({ discountPercent: 15 })
+        );
+        offers.getPrice.mockReturnValue({
+          amount: 9990,
+          currency: Currency.CHF,
+        });
+
+        await service.purchase(
+          buyer,
+          purchaseInput({ discountCode: 'SOMMER' })
+        );
+
+        expect(checkoutLine(checkout).amount).toBe(8491);
+      });
+
+      it('rejects a code that makes the gift free', async () => {
+        const { service, prisma, checkout } = setup();
+        prisma.giftCodeOffer.findUnique.mockResolvedValue(discountOffer());
+        prisma.discountCode.findUnique.mockResolvedValue(
+          discountCode({ discountPercent: 100 })
+        );
+
+        await expect(
+          service.purchase(buyer, purchaseInput({ discountCode: 'SOMMER' }))
+        ).rejects.toThrow(
+          new BadRequestException(
+            'This discount code makes the gift free, which is not supported.'
+          )
+        );
+        expect(checkout.checkout).not.toHaveBeenCalled();
+      });
     });
 
     it.each([

@@ -180,6 +180,9 @@ export const SubscribeBlock = ({
           offers={giftCodeOffers}
           challenge={subscribeProps.challenge}
           fields={lowercaseFields}
+          defaults={{ discountCode: discountCode as string | undefined }}
+          fetchSubscribeInfo={fetchSubscribeInfo}
+          subscribeInfo={subscribeInfo}
           onPurchase={async formData => {
             const result = await purchaseGiftCode({
               variables: formData,

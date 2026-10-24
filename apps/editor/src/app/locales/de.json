@@ -1639,6 +1639,7 @@
       "peers": "Peers",
       "settings": "Einstellungen",
       "subscriptionPlans": "Abo-Pläne",
+      "gifts": "Geschenke",
       "subscriptions": "Abonnements",
       "subscriptionSettings": "Automatische E-Mails",
       "tokens": "Tokens",
@@ -2907,7 +2908,9 @@
         "paymentMethodsHelp": "Mit diesen Methoden können Käufer:innen das Geschenk bezahlen. Nicht jeder Zahlungsanbieter unterstützt Einzelkäufe.",
         "paymentMethodsRequired": "Wähle mindestens eine Zahlungsmethode",
         "issueBeforePayment": "Code vor der Zahlung ausstellen",
-        "issueBeforePaymentHelp": "Käufer:innen erhalten den Code direkt nach der Bestellung, bevor das Geld eingegangen ist. Kommt die Zahlung nie, wird der Code storniert, er kann bis dahin aber schon eingelöst worden sein."
+        "issueBeforePaymentHelp": "Käufer:innen erhalten den Code direkt nach der Bestellung, bevor das Geld eingegangen ist. Kommt die Zahlung nie, wird der Code storniert, er kann bis dahin aber schon eingelöst worden sein.",
+        "allowDiscountCodes": "Rabattcodes erlauben",
+        "allowDiscountCodesHelp": "Käufer:innen können beim Kauf des Geschenks einen Rabattcode dieses Abos eingeben. Ein Code, der das Geschenk gratis machen würde, wird abgelehnt."
       },
       "overview": {
         "title": "Geschenkangebote",
@@ -2922,6 +2925,7 @@
         "months_other": "{{ count }} Monate",
         "unlimited": "Unbegrenzt",
         "issueBeforePayment": "Code vor Zahlung",
+        "allowDiscountCodes": "Rabattcodes",
         "paymentMethods": "Zahlungsmethoden",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAt, ccc PP p}}",

@@ -43,6 +43,17 @@ type GiftCodeOfferRules = Pick<
   paymentMethodIds?: string[];
 };
 
+const duplicateMemberPlan = () =>
+  new BadRequestException('This member plan already has a gift offer.');
+
+const rethrowDuplicateMemberPlan = (error: unknown): never => {
+  if ((error as { code?: string })?.code === 'P2002') {
+    throw duplicateMemberPlan();
+  }
+
+  throw error;
+};
+
 @Injectable()
 export class GiftCodeOfferService {
   constructor(
@@ -135,17 +146,25 @@ export class GiftCodeOfferService {
     );
   }
 
-  async createOffer({ paymentMethodIds, ...input }: CreateGiftCodeOfferInput) {
+  async createOffer({
+    paymentMethodIds,
+    allowDiscountCodes,
+    ...input
+  }: CreateGiftCodeOfferInput) {
     await this.validate({ ...input, paymentMethodIds });
+    await this.assertMemberPlanIsFree(input.memberPlanId);
 
-    const offer = await this.prisma.giftCodeOffer.create({
-      data: {
-        ...input,
-        paymentMethods: {
-          connect: paymentMethodIds.map(id => ({ id })),
+    const offer = await this.prisma.giftCodeOffer
+      .create({
+        data: {
+          ...input,
+          allowDiscountCodes: allowDiscountCodes ?? undefined,
+          paymentMethods: {
+            connect: paymentMethodIds.map(id => ({ id })),
+          },
         },
-      },
-    });
+      })
+      .catch(rethrowDuplicateMemberPlan);
 
     await this.publicContentCache.invalidate('pages', 'articles');
 
@@ -155,6 +174,7 @@ export class GiftCodeOfferService {
   async updateOffer({
     id,
     paymentMethodIds,
+    allowDiscountCodes,
     ...input
   }: UpdateGiftCodeOfferInput) {
     const existing = await this.prisma.giftCodeOffer.findUnique({
@@ -174,17 +194,24 @@ export class GiftCodeOfferService {
         : existing.redemptionWindowMonths,
       paymentMethodIds,
     });
+    await this.assertMemberPlanIsFree(
+      input.memberPlanId ?? existing.memberPlanId,
+      id
+    );
 
-    const offer = await this.prisma.giftCodeOffer.update({
-      where: { id },
-      data: {
-        ...input,
-        paymentMethods:
-          paymentMethodIds ?
-            { set: paymentMethodIds.map(methodId => ({ id: methodId })) }
-          : undefined,
-      },
-    });
+    const offer = await this.prisma.giftCodeOffer
+      .update({
+        where: { id },
+        data: {
+          ...input,
+          allowDiscountCodes: allowDiscountCodes ?? undefined,
+          paymentMethods:
+            paymentMethodIds ?
+              { set: paymentMethodIds.map(methodId => ({ id: methodId })) }
+            : undefined,
+        },
+      })
+      .catch(rethrowDuplicateMemberPlan);
 
     await this.publicContentCache.invalidate('pages', 'articles');
 
@@ -207,6 +234,18 @@ export class GiftCodeOfferService {
     await this.publicContentCache.invalidate('pages', 'articles');
 
     return offer;
+  }
+
+  private async assertMemberPlanIsFree(memberPlanId: string, offerId?: string) {
+    const taken = await this.prisma.giftCodeOffer.findFirst({
+      where:
+        offerId ? { memberPlanId, id: { not: offerId } } : { memberPlanId },
+      select: { id: true },
+    });
+
+    if (taken) {
+      throw duplicateMemberPlan();
+    }
   }
 
   private async validate({

@@ -1191,9 +1191,6 @@ export function Base({ children }: BaseProps) {
                   CanUpdateDiscountCode.id,
                   CanCreateGoodie.id,
                   CanUpdateGoodie.id,
-                  CanGetGiftCodes.id,
-                  CanUpdateGiftCodes.id,
-                  CanDeleteGiftCodes.id,
                 ]}
               >
                 <SidebarNavMenu
@@ -1264,8 +1261,35 @@ export function Base({ children }: BaseProps) {
                       {t('goodie.navbar')}
                     </SidebarNavItem>
                   </PermissionControl>
+                </SidebarNavMenu>
+              </PermissionControl>
 
-                  <FeatureControl feature="gift-codes">
+              <FeatureControl feature="gift-codes">
+                <PermissionControl
+                  qualifyingPermissions={[
+                    CanGetGiftCodes.id,
+                    CanUpdateGiftCodes.id,
+                    CanDeleteGiftCodes.id,
+                  ]}
+                >
+                  <SidebarNavMenu
+                    title={t('navbar.gifts')}
+                    icon={<MdRedeem />}
+                    open={openMenus.includes('gifts')}
+                    openIfCurrent={followsRoute}
+                    onToggle={wasOpen => toggleMenu('gifts', wasOpen)}
+                  >
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetGiftCodes.id]}
+                    >
+                      <SidebarNavItem
+                        href="/gift-codes"
+                        icon={<MdConfirmationNumber />}
+                      >
+                        {t('giftCode.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+
                     <PermissionControl
                       qualifyingPermissions={[
                         CanGetGiftCodes.id,
@@ -1274,26 +1298,15 @@ export function Base({ children }: BaseProps) {
                       ]}
                     >
                       <SidebarNavItem
-                        href="/giftCodeOffers"
-                        icon={<MdRedeem />}
+                        href="/gift-codes/offers"
+                        icon={<MdCardGiftcard />}
                       >
                         {t('giftCodeOffer.navbar')}
                       </SidebarNavItem>
                     </PermissionControl>
-
-                    <PermissionControl
-                      qualifyingPermissions={[CanGetGiftCodes.id]}
-                    >
-                      <SidebarNavItem
-                        href="/giftCodes"
-                        icon={<MdConfirmationNumber />}
-                      >
-                        {t('giftCode.navbar')}
-                      </SidebarNavItem>
-                    </PermissionControl>
-                  </FeatureControl>
-                </SidebarNavMenu>
-              </PermissionControl>
+                  </SidebarNavMenu>
+                </PermissionControl>
+              </FeatureControl>
 
               <PermissionControl
                 qualifyingPermissions={[

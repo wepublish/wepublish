@@ -213,3 +213,175 @@ export const NoPaymentMethods: StoryObj<typeof GiftCodePurchase> = {
     ).toBe(true);
   },
 };
+
+const discountOffer = { ...yearlyOffer, allowDiscountCodes: true };
+
+const subscribeInfo = (
+  createSubscriptionInfo: {
+    discountPercent?: number | null;
+    discountCodeValid?: boolean | null;
+  } = {}
+) => ({
+  data: {
+    __typename: 'Query' as const,
+    createSubscriptionInfo: {
+      __typename: 'CreateSubscriptionInfo' as const,
+      discountPercent: null,
+      discountCodeValid: null,
+      ...createSubscriptionInfo,
+    },
+  },
+  loading: false,
+});
+
+const enterDiscountCode =
+  (code: string): NonNullable<StoryObj['play']> =>
+  async ({ canvasElement, step }) => {
+    await step('Enter discount code', async () => {
+      await userEvent.type(
+        within(canvasElement).getByLabelText('Rabattcode', {
+          selector: 'input',
+        }),
+        code
+      );
+    });
+  };
+
+export const WithoutDiscountCodes: StoryObj<typeof GiftCodePurchase> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    offers: [yearlyOffer],
+    fetchSubscribeInfo: fn(),
+    subscribeInfo: subscribeInfo(),
+  },
+  play: async ({ canvasElement }) => {
+    expect(
+      within(canvasElement).queryByLabelText('Rabattcode', {
+        selector: 'input',
+      })
+    ).toBeNull();
+  },
+};
+
+export const WithDiscountCode: StoryObj<typeof GiftCodePurchase> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    offers: [discountOffer],
+    onPurchase: fn(),
+    fetchSubscribeInfo: fn(),
+    subscribeInfo: subscribeInfo({
+      discountPercent: 0.2,
+      discountCodeValid: true,
+    }),
+  },
+  play: async ctx => {
+    const canvas = within(ctx.canvasElement);
+
+    await fillRecipient(ctx);
+    await enterDiscountCode('SOMMER')(ctx);
+
+    await ctx.step('Checks the code against the gifted plan', async () => {
+      expect(ctx.args.fetchSubscribeInfo).toHaveBeenLastCalledWith({
+        variables: {
+          memberPlanId: discountOffer.memberPlan.id,
+          discountCode: 'SOMMER',
+        },
+      });
+    });
+
+    await ctx.step('Shows the reduced price', async () => {
+      expect(canvas.getByText('20% Rabatt angewendet')).toBeTruthy();
+      expect(
+        canvas.getByRole('button', { name: 'Gutschein für CHF 96.- kaufen' })
+      ).toBeTruthy();
+    });
+
+    await clickPurchase(ctx);
+
+    await ctx.step('Purchases with the code', async () => {
+      expect(ctx.args.onPurchase).toHaveBeenCalledWith({
+        offerId: discountOffer.id,
+        recipientName: 'Anna Muster',
+        message: 'Alles Gute!',
+        paymentMethodId: discountOffer.paymentMethods[0].id,
+        discountCode: 'SOMMER',
+      });
+    });
+  },
+};
+
+export const WithInvalidDiscountCode: StoryObj<typeof GiftCodePurchase> = {
+  ...WithDiscountCode,
+  args: {
+    ...WithDiscountCode.args,
+    onPurchase: fn(),
+    subscribeInfo: subscribeInfo({ discountCodeValid: false }),
+  },
+  play: async ctx => {
+    const canvas = within(ctx.canvasElement);
+
+    await fillRecipient(ctx);
+    await enterDiscountCode('NOPE')(ctx);
+
+    await ctx.step('Blocks the purchase', async () => {
+      expect(canvas.getByText('Rabattcode ungültig')).toBeTruthy();
+      expect(
+        (
+          canvas.getByRole('button', {
+            name: 'Gutschein für CHF 120.- kaufen',
+          }) as HTMLButtonElement
+        ).disabled
+      ).toBe(true);
+      expect(ctx.args.onPurchase).not.toHaveBeenCalled();
+    });
+  },
+};
+
+export const WithFreeDiscountCode: StoryObj<typeof GiftCodePurchase> = {
+  ...WithDiscountCode,
+  args: {
+    ...WithDiscountCode.args,
+    onPurchase: fn(),
+    subscribeInfo: subscribeInfo({
+      discountPercent: 1,
+      discountCodeValid: true,
+    }),
+  },
+  play: async ctx => {
+    const canvas = within(ctx.canvasElement);
+
+    await fillRecipient(ctx);
+    await enterDiscountCode('GRATIS')(ctx);
+
+    await ctx.step('Blocks a free gift', async () => {
+      expect(
+        canvas.getByText(
+          'Mit diesem Rabattcode wäre das Geschenk gratis. Das ist zurzeit nicht möglich.'
+        )
+      ).toBeTruthy();
+      expect(
+        (canvas.getByRole('button', { name: /kaufen/i }) as HTMLButtonElement)
+          .disabled
+      ).toBe(true);
+    });
+  },
+};
+
+export const WithDiscountCodeDefault: StoryObj<typeof GiftCodePurchase> = {
+  ...WithDiscountCode,
+  args: {
+    ...WithDiscountCode.args,
+    defaults: { discountCode: 'SOMMER' },
+  },
+  play: async ({ canvasElement }) => {
+    expect(
+      (
+        within(canvasElement).getByLabelText('Rabattcode', {
+          selector: 'input',
+        }) as HTMLInputElement
+      ).value
+    ).toBe('SOMMER');
+  },
+};

@@ -1443,6 +1443,7 @@ input GiftCodeFilter {
 
 type GiftCodeOffer implements HasImage & HasMemberPlanLc {
   active: Boolean!
+  allowDiscountCodes: Boolean!
   createdAt: DateTime!
   description: RichText
   id: String!
@@ -2939,7 +2940,7 @@ type Mutation {
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
 
   """Creates a gift code offer."""
-  createGiftCodeOffer(active: Boolean!, description: RichText, imageID: String, issueBeforePayment: Boolean!, memberPlanId: String!, name: String!, paymentMethodIds: [String!]!, periodicity: PaymentPeriodicity!, redemptionWindowMonths: Int): GiftCodeOffer!
+  createGiftCodeOffer(active: Boolean!, allowDiscountCodes: Boolean, description: RichText, imageID: String, issueBeforePayment: Boolean!, memberPlanId: String!, name: String!, paymentMethodIds: [String!]!, periodicity: PaymentPeriodicity!, redemptionWindowMonths: Int): GiftCodeOffer!
 
   """Creates a new goodie."""
   createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
@@ -3291,7 +3292,7 @@ type Mutation {
   publishPage(id: String!, publishedAt: DateTime!): Page!
 
   """Buys a gift code and starts its payment."""
-  purchaseGiftCode(failureURL: String, message: String, offerId: String!, paymentMethodId: String, paymentMethodSlug: Slug, recipientName: String!, successURL: String): Payment!
+  purchaseGiftCode(discountCode: String, failureURL: String, message: String, offerId: String!, paymentMethodId: String, paymentMethodSlug: Slug, recipientName: String!, successURL: String): Payment!
 
   """
   This mutation allows to rate a comment. Supports logged in and anonymous
@@ -3475,7 +3476,7 @@ type Mutation {
   ): ExternalApp!
 
   """Updates a gift code offer."""
-  updateGiftCodeOffer(active: Boolean, description: RichText, id: String!, imageID: String, issueBeforePayment: Boolean, memberPlanId: String, name: String, paymentMethodIds: [String!], periodicity: PaymentPeriodicity, redemptionWindowMonths: Int): GiftCodeOffer!
+  updateGiftCodeOffer(active: Boolean, allowDiscountCodes: Boolean, description: RichText, id: String!, imageID: String, issueBeforePayment: Boolean, memberPlanId: String, name: String, paymentMethodIds: [String!], periodicity: PaymentPeriodicity, redemptionWindowMonths: Int): GiftCodeOffer!
 
   """Updates an existing goodie."""
   updateGoodie(active: Boolean, description: RichText, id: String!, imageID: String, memberPlanIDs: [String!], name: String, stock: Int): Goodie!

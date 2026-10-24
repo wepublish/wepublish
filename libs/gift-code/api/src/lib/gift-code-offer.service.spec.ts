@@ -49,12 +49,13 @@ const setup = () => {
     giftCodeOffer: {
       findMany: vi.fn().mockResolvedValue([]),
       count: vi.fn().mockResolvedValue(0),
+      findFirst: vi.fn().mockResolvedValue(null),
       findUnique: vi.fn().mockResolvedValue(offer()),
-      create: vi.fn().mockImplementation(({ data }) => ({
+      create: vi.fn().mockImplementation(async ({ data }) => ({
         id: 'offer-1',
         ...data,
       })),
-      update: vi.fn().mockImplementation(({ data }) => ({
+      update: vi.fn().mockImplementation(async ({ data }) => ({
         ...offer(),
         ...data,
       })),
@@ -156,6 +157,32 @@ describe('GiftCodeOfferService', () => {
           paymentMethods: { connect: [{ id: 'pm-1' }, { id: 'pm-2' }] },
         },
       });
+    });
+
+    it('lets the offer allow discount codes', async () => {
+      const { service, prisma } = setup();
+
+      await service.createOffer({
+        ...createInput(),
+        allowDiscountCodes: true,
+      });
+
+      expect(prisma.giftCodeOffer.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ allowDiscountCodes: true }),
+      });
+    });
+
+    it('leaves discount codes to the database default when null is sent', async () => {
+      const { service, prisma } = setup();
+
+      await service.createOffer({
+        ...createInput(),
+        allowDiscountCodes: null as unknown as boolean,
+      });
+
+      expect(
+        prisma.giftCodeOffer.create.mock.calls[0][0].data.allowDiscountCodes
+      ).toBeUndefined();
     });
 
     it('invalidates pages and articles', async () => {
@@ -277,6 +304,61 @@ describe('GiftCodeOfferService', () => {
     });
   });
 
+  describe('one offer per member plan', () => {
+    it('rejects a second offer for the same member plan', async () => {
+      const { service, prisma } = setup();
+      prisma.giftCodeOffer.findFirst.mockResolvedValue(
+        offer({ id: 'offer-2' })
+      );
+
+      await expect(service.createOffer(createInput())).rejects.toThrow(
+        new BadRequestException('This member plan already has a gift offer.')
+      );
+      expect(prisma.giftCodeOffer.findFirst).toHaveBeenCalledWith({
+        where: { memberPlanId: 'plan-1' },
+        select: { id: true },
+      });
+      expect(prisma.giftCodeOffer.create).not.toHaveBeenCalled();
+    });
+
+    it('lets an offer keep its own member plan on update', async () => {
+      const { service, prisma } = setup();
+
+      await service.updateOffer({ id: 'offer-1', name: 'Renamed' });
+
+      expect(prisma.giftCodeOffer.findFirst).toHaveBeenCalledWith({
+        where: { memberPlanId: 'plan-1', id: { not: 'offer-1' } },
+        select: { id: true },
+      });
+      expect(prisma.giftCodeOffer.update).toHaveBeenCalled();
+    });
+
+    it('rejects moving an offer to a member plan that has one', async () => {
+      const { service, prisma } = setup();
+      prisma.giftCodeOffer.findFirst.mockResolvedValue(
+        offer({ id: 'offer-2', memberPlanId: 'plan-2' })
+      );
+
+      await expect(
+        service.updateOffer({ id: 'offer-1', memberPlanId: 'plan-2' })
+      ).rejects.toThrow('This member plan already has a gift offer.');
+      expect(prisma.giftCodeOffer.update).not.toHaveBeenCalled();
+    });
+
+    it('reports a concurrent duplicate the same way', async () => {
+      const { service, prisma } = setup();
+      prisma.giftCodeOffer.create.mockRejectedValue(
+        Object.assign(new Error('Unique constraint failed'), {
+          code: 'P2002',
+        })
+      );
+
+      await expect(service.createOffer(createInput())).rejects.toThrow(
+        new BadRequestException('This member plan already has a gift offer.')
+      );
+    });
+  });
+
   describe('updateOffer', () => {
     it('replaces the payment methods', async () => {
       const { service, prisma } = setup();
@@ -298,6 +380,31 @@ describe('GiftCodeOfferService', () => {
       expect(prisma.giftCodeOffer.update).toHaveBeenCalledWith({
         where: { id: 'offer-1' },
         data: { name: 'Renamed', paymentMethods: undefined },
+      });
+    });
+
+    it('switches discount codes on and off', async () => {
+      const { service, prisma } = setup();
+
+      await service.updateOffer({ id: 'offer-1', allowDiscountCodes: false });
+
+      expect(prisma.giftCodeOffer.update).toHaveBeenCalledWith({
+        where: { id: 'offer-1' },
+        data: { allowDiscountCodes: false, paymentMethods: undefined },
+      });
+    });
+
+    it('keeps the discount code setting when null is sent', async () => {
+      const { service, prisma } = setup();
+
+      await service.updateOffer({
+        id: 'offer-1',
+        allowDiscountCodes: null as unknown as boolean,
+      });
+
+      expect(prisma.giftCodeOffer.update).toHaveBeenCalledWith({
+        where: { id: 'offer-1' },
+        data: { allowDiscountCodes: undefined, paymentMethods: undefined },
       });
     });
 

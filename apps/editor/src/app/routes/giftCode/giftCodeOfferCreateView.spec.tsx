@@ -141,6 +141,42 @@ beforeEach(() => {
 });
 
 describe('GiftCodeOfferCreateView', () => {
+  it('shows active as a ticked checkbox next to the sales settings', () => {
+    renderView();
+
+    const active = screen.getByRole('checkbox', {
+      name: 'giftCodeOffer.form.active',
+    });
+
+    expect(active).toBeChecked();
+    expect(active.closest('.MuiCard-root')).toBe(
+      screen
+        .getByRole('combobox', { name: 'giftCodeOffer.form.paymentMethods' })
+        .closest('.MuiCard-root')
+    );
+  });
+
+  it('creates an inactive offer once active is unticked', async () => {
+    renderView();
+
+    fireEvent.change(screen.getByLabelText('giftCodeOffer.form.name'), {
+      target: { value: 'Ein Jahr schenken' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'pick plan' }));
+    choosePeriodicity(PaymentPeriodicity.Yearly);
+    choosePaymentMethod('Stripe');
+    fireEvent.click(
+      screen.getByRole('checkbox', { name: 'giftCodeOffer.form.active' })
+    );
+    fireEvent.click(screen.getByTestId('saveButton'));
+
+    await waitFor(() =>
+      expect(createOffer).toHaveBeenCalledWith({
+        variables: expect.objectContaining({ active: false }),
+      })
+    );
+  });
+
   it('offers only the durations the plan has a price for', () => {
     renderView();
 
@@ -199,8 +235,13 @@ describe('GiftCodeOfferCreateView', () => {
       { target: { value: '12' } }
     );
     fireEvent.click(
-      screen.getByRole('switch', {
+      screen.getByRole('checkbox', {
         name: 'giftCodeOffer.form.issueBeforePayment',
+      })
+    );
+    fireEvent.click(
+      screen.getByRole('checkbox', {
+        name: 'giftCodeOffer.form.allowDiscountCodes',
       })
     );
     choosePaymentMethod('Payrexx');
@@ -213,6 +254,7 @@ describe('GiftCodeOfferCreateView', () => {
           description: null,
           active: true,
           issueBeforePayment: true,
+          allowDiscountCodes: true,
           memberPlanId: 'plan-1',
           periodicity: PaymentPeriodicity.Yearly,
           redemptionWindowMonths: 12,

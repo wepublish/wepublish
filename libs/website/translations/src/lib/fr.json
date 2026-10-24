@@ -200,6 +200,7 @@
       "noPaymentMethods": "Aucun mode de paiement n'est actuellement disponible pour ce cadeau.",
       "deliveryNote": "Vous recevrez le code cadeau dès que le paiement sera confirmé. En cas de paiement par facture, cela peut prendre quelques jours.",
       "issueBeforePaymentNote": "Vous trouverez le code cadeau immédiatement après l'achat sous « Mes bons cadeaux » dans votre profil.",
+      "discountCodeFree": "Avec ce code de réduction, le cadeau serait gratuit. Ce n'est pas possible pour le moment.",
       "spamProtection": "Protection anti-spam",
       "captcha": "Captcha",
       "button": "Acheter le bon cadeau pour {formattedAmount}",

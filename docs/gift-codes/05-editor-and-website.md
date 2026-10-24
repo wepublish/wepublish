@@ -34,19 +34,20 @@ the same way as the newsletter routes.
 
 | Route | File | Permission |
 | --- | --- | --- |
-| `/giftCodeOffers` | `giftCodeOfferList.tsx` | any of `CanGetGiftCodes`, `CanUpdateGiftCodes`, `CanDeleteGiftCodes` |
-| `/giftCodeOffers/create` | `giftCodeOfferCreateView.tsx` | `CanUpdateGiftCodes` |
-| `/giftCodeOffers/edit/:id` | `giftCodeOfferEditView.tsx` | `CanUpdateGiftCodes` |
-| `/giftCodes` | `giftCodeList.tsx` | `CanGetGiftCodes` |
+| `/gift-codes` | `giftCodeList.tsx` | `CanGetGiftCodes` |
+| `/gift-codes/offers` | `giftCodeOfferList.tsx` | any of `CanGetGiftCodes`, `CanUpdateGiftCodes`, `CanDeleteGiftCodes` |
+| `/gift-codes/offers/create` | `giftCodeOfferCreateView.tsx` | `CanUpdateGiftCodes` |
+| `/gift-codes/offers/edit/:id` | `giftCodeOfferEditView.tsx` | `CanUpdateGiftCodes` |
 
-Registered in `app.tsx` next to the goodie routes. `base.tsx` adds two
-sidebar entries under the subscription plans menu (`MdRedeem` for offers,
-`MdConfirmationNumber` for codes) and adds the three permissions to the
-menu's `qualifyingPermissions`. The command palette gets `giftCodeOffers` and
-`giftCodes` in `navigationCommands.tsx` and `createGiftCodeOffer` in
-`createCommands.tsx`, all with `feature: 'gift-codes'`. `commands.spec.ts`
-compares the command registry against `app.tsx`, so a route without a command
-fails the spec.
+Registered in `app.tsx` next to the goodie routes. Gifts have their own sidebar
+menu in `base.tsx` ("Gifts", `MdRedeem`, menu key `gifts`), wrapped in
+`FeatureControl feature="gift-codes"` and shown to anyone holding one of the
+three gift-code permissions. It holds two entries: gift codes
+(`MdConfirmationNumber`) and offers (`MdCardGiftcard`). The command palette
+gets `giftCodeOffers` and `giftCodes` in `navigationCommands.tsx` under the
+`navbar.gifts` section and `createGiftCodeOffer` in `createCommands.tsx`, all
+with `feature: 'gift-codes'`. `commands.spec.ts` compares the command registry
+against `app.tsx`, so a route without a command fails the spec.
 
 ### Offer form (`giftCodeOfferForm.tsx`)
 
@@ -65,6 +66,9 @@ fails the spec.
   cannot take standalone payments; the error shows as a snackbar.
 - issue before payment: the switch's helper text warns that an unpaid code
   can be redeemed before the timeout cancels it.
+- allow discount codes: a checkbox below it, off by default. Its helper text
+  says the buyer can enter a discount code of this member plan, and that a
+  code which would make the gift free is rejected.
 - redemption window in months: a number, minimum 1; empty means unlimited
 - image, with the `ChooseEditImage` / `ImageSelectPanel` / `ImageEditPanel`
   drawers from the goodie form
@@ -77,8 +81,8 @@ with the saved data.
 ### Offer list
 
 Columns: active, name, member plan, duration, price, redemption window
-("Unlimited" when null), code before payment, payment methods, last
-modified. Delete is shown only with `CanDeleteGiftCodes`.
+("Unlimited" when null), code before payment, discount codes, payment
+methods, last modified. Delete is shown only with `CanDeleteGiftCodes`.
 The API refuses to delete an offer with sold codes; the error goes to
 `enqueueSnackbar(humanizeError(...))`.
 
@@ -142,7 +146,9 @@ quotes, lowercase du); French uses vous. `locales.spec.ts` checks parity.
   `replaceQuery` on `BuilderRouterContext`, which `withBuilderRouter`
   implements with a shallow `router.replace`. Gift mode renders
   `<GiftCodePurchase>` and `GiftCodePurchaseFailure`; subscribe mode and
-  `subscribe.tsx` are unchanged.
+  `subscribe.tsx` are unchanged. Gift mode passes the block's existing
+  `subscribeInfo` lazy query (`CreateSubscriptionInfo`) and the
+  `discountCode` query parameter as `defaults.discountCode` to the form.
 - `subscribe-block.provider.tsx` wires `usePurchaseGiftCode` and `useRegister`
   and merges the gift `stripeClientSecret` and `redirectPages` into the
   existing merge, so `PaymentForm` mounts Stripe Elements for gift purchases
@@ -167,6 +173,7 @@ giftCodePurchaseSchema = z.object({
   offerId: z.string().min(1),
   recipientName: z.string().trim().min(1).max(200),
   message: z.string().max(1000).nullish(),
+  discountCode: z.string().nullish(),
   paymentMethodId: z.string().min(1),
 })
 ```
@@ -186,8 +193,18 @@ hidden when there is only one offer. Above the button a note says when the
 code arrives: once the payment is confirmed, which can take days for invoice
 payments, or right away under «Meine Gutscheine» when the offer has
 `issueBeforePayment`. An offer without a payment method shows a warning and
-disables the button. There is no amount slider, auto renew, goodie or
-discount code. Fields are read with `useWatch`.
+disables the button. There is no amount slider, auto renew or goodie.
+Fields are read with `useWatch`.
+
+When the selected offer has `allowDiscountCodes`, a "Rabattcode" field shows
+up, built like the one in `subscribe.tsx`. Each change runs
+`fetchSubscribeInfo({memberPlanId: offer.memberPlan.id, discountCode})` with
+the trimmed code. A valid code shows "x% Rabatt angewendet" and the button
+shows the reduced price, rounded like the API rounds it. An invalid code
+shows "Rabattcode ungültig", and a code that would make the gift free shows
+`giftCode.purchase.discountCodeFree`. In both cases the button is disabled
+and submit does nothing. The code is sent as `discountCode` only while the
+selected offer allows codes.
 
 ### Payment hooks
 
@@ -243,7 +260,9 @@ the offer has no usable method left, a warning
 `libs/website/builder/src/lib/membership.interface.ts`:
 
 - `BuilderGiftCodePurchaseProps`: `offers`, `challenge`, `defaults.offerId`,
-  `onPurchase(vars)`, `onPurchaseWithRegister({register, purchase})`,
+  `defaults.discountCode`, the optional `subscribeInfo` and
+  `fetchSubscribeInfo` (typed as in `BuilderSubscribeProps`; without them the
+  field still sends the code but cannot check it first), `onPurchase(vars)`, `onPurchaseWithRegister({register, purchase})`,
   `schema`, `fields`, `termsOfServiceUrl`, `className`. `onPurchase` takes
   `BuilderGiftCodePurchaseVariables` (`PurchaseGiftCodeMutationVariables`
   without the URLs, which the hook builds). There are no `loading` and
@@ -270,14 +289,17 @@ Website specs on this branch are Storybook `composeStories` specs that run
 every play:
 
 - `gift-code-purchase`: LoggedOut, LoggedIn, LoggedInFilled, Invalid,
-  SingleOffer, IssueBeforePayment, NoPaymentMethods, plus spec cases for
+  SingleOffer, IssueBeforePayment, NoPaymentMethods, WithoutDiscountCodes,
+  WithDiscountCode, WithInvalidDiscountCode, WithFreeDiscountCode,
+  WithDiscountCodeDefault, plus spec cases for
   registering a logged-out buyer (stubs `window.turnstile`), switching to a
   payment method of a newly chosen offer, and showing the offer description.
 - `gift-code-list`: Ordered, Issued, IssuedUnpaid, UnpaidWithoutPaymentMethods,
   Redeemed, Canceled, Expired, Empty, plus copy and missing-clipboard cases.
 - `gift-code-list-container`: Default and Empty, plus the invoice check and
   the payment failure alert.
-- `subscribe-block`: Default, WithGiftCodeOffers, GiftMode.
+- `subscribe-block`: Default, WithGiftCodeOffers, GiftMode,
+  GiftModeWithDiscountCode.
 - `handle-payment.spec.tsx` and `with-builder-router.spec.tsx` cover the
   hooks and `replaceQuery`.
 

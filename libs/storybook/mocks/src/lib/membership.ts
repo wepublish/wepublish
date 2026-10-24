@@ -304,6 +304,7 @@ export const mockGiftCodeOffer = ({
     mockPaymentMethod({ name: 'Twint', paymentProviderID: 'payrexx' }),
   ],
   issueBeforePayment = false,
+  allowDiscountCodes = false,
 }: Partial<FullGiftCodeOfferFragment> = {}): FullGiftCodeOfferFragment => ({
   __typename: 'GiftCodeOffer',
   id,
@@ -316,6 +317,7 @@ export const mockGiftCodeOffer = ({
   price,
   paymentMethods,
   issueBeforePayment,
+  allowDiscountCodes,
 });
 
 export const mockGiftCode = ({

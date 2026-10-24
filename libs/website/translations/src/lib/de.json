@@ -203,6 +203,7 @@
       "noPaymentMethods": "Für dieses Geschenk ist zurzeit keine Zahlungsmethode verfügbar.",
       "deliveryNote": "Den Gutscheincode erhältst du, sobald die Zahlung bestätigt ist. Bei Zahlung per Rechnung kann das einige Tage dauern.",
       "issueBeforePaymentNote": "Den Gutscheincode findest du direkt nach dem Kauf unter «Meine Gutscheine» in deinem Profil.",
+      "discountCodeFree": "Mit diesem Rabattcode wäre das Geschenk gratis. Das ist zurzeit nicht möglich.",
       "spamProtection": "Spam-Schutz",
       "captcha": "Captcha",
       "button": "Gutschein für {formattedAmount} kaufen",

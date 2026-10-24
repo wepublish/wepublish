@@ -113,6 +113,7 @@ export class SellableCheckoutService {
                 amount: line.amount,
                 quantity: line.quantity,
                 sellableKind: line.kind,
+                discountCodeId: line.discountCodeId,
               },
             });
 
