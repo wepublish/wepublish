@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -9,10 +10,21 @@ import {
 import {
   CanCreateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanGetArticle,
+  CanGetPage,
   CanUpdateBlockTemplate,
 } from '@wepublish/permissions';
-import { Permissions } from '@wepublish/permissions/api';
-import { Public } from '@wepublish/authentication/api';
+import {
+  hasPermission,
+  permissionsOf,
+  Permissions,
+} from '@wepublish/permissions/api';
+import {
+  CurrentUser,
+  Public,
+  UserSession,
+} from '@wepublish/authentication/api';
+import { skipAnswerCache } from '@wepublish/kv-ttl-cache/api';
 import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
 import {
   BlockTemplate,
@@ -31,6 +43,13 @@ import {
 } from '@nestjs/common';
 import { BlockContent } from '../block-content.model';
 import { BlockTreeLoader } from '../block-tree/block-tree-loader';
+
+const SEES_HIDDEN_BLOCKS = [
+  CanCreateBlockTemplate,
+  CanUpdateBlockTemplate,
+  CanGetArticle,
+  CanGetPage,
+];
 
 @Resolver(() => BlockTemplate)
 export class BlockTemplateResolver {
@@ -96,11 +115,25 @@ export class BlockTemplateResolver {
       type: () => Boolean,
       defaultValue: true,
       description:
-        'Omits blocks that are hidden or outside their timing. Pass `false` to edit the template.',
+        'Omits blocks that are hidden or outside their timing. Pass `false` to edit the template, which only users who can edit block templates, articles or pages may do.',
     })
-    onlyDisplayed: boolean
+    onlyDisplayed: boolean,
+    @Context() context: object,
+    @CurrentUser() user: UserSession | undefined
   ) {
-    return this.blockTreeLoader.loadTemplateBlocks(template, { onlyDisplayed });
+    if (!onlyDisplayed) {
+      skipAnswerCache(context);
+    }
+
+    const permissions = permissionsOf(user);
+
+    return this.blockTreeLoader.loadTemplateBlocks(template, {
+      onlyDisplayed:
+        onlyDisplayed ||
+        !SEES_HIDDEN_BLOCKS.some(permission =>
+          hasPermission(permission, permissions)
+        ),
+    });
   }
 }
 

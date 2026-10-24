@@ -583,6 +583,31 @@ describe('BlockTreeLoader', () => {
       expect(await service.nextChange([mockTeaserSlotsBlock()])).toBeNull();
     });
 
+    it('works out the next change of the same blocks only once', () => {
+      const blocks = [mockTeaserSlotsBlock()];
+
+      expect(service.nextChange(blocks)).toBe(service.nextChange(blocks));
+    });
+
+    it('does not load teasers', async () => {
+      await service.nextChange([mockTeaserSlotsBlock()]);
+
+      expect(mockArticleService.getArticles).not.toHaveBeenCalled();
+    });
+
+    it('reads timings stored as strings', async () => {
+      const at = new Date(service.now.getTime() + 60 * 60 * 1000);
+
+      expect(
+        await service.nextChange([
+          {
+            ...mockTeaserSlotsBlock(),
+            timing: { from: at.toISOString() },
+          } as unknown as BaseBlock<BlockType>,
+        ])
+      ).toEqual(at);
+    });
+
     it('sees the timing of blocks inside templates', async () => {
       const at = new Date(service.now.getTime() + 60 * 60 * 1000);
       mockTemplates = {

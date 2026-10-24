@@ -163,7 +163,9 @@ type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
   authors: [ArticleRevisionAuthor!]!
   blocks(
-    """Omits blocks that should be hidden."""
+    """
+    Omits blocks that should be hidden. Only users who can read articles may pass `false`, everyone else gets the displayed blocks.
+    """
     onlyDisplayed: Boolean! = true
   ): [BlockContent!]!
 
@@ -530,7 +532,7 @@ type BlockStyle {
 type BlockTemplate implements HasBlockContent {
   blocks(
     """
-    Omits blocks that are hidden or outside their timing. Pass `false` to edit the template.
+    Omits blocks that are hidden or outside their timing. Pass `false` to edit the template, which only users who can edit block templates, articles or pages may do.
     """
     onlyDisplayed: Boolean! = true
   ): [BlockContent!]!
@@ -3944,7 +3946,9 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
 type PageRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
   blocks(
-    """Omits blocks that should be hidden."""
+    """
+    Omits blocks that should be hidden. Only users who can read pages may pass `false`, everyone else gets the displayed blocks.
+    """
     onlyDisplayed: Boolean! = true
   ): [BlockContent!]!
 

@@ -114,6 +114,11 @@ export class BlockTreeLoader {
   private loadedTeasers: (typeof Teaser)[] = [];
   private populatedTemplates = new WeakMap<object, BlockTemplate>();
   private loadedBlocks = new WeakMap<object, Promise<BaseBlock<BlockType>[]>>();
+  private nextChanges = new WeakMap<object, Promise<Date | null>>();
+  private expandedBlocks = new WeakMap<
+    object,
+    Promise<BaseBlock<BlockType>[]>
+  >();
 
   constructor(
     private eventService: EventService,
@@ -284,11 +289,16 @@ export class BlockTreeLoader {
     return onlyDisplayed ? this.displayed(loaded) : loaded;
   }
 
-  async nextChange(blocks: BaseBlock<BlockType>[]) {
-    return nextTimingChange(
-      await this.load(blocks, this.loadedTeasers),
-      this.now
-    );
+  nextChange(blocks: BaseBlock<BlockType>[]) {
+    const next =
+      this.nextChanges.get(blocks) ??
+      this.expand(blocks).then(expanded =>
+        nextTimingChange(expanded, this.now)
+      );
+
+    this.nextChanges.set(blocks, next);
+
+    return next;
   }
 
   private isHidden = (block: BaseBlock<BlockType>) =>
@@ -319,16 +329,24 @@ export class BlockTreeLoader {
     return loaded;
   }
 
+  private expand(blocksToExpand: BaseBlock<BlockType>[]) {
+    const expanded =
+      this.expandedBlocks.get(blocksToExpand) ??
+      Promise.all(
+        blocksToExpand.map(block => this.expandBlockTemplates(block))
+      ).then(blocks => blocks.filter(Boolean) as BaseBlock<BlockType>[]);
+
+    this.expandedBlocks.set(blocksToExpand, expanded);
+
+    return expanded;
+  }
+
   private async populate(
     blocksToLoad: BaseBlock<BlockType>[],
     loadedTeasers: (typeof Teaser)[]
   ) {
     const blocks: BaseBlock<BlockType>[] = [];
-    const revisionBlocks = (
-      await Promise.all(
-        blocksToLoad.map(block => this.expandBlockTemplates(block))
-      )
-    ).filter(Boolean) as BaseBlock<BlockType>[];
+    const revisionBlocks = await this.expand(blocksToLoad);
 
     // extract & store all manual teasers
     // - they will be completely excluded from being autofilled

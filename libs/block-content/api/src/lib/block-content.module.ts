@@ -15,6 +15,7 @@ import {
   TeaserListBlockResolver,
 } from './teaser/teaser-list.resolver';
 import { BaseBlockResolver } from './base-block.resolver';
+import { BlockTimingResolver } from './timing/block-timing.resolver';
 import { BlockTreeLoader } from './block-tree/block-tree-loader';
 import { TagModule } from '@wepublish/tag/api';
 import { SubscribeBlockResolver } from './subscribe/subscribe-block.resolver';
@@ -40,6 +41,7 @@ import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.
   ],
   providers: [
     BaseBlockResolver,
+    BlockTimingResolver,
     EventBlockResolver,
     CommentBlockResolver,
     TeaserListBlockResolver,

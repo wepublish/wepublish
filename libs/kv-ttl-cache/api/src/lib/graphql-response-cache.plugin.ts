@@ -27,12 +27,7 @@ export const PUBLIC_COMMENTS_NAMESPACE = 'graphql:comments';
 export type ArticlePage = { id: string; slug?: string | null };
 
 export type PublicContent =
-  | 'articles'
-  | 'pages'
-  | 'authors'
-  | 'images'
-  | 'paywalls'
-  | 'polls';
+  'articles' | 'pages' | 'authors' | 'images' | 'paywalls' | 'polls';
 
 export const contentCacheNamespace = (content: PublicContent) =>
   `content:${content}`;
@@ -226,7 +221,7 @@ const asksOnlyCacheableQueries = asksOnly(CACHEABLE_QUERIES);
 const asksOnlySameForEveryoneQueries = asksOnly(SAME_FOR_EVERYONE_QUERIES);
 
 const answersNotToStore = new WeakSet<object>();
-const answerTtlLimits = new WeakMap<object, number>();
+const answerStaleAt = new WeakMap<object, number>();
 
 export const skipAnswerCache = (context: object | null | undefined) => {
   if (context) {
@@ -236,16 +231,18 @@ export const skipAnswerCache = (context: object | null | undefined) => {
 
 export const limitAnswerCache = (
   context: object | null | undefined,
-  seconds: number
+  staleAt: Date
 ) => {
-  if (!context || !(seconds > 0)) {
+  const time = staleAt.getTime();
+
+  if (!context || Number.isNaN(time)) {
     return;
   }
 
-  const limit = answerTtlLimits.get(context);
+  const limit = answerStaleAt.get(context);
 
-  if (limit === undefined || seconds < limit) {
-    answerTtlLimits.set(context, seconds);
+  if (limit === undefined || time < limit) {
+    answerStaleAt.set(context, time);
   }
 };
 
@@ -441,16 +438,26 @@ export class GraphqlResponseCachePlugin implements ApolloServerPlugin<Context> {
           return;
         }
 
-        const ttl =
-          hasLiveBlock(result.data) ?
-            LIVE_RESPONSE_TTL_SECONDS
-          : RESPONSE_TTL_SECONDS;
+        const staleAt = answerStaleAt.get(contextValue);
+        const secondsLeft =
+          staleAt === undefined ? Infinity : (
+            Math.floor((staleAt - Date.now()) / 1000)
+          );
+
+        if (secondsLeft < 1) {
+          return;
+        }
 
         await kv.setNs(
           RESPONSE_NAMESPACE,
           key,
           result,
-          Math.min(ttl, answerTtlLimits.get(contextValue) ?? ttl)
+          Math.min(
+            hasLiveBlock(result.data) ?
+              LIVE_RESPONSE_TTL_SECONDS
+            : RESPONSE_TTL_SECONDS,
+            secondsLeft
+          )
         );
       },
     };
