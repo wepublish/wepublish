@@ -12,18 +12,21 @@ import {
  * `@wepublish/utils/website/tanstack/server`.
  */
 
-/** Queries every page needs. Was duplicated in every `getStaticProps`. */
+/**
+ * Queries every page needs. Was duplicated in every `getStaticProps`.
+ *
+ * All three land in the Apollo cache and are dehydrated into the SSR payload;
+ * the settings are also returned, because the root loader renders from them
+ * directly (theme, fonts, `head`) rather than reading them back out.
+ */
 export const prefetchShared = async (client: ApolloClient) => {
-  await Promise.all([
+  const [settings] = await Promise.all([
+    client.query({ query: WebsiteSettingsDocument }),
     client.query({ query: NavigationListDocument }),
     client.query({ query: PeerProfileDocument }),
   ]);
-};
 
-export const prefetchWebsiteSettings = async (client: ApolloClient) => {
-  const { data } = await client.query({ query: WebsiteSettingsDocument });
-
-  return data?.websiteSettings as WebsiteSettingsFragment | undefined;
+  return settings.data?.websiteSettings as WebsiteSettingsFragment | undefined;
 };
 
 /**
