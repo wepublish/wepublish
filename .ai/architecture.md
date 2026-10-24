@@ -85,7 +85,7 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 
 ### Infrastructure Libraries
 
-`kv-ttl-cache`, `tracking-pixel`, `media-transform-guard`, `google-analytics`, `health`, `system-info`, `stats`, `session`, `settings`
+`dragonfly`, `kv-ttl-cache`, `website-revalidation`, `public-content-cache`, `tracking-pixel`, `media-transform-guard`, `google-analytics`, `health`, `system-info`, `stats`, `session`, `settings`
 
 ## Database
 

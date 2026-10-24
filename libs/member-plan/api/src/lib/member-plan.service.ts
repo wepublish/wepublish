@@ -16,26 +16,26 @@ import {
   UpdateMemberPlanInput,
 } from './member-plan.model';
 import { MemberPlanDataloader } from './member-plan.dataloader';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import {
-  KvTtlCacheService,
-  PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
-
-const CACHE_NAMESPACE = 'member-plans';
-const CACHE_TTL_SECONDS = 300;
+  MEMBER_PLAN_CACHE_NAMESPACE,
+  MEMBER_PLAN_CACHE_TTL_SECONDS,
+} from './member-plan-cache';
 
 @Injectable()
 export class MemberPlanService {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private kv: NamespacedCache,
+    private resets: NamespaceResets,
     private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   @PrimeDataLoader(MemberPlanDataloader)
   async getMemberPlanBySlug(slug: string) {
     return this.kv.getOrLoadNs(
-      CACHE_NAMESPACE,
+      MEMBER_PLAN_CACHE_NAMESPACE,
       `slug:${slug}`,
       () =>
         this.prisma.memberPlan.findFirst({
@@ -47,17 +47,17 @@ export class MemberPlanService {
             periodicityPricing: true,
           },
         }),
-      CACHE_TTL_SECONDS
+      MEMBER_PLAN_CACHE_TTL_SECONDS
     );
   }
 
   @PrimeDataLoader(MemberPlanDataloader)
   async getMemberPlans(args: MemberPlanListArgs) {
     return this.kv.getOrLoadNs(
-      CACHE_NAMESPACE,
+      MEMBER_PLAN_CACHE_NAMESPACE,
       `list:${JSON.stringify(args)}`,
       () => this.loadMemberPlans(args),
-      CACHE_TTL_SECONDS
+      MEMBER_PLAN_CACHE_TTL_SECONDS
     );
   }
 
@@ -112,7 +112,7 @@ export class MemberPlanService {
   @PrimeDataLoader(MemberPlanDataloader)
   async getActiveMemberPlans() {
     return this.kv.getOrLoadNs(
-      CACHE_NAMESPACE,
+      MEMBER_PLAN_CACHE_NAMESPACE,
       'active',
       () =>
         this.prisma.memberPlan.findMany({
@@ -124,7 +124,7 @@ export class MemberPlanService {
             periodicityPricing: true,
           },
         }),
-      CACHE_TTL_SECONDS
+      MEMBER_PLAN_CACHE_TTL_SECONDS
     );
   }
 
@@ -161,8 +161,8 @@ export class MemberPlanService {
         input.defaultPaymentPeriodicity === null ?
           null
         : ((input.defaultPaymentPeriodicity as
-            | PaymentPeriodicity
-            | undefined) ?? existingMemberPlan.defaultPaymentPeriodicity),
+            PaymentPeriodicity | undefined) ??
+          existingMemberPlan.defaultPaymentPeriodicity),
 
       availablePaymentMethods:
         availablePaymentMethods ?? existingMemberPlan.availablePaymentMethods,
@@ -274,7 +274,7 @@ export class MemberPlanService {
   }
 
   private async forgetMemberPlans() {
-    await this.kv.resetNamespace(CACHE_NAMESPACE);
+    await this.resets.reset(MEMBER_PLAN_CACHE_NAMESPACE);
     await this.publicContentCache.invalidate('paywalls');
   }
 }

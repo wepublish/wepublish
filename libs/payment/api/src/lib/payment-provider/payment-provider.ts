@@ -16,7 +16,7 @@ import express from 'express';
 import DataLoader from 'dataloader';
 import { timingSafeEqual } from 'crypto';
 import { sub } from 'date-fns';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SESSION_CACHE_NAMESPACE } from '@wepublish/authentication/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 
@@ -141,13 +141,15 @@ export interface PaymentProviderProps {
   id: string;
   incomingRequestHandler?: NextHandleFunction;
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
+  resets: Pick<NamespaceResets, 'reset'>;
 }
 
 export abstract class BasePaymentProvider implements PaymentProvider {
   readonly id: string;
   readonly prisma: PrismaClient;
-  readonly kv: KvTtlCacheService;
+  readonly kv: NamespacedCache;
+  readonly resets: Pick<NamespaceResets, 'reset'>;
   readonly remoteManagedSubscription: boolean = false;
 
   readonly incomingRequestHandler: NextHandleFunction;
@@ -158,6 +160,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       props.incomingRequestHandler ?? bodyParser.json();
     this.prisma = props.prisma;
     this.kv = props.kv;
+    this.resets = props.resets;
   }
 
   abstract webhookForPaymentIntent(
@@ -413,7 +416,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
         },
       },
     });
-    await this.kv.resetNamespace(SESSION_CACHE_NAMESPACE);
+    await this.resets.reset(SESSION_CACHE_NAMESPACE);
   }
 
   protected timeConstantCompare(a: string, b: string): boolean {
@@ -431,7 +434,7 @@ class PaymentProviderConfig {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
     private readonly id: string
   ) {}
 

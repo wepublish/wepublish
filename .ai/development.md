@@ -25,7 +25,7 @@ pnpm run watch                # Start all services (API, editor, media, website)
 | Media | http://localhost:4100 | Media/image server |
 | PGAdmin | http://localhost:8000 | Database admin UI |
 | MinIO | http://localhost:9001 | S3 storage console |
-| Dragonfly | redis://localhost:6379 | Shared caches of `KvTtlCacheModule`; admin `default`/`dragonfly` |
+| Dragonfly | redis://localhost:6379 | Shared caches (`@wepublish/kv-ttl-cache/api`) and coordination (`@wepublish/dragonfly/api`); admin `default`/`dragonfly` |
 
 `docker-compose.yml` also defines `mailpit` for catching outbound mail locally,
 and a `migration` service used by the full-stack `pnpm run try` path.
@@ -129,5 +129,5 @@ Key variables for local development (set via `.env` or docker-compose):
 | `MEDIA_SERVER_URL` | `http://localhost:4100` | Public media URL |
 | `MEDIA_SERVER_TOKEN` | `secret` | Media server auth token |
 | `S3_ACCESS_KEY` / `S3_SECRET_KEY` | from `.env` | MinIO credentials |
-| `REDIS_URL` | `redis://wepublish-local:…@localhost:6379/0` | Dragonfly for `KvTtlCacheModule` (api) and the page cache (websites); unset = all caching per replica |
+| `REDIS_URL` | `redis://wepublish-local:…@localhost:6379/0` | Dragonfly for shared caches and coordination (`@wepublish/dragonfly/api`, api), the page cache (websites) and the link cache (media); unset = all caching per replica |
 | `REDIS_KEY_PREFIX` | `wepublish-local` | Required with `REDIS_URL`; every key must start with it |
