@@ -13,19 +13,19 @@
  *
  * The dependency direction is strictly next -> core, never the reverse.
  */
-export * from './lib/auth-guard';
-export * from './lib/get-session-token-props';
-export * from './lib/next-wepublish-link';
-export * from './lib/handle-jwt-login';
-export * from './lib/routed-admin-bar';
-export * from './lib/with-builder-router';
+export * from './next/auth-guard';
+export * from './next/get-session-token-props';
+export * from './next/next-wepublish-link';
+export * from './next/handle-jwt-login';
+export * from './next/routed-admin-bar';
+export * from './next/with-builder-router';
 
-export * from './lib/pages/404-page';
-export * from './lib/pages/author-page';
-export * from './lib/pages/document-page';
-export * from './lib/pages/search-page';
-export * from './lib/pages/subscribe-page';
-export * from './lib/pages/tag-page';
-export * from './lib/pages/profile/profile-page';
-export * from './lib/pages/profile/subscription/subscription-page';
-export * from './lib/pages/profile/subscription/deactivated-subscriptions-page';
+export * from './next/pages/404-page';
+export * from './next/pages/author-page';
+export * from './next/pages/document-page';
+export * from './next/pages/search-page';
+export * from './next/pages/subscribe-page';
+export * from './next/pages/tag-page';
+export * from './next/pages/profile/profile-page';
+export * from './next/pages/profile/subscription/subscription-page';
+export * from './next/pages/profile/subscription/deactivated-subscriptions-page';

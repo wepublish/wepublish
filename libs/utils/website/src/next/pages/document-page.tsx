@@ -11,8 +11,8 @@ import {
   documentGetInitialProps as muiDocumentGetInitialProps,
   DocumentHeadTags as MuiDocumentHeadTags,
 } from '@mui/material-nextjs/v15-pagesRouter';
-import { getApiUrl } from '../api-url';
-import { websiteSettingsFontFamilies } from '../website-fonts';
+import { getApiUrl } from '../../lib/api-url';
+import { websiteSettingsFontFamilies } from '../../lib/website-fonts';
 // Side-effect import: brings the `Window.WEBSITE_SETTINGS` augmentation into
 // scope for the two inline scripts below. It lives in the neutral core so
 // non-Next shells get it too.

@@ -331,7 +331,7 @@ not true. Pinned by `page-cache.spec.ts` and `page-cache-handler.spec.ts`.
 `Cache-Control` already set (`pages-handler.js`); without it Next still sends
 `s-maxage=1` for `notFound`, and a 500 (api down while a page renders for the
 first time) went out as `public, s-maxage=59` (verified end-to-end 2026-10-02).
-`register()` in `libs/utils/website/src/lib/sentry/instrumentation.ts` makes
+`register()` in `libs/utils/website/src/next/sentry/instrumentation.ts` makes
 every 404 and 5xx `private, no-store, max-age=0` (`error-no-store.ts`, same
 folder) so Cloudflare never keeps one. Pinned by `error-no-store.spec.ts`;
 nothing checks the wiring in CI (verified end-to-end 2026-10-01).
