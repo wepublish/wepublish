@@ -19,6 +19,7 @@ import {
   AuthSession,
   CurrentUser,
   requireUserSession,
+  UserSession,
 } from '@wepublish/authentication/api';
 import { JwtService } from '@wepublish/session/api';
 
