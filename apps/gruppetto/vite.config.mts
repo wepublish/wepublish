@@ -124,16 +124,6 @@ export default defineConfig(({ mode }) => {
         // Re-listing `/node_modules/` is required: `include` replaces the
         // default rather than extending it.
         include: [/node_modules/, /libs\/utils\/website\/src\/lib\/page-cache\//],
-        // `shared-store.js` does `require('@keyv/redis').createClient`.
-        // Rollup assumes every external is CommonJS and emits a default
-        // import, which for this ESM-only package is the `KeyvRedis` class —
-        // `.createClient` is then undefined and the shared cache silently
-        // falls back to pod-local. These two options say "this one external
-        // is ESM, hand the require its namespace". Scoped to `@keyv/redis`
-        // so the rest of the build keeps rollup's defaults.
-        esmExternals: ['@keyv/redis'],
-        requireReturnsDefault: (id: string) =>
-          id === '@keyv/redis' ? 'namespace' : false,
       },
     },
 
@@ -155,6 +145,30 @@ export default defineConfig(({ mode }) => {
     },
 
     resolve: {
+      // Vite externalises `react` for the SSR environment, so rolldown emits a
+      // literal `__require("react")` inside any CJS dependency it inlines, and
+      // nitro's second pass cannot rewrite it. `.output` ships without a
+      // `node_modules`, so that call throws "Cannot find module 'react'" on
+      // every render of a route that reaches one. These two specifiers are the
+      // only CJS modules in the graph that `require('react')`; both have an
+      // ESM equivalent, so pointing at it removes the require entirely.
+      //
+      // Putting `react` in `ssr.noExternal` also removes the require, but
+      // gives react-dom/server a second copy of React and every render then
+      // dies on a null hook dispatcher. Adding `react` to the nitro
+      // `traceDeps` is worse still: SSR silently degrades to an empty shell
+      // and keeps returning 200. See `docker/check-nitro-output.js`, which
+      // fails the image build if a third such module ever appears.
+      alias: [
+        {
+          find: 'react-transition-group/cjs/TransitionGroupContext.js',
+          replacement: 'react-transition-group/esm/TransitionGroupContext.js',
+        },
+        {
+          find: /^use-sync-external-store\/shim(\/index\.js)?$/,
+          replacement: 'react',
+        },
+      ],
       // MUI's styled engine and our own `@emotion/styled` must resolve to the
       // same emotion instance, otherwise the theme context is empty during SSR
       // (`theme.breakpoints` undefined). This is the Vite equivalent of the
@@ -219,10 +233,11 @@ export default defineConfig(({ mode }) => {
       // "Could not dynamically require ./langs/br.json" on the first request.
       // Keeping it external makes node resolve it normally; nitro traces it
       // into `.output/server/node_modules`.
-      // `@keyv/redis` (the page cache's Dragonfly client) reaches a native
-      // `.node` binary through `@node-rs/xxhash`, which rollup cannot parse.
-      // External, nitro traces it into `.output/server/node_modules`.
-      external: ['i18n-iso-countries', '@keyv/redis'],
+      // `@redis/client` is the page cache's Dragonfly client, reached through
+      // a bare `require()` in `shared-store.js`. External, so nitro traces it
+      // into `.output/server/node_modules`; bundling it would leave that
+      // require unresolvable at runtime.
+      external: ['i18n-iso-countries', '@redis/client'],
     },
 
     plugins: [
@@ -267,7 +282,11 @@ export default defineConfig(({ mode }) => {
       nitro({
         config: {
           output: { dir: outputDir },
-          traceDeps: ['i18n-iso-countries*', '@keyv/redis*'],
+          traceDeps: [
+            'i18n-iso-countries*',
+            '@redis/client*',
+            '@sentry/server-runtime-injection*',
+          ],
         },
       }),
     ],

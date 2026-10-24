@@ -1132,6 +1132,41 @@ gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
 
 ---
 
+### ⚠️ A TanStack build that works locally can still ship a broken `.output`
+
+[`apps/gruppetto/vite.config.mts`](../../apps/gruppetto/vite.config.mts) lists
+`react` and `react-dom` in `ssr.noExternal`. They look redundant — nothing in
+the app imports React from a CJS module, and the build is green without them.
+
+Vite externalises `react` for the SSR environment. Rolldown then inlines any
+CJS dependency it cannot externalise safely and emits a literal
+`__require("react")` inside it, which nitro's second pass cannot rewrite. The
+call resolves against `node_modules` on disk, and `.output` ships without one,
+so every SSR render dies with `Cannot find module 'react'` — while `nx build`
+exits 0. The offenders here are `react-transition-group/cjs` (reached through
+MUI) and `use-sync-external-store/shim` (reached through `swr` and
+`@tanstack/react-store`). Upstream closed this as working-as-intended:
+[rolldown#10643](https://github.com/rolldown/rolldown/issues/10643).
+
+Whether it happens depends on whether the package is reachable from the **root**
+`node_modules`. A workspace carrying hoisted leftovers from the npm era
+resolves them to their ESM builds and never reproduces it; CI's clean
+`pnpm install --frozen-lockfile` does. To reproduce a CI build locally,
+`git archive` the branch into a temp directory and install there — do not trust
+your own `node_modules`.
+
+Do **not** "fix" it by adding `react` to the nitro `traceDeps`. The require then
+resolves to a second React copy, hooks fail against the bundled copy's
+dispatcher, and SSR degrades to an empty shell while still returning 200.
+
+[`docker/check-nitro-output.js`](../../docker/check-nitro-output.js) runs in the
+`build-website-tanstack` stage and fails the image build on any runtime
+`require()` that is neither bundled, traced, nor a node builtin. The same bug
+hid `@sentry/server-runtime-injection`, which `@sentry/node` imports and nitro
+did not trace.
+
+---
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell _why_ the obvious
