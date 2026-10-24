@@ -13,6 +13,7 @@ export async function bootstrap(logger?: NestApplicationOptions['logger']) {
   const app = await NestFactory.create(AppModule, {
     logger,
   });
+  app.enableShutdownHooks();
   app.useGlobalPipes(new ZodValidationPipe());
   app.enableCors({
     origin: true,

@@ -7,7 +7,7 @@ import { PixelUrl, TrackingPixelProvider } from '../tracking-pixel-provider';
 import { GatewayClient } from './client-gateway';
 import { InternalKey } from './internalKey';
 import { HttpService } from '@nestjs/axios';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { ProLitterisGenerator } from './types';
 import { SecretCrypto } from '@wepublish/settings/api';
 
@@ -17,7 +17,7 @@ class ProlitterisConfig {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
     private readonly id: string
   ) {}
 
@@ -82,7 +82,7 @@ export class ProlitterisTrackingPixelProvider implements TrackingPixelProvider {
   constructor(
     public readonly id: string,
     public prisma: PrismaClient,
-    public kv: KvTtlCacheService,
+    public kv: NamespacedCache,
     private httpClient: HttpService
   ) {}
 

@@ -43,7 +43,11 @@ import { Action } from '../subscription-event-dictionary/subscription-event-dict
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
 import { addErrorContext, getMaxTake } from '@wepublish/utils/api';
-import { KvLock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  DistributedLocks,
+  type HeldLock,
+  type LockResult,
+} from '@wepublish/dragonfly/api';
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
@@ -51,6 +55,9 @@ export const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
 
 const RUN_LOCK = 'periodic-job-run';
 const RUN_LOCK_TTL_MS = 2 * 60 * 1000;
+
+const heldLock = (acquired: LockResult) =>
+  acquired.status === 'acquired' ? acquired.lock : undefined;
 
 const toDbDate = (day: Date) =>
   new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate()));
@@ -99,7 +106,7 @@ export class PeriodicJobService {
     private subscriptionController: SubscriptionService,
     private payments: PaymentsService,
     private invoicePaidNotifier: InvoicePaidNotifier,
-    private kv: KvTtlCacheService
+    private locks: DistributedLocks
   ) {}
 
   async isRunning(job: RunState) {
@@ -107,7 +114,9 @@ export class PeriodicJobService {
       return false;
     }
 
-    return (await this.kv.isLocked(RUN_LOCK)) ?? isPeriodicJobRunning(job);
+    const locked = await this.locks.isLocked(RUN_LOCK);
+
+    return typeof locked === 'boolean' ? locked : isPeriodicJobRunning(job);
   }
 
   getJobLog(take: number, skip?: number) {
@@ -147,14 +156,16 @@ export class PeriodicJobService {
    * If any of the tasks fail, the entire job is marked as failed.
    */
   public async execute(customRunDate: Date = new Date()) {
-    const lock = await this.kv.lock(RUN_LOCK, RUN_LOCK_TTL_MS);
+    const acquired = await this.locks.acquire(RUN_LOCK, RUN_LOCK_TTL_MS);
 
-    if (lock === false) {
+    if (acquired.status === 'taken') {
       this.logger.log(
         'Periodic job is already running on another replica, skipping'
       );
       return;
     }
+
+    const lock = heldLock(acquired);
 
     try {
       await this.runOutstanding(customRunDate, lock);
@@ -164,19 +175,24 @@ export class PeriodicJobService {
   }
 
   public async retryAndCatchUp(): Promise<PeriodicJob> {
-    const lock = await this.kv.lock(RUN_LOCK, RUN_LOCK_TTL_MS);
+    const acquired = await this.locks.acquire(RUN_LOCK, RUN_LOCK_TTL_MS);
 
-    if (lock === false) {
+    if (acquired.status === 'taken') {
       throw new ConflictException(
         'A periodic job is already running. Wait until it has finished.'
       );
     }
 
+    const lock = heldLock(acquired);
+
     let failedRun: RetryRun;
     let job: PeriodicJob;
 
     try {
-      failedRun = await this.findRunToRetry(lock);
+      failedRun = await this.findRunToRetry(
+        lock,
+        acquired.status === 'unavailable'
+      );
       job = await this.retryFailedJob(failedRun);
     } catch (error) {
       await lock?.release();
@@ -193,9 +209,12 @@ export class PeriodicJobService {
     return job;
   }
 
-  private async findRunToRetry(lock: KvLock | undefined): Promise<RetryRun> {
+  private async findRunToRetry(
+    lock: HeldLock | undefined,
+    unavailable: boolean
+  ): Promise<RetryRun> {
     if (!lock) {
-      if ((await this.kv.dragonflyStatus()) === 'unreachable') {
+      if (unavailable) {
         throw new ServiceUnavailableException(
           'Dragonfly is unreachable, so nothing makes sure only one replica runs the periodic job. Try again in a moment.'
         );
@@ -223,7 +242,7 @@ export class PeriodicJobService {
     return failedRun;
   }
 
-  private async runOutstanding(runDate: Date, lock: KvLock | undefined) {
+  private async runOutstanding(runDate: Date, lock: HeldLock | undefined) {
     for (const periodicJobRunObject of await this.getOutstandingRuns(
       runDate,
       !!lock

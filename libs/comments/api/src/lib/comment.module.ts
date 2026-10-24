@@ -1,4 +1,4 @@
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { forwardRef, Module } from '@nestjs/common';
 import { CommentDataloaderService } from './comment-dataloader.service';
 import {
@@ -18,7 +18,7 @@ import { PageModule } from '@wepublish/page/api';
 
 @Module({
   imports: [
-    GraphqlResponseCacheModule,
+    PublicContentInvalidatorModule,
     PrismaModule,
     TagModule,
     SettingModule,

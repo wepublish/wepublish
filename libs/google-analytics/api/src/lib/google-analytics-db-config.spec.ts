@@ -1,5 +1,8 @@
 import { AnalyticsProviderType, PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { GoogleAnalyticsDbConfig } from './google-analytics-db-config';
 
 type Row = { id: string } & Record<string, unknown>;
@@ -57,16 +60,20 @@ class AnalyticsProviderTable {
 
 describe('GoogleAnalyticsDbConfig', () => {
   let table: AnalyticsProviderTable;
+  let testing: NamespacedCacheTesting;
   const replica = () =>
     new GoogleAnalyticsDbConfig(
       { settingAnalyticsProvider: table } as unknown as PrismaClient,
-      {} as KvTtlCacheService,
+      testing.cache,
       'google-analytics'
     );
 
-  beforeEach(() => {
+  beforeEach(async () => {
     table = new AnalyticsProviderTable();
+    testing = await createNamespacedCacheTesting();
   });
+
+  afterEach(() => testing.close());
 
   it('creates the configuration once when several replicas start at the same time', async () => {
     await expect(

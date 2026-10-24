@@ -1,6 +1,9 @@
 import type { Mock } from 'vitest';
 import { Currency, PaymentState, PrismaClient } from '@prisma/client';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import express from 'express';
 import { InvoiceWithItems } from './payment-provider';
 import { SimulatedPaymentProvider } from './simulated-payment-provider';
@@ -8,7 +11,7 @@ import { SimulatedPaymentProvider } from './simulated-payment-provider';
 describe('SimulatedPaymentProvider', () => {
   const env = process.env;
   let provider: SimulatedPaymentProvider;
-  let kv: ReturnType<typeof createKvMock>;
+  let testing: NamespacedCacheTesting;
   let findUnique: Mock;
 
   const invoice = {
@@ -20,17 +23,22 @@ describe('SimulatedPaymentProvider', () => {
   } as unknown as InvoiceWithItems;
 
   const setConfig = (offSessionPayments: boolean, declineRenewals = false) =>
-    kv.setNs('settings:paymentprovider', 'simulated', {
-      id: 'simulated',
-      type: 'simulated',
-      name: 'Simulated',
-      offSessionPayments,
-      simulated_declineRenewals: declineRenewals,
-    });
+    testing.cache.setNs(
+      'settings:paymentprovider',
+      'simulated',
+      {
+        id: 'simulated',
+        type: 'simulated',
+        name: 'Simulated',
+        offSessionPayments,
+        simulated_declineRenewals: declineRenewals,
+      },
+      60
+    );
 
   beforeEach(async () => {
     process.env = { ...env, HOST_URL: 'https://api.example.com' };
-    kv = createKvMock();
+    testing = await createNamespacedCacheTesting();
     await setConfig(false);
     findUnique = vi
       .fn()
@@ -42,12 +50,14 @@ describe('SimulatedPaymentProvider', () => {
         payment: { findUnique },
         invoice: { findUnique: vi.fn().mockResolvedValue(invoice) },
       } as unknown as PrismaClient,
-      kv,
+      kv: testing.cache,
+      resets: testing.resets,
     });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     process.env = env;
+    await testing.close();
   });
 
   const request = (

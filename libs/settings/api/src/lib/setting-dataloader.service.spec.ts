@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SettingDataloaderService } from './setting-dataloader.service';
 import { PrismaClient } from '@prisma/client';
 import DataLoader from 'dataloader';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import type { Mock } from 'vitest';
 
 vi.mock('dataloader', () => ({
@@ -31,7 +31,7 @@ describe('SettingDataloaderService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [NamespacedCacheTestingModule.forRoot()],
       providers: [
         SettingDataloaderService,
         {
@@ -64,7 +64,7 @@ describe('SettingDataloaderService', () => {
       });
 
       const module: TestingModule = await Test.createTestingModule({
-        imports: [KvTtlCacheModule],
+        imports: [NamespacedCacheTestingModule.forRoot()],
         providers: [
           SettingDataloaderService,
           {

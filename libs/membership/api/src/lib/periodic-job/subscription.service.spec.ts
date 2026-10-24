@@ -9,6 +9,7 @@ import nock from 'nock';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { InvoicePaidNotifier, PaymentsModule } from '@wepublish/payment/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { add, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionFlowService } from '../subscription-flow/subscription-flow.service';
@@ -123,6 +124,7 @@ describe('SubscriptionPaymentsService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        NamespacedCacheTestingModule.forRoot(),
         registerMailsModule(),
         registerPaymentMethodModule(),
         PaymentsModule,

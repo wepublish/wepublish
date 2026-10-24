@@ -1,4 +1,3 @@
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { SessionCacheModule } from '@wepublish/authentication/api';
 import {
   DynamicModule,
@@ -34,12 +33,7 @@ export interface PeerModuleAsyncOptions {
 }
 
 @Module({
-  imports: [
-    PrismaModule,
-    forwardRef(() => ImageModule),
-    KvTtlCacheModule,
-    SessionCacheModule,
-  ],
+  imports: [PrismaModule, forwardRef(() => ImageModule), SessionCacheModule],
   providers: [
     {
       provide: PEER_MODULE_OPTIONS,
