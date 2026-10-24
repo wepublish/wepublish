@@ -1,6 +1,7 @@
 import { useRegister } from '@wepublish/authentication/website';
 import {
   PaymentForm,
+  usePurchaseGiftCode,
   useSubscribe,
   useUpgrade,
 } from '@wepublish/payment/website';
@@ -27,6 +28,7 @@ export type SubscribeBlockContextProps = {
 
   subscribe: ReturnType<typeof useSubscribe>[0];
   upgrade: ReturnType<typeof useUpgrade>[0];
+  purchaseGiftCode: ReturnType<typeof usePurchaseGiftCode>[0];
   resubscribe: useMutation.ResultTuple<
     ResubscribeMutation,
     ResubscribeMutationVariables

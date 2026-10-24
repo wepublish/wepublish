@@ -1,17 +1,19 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import {
   PaymentPeriodicity,
   PrismaClient,
   SubscriptionEvent,
 } from '@prisma/client';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
-import { InvoicePaidListener } from '@wepublish/payment/api';
+import {
+  InvoicePaidListener,
+  InvoicePaidNotifier,
+} from '@wepublish/payment/api';
 import { ActionMailNoMailReason } from '../action-mail/action-mail-reason';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 
 export type PaymentMail =
-  | { mailTemplateId: string }
-  | { noMailReason: ActionMailNoMailReason };
+  { mailTemplateId: string } | { noMailReason: ActionMailNoMailReason };
 
 type TemplateLookupSubscription = {
   id: string;
@@ -22,7 +24,9 @@ type TemplateLookupSubscription = {
 };
 
 @Injectable()
-export class RenewalSuccessMailService implements InvoicePaidListener {
+export class RenewalSuccessMailService
+  implements InvoicePaidListener, OnModuleInit
+{
   private subscriptionEventDictionary = new SubscriptionEventDictionary(
     this.prisma
   );
@@ -30,8 +34,13 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
 
   constructor(
     private prisma: PrismaClient,
-    private mailContext: MailContext
+    private mailContext: MailContext,
+    private notifier: InvoicePaidNotifier
   ) {}
+
+  onModuleInit() {
+    this.notifier.register(this);
+  }
 
   /**
    * The RENEWAL_SUCCESS template that paying this invoice would send, or why

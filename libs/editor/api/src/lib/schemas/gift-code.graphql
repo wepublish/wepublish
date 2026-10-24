@@ -1,0 +1,223 @@
+fragment FullGiftCodeOffer on GiftCodeOffer {
+  id
+  createdAt
+  modifiedAt
+
+  name
+  description
+  active
+  issueBeforePayment
+  allowDiscountCodes
+  periodicity
+  redemptionWindowMonths
+
+  imageID
+  image {
+    ...FullImage
+  }
+
+  memberPlanId
+  memberPlan {
+    id
+    name
+    currency
+  }
+
+  paymentMethodIds
+  paymentMethods {
+    id
+    name
+    slug
+  }
+
+  price {
+    amount
+    currency
+  }
+}
+
+query GiftCodeOfferList(
+  $filter: GiftCodeOfferFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: GiftCodeOfferSort
+) {
+  giftCodeOffers(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullGiftCodeOffer
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query GiftCodeOffer($id: String!) {
+  giftCodeOffer(id: $id) {
+    ...FullGiftCodeOffer
+  }
+}
+
+mutation CreateGiftCodeOffer(
+  $name: String!
+  $description: RichText
+  $active: Boolean!
+  $issueBeforePayment: Boolean!
+  $allowDiscountCodes: Boolean
+  $memberPlanId: String!
+  $periodicity: PaymentPeriodicity!
+  $redemptionWindowMonths: Int
+  $imageID: String
+  $paymentMethodIds: [String!]!
+) {
+  createGiftCodeOffer(
+    name: $name
+    description: $description
+    active: $active
+    issueBeforePayment: $issueBeforePayment
+    allowDiscountCodes: $allowDiscountCodes
+    memberPlanId: $memberPlanId
+    periodicity: $periodicity
+    redemptionWindowMonths: $redemptionWindowMonths
+    imageID: $imageID
+    paymentMethodIds: $paymentMethodIds
+  ) {
+    ...FullGiftCodeOffer
+  }
+}
+
+mutation UpdateGiftCodeOffer(
+  $id: String!
+  $name: String
+  $description: RichText
+  $active: Boolean
+  $issueBeforePayment: Boolean
+  $allowDiscountCodes: Boolean
+  $memberPlanId: String
+  $periodicity: PaymentPeriodicity
+  $redemptionWindowMonths: Int
+  $imageID: String
+  $paymentMethodIds: [String!]
+) {
+  updateGiftCodeOffer(
+    id: $id
+    name: $name
+    description: $description
+    active: $active
+    issueBeforePayment: $issueBeforePayment
+    allowDiscountCodes: $allowDiscountCodes
+    memberPlanId: $memberPlanId
+    periodicity: $periodicity
+    redemptionWindowMonths: $redemptionWindowMonths
+    imageID: $imageID
+    paymentMethodIds: $paymentMethodIds
+  ) {
+    ...FullGiftCodeOffer
+  }
+}
+
+mutation DeleteGiftCodeOffer($id: String!) {
+  deleteGiftCodeOffer(id: $id) {
+    id
+  }
+}
+
+fragment GiftCodeListItem on GiftCode {
+  id
+  code
+  status
+  paid
+  recipientName
+  message
+
+  buyerId
+  buyer {
+    id
+    name
+    firstName
+    email
+  }
+
+  offerId
+  offer {
+    id
+    name
+  }
+
+  memberPlanId
+  memberPlan {
+    id
+    name
+  }
+
+  periodicity
+  redemptionWindowMonths
+  amount
+  currency
+  invoiceId
+
+  createdAt
+  issuedAt
+  expiresAt
+  redeemedAt
+  canceledAt
+  cancellationReason
+}
+
+query GiftCodeList(
+  $filter: GiftCodeFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: GiftCodeSort
+) {
+  giftCodes(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...GiftCodeListItem
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query GiftCode($id: String!) {
+  giftCode(id: $id) {
+    ...GiftCodeListItem
+  }
+}
+
+mutation CancelGiftCode($id: String!) {
+  cancelGiftCode(id: $id) {
+    ...GiftCodeListItem
+  }
+}

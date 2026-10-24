@@ -20,6 +20,7 @@ import { TagModule } from '@wepublish/tag/api';
 import { SubscribeBlockResolver } from './subscribe/subscribe-block.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { SettingModule } from '@wepublish/settings/api';
+import { GiftCodeModule } from '@wepublish/gift-code/api';
 import { MailchimpSubscribeResolver } from './mailchimp-form/mailchimp-subscribe.resolver';
 import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.service';
 
@@ -36,6 +37,7 @@ import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.
     CommentModule,
     TagModule,
     forwardRef(() => MemberPlanModule),
+    forwardRef(() => GiftCodeModule),
     SettingModule,
   ],
   providers: [

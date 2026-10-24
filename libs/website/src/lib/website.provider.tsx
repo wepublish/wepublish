@@ -85,6 +85,8 @@ import {
 import { Banner as PageBanner } from '@wepublish/banner/website';
 import { Image } from '@wepublish/image/website';
 import {
+  GiftCodeList,
+  GiftCodePurchase,
   InvoiceList,
   InvoiceListItem,
   MemberPlanItem,
@@ -155,10 +157,14 @@ const globalStyles = (
       html,
       body {
         scroll-padding-top: ${theme.spacing(7)};
-        font-family: ${(theme.typography as TypographyVariantsOptions)
-          .allVariants?.fontFamily};
-        font-weight: ${(theme.typography as TypographyVariantsOptions)
-          .allVariants?.fontWeight};
+        font-family: ${
+          (theme.typography as TypographyVariantsOptions).allVariants
+            ?.fontFamily
+        };
+        font-weight: ${
+          (theme.typography as TypographyVariantsOptions).allVariants
+            ?.fontWeight
+        };
         hyphens: auto;
         word-break: break-word;
 
@@ -254,6 +260,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         TransactionFee={TransactionFee}
         Subscribe={Subscribe}
         Upgrade={Upgrade}
+        GiftCodePurchase={GiftCodePurchase}
+        GiftCodeList={GiftCodeList}
         ContentWrapper={ContentWrapperStyled}
         Paywall={Paywall}
         Tag={Tag}

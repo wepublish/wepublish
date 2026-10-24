@@ -1,4 +1,5 @@
 import {
+  BuilderGiftCodePurchaseProps,
   BuilderSubscribeProps,
   BuilderUpgradeProps,
 } from './membership.interface';
@@ -14,4 +15,10 @@ export const Upgrade = (props: BuilderUpgradeProps) => {
   const { Upgrade } = useWebsiteBuilder();
 
   return <Upgrade {...props} />;
+};
+
+export const GiftCodePurchase = (props: BuilderGiftCodePurchaseProps) => {
+  const { GiftCodePurchase } = useWebsiteBuilder();
+
+  return <GiftCodePurchase {...props} />;
 };

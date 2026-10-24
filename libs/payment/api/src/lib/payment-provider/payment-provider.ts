@@ -19,6 +19,10 @@ import { sub } from 'date-fns';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SESSION_CACHE_NAMESPACE } from '@wepublish/authentication/api';
 import { SecretCrypto } from '@wepublish/settings/api';
+import {
+  isSellableInvoice,
+  settleSellableInvoice,
+} from '../sellable/sellable-invoice';
 
 export type InvoiceWithItems = Invoice & {
   items: InvoiceItem[];
@@ -107,6 +111,7 @@ export type WebhookResponse = {
 export interface PaymentProvider {
   id: string;
   remoteManagedSubscription: boolean;
+  readonly supportsStandaloneInvoices: boolean;
 
   incomingRequestHandler: NextHandleFunction;
 
@@ -149,6 +154,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   readonly prisma: PrismaClient;
   readonly kv: KvTtlCacheService;
   readonly remoteManagedSubscription: boolean = false;
+  readonly supportsStandaloneInvoices: boolean = false;
 
   readonly incomingRequestHandler: NextHandleFunction;
 
@@ -274,6 +280,15 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     const invoice = await this.prisma.invoice.findUnique({
       where: { id: payment.invoiceID },
     });
+
+    if (
+      invoice &&
+      !invoice.subscriptionID &&
+      (await isSellableInvoice(this.prisma, invoice))
+    ) {
+      await settleSellableInvoice(this.prisma, invoice.id, intentState.state);
+      return updatedPayment;
+    }
 
     if (!invoice || !invoice.subscriptionID) {
       throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`);

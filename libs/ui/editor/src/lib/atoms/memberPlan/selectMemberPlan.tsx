@@ -13,7 +13,7 @@ import {
   MemberPlanSort,
   SortOrder,
 } from '@wepublish/editor/api';
-import { useCallback, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { humanizeError } from '../../humanizeError';
 import { Pagination } from '../../listView/pagination';
@@ -31,6 +31,9 @@ interface SelectMemberPlanProps {
   className?: string;
   disabled?: boolean;
   name?: string;
+  label?: ReactNode;
+  helperText?: ReactNode;
+  error?: boolean;
   defaultMemberPlan?: Pick<FullMemberPlanFragment, 'id' | 'name'> | null;
   selectedMemberPlan?: string | null;
   setSelectedMemberPlan(memberPlanId: string | null): void;
@@ -40,6 +43,9 @@ export function SelectMemberPlan({
   className,
   disabled,
   name,
+  label,
+  helperText,
+  error,
   defaultMemberPlan,
   selectedMemberPlan,
   setSelectedMemberPlan,
@@ -128,6 +134,9 @@ export function SelectMemberPlan({
         <TextField
           {...params}
           name={name}
+          label={label}
+          helperText={helperText}
+          error={error}
         />
       )}
       fullWidth

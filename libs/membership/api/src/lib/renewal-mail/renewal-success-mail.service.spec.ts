@@ -5,6 +5,7 @@ import {
   SubscriptionEvent,
 } from '@prisma/client';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
+import { InvoicePaidNotifier } from '@wepublish/payment/api';
 import { ActionMailNoMailReason } from '../action-mail/action-mail-reason';
 import { RenewalSuccessMailService } from './renewal-success-mail.service';
 
@@ -37,6 +38,7 @@ const createInvoice = (overrides: Record<string, unknown> = {}) => ({
   canceledAt: null,
   renewalSuccessMailSentAt: null,
   suppressRenewalSuccessMail: false,
+  userID: null,
   items: [{ id: 'item-1', name: 'Membership', amount: 200, quantity: 1 }],
   subscriptionPeriods: [
     {
@@ -106,12 +108,14 @@ async function setup(options: SetupOptions = {}) {
   };
 
   const mailContext = { sendMail: vi.fn().mockResolvedValue(undefined) };
+  const notifier = { register: vi.fn() };
 
   const module: TestingModule = await Test.createTestingModule({
     providers: [
       RenewalSuccessMailService,
       { provide: PrismaClient, useValue: prisma },
       { provide: MailContext, useValue: mailContext },
+      { provide: InvoicePaidNotifier, useValue: notifier },
     ],
   }).compile();
 
@@ -119,10 +123,19 @@ async function setup(options: SetupOptions = {}) {
     service: module.get<RenewalSuccessMailService>(RenewalSuccessMailService),
     prisma,
     mailContext,
+    notifier,
   };
 }
 
 describe('RenewalSuccessMailService', () => {
+  it('registers itself with the invoice paid notifier on module init', async () => {
+    const { service, notifier } = await setup();
+
+    service.onModuleInit();
+
+    expect(notifier.register).toHaveBeenCalledWith(service);
+  });
+
   it('sends the renewal success mail for a renewal', async () => {
     const { service, prisma, mailContext } = await setup();
 

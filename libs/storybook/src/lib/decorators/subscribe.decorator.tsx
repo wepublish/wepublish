@@ -19,6 +19,7 @@ type SubscribeDecoratorProps = Partial<
     | 'challenge'
     | 'redirectPages'
     | 'stripeClientSecret'
+    | 'purchaseGiftCode'
   > & {
     resubscribeResult: MockedResult<ResubscribeMutation>;
     subscribeResult: MockedResult<SubscribeMutation>;
@@ -39,6 +40,7 @@ export const WithSubscribeBlockDecorators =
     subscribeInfoResult = { data: undefined },
     redirectPages,
     stripeClientSecret,
+    purchaseGiftCode,
     challenge = { data: undefined, loading: true },
     userInvoices = { data: undefined, loading: true },
     userSubscriptions = { data: undefined, loading: true },
@@ -61,6 +63,14 @@ export const WithSubscribeBlockDecorators =
 
       return upgradeResult || {};
     };
+
+    const purchase =
+      purchaseGiftCode ??
+      (async (...args: any[]): Promise<any> => {
+        action('purchaseGiftCode')(args);
+
+        return { data: undefined };
+      });
 
     const register = async (...args: any[]): Promise<any> => {
       action('register')(args);
@@ -85,6 +95,7 @@ export const WithSubscribeBlockDecorators =
         value={{
           subscribe,
           upgrade,
+          purchaseGiftCode: purchase,
           resubscribe: [resubscribe, resubscribeResult as any],
           register: [register, registerResult as any],
           upgradeInfo: [fetchUpgradeInfo, upgradeInfoResult as any],

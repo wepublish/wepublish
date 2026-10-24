@@ -1393,6 +1393,108 @@ type FullPoll {
   question: String
 }
 
+type GiftCode implements HasMemberPlanLc {
+  amount: Int!
+
+  """Only visible to admins."""
+  buyer: SensitiveDataUser
+  buyerId: String
+  canceledAt: DateTime
+  cancellationReason: GiftCodeCancellationReason
+
+  """Only visible to admins and to the buyer of an issued, uncanceled code."""
+  code: String
+  createdAt: DateTime!
+  currency: Currency
+  expiresAt: DateTime
+  id: String!
+  invoiceId: String
+  issuedAt: DateTime
+  memberPlan: MemberPlan!
+  memberPlanId: String!
+  message: String
+  offer: GiftCodeOffer!
+  offerId: String!
+
+  """Whether the invoice of the purchase is paid."""
+  paid: Boolean!
+  periodicity: PaymentPeriodicity!
+  recipientName: String!
+  redeemedAt: DateTime
+  redemptionWindowMonths: Int
+  status: GiftCodeStatus!
+}
+
+enum GiftCodeCancellationReason {
+  chargeback
+  invoiceCanceled
+  manual
+}
+
+input GiftCodeFilter {
+  buyerId: String
+  createdFrom: DateTime
+  createdTo: DateTime
+  memberPlanId: String
+  offerId: String
+  search: String
+  status: GiftCodeStatus
+}
+
+type GiftCodeOffer implements HasImage & HasMemberPlanLc {
+  active: Boolean!
+  allowDiscountCodes: Boolean!
+  createdAt: DateTime!
+  description: RichText
+  id: String!
+  image: Image
+  imageID: String
+  issueBeforePayment: Boolean!
+  memberPlan: MemberPlan!
+  memberPlanId: String!
+  modifiedAt: DateTime!
+  name: String!
+
+  """The payment methods configured on this offer."""
+  paymentMethodIds: [String!]!
+
+  """The payment methods a buyer can use for this offer."""
+  paymentMethods: [PaymentMethod!]!
+  periodicity: PaymentPeriodicity!
+  price: GiftCodePrice!
+  redemptionWindowMonths: Int
+}
+
+input GiftCodeOfferFilter {
+  active: Boolean
+  memberPlanId: String
+  name: String
+}
+
+enum GiftCodeOfferSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
+type GiftCodePrice {
+  amount: Int!
+  currency: Currency!
+}
+
+enum GiftCodeSort {
+  CreatedAt
+  IssuedAt
+}
+
+enum GiftCodeStatus {
+  canceled
+  expired
+  issued
+  ordered
+  redeemed
+}
+
 type Goodie implements HasImage {
   active: Boolean!
   availableStock: Int
@@ -1778,6 +1880,7 @@ type Invoice implements HasOptionalSubscription {
   subscription: PublicSubscription
   subscriptionID: String
   total: Int!
+  userID: String
 }
 
 type InvoiceConnection {
@@ -1805,6 +1908,7 @@ type InvoiceItem {
   modifiedAt: DateTime!
   name: String!
   quantity: Int!
+  sellableKind: SellableKind
   total: Int!
 }
 
@@ -2739,6 +2843,9 @@ type Mutation {
   """Hides the campaign from the default list. Campaigns are never deleted."""
   archiveNewsletterCampaign(id: String!): NewsletterCampaign!
 
+  """Cancels a gift code. Refunds of paid codes happen outside We.Publish."""
+  cancelGiftCode(id: String!): GiftCode!
+
   """
   Stop a running send job. Unsent recipients stay open and can be continued.
   """
@@ -2831,6 +2938,9 @@ type Mutation {
   Generates a short-lived JWT token for authenticating with an external app.
   """
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
+
+  """Creates a gift code offer."""
+  createGiftCodeOffer(active: Boolean!, allowDiscountCodes: Boolean, description: RichText, imageID: String, issueBeforePayment: Boolean!, memberPlanId: String!, name: String!, paymentMethodIds: [String!]!, periodicity: PaymentPeriodicity!, redemptionWindowMonths: Int): GiftCodeOffer!
 
   """Creates a new goodie."""
   createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
@@ -3004,6 +3114,9 @@ type Mutation {
   """Deletes an external app."""
   deleteExternalApp(id: String!): ExternalApp!
 
+  """Deletes a gift code offer that has not sold any codes."""
+  deleteGiftCodeOffer(id: String!): GiftCodeOffer!
+
   """Deletes an existing goodie."""
   deleteGoodie(id: String!): Goodie!
 
@@ -3168,12 +3281,18 @@ type Mutation {
   """
   markNotificationRead(itemId: String!, source: NotificationSource!): NotificationRead!
 
+  """Starts a new payment for an unpaid gift code."""
+  payGiftCode(failureURL: String, id: String!, paymentMethodId: String, paymentMethodSlug: Slug, successURL: String): Payment!
+
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
   publishNewsletterCampaign(id: String!): NewsletterPublishResult!
 
   """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
+
+  """Buys a gift code and starts its payment."""
+  purchaseGiftCode(discountCode: String, failureURL: String, message: String, offerId: String!, paymentMethodId: String, paymentMethodSlug: Slug, recipientName: String!, successURL: String): Payment!
 
   """
   This mutation allows to rate a comment. Supports logged in and anonymous
@@ -3355,6 +3474,9 @@ type Mutation {
     target: ExternalAppsTarget
     url: String
   ): ExternalApp!
+
+  """Updates a gift code offer."""
+  updateGiftCodeOffer(active: Boolean, allowDiscountCodes: Boolean, description: RichText, id: String!, imageID: String, issueBeforePayment: Boolean, memberPlanId: String, name: String, paymentMethodIds: [String!], periodicity: PaymentPeriodicity, redemptionWindowMonths: Int): GiftCodeOffer!
 
   """Updates an existing goodie."""
   updateGoodie(active: Boolean, description: RichText, id: String!, imageID: String, memberPlanIDs: [String!], name: String, stock: Int): Goodie!
@@ -3787,6 +3909,18 @@ type PaginatedEvents {
 
 type PaginatedEventsFromSources {
   nodes: [EventFromSource!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedGiftCodeOffers {
+  nodes: [GiftCodeOffer!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedGiftCodes {
+  nodes: [GiftCode!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4654,6 +4788,54 @@ type Query {
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
 
+  """Returns a gift code."""
+  giftCode(id: String!): GiftCode!
+
+  """Returns a gift code offer."""
+  giftCodeOffer(id: String!): GiftCodeOffer!
+
+  """Returns a list of gift code offers."""
+  giftCodeOffers(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for gift code offers"""
+    filter: GiftCodeOfferFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: GiftCodeOfferSort! = ModifiedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedGiftCodeOffers!
+
+  """Returns a list of gift codes."""
+  giftCodes(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for gift codes"""
+    filter: GiftCodeFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: GiftCodeSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedGiftCodes!
+
   """Returns a goodie by id."""
   goodie(id: String!): Goodie!
 
@@ -4783,6 +4965,9 @@ type Query {
 
   """Returns a paginated list of memberplans based on the filters given."""
   memberPlans(cursorId: String, filter: MemberPlanFilter, order: SortOrder = Ascending, skip: Int = 0, sort: MemberPlanSort = ModifiedAt, take: Int = 10): PaginatedMemberPlans!
+
+  """Returns the gift codes the current user bought."""
+  myGiftCodes: [GiftCode!]!
 
   """Returns a navigation by id."""
   navigation(id: String!): Navigation!
@@ -5083,6 +5268,10 @@ input RichTextBlockInput {
   blockStyleName: String
   disabled: Boolean
   richText: RichText
+}
+
+enum SellableKind {
+  giftCode
 }
 
 input SendTestMailTemplateInput {
@@ -5481,6 +5670,8 @@ type SubscribeBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]!
+  giftCodeOfferIds: [String!]!
+  giftCodeOffers: [GiftCodeOffer!]!
   goodieMinValue: Int
   goodieMinValueAppliesToUpgrade: Boolean!
   hideRepeatGoodieOnUpgrade: Boolean!
@@ -5507,6 +5698,7 @@ input SubscribeBlockInput {
   blockStyleName: String
   disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  giftCodeOfferIds: [String!]! = []
   goodieMinValue: Int
   goodieMinValueAppliesToUpgrade: Boolean! = false
   hideRepeatGoodieOnUpgrade: Boolean! = false

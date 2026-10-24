@@ -41,6 +41,8 @@ const escapeHtml = (value: string) =>
  * No money moves: anyone reaching the checkout page can mark a payment paid.
  */
 export class SimulatedPaymentProvider extends BasePaymentProvider {
+  override readonly supportsStandaloneInvoices = true;
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }

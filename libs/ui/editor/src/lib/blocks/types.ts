@@ -114,6 +114,7 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   goodieMinValue?: number | null;
   goodieMinValueAppliesToUpgrade: boolean;
   hideRepeatGoodieOnUpgrade: boolean;
+  giftCodeOfferIds: string[];
 }
 
 export interface MailchimpFormInterestOptionValue {
@@ -368,10 +369,7 @@ export interface CustomTeaserLink extends BaseTeaser {
 }
 
 export type TeaserLink =
-  | ArticleTeaserLink
-  | PageTeaserLink
-  | CustomTeaserLink
-  | EventTeaserLink;
+  ArticleTeaserLink | PageTeaserLink | CustomTeaserLink | EventTeaserLink;
 
 export interface BaseTeaser {
   image?: FullImageFragment | null;
@@ -633,6 +631,7 @@ export function mapBlockValueToBlockInput(
           goodieMinValueAppliesToUpgrade:
             block.value.goodieMinValueAppliesToUpgrade,
           hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
+          giftCodeOfferIds: block.value.giftCodeOfferIds ?? [],
         },
       };
 
@@ -1330,6 +1329,7 @@ export function blockForQueryBlock(
           goodieMinValueAppliesToUpgrade:
             block.goodieMinValueAppliesToUpgrade ?? false,
           hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
+          giftCodeOfferIds: block.giftCodeOfferIds ?? [],
           memberPlanIds: block.memberPlanIds ?? [],
           periodicityDisplay: block.periodicityDisplay,
           memberPlanRenderSettings: block.memberPlanRenderSettings,
@@ -1406,9 +1406,7 @@ export function blockForQueryBlock(
           teaserType: block.teaserType ?? TeaserType.Article,
           teasers: block.teasers.map((rawTeaser, index) => {
             const teaser = rawTeaser as
-              | FullTeaserFragmentWithTypename
-              | null
-              | undefined;
+              FullTeaserFragmentWithTypename | null | undefined;
 
             return [
               `${index}`,

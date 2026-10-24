@@ -4,6 +4,7 @@ import { css } from '@mui/material';
 import { useApolloClient } from '@apollo/client/react';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
+  GiftCodeListContainer,
   InvoiceListContainer,
   InvoiceListItemWrapper,
   SubscriptionListContainer,
@@ -144,6 +145,10 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
 
       {confirmError && <Alert severity="error">{confirmError.message}</Alert>}
 
+      {router.query.giftCodePurchase === 'success' && (
+        <Alert severity="success">{t('giftCode.purchase.success')}</Alert>
+      )}
+
       <SubscriptionsWrapper className={className}>
         {hasUnpaidInvoices && (
           <SubscriptionListWrapper>
@@ -221,6 +226,8 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
               </Link>
             </DeactivatedSubscriptions>
           )}
+
+          <GiftCodeListContainer />
         </SubscriptionListWrapper>
       </SubscriptionsWrapper>
 

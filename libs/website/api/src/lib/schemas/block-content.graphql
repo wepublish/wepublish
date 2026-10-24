@@ -146,6 +146,10 @@ fragment FullSubscribeBlock on SubscribeBlock {
   goodieMinValue
   goodieMinValueAppliesToUpgrade
   hideRepeatGoodieOnUpgrade
+  giftCodeOfferIds
+  giftCodeOffers {
+    ...FullGiftCodeOffer
+  }
 }
 
 fragment FullMailchimpFormBlock on MailchimpFormBlock {

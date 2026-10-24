@@ -19,6 +19,11 @@ export * from './lib/subscribe/subscribe-container';
 export * from './lib/upgrade/upgrade';
 export * from './lib/upgrade/upgrade-container';
 
+export * from './lib/gift-code/gift-code-purchase';
+export * from './lib/gift-code/gift-code-purchase-failure';
+export * from './lib/gift-code/gift-code-list';
+export * from './lib/gift-code/gift-code-list-container';
+
 export * from './lib/memberplan-picker/memberplan-picker';
 export * from './lib/memberplan-picker/memberplan-picker-item';
 export * from './lib/memberplan-picker/memberplan-offer-picker';

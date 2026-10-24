@@ -41,6 +41,7 @@ import {
   CanDeleteDocument,
   CanDeleteEvent,
   CanDeleteExternalApp,
+  CanDeleteGiftCodes,
   CanDeleteImage,
   CanDeleteMemberPlan,
   CanDeleteNavigation,
@@ -73,6 +74,8 @@ import {
   CanGetDocument,
   CanGetDocuments,
   CanGetEvent,
+  CanGetGiftCodes,
+  CanUpdateGiftCodes,
   CanGetImage,
   CanGetImages,
   CanGetMailLogs,
@@ -153,6 +156,7 @@ import {
   MdCardGiftcard,
   MdChat,
   MdContentCopy,
+  MdConfirmationNumber,
   MdCountertops,
   MdCreditCard,
   MdDarkMode,
@@ -183,6 +187,7 @@ import {
   MdPieChartOutline,
   MdPower,
   MdQueryStats,
+  MdRedeem,
   MdSell,
   MdSend,
   MdSettings,
@@ -1258,6 +1263,50 @@ export function Base({ children }: BaseProps) {
                   </PermissionControl>
                 </SidebarNavMenu>
               </PermissionControl>
+
+              <FeatureControl feature="gift-codes">
+                <PermissionControl
+                  qualifyingPermissions={[
+                    CanGetGiftCodes.id,
+                    CanUpdateGiftCodes.id,
+                    CanDeleteGiftCodes.id,
+                  ]}
+                >
+                  <SidebarNavMenu
+                    title={t('navbar.gifts')}
+                    icon={<MdRedeem />}
+                    open={openMenus.includes('gifts')}
+                    openIfCurrent={followsRoute}
+                    onToggle={wasOpen => toggleMenu('gifts', wasOpen)}
+                  >
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetGiftCodes.id]}
+                    >
+                      <SidebarNavItem
+                        href="/gift-codes"
+                        icon={<MdConfirmationNumber />}
+                      >
+                        {t('giftCode.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetGiftCodes.id,
+                        CanUpdateGiftCodes.id,
+                        CanDeleteGiftCodes.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/gift-codes/offers"
+                        icon={<MdCardGiftcard />}
+                      >
+                        {t('giftCodeOffer.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </SidebarNavMenu>
+                </PermissionControl>
+              </FeatureControl>
 
               <PermissionControl
                 qualifyingPermissions={[

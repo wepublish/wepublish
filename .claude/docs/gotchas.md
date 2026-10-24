@@ -510,10 +510,7 @@ and [slot-teasers-loader.ts](../../libs/block-content/api/src/lib/teaser/slot-te
 
 Without it the class or token is still `undefined` when the decorator runs,
 and the API dies at boot: `Nest can't resolve dependencies of the
-SlotTeasersLoader (EventService, ?, BlockTemplateDataloaderService)`. Whether
-it dies depends on module load order: until 2026-10-07 the `ActionModule`
-happened to import `ArticleModule` early enough to hide two missing
-`forwardRef`s; deleting that module exposed both.
+SlotTeasersLoader (EventService, ?, BlockTemplateDataloaderService)`.
 
 **Load-bearing:** the `forwardRef` wrappers. Removing or reordering a module in
 `app.module.ts` can make a cycle that "worked" fail at the next start.
@@ -522,6 +519,10 @@ Guarded for `SlotTeasersLoader` only: `slot-teasers-loader.spec.ts` starts with
 `import './article.service';`, which enters the cycle from the article side and
 reproduces the boot error in a unit test. A new injection site needs the same
 trick or nothing catches it before `nx serve api-example`.
+
+`gift-code` is in the same loop: it takes `MemberPlanModule` and
+`MemberPlanDataloader` through `forwardRef`, and specs reading its module
+metadata import it from the barrel.
 
 ---
 
