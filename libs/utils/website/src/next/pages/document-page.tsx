@@ -11,9 +11,9 @@ import {
   documentGetInitialProps as muiDocumentGetInitialProps,
   DocumentHeadTags as MuiDocumentHeadTags,
 } from '@mui/material-nextjs/v15-pagesRouter';
-import { getApiUrl } from '../api-url';
-import { googleFontsUrl } from '../google-fonts';
-import '../website-globals';
+import { getApiUrl } from '../../lib/api-url';
+import { googleFontsUrl } from '../../lib/google-fonts';
+import '../../lib/website-globals';
 
 export type DocumentProps = DocumentHeadTagsProps & {
   websiteSettings: WebsiteSettingsFragment | undefined;

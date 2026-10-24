@@ -7,7 +7,13 @@ const { join } = require('path');
  **/
 const nextConfig = {
   output: 'standalone',
-  cacheHandler: join(__dirname, 'page-cache', 'page-cache-handler.js'),
+  cacheHandler: join(
+    __dirname,
+    '..',
+    'lib',
+    'page-cache',
+    'page-cache-handler.js'
+  ),
   poweredByHeader: false,
   reactStrictMode: true,
   compiler: {
