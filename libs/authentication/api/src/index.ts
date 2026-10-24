@@ -5,6 +5,8 @@ export * from './lib/authentication.module';
 export * from './lib/optional-authentication.guard';
 export * from './lib/authentication.service';
 export * from './lib/current-user.decorator';
+export * from './lib/require-user-session';
+export * from './lib/acting-user';
 export * from './lib/request-fingerprint.decorator';
 export * from './lib/public.decorator';
 export * from './lib/public.guard';

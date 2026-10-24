@@ -36,6 +36,7 @@ export const SHARED_NAMESPACES = assertSharedNamespaces([
   'content:images',
   'content:paywalls',
   'content:polls',
+  'content:events',
   'tracking-pixels',
 ] as const);
 

@@ -109,7 +109,6 @@ export const GanzGrazEventListItem = ({
   url,
   description,
   name,
-  lead,
   image,
   startsAt,
   endsAt,
@@ -118,14 +117,14 @@ export const GanzGrazEventListItem = ({
   tags = [],
 }: BuilderEventListItemProps) => {
   const {
-    elements: { H4, Link, Image, Paragraph },
+    elements: { H4, Link, Image },
     blocks: { RichText },
     date,
   } = useWebsiteBuilder();
 
   return (
     <Link
-      href={url}
+      href={url ?? undefined}
       css={eventListItemStyles}
     >
       <EventListItemWrapper className={className}>
@@ -136,17 +135,20 @@ export const GanzGrazEventListItem = ({
 
         <EventListItemContent>
           <EventListItemMeta>
-            <EventListItemDate>
-              <CiCalendar />
-              <time
-                suppressHydrationWarning
-                dateTime={startsAt}
-              >
-                {date.format(new Date(startsAt), false)}
-              </time>
-            </EventListItemDate>
+            {startsAt && (
+              <EventListItemDate>
+                <CiCalendar />
+                <time
+                  suppressHydrationWarning
+                  dateTime={startsAt}
+                >
+                  {date.format(new Date(startsAt), false)}
+                </time>
+              </EventListItemDate>
+            )}
 
-            {endsAt &&
+            {startsAt &&
+              endsAt &&
               new Date(endsAt).toDateString() !==
                 new Date(startsAt).toDateString() && (
                 <>
@@ -180,10 +182,8 @@ export const GanzGrazEventListItem = ({
             </EventLocationWrapper>
           </EventListItemMeta>
 
-          <H4 component="h1">{name}</H4>
-          {lead ?
-            <Paragraph>{lead}</Paragraph>
-          : <RichText richText={description} />}
+          {name && <H4 component="h1">{name}</H4>}
+          <RichText richText={description} />
         </EventListItemContent>
       </EventListItemWrapper>
     </Link>

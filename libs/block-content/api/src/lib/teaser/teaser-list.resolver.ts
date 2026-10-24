@@ -28,6 +28,7 @@ import { skipAnswerCache } from '@wepublish/kv-ttl-cache/api';
 @Resolver(() => TeaserListBlock)
 export class TeaserListBlockResolver {
   constructor(
+    @Inject(forwardRef(() => EventService))
     private eventService: EventService,
     @Inject(forwardRef(() => ArticleService))
     private articleService: ArticleService,
@@ -112,9 +113,9 @@ export class TeaserListBlockResolver {
     }
 
     if (teaserType === TeaserType.Event) {
-      const events = await this.eventService.getEvents({
+      const events = await this.eventService.getPublicEvents({
         filter: {
-          tags: filter.tags,
+          tagIds: filter.tags,
         },
         sort:
           sort === TeaserListBlockSort.UpdatedAt ?

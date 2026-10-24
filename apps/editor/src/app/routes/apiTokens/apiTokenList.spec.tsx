@@ -2,6 +2,11 @@ import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
+  ApiTokenListDocument,
+  ApiTokenStatus,
+  UserListDocument,
+} from '@wepublish/editor/api';
+import {
   CanCreateApiToken,
   CanGetAllApiTokens,
   CanGetApiTokens,
@@ -10,8 +15,6 @@ import {
 import { AuthContext } from '@wepublish/ui/editor';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import type { Mock } from 'vitest';
-
-import { ApiTokenStatus, UserListDocument } from '@wepublish/editor/api';
 
 import { ApiTokenGenerateRoute } from './apiTokenGenerateRoute';
 import { ApiTokenList } from './apiTokenList';
@@ -53,6 +56,8 @@ const apiToken = {
   lastUsedAt: null,
   createdById: 'user-1',
   createdBy: { id: 'user-1', name: 'Ada Lovelace' },
+  organizationId: null as string | null,
+  organization: null as { id: string; name: string } | null,
 };
 
 const users = [
@@ -76,6 +81,10 @@ const listing = (...nodes: (typeof apiToken)[]) => {
       return { data: { users: { nodes: users } }, loading: false };
     }
 
+    if (document !== ApiTokenListDocument) {
+      return { data: undefined, loading: false };
+    }
+
     return {
       data: {
         apiTokens: {
@@ -91,8 +100,9 @@ const listing = (...nodes: (typeof apiToken)[]) => {
 };
 
 const tokenVariables = () =>
-  mockedUseQuery.mock.calls.findLast(call => call[0] !== UserListDocument)?.[1]
-    ?.variables;
+  mockedUseQuery.mock.calls.findLast(
+    call => call[0] === ApiTokenListDocument
+  )?.[1]?.variables;
 
 const REQUIRED = [
   CanCreateApiToken.id,
@@ -267,6 +277,28 @@ describe('ApiTokenList', () => {
     fireEvent.click(await screen.findByText(/Grace/));
 
     await waitFor(() => expect(tokenVariables().createdById).toBe('user-2'));
+  });
+
+  it('shows the organisation a key is bound to', async () => {
+    listing({
+      ...apiToken,
+      organizationId: 'org-a',
+      organization: { id: 'org-a', name: 'Dampfzentrale' },
+    });
+    renderList();
+
+    expect(await screen.findByText('Dampfzentrale')).toBeTruthy();
+    expect(
+      screen.getByText('apiTokenList.overview.organization')
+    ).toBeInTheDocument();
+  });
+
+  it('calls a key without organisation a platform key', async () => {
+    renderList();
+
+    expect(
+      await screen.findByText('apiTokenList.overview.platformKey')
+    ).toBeTruthy();
   });
 
   it('keeps a revoked key revoked even once it has expired', async () => {

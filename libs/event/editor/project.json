@@ -1,0 +1,24 @@
+{
+  "name": "event-editor",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/event/editor/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/event/editor",
+        "tsConfig": "libs/event/editor/tsconfig.lib.json",
+        "main": "libs/event/editor/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

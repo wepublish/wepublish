@@ -99,6 +99,30 @@ describe('ActivityFeed', () => {
     );
   });
 
+  it('shows a new event linking to its edit page', () => {
+    mockedUseQuery.mockReturnValue({
+      data: {
+        actions: [
+          {
+            __typename: 'EventCreatedAction',
+            date: new Date('2026-10-10T08:00:00Z').toISOString(),
+            event: { id: 'event-1', name: null, location: 'Dampfzentrale' },
+          },
+        ],
+      },
+      error: undefined,
+    });
+
+    renderFeed();
+
+    const [tile] = within(screen.getByRole('list')).getAllByRole('listitem');
+
+    expect(within(tile).getByText('Dampfzentrale')).toBeTruthy();
+    expect(within(tile).getByRole('link').getAttribute('href')).toBe(
+      '/events/edit/event-1'
+    );
+  });
+
   it('shows who commented and the comment, with the full text in a tooltip', async () => {
     renderFeed();
 

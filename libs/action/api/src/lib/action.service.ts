@@ -10,13 +10,15 @@ import {
   User,
   Event,
 } from '@prisma/client';
+import { AuthSession } from '@wepublish/authentication/api';
+import { editorEventsWhere } from '@wepublish/event/api';
 import { ActionType } from './action.model';
 
 @Injectable()
 export class ActionService {
   constructor(readonly prisma: PrismaClient) {}
 
-  async getActions(types?: ActionType[] | null) {
+  async getActions(types?: ActionType[] | null, session?: AuthSession | null) {
     const articles = () =>
       this.prisma.article
         .findMany({
@@ -120,7 +122,11 @@ export class ActionService {
 
     const events = () =>
       this.prisma.event
-        .findMany({ take: 50, orderBy: { createdAt: 'desc' } })
+        .findMany({
+          where: editorEventsWhere(session),
+          take: 50,
+          orderBy: { createdAt: 'desc' },
+        })
         .then(val =>
           val.map((event: Event) => {
             return {

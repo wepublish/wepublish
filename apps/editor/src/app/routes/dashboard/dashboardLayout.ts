@@ -3,7 +3,8 @@ export type DashboardCardId =
   | 'network'
   | 'activity'
   | 'audience'
-  | 'externalApps';
+  | 'externalApps'
+  | 'reviewQueue';
 
 export type DashboardCardDefinition = {
   id: DashboardCardId;
@@ -17,6 +18,7 @@ export const DASHBOARD_CARDS: DashboardCardDefinition[] = [
   { id: 'activity', canSpanFullWidth: true },
   { id: 'audience' },
   { id: 'externalApps' },
+  { id: 'reviewQueue' },
 ];
 
 export type DashboardLayout = {

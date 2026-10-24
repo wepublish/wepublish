@@ -158,6 +158,19 @@ describe('drafts read by externals', () => {
     }
   );
 
+  it('answers again after a draft-only event save when the answer shows a draft', async () => {
+    const api = await createApi();
+    const source = '{ article(id: "1") { id draft { title } } }';
+
+    await api.query(source);
+    await new Promise(resolve => setTimeout(resolve, 2));
+    await new PublicContentCacheInvalidator(api.kv).invalidateDraft('events');
+    await api.query(source);
+    await api.stop();
+
+    expect(api.resolved()).toBe(2);
+  });
+
   it('keeps answers without drafts across draft-only saves', async () => {
     const api = await createApi();
     const source = '{ article(id: "1") { id title } }';

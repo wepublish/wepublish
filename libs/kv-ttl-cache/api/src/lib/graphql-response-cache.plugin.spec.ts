@@ -3,6 +3,7 @@ import { createCache } from 'cache-manager';
 import { KvTtlCacheService } from './kv-ttl-cache.service';
 import { FakeDragonfly } from './kv-ttl-cache.testing';
 import {
+  CACHEABLE_QUERIES,
   GraphqlResponseCachePlugin,
   PUBLIC_CONTENT_NAMESPACE,
   PublicContentCacheInvalidator,
@@ -23,6 +24,7 @@ const typeDefs = `
     navigations: [String!]!
     peerProfile: String!
     commentsForItem(itemId: ID!): [String!]!
+    agenda: [String!]!
   }
   type Mutation { tags: String! }
 `;
@@ -48,6 +50,7 @@ const createApi = async (dragonfly: FakeDragonfly) => {
     navigations: 0,
     peerProfile: 0,
     commentsForItem: 0,
+    agenda: 0,
   };
   let failNext = false;
   const kv = new KvTtlCacheService(createCache(), dragonfly);
@@ -78,6 +81,7 @@ const createApi = async (dragonfly: FakeDragonfly) => {
         navigations: () => [`main ${++calls.navigations}`],
         peerProfile: () => `profile ${++calls.peerProfile}`,
         commentsForItem: () => [`comment ${++calls.commentsForItem}`],
+        agenda: () => [`occurrence ${++calls.agenda}`],
       },
       Mutation: {
         tags: () => `tags ${++calls.tags}`,
@@ -377,6 +381,30 @@ describe('GraphqlResponseCachePlugin', () => {
     }
   );
 
+  it.each([
+    'agenda',
+    'place',
+    'places',
+    'eventRegions',
+    'eventAudiences',
+    'eventAffiliations',
+  ])('lets anonymous visitors read %s from the cache', query => {
+    expect(CACHEABLE_QUERIES.has(query)).toBe(true);
+  });
+
+  it('answers the agenda from the cache until events changed', async () => {
+    const api = await start();
+
+    await api.query('{ agenda }');
+    await api.query('{ agenda }');
+    expect(api.calls.agenda).toBe(1);
+
+    await new PublicContentCacheInvalidator(api.kv).invalidate('events');
+    await api.query('{ agenda }');
+
+    expect(api.calls.agenda).toBe(2);
+  });
+
   it('caches comments for anonymous visitors', async () => {
     const api = await start();
 
@@ -421,6 +449,23 @@ describe('PublicContentCacheInvalidator', () => {
     await kv.getOrLoadNs('content:articles', 'a', loader, 60);
 
     expect(loader).toHaveBeenCalledTimes(2);
+  });
+
+  it('clears the cached events', async () => {
+    const { kv, invalidator } = setup();
+    const before = await kv.getNamespaceVersion('content:events');
+    const answersBefore = await kv.getNamespaceVersion(
+      PUBLIC_CONTENT_NAMESPACE
+    );
+
+    await invalidator.invalidate('events');
+
+    await expect(kv.getNamespaceVersion('content:events')).resolves.not.toBe(
+      before
+    );
+    await expect(
+      kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE)
+    ).resolves.not.toBe(answersBefore);
   });
 
   it('retires anonymous answers again once other replicas caught up', async () => {

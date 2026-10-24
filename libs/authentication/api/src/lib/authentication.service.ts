@@ -54,12 +54,22 @@ export class AuthenticationService {
       },
       include: {
         user: {
-          select: unselectPassword,
+          select: {
+            ...unselectPassword,
+            organizationMemberships: {
+              select: {
+                organizationId: true,
+              },
+            },
+          },
         },
       },
+      relationLoadStrategy: 'join',
     });
 
     if (session && session.user) {
+      const { organizationMemberships = [], ...user } = session.user;
+
       return {
         type: AuthSessionType.User,
         id: session.id,
@@ -67,12 +77,15 @@ export class AuthenticationService {
         createdAt: session.createdAt,
         expiresAt: session.expiresAt,
         impersonatedBy: session.impersonatedBy,
-        user: session.user,
+        user,
+        organizationIds: organizationMemberships.map(
+          ({ organizationId }) => organizationId
+        ),
         roles: (
           await this.prisma.userRole.findMany({
             where: {
               id: {
-                in: session.user.roleIDs,
+                in: user.roleIDs,
               },
             },
           })

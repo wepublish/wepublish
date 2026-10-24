@@ -25,6 +25,10 @@ const truncate = truncateFirstParagraph(255);
 export const EventBlock = ({ events, className }: BuilderEventBlockProps) => {
   const { EventListItem } = useWebsiteBuilder();
 
+  if (!events.length) {
+    return null;
+  }
+
   return (
     <EventBlockWrapper className={className}>
       {events.map(event => (

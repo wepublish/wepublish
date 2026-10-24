@@ -10,4 +10,10 @@ describe('Event Block', () => {
       render(<Component />);
     });
   });
+
+  it('renders nothing when no event is left', () => {
+    const { container } = render(<storiesCmp.WithoutEvents />);
+
+    expect(container.querySelector('aside')).toBeNull();
+  });
 });

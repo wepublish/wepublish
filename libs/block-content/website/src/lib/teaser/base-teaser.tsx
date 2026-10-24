@@ -65,7 +65,6 @@ export const selectTeaserLead = (teaser: FullTeaserFragment) => {
     case 'EventTeaser':
       return (
         teaser.lead ||
-        teaser.event?.lead ||
         firstParagraphToPlaintext(
           teaser.event?.description?.content ?? []
         )?.substring(0, 225)

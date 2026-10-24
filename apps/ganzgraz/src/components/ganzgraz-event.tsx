@@ -193,12 +193,14 @@ export const GanzGrazEvent = ({
   }
 
   const event = data.event;
-  const startDate = new Date(event.startsAt);
+  const startDate = event.startsAt ? new Date(event.startsAt) : null;
   const endDate = event.endsAt ? new Date(event.endsAt) : null;
   const isSameDay =
-    !!endDate && startDate.toDateString() === endDate.toDateString();
+    !!startDate &&
+    !!endDate &&
+    startDate.toDateString() === endDate.toDateString();
   const showInlineEndTime = !!endDate && isSameDay;
-  const showSiblingEndTime = !!endDate && !isSameDay;
+  const showSiblingEndTime = !!startDate && !!endDate && !isSameDay;
 
   const endTime = endDate && (
     <EventEndTime>
@@ -222,7 +224,7 @@ export const GanzGrazEvent = ({
       <EventHeader>
         <Title
           css={titleStyle}
-          title={event.name}
+          title={event.name ?? null}
         />
 
         {event.tags && event.tags.length > 0 && (
@@ -236,30 +238,32 @@ export const GanzGrazEvent = ({
           </EventTagWrapper>
         )}
 
-        <EventDateWrapper>
-          <CiCalendar />
+        {startDate && (
+          <EventDateWrapper>
+            <CiCalendar />
 
-          <EventDateRange data-show-dash={showSiblingEndTime}>
-            <EventStartDate>{date.format(startDate, false)}</EventStartDate>
+            <EventDateRange data-show-dash={showSiblingEndTime}>
+              <EventStartDate>{date.format(startDate, false)}</EventStartDate>
 
-            <EventEndDate>
-              {endDate && !isSameDay && date.format(endDate, false)}
-            </EventEndDate>
-          </EventDateRange>
+              <EventEndDate>
+                {endDate && !isSameDay && date.format(endDate, false)}
+              </EventEndDate>
+            </EventDateRange>
 
-          <EventTimeSameDay data-show-dash={showInlineEndTime}>
-            <EventStartTime>
-              {startDate.toLocaleTimeString('de-AT', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </EventStartTime>
+            <EventTimeSameDay data-show-dash={showInlineEndTime}>
+              <EventStartTime>
+                {startDate.toLocaleTimeString('de-AT', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </EventStartTime>
 
-            {showInlineEndTime && endTime}
-          </EventTimeSameDay>
+              {showInlineEndTime && endTime}
+            </EventTimeSameDay>
 
-          {showSiblingEndTime && endTime}
-        </EventDateWrapper>
+            {showSiblingEndTime && endTime}
+          </EventDateWrapper>
+        )}
 
         <EventLocationWrapper>
           <EventLocationIcon />

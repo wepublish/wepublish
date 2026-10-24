@@ -105,3 +105,25 @@ export const WithoutImageWithoutEventImage = {
     },
   },
 };
+
+export const WithoutEventNameAndDate = {
+  args: {
+    alignment: {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 4,
+      __typename: 'FlexAlignment',
+    },
+    teaser: {
+      ...eventTeaser,
+      title: null,
+      event: {
+        ...eventTeaser.event,
+        name: null,
+        startsAt: null,
+        endsAt: null,
+      },
+    },
+  },
+};

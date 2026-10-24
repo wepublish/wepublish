@@ -45,22 +45,29 @@ export class EventScheduleWatcher
       !!date && date > from && date <= until;
 
     try {
-      const events = await this.prisma.event.findMany({
-        where: { OR: [{ startsAt: window }, { endsAt: window }] },
-        select: { startsAt: true, endsAt: true },
-      });
+      const [occurrences, revisions] = await Promise.all([
+        this.prisma.occurrence.findMany({
+          where: { OR: [{ dateFrom: window }, { dateTo: window }] },
+          select: { dateFrom: true, dateTo: true },
+        }),
+        this.prisma.eventRevision.findMany({
+          where: { publishedAt: window },
+          select: { publishedAt: true },
+        }),
+      ]);
 
       this.timers.schedule(
-        events.flatMap(({ startsAt, endsAt }) =>
-          [startsAt, endsAt].filter(inWindow)
-        ),
-        () => this.publicContentCache.invalidate()
+        [
+          ...occurrences.flatMap(({ dateFrom, dateTo }) => [dateFrom, dateTo]),
+          ...revisions.map(({ publishedAt }) => publishedAt),
+        ].filter(inWindow),
+        () => this.publicContentCache.invalidate('events')
       );
 
       this.coveredUntil = until;
     } catch (error) {
       this.logger.error(
-        `Could not look up starting or ending events: ${
+        `Could not look up starting or ending occurrences: ${
           error instanceof Error ? error.message : String(error)
         }`
       );

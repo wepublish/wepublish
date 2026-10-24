@@ -2,9 +2,11 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SessionService } from './session.service';
 import { SessionWithToken } from './session.model';
 import {
+  AuthSession,
+  AuthSessionType,
   CurrentUser,
   Public,
-  UserSession,
+  requireUserSession,
 } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanPreview, CanSendJWTLogin } from '@wepublish/permissions';
@@ -50,8 +52,12 @@ export class SessionResolver {
     description: 'This mutation revokes and deletes the active session.',
   })
   async revokeActiveSession(
-    @CurrentUser() session: UserSession | null
+    @CurrentUser() session: AuthSession | null
   ): Promise<boolean> {
+    if (session?.type !== AuthSessionType.User) {
+      return false;
+    }
+
     return await this.sessionService.revokeSession(session);
   }
 
@@ -103,7 +109,9 @@ export class SessionResolver {
     description:
       'Returns a JWT that is valid for 1min for the current logged in user.',
   })
-  async createJWTForWebsiteLogin(@CurrentUser() user: UserSession) {
-    return this.sessionService.createJWTForWebsiteLogin(user.user.id);
+  async createJWTForWebsiteLogin(@CurrentUser() session: AuthSession) {
+    const { user } = requireUserSession(session);
+
+    return this.sessionService.createJWTForWebsiteLogin(user.id);
   }
 }

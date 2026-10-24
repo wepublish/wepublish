@@ -34,8 +34,8 @@ export const describeActor = (session: AuthSession | undefined): Actor => {
   if (session?.type === AuthSessionType.ApiToken) {
     return {
       actorType: AuditLogActorType.token,
-      userId: null,
-      userEmail: null,
+      userId: session.user?.id ?? null,
+      userEmail: session.user?.email ?? null,
       tokenName: session.name,
       sessionId: session.id,
       impersonatedBy: null,

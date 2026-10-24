@@ -5,6 +5,7 @@ import { SeoBlockContext } from './seoBlockContext';
 export enum SeoContentType {
   Article = 'article',
   Page = 'page',
+  Event = 'event',
 }
 
 export interface SeoPreviewMetadata {
@@ -62,7 +63,7 @@ export const getSeoPreviewData = (
     undefined;
 
   const preview =
-    type === SeoContentType.Article ?
+    type === SeoContentType.Article || type === SeoContentType.Event ?
       {
         title: firstOf(
           metadata.seoTitle,

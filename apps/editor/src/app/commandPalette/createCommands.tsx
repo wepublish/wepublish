@@ -14,6 +14,7 @@ import {
   CanCreateMailTemplates,
   CanCreateMemberPlan,
   CanCreateNavigation,
+  CanCreateOrganization,
   CanCreatePage,
   CanCreatePaymentMethod,
   CanCreatePaywall,
@@ -24,9 +25,11 @@ import {
   CanCreateUser,
   CanCreateUserConsent,
   CanCreateUserRole,
+  CanUpdateOrganization,
 } from '@wepublish/permissions';
 import {
   MdAccountCircle,
+  MdApartment,
   MdApproval,
   MdAutorenew,
   MdBadge,
@@ -47,11 +50,13 @@ import {
   MdPayment,
   MdPersonAddAlt1,
   MdPhoto,
+  MdPlace,
   MdSell,
   MdSignpost,
   MdVpnKey,
 } from 'react-icons/md';
 
+import { EVENT_PERMISSIONS } from '../agendaPermissions';
 import type { CommandDefinition } from './commandDefinition';
 
 export const CREATE_COMMANDS: CommandDefinition[] = [
@@ -119,10 +124,25 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     perform: ({ navigate }) => navigate('/events/create'),
   },
   {
+    id: 'createOrganization',
+    titleKey: 'commandPalette.create.organization',
+    icon: <MdApartment />,
+    permissions: [CanCreateOrganization.id],
+    perform: ({ navigate }) => navigate('/organizations/create'),
+  },
+  {
+    id: 'createVenue',
+    titleKey: 'commandPalette.create.venue',
+    icon: <MdPlace />,
+    permissions: [CanUpdateOrganization.id],
+    perform: ({ navigate }) => navigate('/venues/create'),
+  },
+  {
     id: 'createEventTag',
     titleKey: 'commandPalette.create.eventTag',
     icon: <MdSell />,
     permissions: [CanCreateTag.id],
+    alsoPermissions: EVENT_PERMISSIONS,
     perform: ({ navigate }) => navigate('/events/tags/create'),
   },
   {

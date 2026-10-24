@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
+import { ReviewQueueCard, useReviewQueueAccess } from '@wepublish/event/editor';
 import { ActivityFeed, InfoTooltip } from '@wepublish/ui/editor';
 import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -91,6 +92,8 @@ export function Dashboard() {
   const { t } = useTranslation();
   const [layout, setLayout] = useDashboardLayout();
   const [configOpen, setConfigOpen] = useState(false);
+  const unavailableCards: DashboardCardId[] =
+    useReviewQueueAccess() ? [] : ['reviewQueue'];
 
   const cards: Record<DashboardCardId, ReactNode> = {
     notifications: <DashboardNotifications />,
@@ -185,6 +188,8 @@ export function Dashboard() {
         </CardContent>
       </Card>
     ),
+
+    reviewQueue: <ReviewQueueCard />,
   };
 
   return (
@@ -200,20 +205,23 @@ export function Dashboard() {
       </DashboardToolbar>
 
       <DashboardGrid>
-        {visibleDashboardCards(layout).map(id => (
-          <DashboardCard
-            key={id}
-            data-dashboard-card={id}
-            data-full-width={isDashboardCardFullWidth(layout, id)}
-          >
-            {cards[id]}
-          </DashboardCard>
-        ))}
+        {visibleDashboardCards(layout)
+          .filter(id => !unavailableCards.includes(id))
+          .map(id => (
+            <DashboardCard
+              key={id}
+              data-dashboard-card={id}
+              data-full-width={isDashboardCardFullWidth(layout, id)}
+            >
+              {cards[id]}
+            </DashboardCard>
+          ))}
       </DashboardGrid>
 
       <DashboardConfig
         open={configOpen}
         layout={layout}
+        unavailableCards={unavailableCards}
         onChange={setLayout}
         onClose={() => setConfigOpen(false)}
       />

@@ -281,6 +281,15 @@ function ApiTokenList() {
               ),
               exportValue: row => row.scopes.join(', '),
             },
+            {
+              id: 'organization',
+              label: t('apiTokenList.overview.organization'),
+              width: 200,
+              align: 'left',
+              render: row =>
+                row.organization?.name ??
+                t('apiTokenList.overview.platformKey'),
+            },
             ...(seesEveryKey ?
               [
                 {

@@ -1,9 +1,10 @@
 fragment FullEvent on Event {
   id
+  slug
   name
-  lead
   description
   status
+  scheduleType
   location
   image {
     ...FullImage
@@ -16,8 +17,6 @@ fragment FullEvent on Event {
   createdAt
   modifiedAt
   url
-  externalSourceName
-  externalSourceId
 }
 
 query EventList(
@@ -51,66 +50,271 @@ query EventList(
   }
 }
 
-query Event($id: String!) {
-  event(id: $id) {
-    ...FullEvent
+fragment EditorEventListItem on Event {
+  id
+  name
+  status
+  scheduleType
+  lastDateAt
+  modifiedAt
+  reviewRequestedAt
+  draft {
+    id
+  }
+  pending {
+    id
+    publishedAt
+  }
+  published {
+    id
+    publishedAt
+  }
+  nextOccurrence {
+    id
+    dateFrom
+    dateTo
+  }
+  upcomingOccurrenceCount
+  place {
+    id
+    name
+  }
+  organization {
+    id
+    name
+  }
+  viewerCan {
+    update
+    publish
+    delete
+    duplicate
   }
 }
 
-mutation CreateEvent(
-  $name: String!
-  $lead: String
-  $description: RichText
-  $location: String
-  $startsAt: DateTime!
-  $endsAt: DateTime
-  $imageId: String
-  $tagIds: [String!]
+query EditorEventList(
+  $filter: EventFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: EventSort
 ) {
-  createEvent(
-    name: $name
-    lead: $lead
-    description: $description
-    location: $location
-    startsAt: $startsAt
-    endsAt: $endsAt
-    imageId: $imageId
-    tagIds: $tagIds
-  ) {
-    ...FullEvent
+  events(filter: $filter, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...EditorEventListItem
+    }
+
+    totalCount
   }
 }
 
-mutation UpdateEvent(
-  $id: String!
-  $name: String
-  $lead: String
-  $description: RichText
-  $status: EventStatus
-  $location: String
-  $startsAt: DateTime
-  $endsAt: DateTime
-  $imageId: String
-  $tagIds: [String!]
-) {
-  updateEvent(
-    id: $id
-    name: $name
-    lead: $lead
-    description: $description
-    status: $status
-    location: $location
-    startsAt: $startsAt
-    endsAt: $endsAt
-    imageId: $imageId
-    tagIds: $tagIds
-  ) {
-    ...FullEvent
+query EventReviewQueueCount {
+  events(filter: { reviewRequested: true }, take: 1) {
+    totalCount
+  }
+}
+
+mutation UnpublishEvent($id: String!) {
+  unpublishEvent(id: $id) {
+    ...EditorEventListItem
   }
 }
 
 mutation DeleteEvent($id: String!) {
   deleteEvent(id: $id) {
-    ...FullEvent
+    id
+  }
+}
+
+fragment EditorEventImage on EventImage {
+  imageId
+  caption
+  isMain
+  sortOrder
+  image {
+    ...FullImage
+  }
+}
+
+fragment EditorEventRevision on EventRevision {
+  id
+  name
+  printDescription
+  createdAt
+  publishedAt
+  blocks {
+    ...FullBlock
+  }
+  images {
+    ...EditorEventImage
+  }
+}
+
+fragment EditorEvent on Event {
+  id
+  slug
+  url
+  status
+  scheduleType
+  dateFrom
+  dateTo
+  weekDays
+  openingTime
+  dates {
+    id
+    dateFrom
+    dateTo
+    openingTime
+    sortOrder
+  }
+  rates {
+    id
+    price
+    designation
+    sortOrder
+  }
+  specialRate
+  ticketingUrl
+  showInPrint
+  seoTitle
+  seoDescription
+  socialMediaTitle
+  socialMediaDescription
+  socialMediaImage {
+    ...FullImage
+  }
+  audienceId
+  tags {
+    id
+    tag
+  }
+  place {
+    ...TinyPlace
+  }
+  organization {
+    id
+    name
+  }
+  owner {
+    id
+    firstName
+    name
+  }
+  reviewRequestedAt
+  reviewRequestedBy {
+    id
+    firstName
+    name
+  }
+  createdAt
+  modifiedAt
+  lastDateAt
+  upcomingOccurrenceCount
+  latest {
+    ...EditorEventRevision
+  }
+  draft {
+    id
+  }
+  pending {
+    id
+    publishedAt
+  }
+  published {
+    id
+    publishedAt
+  }
+  viewerCan {
+    update
+    publish
+    delete
+    duplicate
+    requestReview
+    withdrawReview
+    moveOrganization
+    clearOrganization
+    reassignOwner
+  }
+}
+
+query EditorEvent($id: String!) {
+  event(id: $id) {
+    ...EditorEvent
+  }
+}
+
+query EditorEventOccurrences($id: String!, $take: Int, $skip: Int) {
+  agenda(filter: { ids: [$id], upcoming: true }, take: $take, skip: $skip) {
+    nodes {
+      id
+      dateFrom
+      dateTo
+      openingTime
+    }
+
+    totalCount
+  }
+}
+
+mutation CreateEvent($input: EventInput!, $content: EventContentInput!) {
+  createEvent(input: $input, content: $content) {
+    ...EditorEvent
+  }
+}
+
+mutation UpdateEvent($id: String!, $input: UpdateEventInput!) {
+  updateEvent(id: $id, input: $input) {
+    ...EditorEvent
+  }
+}
+
+mutation UpdateEventContent($id: String!, $input: EventContentInput!) {
+  updateEventContent(id: $id, input: $input) {
+    ...EditorEvent
+  }
+}
+
+mutation UpdateEventImageAltText(
+  $id: String!
+  $description: String
+  $focalPointX: Float
+  $focalPointY: Float
+) {
+  updateImage(
+    id: $id
+    description: $description
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
+  ) {
+    ...FullImage
+  }
+}
+
+mutation PublishEvent($id: String!, $publishAt: DateTime) {
+  publishEvent(id: $id, publishAt: $publishAt) {
+    ...EditorEvent
+  }
+}
+
+mutation UnpublishEditorEvent($id: String!) {
+  unpublishEvent(id: $id) {
+    ...EditorEvent
+  }
+}
+
+mutation DuplicateEvent($id: String!) {
+  duplicateEvent(id: $id) {
+    id
+  }
+}
+
+mutation RequestEventReview($id: String!) {
+  requestEventReview(id: $id) {
+    ...EditorEvent
+  }
+}
+
+mutation WithdrawEventReview($id: String!) {
+  withdrawEventReview(id: $id) {
+    ...EditorEvent
   }
 }

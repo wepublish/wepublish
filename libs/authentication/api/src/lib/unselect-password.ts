@@ -24,6 +24,10 @@ export const unselectPassword: Record<
     | 'notificationConfirmations'
     | 'seoChecklistItems'
     | 'apiTokens'
+    | 'organizationMemberships'
+    | 'ownedEvents'
+    | 'reviewRequestedEvents'
+    | 'eventRevisions'
   >,
   boolean
 > = {

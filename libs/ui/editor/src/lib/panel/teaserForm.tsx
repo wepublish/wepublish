@@ -63,7 +63,7 @@ export const originalForTeaser = (teaser: Teaser): OriginalTeaser => {
     case TeaserType.Event:
       return {
         title: teaser.event?.name,
-        lead: teaser.event?.lead || teaser.event?.location,
+        lead: teaser.event?.location,
         image: teaser.event?.image as FullImageFragment | undefined,
       };
 

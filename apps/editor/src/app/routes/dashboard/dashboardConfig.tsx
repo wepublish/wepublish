@@ -48,6 +48,7 @@ export const DASHBOARD_CARD_TITLE_KEYS: Record<DashboardCardId, string> = {
   activity: 'dashboard.activity',
   audience: 'dashboard.audience',
   externalApps: 'dashboard.externalApps',
+  reviewQueue: 'dashboard.reviewQueue',
 };
 
 const CardList = styled.ul`
@@ -179,6 +180,7 @@ function SortableCard({
 export type DashboardConfigProps = {
   open: boolean;
   layout: DashboardLayout;
+  unavailableCards?: DashboardCardId[];
   onChange: (layout: DashboardLayout) => void;
   onClose: () => void;
 };
@@ -186,6 +188,7 @@ export type DashboardConfigProps = {
 export function DashboardConfig({
   open,
   layout,
+  unavailableCards = [],
   onChange,
   onClose,
 }: DashboardConfigProps) {
@@ -206,7 +209,10 @@ export function DashboardConfig({
     }
   };
 
-  const neighbour = (index: number) => layout.cards[index]?.id;
+  const cards = layout.cards.filter(
+    card => !unavailableCards.includes(card.id)
+  );
+  const neighbour = (index: number) => cards[index]?.id;
 
   return (
     <Dialog
@@ -237,11 +243,11 @@ export function DashboardConfig({
           onDragEnd={handleDragEnd}
         >
           <SortableContext
-            items={layout.cards.map(card => card.id)}
+            items={cards.map(card => card.id)}
             strategy={verticalListSortingStrategy}
           >
             <CardList>
-              {layout.cards.map((card, index) => (
+              {cards.map((card, index) => (
                 <SortableCard
                   key={card.id}
                   id={card.id}
@@ -252,7 +258,7 @@ export function DashboardConfig({
                       definition.id === card.id && definition.canSpanFullWidth
                   )}
                   isFirst={index === 0}
-                  isLast={index === layout.cards.length - 1}
+                  isLast={index === cards.length - 1}
                   onVisibleChange={visible =>
                     onChange(setDashboardCardVisible(layout, card.id, visible))
                   }

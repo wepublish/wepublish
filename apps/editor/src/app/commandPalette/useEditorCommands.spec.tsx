@@ -1,3 +1,8 @@
+import {
+  CanCreateEvent,
+  CanGetTags,
+  EditorPermissions,
+} from '@wepublish/permissions';
 import { AuthContext } from '@wepublish/ui/editor';
 import { renderHook } from '@testing-library/react';
 import { ReactNode } from 'react';
@@ -48,6 +53,40 @@ describe('useEditorCommands', () => {
     expect(ids).toContain('createArticle');
     expect(ids).not.toContain('users');
     expect(ids).not.toContain('createUser');
+  });
+
+  it('offers an editor-role user nothing from the agenda, but keeps their tags', () => {
+    const ids = idsFrom({
+      email: 'editor@wepublish.ch',
+      sessionToken: 'token',
+      sessionRoles: [role(EditorPermissions.map(({ id }) => id))],
+    });
+
+    expect(
+      [
+        'events',
+        'organizations',
+        'venues',
+        'eventTags',
+        'createEvent',
+        'createOrganization',
+        'createVenue',
+        'createEventTag',
+      ].filter(id => ids.includes(id))
+    ).toEqual([]);
+    expect(ids).toEqual(
+      expect.arrayContaining(['articleTags', 'commentTags', 'createCommentTag'])
+    );
+  });
+
+  it('offers event tags to someone who may file events and read tags', () => {
+    const ids = idsFrom({
+      email: 'organiser@wepublish.ch',
+      sessionToken: 'token',
+      sessionRoles: [role([CanCreateEvent.id, CanGetTags.id])],
+    });
+
+    expect(ids).toContain('eventTags');
   });
 
   it('keeps the pages that need no permission at all', () => {

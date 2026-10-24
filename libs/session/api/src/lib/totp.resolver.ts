@@ -3,8 +3,9 @@ import { TotpService } from './totp.service';
 import { TotpSetup } from './totp.model';
 import {
   Authenticated,
+  AuthSession,
   CurrentUser,
-  UserSession,
+  requireUserSession,
 } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanResetUserTotp } from '@wepublish/permissions';
@@ -26,8 +27,10 @@ export class TotpResolver {
         'Set to true when called from a website to use the site name instead of "We.Publish CMS" in the authenticator app.',
     })
     website: boolean | undefined,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const { user } = requireUserSession(session);
+
     return this.totpService.setupTotp(user.id, user.email, website ?? false);
   }
 
@@ -38,8 +41,10 @@ export class TotpResolver {
   })
   async enableTotp(
     @Args('totpToken') totpToken: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const { user } = requireUserSession(session);
+
     return this.totpService.enableTotp(user.id, totpToken);
   }
 

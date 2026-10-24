@@ -67,7 +67,7 @@ export function getEventListFilter(params: {
   from?: Date;
   to?: Date;
   upcomingOnly?: boolean;
-}): { from?: string; to?: string; upcomingOnly?: boolean } {
+}): { from?: string; to?: string; upcoming?: boolean } {
   if (params.from && params.to) {
     return { from: params.from.toISOString(), to: params.to.toISOString() };
   }
@@ -76,5 +76,5 @@ export function getEventListFilter(params: {
     return {};
   }
 
-  return { upcomingOnly: true };
+  return { upcoming: true };
 }

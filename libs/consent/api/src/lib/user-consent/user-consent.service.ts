@@ -4,8 +4,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { UserSession } from '@wepublish/authentication/api';
+import {
+  AuthSession,
+  AuthSessionType,
+  UserSession,
+} from '@wepublish/authentication/api';
 import { UserConsentFilter, UserConsentInput } from './user-consent.model';
+
+export const holdsAdminRole = (session: AuthSession) =>
+  session.type === AuthSessionType.User &&
+  session.user.roleIDs.includes('admin');
 
 @Injectable()
 export class UserConsentService {
@@ -66,10 +74,7 @@ export class UserConsentService {
     });
 
     // only allow updating for admin or affected user
-    if (
-      !user.user.roleIDs.includes('admin') &&
-      user.user.id !== toUpdate?.user.id
-    ) {
+    if (!holdsAdminRole(user) && user.user.id !== toUpdate?.user.id) {
       throw new ForbiddenException();
     }
 
@@ -91,10 +96,7 @@ export class UserConsentService {
     });
 
     // only allow deleting for admin or affected user
-    if (
-      !user.user.roleIDs.includes('admin') &&
-      user.user.id !== toDelete?.user.id
-    ) {
+    if (!holdsAdminRole(user) && user.user.id !== toDelete?.user.id) {
       throw new ForbiddenException();
     }
 
