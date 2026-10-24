@@ -2,7 +2,7 @@ import {
   documentGetInitialProps,
   DocumentHeadTags,
   DocumentProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 import { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
 import theme from '../src/theme';

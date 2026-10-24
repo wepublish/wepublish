@@ -1,28 +1,33 @@
+/**
+ * Framework-neutral core of `@wepublish/utils/website`.
+ *
+ * Nothing reachable from this barrel may import `next/*`. That is the whole
+ * contract: it is what lets a non-Next app (TanStack Start) consume the shared
+ * website utilities without pulling Next into its bundle.
+ *
+ * Next-only code — the pages-router page components, their data-fetching
+ * helpers, and anything typed against `NextPageContext` — lives in
+ * `@wepublish/utils/website/next`. That barrel deliberately does NOT re-export
+ * this one, so an import line always says which world a symbol comes from.
+ *
+ * Adding a file here? If it imports `next/*`, it belongs in `./next.ts`.
+ * `pnpm nx lint utils-website` will not catch this for you — see
+ * `.claude/docs/tanstack-start-migration.md`.
+ */
+
+// Side-effect only: the `Window.WEBSITE_SETTINGS` / `Window.PUBLIC_ENV`
+// augmentation. Exports nothing, so it must be imported, not re-exported.
+import './lib/website-globals';
+
 export * from './lib/api-url';
-export * from './lib/auth-guard';
 export * from './lib/auth-link';
-export * from './lib/get-session-token-props';
-export * from './lib/next-wepublish-link';
 export * from './lib/session.provider';
 export * from './lib/async-session.provider';
 export * from './lib/user-country';
-
-export * from './lib/pages/profile/profile-page';
-export * from './lib/pages/profile/subscription/subscription-page';
-export * from './lib/pages/profile/subscription/deactivated-subscriptions-page';
-export * from './lib/pages/404-page';
-export * from './lib/pages/author-page';
-export * from './lib/pages/subscribe-page';
-export * from './lib/pages/search-page';
-export * from './lib/pages/tag-page';
-export * from './lib/pages/document-page';
-
-export * from './lib/routed-admin-bar';
 export * from './lib/with-jwt-handler';
-export * from './lib/handle-jwt-login';
 export * from './lib/with-session-provider';
-export * from './lib/with-builder-router';
 export * from './lib/website-shell';
+export * from './lib/website-fonts';
 export * from './lib/i18n-formatter';
 export * from './lib/components/daily-briefing-teaser';
 export * from './lib/website-token';

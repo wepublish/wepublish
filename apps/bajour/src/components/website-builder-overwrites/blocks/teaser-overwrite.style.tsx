@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import { TeaserLead } from '@wepublish/block-content/website';
 import { Image } from '@wepublish/image/website';
 import { H1, Paragraph } from '@wepublish/ui';
-import { NextWepublishLink } from '@wepublish/utils/website';
+import { NextWepublishLink } from '@wepublish/utils/website/next';
 
 export const fluidTypography = (minSize: number, maxSize: number): string => {
   const minViewPort = 390;

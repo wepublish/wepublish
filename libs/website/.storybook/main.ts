@@ -19,7 +19,7 @@ export default {
     options: {
       nextConfigPath: join(
         dirname(fileURLToPath(import.meta.url)),
-        '../../utils/website/src/lib/next.config.js'
+        '../../utils/website/src/next/next.config.js'
       ),
     },
   },

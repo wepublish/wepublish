@@ -1,4 +1,4 @@
-import { NextWepublishLink } from '@wepublish/utils/website';
+import { NextWepublishLink } from '@wepublish/utils/website/next';
 import { BuilderLinkProps } from '@wepublish/website/builder';
 import { forwardRef, MouseEvent } from 'react';
 

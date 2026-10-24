@@ -6,7 +6,7 @@ import {
   selectTeaserUrl,
   TeaserWrapper,
 } from '@wepublish/block-content/website';
-import { NextWepublishLink } from '@wepublish/utils/website';
+import { NextWepublishLink } from '@wepublish/utils/website/next';
 import { FullArticleTeaserFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserProps,

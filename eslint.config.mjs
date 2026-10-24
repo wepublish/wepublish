@@ -58,7 +58,7 @@ export default [
           // Nx 21+ also checks CommonJS require() calls; this pre-existing
           // import in the apps' next.config.js files was not checked before
           // the upgrade.
-          allow: ['../../libs/utils/website/src/lib/next.config'],
+          allow: ['../../libs/utils/website/src/next/next.config'],
           depConstraints: [
             {
               sourceTag: '*',

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { ProfilePage } from '@wepublish/utils/website';
+import { ProfilePage } from '@wepublish/utils/website/next';
 
 import theme from '../../src/theme';
 

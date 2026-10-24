@@ -17,12 +17,14 @@ import {
   authLink,
   getWebsiteShell,
   initWePublishTranslator,
-  NextWepublishLink,
   WebsiteShellProps,
-  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
+import {
+  NextWepublishLink,
+  withBuilderRouter,
+} from '@wepublish/utils/website/next';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {

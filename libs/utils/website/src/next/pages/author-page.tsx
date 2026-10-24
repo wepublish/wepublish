@@ -22,7 +22,7 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
-import { getApiUrl } from '../api-url';
+import { getApiUrl } from '../../lib/api-url';
 
 const take = 10;
 

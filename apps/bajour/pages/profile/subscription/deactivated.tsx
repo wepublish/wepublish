@@ -1,4 +1,4 @@
-import { DeactivatedSubscriptionsPage } from '@wepublish/utils/website';
+import { DeactivatedSubscriptionsPage } from '@wepublish/utils/website/next';
 
 import { Container } from '../../../src/components/layout/container';
 

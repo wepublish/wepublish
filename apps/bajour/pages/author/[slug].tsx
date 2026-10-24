@@ -1,4 +1,4 @@
-import { AuthorPage } from '@wepublish/utils/website';
+import { AuthorPage } from '@wepublish/utils/website/next';
 
 import { Container } from '../../src/components/layout/container';
 
@@ -13,4 +13,4 @@ export default function AuthorBySlug() {
 export {
   getAuthorStaticPaths as getStaticPaths,
   getAuthorStaticProps as getStaticProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';

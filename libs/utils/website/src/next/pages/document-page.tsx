@@ -1,8 +1,6 @@
 import { NormalizedCacheObject } from '@apollo/client';
 import { DocumentContext } from 'next/document';
 import {
-  FontStyle,
-  FontWeight,
   PublicEnv,
   WebsiteSettingsDocument,
   WebsiteSettingsFragment,
@@ -13,54 +11,20 @@ import {
   documentGetInitialProps as muiDocumentGetInitialProps,
   DocumentHeadTags as MuiDocumentHeadTags,
 } from '@mui/material-nextjs/v15-pagesRouter';
-import { getApiUrl } from '../api-url';
-
-declare global {
-  interface Window {
-    WEBSITE_SETTINGS: WebsiteSettingsFragment | undefined;
-    PUBLIC_ENV: PublicEnv | undefined;
-  }
-}
+import { getApiUrl } from '../../lib/api-url';
+import { websiteSettingsFontFamilies } from '../../lib/website-fonts';
+// Side-effect import: brings the `Window.WEBSITE_SETTINGS` augmentation into
+// scope for the two inline scripts below. It lives in the neutral core so
+// non-Next shells get it too.
+import '../website-globals';
 
 export type DocumentProps = DocumentHeadTagsProps & {
   websiteSettings: WebsiteSettingsFragment | undefined;
   publicEnv: PublicEnv;
 };
 
-const fontWeightToNumber: Record<FontWeight, number> = {
-  [FontWeight.Thin]: 100,
-  [FontWeight.ExtraLight]: 200,
-  [FontWeight.Light]: 300,
-  [FontWeight.Regular]: 400,
-  [FontWeight.Medium]: 500,
-  [FontWeight.SemiBold]: 600,
-  [FontWeight.Bold]: 700,
-  [FontWeight.ExtraBold]: 800,
-  [FontWeight.Black]: 900,
-  [FontWeight.Variable]: 400, // dont care about variable here
-};
-
 export const DocumentHeadTags = (props: DocumentProps) => {
-  const fonts =
-    props.websiteSettings?.fonts.flatMap(font => {
-      if (!font.name) {
-        return [];
-      }
-
-      const fontName = font.name.replace(/ /g, '+');
-      const supportsItalic = font.style.includes(FontStyle.Italic);
-      const weights = new Set(
-        font.weight.map(weight => fontWeightToNumber[weight])
-      );
-      const weightStr = Array.from(
-        weights.values(),
-        weight => `0,${weight}`
-      ).join(';');
-      const italicStr =
-        supportsItalic ? `;${weightStr.replace(/0,/g, '1,')}` : '';
-
-      return `family=${fontName}:ital,wght@${weightStr}${italicStr}`;
-    }) ?? [];
+  const fonts = websiteSettingsFontFamilies(props.websiteSettings);
 
   return (
     <>

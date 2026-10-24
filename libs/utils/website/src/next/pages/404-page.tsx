@@ -8,7 +8,7 @@ import {
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-import { getApiUrl } from '../api-url';
+import { getApiUrl } from '../../lib/api-url';
 
 const fourOhFourSlug = '404';
 
