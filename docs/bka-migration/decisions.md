@@ -3668,7 +3668,7 @@ let them withdraw.
 
 Updates [D94](#d94--an-api-key-acts-as-the-user-who-created-it) and [D41](#d41--an-organisations-api-keys-stay-with-their-creator).
 
-**Status.** Built in `37402f32f` and `59616a085`. Awaiting Karl's confirmation.
+**Status.** Built in `37402f32f`; confirmed by Karl, 2026-10-24. The password part of `59616a085` was replaced by `557b48177`: `updateCurrentUser` no longer accepts a password at all (master PR #3222).
 
 **Context.** Karl said a key acts as its creator everywhere (D94). A few calls on the current user
 would make it more than that: changing the password or email, setting up two-factor login, minting
