@@ -96,7 +96,7 @@ describe('describeTiming', () => {
 
   it('names the days the block shows on', () => {
     expect(describe_({ weekdays: [Weekday.Monday, Weekday.Friday] })).toBe(
-      'blockTiming.summary.shows{conditions=blockTiming.summary.days{days=weekday.Monday and weekday.Friday}}'
+      'blockTiming.summary.shows{conditions=blockTiming.summary.days{days=weekdayRecurring.Monday and weekdayRecurring.Friday}}'
     );
   });
 
@@ -106,7 +106,7 @@ describe('describeTiming', () => {
         weekdays: [Weekday.Monday, Weekday.Wednesday, Weekday.Friday],
       })
     ).toBe(
-      'blockTiming.summary.shows{conditions=blockTiming.summary.days{days=weekday.Monday, weekday.Wednesday, and weekday.Friday}}'
+      'blockTiming.summary.shows{conditions=blockTiming.summary.days{days=weekdayRecurring.Monday, weekdayRecurring.Wednesday, and weekdayRecurring.Friday}}'
     );
   });
 
@@ -156,7 +156,7 @@ describe('describeTiming', () => {
         timeOfDay: { from: '08:00', to: '17:00' },
       })
     ).toBe(
-      'blockTiming.summary.shows{conditions=blockTiming.summary.days{days=weekday.Saturday}, blockTiming.summary.hours{from=08:00;to=17:00}}'
+      'blockTiming.summary.shows{conditions=blockTiming.summary.days{days=weekdayRecurring.Saturday}, blockTiming.summary.hours{from=08:00;to=17:00}}'
     );
   });
 });
@@ -216,6 +216,34 @@ describe('BlockTimingButton', () => {
     );
 
     expect(button()).toHaveAttribute('data-showing', 'true');
+  });
+
+  it('spends less width on margins on phones, so every day stays big enough to tap', () => {
+    vi.stubGlobal(
+      'matchMedia',
+      (query: string) =>
+        ({
+          matches: true,
+          media: query,
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+        }) as unknown as MediaQueryList
+    );
+
+    try {
+      renderButton(null);
+      open();
+
+      const dialog = screen.getByRole('dialog');
+
+      expect(dialog).not.toHaveClass('MuiDialog-paperFullScreen');
+      expect(getComputedStyle(dialog).marginLeft).toBe('16px');
+      expect(getComputedStyle(dialog).width).toBe('calc(100% - 32px)');
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 
   it('opens the window of a block on demand', () => {

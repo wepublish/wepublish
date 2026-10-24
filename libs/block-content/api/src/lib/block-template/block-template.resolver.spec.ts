@@ -6,6 +6,21 @@ import { BlockTemplateDataloaderService } from './block-template-dataloader.serv
 import { BlockTreeLoader } from '../block-tree/block-tree-loader';
 import { BlockType } from '../block-type.model';
 import type { BlockTemplate } from './block-template.model';
+import { skipAnswerCache } from '@wepublish/public-content-cache/api';
+import {
+  CanGetArticle,
+  CanGetPage,
+  CanUpdateBlockTemplate,
+} from '@wepublish/permissions';
+import type { UserSession } from '@wepublish/authentication/api';
+
+vi.mock('@wepublish/public-content-cache/api', async importOriginal => ({
+  ...(await importOriginal<object>()),
+  skipAnswerCache: vi.fn(),
+}));
+
+const userWith = (...permissionIDs: string[]) =>
+  ({ roles: [{ id: 'role', permissionIDs }] }) as unknown as UserSession;
 
 describe('BlockTemplateResolver', () => {
   let resolver: BlockTemplateResolver;
@@ -14,6 +29,7 @@ describe('BlockTemplateResolver', () => {
   let loader: BlockTreeLoader;
 
   beforeEach(async () => {
+    vi.clearAllMocks();
     const module = await Test.createTestingModule({
       providers: [
         BlockTemplateResolver,
@@ -42,17 +58,45 @@ describe('BlockTemplateResolver', () => {
   const template = { id: 'tpl', blocks: [] } as unknown as BlockTemplate;
 
   describe('blocks', () => {
-    it('passes on whether to omit blocks that should not display', async () => {
-      expect(await resolver.blocks(template, true)).toBe(loaded);
+    it('omits blocks that should not display by default', async () => {
+      expect(await resolver.blocks(template, true, {}, undefined)).toBe(loaded);
       expect(loader.loadTemplateBlocks).toHaveBeenCalledWith(template, {
         onlyDisplayed: true,
       });
+      expect(skipAnswerCache).not.toHaveBeenCalled();
+    });
 
-      await resolver.blocks(template, false);
+    it('returns every block to users who edit content', async () => {
+      for (const permission of [
+        CanUpdateBlockTemplate,
+        CanGetArticle,
+        CanGetPage,
+      ]) {
+        const context = {};
+
+        await resolver.blocks(
+          template,
+          false,
+          context,
+          userWith(permission.id)
+        );
+
+        expect(loader.loadTemplateBlocks).toHaveBeenLastCalledWith(template, {
+          onlyDisplayed: false,
+        });
+        expect(skipAnswerCache).toHaveBeenLastCalledWith(context);
+      }
+    });
+
+    it('never returns hidden blocks to anyone else', async () => {
+      const context = {};
+
+      await resolver.blocks(template, false, context, undefined);
 
       expect(loader.loadTemplateBlocks).toHaveBeenLastCalledWith(template, {
-        onlyDisplayed: false,
+        onlyDisplayed: true,
       });
+      expect(skipAnswerCache).toHaveBeenCalledWith(context);
     });
   });
 });

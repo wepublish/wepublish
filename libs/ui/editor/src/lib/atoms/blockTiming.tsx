@@ -13,6 +13,8 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { BlockTimingInput, Weekday } from '@wepublish/editor/api';
 import { useState } from 'react';
@@ -63,13 +65,27 @@ export const dateRangeOf = (
 
 const Window = styled(DialogContent)`
   display: grid;
+  align-content: start;
   gap: ${({ theme }) => theme.spacing(3)};
 `;
 
 const Weekdays = styled(ToggleButtonGroup)`
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   margin-top: ${({ theme }) => theme.spacing(1)};
+
+  .MuiToggleButton-root {
+    min-width: 0;
+    min-height: 48px;
+    padding-inline: 0;
+  }
+`;
+
+const TimePair = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1.5)};
+  white-space: nowrap;
 `;
 
 const Row = styled.div`
@@ -128,7 +144,7 @@ export const describeTiming = (
   if (weekdays.length && weekdays.length < WEEKDAYS.length) {
     conditions.push(
       t('blockTiming.summary.days', {
-        days: list(weekdays.map(weekday => t(`weekday.${weekday}`))),
+        days: list(weekdays.map(weekday => t(`weekdayRecurring.${weekday}`))),
       })
     );
   }
@@ -169,6 +185,8 @@ export function BlockTimingButton({
   disabled,
 }: BlockTimingButtonProps) {
   const { t, i18n } = useTranslation();
+  const theme = useTheme();
+  const isPhone = useMediaQuery(theme.breakpoints.down('sm'));
   const [isOpen, setOpen] = useState(false);
   const [openedWith, setOpenedWith] = useState(timingKey(timing));
   const window = timing ?? {};
@@ -228,6 +246,20 @@ export function BlockTimingButton({
         onClose={() => setOpen(false)}
         fullWidth
         maxWidth="sm"
+        slotProps={{
+          paper: {
+            sx:
+              isPhone ?
+                {
+                  margin: '16px',
+                  width: 'calc(100% - 32px)',
+                  maxHeight: 'calc(100% - 32px)',
+                  '& .MuiDialogTitle-root, & .MuiDialogContent-root, & .MuiDialogActions-root':
+                    { paddingInline: '16px' },
+                }
+              : undefined,
+          },
+        }}
       >
         <DialogTitle>{t('blockTiming.title')}</DialogTitle>
 
@@ -297,25 +329,29 @@ export function BlockTimingButton({
             </FormLabel>
 
             <Row>
-              <Typography aria-hidden>
-                {t('blockTiming.timeOfDayFrom')}
-              </Typography>
+              <TimePair>
+                <Typography aria-hidden>
+                  {t('blockTiming.timeOfDayFrom')}
+                </Typography>
 
-              <CalendarTimeInput
-                label={t('blockTiming.timeOfDayFrom')}
-                value={window.timeOfDay?.from ?? ''}
-                onChange={time => changeTimeOfDay('from', time)}
-              />
+                <CalendarTimeInput
+                  label={t('blockTiming.timeOfDayFrom')}
+                  value={window.timeOfDay?.from ?? ''}
+                  onChange={time => changeTimeOfDay('from', time)}
+                />
+              </TimePair>
 
-              <Typography aria-hidden>
-                {t('blockTiming.timeOfDayTo')}
-              </Typography>
+              <TimePair>
+                <Typography aria-hidden>
+                  {t('blockTiming.timeOfDayTo')}
+                </Typography>
 
-              <CalendarTimeInput
-                label={t('blockTiming.timeOfDayTo')}
-                value={window.timeOfDay?.to ?? ''}
-                onChange={time => changeTimeOfDay('to', time)}
-              />
+                <CalendarTimeInput
+                  label={t('blockTiming.timeOfDayTo')}
+                  value={window.timeOfDay?.to ?? ''}
+                  onChange={time => changeTimeOfDay('to', time)}
+                />
+              </TimePair>
 
               {window.timeOfDay && (
                 <Button

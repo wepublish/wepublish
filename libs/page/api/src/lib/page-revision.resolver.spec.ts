@@ -1,5 +1,7 @@
 import { Test } from '@nestjs/testing';
-import { limitAnswerCache } from '@wepublish/public-content-cache/api';
+import { limitAnswerCache, skipAnswerCache } from '@wepublish/public-content-cache/api';
+import { CanGetPage } from '@wepublish/permissions';
+import type { UserSession } from '@wepublish/authentication/api';
 import { createMock } from '@wepublish/testing';
 import { BlockTreeLoader } from '@wepublish/block-content/api';
 import { ImageDataloaderService } from '@wepublish/image/api';
@@ -9,6 +11,7 @@ import type { PageRevision } from './page.model';
 vi.mock('@wepublish/public-content-cache/api', async importOriginal => ({
   ...(await importOriginal<object>()),
   limitAnswerCache: vi.fn(),
+  skipAnswerCache: vi.fn(),
 }));
 
 describe('PageRevisionResolver', () => {
@@ -66,28 +69,52 @@ describe('PageRevisionResolver', () => {
       changesIn(1800);
       const context = {};
 
-      await resolver.blocks(revision, true, context);
+      await resolver.blocks(revision, true, context, undefined);
 
-      expect(limitAnswerCache).toHaveBeenCalledWith(context, 1800);
+      expect(limitAnswerCache).toHaveBeenCalledWith(
+        context,
+        new Date('2026-01-05T09:30:00Z')
+      );
     });
 
     it('leaves the answer cache alone for untimed blocks', async () => {
-      await resolver.blocks(revision, true, {});
+      await resolver.blocks(revision, true, {}, undefined);
 
       expect(limitAnswerCache).not.toHaveBeenCalled();
     });
 
-    it('passes on whether to omit blocks that should not display', async () => {
-      expect(await resolver.blocks(revision, true, {})).toBe(loaded);
+    const editor = {
+      roles: [{ id: 'editor', permissionIDs: [CanGetPage.id] }],
+    } as unknown as UserSession;
+
+    it('omits blocks that should not display by default', async () => {
+      expect(await resolver.blocks(revision, true, {}, undefined)).toBe(loaded);
       expect(loader.loadBlocks).toHaveBeenCalledWith(revision.blocks, {
         onlyDisplayed: true,
       });
+      expect(skipAnswerCache).not.toHaveBeenCalled();
+    });
 
-      await resolver.blocks(revision, false, {});
+    it('returns every block to a user allowed to edit them', async () => {
+      const context = {};
+
+      await resolver.blocks(revision, false, context, editor);
 
       expect(loader.loadBlocks).toHaveBeenLastCalledWith(revision.blocks, {
         onlyDisplayed: false,
       });
+      expect(skipAnswerCache).toHaveBeenCalledWith(context);
+    });
+
+    it('never returns hidden blocks to anyone else', async () => {
+      const context = {};
+
+      await resolver.blocks(revision, false, context, undefined);
+
+      expect(loader.loadBlocks).toHaveBeenLastCalledWith(revision.blocks, {
+        onlyDisplayed: true,
+      });
+      expect(skipAnswerCache).toHaveBeenCalledWith(context);
     });
   });
 });

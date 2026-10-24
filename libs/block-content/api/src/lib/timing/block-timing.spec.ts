@@ -1,14 +1,24 @@
 import { BlockType } from '../block-type.model';
 import {
+  assertValidTiming,
   isDisplayedAt,
   nextTimingChange,
   shouldDisplayBlock,
 } from './block-timing';
 import { BlockTiming, Weekday } from './block-timing.model';
+import { formatInTimeZone } from 'date-fns-tz';
+
+vi.mock('date-fns-tz', async importOriginal => {
+  const original = await importOriginal<typeof import('date-fns-tz')>();
+
+  return { ...original, formatInTimeZone: vi.fn(original.formatInTimeZone) };
+});
 
 const ZURICH = 'Europe/Zurich';
 
 const at = (iso: string) => new Date(iso);
+
+const stored = <T>(value: T): T => JSON.parse(JSON.stringify(value));
 
 const block = (overrides: { disabled?: boolean; timing?: BlockTiming } = {}) =>
   ({
@@ -150,6 +160,101 @@ describe('isDisplayedAt', () => {
   });
 });
 
+describe('isDisplayedAt with stored timings', () => {
+  it('enforces a date range read back from the database as strings', () => {
+    const timing = stored({
+      from: at('2026-01-05T00:00:00Z'),
+      to: at('2026-01-07T00:00:00Z'),
+    });
+
+    expect(isDisplayedAt(timing, at('2026-01-04T12:00:00Z'), ZURICH)).toBe(
+      false
+    );
+    expect(isDisplayedAt(timing, at('2026-01-06T12:00:00Z'), ZURICH)).toBe(
+      true
+    );
+    expect(isDisplayedAt(timing, at('2026-01-08T12:00:00Z'), ZURICH)).toBe(
+      false
+    );
+  });
+
+  it('hides a block whose stored timing cannot be read', () => {
+    expect(
+      isDisplayedAt(
+        { timeOfDay: { from: '9:00', to: '17:00' } },
+        at('2026-01-05T09:00:00Z'),
+        ZURICH
+      )
+    ).toBe(false);
+    expect(
+      isDisplayedAt(
+        { from: 'tomorrow' as unknown as Date },
+        at('2026-01-05T09:00:00Z'),
+        ZURICH
+      )
+    ).toBe(false);
+  });
+
+  it('counts the part of a window after midnight to the weekday it started on', () => {
+    const timing = {
+      weekdays: [Weekday.Friday],
+      timeOfDay: { from: '22:00', to: '02:00' },
+    };
+
+    // 2026-01-09 is a Friday, 2026-01-10 01:00 Zurich is Saturday 00:00 UTC
+    expect(isDisplayedAt(timing, at('2026-01-09T21:30:00Z'), ZURICH)).toBe(
+      true
+    );
+    expect(isDisplayedAt(timing, at('2026-01-10T00:00:00Z'), ZURICH)).toBe(
+      true
+    );
+    // Friday 01:00 Zurich belongs to Thursday's window
+    expect(isDisplayedAt(timing, at('2026-01-09T00:00:00Z'), ZURICH)).toBe(
+      false
+    );
+  });
+});
+
+describe('assertValidTiming', () => {
+  it('accepts a complete timing', () => {
+    expect(() =>
+      assertValidTiming({
+        from: at('2026-01-05T00:00:00Z'),
+        to: at('2026-01-06T00:00:00Z'),
+        weekdays: [Weekday.Monday],
+        timeOfDay: { from: '22:00', to: '02:00' },
+      })
+    ).not.toThrow();
+    expect(() => assertValidTiming(null)).not.toThrow();
+  });
+
+  it('rejects times that are not HH:mm', () => {
+    for (const time of ['9:00', '24:00', '12:60', '', 'noon']) {
+      expect(() =>
+        assertValidTiming({ timeOfDay: { from: time, to: '17:00' } })
+      ).toThrow();
+    }
+  });
+
+  it('accepts an empty daily window, which never displays', () => {
+    const timing = { timeOfDay: { from: '08:00', to: '08:00' } };
+
+    expect(() => assertValidTiming(timing)).not.toThrow();
+    expect(isDisplayedAt(timing, at('2026-01-05T07:00:00Z'), ZURICH)).toBe(
+      false
+    );
+  });
+
+  it('rejects a date range that ends before it starts', () => {
+    expect(() =>
+      assertValidTiming({
+        from: at('2026-01-06T00:00:00Z'),
+        to: at('2026-01-06T00:00:00Z'),
+      })
+    ).toThrow();
+  });
+});
+
 describe('shouldDisplayBlock', () => {
   it('hides a disabled block regardless of its timing', () => {
     expect(
@@ -281,5 +386,192 @@ describe('nextTimingChange', () => {
     expect(nextTimingChange([nested], at('2026-01-05T09:00:00Z'))).toEqual(
       at('2026-01-05T12:00:00Z')
     );
+  });
+
+  it('reads date ranges stored as strings', () => {
+    expect(
+      nextTimingChange(
+        stored([
+          block({
+            timing: {
+              from: at('2026-01-05T08:00:00Z'),
+              to: at('2026-01-05T18:00:00Z'),
+            } as BlockTiming,
+          }),
+        ]),
+        at('2026-01-05T09:00:00Z')
+      )
+    ).toEqual(at('2026-01-05T18:00:00Z'));
+  });
+
+  it('ignores timings it cannot read instead of failing', () => {
+    expect(
+      nextTimingChange(
+        [
+          block({
+            timing: {
+              timeOfDay: { from: 'noon', to: '17:00' },
+            } as BlockTiming,
+          }),
+        ],
+        at('2026-01-05T09:00:00Z'),
+        ZURICH
+      )
+    ).toBeNull();
+  });
+
+  it('ignores the timing of a disabled block', () => {
+    expect(
+      nextTimingChange(
+        [
+          block({
+            disabled: true,
+            timing: { from: at('2026-01-05T12:00:00Z') } as BlockTiming,
+          }),
+        ],
+        at('2026-01-05T09:00:00Z')
+      )
+    ).toBeNull();
+  });
+
+  it('ignores changes inside a block that stays hidden', () => {
+    const parent = {
+      type: BlockType.FlexBlock,
+      timing: { from: at('2026-01-05T15:00:00Z') },
+      blocks: [
+        {
+          block: block({
+            timing: { from: at('2026-01-05T12:00:00Z') } as BlockTiming,
+          }),
+        },
+      ],
+    } as Parameters<typeof nextTimingChange>[0][number];
+
+    expect(nextTimingChange([parent], at('2026-01-05T09:00:00Z'))).toEqual(
+      at('2026-01-05T15:00:00Z')
+    );
+  });
+
+  it('ends a window that wrapped past midnight on the next day', () => {
+    // Friday 23:00 Zurich, the window runs until Saturday 02:00 Zurich
+    expect(
+      nextTimingChange(
+        [
+          block({
+            timing: {
+              weekdays: [Weekday.Friday],
+              timeOfDay: { from: '22:00', to: '02:00' },
+            } as BlockTiming,
+          }),
+        ],
+        at('2026-01-09T22:00:00Z'),
+        ZURICH
+      )
+    ).toEqual(at('2026-01-10T01:00:00Z'));
+  });
+
+  it('does not skip the day the clocks spring forward', () => {
+    // Saturday 23:30 Zurich, the clocks spring forward on Sunday 2026-03-29
+    expect(
+      nextTimingChange(
+        [
+          block({
+            timing: {
+              timeOfDay: { from: '08:00', to: '17:00' },
+            } as BlockTiming,
+          }),
+        ],
+        at('2026-03-28T22:30:00Z'),
+        ZURICH
+      )
+    ).toEqual(at('2026-03-29T06:00:00Z'));
+  });
+
+  it('opens a window starting inside the skipped hour once the clocks jump', () => {
+    // 02:30 does not exist on 2026-03-29 in Zurich, 03:00 CEST is 01:00 UTC
+    expect(
+      nextTimingChange(
+        [
+          block({
+            timing: {
+              timeOfDay: { from: '02:30', to: '05:00' },
+            } as BlockTiming,
+          }),
+        ],
+        at('2026-03-28T23:30:00Z'),
+        ZURICH
+      )
+    ).toEqual(at('2026-03-29T01:00:00Z'));
+  });
+
+  it('finds the clock jump to the millisecond', () => {
+    expect(
+      nextTimingChange(
+        [
+          block({
+            timing: {
+              timeOfDay: { from: '02:30', to: '03:30' },
+            } as BlockTiming,
+          }),
+        ],
+        at('2026-03-29T00:10:00.123Z'),
+        ZURICH
+      )
+    ).toEqual(at('2026-03-29T01:00:00Z'));
+  });
+
+  it('opens a window on the first of two repeated half hours', () => {
+    // Lord Howe falls back from 02:00 +11:00 to 01:30 +10:30, 01:40 first happens at 14:40 UTC
+    expect(
+      nextTimingChange(
+        [
+          block({
+            timing: {
+              timeOfDay: { from: '01:40', to: '01:50' },
+            } as BlockTiming,
+          }),
+        ],
+        at('2026-04-04T13:00:00.500Z'),
+        'Australia/Lord_Howe'
+      )
+    ).toEqual(at('2026-04-04T14:40:00Z'));
+  });
+
+  it('reads the clock once per moment it checks, not once per block', () => {
+    const blocks = Array.from({ length: 200 }, (_, index) =>
+      block(
+        index % 4 ?
+          {}
+        : {
+            timing: {
+              weekdays: [Weekday.Saturday, Weekday.Sunday],
+              timeOfDay: { from: `0${index % 10}:15`, to: '20:00' },
+            } as BlockTiming,
+          }
+      )
+    );
+    vi.mocked(formatInTimeZone).mockClear();
+
+    expect(
+      nextTimingChange(blocks, at('2026-10-26T09:00:00Z'), ZURICH)
+    ).toBeNull();
+    expect(vi.mocked(formatInTimeZone).mock.calls.length).toBeLessThan(150);
+  });
+
+  it('opens a window on the first of two repeated hours', () => {
+    // 02:30 happens twice on 2026-10-25 in Zurich, first at 00:30 UTC
+    expect(
+      nextTimingChange(
+        [
+          block({
+            timing: {
+              timeOfDay: { from: '02:30', to: '05:00' },
+            } as BlockTiming,
+          }),
+        ],
+        at('2026-10-24T22:00:00Z'),
+        ZURICH
+      )
+    ).toEqual(at('2026-10-25T00:30:00Z'));
   });
 });

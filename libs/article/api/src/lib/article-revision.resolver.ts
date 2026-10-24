@@ -10,7 +10,7 @@ import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { CanGetArticle } from '@wepublish/permissions';
 import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { BlockTreeLoader, BlockContent } from '@wepublish/block-content/api';
-import { limitAnswerCache } from '@wepublish/public-content-cache/api';
+import { limitAnswerCache, skipAnswerCache } from '@wepublish/public-content-cache/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
 
@@ -30,23 +30,27 @@ export class ArticleRevisionResolver {
     @Args('onlyDisplayed', {
       type: () => Boolean,
       defaultValue: true,
-      description: 'Omits blocks that should be hidden.',
+      description:
+        'Omits blocks that should be hidden. Only users who can read articles may pass `false`, everyone else gets the displayed blocks.',
     })
     onlyDisplayed: boolean,
-    @Context() context: object
+    @Context() context: object,
+    @CurrentUser() user: UserSession | undefined
   ) {
+    if (!onlyDisplayed) {
+      skipAnswerCache(context);
+    }
+
     const changeAt = await this.blockTreeLoader.nextChange(parent.blocks);
 
     if (changeAt) {
-      limitAnswerCache(
-        context,
-        Math.ceil(
-          (changeAt.getTime() - this.blockTreeLoader.now.getTime()) / 1000
-        )
-      );
+      limitAnswerCache(context, changeAt);
     }
 
-    return this.blockTreeLoader.loadBlocks(parent.blocks, { onlyDisplayed });
+    return this.blockTreeLoader.loadBlocks(parent.blocks, {
+      onlyDisplayed:
+        onlyDisplayed || !hasPermission(CanGetArticle, permissionsOf(user)),
+    });
   }
 
   @ResolveField(() => Date, {

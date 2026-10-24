@@ -4475,6 +4475,15 @@
       "Saturday": "Saturday",
       "Sunday": "Sunday"
     },
+    "weekdayRecurring": {
+      "Monday": "Mondays",
+      "Tuesday": "Tuesdays",
+      "Wednesday": "Wednesdays",
+      "Thursday": "Thursdays",
+      "Friday": "Fridays",
+      "Saturday": "Saturdays",
+      "Sunday": "Sundays"
+    },
     "weekdayShort": {
       "Monday": "Mon",
       "Tuesday": "Tue",

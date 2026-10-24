@@ -4462,7 +4462,7 @@
         "between": "du {{from}} au {{to}}",
         "since": "à partir du {{from}}",
         "until": "jusqu'au {{to}}",
-        "days": "le {{days}}",
+        "days": "{{days}}",
         "hours": "de {{from}} à {{to}}"
       }
     },
@@ -4474,6 +4474,15 @@
       "Friday": "vendredi",
       "Saturday": "samedi",
       "Sunday": "dimanche"
+    },
+    "weekdayRecurring": {
+      "Monday": "le lundi",
+      "Tuesday": "le mardi",
+      "Wednesday": "le mercredi",
+      "Thursday": "le jeudi",
+      "Friday": "le vendredi",
+      "Saturday": "le samedi",
+      "Sunday": "le dimanche"
     },
     "weekdayShort": {
       "Monday": "lun.",

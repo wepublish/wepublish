@@ -1,5 +1,5 @@
 const answersNotToStore = new WeakSet<object>();
-const answerTtlLimits = new WeakMap<object, number>();
+const answerStaleAt = new WeakMap<object, number>();
 
 export const skipAnswerCache = (context: object | null | undefined) => {
   if (context) {
@@ -12,18 +12,25 @@ export const isAnswerCacheSkipped = (context: object) =>
 
 export const limitAnswerCache = (
   context: object | null | undefined,
-  seconds: number
+  staleAt: Date
 ) => {
-  if (!context || !(seconds > 0)) {
+  const time = staleAt.getTime();
+
+  if (!context || Number.isNaN(time)) {
     return;
   }
 
-  const limit = answerTtlLimits.get(context);
+  const limit = answerStaleAt.get(context);
 
-  if (limit === undefined || seconds < limit) {
-    answerTtlLimits.set(context, seconds);
+  if (limit === undefined || time < limit) {
+    answerStaleAt.set(context, time);
   }
 };
 
-export const answerTtlLimit = (context: object) =>
-  answerTtlLimits.get(context);
+export const answerSecondsLeft = (context: object) => {
+  const staleAt = answerStaleAt.get(context);
+
+  return staleAt === undefined ? Infinity : (
+      Math.floor((staleAt - Date.now()) / 1000)
+    );
+};
