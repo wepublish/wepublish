@@ -23,12 +23,12 @@ distribution across 39,978 events:
 has draft / pending / published, where *pending* means "scheduled for future publication",
 so there was no obvious slot for it.
 
-**Decision.** `to_validate` collapses into **draft**. We do not introduce a fourth
+**Decision.** `to_validate` collapses into draft. We do not introduce a fourth
 publication state.
 
 **Why.** Confirmed by Karl: `to_validate` is draft in practice. Both states are equally
 invisible on the website, so collapsing them loses nothing a reader or editor can observe.
-What `to_validate` really encoded was not a *state* but a *relationship* — see
+What `to_validate` really encoded was a relationship, not a state; see
 [D3](#d3--validation-is-cross-organisation-publishing-not-a-publication-state).
 
 **Consequences.**
@@ -57,7 +57,7 @@ no `PlaceProposed`, no `ACTIVATE_PROPOSAL_PLACE` equivalent. Events are created 
 authenticated users in the editor, or through the API.
 
 **What replaces it.** Nothing purpose-built. An event that would have been "proposed" is
-simply a **draft event that has not been published yet** — the ordinary unpublished state
+a draft event that has not been published yet, the ordinary unpublished state
 every article and page already has.
 
 **Why.** Confirmed by Karl: proposed events are being retired and become plain drafts.
@@ -69,8 +69,8 @@ every article and page already has.
 - Venue creation becomes an ordinary authenticated action, so a `Place` has a single
   lifecycle instead of two.
 - In `EventController::edit` the entire `$event->getProposedBy() !== null` branch
-  disappears. The parallel `$event->getUser() !== null` branch — the one that handles
-  events owned by a real user — is what we port. **The notification emails survive**; see D3.
+  disappears. We port the parallel `$event->getUser() !== null` branch, which handles
+  events owned by a real user. The notification emails survive; see D3.
 
 ---
 
@@ -79,11 +79,11 @@ every article and page already has.
 > **Updated by [D48](#d48--publishing-stays-with-the-organising-organisation) and [D58](#d58--a-review-request-is-a-state-stamped-once), awaiting Karl's confirmation.** `publishEvent` and `unpublishEvent` need `CanPublishEvent` plus membership of the organising organisation, ownership of an orphan event, or `CanUpdateOtherOrganizationEvents`. A venue member without the last can edit a foreign event but not publish it, and asks for review instead.
 
 **Context.** The email logic in `EventController` (lines ~450-470 for create, ~515-570 for
-edit) is not keyed on the proposal wizard. It is keyed on **venue ownership**:
+edit) is keyed on venue ownership, not on the proposal wizard:
 
 > An event takes place at a `Place`. A `Place` belongs to an `Organization`. Users belong
 > to organisations (`user_organization`, 531 rows). If you create or edit an event at a
-> venue whose organisation you are **not** a member of, the venue's organisation admins
+> venue whose organisation you are not a member of, the venue's organisation admins
 > are notified, and it is theirs to validate.
 
 Concretely, on create:
@@ -105,31 +105,31 @@ if (null === $event->getPlace()->getOrganization()
 and on edit, `TO_VALIDATE → PUBLISH` performed by someone other than the owner sends
 `eventPublished` to the owner. Note the whole edit block is skipped for `ROLE_ADMIN`.
 
-**Decision.** Validation is kept, and modelled as a **permission plus ownership**, not as a
+**Decision.** Validation is kept, and modelled as a permission plus ownership rather than as a
 publication state:
 
 - An event is owned by a user and belongs to an organisation.
-- Publishing a draft event that belongs to **another** organisation is "validating" it, and
+- Publishing a draft event that belongs to another organisation is "validating" it, and
   requires the new cross-organisation permission.
 - The notification emails fire on the same real-world transitions, now expressed as
   "a user from another organisation published / edited your draft".
 
 **Why.** Confirmed by Karl: validation still happens, on normal events, and the emails are
-still needed. Reading the code shows validation never depended on the wizard — it depends
+still needed. The code shows validation never depended on the wizard: it depends
 on the venue's organisation differing from the actor's. That survives D2 untouched, and it
-is exactly the capability the new permissions and the Agenda-Admin role are for.
+is the capability the new permissions and the Agenda-Admin role are for.
 
 **Consequences.**
 - This is the concrete job of the requested permissions ("see, edit and delete another
-  organisation's events") and of the **Agenda-Admin** role. Agenda-Admin is the validator.
+  organisation's events") and of the Agenda-Admin role. Agenda-Admin is the validator.
 - The API and editor need the actor's organisation membership available at publish time to
   decide both authorisation and whether to notify.
 - `ROLE_ADMIN` currently bypasses all notification. We must decide whether Agenda-Admin
-  inherits that silence or notifies like everyone else — see open questions.
-- **Six of the eight `admin_event_*` templates survive**, now confirmed in
+  inherits that silence or notifies like everyone else; see open questions.
+- Six of the eight `admin_event_*` templates survive, now confirmed in
   [`research/bka-03-emails.md`](research/bka-03-emails.md). The `a`/`b` suffix is the
-  recipient: **`a` = the event's owner/creator, `b` = the venue organisation's users** —
-  which is D3 restated in the naming scheme.
+  recipient: `a` = the event's owner/creator, `b` = the venue organisation's users.
+  That is D3 restated in the naming scheme.
 
   | # | Mailer method | Recipient | Trigger | Ported? |
   | --- | --- | --- | --- | --- |
@@ -142,15 +142,15 @@ is exactly the capability the new permissions and the Agenda-Admin role are for.
   | 4a | `eventModifiedByOwnerAdminPlace` | the event's owner | edited by someone else | yes |
   | 4b | `eventModifiedByEventOwner` | venue org's users | edited by the owner | yes |
 
-  Only the `2a`/`2b` pair — the wizard's own two — dies with D2. Every remaining template is
-  about venue ownership and survives untouched, exactly as D3 predicts.
-- **Do not port the templates verbatim.** The research found real defects in the BKa
+  Only the `2a`/`2b` pair, the wizard's own two, dies with D2. Every remaining template is
+  about venue ownership and survives untouched, as D3 predicts.
+- Do not port the templates verbatim. The research found real defects in the BKa
   overrides: an unreachable "who to contact" block in `3b` (the template tests a `user`
   variable the builder never passes), a sender-locale instead of recipient-locale bug in
   `2a`, hard-coded German strings bypassing the translation keys, and malformed HTML in
   `3a`. These are reproduced faithfully only if we are careless.
-- Several of these mail **organisation admins** and **event owners** who are real users, so
-  We.Publish's user-centric mail flow fits — but `eventPublished` can target an arbitrary
+- Several of these mail organisation admins and event owners who are real users, so
+  We.Publish's user-centric mail flow fits. But `eventPublished` can target an arbitrary
   address, which is the constraint being checked in
   [`research/wp-02-mail-flow.md`](research/wp-02-mail-flow.md).
 
@@ -166,8 +166,8 @@ is exactly the capability the new permissions and the Agenda-Admin role are for.
 
 **Context.** [D3](#d3--validation-is-cross-organisation-publishing-not-a-publication-state)
 keeps validation but models it as cross-organisation publishing. That still leaves the
-question of who is subject to it. BKa answered this implicitly — `ROLE_ADMIN` bypassed the
-whole notification block, everyone else did not — which made "who must be validated" a
+question of who is subject to it. BKa answered this implicitly: `ROLE_ADMIN` bypassed the
+whole notification block and everyone else did not, which made "who must be validated" a
 side effect of a role check buried in a controller.
 
 **Decision.** Introduce an explicit permission, following the existing convention in
@@ -183,11 +183,11 @@ export const CanPublishEvent: Permission = {
 
 Holding `CanPublishEvent` means your events go live directly. Without it, publishing leaves
 the event as a draft for someone with the cross-organisation permissions to validate.
-**Agenda-Admin holds it**, so Agenda-Admin never needs validating.
+Agenda-Admin holds it, so Agenda-Admin never needs validating.
 
 **Why.** Confirmed by Karl. Making it a permission rather than a role check means the rule
 is declarative, visible in the editor's role UI, and adjustable per medium without code
-changes — and it keeps the guard honest: `@Permissions(CanPublishEvent)` instead of an
+changes. It also keeps the guard honest: `@Permissions(CanPublishEvent)` instead of an
 `isGranted('ROLE_ADMIN')` buried in a branch.
 
 **The events permission set.** Exact names provisional until
@@ -202,7 +202,7 @@ all verbs below (`Get`/`Create`/`Update`/`Delete`/`Publish`) are ones the repo a
 | `CanDeleteEvent` | Delete your own organisation's events |
 | `CanPublishEvent` | Publish directly, bypassing validation |
 | `CanGetOtherOrganizationEvents` | See other organisations' events |
-| `CanUpdateOtherOrganizationEvents` | Edit them — this is what validating one is |
+| `CanUpdateOtherOrganizationEvents` | Edit them; this is what validating one is |
 | `CanDeleteOtherOrganizationEvents` | Delete them |
 
 **The Agenda-Admin role** gets all eight, plus `CanLoginEditor` and the preview permission,
@@ -212,10 +212,10 @@ per the brief.
 - Resolves the open question about whether Agenda-Admin notifies on validation: it does not
   need validating itself, and when it validates someone else's event the owner is still
   notified (`eventPublished`), because that notification is about the owner, not the actor.
-- An ordinary organisation user keeps `CanCreateEvent` / `CanUpdateEvent` but **not**
+- An ordinary organisation user keeps `CanCreateEvent` / `CanUpdateEvent` but not
   `CanPublishEvent`, which reproduces BKa's behaviour without a `to_validate` state.
 - The cross-organisation permissions are what make an Agenda-Admin's validation queue
-  simply "draft events I can see but do not own".
+  "draft events I can see but do not own".
 
 ---
 
@@ -232,20 +232,20 @@ them, and every unpublished event looks identical in the queue.
 
 **Decision.** Add an explicit action rather than reinstating the state.
 
-- A **new field on the event** records the request. Proposed:
+- A new field on the event records the request. Proposed:
   `reviewRequestedAt DateTime?` plus `reviewRequestedById String?`.
-- On a **draft** event, a user who does **not** hold
+- On a draft event, a user who does not hold
   [`CanPublishEvent`](#d4--canpublishevent-decides-who-needs-validating) sees a
-  **"Ready for review"** button. Users who can publish see the normal publish control
-  instead — they never need it.
+  "Ready for review" button. Users who can publish see the normal publish control
+  instead and never need it.
 - Pressing it stamps the field and notifies the validators. Once set, the button is
   replaced by the request's status ("Review requested on …") so it reads as state, not as a
   repeatable action.
 - Publishing clears the field, so the next edit cycle starts clean.
 
 **Why.** Confirmed by Karl: it should be a button on a draft event, shown when you are not
-allowed to publish, and probably a new field. Keeping it off the publication-state enum is
-what preserves D1 — draft stays a single state, and "waiting on a validator" becomes an
+allowed to publish, and probably a new field. Keeping it off the publication-state enum
+preserves D1: draft stays a single state, and "waiting on a validator" becomes an
 attribute of the draft rather than a fourth value nobody else needs to understand.
 
 **Why a timestamp rather than a boolean.** Same storage cost, strictly more information:
@@ -254,17 +254,17 @@ without an audit log.
 
 **Consequences.**
 - Gives the Agenda-Admin a real queue: draft events with `reviewRequestedAt` set, ordered by
-  age — rather than "every unpublished event I can see", which was the weak point of D4.
+  age, instead of "every unpublished event I can see", which was the weak point of D4.
 - The notification reuses BKa's existing admin-facing mail
-  (`newEventCreatedByAnotherOrganizationAdmin` — "something needs validating"), so this adds
+  (`newEventCreatedByAnotherOrganizationAdmin`, "something needs validating"), so this adds
   a trigger, not a new template.
 - Needs one mutation (`requestEventReview`) guarded so it is only callable on a draft, and
   only by someone who can edit the event but cannot publish it.
 - **Placement settled by [D24](#d24--the-revision-carries-what-an-editor-writes-the-event-carries-what-the-event-is).**
   The field sits on the event entity: the queue has to be queryable without joining revisions,
-  and a review request is about the event rather than about a particular draft. D24's rule —
-  the revision carries prose, the entity carries facts — puts it there on principle, not just
-  on convenience.
+  and a review request is about the event rather than about a particular draft. D24's rule
+  (the revision carries prose, the entity carries facts) puts it there on principle as well
+  as on convenience.
 
 ---
 
@@ -278,16 +278,16 @@ without an audit log.
 retired wizard: name, email, and contact details of the organiser. [D2](#d2--the-propose-an-event-flow-is-not-ported)
 drops the wizard, which raised the question of whether this history goes with it.
 
-**Decision.** The provenance is **kept**, as plain metadata on the migrated event — not as a
-live relation, and not as a feature. No `EventProposedBy` entity, no API resource, no editor
-form. It is a record of where an event came from, nothing more.
+**Decision.** The provenance is kept as plain metadata on the migrated event. It is neither a
+live relation nor a feature: no `EventProposedBy` entity, no API resource, no editor
+form. It only records where an event came from.
 
 **Why.** Confirmed by Karl. The events themselves are migrated, so discarding who submitted
 them loses the only answer to "who do we contact about this one" for 5,142 historical events,
 at no saving worth having.
 
 **What the data actually is.** `event_proposed_by` is a flat contact record, one row per
-submission — not a relation to anything:
+submission, with no relation to anything:
 
 | Column | Type | Filled |
 | --- | --- | --- |
@@ -295,11 +295,11 @@ submission — not a relation to anything:
 | `lastname` | `varchar(55)` NOT NULL | 100% |
 | `email` | `varchar(155)` NOT NULL | 100% |
 | `phone` | `varchar(35)` nullable | 100% in practice |
-| `organization` | `varchar(255)` nullable | 100% in practice — **free text**, not a FK |
+| `organization` | `varchar(255)` nullable | 100% in practice; free text, not a FK |
 | `created_at` / `updated_at` | `timestamptz` | 100% |
 
 5,142 rows spanning 2023-12-29 to 2026-05-20, of which 4,288 are linked to an event and 78
-are unreferenced. They represent **1,798 distinct people** and 1,641 distinct free-text
+are unreferenced. They represent 1,798 distinct people and 1,641 distinct free-text
 organisation strings.
 
 **Consequences.**
@@ -307,8 +307,8 @@ organisation strings.
   writes it after the migration. The exact shape follows whatever metadata mechanism the port
   adopts for the event (see the design doc).
 - The 78 unreferenced rows are dropped.
-- **This is the full contact detail — name, email, phone — of 1,798 external people, and it
-  has no live purpose after the migration.** Carrying it over means importing that into the
+- This is the full contact detail (name, email, phone) of 1,798 external people, and it
+  has no live purpose after the migration. Carrying it over means importing that into the
   new system and keeping it indefinitely. Worth a deliberate choice between three options:
   keep everything; keep only the organisation name and date, dropping the personal fields; or
   keep everything but treat it as restricted, not exposed through the API. Defaulting to
@@ -325,10 +325,10 @@ organisation strings.
 
 **Context.** `ACTIVATE_PROINFIRMIS=false` in the local compose file, which made it look
 optional. It is not: BKa runs the integration in production. Separately, the upstream API is
-changing — the ZUERST API (`zuerst.proinfirmis.ch`) **shuts down at the end of 2026** and is
+changing: the ZUERST API (`zuerst.proinfirmis.ch`) shuts down at the end of 2026 and is
 replaced by the Ginto GraphQL API, which BKa already supports behind `ACTIVATE_GINTO`.
 
-**Decision.** The accessibility integration is ported. We implement it **against Ginto**, not
+**Decision.** The accessibility integration is ported. We implement it against Ginto, not
 ZUERST, while keeping the legacy numeric pictogram ids in the stored data and the public API.
 
 **Why.** Karl confirmed production uses ProInfirmis and only the local environment disables
@@ -343,8 +343,8 @@ that normalisation rather than the old transport.
   `key` → numeric id mapping must be ported with the integration. BKa keeps it in the
   `ginto_rating_legacy_ids` parameter; see
   [`research/bka-07-proinfirmis-ginto.md`](research/bka-07-proinfirmis-ginto.md).
-- The API key has arrived and the two High-severity unknowns are now **settled against the live
-  API**. Both were real — see [D21](#d21--the-ginto-branch-is-unfinished-the-live-api-settles-its-two-open-questions).
+- The API key has arrived and the two High-severity unknowns are now settled against the live
+  API. Both were real; see [D21](#d21--the-ginto-branch-is-unfinished-the-live-api-settles-its-two-open-questions).
   A filter id is still needed for `entriesByFilter`.
 - There is no ZUERST fallback path. If Ginto is unreachable the sync no-ops and the last
   synced data stands, rather than degrading to a dead API.
@@ -355,34 +355,34 @@ that normalisation rather than the old transport.
 ## D8 — Former proposers become dormant user accounts
 
 **Context.** [D6](#d6--submission-provenance-is-carried-over-as-metadata) would have imported
-1,798 people's names, emails and phone numbers as inert metadata with no live purpose — data
+1,798 people's names, emails and phone numbers as inert metadata with no live purpose: data
 we hold but never use, which is the worst of both worlds.
 
-**Decision.** Instead of metadata, **create real user accounts** for the 1,798 distinct
+**Decision.** Instead of metadata, create real user accounts for the 1,798 distinct
 proposers and attach their historical events to them.
 
 | BKa field | Becomes |
 | --- | --- |
 | `firstname` | `User.firstName` |
 | `lastname` | `User.name` |
-| `email` | `User.email` (unique — this is the dedupe key, 5,142 rows → 1,798 users) |
+| `email` | `User.email` (unique; this is the dedupe key, 5,142 rows → 1,798 users) |
 | `phone` | `User.properties` (there is no phone field on `User`) |
 | `organization` (free text) | `UserAddress.company`, and matched to a real events organisation where it resolves |
 | `created_at` | retained as the account's provenance timestamp |
 
-The account is created **dormant**:
+The account is created dormant:
 
-- `password` is a cryptographically random value that is **never transmitted to anyone** — it
+- `password` is a cryptographically random value that is never transmitted to anyone. It
   exists only because the column is non-nullable, and it is not a usable credential.
 - `emailVerifiedAt` and `lastLogin` stay null.
-- **No email is sent at migration time.** Nobody is contacted out of the blue.
+- No email is sent at migration time, so nobody is contacted out of the blue.
 - The person claims the account whenever they choose, by entering their email in the ordinary
   login-link / password-reset flow. First login is the verification.
 
 **Why.** Karl's suggestion, and it is strictly better than D6. The same data that would have
 sat dead in a metadata blob instead becomes an account that gives its owner access to the
 events they submitted. It also closes the gap D2 opened: the wizard existed so people without
-accounts could submit events, and the answer to "what replaces it" is now simply *they have
+accounts could submit events, and the answer to "what replaces it" is now *they have
 accounts*.
 
 **Why dormant rather than invited.** These people submitted an event to a cultural agenda;
@@ -393,11 +393,11 @@ table do not give you.
 
 **Consequences.**
 - They get a minimal organiser role: enough to log into the editor and manage their own
-  organisation's events, and explicitly **not**
+  organisation's events, and explicitly not
   [`CanPublishEvent`](#d4--canpublishevent-decides-who-needs-validating). Their events
-  therefore need validating — which is exactly the class
+  therefore need validating, which is the class
   [D3](#d3--validation-is-cross-organisation-publishing-not-a-publication-state) already
-  describes. No special case.
+  describes, so there is no special case.
 - The 4,288 events with a `proposed_by_id` get their proposer as owner, so ownership-based
   permissions have real data from day one rather than a backfilled guess.
 - The 1,641 distinct free-text organisation strings need reconciling against real
@@ -408,12 +408,12 @@ table do not give you.
   [`research/wp-02-mail-flow.md`](research/wp-02-mail-flow.md) explicitly considers and
   *rejects* creating shadow `User` rows for proposers, because they would pollute `users`, the
   manual-send audiences (`allUsers` would mail 1,500 strangers), the Mailchimp contact sync, and
-  the login system. D8 does it anyway, on the grounds that the alternative — holding the same
-  personal data with no account attached to it — is worse. That makes the following mandatory,
+  the login system. D8 does it anyway, on the grounds that the alternative (holding the same
+  personal data with no account attached to it) is worse. That makes the following mandatory,
   not optional:
   - audit every query that counts or mails "all users" and confirm dormant accounts are excluded
     (`allUsers` audiences, Mailchimp sync, member counts, billing);
-  - decide the exclusion predicate deliberately — most likely `emailVerifiedAt IS NULL` combined
+  - decide the exclusion predicate deliberately: most likely `emailVerifiedAt IS NULL` combined
     with `lastLogin IS NULL`, rather than `active`, which may carry other meaning;
   - verify no onboarding or lifecycle mail fires on user creation.
   If that audit shows the blast radius is wider than expected, the fallback is wp-02's preference:
@@ -430,17 +430,17 @@ table do not give you.
 `events.organizations`. The obvious reading is a PostgreSQL schema, which would mean enabling
 Prisma's `multiSchema` preview feature.
 
-**Decision.** No PostgreSQL schema and no `multiSchema`. Use a **literal table name containing
-a dot**, via `@@map("events.organizations")` — because that is already how this repository
+**Decision.** No PostgreSQL schema and no `multiSchema`. Use a literal table name containing
+a dot, via `@@map("events.organizations")`, because that is already how this repository
 names tables.
 
-**Why.** Verified, not assumed: the schema already contains **57** such names, and they are
-plain quoted identifiers rather than schemas —
+**Why.** Verified against the schema: it already contains 57 such names, and they are
+plain quoted identifiers rather than schemas:
 `libs/api/prisma/migrations/20220812113731_init/migration.sql:427` creates
 `CREATE TABLE "users.addresses"`. Existing examples include `articles.revisions`,
 `articles.revisions.published`, `mail.send_jobs`, `member.plans`, `comments.ratings`,
-`notifications.reads` — and, decisively, **`events.tagged-events` already exists**, so the
-`events.` prefix is not merely permitted, it is already in the schema.
+`notifications.reads`. Decisively, `events.tagged-events` already exists, so the
+`events.` prefix is not merely permitted but already in the schema.
 
 *(An earlier revision of this entry said 38. That came from a regex that excluded hyphenated
 names such as `articles.tagged-articles`; the real count is 57.)*
@@ -453,8 +453,8 @@ tables already named this way.
 - New tables are `events.organizations`, `events.places`, `events.occurrences`, and so on.
 - Every identifier must be quoted in raw SQL, exactly as the existing dotted tables already
   require.
-- `events.tagged-events` belongs to the **old** event implementation being deleted, so the name
-  is reused rather than shared. Worth not tripping over during the migration.
+- `events.tagged-events` belongs to the old event implementation being deleted, so the name
+  is reused rather than shared. Keep this in mind during the migration.
 - This is independent of the multi-file schema question (whether to use `prismaSchemaFolder`),
   which [`research/wp-06-prisma-conventions.md`](research/wp-06-prisma-conventions.md) is
   still testing.
@@ -469,19 +469,19 @@ tables already named this way.
 > **Updated by [D45](#d45--occurrences-are-written-whenever-the-schedule-is-saved), awaiting Karl's confirmation.** Occurrences are re-expanded on every save that changes the schedule and re-synced on publish, not only on publish and unpublish. Unpublishing keeps them; the public agenda hides them through `publicEventsWhere`. The expansion timing in the consequences below no longer describes the code.
 
 **Context.** This was the port's central open question. A BKa `mainevent` with a recurrence
-materialises 128,489 `event_occurrence` rows, and BKa regenerates **all** of an event's
-occurrences on **every save** (`OnFlushEventListener`). Adopting the article revision system
+materialises 128,489 `event_occurrence` rows, and BKa regenerates all of an event's
+occurrences on every save (`OnFlushEventListener`). Adopting the article revision system
 raised the question of whether occurrences hang off the revision or off the event.
 
-**Decision.** Occurrences are **entity-scoped**. The recurrence *rule* lives on the
-**revision**; only the materialised expansion is entity-level. Drafts expand **in memory** for
+**Decision.** Occurrences are entity-scoped. The recurrence *rule* lives on the
+revision; only the materialised expansion is entity-level. Drafts expand in memory for
 preview and materialise nothing.
 
 **Why.** From [`research/wp-05-revision-publication-system.md`](research/wp-05-revision-publication-system.md) §11:
 occurrence volume is driven by the recurrence rule (up to 12,374 rows for a single BKa event)
 while revision volume is driven by typing (a revision per edit). Attaching the first to the
 second multiplies a 12,000× range by a 120-per-hour range. Nothing in the article system has
-that shape — its largest per-revision child set is an author list of three or four rows.
+that shape: its largest per-revision child set is an author list of three or four rows.
 
 The rule itself is content the editor edits and version history should show, so it stays on the
 revision. The expansion is derived state, so it belongs to the entity and must be reproducible.
@@ -492,20 +492,20 @@ revision. The expansion is derived state, so it belongs to the entity and must b
 - Expansion runs on `publishEvent` / `unpublishEvent`, plus a backfill for the data migration and
   a repair command equivalent to BKa's `EventsCalculateOccurrencesCommand`. A test must assert
   that re-expanding a published event is idempotent.
-- **This deliberately differs from BKa**, which re-expands on every save because it has no
+- This deliberately differs from BKa, which re-expands on every save because it has no
   revisions. [`research/bka-04-api-v2-apiplatform.md`](research/bka-04-api-v2-apiplatform.md)
   §19.5 warns that a port must reproduce the on-save behaviour "or the agenda endpoints will go
   stale". That warning does not apply once drafts exist: the public agenda only ever reads
   published state, and publishing is exactly when we re-expand.
-- **Open sub-problem — hand-entered dates.** wp-05 reasons entirely in terms of a recurrence
+- **Open sub-problem: hand-entered dates.** wp-05 reasons entirely in terms of a recurrence
   *rule*, but BKa has a second mechanism: `recurrence = none` on a recurrent schedule means the
   organiser types an arbitrary list of dates, each with its own times. That is the 15,275
-  sub-events, and it is not derivable from a rule — it is content, so it must live on the
+  sub-events, and it is not derivable from a rule. It is content, so it must live on the
   revision as an explicit list and be expanded like a rule. The editor has no sortable repeatable
   row component today ([`research/wp-07-editor-architecture.md`](research/wp-07-editor-architecture.md)
   §10.1), so this needs building.
 - **Unbounded recurrences need a cap.** 20 BKa events run past 2030, one to 2099. A horizon such
-  as `now + 2 years`, re-expanded periodically, avoids BKa's 12,374-row outlier — but reintroduces
+  as `now + 2 years`, re-expanded periodically, avoids BKa's 12,374-row outlier, but reintroduces
   a scheduled job. Product decision, deferred to the design.
 
 ---
@@ -517,21 +517,21 @@ revision. The expansion is derived state, so it belongs to the entity and must b
 **Context.** 279 of BKa's 670 users carry `member = true`. It gates three real behaviours: the
 print fields on the event form, the admin-only `/events/members-only` list, and the `member`
 search parameter exposed through both public APIs. We.Publish already uses "member" for an
-entirely different thing — a paying subscriber, with `member.plans`, `Subscription`, and the
+entirely different thing: a paying subscriber, with `member.plans`, `Subscription`, and the
 whole membership domain behind it.
 
-**Decision.** Port the flag as **`partner`**.
+**Decision.** Port the flag as `partner`.
 
 **Why.** Confirmed by Karl, who preferred it to the interim `bkaMember`. Two unrelated concepts
 sharing one word in the same schema is the kind of collision that survives for years and
-misleads everyone who meets it second — but `bkaMember` only avoided the collision by naming the
+misleads everyone who meets it second. But `bkaMember` only avoided the collision by naming the
 system it came from, which says nothing about what the flag means. `partner` is what these
 organisations actually are: affiliated bodies whose events qualify for the print edition. It
 describes the domain rather than the migration, so it still reads correctly once BKa is history.
 
 **Consequences.**
-- Named `partner` wherever it lands — field, GraphQL, API filter, editor label.
-- Explicitly **not** related to `Subscription` or `member.plans`; nothing should join the two.
+- Named `partner` wherever it lands: field, GraphQL, API filter, editor label.
+- Explicitly not related to `Subscription` or `member.plans`; nothing should join the two.
 - The BKa-facing labels ("BKa Mitgliederanlass", "Nur Veranstaltungen von Mitgliedern anzeigen")
   are presentation strings and can keep saying *Mitglied* without the schema doing so.
 
@@ -542,11 +542,11 @@ describes the domain rather than the migration, so it still reads correctly once
 **Context.** The original brief asked to "split the prisma schema for the work you are doing
 into a separate file". [`research/wp-06-prisma-conventions.md`](research/wp-06-prisma-conventions.md)
 §5 tested this rather than assuming: moving to Prisma's `prismaSchemaFolder` produces an
-**empty SQL diff** and a client identical in shape, so it is technically free. The costs are
-organisational — a whole-file rename that conflicts with every open branch, three changes to
+empty SQL diff and a client identical in shape, so it is technically free. The costs are
+organisational: a whole-file rename that conflicts with every open branch, three changes to
 the Dockerfile, and `migrations.path`, which fails silently if forgotten.
 
-**Decision.** **No split.** The events domain is added as one contiguous block in the existing
+**Decision.** No split. The events domain is added as one contiguous block in the existing
 `libs/api/prisma/schema.prisma`.
 
 **Why.** Karl's call, reversing the original brief once the trade-off was measured. The split's
@@ -555,7 +555,7 @@ capability. Against that sits a rename touching every in-flight branch and a sil
 trap, for a schema that is large but not unmanageable at 2,352 lines.
 
 **Consequences.**
-- The events models — roughly 400-600 lines — go at the bottom of `schema.prisma`, grouped
+- The events models (roughly 400-600 lines) go at the bottom of `schema.prisma`, grouped
   together and clearly delimited, so they stay easy to find without a file boundary.
 - Table naming still groups them: the `events.` prefix from
   [D9](#d9--the-events-table-prefix-uses-the-existing-dotted-map-convention) does the job the
@@ -569,7 +569,7 @@ trap, for a schema that is large but not unmanageable at 2,352 lines.
 
 ## D13 — French content is dropped, not parked
 
-> **Premise corrected by [D33](#d33--bka-has-no-french-content-d13s-premise-is-corrected).** BKa has no French content. The outcome — migrate only `de` — is unchanged.
+> **Premise corrected by [D33](#d33--bka-has-no-french-content-d13s-premise-is-corrected).** BKa has no French content. The outcome (migrate only `de`) is unchanged.
 
 **Context.** BKa is bilingual de|fr. Content entities store translations in a `labels` JSON
 column shaped `{property: {lang: value}}`. The brief put localisation out of scope, which left
@@ -578,12 +578,11 @@ image labels, and scattered values on places, organisations, rates and contacts.
 design recommended parking the raw `labels` JSON in a migration-only column on the grounds that
 deleting it is irreversible.
 
-**Decision.** **Drop it.** French content is not migrated and no column is kept to hold it. The
+**Decision.** Drop it. French content is not migrated and no column is kept to hold it. The
 `labels` JSON collapses to the German value and nothing else is carried over.
 
 **Why.** Karl's call, overriding the recommendation. The argument for parking it was optionality;
-the argument against is that an unused column full of data nothing reads is a liability, not an
-asset — it ages, it confuses the next reader, it shows up in exports and backups, and the
+the argument against is that an unused column full of data nothing reads is a liability rather than an asset: it ages, it confuses the next reader, it shows up in exports and backups, and the
 "someday" that justifies it rarely arrives. The original BKa database is not being destroyed, so
 the French text is not actually unrecoverable: it remains in the source system and in the dumps.
 Parking it in the new schema buys very little that a dump does not already provide.
@@ -592,12 +591,12 @@ Parking it in the new schema buys very little that a dump does not already provi
 - The migration reads only the `de` key from every `labels` JSON and discards the rest.
 - No `legacyLabels`, no migration-only column, no commented-out field.
 - `ACTIVATE_EVENT_NAME_TRANSLATABLE` is already false in BKa, so names were never translated
-  anyway — this affects descriptions, image legends, rate designations, place and organisation
+  anyway. This affects descriptions, image legends, rate designations, place and organisation
   `about` text, and contact labels.
 - Should the agenda ever need French again, it is a new feature built on We.Publish's own
   localisation story, not a revival of BKa's `labels` column. The historical text can be pulled
   from the BKa dump at that point.
-- Rows whose `de` key is null or missing need a defined fallback — the migration must report them
+- Rows whose `de` key is null or missing need a defined fallback: the migration must report them
   rather than silently writing empty strings.
 
 ---
@@ -624,8 +623,8 @@ mechanism. The two-year limit stands; the scheduled refresh does not.*
 
 They go in `libs/api/prisma/schema.prisma` alongside everything else, in every tenant's database.
 
-Karl expects other media to adopt the agenda, so this is not BKa-only infrastructure being
-imposed on twenty unrelated sites — it is a feature arriving where the next tenant can reach it.
+Karl expects other media to adopt the agenda, so this is a feature arriving where the next
+tenant can reach it rather than BKa-only infrastructure imposed on twenty unrelated sites.
 Tables stay empty for anyone not using it, which costs nothing.
 
 ### 14d — Sub-events collapse into occurrences
@@ -638,12 +637,12 @@ one:
 | Check | Result |
 | --- | --- |
 | Occurrences per sub-event | exactly 1.00 (15,275 : 15,275) |
-| Occurrences on the parent of an explicit-list event | 1 — its own first date |
+| Occurrences on the parent of an explicit-list event | 1, its own first date |
 | Child occurrences coinciding with a parent occurrence | 30 of 15,275 |
 | Children drifted from their parent despite the copy-down | 67 |
 
 The parent's `date_from`/`date_to` hold exactly one span, so a second date had nowhere to go but
-another row of the same table — which then inherited an id, a slug, and fourteen fields needing
+another row of the same table, which then inherited an id, a slug, and fourteen fields needing
 permanent synchronisation. The 67 drifted children are what that costs. A sub-event is a storage
 workaround for a single-span column, not a domain concept.
 
@@ -667,17 +666,17 @@ expensive to reverse after data is migrated.
 
 **Context.** [D14b](#d14--data-model-answers-partner-recurrence-horizon-shared-schema-sub-events)
 capped expansion at `now + 2 years` and accepted a periodic job to extend the window as time
-passed. Karl proposed the inverse: **forbid entering dates more than two years ahead**, and let an
+passed. Karl proposed the inverse: forbid entering dates more than two years ahead, and let an
 organiser who wants more come back and extend the event.
 
-**Decision.** The cap is enforced at **input validation**. An event's last date may not exceed
+**Decision.** The cap is enforced at input validation. An event's last date may not exceed
 `now + 2 years` at the time it is saved. Expansion then materialises every date the revision
-describes, once, at publish. **No scheduled job, no refreshing window.**
+describes, once, at publish. There is no scheduled job and no refreshing window.
 
 **Why.** Better on three counts.
 
 1. **Expansion stays a pure function of the published revision.** A refreshing window makes it
-   time-dependent — re-expanding the same revision a year later would legitimately produce
+   time-dependent: re-expanding the same revision a year later would legitimately produce
    different rows, which breaks the idempotence test [D10](#d10--occurrences-belong-to-the-entity-the-recurrence-rule-belongs-to-the-revision)
    depends on. With a validation cap, re-expansion is deterministic forever.
 2. **The limit becomes honest.** A refreshing horizon silently truncates: the organiser types
@@ -687,14 +686,14 @@ describes, once, at publish. **No scheduled job, no refreshing window.**
 3. **No rows appear that nobody typed.** What exists after publish is what the organiser entered.
 
 **Consequences.**
-- One validation rule on the event: the last date — `dateTo` for a span or a rule, the latest
-  entry for an explicit list — must be within two years of the save.
+- One validation rule on the event: the last date (`dateTo` for a span or a rule, the latest
+  entry for an explicit list) must be within two years of the save.
 - Measured at save time, so a draft that sits for a year is re-checked when it is finally
   published rather than grandfathered in.
 - Past dates stay valid. The cap is a ceiling, not a window; an event does not become invalid as
   time passes.
 - **The editor needs an expiry warning.** The cost of this choice is that an open-ended weekly
-  event — a regular club night — needs an organiser back every two years. Expiring silently would
+  event, such as a regular club night, needs an organiser back every two years. Expiring silently would
   make the event vanish from the agenda with no signal. The editor surfaces events whose last
   occurrence is approaching; specified in [design 3](design/03-editor.md).
 - **The migration must truncate and report.** 20 BKa events run past 2030 and one to 2099. They
@@ -710,22 +709,22 @@ describes, once, at publish. **No scheduled job, no refreshing window.**
 
 **Context.** BKa's event search is `unaccent()` + `ILIKE '%…%'` across the event name and
 description, with no index. Bernese venue and production names are full of accents, so a search
-for `theatre` must find *Théâtre* — the accent folding is not optional. We.Publish offers only
-German `to_tsvector` raw SQL and GIN trigram indexes on slugs; nothing accent-insensitive.
+for `theatre` must find *Théâtre*, so accent folding is required. We.Publish offers only
+German `to_tsvector` raw SQL and GIN trigram indexes on slugs, and neither is accent-insensitive.
 
-**Decision.** Port the behaviour and **add the index BKa never had**: enable the `unaccent`
+**Decision.** Port the behaviour and add the index BKa never had: enable the `unaccent`
 extension in a migration, and create a GIN trigram index over the unaccented searched columns.
 
 **Why.** Karl's call to do it properly. `ILIKE '%…%'` is a leading-wildcard match, so without a
-trigram index it is a sequential scan over ~25,000 event rows — on every keystroke of a
-type-ahead. BKa gets away with it on a smaller working set and a slower UI; reproducing the
-query without the index would be porting the bug along with the feature.
+trigram index it is a sequential scan over ~25,000 event rows, run on every keystroke of a
+type-ahead. BKa gets away with it on a smaller working set and a slower UI. Reproducing the
+query without the index would port the bug along with the feature.
 
 **Consequences.**
 - A migration enables `unaccent` and `pg_trgm` and creates the index. Both are standard
-  PostgreSQL extensions and need superuser at creation time — a deployment prerequisite worth
-  confirming against the managed database before the migration ships.
-- The index must be built on the **same expression** the query uses, or it will not be used. An
+  PostgreSQL extensions and need superuser at creation time. That is a deployment prerequisite to
+  confirm against the managed database before the migration ships.
+- The index must be built on the same expression the query uses, or it will not be used. An
   `EXPLAIN` in review is the cheapest way to be sure.
 - `unaccent()` is not immutable by default, which blocks indexing it directly; the usual remedy
   is an immutable wrapper function. This is the detail most likely to go wrong, so it gets a test
@@ -735,31 +734,30 @@ query without the index would be porting the bug along with the feature.
 
 ## D17 — BCC is a per-template setting, not a global environment variable
 
-**Context.** BKa copies `MAILER_BCC_ADDRESS` onto **every** outbound notification. It is set once
+**Context.** BKa copies `MAILER_BCC_ADDRESS` onto every outbound notification. It is set once
 in the environment, applies to all eight templates, and is invisible to anyone reading the
 application.
 
-**Decision.** Do not port the global variable. Add a nullable **`bccAddress` on `MailTemplate`**,
+**Decision.** Do not port the global variable. Add a nullable `bccAddress` on `MailTemplate`,
 editable in the editor beside the subject and body.
 
 **Why.** Karl's suggestion. A silent global BCC on every message is a surveillance default: it
 copies an unrelated address on mail to people who cannot see that it is happening, and nothing in
-the application discloses it. Per-template makes it a deliberate, visible choice — an operator who
-wants a copy of "an event needs validating" can have one without also copying every message to an
-organiser.
+the application discloses it. A per-template setting makes it a deliberate, visible choice. An
+operator who wants a copy of "an event needs validating" can have one without also copying every
+message to an organiser.
 
-It also fits where the rest of this work is going. The templates become editor-editable anyway, so
-the recipient configuration belongs in the same place as the content rather than in a deploy-time
-variable nobody edits.
+The templates become editor-editable anyway, so the recipient configuration belongs in the same
+place as the content, not in a deploy-time variable nobody edits.
 
 **Consequences.**
 - `MailTemplate` gains `bccAddress String?`. Null means no BCC, which is the default for every
-  template — the behaviour change from BKa is deliberate and should be called out at cutover.
+  template. The behaviour change from BKa is deliberate and should be called out at cutover.
 - The editor exposes it on the template form, with help text saying plainly that the recipient
   will not see it.
 - The mail service reads it per send rather than from configuration.
-- Applies to all templates, not only the agenda's — this is a general improvement that the port
-  happens to be the occasion for.
+- It applies to all templates, not only the agenda's. This is a general improvement, and the port
+  happens to be the occasion for it.
 
 ---
 
@@ -768,14 +766,14 @@ variable nobody edits.
 **Context.** Three of the six surviving BKa templates
 ([D3](#d3--validation-is-cross-organisation-publishing-not-a-publication-state)) address "the
 users of the venue's organisation", and fall back to a configured reply-to address when that
-organisation has **no users at all**. We.Publish cannot log such a send: `MailLog.recipientID` is
-a **NOT NULL foreign key to `users(id)`**, and a bare address is not a user row.
+organisation has no users at all. We.Publish cannot log such a send: `MailLog.recipientID` is
+a NOT NULL foreign key to `users(id)`, and a bare address is not a user row.
 
-**Decision.** **Skip the send.** No mail goes to a fallback address. Instead, an organisation with
+**Decision.** Skip the send. No mail goes to a fallback address. Instead, an organisation with
 no members is surfaced as a problem in the editor.
 
-**Why.** Karl's call. The alternative — making `recipientID` nullable and adding a
-`recipientEmail` column — touches a shared table that every mail in the system writes to, in order
+**Why.** Karl's call. The alternative (making `recipientID` nullable and adding a
+`recipientEmail` column) touches a shared table that every mail in the system writes to, in order
 to support a case that exists only because BKa had nowhere else to put these people.
 [D8](#d8--former-proposers-become-dormant-user-accounts) removes most of that reason by giving
 former proposers real accounts.
@@ -786,18 +784,18 @@ is unmaintained, so it stays unmaintained. Making the gap visible fixes the actu
 than papering over it with a redirect.
 
 **Consequences.**
-- The mail service resolves recipients to user rows. An empty set means no send — not an error,
-  and not a fallback.
+- The mail service resolves recipients to user rows. An empty set means no send. It is neither an
+  error nor a fallback.
 - The editor shows organisations with zero members as needing attention, so the condition is
   discoverable rather than silent. Specified in [design 3](design/03-editor.md).
 - `MailLog` keeps its NOT NULL constraint, and no shared mail schema changes.
-- A skipped send should still be observable — it is a condition worth seeing in logs, not a
-  silent no-op, or we have replaced one invisible behaviour with another.
-- **The gap is far larger than assumed: 315 of 781 organisations (40%) have no members at all.**
+- A skipped send should still show up in the logs. A silent no-op would replace one invisible
+  behaviour with another.
+- The gap is far larger than assumed: 315 of 781 organisations (40%) have no members at all.
   Measured after the data was re-restored (see the correction note in
   [`research/README.md`](research/README.md)). That makes surfacing it the substantive half of
-  this decision rather than a tidy-up — two in five organisations would otherwise silently
-  receive no notifications, and nobody would learn why.
+  this decision: two in five organisations would otherwise silently receive no notifications, and
+  nobody would learn why.
 - The migration reports the figure at cutover so the backlog is known rather than discovered.
 
 ---
@@ -817,31 +815,31 @@ return { OR: [ { published: { isNot: null } },
 ```
 
 That let any logged-in organiser browse every other organisation's published events. The open
-question was whether that was deliberate — it helps avoid double-booking a venue, but exposes
+question was whether that was deliberate. It helps avoid double-booking a venue, but exposes
 other people's programming.
 
-**Decision.** **No.** In the editor, a user sees only the events of organisations they belong to.
+**Decision.** No. In the editor, a user sees only the events of organisations they belong to.
 Seeing anyone else's requires the cross-organisation permissions from
 [D4](#d4--canpublishevent-decides-who-needs-validating)
-(`CanGetOtherOrganizationEvents` and friends), which the **Agenda-Admin** role carries.
+(`CanGetOtherOrganizationEvents` and friends), which the Agenda-Admin role carries.
 
 **Why.** Karl's call, and it matches BKa (`LIST_OWN_EVENTS_ONLY=true` in production). An agenda is
 a competitive space: unannounced programming is commercially sensitive, and "published on the
 public website" is not the same permission as "visible in my colleague-of-nobody admin tool". The
-double-booking argument is real but weaker — the venue's own admins can reach their venue's
+double-booking argument is real but weaker. The venue's own admins can reach their venue's
 events, which is where that conflict actually surfaces.
 
 **Confirmed by Karl after review**, in the sentence that settles it: *"it's fine when the admin
 backend doesn't show published events to other organisations — you care about editing events
-there, not seeing events."* The scoping question and the editing question are simply different
-questions, and only the second one has to let the venue's organisation in.
+there, not seeing events."* Scoping the list and editing an event are different questions, and
+only the second has to let the venue's organisation in.
 
-**Precision added after review.** "Can reach" is not "can list", and the difference is load-bearing.
+**Precision added after review.** "Can reach" is not "can list", and the difference matters.
 The list is scoped to the organising body only. The venue's organisation enters through
 `canModifyEvent`, not `editorEventsWhere`, so a venue admin opens the event from
 [D3](#d3--validation-is-cross-organisation-publishing-not-a-publication-state)'s mail rather than
 by browsing to it. Narrowing `canModifyEvent` to match the list would point every validation mail
-at a 403. BKa splits it the same way — its admin list is `org ∪ proposer` while its edit voter is
+at a 403. BKa splits it the same way: its admin list is `org ∪ proposer` while its edit voter is
 `own ∪ org ∪ place-org ∪ proposer` (`research/bka-06-security-auth-roles.md:443,453`).
 
 **Consequences — this splits one function into two.** Conflating "what the public may read" with
@@ -860,11 +858,11 @@ export const editorEventsWhere = (session: UserSession): Prisma.EventWhereInput 
 ```
 
 - The public website is unaffected: it reads published events through `publicEventsWhere`.
-- A user with no organisation membership and no cross-organisation permission sees an **empty**
+- A user with no organisation membership and no cross-organisation permission sees an empty
   event list in the editor. That is correct, and the empty state must say so clearly rather than
   implying the agenda is empty.
 - Venue admins still see events at their venue through their organisation's ownership of the
-  venue — the case the double-booking argument cares about.
+  venue, which is the case the double-booking argument cares about.
 - The same split applies to organisations and venues: the editor's lists are scoped, the public
   API is not.
 
@@ -878,7 +876,7 @@ export const editorEventsWhere = (session: UserSession): Prisma.EventWhereInput 
 
 **Context.** 7,576 events (19%) have no `organization_id`. [Design 1](design/01-data-model.md)
 made `Event.organizationId` required, because [D19](#d19--an-organiser-sees-only-their-own-organisations-events-in-the-editor)
-scopes everything by it — which would have blocked the migration. Profiling the gap:
+scopes everything by it, and that would have blocked the migration. Profiling the gap:
 
 | Of the 5,026 **mainevents** with no organisation | |
 | --- | --- |
@@ -889,7 +887,7 @@ scopes everything by it — which would have blocked the migration. Profiling th
 
 (The other 2,550 are subevents, which inherit from their parent.)
 
-Those 4,961 events name **1,835 distinct organisations** that mostly do not exist as rows:
+Those 4,961 events name 1,835 distinct organisations that mostly do not exist as rows:
 1,221 with a single event, 472 with two to five, 142 with six or more, the largest with 132.
 
 **Decision.** Two parts, per Karl.
@@ -907,33 +905,33 @@ venue's organisation    → where no name was given
 otherwise               → null
 ```
 
-**Why.** The alternative — parking everything in a catch-all organisation — quietly breaks
+**Why.** Parking everything in a catch-all organisation instead would quietly break
 [D8](#d8--former-proposers-become-dormant-user-accounts). Proposers get accounts so they can
-manage the events they submitted; but under D19's strict scoping a proposer who is not a member of
-the organisation owning their event would log in and see **nothing**. Creating the organisation
-they named, with them as its member, is what makes D8 do what it was for.
+manage the events they submitted, but under D19's strict scoping a proposer who is not a member of
+the organisation owning their event would log in and see nothing. Creating the organisation
+they named, with them as its member, lets D8 work as intended.
 
-It is also the more honest representation. These groups *are* organisations in the domain sense —
-BKa simply never registered them, because its wizard had no way to. The new model has no such gap.
+It is also the more honest representation. These groups *are* organisations in the domain sense.
+BKa never registered them because its wizard had no way to. The new model has no such gap.
 
 Nullable rather than a catch-all because an orphan event with no owner is a real state, and a
 column that says so is clearer than a sentinel row that pretends otherwise.
 
 **Consequences.**
 - `editorEventsWhere` filters `organizationId: { in: session.organizationIds }`, which excludes
-  nulls naturally — so an organiser never sees orphan events, and only a holder of
+  nulls naturally. An organiser therefore never sees orphan events, and only a holder of
   `CanGetOtherOrganizationEvents` (Agenda-Admin) can. That is the right default and needs no
   special case.
-- ~1,835 organisations are created, most with a single event. They are **marked as
-  migration-created** so an Agenda-Admin can review, merge and tidy them; 1,221 single-event
+- ~1,835 organisations are created, most with a single event. They are marked as
+  migration-created so an Agenda-Admin can review, merge and tidy them; 1,221 single-event
   organisations is a long tail worth being able to find.
-- Name matching is **exact after normalisation**, never fuzzy. Normalising case, whitespace and
+- Name matching is exact after normalisation, never fuzzy. Normalising case, whitespace and
   punctuation only lifts matches from 1,911 to 1,870 distinct names, so fuzzy matching would buy
-  little and risks merging two genuinely different groups — which is far harder to undo than
+  little and risks merging two genuinely different groups, which is far harder to undo than
   merging duplicates later.
 - The created organisations have no address, region or contact details, all of which are required
   or expected elsewhere. They need sensible empty states rather than fabricated values.
-- The editor must handle an event with no organisation without crashing — in the form, in the
+- The editor must handle an event with no organisation without crashing: in the form, in the
   list, and in the notification logic ([D3](#d3--validation-is-cross-organisation-publishing-not-a-publication-state)),
   which has nobody to notify for such an event.
 
@@ -943,12 +941,12 @@ column that says so is clearer than a sentinel row that pretends otherwise.
 
 > **Updated by [D34](#d34--in-situ-finishes-ginto-before-the-end-of-2026).** In Situ's finished integration replaces this branch as the reference.
 
-**Context.** The Ginto integration exists on branch `f/lab-insitu-386` — **unfinished work, not
-shipped code**, as Karl confirmed. It is still the best starting point we have, so the question is
-which parts to carry over. Branch files:
+**Context.** The Ginto integration exists on branch `f/lab-insitu-386`. Karl confirmed it is
+unfinished work and was never shipped. It is still the best starting point we have, so the question
+is which parts to carry over. Branch files:
 (`GintoHttpClient`, `GintoDataProvider`, `GintoLegacyNormalizer`, `GintoRatingLegacyIdMap`,
 `GintoRatingsCommand`). [`research/bka-07-proinfirmis-ginto.md`](research/bka-07-proinfirmis-ginto.md)
-§14 rated two discrepancies **High** but could not verify either without a key. With the key, both
+§14 rated two discrepancies High but could not verify either without a key. With the key, both
 were tested directly against `https://api.ginto.guide/graphql`.
 
 Both turned out to be real, which is what you would expect of a branch that has not yet met the
@@ -972,9 +970,10 @@ The live API answers:
 Field 'name' doesn't exist on type 'DefaultAccessibilityRating'
 ```
 
-GraphQL rejects the **whole document** on an unknown field, so this returns no data at all —
+GraphQL rejects the whole document on an unknown field, so this returns no data at all:
 `availableDefaultRatings` comes back empty, the legacy id map cannot be built, and every place
-sync writes zero pictograms. Silently, because the branch treats an empty list as "no ratings".
+sync writes zero pictograms. Nothing reports it, because the branch treats an empty list as "no
+ratings".
 
 `DefaultAccessibilityRating` has exactly three fields:
 
@@ -993,18 +992,18 @@ f9e71950-b99d-417b-b9ec-1ebf623d7113   len=36
 79b89cbf-15a0-4512-b8d1-17abf95b3bd4   len=36
 ```
 
-BKa stores the fallback in `place.pro_infirmis_id_source`, a **`varchar(24)`** — every id would be
+BKa stores the fallback in `place.pro_infirmis_id_source`, a `varchar(24)`, so every id would be
 truncated or rejected. The new column is sized for a UUID.
 
-**Decision.** Take the *approach* from the branch — normalising Ginto back to the legacy numeric
-pictogram ids ([D7](#d7--proinfirmis-is-in-scope-and-we-build-against-ginto)) is sound and worth
-keeping — and correct these two details against the live schema: `description(locale:)` for
-labels, and a UUID-sized source-id column.
+**Decision.** Keep the branch's approach: normalising Ginto back to the legacy numeric
+pictogram ids ([D7](#d7--proinfirmis-is-in-scope-and-we-build-against-ginto)) is sound. Correct
+these two details against the live schema: `description(locale:)` for labels, and a UUID-sized
+source-id column.
 
 **Why it matters beyond the two fixes.** The ratings query would have failed on first contact, so
-the branch has clearly never run against the live API. Expected for unfinished work — but it means
-the rest of it is **unverified against reality** too, and should be read as a design sketch rather
-than behaviour to preserve. The 14 live rating keys are:
+the branch has clearly never run against the live API. That is expected for unfinished work, but it
+means the rest of the branch is unverified against the live API too. Read it as a design sketch,
+not as behaviour to preserve. The 14 live rating keys are:
 
 ```
 completely_wheelchair_accessible          toilet_completely_wheelchair_accessible
@@ -1022,36 +1021,35 @@ it is trusted, since the numeric ids are part of BKa's public API contract.
 **Consequences.**
 - An integration test hits the real API for the ratings query, so a schema change upstream fails
   loudly instead of silently emptying the pictograms.
-- A sync that retrieves **zero** ratings is an error, never a quiet no-op. That is the specific
+- A sync that retrieves zero ratings is an error, never a quiet no-op. That is the specific
   failure this bug produced.
 - **A third bug, found while creating the filter: the source key is wrong.** `.env` ships
-  `GINTO_SOURCE_KEY=zuerst`, but the key Ginto actually uses is **`ch.proinfirmis.zuerst`**.
+  `GINTO_SOURCE_KEY=zuerst`, but the key Ginto actually uses is `ch.proinfirmis.zuerst`.
   Sampled live: of 400 entries, the sources seen are `org.openstreetmap` (217), `ch.didok` (13),
-  `ch.proinfirmis.zuerst` (8) and a long tail — nothing called plain `zuerst`. With the shipped
-  default, matching would find nothing. Same silent-no-op shape as the ratings bug.
+  `ch.proinfirmis.zuerst` (8) and a long tail, and none is called plain `zuerst`. With the shipped
+  default, matching would find nothing, and it would fail silently like the ratings bug.
 - **The filter now exists and is verified.** Created in the Ginto admin for the We.Publish
-  organisation, scoped to all **89 ZUERST-derived sources** (so an entry qualifies if it carries
+  organisation, scoped to all 89 ZUERST-derived sources (so an entry qualifies if it carries
   any legacy ZUERST id), with no category, campaign, verification or detail-level restriction.
-  `entriesByFilter` returns **12,238 entries**, each with numeric `originIds` such as `4869` —
-  exactly the shape of BKa's `place.pro_infirmis_id_source`.
+  `entriesByFilter` returns 12,238 entries, each with numeric `originIds` such as `4869`, the
+  same shape as BKa's `place.pro_infirmis_id_source`.
   The admin's "Entries" column shows 0; that count is not what the API serves, and the API was
   tested directly.
-- The key, the filter id and the corrected source key live in `.env.local` in both checkouts —
+- The key, the filter id and the corrected source key live in `.env.local` in both checkouts and
   never in this repository, which is public.
-- **BKa has almost no ProInfirmis data — but that is a statement about BKa, not about the
-  feature.** Exactly **1 of 1,369** BKa places carries a ProInfirmis id (`265`). Karl confirms
-  other tenants, InSitu in particular, do use it — InSitu runs with `ACTIVATE_PROINFIRMIS=true`
-  by default, where BKa's local compose has it off. So this is built as a **first-class,
-  multi-tenant integration**, not a BKa courtesy.
+- **BKa has almost no ProInfirmis data, which says nothing about the feature.** Exactly 1 of
+  1,369 BKa places carries a ProInfirmis id (`265`). Karl confirms other tenants, InSitu in
+  particular, do use it: InSitu runs with `ACTIVATE_PROINFIRMIS=true` by default, where BKa's
+  local compose has it off. So this is built as a first-class, multi-tenant integration.
 
-  Two practical consequences. The **data migration** carries essentially nothing, so there is no
-  import to get right. The **integration** carries everything, so it must be correct on its own
-  terms — and all three bugs found above fail **silently**, writing zero pictograms rather than
-  erroring. For a tenant whose venues depend on this, silent emptiness is the worst failure mode
-  available: the accessibility information simply stops appearing and nobody is told.
+  This has two practical consequences. The data migration carries essentially nothing, so there is
+  no import to get right. The integration carries everything, so it must be correct by itself, and
+  all three bugs found above fail silently: they write zero pictograms instead of raising an error.
+  For a tenant whose venues depend on this, that is the worst failure mode available. The
+  accessibility information stops appearing and nobody is told.
 
-  Hence the rule in the consequences above, which matters more for InSitu than for BKa: a sync
-  that retrieves zero ratings, or matches zero entries, is an **error**, not a quiet no-op.
+  That is why the rule in the consequences above matters more for InSitu than for BKa: a sync
+  that retrieves zero ratings, or matches zero entries, is an error, not a quiet no-op.
 
 ---
 
@@ -1062,31 +1060,31 @@ it is trusted, since the numeric ids are part of BKa's public API contract.
 **Context.** [Design 4](design/04-migration.md) §8 left the stub's scope open because nobody knew
 whether anything still called the old APIs, and the restored environment has no access logs.
 
-**Decision.** Confirmed by Karl: **multiple clients call v1 and v2.** The stub is built.
+**Decision.** Confirmed by Karl: multiple clients call v1 and v2. The stub is built.
 
 **Consequences.**
-- It is no longer contingent work — it belongs in the plan with the rest.
-- ~~Mounted away from the GraphQL endpoint~~ — superseded by [D26](#d26--the-compatibility-stub-stays-in-the-php-application-and-calls-wepublish): it does not live in We.Publish at all.
+- It is no longer contingent work and belongs in the plan with the rest.
+- ~~Mounted away from the GraphQL endpoint~~ Superseded by [D26](#d26--the-compatibility-stub-stays-in-the-php-application-and-calls-wepublish): it does not live in We.Publish at all.
 - A translation layer only: old route in, ledger lookup, service call, old response shape out.
-- **Every endpoint is covered**, not a guessed subset — Karl's instruction, and the surface is
-  small enough to make that a real commitment rather than an aspiration:
+- Every endpoint is covered, not a guessed subset, per Karl's instruction. The surface is small
+  enough to make that a real commitment:
 
   | | Surface |
   | --- | --- |
-  | **v1** — hand-written controllers | 7 controllers, **19 actions** (11 of them on `/api/v1/events`) |
-  | **v2** — API Platform resources | 8 resources, **23 operations** (14 collection, 4 item, 2 POST, 1 PATCH, 2 DELETE) |
+  | **v1** (hand-written controllers) | 7 controllers, **19 actions** (11 of them on `/api/v1/events`) |
+  | **v2** (API Platform resources) | 8 resources, **23 operations** (14 collection, 4 item, 2 POST, 1 PATCH, 2 DELETE) |
   | **Total** | **42 operations** |
 
   Coverage is therefore enumerable, and the stub gets a checklist rather than a judgement call.
-  The v2 side includes four agenda sub-collections that are easy to miss —
+  The v2 side includes four agenda sub-collections that are easy to miss:
   `/events/agenda/organization`, `/events/agenda/place`, `/events/agenda/similar`,
   `/events/agenda/sponsored`.
-- Per-call logging with the calling token ([design 4](design/04-migration.md) §8.3) still matters:
-  it is what eventually tells us which of the 42 are actually used, and the only way anyone will
+- Per-call logging with the calling token ([design 4](design/04-migration.md) §8.3) still matters.
+  It will eventually tell us which of the 42 are actually used, and it is the only way anyone will
   be able to prove the stub is safe to retire.
-- **`public/openapi.yaml` is stale** — it documents v1 only (8 paths, 17 operations) and predates
+- `public/openapi.yaml` is stale: it documents v1 only (8 paths, 17 operations) and predates
   the v2 surface. Generate it fresh from the running app before using it as the contract.
-- ~~The two `Print Import` tokens cannot be migrated (stored hashed)~~ — moot under
+- ~~The two `Print Import` tokens cannot be migrated (stored hashed)~~ Moot under
   [D26](#d26--the-compatibility-stub-stays-in-the-php-application-and-calls-wepublish): the PHP app
   keeps its own token table, so they keep working untouched.
 
@@ -1097,7 +1095,7 @@ whether anything still called the old APIs, and the restored environment has no 
 > **Updated by [D36](#d36--an-api-key-can-belong-to-one-organisation).** A key can now be bound to one organisation.
 
 **Context.** The brief asks for BKa's API tokens re-implemented as a separate library with its
-own table prefix. BKa issues them as **JWTs stored in plaintext** (7 live tokens, ~920 characters
+own table prefix. BKa issues them as JWTs stored in plaintext (7 live tokens, ~920 characters
 each), re-displayable from the admin forever, inheriting the full permissions of the user who owns
 them. We are not porting that design.
 
@@ -1105,21 +1103,21 @@ them. We are not porting that design.
 
 | | Decision | Why |
 | --- | --- | --- |
-| Format | **Opaque random**, 256 bits, base64url | A JWT is self-verifying so it can only be revoked via a blocklist — and once you consult a database anyway, the JWT buys nothing while costing ~900 bytes per request and exposing its claims to anyone who base64-decodes it. |
-| Storage | **SHA-256 hash only** | Treat it like a password: a leaked database must not yield working keys. |
-| Hash choice | **SHA-256, not bcrypt/argon2** | The usual advice inverts here. Slow KDFs defend *low-entropy human* passwords; a 256-bit random token has nothing to brute-force, so the slow hash buys no security, costs latency on every API call, and — being salted — cannot be indexed, forcing a table scan per request. |
-| Visibility | **Shown once, at creation** | Lost keys are rotated, not recovered. |
-| Identification | A stored **prefix** (`wep_` + first 8 chars), non-secret | Lets the editor and the logs name a key without holding the secret. |
+| Format | Opaque random, 256 bits, base64url | A JWT is self-verifying, so it can only be revoked via a blocklist. Once you consult a database anyway, the JWT buys nothing, while it costs ~900 bytes per request and exposes its claims to anyone who base64-decodes it. |
+| Storage | SHA-256 hash only | Treat it like a password: a leaked database must not yield working keys. |
+| Hash choice | SHA-256, not bcrypt/argon2 | The usual advice inverts here. Slow KDFs defend *low-entropy human* passwords; a 256-bit random token has nothing to brute-force, so the slow hash buys no security, costs latency on every API call, and, being salted, cannot be indexed, which forces a table scan per request. |
+| Visibility | Shown once, at creation | Lost keys are rotated, not recovered. |
+| Identification | A stored prefix (`wep_` + first 8 chars), non-secret | Lets the editor and the logs name a key without holding the secret. |
 | Detectability | A fixed `wep_` prefix | Secret scanners (GitHub push protection and friends) can recognise a leaked key. |
-| Authority | **Explicit scopes on the key** | BKa keys inherit their owner's permissions, so a print-import key can do whatever an admin can. Least privilege instead. |
+| Authority | Explicit scopes on the key | BKa keys inherit their owner's permissions, so a print-import key can do whatever an admin can. Least privilege instead. |
 | Lifecycle | `expiresAt`, `revokedAt`, `lastUsedAt` | Revocation is a row update; `lastUsedAt` tells you which keys are dead before you delete them. |
 | Transport | `Authorization: Bearer` only | Query strings leak into access logs, referrers and browser history. |
 
 **Consequences.**
-- BKa's 7 existing tokens **cannot be migrated** — we never learn their plaintext, and would not
+- BKa's 7 existing tokens cannot be migrated: we never learn their plaintext, and would not
   reuse a JWT anyway. Every consumer is reissued a key at cutover. Two of them are named
   `Print Import` and `Printimport V2`, so that pipeline needs warning.
-- `lastUsedAt` must be written **lazily** (throttled, say once a minute per key) or it turns every
+- `lastUsedAt` must be written lazily (throttled, say once a minute per key) or it turns every
   read request into a write.
 - Scoping a key to an organisation plugs into the same predicate the user path uses
   ([D19](#d19--an-organiser-sees-only-their-own-organisations-events-in-the-editor)), so one
@@ -1143,9 +1141,9 @@ them. We are not porting that design.
 `Event`. Karl's correction: *"lots of things that are currently in revisions should be on the event
 itself. The revision is mostly for the content of the event and less so for the metadata."*
 
-**Decision.** A field lives on the **revision** only if it is prose an editor composes. Everything
-that states a present fact about the event — when it happens, where, who runs it, what it costs,
-whether it is still on — lives on the **entity** and changes immediately.
+**Decision.** A field lives on the revision only if it is prose an editor composes. Everything
+that states a present fact about the event (when it happens, where, who runs it, what it costs,
+whether it is still on) lives on the entity and changes immediately.
 
 | On `Event` | On `EventRevision` |
 | --- | --- |
@@ -1155,7 +1153,7 @@ whether it is still on — lives on the **entity** and changes immediately.
 | `occurrences` | images, via `EventImage` |
 | tags (`Tag[]`), `audienceId` | |
 | `rates` (`Rate[]`) | |
-| the SEO/social set — a deliberate divergence from `ArticleRevision`/`PageRevision`, which version it | |
+| the SEO/social set, a deliberate divergence from `ArticleRevision`/`PageRevision`, which version it | |
 | `reviewRequestedAt` / `reviewRequestedById` | |
 | `legacyId`, `legacyProposedBy` | |
 
@@ -1179,10 +1177,10 @@ whether it is still on — lives on the **entity** and changes immediately.
   `ArticleRevision` by design; events carry far less prose than articles.
 - The API splits: `updateEvent` for facts, `updateEventContent` for prose. Design 2 §2.3 and
   design 3 §4 are reworked to match.
-- **`name` stays on the revision — confirmed, for now.** It is prose, and `ArticleRevision` holds
+- **`name` stays on the revision, confirmed for now.** It is prose, and `ArticleRevision` holds
   `title`. The accepted cost: an organiser who needs validation ([D4](#d4--canpublishevent-decides-who-needs-validating))
-  goes through a review cycle to fix a typo in a title. The alternative — name on the entity —
-  makes renaming immediate but lets that same organiser publish and then rename to anything.
+  goes through a review cycle to fix a typo in a title. Putting the name on the entity would make
+  renaming immediate, but would let that same organiser publish and then rename to anything.
   Revisit if the review cycle proves annoying in practice.
 - Images likewise follow the article precedent and stay on the revision, through the existing
   `EventImage` join (caption, sort order, main flag) rather than a single `imageId`.
@@ -1200,10 +1198,10 @@ whether it is still on — lives on the **entity** and changes immediately.
 **Decision.** Follow the schema's own convention, measured rather than assumed. Of 91 models in
 `libs/api/prisma/schema.prisma`:
 
-- **82 carry both** `createdAt` and `modifiedAt` — this is the rule for every entity table.
-- **6 carry `createdAt` only**, and three of those are `ArticleRevision`, `PageRevision` and
+- 82 carry both `createdAt` and `modifiedAt`. This is the rule for every entity table.
+- 6 carry `createdAt` only, and three of those are `ArticleRevision`, `PageRevision` and
   `CommentsRevisions`. Revision tables deliberately omit `modifiedAt`, so `EventRevision` does too.
-- **3 carry neither** — `ArticleRevisionAuthor` and `ArticleRevisionSocialMediaAuthor` (pure join
+- 3 carry neither: `ArticleRevisionAuthor` and `ArticleRevisionSocialMediaAuthor` (pure join
   tables) and `PeerProfile`. `OrganizationMember` is a join table but keeps `createdAt`, because
   "member since" is a fact worth having.
 
@@ -1220,13 +1218,13 @@ occupies `path: 'v1'`". Supersedes the placement bullets in
 [D22](#d22--the-v1v2-compatibility-stub-is-required).**
 
 **Context.** [D22](#d22--the-v1v2-compatibility-stub-is-required) settled that the stub is required
-and enumerated its 42 operations, but assumed it would be built *inside* We.Publish — which
+and enumerated its 42 operations, but assumed it would be built *inside* We.Publish. That
 collided with GraphQL already serving `path: 'v1'` and meant re-implementing 42 legacy response
 shapes in Nest.
 
 **Decision.** Karl: *"the stub should live in the php application that then calls the WeP
-application."* The BKa Symfony app survives cutover as a **stateless proxy**. Its routes,
-controllers, serialisers and token auth stay exactly as they are; only the data layer changes —
+application."* The BKa Symfony app survives cutover as a stateless proxy. Its routes,
+controllers, serialisers and token auth stay exactly as they are. Only the data layer changes:
 Doctrine reads become GraphQL calls to We.Publish.
 
 **Why this is better than building it in Nest.**
@@ -1248,7 +1246,7 @@ Doctrine reads become GraphQL calls to We.Publish.
 
 **Consequences.**
 
-- **The PHP app authenticates to We.Publish with one scoped API key** ([D23](#d23--api-keys-are-opaque-hashed-scoped-and-shown-once)) —
+- **The PHP app authenticates to We.Publish with one scoped API key** ([D23](#d23--api-keys-are-opaque-hashed-scoped-and-shown-once)),
   the first real consumer of that feature. Its scopes are read-mostly plus whatever the two POST,
   one PATCH and two DELETE v2 operations need.
 - **We.Publish must support lookup by `legacyId`.** Clients pass BKa's BigInt ids. The entities
@@ -1262,8 +1260,8 @@ Doctrine reads become GraphQL calls to We.Publish.
 - **Watch for N+1.** API Platform collections lazily hydrated relations through Doctrine. Ported
   naively, one collection request becomes dozens of GraphQL round trips. Each collection endpoint
   needs a single query with the right selection set, and that is where the real care goes.
-- **Someone has to own the PHP app** through the transition — its runtime, its dependencies and its
-  deploy target all keep ageing. This is the cost being accepted, and the deprecation date in §8.3
+- **Someone has to own the PHP app** through the transition, while its runtime, its dependencies
+  and its deploy target all keep ageing. This is the cost being accepted, and the deprecation date in §8.3
   is what bounds it.
 
 ---
@@ -1281,19 +1279,18 @@ belong to every tenant or only to the agenda sites (BKa, InSitu).
 **Decision.** Karl: *"yes do for everyone."* The events domain is part of the platform, not a
 per-tenant bolt-on. Every tenant gets the tables.
 
-**Why this is cheap.** An unused table costs a row in `pg_class` and nothing else — no rows, no
+**Why this is cheap.** An unused table costs a row in `pg_class` and nothing else: no rows, no
 queries, no indexes doing work. It is the same bargain the schema already makes: every tenant
 carries `polls`, `crowdfundings`, `banners` and `events.tagged-events` whether or not it runs any.
-The alternative — a conditional schema — would mean per-tenant migrations, which this repo has
-deliberately never had.
+A conditional schema would mean per-tenant migrations, which this repo has deliberately never had.
 
 **Consequences.**
 - One migration, applied everywhere, exactly like every other migration in `libs/api/prisma/migrations`.
 - The editor's **Agenda** section is permission-gated ([design 3](design/03-editor.md) §2), so a
   tenant that does not run an agenda simply grants nobody the events permissions and the navigation
   entry never appears. No feature flag is needed to hide it.
-- Seed data — the 13 regions, 4 audiences, 7 affiliations ([design 1](design/01-data-model.md) §10.2) —
-  is **BKa's**, and seeding it into 20 unrelated tenants would be wrong. The migration seeds
+- Seed data (the 13 regions, 4 audiences and 7 affiliations in [design 1](design/01-data-model.md) §10.2)
+  is BKa's, and seeding it into 20 unrelated tenants would be wrong. The migration seeds
   reference data only for the tenants that run an agenda; everywhere else the tables stay empty.
   This is the one place where "ships to everyone" does not mean "populated for everyone".
 - The ~39,978 BKa events import into the BKa tenant's database only. Nothing crosses tenants.
@@ -1304,13 +1301,13 @@ deliberately never had.
 
 - **Everything in this dossier ships in 2026.** Karl, 2026-10-19.
 
-Not architectural decisions — how the work itself is carried out.
+These are not architectural decisions. They record how the work itself is carried out.
 
 - **Design uses the design skills; implementation uses the MUI skill.** The editor half of
   the *design* is written with `/intent` (UX structure, flows, information architecture),
   `/impeccable` (interface quality, visual hierarchy, states and edge cases) and
   `/material-3` (design language). When it comes to *building* it, `/material-ui-theming` is
-  the one that applies — the editor is MUI, while `/material-3` targets Compose, Flutter and
+  the one that applies: the editor is MUI, while `/material-3` targets Compose, Flutter and
   `@material/web`, so it informs the design language rather than the code. Requested by Karl.
 - **Design documents ship as an artifact.** The four design documents (data model, API,
   editor, migration) are written as separate documents and published together as one artifact
@@ -1328,45 +1325,45 @@ Not architectural decisions — how the work itself is carried out.
 
 **Context.** [D26](#d26--the-compatibility-stub-stays-in-the-php-application-and-calls-wepublish)
 makes the surviving Symfony app a proxy in front of We.Publish, which made it the busiest caller of
-the new API — and nothing in the authorisation model fitted it. `ApiToken` carries no
+the new API, and nothing in the authorisation model fitted it. `ApiToken` carries no
 `organizationId`, and `ApiTokenSession` carries no `roles`
 (`libs/authentication/api/src/lib/auth-session.ts`), so any scope predicate typed against
 `UserSession` would have excluded the proxy outright.
 
-**Decision.** Karl's call: **the PHP app gets an admin API token that can set whatever it wants.**
+**Decision.** Karl's call: the PHP app gets an admin API token that can set whatever it wants.
 Per-caller authorisation stays in the PHP app, where it already lives.
 
 **Why.** It is the only option that does not duplicate BKa's authorisation into We.Publish. The
 Symfony app already authenticates its own callers against its own `user_token` table and already
-runs the voters — D26 changes only its data layer, so the voters survive cutover untouched. Giving
+runs the voters. D26 changes only its data layer, so the voters survive cutover untouched. Giving
 the proxy an organisation-scoped token instead would mean re-implementing BKa's ownership rules on
-the We.Publish side, and those rules are not even self-consistent: the research found **five
-different definitions of "my event"** across BKa's five implementations
+the We.Publish side, and those rules are not even self-consistent: the research found five
+different definitions of "my event" across BKa's five implementations
 (`research/bka-06-security-auth-roles.md:453`). Porting that mess is worse than fronting it.
 
 **Consequences.**
-- `ApiToken` gains **no** `organizationId`, and `editorEventsWhere` / `canModifyEvent` stay typed
+- `ApiToken` gains no `organizationId`, and `editorEventsWhere` / `canModifyEvent` stay typed
   against `UserSession`. The proxy never passes through them.
 - **The proxy becomes the sole enforcement point for every BKa API caller.** A bug there is an
   admin-level bug on We.Publish, not a scoped one. This is the price of the decision and it should
   be stated plainly rather than discovered later.
 - The voters now need their ownership facts from We.Publish rather than Doctrine, so the API must
   expose `Event.organizationId` and `Event.place.organizationId`, plus the caller's organisation
-  memberships. That is a hard requirement on [design 2](design/02-api.md), not a nicety.
+  memberships. That is a hard requirement on [design 2](design/02-api.md).
 - An admin token bypasses *scoping*, not *validation*. The zod rules in design 2 still apply to
   everything the proxy writes.
 - **All BKa traffic is one session, which is already the behaviour.** `ApiTokenStrategy` builds
   the session with `id: apiToken.id` (`libs/api-token/api/src/lib/api-token.strategy.ts:19-24`),
   so a token *is* a single stable session rather than one session per request or per caller. Every
   audit row from the proxy therefore shares one `sessionId`. Karl confirmed this is what is wanted,
-  so nothing is built here — it is recorded only so that a later change does not "fix" it into
+  so nothing is built here. It is recorded only so that a later change does not "fix" it into
   per-caller sessions. The token's reach comes from `permissions: apiToken.scopes`, so "can set
   whatever it wants" means a token whose scopes cover the whole event surface.
 - **The audit log shows the token, and that is accepted.** `describeActor` records an API-token
   call as `actorType: token` with `userId: null` and only a `tokenName`
   (`libs/audit-log/api/src/lib/audit-log.interceptor.ts:34-42`), so every BKa-originated change
   lands in the audit log as one actor. Karl considered threading the acting user through the
-  existing `impersonatedBy` field and **declined** — showing the token is enough. The proxy
+  existing `impersonatedBy` field and declined: showing the token is enough. The proxy
   therefore passes no actor, the token branch keeps `impersonatedBy: null`, and no audit-log
   change is in scope. The real per-user history stays in the PHP app, which keeps its own
   `user_token` table and its own logs.
@@ -1376,36 +1373,36 @@ different definitions of "my event"** across BKa's five implementations
 > **Superseded by [D31](#d31--bkas-old-api-is-switched-off-at-cutover-there-is-no-interim-layer).** With no proxy there is no category mapping; clients move to We.Publish tag ids.
 
 **Context.** BKa's numeric category ids are part of a frozen contract. Clients POST
-`"categories": ["/api/v2/categories/1"]` and read a `CategoryApi` — `id`, `label{fr,de}`,
-`tag_color`, `hidden`, `children`, `level` — out of the collection endpoint
+`"categories": ["/api/v2/categories/1"]` and read a `CategoryApi` (`id`, `label{fr,de}`,
+`tag_color`, `hidden`, `children`, `level`) out of the collection endpoint
 (`research/bka-04-api-v2-apiplatform.md:559-564`). Making the vocabulary editable We.Publish `Tag`s
 left nothing holding the id→tag mapping: `Tag` has no `legacyId`, and
 [D26](#d26--the-compatibility-stub-stays-in-the-php-application-and-calls-wepublish) describes the
 proxy as stateless.
 
-**Decision.** Karl's call: **the mapping happens in the PHP app, by querying the tags and matching
-on names.** `Tag` gains no `legacyId`.
+**Decision.** Karl's call: the mapping happens in the PHP app, by querying the tags and matching
+on names. `Tag` gains no `legacyId`.
 
 **Why.** It keeps BKa's vocabulary out of the shared schema. A `legacyId` on `Tag` would appear in
-every tenant's database to serve one tenant's compatibility shim — exactly the pollution the port
+every tenant's database to serve one tenant's compatibility shim, which is the pollution the port
 has been avoiding. Name matching is also better defined here than it looks from the outside:
 `Tag` carries `@@unique([type, tag])` (`libs/api/prisma/schema.prisma`), so a name is a unique key
 within a tag type, not a fuzzy match.
 
 **Why the hierarchy problem evaporates.** `CategoryApi` is hierarchical (`children`, and a `level`
-computed as 1 with children / 2 for a leaf with a parent) while `Tag` is flat — which looked like a
-blocker. It is not, for two reasons. `children` **is not in any event serialization group**
+computed as 1 with children / 2 for a leaf with a parent) while `Tag` is flat. That looked like a
+blocker, but two facts remove it. `children` is not in any event serialization group
 (`research/bka-04-api-v2-apiplatform.md:798`), so an event payload never carries it. And the PHP
 app keeps its own `category` table regardless, so it can serve `GET /api/v2/categories` entirely
-from its own data — ids, bilingual labels, colours, `hidden`, hierarchy and all. We.Publish tags
-are consulted only for the **event↔category association**, which is flat.
+from its own data: ids, bilingual labels, colours, `hidden` and the hierarchy. We.Publish tags
+are consulted only for the event↔category association, which is flat.
 
 **Consequences.**
 - The proxy resolves a category to a tag by name at call time. BKa's `DEFAULT_LOCALE` is `de`, so
   the German label is the matching key; the French label stays a PHP-side display concern.
 - Renaming a tag in the editor silently breaks the association for that category until the PHP
-  table is updated. This is the accepted cost of not carrying a `legacyId`. It is worth a note in
-  the tag editor rather than a schema change.
+  table is updated. This is the accepted cost of not carrying a `legacyId`. It is worth a note
+  in the tag editor rather than a schema change.
 - `Tag.tag` is nullable, so an unnamed tag is unmappable. The proxy treats a miss as "no such
   category" rather than guessing.
 - Categories stay editable in the We.Publish editor as ordinary tags, which was the point of
@@ -1417,24 +1414,24 @@ are consulted only for the **event↔category association**, which is flat.
 
 **Context.** Keeping the `EventBlock` made the public `Event` type a consumer contract, which
 raised a sorting problem: if an event has one `startsAt`, a weekly series running 2023→2026 sorts
-under 2023 forever and sinks to the bottom of an ascending agenda. The proposed fixes were all
-bad — a time-dependent `nextOccurrenceAt` column that defeats the response cache, or accepting
+under 2023 forever and sinks to the bottom of an ascending agenda. Both proposed fixes were
+bad: a time-dependent `nextOccurrenceAt` column that defeats the response cache, or accepting
 the mis-sort.
 
-**Decision.** Neither. **Ship both list shapes, because BKa ships both.** Karl's instruction —
-*"you can disregard what the old event does"* — is what surfaced this: the problem was an artefact
-of reasoning from We.Publish's old flat event instead of from BKa.
+**Decision.** Neither. Ship both list shapes, because BKa ships both. Karl's instruction,
+*"you can disregard what the old event does"*, surfaced this: the problem came from reasoning
+from We.Publish's old flat event instead of from BKa.
 
 | Query | Returns | Ordered by | Question it answers |
 | --- | --- | --- | --- |
-| `events` | one row per **event** | `firstDateAt` | "this organiser's productions" |
-| `agenda` | one row per **occurrence** | `occurrence.dateFrom` | "what is on this week" |
+| `events` | one row per event | `firstDateAt` | "this organiser's productions" |
+| `agenda` | one row per occurrence | `occurrence.dateFrom` | "what is on this week" |
 
 This mirrors `GET /api/v2/events` (`event.dateFrom ASC`) and `GET /api/v2/events/agenda`
-(one member **per occurrence**, `occurrence.dateFrom ASC`) exactly
+(one member per occurrence, `occurrence.dateFrom ASC`) exactly
 (`research/bka-04-api-v2-apiplatform.md:296-297`).
 
-**Why.** A recurring series genuinely *is* many things in a calendar and one thing in a catalogue.
+**Why.** A recurring series is many things in a calendar and one thing in a catalogue.
 BKa never had the sorting problem because it never asked an event to carry a single agenda
 position. Copying that costs one extra query and removes a column, a cache hazard and a false
 choice.
@@ -1442,7 +1439,7 @@ choice.
 **Consequences.**
 - `firstDateAt` / `lastDateAt` keep a narrower job: they back the compatibility scalars
   `Event.startsAt` / `Event.endsAt` that the `EventBlock` and teasers read, and they order the
-  `events` catalogue. They do **not** back the agenda.
+  `events` catalogue. They do not back the agenda.
 - No `nextOccurrenceAt`, and no `EventSort.NextOccurrence`.
 - The agenda needs `PaginatedOccurrences` and cursor pagination over `occurrence.dateFrom`.
 - The existing date filters already match occurrences (design 2 §2), so the filter surface is
@@ -1463,10 +1460,10 @@ Supersedes [D22](#d22--the-v1v2-compatibility-stub-is-required),
 Symfony app as a stateless proxy in front of We.Publish, D28 gave that proxy an admin API token, and
 D29 had it map BKa categories to tags by name.
 
-**Decision.** Karl, 2026-10-19: **no interim version.** When BKa migrates, its v1/v2 API is switched
+**Decision.** Karl, 2026-10-19: no interim version. When BKa migrates, its v1/v2 API is switched
 off. In Situ's API, served by the same Symfony codebase, stays on.
 
-**What it removes.** The Symfony app drops out of BKa's future entirely: no proxy to own and keep
+**What it removes.** The Symfony app has no further role for BKa: no proxy to own and keep
 patched, no admin token whose holder becomes the sole enforcement point (D28), no name-based category
 mapping that breaks on a rename (D29), and no N+1 work porting 42 collection endpoints.
 
@@ -1475,8 +1472,8 @@ mapping that breaks on a rename (D29), and no N+1 work porting 42 collection end
   authenticate with We.Publish API keys ([D23](#d23--api-keys-are-opaque-hashed-scoped-and-shown-once)).
 - Which clients are still active is unknown: four OAuth clients are registered (by name the BKa
   website, the Guidle event exchange, a venue and an agency) plus the two `Print Import` tokens, and
-  the restored environment has no access logs. **All of them have to be told before cutover.**
-- The `Print Import` tokens are stored hashed and cannot be migrated — D22's original note applies
+  the restored environment has no access logs. All of them have to be told before cutover.
+- The `Print Import` tokens are stored hashed and cannot be migrated, so D22's original note applies
   again. The print pipeline needs new credentials and advance warning.
 - A client moving off v2 needs a We.Publish equivalent for each operation it uses. `agenda`
   ([D30](#d30--the-agenda-lists-occurrences-the-catalogue-lists-events)) covers
@@ -1500,9 +1497,9 @@ Supersedes [D2](#d2--the-propose-an-event-flow-is-not-ported).
 **Context.** D2 retired BKa's public "propose an event" wizard and treated a proposal as a plain
 draft created by an authenticated user.
 
-**Decision.** Karl, 2026-10-19: **the public form still exists.** It creates an account for the
-submitter, as the form already does today; only the order changes. The account is created first,
-then the event — instead of the event first, then the account.
+**Decision.** Karl, 2026-10-19: the public form still exists. It creates an account for the
+submitter, as the form already does today; only the order changes. Today it creates the event and
+then the account; now the account comes first, then the event.
 
 **Consequences.**
 - A submission is an ordinary draft owned by a real user from the moment it exists. There is still
@@ -1521,10 +1518,10 @@ then the event — instead of the event first, then the account.
 **Context.** [D13](#d13--french-content-is-dropped-not-parked) dropped French content, citing 3,212
 French event descriptions and 2,798 French image labels in the restored BKa database.
 
-**Correction.** Karl, 2026-10-19: **BKa had no French texts.**
+**Correction.** Karl, 2026-10-19: BKa had no French texts.
 
 **Consequences.**
-- D13's outcome is unchanged — the migration reads only `de` — but nothing is being taken away
+- D13's outcome is unchanged (the migration reads only `de`), but nothing is being taken away
   from BKa.
 - The `fr` values counted in the restore still exist somewhere. `migrate-bka analyze` should
   establish where they come from (for example In Situ data, or values that were never shown) before
@@ -1538,8 +1535,8 @@ French event descriptions and 2,798 French image labels in the restored BKa data
 Updates [D7](#d7--proinfirmis-is-in-scope-and-we-build-against-ginto) and
 [D21](#d21--the-ginto-branch-is-unfinished-the-live-api-settles-its-two-open-questions).
 
-**Decision.** Karl, 2026-10-19: **In Situ completes the Ginto integration in the shared Symfony app
-before ZUERST shuts down at the end of 2026.**
+**Decision.** Karl, 2026-10-19: In Situ completes the Ginto integration in the shared Symfony app
+before ZUERST shuts down at the end of 2026.
 
 **Consequences.**
 - BKa's accessibility data keeps syncing in the old system until cutover, so there is no gap.
@@ -1568,21 +1565,21 @@ nothing, and could not edit the event they just submitted. D20 names that failur
 to park events in a catch-all organisation, but its fix (create the organisation the proposer named)
 only covers migrated proposers who typed a name.
 
-**Decision.** Karl, 2026-10-23: **the owner (`Event.ownerId`) can list and edit their own events,
-with or without an organisation.**
+**Decision.** Karl, 2026-10-23: the owner (`Event.ownerId`) can list and edit their own events,
+with or without an organisation.
 
 - `editorEventsWhere` is `organisation ∪ owner`; `canModifyEvent` is
   `owner ∪ organisation ∪ venue organisation ∪ CanUpdateOtherOrganizationEvents`
   (`libs/event/api/src/lib/event-scope.ts:163-178,209-213`).
-- "Owner" means a **user** session whose user id equals `ownerId` (`isEventOwner`,
+- "Owner" means a user session whose user id equals `ownerId` (`isEventOwner`,
   `event-scope.ts:57-61`). API keys and peer tokens own nothing: their sessions carry no user, so a token id that happens to equal an `ownerId` matches
   nothing. ~~API keys own nothing~~ Superseded by [D94](#d94--an-api-key-acts-as-the-user-who-created-it): a key acts as its creator.
 - D20 still holds for everyone else: an orphan event (no organisation) is listed only to its owner
   and to holders of `CanGetOtherOrganizationEvents`, and editable only by its owner, its venue's
   organisation and holders of `CanUpdateOtherOrganizationEvents`.
 
-**Owner rights survive publication and validation.** `canModifyEvent` does not look at the
-publication state, on purpose:
+**Owner rights survive publication and validation.** `canModifyEvent` deliberately ignores the
+publication state:
 
 - Editing is not publishing. Prose lands in the draft revision
   ([D24](#d24--the-revision-carries-what-an-editor-writes-the-event-carries-what-the-event-is)), and
@@ -1625,19 +1622,19 @@ and nothing else, and the scope module treated every key as belonging to no orga
 venue's key could reach its own events only through a cross-organisation permission, and that
 permission reaches every organisation's events.
 
-**Decision.** Karl, 2026-10-23: **API keys are tied to an organisation, so a venue's or agency's key
-can only touch its own organisation's events.**
+**Decision.** Karl, 2026-10-23: API keys are tied to an organisation, so a venue's or agency's key
+can only touch its own organisation's events.
 
 - `ApiToken.organizationId` is a nullable foreign key to `Organization`. A key without one is a
-  **platform key** and behaves as before: only its scopes limit it.
+  platform key and behaves as before: only its scopes limit it.
 - `ApiTokenSession.organizationId` carries it (`libs/authentication/api/src/lib/auth-session.ts:29-36`,
   set in `libs/api-token/api/src/lib/api-token.strategy.ts:18-28`), and `organizationIdsOf` returns
   it (`libs/event/api/src/lib/event-scope.ts:41-52`). The scope module therefore treats a bound key as a member of
   that one organisation, through the same functions the user path uses.
 - **Least privilege comes from intersecting the two.** Every right a member exercises goes through a
   resolver guarded by `@Permissions`, and for a key that guard checks the key's scopes. A bound key
-  needs both the scope and the organisation. The scope module also **ignores cross-organisation
-  permissions on a bound key** (`holdsAcrossOrganizations`, `event-scope.ts:30-32`), so it cannot reach past its
+  needs both the scope and the organisation. The scope module also ignores cross-organisation
+  permissions on a bound key (`holdsAcrossOrganizations`, `event-scope.ts:30-32`), so it cannot reach past its
   organisation even if its row somehow carried one.
 - **Who may bind a key to which organisation.** `createApiToken(organizationId)` accepts an
   organisation the creator is a member of, or any organisation for a holder of
@@ -1703,8 +1700,8 @@ the `/organizations/` page fetches `/api/organizations` anonymously and renders 
 organisation. But not every column is shown there, and BKa's own APIs keep some fields behind a
 login (`research/bka-05-api-v1-legacy.md`, `research/bka-04-api-v2-apiplatform.md` §6.3).
 
-**Decision.** Karl, 2026-10-23: **organisations can be read without login, but not all of their
-data is public. Follow the `SensitiveDataUser` pattern.**
+**Decision.** Karl, 2026-10-23: organisations can be read without login, but not all of their
+data is public. Follow the `SensitiveDataUser` pattern.
 
 - An interface `BaseOrganization` carries the public fields, `Organization` implements it with
   nothing more, and `SensitiveDataOrganization` adds the rest
@@ -1715,7 +1712,7 @@ data is public. Follow the `SensitiveDataUser` pattern.**
   | `id`, `name`, `slug`, `subTitle`, `about`, `website`, `legalStatus`, `enabled`, `address`, `zip`, `city`, `latitude`, `longitude`, `regionId` | `createdAt`, `modifiedAt`, `partner`, `createdByMigration`, `postOfficeBox`, `members` |
 
 - `organization` and `organizations` are `@Public()` and return `BaseOrganization`
-  (`organization.resolver.ts:27-48`). Its `resolveType` picks the type **per row and per caller**
+  (`organization.resolver.ts:27-48`). Its `resolveType` picks the type per row and per caller
   with `canReadOrganizationSensitiveData` (`libs/event/api/src/lib/event-scope.ts:91-97`): a member
   of that organisation, or a holder of `CanGetOtherOrganizations` or `CanUpdateOtherOrganizations`,
   gets `SensitiveDataOrganization`; everyone else gets `Organization`. API keys go through the same
@@ -1778,12 +1775,12 @@ Updates [D15](#d15--the-two-year-cap-is-a-validation-rule-not-a-refreshing-windo
 
 **Context.** BKa stores `recurrence_week_days` as a JSON array, and `[]` is common: 2,855 of the
 3,611 non-null values are empty (`research/bka-02-live-data-profile.md:686-692`). A weekly
-schedule with no weekdays expands to **no occurrences** (`expandWeekly`,
+schedule with no weekdays expands to no occurrences (`expandWeekly`,
 `libs/event/schedule/src/lib/expand-occurrences.ts:58-60`), so an event saved that way would
 publish and then never appear in the agenda, with nothing telling the organiser why.
 
-**Decision.** Karl, 2026-10-23: **reject a weekly schedule with empty `weekDays` on input.** Stored
-rows that already have one are tolerated, not crashed on.
+**Decision.** Karl, 2026-10-23: reject a weekly schedule with empty `weekDays` on input. Stored
+rows that already have one are tolerated and do not cause a crash.
 
 - `hasRequiredWeekDays(schedule)` is false only for `scheduleType: 'Weekly'` with no weekdays, and
   `validateScheduleInput(schedule, now)` returns every problem it finds as `'MissingWeekDays'`
@@ -1826,7 +1823,7 @@ has `date_from` and `date_to` as `timestamptz` and a free-text `opening_time var
 (`research/bka-01-data-model.md:388-390`). A timestamp already carries the time of day, so the two
 string fields would have been a second, possibly disagreeing, source for it.
 
-**Decision.** Karl, 2026-10-23: **`startTime` and `endTime` go.** He asked whether the times could
+**Decision.** Karl, 2026-10-23: `startTime` and `endTime` go. He asked whether the times could
 generate the dates instead; that is what expansion already does with the times inside `dateFrom` and
 `dateTo`:
 
@@ -1856,7 +1853,7 @@ was measured to the instant. On the last allowed day an evening date was refused
 save, while the editor copy in [design 3](design/03-editor.md) §5 names a date ("Dates can be set up
 to …"), which reads as the whole day.
 
-**Decision.** Karl, 2026-10-23: **whole day.** The last allowed date is a Zurich calendar day, and
+**Decision.** Karl, 2026-10-23: whole day. The last allowed date is a Zurich calendar day, and
 anything on that day is accepted.
 
 - `lastSchedulableDay(now)` returns that day: today's Zurich date, two years on
@@ -1882,7 +1879,7 @@ D15's reasons (pure expansion, an honest limit, no rows nobody typed) all still 
 
 **Consequences.**
 - The editor message shows `lastSchedulableDay(now)` directly ([design 3](design/03-editor.md) §5).
-- **The migration clip must not move a weekly event's end time.** [Design 4](design/04-migration.md)
+- The migration clip must not move a weekly event's end time. [Design 4](design/04-migration.md)
   §4.7 clips to the API's horizon. `scheduleHorizon` is now 23:59:59.999 Zurich time, and a weekly
   event's `dateTo` carries the end time of every occurrence ([D39](#d39--the-event-has-no-starttime-or-endtime)),
   so clipping `dateTo` to that instant would make every occurrence end at 23:59. The clip should
@@ -1936,14 +1933,14 @@ organisation filter on it behind `CanGetOtherOrganizations` / `CanUpdateOtherOrg
 successor of BKa's public `member` parameter. Filtering events by it reveals which organisations
 are partners, so the two looked contradictory.
 
-**Decision.** Karl, 2026-10-23: **the event filter stays public, as designed, and revealing partner
-status through it is accepted.** D37 is otherwise unchanged:
+**Decision.** Karl, 2026-10-23: the event filter stays public, as designed, and revealing partner
+status through it is accepted. D37 is otherwise unchanged:
 
 | Surface | Who |
 | --- | --- |
 | Reading `Organization.partner` | members, and holders of `CanGetOtherOrganizations` / `CanUpdateOtherOrganizations` (D37) |
 | Filtering organisations by `partner` | holders of those two permissions (D37) |
-| Filtering **events** by `partner` | everyone, without login (this decision) |
+| Filtering events by `partner` | everyone, without login (this decision) |
 | Changing `partner` | holders of `CanUpdateOtherOrganizations` (D37) |
 
 **Why.** BKa's public `member` parameter answers the same question today, so the filter reveals
@@ -1967,7 +1964,7 @@ Updates [D38](#d38--a-weekly-schedule-needs-at-least-one-weekday) and closes its
 **Context.** D38 rejects an empty weekly `weekDays` on input, but `[0]` or `[8]` passed and also
 expanded to nothing.
 
-**Decision.** Karl, 2026-10-23: **reject weekday values outside ISO 1–7 on input.**
+**Decision.** Karl, 2026-10-23: reject weekday values outside ISO 1–7 on input.
 
 - `hasValidWeekDays(schedule)` accepts only whole numbers from 1 to 7 (Monday to Sunday), with no
   repeats (`libs/event/schedule/src/lib/schedule-input.ts:9-17`).
@@ -1981,8 +1978,8 @@ expanded to nothing.
   gives only the Mondays, once each, and `[0, 8, 1.5]` gives nothing without throwing
   (`libs/event/schedule/src/lib/schedule-input.spec.ts:91-107`).
 
-**Why.** The same reason as D38: a value the system accepts and then silently turns into nothing
-belongs refused at the point of entry.
+**Why.** As in D38, a value the system would accept and then silently turn into nothing should be
+refused at the point of entry.
 
 **Consequences.**
 - `createEvent`/`updateEvent` map `'InvalidWeekDays'` to a `BadRequestException` alongside the other
@@ -1995,7 +1992,7 @@ belongs refused at the point of entry.
 
 Confirms the migration split stated in [D36](#d36--an-api-key-can-belong-to-one-organisation).
 
-**Decision.** Karl, 2026-10-23: **two migrations.** `ApiToken.organizationId` stays in
+**Decision.** Karl, 2026-10-23: two migrations. `ApiToken.organizationId` stays in
 `20261023130000_add_api_token_organization` and is not folded into
 `20261023120000_add_event_organizations`.
 
@@ -2079,7 +2076,7 @@ editor sends the `preview` header on every request (`libs/editor/api/src/lib/set
 D19 split the public scope from the editor scope but did not say how a request picks one.
 
 **Decision.**
-- A request is in **editor mode** when it carries the `preview` header and the caller holds
+- A request is in editor mode when it carries the `preview` header and the caller holds
   `CanGetEvent` (for `event`) or `CanGetEvents` (for `events` and `agenda`)
   (`isEventEditorRequest`, `libs/event/api/src/lib/event-editor-mode.decorator.ts:11-16`).
   `CanPreview` plays no part.
@@ -2087,7 +2084,7 @@ D19 split the public scope from the editor scope but did not say how a request p
   which adds the venue's organisation so the link in a validation mail opens
   (`event-scope.ts:180-200`, `event.service.ts:184-191`). Every other request uses
   `publicEventsWhere`.
-- The draft view is decided **per event**. `latest`, `name`, `description` and `image` resolve from
+- The draft view is decided per event. `latest`, `name`, `description` and `image` resolve from
   `draft ?? pending ?? published` only in editor mode and only for an event the caller can reach
   (`canReachEvent`, `event-scope.ts:202-207`, through `canReachLoadedEvent`, `event-reach.ts:9-25`).
   Otherwise they resolve from `published`.
@@ -2178,7 +2175,7 @@ foreign event the same act as publishing it with a cross-organisation permission
 `@Permissions(CanPublishEvent)` on its own would let anyone holding it publish any event they can
 edit, including a venue member editing another organiser's event through D19's venue branch.
 
-**Decision.** `canPublishEvent(session, event)` is `CanPublishEvent` **and** one of: membership of
+**Decision.** `canPublishEvent(session, event)` is `CanPublishEvent` and one of: membership of
 the organising organisation; ownership of an event that has no organisation;
 `CanUpdateOtherOrganizationEvents` (`event-scope.ts:215-219`). It gates both `publishEvent` and
 `unpublishEvent` (`event.service.ts:567,636`).
@@ -2232,7 +2229,7 @@ a slug that another published event already uses (`assertSlugAvailable`,
 `event.service.ts:903-926`). `event(slug:)` prefers the published event when several share the slug
 (`:184-191`).
 
-**Why.** The prose states the rule; the `@unique` was a slip in the sketch. Drafts stay cheap, and
+**Why.** The prose states the rule, and the `@unique` was a slip in the sketch. Drafts stay cheap, and
 `Article` also keeps a non-unique slug.
 
 **Consequences.**
@@ -2473,7 +2470,7 @@ Updates [D27](#d27--the-events-domain-ships-to-every-tenant).
 - Its name is `Kopie von <name>`, cut to 130 characters (`:95`), in German only ([D33](#d33--bka-has-no-french-content-d13s-premise-is-corrected)).
 - Not copied: the slug, the SEO and social fields, `legacyId`, the review fields and the publication.
   The caller becomes the owner.
-- The caller needs `canModifyEvent` on the source **and** `mayAssignEventOrganization` for the
+- The caller needs `canModifyEvent` on the source and `mayAssignEventOrganization` for the
   source's organisation. A venue member may edit a foreign event but may not duplicate it.
 - The image rows point at the same `Image` records. BKa copies the files because its images belong
   to one event; We.Publish images are shared.
@@ -2496,7 +2493,7 @@ Updates [D5](#d5--ready-for-review-is-an-explicit-action-backed-by-a-field-on-th
 **Status.** Built in `595956a6f`. Awaiting Karl's confirmation.
 
 **Decision.**
-- `requestEventReview` needs `canModifyEvent`, an unpublished draft, and that the caller **cannot**
+- `requestEventReview` needs `canModifyEvent`, an unpublished draft, and that the caller cannot
   publish this event, judged by `canPublishEvent(session, event)` rather than the bare
   `CanPublishEvent` permission (`event.service.ts:791-827`).
 - Asking again keeps the first `reviewRequestedAt` and returns the event unchanged.
@@ -2522,12 +2519,12 @@ Updates [D42](#d42--the-public-event-partner-filter-stays).
 **Decision.** In `EventFilter` (`libs/event/api/src/lib/event-filter.ts`):
 
 - `regionId`, `geoBoundingBox`, `wheelchairAccessible` and `accessibilityProInfirmis` match the
-  **venue** (`event-filter.ts:37-70`).
-- `accessibilityProInfirmis` matches a venue that has **any** of the given pictogram ids, as BKa ORs
+  venue (`event-filter.ts:37-70`).
+- `accessibilityProInfirmis` matches a venue that has any of the given pictogram ids, as BKa ORs
   them over `$[*].Id` (`research/bka-04-api-v2-apiplatform.md:1088`,
   `research/bka-07-proinfirmis-ginto.md` §8.4).
 - `wheelchairAccessible: false` and `partner: false` match events whose venue or organisation is
-  **not** flagged, including events with no venue or no organisation (`flagWhere`, `:11-14`). `true`
+  not flagged, including events with no venue or no organisation (`flagWhere`, `:11-14`). `true`
   matches flagged ones; leaving the field out ignores the flag.
 - `from`, `to` and `upcoming` match occurrences ([D30](#d30--the-agenda-lists-occurrences-the-catalogue-lists-events)). `upcoming` means an occurrence whose
   `dateTo` has not passed.
@@ -2595,7 +2592,7 @@ article one.
   `prisma.event.externalSource*` and stopped compiling once the client was regenerated.
 - The activity feed's EventCreated tile no longer links anywhere until slice F adds an edit route.
 
-**Why.** Five deletions and a few small edits, against a rewrite that would not survive slice F.
+**Why.** Removing them took five deletions and a few small edits, while adapting them would have been a rewrite that would not survive slice F.
 `commands.spec.ts` keeps the route registry honest.
 
 **Consequences.**
@@ -2630,7 +2627,7 @@ Updates [D30](#d30--the-agenda-lists-occurrences-the-catalogue-lists-events).
 - Tenant `/event` lists stay on the `events` catalogue rather than `agenda`. They send the variable
   `upcoming` and keep the URL parameter `upcomingOnly`, so existing links work.
 
-**Why.** It is design 2 §8.2's route split with the least churn in the tenants.
+**Why.** It follows design 2 §8.2's route split with the least churn in the tenants.
 
 **Consequences.**
 - Already true before this slice: tenant list pages prefetch `EventList` without the filter while
@@ -2645,7 +2642,7 @@ Updates [D30](#d30--the-agenda-lists-occurrences-the-catalogue-lists-events).
 **Status.** Built in `f5e738261`. Awaiting Karl's confirmation of the labels.
 
 **Decision.**
-- `EventStatusBadge` shows **Abgesagt** (Cancelled), **Verschoben** (Postponed) and **Ausverkauft**
+- `EventStatusBadge` shows Abgesagt (Cancelled), Verschoben (Postponed) and Ausverkauft
   (SoldOut), and nothing for Confirmed
   (`libs/event/website/src/lib/event-status/event-status.tsx:4-9`), on the list item and on the
   detail page. The EventBlock and the teasers render through the list item, so they show it too.
@@ -2654,7 +2651,7 @@ Updates [D30](#d30--the-agenda-lists-occurrences-the-catalogue-lists-events).
   sold-out event status. `duration` is emitted only for Continuous events: for Weekly and Explicit
   schedules the span is not the length of one sitting ([design 2](design/02-api.md) §8.3).
 
-**Why.** German only ([D33](#d33--bka-has-no-french-content-d13s-premise-is-corrected)). "Abgesagt" rather than BKa's misspelt "Annuliert". A cancelled
+**Why.** Labels are German only ([D33](#d33--bka-has-no-french-content-d13s-premise-is-corrected)). "Abgesagt" replaces BKa's misspelt "Annuliert". A cancelled
 event must not look as if it is still on, so the detail page shows the badge as well.
 
 **Consequences.**
@@ -2708,7 +2705,7 @@ Reusing the `events.tagged-events` name and `TagType.Event` keeps the tag model 
 
 ## D66 — The editor role files and publishes its own events; Agenda-Admin is a predefined role
 
-> **Superseded in part by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).** Karl, 2026-10-24: the predefined editor role gets **no** agenda permission for now. The six event permissions below are gone from `EditorPermissions`. The Agenda-Admin set and the role on every tenant are confirmed as built.
+> **Superseded in part by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers).** Karl, 2026-10-24: the predefined editor role gets no agenda permission for now. The six event permissions below are gone from `EditorPermissions`. The Agenda-Admin set and the role on every tenant are confirmed as built.
 
 Updates [D4](#d4--canpublishevent-decides-who-needs-validating) and [D61](#d61--the-old-editor-event-screens-are-removed-until-slice-f).
 
@@ -2718,7 +2715,7 @@ awaiting Karl's confirmation.
 
 **Karl's decision (2026-10-24).** The predefined editor role gets the event permissions, scoped to
 its own events: its organisations' events plus the events it owns, through `event-scope.ts`. Seeing
-**all** events is a separate permission, `CanGetOtherOrganizationEvents`, together with the other
+all events is a separate permission, `CanGetOtherOrganizationEvents`, together with the other
 cross-organisation permissions, and only admin and the Agenda-Admin role hold them.
 
 **Context.** D61 left the predefined editor role without `CanGetEvents` or `CanPublishEvent`, so an
@@ -2789,7 +2786,7 @@ not know the session's memberships, so it cannot work out which buttons to offer
 **Decision.**
 - `Event.viewerCan` returns `update`, `publish`, `delete`, `duplicate`, `requestReview`,
   `withdrawReview`, `moveOrganization`, `clearOrganization` and `reassignOwner`. Each flag is the permission the
-  mutation's guard checks **and** the record rule the service checks (`eventViewerPermissions`,
+  mutation's guard checks and the record rule the service checks (`eventViewerPermissions`,
   `event-scope.ts:267-295`): `update` is `CanUpdateEvent` and `canModifyEvent`; `delete` is
   `CanDeleteEvent` and `canDeleteEvent`; `duplicate` is `CanCreateEvent`, `canModifyEvent` and
   `mayAssignEventOrganization`; `requestReview` needs `update`, no `publish`, a draft and no pending
@@ -2868,8 +2865,8 @@ Updates [D46](#d46--editor-mode-needs-the-preview-header-an-event-permission-and
   the public cannot probe which events have unpublished work.
 - `EventSort.ReviewRequestedAt` orders the queue by `reviewRequestedAt` with nulls last, then by id.
 - `Event.nextOccurrence` is the earliest occurrence that has not ended, and
-  `Event.upcomingOccurrenceCount` counts every occurrence that has not ended, **the next one
-  included** ("+3 more dates" is the count minus one). Both come from one batched `groupBy` plus one
+  `Event.upcomingOccurrenceCount` counts every occurrence that has not ended, the next one
+  included ("+3 more dates" is the count minus one). Both come from one batched `groupBy` plus one
   fetch (`event-occurrence-summary.dataloader.ts`).
 - In editor mode, `events` and `agenda` with a non-empty `filter.ids` are scoped by
   `reachableEventsWhere`, as a single `event` is, rather than by `editorEventsWhere`.
@@ -2893,7 +2890,7 @@ organisation form edits all three.
 
 **Decision.**
 - `BaseOrganization` gains `tags` (`Tag`, event tags), `affiliations` (`EventAffiliation`) and
-  `contacts` (`OrganizationContact`: `id`, `label`, `email`, `phone`). All three are **public**: an
+  `contacts` (`OrganizationContact`: `id`, `label`, `email`, `phone`). All three are public: an
   anonymous caller reads them on `Organization` as a member reads them on
   `SensitiveDataOrganization`. They are resolved by `OrganizationRelationsResolver` through one
   batched dataloader each (`organization/organization-relations.resolver.ts`,
@@ -3024,7 +3021,7 @@ Updates design 3 §9.
 **Status.** Built in slice F stage 3. Awaiting Karl's answer on the scope.
 
 **Decision.**
-- The list marks a **weekly** event whose last date is still to come and at most 30 Zurich calendar
+- The list marks a weekly event whose last date is still to come and at most 30 Zurich calendar
   days away: "Ends in 12 days", or "Ends today" (`event-expiry.ts`). The day count compares Zurich
   dates, not 24-hour periods.
 - Single dates, consecutive-day runs and explicit date lists are never marked: they end when they
@@ -3098,15 +3095,15 @@ Implements design 3 §5. Updates [D39](#d39--the-event-has-no-starttime-or-endti
 **Status.** Built in slice F stage 4. Awaiting Karl's confirmation.
 
 **Decision.**
-- Dates and times are native `date` and `time` inputs whose values are read as **Zurich wall clock**
+- Dates and times are native `date` and `time` inputs whose values are read as Zurich wall clock
   and turned into instants with `zurichWallClockToInstant` (`schedule-form.ts`). The browser's own
   time zone plays no part, which the house `DatePicker` (local `Date`) could not promise.
 - Each mode keeps its own values (`continuous`, `weekly`, `explicit`), so switching modes and back
   loses nothing; only the chosen mode is sent.
-- **An explicit row whose end time is earlier than its start time ends on the next day**, as a
+- An explicit row whose end time is earlier than its start time ends on the next day, as a
   weekly series does (D39) and as BKa's sub-event form already did (it adds a day when the end time
   wraps past midnight, research `bka-09` §7.2). Without it, 22:00–01:00 could not be entered.
-- **Duplicate last** copies the last row's times onto the **following day**: the case it exists
+- **Duplicate last** copies the last row's times onto the following day: the case it exists
   for is the same show on consecutive evenings.
 - New schedules start at 20:00–23:30, BKa's defaults.
 - The `→ N dates` count runs `eventScheduleProblems` first and calls `expandOccurrences` only when
@@ -3134,8 +3131,8 @@ Implements design 3 §6. Follows design 1 §11.1.
 - Each image row has a thumbnail, a **Main image** radio (exactly one is main; removing it makes
   the first remaining image main), a caption and an alt text, each with its own help and a `n/125`
   counter.
-- The caption is refused above 125 characters (BKa's `legend` limit). **The API does not enforce
-  this yet**; the rule lives in the editor's form schema.
+- The caption is refused above 125 characters (BKa's `legend` limit). The API does not enforce
+  this yet; the rule lives in the editor's form schema.
 - The alt text is `Image.description`, prefilled from it and saved through `updateImage` in stage 5.
   Its help says every article using the image shares it. An empty or over-long alt text gets a
   warning and never blocks saving.
@@ -3422,8 +3419,8 @@ region, status marks beside the words, and no horizontal scrolling at 320 CSS pi
 
 **Why.** Design 3 §11: non-negotiable for a product that catalogues wheelchair access.
 
-**Consequences.** Five findings belong to the shell every editor screen shares, not to the agenda,
-and are left for a change of their own:
+**Consequences.** Five findings are in the shell that every editor screen shares, not in the
+agenda, and are left for a change of their own:
 - Contained primary buttons fail text contrast: white on `#3498ff` is 2.97:1 (needs 4.5:1). This
   is the theme's primary colour on every screen; fixing it is a theme decision.
 - No `main` landmark and no skip link on any editor page (`Base`, `EditorTemplate`).
@@ -3520,7 +3517,7 @@ organisations and venues only.
 
 **Decision.** No Taxonomies menu entry, route or mutation. Regions, audiences and affiliations stay
 read-only queries, used by the event and organisation pickers. Event tags stay where they are, as
-**Tags** under Agenda ([D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first)).
+Tags under Agenda ([D74](#d74--the-agenda-editor-lives-in-libseventeditor-and-the-list-comes-first)).
 
 **Why.** The tables are empty on every tenant until the slice G import fills them with BKa's 13
 regions, 4 audiences and 7 affiliations (D56). Screens built now would have nothing to show.
@@ -3646,7 +3643,7 @@ Updates [D54](#d54--places-are-public-and-private-only-narrows-the-venue-picker)
   `canModifyEvent`) may withdraw it, not only the person who asked. The API already allowed that
   (D69); the editor's Withdraw request now follows `viewerCan.withdrawReview` alone, so it also shows
   next to Publish.
-- **Confirmed unchanged.** Event tags stay as **Tags** under Agenda (D74, D93), not under Content
+- **Confirmed unchanged.** Event tags stay as Tags under Agenda (D74, D93), not under Content
   Blocks. Alt text is written to the shared `Image.description` (D80). Holders of
   `CanUpdateOtherOrganizationEvents`, Agenda-Admin among them, may file events at private venues
   (`selectablePlacesWhere`), which closes D54's open point.
@@ -3723,8 +3720,8 @@ have seen an Agenda section holding nothing but event tags.
 - The Agenda section shows for `AGENDA_PERMISSIONS` (`CanGetEvents`, `CanCreateEvent`,
   `CanUpdateOrganization`, `CanGetOtherOrganizations`, `CanUpdateOtherOrganizations`, in
   `apps/editor/src/app/agendaPermissions.ts`), no longer for a tag permission.
-- Its **Tags** entry, and the `eventTags` and `createEventTag` commands, need a tag permission
-  **and** `CanGetEvents` or `CanCreateEvent`. Commands express the second group with the optional
+- Its Tags entry, and the `eventTags` and `createEventTag` commands, need both a tag permission
+  and `CanGetEvents` or `CanCreateEvent`. Commands express the second group with the optional
   `Command.alsoPermissions` (`libs/ui/editor/src/lib/commandPalette/allowedCommands.ts`,
   `.ai/conventions.md`), which keeps the palette in step with the sidebar's nested
   `PermissionControl`.
@@ -3745,9 +3742,9 @@ without special-casing two commands.
 
 Recorded as they surface; resolved ones become decisions above.
 
-**This file is authoritative where it disagrees with `research/`.** The research documents were
-written in parallel and several reached different conclusions before a decision was taken — most
-notably on `to_validate`, which `bka-02` and `bka-04` map to *pending* while
+This file is authoritative where it disagrees with `research/`. The research documents were
+written in parallel, and several reached different conclusions before a decision was taken. The
+main case is `to_validate`, which `bka-02` and `bka-04` map to *pending* while
 [D1](#d1--to_validate-maps-to-draft-not-to-a-new-state) maps it to *draft*. D1 wins.
 
 Raised by the completeness critic, to be resolved in the design:
@@ -3766,7 +3763,7 @@ Raised by the completeness critic, to be resolved in the design:
   was written before D18; the only alternative it pointed at is the one D18 names and rejects.
 - ~~The compatibility stub has no target research, and GraphQL already occupies `path: 'v1'`.~~
   Resolved by [D26](#d26--the-compatibility-stub-stays-in-the-php-application-and-calls-wepublish).
-- **Unowned cross-cutting subjects:** BKa's ~30 feature flags vs `Setting`/`@Feature`.
+- Unowned cross-cutting subjects: BKa's ~30 feature flags vs `Setting`/`@Feature`.
   The rest is settled or built: fr|de content by [D33](#d33--bka-has-no-french-content-d13s-premise-is-corrected);
   categories are event tags and region, audience and affiliation are tables with read-only queries
   (`libs/event/api/src/lib/taxonomy/`); the Zurich wall clock in `@wepublish/event/schedule`;
@@ -3791,19 +3788,19 @@ Raised by the adversarial review of the subjects above, and verified against the
 - ~~Frozen BKa category ids versus an editable tag vocabulary.~~ Resolved by
   [D29](#d29--the-php-app-maps-bka-categories-to-tags-by-name-and-keeps-the-category-table).
 - ~~The blast radius of deleting the old events is larger than "barely used" suggests.~~
-  **Reversed by Karl, twice over.** First: nobody meaningfully uses `EventBlock` today. Then:
-  **keep it anyway** — "people will be using it in the future". So the block is *not* deleted; it
-  is re-pointed at the new events domain. That changes [design 2](design/02-api.md) §8 from a
+  Karl reversed this twice. First, nobody meaningfully uses `EventBlock` today. Then he said to
+  keep it anyway: "people will be using it in the future". So the block is not deleted; it
+  is re-pointed at the new events domain. That turns [design 2](design/02-api.md) §8 from a
   deletion list into a migration list, and it makes the new public `Event` GraphQL type a
-  **consumer-facing contract**, not just an editor one — `libs/event/website/**`,
+  contract for consumers as well as for the editor: `libs/event/website/**`,
   `libs/block-content/website/src/lib/event/event-block.tsx`, the event teaser in
   `base-teaser.tsx`, and the editor's `eventBlock.tsx` / `selectEventsPanel.tsx` all read it.
-  Two further calls from Karl: **stale ids may resolve to nothing** — an `EventBlock` whose
-  `filter.events` points at deleted old-event rows simply renders empty, so no data migration of
-  stored block payloads is required; and **`lead` is just `description`** — the old `lead` and
-  `description` are one concept, so `EventRevision` gains no `lead` field.
+  Karl made two further calls. Stale ids may resolve to nothing: an `EventBlock` whose
+  `filter.events` points at deleted old-event rows renders empty, so stored block payloads need
+  no data migration. And `lead` is just `description`: the old `lead` and `description` are one
+  concept, so `EventRevision` gains no `lead` field.
 
-Mechanical gaps, no decision needed — fold into the build:
+Mechanical gaps, no decision needed, to fold into the build:
 
 - `EventRevision` needed `archivedAt` for the three-view mechanism to work. Fixed in
   [design 1 §3](design/01-data-model.md).
@@ -3823,21 +3820,21 @@ Mechanical gaps, no decision needed — fold into the build:
 
 Raised by D31–D34:
 
-- **Venue proposals in the public form.** BKa's form could propose a venue (`PlaceProposed`,
+- Venue proposals in the public form. BKa's form could propose a venue (`PlaceProposed`,
   2,083 rows). Does the account-first form still do that, and what happens to the 2,083 pending
-  rows? **Needs a decision.**
-- **Where the public form lives and which mails it sends.** It is not an editor surface, so
-  [design 3](design/03-editor.md) does not cover it. **Needs a decision.**
-- **Legacy numeric ProInfirmis pictogram ids.** Kept for BKa's public contract (D7), which D31
-  removes. Keep them for In Situ parity, or store Ginto's string keys? **Needs a decision.**
-- **`/events/agenda/similar`.** No We.Publish equivalent exists. Build one, or tell clients it goes
-  away? **Needs a decision.**
+  rows? Needs a decision.
+- Where the public form lives and which mails it sends. It is not an editor surface, so
+  [design 3](design/03-editor.md) does not cover it. Needs a decision.
+- Legacy numeric ProInfirmis pictogram ids. Kept for BKa's public contract (D7), which D31
+  removes. Keep them for In Situ parity, or store Ginto's string keys? Needs a decision.
+- `/events/agenda/similar`. No We.Publish equivalent exists. Build one, or tell clients it goes
+  away? Needs a decision.
 
 Raised by D35:
 
-- **Who may change an event's owner or organisation.** Owner access must not let a submitter move
+- Who may change an event's owner or organisation. Owner access must not let a submitter move
   their event into an organisation they do not belong to, or hand it to another user. Built as
-  [D47](#d47--who-may-set-an-events-organisation-and-owner). **Needs confirmation.**
+  [D47](#d47--who-may-set-an-events-organisation-and-owner). Needs confirmation.
 
 Raised by D36:
 
@@ -3850,7 +3847,7 @@ Raised by D37–D39:
 - ~~**Is `partner` public after all?**~~ Resolved by [D42](#d42--the-public-event-partner-filter-stays): the public event filter stays
   as designed, revealing partner status through it is accepted, and the field stays sensitive on
   the organisation.
-- **Is `postOfficeBox` really private?** Classed sensitive because it appears only in BKa's
+- Is `postOfficeBox` really private? Classed sensitive because it appears only in BKa's
   login-only groups; 8 of 741 organisations have one, too few to confirm from sampled pages.
 - ~~**Exact instant or whole day for the two-year horizon?**~~ Resolved by [D40](#d40--the-two-year-cap-counts-whole-days-in-zurich): whole
   day in Europe/Zurich.
@@ -3859,7 +3856,7 @@ Raised by D37–D39:
 
 Raised by D40:
 
-- **The migration clip keeps each weekly event's end time.** Clipping a weekly `dateTo` to
+- The migration clip keeps each weekly event's end time. Clipping a weekly `dateTo` to
   `scheduleHorizon` (23:59:59.999 Zurich) would make every occurrence end at 23:59. Move the date to
   `lastSchedulableDay` and keep the time of day; settle the detail when
   [design 4](design/04-migration.md) §4.7 is built.
@@ -3868,8 +3865,8 @@ Raised by D40:
 
 Slices C and D replaced the old event model with the agenda domain end to end (commits `b2a151771`
 to `e3dd54e34`). Where the design left a choice open, the build made one, and each is recorded as a
-decision, [D45](#d45--occurrences-are-written-whenever-the-schedule-is-saved) to [D65](#d65--one-migration-replaces-the-old-event-tables-in-place). **The ones marked "awaiting Karl's confirmation" need a yes, or
-the change he wants:**
+decision, [D45](#d45--occurrences-are-written-whenever-the-schedule-is-saved) to [D65](#d65--one-migration-replaces-the-old-event-tables-in-place). The ones marked "awaiting Karl's confirmation" need a yes, or
+the change he wants:
 
 1. [D45](#d45--occurrences-are-written-whenever-the-schedule-is-saved): occurrences are written on every save that changes the schedule, not only at
    publish. Accepting it supersedes the expansion timing in D10, D15 and design 1 §5.2.
@@ -3915,7 +3912,7 @@ Slice F built the agenda editor (commits `89503d801` to `27185a677`). Karl first
 predefined editor role the event permissions scoped to its own events ([D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role)), then, on 2026-10-24,
 took every agenda permission away from it again: the editor role is a CMS role for now, and
 Agenda-Admin stays a predefined role on every tenant ([D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers)). The build choices are recorded as decisions
-[D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) to [D93](#d93--taxonomy-screens-are-not-part-of-slice-f). **Each needs a yes, or the change Karl wants:**
+[D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role) to [D93](#d93--taxonomy-screens-are-not-part-of-slice-f). Each needs a yes, or the change Karl wants:
 
 1. ~~[D66](#d66--the-editor-role-files-and-publishes-its-own-events-agenda-admin-is-a-predefined-role): the Agenda-Admin set, the role on every tenant, and whether the editor role should
    also hold `CanUpdateOrganization`.~~ Answered by [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers): Agenda-Admin stays as built; the editor role holds no agenda permission at all for now.
@@ -3994,8 +3991,8 @@ Karl's calls of 2026-10-24 are recorded as [D94](#d94--an-api-key-acts-as-the-us
 records both, superseding D28's audit part) and [D96](#d96--the-editor-role-holds-no-agenda-permission-for-now-and-karls-other-slice-f-answers) (the editor role holds no agenda permission,
 Agenda-Admin stays on every tenant, tags stay under Agenda, anyone who may edit an event may withdraw
 its review request, alt text stays shared, Agenda-Admin may file at private venues). Built in
-`37402f32f`, `702d76f1c`, `dc88bd535` and `59616a085`. **The choices this round made need a yes, or
-the change Karl wants:**
+`37402f32f`, `702d76f1c`, `dc88bd535` and `59616a085`. The choices this round made need a yes, or
+the change Karl wants:
 
 1. [D95](#d95--copies-venue-switches-and-the-print-flag-follow-the-organisation-rules): copying needs membership of the source's organisation (or ownership of an
    organisation-less source) and a venue that is still selectable; a venue's `enabled` needs
