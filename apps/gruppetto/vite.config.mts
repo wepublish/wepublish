@@ -155,6 +155,30 @@ export default defineConfig(({ mode }) => {
     },
 
     resolve: {
+      // Vite externalises `react` for the SSR environment, so rolldown emits a
+      // literal `__require("react")` inside any CJS dependency it inlines, and
+      // nitro's second pass cannot rewrite it. `.output` ships without a
+      // `node_modules`, so that call throws "Cannot find module 'react'" on
+      // every render of a route that reaches one. These two specifiers are the
+      // only CJS modules in the graph that `require('react')`; both have an
+      // ESM equivalent, so pointing at it removes the require entirely.
+      //
+      // Putting `react` in `ssr.noExternal` also removes the require, but
+      // gives react-dom/server a second copy of React and every render then
+      // dies on a null hook dispatcher. Adding `react` to the nitro
+      // `traceDeps` is worse still: SSR silently degrades to an empty shell
+      // and keeps returning 200. See `docker/check-nitro-output.js`, which
+      // fails the image build if a third such module ever appears.
+      alias: [
+        {
+          find: 'react-transition-group/cjs/TransitionGroupContext.js',
+          replacement: 'react-transition-group/esm/TransitionGroupContext.js',
+        },
+        {
+          find: /^use-sync-external-store\/shim(\/index\.js)?$/,
+          replacement: 'react',
+        },
+      ],
       // MUI's styled engine and our own `@emotion/styled` must resolve to the
       // same emotion instance, otherwise the theme context is empty during SSR
       // (`theme.breakpoints` undefined). This is the Vite equivalent of the
@@ -267,7 +291,11 @@ export default defineConfig(({ mode }) => {
       nitro({
         config: {
           output: { dir: outputDir },
-          traceDeps: ['i18n-iso-countries*', '@keyv/redis*'],
+          traceDeps: [
+            'i18n-iso-countries*',
+            '@keyv/redis*',
+            '@sentry/server-runtime-injection*',
+          ],
         },
       }),
     ],
