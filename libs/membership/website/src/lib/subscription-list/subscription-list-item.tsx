@@ -99,7 +99,7 @@ export function SubscriptionListItem({
 }: BuilderSubscriptionListItemProps) {
   const {
     meta: { locale },
-    elements: { Image, H6, Button, Link, Alert, H5, Paragraph },
+    elements: { Image, H6, Button, Link, Alert, Paragraph },
     date,
   } = useWebsiteBuilder();
   const { t } = useTranslation();
@@ -328,13 +328,10 @@ export function SubscriptionListItem({
           type: productType,
         })}
         cancelText={t('user.cancel')}
+        title={t('subscription.cancelProduct', {
+          productName: productType,
+        })}
       >
-        <H5 component="h1">
-          {t('subscription.cancelProduct', {
-            productName: productType,
-          })}
-        </H5>
-
         <Paragraph gutterBottom={false}>
           {t('subscription.cancelConfirmation', {
             type: productType,
@@ -351,9 +348,8 @@ export function SubscriptionListItem({
         onCancel={() => setConfirmRevertUpgrade(false)}
         submitText={t('subscription.revertUpgrade')}
         cancelText={t('user.cancel')}
+        title={t('subscription.revertUpgradeTitle')}
       >
-        <H5 component="h1">{t('subscription.revertUpgradeTitle')}</H5>
-
         <Paragraph gutterBottom={false}>
           {t('subscription.revertUpgradeConfirmation', {
             type: productType,
@@ -372,13 +368,10 @@ export function SubscriptionListItem({
           type: productType,
         })}
         cancelText={t('user.cancel')}
+        title={t('subscription.reactivateProduct', {
+          productName: productType,
+        })}
       >
-        <H5 component="h1">
-          {t('subscription.reactivateProduct', {
-            productName: productType,
-          })}
-        </H5>
-
         <Paragraph gutterBottom={false}>
           {t('subscription.reactivateConfirmation', {
             type: productType,
@@ -397,13 +390,10 @@ export function SubscriptionListItem({
           subscriptionDuration,
         })}
         cancelText={t('user.cancel')}
+        title={t('subscription.extendEarly', {
+          type: productType,
+        })}
       >
-        <H5 component="h1">
-          {t('subscription.extendEarly', {
-            type: productType,
-          })}
-        </H5>
-
         <Paragraph gutterBottom={false}>
           {t('subscription.extendEarlyConfirmation', {
             subscriptionDuration,

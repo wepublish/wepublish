@@ -1995,7 +1995,29 @@
     "richtext": {
       "menuBar": {
         "paragraph": "Paragraphe",
-        "heading": "Titre {{level}}"
+        "heading": "Titre {{level}}",
+        "label": "Mise en forme",
+        "textStyle": "Style de texte",
+        "undo": "Annuler",
+        "redo": "Rétablir",
+        "bold": "Gras",
+        "italic": "Italique",
+        "underline": "Souligné",
+        "strike": "Barré",
+        "subscript": "Indice",
+        "superscript": "Exposant",
+        "textColor": "Couleur du texte",
+        "backgroundColor": "Couleur de fond",
+        "bulletList": "Liste à puces",
+        "orderedList": "Liste numérotée",
+        "alignLeft": "Aligner à gauche",
+        "alignCenter": "Centrer",
+        "alignRight": "Aligner à droite",
+        "link": "Lien",
+        "table": "Insérer un tableau",
+        "codeBlock": "Bloc de code",
+        "blockquote": "Citation",
+        "invisibleCharacters": "Afficher les caractères invisibles"
       },
       "link": {
         "title": "Lier le texte avec",
@@ -2012,6 +2034,18 @@
         "remove": "Supprimer le lien",
         "variantButtonMain": "Bouton (principal)",
         "variantButtonSecondary": "Bouton (secondaire)"
+      },
+      "table": {
+        "label": "Tableau",
+        "addColumnBefore": "Insérer une colonne à gauche",
+        "addColumnAfter": "Insérer une colonne à droite",
+        "deleteColumn": "Supprimer la colonne",
+        "addRowBefore": "Insérer une ligne au-dessus",
+        "addRowAfter": "Insérer une ligne en dessous",
+        "deleteRow": "Supprimer la ligne",
+        "mergeCells": "Fusionner les cellules",
+        "splitCell": "Scinder la cellule",
+        "headerCell": "Cellule d'en-tête"
       },
       "colorPicker": {
         "clear": "Réinitialiser la couleur"

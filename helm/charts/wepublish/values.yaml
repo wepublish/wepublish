@@ -189,21 +189,6 @@ website:
   replicaCount: 1
 
 
-storybook:
-  enabled: false
-  image: ghcr.io/wepublish/storybook
-  imagePullPolicy: Always
-  imagePullSecret:
-  url: https://storybook
-  env: {}
-  resources:
-    requests:
-      memory: 8Mi
-      cpu: 1m
-    limits:
-      memory: 16Mi
-      cpu: 20m
-
 media:
   image: ghcr.io/wepublish/media
   env: {}

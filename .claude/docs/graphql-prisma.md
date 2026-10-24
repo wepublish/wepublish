@@ -102,5 +102,5 @@ Adding a field that reaches the website:
 3. Model + resolver/service in `libs/<domain>/api` → test passes
 4. Start the API so `schema-v2.graphql` regenerates
 5. Add the field to the `.graphql` document, `pnpm run generate-api`
-6. Story + failing test in `libs/<domain>/website`, then the component
+6. Failing spec in `libs/<domain>/website`, then the component
 7. `pnpm nx affected -t lint test --uncommitted` — see [verification.md](verification.md)

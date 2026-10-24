@@ -39,8 +39,6 @@ ignore:
   - "docker"
   - "helm"
   - "tools"
-  - "**/*.stories.tsx"
   - "libs/testing"
-  - "libs/storybook"
   - "**/*.model.ts"
   - "**/*.module.ts"

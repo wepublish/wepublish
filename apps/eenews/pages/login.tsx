@@ -6,6 +6,7 @@ import {
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
+import { EenewsPageShell } from '@wepublish/tenant/eenews';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
   FullSessionWithTokenWithoutUserFragment,
@@ -17,8 +18,6 @@ import { add } from 'date-fns';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
-
-import { EenewsPageShell } from '../src/components/eenews-page-shell';
 
 const LoginWrapper = styled('div')`
   display: grid;

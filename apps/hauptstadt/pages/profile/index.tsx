@@ -1,5 +1,6 @@
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { HauptstadtContentFullWidth } from '@wepublish/tenant/hauptstadt';
 import {
   getApiUrl,
   getSessionTokenProps,
@@ -8,8 +9,6 @@ import {
 } from '@wepublish/utils/website';
 import { getApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
-
-import { HauptstadtContentFullWidth } from '../../src/components/hauptstadt-content-wrapper';
 
 export default function Profile() {
   return (

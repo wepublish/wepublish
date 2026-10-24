@@ -9,6 +9,9 @@
     "backToProfile": "Retour au profil",
     "profile": "Profil"
   },
+  "banner": {
+    "close": "Fermer la bannière"
+  },
   "paywall": {
     "subscribe": "S'abonner",
     "login": "Login"
@@ -29,7 +32,10 @@
   },
   "subscribe": {
     "memberplan": {
-      "price": "{amountPerMonthMin, select, 0 {Gratuit} other {À partir de {monthlyPrice} {extendable, select, true {par mois} other {}}}}"
+      "price": "{amountPerMonthMin, select, 0 {Gratuit} other {À partir de {monthlyPrice} {extendable, select, true {par mois} other {}}}}",
+      "offerPrice": "{amountMin, select, 0 {Gratuit} other {{exactAmount, select, true {} other {À partir de }}{periodPrice} {periodicity, select, monthly {par mois} quarterly {par trimestre} biannual {par semestre} yearly {par an} biennial {par 2 ans} lifetime {une seule fois} other {}}}}",
+      "amountMin": "Au moins {amount}",
+      "periodicityUnavailable": "Non disponible pour cet intervalle de paiement"
     },
     "periodicity": "Intervalle de paiement",
     "continuation": "Après {afterFirstPaymentPeriod}, {formattedAmount} {renewalPeriodL}.",
@@ -206,6 +212,11 @@
     "saveSuccess": "Modifications enregistrées avec succès !",
     "passwordWarning": "Remplissez uniquement si vous souhaitez modifier le mot de passe. Sinon laissez vide.",
     "pay": "Payer",
+    "imageUpload": {
+      "delete": "Supprimer l'image",
+      "replace": "Téléverser une nouvelle image",
+      "upload": "Téléverser une image"
+    },
     "totp": {
       "title": "Authentification à deux facteurs",
       "enabled": "L'authentification à deux facteurs est activée.",
@@ -252,7 +263,14 @@
     "loginForReaders": "Connexion pour les lecteurs",
     "noAccountYet": "Pas encore de compte?",
     "registerNow": "S'inscrire maintenant",
-    "notLoggedIn": "Vous n'êtes pas connecté"
+    "notLoggedIn": "Vous n'êtes pas connecté",
+    "name": "Nom",
+    "namePlaceholder": "Votre nom",
+    "title": "Titre",
+    "titlePlaceholder": "Donnez un titre à votre contribution.",
+    "text": "Commentaire",
+    "textPlaceholder": "Rédiger une contribution",
+    "characterCount": "{{length}} / {{max}} caractères"
   },
   "comments": {
     "list": {
@@ -268,7 +286,7 @@
   "poll": {
     "totalVotes": "{count} votes",
     "closesAt": "Clôture le <time>{date}</time>",
-    "closed": "&ndash; Vote terminé."
+    "closed": "Vote terminé."
   },
   "registrationForm": {
     "register": "S'inscrire",
@@ -392,5 +410,21 @@
       "map": "Map",
       "set": "Ensemble"
     }
+  },
+  "contextBox": {
+    "defaultTitle": "De quoi s'agit-il",
+    "readMore": "Lire la suite",
+    "readLess": "Réduire"
+  },
+  "slider": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "slide": "Diapositive {index}"
+  },
+  "lightbox": {
+    "previous": "Image précédente",
+    "next": "Image suivante",
+    "fullscreen": "Plein écran",
+    "exitFullscreen": "Quitter le plein écran"
   }
 }

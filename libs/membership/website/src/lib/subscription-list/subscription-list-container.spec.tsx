@@ -1,58 +1,361 @@
-import { MockedProvider } from '@apollo/client/testing/react';
-import { composeStories, composeStory } from '@storybook/react';
-import { act, render, screen } from '@testing-library/react';
-import { actWait, addDateMock } from '@wepublish/testing';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {
+  mockInvoice,
+  mockMemberPlan,
+  mockOperation,
+  mockPayment,
+  mockPaymentMethod,
+  mockSubscription,
+  mockSubscriptionDeactivation,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import {
+  CancelSubscriptionDocument,
+  CheckInvoiceStatusDocument,
+  ExtendSubscriptionDocument,
+  FullInvoiceFragment,
+  FullSubscriptionFragment,
+  InvoicesDocument,
+  PaymentPeriodicity,
+  ProductType,
+  ReactivateSubscriptionDocument,
+  RevertSubscriptionUpgradeDocument,
+  SubscriptionDeactivationReason,
+  SubscriptionsDocument,
+} from '@wepublish/website/api';
+import { t } from 'i18next';
+import { InvoiceListContainer } from '../invoice-list/invoice-list-container';
+import { SubscriptionListContainer } from './subscription-list-container';
 
-import meta, * as stories from './subscription-list-container.stories';
+const type = ProductType.Subscription;
 
-const storiesCmp = composeStories(stories);
+const subscription = mockSubscription({
+  id: 'subscription',
+  memberPlan: mockMemberPlan({ name: 'Jahresabo' }),
+  paymentPeriodicity: PaymentPeriodicity.Quarterly,
+  canExtend: true,
+});
 
-describe('SubscriptionList Container', () => {
-  addDateMock();
+const deactivation = mockSubscriptionDeactivation({
+  date: '2024-02-01T00:00:00.000Z',
+  reason: SubscriptionDeactivationReason.UserSelfDeactivated,
+});
+const cancelledSubscription = { ...subscription, deactivation };
 
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, async () => {
-      const { container } = render(
-        <MockedProvider {...Component.parameters?.apolloClient}>
-          <Component />
-        </MockedProvider>
-      );
+const paidInvoice = mockInvoice({ id: 'paid-invoice', subscription });
+const openInvoice = mockInvoice({
+  id: 'open-invoice',
+  paidAt: null,
+  subscription,
+});
 
-      await actWait();
-
-      if (Component.play) {
-        await act(() => Component.play?.({ canvasElement: container }));
-      }
-    });
+const subscriptionsQuery = (subscriptions: FullSubscriptionFragment[]) =>
+  mockOperation(SubscriptionsDocument, {
+    data: { __typename: 'Query', userSubscriptions: subscriptions },
   });
 
-  // Both queries return the same subscription. If its mock lacks a field of
-  // `FullSubscription`, the second response leaves it incomplete in the cache,
-  // Apollo refetches the first query, finds no mock left and shows the error
-  // instead of the list. The mock delays are random, so on CI this failed now
-  // and then; fixed delays make it fail every time.
-  it('should keep the list when the invoices arrive after the subscriptions', async () => {
-    const [subscriptions, invoices, ...mocks] =
-      stories.Extend.parameters!.apolloClient.mocks;
-    const Extend = composeStory(
+const invoicesQuery = (invoices: FullInvoiceFragment[], delay?: number) =>
+  mockOperation(InvoicesDocument, {
+    delay,
+    data: { __typename: 'Query', userInvoices: invoices },
+  });
+
+const checkInvoiceStatus = (invoice: FullInvoiceFragment) =>
+  mockOperation(CheckInvoiceStatusDocument, {
+    variables: { id: invoice.id },
+    data: { __typename: 'Query', checkInvoiceStatus: invoice },
+  });
+
+const cancelMutation = mockOperation(CancelSubscriptionDocument, {
+  variables: { subscriptionId: 'subscription' },
+  data: {
+    __typename: 'Mutation',
+    cancelUserSubscription: cancelledSubscription,
+  },
+});
+
+const extendMutation = mockOperation(ExtendSubscriptionDocument, {
+  variables: {
+    subscriptionId: 'subscription',
+    successURL: 'https://example.com/success',
+    failureURL: 'https://example.com/fail',
+  },
+  data: {
+    __typename: 'Mutation',
+    extendUserSubscription: mockPayment({
+      intentSecret: '',
+      paymentMethod: mockPaymentMethod({ paymentProviderID: 'payrexx' }),
+    }),
+  },
+});
+
+const button = (key: string, options?: Record<string, unknown>) =>
+  screen.getByRole('button', { name: t(key, options) });
+const findButton = (key: string, options?: Record<string, unknown>) =>
+  screen.findByRole('button', { name: t(key, options) });
+
+const cancel = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.click(await findButton('subscription.cancel', { type }));
+  await user.click(button('subscription.cancel', { type }));
+};
+
+const extend = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.click(await findButton('subscription.extendNow'));
+  await user.click(
+    button('subscription.extendBy', {
+      subscriptionDuration: t('subscription.paymentPeriod.quarterly'),
+    })
+  );
+};
+
+describe('SubscriptionListContainer', () => {
+  it('shows the subscriptions of the reader', async () => {
+    renderWithProviders(<SubscriptionListContainer />, {
+      mocks: [subscriptionsQuery([subscription]), invoicesQuery([])],
+    });
+
+    expect(
+      await screen.findByRole('heading', { name: 'Jahresabo' })
+    ).toBeInTheDocument();
+  });
+
+  it('cancels the subscription and shows it as cancelled', async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders(<SubscriptionListContainer />, {
+      mocks: [
+        subscriptionsQuery([subscription]),
+        invoicesQuery([paidInvoice]),
+        cancelMutation,
+      ],
+    });
+
+    await cancel(user);
+
+    expect(
+      await findButton('subscription.reactivate', { type })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(t('subscription.cancelledOn'), { exact: false })
+    ).toBeInTheDocument();
+  });
+
+  it('shows why cancelling failed', async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders(<SubscriptionListContainer />, {
+      mocks: [
+        subscriptionsQuery([subscription]),
+        invoicesQuery([paidInvoice]),
+        mockOperation(CancelSubscriptionDocument, {
+          variables: { subscriptionId: 'subscription' },
+          errors: [{ message: 'Subscription not found' }],
+        }),
+      ],
+    });
+
+    await cancel(user);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Subscription not found'
+    );
+  });
+
+  it('reactivates a cancelled subscription and reloads the invoices', async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders(
+      <>
+        <SubscriptionListContainer />
+        <InvoiceListContainer />
+      </>,
       {
-        ...stories.Extend,
-        parameters: {
-          apolloClient: {
-            mocks: [
-              { ...subscriptions, delay: 0 },
-              { ...invoices, delay: 30 },
-              ...mocks,
-            ],
-          },
-        },
-      },
-      meta
+        mocks: [
+          subscriptionsQuery([cancelledSubscription]),
+          invoicesQuery([]),
+          mockOperation(ReactivateSubscriptionDocument, {
+            variables: { subscriptionId: 'subscription' },
+            data: {
+              __typename: 'Mutation',
+              reactivateUserSubscription: subscription,
+            },
+          }),
+          invoicesQuery([paidInvoice]),
+        ],
+      }
     );
 
-    render(<Extend />);
-    await actWait(200);
+    expect(
+      await screen.findByText(t('invoice.noOpenInvoices'))
+    ).toBeInTheDocument();
 
-    expect(screen.getByText('Jetzt verlängern')).toBeInTheDocument();
+    await user.click(await findButton('subscription.reactivate', { type }));
+    await user.click(button('subscription.reactivate', { type }));
+
+    expect(
+      await findButton('subscription.cancel', { type })
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(t('invoice.paid'), { exact: false })
+    ).toBeInTheDocument();
+  });
+
+  it('reverts an upgrade and reloads the subscriptions and invoices', async () => {
+    const user = userEvent.setup();
+    const upgraded = {
+      ...subscription,
+      canRevertUpgrade: true,
+      deactivation: mockSubscriptionDeactivation({
+        reason: SubscriptionDeactivationReason.UserReplacedSubscription,
+      }),
+    };
+    const previous = mockSubscription({
+      id: 'previous',
+      memberPlan: mockMemberPlan({ name: 'Monatsabo' }),
+    });
+    const upgradeInvoice = mockInvoice({
+      id: 'upgrade-invoice',
+      paidAt: null,
+      subscription: upgraded,
+    });
+
+    renderWithProviders(
+      <>
+        <SubscriptionListContainer />
+        <InvoiceListContainer />
+      </>,
+      {
+        mocks: [
+          subscriptionsQuery([upgraded]),
+          invoicesQuery([upgradeInvoice]),
+          checkInvoiceStatus(upgradeInvoice),
+          mockOperation(RevertSubscriptionUpgradeDocument, {
+            variables: { subscriptionId: 'subscription' },
+            data: {
+              __typename: 'Mutation',
+              revertUserSubscriptionUpgrade: previous,
+            },
+          }),
+          subscriptionsQuery([previous]),
+          invoicesQuery([]),
+        ],
+      }
+    );
+
+    await user.click(await findButton('subscription.revertUpgrade'));
+    await user.click(button('subscription.revertUpgrade'));
+
+    expect(
+      await screen.findByRole('heading', { name: 'Monatsabo' })
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(t('invoice.noOpenInvoices'))
+    ).toBeInTheDocument();
+  });
+
+  it('marks the open invoices of a cancelled subscription as cancelled', async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders(
+      <>
+        <SubscriptionListContainer />
+        <InvoiceListContainer />
+      </>,
+      {
+        mocks: [
+          subscriptionsQuery([subscription]),
+          invoicesQuery([openInvoice]),
+          checkInvoiceStatus(openInvoice),
+          cancelMutation,
+        ],
+      }
+    );
+
+    expect(await findButton('invoice.payNow')).toBeInTheDocument();
+
+    await cancel(user);
+
+    expect(
+      await screen.findByText(t('invoice.canceled'), { exact: false })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: t('invoice.payNow') })
+    ).not.toBeInTheDocument();
+  });
+
+  it('extends the subscription with the redirect pages of its plan and reloads the invoices', async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders(
+      <>
+        <SubscriptionListContainer />
+        <InvoiceListContainer />
+      </>,
+      {
+        mocks: [
+          subscriptionsQuery([subscription]),
+          invoicesQuery([]),
+          extendMutation,
+          invoicesQuery([paidInvoice]),
+        ],
+      }
+    );
+
+    expect(
+      await screen.findByText(t('invoice.noOpenInvoices'))
+    ).toBeInTheDocument();
+
+    await extend(user);
+
+    expect(
+      await screen.findByText(t('invoice.paid'), { exact: false })
+    ).toBeInTheDocument();
+  });
+
+  it('shows the subscriptions before the invoices have arrived', async () => {
+    renderWithProviders(<SubscriptionListContainer />, {
+      mocks: [subscriptionsQuery([subscription]), invoicesQuery([], 1000)],
+    });
+
+    expect(await findButton('subscription.extendNow')).toBeEnabled();
+  });
+
+  it('only shows the subscriptions the filter keeps', async () => {
+    renderWithProviders(<SubscriptionListContainer filter={() => []} />, {
+      mocks: [subscriptionsQuery([subscription]), invoicesQuery([])],
+    });
+
+    expect(
+      await screen.findByRole('link', { name: t('subscription.subscribeNow') })
+    ).toHaveAttribute('href', '/mitmachen');
+    expect(
+      screen.queryByRole('heading', { name: 'Jahresabo' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('links to the given subscribe page', async () => {
+    renderWithProviders(<SubscriptionListContainer subscribeUrl="/abo" />, {
+      mocks: [subscriptionsQuery([]), invoicesQuery([])],
+    });
+
+    expect(
+      await screen.findByRole('link', { name: t('subscription.subscribeNow') })
+    ).toHaveAttribute('href', '/abo');
+  });
+
+  it('shows why the subscriptions could not be loaded', async () => {
+    renderWithProviders(<SubscriptionListContainer />, {
+      mocks: [
+        mockOperation(SubscriptionsDocument, {
+          errors: [{ message: 'Not authenticated' }],
+        }),
+        invoicesQuery([]),
+      ],
+    });
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Not authenticated'
+    );
   });
 });

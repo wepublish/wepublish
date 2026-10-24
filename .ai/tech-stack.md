@@ -60,7 +60,7 @@ reference — architecture, repo-specific patterns, commands, env vars.
 `.claude/docs/` holds agent behaviour — what to do, what never to do, and what
 to run before claiming something is done.
 
-**Keep the whole set under ~60 KB** (it is ~109 KB today — over budget,
+**Keep the whole set under ~60 KB** (it is ~121 KB today — over budget,
 mostly [gotchas.md](.claude/docs/gotchas.md) at 44 KB; prune before adding).
 This is context every task pays for, so a new doc earns its place by
 changing what an agent *does*.
