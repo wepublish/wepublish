@@ -12,11 +12,11 @@ import {
   DocumentHeadTags as MuiDocumentHeadTags,
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { getApiUrl } from '../../lib/api-url';
-import { websiteSettingsFontFamilies } from '../../lib/website-fonts';
+import { websiteSettingsFontLinks } from '../../lib/website-fonts';
 // Side-effect import: brings the `Window.WEBSITE_SETTINGS` augmentation into
 // scope for the two inline scripts below. It lives in the neutral core so
 // non-Next shells get it too.
-import '../website-globals';
+import '../../lib/website-globals';
 
 export type DocumentProps = DocumentHeadTagsProps & {
   websiteSettings: WebsiteSettingsFragment | undefined;
@@ -24,29 +24,16 @@ export type DocumentProps = DocumentHeadTagsProps & {
 };
 
 export const DocumentHeadTags = (props: DocumentProps) => {
-  const fonts = websiteSettingsFontFamilies(props.websiteSettings);
+  const fontLinks = websiteSettingsFontLinks(props.websiteSettings);
 
   return (
     <>
-      {!!fonts.length && (
-        <>
-          <link
-            rel="preconnect"
-            href="https://fonts.googleapis.com"
-          />
-
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin={'anonymous'}
-          />
-
-          <link
-            href={`https://fonts.googleapis.com/css2?${fonts.join('&')}&display=swap`}
-            rel="stylesheet"
-          />
-        </>
-      )}
+      {fontLinks.map(link => (
+        <link
+          key={link.href}
+          {...link}
+        />
+      ))}
 
       <MuiDocumentHeadTags {...props} />
 

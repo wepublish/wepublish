@@ -126,9 +126,7 @@ state, and report to Sentry alongside the backend.
 
 ### Editor command palette
 
-Cmd/Ctrl+K opens a command palette over the whole editor, unless a focused
-widget already handled the keystroke (`event.defaultPrevented`) — the richtext
-editor claims it for its link menu. Its commands are
+Cmd/Ctrl+K opens a command palette over the whole editor. Its commands are
 plain data, split across `navigationCommands.tsx`, `createCommands.tsx` and
 `accountCommands.tsx`, and brought together by
 [apps/editor/src/app/commandPalette/commands.tsx](../apps/editor/src/app/commandPalette/commands.tsx).

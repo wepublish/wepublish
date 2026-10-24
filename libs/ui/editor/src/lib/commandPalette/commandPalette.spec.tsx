@@ -150,21 +150,6 @@ describe('CommandPalette', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
-  it('yields the hotkey to a focused widget that already handled it', () => {
-    renderPalette(
-      <div
-        data-testid="widget"
-        onKeyDown={event => event.preventDefault()}
-      />
-    );
-    fireEvent.keyDown(screen.getByTestId('widget'), {
-      key: 'k',
-      metaKey: true,
-    });
-
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  });
-
   it('keeps working on a layout where mod+K produces another character', () => {
     renderPalette();
     fireEvent.keyDown(document, {

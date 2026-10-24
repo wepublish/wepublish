@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode } from 'react';
 
 const Children = styled('div', {
   shouldForwardProp: propName => propName !== 'maxWidth',
@@ -55,33 +55,9 @@ export function EditorTemplate({
   navigationChildren,
   maxWidth = '1220px',
 }: EditorTemplateProps) {
-  const navigationRef = useRef<HTMLDivElement>(null);
-  const [navigationHeight, setNavigationHeight] = useState(0);
-
-  useEffect(() => {
-    const navigation = navigationRef.current;
-
-    if (!navigation || typeof ResizeObserver === 'undefined') {
-      return;
-    }
-
-    const observer = new ResizeObserver(([entry]) => {
-      setNavigationHeight(
-        entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height
-      );
-    });
-    observer.observe(navigation);
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <EditorTemplateWrapper
-      style={{ '--wep-sticky-top': `${navigationHeight}px` } as CSSProperties}
-    >
-      <NavigationChildren ref={navigationRef}>
-        {navigationChildren}
-      </NavigationChildren>
+    <EditorTemplateWrapper>
+      <NavigationChildren>{navigationChildren}</NavigationChildren>
       <ChildrenWrapper>
         <Children maxWidth={maxWidth}>{children}</Children>
       </ChildrenWrapper>
