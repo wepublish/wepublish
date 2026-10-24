@@ -148,6 +148,7 @@ ENV NODE_OPTIONS=--max-old-space-size=8192
 RUN cp version apps/${NEXT_PROJECT}/public/deployed_version && \
     pnpm exec prisma generate && \
     pnpm exec nx build ${NEXT_PROJECT} --skip-nx-cache && \
+    node docker/check-nitro-output.js dist/apps/${NEXT_PROJECT}/.output && \
     node /wepublish/deployment/map-secrets.js clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website-tanstack-setup
