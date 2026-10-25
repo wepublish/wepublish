@@ -49,6 +49,9 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "helm.name" . }}-editor
         app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- if eq (include "helm.observability.enabled" .) "true" }}
+        {{- include "helm.observability.podLabels" (dict "root" . "component" "editor") | nindent 8 }}
+        {{- end }}
     spec:
       {{- if .Values.deployment.imagePullSecret }}
       imagePullSecrets:
@@ -90,6 +93,9 @@ spec:
             - name: {{ $key }}
               {{- toYaml $value | nindent 14 }}
             {{- end }}
+            {{- end }}
+            {{- if eq (include "helm.observability.enabled" .) "true" }}
+            {{- include "helm.observability.env" (dict "root" . "component" "editor" "values" .Values.editor) | trim | nindent 12 }}
             {{- end }}
           envFrom:
             - secretRef:

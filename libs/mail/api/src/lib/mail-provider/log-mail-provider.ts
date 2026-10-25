@@ -1,4 +1,4 @@
-import { logger } from '@wepublish/utils/api';
+import { Logger } from '@nestjs/common';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
 import {
   MailLogStatus,
@@ -55,7 +55,7 @@ export const extractLinks = (props: {
 };
 
 export class LogMailProvider extends BaseMailProvider {
-  private readonly log = logger('mail-provider');
+  private readonly logger = new Logger(LogMailProvider.name);
 
   constructor(props: MailProviderProps) {
     super(props);
@@ -70,18 +70,17 @@ export class LogMailProvider extends BaseMailProvider {
   async sendMail(props: SendMailProps): Promise<SendMailResult> {
     const config = await this.getConfig();
 
-    this.log.info(
-      {
-        mailLogID: props.mailLogID,
-        from: config?.fromAddress ?? null,
-        to: props.recipient,
-        replyTo: props.replyToAddress || null,
-        subject: props.subject,
-        body: readableBody(props),
-        links: extractLinks(props),
-      },
-      `Mail to ${props.recipient}: ${props.subject}`
-    );
+    const payload = {
+      mailLogID: props.mailLogID,
+      from: config?.fromAddress ?? null,
+      to: props.recipient,
+      replyTo: props.replyToAddress || null,
+      subject: props.subject,
+      body: readableBody(props),
+      links: extractLinks(props),
+    };
+
+    this.logger.log(`Mail to ${props.recipient}: ${props.subject}`, payload);
 
     return {};
   }

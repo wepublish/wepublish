@@ -8,7 +8,7 @@ import {
   WebhookForPaymentIntentProps,
   WebhookResponse,
 } from './payment-provider';
-import { logger } from '@wepublish/utils/api';
+import { Logger } from '@nestjs/common';
 import { PaymentState } from '@prisma/client';
 import { Gateway, GatewayStatus } from '../payrexx/gateway-client';
 import { Transaction, TransactionStatus } from '../payrexx/transaction-client';
@@ -18,6 +18,7 @@ import {
   mapPayrexxPSPs,
 } from '../payment.methode.mapper';
 export class PayrexxPaymentProvider extends BasePaymentProvider {
+  private readonly logger = new Logger(PayrexxPaymentProvider.name);
   payrexxFactory = PayrexxFactory;
 
   constructor(props: PaymentProviderProps) {
@@ -149,10 +150,8 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       return this.checkGatewayIntentStatus(gateway);
     }
 
-    logger('payrexxPaymentProvider').error(
-      'No Payrexx Gateway nor Transaction with intendID: %s for paymentProvider %s found',
-      intentID,
-      this.id
+    this.logger.error(
+      `No Payrexx Gateway nor Transaction with intendID: ${intentID} for paymentProvider ${this.id} found`
     );
 
     throw new Error('Payrexx Gateway/Transaction not found');
@@ -252,10 +251,8 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       ...tokenization,
     });
 
-    logger('payrexxPaymentProvider').info(
-      'Created Payrexx intent with ID: %s for paymentProvider %s',
-      gateway.id,
-      this.id
+    this.logger.log(
+      `Created Payrexx intent with ID: ${gateway.id} for paymentProvider ${this.id}`
     );
 
     return {
@@ -272,21 +269,16 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     const state = this.mapPayrexxEventToPaymentStatus(transaction.status);
 
     if (!state) {
-      logger('payrexxPaymentProvider').warn(
-        'Payrexx transaction with ID: %s for paymentProvider %s returned with an unhandled status %s, skipping',
-        transaction.id,
-        this.id,
-        transaction.status
+      this.logger.warn(
+        `Payrexx transaction with ID: ${transaction.id} for paymentProvider ${this.id} returned with an unhandled status ${transaction.status}, skipping`
       );
 
       return null;
     }
 
     if (!transaction.referenceId) {
-      logger('payrexxPaymentProvider').error(
-        'Payrexx transaction with ID: %s for paymentProvider %s returned with empty referenceId',
-        transaction.id,
-        this.id
+      this.logger.error(
+        `Payrexx transaction with ID: ${transaction.id} for paymentProvider ${this.id} returned with empty referenceId`
       );
 
       throw new Error('empty referenceId');
@@ -302,29 +294,22 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   private checkGatewayIntentStatus(gateway: Gateway): IntentState | null {
     const state = this.mapPayrexxEventToPaymentStatus(gateway.status);
     if (!state) {
-      logger('payrexxPaymentProvider').warn(
-        'Payrexx gateway with ID: %s for paymentProvider %s returned with an unhandled status %s, skipping',
-        gateway.id,
-        this.id,
-        gateway.status
+      this.logger.warn(
+        `Payrexx gateway with ID: ${gateway.id} for paymentProvider ${this.id} returned with an unhandled status ${gateway.status}, skipping`
       );
       return null;
     }
 
     const transaction = gateway.invoices[0]?.transactions[0];
     if (!transaction) {
-      logger('payrexxPaymentProvider').error(
-        'Payrexx gateway with ID: %s for paymentProvider %s returned without transaction despite preAuthorization set to true.',
-        gateway.id,
-        this.id
+      this.logger.error(
+        `Payrexx gateway with ID: ${gateway.id} for paymentProvider ${this.id} returned without transaction despite preAuthorization set to true.`
       );
     }
 
     if (!gateway.referenceId) {
-      logger('payrexxPaymentProvider').error(
-        'Payrexx gateway with ID: %s for paymentProvider %s returned with empty referenceId',
-        gateway.id,
-        this.id
+      this.logger.error(
+        `Payrexx gateway with ID: ${gateway.id} for paymentProvider ${this.id} returned with empty referenceId`
       );
       throw new Error('empty referenceId');
     }

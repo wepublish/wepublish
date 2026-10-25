@@ -190,8 +190,12 @@ so use `lazyMessage('key')` from `apps/editor/src/app/utility.ts` instead of
 - Use dataloaders (`*-dataloader.service.ts`) for relations to avoid N+1 queries.
 - Throw the standard Nest exceptions (`NotFoundException`,
   `BadRequestException`) rather than returning null-ish sentinels.
-- Log with Pino; report to Sentry. Never log tokens, passwords, or payment
-  payloads.
+- Log with Nest's `Logger` (`private readonly logger = new Logger(X.name)`
+  from `@nestjs/common`), passing `error.stack` as the second argument to
+  `error()`; `warn()` has no stack argument, so put the stack in the message.
+  Structured fields go in a plain object after the message
+  (`logger.log(msg, {id})`), which lands in `params` in production JSON.
+  Report to Sentry. Never log tokens, passwords, or payment payloads.
 - **API errors say where they come from.** Every payment, mail, challenge and
   tracking-pixel provider the `ProviderRegistryService` builds is wrapped by
   `withProviderErrorContext`, so its errors read `Payment provider "<name>"

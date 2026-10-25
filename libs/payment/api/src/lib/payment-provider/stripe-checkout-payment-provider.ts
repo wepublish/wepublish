@@ -1,5 +1,5 @@
+import { Logger } from '@nestjs/common';
 import { PaymentState } from '@prisma/client';
-import { logger } from '@wepublish/utils/api';
 import Stripe from 'stripe';
 
 import {
@@ -34,6 +34,8 @@ function mapStripeCheckoutEventToPaymentStatus(
 }
 
 export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
+  private readonly logger = new Logger(StripeCheckoutPaymentProvider.name);
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }
@@ -124,10 +126,8 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
     if (session.amount_total === null) {
       throw new Error('Error amount_total can not be null');
     }
-    logger('stripeCheckoutPaymentProvider').info(
-      'Created Stripe checkout session with ID: %s for paymentProvider %s',
-      session.id,
-      this.id
+    this.logger.log(
+      `Created Stripe checkout session with ID: ${session.id} for paymentProvider ${this.id}`
     );
 
     if (session.url === null) {
@@ -153,10 +153,8 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
       : PaymentState.requiresUserAction;
 
     if (!session.client_reference_id) {
-      logger('stripePaymentProvider').error(
-        'Stripe checkout session with ID: %s for paymentProvider %s returned without client_reference_id',
-        session.id,
-        this.id
+      this.logger.error(
+        `Stripe checkout session with ID: ${session.id} for paymentProvider ${this.id} returned without client_reference_id`
       );
       throw new Error('empty paymentID');
     }

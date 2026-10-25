@@ -28,6 +28,12 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@opentelemetry/api": "catalog:",
+    "@opentelemetry/instrumentation-express": "catalog:",
+    "@opentelemetry/instrumentation-http": "catalog:",
+    "@opentelemetry/instrumentation-runtime-node": "catalog:",
+    "@opentelemetry/resources": "catalog:",
+    "@opentelemetry/sdk-node": "catalog:",
     "cors": "catalog:",
     "express": "catalog:"
   }

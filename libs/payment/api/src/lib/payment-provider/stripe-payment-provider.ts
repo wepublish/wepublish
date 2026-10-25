@@ -9,7 +9,7 @@ import {
   WebhookResponse,
 } from './payment-provider';
 import Stripe from 'stripe';
-import { logger } from '@wepublish/utils/api';
+import { Logger } from '@nestjs/common';
 import { PaymentState } from '@prisma/client';
 import { mapStripePaymentMethodTypes } from '../payment.methode.mapper';
 
@@ -35,6 +35,8 @@ function mapStripeEventToPaymentStatus(event: string): PaymentState | null {
 }
 
 export class StripePaymentProvider extends BasePaymentProvider {
+  private readonly logger = new Logger(StripePaymentProvider.name);
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }
@@ -136,9 +138,8 @@ export class StripePaymentProvider extends BasePaymentProvider {
       // If no user, deleted user, no default_payment_method or no default_source the intent will be created without an customer.
       const customer = await stripe.customers.retrieve(customerID);
       if (this.isCustomerDeleted(customer)) {
-        logger('stripePaymentProvider').warn(
-          'Provided customerID "%s" returns a deleted stripe customer',
-          customerID
+        this.logger.warn(
+          `Provided customerID "${customerID}" returns a deleted stripe customer`
         );
       } else if (customer.invoice_settings.default_payment_method !== null) {
         paymentMethodID = customer.invoice_settings
@@ -146,9 +147,8 @@ export class StripePaymentProvider extends BasePaymentProvider {
       } else if (customer.default_source !== null) {
         paymentMethodID = customer.default_source as string;
       } else {
-        logger('stripePaymentProvider').warn(
-          'Provided customerID "%s" has no default_payment_method or default_source',
-          customerID
+        this.logger.warn(
+          `Provided customerID "${customerID}" has no default_payment_method or default_source`
         );
       }
     }
@@ -188,10 +188,9 @@ export class StripePaymentProvider extends BasePaymentProvider {
     } catch (err) {
       const error: any = err;
 
-      logger('stripePaymentProvider').error(
-        error,
-        'Error while creating Stripe Intent for paymentProvider %s',
-        this.id
+      this.logger.error(
+        `Error while creating Stripe Intent for paymentProvider ${this.id}: ${error} (type=${error?.type} code=${error?.code} decline_code=${error?.decline_code} status=${error?.statusCode} requestId=${error?.requestId})`,
+        error instanceof Error ? error.stack : undefined
       );
 
       if (error.type === 'StripeCardError') {
@@ -208,10 +207,8 @@ export class StripePaymentProvider extends BasePaymentProvider {
     }
 
     const state = mapStripeEventToPaymentStatus(intent.status);
-    logger('stripePaymentProvider').info(
-      'Created Stripe intent with ID: %s for paymentProvider %s',
-      intent.id,
-      this.id
+    this.logger.log(
+      `Created Stripe intent with ID: ${intent.id} for paymentProvider ${this.id}`
     );
 
     return {
@@ -231,20 +228,15 @@ export class StripePaymentProvider extends BasePaymentProvider {
     const state = mapStripeEventToPaymentStatus(intent.status);
 
     if (!state) {
-      logger('stripePaymentProvider').error(
-        'Stripe intent with ID: %s for paymentProvider %s returned with an unknown state %s',
-        intent.id,
-        this.id,
-        intent.status
+      this.logger.error(
+        `Stripe intent with ID: ${intent.id} for paymentProvider ${this.id} returned with an unknown state ${intent.status}`
       );
       throw new Error('unknown intent state');
     }
 
     if (!intent.metadata['paymentID']) {
-      logger('stripePaymentProvider').error(
-        'Stripe intent with ID: %s for paymentProvider %s returned with empty paymentID',
-        intent.id,
-        this.id
+      this.logger.error(
+        `Stripe intent with ID: ${intent.id} for paymentProvider ${this.id} returned with empty paymentID`
       );
       throw new Error('empty paymentID');
     }

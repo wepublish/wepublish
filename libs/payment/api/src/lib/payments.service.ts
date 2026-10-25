@@ -15,14 +15,18 @@ import {
   PaymentFromInvoiceInput,
   PaymentFromSubscriptionArgs,
 } from './payment.model';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from './payment-method/payment-method.config';
 import { InvoicePaidNotifier } from './invoice-paid.listener';
 import { ErrorCode } from '@wepublish/errors';
-import { logger } from '@wepublish/utils/api';
 
 interface CreatePaymentWithProvider {
   paymentMethodID: string;
@@ -36,6 +40,7 @@ interface CreatePaymentWithProvider {
 
 @Injectable()
 export class PaymentsService {
+  private readonly logger = new Logger(PaymentsService.name);
   private readonly paymentProviders = this.config.paymentProviders;
 
   constructor(
@@ -165,7 +170,7 @@ export class PaymentsService {
       },
     });
     if (blockingPayment) {
-      logger('paymentsService').warn(
+      this.logger.warn(
         `Blocked duplicate payment attempt for invoice ${invoiceID}: payment ${blockingPayment.id} is still pending`
       );
       throw new BadRequestException(ErrorCode.PaymentAlreadyRunning);

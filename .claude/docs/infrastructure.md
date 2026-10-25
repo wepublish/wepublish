@@ -17,7 +17,12 @@
 
 ## Containerization
 
-- **Docker** for local development (`docker-compose.yml`)
+- **podman** (`podman compose`) for local development (`docker-compose.yml`)
+- **Observability (opt-in):** the `observability` compose profile runs an OTel
+  collector, Elasticsearch, Logstash, Kibana, Prometheus (fed through its OTLP
+  receiver, no app scraping) and Grafana for apps running on the host; gate,
+  env per app, multi-instance API and URLs:
+  [docker/observability/README.md](../../docker/observability/README.md).
 - Multi-stage Dockerfile for all production builds (API, editor, website, media, migration, storybook)
 - **MinIO** as S3-compatible object storage for media in local dev
 
@@ -49,10 +54,16 @@ directory (`prisma generate` resolves `@prisma/client` from the schema's
 location), and pnpm 12.9's unreferenced `.pnpm/@` / `.pnpm/@<scope>` copies are
 deleted after each deploy.
 
+The `@opentelemetry/*` packages follow the same rule: catalog, root
+`package.json` (websites resolve from the root) and the manifest of each app
+that loads them. api, media and the editor server `require()` them only behind
+the OTel gate, and `check-runtime-deps.js` still counts those calls.
+
 ## Dragonfly (shared cache)
 
-`dragonfly01.wepublish.cloud:6379` (TLS, internal CA `/wepublish/ca.crt`)
-serves all media. Terraform in `application-configuration` creates a user
+`dragonfly01.wepublish.cloud:6379` (TLS, internal CA `/wepublish/ca.crt`,
+copied from `libs/api/prisma/ca.crt` into the api, website, migration, media
+and editor images) serves all media. Terraform in `application-configuration` creates a user
 `wepublish-<app>-<env>` per medium and sets `REDIS_URL`, `REDIS_KEY_PREFIX` and
 `NODE_EXTRA_CA_CERTS` on api and website pods; media are separated by key
 prefix ([gotchas.md](gotchas.md)), mirrored locally by `docker/dragonfly/users.acl`.
@@ -103,3 +114,10 @@ The migration container (and `pnpm run migrate` locally) runs three steps in ord
   separate `application-configuration` repo
   (`terraform/modules/wepublish_app/templates/`), so a chart version bump has to
   land on `master` here *before* the pinned `version:` is raised there.
+- Both charts have an opt-in `observability` values block (off by default,
+  renders nothing when off). On, api/media/editor/website get the `OTEL_*` env
+  from [docker/observability/README.md](../../docker/observability/README.md)
+  (logs, traces and metrics all pushed over OTLP; no metrics port, nothing to
+  scrape) and `wepublish.ch/{tenant,component,environment}` pod labels;
+  migration and storybook are untouched. An `OTEL_*` name the release already sets in `env`,
+  `deployment.env` or `dynamicEnv` wins over the chart's value.

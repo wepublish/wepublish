@@ -227,7 +227,7 @@ a new write path needs its own test.
 
 ### ⚠️ nx loads `.env` into every task, tests included
 
-`.env` sets `REDIS_URL` and nx passes it into tests (verified 2026-10-01), so
+`.env` sets `REDIS_URL` and nx passes it into tests, so
 `vitest.setup-tests.ts` and `vitest.setup-nest.ts` delete it (along with
 `REDIS_KEY_PREFIX`). Pinned by `kv-ttl-cache.module.spec.ts`. The built api
 loads `.env` too (`ConfigModule.forRoot()`), so to run it without Dragonfly set
@@ -394,27 +394,18 @@ mixed set installs two `@sentry/node` copies with separate `__SENTRY__`
 carriers. Bumping only nestjs + profiling-node did not compile: `Type
 'Integration & { name: string; }' is not assignable to type 'Integration'` — a
 v11 integration handed to a v10 `Sentry.init`. Nothing type-checks this; bump
-all four together.
+all four together. `withSentryConfig` lives at `@sentry/nextjs/config`, which
+node10 `moduleResolution` cannot see, so every app needs `bundler`.
 
-v11 renames: `beforeSendSpan` gets a streamed span with `attributes`, not
-`data`; `profilesSampleRate` became `profileLifecycle` +
-`profileSessionSampleRate`; `withSentryConfig` moved to `@sentry/nextjs/config`
-— a subpath export node10 `moduleResolution` cannot see, so every app needs
-`moduleResolution: bundler`.
-
-**Diagnostics-channel spans need a plain `node` process.** v11 instruments
-`express`, `graphql`, `@nestjs/*`, `pg` and Prisma via diagnostics channels
-injected by runtime module hooks. Until 2026-10-20 the API shipped as a
-`@yao-pkg/pkg` binary, which cannot register them, and booted with _"Failed to
-register diagnostics-channel injection hooks, so channel-based integrations
-will not record spans."_ It now runs under plain `node`; if that warning comes
-back, the cause is something else. Two build-time workarounds failed on
-2026-10-05 — do not redo them:
+**Diagnostics-channel spans need a plain `node` process** (a `pkg` binary
+cannot register the hooks). v11 instruments `express`, `graphql`, `@nestjs/*`,
+`pg` and Prisma via runtime module hooks, so a module loaded before
+`Sentry.init` stays unpatched. Two build-time workarounds failed on 2026-10-05
+— do not redo them:
 
 - `sentryOrchestrionWebpackPlugin` (build-time injection) builds clean and
   injects **nothing**: `@nx/webpack` externalizes node_modules, so webpack
-  never compiles them. Its externals warning cannot fire either — it inspects
-  only string/RegExp/object externals and nx passes a function. Grep the
+  never compiles them, and its externals warning cannot fire. Grep the
   bundle for `tracingChannel` rather than trusting a clean build.
 - Bundling them instead (`externalDependencies` listing only native/Prisma/pg)
   dies on Nest's dynamic loaders: `Can't resolve 'class-transformer/cjs/storage'`
@@ -445,8 +436,8 @@ peer (`peerDependencies` or `peerDependenciesMeta`), so they pass the check.
 
 **Before adding a library that lazily resolves an optional peer** — grep it for
 `loadPackage`, `assertPackages`, `loadAdapter`, `import.meta.resolve` and
-`await import(` — add that peer to the app's `package.json` as well. Nothing
-type-checks or tests this; only booting the image shows it.
+`await import(` — add that peer to the app's `package.json` as well; only
+booting the image shows a gap.
 
 ---
 
@@ -458,7 +449,8 @@ media `instrument.ts`). Dropping it compiles the import to `0;`, and the API
 then boots without `Sentry.init`. It started being dropped with the dependency
 bump in #3195 (webpack 5.108 → 5.112), and `docker/check-runtime-deps.js` then
 failed the image build on the now-unused `@sentry/profiling-node`. The array form keeps
-`libs/utils/api/src/lib/sentry/instrumentation.ts` and leaves everything else
+`libs/utils/api/src/lib/sentry/instrumentation.ts` and the OTel bootstrap
+`libs/utils/api/src/lib/otel/instrumentation.ts`, and leaves everything else
 tree-shakeable. **A new file loaded only by a bare import needs an entry here
 too.**
 
@@ -533,14 +525,12 @@ type-checks and has no effect: Apollo Client 4 only reads `refetchOn` when the
 client is built with a `refetchEventManager`, and nothing in this repo
 constructs one, so Apollo never refetches on focus in the first place.
 
-What did reload the whole editor on refocus was
+What reloads the editor on refocus is
 [authContext.tsx](../../libs/ui/editor/src/lib/authContext.tsx): it re-checks
-the session on every `usePageVisibility()` change and used to render `null`
-while `loading`. Apollo Client 4 flipped the `notifyOnNetworkStatusChange`
-default from `false` to `true` (verified in `QueryManager.js`, @apollo/client
-4.3.1, 2026-10-08), so from AC4 on a `refetch()` sets `loading: true` — the
-provider returned `null`, unmounted the editor, and every remounted query
-re-ran under the `network-only` default.
+the session on every `usePageVisibility()` change, and since Apollo Client 4
+(`notifyOnNetworkStatusChange` defaults to `true`) that `refetch()` sets
+`loading: true`. Rendering `null` on `loading` unmounts the editor and re-runs
+every query.
 
 **Load-bearing:** `loading && !data` (not `loading`) in the provider's return,
 and the `if (!isPageActive) return` guard, which keeps the tab _losing_ focus
@@ -573,11 +563,9 @@ error and however old ([mailchimp-sync.service.ts](../../libs/membership/api/src
 `getRecentSyncErrorUserIds` — nothing makes it "recent"). Rows only go away when
 someone deletes them in the editor's sync error list.
 
-The email-change hook used to record one whenever Mailchimp refused the rename,
-including when the user had signed up with the new email. That user then
-dropped out of the sync for good, with two stale contacts (found on hauptstadt,
-2026-10-09). Record an error only for a state a person has to resolve, and
-handle the expected Mailchimp answers instead.
+Record an error only for a state a person has to resolve, and handle the
+expected Mailchimp answers instead (a refused rename once dropped users from
+the sync for good, hauptstadt 2026-10-09).
 
 Mailchimp renames only `subscribed` contacts, and not onto an email that an
 active, archived or even permanently deleted contact still has: all give
@@ -777,8 +765,7 @@ settings page.
 So every form group carries `spacing={3}`, and
 `tools/rsuite-to-mui/codemods/form-bare.mjs` and `form-stack.mjs` emit it, so
 a re-run does not undo the fix. When a group spaces itself, a child carrying
-`sx={{ marginBottom: 3 }}` is the old manual spacing and doubles the gap —
-63 of those came out with the fix.
+`sx={{ marginBottom: 3 }}` doubles the gap.
 
 New groups should use `FormFields` from `@wepublish/ui/editor` instead; the
 `Stack` form is what the migration left behind.
@@ -998,6 +985,18 @@ Pinned by `render.spec.tsx`, `newsletter-render.service.spec.ts`,
 `react-dom`, `@react-email/components`, and `tslib`, because the API's webpack
 gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
 `apps/api-example/package.json` — see [infrastructure.md](infrastructure.md).
+
+---
+
+### ⚠️ OpenTelemetry ([docker/observability](../../docker/observability/README.md)): pins and load order
+
+- `@opentelemetry/instrumentation-nestjs-core` stays on exactly 0.69.0; 0.70+ silently skip Nest 12 (`nestjs-version.spec.ts`).
+- Stay off OTel JS 0.300 / 3.0: it needs `@opentelemetry/api` 1.10; Sentry and sdk-node 0.223 need `<1.10`.
+- Never add `@prisma/instrumentation`: it clashes with Sentry's `PRISMA_INSTRUMENTATION` global.
+- Websites import `otel.node` only inside the `NEXT_RUNTIME === 'nodejs'` branch; `OTEL_*` never goes into the next.config `env` block (`browser-isolation.spec.ts`).
+- `@wepublish/utils/api/otel` must not load `@nestjs/common` (Sentry, which inits after it, must patch `@Injectable`/`@Catch`); `createNestLogger` lives in `.../otel/logger`, imported after Sentry (`instrumentation.spec.ts`).
+- The editor bundle hoists requires above `./src/otel`, so `otel.ts` re-requires `http` and `express` after `sdk.start()`; without them editor HTTP metrics and spans vanish (`otel.spec.ts`).
+- Metrics are pushed, so there is no `up`: count instances from `target_info`, and keep `translation_strategy: UnderscoreEscapingWithoutSuffixes` or every metric name gains `_bytes`/`_seconds`/`_total` (`prometheus/rules.yml`).
 
 ---
 

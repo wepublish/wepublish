@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import {
@@ -30,7 +31,6 @@ import {
 import {
   calculatePeriodAmount,
   getPeriodPriceRange,
-  logger,
 } from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import {
@@ -48,6 +48,9 @@ export type SubscriptionWithRelations = Subscription & {
 
 @Injectable()
 export class UserSubscriptionService {
+  private readonly logger = new Logger(UserSubscriptionService.name);
+  private readonly extendSubscriptionLogger = new Logger('extendSubscription');
+
   constructor(
     private prisma: PrismaClient,
     private payments: PaymentsService,
@@ -152,9 +155,8 @@ export class UserSubscriptionService {
       });
 
     if (!invoice) {
-      logger('mutation.public').error(
-        'Could not create new invoice for subscription with ID "%s"',
-        subscription.id
+      this.logger.error(
+        `Could not create new invoice for subscription with ID "${subscription.id}"`
       );
       throw new InternalServerErrorException();
     }
@@ -218,9 +220,8 @@ export class UserSubscriptionService {
         });
 
       if (!invoice) {
-        logger('mutation.public').error(
-          'Could not create new invoice for subscription with ID "%s"',
-          subscription.id
+        this.logger.error(
+          `Could not create new invoice for subscription with ID "${subscription.id}"`
         );
         throw new InternalServerErrorException();
       }
@@ -246,10 +247,8 @@ export class UserSubscriptionService {
 
     // Allow only valid and subscription belonging to the user to early extend
     if (!subscription || subscription.userID !== userId) {
-      logger('extendSubscription').error(
-        'Could not find subscription with ID "%s" or subscription does not belong to user "%s"',
-        subscriptionId,
-        userId
+      this.extendSubscriptionLogger.error(
+        `Could not find subscription with ID "${subscriptionId}" or subscription does not belong to user "${userId}"`
       );
       throw new BadRequestException(`SubscriptionId given not found!`);
     }
@@ -268,9 +267,8 @@ export class UserSubscriptionService {
       },
     });
     if (!paymentMethod) {
-      logger('extendSubscription').error(
-        'Could not find paymentMethod with ID "%s"',
-        subscription.paymentMethodID
+      this.extendSubscriptionLogger.error(
+        `Could not find paymentMethod with ID "${subscription.paymentMethodID}"`
       );
       throw new InternalServerErrorException();
     }
@@ -296,9 +294,8 @@ export class UserSubscriptionService {
       subscription,
     });
     if (!invoice) {
-      logger('extendSubscription').error(
-        'Could not create new invoice for subscription with ID "%s"',
-        subscription.id
+      this.extendSubscriptionLogger.error(
+        `Could not create new invoice for subscription with ID "${subscription.id}"`
       );
       throw new InternalServerErrorException();
     }
@@ -313,9 +310,8 @@ export class UserSubscriptionService {
       });
 
       if (!paymentMethod) {
-        logger('extendSubscription').warn(
-          'paymentMethod %s not found',
-          subscription.paymentMethodID
+        this.extendSubscriptionLogger.warn(
+          `paymentMethod ${subscription.paymentMethodID} not found`
         );
         throw new InternalServerErrorException();
       }
@@ -326,9 +322,8 @@ export class UserSubscriptionService {
       });
 
       if (!fullUser) {
-        logger('extendSubscription').warn(
-          'user %s not found',
-          subscription.userID
+        this.extendSubscriptionLogger.warn(
+          `user ${subscription.userID} not found`
         );
         throw new InternalServerErrorException();
       }
@@ -338,9 +333,8 @@ export class UserSubscriptionService {
       );
 
       if (!customer) {
-        logger('extendSubscription').warn(
-          'customer %s not found',
-          paymentMethod.paymentProviderID
+        this.extendSubscriptionLogger.warn(
+          `customer ${paymentMethod.paymentProviderID} not found`
         );
       } else {
         const user = await this.prisma.user.findUniqueOrThrow({
@@ -358,10 +352,8 @@ export class UserSubscriptionService {
             return payment;
           }
         } catch (e) {
-          logger('extendSubscription').warn(
-            'Invoice off session charge for subscription %s failed: %s',
-            subscription.id,
-            e
+          this.extendSubscriptionLogger.warn(
+            `Invoice off session charge for subscription ${subscription.id} failed: ${String(e)}`
           );
         }
       }

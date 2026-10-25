@@ -2,6 +2,7 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
+  Logger,
   NestInterceptor,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -10,7 +11,6 @@ import { AuditLogActorType, Prisma } from '@prisma/client';
 import { AuthSession, AuthSessionType } from '@wepublish/authentication/api';
 import { PERMISSIONS_METADATA_KEY } from '@wepublish/permissions/api';
 import { Permission } from '@wepublish/permissions';
-import { logger } from '@wepublish/utils/api';
 import { Observable, tap } from 'rxjs';
 import { AUDIT_LOG_METADATA_KEY, AuditLogOptions } from './audit-log.decorator';
 import { AuditLogService } from './audit-log.service';
@@ -76,6 +76,8 @@ export const describeActor = (session: AuthSession | undefined): Actor => {
 
 @Injectable()
 export class AuditLogInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(AuditLogInterceptor.name);
+
   constructor(
     private reflector: Reflector,
     private auditLogService: AuditLogService
@@ -146,7 +148,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     try {
       void this.auditLogService.record(entry);
     } catch (error) {
-      logger('audit-log').error(
+      this.logger.error(
         `Could not record audit log entry for ${entry.mutation}: ${
           (error as Error).message
         }`

@@ -1,16 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { compare as bcryptCompare } from '@node-rs/bcrypt';
 import { hash as argon2Hash, verify as argon2Verify } from '@node-rs/argon2';
 import { UserService } from '@wepublish/user/api';
 import { PrismaClient } from '@prisma/client';
-import {
-  logger,
-  USER_PROPERTY_LAST_LOGIN_LINK_SEND,
-} from '@wepublish/utils/api';
+import { USER_PROPERTY_LAST_LOGIN_LINK_SEND } from '@wepublish/utils/api';
 import { Property } from '@wepublish/property/api';
 
 @Injectable()
 export class UserAuthenticationService {
+  private readonly logger = new Logger(UserAuthenticationService.name);
+
   constructor(
     private userService: UserService,
     private prisma: PrismaClient
@@ -72,10 +71,8 @@ export class UserAuthenticationService {
         },
       });
     } catch (error) {
-      logger('mutation.public').warn(
-        error as Error,
-        'Updating User with ID %s failed',
-        userId
+      this.logger.warn(
+        `Updating User with ID ${userId} failed: ${error instanceof Error ? error.stack : String(error)}`
       );
     }
   }

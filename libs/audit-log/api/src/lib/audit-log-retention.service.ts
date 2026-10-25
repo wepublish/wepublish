@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { logger } from '@wepublish/utils/api';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { AuditLogService } from './audit-log.service';
 
@@ -15,6 +14,8 @@ const CLAIM_RETRY_FOR_MS = 60_000;
 
 @Injectable()
 export class AuditLogRetentionService {
+  private readonly logger = new Logger(AuditLogRetentionService.name);
+
   constructor(
     private auditLogService: AuditLogService,
     private config: ConfigService,
@@ -40,7 +41,7 @@ export class AuditLogRetentionService {
     });
 
     if (claimed === undefined) {
-      logger('audit-log').info(
+      this.logger.log(
         'Audit log retention runs on every replica: without Dragonfly (REDIS_URL unset or Dragonfly unreachable) nothing keeps it to one, and deleting old entries twice is harmless'
       );
 
@@ -68,7 +69,7 @@ export class AuditLogRetentionService {
     }
 
     if (deleted) {
-      logger('audit-log').info(
+      this.logger.log(
         `Pruned ${deleted} audit log entries older than ${cutoff.toISOString()}`
       );
     }
