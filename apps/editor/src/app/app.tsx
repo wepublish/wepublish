@@ -43,6 +43,7 @@ import {
   useReportQueryErrors,
 } from '@wepublish/ui/editor';
 import { lazy, Suspense, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { Base } from './base';
@@ -158,6 +159,7 @@ const Logout = () => {
 
 export function App() {
   const { session } = useContext(AuthContext);
+  const { t } = useTranslation();
 
   useReportQueryErrors();
 
@@ -238,7 +240,7 @@ export function App() {
         `}
       />
       <EditorGlobalStyles />
-      <SnackbarHost />
+      <SnackbarHost label={t('navbar.notifications')} />
       <BrowserRouter>
         <RouteErrorBoundary>
           <EditorCommandPaletteSurface />

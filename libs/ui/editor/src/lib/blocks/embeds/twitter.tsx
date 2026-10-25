@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useScript } from '../../utility';
 
@@ -47,6 +48,7 @@ export interface TwitterTweetEmbedProps {
 }
 
 export function TwitterTweetEmbed({ userID, tweetID }: TwitterTweetEmbedProps) {
+  const { t } = useTranslation();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const context = useContext(TwitterContext);
 
@@ -74,7 +76,9 @@ export function TwitterTweetEmbed({ userID, tweetID }: TwitterTweetEmbedProps) {
             href={`https://twitter.com/${encodeURIComponent(userID)}/status/${encodeURIComponent(
               tweetID
             )}`}
-          />
+          >
+            {t('blocks.embeds.tweetBy', { user: userID })}
+          </a>
         </blockquote>
       )}
     </TwitterEmbed>

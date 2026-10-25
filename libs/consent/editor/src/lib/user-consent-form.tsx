@@ -5,7 +5,6 @@ import {
   CircularProgress,
   FormControl,
   FormControlLabel,
-  FormLabel,
   Switch,
   TextField,
 } from '@mui/material';
@@ -70,7 +69,6 @@ export const UserConsentForm = ({ isEdit }: UserConsentFormProps) => {
         name="userId"
         render={({ field, fieldState: { error } }) => (
           <FormControl fullWidth>
-            <FormLabel>{t('dashboard.user')}</FormLabel>
             <Autocomplete
               options={userValues}
               getOptionLabel={option => option.label}
@@ -85,7 +83,7 @@ export const UserConsentForm = ({ isEdit }: UserConsentFormProps) => {
               renderInput={params => (
                 <TextField
                   {...params}
-                  placeholder={t('dashboard.user')}
+                  label={t('dashboard.user')}
                   error={Boolean(error)}
                   helperText={error?.message}
                 />
@@ -100,7 +98,6 @@ export const UserConsentForm = ({ isEdit }: UserConsentFormProps) => {
         name="consentId"
         render={({ field, fieldState: { error } }) => (
           <FormControl fullWidth>
-            <FormLabel>{t('consents.consent')}</FormLabel>
             <Autocomplete
               options={consentsValues}
               getOptionLabel={option => option.label}
@@ -116,7 +113,7 @@ export const UserConsentForm = ({ isEdit }: UserConsentFormProps) => {
               renderInput={params => (
                 <TextField
                   {...params}
-                  placeholder={t('consents.consent')}
+                  label={t('consents.consent')}
                   error={Boolean(error)}
                   helperText={error?.message}
                 />

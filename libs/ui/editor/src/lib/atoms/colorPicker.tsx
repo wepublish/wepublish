@@ -13,7 +13,9 @@ import {
   CSSProperties,
   FocusEventHandler,
   forwardRef,
+  KeyboardEvent,
   ReactNode,
+  useRef,
   useState,
 } from 'react';
 import { FieldError } from 'react-hook-form';
@@ -52,10 +54,34 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
   (props, ref) => {
     const { t } = useTranslation();
     const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+    const swatchRef = useRef<HTMLButtonElement>(null);
     const value = props.value ?? '';
+    const open = Boolean(anchor);
+    const swatchName =
+      props.label ?
+        t('colorPicker.pickColorFor', { label: props.label })
+      : t('colorPicker.pickColor');
+
+    const close = () => {
+      setAnchor(null);
+      swatchRef.current?.focus();
+    };
+
+    const focusPalette = (palette: HTMLDivElement | null) => {
+      palette?.querySelector<HTMLInputElement>('input')?.focus();
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && open) {
+        event.preventDefault();
+        event.stopPropagation();
+        close();
+      }
+    };
 
     return (
       <Box
+        onKeyDown={handleKeyDown}
         sx={{
           position: 'relative',
           display: 'flex',
@@ -64,12 +90,15 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
           alignItems: 'center',
         }}
       >
-        <IconButtonTooltip caption={t('colorPicker.pickColor')}>
+        <IconButtonTooltip caption={swatchName}>
           <Box
             component="button"
             type="button"
+            ref={swatchRef}
             disabled={props.disabled}
-            aria-label={t('colorPicker.pickColor')}
+            aria-label={swatchName}
+            aria-haspopup="dialog"
+            aria-expanded={open}
             sx={theme => ({
               width: 25,
               height: 25,
@@ -79,7 +108,7 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
               bgcolor: value || '#000',
               border: `1px solid ${theme.vars.palette.divider}`,
             })}
-            onClick={event => setAnchor(event.currentTarget)}
+            onClick={event => setAnchor(open ? null : event.currentTarget)}
           />
         </IconButtonTooltip>
 
@@ -105,17 +134,18 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
         )}
 
         <ElevatedPopper
-          open={Boolean(anchor)}
+          open={open}
           anchorEl={anchor}
           placement="bottom-start"
-          onKeyDown={e => {
-            if (e.key === 'Escape') {
-              setAnchor(null);
-            }
-          }}
+          disablePortal
+          popperOptions={{ strategy: 'fixed' }}
         >
           <ClickAwayListener onClickAway={() => setAnchor(null)}>
-            <Palette>
+            <Palette
+              ref={focusPalette}
+              role="dialog"
+              aria-label={t('colorPicker.pickColor')}
+            >
               <Sketch
                 color={value}
                 presetColors={props.presetColors}

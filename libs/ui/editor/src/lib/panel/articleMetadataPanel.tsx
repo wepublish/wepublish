@@ -4,19 +4,20 @@ import {
   Badge,
   Box,
   Button,
+  Checkbox,
   Drawer,
   FormControl,
   FormControlLabel,
+  FormGroup,
   FormLabel,
   IconButton,
   InputAdornment,
-  Checkbox,
-  FormGroup,
   Stack,
   Tab,
   Tabs,
   TextField,
 } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import {
   CommentItemType,
   FullAuthorFragment,
@@ -32,7 +33,7 @@ import {
   CanPublishArticle,
 } from '@wepublish/permissions';
 import { slugify } from '@wepublish/utils';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   MdAutoFixHigh,
@@ -78,6 +79,7 @@ import { SeoBlockContext } from './seoBlockContext';
 import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
 import { SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';
+import { useTabPanel } from './useTabPanel';
 
 const ValueInput = styled(TextField)`
   width: 60%;
@@ -193,6 +195,10 @@ function ArticleMetadataPanel({
   } = value;
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General);
+  const { tabProps, panelProps } = useTabPanel(activeKey);
+  const hasTrackingError = !!trackingPixels?.find(
+    trackingPixel => !!trackingPixel?.error
+  );
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -208,6 +214,7 @@ function ArticleMetadataPanel({
   );
 
   const { t } = useTranslation();
+  const tagsLabelId = useId();
 
   const isAuthorized = useAuthorisation(CanCreateArticle.id);
 
@@ -341,18 +348,14 @@ function ArticleMetadataPanel({
               fullWidth
             />
 
-            <FormControl fullWidth>
-              <FormLabel>
-                {t('articleEditor.panels.socialMediaAuthors')}
-              </FormLabel>
-              <AuthorCheckPicker
-                disabled={!isAuthorized}
-                list={socialMediaAuthors}
-                onChange={authors =>
-                  onChange?.({ ...value, socialMediaAuthors: authors })
-                }
-              />
-            </FormControl>
+            <AuthorCheckPicker
+              label={t('articleEditor.panels.socialMediaAuthors')}
+              disabled={!isAuthorized}
+              list={socialMediaAuthors}
+              onChange={authors =>
+                onChange?.({ ...value, socialMediaAuthors: authors })
+              }
+            />
 
             <SocialPreviews
               data={getSeoPreviewData(
@@ -585,8 +588,11 @@ function ArticleMetadataPanel({
             </FormSectionTitle>
 
             <FormControl fullWidth>
-              <FormLabel>{t('articleEditor.panels.tags')}</FormLabel>
+              <FormLabel id={tagsLabelId}>
+                {t('articleEditor.panels.tags')}
+              </FormLabel>
               <SelectTags
+                aria-labelledby={tagsLabelId}
                 defaultTags={defaultTags}
                 disabled={!isAuthorized}
                 selectedTags={tags}
@@ -746,14 +752,14 @@ function ArticleMetadataPanel({
                 {({ value, onChange }) => (
                   <FlexRow>
                     <KeyInput
-                      placeholder={t('articleEditor.panels.key')}
+                      label={t('articleEditor.panels.key')}
                       value={value.key}
                       onChange={event =>
                         onChange({ ...value, key: event.target.value })
                       }
                     />
                     <ValueInput
-                      placeholder={t('articleEditor.panels.value')}
+                      label={t('articleEditor.panels.value')}
                       value={value.value}
                       onChange={event =>
                         onChange({ ...value, value: event.target.value })
@@ -842,24 +848,28 @@ function ArticleMetadataPanel({
       >
         <Tab
           value={MetaDataType.General}
+          {...tabProps(MetaDataType.General)}
           icon={<MdSettings />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.general')}</>}
         />
         <Tab
           value={MetaDataType.SocialMedia}
+          {...tabProps(MetaDataType.SocialMedia)}
           icon={<MdShare />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.socialMedia')}</>}
         />
         <Tab
           value={MetaDataType.Seo}
+          {...tabProps(MetaDataType.Seo)}
           icon={<MdTravelExplore />}
           iconPosition="start"
           label={<>{t('seoTab.title')}</>}
         />
         <Tab
           value={MetaDataType.Properties}
+          {...tabProps(MetaDataType.Properties)}
           icon={<MdListAlt />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.properties')}</>}
@@ -867,6 +877,7 @@ function ArticleMetadataPanel({
         {articleID && (
           <Tab
             value={MetaDataType.Comments}
+            {...tabProps(MetaDataType.Comments)}
             icon={<MdComment />}
             iconPosition="start"
             label={<>{t('articleEditor.panels.comments')}</>}
@@ -874,22 +885,33 @@ function ArticleMetadataPanel({
         )}
         <Tab
           value={MetaDataType.Tracking}
+          {...tabProps(MetaDataType.Tracking)}
           icon={
             <Badge
               variant="dot"
               color="error"
-              invisible={
-                !trackingPixels?.find(trackingPixel => !!trackingPixel?.error)
-              }
+              invisible={!hasTrackingError}
             >
               <MdTrackChanges />
             </Badge>
           }
           iconPosition="start"
-          label={<>{t('articleEditor.panels.tracking')}</>}
+          label={
+            <>
+              {t('articleEditor.panels.tracking')}
+              {hasTrackingError && (
+                <Box
+                  component="span"
+                  sx={visuallyHidden}
+                >
+                  {`, ${t('articleEditor.panels.hasErrors')}`}
+                </Box>
+              )}
+            </>
+          }
         />
       </Tabs>
-      <DrawerBody>{currentContent()}</DrawerBody>
+      <DrawerBody {...panelProps}>{currentContent()}</DrawerBody>
 
       <Drawer
         anchor="right"

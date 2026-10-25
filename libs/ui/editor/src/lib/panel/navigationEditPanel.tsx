@@ -18,7 +18,7 @@ import {
   CanGetNavigation,
   CanGetNavigations,
 } from '@wepublish/permissions';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -72,6 +72,7 @@ function NavigationEditPanel({
   >([]);
 
   const { t } = useTranslation();
+  const linksLabelId = useId();
 
   const linkTypes = [
     {
@@ -282,105 +283,116 @@ function NavigationEditPanel({
             fullWidth
           />
 
-          <FormLabel>{t('authors.panels.links')}</FormLabel>
-
-          <ListInput
-            disabled={isDisabled}
-            value={navigationLinks}
-            onChange={navigationLinkInput =>
-              setNavigationLinks(navigationLinkInput)
-            }
-            defaultValue={{
-              label: '',
-              url: '',
-              type: 'ExternalNavigationLink',
-            }}
+          <div
+            role="group"
+            aria-labelledby={linksLabelId}
           >
-            {({ value, onChange }) => (
-              <>
-                <TextField
-                  placeholder={t('navigation.panels.label')}
-                  value={value.label}
-                  onChange={event => {
-                    onChange({ ...value, label: event.target.value });
-                  }}
-                />
+            <FormLabel id={linksLabelId}>{t('authors.panels.links')}</FormLabel>
 
-                <Autocomplete
-                  options={linkTypes}
-                  getOptionLabel={option => option.label}
-                  isOptionEqualToValue={(option, selected) =>
-                    option.value === selected.value
-                  }
-                  value={
-                    linkTypes.find(option => option.value === value.type) ??
-                    null
-                  }
-                  onChange={(_event, option) => {
-                    const type = option?.value ?? null;
-                    if (type) {
-                      onChange({ ...value, type: type as string });
-                    }
-                  }}
-                  renderInput={params => <TextField {...params} />}
-                />
+            <ListInput
+              disabled={isDisabled}
+              value={navigationLinks}
+              onChange={navigationLinkInput =>
+                setNavigationLinks(navigationLinkInput)
+              }
+              defaultValue={{
+                label: '',
+                url: '',
+                type: 'ExternalNavigationLink',
+              }}
+            >
+              {({ value, onChange }) => (
+                <>
+                  <TextField
+                    label={t('navigation.panels.label')}
+                    value={value.label}
+                    onChange={event => {
+                      onChange({ ...value, label: event.target.value });
+                    }}
+                  />
 
-                {(
-                  value.type === 'PageNavigationLink' ||
-                  value.type === 'ArticleNavigationLink'
-                ) ?
                   <Autocomplete
-                    options={
-                      value.type === 'PageNavigationLink' ?
-                        pages.map(page => page.id!)
-                      : articles.map(article => article.id!)
-                    }
-                    getOptionLabel={id =>
-                      value.type === 'PageNavigationLink' ?
-                        (pages.find(page => page.id === id)?.latest.title ?? id)
-                      : (articles.find(article => article.id === id)?.latest
-                          .title ?? id)
+                    options={linkTypes}
+                    getOptionLabel={option => option.label}
+                    isOptionEqualToValue={(option, selected) =>
+                      option.value === selected.value
                     }
                     value={
-                      (value.type === 'PageNavigationLink' ?
-                        value.pageID
-                      : value.articleID) ?? null
+                      linkTypes.find(option => option.value === value.type) ??
+                      null
                     }
-                    onChange={(_event, chosenReferenceID) => {
-                      if (!chosenReferenceID) {
-                        return;
-                      }
-                      if (value.type === 'PageNavigationLink') {
-                        onChange({ ...value, pageID: chosenReferenceID });
-                      } else {
-                        onChange({ ...value, articleID: chosenReferenceID });
+                    onChange={(_event, option) => {
+                      const type = option?.value ?? null;
+                      if (type) {
+                        onChange({ ...value, type: type as string });
                       }
                     }}
                     renderInput={params => (
                       <TextField
                         {...params}
-                        placeholder={
-                          value.type === 'PageNavigationLink' ?
-                            t('navigation.panels.selectPage')
-                          : t('navigation.panels.selectArticle')
-                        }
+                        label={t('navigation.panels.linkType')}
                       />
                     )}
                   />
-                : <TextField
-                    placeholder={t('navigation.panels.url')}
-                    value={value.url!}
-                    onChange={event =>
-                      onChange({
-                        ...value,
-                        url: event.target.value,
-                      })
-                    }
-                  />
-                }
-              </>
-            )}
-          </ListInput>
+
+                  {(
+                    value.type === 'PageNavigationLink' ||
+                    value.type === 'ArticleNavigationLink'
+                  ) ?
+                    <Autocomplete
+                      options={
+                        value.type === 'PageNavigationLink' ?
+                          pages.map(page => page.id!)
+                        : articles.map(article => article.id!)
+                      }
+                      getOptionLabel={id =>
+                        value.type === 'PageNavigationLink' ?
+                          (pages.find(page => page.id === id)?.latest.title ??
+                          id)
+                        : (articles.find(article => article.id === id)?.latest
+                            .title ?? id)
+                      }
+                      value={
+                        (value.type === 'PageNavigationLink' ?
+                          value.pageID
+                        : value.articleID) ?? null
+                      }
+                      onChange={(_event, chosenReferenceID) => {
+                        if (!chosenReferenceID) {
+                          return;
+                        }
+                        if (value.type === 'PageNavigationLink') {
+                          onChange({ ...value, pageID: chosenReferenceID });
+                        } else {
+                          onChange({ ...value, articleID: chosenReferenceID });
+                        }
+                      }}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          label={
+                            value.type === 'PageNavigationLink' ?
+                              t('navigation.panels.selectPage')
+                            : t('navigation.panels.selectArticle')
+                          }
+                        />
+                      )}
+                    />
+                  : <TextField
+                      label={t('navigation.panels.url')}
+                      value={value.url!}
+                      onChange={event =>
+                        onChange({
+                          ...value,
+                          url: event.target.value,
+                        })
+                      }
+                    />
+                  }
+                </>
+              )}
+            </ListInput>
+          </div>
         </FormFields>
       </DrawerBody>
     </>

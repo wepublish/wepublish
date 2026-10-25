@@ -23,7 +23,7 @@ import {
   RichTextBlockValue,
   SelectMemberPlans,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -82,6 +82,9 @@ export const GoodieForm = ({ create }: GoodieFormProps) => {
   const memberPlans = useWatch({ control, name: 'memberPlans' });
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const memberPlansLabelId = useId();
+  const descriptionLabelId = useId();
+  const imageLabelId = useId();
 
   const image = useWatch({ control, name: 'image' });
 
@@ -164,13 +167,16 @@ export const GoodieForm = ({ create }: GoodieFormProps) => {
                 </NameStockGrid>
 
                 <div>
-                  <FormLabel>{t('goodie.form.description')}</FormLabel>
+                  <FormLabel id={descriptionLabelId}>
+                    {t('goodie.form.description')}
+                  </FormLabel>
 
                   <Controller
                     control={control}
                     name="description"
                     render={({ field }) => (
                       <RichTextBlock
+                        aria-labelledby={descriptionLabelId}
                         value={field.value}
                         onChange={field.onChange}
                       />
@@ -194,7 +200,9 @@ export const GoodieForm = ({ create }: GoodieFormProps) => {
               >
                 <div>
                   <FormLabel>
-                    {t('goodie.form.memberPlans')}{' '}
+                    <span id={memberPlansLabelId}>
+                      {t('goodie.form.memberPlans')}
+                    </span>{' '}
                     <InfoTooltip text={t('goodie.form.memberPlansInfo')} />
                   </FormLabel>
 
@@ -203,6 +211,7 @@ export const GoodieForm = ({ create }: GoodieFormProps) => {
                     name="memberPlanIDs"
                     render={({ field }) => (
                       <SelectMemberPlans
+                        aria-labelledby={memberPlansLabelId}
                         name="memberPlanIDs"
                         defaultMemberPlans={memberPlans ?? []}
                         selectedMemberPlans={field.value ?? []}
@@ -213,13 +222,16 @@ export const GoodieForm = ({ create }: GoodieFormProps) => {
                 </div>
 
                 <div>
-                  <FormLabel>{t('goodie.form.image')}</FormLabel>
+                  <FormLabel id={imageLabelId}>
+                    {t('goodie.form.image')}
+                  </FormLabel>
 
                   <Controller
                     control={control}
                     name="image"
                     render={({ field }) => (
                       <ChooseEditImage
+                        aria-labelledby={imageLabelId}
                         onSelect={(chosen: FullImageFragment) => {
                           setChooseModalOpen(false);
                           setValue('imageID', chosen.id);

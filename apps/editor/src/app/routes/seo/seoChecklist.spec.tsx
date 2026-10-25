@@ -1,5 +1,11 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { SeoCheckId, SeoCheckStatus } from '@wepublish/editor/api';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -10,20 +16,23 @@ import {
   SeoChecklist,
 } from './seoChecklist';
 
-const { queryResult, updateItem, mutationResult, auth } = vi.hoisted(() => ({
-  queryResult: {
-    data: undefined as unknown,
-    loading: false,
-    error: undefined as Error | undefined,
-    refetch: vi.fn(),
-  },
-  updateItem: vi.fn(),
-  mutationResult: {
-    loading: false,
-    error: undefined,
-  },
-  auth: { canUpdate: true },
-}));
+const { queryResult, updateItem, mutationResult, auth, snackbar } = vi.hoisted(
+  () => ({
+    snackbar: vi.fn(),
+    queryResult: {
+      data: undefined as unknown,
+      loading: false,
+      error: undefined as Error | undefined,
+      refetch: vi.fn(),
+    },
+    updateItem: vi.fn(),
+    mutationResult: {
+      loading: false,
+      error: undefined,
+    },
+    auth: { canUpdate: true },
+  })
+);
 
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
@@ -34,6 +43,7 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
   useAuthorisation: () => auth.canUpdate,
+  enqueueSnackbar: snackbar,
 }));
 
 vi.mock('react-i18next', () => ({
@@ -245,7 +255,9 @@ describe('SeoChecklist', () => {
     for (const id of ['seo-titles', 'meta-descriptions']) {
       const item = within(screen.getByTestId(`seo-item-${id}`));
       const toggle = item.getByRole('button', {
-        name: 'seoChecklist.guide.show',
+        name: new RegExp(
+          String.raw`^seoChecklist\.guide\.show\s*–\s*seoChecklist\.items\.${id}\.title$`
+        ),
       });
 
       expect(toggle.getAttribute('aria-expanded')).toBe('false');
@@ -265,9 +277,82 @@ describe('SeoChecklist', () => {
 
     expect(
       within(screen.getByTestId('seo-item-structure')).queryByRole('button', {
-        name: 'seoChecklist.guide.show',
+        name: /^seoChecklist\.guide\.show/,
       })
     ).toBe(null);
+  });
+});
+
+describe('SeoChecklist accessibility', () => {
+  const writeText = vi.fn().mockResolvedValue(undefined);
+
+  beforeEach(() => {
+    snackbar.mockClear();
+    writeText.mockClear();
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+    queryResult.error = undefined;
+    queryResult.loading = false;
+    queryResult.data = {
+      seoChecklist: {
+        websiteUrl: 'https://example.com',
+        sitemapUrl: 'https://example.com/api/sitemap',
+        rssFeedUrl: 'https://example.com/api/rss-feed',
+        atomFeedUrl: 'https://example.com/api/atom-feed',
+        jsonFeedUrl: 'https://example.com/api/json-feed',
+        checks,
+        completedItems,
+      },
+    };
+  });
+
+  test('uses a page heading, section headings and item headings', () => {
+    renderChecklist();
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'seoChecklist.title' })
+    ).toBeTruthy();
+    expect(
+      screen.getByRole('heading', {
+        level: 3,
+        name: 'seoChecklist.items.gsc-verify.title',
+      })
+    ).toBeTruthy();
+  });
+
+  test('names the overall progress bar with the visible progress text', () => {
+    renderChecklist();
+
+    expect(
+      screen.getByRole('progressbar', { name: /^seoChecklist\.progress:/ })
+    ).toBeTruthy();
+  });
+
+  test('renders internal actions as a single link', () => {
+    renderChecklist();
+
+    const link = within(screen.getByTestId('seo-item-author-pages')).getByRole(
+      'link',
+      { name: 'seoChecklist.items.author-pages.action' }
+    );
+
+    expect(link.getAttribute('href')).toBe('/authors');
+    expect(within(link).queryByRole('button')).toBe(null);
+  });
+
+  test('names each copy button after its URL and confirms the copy', async () => {
+    renderChecklist();
+
+    fireEvent.click(
+      within(screen.getByTestId('seo-item-gsc-sitemap')).getByRole('button', {
+        name: 'seoChecklist.copyUrl: https://example.com/api/sitemap',
+      })
+    );
+
+    expect(writeText).toHaveBeenCalledWith('https://example.com/api/sitemap');
+    await waitFor(() => expect(snackbar).toHaveBeenCalled());
   });
 });
 

@@ -131,6 +131,22 @@ describe('AuthorCheckPicker', () => {
     expect(screen.getByRole('combobox')).not.toHaveAttribute('placeholder');
   });
 
+  it('keeps its name once somebody is picked', () => {
+    renderPicker({ list: [ada] });
+
+    expect(
+      screen.getByRole('combobox', { name: 'blocks.quote.author' })
+    ).toBeInTheDocument();
+  });
+
+  it('takes the label the caller gives it', () => {
+    renderPicker({ label: 'Social media authors' });
+
+    expect(
+      screen.getByRole('combobox', { name: 'Social media authors' })
+    ).toBeInTheDocument();
+  });
+
   it('can be disabled', () => {
     renderPicker({ disabled: true });
 

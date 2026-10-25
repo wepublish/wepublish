@@ -244,6 +244,43 @@ describe('SettingList', () => {
     );
   });
 
+  test('names each control by its label alone, with the help beside it', async () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProvider
+            mocks={[settingsListMock, updateSettingMock, paywallListMock]}
+            addTypename={false}
+          >
+            <BrowserRouter>
+              <SettingList />
+            </BrowserRouter>
+          </MockedProvider>
+        </AuthContext.Provider>
+      </ThemeProvider>
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole('checkbox', { name: 'settingList.guestCommenting' })
+      ).toBeInTheDocument()
+    );
+
+    expect(
+      screen.getByRole('spinbutton', { name: 'settingList.peerToken' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', { name: 'settingList.newArticlePaywall' })
+    ).toBeInTheDocument();
+    expect(
+      screen
+        .getByRole('button', {
+          name: 'settingList.warnings.guestCommenting',
+        })
+        .closest('label')
+    ).toBeNull();
+  });
+
   test('renders the setting list view with settings', async () => {
     render(
       <ThemeProvider theme={theme}>

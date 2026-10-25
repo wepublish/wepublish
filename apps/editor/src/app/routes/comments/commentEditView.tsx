@@ -37,7 +37,7 @@ import {
   SelectTags,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdVisibility } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -103,6 +103,9 @@ const CommentEditView = memo(() => {
   const { id } = useParams();
   const commentId = id!;
   const closePath = '/comments';
+  const tagsLabelId = useId();
+  const sourceLabelId = useId();
+  const ratingOverrideLabelId = useId();
   const [close, setClose] = useState<boolean>(false);
   // where the comment properties are handled
   const [comment, setComment] = useState<FullCommentFragment | undefined>(
@@ -238,7 +241,7 @@ const CommentEditView = memo(() => {
         >
           {/* comment content */}
           <Grid
-            size={{ xs: 7 }}
+            size={{ xs: 12, md: 7 }}
             style={{
               maxHeight: 'calc(100vh - 80px - 60px - 15px)',
               overflowY: 'scroll',
@@ -261,7 +264,7 @@ const CommentEditView = memo(() => {
             </Card>
           </Grid>
 
-          <Grid size={{ xs: 5 }}>
+          <Grid size={{ xs: 12, md: 5 }}>
             <Grid
               container
               spacing={2}
@@ -358,8 +361,11 @@ const CommentEditView = memo(() => {
                       )}
 
                       <Grid size={{ xs: 12 }}>
-                        <FormLabel>{t('commentEditView.tags')}</FormLabel>
+                        <FormLabel id={tagsLabelId}>
+                          {t('commentEditView.tags')}
+                        </FormLabel>
                         <SelectTags
+                          aria-labelledby={tagsLabelId}
                           defaultTags={comment?.tags ?? []}
                           selectedTags={commentTags}
                           setSelectedTags={setSelectedTags}
@@ -369,11 +375,16 @@ const CommentEditView = memo(() => {
 
                       <Grid size={{ xs: 12 }}>
                         <FormLabel>
-                          {t('commentEditView.source')}{' '}
+                          <span id={sourceLabelId}>
+                            {t('commentEditView.source')}
+                          </span>{' '}
                           <InfoTooltip text={t('commentEditView.sourceInfo')} />
                         </FormLabel>
                         <TextField
                           placeholder={t('commentEditView.source')}
+                          slotProps={{
+                            htmlInput: { 'aria-labelledby': sourceLabelId },
+                          }}
                           value={comment?.source || ''}
                           onChange={event => {
                             setComment(
@@ -430,7 +441,11 @@ const CommentEditView = memo(() => {
                           size={{ xs: 12 }}
                           key={override.answerId}
                         >
-                          <FormLabel>{override.name}</FormLabel>
+                          <FormLabel
+                            id={`${ratingOverrideLabelId}-${override.answerId}`}
+                          >
+                            {override.name}
+                          </FormLabel>
                           <Autocomplete
                             options={ratingOverridePossibleValues}
                             getOptionLabel={option => option.label}
@@ -470,7 +485,18 @@ const CommentEditView = memo(() => {
                               );
                             }}
                             disableClearable
-                            renderInput={params => <TextField {...params} />}
+                            renderInput={params => (
+                              <TextField
+                                {...params}
+                                slotProps={{
+                                  ...params.slotProps,
+                                  htmlInput: {
+                                    ...params.slotProps.htmlInput,
+                                    'aria-labelledby': `${ratingOverrideLabelId}-${override.answerId}`,
+                                  },
+                                }}
+                              />
+                            )}
                           />
                         </FlexItem>
                       ))}

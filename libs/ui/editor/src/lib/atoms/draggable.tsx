@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import {
   createContext,
+  KeyboardEvent,
   ReactNode,
   RefObject,
   useContext,
@@ -34,12 +35,25 @@ const DraggableWrapper = styled.div`
   transform: translate(-50%, -50%);
   transform-origin: center;
   user-select: none;
+  touch-action: none;
   display: none;
+  border-radius: 50%;
 
   &[data-layouted='true'] {
     display: block;
   }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
+  }
 `;
+
+const KEYBOARD_STEP = 0.05;
+const FINE_KEYBOARD_STEP = 0.01;
+
+const clamp = (value: number) =>
+  Math.round(Math.max(0, Math.min(1, value)) * 100) / 100;
 
 export function DraggableContainer({ children }: DraggableContainerProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -57,6 +71,8 @@ export interface DraggableProps {
   point: Point;
   children?: ReactNode;
   disabled?: boolean;
+  label?: string;
+  valueText?: (point: Point) => string;
 
   onChange?(point: Point): void;
 }
@@ -65,6 +81,8 @@ export function Draggable({
   children,
   point,
   disabled,
+  label,
+  valueText,
   onChange,
 }: DraggableProps) {
   const draggableRef = useRef<HTMLDivElement>(null);
@@ -75,14 +93,17 @@ export function Draggable({
   }
 
   useEffect(() => {
-    let containerWidth = containerRef.current!.clientWidth;
-    let containerHeight = containerRef.current!.clientHeight;
+    const container = containerRef.current!;
+    const draggable = draggableRef.current!;
+    let containerWidth = container.clientWidth;
+    let containerHeight = container.clientHeight;
 
     let realPoint: Point = {
       x: containerWidth * point.x,
       y: containerHeight * point.y,
     };
-    let lastMousePosition: Point | null = null;
+    let lastPointerPosition: Point | null = null;
+    let dragged = false;
 
     function clampPoint(point: Point) {
       return {
@@ -93,17 +114,17 @@ export function Draggable({
 
     function setTransform(point: Point) {
       const clampedPoint = clampPoint(point);
-      draggableRef.current!.style.transform = `translate(-50%, -50%) translate(${clampedPoint.x}px, ${clampedPoint.y}px)`;
+      draggable.style.transform = `translate(-50%, -50%) translate(${clampedPoint.x}px, ${clampedPoint.y}px)`;
     }
 
     setTransform(realPoint);
-    draggableRef.current!.dataset.layouted = 'true';
+    draggable.dataset.layouted = 'true';
 
-    function handleMouseMove(e: MouseEvent) {
-      if (lastMousePosition) {
+    function handlePointerMove(e: PointerEvent) {
+      if (lastPointerPosition) {
         const deltaPoint: Point = {
-          x: lastMousePosition.x - e.pageX,
-          y: lastMousePosition.y - e.pageY,
+          x: lastPointerPosition.x - e.pageX,
+          y: lastPointerPosition.y - e.pageY,
         };
 
         realPoint = {
@@ -111,21 +132,28 @@ export function Draggable({
           y: realPoint.y - deltaPoint.y,
         };
 
+        dragged = true;
         setTransform(realPoint);
-        lastMousePosition = { x: e.pageX, y: e.pageY };
+        lastPointerPosition = { x: e.pageX, y: e.pageY };
       }
     }
 
-    function handleMouseDown(e: MouseEvent) {
-      lastMousePosition = { x: e.pageX, y: e.pageY };
+    function handlePointerDown(e: PointerEvent) {
+      e.stopPropagation();
+      dragged = false;
+      lastPointerPosition = { x: e.pageX, y: e.pageY };
     }
 
-    function handleMouseUp() {
+    function handlePointerUp() {
+      if (!lastPointerPosition) {
+        return;
+      }
+
       const clampedPoint = clampPoint(realPoint);
 
-      lastMousePosition = null;
+      lastPointerPosition = null;
 
-      if (onChange) {
+      if (onChange && containerWidth && containerHeight) {
         onChange({
           x: clampedPoint.x / containerWidth,
           y: clampedPoint.y / containerHeight,
@@ -133,40 +161,89 @@ export function Draggable({
       }
     }
 
+    function handleContainerClick(e: MouseEvent) {
+      if (dragged || draggable.contains(e.target as Node)) {
+        dragged = false;
+        return;
+      }
+
+      const rect = container.getBoundingClientRect();
+
+      if (!rect.width || !rect.height) {
+        return;
+      }
+
+      onChange?.({
+        x: clamp((e.clientX - rect.left) / rect.width),
+        y: clamp((e.clientY - rect.top) / rect.height),
+      });
+    }
+
     function handleResize() {
-      containerWidth = containerRef!.current!.clientWidth;
-      containerHeight = containerRef!.current!.clientHeight;
+      containerWidth = container.clientWidth;
+      containerHeight = container.clientHeight;
       realPoint = { x: containerWidth * point.x, y: containerHeight * point.y };
 
       setTransform(realPoint);
     }
 
-    // TODO: Consider using ResizeObserver
     window.addEventListener('resize', handleResize);
 
     if (!disabled) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('pointermove', handlePointerMove);
+      window.addEventListener('pointerup', handlePointerUp);
+      window.addEventListener('pointercancel', handlePointerUp);
 
-      draggableRef.current!.addEventListener('mousedown', handleMouseDown);
+      draggable.addEventListener('pointerdown', handlePointerDown);
+      container.addEventListener('click', handleContainerClick);
     }
 
     return () => {
       window.removeEventListener('resize', handleResize);
 
       if (!disabled) {
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener('pointermove', handlePointerMove);
+        window.removeEventListener('pointerup', handlePointerUp);
+        window.removeEventListener('pointercancel', handlePointerUp);
 
-        if (draggableRef.current !== null) {
-          draggableRef.current!.removeEventListener(
-            'mousedown',
-            handleMouseDown
-          );
-        }
+        draggable.removeEventListener('pointerdown', handlePointerDown);
+        container.removeEventListener('click', handleContainerClick);
       }
     };
-  }, [containerRef, draggableRef, point, disabled]);
+  }, [containerRef, draggableRef, point, disabled, onChange]);
 
-  return <DraggableWrapper ref={draggableRef}>{children}</DraggableWrapper>;
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const step = event.shiftKey ? FINE_KEYBOARD_STEP : KEYBOARD_STEP;
+    const delta: Record<string, Point> = {
+      ArrowLeft: { x: -step, y: 0 },
+      ArrowRight: { x: step, y: 0 },
+      ArrowUp: { x: 0, y: -step },
+      ArrowDown: { x: 0, y: step },
+    };
+    const move = delta[event.key];
+
+    if (!move || disabled) {
+      return;
+    }
+
+    event.preventDefault();
+    onChange?.({ x: clamp(point.x + move.x), y: clamp(point.y + move.y) });
+  };
+
+  return (
+    <DraggableWrapper
+      ref={draggableRef}
+      role="slider"
+      tabIndex={disabled ? -1 : 0}
+      aria-label={label}
+      aria-disabled={disabled || undefined}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(point.x * 100)}
+      aria-valuetext={valueText?.(point)}
+      onKeyDown={handleKeyDown}
+    >
+      {children}
+    </DraggableWrapper>
+  );
 }

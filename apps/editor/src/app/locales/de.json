@@ -97,9 +97,12 @@
       }
     },
     "articleEditor": {
+      "unsavedChanges": "ungespeicherte Änderungen",
+      "unpublishedChanges": "Änderungen noch nicht publiziert",
       "validationFailedGeneric": "Speichern nicht möglich. Bitte prüfe die markierten Fehler.",
       "saveValidationFailed": "Speichern fehlgeschlagen",
       "publishValidationFailed": "Publizieren fehlgeschlagen",
+      "title": "Artikel bearbeiten",
       "overview": {
         "articlePending": "Artikel geplant",
         "articlePublished": "Artikel publiziert",
@@ -232,6 +235,7 @@
         "text": "Text",
         "default": "Standard",
         "tracking": "Tracking",
+        "hasErrors": "enthält Fehler",
         "paywall": "Paywall",
         "likeCountInfo": "Anzahl Likes, die Leser*innen diesem Artikel auf der Website gegeben haben. Bei Bedarf kannst du die Zahl hier korrigieren.",
         "slugInfo": "Der letzte Teil der Webadresse des Artikels, z.B. …/a/mein-artikel. Verwende nur Kleinbuchstaben, Zahlen und Bindestriche.",
@@ -351,7 +355,8 @@
           "style": "Stil",
           "role": "Funktion",
           "styleInfo": "Optionaler Stilname für den Button, z.B. «outline». Wirkt nur, wenn deine Website ihn unterstützt.",
-          "roleInfo": "«Primär» hebt den Button hervor. «Abbrechen» schliesst den Banner, statt den Link zu öffnen. «Andere» zeigt einen normalen Button."
+          "roleInfo": "«Primär» hebt den Button hervor. «Abbrechen» schliesst den Banner, statt den Link zu öffnen. «Andere» zeigt einen normalen Button.",
+          "group": "Aktion {{number}}"
         },
         "content": "Inhalt",
         "mustNotBeNegative": "Wert darf nicht negativ sein",
@@ -447,6 +452,7 @@
           "invalidURL": "Ungültige URL oder ungültiger iFrame-Code",
           "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, TikTok Video, Polis Conversation, formatiert wie z.B."
         },
+        "tweetBy": "Tweet von @{{user}}",
         "streamableVideo": "Streamable Video"
       },
       "event": {
@@ -848,6 +854,7 @@
         "areYouSure": "Bist du sicher?",
         "areYouSureBody": "Die Bewertung «{{ answer }}» wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Bewertung löschen",
+        "type": "Typ",
         "loading": "Wird geladen …",
         "newAnswer": "Bewertung hinzufügen",
         "placeholder": "Name der Bewertung",
@@ -925,6 +932,7 @@
       "dragToMove": "Zum Verschieben ziehen",
       "moveUp": "Nach oben",
       "moveDown": "Nach unten",
+      "cardMoved": "{{card}} an Position {{position}} von {{total}} verschoben",
       "resetLayout": "Standard wiederherstellen",
       "configureDone": "Fertig",
       "activity": "Letzte Aktivitäten",
@@ -961,7 +969,8 @@
       "nextSaturday": "Nächsten Samstag",
       "now": "Jetzt",
       "today": "Heute",
-      "tomorrow": "Morgen"
+      "tomorrow": "Morgen",
+      "clear": "Datum löschen"
     },
     "deactivated": "Deaktiviert",
     "delete": "Löschen",
@@ -1027,6 +1036,7 @@
         "cancelled": "Abgesagt",
         "description": "Beschreibung",
         "endsAt": "Endet um",
+        "endsBeforeStart": "Das Ende darf nicht vor dem Beginn liegen",
         "externalSource": "Externe Quelle (für importierte Events)",
         "image": "Bild",
         "location": "Veranstaltungsort",
@@ -1174,6 +1184,7 @@
         "uploadImage": "Bild hochladen",
         "urlPlaceholder": "https://www.link.com",
         "focalPoint": "Bildfokus",
+        "focalPointPosition": "{{x}} % von links, {{y}} % von oben",
         "focalPointInfo": "Ziehe den Punkt auf den wichtigsten Bereich des Bildes. Wird das Bild zugeschnitten, z.B. in Teasern, bleibt dieser Bereich sichtbar.",
         "descriptionInfo": "Beschreibe, was auf dem Bild zu sehen ist. Der Text dient als Alternativtext für Menschen mit Screenreader und für Suchmaschinen.",
         "linkUrlInfo": "Webadresse, die sich öffnet, wenn Leser*innen auf das Bild klicken. Leer lassen, wenn das Bild kein Link sein soll."
@@ -1251,6 +1262,7 @@
       "jwt": "Anmeldung läuft …"
     },
     "resetPassword": {
+      "title": "Passwort zurücksetzen",
       "description": "Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.",
       "submit": "Reset-Link senden",
       "sent": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde ein Link zum Zurücksetzen des Passworts versendet. Bitte prüfe deinen Posteingang.",
@@ -1269,6 +1281,7 @@
       "goToLogin": "Zum Login"
     },
     "mailTemplates": {
+      "empty": "Noch keine E-Mail-Vorlagen.",
       "availableTemplates": "Verfügbare E-Mail-Vorlagen",
       "cancel": "Abbrechen",
       "content": "Inhalt",
@@ -1301,7 +1314,8 @@
         "sampleSubscriptionHelp": "Wähle ein bestehendes Abo, damit Vorschau und Test-E-Mail mit dessen echten Daten gefüllt werden. Ohne Auswahl werden erfundene Beispieldaten verwendet. Die Test-E-Mail geht trotzdem nur an dich.",
         "bodyModeHelp": "Visuell: Inhalt wie in einem Textprogramm bearbeiten. HTML: den Quellcode direkt bearbeiten – nur für Fortgeschrittene. Text-Inhalt: die reine Textversion für E-Mail-Programme ohne HTML; sie wird automatisch erzeugt.",
         "backgroundHelp": "Farbe der Fläche rund um den Inhalt der E-Mail.",
-        "contentWidthHelp": "Maximale Breite des Inhalts in Pixeln. 600 px ist ein bewährter Wert, der in den meisten E-Mail-Programmen gut aussieht. Auf schmalen Bildschirmen wird der Inhalt automatisch schmaler."
+        "contentWidthHelp": "Maximale Breite des Inhalts in Pixeln. 600 px ist ein bewährter Wert, der in den meisten E-Mail-Programmen gut aussieht. Auf schmalen Bildschirmen wird der Inhalt automatisch schmaler.",
+        "bodyMode": "Bearbeitungsmodus"
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1350,7 +1364,8 @@
         "appendJwtDone": "Login-Token ist bereits enthalten – der Empfänger ist beim Klick eingeloggt.",
         "frameTitle": "Editor für den E-Mail-Inhalt",
         "imageAltHelp": "Beschreibt das Bild in wenigen Worten. Wird angezeigt, wenn das Bild nicht lädt, und von Screenreadern vorgelesen.",
-        "imageWidthHelp": "Leer lassen, um die Originalgrösse zu verwenden. Breiter als die E-Mail wird das Bild nie."
+        "imageWidthHelp": "Leer lassen, um die Originalgrösse zu verwenden. Breiter als die E-Mail wird das Bild nie.",
+        "toolbar": "Formatierung"
       },
       "goToPlaceholders": "Verfügbare Platzhalter",
       "htmlContent": "HTML-Inhalt",
@@ -1527,7 +1542,8 @@
         "optional_invoices_0_description": "Beschreibung der neuesten Rechnung."
       },
       "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «E-Mail senden» kannst du sie trotzdem von Hand verschicken.",
-      "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich."
+      "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich.",
+      "searchPlaceholdersLabel": "Platzhalter suchen"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "Keine E-Mail senden"
@@ -1618,6 +1634,8 @@
       "importableEvents": "Importierbare Events",
       "media": "Dateien",
       "menu": "Menü",
+      "mainNavigation": "Hauptnavigation",
+      "skipToContent": "Zum Hauptinhalt springen",
       "colorMode": {
         "title": "Darstellung",
         "light": "Hell",
@@ -1677,6 +1695,7 @@
         "linkTypeArticle": "Artikel",
         "linkTypePage": "Seite",
         "linkTypeExternal": "Externer Link",
+        "linkType": "Linktyp",
         "keyInfo": "Technischer Name, über den deine Website diese Navigation findet, z.B. «main» oder «footer». Nur in Absprache mit den Entwickler*innen deiner Website ändern."
       }
     },
@@ -1695,10 +1714,13 @@
     },
     "no": "Nein",
     "pageEditor": {
+      "unsavedChanges": "ungespeicherte Änderungen",
+      "unpublishedChanges": "Änderungen noch nicht publiziert",
       "validationFailedHeader": "Validierung fehlgeschlagen",
       "validationFailedGeneric": "Speichern nicht möglich. Bitte prüfe die markierten Fehler.",
       "saveValidationFailed": "Speichern fehlgeschlagen",
       "publishValidationFailed": "Publizieren fehlgeschlagen",
+      "title": "Seite bearbeiten",
       "overview": {
         "createComment": "Kommentar erstellen",
         "duplicate": "Duplizieren",
@@ -1926,7 +1948,9 @@
       "insertYourNewAnswer": "Neue Antwort eingeben",
       "urlCopied": "Abstimmungs-Link in die Zwischenablage kopiert.",
       "urlCopyingFailed": "Abstimmungs-Link konnte nicht kopiert werden.",
-      "votes": "Stimmen"
+      "votes": "Stimmen",
+      "answerLabel": "Antwort {{number}}",
+      "deleteAnswer": "Antwort «{{answer}}» löschen"
     },
     "pollEditView": {
       "addAndSaveNewAnswer": "Antwort hinzufügen",
@@ -1954,7 +1978,9 @@
       "emptySource": "Bitte Name der Quelle eingeben.",
       "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",
       "sourceHeaderCell": "Quelle",
-      "noPollAvailable": "Keine Umfrage verfügbar."
+      "noPollAvailable": "Keine Umfrage verfügbar.",
+      "deleteSource": "Quelle «{{source}}» löschen",
+      "votesFor": "Stimmen für «{{answer}}» aus {{source}}"
     },
     "pollList": {
       "closedAt": "Geschlossen am",
@@ -1972,6 +1998,8 @@
       "title": "Umfragen"
     },
     "pollVoteList": {
+      "selectAll": "Alle Stimmen auswählen",
+      "selectVote": "Stimme vom {{date}} auswählen",
       "createdAt": "Erstellt am",
       "answerId": "Antwort",
       "userId": "Benutzer-ID",
@@ -1995,7 +2023,32 @@
     "richtext": {
       "menuBar": {
         "paragraph": "Absatz",
-        "heading": "Überschrift {{level}}"
+        "heading": "Überschrift {{level}}",
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
+        "textStyle": "Textstil",
+        "formatting": "Textformatierung",
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "underline": "Unterstrichen",
+        "strike": "Durchgestrichen",
+        "subscript": "Tiefgestellt",
+        "superscript": "Hochgestellt",
+        "textColor": "Textfarbe",
+        "backgroundColor": "Hintergrundfarbe",
+        "lists": "Listen",
+        "bulletList": "Aufzählung",
+        "orderedList": "Nummerierte Liste",
+        "alignment": "Ausrichtung",
+        "alignLeft": "Linksbündig",
+        "alignCenter": "Zentriert",
+        "alignRight": "Rechtsbündig",
+        "link": "Link",
+        "editLink": "Link bearbeiten",
+        "table": "Tabelle einfügen",
+        "codeBlock": "Codeblock",
+        "blockquote": "Zitat",
+        "invisibleCharacters": "Unsichtbare Zeichen anzeigen"
       },
       "link": {
         "title": "Text verlinken mit",
@@ -2016,6 +2069,21 @@
       "colorPicker": {
         "clear": "Farbe zurücksetzen"
       },
+      "table": {
+        "columns": "Spalten",
+        "rows": "Zeilen",
+        "cells": "Zellen",
+        "addColumnBefore": "Spalte davor einfügen",
+        "addColumnAfter": "Spalte danach einfügen",
+        "deleteColumn": "Spalte löschen",
+        "addRowBefore": "Zeile oberhalb einfügen",
+        "addRowAfter": "Zeile unterhalb einfügen",
+        "deleteRow": "Zeile löschen",
+        "mergeCells": "Zellen verbinden",
+        "splitCell": "Zelle teilen",
+        "toggleHeader": "Kopfzelle"
+      },
+      "dragHandle": "Ziehen zum Verschieben",
       "commands": {
         "table": "Tabelle",
         "quote": "Zitat",
@@ -2172,7 +2240,8 @@
           "description": "Geht raus, wenn ein Abo gekündigt wird – von der Person selber auf der Website oder von dir im Editor. Für die Kündigung wegen unbezahlter Rechnung ist die Zeitleiste zuständig.",
           "example": "«Schade, dass du gehst – dein Abo läuft noch bis zum 31.12.»"
         }
-      }
+      },
+      "moveMail": "«{{title}}» verschieben"
     },
     "subscriptionList": {
       "filter": {
@@ -2681,6 +2750,7 @@
         "noActivityDay": "Keine Abo-Bewegungen an diesem Tag",
         "noActivityMonth": "Keine Abo-Bewegungen in diesem Monat",
         "flowsTitle": "Zu- und Abgänge",
+        "keyboardHint": "Mit den Pfeiltasten von Datum zu Datum springen. Die Tabellenansicht des Audience-Dashboards zeigt dieselben Zahlen.",
         "net": "Saldo",
         "since": "seit {{date}}",
         "flowsInfo": "Jeder Balken zeigt, wie viele Abos pro Tag oder Monat dazugekommen (über der Linie) oder weggefallen (unter der Linie) sind. Fahre über einen Balken für Details und den Saldo."
@@ -3255,8 +3325,7 @@
           "text": "Text",
           "textPrimary": "Die Textfarbe der Website",
           "default": "Standard",
-          "paper": "Papier",
-          "pickColor": "Farbe auswählen"
+          "paper": "Papier"
         },
         "typography": {
           "fontFamily": "Schriftfamilie",
@@ -3266,6 +3335,7 @@
           "letterSpacing": "Zeichenabstand",
           "textTransform": "Texttransformation",
           "textTransformDefault": "Standard",
+          "unitFor": "Einheit für {{label}}",
           "textTransformCapitalize": "Erster Buchstabe gross",
           "textTransformUppercase": "Grossbuchstaben",
           "textTransformLowercase": "Kleinbuchstaben",
@@ -4096,6 +4166,7 @@
       "message": "Deine Änderungen werden möglicherweise nicht gespeichert."
     },
     "action": "Aktionen",
+    "moreInfo": "Weitere Informationen",
     "blockStyles": {
       "areYouSure": "Bist du sicher?",
       "areYouSureBody": "Der Stil «{{ blockStyle }}» wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
@@ -4122,13 +4193,16 @@
       "deleteBlock": "Block löschen",
       "moveBlockUp": "Block nach oben verschieben",
       "moveBlockDown": "Block nach unten verschieben",
+      "movedTo": "Block an Position {{position}} von {{count}} verschoben",
+      "deleted": "Block gelöscht",
       "styleHelp": "Ändert, wie dieser Block auf der Website aussieht. Leer lassen für die Standarddarstellung. Die Styles verwaltest du unter «Block Styling»."
     },
     "placeholderInput": {
       "add": "Hinzufügen"
     },
     "colorPicker": {
-      "pickColor": "Farbe auswählen"
+      "pickColor": "Farbe auswählen",
+      "pickColorFor": "Farbe auswählen: {{label}}"
     },
     "flexTile": {
       "moreActions": "Weitere Aktionen"
@@ -4157,12 +4231,22 @@
         "cancel": "Abbrechen"
       },
       "table": {
-        "empty": "Nichts vorhanden"
+        "empty": "Nichts vorhanden",
+        "label": "Tabelle",
+        "loading": "Wird geladen",
+        "resizeColumn": "Spaltenbreite ändern: {{column}}"
       },
       "pagination": {
         "total": "{{count}} Einträge",
         "pageSize": "Einträge pro Seite",
-        "perPage": "{{count}} / Seite"
+        "perPage": "{{count}} / Seite",
+        "label": "Seitennavigation",
+        "page": "Zu Seite {{page}}",
+        "currentPage": "Seite {{page}}",
+        "first": "Zur ersten Seite",
+        "last": "Zur letzten Seite",
+        "next": "Zur nächsten Seite",
+        "previous": "Zur vorherigen Seite"
       }
     },
     "dateRange": {
@@ -4185,6 +4269,8 @@
       "title": "Befehlspalette",
       "placeholder": "Wohin möchtest du?",
       "empty": "Keine Treffer für",
+      "resultCount_one": "{{count}} Treffer",
+      "resultCount_other": "{{count}} Treffer",
       "groups": {
         "favourite": "Favoriten",
         "navigate": "Gehe zu",
@@ -4373,7 +4459,8 @@
         "nothingToCompare": "Das Mailchimp-Publikum hat keine eigenen Kontaktfelder und keine Interessengruppen — es gibt nichts, worauf sich eine Bedingung beziehen könnte.",
         "pickGroup": "Gruppe wählen …",
         "stored": "Im Dokument gespeichert",
-        "value": "Wert"
+        "value": "Wert",
+        "operator": "Vergleich"
       },
       "editor": {
         "back": "Zurück zur Übersicht",
@@ -4427,7 +4514,8 @@
         "mergeTagTitle": "Mailchimp-Merge-Tag einfügen",
         "noTag": "Kein Merge-Tag gefunden.",
         "remove": "Entfernen",
-        "searchTag": "Merge-Tag suchen …"
+        "searchTag": "Merge-Tag suchen …",
+        "linkUrl": "Link-URL"
       },
       "report": {
         "clipped": "Gmail schneidet die Ausgabe ab und versteckt den Schluss — Impressum, Abmeldelink und Adresse — hinter «Nachricht gekürzt».",

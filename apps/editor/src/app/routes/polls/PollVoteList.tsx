@@ -48,6 +48,11 @@ type PollVotesListProps = {
   deleteItems: (ids: string[]) => Promise<void>;
 };
 
+const formatVoteDate = (createdAt: string) =>
+  `${new Date(createdAt).toLocaleDateString()} ${new Date(
+    createdAt
+  ).toLocaleTimeString()}`;
+
 const POLL_VOTE_FILTER_FIELDS = ['dates', 'answerIds', 'fingerprint'] as const;
 
 export function PollVoteList({
@@ -140,16 +145,26 @@ export function PollVoteList({
               label: (
                 <Checkbox
                   size="small"
+                  slotProps={{
+                    input: { 'aria-label': t('pollVoteList.selectAll') },
+                  }}
                   onChange={() => toggleAll()}
                   indeterminate={someSelected}
                   checked={allSelected}
                 />
               ),
               width: 80,
-              render: ({ id }) => {
+              render: ({ id, createdAt }) => {
                 return (
                   <Checkbox
                     size="small"
+                    slotProps={{
+                      input: {
+                        'aria-label': t('pollVoteList.selectVote', {
+                          date: formatVoteDate(createdAt),
+                        }),
+                      },
+                    }}
                     value={id}
                     onChange={(_event, checked) => toggleItem(id, checked)}
                     checked={selectedItems.includes(id)}
@@ -163,10 +178,7 @@ export function PollVoteList({
               width: 250,
               align: 'left',
               sortKey: 'createdAt',
-              render: ({ createdAt }) =>
-                `${new Date(createdAt).toLocaleDateString()} ${new Date(
-                  createdAt
-                ).toLocaleTimeString()}`,
+              render: ({ createdAt }) => formatVoteDate(createdAt),
               exportValue: ({ createdAt }) => new Date(createdAt),
             },
             {

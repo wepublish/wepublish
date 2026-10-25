@@ -42,7 +42,6 @@ import {
   PermissionControl,
   TableWrapper,
   useListViewState,
-  useSeededState,
   PageTitle,
 } from '@wepublish/ui/editor';
 import prettyBytes from 'pretty-bytes';
@@ -91,12 +90,10 @@ function DocumentList() {
 
   const [activePage, setActivePage] = useState(1);
 
-  const [isUploadModalOpen, setUploadModalOpen] = useState(isUploadRoute);
-  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute);
-
-  const [editID, setEditID] = useState<string | undefined>(
-    isEditRoute ? id : undefined
-  );
+  const isUploadModalOpen = isUploadRoute;
+  const isEditModalOpen = isEditRoute;
+  const editID = isEditRoute ? id : undefined;
+  const closeDrawer = () => navigate('/documents');
 
   const listVariables = {
     filter: filter || undefined,
@@ -143,20 +140,6 @@ function DocumentList() {
   useEffect(() => {
     refetch(listVariables);
   }, [filter, activePage, limit]);
-
-  useSeededState(
-    isUploadRoute || isEditRoute ? location.pathname : undefined,
-    () => {
-      if (isUploadRoute) {
-        setUploadModalOpen(true);
-      }
-
-      if (isEditRoute) {
-        setEditModalOpen(true);
-        setEditID(id);
-      }
-    }
-  );
 
   return (
     <>
@@ -253,10 +236,20 @@ function DocumentList() {
               width: 120,
               align: 'center',
               render: rowData => (
-                <Link to={`/documents/edit/${rowData.id}`}>
+                <Link
+                  to={`/documents/edit/${rowData.id}`}
+                  aria-label={rowData.title || t('documents.overview.untitled')}
+                >
                   {rowData.thumbnailURL ?
-                    <Thumbnail src={rowData.thumbnailURL} />
-                  : <MdOutlineUploadFile size={40} />}
+                    <Thumbnail
+                      src={rowData.thumbnailURL}
+                      alt=""
+                    />
+                  : <MdOutlineUploadFile
+                      size={40}
+                      aria-hidden
+                    />
+                  }
                 </Link>
               ),
             },
@@ -328,18 +321,16 @@ function DocumentList() {
                     </IconButton>
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('documents.overview.openLink')}>
-                    <a
+                    <IconButton
+                      component="a"
                       href={rowData.url as string}
                       target="_blank"
                       rel="noreferrer"
+                      aria-label={t('documents.overview.openLink')}
+                      size="small"
                     >
-                      <IconButton
-                        aria-label={t('documents.overview.openLink')}
-                        size="small"
-                      >
-                        <MdOpenInNew />
-                      </IconButton>
-                    </a>
+                      <MdOpenInNew />
+                    </IconButton>
                   </IconButtonTooltip>
                   <PermissionControl
                     qualifyingPermissions={[CanCreateDocument.id]}
@@ -404,20 +395,13 @@ function DocumentList() {
           },
         }}
         open={isUploadModalOpen}
-        onClose={() => {
-          setUploadModalOpen(false);
-          navigate('/documents');
-        }}
+        onClose={closeDrawer}
       >
         <DocumentUploadAndEditPanel
-          onClose={() => {
-            setUploadModalOpen(false);
-            navigate('/documents');
-          }}
+          onClose={closeDrawer}
           onUpload={() => {
-            setUploadModalOpen(false);
             refetchStorage();
-            navigate('/documents');
+            closeDrawer();
           }}
         />
       </Drawer>
@@ -433,17 +417,11 @@ function DocumentList() {
           },
         }}
         open={isEditModalOpen}
-        onClose={() => {
-          setEditModalOpen(false);
-          navigate('/documents');
-        }}
+        onClose={closeDrawer}
       >
         <DocumentEditPanel
           id={editID!}
-          onClose={() => {
-            setEditModalOpen(false);
-            navigate('/documents');
-          }}
+          onClose={closeDrawer}
         />
       </Drawer>
 

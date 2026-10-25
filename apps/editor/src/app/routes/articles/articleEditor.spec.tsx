@@ -126,7 +126,16 @@ vi.mock('@apollo/client/react', async importOriginal => {
   };
 });
 
-const blockListProps = vi.hoisted(() => ({ disabled: [] as boolean[] }));
+const blockListProps = vi.hoisted(() => ({
+  disabled: [] as boolean[],
+  onChange: undefined as undefined | ((blocks: unknown[]) => void),
+}));
+
+const validation = vi.hoisted(() => ({
+  fail: false,
+  snackbar: vi.fn(),
+  focus: vi.fn(),
+}));
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...((await importOriginal()) as object),
@@ -137,10 +146,35 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
   PermissionControl: ({ children }: { children?: unknown }) => children,
   useAuthorisation: () => true,
   useUnsavedChangesDialog: () => () => true,
-  BlockList: ({ disabled }: { disabled?: boolean }) => {
+  BlockList: ({
+    disabled,
+    onChange,
+  }: {
+    disabled?: boolean;
+    onChange: (blocks: unknown[]) => void;
+  }) => {
     blockListProps.disabled.push(!!disabled);
+    blockListProps.onChange = onChange;
     return null;
   },
+  EditorValidationProvider: ({
+    runAllRef,
+    children,
+  }: {
+    runAllRef: { current: () => unknown };
+    children?: unknown;
+  }) => {
+    if (validation.fail) {
+      runAllRef.current = () => ({
+        ok: false,
+        failures: [
+          { id: 'block', summary: 'Broken block', focus: validation.focus },
+        ],
+      });
+    }
+    return children;
+  },
+  enqueueSnackbar: validation.snackbar,
   ArticleMetadataPanel: () => null,
   VersionHistory: () => null,
   PublishArticlePanel: () => null,
@@ -283,5 +317,96 @@ describe('ArticleEditor copy link', () => {
     await waitFor(() =>
       expect(writeText).toHaveBeenCalledWith('https://example.com/a/slug')
     );
+  });
+});
+
+describe('ArticleEditor save state', () => {
+  afterEach(() => {
+    validation.fail = false;
+    validation.snackbar.mockClear();
+    validation.focus.mockClear();
+  });
+
+  const renderEditor = () =>
+    renderWithTheme(
+      <MemoryRouter initialEntries={['/articles/edit/article-1']}>
+        <Routes>
+          <Route
+            path="/articles/edit/:id"
+            element={<ArticleEditor />}
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+
+  it('announces unsaved changes in the save button name', () => {
+    renderEditor();
+
+    expect(screen.getByRole('button', { name: 'save' })).toBeTruthy();
+
+    act(() => {
+      blockListProps.onChange?.([]);
+    });
+
+    expect(
+      screen.getByRole('button', {
+        name: 'save, articleEditor.unsavedChanges',
+      })
+    ).toBeTruthy();
+  });
+
+  it('announces an unpublished draft in the publish button name', () => {
+    renderEditor();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'articleEditor.overview.publish, articleEditor.unpublishedChanges',
+      })
+    ).toBeTruthy();
+  });
+
+  it('keeps validation errors on screen until dismissed', () => {
+    validation.fail = true;
+    renderEditor();
+
+    act(() => {
+      blockListProps.onChange?.([]);
+    });
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'save, articleEditor.unsavedChanges',
+      })
+    );
+
+    expect(validation.snackbar).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ variant: 'error', autoHideDuration: null })
+    );
+  });
+
+  it('moves focus to the first failing block when validation fails', () => {
+    validation.fail = true;
+    renderEditor();
+
+    act(() => {
+      blockListProps.onChange?.([]);
+    });
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'save, articleEditor.unsavedChanges',
+      })
+    );
+
+    expect(validation.focus).toHaveBeenCalledTimes(1);
+  });
+
+  it('has a page heading', () => {
+    renderEditor();
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'articleEditor.title' })
+    ).toBeTruthy();
   });
 });

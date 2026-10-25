@@ -137,7 +137,7 @@ export function DashboardNotifications() {
     >
       <CardHeader
         title={t('dashboard.notifications')}
-        slotProps={{ title: { variant: 'h2' } }}
+        slotProps={{ title: { variant: 'h2', component: 'h2' } }}
         action={
           <Button
             component={RouterLink}

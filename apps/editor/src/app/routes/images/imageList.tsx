@@ -41,7 +41,6 @@ import {
   PermissionControl,
   TableWrapper,
   useListViewState,
-  useSeededState,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
@@ -107,6 +106,9 @@ const GridIcon = styled(IconButton)`
   position: absolute;
   top: 8px;
   right: 8px;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 `;
 
 const GridView = styled.div`
@@ -150,7 +152,7 @@ const OverlayContainer = styled.div`
       transform: scale(1.04);
     }
 
-    ${Overlay} {
+    ${Overlay}, ${GridIcon} {
       opacity: 1;
     }
   }
@@ -175,12 +177,10 @@ function ImageList() {
 
   const [activePage, setActivePage] = useState(1);
 
-  const [isUploadModalOpen, setUploadModalOpen] = useState(isUploadRoute);
-  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute);
-
-  const [editID, setEditID] = useState<string | undefined>(
-    isEditRoute ? id : undefined
-  );
+  const isUploadModalOpen = isUploadRoute;
+  const isEditModalOpen = isEditRoute;
+  const editID = isEditRoute ? id : undefined;
+  const closeDrawer = () => navigate('/images');
 
   const [layout, setLayout] = useState(
     localStorage.getItem(LocalStorageKey.ImageListLayout) ||
@@ -214,20 +214,6 @@ function ImageList() {
     refetch(listVariables);
   }, [filter, activePage, limit]);
 
-  useSeededState(
-    isUploadRoute || isEditRoute ? location.pathname : undefined,
-    () => {
-      if (isUploadRoute) {
-        setUploadModalOpen(true);
-      }
-
-      if (isEditRoute) {
-        setEditModalOpen(true);
-        setEditID(id);
-      }
-    }
-  );
-
   return (
     <>
       <ListViewContainer>
@@ -256,6 +242,12 @@ function ImageList() {
             <IconButton
               aria-label={t('images.overview.gridView')}
               aria-pressed={layout === ImageListLayout.Grid}
+              sx={{
+                bgcolor:
+                  layout === ImageListLayout.Grid ?
+                    'action.selected'
+                  : undefined,
+              }}
               onClick={() => {
                 setLayout(ImageListLayout.Grid);
                 localStorage.setItem(
@@ -271,6 +263,12 @@ function ImageList() {
             <IconButton
               aria-label={t('images.overview.listView')}
               aria-pressed={layout === ImageListLayout.List}
+              sx={{
+                bgcolor:
+                  layout === ImageListLayout.List ?
+                    'action.selected'
+                  : undefined,
+              }}
               onClick={() => {
                 setLayout(ImageListLayout.List);
                 localStorage.setItem(
@@ -344,20 +342,11 @@ function ImageList() {
           },
         }}
         open={isUploadModalOpen}
-        onClose={() => {
-          setUploadModalOpen(false);
-          navigate('/images');
-        }}
+        onClose={closeDrawer}
       >
         <ImageUploadAndEditPanel
-          onClose={() => {
-            setUploadModalOpen(false);
-            navigate('/images');
-          }}
-          onUpload={() => {
-            setUploadModalOpen(false);
-            navigate('/images');
-          }}
+          onClose={closeDrawer}
+          onUpload={closeDrawer}
         />
       </Drawer>
       <Drawer
@@ -371,17 +360,11 @@ function ImageList() {
           },
         }}
         open={isEditModalOpen}
-        onClose={() => {
-          setEditModalOpen(false);
-          navigate('/images');
-        }}
+        onClose={closeDrawer}
       >
         <ImageEditPanel
           id={editID!}
-          onClose={() => {
-            setEditModalOpen(false);
-            navigate('/images');
-          }}
+          onClose={closeDrawer}
         />
       </Drawer>
       <Dialog
@@ -500,28 +483,31 @@ const ImageGridView = ({
             <OverlayContainer>
               <Link to={`/images/edit/${image.id}`}>
                 <Overlay>
-                  <IconButtonTooltip caption={t('delete')}>
-                    <GridIcon
-                      aria-label={t('delete')}
-                      size="medium"
-                      color="error"
-                      data-on-media
-                      onClick={event => {
-                        event.preventDefault();
-                        setCurrentImage(image);
-                        setConfirmationDialogOpen(true);
-                      }}
-                    >
-                      <MdDelete />
-                    </GridIcon>
-                  </IconButtonTooltip>
                   {image?.title && <ImgDesc>{image?.title}</ImgDesc>}
                 </Overlay>
                 <GridImg
                   src={image?.squareURL || ''}
-                  alt={image?.title || image?.filename || ''}
+                  alt={
+                    image?.title ? '' : (
+                      image?.filename || t('images.overview.untitled')
+                    )
+                  }
                 />
               </Link>
+              <IconButtonTooltip caption={t('delete')}>
+                <GridIcon
+                  aria-label={`${t('delete')} ${image?.title || image?.filename || t('images.overview.untitled')}`}
+                  size="medium"
+                  color="error"
+                  data-on-media
+                  onClick={() => {
+                    setCurrentImage(image);
+                    setConfirmationDialogOpen(true);
+                  }}
+                >
+                  <MdDelete />
+                </GridIcon>
+              </IconButtonTooltip>
             </OverlayContainer>
           </ImageWrapper>
         );
@@ -550,7 +536,14 @@ const ImageListView = ({
           align: 'left',
           render: rowData => (
             <Link to={`/images/edit/${rowData.id}`}>
-              <Img src={rowData.thumbURL || ''} />
+              <Img
+                src={rowData.thumbURL || ''}
+                alt={
+                  rowData.title ||
+                  rowData.filename ||
+                  t('images.overview.untitled')
+                }
+              />
             </Link>
           ),
         },

@@ -14,10 +14,10 @@ import {
   TableSortLabel,
   Typography,
 } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import {
   ColumnDef,
   ColumnSizingState,
-  flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
@@ -27,6 +27,7 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -49,6 +50,12 @@ import { useColumnConfig } from './use-column-config';
 export type SortOrder = 'asc' | 'desc';
 
 const MIN_COLUMN_WIDTH = 48;
+
+const MAX_COLUMN_WIDTH = 1200;
+
+const KEYBOARD_RESIZE_STEP = 10;
+
+const PIN_WIDTH_RATIO = 2;
 
 const ROW_HEIGHT = 37;
 
@@ -105,6 +112,23 @@ const HeadCell = styled(TableCell)`
   ${cellStyles}
   font-weight: 600;
 
+  & .MuiTableSortLabel-root.Mui-focusVisible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
+    border-radius: 4px;
+    color: ${({ theme }) => theme.vars.palette.text.primary};
+  }
+
+  & .MuiTableSortLabel-root.Mui-focusVisible .MuiTableSortLabel-icon {
+    opacity: 0.5;
+  }
+
+  &
+    .MuiTableSortLabel-root.Mui-active.Mui-focusVisible
+    .MuiTableSortLabel-icon {
+    opacity: 1;
+  }
+
   &[data-resizable='true'] {
     position: sticky;
     top: 0;
@@ -142,10 +166,16 @@ const ResizeHandle = styled.span`
   touch-action: none;
 
   &:hover [data-resize-grip],
-  &:active [data-resize-grip] {
+  &:active [data-resize-grip],
+  &:focus-visible [data-resize-grip] {
     width: 2px;
     height: 100%;
     background-color: ${({ theme }) => theme.vars.palette.primary.main};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: -2px;
   }
 `;
 
@@ -164,6 +194,13 @@ const FilterPanel = styled(Collapse)`
 
 const Filters = styled.div`
   padding: ${({ theme }) => theme.spacing(1, 0, 2)};
+`;
+
+const ScrollContainer = styled(TableContainer)`
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
+  }
 `;
 
 const TableState = styled.div`
@@ -243,6 +280,7 @@ export function DataTable<Row>({
   exportFilename,
 }: DataTableProps<Row>) {
   const { t } = useTranslation();
+  const headerIdPrefix = useId();
 
   const [openedByUser, setOpenedByUser] = useState<boolean | null>(null);
   const filtersOpen = openedByUser ?? false;
@@ -318,6 +356,8 @@ export function DataTable<Row>({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [showPinShadow, setShowPinShadow] = useState(false);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [overflows, setOverflows] = useState(false);
 
   const syncPinShadow = useCallback(() => {
     const element = containerRef.current;
@@ -327,6 +367,8 @@ export function DataTable<Row>({
     const remaining =
       element.scrollWidth - element.clientWidth - element.scrollLeft;
     setShowPinShadow(remaining > 1);
+    setContainerWidth(element.clientWidth);
+    setOverflows(element.scrollWidth - element.clientWidth > 1);
   }, []);
 
   useEffect(() => {
@@ -373,11 +415,23 @@ export function DataTable<Row>({
     return offsets;
   }, [pinnedSignature]);
 
+  const pinnedWidth = useMemo(
+    () =>
+      (pinnedSignature ? pinnedSignature.split('|') : []).reduce(
+        (sum, part) => sum + Number(part.split(':')[1]),
+        0
+      ),
+    [pinnedSignature]
+  );
+
+  const pinning =
+    !containerWidth || containerWidth >= pinnedWidth * PIN_WIDTH_RATIO;
+
   const outermostPinnedId = Object.keys(pinnedOffsets).at(-1);
 
   const pinProps = useCallback(
     (columnId: string, fixed?: boolean) =>
-      fixed ?
+      fixed && pinning ?
         {
           'data-pinned': 'true',
           'data-pin-edge': columnId === outermostPinnedId ? 'true' : undefined,
@@ -386,8 +440,29 @@ export function DataTable<Row>({
           } as CSSProperties,
         }
       : undefined,
-    [pinnedOffsets, outermostPinnedId]
+    [pinnedOffsets, outermostPinnedId, pinning]
   );
+
+  const resizeWithKeyboard = (
+    columnId: string,
+    size: number,
+    minSize: number,
+    key: string
+  ) => {
+    const delta =
+      key === 'ArrowRight' ? KEYBOARD_RESIZE_STEP
+      : key === 'ArrowLeft' ? -KEYBOARD_RESIZE_STEP
+      : null;
+
+    if (delta === null) {
+      return false;
+    }
+
+    const next = Math.min(MAX_COLUMN_WIDTH, Math.max(minSize, size + delta));
+    table.setColumnSizing(old => ({ ...old, [columnId]: next }));
+
+    return true;
+  };
 
   const rows = table.getRowModel().rows;
 
@@ -432,6 +507,14 @@ export function DataTable<Row>({
     virtualRows ? virtualRows.map(item => rows[item.index]) : rows;
   const emptyText = emptyMessage ?? t('listView.table.empty');
 
+  const orderedColumnsById = useMemo(
+    () =>
+      Object.fromEntries(
+        orderedColumns.map(column => [column.id, column])
+      ) as Record<string, DataTableColumn<Row>>,
+    [orderedColumns]
+  );
+
   const tableBody = useMemo(
     () => (
       <TableBody>
@@ -470,7 +553,7 @@ export function DataTable<Row>({
                       ...pin?.style,
                     }}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {orderedColumnsById[cell.column.id]?.render(row.original)}
                   </BodyCell>
                 );
               })}
@@ -496,13 +579,26 @@ export function DataTable<Row>({
       rowClassName,
       pinProps,
       columnDefs,
+      orderedColumnsById,
     ]
   );
 
   const table_ = (
-    <TableContainer
+    <ScrollContainer
       ref={containerRef}
       data-pin-shadow={showPinShadow ? 'true' : 'false'}
+      {...(overflows ?
+        {
+          tabIndex: 0,
+          role: 'region',
+          'aria-label': t('listView.table.label'),
+        }
+      : {})}
+      style={
+        pinning && pinnedWidth ?
+          { scrollPaddingInlineEnd: pinnedWidth }
+        : undefined
+      }
       sx={
         virtualize || maxHeight ?
           {
@@ -531,6 +627,24 @@ export function DataTable<Row>({
                     }
                   | undefined;
                 const sortKey = meta?.sortKey ?? header.column.id;
+                const column = orderedColumnsById[header.column.id];
+                const label = column?.label;
+                const columnName =
+                  column?.columnLabel ??
+                  (typeof label === 'string' ? label : header.column.id);
+                const minSize =
+                  header.column.columnDef.minSize ?? MIN_COLUMN_WIDTH;
+                const labelId = `${headerIdPrefix}-${header.column.id}`;
+                const labelElement =
+                  label || !column?.columnLabel ?
+                    <span id={labelId}>{label}</span>
+                  : <Box
+                      component="span"
+                      id={labelId}
+                      sx={visuallyHidden}
+                    >
+                      {column.columnLabel}
+                    </Box>;
                 const canSort = sortableIds.has(sortKey);
                 const isSorted = sortColumn === sortKey;
 
@@ -542,6 +656,7 @@ export function DataTable<Row>({
                     data-col={header.column.id}
                     align={meta?.align ?? 'left'}
                     sortDirection={isSorted ? sortOrder : false}
+                    aria-labelledby={labelId}
                     data-resizable={
                       header.column.getCanResize() ? 'true' : undefined
                     }
@@ -562,22 +677,35 @@ export function DataTable<Row>({
                           )
                         }
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        {labelElement}
                       </TableSortLabel>
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )
-                    }
+                    : labelElement}
                     {header.column.getCanResize() && (
                       <ResizeHandle
-                        aria-hidden
+                        role="separator"
+                        tabIndex={0}
+                        aria-orientation="vertical"
+                        aria-label={t('listView.table.resizeColumn', {
+                          column: columnName,
+                        })}
+                        aria-valuenow={header.column.getSize()}
+                        aria-valuemin={minSize}
+                        aria-valuemax={MAX_COLUMN_WIDTH}
                         data-resize-handle={header.column.id}
                         onMouseDown={header.getResizeHandler()}
                         onTouchStart={header.getResizeHandler()}
+                        onKeyDown={event => {
+                          if (
+                            resizeWithKeyboard(
+                              header.column.id,
+                              header.column.getSize(),
+                              minSize,
+                              event.key
+                            )
+                          ) {
+                            event.preventDefault();
+                          }
+                        }}
                       >
                         <ResizeGrip data-resize-grip />
                       </ResizeHandle>
@@ -592,20 +720,20 @@ export function DataTable<Row>({
         {tableBody}
       </Table>
 
-      {loading && (
-        <TableState data-table-state>
-          <CircularProgress />
-        </TableState>
-      )}
-
-      {!loading && !rows.length && (
-        <TableState data-table-state>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-          >
-            {emptyText}
-          </Typography>
+      {(loading || !rows.length) && (
+        <TableState
+          data-table-state
+          role="status"
+        >
+          {loading ?
+            <CircularProgress aria-label={t('listView.table.loading')} />
+          : <Typography
+              variant="body2"
+              color="text.secondary"
+            >
+              {emptyText}
+            </Typography>
+          }
         </TableState>
       )}
 
@@ -619,7 +747,7 @@ export function DataTable<Row>({
           </Typography>
         </Box>
       )}
-    </TableContainer>
+    </ScrollContainer>
   );
 
   if (!storageKey && !filters && !exportRows) {

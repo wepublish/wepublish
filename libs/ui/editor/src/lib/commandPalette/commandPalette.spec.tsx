@@ -331,6 +331,33 @@ describe('CommandPalette', () => {
     expect(screen.getByText('zzzz')).toBeInTheDocument();
   });
 
+  it('announces that nothing matches to assistive technology', () => {
+    renderPalette();
+    pressHotkey();
+    type('zzzz');
+
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'commandPalette.empty zzzz'
+    );
+  });
+
+  it('announces how many commands match the query', () => {
+    renderPalette();
+    pressHotkey();
+    type('Tags');
+
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'commandPalette.resultCount'
+    );
+  });
+
+  it('stays quiet before anything is typed', () => {
+    renderPalette();
+    pressHotkey();
+
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  });
+
   it('presses Enter on nothing without throwing', () => {
     renderPalette();
     pressHotkey();

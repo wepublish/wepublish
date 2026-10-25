@@ -161,7 +161,10 @@ function MailTemplateList() {
               </TableCell>
               <TableCell>
                 <strong>{t('mailTemplates.edit.mailType')}</strong>{' '}
-                <InfoTooltip text={t('mailTemplates.edit.purposeHint')} />
+                <InfoTooltip
+                  text={t('mailTemplates.edit.purposeHint')}
+                  label={t('moreInfo')}
+                />
               </TableCell>
               <TableCell>
                 <strong>{t('mailTemplates.description')}</strong>
@@ -171,7 +174,10 @@ function MailTemplateList() {
               </TableCell>
               <TableCell>
                 <strong>{t('mailTemplates.status')}</strong>{' '}
-                <InfoTooltip text={t('mailTemplates.statusHelp')} />
+                <InfoTooltip
+                  text={t('mailTemplates.statusHelp')}
+                  label={t('moreInfo')}
+                />
               </TableCell>
               <TableCell align="center">
                 <strong>{t('action')}</strong>
@@ -180,6 +186,12 @@ function MailTemplateList() {
           </TableHead>
 
           <TableBody>
+            {queryData && !queryData.mailTemplates.length && (
+              <TableRow>
+                <TableCell colSpan={6}>{t('mailTemplates.empty')}</TableCell>
+              </TableRow>
+            )}
+
             {queryData?.mailTemplates.map(template => (
               <TableRow key={template.id}>
                 <TableCell>{template.name}</TableCell>
@@ -190,7 +202,10 @@ function MailTemplateList() {
                 <TableCell>{template.subject}</TableCell>
                 <TableCell>
                   {template.status === 'ok' ?
-                    <MdCheck />
+                    <MdCheck
+                      role="img"
+                      aria-label={t('ok')}
+                    />
                   : <StatusTag
                       icon={<MdWarning />}
                       label={t(`mailTemplates.statuses.${template.status}`)}

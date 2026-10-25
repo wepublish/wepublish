@@ -20,7 +20,7 @@ import {
 } from '@wepublish/permissions';
 import { RichtextJSONDocument, toPlaintext } from '@wepublish/richtext';
 import { slugify } from '@wepublish/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -44,7 +44,6 @@ import {
   FormSectionTitle,
 } from '../drawer';
 import { enqueueSnackbar } from '../snackbar';
-import { toggleRequiredLabel } from '../toggleRequiredLabel';
 
 export interface PeerEditPanelProps {
   id?: string;
@@ -87,6 +86,7 @@ const EMPTY_PEER = {
 
 function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
   const { t } = useTranslation();
+  const informationLabelId = useId();
   const isAuthorized = useAuthorisation(CanCreatePeer.id);
   const client = useApolloClient();
   const [loadError, setLoadError] = useState<Error>();
@@ -240,7 +240,10 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
   }
 
   return (
-    <DrawerForm onSubmit={handleSubmit(handleSave)}>
+    <DrawerForm
+      noValidate
+      onSubmit={handleSubmit(handleSave)}
+    >
       <Stack
         direction="column"
         sx={{ height: '100%' }}
@@ -295,7 +298,8 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                   render={({ field, fieldState: { error } }) => (
                     <TextField
                       {...field}
-                      label={toggleRequiredLabel(t('peerList.panels.name'))}
+                      label={t('peerList.panels.name')}
+                      required
                       disabled={!isAuthorized}
                       onChange={event => {
                         field.onChange(event);
@@ -309,13 +313,16 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                 />
 
                 <div>
-                  <FormLabel>{t('peerList.panels.information')}</FormLabel>
+                  <FormLabel id={informationLabelId}>
+                    {t('peerList.panels.information')}
+                  </FormLabel>
 
                   <Controller
                     control={control}
                     name="information"
                     render={({ field }) => (
                       <RichTextBlock
+                        aria-labelledby={informationLabelId}
                         value={field.value}
                         onChange={newInformation =>
                           field.onChange(
@@ -335,10 +342,11 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                       {...field}
                       label={
                         <>
-                          {toggleRequiredLabel(t('peerList.panels.URL'))}{' '}
+                          {t('peerList.panels.URL')}{' '}
                           <InfoTooltip text={t('peerList.panels.urlInfo')} />
                         </>
                       }
+                      required
                       disabled={!isAuthorized}
                       onChange={event => {
                         field.onChange(event);
@@ -359,10 +367,11 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                       {...field}
                       label={
                         <>
-                          {toggleRequiredLabel(t('peerList.panels.token'), !id)}{' '}
+                          {t('peerList.panels.token')}{' '}
                           <InfoTooltip text={t('peerList.panels.tokenInfo')} />
                         </>
                       }
+                      required={!id}
                       disabled={!isAuthorized}
                       placeholder={
                         id ? t('peerList.panels.leaveEmpty') : undefined

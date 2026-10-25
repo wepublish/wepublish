@@ -66,7 +66,9 @@ export function AddBlockInput({
 
             return [
               <Fragment key={group}>
-                <ListSubheader>{t(`blocks.groups.${group}`)}</ListSubheader>
+                <ListSubheader role="presentation">
+                  {t(`blocks.groups.${group}`)}
+                </ListSubheader>
 
                 {blocks.map(item => (
                   <MenuItem

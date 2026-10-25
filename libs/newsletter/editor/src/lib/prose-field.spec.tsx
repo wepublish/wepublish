@@ -1,4 +1,28 @@
-import { linesFrom, toHtml } from './prose-field';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { ReactElement } from 'react';
+
+import { linesFrom, proseField, toHtml } from './prose-field';
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { language: 'en' },
+  }),
+}));
+
+vi.mock('./merge-tags', async importOriginal => ({
+  ...(await importOriginal<typeof import('./merge-tags')>()),
+  loadMergeTags: vi.fn(() => new Promise(() => undefined)),
+}));
+
+const renderEditor = () =>
+  render(
+    proseField('Text').render({
+      value: '',
+      onChange: vi.fn(),
+      id: 'prose',
+    } as never) as ReactElement
+  );
 
 const roundTrip = (value: string) => {
   const root = document.createElement('div');
@@ -15,6 +39,12 @@ const read = (html: string) => {
 };
 
 describe('prose field', () => {
+  it('names the editable after the field', () => {
+    renderEditor();
+
+    expect(screen.getByRole('textbox', { name: 'Text' })).toBeTruthy();
+  });
+
   it('keeps bold, links and bullets through the editable', () => {
     const value = [
       '**Liebe Freundin**, lieber Freund',
@@ -65,5 +95,53 @@ describe('prose field', () => {
 
   it('starts an empty field as one empty paragraph', () => {
     expect(toHtml('')).toBe('<p><br></p>');
+  });
+
+  describe('accessibility', () => {
+    beforeEach(() => {
+      document.queryCommandState = vi.fn(() => false);
+      document.execCommand = vi.fn(() => true);
+    });
+
+    it('names the link address field', () => {
+      renderEditor();
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'newsletter.prose.link' })
+      );
+
+      expect(
+        screen.getByRole('textbox', { name: 'newsletter.prose.linkUrl' })
+      ).toBeTruthy();
+    });
+
+    it('names the merge tag search', () => {
+      renderEditor();
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'newsletter.prose.mergeTag' })
+      );
+
+      expect(
+        screen.getByRole('textbox', { name: 'newsletter.prose.searchTag' })
+      ).toBeTruthy();
+    });
+
+    it('says which toolbar buttons are on and which panels are open', () => {
+      renderEditor();
+
+      expect(
+        screen.getByRole('button', { name: 'newsletter.prose.boldTitle' })
+      ).toHaveAttribute('aria-pressed', 'false');
+
+      const mergeTag = screen.getByRole('button', {
+        name: 'newsletter.prose.mergeTag',
+      });
+      expect(mergeTag).toHaveAttribute('aria-expanded', 'false');
+
+      fireEvent.click(mergeTag);
+
+      expect(mergeTag).toHaveAttribute('aria-expanded', 'true');
+    });
   });
 });

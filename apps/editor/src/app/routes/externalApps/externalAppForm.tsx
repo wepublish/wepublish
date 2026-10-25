@@ -433,6 +433,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           <Button
             onClick={() => setDeleteDialogOpen(false)}
             disabled={loading}
+            autoFocus
           >
             {t('cancel')}
           </Button>
@@ -440,7 +441,6 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             variant="contained"
             onClick={handleDelete}
             color="error"
-            autoFocus
             disabled={loading}
           >
             {t('externalAppForm.delete')}

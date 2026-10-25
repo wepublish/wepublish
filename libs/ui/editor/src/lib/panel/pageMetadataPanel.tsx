@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import {
   Alert,
-  Checkbox,
   Box,
   Button,
+  Checkbox,
   Drawer,
   FormControl,
   FormControlLabel,
@@ -26,7 +26,7 @@ import {
   CanGetPages,
   CanPublishPage,
 } from '@wepublish/permissions';
-import { SetStateAction, useCallback, useState } from 'react';
+import { SetStateAction, useCallback, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdListAlt,
@@ -62,6 +62,7 @@ import { SeoBlockContext } from './seoBlockContext';
 import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
 import { SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';
+import { useTabPanel } from './useTabPanel';
 
 const InputWidth60 = styled(TextField)`
   width: 60%;
@@ -148,6 +149,7 @@ function PageMetadataPanel({
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General);
+  const { tabProps, panelProps } = useTabPanel(activeKey);
 
   const isAuthorized = useAuthorisation(CanCreatePage.id);
 
@@ -163,6 +165,7 @@ function PageMetadataPanel({
   );
 
   const { t } = useTranslation();
+  const tagsLabelId = useId();
 
   const handleMetadataPropertiesChange = useCallback(
     (updatedProperties: SetStateAction<ListValue<PageMetadataProperty>[]>) => {
@@ -384,8 +387,11 @@ function PageMetadataPanel({
             </FormSectionTitle>
 
             <FormControl fullWidth>
-              <FormLabel>{t('pageEditor.panels.tags')}</FormLabel>
+              <FormLabel id={tagsLabelId}>
+                {t('pageEditor.panels.tags')}
+              </FormLabel>
               <SelectTags
+                aria-labelledby={tagsLabelId}
                 defaultTags={defaultTags}
                 disabled={!isAuthorized}
                 selectedTags={tags}
@@ -486,14 +492,14 @@ function PageMetadataPanel({
                 {({ value, onChange }) => (
                   <InputList>
                     <InputWidth40
-                      placeholder={t('pageEditor.panels.key')}
+                      label={t('pageEditor.panels.key')}
                       value={value.key}
                       onChange={event => {
                         onChange({ ...value, key: event.target.value });
                       }}
                     />
                     <InputWidth60
-                      placeholder={t('pageEditor.panels.value')}
+                      label={t('pageEditor.panels.value')}
                       value={value.value}
                       onChange={event => {
                         onChange({ ...value, value: event.target.value });
@@ -554,30 +560,34 @@ function PageMetadataPanel({
       >
         <Tab
           value={MetaDataType.General}
+          {...tabProps(MetaDataType.General)}
           icon={<MdSettings />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.general')}</>}
         />
         <Tab
           value={MetaDataType.SocialMedia}
+          {...tabProps(MetaDataType.SocialMedia)}
           icon={<MdShare />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.socialMedia')}</>}
         />
         <Tab
           value={MetaDataType.Seo}
+          {...tabProps(MetaDataType.Seo)}
           icon={<MdTravelExplore />}
           iconPosition="start"
           label={<>{t('seoTab.title')}</>}
         />
         <Tab
           value={MetaDataType.Properties}
+          {...tabProps(MetaDataType.Properties)}
           icon={<MdListAlt />}
           iconPosition="start"
           label={<>{t('pageEditor.panels.properties')}</>}
         />
       </Tabs>
-      <DrawerBody>{currentContent()}</DrawerBody>
+      <DrawerBody {...panelProps}>{currentContent()}</DrawerBody>
 
       <Drawer
         anchor="right"

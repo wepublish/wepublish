@@ -289,7 +289,7 @@ const BlockStyleList = memo(() => {
               <NameField>
                 <TextField
                   value={inputValue.name}
-                  placeholder={t('blockStyles.placeholder')}
+                  label={t('blockStyles.placeholder')}
                   onChange={event => {
                     dispatchFormValue({
                       type: BlockStyleListActionType.Update,
@@ -321,11 +321,7 @@ const BlockStyleList = memo(() => {
                   renderInput={params => (
                     <TextField
                       {...params}
-                      placeholder={
-                        inputValue.blocks.length ?
-                          undefined
-                        : t('blockStyles.blockTypesPlaceholder')
-                      }
+                      label={t('blockStyles.blockTypesPlaceholder')}
                     />
                   )}
                 />
@@ -337,7 +333,7 @@ const BlockStyleList = memo(() => {
                 >
                   <IconButtonTooltip caption={t('save')}>
                     <IconButton
-                      aria-label={t('save')}
+                      aria-label={`${t('save')} ${inputValue.name}`.trim()}
                       type="submit"
                       size="small"
                       onClick={() => {
@@ -357,7 +353,7 @@ const BlockStyleList = memo(() => {
                 >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
-                      aria-label={t('delete')}
+                      aria-label={`${t('delete')} ${inputValue.name}`.trim()}
                       color="error"
                       size="small"
                       onClick={() => setBlockStyleToDelete(blockstyleId)}

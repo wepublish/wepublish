@@ -29,7 +29,7 @@ import {
   RichTextBlock,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -41,10 +41,14 @@ const DateLabel = styled(FormLabel)`
 
 const PollEditor = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
   grid-auto-rows: auto;
   align-items: start;
   gap: 16px;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 `;
 
 const DatesWrapper = styled.div`
@@ -71,6 +75,9 @@ function PollEditView() {
   const pollId = params.id!;
   const [close, setClose] = useState<boolean>(false);
   const closePath = '/polls';
+  const opensAtLabelId = useId();
+  const closesAtLabelId = useId();
+  const infoTextLabelId = useId();
 
   /**
    * Handling toasts
@@ -218,7 +225,9 @@ function PollEditView() {
 
               <DatesWrapper>
                 <DateItem>
-                  <DateLabel>{t('pollEditView.opensAtLabel')}</DateLabel>
+                  <DateLabel id={opensAtLabelId}>
+                    {t('pollEditView.opensAtLabel')}
+                  </DateLabel>
 
                   <Controller
                     control={control}
@@ -226,6 +235,7 @@ function PollEditView() {
                     render={({ field }) => (
                       <DatePicker
                         withTime
+                        aria-labelledby={opensAtLabelId}
                         value={field.value ? new Date(field.value) : null}
                         onChange={opensAt =>
                           field.onChange(
@@ -240,7 +250,9 @@ function PollEditView() {
 
                 <DateItem>
                   <DateLabel>
-                    {t('pollEditView.closesAtLabel')}{' '}
+                    <span id={closesAtLabelId}>
+                      {t('pollEditView.closesAtLabel')}
+                    </span>{' '}
                     <InfoTooltip text={t('pollEditView.closesAtInfo')} />
                   </DateLabel>
 
@@ -250,6 +262,7 @@ function PollEditView() {
                     render={({ field }) => (
                       <DatePicker
                         withTime
+                        aria-labelledby={closesAtLabelId}
                         value={field.value ? new Date(field.value) : null}
                         onChange={closedAt =>
                           field.onChange(closedAt?.toISOString() ?? null)
@@ -283,7 +296,7 @@ function PollEditView() {
 
         <InfoText>
           <FormLabel>
-            {t('pollEditView.infoText')}{' '}
+            <span id={infoTextLabelId}>{t('pollEditView.infoText')}</span>{' '}
             <InfoTooltip text={t('pollEditView.infoTextInfo')} />
           </FormLabel>
 
@@ -292,6 +305,7 @@ function PollEditView() {
             name="poll.infoText"
             render={({ field }) => (
               <RichTextBlock
+                aria-labelledby={infoTextLabelId}
                 value={field.value}
                 onChange={value =>
                   field.onChange(value as RichtextJSONDocument)

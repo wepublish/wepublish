@@ -31,6 +31,7 @@ export interface ChooseEditImageProps {
   removeImage?: () => void;
   onSelect?: (image: FullImageFragment) => void;
   maxHeight?: number;
+  'aria-labelledby'?: string;
 }
 
 const Frame = styled.div<{ height: number }>`
@@ -144,8 +145,11 @@ export function ChooseEditImage({
   removeImage,
   onSelect,
   maxHeight = 240,
+  'aria-labelledby': ariaLabelledby,
 }: ChooseEditImageProps): JSX.Element {
   const { t } = useTranslation();
+  const groupProps =
+    ariaLabelledby ? { role: 'group', 'aria-labelledby': ariaLabelledby } : {};
   const [dragging, setDragging] = useState(false);
   const [droppedFile, setDroppedFile] = useState<File | null>(null);
   const [droppedMetaData, setDroppedMetaData] = useState<ImageMetaData>();
@@ -202,7 +206,10 @@ export function ChooseEditImage({
 
   if (!image) {
     return (
-      <Frame height={maxHeight}>
+      <Frame
+        height={maxHeight}
+        {...groupProps}
+      >
         {disabled ?
           <Skeleton
             variant="rectangular"
@@ -249,7 +256,10 @@ export function ChooseEditImage({
   const source = image.largeURL ?? '/static/placeholder-240x240.png';
 
   return (
-    <Frame height={maxHeight}>
+    <Frame
+      height={maxHeight}
+      {...groupProps}
+    >
       <Figure>
         <Backdrop
           src={source}

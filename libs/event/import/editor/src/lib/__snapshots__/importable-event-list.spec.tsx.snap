@@ -54,6 +54,7 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
         aria-expanded="false"
         aria-haspopup="menu"
         class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-sizeSmall MuiButton-colorInherit emotion-4"
+        id="_r_4_"
         tabindex="0"
         type="button"
       >
@@ -120,29 +121,33 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
                 <div
                   class="MuiFormControl-root MuiTextField-root emotion-17"
                 >
+                  <label
+                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-18"
+                    data-shrink="false"
+                    for="_r_6_"
+                    id="_r_6_-label"
+                  >
+                    filterableList.filter.name
+                  </label>
                   <div
-                    class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-18"
+                    class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-19"
                   >
                     <input
                       aria-invalid="false"
-                      class="MuiInputBase-input MuiOutlinedInput-input emotion-19"
-                      id="_r_4_"
-                      placeholder="filterableList.filter.name"
+                      class="MuiInputBase-input MuiOutlinedInput-input emotion-20"
+                      id="_r_6_"
                       type="text"
                       value=""
                     />
                     <fieldset
                       aria-hidden="true"
-                      class="MuiOutlinedInput-notchedOutline emotion-20"
+                      class="MuiOutlinedInput-notchedOutline emotion-21"
                     >
                       <legend
-                        class="emotion-21"
+                        class="emotion-22"
                       >
-                        <span
-                          aria-hidden="true"
-                          class="notranslate"
-                        >
-                          ​
+                        <span>
+                          filterableList.filter.name
                         </span>
                       </legend>
                     </fieldset>
@@ -153,29 +158,33 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
                 <div
                   class="MuiFormControl-root MuiTextField-root emotion-17"
                 >
+                  <label
+                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-18"
+                    data-shrink="false"
+                    for="_r_7_"
+                    id="_r_7_-label"
+                  >
+                    filterableList.filter.location
+                  </label>
                   <div
-                    class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-18"
+                    class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-19"
                   >
                     <input
                       aria-invalid="false"
-                      class="MuiInputBase-input MuiOutlinedInput-input emotion-19"
-                      id="_r_5_"
-                      placeholder="filterableList.filter.location"
+                      class="MuiInputBase-input MuiOutlinedInput-input emotion-20"
+                      id="_r_7_"
                       type="text"
                       value=""
                     />
                     <fieldset
                       aria-hidden="true"
-                      class="MuiOutlinedInput-notchedOutline emotion-20"
+                      class="MuiOutlinedInput-notchedOutline emotion-21"
                     >
                       <legend
-                        class="emotion-21"
+                        class="emotion-22"
                       >
-                        <span
-                          aria-hidden="true"
-                          class="notranslate"
-                        >
-                          ​
+                        <span>
+                          filterableList.filter.location
                         </span>
                       </legend>
                     </fieldset>
@@ -184,21 +193,21 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
               </div>
               <div>
                 <div
-                  class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon emotion-27 emotion-28"
+                  class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon emotion-29 emotion-30"
                 >
                   <div
-                    class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-29"
+                    class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-31"
                   >
                     <label
-                      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-30"
+                      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-18"
                       data-shrink="false"
-                      for="_r_6_"
-                      id="_r_6_-label"
+                      for="_r_8_"
+                      id="_r_8_-label"
                     >
                       filterableList.filter.providers
                     </label>
                     <div
-                      class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-31"
+                      class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-33"
                     >
                       <input
                         aria-autocomplete="list"
@@ -206,26 +215,26 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
                         aria-invalid="false"
                         autocapitalize="none"
                         autocomplete="off"
-                        class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-32"
-                        id="_r_6_"
+                        class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-34"
+                        id="_r_8_"
                         role="combobox"
                         spellcheck="false"
                         type="text"
                         value=""
                       />
                       <div
-                        class="MuiAutocomplete-endAdornment emotion-33"
+                        class="MuiAutocomplete-endAdornment emotion-35"
                       >
                         <button
                           aria-label="Open"
-                          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-34"
+                          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-36"
                           tabindex="-1"
                           title="Open"
                           type="button"
                         >
                           <svg
                             aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-35"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
                             data-testid="ArrowDropDownIcon"
                             focusable="false"
                             viewBox="0 0 24 24"
@@ -238,10 +247,10 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
                       </div>
                       <fieldset
                         aria-hidden="true"
-                        class="MuiOutlinedInput-notchedOutline emotion-20"
+                        class="MuiOutlinedInput-notchedOutline emotion-21"
                       >
                         <legend
-                          class="emotion-37"
+                          class="emotion-22"
                         >
                           <span>
                             filterableList.filter.providers
@@ -254,7 +263,7 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
               </div>
               <div>
                 <div
-                  class="emotion-38 emotion-39"
+                  class="emotion-40 emotion-41"
                 >
                   <div
                     class="react-datepicker-wrapper"
@@ -263,29 +272,30 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
                       class="react-datepicker__input-container"
                     >
                       <div
-                        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-29"
+                        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-31"
                       >
                         <label
-                          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeSmall MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeSmall MuiInputLabel-outlined emotion-41"
+                          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeSmall MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeSmall MuiInputLabel-outlined emotion-43"
                           data-shrink="false"
-                          for="_r_a_"
-                          id="_r_a_-label"
+                          for="_r_c_"
+                          id="_r_c_-label"
                         >
                           filterableList.filter.dates
                         </label>
                         <div
-                          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-adornedEnd emotion-31"
+                          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-adornedEnd emotion-33"
                         >
                           <input
+                            aria-haspopup="dialog"
                             aria-invalid="false"
                             autocomplete="off"
-                            class="MuiInputBase-input MuiOutlinedInput-input emotion-43"
-                            id="_r_a_"
+                            class="MuiInputBase-input MuiOutlinedInput-input emotion-45"
+                            id="_r_c_"
                             type="text"
                             value=""
                           />
                           <div
-                            class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeSmall emotion-44"
+                            class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeSmall emotion-46"
                           >
                             <svg
                               fill="currentColor"
@@ -307,10 +317,10 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
                           </div>
                           <fieldset
                             aria-hidden="true"
-                            class="MuiOutlinedInput-notchedOutline emotion-20"
+                            class="MuiOutlinedInput-notchedOutline emotion-21"
                           >
                             <legend
-                              class="emotion-37"
+                              class="emotion-22"
                             >
                               <span>
                                 filterableList.filter.dates
@@ -329,110 +339,165 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
       </div>
     </div>
     <div
-      class="MuiTableContainer-root emotion-47"
+      class="MuiTableContainer-root emotion-49 emotion-50"
       data-pin-shadow="false"
     >
       <table
-        class="MuiTable-root MuiTable-stickyHeader emotion-48"
+        class="MuiTable-root MuiTable-stickyHeader emotion-51"
         style="--col-name-size: 200px; --col-startsatheader-size: 220px; --col-endsatheader-size: 220px; --col-source-size: 150px; --col-action-size: 150px; min-width: 940px;"
       >
         <thead
-          class="MuiTableHead-root emotion-49"
+          class="MuiTableHead-root emotion-52"
         >
           <tr
-            class="MuiTableRow-root MuiTableRow-head emotion-50"
+            class="MuiTableRow-root MuiTableRow-head emotion-53"
           >
             <th
-              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-51 emotion-52"
+              aria-labelledby="_r_1_-name"
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-54 emotion-55"
               data-col="name"
               data-resizable="true"
               scope="col"
               style="width: var(--col-name-size);"
             >
-              event.list.name
               <span
-                aria-hidden="true"
-                class="emotion-53 emotion-54"
+                id="_r_1_-name"
+              >
+                event.list.name
+              </span>
+              <span
+                aria-label="listView.table.resizeColumn"
+                aria-orientation="vertical"
+                aria-valuemax="1200"
+                aria-valuemin="48"
+                aria-valuenow="200"
+                class="emotion-56 emotion-57"
                 data-resize-handle="name"
+                role="separator"
+                tabindex="0"
               >
                 <span
-                  class="emotion-55 emotion-56"
+                  class="emotion-58 emotion-59"
                   data-resize-grip="true"
                 />
               </span>
             </th>
             <th
-              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-51 emotion-52"
+              aria-labelledby="_r_1_-startsatheader"
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-54 emotion-55"
               data-col="startsatheader"
               data-resizable="true"
               scope="col"
               style="width: var(--col-startsatheader-size);"
             >
-              event.list.startsAtHeader
               <span
-                aria-hidden="true"
-                class="emotion-53 emotion-54"
+                id="_r_1_-startsatheader"
+              >
+                event.list.startsAtHeader
+              </span>
+              <span
+                aria-label="listView.table.resizeColumn"
+                aria-orientation="vertical"
+                aria-valuemax="1200"
+                aria-valuemin="48"
+                aria-valuenow="220"
+                class="emotion-56 emotion-57"
                 data-resize-handle="startsatheader"
+                role="separator"
+                tabindex="0"
               >
                 <span
-                  class="emotion-55 emotion-56"
+                  class="emotion-58 emotion-59"
                   data-resize-grip="true"
                 />
               </span>
             </th>
             <th
-              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-51 emotion-52"
+              aria-labelledby="_r_1_-endsatheader"
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-54 emotion-55"
               data-col="endsatheader"
               data-resizable="true"
               scope="col"
               style="width: var(--col-endsatheader-size);"
             >
-              event.list.endsAtHeader
               <span
-                aria-hidden="true"
-                class="emotion-53 emotion-54"
+                id="_r_1_-endsatheader"
+              >
+                event.list.endsAtHeader
+              </span>
+              <span
+                aria-label="listView.table.resizeColumn"
+                aria-orientation="vertical"
+                aria-valuemax="1200"
+                aria-valuemin="48"
+                aria-valuenow="220"
+                class="emotion-56 emotion-57"
                 data-resize-handle="endsatheader"
+                role="separator"
+                tabindex="0"
               >
                 <span
-                  class="emotion-55 emotion-56"
+                  class="emotion-58 emotion-59"
                   data-resize-grip="true"
                 />
               </span>
             </th>
             <th
-              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-51 emotion-52"
+              aria-labelledby="_r_1_-source"
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-54 emotion-55"
               data-col="source"
               data-resizable="true"
               scope="col"
               style="width: var(--col-source-size);"
             >
-              event.list.source
               <span
-                aria-hidden="true"
-                class="emotion-53 emotion-54"
+                id="_r_1_-source"
+              >
+                event.list.source
+              </span>
+              <span
+                aria-label="listView.table.resizeColumn"
+                aria-orientation="vertical"
+                aria-valuemax="1200"
+                aria-valuemin="48"
+                aria-valuenow="150"
+                class="emotion-56 emotion-57"
                 data-resize-handle="source"
+                role="separator"
+                tabindex="0"
               >
                 <span
-                  class="emotion-55 emotion-56"
+                  class="emotion-58 emotion-59"
                   data-resize-grip="true"
                 />
               </span>
             </th>
             <th
-              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-51 emotion-52"
+              aria-labelledby="_r_1_-action"
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-54 emotion-55"
               data-col="action"
               data-resizable="true"
               scope="col"
               style="width: var(--col-action-size);"
             >
-              action
               <span
-                aria-hidden="true"
-                class="emotion-53 emotion-54"
+                id="_r_1_-action"
+              >
+                action
+              </span>
+              <span
+                aria-label="listView.table.resizeColumn"
+                aria-orientation="vertical"
+                aria-valuemax="1200"
+                aria-valuemin="48"
+                aria-valuenow="150"
+                class="emotion-56 emotion-57"
                 data-resize-handle="action"
+                role="separator"
+                tabindex="0"
               >
                 <span
-                  class="emotion-55 emotion-56"
+                  class="emotion-58 emotion-59"
                   data-resize-grip="true"
                 />
               </span>
@@ -440,20 +505,20 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
           </tr>
         </thead>
         <tbody
-          class="MuiTableBody-root emotion-81"
+          class="MuiTableBody-root emotion-84"
         >
           <tr
-            class="MuiTableRow-root emotion-50"
+            class="MuiTableRow-root emotion-53"
           >
             <td
-              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-86 emotion-87"
               data-col="name"
               style="width: var(--col-name-size);"
             >
               Event 1
             </td>
             <td
-              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-86 emotion-87"
               data-col="startsatheader"
               style="width: var(--col-startsatheader-size);"
             >
@@ -464,7 +529,7 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
               </time>
             </td>
             <td
-              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-86 emotion-87"
               data-col="endsatheader"
               style="width: var(--col-endsatheader-size);"
             >
@@ -475,19 +540,19 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
               </time>
             </td>
             <td
-              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-86 emotion-87"
               data-col="source"
               style="width: var(--col-source-size);"
             >
               AgendaBasel
             </td>
             <td
-              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-86 emotion-87"
               data-col="action"
               style="width: var(--col-action-size);"
             >
               <button
-                class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-outlined MuiButton-sizeMedium MuiButton-colorPrimary emotion-93"
+                class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-outlined MuiButton-sizeMedium MuiButton-colorPrimary emotion-96"
                 disabled=""
                 tabindex="-1"
                 type="button"
@@ -497,17 +562,17 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
             </td>
           </tr>
           <tr
-            class="MuiTableRow-root emotion-50"
+            class="MuiTableRow-root emotion-53"
           >
             <td
-              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-86 emotion-87"
               data-col="name"
               style="width: var(--col-name-size);"
             >
               Event 2
             </td>
             <td
-              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-86 emotion-87"
               data-col="startsatheader"
               style="width: var(--col-startsatheader-size);"
             >
@@ -518,7 +583,7 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
               </time>
             </td>
             <td
-              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-86 emotion-87"
               data-col="endsatheader"
               style="width: var(--col-endsatheader-size);"
             >
@@ -529,19 +594,19 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
               </time>
             </td>
             <td
-              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-86 emotion-87"
               data-col="source"
               style="width: var(--col-source-size);"
             >
               AgendaBasel
             </td>
             <td
-              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-86 emotion-87"
               data-col="action"
               style="width: var(--col-action-size);"
             >
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-105"
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-108"
                 tabindex="0"
                 type="button"
               >
@@ -553,29 +618,31 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
       </table>
     </div>
     <div
-      class="MuiBox-root emotion-106"
+      class="MuiBox-root emotion-109"
     >
       <p
-        class="MuiTypography-root MuiTypography-body2 emotion-107"
+        aria-atomic="true"
+        class="MuiTypography-root MuiTypography-body2 emotion-110"
+        role="status"
       >
         listView.pagination.total
       </p>
       <div
-        class="MuiBox-root emotion-108"
+        class="MuiBox-root emotion-111"
       >
         <label
-          class="MuiBox-root emotion-109"
-          for="_r_b_"
+          class="MuiBox-root emotion-112"
+          for="_r_d_"
         >
           listView.pagination.pageSize
         </label>
         <div
-          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-sizeSmall MuiSelect-root emotion-110"
+          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-sizeSmall MuiSelect-root emotion-113"
         >
           <select
             aria-label="listView.pagination.pageSize"
-            class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-111"
-            id="_r_b_"
+            class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-114"
+            id="_r_d_"
           >
             <option
               value="10"
@@ -600,7 +667,7 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
           </select>
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiNativeSelect-icon MuiNativeSelect-iconOutlined emotion-112"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiNativeSelect-icon MuiNativeSelect-iconOutlined emotion-115"
             data-testid="ArrowDropDownIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -611,10 +678,10 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
           </svg>
           <fieldset
             aria-hidden="true"
-            class="MuiOutlinedInput-notchedOutline emotion-20"
+            class="MuiOutlinedInput-notchedOutline emotion-21"
           >
             <legend
-              class="emotion-21"
+              class="emotion-117"
             >
               <span
                 aria-hidden="true"
@@ -626,23 +693,23 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
           </fieldset>
         </div>
         <nav
-          aria-label="pagination navigation"
-          class="MuiPagination-root MuiPagination-text emotion-115"
+          aria-label="listView.pagination.label"
+          class="MuiPagination-root MuiPagination-text emotion-118"
         >
           <ul
-            class="MuiPagination-ul emotion-116"
+            class="MuiPagination-ul emotion-119"
           >
             <li>
               <button
-                aria-label="Go to first page"
-                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-firstLast emotion-117"
+                aria-label="listView.pagination.first"
+                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-firstLast emotion-120"
                 disabled=""
                 tabindex="-1"
                 type="button"
               >
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-118"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-121"
                   data-testid="FirstPageIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
@@ -655,15 +722,15 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
             </li>
             <li>
               <button
-                aria-label="Go to previous page"
-                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-previousNext emotion-117"
+                aria-label="listView.pagination.previous"
+                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-previousNext emotion-120"
                 disabled=""
                 tabindex="-1"
                 type="button"
               >
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-118"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-121"
                   data-testid="NavigateBeforeIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
@@ -677,8 +744,8 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
             <li>
               <button
                 aria-current="page"
-                aria-label="page 1"
-                class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-selected MuiPaginationItem-page emotion-117"
+                aria-label="listView.pagination.currentPage"
+                class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-selected MuiPaginationItem-page emotion-120"
                 tabindex="0"
                 type="button"
               >
@@ -687,15 +754,15 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
             </li>
             <li>
               <button
-                aria-label="Go to next page"
-                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-previousNext emotion-117"
+                aria-label="listView.pagination.next"
+                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-previousNext emotion-120"
                 disabled=""
                 tabindex="-1"
                 type="button"
               >
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-118"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-121"
                   data-testid="NavigateNextIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
@@ -708,15 +775,15 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
             </li>
             <li>
               <button
-                aria-label="Go to last page"
-                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-firstLast emotion-117"
+                aria-label="listView.pagination.last"
+                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-firstLast emotion-120"
                 disabled=""
                 tabindex="-1"
                 type="button"
               >
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-118"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-121"
                   data-testid="LastPageIcon"
                   focusable="false"
                   viewBox="0 0 24 24"

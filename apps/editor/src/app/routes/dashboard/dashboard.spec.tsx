@@ -173,6 +173,84 @@ describe('Dashboard', () => {
     });
   });
 
+  it('gives the page a top-level heading and each card a section heading', () => {
+    renderDashboard();
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'navbar.dashboard' })
+    ).toBeInTheDocument();
+
+    for (const title of [
+      'dashboard.networkContent',
+      'dashboard.activity',
+      'dashboard.audience',
+      'dashboard.externalApps',
+    ]) {
+      expect(
+        screen.getByRole('heading', { level: 2, name: new RegExp(title) })
+      ).toBeInTheDocument();
+    }
+  });
+
+  it('keeps focus in the dialog when a card reaches the top', () => {
+    renderDashboard();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'dashboard.configure' })
+    );
+    const dialog = screen.getByRole('dialog');
+    const audienceRow = () =>
+      within(dialog)
+        .getByRole('checkbox', { name: 'dashboard.audience' })
+        .closest('[data-dashboard-config-card]') as HTMLElement;
+
+    const moveUp = within(audienceRow()).getByRole('button', {
+      name: 'dashboard.moveUp',
+    });
+    moveUp.focus();
+    fireEvent.click(moveUp);
+
+    expect(
+      within(audienceRow()).getByRole('button', { name: 'dashboard.moveDown' })
+    ).toHaveFocus();
+  });
+
+  it('announces where a moved card ended up', () => {
+    renderDashboard();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'dashboard.configure' })
+    );
+    const dialog = screen.getByRole('dialog');
+    const activityRow = within(dialog)
+      .getByRole('checkbox', { name: 'dashboard.activity' })
+      .closest('[data-dashboard-config-card]') as HTMLElement;
+
+    fireEvent.click(
+      within(activityRow).getByRole('button', { name: 'dashboard.moveDown' })
+    );
+
+    expect(
+      within(dialog)
+        .getAllByRole('status')
+        .some(region => region.textContent === 'dashboard.cardMoved')
+    ).toBe(true);
+  });
+
+  it('keeps the pointer-only drag handle out of the tab order', () => {
+    renderDashboard();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'dashboard.configure' })
+    );
+
+    expect(
+      within(screen.getByRole('dialog')).queryAllByRole('button', {
+        name: 'dashboard.dragToMove',
+      })
+    ).toHaveLength(0);
+  });
+
   it('keeps working when the stored layout is unreadable', () => {
     localStorage.setItem(DASHBOARD_LAYOUT_STORAGE_KEY, '{not json');
 

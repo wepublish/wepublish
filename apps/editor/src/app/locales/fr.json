@@ -97,9 +97,12 @@
       }
     },
     "articleEditor": {
+      "unsavedChanges": "modifications non enregistrées",
+      "unpublishedChanges": "modifications pas encore publiées",
       "validationFailedGeneric": "Impossible d’enregistrer. Corrigez les erreurs signalées.",
       "saveValidationFailed": "Échec de l’enregistrement",
       "publishValidationFailed": "Échec de la publication",
+      "title": "Modifier l’article",
       "overview": {
         "articlePending": "Article en attente",
         "articlePublished": "Article publié",
@@ -233,6 +236,7 @@
         "paywall": "Paywall",
         "likeCount": "Likes",
         "tracking": "Suivi",
+        "hasErrors": "contient des erreurs",
         "likeCountInfo": "Nombre de « j’aime » que les lecteur·trice·s ont donnés à cet article sur le site. Vous pouvez corriger ce nombre ici si nécessaire.",
         "slugInfo": "La dernière partie de l’adresse web de l’article, p.ex. …/a/mon-article. Utilisez uniquement des minuscules, des chiffres et des tirets.",
         "hideAuthorsInfo": "Les auteur·trice·s ne sont pas affiché·e·s sur le site pour cet article. Ils et elles restent enregistré·e·s dans l’éditeur.",
@@ -351,7 +355,8 @@
           "style": "Style",
           "role": "Rôle",
           "styleInfo": "Nom de style optionnel pour le bouton, p.ex. « outline ». N’a d’effet que si votre site le prend en charge.",
-          "roleInfo": "« Principal » met le bouton en avant. « Annuler » ferme la bannière au lieu d’ouvrir le lien. « Autre » affiche un bouton normal."
+          "roleInfo": "« Principal » met le bouton en avant. « Annuler » ferme la bannière au lieu d’ouvrir le lien. « Autre » affiche un bouton normal.",
+          "group": "Action {{number}}"
         },
         "content": "Contenu",
         "mustNotBeNegative": "La valeur ne doit pas être négative",
@@ -447,6 +452,7 @@
           "invalidURL": "URL ou code iframe non valide",
           "socialMediaList": "Message/vidéo Facebook, message Instagram, tweet Twitter, vidéo Vimeo, vidéo YouTube, vidéo TikTok, conversation Polis formatée par exemple comme :"
         },
+        "tweetBy": "Tweet de @{{user}}",
         "streamableVideo": "Vidéo Streamable"
       },
       "event": {
@@ -848,6 +854,7 @@
         "areYouSure": "Êtes-vous sûr·e ?",
         "areYouSureBody": "L’évaluation « {{ answer }} » sera supprimée définitivement et cette action est irréversible.",
         "areYouSureConfirmation": "Supprimer l’évaluation",
+        "type": "Type",
         "loading": "Chargement",
         "newAnswer": "Ajouter une évaluation",
         "placeholder": "Nom de l’évaluation",
@@ -925,6 +932,7 @@
       "dragToMove": "Glisser pour déplacer",
       "moveUp": "Monter",
       "moveDown": "Descendre",
+      "cardMoved": "{{card}} déplacé en position {{position}} sur {{total}}",
       "resetLayout": "Rétablir par défaut",
       "configureDone": "Terminé",
       "activity": "Dernière activité",
@@ -961,7 +969,8 @@
       "nextSaturday": "Samedi prochain",
       "now": "Maintenant",
       "today": "Aujourd’hui",
-      "tomorrow": "Demain"
+      "tomorrow": "Demain",
+      "clear": "Effacer la date"
     },
     "deactivated": "Désactivé",
     "delete": "Supprimer",
@@ -1027,6 +1036,7 @@
         "cancelled": "Annulé",
         "description": "Description",
         "endsAt": "Fin",
+        "endsBeforeStart": "La fin ne peut pas précéder le début",
         "externalSource": "Source externe (pour les événements importés)",
         "image": "Image",
         "location": "Lieu",
@@ -1174,6 +1184,7 @@
         "uploadImage": "Téléverser une image",
         "urlPlaceholder": "https://www.lien.com",
         "focalPoint": "Point focal",
+        "focalPointPosition": "{{x}} % depuis la gauche, {{y}} % depuis le haut",
         "focalPointInfo": "Faites glisser le point sur la partie la plus importante de l’image. Lorsque l’image est recadrée, p.ex. dans les teasers, cette zone reste visible.",
         "descriptionInfo": "Décrivez ce que l’on voit sur l’image. Le texte sert de texte alternatif pour les personnes utilisant un lecteur d’écran et pour les moteurs de recherche.",
         "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien."
@@ -1251,6 +1262,7 @@
       "jwt": "Connexion en cours …"
     },
     "resetPassword": {
+      "title": "Réinitialiser le mot de passe",
       "description": "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
       "submit": "Envoyer le lien",
       "sent": "Si un compte existe avec cette adresse e-mail, un lien de réinitialisation a été envoyé. Veuillez vérifier votre boîte de réception.",
@@ -1269,6 +1281,7 @@
       "goToLogin": "Aller à la connexion"
     },
     "mailTemplates": {
+      "empty": "Aucun modèle d’e-mail pour le moment.",
       "availableTemplates": "Modèles d’e-mail disponibles",
       "cancel": "Annuler",
       "content": "Contenu",
@@ -1301,7 +1314,8 @@
         "sampleSubscriptionHelp": "Choisissez un abonnement existant pour remplir l’aperçu et l’e-mail de test avec ses données réelles. Sans sélection, des données d’exemple fictives sont utilisées. L’e-mail de test n’est envoyé qu’à vous.",
         "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
-        "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement."
+        "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
+        "bodyMode": "Mode d’édition"
       },
       "editor": {
         "undo": "Annuler",
@@ -1350,7 +1364,8 @@
         "appendJwtDone": "Jeton de connexion déjà présent — le destinataire est connecté au clic.",
         "frameTitle": "Éditeur du contenu de l’e-mail",
         "imageAltHelp": "Décrit l’image en quelques mots. Affiché si l’image ne se charge pas et lu par les lecteurs d’écran.",
-        "imageWidthHelp": "Laissez vide pour utiliser la taille d’origine. L’image n’est jamais plus large que l’e-mail."
+        "imageWidthHelp": "Laissez vide pour utiliser la taille d’origine. L’image n’est jamais plus large que l’e-mail.",
+        "toolbar": "Mise en forme"
       },
       "goToPlaceholders": "Espaces réservés disponibles",
       "htmlContent": "Contenu HTML",
@@ -1527,7 +1542,8 @@
         "optional_invoices_0_description": "Description de la dernière facture."
       },
       "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Envoyer un e-mail ».",
-      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel."
+      "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel.",
+      "searchPlaceholdersLabel": "Rechercher des espaces réservés"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
@@ -1610,6 +1626,8 @@
       "importableEvents": "Événements importables",
       "media": "Fichiers",
       "menu": "Menu",
+      "mainNavigation": "Navigation principale",
+      "skipToContent": "Aller au contenu principal",
       "colorMode": {
         "title": "Apparence",
         "light": "Clair",
@@ -1677,6 +1695,7 @@
         "linkTypeArticle": "Article",
         "linkTypePage": "Page",
         "linkTypeExternal": "Lien externe",
+        "linkType": "Type de lien",
         "keyInfo": "Nom technique utilisé par votre site pour trouver cette navigation, p.ex. « main » ou « footer ». À modifier uniquement en accord avec les personnes qui développent votre site."
       }
     },
@@ -1695,10 +1714,13 @@
     },
     "no": "Non",
     "pageEditor": {
+      "unsavedChanges": "modifications non enregistrées",
+      "unpublishedChanges": "modifications pas encore publiées",
       "validationFailedHeader": "Validation échouée",
       "validationFailedGeneric": "Impossible d’enregistrer. Corrigez les erreurs signalées.",
       "saveValidationFailed": "Échec de l’enregistrement",
       "publishValidationFailed": "Échec de la publication",
+      "title": "Modifier la page",
       "overview": {
         "createComment": "Créer un commentaire",
         "duplicate": "Dupliquer",
@@ -1926,7 +1948,9 @@
       "insertYourNewAnswer": "Saisir une nouvelle réponse",
       "urlCopied": "Lien de vote copié dans le presse-papiers.",
       "urlCopyingFailed": "Le lien de vote n’a pas pu être copié.",
-      "votes": "votes"
+      "votes": "votes",
+      "answerLabel": "Réponse {{number}}",
+      "deleteAnswer": "Supprimer la réponse « {{answer}} »"
     },
     "pollEditView": {
       "addAndSaveNewAnswer": "Ajouter une réponse",
@@ -1954,7 +1978,9 @@
       "emptySource": "Veuillez saisir le nom de la source.",
       "newSourcePlaceholder": "Nom de la source du vote (p. ex. Facebook)",
       "sourceHeaderCell": "Source",
-      "noPollAvailable": "Aucun sondage disponible."
+      "noPollAvailable": "Aucun sondage disponible.",
+      "deleteSource": "Supprimer la source « {{source}} »",
+      "votesFor": "Votes pour « {{answer}} » de la source {{source}}"
     },
     "pollList": {
       "closedAt": "Fermé le",
@@ -1972,6 +1998,8 @@
       "title": "Sondages"
     },
     "pollVoteList": {
+      "selectAll": "Sélectionner tous les votes",
+      "selectVote": "Sélectionner le vote du {{date}}",
       "createdAt": "Créé le",
       "answerId": "Réponse",
       "userId": "ID utilisateur",
@@ -1995,7 +2023,32 @@
     "richtext": {
       "menuBar": {
         "paragraph": "Paragraphe",
-        "heading": "Titre {{level}}"
+        "heading": "Titre {{level}}",
+        "undo": "Annuler",
+        "redo": "Rétablir",
+        "textStyle": "Style de texte",
+        "formatting": "Mise en forme du texte",
+        "bold": "Gras",
+        "italic": "Italique",
+        "underline": "Souligné",
+        "strike": "Barré",
+        "subscript": "Indice",
+        "superscript": "Exposant",
+        "textColor": "Couleur du texte",
+        "backgroundColor": "Couleur de fond",
+        "lists": "Listes",
+        "bulletList": "Liste à puces",
+        "orderedList": "Liste numérotée",
+        "alignment": "Alignement",
+        "alignLeft": "Aligner à gauche",
+        "alignCenter": "Centrer",
+        "alignRight": "Aligner à droite",
+        "link": "Lien",
+        "editLink": "Modifier le lien",
+        "table": "Insérer un tableau",
+        "codeBlock": "Bloc de code",
+        "blockquote": "Citation",
+        "invisibleCharacters": "Afficher les caractères invisibles"
       },
       "link": {
         "title": "Lier le texte avec",
@@ -2016,6 +2069,21 @@
       "colorPicker": {
         "clear": "Réinitialiser la couleur"
       },
+      "table": {
+        "columns": "Colonnes",
+        "rows": "Lignes",
+        "cells": "Cellules",
+        "addColumnBefore": "Insérer une colonne avant",
+        "addColumnAfter": "Insérer une colonne après",
+        "deleteColumn": "Supprimer la colonne",
+        "addRowBefore": "Insérer une ligne au-dessus",
+        "addRowAfter": "Insérer une ligne en dessous",
+        "deleteRow": "Supprimer la ligne",
+        "mergeCells": "Fusionner les cellules",
+        "splitCell": "Scinder la cellule",
+        "toggleHeader": "Cellule d'en-tête"
+      },
+      "dragHandle": "Faire glisser pour déplacer",
       "commands": {
         "table": "Tableau",
         "quote": "Citation",
@@ -2172,7 +2240,8 @@
           "description": "Part lorsqu’un abonnement est résilié – par la personne sur le site web ou par vous dans l’éditeur. La résiliation pour facture impayée est gérée par la chronologie.",
           "example": "« Dommage de vous voir partir – votre abonnement court jusqu’au 31 décembre. »"
         }
-      }
+      },
+      "moveMail": "Déplacer «{{title}}»"
     },
     "subscriptionList": {
       "filter": {
@@ -2673,6 +2742,7 @@
         "noActivityDay": "Aucun mouvement d’abonnement ce jour-là",
         "noActivityMonth": "Aucun mouvement d’abonnement ce mois-ci",
         "flowsTitle": "Entrées et sorties",
+        "keyboardHint": "Utilisez les flèches du clavier pour parcourir les dates. La vue tableau du tableau de bord Audience affiche les mêmes chiffres.",
         "net": "Solde",
         "since": "depuis le {{date}}",
         "flowsInfo": "Chaque barre montre combien d’abonnements ont été gagnés (au-dessus de la ligne) ou perdus (en dessous) par jour ou par mois. Survolez une barre pour voir le détail et le solde."
@@ -3247,8 +3317,7 @@
           "text": "Texte",
           "textPrimary": "La couleur du texte du site",
           "default": "Par défaut",
-          "paper": "Papier",
-          "pickColor": "Choisir la couleur"
+          "paper": "Papier"
         },
         "typography": {
           "fontFamily": "Famille de polices",
@@ -3258,6 +3327,7 @@
           "letterSpacing": "Espacement des lettres",
           "textTransform": "Transformation du texte",
           "textTransformDefault": "Par défaut",
+          "unitFor": "Unité pour {{label}}",
           "textTransformCapitalize": "Première lettre en majuscule",
           "textTransformUppercase": "Majuscules",
           "textTransformLowercase": "Minuscules",
@@ -4088,6 +4158,7 @@
       "message": "Les modifications que vous avez apportées ne seront peut-être pas enregistrées."
     },
     "action": "Actions",
+    "moreInfo": "Plus d’informations",
     "trackingPixels": {
       "errorHeader": "Erreur",
       "noPixelInfoDescription": "C’est le cas, par exemple, si aucun suivi n’est configuré ou pour les anciens articles.",
@@ -4122,13 +4193,16 @@
       "deleteBlock": "Supprimer le bloc",
       "moveBlockUp": "Déplacer le bloc vers le haut",
       "moveBlockDown": "Déplacer le bloc vers le bas",
+      "movedTo": "Bloc déplacé en position {{position}} sur {{count}}",
+      "deleted": "Bloc supprimé",
       "styleHelp": "Modifie l’apparence de ce bloc sur le site. Laissez vide pour l’affichage par défaut. Les styles se gèrent sous « Styles de blocs »."
     },
     "placeholderInput": {
       "add": "Ajouter"
     },
     "colorPicker": {
-      "pickColor": "Choisir la couleur"
+      "pickColor": "Choisir la couleur",
+      "pickColorFor": "Choisir la couleur : {{label}}"
     },
     "flexTile": {
       "moreActions": "Plus d’actions"
@@ -4157,12 +4231,22 @@
         "cancel": "Annuler"
       },
       "table": {
-        "empty": "Rien à afficher"
+        "empty": "Rien à afficher",
+        "label": "Tableau",
+        "loading": "Chargement",
+        "resizeColumn": "Redimensionner la colonne {{column}}"
       },
       "pagination": {
         "total": "{{count}} entrées",
         "pageSize": "Entrées par page",
-        "perPage": "{{count}} / page"
+        "perPage": "{{count}} / page",
+        "label": "Pagination",
+        "page": "Aller à la page {{page}}",
+        "currentPage": "Page {{page}}",
+        "first": "Aller à la première page",
+        "last": "Aller à la dernière page",
+        "next": "Aller à la page suivante",
+        "previous": "Aller à la page précédente"
       }
     },
     "dateRange": {
@@ -4185,6 +4269,8 @@
       "title": "Palette de commandes",
       "placeholder": "Où voulez-vous aller ?",
       "empty": "Aucun résultat pour",
+      "resultCount_one": "{{count}} résultat",
+      "resultCount_other": "{{count}} résultats",
       "groups": {
         "favourite": "Favoris",
         "navigate": "Aller à",
@@ -4373,7 +4459,8 @@
         "nothingToCompare": "L’audience Mailchimp n’a ni champs de contact ni groupes d’intérêt propres — aucune condition n’est possible.",
         "pickGroup": "Choisir un groupe …",
         "stored": "Enregistré dans le document",
-        "value": "Valeur"
+        "value": "Valeur",
+        "operator": "Comparaison"
       },
       "editor": {
         "back": "Retour à l’aperçu général",
@@ -4427,7 +4514,8 @@
         "mergeTagTitle": "Insérer une balise de fusion Mailchimp",
         "noTag": "Aucune balise trouvée.",
         "remove": "Retirer",
-        "searchTag": "Rechercher une balise …"
+        "searchTag": "Rechercher une balise …",
+        "linkUrl": "URL du lien"
       },
       "report": {
         "clipped": "Gmail tronque ce numéro et cache la fin — mentions légales, lien de désinscription et adresse — derrière «Message tronqué».",

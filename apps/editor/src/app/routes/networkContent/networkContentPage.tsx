@@ -153,6 +153,7 @@ export function NetworkContentPage() {
           <CardHeader>
             <Typography
               variant="h3"
+              component="h2"
               id="network-articles-title"
             >
               {t('networkContentPage.articlesTitle')}
@@ -166,23 +167,27 @@ export function NetworkContentPage() {
             onFiltersChange={handleFiltersChange}
           />
 
-          {loading && (
-            <CenteredContainer>
-              <CircularProgress />
-            </CenteredContainer>
-          )}
+          <div role="status">
+            {loading && (
+              <CenteredContainer>
+                <CircularProgress aria-label={t('loading')} />
+              </CenteredContainer>
+            )}
 
-          {!loading && error && (
-            <CenteredContainer>
-              <ErrorText>{t('networkContentDashboard.errorLoading')}</ErrorText>
-            </CenteredContainer>
-          )}
+            {!loading && error && (
+              <CenteredContainer>
+                <ErrorText>
+                  {t('networkContentDashboard.errorLoading')}
+                </ErrorText>
+              </CenteredContainer>
+            )}
 
-          {!loading && !error && articles.length === 0 && (
-            <CenteredContainer>
-              {t('networkContentDashboard.noArticles')}
-            </CenteredContainer>
-          )}
+            {!loading && !error && articles.length === 0 && (
+              <CenteredContainer>
+                {t('networkContentDashboard.noArticles')}
+              </CenteredContainer>
+            )}
+          </div>
 
           {!loading && !error && articles.length > 0 && (
             <FeedList>
@@ -212,6 +217,7 @@ export function NetworkContentPage() {
                   setLimit: () => undefined /* page size was fixed here */,
                 }}
                 totalCount={articleTotalCount}
+                label={t('networkContentPage.articlesTitle')}
               />
             </CardFooter>
           )}

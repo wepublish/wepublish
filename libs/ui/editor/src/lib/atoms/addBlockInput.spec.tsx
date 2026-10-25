@@ -72,6 +72,15 @@ describe('AddBlockInput', () => {
     expect(screen.getByText('blocks.groups.media')).toBeInTheDocument();
   });
 
+  it('exposes only menu items inside the menu, not stray list items', () => {
+    openMenu();
+
+    const menu = screen.getByRole('menu');
+
+    expect(within(menu).queryAllByRole('listitem')).toHaveLength(0);
+    expect(within(menu).getByText('blocks.groups.text')).toBeInTheDocument();
+  });
+
   it('leaves out a heading no block belongs to', () => {
     openMenu([ITEMS[2]]);
 
