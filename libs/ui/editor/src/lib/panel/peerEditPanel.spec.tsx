@@ -65,6 +65,29 @@ describe('PeerEditPanel', () => {
     expect(screen.queryByText('Partner profile')).not.toBeInTheDocument();
   });
 
+  it('marks name and URL as required, and the token only for a new peer', async () => {
+    renderPanel();
+
+    await screen.findByText('Partner profile');
+
+    const name = screen.getByRole('textbox', { name: /name/i });
+
+    expect(name).toBeRequired();
+    expect(screen.getByRole('textbox', { name: /URL/i })).toBeRequired();
+    expect(screen.getByRole('textbox', { name: /token/i })).not.toBeRequired();
+    expect(name.closest('form')).toHaveAttribute('novalidate');
+  });
+
+  it('names the information editor after its label', async () => {
+    renderPanel();
+
+    await screen.findByText('Partner profile');
+
+    expect(
+      screen.getByRole('textbox', { name: /information/i })
+    ).toHaveAttribute('contenteditable', 'true');
+  });
+
   it('drops the profile when the token is edited', async () => {
     renderPanel();
 

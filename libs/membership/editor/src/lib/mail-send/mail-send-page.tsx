@@ -20,7 +20,6 @@ import {
   DateRangeFilter,
   enqueueSnackbar,
   humanizeError,
-  InfoTooltip,
   ListViewContainer,
   ListViewHeader,
   Pagination,
@@ -57,9 +56,18 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Theme,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
-import { ReactElement, useEffect, useMemo, useState } from 'react';
+import {
+  ReactElement,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdd,
@@ -70,6 +78,7 @@ import {
 } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
 import { mailErrorHelpKey } from './mail-log-common';
+import { FieldLabel } from '../field-label';
 import {
   CancelJobButton,
   canResume,
@@ -173,6 +182,34 @@ function MailSendPage() {
   const [recipientsOpen, setRecipientsOpen] = useState(false);
   const [jobId, setJobId] = useState<string | null>(null);
   const [step, setStep] = useState(STEP_AUDIENCE);
+  const fieldId = useId();
+  const templateTitleId = `${fieldId}-template-title`;
+  const stepTitleRef = useRef<HTMLHeadingElement>(null);
+  const focusStepTitle = useRef(false);
+  const stepperVertical = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
+
+  const goToStep = (target: number) => {
+    focusStepTitle.current = true;
+    setStep(target);
+  };
+
+  useEffect(() => {
+    if (focusStepTitle.current) {
+      focusStepTitle.current = false;
+      stepTitleRef.current?.focus();
+    }
+  }, [step]);
+
+  const stepTitleProps = {
+    title: {
+      component: 'h2',
+      tabIndex: -1,
+      ref: stepTitleRef,
+      sx: { outline: 'none' },
+    },
+  } as const;
 
   const { data: templateData, refetch: refetchTemplates } =
     useQuery(MailTemplateDocument);
@@ -369,6 +406,7 @@ function MailSendPage() {
           <Stepper
             activeStep={step}
             nonLinear
+            orientation={stepperVertical ? 'vertical' : 'horizontal'}
             sx={{ marginTop: 3, marginBottom: 1 }}
           >
             {STEP_KEYS.map((key, index) => (
@@ -394,7 +432,10 @@ function MailSendPage() {
                 variant="outlined"
                 style={{ marginTop: 16 }}
               >
-                <CardHeader title={t('mailSend.audience.title')} />
+                <CardHeader
+                  title={t('mailSend.audience.title')}
+                  slotProps={stepTitleProps}
+                />
 
                 <CardContent>
                   <Stack
@@ -402,8 +443,12 @@ function MailSendPage() {
                     sx={{ width: '100%' }}
                   >
                     <FormControl fullWidth>
-                      <FormLabel>{t('mailSend.base.label')}</FormLabel>
+                      <FieldLabel
+                        id={`${fieldId}-f1`}
+                        label={t('mailSend.base.label')}
+                      />
                       <RadioGroup
+                        aria-labelledby={`${fieldId}-f1`}
                         value={base}
                         onChange={(_event, value) =>
                           setBase(value as MailRecipientBase)
@@ -446,10 +491,12 @@ function MailSendPage() {
                       <>
                         <Divider />
                         <FormControl fullWidth>
-                          <FormLabel>
-                            {t('mailSend.endedWindow.label')}
-                          </FormLabel>
+                          <FieldLabel
+                            id={`${fieldId}-f2`}
+                            label={t('mailSend.endedWindow.label')}
+                          />
                           <RadioGroup
+                            aria-labelledby={`${fieldId}-f2`}
                             row
                             value={endedMode}
                             onChange={(_event, value) =>
@@ -484,7 +531,13 @@ function MailSendPage() {
                                   }
                                 }}
                                 slotProps={{
-                                  htmlInput: { min: 1, max: 3650 },
+                                  htmlInput: {
+                                    min: 1,
+                                    max: 3650,
+                                    'aria-label': t(
+                                      'mailSend.endedWindow.relative'
+                                    ),
+                                  },
                                   input: {
                                     endAdornment: (
                                       <InputAdornment position="end">
@@ -519,7 +572,10 @@ function MailSendPage() {
                         </FormControl>
 
                         <FormControl fullWidth>
-                          <FormLabel>{t('mailSend.memberPlans')}</FormLabel>
+                          <FieldLabel
+                            id={`${fieldId}-f3`}
+                            label={t('mailSend.memberPlans')}
+                          />
                           <Autocomplete
                             multiple
                             disableCloseOnSelect
@@ -539,6 +595,13 @@ function MailSendPage() {
                               <TextField
                                 {...params}
                                 placeholder={t('mailSend.memberPlansAll')}
+                                slotProps={{
+                                  ...params.slotProps,
+                                  htmlInput: {
+                                    ...params.slotProps.htmlInput,
+                                    'aria-labelledby': `${fieldId}-f3`,
+                                  },
+                                }}
                               />
                             )}
                           />
@@ -550,7 +613,10 @@ function MailSendPage() {
                       <>
                         <Divider />
                         <FormControl fullWidth>
-                          <FormLabel>{t('mailSend.memberPlans')}</FormLabel>
+                          <FieldLabel
+                            id={`${fieldId}-f4`}
+                            label={t('mailSend.memberPlans')}
+                          />
                           <Autocomplete
                             multiple
                             disableCloseOnSelect
@@ -570,16 +636,24 @@ function MailSendPage() {
                               <TextField
                                 {...params}
                                 placeholder={t('mailSend.memberPlansAll')}
+                                slotProps={{
+                                  ...params.slotProps,
+                                  htmlInput: {
+                                    ...params.slotProps.htmlInput,
+                                    'aria-labelledby': `${fieldId}-f4`,
+                                  },
+                                }}
                               />
                             )}
                           />
                         </FormControl>
 
                         <FormControl fullWidth>
-                          <FormLabel>
-                            {t('mailSend.state.label')}{' '}
-                            <InfoTooltip text={t('mailSend.stateHelp')} />
-                          </FormLabel>
+                          <FieldLabel
+                            id={`${fieldId}-f5`}
+                            label={t('mailSend.state.label')}
+                            help={t('mailSend.stateHelp')}
+                          />
                           <TextField
                             select
                             value={subscriptionState ?? ''}
@@ -589,7 +663,12 @@ function MailSendPage() {
                               )
                             }
                             fullWidth
-                            slotProps={{ select: { displayEmpty: true } }}
+                            slotProps={{
+                              select: {
+                                displayEmpty: true,
+                                labelId: `${fieldId}-f5`,
+                              },
+                            }}
                           >
                             <MenuItem value="">
                               {t('mailSend.state.any')}
@@ -607,10 +686,11 @@ function MailSendPage() {
                         </FormControl>
 
                         <FormControl fullWidth>
-                          <FormLabel>
-                            {t('mailSend.autoRenew')}{' '}
-                            <InfoTooltip text={t('mailSend.autoRenewHelp')} />
-                          </FormLabel>
+                          <FieldLabel
+                            id={`${fieldId}-f6`}
+                            label={t('mailSend.autoRenew')}
+                            help={t('mailSend.autoRenewHelp')}
+                          />
                           <TextField
                             select
                             value={autoRenew ?? ''}
@@ -619,6 +699,7 @@ function MailSendPage() {
                               setAutoRenew(value ?? 'any');
                             }}
                             fullWidth
+                            slotProps={{ select: { labelId: `${fieldId}-f6` } }}
                           >
                             <MenuItem
                               key={'any'}
@@ -644,7 +725,10 @@ function MailSendPage() {
                         </FormControl>
 
                         <FormControl fullWidth>
-                          <FormLabel>{t('mailSend.paymentMethod')}</FormLabel>
+                          <FieldLabel
+                            id={`${fieldId}-f7`}
+                            label={t('mailSend.paymentMethod')}
+                          />
                           <TextField
                             select
                             value={paymentMethodID ?? ''}
@@ -652,7 +736,12 @@ function MailSendPage() {
                               setPaymentMethodID(event.target.value)
                             }
                             fullWidth
-                            slotProps={{ select: { displayEmpty: true } }}
+                            slotProps={{
+                              select: {
+                                displayEmpty: true,
+                                labelId: `${fieldId}-f7`,
+                              },
+                            }}
                           >
                             <MenuItem value="">{t('mailSend.any')}</MenuItem>
 
@@ -670,7 +759,10 @@ function MailSendPage() {
                         </FormControl>
 
                         <FormControl fullWidth>
-                          <FormLabel>{t('mailSend.periodicity')}</FormLabel>
+                          <FieldLabel
+                            id={`${fieldId}-f8`}
+                            label={t('mailSend.periodicity')}
+                          />
                           <TextField
                             select
                             value={periodicity ?? ''}
@@ -680,7 +772,12 @@ function MailSendPage() {
                               )
                             }
                             fullWidth
-                            slotProps={{ select: { displayEmpty: true } }}
+                            slotProps={{
+                              select: {
+                                displayEmpty: true,
+                                labelId: `${fieldId}-f8`,
+                              },
+                            }}
                           >
                             <MenuItem value="">{t('mailSend.any')}</MenuItem>
 
@@ -726,7 +823,10 @@ function MailSendPage() {
                         </FormControl>
 
                         <FormControl fullWidth>
-                          <FormLabel>{t('mailSend.isPaid')}</FormLabel>
+                          <FieldLabel
+                            id={`${fieldId}-f9`}
+                            label={t('mailSend.isPaid')}
+                          />
                           <TextField
                             select
                             value={isPaid ?? ''}
@@ -735,6 +835,7 @@ function MailSendPage() {
                               setIsPaid(value ?? 'any');
                             }}
                             fullWidth
+                            slotProps={{ select: { labelId: `${fieldId}-f9` } }}
                           >
                             <MenuItem
                               key={'any'}
@@ -763,7 +864,10 @@ function MailSendPage() {
                         </FormControl>
 
                         <FormControl fullWidth>
-                          <FormLabel>{t('mailSend.isCanceled')}</FormLabel>
+                          <FieldLabel
+                            id={`${fieldId}-f10`}
+                            label={t('mailSend.isCanceled')}
+                          />
                           <TextField
                             select
                             value={isCanceled ?? ''}
@@ -772,6 +876,9 @@ function MailSendPage() {
                               setIsCanceled(value ?? 'any');
                             }}
                             fullWidth
+                            slotProps={{
+                              select: { labelId: `${fieldId}-f10` },
+                            }}
                           >
                             <MenuItem
                               key={'any'}
@@ -800,9 +907,10 @@ function MailSendPage() {
                         </FormControl>
 
                         <FormControl fullWidth>
-                          <FormLabel>
-                            {t('mailSend.hasReplacedSubscription')}
-                          </FormLabel>
+                          <FieldLabel
+                            id={`${fieldId}-f11`}
+                            label={t('mailSend.hasReplacedSubscription')}
+                          />
                           <TextField
                             select
                             value={hasReplaced ?? ''}
@@ -811,6 +919,9 @@ function MailSendPage() {
                               setHasReplaced(value ?? 'any');
                             }}
                             fullWidth
+                            slotProps={{
+                              select: { labelId: `${fieldId}-f11` },
+                            }}
                           >
                             <MenuItem
                               key={'any'}
@@ -846,7 +957,7 @@ function MailSendPage() {
               {recipientSummary()}
 
               <StepNav
-                onNext={() => setStep(STEP_CONTENT)}
+                onNext={() => goToStep(STEP_CONTENT)}
                 nextDisabled={!stepComplete[STEP_AUDIENCE]}
               />
             </>
@@ -858,7 +969,12 @@ function MailSendPage() {
                 variant="outlined"
                 style={{ marginTop: 16 }}
               >
-                <CardHeader title={t('mailSend.template')} />
+                <CardHeader
+                  title={t('mailSend.template')}
+                  slotProps={{
+                    title: { ...stepTitleProps.title, id: templateTitleId },
+                  }}
+                />
 
                 <CardContent>
                   <div
@@ -869,7 +985,12 @@ function MailSendPage() {
                       value={templateId ?? ''}
                       onChange={event => setTemplateId(event.target.value)}
                       fullWidth
-                      slotProps={{ select: { displayEmpty: true } }}
+                      slotProps={{
+                        select: {
+                          displayEmpty: true,
+                          labelId: templateTitleId,
+                        },
+                      }}
                     >
                       <MenuItem value="">
                         {t('mailSend.selectTemplate')}
@@ -909,8 +1030,8 @@ function MailSendPage() {
               </Card>
 
               <StepNav
-                onBack={() => setStep(STEP_AUDIENCE)}
-                onNext={() => setStep(STEP_SEND)}
+                onBack={() => goToStep(STEP_AUDIENCE)}
+                onNext={() => goToStep(STEP_SEND)}
                 nextDisabled={!stepComplete[STEP_CONTENT]}
               />
             </>
@@ -922,7 +1043,10 @@ function MailSendPage() {
                 variant="outlined"
                 style={{ marginTop: 16 }}
               >
-                <CardHeader title={t('mailSend.summary.title')} />
+                <CardHeader
+                  title={t('mailSend.summary.title')}
+                  slotProps={stepTitleProps}
+                />
 
                 <CardContent>
                   <Stack
@@ -949,7 +1073,7 @@ function MailSendPage() {
               {jobId && <JobProgress jobId={jobId} />}
 
               <StepNav
-                onBack={jobId ? undefined : () => setStep(STEP_CONTENT)}
+                onBack={jobId ? undefined : () => goToStep(STEP_CONTENT)}
               />
             </>
           )}
@@ -965,10 +1089,16 @@ function MailSendPage() {
               recipientCount={count}
             />
           : <Card>
-              <CardHeader title={t('mailSend.preview.title')} />
+              <CardHeader
+                title={t('mailSend.preview.title')}
+                slotProps={{ title: { component: 'h2' } }}
+              />
 
               <CardContent>
-                <Alert severity="info">
+                <Alert
+                  severity="info"
+                  role="status"
+                >
                   {t('mailSend.selectTemplateHint')}
                 </Alert>
               </CardContent>
@@ -1048,7 +1178,7 @@ function RecipientSummary({
             sx={{ alignItems: 'center' }}
             spacing={1.5}
           >
-            <span>
+            <span role="status">
               {loading ?
                 t('mailSend.counting')
               : count === userCount ?
@@ -1147,6 +1277,7 @@ function TemplatePreview({
 }) {
   const { t } = useTranslation();
   const [recipientId, setRecipientId] = useState<string | null>(null);
+  const recipientLabelId = useId();
 
   const [shownAudience, setShownAudience] = useState(audience);
 
@@ -1206,11 +1337,19 @@ function TemplatePreview({
 
       <CardContent>
         {recipientCount === 0 ?
-          <Alert severity="info">{t('mailSend.preview.noRecipients')}</Alert>
+          <Alert
+            severity="info"
+            role="status"
+          >
+            {t('mailSend.preview.noRecipients')}
+          </Alert>
         : <>
             <div style={{ marginBottom: 12 }}>
               <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                <FormLabel style={{ margin: 0 }}>
+                <FormLabel
+                  id={recipientLabelId}
+                  style={{ margin: 0 }}
+                >
                   {t('mailSend.preview.recipient')}
                 </FormLabel>
                 <Autocomplete
@@ -1234,6 +1373,13 @@ function TemplatePreview({
                     <TextField
                       {...params}
                       placeholder={t('mailSend.preview.firstRecipient')}
+                      slotProps={{
+                        ...params.slotProps,
+                        htmlInput: {
+                          ...params.slotProps.htmlInput,
+                          'aria-labelledby': recipientLabelId,
+                        },
+                      }}
                     />
                   )}
                 />

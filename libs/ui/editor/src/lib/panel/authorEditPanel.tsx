@@ -28,7 +28,7 @@ import {
   CanGetAuthors,
 } from '@wepublish/permissions';
 import { slugify } from '@wepublish/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdLink } from 'react-icons/md';
@@ -55,7 +55,6 @@ import {
   FormSectionTitle,
 } from '../drawer';
 import { enqueueSnackbar } from '../snackbar';
-import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { generateID, getOperationNameFromDocument } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
@@ -104,6 +103,9 @@ const EMPTY_AUTHOR = {
 
 function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
   const { t } = useTranslation();
+  const bioLabelId = useId();
+  const linksLabelId = useId();
+  const tagsLabelId = useId();
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -259,7 +261,10 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
 
   return (
     <>
-      <DrawerForm onSubmit={handleSubmit(handleSave)}>
+      <DrawerForm
+        noValidate
+        onSubmit={handleSubmit(handleSave)}
+      >
         <DrawerHeader>
           <DrawerTitle>
             {id ?
@@ -296,7 +301,8 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
-                    label={toggleRequiredLabel(t('authors.panels.name'))}
+                    label={t('authors.panels.name')}
+                    required
                     disabled={isDisabled}
                     onChange={event => {
                       field.onChange(event);
@@ -338,77 +344,89 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
                 removeImage={() => setValue('image', undefined)}
               />
 
-              <FormLabel>{t('authors.panels.bioInformation')}</FormLabel>
+              <div>
+                <FormLabel id={bioLabelId}>
+                  {t('authors.panels.bioInformation')}
+                </FormLabel>
 
-              <Controller
-                control={control}
-                name="bio"
-                render={({ field }) => (
-                  <RichTextBlock
-                    disabled={isDisabled}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                )}
-              />
+                <Controller
+                  control={control}
+                  name="bio"
+                  render={({ field }) => (
+                    <RichTextBlock
+                      aria-labelledby={bioLabelId}
+                      disabled={isDisabled}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </div>
 
-              <FormLabel>{t('authors.panels.links')}</FormLabel>
+              <div
+                role="group"
+                aria-labelledby={linksLabelId}
+              >
+                <FormLabel id={linksLabelId}>
+                  {t('authors.panels.links')}
+                </FormLabel>
 
-              <Controller
-                control={control}
-                name="links"
-                render={({ field }) => (
-                  <ListInput
-                    disabled={isDisabled}
-                    value={field.value}
-                    onChange={field.onChange}
-                    defaultValue={emptyAuthorLink}
-                  >
-                    {({ value, onChange }) => (
-                      <Controls>
-                        <TextField
-                          name="title"
-                          placeholder={t('authors.panels.title')}
-                          value={value.title}
-                          onChange={event =>
-                            onChange({ ...value, title: event.target.value })
-                          }
-                          fullWidth
-                        />
+                <Controller
+                  control={control}
+                  name="links"
+                  render={({ field }) => (
+                    <ListInput
+                      disabled={isDisabled}
+                      value={field.value}
+                      onChange={field.onChange}
+                      defaultValue={emptyAuthorLink}
+                    >
+                      {({ value, onChange }) => (
+                        <Controls>
+                          <TextField
+                            name="title"
+                            label={t('authors.panels.title')}
+                            value={value.title}
+                            onChange={event =>
+                              onChange({ ...value, title: event.target.value })
+                            }
+                            fullWidth
+                          />
 
-                        <TextField
-                          name="link"
-                          placeholder={
-                            t('authors.panels.link') + ':https//link.com'
-                          }
-                          value={value.url}
-                          onChange={event =>
-                            onChange({ ...value, url: event.target.value })
-                          }
-                          slotProps={{
-                            input: {
-                              startAdornment: (
-                                <InputAdornment position="start">
-                                  <MdLink />
-                                </InputAdornment>
-                              ),
-                            },
-                          }}
-                          fullWidth
-                        />
-                      </Controls>
-                    )}
-                  </ListInput>
-                )}
-              />
+                          <TextField
+                            name="link"
+                            label={t('authors.panels.link')}
+                            placeholder={t('images.panels.urlPlaceholder')}
+                            value={value.url}
+                            onChange={event =>
+                              onChange({ ...value, url: event.target.value })
+                            }
+                            slotProps={{
+                              input: {
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <MdLink />
+                                  </InputAdornment>
+                                ),
+                              },
+                            }}
+                            fullWidth
+                          />
+                        </Controls>
+                      )}
+                    </ListInput>
+                  )}
+                />
+              </div>
 
-              <FormLabel>{t('authors.panels.tags')}</FormLabel>
+              <FormLabel id={tagsLabelId}>{t('authors.panels.tags')}</FormLabel>
 
               <Controller
                 control={control}
                 name="tagIds"
                 render={({ field }) => (
                   <SelectTags
+                    aria-labelledby={tagsLabelId}
                     name={field.name}
                     defaultTags={tags ?? []}
                     selectedTags={field.value}

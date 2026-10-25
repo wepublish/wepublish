@@ -129,4 +129,49 @@ describe('CrowdfundingForm', () => {
       expect(screen.getByText('CHF')).toBeInTheDocument();
     });
   });
+
+  describe('structure and labels', () => {
+    it('names the member plan picker and the goal type select', () => {
+      renderForm(CrowdfundingGoalType.Subscription);
+
+      expect(
+        screen.getByRole('combobox', { name: 'crowdfunding.form.memberPlans' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('combobox', { name: 'crowdfunding.form.goalType' })
+      ).toBeInTheDocument();
+    });
+
+    it('titles its sections as level-two headings without the help text', () => {
+      renderForm(CrowdfundingGoalType.Subscription);
+
+      expect(
+        screen.getByRole('heading', {
+          level: 2,
+          name: 'crowdfunding.form.filter',
+        })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          level: 2,
+          name: 'crowdfunding.form.goals',
+        })
+      ).toBeInTheDocument();
+    });
+
+    it('keeps the help buttons out of labels and headings', () => {
+      renderForm(CrowdfundingGoalType.Subscription);
+
+      for (const name of [
+        'crowdfunding.form.additionalSubscriptionsInfo',
+        'crowdfunding.form.memberPlansInfo',
+        'crowdfunding.form.goalsInfo',
+        'crowdfunding.form.goalTypeInfo',
+      ]) {
+        const buttons = screen.getAllByRole('button', { name });
+        expect(buttons).toHaveLength(1);
+        expect(buttons[0].closest('label, legend, h2, h3')).toBeNull();
+      }
+    });
+  });
 });

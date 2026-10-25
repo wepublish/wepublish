@@ -182,4 +182,33 @@ describe('UserSearch', () => {
 
     expect(clearIcon()).toBeNull();
   });
+
+  it('names its input with the label it is given', () => {
+    renderSearch(
+      <UserSearch
+        name="user"
+        label="Owner"
+        onUpdateUser={vi.fn()}
+      />
+    );
+
+    expect(screen.getByRole('combobox', { name: 'Owner' })).toBeInTheDocument();
+  });
+
+  it('can be named by a label rendered elsewhere', () => {
+    renderSearch(
+      <>
+        <span id="owner-label">Subscription owner</span>
+        <UserSearch
+          name="user"
+          aria-labelledby="owner-label"
+          onUpdateUser={vi.fn()}
+        />
+      </>
+    );
+
+    expect(
+      screen.getByRole('combobox', { name: 'Subscription owner' })
+    ).toBeInTheDocument();
+  });
 });

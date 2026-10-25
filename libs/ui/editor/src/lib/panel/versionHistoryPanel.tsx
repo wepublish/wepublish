@@ -441,7 +441,9 @@ export function VersionHistory({
                                 <Tooltip title={t('versionHistory.preview')}>
                                   <IconButton
                                     size="small"
-                                    aria-label={t('versionHistory.preview')}
+                                    aria-label={`${t(
+                                      'versionHistory.preview'
+                                    )} ${formatDate(revision.createdAt)}`}
                                     onClick={() => onPreview(revision.id)}
                                   >
                                     <MdVisibility />
@@ -455,7 +457,9 @@ export function VersionHistory({
                                     <IconButton
                                       size="small"
                                       color="primary"
-                                      aria-label={t('versionHistory.restore')}
+                                      aria-label={`${t(
+                                        'versionHistory.restore'
+                                      )} ${formatDate(revision.createdAt)}`}
                                       disabled={!!restoringId}
                                       onClick={() =>
                                         setPendingRestore(revision)
