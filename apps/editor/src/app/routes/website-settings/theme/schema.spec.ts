@@ -1,6 +1,17 @@
 import i18n from 'i18next';
 
-import { normalizeValues, paletteSchema, typographyItem } from './schema';
+import {
+  normalizeTheme,
+  normalizeValues,
+  paletteSchema,
+  typographyItem,
+  typographySchema,
+} from './schema';
+import { mediaQuery } from './typography-breakpoints';
+
+const sm = mediaQuery('sm');
+const md = mediaQuery('md');
+const xl = mediaQuery('xl');
 
 const messages = (result: { error?: { issues: { message: string }[] } }) =>
   result.error?.issues.map(issue => issue.message);
@@ -58,6 +69,16 @@ describe('theme schema validation messages', () => {
     ]);
   });
 
+  it('allows the same line height range on the base as on every style', () => {
+    const base = typographySchema.shape.allVariants.shape.lineHeight;
+
+    expect(messages(base.safeParse('0.5em'))).toEqual(['Between 1em and 3em']);
+    expect(base.safeParse('3em').success).toBe(true);
+    expect(messages(base.safeParse('4em'))).toEqual(
+      messages(typographyItem.shape.lineHeight.safeParse('4em'))
+    );
+  });
+
   it('follows the language at validation time, not at import time', async () => {
     await i18n.changeLanguage('de');
 
@@ -79,5 +100,62 @@ describe('normalizeValues colours', () => {
 
   it('leaves hex colours untouched', () => {
     expect(normalizeValues('#0288d1', 'color')).toBe('#0288d1');
+  });
+});
+
+describe('typography breakpoints', () => {
+  it('parses sparse media query overrides', () => {
+    const result = typographyItem.safeParse({
+      fontSize: '2rem',
+      [xl]: { lineHeight: '1.2em' },
+      [md]: { fontSize: '3rem' },
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.data).toEqual({
+      fontSize: '2rem',
+      [md]: { fontSize: '3rem' },
+      [xl]: { lineHeight: '1.2em' },
+    });
+    expect(Object.keys(result.data ?? {})).toEqual(['fontSize', md, xl]);
+  });
+
+  it('has no breakpoints object and strips unknown media queries', () => {
+    const result = typographyItem.safeParse({
+      breakpoints: { md: { fontSize: '3rem' } },
+      '@media (min-width:1234px)': { fontSize: '3rem' },
+    });
+
+    expect(result.data).toEqual({});
+  });
+
+  it('rejects an override outside the allowed range', () => {
+    expect(
+      typographyItem.safeParse({ [md]: { fontSize: '100em' } }).success
+    ).toBe(false);
+  });
+
+  it('only keeps size, line height and letter spacing per breakpoint', () => {
+    const result = typographyItem.safeParse({
+      [sm]: { fontFamily: 'Lora', letterSpacing: '0.01em' },
+    });
+
+    expect(result.data).toEqual({
+      [sm]: { letterSpacing: '0.01em' },
+    });
+  });
+
+  it('keeps the media queries when normalizing', () => {
+    expect(
+      normalizeTheme({
+        typography: {
+          h1: { fontSize: 32, [md]: { fontSize: 48 } },
+        },
+      })
+    ).toEqual({
+      typography: {
+        h1: { fontSize: '32px', [md]: { fontSize: '48px' } },
+      },
+    });
   });
 });
