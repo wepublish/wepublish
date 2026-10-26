@@ -58,3 +58,35 @@ describe('TeaserListBlockResolver most read articles', () => {
     expect(skipAnswerCache).not.toHaveBeenCalled();
   });
 });
+
+describe('TeaserListBlockResolver events', () => {
+  it('fills event teasers from the public events with the given tags', async () => {
+    const getPublicEvents = vi.fn().mockResolvedValue({
+      nodes: [{ id: 'event-1' }],
+    });
+    const resolver = new TeaserListBlockResolver(
+      { getPublicEvents } as never,
+      {} as never,
+      {} as never,
+      {} as never
+    );
+
+    await expect(
+      resolver.teasers(
+        {
+          teaserType: TeaserType.Event,
+          sort: TeaserListBlockSort.PublishedAt,
+          skip: 0,
+          take: 3,
+          filter: { tags: ['tag-1'] },
+        } as unknown as TeaserListBlock,
+        { req: {} }
+      )
+    ).resolves.toEqual([
+      expect.objectContaining({ eventID: 'event-1', type: TeaserType.Event }),
+    ]);
+    expect(getPublicEvents).toHaveBeenCalledWith(
+      expect.objectContaining({ filter: { tagIds: ['tag-1'] }, take: 3 })
+    );
+  });
+});

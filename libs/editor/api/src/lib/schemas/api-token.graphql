@@ -18,6 +18,12 @@ fragment FullApiToken on ApiToken {
     id
     name
   }
+
+  organizationId
+
+  organization {
+    ...TinyOrganization
+  }
 }
 
 query ApiTokenList(
@@ -53,8 +59,14 @@ mutation CreateApiToken(
   $name: String!
   $scopes: [String!]!
   $expiresAt: DateTime!
+  $organizationId: String
 ) {
-  createApiToken(name: $name, scopes: $scopes, expiresAt: $expiresAt) {
+  createApiToken(
+    name: $name
+    scopes: $scopes
+    expiresAt: $expiresAt
+    organizationId: $organizationId
+  ) {
     token
 
     apiToken {

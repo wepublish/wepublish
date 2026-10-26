@@ -17,7 +17,14 @@ import {
   TagSort,
   TagType,
 } from '@wepublish/editor/api';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { humanizeError } from '../../humanizeError';
@@ -41,6 +48,10 @@ interface SelectTagsProps {
   selectedTags?: string[] | null;
   setSelectedTags(tags: string[]): void;
   placeholder?: string;
+  label?: string;
+  helperText?: ReactNode;
+  error?: boolean;
+  maxTags?: number;
 }
 
 type LabelledOption = { label: string; value: string };
@@ -54,6 +65,10 @@ export function SelectTags({
   selectedTags,
   setSelectedTags,
   placeholder,
+  label,
+  helperText,
+  error,
+  maxTags,
 }: SelectTagsProps) {
   const { t } = useTranslation();
   const client = useApolloClient();
@@ -208,6 +223,11 @@ export function SelectTags({
         ),
       ]}
       getOptionLabel={id => labelFor(id)}
+      getOptionDisabled={id =>
+        maxTags != null &&
+        (selectedTags ?? []).length >= maxTags &&
+        !(selectedTags ?? []).includes(id)
+      }
       filterOptions={options => options}
       onInputChange={(_event, word) => {
         setPage(1);
@@ -221,6 +241,9 @@ export function SelectTags({
           {...params}
           name={name}
           placeholder={placeholder}
+          label={label}
+          helperText={helperText}
+          error={error}
         />
       )}
       fullWidth

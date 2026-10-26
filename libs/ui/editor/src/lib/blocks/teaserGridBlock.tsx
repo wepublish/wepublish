@@ -442,12 +442,7 @@ export function ContentForTeaser({
         <TeaserContent
           image={teaser.image ?? teaser.event.image ?? undefined}
           title={teaser.title ?? teaser.event.name ?? ''}
-          lead={
-            teaser.lead ||
-            teaser.event.lead ||
-            teaser.event.location ||
-            undefined
-          }
+          lead={teaser.lead || teaser.event.location || undefined}
           numColumns={numColumns}
         />
       );

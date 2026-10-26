@@ -951,7 +951,8 @@
       "goToNetwork": "Go to Network",
       "welcome": "Welcome to the dashboard!",
       "externalAppsInfo": "Shortcuts to tools your team uses alongside We.Publish. Admins manage them under «Apps».",
-      "networkContentInfo": "The latest articles from other media in the We.Publish network. You can take them over into your editor (import) and publish them on your website."
+      "networkContentInfo": "The latest articles from other media in the We.Publish network. You can take them over into your editor (import) and publish them on your website.",
+      "reviewQueue": "Review queue"
     },
     "dateTimePicker": {
       "yesterday": "Yesterday",
@@ -1613,6 +1614,8 @@
       "dashboard": "Dashboard",
       "notifications": "Notifications",
       "events": "Events",
+      "organizations": "Organisations",
+      "venues": "Venues",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
       "imageLibrary": "Images",
@@ -1653,7 +1656,8 @@
       "mailLog": "Sent emails",
       "communication": "Communication",
       "auditLog": "Audit log",
-      "language": "Language"
+      "language": "Language",
+      "agenda": "Agenda"
     },
     "navigation": {
       "overview": {
@@ -4135,7 +4139,16 @@
     },
     "listInput": {
       "dragToReorder": "Drag to change the order",
-      "add": "Add entry"
+      "add": "Add entry",
+      "announcements": {
+        "instructions": "To reorder, press Space or Enter on the handle, move with the arrow keys, then press Space or Enter again. Escape cancels.",
+        "start": "Picked up entry {{position}} of {{total}}.",
+        "over": "Moved to position {{position}} of {{total}}.",
+        "end": "Dropped at position {{position}} of {{total}}.",
+        "cancel": "Reordering cancelled, the order is unchanged."
+      },
+      "reorderItem": "Move entry {{index}}",
+      "deleteItem": "Delete entry {{index}}"
     },
     "errorBoundary": {
       "title": "Something went wrong on this page",
@@ -4210,6 +4223,8 @@
         "commentTag": "Create comment tag",
         "event": "Create event",
         "eventTag": "Create event tag",
+        "organization": "Create organisation",
+        "venue": "Create venue",
         "image": "Upload image",
         "document": "Upload document",
         "navigation": "Create navigation",
@@ -4260,7 +4275,9 @@
         "owner": "Owner",
         "ownerUnknown": "Deleted user",
         "filterByOwner": "Filter by owner",
-        "anyStatus": "Any status"
+        "anyStatus": "Any status",
+        "organization": "Organization",
+        "platformKey": "Platform key"
       },
       "panels": {
         "generateToken": "Create API key",
@@ -4269,6 +4286,8 @@
         "name": "Name",
         "scopes": "Permissions",
         "scopesHelp": "You can only grant permissions you hold yourself.",
+        "organization": "Organization",
+        "organizationHelp": "The key can then only reach this organization and its events. Leave empty for a platform key that only its permissions limit.",
         "creationSuccess": "Your API key has been created.",
         "copy": "Copy key",
         "copied": "Key copied",
@@ -4452,6 +4471,521 @@
         "heading": "Settings",
         "title": "Title",
         "titleHint": "Also the subject line of the Mailchimp draft. Takes effect on save."
+      }
+    },
+    "agenda": {
+      "status": {
+        "Confirmed": "Confirmed",
+        "Cancelled": "Cancelled",
+        "Postponed": "Postponed",
+        "SoldOut": "Sold out"
+      },
+      "publication": {
+        "draft": "Draft",
+        "pending": "Scheduled",
+        "published": "Published",
+        "reviewRequested": "Review requested",
+        "reviewRequestedAgo": "Review requested · {{time}}"
+      },
+      "list": {
+        "title": "Events",
+        "untitled": "Untitled event",
+        "name": "Name",
+        "nextDate": "Next date",
+        "venue": "Venue",
+        "organization": "Organisation",
+        "status": "Status",
+        "publication": "Publication",
+        "lastDate": "Last date",
+        "modified": "Last changed",
+        "noUpcomingDates": "No upcoming dates",
+        "moreDates_one": "+{{count}} more date",
+        "moreDates_other": "+{{count}} more dates",
+        "endsIn_one": "Ends in {{count}} day",
+        "endsIn_other": "Ends in {{count}} days",
+        "endsToday": "Ends today",
+        "endsInHint": "The last date of this weekly series is near. Add later dates so it stays in the agenda.",
+        "unpublish": "Unpublish",
+        "unpublishTitle": "Unpublish event?",
+        "unpublishBody": "“{{name}}” disappears from the public agenda. Its content stays as a draft.",
+        "confirmUnpublish": "Unpublish",
+        "deleteTitle": "Delete event?",
+        "deleteBody": "“{{name}}” and all its dates are deleted. This cannot be undone.",
+        "confirmDelete": "Delete event",
+        "filter": {
+          "search": "Search",
+          "organization": "Organisation",
+          "place": "Venue",
+          "tags": "Tags",
+          "status": "Status",
+          "publication": "Publication",
+          "dates": "Dates",
+          "ending": "End of run",
+          "endingAny": "Any",
+          "endingSoon": "Ending within 30 days",
+          "endingEnded": "Ended",
+          "reviewRequested": "Review requested"
+        },
+        "empty": {
+          "noEventsTitle": "No events yet",
+          "noEventsBody": "The agenda lists what happens: concerts, exhibitions, performances. Events appear here as soon as they are created.",
+          "noEventsMembershipHint": "Events of an organisation appear here once you are a member of it.",
+          "noMembershipTitle": "You are not a member of any organisation yet",
+          "noMembershipBody": "This list shows the events of your organisations and the events you own. Ask an agenda administrator to add you to your organisation.",
+          "noResultsTitle": "No events match these filters",
+          "noResultsSearch": "Nothing found for “{{search}}”.",
+          "clearFilters": "Clear filters",
+          "queueEmptyTitle": "Nothing waiting for review",
+          "queueEmptyBody": "Every event sent for review has been dealt with.",
+          "createFirst": "Create your first event"
+        },
+        "newEvent": "New event",
+        "duplicate": "Duplicate",
+        "extend": "Extend"
+      },
+      "reviewQueue": {
+        "title": "Review queue",
+        "info": "Drafts whose organisers asked for them to be checked and published, oldest first.",
+        "count_one": "{{count}} event awaiting review",
+        "count_other": "{{count}} events awaiting review",
+        "empty": "Nothing waiting for review",
+        "open": "Open queue"
+      },
+      "schedule": {
+        "legend": "When does it happen?",
+        "modes": {
+          "Continuous": {
+            "label": "Once, or over consecutive days",
+            "example": "A concert, a vernissage, the run of an exhibition"
+          },
+          "Weekly": {
+            "label": "Every week on certain days",
+            "example": "An exhibition open Thursdays to Sundays"
+          },
+          "Explicit": {
+            "label": "On specific dates",
+            "example": "Several performances on dates you choose"
+          }
+        },
+        "span": {
+          "continuous": {
+            "dateFrom": "Start date",
+            "timeFrom": "Start time",
+            "dateTo": "End date",
+            "timeTo": "End time"
+          },
+          "weekly": {
+            "dateFrom": "First day",
+            "timeFrom": "Each date starts at",
+            "dateTo": "Last day",
+            "timeTo": "Each date ends at"
+          }
+        },
+        "overnight": "An end time earlier than the start runs into the next morning.",
+        "openingTime": "Doors open",
+        "optional": "Optional",
+        "weekDays": "On these days",
+        "horizon": "Dates can be set up to {{date}}. For a longer run, add the later dates nearer the time.",
+        "countWeekly_one": "→ {{count}} date, {{from}}–{{to}}",
+        "countWeekly_other": "→ {{count}} dates, each {{from}}–{{to}}",
+        "countExplicit_one": "→ {{count}} date",
+        "countExplicit_other": "→ {{count}} dates",
+        "addDate": "Add date",
+        "duplicateLast": "Duplicate last",
+        "row": {
+          "date": "Date",
+          "timeFrom": "From",
+          "timeTo": "To",
+          "openingTime": "Doors"
+        },
+        "rowDate": "Date of entry {{position}}",
+        "rowTimeFrom": "Start time of entry {{position}}",
+        "rowTimeTo": "End time of entry {{position}}",
+        "rowOpeningTime": "Door time of entry {{position}}",
+        "problems": {
+          "MissingDateRange": "Enter a date and a time for the start and the end.",
+          "MissingDates": "Add at least one date.",
+          "IncompleteDates": "Every entry needs a date, a start time and an end time.",
+          "DateToBeforeDateFrom": "The end is before the start.",
+          "InvalidOpeningTime": "Write the door time as HH:MM, for example 19:30.",
+          "MissingWeekDays": "Pick at least one day",
+          "InvalidWeekDays": "Pick days from Monday to Sunday, each once.",
+          "BeyondScheduleHorizon": "Dates can be set up to {{date}}. End the run on that day or earlier, and add later dates nearer the time.",
+          "SpanTooLongToPreview": "This run is longer than ten years, so its dates are not counted. Check the first day."
+        }
+      },
+      "images": {
+        "title": "Images",
+        "add": "Add images",
+        "main": "Main image",
+        "caption": "Caption",
+        "captionHelp": "Shown below the image, for example the photo credit.",
+        "altText": "Alt text",
+        "altTextHelp": "Describes the image for people who cannot see it. Every article that uses this image shares it.",
+        "altTextMissing": "No alt text yet: screen reader users will not know what the image shows.",
+        "altTextLong": "Keep alt text to {{max}} characters; screen readers read it in one go."
+      },
+      "rates": {
+        "title": "Prices",
+        "add": "Add price",
+        "priceLabel": "Price",
+        "pricePlaceholder": "CHF 25",
+        "designationLabel": "For whom",
+        "designationPlaceholder": "Reduced, students, …",
+        "price": "Price {{position}}",
+        "designation": "Who price {{position}} is for",
+        "specialRate": "Special rate",
+        "special": {
+          "none": "None",
+          "FreeEntry": "Free entry",
+          "FreePrice": "Pay what you like, or a collection"
+        }
+      },
+      "form": {
+        "tags": "Tags",
+        "tagsHelp": "Pick one to {{max}} tags.",
+        "tagsAtMax": "An event has at most {{max}} tags. Remove one to pick another.",
+        "place": "Venue",
+        "placeHelp": "The venues you may file events at.",
+        "placeNone": "There is no venue you can file events at yet. The agenda lists events by venue, so ask an agenda administrator to add yours.",
+        "audience": "Audience",
+        "audienceNone": "Not specified",
+        "organization": "Organisation",
+        "organizationHelpMine": "One of your organisations. Its members can edit the event.",
+        "organizationHelpAll": "The organisation that runs the event. Its members can edit it.",
+        "organizationLocked": "Only a member of the event’s organisation can move it, and only to an organisation of their own. Agenda administrators can move any event.",
+        "organizationKeep": "You can move the event to another of your organisations. Only its owner can leave it without an organisation, because it would drop out of your agenda.",
+        "owner": "Owner",
+        "ownerYou": "You",
+        "ownerYouHelp": "You own the events you create and can edit them without being in an organisation.",
+        "ownerNone": "No owner",
+        "ownerLocked": "Only agenda administrators can hand an event to another owner.",
+        "ownerPickHelp": "Leave empty to own the event yourself.",
+        "ownerReassignHelp": "The owner can edit the event without being in its organisation.",
+        "errors": {
+          "nameRequired": "Give the event a name.",
+          "nameTooLong": "Use at most {{max}} characters.",
+          "printDescriptionTooLong": "Use at most {{max}} characters.",
+          "descriptionTooLong": "The description may have at most {{max}} characters.",
+          "captionTooLong": "Use at most {{max}} characters.",
+          "tagsRequired": "Pick at least {{min}} tag.",
+          "tagsTooMany": "Pick at most {{max}} tags.",
+          "tagsDistinct": "Pick each tag only once.",
+          "ratePrice": "Enter a price, or remove the row.",
+          "ticketingUrl": "Start the link with one of: {{schemes}}."
+        },
+        "placeCreate": "Create a venue (opens in a new tab)",
+        "invalid": "Some fields need your attention before saving. They are marked in red."
+      },
+      "editor": {
+        "name": "Name",
+        "namePlaceholder": "What is the event called?",
+        "nameCount": "{{current}}/{{max}} characters",
+        "descriptionCount": "Description: {{current}}/{{max}} characters",
+        "metadata": "Metadata",
+        "back": "Back to the events",
+        "duplicate": "Duplicate",
+        "lastChanged": "Last saved {{date}}",
+        "readOnly": "You can look at this event but not change it. Members of {{organization}} with editing rights can, and so can the agenda administrators.",
+        "agendaTeam": "the agenda team",
+        "invalid": "Some fields need your attention before the event can be saved. They are marked in red.",
+        "saved": "Event saved",
+        "created": "Event created",
+        "createdWithProblems": "The event was created, but not everything could be saved: {{problems}}",
+        "saveResult": {
+          "saved": "Saved: {{groups}}.",
+          "notSaved": "Not saved: {{groups}}.",
+          "kept": "Your changes are still here. Fix the problem and save again."
+        },
+        "saveGroups": {
+          "facts": "dates, venue and other details",
+          "content": "name, text and images",
+          "altText": "alt texts"
+        },
+        "tabs": {
+          "general": "General",
+          "dates": "Dates",
+          "pricing": "Pricing",
+          "social": "Social Media"
+        },
+        "sections": {
+          "content": "Text and images",
+          "facts": "Details",
+          "search": "Search engines",
+          "social": "Social media"
+        },
+        "printDescription": "Print blurb",
+        "printDescriptionHelp": "A short text for the printed agenda. {{current}}/{{max}} characters",
+        "status": "Status",
+        "statusHelp": "Whether the event still takes place. A cancelled event stays visible, marked as cancelled.",
+        "showInPrint": "Show in the printed agenda",
+        "ticketingUrl": "Ticket link",
+        "ticketingUrlHelp": "Where people buy tickets. Starts with {{schemes}}.",
+        "social": {
+          "slug": "Slug",
+          "slugHelp": "The last part of the event’s address. Leave empty to have one made from the name.",
+          "seoTitle": "SEO title",
+          "seoTitleHelp": "Shown by search engines. Leave empty to use the name.",
+          "seoDescription": "SEO description",
+          "seoDescriptionHelp": "Shown by search engines. Leave empty to use the print blurb.",
+          "socialMediaTitle": "Social media title",
+          "socialMediaTitleHelp": "Shown when the event is shared. Leave empty to use the SEO title or the name.",
+          "socialMediaDescription": "Social media description",
+          "socialMediaDescriptionHelp": "Shown when the event is shared. Leave empty to use the SEO description or the print blurb.",
+          "socialMediaImage": "Social media image"
+        },
+        "state": {
+          "new": "New event",
+          "scheduled": "Scheduled for {{date}}",
+          "publishedWithDraft": "Published · unpublished changes"
+        },
+        "publish": {
+          "button": "Publish",
+          "title": "Publish event",
+          "body": "The name, text and images go live. Dates and details are live already.",
+          "now": "Now",
+          "later": "At a later moment",
+          "at": "Date and time (Swiss time)",
+          "atHelp": "The event appears in the public agenda at this moment.",
+          "inThePast": "This moment has passed. Choose one in the future, or publish now.",
+          "confirm": "Publish",
+          "published": "Event published",
+          "scheduled": "Publication scheduled",
+          "nothingNew": "Nothing new to publish. Change the name, text or images first."
+        },
+        "unpublish": {
+          "button": "Unpublish",
+          "title": "Unpublish event?",
+          "body": "The event disappears from the public agenda. Its content stays as a draft.",
+          "confirm": "Unpublish",
+          "done": "Event unpublished"
+        },
+        "review": {
+          "request": "Ready for review",
+          "withdraw": "Withdraw request",
+          "confirmTitle": "Send the event for review?",
+          "confirmBody": "{{organization}} can then check the event and publish it. It stays a draft until then, and you can withdraw the request.",
+          "confirmBodyAgendaTeam": "The agenda team can then check the event and publish it. It stays a draft until then, and you can withdraw the request.",
+          "confirm": "Send for review",
+          "requested": "Review requested",
+          "withdrawn": "Review request withdrawn",
+          "nothingNew": "Nothing new to send for review. Change the event and save it first."
+        },
+        "occurrences": {
+          "title_one": "{{count}} upcoming date",
+          "title_other": "{{count}} upcoming dates",
+          "none": "No date lies ahead. Saved dates show here."
+        },
+        "heading": "Event: {{name}}",
+        "headingNew": "New event"
+      },
+      "organizations": {
+        "list": {
+          "title": "Organisations",
+          "create": "New organisation",
+          "name": "Name",
+          "location": "Postcode and city",
+          "status": "Status",
+          "markers": "Notes",
+          "active": "Active",
+          "inactive": "Inactive",
+          "empty": "No organisations yet. Organisations run events and own venues.",
+          "emptyMine": "You are not a member of any organisation. Turn off “Only my organisations” to see the others, or ask the agenda team to add you to yours.",
+          "emptyFiltered": "No organisation matches these filters.",
+          "deleteTitle": "Delete organisation?",
+          "deleteBody": "“{{name}}” is deleted. Its events and venues stay, without an organisation. This cannot be undone.",
+          "confirmDelete": "Delete organisation"
+        },
+        "filter": {
+          "search": "Search by name",
+          "mine": "Only my organisations",
+          "enabled": "Status",
+          "members": "Members",
+          "membersSome": "Has members",
+          "membersNone": "No members",
+          "partner": "Partner",
+          "migrated": "Created by the migration",
+          "yes": "Yes",
+          "no": "No"
+        },
+        "markers": {
+          "noMembers": "No members",
+          "noMembersHint": "Nobody receives the notifications about its events and venues.",
+          "partner": "Partner",
+          "migrated": "From the migration",
+          "migratedHint": "Created by the data migration from the old agenda. Check its details."
+        },
+        "form": {
+          "createTitle": "New organisation",
+          "editTitle": "Organisation: {{name}}",
+          "saved": "Organisation saved",
+          "created": "Organisation created",
+          "delete": "Delete",
+          "readOnly": "You can look at this organisation but not change it. Its members with editing rights can, and so can the agenda administrators.",
+          "sections": {
+            "details": "Details",
+            "address": "Address",
+            "categories": "Categories and memberships",
+            "contacts": "Contacts",
+            "status": "Status"
+          },
+          "name": "Name",
+          "subTitle": "Subtitle",
+          "about": "About",
+          "website": "Website",
+          "legalStatus": "Legal form",
+          "legalStatusNone": "Not specified",
+          "address": "Street and number",
+          "postOfficeBox": "PO box",
+          "zip": "Postcode",
+          "city": "City",
+          "region": "Region",
+          "regionNone": "No region",
+          "tags": "Categories",
+          "tagsHelp": "Up to {{max}} categories, the same ones events use.",
+          "tagsAtMax": "That is the maximum of {{max}} categories. Remove one to pick another.",
+          "affiliations": "Memberships and discounts",
+          "affiliationsHelp": "Which passes and discounts the organisation accepts, such as Kulturlegi.",
+          "enabled": "Active",
+          "enabledHelp": "Inactive organisations are hidden from the public and cannot file events.",
+          "partner": "Partner — events qualify for the print edition",
+          "partnerHelp": "Every event this organisation runs can appear in the printed agenda.",
+          "privilegedLocked": "Only the agenda administrators can change this."
+        },
+        "contacts": {
+          "add": "Add contact",
+          "help": "Up to {{max}} email addresses and phone numbers, each with an optional label.",
+          "atMax": "That is the maximum of {{max}} contacts.",
+          "labelLabel": "Label",
+          "emailLabel": "Email",
+          "phoneLabel": "Phone",
+          "label": "Label of contact {{position}}",
+          "email": "Email of contact {{position}}",
+          "phone": "Phone of contact {{position}}"
+        },
+        "members": {
+          "title": "Members",
+          "add": "Add a member",
+          "addHelp": "Search people by name or email. Members can edit the organisation’s events and venues and receive its notifications.",
+          "remove": "Remove {{name}}",
+          "since": "Member since {{date}}",
+          "noneTitle": "This organisation has no members",
+          "noneBody": "Notifications about its events and venues reach nobody. Add at least one person who looks after it.",
+          "manageLocked": "Only the agenda administrators can add or remove members."
+        },
+        "venues": {
+          "title": "Venues",
+          "none": "This organisation has no venues yet. Events need a venue, so its members cannot file any until one exists.",
+          "create": "Create a venue for this organisation"
+        },
+        "errors": {
+          "nameRequired": "Give the organisation a name.",
+          "nameTooLong": "At most {{max}} characters.",
+          "zipTooLong": "At most {{max}} characters.",
+          "tagsTooMany": "At most {{max}} categories.",
+          "contactsTooMany": "At most {{max}} contacts.",
+          "contactNeedsEmailOrPhone": "Enter an email address or a phone number.",
+          "contactEmailInvalid": "This is not a valid email address.",
+          "contactLabelTooLong": "At most {{max}} characters."
+        },
+        "legalStatus": {
+          "association": "Association",
+          "entreprise_individuelle": "Sole proprietorship",
+          "societe_simple": "Simple partnership",
+          "societe_collectif": "General partnership",
+          "societe_commandite": "Limited partnership",
+          "societe_anonyme": "Public limited company (AG)",
+          "societe_responsabilite_limitee": "Limited liability company (GmbH)",
+          "societe_cooperative": "Cooperative",
+          "fondation": "Foundation",
+          "collectif": "Collective"
+        }
+      },
+      "venues": {
+        "list": {
+          "title": "Venues",
+          "create": "New venue",
+          "name": "Name",
+          "address": "Address",
+          "organization": "Organisation",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive",
+          "empty": "No venues yet. Every event takes place at a venue.",
+          "emptyMine": "Your organisations have no venues yet. Turn off “Only my organisations’ venues” to see all of them.",
+          "emptyFiltered": "No venue matches these filters."
+        },
+        "filter": {
+          "search": "Search by name",
+          "mine": "Only my organisations’ venues",
+          "enabled": "Status"
+        },
+        "markers": {
+          "private": "Private"
+        },
+        "form": {
+          "createTitle": "New venue",
+          "editTitle": "Venue: {{name}}",
+          "saved": "Venue saved",
+          "created": "Venue created",
+          "readOnly": "You can look at this venue but not change it. Members of its organisation with editing rights can, and so can the agenda administrators.",
+          "sections": {
+            "details": "Details",
+            "address": "Address",
+            "accessibility": "Accessibility",
+            "organization": "Organisation and visibility"
+          },
+          "name": "Name",
+          "about": "Description",
+          "capacity": "Capacity",
+          "website": "Website",
+          "address": "Street and number",
+          "zip": "Postcode",
+          "city": "City",
+          "region": "Region",
+          "regionNone": "No region",
+          "organization": "Organisation",
+          "organizationMineHelp": "One of your organisations. Its members manage the venue.",
+          "organizationAnyHelp": "The organisation whose members manage the venue. Leave empty for a venue nobody manages.",
+          "enabled": "Active",
+          "enabledHelp": "Events can only be filed at active venues.",
+          "privilegedLocked": "Only the agenda administrators can switch a venue on or off.",
+          "private": "Only this venue’s organisation can file events here",
+          "privateHelp": "The venue stays visible on the website. The agenda administrators can still file events here.",
+          "accessibility": "Accessibility — self-declaration (optional)",
+          "accessibilityHelp": "What the venue declares about itself. ProInfirmis data below is checked independently.",
+          "wheelchairAccessible": "Wheelchair accessible",
+          "wheelchairAccessibleToilets": "Wheelchair-accessible toilets",
+          "wheelchairAccessibleParking": "Wheelchair-accessible parking"
+        },
+        "proInfirmis": {
+          "title": "ProInfirmis accessibility data",
+          "none": "No ProInfirmis entry is linked to this venue.",
+          "readOnly": "Synced from ProInfirmis (Ginto). It cannot be edited here, because the next sync would overwrite it.",
+          "pictograms": "Accessibility features",
+          "noPictograms": "The entry lists no accessibility features.",
+          "open": "Open the entry in Ginto"
+        },
+        "delete": {
+          "action": "Delete",
+          "title": "Delete venue?",
+          "body": "“{{name}}” is deleted. This cannot be undone.",
+          "confirm": "Delete venue",
+          "upcoming_one": "This venue still has {{count}} upcoming event, so it cannot be deleted. Move that event to another venue, or wait until its last date has passed.",
+          "upcoming_other": "This venue still has {{count}} upcoming events, so it cannot be deleted. Move those events to another venue, or wait until their last dates have passed."
+        },
+        "errors": {
+          "nameRequired": "Give the venue a name.",
+          "nameTooLong": "At most {{max}} characters.",
+          "addressRequired": "Enter the street and number.",
+          "zipRequired": "Enter the postcode.",
+          "zipTooLong": "At most {{max}} characters.",
+          "cityRequired": "Enter the city.",
+          "organizationRequired": "Pick one of your organisations."
+        }
+      },
+      "filters": {
+        "any": "Any"
       }
     }
   }

@@ -1,6 +1,11 @@
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
 import { stripQueryAndHash } from '@wepublish/utils';
-import { FullEventFragment, FullImageFragment } from '@wepublish/website/api';
+import {
+  EventScheduleType,
+  EventStatus,
+  FullEventFragment,
+  FullImageFragment,
+} from '@wepublish/website/api';
 import {
   BuilderEventSEOProps,
   useWebsiteBuilder,
@@ -8,14 +13,27 @@ import {
 import { formatISO, formatISODuration, intervalToDuration } from 'date-fns';
 import { useMemo } from 'react';
 
+const schemaEventStatus: Record<EventStatus, string> = {
+  [EventStatus.Confirmed]: 'https://schema.org/EventScheduled',
+  [EventStatus.Cancelled]: 'https://schema.org/EventCancelled',
+  [EventStatus.Postponed]: 'https://schema.org/EventPostponed',
+  [EventStatus.SoldOut]: 'https://schema.org/EventScheduled',
+};
+
 export const getEventSEO = (event: FullEventFragment) => {
-  const description =
-    event.lead ?? firstParagraphToPlaintext(event.description?.content ?? []);
+  const description = firstParagraphToPlaintext(
+    event.description?.content ?? []
+  );
   const image = event.image as FullImageFragment | undefined;
-  const startDate = formatISO(new Date(event.startsAt));
+  const startDate =
+    event.startsAt ? formatISO(new Date(event.startsAt)) : undefined;
   const endDate = event.endsAt ? formatISO(new Date(event.endsAt)) : undefined;
   const duration =
-    event.endsAt ?
+    (
+      event.scheduleType === EventScheduleType.Continuous &&
+      event.startsAt &&
+      event.endsAt
+    ) ?
       formatISODuration(
         intervalToDuration({
           start: new Date(event.startsAt),
@@ -23,12 +41,16 @@ export const getEventSEO = (event: FullEventFragment) => {
         })
       )
     : undefined;
+  const offers =
+    event.status === EventStatus.SoldOut ?
+      { '@type': 'Offer', availability: 'https://schema.org/SoldOut' }
+    : undefined;
 
   return {
     type: 'website',
-    title: event.name,
+    title: event.name ?? undefined,
     description,
-    url: stripQueryAndHash(event.url),
+    url: event.url ? stripQueryAndHash(event.url) : undefined,
     image,
     schema: {
       '@context': 'http://schema.org',
@@ -37,7 +59,8 @@ export const getEventSEO = (event: FullEventFragment) => {
       endDate,
       duration,
       keywords: event.tags?.map(tag => tag.tag).join(','),
-      eventStatus: event.status,
+      eventStatus: schemaEventStatus[event.status],
+      offers,
       location: event.location,
       image:
         image ?
@@ -51,7 +74,7 @@ export const getEventSEO = (event: FullEventFragment) => {
             encodingFormat: 'image/webp',
           }
         : undefined,
-      name: event.name,
+      name: event.name ?? undefined,
       description,
     },
   };

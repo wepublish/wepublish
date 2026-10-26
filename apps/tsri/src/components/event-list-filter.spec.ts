@@ -97,9 +97,9 @@ describe('event-list-filter', () => {
     });
 
     it('defaults to upcoming only', () => {
-      expect(getEventListFilter({})).toEqual({ upcomingOnly: true });
+      expect(getEventListFilter({})).toEqual({ upcoming: true });
       expect(getEventListFilter({ upcomingOnly: true })).toEqual({
-        upcomingOnly: true,
+        upcoming: true,
       });
     });
   });

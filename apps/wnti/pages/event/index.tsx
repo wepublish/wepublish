@@ -59,7 +59,7 @@ export default function EventList() {
         filter: {
           from: from?.toISOString(),
           to: to?.toISOString(),
-          upcomingOnly,
+          upcoming: upcomingOnly,
         },
         sort: EventSort.StartsAt,
         order: SortOrder.Ascending,

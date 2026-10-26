@@ -6,7 +6,12 @@ import {
   UserSubscriptionOverview,
 } from './user.model';
 import { PrismaClient } from '@prisma/client';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  actingUserOf,
+  AuthSession,
+  CurrentUser,
+} from '@wepublish/authentication/api';
+import { permissionsOf } from '@wepublish/permissions/api';
 import { UserRoleDataloader } from './user-role.dataloader';
 import { UserRole } from './user-role.model';
 import { User as PUser } from '@prisma/client';
@@ -48,11 +53,11 @@ export class SensitiveDataUserResolver {
 
   @ResolveField(() => [String])
   public async permissions(
-    @CurrentUser() user: UserSession | undefined,
+    @CurrentUser() session: AuthSession | undefined,
     @Parent() { id }: SensitiveDataUser
   ) {
-    if (user?.user.id === id) {
-      return user.roles.flatMap(r => r.permissionIDs);
+    if (actingUserOf(session)?.id === id) {
+      return permissionsOf(session);
     }
 
     return [];

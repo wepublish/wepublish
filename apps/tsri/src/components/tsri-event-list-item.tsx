@@ -326,7 +326,6 @@ export const TsriEventListItem = ({
   url,
   description,
   name,
-  lead,
   image,
   startsAt,
   endsAt,
@@ -335,7 +334,7 @@ export const TsriEventListItem = ({
   tags = [],
 }: BuilderEventListItemProps) => {
   const {
-    elements: { Link, Image, Paragraph },
+    elements: { Link, Image },
     blocks: { RichText },
     date,
   } = useWebsiteBuilder();
@@ -356,14 +355,17 @@ export const TsriEventListItem = ({
         </EventListItemImage>
 
         <EventListItemDate>
-          <time
-            suppressHydrationWarning
-            dateTime={startsAt}
-          >
-            {date.format(new Date(startsAt), false)}
-          </time>
+          {startsAt && (
+            <time
+              suppressHydrationWarning
+              dateTime={startsAt}
+            >
+              {date.format(new Date(startsAt), false)}
+            </time>
+          )}
 
-          {endsAt &&
+          {startsAt &&
+            endsAt &&
             new Date(endsAt).toDateString() !==
               new Date(startsAt).toDateString() && (
               <span>
@@ -401,13 +403,11 @@ export const TsriEventListItem = ({
           </EventListItemMeta>
 
           <EventListItemName>
-            <Link href={url}>{name}</Link>
+            <Link href={url ?? undefined}>{name}</Link>
           </EventListItemName>
 
           <EventListItemLead>
-            {lead ?
-              <Paragraph>{lead}</Paragraph>
-            : <RichText richText={description} />}
+            <RichText richText={description} />
           </EventListItemLead>
         </EventListItemContent>
       </EventListItemWrapper>

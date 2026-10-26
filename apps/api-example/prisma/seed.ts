@@ -17,6 +17,8 @@ import {
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
   MailTemplateContext,
+  EventScheduleType,
+  TagType,
 } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { createReadStream } from 'fs';
@@ -37,6 +39,12 @@ import {
   EventBlock,
 } from '@wepublish/block-content/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
+import {
+  blocksPlainText,
+  EventSchedule,
+  expandOccurrences,
+  scheduleBounds,
+} from '@wepublish/event/schedule';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import {
   seedChangelogEntries,
@@ -459,21 +467,66 @@ async function seedAuthors(prisma: PrismaClient, imageIds: string[] = []) {
   );
 }
 
-async function seedEvents(prisma: PrismaClient, imageIds: string[] = []) {
-  const future = faker.date.future();
+async function seedEvents(prisma: PrismaClient) {
+  const now = new Date();
+  const tag = await prisma.tag.upsert({
+    where: { type_tag: { type: TagType.Event, tag: 'Konzert' } },
+    create: { type: TagType.Event, tag: 'Konzert' },
+    update: {},
+  });
 
   return Promise.all(
-    Array.from({ length: faker.number.int({ min: 10, max: 20 }) }, () =>
-      prisma.event.create({
-        data: {
-          name: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-          slateDescription: getText(4, 12) as any,
-          startsAt: future,
-          endsAt: faker.date.future({ refDate: future }),
-          imageId: shuffle(imageIds).at(0),
+    Array.from({ length: faker.number.int({ min: 10, max: 20 }) }, () => {
+      const dateFrom = faker.date.soon({ days: 60 });
+      const dateTo = new Date(
+        dateFrom.getTime() + faker.number.int({ min: 1, max: 4 }) * 3_600_000
+      );
+      const schedule: EventSchedule = {
+        scheduleType: 'Continuous',
+        dateFrom,
+        dateTo,
+        weekDays: [],
+        openingTime: null,
+        dates: [],
+      };
+      const blocks = [
+        {
+          type: BlockType.RichText,
+          richText: {
+            type: 'doc',
+            content: Array.from(
+              { length: faker.number.int({ min: 1, max: 4 }) },
+              () => ({
+                type: 'paragraph',
+                content: [{ type: 'text', text: faker.lorem.paragraph() }],
+              })
+            ),
+          },
         },
-      })
-    )
+      ];
+
+      return prisma.event.create({
+        data: {
+          scheduleType: EventScheduleType.Continuous,
+          dateFrom,
+          dateTo,
+          ...scheduleBounds(schedule),
+          publishedAt: now,
+          tags: { create: { tagId: tag.id } },
+          occurrences: {
+            createMany: { data: expandOccurrences(schedule) },
+          },
+          revisions: {
+            create: {
+              name: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+              blocks,
+              descriptionText: blocksPlainText(blocks),
+              publishedAt: now,
+            },
+          },
+        },
+      });
+    })
   );
 }
 
@@ -2018,7 +2071,7 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
   console.log('Seeding authors');
   const authors = await seedAuthors(prisma, []);
   console.log('Seeding events');
-  const events = await seedEvents(prisma, []);
+  const events = await seedEvents(prisma);
   console.log('Seeding articles');
   const articles = await seedArticles(
     prisma,

@@ -39,7 +39,6 @@ import {
   CanDeleteCommentRatingSystem,
   CanDeleteConsent,
   CanDeleteDocument,
-  CanDeleteEvent,
   CanDeleteExternalApp,
   CanDeleteImage,
   CanDeleteMemberPlan,
@@ -52,6 +51,7 @@ import {
   CanDeleteTag,
   CanCreateApiToken,
   CanGetApiTokens,
+  CanGetOtherOrganizations,
   CanRevokeApiToken,
   CanDeleteToken,
   CanDeleteUser,
@@ -72,7 +72,7 @@ import {
   CanGetCrowdfundings,
   CanGetDocument,
   CanGetDocuments,
-  CanGetEvent,
+  CanGetEvents,
   CanGetImage,
   CanGetImages,
   CanGetMailLogs,
@@ -118,10 +118,11 @@ import {
   CanUpdateConsent,
   CanUpdateCrowdfunding,
   CanUpdateDiscountCode,
-  CanUpdateEvent,
   CanUpdateExternalApp,
   CanUpdateGoodie,
   CanUpdateMailTemplates,
+  CanUpdateOrganization,
+  CanUpdateOtherOrganizations,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
@@ -144,6 +145,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
+  MdApartment,
   MdApproval,
   MdAutoFixHigh,
   MdAutorenew,
@@ -181,6 +183,7 @@ import {
   MdPersonAddAlt1,
   MdPhoto,
   MdPieChartOutline,
+  MdPlace,
   MdPower,
   MdQueryStats,
   MdSell,
@@ -196,6 +199,7 @@ import {
   MdVpnKey,
 } from 'react-icons/md';
 
+import { AGENDA_PERMISSIONS, EVENT_PERMISSIONS } from './agendaPermissions';
 import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
 import { useSidebarMenu } from './sidebarMenu';
@@ -815,26 +819,15 @@ export function Base({ children }: BaseProps) {
                 </SidebarNavMenu>
               </PermissionControl>
 
-              <PermissionControl
-                qualifyingPermissions={[
-                  CanGetEvent.id,
-                  CanGetCommentRatingSystem.id,
-                ]}
-              >
+              <PermissionControl qualifyingPermissions={AGENDA_PERMISSIONS}>
                 <SidebarNavMenu
-                  title={t('navbar.events')}
+                  title={t('navbar.agenda')}
                   icon={<MdEvent />}
                   open={openMenus.includes('events')}
                   openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('events', wasOpen)}
                 >
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      CanGetEvent.id,
-                      CanUpdateEvent.id,
-                      CanDeleteEvent.id,
-                    ]}
-                  >
+                  <PermissionControl qualifyingPermissions={[CanGetEvents.id]}>
                     <SidebarNavItem
                       href="/events"
                       icon={<MdEvent />}
@@ -843,35 +836,46 @@ export function Base({ children }: BaseProps) {
                     </SidebarNavItem>
                   </PermissionControl>
 
-                  {/* <PermissionControl
-                      qualifyingPermissions={[
-                        CanGetEvent.id,
-                        CanUpdateEvent.id,
-                        CanDeleteEvent.id,
-                      ]}
-                    >
-                      <SidebarNavItem
-        href="/events/import"
-                        icon={<MdEventAvailable />}
-                      >
-                        {t('navbar.importableEvents')}
-                      </SidebarNavItem>
-                    </PermissionControl> */}
-
                   <PermissionControl
                     qualifyingPermissions={[
-                      CanGetTags.id,
-                      CanCreateTag.id,
-                      CanUpdateTag.id,
-                      CanDeleteTag.id,
+                      CanGetOtherOrganizations.id,
+                      CanUpdateOtherOrganizations.id,
+                      CanUpdateOrganization.id,
                     ]}
                   >
                     <SidebarNavItem
-                      href="/events/tags"
-                      icon={<MdSell />}
+                      href="/organizations"
+                      icon={<MdApartment />}
                     >
-                      {t('navbar.eventTags')}
+                      {t('navbar.organizations')}
                     </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl qualifyingPermissions={AGENDA_PERMISSIONS}>
+                    <SidebarNavItem
+                      href="/venues"
+                      icon={<MdPlace />}
+                    >
+                      {t('navbar.venues')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl qualifyingPermissions={EVENT_PERMISSIONS}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetTags.id,
+                        CanCreateTag.id,
+                        CanUpdateTag.id,
+                        CanDeleteTag.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/events/tags"
+                        icon={<MdSell />}
+                      >
+                        {t('navbar.eventTags')}
+                      </SidebarNavItem>
+                    </PermissionControl>
                   </PermissionControl>
                 </SidebarNavMenu>
               </PermissionControl>

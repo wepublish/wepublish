@@ -10,3 +10,7 @@ export default {
 export const Event = {
   args: mockEventBlock(),
 };
+
+export const WithoutEvents = {
+  args: mockEventBlock({ events: [] }),
+};

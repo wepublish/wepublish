@@ -34,6 +34,13 @@ describe('dashboard layout', () => {
     ]);
   });
 
+  it('offers the review queue as a card that can be moved and hidden', () => {
+    expect(configurable).toContain('reviewQueue');
+    expect(visibleDashboardCards(defaultDashboardLayout())).toContain(
+      'reviewQueue'
+    );
+  });
+
   it('shows the activity feed by default', () => {
     expect(visibleDashboardCards(defaultDashboardLayout())).toContain(
       'activity'

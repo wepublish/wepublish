@@ -1,0 +1,174 @@
+fragment TinyPlace on Place {
+  id
+  name
+  zip
+  city
+}
+
+query TinyPlaceList($filter: PlaceFilter, $take: Int, $skip: Int) {
+  places(filter: $filter, take: $take, skip: $skip) {
+    nodes {
+      ...TinyPlace
+    }
+
+    totalCount
+  }
+}
+
+fragment EditorPlaceListItem on Place {
+  id
+  name
+  address
+  zip
+  city
+  enabled
+  private
+  organization {
+    id
+    name
+  }
+  viewerCan {
+    update
+    delete
+  }
+}
+
+query EditorPlaceList(
+  $filter: PlaceFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: PlaceSort
+) {
+  places(
+    filter: $filter
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...EditorPlaceListItem
+    }
+
+    totalCount
+  }
+}
+
+fragment EditorPlace on Place {
+  id
+  name
+  slug
+  about
+  address
+  zip
+  city
+  capacity
+  website
+  enabled
+  private
+  regionId
+  organization {
+    id
+    name
+  }
+  proInfirmisIdSource
+  proInfirmisDetailUrl
+  proInfirmisPictograms
+  wheelchairAccessible
+  wheelchairAccessibleParking
+  wheelchairAccessibleToilets
+  createdAt
+  modifiedAt
+  viewerCan {
+    update
+    updatePrivileged
+    delete
+  }
+}
+
+query EditorPlace($id: String!) {
+  place(id: $id) {
+    ...EditorPlace
+  }
+}
+
+mutation CreatePlace(
+  $name: String!
+  $address: String!
+  $zip: String!
+  $city: String!
+  $about: String
+  $capacity: String
+  $website: String
+  $enabled: Boolean
+  $private: Boolean
+  $regionId: String
+  $organizationId: String
+  $wheelchairAccessible: Boolean
+  $wheelchairAccessibleParking: Boolean
+  $wheelchairAccessibleToilets: Boolean
+) {
+  createPlace(
+    name: $name
+    address: $address
+    zip: $zip
+    city: $city
+    about: $about
+    capacity: $capacity
+    website: $website
+    enabled: $enabled
+    private: $private
+    regionId: $regionId
+    organizationId: $organizationId
+    wheelchairAccessible: $wheelchairAccessible
+    wheelchairAccessibleParking: $wheelchairAccessibleParking
+    wheelchairAccessibleToilets: $wheelchairAccessibleToilets
+  ) {
+    ...EditorPlace
+  }
+}
+
+mutation UpdatePlace(
+  $id: String!
+  $name: String
+  $address: String
+  $zip: String
+  $city: String
+  $about: String
+  $capacity: String
+  $website: String
+  $enabled: Boolean
+  $private: Boolean
+  $regionId: String
+  $organizationId: String
+  $wheelchairAccessible: Boolean
+  $wheelchairAccessibleParking: Boolean
+  $wheelchairAccessibleToilets: Boolean
+) {
+  updatePlace(
+    id: $id
+    name: $name
+    address: $address
+    zip: $zip
+    city: $city
+    about: $about
+    capacity: $capacity
+    website: $website
+    enabled: $enabled
+    private: $private
+    regionId: $regionId
+    organizationId: $organizationId
+    wheelchairAccessible: $wheelchairAccessible
+    wheelchairAccessibleParking: $wheelchairAccessibleParking
+    wheelchairAccessibleToilets: $wheelchairAccessibleToilets
+  ) {
+    ...EditorPlace
+  }
+}
+
+mutation DeletePlace($id: String!) {
+  deletePlace(id: $id) {
+    id
+  }
+}

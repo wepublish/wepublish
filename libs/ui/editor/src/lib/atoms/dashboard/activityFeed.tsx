@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client/react';
+import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
   Button,
@@ -40,7 +41,7 @@ type Action = NonNullable<RecentActionsQuery['actions']>[number];
 type ActivityItem = {
   icon: ReactNode;
   labelKey: string;
-  link: string;
+  link?: string;
   date: string;
   title?: string;
   excerpt?: string;
@@ -156,7 +157,7 @@ const EntryIcon = styled.span`
   font-size: 16px;
 `;
 
-const Tile = styled(Link)`
+const tileStyles = ({ theme }: { theme: Theme }) => css`
   flex: 1;
   min-width: 0;
   display: flex;
@@ -164,10 +165,10 @@ const Tile = styled(Link)`
   gap: 4px;
   min-height: 0;
   padding: 10px 12px;
-  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
-  background: ${({ theme }) => theme.vars.palette.background.paper};
-  color: ${({ theme }) => theme.vars.palette.text.primary};
+  border: 1px solid ${theme.vars.palette.divider};
+  border-radius: ${theme.shape.borderRadius + 'px'};
+  background: ${theme.vars.palette.background.paper};
+  color: ${theme.vars.palette.text.primary};
   font-size: 13px;
   line-height: 1.4;
   overflow: hidden;
@@ -175,11 +176,15 @@ const Tile = styled(Link)`
 
   &:hover,
   &:focus {
-    color: ${({ theme }) => theme.vars.palette.text.primary};
+    color: ${theme.vars.palette.text.primary};
     text-decoration: none;
-    border-color: ${({ theme }) => theme.vars.palette.primary.main};
+    border-color: ${theme.vars.palette.primary.main};
   }
 `;
+
+const Tile = styled(Link)(tileStyles);
+
+const StaticTile = styled('div')(tileStyles);
 
 const oneLine = `
   overflow: hidden;
@@ -317,7 +322,7 @@ const toActivityItem = (action: Action, t: TFunction): ActivityItem | null => {
         labelKey: 'dashboard.newEvent',
         link: `/events/edit/${action.event.id}`,
         date: action.date,
-        title: action.event.name,
+        title: action.event.name ?? undefined,
         excerpt: action.event.location ?? undefined,
       };
     default:
@@ -332,8 +337,8 @@ function ActivityEntry({ item }: { item: ActivityItem }) {
   );
   const fullText = [item.title, item.excerpt].filter(Boolean).join('\n');
 
-  const tile = (
-    <Tile to={item.link}>
+  const content = (
+    <>
       <Label>
         <Trans
           i18nKey={item.labelKey}
@@ -349,8 +354,13 @@ function ActivityEntry({ item }: { item: ActivityItem }) {
           addSuffix: true,
         })}
       </Time>
-    </Tile>
+    </>
   );
+
+  const tile =
+    item.link ?
+      <Tile to={item.link}>{content}</Tile>
+    : <StaticTile>{content}</StaticTile>;
 
   return (
     <Entry>

@@ -12,7 +12,7 @@ Whether a namespace's values go to Dragonfly is decided by one list,
 
 | Namespace | Values |
 | --- | --- |
-| listed (`settings`, `website-settings`, `navigations`, `banners`, `member-plans`, `peer-profile`, `peering:remote-profiles`, `crowdfunding`, `ga4`, `graphql:responses`, `graphql:comments`, `content:articles`, `content:pages`, `content:authors`, `content:images`, `content:paywalls`, `content:polls`, `tracking-pixels`) | Dragonfly key `<REDIS_KEY_PREFIX>::val:<APP_RELEASE_ID or dev>:ns:<namespace>:v<version>:<key>` (pods of different releases never read each other's values, but share versions), plus a 2 s copy in memory |
+| listed (`settings`, `website-settings`, `navigations`, `banners`, `member-plans`, `peer-profile`, `peering:remote-profiles`, `crowdfunding`, `ga4`, `graphql:responses`, `graphql:comments`, `content:articles`, `content:pages`, `content:authors`, `content:images`, `content:paywalls`, `content:polls`, `content:events`, `tracking-pixels`) | Dragonfly key `<REDIS_KEY_PREFIX>::val:<APP_RELEASE_ID or dev>:ns:<namespace>:v<version>:<key>` (pods of different releases never read each other's values, but share versions), plus a 2 s copy in memory |
 | everything else, including all integration settings (`settings:paymentprovider`, `settings:mailprovider`, …) | process memory only |
 
 Integration secrets never reach Dragonfly, enforced three ways:

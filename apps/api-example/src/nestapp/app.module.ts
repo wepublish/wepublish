@@ -24,12 +24,12 @@ import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
 import { ApiTokenModule } from '@wepublish/api-token/api';
 import { NewsletterModule } from '@wepublish/newsletter/api';
 import { DocumentModule } from '@wepublish/document/api';
-import { EventModule } from '@wepublish/event/api';
 import {
-  AgendaBaselService,
-  EventsImportModule,
-  KulturZueriService,
-} from '@wepublish/event/import/api';
+  EventModule,
+  EventTaxonomyModule,
+  OrganizationModule,
+  PlaceModule,
+} from '@wepublish/event/api';
 import { ExternalAppsModule } from '@wepublish/external-apps/api';
 import {
   GoogleAnalyticsDbConfig,
@@ -265,6 +265,9 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     SettingModule,
     ExternalAppsModule,
     EventModule,
+    OrganizationModule,
+    PlaceModule,
+    EventTaxonomyModule,
     PageModule,
     PeerModule.registerAsync({
       imports: [ConfigModule],
@@ -296,13 +299,6 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     UpgradeSubscriptionModule,
     NavigationModule,
     TagModule,
-    EventsImportModule.registerAsync({
-      useFactory: (
-        agendaBasel: AgendaBaselService,
-        kulturZueri: KulturZueriService
-      ) => [agendaBasel, kulturZueri],
-      inject: [AgendaBaselService, KulturZueriService],
-    }),
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     HealthModule,

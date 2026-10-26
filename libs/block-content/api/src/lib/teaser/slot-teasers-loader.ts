@@ -97,6 +97,7 @@ export class SlotTeasersLoader {
   private populatedTemplates = new WeakSet<BlockTemplate>();
 
   constructor(
+    @Inject(forwardRef(() => EventService))
     private eventService: EventService,
     @Inject(forwardRef(() => ArticleService))
     private articleService: ArticleService,
@@ -333,9 +334,9 @@ export class SlotTeasersLoader {
     }
 
     if (teaserType === TeaserType.Event) {
-      const events = await this.eventService.getEvents({
+      const events = await this.eventService.getPublicEvents({
         filter: {
-          tags: filter?.tags,
+          tagIds: filter?.tags,
         },
         sort: EventSort.StartsAt,
         order: SortOrder.Descending,

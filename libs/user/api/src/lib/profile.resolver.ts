@@ -1,8 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  actingUserOf,
   Authenticated,
-  AuthSessionType,
+  AuthSession,
   CurrentUser,
+  requireUserSession,
   UserSession,
 } from '@wepublish/authentication/api';
 import { SensitiveDataUser } from './user.model';
@@ -23,12 +25,8 @@ export class ProfileResolver {
     description: `This query returns the user.`,
     nullable: true,
   })
-  async me(@CurrentUser() session: UserSession) {
-    if (session?.type !== AuthSessionType.User) {
-      return null;
-    }
-
-    return session.user;
+  async me(@CurrentUser() session: AuthSession | undefined) {
+    return actingUserOf(session);
   }
 
   @Authenticated()
@@ -38,8 +36,10 @@ export class ProfileResolver {
   async updatePassword(
     @Args('password') password: string,
     @Args('passwordRepeated') passwordRepeated: string,
-    @CurrentUser() { id, user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const { id, user } = requireUserSession(session);
+
     if (password !== passwordRepeated) {
       throw new BadRequestException(
         'password and passwordRepeated are not equal'
@@ -75,8 +75,10 @@ export class ProfileResolver {
   })
   async requestEmailChange(
     @Args('newEmail') newEmail: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ): Promise<boolean> {
+    const { user } = requireUserSession(session);
+
     await this.userService.requestEmailChange(user.id, newEmail);
     return true;
   }
@@ -87,8 +89,10 @@ export class ProfileResolver {
   })
   async confirmEmailChange(
     @Args('newEmail') newEmail: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: AuthSession
   ) {
+    const { user } = requireUserSession(session);
+
     return this.userService.confirmEmailChange(user.id, newEmail);
   }
 }

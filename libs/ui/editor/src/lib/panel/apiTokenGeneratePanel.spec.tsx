@@ -1,7 +1,17 @@
 import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { CanGetArticle, CanGetPage } from '@wepublish/permissions';
+import {
+  PermissionListDocument,
+  TinyOrganizationListDocument,
+} from '@wepublish/editor/api';
+import {
+  CanGetArticle,
+  CanGetOtherOrganizationEvents,
+  CanGetPage,
+  CanUpdateOtherOrganizations,
+  Permission,
+} from '@wepublish/permissions';
 import type { Mock } from 'vitest';
 
 import { AuthContext } from '../authContext';
@@ -19,11 +29,12 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 
 const theme = createTheme({ cssVariables: true });
 
-const session = {
-  sessionRoles: [{ id: 'role', name: 'admin', permissions: [CanGetArticle] }],
-} as never;
+const sessionWith = (...permissions: Permission[]) =>
+  ({
+    sessionRoles: [{ id: 'role', name: 'admin', permissions }],
+  }) as never;
 
-const renderPanel = () =>
+const renderPanel = (session = sessionWith(CanGetArticle)) =>
   render(
     <ThemeProvider theme={theme}>
       <AuthContext.Provider value={{ session }}>
@@ -62,12 +73,146 @@ const submit = async () => {
   fireEvent.click(generateButton());
 };
 
+const dampfzentrale = {
+  __typename: 'Organization',
+  id: 'org-a',
+  name: 'Dampfzentrale',
+};
+
+const organizationQueries = () =>
+  (useQuery as Mock).mock.calls.filter(
+    call => call[0] === TinyOrganizationListDocument
+  );
+
+const organizationField = () =>
+  screen.getByRole('combobox', { name: /panels.organization/ });
+
+const pickTheOnlyOrganization = async () => {
+  fireEvent.mouseDown(organizationField());
+  fireEvent.click(await screen.findByRole('option', { name: 'Dampfzentrale' }));
+};
+
+const pickScope = async (permission: Permission) => {
+  fireEvent.keyDown(screen.getByRole('combobox', { name: /panels.scopes/ }), {
+    key: 'ArrowDown',
+  });
+  fireEvent.click(
+    await screen.findByRole('option', { name: permission.description })
+  );
+};
+
+const offeredScopes = async () => {
+  fireEvent.keyDown(screen.getByRole('combobox', { name: /panels.scopes/ }), {
+    key: 'ArrowDown',
+  });
+
+  return (await screen.findAllByRole('option')).map(
+    option => option.textContent
+  );
+};
+
 describe('ApiTokenGeneratePanel', () => {
   beforeEach(() => {
     create.mockClear();
-    (useQuery as Mock).mockReturnValue({
-      data: { permissions: [CanGetArticle, CanGetPage] },
-      loading: false,
+    (useQuery as Mock).mockReset();
+    (useQuery as Mock).mockImplementation((document: unknown) => {
+      if (document === TinyOrganizationListDocument) {
+        return {
+          data: { organizations: { nodes: [dampfzentrale] } },
+          loading: false,
+        };
+      }
+
+      if (document === PermissionListDocument) {
+        return {
+          data: {
+            permissions: [
+              CanGetArticle,
+              CanGetPage,
+              CanGetOtherOrganizationEvents,
+            ],
+          },
+          loading: false,
+        };
+      }
+
+      return { data: undefined, loading: false };
+    });
+  });
+
+  it('offers a member only their own organisations to bind the key to', () => {
+    renderPanel();
+
+    expect(organizationQueries().at(-1)?.[1]?.variables?.filter).toEqual({
+      mine: true,
+    });
+  });
+
+  it('offers every organisation to whoever may update any of them', () => {
+    renderPanel(sessionWith(CanGetArticle, CanUpdateOtherOrganizations));
+
+    expect(organizationQueries().at(-1)?.[1]?.variables?.filter).toEqual({});
+  });
+
+  it('binds the key to the organisation picked', async () => {
+    renderPanel();
+
+    nameIt('Dampfzentrale import');
+    await pickTheOnlyScope();
+    await pickTheOnlyOrganization();
+
+    fireEvent.change(expiryField(), { target: { value: '31.12.2027' } });
+
+    await submit();
+
+    await waitFor(() => expect(create).toHaveBeenCalled());
+    expect(create.mock.calls[0][0].variables.organizationId).toBe('org-a');
+  });
+
+  it('creates a platform key when no organisation is picked', async () => {
+    renderPanel();
+
+    nameIt('Ginto import');
+    await pickTheOnlyScope();
+
+    fireEvent.change(expiryField(), { target: { value: '31.12.2027' } });
+
+    await submit();
+
+    await waitFor(() => expect(create).toHaveBeenCalled());
+    expect(create.mock.calls[0][0].variables.organizationId).toBeNull();
+  });
+
+  it('stops offering cross-organisation permissions once the key is bound to an organisation', async () => {
+    renderPanel(sessionWith(CanGetArticle, CanGetOtherOrganizationEvents));
+
+    expect(await offeredScopes()).toHaveLength(2);
+    fireEvent.keyDown(screen.getByRole('combobox', { name: /panels.scopes/ }), {
+      key: 'Escape',
+    });
+
+    await pickTheOnlyOrganization();
+
+    expect(await offeredScopes()).toEqual([CanGetArticle.description]);
+  });
+
+  it('drops a cross-organisation permission already picked when an organisation is chosen', async () => {
+    renderPanel(sessionWith(CanGetArticle, CanGetOtherOrganizationEvents));
+
+    nameIt('Dampfzentrale import');
+    await pickScope(CanGetOtherOrganizationEvents);
+    await pickScope(CanGetArticle);
+
+    await pickTheOnlyOrganization();
+
+    fireEvent.change(expiryField(), { target: { value: '31.12.2027' } });
+
+    await submit();
+
+    await waitFor(() => expect(create).toHaveBeenCalled());
+    expect(create.mock.calls[0][0].variables).toMatchObject({
+      scopes: [CanGetArticle.id],
+      organizationId: 'org-a',
     });
   });
 

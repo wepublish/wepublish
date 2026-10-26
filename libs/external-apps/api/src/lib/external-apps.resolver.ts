@@ -16,7 +16,9 @@ import { ApiTokenReader, ExternalAppsService } from './external-apps.service';
 import { ExternalAppsDataloaderService } from './external-apps-dataloader.service';
 import {
   Authenticated,
+  AuthSession,
   CurrentUser,
+  requireUserSession,
   UserSession,
 } from '@wepublish/authentication/api';
 import { JwtService } from '@wepublish/session/api';
@@ -102,8 +104,9 @@ export class ExternalAppsResolver {
   })
   async createExternalAppToken(
     @Args('externalAppId') externalAppId: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: AuthSession
   ): Promise<ExternalAppToken> {
+    const { user } = requireUserSession(session);
     const app = await this.externalAppsDataloader.load(externalAppId);
 
     if (!app) {
@@ -112,7 +115,7 @@ export class ExternalAppsResolver {
 
     const expiresInMinutes = 240;
     const token = await this.jwtService.generateJWT({
-      id: session.user.id,
+      id: user.id,
       expiresInMinutes,
       audience: app.url,
     });

@@ -15,6 +15,7 @@ vi.mock('@wepublish/authentication/api', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/authentication/api')>()),
   ScopedJwtVerifier: vi.fn(),
   UserSession: vi.fn(),
+  AuthSession: vi.fn(),
   CurrentUser: vi.fn(() => {
     return (
       data: unknown,
@@ -46,8 +47,8 @@ const actionsQuery = `
           date
           event {
               id
-              name
-              location
+              slug
+              status
           }
       }
     }
@@ -93,10 +94,9 @@ describe('ActionResolver', () => {
         actionType: ActionType.EventCreated,
         event: {
           id: '1',
-          name: 'Event name',
+          slug: 'event-name',
           modifiedAt: new Date('2023-01-02T00:00:00Z'),
-          startsAt: new Date('2023-01-02T00:00:00Z'),
-          status: EventStatus.Scheduled,
+          status: EventStatus.Confirmed,
           createdAt: new Date('2023-01-02T00:00:00Z'),
         } as Event,
       },

@@ -174,8 +174,9 @@ describe('SlateToPmMigrator nested list repair', () => {
       const queries = prisma.$queryRawUnsafe.mock.calls.map(
         ([sql]) => sql as string
       );
-      expect(queries).toHaveLength(13);
+      expect(queries).toHaveLength(12);
       queries.forEach(sql => expect(sql).not.toContain('slate'));
+      queries.forEach(sql => expect(sql).not.toContain('FROM "events"'));
       expect(written()).toEqual([
         {
           sql: 'UPDATE "authors" SET "bio" = $1::jsonb WHERE id = $2',

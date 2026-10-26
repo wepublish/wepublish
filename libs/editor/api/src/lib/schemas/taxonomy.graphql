@@ -1,0 +1,21 @@
+query EventAudiences {
+  eventAudiences {
+    id
+    name
+  }
+}
+
+query EventRegions {
+  eventRegions {
+    id
+    name
+    enabled
+  }
+}
+
+query EventAffiliations {
+  eventAffiliations {
+    id
+    name
+  }
+}

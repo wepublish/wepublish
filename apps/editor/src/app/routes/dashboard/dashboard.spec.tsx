@@ -28,6 +28,15 @@ vi.mock('./externalAppsDashboard', () => ({
   ExternalAppsDashboard: () => <div data-testid="external-apps-content" />,
 }));
 
+const reviewQueueAccess = vi.hoisted(() => ({
+  current: undefined as boolean | undefined,
+}));
+
+vi.mock('@wepublish/event/editor', () => ({
+  ReviewQueueCard: () => <div data-testid="review-queue-content" />,
+  useReviewQueueAccess: () => reviewQueueAccess.current,
+}));
+
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
   ActivityFeed: () => <div data-testid="activity-content" />,
@@ -55,6 +64,70 @@ const storedLayout = () =>
 describe('Dashboard', () => {
   afterEach(() => {
     localStorage.clear();
+    reviewQueueAccess.current = undefined;
+  });
+
+  it('shows the review queue to whoever may work through it', () => {
+    reviewQueueAccess.current = true;
+
+    const { container } = renderDashboard();
+
+    expect(shownCards(container)).toContain('reviewQueue');
+    expect(screen.getByTestId('review-queue-content')).toBeDefined();
+  });
+
+  it.each([false, undefined])(
+    'leaves the review queue out of the grid and the settings when access is %s',
+    access => {
+      reviewQueueAccess.current = access;
+
+      const { container } = renderDashboard();
+
+      expect(shownCards(container)).not.toContain('reviewQueue');
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'dashboard.configure' })
+      );
+
+      expect(
+        within(screen.getByRole('dialog')).queryByRole('checkbox', {
+          name: 'dashboard.reviewQueue',
+        })
+      ).toBeNull();
+    }
+  );
+
+  it('moves a card past a card the user cannot see', () => {
+    localStorage.setItem(
+      DASHBOARD_LAYOUT_STORAGE_KEY,
+      JSON.stringify({
+        version: 1,
+        cards: [
+          { id: 'activity', visible: true },
+          { id: 'reviewQueue', visible: true },
+          { id: 'audience', visible: true },
+          { id: 'externalApps', visible: true },
+        ],
+      })
+    );
+
+    const { container } = renderDashboard();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'dashboard.configure' })
+    );
+    const audienceRow = within(screen.getByRole('dialog'))
+      .getByRole('checkbox', { name: 'dashboard.audience' })
+      .closest('[data-dashboard-config-card]') as HTMLElement;
+    fireEvent.click(
+      within(audienceRow).getByRole('button', { name: 'dashboard.moveUp' })
+    );
+
+    expect(shownCards(container).slice(2)).toEqual([
+      'audience',
+      'activity',
+      'externalApps',
+    ]);
   });
 
   it('shows the activity feed right below the sticky cards by default', () => {
@@ -134,6 +207,7 @@ describe('Dashboard', () => {
       'audience',
       'activity',
       'externalApps',
+      'reviewQueue',
     ]);
   });
 

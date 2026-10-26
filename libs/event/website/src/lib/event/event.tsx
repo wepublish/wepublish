@@ -8,6 +8,7 @@ import { MdDateRange, MdLocationCity } from 'react-icons/md';
 import { EventSEO } from './event-seo';
 import { ContentWrapper } from '@wepublish/content/website';
 import { ImageWrapper } from '@wepublish/image/website';
+import { EventStatusBadge } from '../event-status/event-status';
 
 export const EventWrapper = styled(ContentWrapper)`
   gap: ${({ theme }) => theme.spacing(4)};
@@ -35,7 +36,7 @@ export const EventMeta = styled('div')`
 
 const MetaWrapper = styled('div')`
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-auto-flow: column;
   gap: ${({ theme }) => theme.spacing(2)};
   justify-content: flex-start;
   align-items: center;
@@ -55,58 +56,70 @@ export const Event = ({
   className,
 }: BuilderEventProps) => {
   const {
-    blocks: { RichText, Title, Image },
+    blocks: { RichText, Title, Image, Blocks },
     date,
   } = useWebsiteBuilder();
 
+  const event = data?.event;
+
   return (
     <EventWrapper className={className}>
-      {data?.event && <EventSEO event={data.event} />}
-      {data?.event.image && (
+      {event && <EventSEO event={event} />}
+      {event?.image && (
         <Image
           css={eventImage}
-          image={data.event.image}
+          image={event.image}
           caption={null}
           linkUrl={null}
         />
       )}
 
-      {data?.event && (
+      {event && (
         <EventMeta>
           <MetaWrapper>
-            <EventStart>
-              <MdDateRange />
-              <time
-                suppressHydrationWarning
-                dateTime={data.event.startsAt}
-              >
-                {date.format(new Date(data.event.startsAt))}
-              </time>
-            </EventStart>
+            {event.startsAt && (
+              <EventStart>
+                <MdDateRange />
+                <time
+                  suppressHydrationWarning
+                  dateTime={event.startsAt}
+                >
+                  {date.format(new Date(event.startsAt))}
+                </time>
+              </EventStart>
+            )}
 
-            {data.event.endsAt && (
+            {event.startsAt && event.endsAt && (
               <>
                 <span>&ndash;</span>{' '}
                 <time
                   suppressHydrationWarning
-                  dateTime={data.event.endsAt}
+                  dateTime={event.endsAt}
                 >
-                  {date.format(new Date(data.event.endsAt))}
+                  {date.format(new Date(event.endsAt))}
                 </time>
               </>
             )}
+
+            <EventStatusBadge status={event.status} />
           </MetaWrapper>
 
           <MetaWrapper>
             <MdLocationCity />{' '}
-            {data.event.location ?? 'Veranstaltungsort noch nicht bekannt'}
+            {event.location ?? 'Veranstaltungsort noch nicht bekannt'}
           </MetaWrapper>
         </EventMeta>
       )}
 
-      <Title title={data?.event.name ?? null} />
+      <Title title={event?.name ?? null} />
 
-      <RichText richText={data?.event.description ?? null} />
+      {event?.latest ?
+        <Blocks
+          key={event.latest.id}
+          blocks={event.latest.blocks}
+          type="Page"
+        />
+      : <RichText richText={event?.description ?? null} />}
     </EventWrapper>
   );
 };

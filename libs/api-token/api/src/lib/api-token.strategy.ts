@@ -1,6 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ApiToken } from '@prisma/client';
 import {
   ApiTokenSession,
   AuthSessionType,
@@ -10,13 +9,13 @@ import { Request } from 'express';
 import { Strategy } from 'passport-http-bearer';
 
 import { API_TOKEN_PREFIX } from './api-token.crypto';
-import { ApiTokenService } from './api-token.service';
+import { ApiTokenService, ResolvedApiToken } from './api-token.service';
 
 export const API_TOKEN_STRATEGY = 'api-token';
 export const API_KEY_EXPIRATION_HEADER = 'wepublish-api-key-expiration';
 
 export const apiTokenSession = (
-  apiToken: ApiToken,
+  apiToken: ResolvedApiToken,
   token: string
 ): ApiTokenSession => ({
   type: AuthSessionType.ApiToken,
@@ -24,6 +23,8 @@ export const apiTokenSession = (
   name: apiToken.name,
   token,
   permissions: apiToken.scopes,
+  organizationId: apiToken.organizationId ?? null,
+  user: apiToken.createdBy ?? null,
 });
 
 @Injectable()

@@ -15,8 +15,12 @@ import {
   CreateApiTokenDocument,
   PermissionListDocument,
 } from '@wepublish/editor/api';
+import {
+  CanUpdateOtherOrganizations,
+  CrossOrganizationPermissions,
+} from '@wepublish/permissions';
 import { useContext } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdContentCopy } from 'react-icons/md';
 import { z } from 'zod';
@@ -37,6 +41,10 @@ import {
 } from '../drawer';
 import { enqueueSnackbar } from '../snackbar';
 import { getOperationNameFromDocument } from '../utility';
+import {
+  OrganizationOption,
+  OrganizationSelectPicker,
+} from './organizationSelectPicker';
 
 const MAX_LIFETIME_YEARS = 3;
 const RECOMMENDED_LIFETIME_YEARS = 1;
@@ -59,13 +67,19 @@ const schema = z.object({
     .refine(expiresAt => expiresAt <= yearsFromNow(MAX_LIFETIME_YEARS), {
       message: 'apiTokenList.panels.expiresTooLate',
     }),
+  organization: z.object({ id: z.string(), name: z.string() }).nullable(),
 });
 
 const EMPTY_API_TOKEN = {
   name: '',
   scopes: [] as string[],
   expiresAt: null as unknown as Date,
+  organization: null as OrganizationOption | null,
 };
+
+const CROSS_ORGANIZATION = new Set<string>(
+  CrossOrganizationPermissions.map(({ id }) => id)
+);
 
 const EXPIRY_PRESETS = [
   { label: 'apiTokenList.panels.in30Days', days: 30 },
@@ -92,6 +106,10 @@ const ExpiresAt = styled.div`
   margin-top: ${({ theme }) => theme.spacing(2)};
 `;
 
+const Organization = styled(OrganizationSelectPicker)`
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
+`;
+
 export interface ApiTokenGeneratePanelProps {
   onClose?(): void;
 }
@@ -103,12 +121,16 @@ export function ApiTokenGeneratePanel({ onClose }: ApiTokenGeneratePanelProps) {
   const {
     control,
     handleSubmit,
+    getValues,
+    setValue,
     formState: { isValid },
   } = useForm({
     resolver: zodResolver(schema),
     mode: 'onChange',
     defaultValues: EMPTY_API_TOKEN,
   });
+
+  const organization = useWatch({ control, name: 'organization' });
 
   const { data: permissionData } = useQuery(PermissionListDocument);
 
@@ -132,9 +154,13 @@ export function ApiTokenGeneratePanel({ onClose }: ApiTokenGeneratePanelProps) {
     ) ?? []
   );
 
-  const grantable = (permissionData?.permissions ?? []).filter(permission =>
-    held.has(permission.id)
+  const grantable = (permissionData?.permissions ?? []).filter(
+    permission =>
+      held.has(permission.id) &&
+      !(organization && CROSS_ORGANIZATION.has(permission.id))
   );
+
+  const mayBindToAnyOrganization = held.has(CanUpdateOtherOrganizations.id);
 
   const copy = async () => {
     if (!token) {
@@ -147,10 +173,15 @@ export function ApiTokenGeneratePanel({ onClose }: ApiTokenGeneratePanelProps) {
 
   return (
     <DrawerForm
-      onSubmit={handleSubmit(({ expiresAt, ...values }) =>
-        createApiToken({
-          variables: { ...values, expiresAt: expiresAt.toISOString() },
-        })
+      onSubmit={handleSubmit(
+        ({ expiresAt, organization: boundTo, ...values }) =>
+          createApiToken({
+            variables: {
+              ...values,
+              expiresAt: expiresAt.toISOString(),
+              organizationId: boundTo?.id ?? null,
+            },
+          })
       )}
     >
       <DrawerHeader>
@@ -219,6 +250,33 @@ export function ApiTokenGeneratePanel({ onClose }: ApiTokenGeneratePanelProps) {
                   error={Boolean(error)}
                   helperText={error && t(error.message as string)}
                   sx={{ mb: 2 }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="organization"
+              render={({ field }) => (
+                <Organization
+                  name={field.name}
+                  label={t('apiTokenList.panels.organization')}
+                  helperText={t('apiTokenList.panels.organizationHelp')}
+                  mine={!mayBindToAnyOrganization}
+                  value={field.value}
+                  onChange={picked => {
+                    field.onChange(picked);
+
+                    if (picked) {
+                      setValue(
+                        'scopes',
+                        getValues('scopes').filter(
+                          scope => !CROSS_ORGANIZATION.has(scope)
+                        ),
+                        { shouldValidate: true }
+                      );
+                    }
+                  }}
                 />
               )}
             />

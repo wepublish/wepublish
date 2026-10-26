@@ -73,6 +73,14 @@ type ApiToken {
   modifiedAt: DateTime!
   name: String!
 
+  """The organization this token is bound to. Null for a platform token."""
+  organization: BaseOrganization
+
+  """
+  The organization this token is bound to. A bound token acts as a member of that organization and of no other. Null for a platform token, which only its scopes limit.
+  """
+  organizationId: String
+
   """The non-secret start of the token"""
   prefix: String!
   revokedAt: DateTime
@@ -408,6 +416,32 @@ interface BaseNavigationLink {
   label: String!
   modifiedAt: DateTime!
   type: NavigationLinkType!
+}
+
+interface BaseOrganization {
+  about: String
+  address: String
+  affiliations: [EventAffiliation!]!
+  city: String
+
+  """At most 6."""
+  contacts: [OrganizationContact!]!
+  enabled: Boolean!
+  id: String!
+  latitude: Float
+  legalStatus: String
+  longitude: Float
+  name: String!
+  region: EventRegion
+  regionId: String
+  slug: Slug
+  subTitle: String
+
+  """Event tags, at most 3."""
+  tags: [Tag!]!
+  viewerCan: OrganizationViewerPermissions!
+  website: String
+  zip: String
 }
 
 interface BaseTeaser implements HasImage {
@@ -1135,22 +1169,75 @@ enum EditorBlockType {
 }
 
 type Event {
+  audience: EventAudience
+  audienceId: String
   createdAt: DateTime!
+  dateFrom: DateTime
+  dateTo: DateTime
+  dates: [EventDate!]!
   description: RichText
+  draft: EventRevision
   endsAt: DateTime
-  externalSourceId: String
-  externalSourceName: String
+  firstDateAt: DateTime
   id: String!
   image: Image
-  imageId: String
-  lead: String
+  lastDateAt: DateTime
+  latest: EventRevision
+  legacyId: String
   location: String
   modifiedAt: DateTime!
-  name: String!
-  startsAt: DateTime!
+  name: String
+
+  """The earliest occurrence that has not ended."""
+  nextOccurrence: Occurrence
+  openingTime: String
+  organization: BaseOrganization
+  organizationId: String
+  owner: User
+  ownerId: String
+  pending: EventRevision
+  place: Place
+  placeId: String
+  published: EventRevision
+  publishedAt: DateTime
+  rates: [EventRate!]!
+  reviewRequestedAt: DateTime
+  reviewRequestedBy: User
+  reviewRequestedById: String
+  scheduleType: EventScheduleType!
+  seoDescription: String
+  seoTitle: String
+  showInPrint: Boolean!
+  slug: Slug
+  socialMediaDescription: String
+  socialMediaImage: Image
+  socialMediaImageID: String
+  socialMediaTitle: String
+  specialRate: EventSpecialRate
+  startsAt: DateTime
   status: EventStatus!
-  tags: [Tag!]
-  url: String!
+  tags: [Tag!]!
+  ticketingUrl: String
+
+  """How many occurrences have not ended, the next one included."""
+  upcomingOccurrenceCount: Int!
+  url: String
+
+  """What you may do with this event. Null outside its editor view."""
+  viewerCan: EventViewerPermissions
+  weekDays: [Int!]!
+}
+
+type EventAffiliation {
+  id: String!
+  name: String!
+  slug: Slug
+}
+
+type EventAudience {
+  id: String!
+  name: String!
+  slug: Slug
 }
 
 type EventBlock implements BaseBlock {
@@ -1179,6 +1266,13 @@ input EventBlockInput {
   filter: EventBlockFilterInput!
 }
 
+input EventContentInput {
+  blocks: [BlockContentInput!]!
+  images: [EventImageInput!]
+  name: String!
+  printDescription: String
+}
+
 type EventCreatedAction implements BaseAction & HasEventLc {
   actionType: ActionType!
   date: DateTime!
@@ -1186,43 +1280,163 @@ type EventCreatedAction implements BaseAction & HasEventLc {
   eventId: String!
 }
 
-input EventFilter {
-  from: DateTime
-  location: String
-  name: String
-  tags: [String!]
-  to: DateTime
-  upcomingOnly: Boolean
+type EventDate {
+  dateFrom: DateTime!
+  dateTo: DateTime!
+  id: String!
+  openingTime: String
+  sortOrder: Int!
 }
 
-type EventFromSource {
-  createdAt: DateTime!
-  description: RichText
-  endsAt: DateTime
-  externalSourceId: String
-  externalSourceName: String
+input EventDateInput {
+  dateFrom: DateTime!
+  dateTo: DateTime!
+  openingTime: String
+}
+
+input EventFilter {
+  """Pro Infirmis pictogram ids; the venue needs at least one of them."""
+  accessibilityProInfirmis: [Int!]
+  audienceId: String
+
+  """Events with an unpublished draft. Editor mode only."""
+  draft: Boolean
+
+  """Events whose last date ends at or after this instant."""
+  endsAfter: DateTime
+
+  """Events whose last date ends before this instant."""
+  endsBefore: DateTime
+  eventStatus: [EventStatus!]
+  from: DateTime
+
+  """Matches the coordinates of the venue."""
+  geoBoundingBox: GeoBoundingBox
+  ids: [String!]
+  organizationIds: [String!]
+  partner: Boolean
+
+  """Events with a revision scheduled for publication. Editor mode only."""
+  pending: Boolean
+  placeIds: [String!]
+
+  """Events with a published revision."""
+  published: Boolean
+
+  """Matches the region of the venue."""
+  regionId: String
+
+  """Events whose draft waits for review. Editor mode only."""
+  reviewRequested: Boolean
+
+  """Matches name and description, ignoring accents and case."""
+  search: String
+  showInPrint: Boolean
+  tagIds: [String!]
+  to: DateTime
+
+  """Only events with an occurrence that has not ended yet."""
+  upcoming: Boolean
+  wheelchairAccessible: Boolean
+}
+
+type EventImage {
+  caption: String
+  image: Image
+  imageId: String!
+  isMain: Boolean!
+  sortOrder: Int!
+}
+
+input EventImageInput {
+  caption: String
+  imageId: String!
+  isMain: Boolean
+}
+
+input EventInput {
+  audienceId: String
+  dateFrom: DateTime
+  dateTo: DateTime
+  dates: [EventDateInput!]
+  openingTime: String
+  organizationId: String
+  ownerId: String
+  placeId: String
+  rates: [EventRateInput!]
+  scheduleType: EventScheduleType!
+  seoDescription: String
+  seoTitle: String
+  showInPrint: Boolean
+  slug: Slug
+  socialMediaDescription: String
+  socialMediaImageID: String
+  socialMediaTitle: String
+  specialRate: EventSpecialRate
+  status: EventStatus
+  tagIds: [String!]!
+  ticketingUrl: String
+  weekDays: [Int!]
+}
+
+type EventRate {
+  designation: String
   id: String!
-  imageUrl: String
-  lead: String
-  location: String
-  modifiedAt: DateTime!
+  price: String!
+  sortOrder: Int!
+}
+
+input EventRateInput {
+  designation: String
+  price: String!
+}
+
+type EventRegion {
+  """
+  A disabled region takes no new organisations or places. Listed only to holders of CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  enabled: Boolean!
+  id: String!
   name: String!
-  startsAt: DateTime!
-  status: EventStatus!
+  slug: Slug
+}
+
+type EventRevision {
+  archivedAt: DateTime
+  blocks: [BlockContent!]!
+  createdAt: DateTime!
+  id: String!
+  images: [EventImage!]!
+  name: String!
+  printDescription: String
+  publishedAt: DateTime
+}
+
+enum EventScheduleType {
+  Continuous
+  Explicit
+  Weekly
 }
 
 enum EventSort {
   CreatedAt
   EndsAt
   ModifiedAt
+  PublishedAt
+  ReviewRequestedAt
   StartsAt
+}
+
+enum EventSpecialRate {
+  FreeEntry
+  FreePrice
 }
 
 enum EventStatus {
   Cancelled
+  Confirmed
   Postponed
-  Rescheduled
-  Scheduled
+  SoldOut
 }
 
 type EventTeaser implements BaseTeaser & HasImage & HasOptionalEvent {
@@ -1242,6 +1456,21 @@ input EventTeaserInput {
   lead: String
   preTitle: String
   title: String
+}
+
+"""
+What the caller may do with an event, by the same rules the mutations apply.
+"""
+type EventViewerPermissions {
+  clearOrganization: Boolean!
+  delete: Boolean!
+  duplicate: Boolean!
+  moveOrganization: Boolean!
+  publish: Boolean!
+  reassignOwner: Boolean!
+  requestReview: Boolean!
+  update: Boolean!
+  withdrawReview: Boolean!
 }
 
 type ExternalApp {
@@ -1391,6 +1620,16 @@ type FullPoll {
   infoText: RichText
   opensAt: DateTime!
   question: String
+}
+
+input GeoBoundingBox {
+  northEast: GeoPointInput!
+  southWest: GeoPointInput!
+}
+
+input GeoPointInput {
+  latitude: Float!
+  longitude: Float!
 }
 
 type Goodie implements HasImage {
@@ -1731,21 +1970,6 @@ input ImportArticleOptions {
   importTags: Boolean
 }
 
-input ImportedEventFilter {
-  from: String
-  location: String
-  name: String
-  providers: [String]
-  to: String
-}
-
-enum ImportedEventSort {
-  CREATED_AT
-  ENDS_AT
-  MODIFIED_AT
-  STARTS_AT
-}
-
 type InstagramPostBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1820,6 +2044,11 @@ enum InvoiceSort {
   ModifiedAt
   PaidAt
 }
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
 
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
@@ -2725,6 +2954,9 @@ type Mutation {
   """Subscribes a contact to a Mailchimp list."""
   addMailchimpContact(input: MailchimpContactInput!): MailchimpSubscribeResult!
 
+  """Makes a user a member of an organization."""
+  addOrganizationMember(organizationId: String!, userId: String!): OrganizationMember!
+
   """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 
@@ -2787,6 +3019,11 @@ type Mutation {
     expiresAt: DateTime!
     name: String!
 
+    """
+    Binds the token to an organization you are a member of, or to any with CAN_UPDATE_OTHER_ORGANIZATIONS. A bound token cannot carry cross-organization permissions.
+    """
+    organizationId: String
+
     """The permissions this token carries."""
     scopes: [String!]!
   ): CreatedApiToken!
@@ -2821,8 +3058,8 @@ type Mutation {
   """Creates a new discountCode."""
   createDiscountCode(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): DiscountCode!
 
-  """Creates a new event."""
-  createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
+  """Creates an event with its facts and a first draft of its content."""
+  createEvent(content: EventContentInput!, input: EventInput!): Event!
 
   """Creates a new external app."""
   createExternalApp(input: CreateExternalAppInput!): ExternalApp!
@@ -2858,6 +3095,40 @@ type Mutation {
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
   createNewsletterCampaign(document: JSONObject, title: String!): NewsletterCampaign!
 
+  """
+  Creates an organization. A creator without CAN_UPDATE_OTHER_ORGANIZATIONS becomes its member.
+  """
+  createOrganization(
+    about: String
+    address: String
+
+    """Replaces the stored ones."""
+    affiliationIds: [String!]
+    city: String
+
+    """At most 6, each with an email or a phone. Replaces the stored ones."""
+    contacts: [OrganizationContactInput!]
+
+    """Needs CAN_UPDATE_OTHER_ORGANIZATIONS to change."""
+    enabled: Boolean
+    latitude: Float
+    legalStatus: String
+    longitude: Float
+    name: String!
+
+    """Needs CAN_UPDATE_OTHER_ORGANIZATIONS to change."""
+    partner: Boolean
+    postOfficeBox: String
+    regionId: String
+    slug: Slug
+    subTitle: String
+
+    """Event tags, at most 3. Replaces the stored ones."""
+    tagIds: [String!]
+    website: String
+    zip: String
+  ): SensitiveDataOrganization!
+
   """Creates an page."""
   createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
@@ -2880,6 +3151,34 @@ type Mutation {
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
+
+  """
+  Creates a place for an organisation you are a member of, or for any or none with CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  createPlace(
+    about: String
+    address: String!
+    capacity: String
+    city: String!
+    enabled: Boolean
+    latitude: Float
+    longitude: Float
+    name: String!
+
+    """
+    An organisation you are a member of. Any organisation, or none, needs CAN_UPDATE_OTHER_ORGANIZATIONS.
+    """
+    organizationId: String
+    private: Boolean
+    proInfirmisIdSource: String
+    regionId: String
+    slug: Slug
+    website: String
+    wheelchairAccessible: Boolean
+    wheelchairAccessibleParking: Boolean
+    wheelchairAccessibleToilets: Boolean
+    zip: String!
+  ): Place!
 
   """Creates a new poll."""
   createPoll(closedAt: DateTime, infoText: RichText, opensAt: DateTime!, question: String): FullPoll!
@@ -2998,7 +3297,7 @@ type Mutation {
   """Deletes an existing document."""
   deleteDocument(id: String!): String!
 
-  """Deletes an existing event."""
+  """Deletes an event."""
   deleteEvent(id: String!): Event!
 
   """Deletes an external app."""
@@ -3025,6 +3324,11 @@ type Mutation {
   """Deletes an existing navigation."""
   deleteNavigation(id: String!): Navigation!
 
+  """
+  Deletes an organization you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  deleteOrganization(id: String!): SensitiveDataOrganization!
+
   """Deletes an page."""
   deletePage(id: String!): String!
 
@@ -3039,6 +3343,11 @@ type Mutation {
 
   """Deletes an existing peer."""
   deletePeer(id: String!): String!
+
+  """
+  Deletes a place without upcoming events, of an organisation you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  deletePlace(id: String!): Place!
 
   """Deletes an existing poll."""
   deletePoll(id: String!): FullPoll!
@@ -3104,6 +3413,11 @@ type Mutation {
   duplicateArticle(id: String!): Article!
 
   """
+  Copies an event you may file under its organisation into a new unpublished event that you own.
+  """
+  duplicateEvent(id: String!): Event!
+
+  """
   A new campaign with the given one's document. The Mailchimp draft is not copied.
   """
   duplicateNewsletterCampaign(id: String!): NewsletterCampaign!
@@ -3128,9 +3442,6 @@ type Mutation {
     """
     website: Boolean
   ): TotpSetup!
-
-  "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
-  importEvent(id: String!, source: String!): String!
 
   """Import HTML/subject from the mail provider, overwriting local content"""
   importMailTemplatesFromProvider: Int!
@@ -3170,6 +3481,9 @@ type Mutation {
 
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
+
+  """Publishes the draft of an event, at publishAt when given."""
+  publishEvent(id: String!, publishAt: DateTime): Event!
   publishNewsletterCampaign(id: String!): NewsletterPublishResult!
 
   """Publishes an page at the given time."""
@@ -3201,6 +3515,9 @@ type Mutation {
   """
   reloadProviders: Boolean!
 
+  """Removes a user from an organization."""
+  removeOrganizationMember(organizationId: String!, userId: String!): OrganizationMember!
+
   """Renews a subscription."""
   renewSubscription(id: String!): PublicSubscription!
 
@@ -3211,6 +3528,11 @@ type Mutation {
   Requests an email change. A confirmation link is sent to the current email address.
   """
   requestEmailChange(newEmail: String!): Boolean!
+
+  """
+  Asks the validators to review the draft of an event you may edit but not publish.
+  """
+  requestEventReview(id: String!): Event!
 
   """Resets the password of a user."""
   resetPassword(id: String!, password: String): SensitiveDataUser!
@@ -3296,6 +3618,9 @@ type Mutation {
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
 
+  """Unpublishes an event. Its latest revision stays as draft."""
+  unpublishEvent(id: String!): Event!
+
   """Unpublishes all revisions of an page."""
   unpublishPage(id: String!): Page!
 
@@ -3331,7 +3656,7 @@ type Mutation {
   updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates the current logged in user."""
-  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+  updateCurrentUser(address: UserAddressInput, birthday: DateTime, firstName: String, flair: String, name: String): SensitiveDataUser!
 
   """Updates an existing discountCode."""
   updateDiscountCode(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): DiscountCode!
@@ -3339,8 +3664,11 @@ type Mutation {
   """Updates an existing document."""
   updateDocument(description: String, id: String!, title: String): Document!
 
-  """Updates an existing event."""
-  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
+  """Updates the facts of an event. They take effect immediately."""
+  updateEvent(id: String!, input: UpdateEventInput!): Event!
+
+  """Writes the content of an event into a new draft revision."""
+  updateEventContent(id: String!, input: EventContentInput!): Event!
 
   """Updates an existing external app."""
   updateExternalApp(
@@ -3378,6 +3706,41 @@ type Mutation {
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
   updateNewsletterCampaign(document: JSONObject!, id: String!, title: String): NewsletterCampaign!
 
+  """
+  Updates an organization you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  updateOrganization(
+    about: String
+    address: String
+
+    """Replaces the stored ones."""
+    affiliationIds: [String!]
+    city: String
+
+    """At most 6, each with an email or a phone. Replaces the stored ones."""
+    contacts: [OrganizationContactInput!]
+
+    """Needs CAN_UPDATE_OTHER_ORGANIZATIONS to change."""
+    enabled: Boolean
+    id: String!
+    latitude: Float
+    legalStatus: String
+    longitude: Float
+    name: String
+
+    """Needs CAN_UPDATE_OTHER_ORGANIZATIONS to change."""
+    partner: Boolean
+    postOfficeBox: String
+    regionId: String
+    slug: Slug
+    subTitle: String
+
+    """Event tags, at most 3. Replaces the stored ones."""
+    tagIds: [String!]
+    website: String
+    zip: String
+  ): SensitiveDataOrganization!
+
   """Updates an page."""
   updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
@@ -3400,6 +3763,35 @@ type Mutation {
 
   """Updates the peer profile of the current media."""
   updatePeerProfile(callToActionImageID: String!, callToActionImageURL: String, callToActionText: RichText, callToActionURL: String!, logoID: String!, name: String!, squareLogoId: String!, themeColor: Color!, themeFontColor: Color!): PeerProfile!
+
+  """
+  Updates a place of an organisation you are a member of, or any with CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  updatePlace(
+    about: String
+    address: String
+    capacity: String
+    city: String
+    enabled: Boolean
+    id: String!
+    latitude: Float
+    longitude: Float
+    name: String
+
+    """
+    An organisation you are a member of. Any organisation, or none, needs CAN_UPDATE_OTHER_ORGANIZATIONS.
+    """
+    organizationId: String
+    private: Boolean
+    proInfirmisIdSource: String
+    regionId: String
+    slug: Slug
+    website: String
+    wheelchairAccessible: Boolean
+    wheelchairAccessibleParking: Boolean
+    wheelchairAccessibleToilets: Boolean
+    zip: String
+  ): Place!
 
   """Updates an existing poll."""
   updatePoll(answers: [PollAnswerInput!]!, closedAt: DateTime, externalVoteSources: [PollExternalVoteSourceInput!]!, id: String!, infoText: RichText, opensAt: DateTime, question: String): FullPoll!
@@ -3477,6 +3869,9 @@ type Mutation {
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
   """
   voteOnPoll(answerId: String!): PollVote
+
+  """Withdraws the pending review request of an event you may edit."""
+  withdrawEventReview(id: String!): Event!
 }
 
 type Navigation {
@@ -3572,6 +3967,15 @@ enum NotificationSource {
   PERIODIC_JOB
 }
 
+type Occurrence {
+  dateFrom: DateTime!
+  dateTo: DateTime!
+  event: Event!
+  eventId: String!
+  id: String!
+  openingTime: String
+}
+
 enum OneChannelConnectionState {
   Connected
   Failing
@@ -3589,6 +3993,94 @@ type OneChannelStatus {
   No successful heartbeat for longer than the outage threshold. Always false while the connector is not configured.
   """
   unreachable: Boolean!
+}
+
+type Organization implements BaseOrganization {
+  about: String
+  address: String
+  affiliations: [EventAffiliation!]!
+  city: String
+
+  """At most 6."""
+  contacts: [OrganizationContact!]!
+  enabled: Boolean!
+  id: String!
+  latitude: Float
+  legalStatus: String
+  longitude: Float
+  name: String!
+  region: EventRegion
+  regionId: String
+  slug: Slug
+  subTitle: String
+
+  """Event tags, at most 3."""
+  tags: [Tag!]!
+  viewerCan: OrganizationViewerPermissions!
+  website: String
+  zip: String
+}
+
+type OrganizationContact {
+  email: String
+  id: String!
+  label: String
+  phone: String
+}
+
+input OrganizationContactInput {
+  email: String
+  label: String
+  phone: String
+}
+
+input OrganizationFilter {
+  """Needs CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS."""
+  createdByMigration: Boolean
+  enabled: Boolean
+
+  """
+  Organizations with or without members. Needs CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  hasMembers: Boolean
+  ids: [String!]
+
+  """Only the organizations you are a member of."""
+  mine: Boolean
+  name: String
+
+  """Needs CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS."""
+  partner: Boolean
+  regionId: String
+}
+
+type OrganizationMember {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  organization: BaseOrganization
+  organizationId: String!
+  user: User
+  userId: String!
+}
+
+enum OrganizationSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
+"""
+What the caller may do with an organisation, by the same rules the mutations apply.
+"""
+type OrganizationViewerPermissions {
+  delete: Boolean!
+
+  """Adding and removing members."""
+  manageMembers: Boolean!
+  update: Boolean!
+
+  """Changing partner and enabled."""
+  updatePrivileged: Boolean!
 }
 
 type OverriddenRating {
@@ -3785,12 +4277,6 @@ type PaginatedEvents {
   totalCount: Int!
 }
 
-type PaginatedEventsFromSources {
-  nodes: [EventFromSource!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type PaginatedGoodies {
   nodes: [Goodie!]!
   pageInfo: PageInfo!
@@ -3833,6 +4319,18 @@ type PaginatedMemberPlans {
   totalCount: Int!
 }
 
+type PaginatedOccurrences {
+  nodes: [Occurrence!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedOrganizations {
+  nodes: [BaseOrganization!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedPageRevisions {
   nodes: [PageRevision!]!
   pageInfo: PageInfo!
@@ -3847,6 +4345,12 @@ type PaginatedPages {
 
 type PaginatedPeerArticles {
   nodes: [PeerArticle!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedPlaces {
+  nodes: [Place!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4236,6 +4740,75 @@ type Phrase {
   pages: PaginatedPages!
 }
 
+type Place {
+  about: String
+  address: String!
+  capacity: String
+  city: String!
+  createdAt: DateTime!
+  enabled: Boolean!
+  id: String!
+  latitude: Float
+  longitude: Float
+  modifiedAt: DateTime!
+  name: String!
+  organization: BaseOrganization
+  organizationId: String
+
+  """
+  A private place is offered in the event form only to members of its organisation. It stays publicly readable.
+  """
+  private: Boolean!
+  proInfirmisDetailUrl: String
+  proInfirmisIdSource: String
+  proInfirmisPictograms: JSON
+  region: EventRegion
+  regionId: String
+  slug: Slug
+  viewerCan: PlaceViewerPermissions!
+  website: String
+  wheelchairAccessible: Boolean!
+  wheelchairAccessibleParking: Boolean!
+  wheelchairAccessibleToilets: Boolean!
+  zip: String!
+}
+
+input PlaceFilter {
+  enabled: Boolean
+  geoBoundingBox: GeoBoundingBox
+
+  """Only the places of the organisations you are a member of."""
+  mine: Boolean
+  organizationId: String
+  regionId: String
+
+  """Matches the name."""
+  search: String
+
+  """
+  Only the places you may file an event at: enabled ones that are not private or belong to your organisation.
+  """
+  selectable: Boolean
+}
+
+enum PlaceSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
+"""
+What the caller may do with a place, by the same rules the mutations apply.
+"""
+type PlaceViewerPermissions {
+  """A place with upcoming events is still refused on delete."""
+  delete: Boolean!
+  update: Boolean!
+
+  """Whether you may also switch the place on and off."""
+  updatePrivileged: Boolean!
+}
+
 type PolisConversationBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -4425,6 +4998,11 @@ type Query {
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
+
+  """
+  Returns the agenda: one row per occurrence of a published event, ordered by its start. With the preview header and CAN_GET_EVENTS it lists the occurrences of the events you manage.
+  """
+  agenda(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, take: Int = 10): PaginatedOccurrences!
 
   """Returns a single AI provider setting by id."""
   aiSetting(id: String!): SettingAIProvider!
@@ -4628,13 +5206,25 @@ type Query {
   """Returns a paginated list of documents based on the filters given."""
   documents(cursorId: String, filter: DocumentFilter, order: SortOrder = Descending, skip: Int = 0, sort: DocumentSort = ModifiedAt, take: Int = 10): PaginatedDocuments!
 
-  """Returns an event by id."""
-  event(id: String!): Event!
+  """
+  Returns a published event by id or slug. With the preview header and CAN_GET_EVENT it returns any event you may open in the editor.
+  """
+  event(id: String, slug: Slug): Event!
 
-  "\n      Returns a list of Importable Event Providers\n    "
-  eventProviders: [String!]!
+  """Returns the affiliations an organisation can have."""
+  eventAffiliations: [EventAffiliation!]!
 
-  """Returns a paginated list of events based on the filters given."""
+  """Returns the audiences an event can be for."""
+  eventAudiences: [EventAudience!]!
+
+  """
+  Returns the enabled regions, and the disabled ones too for CAN_GET_OTHER_ORGANIZATIONS or CAN_UPDATE_OTHER_ORGANIZATIONS.
+  """
+  eventRegions: [EventRegion!]!
+
+  """
+  Returns a paginated list of published events. With the preview header and CAN_GET_EVENTS it lists the events you manage.
+  """
   events(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
@@ -4689,15 +5279,6 @@ type Query {
   impersonationEnabled: Boolean!
   impersonationSearchUsers(limit: Int, query: String!): [ImpersonationUser!]!
   impersonationSessions: [ImpersonationSessionInfo!]!
-
-  "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
-  importedEvent(filter: SingleEventFilter!): EventFromSource!
-
-  "\n      Returns a list of imported events from external sources, transformed to match our model.\n    "
-  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): PaginatedEventsFromSources!
-
-  "\n      Returns a list of external source ids of already imported events.\n    "
-  importedEventsIds: [String!]!
 
   """Returns a invoice by id."""
   invoice(id: String!): Invoice!
@@ -4814,6 +5395,14 @@ type Query {
   notificationReads: [NotificationRead!]!
   oneChannelStatus: OneChannelStatus!
 
+  """
+  Returns an organization by id or slug. Members and whoever may read any organization get a SensitiveDataOrganization.
+  """
+  organization(id: String, slug: Slug): BaseOrganization
+
+  """Returns a paginated list of organizations based on the filters given."""
+  organizations(cursorId: String, filter: OrganizationFilter, order: SortOrder = Ascending, skip: Int = 0, sort: OrganizationSort = Name, take: Int = 10): PaginatedOrganizations!
+
   """Returns an page by id or slug."""
   page(id: String, slug: String): Page!
 
@@ -4869,6 +5458,14 @@ type Query {
   This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones.
   """
   phrase(articleSort: ArticleSort! = PublishedAt, order: SortOrder! = Descending, pageSort: PageSort! = PublishedAt, query: String!, skip: Int! = 0, take: Int! = 10): Phrase!
+
+  """
+  Returns a place by id or slug. Disabled places are returned to members of their organisation and to whoever may read any organisation.
+  """
+  place(id: String, slug: Slug): Place!
+
+  """Returns a paginated list of places based on the filters given."""
+  places(cursorId: String, filter: PlaceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PlaceSort = Name, take: Int = 10): PaginatedPlaces!
   poll(id: String!): FullPoll!
 
   """Returns a paginated list of poll votes"""
@@ -5091,6 +5688,41 @@ input SendTestMailTemplateInput {
   subject: String!
   subscriptionId: String
   textContent: String
+}
+
+"""
+Only resolved for members of the organization and for whoever may read or update any organization.
+"""
+type SensitiveDataOrganization implements BaseOrganization {
+  about: String
+  address: String
+  affiliations: [EventAffiliation!]!
+  city: String
+
+  """At most 6."""
+  contacts: [OrganizationContact!]!
+  createdAt: DateTime!
+  createdByMigration: Boolean!
+  enabled: Boolean!
+  id: String!
+  latitude: Float
+  legalStatus: String
+  longitude: Float
+  members: [OrganizationMember!]!
+  modifiedAt: DateTime!
+  name: String!
+  partner: Boolean!
+  postOfficeBox: String
+  region: EventRegion
+  regionId: String
+  slug: Slug
+  subTitle: String
+
+  """Event tags, at most 3."""
+  tags: [Tag!]!
+  viewerCan: OrganizationViewerPermissions!
+  website: String
+  zip: String
 }
 
 type SensitiveDataUser implements BaseUser {
@@ -5401,11 +6033,6 @@ type SettingTrackingPixelProvider implements SettingProvider {
   prolitteris_usePublisherInternalKey: Boolean
   prolitteris_username: String
   type: TrackingPixelProviderType!
-}
-
-input SingleEventFilter {
-  id: String!
-  source: String!
 }
 
 scalar Slug
@@ -5988,6 +6615,31 @@ input UpdateCrowdfundingInput {
   id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String
+}
+
+input UpdateEventInput {
+  audienceId: String
+  dateFrom: DateTime
+  dateTo: DateTime
+  dates: [EventDateInput!]
+  openingTime: String
+  organizationId: String
+  ownerId: String
+  placeId: String
+  rates: [EventRateInput!]
+  scheduleType: EventScheduleType
+  seoDescription: String
+  seoTitle: String
+  showInPrint: Boolean
+  slug: Slug
+  socialMediaDescription: String
+  socialMediaImageID: String
+  socialMediaTitle: String
+  specialRate: EventSpecialRate
+  status: EventStatus
+  tagIds: [String!]
+  ticketingUrl: String
+  weekDays: [Int!]
 }
 
 input UpdateUserSubscriptionInput {

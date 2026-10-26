@@ -153,6 +153,13 @@ written to a `date` column lands on the previous day outside UTC (verified
 row). `toDbDate`/`fromDbDate` in `periodic-job.service.ts` convert at the
 database boundary.
 
+Event recurrences are walked on the Europe/Zurich wall clock through
+`@wepublish/event/schedule` (`zurich-time.ts`, plain `Intl`, no date library).
+Adding 24 hours in UTC moves a Saturday 11:00 series to 10:00 for half the year.
+Its DST rules copy PHP's, which BKa expanded with: a time in the spring gap
+moves forward and the moved time sticks for the rest of the series, and an
+ambiguous autumn time keeps the UTC offset of the day it was reached from.
+
 ---
 
 ### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
@@ -214,7 +221,7 @@ Sessions, page data, articles, pages, authors, images, polls, readers'
 comments and anonymous GraphQL answers are cached for 5 min — for logged-in
 requests too. Writers call
 `kv.resetNamespace(...)`, `SessionCacheInvalidator` (user, role, session, peer
-token) or `PublicContentCacheInvalidator` (`invalidate` for public changes,
+token, organisation membership) or `PublicContentCacheInvalidator` (`invalidate` for public changes,
 `invalidateDraft` for drafts, `invalidateComments`); otherwise stale data shows
 until the TTL ends, in the editor as well. A field joins `CACHEABLE_QUERIES`
 only if its anonymous answer is the same for every visitor; see the
@@ -499,12 +506,16 @@ Pinned by [apps/editor/src/server-app.spec.ts](../../apps/editor/src/server-app.
 
 ---
 
-### ⚠️ `block-content` injects anything from `article` or `page` through `forwardRef`
+### ⚠️ `block-content` injects anything from `article`, `page` or `event` through `forwardRef`
 
-`libs/article/api` and `libs/page/api` import `@wepublish/block-content/api`,
-and block-content imports them back. Every block-content provider that takes
-`ArticleService`, `PageService` or `HOT_AND_TRENDING_DATA_SOURCE` therefore
-uses `@Inject(forwardRef(() => …))` — see
+`libs/article/api`, `libs/page/api` and `libs/event/api` import
+`@wepublish/block-content/api`, and block-content imports them back. Every
+block-content provider that takes `ArticleService`, `PageService`,
+`EventService` or `HOT_AND_TRENDING_DATA_SOURCE` therefore uses
+`@Inject(forwardRef(() => …))`, and `BlockContentModule` imports those modules
+through `forwardRef`. The event side does the same in reverse: `EventModule`
+imports `forwardRef(() => BlockContentModule)` and `EventRevisionResolver`
+injects `forwardRef(() => SlotTeasersLoader)`. See
 [teaser-list.resolver.ts](../../libs/block-content/api/src/lib/teaser/teaser-list.resolver.ts)
 and [slot-teasers-loader.ts](../../libs/block-content/api/src/lib/teaser/slot-teasers-loader.ts).
 
@@ -518,10 +529,81 @@ happened to import `ArticleModule` early enough to hide two missing
 **Load-bearing:** the `forwardRef` wrappers. Removing or reordering a module in
 `app.module.ts` can make a cycle that "worked" fail at the next start.
 
-Guarded for `SlotTeasersLoader` only: `slot-teasers-loader.spec.ts` starts with
-`import './article.service';`, which enters the cycle from the article side and
-reproduces the boot error in a unit test. A new injection site needs the same
-trick or nothing catches it before `nx serve api-example`.
+Guarded by specs that import the *other* library first, which enters the cycle
+from that side and reproduces the boot error in a unit test:
+`slot-teasers-loader.spec.ts` (`import './article.service';`, in article-api),
+`block-content/api/src/lib/teaser/event-cycle.spec.ts` and
+`event/event-block.resolver.spec.ts` (`import '@wepublish/event/api';`), and
+`event/api/src/lib/event-revision.resolver.spec.ts`
+(`import '@wepublish/block-content/api';`). The import has to be the spec's
+first line. A new injection site needs the same trick or nothing catches it
+before `nx serve api-example`. block-content/api is `.nxignore`d, so its specs
+run only through `pnpm vitest run --config libs/block-content/api/vitest.config.ts`.
+
+---
+
+### ⚠️ The event search expression is written twice and must stay identical
+
+The trigram index in migration `20261023140000_replace_events_with_agenda`
+and the query in
+[event-search.ts](../../libs/event/api/src/lib/event-search.ts)
+(`EVENT_SEARCH_EXPRESSION`) both spell
+`events_unaccent(coalesce("name", '') || ' ' || coalesce("descriptionText", ''))`.
+Postgres uses an expression index only for a byte-identical expression, so a
+"harmless" tidy-up of either side turns every search into a sequential scan
+with no error. `event-search.spec.ts` asserts the migration contains the
+constant's text, and `event-search.db.spec.ts` checks the `EXPLAIN` plan.
+Changing the expression means a new migration that drops and recreates the
+index, plus the constant.
+
+`events_unaccent` is an `IMMUTABLE` wrapper around `public.unaccent`, because
+`unaccent()` itself is only `STABLE` and cannot be indexed. The migration
+creates the `unaccent` extension, which a managed database has to allow.
+
+---
+
+### ⚠️ A predefined role lives in three places, and the seed is positional
+
+The system roles `admin`, `editor`, `peer` and `agenda-admin` are seeded with
+empty `permissionIDs` in `libs/api/prisma/seed.ts` (`seedRoles`). Their real
+sets come from code, in two switches that must agree:
+`addPredefinedPermissions` (`libs/permissions/api`), which the session uses,
+and `UserRoleResolver.permissions` (`libs/user/api`), which the editor's role
+screen shows. A role added to one switch only is silently empty on the other
+side. `seed()` returns the `$transaction` result and `apps/api-example`
+destructures it by position, so a new role is appended last.
+
+---
+
+### ⚠️ An editor query that sets `context.headers` loses the session token
+
+`authLink` in `libs/editor/api/src/lib/setup.tsx` spreads `...context` after
+building `headers`, so a query passing `context: { headers }` replaces the
+`authorization` and `preview` headers instead of adding to them. The event
+pickers rely on that: `publicEventsContext` sends `preview: ''`, which runs the
+query anonymously and outside editor mode, so they list published events of
+every organisation.
+
+---
+
+### ⚠️ An Autocomplete inside a Drawer is invisible to screen readers
+
+MUI 9's temporary `Drawer` paper is `role="dialog"` with `aria-modal="true"`,
+and `Autocomplete` portals its option list to `body`. Chrome prunes everything
+outside an `aria-modal` dialog from the accessibility tree, so the listbox and
+the option `aria-activedescendant` points at do not exist for a screen reader:
+it hears the combobox and no options. The keyboard still works, so nothing
+looks wrong (found on the event Metadata drawer, 2026-10-23). `Select` menus are
+unaffected; they open their own modal.
+
+The event drawer fixes it by giving its subtree a theme whose
+`MuiAutocomplete.defaultProps.disablePortal` is true
+([event-metadata-panel.tsx](../../libs/event/editor/src/lib/event-editor/event-metadata-panel.tsx)),
+so the list renders inside the dialog; Popper still flips it at the edge. The
+article and page Metadata drawers still have the problem.
+
+Pinned by `event-metadata-panel.spec.tsx` ("opens the option lists inside the
+drawer").
 
 ---
 
@@ -757,8 +839,8 @@ not re-render every cell. The deps have to include `columnDefs`: a cell may
 draw from something outside its row (a second query's answer), and that reaches
 the table as a new `columns` array while `rows` keeps its identity.
 
-Left out, the import-events list never redrew its "imported" buttons when the
-ids query landed, which read as a flaky test rather than a bug. A drag is
+Left out, the import-events list (since removed) never redrew its "imported"
+buttons when the ids query landed, which read as a flaky test rather than a bug. A drag is
 unaffected by the extra dep, because the sizing state is the table's own and
 leaves the caller's `columns` untouched.
 
@@ -1000,6 +1082,16 @@ gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
 `apps/api-example/package.json` — see [infrastructure.md](infrastructure.md).
 
 ---
+
+### ⚠️ `updateImage` resets an omitted focal point to the centre
+
+`focalPointX` and `focalPointY` default to `0.5` in the GraphQL signature, so a
+mutation that only means to change `description` (the event editor's alt text)
+silently moves the focal point of every article using that image. Send the
+image's current focal point along, as `UpdateEventImageAltText` does.
+
+Pinned by `libs/event/editor/src/lib/event-editor/event-save.spec.ts` (the alt
+text update carries the focal point). Nothing guards other callers.
 
 ## Adding an entry
 

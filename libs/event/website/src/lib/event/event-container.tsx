@@ -5,16 +5,15 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 
-export type EventContainerProps = {
-  id: string;
-} & BuilderContainerProps;
+export type EventContainerProps = (
+  { id: string; slug?: never } | { slug: string; id?: never }
+) &
+  BuilderContainerProps;
 
-export function EventContainer({ id, className }: EventContainerProps) {
+export function EventContainer({ id, slug, className }: EventContainerProps) {
   const { Event } = useWebsiteBuilder();
   const { data, loading, error } = useQuery(EventDocument, {
-    variables: {
-      id,
-    },
+    variables: id ? { id } : { slug },
   });
 
   return (

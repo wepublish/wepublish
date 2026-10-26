@@ -133,8 +133,10 @@ plain data, split across `navigationCommands.tsx`, `createCommands.tsx` and
 `accountCommands.tsx`, and brought together by
 [apps/editor/src/app/commandPalette/commands.tsx](../apps/editor/src/app/commandPalette/commands.tsx).
 **Add a route to `app.tsx` and you add it here**, with the same
-`qualifyingPermissions` the sidebar uses, and the same `feature` wherever the
-sidebar wraps the entry in `FeatureControl`;
+`qualifyingPermissions` the sidebar uses (where the sidebar nests two
+`PermissionControl`s, the inner list goes in `alsoPermissions`, which must
+match as well), and the same `feature` wherever the sidebar wraps the entry
+in `FeatureControl`;
 `commands.spec.ts` runs every command's `perform` against a fake `navigate`
 and fails on any route the router serves that no command reaches (routes
 needing an `:id` are excluded by name).

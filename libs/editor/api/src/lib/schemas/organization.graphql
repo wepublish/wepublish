@@ -1,0 +1,235 @@
+fragment TinyOrganization on BaseOrganization {
+  id
+  name
+}
+
+query TinyOrganizationList(
+  $filter: OrganizationFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: OrganizationSort
+) {
+  organizations(
+    filter: $filter
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...TinyOrganization
+    }
+
+    totalCount
+  }
+}
+
+fragment EditorOrganizationListItem on BaseOrganization {
+  id
+  name
+  zip
+  city
+  enabled
+  viewerCan {
+    update
+    delete
+  }
+  ... on SensitiveDataOrganization {
+    partner
+    createdByMigration
+    members {
+      userId
+    }
+  }
+}
+
+query EditorOrganizationList(
+  $filter: OrganizationFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: OrganizationSort
+) {
+  organizations(
+    filter: $filter
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...EditorOrganizationListItem
+    }
+
+    totalCount
+  }
+}
+
+fragment EditorOrganization on BaseOrganization {
+  id
+  name
+  slug
+  subTitle
+  about
+  website
+  legalStatus
+  enabled
+  address
+  zip
+  city
+  regionId
+  tags {
+    id
+    tag
+  }
+  affiliations {
+    id
+    name
+  }
+  contacts {
+    id
+    label
+    email
+    phone
+  }
+  viewerCan {
+    update
+    updatePrivileged
+    delete
+    manageMembers
+  }
+  ... on SensitiveDataOrganization {
+    partner
+    createdByMigration
+    postOfficeBox
+    createdAt
+    modifiedAt
+  }
+}
+
+query EditorOrganization($id: String!) {
+  organization(id: $id) {
+    ...EditorOrganization
+  }
+}
+
+fragment EditorOrganizationMember on OrganizationMember {
+  userId
+  createdAt
+  user {
+    id
+    firstName
+    name
+  }
+}
+
+query EditorOrganizationMembers($id: String!) {
+  organization(id: $id) {
+    id
+    viewerCan {
+      manageMembers
+    }
+    ... on SensitiveDataOrganization {
+      members {
+        ...EditorOrganizationMember
+      }
+    }
+  }
+}
+
+mutation CreateOrganization(
+  $name: String!
+  $subTitle: String
+  $about: String
+  $website: String
+  $legalStatus: String
+  $enabled: Boolean
+  $partner: Boolean
+  $address: String
+  $postOfficeBox: String
+  $zip: String
+  $city: String
+  $regionId: String
+  $tagIds: [String!]
+  $affiliationIds: [String!]
+  $contacts: [OrganizationContactInput!]
+) {
+  createOrganization(
+    name: $name
+    subTitle: $subTitle
+    about: $about
+    website: $website
+    legalStatus: $legalStatus
+    enabled: $enabled
+    partner: $partner
+    address: $address
+    postOfficeBox: $postOfficeBox
+    zip: $zip
+    city: $city
+    regionId: $regionId
+    tagIds: $tagIds
+    affiliationIds: $affiliationIds
+    contacts: $contacts
+  ) {
+    ...EditorOrganization
+  }
+}
+
+mutation UpdateOrganization(
+  $id: String!
+  $name: String
+  $subTitle: String
+  $about: String
+  $website: String
+  $legalStatus: String
+  $enabled: Boolean
+  $partner: Boolean
+  $address: String
+  $postOfficeBox: String
+  $zip: String
+  $city: String
+  $regionId: String
+  $tagIds: [String!]
+  $affiliationIds: [String!]
+  $contacts: [OrganizationContactInput!]
+) {
+  updateOrganization(
+    id: $id
+    name: $name
+    subTitle: $subTitle
+    about: $about
+    website: $website
+    legalStatus: $legalStatus
+    enabled: $enabled
+    partner: $partner
+    address: $address
+    postOfficeBox: $postOfficeBox
+    zip: $zip
+    city: $city
+    regionId: $regionId
+    tagIds: $tagIds
+    affiliationIds: $affiliationIds
+    contacts: $contacts
+  ) {
+    ...EditorOrganization
+  }
+}
+
+mutation DeleteOrganization($id: String!) {
+  deleteOrganization(id: $id) {
+    id
+  }
+}
+
+mutation AddOrganizationMember($organizationId: String!, $userId: String!) {
+  addOrganizationMember(organizationId: $organizationId, userId: $userId) {
+    ...EditorOrganizationMember
+  }
+}
+
+mutation RemoveOrganizationMember($organizationId: String!, $userId: String!) {
+  removeOrganizationMember(organizationId: $organizationId, userId: $userId) {
+    userId
+  }
+}

@@ -24,7 +24,16 @@ import {
   LocalStorageKey,
   TagType,
 } from '@wepublish/editor/api';
-import { ImportableEventListView } from '@wepublish/event/import/editor';
+import {
+  CreateOrganization,
+  CreateVenue,
+  EditOrganization,
+  EditVenue,
+  EventEditor,
+  EventList,
+  OrganizationList,
+  VenueList,
+} from '@wepublish/event/editor';
 import {
   MailLogList,
   MailSendPage,
@@ -70,9 +79,6 @@ import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { DocumentList } from './routes/documents/documentList';
-import { EventCreateView } from './routes/events/eventCreateView';
-import { EventEditView } from './routes/events/eventEditView';
-import { EventListView } from './routes/events/eventListView';
 import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
 import { GoodieCreateView } from './routes/goodie/goodieCreateView';
@@ -565,29 +571,66 @@ export function App() {
               path="events"
               element={
                 <Base>
-                  <EventListView />
+                  <EventList />
                 </Base>
               }
             />
-
             <Route
               path="events/create"
-              element={
-                <Base>
-                  <EventCreateView />
-                </Base>
-              }
+              element={<EventEditor />}
             />
-
             <Route
               path="events/edit/:id"
+              element={<EventEditor />}
+            />
+            <Route
+              path="organizations"
               element={
                 <Base>
-                  <EventEditView />
+                  <OrganizationList />
                 </Base>
               }
             />
-
+            <Route
+              path="organizations/create"
+              element={
+                <Base>
+                  <CreateOrganization />
+                </Base>
+              }
+            />
+            <Route
+              path="organizations/edit/:id"
+              element={
+                <Base>
+                  <EditOrganization />
+                </Base>
+              }
+            />
+            <Route
+              path="venues"
+              element={
+                <Base>
+                  <VenueList />
+                </Base>
+              }
+            />
+            <Route
+              path="venues/create"
+              element={
+                <Base>
+                  <CreateVenue />
+                </Base>
+              }
+            />
+            <Route
+              path="venues/edit/:id"
+              element={
+                <Base>
+                  <EditVenue />
+                </Base>
+              }
+            />
             <Route
               path="events/tags"
               element={
@@ -609,15 +652,6 @@ export function App() {
               element={
                 <Base>
                   <TagEditView />
-                </Base>
-              }
-            />
-
-            <Route
-              path="events/import"
-              element={
-                <Base>
-                  <ImportableEventListView />
                 </Base>
               }
             />

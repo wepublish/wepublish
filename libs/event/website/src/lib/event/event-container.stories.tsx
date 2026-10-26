@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/nextjs-vite';
 import { EventDocument } from '@wepublish/website/api';
 import { EventContainer } from './event-container';
-import { mockEvent } from '@wepublish/storybook/mocks';
+import { mockEventDetail } from '@wepublish/storybook/mocks';
 
-const event = mockEvent();
+const event = mockEventDetail();
 
 export default {
   component: EventContainer,
@@ -23,6 +23,32 @@ export const Default = {
             query: EventDocument,
             variables: {
               id: event.id,
+            },
+          },
+          result: {
+            data: {
+              event,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
+
+export const BySlug = {
+  args: {
+    slug: event.slug,
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: EventDocument,
+            variables: {
+              slug: event.slug,
             },
           },
           result: {

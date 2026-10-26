@@ -230,7 +230,6 @@ const MEMBER_PLANS_NAMESPACE = 'member-plans';
 type MigratedTable =
   | 'authors'
   | 'comments.revisions'
-  | 'events'
   | 'peerProfiles'
   | 'peers'
   | 'polls'
@@ -265,8 +264,6 @@ export class SlateToPmMigrator {
         return this.publicContentCache.invalidate('authors');
       case 'comments.revisions':
         return this.publicContentCache.invalidateComments(true);
-      case 'events':
-        return this.publicContentCache.invalidate();
       case 'peerProfiles':
         return this.kv.resetNamespace(PEER_PROFILE_NAMESPACE);
       case 'peers':
@@ -371,49 +368,6 @@ export class SlateToPmMigrator {
       this.schedulerRegistry.deleteCronJob('slate.migrateComments');
       this.logger.warn(
         'Stopped `slate.migrateComments` cronjob as all have been migrated'
-      );
-    }
-  }
-
-  @Cron(CronExpression.EVERY_10_SECONDS, {
-    name: 'slate.migrateEvents',
-    waitForCompletion: true,
-  })
-  async migrateEvents() {
-    if (await this.isAnotherReplicasTurn('slate.migrateEvents', TEN_SECONDS)) {
-      return;
-    }
-
-    const events = await this.prisma.event.findMany({
-      where: {
-        slateDescription: {
-          not: Prisma.AnyNull,
-        },
-        description: {
-          equals: Prisma.AnyNull,
-        },
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 30,
-    });
-
-    await Promise.all(
-      events.map(async event => {
-        this.logger.log(`Migrating event with id: ${event.id}`);
-        await this.prisma.event.update({
-          where: { id: event.id },
-          // @ts-expect-error Prisma JSON typings
-          data: { description: this.migrate(event.slateDescription ?? []) },
-        });
-      })
-    );
-
-    await this.forgetMigrated('events', events.length);
-
-    if (events.length < 30) {
-      this.schedulerRegistry.deleteCronJob('slate.migrateEvents');
-      this.logger.warn(
-        'Stopped `slate.migrateEvents` cronjob as all have been migrated'
       );
     }
   }
@@ -1182,7 +1136,6 @@ export class SlateToPmMigrator {
   private static readonly BUGGY_ENTITY_COLUMNS = [
     { table: 'authors', source: 'slateBio', target: 'bio' },
     { table: 'comments.revisions', source: 'slateText', target: 'text' },
-    { table: 'events', source: 'slateDescription', target: 'description' },
     {
       table: 'peerProfiles',
       source: 'slateCallToActionText',

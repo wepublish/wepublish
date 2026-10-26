@@ -135,6 +135,13 @@ Mocks are **not** auto-cleared between tests — add `vi.clearAllMocks()` to
 Cover resolvers, services, guards and permission checks. Permission and paywall
 logic is security-relevant — test the **deny** path, not just the allow path.
 
+Raw SQL that mocks cannot prove (an index expression, a view, `$queryRaw`) gets a
+`*.db.spec.ts` that runs against `DATABASE_URL`, like
+[event-search.db.spec.ts](../../libs/event/api/src/lib/event-search.db.spec.ts).
+It builds what it needs from the migration's own SQL on temporary tables inside a
+transaction it always rolls back, so it leaves nothing behind. It skips locally
+when no database answers, and throws under `CI`, which provides one.
+
 Resolver specs go one level up, as a full GraphQL e2e: `GraphQLModule.forRoot`
 with `autoSchemaFile: true` driven by `supertest` against the Nest app (see
 `libs/consent/api/.../consent.resolver.spec.ts`). Note that `@Permissions` and

@@ -49,8 +49,10 @@ export class URLAdapter {
     return `${this.baseURL}/author/${author.slug}`;
   }
 
-  async getEventURL(event: Event) {
-    return `${this.baseURL}/event/${event.id}`;
+  async getEventURL(event: Pick<Event, 'id' | 'slug'>) {
+    return event.slug ?
+        `${this.baseURL}/event/${event.slug}`
+      : `${this.baseURL}/event/id/${event.id}`;
   }
 
   async getCommentURL(

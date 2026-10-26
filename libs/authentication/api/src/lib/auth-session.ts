@@ -19,6 +19,7 @@ export type UserSession = {
   id: string;
   user: User;
   roles: UserRole[];
+  organizationIds: string[];
   createdAt: Date;
   expiresAt: Date;
   token: string;
@@ -31,6 +32,8 @@ export type ApiTokenSession = {
   name: string;
   token: string;
   permissions: string[];
+  organizationId: string | null;
+  user: User | null;
 };
 
 export const EXPIRED_API_TOKEN = 'expired-api-token';
