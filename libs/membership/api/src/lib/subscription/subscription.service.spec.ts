@@ -125,4 +125,133 @@ describe('SubscriptionService', () => {
       expect(prisma.subscriptionDeactivation.delete).not.toHaveBeenCalled();
     });
   });
+
+  describe('updateSubscriptionPaymentMethod', () => {
+    const paymentMethods: Record<string, { id: string; active: boolean }> = {
+      payrexx: { id: 'payrexx', active: true },
+      bexio: { id: 'bexio', active: false },
+    };
+
+    const makePrisma = (
+      subscription: {
+        id: string;
+        paymentMethodID: string;
+        deactivation: { id: string } | null;
+      } | null = {
+        id: 'sub-1',
+        paymentMethodID: 'payrexx',
+        deactivation: { id: 'deactivation-1' },
+      }
+    ) => ({
+      paymentMethod: {
+        findUnique: vi.fn(
+          async ({ where }: { where: { id: string } }) =>
+            paymentMethods[where.id] ?? null
+        ),
+      },
+      subscription: {
+        findUnique: vi.fn(async () => subscription),
+        updateMany: vi.fn(async () => ({
+          count: subscription?.paymentMethodID === 'payrexx' ? 1 : 0,
+        })),
+      },
+      invoice: { update: vi.fn(), delete: vi.fn() },
+      subscriptionPeriod: { delete: vi.fn() },
+    });
+
+    const args = {
+      subscriptionId: 'sub-1',
+      fromPaymentMethodId: 'payrexx',
+      toPaymentMethodId: 'bexio',
+    };
+
+    it('moves a subscription that is still on the old payment method', async () => {
+      const prisma = makePrisma();
+
+      await expect(
+        makeService(prisma).updateSubscriptionPaymentMethod(args)
+      ).resolves.toBe(true);
+      // only while it is still on the old one, so a change made since is kept
+      expect(prisma.subscription.updateMany).toHaveBeenCalledWith({
+        where: { id: 'sub-1', paymentMethodID: 'payrexx' },
+        data: { paymentMethodID: 'bexio' },
+      });
+    });
+
+    it('leaves a subscription that is on another payment method', async () => {
+      const prisma = makePrisma({
+        id: 'sub-1',
+        paymentMethodID: 'stripe',
+        deactivation: null,
+      });
+
+      await expect(
+        makeService(prisma).updateSubscriptionPaymentMethod(args)
+      ).resolves.toBe(false);
+    });
+
+    // unlike updateSubscription: deactivated subscriptions are fine, and no
+    // invoice, period or renewal is touched
+    it('moves deactivated subscriptions without touching their billing', async () => {
+      const prisma = makePrisma();
+      const memberContext = {
+        handleSubscriptionChange: vi.fn(),
+        renewSubscriptionForUser: vi.fn(),
+        updateRemoteSubscription: vi.fn(),
+      };
+
+      await makeService(prisma, memberContext).updateSubscriptionPaymentMethod(
+        args
+      );
+
+      expect(memberContext.handleSubscriptionChange).not.toHaveBeenCalled();
+      expect(memberContext.renewSubscriptionForUser).not.toHaveBeenCalled();
+      expect(memberContext.updateRemoteSubscription).not.toHaveBeenCalled();
+      expect(prisma.invoice.update).not.toHaveBeenCalled();
+      expect(prisma.invoice.delete).not.toHaveBeenCalled();
+      expect(prisma.subscriptionPeriod.delete).not.toHaveBeenCalled();
+    });
+
+    it('accepts an inactive target payment method', async () => {
+      await expect(
+        makeService(makePrisma()).updateSubscriptionPaymentMethod(args)
+      ).resolves.toBe(true);
+    });
+
+    it('refuses an unknown subscription', async () => {
+      const prisma = makePrisma(null);
+
+      await expect(
+        makeService(prisma).updateSubscriptionPaymentMethod(args)
+      ).rejects.toThrow(NotFoundException);
+      expect(prisma.subscription.updateMany).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ['an unknown target payment method', { toPaymentMethodId: 'unknown' }],
+      ['an unknown source payment method', { fromPaymentMethodId: 'unknown' }],
+    ])('refuses %s', async (_, override) => {
+      const prisma = makePrisma();
+
+      await expect(
+        makeService(prisma).updateSubscriptionPaymentMethod({
+          ...args,
+          ...override,
+        })
+      ).rejects.toThrow(NotFoundException);
+      expect(prisma.subscription.updateMany).not.toHaveBeenCalled();
+    });
+
+    it('refuses moving to the same payment method', async () => {
+      const prisma = makePrisma();
+
+      await expect(
+        makeService(prisma).updateSubscriptionPaymentMethod({
+          ...args,
+          toPaymentMethodId: 'payrexx',
+        })
+      ).rejects.toThrow(BadRequestException);
+      expect(prisma.subscription.updateMany).not.toHaveBeenCalled();
+    });
+  });
 });

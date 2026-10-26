@@ -13,6 +13,7 @@ import {
   ImportPublicSubscriptionInput,
   PublicSubscription,
   PublicSubscriptionConnection,
+  UpdateSubscriptionPaymentMethodArgs,
   SubscriptionDeactivation,
   SubscriptionListArgs,
   SubscriptionPeriod,
@@ -110,6 +111,16 @@ export class PublicSubscriptionResolver {
   })
   public updateSubscription(@Args() input: UpdatePublicSubscriptionInput) {
     return this.service.updateSubscription(input);
+  }
+
+  @Permissions(CanCreateSubscription)
+  @Mutation(returns => Boolean, {
+    description: `Data correction: moves a subscription that is still on fromPaymentMethodId to toPaymentMethodId and changes nothing else. Unlike updateSubscription it also takes deactivated subscriptions and never touches invoices, periods or the payment provider. Returns whether it moved the subscription; swap the payment methods to undo it.`,
+  })
+  public updateSubscriptionPaymentMethod(
+    @Args() args: UpdateSubscriptionPaymentMethodArgs
+  ) {
+    return this.service.updateSubscriptionPaymentMethod(args);
   }
 
   @Permissions(CanCreateSubscription)
