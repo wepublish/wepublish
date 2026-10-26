@@ -31,7 +31,8 @@ export type PublicContent =
   | 'pages'
   | 'authors'
   | 'images'
-  | 'gates'
+  | 'paywalls'
+  | 'engagement'
   | 'polls';
 
 export const contentCacheNamespace = (content: PublicContent) =>
@@ -90,6 +91,7 @@ export const CACHEABLE_QUERIES = new Set([
   'author',
   'authors',
   'commentsForItem',
+  'engagementPrompts',
   'event',
   'events',
   'getImagesByTag',

@@ -1,6 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 
-// Same values as GateActionRole, under the name the website already selects.
 export enum BannerActionRole {
   PRIMARY = 'PRIMARY',
   CANCEL = 'CANCEL',

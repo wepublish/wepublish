@@ -1,15 +1,19 @@
 import { useQuery } from '@apollo/client/react';
+import { useUser } from '@wepublish/authentication/website';
+import {
+  EngagementBannerSlot,
+  EngagementPromptSlot,
+  resolveEngagement,
+  useEngagementDismissals,
+} from '@wepublish/engagement/website';
+import { getPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   BannerDocumentType,
-  PrimaryBannerDocument,
+  EngagementDocumentType,
+  EngagementPromptsDocument,
 } from '@wepublish/website/api';
-import {
-  BuilderContainerProps,
-  useWebsiteBuilder,
-} from '@wepublish/website/builder';
-import { useUser } from '@wepublish/authentication/website';
-import { useHasActiveSubscription } from '@wepublish/membership/website';
-import { hasPaywallBypass } from '@wepublish/paywall/website';
+import { BuilderContainerProps } from '@wepublish/website/builder';
+import { useEffect, useMemo, useState } from 'react';
 
 export type BannerContainerProps = {
   documentType: BannerDocumentType;
@@ -17,34 +21,70 @@ export type BannerContainerProps = {
   tags?: string[];
 } & BuilderContainerProps;
 
+/**
+ * The banner (and modal) engagement prompts of a page. The server knows the
+ * reader from the session, so only the bypass token is sent along.
+ */
 export function BannerContainer({
   documentType,
   documentId,
   tags,
   className,
 }: BannerContainerProps) {
-  const { Banner } = useWebsiteBuilder();
-  const { hasUser } = useUser();
-  const hasSubscription = useHasActiveSubscription();
+  const { user } = useUser();
+  const [paywallBypassToken, setPaywallBypassToken] = useState<string>();
+  const { dismissals, legacyBannerClosedAt, dismiss } =
+    useEngagementDismissals();
 
-  const { data, loading, error } = useQuery(PrimaryBannerDocument, {
-    skip: hasSubscription == null,
+  useEffect(() => setPaywallBypassToken(getPaywallBypassToken()), []);
+
+  const { data, refetch } = useQuery(EngagementPromptsDocument, {
+    skip: !documentId,
     variables: {
       documentId: documentId ?? '',
-      documentType,
-      loggedIn: hasUser,
-      hasSubscription,
-      hasPaywallBypass: hasPaywallBypass(),
+      documentType:
+        documentType === BannerDocumentType.Article ?
+          EngagementDocumentType.Article
+        : EngagementDocumentType.Page,
+      paywallBypassToken,
     },
   });
 
+  useEffect(() => {
+    if (documentId) {
+      refetch().catch(() => undefined);
+    }
+  }, [user?.id, documentId, refetch]);
+
+  const { banner, modal } = useMemo(
+    () =>
+      resolveEngagement({
+        prompts: data?.engagementPrompts ?? [],
+        dismissals,
+        legacyBannerClosedAt,
+        now: Date.now(),
+      }),
+    [data?.engagementPrompts, dismissals, legacyBannerClosedAt]
+  );
+
   return (
-    <Banner
-      data={data}
-      loading={loading}
-      error={error}
-      tags={tags}
-      className={className}
-    />
+    <>
+      {banner && (
+        <EngagementBannerSlot
+          key={banner.stage.id}
+          prompt={banner}
+          tags={tags}
+          className={className}
+        />
+      )}
+
+      {modal && (
+        <EngagementPromptSlot
+          key={modal.stage.id}
+          prompt={modal}
+          onDismiss={dismiss}
+        />
+      )}
+    </>
   );
 }

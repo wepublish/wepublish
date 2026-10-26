@@ -1,4 +1,4 @@
-import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Context, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { ArticleRevision, ArticleRevisionAuthor } from './article.model';
 import {
   ArticleAuthorDataloader,
@@ -6,14 +6,18 @@ import {
   Author,
 } from '@wepublish/author/api';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
-import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import {
+  AuthSession,
+  CurrentUser,
+  UserSession,
+} from '@wepublish/authentication/api';
 import { CanGetArticle } from '@wepublish/permissions';
 import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { SlotTeasersLoader, BlockContent } from '@wepublish/block-content/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
-import { ContentGateAccessService } from '@wepublish/content-gate/api';
-import { ArticleDataloaderService } from './article-dataloader.service';
+import { ArticleAccessService, ArticleRequest } from './article-access.service';
+import { isRestricted } from './article-access';
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {
@@ -23,54 +27,42 @@ export class ArticleRevisionResolver {
     private authorDataLoader: ArticleAuthorDataloader,
     private socialMediaAuthorDataLoader: ArticleSocialMediaAuthorDataloader,
     private imageDataloaderService: ImageDataloaderService,
-    private articleDataloader: ArticleDataloaderService,
-    private contentGateAccess: ContentGateAccessService
+    private articleAccess: ArticleAccessService
   ) {}
 
-  @ResolveField(() => [BlockContent])
+  @ResolveField(() => [BlockContent], {
+    description: `Readers without access only get the preview blocks: the server cuts paywalled and metered articles, the website does not hide them. viewArticle grants access for the article it returns.`,
+  })
   async blocks(
     @Parent() parent: ArticleRevision,
-    @Args('unlockContentGate', {
-      defaultValue: false,
-      description: `Content gates only send the preview blocks of an article.
-The website asks for the rest once the reader's meter allows it.`,
-    })
-    unlockContentGate: boolean,
-    @CurrentUser() session: UserSession | undefined
+    @Context('req') req: ArticleRequest,
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    const blocks =
-      unlockContentGate ?
-        parent.blocks
-      : (await this.contentGatePreview(parent, session)).blocks;
+    // Cut after loading: block templates expand into the blocks a reader sees.
+    const blocks = await this.slotTeasersLoader.loadSlotTeasersIntoBlocks(
+      parent.blocks
+    );
+    const access = await this.articleAccess.accessFor(
+      req,
+      session,
+      parent.articleId
+    );
 
-    return await this.slotTeasersLoader.loadSlotTeasersIntoBlocks(blocks);
+    return isRestricted(access) ?
+        blocks.slice(0, access.previewBlocks)
+      : blocks;
   }
 
   @ResolveField(() => Boolean, {
-    description: `Whether blocks were left out because of a content gate.`,
+    description: `Whether the reader has no access to the article and only gets its preview blocks.`,
   })
-  async contentGated(
+  async restricted(
     @Parent() parent: ArticleRevision,
-    @CurrentUser() session: UserSession | undefined
+    @Context('req') req: ArticleRequest,
+    @CurrentUser() session: AuthSession | undefined
   ) {
-    return (await this.contentGatePreview(parent, session)).gated;
-  }
-
-  private async contentGatePreview(
-    parent: ArticleRevision,
-    session: UserSession | undefined
-  ) {
-    const article = await this.articleDataloader.load(parent.articleId);
-
-    if (!article) {
-      return { blocks: parent.blocks, gated: false };
-    }
-
-    return this.contentGateAccess.previewBlocks(
-      parent.blocks,
-      article,
-      session
-    );
+    return !(await this.articleAccess.accessFor(req, session, parent.articleId))
+      .granted;
   }
 
   @ResolveField(() => [Property])

@@ -5,16 +5,35 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { LoginStatus } from '@prisma/client';
-import { BannerDocumentType, PageModel } from '@wepublish/gate/api';
-import { Image } from '@wepublish/image/api';
 import { BannerAction } from './banner-action.model';
+import { Image } from '@wepublish/image/api';
 
-export { BannerDocumentType };
+/**
+ * Banners are announcement engagement rules now. This keeps `primaryBanner`
+ * and its types for websites that still ask for it.
+ */
+export enum LoginStatus {
+  PAYWALL_BYPASSED = 'PAYWALL_BYPASSED',
+  UNSUBSCRIBED = 'UNSUBSCRIBED',
+  SUBSCRIBED = 'SUBSCRIBED',
+  LOGGED_IN = 'LOGGED_IN',
+  LOGGED_OUT = 'LOGGED_OUT',
+  ALL = 'ALL',
+}
 
-registerEnumType(BannerDocumentType, {
-  name: 'BannerDocumentType',
+registerEnumType(LoginStatus, {
+  name: 'LoginStatus',
 });
+
+/*
+This is only here to provide the interface for the "showOnPages" field
+and can be removed when Pages are moved to APIv2
+*/
+@ObjectType()
+export class PageModel {
+  @Field()
+  id!: string;
+}
 
 @ObjectType()
 export class Banner {
@@ -66,6 +85,15 @@ export class Banner {
   @Field(() => [BannerAction], { nullable: true })
   actions?: BannerAction[];
 }
+
+export enum BannerDocumentType {
+  PAGE,
+  ARTICLE,
+}
+
+registerEnumType(BannerDocumentType, {
+  name: 'BannerDocumentType',
+});
 
 @ArgsType()
 export class PrimaryBannerArgs {

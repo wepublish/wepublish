@@ -19,7 +19,7 @@ fragment FullArticleRevision on ArticleRevision {
   blocks {
     ...FullBlock
   }
-  contentGated
+  restricted
 
   authors {
     role
@@ -39,10 +39,6 @@ fragment FullArticle on Article {
 
   paywall {
     ...FullPaywall
-  }
-
-  contentGate {
-    ...FullContentGate
   }
 
   latest {

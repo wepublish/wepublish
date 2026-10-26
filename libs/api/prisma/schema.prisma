@@ -119,9 +119,10 @@ model Article {
   peerId        String?
   peerArticleId String?
 
-  paywall   Gate?   @relation(fields: [paywallId], references: [id], onDelete: SetNull)
-  paywallId String? @db.Uuid
+  paywall   Paywall? @relation(fields: [paywallId], references: [id], onDelete: SetNull)
+  paywallId String?  @db.Uuid
 
+  /// Leaves the article out of metered engagement rules.
   contentGateDisabled Boolean @default(false)
 
   navigations              NavigationLink[]
@@ -286,7 +287,7 @@ model Image {
   events         Event[]
   paymentMethods PaymentMethod[]
 
-  gates                 Gate[]
+  engagementStages      EngagementStage[]
   peerProfileLogo       PeerProfile[] @relation("logo")
   peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
   goodies               Goodie[]
@@ -808,7 +809,7 @@ model MemberPlan {
   subscriptionFlows SubscriptionFlow[]
 
   crowdfundings Crowdfunding[]
-  gates         GateMemberPlan[]
+  paywalls      PaywallMemberplan[]
   discountCodes DiscountCode[]
   goodies       Goodie[]
 
@@ -907,7 +908,7 @@ model Page {
   memberPlansSuccess      MemberPlan[]            @relation("successPage")
   memberPlansFail         MemberPlan[]            @relation("failPage")
   memberPlansConfirmation MemberPlan[]            @relation("confirmationPage")
-  gates                   Gate[]
+  engagementRules         EngagementRule[]
   PagesRevisionPublished  PagesRevisionPublished?
   PagesRevisionPending    PagesRevisionPending?
   PagesRevisionDraft      PagesRevisionDraft?
@@ -1675,19 +1676,139 @@ model NewsletterCampaign {
   @@map("newsletter_campaigns")
 }
 
-enum LoginStatus {
-  PAYWALL_BYPASSED @map("paywall_bypassed")
-  UNSUBSCRIBED     @map("unsubscribed")
-  SUBSCRIBED       @map("subscribed")
-  LOGGED_IN        @map("logged_in")
-  LOGGED_OUT       @map("logged_out")
-  ALL              @map("all")
+enum EngagementGoal {
+  ANNOUNCEMENT
+  NEWSLETTER
+  MEMBERSHIP
 }
 
-enum GateActionRole {
+enum EngagementAudience {
+  ALL
+  ANONYMOUS
+  REGISTERED
+  NON_MEMBERS
+  MEMBERS
+  NON_PAYING
+  PAYING_MEMBERS
+  PAYWALL_BYPASSED
+}
+
+enum EngagementPlacement {
+  BANNER
+  MODAL
+  INLINE
+  CUTOFF
+}
+
+enum EngagementEnforcement {
+  SOFT
+  HARD
+}
+
+enum EngagementRequirement {
+  REGISTRATION
+  MEMBERSHIP
+  PAID_MEMBERSHIP
+}
+
+enum EngagementActionType {
+  URL
+  NEWSLETTER
+  LOGIN
+  REGISTER
+  MEMBERSHIP
+}
+
+enum NewsletterReferralMode {
+  NONE
+  UNLIMITED
+  LIMITED
+}
+
+enum EngagementActionRole {
   PRIMARY @map("primary")
   CANCEL  @map("cancel")
   OTHER   @map("other")
+}
+
+/// Who sees which prompt, when, and whether it restricts the article.
+/// Paywalls are separate: see Paywall.
+model EngagementRule {
+  id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name     String
+  goal     EngagementGoal
+  active   Boolean        @default(true)
+  priority Int            @default(0)
+  /// Bumped on every update, so readers see a changed prompt again.
+  version  Int            @default(1)
+
+  audience              EngagementAudience @default(ALL)
+  showOnArticles        Boolean            @default(true)
+  showOnPages           Page[]
+  includePeeredArticles Boolean            @default(false)
+
+  meterWindowDays         Int?
+  newsletterReferral      NewsletterReferralMode @default(NONE)
+  newsletterReferralLimit Int                    @default(0)
+  /// [{key, value}] url params that mark a visit from a newsletter.
+  newsletterParams        Json?
+
+  stages EngagementStage[]
+
+  @@map("engagement_rules")
+}
+
+model EngagementStage {
+  id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  rule   EngagementRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  ruleId String         @db.Uuid
+
+  afterArticles Int                    @default(0)
+  placement     EngagementPlacement
+  enforcement   EngagementEnforcement  @default(SOFT)
+  requirement   EngagementRequirement?
+  previewBlocks Int?
+
+  dismissible    Boolean @default(true)
+  hideForMinutes Int     @default(1440)
+  delaySeconds   Int     @default(0)
+
+  title       String?
+  text        String?
+  cta         String?
+  description Json?
+  html        String?
+  embedUrl    String?
+  imageId     String?
+  image       Image?  @relation(fields: [imageId], references: [id], onDelete: SetNull)
+
+  actions EngagementAction[]
+
+  @@unique([ruleId, afterArticles])
+  @@map("engagement_stages")
+}
+
+model EngagementAction {
+  id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  stage   EngagementStage @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  stageId String          @db.Uuid
+
+  type  EngagementActionType @default(URL)
+  label String
+  url   String               @default("")
+  style String               @default("")
+  role  EngagementActionRole @default(OTHER)
+
+  @@map("engagement_actions")
 }
 
 enum CrowdfundingGoalType {
@@ -1724,117 +1845,65 @@ model CrowdfundingGoal {
   @@map("crowdfunding_goals")
 }
 
-enum GateMode {
-  PAYWALL
-  CONTENT_GATE
-  BANNER
-}
-
-model Gate {
+model Paywall {
   id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  mode   GateMode
-  name   String?
-  active Boolean  @default(true)
+  name String? @unique
 
-  // who
-  audience      LoginStatus      @default(ALL)
-  anyMemberPlan Boolean          @default(false)
-  memberPlans   GateMemberPlan[]
-  bypasses      GateBypass[]
+  description             Json?
+  slateDescription        Json?
+  upgradeDescription      Json?
+  slateUpgradeDescription Json?
 
-  // where
-  showOnArticles Boolean   @default(false)
-  showOnPages    Page[]
-  articles       Article[]
-
-  // content
-  title    String?
-  text     String?
-  cta      String?
-  html     String?
-  embedUrl String?
-  imageId  String?
-  image    Image?  @relation(fields: [imageId], references: [id])
-
-  description                       Json?
-  slateDescription                  Json?
-  upgradeDescription                Json?
-  slateUpgradeDescription           Json?
   circumventDescription             Json?
   slateCircumventDescription        Json?
   upgradeCircumventDescription      Json?
   slateUpgradeCircumventDescription Json?
-  softDescription                   Json?
 
-  actions GateAction[]
+  anyMemberPlan           Boolean @default(false)
+  active                  Boolean @default(true)
+  alternativeSubscribeUrl String?
 
-  // content cut
-  previewBlocks Int?
-  fadeout       Boolean @default(false)
+  hideContentAfter Int     @default(3)
+  fadeout          Boolean @default(true)
+  /// Cut the blocks on the server instead of hiding them with CSS.
+  enforced         Boolean @default(false)
 
-  // metering
-  freeArticles           Int?
-  softGateArticles       Int?
-  meterWindowDays        Int?
-  newsletterParams       Json?
-  newsletterNeverGate    Boolean @default(false)
-  newsletterFreeArticles Int     @default(0)
+  memberPlans PaywallMemberplan[]
+  articles    Article[]
+  bypasses    PaywallBypass[]
 
-  // display
-  collapsible    Boolean @default(true)
-  hideForMinutes Int     @default(1440)
-  delay          Int     @default(0)
-
-  @@unique([mode, name])
-  @@map("gates")
+  @@map("paywalls")
 }
 
-model GateAction {
-  id         String   @id @default(dbgenerated("uuidv7()"))
-  createdAt  DateTime @default(now()) @db.Timestamptz(3)
-  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
-
-  gate   Gate   @relation(fields: [gateId], references: [id], onDelete: Cascade)
-  gateId String @db.Uuid
-
-  label String
-  url   String
-
-  style String         @default("")
-  role  GateActionRole @default(OTHER)
-
-  @@map("gate_actions")
-}
-
-model GateMemberPlan {
+model PaywallMemberplan {
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   memberPlanId String
 
-  gate   Gate   @relation(fields: [gateId], references: [id], onDelete: Cascade)
-  gateId String @db.Uuid
+  paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
+  paywallId String  @db.Uuid
 
-  @@id([gateId, memberPlanId])
-  @@map("gate_member_plans")
+  @@id([paywallId, memberPlanId])
+  @@map("paywalls.memberPlans")
 }
 
-model GateBypass {
+model PaywallBypass {
   id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   token String
 
-  gate   Gate   @relation(fields: [gateId], references: [id], onDelete: Cascade)
-  gateId String @db.Uuid
+  paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
+  paywallId String  @db.Uuid
 
-  @@unique([gateId, token])
-  @@map("gate_bypasses")
+  @@unique([paywallId, token])
+  @@map("paywall_bypasses")
 }
 
 enum MailProviderType {

@@ -5,7 +5,7 @@ import { FakeDragonfly } from './kv-ttl-cache.testing';
 const NAMESPACES = [
   'graphql:content',
   'navigations',
-  'member-plans',
+  'content:engagement',
   'settings',
 ];
 
@@ -122,20 +122,20 @@ describe('KvTtlCacheService namespace versions', () => {
     const replica = new KvTtlCacheService(createCache(), dragonfly);
     dragonfly.down = true;
     await replica.resetNamespace('navigations');
-    await replica.resetNamespace('member-plans');
+    await replica.resetNamespace('content:engagement');
     dragonfly.down = false;
     vi.setSystemTime(new Date('2026-10-02T10:00:02.100Z'));
 
     const release = dragonfly.hold('set nsv:navigations');
     const catchingUp = replica.getNamespaceVersion('navigations');
     await new Promise(resolve => setTimeout(resolve, 0));
-    await replica.resetNamespace('member-plans');
-    const memberPlans = await replica.getNamespaceVersion('member-plans');
+    await replica.resetNamespace('content:engagement');
+    const engagement = await replica.getNamespaceVersion('content:engagement');
     release();
     await catchingUp;
 
-    await expect(dragonfly.getRaw('nsv:member-plans')).resolves.toBe(
-      memberPlans
+    await expect(dragonfly.getRaw('nsv:content:engagement')).resolves.toBe(
+      engagement
     );
   });
 });

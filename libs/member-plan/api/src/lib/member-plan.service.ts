@@ -161,8 +161,8 @@ export class MemberPlanService {
         input.defaultPaymentPeriodicity === null ?
           null
         : ((input.defaultPaymentPeriodicity as
-            | PaymentPeriodicity
-            | undefined) ?? existingMemberPlan.defaultPaymentPeriodicity),
+            PaymentPeriodicity | undefined) ??
+          existingMemberPlan.defaultPaymentPeriodicity),
 
       availablePaymentMethods:
         availablePaymentMethods ?? existingMemberPlan.availablePaymentMethods,
@@ -275,7 +275,7 @@ export class MemberPlanService {
 
   private async forgetMemberPlans() {
     await this.kv.resetNamespace(CACHE_NAMESPACE);
-    await this.publicContentCache.invalidate('gates');
+    await this.publicContentCache.invalidate('paywalls');
   }
 }
 

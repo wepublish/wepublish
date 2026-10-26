@@ -3,6 +3,8 @@ export * from './lib/article.service';
 export * from './lib/article-dataloader.service';
 export * from './lib/article-revision-dataloader.service';
 export * from './lib/article.module';
+export * from './lib/article-access';
+export * from './lib/view-article.model';
 
 export * from './lib/has-article/has-article.model';
 export * from './lib/has-article/has-article.resolver';

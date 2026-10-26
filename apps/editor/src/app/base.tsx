@@ -7,8 +7,12 @@ import {
 } from '@mui/material';
 import {
   CanCreateArticle,
+  CanCreateEngagementRule,
+  CanDeleteEngagementRule,
+  CanGetEngagementRule,
+  CanGetEngagementRules,
+  CanUpdateEngagementRule,
   CanCreateAuthor,
-  CanCreateBanner,
   CanCreateBlockStyle,
   CanCreateBlockTemplate,
   CanCreateCommentRatingSystem,
@@ -23,7 +27,6 @@ import {
   CanCreateNavigation,
   CanCreatePage,
   CanCreatePaymentMethod,
-  CanCreateContentGate,
   CanCreatePaywall,
   CanCreatePeer,
   CanCreatePoll,
@@ -34,7 +37,6 @@ import {
   CanCreateUserRole,
   CanDeleteArticle,
   CanDeleteAuthor,
-  CanDeleteBanner,
   CanDeleteBlockStyle,
   CanDeleteBlockTemplate,
   CanDeleteCommentRatingSystem,
@@ -64,8 +66,6 @@ import {
   CanGetAuditLogs,
   CanGetAuthor,
   CanGetAuthors,
-  CanGetBanner,
-  CanGetBanners,
   CanGetChallengeProviderSettings,
   CanGetCommentRatingSystem,
   CanGetComments,
@@ -123,7 +123,6 @@ import {
   CanUpdateExternalApp,
   CanUpdateGoodie,
   CanUpdateMailTemplates,
-  CanUpdateContentGate,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
@@ -170,7 +169,6 @@ import {
   MdHub,
   MdLightMode,
   MdLocationPin,
-  MdLock,
   MdLogout,
   MdMail,
   MdMenu,
@@ -542,8 +540,6 @@ export function Base({ children }: BaseProps) {
                   CanGetTags.id,
                   CanCreatePaywall.id,
                   CanUpdatePaywall.id,
-                  CanCreateContentGate.id,
-                  CanUpdateContentGate.id,
                 ]}
               >
                 <SidebarNavMenu
@@ -619,20 +615,6 @@ export function Base({ children }: BaseProps) {
                       icon={<MdPayment />}
                     >
                       {t('paywall.navbar')}
-                    </SidebarNavItem>
-                  </PermissionControl>
-
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      CanCreateContentGate.id,
-                      CanUpdateContentGate.id,
-                    ]}
-                  >
-                    <SidebarNavItem
-                      href="/articles/content-gates"
-                      icon={<MdLock />}
-                    >
-                      {t('contentGate.navbar')}
                     </SidebarNavItem>
                   </PermissionControl>
                 </SidebarNavMenu>
@@ -966,17 +948,18 @@ export function Base({ children }: BaseProps) {
 
               <PermissionControl
                 qualifyingPermissions={[
-                  CanGetBanners.id,
-                  CanGetBanner.id,
-                  CanCreateBanner.id,
-                  CanDeleteBanner.id,
+                  CanGetEngagementRules.id,
+                  CanGetEngagementRule.id,
+                  CanCreateEngagementRule.id,
+                  CanUpdateEngagementRule.id,
+                  CanDeleteEngagementRule.id,
                 ]}
               >
                 <SidebarNavItem
-                  href="/banners"
+                  href="/audience-engagement"
                   icon={<MdSignpost />}
                 >
-                  {t('navbar.banners')}
+                  {t('navbar.audienceEngagement')}
                 </SidebarNavItem>
               </PermissionControl>
 

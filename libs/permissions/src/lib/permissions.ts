@@ -61,31 +61,31 @@ export const CanDeleteNavigation: Permission = {
 export const CanGetBanner: Permission = {
   id: 'CAN_GET_BANNER',
   description: 'Allows to get banner',
-  deprecated: false,
+  deprecated: true,
 };
 
 export const CanGetBanners: Permission = {
   id: 'CAN_GET_BANNERS',
   description: 'Allows to get all banners',
-  deprecated: false,
+  deprecated: true,
 };
 
 export const CanCreateBanner: Permission = {
   id: 'CAN_CREATE_BANNER',
   description: 'Allows to create banner',
-  deprecated: false,
+  deprecated: true,
 };
 
 export const CanUpdateBanner: Permission = {
   id: 'CAN_UPDATE_BANNER',
   description: 'Allows to update banner',
-  deprecated: false,
+  deprecated: true,
 };
 
 export const CanDeleteBanner: Permission = {
   id: 'CAN_DELETE_BANNER',
   description: 'Allows to delete banners',
-  deprecated: false,
+  deprecated: true,
 };
 
 export const CanCreateAuthor: Permission = {
@@ -1010,23 +1010,35 @@ export const CanDeletePaywall: Permission = {
 };
 
 /**
- * Content Gate
+ * Engagement Rules (Audience Engagement), replace the banner permissions
  */
-export const CanCreateContentGate: Permission = {
-  id: 'CAN_CREATE_CONTENT_GATE',
-  description: 'Allows to create a content gate',
+export const CanGetEngagementRule: Permission = {
+  id: 'CAN_GET_ENGAGEMENT_RULE',
+  description: 'Allows to get an engagement rule',
   deprecated: false,
 };
 
-export const CanUpdateContentGate: Permission = {
-  id: 'CAN_UPDATE_CONTENT_GATE',
-  description: 'Allows to update a content gate',
+export const CanGetEngagementRules: Permission = {
+  id: 'CAN_GET_ENGAGEMENT_RULES',
+  description: 'Allows to get all engagement rules',
   deprecated: false,
 };
 
-export const CanDeleteContentGate: Permission = {
-  id: 'CAN_DELETE_CONTENT_GATE',
-  description: 'Allows to delete a content gate',
+export const CanCreateEngagementRule: Permission = {
+  id: 'CAN_CREATE_ENGAGEMENT_RULE',
+  description: 'Allows to create an engagement rule',
+  deprecated: false,
+};
+
+export const CanUpdateEngagementRule: Permission = {
+  id: 'CAN_UPDATE_ENGAGEMENT_RULE',
+  description: 'Allows to update an engagement rule',
+  deprecated: false,
+};
+
+export const CanDeleteEngagementRule: Permission = {
+  id: 'CAN_DELETE_ENGAGEMENT_RULE',
+  description: 'Allows to delete an engagement rule',
   deprecated: false,
 };
 
@@ -1282,11 +1294,11 @@ export const AllPermissions = [
   CanGetNavigation,
   CanGetNavigations,
   CanDeleteNavigation,
-  CanGetBanner,
-  CanGetBanners,
-  CanCreateBanner,
-  CanUpdateBanner,
-  CanDeleteBanner,
+  CanGetEngagementRule,
+  CanGetEngagementRules,
+  CanCreateEngagementRule,
+  CanUpdateEngagementRule,
+  CanDeleteEngagementRule,
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
@@ -1425,9 +1437,6 @@ export const AllPermissions = [
   CanCreatePaywall,
   CanUpdatePaywall,
   CanDeletePaywall,
-  CanCreateContentGate,
-  CanUpdateContentGate,
-  CanDeleteContentGate,
   CanGetAudienceStats,
   CanGetAISettings,
   CanCreateAISettings,
@@ -1479,11 +1488,11 @@ export const EditorPermissions = [
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
-  CanGetBanner,
-  CanGetBanners,
-  CanCreateBanner,
-  CanUpdateBanner,
-  CanDeleteBanner,
+  CanGetEngagementRule,
+  CanGetEngagementRules,
+  CanCreateEngagementRule,
+  CanUpdateEngagementRule,
+  CanDeleteEngagementRule,
   CanCreateImage,
   CanGetImage,
   CanGetImages,

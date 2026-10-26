@@ -18,8 +18,10 @@ import {
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { TagModule } from '@wepublish/tag/api';
-import { ContentGateModule } from '@wepublish/content-gate/api';
-import { GateModule } from '@wepublish/gate/api';
+import { EngagementModule } from '@wepublish/engagement/api';
+import { PaywallModule } from '@wepublish/paywall/api';
+import { ArticleAccessService } from './article-access.service';
+import { ViewArticleResolver } from './view-article.resolver';
 
 @Module({
   imports: [
@@ -29,8 +31,8 @@ import { GateModule } from '@wepublish/gate/api';
     AuthorModule,
     SettingModule,
     TagModule,
-    ContentGateModule,
-    GateModule,
+    EngagementModule,
+    PaywallModule,
     forwardRef(() => BlockContentModule),
   ],
   providers: [
@@ -40,6 +42,8 @@ import { GateModule } from '@wepublish/gate/api';
     ArticleService,
     ArticleResolver,
     ArticleRevisionResolver,
+    ArticleAccessService,
+    ViewArticleResolver,
 
     HasArticleResolver,
     HasArticleLcResolver,

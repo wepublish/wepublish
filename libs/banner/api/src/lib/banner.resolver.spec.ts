@@ -1,253 +1,234 @@
-import { NotFoundException } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { GateActionRole, GateMode, LoginStatus } from '@prisma/client';
-import { GateService } from '@wepublish/gate/api';
 import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
-} from '@wepublish/kv-ttl-cache/api';
-import { pick } from 'ramda';
+  EngagementActionRole,
+  EngagementActionType,
+  EngagementAudience,
+  EngagementEnforcement,
+  EngagementGoal,
+  EngagementPlacement,
+  NewsletterReferralMode,
+} from '@prisma/client';
+import {
+  EngagementRuleWithStages,
+  EngagementStageWithActions,
+} from '@wepublish/engagement/api';
 import { BannerResolver } from './banner.resolver';
-import { BannerDocumentType } from './banner.model';
+import { BannerDocumentType, PrimaryBannerArgs } from './banner.model';
 
-// The scalar fields of the Banner GraphQL type.
-const BANNER_FIELDS = [
-  'id',
-  'title',
-  'text',
-  'cta',
-  'html',
-  'embedUrl',
-  'active',
-  'collapsible',
-  'delay',
-  'hideForMinutes',
-  'showOnArticles',
-  'imageId',
-  'showForLoginStatus',
-] as const;
+const stage = (
+  overrides: Partial<EngagementStageWithActions> = {}
+): EngagementStageWithActions => ({
+  id: 'stage-1',
+  ruleId: 'rule-1',
+  createdAt: new Date('2023-01-01'),
+  modifiedAt: new Date('2023-01-01'),
+  afterArticles: 0,
+  placement: EngagementPlacement.BANNER,
+  enforcement: EngagementEnforcement.SOFT,
+  requirement: null,
+  previewBlocks: null,
+  dismissible: true,
+  hideForMinutes: 1440,
+  delaySeconds: 5,
+  title: 'Test Banner',
+  text: 'Test Banner Text',
+  cta: 'Read on',
+  description: null,
+  html: null,
+  embedUrl: null,
+  imageId: 'image-1',
+  actions: [
+    {
+      id: 'action-1',
+      stageId: 'stage-1',
+      createdAt: new Date('2023-01-01'),
+      modifiedAt: new Date('2023-01-01'),
+      type: EngagementActionType.URL,
+      label: 'Subscribe',
+      url: 'https://example.com',
+      style: 'primary',
+      role: EngagementActionRole.PRIMARY,
+    },
+    {
+      id: 'action-2',
+      stageId: 'stage-1',
+      createdAt: new Date('2023-01-01'),
+      modifiedAt: new Date('2023-01-01'),
+      type: EngagementActionType.LOGIN,
+      label: 'Login',
+      url: '',
+      style: '',
+      role: EngagementActionRole.OTHER,
+    },
+  ],
+  ...overrides,
+});
+
+const announcement = (
+  id: string,
+  overrides: Partial<EngagementRuleWithStages> = {}
+): EngagementRuleWithStages => ({
+  id,
+  createdAt: new Date('2023-01-01'),
+  modifiedAt: new Date('2023-01-01'),
+  name: id,
+  goal: EngagementGoal.ANNOUNCEMENT,
+  active: true,
+  priority: 0,
+  version: 1,
+  audience: EngagementAudience.ALL,
+  showOnArticles: true,
+  showOnPageIds: ['page-1'],
+  includePeeredArticles: true,
+  meterWindowDays: null,
+  newsletterReferral: NewsletterReferralMode.NONE,
+  newsletterReferralLimit: 0,
+  newsletterParams: [],
+  stages: [stage()],
+  ...overrides,
+});
+
+// The banners the audience engagement migration made, with its priorities.
+const migrated = {
+  all: announcement('all', { audience: EngagementAudience.ALL, priority: 0 }),
+  loggedIn: announcement('logged-in', {
+    audience: EngagementAudience.REGISTERED,
+    priority: 1,
+  }),
+  unsubscribed: announcement('unsubscribed', {
+    audience: EngagementAudience.NON_MEMBERS,
+    priority: 2,
+  }),
+  loggedOut: announcement('logged-out', {
+    audience: EngagementAudience.ANONYMOUS,
+    priority: 3,
+  }),
+  subscribed: announcement('subscribed', {
+    audience: EngagementAudience.MEMBERS,
+    priority: 3,
+  }),
+  bypassed: announcement('bypassed', {
+    audience: EngagementAudience.PAYWALL_BYPASSED,
+    priority: 4,
+  }),
+};
+
+const args = (
+  overrides: Partial<PrimaryBannerArgs> = {}
+): PrimaryBannerArgs => ({
+  documentType: BannerDocumentType.ARTICLE,
+  documentId: 'article-1',
+  loggedIn: false,
+  hasSubscription: false,
+  hasPaywallBypass: false,
+  ...overrides,
+});
 
 describe('BannerResolver', () => {
-  let resolver: BannerResolver;
-
-  const gate = {
-    id: '1',
-    createdAt: new Date('2023-01-01'),
-    modifiedAt: new Date('2023-01-01'),
-    mode: GateMode.BANNER,
-    name: null,
-    title: 'Test Banner',
-    text: 'Test Banner Text',
-    cta: null,
-    imageId: null,
-    active: true,
-    delay: 0,
-    html: null,
-    embedUrl: null,
-    showOnArticles: true,
-    audience: LoginStatus.ALL,
-    collapsible: true,
-    hideForMinutes: 24 * 60,
-    actions: [],
-  };
-
-  const prisma = {
-    gate: { findMany: vi.fn(), findUnique: vi.fn() },
-  };
-  const imageDataloader = {
-    load: vi.fn().mockReturnValue({ __typename: 'Image', id: '123' }),
-  };
-
-  beforeEach(async () => {
-    vi.clearAllMocks();
-
-    const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
-    }).compile();
-    const gateService = new GateService(
-      prisma as any,
-      module.get(KvTtlCacheService),
-      { invalidate: vi.fn() } as any
+  let rules: EngagementRuleWithStages[];
+  const images = { load: vi.fn().mockResolvedValue({ id: 'image-1' }) };
+  const resolver = () =>
+    new BannerResolver(
+      { getActiveRules: async () => rules } as never,
+      images as never
     );
 
-    resolver = new BannerResolver(gateService, imageDataloader as any);
+  beforeEach(() => {
+    rules = [];
   });
 
-  describe('banners', () => {
-    it('lists banner gates as banners', async () => {
-      prisma.gate.findMany.mockResolvedValue([gate]);
+  it('maps an announcement onto the banner type older websites select', async () => {
+    rules = [announcement('rule-1')];
 
-      const result = await resolver.banners({ skip: 0, take: 10 });
-
-      expect(result.map(pick(BANNER_FIELDS))).toEqual([
-        {
-          id: '1',
-          title: 'Test Banner',
-          text: 'Test Banner Text',
-          cta: null,
-          html: null,
-          embedUrl: null,
-          active: true,
-          collapsible: true,
-          delay: 0,
-          hideForMinutes: 1440,
-          showOnArticles: true,
-          imageId: null,
-          showForLoginStatus: LoginStatus.ALL,
-        },
-      ]);
-      expect(prisma.gate.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: { mode: GateMode.BANNER },
-          skip: 0,
-          take: 10,
-        })
-      );
-    });
+    expect(await resolver().primaryBanner(args())).toMatchSnapshot();
   });
 
-  describe('banner', () => {
-    it('answers a banner gate', async () => {
-      prisma.gate.findUnique.mockResolvedValue(gate);
+  it('answers no banner without a matching announcement', async () => {
+    rules = [
+      announcement('inactive', { active: false }),
+      announcement('pages only', { showOnArticles: false }),
+      announcement('metered', {
+        goal: EngagementGoal.NEWSLETTER,
+        meterWindowDays: 30,
+      }),
+    ];
 
-      expect(await resolver.banner('1')).toMatchObject({ id: '1' });
-    });
+    expect(await resolver().primaryBanner(args())).toBeNull();
+  });
 
+  it('answers the banners of a page', async () => {
+    rules = [
+      announcement('elsewhere', { showOnPageIds: ['page-2'] }),
+      announcement('here'),
+    ];
+
+    expect(
+      await resolver().primaryBanner(
+        args({ documentType: BannerDocumentType.PAGE, documentId: 'page-1' })
+      )
+    ).toMatchObject({ id: 'here', showOnPages: [{ id: 'page-1' }] });
+  });
+
+  describe('Scenarios C and E: the audience that fits the reader best wins, as before', () => {
     it.each([
-      ['does not exist', null],
-      ['is not a banner', { ...gate, mode: GateMode.PAYWALL }],
-    ])('fails when the gate %s', async (_, found) => {
-      prisma.gate.findUnique.mockResolvedValue(found);
+      ['an anonymous reader', args(), Object.values(migrated), 'logged-out'],
+      [
+        'an anonymous reader without a logged out banner',
+        args(),
+        [migrated.all, migrated.unsubscribed, migrated.loggedIn],
+        'unsubscribed',
+      ],
+      [
+        'a logged-in reader without a subscription',
+        args({ loggedIn: true }),
+        Object.values(migrated),
+        'unsubscribed',
+      ],
+      [
+        'a logged-in reader without a subscription, without an unsubscribed banner',
+        args({ loggedIn: true }),
+        [migrated.all, migrated.loggedIn, migrated.loggedOut],
+        'logged-in',
+      ],
+      [
+        'a subscriber',
+        args({ loggedIn: true, hasSubscription: true }),
+        Object.values(migrated),
+        'subscribed',
+      ],
+      [
+        'a subscriber without a subscribed banner',
+        args({ loggedIn: true, hasSubscription: true }),
+        [migrated.all, migrated.loggedIn, migrated.unsubscribed],
+        'logged-in',
+      ],
+      [
+        'a reader with a paywall bypass',
+        args({ hasPaywallBypass: true }),
+        Object.values(migrated),
+        'bypassed',
+      ],
+      ['anyone else', args(), [migrated.all, migrated.subscribed], 'all'],
+    ])('picks the banner for %s', async (_, reader, available, expected) => {
+      rules = available;
 
-      await expect(resolver.banner('1')).rejects.toThrow(NotFoundException);
+      expect((await resolver().primaryBanner(reader))?.id).toBe(expected);
     });
 
-    it('answers an empty title and text for a banner without them', async () => {
-      prisma.gate.findUnique.mockResolvedValue({
-        ...gate,
-        title: null,
-        text: null,
-      });
-
-      expect(await resolver.banner('1')).toMatchObject({ title: '', text: '' });
-    });
-  });
-
-  describe('primaryBanner', () => {
-    it.each([
-      {
-        documentType: BannerDocumentType.ARTICLE,
-        loggedIn: false,
-        hasSubscription: false,
-        hasPaywallBypass: false,
-      },
-      {
-        documentType: BannerDocumentType.ARTICLE,
-        loggedIn: true,
-        hasSubscription: false,
-        hasPaywallBypass: false,
-      },
-      {
-        documentType: BannerDocumentType.ARTICLE,
-        loggedIn: true,
-        hasSubscription: true,
-        hasPaywallBypass: true,
-      },
-      // Page
-      {
-        documentType: BannerDocumentType.PAGE,
-        loggedIn: false,
-        hasSubscription: false,
-        hasPaywallBypass: false,
-      },
-      {
-        documentType: BannerDocumentType.PAGE,
-        loggedIn: true,
-        hasSubscription: false,
-        hasPaywallBypass: false,
-      },
-      {
-        documentType: BannerDocumentType.PAGE,
-        loggedIn: true,
-        hasSubscription: true,
-        hasPaywallBypass: true,
-      },
-    ])('should return the first active banner for %o', async values => {
-      prisma.gate.findMany.mockResolvedValue(
-        [
-          LoginStatus.ALL,
-          LoginStatus.LOGGED_IN,
-          LoginStatus.LOGGED_OUT,
-          LoginStatus.SUBSCRIBED,
-          LoginStatus.UNSUBSCRIBED,
-          LoginStatus.PAYWALL_BYPASSED,
-        ].map(audience => ({ ...gate, audience }))
-      );
-
-      const result = await resolver.primaryBanner({
-        documentId: '1',
-        ...values,
-      });
-
-      // Unchanged from before banners became gates.
-      expect(pick(BANNER_FIELDS, result!)).toMatchSnapshot();
-    });
-
-    it('should return null when no primary banner found', async () => {
-      prisma.gate.findMany.mockResolvedValue([]);
-
-      expect(
-        await resolver.primaryBanner({
-          documentType: BannerDocumentType.ARTICLE,
-          documentId: '1',
-          loggedIn: true,
-          hasSubscription: false,
-          hasPaywallBypass: false,
-        })
-      ).toBeNull();
-    });
-  });
-
-  describe('actions', () => {
-    it('answers the actions of the gate', async () => {
-      const actions = [
-        {
-          id: 'a-1',
-          label: 'Later',
-          url: '#',
-          style: 'text',
-          role: GateActionRole.CANCEL,
-        },
+    it('prefers a higher priority among banners for the same audience', async () => {
+      rules = [
+        announcement('a', { priority: 0 }),
+        announcement('b', { priority: 5 }),
       ];
 
-      expect(await resolver.actions({ id: '1', actions } as any)).toEqual(
-        actions
-      );
+      expect((await resolver().primaryBanner(args()))?.id).toBe('b');
     });
   });
 
-  describe('image', () => {
-    it('should return image when imageId exists', () => {
-      expect(resolver.image({ imageId: '123' } as any)).toEqual({
-        __typename: 'Image',
-        id: '123',
-      });
-    });
+  it('resolves the image', async () => {
+    rules = [announcement('rule-1')];
+    const banner = await resolver().primaryBanner(args());
 
-    it('should return null when no imageId', () => {
-      expect(resolver.image({ imageId: null } as any)).toBeNull();
-    });
-  });
-
-  describe('showOnPages', () => {
-    it('should return pages for banner', async () => {
-      prisma.gate.findUnique.mockResolvedValue({
-        showOnPages: [{ id: '1' }],
-      });
-
-      expect(await resolver.showOnPages({ id: '1' } as any)).toEqual([
-        { id: '1' },
-      ]);
-    });
+    expect(await resolver().image(banner!)).toEqual({ id: 'image-1' });
+    expect(images.load).toHaveBeenCalledWith('image-1');
   });
 });

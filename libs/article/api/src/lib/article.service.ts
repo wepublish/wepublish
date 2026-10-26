@@ -30,7 +30,6 @@ import {
 } from '@wepublish/kv-ttl-cache/api';
 import { uniqBy } from 'ramda';
 import { ArticlePublicationWatcher } from './article-publication.watcher';
-import { GateService } from '@wepublish/gate/api';
 
 export const mapArticleRevisionAuthors = (
   authors: { authorId: string; role?: string | null }[]
@@ -50,8 +49,7 @@ export class ArticleService {
     private trackingPixelService: TrackingPixelService,
     private publicContentCache: PublicContentCacheInvalidator,
     private kv: KvTtlCacheService,
-    private publicationWatcher: ArticlePublicationWatcher,
-    private gateService: GateService
+    private publicationWatcher: ArticlePublicationWatcher
   ) {}
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -159,10 +157,6 @@ export class ArticleService {
     }: CreateArticleInput,
     userId: string | null | undefined
   ) {
-    if (paywallId) {
-      await this.gateService.assertPaywall(paywallId);
-    }
-
     const mappedBlocks = blocks.map(mapBlockUnionMap);
 
     const article = await this.prisma.article.create({
@@ -246,10 +240,6 @@ export class ArticleService {
 
     if (!article) {
       throw new NotFoundException(`Article with id ${id} not found`);
-    }
-
-    if (paywallId) {
-      await this.gateService.assertPaywall(paywallId);
     }
 
     const mappedBlocks = blocks.map(mapBlockUnionMap);

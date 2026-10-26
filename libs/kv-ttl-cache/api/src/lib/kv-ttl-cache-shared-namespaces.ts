@@ -33,9 +33,13 @@ export const SHARED_NAMESPACES = assertSharedNamespaces([
   'content:pages',
   'content:authors',
   'content:images',
-  'content:gates',
+  'content:paywalls',
+  'content:engagement',
   'content:polls',
   'tracking-pixels',
+  // Keyed by an HMAC of the user id and holding article ids only, so a website
+  // pod can not tell whose reading history it is.
+  'engagement:meters',
 ] as const);
 
 export const PUBLIC_CONTENT_NAMESPACE = 'graphql:content';
@@ -45,6 +49,7 @@ export const WEBSITE_PAGES_NAMESPACE = 'website:pages';
 export const PAGE_CONTENT_NAMESPACES: readonly string[] = [
   PUBLIC_CONTENT_NAMESPACE,
   'navigations',
+  'content:engagement',
   'settings',
   'website-settings',
   'peer-profile',
@@ -63,7 +68,7 @@ export const WEBSITE_LAYOUT_NAMESPACES: readonly string[] = [
   ...PAGE_CONTENT_NAMESPACES.filter(
     namespace => namespace !== PUBLIC_CONTENT_NAMESPACE
   ),
-  'content:gates',
+  'content:paywalls',
 ];
 
 const websiteLayout = new Set<string>(WEBSITE_LAYOUT_NAMESPACES);
