@@ -4,13 +4,21 @@
 the workspace: there are no `jest.config.ts` files left, and `jest.fn()` /
 `jest.mock()` do not exist. Use `vi.fn()` and `vi.mock()` everywhere.
 
+The one exception is browser E2E in `e2e/`: Gherkin features run by Playwright
+via playwright-bdd against a live tenant website and editor (`E2E_APP` +
+`E2E_ENV`, see `e2e/README.md`). It is an `e2e` target, not
+`test`, so `nx affected -t test` and CI never run it — run `pnpm run e2e` by
+hand or the manual `on-demand-e2e.yml` workflow. Which journeys a change
+needs: the `gherkin-from-changes` skill; how to write steps: the
+`gherkin-to-playwright` skill.
+
 Each project has a `vitest.config.ts` that delegates to the root
 `vitest.shared.ts`:
 
-| Project pattern | `createVitestConfig` options |
-| --- | --- |
+| Project pattern                                                                | `createVitestConfig` options                        |
+| ------------------------------------------------------------------------------ | --------------------------------------------------- |
 | `libs/*/api`, `libs/nest-modules`, `libs/permissions`, `libs/testing` (NestJS) | `environment: 'node'`, `react: false`, `nest: true` |
-| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils`, `apps/<tenant>` | `environment: 'jsdom'` (default), `react: true` |
+| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils`, `apps/<tenant>`    | `environment: 'jsdom'` (default), `react: true`     |
 
 NestJS projects **must** pass `nest: true`. It switches the transform to swc
 (es2021 + `decoratorMetadata`) and loads `vitest.setup-nest.ts`. Without it,
@@ -30,7 +38,7 @@ circular imports), so neither `nx test` nor CI runs their specs — run
 For any new feature or bugfix, in this order:
 
 1. **Write the test first.** It describes the behaviour you are about to build.
-2. **Run it and confirm it FAILS** — and fails for the *right reason* (assertion
+2. **Run it and confirm it FAILS** — and fails for the _right reason_ (assertion
    mismatch, not a typo or an import error). A test that passes before the
    implementation exists is testing nothing.
 3. **Implement the minimum** that makes it pass.
