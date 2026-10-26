@@ -1,7 +1,8 @@
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { FieldLabel, FieldProps } from '@puckeditor/core';
 
+import { FieldSelect } from '../field-controls.component';
+import { useWebsiteTheme } from '../website-theme';
 import { ColorPicker } from './color-picker';
 import {
   ColorField,
@@ -73,7 +74,7 @@ const Swatch = styled.div<{ color?: string }>`
   width: 25px;
   height: 25px;
   border-radius: 3px;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border: 1px solid var(--puck-color-border);
   background: ${({ color }) => color ?? 'transparent'};
 `;
 
@@ -92,7 +93,7 @@ export const ColorFieldRender = ({
   name,
 }: ColorFieldRenderProps) => {
   const labels = useColorLabels();
-  const theme = useTheme();
+  const theme = useWebsiteTheme();
   const isCustom = !!value && !isThemeColor(value);
   // Switching to custom starts with an empty picker, so track the mode
   // separately from the value
@@ -134,7 +135,7 @@ export const ColorFieldRender = ({
         <Selection>
           <Swatch color={resolveColor(theme, value)} />
 
-          <select
+          <FieldSelect
             value={showCustom ? customColor : (value ?? '')}
             disabled={readOnly}
             onChange={event => handleSelectChange(event.currentTarget.value)}
@@ -164,7 +165,7 @@ export const ColorFieldRender = ({
             {allowCustom && (
               <option value={customColor}>{labels.custom}</option>
             )}
-          </select>
+          </FieldSelect>
         </Selection>
 
         {showCustom && (

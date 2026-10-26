@@ -1,4 +1,3 @@
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Breakpoint } from '@mui/material';
 import {
@@ -9,6 +8,7 @@ import {
   FieldProps,
 } from '@puckeditor/core';
 
+import { useWebsiteTheme } from '../website-theme';
 import {
   BreakpointsField,
   BreakpointsValue,
@@ -41,7 +41,7 @@ const Tabs = styled.div`
   align-items: center;
   gap: 4px;
   flex-wrap: wrap;
-  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
+  border-bottom: 1px solid var(--puck-color-border);
   margin-bottom: 12px;
 `;
 
@@ -52,12 +52,11 @@ const Tab = styled.button<{ active: boolean }>`
   padding: 6px 10px;
   border: 0;
   border-bottom: 2px solid
-    ${({ active, theme }) =>
-      active ? theme.palette.action.active : 'transparent'};
+    ${({ active }) => (active ? 'var(--puck-color-text)' : 'transparent')};
   margin-bottom: -1px;
   background: transparent;
-  color: ${({ active, theme }) =>
-    active ? theme.palette.text.primary : theme.palette.text.secondary};
+  color: ${({ active }) =>
+    active ? 'var(--puck-color-text)' : 'var(--puck-color-text-secondary)'};
   font: inherit;
   font-weight: ${({ active }) => (active ? 600 : 400)};
   cursor: pointer;
@@ -72,17 +71,17 @@ const ActiveDot = styled.span`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: ${({ theme }) => theme.palette.success.main};
+  background: ${({ theme }) => theme.vars.palette.success.main};
 `;
 
 const TabRemove = styled.span`
   display: inline-flex;
   align-items: center;
   border-radius: 50%;
-  color: ${({ theme }) => theme.palette.text.secondary};
+  color: var(--puck-color-text-secondary);
 
   &:hover {
-    color: ${({ theme }) => theme.palette.text.primary};
+    color: var(--puck-color-text);
   }
 `;
 
@@ -98,7 +97,7 @@ const AddButton = styled.button`
   width: 28px;
   height: 28px;
   padding: 0;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border: 1px solid var(--puck-color-border);
   border-radius: 4px;
   background: transparent;
   color: inherit;
@@ -119,9 +118,9 @@ const Menu = styled.ul`
   margin: 0;
   padding: 4px;
   list-style: none;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border: 1px solid var(--puck-color-border);
   border-radius: 4px;
-  background: ${({ theme }) => theme.palette.background.paper};
+  background: var(--puck-color-surface);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 `;
 
@@ -141,13 +140,13 @@ const MenuItem = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: ${({ theme }) => theme.palette.action.hover};
+    background: var(--puck-color-interactive-neutral-hover);
   }
 `;
 
 const Size = styled.span`
   font-size: 0.85em;
-  color: ${({ theme }) => theme.palette.text.secondary};
+  color: var(--puck-color-text-secondary);
 `;
 
 const Fields = styled.div`
@@ -172,7 +171,7 @@ export const BreakpointsFieldRender = ({
   id,
 }: BreakpointsFieldRenderProps) => {
   const { t } = useTranslation();
-  const theme = useTheme();
+  const theme = useWebsiteTheme();
   const previewWidth = usePuck(
     puck => puck.appState.ui.viewports.current.width
   );
@@ -203,18 +202,15 @@ export const BreakpointsFieldRender = ({
       getActiveBreakpoint(theme, activeBreakpoints, previewWidth)
     : undefined;
 
-  const [selected, setSelected] = useState<Breakpoint | undefined>(
+  const [selectedState, setSelected] = useState<Breakpoint | undefined>(
     () => previewBreakpoint ?? activeBreakpoints[0]
   );
+  const selected =
+    selectedState && activeBreakpoints.includes(selectedState) ?
+      selectedState
+    : activeBreakpoints[0];
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  // Keep the selection valid when breakpoints get removed externally
-  useEffect(() => {
-    if (!selected || !activeBreakpoints.includes(selected)) {
-      setSelected(activeBreakpoints[0]);
-    }
-  }, [activeBreakpoints, current, selected]);
 
   useEffect(() => {
     if (!menuOpen) {

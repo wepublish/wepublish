@@ -29,10 +29,10 @@ const ImageOverlay = styled(Box)(({ theme }) => ({
 const ImageCard = styled(Paper)(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
-  borderRadius: theme.shape.borderRadius * 1.5,
+  borderRadius: `calc(${theme.shape.borderRadius}px * 1.5)`,
   cursor: 'pointer',
   transition: 'transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease',
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid ${theme.vars.palette.divider}`,
   '&:hover': {
     transform: 'none',
     boxShadow: 'none',
@@ -57,7 +57,7 @@ export const StockImage = () => {
         <Typography
           variant="h5"
           component={'div'}
-          fontWeight={600}
+          sx={{ fontWeight: 600 }}
         >
           Stock Images
         </Typography>

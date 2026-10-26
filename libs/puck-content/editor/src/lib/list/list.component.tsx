@@ -31,7 +31,7 @@ import {
   ListValue,
   withoutTakenOptions,
 } from './list.field';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdDragIndicator } from 'react-icons/md';
 
@@ -183,18 +183,29 @@ const resolveDefaultItem = <Item,>(
 // Values are plain primitives and may repeat, so sorting needs a stable id
 // per position that survives reorders and edits.
 const useItemIds = (length: number) => {
-  const ids = useRef<string[]>([]);
-  const counter = useRef(0);
+  const [state, setState] = useState(() => ({
+    ids: Array.from({ length }, (_, index) => `item-${index}`),
+    next: length,
+  }));
 
-  while (ids.current.length < length) {
-    ids.current.push(`item-${counter.current++}`);
+  let current = state;
+
+  if (state.ids.length !== length) {
+    const ids = state.ids.slice(0, length);
+    let next = state.next;
+
+    while (ids.length < length) {
+      ids.push(`item-${next++}`);
+    }
+
+    current = { ids, next };
+    setState(current);
   }
 
-  if (ids.current.length > length) {
-    ids.current = ids.current.slice(0, length);
-  }
+  const updateIds = (update: (ids: string[]) => string[]) =>
+    setState(previous => ({ ...previous, ids: update(previous.ids) }));
 
-  return ids;
+  return [current.ids, updateIds] as const;
 };
 
 type SortableItemProps = {
@@ -289,7 +300,7 @@ export const ListFieldRender = <Item,>({
 }: ListFieldRenderProps<Item>) => {
   const { t } = useTranslation();
   const current = value ?? [];
-  const ids = useItemIds(current.length);
+  const [ids, updateIds] = useItemIds(current.length);
   const options =
     field.unique ? getListItemOptions(field.itemField) : undefined;
   const unusedOptions = options?.filter(
@@ -323,7 +334,7 @@ export const ListFieldRender = <Item,>({
   };
 
   const removeItem = (index: number) => {
-    ids.current = ids.current.filter((_, i) => i !== index);
+    updateIds(previous => previous.filter((_, i) => i !== index));
     onChange(current.filter((_, i) => i !== index));
   };
 
@@ -336,14 +347,14 @@ export const ListFieldRender = <Item,>({
       return;
     }
 
-    const from = ids.current.indexOf(String(active.id));
-    const to = ids.current.indexOf(String(over.id));
+    const from = ids.indexOf(String(active.id));
+    const to = ids.indexOf(String(over.id));
 
     if (from < 0 || to < 0) {
       return;
     }
 
-    ids.current = arrayMove(ids.current, from, to);
+    updateIds(previous => arrayMove(previous, from, to));
     onChange(arrayMove(current, from, to));
   };
 
@@ -360,13 +371,13 @@ export const ListFieldRender = <Item,>({
           onDragEnd={handleDragEnd}
         >
           <SortableContext
-            items={ids.current}
+            items={ids}
             strategy={verticalListSortingStrategy}
           >
             {current.map((item, index) => (
               <SortableItem
-                key={ids.current[index]}
-                id={ids.current[index]}
+                key={ids[index]}
+                id={ids[index]}
                 index={index}
                 fieldId={id}
                 itemField={

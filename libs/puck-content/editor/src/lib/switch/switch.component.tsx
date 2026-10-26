@@ -11,7 +11,7 @@ const Row = styled.label<{ readOnly: boolean }>`
   gap: 12px;
   font-size: var(--puck-font-size-xxs);
   font-weight: 600;
-  color: var(--puck-color-grey-04);
+  color: var(--puck-color-text-secondary);
   cursor: ${({ readOnly }) => (readOnly ? 'default' : 'pointer')};
 `;
 
@@ -34,7 +34,7 @@ export const SwitchFieldRender = ({
       checked={!!value}
       disabled={readOnly}
       onChange={(_event, checked) => onChange(checked)}
-      inputProps={{ 'aria-label': field.label }}
+      slotProps={{ input: { 'aria-label': field.label } }}
     />
   </Row>
 );

@@ -30,22 +30,20 @@ export const ButtonConfig: ComponentConfig<{
         { label: 'Text', value: 'text' },
       ],
     },
+    elevated: {
+      type: 'switch',
+      label: 'Elevated',
+      ai: switchFieldAi(
+        'Whether the button is raised with a shadow instead of flat.'
+      ),
+    },
   },
   resolveFields: async (data, params) => {
-    let fields = params.fields;
-
     if (data.props.variant === 'contained') {
-      fields = {
-        ...fields,
-        elevated: {
-          type: 'switch',
-          label: 'Elevated',
-          ai: switchFieldAi(
-            'Whether the button is raised with a shadow instead of flat.'
-          ),
-        },
-      };
+      return params.fields;
     }
+
+    const { elevated: _elevated, ...fields } = params.fields;
 
     return fields;
   },

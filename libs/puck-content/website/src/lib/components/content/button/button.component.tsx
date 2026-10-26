@@ -13,10 +13,10 @@ export const ButtonRender: PuckComponent<ButtonConfigProps> = ({
   variant,
   color,
   elevated,
-  puck,
+  puck: { dragRef },
 }) => (
   <Button
-    ref={puck.dragRef}
+    ref={dragRef}
     variant={variant}
     color={color}
     disableElevation={!elevated}

@@ -1,4 +1,3 @@
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Breakpoint } from '@mui/material';
 import { FieldLabel, FieldProps } from '@puckeditor/core';
@@ -6,6 +5,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { sortBreakpoints } from '../breakpoints/breakpoints.field';
+import { useWebsiteTheme } from '../website-theme';
 import { VisibilityField, VisibilityValue } from './visibility.field';
 
 // Mirrors the colours of the alignment field, but as one connected group
@@ -19,9 +19,10 @@ const Option = styled.label<{ active: boolean; disabled: boolean }>`
   align-items: center;
   justify-content: center;
   padding: 8px;
-  border: 1px solid ${({ active }) => (active ? '#1a1a1a' : '#ddd')};
+  border: 1px solid
+    ${({ active }) => (active ? 'var(--puck-color-interactive)' : 'var(--puck-color-border)')};
   margin-left: -1px;
-  background: ${({ active }) => (active ? '#1a1a1a' : 'transparent')};
+  background: ${({ active }) => (active ? 'var(--puck-color-interactive-soft)' : 'var(--puck-color-surface)')};
 
   &:first-of-type {
     margin-left: 0;
@@ -32,9 +33,9 @@ const Option = styled.label<{ active: boolean; disabled: boolean }>`
     border-radius: 0 4px 4px 0;
   }
 
-  /* Keep the dark border of an active option above its neighbours */
+  /* Keep the highlighted border of an active option above its neighbours */
   ${({ active }) => (active ? 'position: relative; z-index: 1;' : '')}
-  color: ${({ active }) => (active ? '#f2f2f2' : 'inherit')};
+  color: ${({ active }) => (active ? 'var(--puck-color-interactive)' : 'var(--puck-color-text)')};
   font-size: var(--puck-font-size-xxs);
   font-weight: 600;
   text-transform: uppercase;
@@ -65,7 +66,7 @@ export const VisibilityFieldRender = ({
   readOnly,
 }: VisibilityFieldRenderProps) => {
   const { t } = useTranslation();
-  const theme = useTheme();
+  const theme = useWebsiteTheme();
 
   const breakpoints = useMemo(
     () => sortBreakpoints(theme, theme.breakpoints.keys),

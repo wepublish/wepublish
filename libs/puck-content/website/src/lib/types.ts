@@ -11,7 +11,6 @@ import {
   BuilderIFrameBlockProps,
   BuilderImageBlockProps,
   BuilderInstagramPostBlockProps,
-  BuilderListicleBlockProps,
   BuilderPolisConversationBlockProps,
   BuilderPollBlockProps,
   BuilderQuoteBlockProps,
@@ -44,18 +43,9 @@ import { WithVisibility } from './components/layout/with-visibility';
 import { MailchimpFormConfigProps } from './components/data/mailchimp-form/mailchimp-form.component';
 import { SubscribeConfigProps } from './components/subscribe/subscribe.component';
 import { WithDataSource } from './components/with-datasource';
-import {
-  AlignmentValue,
-  SEOValue,
-  UserFields,
-} from '@wepublish/puck-content/editor';
-
-export type RootProps = {
-  showNavigation: boolean;
-  showFooter: boolean;
-  seo?: SEOValue;
-  socialMedia?: SEOValue;
-};
+import { AlignmentValue, UserFields } from '@wepublish/puck-content/editor';
+import { ListicleConfigProps } from './components/content/listicle/listicle.component';
+import { RootProps } from './root.component';
 
 type BaseComponents = {
   Title: BuilderTitleBlockProps;
@@ -70,7 +60,7 @@ type BaseComponents = {
   Container: WithDataSource<ContainerProps>;
   Collapsible: CollapsibleConfigProps;
   RichText: BuilderRichTextBlockProps;
-  Listicle: BuilderListicleBlockProps;
+  Listicle: ListicleConfigProps;
   IFrame: BuilderIFrameBlockProps;
   YouTube: BuilderYouTubeVideoBlockProps;
   Vimeo: BuilderVimeoVideoBlockProps;

@@ -1,4 +1,4 @@
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Button,
@@ -49,10 +49,10 @@ const SelectButton = styled.button`
   flex: 1;
   min-height: 34px;
   padding: 8px 12px;
-  border: 1px solid var(--puck-color-grey-09);
+  border: 1px solid var(--puck-color-border);
   border-radius: 4px;
-  background: var(--puck-color-white);
-  color: var(--puck-color-grey-03);
+  background: var(--puck-color-surface);
+  color: var(--puck-color-text-secondary);
   font: inherit;
   font-size: var(--puck-font-size-xxs);
   text-align: left;
@@ -158,7 +158,7 @@ const ApiFieldDialog = ({ field, onSelect }: ApiFieldDialogProps) => {
           <Stack
             direction="row"
             spacing={1}
-            alignItems="center"
+            sx={{ alignItems: 'center' }}
           >
             <TextField
               fullWidth
@@ -169,7 +169,7 @@ const ApiFieldDialog = ({ field, onSelect }: ApiFieldDialogProps) => {
               placeholder={field.placeholder}
               value={searchInput}
               onChange={event => setSearchInput(event.currentTarget.value)}
-              InputProps={{ startAdornment: <MdSearch /> }}
+              slotProps={{ input: { startAdornment: <MdSearch /> } }}
             />
 
             <Button

@@ -1,10 +1,12 @@
 import '@puckeditor/core/puck.css';
+import './puck-dark.css';
 
-import { createTheme, Link as MuiLink, ThemeProvider } from '@mui/material';
+import { useQuery } from '@apollo/client/react';
+import { createTheme, Link as MuiLink } from '@mui/material';
 import { Data, Puck, Viewport } from '@puckeditor/core';
 import { withDynamicConfig } from '@puckeditor/plugin-ai';
 import { SessionTokenContext } from '@wepublish/authentication/website';
-import { getSettings, useWebsiteSettingsQuery } from '@wepublish/editor/api';
+import { getSettings, WebsiteSettingsDocument } from '@wepublish/editor/api';
 import {
   alignmentPlugin,
   apiPlugin,
@@ -37,9 +39,11 @@ import {
   viewportSelectionPlugin,
   visibilityPlugin,
   webComponentsPlugin,
+  WebsiteThemeContext,
+  websiteThemePlugin,
   WebsiteTranslationsPlugin,
 } from '@wepublish/puck-content/editor';
-import { config, UserConfig } from '@wepublish/puck-content/website';
+import { Components, config } from '@wepublish/puck-content/website';
 import { minimalTheme } from '@wepublish/ui';
 import { WebsiteProvider } from '@wepublish/website';
 import {
@@ -65,7 +69,7 @@ const initialData = {
       },
     },
   ],
-} satisfies Partial<Data<UserConfig['components']>>;
+} satisfies Partial<Data<Components>>;
 
 // The preview renders the website as an anonymous reader
 const anonymousSession: NonNullable<ContextType<typeof SessionTokenContext>> = [
@@ -89,7 +93,7 @@ const Link = forwardRef<HTMLAnchorElement, BuilderLinkProps>(function Link(
 });
 
 export function PuckEditor() {
-  const { data } = useWebsiteSettingsQuery();
+  const { data } = useQuery(WebsiteSettingsDocument);
 
   const theme = useMemo(
     () => createTheme(minimalTheme, data?.websiteSettings.theme ?? {}),
@@ -155,12 +159,13 @@ export function PuckEditor() {
   );
 
   return (
-    <ThemeProvider theme={theme}>
+    <WebsiteThemeContext.Provider value={theme}>
       <WebsiteProvider>
         <WebsiteBuilderProvider elements={{ Link }}>
           <SessionTokenContext.Provider value={anonymousSession}>
             <Puck
               dnd={{ behavior: 'static' }}
+              iframe={{ syncHostStyles: false }}
               config={dynamicConfig}
               data={initialData}
               plugins={[
@@ -173,6 +178,7 @@ export function PuckEditor() {
                 SEOPreviewPlugin,
                 HeadingAnalyzerPlugin,
                 RawDataPlugin,
+                websiteThemePlugin,
                 EmotionPlugin,
                 webComponentsPlugin,
                 WebsiteTranslationsPlugin,
@@ -207,6 +213,6 @@ export function PuckEditor() {
           </SessionTokenContext.Provider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
-    </ThemeProvider>
+    </WebsiteThemeContext.Provider>
   );
 }

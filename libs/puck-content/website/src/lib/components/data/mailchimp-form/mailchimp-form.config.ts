@@ -1,4 +1,5 @@
-import { ComponentConfig } from '@puckeditor/core';
+import { ArrayField, ComponentConfig, Fields } from '@puckeditor/core';
+import { MailchimpFormOptionsLayout } from '@wepublish/website/api';
 import { z } from 'zod/v4';
 
 import {
@@ -9,7 +10,9 @@ import {
 import { UserFields } from '../../../types';
 import {
   MailchimpFormConfigProps,
+  MailchimpFormInputConfig,
   MailchimpFormRender,
+  MailchimpFormStepConfig,
 } from './mailchimp-form.component';
 
 const inputTypes = [
@@ -21,7 +24,7 @@ const inputTypes = [
   { label: 'Interest groups', value: 'groups' },
 ];
 
-const defaultInput = {
+const defaultInput: MailchimpFormInputConfig = {
   inputType: 'text',
   name: '',
   label: '',
@@ -30,10 +33,11 @@ const defaultInput = {
   urlParam: '',
   defaultValue: '',
   value: '',
+  optionsLayout: MailchimpFormOptionsLayout.List,
   options: [],
 };
 
-const defaultStep = {
+const defaultStep: MailchimpFormStepConfig = {
   skipIfFieldsFilled: [],
   skipIfInterestsFilled: [],
   showIfInterestsFilled: [],
@@ -43,6 +47,149 @@ const defaultStep = {
 };
 
 const idList = (instructions: string) => listFieldAi(z.string(), instructions);
+
+type MailchimpFormFields = Fields<
+  MailchimpFormConfigProps,
+  UserFields[keyof UserFields]
+>;
+
+const stepsField: ArrayField<
+  MailchimpFormStepConfig[],
+  UserFields[keyof UserFields]
+> = {
+  type: 'array',
+  label: 'Steps',
+  min: 1,
+  getItemSummary: (_item, index = 0) => `Step ${index + 1}`,
+  defaultItemProps: defaultStep,
+  arrayFields: {
+    inputs: {
+      type: 'array',
+      label: 'Inputs',
+      getItemSummary: item => item.label || item.name || 'Input',
+      defaultItemProps: defaultInput,
+      arrayFields: {
+        inputType: {
+          type: 'select',
+          label: 'Type',
+          options: inputTypes,
+          ai: {
+            instructions:
+              'Kind of input: text, email, tel, number, hidden (not shown, submits value) or groups (interest group checkboxes from options).',
+          },
+        },
+        name: {
+          type: 'text',
+          label: 'Merge field',
+          ai: {
+            instructions:
+              'Mailchimp merge field name in upper case, e.g. EMAIL, FNAME, LNAME.',
+          },
+        },
+        label: {
+          type: 'text',
+          label: 'Label',
+        },
+        description: {
+          type: 'textarea',
+          label: 'Description',
+        },
+        required: {
+          type: 'switch',
+          label: 'Required',
+          ai: switchFieldAi('Whether the input must be filled in.'),
+        },
+        urlParam: {
+          type: 'text',
+          label: 'URL parameter',
+          ai: {
+            instructions:
+              'Query parameter that prefills the input, e.g. "email" for ?email=…',
+          },
+        },
+        defaultValue: {
+          type: 'text',
+          label: 'Default value',
+        },
+        value: {
+          type: 'text',
+          label: 'Fixed value',
+          ai: {
+            instructions:
+              'Fixed value submitted for this input, mainly for hidden inputs.',
+          },
+        },
+        optionsLayout: {
+          type: 'select',
+          label: 'Options layout',
+          options: Object.values(MailchimpFormOptionsLayout).map(layout => ({
+            label: layout,
+            value: layout,
+          })),
+          ai: {
+            instructions:
+              'How the interest options are arranged: List or Grid.',
+          },
+        },
+        options: {
+          type: 'array',
+          label: 'Interest options',
+          getItemSummary: item => item.name || 'Option',
+          defaultItemProps: { id: '', name: '', description: '' },
+          arrayFields: {
+            id: {
+              type: 'text',
+              label: 'Interest ID',
+              ai: {
+                instructions:
+                  'Mailchimp interest group id. Keep the existing value and never invent one.',
+              },
+            },
+            name: {
+              type: 'text',
+              label: 'Name',
+            },
+            description: {
+              type: 'textarea',
+              label: 'Description',
+            },
+          },
+          ai: {
+            instructions:
+              'Interest group checkboxes, only used for inputs of type groups.',
+          },
+        },
+      },
+    },
+    skipIfFieldsFilled: {
+      type: 'list',
+      label: 'Skip if fields filled',
+      itemField: { type: 'text' },
+      defaultItem: '',
+      ai: idList(
+        'Merge field names; the step is skipped when all of them are already filled.'
+      ),
+    },
+    skipIfInterestsFilled: {
+      type: 'list',
+      label: 'Skip if interests chosen',
+      itemField: { type: 'text' },
+      defaultItem: '',
+      ai: idList(
+        'Interest group ids; the step is skipped when the reader already chose them.'
+      ),
+    },
+    showIfInterestsFilled: {
+      type: 'list',
+      label: 'Show only if interests chosen',
+      itemField: { type: 'text' },
+      defaultItem: '',
+      ai: idList(
+        'Interest group ids; the step is only shown when the reader chose them.'
+      ),
+    },
+  },
+};
 
 export const MailchimpFormConfig: ComponentConfig<{
   props: MailchimpFormConfigProps;
@@ -113,128 +260,7 @@ export const MailchimpFormConfig: ComponentConfig<{
           'URL the reader is redirected to after subscribing. Leave empty to show the success page instead. Merge fields can be inserted as |*FIELD*|.',
       },
     },
-    steps: {
-      type: 'array',
-      label: 'Steps',
-      min: 1,
-      getItemSummary: (_item, index = 0) => `Step ${index + 1}`,
-      defaultItemProps: defaultStep,
-      arrayFields: {
-        inputs: {
-          type: 'array',
-          label: 'Inputs',
-          getItemSummary: item => item.label || item.name || 'Input',
-          defaultItemProps: defaultInput,
-          arrayFields: {
-            inputType: {
-              type: 'select',
-              label: 'Type',
-              options: inputTypes,
-              ai: {
-                instructions:
-                  'Kind of input: text, email, tel, number, hidden (not shown, submits value) or groups (interest group checkboxes from options).',
-              },
-            },
-            name: {
-              type: 'text',
-              label: 'Merge field',
-              ai: {
-                instructions:
-                  'Mailchimp merge field name in upper case, e.g. EMAIL, FNAME, LNAME.',
-              },
-            },
-            label: {
-              type: 'text',
-              label: 'Label',
-            },
-            description: {
-              type: 'textarea',
-              label: 'Description',
-            },
-            required: {
-              type: 'switch',
-              label: 'Required',
-              ai: switchFieldAi('Whether the input must be filled in.'),
-            },
-            urlParam: {
-              type: 'text',
-              label: 'URL parameter',
-              ai: {
-                instructions:
-                  'Query parameter that prefills the input, e.g. "email" for ?email=…',
-              },
-            },
-            defaultValue: {
-              type: 'text',
-              label: 'Default value',
-            },
-            value: {
-              type: 'text',
-              label: 'Fixed value',
-              ai: {
-                instructions:
-                  'Fixed value submitted for this input, mainly for hidden inputs.',
-              },
-            },
-            options: {
-              type: 'array',
-              label: 'Interest options',
-              getItemSummary: item => item.name || 'Option',
-              defaultItemProps: { id: '', name: '', description: '' },
-              arrayFields: {
-                id: {
-                  type: 'text',
-                  label: 'Interest ID',
-                  ai: {
-                    instructions:
-                      'Mailchimp interest group id. Keep the existing value and never invent one.',
-                  },
-                },
-                name: {
-                  type: 'text',
-                  label: 'Name',
-                },
-                description: {
-                  type: 'textarea',
-                  label: 'Description',
-                },
-              },
-              ai: {
-                instructions:
-                  'Interest group checkboxes, only used for inputs of type groups.',
-              },
-            },
-          },
-        },
-        skipIfFieldsFilled: {
-          type: 'list',
-          label: 'Skip if fields filled',
-          itemField: { type: 'text' },
-          defaultItem: '',
-          ai: idList(
-            'Merge field names; the step is skipped when all of them are already filled.'
-          ),
-        },
-        skipIfInterestsFilled: {
-          type: 'list',
-          label: 'Skip if interests chosen',
-          itemField: { type: 'text' },
-          defaultItem: '',
-          ai: idList(
-            'Interest group ids; the step is skipped when the reader already chose them.'
-          ),
-        },
-        showIfInterestsFilled: {
-          type: 'list',
-          label: 'Show only if interests chosen',
-          itemField: { type: 'text' },
-          defaultItem: '',
-          ai: idList(
-            'Interest group ids; the step is only shown when the reader chose them.'
-          ),
-        },
-      },
-    },
+    steps: stepsField as MailchimpFormFields['steps'],
     successPage: {
       type: 'object',
       label: 'Success page',

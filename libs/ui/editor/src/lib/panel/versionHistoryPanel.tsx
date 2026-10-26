@@ -243,9 +243,12 @@ export function getRevisionState(
   return 'archived';
 }
 
-export function VersionHistory({
-  open,
-  onClose,
+export type VersionHistoryTimelineProps = Omit<
+  VersionHistoryProps,
+  'open' | 'onClose'
+>;
+
+export function VersionHistoryTimeline({
   revisions,
   draftId,
   pendingId,
@@ -259,7 +262,7 @@ export function VersionHistory({
   onLoadMore,
   onRestore,
   onPreview,
-}: VersionHistoryProps) {
+}: VersionHistoryTimelineProps) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const [pendingRestore, setPendingRestore] =
@@ -317,250 +320,207 @@ export function VersionHistory({
   }, []);
 
   return (
-    <Drawer
-      anchor="right"
-      open={open}
-      onClose={onClose}
-      slotProps={{
-        paper: {
-          sx: {
-            display: 'flex',
-            flexDirection: 'column',
-            width: DRAWER_WIDTHS.xs,
-            maxWidth: '100vw',
-          },
-        },
-      }}
-    >
-      <DrawerHeader>
-        <div>
-          <DrawerTitle>{t('versionHistory.title')}</DrawerTitle>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-          >
-            {t('versionHistory.subtitle', {
-              count: totalCount ?? revisions.length,
-            })}
-          </Typography>
-        </div>
+    <>
+      {loading && (
+        <Box sx={{ display: 'grid', gap: 2 }}>
+          {[0, 1, 2].map(key => (
+            <Skeleton
+              key={key}
+              variant="rounded"
+              height={72}
+            />
+          ))}
+        </Box>
+      )}
 
-        <DrawerActions>
-          <Button
-            variant="text"
-            onClick={onClose}
-          >
-            {t('versionHistory.close')}
-          </Button>
-        </DrawerActions>
-      </DrawerHeader>
+      {!loading && revisions.length === 0 && (
+        <EmptyState>
+          <MdHistory size={40} />
+          <Typography>{t('versionHistory.empty')}</Typography>
+        </EmptyState>
+      )}
 
-      <DrawerBody>
-        {loading && (
-          <Box sx={{ display: 'grid', gap: 2 }}>
-            {[0, 1, 2].map(key => (
-              <Skeleton
-                key={key}
-                variant="rounded"
-                height={72}
-              />
-            ))}
-          </Box>
-        )}
+      {!loading &&
+        days.map(({ day, entries }) => (
+          <Day key={day}>
+            <DayHeading>{day}</DayHeading>
 
-        {!loading && revisions.length === 0 && (
-          <EmptyState>
-            <MdHistory size={40} />
-            <Typography>{t('versionHistory.empty')}</Typography>
-          </EmptyState>
-        )}
+            <Timeline>
+              {entries.map(({ revision, showTitle }) => {
+                const state = getRevisionState(revision, {
+                  draftId,
+                  pendingId,
+                  publishedId,
+                });
+                const isCurrent =
+                  revision.id === draftId ||
+                  revision.id === pendingId ||
+                  revision.id === publishedId;
+                const isDraft = revision.id === draftId;
+                const restorable = canRestore && !isDraft;
+                const authorName = getAuthorName(revision.author);
 
-        {!loading &&
-          days.map(({ day, entries }) => (
-            <Day key={day}>
-              <DayHeading>{day}</DayHeading>
+                return (
+                  <TimelineItem key={revision.id}>
+                    <Dot
+                      dotColor={paletteColor(
+                        theme,
+                        stateTextColors[stateColors[state]]
+                      )}
+                      isCurrent={isCurrent}
+                    />
 
-              <Timeline>
-                {entries.map(({ revision, showTitle }) => {
-                  const state = getRevisionState(revision, {
-                    draftId,
-                    pendingId,
-                    publishedId,
-                  });
-                  const isCurrent =
-                    revision.id === draftId ||
-                    revision.id === pendingId ||
-                    revision.id === publishedId;
-                  const isDraft = revision.id === draftId;
-                  const restorable = canRestore && !isDraft;
-                  const authorName = getAuthorName(revision.author);
-
-                  return (
-                    <TimelineItem key={revision.id}>
-                      <Dot
-                        dotColor={paletteColor(
-                          theme,
-                          stateTextColors[stateColors[state]]
-                        )}
-                        isCurrent={isCurrent}
-                      />
-
-                      <Entry isCurrent={isCurrent}>
-                        <EntryHeader>
-                          <Tooltip title={formatDate(revision.createdAt)}>
-                            <Typography
-                              variant="subtitle2"
-                              component="span"
-                            >
-                              {format(new Date(revision.createdAt), 'HH:mm', {
-                                locale: dateLocale,
-                              })}
-                            </Typography>
-                          </Tooltip>
-
-                          <StatePill
-                            state={stateColors[state]}
-                            size="small"
+                    <Entry isCurrent={isCurrent}>
+                      <EntryHeader>
+                        <Tooltip title={formatDate(revision.createdAt)}>
+                          <Typography
+                            variant="subtitle2"
+                            component="span"
                           >
-                            {stateLabel[state]}
-                          </StatePill>
-
-                          {isCurrent && !restorable && (
-                            <Typography
-                              variant="caption"
-                              color="primary"
-                              sx={{ ml: 'auto' }}
-                            >
-                              {t('versionHistory.currentVersion')}
-                            </Typography>
-                          )}
-
-                          {((onPreview && !isDraft) || restorable) && (
-                            <Actions>
-                              {onPreview && !isDraft && (
-                                <Tooltip title={t('versionHistory.preview')}>
-                                  <IconButton
-                                    size="small"
-                                    aria-label={t('versionHistory.preview')}
-                                    onClick={() => onPreview(revision.id)}
-                                  >
-                                    <MdVisibility />
-                                  </IconButton>
-                                </Tooltip>
-                              )}
-
-                              {restorable && (
-                                <Tooltip title={t('versionHistory.restore')}>
-                                  <span>
-                                    <IconButton
-                                      size="small"
-                                      color="primary"
-                                      aria-label={t('versionHistory.restore')}
-                                      disabled={!!restoringId}
-                                      onClick={() =>
-                                        setPendingRestore(revision)
-                                      }
-                                    >
-                                      {restoringId === revision.id ?
-                                        <CircularProgress size={16} />
-                                      : <MdRestore />}
-                                    </IconButton>
-                                  </span>
-                                </Tooltip>
-                              )}
-                            </Actions>
-                          )}
-                        </EntryHeader>
-
-                        {showTitle && (
-                          <Typography variant="body2">
-                            {revision.title || t('versionHistory.untitled')}
+                            {format(new Date(revision.createdAt), 'HH:mm', {
+                              locale: dateLocale,
+                            })}
                           </Typography>
-                        )}
+                        </Tooltip>
 
-                        {showTitle && revision.subtitle && (
+                        <StatePill
+                          state={stateColors[state]}
+                          size="small"
+                        >
+                          {stateLabel[state]}
+                        </StatePill>
+
+                        {isCurrent && !restorable && (
                           <Typography
                             variant="caption"
-                            color="text.secondary"
-                            sx={{
-                              display: '-webkit-box',
-                              WebkitLineClamp: 2,
-                              WebkitBoxOrient: 'vertical',
-                              overflow: 'hidden',
-                            }}
+                            color="primary"
+                            sx={{ ml: 'auto' }}
                           >
-                            {revision.subtitle}
+                            {t('versionHistory.currentVersion')}
                           </Typography>
                         )}
 
-                        <Meta>
-                          <Avatar
-                            sx={{
-                              width: 20,
-                              height: 20,
-                              fontSize: 10,
-                              bgcolor: 'action.selected',
-                              color: 'text.secondary',
-                            }}
-                          >
-                            {authorName ?
-                              getAuthorInitials(authorName)
-                            : <MdPerson size={12} />}
-                          </Avatar>
+                        {((onPreview && !isDraft) || restorable) && (
+                          <Actions>
+                            {onPreview && !isDraft && (
+                              <Tooltip title={t('versionHistory.preview')}>
+                                <IconButton
+                                  size="small"
+                                  aria-label={t('versionHistory.preview')}
+                                  onClick={() => onPreview(revision.id)}
+                                >
+                                  <MdVisibility />
+                                </IconButton>
+                              </Tooltip>
+                            )}
 
+                            {restorable && (
+                              <Tooltip title={t('versionHistory.restore')}>
+                                <span>
+                                  <IconButton
+                                    size="small"
+                                    color="primary"
+                                    aria-label={t('versionHistory.restore')}
+                                    disabled={!!restoringId}
+                                    onClick={() => setPendingRestore(revision)}
+                                  >
+                                    {restoringId === revision.id ?
+                                      <CircularProgress size={16} />
+                                    : <MdRestore />}
+                                  </IconButton>
+                                </span>
+                              </Tooltip>
+                            )}
+                          </Actions>
+                        )}
+                      </EntryHeader>
+
+                      {showTitle && (
+                        <Typography variant="body2">
+                          {revision.title || t('versionHistory.untitled')}
+                        </Typography>
+                      )}
+
+                      {showTitle && revision.subtitle && (
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {revision.subtitle}
+                        </Typography>
+                      )}
+
+                      <Meta>
+                        <Avatar
+                          sx={{
+                            width: 20,
+                            height: 20,
+                            fontSize: 10,
+                            bgcolor: 'action.selected',
+                            color: 'text.secondary',
+                          }}
+                        >
+                          {authorName ?
+                            getAuthorInitials(authorName)
+                          : <MdPerson size={12} />}
+                        </Avatar>
+
+                        <Typography
+                          variant="caption"
+                          noWrap
+                          sx={{ flexShrink: 0 }}
+                        >
+                          {authorName ?? t('versionHistory.unknownAuthor')}
+                        </Typography>
+
+                        {revision.publishedAt && (
                           <Typography
                             variant="caption"
                             noWrap
-                            sx={{ flexShrink: 0 }}
                           >
-                            {authorName ?? t('versionHistory.unknownAuthor')}
+                            · {formatDate(revision.publishedAt)}
                           </Typography>
+                        )}
+                      </Meta>
+                    </Entry>
+                  </TimelineItem>
+                );
+              })}
+            </Timeline>
+          </Day>
+        ))}
 
-                          {revision.publishedAt && (
-                            <Typography
-                              variant="caption"
-                              noWrap
-                            >
-                              · {formatDate(revision.publishedAt)}
-                            </Typography>
-                          )}
-                        </Meta>
-                      </Entry>
-                    </TimelineItem>
-                  );
-                })}
-              </Timeline>
-            </Day>
-          ))}
+      {!loading && hasMore && (
+        <Box sx={{ display: 'grid', justifyItems: 'center', gap: 1, pt: 2 }}>
+          <Button
+            fullWidth
+            variant="outlined"
+            disabled={loadingMore}
+            startIcon={loadingMore ? <CircularProgress size={14} /> : undefined}
+            onClick={() => onLoadMore?.()}
+          >
+            {t('versionHistory.loadMore')}
+          </Button>
 
-        {!loading && hasMore && (
-          <Box sx={{ display: 'grid', justifyItems: 'center', gap: 1, pt: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              disabled={loadingMore}
-              startIcon={
-                loadingMore ? <CircularProgress size={14} /> : undefined
-              }
-              onClick={() => onLoadMore?.()}
+          {totalCount != null && (
+            <Typography
+              variant="caption"
+              color="text.secondary"
             >
-              {t('versionHistory.loadMore')}
-            </Button>
-
-            {totalCount != null && (
-              <Typography
-                variant="caption"
-                color="text.secondary"
-              >
-                {t('versionHistory.showing', {
-                  count: revisions.length,
-                  total: totalCount,
-                })}
-              </Typography>
-            )}
-          </Box>
-        )}
-      </DrawerBody>
+              {t('versionHistory.showing', {
+                count: revisions.length,
+                total: totalCount,
+              })}
+            </Typography>
+          )}
+        </Box>
+      )}
 
       <Dialog
         open={!!pendingRestore}
@@ -592,6 +552,59 @@ export function VersionHistory({
           </Button>
         </DialogActions>
       </Dialog>
+    </>
+  );
+}
+
+export function VersionHistory({
+  open,
+  onClose,
+  ...timeline
+}: VersionHistoryProps) {
+  const { t } = useTranslation();
+
+  return (
+    <Drawer
+      anchor="right"
+      open={open}
+      onClose={onClose}
+      slotProps={{
+        paper: {
+          sx: {
+            display: 'flex',
+            flexDirection: 'column',
+            width: DRAWER_WIDTHS.xs,
+            maxWidth: '100vw',
+          },
+        },
+      }}
+    >
+      <DrawerHeader>
+        <div>
+          <DrawerTitle>{t('versionHistory.title')}</DrawerTitle>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+          >
+            {t('versionHistory.subtitle', {
+              count: timeline.totalCount ?? timeline.revisions.length,
+            })}
+          </Typography>
+        </div>
+
+        <DrawerActions>
+          <Button
+            variant="text"
+            onClick={onClose}
+          >
+            {t('versionHistory.close')}
+          </Button>
+        </DrawerActions>
+      </DrawerHeader>
+
+      <DrawerBody>
+        <VersionHistoryTimeline {...timeline} />
+      </DrawerBody>
     </Drawer>
   );
 }

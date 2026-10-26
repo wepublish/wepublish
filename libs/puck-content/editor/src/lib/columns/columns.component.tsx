@@ -45,8 +45,11 @@ export const ColumnsFieldRender = ({
               gap: 4,
               padding: selected ? 11 : 12,
               borderRadius: 8,
-              border: selected ? '2px solid #1a1a1a' : '1px solid #e0e0e0',
-              background: '#fff',
+              border:
+                selected ?
+                  '2px solid var(--puck-color-interactive)'
+                : '1px solid var(--puck-color-border)',
+              background: 'var(--puck-color-surface)',
               cursor: readOnly ? 'default' : 'pointer',
             }}
           >
@@ -60,9 +63,12 @@ export const ColumnsFieldRender = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 4,
-                  border: '1px solid #e0e0e0',
-                  background: selected ? '#fff' : '#f2f2f2',
-                  color: '#333',
+                  border: '1px solid var(--puck-color-border)',
+                  background:
+                    selected ?
+                      'var(--puck-color-surface)'
+                    : 'var(--puck-color-surface-subtle)',
+                  color: 'var(--puck-color-text)',
                   fontSize: 14,
                   fontWeight: 500,
                 }}
