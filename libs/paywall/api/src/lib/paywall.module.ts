@@ -1,13 +1,34 @@
-import { Module } from '@nestjs/common';
-import { GateModule } from '@wepublish/gate/api';
+import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { forwardRef, Module } from '@nestjs/common';
+import { PrismaModule } from '@wepublish/nest-modules';
+import { PaywallDataloaderService } from './paywall-dataloader.service';
+import { PaywallMemberPlansDataloader } from './paywall-member-plans.dataloader';
+import { PaywallService } from './paywall.service';
 import { PaywallResolver } from './paywall.resolver';
 import {
   HasOptionalPaywallResolver,
   HasPaywallResolver,
 } from './has-paywall/has-paywall.resolver';
+import { MemberPlanModule } from '@wepublish/member-plan/api';
 
 @Module({
-  imports: [GateModule],
-  providers: [PaywallResolver, HasPaywallResolver, HasOptionalPaywallResolver],
+  imports: [
+    GraphqlResponseCacheModule,
+    PrismaModule,
+    forwardRef(() => MemberPlanModule),
+  ],
+  providers: [
+    PaywallDataloaderService,
+    PaywallMemberPlansDataloader,
+    PaywallService,
+    PaywallResolver,
+    HasPaywallResolver,
+    HasOptionalPaywallResolver,
+  ],
+  exports: [
+    PaywallDataloaderService,
+    PaywallMemberPlansDataloader,
+    PaywallService,
+  ],
 })
 export class PaywallModule {}

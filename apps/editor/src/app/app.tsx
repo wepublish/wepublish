@@ -2,15 +2,10 @@ import { gql } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
 import { css, Global } from '@emotion/react';
 import {
-  BannerList,
-  CreateBannerForm,
-  EditBannerForm,
-} from '@wepublish/banner/editor';
-import {
-  ContentGateList,
-  CreateContentGateForm,
-  EditContentGateForm,
-} from '@wepublish/content-gate/editor';
+  CreateEngagementRule,
+  EditEngagementRule,
+  EngagementRuleList,
+} from '@wepublish/engagement/editor';
 import {
   ConsentCreateView,
   ConsentEditView,
@@ -48,7 +43,13 @@ import {
   useReportQueryErrors,
 } from '@wepublish/ui/editor';
 import { lazy, Suspense, useContext, useEffect } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useParams,
+} from 'react-router-dom';
 
 import { Base } from './base';
 import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalette';
@@ -156,6 +157,21 @@ const Logout = () => {
   return (
     <Navigate
       to="/login"
+      replace
+    />
+  );
+};
+
+/**
+ * Banners and content gates became engagement rules with the same ids, so
+ * their old links still lead to the rule.
+ */
+const RedirectToEngagementRule = () => {
+  const { id } = useParams();
+
+  return (
+    <Navigate
+      to={id ? `/audience-engagement/edit/${id}` : '/audience-engagement'}
       replace
     />
   );
@@ -393,28 +409,36 @@ export function App() {
               }
             />
             <Route
-              path="articles/content-gates"
+              path="audience-engagement"
               element={
                 <Base>
-                  <ContentGateList />
+                  <EngagementRuleList />
+                </Base>
+              }
+            />
+            <Route
+              path="audience-engagement/create"
+              element={
+                <Base>
+                  <CreateEngagementRule />
+                </Base>
+              }
+            />
+            <Route
+              path="audience-engagement/edit/:id"
+              element={
+                <Base>
+                  <EditEngagementRule />
                 </Base>
               }
             />
             <Route
               path="articles/content-gates/edit/:id"
-              element={
-                <Base>
-                  <EditContentGateForm />
-                </Base>
-              }
+              element={<RedirectToEngagementRule />}
             />
             <Route
-              path="articles/content-gates/create"
-              element={
-                <Base>
-                  <CreateContentGateForm />
-                </Base>
-              }
+              path="articles/content-gates/*"
+              element={<RedirectToEngagementRule />}
             />
             {/* Pages Routes */}
             <Route
@@ -754,28 +778,12 @@ export function App() {
               }
             />
             <Route
-              path="banners"
-              element={
-                <Base>
-                  <BannerList />
-                </Base>
-              }
-            />
-            <Route
-              path="banners/create"
-              element={
-                <Base>
-                  <CreateBannerForm />
-                </Base>
-              }
-            />
-            <Route
               path="banners/edit/:id"
-              element={
-                <Base>
-                  <EditBannerForm />
-                </Base>
-              }
+              element={<RedirectToEngagementRule />}
+            />
+            <Route
+              path="banners/*"
+              element={<RedirectToEngagementRule />}
             />
             {/* Authors Routes */}
             <Route

@@ -134,7 +134,7 @@ import { BuilderBlockStyleProps } from './block-styles.interface';
 import { BuilderContentWrapperProps } from './content-wrapper.interface';
 import { BuilderTeaserProps } from './teaser.interface';
 import { BuilderPaywallProps } from './paywall.interface';
-import { BuilderContentGateProps } from './content-gate.interface';
+import { BuilderEngagementPromptProps } from './engagement-prompt.interface';
 import { BuilderShareProps } from './share.interface';
 import { BuilderTagProps, BuilderTagSEOProps } from './tag.interface';
 import { BuilderTextToIconProps } from './text-to-icon.interface';
@@ -197,7 +197,7 @@ export type WebsiteBuilderProps = {
   Upgrade: ComponentType<BuilderUpgradeProps>;
   ContentWrapper: ComponentType<BuilderContentWrapperProps>;
   Paywall: ComponentType<BuilderPaywallProps>;
-  ContentGate: ComponentType<BuilderContentGateProps>;
+  EngagementPrompt: ComponentType<BuilderEngagementPromptProps>;
   TextToIcon: ComponentType<BuilderTextToIconProps>;
   Share: ComponentType<BuilderShareProps>;
 
@@ -343,7 +343,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   UserForm: NoComponent,
   ContentWrapper: NoComponent,
   Paywall: NoComponent,
-  ContentGate: NoComponent,
+  EngagementPrompt: NoComponent,
   TextToIcon: NoComponent,
   Share: NoComponent,
 

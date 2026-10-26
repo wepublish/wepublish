@@ -33,8 +33,7 @@ describe('article content cache', () => {
         {} as any,
         new PublicContentCacheInvalidator(kv),
         kv,
-        { schedule: vi.fn() } as any,
-        { assertPaywall: vi.fn() } as any
+        { schedule: vi.fn() } as any
       ),
       { __DATALOADER__ArticleDataloaderService: { prime: vi.fn() } }
     );

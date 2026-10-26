@@ -9,11 +9,15 @@
     "backToProfile": "Zurück zum Profil",
     "profile": "Profil"
   },
-  "contentGate": {
-    "register": "Kostenlos registrieren",
-    "subscribe": "Abonnent*in werden",
-    "login": "Login",
-    "continueReading": "Weiterlesen"
+  "engagement": {
+    "action": {
+      "LOGIN": "Login",
+      "REGISTER": "Kostenlos registrieren",
+      "MEMBERSHIP": "Abonnent*in werden",
+      "NEWSLETTER": "Newsletter abonnieren",
+      "URL": "Mehr erfahren"
+    },
+    "dismiss": "Weiterlesen"
   },
   "paywall": {
     "subscribe": "Abonnent*in werden",

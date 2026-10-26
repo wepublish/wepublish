@@ -67,8 +67,11 @@ import {
 import { PageModule } from '@wepublish/page/api';
 import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 import { PaywallModule } from '@wepublish/paywall/api';
-import { ContentGateModule } from '@wepublish/content-gate/api';
-import { GateModule } from '@wepublish/gate/api';
+import {
+  EngagementMeterSecretModule,
+  EngagementModule,
+  deriveMeterSecret,
+} from '@wepublish/engagement/api';
 import { PeerModule } from '@wepublish/peering/api';
 import { ImportPeerArticleModule } from '@wepublish/peering/api/import';
 import { PermissionModule } from '@wepublish/permissions/api';
@@ -376,9 +379,17 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       },
       inject: [ConfigService],
     }),
-    GateModule,
     PaywallModule,
-    ContentGateModule,
+    EngagementModule,
+    EngagementMeterSecretModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      // Signs anonymous readers' meters. Derived, so no new env var is needed.
+      useFactory: (config: ConfigService) =>
+        deriveMeterSecret(
+          config.getOrThrow<string>('JWT_PRIVATE_KEY').replace(/\\n/g, '\n')
+        ),
+    }),
     WebsiteSettingsModule,
     SeoChecklistModule,
   ],

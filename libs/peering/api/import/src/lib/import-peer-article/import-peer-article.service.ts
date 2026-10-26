@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, PrismaClient, TagType } from '@prisma/client';
 import {
   ArticleDataloaderService,
@@ -16,7 +20,8 @@ import { ImageFetcherService, MediaAdapter } from '@wepublish/image/api';
 import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { createSafeHostUrl, remote } from '@wepublish/peering/api';
 import { DateFilter, PrimeDataLoader } from '@wepublish/utils/api';
-import { GraphQLClient } from 'graphql-request';
+import { PEER_USER_AGENT } from '@wepublish/authentication/api';
+import { ClientError, GraphQLClient } from 'graphql-request';
 import { pipe, replace, toLower } from 'ramda';
 import { ValueOf } from 'type-fest';
 import {
@@ -45,6 +50,17 @@ const peerArticleFilterToGqlArticleFilter = ({
     filter.publicationDateTo &&
     dateFilterToGqlDateFilter(filter.publicationDateTo),
 });
+
+/**
+ * A peer asked with `PEER_USER_AGENT` answers 401 for a token it does not
+ * know (`INVALID_PEER_TOKEN`), instead of treating the request as anonymous.
+ */
+const isInvalidPeerToken = (error: unknown) =>
+  error instanceof ClientError &&
+  (error.response.status === 401 ||
+    !!error.response.errors?.some(
+      ({ message }) => message === 'Token is invalid'
+    ));
 
 @Injectable()
 export class ImportPeerArticleService {
@@ -83,6 +99,7 @@ export class ImportPeerArticleService {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${peer.token}`,
+            'User-Agent': PEER_USER_AGENT,
           },
         });
 
@@ -180,15 +197,27 @@ export class ImportPeerArticleService {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${peer.token}`,
+        // As a peer, the remote sends the whole article, paywalled or not.
+        'User-Agent': PEER_USER_AGENT,
       },
     });
 
-    const { article } = await client.request<
-      remote.ArticleQuery,
-      remote.ArticleQueryVariables
-    >(remote.ArticleDocument, {
-      id: articleId,
-    });
+    const { article } = await client
+      .request<remote.ArticleQuery, remote.ArticleQueryVariables>(
+        remote.ArticleDocument,
+        {
+          id: articleId,
+        }
+      )
+      .catch(error => {
+        if (isInvalidPeerToken(error)) {
+          throw new BadRequestException(
+            `The token of the peer ${peer.name} is no longer valid. Ask them for a new one and update it in the peer settings.`
+          );
+        }
+
+        throw error;
+      });
 
     const authors =
       options.importAuthors ?

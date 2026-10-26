@@ -23,8 +23,9 @@ const typeDefs = `
     navigations: [String!]!
     peerProfile: String!
     commentsForItem(itemId: ID!): [String!]!
+    engagementPrompts(documentId: ID!): [String!]!
   }
-  type Mutation { tags: String! }
+  type Mutation { tags: String!, viewArticle(articleId: ID!): Article! }
 `;
 
 const BLOCKS: Record<string, Array<{ kind: string; disabled?: boolean }>> = {
@@ -48,6 +49,8 @@ const createApi = async (dragonfly: FakeDragonfly) => {
     navigations: 0,
     peerProfile: 0,
     commentsForItem: 0,
+    engagementPrompts: 0,
+    viewArticle: 0,
   };
   let failNext = false;
   const kv = new KvTtlCacheService(createCache(), dragonfly);
@@ -78,9 +81,15 @@ const createApi = async (dragonfly: FakeDragonfly) => {
         navigations: () => [`main ${++calls.navigations}`],
         peerProfile: () => `profile ${++calls.peerProfile}`,
         commentsForItem: () => [`comment ${++calls.commentsForItem}`],
+        engagementPrompts: () => [`prompt ${++calls.engagementPrompts}`],
       },
       Mutation: {
         tags: () => `tags ${++calls.tags}`,
+        viewArticle: (_: unknown, { articleId }: { articleId: string }) => ({
+          id: articleId,
+          title: `viewed ${++calls.viewArticle}`,
+          blocks: [],
+        }),
       },
       Block: {
         __resolveType: (block: { kind: string }) => block.kind,
@@ -322,6 +331,37 @@ describe('GraphqlResponseCachePlugin', () => {
     expect(api.calls.tags).toBe(2);
   });
 
+  it('caches the engagement prompts of anonymous readers, which depend on the page only', async () => {
+    const api = await start();
+
+    await api.query('{ engagementPrompts(documentId: "page-1") }');
+    await api.query('{ engagementPrompts(documentId: "page-1") }');
+
+    expect(api.calls.engagementPrompts).toBe(1);
+  });
+
+  it('never caches viewArticle, which meters the reader', async () => {
+    const api = await start();
+
+    await api.query('mutation { viewArticle(articleId: "1") { id title } }');
+    await api.query('mutation { viewArticle(articleId: "1") { id title } }');
+
+    expect(api.calls.viewArticle).toBe(2);
+  });
+
+  it('answers an article from the resolvers again once the engagement rules changed', async () => {
+    const api = await start();
+
+    await api.query(ARTICLE);
+    await new PublicContentCacheInvalidator(api.kv).invalidate(
+      'engagement',
+      'articles'
+    );
+    await api.query(ARTICLE);
+
+    expect(api.calls.article).toBe(2);
+  });
+
   it('never caches an answer with errors', async () => {
     const api = await start();
 
@@ -367,7 +407,7 @@ describe('GraphqlResponseCachePlugin', () => {
   it.each([
     PUBLIC_CONTENT_NAMESPACE,
     'navigations',
-    'member-plans',
+    'content:engagement',
     'settings',
   ])('answers from the resolvers again once %s changed', async namespace => {
     const api = await start();

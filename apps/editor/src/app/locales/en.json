@@ -239,8 +239,8 @@
         "breakingNewsInfo": "Marks the article as breaking news. Depending on your website's design, its teaser gets a special label.",
         "peeringInfo": "Allows partner media in the We.Publish network (peers) to take over this article and publish it on their website.",
         "paywallInfo": "Choose a paywall if only readers with a suitable subscription should be able to read this article. Leave empty for free access.",
-        "contentGateDisabled": "No content gate",
-        "contentGateDisabledInfo": "The active content gate never appears on this article. Articles with a paywall never get a content gate.",
+        "contentGateDisabled": "Exclude from metered engagement rules",
+        "contentGateDisabledInfo": "Metered engagement rules (newsletter and membership prompts that count articles) never show on this article and never restrict it. Announcements still show. Articles with a paywall are left to the paywall.",
         "hiddenInfo": "Hidden articles do not appear in automatic article lists on the website (e.g. latest articles or tag pages), but remain reachable via their direct link.",
         "contentUrlInfo": "The web address readers are taken to when they click on the teaser.",
         "teaserPropertiesInfo": "Additional key-value pairs your website can use for special display options. Only needed if the people who develop your website asked you to set them. Public properties are visible via the public API.",
@@ -307,78 +307,6 @@
         "name": "Name",
         "title": "Title",
         "tags": "Tags"
-      }
-    },
-    "banner": {
-      "edit": {
-        "title": "Edit banner"
-      },
-      "create": {
-        "title": "Create banner"
-      },
-      "delete": {
-        "title": "Delete banner",
-        "body": "Do you really want to delete the banner?",
-        "delete": "Delete banner"
-      },
-      "form": {
-        "displayOptions": "Display Options",
-        "title": "Title",
-        "text": "Text",
-        "cta": "Call to action",
-        "delay": "Delay in seconds",
-        "hideForMinutes": "Hide/collapse duration in minutes after the banner is dismissed",
-        "collapsible": "Collapse banner instead of hiding it after dismissing",
-        "active": "Active",
-        "showOnArticles": "Display on articles",
-        "showOnPages": "Display on these pages",
-        "showForLoginStatus": "Display for",
-        "html": "HTML code",
-        "embedUrl": "Embed URL (iframe)",
-        "embedUrlHelp": "URL of a page embedded as an iframe with automatic height adjustment. The article's tags are appended as a ?tags=... query parameter.",
-        "loginStatus": {
-          "ALL": "all visitors",
-          "LOGGED_IN": "logged in visitors",
-          "LOGGED_OUT": "logged out visitors",
-          "SUBSCRIBED": "subscribed visitors",
-          "UNSUBSCRIBED": "unsubscribed visitors",
-          "PAYWALL_BYPASSED": "visitors bypassing the paywall"
-        },
-        "actions": "Actions",
-        "image": "Image",
-        "action": {
-          "add": "Add new action",
-          "label": "Label",
-          "url": "URL",
-          "style": "Style",
-          "role": "Role",
-          "styleInfo": "Optional style name for the button, e.g. «outline». Only has an effect if your website supports it.",
-          "roleInfo": "«Primary» highlights the button. «Cancel» closes the banner instead of opening the link. «Other» shows a normal button."
-        },
-        "content": "Content",
-        "mustNotBeNegative": "Value must not be negative",
-        "collapsibleInfo": "When a reader closes the banner, it is collapsed instead of disappearing completely. How a collapsed banner looks depends on your website.",
-        "delayInfo": "How many seconds after the page has loaded the banner appears. 0 shows it immediately.",
-        "showForLoginStatusInfo": "Choose which visitors see the banner, e.g. only visitors without a subscription. If several active banners fit a visitor, the one with the most specific target group is shown.",
-        "showOnPagesInfo": "The banner appears on the pages selected here. Leave empty if it should not appear on any page.",
-        "ctaInfo": "Short sentence above the buttons that invites readers to act, e.g. «Support us with a subscription».",
-        "htmlInfo": "Optional: your own HTML code for the banner. If filled in, it replaces the title, text, call to action and buttons."
-      },
-      "list": {
-        "title": "Banners",
-        "text": "Text",
-        "createNew": "Create new",
-        "active": "Active",
-        "edit": "Edit",
-        "delete": "Delete"
-      },
-      "actions": {
-        "add": "Add action",
-        "role": {
-          "PRIMARY": "Primary",
-          "CANCEL": "Cancel",
-          "OTHER": "Other"
-        }
       }
     },
     "blocks": {
@@ -1598,7 +1526,6 @@
     "navbar": {
       "articles": "Articles",
       "authors": "Authors",
-      "banners": "Banners",
       "blocks": {
         "polls": "Polls",
         "blockStyles": "Block Styling",
@@ -1655,7 +1582,8 @@
       "mailLog": "Sent emails",
       "communication": "Communication",
       "auditLog": "Audit log",
-      "language": "Language"
+      "language": "Language",
+      "audienceEngagement": "Audience Engagement"
     },
     "navigation": {
       "overview": {
@@ -2854,7 +2782,9 @@
         "fadeoutHelpText": "Fading out allows a preview of the rest of the content to be shown.",
         "bypassesInfo": "Secret codes that let people read articles behind this paywall without a subscription, e.g. for a print or event campaign. Share the link or QR code: whoever opens it gets free access for a few hours.",
         "showQrCode": "Show QR code",
-        "hideContentAfterInfo": "How many blocks of the article (e.g. title, lead, paragraphs) readers without access still see before the rest is hidden. Default: 3."
+        "hideContentAfterInfo": "How many blocks of the article (e.g. title, lead, paragraphs) readers without access still see before the rest is hidden. Default: 3.",
+        "enforced": "Enforce on the server",
+        "enforcedHelpText": "Readers without access only get the first blocks; the rest never leaves the server. Without it, the website hides the rest, which readers can work around. Update the websites before turning it on."
       },
       "overview": {
         "areYouSure": "Are you sure?",
@@ -2866,72 +2796,6 @@
         "active": "Active",
         "memberPlans": "Subscription plans",
         "anyMemberPlan": "All subscription plans"
-      }
-    },
-    "contentGate": {
-      "navbar": "Content gates",
-      "list": {
-        "title": "Content gates",
-        "description": "Content gates ask readers to register or subscribe after they read a number of articles. Only one content gate can be active.",
-        "createNew": "Create content gate",
-        "active": "Active",
-        "name": "Name",
-        "audience": "Audience",
-        "metering": "Metering",
-        "meteringSummary": "{{free}} free, soft gate on {{soft}}, hard gate from article {{hard}}"
-      },
-      "create": {
-        "title": "Create content gate"
-      },
-      "edit": {
-        "title": "Edit content gate"
-      },
-      "delete": {
-        "title": "Delete content gate?",
-        "body": "Do you really want to delete the content gate \"{{name}}\"?",
-        "delete": "Delete"
-      },
-      "audience": {
-        "ANONYMOUS": "Readers who are not logged in",
-        "ANONYMOUSInfo": "Logging in or registering lifts the gate.",
-        "NON_SUBSCRIBERS": "Readers without a subscription",
-        "NON_SUBSCRIBERSInfo": "Only an active subscription lifts the gate. Logged-in readers without a subscription see it too."
-      },
-      "form": {
-        "metering": "When does the gate appear?",
-        "name": "Name (not visible to readers)",
-        "active": "Active",
-        "activeInfo": "Applies to every article without a paywall. Activating this gate deactivates all other content gates.",
-        "freeArticles": "Free articles before the first gate",
-        "softGateArticles": "Articles with the soft gate",
-        "softGateArticlesInfo": "The soft gate can be dismissed and the article can be read afterwards.",
-        "hardGateFrom": "Hard gate from article",
-        "hardGateFromHelp": "The hard gate cannot be dismissed. Readers only see the beginning of the article.",
-        "meterWindowDays": "Count reads of the last … days",
-        "meterWindowDaysInfo": "Older reads stop counting. Leave empty to never reset the count.",
-        "previewBlocks": "Blocks shown before the gate",
-        "previewBlocksInfo": "Only these first blocks of a gated article are sent to the browser. The rest is loaded once the reader may read the article.",
-        "audience": "Who sees the gate?",
-        "exclusions": "Exclusions",
-        "newsletterParams": "Newsletter links contain",
-        "newsletterParamsInfo": "Visits whose link contains one of these URL parameters count as coming from a newsletter, for the rest of the visit.",
-        "newsletterParamKey": "Parameter, e.g. utm_medium",
-        "newsletterParamValue": "Value, e.g. email",
-        "addNewsletterParam": "Add parameter",
-        "newsletterNeverGate": "Never show a gate on visits from a newsletter",
-        "newsletterFreeArticles": "Free articles from a newsletter",
-        "newsletterFreeArticlesInfo": "This many articles opened from a newsletter neither show a gate nor count towards it.",
-        "content": "What does the gate say?",
-        "softDescription": "Text of the soft gate",
-        "softDescriptionInfo": "Shown in a dialog the reader can close.",
-        "hardDescription": "Text of the hard gate",
-        "hardDescriptionInfo": "Shown below the beginning of the article.",
-        "ctaLabel": "Button text",
-        "ctaLabelInfo": "Leave empty for \"Register for free\" or \"Subscribe\", depending on who sees the gate.",
-        "ctaUrl": "Button link",
-        "ctaUrlInfo": "A path like /signup or a full URL. Leave empty for the registration or subscription page, depending on who sees the gate.",
-        "ctaUrlInvalid": "Enter a path starting with / or a full URL",
-        "mustNotBeNegative": "Value must not be negative"
       }
     },
     "discountCode": {
@@ -4281,7 +4145,7 @@
         "image": "Upload image",
         "document": "Upload document",
         "navigation": "Create navigation",
-        "banner": "Create banner",
+        "engagementRule": "Create engagement rule",
         "author": "Create author",
         "authorTag": "Create author tag",
         "user": "Create user",
@@ -4520,6 +4384,204 @@
         "heading": "Settings",
         "title": "Title",
         "titleHint": "Also the subject line of the Mailchimp draft. Takes effect on save."
+      }
+    },
+    "engagement": {
+      "list": {
+        "title": "Audience Engagement",
+        "description": "Who sees which prompt, when, and whether it keeps the rest of an article back.",
+        "create": "New rule",
+        "empty": "No engagement rules yet.",
+        "active": "Active",
+        "toggle": "Activate {{name}}",
+        "name": "Name",
+        "goal": "Goal",
+        "audience": "Audience",
+        "where": "Where",
+        "summary": "Summary",
+        "priority": "Priority",
+        "articles": "Articles",
+        "pages_one": "{{count}} page",
+        "pages_other": "{{count}} pages",
+        "peered": "peered articles",
+        "paywalls": "Content access (paywalls)",
+        "paywallsDescription": "Paywalls keep articles for members of certain plans. An enforced paywall is checked on the server.",
+        "managePaywalls": "Manage paywalls",
+        "enforced": "Enforced",
+        "inactive": "Inactive",
+        "anyMemberPlan": "Any member plan"
+      },
+      "delete": {
+        "title": "Delete engagement rule?",
+        "body": "“{{name}}” stops showing right away.",
+        "confirm": "Delete"
+      },
+      "create": {
+        "title": "New engagement rule",
+        "pickPreset": "What do you want to achieve? You can change everything afterwards."
+      },
+      "edit": {
+        "title": "Edit engagement rule"
+      },
+      "preset": {
+        "growNewsletter": "Grow the newsletter",
+        "growNewsletterInfo": "Ask anonymous readers to subscribe after a few articles, then ask them to register.",
+        "promoteMemberships": "Promote memberships",
+        "promoteMembershipsInfo": "Show an invitation to become a member in articles, for readers without a membership.",
+        "restrictPremium": "Restrict premium content",
+        "restrictPremiumInfo": "Keep articles for members of certain plans, enforced on the server. Opens a new paywall.",
+        "displayAnnouncement": "Display an announcement",
+        "displayAnnouncementInfo": "A banner or message on articles and pages, e.g. for a crowdfunding."
+      },
+      "goal": {
+        "ANNOUNCEMENT": "Announcement",
+        "ANNOUNCEMENTInfo": "One message from the first visit on. No meter, nothing is restricted.",
+        "NEWSLETTER": "Newsletter",
+        "NEWSLETTERInfo": "Prompts that grow the newsletter, counted by the articles a reader read.",
+        "MEMBERSHIP": "Membership",
+        "MEMBERSHIPInfo": "Prompts that promote memberships, counted by the articles a reader read."
+      },
+      "audience": {
+        "ALL": "Everyone",
+        "ALLInfo": "Every reader.",
+        "ANONYMOUS": "Anonymous readers",
+        "ANONYMOUSInfo": "Readers who are not logged in.",
+        "REGISTERED": "Logged-in readers",
+        "REGISTEREDInfo": "Readers who are logged in, with or without a membership.",
+        "NON_MEMBERS": "Readers without a membership",
+        "NON_MEMBERSInfo": "Anonymous readers and logged-in readers without an active membership.",
+        "MEMBERS": "Members",
+        "MEMBERSInfo": "Readers with an active membership, free or paid.",
+        "NON_PAYING": "Readers who do not pay",
+        "NON_PAYINGInfo": "Everyone without a paid membership, free members included.",
+        "PAYING_MEMBERS": "Paying members",
+        "PAYING_MEMBERSInfo": "Readers with an active membership that costs something.",
+        "PAYWALL_BYPASSED": "Readers with a paywall bypass link",
+        "PAYWALL_BYPASSEDInfo": "Readers who opened a bypass link of an active paywall."
+      },
+      "placement": {
+        "BANNER": "Banner",
+        "MODAL": "Modal",
+        "INLINE": "In the article",
+        "CUTOFF": "After the article"
+      },
+      "requirement": {
+        "REGISTRATION": "Registration",
+        "MEMBERSHIP": "Membership",
+        "PAID_MEMBERSHIP": "Paid membership"
+      },
+      "actionType": {
+        "URL": "Link",
+        "NEWSLETTER": "Newsletter signup",
+        "LOGIN": "Login",
+        "REGISTER": "Registration",
+        "MEMBERSHIP": "Membership"
+      },
+      "actionRole": {
+        "PRIMARY": "Primary",
+        "CANCEL": "Close",
+        "OTHER": "Other"
+      },
+      "referral": {
+        "NONE": "Newsletter links count like other visits",
+        "UNLIMITED": "Newsletter links always open the linked article",
+        "LIMITED": "Newsletter links open a limited number of articles"
+      },
+      "summary": {
+        "announcement": "{{placement}} from the first visit",
+        "article": "Article {{from}}",
+        "articles": "Articles {{from}}–{{to}}",
+        "from": "from {{from}}",
+        "dismissible": "dismissible {{placement}}",
+        "hard_one": "requires {{requirement}}, {{count}} preview block",
+        "hard_other": "requires {{requirement}}, {{count}} preview blocks",
+        "placement": {
+          "BANNER": "banner",
+          "MODAL": "modal",
+          "INLINE": "prompt in the article",
+          "CUTOFF": "prompt after the article"
+        },
+        "requirement": {
+          "REGISTRATION": "registration",
+          "MEMBERSHIP": "a membership",
+          "PAID_MEMBERSHIP": "a paid membership"
+        }
+      },
+      "form": {
+        "goal": "Goal",
+        "name": "Name",
+        "active": "Active",
+        "priority": "Priority",
+        "priorityInfo": "When several rules apply, the higher priority gets its place first. One banner, one modal and one prompt in the article show at a time.",
+        "newsletterNote": "Newsletter subscriptions can not be verified yet. A hard stage of a newsletter rule therefore asks for a registration or membership, and must also offer a newsletter signup.",
+        "audience": "Audience",
+        "trigger": "Where and when",
+        "showOnArticles": "Show on articles",
+        "includePeeredArticles": "Include peered articles",
+        "includePeeredArticlesInfo": "Articles imported from peers. Their publishers decide about access to them.",
+        "showOnPages": "Show on pages",
+        "meterWindowDays": "Count articles of the last … days",
+        "meterWindowDaysInfo": "Articles read longer ago no longer count. Each article counts once.",
+        "newsletterReferral": "Newsletter links",
+        "newsletterReferralInfo": "Readers who come from a newsletter link may read that article past the meter. Never applies to paywalls.",
+        "newsletterReferralLimit": "Articles per window",
+        "newsletterParams": "Url params of newsletter links",
+        "newsletterParamsInfo": "A visit counts as coming from the newsletter when the url has one of these params. Leave the value empty to accept any value.",
+        "paramKey": "Param, e.g. utm_medium",
+        "paramValue": "Value, e.g. email",
+        "addParam": "Add param",
+        "presentation": "Presentation and actions",
+        "message": "Message",
+        "stage": "Stage {{number}}",
+        "removeStage": "Remove stage",
+        "addStage": "Add stage",
+        "afterArticles": "Show after … articles",
+        "afterArticlesInfo": "The number of other articles the reader read in the window. 0 shows it from the first article on.",
+        "placement": "Placement",
+        "placementInfo": "A banner on top, a modal over the article, a prompt in the article, or after the article. Only the last stage can be after the article.",
+        "hard": "Restrict the article",
+        "hardInfo": "Readers who do not meet the requirement only get the preview blocks. Checked on the server.",
+        "requirement": "Requirement",
+        "requirementInfo": "What a reader needs to read on. A rule does not show to readers who already meet it.",
+        "previewBlocks": "Preview blocks",
+        "previewBlocksInfo": "How many blocks restricted readers get, title and lead included.",
+        "title": "Title",
+        "description": "Text",
+        "text": "Short text",
+        "html": "HTML",
+        "htmlInfo": "Replaces title, text and actions in the banner.",
+        "embedUrl": "Embed url",
+        "embedUrlInfo": "An iframe in the banner, e.g. a form.",
+        "cta": "Call to action",
+        "ctaInfo": "A line above the buttons.",
+        "image": "Image",
+        "dismissible": "Can be dismissed",
+        "dismissibleInfo": "Readers can close it, it then stays away for the time below.",
+        "hideForMinutes": "Hide for … minutes after dismissing",
+        "hideForMinutesInfo": "A changed rule shows again right away.",
+        "delaySeconds": "Show after … seconds",
+        "actions": "Actions",
+        "actionsInfo": "Buttons. Login, registration and membership lead to their pages on the website.",
+        "actionType": "Type",
+        "actionLabel": "Label",
+        "actionLabelDefault": "Default of the website",
+        "actionUrl": "Url",
+        "actionRole": "Role",
+        "addAction": "Add action"
+      },
+      "validation": {
+        "required": "Required",
+        "min": "Too small",
+        "ascending": "Must be higher than the stage before",
+        "hardNotLast": "Only the last stage can restrict the article",
+        "hardNeedsCutoff": "A restricting stage is shown after the article",
+        "onlyHard": "Only for a stage that restricts the article",
+        "announcementSingleStage": "An announcement has one message",
+        "announcementFromStart": "An announcement shows from the first article",
+        "announcementSoft": "An announcement can not restrict the article",
+        "announcementNoMeter": "An announcement does not count articles",
+        "announcementNoReferral": "An announcement has no newsletter settings",
+        "newsletterActionRequired": "Offer a newsletter signup too"
       }
     }
   }

@@ -25,7 +25,7 @@ const setup = ({
     poll: model(),
     tag: model(),
     memberPlan: model(),
-    gate: model(),
+    paywall: model(),
     articleRevision: model(),
     pageRevision: model(),
     $queryRaw: vi.fn().mockResolvedValue(rows),
@@ -50,18 +50,21 @@ const setup = ({
   );
 
   const resets = (): Reset[] => [
-    ...publicContentCache.invalidate.mock.calls.map(
-      (args): Reset => ['invalidate', ...args]
-    ),
-    ...publicContentCache.invalidateComments.mock.calls.map(
-      (args): Reset => ['invalidateComments', ...args]
-    ),
+    ...publicContentCache.invalidate.mock.calls.map((args): Reset => [
+      'invalidate',
+      ...args,
+    ]),
+    ...publicContentCache.invalidateComments.mock.calls.map((args): Reset => [
+      'invalidateComments',
+      ...args,
+    ]),
     ...publicContentCache.invalidateArticleLayout.mock.calls.map(
       (args): Reset => ['invalidateArticleLayout', ...args]
     ),
-    ...kv.resetNamespace.mock.calls.map(
-      (args): Reset => ['resetNamespace', ...args]
-    ),
+    ...kv.resetNamespace.mock.calls.map((args): Reset => [
+      'resetNamespace',
+      ...args,
+    ]),
   ];
 
   return { migrator, prisma, resets };
@@ -84,11 +87,11 @@ const MIGRATIONS: Array<[keyof SlateToPmMigrator, Reset[]]> = [
   [
     'migrateMemberPlans',
     [
-      ['invalidate', 'gates'],
+      ['invalidate', 'paywalls'],
       ['resetNamespace', 'member-plans'],
     ],
   ],
-  ['migratePaywalls', [['invalidate', 'gates']]],
+  ['migratePaywalls', [['invalidate', 'paywalls']]],
   ['migrateArticles', ARTICLES],
   ['migratePages', PAGES],
 ];
@@ -180,7 +183,7 @@ describe('SlateToPmMigrator caches', () => {
 
     it('retires only the caches of the tables it rewrote, once each', async () => {
       const { migrator, prisma, resets } = setup({
-        raw: buggyEntityIn('authors', 'member.plans', 'gates'),
+        raw: buggyEntityIn('authors', 'member.plans', 'paywalls'),
       });
 
       await migrator.remigrateBuggyEntities();
@@ -188,8 +191,8 @@ describe('SlateToPmMigrator caches', () => {
       expect(prisma.$executeRawUnsafe).toHaveBeenCalledTimes(7);
       expect(resets()).toEqual([
         ['invalidate', 'authors'],
-        ['invalidate', 'gates'],
-        ['invalidate', 'gates'],
+        ['invalidate', 'paywalls'],
+        ['invalidate', 'paywalls'],
         ['resetNamespace', 'member-plans'],
       ]);
     });

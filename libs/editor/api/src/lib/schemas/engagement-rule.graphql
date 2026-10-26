@@ -1,0 +1,88 @@
+fragment FullEngagementAction on EngagementAction {
+  id
+  type
+  label
+  url
+  style
+  role
+}
+
+fragment FullEngagementStage on EngagementStage {
+  id
+  afterArticles
+  placement
+  enforcement
+  requirement
+  previewBlocks
+  dismissible
+  hideForMinutes
+  delaySeconds
+  title
+  text
+  cta
+  description
+  html
+  embedUrl
+  imageId
+  image {
+    ...FullImage
+  }
+  actions {
+    ...FullEngagementAction
+  }
+}
+
+fragment FullEngagementRule on EngagementRule {
+  id
+  createdAt
+  modifiedAt
+  name
+  goal
+  active
+  priority
+  version
+  audience
+  showOnArticles
+  showOnPageIds
+  includePeeredArticles
+  meterWindowDays
+  newsletterReferral
+  newsletterReferralLimit
+  newsletterParams {
+    key
+    value
+  }
+  stages {
+    ...FullEngagementStage
+  }
+}
+
+query EngagementRules {
+  engagementRules {
+    ...FullEngagementRule
+  }
+}
+
+query EngagementRule($id: String!) {
+  engagementRule(id: $id) {
+    ...FullEngagementRule
+  }
+}
+
+mutation CreateEngagementRule($input: CreateEngagementRuleInput!) {
+  createEngagementRule(input: $input) {
+    ...FullEngagementRule
+  }
+}
+
+mutation UpdateEngagementRule($input: UpdateEngagementRuleInput!) {
+  updateEngagementRule(input: $input) {
+    ...FullEngagementRule
+  }
+}
+
+mutation DeleteEngagementRule($id: String!) {
+  deleteEngagementRule(id: $id) {
+    ...FullEngagementRule
+  }
+}

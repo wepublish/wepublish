@@ -114,13 +114,13 @@ describe('MemberPlanService cache', () => {
     ['updated', () => service.updateMemberPlan({ id: 'plan-1', name: 'Abo' })],
     ['deleted', () => service.deleteMemberPlan('plan-1')],
   ])(
-    'loads the member plans of gates again after one was %s',
+    'loads the member plans of paywalls again after one was %s',
     async (_, change) => {
       const loader = vi.fn().mockResolvedValue([memberPlan]);
 
-      await kv.getOrLoadNs('content:gates', 'member-plans:gate-1', loader, 60);
+      await kv.getOrLoadNs('content:paywalls', 'member-plans:pw-1', loader, 60);
       await change();
-      await kv.getOrLoadNs('content:gates', 'member-plans:gate-1', loader, 60);
+      await kv.getOrLoadNs('content:paywalls', 'member-plans:pw-1', loader, 60);
 
       expect(loader).toHaveBeenCalledTimes(2);
     }

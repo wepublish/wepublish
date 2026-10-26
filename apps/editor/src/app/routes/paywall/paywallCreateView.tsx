@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateGateDocument, GateMode } from '@wepublish/editor/api';
-import { PaywallFormValues, toPaywallGateInput } from '@wepublish/gate/editor';
+import { CreatePaywallDocument } from '@wepublish/editor/api';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -12,9 +11,9 @@ import {
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { PaywallForm, paywallSchema } from './paywallForm';
+import { PaywallForm, PaywallFormValues, paywallSchema } from './paywallForm';
 
 const onErrorToast = (error: Error) => {
   enqueueSnackbar(humanizeError(error), {
@@ -27,6 +26,7 @@ const PaywallCreateView = () => {
   const { t } = useTranslation();
   const [shouldClose, setShouldClose] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const closePath = './../..';
 
   const form = useForm<PaywallFormValues>({
@@ -39,19 +39,21 @@ const PaywallCreateView = () => {
       bypasses: [],
       fadeout: true,
       hideContentAfter: 3,
+      // "Restrict premium content" in Audience Engagement opens this form.
+      enforced: searchParams.get('enforced') === 'true',
     },
   });
 
   const [createPaywall, { loading: updateLoading }] = useMutation(
-    CreateGateDocument,
+    CreatePaywallDocument,
     {
       onError: onErrorToast,
       onCompleted: data => {
-        if (data.createGate) {
+        if (data.createPaywall) {
           if (shouldClose) {
             navigate(`./..`);
           } else {
-            navigate(`./../edit/${data.createGate.id}`);
+            navigate(`./../edit/${data.createPaywall.id}`);
           }
         }
       },
@@ -61,12 +63,14 @@ const PaywallCreateView = () => {
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit(paywall =>
-          createPaywall({
-            variables: {
-              input: { mode: GateMode.Paywall, ...toPaywallGateInput(paywall) },
-            },
-          })
+        onSubmit={form.handleSubmit(
+          ({ memberPlans, bypasses, id, ...paywall }) =>
+            createPaywall({
+              variables: {
+                ...paywall,
+                bypassTokens: bypasses.map(bypass => bypass.token),
+              },
+            })
         )}
       >
         <SingleViewTitle

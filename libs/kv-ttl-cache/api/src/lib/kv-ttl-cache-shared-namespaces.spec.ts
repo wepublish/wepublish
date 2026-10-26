@@ -27,9 +27,22 @@ describe('shared namespaces', () => {
         'settings',
         'navigations',
         'graphql:responses',
-        'content:gates',
+        'content:paywalls',
       ])
     );
+  });
+
+  it('shares the active engagement rules and rebuilds article pages when they change', () => {
+    expect(SHARED_NAMESPACES).toContain('content:engagement');
+    expect(isWebsiteLayoutNamespace('content:engagement')).toBe(true);
+  });
+
+  it('no longer knows the banners namespace', () => {
+    expect(SHARED_NAMESPACES).not.toContain('banners');
+  });
+
+  it("shares logged-in readers' meters, which are keyed by a hash and hold no names", () => {
+    expect(isSharedNamespace('engagement:meters')).toBe(true);
   });
 
   it('shares the comments and polls every logged-in article view reads', () => {
@@ -80,20 +93,14 @@ describe('findSecretField', () => {
 });
 
 describe('website layout', () => {
-  it.each(['banners', 'content:paywalls', 'content:content-gates'])(
-    'no longer knows %s, which became content:gates',
-    namespace => {
-      expect(isSharedNamespace(namespace)).toBe(false);
-      expect(isWebsiteLayoutNamespace(namespace)).toBe(false);
-    }
-  );
-
-  it.each(['navigations', 'settings', 'content:gates'])(
-    'counts %s as layout every page shows',
-    namespace => {
-      expect(isWebsiteLayoutNamespace(namespace)).toBe(true);
-    }
-  );
+  it.each([
+    'navigations',
+    'settings',
+    'content:engagement',
+    'content:paywalls',
+  ])('counts %s as layout every page shows', namespace => {
+    expect(isWebsiteLayoutNamespace(namespace)).toBe(true);
+  });
 
   it.each(['graphql:content', 'content:articles', 'content:images'])(
     'does not count %s as layout',

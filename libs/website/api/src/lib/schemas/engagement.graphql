@@ -1,0 +1,94 @@
+fragment FullEngagementAction on EngagementAction {
+  id
+  type
+  label
+  url
+  style
+  role
+}
+
+fragment FullEngagementPrompt on EngagementPrompt {
+  ruleId
+  ruleVersion
+  goal
+
+  stage {
+    id
+    afterArticles
+    placement
+    enforcement
+    requirement
+    previewBlocks
+    dismissible
+    hideForMinutes
+    delaySeconds
+    title
+    text
+    cta
+    description
+    html
+    embedUrl
+
+    image {
+      ...FullImage
+    }
+
+    actions {
+      ...FullEngagementAction
+    }
+  }
+}
+
+fragment FullArticleAccess on ArticleAccess {
+  granted
+  source
+  requirement
+  previewBlocks
+  paywallId
+  ruleId
+  stageId
+}
+
+# A mutation on purpose: it meters the reader, so it must never be cached or
+# prefetched. The article it answers carries every block when access was
+# granted, which Apollo writes over the cut blocks of ArticleDocument.
+mutation ViewArticle($input: ViewArticleInput!) {
+  viewArticle(input: $input) {
+    meterToken
+
+    access {
+      ...FullArticleAccess
+    }
+
+    prompts {
+      ...FullEngagementPrompt
+    }
+
+    article {
+      id
+
+      latest {
+        id
+        restricted
+
+        blocks {
+          ...FullBlock
+        }
+      }
+    }
+  }
+}
+
+query EngagementPrompts(
+  $documentType: EngagementDocumentType!
+  $documentId: String!
+  $paywallBypassToken: String
+) {
+  engagementPrompts(
+    documentType: $documentType
+    documentId: $documentId
+    paywallBypassToken: $paywallBypassToken
+  ) {
+    ...FullEngagementPrompt
+  }
+}

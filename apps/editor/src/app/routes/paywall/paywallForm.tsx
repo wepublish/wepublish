@@ -18,10 +18,10 @@ import {
   FormLabel,
   IconButton,
   Stack,
+  Switch,
   TextField,
 } from '@mui/material';
 import { FullMemberPlanFragment } from '@wepublish/editor/api';
-import { PaywallFormValues } from '@wepublish/gate/editor';
 import {
   IconButtonTooltip,
   InfoTooltip,
@@ -43,7 +43,8 @@ import { z } from 'zod';
 
 import markUrl from '../../ui/wepublish-mark.png';
 
-export const paywallSchema: z.ZodType<PaywallFormValues> = z.object({
+export const paywallSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1).nullable(),
   description: z.custom<RichTextBlockValue['richText']>().nullish(),
   circumventDescription: z.custom<RichTextBlockValue['richText']>().nullish(),
@@ -60,8 +61,11 @@ export const paywallSchema: z.ZodType<PaywallFormValues> = z.object({
   alternativeSubscribeUrl: z.union([z.literal(''), z.string().url()]).nullish(),
   hideContentAfter: z.coerce.number(),
   fadeout: z.boolean(),
+  enforced: z.boolean(),
   bypasses: z.array(z.object({ id: z.string().optional(), token: z.string() })),
 });
+
+export type PaywallFormValues = z.infer<typeof paywallSchema>;
 
 type PaywallFormProps = {
   create?: boolean;
@@ -308,6 +312,30 @@ export const PaywallForm = ({ create }: PaywallFormProps) => {
 
                 <FormHelperText>
                   {t('paywall.form.activeHelpText')}
+                </FormHelperText>
+              </Box>
+
+              <Box>
+                <Controller
+                  control={control}
+                  name="enforced"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={Boolean(field.value)}
+                          onChange={(_event, checked) =>
+                            field.onChange(checked)
+                          }
+                        />
+                      }
+                      label={t('paywall.form.enforced')}
+                    />
+                  )}
+                />
+
+                <FormHelperText>
+                  {t('paywall.form.enforcedHelpText')}
                 </FormHelperText>
               </Box>
 
