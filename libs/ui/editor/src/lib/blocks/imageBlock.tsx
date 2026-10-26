@@ -14,15 +14,16 @@ import { ImageBlockValue } from './types';
 
 const BLOCK_IMAGE_HEIGHT = 300;
 
-const Panel = styled.div`
-  margin-bottom: 10px;
+const Wrapper = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-// TODO: Handle disabled prop
 export function ImageBlock({
   value,
   onChange,
   autofocus,
+  disabled,
 }: BlockProps<ImageBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(
     () => Boolean(autofocus) && !value.image
@@ -37,27 +38,26 @@ export function ImageBlock({
   }
 
   return (
-    <>
-      <Panel>
-        <ChooseEditImage
-          onSelect={value => {
-            setChooseModalOpen(false);
-            handleImageChange(value);
-          }}
-          image={image}
-          disabled={false}
-          maxHeight={BLOCK_IMAGE_HEIGHT}
-          openChooseModalOpen={() => setChooseModalOpen(true)}
-          openEditModalOpen={() => setEditModalOpen(true)}
-          removeImage={() => handleImageChange(null)}
-        />
-      </Panel>
+    <Wrapper>
+      <ChooseEditImage
+        onSelect={value => {
+          setChooseModalOpen(false);
+          handleImageChange(value);
+        }}
+        image={image}
+        disabled={!!disabled}
+        maxHeight={BLOCK_IMAGE_HEIGHT}
+        openChooseModalOpen={() => setChooseModalOpen(true)}
+        openEditModalOpen={() => setEditModalOpen(true)}
+        removeImage={() => handleImageChange(null)}
+      />
 
       <TypographicTextArea
         variant="subtitle2"
         align="center"
         placeholder={t('blocks.image.overview.caption')}
         value={caption}
+        disabled={disabled}
         onChange={e => {
           onChange({ ...value, caption: e.target.value });
         }}
@@ -105,11 +105,14 @@ export function ImageBlock({
             onClose={() => setEditModalOpen(false)}
             onSave={(_, block) => {
               setEditModalOpen(false);
-              block && onChange({ ...value, linkUrl: block.linkUrl });
+
+              if (block) {
+                onChange({ ...value, linkUrl: block.linkUrl });
+              }
             }}
           />
         </Drawer>
       )}
-    </>
+    </Wrapper>
   );
 }

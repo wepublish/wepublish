@@ -30,6 +30,7 @@ import {
   Pagination,
   TableWrapper,
   PageTitle,
+  useTableExportQuery,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -101,6 +102,16 @@ function AuditLogList() {
   });
 
   const auditLogs = data?.auditLogs?.nodes ?? [];
+
+  const exportAuditLogs = useTableExportQuery(
+    AuditLogListDocument,
+    {
+      filter,
+      sort: AuditLogSort.CreatedAt,
+      order: sortOrder === 'asc' ? SortOrder.Ascending : SortOrder.Descending,
+    },
+    data => data.auditLogs
+  );
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -273,6 +284,8 @@ function AuditLogList() {
       <TableWrapper>
         <DataTable
           storageKey="audit-log"
+          exportRows={exportAuditLogs}
+          exportTotalCount={data?.auditLogs.totalCount ?? 0}
           data={auditLogs}
           loading={isLoading}
           columns={[
@@ -286,6 +299,7 @@ function AuditLogList() {
                 t('auditLogList.overview.createdAtDate', {
                   createdAtDate: new Date(createdAt),
                 }),
+              exportValue: ({ createdAt }) => new Date(createdAt),
             },
             {
               id: 'actor',
@@ -297,6 +311,8 @@ function AuditLogList() {
 
                 return <Truncate title={actor}>{actor}</Truncate>;
               },
+              exportValue: rowData =>
+                describeActor(rowData as FullAuditLogFragment),
             },
             {
               id: 'action',
@@ -309,6 +325,7 @@ function AuditLogList() {
                   label={t(`auditLogList.action.${action}`)}
                 />
               ),
+              exportValue: ({ action }) => t(`auditLogList.action.${action}`),
             },
             {
               id: 'mutation',
@@ -323,6 +340,7 @@ function AuditLogList() {
               render: ({ mutation }) => (
                 <Truncate title={mutation}>{mutation}</Truncate>
               ),
+              exportValue: ({ mutation }) => mutation,
             },
             {
               id: 'record',
@@ -343,6 +361,8 @@ function AuditLogList() {
                     )}
                   </Truncate>
                 : <Muted>—</Muted>,
+              exportValue: ({ entity, recordId }) =>
+                entity && recordId ? `${entity} · ${recordId}` : entity,
             },
             {
               id: 'session',
@@ -367,6 +387,7 @@ function AuditLogList() {
                     </Monospace>
                   </IconButtonTooltip>
                 : <Muted>—</Muted>,
+              exportValue: ({ sessionId }) => sessionId,
             },
             {
               id: 'status',
@@ -385,6 +406,7 @@ function AuditLogList() {
                       label={t('auditLogList.overview.failed')}
                     />
                   </IconButtonTooltip>,
+              exportValue: ({ success }) => success,
             },
           ]}
         />

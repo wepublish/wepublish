@@ -11,6 +11,7 @@ import { Box, css, Paper } from '@mui/material';
 import { BubbleMenu } from './editor/bubble-menu';
 import { editorConfig } from './richtext-editor.config';
 import { DragHandle } from './editor/drag-handle';
+import { CaretLinkPopover } from './editor/link-popover';
 import { FooterActions } from './editor/footer-actions';
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import { forwardRef, useEffect, useMemo } from 'react';
@@ -231,6 +232,12 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
                 p: 1,
                 borderBottom: 1,
                 borderColor: 'divider',
+                position: 'sticky',
+                top: 'var(--wep-sticky-top, 0px)',
+                zIndex: 2,
+                bgcolor: 'background.paper',
+                borderTopLeftRadius: 'inherit',
+                borderTopRightRadius: 'inherit',
               }}
             >
               <MenuBar />
@@ -238,6 +245,7 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
           )}
 
           {editorReady && <BubbleMenu />}
+          {editorReady && <CaretLinkPopover />}
           {editorReady && <DragHandle />}
 
           <Editor

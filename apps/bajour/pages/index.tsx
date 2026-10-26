@@ -2,7 +2,11 @@ import styled from '@emotion/styled';
 import { SliderWrapper } from '@wepublish/block-content/website';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
+import {
+  getApiUrl,
+  getPageShell,
+  revalidateFor,
+} from '@wepublish/utils/website';
 import {
   CommentListDocument,
   CommentSort,
@@ -129,7 +133,9 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   }
 
-  const props = addClientCacheToProps(client, {});
+  const props = addClientCacheToProps(client, {
+    shell: getPageShell(page.data?.page),
+  });
 
   return {
     props,

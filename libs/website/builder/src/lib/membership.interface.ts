@@ -114,6 +114,9 @@ export type BuilderMemberPlanItemProps = Pick<
     slug: string;
     paymentPeriodicity?: PaymentPeriodicity;
     showPeriodicity?: boolean;
+    // the card stands for one offer of a plan and periodicity, so its price
+    // is the one for that whole period
+    isOffer?: boolean;
     amountLayout?: BuilderMemberPlanLayout;
     amount?: number;
     onAmountChange?: (monthlyAmount: number) => void;

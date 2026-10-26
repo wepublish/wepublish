@@ -152,6 +152,33 @@ describe('deriveDateFormats', () => {
     expect(result.user_name_date).toBeUndefined();
   });
 
+  it('reuses its formatters instead of building new ones per date', () => {
+    // Every Intl.DateTimeFormat holds native ICU memory that GC does not hand
+    // back. Built per date, a bulk send grew the API by MBs per mail until it
+    // was killed.
+    deriveDateFormats({ warmUp: '2026-06-30T08:22:10.000Z' });
+    const { DateTimeFormat } = Intl;
+    const construct = vi
+      .spyOn(Intl, 'DateTimeFormat')
+      .mockImplementation(function (
+        locales?: string | string[],
+        options?: Intl.DateTimeFormatOptions
+      ) {
+        return new DateTimeFormat(locales, options);
+      });
+
+    try {
+      deriveDateFormats({
+        user_lastLogin: '2026-06-30T08:22:10.000Z',
+        optional_subscription_paidUntil: '2027-01-15T23:00:00.000Z',
+      });
+
+      expect(construct).not.toHaveBeenCalled();
+    } finally {
+      construct.mockRestore();
+    }
+  });
+
   describe('timezone via TZ env', () => {
     const originalTz = process.env.TZ;
     afterEach(() => {

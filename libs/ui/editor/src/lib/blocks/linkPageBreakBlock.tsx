@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Drawer, IconButton, TextField } from '@mui/material';
+import { Button, Drawer, Typography } from '@mui/material';
 import {
   SetStateAction,
   useCallback,
@@ -12,7 +12,7 @@ import { MdEdit } from 'react-icons/md';
 
 import { BlockProps } from '../atoms/blockList';
 import { ChooseEditImage } from '../atoms/chooseEditImage';
-import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import { TypographicTextArea } from '../atoms/typographicTextArea';
 import { DRAWER_WIDTHS } from '../drawer';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
@@ -21,38 +21,28 @@ import { isFunctionalUpdate } from '../utility';
 import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { LinkPageBreakBlockValue, RichTextBlockValue } from './types';
 
-const Input = styled(TextField)`
-  font-size: 24px;
-  margin-bottom: 20px;
+const Wrapper = styled('div')`
+  container-type: inline-size;
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
 `;
 
-const InputWrapper = styled.div`
-  flex: 1 0 70%;
+const ContentLayout = styled('div')`
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 5fr);
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-items: start;
+
+  @container (max-width: 600px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 `;
 
-const ChooseImageWrapper = styled.div`
-  flex: 1 0 25%;
-  align-self: flex-start;
-  margin-bottom: 10px;
-`;
-
-const ContentWrapper = styled.div`
+const LinkSummary = styled('div')`
   display: flex;
-  flex-flow: row wrap;
-  margin-top: 50px;
-  gap: 24px;
-`;
-
-const IconWrapper = styled.div`
-  position: absolute;
-  z-index: 1;
-  height: 100%;
-  right: 0;
-`;
-
-const LinkPage = styled.div`
-  position: relative;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(1, 2)};
+  align-items: center;
 `;
 
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>;
@@ -65,7 +55,6 @@ export function LinkPageBreakBlock({
 }: LinkPageBreakBlockProps) {
   const { text, richText, image } = value;
   const focusRef = useRef<HTMLTextAreaElement>(null);
-  const focusInputRef = useRef<HTMLInputElement>(null);
 
   const { t } = useTranslation();
 
@@ -90,53 +79,62 @@ export function LinkPageBreakBlock({
   const [isEditPanelOpen, setEditPanelOpen] = useState(false);
 
   return (
-    <>
-      <LinkPage>
-        <IconWrapper>
-          <IconButtonTooltip caption={t('blocks.linkPageBreak.editSettings')}>
-            <IconButton
-              size="large"
-              aria-label={t('blocks.linkPageBreak.editSettings')}
-              onClick={() => setEditPanelOpen(true)}
-            >
-              <MdEdit />
-            </IconButton>
-          </IconButtonTooltip>
-        </IconWrapper>
-      </LinkPage>
+    <Wrapper>
+      <TypographicTextArea
+        ref={focusRef}
+        variant="title"
+        align="center"
+        placeholder={t('blocks.title.title')}
+        value={text ?? ''}
+        disabled={disabled}
+        onChange={event => {
+          const text = event.target.value;
+          onChange(value => ({ ...value, text }));
+        }}
+      />
 
-      <ContentWrapper>
-        <ChooseImageWrapper>
-          <ChooseEditImage
-            onSelect={image => {
-              setChooseModalOpen(false);
-              onChange(value => ({ ...value, image, imageID: image.id }));
-            }}
-            image={image}
-            disabled={false}
-            openChooseModalOpen={() => setChooseModalOpen(true)}
-            openEditModalOpen={() => setEditModalOpen(true)}
-            removeImage={() =>
-              onChange(value => ({ ...value, image: undefined }))
-            }
-          />
-        </ChooseImageWrapper>
+      <ContentLayout>
+        <ChooseEditImage
+          onSelect={image => {
+            setChooseModalOpen(false);
+            onChange(value => ({ ...value, image, imageID: image.id }));
+          }}
+          image={image}
+          disabled={!!disabled}
+          maxHeight={200}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() =>
+            onChange(value => ({ ...value, image: undefined }))
+          }
+        />
 
-        <InputWrapper>
-          <TextField
-            ref={focusInputRef}
-            placeholder={t('blocks.linkPageBreak.title')}
-            value={text}
-            disabled={disabled}
-            onChange={event => onChange({ ...value, text: event.target.value })}
-          />
+        <RichTextBlock
+          value={richText}
+          disabled={disabled}
+          onChange={handleRichTextChange}
+        />
+      </ContentLayout>
 
-          <RichTextBlock
-            value={richText}
-            onChange={handleRichTextChange}
-          />
-        </InputWrapper>
-      </ContentWrapper>
+      <LinkSummary>
+        <Button
+          variant="text"
+          startIcon={<MdEdit />}
+          disabled={disabled}
+          onClick={() => setEditPanelOpen(true)}
+        >
+          {t('blocks.linkPageBreak.editSettings')}
+        </Button>
+
+        {!value.hideButton && (value.linkText || value.linkURL) && (
+          <Typography
+            variant="caption"
+            color="text.secondary"
+          >
+            {[value.linkText, value.linkURL].filter(Boolean).join(' → ')}
+          </Typography>
+        )}
+      </LinkSummary>
 
       <Drawer
         anchor="right"
@@ -201,6 +199,6 @@ export function LinkPageBreakBlock({
           onChange={onChange}
         />
       </Drawer>
-    </>
+    </Wrapper>
   );
 }

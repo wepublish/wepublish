@@ -122,4 +122,18 @@ describe('ImageGalleryBlock', () => {
       })
     ).toBeDisabled();
   });
+
+  it('labels the gallery editor button with text', () => {
+    renderBlock();
+
+    expect(
+      screen.getByText('blocks.imageGallery.panels.editGallery')
+    ).toBeVisible();
+  });
+
+  it('shows which slide is visible', () => {
+    renderBlock();
+
+    expect(screen.getByText('1 / 2')).toBeInTheDocument();
+  });
 });

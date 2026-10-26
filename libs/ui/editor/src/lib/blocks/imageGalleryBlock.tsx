@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Drawer, IconButton } from '@mui/material';
+import { Button, Drawer, IconButton, Typography } from '@mui/material';
 import { FullImageFragment } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,44 +23,32 @@ import { ImageGalleryBlockValue } from './types';
 
 const GALLERY_IMAGE_HEIGHT = 300;
 
-const Block = styled.div`
-  display: flex;
+const Wrapper = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+const Toolbar = styled('div')`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(1)};
   align-items: center;
-  margin-bottom: 10px;
+
+  @media (max-width: 599px) {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    & > :nth-child(2) {
+      order: 3;
+      grid-column: 1 / -1;
+      justify-self: center;
+    }
+  }
 `;
 
-const EditIconWrapper = styled.div`
-  flex-basis: 0;
-  flex-grow: 1;
-  flex-shrink: 1;
-`;
-
-const IsNewWrapper = styled.div`
+const ToolbarActions = styled('div')`
   display: flex;
-  flex-basis: 0;
-  justify-content: center;
-  flex-grow: 1;
-  flex-shrink: 1;
-`;
-
-const LeftArrowWrapper = styled.div`
-  display: flex;
-  flex-basis: 0;
   justify-content: flex-end;
-  flex-grow: 1;
-  flex-shrink: 1;
-`;
-
-const IsNew = styled.p`
-  color: grey;
-`;
-
-const LeftArrow = styled(IconButton)`
-  margin-right: 4px;
-`;
-
-const RightArrow = styled(IconButton)`
-  margin-right: 8px;
+  gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 export function ImageGalleryBlock({
@@ -127,50 +115,51 @@ export function ImageGalleryBlock({
   }
 
   return (
-    <>
-      <Block>
-        <EditIconWrapper>
-          <IconButtonTooltip
-            caption={t('blocks.imageGallery.panels.editGallery')}
+    <Wrapper>
+      <Toolbar>
+        <div>
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<MdEdit />}
+            onClick={() => setGalleryListEditModalOpen(true)}
+            disabled={disabled}
           >
-            <IconButton
-              aria-label={t('blocks.imageGallery.panels.editGallery')}
-              onClick={() => setGalleryListEditModalOpen(true)}
-              disabled={disabled}
-            >
-              <MdEdit />
-            </IconButton>
-          </IconButtonTooltip>
-        </EditIconWrapper>
+            {t('blocks.imageGallery.panels.editGallery')}
+          </Button>
+        </div>
 
-        <IsNewWrapper>
-          <IsNew>
-            {index + 1} / {Math.max(index + 1, value.images.length)}{' '}
-            {isNewIndex ? t('blocks.imageGallery.overview.new') : ''}
-          </IsNew>
-        </IsNewWrapper>
-        <LeftArrowWrapper>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+        >
+          {index + 1} / {Math.max(index + 1, value.images.length)}{' '}
+          {isNewIndex ? t('blocks.imageGallery.overview.new') : ''}
+        </Typography>
+
+        <ToolbarActions>
           <IconButtonTooltip
             caption={t('blocks.imageGallery.overview.previousImage')}
           >
-            <LeftArrow
+            <IconButton
               aria-label={t('blocks.imageGallery.overview.previousImage')}
               onClick={() => setIndex(index => index - 1)}
               disabled={disabled || !hasPrevious}
             >
               <MdArrowLeft />
-            </LeftArrow>
+            </IconButton>
           </IconButtonTooltip>
+
           <IconButtonTooltip
             caption={t('blocks.imageGallery.overview.nextImage')}
           >
-            <RightArrow
+            <IconButton
               aria-label={t('blocks.imageGallery.overview.nextImage')}
               onClick={() => setIndex(index => index + 1)}
               disabled={disabled || !hasNext}
             >
               <MdArrowRight />
-            </RightArrow>
+            </IconButton>
           </IconButtonTooltip>
 
           <IconButtonTooltip
@@ -200,8 +189,9 @@ export function ImageGalleryBlock({
               <MdDelete />
             </IconButton>
           </IconButtonTooltip>
-        </LeftArrowWrapper>
-      </Block>
+        </ToolbarActions>
+      </Toolbar>
+
       <ChooseEditImage
         onSelect={(value: FullImageFragment | null) => {
           setChooseModalOpen(false);
@@ -292,6 +282,6 @@ export function ImageGalleryBlock({
           onClose={() => setGalleryListEditModalOpen(false)}
         />
       </Drawer>
-    </>
+    </Wrapper>
   );
 }

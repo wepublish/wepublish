@@ -1,0 +1,30 @@
+fragment SeoChecklistItem on SeoChecklistItem {
+  itemId
+  completedAt
+  completedBy
+}
+
+query SeoChecklist {
+  seoChecklist {
+    websiteUrl
+    sitemapUrl
+    rssFeedUrl
+    atomFeedUrl
+    jsonFeedUrl
+    checks {
+      id
+      status
+      detail
+      url
+    }
+    completedItems {
+      ...SeoChecklistItem
+    }
+  }
+}
+
+mutation UpdateSeoChecklistItem($itemId: String!, $completed: Boolean!) {
+  updateSeoChecklistItem(itemId: $itemId, completed: $completed) {
+    ...SeoChecklistItem
+  }
+}

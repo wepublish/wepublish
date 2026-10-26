@@ -14,22 +14,25 @@ import { isFunctionalUpdate } from '../utility';
 import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { ListicleBlockValue, ListicleItem, RichTextBlockValue } from './types';
 
-const ListicleWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
+const ListicleItemContainer = styled('div')`
+  container-type: inline-size;
 `;
 
-const ImageWrapper = styled.div`
+const ListicleItemLayout = styled('div')`
   display: grid;
-  overflow: hidden;
-  width: 200px;
-  height: 150px;
-  margin-right: 10px;
-  flex-shrink: 0;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-items: start;
+
+  @container (max-width: 520px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 `;
 
-const TextAreaWrapper = styled.div`
-  flex-grow: 1;
+const ListicleContent = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(1)};
+  min-width: 0;
 `;
 
 export function ListicleBlock({
@@ -48,7 +51,12 @@ export function ListicleBlock({
       defaultValue={{ image: null, richText: undefined, title: '' }}
       disabled={disabled}
     >
-      {props => <ListicleItemElement {...props} />}
+      {props => (
+        <ListicleItemElement
+          {...props}
+          disabled={disabled}
+        />
+      )}
     </ListInput>
   );
 }
@@ -56,7 +64,8 @@ export function ListicleBlock({
 export function ListicleItemElement({
   value,
   onChange,
-}: FieldProps<ListicleItem>) {
+  disabled,
+}: FieldProps<ListicleItem> & { disabled?: boolean }) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
@@ -76,38 +85,41 @@ export function ListicleItemElement({
 
   return (
     <>
-      <ListicleWrapper>
-        <ImageWrapper>
+      <ListicleItemContainer>
+        <ListicleItemLayout>
           <ChooseEditImage
             onSelect={image => {
               setChooseModalOpen(false);
               onChange(value => ({ ...value, image }));
             }}
             image={image}
-            disabled={false}
+            disabled={!!disabled}
+            maxHeight={150}
             openChooseModalOpen={() => setChooseModalOpen(true)}
             openEditModalOpen={() => setEditModalOpen(true)}
-            removeImage={() => onChange?.({ ...value, image: null })}
-          />
-        </ImageWrapper>
-
-        <TextAreaWrapper>
-          <TypographicTextArea
-            variant="h1"
-            placeholder={t('blocks.listicle.title')}
-            value={title ?? ''}
-            onChange={e => {
-              const title = e.target.value;
-              onChange(value => ({ ...value, title }));
-            }}
+            removeImage={() => onChange(value => ({ ...value, image: null }))}
           />
 
-          <RichTextBlock
-            value={richText}
-            onChange={handleRichTextChange}
-          />
-        </TextAreaWrapper>
-      </ListicleWrapper>
+          <ListicleContent>
+            <TypographicTextArea
+              variant="h3"
+              placeholder={t('blocks.listicle.title')}
+              value={title ?? ''}
+              disabled={disabled}
+              onChange={e => {
+                const title = e.target.value;
+                onChange(value => ({ ...value, title }));
+              }}
+            />
+
+            <RichTextBlock
+              value={richText}
+              disabled={disabled}
+              onChange={handleRichTextChange}
+            />
+          </ListicleContent>
+        </ListicleItemLayout>
+      </ListicleItemContainer>
 
       <Drawer
         anchor="right"

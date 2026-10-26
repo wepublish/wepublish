@@ -43,11 +43,15 @@ import {
   useAuthorisation,
   useListViewState,
   UserSearch,
+  useTableExportQuery,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdBlock, MdGeneratingTokens } from 'react-icons/md';
 import { Link as RouterLink, Outlet, useNavigate } from 'react-router-dom';
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const EXPIRY_WARNING_DAYS = 30;
 
 const Filters = styled.div`
   display: grid;
@@ -89,6 +93,15 @@ function ApiTokenList() {
     },
   });
 
+  const exportApiTokens = useTableExportQuery(
+    ApiTokenListDocument,
+    {
+      createdById: owner?.id,
+      status: status || undefined,
+    },
+    data => data.apiTokens
+  );
+
   const [revokeApiToken, { loading: isRevoking, error: revokeError }] =
     useMutation(RevokeApiTokenDocument, {
       refetchQueries: [getOperationNameFromDocument(ApiTokenListDocument)],
@@ -108,6 +121,9 @@ function ApiTokenList() {
 
   const hasExpired = (expiresAt?: string | null) =>
     Boolean(expiresAt && new Date(expiresAt).getTime() <= Date.now());
+
+  const daysLeft = (expiresAt: string) =>
+    Math.ceil((new Date(expiresAt).getTime() - Date.now()) / DAY_MS);
 
   return (
     <>
@@ -184,6 +200,8 @@ function ApiTokenList() {
             setStatus('');
             setActivePage(1);
           }}
+          exportRows={exportApiTokens}
+          exportTotalCount={data?.apiTokens.totalCount ?? 0}
           data={data?.apiTokens.nodes ?? []}
           loading={isLoading}
           columns={[
@@ -191,7 +209,7 @@ function ApiTokenList() {
               id: 'status',
               alwaysVisible: true,
               label: t('apiTokenList.overview.status'),
-              width: 130,
+              width: 160,
               align: 'left',
               render: row =>
                 row.revokedAt ?
@@ -206,11 +224,24 @@ function ApiTokenList() {
                     color="warning"
                     label={t('apiTokenList.overview.expired')}
                   />
+                : daysLeft(row.expiresAt) <= EXPIRY_WARNING_DAYS ?
+                  <Chip
+                    size="small"
+                    color="warning"
+                    variant="outlined"
+                    label={t('apiTokenList.overview.expiresInDays', {
+                      count: daysLeft(row.expiresAt),
+                    })}
+                  />
                 : <Chip
                     size="small"
                     color="success"
                     label={t('apiTokenList.overview.active')}
                   />,
+              exportValue: row =>
+                row.revokedAt ? t('apiTokenList.overview.revoked')
+                : hasExpired(row.expiresAt) ? t('apiTokenList.overview.expired')
+                : t('apiTokenList.overview.active'),
             },
             {
               id: 'name',
@@ -226,6 +257,7 @@ function ApiTokenList() {
               width: 160,
               align: 'left',
               render: row => <code>{row.prefix}…</code>,
+              exportValue: false,
             },
             {
               id: 'scopes',
@@ -247,6 +279,7 @@ function ApiTokenList() {
                   </Stack>
                 </Tooltip>
               ),
+              exportValue: row => row.scopes.join(', '),
             },
             ...(seesEveryKey ?
               [
@@ -272,6 +305,8 @@ function ApiTokenList() {
                     lastUsedDate: new Date(row.lastUsedAt),
                   })
                 : never,
+              exportValue: row =>
+                row.lastUsedAt ? new Date(row.lastUsedAt) : null,
             },
             {
               id: 'expiresAt',
@@ -282,6 +317,8 @@ function ApiTokenList() {
                 t('apiTokenList.overview.expiresDate', {
                   expiresDate: new Date(row.expiresAt),
                 }),
+              exportValue: row =>
+                row.expiresAt ? new Date(row.expiresAt) : null,
             },
             {
               id: 'action',

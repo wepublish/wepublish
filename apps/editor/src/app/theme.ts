@@ -245,6 +245,15 @@ export const createEditorTheme = () =>
       MuiAlert: {
         styleOverrides: alertOverrides(),
       },
+      MuiBadge: {
+        styleOverrides: {
+          dot: ({ theme }) => ({
+            top: 2,
+            right: 2,
+            boxShadow: `0 0 0 2px ${theme.vars.palette.background.paper}`,
+          }),
+        },
+      },
       MuiTableCell: {
         styleOverrides: {
           root: ({ theme }) => ({

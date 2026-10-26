@@ -114,9 +114,9 @@ function CustomApp({
     if (typeof window !== 'undefined' && !oneSignalInitialized) {
       OneSignal.init({
         appId: '71c06630-2d7c-487d-b261-e718bb8ef25f',
-        notifyButton: {
-          enable: true,
-        },
+        notifyButton: { enable: true } as NonNullable<
+          Parameters<typeof OneSignal.init>[0]['notifyButton']
+        >,
         allowLocalhostAsSecureOrigin: true,
       });
       oneSignalInitialized = true;

@@ -3,13 +3,12 @@ import 'react-resizable/css/styles.css';
 
 import styled from '@emotion/styled';
 import {
+  Button,
   Card,
-  CardContent,
   Drawer,
   IconButton as MuiIconButton,
   Stack,
 } from '@mui/material';
-import i18next from 'i18next';
 import nanoid from 'nanoid';
 import {
   ChangeEvent,
@@ -20,10 +19,11 @@ import {
 } from 'react';
 import GridLayoutWithoutChildren, {
   ReactGridLayoutProps,
+  WidthProvider,
 } from 'react-grid-layout';
 import { useTranslation } from 'react-i18next';
 import {
-  MdAddBox,
+  MdAdd,
   MdArticle,
   MdDelete,
   MdEdit,
@@ -32,13 +32,19 @@ import {
 } from 'react-icons/md';
 
 import { BlockProps } from '../atoms/blockList';
-import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import {
+  FLEX_TILE_DRAG_CANCEL,
+  FLEX_TILE_ROW_HEIGHT,
+  FlexGrid,
+  FlexTile,
+  FlexTileAction,
+} from '../atoms/flexTile';
 import { PlaceholderInput } from '../atoms/placeholderInput';
 import { TypographicTextArea } from '../atoms/typographicTextArea';
 import { DRAWER_WIDTHS } from '../drawer';
 import { TeaserEditPanel } from '../panel/teaserEditPanel';
 import { TeaserSelectAndEditPanel } from '../panel/teaserSelectAndEditPanel';
-import { ContentForTeaser, IconWrapper } from './teaserGridBlock';
+import { ContentForTeaser } from './teaserGridBlock';
 import {
   FlexAlignment,
   FlexTeaser,
@@ -59,7 +65,12 @@ const Teaser = styled.div`
 // Fixes that pre React 18, all components had the children prop.
 // With React 18 this is not the case anymore, so some types are wrong
 const GridLayout: ComponentType<PropsWithChildren<ReactGridLayoutProps>> =
-  GridLayoutWithoutChildren;
+  WidthProvider(GridLayoutWithoutChildren);
+
+const AddTileBar = styled('div')`
+  display: flex;
+  margin-block: ${({ theme }) => theme.spacing(1)};
+`;
 
 const ButtonToolbar = styled(Stack)`
   top: 0;
@@ -79,62 +90,69 @@ const Panel = styled(Card, {
 
 export function FlexTeaserBlock({
   teaser,
-  showGrabCursor,
+  locked,
   onEdit,
   onChoose,
   onRemove,
+  onRemoveTile,
+  onToggleLock,
 }: FlexTeaserBlockProps) {
-  return (
-    <Panel
-      variant="outlined"
-      showGrabCursor={showGrabCursor}
-    >
-      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
-        <PlaceholderInput
-          onAddClick={onChoose}
-          addLabel={i18next.t('blocks.flexTeaser.chooseTeaser')}
-        >
-          {teaser && (
-            <Teaser>
-              <ContentForTeaser teaser={teaser} />
+  const { t } = useTranslation();
 
-              <IconWrapper>
-                <IconButtonTooltip
-                  caption={i18next.t('blocks.flexTeaser.chooseTeaser')}
-                >
-                  <IconButton
-                    aria-label={i18next.t('blocks.flexTeaser.chooseTeaser')}
-                    onClick={onChoose}
-                  >
-                    <MdArticle />
-                  </IconButton>
-                </IconButtonTooltip>
-                <IconButtonTooltip
-                  caption={i18next.t('blocks.flexTeaser.editTeaser')}
-                >
-                  <IconButton
-                    aria-label={i18next.t('blocks.flexTeaser.editTeaser')}
-                    onClick={onEdit}
-                  >
-                    <MdEdit />
-                  </IconButton>
-                </IconButtonTooltip>
-                <IconButtonTooltip
-                  caption={i18next.t('blocks.flexTeaser.deleteTeaser')}
-                >
-                  <IconButton
-                    aria-label={i18next.t('blocks.flexTeaser.deleteTeaser')}
-                    onClick={onRemove}
-                  >
-                    <MdDelete />
-                  </IconButton>
-                </IconButtonTooltip>
-              </IconWrapper>
-            </Teaser>
-          )}
-        </PlaceholderInput>
-      </CardContent>
-    </Panel>
+  const actions: FlexTileAction[] = [
+    ...(teaser ?
+      [
+        {
+          label: t('blocks.flexTeaser.chooseTeaser'),
+          icon: <MdArticle />,
+          onClick: onChoose,
+        },
+        {
+          label: t('blocks.flexTeaser.editTeaser'),
+          icon: <MdEdit />,
+          onClick: onEdit,
+        },
+        {
+          label: t('blocks.flexTeaser.deleteTeaser'),
+          icon: <MdDelete />,
+          onClick: onRemove,
+        },
+      ]
+    : [
+        {
+          label: t('blocks.flexTeaser.removeBlock'),
+          icon: <MdDelete />,
+          onClick: onRemoveTile,
+          disabled: locked,
+        },
+      ]),
+    {
+      label:
+        locked ?
+          t('blocks.flexTeaser.unlockBlock')
+        : t('blocks.flexTeaser.lockBlock'),
+      icon: locked ? <MdLockOpen /> : <MdLock />,
+      onClick: onToggleLock,
+    },
+  ];
+
+  return (
+    <FlexTile
+      locked={locked}
+      empty={!teaser}
+      actions={actions}
+    >
+      {teaser ?
+        <Teaser>
+          <ContentForTeaser teaser={teaser} />
+        </Teaser>
+      : <PlaceholderInput
+          onAddClick={onChoose}
+          addLabel={t('blocks.flexTeaser.chooseTeaser')}
+          minHeight={0}
+        />
+      }
+    </FlexTile>
   );
 }
 
@@ -261,89 +279,57 @@ export function TeaserGridFlexBlock({
         onChange={handleTitleChange}
       />
 
-      <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
-        <IconButton
-          aria-label={t('blocks.flexTeaser.addBlock')}
-          size="medium"
+      <FlexGrid>
+        <GridLayout
+          onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
+          onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
+          onDragStop={layout => {
+            setIsDragging(false);
+            handleLayoutChange(layout as FlexAlignment[]);
+          }}
+          onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
+          cols={12}
+          rowHeight={FLEX_TILE_ROW_HEIGHT}
+          compactType={null}
+          containerPadding={[0, 0]}
+          draggableCancel={FLEX_TILE_DRAG_CANCEL}
+          layout={flexTeasers.map(ft => ft.alignment)}
+        >
+          {flexTeasers.map(flexTeaser => (
+            <div key={flexTeaser.alignment.i}>
+              <FlexTeaserBlock
+                teaser={flexTeaser.teaser}
+                locked={!!flexTeaser.alignment.static}
+                onEdit={() => {
+                  setEditItem(flexTeaser);
+                  setEditModalOpen(true);
+                }}
+                onChoose={() => {
+                  setEditItem(flexTeaser);
+                  setChooseModalOpen(true);
+                }}
+                onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
+                onRemoveTile={() =>
+                  handleRemoveTeaserBlock(flexTeaser.alignment.i)
+                }
+                onToggleLock={() =>
+                  handlePinTeaserBlock(flexTeaser.alignment.i)
+                }
+              />
+            </div>
+          ))}
+        </GridLayout>
+      </FlexGrid>
+
+      <AddTileBar>
+        <Button
+          variant="text"
+          startIcon={<MdAdd />}
           onClick={handleAddTeaserBlock}
         >
-          <MdAddBox />
-        </IconButton>
-      </IconButtonTooltip>
-
-      <GridLayout
-        onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
-        onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
-        onDragStop={layout => {
-          setIsDragging(false);
-          handleLayoutChange(layout as FlexAlignment[]);
-        }}
-        onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
-        cols={12}
-        rowHeight={30}
-        compactType={null}
-        layout={flexTeasers.map(ft => ft.alignment)}
-        width={640}
-      >
-        {flexTeasers.map(flexTeaser => (
-          <div key={flexTeaser.alignment.i}>
-            <FlexTeaserBlock
-              teaser={flexTeaser.teaser}
-              showGrabCursor={!flexTeaser.alignment.static}
-              onEdit={() => {
-                setEditItem(flexTeaser);
-                setEditModalOpen(true);
-              }}
-              onChoose={() => {
-                setEditItem(flexTeaser);
-                setChooseModalOpen(true);
-              }}
-              onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
-            />
-
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{ flexWrap: 'wrap' }}
-            >
-              {!flexTeaser.teaser && (
-                <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
-                  <IconButton
-                    aria-label={t('blocks.flexTeaser.removeBlock')}
-                    disabled={flexTeaser.alignment.static}
-                    onClick={() =>
-                      handleRemoveTeaserBlock(flexTeaser.alignment.i)
-                    }
-                  >
-                    <MdDelete />
-                  </IconButton>
-                </IconButtonTooltip>
-              )}
-
-              <IconButtonTooltip
-                caption={
-                  !flexTeaser.alignment.static ?
-                    t('blocks.flexTeaser.lockBlock')
-                  : t('blocks.flexTeaser.unlockBlock')
-                }
-              >
-                <IconButton
-                  aria-label={
-                    !flexTeaser.alignment.static ?
-                      t('blocks.flexTeaser.lockBlock')
-                    : t('blocks.flexTeaser.unlockBlock')
-                  }
-                  onClick={() => handlePinTeaserBlock(flexTeaser.alignment.i)}
-                >
-                  {flexTeaser.alignment.static ?
-                    <MdLockOpen />
-                  : <MdLock />}
-                </IconButton>
-              </IconButtonTooltip>
-            </Stack>
-          </div>
-        ))}
-      </GridLayout>
+          {t('blocks.flexTeaser.addBlock')}
+        </Button>
+      </AddTileBar>
 
       <Drawer
         anchor="right"
@@ -399,8 +385,10 @@ export function TeaserGridFlexBlock({
 
 interface FlexTeaserBlockProps {
   teaser: TeaserType | null;
-  showGrabCursor: boolean;
+  locked: boolean;
   onEdit: () => void;
   onChoose: () => void;
   onRemove: () => void;
+  onRemoveTile: () => void;
+  onToggleLock: () => void;
 }

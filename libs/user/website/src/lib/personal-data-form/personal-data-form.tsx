@@ -16,7 +16,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useMemo, useReducer, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Control, Controller, useForm } from 'react-hook-form';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
@@ -210,7 +210,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
         )}
 
         <UserForm
-          control={control}
+          control={control as Control<any>}
           hideEmail
           fields={userformFields}
           css={fullWidth}

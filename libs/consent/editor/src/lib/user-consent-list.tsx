@@ -82,6 +82,7 @@ export function UserConsentList() {
       <TableWrapper>
         <DataTable
           storageKey="user-consents"
+          exportRows={() => data?.userConsents ?? []}
           data={data?.userConsents || []}
           loading={loading}
           columns={[
@@ -95,6 +96,10 @@ export function UserConsentList() {
                   {(rowData.user.firstName || '') + ' ' + rowData.user.name}
                 </Link>
               ),
+              exportValue: rowData =>
+                [rowData.user.firstName, rowData.user.name]
+                  .filter(Boolean)
+                  .join(' '),
             },
             {
               id: 'consentname',
@@ -102,12 +107,14 @@ export function UserConsentList() {
               width: 200,
               alwaysVisible: true,
               render: rowData => <span>{rowData.consent.name}</span>,
+              exportValue: rowData => rowData.consent.name,
             },
             {
               id: 'consentslug',
               label: t('userConsents.consentSlug'),
               width: 200,
               render: rowData => <span>{rowData.consent.slug}</span>,
+              exportValue: rowData => rowData.consent.slug,
             },
             {
               id: 'value',
@@ -120,6 +127,7 @@ export function UserConsentList() {
                   : t('consents.rejected')}
                 </span>
               ),
+              exportValue: rowData => rowData.value,
             },
             {
               id: 'action',

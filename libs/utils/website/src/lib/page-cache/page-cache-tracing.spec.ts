@@ -46,6 +46,26 @@ describe('tracePageCacheGet', () => {
     ]);
   });
 
+  it.each([
+    ['/a/one', '/a/one'],
+    ['/index', '/'],
+    ['/index/index/a/one', '/index/a/one'],
+  ])(
+    'names the page %s by its path, not by the route cache key Next 16.3 gives it',
+    async (normalized, path) => {
+      const { spans, startSpan } = recordingStartSpan();
+
+      await tracePageCacheGet(
+        startSpan,
+        `/route-cache/PAGES/${'f'.repeat(64)}/$${normalized}`,
+        { kind: 'PAGES' },
+        async () => null
+      );
+
+      expect(spans[0].attributes['cache.key']).toEqual([path]);
+    }
+  );
+
   it('marks a page served from the cache as a hit and returns it', async () => {
     const { spans, startSpan } = recordingStartSpan();
     const entry = { value: { kind: 'PAGES' }, lastModified: 1 };

@@ -118,7 +118,7 @@ export function SelectCommentPanel({
 
         <DrawerActions>
           <Button
-            variant="outlined"
+            variant="text"
             onClick={() => onClose()}
           >
             {t('close')}

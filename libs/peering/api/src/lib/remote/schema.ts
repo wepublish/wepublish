@@ -936,6 +936,8 @@ export type CreateCrowdfundingMemberPlan = {
 };
 
 export type CreateExternalAppInput = {
+  /** An API key you may see that has neither expired nor been revoked. */
+  apiTokenId?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
@@ -1360,6 +1362,10 @@ export type EventTeaserInput = {
 
 export type ExternalApp = {
   __typename?: 'ExternalApp';
+  /** The linked API key, for editors who may see it in the API keys list. Never contains the secret. */
+  apiToken?: Maybe<ApiToken>;
+  /** The API key the app reads the We.Publish API with. */
+  apiTokenId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   icon?: Maybe<Scalars['String']['output']>;
@@ -3270,6 +3276,8 @@ export type Mutation = {
   updatePoll: FullPoll;
   /** Update the comment rating system. */
   updateRatingSystem: CommentRatingSystem;
+  /** Marks an SEO checklist item as done or not done and returns all completed items. */
+  updateSeoChecklistItem: Array<SeoChecklistItem>;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Updates an existing subscription. */
@@ -3629,6 +3637,8 @@ export type MutationCreatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']['input']>;
   hidden: Scalars['Boolean']['input'];
+  hideFooter?: Scalars['Boolean']['input'];
+  hideHeader?: Scalars['Boolean']['input'];
   imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
@@ -4505,6 +4515,7 @@ export type MutationUpdateEventArgs = {
 
 
 export type MutationUpdateExternalAppArgs = {
+  apiTokenId?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
@@ -4625,6 +4636,8 @@ export type MutationUpdatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']['input']>;
   hidden: Scalars['Boolean']['input'];
+  hideFooter?: Scalars['Boolean']['input'];
+  hideHeader?: Scalars['Boolean']['input'];
   id: Scalars['String']['input'];
   imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
@@ -4727,6 +4740,12 @@ export type MutationUpdateRatingSystemArgs = {
   answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswerInput>>;
   id: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateSeoChecklistItemArgs = {
+  completed: Scalars['Boolean']['input'];
+  itemId: Scalars['String']['input'];
 };
 
 
@@ -5049,6 +5068,8 @@ export type Page = {
   createdAt: Scalars['DateTime']['output'];
   draft?: Maybe<PageRevision>;
   hidden: Scalars['Boolean']['output'];
+  hideFooter: Scalars['Boolean']['output'];
+  hideHeader: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   latest: PageRevision;
   modifiedAt: Scalars['DateTime']['output'];
@@ -6209,6 +6230,8 @@ export type Query = {
    *
    */
   revenue: Array<DashboardInvoice>;
+  /** Returns a checklist of the SEO setup of the website. */
+  seoChecklist: SeoChecklist;
   /**
    *
    *       Returns a single setting by name.
@@ -7225,6 +7248,47 @@ export type SensitiveDataUser = BaseUser & {
   /** Whether this user is exempt from the two-factor authentication requirement. */
   totpExempt: Scalars['Boolean']['output'];
   userImageID?: Maybe<Scalars['String']['output']>;
+};
+
+export type SeoCheck = {
+  __typename?: 'SeoCheck';
+  detail?: Maybe<Scalars['String']['output']>;
+  id: SeoCheckId;
+  status: SeoCheckStatus;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+export enum SeoCheckId {
+  ArticleMarkup = 'ArticleMarkup',
+  Feed = 'Feed',
+  NewsSitemap = 'NewsSitemap',
+  PublicationMetadata = 'PublicationMetadata',
+  Sitemap = 'Sitemap'
+}
+
+export enum SeoCheckStatus {
+  Error = 'Error',
+  Info = 'Info',
+  Ok = 'Ok',
+  Warning = 'Warning'
+}
+
+export type SeoChecklist = {
+  __typename?: 'SeoChecklist';
+  atomFeedUrl: Scalars['String']['output'];
+  checks: Array<SeoCheck>;
+  completedItems: Array<SeoChecklistItem>;
+  jsonFeedUrl: Scalars['String']['output'];
+  rssFeedUrl: Scalars['String']['output'];
+  sitemapUrl: Scalars['String']['output'];
+  websiteUrl: Scalars['String']['output'];
+};
+
+export type SeoChecklistItem = {
+  __typename?: 'SeoChecklistItem';
+  completedAt: Scalars['DateTime']['output'];
+  completedBy?: Maybe<Scalars['String']['output']>;
+  itemId: Scalars['String']['output'];
 };
 
 export type SessionWithToken = {

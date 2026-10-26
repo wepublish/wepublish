@@ -19,6 +19,7 @@ import {
   mapTableSortTypeToGraphQLSortOrder,
   Pagination,
   TableWrapper,
+  useTableExportQuery,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
@@ -57,6 +58,16 @@ function DiscountCodeUsageView() {
     },
   });
 
+  const exportUsages = useTableExportQuery(
+    DiscountCodeUsagesDocument,
+    {
+      discountCodeId: id as string,
+      sort: InvoiceSort.CreatedAt,
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    },
+    data => data.invoices
+  );
+
   const discountCode = discountCodeData?.discountCode;
 
   return (
@@ -93,6 +104,8 @@ function DiscountCodeUsageView() {
       <TableWrapper>
         <DataTable
           storageKey="discount-code-usage"
+          exportRows={exportUsages}
+          exportTotalCount={data?.invoices.totalCount ?? 0}
           data={data?.invoices.nodes ?? []}
           loading={loading}
           sortColumn={'createdAt'}
@@ -107,6 +120,7 @@ function DiscountCodeUsageView() {
               sortKey: 'createdAt',
               render: (rowData: Usage) =>
                 new Date(rowData.createdAt).toLocaleDateString('de-CH'),
+              exportValue: rowData => new Date(rowData.createdAt),
             },
             {
               id: 'mail',
@@ -117,6 +131,7 @@ function DiscountCodeUsageView() {
             },
             {
               id: 'amount',
+              columnLabel: t('discountCode.usage.amount'),
               label: (
                 <>
                   {t('discountCode.usage.amount')}{' '}
@@ -154,6 +169,7 @@ function DiscountCodeUsageView() {
                     {t('discountCode.usage.showSubscription')}
                   </Link>
                 : null,
+              exportValue: rowData => rowData.subscriptionID,
             },
           ]}
         />

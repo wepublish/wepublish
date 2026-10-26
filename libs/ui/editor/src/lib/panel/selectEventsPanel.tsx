@@ -88,7 +88,7 @@ export function SelectEventPanel({
 
         <DrawerActions>
           <Button
-            variant="outlined"
+            variant="text"
             onClick={() => onClose()}
           >
             {t('close')}

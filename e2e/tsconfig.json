@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2022",
+    "lib": ["es2022", "dom"],
+    "types": ["node"],
+  },
+  "include": ["**/*.ts"],
+  "exclude": [".features-gen", "playwright-report", "test-results"],
+  "extends": "../tsconfig.base.json"
+}

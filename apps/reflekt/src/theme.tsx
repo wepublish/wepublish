@@ -813,6 +813,13 @@ const theme = createTheme(WePTheme, {
               display: 'none',
             },
           },
+          '.MuiAccordion-heading': {
+            gridColumn: '-1 / 1',
+            gridRow: '1 / 2',
+            display: 'grid',
+            gridTemplateColumns: 'subgrid',
+            margin: 0,
+          },
           '.MuiAccordionSummary-root': {
             fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
               ','

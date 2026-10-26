@@ -23,7 +23,7 @@ import articleRedirects from './src/redirects/article-redirects.generated.json';
  * locale prefix (a `/fr/a/…` destination would 404).
  *
  * Taxonomy / CMS / agenda redirects are pattern-based and live in
- * next.config.js (`legacyRedirects()`), which runs after this middleware.
+ * next.config.js (`legacyRedirects()`), which runs after this proxy.
  */
 
 const byId = (articleRedirects as { byId: Record<string, string> }).byId;
@@ -33,7 +33,7 @@ const ARTICLE_RE = /(?:^|\/)article\/(\d+)(?:\/([^/?#&]+))?/;
 
 const LOCALES = new Set(['de', 'fr', 'en']);
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Fast path: only article URLs are handled here.

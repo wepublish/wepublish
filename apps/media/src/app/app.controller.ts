@@ -22,6 +22,7 @@ import {
   SupportedDocumentsValidator,
   getExtensionForMimeType,
   JwtAuthGuard,
+  MISSING_LINK_TTL,
 } from '@wepublish/media/api';
 import {
   getTransformationKey,
@@ -161,7 +162,11 @@ export class AppController {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
       if (!this.fallbackUrl) {
-        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+        await this.linkCache.set(
+          cacheKey,
+          { uri, exists: false },
+          MISSING_LINK_TTL
+        );
       }
       return;
     } else {
@@ -260,7 +265,11 @@ export class AppController {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
       if (!this.fallbackUrl) {
-        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+        await this.linkCache.set(
+          cacheKey,
+          { uri, exists: false },
+          MISSING_LINK_TTL
+        );
       }
       return;
     }
@@ -328,7 +337,11 @@ export class AppController {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
       if (!this.fallbackUrl) {
-        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+        await this.linkCache.set(
+          cacheKey,
+          { uri, exists: false },
+          MISSING_LINK_TTL
+        );
       }
       return;
     }

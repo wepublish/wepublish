@@ -1,3 +1,5 @@
+const { pagePath } = require('./page-path');
+
 const VERSION_REFRESH_MS = 2000;
 const DEFAULT_REVALIDATE_SECONDS = 60;
 const UNSIGNALLED_REVALIDATE_SECONDS = 60;
@@ -13,7 +15,7 @@ const ARTICLE_PAGE = /^\/a\/(?:id\/[^/]+|(?!tag$|index$)[^/]+)$/;
 const TRACE_META =
   /<meta name="(?:sentry-trace|baggage)" content="[^"]*"\s*\/?>/g;
 
-const isArticlePage = key => ARTICLE_PAGE.test(key);
+const isArticlePage = key => ARTICLE_PAGE.test(pagePath(key));
 
 const withoutTrace = value =>
   value?.kind === 'PAGES' && typeof value.html === 'string' ?
@@ -150,7 +152,10 @@ function createPageCache({
       return undefined;
     }
 
-    const names = [LAYOUT_VERSION, `website:path:${key.toLowerCase()}`];
+    const names = [
+      LAYOUT_VERSION,
+      `website:path:${pagePath(key).toLowerCase()}`,
+    ];
     const recent = names.map(name => knownVersions.get(name));
 
     if (

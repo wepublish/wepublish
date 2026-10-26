@@ -28,6 +28,7 @@ import {
   PermissionControl,
   TableWrapper,
   useListViewState,
+  useTableExportQuery,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
@@ -111,6 +112,16 @@ function CommentList() {
 
   const comments = data?.comments?.nodes ?? [];
 
+  const exportComments = useTableExportQuery(
+    CommentListDocument,
+    {
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+      filter,
+    },
+    data => data.comments
+  );
+
   useEffect(() => {
     refetch({
       take: limit,
@@ -138,6 +149,8 @@ function CommentList() {
       <TableWrapper>
         <DataTable
           storageKey="comments"
+          exportRows={exportComments}
+          exportTotalCount={data?.comments.totalCount ?? 0}
           filters={
             <StateFilter
               label={t('comments.overview.states')}
@@ -204,6 +217,7 @@ function CommentList() {
                 t('comments.overview.modifiedAtDate', {
                   modifiedAtDate: new Date(modifiedAt),
                 }),
+              exportValue: ({ modifiedAt }) => new Date(modifiedAt),
             },
             {
               id: 'editState',
@@ -224,6 +238,13 @@ function CommentList() {
                   />
                 </PermissionControl>
               ),
+              exportValue: row => {
+                const option = commentStateOptions.find(
+                  ({ state }) => state === row.state
+                );
+
+                return option ? t(option.label) : row.state;
+              },
             },
             {
               id: 'action',

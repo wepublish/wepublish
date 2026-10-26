@@ -1,7 +1,11 @@
 import { CombinedGraphQLErrors } from '@apollo/client';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
+import {
+  getApiUrl,
+  getPageShell,
+  revalidateFor,
+} from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -66,7 +70,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  const props = addClientCacheToProps(client, {});
+  const props = addClientCacheToProps(client, {
+    shell: getPageShell(page.data?.page),
+  });
 
   return {
     props,

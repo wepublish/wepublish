@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 import ReactDatePicker from 'react-datepicker';
 import { useTranslation } from 'react-i18next';
 import { MdClear, MdEvent } from 'react-icons/md';
@@ -26,6 +27,24 @@ const FullWidthWrapper = styled.div`
     width: 100%;
   }
 `;
+
+const InlineWrapper = styled.div`
+  display: contents;
+`;
+
+// The calendar has to live inside the surrounding dialog or drawer: MUI's
+// focus trap pulls focus out of anything rendered outside of it, and a
+// calendar portaled to the body ends up behind dialogs opened later on.
+const MODAL_ROOT = '.MuiDialog-container, .MuiDrawer-paper';
+
+const PopperAnchorContext = createContext<HTMLElement | null>(null);
+
+function PopperContainer({ children }: { children?: ReactNode }) {
+  const anchor = useContext(PopperAnchorContext);
+  const host = anchor?.closest<HTMLElement>(MODAL_ROOT) ?? document.body;
+
+  return createPortal(children, host);
+}
 
 const CloseCalendarContext = createContext<() => void>(() => undefined);
 
@@ -153,13 +172,26 @@ export interface DatePickerProps extends FieldProps {
   children?: ReactNode;
 }
 
-const Wrapper = ({
+function Wrapper({
   fullWidth,
   children,
 }: {
   fullWidth?: boolean;
   children: ReactNode;
-}) => (fullWidth ? <FullWidthWrapper>{children}</FullWidthWrapper> : children);
+}) {
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const Element = fullWidth ? FullWidthWrapper : InlineWrapper;
+
+  return (
+    <Element ref={setAnchor}>
+      <PopperAnchorContext.Provider value={anchor}>
+        {children}
+      </PopperAnchorContext.Provider>
+    </Element>
+  );
+}
+
+const popperProps = { strategy: 'fixed' } as const;
 
 export function DatePicker({
   value,
@@ -196,7 +228,8 @@ export function DatePicker({
         ariaLabelledBy={field['aria-labelledby']}
         showPopperArrow={false}
         popperPlacement="bottom-start"
-        portalId="wep-datepicker-portal"
+        popperContainer={PopperContainer}
+        popperProps={popperProps}
         customInput={
           <PickerInput
             {...field}
@@ -262,7 +295,8 @@ export function DateRangePicker({
         ariaLabelledBy={field['aria-labelledby']}
         showPopperArrow={false}
         popperPlacement="bottom-start"
-        portalId="wep-datepicker-portal"
+        popperContainer={PopperContainer}
+        popperProps={popperProps}
         monthsShown={2}
         onCalendarClose={() => setPendingStart(null)}
         customInput={

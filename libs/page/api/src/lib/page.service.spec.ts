@@ -556,6 +556,79 @@ describe('PageService', () => {
     });
   });
 
+  describe('hide header and footer', () => {
+    it('should store hideHeader and hideFooter separately when creating a page', async () => {
+      prismaMock.page.create?.mockResolvedValue({ id: '1234' });
+
+      await service.createPage(
+        {
+          hidden: false,
+          hideHeader: false,
+          hideFooter: true,
+          properties: [],
+          tagIds: [],
+          blocks: [],
+        },
+        '1234'
+      );
+
+      expect(prismaMock.page.create?.mock.calls[0][0].data).toMatchObject({
+        hideHeader: false,
+        hideFooter: true,
+      });
+    });
+
+    it('should store hideHeader and hideFooter separately when updating a page', async () => {
+      prismaMock.page.findUnique?.mockResolvedValue({ id: '123', tags: [] });
+
+      await service.updatePage(
+        {
+          id: '123',
+          hidden: false,
+          hideHeader: true,
+          hideFooter: false,
+          properties: [],
+          tagIds: [],
+          blocks: [],
+        },
+        '1234'
+      );
+
+      expect(prismaMock.page.update?.mock.calls[0][0].data).toMatchObject({
+        hideHeader: true,
+        hideFooter: false,
+      });
+    });
+
+    it('should keep hideHeader and hideFooter when duplicating a page', async () => {
+      prismaMock.page.findUnique?.mockResolvedValue({
+        id: '1234',
+        hidden: false,
+        hideHeader: true,
+        hideFooter: false,
+        tags: [],
+        revisions: [
+          {
+            id: 'rev',
+            createdAt: new Date(),
+            publishedAt: null,
+            pageId: '1234',
+            properties: [],
+            blocks: [],
+          },
+        ],
+      });
+      prismaMock.page.create?.mockResolvedValue({ id: '5678' });
+
+      await service.duplicatePage('1234', '1');
+
+      expect(prismaMock.page.create?.mock.calls[0][0].data).toMatchObject({
+        hideHeader: true,
+        hideFooter: false,
+      });
+    });
+  });
+
   describe('unhappy path', () => {
     it('updatePage should throw if page can not be found', async () => {
       await expect(async () => {

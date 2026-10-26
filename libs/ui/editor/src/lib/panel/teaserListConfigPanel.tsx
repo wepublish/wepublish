@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, FormLabel, MenuItem, TextField } from '@mui/material';
 import {
@@ -10,7 +10,6 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import { InfoTooltip } from '../atoms/infoTooltip';
 import { SelectTags } from '../atoms/tag/selectTags';
 import { TeaserListBlockValue } from '../blocks/types';
 import {
@@ -21,8 +20,21 @@ import {
   DrawerTitle,
 } from '../drawer';
 
-const inputStyles = css`
-  width: 200px !important;
+const Fields = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-items: start;
+`;
+
+const Form = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(3)};
+`;
+
+const TagsField = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 export type TeaserListConfigPanelProps = {
@@ -98,7 +110,7 @@ export function TeaserListConfigPanel({
 
         <DrawerActions>
           <Button
-            variant="outlined"
+            variant="text"
             onClick={() => onClose()}
             type="button"
           >
@@ -115,133 +127,124 @@ export function TeaserListConfigPanel({
       </DrawerHeader>
 
       <DrawerBody>
-        <Controller
-          control={control}
-          name="teaserType"
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              select
-              label={t('blocks.teaserList.teaserTypeLabel')}
-              onChange={event => {
-                field.onChange(event);
-                setValue('tags', []);
-                setValue('sort', TeaserListBlockSort.PublishedAt);
-              }}
-              error={Boolean(error)}
-              helperText={error?.message}
-              css={inputStyles}
-              fullWidth
-            >
-              {[TeaserType.Article, TeaserType.Event, TeaserType.Page].map(
-                type => (
-                  <MenuItem
-                    key={type}
-                    value={type}
-                  >
-                    {teaserTypeText(type)}
-                  </MenuItem>
-                )
-              )}
-            </TextField>
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="sort"
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              select
-              label={
-                <>
-                  {t('blocks.teaserList.sortLabel')}{' '}
-                  <InfoTooltip text={t('blocks.teaserList.sortInfo')} />
-                </>
-              }
-              error={Boolean(error)}
-              helperText={error?.message}
-              css={inputStyles}
-              fullWidth
-            >
-              {[
-                TeaserListBlockSort.PublishedAt,
-                TeaserListBlockSort.UpdatedAt,
-                ...(teaserType === TeaserType.Article ?
-                  [TeaserListBlockSort.HotAndTrending]
-                : []),
-              ].map(option => (
-                <MenuItem
-                  key={option}
-                  value={option}
+        <Form>
+          <Fields>
+            <Controller
+              control={control}
+              name="teaserType"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  select
+                  label={t('blocks.teaserList.teaserTypeLabel')}
+                  onChange={event => {
+                    field.onChange(event);
+                    setValue('tags', []);
+                    setValue('sort', TeaserListBlockSort.PublishedAt);
+                  }}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
                 >
-                  {t(`resources.teaserSort.${option}`)}
-                </MenuItem>
-              ))}
-            </TextField>
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="skip"
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              label={
-                <>
-                  {t('blocks.teaserList.skipLabel')}{' '}
-                  <InfoTooltip text={t('blocks.teaserList.skipInfo')} />
-                </>
-              }
-              type="number"
-              onChange={event => field.onChange(+event.target.value)}
-              error={Boolean(error)}
-              helperText={error?.message}
-              css={inputStyles}
-              fullWidth
+                  {[TeaserType.Article, TeaserType.Event, TeaserType.Page].map(
+                    type => (
+                      <MenuItem
+                        key={type}
+                        value={type}
+                      >
+                        {teaserTypeText(type)}
+                      </MenuItem>
+                    )
+                  )}
+                </TextField>
+              )}
             />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="take"
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              label={t('blocks.teaserList.takeLabel')}
-              type="number"
-              onChange={event => field.onChange(+event.target.value)}
-              error={Boolean(error)}
-              helperText={error?.message}
-              css={inputStyles}
-              fullWidth
-            />
-          )}
-        />
-
-        {sort !== TeaserListBlockSort.HotAndTrending && (
-          <div>
-            <FormLabel>{t('blocks.teaserList.tagsLabel')}</FormLabel>
 
             <Controller
               control={control}
-              name="tags"
-              render={({ field }) => (
-                <SelectTags
-                  defaultTags={value.filter.tagObjects}
-                  name={field.name}
-                  tagType={tagTypeFor(teaserType)}
-                  setSelectedTags={field.onChange}
-                  selectedTags={field.value}
-                  css={inputStyles}
+              name="sort"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  select
+                  label={t('blocks.teaserList.sortLabel')}
+                  error={Boolean(error)}
+                  helperText={error?.message ?? t('blocks.teaserList.sortInfo')}
+                  fullWidth
+                >
+                  {[
+                    TeaserListBlockSort.PublishedAt,
+                    TeaserListBlockSort.UpdatedAt,
+                    ...(teaserType === TeaserType.Article ?
+                      [TeaserListBlockSort.HotAndTrending]
+                    : []),
+                  ].map(option => (
+                    <MenuItem
+                      key={option}
+                      value={option}
+                    >
+                      {t(`resources.teaserSort.${option}`)}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Fields>
+
+          <Fields>
+            <Controller
+              control={control}
+              name="take"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('blocks.teaserList.takeLabel')}
+                  type="number"
+                  onChange={event => field.onChange(+event.target.value)}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
                 />
               )}
             />
-          </div>
-        )}
+
+            <Controller
+              control={control}
+              name="skip"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('blocks.teaserList.skipLabel')}
+                  type="number"
+                  onChange={event => field.onChange(+event.target.value)}
+                  error={Boolean(error)}
+                  helperText={error?.message ?? t('blocks.teaserList.skipInfo')}
+                  fullWidth
+                />
+              )}
+            />
+          </Fields>
+
+          {sort !== TeaserListBlockSort.HotAndTrending && (
+            <TagsField>
+              <FormLabel>{t('blocks.teaserList.tagsLabel')}</FormLabel>
+
+              <Controller
+                control={control}
+                name="tags"
+                render={({ field }) => (
+                  <SelectTags
+                    defaultTags={value.filter.tagObjects}
+                    name={field.name}
+                    tagType={tagTypeFor(teaserType)}
+                    setSelectedTags={field.onChange}
+                    selectedTags={field.value}
+                  />
+                )}
+              />
+            </TagsField>
+          )}
+        </Form>
       </DrawerBody>
     </DrawerForm>
   );

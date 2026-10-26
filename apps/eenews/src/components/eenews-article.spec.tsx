@@ -3,6 +3,10 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 import { SessionTokenContext } from '@wepublish/authentication/website';
 import { ArticleQuery } from '@wepublish/website/api';
+import {
+  BuilderArticleSEOProps,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 
 import { EenewsArticle } from './eenews-article';
 
@@ -78,5 +82,54 @@ describe('EenewsArticle', () => {
     );
 
     expect(container.querySelector(`img[src="${uri}"]`)).not.toBeNull();
+  });
+
+  it('renders the article SEO so search engines get the headline and metadata', () => {
+    const article = {
+      __typename: 'Article',
+      id: 'article',
+      url: 'https://ee-news.ch/a/article',
+      publishedAt: new Date('2026-01-01').toISOString(),
+      disableComments: true,
+      paywall: null,
+      tags: [],
+      trackingPixels: [],
+      latest: {
+        __typename: 'ArticleRevision',
+        title: 'Nachhaltiges Wohnen im Rittergut',
+        lead: 'Lead',
+        preTitle: null,
+        breaking: false,
+        image: null,
+        authors: [],
+        properties: [],
+        blocks: [],
+      },
+    } as unknown as ArticleQuery['article'];
+
+    const ArticleSEO = ({ article }: BuilderArticleSEOProps) => (
+      <span data-testid="article-seo">{article.latest.title}</span>
+    );
+
+    render(
+      <MockedProvider>
+        <SessionTokenContext.Provider value={[null, false, vi.fn()]}>
+          <WebsiteBuilderProvider ArticleSEO={ArticleSEO}>
+            <ThemeProvider theme={createTheme()}>
+              <EenewsArticle
+                data={{ __typename: 'Query', article }}
+                loading={false}
+                showPaywall={false}
+                hideContent={false}
+              />
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </SessionTokenContext.Provider>
+      </MockedProvider>
+    );
+
+    expect(screen.getByTestId('article-seo').textContent).toBe(
+      'Nachhaltiges Wohnen im Rittergut'
+    );
   });
 });

@@ -3,7 +3,7 @@
  * Legacy ee-news.ch → new eenews redirects (pattern-based).
  *
  * Consumed by next.config.js `redirects()`. Article redirects are NOT here —
- * they key on a 39k legacy-id→slug map and live in `middleware.ts`.
+ * they key on a 39k legacy-id→slug map and live in `proxy.ts`.
  *
  * Covered here:
  *   - Theme / dossier / category listing pages → new tag pages `/a/tag/<tag>`
