@@ -620,6 +620,19 @@ describe('BexioPaymentProvider', () => {
       expect(intent.intentID).toBe('testid');
     });
 
+    // a missing id must not end up stored as the text "null" or "undefined"
+    it.each([null, undefined])(
+      'does not remember a contact whose id is %s',
+      async id => {
+        mockBexioContactSearch.mockResolvedValue([]);
+        mockBexioContactCreate.mockResolvedValue({ id });
+
+        const { saveCustomer } = await createIntent();
+
+        expect(saveCustomer).not.toHaveBeenCalled();
+      }
+    );
+
     it('remembers a contact it had to create', async () => {
       mockBexioContactSearch.mockResolvedValue([]);
       mockBexioContactCreate.mockResolvedValue({ id: 900 });

@@ -301,12 +301,15 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
       // The email can differ between we.publish and bexio, so the next
       // invoice finds this contact by its id. Only a convenience: the
-      // invoice is out either way.
-      if (`${updatedContact.id}` !== storedContactId) {
-        await this.saveCustomer(user.id, `${updatedContact.id}`).catch(error =>
+      // invoice is out either way, so a missing id is skipped, not thrown.
+      const contactId =
+        updatedContact.id != null ? String(updatedContact.id) : undefined;
+
+      if (contactId && contactId !== storedContactId) {
+        await this.saveCustomer(user.id, contactId).catch(error =>
           logger('bexioPaymentProvider').warn(
             'Could not remember Bexio contact %s for user %s: %s',
-            updatedContact.id,
+            contactId,
             user.id,
             describeError(error)
           )
