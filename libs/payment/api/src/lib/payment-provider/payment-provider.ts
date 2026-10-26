@@ -362,7 +362,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
     // update payment provider
     if (intentState.customerID && payment.invoiceID) {
-      await this.updatePaymentProvider(subscription, intentState.customerID);
+      await this.saveCustomer(subscription.userID, intentState.customerID);
     }
 
     return updatedPayment;
@@ -370,32 +370,18 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
   /**
    * adding or updating paymentProvider customer ID for user
-   *
-   * @param subscription
-   * @param customerID
-   * @private
    */
-  private async updatePaymentProvider(
-    subscription: Subscription,
-    customerID: string
-  ) {
-    if (!subscription) {
-      throw new Error(
-        'Empty subscription within updatePaymentProvider method.'
-      );
-    }
-
+  async saveCustomer(userID: string, customerID: string) {
     const user = await this.prisma.user.findUnique({
       where: {
-        id: subscription.userID,
+        id: userID,
       },
       include: {
         paymentProviderCustomers: true,
       },
     });
 
-    if (!user)
-      throw new Error(`User with ID ${subscription.userID} does not exist`);
+    if (!user) throw new Error(`User with ID ${userID} does not exist`);
 
     await this.prisma.user.update({
       where: {
