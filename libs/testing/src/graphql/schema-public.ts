@@ -1840,6 +1840,8 @@ export type Invoice = HasOptionalSubscription & {
   manuallySetAsPaidByUserId?: Maybe<Scalars['String']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   paidAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The payments made or attempted for this invoice, oldest first. Invoices imported from another system have none. */
+  payments: Array<Payment>;
   scheduledDeactivationAt: Scalars['DateTime']['output'];
   subscription?: Maybe<PublicSubscription>;
   subscriptionID?: Maybe<Scalars['String']['output']>;
@@ -3051,6 +3053,8 @@ export type Mutation = {
   sendTestMailTemplate?: Maybe<Scalars['Boolean']['output']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String']['output'];
+  /** Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated. */
+  setPaymentProviderCustomers: Scalars['Int']['output'];
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
@@ -4205,6 +4209,12 @@ export type MutationSendWebsiteLoginArgs = {
 };
 
 
+export type MutationSetPaymentProviderCustomersArgs = {
+  customers: Array<PaymentProviderCustomerInput>;
+  paymentProviderId: Scalars['String']['input'];
+};
+
+
 export type MutationSyncMailLogStatesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -5264,8 +5274,10 @@ export type PaginatedUserRoles = {
 
 export type Payment = HasPaymentMethod & {
   __typename?: 'Payment';
+  createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   intentSecret: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   paymentMethod: PaymentMethod;
   paymentMethodID: Scalars['String']['output'];
   state: PaymentState;
@@ -5346,6 +5358,12 @@ export type PaymentProviderCustomer = {
   __typename?: 'PaymentProviderCustomer';
   customerID: Scalars['String']['output'];
   paymentProviderID: Scalars['String']['output'];
+};
+
+export type PaymentProviderCustomerInput = {
+  /** The provider's id for the user, e.g. the bexio contact id. */
+  customerId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 export enum PaymentProviderType {

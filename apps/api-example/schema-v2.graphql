@@ -1774,6 +1774,11 @@ type Invoice implements HasOptionalSubscription {
   manuallySetAsPaidByUserId: String
   modifiedAt: DateTime!
   paidAt: DateTime
+
+  """
+  The payments made or attempted for this invoice, oldest first. Invoices imported from another system have none.
+  """
+  payments: [Payment!]!
   scheduledDeactivationAt: DateTime!
   subscription: PublicSubscription
   subscriptionID: String
@@ -3282,6 +3287,11 @@ type Mutation {
   sendWebsiteLogin(email: String!): String!
 
   """
+  Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated.
+  """
+  setPaymentProviderCustomers(customers: [PaymentProviderCustomerInput!]!, paymentProviderId: String!): Int!
+
+  """
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
   """
   syncMailLogStates(limit: Int): MailLogSyncModel!
@@ -3882,8 +3892,10 @@ type PaginatedUserRoles {
 }
 
 type Payment implements HasPaymentMethod {
+  createdAt: DateTime!
   id: String!
   intentSecret: String!
+  modifiedAt: DateTime!
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   state: PaymentState!
@@ -3961,6 +3973,12 @@ type PaymentProvider {
 type PaymentProviderCustomer {
   customerID: String!
   paymentProviderID: String!
+}
+
+input PaymentProviderCustomerInput {
+  """The provider's id for the user, e.g. the bexio contact id."""
+  customerId: String!
+  userId: String!
 }
 
 enum PaymentProviderType {
