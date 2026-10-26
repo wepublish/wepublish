@@ -1201,7 +1201,27 @@
         "description": "Description",
         "goodie": "Goodie",
         "status": "Statut",
-        "idCopied": "ID de facture copié"
+        "idCopied": "ID de facture copié",
+        "paidAt": "Payée le",
+        "paidVia": "Payée via",
+        "paymentState": "Statut du paiement",
+        "manuallyPaidBy": "Marquée payée par",
+        "canceledAt": "Annulée le",
+        "scheduledDeactivationAt": "Désactivation si impayée",
+        "createdAt": "Créée le",
+        "modifiedAt": "Dernière modification",
+        "mail": "E-mail de facturation",
+        "positions": "Positions"
+      },
+      "paymentState": {
+        "created": "Créé",
+        "submitted": "Soumis",
+        "requiresUserAction": "Action requise",
+        "processing": "En cours",
+        "paid": "Payé",
+        "canceled": "Annulé",
+        "declined": "Refusé",
+        "chargeback": "Rétrofacturation"
       }
     },
     "linkPageBreakEditPanel": {

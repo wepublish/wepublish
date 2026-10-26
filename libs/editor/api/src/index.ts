@@ -348,6 +348,7 @@ export type {
   MutationSendPasswordResetEmailArgs,
   MutationSendTestMailTemplateArgs,
   MutationSendWebsiteLoginArgs,
+  MutationSetPaymentProviderCustomersArgs,
   MutationSyncMailLogStatesArgs,
   MutationSyncOpenInvoiceStatesArgs,
   MutationTestSystemMailArgs,
@@ -462,6 +463,7 @@ export type {
   PaymentMethod,
   PaymentProvider,
   PaymentProviderCustomer,
+  PaymentProviderCustomerInput,
   Paywall,
   PaywallBypass,
   Peer,
@@ -717,7 +719,6 @@ export {
   ImageSort,
   MailchimpContactStatus,
   NavigationLinkType,
-  PaymentState,
 } from './lib/schema-types';
 
 export { default as possibleTypes } from './lib/possible-types';
