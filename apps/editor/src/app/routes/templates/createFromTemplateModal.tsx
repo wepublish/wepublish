@@ -31,6 +31,7 @@ const Options = styled.div`
 
 const Option = styled(Button)`
   justify-content: flex-start;
+  text-align: left;
 `;
 
 const NoResults = styled.p`
@@ -113,7 +114,7 @@ export function CreateFromTemplateModal<Data>({
       <DialogContent>
         <Content>
           <Option
-            variant="contained"
+            variant="outlined"
             startIcon={<MdNoteAdd />}
             onClick={() => create()}
           >

@@ -2508,7 +2508,8 @@
         "saved": "Gespeichert",
         "created": "Erstellt",
         "new": "Neu",
-        "editing": "In Bearbeitung"
+        "editing": "In Bearbeitung",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
       },
       "delete": {
         "title": "Artikelvorlage löschen?",
@@ -2535,7 +2536,8 @@
         "saved": "Gespeichert",
         "created": "Erstellt",
         "new": "Neu",
-        "editing": "In Bearbeitung"
+        "editing": "In Bearbeitung",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
       },
       "delete": {
         "title": "Seitenvorlage löschen?",
@@ -2562,7 +2564,8 @@
         "editing": "In Bearbeitung",
         "saveConfirmMessage": "Beim Speichern wird der Inhalt dieser Vorlage sofort in allen Artikeln und Seiten aktualisiert, die sie verwenden, auch in bereits veröffentlichten.",
         "saveConfirmTitle": "Vorlage speichern?",
-        "created": "Erstellt"
+        "created": "Erstellt",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
       }
     },
     "yes": "Ja",

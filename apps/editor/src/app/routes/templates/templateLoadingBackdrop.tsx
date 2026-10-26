@@ -1,4 +1,10 @@
-import { Backdrop, CircularProgress, Stack, Typography } from '@mui/material';
+import {
+  Backdrop,
+  CircularProgress,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
 
 type TemplateLoadingBackdropProps = {
   open: boolean;
@@ -19,14 +25,16 @@ export function TemplateLoadingBackdrop({
       open
       sx={{ zIndex: theme => theme.zIndex.modal + 1 }}
     >
-      <Stack
-        alignItems="center"
-        spacing={2}
-        role="status"
-      >
-        <CircularProgress />
-        <Typography>{label}</Typography>
-      </Stack>
+      <Paper sx={{ px: 4, py: 3 }}>
+        <Stack
+          sx={{ alignItems: 'center' }}
+          spacing={2}
+          role="status"
+        >
+          <CircularProgress />
+          <Typography>{label}</Typography>
+        </Stack>
+      </Paper>
     </Backdrop>
   );
 }

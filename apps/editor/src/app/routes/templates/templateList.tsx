@@ -118,6 +118,7 @@ export function TemplateList<Data>({
               id: 'name',
               alwaysVisible: true,
               label: t(`${i18nPrefix}.list.name`),
+              width: 240,
               render: rowData => (
                 <Link to={`${basePath}/edit/${rowData.id}`}>
                   {rowData.blockTemplate.name || t(`${i18nPrefix}.list.noName`)}

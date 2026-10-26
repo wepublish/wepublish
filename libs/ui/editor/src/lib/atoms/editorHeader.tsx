@@ -143,8 +143,10 @@ const Actions = styled('div')`
   gap: 8px;
 
   @container (max-width: 760px) {
-    flex: 1 1 100%;
-    justify-content: space-between;
+    &[data-own-row] {
+      flex: 1 1 100%;
+      justify-content: space-between;
+    }
   }
 `;
 
@@ -168,6 +170,10 @@ const Divider = styled('span')`
   height: 24px;
   margin: 0 4px;
   background-color: ${({ theme }) => theme.vars.palette.divider};
+
+  @container (max-width: 760px) {
+    display: none;
+  }
 `;
 
 export interface EditorHeaderProps {
@@ -220,7 +226,7 @@ export function EditorHeader({
           {statusAction && <StatusAction>{statusAction}</StatusAction>}
         </Start>
 
-        <Actions>
+        <Actions data-own-row={secondaryActions ? '' : undefined}>
           <Group>{secondaryActions}</Group>
           {secondaryActions && primaryActions && <Divider />}
           <PrimaryGroup>{primaryActions}</PrimaryGroup>

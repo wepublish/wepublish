@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom/vitest';
 
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { BlockStylesDocument } from '@wepublish/editor/api';
+import { BlockStylesDocument, EditorBlockType } from '@wepublish/editor/api';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -74,18 +75,22 @@ const defaultProps: ComponentProps<typeof TemplateEditorLayout> = {
   ),
 };
 
+const theme = createTheme({ cssVariables: true });
+
 const renderLayout = (
   props: Partial<ComponentProps<typeof TemplateEditorLayout>> = {}
 ) =>
   render(
-    <MockedProvider mocks={blockStylesMock}>
-      <MemoryRouter>
-        <TemplateEditorLayout
-          {...defaultProps}
-          {...props}
-        />
-      </MemoryRouter>
-    </MockedProvider>
+    <ThemeProvider theme={theme}>
+      <MockedProvider mocks={blockStylesMock}>
+        <MemoryRouter>
+          <TemplateEditorLayout
+            {...defaultProps}
+            {...props}
+          />
+        </MemoryRouter>
+      </MockedProvider>
+    </ThemeProvider>
   );
 
 beforeEach(() => {
@@ -196,6 +201,28 @@ describe('TemplateEditorLayout', () => {
     fireEvent.click(back);
 
     expect(unsavedChangesDialog).toHaveBeenCalled();
+  });
+
+  it('should explain how to start a template without blocks', () => {
+    renderLayout({ blocks: [] });
+
+    expect(screen.getByText('thingTemplates.edit.empty')).toBeInTheDocument();
+  });
+
+  it('should not explain how to start once the template has blocks', () => {
+    renderLayout({
+      blocks: [
+        {
+          key: '0',
+          type: EditorBlockType.Title,
+          value: { preTitle: '', title: '', lead: '' },
+        },
+      ],
+    });
+
+    expect(
+      screen.queryByText('thingTemplates.edit.empty')
+    ).not.toBeInTheDocument();
   });
 
   it('should show what is loading', () => {

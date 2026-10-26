@@ -108,6 +108,21 @@ describe('CreateFromTemplateModal', () => {
     ).toBeInTheDocument();
   });
 
+  it('should present the blank document and templates as equal choices', async () => {
+    renderModal();
+
+    const options = [
+      await screen.findByRole('button', { name: /things.createModal.blank/ }),
+      screen.getByRole('button', { name: /News/ }),
+      screen.getByRole('button', { name: /Interview/ }),
+    ];
+
+    for (const option of options) {
+      expect(option).toHaveClass('MuiButton-outlined');
+      expect(getComputedStyle(option).textAlign).toBe('left');
+    }
+  });
+
   it('should create a blank document', async () => {
     const onClose = vi.fn();
     renderModal(onClose);

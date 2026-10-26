@@ -2568,7 +2568,8 @@
         "saved": "Saved",
         "created": "Created",
         "new": "New",
-        "editing": "Editing"
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
       },
       "delete": {
         "title": "Delete article template?",
@@ -2595,7 +2596,8 @@
         "saved": "Saved",
         "created": "Created",
         "new": "New",
-        "editing": "Editing"
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
       },
       "delete": {
         "title": "Delete page template?",
@@ -2622,7 +2624,8 @@
         "editing": "Editing",
         "saveConfirmMessage": "Saving updates this template's content right away in every article and page that uses it, including published ones.",
         "saveConfirmTitle": "Save template?",
-        "created": "Created"
+        "created": "Created",
+        "empty": "This template has no blocks yet. Add the first one with +."
       }
     },
     "yes": "Yes",

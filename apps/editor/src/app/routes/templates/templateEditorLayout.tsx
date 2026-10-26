@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Badge, Drawer, IconButton } from '@mui/material';
+import { Badge, Drawer, IconButton, Typography } from '@mui/material';
 import {
   BlockList,
   BlockMap,
@@ -153,6 +153,15 @@ export function TemplateEditorLayout({
             placeholder={t(`${i18nPrefix}.edit.name`)}
             onChange={e => onNameChange(e?.target?.value)}
           />
+
+          {!blocks.length && (
+            <Typography
+              color="textSecondary"
+              align="center"
+            >
+              {t(`${i18nPrefix}.edit.empty`)}
+            </Typography>
+          )}
 
           <BlockList
             itemId={itemId}

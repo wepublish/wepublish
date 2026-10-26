@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
   ArticleTemplateListDocument,
@@ -61,29 +62,33 @@ function CurrentLocation() {
   return <div data-testid="location">{`${pathname}${search}`}</div>;
 }
 
+const theme = createTheme({ cssVariables: true });
+
 const renderList = () =>
   render(
-    <MemoryRouter initialEntries={['/things/templates']}>
-      <Routes>
-        <Route
-          path="/things/templates"
-          element={
-            <TemplateList
-              listDocument={ArticleTemplateListDocument}
-              deleteDocument={DeleteArticleTemplateDocument}
-              selectTemplates={data => data?.articleTemplates}
-              basePath="/things/templates"
-              permissions={{ create: 'CREATE', delete: 'DELETE' }}
-              i18nPrefix="thingTemplates"
-            />
-          }
-        />
-        <Route
-          path="*"
-          element={<CurrentLocation />}
-        />
-      </Routes>
-    </MemoryRouter>
+    <ThemeProvider theme={theme}>
+      <MemoryRouter initialEntries={['/things/templates']}>
+        <Routes>
+          <Route
+            path="/things/templates"
+            element={
+              <TemplateList
+                listDocument={ArticleTemplateListDocument}
+                deleteDocument={DeleteArticleTemplateDocument}
+                selectTemplates={data => data?.articleTemplates}
+                basePath="/things/templates"
+                permissions={{ create: 'CREATE', delete: 'DELETE' }}
+                i18nPrefix="thingTemplates"
+              />
+            }
+          />
+          <Route
+            path="*"
+            element={<CurrentLocation />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 describe('TemplateList', () => {
@@ -104,6 +109,17 @@ describe('TemplateList', () => {
       screen.getByRole('link', { name: /thingTemplates.list.newTemplate/ })
     ).toHaveAttribute('href', '/things/templates/create');
     expect(screen.getByText('thingTemplates.list.title')).toBeInTheDocument();
+  });
+
+  it('should give the name most of the row and keep the actions compact', async () => {
+    renderList();
+
+    const table = (await screen.findByRole('link', { name: 'News' })).closest(
+      'table'
+    );
+
+    expect(table?.style.getPropertyValue('--col-name-size')).toBe('240px');
+    expect(table?.style.getPropertyValue('--col-action-size')).toBe('100px');
   });
 
   it('should open a copy of a template', async () => {
