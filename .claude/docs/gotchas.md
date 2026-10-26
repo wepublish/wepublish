@@ -175,6 +175,23 @@ Local runs don't use `-c ci`. When reproducing CI locally with `-c ci`, add
 
 ---
 
+### ⚠️ A spec must listen on `127.0.0.1` before `supertest` touches the server
+
+On a server that is not listening, supertest calls `listen(0)` per request,
+which binds the IPv6 wildcard `[::]`. macOS hands that bind a port another
+process already holds on `127.0.0.1` (VS Code's extension host keeps ~160 such
+listeners; libuv sets `SO_REUSEADDR` and the kernel only checks same-address
+binds). The request then goes to that process, which never answers, and a
+random test hits the 15 s `testTimeout` — `membership-api`, about 1 request in
+30, reproduced with plain express + supertest, no Nest and no load
+(2026-10-26). A bind to `127.0.0.1` cannot collide, but a `listen` with a host
+is asynchronous, so the spec has to do it before the first request:
+`await app.listen(0, '127.0.0.1')` instead of `app.init()`, closed in the
+matching `after*` hook. `vitest.setup-nest.ts` makes supertest throw on a server
+that is not listening, so the old form cannot creep back.
+
+---
+
 ### ⚠️ Every Dragonfly key must start with `REDIS_KEY_PREFIX`
 
 All media share database 0; a medium's user may only touch `<prefix>:*` /

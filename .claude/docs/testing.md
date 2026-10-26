@@ -137,7 +137,12 @@ logic is security-relevant — test the **deny** path, not just the allow path.
 
 Resolver specs go one level up, as a full GraphQL e2e: `GraphQLModule.forRoot`
 with `autoSchemaFile: true` driven by `supertest` against the Nest app (see
-`libs/consent/api/.../consent.resolver.spec.ts`). Note that `@Permissions` and
+`libs/consent/api/.../consent.resolver.spec.ts`). Start the app with
+`await app.listen(0, '127.0.0.1')`, not `app.init()`, and close it in the
+matching `after*` hook: supertest's own `listen(0)` can land on another
+process's port on macOS and hang a random test
+([gotchas](gotchas.md#️-a-spec-must-listen-on-127001-before-supertest-touches-the-server)).
+Note that `@Permissions` and
 `@Authenticated` are metadata-only without the globally registered guard, so
 operations run **unguarded** in these tests — asserting a deny path here proves
 nothing. When a resolver uses `@CurrentUser()`, inject a fake session through
