@@ -133,7 +133,11 @@ describe('SubscriptionService', () => {
     };
 
     const makePrisma = (
-      subscription: Record<string, unknown> | null = {
+      subscription: {
+        id: string;
+        paymentMethodID: string;
+        deactivation: { id: string } | null;
+      } | null = {
         id: 'sub-1',
         paymentMethodID: 'payrexx',
         deactivation: { id: 'deactivation-1' },
