@@ -1210,7 +1210,7 @@ function SyncProviderSettingCard({
                     control={control}
                     render={({ field: { value, onChange } }) => (
                       <MergeFieldExpressionEditor
-                        value={value}
+                        value={value ?? ''}
                         onChange={onChange}
                         memberPlanSlugs={memberPlanSlugs}
                         paymentMethodSlugs={paymentMethodSlugs}
@@ -1305,7 +1305,7 @@ function SyncProviderSettingCard({
                     control={control}
                     render={({ field: { value, onChange } }) => (
                       <InterestExpressionEditor
-                        value={value}
+                        value={value ?? ''}
                         onChange={onChange}
                         memberPlanSlugs={memberPlanSlugs}
                       />

@@ -73,7 +73,7 @@ export function SelectPollPanel({
 
         <DrawerActions>
           <Button
-            variant="outlined"
+            variant="text"
             onClick={() => onClose()}
           >
             {t('close')}

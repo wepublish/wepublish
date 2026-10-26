@@ -28,7 +28,13 @@ import {
 } from '@wepublish/permissions';
 import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdListAlt, MdNoteAdd, MdSettings, MdShare } from 'react-icons/md';
+import {
+  MdListAlt,
+  MdNoteAdd,
+  MdSettings,
+  MdShare,
+  MdTravelExplore,
+} from 'react-icons/md';
 
 import {
   ChooseEditImage,
@@ -53,6 +59,10 @@ import {
 import { generateID, isFunctionalUpdate } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
+import { SeoBlockContext } from './seoBlockContext';
+import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
+import { SocialPreviews } from './seoPreviews';
+import { SeoTab } from './seoTab';
 
 const InputWidth60 = styled(TextField)`
   width: 60%;
@@ -103,7 +113,9 @@ export interface PageMetadata {
 export interface PageMetadataPanelProps {
   value: PageMetadata;
   isTemplate?: boolean;
+  seoContext?: SeoBlockContext;
 
+  onSave?(): void;
   onClose?(): void;
   onCreateTemplate?(): void;
 
@@ -113,6 +125,8 @@ export interface PageMetadataPanelProps {
 function PageMetadataPanel({
   value,
   isTemplate,
+  seoContext,
+  onSave,
   onClose,
   onCreateTemplate,
   onChange,
@@ -194,6 +208,19 @@ function PageMetadataPanel({
     }
   }
 
+  const seoMetadata = {
+    title,
+    lead: description,
+    seoTitle,
+    seoDescription,
+    socialMediaTitle,
+    socialMediaDescription,
+    url: value.url,
+    image,
+    socialMediaImage,
+    slug,
+  };
+
   function currentContent() {
     switch (activeKey) {
       case MetaDataType.SocialMedia:
@@ -254,6 +281,14 @@ function PageMetadataPanel({
               }
               helperText={t('metadataHints.socialMediaDescriptionFallback')}
               fullWidth
+            />
+
+            <SocialPreviews
+              data={getSeoPreviewData(
+                SeoContentType.Page,
+                seoMetadata,
+                seoContext ?? {}
+              )}
             />
           </FormFields>
         );
@@ -440,6 +475,15 @@ function PageMetadataPanel({
           </FormFields>
         );
 
+      case MetaDataType.Seo:
+        return (
+          <SeoTab
+            type={SeoContentType.Page}
+            metadata={seoMetadata}
+            seoContext={seoContext}
+          />
+        );
+
       case MetaDataType.Properties:
         return (
           <Stack
@@ -505,6 +549,14 @@ function PageMetadataPanel({
 
         <DrawerActions>
           <PermissionControl qualifyingPermissions={[CanCreatePage.id]}>
+            {onSave && (
+              <Button
+                variant="outlined"
+                onClick={() => onSave()}
+              >
+                {t('save')}
+              </Button>
+            )}
             <Button
               variant="contained"
               onClick={() => onClose?.()}
@@ -532,6 +584,12 @@ function PageMetadataPanel({
           icon={<MdShare />}
           iconPosition="start"
           label={<>{t('articleEditor.panels.socialMedia')}</>}
+        />
+        <Tab
+          value={MetaDataType.Seo}
+          icon={<MdTravelExplore />}
+          iconPosition="start"
+          label={<>{t('seoTab.title')}</>}
         />
         <Tab
           value={MetaDataType.Properties}

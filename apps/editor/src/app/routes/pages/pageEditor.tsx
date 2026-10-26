@@ -44,6 +44,7 @@ import {
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
+  getSeoBlockContext,
   enqueueSnackbar,
   mapBlockValueToBlockInput,
   PageMetadata,
@@ -62,6 +63,7 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -173,6 +175,11 @@ function PageEditor() {
     }, [])
   );
 
+  const seoContext = useMemo(
+    () => (isMetaDrawerOpen ? getSeoBlockContext(blocks) : undefined),
+    [blocks, isMetaDrawerOpen]
+  );
+
   const pageID = id || createData?.createPage.id;
 
   const {
@@ -276,8 +283,8 @@ function PageEditor() {
   const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     pageData?.page?.draft ||
-      pageData?.page?.published ||
-      pageData?.page?.pending
+    pageData?.page?.published ||
+    pageData?.page?.pending
   );
 
   const changeVersion = useRef(0);
@@ -789,7 +796,9 @@ function PageEditor() {
         onClose={() => setMetaDrawerOpen(false)}
       >
         <PageMetadataPanel
+          seoContext={seoContext}
           value={metadata}
+          onSave={() => handleSave()}
           onClose={() => {
             handleSave();
             setMetaDrawerOpen(false);

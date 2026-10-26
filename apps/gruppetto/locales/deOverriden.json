@@ -4,7 +4,7 @@
   },
   "subscribe": {
     "memberplan": {
-      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {yearlyPrice} {extendable, select, true {pro Jahr} other {}}}}"
+      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {yearlyPrice}}}"
     }
   }
 }

@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { ArticleMetadata, ArticleMetadataPanel } from './articleMetadataPanel';
@@ -33,18 +34,22 @@ const metadata: ArticleMetadata = {
   likes: 0,
 };
 
+const theme = createTheme({ cssVariables: true });
+
 const renderPanel = (isTemplate?: boolean, onCreateTemplate?: () => void) =>
   render(
-    <MockedProvider>
-      <ArticleMetadataPanel
-        articleID={null}
-        peerId={null}
-        value={metadata}
-        infoData={{ charCount: 0 }}
-        isTemplate={isTemplate}
-        onCreateTemplate={onCreateTemplate}
-      />
-    </MockedProvider>
+    <ThemeProvider theme={theme}>
+      <MockedProvider>
+        <ArticleMetadataPanel
+          articleID={null}
+          peerId={null}
+          value={metadata}
+          infoData={{ charCount: 0 }}
+          isTemplate={isTemplate}
+          onCreateTemplate={onCreateTemplate}
+        />
+      </MockedProvider>
+    </ThemeProvider>
   );
 
 describe('ArticleMetadataPanel', () => {
@@ -53,7 +58,7 @@ describe('ArticleMetadataPanel', () => {
 
     expect(screen.getByDisplayValue('slug')).toBeInTheDocument();
     expect(
-      screen.getByText('articleEditor.panels.likeCount')
+      screen.getAllByText('articleEditor.panels.likeCount')[0]
     ).toBeInTheDocument();
     expect(
       screen.getByText('articleEditor.panels.tracking')

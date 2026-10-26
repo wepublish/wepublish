@@ -48,6 +48,7 @@ import {
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
+  getSeoBlockContext,
   enqueueSnackbar,
   InfoData,
   ListicleBlockListValue,
@@ -203,6 +204,11 @@ function ArticleEditor() {
     }, [])
   );
 
+  const seoContext = useMemo(
+    () => (isMetaDrawerOpen ? getSeoBlockContext(blocks) : undefined),
+    [blocks, isMetaDrawerOpen]
+  );
+
   const articleID = id || createData?.createArticle.id;
 
   const {
@@ -304,8 +310,8 @@ function ArticleEditor() {
   const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     articleData?.article?.draft ||
-      articleData?.article?.published ||
-      articleData?.article?.pending
+    articleData?.article?.published ||
+    articleData?.article?.pending
   );
 
   const changeVersion = useRef(0);
@@ -913,10 +919,12 @@ function ArticleEditor() {
         onClose={() => setMetaDrawerOpen(false)}
       >
         <ArticleMetadataPanel
+          seoContext={seoContext}
           peerId={articleData?.article.peer?.id}
           articleID={articleID}
           value={metadata}
           infoData={infoData}
+          onSave={() => handleSave()}
           onClose={() => {
             handleSave();
             setMetaDrawerOpen(false);
