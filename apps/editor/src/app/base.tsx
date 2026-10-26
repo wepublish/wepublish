@@ -194,6 +194,7 @@ import {
   MdStar,
   MdStyle,
   MdTranslate,
+  MdTravelExplore,
   MdKey,
   MdVpnKey,
 } from 'react-icons/md';
@@ -1419,6 +1420,17 @@ export function Base({ children }: BaseProps) {
                       icon={<MdAutoFixHigh />}
                     >
                       {t('websiteSettings.navbar')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[CanGetSettings.id]}
+                  >
+                    <SidebarNavItem
+                      href="/settings/seo"
+                      icon={<MdTravelExplore />}
+                    >
+                      {t('seoChecklist.navbar')}
                     </SidebarNavItem>
                   </PermissionControl>
                 </SidebarNavMenu>

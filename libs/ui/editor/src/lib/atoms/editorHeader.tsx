@@ -4,13 +4,7 @@ import { ReactNode, useId } from 'react';
 
 import { paletteColor } from '../paletteColor';
 import { StateColor } from '../utility';
-
-const stateTextColors: Record<StateColor, string> = {
-  [StateColor.pending]: 'var(--wep-state-pending-text)',
-  [StateColor.published]: 'var(--wep-state-published-text)',
-  [StateColor.draft]: 'var(--wep-state-draft-text)',
-  [StateColor.none]: 'text.secondary',
-};
+import { StatePill, stateTextColors } from './statePill';
 
 const Bar = styled('header', {
   shouldForwardProp: prop => prop !== 'accent',
@@ -79,38 +73,6 @@ const Status = styled('div')`
   justify-items: start;
   gap: 2px;
   min-width: 0;
-`;
-
-const Chip = styled('span', {
-  shouldForwardProp: prop => prop !== 'background' && prop !== 'color',
-})<{ background: string; color: string }>`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  max-width: 100%;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background-color: ${({ background }) => background};
-  color: ${({ color }) => color};
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 20px;
-  white-space: nowrap;
-
-  &::before {
-    content: '';
-    flex-shrink: 0;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: currentColor;
-  }
-
-  > span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
 `;
 
 const Meta = styled('span')`
@@ -205,12 +167,9 @@ export function EditorHeader({
             role="group"
             aria-labelledby={statusId}
           >
-            <Chip
-              background={state}
-              color={textColor}
-            >
+            <StatePill state={state}>
               <span id={statusId}>{stateLabel}</span>
-            </Chip>
+            </StatePill>
 
             {meta && <Meta>{meta}</Meta>}
           </Status>

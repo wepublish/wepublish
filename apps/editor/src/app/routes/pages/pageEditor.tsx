@@ -44,6 +44,7 @@ import {
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
+  getSeoBlockContext,
   enqueueSnackbar,
   mapBlockValueToBlockInput,
   PageMetadata,
@@ -62,6 +63,7 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -73,12 +75,14 @@ import {
   MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
+  MdLink,
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 import { AutosaveToggle } from '../../autosaveToggle';
+import { copyLinkToClipboard } from '../../copyLink';
 import { LastSavedAt } from '../../lastSavedAt';
 import {
   PreviewControls,
@@ -157,6 +161,8 @@ function PageEditor() {
     url: '',
     properties: [],
     hidden: false,
+    hideHeader: false,
+    hideFooter: false,
     image: undefined,
     socialMediaTitle: undefined,
     socialMediaDescription: undefined,
@@ -165,6 +171,11 @@ function PageEditor() {
 
   const isNew = id === undefined;
   const [blocks, setBlocks] = useState<BlockValue[]>([]);
+
+  const seoContext = useMemo(
+    () => (isMetaDrawerOpen ? getSeoBlockContext(blocks) : undefined),
+    [blocks, isMetaDrawerOpen]
+  );
 
   const pageID = id || createData?.createPage.id;
 
@@ -268,8 +279,8 @@ function PageEditor() {
   const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     pageData?.page?.draft ||
-      pageData?.page?.published ||
-      pageData?.page?.pending
+    pageData?.page?.published ||
+    pageData?.page?.pending
   );
 
   const [hasChanged, setChanged] = useState(false);
@@ -278,6 +289,8 @@ function PageEditor() {
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = pageData?.page?.previewUrl;
+  const publishedUrl =
+    pageData?.page?.published ? pageData.page.url : undefined;
   const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
   const showPreview = isPreviewOpen && !isPreviewDisabled;
 
@@ -292,7 +305,8 @@ function PageEditor() {
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (pageData?.page && !hasChanged && !skipRepopulate.current) {
-      const { latest, tags, hidden, slug, url } = pageData.page;
+      const { latest, tags, hidden, hideHeader, hideFooter, slug, url } =
+        pageData.page;
       const {
         title,
         description,
@@ -322,6 +336,8 @@ function PageEditor() {
         url,
         properties,
         hidden,
+        hideHeader,
+        hideFooter,
         image: image || undefined,
         socialMediaTitle: socialMediaTitle || '',
         socialMediaDescription: socialMediaDescription || '',
@@ -445,6 +461,8 @@ function PageEditor() {
       seoTitle: metadata.seoTitle || undefined,
       seoDescription: metadata.seoDescription || undefined,
       hidden: metadata.hidden ?? false,
+      hideHeader: metadata.hideHeader ?? false,
+      hideFooter: metadata.hideFooter ?? false,
       imageID: metadata.image?.id,
       tagIds: metadata.tags,
       properties: metadata.properties,
@@ -654,6 +672,15 @@ function PageEditor() {
                       />
                     </PermissionControl>
 
+                    {publishedUrl && (
+                      <EditorHeaderButton
+                        variant="text"
+                        icon={<MdLink />}
+                        label={t('copyLink.button')}
+                        onClick={() => copyLinkToClipboard(publishedUrl, t)}
+                      />
+                    )}
+
                     {pageData?.page?.draft && pageData?.page?.published && (
                       <PermissionControl
                         qualifyingPermissions={[CanCreatePage.id]}
@@ -805,7 +832,9 @@ function PageEditor() {
         onClose={() => setMetaDrawerOpen(false)}
       >
         <PageMetadataPanel
+          seoContext={seoContext}
           value={metadata}
+          onSave={() => handleSave()}
           onClose={() => {
             handleSave();
             setMetaDrawerOpen(false);

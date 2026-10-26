@@ -1,6 +1,7 @@
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { EXPIRED_API_TOKEN } from './auth-session';
 import { INVALID_PEER_TOKEN } from './session.strategy';
 
 /**
@@ -25,6 +26,10 @@ export class OptionalAuthenticationGuard extends AuthGuard([
         if (e.cause === INVALID_PEER_TOKEN) {
           // To fake needing a token for peering,
           // we want to rethrow to stop the request from happening
+          throw e;
+        }
+
+        if (e.cause === EXPIRED_API_TOKEN) {
           throw e;
         }
 

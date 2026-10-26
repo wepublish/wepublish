@@ -14,7 +14,11 @@ const image = {
   title: 'A portrait',
 } as FullImageFragment;
 
-const renderBlock = (value: Partial<ImageBlockValue>, onChange = vi.fn()) =>
+const renderBlock = (
+  value: Partial<ImageBlockValue>,
+  onChange = vi.fn(),
+  disabled = false
+) =>
   render(
     <MockedProvider>
       <ThemeProvider theme={theme}>
@@ -22,6 +26,7 @@ const renderBlock = (value: Partial<ImageBlockValue>, onChange = vi.fn()) =>
           type={EditorBlockType.Image}
           value={{ image: null, caption: '', ...value } as ImageBlockValue}
           onChange={onChange}
+          disabled={disabled}
         />
       </ThemeProvider>
     </MockedProvider>
@@ -63,5 +68,16 @@ describe('ImageBlock', () => {
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({ image: null, caption: 'A caption' })
     );
+  });
+
+  it('disables the image picker and caption of a disabled block', () => {
+    renderBlock({}, vi.fn(), true);
+
+    expect(
+      screen.getByRole('button', { name: 'chooseEditImage.chooseImage' })
+    ).toBeDisabled();
+    expect(
+      screen.getByPlaceholderText('blocks.image.overview.caption')
+    ).toBeDisabled();
   });
 });

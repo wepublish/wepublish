@@ -5,10 +5,10 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
-import { PaymentPeriodicity } from '@wepublish/website/api';
 import { formatCurrency } from '../formatters/format-currency';
 import {
   calculatePeriodAmount,
+  getAdvertisedYearlyAmount,
   getCheapestOffer,
   getMonthlyEquivalentRange,
   getPeriodicityLabel,
@@ -113,6 +113,7 @@ export const MemberPlanItem = forwardRef<
       periodicityPricing,
       paymentPeriodicity,
       showPeriodicity,
+      isOffer,
       amountLayout,
       amount,
       onAmountChange,
@@ -147,20 +148,6 @@ export const MemberPlanItem = forwardRef<
       monthlyEquivalent.amountPerMonthMax ===
         monthlyEquivalent.amountPerMonthMin;
 
-    const yearlyPriceRange = getPeriodPriceRange(
-      memberPlan,
-      PaymentPeriodicity.Yearly
-    );
-    const hasYearlyPricing = !!periodicityPricing?.some(
-      price =>
-        price.periodicity === PaymentPeriodicity.Yearly &&
-        price.amountMin != null
-    );
-    const yearlyAmount =
-      hasYearlyPricing ?
-        yearlyPriceRange.amountMin / 100
-      : Math.ceil((amountPerMonthMin / 100) * 12);
-
     const cheapestOffer =
       paymentPeriodicity ?
         {
@@ -168,6 +155,11 @@ export const MemberPlanItem = forwardRef<
           ...getPeriodPriceRange(memberPlan, paymentPeriodicity),
         }
       : getCheapestOffer(memberPlan);
+    const yearlyAmount = getAdvertisedYearlyAmount(
+      memberPlan,
+      cheapestOffer.periodicity,
+      isOffer
+    );
     const allowsHigherAmount = offersAmountChoice(
       amountLayout,
       cheapestOffer.periodicity
