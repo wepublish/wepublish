@@ -8,7 +8,7 @@ import type { Mock } from 'vitest';
 
 import { ExternalAppsDashboard } from './externalAppsDashboard';
 
-const { mutationFor, navigate, toasterPush } = vi.hoisted(() => {
+const { mutationFor, navigate, enqueueSnackbar } = vi.hoisted(() => {
   const mutations = new Map<unknown, Mock>();
 
   return {
@@ -20,7 +20,7 @@ const { mutationFor, navigate, toasterPush } = vi.hoisted(() => {
       return mutations.get(document) as Mock;
     },
     navigate: vi.fn(),
-    toasterPush: vi.fn(),
+    enqueueSnackbar: vi.fn(),
   };
 });
 
@@ -42,9 +42,9 @@ vi.mock('react-router-dom', async importOriginal => ({
   useNavigate: () => navigate,
 }));
 
-vi.mock('rsuite', async importOriginal => ({
-  ...(await importOriginal<typeof import('rsuite')>()),
-  toaster: { push: toasterPush },
+vi.mock('@wepublish/ui/editor', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  enqueueSnackbar,
 }));
 
 const { useQuery } = await import('@apollo/client/react');
@@ -91,7 +91,7 @@ const popup = () => ({
 // the dashboard styles read theme.spacing, which only a provider supplies
 const renderDashboard = () =>
   render(
-    <ThemeProvider theme={createTheme()}>
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
       <ExternalAppsDashboard />
     </ThemeProvider>
   );
@@ -113,7 +113,7 @@ beforeEach(() => {
     },
   });
   navigate.mockReset();
-  toasterPush.mockReset();
+  enqueueSnackbar.mockReset();
 });
 
 afterEach(() => vi.restoreAllMocks());
@@ -157,7 +157,11 @@ describe('ExternalAppsDashboard', () => {
     fireEvent.click(screen.getByText('Tab app'));
 
     await waitFor(() => expect(tab.close).toHaveBeenCalled());
-    expect(toasterPush).toHaveBeenCalledTimes(1);
+    expect(enqueueSnackbar).toHaveBeenCalledTimes(1);
+    expect(enqueueSnackbar).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ variant: 'error' })
+    );
     expect(tab.location.replace).not.toHaveBeenCalled();
   });
 });
