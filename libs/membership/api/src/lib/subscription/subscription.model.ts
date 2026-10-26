@@ -251,6 +251,20 @@ export class UpdatePublicSubscriptionInput extends PartialType(
 }
 
 @ArgsType()
+export class UpdateSubscriptionPaymentMethodArgs {
+  @Field()
+  subscriptionId!: string;
+
+  @Field({
+    description: `The payment method the subscription is expected to be on; it is only moved while it still is.`,
+  })
+  fromPaymentMethodId!: string;
+
+  @Field()
+  toPaymentMethodId!: string;
+}
+
+@ArgsType()
 export class CancelPublicSubscriptionInput extends PickType(
   SubscriptionDeactivation,
   ['reason'] as const,

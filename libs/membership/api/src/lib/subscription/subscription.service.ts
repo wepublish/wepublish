@@ -17,6 +17,7 @@ import {
   CancelPublicSubscriptionInput,
   CreatePublicSubscriptionInput,
   ImportPublicSubscriptionInput,
+  UpdateSubscriptionPaymentMethodArgs,
   SubscriptionFilter,
   SubscriptionListArgs,
   SubscriptionsCSVArgs,
@@ -242,6 +243,48 @@ export class SubscriptionService {
       deactivationReason: reason,
       skipMail,
     });
+  }
+
+  /**
+   * Moves a subscription to another payment method and changes nothing else,
+   * for data corrections (e.g. after an import). Unlike updateSubscription it
+   * also takes deactivated subscriptions and never touches invoices, periods
+   * or the payment provider. Only moves it while it is still on
+   * `fromPaymentMethodId`; returns whether it did. The same call with the
+   * payment methods swapped undoes it.
+   */
+  async updateSubscriptionPaymentMethod({
+    subscriptionId,
+    fromPaymentMethodId,
+    toPaymentMethodId,
+  }: UpdateSubscriptionPaymentMethodArgs) {
+    if (fromPaymentMethodId === toPaymentMethodId) {
+      throw new BadRequestException(
+        'The subscription already uses this payment method'
+      );
+    }
+
+    // inactive payment methods are fine: subscriptions keep using them
+    for (const id of [fromPaymentMethodId, toPaymentMethodId]) {
+      if (!(await this.prisma.paymentMethod.findUnique({ where: { id } }))) {
+        throw new NotFoundException('PaymentMethod', id);
+      }
+    }
+
+    if (
+      !(await this.prisma.subscription.findUnique({
+        where: { id: subscriptionId },
+      }))
+    ) {
+      throw new NotFoundException('Subscription', subscriptionId);
+    }
+
+    const { count } = await this.prisma.subscription.updateMany({
+      where: { id: subscriptionId, paymentMethodID: fromPaymentMethodId },
+      data: { paymentMethodID: toPaymentMethodId },
+    });
+
+    return count === 1;
   }
 
   @PrimeDataLoader(SubscriptionDataloader)
