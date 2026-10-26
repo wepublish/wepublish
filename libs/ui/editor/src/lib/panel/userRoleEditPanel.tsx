@@ -39,7 +39,6 @@ import {
   DrawerTitle,
 } from '../drawer';
 import { enqueueSnackbar } from '../snackbar';
-import { toggleRequiredLabel } from '../toggleRequiredLabel';
 
 const EMPTY_USER_ROLE = {
   name: '',
@@ -172,7 +171,10 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
   }
 
   return (
-    <DrawerForm onSubmit={handleSubmit(handleSave)}>
+    <DrawerForm
+      noValidate
+      onSubmit={handleSubmit(handleSave)}
+    >
       <Stack
         direction="column"
         sx={{ height: '100%' }}
@@ -204,7 +206,16 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
           </DrawerActions>
         </DrawerHeader>
 
-        <DrawerBody>
+        <DrawerBody
+          {...((systemRole || !isAuthorized) && {
+            role: 'region',
+            tabIndex: 0,
+            'aria-label':
+              id ?
+                t('userRoles.panels.editUserRole')
+              : t('userRoles.panels.createUserRole'),
+          })}
+        >
           {!isLoading && (
             <>
               <Stack
@@ -217,7 +228,8 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
                   render={({ field, fieldState: { error } }) => (
                     <TextField
                       {...field}
-                      label={toggleRequiredLabel(t('userRoles.panels.name'))}
+                      label={t('userRoles.panels.name')}
+                      required
                       disabled={isDisabled}
                       error={Boolean(error)}
                       helperText={error?.message}
@@ -259,6 +271,15 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
                         option.id === selected.id
                       }
                       onChange={(_event, selected) => field.onChange(selected)}
+                      slotProps={{
+                        chip: {
+                          ...(isDisabled && { onDelete: undefined }),
+                          sx: {
+                            height: 'auto',
+                            '& .MuiChip-label': { whiteSpace: 'normal' },
+                          },
+                        },
+                      }}
                       renderInput={params => (
                         <TextField
                           {...params}

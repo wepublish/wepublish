@@ -310,7 +310,12 @@ function UserSubscriptionsList({
 
   return (
     <>
-      <TableContainer sx={{ overflowX: 'auto' }}>
+      <TableContainer
+        sx={{ overflowX: 'auto' }}
+        role="region"
+        tabIndex={0}
+        aria-label={t('userList.overview.subscriptions')}
+      >
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -337,6 +342,14 @@ function UserSubscriptionsList({
           </TableHead>
 
           <TableBody>
+            {!rows.length && (
+              <TableRow>
+                <TableCell colSpan={11}>
+                  {t('userList.overview.noSubscriptions')}
+                </TableCell>
+              </TableRow>
+            )}
+
             {rows.map(({ subscription, periods }) => {
               const status = getSubscriptionStatus(subscription);
               const isExpandable = periods.length > 0;

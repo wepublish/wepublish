@@ -19,7 +19,7 @@ import {
 import { CanUpdateComments } from '@wepublish/permissions';
 import { toPlaintext } from '@wepublish/richtext';
 import { TFunction } from 'i18next';
-import { useMemo, useReducer, useState } from 'react';
+import { useId, useMemo, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
@@ -78,6 +78,7 @@ export function SelectCommentPanel({
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
+  const tagsLabelId = useId();
 
   const { data, loading } = useQuery(CommentListDocument, {
     skip: !itemId,
@@ -139,9 +140,12 @@ export function SelectCommentPanel({
             fullWidth
             sx={{ marginBottom: 3 }}
           >
-            <FormLabel>{t('blocks.comment.filterByTag')}</FormLabel>
+            <FormLabel id={tagsLabelId}>
+              {t('blocks.comment.filterByTag')}
+            </FormLabel>
 
             <SelectTags
+              aria-labelledby={tagsLabelId}
               defaultTags={[]}
               name="tags"
               tagType={TagType.Comment}

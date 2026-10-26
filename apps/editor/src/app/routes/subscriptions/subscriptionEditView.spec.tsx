@@ -198,6 +198,63 @@ describe('SubscriptionEditView', () => {
     expect(screen.queryByText('userSubscriptionEdit.renewNow')).toBeNull();
   });
 
+  it('names every field after the label shown above it', async () => {
+    mockQueries(null);
+    renderEditView();
+
+    await screen.findByRole('checkbox', {
+      name: 'userSubscriptionEdit.autoRenew',
+    });
+
+    expect(
+      screen.getByRole('combobox', { name: /^userSubscriptionEdit.selectUser/ })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', {
+        name: /^userSubscriptionEdit.selectMemberPlan/,
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', {
+        name: /^memberPlanList.paymentPeriodicities/,
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', {
+        name: /^userSubscriptionEdit.paymentMethod/,
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('textbox', {
+        name: /^userSubscriptionEdit.periodAmount/,
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('textbox', { name: 'userSubscriptionEdit.startsAt' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('textbox', { name: 'userSubscriptionEdit.paidUntil' })
+    ).toBeInTheDocument();
+  });
+
+  it('marks the required pickers as required without native validation', async () => {
+    mockQueries(null);
+    const { container } = renderEditView();
+
+    await screen.findByRole('checkbox', {
+      name: 'userSubscriptionEdit.autoRenew',
+    });
+
+    for (const name of [
+      'userSubscriptionEdit.selectMemberPlan',
+      'memberPlanList.paymentPeriodicities',
+      'userSubscriptionEdit.paymentMethod',
+    ]) {
+      expect(screen.getByRole('combobox', { name })).toBeRequired();
+    }
+    expect(container.querySelector('form')).toHaveAttribute('novalidate');
+  });
+
   it('offers no reactivation for a running subscription', async () => {
     mockQueries(null);
     renderEditView();

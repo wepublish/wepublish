@@ -12,9 +12,15 @@ const Input = styled.input`
   position: absolute;
   top: 0;
   left: 0;
-  width: 0;
-  height: 0;
-  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 `;
 
 const FileDropInputWrapper = styled.div<{
@@ -58,6 +64,13 @@ const FileDropInputWrapper = styled.div<{
     border-color: ${({ theme }) => theme.vars.palette.text.primary};
     color: ${({ theme }) => theme.vars.palette.text.primary};
   }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
+    border-color: ${({ theme }) => theme.vars.palette.primary.main};
+    color: ${({ theme }) => theme.vars.palette.text.primary};
+  }
 `;
 
 export interface FileDropInputProps {
@@ -66,7 +79,9 @@ export interface FileDropInputProps {
 
   icon?: ReactElement;
   text?: string;
+  label?: string;
   children?: ReactNode;
+  'aria-describedby'?: string;
 
   onDrop: (fileList: File[]) => void;
 }
@@ -77,7 +92,9 @@ export function FileDropInput({
   onDrop,
   icon,
   text,
+  label,
   children,
+  'aria-describedby': ariaDescribedby,
 }: FileDropInputProps) {
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -108,6 +125,8 @@ export function FileDropInput({
     }
   }
 
+  const inputName = label ?? (children ? undefined : text);
+
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       onDrop(Array.from(e.target.files));
@@ -136,6 +155,11 @@ export function FileDropInput({
         accept={accept}
         onChange={handleInputChange}
         disabled={disabled}
+        aria-label={inputName}
+        aria-describedby={ariaDescribedby}
+        tabIndex={inputName ? undefined : -1}
+        aria-hidden={inputName ? undefined : true}
+        onClick={event => event.stopPropagation()}
       />
     </FileDropInputWrapper>
   );

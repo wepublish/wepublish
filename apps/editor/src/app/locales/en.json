@@ -97,9 +97,12 @@
       }
     },
     "articleEditor": {
+      "unsavedChanges": "unsaved changes",
+      "unpublishedChanges": "changes not yet published",
       "validationFailedGeneric": "Cannot save. Please fix the highlighted errors.",
       "saveValidationFailed": "Saving failed",
       "publishValidationFailed": "Publishing failed",
+      "title": "Edit Article",
       "overview": {
         "articlePending": "Article Pending",
         "articlePublished": "Article Published",
@@ -232,6 +235,7 @@
         "text": "Text",
         "default": "Default",
         "tracking": "Tracking",
+        "hasErrors": "has errors",
         "paywall": "Paywall",
         "likeCountInfo": "Number of likes readers have given this article on the website. You can correct the number here if needed.",
         "slugInfo": "The last part of the article's web address, e.g. …/a/my-article. Use lowercase letters, numbers and hyphens only.",
@@ -351,7 +355,8 @@
           "style": "Style",
           "role": "Role",
           "styleInfo": "Optional style name for the button, e.g. «outline». Only has an effect if your website supports it.",
-          "roleInfo": "«Primary» highlights the button. «Cancel» closes the banner instead of opening the link. «Other» shows a normal button."
+          "roleInfo": "«Primary» highlights the button. «Cancel» closes the banner instead of opening the link. «Other» shows a normal button.",
+          "group": "Action {{number}}"
         },
         "content": "Content",
         "mustNotBeNegative": "Value must not be negative",
@@ -447,6 +452,7 @@
           "invalidURL": "Invalid URL or iframe code",
           "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, TikTok Video, Polis Conversation formatted like:"
         },
+        "tweetBy": "Tweet by @{{user}}",
         "streamableVideo": "Streamable video"
       },
       "event": {
@@ -848,6 +854,7 @@
         "areYouSure": "Are you sure?",
         "areYouSureBody": "The rating \"{{ answer }}\" will be deleted permanently and cannot be undone.",
         "areYouSureConfirmation": "Delete rating",
+        "type": "Type",
         "loading": "Loading",
         "newAnswer": "Add rating",
         "placeholder": "Name of rating",
@@ -925,6 +932,7 @@
       "dragToMove": "Drag to move",
       "moveUp": "Move up",
       "moveDown": "Move down",
+      "cardMoved": "{{card}} moved to position {{position}} of {{total}}",
       "resetLayout": "Restore default",
       "configureDone": "Done",
       "activity": "Latest Activity",
@@ -961,7 +969,8 @@
       "nextSaturday": "Next Saturday",
       "now": "Now",
       "today": "Today",
-      "tomorrow": "Tomorrow"
+      "tomorrow": "Tomorrow",
+      "clear": "Clear date"
     },
     "deactivated": "Deactivated",
     "delete": "Delete",
@@ -1027,6 +1036,7 @@
         "cancelled": "Canceled",
         "description": "Description",
         "endsAt": "Ends at",
+        "endsBeforeStart": "The end must not be before the start",
         "externalSource": "External source (for imported events)",
         "image": "Image",
         "location": "Location",
@@ -1174,6 +1184,7 @@
         "uploadImage": "Upload Image",
         "urlPlaceholder": "https://www.link.com",
         "focalPoint": "Focal point",
+        "focalPointPosition": "{{x}} % from the left, {{y}} % from the top",
         "focalPointInfo": "Drag the point onto the most important part of the image. When the image is cropped, e.g. in teasers, this area stays visible.",
         "descriptionInfo": "Describe what can be seen in the image. The text is used as alternative text for people using screen readers and for search engines.",
         "linkUrlInfo": "Web address that opens when readers click on the image. Leave empty if the image should not be a link."
@@ -1251,6 +1262,7 @@
       "jwt": "Signing in …"
     },
     "resetPassword": {
+      "title": "Reset password",
       "description": "Enter your email address and we will send you a link to reset your password.",
       "submit": "Send reset link",
       "sent": "If an account exists with this email, a password reset link has been sent. Please check your inbox.",
@@ -1270,6 +1282,7 @@
     },
     "name": "Name",
     "mailTemplates": {
+      "empty": "No mail templates yet.",
       "availableTemplates": "Available templates",
       "cancel": "Cancel",
       "content": "Content",
@@ -1302,7 +1315,8 @@
         "sampleSubscriptionHelp": "Pick an existing subscription to fill the preview and the test mail with its real data. Without a choice, made-up sample data is used. The test mail still only goes to you.",
         "bodyModeHelp": "Visual: edit the content like in a word processor. HTML: edit the source code directly — for advanced users. Plain text: the text-only version for email programs without HTML; it is generated automatically.",
         "backgroundHelp": "Color of the area around the email's content.",
-        "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically."
+        "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically.",
+        "bodyMode": "Editor mode"
       },
       "editor": {
         "undo": "Undo",
@@ -1351,7 +1365,8 @@
         "appendJwtDone": "Login token already included — the recipient is logged in on click.",
         "frameTitle": "Mail content editor",
         "imageAltHelp": "Describes the image in a few words. Shown when the image does not load and read aloud by screen readers.",
-        "imageWidthHelp": "Leave empty to use the original size. The image is never wider than the email."
+        "imageWidthHelp": "Leave empty to use the original size. The image is never wider than the email.",
+        "toolbar": "Formatting"
       },
       "goToPlaceholders": "Available placeholders",
       "htmlContent": "HTML content",
@@ -1528,7 +1543,8 @@
         "optional_invoices_0_description": "Description of the latest invoice."
       },
       "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Send email».",
-      "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal."
+      "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal.",
+      "searchPlaceholdersLabel": "Search placeholders"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "Do not send an email"
@@ -1619,6 +1635,8 @@
       "importableEvents": "Importable Events",
       "media": "Files",
       "menu": "Menu",
+      "mainNavigation": "Main navigation",
+      "skipToContent": "Skip to main content",
       "colorMode": {
         "title": "Appearance",
         "light": "Light",
@@ -1678,6 +1696,7 @@
         "linkTypeArticle": "Article",
         "linkTypePage": "Page",
         "linkTypeExternal": "External link",
+        "linkType": "Link type",
         "keyInfo": "Technical name your website uses to find this navigation, e.g. «main» or «footer». Only change it together with the people who develop your website."
       }
     },
@@ -1696,10 +1715,13 @@
     },
     "no": "No",
     "pageEditor": {
+      "unsavedChanges": "unsaved changes",
+      "unpublishedChanges": "changes not yet published",
       "validationFailedHeader": "Validation failed",
       "validationFailedGeneric": "Cannot save. Please fix the highlighted errors.",
       "saveValidationFailed": "Saving failed",
       "publishValidationFailed": "Publishing failed",
+      "title": "Edit Page",
       "overview": {
         "createComment": "Create Comment",
         "duplicate": "Duplicate",
@@ -1927,7 +1949,9 @@
       "insertYourNewAnswer": "Enter a new answer",
       "urlCopied": "Voting link copied to the clipboard.",
       "urlCopyingFailed": "Voting link could not be copied.",
-      "votes": "votes"
+      "votes": "votes",
+      "answerLabel": "Answer {{number}}",
+      "deleteAnswer": "Delete answer \"{{answer}}\""
     },
     "pollEditView": {
       "addAndSaveNewAnswer": "Add Answer",
@@ -1955,7 +1979,9 @@
       "emptySource": "Please enter the source name.",
       "newSourcePlaceholder": "Enter a new external vote source (e.g. Facebook)",
       "sourceHeaderCell": "Source",
-      "noPollAvailable": "No poll available."
+      "noPollAvailable": "No poll available.",
+      "deleteSource": "Delete source \"{{source}}\"",
+      "votesFor": "Votes for \"{{answer}}\" from {{source}}"
     },
     "pollList": {
       "closedAt": "Closed at",
@@ -1973,6 +1999,8 @@
       "title": "Polls"
     },
     "pollVoteList": {
+      "selectAll": "Select all votes",
+      "selectVote": "Select vote from {{date}}",
       "createdAt": "Created at",
       "answerId": "Answer",
       "userId": "User ID",
@@ -1996,7 +2024,32 @@
     "richtext": {
       "menuBar": {
         "paragraph": "Paragraph",
-        "heading": "Heading {{level}}"
+        "heading": "Heading {{level}}",
+        "undo": "Undo",
+        "redo": "Redo",
+        "textStyle": "Text style",
+        "formatting": "Text formatting",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "strike": "Strikethrough",
+        "subscript": "Subscript",
+        "superscript": "Superscript",
+        "textColor": "Text color",
+        "backgroundColor": "Background color",
+        "lists": "Lists",
+        "bulletList": "Bulleted list",
+        "orderedList": "Numbered list",
+        "alignment": "Alignment",
+        "alignLeft": "Align left",
+        "alignCenter": "Align center",
+        "alignRight": "Align right",
+        "link": "Link",
+        "editLink": "Edit link",
+        "table": "Insert table",
+        "codeBlock": "Code block",
+        "blockquote": "Quote",
+        "invisibleCharacters": "Show invisible characters"
       },
       "link": {
         "title": "Link text with",
@@ -2017,6 +2070,21 @@
       "colorPicker": {
         "clear": "Clear color"
       },
+      "table": {
+        "columns": "Columns",
+        "rows": "Rows",
+        "cells": "Cells",
+        "addColumnBefore": "Insert column before",
+        "addColumnAfter": "Insert column after",
+        "deleteColumn": "Delete column",
+        "addRowBefore": "Insert row above",
+        "addRowAfter": "Insert row below",
+        "deleteRow": "Delete row",
+        "mergeCells": "Merge cells",
+        "splitCell": "Split cell",
+        "toggleHeader": "Header cell"
+      },
+      "dragHandle": "Drag to move",
       "commands": {
         "table": "Table",
         "quote": "Quote",
@@ -2173,7 +2241,8 @@
           "description": "Goes out when a subscription is canceled – either by the person on the website or by you in the editor. Cancellation because of an unpaid invoice is handled by the timeline.",
           "example": "“Sorry to see you go – your subscription runs until 31 December.”"
         }
-      }
+      },
+      "moveMail": "Move «{{title}}»"
     },
     "subscriptionList": {
       "filter": {
@@ -2741,6 +2810,7 @@
         "noActivityDay": "No subscription activity on this day",
         "noActivityMonth": "No subscription activity in this month",
         "flowsTitle": "Gains and losses",
+        "keyboardHint": "Use the arrow keys to step through the dates. The table view of the audience dashboard lists the same figures.",
         "net": "Net",
         "since": "since {{date}}",
         "flowsInfo": "Each bar shows how many subscriptions were added (above the line) or lost (below the line) per day or month. Hover over a bar to see the details and the net change."
@@ -3315,8 +3385,7 @@
           "text": "Text",
           "textPrimary": "The text color of the website",
           "default": "Default",
-          "paper": "Paper",
-          "pickColor": "Pick color"
+          "paper": "Paper"
         },
         "typography": {
           "fontFamily": "Font Family",
@@ -3326,6 +3395,7 @@
           "letterSpacing": "Letter Spacing",
           "textTransform": "Text Transform",
           "textTransformDefault": "Default",
+          "unitFor": "Unit for {{label}}",
           "textTransformCapitalize": "Capitalize",
           "textTransformUppercase": "Uppercase",
           "textTransformLowercase": "Lowercase",
@@ -4115,6 +4185,7 @@
       "message": "Changes you made may not be saved."
     },
     "action": "Actions",
+    "moreInfo": "More information",
     "blockList": {
       "addBlock": "Add block",
       "hideBlock": "Hide block on the website",
@@ -4122,13 +4193,16 @@
       "deleteBlock": "Delete block",
       "moveBlockUp": "Move block up",
       "moveBlockDown": "Move block down",
+      "movedTo": "Block moved to position {{position}} of {{count}}",
+      "deleted": "Block deleted",
       "styleHelp": "Changes how this block looks on the website. Leave it empty to use the default look. Styles are managed under «Block Styling»."
     },
     "placeholderInput": {
       "add": "Add"
     },
     "colorPicker": {
-      "pickColor": "Pick color"
+      "pickColor": "Pick color",
+      "pickColorFor": "Pick color: {{label}}"
     },
     "flexTile": {
       "moreActions": "More actions"
@@ -4157,12 +4231,22 @@
         "cancel": "Cancel"
       },
       "table": {
-        "empty": "Nothing to show"
+        "empty": "Nothing to show",
+        "label": "Table",
+        "loading": "Loading",
+        "resizeColumn": "Resize column {{column}}"
       },
       "pagination": {
         "total": "{{count}} entries",
         "pageSize": "Entries per page",
-        "perPage": "{{count}} / page"
+        "perPage": "{{count}} / page",
+        "label": "Pagination",
+        "page": "Go to page {{page}}",
+        "currentPage": "Page {{page}}",
+        "first": "Go to first page",
+        "last": "Go to last page",
+        "next": "Go to next page",
+        "previous": "Go to previous page"
       }
     },
     "dateRange": {
@@ -4185,6 +4269,8 @@
       "title": "Command palette",
       "placeholder": "Where do you want to go?",
       "empty": "Nothing matches",
+      "resultCount_one": "{{count}} result",
+      "resultCount_other": "{{count}} results",
       "groups": {
         "favourite": "Favourites",
         "navigate": "Go to",
@@ -4373,7 +4459,8 @@
         "nothingToCompare": "The Mailchimp audience has no contact fields and no interest groups of its own — there is nothing a condition could refer to.",
         "pickGroup": "Choose group …",
         "stored": "Stored in the document",
-        "value": "Value"
+        "value": "Value",
+        "operator": "Comparison"
       },
       "editor": {
         "back": "Back to overview",
@@ -4427,7 +4514,8 @@
         "mergeTagTitle": "Insert Mailchimp merge tag",
         "noTag": "No merge tag found.",
         "remove": "Remove",
-        "searchTag": "Search merge tags …"
+        "searchTag": "Search merge tags …",
+        "linkUrl": "Link URL"
       },
       "report": {
         "clipped": "Gmail clips this issue and hides its end — imprint, unsubscribe link and address — behind «Message clipped».",

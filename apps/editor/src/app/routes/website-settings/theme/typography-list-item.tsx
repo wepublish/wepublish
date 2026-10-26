@@ -11,7 +11,7 @@ import {
   Switch,
 } from '@mui/material';
 import { InfoTooltip } from '@wepublish/ui/editor';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useId, useMemo, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
@@ -119,6 +119,8 @@ export const TypographyListItem = memo<TypographyListItemProps>(
       };
     }, [isOpen]);
 
+    const collapseId = useId();
+
     const onClick = () => {
       setPlayAnimation(true);
       onOpen();
@@ -157,7 +159,11 @@ export const TypographyListItem = memo<TypographyListItemProps>(
 
     return (
       <>
-        <ListItemButton onClick={onClick}>
+        <ListItemButton
+          onClick={onClick}
+          aria-expanded={isOpen}
+          aria-controls={collapseId}
+        >
           <ListItemText
             primary={
               <span css={styles}>{t(`websiteSettings.theme.${name}`)}</span>
@@ -170,6 +176,7 @@ export const TypographyListItem = memo<TypographyListItemProps>(
         </ListItemButton>
 
         <Collapse
+          id={collapseId}
           timeout="auto"
           in={isOpen}
           mountOnEnter
@@ -198,7 +205,12 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                   <Controller
                     name={`${name}.fontFamily`}
                     control={control}
-                    render={({ field }) => <AvailableFontsPicker {...field} />}
+                    render={({ field }) => (
+                      <AvailableFontsPicker
+                        {...field}
+                        label={t('websiteSettings.theme.typography.fontFamily')}
+                      />
+                    )}
                   />
                 </FormControl>
 
@@ -213,6 +225,7 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                     render={({ field, fieldState: { error } }) => (
                       <FontWeightSelect
                         {...field}
+                        label={t('websiteSettings.theme.typography.fontWeight')}
                         error={error}
                       />
                     )}
@@ -243,6 +256,9 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                     render={({ field, fieldState: { error } }) => (
                       <TextTransformSelect
                         {...field}
+                        label={t(
+                          'websiteSettings.theme.typography.textTransform'
+                        )}
                         error={error}
                       />
                     )}
@@ -289,6 +305,7 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                   render={({ field }) => (
                     <LengthSlider
                       {...field}
+                      label={t('websiteSettings.theme.typography.fontSize')}
                       defaultUnit="rem"
                       unitConfig={fontSizeConfig}
                     />
@@ -338,6 +355,7 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                     {field.value && (
                       <LengthSlider
                         {...field}
+                        label={t('websiteSettings.theme.typography.lineHeight')}
                         defaultUnit="em"
                         unitConfig={lineHeightConfig}
                         disabled={field.value == null}
@@ -389,6 +407,9 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                     {field.value && (
                       <LengthSlider
                         {...field}
+                        label={t(
+                          'websiteSettings.theme.typography.letterSpacing'
+                        )}
                         error={error}
                         defaultUnit="em"
                         unitConfig={letterSpacingConfig}

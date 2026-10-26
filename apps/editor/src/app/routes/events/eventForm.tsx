@@ -26,34 +26,36 @@ import {
   RichTextBlock,
   SelectTags,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { TFunction } from 'i18next';
+import { useId, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-export const eventSchema = z
-  .object({
-    id: z.string().optional(),
-    name: z.string().min(1),
-    location: z.string().nullish(),
-    startsAt: z.string().min(1),
-    endsAt: z.string().nullish(),
-    lead: z.string().nullish(),
-    description: z.custom<RichtextJSONDocument>().nullish(),
-    status: z.nativeEnum(EventStatus).optional(),
-    tagIds: z.array(z.string()).optional(),
-    tags: z.array(z.custom<Pick<FullTagFragment, 'id' | 'tag'>>()).optional(),
-    imageId: z.string().nullish(),
-    image: z.custom<FullImageFragment>().nullish(),
-    externalSourceName: z.string().optional(),
-  })
-  .refine(
-    value =>
-      !value.endsAt || new Date(value.endsAt) >= new Date(value.startsAt),
-    { path: ['endsAt'] }
-  );
+export const createEventSchema = (t: TFunction) =>
+  z
+    .object({
+      id: z.string().optional(),
+      name: z.string().min(1, t('errorMessages.noNameErrorMessage')),
+      location: z.string().nullish(),
+      startsAt: z.string().min(1, t('errorMessages.required')),
+      endsAt: z.string().nullish(),
+      lead: z.string().nullish(),
+      description: z.custom<RichtextJSONDocument>().nullish(),
+      status: z.nativeEnum(EventStatus).optional(),
+      tagIds: z.array(z.string()).optional(),
+      tags: z.array(z.custom<Pick<FullTagFragment, 'id' | 'tag'>>()).optional(),
+      imageId: z.string().nullish(),
+      image: z.custom<FullImageFragment>().nullish(),
+      externalSourceName: z.string().optional(),
+    })
+    .refine(
+      value =>
+        !value.endsAt || new Date(value.endsAt) >= new Date(value.startsAt),
+      { path: ['endsAt'], message: t('event.form.endsBeforeStart') }
+    );
 
-export type EventFormValues = z.infer<typeof eventSchema>;
+export type EventFormValues = z.infer<ReturnType<typeof createEventSchema>>;
 
 type EventFormProps = {
   create?: boolean;
@@ -69,11 +71,19 @@ export const EventForm = ({ create }: EventFormProps) => {
 
   const externalSourceName = useWatch({ control, name: 'externalSourceName' });
   const imageId = useWatch({ control, name: 'imageId' });
+  const descriptionLabelId = useId();
+  const statusLabelId = useId();
+  const tagsLabelId = useId();
+  const imageLabelId = useId();
 
   return (
     <>
-      <div
-        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: '1fr 1fr' },
+          gap: 2,
+        }}
       >
         <Card
           variant="outlined"
@@ -84,9 +94,13 @@ export const EventForm = ({ create }: EventFormProps) => {
               <Controller
                 control={control}
                 name="name"
-                render={({ field, fieldState: { error } }) => (
+                render={({
+                  field: { ref, ...field },
+                  fieldState: { error },
+                }) => (
                   <TextField
                     {...field}
+                    inputRef={ref}
                     value={field.value ?? ''}
                     label={t('event.form.name')}
                     error={Boolean(error)}
@@ -109,9 +123,13 @@ export const EventForm = ({ create }: EventFormProps) => {
               <Controller
                 control={control}
                 name="location"
-                render={({ field, fieldState: { error } }) => (
+                render={({
+                  field: { ref, ...field },
+                  fieldState: { error },
+                }) => (
                   <TextField
                     {...field}
+                    inputRef={ref}
                     value={field.value ?? ''}
                     label={t('event.form.location')}
                     error={Boolean(error)}
@@ -121,11 +139,14 @@ export const EventForm = ({ create }: EventFormProps) => {
                 )}
               />
 
-              <div
-                style={{
+              <Box
+                sx={{
                   display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '12px',
+                  gridTemplateColumns: {
+                    xs: 'minmax(0, 1fr)',
+                    sm: 'minmax(0, 1fr) minmax(0, 1fr)',
+                  },
+                  gap: 1.5,
                 }}
               >
                 <Controller
@@ -142,6 +163,7 @@ export const EventForm = ({ create }: EventFormProps) => {
                           field.onChange(date?.toISOString())
                         }
                         helperText={error?.message}
+                        inputRef={field.ref}
                       />
                     </Box>
                   )}
@@ -161,18 +183,23 @@ export const EventForm = ({ create }: EventFormProps) => {
                           field.onChange(date?.toISOString() ?? null)
                         }
                         helperText={error?.message}
+                        inputRef={field.ref}
                       />
                     </Box>
                   )}
                 />
-              </div>
+              </Box>
 
               <Controller
                 control={control}
                 name="lead"
-                render={({ field, fieldState: { error } }) => (
+                render={({
+                  field: { ref, ...field },
+                  fieldState: { error },
+                }) => (
                   <TextField
                     {...field}
+                    inputRef={ref}
                     value={field.value ?? ''}
                     label={t('event.form.lead')}
                     multiline
@@ -185,13 +212,16 @@ export const EventForm = ({ create }: EventFormProps) => {
               />
 
               <FormControl fullWidth>
-                <FormLabel>{t('event.form.description')}</FormLabel>
+                <FormLabel id={descriptionLabelId}>
+                  {t('event.form.description')}
+                </FormLabel>
 
                 <Controller
                   control={control}
                   name="description"
                   render={({ field }) => (
                     <RichTextBlock
+                      aria-labelledby={descriptionLabelId}
                       value={field.value}
                       onChange={field.onChange}
                     />
@@ -211,17 +241,22 @@ export const EventForm = ({ create }: EventFormProps) => {
                   sx={{ marginBottom: 3 }}
                 >
                   <FormLabel>
-                    {t('event.form.status')}{' '}
+                    <span id={statusLabelId}>{t('event.form.status')}</span>{' '}
                     <InfoTooltip text={t('event.form.statusInfo')} />
                   </FormLabel>
                   <Controller
                     control={control}
                     name="status"
-                    render={({ field, fieldState: { error } }) => (
+                    render={({
+                      field: { ref, ...field },
+                      fieldState: { error },
+                    }) => (
                       <TextField
                         {...field}
+                        inputRef={ref}
                         value={field.value ?? ''}
                         select
+                        slotProps={{ select: { labelId: statusLabelId } }}
                         error={Boolean(error)}
                         helperText={error?.message}
                         fullWidth
@@ -246,12 +281,13 @@ export const EventForm = ({ create }: EventFormProps) => {
               )}
 
               <FormControl fullWidth>
-                <FormLabel>{t('event.form.tags')}</FormLabel>
+                <FormLabel id={tagsLabelId}>{t('event.form.tags')}</FormLabel>
                 <Controller
                   control={control}
                   name="tagIds"
                   render={({ field }) => (
                     <SelectTags
+                      aria-labelledby={tagsLabelId}
                       defaultTags={tags ?? []}
                       selectedTags={field.value ?? []}
                       setSelectedTags={field.onChange}
@@ -262,12 +298,13 @@ export const EventForm = ({ create }: EventFormProps) => {
               </FormControl>
 
               <FormControl fullWidth>
-                <FormLabel>{t('event.form.image')}</FormLabel>
+                <FormLabel id={imageLabelId}>{t('event.form.image')}</FormLabel>
                 <Controller
                   control={control}
                   name="image"
                   render={({ field }) => (
                     <ChooseEditImage
+                      aria-labelledby={imageLabelId}
                       onSelect={image => {
                         setChooseModalOpen(false);
                         setValue('imageId', image.id);
@@ -288,7 +325,7 @@ export const EventForm = ({ create }: EventFormProps) => {
             </FormFields>
           </CardContent>
         </Card>
-      </div>
+      </Box>
 
       <Drawer
         anchor="right"

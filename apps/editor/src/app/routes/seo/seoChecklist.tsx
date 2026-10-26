@@ -19,6 +19,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import {
   SeoCheck,
   SeoCheckId,
@@ -30,9 +31,11 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
+  PageTitle,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCheck,
@@ -237,6 +240,11 @@ const ItemTitle = styled.div`
   gap: 8px;
   align-items: center;
   font-weight: 600;
+
+  h3 {
+    margin: 0;
+    font: inherit;
+  }
 `;
 
 const UrlRow = styled.div`
@@ -314,14 +322,26 @@ const WritingGuide = ({ entry }: { entry: SeoChecklistEntry }) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const key = `seoChecklist.items.${entry.id}.guide`;
+  const guideId = useId();
 
   return (
     <Accordion
       disableGutters
       variant="outlined"
+      slotProps={{ heading: { component: 'h4' } }}
     >
-      <AccordionSummary expandIcon={<MdExpandMore />}>
-        <Typography variant="body2">{t('seoChecklist.guide.show')}</Typography>
+      <AccordionSummary
+        id={`${guideId}-header`}
+        aria-controls={`${guideId}-content`}
+        expandIcon={<MdExpandMore />}
+      >
+        <Typography variant="body2">
+          {t('seoChecklist.guide.show')}
+          <span style={visuallyHidden}>
+            {' – '}
+            {t(`seoChecklist.items.${entry.id}.title`)}
+          </span>
+        </Typography>
       </AccordionSummary>
 
       <AccordionDetails>
@@ -402,7 +422,7 @@ const ChecklistItem = ({
 
       <ItemBody>
         <ItemTitle>
-          {t(`${key}.title`)}
+          <h3>{t(`${key}.title`)}</h3>
           {check && (
             <Chip
               size="small"
@@ -435,8 +455,20 @@ const ChecklistItem = ({
               <Tooltip title={t('seoChecklist.copyUrl')}>
                 <IconButton
                   size="small"
-                  aria-label={t('seoChecklist.copyUrl')}
-                  onClick={() => navigator.clipboard.writeText(data[urlKey])}
+                  aria-label={`${t('seoChecklist.copyUrl')}: ${data[urlKey]}`}
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(data[urlKey]);
+                      enqueueSnackbar(t('copyLink.copied'), {
+                        variant: 'success',
+                        autoHideDuration: 3000,
+                      });
+                    } catch {
+                      enqueueSnackbar(t('copyLink.failed'), {
+                        variant: 'error',
+                      });
+                    }
+                  }}
                 >
                   <MdContentCopy />
                 </IconButton>
@@ -459,9 +491,13 @@ const ChecklistItem = ({
             )}
 
             {entry.internalLink && (
-              <Link to={entry.internalLink}>
-                <Button size="small">{t(`${key}.action`)}</Button>
-              </Link>
+              <Button
+                size="small"
+                component={Link}
+                to={entry.internalLink}
+              >
+                {t(`${key}.action`)}
+              </Button>
             )}
           </ItemActions>
         )}
@@ -560,6 +596,7 @@ function SeoChecklist() {
   });
 
   const [updatingId, setUpdatingId] = useState<string>();
+  const progressLabelId = useId();
   const [updateItem, { loading: updating, error: updateError }] = useMutation(
     UpdateSeoChecklistItemDocument,
     {
@@ -611,7 +648,7 @@ function SeoChecklist() {
     <Wrapper>
       <Content>
         <div>
-          <h3>{t('seoChecklist.title')}</h3>
+          <PageTitle>{t('seoChecklist.title')}</PageTitle>
           <Typography
             variant="body2"
             color="text.secondary"
@@ -632,10 +669,15 @@ function SeoChecklist() {
 
         {progress && (
           <div>
-            <Typography variant="body2">
+            <Typography
+              variant="body2"
+              id={progressLabelId}
+              role="status"
+            >
               {t('seoChecklist.progress', progress)}
             </Typography>
             <LinearProgress
+              aria-labelledby={progressLabelId}
               variant="determinate"
               value={(progress.done / progress.total) * 100}
             />

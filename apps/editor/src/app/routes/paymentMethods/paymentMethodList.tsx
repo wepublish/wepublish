@@ -34,7 +34,6 @@ import {
   PaymentMethodEditPanel,
   PermissionControl,
   TableWrapper,
-  useSeededState,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
@@ -61,13 +60,9 @@ function PaymentMethodList() {
   const isCreateRoute = location.pathname.includes('create');
   const isEditRoute = location.pathname.includes('edit');
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    isEditRoute || isCreateRoute
-  );
-
-  const [editID, setEditID] = useState<string | undefined>(
-    isEditRoute ? id : undefined
-  );
+  const isEditModalOpen = isEditRoute || isCreateRoute;
+  const editID = isEditRoute ? id : undefined;
+  const closeDrawer = () => navigate('/paymentmethods');
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentPaymentMethod, setCurrentPaymentMethod] =
@@ -83,14 +78,6 @@ function PaymentMethodList() {
 
   const [deletePaymentMethod, { loading: isDeleting }] = useMutation(
     DeletePaymentMethodDocument
-  );
-
-  useSeededState(
-    isCreateRoute || isEditRoute ? location.pathname : undefined,
-    () => {
-      setEditID(isEditRoute ? id : undefined);
-      setEditModalOpen(true);
-    }
   );
 
   return (
@@ -196,21 +183,16 @@ function PaymentMethodList() {
           },
         }}
         open={isEditModalOpen}
-        onClose={() => {
-          setEditModalOpen(false);
-          navigate('/paymentmethods');
-        }}
+        onClose={closeDrawer}
       >
         <PaymentMethodEditPanel
           id={editID}
           onClose={async () => {
-            setEditModalOpen(false);
-            navigate('/paymentmethods');
+            closeDrawer();
             await refetch();
           }}
           onSave={async () => {
-            setEditModalOpen(false);
-            navigate('/paymentmethods');
+            closeDrawer();
             await refetch();
           }}
         />

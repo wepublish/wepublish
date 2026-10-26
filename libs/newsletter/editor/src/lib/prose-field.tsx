@@ -274,10 +274,12 @@ function ProseEditor({
   value,
   onChange,
   id,
+  label,
 }: {
   value: string;
   onChange: (next: string) => void;
   id: string;
+  label: string;
 }) {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
@@ -619,6 +621,8 @@ function ProseEditor({
         <button
           type="button"
           data-active={active.bold}
+          aria-pressed={!!active.bold}
+          aria-label={t('newsletter.prose.boldTitle')}
           onMouseDown={keepSelection}
           onClick={() => exec('bold')}
           title={t('newsletter.prose.boldTitle')}
@@ -628,6 +632,7 @@ function ProseEditor({
         <button
           type="button"
           data-active={active.link}
+          aria-expanded={link.open}
           onMouseDown={keepSelection}
           onClick={openLink}
           title={t('newsletter.prose.link')}
@@ -637,6 +642,7 @@ function ProseEditor({
         <button
           type="button"
           data-active={active.list}
+          aria-pressed={!!active.list}
           onMouseDown={keepSelection}
           onClick={() => exec('insertUnorderedList')}
           title={t('newsletter.prose.listTitle')}
@@ -646,6 +652,7 @@ function ProseEditor({
         <button
           type="button"
           data-active={picker}
+          aria-expanded={picker}
           onMouseDown={keepSelection}
           onClick={picker ? () => setPicker(false) : openPicker}
           title={t('newsletter.prose.mergeTagTitle')}
@@ -661,6 +668,7 @@ function ProseEditor({
             className="prose-link-url"
             value={link.url}
             autoFocus
+            aria-label={t('newsletter.prose.linkUrl')}
             placeholder="https://…"
             onChange={event =>
               setLink({ ...link, url: event.currentTarget.value })
@@ -701,6 +709,7 @@ function ProseEditor({
             className="prose-tags-search"
             value={query}
             autoFocus
+            aria-label={t('newsletter.prose.searchTag')}
             placeholder={t('newsletter.prose.searchTag')}
             onChange={event => setQuery(event.currentTarget.value)}
             onKeyDown={event => {
@@ -757,6 +766,7 @@ function ProseEditor({
         contentEditable
         suppressContentEditableWarning
         role="textbox"
+        aria-label={label}
         aria-multiline="true"
         onInput={sync}
         onFocus={() => {
@@ -793,6 +803,7 @@ export function proseField(label: string): CustomField<string> {
         value={value ?? ''}
         onChange={onChange}
         id={id}
+        label={label}
       />
     ),
   };

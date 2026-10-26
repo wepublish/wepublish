@@ -24,6 +24,12 @@ const InvoiceIconWrapper = styled('span')`
   position: relative;
   display: inline-flex;
   vertical-align: middle;
+  border-radius: 4px;
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
+  }
 `;
 
 const InvoiceIcon = styled(LiaFileInvoiceSolid)`
@@ -58,7 +64,11 @@ export function InvoiceStatusIcon({ status, title }: InvoiceStatusIconProps) {
       title={title}
       placement="top"
     >
-      <InvoiceIconWrapper>
+      <InvoiceIconWrapper
+        role="img"
+        aria-label={title}
+        tabIndex={0}
+      >
         <InvoiceIcon />
 
         <StatusPill pillColor={statusColors[status]}>

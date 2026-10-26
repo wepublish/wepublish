@@ -14,6 +14,7 @@ export const PlaceholderImage = forwardRef<SVGSVGElement>(
     return (
       <Image
         ref={ref}
+        aria-hidden
         viewBox={'0 0 64 64'}
         preserveAspectRatio="none"
       >

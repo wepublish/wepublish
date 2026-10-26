@@ -44,10 +44,6 @@ const IconCircle = styled.div`
   font-size: 28px;
 `;
 
-const Title = styled(Typography)`
-  color: ${({ theme }) => theme.vars.palette.text.primary};
-`;
-
 export interface ImageUploadPanelProps {
   onClose(): void;
   onUpload(file: File): void;
@@ -98,9 +94,13 @@ export function ImageUploadPanel({ onClose, onUpload }: ImageUploadPanelProps) {
                   <MdUploadFile />
                 </IconCircle>
 
-                <Title variant="subtitle1">
+                <Typography
+                  variant="subtitle1"
+                  component="p"
+                  sx={{ color: 'text.primary' }}
+                >
                   {t('articleEditor.panels.dropImage')}
-                </Title>
+                </Typography>
 
                 <Button variant="outlined">
                   {t('articleEditor.panels.chooseFile')}

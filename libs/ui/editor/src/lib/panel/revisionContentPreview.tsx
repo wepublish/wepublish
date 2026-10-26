@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
-import { forwardRef, ReactElement, Ref } from 'react';
+import { forwardRef, ReactElement, Ref, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose, MdLock } from 'react-icons/md';
 
@@ -69,12 +69,14 @@ export function RevisionContentPreview({
   blocks,
 }: RevisionContentPreviewProps) {
   const { t } = useTranslation();
+  const titleId = useId();
 
   return (
     <Dialog
       fullScreen
       open={open}
       onClose={onClose}
+      aria-labelledby={titleId}
       slots={{
         transition: Transition,
       }}
@@ -86,7 +88,11 @@ export function RevisionContentPreview({
       >
         <Toolbar>
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h6">
+            <Typography
+              variant="h6"
+              component="h2"
+              id={titleId}
+            >
               {t('versionHistory.previewTitle')}
             </Typography>
             {title && (

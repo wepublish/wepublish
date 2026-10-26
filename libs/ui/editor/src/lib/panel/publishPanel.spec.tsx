@@ -146,6 +146,15 @@ describe('PublishArticlePanel', () => {
     ).toBeDisabled();
   });
 
+  it('shows the first-published note as a hint, not as an error', () => {
+    renderPanel();
+
+    const note = screen.getByText('articleEditor.panels.notPublishedYet');
+
+    expect(note).not.toHaveClass('Mui-error');
+    expect(document.querySelector('[aria-invalid="true"]')).toBeNull();
+  });
+
   it('lists only the options that are switched on', () => {
     renderPanel();
 

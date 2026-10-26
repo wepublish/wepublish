@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import { Autocomplete, TextField } from '@mui/material';
 import { PageListDocument, PageSort, SortOrder } from '@wepublish/editor/api';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { humanizeError } from '../../humanizeError';
@@ -13,6 +13,8 @@ interface SelectPageProps {
   name?: string;
   selectedPage?: string | null;
   setSelectedPage(page: string | null): void;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
 }
 
 export function SelectPage({
@@ -21,6 +23,8 @@ export function SelectPage({
   name,
   selectedPage,
   setSelectedPage,
+  label,
+  'aria-labelledby': ariaLabelledby,
 }: SelectPageProps) {
   const { t } = useTranslation();
 
@@ -77,6 +81,14 @@ export function SelectPage({
       renderInput={params => (
         <TextField
           {...params}
+          label={label}
+          slotProps={{
+            ...params.slotProps,
+            htmlInput: {
+              ...params.slotProps.htmlInput,
+              'aria-labelledby': ariaLabelledby,
+            },
+          }}
           name={name}
         />
       )}

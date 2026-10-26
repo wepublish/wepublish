@@ -22,6 +22,7 @@ import {
   InfoTooltip,
 } from '@wepublish/ui/editor';
 import styled from '@emotion/styled';
+import { useId } from 'react';
 import {
   Autocomplete,
   Box,
@@ -57,8 +58,23 @@ interface CrowdfundingFormProps {
 
 const CrowdfundingFormWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+`;
+
+const FieldWithHelp = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+
+  & > :first-child {
+    flex: 1;
+    min-width: 0;
+  }
 `;
 
 export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
@@ -80,6 +96,9 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
   const values = useWatch({ control });
   const goalType = values.goalType ?? CrowdfundingGoalType.Subscription;
   const isSubscriptionGoal = goalType === CrowdfundingGoalType.Subscription;
+  const fieldId = useId();
+  const memberPlansLabelId = `${fieldId}-member-plans`;
+  const goalTypeLabelId = `${fieldId}-goal-type`;
 
   return (
     <CrowdfundingFormWrapper>
@@ -111,41 +130,35 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
               name="additionalRevenue"
               render={({ field, fieldState: { error } }) =>
                 isSubscriptionGoal ?
-                  <TextField
-                    {...field}
-                    value={field.value ?? 0}
-                    label={
-                      <>
-                        {t('crowdfunding.form.additionalSubscriptions')}{' '}
-                        <InfoTooltip
-                          text={t(
-                            'crowdfunding.form.additionalSubscriptionsInfo'
-                          )}
-                        />
-                      </>
-                    }
-                    type="number"
-                    onChange={event =>
-                      field.onChange(+(event.target.value || 0))
-                    }
-                    error={Boolean(error)}
-                    helperText={error?.message}
-                    fullWidth
-                  />
-                : <CurrencyInput
-                    name={field.name}
-                    label={
-                      <>
-                        {t('crowdfunding.form.additionalRevenue')}{' '}
-                        <InfoTooltip
-                          text={t('crowdfunding.form.additionalRevenueInfo')}
-                        />
-                      </>
-                    }
-                    currency={'CHF'}
-                    centAmount={field.value ?? 0}
-                    onChange={field.onChange}
-                  />
+                  <FieldWithHelp>
+                    <TextField
+                      {...field}
+                      value={field.value ?? 0}
+                      label={t('crowdfunding.form.additionalSubscriptions')}
+                      type="number"
+                      onChange={event =>
+                        field.onChange(+(event.target.value || 0))
+                      }
+                      error={Boolean(error)}
+                      helperText={error?.message}
+                      fullWidth
+                    />
+                    <InfoTooltip
+                      text={t('crowdfunding.form.additionalSubscriptionsInfo')}
+                    />
+                  </FieldWithHelp>
+                : <FieldWithHelp>
+                    <CurrencyInput
+                      name={field.name}
+                      label={t('crowdfunding.form.additionalRevenue')}
+                      currency={'CHF'}
+                      centAmount={field.value ?? 0}
+                      onChange={field.onChange}
+                    />
+                    <InfoTooltip
+                      text={t('crowdfunding.form.additionalRevenueInfo')}
+                    />
+                  </FieldWithHelp>
               }
             />
           </Stack>
@@ -168,17 +181,24 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
         style={{ overflow: 'initial' }}
       >
         <CardContent>
-          <Typography variant="h3">{t('crowdfunding.form.filter')}</Typography>
+          <Typography
+            variant="h3"
+            component="h2"
+          >
+            {t('crowdfunding.form.filter')}
+          </Typography>
 
           <Stack
             spacing={3}
             sx={{ width: '100%' }}
           >
             <FormControl fullWidth>
-              <FormLabel>
-                {t('crowdfunding.form.memberPlans')}{' '}
+              <FieldWithHelp>
+                <FormLabel id={memberPlansLabelId}>
+                  {t('crowdfunding.form.memberPlans')}
+                </FormLabel>
                 <InfoTooltip text={t('crowdfunding.form.memberPlansInfo')} />
-              </FormLabel>
+              </FieldWithHelp>
 
               <Controller
                 control={control}
@@ -201,6 +221,13 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
                       <TextField
                         {...params}
                         placeholder={t('crowdfunding.form.selectMemberPlans')}
+                        slotProps={{
+                          ...params.slotProps,
+                          htmlInput: {
+                            ...params.slotProps.htmlInput,
+                            'aria-labelledby': memberPlansLabelId,
+                          },
+                        }}
                       />
                     )}
                   />
@@ -255,16 +282,23 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
             sx={{ width: '100%' }}
           >
             <Box>
-              <Typography variant="h3">
-                {t('crowdfunding.form.goals')}{' '}
+              <FieldWithHelp>
+                <Typography
+                  variant="h3"
+                  component="h2"
+                >
+                  {t('crowdfunding.form.goals')}
+                </Typography>
                 <InfoTooltip text={t('crowdfunding.form.goalsInfo')} />
-              </Typography>
+              </FieldWithHelp>
 
               <FormControl fullWidth>
-                <FormLabel>
-                  {t('crowdfunding.form.goalType')}{' '}
+                <FieldWithHelp>
+                  <FormLabel id={goalTypeLabelId}>
+                    {t('crowdfunding.form.goalType')}
+                  </FormLabel>
                   <InfoTooltip text={t('crowdfunding.form.goalTypeInfo')} />
-                </FormLabel>
+                </FieldWithHelp>
 
                 <Controller
                   control={control}
@@ -273,6 +307,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
                     <TextField
                       {...field}
                       select
+                      slotProps={{ select: { labelId: goalTypeLabelId } }}
                       error={Boolean(error)}
                       helperText={error?.message}
                       fullWidth

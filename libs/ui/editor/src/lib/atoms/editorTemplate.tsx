@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { Box } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
 
 const Children = styled('div', {
@@ -37,7 +39,7 @@ const NavigationChildren = styled.div`
     calc(-1 * var(--wep-page-padding-x, 0px)) 0;
 `;
 
-const EditorTemplateWrapper = styled.div`
+const EditorTemplateWrapper = styled.main`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -48,12 +50,14 @@ export interface EditorTemplateProps {
   navigationChildren?: ReactNode;
   children?: ReactNode;
   maxWidth?: string;
+  title?: string;
 }
 
 export function EditorTemplate({
   children,
   navigationChildren,
   maxWidth = '1220px',
+  title,
 }: EditorTemplateProps) {
   const navigationRef = useRef<HTMLDivElement>(null);
   const [navigationHeight, setNavigationHeight] = useState(0);
@@ -79,6 +83,14 @@ export function EditorTemplate({
     <EditorTemplateWrapper
       style={{ '--wep-sticky-top': `${navigationHeight}px` } as CSSProperties}
     >
+      {title && (
+        <Box
+          component="h1"
+          sx={visuallyHidden}
+        >
+          {title}
+        </Box>
+      )}
       <NavigationChildren ref={navigationRef}>
         {navigationChildren}
       </NavigationChildren>

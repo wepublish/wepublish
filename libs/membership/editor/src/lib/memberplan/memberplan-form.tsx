@@ -1,4 +1,12 @@
-import { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import {
   Currency,
@@ -27,6 +35,7 @@ import {
 } from '@wepublish/ui/editor';
 import { MdAutoFixHigh, MdCheck, MdExpandMore } from 'react-icons/md';
 import { MemberPlanPricing } from './memberplan-pricing';
+import { FieldLabel } from '../field-label';
 import {
   Accordion,
   AccordionDetails,
@@ -50,6 +59,12 @@ import styled from '@emotion/styled';
 
 const PanelWidth100 = styled(Card)`
   width: 100%;
+`;
+
+const InlineRow = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 interface MemberPlanFormProps {
@@ -91,6 +106,35 @@ export function MemberPlanForm({
   );
 
   const isTrialSubscription = !extendable && !!maxCount;
+  const trialAlertRef = useRef<HTMLDivElement>(null);
+  const focusTrialAlert = useRef(false);
+
+  useEffect(() => {
+    if (isTrialSubscription && focusTrialAlert.current) {
+      focusTrialAlert.current = false;
+      trialAlertRef.current?.focus();
+    }
+  }, [isTrialSubscription]);
+
+  const fieldId = useId();
+  const ids = {
+    productType: `${fieldId}-product-type`,
+    activeHelp: `${fieldId}-active-help`,
+    name: `${fieldId}-name`,
+    slug: `${fieldId}-slug`,
+    description: `${fieldId}-description`,
+    shortDescription: `${fieldId}-short-description`,
+    externalReward: `${fieldId}-external-reward`,
+    maxCount: `${fieldId}-max-count`,
+    tags: `${fieldId}-tags`,
+    migrate: `${fieldId}-migrate`,
+    successPage: `${fieldId}-success-page`,
+    failPage: `${fieldId}-fail-page`,
+    confirmationPage: `${fieldId}-confirmation-page`,
+    currency: `${fieldId}-currency`,
+    defaultPeriodicity: `${fieldId}-default-periodicity`,
+    paymentMethods: `${fieldId}-payment-methods`,
+  };
 
   const enabledPeriodicities = useMemo(() => {
     const enabled = new Set(
@@ -146,7 +190,7 @@ export function MemberPlanForm({
       container
       spacing={2}
     >
-      <Grid size={{ xs: 6 }}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <PanelWidth100>
           <CardContent>
             <Grid
@@ -154,7 +198,10 @@ export function MemberPlanForm({
               spacing={2}
             >
               <Grid size={{ xs: 12 }}>
-                <FormLabel>{t('memberplanForm.productType')}</FormLabel>
+                <FieldLabel
+                  id={ids.productType}
+                  label={t('memberplanForm.productType')}
+                />
                 <Controller
                   control={control}
                   name="productType"
@@ -164,7 +211,11 @@ export function MemberPlanForm({
                       select
                       disabled={loading}
                       error={Boolean(error)}
-                      helperText={error?.message}
+                      helperText={
+                        error?.message ??
+                        t('memberplanForm.productTypeHelpText')
+                      }
+                      slotProps={{ select: { labelId: ids.productType } }}
                       fullWidth
                     >
                       <MenuItem
@@ -183,12 +234,9 @@ export function MemberPlanForm({
                     </TextField>
                   )}
                 />
-                <FormHelperText>
-                  {t('memberplanForm.productTypeHelpText')}
-                </FormHelperText>
               </Grid>
 
-              <Grid size={{ xs: 6 }}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <ChooseEditImage
                   onSelect={(image: FullImageFragment) => {
                     setChooseModalOpen(false);
@@ -202,7 +250,7 @@ export function MemberPlanForm({
                 />
               </Grid>
 
-              <Grid size={{ xs: 6 }}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Controller
                   control={control}
                   name="active"
@@ -213,13 +261,16 @@ export function MemberPlanForm({
                           {...field}
                           checked={field.value}
                           disabled={loading}
+                          slotProps={{
+                            input: { 'aria-describedby': ids.activeHelp },
+                          }}
                         />
                       }
                       label={t('memberPlanEdit.active')}
                     />
                   )}
                 />
-                <FormHelperText>
+                <FormHelperText id={ids.activeHelp}>
                   {t('memberPlanEdit.activeDescription')}
                 </FormHelperText>
               </Grid>
@@ -229,8 +280,11 @@ export function MemberPlanForm({
                   container
                   spacing={2}
                 >
-                  <Grid size={{ xs: 6 }}>
-                    <FormLabel>{t('memberPlanEdit.name')}</FormLabel>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <FieldLabel
+                      id={ids.name}
+                      label={t('memberPlanEdit.name')}
+                    />
                     <Controller
                       control={control}
                       name="name"
@@ -246,17 +300,21 @@ export function MemberPlanForm({
                           }}
                           error={Boolean(error)}
                           helperText={error?.message}
+                          slotProps={{
+                            htmlInput: { 'aria-labelledby': ids.name },
+                          }}
                           fullWidth
                         />
                       )}
                     />
                   </Grid>
 
-                  <Grid size={{ xs: 6 }}>
-                    <FormLabel>
-                      {t('memberPlanEdit.slug')}{' '}
-                      <InfoTooltip text={t('memberPlanEdit.slugHelp')} />
-                    </FormLabel>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <FieldLabel
+                      id={ids.slug}
+                      label={t('memberPlanEdit.slug')}
+                      help={t('memberPlanEdit.slugHelp')}
+                    />
                     <Controller
                       control={control}
                       name="slug"
@@ -268,6 +326,9 @@ export function MemberPlanForm({
                           }
                           error={Boolean(error)}
                           helperText={error?.message}
+                          slotProps={{
+                            htmlInput: { 'aria-labelledby': ids.slug },
+                          }}
                           fullWidth
                         />
                       )}
@@ -277,16 +338,18 @@ export function MemberPlanForm({
               </Grid>
 
               <Grid size={{ xs: 12 }}>
-                <FormLabel>
-                  {t('memberPlanEdit.description')}{' '}
-                  <InfoTooltip text={t('memberPlanEdit.descriptionHelp')} />
-                </FormLabel>
+                <FieldLabel
+                  id={ids.description}
+                  label={t('memberPlanEdit.description')}
+                  help={t('memberPlanEdit.descriptionHelp')}
+                />
 
                 <Controller
                   control={control}
                   name="description"
                   render={({ field }) => (
                     <RichTextBlock
+                      aria-labelledby={ids.description}
                       value={field.value}
                       disabled={loading}
                       onChange={value =>
@@ -300,18 +363,18 @@ export function MemberPlanForm({
               </Grid>
 
               <Grid size={{ xs: 12 }}>
-                <FormLabel>
-                  {t('memberPlanEdit.shortDescription')}{' '}
-                  <InfoTooltip
-                    text={t('memberPlanEdit.shortDescriptionHelp')}
-                  />
-                </FormLabel>
+                <FieldLabel
+                  id={ids.shortDescription}
+                  label={t('memberPlanEdit.shortDescription')}
+                  help={t('memberPlanEdit.shortDescriptionHelp')}
+                />
 
                 <Controller
                   control={control}
                   name="shortDescription"
                   render={({ field }) => (
                     <RichTextBlock
+                      aria-labelledby={ids.shortDescription}
                       value={field.value}
                       disabled={loading}
                       onChange={value =>
@@ -325,7 +388,10 @@ export function MemberPlanForm({
               </Grid>
 
               <Grid size={{ xs: 12 }}>
-                <FormLabel>{t('memberPlanEdit.externalReward')}</FormLabel>
+                <FieldLabel
+                  id={ids.externalReward}
+                  label={t('memberPlanEdit.externalReward')}
+                />
 
                 <Controller
                   control={control}
@@ -336,6 +402,9 @@ export function MemberPlanForm({
                       value={field.value ?? ''}
                       error={Boolean(error)}
                       helperText={error?.message}
+                      slotProps={{
+                        htmlInput: { 'aria-labelledby': ids.externalReward },
+                      }}
                       fullWidth
                     />
                   )}
@@ -346,15 +415,20 @@ export function MemberPlanForm({
         </PanelWidth100>
       </Grid>
 
-      <Grid size={{ xs: 6 }}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Card>
-          <CardHeader title={t('memberplanForm.trialSubscription')} />
+          <CardHeader
+            title={t('memberplanForm.trialSubscription')}
+            slotProps={{ title: { component: 'h2' } }}
+          />
 
           <CardContent>
             <FormFields>
               <div>
                 {isTrialSubscription ?
                   <Alert
+                    ref={trialAlertRef}
+                    tabIndex={-1}
                     icon={<MdCheck />}
                     severity="success"
                   >
@@ -364,7 +438,10 @@ export function MemberPlanForm({
                     <Button
                       variant="outlined"
                       startIcon={<MdAutoFixHigh />}
-                      onClick={() => setExtendable(false, 1)}
+                      onClick={() => {
+                        focusTrialAlert.current = true;
+                        setExtendable(false, 1);
+                      }}
                       disabled={isTrialSubscription}
                       color="success"
                     >
@@ -377,8 +454,9 @@ export function MemberPlanForm({
                 }
               </div>
 
-              <div>
+              <InlineRow>
                 <FormControlLabel
+                  sx={{ marginRight: 0 }}
                   control={
                     <Switch
                       checked={extendable}
@@ -387,21 +465,17 @@ export function MemberPlanForm({
                       }
                     />
                   }
-                  label={
-                    <>
-                      {t('memberplanForm.extendableToggle')}{' '}
-                      <InfoTooltip
-                        text={t('memberplanForm.extendableHelpText')}
-                      />
-                    </>
-                  }
+                  label={t('memberplanForm.extendableToggle')}
                 />
-              </div>
+                <InfoTooltip text={t('memberplanForm.extendableHelpText')} />
+              </InlineRow>
 
               <div>
-                <FormLabel>
-                  {maxCountLabel} <InfoTooltip text={maxCountHelpText} />
-                </FormLabel>
+                <FieldLabel
+                  id={ids.maxCount}
+                  label={maxCountLabel}
+                  help={maxCountHelpText}
+                />
                 <Controller
                   control={control}
                   name="maxCount"
@@ -409,9 +483,10 @@ export function MemberPlanForm({
                     <TextField
                       {...field}
                       value={field.value ?? ''}
-                      placeholder={maxCountLabel}
                       type={'number'}
-                      slotProps={{ htmlInput: { min: 0 } }}
+                      slotProps={{
+                        htmlInput: { min: 0, 'aria-labelledby': ids.maxCount },
+                      }}
                       onChange={event =>
                         field.onChange(Number(event.target.value) || null)
                       }
@@ -424,7 +499,10 @@ export function MemberPlanForm({
               </div>
 
               <div>
-                <FormLabel>{t('memberPlanEdit.tags')}</FormLabel>
+                <FieldLabel
+                  id={ids.tags}
+                  label={t('memberPlanEdit.tags')}
+                />
                 <Controller
                   control={control}
                   name="tags"
@@ -436,17 +514,29 @@ export function MemberPlanForm({
                       options={field.value}
                       value={field.value}
                       onChange={(_event, tags) => field.onChange(tags)}
-                      renderInput={params => <TextField {...params} />}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          slotProps={{
+                            ...params.slotProps,
+                            htmlInput: {
+                              ...params.slotProps.htmlInput,
+                              'aria-labelledby': ids.tags,
+                            },
+                          }}
+                        />
+                      )}
                     />
                   )}
                 />
               </div>
 
               <div>
-                <FormLabel>
-                  {t('memberplanForm.migratePMTitle')}{' '}
-                  <InfoTooltip text={t('memberplanForm.migratePMHelptext')} />
-                </FormLabel>
+                <FieldLabel
+                  id={ids.migrate}
+                  label={t('memberplanForm.migratePMTitle')}
+                  help={t('memberplanForm.migratePMHelptext')}
+                />
                 <Controller
                   control={control}
                   name="migrateToTargetPaymentMethodID"
@@ -461,6 +551,7 @@ export function MemberPlanForm({
                       }
                       error={Boolean(error)}
                       helperText={error?.message}
+                      slotProps={{ select: { labelId: ids.migrate } }}
                       fullWidth
                     >
                       {paymentMethods.map(pm => (
@@ -481,12 +572,16 @@ export function MemberPlanForm({
               </FormSectionTitle>
 
               <div>
-                <FormLabel>{t('memberPlanEdit.successPage')}</FormLabel>
+                <FieldLabel
+                  id={ids.successPage}
+                  label={t('memberPlanEdit.successPage')}
+                />
                 <Controller
                   control={control}
                   name="successPageId"
                   render={({ field }) => (
                     <SelectPage
+                      aria-labelledby={ids.successPage}
                       setSelectedPage={field.onChange}
                       selectedPage={field.value}
                       name={field.name}
@@ -496,12 +591,16 @@ export function MemberPlanForm({
               </div>
 
               <div>
-                <FormLabel>{t('memberPlanEdit.failPage')}</FormLabel>
+                <FieldLabel
+                  id={ids.failPage}
+                  label={t('memberPlanEdit.failPage')}
+                />
                 <Controller
                   control={control}
                   name="failPageId"
                   render={({ field }) => (
                     <SelectPage
+                      aria-labelledby={ids.failPage}
                       setSelectedPage={field.onChange}
                       selectedPage={field.value}
                       name={field.name}
@@ -511,17 +610,17 @@ export function MemberPlanForm({
               </div>
 
               <div>
-                <FormLabel>
-                  {t('memberplanForm.confirmationPage')}{' '}
-                  <InfoTooltip
-                    text={t('memberplanForm.confirmationPageHelptext')}
-                  />
-                </FormLabel>
+                <FieldLabel
+                  id={ids.confirmationPage}
+                  label={t('memberplanForm.confirmationPage')}
+                  help={t('memberplanForm.confirmationPageHelptext')}
+                />
                 <Controller
                   control={control}
                   name="confirmationPageId"
                   render={({ field }) => (
                     <SelectPage
+                      aria-labelledby={ids.confirmationPage}
                       setSelectedPage={field.onChange}
                       selectedPage={field.value}
                       name={field.name}
@@ -536,17 +635,23 @@ export function MemberPlanForm({
 
       <Grid size={{ xs: 12 }}>
         <PanelWidth100>
-          <CardHeader title={t('memberPlanEdit.paymentConfigs')} />
+          <CardHeader
+            title={t('memberPlanEdit.paymentConfigs')}
+            slotProps={{ title: { component: 'h2' } }}
+          />
 
           <CardContent>
             <Grid
               container
               spacing={2}
             >
-              <Grid size={{ xs: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <FormFields>
                   <div>
-                    <FormLabel>{t('memberPlanEdit.currency')}</FormLabel>
+                    <FieldLabel
+                      id={ids.currency}
+                      label={t('memberPlanEdit.currency')}
+                    />
                     <Controller
                       control={control}
                       name="currency"
@@ -557,6 +662,7 @@ export function MemberPlanForm({
                           disabled={loading}
                           error={Boolean(error)}
                           helperText={error?.message}
+                          slotProps={{ select: { labelId: ids.currency } }}
                           fullWidth
                         >
                           <MenuItem
@@ -578,9 +684,10 @@ export function MemberPlanForm({
                   </div>
 
                   <div>
-                    <FormLabel>
-                      {t('memberplanForm.defaultPaymentPeriodicity')}
-                    </FormLabel>
+                    <FieldLabel
+                      id={ids.defaultPeriodicity}
+                      label={t('memberplanForm.defaultPaymentPeriodicity')}
+                    />
                     <Controller
                       control={control}
                       name="defaultPaymentPeriodicity"
@@ -591,7 +698,15 @@ export function MemberPlanForm({
                           value={field.value ?? ''}
                           disabled={loading}
                           error={Boolean(error)}
-                          helperText={error?.message}
+                          helperText={
+                            error?.message ??
+                            t(
+                              'memberplanForm.defaultPaymentPeriodicityHelpText'
+                            )
+                          }
+                          slotProps={{
+                            select: { labelId: ids.defaultPeriodicity },
+                          }}
                           fullWidth
                         >
                           {enabledPeriodicities.map(periodicity => (
@@ -607,15 +722,15 @@ export function MemberPlanForm({
                         </TextField>
                       )}
                     />
-                    <FormHelperText>
-                      {t('memberplanForm.defaultPaymentPeriodicityHelpText')}
-                    </FormHelperText>
                   </div>
                 </FormFields>
               </Grid>
 
-              <Grid size={{ xs: 6 }}>
-                <FormLabel>{t('memberPlanList.paymentMethods')}</FormLabel>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <FieldLabel
+                  id={ids.paymentMethods}
+                  label={t('memberPlanList.paymentMethods')}
+                />
                 <Controller
                   control={control}
                   name="availablePaymentMethods"
@@ -642,8 +757,9 @@ export function MemberPlanForm({
                               container
                               spacing={2}
                             >
-                              <Grid size={{ xs: 12 }}>
+                              <InlineRow>
                                 <FormControlLabel
+                                  sx={{ marginRight: 0 }}
                                   control={
                                     <Switch
                                       checked={value.forceAutoRenewal}
@@ -657,18 +773,14 @@ export function MemberPlanForm({
                                       }
                                     />
                                   }
-                                  label={
-                                    <>
-                                      {t('memberPlanEdit.forceAutoRenewal')}{' '}
-                                      <InfoTooltip
-                                        text={t(
-                                          'memberPlanEdit.forceAutoRenewalHelp'
-                                        )}
-                                      />
-                                    </>
-                                  }
+                                  label={t('memberPlanEdit.forceAutoRenewal')}
                                 />
-                              </Grid>
+                                <InfoTooltip
+                                  text={t(
+                                    'memberPlanEdit.forceAutoRenewalHelp'
+                                  )}
+                                />
+                              </InlineRow>
 
                               <Grid size={{ xs: 12 }}>
                                 <FormLabel>
@@ -691,7 +803,18 @@ export function MemberPlanForm({
                                     })
                                   }
                                   renderInput={params => (
-                                    <TextField {...params} />
+                                    <TextField
+                                      {...params}
+                                      slotProps={{
+                                        ...params.slotProps,
+                                        htmlInput: {
+                                          ...params.slotProps.htmlInput,
+                                          'aria-label': t(
+                                            'memberPlanList.paymentPeriodicities'
+                                          ),
+                                        },
+                                      }}
+                                    />
                                   )}
                                 />
                               </Grid>
@@ -723,7 +846,18 @@ export function MemberPlanForm({
                                     });
                                   }}
                                   renderInput={params => (
-                                    <TextField {...params} />
+                                    <TextField
+                                      {...params}
+                                      slotProps={{
+                                        ...params.slotProps,
+                                        htmlInput: {
+                                          ...params.slotProps.htmlInput,
+                                          'aria-label': t(
+                                            'memberPlanList.paymentMethods'
+                                          ),
+                                        },
+                                      }}
+                                    />
                                   )}
                                 />
                               </Grid>

@@ -73,13 +73,23 @@ const EventTag = styled.div`
 const DragHandle = styled.span`
   display: inline-flex;
   flex-shrink: 0;
-  margin-left: -2px;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+  margin-left: -4px;
+  border-radius: 4px;
   color: ${({ theme }) => theme.vars.palette.text.secondary};
   cursor: grab;
   touch-action: none;
 
   &:active {
     cursor: grabbing;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 1px;
   }
 `;
 
@@ -149,8 +159,14 @@ export function DraggableSubscriptionInterval({
                   ref={setNodeRef}
                   {...listeners}
                   {...attributes}
+                  aria-label={t('subscriptionFlow.moveMail', {
+                    title: subscriptionInterval.title,
+                  })}
                 >
-                  <MdDragIndicator size={18} />
+                  <MdDragIndicator
+                    size={18}
+                    aria-hidden
+                  />
                 </DragHandle>
               )}
               {subscriptionInterval.icon}
@@ -160,6 +176,15 @@ export function DraggableSubscriptionInterval({
 
           <SelectWrapper padded={!!subscriptionInterval && !isCustom}>
             <MailTemplateSelect
+              label={
+                subscriptionInterval && !isCustom ?
+                  subscriptionInterval.title
+                : t('subscriptionFlow.dayWithNumber', {
+                    day:
+                      subscriptionInterval?.object.daysAwayFromEnding ??
+                      newDaysAwayFromEnding,
+                  })
+              }
               mailTemplates={mailTemplates}
               subscriptionInterval={subscriptionInterval}
               subscriptionFlow={subscriptionFlow}

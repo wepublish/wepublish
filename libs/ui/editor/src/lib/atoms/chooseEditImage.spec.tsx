@@ -1,5 +1,11 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { FullImageFragment } from '@wepublish/editor/api';
 
 import { ChooseEditImage } from './chooseEditImage';
@@ -79,6 +85,45 @@ describe('ChooseEditImage', () => {
     );
 
     expect(openChooseModalOpen).not.toHaveBeenCalled();
+  });
+
+  it('groups its controls under the label it is pointed at', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <span id="post-image-label">Post image</span>
+        <ChooseEditImage
+          disabled={false}
+          openChooseModalOpen={vi.fn()}
+          aria-labelledby="post-image-label"
+        />
+      </ThemeProvider>
+    );
+
+    const group = screen.getByRole('group', { name: 'Post image' });
+
+    expect(
+      within(group).getByRole('button', { name: 'chooseEditImage.chooseImage' })
+    ).toBeInTheDocument();
+  });
+
+  it('groups the actions on a chosen image under the same label', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <span id="post-image-label">Post image</span>
+        <ChooseEditImage
+          image={image}
+          disabled={false}
+          removeImage={vi.fn()}
+          aria-labelledby="post-image-label"
+        />
+      </ThemeProvider>
+    );
+
+    const group = screen.getByRole('group', { name: 'Post image' });
+
+    expect(
+      within(group).getByRole('button', { name: 'chooseEditImage.removeImage' })
+    ).toBeInTheDocument();
   });
 
   describe('with an image', () => {

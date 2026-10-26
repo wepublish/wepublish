@@ -13,6 +13,7 @@ const textTransformValues: TextTransformValue[] = [
 
 type TextTransformSelectProps = {
   name: string;
+  label?: string;
   value: TextTransformValue | null | undefined;
   onChange: (value: TextTransformValue | null) => void;
   onBlur?: () => void;
@@ -21,13 +22,14 @@ type TextTransformSelectProps = {
 
 export const TextTransformSelect = memo(
   forwardRef<HTMLDivElement, TextTransformSelectProps>(
-    ({ name, value, onChange, onBlur, error }, ref) => {
+    ({ name, label, value, onChange, onBlur, error }, ref) => {
       const { t } = useTranslation();
 
       return (
         <Select
           ref={ref}
           name={name}
+          aria-label={label}
           value={value ?? ''}
           displayEmpty
           error={!!error}

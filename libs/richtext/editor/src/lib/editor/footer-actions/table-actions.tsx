@@ -19,6 +19,7 @@ import {
   LuTableCellsMerge,
   LuTableCellsSplit,
 } from 'react-icons/lu';
+import { useTranslation } from 'react-i18next';
 
 const selectTableState = ({ editor }: EditorStateSnapshot) => {
   if (!editor || editor.isDestroyed) {
@@ -32,6 +33,7 @@ const selectTableState = ({ editor }: EditorStateSnapshot) => {
 };
 
 export function TableActions() {
+  const { t } = useTranslation();
   const editor = useCurrentEditor().editor!;
 
   const editorState = useEditorState({
@@ -46,9 +48,10 @@ export function TableActions() {
 
   return (
     <>
-      <ButtonGroup>
+      <ButtonGroup aria-label={t('richtext.table.columns')}>
         <IconButton
           size="small"
+          aria-label={t('richtext.table.addColumnBefore')}
           onClick={() => editor.commands.addColumnBefore()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -57,6 +60,7 @@ export function TableActions() {
 
         <IconButton
           size="small"
+          aria-label={t('richtext.table.addColumnAfter')}
           onClick={() => editor.commands.addColumnAfter()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -65,6 +69,7 @@ export function TableActions() {
 
         <IconButton
           size="small"
+          aria-label={t('richtext.table.deleteColumn')}
           onClick={() => editor.commands.deleteColumn()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -72,9 +77,10 @@ export function TableActions() {
         </IconButton>
       </ButtonGroup>
 
-      <ButtonGroup>
+      <ButtonGroup aria-label={t('richtext.table.rows')}>
         <IconButton
           size="small"
+          aria-label={t('richtext.table.addRowBefore')}
           onClick={() => editor.commands.addRowBefore()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -83,6 +89,7 @@ export function TableActions() {
 
         <IconButton
           size="small"
+          aria-label={t('richtext.table.addRowAfter')}
           onClick={() => editor.commands.addRowAfter()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -91,6 +98,7 @@ export function TableActions() {
 
         <IconButton
           size="small"
+          aria-label={t('richtext.table.deleteRow')}
           onClick={() => editor.commands.deleteRow()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -98,9 +106,10 @@ export function TableActions() {
         </IconButton>
       </ButtonGroup>
 
-      <ButtonGroup>
+      <ButtonGroup aria-label={t('richtext.table.cells')}>
         <IconButton
           size="small"
+          aria-label={t('richtext.table.mergeCells')}
           onClick={() => editor.commands.mergeCells()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -109,6 +118,7 @@ export function TableActions() {
 
         <IconButton
           size="small"
+          aria-label={t('richtext.table.splitCell')}
           onClick={() => editor.commands.splitCell()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -119,6 +129,11 @@ export function TableActions() {
       <ButtonGroup>
         <IconButton
           size="small"
+          aria-label={t('richtext.table.toggleHeader')}
+          aria-pressed={editorState.isHeader}
+          sx={{
+            '&[aria-pressed="true"]': { backgroundColor: 'action.selected' },
+          }}
           color={editorState.isHeader ? 'primary' : undefined}
           onClick={() => editor.commands.toggleHeaderCell()}
           onMouseDown={e => e.preventDefault()}

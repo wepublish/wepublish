@@ -1,12 +1,14 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Box,
   Card,
   CardContent,
   IconButton,
   MenuItem,
   TextField,
 } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import {
   BlockStylesDocument,
   EditorBlockType,
@@ -22,7 +24,11 @@ import {
   ReactNode,
   SetStateAction,
   useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -293,7 +299,7 @@ const AddBlockButton = memo(function AddBlockButton({
   );
 
   return (
-    <AddBlockInputWrapper>
+    <AddBlockInputWrapper data-add-block={index}>
       <AddBlockInput
         menuItems={menuItems}
         onMenuItemClick={handleMenuItemClick}
@@ -304,8 +310,9 @@ const AddBlockButton = memo(function AddBlockButton({
   );
 });
 
-export interface BlockListProps<V extends BlockListValue>
-  extends BlockProps<V[]> {
+export interface BlockListProps<V extends BlockListValue> extends BlockProps<
+  V[]
+> {
   blockMap: BlockMapForValue<V>;
 }
 
@@ -316,8 +323,67 @@ export function BlockList<V extends BlockListValue>({
   disabled,
   onChange,
 }: BlockListProps<V>) {
+  const { t } = useTranslation();
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
+  const [announcement, setAnnouncement] = useState({ text: '', n: 0 });
+  const announce = useCallback(
+    (text: string) => setAnnouncement(({ n }) => ({ text, n: n + 1 })),
+    []
+  );
+  const valuesRef = useRef(values);
+
+  useLayoutEffect(() => {
+    valuesRef.current = values;
+  }, [values]);
+  const listRef = useRef<HTMLDivElement>(null);
+  const pendingFocus = useRef<
+    | { kind: 'move'; key: string; action: 'up' | 'down' }
+    | { kind: 'delete'; index: number }
+    | null
+  >(null);
   const blockMap = blocMap as BlockMapType;
+
+  useEffect(() => {
+    const pending = pendingFocus.current;
+    const list = listRef.current;
+
+    if (!pending || !list) {
+      return;
+    }
+
+    pendingFocus.current = null;
+
+    const blocks = [...list.querySelectorAll<HTMLElement>('[data-block-key]')];
+    const enabled = (element: HTMLElement | null | undefined) =>
+      element && !(element as HTMLButtonElement).disabled ? element : null;
+
+    if (pending.kind === 'move') {
+      const block = blocks.find(
+        element => element.dataset.blockKey === pending.key
+      );
+      const other = pending.action === 'up' ? 'down' : 'up';
+      const target =
+        enabled(
+          block?.querySelector<HTMLElement>(
+            `[data-block-action="${pending.action}"]`
+          )
+        ) ??
+        enabled(
+          block?.querySelector<HTMLElement>(`[data-block-action="${other}"]`)
+        );
+
+      target?.focus();
+      return;
+    }
+
+    const block = blocks[pending.index] ?? blocks[pending.index - 1];
+    const target =
+      enabled(
+        block?.querySelector<HTMLElement>('[data-block-action="delete"]')
+      ) ?? list.querySelector<HTMLElement>('[data-add-block] button');
+
+    target?.focus();
+  }, [values]);
 
   const handleItemChange = useCallback(
     (index: number, itemValue: SetStateAction<BlockListValue>) => {
@@ -365,15 +431,35 @@ export function BlockList<V extends BlockListValue>({
 
   const handleRemove = useCallback(
     (itemIndex: number) => {
+      pendingFocus.current = { kind: 'delete', index: itemIndex };
+      setFocusIndex(null);
+      announce(t('blockList.deleted'));
       onChange((value: any) =>
         value.filter((value: any, index: any) => index !== itemIndex)
       );
     },
-    [onChange]
+    [announce, onChange, t]
   );
 
   const handleMoveIndex = useCallback(
     (from: number, to: number) => {
+      const key = valuesRef.current[from]?.key;
+
+      if (key) {
+        pendingFocus.current = {
+          kind: 'move',
+          key,
+          action: to < from ? 'up' : 'down',
+        };
+      }
+
+      setFocusIndex(null);
+      announce(
+        t('blockList.movedTo', {
+          position: to + 1,
+          count: valuesRef.current.length,
+        })
+      );
       onChange((values: any) => {
         const valuesCopy = values.slice();
         const [value] = valuesCopy.splice(from, 1);
@@ -383,7 +469,7 @@ export function BlockList<V extends BlockListValue>({
         return valuesCopy;
       });
     },
-    [onChange]
+    [announce, onChange, t]
   );
 
   const handleMoveUp = useCallback(
@@ -452,9 +538,17 @@ export function BlockList<V extends BlockListValue>({
   }
 
   return (
-    <AddButton>
+    <AddButton ref={listRef}>
       {addButtonForIndex(0)}
       {values.map((value: any, index: any) => listItemForIndex(value, index))}
+      <Box
+        component="span"
+        role="status"
+        aria-atomic
+        sx={visuallyHidden}
+      >
+        <span key={announcement.n}>{announcement.text}</span>
+      </Box>
     </AddButton>
   );
 }
@@ -499,19 +593,22 @@ function ListItemWrapper({
     [data?.blockStyles, value.type]
   );
 
+  const styleLabelId = useId();
   const blockStyleId = value.value.blockStyle;
   const visibilityLabel = t(
     value.value.disabled ? 'blockList.showBlock' : 'blockList.hideBlock'
   );
 
   return (
-    <ListItem>
+    <ListItem data-block-key={value.key}>
       <LeftButtonsWrapper>
         <UpwardButtonWrapper>
           <IconButtonTooltip caption={visibilityLabel}>
             <IconButton
               size="small"
               aria-label={visibilityLabel}
+              data-block-action="visibility"
+              disabled={disabled}
               onClick={() => onDisable?.(!value.value.disabled)}
             >
               {value.value.disabled ?
@@ -527,6 +624,7 @@ function ListItemWrapper({
               size="small"
               color="error"
               aria-label={t('blockList.deleteBlock')}
+              data-block-action="delete"
               onClick={onDelete}
               disabled={onDelete == null || disabled}
             >
@@ -541,6 +639,7 @@ function ListItemWrapper({
               color="inherit"
               size="small"
               aria-label={t('blockList.moveBlockUp')}
+              data-block-action="up"
               onClick={onMoveUp}
               disabled={onMoveUp == null || disabled}
             >
@@ -555,6 +654,7 @@ function ListItemWrapper({
               color="inherit"
               size="small"
               aria-label={t('blockList.moveBlockDown')}
+              data-block-action="down"
               onClick={onMoveDown}
               disabled={onMoveDown == null || disabled}
             >
@@ -577,14 +677,15 @@ function ListItemWrapper({
 
       <BlockStyleIconWrapper>
         <Icon>
-          {icon} {t('blockStyles.style')}
+          {icon} <span id={styleLabelId}>{t('blockStyles.style')}</span>
           <InfoTooltip text={t('blockList.styleHelp')} />
         </Icon>
 
         <BlockStyleSelect
           select
           value={blockStyleId ?? ''}
-          slotProps={{ select: { displayEmpty: true } }}
+          disabled={disabled}
+          slotProps={{ select: { displayEmpty: true, labelId: styleLabelId } }}
           onChange={event => {
             const blockStyle = event.target.value || undefined;
             onStyleChange?.(

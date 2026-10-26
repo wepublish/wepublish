@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import {
   CreateMailProviderSettingDocument,
   MailProviderSettingsDocument,
@@ -67,5 +67,41 @@ describe('GenericIntegrationList', () => {
     expect(
       screen.queryByRole('button', { name: 'integrations.setUp' })
     ).toBeNull();
+  });
+
+  it('labels the fields of the set-up dialog', () => {
+    mockedUseQuery.mockReturnValue({
+      data: { mailProviderSettings: [] },
+      loading: false,
+    });
+
+    renderList();
+    fireEvent.click(screen.getByRole('button', { name: 'integrations.setUp' }));
+
+    const dialog = screen.getByRole('dialog');
+
+    expect(
+      within(dialog).getByRole('combobox', { name: 'integrations.addType' })
+    ).toBeTruthy();
+    expect(
+      within(dialog).getByRole('textbox', { name: 'integrations.addId' })
+    ).toHaveAccessibleDescription('integrations.addIdHelp');
+  });
+
+  it('labels the search once there are several integrations', () => {
+    mockedUseQuery.mockReturnValue({
+      data: {
+        mailProviderSettings: ['a', 'b', 'c', 'd'].map(id => ({
+          id,
+          type: 'SMTP',
+          name: id,
+        })),
+      },
+      loading: false,
+    });
+
+    renderList();
+
+    expect(screen.getByRole('textbox', { name: 'search' })).toBeTruthy();
   });
 });

@@ -32,7 +32,7 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
   );
 
   return (
-    <List>
+    <List component="div">
       <Stack
         sx={{
           gap: 5,
@@ -58,7 +58,10 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
                   />
                 </FormLabel>
 
-                <AvailableFontsPicker {...field} />
+                <AvailableFontsPicker
+                  {...field}
+                  label={t('websiteSettings.theme.typography.fontFamily')}
+                />
               </FormControl>
             )}
           />
@@ -74,6 +77,7 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
 
                 <FontWeightSelect
                   {...field}
+                  label={t('websiteSettings.theme.typography.fontWeight')}
                   error={error}
                 />
               </FormControl>
@@ -99,6 +103,7 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
 
                 <LengthSlider
                   {...field}
+                  label={t('websiteSettings.theme.typography.lineHeight')}
                   defaultUnit="em"
                   unitConfig={lineHeightConfig}
                 />
@@ -122,6 +127,7 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
 
                 <LengthSlider
                   {...field}
+                  label={t('websiteSettings.theme.typography.letterSpacing')}
                   defaultUnit="em"
                   unitConfig={letterSpacingConfig}
                 />

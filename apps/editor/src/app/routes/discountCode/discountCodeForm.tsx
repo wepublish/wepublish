@@ -13,6 +13,7 @@ import {
   InfoTooltip,
   SelectMemberPlan,
 } from '@wepublish/ui/editor';
+import { useId } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -78,6 +79,7 @@ export const DiscountCodeForm = ({ create }: DiscountCodeFormProps) => {
   const { t } = useTranslation();
   const { control } = useFormContext<DiscountCodeFormValues>();
   const memberPlan = useWatch({ control, name: 'memberPlan' });
+  const memberPlanLabelId = useId();
 
   return (
     <DiscountCodeFormWrapper>
@@ -147,7 +149,9 @@ export const DiscountCodeForm = ({ create }: DiscountCodeFormProps) => {
               sx={{ marginBottom: 3 }}
             >
               <FormLabel>
-                {t('discountCode.form.memberPlan')}{' '}
+                <span id={memberPlanLabelId}>
+                  {t('discountCode.form.memberPlan')}
+                </span>{' '}
                 <InfoTooltip text={t('discountCode.form.memberPlanInfo')} />
               </FormLabel>
 
@@ -156,6 +160,7 @@ export const DiscountCodeForm = ({ create }: DiscountCodeFormProps) => {
                 name="memberPlanId"
                 render={({ field }) => (
                   <SelectMemberPlan
+                    aria-labelledby={memberPlanLabelId}
                     defaultMemberPlan={memberPlan}
                     selectedMemberPlan={field.value}
                     setSelectedMemberPlan={field.onChange}
@@ -172,6 +177,7 @@ export const DiscountCodeForm = ({ create }: DiscountCodeFormProps) => {
                   <Box sx={{ marginBottom: 3 }}>
                     <DateTimePicker
                       label={t('discountCode.form.validFrom')}
+                      inputRef={field.ref}
                       dateTime={field.value ? new Date(field.value) : undefined}
                       changeDate={(date: Date) =>
                         field.onChange(date?.toISOString())
@@ -189,6 +195,7 @@ export const DiscountCodeForm = ({ create }: DiscountCodeFormProps) => {
                   <Box sx={{ marginBottom: 3 }}>
                     <DateTimePicker
                       label={t('discountCode.form.validTo')}
+                      inputRef={field.ref}
                       dateTime={field.value ? new Date(field.value) : undefined}
                       changeDate={(date: Date) =>
                         field.onChange(date?.toISOString())

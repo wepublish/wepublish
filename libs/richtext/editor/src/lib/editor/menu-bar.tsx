@@ -39,6 +39,10 @@ import { ColorFillSwatchIcon, ColorTextSwatchIcon } from './color-swatch-icons';
 import { LinkPopoverButton } from './link-popover';
 import { useWebsiteThemeColors } from './use-website-theme-colors';
 
+const pressedSx = {
+  '&[aria-pressed="true"]': { backgroundColor: 'action.selected' },
+};
+
 const selectMenuBarState = ({ editor }: EditorStateSnapshot) => {
   if (!editor || editor.isDestroyed) {
     return null;
@@ -115,7 +119,7 @@ export function MenuBar() {
   const updateColor = useDebounceCallback(
     useCallback(
       (color: string | null) => {
-        const chain = editor.chain().focus();
+        const chain = editor.chain();
 
         if (editor.state.selection.empty) {
           chain.extendMarkRange('textStyle');
@@ -138,7 +142,7 @@ export function MenuBar() {
   const updateBackgroundColor = useDebounceCallback(
     useCallback(
       (color: string | null) => {
-        const chain = editor.chain().focus();
+        const chain = editor.chain();
 
         if (editor.state.selection.empty) {
           chain.extendMarkRange('textStyle');
@@ -166,6 +170,7 @@ export function MenuBar() {
     <>
       <IconButton
         size="small"
+        aria-label={t('richtext.menuBar.undo')}
         onClick={() => editor.chain().focus().undo().run()}
         disabled={!editorState.canUndo}
       >
@@ -174,6 +179,7 @@ export function MenuBar() {
 
       <IconButton
         size="small"
+        aria-label={t('richtext.menuBar.redo')}
         onClick={() => editor.chain().focus().redo().run()}
         disabled={!editorState.canRedo}
       >
@@ -190,6 +196,7 @@ export function MenuBar() {
         <Select
           value={editorState.headingLevel}
           displayEmpty
+          inputProps={{ 'aria-label': t('richtext.menuBar.textStyle') }}
           sx={{ fontSize: '0.875rem', height: 32 }}
           onChange={event => {
             const level = +event.target.value as Level;
@@ -237,6 +244,7 @@ export function MenuBar() {
 
       <ToggleButtonGroup
         size="small"
+        aria-label={t('richtext.menuBar.formatting')}
         value={Object.entries({
           bold: editorState.isBold,
           italic: editorState.isItalic,
@@ -248,6 +256,7 @@ export function MenuBar() {
       >
         <ToggleButton
           value="bold"
+          aria-label={t('richtext.menuBar.bold')}
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={!editorState.canBold}
         >
@@ -256,6 +265,7 @@ export function MenuBar() {
 
         <ToggleButton
           value="italic"
+          aria-label={t('richtext.menuBar.italic')}
           onClick={() => editor.chain().focus().toggleItalic().run()}
           disabled={!editorState.canItalic}
         >
@@ -264,6 +274,7 @@ export function MenuBar() {
 
         <ToggleButton
           value="underline"
+          aria-label={t('richtext.menuBar.underline')}
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           disabled={!editorState.canUnderline}
         >
@@ -272,6 +283,7 @@ export function MenuBar() {
 
         <ToggleButton
           value="strike"
+          aria-label={t('richtext.menuBar.strike')}
           onClick={() => editor.chain().focus().toggleStrike().run()}
           disabled={!editorState.canStrike}
         >
@@ -280,6 +292,7 @@ export function MenuBar() {
 
         <ToggleButton
           value="sub"
+          aria-label={t('richtext.menuBar.subscript')}
           onClick={() => editor.chain().focus().toggleSubscript().run()}
           disabled={!editorState.canSub}
         >
@@ -288,6 +301,7 @@ export function MenuBar() {
 
         <ToggleButton
           value="sup"
+          aria-label={t('richtext.menuBar.superscript')}
           onClick={() => editor.chain().focus().toggleSuperscript().run()}
           disabled={!editorState.canSup}
         >
@@ -302,6 +316,7 @@ export function MenuBar() {
       />
 
       <ColorPickerButton
+        aria-label={t('richtext.menuBar.textColor')}
         value={editorState.color}
         onChange={updateColor}
         presetColors={themeColors}
@@ -313,6 +328,7 @@ export function MenuBar() {
       </ColorPickerButton>
 
       <ColorPickerButton
+        aria-label={t('richtext.menuBar.backgroundColor')}
         value={editorState.background}
         onChange={updateBackgroundColor}
         presetColors={themeColors}
@@ -332,9 +348,11 @@ export function MenuBar() {
       <ToggleButtonGroup
         size="small"
         value={editorState.list}
+        aria-label={t('richtext.menuBar.lists')}
       >
         <ToggleButton
           value="bullet"
+          aria-label={t('richtext.menuBar.bulletList')}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
           <MdFormatListBulleted size={18} />
@@ -342,6 +360,7 @@ export function MenuBar() {
 
         <ToggleButton
           value="ordered"
+          aria-label={t('richtext.menuBar.orderedList')}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
         >
           <MdFormatListNumbered size={18} />
@@ -365,10 +384,12 @@ export function MenuBar() {
       <ToggleButtonGroup
         size="small"
         value={editorState.alignment}
+        aria-label={t('richtext.menuBar.alignment')}
         disabled={!editorState.canAlign}
       >
         <ToggleButton
           value="left"
+          aria-label={t('richtext.menuBar.alignLeft')}
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
         >
           <MdFormatAlignLeft size={18} />
@@ -376,6 +397,7 @@ export function MenuBar() {
 
         <ToggleButton
           value="center"
+          aria-label={t('richtext.menuBar.alignCenter')}
           onClick={() => editor.chain().focus().setTextAlign('center').run()}
         >
           <MdFormatAlignCenter size={18} />
@@ -383,6 +405,7 @@ export function MenuBar() {
 
         <ToggleButton
           value="right"
+          aria-label={t('richtext.menuBar.alignRight')}
           onClick={() => editor.chain().focus().setTextAlign('right').run()}
         >
           <MdFormatAlignRight size={18} />
@@ -399,6 +422,7 @@ export function MenuBar() {
 
       <IconButton
         size="small"
+        aria-label={t('richtext.menuBar.table')}
         onClick={() =>
           editor
             .chain()
@@ -412,6 +436,10 @@ export function MenuBar() {
 
       <IconButton
         size="small"
+        aria-label={t('richtext.menuBar.codeBlock')}
+        aria-pressed={editorState.isCodeBlock}
+        sx={pressedSx}
+        color={editorState.isCodeBlock ? 'primary' : undefined}
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
       >
         <TbCodePlus size={18} />
@@ -419,6 +447,10 @@ export function MenuBar() {
 
       <IconButton
         size="small"
+        aria-label={t('richtext.menuBar.blockquote')}
+        aria-pressed={editorState.isBlockquote}
+        sx={pressedSx}
+        color={editorState.isBlockquote ? 'primary' : undefined}
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
       >
         <TbQuoteFilled size={18} />
@@ -432,6 +464,9 @@ export function MenuBar() {
 
       <IconButton
         size="small"
+        aria-label={t('richtext.menuBar.invisibleCharacters')}
+        aria-pressed={editorState.invisibleCharactersVisible}
+        sx={pressedSx}
         color={editorState.invisibleCharactersVisible ? 'primary' : undefined}
         onClick={() => editor.commands.toggleInvisibleCharacters()}
       >

@@ -170,14 +170,40 @@ type RichtextEditorProps = {
   disabled?: boolean;
   autofocus?: boolean;
   onChange?: (values: { json: RichtextJSONDocument; html: string }) => void;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
 };
 
+const accessibleNameAttributes = (
+  ariaLabel: string | undefined,
+  ariaLabelledBy: string | undefined
+) => ({
+  'aria-multiline': 'true',
+  ...(ariaLabel ? { 'aria-label': ariaLabel } : {}),
+  ...(ariaLabelledBy ? { 'aria-labelledby': ariaLabelledBy } : {}),
+});
+
 export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
-  ({ defaultValue, value, onChange, disabled, autofocus }, ref) => {
+  (
+    {
+      defaultValue,
+      value,
+      onChange,
+      disabled,
+      autofocus,
+      'aria-label': ariaLabel,
+      'aria-labelledby': ariaLabelledBy,
+    },
+    ref
+  ) => {
     const editor = useEditor({
       ...editorConfig,
+      editorProps: {
+        ...editorConfig.editorProps,
+        attributes: accessibleNameAttributes(ariaLabel, ariaLabelledBy),
+      },
       content: null,
-      autofocus,
+      autofocus: autofocus ?? false,
       editable: !disabled,
       onUpdate: arg => {
         onChange?.({
@@ -196,6 +222,19 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
 
       editor.setEditable(!disabled, false);
     }, [editorReady, disabled, editor]);
+
+    useEffect(() => {
+      if (!editorReady) {
+        return;
+      }
+
+      editor.setOptions({
+        editorProps: {
+          ...editor.options.editorProps,
+          attributes: accessibleNameAttributes(ariaLabel, ariaLabelledBy),
+        },
+      });
+    }, [editorReady, editor, ariaLabel, ariaLabelledBy]);
 
     useEffect(() => {
       if (editorReady && autofocus) {

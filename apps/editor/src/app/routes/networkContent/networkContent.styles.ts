@@ -108,12 +108,19 @@ export const ArticleRow = styled('div')`
 export const ArticleLink = styled('a')`
   text-decoration: none;
   color: inherit;
-  display: contents;
+  display: block;
+  min-width: 0;
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
 
   &:hover,
   &:focus,
   &:active {
     text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
   }
 `;
 

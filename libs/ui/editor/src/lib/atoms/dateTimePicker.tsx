@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { useState } from 'react';
+import { Ref, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -24,6 +24,8 @@ export interface DateTimePickerProps {
   helpInfo?: string;
   disabled?: boolean;
   helperText?: string;
+  error?: boolean;
+  inputRef?: Ref<HTMLInputElement>;
 }
 
 export function DateTimePicker({
@@ -35,6 +37,8 @@ export function DateTimePicker({
   helpInfo,
   disabled,
   helperText,
+  error,
+  inputRef,
 }: DateTimePickerProps) {
   const { t } = useTranslation();
 
@@ -95,8 +99,9 @@ export function DateTimePicker({
       value={dateSelection}
       onChange={handleChange}
       disabled={disabled}
-      error={Boolean(helperText)}
+      error={error ?? Boolean(helperText)}
       helperText={helperText ?? helpInfo}
+      inputRef={inputRef}
     >
       <DatePickerFooter>
         <DatePickerShortcuts>

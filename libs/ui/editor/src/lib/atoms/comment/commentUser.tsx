@@ -1,6 +1,6 @@
 import { Drawer, FormLabel, Grid, TextField } from '@mui/material';
 import { FullCommentFragment, FullImageFragment } from '@wepublish/editor/api';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DRAWER_WIDTHS } from '../../drawer';
@@ -16,6 +16,8 @@ interface CommentUserProps {
 export function CommentUser({ comment, setComment }: CommentUserProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const userLabelId = useId();
+  const imageLabelId = useId();
 
   function setUser(user: FullCommentFragment['user']) {
     setComment(oldComment =>
@@ -49,9 +51,12 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
         spacing={2}
       >
         <Grid size={{ xs: 12 }}>
-          <FormLabel>{t('commentUser.selectExistingUser')}</FormLabel>
+          <FormLabel id={userLabelId}>
+            {t('commentUser.selectExistingUser')}
+          </FormLabel>
 
           <UserSearch
+            aria-labelledby={userLabelId}
             key={`user-${comment?.user}`}
             name="selectFromExistingUser"
             placeholder={t('commentUser.selectExistingUser')}
@@ -74,9 +79,12 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
         </Grid>
 
         <Grid size={{ xs: 9 }}>
-          <FormLabel>{t('commentUser.selectImage')}</FormLabel>
+          <FormLabel id={imageLabelId}>
+            {t('commentUser.selectImage')}
+          </FormLabel>
 
           <ChooseEditImage
+            aria-labelledby={imageLabelId}
             onSelect={(image: FullImageFragment) => {
               setImage(image);
               setOpen(false);

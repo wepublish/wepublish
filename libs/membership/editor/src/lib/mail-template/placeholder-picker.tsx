@@ -160,8 +160,17 @@ export function PlaceholderPicker({
 
     if (formats) {
       return (
-        <PlaceholderFormats key={placeholder.key}>
-          <Typography variant="caption">{name}</Typography>
+        <PlaceholderFormats
+          key={placeholder.key}
+          role="group"
+          aria-label={name}
+        >
+          <Typography
+            variant="caption"
+            aria-hidden
+          >
+            {name}
+          </Typography>
           <PlaceholderGroup>
             {formats.map(format => (
               <Tooltip
@@ -214,8 +223,16 @@ export function PlaceholderPicker({
 
   return (
     <div style={{ paddingRight: 4 }}>
-      <strong>{t('mailTemplates.placeholders')}</strong>{' '}
-      <InfoTooltip text={t('mailTemplates.placeholdersInfo')} />
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        <Typography
+          component="h2"
+          variant="body1"
+          sx={{ fontWeight: 700, margin: 0 }}
+        >
+          {t('mailTemplates.placeholders')}
+        </Typography>
+        <InfoTooltip text={t('mailTemplates.placeholdersInfo')} />
+      </Box>
       <Typography
         variant="caption"
         style={{ marginBottom: 8 }}
@@ -228,6 +245,11 @@ export function PlaceholderPicker({
       <TextField
         fullWidth
         placeholder={t('mailTemplates.searchPlaceholders', 'Search…')}
+        slotProps={{
+          htmlInput: {
+            'aria-label': t('mailTemplates.searchPlaceholdersLabel'),
+          },
+        }}
         value={search}
         onChange={event => setSearch(event.target.value)}
         sx={{ marginBottom: 1.5 }}
@@ -247,6 +269,7 @@ export function PlaceholderPicker({
       : <>
           <Typography
             variant="subtitle2"
+            component="h3"
             style={{ marginBottom: 2 }}
           >
             {t(
@@ -295,6 +318,7 @@ export function PlaceholderPicker({
             : <>
                 <Typography
                   variant="subtitle2"
+                  component="h3"
                   style={{ marginBottom: 2 }}
                 >
                   {t(selectedContext.titleKey, selectedContext.title)}

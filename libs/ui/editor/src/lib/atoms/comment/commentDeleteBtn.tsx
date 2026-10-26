@@ -69,7 +69,10 @@ export function CommentDeleteBtn({
         </Button>
       </PermissionControl>
 
-      <Dialog open={modalOpen}>
+      <Dialog
+        open={modalOpen}
+        onClose={() => !loading && setModalOpen(false)}
+      >
         <DialogTitle>{t('commentDeleteBtn.modalTitle')}</DialogTitle>
         <DialogContent>{t('commentDeleteBtn.modalBody')}</DialogContent>
         <DialogActions>

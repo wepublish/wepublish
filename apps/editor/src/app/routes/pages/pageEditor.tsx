@@ -279,14 +279,16 @@ function PageEditor() {
   const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     pageData?.page?.draft ||
-      pageData?.page?.published ||
-      pageData?.page?.pending
+    pageData?.page?.published ||
+    pageData?.page?.pending
   );
 
   const [hasChanged, setChanged] = useState(false);
   const changeVersion = useRef(0);
   const skipRepopulate = useRef(false);
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+  const hasUnpublishedDraft =
+    !!pageData?.page?.draft || !pageData?.page?.published;
 
   const previewUrl = pageData?.page?.previewUrl;
   const publishedUrl =
@@ -496,8 +498,9 @@ function PageEditor() {
         <strong>{header}</strong>
         <div>{summaries || t('pageEditor.validationFailedGeneric')}</div>
       </>,
-      { variant: 'error', autoHideDuration: 8000 }
+      { variant: 'error', autoHideDuration: null }
     );
+    result.failures.find(failure => failure.focus)?.focus?.();
     return false;
   }
 
@@ -622,6 +625,7 @@ function PageEditor() {
   return (
     <>
       <EditorTemplate
+        title={isNew ? t('pages.overview.newPage') : t('pageEditor.title')}
         maxWidth={showPreview ? '80vw' : undefined}
         navigationChildren={
           <EditorHeader
@@ -742,6 +746,11 @@ function PageEditor() {
                       variant="outlined"
                       icon={<MdSave />}
                       label={t('save')}
+                      aria-label={
+                        hasChanged ?
+                          `${t('save')}, ${t('pageEditor.unsavedChanges')}`
+                        : t('save')
+                      }
                       collapse="sm"
                       disabled={isDisabled}
                       onClick={handleSave}
@@ -754,14 +763,17 @@ function PageEditor() {
                     <Badge
                       variant="dot"
                       color="warning"
-                      invisible={
-                        !pageData?.page?.draft && !!pageData?.page?.published
-                      }
+                      invisible={!hasUnpublishedDraft}
                     >
                       <EditorHeaderButton
                         variant="contained"
                         icon={<MdCloudUpload />}
                         label={t('pageEditor.overview.publish')}
+                        aria-label={
+                          hasUnpublishedDraft ?
+                            `${t('pageEditor.overview.publish')}, ${t('pageEditor.unpublishedChanges')}`
+                          : t('pageEditor.overview.publish')
+                        }
                         collapse={false}
                         disabled={isDisabled}
                         onClick={() => {

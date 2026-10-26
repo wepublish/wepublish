@@ -13,6 +13,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdArrowDownward,
@@ -81,6 +82,15 @@ const Pinned = styled.span`
   color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
+const Announcement = styled.div`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+`;
+
 const SectionInfo = styled.p`
   margin: 16px 0 8px;
   color: ${({ theme }) => theme.vars.palette.text.secondary};
@@ -114,6 +124,21 @@ function SortableCard({
   const { t } = useTranslation();
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
+  const moveUpRef = useRef<HTMLButtonElement>(null);
+  const moveDownRef = useRef<HTMLButtonElement>(null);
+  const lastMove = useRef<'up' | 'down' | null>(null);
+
+  useLayoutEffect(() => {
+    if (lastMove.current === 'up' && isFirst) {
+      moveDownRef.current?.focus();
+    }
+
+    if (lastMove.current === 'down' && isLast) {
+      moveUpRef.current?.focus();
+    }
+
+    lastMove.current = null;
+  }, [isFirst, isLast]);
 
   return (
     <CardRow
@@ -124,6 +149,8 @@ function SortableCard({
       <Handle
         {...attributes}
         {...listeners}
+        tabIndex={-1}
+        aria-hidden
         title={t('dashboard.dragToMove')}
       >
         <MdDragIndicator size={20} />
@@ -141,20 +168,28 @@ function SortableCard({
 
       <IconButton
         size="small"
+        ref={moveUpRef}
         disabled={isFirst}
         aria-label={t('dashboard.moveUp')}
         title={t('dashboard.moveUp')}
-        onClick={onMoveUp}
+        onClick={() => {
+          lastMove.current = 'up';
+          onMoveUp();
+        }}
       >
         <MdArrowUpward />
       </IconButton>
 
       <IconButton
         size="small"
+        ref={moveDownRef}
         disabled={isLast}
         aria-label={t('dashboard.moveDown')}
         title={t('dashboard.moveDown')}
-        onClick={onMoveDown}
+        onClick={() => {
+          lastMove.current = 'down';
+          onMoveDown();
+        }}
       >
         <MdArrowDownward />
       </IconButton>
@@ -206,7 +241,20 @@ export function DashboardConfig({
     }
   };
 
+  const [announcement, setAnnouncement] = useState('');
+
   const neighbour = (index: number) => layout.cards[index]?.id;
+
+  const moveCard = (id: DashboardCardId, to: number) => {
+    onChange(moveDashboardCard(layout, id, neighbour(to)));
+    setAnnouncement(
+      t('dashboard.cardMoved', {
+        card: t(DASHBOARD_CARD_TITLE_KEYS[id]),
+        position: to + 1,
+        total: layout.cards.length,
+      })
+    );
+  };
 
   return (
     <Dialog
@@ -261,21 +309,15 @@ export function DashboardConfig({
                       setDashboardCardFullWidth(layout, card.id, fullWidth)
                     )
                   }
-                  onMoveUp={() =>
-                    onChange(
-                      moveDashboardCard(layout, card.id, neighbour(index - 1))
-                    )
-                  }
-                  onMoveDown={() =>
-                    onChange(
-                      moveDashboardCard(layout, card.id, neighbour(index + 1))
-                    )
-                  }
+                  onMoveUp={() => moveCard(card.id, index - 1)}
+                  onMoveDown={() => moveCard(card.id, index + 1)}
                 />
               ))}
             </CardList>
           </SortableContext>
         </DndContext>
+
+        <Announcement role="status">{announcement}</Announcement>
       </DialogContent>
 
       <DialogActions>

@@ -1,6 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
 import styled from '@emotion/styled';
 import {
+  FormHelperText,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -15,9 +16,11 @@ import {
   forwardRef,
   ReactNode,
   useCallback,
+  useId,
   useMemo,
 } from 'react';
 import { FieldError } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 type CssUnit = 'em' | 'rem' | 'px';
 export type UnitConfig = Record<
@@ -98,6 +101,7 @@ function formatCssLength(num: number, unit: CssUnit): string {
 
 type CssLengthSliderProps = {
   name: string;
+  label: string;
   value?: string | null;
   defaultUnit: CssUnit;
   unitConfig: UnitConfig;
@@ -112,9 +116,21 @@ const stackSx = { alignItems: 'center', width: '100%' };
 
 export const LengthSlider = forwardRef<HTMLInputElement, CssLengthSliderProps>(
   (
-    { name, value, defaultUnit, unitConfig, onChange, onBlur, error, disabled },
+    {
+      name,
+      label,
+      value,
+      defaultUnit,
+      unitConfig,
+      onChange,
+      onBlur,
+      error,
+      disabled,
+    },
     ref
   ) => {
+    const { t } = useTranslation();
+    const errorId = useId();
     const { num, unit } = useMemo(
       () => parseCssLength(value, defaultUnit),
       [value, defaultUnit]
@@ -167,50 +183,72 @@ export const LengthSlider = forwardRef<HTMLInputElement, CssLengthSliderProps>(
     );
 
     return (
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={stackSx}
-      >
-        <StyledSlider
-          name={name}
-          value={num}
-          onChange={handleSliderChange}
-          min={config.min}
-          max={config.max}
-          step={config.step}
-          color="primary"
-          size="small"
-          valueLabelDisplay="auto"
-          valueLabelFormat={valueLabelFormat}
-          marks={marks}
-          onBlur={onBlur}
-          disabled={disabled}
-        />
-
-        <StyledTextField
-          ref={ref}
-          name={`${name}.input`}
-          error={!!error}
-          value={num}
-          type="number"
-          onChange={handleTextChange}
-          onBlur={onBlur}
-          disabled={disabled}
-        />
-
-        <StyledSelect
-          name={`${name}.unit`}
-          value={unit}
-          onChange={handleUnitChange}
-          onBlur={onBlur}
-          disabled={disabled}
+      <>
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={stackSx}
         >
-          <MenuItem value="em">em</MenuItem>
-          <MenuItem value="rem">rem</MenuItem>
-          <MenuItem value="px">px</MenuItem>
-        </StyledSelect>
-      </Stack>
+          <StyledSlider
+            name={name}
+            aria-label={label}
+            getAriaValueText={valueLabelFormat}
+            value={num}
+            onChange={handleSliderChange}
+            min={config.min}
+            max={config.max}
+            step={config.step}
+            color="primary"
+            size="small"
+            valueLabelDisplay="auto"
+            valueLabelFormat={valueLabelFormat}
+            marks={marks}
+            onBlur={onBlur}
+            disabled={disabled}
+          />
+
+          <StyledTextField
+            ref={ref}
+            name={`${name}.input`}
+            error={!!error}
+            value={num}
+            type="number"
+            onChange={handleTextChange}
+            onBlur={onBlur}
+            disabled={disabled}
+            slotProps={{
+              htmlInput: {
+                'aria-label': label,
+                'aria-describedby': error?.message ? errorId : undefined,
+              },
+            }}
+          />
+
+          <StyledSelect
+            name={`${name}.unit`}
+            aria-label={t('websiteSettings.theme.typography.unitFor', {
+              label,
+            })}
+            value={unit}
+            onChange={handleUnitChange}
+            onBlur={onBlur}
+            disabled={disabled}
+          >
+            <MenuItem value="em">em</MenuItem>
+            <MenuItem value="rem">rem</MenuItem>
+            <MenuItem value="px">px</MenuItem>
+          </StyledSelect>
+        </Stack>
+
+        {error?.message && (
+          <FormHelperText
+            error
+            id={errorId}
+          >
+            {error.message}
+          </FormHelperText>
+        )}
+      </>
     );
   }
 );

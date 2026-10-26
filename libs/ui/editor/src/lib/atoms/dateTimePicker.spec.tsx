@@ -1,5 +1,6 @@
 import { createTheme, Dialog, ThemeProvider } from '@mui/material';
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 
 import { DateTimePicker } from './dateTimePicker';
 
@@ -33,6 +34,16 @@ const openCalendar = () =>
   fireEvent.focus(screen.getByRole('textbox', { name: 'Starts at' }));
 
 describe('DateTimePicker', () => {
+  it('hands its input to the inputRef so a form can focus it', () => {
+    const inputRef = createRef<HTMLInputElement>();
+
+    renderPicker({ inputRef });
+
+    expect(inputRef.current).toBe(
+      screen.getByRole('textbox', { name: 'Starts at' })
+    );
+  });
+
   it('sets the clock without moving the day', () => {
     const changeDate = renderPicker({
       dateTime: new Date('2026-03-04T09:30:00'),
@@ -108,6 +119,36 @@ describe('DateTimePicker', () => {
         .getByRole('textbox', { name: 'time' })
         .closest('.MuiDialog-container')
     ).not.toBeNull();
+  });
+
+  it('shows information below the field without marking it invalid', () => {
+    renderPicker({ helpInfo: 'First published on 24.10.2026' });
+
+    expect(screen.getByRole('textbox', { name: 'Starts at' })).toHaveAttribute(
+      'aria-invalid',
+      'false'
+    );
+    expect(screen.getByText('First published on 24.10.2026')).not.toHaveClass(
+      'Mui-error'
+    );
+  });
+
+  it('marks the field invalid only when told it is in error', () => {
+    renderPicker({ helperText: 'Required', error: true });
+
+    expect(screen.getByRole('textbox', { name: 'Starts at' })).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
+  });
+
+  it('keeps information passed as helper text neutral when there is no error', () => {
+    renderPicker({ helperText: 'First published on 24.10.2026', error: false });
+
+    expect(screen.getByRole('textbox', { name: 'Starts at' })).toHaveAttribute(
+      'aria-invalid',
+      'false'
+    );
   });
 
   it('keeps the focus on the time input instead of the selected day', () => {

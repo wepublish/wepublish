@@ -26,6 +26,7 @@ export const fontWeights = [
 
 type FontWeightSelectProps = {
   name: string;
+  label?: string;
   value: number | null | undefined;
   onChange: (value: number | null) => void;
   onBlur?: () => void;
@@ -34,13 +35,14 @@ type FontWeightSelectProps = {
 
 export const FontWeightSelect = memo(
   forwardRef<HTMLDivElement, FontWeightSelectProps>(
-    ({ name, value, onChange, onBlur, error }, ref) => {
+    ({ name, label, value, onChange, onBlur, error }, ref) => {
       const { t } = useTranslation();
 
       return (
         <Select
           ref={ref}
           name={name}
+          aria-label={label}
           value={value ?? ''}
           displayEmpty
           error={!!error}

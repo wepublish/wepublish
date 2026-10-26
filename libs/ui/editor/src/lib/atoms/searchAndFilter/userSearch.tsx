@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import { Autocomplete, Box, TextField } from '@mui/material';
 import { FullUserFragment, UserListDocument } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 
 export interface UserSearchProps {
   user?: FullUserFragment | null;
@@ -9,6 +9,8 @@ export interface UserSearchProps {
   name: string;
   disableClearable?: boolean;
   onUpdateUser(user: FullUserFragment | undefined | null): void;
+  label?: ReactNode;
+  'aria-labelledby'?: string;
 }
 
 /**
@@ -47,6 +49,8 @@ export function UserSearch({
   name,
   disableClearable,
   onUpdateUser,
+  label,
+  'aria-labelledby': ariaLabelledby,
 }: UserSearchProps) {
   const [userSearch, setUserSearch] = useState<string>('');
   const [open, setOpen] = useState(false);
@@ -118,6 +122,14 @@ export function UserSearch({
         renderInput={params => (
           <TextField
             {...params}
+            label={label}
+            slotProps={{
+              ...params.slotProps,
+              htmlInput: {
+                ...params.slotProps.htmlInput,
+                'aria-labelledby': ariaLabelledby,
+              },
+            }}
             placeholder={placeholder}
           />
         )}

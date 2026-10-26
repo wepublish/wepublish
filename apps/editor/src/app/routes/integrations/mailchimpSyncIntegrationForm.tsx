@@ -26,6 +26,7 @@ import {
   Switch,
   TextField,
   Typography,
+  TypographyProps,
 } from '@mui/material';
 import {
   CreateSyncProviderSettingDocument,
@@ -52,7 +53,7 @@ import {
   IconButtonTooltip,
   InfoTooltip,
 } from '@wepublish/ui/editor';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useId, useState } from 'react';
 import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdExpandMore, MdSync } from 'react-icons/md';
@@ -158,7 +159,12 @@ const MappingRow = styled.div`
   margin-bottom: 8px;
 `;
 
-const SectionTitle = styled(Typography)`
+const SectionTitle = styled((props: TypographyProps) => (
+  <Typography
+    component="h2"
+    {...props}
+  />
+))`
   margin-top: 16px;
   margin-bottom: 8px;
 `;
@@ -678,6 +684,10 @@ function SyncProviderSettingCard({
   const { t } = useTranslation();
   const [syncing, setSyncing] = useState(false);
   const [syncSeq, setSyncSeq] = useState(0);
+  const nameLabelId = useId();
+  const apiKeyLabelId = useId();
+  const listIdLabelId = useId();
+  const defaultInterestGroupsLabelId = useId();
   const [dryRunning, setDryRunning] = useState(false);
   const [syncLimit, setSyncLimit] = useState<number | undefined>(100);
   const [dryRunResult, setDryRunResult] = useState<DryRunResultData | null>(
@@ -1045,7 +1055,7 @@ function SyncProviderSettingCard({
                 fullWidth
                 sx={{ marginBottom: 3 }}
               >
-                <FormLabel>{t('name')}</FormLabel>
+                <FormLabel id={nameLabelId}>{t('name')}</FormLabel>
                 <Controller
                   name="name"
                   control={control}
@@ -1054,6 +1064,9 @@ function SyncProviderSettingCard({
                       value={value ?? ''}
                       onChange={onChange}
                       fullWidth
+                      slotProps={{
+                        htmlInput: { 'aria-labelledby': nameLabelId },
+                      }}
                       {...rest}
                     />
                   )}
@@ -1065,7 +1078,9 @@ function SyncProviderSettingCard({
                 sx={{ marginBottom: 3 }}
               >
                 <FormLabel>
-                  {t('integrations.mailchimpSyncSettings.apiKey')}{' '}
+                  <span id={apiKeyLabelId}>
+                    {t('integrations.mailchimpSyncSettings.apiKey')}
+                  </span>{' '}
                   <InfoTooltip
                     text={t('integrations.mailchimpSyncSettings.apiKeyInfo')}
                   />
@@ -1081,6 +1096,9 @@ function SyncProviderSettingCard({
                       autoComplete="one-time-code"
                       placeholder={t('integrations.placeholderSecret')}
                       fullWidth
+                      slotProps={{
+                        htmlInput: { 'aria-labelledby': apiKeyLabelId },
+                      }}
                       {...rest}
                     />
                   )}
@@ -1092,7 +1110,9 @@ function SyncProviderSettingCard({
                 sx={{ marginBottom: 3 }}
               >
                 <FormLabel>
-                  {t('integrations.mailchimpSyncSettings.listId')}{' '}
+                  <span id={listIdLabelId}>
+                    {t('integrations.mailchimpSyncSettings.listId')}
+                  </span>{' '}
                   <InfoTooltip
                     text={t('integrations.mailchimpSyncSettings.listIdInfo')}
                   />
@@ -1134,6 +1154,13 @@ function SyncProviderSettingCard({
                       renderInput={params => (
                         <TextField
                           {...params}
+                          slotProps={{
+                            ...params.slotProps,
+                            htmlInput: {
+                              ...params.slotProps.htmlInput,
+                              'aria-labelledby': listIdLabelId,
+                            },
+                          }}
                           placeholder={t(
                             'integrations.mailchimpSyncSettings.listId'
                           )}
@@ -1337,7 +1364,10 @@ function SyncProviderSettingCard({
                 {t('integrations.mailchimpSyncSettings.addInterestGroup')}
               </Button>
 
-              <SectionTitle variant="h6">
+              <SectionTitle
+                variant="h6"
+                id={defaultInterestGroupsLabelId}
+              >
                 {t('integrations.mailchimpSyncSettings.defaultInterestGroups')}
               </SectionTitle>
               <Typography
@@ -1377,6 +1407,13 @@ function SyncProviderSettingCard({
                     renderInput={params => (
                       <TextField
                         {...params}
+                        slotProps={{
+                          ...params.slotProps,
+                          htmlInput: {
+                            ...params.slotProps.htmlInput,
+                            'aria-labelledby': defaultInterestGroupsLabelId,
+                          },
+                        }}
                         placeholder={t(
                           'integrations.mailchimpSyncSettings.defaultInterestGroups'
                         )}
@@ -1391,7 +1428,10 @@ function SyncProviderSettingCard({
                 variant="outlined"
               >
                 <AccordionSummary expandIcon={<MdExpandMore />}>
-                  <Typography variant="subtitle1">
+                  <Typography
+                    variant="subtitle1"
+                    component="span"
+                  >
                     {t('integrations.mailchimpSyncSettings.extensions')}
                   </Typography>
                 </AccordionSummary>

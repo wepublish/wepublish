@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 type AvailableFontsPickerProps = {
   name: string;
+  label?: string;
   value: string;
   onBlur: () => void;
   onChange: (value: string | '') => void;
@@ -16,7 +17,7 @@ type AvailableFontsPickerProps = {
 
 export const AvailableFontsPicker = memo(
   forwardRef<HTMLDivElement, AvailableFontsPickerProps>(
-    ({ name, value, onChange, onBlur, error }, ref) => {
+    ({ name, label, value, onChange, onBlur, error }, ref) => {
       const { t } = useTranslation();
       const { data } = useQuery(WebsiteSettingsDocument);
       const fonts = data?.websiteSettings.fonts ?? [];
@@ -46,6 +47,7 @@ export const AvailableFontsPicker = memo(
           <Select
             ref={ref}
             name={name}
+            aria-label={label}
             value={cleanValue}
             displayEmpty
             onChange={handleChange}

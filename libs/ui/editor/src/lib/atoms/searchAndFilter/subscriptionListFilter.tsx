@@ -106,6 +106,7 @@ export function SubscriptionListFilter({
               userID: user?.id,
             });
           }}
+          label={t('userSubscriptionEdit.selectUser')}
           placeholder={t('subscriptionList.filter.searchPlaceholder')}
         />
       </div>

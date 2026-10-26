@@ -172,6 +172,11 @@ function BlockTemplateEditView() {
   return (
     <>
       <EditorTemplate
+        title={
+          isNew ?
+            t('blockTemplates.list.newBlockTemplate')
+          : t('blockTemplates.edit.title')
+        }
         navigationChildren={
           <EditorHeader
             state={stateColor}
@@ -217,6 +222,11 @@ function BlockTemplateEditView() {
                       variant="contained"
                       icon={<MdSave />}
                       label={t('save')}
+                      aria-label={
+                        hasChanged ?
+                          `${t('save')}, ${t('articleEditor.unsavedChanges')}`
+                        : t('save')
+                      }
                       collapse={false}
                       disabled={isDisabled}
                       onClick={() => setSaveConfirmOpen(true)}

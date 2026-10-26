@@ -304,7 +304,7 @@ export function TeaserForm({ teaser, values, onChange }: TeaserFormProps) {
             {({ value, onChange: onPropertyChange }) => (
               <PropertyRow>
                 <TextField
-                  placeholder={t('articleEditor.panels.key')}
+                  label={t('articleEditor.panels.key')}
                   value={value.key}
                   onChange={event =>
                     onPropertyChange({ ...value, key: event.target.value })
@@ -312,7 +312,7 @@ export function TeaserForm({ teaser, values, onChange }: TeaserFormProps) {
                 />
 
                 <TextField
-                  placeholder={t('articleEditor.panels.value')}
+                  label={t('articleEditor.panels.value')}
                   value={value.value}
                   onChange={event =>
                     onPropertyChange({ ...value, value: event.target.value })

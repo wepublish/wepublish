@@ -199,6 +199,9 @@ export function CommentStateChangeModal({
       fullWidth
       open={open}
       maxWidth="sm"
+      onClose={() =>
+        !(isApproving || isRequestingChanges || isRejecting) && onClose?.()
+      }
     >
       <DialogTitle>{t(mapModalTitle(newCommentState))}</DialogTitle>
       <DialogContent>

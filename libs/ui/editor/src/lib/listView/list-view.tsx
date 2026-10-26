@@ -50,6 +50,7 @@ export const StatusBadge = styled.div<StatusBadgeProps>`
   text-align: center;
   border-radius: 999px;
   padding: 2px 8px;
+  white-space: normal;
   background-color: ${props => StateColor[statusOf(props.states)]};
   color: ${props => `var(--wep-state-${statusOf(props.states)}-text, inherit)`};
 `;

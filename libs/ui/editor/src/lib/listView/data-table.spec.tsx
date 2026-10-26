@@ -6,6 +6,7 @@ import {
   waitFor,
   within,
 } from '@testing-library/react';
+import { useState } from 'react';
 
 import { DataTable, DataTableColumn } from './data-table';
 
@@ -141,6 +142,26 @@ describe('DataTable', () => {
     );
 
     expect(onRowClick).toHaveBeenCalledWith(rows[0]);
+  });
+});
+
+describe('DataTable header names', () => {
+  it('names a header without a visible label after its column label', () => {
+    renderTable({
+      columns: [
+        {
+          id: 'image',
+          label: '',
+          columnLabel: 'Image',
+          render: () => null,
+        },
+        ...columns,
+      ],
+    });
+
+    const header = screen.getByRole('columnheader', { name: 'Image' });
+
+    expect(within(header).getByText('Image')).toBeInTheDocument();
   });
 });
 
@@ -1190,5 +1211,168 @@ describe('DataTable export scope', () => {
 
     await waitFor(() => expect(downloadTable).toHaveBeenCalledTimes(1));
     expect(screen.queryByRole('radio')).not.toBeInTheDocument();
+  });
+});
+
+describe('DataTable accessibility', () => {
+  const setScroll = (
+    element: HTMLElement,
+    { scrollLeft, clientWidth, scrollWidth }: Record<string, number>
+  ) => {
+    Object.defineProperties(element, {
+      scrollLeft: { value: scrollLeft, configurable: true },
+      clientWidth: { value: clientWidth, configurable: true },
+      scrollWidth: { value: scrollWidth, configurable: true },
+    });
+    fireEvent.scroll(element);
+  };
+
+  const container = (baseElement: HTMLElement) =>
+    baseElement.querySelector('[data-pin-shadow]') as HTMLElement;
+
+  it('keeps focus on a control inside a cell when the caller rebuilds its columns', () => {
+    function Selectable() {
+      const [checked, setChecked] = useState<string[]>([]);
+
+      return (
+        <ThemeProvider theme={theme}>
+          <DataTable
+            data={rows}
+            columns={[
+              {
+                id: 'select',
+                label: 'Select',
+                render: row => (
+                  <input
+                    type="checkbox"
+                    aria-label={`Select ${row.title}`}
+                    checked={checked.includes(row.id)}
+                    onChange={() => setChecked([...checked, row.id])}
+                  />
+                ),
+              },
+              ...columns,
+            ]}
+          />
+        </ThemeProvider>
+      );
+    }
+
+    render(<Selectable />);
+
+    const checkbox = screen.getByRole('checkbox', { name: 'Select Alpha' });
+    checkbox.focus();
+    fireEvent.click(checkbox);
+
+    expect(checkbox).toBeInTheDocument();
+    expect(checkbox).toBeChecked();
+    expect(checkbox).toHaveFocus();
+  });
+
+  it('announces that there is nothing to show', () => {
+    renderTable({ data: [], emptyMessage: 'No articles yet' });
+
+    expect(screen.getByRole('status')).toHaveTextContent('No articles yet');
+  });
+
+  it('announces that the rows are loading', () => {
+    renderTable({ loading: true, data: [] });
+
+    expect(
+      within(screen.getByRole('status')).getByRole('progressbar')
+    ).toBeInTheDocument();
+  });
+
+  it('stops pinning columns once they would cover most of a narrow table', () => {
+    const { baseElement } = renderTable({
+      columns: [columns[0], { ...columns[1], fixed: true }],
+    });
+
+    setScroll(container(baseElement), {
+      scrollLeft: 0,
+      clientWidth: 200,
+      scrollWidth: 900,
+    });
+
+    expect(
+      screen.getByRole('columnheader', { name: 'Author' })
+    ).not.toHaveAttribute('data-pinned');
+  });
+
+  it('keeps pinning columns in a table wide enough for them', () => {
+    const { baseElement } = renderTable({
+      columns: [columns[0], { ...columns[1], fixed: true }],
+    });
+
+    setScroll(container(baseElement), {
+      scrollLeft: 0,
+      clientWidth: 600,
+      scrollWidth: 900,
+    });
+
+    expect(
+      screen.getByRole('columnheader', { name: 'Author' })
+    ).toHaveAttribute('data-pinned', 'true');
+  });
+
+  it('lets a keyboard user scroll a table that overflows sideways', () => {
+    const { baseElement } = renderTable({ data: [] });
+
+    setScroll(container(baseElement), {
+      scrollLeft: 0,
+      clientWidth: 300,
+      scrollWidth: 900,
+    });
+
+    const region = screen.getByRole('region', {
+      name: 'listView.table.label',
+    });
+    expect(region).toHaveAttribute('tabindex', '0');
+  });
+
+  it('adds no tab stop to a table that fits', () => {
+    const { baseElement } = renderTable();
+
+    setScroll(container(baseElement), {
+      scrollLeft: 0,
+      clientWidth: 900,
+      scrollWidth: 900,
+    });
+
+    expect(container(baseElement)).not.toHaveAttribute('tabindex');
+  });
+
+  it('lets a column be resized from the keyboard', () => {
+    renderTable({ columns: [{ ...columns[0], width: 200 }, columns[1]] });
+
+    const [handle] = screen.getAllByRole('separator', {
+      name: 'listView.table.resizeColumn',
+    });
+
+    expect(handle).toHaveAttribute('tabindex', '0');
+    expect(handle).toHaveAttribute('aria-orientation', 'vertical');
+    expect(handle).toHaveAttribute('aria-valuenow', '200');
+
+    fireEvent.keyDown(handle, { key: 'ArrowRight' });
+    expect(columnWidth('title')).toBe('210px');
+
+    fireEvent.keyDown(handle, { key: 'ArrowLeft' });
+    fireEvent.keyDown(handle, { key: 'ArrowLeft' });
+    expect(columnWidth('title')).toBe('190px');
+  });
+
+  it('will not let the keyboard shrink a column below its minimum', () => {
+    renderTable({
+      columns: [{ ...columns[0], width: 60 }, columns[1]],
+    });
+
+    const [handle] = screen.getAllByRole('separator', {
+      name: 'listView.table.resizeColumn',
+    });
+
+    fireEvent.keyDown(handle, { key: 'ArrowLeft' });
+    fireEvent.keyDown(handle, { key: 'ArrowLeft' });
+
+    expect(columnWidth('title')).toBe('48px');
   });
 });

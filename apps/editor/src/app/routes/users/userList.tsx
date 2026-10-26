@@ -326,11 +326,12 @@ function UserList() {
               label: t('userList.overview.firstName'),
               width: 200,
               align: 'left',
-              render: (rowData: TinyUserFragment) => (
-                <Link to={`/users/edit/${rowData.id}`}>
-                  {rowData.firstName || ''}
-                </Link>
-              ),
+              render: (rowData: TinyUserFragment) =>
+                rowData.firstName ?
+                  <Link to={`/users/edit/${rowData.id}`}>
+                    {rowData.firstName}
+                  </Link>
+                : null,
               exportValue: rowData => rowData.firstName,
             },
             {

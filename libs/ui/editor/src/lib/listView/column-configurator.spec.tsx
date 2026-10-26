@@ -77,9 +77,7 @@ describe('ColumnConfigurator', () => {
     open();
 
     expect(
-      screen.getAllByRole('button', {
-        name: 'columnConfigurator.dragToReorder',
-      })
+      screen.getAllByLabelText('columnConfigurator.dragToReorder')
     ).toHaveLength(2);
   });
 
@@ -95,7 +93,7 @@ describe('ColumnConfigurator', () => {
     open();
 
     expect(
-      screen.queryByRole('button', { name: 'columnConfigurator.dragToReorder' })
+      screen.queryByLabelText('columnConfigurator.dragToReorder')
     ).toBeNull();
   });
 
@@ -116,7 +114,7 @@ describe('ColumnConfigurator', () => {
 
     expect(onToggle).not.toHaveBeenCalled();
     expect(
-      screen.getByRole('button', { name: 'columnConfigurator.dragToReorder' })
+      screen.getByLabelText('columnConfigurator.dragToReorder')
     ).toBeInTheDocument();
   });
 
@@ -136,5 +134,105 @@ describe('ColumnConfigurator', () => {
     fireEvent.click(screen.getByText('Author'));
 
     expect(onToggle).toHaveBeenCalledWith('author');
+  });
+
+  it('keeps the drag handle out of the keyboard order and the item name', () => {
+    renderConfigurator(
+      <ColumnConfigurator
+        columns={columns}
+        isVisible={() => true}
+        onToggle={vi.fn()}
+        onMove={vi.fn()}
+      />
+    );
+
+    open();
+
+    expect(
+      screen.queryByRole('button', { name: 'columnConfigurator.dragToReorder' })
+    ).toBeNull();
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Title' })
+    ).toBeInTheDocument();
+  });
+
+  it('moves a column down with Alt and the down arrow', () => {
+    const onMove = vi.fn();
+
+    renderConfigurator(
+      <ColumnConfigurator
+        columns={columns}
+        isVisible={() => true}
+        onToggle={vi.fn()}
+        onMove={onMove}
+      />
+    );
+
+    open();
+    fireEvent.keyDown(screen.getByRole('menuitemcheckbox', { name: 'Title' }), {
+      key: 'ArrowDown',
+      altKey: true,
+    });
+
+    expect(onMove).toHaveBeenCalledWith('title', 'author');
+  });
+
+  it('moves a column up with Alt and the up arrow', () => {
+    const onMove = vi.fn();
+
+    renderConfigurator(
+      <ColumnConfigurator
+        columns={columns}
+        isVisible={() => true}
+        onToggle={vi.fn()}
+        onMove={onMove}
+      />
+    );
+
+    open();
+    fireEvent.keyDown(
+      screen.getByRole('menuitemcheckbox', { name: 'Author' }),
+      { key: 'ArrowUp', altKey: true }
+    );
+
+    expect(onMove).toHaveBeenCalledWith('author', 'title');
+  });
+
+  it('tells assistive technology about the shortcut', () => {
+    renderConfigurator(
+      <ColumnConfigurator
+        columns={columns}
+        isVisible={() => true}
+        onToggle={vi.fn()}
+        onMove={vi.fn()}
+      />
+    );
+
+    open();
+
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Title' })
+    ).toHaveAttribute('aria-keyshortcuts', 'Alt+ArrowUp Alt+ArrowDown');
+  });
+
+  it('does nothing past the end of the list', () => {
+    const onMove = vi.fn();
+
+    renderConfigurator(
+      <ColumnConfigurator
+        columns={columns}
+        isVisible={() => true}
+        onToggle={vi.fn()}
+        onMove={onMove}
+      />
+    );
+
+    open();
+    fireEvent.keyDown(
+      screen.getByRole('menuitemcheckbox', { name: 'Author' }),
+      { key: 'ArrowDown', altKey: true }
+    );
+
+    expect(onMove).not.toHaveBeenCalled();
   });
 });

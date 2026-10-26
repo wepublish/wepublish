@@ -1,5 +1,5 @@
-import { createTheme, ThemeProvider } from '@mui/material';
-import { act, render, screen } from '@testing-library/react';
+import { createTheme, Modal, ThemeProvider } from '@mui/material';
+import { act, render, screen, waitFor } from '@testing-library/react';
 
 import { closeSnackbar, enqueueSnackbar, SnackbarHost } from './snackbar';
 
@@ -11,6 +11,9 @@ const renderHost = (props = {}) =>
       <SnackbarHost {...props} />
     </ThemeProvider>
   );
+
+const alertOf = (text: string) =>
+  screen.getByText(text).closest('.MuiAlert-root') as HTMLElement;
 
 afterEach(() => {
   act(() => closeSnackbar());
@@ -24,9 +27,8 @@ describe('enqueueSnackbar', () => {
       enqueueSnackbar('Saved', { variant: 'success' });
     });
 
-    const alert = screen.getByRole('alert');
-    expect(alert).toHaveTextContent('Saved');
-    expect(alert.className).toContain('Success');
+    expect(screen.getByRole('status')).toHaveTextContent('Saved');
+    expect(alertOf('Saved').className).toContain('Success');
   });
 
   it('defaults to the info variant', () => {
@@ -36,7 +38,140 @@ describe('enqueueSnackbar', () => {
       enqueueSnackbar('Heads up');
     });
 
-    expect(screen.getByRole('alert').className).toContain('Info');
+    expect(alertOf('Heads up').className).toContain('Info');
+  });
+
+  it.each(['success', 'info'] as const)(
+    'announces %s politely so it does not interrupt typing',
+    variant => {
+      renderHost();
+
+      act(() => {
+        enqueueSnackbar('Draft autosaved', { variant });
+      });
+
+      expect(screen.getByRole('status')).toHaveTextContent('Draft autosaved');
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    }
+  );
+
+  it.each(['success', 'info'] as const)(
+    'adds a %s to a polite live region that was already mounted',
+    variant => {
+      renderHost();
+
+      const region = screen.getByRole('status');
+      expect(region).toBeEmptyDOMElement();
+
+      act(() => {
+        enqueueSnackbar('Draft autosaved', { variant });
+      });
+
+      expect(screen.getByRole('status')).toBe(region);
+      expect(region).toHaveTextContent('Draft autosaved');
+    }
+  );
+
+  it('keeps the live region announcing while a modal drawer is open', async () => {
+    renderHost();
+    const region = screen.getByRole('status');
+
+    render(
+      <Modal open>
+        <div>Edit author</div>
+      </Modal>
+    );
+
+    act(() => {
+      enqueueSnackbar('Author saved', { variant: 'success' });
+    });
+
+    await waitFor(() =>
+      expect(screen.getByRole('status')).toHaveTextContent('Author saved')
+    );
+    expect(screen.getByRole('status')).toBe(region);
+  });
+
+  it.each(['error', 'warning'] as const)(
+    'announces %s assertively',
+    variant => {
+      renderHost();
+
+      act(() => {
+        enqueueSnackbar('Something went wrong', { variant });
+      });
+
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'Something went wrong'
+      );
+    }
+  );
+
+  it.each(['error', 'warning'] as const)(
+    'gives a %s twice as long to be read by default',
+    variant => {
+      vi.useFakeTimers();
+
+      try {
+        renderHost();
+
+        act(() => {
+          enqueueSnackbar('Could not save', { variant });
+        });
+
+        act(() => vi.advanceTimersByTime(5001));
+        expect(screen.getByText('Could not save')).toBeInTheDocument();
+
+        act(() => vi.advanceTimersByTime(5000));
+        expect(screen.queryByText('Could not save')).not.toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
+    }
+  );
+
+  it('stays announced while a modal drawer hides the rest of the page', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <SnackbarHost />
+        <Modal open>
+          <div>Edit author</div>
+        </Modal>
+      </ThemeProvider>
+    );
+
+    act(() => {
+      enqueueSnackbar('Author saved', { variant: 'error' });
+    });
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Author saved');
+  });
+
+  it('keeps the notifications inside a named landmark', () => {
+    renderHost({ label: 'Notifications' });
+
+    act(() => {
+      enqueueSnackbar('Saved', { variant: 'success' });
+    });
+
+    expect(
+      screen.getByRole('region', { name: 'Notifications' })
+    ).toContainElement(screen.getByRole('status'));
+  });
+
+  it('keeps the landmark exposed while a modal drawer hides the page', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <SnackbarHost label="Notifications" />
+        <Modal open>
+          <div>Edit author</div>
+        </Modal>
+      </ThemeProvider>
+    );
+
+    expect(
+      screen.getByRole('region', { name: 'Notifications' })
+    ).not.toHaveAttribute('aria-hidden');
   });
 
   it('renders a title above the message when given', () => {
@@ -137,9 +272,9 @@ describe('enqueueSnackbar', () => {
     render(<SnackbarHost />);
     enqueueSnackbar('Saved', { variant: 'success', title });
 
-    const alert = await screen.findByRole('alert');
+    await screen.findByText('Saved');
 
-    expect(alert).toHaveStyle({ alignItems: 'center' });
+    expect(alertOf('Saved')).toHaveStyle({ alignItems: 'center' });
   });
 
   it('drops the title margin when the title is the only text', async () => {

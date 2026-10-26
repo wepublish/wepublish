@@ -99,6 +99,27 @@ describe('SidebarNavMenu', () => {
     expect(screen.getByRole('link', { name: /Articles/ })).toBeVisible();
   });
 
+  it('points its header at the submenu it reveals', () => {
+    renderNav(menu(true));
+
+    const header = screen.getByRole('button', { name: /Content/ });
+    const submenu = document.getElementById(
+      header.getAttribute('aria-controls') ?? ''
+    );
+
+    expect(submenu).toContainElement(
+      screen.getByRole('link', { name: /Articles/ })
+    );
+  });
+
+  it('points at nothing while the submenu is not rendered', () => {
+    renderNav(menu(false));
+
+    expect(screen.getByRole('button', { name: /Content/ })).not.toHaveAttribute(
+      'aria-controls'
+    );
+  });
+
   it('reports a click on its header', () => {
     const onToggle = vi.fn();
     renderNav(

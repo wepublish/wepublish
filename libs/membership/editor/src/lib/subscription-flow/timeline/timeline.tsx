@@ -8,7 +8,7 @@ import {
   useAuthorisation,
   ClickPopover,
 } from '@wepublish/ui/editor';
-import { useContext, useMemo, useRef, useState } from 'react';
+import { useContext, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdAlarmOn, MdCheck, MdEdit, MdRefresh } from 'react-icons/md';
 import { MailSubsection } from '../../mail-settings-layout';
@@ -165,6 +165,7 @@ interface AddDayProps {
 function AddDay({ onAdd }: AddDayProps) {
   const { t } = useTranslation();
   const [day, setDay] = useState(-3);
+  const titleId = useId();
 
   return (
     <PermissionControl qualifyingPermissions={[CanUpdateSubscriptionFlow.id]}>
@@ -183,7 +184,10 @@ function AddDay({ onAdd }: AddDayProps) {
       >
         {close => (
           <NewDayBody>
-            <Typography variant="h6">
+            <Typography
+              variant="h6"
+              id={titleId}
+            >
               {t('subscriptionFlow.newDayTitle')}
             </Typography>
 
@@ -194,7 +198,9 @@ function AddDay({ onAdd }: AddDayProps) {
                 type="number"
                 defaultValue={day}
                 onChange={event => setDay(+(event.target.value || 0))}
-                slotProps={{ htmlInput: { step: 1 } }}
+                slotProps={{
+                  htmlInput: { step: 1, 'aria-labelledby': titleId },
+                }}
               />
 
               <Button
@@ -270,6 +276,7 @@ function EditDay({ day, subscriptionFlow }: EditDayProps) {
       <PopoverBody>
         <TextField
           type="number"
+          label={t('subscriptionFlow.editDay')}
           defaultValue={day}
           onChange={event => (editDay.current = +(event.target.value || 0))}
           slotProps={{
@@ -287,6 +294,7 @@ function EditDay({ day, subscriptionFlow }: EditDayProps) {
         <IconButton
           color="success"
           size="small"
+          aria-label={t('save')}
           onClick={updateTimelineDay}
         >
           <MdCheck />

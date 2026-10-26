@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import { DataTable, DataTableColumn, InfoTooltip } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -275,6 +276,15 @@ export function AudienceTable({
           onClick={() => setSelectedAudienceStats(row)}
         >
           {t('audienceTable.showUsers')}
+          <Box
+            component="span"
+            sx={visuallyHidden}
+          >
+            {' '}
+            {new Date(row.date).toLocaleDateString(language, {
+              dateStyle: 'medium',
+            })}
+          </Box>
         </Button>
       ),
     }

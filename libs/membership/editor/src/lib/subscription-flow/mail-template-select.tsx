@@ -26,6 +26,7 @@ interface MailTemplateSelectProps {
   newDaysAwayFromEnding?: number;
   subscriptionFlow: SubscriptionFlowFragment;
   event: SubscriptionEvent;
+  label?: string;
 }
 
 export function MailTemplateSelect({
@@ -34,6 +35,7 @@ export function MailTemplateSelect({
   newDaysAwayFromEnding,
   subscriptionFlow,
   event,
+  label,
 }: MailTemplateSelectProps) {
   const { t } = useTranslation();
   const canUpdateSubscriptionFlow = useAuthorisation(
@@ -89,7 +91,12 @@ export function MailTemplateSelect({
           deleteInterval();
         }
       }}
-      slotProps={{ select: { displayEmpty: true } }}
+      slotProps={{
+        select: {
+          displayEmpty: true,
+          SelectDisplayProps: { 'aria-label': label } as object,
+        },
+      }}
       fullWidth
     >
       <MenuItem value="">

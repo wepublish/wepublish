@@ -12,7 +12,7 @@ import {
   CanGetPeerProfile,
   CanUpdatePeerProfile,
 } from '@wepublish/permissions';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -58,6 +58,9 @@ const EMPTY_PEER_PROFILE = {
 
 function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
   const { t } = useTranslation();
+  const ctaTextLabelId = useId();
+  const ctaTextBodyLabelId = useId();
+  const ctaImageLabelId = useId();
   const isAuthorized = useAuthorisation(CanUpdatePeerProfile.id);
   const client = useApolloClient();
 
@@ -168,7 +171,10 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
   }
 
   return (
-    <DrawerForm onSubmit={handleSubmit(handleSave)}>
+    <DrawerForm
+      noValidate
+      onSubmit={handleSubmit(handleSave)}
+    >
       <DrawerHeader>
         <DrawerTitle>{t('peerList.panels.editPeerInfo')}</DrawerTitle>
         <DrawerActions>
@@ -259,7 +265,8 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
               render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
-                  label={toggleRequiredLabel(t('peerList.panels.name'))}
+                  label={t('peerList.panels.name')}
+                  required
                   disabled={isDisabled}
                   error={Boolean(error)}
                   helperText={error?.message}
@@ -268,54 +275,56 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
               )}
             />
 
-            <div>
-              <FormLabel>
-                {t('peerList.panels.themeColor')}{' '}
-                <InfoTooltip text={t('peerList.panels.themeColorInfo')} />
-              </FormLabel>
-              <Controller
-                control={control}
-                name="themeColor"
-                render={({ field }) => (
-                  <ColorPicker
-                    {...field}
-                    value={field.value ?? ''}
-                    disabled={isDisabled}
-                  />
-                )}
-              />
-            </div>
+            <Controller
+              control={control}
+              name="themeColor"
+              render={({ field }) => (
+                <ColorPicker
+                  {...field}
+                  value={field.value ?? ''}
+                  label={t('peerList.panels.themeColor')}
+                  helperText={t('peerList.panels.themeColorInfo')}
+                  disabled={isDisabled}
+                />
+              )}
+            />
 
-            <div>
-              <FormLabel>{t('peerList.panels.themeFontColor')}</FormLabel>
-              <Controller
-                control={control}
-                name="themeFontColor"
-                render={({ field }) => (
-                  <ColorPicker
-                    {...field}
-                    value={field.value ?? ''}
-                    disabled={isDisabled}
-                  />
-                )}
-              />
-            </div>
+            <Controller
+              control={control}
+              name="themeFontColor"
+              render={({ field }) => (
+                <ColorPicker
+                  {...field}
+                  value={field.value ?? ''}
+                  label={t('peerList.panels.themeFontColor')}
+                  disabled={isDisabled}
+                />
+              )}
+            />
 
-            <div>
+            <div
+              role="group"
+              aria-labelledby={ctaTextLabelId}
+            >
               <FormLabel>
-                {t('peerList.panels.callToActionText')}{' '}
+                <span id={ctaTextLabelId}>
+                  {t('peerList.panels.callToActionText')}
+                </span>{' '}
                 <InfoTooltip text={t('peerList.panels.callToActionInfo')} />
               </FormLabel>
 
               <FormFields>
                 <div>
-                  <FormLabel>{t('peerList.panels.text')}</FormLabel>
+                  <FormLabel id={ctaTextBodyLabelId}>
+                    {t('peerList.panels.text')}
+                  </FormLabel>
 
                   <Controller
                     control={control}
                     name="callToActionText"
                     render={({ field }) => (
                       <RichTextBlock
+                        aria-labelledby={ctaTextBodyLabelId}
                         value={field.value}
                         onChange={field.onChange}
                         disabled={isDisabled}
@@ -330,6 +339,7 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
                   render={({ field, fieldState: { error } }) => (
                     <TextField
                       {...field}
+                      label={t('peerList.panels.callToActionURL')}
                       placeholder={t('peerList.panels.URL')}
                       disabled={isDisabled}
                       error={Boolean(error)}
@@ -341,8 +351,11 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
               </FormFields>
             </div>
 
-            <div>
-              <FormLabel>
+            <div
+              role="group"
+              aria-labelledby={ctaImageLabelId}
+            >
+              <FormLabel id={ctaImageLabelId}>
                 {toggleRequiredLabel(t('peerList.panels.callToActionImage'))}
               </FormLabel>
 
@@ -373,6 +386,7 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
                     render={({ field, fieldState: { error } }) => (
                       <TextField
                         {...field}
+                        label={t('peerList.panels.callToActionImageURL')}
                         placeholder={t('peerList.panels.URL')}
                         disabled={isDisabled}
                         error={Boolean(error)}
