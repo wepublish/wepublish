@@ -24,9 +24,8 @@ before you start.
    thinking and put it in the reply. Scratch files go in a temp directory, never
    in the working tree.
 5. **Never edit generated code** — the codegen output (`gql/`,
-   `schema-types.ts`, `possible-types.ts`, the `editor`/`website` api
-   `index.ts`), `schema-v2.graphql`, `__generated__/`, Prisma client. Fix the
-   source and regenerate:
+   `schema-types.ts`, `possible-types.ts`), `schema-v2.graphql`,
+   `__generated__/`, Prisma client. Fix the source and regenerate:
    [graphql-prisma.md](.claude/docs/graphql-prisma.md).
 6. **Never run Prettier.** A Husky pre-commit hook handles it.
 7. **Check [gotchas.md](.claude/docs/gotchas.md) before "simplifying"** config,

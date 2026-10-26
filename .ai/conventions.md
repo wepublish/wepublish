@@ -131,9 +131,10 @@ export class ArticleListArgs {
 ## React
 
 Styling, forms, i18n and Website Builder rules are in
-[code-style.md](../.claude/docs/code-style.md). Apollo hooks are generated —
-import them from `@wepublish/editor/api` or `@wepublish/website/api`, never
-hand-write a query hook; see
+[code-style.md](../.claude/docs/code-style.md). Operations are generated as
+`XDocument`s — import them from `@wepublish/editor/api` or
+`@wepublish/website/api` and pass them to Apollo's `useQuery` / `useMutation`,
+never hand-write a query; see
 [graphql-prisma.md](../.claude/docs/graphql-prisma.md).
 
 Frontend errors surface through the Apollo `onError` link plus per-query error

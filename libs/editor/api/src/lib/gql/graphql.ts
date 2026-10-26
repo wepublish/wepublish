@@ -4,1688 +4,16 @@ type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** Internal type. DO NOT USE DIRECTLY. */
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import type * as Types from '../schema-types';
+
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export enum AiProviderType {
-  V0 = 'V0'
-}
-
-export enum ActionMailNoMailReason {
-  AlreadyHandled = 'alreadyHandled',
-  FirstPeriod = 'firstPeriod',
-  NoTemplate = 'noTemplate',
-  NotApplicable = 'notApplicable'
-}
-
-export enum ActionType {
-  ArticleCreated = 'ArticleCreated',
-  AuthorCreated = 'AuthorCreated',
-  CommentCreated = 'CommentCreated',
-  EventCreated = 'EventCreated',
-  PageCreated = 'PageCreated',
-  PollStarted = 'PollStarted',
-  SubscriptionCreated = 'SubscriptionCreated',
-  UserCreated = 'UserCreated'
-}
-
-export enum AnalyticsProviderType {
-  Google = 'GOOGLE'
-}
-
-/** A revoked token counts as revoked even once it has also expired. */
-export enum ApiTokenStatus {
-  Active = 'Active',
-  Expired = 'Expired',
-  Revoked = 'Revoked'
-}
-
-export type ArticleFilter = {
-  /** Only include articles that have every one of these tags */
-  allTagsIn?: Array<string> | null | undefined;
-  authors?: Array<string> | null | undefined;
-  body?: string | null | undefined;
-  draft?: boolean | null | undefined;
-  excludeHideAuthor?: boolean | null | undefined;
-  excludeIds?: Array<string> | null | undefined;
-  ids?: Array<string> | null | undefined;
-  includeHidden?: boolean | null | undefined;
-  lead?: string | null | undefined;
-  peerId?: string | null | undefined;
-  pending?: boolean | null | undefined;
-  preTitle?: string | null | undefined;
-  publicationDateFrom?: DateFilter | null | undefined;
-  publicationDateTo?: DateFilter | null | undefined;
-  published?: boolean | null | undefined;
-  shared?: boolean | null | undefined;
-  tags?: Array<string> | null | undefined;
-  tagsNotIn?: Array<string> | null | undefined;
-  title?: string | null | undefined;
-};
-
-export type ArticleRevisionAuthorInput = {
-  authorId: string;
-  role?: string | null | undefined;
-};
-
-export type ArticleRevisionFilter = {
-  userId?: string | null | undefined;
-};
-
-export enum ArticleSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  PublishedAt = 'PublishedAt'
-}
-
-export type ArticleTeaserInput = {
-  articleID?: string | null | undefined;
-  imageID?: string | null | undefined;
-  lead?: string | null | undefined;
-  preTitle?: string | null | undefined;
-  title?: string | null | undefined;
-};
-
-export enum AuditLogAction {
-  Create = 'create',
-  Delete = 'delete',
-  Other = 'other',
-  Update = 'update'
-}
-
-export enum AuditLogActorType {
-  Token = 'token',
-  User = 'user'
-}
-
-export type AuditLogFilter = {
-  actions?: Array<AuditLogAction> | null | undefined;
-  actorType?: AuditLogActorType | null | undefined;
-  entity?: string | null | undefined;
-  from?: string | null | undefined;
-  /** Only entries where the actor was impersonating another user. */
-  impersonatedOnly?: boolean | null | undefined;
-  mutation?: string | null | undefined;
-  recordId?: string | null | undefined;
-  /** Case insensitive search across mutation, entity, record id, user email and token name. */
-  search?: string | null | undefined;
-  sessionId?: string | null | undefined;
-  success?: boolean | null | undefined;
-  to?: string | null | undefined;
-  userEmail?: string | null | undefined;
-  userId?: string | null | undefined;
-};
-
-export enum AuditLogSort {
-  CreatedAt = 'CreatedAt'
-}
-
-export type AuthorLinkInput = {
-  title: string;
-  url: string;
-};
-
-/** Sorting options for authors */
-export enum AuthorSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Name = 'Name'
-}
-
-export type AvailablePaymentMethodInput = {
-  forceAutoRenewal: boolean;
-  paymentMethodIDs: Array<string>;
-  paymentPeriodicities: Array<PaymentPeriodicity>;
-};
-
-export enum BannerActionRole {
-  Cancel = 'CANCEL',
-  Other = 'OTHER',
-  Primary = 'PRIMARY'
-}
-
-export type BildwurfAdBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  zoneID?: string | null | undefined;
-};
-
-export type BlockContentInput = {
-  bildwurfAd?: BildwurfAdBlockInput | null | undefined;
-  blockTemplate?: BlockTemplateBlockInput | null | undefined;
-  comment?: CommentBlockInput | null | undefined;
-  crowdfunding?: CrowdfundingBlockInput | null | undefined;
-  embed?: IFrameBlockInput | null | undefined;
-  event?: EventBlockInput | null | undefined;
-  facebookPost?: FacebookPostBlockInput | null | undefined;
-  facebookVideo?: FacebookVideoBlockInput | null | undefined;
-  flexBlock?: FlexBlockInput | null | undefined;
-  html?: HtmlBlockInput | null | undefined;
-  image?: ImageBlockInput | null | undefined;
-  imageGallery?: ImageGalleryBlockInput | null | undefined;
-  instagramPost?: InstagramPostBlockInput | null | undefined;
-  linkPageBreak?: BreakBlockInput | null | undefined;
-  listicle?: ListicleBlockInput | null | undefined;
-  mailchimpForm?: MailchimpFormBlockInput | null | undefined;
-  polisConversation?: PolisConversationBlockInput | null | undefined;
-  poll?: PollBlockInput | null | undefined;
-  quote?: QuoteBlockInput | null | undefined;
-  richText?: RichTextBlockInput | null | undefined;
-  soundCloudTrack?: SoundCloudTrackBlockInput | null | undefined;
-  streamableVideo?: StreamableVideoBlockInput | null | undefined;
-  subscribe?: SubscribeBlockInput | null | undefined;
-  teaserGrid?: TeaserGridBlockInput | null | undefined;
-  teaserGridFlex?: TeaserGridFlexBlockInput | null | undefined;
-  teaserList?: TeaserListBlockInput | null | undefined;
-  teaserSlots?: TeaserSlotsBlockInput | null | undefined;
-  tikTokVideo?: TikTokVideoBlockInput | null | undefined;
-  title?: TitleBlockInput | null | undefined;
-  twitterTweet?: TwitterTweetBlockInput | null | undefined;
-  vimeoVideo?: VimeoVideoBlockInput | null | undefined;
-  youTubeVideo?: YouTubeVideoBlockInput | null | undefined;
-};
-
-export type BlockTemplateBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  templateId: string;
-};
-
-export type BlockTemplateFilter = {
-  name?: string | null | undefined;
-};
-
-export enum BlockTemplateSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Name = 'Name'
-}
-
-export enum BlockType {
-  BildwurfAd = 'BildwurfAd',
-  BlockTemplate = 'BlockTemplate',
-  Comment = 'Comment',
-  Crowdfunding = 'Crowdfunding',
-  Embed = 'Embed',
-  Event = 'Event',
-  FacebookPost = 'FacebookPost',
-  FacebookVideo = 'FacebookVideo',
-  FlexBlock = 'FlexBlock',
-  Html = 'HTML',
-  Image = 'Image',
-  ImageGallery = 'ImageGallery',
-  InstagramPost = 'InstagramPost',
-  LinkPageBreak = 'LinkPageBreak',
-  Listicle = 'Listicle',
-  MailchimpForm = 'MailchimpForm',
-  PolisConversation = 'PolisConversation',
-  Poll = 'Poll',
-  Quote = 'Quote',
-  RichText = 'RichText',
-  SoundCloudTrack = 'SoundCloudTrack',
-  StreamableVideo = 'StreamableVideo',
-  Subscribe = 'Subscribe',
-  TeaserGrid = 'TeaserGrid',
-  TeaserGridFlex = 'TeaserGridFlex',
-  TeaserList = 'TeaserList',
-  TeaserSlots = 'TeaserSlots',
-  TikTokVideo = 'TikTokVideo',
-  Title = 'Title',
-  TwitterTweet = 'TwitterTweet',
-  VimeoVideo = 'VimeoVideo',
-  YouTubeVideo = 'YouTubeVideo'
-}
-
-export type BlockWithAlignmentInput = {
-  alignment: FlexAlignmentInput;
-  block?: BlockContentInput | null | undefined;
-};
-
-export type BreakBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  hideButton?: boolean | null | undefined;
-  imageID?: string | null | undefined;
-  linkTarget?: string | null | undefined;
-  linkText?: string | null | undefined;
-  linkURL?: string | null | undefined;
-  richText?: RichtextJSONDocument | null | undefined;
-  text?: string | null | undefined;
-};
-
-export enum ChallengeProviderType {
-  Hcaptcha = 'HCAPTCHA',
-  Turnstile = 'TURNSTILE'
-}
-
-export type ChangelogEntryFilter = {
-  actionRequired?: boolean | null | undefined;
-  confirmed?: boolean | null | undefined;
-};
-
-export type CommentBlockFilterInput = {
-  comments?: Array<string> | null | undefined;
-  item?: string | null | undefined;
-  tags?: Array<string> | null | undefined;
-};
-
-export type CommentBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  filter: CommentBlockFilterInput;
-};
-
-export type CommentFilter = {
-  item?: string | null | undefined;
-  itemID?: string | null | undefined;
-  itemType?: CommentItemType | null | undefined;
-  states?: Array<CommentState> | null | undefined;
-  tags?: Array<string> | null | undefined;
-};
-
-export enum CommentItemType {
-  Article = 'article',
-  Page = 'page'
-}
-
-export enum CommentRejectionReason {
-  Misconduct = 'misconduct',
-  Spam = 'spam'
-}
-
-export type CommentRevisionInput = {
-  lead?: string | null | undefined;
-  text?: RichtextJSONDocument | null | undefined;
-  title?: string | null | undefined;
-};
-
-export enum CommentSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Rating = 'Rating'
-}
-
-export enum CommentState {
-  Approved = 'approved',
-  PendingApproval = 'pendingApproval',
-  PendingUserChanges = 'pendingUserChanges',
-  Rejected = 'rejected'
-}
-
-export type CreateBannerActionInput = {
-  label: string;
-  role: BannerActionRole;
-  style: string;
-  url: string;
-};
-
-export type CreateBannerInput = {
-  actions?: Array<CreateBannerActionInput> | null | undefined;
-  active: boolean;
-  collapsible: boolean;
-  cta?: string | null | undefined;
-  delay: number;
-  embedUrl?: string | null | undefined;
-  hideForMinutes: number;
-  html?: string | null | undefined;
-  imageId?: string | null | undefined;
-  showForLoginStatus: LoginStatus;
-  showOnArticles: boolean;
-  showOnPages?: Array<PageModelInput> | null | undefined;
-  text: string;
-  title: string;
-};
-
-export type CreateCrowdfundingGoalInput = {
-  amount: number;
-  description?: string | null | undefined;
-  title: string;
-};
-
-export type CreateCrowdfundingInput = {
-  additionalRevenue?: number | null | undefined;
-  countSubscriptionsFrom?: string | null | undefined;
-  countSubscriptionsUntil?: string | null | undefined;
-  goalType: CrowdfundingGoalType;
-  goals?: Array<CreateCrowdfundingGoalInput> | null | undefined;
-  memberPlans?: Array<CreateCrowdfundingMemberPlan> | null | undefined;
-  name: string;
-};
-
-export type CreateCrowdfundingMemberPlan = {
-  id: string;
-};
-
-export type CreateExternalAppInput = {
-  /** An API key you may see that has neither expired nor been revoked. */
-  apiTokenId?: string | null | undefined;
-  description?: string | null | undefined;
-  icon?: string | null | undefined;
-  name: string;
-  target: ExternalAppsTarget;
-  url: string;
-};
-
-export type CrowdfundingBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  crowdfundingId?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-};
-
-export enum CrowdfundingGoalType {
-  Revenue = 'Revenue',
-  Subscription = 'Subscription'
-}
-
-export enum Currency {
-  Chf = 'CHF',
-  Eur = 'EUR'
-}
-
-export type CustomTeaserInput = {
-  contentUrl?: string | null | undefined;
-  imageID?: string | null | undefined;
-  lead?: string | null | undefined;
-  openInNewTab?: boolean | null | undefined;
-  preTitle?: string | null | undefined;
-  properties?: Array<PropertyInput> | null | undefined;
-  title?: string | null | undefined;
-};
-
-export type DateFilter = {
-  comparison: DateFilterComparison;
-  date?: string | null | undefined;
-};
-
-export enum DateFilterComparison {
-  Equal = 'Equal',
-  GreaterThan = 'GreaterThan',
-  GreaterThanOrEqual = 'GreaterThanOrEqual',
-  LowerThan = 'LowerThan',
-  LowerThanOrEqual = 'LowerThanOrEqual'
-}
-
-export type DiscountCodeFilter = {
-  from?: string | null | undefined;
-  memberPlans?: Array<string> | null | undefined;
-  to?: string | null | undefined;
-};
-
-export enum DiscountCodesort {
-  CreatedAt = 'CreatedAt',
-  Discount = 'Discount',
-  ModifiedAt = 'ModifiedAt'
-}
-
-export enum EditorBlockType {
-  BlockTemplate = 'BlockTemplate',
-  Comment = 'Comment',
-  Crowdfunding = 'Crowdfunding',
-  Embed = 'Embed',
-  Event = 'Event',
-  FlexBlock = 'FlexBlock',
-  Html = 'HTML',
-  Image = 'Image',
-  ImageGallery = 'ImageGallery',
-  LinkPageBreak = 'LinkPageBreak',
-  Listicle = 'Listicle',
-  MailchimpForm = 'MailchimpForm',
-  Poll = 'Poll',
-  Quote = 'Quote',
-  RichText = 'RichText',
-  Subscribe = 'Subscribe',
-  TeaserGrid1 = 'TeaserGrid1',
-  TeaserGrid6 = 'TeaserGrid6',
-  TeaserGridFlex = 'TeaserGridFlex',
-  TeaserList = 'TeaserList',
-  TeaserSlots = 'TeaserSlots',
-  Title = 'Title'
-}
-
-export type EventBlockFilterInput = {
-  events?: Array<string> | null | undefined;
-  tags?: Array<string> | null | undefined;
-};
-
-export type EventBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  filter: EventBlockFilterInput;
-};
-
-export type EventFilter = {
-  from?: string | null | undefined;
-  location?: string | null | undefined;
-  name?: string | null | undefined;
-  tags?: Array<string> | null | undefined;
-  to?: string | null | undefined;
-  upcomingOnly?: boolean | null | undefined;
-};
-
-export enum EventSort {
-  CreatedAt = 'CreatedAt',
-  EndsAt = 'EndsAt',
-  ModifiedAt = 'ModifiedAt',
-  StartsAt = 'StartsAt'
-}
-
-export enum EventStatus {
-  Cancelled = 'Cancelled',
-  Postponed = 'Postponed',
-  Rescheduled = 'Rescheduled',
-  Scheduled = 'Scheduled'
-}
-
-export type EventTeaserInput = {
-  eventID?: string | null | undefined;
-  imageID?: string | null | undefined;
-  lead?: string | null | undefined;
-  preTitle?: string | null | undefined;
-  title?: string | null | undefined;
-};
-
-export type ExternalAppFilter = {
-  description?: string | null | undefined;
-  id?: string | null | undefined;
-  name?: string | null | undefined;
-  target?: ExternalAppsTarget | null | undefined;
-};
-
-export enum ExternalAppsTarget {
-  Blank = 'BLANK',
-  Iframe = 'IFRAME'
-}
-
-export type FacebookPostBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  postID?: string | null | undefined;
-  userID?: string | null | undefined;
-};
-
-export type FacebookVideoBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  userID?: string | null | undefined;
-  videoID?: string | null | undefined;
-};
-
-export type FlexAlignmentInput = {
-  h: number;
-  i: string;
-  static?: boolean | null | undefined;
-  w: number;
-  x: number;
-  y: number;
-};
-
-export type FlexBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  blocks: Array<BlockWithAlignmentInput>;
-  disabled?: boolean | null | undefined;
-};
-
-export type FlexTeaserInput = {
-  alignment: FlexAlignmentInput;
-  teaser?: TeaserInput | null | undefined;
-};
-
-export enum FontStyle {
-  Italic = 'italic',
-  Normal = 'normal'
-}
-
-export enum FontWeight {
-  Black = 'Black',
-  Bold = 'Bold',
-  ExtraBold = 'ExtraBold',
-  ExtraLight = 'ExtraLight',
-  Light = 'Light',
-  Medium = 'Medium',
-  Regular = 'Regular',
-  SemiBold = 'SemiBold',
-  Thin = 'Thin',
-  Variable = 'Variable'
-}
-
-export type GoodieFilter = {
-  active?: boolean | null | undefined;
-  memberPlans?: Array<string> | null | undefined;
-  name?: string | null | undefined;
-};
-
-export enum GoodieSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Name = 'Name'
-}
-
-export type HtmlBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  html?: string | null | undefined;
-};
-
-export type IFrameBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  height?: number | null | undefined;
-  sandbox?: string | null | undefined;
-  styleCustom?: string | null | undefined;
-  title?: string | null | undefined;
-  url?: string | null | undefined;
-  width?: number | null | undefined;
-};
-
-export type ImageBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  caption?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  imageID?: string | null | undefined;
-  linkUrl?: string | null | undefined;
-};
-
-export type ImageGalleryBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  images: Array<ImageGalleryImageInput>;
-};
-
-export type ImageGalleryImageInput = {
-  caption?: string | null | undefined;
-  imageID?: string | null | undefined;
-};
-
-export type ImportArticleOptions = {
-  importAuthors?: boolean | null | undefined;
-  importContentImages?: boolean | null | undefined;
-  importTags?: boolean | null | undefined;
-};
-
-export type ImportedEventFilter = {
-  from?: string | null | undefined;
-  location?: string | null | undefined;
-  name?: string | null | undefined;
-  providers?: Array<string | null | undefined> | null | undefined;
-  to?: string | null | undefined;
-};
-
-export enum ImportedEventSort {
-  CreatedAt = 'CREATED_AT',
-  EndsAt = 'ENDS_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  StartsAt = 'STARTS_AT'
-}
-
-export type InstagramPostBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  postID?: string | null | undefined;
-};
-
-export type InvoiceFilter = {
-  canceledAt?: DateFilter | null | undefined;
-  discountCodeId?: string | null | undefined;
-  mail?: string | null | undefined;
-  paidAt?: DateFilter | null | undefined;
-  subscriptionID?: string | null | undefined;
-  userID?: string | null | undefined;
-};
-
-export enum InvoiceSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  PaidAt = 'PaidAt'
-}
-
-export type KeyEnabledInput = {
-  enabled: boolean;
-  key?: string | null | undefined;
-};
-
-export type ListicleBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  items: Array<ListicleItemInput>;
-};
-
-export type ListicleItemInput = {
-  imageID?: string | null | undefined;
-  richText?: RichtextJSONDocument | null | undefined;
-  title?: string | null | undefined;
-};
-
-export enum LoginStatus {
-  All = 'ALL',
-  LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT',
-  PaywallBypassed = 'PAYWALL_BYPASSED',
-  Subscribed = 'SUBSCRIBED',
-  Unsubscribed = 'UNSUBSCRIBED'
-}
-
-export type MailAudienceInput = {
-  autoRenew?: boolean | null | undefined;
-  base: MailRecipientBase;
-  /** Win-back audience only: start of an explicit period the subscription ended in. */
-  endedFrom?: string | null | undefined;
-  /** Win-back audience only: end of an explicit period the subscription ended in. */
-  endedTo?: string | null | undefined;
-  /** Win-back audience only: how far back an ended subscription may lie, in days. Ignored when an explicit period is given. */
-  endedWithinDays?: number | null | undefined;
-  /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or after this date. */
-  endsAtFrom?: string | null | undefined;
-  /** Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date. */
-  endsAtTo?: string | null | undefined;
-  /** Subscribers audience only: true keeps only subscriptions that replaced another one (typically an upgrade, but downgrades and lateral plan switches are included too, and manual or imported changes are not detected). */
-  hasReplacedSubscription?: boolean | null | undefined;
-  /** Subscribers audience only: true keeps only subscriptions that have given notice, including cancellations that only take effect in the future; false keeps the rest. */
-  isCanceled?: boolean | null | undefined;
-  /** Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered. */
-  isPaid?: boolean | null | undefined;
-  /** Restrict to subscriptions of these member plans. */
-  memberPlanIDs?: Array<string> | null | undefined;
-  paymentMethodID?: string | null | undefined;
-  paymentPeriodicity?: PaymentPeriodicity | null | undefined;
-  /** Subscribers audience only: only subscriptions that started on or after this date. */
-  startsAtFrom?: string | null | undefined;
-  /** Subscribers audience only: only subscriptions that started on or before this date. */
-  startsAtTo?: string | null | undefined;
-  subscriptionState?: MailSubscriptionState | null | undefined;
-};
-
-export type MailLogFilter = {
-  mailSendJobId?: string | null | undefined;
-  mailTemplateId?: string | null | undefined;
-  recipientId?: string | null | undefined;
-  state?: MailLogState | null | undefined;
-  type?: MailLogType | null | undefined;
-};
-
-export enum MailLogState {
-  Accepted = 'accepted',
-  Bounced = 'bounced',
-  Deferred = 'deferred',
-  Delivered = 'delivered',
-  Rejected = 'rejected',
-  Submitted = 'submitted'
-}
-
-/** Origin of a sent mail. */
-export enum MailLogType {
-  Manual = 'manual',
-  SubscriptionFlow = 'subscriptionFlow',
-  SystemMail = 'systemMail',
-  UserFlow = 'userFlow'
-}
-
-export enum MailProviderType {
-  Log = 'LOG',
-  Mailchimp = 'MAILCHIMP',
-  Mailgun = 'MAILGUN',
-  Slack = 'SLACK',
-  Smtp = 'SMTP'
-}
-
-/** Base set of users a manual-send audience is drawn from. */
-export enum MailRecipientBase {
-  AllUsers = 'allUsers',
-  EndedSubscription = 'endedSubscription',
-  HasSubscription = 'hasSubscription',
-  NoActiveSubscription = 'noActiveSubscription'
-}
-
-export enum MailSendAudience {
-  AllUsers = 'allUsers',
-  FilteredSubscriptions = 'filteredSubscriptions',
-  SingleUser = 'singleUser'
-}
-
-export type MailSendJobInput = {
-  audience: MailAudienceInput;
-  mailTemplateId: string;
-};
-
-/** Where one planned mail of a send job stands. */
-export enum MailSendJobRecipientState {
-  Failed = 'failed',
-  Pending = 'pending',
-  Sending = 'sending',
-  Sent = 'sent'
-}
-
-export enum MailSendJobState {
-  Cancelled = 'cancelled',
-  Done = 'done',
-  Failed = 'failed',
-  Queued = 'queued',
-  Running = 'running'
-}
-
-export type MailSendPreviewInput = {
-  audience: MailAudienceInput;
-  mailTemplateId: string;
-  /** Row id of the recipient to render for. Defaults to the first of the audience. */
-  recipientId?: string | null | undefined;
-};
-
-export enum MailSubscriptionState {
-  Active = 'active',
-  Deactivated = 'deactivated',
-  Pending = 'pending'
-}
-
-/** The mail type / context a template is written for. */
-export enum MailTemplateContext {
-  Account = 'account',
-  Custom = 'custom',
-  CustomNoSubscription = 'customNoSubscription',
-  EmailChange = 'emailChange',
-  InvoiceCreation = 'invoiceCreation',
-  Renewal = 'renewal',
-  Subscription = 'subscription'
-}
-
-export type MailTemplateInput = {
-  context?: MailTemplateContext | null | undefined;
-  description?: string | null | undefined;
-  htmlContent: string;
-  name: string;
-  subject: string;
-  textContent?: string | null | undefined;
-};
-
-export type MailTemplatePreviewInput = {
-  /** Mail type / context id, e.g. "renewal". */
-  contextId: string;
-  htmlContent: string;
-  subject: string;
-  /** Subscription to take sample data from. */
-  subscriptionId?: string | null | undefined;
-  textContent?: string | null | undefined;
-};
-
-export type MailchimpFormBlockInput = {
-  autoFocus?: boolean;
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  buttonColor?: string | null | undefined;
-  buttonFontColor?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  doubleOptIn?: boolean | null | undefined;
-  interests?: Array<string>;
-  listId?: string | null | undefined;
-  steps?: Array<MailchimpFormStepInput>;
-  submitButtonLabel?: string | null | undefined;
-  successPage?: MailchimpFormSuccessPageInput | null | undefined;
-  successUrl?: string | null | undefined;
-  syncProviderId?: string | null | undefined;
-};
-
-export type MailchimpFormFieldConfigInput = {
-  defaultValue?: string | null | undefined;
-  description?: string | null | undefined;
-  inputType?: string | null | undefined;
-  label?: string | null | undefined;
-  name?: string | null | undefined;
-  options?: Array<MailchimpFormInterestOptionInput>;
-  optionsLayout?: MailchimpFormOptionsLayout;
-  required?: boolean | null | undefined;
-  urlParam?: string | null | undefined;
-  value?: string | null | undefined;
-};
-
-export type MailchimpFormInterestOptionInput = {
-  description?: string | null | undefined;
-  id: string;
-  imageID?: string | null | undefined;
-  name: string;
-};
-
-export enum MailchimpFormOptionsLayout {
-  Grid = 'Grid',
-  List = 'List'
-}
-
-export type MailchimpFormStepInput = {
-  inputs?: Array<MailchimpFormFieldConfigInput>;
-  showIfInterestsFilled?: Array<string>;
-  skipIfFieldsFilled?: Array<string>;
-  skipIfInterestsFilled?: Array<string>;
-};
-
-export type MailchimpFormSuccessOptionInput = {
-  background: string;
-  label: string;
-  mergeFieldName?: string | null | undefined;
-  mergeFieldValue?: string | null | undefined;
-  url: string;
-};
-
-export type MailchimpFormSuccessPageInput = {
-  description?: string | null | undefined;
-  options?: Array<MailchimpFormSuccessOptionInput>;
-};
-
-export type MemberPlanFilter = {
-  active?: boolean | null | undefined;
-  name?: string | null | undefined;
-  productType?: ProductType | null | undefined;
-  tags?: Array<string> | null | undefined;
-};
-
-export enum MemberPlanSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt'
-}
-
-export type NavigationLinkInput = {
-  articleID?: string | null | undefined;
-  label: string;
-  pageID?: string | null | undefined;
-  type: string;
-  url?: string | null | undefined;
-};
-
-export enum NewsletterCampaignStatus {
-  Active = 'active',
-  Archived = 'archived'
-}
-
-export enum NotificationSource {
-  Changelog = 'CHANGELOG',
-  OneMessage = 'ONE_MESSAGE',
-  PeriodicJob = 'PERIODIC_JOB'
-}
-
-export enum OneChannelConnectionState {
-  Connected = 'Connected',
-  Failing = 'Failing',
-  NotConfigured = 'NotConfigured'
-}
-
-export type OverriddenRatingInput = {
-  answerId: string;
-  value?: number | null | undefined;
-};
-
-export type PageFilter = {
-  description?: string | null | undefined;
-  draft?: boolean | null | undefined;
-  includeHidden?: boolean | null | undefined;
-  pending?: boolean | null | undefined;
-  publicationDateFrom?: DateFilter | null | undefined;
-  publicationDateTo?: DateFilter | null | undefined;
-  published?: boolean | null | undefined;
-  slug?: string | null | undefined;
-  tags?: Array<string> | null | undefined;
-  title?: string | null | undefined;
-};
-
-export type PageModelInput = {
-  id: string;
-};
-
-export type PageRevisionFilter = {
-  userId?: string | null | undefined;
-};
-
-export enum PageSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  PublishedAt = 'PublishedAt'
-}
-
-export type PageTeaserInput = {
-  imageID?: string | null | undefined;
-  lead?: string | null | undefined;
-  pageID?: string | null | undefined;
-  preTitle?: string | null | undefined;
-  title?: string | null | undefined;
-};
-
-/** How the reader proves the new payment method: by paying the open invoice with it, by authorizing it without a charge, or not at all. */
-export enum PaymentMethodChangeKind {
-  Authorization = 'authorization',
-  Immediate = 'immediate',
-  InvoicePayment = 'invoicePayment'
-}
-
-export enum PaymentMethodChangeState {
-  Canceled = 'canceled',
-  Completed = 'completed',
-  Expired = 'expired',
-  Failed = 'failed',
-  Pending = 'pending'
-}
-
-export enum PaymentMethodMollie {
-  Alma = 'ALMA',
-  Applepay = 'APPLEPAY',
-  Bacs = 'BACS',
-  Bancomatpay = 'BANCOMATPAY',
-  Bancontact = 'BANCONTACT',
-  Banktransfer = 'BANKTRANSFER',
-  Belfius = 'BELFIUS',
-  Billie = 'BILLIE',
-  Blik = 'BLIK',
-  Creditcard = 'CREDITCARD',
-  Directdebit = 'DIRECTDEBIT',
-  Eps = 'EPS',
-  Giftcard = 'GIFTCARD',
-  Ideal = 'IDEAL',
-  In3 = 'IN3',
-  Kbc = 'KBC',
-  Klarna = 'KLARNA',
-  Klarnapaylater = 'KLARNAPAYLATER',
-  Klarnapaynow = 'KLARNAPAYNOW',
-  Klarnasliceit = 'KLARNASLICEIT',
-  Mybank = 'MYBANK',
-  Paypal = 'PAYPAL',
-  Paysafecard = 'PAYSAFECARD',
-  Przelewy24 = 'PRZELEWY24',
-  Riverty = 'RIVERTY',
-  Satispay = 'SATISPAY',
-  Trustly = 'TRUSTLY',
-  Twint = 'TWINT',
-  Voucher = 'VOUCHER'
-}
-
-export enum PaymentPeriodicity {
-  Biannual = 'biannual',
-  Biennial = 'biennial',
-  Lifetime = 'lifetime',
-  Monthly = 'monthly',
-  Quarterly = 'quarterly',
-  Yearly = 'yearly'
-}
-
-export enum PaymentProviderType {
-  Bexio = 'BEXIO',
-  Mollie = 'MOLLIE',
-  NoCharge = 'NO_CHARGE',
-  Payrexx = 'PAYREXX',
-  PayrexxSubscription = 'PAYREXX_SUBSCRIPTION',
-  Simulated = 'SIMULATED',
-  Stripe = 'STRIPE',
-  StripeCheckout = 'STRIPE_CHECKOUT'
-}
-
-export enum PaymentState {
-  Canceled = 'canceled',
-  Chargeback = 'chargeback',
-  Created = 'created',
-  Declined = 'declined',
-  Paid = 'paid',
-  Processing = 'processing',
-  RequiresUserAction = 'requiresUserAction',
-  Submitted = 'submitted'
-}
-
-export enum PayrexxPm {
-  Alipay = 'ALIPAY',
-  AmazonPay = 'AMAZON_PAY',
-  AmericanExpress = 'AMERICAN_EXPRESS',
-  ApplePay = 'APPLE_PAY',
-  Bancontact = 'BANCONTACT',
-  BankTransfer = 'BANK_TRANSFER',
-  CartesBancaires = 'CARTES_BANCAIRES',
-  Crypto = 'CRYPTO',
-  DinersClub = 'DINERS_CLUB',
-  Discover = 'DISCOVER',
-  Eps = 'EPS',
-  Giropay = 'GIROPAY',
-  GooglePay = 'GOOGLE_PAY',
-  Ideal = 'IDEAL',
-  Invoice = 'INVOICE',
-  Jcb = 'JCB',
-  Klarna = 'KLARNA',
-  Maestro = 'MAESTRO',
-  Mastercard = 'MASTERCARD',
-  Paypal = 'PAYPAL',
-  PayByBank = 'PAY_BY_BANK',
-  PostFinancePay = 'POST_FINANCE_PAY',
-  Powerpay = 'POWERPAY',
-  Prepayment = 'PREPAYMENT',
-  SamsungPay = 'SAMSUNG_PAY',
-  SepaDirectDebit = 'SEPA_DIRECT_DEBIT',
-  SwisscomPay = 'SWISSCOM_PAY',
-  Twint = 'TWINT',
-  Unionpay = 'UNIONPAY',
-  VerdCash = 'VERD_CASH',
-  Visa = 'VISA',
-  VPay = 'V_PAY',
-  WechatPay = 'WECHAT_PAY'
-}
-
-export enum PayrexxPsp {
-  AmazonPay = 'AMAZON_PAY',
-  BarzahlenViacash = 'BARZAHLEN_VIACASH',
-  Braintree = 'BRAINTREE',
-  Ccavenue = 'CCAVENUE',
-  Cembrapay = 'CEMBRAPAY',
-  ClearhausAcquiring = 'CLEARHAUS_ACQUIRING',
-  Coinbase = 'COINBASE',
-  ConcardisBasic = 'CONCARDIS_BASIC',
-  ConcardisPayengine = 'CONCARDIS_PAYENGINE',
-  ConcardisPayEngine = 'CONCARDIS_PAY_ENGINE',
-  Datatrans = 'DATATRANS',
-  Giropay = 'GIROPAY',
-  Invoice = 'INVOICE',
-  Klarna = 'KLARNA',
-  Mollie = 'MOLLIE',
-  OgoneAliasGateway = 'OGONE_ALIAS_GATEWAY',
-  OgoneBasic = 'OGONE_BASIC',
-  Payone = 'PAYONE',
-  Paypal = 'PAYPAL',
-  PayrexxPay = 'PAYREXX_PAY',
-  PayrexxPaymentsByStripe = 'PAYREXX_PAYMENTS_BY_STRIPE',
-  PayrexxPayPlus = 'PAYREXX_PAY_PLUS',
-  Paysafecash = 'PAYSAFECASH',
-  PointsPay = 'POINTS_PAY',
-  PostfinanceAliasGateway = 'POSTFINANCE_ALIAS_GATEWAY',
-  PostfinanceCheckout = 'POSTFINANCE_CHECKOUT',
-  PostfinanceEcommerce = 'POSTFINANCE_ECOMMERCE',
-  Powerpay = 'POWERPAY',
-  Reka = 'REKA',
-  Saferpay = 'SAFERPAY',
-  Skrill = 'SKRILL',
-  Stripe = 'STRIPE',
-  Swissbilling = 'SWISSBILLING',
-  Twint = 'TWINT',
-  Utrust = 'UTRUST',
-  Viveum = 'VIVEUM',
-  Vorkasse = 'VORKASSE',
-  Vrpay = 'VRPAY',
-  Wirpay = 'WIRPAY',
-  Worldpay = 'WORLDPAY'
-}
-
-export type PeerArticleFilter = {
-  /** Only include articles that have every one of these tags */
-  allTagsIn?: Array<string> | null | undefined;
-  authors?: Array<string> | null | undefined;
-  body?: string | null | undefined;
-  excludeHideAuthor?: boolean | null | undefined;
-  excludeIds?: Array<string> | null | undefined;
-  ids?: Array<string> | null | undefined;
-  lead?: string | null | undefined;
-  peerId?: string | null | undefined;
-  preTitle?: string | null | undefined;
-  publicationDateFrom?: DateFilter | null | undefined;
-  publicationDateTo?: DateFilter | null | undefined;
-  tags?: Array<string> | null | undefined;
-  title?: string | null | undefined;
-};
-
-export type PeriodicityPriceInput = {
-  amountMax?: number | null | undefined;
-  amountMin?: number | null | undefined;
-  amountTarget?: number | null | undefined;
-  label?: string | null | undefined;
-  periodicity: PaymentPeriodicity;
-};
-
-export type PolisConversationBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  conversationID?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-};
-
-export type PollAnswerInput = {
-  answer?: string | null | undefined;
-  id: string;
-};
-
-export type PollBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  pollId?: string | null | undefined;
-};
-
-export type PollExternalVoteInput = {
-  amount: number;
-  id: string;
-};
-
-export type PollExternalVoteSourceInput = {
-  id: string;
-  source?: string | null | undefined;
-  voteAmounts: Array<PollExternalVoteInput>;
-};
-
-export type PollFilter = {
-  openOnly?: boolean | null | undefined;
-};
-
-export enum PollSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  OpensAt = 'OpensAt'
-}
-
-export type PollVoteFilter = {
-  answerIds?: Array<string> | null | undefined;
-  fingerprint?: string | null | undefined;
-  from?: string | null | undefined;
-  pollId?: string | null | undefined;
-  to?: string | null | undefined;
-  userId?: string | null | undefined;
-};
-
-export enum PollVoteSort {
-  CreatedAt = 'CreatedAt'
-}
-
-export enum ProductType {
-  Donation = 'Donation',
-  Subscription = 'Subscription'
-}
-
-export type PropertyInput = {
-  id?: string | null | undefined;
-  key: string;
-  public: boolean;
-  value: string;
-};
-
-export type QuoteBlockInput = {
-  author?: string | null | undefined;
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  imageID?: string | null | undefined;
-  quote?: string | null | undefined;
-};
-
-export enum RatingSystemType {
-  Star = 'star'
-}
-
-export type RichTextBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  richText?: RichtextJSONDocument | null | undefined;
-};
-
-export type SendTestMailTemplateInput = {
-  contextId: string;
-  htmlContent: string;
-  subject: string;
-  subscriptionId?: string | null | undefined;
-  textContent?: string | null | undefined;
-};
-
-export enum SeoCheckId {
-  ArticleMarkup = 'ArticleMarkup',
-  Feed = 'Feed',
-  NewsSitemap = 'NewsSitemap',
-  PublicationMetadata = 'PublicationMetadata',
-  Sitemap = 'Sitemap'
-}
-
-export enum SeoCheckStatus {
-  Error = 'Error',
-  Info = 'Info',
-  Ok = 'Ok',
-  Warning = 'Warning'
-}
-
-export type SettingAnalyticsCredentialsInput = {
-  client_email: string;
-  client_id: string;
-  private_key: string;
-  private_key_id: string;
-  project_id: string;
-  type: string;
-};
-
-export enum SettingName {
-  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
-  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
-  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
-  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
-  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  MailProviderName = 'MAIL_PROVIDER_NAME',
-  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
-  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
-  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
-  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
-  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
-  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
-  NewArticlePaywall = 'NEW_ARTICLE_PAYWALL',
-  NewArticlePeering = 'NEW_ARTICLE_PEERING',
-  PaymentMethodChangeExpiryDays = 'PAYMENT_METHOD_CHANGE_EXPIRY_DAYS',
-  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
-  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
-  SessionTtlDays = 'SESSION_TTL_DAYS',
-  ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',
-  SubscriptionExtendWindowDays = 'SUBSCRIPTION_EXTEND_WINDOW_DAYS',
-  SubscriptionUpgradeBillsFullDifference = 'SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE'
-}
-
-export type SingleEventFilter = {
-  id: string;
-  source: string;
-};
-
-export enum SortOrder {
-  Ascending = 'Ascending',
-  Descending = 'Descending'
-}
-
-export type SoundCloudTrackBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  trackID?: string | null | undefined;
-};
-
-export type StreamableVideoBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  videoID?: string | null | undefined;
-};
-
-export enum StripePaymentMethod {
-  AcssDebit = 'ACSS_DEBIT',
-  AfterpayClearpay = 'AFTERPAY_CLEARPAY',
-  Alipay = 'ALIPAY',
-  AuBecsDebit = 'AU_BECS_DEBIT',
-  BacsDebit = 'BACS_DEBIT',
-  Bancontact = 'BANCONTACT',
-  Boleto = 'BOLETO',
-  Card = 'CARD',
-  Eps = 'EPS',
-  Fpx = 'FPX',
-  Giropay = 'GIROPAY',
-  Grabpay = 'GRABPAY',
-  Ideal = 'IDEAL',
-  Klarna = 'KLARNA',
-  Konbini = 'KONBINI',
-  Oxxo = 'OXXO',
-  P24 = 'P24',
-  Paynow = 'PAYNOW',
-  SepaDebit = 'SEPA_DEBIT',
-  Sofort = 'SOFORT',
-  UsBankAccount = 'US_BANK_ACCOUNT',
-  WechatPay = 'WECHAT_PAY'
-}
-
-export enum SubscribeBlockField {
-  Address = 'Address',
-  Birthday = 'Birthday',
-  EmailRepeated = 'EmailRepeated',
-  FirstName = 'FirstName',
-  Password = 'Password',
-  PasswordRepeated = 'PasswordRepeated'
-}
-
-export type SubscribeBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  fields?: Array<SubscribeBlockField>;
-  goodieMinValue?: number | null | undefined;
-  goodieMinValueAppliesToUpgrade?: boolean;
-  hideRepeatGoodieOnUpgrade?: boolean;
-  memberPlanIds?: Array<string>;
-  memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSettingInput>;
-  periodicityDisplay?: SubscribePeriodicityDisplay | null | undefined;
-  showDiscountCodes?: boolean;
-  showGoodies?: boolean;
-};
-
-export type SubscribeBlockLayoutConfigInput = {
-  showInput?: boolean;
-  type: SubscribeBlockRenderLayout;
-  values?: Array<number> | null | undefined;
-  valuesByPeriodicity?: Array<SubscribeBlockPeriodicityValuesInput> | null | undefined;
-};
-
-export type SubscribeBlockMemberPlanRenderSettingInput = {
-  isDefault?: boolean;
-  layout: SubscribeBlockLayoutConfigInput;
-  memberPlanId: string;
-};
-
-export type SubscribeBlockPeriodicityValuesInput = {
-  periodicity: PaymentPeriodicity;
-  values: Array<number>;
-};
-
-export enum SubscribeBlockRenderLayout {
-  None = 'None',
-  Picker = 'Picker',
-  Slider = 'Slider'
-}
-
-export enum SubscribePeriodicityDisplay {
-  Dropdown = 'Dropdown',
-  OfferCards = 'OfferCards',
-  Toggle = 'Toggle'
-}
-
-export enum SubscriptionDeactivationReason {
-  Chargeback = 'chargeback',
-  InvoiceNotPaid = 'invoiceNotPaid',
-  None = 'none',
-  UserReplacedSubscription = 'userReplacedSubscription',
-  UserSelfDeactivated = 'userSelfDeactivated'
-}
-
-export enum SubscriptionEvent {
-  ConfirmSubscription = 'CONFIRM_SUBSCRIPTION',
-  Custom = 'CUSTOM',
-  DeactivationByUser = 'DEACTIVATION_BY_USER',
-  DeactivationUnpaid = 'DEACTIVATION_UNPAID',
-  InvoiceCreation = 'INVOICE_CREATION',
-  RenewalFailed = 'RENEWAL_FAILED',
-  RenewalSuccess = 'RENEWAL_SUCCESS',
-  Subscribe = 'SUBSCRIBE'
-}
-
-export type SubscriptionFilter = {
-  activeAt?: string | null | undefined;
-  autoRenew?: boolean | null | undefined;
-  cancellationDateFrom?: DateFilter | null | undefined;
-  cancellationDateTo?: DateFilter | null | undefined;
-  deactivationDateFrom?: DateFilter | null | undefined;
-  deactivationDateTo?: DateFilter | null | undefined;
-  deactivationReason?: string | null | undefined;
-  extendable?: boolean | null | undefined;
-  memberPlanID?: string | null | undefined;
-  paidUntilFrom?: DateFilter | null | undefined;
-  paidUntilTo?: DateFilter | null | undefined;
-  paymentMethodID?: string | null | undefined;
-  paymentPeriodicity?: PaymentPeriodicity | null | undefined;
-  startsAtFrom?: DateFilter | null | undefined;
-  startsAtTo?: DateFilter | null | undefined;
-  subscriptionIDs?: Array<string> | null | undefined;
-  userHasAddress?: boolean | null | undefined;
-  userID?: string | null | undefined;
-  userIDs?: Array<string> | null | undefined;
-};
-
-export enum SubscriptionSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt'
-}
-
-export enum SyncProviderType {
-  Mailchimp = 'MAILCHIMP'
-}
-
-export type TagFilter = {
-  tag?: string | null | undefined;
-  tags?: Array<string> | null | undefined;
-  type?: TagType | null | undefined;
-};
-
-export enum TagSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Tag = 'Tag'
-}
-
-/** Type of tag. */
-export enum TagType {
-  Article = 'Article',
-  Author = 'Author',
-  Comment = 'Comment',
-  Event = 'Event',
-  Page = 'Page'
-}
-
-export type TeaserGridBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  numColumns: number;
-  teasers: Array<TeaserInput | null | undefined>;
-  title?: string | null | undefined;
-};
-
-export type TeaserGridFlexBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  flexTeasers: Array<FlexTeaserInput>;
-  title?: string | null | undefined;
-};
-
-export type TeaserInput = {
-  article?: ArticleTeaserInput | null | undefined;
-  custom?: CustomTeaserInput | null | undefined;
-  event?: EventTeaserInput | null | undefined;
-  page?: PageTeaserInput | null | undefined;
-};
-
-export type TeaserListBlockFilterInput = {
-  tags?: Array<string> | null | undefined;
-};
-
-export type TeaserListBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  filter: TeaserListBlockFilterInput;
-  skip?: number | null | undefined;
-  sort?: TeaserListBlockSort | null | undefined;
-  take?: number | null | undefined;
-  teaserType: TeaserType;
-  title?: string | null | undefined;
-};
-
-export enum TeaserListBlockSort {
-  HotAndTrending = 'HotAndTrending',
-  PublishedAt = 'PublishedAt',
-  UpdatedAt = 'UpdatedAt'
-}
-
-export type TeaserSlotInput = {
-  teaser?: TeaserInput | null | undefined;
-  type?: TeaserSlotType;
-};
-
-export enum TeaserSlotType {
-  Autofill = 'Autofill',
-  Manual = 'Manual'
-}
-
-export type TeaserSlotsAutofillConfigInput = {
-  enabled: boolean;
-  filter?: TeaserListBlockFilterInput | null | undefined;
-  sort?: TeaserListBlockSort | null | undefined;
-  teaserType?: TeaserType | null | undefined;
-};
-
-export type TeaserSlotsBlockInput = {
-  autofillConfig: TeaserSlotsAutofillConfigInput;
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  slots: Array<TeaserSlotInput>;
-  title?: string | null | undefined;
-};
-
-export enum TeaserType {
-  Article = 'Article',
-  Custom = 'Custom',
-  Event = 'Event',
-  Page = 'Page'
-}
-
-export type TikTokVideoBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  userID?: string | null | undefined;
-  videoID?: string | null | undefined;
-};
-
-export type TitleBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  lead?: string | null | undefined;
-  preTitle?: string | null | undefined;
-  title?: string | null | undefined;
-};
-
-export enum TrackingPixelProviderType {
-  Prolitteris = 'prolitteris'
-}
-
-export type TwitterTweetBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  tweetID?: string | null | undefined;
-  userID?: string | null | undefined;
-};
-
-export type UpdateBannerInput = {
-  actions?: Array<CreateBannerActionInput> | null | undefined;
-  active: boolean;
-  collapsible: boolean;
-  cta?: string | null | undefined;
-  delay: number;
-  embedUrl?: string | null | undefined;
-  hideForMinutes: number;
-  html?: string | null | undefined;
-  id: string;
-  imageId?: string | null | undefined;
-  showForLoginStatus: LoginStatus;
-  showOnArticles: boolean;
-  showOnPages?: Array<PageModelInput> | null | undefined;
-  text: string;
-  title: string;
-};
-
-export type UpdateCommentRatingSystemAnswerInput = {
-  answer?: string | null | undefined;
-  id: string;
-  type?: RatingSystemType | null | undefined;
-};
-
-export type UpdateCrowdfundingInput = {
-  additionalRevenue?: number | null | undefined;
-  countSubscriptionsFrom?: string | null | undefined;
-  countSubscriptionsUntil?: string | null | undefined;
-  goalType?: CrowdfundingGoalType | null | undefined;
-  goals?: Array<CreateCrowdfundingGoalInput> | null | undefined;
-  id: string;
-  memberPlans?: Array<CreateCrowdfundingMemberPlan> | null | undefined;
-  name?: string | null | undefined;
-};
-
-export type UserAddressInput = {
-  city?: string | null | undefined;
-  company?: string | null | undefined;
-  country?: string | null | undefined;
-  streetAddress?: string | null | undefined;
-  streetAddress2?: string | null | undefined;
-  streetAddress2Number?: string | null | undefined;
-  streetAddressNumber?: string | null | undefined;
-  zipCode?: string | null | undefined;
-};
-
-export enum UserEvent {
-  AccountCreation = 'ACCOUNT_CREATION',
-  EmailChange = 'EMAIL_CHANGE',
-  LoginLink = 'LOGIN_LINK',
-  PasswordReset = 'PASSWORD_RESET',
-  TestMail = 'TEST_MAIL'
-}
-
-export type UserFilter = {
-  name?: string | null | undefined;
-  text?: string | null | undefined;
-  userRole?: Array<string> | null | undefined;
-};
-
-export enum UserRoleSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt'
-}
-
-export enum UserSort {
-  CreatedAt = 'CreatedAt',
-  FirstName = 'FirstName',
-  ModifiedAt = 'ModifiedAt',
-  Name = 'Name',
-  SubscriptionCount = 'SubscriptionCount'
-}
-
-export enum UserSubscriptionStatus {
-  Active = 'Active',
-  Deactivated = 'Deactivated',
-  Expired = 'Expired',
-  Planned = 'Planned',
-  Unpaid = 'Unpaid'
-}
-
-export type VimeoVideoBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  videoID?: string | null | undefined;
-};
-
-export type WebsiteAdsInput = {
-  sparkLoop: KeyEnabledInput;
-};
-
-export type WebsiteAnalyticsInput = {
-  googleAnalytics: KeyEnabledInput;
-  googleTagManager: KeyEnabledInput;
-  piwik: KeyEnabledInput;
-  plausible: KeyEnabledInput;
-};
-
-export type WebsiteMailInput = {
-  mailchimp: KeyEnabledInput;
-};
-
-export type WebsiteRemoteFontInput = {
-  name: string;
-  style: Array<FontStyle>;
-  weight: Array<FontWeight>;
-};
-
-export type YouTubeVideoBlockInput = {
-  blockStyle?: string | null | undefined;
-  blockStyleName?: string | null | undefined;
-  disabled?: boolean | null | undefined;
-  videoID?: string | null | undefined;
-};
-
-export type ActionMailFragment = { __typename: 'ActionMail', event: string, recipientEmail: string | null, mailTemplateId: string | null, mailTemplateName: string | null, noMailReason: ActionMailNoMailReason | null };
+export type ActionMailFragment = { __typename: 'ActionMail', event: string, recipientEmail: string | null, mailTemplateId: string | null, mailTemplateName: string | null, noMailReason: Types.ActionMailNoMailReason | null };
 
 export type SubscriptionCreationMailQueryVariables = Exact<{
   userID: string;
   memberPlanID: string;
   paymentMethodID: string;
-  paymentPeriodicity: PaymentPeriodicity;
+  paymentPeriodicity: Types.PaymentPeriodicity;
   autoRenew: boolean;
 }>;
 
@@ -1697,7 +25,7 @@ export type SubscriptionCreationMailQuery = { __typename: 'Query', subscriptionC
 
 export type SubscriptionCancellationMailQueryVariables = Exact<{
   id: string;
-  reason: SubscriptionDeactivationReason;
+  reason: Types.SubscriptionDeactivationReason;
 }>;
 
 
@@ -1725,7 +53,7 @@ export type InvoicePaymentMailQuery = { __typename: 'Query', invoicePaymentMail:
   ) };
 
 export type RecentActionsQueryVariables = Exact<{
-  types?: Array<ActionType> | ActionType | null | undefined;
+  types?: Array<Types.ActionType> | Types.ActionType | null | undefined;
 }>;
 
 
@@ -1808,7 +136,7 @@ export type ApiTokenListQueryVariables = Exact<{
   skip?: number | null | undefined;
   cursorId?: string | null | undefined;
   createdById?: string | null | undefined;
-  status?: ApiTokenStatus | null | undefined;
+  status?: Types.ApiTokenStatus | null | undefined;
 }>;
 
 
@@ -2014,12 +342,12 @@ export type FullArticleFragment = (
 );
 
 export type ArticleListQueryVariables = Exact<{
-  filter?: ArticleFilter | null | undefined;
+  filter?: Types.ArticleFilter | null | undefined;
   cursor?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: ArticleSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.ArticleSort | null | undefined;
 }>;
 
 
@@ -2029,8 +357,8 @@ export type ArticleListQuery = { __typename: 'Query', articles: { __typename: 'P
     )>, pageInfo: { __typename: 'PageInfo', startCursor: string | null, endCursor: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CreateArticleMutationVariables = Exact<{
-  authors: Array<ArticleRevisionAuthorInput> | ArticleRevisionAuthorInput;
-  blocks: Array<BlockContentInput> | BlockContentInput;
+  authors: Array<Types.ArticleRevisionAuthorInput> | Types.ArticleRevisionAuthorInput;
+  blocks: Array<Types.BlockContentInput> | Types.BlockContentInput;
   breaking: boolean;
   canonicalUrl: string;
   disableComments: boolean;
@@ -2040,7 +368,7 @@ export type CreateArticleMutationVariables = Exact<{
   paywallId?: string | null | undefined;
   lead?: string | null | undefined;
   preTitle?: string | null | undefined;
-  properties: Array<PropertyInput> | PropertyInput;
+  properties: Array<Types.PropertyInput> | Types.PropertyInput;
   seoTitle?: string | null | undefined;
   seoDescription?: string | null | undefined;
   shared: boolean;
@@ -2062,8 +390,8 @@ export type CreateArticleMutation = { __typename: 'Mutation', createArticle: (
 
 export type UpdateArticleMutationVariables = Exact<{
   id: string;
-  authors: Array<ArticleRevisionAuthorInput> | ArticleRevisionAuthorInput;
-  blocks: Array<BlockContentInput> | BlockContentInput;
+  authors: Array<Types.ArticleRevisionAuthorInput> | Types.ArticleRevisionAuthorInput;
+  blocks: Array<Types.BlockContentInput> | Types.BlockContentInput;
   breaking: boolean;
   canonicalUrl: string;
   disableComments: boolean;
@@ -2073,7 +401,7 @@ export type UpdateArticleMutationVariables = Exact<{
   paywallId?: string | null | undefined;
   lead?: string | null | undefined;
   preTitle?: string | null | undefined;
-  properties: Array<PropertyInput> | PropertyInput;
+  properties: Array<Types.PropertyInput> | Types.PropertyInput;
   seoTitle?: string | null | undefined;
   seoDescription?: string | null | undefined;
   shared: boolean;
@@ -2127,8 +455,8 @@ export type ArticleRevisionListQueryVariables = Exact<{
   take?: number | null | undefined;
   skip?: number | null | undefined;
   cursor?: string | null | undefined;
-  filter?: ArticleRevisionFilter | null | undefined;
-  order?: SortOrder | null | undefined;
+  filter?: Types.ArticleRevisionFilter | null | undefined;
+  order?: Types.SortOrder | null | undefined;
 }>;
 
 
@@ -2188,15 +516,15 @@ export type ArticleQuery = { __typename: 'Query', article: (
     & FullArticleFragment
   ) };
 
-export type FullAuditLogFragment = { __typename: 'AuditLog', id: string, createdAt: string, mutation: string, action: AuditLogAction, entity: string | null, recordId: string | null, actorType: AuditLogActorType, userId: string | null, userEmail: string | null, tokenName: string | null, sessionId: string | null, impersonatedBy: string | null, success: boolean, errorMessage: string | null };
+export type FullAuditLogFragment = { __typename: 'AuditLog', id: string, createdAt: string, mutation: string, action: Types.AuditLogAction, entity: string | null, recordId: string | null, actorType: Types.AuditLogActorType, userId: string | null, userEmail: string | null, tokenName: string | null, sessionId: string | null, impersonatedBy: string | null, success: boolean, errorMessage: string | null };
 
 export type AuditLogListQueryVariables = Exact<{
-  filter?: AuditLogFilter | null | undefined;
+  filter?: Types.AuditLogFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: AuditLogSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.AuditLogSort | null | undefined;
 }>;
 
 
@@ -2297,8 +625,8 @@ export type AuthorListQueryVariables = Exact<{
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: AuthorSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.AuthorSort | null | undefined;
 }>;
 
 
@@ -2325,7 +653,7 @@ export type CreateAuthorMutationVariables = Exact<{
   hideOnArticle: boolean;
   hideOnTeam: boolean;
   hideOnTeaser: boolean;
-  links: Array<AuthorLinkInput> | AuthorLinkInput;
+  links: Array<Types.AuthorLinkInput> | Types.AuthorLinkInput;
   tagIds: Array<string> | string;
   imageID?: string | null | undefined;
 }>;
@@ -2345,7 +673,7 @@ export type UpdateAuthorMutationVariables = Exact<{
   hideOnArticle?: boolean | null | undefined;
   hideOnTeam?: boolean | null | undefined;
   hideOnTeaser?: boolean | null | undefined;
-  links?: Array<AuthorLinkInput> | AuthorLinkInput | null | undefined;
+  links?: Array<Types.AuthorLinkInput> | Types.AuthorLinkInput | null | undefined;
   tagIds?: Array<string> | string | null | undefined;
   imageID?: string | null | undefined;
 }>;
@@ -2388,7 +716,7 @@ export type BannerQuery = { __typename: 'Query', banner: (
   ) };
 
 export type CreateBannerMutationVariables = Exact<{
-  input: CreateBannerInput;
+  input: Types.CreateBannerInput;
 }>;
 
 
@@ -2398,7 +726,7 @@ export type CreateBannerMutation = { __typename: 'Mutation', createBanner: (
   ) };
 
 export type UpdateBannerMutationVariables = Exact<{
-  input: UpdateBannerInput;
+  input: Types.UpdateBannerInput;
 }>;
 
 
@@ -2416,7 +744,7 @@ export type DeleteBannerMutation = { __typename: 'Mutation', deleteBanner: boole
 
 export type Page2RefFragment = { __typename: 'PageModel', id: string };
 
-export type FullBannerFragment = { __typename: 'Banner', id: string, title: string, text: string, cta: string | null, active: boolean, collapsible: boolean, delay: number, hideForMinutes: number, html: string | null, embedUrl: string | null, showOnArticles: boolean, showForLoginStatus: LoginStatus, showOnPages: Array<(
+export type FullBannerFragment = { __typename: 'Banner', id: string, title: string, text: string, cta: string | null, active: boolean, collapsible: boolean, delay: number, hideForMinutes: number, html: string | null, embedUrl: string | null, showOnArticles: boolean, showForLoginStatus: Types.LoginStatus, showOnPages: Array<(
     { __typename: 'PageModel' }
     & Page2RefFragment
   )> | null, image: (
@@ -2427,9 +755,9 @@ export type FullBannerFragment = { __typename: 'Banner', id: string, title: stri
     & FullBannerActionFragment
   )> | null };
 
-export type FullBannerActionFragment = { __typename: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole };
+export type FullBannerActionFragment = { __typename: 'BannerAction', id: string, label: string, url: string, style: string, role: Types.BannerActionRole };
 
-export type FullBlockStyleFragment = { __typename: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<EditorBlockType> };
+export type FullBlockStyleFragment = { __typename: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<Types.EditorBlockType> };
 
 export type BlockStylesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2441,7 +769,7 @@ export type BlockStylesQuery = { __typename: 'Query', blockStyles: Array<(
 
 export type CreateBlockStyleMutationVariables = Exact<{
   name: string;
-  blocks: Array<EditorBlockType> | EditorBlockType;
+  blocks: Array<Types.EditorBlockType> | Types.EditorBlockType;
 }>;
 
 
@@ -2453,7 +781,7 @@ export type CreateBlockStyleMutation = { __typename: 'Mutation', createBlockStyl
 export type UpdateBlockStyleMutationVariables = Exact<{
   id: string;
   name?: string | null | undefined;
-  blocks: Array<EditorBlockType> | EditorBlockType;
+  blocks: Array<Types.EditorBlockType> | Types.EditorBlockType;
 }>;
 
 
@@ -2514,7 +842,7 @@ type BlockTemplateContent_FacebookVideoBlock_Fragment = (
 );
 
 type BlockTemplateContent_FlexBlock_Fragment = (
-  { __typename: 'FlexBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, blocks: Array<{ __typename: 'BlockWithAlignment', alignment: { __typename: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean | null }, block:
+  { __typename: 'FlexBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, blocks: Array<{ __typename: 'BlockWithAlignment', alignment: { __typename: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean | null }, block:
       | (
         { __typename: 'BildwurfAdBlock' }
         & BlockWithoutTeaser_BildwurfAdBlock_Fragment
@@ -2756,7 +1084,7 @@ type BlockTemplateContent_SubscribeBlock_Fragment = (
 );
 
 type BlockTemplateContent_TeaserGridBlock_Fragment = (
-  { __typename: 'TeaserGridBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, numColumns: number, teasers: Array<
+  { __typename: 'TeaserGridBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, numColumns: number, teasers: Array<
     | (
       { __typename: 'ArticleTeaser' }
       & FullTeaser_ArticleTeaser_Fragment
@@ -2778,7 +1106,7 @@ type BlockTemplateContent_TeaserGridBlock_Fragment = (
 );
 
 type BlockTemplateContent_TeaserGridFlexBlock_Fragment = (
-  { __typename: 'TeaserGridFlexBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, flexTeasers: Array<{ __typename: 'FlexTeaser', alignment: { __typename: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean | null }, teaser:
+  { __typename: 'TeaserGridFlexBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, flexTeasers: Array<{ __typename: 'FlexTeaser', alignment: { __typename: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean | null }, teaser:
       | (
         { __typename: 'ArticleTeaser' }
         & FullTeaser_ArticleTeaser_Fragment
@@ -2800,7 +1128,7 @@ type BlockTemplateContent_TeaserGridFlexBlock_Fragment = (
 );
 
 type BlockTemplateContent_TeaserListBlock_Fragment = (
-  { __typename: 'TeaserListBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, skip: number | null, take: number | null, sort: TeaserListBlockSort | null, teaserType: TeaserType, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> }, teasers: Array<
+  { __typename: 'TeaserListBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, skip: number | null, take: number | null, sort: Types.TeaserListBlockSort | null, teaserType: Types.TeaserType, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> }, teasers: Array<
     | (
       { __typename: 'ArticleTeaser' }
       & FullTeaser_ArticleTeaser_Fragment
@@ -2822,7 +1150,7 @@ type BlockTemplateContent_TeaserListBlock_Fragment = (
 );
 
 type BlockTemplateContent_TeaserSlotsBlock_Fragment = (
-  { __typename: 'TeaserSlotsBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, autofillConfig: { __typename: 'TeaserSlotsAutofillConfig', enabled: boolean, sort: TeaserListBlockSort | null, teaserType: TeaserType | null, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> } | null }, slots: Array<{ __typename: 'TeaserSlot', type: TeaserSlotType, teaser:
+  { __typename: 'TeaserSlotsBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, autofillConfig: { __typename: 'TeaserSlotsAutofillConfig', enabled: boolean, sort: Types.TeaserListBlockSort | null, teaserType: Types.TeaserType | null, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> } | null }, slots: Array<{ __typename: 'TeaserSlot', type: Types.TeaserSlotType, teaser:
       | (
         { __typename: 'ArticleTeaser' }
         & FullTeaser_ArticleTeaser_Fragment
@@ -2926,7 +1254,7 @@ export type BlockTemplateContentFragment =
   | BlockTemplateContent_YouTubeVideoBlock_Fragment
 ;
 
-export type NestedBlockTemplateBlockFragment = { __typename: 'BlockTemplateBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, templateId: string, template: { __typename: 'BlockTemplate', id: string, createdAt: string, modifiedAt: string, name: string } | null };
+export type NestedBlockTemplateBlockFragment = { __typename: 'BlockTemplateBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, templateId: string, template: { __typename: 'BlockTemplate', id: string, createdAt: string, modifiedAt: string, name: string } | null };
 
 export type FullBlockTemplateFragment = { __typename: 'BlockTemplate', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<
     | (
@@ -3064,12 +1392,12 @@ export type FullBlockTemplateFragment = { __typename: 'BlockTemplate', id: strin
   > };
 
 export type BlockTemplateListQueryVariables = Exact<{
-  filter?: BlockTemplateFilter | null | undefined;
+  filter?: Types.BlockTemplateFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: BlockTemplateSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.BlockTemplateSort | null | undefined;
 }>;
 
 
@@ -3090,7 +1418,7 @@ export type BlockTemplateQuery = { __typename: 'Query', blockTemplate: (
 
 export type CreateBlockTemplateMutationVariables = Exact<{
   name: string;
-  blocks: Array<BlockContentInput> | BlockContentInput;
+  blocks: Array<Types.BlockContentInput> | Types.BlockContentInput;
 }>;
 
 
@@ -3102,7 +1430,7 @@ export type CreateBlockTemplateMutation = { __typename: 'Mutation', createBlockT
 export type UpdateBlockTemplateMutationVariables = Exact<{
   id: string;
   name: string;
-  blocks: Array<BlockContentInput> | BlockContentInput;
+  blocks: Array<Types.BlockContentInput> | Types.BlockContentInput;
 }>;
 
 
@@ -3121,81 +1449,81 @@ export type DeleteBlockTemplateMutation = { __typename: 'Mutation', deleteBlockT
     & FullBlockTemplateFragment
   ) };
 
-type BlockWithoutTeaser_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, zoneID: string | null };
+type BlockWithoutTeaser_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, zoneID: string | null };
 
 type BlockWithoutTeaser_BlockTemplateBlock_Fragment = { __typename: 'BlockTemplateBlock' };
 
-type BlockWithoutTeaser_BreakBlock_Fragment = { __typename: 'BreakBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, text: string | null, richText: RichtextJSONDocument | null, hideButton: boolean | null, linkTarget: string | null, linkText: string | null, linkURL: string | null, image: (
+type BlockWithoutTeaser_BreakBlock_Fragment = { __typename: 'BreakBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, text: string | null, richText: RichtextJSONDocument | null, hideButton: boolean | null, linkTarget: string | null, linkText: string | null, linkURL: string | null, image: (
     { __typename: 'Image' }
     & FullImageFragment
   ) | null };
 
-type BlockWithoutTeaser_CommentBlock_Fragment = { __typename: 'CommentBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, filter: { __typename: 'CommentBlockFilter', tags: Array<string> | null, comments: Array<string> | null }, comments: Array<(
+type BlockWithoutTeaser_CommentBlock_Fragment = { __typename: 'CommentBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, filter: { __typename: 'CommentBlockFilter', tags: Array<string> | null, comments: Array<string> | null }, comments: Array<(
     { __typename: 'Comment' }
     & CommentBlockCommentFragment
   )> };
 
-type BlockWithoutTeaser_CrowdfundingBlock_Fragment = { __typename: 'CrowdfundingBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, crowdfunding: { __typename: 'Crowdfunding', id: string, name: string, activeGoal: { __typename: 'CrowdfundingGoalWithProgress', id: string, title: string, description: string | null, amount: number, progress: number | null } | null } | null };
+type BlockWithoutTeaser_CrowdfundingBlock_Fragment = { __typename: 'CrowdfundingBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, crowdfunding: { __typename: 'Crowdfunding', id: string, name: string, activeGoal: { __typename: 'CrowdfundingGoalWithProgress', id: string, title: string, description: string | null, amount: number, progress: number | null } | null } | null };
 
-type BlockWithoutTeaser_EventBlock_Fragment = { __typename: 'EventBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, filter: { __typename: 'EventBlockFilter', tags: Array<string> | null, events: Array<string> | null }, events: Array<(
+type BlockWithoutTeaser_EventBlock_Fragment = { __typename: 'EventBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, filter: { __typename: 'EventBlockFilter', tags: Array<string> | null, events: Array<string> | null }, events: Array<(
     { __typename: 'Event' }
     & FullEventFragment
   )> };
 
-type BlockWithoutTeaser_FacebookPostBlock_Fragment = { __typename: 'FacebookPostBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, userID: string | null, postID: string | null };
+type BlockWithoutTeaser_FacebookPostBlock_Fragment = { __typename: 'FacebookPostBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, userID: string | null, postID: string | null };
 
-type BlockWithoutTeaser_FacebookVideoBlock_Fragment = { __typename: 'FacebookVideoBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, userID: string | null, videoID: string | null };
+type BlockWithoutTeaser_FacebookVideoBlock_Fragment = { __typename: 'FacebookVideoBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, userID: string | null, videoID: string | null };
 
 type BlockWithoutTeaser_FlexBlock_Fragment = { __typename: 'FlexBlock' };
 
-type BlockWithoutTeaser_HtmlBlock_Fragment = { __typename: 'HTMLBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, html: string | null };
+type BlockWithoutTeaser_HtmlBlock_Fragment = { __typename: 'HTMLBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, html: string | null };
 
-type BlockWithoutTeaser_IFrameBlock_Fragment = { __typename: 'IFrameBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, url: string | null, title: string | null, width: number | null, height: number | null, styleCustom: string | null, sandbox: string | null };
+type BlockWithoutTeaser_IFrameBlock_Fragment = { __typename: 'IFrameBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, url: string | null, title: string | null, width: number | null, height: number | null, styleCustom: string | null, sandbox: string | null };
 
-type BlockWithoutTeaser_ImageBlock_Fragment = { __typename: 'ImageBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, caption: string | null, linkUrl: string | null, image: (
+type BlockWithoutTeaser_ImageBlock_Fragment = { __typename: 'ImageBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, caption: string | null, linkUrl: string | null, image: (
     { __typename: 'Image' }
     & FullImageFragment
   ) | null };
 
-type BlockWithoutTeaser_ImageGalleryBlock_Fragment = { __typename: 'ImageGalleryBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, images: Array<{ __typename: 'ImageGalleryImage', caption: string | null, image: (
+type BlockWithoutTeaser_ImageGalleryBlock_Fragment = { __typename: 'ImageGalleryBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, images: Array<{ __typename: 'ImageGalleryImage', caption: string | null, image: (
       { __typename: 'Image' }
       & FullImageFragment
     ) | null }> };
 
-type BlockWithoutTeaser_InstagramPostBlock_Fragment = { __typename: 'InstagramPostBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, postID: string | null };
+type BlockWithoutTeaser_InstagramPostBlock_Fragment = { __typename: 'InstagramPostBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, postID: string | null };
 
-type BlockWithoutTeaser_ListicleBlock_Fragment = { __typename: 'ListicleBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, items: Array<{ __typename: 'ListicleItem', title: string | null, richText: RichtextJSONDocument | null, image: (
+type BlockWithoutTeaser_ListicleBlock_Fragment = { __typename: 'ListicleBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, items: Array<{ __typename: 'ListicleItem', title: string | null, richText: RichtextJSONDocument | null, image: (
       { __typename: 'Image' }
       & FullImageFragment
     ) | null }> };
 
-type BlockWithoutTeaser_MailchimpFormBlock_Fragment = { __typename: 'MailchimpFormBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, syncProviderId: string | null, listId: string | null, interests: Array<string>, autoFocus: boolean, doubleOptIn: boolean | null, buttonColor: string | null, buttonFontColor: string | null, submitButtonLabel: string | null, successUrl: string | null, steps: Array<{ __typename: 'MailchimpFormStep', skipIfFieldsFilled: Array<string>, skipIfInterestsFilled: Array<string>, showIfInterestsFilled: Array<string>, inputs: Array<{ __typename: 'MailchimpFormFieldConfig', inputType: string | null, name: string | null, label: string | null, description: string | null, required: boolean | null, urlParam: string | null, defaultValue: string | null, value: string | null, optionsLayout: MailchimpFormOptionsLayout, options: Array<{ __typename: 'MailchimpFormInterestOption', id: string, name: string, description: string | null, image: (
+type BlockWithoutTeaser_MailchimpFormBlock_Fragment = { __typename: 'MailchimpFormBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, syncProviderId: string | null, listId: string | null, interests: Array<string>, autoFocus: boolean, doubleOptIn: boolean | null, buttonColor: string | null, buttonFontColor: string | null, submitButtonLabel: string | null, successUrl: string | null, steps: Array<{ __typename: 'MailchimpFormStep', skipIfFieldsFilled: Array<string>, skipIfInterestsFilled: Array<string>, showIfInterestsFilled: Array<string>, inputs: Array<{ __typename: 'MailchimpFormFieldConfig', inputType: string | null, name: string | null, label: string | null, description: string | null, required: boolean | null, urlParam: string | null, defaultValue: string | null, value: string | null, optionsLayout: Types.MailchimpFormOptionsLayout, options: Array<{ __typename: 'MailchimpFormInterestOption', id: string, name: string, description: string | null, image: (
           { __typename: 'Image' }
           & FullImageFragment
         ) | null }> }> }>, successPage: { __typename: 'MailchimpFormSuccessPage', description: string | null, options: Array<{ __typename: 'MailchimpFormSuccessOption', label: string, background: string, url: string, mergeFieldName: string | null, mergeFieldValue: string | null }> } | null };
 
-type BlockWithoutTeaser_PolisConversationBlock_Fragment = { __typename: 'PolisConversationBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, conversationID: string | null };
+type BlockWithoutTeaser_PolisConversationBlock_Fragment = { __typename: 'PolisConversationBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, conversationID: string | null };
 
-type BlockWithoutTeaser_PollBlock_Fragment = { __typename: 'PollBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, poll: (
+type BlockWithoutTeaser_PollBlock_Fragment = { __typename: 'PollBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, poll: (
     { __typename: 'FullPoll' }
     & FullPollFragment
   ) | null };
 
-type BlockWithoutTeaser_QuoteBlock_Fragment = { __typename: 'QuoteBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, quote: string | null, author: string | null, image: (
+type BlockWithoutTeaser_QuoteBlock_Fragment = { __typename: 'QuoteBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, quote: string | null, author: string | null, image: (
     { __typename: 'Image' }
     & FullImageFragment
   ) | null };
 
-type BlockWithoutTeaser_RichTextBlock_Fragment = { __typename: 'RichTextBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, richText: RichtextJSONDocument | null };
+type BlockWithoutTeaser_RichTextBlock_Fragment = { __typename: 'RichTextBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, richText: RichtextJSONDocument | null };
 
-type BlockWithoutTeaser_SoundCloudTrackBlock_Fragment = { __typename: 'SoundCloudTrackBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, trackID: string | null };
+type BlockWithoutTeaser_SoundCloudTrackBlock_Fragment = { __typename: 'SoundCloudTrackBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, trackID: string | null };
 
-type BlockWithoutTeaser_StreamableVideoBlock_Fragment = { __typename: 'StreamableVideoBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, videoID: string | null };
+type BlockWithoutTeaser_StreamableVideoBlock_Fragment = { __typename: 'StreamableVideoBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, videoID: string | null };
 
-type BlockWithoutTeaser_SubscribeBlock_Fragment = { __typename: 'SubscribeBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, memberPlanIds: Array<string>, periodicityDisplay: SubscribePeriodicityDisplay | null, fields: Array<SubscribeBlockField>, showGoodies: boolean, showDiscountCodes: boolean, goodieMinValue: number | null, goodieMinValueAppliesToUpgrade: boolean, hideRepeatGoodieOnUpgrade: boolean, type: BlockType, memberPlanRenderSettings: Array<{ __typename: 'SubscribeBlockMemberPlanRenderSetting', isDefault: boolean, memberPlanId: string, layout:
-      | { __typename: 'SubscribeBlockLayoutNoneConfig', showInput: boolean, type: SubscribeBlockRenderLayout }
-      | { __typename: 'SubscribeBlockLayoutPickerConfig', showInput: boolean, values: Array<number>, type: SubscribeBlockRenderLayout, valuesByPeriodicity: Array<{ __typename: 'SubscribeBlockPeriodicityValues', periodicity: PaymentPeriodicity, values: Array<number> }> }
-      | { __typename: 'SubscribeBlockLayoutSliderConfig', showInput: boolean, type: SubscribeBlockRenderLayout }
+type BlockWithoutTeaser_SubscribeBlock_Fragment = { __typename: 'SubscribeBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, memberPlanIds: Array<string>, periodicityDisplay: Types.SubscribePeriodicityDisplay | null, fields: Array<Types.SubscribeBlockField>, showGoodies: boolean, showDiscountCodes: boolean, goodieMinValue: number | null, goodieMinValueAppliesToUpgrade: boolean, hideRepeatGoodieOnUpgrade: boolean, type: Types.BlockType, memberPlanRenderSettings: Array<{ __typename: 'SubscribeBlockMemberPlanRenderSetting', isDefault: boolean, memberPlanId: string, layout:
+      | { __typename: 'SubscribeBlockLayoutNoneConfig', showInput: boolean, type: Types.SubscribeBlockRenderLayout }
+      | { __typename: 'SubscribeBlockLayoutPickerConfig', showInput: boolean, values: Array<number>, type: Types.SubscribeBlockRenderLayout, valuesByPeriodicity: Array<{ __typename: 'SubscribeBlockPeriodicityValues', periodicity: Types.PaymentPeriodicity, values: Array<number> }> }
+      | { __typename: 'SubscribeBlockLayoutSliderConfig', showInput: boolean, type: Types.SubscribeBlockRenderLayout }
      }> };
 
 type BlockWithoutTeaser_TeaserGridBlock_Fragment = { __typename: 'TeaserGridBlock' };
@@ -3206,17 +1534,17 @@ type BlockWithoutTeaser_TeaserListBlock_Fragment = { __typename: 'TeaserListBloc
 
 type BlockWithoutTeaser_TeaserSlotsBlock_Fragment = { __typename: 'TeaserSlotsBlock' };
 
-type BlockWithoutTeaser_TikTokVideoBlock_Fragment = { __typename: 'TikTokVideoBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, userID: string | null, videoID: string | null };
+type BlockWithoutTeaser_TikTokVideoBlock_Fragment = { __typename: 'TikTokVideoBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, userID: string | null, videoID: string | null };
 
-type BlockWithoutTeaser_TitleBlock_Fragment = { __typename: 'TitleBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, preTitle: string | null, title: string | null, lead: string | null };
+type BlockWithoutTeaser_TitleBlock_Fragment = { __typename: 'TitleBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, preTitle: string | null, title: string | null, lead: string | null };
 
-type BlockWithoutTeaser_TwitterTweetBlock_Fragment = { __typename: 'TwitterTweetBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, userID: string | null, tweetID: string | null };
+type BlockWithoutTeaser_TwitterTweetBlock_Fragment = { __typename: 'TwitterTweetBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, userID: string | null, tweetID: string | null };
 
 type BlockWithoutTeaser_UnknownBlock_Fragment = { __typename: 'UnknownBlock' };
 
-type BlockWithoutTeaser_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, videoID: string | null };
+type BlockWithoutTeaser_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, videoID: string | null };
 
-type BlockWithoutTeaser_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, videoID: string | null };
+type BlockWithoutTeaser_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, videoID: string | null };
 
 export type BlockWithoutTeaserFragment =
   | BlockWithoutTeaser_BildwurfAdBlock_Fragment
@@ -3276,7 +1604,7 @@ type FullTeaser_ArticleTeaser_Fragment = { __typename: 'ArticleTeaser', type: st
         | { __typename: 'ListicleBlock' }
         | { __typename: 'MailchimpFormBlock' }
         | { __typename: 'PolisConversationBlock' }
-        | { __typename: 'PollBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, poll: (
+        | { __typename: 'PollBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, poll: (
             { __typename: 'FullPoll' }
             & FullPollFragment
           ) | null }
@@ -3369,7 +1697,7 @@ type FullBlock_FacebookVideoBlock_Fragment = (
 );
 
 type FullBlock_FlexBlock_Fragment = (
-  { __typename: 'FlexBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, blocks: Array<{ __typename: 'BlockWithAlignment', alignment: { __typename: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean | null }, block:
+  { __typename: 'FlexBlock', disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, blocks: Array<{ __typename: 'BlockWithAlignment', alignment: { __typename: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean | null }, block:
       | (
         { __typename: 'BildwurfAdBlock' }
         & BlockWithoutTeaser_BildwurfAdBlock_Fragment
@@ -3611,7 +1939,7 @@ type FullBlock_SubscribeBlock_Fragment = (
 );
 
 type FullBlock_TeaserGridBlock_Fragment = (
-  { __typename: 'TeaserGridBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, numColumns: number, teasers: Array<
+  { __typename: 'TeaserGridBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, numColumns: number, teasers: Array<
     | (
       { __typename: 'ArticleTeaser' }
       & FullTeaser_ArticleTeaser_Fragment
@@ -3633,7 +1961,7 @@ type FullBlock_TeaserGridBlock_Fragment = (
 );
 
 type FullBlock_TeaserGridFlexBlock_Fragment = (
-  { __typename: 'TeaserGridFlexBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, flexTeasers: Array<{ __typename: 'FlexTeaser', alignment: { __typename: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean | null }, teaser:
+  { __typename: 'TeaserGridFlexBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, flexTeasers: Array<{ __typename: 'FlexTeaser', alignment: { __typename: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean | null }, teaser:
       | (
         { __typename: 'ArticleTeaser' }
         & FullTeaser_ArticleTeaser_Fragment
@@ -3655,7 +1983,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
 );
 
 type FullBlock_TeaserListBlock_Fragment = (
-  { __typename: 'TeaserListBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, skip: number | null, take: number | null, sort: TeaserListBlockSort | null, teaserType: TeaserType, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> }, teasers: Array<
+  { __typename: 'TeaserListBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, skip: number | null, take: number | null, sort: Types.TeaserListBlockSort | null, teaserType: Types.TeaserType, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> }, teasers: Array<
     | (
       { __typename: 'ArticleTeaser' }
       & FullTeaser_ArticleTeaser_Fragment
@@ -3677,7 +2005,7 @@ type FullBlock_TeaserListBlock_Fragment = (
 );
 
 type FullBlock_TeaserSlotsBlock_Fragment = (
-  { __typename: 'TeaserSlotsBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, autofillConfig: { __typename: 'TeaserSlotsAutofillConfig', enabled: boolean, sort: TeaserListBlockSort | null, teaserType: TeaserType | null, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> } | null }, slots: Array<{ __typename: 'TeaserSlot', type: TeaserSlotType, teaser:
+  { __typename: 'TeaserSlotsBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, autofillConfig: { __typename: 'TeaserSlotsAutofillConfig', enabled: boolean, sort: Types.TeaserListBlockSort | null, teaserType: Types.TeaserType | null, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> } | null }, slots: Array<{ __typename: 'TeaserSlot', type: Types.TeaserSlotType, teaser:
       | (
         { __typename: 'ArticleTeaser' }
         & FullTeaser_ArticleTeaser_Fragment
@@ -3831,7 +2159,7 @@ type NestedTeaserBlock_TeaserGridBlock_Fragment = { __typename: 'TeaserGridBlock
 
 type NestedTeaserBlock_TeaserGridFlexBlock_Fragment = { __typename: 'TeaserGridFlexBlock' };
 
-type NestedTeaserBlock_TeaserListBlock_Fragment = { __typename: 'TeaserListBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, skip: number | null, take: number | null, sort: TeaserListBlockSort | null, teaserType: TeaserType, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> }, teasers: Array<
+type NestedTeaserBlock_TeaserListBlock_Fragment = { __typename: 'TeaserListBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, skip: number | null, take: number | null, sort: Types.TeaserListBlockSort | null, teaserType: Types.TeaserType, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> }, teasers: Array<
     | (
       { __typename: 'ArticleTeaser' }
       & FullTeaser_ArticleTeaser_Fragment
@@ -3850,7 +2178,7 @@ type NestedTeaserBlock_TeaserListBlock_Fragment = { __typename: 'TeaserListBlock
     )
    | null> };
 
-type NestedTeaserBlock_TeaserSlotsBlock_Fragment = { __typename: 'TeaserSlotsBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: BlockType, autofillConfig: { __typename: 'TeaserSlotsAutofillConfig', enabled: boolean, sort: TeaserListBlockSort | null, teaserType: TeaserType | null, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> } | null }, slots: Array<{ __typename: 'TeaserSlot', type: TeaserSlotType, teaser:
+type NestedTeaserBlock_TeaserSlotsBlock_Fragment = { __typename: 'TeaserSlotsBlock', title: string | null, disabled: boolean | null, blockStyle: string | null, blockStyleName: string | null, type: Types.BlockType, autofillConfig: { __typename: 'TeaserSlotsAutofillConfig', enabled: boolean, sort: Types.TeaserListBlockSort | null, teaserType: Types.TeaserType | null, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null, tagObjects: Array<{ __typename: 'Tag', id: string, tag: string | null }> } | null }, slots: Array<{ __typename: 'TeaserSlot', type: Types.TeaserSlotType, teaser:
       | (
         { __typename: 'ArticleTeaser' }
         & FullTeaser_ArticleTeaser_Fragment
@@ -3939,7 +2267,7 @@ export type ChangelogEntryFragment = { __typename: 'ChangelogEntry', id: string,
 export type ChangelogEntriesQueryVariables = Exact<{
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  filter?: ChangelogEntryFilter | null | undefined;
+  filter?: Types.ChangelogEntryFilter | null | undefined;
   locale?: string | null | undefined;
 }>;
 
@@ -3960,7 +2288,7 @@ export type ConfirmChangelogEntryMutation = { __typename: 'Mutation', confirmCha
     & ChangelogEntryFragment
   ) };
 
-export type FullCommentRatingSystemFragment = { __typename: 'CommentRatingSystem', id: string, name: string | null, answers: Array<{ __typename: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer: string | null, ratingSystemId: string }> };
+export type FullCommentRatingSystemFragment = { __typename: 'CommentRatingSystem', id: string, name: string | null, answers: Array<{ __typename: 'CommentRatingSystemAnswer', id: string, type: Types.RatingSystemType, answer: string | null, ratingSystemId: string }> };
 
 export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3973,20 +2301,20 @@ export type RatingSystemQuery = { __typename: 'Query', ratingSystem: (
 export type UpdateRatingSystemMutationVariables = Exact<{
   id: string;
   name?: string | null | undefined;
-  answers?: Array<UpdateCommentRatingSystemAnswerInput> | UpdateCommentRatingSystemAnswerInput | null | undefined;
+  answers?: Array<Types.UpdateCommentRatingSystemAnswerInput> | Types.UpdateCommentRatingSystemAnswerInput | null | undefined;
 }>;
 
 
-export type UpdateRatingSystemMutation = { __typename: 'Mutation', updateRatingSystem: { __typename: 'CommentRatingSystem', id: string, name: string | null, answers: Array<{ __typename: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer: string | null, ratingSystemId: string }> } };
+export type UpdateRatingSystemMutation = { __typename: 'Mutation', updateRatingSystem: { __typename: 'CommentRatingSystem', id: string, name: string | null, answers: Array<{ __typename: 'CommentRatingSystemAnswer', id: string, type: Types.RatingSystemType, answer: string | null, ratingSystemId: string }> } };
 
 export type CreateRatingSystemAnswerMutationVariables = Exact<{
   ratingSystemId: string;
-  type: RatingSystemType;
+  type: Types.RatingSystemType;
   answer?: string | null | undefined;
 }>;
 
 
-export type CreateRatingSystemAnswerMutation = { __typename: 'Mutation', createRatingSystemAnswer: { __typename: 'CommentRatingSystemAnswer', answer: string | null, id: string, type: RatingSystemType, ratingSystemId: string } };
+export type CreateRatingSystemAnswerMutation = { __typename: 'Mutation', createRatingSystemAnswer: { __typename: 'CommentRatingSystemAnswer', answer: string | null, id: string, type: Types.RatingSystemType, ratingSystemId: string } };
 
 export type DeleteRatingSystemAnswerMutationVariables = Exact<{
   answerId: string;
@@ -3995,7 +2323,7 @@ export type DeleteRatingSystemAnswerMutationVariables = Exact<{
 
 export type DeleteRatingSystemAnswerMutation = { __typename: 'Mutation', deleteRatingSystemAnswer: { __typename: 'CommentRatingSystemAnswer', id: string } };
 
-export type CommentBlockCommentFragment = { __typename: 'Comment', id: string, state: CommentState, guestUsername: string | null, text: RichtextJSONDocument | null, source: string | null, itemID: string, itemType: CommentItemType, featured: boolean | null, guestUserImage: (
+export type CommentBlockCommentFragment = { __typename: 'Comment', id: string, state: Types.CommentState, guestUsername: string | null, text: RichtextJSONDocument | null, source: string | null, itemID: string, itemType: Types.CommentItemType, featured: boolean | null, guestUserImage: (
     { __typename: 'Image' }
     & FullImageFragment
   ) | null, user: (
@@ -4008,23 +2336,23 @@ export type ApproveCommentMutationVariables = Exact<{
 }>;
 
 
-export type ApproveCommentMutation = { __typename: 'Mutation', approveComment: { __typename: 'Comment', state: CommentState } };
+export type ApproveCommentMutation = { __typename: 'Mutation', approveComment: { __typename: 'Comment', state: Types.CommentState } };
 
 export type RejectCommentMutationVariables = Exact<{
   id: string;
-  rejectionReason: CommentRejectionReason;
+  rejectionReason: Types.CommentRejectionReason;
 }>;
 
 
-export type RejectCommentMutation = { __typename: 'Mutation', rejectComment: { __typename: 'Comment', state: CommentState, rejectionReason: CommentRejectionReason | null } };
+export type RejectCommentMutation = { __typename: 'Mutation', rejectComment: { __typename: 'Comment', state: Types.CommentState, rejectionReason: Types.CommentRejectionReason | null } };
 
 export type RequestChangesOnCommentMutationVariables = Exact<{
   id: string;
-  rejectionReason: CommentRejectionReason;
+  rejectionReason: Types.CommentRejectionReason;
 }>;
 
 
-export type RequestChangesOnCommentMutation = { __typename: 'Mutation', requestChangesOnComment: { __typename: 'Comment', state: CommentState, rejectionReason: CommentRejectionReason | null } };
+export type RequestChangesOnCommentMutation = { __typename: 'Mutation', requestChangesOnComment: { __typename: 'Comment', state: Types.CommentState, rejectionReason: Types.CommentRejectionReason | null } };
 
 export type CommentRevisionFragment = { __typename: 'CommentRevision', text: RichtextJSONDocument | null, title: string | null, lead: string | null, createdAt: string };
 
@@ -4033,7 +2361,7 @@ export type CommentUserFragment = { __typename: 'User', id: string, name: string
     & FullImageFragment
   ) | null };
 
-export type FullParentCommentFragment = { __typename: 'Comment', id: string, state: CommentState, rejectionReason: CommentRejectionReason | null, guestUsername: string | null, createdAt: string, modifiedAt: string, user: (
+export type FullParentCommentFragment = { __typename: 'Comment', id: string, state: Types.CommentState, rejectionReason: Types.CommentRejectionReason | null, guestUsername: string | null, createdAt: string, modifiedAt: string, user: (
     { __typename: 'User' }
     & CommentUserFragment
   ) | null, revisions: Array<(
@@ -4041,7 +2369,7 @@ export type FullParentCommentFragment = { __typename: 'Comment', id: string, sta
     & CommentRevisionFragment
   )> };
 
-export type FullCommentFragment = { __typename: 'Comment', id: string, state: CommentState, rejectionReason: CommentRejectionReason | null, guestUsername: string | null, source: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured: boolean | null, guestUserImage: (
+export type FullCommentFragment = { __typename: 'Comment', id: string, state: Types.CommentState, rejectionReason: Types.CommentRejectionReason | null, guestUsername: string | null, source: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: Types.CommentItemType, featured: boolean | null, guestUserImage: (
     { __typename: 'Image' }
     & FullImageFragment
   ) | null, user: (
@@ -4056,12 +2384,12 @@ export type FullCommentFragment = { __typename: 'Comment', id: string, state: Co
   ) | null, tags: Array<{ __typename: 'Tag', id: string, tag: string | null }>, overriddenRatings: Array<{ __typename: 'OverriddenRating', answerId: string, value: number | null }> };
 
 export type CommentListQueryVariables = Exact<{
-  filter?: CommentFilter | null | undefined;
+  filter?: Types.CommentFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: CommentSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.CommentSort | null | undefined;
 }>;
 
 
@@ -4082,14 +2410,14 @@ export type CommentQuery = { __typename: 'Query', comment: (
 
 export type UpdateCommentMutationVariables = Exact<{
   id: string;
-  revision?: CommentRevisionInput | null | undefined;
+  revision?: Types.CommentRevisionInput | null | undefined;
   userID?: string | null | undefined;
   guestUsername?: string | null | undefined;
   guestUserImageID?: string | null | undefined;
   featured?: boolean | null | undefined;
   source?: string | null | undefined;
   tagIds?: Array<string> | string | null | undefined;
-  ratingOverrides?: Array<OverriddenRatingInput> | OverriddenRatingInput | null | undefined;
+  ratingOverrides?: Array<Types.OverriddenRatingInput> | Types.OverriddenRatingInput | null | undefined;
 }>;
 
 
@@ -4100,7 +2428,7 @@ export type UpdateCommentMutation = { __typename: 'Mutation', updateComment: (
 
 export type CreateCommentMutationVariables = Exact<{
   itemID: string;
-  itemType: CommentItemType;
+  itemType: Types.CommentItemType;
   parentID?: string | null | undefined;
   text?: RichtextJSONDocument | null | undefined;
   tagIds?: Array<string> | string | null | undefined;
@@ -4246,7 +2574,7 @@ export type CrowdfundingQuery = { __typename: 'Query', crowdfunding: (
   ) };
 
 export type CreateCrowdfundingMutationVariables = Exact<{
-  input: CreateCrowdfundingInput;
+  input: Types.CreateCrowdfundingInput;
 }>;
 
 
@@ -4256,7 +2584,7 @@ export type CreateCrowdfundingMutation = { __typename: 'Mutation', createCrowdfu
   ) };
 
 export type UpdateCrowdfundingMutationVariables = Exact<{
-  input: UpdateCrowdfundingInput;
+  input: Types.UpdateCrowdfundingInput;
 }>;
 
 
@@ -4272,7 +2600,7 @@ export type DeleteCrowdfundingMutationVariables = Exact<{
 
 export type DeleteCrowdfundingMutation = { __typename: 'Mutation', deleteCrowdfunding: boolean | null };
 
-export type FullCrowdfundingFragment = { __typename: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom: string | null, countSubscriptionsUntil: string | null, additionalRevenue: number | null, revenue: number | null, goalType: CrowdfundingGoalType, subscriptions: number | null, goals: Array<(
+export type FullCrowdfundingFragment = { __typename: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom: string | null, countSubscriptionsUntil: string | null, additionalRevenue: number | null, revenue: number | null, goalType: Types.CrowdfundingGoalType, subscriptions: number | null, goals: Array<(
     { __typename: 'CrowdfundingGoal' }
     & FullCrowdfundingGoalFragment
   )>, activeGoal: (
@@ -4296,12 +2624,12 @@ export type DailySubscriptionStatsQuery = { __typename: 'Query', dailySubscripti
 export type FullDiscountCodeFragment = { __typename: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename: 'MemberPlan', id: string, name: string } };
 
 export type DiscountCodeListQueryVariables = Exact<{
-  filter?: DiscountCodeFilter | null | undefined;
+  filter?: Types.DiscountCodeFilter | null | undefined;
   cursor?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: DiscountCodesort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.DiscountCodesort | null | undefined;
 }>;
 
 
@@ -4363,12 +2691,12 @@ export type DiscountCodeUsagesQueryVariables = Exact<{
   discountCodeId: string;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  sort?: InvoiceSort | null | undefined;
-  order?: SortOrder | null | undefined;
+  sort?: Types.InvoiceSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
 }>;
 
 
-export type DiscountCodeUsagesQuery = { __typename: 'Query', invoices: { __typename: 'InvoiceConnection', totalCount: number, nodes: Array<{ __typename: 'Invoice', id: string, createdAt: string, mail: string, total: number, currency: Currency, paidAt: string | null, canceledAt: string | null, subscriptionID: string | null }> } };
+export type DiscountCodeUsagesQuery = { __typename: 'Query', invoices: { __typename: 'InvoiceConnection', totalCount: number, nodes: Array<{ __typename: 'Invoice', id: string, createdAt: string, mail: string, total: number, currency: Types.Currency, paidAt: string | null, canceledAt: string | null, subscriptionID: string | null }> } };
 
 export type FullDocumentFragment = { __typename: 'Document', id: string, createdAt: string, modifiedAt: string, title: string | null, filename: string | null, extension: string, fileSize: number, mimeType: string, description: string | null, url: string, thumbnailURL: string | null };
 
@@ -4432,7 +2760,7 @@ export type DeleteDocumentMutationVariables = Exact<{
 
 export type DeleteDocumentMutation = { __typename: 'Mutation', deleteDocument: string };
 
-export type FullEventFragment = { __typename: 'Event', id: string, name: string, lead: string | null, description: RichtextJSONDocument | null, status: EventStatus, location: string | null, startsAt: string, endsAt: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName: string | null, externalSourceId: string | null, image: (
+export type FullEventFragment = { __typename: 'Event', id: string, name: string, lead: string | null, description: RichtextJSONDocument | null, status: Types.EventStatus, location: string | null, startsAt: string, endsAt: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName: string | null, externalSourceId: string | null, image: (
     { __typename: 'Image' }
     & FullImageFragment
   ) | null, tags: Array<(
@@ -4441,12 +2769,12 @@ export type FullEventFragment = { __typename: 'Event', id: string, name: string,
   )> | null };
 
 export type EventListQueryVariables = Exact<{
-  filter?: EventFilter | null | undefined;
+  filter?: Types.EventFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: EventSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.EventSort | null | undefined;
 }>;
 
 
@@ -4487,7 +2815,7 @@ export type UpdateEventMutationVariables = Exact<{
   name?: string | null | undefined;
   lead?: string | null | undefined;
   description?: RichtextJSONDocument | null | undefined;
-  status?: EventStatus | null | undefined;
+  status?: Types.EventStatus | null | undefined;
   location?: string | null | undefined;
   startsAt?: string | null | undefined;
   endsAt?: string | null | undefined;
@@ -4513,7 +2841,7 @@ export type DeleteEventMutation = { __typename: 'Mutation', deleteEvent: (
 
 export type ExternalAppApiTokenFragment = { __typename: 'ApiToken', id: string, name: string, prefix: string, scopes: Array<string>, expiresAt: string, revokedAt: string | null, lastUsedAt: string | null };
 
-export type ExternalAppFragment = { __typename: 'ExternalApp', createdAt: string, icon: string | null, id: string, modifiedAt: string, name: string, description: string | null, target: ExternalAppsTarget, url: string, apiTokenId: string | null, apiToken: (
+export type ExternalAppFragment = { __typename: 'ExternalApp', createdAt: string, icon: string | null, id: string, modifiedAt: string, name: string, description: string | null, target: Types.ExternalAppsTarget, url: string, apiTokenId: string | null, apiToken: (
     { __typename: 'ApiToken' }
     & ExternalAppApiTokenFragment
   ) | null };
@@ -4529,7 +2857,7 @@ export type ExternalAppQuery = { __typename: 'Query', externalApp: (
   ) };
 
 export type ExternalAppsQueryVariables = Exact<{
-  filter?: ExternalAppFilter | null | undefined;
+  filter?: Types.ExternalAppFilter | null | undefined;
 }>;
 
 
@@ -4539,7 +2867,7 @@ export type ExternalAppsQuery = { __typename: 'Query', externalApps: Array<(
   )> };
 
 export type CreateExternalAppMutationVariables = Exact<{
-  input: CreateExternalAppInput;
+  input: Types.CreateExternalAppInput;
 }>;
 
 
@@ -4552,7 +2880,7 @@ export type UpdateExternalAppMutationVariables = Exact<{
   icon?: string | null | undefined;
   name?: string | null | undefined;
   description?: string | null | undefined;
-  target?: ExternalAppsTarget | null | undefined;
+  target?: Types.ExternalAppsTarget | null | undefined;
   url?: string | null | undefined;
   apiTokenId?: string | null | undefined;
   updateExternalAppId: string;
@@ -4585,12 +2913,12 @@ export type FullGoodieFragment = { __typename: 'Goodie', id: string, createdAt: 
   ) | null, memberPlans: Array<{ __typename: 'MemberPlan', id: string, name: string }> };
 
 export type GoodieListQueryVariables = Exact<{
-  filter?: GoodieFilter | null | undefined;
+  filter?: Types.GoodieFilter | null | undefined;
   cursor?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: GoodieSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.GoodieSort | null | undefined;
 }>;
 
 
@@ -4727,14 +3055,14 @@ export type DeleteImageMutationVariables = Exact<{
 
 export type DeleteImageMutation = { __typename: 'Mutation', deleteImage: string };
 
-export type ImportableEventRefFragment = { __typename: 'EventFromSource', id: string, name: string, description: RichtextJSONDocument | null, status: EventStatus, location: string | null, externalSourceId: string | null, externalSourceName: string | null, imageUrl: string | null, startsAt: string, endsAt: string | null };
+export type ImportableEventRefFragment = { __typename: 'EventFromSource', id: string, name: string, description: RichtextJSONDocument | null, status: Types.EventStatus, location: string | null, externalSourceId: string | null, externalSourceName: string | null, imageUrl: string | null, startsAt: string, endsAt: string | null };
 
 export type ImportedEventListQueryVariables = Exact<{
-  filter?: ImportedEventFilter | null | undefined;
+  filter?: Types.ImportedEventFilter | null | undefined;
   order?: number | null | undefined;
   skip?: number | null | undefined;
   take?: number | null | undefined;
-  sort?: ImportedEventSort | null | undefined;
+  sort?: Types.ImportedEventSort | null | undefined;
 }>;
 
 
@@ -4744,7 +3072,7 @@ export type ImportedEventListQuery = { __typename: 'Query', importedEvents: { __
     )>, pageInfo: { __typename: 'PageInfo', startCursor: string | null, endCursor: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImportedEventQueryVariables = Exact<{
-  filter: SingleEventFilter;
+  filter: Types.SingleEventFilter;
 }>;
 
 
@@ -4771,15 +3099,15 @@ export type ImportEventMutationVariables = Exact<{
 
 export type ImportEventMutation = { __typename: 'Mutation', importEvent: string };
 
-export type InvoiceFragment = { __typename: 'Invoice', id: string, total: number, dueAt: string, paidAt: string | null, description: string | null, mail: string, manuallySetAsPaidByUserId: string | null, canceledAt: string | null, scheduledDeactivationAt: string, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description: string | null, quantity: number, amount: number, total: number, goodieId: string | null, goodie: { __typename: 'Goodie', id: string, name: string } | null }>, manuallySetAsPaidByUser: { __typename: 'User', id: string, firstName: string | null, name: string } | null, payments: Array<{ __typename: 'Payment', id: string, state: PaymentState, createdAt: string, paymentMethod: { __typename: 'PaymentMethod', id: string, name: string, paymentProviderID: string } }> };
+export type InvoiceFragment = { __typename: 'Invoice', id: string, total: number, dueAt: string, paidAt: string | null, description: string | null, mail: string, manuallySetAsPaidByUserId: string | null, canceledAt: string | null, scheduledDeactivationAt: string, modifiedAt: string, createdAt: string, currency: Types.Currency, items: Array<{ __typename: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description: string | null, quantity: number, amount: number, total: number, goodieId: string | null, goodie: { __typename: 'Goodie', id: string, name: string } | null }>, manuallySetAsPaidByUser: { __typename: 'User', id: string, firstName: string | null, name: string } | null, payments: Array<{ __typename: 'Payment', id: string, state: Types.PaymentState, createdAt: string, paymentMethod: { __typename: 'PaymentMethod', id: string, name: string, paymentProviderID: string } }> };
 
 export type InvoicesQueryVariables = Exact<{
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  filter?: InvoiceFilter | null | undefined;
-  sort?: InvoiceSort | null | undefined;
-  order?: SortOrder | null | undefined;
+  filter?: Types.InvoiceFilter | null | undefined;
+  sort?: Types.InvoiceSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
 }>;
 
 
@@ -4799,7 +3127,7 @@ export type MarkInvoiceAsPaidMutation = { __typename: 'Mutation', markInvoiceAsP
     & InvoiceFragment
   ) };
 
-export type FullMailLogFragment = { __typename: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: MailLogState, type: MailLogType | null, subject: string | null, error: string | null, mailProviderID: string, mailSendJobId: string | null, recipient: { __typename: 'MailLogRecipient', id: string, email: string, name: string, firstName: string | null }, mailTemplate: { __typename: 'MailLogTemplate', id: string, name: string } };
+export type FullMailLogFragment = { __typename: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: Types.MailLogState, type: Types.MailLogType | null, subject: string | null, error: string | null, mailProviderID: string, mailSendJobId: string | null, recipient: { __typename: 'MailLogRecipient', id: string, email: string, name: string, firstName: string | null }, mailTemplate: { __typename: 'MailLogTemplate', id: string, name: string } };
 
 export type SyncMailLogStatesMutationVariables = Exact<{
   limit?: number | null | undefined;
@@ -4809,7 +3137,7 @@ export type SyncMailLogStatesMutationVariables = Exact<{
 export type SyncMailLogStatesMutation = { __typename: 'Mutation', syncMailLogStates: { __typename: 'MailLogSyncModel', checked: number, updated: number } };
 
 export type MailLogsQueryVariables = Exact<{
-  filter?: MailLogFilter | null | undefined;
+  filter?: Types.MailLogFilter | null | undefined;
   skip?: number | null | undefined;
   take?: number | null | undefined;
 }>;
@@ -4820,17 +3148,17 @@ export type MailLogsQuery = { __typename: 'Query', mailLogs: { __typename: 'Pagi
       & FullMailLogFragment
     )>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
 
-export type FullMailSendJobFragment = { __typename: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: MailSendJobState, audience: MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt: string | null, finishedAt: string | null, heartbeatAt: string | null, error: string | null, mailTemplate: { __typename: 'MailLogTemplate', id: string, name: string } | null };
+export type FullMailSendJobFragment = { __typename: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: Types.MailSendJobState, audience: Types.MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt: string | null, finishedAt: string | null, heartbeatAt: string | null, error: string | null, mailTemplate: { __typename: 'MailLogTemplate', id: string, name: string } | null };
 
 export type MailSendRecipientPreviewQueryVariables = Exact<{
-  audience: MailAudienceInput;
+  audience: Types.MailAudienceInput;
 }>;
 
 
 export type MailSendRecipientPreviewQuery = { __typename: 'Query', mailSendRecipientPreview: { __typename: 'MailSendRecipientPreview', count: number, userCount: number, allowsSubscriptionTemplates: boolean } };
 
 export type MailSendRecipientsQueryVariables = Exact<{
-  audience: MailAudienceInput;
+  audience: Types.MailAudienceInput;
   skip?: number | null | undefined;
   take?: number | null | undefined;
 }>;
@@ -4839,7 +3167,7 @@ export type MailSendRecipientsQueryVariables = Exact<{
 export type MailSendRecipientsQuery = { __typename: 'Query', mailSendRecipients: { __typename: 'PaginatedMailSendRecipient', totalCount: number, nodes: Array<{ __typename: 'MailSendRecipientModel', id: string, userId: string, email: string, name: string, firstName: string | null, subscriptionId: string | null, memberPlanName: string | null }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type MailSendPreviewQueryVariables = Exact<{
-  input: MailSendPreviewInput;
+  input: Types.MailSendPreviewInput;
 }>;
 
 
@@ -4876,13 +3204,13 @@ export type MailSendJobsQuery = { __typename: 'Query', mailSendJobs: { __typenam
 
 export type MailSendJobRecipientsQueryVariables = Exact<{
   jobId: string;
-  state?: MailSendJobRecipientState | null | undefined;
+  state?: Types.MailSendJobRecipientState | null | undefined;
   skip?: number | null | undefined;
   take?: number | null | undefined;
 }>;
 
 
-export type MailSendJobRecipientsQuery = { __typename: 'Query', mailSendJobRecipients: { __typename: 'PaginatedMailSendJobRecipient', totalCount: number, nodes: Array<{ __typename: 'MailSendJobRecipientModel', id: string, position: number, state: MailSendJobRecipientState, attempts: number, error: string | null, sentAt: string | null, mailLogId: string | null, memberPlanName: string | null, user: { __typename: 'MailLogRecipient', id: string, email: string, name: string, firstName: string | null } }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type MailSendJobRecipientsQuery = { __typename: 'Query', mailSendJobRecipients: { __typename: 'PaginatedMailSendJobRecipient', totalCount: number, nodes: Array<{ __typename: 'MailSendJobRecipientModel', id: string, position: number, state: Types.MailSendJobRecipientState, attempts: number, error: string | null, sentAt: string | null, mailLogId: string | null, memberPlanName: string | null, user: { __typename: 'MailLogRecipient', id: string, email: string, name: string, firstName: string | null } }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ResumeMailSendJobMutationVariables = Exact<{
   id: string;
@@ -4917,7 +3245,7 @@ export type SendMailTemplateToUserMutation = { __typename: 'Mutation', sendMailT
   ) };
 
 export type CreateMailSendJobMutationVariables = Exact<{
-  input: MailSendJobInput;
+  input: Types.MailSendJobInput;
 }>;
 
 
@@ -4948,7 +3276,7 @@ export type MailTemplateByIdQuery = { __typename: 'Query', mailTemplate: (
   ) | null };
 
 export type CreateMailTemplateMutationVariables = Exact<{
-  input: MailTemplateInput;
+  input: Types.MailTemplateInput;
 }>;
 
 
@@ -4959,7 +3287,7 @@ export type CreateMailTemplateMutation = { __typename: 'Mutation', createMailTem
 
 export type UpdateMailTemplateMutationVariables = Exact<{
   id: string;
-  input: MailTemplateInput;
+  input: Types.MailTemplateInput;
 }>;
 
 
@@ -4988,20 +3316,20 @@ export type MailTemplateSubscriptionsQueryVariables = Exact<{
 export type MailTemplateSubscriptionsQuery = { __typename: 'Query', mailTemplateSubscriptions: Array<{ __typename: 'MailTemplateSubscriptionOption', id: string, label: string }> };
 
 export type MailTemplatePreviewQueryVariables = Exact<{
-  input: MailTemplatePreviewInput;
+  input: Types.MailTemplatePreviewInput;
 }>;
 
 
 export type MailTemplatePreviewQuery = { __typename: 'Query', mailTemplatePreview: { __typename: 'MailTemplatePreviewModel', subject: string, html: string, text: string | null } };
 
 export type SendTestMailTemplateMutationVariables = Exact<{
-  input: SendTestMailTemplateInput;
+  input: Types.SendTestMailTemplateInput;
 }>;
 
 
 export type SendTestMailTemplateMutation = { __typename: 'Mutation', sendTestMailTemplate: boolean | null };
 
-export type TinyMailTemplateFragment = { __typename: 'MailTemplateModel', id: string, name: string, description: string | null, subject: string, context: MailTemplateContext | null, status: string };
+export type TinyMailTemplateFragment = { __typename: 'MailTemplateModel', id: string, name: string, description: string | null, subject: string, context: Types.MailTemplateContext | null, status: string };
 
 export type FullMailTemplateFragment = (
   { __typename: 'MailTemplateModel', htmlContent: string, textContent: string | null }
@@ -5010,12 +3338,12 @@ export type FullMailTemplateFragment = (
 
 export type FullMailProviderFragment = { __typename: 'MailProviderModel', name: string };
 
-export type FullAvailablePaymentMethodFragment = { __typename: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<(
+export type FullAvailablePaymentMethodFragment = { __typename: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<(
     { __typename: 'PaymentMethod' }
     & FullPaymentMethodFragment
   )> };
 
-export type FullMemberPlanFragment = { __typename: 'MemberPlan', id: string, createdAt: string, modifiedAt: string, name: string, description: RichtextJSONDocument | null, shortDescription: RichtextJSONDocument | null, slug: string, active: boolean, productType: ProductType, tags: Array<string> | null, externalReward: string | null, currency: Currency, extendable: boolean, maxCount: number | null, migrateToTargetPaymentMethodID: string | null, defaultPaymentPeriodicity: PaymentPeriodicity | null, successPageId: string | null, failPageId: string | null, confirmationPageId: string | null, periodicityPricing: Array<{ __typename: 'PeriodicityPrice', periodicity: PaymentPeriodicity, label: string | null, amountMin: number | null, amountTarget: number | null, amountMax: number | null }>, image: (
+export type FullMemberPlanFragment = { __typename: 'MemberPlan', id: string, createdAt: string, modifiedAt: string, name: string, description: RichtextJSONDocument | null, shortDescription: RichtextJSONDocument | null, slug: string, active: boolean, productType: Types.ProductType, tags: Array<string> | null, externalReward: string | null, currency: Types.Currency, extendable: boolean, maxCount: number | null, migrateToTargetPaymentMethodID: string | null, defaultPaymentPeriodicity: Types.PaymentPeriodicity | null, successPageId: string | null, failPageId: string | null, confirmationPageId: string | null, periodicityPricing: Array<{ __typename: 'PeriodicityPrice', periodicity: Types.PaymentPeriodicity, label: string | null, amountMin: number | null, amountTarget: number | null, amountMax: number | null }>, image: (
     { __typename: 'Image' }
     & FullImageFragment
   ) | null, availablePaymentMethods: Array<(
@@ -5024,12 +3352,12 @@ export type FullMemberPlanFragment = { __typename: 'MemberPlan', id: string, cre
   )> };
 
 export type MemberPlanListQueryVariables = Exact<{
-  filter?: MemberPlanFilter | null | undefined;
+  filter?: Types.MemberPlanFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: MemberPlanSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.MemberPlanSort | null | undefined;
 }>;
 
 
@@ -5055,17 +3383,17 @@ export type CreateMemberPlanMutationVariables = Exact<{
   shortDescription?: RichtextJSONDocument | null | undefined;
   description?: RichtextJSONDocument | null | undefined;
   imageID?: string | null | undefined;
-  periodicityPricing?: Array<PeriodicityPriceInput> | PeriodicityPriceInput | null | undefined;
-  defaultPaymentPeriodicity?: PaymentPeriodicity | null | undefined;
+  periodicityPricing?: Array<Types.PeriodicityPriceInput> | Types.PeriodicityPriceInput | null | undefined;
+  defaultPaymentPeriodicity?: Types.PaymentPeriodicity | null | undefined;
   confirmationPageId?: string | null | undefined;
   failPageId?: string | null | undefined;
   successPageId?: string | null | undefined;
-  productType: ProductType;
-  currency: Currency;
+  productType: Types.ProductType;
+  currency: Types.Currency;
   extendable: boolean;
   externalReward?: string | null | undefined;
   maxCount?: number | null | undefined;
-  availablePaymentMethods: Array<AvailablePaymentMethodInput> | AvailablePaymentMethodInput;
+  availablePaymentMethods: Array<Types.AvailablePaymentMethodInput> | Types.AvailablePaymentMethodInput;
   migrateToTargetPaymentMethodID?: string | null | undefined;
   tags: Array<string> | string;
 }>;
@@ -5084,17 +3412,17 @@ export type UpdateMemberPlanMutationVariables = Exact<{
   shortDescription?: RichtextJSONDocument | null | undefined;
   description?: RichtextJSONDocument | null | undefined;
   imageID?: string | null | undefined;
-  periodicityPricing?: Array<PeriodicityPriceInput> | PeriodicityPriceInput | null | undefined;
-  defaultPaymentPeriodicity?: PaymentPeriodicity | null | undefined;
+  periodicityPricing?: Array<Types.PeriodicityPriceInput> | Types.PeriodicityPriceInput | null | undefined;
+  defaultPaymentPeriodicity?: Types.PaymentPeriodicity | null | undefined;
   confirmationPageId?: string | null | undefined;
   failPageId?: string | null | undefined;
   successPageId?: string | null | undefined;
-  productType: ProductType;
-  currency: Currency;
+  productType: Types.ProductType;
+  currency: Types.Currency;
   extendable: boolean;
   externalReward?: string | null | undefined;
   maxCount?: number | null | undefined;
-  availablePaymentMethods?: Array<AvailablePaymentMethodInput> | AvailablePaymentMethodInput | null | undefined;
+  availablePaymentMethods?: Array<Types.AvailablePaymentMethodInput> | Types.AvailablePaymentMethodInput | null | undefined;
   migrateToTargetPaymentMethodID?: string | null | undefined;
   tags?: Array<string> | string | null | undefined;
 }>;
@@ -5147,7 +3475,7 @@ export type NavigationQuery = { __typename: 'Query', navigation: (
 export type CreateNavigationMutationVariables = Exact<{
   key: string;
   name: string;
-  links: Array<NavigationLinkInput> | NavigationLinkInput;
+  links: Array<Types.NavigationLinkInput> | Types.NavigationLinkInput;
 }>;
 
 
@@ -5160,7 +3488,7 @@ export type UpdateNavigationMutationVariables = Exact<{
   id: string;
   key: string;
   name: string;
-  links: Array<NavigationLinkInput> | NavigationLinkInput;
+  links: Array<Types.NavigationLinkInput> | Types.NavigationLinkInput;
 }>;
 
 
@@ -5179,7 +3507,7 @@ export type DeleteNavigationMutation = { __typename: 'Mutation', deleteNavigatio
     & FullNavigationFragment
   ) };
 
-export type NewsletterCampaignSummaryFragment = { __typename: 'NewsletterCampaign', id: string, title: string, createdAt: string, modifiedAt: string, blockCount: number, status: NewsletterCampaignStatus, mailchimpCampaignWebId: number | null, mailchimpEditUrl: string | null };
+export type NewsletterCampaignSummaryFragment = { __typename: 'NewsletterCampaign', id: string, title: string, createdAt: string, modifiedAt: string, blockCount: number, status: Types.NewsletterCampaignStatus, mailchimpCampaignWebId: number | null, mailchimpEditUrl: string | null };
 
 export type NewsletterReportFragment = { __typename: 'NewsletterReport', bytes: number, missingFooter: Array<string>, missingArticles: Array<string> };
 
@@ -5231,7 +3559,7 @@ export type NewsletterMergeFieldsQueryVariables = Exact<{ [key: string]: never; 
 export type NewsletterMergeFieldsQuery = { __typename: 'Query', newsletterMergeFields: { __typename: 'NewsletterMergeFields', error: string | null, fields: Array<{ __typename: 'NewsletterMergeTag', tag: string, label: string, description: string, kind: string | null }>, interests: Array<{ __typename: 'NewsletterInterestCategory', title: string, groups: Array<string> }> } };
 
 export type NewsletterArticlesQueryVariables = Exact<{
-  filter?: ArticleFilter | null | undefined;
+  filter?: Types.ArticleFilter | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
 }>;
@@ -5305,7 +3633,7 @@ export type PublishNewsletterCampaignMutation = { __typename: 'Mutation', publis
       & NewsletterReportFragment
     ) } };
 
-export type NotificationReadFragment = { __typename: 'NotificationRead', id: string, createdAt: string, source: NotificationSource, itemId: string };
+export type NotificationReadFragment = { __typename: 'NotificationRead', id: string, createdAt: string, source: Types.NotificationSource, itemId: string };
 
 export type NotificationReadsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5316,7 +3644,7 @@ export type NotificationReadsQuery = { __typename: 'Query', notificationReads: A
   )> };
 
 export type MarkNotificationReadMutationVariables = Exact<{
-  source: NotificationSource;
+  source: Types.NotificationSource;
   itemId: string;
 }>;
 
@@ -5326,7 +3654,7 @@ export type MarkNotificationReadMutation = { __typename: 'Mutation', markNotific
     & NotificationReadFragment
   ) };
 
-export type NotificationConfirmationFragment = { __typename: 'NotificationConfirmation', id: string, createdAt: string, source: NotificationSource, itemId: string, confirmedByUserId: string | null };
+export type NotificationConfirmationFragment = { __typename: 'NotificationConfirmation', id: string, createdAt: string, source: Types.NotificationSource, itemId: string, confirmedByUserId: string | null };
 
 export type NotificationConfirmationsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5337,7 +3665,7 @@ export type NotificationConfirmationsQuery = { __typename: 'Query', notification
   )> };
 
 export type ConfirmNotificationMutationVariables = Exact<{
-  source: NotificationSource;
+  source: Types.NotificationSource;
   itemId: string;
 }>;
 
@@ -5350,7 +3678,7 @@ export type ConfirmNotificationMutation = { __typename: 'Mutation', confirmNotif
 export type OneChannelStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type OneChannelStatusQuery = { __typename: 'Query', oneChannelStatus: { __typename: 'OneChannelStatus', state: OneChannelConnectionState, oneUrl: string | null, lastSuccessAt: string | null, lastAttemptAt: string | null, lastError: string | null, unreachable: boolean } };
+export type OneChannelStatusQuery = { __typename: 'Query', oneChannelStatus: { __typename: 'OneChannelStatus', state: Types.OneChannelConnectionState, oneUrl: string | null, lastSuccessAt: string | null, lastAttemptAt: string | null, lastError: string | null, unreachable: boolean } };
 
 export type FullPageRevisionWithoutBlocksFragment = { __typename: 'PageRevision', id: string, createdAt: string, publishedAt: string | null, archivedAt: string | null, title: string | null, description: string | null, seoTitle: string | null, seoDescription: string | null, socialMediaTitle: string | null, socialMediaDescription: string | null, image: (
     { __typename: 'Image' }
@@ -5515,12 +3843,12 @@ export type FullPageFragment = (
 );
 
 export type PageListQueryVariables = Exact<{
-  filter?: PageFilter | null | undefined;
+  filter?: Types.PageFilter | null | undefined;
   cursor?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: PageSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.PageSort | null | undefined;
 }>;
 
 
@@ -5530,12 +3858,12 @@ export type PageListQuery = { __typename: 'Query', pages: { __typename: 'Paginat
     )>, pageInfo: { __typename: 'PageInfo', startCursor: string | null, endCursor: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CreatePageMutationVariables = Exact<{
-  blocks: Array<BlockContentInput> | BlockContentInput;
+  blocks: Array<Types.BlockContentInput> | Types.BlockContentInput;
   imageID?: string | null | undefined;
   description?: string | null | undefined;
   seoTitle?: string | null | undefined;
   seoDescription?: string | null | undefined;
-  properties: Array<PropertyInput> | PropertyInput;
+  properties: Array<Types.PropertyInput> | Types.PropertyInput;
   slug?: string | null | undefined;
   hidden?: boolean | null | undefined;
   hideHeader?: boolean | null | undefined;
@@ -5555,12 +3883,12 @@ export type CreatePageMutation = { __typename: 'Mutation', createPage: (
 
 export type UpdatePageMutationVariables = Exact<{
   id: string;
-  blocks: Array<BlockContentInput> | BlockContentInput;
+  blocks: Array<Types.BlockContentInput> | Types.BlockContentInput;
   imageID?: string | null | undefined;
   description?: string | null | undefined;
   seoTitle?: string | null | undefined;
   seoDescription?: string | null | undefined;
-  properties: Array<PropertyInput> | PropertyInput;
+  properties: Array<Types.PropertyInput> | Types.PropertyInput;
   slug?: string | null | undefined;
   hidden?: boolean | null | undefined;
   hideHeader?: boolean | null | undefined;
@@ -5613,8 +3941,8 @@ export type PageRevisionListQueryVariables = Exact<{
   take?: number | null | undefined;
   skip?: number | null | undefined;
   cursor?: string | null | undefined;
-  filter?: PageRevisionFilter | null | undefined;
-  order?: SortOrder | null | undefined;
+  filter?: Types.PageRevisionFilter | null | undefined;
+  order?: Types.SortOrder | null | undefined;
 }>;
 
 
@@ -5837,11 +4165,11 @@ export type SlimPeerArticleFragment = { __typename: 'PeerArticle', id: string, c
   ) | null };
 
 export type PeerArticleListQueryVariables = Exact<{
-  filter?: PeerArticleFilter | null | undefined;
+  filter?: Types.PeerArticleFilter | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: ArticleSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.ArticleSort | null | undefined;
 }>;
 
 
@@ -5853,7 +4181,7 @@ export type PeerArticleListQuery = { __typename: 'Query', peerArticles: { __type
 export type ImportPeerArticleMutationVariables = Exact<{
   peerId: string;
   articleId: string;
-  options?: ImportArticleOptions | null | undefined;
+  options?: Types.ImportArticleOptions | null | undefined;
 }>;
 
 
@@ -6035,8 +4363,8 @@ export type UpdatePollMutationVariables = Exact<{
   closedAt?: string | null | undefined;
   question?: string | null | undefined;
   infoText?: RichtextJSONDocument | null | undefined;
-  answers: Array<PollAnswerInput> | PollAnswerInput;
-  externalVoteSources: Array<PollExternalVoteSourceInput> | PollExternalVoteSourceInput;
+  answers: Array<Types.PollAnswerInput> | Types.PollAnswerInput;
+  externalVoteSources: Array<Types.PollExternalVoteSourceInput> | Types.PollExternalVoteSourceInput;
 }>;
 
 
@@ -6092,9 +4420,9 @@ export type PollsQueryVariables = Exact<{
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  filter?: PollFilter | null | undefined;
-  sort?: PollSort | null | undefined;
-  order?: SortOrder | null | undefined;
+  filter?: Types.PollFilter | null | undefined;
+  sort?: Types.PollSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
 }>;
 
 
@@ -6111,12 +4439,12 @@ export type PollQuery = { __typename: 'Query', poll: (
   ) };
 
 export type PollVoteListQueryVariables = Exact<{
-  filter?: PollVoteFilter | null | undefined;
+  filter?: Types.PollVoteFilter | null | undefined;
   cursor?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: PollVoteSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.PollVoteSort | null | undefined;
 }>;
 
 
@@ -6137,7 +4465,7 @@ export type SeoChecklistItemFragment = { __typename: 'SeoChecklistItem', itemId:
 export type SeoChecklistQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SeoChecklistQuery = { __typename: 'Query', seoChecklist: { __typename: 'SeoChecklist', websiteUrl: string, sitemapUrl: string, rssFeedUrl: string, atomFeedUrl: string, jsonFeedUrl: string, checks: Array<{ __typename: 'SeoCheck', id: SeoCheckId, status: SeoCheckStatus, detail: string | null, url: string | null }>, completedItems: Array<(
+export type SeoChecklistQuery = { __typename: 'Query', seoChecklist: { __typename: 'SeoChecklist', websiteUrl: string, sitemapUrl: string, rssFeedUrl: string, atomFeedUrl: string, jsonFeedUrl: string, checks: Array<{ __typename: 'SeoCheck', id: Types.SeoCheckId, status: Types.SeoCheckStatus, detail: string | null, url: string | null }>, completedItems: Array<(
       { __typename: 'SeoChecklistItem' }
       & SeoChecklistItemFragment
     )> } };
@@ -6156,20 +4484,20 @@ export type UpdateSeoChecklistItemMutation = { __typename: 'Mutation', updateSeo
 export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingsListQuery = { __typename: 'Query', settings: Array<{ __typename: 'Setting', id: string, name: SettingName, value: unknown, settingRestriction: { __typename: 'SettingRestriction', maxValue: number | null, minValue: number | null, inputLength: number | null, allowedValues: { __typename: 'AllowedSettingVals', stringChoice: Array<string> | null, boolChoice: boolean | null } | null } | null }> };
+export type SettingsListQuery = { __typename: 'Query', settings: Array<{ __typename: 'Setting', id: string, name: Types.SettingName, value: unknown, settingRestriction: { __typename: 'SettingRestriction', maxValue: number | null, minValue: number | null, inputLength: number | null, allowedValues: { __typename: 'AllowedSettingVals', stringChoice: Array<string> | null, boolChoice: boolean | null } | null } | null }> };
 
 export type UpdateSettingMutationVariables = Exact<{
-  name: SettingName;
+  name: Types.SettingName;
   value?: unknown;
 }>;
 
 
-export type UpdateSettingMutation = { __typename: 'Mutation', updateSetting: { __typename: 'Setting', name: SettingName, value: unknown } };
+export type UpdateSettingMutation = { __typename: 'Mutation', updateSetting: { __typename: 'Setting', name: Types.SettingName, value: unknown } };
 
 export type SettingsIntegrationsAiQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingsIntegrationsAiQuery = { __typename: 'Query', aiSettings: Array<{ __typename: 'SettingAIProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, systemPrompt: string | null, type: AiProviderType }> };
+export type SettingsIntegrationsAiQuery = { __typename: 'Query', aiSettings: Array<{ __typename: 'SettingAIProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, systemPrompt: string | null, type: Types.AiProviderType }> };
 
 export type UpdateSettingsIntegrationsAiMutationVariables = Exact<{
   apiKey?: string | null | undefined;
@@ -6179,74 +4507,74 @@ export type UpdateSettingsIntegrationsAiMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSettingsIntegrationsAiMutation = { __typename: 'Mutation', updateAISetting: { __typename: 'SettingAIProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, systemPrompt: string | null, type: AiProviderType } };
+export type UpdateSettingsIntegrationsAiMutation = { __typename: 'Mutation', updateAISetting: { __typename: 'SettingAIProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, systemPrompt: string | null, type: Types.AiProviderType } };
 
 export type CreateAiSettingMutationVariables = Exact<{
   id: string;
-  type: AiProviderType;
+  type: Types.AiProviderType;
   name?: string | null | undefined;
 }>;
 
 
-export type CreateAiSettingMutation = { __typename: 'Mutation', createAISetting: { __typename: 'SettingAIProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, systemPrompt: string | null, type: AiProviderType } };
+export type CreateAiSettingMutation = { __typename: 'Mutation', createAISetting: { __typename: 'SettingAIProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, systemPrompt: string | null, type: Types.AiProviderType } };
 
 export type SettingsIntegrationsAnalyticsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingsIntegrationsAnalyticsQuery = { __typename: 'Query', analyticsProviderSettings: Array<{ __typename: 'SettingAnalyticsProvider', id: string, createdAt: string, modifiedAt: string, lastLoadedAt: string, type: AnalyticsProviderType, name: string | null, articlePrefix: string | null, property: string | null }> };
+export type SettingsIntegrationsAnalyticsQuery = { __typename: 'Query', analyticsProviderSettings: Array<{ __typename: 'SettingAnalyticsProvider', id: string, createdAt: string, modifiedAt: string, lastLoadedAt: string, type: Types.AnalyticsProviderType, name: string | null, articlePrefix: string | null, property: string | null }> };
 
 export type UpdateAnalyticsProviderSettingMutationVariables = Exact<{
   id: string;
   name?: string | null | undefined;
   property?: string | null | undefined;
   articlePrefix?: string | null | undefined;
-  credentials?: SettingAnalyticsCredentialsInput | null | undefined;
+  credentials?: Types.SettingAnalyticsCredentialsInput | null | undefined;
 }>;
 
 
-export type UpdateAnalyticsProviderSettingMutation = { __typename: 'Mutation', updateAnalyticsProviderSetting: { __typename: 'SettingAnalyticsProvider', id: string, createdAt: string, modifiedAt: string, lastLoadedAt: string, type: AnalyticsProviderType, name: string | null, articlePrefix: string | null, property: string | null } };
+export type UpdateAnalyticsProviderSettingMutation = { __typename: 'Mutation', updateAnalyticsProviderSetting: { __typename: 'SettingAnalyticsProvider', id: string, createdAt: string, modifiedAt: string, lastLoadedAt: string, type: Types.AnalyticsProviderType, name: string | null, articlePrefix: string | null, property: string | null } };
 
 export type CreateAnalyticsProviderSettingMutationVariables = Exact<{
   id: string;
-  type: AnalyticsProviderType;
+  type: Types.AnalyticsProviderType;
   name?: string | null | undefined;
 }>;
 
 
-export type CreateAnalyticsProviderSettingMutation = { __typename: 'Mutation', createAnalyticsProviderSetting: { __typename: 'SettingAnalyticsProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, type: AnalyticsProviderType } };
+export type CreateAnalyticsProviderSettingMutation = { __typename: 'Mutation', createAnalyticsProviderSetting: { __typename: 'SettingAnalyticsProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, type: Types.AnalyticsProviderType } };
 
 export type SettingsIntegrationsChallengeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingsIntegrationsChallengeQuery = { __typename: 'Query', challengeProviderSettings: Array<{ __typename: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, type: ChallengeProviderType }> };
+export type SettingsIntegrationsChallengeQuery = { __typename: 'Query', challengeProviderSettings: Array<{ __typename: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, type: Types.ChallengeProviderType }> };
 
 export type UpdateSettingsIntegrationsChallengeMutationVariables = Exact<{
   id: string;
-  type?: ChallengeProviderType | null | undefined;
+  type?: Types.ChallengeProviderType | null | undefined;
   name?: string | null | undefined;
   secret?: string | null | undefined;
   siteKey?: string | null | undefined;
 }>;
 
 
-export type UpdateSettingsIntegrationsChallengeMutation = { __typename: 'Mutation', updateChallengeProviderSetting: { __typename: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, type: ChallengeProviderType } };
+export type UpdateSettingsIntegrationsChallengeMutation = { __typename: 'Mutation', updateChallengeProviderSetting: { __typename: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, type: Types.ChallengeProviderType } };
 
 export type CreateSettingsIntegrationsChallengeMutationVariables = Exact<{
   id: string;
-  type: ChallengeProviderType;
+  type: Types.ChallengeProviderType;
   name?: string | null | undefined;
 }>;
 
 
-export type CreateSettingsIntegrationsChallengeMutation = { __typename: 'Mutation', createChallengeProviderSetting: { __typename: 'SettingChallengeProvider', id: string, type: ChallengeProviderType, name: string | null } };
+export type CreateSettingsIntegrationsChallengeMutation = { __typename: 'Mutation', createChallengeProviderSetting: { __typename: 'SettingChallengeProvider', id: string, type: Types.ChallengeProviderType, name: string | null } };
 
 export type MailProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MailProviderSettingsQuery = { __typename: 'Query', mailProviderSettings: Array<{ __typename: 'SettingMailProvider', createdAt: string, fromAddress: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL: string | null, mailgun_baseDomain: string | null, mailgun_mailDomain: string | null, modifiedAt: string, name: string | null, replyToAddress: string | null, slack_webhookURL: string | null, smtp_host: string | null, smtp_port: number | null, smtp_secure: boolean | null, smtp_user: string | null, type: MailProviderType }> };
+export type MailProviderSettingsQuery = { __typename: 'Query', mailProviderSettings: Array<{ __typename: 'SettingMailProvider', createdAt: string, fromAddress: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL: string | null, mailgun_baseDomain: string | null, mailgun_mailDomain: string | null, modifiedAt: string, name: string | null, replyToAddress: string | null, slack_webhookURL: string | null, smtp_host: string | null, smtp_port: number | null, smtp_secure: boolean | null, smtp_user: string | null, type: Types.MailProviderType }> };
 
 export type UpdateMailProviderSettingMutationVariables = Exact<{
-  type?: MailProviderType | null | undefined;
+  type?: Types.MailProviderType | null | undefined;
   apiKey?: string | null | undefined;
   fromAddress?: string | null | undefined;
   id: string;
@@ -6264,21 +4592,21 @@ export type UpdateMailProviderSettingMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMailProviderSettingMutation = { __typename: 'Mutation', updateMailProviderSetting: { __typename: 'SettingMailProvider', createdAt: string, fromAddress: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL: string | null, mailgun_baseDomain: string | null, mailgun_mailDomain: string | null, modifiedAt: string, name: string | null, replyToAddress: string | null, slack_webhookURL: string | null, smtp_host: string | null, smtp_port: number | null, smtp_secure: boolean | null, smtp_user: string | null, type: MailProviderType } };
+export type UpdateMailProviderSettingMutation = { __typename: 'Mutation', updateMailProviderSetting: { __typename: 'SettingMailProvider', createdAt: string, fromAddress: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL: string | null, mailgun_baseDomain: string | null, mailgun_mailDomain: string | null, modifiedAt: string, name: string | null, replyToAddress: string | null, slack_webhookURL: string | null, smtp_host: string | null, smtp_port: number | null, smtp_secure: boolean | null, smtp_user: string | null, type: Types.MailProviderType } };
 
 export type CreateMailProviderSettingMutationVariables = Exact<{
   id: string;
-  type: MailProviderType;
+  type: Types.MailProviderType;
   name?: string | null | undefined;
 }>;
 
 
-export type CreateMailProviderSettingMutation = { __typename: 'Mutation', createMailProviderSetting: { __typename: 'SettingMailProvider', id: string, type: MailProviderType, name: string | null } };
+export type CreateMailProviderSettingMutation = { __typename: 'Mutation', createMailProviderSetting: { __typename: 'SettingMailProvider', id: string, type: Types.MailProviderType, name: string | null } };
 
 export type PaymentProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaymentProviderSettingsQuery = { __typename: 'Query', paymentProviderSettings: Array<{ __typename: 'SettingPaymentProvider', deletedAt: string | null, bexio_accountId: number | null, bexio_countryId: number | null, bexio_invoiceMailBodyNewMembership: string | null, bexio_invoiceMailBodyRenewalMembership: string | null, bexio_invoiceMailSubjectNewMembership: string | null, bexio_invoiceMailSubjectRenewalMembership: string | null, bexio_invoiceTemplateNewMembership: string | null, bexio_invoiceTemplateRenewalMembership: string | null, bexio_invoiceTitleNewMembership: string | null, bexio_invoiceTitleRenewalMembership: string | null, bexio_markInvoiceAsOpen: boolean | null, bexio_taxId: number | null, bexio_unitId: number | null, bexio_userId: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl: string | null, mollie_methods: Array<PaymentMethodMollie> | null, name: string | null, offSessionPayments: boolean | null, payrexx_instancename: string | null, payrexx_pm: Array<PayrexxPm> | null, payrexx_psp: Array<PayrexxPsp> | null, payrexx_vatrate: string | null, simulated_declineRenewals: boolean | null, stripe_methods: Array<StripePaymentMethod> | null, type: PaymentProviderType }> };
+export type PaymentProviderSettingsQuery = { __typename: 'Query', paymentProviderSettings: Array<{ __typename: 'SettingPaymentProvider', deletedAt: string | null, bexio_accountId: number | null, bexio_countryId: number | null, bexio_invoiceMailBodyNewMembership: string | null, bexio_invoiceMailBodyRenewalMembership: string | null, bexio_invoiceMailSubjectNewMembership: string | null, bexio_invoiceMailSubjectRenewalMembership: string | null, bexio_invoiceTemplateNewMembership: string | null, bexio_invoiceTemplateRenewalMembership: string | null, bexio_invoiceTitleNewMembership: string | null, bexio_invoiceTitleRenewalMembership: string | null, bexio_markInvoiceAsOpen: boolean | null, bexio_taxId: number | null, bexio_unitId: number | null, bexio_userId: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl: string | null, mollie_methods: Array<Types.PaymentMethodMollie> | null, name: string | null, offSessionPayments: boolean | null, payrexx_instancename: string | null, payrexx_pm: Array<Types.PayrexxPm> | null, payrexx_psp: Array<Types.PayrexxPsp> | null, payrexx_vatrate: string | null, simulated_declineRenewals: boolean | null, stripe_methods: Array<Types.StripePaymentMethod> | null, type: Types.PaymentProviderType }> };
 
 export type UpdatePaymentProviderSettingMutationVariables = Exact<{
   id: string;
@@ -6298,29 +4626,29 @@ export type UpdatePaymentProviderSettingMutationVariables = Exact<{
   bexio_unitId?: number | null | undefined;
   bexio_userId?: number | null | undefined;
   mollie_apiBaseUrl?: string | null | undefined;
-  mollie_methods?: Array<PaymentMethodMollie> | PaymentMethodMollie | null | undefined;
+  mollie_methods?: Array<Types.PaymentMethodMollie> | Types.PaymentMethodMollie | null | undefined;
   name?: string | null | undefined;
   offSessionPayments?: boolean | null | undefined;
   payrexx_instancename?: string | null | undefined;
-  payrexx_pm?: Array<PayrexxPm> | PayrexxPm | null | undefined;
-  payrexx_psp?: Array<PayrexxPsp> | PayrexxPsp | null | undefined;
+  payrexx_pm?: Array<Types.PayrexxPm> | Types.PayrexxPm | null | undefined;
+  payrexx_psp?: Array<Types.PayrexxPsp> | Types.PayrexxPsp | null | undefined;
   payrexx_vatrate?: string | null | undefined;
   simulated_declineRenewals?: boolean | null | undefined;
-  stripe_methods?: Array<StripePaymentMethod> | StripePaymentMethod | null | undefined;
+  stripe_methods?: Array<Types.StripePaymentMethod> | Types.StripePaymentMethod | null | undefined;
   webhookEndpointSecret?: string | null | undefined;
 }>;
 
 
-export type UpdatePaymentProviderSettingMutation = { __typename: 'Mutation', updatePaymentProviderSetting: { __typename: 'SettingPaymentProvider', bexio_accountId: number | null, bexio_countryId: number | null, bexio_invoiceMailBodyNewMembership: string | null, bexio_invoiceMailBodyRenewalMembership: string | null, bexio_invoiceMailSubjectNewMembership: string | null, bexio_invoiceMailSubjectRenewalMembership: string | null, bexio_invoiceTemplateNewMembership: string | null, bexio_invoiceTemplateRenewalMembership: string | null, bexio_invoiceTitleNewMembership: string | null, bexio_invoiceTitleRenewalMembership: string | null, bexio_markInvoiceAsOpen: boolean | null, bexio_taxId: number | null, bexio_unitId: number | null, bexio_userId: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl: string | null, mollie_methods: Array<PaymentMethodMollie> | null, name: string | null, offSessionPayments: boolean | null, payrexx_instancename: string | null, payrexx_pm: Array<PayrexxPm> | null, payrexx_psp: Array<PayrexxPsp> | null, payrexx_vatrate: string | null, simulated_declineRenewals: boolean | null, stripe_methods: Array<StripePaymentMethod> | null, type: PaymentProviderType } };
+export type UpdatePaymentProviderSettingMutation = { __typename: 'Mutation', updatePaymentProviderSetting: { __typename: 'SettingPaymentProvider', bexio_accountId: number | null, bexio_countryId: number | null, bexio_invoiceMailBodyNewMembership: string | null, bexio_invoiceMailBodyRenewalMembership: string | null, bexio_invoiceMailSubjectNewMembership: string | null, bexio_invoiceMailSubjectRenewalMembership: string | null, bexio_invoiceTemplateNewMembership: string | null, bexio_invoiceTemplateRenewalMembership: string | null, bexio_invoiceTitleNewMembership: string | null, bexio_invoiceTitleRenewalMembership: string | null, bexio_markInvoiceAsOpen: boolean | null, bexio_taxId: number | null, bexio_unitId: number | null, bexio_userId: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl: string | null, mollie_methods: Array<Types.PaymentMethodMollie> | null, name: string | null, offSessionPayments: boolean | null, payrexx_instancename: string | null, payrexx_pm: Array<Types.PayrexxPm> | null, payrexx_psp: Array<Types.PayrexxPsp> | null, payrexx_vatrate: string | null, simulated_declineRenewals: boolean | null, stripe_methods: Array<Types.StripePaymentMethod> | null, type: Types.PaymentProviderType } };
 
 export type CreatePaymentProviderSettingMutationVariables = Exact<{
   id: string;
-  type: PaymentProviderType;
+  type: Types.PaymentProviderType;
   name?: string | null | undefined;
 }>;
 
 
-export type CreatePaymentProviderSettingMutation = { __typename: 'Mutation', createPaymentProviderSetting: { __typename: 'SettingPaymentProvider', createdAt: string, deletedAt: string | null, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, type: PaymentProviderType } };
+export type CreatePaymentProviderSettingMutation = { __typename: 'Mutation', createPaymentProviderSetting: { __typename: 'SettingPaymentProvider', createdAt: string, deletedAt: string | null, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, type: Types.PaymentProviderType } };
 
 export type DeletePaymentProviderSettingMutationVariables = Exact<{
   id: string;
@@ -6337,7 +4665,7 @@ export type ReloadProvidersMutation = { __typename: 'Mutation', reloadProviders:
 export type SyncProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SyncProviderSettingsQuery = { __typename: 'Query', syncProviderSettings: Array<{ __typename: 'SettingSyncProvider', id: string, createdAt: string, modifiedAt: string, lastLoadedAt: string, type: SyncProviderType, name: string | null, enabled: boolean | null, mailchimp_listId: string | null, mailchimp_mergeFieldMappings: Array<unknown> | null, mailchimp_interestGroupMappings: Array<unknown> | null, mailchimp_defaultInterestGroupIds: Array<string> | null, mailchimp_extensions: unknown, lastSyncAt: string | null, lastSyncError: string | null }> };
+export type SyncProviderSettingsQuery = { __typename: 'Query', syncProviderSettings: Array<{ __typename: 'SettingSyncProvider', id: string, createdAt: string, modifiedAt: string, lastLoadedAt: string, type: Types.SyncProviderType, name: string | null, enabled: boolean | null, mailchimp_listId: string | null, mailchimp_mergeFieldMappings: Array<unknown> | null, mailchimp_interestGroupMappings: Array<unknown> | null, mailchimp_defaultInterestGroupIds: Array<string> | null, mailchimp_extensions: unknown, lastSyncAt: string | null, lastSyncError: string | null }> };
 
 export type UpdateSyncProviderSettingMutationVariables = Exact<{
   id: string;
@@ -6352,7 +4680,7 @@ export type UpdateSyncProviderSettingMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSyncProviderSettingMutation = { __typename: 'Mutation', updateSyncProviderSetting: { __typename: 'SettingSyncProvider', id: string, createdAt: string, modifiedAt: string, lastLoadedAt: string, type: SyncProviderType, name: string | null, enabled: boolean | null, mailchimp_listId: string | null, mailchimp_mergeFieldMappings: Array<unknown> | null, mailchimp_interestGroupMappings: Array<unknown> | null, mailchimp_defaultInterestGroupIds: Array<string> | null, mailchimp_extensions: unknown, lastSyncAt: string | null, lastSyncError: string | null } };
+export type UpdateSyncProviderSettingMutation = { __typename: 'Mutation', updateSyncProviderSetting: { __typename: 'SettingSyncProvider', id: string, createdAt: string, modifiedAt: string, lastLoadedAt: string, type: Types.SyncProviderType, name: string | null, enabled: boolean | null, mailchimp_listId: string | null, mailchimp_mergeFieldMappings: Array<unknown> | null, mailchimp_interestGroupMappings: Array<unknown> | null, mailchimp_defaultInterestGroupIds: Array<string> | null, mailchimp_extensions: unknown, lastSyncAt: string | null, lastSyncError: string | null } };
 
 export type TriggerMailchimpSyncMutationVariables = Exact<{
   id: string;
@@ -6424,17 +4752,17 @@ export type MailchimpSyncProgressQuery = { __typename: 'Query', mailchimpSyncPro
 
 export type CreateSyncProviderSettingMutationVariables = Exact<{
   id: string;
-  type: SyncProviderType;
+  type: Types.SyncProviderType;
   name?: string | null | undefined;
 }>;
 
 
-export type CreateSyncProviderSettingMutation = { __typename: 'Mutation', createSyncProviderSetting: { __typename: 'SettingSyncProvider', id: string, type: SyncProviderType, name: string | null } };
+export type CreateSyncProviderSettingMutation = { __typename: 'Mutation', createSyncProviderSetting: { __typename: 'SettingSyncProvider', id: string, type: Types.SyncProviderType, name: string | null } };
 
 export type TrackingPixelSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TrackingPixelSettingsQuery = { __typename: 'Query', trackingPixelSettings: Array<{ __typename: 'SettingTrackingPixelProvider', deletedAt: string | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, prolitteris_memberNr: string | null, prolitteris_onlyPaidContentAccess: boolean | null, prolitteris_publisherInternalKeyDomain: string | null, prolitteris_usePublisherInternalKey: boolean | null, prolitteris_username: string | null, type: TrackingPixelProviderType }> };
+export type TrackingPixelSettingsQuery = { __typename: 'Query', trackingPixelSettings: Array<{ __typename: 'SettingTrackingPixelProvider', deletedAt: string | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, prolitteris_memberNr: string | null, prolitteris_onlyPaidContentAccess: boolean | null, prolitteris_publisherInternalKeyDomain: string | null, prolitteris_usePublisherInternalKey: boolean | null, prolitteris_username: string | null, type: Types.TrackingPixelProviderType }> };
 
 export type UpdateTrackingPixelSettingMutationVariables = Exact<{
   id: string;
@@ -6448,16 +4776,16 @@ export type UpdateTrackingPixelSettingMutationVariables = Exact<{
 }>;
 
 
-export type UpdateTrackingPixelSettingMutation = { __typename: 'Mutation', updateTrackingPixelSetting: { __typename: 'SettingTrackingPixelProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, prolitteris_memberNr: string | null, prolitteris_onlyPaidContentAccess: boolean | null, prolitteris_publisherInternalKeyDomain: string | null, prolitteris_usePublisherInternalKey: boolean | null, prolitteris_username: string | null, type: TrackingPixelProviderType } };
+export type UpdateTrackingPixelSettingMutation = { __typename: 'Mutation', updateTrackingPixelSetting: { __typename: 'SettingTrackingPixelProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, prolitteris_memberNr: string | null, prolitteris_onlyPaidContentAccess: boolean | null, prolitteris_publisherInternalKeyDomain: string | null, prolitteris_usePublisherInternalKey: boolean | null, prolitteris_username: string | null, type: Types.TrackingPixelProviderType } };
 
 export type CreateTrackingPixelSettingMutationVariables = Exact<{
   id: string;
-  type: TrackingPixelProviderType;
+  type: Types.TrackingPixelProviderType;
   name?: string | null | undefined;
 }>;
 
 
-export type CreateTrackingPixelSettingMutation = { __typename: 'Mutation', createTrackingPixelSetting: { __typename: 'SettingTrackingPixelProvider', createdAt: string, deletedAt: string | null, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, type: TrackingPixelProviderType } };
+export type CreateTrackingPixelSettingMutation = { __typename: 'Mutation', createTrackingPixelSetting: { __typename: 'SettingTrackingPixelProvider', createdAt: string, deletedAt: string | null, id: string, lastLoadedAt: string, modifiedAt: string, name: string | null, type: Types.TrackingPixelProviderType } };
 
 export type DeleteTrackingPixelSettingMutationVariables = Exact<{
   id: string;
@@ -6466,7 +4794,7 @@ export type DeleteTrackingPixelSettingMutationVariables = Exact<{
 
 export type DeleteTrackingPixelSettingMutation = { __typename: 'Mutation', deleteTrackingPixelSetting: { __typename: 'SettingTrackingPixelProvider', deletedAt: string | null, id: string } };
 
-export type FullWebsiteSettingsFragment = { __typename: 'WebsiteSettings', theme: unknown, analytics: { __typename: 'WebsiteAnalytics', googleAnalytics: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, googleTagManager: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, plausible: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, piwik: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } }, mail: { __typename: 'WebsiteMail', mailchimp: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } | null }, ads: { __typename: 'WebsiteAds', sparkLoop: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } }, fonts: Array<{ __typename: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> };
+export type FullWebsiteSettingsFragment = { __typename: 'WebsiteSettings', theme: unknown, analytics: { __typename: 'WebsiteAnalytics', googleAnalytics: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, googleTagManager: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, plausible: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, piwik: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } }, mail: { __typename: 'WebsiteMail', mailchimp: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } | null }, ads: { __typename: 'WebsiteAds', sparkLoop: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } }, fonts: Array<{ __typename: 'WebsiteRemoteFont', weight: Array<Types.FontWeight>, style: Array<Types.FontStyle>, name: string }> };
 
 export type WebsiteSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6477,11 +4805,11 @@ export type WebsiteSettingsQuery = { __typename: 'Query', websiteSettings: (
   ) };
 
 export type UpdateWebsiteSettingsMutationVariables = Exact<{
-  analytics?: WebsiteAnalyticsInput | null | undefined;
-  mail?: WebsiteMailInput | null | undefined;
-  ads?: WebsiteAdsInput | null | undefined;
+  analytics?: Types.WebsiteAnalyticsInput | null | undefined;
+  mail?: Types.WebsiteMailInput | null | undefined;
+  ads?: Types.WebsiteAdsInput | null | undefined;
   theme?: unknown;
-  fonts?: Array<WebsiteRemoteFontInput> | WebsiteRemoteFontInput | null | undefined;
+  fonts?: Array<Types.WebsiteRemoteFontInput> | Types.WebsiteRemoteFontInput | null | undefined;
 }>;
 
 
@@ -6504,7 +4832,7 @@ export type SubscriptionFlowsQuery = { __typename: 'Query', subscriptionFlows: A
 export type CreateSubscriptionFlowMutationVariables = Exact<{
   memberPlanId: string;
   paymentMethodIds: Array<string> | string;
-  periodicities: Array<PaymentPeriodicity> | PaymentPeriodicity;
+  periodicities: Array<Types.PaymentPeriodicity> | Types.PaymentPeriodicity;
   autoRenewal: Array<boolean> | boolean;
 }>;
 
@@ -6518,7 +4846,7 @@ export type UpdateSubscriptionFlowMutationVariables = Exact<{
   id: string;
   memberPlanId?: string | null | undefined;
   paymentMethodIds: Array<string> | string;
-  periodicities: Array<PaymentPeriodicity> | PaymentPeriodicity;
+  periodicities: Array<Types.PaymentPeriodicity> | Types.PaymentPeriodicity;
   autoRenewal: Array<boolean> | boolean;
 }>;
 
@@ -6544,7 +4872,7 @@ export type CreateSubscriptionIntervalMutationVariables = Exact<{
   memberPlanId?: string | null | undefined;
   daysAwayFromEnding?: number | null | undefined;
   mailTemplateId?: string | null | undefined;
-  event: SubscriptionEvent;
+  event: Types.SubscriptionEvent;
 }>;
 
 
@@ -6585,7 +4913,7 @@ export type ListPaymentMethodsQuery = { __typename: 'Query', paymentMethods: Arr
     & FullPaymentMethodFragment
   )> };
 
-export type SubscriptionFlowFragment = { __typename: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan: (
+export type SubscriptionFlowFragment = { __typename: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<Types.PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan: (
     { __typename: 'MemberPlan' }
     & MemberPlanRefFragment
   ) | null, paymentMethods: Array<(
@@ -6596,19 +4924,19 @@ export type SubscriptionFlowFragment = { __typename: 'SubscriptionFlowModel', id
     & SubscriptionIntervalFragment
   )> };
 
-export type SubscriptionIntervalFragment = { __typename: 'SubscriptionInterval', id: string, daysAwayFromEnding: number | null, event: SubscriptionEvent, mailTemplate: (
+export type SubscriptionIntervalFragment = { __typename: 'SubscriptionInterval', id: string, daysAwayFromEnding: number | null, event: Types.SubscriptionEvent, mailTemplate: (
     { __typename: 'MailTemplateRef' }
     & MailTemplateRefFragment
   ) | null };
 
 export type MailTemplateRefFragment = { __typename: 'MailTemplateRef', id: string, name: string };
 
-export type MemberPlanRefFragment = { __typename: 'MemberPlan', id: string, name: string, productType: ProductType, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<(
+export type MemberPlanRefFragment = { __typename: 'MemberPlan', id: string, name: string, productType: Types.ProductType, currency: Types.Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<(
     { __typename: 'AvailablePaymentMethod' }
     & FullAvailablePaymentMethodFragment
   )> };
 
-export type FullSubscriptionFragment = { __typename: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil: string | null, extendable: boolean, canRevertUpgrade: boolean, currency: Currency, user: { __typename: 'User', id: string, name: string, firstName: string | null }, memberPlan: (
+export type FullSubscriptionFragment = { __typename: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil: string | null, extendable: boolean, canRevertUpgrade: boolean, currency: Types.Currency, user: { __typename: 'User', id: string, name: string, firstName: string | null }, memberPlan: (
     { __typename: 'MemberPlan' }
     & FullMemberPlanFragment
   ), properties: Array<{ __typename: 'Property', key: string, value: string, public: boolean }>, paymentMethod: (
@@ -6617,22 +4945,22 @@ export type FullSubscriptionFragment = { __typename: 'PublicSubscription', id: s
   ), deactivation: (
     { __typename: 'SubscriptionDeactivation' }
     & DeactivationFragment
-  ) | null, goodie: { __typename: 'Goodie', id: string, name: string } | null, pendingPaymentMethodChange: { __typename: 'SubscriptionPaymentMethodChange', id: string, kind: PaymentMethodChangeKind, state: PaymentMethodChangeState, createdAt: string, expiresAt: string, paymentMethod: { __typename: 'PaymentMethod', id: string, name: string } } | null };
+  ) | null, goodie: { __typename: 'Goodie', id: string, name: string } | null, pendingPaymentMethodChange: { __typename: 'SubscriptionPaymentMethodChange', id: string, kind: Types.PaymentMethodChangeKind, state: Types.PaymentMethodChangeState, createdAt: string, expiresAt: string, paymentMethod: { __typename: 'PaymentMethod', id: string, name: string } } | null };
 
-export type DeactivationFragment = { __typename: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason };
+export type DeactivationFragment = { __typename: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason };
 
-export type TinySubscriptionFragment = { __typename: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, monthlyAmount: number, paymentPeriodicity: PaymentPeriodicity, currency: Currency, paidUntil: string | null, user: { __typename: 'User', id: string, name: string, firstName: string | null }, memberPlan: { __typename: 'MemberPlan', id: string, name: string }, deactivation: (
+export type TinySubscriptionFragment = { __typename: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, monthlyAmount: number, paymentPeriodicity: Types.PaymentPeriodicity, currency: Types.Currency, paidUntil: string | null, user: { __typename: 'User', id: string, name: string, firstName: string | null }, memberPlan: { __typename: 'MemberPlan', id: string, name: string }, deactivation: (
     { __typename: 'SubscriptionDeactivation' }
     & DeactivationFragment
   ) | null };
 
 export type SubscriptionListQueryVariables = Exact<{
-  filter?: SubscriptionFilter | null | undefined;
+  filter?: Types.SubscriptionFilter | null | undefined;
   cursor?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: SubscriptionSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.SubscriptionSort | null | undefined;
 }>;
 
 
@@ -6656,21 +4984,21 @@ export type SubscriptionsAsCsvQueryVariables = Exact<{
   autoRenew?: boolean | null | undefined;
   userHasAddress?: boolean | null | undefined;
   extendable?: boolean | null | undefined;
-  cancellationDateTo?: DateFilter | null | undefined;
-  cancellationDateFrom?: DateFilter | null | undefined;
-  deactivationDateTo?: DateFilter | null | undefined;
-  deactivationDateFrom?: DateFilter | null | undefined;
-  paidUntilTo?: DateFilter | null | undefined;
-  paidUntilFrom?: DateFilter | null | undefined;
-  startsAtTo?: DateFilter | null | undefined;
-  startsAtFrom?: DateFilter | null | undefined;
+  cancellationDateTo?: Types.DateFilter | null | undefined;
+  cancellationDateFrom?: Types.DateFilter | null | undefined;
+  deactivationDateTo?: Types.DateFilter | null | undefined;
+  deactivationDateFrom?: Types.DateFilter | null | undefined;
+  paidUntilTo?: Types.DateFilter | null | undefined;
+  paidUntilFrom?: Types.DateFilter | null | undefined;
+  startsAtTo?: Types.DateFilter | null | undefined;
+  startsAtFrom?: Types.DateFilter | null | undefined;
   deactivationReason?: string | null | undefined;
   memberPlanID?: string | null | undefined;
   paymentMethodID?: string | null | undefined;
   subscriptionIDs?: Array<string> | string | null | undefined;
   userID?: string | null | undefined;
   userIDs?: Array<string> | string | null | undefined;
-  paymentPeriodicity?: PaymentPeriodicity | null | undefined;
+  paymentPeriodicity?: Types.PaymentPeriodicity | null | undefined;
 }>;
 
 
@@ -6682,8 +5010,8 @@ export type CreateSubscriptionMutationVariables = Exact<{
   monthlyAmount: number;
   paidUntil?: string | null | undefined;
   startsAt: string;
-  paymentPeriodicity: PaymentPeriodicity;
-  properties: Array<PropertyInput> | PropertyInput;
+  paymentPeriodicity: Types.PaymentPeriodicity;
+  properties: Array<Types.PropertyInput> | Types.PropertyInput;
   userID: string;
   paymentMethodID: string;
   memberPlanID: string;
@@ -6703,8 +5031,8 @@ export type UpdateSubscriptionMutationVariables = Exact<{
   monthlyAmount?: number | null | undefined;
   paidUntil?: string | null | undefined;
   startsAt?: string | null | undefined;
-  paymentPeriodicity?: PaymentPeriodicity | null | undefined;
-  properties?: Array<PropertyInput> | PropertyInput | null | undefined;
+  paymentPeriodicity?: Types.PaymentPeriodicity | null | undefined;
+  properties?: Array<Types.PropertyInput> | Types.PropertyInput | null | undefined;
   userID?: string | null | undefined;
   paymentMethodID?: string | null | undefined;
   memberPlanID?: string | null | undefined;
@@ -6718,7 +5046,7 @@ export type UpdateSubscriptionMutation = { __typename: 'Mutation', updateSubscri
 
 export type CancelSubscriptionMutationVariables = Exact<{
   cancelSubscriptionId: string;
-  reason: SubscriptionDeactivationReason;
+  reason: Types.SubscriptionDeactivationReason;
   skipMail?: boolean | null | undefined;
 }>;
 
@@ -6792,7 +5120,7 @@ export type SystemMailsQuery = { __typename: 'Query', systemMails: Array<(
   )> };
 
 export type UpdateSystemMailMutationVariables = Exact<{
-  event: UserEvent;
+  event: Types.UserEvent;
   mailTemplateId?: string | null | undefined;
 }>;
 
@@ -6803,18 +5131,18 @@ export type UpdateSystemMailMutation = { __typename: 'Mutation', updateSystemMai
   )> };
 
 export type TestSystemMailMutationVariables = Exact<{
-  event: UserEvent;
+  event: Types.UserEvent;
 }>;
 
 
 export type TestSystemMailMutation = { __typename: 'Mutation', testSystemMail: boolean };
 
-export type SystemMailFragment = { __typename: 'SystemMailModel', event: UserEvent, mailTemplate: (
+export type SystemMailFragment = { __typename: 'SystemMailModel', event: Types.UserEvent, mailTemplate: (
     { __typename: 'MailTemplateRef' }
     & MailTemplateRefFragment
   ) | null };
 
-export type FullTagFragment = { __typename: 'Tag', id: string, tag: string | null, description: RichtextJSONDocument | null, type: TagType, main: boolean, url: string, color: string | null };
+export type FullTagFragment = { __typename: 'Tag', id: string, tag: string | null, description: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color: string | null };
 
 export type TagQueryVariables = Exact<{
   id: string;
@@ -6827,12 +5155,12 @@ export type TagQuery = { __typename: 'Query', tag: (
   ) };
 
 export type TagListQueryVariables = Exact<{
-  filter?: TagFilter | null | undefined;
+  filter?: Types.TagFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: TagSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.TagSort | null | undefined;
 }>;
 
 
@@ -6844,7 +5172,7 @@ export type TagListQuery = { __typename: 'Query', tags: { __typename: 'Paginated
 export type CreateTagMutationVariables = Exact<{
   tag?: string | null | undefined;
   description?: RichtextJSONDocument | null | undefined;
-  type: TagType;
+  type: Types.TagType;
   color?: string | null | undefined;
 }>;
 
@@ -6920,7 +5248,7 @@ export type FullTrackingPixelFragment = { __typename: 'TrackingPixel', id: strin
     & FullTrackingPixelMethodFragment
   ) };
 
-export type FullTrackingPixelMethodFragment = { __typename: 'TrackingPixelMethod', trackingPixelProviderID: string, trackingPixelProviderType: TrackingPixelProviderType };
+export type FullTrackingPixelMethodFragment = { __typename: 'TrackingPixelMethod', trackingPixelProviderID: string, trackingPixelProviderType: Types.TrackingPixelProviderType };
 
 export type FullUserFragment = { __typename: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName: string | null, flair: string | null, birthday: string | null, active: boolean, lastLogin: string | null, email: string, emailVerifiedAt: string | null, note: string | null, totpEnabled: boolean, totpExempt: boolean, address: { __typename: 'UserAddress', company: string | null, streetAddress: string | null, streetAddressNumber: string | null, streetAddress2: string | null, streetAddress2Number: string | null, zipCode: string | null, city: string | null, country: string | null } | null, image: (
     { __typename: 'Image' }
@@ -6933,15 +5261,15 @@ export type FullUserFragment = { __typename: 'SensitiveDataUser', id: string, cr
 export type TinyUserFragment = { __typename: 'SensitiveDataUser', id: string, createdAt: string, modifiedAt: string, name: string, firstName: string | null, active: boolean, lastLogin: string | null, email: string, totpEnabled: boolean, subscriptionCount: number, roles: Array<(
     { __typename: 'UserRole' }
     & FullUserRoleFragment
-  )>, subscriptionOverview: Array<{ __typename: 'UserSubscriptionOverview', id: string, memberPlanName: string, status: UserSubscriptionStatus }> };
+  )>, subscriptionOverview: Array<{ __typename: 'UserSubscriptionOverview', id: string, memberPlanName: string, status: Types.UserSubscriptionStatus }> };
 
 export type TinyUserListQueryVariables = Exact<{
-  filter?: UserFilter | null | undefined;
+  filter?: Types.UserFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: UserSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.UserSort | null | undefined;
 }>;
 
 
@@ -6951,12 +5279,12 @@ export type TinyUserListQuery = { __typename: 'Query', users: { __typename: 'Pag
     )>, pageInfo: { __typename: 'PageInfo', startCursor: string | null, endCursor: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type UserListQueryVariables = Exact<{
-  filter?: UserFilter | null | undefined;
+  filter?: Types.UserFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: UserSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.UserSort | null | undefined;
 }>;
 
 
@@ -6988,14 +5316,14 @@ export type CreateUserMutationVariables = Exact<{
   flair?: string | null | undefined;
   firstName?: string | null | undefined;
   birthday?: string | null | undefined;
-  address?: UserAddressInput | null | undefined;
+  address?: Types.UserAddressInput | null | undefined;
   email: string;
   emailVerifiedAt?: string | null | undefined;
   userImageID?: string | null | undefined;
   password?: string | null | undefined;
   active: boolean;
   note?: string | null | undefined;
-  properties: Array<PropertyInput> | PropertyInput;
+  properties: Array<Types.PropertyInput> | Types.PropertyInput;
   roleIDs: Array<string> | string;
   skipMail?: boolean | null | undefined;
 }>;
@@ -7012,14 +5340,14 @@ export type UpdateUserMutationVariables = Exact<{
   name?: string | null | undefined;
   firstName?: string | null | undefined;
   birthday?: string | null | undefined;
-  address?: UserAddressInput | null | undefined;
+  address?: Types.UserAddressInput | null | undefined;
   email?: string | null | undefined;
   emailVerifiedAt?: string | null | undefined;
   userImageID?: string | null | undefined;
   active?: boolean | null | undefined;
   note?: string | null | undefined;
   roleIDs?: Array<string> | string | null | undefined;
-  properties?: Array<PropertyInput> | PropertyInput | null | undefined;
+  properties?: Array<Types.PropertyInput> | Types.PropertyInput | null | undefined;
   totpExempt?: boolean | null | undefined;
 }>;
 
@@ -7060,8 +5388,8 @@ export type UserRoleListQueryVariables = Exact<{
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: UserRoleSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.UserRoleSort | null | undefined;
 }>;
 
 

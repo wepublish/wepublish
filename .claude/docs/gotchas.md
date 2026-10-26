@@ -13,7 +13,7 @@ gets refactored away by the next agent.
 ### ⚠️ Prisma helpers are deliberately absent from the `@wepublish/testing` barrel
 
 [libs/testing/src/index.ts](../../libs/testing/src/index.ts) exports `act-wait`,
-`mock-date`, `create-mock` and `graphql-public` — but **not** the Prisma
+`mock-date` and `create-mock` — but **not** the Prisma
 utilities, with the reason stated inline:
 
 > Prisma utilities (`createPrismaClient`, `clearDatabase`, `clearFullDatabase`)
