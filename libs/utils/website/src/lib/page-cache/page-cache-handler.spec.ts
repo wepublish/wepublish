@@ -38,7 +38,8 @@ const incrementalCache = (
     serverDistDir,
     requestHeaders,
     maxMemoryCacheSize: 0,
-    getPrerenderManifest: () => manifest as never,
+    prerenderManifest: manifest as never,
+    previewProps: manifest.preview,
     fetchCacheKeyPrefix: '',
     CurCacheHandler: PageCacheHandler as never,
     allowedRevalidateHeaderKeys: [],
@@ -52,7 +53,13 @@ const page = (html: string) => ({
   status: 200,
 });
 
-const PAGES = { kind: 'PAGES', isFallback: false, isRoutePPREnabled: false };
+const route = { kind: 'PAGES', sourceRoute: '/a/[slug]' };
+const PAGES = {
+  kind: 'PAGES',
+  isFallback: false,
+  isRoutePPREnabled: false,
+  route,
+};
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe('PageCacheHandler', () => {
@@ -75,6 +82,7 @@ describe('PageCacheHandler', () => {
         cacheControl: { revalidate: 2, expire: undefined },
         isRoutePPREnabled: false,
         isFallback: false,
+        route,
       } as never
     );
     new SharedCacheControls(manifest as never).clear();
@@ -99,6 +107,7 @@ describe('PageCacheHandler', () => {
         cacheControl: { revalidate: 1, expire: undefined },
         isRoutePPREnabled: false,
         isFallback: false,
+        route,
       } as never
     );
     await sleep(1100);
@@ -122,6 +131,7 @@ describe('PageCacheHandler', () => {
         cacheControl: { revalidate: 1, expire: undefined },
         isRoutePPREnabled: false,
         isFallback: false,
+        route,
       } as never
     );
     await sleep(1100);
@@ -194,6 +204,7 @@ describe('PageCacheHandler', () => {
       cacheControl: { revalidate: 1, expire: undefined },
       isRoutePPREnabled: false,
       isFallback: false,
+      route,
     } as never);
 
     await expect(

@@ -96,8 +96,23 @@ function InvoiceListPanel({
   );
   const client = useApolloClient();
   const { askMail, actionMailDialog } = useActionMailQuestion();
-  const columns = useMemo<ListColumn<InvoiceFragment>[]>(
-    () => [
+  const columns = useMemo<ListColumn<InvoiceFragment>[]>(() => {
+    const invoiceStatus = (
+      invoice: InvoiceFragment
+    ): { status: InvoiceStatus; title: string } =>
+      invoice.paidAt ?
+        {
+          status: 'paid',
+          title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
+        }
+      : invoice.canceledAt ?
+        {
+          status: 'canceled',
+          title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
+        }
+      : { status: 'unpaid', title: t('invoice.unpaid') };
+
+    return [
       {
         id: 'id',
         label: t('invoice.invoiceNo'),
@@ -122,6 +137,7 @@ function InvoiceListPanel({
             </IdButton>
           </SingleLineTooltip>
         ),
+        exportValue: invoice => invoice.id,
       },
       {
         id: 'date',
@@ -132,6 +148,7 @@ function InvoiceListPanel({
         dataKey: 'dueAt',
         sortKey: 'dueAt',
         render: invoice => formatDate(billingDate(invoice)),
+        exportValue: invoice => new Date(billingDate(invoice)),
       },
       {
         id: 'description',
@@ -167,18 +184,7 @@ function InvoiceListPanel({
         resizable: false,
         alwaysVisible: true,
         render: invoice => {
-          const status: { status: InvoiceStatus; title: string } =
-            invoice.paidAt ?
-              {
-                status: 'paid',
-                title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
-              }
-            : invoice.canceledAt ?
-              {
-                status: 'canceled',
-                title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
-              }
-            : { status: 'unpaid', title: t('invoice.unpaid') };
+          const status = invoiceStatus(invoice);
 
           return (
             <InvoiceStatusIcon
@@ -187,6 +193,7 @@ function InvoiceListPanel({
             />
           );
         },
+        exportValue: invoice => invoiceStatus(invoice).title,
       },
       {
         id: 'action',
@@ -206,9 +213,8 @@ function InvoiceListPanel({
             </Button>
           : null,
       },
-    ],
-    [disabled, t]
-  );
+    ];
+  }, [disabled, t]);
 
   const [markInvoiceAsPaid] = useMutation(MarkInvoiceAsPaidDocument);
 
@@ -300,6 +306,7 @@ function InvoiceListPanel({
           onSort={(_column, order) => setSortType(order)}
           getRowId={row => row.id}
           storageKey="invoices"
+          exportRows={() => sortedInvoices}
           columns={columns}
         />
       </CardContent>

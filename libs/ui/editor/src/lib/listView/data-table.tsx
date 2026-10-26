@@ -36,6 +36,14 @@ import { MdClose, MdFilterList } from 'react-icons/md';
 
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { ColumnConfigurator, ToolbarCount } from './column-configurator';
+import {
+  downloadTable,
+  getExportColumns,
+  TableExportFormat,
+  TableExportScope,
+  TableExportValue,
+} from './table-export';
+import { TableExportMenu } from './table-export-menu';
 import { useColumnConfig } from './use-column-config';
 
 export type SortOrder = 'asc' | 'desc';
@@ -158,6 +166,14 @@ const Filters = styled.div`
   padding: ${({ theme }) => theme.spacing(1, 0, 2)};
 `;
 
+const TableState = styled.div`
+  position: sticky;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  padding: ${({ theme }) => theme.spacing(4, 0)};
+`;
+
 const ResizeGrip = styled.span`
   width: 1px;
   height: 60%;
@@ -176,6 +192,7 @@ export type DataTableColumn<Row> = {
   resizable?: boolean;
   alwaysVisible?: boolean;
   columnLabel?: string;
+  exportValue?: ((row: Row) => TableExportValue) | false;
 };
 
 export type DataTableProps<Row> = {
@@ -197,6 +214,9 @@ export type DataTableProps<Row> = {
   rowClassName?: (row: Row) => string | undefined;
   virtualize?: boolean;
   maxHeight?: number | string;
+  exportRows?: () => Row[] | Promise<Row[]>;
+  exportTotalCount?: number;
+  exportFilename?: string;
 };
 
 export function DataTable<Row>({
@@ -218,6 +238,9 @@ export function DataTable<Row>({
   rowClassName,
   virtualize,
   maxHeight,
+  exportRows,
+  exportTotalCount,
+  exportFilename,
 }: DataTableProps<Row>) {
   const { t } = useTranslation();
 
@@ -267,7 +290,6 @@ export function DataTable<Row>({
   });
 
   const allColumns = table.getAllLeafColumns();
-  const columnCount = allColumns.length;
   const hiddenSet = useMemo(() => new Set(hidden ?? []), [hidden]);
   const hiddenRules = useMemo(
     () =>
@@ -369,6 +391,28 @@ export function DataTable<Row>({
 
   const rows = table.getRowModel().rows;
 
+  const exportTable = async (
+    format: TableExportFormat,
+    scope: TableExportScope
+  ) => {
+    if (!exportRows) {
+      return;
+    }
+
+    const exported = scope === 'page' ? data : await exportRows();
+    const day = new Date().toISOString().slice(0, 10);
+
+    await downloadTable({
+      format,
+      rows: exported,
+      columns: getExportColumns(
+        orderedColumns.filter(column => !hiddenSet.has(column.id)),
+        exported
+      ),
+      filename: `${exportFilename ?? storageKey ?? 'export'}-${day}`,
+    });
+  };
+
   const virtualHeight = typeof maxHeight === 'number' ? maxHeight : 800;
   const virtualizer = useVirtualizer({
     count: rows.length,
@@ -391,35 +435,6 @@ export function DataTable<Row>({
   const tableBody = useMemo(
     () => (
       <TableBody>
-        {loading && (
-          <TableRow>
-            <TableCell
-              colSpan={columnCount}
-              align="center"
-              sx={{ py: 4, border: 0 }}
-            >
-              <CircularProgress />
-            </TableCell>
-          </TableRow>
-        )}
-
-        {!loading && !rows.length && (
-          <TableRow>
-            <TableCell
-              colSpan={columnCount}
-              align="center"
-              sx={{ py: 4, border: 0 }}
-            >
-              <Typography
-                variant="body2"
-                color="text.secondary"
-              >
-                {emptyText}
-              </Typography>
-            </TableCell>
-          </TableRow>
-        )}
-
         {!loading && paddingTop > 0 && (
           <TableRow
             data-virtual-spacer="before"
@@ -479,8 +494,6 @@ export function DataTable<Row>({
       loading,
       onRowClick,
       rowClassName,
-      emptyText,
-      columnCount,
       pinProps,
       columnDefs,
     ]
@@ -579,6 +592,23 @@ export function DataTable<Row>({
         {tableBody}
       </Table>
 
+      {loading && (
+        <TableState data-table-state>
+          <CircularProgress />
+        </TableState>
+      )}
+
+      {!loading && !rows.length && (
+        <TableState data-table-state>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+          >
+            {emptyText}
+          </Typography>
+        </TableState>
+      )}
+
       {!visibleColumnCount && (
         <Box sx={{ p: 2 }}>
           <Typography
@@ -592,7 +622,7 @@ export function DataTable<Row>({
     </TableContainer>
   );
 
-  if (!storageKey && !filters) {
+  if (!storageKey && !filters && !exportRows) {
     return table_;
   }
 
@@ -638,6 +668,14 @@ export function DataTable<Row>({
             onMove={columnConfig.move}
             onReset={columnConfig.reset}
             canReset={columnConfig.isCustomised}
+          />
+        )}
+
+        {exportRows && (
+          <TableExportMenu
+            onExport={exportTable}
+            pageCount={data.length}
+            totalCount={exportTotalCount}
           />
         )}
       </Toolbar>

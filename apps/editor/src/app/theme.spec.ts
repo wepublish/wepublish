@@ -53,8 +53,7 @@ describe('createEditorTheme', () => {
     expect(
       (
         theme.components?.MuiCardHeader?.defaultProps?.slotProps?.title as
-          | { component?: string }
-          | undefined
+          { component?: string } | undefined
       )?.component
     ).toBe('div');
   });
@@ -148,5 +147,17 @@ describe('tabs', () => {
     expect(
       override('MuiTabs')['& .MuiTabs-scrollButtons.Mui-disabled']
     ).toMatchObject({ display: 'none' });
+  });
+
+  it('cuts dot badges out of what they sit on', () => {
+    const dot = theme.components?.MuiBadge?.styleOverrides?.dot as (props: {
+      theme: typeof theme;
+    }) => { boxShadow: string; top: number; right: number };
+
+    expect(dot({ theme })).toEqual({
+      top: 2,
+      right: 2,
+      boxShadow: `0 0 0 2px ${theme.vars?.palette.background.paper}`,
+    });
   });
 });

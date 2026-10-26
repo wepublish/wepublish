@@ -52,12 +52,12 @@
     },
     "versionHistory": {
       "title": "Historique des versions",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
       "subtitle": "{{count}} version(s)",
       "close": "Fermer",
       "empty": "Aucune version pour l’instant.",
       "untitled": "Sans titre",
-      "created": "Créé le {{date}}",
-      "published": "publié le {{date}}",
       "currentVersion": "Version actuelle",
       "restore": "Restaurer",
       "restored": "Version restaurée en tant que nouveau brouillon",
@@ -150,6 +150,7 @@
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "Ceci peut être utilisé pour faire référence à des articles qui seront publiés ultérieurement. Par exemple, lorsque des posts pour les réseaux sociaux sont programmés pour être publiés le lendemain matin.",
         "displayOptions": "Options d’affichage",
+        "displayOptionsHint": "Laissez un champ vide pour utiliser le texte original.",
         "dontChangeSlug": "Veuillez ne pas changer le slug une fois l’article publié.",
         "draft": "Brouillon",
         "chooseFile": "Choisir un fichier",
@@ -172,6 +173,7 @@
         "lead": "Chapeau",
         "loading": "Chargement …",
         "loadMore": "Charger plus",
+        "search": "Rechercher par titre",
         "noDataToDisplay": "Pas de données à afficher",
         "metadata": "Métadonnées",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
@@ -380,6 +382,7 @@
     "blocks": {
       "blockTemplate": {
         "editTemplate": "Modifier le modèle",
+        "linkedInfo": "Les modifications du modèle apparaissent ici automatiquement.",
         "label": "Modèle de bloc",
         "select": "Sélectionner un modèle de bloc",
         "useContent": "Utiliser le contenu",
@@ -388,12 +391,12 @@
         "reload": "Recharger les modèles"
       },
       "crowdfunding": {
-        "edit": "Modifier",
+        "edit": "Modifier le bloc de financement participatif",
         "label": "Crowdfunding",
         "title": "Sélectionner le crowdfunding",
         "name": "Nom du crowdfunding",
         "select": "Sélectionner",
-        "open": "ouvrir",
+        "open": "Ouvrir",
         "crowdfundingName": "Crowdfunding {{name}}"
       },
       "comment": {
@@ -512,7 +515,8 @@
         "showGoodies": "Afficher la sélection de goodies",
         "showDiscountCodes": "Afficher le champ de code de réduction",
         "goodieMinValue": {
-          "label": "Montant de paiement minimal requis pour bénéficier d’un goodie :"
+          "label": "Montant minimal pour un goodie",
+          "hint": "Les lecteurs qui paient moins ne peuvent pas choisir de goodie. Laisser vide pour aucun minimum."
         },
         "goodieMinValueAppliesToUpgrade": "Appliquer ce montant minimum aussi aux mises à niveau",
         "hideRepeatGoodieOnUpgrade": "Masquer lors d’une mise à niveau si un goodie a déjà été reçu",
@@ -550,6 +554,8 @@
         },
         "planAmountsTitle": "Montant minimum / cible / maximum",
         "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page.",
+        "amountLayout": "Saisie du montant",
+        "planAmountTarget": "cible {{amount}}",
         "defaultPlanLabel": "Par défaut",
         "dragToReorder": "Glisser pour modifier l’ordre",
         "renderStylesHelp": "Faites glisser les plans dans l’ordre dans lequel ils apparaissent sur le site. Pour chaque plan, choisissez comment le montant est saisi et quel plan est présélectionné."
@@ -588,6 +594,7 @@
         "label": "Listicle"
       },
       "poll": {
+        "open": "Ouvrir",
         "edit": "Modifier le bloc de sondage",
         "label": "Sondage",
         "select": "Sélectionner",
@@ -646,7 +653,8 @@
         "syncProviderPlaceholder": "Choisir un compte",
         "list": "Liste",
         "listPlaceholder": "Choisir une liste",
-        "interests": "Intérêts prédéfinis. Ils sont ajoutés automatiquement pour chaque abonné",
+        "interests": "Intérêts prédéfinis",
+        "interestsHelp": "Ils sont ajoutés automatiquement pour chaque abonné.",
         "interestsPlaceholder": "Choisir des intérêts",
         "autoFocus": "Focus automatique",
         "doubleOptIn": "Double opt-in",
@@ -3312,12 +3320,22 @@
       "saveSuccess": "Les paramètres du site ont été enregistrés avec succès"
     },
     "externalApps": {
+      "apiKey": {
+        "expiresSoon": "La clé API «{{name}}» expire le {{expiresAt, PP}}. Créez une nouvelle clé, enregistrez-la dans l’app et associez-la ici.",
+        "expired": "La clé API «{{name}}» a expiré le {{expiresAt, PP}} – l’app ne peut plus lire de données.",
+        "revoked": "La clé API «{{name}}» a été révoquée – l’app ne peut plus lire de données."
+      },
       "apps": "Applications",
       "noAppsFound": "Aucune application externe configurée.",
       "notFound": "Application externe introuvable",
       "appsInfo": "Raccourcis vers des outils externes qui apparaissent sur le tableau de bord sous « We.Publish Apps ». « Cible » détermine si une app s’ouvre dans un nouvel onglet du navigateur ou directement dans l’éditeur. Certains sites ne peuvent pas être affichés dans l’éditeur – ouvrez-les dans un nouvel onglet."
     },
     "externalAppForm": {
+      "apiKey": "Clé API",
+      "apiKeyOption": "{{name}} ({{prefix}}…)",
+      "noApiKey": "Aucune clé API",
+      "apiKeyHelp": "La clé API avec laquelle l’app lit l’API We.Publish. L’éditeur indique alors quand elle expire ou a été révoquée. La clé elle-même est enregistrée dans l’app.",
+      "apiKeyDetails": "{{prefix}}… · {{scopes}} autorisations · expire le {{expiresAt, PP}}",
       "create": "Créer",
       "update": "Mettre à jour",
       "delete": "Supprimer",
@@ -3800,6 +3818,12 @@
         "attemptsHelp": "Nombre de tentatives d’envoi de cet e-mail. Plus de 1 signifie qu’il a été réessayé après une erreur ou une interruption."
       }
     },
+    "publishDialog": {
+      "checklist": "Avant de publier",
+      "options": "Options",
+      "publish": "Publier",
+      "schedule": "Programmer"
+    },
     "seoChecklist": {
       "navbar": "SEO",
       "title": "Liste de contrôle SEO",
@@ -4109,6 +4133,9 @@
     "colorPicker": {
       "pickColor": "Choisir la couleur"
     },
+    "flexTile": {
+      "moreActions": "Plus d’actions"
+    },
     "listInput": {
       "dragToReorder": "Glisser pour modifier l’ordre",
       "add": "Ajouter une entrée"
@@ -4119,6 +4146,19 @@
       "reload": "Recharger l'éditeur"
     },
     "listView": {
+      "export": {
+        "download": "Télécharger",
+        "csv": "CSV (.csv)",
+        "xlsx": "Excel (.xlsx)",
+        "scope": {
+          "title": "Que faut-il télécharger ?",
+          "page": "Seulement cette page ({{count}} entrées)",
+          "all": "Toutes les {{count}} entrées"
+        },
+        "largeWarning": "Charger {{count}} entrées peut prendre un moment et produit un fichier volumineux.",
+        "confirm": "Télécharger",
+        "cancel": "Annuler"
+      },
       "table": {
         "empty": "Rien à afficher"
       },
@@ -4217,6 +4257,8 @@
         "lastUsedDate": "{{lastUsedDate, ccc PP p}}",
         "expires": "Expire le",
         "expired": "Expirée",
+        "expiresInDays_one": "Expire dans {{count}} jour",
+        "expiresInDays_other": "Expire dans {{count}} jours",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Propriétaire",
         "ownerUnknown": "Personne supprimée",
