@@ -11,9 +11,9 @@ type ExtractOrderType<T> = T extends { order?: infer F } ? F : never;
 
 export type PaginationState<Variables = any> = {
   page: number;
-  setPage: Dispatch<SetStateAction<number>>;
   limit: number;
-  setLimit: Dispatch<SetStateAction<number>>;
+  setPage: (page: number) => void;
+  setLimit: (limit: number) => void;
 };
 
 export type QueryState<Variables = any> = {

@@ -12,7 +12,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { differenceInMinutes } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { BANNER_STORAGE_KEY, collapseBanner } from './collapse-banner';
 
 export const BannerImage = styled('div')(
@@ -222,7 +222,7 @@ export const Banner = ({
   };
 
   const handleActionClick = (
-    e: React.MouseEvent,
+    e: MouseEvent,
     action: FullBannerActionFragment
   ) => {
     if (action.role === BannerActionRole.Cancel) {

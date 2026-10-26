@@ -9,6 +9,7 @@ import {
   MenuItem,
   Paper,
   Popper,
+  PopperProps,
   Select,
   TextField,
   Typography,
@@ -22,12 +23,13 @@ import {
   LinkVariantOptions,
 } from './extensions/link-variant';
 import * as z from 'zod';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import {
   EditorStateSnapshot,
+  posToDOMRect,
   useCurrentEditor,
   useEditorState,
 } from '@tiptap/react';
@@ -59,17 +61,19 @@ const Actions = styled('div')`
 `;
 
 const CancelButton = styled(Button)`
-  background-color: ${({ theme }) =>
-    theme.palette.mode === 'dark' ?
-      theme.palette.grey[800]
-    : theme.palette.grey[100]};
-  color: ${({ theme }) => theme.palette.text.primary};
+  background-color: ${({ theme }) => theme.vars.palette.grey[100]};
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 
   &:hover {
-    background-color: ${({ theme }) =>
-      theme.palette.mode === 'dark' ?
-        theme.palette.grey[700]
-      : theme.palette.grey[200]};
+    background-color: ${({ theme }) => theme.vars.palette.grey[200]};
+  }
+
+  [data-mui-color-scheme='dark'] & {
+    background-color: ${({ theme }) => theme.vars.palette.grey[800]};
+
+    &:hover {
+      background-color: ${({ theme }) => theme.vars.palette.grey[700]};
+    }
   }
 `;
 
@@ -100,7 +104,7 @@ function stripMailto(href: string | undefined) {
 
 type LinkPopoverProps = {
   open: boolean;
-  anchorEl: HTMLElement | null;
+  anchorEl: PopperProps['anchorEl'];
   onClose: () => void;
 };
 
@@ -227,7 +231,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
     onClose();
   }, console.warn);
 
-  const linkType = watch('type');
+  const linkType = useWatch({ control, name: 'type' });
 
   useEffect(() => {
     reset({
@@ -267,10 +271,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
           control={control}
           name="type"
           render={({ field }) => (
-            <FormControl
-              size="small"
-              fullWidth
-            >
+            <FormControl fullWidth>
               <InputLabel>{t('richtext.link.type')}</InputLabel>
               <Select
                 {...field}
@@ -298,10 +299,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
             control={control}
             name="url"
             render={({ field }) => (
-              <FormControl
-                size="small"
-                fullWidth
-              >
+              <FormControl fullWidth>
                 <InputLabel>{t('richtext.link.anchor')}</InputLabel>
 
                 <Select
@@ -336,7 +334,6 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
                 {...field}
                 autoFocus
                 fullWidth
-                size="small"
                 label={
                   linkType === 'email' ?
                     t('richtext.link.email')
@@ -399,10 +396,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
             control={control}
             name="variant"
             render={({ field }) => (
-              <FormControl
-                size="small"
-                fullWidth
-              >
+              <FormControl fullWidth>
                 <InputLabel shrink>{t('richtext.link.style')}</InputLabel>
                 <Select
                   {...field}
@@ -485,9 +479,44 @@ export function LinkPopoverButton({ isLink }: { isLink: boolean }) {
 
       <LinkPopover
         open={open}
-        anchorEl={anchorRef.current}
+        anchorEl={() => anchorRef.current!}
         onClose={() => setOpen(false)}
       />
     </>
+  );
+}
+
+export function CaretLinkPopover() {
+  const editor = useCurrentEditor().editor!;
+  const [anchorEl, setAnchorEl] = useState<PopperProps['anchorEl']>(null);
+
+  useEffect(() => {
+    const openLinkMenu = () => {
+      const { empty, from, to } = editor.state.selection;
+
+      if (!empty) {
+        return;
+      }
+
+      const rect = posToDOMRect(editor.view, from, to);
+      setAnchorEl({ getBoundingClientRect: () => rect });
+    };
+
+    editor.on('openLinkMenu', openLinkMenu);
+
+    return () => {
+      editor.off('openLinkMenu', openLinkMenu);
+    };
+  }, [editor]);
+
+  return (
+    <LinkPopover
+      open={!!anchorEl}
+      anchorEl={anchorEl}
+      onClose={() => {
+        setAnchorEl(null);
+        editor.commands.focus();
+      }}
+    />
   );
 }

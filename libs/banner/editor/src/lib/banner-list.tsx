@@ -2,25 +2,28 @@ import { useQuery } from '@apollo/client/react';
 import { BannersDocument, FullBannerFragment } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  DataTable,
   IconButton,
   IconButtonTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PaddedCell,
-  Table,
   TableWrapper,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Table as RTable } from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
+import { Link as RouterLink } from 'react-router-dom';
 import { BannerDeleteModal } from './banner-delete-modal';
-import React from 'react';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+import { Button } from '@mui/material';
+import {
+  CanCreateBanner,
+  CanDeleteBanner,
+  CanGetBanner,
+  CanGetBanners,
+} from '@wepublish/permissions';
 
 function BannerList() {
   const { t } = useTranslation();
@@ -45,115 +48,91 @@ function BannerList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('banner.list.title')}</h2>
+          <PageTitle>{t('banner.list.title')}</PageTitle>
         </ListViewHeader>
 
         <ListViewActions>
-          <Link to="create">
-            <IconButton
-              appearance="primary"
-              loading={loading}
-            >
-              <MdAdd />
-              {t('banner.list.createNew')}
-            </IconButton>
-          </Link>
+          <Button
+            component={RouterLink}
+            to="create"
+            variant="contained"
+            loading={loading}
+            startIcon={<MdAdd />}
+          >
+            {t('banner.list.createNew')}
+          </Button>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey="banners"
           data={data?.banners || []}
-        >
-          <Column
-            width={300}
-            resizable
-          >
-            <HeaderCell>{t('banner.list.title')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullBannerFragment>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'title',
+              alwaysVisible: true,
+              label: t('banner.list.title'),
+              width: 300,
+              render: rowData => (
                 <Link to={`/banners/edit/${rowData.id}`}>{rowData.title}</Link>
-              )}
-            </RCell>
-          </Column>
-          <Column
-            width={300}
-            resizable
-          >
-            <HeaderCell>{t('banner.list.text')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullBannerFragment>) =>
-                (rowData as FullBannerFragment).text
-              }
-            </RCell>
-          </Column>
-          <Column
-            width={100}
-            resizable
-          >
-            <HeaderCell>{t('banner.list.active')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullBannerFragment>) =>
-                (rowData as FullBannerFragment).active ? '✓' : '⨯'
-              }
-            </RCell>
-          </Column>
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('banner.form.showForLoginStatus')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullBannerFragment>) =>
+              ),
+            },
+            {
+              id: 'text',
+              label: t('banner.list.text'),
+              width: 300,
+              render: rowData => (rowData as FullBannerFragment).text,
+            },
+            {
+              id: 'active',
+              label: t('banner.list.active'),
+              width: 100,
+              render: rowData =>
+                (rowData as FullBannerFragment).active ? '✓' : '⨯',
+            },
+            {
+              id: 'showforloginstatus',
+              label: t('banner.form.showForLoginStatus'),
+              width: 200,
+              render: rowData =>
                 t(
                   `banner.form.loginStatus.${(rowData as FullBannerFragment).showForLoginStatus}`
-                )
-              }
-            </RCell>
-          </Column>
-          <Column
-            width={100}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <PaddedCell align="center">
-              {(banner: RowDataType<FullBannerFragment>) => (
+                ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: banner => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
+                    color="error"
+                    size="small"
                     onClick={() =>
                       setBannerDelete(banner as FullBannerFragment)
                     }
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         {/*<Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.banners?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          state={{
+            page: page,
+            limit: limit,
+            setPage: setPage,
+            setLimit: setLimit,
+          }}
+          totalCount={data?.banners?.totalCount ?? 0}
         />*/}
       </TableWrapper>
 
@@ -169,9 +148,9 @@ function BannerList() {
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_BANNERS',
-  'CAN_GET_BANNER',
-  'CAN_CREATE_BANNER',
-  'CAN_DELETE_BANNER',
+  CanGetBanners.id,
+  CanGetBanner.id,
+  CanCreateBanner.id,
+  CanDeleteBanner.id,
 ])(BannerList);
 export { CheckedPermissionComponent as BannerList };

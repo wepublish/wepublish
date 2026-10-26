@@ -40,7 +40,6 @@ const saveWithPort = async (typed: string) => {
 describe('SingleGenericIntegrationForm number fields', () => {
   beforeEach(() => updateSettings.mockReset().mockResolvedValue({}));
 
-  // A number input hands its value over as text.
   it('saves a typed number as a number', async () => {
     await saveWithPort('587');
 

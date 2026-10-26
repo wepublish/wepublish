@@ -20,7 +20,10 @@ export default defineConfig(({ mode }) => ({
     react({
       jsxImportSource: '@emotion/react',
       babel: {
-        plugins: ['@emotion/babel-plugin'],
+        plugins: [
+          ['babel-plugin-react-compiler', { target: '19' }],
+          '@emotion/babel-plugin',
+        ],
       },
     }),
     tsconfigPaths({

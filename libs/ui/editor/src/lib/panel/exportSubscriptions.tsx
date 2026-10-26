@@ -1,13 +1,15 @@
 import { useLazyQuery } from '@apollo/client/react';
+import { Button, MenuItem } from '@mui/material';
 import {
   SubscriptionFilter,
   SubscriptionsAsCsvDocument,
 } from '@wepublish/editor/api';
-import { Ref, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFileDownload } from 'react-icons/md';
-import { Dropdown, IconButton, Message, toaster } from 'rsuite';
 
+import { ClickMenu } from '../popover/click-menu';
+import { enqueueSnackbar } from '../snackbar';
 import {
   exportSubscriptionsAsCsv,
   exportSubscriptionsAsXlsx,
@@ -85,44 +87,51 @@ export function SubscriptionExportDropdown({
     try {
       await onExport(format);
     } catch (error) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {(error as Error).message}
-        </Message>
-      );
+      enqueueSnackbar((error as Error).message, {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     } finally {
       setExporting(false);
     }
   }
 
   return (
-    <Dropdown
-      placement="bottomEnd"
-      renderToggle={(props: object, ref: Ref<HTMLButtonElement>) => (
-        <IconButton
-          {...props}
-          ref={ref}
-          appearance="primary"
-          icon={<MdFileDownload />}
+    <ClickMenu
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      trigger={
+        <Button
+          variant="contained"
+          startIcon={<MdFileDownload />}
           loading={loading || exporting}
           disabled={disabled}
         >
           {label}
-        </IconButton>
-      )}
+        </Button>
+      }
     >
-      <Dropdown.Item onClick={() => exportSubscriptions('csv')}>
-        {t('subscriptionsExport.csv')}
-      </Dropdown.Item>
-      <Dropdown.Item onClick={() => exportSubscriptions('xlsx')}>
-        {t('subscriptionsExport.xlsx')}
-      </Dropdown.Item>
-    </Dropdown>
+      {close => [
+        <MenuItem
+          key="csv"
+          onClick={() => {
+            exportSubscriptions('csv');
+            close();
+          }}
+        >
+          {t('subscriptionsExport.csv')}
+        </MenuItem>,
+        <MenuItem
+          key="xlsx"
+          onClick={() => {
+            exportSubscriptions('xlsx');
+            close();
+          }}
+        >
+          {t('subscriptionsExport.xlsx')}
+        </MenuItem>,
+      ]}
+    </ClickMenu>
   );
 }
 

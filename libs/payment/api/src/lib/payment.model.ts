@@ -54,3 +54,23 @@ export class PaymentFromSubscriptionArgs {
   @Field({ nullable: true })
   failureURL?: string;
 }
+
+@InputType()
+export class PaymentProviderCustomerInput {
+  @Field()
+  userId!: string;
+
+  @Field({
+    description: `The provider's id for the user, e.g. the bexio contact id.`,
+  })
+  customerId!: string;
+}
+
+@ArgsType()
+export class SetPaymentProviderCustomersArgs {
+  @Field()
+  paymentProviderId!: string;
+
+  @Field(() => [PaymentProviderCustomerInput])
+  customers!: PaymentProviderCustomerInput[];
+}

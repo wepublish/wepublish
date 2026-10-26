@@ -9,7 +9,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import React from 'react';
+import { useId } from 'react';
 import { MdArrowDownward } from 'react-icons/md';
 
 import { anchorId } from '../anchor-id';
@@ -54,7 +54,7 @@ export const CollapsibleContent = ({
   const {
     blocks: { RichText },
   } = useWebsiteBuilder();
-  const thisId = `AC-${React.useId().replace(/:/g, '')}`;
+  const thisId = `AC-${useId().replace(/:/g, '')}`;
   const titleId = anchorId(text);
 
   return (

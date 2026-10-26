@@ -19,8 +19,7 @@ export const useThemePresetColors = (): string[] => {
 
   return useMemo(() => {
     const theme = data?.websiteSettings?.theme as
-      | Record<string, unknown>
-      | undefined;
+      Record<string, unknown> | undefined;
     const palette = theme?.['palette'] as Record<string, unknown> | undefined;
 
     if (!palette) {
@@ -101,7 +100,7 @@ export function MailColorPicker({
         cursor: 'pointer',
         borderRadius: '4px',
         backgroundColor: value || '#000000',
-        border: `1px solid ${theme.palette.divider}`,
+        border: `1px solid ${theme.vars.palette.divider}`,
         flexShrink: 0,
       })}
     />
@@ -115,7 +114,7 @@ export function MailColorPicker({
 
       <ElevatedPopper
         open={open}
-        anchorEl={anchorRef.current}
+        anchorEl={() => anchorRef.current!}
         placement="bottom-start"
         onKeyDown={event => {
           if (event.key === 'Escape') {

@@ -1,5 +1,12 @@
-import { act, render } from '@testing-library/react';
-import { useState } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
+import { ReactNode, useState } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { ArticleEditor } from './articleEditor';
@@ -142,11 +149,19 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
 
 const autosave = vi.hoisted(() => ({
   onAutosave: undefined as undefined | (() => Promise<unknown>),
+  enabled: [] as boolean[],
 }));
 
 vi.mock('../../useAutosave', () => ({
-  useAutosave: ({ onAutosave }: { onAutosave: () => Promise<unknown> }) => {
+  useAutosave: ({
+    onAutosave,
+    enabled,
+  }: {
+    onAutosave: () => Promise<unknown>;
+    enabled: boolean;
+  }) => {
     autosave.onAutosave = onAutosave;
+    autosave.enabled.push(enabled);
     return { markSaved: () => undefined };
   },
 }));
@@ -160,14 +175,19 @@ vi.mock('react-i18next', () => ({
   initReactI18next: { type: '3rdParty', init: () => undefined },
 }));
 
-vi.mock('rsuite', async importOriginal => ({
-  ...((await importOriginal()) as object),
-  toaster: { push: vi.fn() },
-}));
+const theme = createTheme({ cssVariables: true });
+
+const renderWithTheme = (ui: ReactNode) =>
+  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
 
 describe('ArticleEditor autosave', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    autosave.enabled.length = 0;
+  });
+
   it('keeps the blocks editable while an autosave is in flight', async () => {
-    render(
+    renderWithTheme(
       <MemoryRouter initialEntries={['/articles/edit/article-1']}>
         <Routes>
           <Route
@@ -195,5 +215,73 @@ describe('ArticleEditor autosave', () => {
     });
 
     expect(blockListProps.disabled).not.toContain(true);
+  });
+
+  it('stops autosaving when the header toggle is turned off', async () => {
+    renderWithTheme(
+      <MemoryRouter initialEntries={['/articles/edit/article-1']}>
+        <Routes>
+          <Route
+            path="/articles/edit/:id"
+            element={<ArticleEditor />}
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(autosave.enabled.at(-1)).toBe(true);
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('switch', { name: 'autosave.label' }));
+    });
+
+    expect(autosave.enabled.at(-1)).toBe(false);
+  });
+});
+
+describe('ArticleEditor copy link', () => {
+  const writeText = vi.fn().mockResolvedValue(undefined);
+
+  beforeEach(() => {
+    writeText.mockClear();
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+  });
+
+  afterEach(() => {
+    article.published = null;
+  });
+
+  const renderEditor = () =>
+    renderWithTheme(
+      <MemoryRouter initialEntries={['/articles/edit/article-1']}>
+        <Routes>
+          <Route
+            path="/articles/edit/:id"
+            element={<ArticleEditor />}
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+
+  it('is hidden for unpublished articles', () => {
+    renderEditor();
+
+    expect(
+      screen.queryByRole('button', { name: 'copyLink.button' })
+    ).toBeNull();
+  });
+
+  it('copies the url of published articles', async () => {
+    (article as { published: unknown }).published = { id: 'rev-0' };
+    renderEditor();
+
+    fireEvent.click(screen.getByRole('button', { name: 'copyLink.button' }));
+
+    await waitFor(() =>
+      expect(writeText).toHaveBeenCalledWith('https://example.com/a/slug')
+    );
   });
 });

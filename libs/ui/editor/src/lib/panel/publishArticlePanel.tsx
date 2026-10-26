@@ -1,17 +1,10 @@
-import { useState } from 'react';
+import { CanPublishArticle } from '@wepublish/permissions';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, Modal } from 'rsuite';
 
-import {
-  createCheckedPermissionComponent,
-  DateTimePicker,
-  DescriptionList,
-  DescriptionListItem,
-  DescriptionListItemWithMessage,
-  InfoColor,
-} from '../atoms';
+import { createCheckedPermissionComponent } from '../atoms';
 import { formatArticleAuthors } from './articleAuthorList';
 import { ArticleMetadata } from './articleMetadataPanel';
+import { PublishDialogContent } from './publishDialogContent';
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date;
@@ -29,195 +22,101 @@ function PublishArticlePanel({
   onClose,
   onConfirm,
 }: PublishArticlePanelProps) {
-  const now = new Date();
-  const [publishedAt, setPublishedAt] = useState<Date | undefined>(
-    publishedAtDate ?? now
-  );
   const { t } = useTranslation();
 
   return (
-    <>
-      <Modal.Header>
-        <Modal.Title>{t('articleEditor.panels.publishArticle')}</Modal.Title>
-      </Modal.Header>
-
-      <Modal.Body>
-        {publishedAt && publishedAt > now && (
-          <Message type="warning">
-            {t('articleEditor.panels.articlePending', {
-              pendingPublishDate: publishedAt,
-            })}
-          </Message>
-        )}
-
-        <div style={{ maxWidth: '200px' }}>
-          <DateTimePicker
-            dateTime={publishedAt}
-            label={t('articleEditor.panels.publishDate')}
-            changeDate={date => setPublishedAt(date)}
-          />
-        </div>
-
-        <div
-          style={{
-            maxWidth: '300px',
-            marginTop: '0.25rem',
-            marginBottom: '2rem',
-            fontSize: '0.75rem',
-            color: 'var(--rs-text-secondary)',
-          }}
-        >
-          {firstPublishedAtDate ?
-            t('articleEditor.panels.firstPublishedAtDate', {
-              firstPublishedAtDate,
-            })
-          : t('articleEditor.panels.notPublishedYet')}
-        </div>
-
-        <DescriptionList>
-          <DescriptionListItem label={t('articleEditor.panels.url')}>
-            {metadata?.url ?
-              <a
-                href={metadata.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {metadata.url}
-              </a>
-            : '-'}
-          </DescriptionListItem>
-
-          <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
-            {metadata.preTitle || '-'}
-          </DescriptionListItem>
-
-          <DescriptionListItemWithMessage
-            label={t('articleEditor.panels.title')}
-            message={t('articleEditor.panels.enterTitle')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.title}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItem label={t('articleEditor.panels.lead')}>
-            {metadata.lead || '-'}
-          </DescriptionListItem>
-
-          <DescriptionListItemWithMessage
-            label={t('articleEditor.panels.seoTitle')}
-            message={t('articleEditor.panels.enterSeoTitle')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.seoTitle}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItem label={t('articleEditor.panels.seoDescription')}>
-            {metadata.seoDescription || '-'}
-          </DescriptionListItem>
-
-          <DescriptionListItemWithMessage
-            label={t('articleEditor.panels.authors')}
-            message={t('articleEditor.panels.enterAuthors')}
-            messageType={InfoColor.warning}
-          >
-            {formatArticleAuthors(metadata.authors)}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItemWithMessage
-            label={t('articleEditor.panels.slug')}
-            message={t('articleEditor.panels.addSlug')}
-            messageType={InfoColor.error}
-          >
-            {metadata.slug}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItemWithMessage
-            label={t('articleEditor.panels.tags')}
-            message={t('articleEditor.panels.enterTag')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.tags.join(', ')}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItemWithMessage
-            label={t('articleEditor.panels.image')}
-            message={t('articleEditor.panels.enterImage')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.image?.filename}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItem label={t('articleEditor.panels.breakingNews')}>
-            {metadata.breaking ?
-              t('articleEditor.panels.yes')
-            : t('articleEditor.panels.no')}
-          </DescriptionListItem>
-          <DescriptionListItem
-            label={t('articleEditor.panels.sharedWithPeers')}
-          >
-            {metadata.shared ?
-              t('articleEditor.panels.yes')
-            : t('articleEditor.panels.no')}
-          </DescriptionListItem>
-          <DescriptionListItem label={t('articleEditor.panels.hideAuthors')}>
-            {metadata.hideAuthor ?
-              t('articleEditor.panels.yes')
-            : t('articleEditor.panels.no')}
-          </DescriptionListItem>
-
-          <DescriptionListItemWithMessage
-            label={t('articleEditor.panels.socialMediaTitle')}
-            message={t('articleEditor.panels.enterSocialMediaTitle')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.socialMediaTitle}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItemWithMessage
-            label={t('articleEditor.panels.socialMediaDescription')}
-            message={t('articleEditor.panels.enterSocialMediaDescription')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.socialMediaDescription}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItemWithMessage
-            label={t('articleEditor.panels.socialMediaAuthors')}
-            message={t('articleEditor.panels.enterSocialMediaAuthors')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.socialMediaAuthors.map(e => e.name).join(', ')}
-          </DescriptionListItemWithMessage>
-
-          <DescriptionListItemWithMessage
-            label={t('articleEditor.panels.socialMediaImage')}
-            message={t('articleEditor.panels.enterSocialMediaImage')}
-            messageType={InfoColor.warning}
-          >
-            {metadata.socialMediaImage?.filename}
-          </DescriptionListItemWithMessage>
-        </DescriptionList>
-      </Modal.Body>
-
-      <Modal.Footer>
-        <Button
-          appearance="primary"
-          disabled={!publishedAt || !metadata.slug}
-          onClick={() => onConfirm(publishedAt!)}
-        >
-          {t('articleEditor.panels.confirm')}
-        </Button>
-        <Button
-          appearance="subtle"
-          onClick={() => onClose()}
-        >
-          {t('articleEditor.panels.close')}
-        </Button>
-      </Modal.Footer>
-    </>
+    <PublishDialogContent
+      title={t('articleEditor.panels.publishArticle')}
+      url={metadata.url}
+      publishedAtDate={publishedAtDate}
+      dateLabel={t('articleEditor.panels.publishDate')}
+      dateHelperText={
+        firstPublishedAtDate ?
+          t('articleEditor.panels.firstPublishedAtDate', {
+            firstPublishedAtDate,
+          })
+        : t('articleEditor.panels.notPublishedYet')
+      }
+      pendingMessage={pendingPublishDate =>
+        t('articleEditor.panels.articlePending', { pendingPublishDate })
+      }
+      closeLabel={t('articleEditor.panels.close')}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      options={[
+        metadata.breaking && t('articleEditor.panels.breakingNews'),
+        metadata.shared && t('articleEditor.panels.sharedWithPeers'),
+        metadata.hideAuthor && t('articleEditor.panels.hideAuthors'),
+      ].filter((option): option is string => !!option)}
+      checks={[
+        {
+          label: t('articleEditor.panels.slug'),
+          value: metadata.slug,
+          missing: t('articleEditor.panels.addSlug'),
+          required: true,
+        },
+        {
+          label: t('articleEditor.panels.preTitle'),
+          value: metadata.preTitle,
+        },
+        {
+          label: t('articleEditor.panels.title'),
+          value: metadata.title,
+          missing: t('articleEditor.panels.enterTitle'),
+        },
+        {
+          label: t('articleEditor.panels.lead'),
+          value: metadata.lead,
+        },
+        {
+          label: t('articleEditor.panels.authors'),
+          value: formatArticleAuthors(metadata.authors),
+          missing: t('articleEditor.panels.enterAuthors'),
+        },
+        {
+          label: t('articleEditor.panels.tags'),
+          value: metadata.tags.join(', '),
+          missing: t('articleEditor.panels.enterTag'),
+        },
+        {
+          label: t('articleEditor.panels.image'),
+          value: metadata.image?.filename,
+          missing: t('articleEditor.panels.enterImage'),
+        },
+        {
+          label: t('articleEditor.panels.seoTitle'),
+          value: metadata.seoTitle,
+          missing: t('articleEditor.panels.enterSeoTitle'),
+        },
+        {
+          label: t('articleEditor.panels.seoDescription'),
+          value: metadata.seoDescription,
+        },
+        {
+          label: t('articleEditor.panels.socialMediaTitle'),
+          value: metadata.socialMediaTitle,
+          missing: t('articleEditor.panels.enterSocialMediaTitle'),
+        },
+        {
+          label: t('articleEditor.panels.socialMediaDescription'),
+          value: metadata.socialMediaDescription,
+          missing: t('articleEditor.panels.enterSocialMediaDescription'),
+        },
+        {
+          label: t('articleEditor.panels.socialMediaAuthors'),
+          value: metadata.socialMediaAuthors.map(e => e.name).join(', '),
+          missing: t('articleEditor.panels.enterSocialMediaAuthors'),
+        },
+        {
+          label: t('articleEditor.panels.socialMediaImage'),
+          value: metadata.socialMediaImage?.filename,
+          missing: t('articleEditor.panels.enterSocialMediaImage'),
+        },
+      ]}
+    />
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_PUBLISH_ARTICLE',
+  CanPublishArticle.id,
 ])(PublishArticlePanel);
 export { CheckedPermissionComponent as PublishArticlePanel };

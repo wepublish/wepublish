@@ -5,18 +5,19 @@ import {
   PeriodicJobLogsDocument,
   RetryPeriodicJobDocument,
 } from '@wepublish/editor/api';
+import { CanRetryPeriodicJob } from '@wepublish/permissions';
 import {
   NotificationItem,
   NotificationSeverity,
   useHasPermission,
 } from '@wepublish/ui/editor';
 import { ReactElement, useEffect, useMemo } from 'react';
+import { Button, Tooltip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Button, Tooltip, Whisper } from 'rsuite';
 
 import { showErrors } from '../common';
 
-const RETRY_PERMISSION = ['CAN_RETRY_PERIODIC_JOB'];
+const RETRY_PERMISSION = [CanRetryPeriodicJob.id];
 
 const POLL_WHILE_RUNNING_MS = 10_000;
 
@@ -54,9 +55,9 @@ function getStatusText(
   }
 }
 
-const Stack = styled.div`
+const Stack = styled.div<{ direction?: 'row' | 'column' }>`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({ direction }) => direction ?? 'column'};
   gap: 12px;
 `;
 
@@ -119,17 +120,16 @@ export function usePeriodicJobNotifications({
    * If all jobs were successfully (no finished with error), return only first periodic job log entry.
    * Else return all job logs. This is meant to shorten the list in favor of UX.
    */
+  const log = data?.periodicJobLog;
   const jobs = useMemo<FullPeriodicJobFragment[]>(() => {
-    if (!data?.periodicJobLog?.length) {
+    if (!log?.length) {
       return [];
     }
 
-    const hasFailingJobs = !!data.periodicJobLog.find(
-      job => !!job?.finishedWithError
-    );
+    const hasFailingJobs = !!log.find(job => !!job?.finishedWithError);
 
-    return hasFailingJobs ? data.periodicJobLog : [data.periodicJobLog[0]];
-  }, [data?.periodicJobLog]);
+    return hasFailingJobs ? log : [log[0]];
+  }, [log]);
 
   /**
    * In case the last running job is older than 24 + 4 hour.
@@ -209,20 +209,20 @@ export function usePeriodicJobNotifications({
           title={title}
           actions={
             mayRetry && severity === 'error' && periodicJob === jobs[0] ?
-              <Whisper
-                trigger={['hover', 'focus']}
+              <Tooltip
                 placement="top"
-                speaker={<Tooltip>{t('periodicJobsLog.retryHint')}</Tooltip>}
+                describeChild
+                title={t('periodicJobsLog.retryHint')}
               >
                 <Button
-                  size="sm"
-                  appearance="primary"
+                  variant="contained"
+                  size="small"
                   loading={retrying}
                   onClick={() => retryPeriodicJob()}
                 >
                   {t('periodicJobsLog.retry')}
                 </Button>
-              </Whisper>
+              </Tooltip>
             : undefined
           }
         >
@@ -276,5 +276,5 @@ export function usePeriodicJobNotifications({
 export function PeriodicJobsLog(props: PeriodicJobsLogProps) {
   const items = usePeriodicJobNotifications(props);
 
-  return items.length ? <Stack>{items}</Stack> : null;
+  return items.length ? <Stack direction="row">{items}</Stack> : null;
 }

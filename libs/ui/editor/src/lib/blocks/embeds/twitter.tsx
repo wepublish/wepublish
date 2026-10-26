@@ -17,8 +17,8 @@ declare global {
   }
 }
 export interface TwitterContextState {
-  readonly isLoaded: boolean;
-  readonly isLoading: boolean;
+  isLoaded: boolean;
+  isLoading: boolean;
 
   load(): void;
 }

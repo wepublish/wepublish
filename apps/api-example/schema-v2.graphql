@@ -59,6 +59,41 @@ enum AnalyticsProviderType {
   GOOGLE
 }
 
+type ApiToken {
+  createdAt: DateTime!
+
+  """The user who created this token. Null once that user is deleted."""
+  createdBy: User
+  createdById: String
+
+  """When the token stops working."""
+  expiresAt: DateTime!
+  id: String!
+  lastUsedAt: DateTime
+  modifiedAt: DateTime!
+  name: String!
+
+  """The non-secret start of the token"""
+  prefix: String!
+  revokedAt: DateTime
+
+  """The permissions this token carries."""
+  scopes: [String!]!
+}
+
+enum ApiTokenSort {
+  CreatedAt
+  LastUsedAt
+  Name
+}
+
+"""A revoked token counts as revoked even once it has also expired."""
+enum ApiTokenStatus {
+  Active
+  Expired
+  Revoked
+}
+
 type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   createdAt: DateTime!
   disableComments: Boolean!
@@ -827,6 +862,8 @@ input CreateCrowdfundingMemberPlan {
 }
 
 input CreateExternalAppInput {
+  """An API key you may see that has neither expired nor been revoked."""
+  apiTokenId: String
   description: String
   icon: String
   name: String!
@@ -837,6 +874,16 @@ input CreateExternalAppInput {
 type CreateSubscriptionInfo {
   discountCodeValid: Boolean
   discountPercent: Float
+}
+
+"""
+A newly created token. The secret is returned exactly once and cannot be retrieved again.
+"""
+type CreatedApiToken {
+  apiToken: ApiToken!
+
+  """The secret."""
+  token: String!
 }
 
 type Crowdfunding {
@@ -1198,6 +1245,13 @@ input EventTeaserInput {
 }
 
 type ExternalApp {
+  """
+  The linked API key, for editors who may see it in the API keys list. Never contains the secret.
+  """
+  apiToken: ApiToken
+
+  """The API key the app reads the We.Publish API with."""
+  apiTokenId: String
   createdAt: DateTime!
   description: String
   icon: String
@@ -2158,6 +2212,13 @@ enum MailchimpContactStatus {
   Subscribed
 }
 
+type MailchimpDraft {
+  editUrl: String!
+  id: String!
+  title: String!
+  webId: Int!
+}
+
 type MailchimpFormBlock implements BaseBlock {
   autoFocus: Boolean!
   blockStyle: String
@@ -2667,8 +2728,16 @@ type Mutation {
   """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 
+  """
+  Called by We.Publish One. Replaces the feature state of this medium and returns the features now switched on.
+  """
+  applyMediumFeatures(features: JSONObject!): [String!]!
+
   """Approves a comment"""
   approveComment(id: String!): Comment!
+
+  """Hides the campaign from the default list. Campaigns are never deleted."""
+  archiveNewsletterCampaign(id: String!): NewsletterCampaign!
 
   """
   Stop a running send job. Unsent recipients stay open and can be continued.
@@ -2709,6 +2778,18 @@ type Mutation {
 
   """Creates a new analytics provider setting."""
   createAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String!, name: String, property: String, type: AnalyticsProviderType!): SettingAnalyticsProvider!
+
+  """
+  Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again.
+  """
+  createApiToken(
+    """When the token stops working."""
+    expiresAt: DateTime!
+    name: String!
+
+    """The permissions this token carries."""
+    scopes: [String!]!
+  ): CreatedApiToken!
 
   """Creates an article."""
   createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
@@ -2775,9 +2856,10 @@ type Mutation {
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+  createNewsletterCampaign(document: JSONObject, title: String!): NewsletterCampaign!
 
   """Creates an page."""
-  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
@@ -3021,6 +3103,11 @@ type Mutation {
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!
 
+  """
+  A new campaign with the given one's document. The Mailchimp draft is not copied.
+  """
+  duplicateNewsletterCampaign(id: String!): NewsletterCampaign!
+
   """Duplicates an page."""
   duplicatePage(id: String!): Page!
 
@@ -3083,6 +3170,7 @@ type Mutation {
 
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
+  publishNewsletterCampaign(id: String!): NewsletterPublishResult!
 
   """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
@@ -3165,6 +3253,11 @@ type Mutation {
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
+
+  """
+  Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately.
+  """
+  revokeApiToken(id: String!): ApiToken!
   revokeImpersonationSessions(ids: [String!]): Int!
 
   """
@@ -3198,6 +3291,7 @@ type Mutation {
 
   """Triggers a mailchimp sync in the background."""
   triggerMailchimpSync(id: String!): Boolean!
+  unarchiveNewsletterCampaign(id: String!): NewsletterCampaign!
 
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
@@ -3237,7 +3331,7 @@ type Mutation {
   updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates the current logged in user."""
-  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+  updateCurrentUser(address: UserAddressInput, birthday: DateTime, firstName: String, flair: String, name: String): SensitiveDataUser!
 
   """Updates an existing discountCode."""
   updateDiscountCode(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): DiscountCode!
@@ -3249,7 +3343,18 @@ type Mutation {
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
 
   """Updates an existing external app."""
-  updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
+  updateExternalApp(
+    """
+    An API key you may see that has neither expired nor been revoked; null unlinks the key.
+    """
+    apiTokenId: String
+    description: String
+    icon: String
+    id: String!
+    name: String
+    target: ExternalAppsTarget
+    url: String
+  ): ExternalApp!
 
   """Updates an existing goodie."""
   updateGoodie(active: Boolean, description: RichText, id: String!, imageID: String, memberPlanIDs: [String!], name: String, stock: Int): Goodie!
@@ -3271,9 +3376,10 @@ type Mutation {
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
+  updateNewsletterCampaign(document: JSONObject!, id: String!, title: String): NewsletterCampaign!
 
   """Updates an page."""
-  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
@@ -3300,6 +3406,11 @@ type Mutation {
 
   """Update the comment rating system."""
   updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
+
+  """
+  Marks an SEO checklist item as done or not done and returns all completed items.
+  """
+  updateSeoChecklistItem(completed: Boolean!, itemId: String!): [SeoChecklistItem!]!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
@@ -3391,6 +3502,55 @@ enum NavigationLinkType {
   Page
 }
 
+type NewsletterCampaign {
+  blockCount: Int!
+  createdAt: DateTime!
+  document: JSONObject!
+  id: String!
+  images: [Image!]!
+  mailchimpCampaignId: String
+  mailchimpCampaignWebId: Int
+  mailchimpEditUrl: String
+  modifiedAt: DateTime!
+  status: NewsletterCampaignStatus!
+  title: String!
+}
+
+enum NewsletterCampaignStatus {
+  active
+  archived
+}
+
+type NewsletterInterestCategory {
+  groups: [String!]!
+  title: String!
+}
+
+type NewsletterMergeFields {
+  error: String
+  fields: [NewsletterMergeTag!]!
+  interests: [NewsletterInterestCategory!]!
+}
+
+type NewsletterMergeTag {
+  description: String!
+  kind: String
+  label: String!
+  tag: String!
+}
+
+type NewsletterPublishResult {
+  campaign: MailchimpDraft!
+  created: Boolean!
+  report: NewsletterReport!
+}
+
+type NewsletterReport {
+  bytes: Int!
+  missingArticles: [String!]!
+  missingFooter: [String!]!
+}
+
 type NotificationConfirmation {
   confirmedByUserId: String
   createdAt: DateTime!
@@ -3445,6 +3605,8 @@ type Page {
   createdAt: DateTime!
   draft: PageRevision
   hidden: Boolean!
+  hideFooter: Boolean!
+  hideHeader: Boolean!
   id: String!
   latest: PageRevision!
   modifiedAt: DateTime!
@@ -3550,6 +3712,12 @@ input PageTeaserInput {
   pageID: String
   preTitle: String
   title: String
+}
+
+type PaginatedApiTokens {
+  nodes: [ApiToken!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type PaginatedArticleRevisions {
@@ -4270,6 +4438,22 @@ type Query {
   """Returns all analytics provider settings."""
   analyticsProviderSettings(filter: SettingAnalyticsProviderFilter): [SettingAnalyticsProvider!]!
 
+  """
+  Returns your own api tokens, or everyone's with CAN_GET_ALL_API_TOKENS. Secrets are never included.
+  """
+  apiTokens(
+    """
+    Only tokens created by this user. Ignored without CAN_GET_ALL_API_TOKENS, which already limits you to your own.
+    """
+    createdById: String
+    cursorId: String
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: ApiTokenSort = CreatedAt
+    status: ApiTokenStatus
+    take: Int = 10
+  ): PaginatedApiTokens!
+
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
 
@@ -4462,6 +4646,11 @@ type Query {
   """Returns all external apps. Requires authentication."""
   externalApps(filter: ExternalAppFilter): [ExternalApp!]!
 
+  """
+  The features switched on for this medium in We.Publish One (or through WEP_FEATURES).
+  """
+  features: [String!]!
+
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
 
@@ -4606,6 +4795,13 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  newsletterCampaign(id: String!): NewsletterCampaign!
+
+  """The stored issue rendered as the HTML Mailchimp receives."""
+  newsletterCampaignPreview(id: String!): String!
+  newsletterCampaignReport(id: String!): NewsletterReport!
+  newsletterCampaigns(includeArchived: Boolean! = false): [NewsletterCampaign!]!
+  newsletterMergeFields: NewsletterMergeFields!
 
   """
   Returns the instance-wide notification confirmations. Requires authentication.
@@ -4695,6 +4891,9 @@ type Query {
 
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """Returns a checklist of the SEO setup of the website."""
+  seoChecklist: SeoChecklist!
 
   "\n      Returns a single setting by name.\n    "
   setting(name: String!): Setting!
@@ -4926,6 +5125,44 @@ type SensitiveDataUser implements BaseUser {
   """
   totpExempt: Boolean!
   userImageID: String
+}
+
+type SeoCheck {
+  detail: String
+  id: SeoCheckId!
+  status: SeoCheckStatus!
+  url: String
+}
+
+enum SeoCheckId {
+  ArticleMarkup
+  Feed
+  NewsSitemap
+  PublicationMetadata
+  Sitemap
+}
+
+enum SeoCheckStatus {
+  Error
+  Info
+  Ok
+  Warning
+}
+
+type SeoChecklist {
+  atomFeedUrl: String!
+  checks: [SeoCheck!]!
+  completedItems: [SeoChecklistItem!]!
+  jsonFeedUrl: String!
+  rssFeedUrl: String!
+  sitemapUrl: String!
+  websiteUrl: String!
+}
+
+type SeoChecklistItem {
+  completedAt: DateTime!
+  completedBy: String
+  itemId: String!
 }
 
 type SessionWithToken {

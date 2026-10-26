@@ -26,7 +26,11 @@ import { PaymentMethod, PaymentMethodDataloader } from '@wepublish/payment/api';
 import { SubscriptionDeactivationDataloader } from './subscription-deactivation.dataloader';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { Subscription as PSubscription } from '@prisma/client';
-import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import {
+  hasPermission,
+  Permissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
 import {
   CanCreateSubscription,
   CanDeleteSubscription,
@@ -167,7 +171,7 @@ export class PublicSubscriptionResolver {
   ) {
     return (properties as unknown as Property[])?.filter(
       prop =>
-        prop.public || hasPermission(CanGetSubscription, user?.roles ?? [])
+        prop.public || hasPermission(CanGetSubscription, permissionsOf(user))
     );
   }
 
@@ -258,7 +262,7 @@ export class PublicSubscriptionResolver {
   ) {
     const canManage = hasPermission(
       [CanGetSubscription, CanGetSubscriptions],
-      user?.roles ?? []
+      permissionsOf(user)
     );
     const isOwn = parent.userID === user?.user.id;
 

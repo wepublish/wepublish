@@ -14,8 +14,8 @@ an entry is inserted as soon as its folder reaches the deployed code, and never 
    a normal claude.ai login (no API key):
 
    ```bash
-   npm run changelog:generate            # analyzes the branch diff vs origin/master
-   npm run changelog:generate -- --base <git-ref>
+   pnpm run changelog:generate            # analyzes the branch diff vs origin/master
+   pnpm run changelog:generate --base <git-ref>
    ```
 
    This drafts the entry in all three languages (en/de/fr), validates it with
@@ -25,9 +25,9 @@ an entry is inserted as soon as its folder reaches the deployed code, and never 
 1. Or scaffold it manually (mirrors `prisma migrate dev --name …`):
 
    ```bash
-   npm run changelog:create -- "New landing page block"
+   pnpm run changelog:create "New landing page block"
    # needs a manual step in every instance?
-   npm run changelog:create -- "New landing page block" --action-required
+   pnpm run changelog:create "New landing page block" --action-required
    ```
 
    This creates a correctly named folder `<YYYYMMDDHHMMSS>_<snake_case_name>`
