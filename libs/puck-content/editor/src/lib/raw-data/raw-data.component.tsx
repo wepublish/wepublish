@@ -4,16 +4,17 @@ import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ComponentData, createUsePuck, Data } from '@puckeditor/core';
 import CodeMirror from '@uiw/react-codemirror';
-import { useEffect, useMemo, useState } from 'react';
+import { useDarkMode } from '@wepublish/ui/editor';
+import { useMemo, useState } from 'react';
 
 const ROOT_ZONE = 'root:default-zone';
 
 const EditorWrapper = styled(Box)`
   margin: ${({ theme }) => theme.spacing(0, 1.5, 1.5)};
-  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border: 1px solid var(--puck-color-border);
   border-radius: 6px;
   overflow: hidden;
-  background-color: #fff;
+  background-color: var(--puck-color-surface);
 
   & .cm-editor.cm-focused {
     outline: none;
@@ -94,6 +95,7 @@ const parseDocumentData = (
 };
 
 export const RawDataView = () => {
+  const dark = useDarkMode();
   const selectedItem = usePuck(state => state.selectedItem);
   const itemSelector = usePuck(state => state.appState.ui.itemSelector);
   const data = usePuck(state => state.appState.data);
@@ -109,10 +111,14 @@ export const RawDataView = () => {
 
   const selectionKey = selectedItem?.props.id ?? null;
 
-  useEffect(() => {
+  const [previousSelectionKey, setPreviousSelectionKey] =
+    useState(selectionKey);
+
+  if (previousSelectionKey !== selectionKey) {
+    setPreviousSelectionKey(selectionKey);
     setEdited(null);
     setError(null);
-  }, [selectionKey]);
+  }
 
   const extensions = useMemo(() => [javascript(), EditorView.lineWrapping], []);
 
@@ -168,7 +174,7 @@ export const RawDataView = () => {
         <Typography
           variant="h5"
           component="div"
-          fontWeight={600}
+          sx={{ fontWeight: 600 }}
         >
           Raw Data
         </Typography>
@@ -187,6 +193,7 @@ export const RawDataView = () => {
       <EditorWrapper>
         <CodeMirror
           value={value}
+          theme={dark ? 'dark' : 'light'}
           maxHeight="400px"
           extensions={extensions}
           onChange={handleChange}

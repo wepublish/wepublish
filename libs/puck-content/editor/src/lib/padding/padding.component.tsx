@@ -1,5 +1,6 @@
 import { FieldLabel, FieldProps } from '@puckeditor/core';
 
+import { FieldCheckboxLabel, FieldInput, FieldStack } from '../field-controls';
 import {
   PaddingField,
   PaddingSide,
@@ -68,44 +69,46 @@ export const PaddingFieldRender = ({
       readOnly={readOnly}
       el="div"
     >
-      {!showMore && (
-        <input
-          type="number"
-          value={current.top ?? ''}
-          disabled={readOnly}
-          placeholder={labels.all}
-          onChange={event => handleAllChange(event.currentTarget.value)}
-        />
-      )}
+      <FieldStack>
+        {!showMore && (
+          <FieldInput
+            type="number"
+            value={current.top ?? ''}
+            disabled={readOnly}
+            placeholder={labels.all}
+            onChange={event => handleAllChange(event.currentTarget.value)}
+          />
+        )}
 
-      {showMore &&
-        paddingSides.map(side => (
-          <FieldLabel
-            key={side}
-            label={labels[side]}
-            readOnly={readOnly}
-            el="div"
-          >
-            <input
-              type="number"
-              value={current[side] ?? ''}
-              disabled={readOnly}
-              onChange={event =>
-                handleSideChange(side, event.currentTarget.value)
-              }
-            />
-          </FieldLabel>
-        ))}
+        {showMore &&
+          paddingSides.map(side => (
+            <FieldLabel
+              key={side}
+              label={labels[side]}
+              readOnly={readOnly}
+              el="div"
+            >
+              <FieldInput
+                type="number"
+                value={current[side] ?? ''}
+                disabled={readOnly}
+                onChange={event =>
+                  handleSideChange(side, event.currentTarget.value)
+                }
+              />
+            </FieldLabel>
+          ))}
 
-      <label>
-        <input
-          type="checkbox"
-          checked={showMore}
-          disabled={readOnly}
-          onChange={event => setShowMore(event.currentTarget.checked)}
-        />
-        {labels.moreOptions}
-      </label>
+        <FieldCheckboxLabel>
+          <input
+            type="checkbox"
+            checked={showMore}
+            disabled={readOnly}
+            onChange={event => setShowMore(event.currentTarget.checked)}
+          />
+          {labels.moreOptions}
+        </FieldCheckboxLabel>
+      </FieldStack>
     </FieldLabel>
   );
 };

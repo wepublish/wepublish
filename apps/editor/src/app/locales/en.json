@@ -4359,6 +4359,7 @@
     },
     "seoPreviews": {
       "info": "Approximate previews based on the current settings. The platforms decide the final look and may shorten texts or crop images.",
+      "noImage": "No image",
       "pageIgnoresSeoFields": "The website currently does not use the SEO title and SEO description of pages. The previews show what is actually used.",
       "google": "Google search",
       "googleTitleTooLong": "Longer than {{limit}} characters, Google will likely shorten it",
@@ -4575,6 +4576,7 @@
         "paywall": "Create paywall",
         "page": "Create page",
         "pageTemplate": "Create page template",
+        "puckPage": "Create page with Puck",
         "pageTag": "Create page tag",
         "crowdfunding": "Create crowdfunding",
         "blockTemplate": "Create block template",
@@ -4823,6 +4825,12 @@
         "heading": "Settings",
         "title": "Title",
         "titleHint": "Also the subject line of the Mailchimp draft. Takes effect on save."
+      }
+    },
+    "puck": {
+      "search": {
+        "placeholder": "Search blocks",
+        "noResults": "No blocks found"
       }
     }
   }

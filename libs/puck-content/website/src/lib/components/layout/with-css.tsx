@@ -1,5 +1,6 @@
 import { ClassNames, CSSObject, Theme } from '@emotion/react';
 import { ComponentConfig, DefaultComponentProps } from '@puckeditor/core';
+import { createElement } from 'react';
 
 import {
   alignmentFieldAi,
@@ -18,7 +19,7 @@ import { UserFields } from '../../types';
 export type CSSValue = {
   color?: ColorValue;
   background?: ColorValue;
-  textAlign?: AlignmentValue;
+  textAlign?: Extract<AlignmentValue, 'left' | 'center' | 'right'>;
   border?: BorderValue;
   padding?: PaddingValue;
 };
@@ -116,12 +117,12 @@ export function withCSS<
     },
     render: ({ css: cssValue, className, ...props }) => (
       <ClassNames>
-        {({ css, cx, theme }) => (
-          <Render
-            {...(props as Parameters<typeof Render>[0])}
-            className={cx(className, css(cssStyles(theme, cssValue)))}
-          />
-        )}
+        {({ css, cx, theme }) =>
+          createElement(Render, {
+            ...props,
+            className: cx(className, css(cssStyles(theme, cssValue))),
+          } as Parameters<typeof Render>[0])
+        }
       </ClassNames>
     ),
   } as ComponentConfig<{ props: WithCSS<Props>; fields: UserFields }>;

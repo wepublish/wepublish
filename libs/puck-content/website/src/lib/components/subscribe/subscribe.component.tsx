@@ -8,7 +8,7 @@ import {
 import { DatasourceValueType } from '@wepublish/puck-content/editor';
 
 export type SubscribeConfigProps = BuilderSubscribeBlockProps & {
-  datasource?: DatasourceValueType<'items'>;
+  datasource: DatasourceValueType<'items'>;
 };
 
 export const SubscribeRender: PuckComponent<SubscribeConfigProps> = props => (

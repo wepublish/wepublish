@@ -63,10 +63,11 @@ const AlignmentOption = styled.label<{ active: boolean; disabled: boolean }>`
   align-items: center;
   justify-content: center;
   padding: 8px;
-  border: 1px solid ${({ active }) => (active ? '#1a1a1a' : '#ddd')};
+  border: 1px solid
+    ${({ active }) => (active ? 'var(--puck-color-interactive)' : 'var(--puck-color-border)')};
   border-radius: 4px;
-  background: ${({ active }) => (active ? '#1a1a1a' : 'transparent')};
-  color: ${({ active }) => (active ? '#f2f2f2' : 'inherit')};
+  background: ${({ active }) => (active ? 'var(--puck-color-interactive-soft)' : 'var(--puck-color-surface)')};
+  color: ${({ active }) => (active ? 'var(--puck-color-interactive)' : 'var(--puck-color-text)')};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 

@@ -14,7 +14,7 @@ export const defaultGap = 16;
  * Sub fields for a breakpoints field controlling the gaps between the
  * children of a grid-like layout.
  */
-export const gapFields: BreakpointsField<GapValue>['objectFields'] = {
+export const gapFields = {
   columnGap: {
     type: 'number',
     label: 'Column gap',
@@ -25,7 +25,7 @@ export const gapFields: BreakpointsField<GapValue>['objectFields'] = {
     label: 'Row gap',
     min: 0,
   },
-};
+} satisfies BreakpointsField<GapValue>['objectFields'];
 
 export const gapSchema = {
   columnGap: z

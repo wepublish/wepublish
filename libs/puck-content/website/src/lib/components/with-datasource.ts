@@ -1,4 +1,8 @@
-import { ComponentConfig, DefaultComponentProps } from '@puckeditor/core';
+import {
+  ComponentConfig,
+  DefaultComponentProps,
+  PuckComponent,
+} from '@puckeditor/core';
 
 import {
   DatasourceField,
@@ -8,14 +12,17 @@ import {
 import { UserFields } from '../types';
 
 export type WithDataSource<Props> = Props & {
-  datasource: DatasourceValue;
+  datasource?: DatasourceValue;
 };
 
 export function withDataSource<Props extends DefaultComponentProps>(
-  config: ComponentConfig<{
-    props: Omit<Props, 'datasource'>;
-    fields: UserFields;
-  }>,
+  config: Omit<
+    ComponentConfig<{
+      props: Omit<Props, 'datasource'>;
+      fields: UserFields;
+    }>,
+    'render'
+  > & { render: PuckComponent<WithDataSource<Props>> },
   defaultProps?: DatasourceValue,
   settings?: Omit<DatasourceField, 'type' | 'ai'>
 ): ComponentConfig<{ props: WithDataSource<Props>; fields: UserFields }> {

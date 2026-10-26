@@ -27,7 +27,9 @@ export const themeColorGroups = {
 export type ThemeColorGroups = typeof themeColorGroups;
 
 export type ThemeColorValue = {
-  [Group in keyof ThemeColorGroups]: `${Group}.${ThemeColorGroups[Group][number]}`;
+  [
+    Group in keyof ThemeColorGroups
+  ]: `${Group}.${ThemeColorGroups[Group][number]}`;
 }[keyof ThemeColorGroups];
 
 export const themeColors = Object.entries(themeColorGroups).flatMap(
@@ -69,7 +71,9 @@ export const resolveColor = (
 
   const [group, shade] = value.split('.') as [keyof ThemeColorGroups, string];
 
-  return (theme.palette[group] as Record<string, string> | undefined)?.[shade];
+  return (
+    theme.palette[group] as unknown as Record<string, string> | undefined
+  )?.[shade];
 };
 
 export const colorSchema = (

@@ -48,6 +48,10 @@ import { TeaserPreTitleConfig } from './components/teaser/teaser-pre-title/tease
 import { TeaserTagsConfig } from './components/teaser/teaser-tags/teaser-tags.config';
 import { TeaserTitleConfig } from './components/teaser/teaser-title/teaser-title.config';
 
+type RootSEOField = NonNullable<
+  NonNullable<UserConfig['root']>['fields']
+>['seo'];
+
 export const config: UserConfig = {
   root: {
     fields: {
@@ -68,11 +72,11 @@ export const config: UserConfig = {
       seo: seoField({
         label: 'SEO',
         instructions: 'Metadata shown to search engines.',
-      }),
+      }) as RootSEOField,
       socialMedia: seoField({
         label: 'Social Media',
         instructions: 'Metadata shown when the page is shared on social media.',
-      }),
+      }) as RootSEOField,
     },
     defaultProps: {
       showFooter: true,

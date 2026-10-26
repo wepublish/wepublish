@@ -1,5 +1,6 @@
+import { useQuery } from '@apollo/client/react';
 import { PuckComponent } from '@puckeditor/core';
-import { useImageQuery } from '@wepublish/website/api';
+import { ImageDocument } from '@wepublish/website/api';
 import { BreakBlock, BuilderBreakBlockProps } from '@wepublish/website/builder';
 
 import { useOverlayPortalOnModifier } from '@wepublish/puck-content/editor';
@@ -10,7 +11,7 @@ export const BreakRender: PuckComponent<BreakConfigProps> = ({
   imageId,
   ...props
 }) => {
-  const { data } = useImageQuery({
+  const { data } = useQuery(ImageDocument, {
     variables: { id: imageId ?? '' },
     skip: !imageId,
   });

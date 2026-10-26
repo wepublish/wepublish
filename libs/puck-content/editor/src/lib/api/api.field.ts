@@ -27,7 +27,7 @@ export type ApiField<Item = any, Props = Item> = BaseField & {
   type: 'api';
   placeholder?: string;
   useFetchList: (
-    client: ApolloClient<object>,
+    client: ApolloClient,
     params: ApiFetchListParams
   ) => PaginatedType<Item> | undefined;
   mapProp?: (item: Item) => Props;

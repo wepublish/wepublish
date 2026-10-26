@@ -43,6 +43,7 @@ export * from './lib/switch/switch.field';
 export * from './lib/tag/tag';
 export * from './lib/tag/tag.field';
 export * from './lib/theme';
+export * from './lib/website-theme';
 export * from './lib/typography/typography';
 export * from './lib/typography/typography.field';
 export * from './lib/viewport-selection/viewport-selection';

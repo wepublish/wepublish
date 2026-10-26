@@ -1,5 +1,7 @@
 import { FieldLabel, FieldProps } from '@puckeditor/core';
 
+import { FieldSelect } from '../field-controls.component';
+import { FieldStack } from '../field-controls';
 import {
   DatasourceField,
   DatasourceModels,
@@ -61,48 +63,50 @@ export const DatasourceFieldRender = ({
       readOnly={readOnly}
       el="div"
     >
-      {types.length > 1 && (
-        <select
-          value={current.type}
-          disabled={readOnly}
-          onChange={event =>
-            handleTypeChange(event.currentTarget.value as DatasourceType)
-          }
-        >
-          {types.map(type => (
-            <option
-              key={type}
-              value={type}
-            >
-              {datasourceLabels[type]}
-            </option>
-          ))}
-        </select>
-      )}
+      <FieldStack>
+        {types.length > 1 && (
+          <FieldSelect
+            value={current.type}
+            disabled={readOnly}
+            onChange={event =>
+              handleTypeChange(event.currentTarget.value as DatasourceType)
+            }
+          >
+            {types.map(type => (
+              <option
+                key={type}
+                value={type}
+              >
+                {datasourceLabels[type]}
+              </option>
+            ))}
+          </FieldSelect>
+        )}
 
-      {requiresModel(current) && models.length > 1 && (
-        <select
-          value={current.model}
-          disabled={readOnly}
-          onChange={event =>
-            onChange({
-              ...current,
-              model: event.currentTarget.value as DatasourceModels,
-            })
-          }
-        >
-          <option value="">Select a model…</option>
+        {requiresModel(current) && models.length > 1 && (
+          <FieldSelect
+            value={current.model}
+            disabled={readOnly}
+            onChange={event =>
+              onChange({
+                ...current,
+                model: event.currentTarget.value as DatasourceModels,
+              })
+            }
+          >
+            <option value="">Select a model…</option>
 
-          {models.map(model => (
-            <option
-              key={model}
-              value={model}
-            >
-              {model}
-            </option>
-          ))}
-        </select>
-      )}
+            {models.map(model => (
+              <option
+                key={model}
+                value={model}
+              >
+                {model}
+              </option>
+            ))}
+          </FieldSelect>
+        )}
+      </FieldStack>
     </FieldLabel>
   );
 };

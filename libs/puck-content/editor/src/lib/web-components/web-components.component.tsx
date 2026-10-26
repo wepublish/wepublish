@@ -1,6 +1,10 @@
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useSyncExternalStore } from 'react';
 
-import { bridgeCustomElements } from './web-components';
+import {
+  bridgeDocument,
+  isDocumentBridged,
+  subscribeToBridgedDocuments,
+} from './web-components';
 
 type CustomElementsBridgeProps = PropsWithChildren<{
   document?: Document;
@@ -14,26 +18,24 @@ export const CustomElementsBridge = ({
   children,
   document: frameDocument,
 }: CustomElementsBridgeProps) => {
-  const [bridgedDocument, setBridgedDocument] = useState<Document>();
+  const bridged = useSyncExternalStore(
+    subscribeToBridgedDocuments,
+    () => isDocumentBridged(frameDocument),
+    () => false
+  );
 
   useEffect(() => {
     if (!frameDocument) {
       return;
     }
 
-    const restore = bridgeCustomElements(frameDocument);
-    setBridgedDocument(frameDocument);
-
-    return () => {
-      restore();
-      setBridgedDocument(undefined);
-    };
+    return bridgeDocument(frameDocument);
   }, [frameDocument]);
 
   // Puck's override has to return an element, not a bare node
   /* eslint-disable react/jsx-no-useless-fragment */
   // Without an iframe the preview shares the editor document and needs no bridge
-  if (frameDocument && bridgedDocument !== frameDocument) {
+  if (frameDocument && !bridged) {
     return <></>;
   }
 

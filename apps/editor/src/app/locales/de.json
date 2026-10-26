@@ -4340,6 +4340,7 @@
     },
     "seoPreviews": {
       "info": "Ungefähre Vorschauen anhand der aktuellen Einstellungen. Die Plattformen bestimmen die endgültige Darstellung und können Texte kürzen oder Bilder zuschneiden.",
+      "noImage": "Kein Bild",
       "pageIgnoresSeoFields": "Die Website verwendet SEO-Titel und SEO-Beschreibung von Seiten derzeit nicht. Die Vorschauen zeigen, was tatsächlich verwendet wird.",
       "google": "Google-Suche",
       "googleTitleTooLong": "Länger als {{limit}} Zeichen, Google kürzt ihn wahrscheinlich",
@@ -4575,6 +4576,7 @@
         "paywall": "Paywall erstellen",
         "page": "Seite erstellen",
         "pageTemplate": "Seitenvorlage erstellen",
+        "puckPage": "Seite mit Puck erstellen",
         "pageTag": "Seiten-Tag erstellen",
         "crowdfunding": "Crowdfunding erstellen",
         "blockTemplate": "Block-Vorlage erstellen",
@@ -4823,6 +4825,12 @@
         "heading": "Einstellungen",
         "title": "Titel",
         "titleHint": "Zugleich die Betreffzeile des Mailchimp-Entwurfs. Wird beim Speichern übernommen."
+      }
+    },
+    "puck": {
+      "search": {
+        "placeholder": "Blöcke suchen",
+        "noResults": "Keine Blöcke gefunden"
       }
     }
   }

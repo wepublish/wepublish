@@ -36,5 +36,6 @@ export * from './lib/singleView/singleViewTitle';
 export * from './lib/snackbar';
 export * from './lib/testUtils';
 export * from './lib/toggleRequiredLabel';
+export * from './lib/useDarkMode';
 export * from './lib/useReportQueryErrors';
 export * from './lib/utility';

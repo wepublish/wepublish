@@ -43,7 +43,7 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
             cursor: 'pointer',
             borderRadius: `3px`,
             bgcolor: props.value ?? '#00000000',
-            border: `1px solid ${theme.palette.divider}`,
+            border: `1px solid ${theme.vars.palette.divider}`,
           })}
           onClick={() => setOpen(true)}
         />

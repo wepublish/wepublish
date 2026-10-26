@@ -1,9 +1,13 @@
-import { CSSObject, useTheme } from '@emotion/react';
+import { useQuery } from '@apollo/client/react';
+import { CSSObject } from '@emotion/react';
 import styled from '@emotion/styled';
-import { TypographyStyleOptions } from '@mui/material/styles/createTypography';
+import { TypographyStyle } from '@mui/material/styles';
 import { FieldLabel, FieldProps } from '@puckeditor/core';
-import { FontWeight, useWebsiteSettingsQuery } from '@wepublish/editor/api';
+import { FontWeight, WebsiteSettingsDocument } from '@wepublish/editor/api';
 
+import { FieldSelect } from '../field-controls.component';
+import { FieldInput } from '../field-controls';
+import { useWebsiteTheme } from '../website-theme';
 import {
   customTypographyVariant,
   fontWeights,
@@ -64,7 +68,7 @@ type WebsiteFont = {
 };
 
 const useWebsiteFonts = (): WebsiteFont[] => {
-  const { data } = useWebsiteSettingsQuery();
+  const { data } = useQuery(WebsiteSettingsDocument);
 
   return useMemo(
     () =>
@@ -93,7 +97,7 @@ const Fields = styled.div`
   gap: 8px;
 `;
 
-const Preview = styled.div<{ font: TypographyStyleOptions | undefined }>`
+const Preview = styled.div<{ font: TypographyStyle | undefined }>`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -114,7 +118,7 @@ export const TypographyFieldRender = ({
   readOnly,
 }: TypographyFieldRenderProps) => {
   const labels = useTypographyLabels();
-  const theme = useTheme();
+  const theme = useWebsiteTheme();
   const fonts = useWebsiteFonts();
   const variants = field.variants ?? getThemeTypographyVariants(theme);
   const current = value ?? {};
@@ -176,7 +180,7 @@ export const TypographyFieldRender = ({
       el="div"
     >
       <Fields>
-        <select
+        <FieldSelect
           value={current.variant ?? ''}
           disabled={readOnly}
           onChange={event => handleVariantChange(event.currentTarget.value)}
@@ -193,7 +197,7 @@ export const TypographyFieldRender = ({
           ))}
 
           <option value={customTypographyVariant}>{labels.custom}</option>
-        </select>
+        </FieldSelect>
 
         {isCustom && (
           <>
@@ -202,7 +206,7 @@ export const TypographyFieldRender = ({
               readOnly={readOnly}
               el="div"
             >
-              <select
+              <FieldSelect
                 value={current.fontFamily ?? ''}
                 disabled={readOnly}
                 onChange={event =>
@@ -219,7 +223,7 @@ export const TypographyFieldRender = ({
                     {font.name}
                   </option>
                 ))}
-              </select>
+              </FieldSelect>
             </FieldLabel>
 
             <FieldLabel
@@ -227,7 +231,7 @@ export const TypographyFieldRender = ({
               readOnly={readOnly}
               el="div"
             >
-              <select
+              <FieldSelect
                 value={current.fontWeight ?? ''}
                 disabled={readOnly}
                 onChange={event =>
@@ -244,7 +248,7 @@ export const TypographyFieldRender = ({
                     {weight} · {labels.weights[weight]}
                   </option>
                 ))}
-              </select>
+              </FieldSelect>
             </FieldLabel>
 
             <FieldLabel
@@ -252,7 +256,7 @@ export const TypographyFieldRender = ({
               readOnly={readOnly}
               el="div"
             >
-              <input
+              <FieldInput
                 type="text"
                 value={current.fontSize ?? ''}
                 disabled={readOnly}
@@ -268,7 +272,7 @@ export const TypographyFieldRender = ({
               readOnly={readOnly}
               el="div"
             >
-              <input
+              <FieldInput
                 type="text"
                 value={current.lineHeight ?? ''}
                 disabled={readOnly}

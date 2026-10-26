@@ -61,7 +61,7 @@ import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 import { SeoBlockContext } from './seoBlockContext';
 import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
-import { SocialPreviews } from './seoPreviews';
+import { SeoPreviewInfo, SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';
 
 const InputWidth60 = styled(TextField)`
@@ -281,6 +281,8 @@ function PageMetadataPanel({
               helperText={t('metadataHints.socialMediaDescriptionFallback')}
               fullWidth
             />
+
+            <SeoPreviewInfo />
 
             <SocialPreviews
               data={getSeoPreviewData(

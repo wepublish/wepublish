@@ -31,6 +31,7 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms/permissionControl';
+import { prepareImageForUpload } from '../atoms/prepareImageForUpload';
 import { ImageBlockValue } from '../blocks';
 import {
   DrawerActions,
@@ -113,6 +114,7 @@ function ImageEditPanel({
   const { t } = useTranslation();
   const client = useApolloClient();
   const [loadingError, setLoadingError] = useState<Error>();
+  const [preparedFile, setPreparedFile] = useState<File>();
 
   const [updateImage, { loading: isUpdating, error: savingError }] =
     useMutation(UpdateImageDocument);
@@ -159,16 +161,18 @@ function ImageEditPanel({
     resolver: zodResolver(schema),
     defaultValues: async () => {
       if (file) {
-        const [filename, ...extensions] = file.name.split('.');
-
         try {
-          const { url, width, height } = await readFile(file);
+          const prepared = await prepareImageForUpload(file);
+          setPreparedFile(prepared);
+
+          const [filename, ...extensions] = prepared.name.split('.');
+          const { url, width, height } = await readFile(prepared);
 
           return {
             ...EMPTY_IMAGE,
             filename,
             extension: `.${extensions.join('.')}`,
-            fileSize: file.size,
+            fileSize: prepared.size,
             imageURL: url,
             imageWidth: width,
             imageHeight: height,
@@ -270,7 +274,7 @@ function ImageEditPanel({
     };
 
     if (isUpload) {
-      const optimizedImage: File = await resizeImage(file!);
+      const optimizedImage: File = await resizeImage(preparedFile ?? file!);
       const { data } = await uploadImage({
         variables: {
           file: optimizedImage!,

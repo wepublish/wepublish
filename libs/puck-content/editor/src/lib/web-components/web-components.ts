@@ -48,3 +48,32 @@ export const bridgeCustomElements = (frameDocument: Document) => {
     }
   };
 };
+
+const bridgedDocuments = new Set<Document>();
+const bridgeListeners = new Set<() => void>();
+
+const notifyBridgeListeners = () =>
+  bridgeListeners.forEach(listener => listener());
+
+export const subscribeToBridgedDocuments = (listener: () => void) => {
+  bridgeListeners.add(listener);
+
+  return () => {
+    bridgeListeners.delete(listener);
+  };
+};
+
+export const isDocumentBridged = (frameDocument?: Document) =>
+  !!frameDocument && bridgedDocuments.has(frameDocument);
+
+export const bridgeDocument = (frameDocument: Document) => {
+  const restore = bridgeCustomElements(frameDocument);
+  bridgedDocuments.add(frameDocument);
+  notifyBridgeListeners();
+
+  return () => {
+    restore();
+    bridgedDocuments.delete(frameDocument);
+    notifyBridgeListeners();
+  };
+};

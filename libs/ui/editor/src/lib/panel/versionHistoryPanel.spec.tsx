@@ -6,6 +6,7 @@ import {
   getRevisionState,
   VersionHistory,
   VersionHistoryRevision,
+  VersionHistoryTimeline,
 } from './versionHistoryPanel';
 
 const theme = createTheme({ cssVariables: true });
@@ -321,5 +322,37 @@ describe('getAuthorName', () => {
   it('returns null when there is no author', () => {
     expect(getAuthorName(null)).toBeNull();
     expect(getAuthorName({})).toBeNull();
+  });
+});
+
+describe('VersionHistoryTimeline', () => {
+  it('renders the revisions and restores without a drawer around it', () => {
+    const onRestore = vi.fn();
+
+    render(
+      <ThemeProvider theme={theme}>
+        <VersionHistoryTimeline
+          revisions={[draft, published, archived]}
+          draftId="draft-1"
+          publishedId="pub-1"
+          onRestore={onRestore}
+        />
+      </ThemeProvider>
+    );
+
+    expect(screen.queryByRole('presentation')).toBeNull();
+    expect(screen.getByText('Working draft')).toBeTruthy();
+    expect(screen.getByText('Old archived version')).toBeTruthy();
+
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'versionHistory.restore' })[0]
+    );
+    fireEvent.click(
+      within(screen.getByRole('dialog')).getByText(
+        'versionHistory.confirm.confirm'
+      )
+    );
+
+    expect(onRestore).toHaveBeenCalledWith('pub-1');
   });
 });

@@ -1,8 +1,7 @@
 import { Theme } from '@emotion/react';
-import { TypographyStyleOptions } from '@mui/material/styles/createTypography';
+import { TypographyStyle } from '@mui/material/styles';
 import { BaseField } from '@puckeditor/core';
 import { FieldAiParams } from '@puckeditor/plugin-ai';
-import { CSSProperties } from 'react';
 import { z } from 'zod/v4';
 
 import { toAiSchema } from '../ai-schema';
@@ -91,18 +90,17 @@ export const resolveFontFamily = (theme: Theme, fontFamily?: string) => {
 export const resolveTypography = (
   theme: Theme,
   value: TypographyValue | undefined
-): TypographyStyleOptions | undefined => {
+): TypographyStyle | undefined => {
   if (!value?.variant) {
     return undefined;
   }
 
   if (value.variant !== customTypographyVariant) {
     return theme.typography[value.variant as keyof Theme['typography']] as
-      | TypographyStyleOptions
-      | undefined;
+      TypographyStyle | undefined;
   }
 
-  const styles: CSSProperties = {};
+  const styles: TypographyStyle = {};
 
   if (value.fontSize) {
     styles.fontSize = value.fontSize;

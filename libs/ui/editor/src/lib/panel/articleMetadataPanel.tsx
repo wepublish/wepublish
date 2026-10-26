@@ -77,7 +77,7 @@ import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 import { SeoBlockContext } from './seoBlockContext';
 import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
-import { SocialPreviews } from './seoPreviews';
+import { SeoPreviewInfo, SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';
 
 const ValueInput = styled(TextField)`
@@ -357,6 +357,8 @@ function ArticleMetadataPanel({
                 }
               />
             </FormControl>
+
+            <SeoPreviewInfo />
 
             <SocialPreviews
               data={getSeoPreviewData(

@@ -1,5 +1,6 @@
-import { CSSObject, Theme } from '@emotion/react';
+import { ClassNames, CSSObject, Theme } from '@emotion/react';
 import { ComponentConfig, DefaultComponentProps } from '@puckeditor/core';
+import { createElement } from 'react';
 
 import {
   isHiddenOn,
@@ -42,11 +43,15 @@ export function withVisibility<
         ai: visibilityFieldAi(),
       },
     },
-    render: ({ visibility, ...props }) => (
-      <Render
-        {...(props as Parameters<typeof Render>[0])}
-        css={visibilityStyles(visibility)}
-      />
+    render: ({ visibility, className, ...props }) => (
+      <ClassNames>
+        {({ css, cx, theme }) =>
+          createElement(Render, {
+            ...props,
+            className: cx(className, css(visibilityStyles(visibility)(theme))),
+          } as Parameters<typeof Render>[0])
+        }
+      </ClassNames>
     ),
   } as ComponentConfig<{ props: WithVisibility<Props>; fields: UserFields }>;
 }

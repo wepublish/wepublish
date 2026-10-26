@@ -1,7 +1,7 @@
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { FieldLabel, FieldProps } from '@puckeditor/core';
 
+import { useWebsiteTheme } from '../website-theme';
 import { PaletteField, palettes, PaletteValue } from './palette.field';
 import { useTranslation } from 'react-i18next';
 
@@ -36,8 +36,8 @@ const PaletteOption = styled.label<{
   width: 25px;
   height: 25px;
   border: 1px solid
-    ${({ active, theme }) =>
-      active ? theme.palette.action.active : theme.palette.divider};
+    ${({ active }) =>
+      active ? 'var(--puck-color-text)' : 'var(--puck-color-border)'};
   border-radius: 4px;
   background: ${({ color }) => color};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
@@ -67,7 +67,7 @@ export const PaletteFieldRender = ({
   name,
 }: PaletteFieldRenderProps) => {
   const labels = usePaletteLabels();
-  const theme = useTheme();
+  const theme = useWebsiteTheme();
 
   return (
     <FieldLabel

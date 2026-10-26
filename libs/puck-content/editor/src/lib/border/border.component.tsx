@@ -1,5 +1,7 @@
 import { FieldLabel, FieldProps } from '@puckeditor/core';
 
+import { FieldSelect } from '../field-controls.component';
+import { FieldCheckboxLabel, FieldInput, FieldStack } from '../field-controls';
 import {
   BorderField,
   BorderSide,
@@ -96,7 +98,7 @@ export const BorderFieldRender = ({
     sideValue: BorderSideValue | undefined,
     onStyleChange: (style: BorderStyle) => void
   ) => (
-    <select
+    <FieldSelect
       value={sideValue?.style ?? 'solid'}
       disabled={readOnly}
       onChange={event =>
@@ -111,7 +113,7 @@ export const BorderFieldRender = ({
           {styleLabels[style]}
         </option>
       ))}
-    </select>
+    </FieldSelect>
   );
 
   return (
@@ -120,53 +122,57 @@ export const BorderFieldRender = ({
       readOnly={readOnly}
       el="div"
     >
-      {!showMore && (
-        <>
-          <input
-            type="number"
-            value={current.top?.width ?? ''}
-            disabled={readOnly}
-            placeholder={labels.width}
-            onChange={event => handleAllWidthChange(event.currentTarget.value)}
-          />
-
-          {renderStyleSelect(current.top, handleAllStyleChange)}
-        </>
-      )}
-
-      {showMore &&
-        borderSides.map(side => (
-          <FieldLabel
-            key={side}
-            label={labels[side]}
-            readOnly={readOnly}
-            el="div"
-          >
-            <input
+      <FieldStack>
+        {!showMore && (
+          <>
+            <FieldInput
               type="number"
-              value={current[side]?.width ?? ''}
+              value={current.top?.width ?? ''}
               disabled={readOnly}
               placeholder={labels.width}
               onChange={event =>
-                handleSideWidthChange(side, event.currentTarget.value)
+                handleAllWidthChange(event.currentTarget.value)
               }
             />
 
-            {renderStyleSelect(current[side], style =>
-              handleSideStyleChange(side, style)
-            )}
-          </FieldLabel>
-        ))}
+            {renderStyleSelect(current.top, handleAllStyleChange)}
+          </>
+        )}
 
-      <label>
-        <input
-          type="checkbox"
-          checked={showMore}
-          disabled={readOnly}
-          onChange={event => setShowMore(event.currentTarget.checked)}
-        />
-        {labels.moreOptions}
-      </label>
+        {showMore &&
+          borderSides.map(side => (
+            <FieldLabel
+              key={side}
+              label={labels[side]}
+              readOnly={readOnly}
+              el="div"
+            >
+              <FieldInput
+                type="number"
+                value={current[side]?.width ?? ''}
+                disabled={readOnly}
+                placeholder={labels.width}
+                onChange={event =>
+                  handleSideWidthChange(side, event.currentTarget.value)
+                }
+              />
+
+              {renderStyleSelect(current[side], style =>
+                handleSideStyleChange(side, style)
+              )}
+            </FieldLabel>
+          ))}
+
+        <FieldCheckboxLabel>
+          <input
+            type="checkbox"
+            checked={showMore}
+            disabled={readOnly}
+            onChange={event => setShowMore(event.currentTarget.checked)}
+          />
+          {labels.moreOptions}
+        </FieldCheckboxLabel>
+      </FieldStack>
     </FieldLabel>
   );
 };

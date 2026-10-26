@@ -1,9 +1,5 @@
 import { captureException } from '@sentry/react';
 
-/**
- * Image formats the media server accepts, mirrors the
- * SupportedImagesValidator in @wepublish/media/api.
- */
 export const supportedImageMimeTypes = [
   'image/webp',
   'image/png',
@@ -14,9 +10,7 @@ export const supportedImageMimeTypes = [
   'image/tiff',
 ];
 
-/** Multer limit of the media server (apps/media) */
 export const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
-/** M_PIXEL_LIMIT of the media server transform guard */
 export const MAX_IMAGE_MEGAPIXELS = 20;
 
 const WEBP_QUALITY_STEPS = [0.9, 0.8, 0.7];
@@ -27,16 +21,7 @@ export const isSupportedImage = (file: File) =>
 
 type DecodedImage = ImageBitmap | HTMLImageElement;
 
-const decodeImage = async (file: File): Promise<DecodedImage> => {
-  if (typeof createImageBitmap === 'function') {
-    try {
-      return await createImageBitmap(file);
-    } catch {
-      // Fall through to the <img> based decoder, e.g. for SVGs in browsers
-      // whose createImageBitmap does not handle them
-    }
-  }
-
+const decodeWithImageElement = async (file: File) => {
   const url = URL.createObjectURL(file);
 
   try {
@@ -51,14 +36,23 @@ const decodeImage = async (file: File): Promise<DecodedImage> => {
   }
 };
 
+const decodeImage = async (file: File): Promise<DecodedImage> => {
+  if (typeof createImageBitmap === 'function') {
+    try {
+      return await createImageBitmap(file);
+    } catch {
+      return decodeWithImageElement(file);
+    }
+  }
+
+  return decodeWithImageElement(file);
+};
+
 const imageSize = (source: DecodedImage) =>
   'naturalWidth' in source ?
     { width: source.naturalWidth, height: source.naturalHeight }
   : { width: source.width, height: source.height };
 
-/**
- * Scale factor (<= 1) that brings the image down to the megapixel limit.
- */
 const fitToMegapixels = (width: number, height: number) => {
   const megapixels = (width * height) / 1000 / 1000;
 
@@ -87,7 +81,6 @@ const encodeWebp = async (
 
   context.drawImage(source, 0, 0, canvas.width, canvas.height);
 
-  // Lower the quality first, only shrink further when that is not enough
   for (const quality of WEBP_QUALITY_STEPS) {
     const blob = await toBlob(canvas, 'image/webp', quality);
 
@@ -103,13 +96,6 @@ const encodeWebp = async (
   return encodeWebp(source, scale * DOWNSCALE_STEP);
 };
 
-/**
- * Makes sure an image can be uploaded to the media server: formats it does
- * not accept (bmp, svg, heic, ...) are re-encoded as webp and images above
- * its pixel or byte limits are scaled down. Files that already fit are
- * returned untouched, as is anything the browser cannot decode so the server
- * can report its own error.
- */
 export const prepareImageForUpload = async (file: File): Promise<File> => {
   let source: DecodedImage | undefined;
 

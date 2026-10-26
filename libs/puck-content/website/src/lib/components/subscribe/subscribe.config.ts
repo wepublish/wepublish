@@ -2,7 +2,11 @@ import { ComponentConfig } from '@puckeditor/core';
 import { SubscribeBlockField } from '@wepublish/website/api';
 import { z } from 'zod/v4';
 
-import { resolvedFieldAi, tagFieldAi } from '@wepublish/puck-content/editor';
+import {
+  resolvedFieldAi,
+  switchFieldAi,
+  tagFieldAi,
+} from '@wepublish/puck-content/editor';
 import { UserFields } from '../../types';
 import { SubscribeConfigProps, SubscribeRender } from './subscribe.component';
 import { withDataSource } from '../with-datasource';
@@ -19,7 +23,7 @@ const subscribeFields = [
 export const SubscribeConfig: ComponentConfig<{
   props: SubscribeConfigProps;
   fields: UserFields;
-}> = withDataSource(
+}> = withDataSource<SubscribeConfigProps>(
   {
     ai: {
       instructions:
@@ -27,6 +31,16 @@ export const SubscribeConfig: ComponentConfig<{
     },
     fields: {
       memberPlans: {
+        type: 'resolved',
+        visible: false,
+        ai: resolvedFieldAi,
+      },
+      memberPlanIds: {
+        type: 'resolved',
+        visible: false,
+        ai: resolvedFieldAi,
+      },
+      memberPlanRenderSettings: {
         type: 'resolved',
         visible: false,
         ai: resolvedFieldAi,
@@ -45,10 +59,40 @@ export const SubscribeConfig: ComponentConfig<{
           'Extra input fields the sign-up form asks for.'
         ),
       },
+      showGoodies: {
+        type: 'switch',
+        label: 'Show goodies',
+        ai: switchFieldAi('Whether the form offers goodies with a plan.'),
+      },
+      showDiscountCodes: {
+        type: 'switch',
+        label: 'Show discount codes',
+        ai: switchFieldAi('Whether the form accepts discount codes.'),
+      },
+      goodieMinValueAppliesToUpgrade: {
+        type: 'switch',
+        label: 'Goodie minimum applies to upgrades',
+        ai: switchFieldAi(
+          'Whether the minimum value for goodies also applies to upgrades.'
+        ),
+      },
+      hideRepeatGoodieOnUpgrade: {
+        type: 'switch',
+        label: 'Hide repeated goodie on upgrade',
+        ai: switchFieldAi(
+          'Whether a goodie the reader already received is hidden when upgrading.'
+        ),
+      },
     },
     defaultProps: {
       memberPlans: [],
+      memberPlanIds: [],
+      memberPlanRenderSettings: [],
       fields: [],
+      showGoodies: false,
+      showDiscountCodes: false,
+      goodieMinValueAppliesToUpgrade: false,
+      hideRepeatGoodieOnUpgrade: false,
     },
     resolveData(data, params) {
       return {

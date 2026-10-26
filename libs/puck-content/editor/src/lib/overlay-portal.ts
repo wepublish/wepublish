@@ -12,7 +12,10 @@ export const useOverlayPortalOnModifier = (options?: OverlayPortalOptions) => {
   const elementRef = useRef<HTMLElement>(null);
   const cleanupRef = useRef<(() => void) | undefined>(undefined);
   const optionsRef = useRef(options);
-  optionsRef.current = options;
+
+  useEffect(() => {
+    optionsRef.current = options;
+  });
 
   const unregister = useCallback(() => {
     cleanupRef.current?.();

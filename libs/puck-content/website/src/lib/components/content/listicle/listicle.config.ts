@@ -1,15 +1,12 @@
 import { ComponentConfig } from '@puckeditor/core';
 import { mockRichText } from '@wepublish/storybook/mocks';
-import {
-  BuilderListicleBlockProps,
-  ListicleBlock,
-} from '@wepublish/website/builder';
 
 import { imageFieldAi, richtextFieldAi } from '@wepublish/puck-content/editor';
 import { UserFields } from '../../../types';
+import { ListicleConfigProps, ListicleRender } from './listicle.component';
 
 export const ListicleConfig: ComponentConfig<{
-  props: BuilderListicleBlockProps;
+  props: ListicleConfigProps;
   fields: UserFields;
 }> = {
   ai: {
@@ -50,5 +47,5 @@ export const ListicleConfig: ComponentConfig<{
     ],
   },
 
-  render: ListicleBlock,
+  render: ListicleRender,
 };

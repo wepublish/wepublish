@@ -88,16 +88,16 @@ export const TagFieldRender = <Item,>({
         noOptionsText={
           canAdd ? t('', 'No options') : t('', 'No more tags can be added')
         }
-        renderTags={(tags, getTagProps) =>
+        renderValue={(tags, getItemProps) =>
           tags.map((tag, index) => {
-            const { key, onDelete, ...tagProps } = getTagProps({ index });
+            const { key, onDelete, ...tagProps } = getItemProps({ index });
 
             return (
               <Chip
                 {...tagProps}
                 key={key}
                 size="small"
-                label={labelOf(tag)}
+                label={labelOf(tag as Item)}
                 onDelete={canRemove ? onDelete : undefined}
               />
             );
