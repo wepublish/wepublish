@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
@@ -29,6 +30,8 @@ import {
 
 @Injectable()
 export class InvoiceService {
+  private logger = new Logger('InvoiceService');
+
   constructor(
     private prisma: PrismaClient,
     @Inject(PAYMENT_METHOD_CONFIG)
@@ -297,18 +300,27 @@ export class InvoiceService {
         continue; // TODO: what happens if we don't find a paymentProvider
       }
 
-      const intentState = await paymentProvider.checkIntentStatus({
-        intentID: payment.intentID,
-        paymentID: payment.id,
-      });
+      // One payment the provider cannot answer for (e.g. an abandoned
+      // checkout) must not keep the others from being checked, nor the
+      // listeners from hearing that the invoice is paid.
+      try {
+        const intentState = await paymentProvider.checkIntentStatus({
+          intentID: payment.intentID,
+          paymentID: payment.id,
+        });
 
-      if (!intentState) {
-        continue;
+        if (!intentState) {
+          continue;
+        }
+
+        await paymentProvider.updatePaymentWithIntentState({
+          intentState,
+        });
+      } catch (error) {
+        this.logger.error(
+          `Checking payment ${payment.id} of invoice ${id} failed: ${(error as Error).message}`
+        );
       }
-
-      await paymentProvider.updatePaymentWithIntentState({
-        intentState,
-      });
     }
 
     await this.invoicePaidNotifier.notify(id);

@@ -140,6 +140,7 @@ describe('PaymentMethodChangeService', () => {
       },
       invoice: {
         findFirst: vi.fn().mockResolvedValue(null),
+        findUnique: vi.fn().mockResolvedValue(null),
       },
       payment: {
         findUnique: vi.fn(),
@@ -714,6 +715,65 @@ describe('PaymentMethodChangeService', () => {
         providers['stripe'].updatePaymentWithIntentState
       ).toHaveBeenCalledWith({ intentState });
       expect(invoicePaidNotifier.notify).toHaveBeenCalledWith('invoice-1');
+    });
+
+    describe('when the invoice was settled before the check', () => {
+      // Another request (the invoice list's status check, the webhook) can
+      // mark the payment paid first; the change must not wait for a
+      // notification it may have missed.
+      const startInvoicePayment = async (
+        paymentState: PaymentState,
+        paidAt: Date | null
+      ) => {
+        prisma.invoice.findFirst.mockResolvedValue({
+          id: 'invoice-1',
+          currency: Currency.CHF,
+          items: [],
+        });
+        // not linked through `invoiceIDForTest`: the check settles the
+        // change it holds instead of looking it up by invoice again
+        await start('pm-card');
+        prisma.payment.findUnique.mockResolvedValue({
+          id: 'payment-1',
+          invoiceID: 'invoice-1',
+          intentID: 'pi_1',
+          state: paymentState,
+        });
+        prisma.invoice.findUnique.mockResolvedValue({
+          id: 'invoice-1',
+          paidAt,
+        });
+      };
+
+      it('completes a change whose payment is already paid', async () => {
+        await startInvoicePayment(PaymentState.paid, NOW);
+
+        const change = await service.check('user-1', 'change-1');
+
+        expect(change.state).toBe(PaymentMethodChangeState.completed);
+        expect(subscription.paymentMethodID).toBe('pm-card');
+        expect(providers['stripe'].checkIntentStatus).not.toHaveBeenCalled();
+      });
+
+      it('fails the change when the invoice was paid another way', async () => {
+        await startInvoicePayment(PaymentState.canceled, NOW);
+        providers['stripe'].checkIntentStatus.mockResolvedValue(null);
+
+        const change = await service.check('user-1', 'change-1');
+
+        expect(change.state).toBe(PaymentMethodChangeState.failed);
+        expect(subscription.paymentMethodID).toBe('pm-invoice');
+      });
+
+      it('keeps waiting while the invoice is open', async () => {
+        await startInvoicePayment(PaymentState.processing, null);
+        providers['stripe'].checkIntentStatus.mockResolvedValue(null);
+
+        const change = await service.check('user-1', 'change-1');
+
+        expect(change.state).toBe(PaymentMethodChangeState.pending);
+        expect(subscription.paymentMethodID).toBe('pm-invoice');
+      });
     });
 
     it('refuses changes of other users', async () => {

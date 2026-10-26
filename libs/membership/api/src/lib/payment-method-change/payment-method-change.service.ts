@@ -321,6 +321,18 @@ export class PaymentMethodChangeService
           }
         }
       }
+
+      // Another request may have settled the invoice first and its
+      // notification not reached this change, so settle it from the invoice.
+      const invoice =
+        payment &&
+        (await this.prisma.invoice.findUnique({
+          where: { id: payment.invoiceID },
+        }));
+
+      if (invoice?.paidAt) {
+        await this.settleInvoicePayment(change);
+      }
     }
 
     return this.findOwnChange(userId, changeId);
@@ -371,7 +383,16 @@ export class PaymentMethodChangeService
       },
     });
 
-    if (!change?.paymentID) {
+    if (!change) {
+      return;
+    }
+
+    await this.settleInvoicePayment(change);
+  }
+
+  /** Ends a change whose open invoice got paid, by its payment or not. */
+  private async settleInvoicePayment(change: SubscriptionPaymentMethodChange) {
+    if (!change.paymentID) {
       return;
     }
 
