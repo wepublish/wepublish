@@ -81,7 +81,9 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 
 ### Business Domain Libraries
 
-`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`
+`membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`, `gift-code`
+
+One-off products (gift codes, behind the `gift-codes` feature) sell through the sellable contract in `libs/payment/api/src/lib/sellable/`: a `SellableHandler` registered in `SellableRegistry`, fulfilled and revoked by listeners added with `InvoicePaidNotifier.register()` (the `INVOICE_PAID_LISTENER` token is gone). See [docs/gift-codes/01-selling-things.md](../docs/gift-codes/01-selling-things.md).
 
 ### Infrastructure Libraries
 

@@ -299,6 +299,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       goodieMinValue: null,
       goodieMinValueAppliesToUpgrade: false,
       hideRepeatGoodieOnUpgrade: false,
+      giftCodeOfferIds: [],
     },
     label: 'blocks.subscribe.label',
     icon: <MdAccountBox />,

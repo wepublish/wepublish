@@ -10,6 +10,7 @@ import {
   PaymentWebhookMiddleware,
 } from './payment.webhook';
 import { InvoicePaidNotifier } from './invoice-paid.listener';
+import { SellableRegistry } from './sellable/sellable-registry.service';
 
 @Module({
   imports: [PrismaModule, PaymentMethodModule],
@@ -18,9 +19,15 @@ import { InvoicePaidNotifier } from './invoice-paid.listener';
     PaymentDataloader,
     PaymentsResolver,
     InvoicePaidNotifier,
+    SellableRegistry,
   ],
   controllers: [PaymentWebhookController],
-  exports: [PaymentsService, PaymentDataloader, InvoicePaidNotifier],
+  exports: [
+    PaymentsService,
+    PaymentDataloader,
+    InvoicePaidNotifier,
+    SellableRegistry,
+  ],
 })
 export class PaymentsModule {
   configure(consumer: MiddlewareConsumer) {

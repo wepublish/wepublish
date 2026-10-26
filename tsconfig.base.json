@@ -64,6 +64,7 @@
       "@wepublish/event/website": ["libs/event/website/src/index.ts"],
       "@wepublish/external-apps/api": ["libs/external-apps/api/src/index.ts"],
       "@wepublish/feed/website": ["libs/feed/website/src/index.ts"],
+      "@wepublish/gift-code/api": ["libs/gift-code/api/src/index.ts"],
       "@wepublish/google-analytics/api": [
         "libs/google-analytics/api/src/index.ts"
       ],

@@ -87,6 +87,8 @@ import {
   BuilderUnorderedListProps,
 } from './lists.interface';
 import {
+  BuilderGiftCodeListProps,
+  BuilderGiftCodePurchaseProps,
   BuilderInvoiceListItemProps,
   BuilderInvoiceListProps,
   BuilderMemberPlanItemProps,
@@ -194,6 +196,8 @@ export type WebsiteBuilderProps = {
   TransactionFee: ComponentType<BuilderTransactionFeeProps>;
   Subscribe: ComponentType<BuilderSubscribeProps>;
   Upgrade: ComponentType<BuilderUpgradeProps>;
+  GiftCodePurchase: ComponentType<BuilderGiftCodePurchaseProps>;
+  GiftCodeList: ComponentType<BuilderGiftCodeListProps>;
   ContentWrapper: ComponentType<BuilderContentWrapperProps>;
   Paywall: ComponentType<BuilderPaywallProps>;
   TextToIcon: ComponentType<BuilderTextToIconProps>;
@@ -298,6 +302,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   InvoiceListItem: NoComponent,
   Subscribe: NoComponent,
   Upgrade: NoComponent,
+  GiftCodePurchase: NoComponent,
+  GiftCodeList: NoComponent,
   TransactionFee: NoComponent,
   GoodiePicker: NoComponent,
   MemberPlanPicker: NoComponent,

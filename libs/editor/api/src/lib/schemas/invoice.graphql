@@ -14,6 +14,7 @@ fragment Invoice on Invoice {
       id
       name
     }
+    sellableKind
   }
   dueAt
   paidAt
@@ -24,6 +25,7 @@ fragment Invoice on Invoice {
   modifiedAt
   createdAt
   currency
+  userID
 }
 
 query Invoices(

@@ -27,6 +27,11 @@ export const FEATURES = [
     description: 'Newsletter editor: build issues and push them to Mailchimp',
     stage: 'alpha',
   },
+  {
+    key: 'gift-codes',
+    description: 'Sell gift codes for member plans',
+    stage: 'alpha',
+  },
 ] as const satisfies readonly Feature[];
 
 export type FeatureKey = (typeof FEATURES)[number]['key'];

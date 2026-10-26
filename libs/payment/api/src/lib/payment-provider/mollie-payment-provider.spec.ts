@@ -54,6 +54,7 @@ const defaultCreatePaymentIntentProps: CreatePaymentIntentProps = {
     manuallySetAsPaidByUserId: null,
     renewalSuccessMailSentAt: null,
     suppressRenewalSuccessMail: false,
+    userID: null,
     currency: 'EUR',
     subscriptionID: '1',
   },
@@ -341,6 +342,75 @@ describe('MolliePaymentProvider', () => {
         intentSecret: 'https://mooked.mollie.com/url',
         state: 'processing',
       });
+    });
+  });
+
+  describe('createGatewayIntent without saving the customer', () => {
+    const mockClient = () => ({
+      customers: { create: vi.fn().mockResolvedValue({ id: 'cst_1' }) },
+      payments: {
+        create: vi.fn().mockResolvedValue({
+          ...mollieApiPaymentCreate,
+          getCheckoutUrl: mollieApiPaymentCreate.getCheckoutUrl,
+        }),
+      },
+    });
+
+    it('creates a one-off payment without a customer for a one-time purchase in off-session mode', async () => {
+      const client = mockClient();
+      vi.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue(
+        client as any
+      );
+
+      await mollieOffSession.createIntent({
+        ...defaultCreatePaymentIntentProps,
+        saveCustomer: false,
+        customerID: undefined,
+      });
+
+      expect(client.customers.create).not.toHaveBeenCalled();
+      expect(client.payments.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          customerId: undefined,
+          sequenceType: 'oneoff',
+        })
+      );
+    });
+
+    it('still sets up a mandate when the customer is saved in off-session mode', async () => {
+      const client = mockClient();
+      vi.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue(
+        client as any
+      );
+
+      await mollieOffSession.createGatewayIntent(
+        defaultCreatePaymentIntentProps
+      );
+
+      expect(client.customers.create).toHaveBeenCalled();
+      expect(client.payments.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          customerId: 'cst_1',
+          sequenceType: 'first',
+        })
+      );
+    });
+
+    it('still sets up a mandate for the gateway fallback of a stored customer', async () => {
+      const client = mockClient();
+      vi.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue(
+        client as any
+      );
+
+      await mollieOffSession.createGatewayIntent({
+        ...defaultCreatePaymentIntentProps,
+        saveCustomer: false,
+        customerID: 'cst_old',
+      });
+
+      expect(client.payments.create).toHaveBeenCalledWith(
+        expect.objectContaining({ sequenceType: 'first' })
+      );
     });
   });
 

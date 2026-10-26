@@ -53,4 +53,8 @@ describe('isKnownFeature', () => {
   it('checks the real registry by default', () => {
     expect(isKnownFeature('surely-not-a-feature')).toBe(false);
   });
+
+  it('knows the gift codes feature', () => {
+    expect(isKnownFeature('gift-codes')).toBe(true);
+  });
 });

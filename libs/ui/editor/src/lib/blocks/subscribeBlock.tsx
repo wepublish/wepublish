@@ -40,6 +40,7 @@ import {
   SubscribeBlockRenderLayout,
   SubscribePeriodicityDisplay,
 } from '@wepublish/editor/api';
+import { CanGetGiftCodes } from '@wepublish/permissions';
 import {
   Fragment,
   ReactNode,
@@ -57,8 +58,11 @@ import {
   BlockSectionHeader,
   BlockSections,
 } from '../atoms/blockSection';
+import { SelectGiftCodeOffers } from '../atoms/giftCodeOffer/selectGiftCodeOffers';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { InfoTooltip, InfoTrigger } from '../atoms/infoTooltip';
+import { useAuthorisation } from '../atoms/permissionControl';
+import { useFeature } from '../featureContext';
 import { ClickPopover } from '../popover';
 import { getMonthlyEquivalentRange } from '../utility';
 import { SubscribeBlockValue } from './types';
@@ -561,6 +565,8 @@ export const SubscribeBlock = ({
   disabled,
 }: BlockProps<SubscribeBlockValue>) => {
   const { t } = useTranslation();
+  const canReadGiftCodeOffers = useAuthorisation(CanGetGiftCodes.id);
+  const hasGiftCodes = useFeature('gift-codes') && canReadGiftCodeOffers;
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
@@ -898,6 +904,13 @@ export const SubscribeBlock = ({
   const handleShowDiscountCodesChange = useCallback(
     (_value: unknown, checked: boolean) => {
       onChange(current => ({ ...current, showDiscountCodes: checked }));
+    },
+    [onChange]
+  );
+
+  const handleGiftCodeOffersChange = useCallback(
+    (giftCodeOfferIds: string[]) => {
+      onChange(current => ({ ...current, giftCodeOfferIds }));
     },
     [onChange]
   );
@@ -1438,6 +1451,20 @@ export const SubscribeBlock = ({
           }
         />
       </BlockSection>
+
+      {hasGiftCodes && (
+        <BlockSection>
+          <BlockSectionHeader title={t('blocks.subscribe.giftCodesHeading')} />
+
+          <SelectGiftCodeOffers
+            disabled={disabled}
+            label={t('blocks.subscribe.giftCodeOffers')}
+            helperText={t('blocks.subscribe.giftCodeOffersHint')}
+            selectedOffers={value.giftCodeOfferIds ?? []}
+            setSelectedOffers={handleGiftCodeOffersChange}
+          />
+        </BlockSection>
+      )}
 
       <BlockSection>
         <BlockSectionHeader title={t('blocks.subscribe.selectFields')} />

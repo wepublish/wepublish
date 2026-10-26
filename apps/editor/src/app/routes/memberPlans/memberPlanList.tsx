@@ -27,6 +27,8 @@ import {
   DataTable,
   DescriptionList,
   DescriptionListItem,
+  enqueueSnackbar,
+  humanizeError,
   IconButton,
   IconButtonTooltip,
   InfoTooltip,
@@ -92,7 +94,14 @@ function MemberPlanList() {
   const memberPlans = data?.memberPlans.nodes ?? [];
 
   const [deleteMemberPlan, { loading: isDeleting }] = useMutation(
-    DeleteMemberPlanDocument
+    DeleteMemberPlanDocument,
+    {
+      onError: error =>
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        }),
+    }
   );
 
   return (

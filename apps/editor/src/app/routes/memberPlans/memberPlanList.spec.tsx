@@ -1,7 +1,12 @@
-import { useQuery } from '@apollo/client/react';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { MemberPlanSort, SortOrder } from '@wepublish/editor/api';
+import {
+  DeleteMemberPlanDocument,
+  MemberPlanSort,
+  SortOrder,
+} from '@wepublish/editor/api';
+import { enqueueSnackbar } from '@wepublish/ui/editor';
 import { MemoryRouter } from 'react-router-dom';
 import type { Mock } from 'vitest';
 
@@ -12,7 +17,12 @@ const theme = createTheme({ cssVariables: true });
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
-  useMutation: () => [vi.fn(), { loading: false }],
+  useMutation: vi.fn(() => [vi.fn(), { loading: false }]),
+}));
+
+vi.mock('@wepublish/ui/editor', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  enqueueSnackbar: vi.fn(),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -30,6 +40,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 const mockedUseQuery = useQuery as unknown as Mock;
+const mockedUseMutation = useMutation as unknown as Mock;
 
 const plan = {
   id: 'plan-1',
@@ -100,6 +111,20 @@ describe('MemberPlanList', () => {
 
     expect(lastVariables()).toEqual(
       expect.objectContaining({ sort: MemberPlanSort.CreatedAt })
+    );
+  });
+
+  it('tells the editor why a plan could not be deleted', () => {
+    renderList();
+
+    const [, options] = mockedUseMutation.mock.calls.find(
+      ([document]) => document === DeleteMemberPlanDocument
+    )!;
+    options.onError(new Error('The plan still has sold gift codes'));
+
+    expect(enqueueSnackbar).toHaveBeenCalledWith(
+      expect.stringContaining('The plan still has sold gift codes'),
+      expect.objectContaining({ variant: 'error' })
     );
   });
 });
