@@ -8,7 +8,7 @@ import type { Mock } from 'vitest';
 
 import { ExternalAppsDashboard } from './externalAppsDashboard';
 
-const { mutationFor, navigate, showSnackbar } = vi.hoisted(() => {
+const { mutationFor, navigate, enqueueSnackbar } = vi.hoisted(() => {
   const mutations = new Map<unknown, Mock>();
 
   return {
@@ -20,7 +20,7 @@ const { mutationFor, navigate, showSnackbar } = vi.hoisted(() => {
       return mutations.get(document) as Mock;
     },
     navigate: vi.fn(),
-    showSnackbar: vi.fn(),
+    enqueueSnackbar: vi.fn(),
   };
 });
 
@@ -44,7 +44,7 @@ vi.mock('react-router-dom', async importOriginal => ({
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
-  enqueueSnackbar: showSnackbar,
+  enqueueSnackbar,
 }));
 
 const { useQuery } = await import('@apollo/client/react');
@@ -113,7 +113,7 @@ beforeEach(() => {
     },
   });
   navigate.mockReset();
-  showSnackbar.mockReset();
+  enqueueSnackbar.mockReset();
 });
 
 afterEach(() => vi.restoreAllMocks());
@@ -157,7 +157,11 @@ describe('ExternalAppsDashboard', () => {
     fireEvent.click(screen.getByText('Tab app'));
 
     await waitFor(() => expect(tab.close).toHaveBeenCalled());
-    expect(showSnackbar).toHaveBeenCalledTimes(1);
+    expect(enqueueSnackbar).toHaveBeenCalledTimes(1);
+    expect(enqueueSnackbar).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ variant: 'error' })
+    );
     expect(tab.location.replace).not.toHaveBeenCalled();
   });
 });

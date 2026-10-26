@@ -129,6 +129,7 @@ export function ExternalAppsDashboard() {
                     (mintError: unknown) =>
                       enqueueSnackbar(humanizeError(mintError), {
                         variant: 'error',
+                        autoHideDuration: 8000,
                       })
                   );
                 } else if (app.target === ExternalAppsTarget.Iframe) {

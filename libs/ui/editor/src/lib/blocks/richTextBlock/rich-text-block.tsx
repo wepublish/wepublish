@@ -4,8 +4,10 @@ import { memo } from 'react';
 import { BlockProps } from '../../atoms/blockList';
 import { RichTextBlockValue } from '../types';
 
-export interface RichTextBlockProps
-  extends Omit<BlockProps<RichTextBlockValue['richText']>, 'onChange'> {
+export interface RichTextBlockProps extends Omit<
+  BlockProps<RichTextBlockValue['richText']>,
+  'onChange'
+> {
   defaultValue?: RichTextBlockProps['value'];
   onChange(value: RichTextBlockValue['richText']): void;
 }

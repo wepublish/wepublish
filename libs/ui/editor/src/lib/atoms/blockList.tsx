@@ -304,8 +304,9 @@ const AddBlockButton = memo(function AddBlockButton({
   );
 });
 
-export interface BlockListProps<V extends BlockListValue>
-  extends BlockProps<V[]> {
+export interface BlockListProps<V extends BlockListValue> extends BlockProps<
+  V[]
+> {
   blockMap: BlockMapForValue<V>;
 }
 

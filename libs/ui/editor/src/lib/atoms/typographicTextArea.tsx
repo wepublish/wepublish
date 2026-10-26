@@ -47,8 +47,7 @@ const StyledTextArea = styled('textarea', {
   }
 `;
 
-export interface TypographicTextAreaProps
-  extends ComponentPropsWithRef<'textarea'> {
+export interface TypographicTextAreaProps extends ComponentPropsWithRef<'textarea'> {
   variant?: TypographyVariant;
   align?: TypographyTextAlign;
 }
