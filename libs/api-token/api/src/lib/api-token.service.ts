@@ -2,8 +2,10 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiToken, Prisma, PrismaClient } from '@prisma/client';
+import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -124,7 +126,10 @@ export class ApiTokenService {
     }
 
     if (apiToken.expiresAt && apiToken.expiresAt.getTime() <= Date.now()) {
-      return null;
+      throw new UnauthorizedException(
+        `The API key expired on ${apiToken.expiresAt.toISOString()}`,
+        { cause: EXPIRED_API_TOKEN }
+      );
     }
 
     await this.touch(apiToken);
