@@ -20,17 +20,14 @@ import { ReactNode, useState } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import {
-  gruppettoTenant,
-  gruppettoTheme,
-} from '@wepublish/tenant/gruppetto';
+import { gruppettoConfig, gruppettoTheme } from '@wepublish/tenant/gruppetto';
 
 import { App } from '../app';
 import { getPublicEnvFn } from '../integration/public-env';
 
-setDefaultOptions({ locale: gruppettoTenant.dateLocale });
+setDefaultOptions({ locale: gruppettoConfig.dateLocale });
 initWePublishTranslator(
-  gruppettoTenant.translations.overrides?.[gruppettoTenant.translations.lng]
+  gruppettoConfig.translations.overrides?.[gruppettoConfig.translations.lng]
 );
 z.setErrorMap(zodI18nMap);
 

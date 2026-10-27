@@ -2,7 +2,6 @@ import { ApolloClient } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers';
 import {
   EventListDocument,
   EventListQueryVariables,
@@ -11,7 +10,7 @@ import {
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { EventListContainer } from '@wepublish/event/website';
-import { useMemo } from 'react';
+import { Suspense, lazy, useMemo } from 'react';
 import { z } from 'zod';
 
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
@@ -23,6 +22,10 @@ const Filter = styled('div')`
   gap: ${({ theme }) => theme.spacing(2)};
   margin-bottom: ${({ theme }) => theme.spacing(3)};
 `;
+
+const DateTimePicker = lazy(async () => ({
+  default: (await import('@mui/x-date-pickers/DateTimePicker')).DateTimePicker,
+}));
 
 export const DEFAULT_EVENT_LIST_TAKE = 25;
 
@@ -116,27 +119,29 @@ export function EventListPage({
   return (
     <>
       <Filter>
-        <DateTimePicker
-          label={labels.from}
-          value={from ?? null}
-          onChange={value =>
-            replaceSearch(previous => ({
-              ...previous,
-              from: value?.toISOString(),
-            }))
-          }
-        />
+        <Suspense fallback={null}>
+          <DateTimePicker
+            label={labels.from}
+            value={from ?? null}
+            onChange={value =>
+              replaceSearch(previous => ({
+                ...previous,
+                from: value?.toISOString(),
+              }))
+            }
+          />
 
-        <DateTimePicker
-          label={labels.to}
-          value={to ?? null}
-          onChange={value =>
-            replaceSearch(previous => ({
-              ...previous,
-              to: value?.toISOString(),
-            }))
-          }
-        />
+          <DateTimePicker
+            label={labels.to}
+            value={to ?? null}
+            onChange={value =>
+              replaceSearch(previous => ({
+                ...previous,
+                to: value?.toISOString(),
+              }))
+            }
+          />
+        </Suspense>
 
         <FormGroup>
           <FormControlLabel
