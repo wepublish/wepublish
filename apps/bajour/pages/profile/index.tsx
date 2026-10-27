@@ -1,5 +1,5 @@
 import { BajourContainer as Container } from '@wepublish/tenant/bajour';
-import { ProfilePage } from '@wepublish/utils/website';
+import { ProfilePage } from '@wepublish/utils/website/next';
 
 export default function Profile() {
   return (

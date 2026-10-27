@@ -6,7 +6,7 @@ import {
 import { ApolloClient, CombinedGraphQLErrors } from '@apollo/client';
 import { setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
-import { EXPIRED_JWT_MESSAGE } from './with-jwt-handler';
+import { EXPIRED_JWT_MESSAGE } from '../lib/with-jwt-handler';
 
 /**
  * Handles JWT login from query params in getInitialProps (server-side).

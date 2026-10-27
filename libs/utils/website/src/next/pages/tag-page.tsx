@@ -12,7 +12,7 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
 
-import { getApiUrl } from '../api-url';
+import { getApiUrl } from '../../lib/api-url';
 
 const take = 25;
 

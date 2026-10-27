@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { withAuthGuard } from '../../../auth-guard';
-import { ssrAuthLink } from '../../../auth-link';
+import { ssrAuthLink } from '../../../../lib/auth-link';
 import { getSessionTokenProps } from '../../../get-session-token-props';
 import { handleJwtLogin } from '../../../handle-jwt-login';
 import { NextPage, NextPageContext } from 'next';
@@ -20,7 +20,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Link } from '@wepublish/website/builder';
 
-import { getApiUrl } from '../../../api-url';
+import { getApiUrl } from '../../../../lib/api-url';
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;

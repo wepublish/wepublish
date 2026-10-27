@@ -1,5 +1,5 @@
 import { BajourContainer as Container } from '@wepublish/tenant/bajour';
-import { TagPage } from '@wepublish/utils/website';
+import { TagPage } from '@wepublish/utils/website/next';
 import { ComponentProps } from 'react';
 
 export default function ArticleListByTag(
@@ -15,4 +15,4 @@ export default function ArticleListByTag(
 export {
   TagPageGetStaticPaths as getStaticPaths,
   TagPageGetStaticProps as getStaticProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';

@@ -17,7 +17,7 @@ import { GetStaticProps } from 'next';
 export {
   TagPage as default,
   TagPageGetStaticPaths as getStaticPaths,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 
 const TAKE = 25;
 
