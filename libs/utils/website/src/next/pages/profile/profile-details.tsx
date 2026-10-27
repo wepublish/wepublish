@@ -87,7 +87,8 @@ export const ProfilePersonalData = styled('div')`
 
   @container (min-width: 560px) {
     ${UserAddressWrapper} {
-      grid-template-columns: repeat(3, 1fr);
+      // the zip code needs less room than city and country
+      grid-template-columns: 1fr 2fr 2fr;
 
       & > :last-child {
         grid-column: auto;
