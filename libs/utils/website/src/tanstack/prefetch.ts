@@ -2,6 +2,7 @@ import { ApolloClient, CombinedGraphQLErrors } from '@apollo/client';
 import {
   NavigationListDocument,
   PeerProfileDocument,
+  SettingListDocument,
   WebsiteSettingsDocument,
   WebsiteSettingsFragment,
 } from '@wepublish/website/api';
@@ -15,15 +16,22 @@ import {
 /**
  * Queries every page needs. Was duplicated in every `getStaticProps`.
  *
- * All three land in the Apollo cache and are dehydrated into the SSR payload;
- * the settings are also returned, because the root loader renders from them
- * directly (theme, fonts, `head`) rather than reading them back out.
+ * All four land in the Apollo cache and are dehydrated into the SSR payload;
+ * the website settings are also returned, because the root loader renders
+ * from them directly (theme, fonts, `head`) rather than reading them back
+ * out.
+ *
+ * `SettingList` is global, anonymous and identical for every visitor — the
+ * poll, comment and rating providers each read it. Fetching it here puts it
+ * in the document payload instead of letting those components ask the API
+ * from the browser on every first paint.
  */
 export const prefetchShared = async (client: ApolloClient) => {
   const [settings] = await Promise.all([
     client.query({ query: WebsiteSettingsDocument }),
     client.query({ query: NavigationListDocument }),
     client.query({ query: PeerProfileDocument }),
+    client.query({ query: SettingListDocument }),
   ]);
 
   return settings.data?.websiteSettings as WebsiteSettingsFragment | undefined;

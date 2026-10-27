@@ -10,4 +10,5 @@
  * scanner through every server route that imports this barrel. See
  * `./tanstack-page-cache.ts`.
  */
+export * from './tanstack/emotion-ssr';
 export * from './tanstack/ssr';

@@ -269,7 +269,11 @@ export const createStartPageCache = (
     detach(
       (async () => {
         try {
-          await store(key, await fetch(new Request(request), opts));
+          // `request.clone()`, not `new Request(request)`: undici's
+          // constructor reads `init.window` and throws on a request that did
+          // not originate from it, which is what reaches here once server
+          // function payloads are cacheable.
+          await store(key, await fetch(request.clone(), opts));
         } catch (error) {
           logger.error('[page-cache] background revalidation failed', error);
         }

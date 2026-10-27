@@ -1,4 +1,8 @@
-import { createMiddleware, createStart } from '@tanstack/react-start';
+import {
+  createCsrfMiddleware,
+  createMiddleware,
+  createStart,
+} from '@tanstack/react-start';
 
 /**
  * ## The ISR replacement
@@ -34,6 +38,9 @@ const CDN = 's-maxage=60, stale-while-revalidate=604800, stale-if-error=86400';
 const ISR_60 = `${BROWSER}, ${CDN}`;
 
 const NO_STORE = 'no-store';
+
+/** `serverFns.base` in the Start plugin config, which we leave at its default. */
+const SERVER_FUNCTION_BASE = '/_serverFn';
 
 const CACHE_RULES: Array<[RegExp, string]> = [
   // `next.config.js` set `no-store` for /profile and /profile/:path*
@@ -80,6 +87,29 @@ const cacheHeaders = createMiddleware({ type: 'request' }).server(
 );
 
 /** `poweredByHeader: false` had no equivalent to port — Vite sends none. */
+/**
+ * Server functions are same-origin by contract, so a cross-site caller is
+ * never legitimate. Most of ours only read public content, but the `?jwt=`
+ * magic link reaches `createSessionWithJWT` and writes the auth cookie
+ * (`ssr.ts`), which is exactly the shape CSRF protection exists for.
+ *
+ * This is a **request** middleware, so it sees documents too, and the filter
+ * is what makes it safe: a reader arriving from Google or a social post sends
+ * `Sec-Fetch-Site: cross-site` on that top-level navigation, and validating
+ * it would answer every inbound link with a 403.
+ *
+ * `allowRequestsWithoutOriginCheck` covers the case the default rejects
+ * outright: a request carrying none of `Sec-Fetch-Site`, `Origin` or
+ * `Referer`. Every browser sends at least one, so in practice that is the
+ * prerender pass and anything reaching the endpoint without a browser — both
+ * already on this side of the trust boundary.
+ */
+const csrf = createCsrfMiddleware({
+  filter: ({ request }) =>
+    new URL(request.url).pathname.startsWith(SERVER_FUNCTION_BASE),
+  allowRequestsWithoutOriginCheck: true,
+});
+
 export const startInstance = createStart(() => ({
-  requestMiddleware: [cacheHeaders],
+  requestMiddleware: [cacheHeaders, csrf],
 }));
