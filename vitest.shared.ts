@@ -202,7 +202,6 @@ export const createVitestConfig = ({
       // Was a `--passWithNoTests` CLI flag on every project's test command;
       // it belongs to the config now that targets use the @nx/vitest executor.
       passWithNoTests: true,
-      server: { deps: { inline: ['i18next-icu'] } },
       // Jest ran every project in band, vitest runs test files in parallel
       // workers, so individual tests see more contention than the 5s default.
       testTimeout: 15_000,

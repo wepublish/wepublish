@@ -155,6 +155,21 @@ database boundary.
 
 ---
 
+### ⚠️ `i18next-icu` is imported from `i18next-icu/cjs` — the main entry breaks server rendering
+
+Its ES build default-imports `intl-messageformat`, a CommonJS package without
+ESM exports. Node (the Next server, and Vitest for anything not inlined) hands
+that import the module object, every message fails to format, and the server
+renders raw templates (`{type, select, …}`) that hydration then flips. The
+browser bundle resolves fine, so it shows only as hydration errors.
+[i18n-formatter.tsx](../../libs/utils/website/src/lib/i18n-formatter.tsx)
+therefore imports the CommonJS build; `i18next-icu-cjs.d.ts` next to it types
+the subpath, which `moduleResolution: node` cannot see. Don't inline
+`i18next-icu` in Vitest again: its spec has to run the package the way Node
+loads it.
+
+---
+
 ### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
 
 The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 1`.
