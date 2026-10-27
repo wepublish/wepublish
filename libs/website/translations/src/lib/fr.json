@@ -118,7 +118,7 @@
     "renewPaymentMethodConfirmation": "Vous confirmez à nouveau {paymentMethod}, par exemple avec une nouvelle carte ou un nouveau compte TWINT. D'ici là, l'enregistrement actuel reste actif.",
     "paymentMethod": "Moyen de paiement : {paymentMethod}",
     "changePaymentMethod": "Adapter le moyen de paiement",
-    "changePaymentMethodTitle": "Changer de moyen de paiement",
+    "changePaymentMethodTitle": "Adapter le moyen de paiement",
     "changePaymentMethodCurrent": "Moyen de paiement actuel : <strong>{paymentMethod}</strong>",
     "changePaymentMethodChoose": "Changer le moyen de paiement pour :",
     "changePaymentMethodNew": "Changer le moyen de paiement pour : <strong>{paymentMethod}</strong>",

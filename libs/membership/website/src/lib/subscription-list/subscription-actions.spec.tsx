@@ -217,6 +217,16 @@ describe('SubscriptionActions', () => {
       return { dialog: screen.getByRole('dialog'), user, changePaymentMethod };
     };
 
+    it('is headed like the button that opens it', async () => {
+      const { dialog } = await renderChange([card]);
+
+      expect(
+        within(dialog).getByRole('heading', {
+          name: 'Zahlungsmethode anpassen',
+        })
+      ).toBeInTheDocument();
+    });
+
     it('names the current payment method and the choices, without logos', async () => {
       const { dialog } = await renderChange([card, twint]);
 

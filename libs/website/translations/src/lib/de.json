@@ -118,7 +118,7 @@
     "renewPaymentMethodConfirmation": "Du bestätigst {paymentMethod} neu, zum Beispiel mit einer neuen Karte oder einem neuen TWINT-Konto. Bis dahin bleibt die bisherige Hinterlegung aktiv.",
     "paymentMethod": "Zahlungsmethode: {paymentMethod}",
     "changePaymentMethod": "Zahlungsmethode anpassen",
-    "changePaymentMethodTitle": "Zahlungsmethode ändern",
+    "changePaymentMethodTitle": "Zahlungsmethode anpassen",
     "changePaymentMethodCurrent": "Aktuelle Zahlungsmethode: <strong>{paymentMethod}</strong>",
     "changePaymentMethodChoose": "Zahlungsmethode ändern auf:",
     "changePaymentMethodNew": "Zahlungsmethode ändern auf: <strong>{paymentMethod}</strong>",
