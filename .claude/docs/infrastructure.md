@@ -18,7 +18,7 @@
 ## Containerization
 
 - **Docker** for local development (`docker-compose.yml`)
-- Multi-stage Dockerfile for all production builds (API, editor, website, media, migration, storybook)
+- Multi-stage Dockerfile for all production builds (API, editor, website, media, migration)
 - **MinIO** as S3-compatible object storage for media in local dev
 
 ### Runtime dependencies of api, media and editor

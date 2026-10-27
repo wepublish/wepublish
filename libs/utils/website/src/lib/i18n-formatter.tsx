@@ -1,8 +1,4 @@
-// an import cannot load a .d.ts; the reference brings the subpath's types to
-// every app that compiles this file through its path aliases
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="./i18next-icu-cjs.d.ts" />
-import i18next, { Resource } from 'i18next';
+import i18next, { i18n, Resource } from 'i18next';
 
 import LanguageDetector from 'i18next-browser-languagedetector';
 // The ES build default-imports intl-messageformat, a CommonJS package without
@@ -44,4 +40,30 @@ export function initWePublishTranslator(overrides: object = {}) {
     });
 
   return i18next;
+}
+
+export type TranslationOverridesByLocale = Partial<Record<string, object>>;
+
+export async function applyTranslationOverrides(
+  i18n: i18n,
+  overridesByLocale: TranslationOverridesByLocale
+) {
+  const locales = Object.keys(translations);
+
+  await i18n.loadLanguages(locales);
+
+  for (const locale of locales) {
+    i18n.removeResourceBundle(locale, 'translation');
+    i18n.addResourceBundle(
+      locale,
+      'translation',
+      mergeDeepRight(translations[locale], overridesByLocale[locale] ?? {}),
+      true,
+      true
+    );
+  }
+
+  await i18n.changeLanguage(i18n.language);
+
+  return i18n;
 }

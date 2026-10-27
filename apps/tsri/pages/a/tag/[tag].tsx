@@ -1,7 +1,6 @@
 import { css, Global } from '@emotion/react';
+import { tsriTheme as theme } from '@wepublish/tenant/tsri';
 import { TagPage } from '@wepublish/utils/website';
-
-import theme from '../../../src/theme';
 
 export default function TsriTagPage(props: Parameters<typeof TagPage>[0]) {
   return (

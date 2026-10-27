@@ -2138,7 +2138,29 @@
     "richtext": {
       "menuBar": {
         "paragraph": "Paragraph",
-        "heading": "Heading {{level}}"
+        "heading": "Heading {{level}}",
+        "label": "Formatting",
+        "textStyle": "Text style",
+        "undo": "Undo",
+        "redo": "Redo",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "strike": "Strikethrough",
+        "subscript": "Subscript",
+        "superscript": "Superscript",
+        "textColor": "Text color",
+        "backgroundColor": "Background color",
+        "bulletList": "Bulleted list",
+        "orderedList": "Numbered list",
+        "alignLeft": "Align left",
+        "alignCenter": "Align center",
+        "alignRight": "Align right",
+        "link": "Link",
+        "table": "Insert table",
+        "codeBlock": "Code block",
+        "blockquote": "Quote",
+        "invisibleCharacters": "Show invisible characters"
       },
       "link": {
         "title": "Link text with",
@@ -2155,6 +2177,18 @@
         "remove": "Remove link",
         "variantButtonMain": "Button (main)",
         "variantButtonSecondary": "Button (secondary)"
+      },
+      "table": {
+        "label": "Table",
+        "addColumnBefore": "Insert column left",
+        "addColumnAfter": "Insert column right",
+        "deleteColumn": "Delete column",
+        "addRowBefore": "Insert row above",
+        "addRowAfter": "Insert row below",
+        "deleteRow": "Delete row",
+        "mergeCells": "Merge cells",
+        "splitCell": "Split cell",
+        "headerCell": "Header cell"
       },
       "colorPicker": {
         "clear": "Clear color"

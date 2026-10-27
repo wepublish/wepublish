@@ -18,7 +18,8 @@ Each project has a `vitest.config.ts` that delegates to the root
 | Project pattern                                                                | `createVitestConfig` options                        |
 | ------------------------------------------------------------------------------ | --------------------------------------------------- |
 | `libs/*/api`, `libs/nest-modules`, `libs/permissions`, `libs/testing` (NestJS) | `environment: 'node'`, `react: false`, `nest: true` |
-| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils`, `apps/<tenant>`    | `environment: 'jsdom'` (default), `react: true`     |
+| `libs/*/editor`, `libs/utils`, `apps/<tenant>` | `environment: 'happy-dom'` (default), `react: true` |
+| `libs/*/website`, `libs/ui`, `libs/website`, `libs/tenants/*` | the same, plus `website: true` |
 
 NestJS projects **must** pass `nest: true`. It switches the transform to swc
 (es2021 + `decoratorMetadata`) and loads `vitest.setup-nest.ts`. Without it,
@@ -29,9 +30,9 @@ type function fail. When setting up a new NestJS lib, copy the setup from
 `libs/consent/api` (`vitest.config.ts`, the `project.json` test target and
 `tsconfig.spec.json`).
 
-`libs/block-content/api` and `libs/image/api` are in `.nxignore` (load-bearing:
-circular imports), so neither `nx test` nor CI runs their specs — run
-`pnpm vitest run --config libs/<lib>/api/vitest.config.ts` yourself.
+`libs/block-content/api`, `libs/image/api` and `libs/mocks/website` are in
+`.nxignore` (load-bearing: circular imports), so `nx test` doesn't run their
+specs — run `pnpm vitest run --config libs/<lib>/vitest.config.ts` yourself.
 
 ## Test-driven development is mandatory
 
@@ -148,31 +149,48 @@ operations run **unguarded** in these tests — asserting a deny path here prove
 nothing. When a resolver uses `@CurrentUser()`, inject a fake session through
 the GraphQL `context` option.
 
-### Website libs (Vitest + Storybook)
+### Website libs (Vitest + Testing Library)
 
-Website components are driven by Storybook stories. The standard spec composes
-every story and renders it, so adding a story automatically adds coverage:
+Website components are tested with a `<component>.spec.tsx` next to the
+component, in happy-dom. `createVitestConfig({ website: true })` loads
+jest-dom, German i18next, the zod error map, date-fns `de` and stand-ins for
+`next/router`, Turnstile and hCaptcha. Every `libs/*/website`, `libs/ui`,
+`libs/website` and `libs/tenants/*` project has it on.
 
-```tsx
-import { render } from '@testing-library/react';
-import { composeStories } from '@storybook/react';
-import * as stories from './tag.stories';
+Render with `renderWithProviders` from `@wepublish/mocks/website`. It gives
+the component the theme, the website builder, a fresh Apollo cache, a session
+(`user`, logged out by default), `next/router` (`router`), the locale (`'de'`
+or `'fr'`), the block contexts and a `tenant`. Fake API data comes from the
+factories in the same library, and Apollo responses from
+`mockOperation(Document, { variables, data })` with the exact variables.
+Background queries (settings, challenge, primary banner) take the
+`mock*Query()` helpers. Examples for each option:
+[libs/mocks/website/README.md](../../libs/mocks/website/README.md).
 
-const storiesCmp = composeStories(stories);
+A GraphQL operation without a matching mock fails the test, and the message
+names it. Queries use `errorPolicy: 'all'` and mutations reject on errors, as
+in production. An "Unhandled Rejection" in the output means the component
+awaits a mutation without catching it. That is a bug in the component, so fix
+the component.
 
-describe('Tag', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
-  });
-});
-```
+Query by role, by label, or by text through `t('key')` from `i18next`. Never
+query by hard-coded German or CSS classes; text a component hard-codes without
+a key is the only exception. Cover each render state (loading, error, empty,
+paywalled) and each interaction, asserting the exact callback arguments or
+mutation variables. happy-dom computes no layout and skips complex selectors
+such as `:not(:is(...))`, so `getBoundingClientRect`, fonts and CSS ordering
+can't be tested; leave those cases out.
 
-**Add a story for each new state** (loading, error, empty, paywalled) — that is
-how you get real coverage here, rather than by writing more `it` blocks. For
-behaviour that is not a render state (event handlers, hooks, data mapping),
-write a normal Testing Library test asserting on user-visible output.
+No `act()` around `render`, `userEvent`, `findBy*` or `waitFor`, because they
+already wait. Use `act()` only around imperative calls outside React (a ref's
+`reset()`), `hydrateRoot`, direct hook state updates and fake timer advances.
+
+Tenants: pass `{ tenant: bajourTenant }`. Translation overrides load
+asynchronously, so call `await applyTenantTranslations(tenant)` in `beforeAll`
+and `await resetTranslations()` in `afterAll`. Each tenant library has a
+config spec, an `index.spec.ts` that catches circular imports, and a
+`<tenant>.spec.tsx` that renders a page as that tenant; see
+[libs/tenants/README.md](../../libs/tenants/README.md).
 
 ### Editor libs (Vitest + Apollo mocks)
 
@@ -197,7 +215,7 @@ logic belongs in a lib and is tested there. What the app itself needs is a
 
 ## Snapshots
 
-35 snapshot directories exist, mostly for website components. Update them with:
+36 snapshot directories exist, mostly for website components. Update them with:
 
 ```bash
 pnpm nx test <project> --configuration=update    # single project

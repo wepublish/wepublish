@@ -889,31 +889,18 @@ reproduce.
 
 ---
 
-### ⚠️ An incomplete Apollo mock turns a story spec into a race
+### ⚠️ Apollo mocks: incomplete data and Apollo 3 matchers
 
-Apollo 4's `MockLink` delays each response by a random 20–50 ms. When two
-queries return the same normalised object (a `PublicSubscription` in both
-`Subscriptions` and `Invoices`), and its mock lacks a fragment field
-(`Missing field 'goodie' while writing result` in stderr), the second response
-leaves the object incomplete. Apollo then refetches the first query, finds its
-mock used up, and the component shows "No more mocked responses" instead of its
-content. That depends on which response comes first and how fast the runner
-renders, so `membership-website`'s "should render Extend" failed now and then on
-CI and never locally (2026-10-16).
-
-Type a mock with `satisfies Exact<…Fragment>`, never `as`, so a missing field
-shows in the editor. Stories aren't type-checked in CI (excluded from
-`tsconfig.lib.json`). Write "no value" as `null`, not `undefined`. Treat any
-`Missing field` line in a spec's stderr as a bug. Fixed delays (`delay` on each
-mock) turn the race into a test that fails every time.
-
-Pinned by `subscription-list-container.spec.tsx` ("should keep the list when
-the invoices arrive after the subscriptions").
+A mocked result that lacks a fragment field (`Missing field 'goodie' while
+writing result` in stderr) leaves the normalised object incomplete, and Apollo
+refetches with a mock that is already used up. Type mocks with
+`satisfies Exact<…Fragment>` (never `as`) or build them with the
+`@wepublish/mocks/website` factories, and write "no value" as `null`, not
+`undefined`. Treat any `Missing field` line in a spec's stderr as a bug.
 
 The top-level `variableMatcher` of Apollo 3 is silently ignored in Apollo 4:
-match any variables with `request: { query, variables: () => true }`. A mock
-that never matches fails the call, and a spec can still pass when the error
-path ends up rendering the same thing (2026-10-23, `ChangePaymentMethod`).
+match any variables with `request: { query, variables: () => true }`
+(`anyVariables` in the mocks lib).
 
 ---
 

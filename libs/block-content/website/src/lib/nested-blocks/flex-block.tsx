@@ -5,7 +5,6 @@ import {
   FullFlexBlockFragment,
 } from '@wepublish/website/api';
 import {
-  BuilderBlockRendererProps,
   BuilderFlexBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
@@ -49,10 +48,7 @@ export const FlexBlock = ({
   blocks,
   type,
   level,
-}: BuilderFlexBlockProps & {
-  type?: BuilderBlockRendererProps['type'];
-  level?: number;
-}) => {
+}: BuilderFlexBlockProps) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
