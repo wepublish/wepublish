@@ -1,5 +1,8 @@
 import { screen, within } from '@testing-library/react';
-import { renderWithProviders } from '@wepublish/mocks/website';
+import {
+  mockSubscriptionPaymentMethodChange,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
 import { actWait } from '@wepublish/testing';
 import {
   FullSubscriptionFragment,
@@ -34,9 +37,7 @@ const renderStory = async (
       {...props}
       data={{
         __typename: 'Query',
-        userSubscriptions: [
-          { ...subscriptionOf(story), ...overrides },
-        ],
+        userSubscriptions: [{ ...subscriptionOf(story), ...overrides }],
       }}
     />,
     { mocks }
@@ -150,10 +151,10 @@ describe('SubscriptionEdit', () => {
 
     const payment = section('Zahlung');
     expect(
-      within(payment).getByText('Zahlungsmethode: Payrexx')
+      within(payment).getByText('Zahlungsmethode: Online-Zahlung')
     ).toBeInTheDocument();
     expect(
-      within(payment).getByRole('button', { name: 'Zahlungsmethode ändern' })
+      within(payment).getByRole('button', { name: 'Zahlungsmethode anpassen' })
     ).toBeInTheDocument();
   });
 
@@ -161,7 +162,7 @@ describe('SubscriptionEdit', () => {
     await renderStory(Default);
 
     const change = within(section('Zahlung')).getByRole('button', {
-      name: 'Zahlungsmethode ändern',
+      name: 'Zahlungsmethode anpassen',
     });
     expect(change.className).not.toMatch(/MuiButton-text/);
   });
@@ -186,6 +187,18 @@ describe('SubscriptionEdit', () => {
       }
     }
   );
+
+  it('names a pending payment method change the way readers know it', async () => {
+    await renderStory(Default, {
+      pendingPaymentMethodChange: mockSubscriptionPaymentMethodChange({
+        paymentMethod: subscription.paymentMethod,
+      }),
+    });
+
+    const payment = section('Zahlung');
+    expect(payment).toHaveTextContent('Online-Zahlung');
+    expect(payment).not.toHaveTextContent('Payrexx');
+  });
 
   it('says so when the payment method cannot be changed', async () => {
     await renderStory(PaymentMethodNotChangeable);

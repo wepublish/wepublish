@@ -26,15 +26,12 @@ import {
 } from '@wepublish/website/builder';
 import { MouseEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  MdEdit,
-  MdKeyboardArrowDown,
-  MdKeyboardArrowRight,
-} from 'react-icons/md';
+import { MdKeyboardArrowDown, MdKeyboardArrowRight } from 'react-icons/md';
 
 import { formatCurrency } from '../formatters/format-currency';
 import { calculatePeriodAmount } from '../formatters/format-payment-period';
 import { InvoiceListContainer } from '../invoice-list/invoice-list-container';
+import { paymentMethodLabel } from '../payment-method-label';
 import {
   IMMEDIATE_ACTIONS,
   SubscriptionActions,
@@ -103,6 +100,15 @@ export const SubscriptionHistoryActions = styled('div')`
   ${SubscriptionListItemActions} {
     justify-content: flex-end;
   }
+`;
+
+/** On the right: editing, then the subscription's own actions. */
+export const SubscriptionHistoryActionBar = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: ${({ theme }) => theme.spacing(1, 2)};
 `;
 
 /** In the table, so it lines up with the actions' last button. */
@@ -187,6 +193,7 @@ function SubscriptionHistoryRow({
 }: RowProps) {
   const {
     meta: { locale },
+    elements: { Button },
     date,
   } = useWebsiteBuilder();
   const { t } = useTranslation();
@@ -259,23 +266,6 @@ function SubscriptionHistoryRow({
           <PlanName>{memberPlan.name}</PlanName>
         </HistoryPlanCell>
 
-        {/* like the editor's user view: editing next to the plan */}
-        <HistoryCell data-label={t('subscriptionHistory.action')}>
-          <Tooltip
-            title={t('subscriptionHistory.edit')}
-            placement="top"
-          >
-            <IconButton
-              size="small"
-              LinkComponent={BuilderLink}
-              href={url}
-              aria-label={t('subscriptionHistory.edit')}
-            >
-              <MdEdit size={16} />
-            </IconButton>
-          </Tooltip>
-        </HistoryCell>
-
         <HistoryStateCell data-label={t('subscriptionHistory.state')}>
           <HistoryState>
             <SubscriptionStateChip subscription={subscription} />
@@ -316,7 +306,7 @@ function SubscriptionHistoryRow({
         </HistoryCell>
 
         <HistoryCell data-label={t('subscriptionHistory.paymentMethod')}>
-          {paymentMethod?.name}
+          {paymentMethod && paymentMethodLabel(t, paymentMethod)}
         </HistoryCell>
 
         <HistoryCell data-label={t('subscriptionHistory.renewal')}>
@@ -331,31 +321,44 @@ function SubscriptionHistoryRow({
           colSpan={HISTORY_COLUMNS}
           data-label=""
         >
-          <SubscriptionHistoryActions>
-            {/* the rest is on the subscription's edit page (pencil) */}
-            <SubscriptionActions
-              {...subscription}
-              actions={IMMEDIATE_ACTIONS}
-              openInvoiceTotal={openInvoiceTotal}
-              cancel={async () => await onCancel?.(id)}
-              reactivate={
-                onReactivate ? async () => await onReactivate(id) : undefined
-              }
-              revertUpgrade={
-                onRevertUpgrade ?
-                  async () => await onRevertUpgrade(id)
-                : undefined
-              }
-              extend={async () => await onExtend?.(id)}
-              changePaymentMethod={
-                onChangePaymentMethod ?
-                  async paymentMethodId =>
-                    await onChangePaymentMethod(id, paymentMethodId)
-                : undefined
-              }
-              cancelPaymentMethodChange={onCancelPaymentMethodChange}
-            />
-          </SubscriptionHistoryActions>
+          <SubscriptionHistoryActionBar>
+            {/* everything else is on the subscription's edit page */}
+            <Button
+              variant="outlined"
+              color="primary"
+              LinkComponent={BuilderLink}
+              href={url}
+            >
+              {t('subscriptionHistory.edit')}
+            </Button>
+
+            <SubscriptionHistoryActions>
+              <SubscriptionActions
+                {...subscription}
+                variant="table"
+                actions={IMMEDIATE_ACTIONS}
+                paymentMethodLabel={method => paymentMethodLabel(t, method)}
+                openInvoiceTotal={openInvoiceTotal}
+                cancel={async () => await onCancel?.(id)}
+                reactivate={
+                  onReactivate ? async () => await onReactivate(id) : undefined
+                }
+                revertUpgrade={
+                  onRevertUpgrade ?
+                    async () => await onRevertUpgrade(id)
+                  : undefined
+                }
+                extend={async () => await onExtend?.(id)}
+                changePaymentMethod={
+                  onChangePaymentMethod ?
+                    async paymentMethodId =>
+                      await onChangePaymentMethod(id, paymentMethodId)
+                  : undefined
+                }
+                cancelPaymentMethodChange={onCancelPaymentMethodChange}
+              />
+            </SubscriptionHistoryActions>
+          </SubscriptionHistoryActionBar>
         </HistoryCell>
       </SubscriptionHistoryActionRow>
 
@@ -450,7 +453,6 @@ export function SubscriptionHistory({
           <TableRow>
             <HistoryArrowCell />
             <HistoryPlanCell>{t('subscriptionHistory.plan')}</HistoryPlanCell>
-            <HistoryCell>{t('subscriptionHistory.action')}</HistoryCell>
             <HistoryStateCell>
               {t('subscriptionHistory.state')}
             </HistoryStateCell>

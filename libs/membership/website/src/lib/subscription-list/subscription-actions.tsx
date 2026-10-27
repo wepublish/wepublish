@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
-import { FullSubscriptionFragment } from '@wepublish/website/api';
+import {
+  FullPaymentMethodFragment,
+  FullSubscriptionFragment,
+} from '@wepublish/website/api';
 import {
   BuilderSubscriptionListItemProps,
   Modal,
@@ -7,8 +10,9 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { PropsWithChildren, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { formatCurrency } from '../formatters/format-currency';
+import { PaymentMethodChoice } from './payment-method-choice';
 
 export const SubscriptionListItemActions = styled('div')`
   display: grid;
@@ -17,6 +21,18 @@ export const SubscriptionListItemActions = styled('div')`
   @container (min-width: 35ch) {
     display: flex;
     justify-content: space-between;
+  }
+`;
+
+/** In the extension dialog: how it is paid, and the way to change that. */
+export const SubscriptionExtendPaymentMethod = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1, 3)};
+
+  & > p {
+    margin: 0;
   }
 `;
 
@@ -126,12 +142,15 @@ export type SubscriptionActionsProps = PropsWithChildren<
     | 'openInvoiceTotal'
   > & {
     /**
-     * `table`: cancelling and the payment method as buttons, not text links
-     * (subscription history and edit page).
+     * `table`: cancelling and the payment method as buttons, not text links,
+     * and the payment methods to change to by name (subscription history and
+     * edit page).
      */
     variant?: 'card' | 'table';
     /** Which actions to offer; all of them by default. */
     actions?: readonly SubscriptionAction[];
+    /** How to name a payment method; its name from the editor by default. */
+    paymentMethodLabel?: (paymentMethod: FullPaymentMethodFragment) => string;
   }
 >;
 
@@ -194,6 +213,7 @@ export function SubscriptionActions({
   children,
   variant = 'card',
   actions = ALL_ACTIONS,
+  paymentMethodLabel = ({ name }) => name,
 }: SubscriptionActionsProps) {
   const show = (action: SubscriptionAction) => actions.includes(action);
 
@@ -255,7 +275,9 @@ export function SubscriptionActions({
         <SubscriptionListItemPaymentMethodChange>
           <Alert severity="info">
             {t('subscription.paymentMethodChangePending', {
-              paymentMethod: pendingPaymentMethodChange.paymentMethod.name,
+              paymentMethod: paymentMethodLabel(
+                pendingPaymentMethodChange.paymentMethod
+              ),
               kind: pendingPaymentMethodChange.kind,
               expiresAt: date.format(
                 new Date(pendingPaymentMethodChange.expiresAt)
@@ -454,17 +476,24 @@ export function SubscriptionActions({
         <Paragraph gutterBottom={!!paymentMethod?.name}>
           {t('subscription.extendEarlyConfirmation', {
             subscriptionDuration,
+            type: productType,
           })}
         </Paragraph>
 
-        {paymentMethod?.name && (
-          <Paragraph gutterBottom={false}>
-            {t('subscription.extendChargedWith', {
-              paymentMethod: paymentMethod.name,
-            })}{' '}
+        {paymentMethod && (
+          <SubscriptionExtendPaymentMethod>
+            <Paragraph gutterBottom={false}>
+              <Trans
+                i18nKey="subscription.extendChargedWith"
+                values={{ paymentMethod: paymentMethodLabel(paymentMethod) }}
+                components={{ strong: <strong /> }}
+              />
+            </Paragraph>
+
             {canChangePaymentMethod && (
               <Button
-                variant="text"
+                variant="outlined"
+                color="primary"
                 size="small"
                 onClick={() => {
                   setConfirmExtend(false);
@@ -474,7 +503,7 @@ export function SubscriptionActions({
                 {t('subscription.changePaymentMethod')}
               </Button>
             )}
-          </Paragraph>
+          </SubscriptionExtendPaymentMethod>
         )}
       </Modal>
 
@@ -494,11 +523,20 @@ export function SubscriptionActions({
         cancelText={t('user.cancel')}
         title={t('subscription.changePaymentMethodTitle')}
       >
-        <PaymentMethodPicker
-          paymentMethods={changeablePaymentMethods}
-          value={chosenPaymentMethodId}
-          onChange={setChosenPaymentMethodId}
-        />
+        {variant === 'table' ?
+          <PaymentMethodChoice
+            current={paymentMethod}
+            paymentMethods={changeablePaymentMethods}
+            value={chosenPaymentMethodId}
+            onChange={setChosenPaymentMethodId}
+            label={paymentMethodLabel}
+          />
+        : <PaymentMethodPicker
+            paymentMethods={changeablePaymentMethods}
+            value={chosenPaymentMethodId}
+            onChange={setChosenPaymentMethodId}
+          />
+        }
 
         <Paragraph gutterBottom={false}>
           {paymentMethodChangeExplanation}
@@ -521,7 +559,7 @@ export function SubscriptionActions({
       >
         <Paragraph>
           {t('subscription.renewPaymentMethodConfirmation', {
-            paymentMethod: paymentMethod?.name,
+            paymentMethod: paymentMethod && paymentMethodLabel(paymentMethod),
           })}
         </Paragraph>
 

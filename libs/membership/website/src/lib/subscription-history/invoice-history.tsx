@@ -188,9 +188,6 @@ function InvoiceHistoryRow({ invoice, onPay, nested }: InvoiceHistoryRowProps) {
               </InvoiceHistoryLabel>
             </InvoiceHistoryNested>
           </InvoiceHistoryIndentedCell>
-
-          {/* under the subscription's action */}
-          <InvoiceHistorySpacerCell data-label="" />
         </>
       : <HistoryCell data-label={t('subscriptionHistory.invoice')}>
           {invoice.description ?? invoice.id}
@@ -347,7 +344,6 @@ export function InvoiceHistory({
               <InvoiceHistoryIndentedCell component="th">
                 {t('subscriptionHistory.invoice')}
               </InvoiceHistoryIndentedCell>
-              <HistoryCell component="th" />
             </>
           : <HistoryCell component="th">
               {t('subscriptionHistory.invoice')}

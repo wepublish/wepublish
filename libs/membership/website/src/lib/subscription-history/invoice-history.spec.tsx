@@ -158,7 +158,6 @@ describe('InvoiceHistory', () => {
     ).toEqual([
       '',
       'Rechnung',
-      '',
       'Status',
       'Erstellt am',
       'Fällig am',

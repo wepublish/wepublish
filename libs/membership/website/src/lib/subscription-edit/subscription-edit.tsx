@@ -4,6 +4,7 @@ import { TableBody } from '@mui/material';
 import { isInvoiceOpen } from '@wepublish/ui';
 import {
   FullInvoiceFragment,
+  FullPaymentMethodFragment,
   FullSubscriptionFragment,
   MemberPlanListDocument,
 } from '@wepublish/website/api';
@@ -18,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../formatters/format-currency';
 import { calculatePeriodAmount } from '../formatters/format-payment-period';
 import { InvoiceListContainer } from '../invoice-list/invoice-list-container';
+import { paymentMethodLabel } from '../payment-method-label';
 import {
   HistoryTable,
   HistoryTableWrapper,
@@ -269,6 +271,8 @@ function SubscriptionEditDetails({
     extend: async () => await onExtend?.(id),
     changePaymentMethod,
     cancelPaymentMethodChange: onCancelPaymentMethodChange,
+    paymentMethodLabel: (method: FullPaymentMethodFragment) =>
+      paymentMethodLabel(t, method),
   };
 
   const endsOn = (when: string) =>
@@ -360,10 +364,10 @@ function SubscriptionEditDetails({
         title={t('subscriptionEdit.sections.payment')}
         area="payment"
       >
-        {paymentMethod?.name && (
+        {paymentMethod && (
           <Paragraph gutterBottom={false}>
             {t('subscription.paymentMethod', {
-              paymentMethod: paymentMethod.name,
+              paymentMethod: paymentMethodLabel(t, paymentMethod),
             })}
           </Paragraph>
         )}

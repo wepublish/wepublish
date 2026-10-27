@@ -84,7 +84,7 @@ describe('ProfileSubscription', () => {
     renderWith(['profile-subscription-history']);
 
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Abo bearbeiten' })
+      await screen.findByRole('heading', { level: 1, name: 'Abo anpassen' })
     ).toBeInTheDocument();
     expect(
       await screen.findByRole('heading', { name: 'Zahlung' })
@@ -100,7 +100,7 @@ describe('ProfileSubscription', () => {
 
       const title = await screen.findByRole('heading', {
         level: 1,
-        name: 'Abo bearbeiten',
+        name: 'Abo anpassen',
       });
       const [top] = backLinks();
       // first in reading order: above the title where the row wraps
@@ -121,7 +121,7 @@ describe('ProfileSubscription', () => {
         renderWith(['profile-subscription-history'], invoices(count, canceled));
         await screen.findByRole('heading', {
           level: 1,
-          name: 'Abo bearbeiten',
+          name: 'Abo anpassen',
         });
         // the invoices are in
         await screen.findAllByText('Bezahlt');
@@ -142,7 +142,7 @@ describe('ProfileSubscription', () => {
       await screen.findByRole('heading', { level: 1, name: 'Rechnungen' })
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole('heading', { name: 'Abo bearbeiten' })
+      screen.queryByRole('heading', { name: 'Abo anpassen' })
     ).not.toBeInTheDocument();
   });
 });

@@ -1,4 +1,5 @@
 import { fireEvent, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   renderWithProviders,
   RenderWithProvidersOptions,
@@ -77,6 +78,14 @@ describe('SubscriptionHistory', () => {
     ).toHaveAttribute('href', '/profile/subscription/yearly');
   });
 
+  it('names the payment method the way readers know it', async () => {
+    await renderStory(Default);
+
+    const row = subscriptionRow('Jahresabo');
+    expect(row).toHaveTextContent('Online-Zahlung');
+    expect(row).not.toHaveTextContent('Payrexx');
+  });
+
   it('opens and closes the invoices of a subscription on request', async () => {
     await renderStory(Default);
 
@@ -111,7 +120,7 @@ describe('SubscriptionHistory', () => {
 
     for (const name of [
       'Abo kündigen',
-      'Zahlungsmethode ändern',
+      'Zahlungsmethode anpassen',
       'Bestehende Zahlungsmethode aktualisieren',
     ]) {
       expect(screen.queryByRole('button', { name })).not.toBeInTheDocument();
@@ -264,9 +273,9 @@ describe('SubscriptionHistory', () => {
       await renderStory(Default);
 
       fireEvent.click(
-        within(subscriptionRow('Förderabo')).getByRole('link', {
-          name: 'Abo bearbeiten',
-        })
+        within(
+          subscriptionRow('Förderabo').nextElementSibling as HTMLElement
+        ).getByRole('link', { name: 'Abo anpassen' })
       );
       expect(screen.queryByText('Förderabo 2026')).not.toBeInTheDocument();
 
@@ -332,23 +341,82 @@ describe('SubscriptionHistory', () => {
     ).toBeGreaterThanOrEqual(700);
   });
 
-  it('offers editing in an action column right of the plan, like the editor', async () => {
+  it('offers editing first in the action row, without a column of its own', async () => {
     await renderStory(Default);
 
-    const headers = screen
-      .getAllByRole('columnheader')
-      .map(cell => cell.textContent);
-    expect(headers[headers.indexOf('Abo') + 1]).toBe('Aktion');
+    expect(
+      screen.getAllByRole('columnheader').map(cell => cell.textContent)
+    ).not.toContain('Aktion');
 
     const row = subscriptionRow('Förderabo');
-    const edit = within(row).getByRole('link', { name: 'Abo bearbeiten' });
+    const actionRow = row.nextElementSibling as HTMLElement;
+    expect(
+      within(row).queryByRole('link', { name: 'Abo anpassen' })
+    ).not.toBeInTheDocument();
+
+    const edit = within(actionRow).getByRole('link', {
+      name: 'Abo anpassen',
+    });
     expect(edit).toHaveAttribute(
       'href',
       'https://example.com/profile/subscription/subscription-1'
     );
-    expect(edit.closest('td')).toBe(
-      screen.getByRole('rowheader', { name: 'Förderabo' }).nextElementSibling
+    // secondary, right-aligned just before the subscription's own actions
+    expect(edit.className).toMatch(/MuiButton-outlined/);
+    expect(
+      getComputedStyle(edit.parentElement as HTMLElement).justifyContent
+    ).toBe('flex-end');
+    const extend = within(actionRow).getByRole('button', {
+      name: 'Jetzt verlängern',
+    });
+    expect(
+      edit.compareDocumentPosition(extend) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it('changes the payment method from an early extension by name, like the edit page', async () => {
+    await renderStory(Default);
+    const user = userEvent.setup();
+
+    const actionRow = subscriptionRow('Jahresabo')
+      .nextElementSibling as HTMLElement;
+    await user.click(
+      within(actionRow).getByRole('button', { name: 'Jetzt verlängern' })
     );
+    await user.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'Zahlungsmethode anpassen',
+      })
+    );
+
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveTextContent(
+      'Aktuelle Zahlungsmethode: Online-Zahlung'
+    );
+    expect(dialog.querySelector('img')).toBeNull();
+  });
+
+  it('offers editing also where there is nothing else to do', async () => {
+    // running, and too early to extend: no immediate action
+    await renderStory({
+      ...Default,
+      props: {
+        ...Default.props,
+        data: {
+          __typename: 'Query',
+          userSubscriptions: (Default.props.data?.userSubscriptions ?? [])
+            .filter(({ memberPlan }) => memberPlan.name === 'Förderabo')
+            .map(subscription => ({ ...subscription, canExtend: false })),
+        },
+      },
+    });
+
+    const actionRow = subscriptionRow('Förderabo')
+      .nextElementSibling as HTMLElement;
+    expect(within(actionRow).queryAllByRole('button')).toHaveLength(0);
+    expect(
+      within(actionRow).getByRole('link', { name: 'Abo anpassen' })
+    ).toBeInTheDocument();
   });
 
   it('keeps the arrow column narrow, on both levels', async () => {

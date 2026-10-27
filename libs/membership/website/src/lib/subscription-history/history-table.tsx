@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import { Table, TableCell } from '@mui/material';
 
-/** Columns of the subscription history: the expand arrow, the plan, its
- * action and six values. */
-export const HISTORY_COLUMNS = 9;
+/** Columns of the subscription history: the expand arrow, the plan and six
+ * values. */
+export const HISTORY_COLUMNS = 8;
 
 /**
  * Below this container width the rows stack: the table with its invoices open

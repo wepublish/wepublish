@@ -117,24 +117,27 @@
     "renewPaymentMethodTitle": "Mettre à jour le moyen de paiement actuel",
     "renewPaymentMethodConfirmation": "Vous confirmez à nouveau {paymentMethod}, par exemple avec une nouvelle carte ou un nouveau compte TWINT. D'ici là, l'enregistrement actuel reste actif.",
     "paymentMethod": "Moyen de paiement : {paymentMethod}",
-    "changePaymentMethod": "Changer de moyen de paiement",
+    "changePaymentMethod": "Adapter le moyen de paiement",
     "changePaymentMethodTitle": "Changer de moyen de paiement",
+    "changePaymentMethodCurrent": "Moyen de paiement actuel : <strong>{paymentMethod}</strong>",
+    "changePaymentMethodChoose": "Changer le moyen de paiement pour :",
+    "changePaymentMethodNew": "Changer le moyen de paiement pour : <strong>{paymentMethod}</strong>",
     "changePaymentMethodSubmit": "Continuer",
     "changePaymentMethodOpenInvoice": "Vous payez la facture ouverte de {amount} avec le nouveau moyen de paiement. Ce n'est qu'ensuite qu'il sera repris pour votre {type, select, Donation {don} other {abonnement}}.",
     "changePaymentMethodAuthorization": "Vous confirmez une fois un moyen de paiement en ligne auprès du prestataire de paiement. Un montant de {amount} peut être réservé à cet effet, il ne vous sera jamais débité. D'ici là, votre moyen de paiement actuel reste actif.",
     "paymentMethodChangePending": "Changement vers {paymentMethod} en attente : {kind, select, invoicePayment {actif dès que la facture ouverte est payée} other {actif dès que vous avez confirmé le moyen de paiement}}. Possible jusqu'au {expiresAt}.",
     "paymentMethodChangeContinue": "Continuer",
     "paymentMethodChangeCancel": "Annuler le changement",
-    "extendChargedWith": "Débité via : {paymentMethod}",
+    "extendChargedWith": "Paiement par : <strong>{paymentMethod}</strong>",
     "externalReward": "{isLink, select, true {Lien vers une récompense externe} other {{externalReward}}}",
     "unpaid": "{type, select, Donation {Don} other {Abonnement}} impayé",
     "cancel": "Résilier {type, select, Donation {le don} other {l'abonnement}}",
-    "cancelConfirmation": "{type, select, Donation {Toutes les factures ouvertes du don seront annulées.} other {L'abonnement ne sera pas renouvelé, mais restera valable jusqu'à sa date d'expiration. Toutes les factures ouvertes de l'abonnement seront annulées.}}",
+    "cancelConfirmation": "{type, select, Donation {En résiliant, vous mettez fin à un soutien précieux. Les factures ouvertes du don seront annulées.} other {En résiliant, vous mettez fin à un soutien précieux. Votre abonnement ne sera plus prolongé, mais reste valable jusqu'à sa date d'échéance. Les factures ouvertes de l'abonnement seront annulées.}}",
     "costs": "Coûte {amount} {extendable, select, true {{periodicity, select, monthly {par mois} quarterly {par trimestre} biannual {par semestre} yearly {par an} biennial {par 2 ans} lifetime {une seule fois} other {}}} other {}}",
     "extendNow": "Prolonger maintenant",
     "extendBy": "Prolonger maintenant de {subscriptionDuration}",
-    "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}} à l'avance ?",
-    "extendEarlyConfirmation": "Nous sommes ravis que vous souhaitiez prolonger votre {type, select, Donation {don} other {abonnement}} de {subscriptionDuration} à l'avance. Continuer ?",
+    "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}}",
+    "extendEarlyConfirmation": "Votre prolongation anticipée {type, select, Donation {du don} other {de l'abonnement}} de {subscriptionDuration} renforce notre sécurité de planification. Merci pour ce soutien !",
     "noActiveSubscriptions": "Vous n'avez pas encore d'abonnement actif.",
     "subscribeNow": "S'abonner maintenant.",
     "startsAt": "{type, select, Donation {Effectué le} other {Souscrit le}} <time>{startsAt}</time>",
@@ -145,9 +148,9 @@
     "cancelledDueToUnknownReason": "Le motif de résiliation est inconnu",
     "autoRenew": "Sera renouvelé automatiquement {periodicityTimeline}",
     "validFor": "Valable {subscriptionDuration}",
-    "cancelProduct": "Voulez-vous vraiment résilier {productName} ?",
+    "cancelProduct": "Voulez-vous vraiment résilier {productName, select, Donation {votre don} other {votre abonnement}} ?",
     "reactivate": "Réactiver {type, select, Donation {le don} other {l’abonnement}}",
-    "reactivateProduct": "Réactiver vraiment {productName} ?",
+    "reactivateProduct": "Réactiver {productName, select, Donation {le don} other {l'abonnement}}",
     "revertUpgrade": "Annuler le changement",
     "revertUpgradeTitle": "Vraiment annuler le changement ?",
     "revertUpgradeConfirmation": "{type, select, Donation {Le nouveau don et sa facture ouverte sont supprimés, le don précédent se poursuit normalement.} other {Le nouvel abonnement et sa facture ouverte sont supprimés, ton abonnement précédent se poursuit normalement.}}",
@@ -484,11 +487,10 @@
       "canceled": "Annulée",
       "unpaid": "Ouverte"
     },
-    "action": "Action",
-    "edit": "Modifier l'abonnement"
+    "edit": "Adapter l'abonnement"
   },
   "subscriptionEdit": {
-    "title": "Modifier l'abonnement",
+    "title": "Adapter l'abonnement",
     "sections": {
       "plan": "Abonnement",
       "payment": "Paiement",
@@ -497,5 +499,14 @@
     },
     "upgrade": "Passer à un abonnement supérieur",
     "paymentMethodNotChangeable": "Le moyen de paiement de cet abonnement ne peut pas être modifié en ligne."
+  },
+  "paymentMethodLabels": {
+    "bexio": "Facture",
+    "payrexx": "Paiement en ligne",
+    "payrexx-subscription": "Paiement en ligne",
+    "stripe": "Carte de crédit",
+    "stripe-checkout": "Carte de crédit",
+    "mollie": "Paiement en ligne",
+    "no-charge": "Gratuit"
   }
 }
