@@ -1,10 +1,12 @@
 import { TableBody } from '@mui/material';
 import { act, fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   renderWithProviders,
   RenderWithProvidersOptions,
 } from '@wepublish/mocks/website';
 
+import { invoiceFixture } from '../membership.fixtures';
 import { HistoryTable } from './history-table';
 import { InvoiceHistory, InvoiceHistoryProps } from './invoice-history';
 import * as fixtures from './invoice-history.fixtures';
@@ -149,6 +151,24 @@ describe('InvoiceHistory', () => {
     expect(style.overflow).toBe('hidden');
   });
 
+  it('marks every row of a closed subscription as collapsed', () => {
+    renderHistory({ ...Default, collapsed: true });
+
+    const rows = screen.getAllByRole('row');
+    expect(rows.length).toBeGreaterThan(1);
+    for (const row of rows) {
+      expect(row).toHaveAttribute('data-collapsed', 'true');
+    }
+  });
+
+  it('leaves the rows of an opened subscription unmarked', () => {
+    renderHistory(Default);
+
+    for (const row of screen.getAllByRole('row')) {
+      expect(row).not.toHaveAttribute('data-collapsed');
+    }
+  });
+
   it('labels the invoice columns in the order of the subscription columns', () => {
     renderHistory(Default);
 
@@ -271,6 +291,89 @@ describe('InvoiceHistory', () => {
       );
       expect(style.borderBottomStyle).not.toBe('none');
     }
+  });
+
+  describe('on the edit page, when stacked', () => {
+    // five shown invoices: the four of Standalone without the cancelled one, plus two
+    const many = () => {
+      const invoices = Standalone.data?.userInvoices ?? [];
+      const subscription = invoices[0]?.subscription;
+
+      if (!subscription) {
+        throw new Error('a fixture without a subscription');
+      }
+
+      return {
+        ...Standalone,
+        data: {
+          __typename: 'Query' as const,
+          userInvoices: [
+            ...invoices,
+            invoiceFixture(subscription, {
+              id: 'paid-2023',
+              description: 'Jahresabo 2023',
+              dueAt: '2023-01-01T00:00:00.000Z',
+              paidAt: '2022-12-10T00:00:00.000Z',
+            }),
+            invoiceFixture(subscription, {
+              id: 'paid-2022',
+              description: 'Jahresabo 2022',
+              dueAt: '2022-01-01T00:00:00.000Z',
+              paidAt: '2021-12-10T00:00:00.000Z',
+            }),
+          ],
+        },
+      };
+    };
+    const beyondLimit = () =>
+      screen
+        .getAllByRole('row')
+        .filter(row => row.getAttribute('data-beyond-limit') === 'true')
+        .map(row => row.textContent);
+
+    it('folds away all but the latest three invoices', () => {
+      renderHistory(many());
+
+      expect(beyondLimit()).toEqual([
+        expect.stringContaining('Jahresabo 2023'),
+        expect.stringContaining('Jahresabo 2022'),
+      ]);
+      const toggle = screen.getByRole('button', {
+        name: '2 weitere Rechnungen',
+      });
+      // the table shows them all and has no use for it
+      expect(toggle.closest('tr')).toHaveAttribute('data-stacked-only', 'true');
+    });
+
+    it('shows and hides the rest on request', async () => {
+      renderHistory(many());
+      const user = userEvent.setup();
+
+      await user.click(
+        screen.getByRole('button', { name: '2 weitere Rechnungen' })
+      );
+      expect(beyondLimit()).toEqual([]);
+
+      await user.click(
+        screen.getByRole('button', { name: 'Rechnungen ausblenden' })
+      );
+      expect(beyondLimit()).toHaveLength(2);
+    });
+
+    it('needs no toggle for three invoices or fewer', () => {
+      renderHistory(Standalone);
+
+      expect(beyondLimit()).toEqual([]);
+      expect(
+        screen.queryByRole('button', { name: /weitere Rechnung/ })
+      ).not.toBeInTheDocument();
+    });
+
+    it('leaves the profile to its own limit', () => {
+      renderHistory({ ...many(), nested: true });
+
+      expect(beyondLimit()).toEqual([]);
+    });
   });
 
   describe('in the profile', () => {

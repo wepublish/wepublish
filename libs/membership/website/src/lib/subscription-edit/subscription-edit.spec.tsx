@@ -74,6 +74,22 @@ describe('SubscriptionEdit', () => {
     }
   });
 
+  it('rounds the corners of each section box', async () => {
+    await renderStory(Default);
+
+    for (const name of [
+      'Abo',
+      'Zahlung',
+      'Verlängerung & Kündigung',
+      'Rechnungen',
+    ]) {
+      const box = getComputedStyle(section(name));
+      expect(parseFloat(box.borderRadius)).toBeGreaterThan(0);
+      // the heading band follows the rounding
+      expect(box.overflow).toBe('hidden');
+    }
+  });
+
   it('indents the content of each section under its title', async () => {
     await renderStory(Default);
 

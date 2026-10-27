@@ -40,6 +40,8 @@ import {
 import { isSubscriptionDeactivated } from '../subscription-state';
 import {
   HISTORY_COLUMNS,
+  HISTORY_STACKED,
+  PLAN_PADDING,
   HistoryAmount,
   HistoryArrowCell,
   HistoryCell,
@@ -57,11 +59,61 @@ export const SubscriptionHistoryWrapper = styled(HistoryTableWrapper)`
 `;
 
 /**
+ * One subscription with its actions and invoices. Stacked, a box like the
+ * sections of the edit page, its name on a band like their headings.
+ */
+export const SubscriptionHistoryBody = styled(TableBody)`
+  ${HISTORY_STACKED} {
+    border: 1px solid ${({ theme }) => theme.palette.divider};
+    border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+    // the heading band follows the rounding
+    overflow: hidden;
+    margin-bottom: ${({ theme }) => theme.spacing(3)};
+
+    & > tr > th[scope='row'] {
+      background-color: ${({ theme }) => theme.palette.grey[100]};
+      border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
+      padding: ${({ theme }) => theme.spacing(1.5, PLAN_PADDING)};
+      margin-bottom: ${({ theme }) => theme.spacing(1)};
+      font-size: ${({ theme }) => theme.typography.h6.fontSize};
+      font-weight: ${({ theme }) => theme.typography.h6.fontWeight};
+      line-height: ${({ theme }) => theme.typography.h6.lineHeight};
+
+      & > span {
+        font-weight: inherit;
+      }
+    }
+
+    // the heading band starts at the box's top edge
+    & > tr:first-of-type {
+      padding-top: 0;
+    }
+
+    & > tr:last-of-type {
+      border-bottom: none;
+    }
+  }
+`;
+
+/** Opens the invoices in the table; stacked, they are always shown. */
+const SubscriptionHistoryArrowCell = styled(HistoryArrowCell)`
+  ${HISTORY_STACKED} {
+    && {
+      display: none;
+    }
+  }
+`;
+
+/**
  * The data row of a subscription: one block with its action row below. A click
  * on it opens or closes the invoices, like the arrow.
  */
 export const SubscriptionHistoryMainRow = styled(TableRow)`
   cursor: pointer;
+
+  ${HISTORY_STACKED} {
+    cursor: auto;
+  }
 
   && > td,
   && > th {
@@ -81,6 +133,10 @@ export const SubscriptionHistoryMainRow = styled(TableRow)`
 /** The actions below the data row: part of the same block on hover and click. */
 export const SubscriptionHistoryActionRow = styled(TableRow)`
   cursor: pointer;
+
+  ${HISTORY_STACKED} {
+    cursor: auto;
+  }
 
   &:hover > td,
   ${SubscriptionHistoryMainRow}:hover + && > td {
@@ -115,6 +171,14 @@ export const SubscriptionHistoryActionBar = styled('div')`
 export const SubscriptionHistorySubscribeRow = styled(TableRow)`
   && > td {
     border-bottom: none;
+  }
+
+  // stacked rows draw their own line; this one ends the list
+  ${HISTORY_STACKED} {
+    && {
+      border-bottom: none;
+      padding-bottom: ${({ theme }) => theme.spacing(2)};
+    }
   }
 `;
 
@@ -233,15 +297,16 @@ function SubscriptionHistoryRow({
       <InvoiceHistory
         {...props}
         allInvoicesUrl={url}
+        collapsed={!expanded}
       />
     ),
-    [url]
+    [url, expanded]
   );
 
   return (
-    <>
+    <SubscriptionHistoryBody>
       <SubscriptionHistoryMainRow onClick={toggleFromClick}>
-        <HistoryArrowCell data-label="">
+        <SubscriptionHistoryArrowCell data-label="">
           <IconButton
             size="small"
             onClick={onToggle}
@@ -256,7 +321,7 @@ function SubscriptionHistoryRow({
               <MdKeyboardArrowDown />
             : <MdKeyboardArrowRight />}
           </IconButton>
-        </HistoryArrowCell>
+        </SubscriptionHistoryArrowCell>
 
         <HistoryPlanCell
           component="th"
@@ -362,14 +427,13 @@ function SubscriptionHistoryRow({
         </HistoryCell>
       </SubscriptionHistoryActionRow>
 
-      {/* rows of this table; its payment dialog is a portal */}
-      {expanded && (
-        <InvoiceListContainer
-          filter={filterInvoices}
-          List={InvoiceList}
-        />
-      )}
-    </>
+      {/* rows of this table, also while closed (the stacked layout shows
+          them); its payment dialog is a portal */}
+      <InvoiceListContainer
+        filter={filterInvoices}
+        List={InvoiceList}
+      />
+    </SubscriptionHistoryBody>
   );
 }
 
@@ -464,10 +528,10 @@ export function SubscriptionHistory({
           </TableRow>
         </TableHead>
 
-        <TableBody>
-          {rows(running)}
-          {showEnded && rows(ended)}
+        {rows(running)}
+        {showEnded && rows(ended)}
 
+        <TableBody>
           {!!running.length && (
             <SubscriptionHistorySubscribeRow>
               <HistoryCell

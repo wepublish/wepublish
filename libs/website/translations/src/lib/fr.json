@@ -487,7 +487,9 @@
       "canceled": "Annulée",
       "unpaid": "Ouverte"
     },
-    "edit": "Adapter l'abonnement"
+    "edit": "Adapter l'abonnement",
+    "moreInvoices": "{count, plural, one {# autre facture} other {# autres factures}}",
+    "hideMoreInvoices": "Masquer les factures"
   },
   "subscriptionEdit": {
     "title": "Adapter l'abonnement",

@@ -33,6 +33,15 @@ const subscriptionRow = (planName: string) => {
   return row;
 };
 
+// a closed subscription keeps its invoices in the table, marked collapsed:
+// the table hides them, the stacked layout always shows them
+const invoiceRow = (text: string) =>
+  screen.getByText(text).closest('tr') as HTMLElement;
+const expectShown = (text: string) =>
+  expect(invoiceRow(text)).not.toHaveAttribute('data-collapsed');
+const expectCollapsed = (text: string) =>
+  expect(invoiceRow(text)).toHaveAttribute('data-collapsed', 'true');
+
 describe('SubscriptionHistory', () => {
   for (const [name, fixture] of [
     ['Default', Default],
@@ -64,14 +73,14 @@ describe('SubscriptionHistory', () => {
   it('opens the invoices of a subscription with an open invoice', async () => {
     await renderStory(Default);
 
-    expect(screen.getByText('Jahresabo 2026')).toBeInTheDocument();
-    expect(screen.queryByText('Förderabo 2026')).not.toBeInTheDocument();
+    expectShown('Jahresabo 2026');
+    expectCollapsed('Förderabo 2026');
   });
 
   it('shows the latest invoices and links to all of them on the edit page', async () => {
     await renderStory(Default);
 
-    expect(screen.getByText('Jahresabo 2025')).toBeInTheDocument();
+    expectShown('Jahresabo 2025');
     expect(screen.queryByText('Jahresabo 2024')).not.toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: 'Alle Rechnungen (3)' })
@@ -86,6 +95,18 @@ describe('SubscriptionHistory', () => {
     expect(row).not.toHaveTextContent('Payrexx');
   });
 
+  it('groups each subscription with its actions and invoices, a box when stacked', async () => {
+    await renderStory(Default);
+
+    const body = subscriptionRow('Jahresabo').closest('tbody') as HTMLElement;
+    expect(body).toContainElement(
+      subscriptionRow('Jahresabo').nextElementSibling as HTMLElement
+    );
+    expect(body).toContainElement(invoiceRow('Jahresabo 2026'));
+    expect(body).not.toContainElement(subscriptionRow('Förderabo'));
+    expect(body).not.toContainElement(invoiceRow('Förderabo 2026'));
+  });
+
   it('opens and closes the invoices of a subscription on request', async () => {
     await renderStory(Default);
 
@@ -95,21 +116,21 @@ describe('SubscriptionHistory', () => {
       })
     );
     await actWait(50);
-    expect(screen.getByText('Förderabo 2026')).toBeInTheDocument();
+    expectShown('Förderabo 2026');
 
     fireEvent.click(
       within(subscriptionRow('Jahresabo')).getByRole('button', {
         name: 'Rechnungen ausblenden',
       })
     );
-    expect(screen.queryByText('Jahresabo 2026')).not.toBeInTheDocument();
+    expectCollapsed('Jahresabo 2026');
   });
 
   it('offers the immediate actions of every running subscription without opening it', async () => {
     await renderStory(Default);
 
     // Jahresabo is opened (open invoice), Förderabo is not
-    expect(screen.queryByText('Förderabo 2026')).not.toBeInTheDocument();
+    expectCollapsed('Förderabo 2026');
     expect(
       screen.getAllByRole('button', { name: 'Jetzt verlängern' })
     ).toHaveLength(2);
@@ -263,10 +284,10 @@ describe('SubscriptionHistory', () => {
 
       fireEvent.click(statusCell('Förderabo', 'Aktiv'));
       await actWait(50);
-      expect(screen.getByText('Förderabo 2026')).toBeInTheDocument();
+      expectShown('Förderabo 2026');
 
       fireEvent.click(statusCell('Förderabo', 'Aktiv'));
-      expect(screen.queryByText('Förderabo 2026')).not.toBeInTheDocument();
+      expectCollapsed('Förderabo 2026');
     });
 
     it('leaves the edit link and the arrow to themselves', async () => {
@@ -277,7 +298,7 @@ describe('SubscriptionHistory', () => {
           subscriptionRow('Förderabo').nextElementSibling as HTMLElement
         ).getByRole('link', { name: 'Abo anpassen' })
       );
-      expect(screen.queryByText('Förderabo 2026')).not.toBeInTheDocument();
+      expectCollapsed('Förderabo 2026');
 
       // the arrow opens once, the row does not toggle it back
       fireEvent.click(
@@ -286,7 +307,7 @@ describe('SubscriptionHistory', () => {
         })
       );
       await actWait(50);
-      expect(screen.getByText('Förderabo 2026')).toBeInTheDocument();
+      expectShown('Förderabo 2026');
     });
 
     it('does not toggle while text in it is selected', async () => {
@@ -296,7 +317,7 @@ describe('SubscriptionHistory', () => {
       } as Selection);
 
       fireEvent.click(statusCell('Förderabo', 'Aktiv'));
-      expect(screen.queryByText('Förderabo 2026')).not.toBeInTheDocument();
+      expectCollapsed('Förderabo 2026');
     });
 
     it('shows a pointer on the whole block, data and actions', async () => {
@@ -316,7 +337,7 @@ describe('SubscriptionHistory', () => {
       ).querySelector('td') as HTMLElement;
       fireEvent.click(actionCell);
       await actWait(50);
-      expect(screen.getByText('Förderabo 2026')).toBeInTheDocument();
+      expectShown('Förderabo 2026');
     });
 
     it('leaves the action buttons to themselves', async () => {
@@ -327,7 +348,7 @@ describe('SubscriptionHistory', () => {
       fireEvent.click(
         within(actionRow).getByRole('button', { name: 'Jetzt verlängern' })
       );
-      expect(screen.queryByText('Förderabo 2026')).not.toBeInTheDocument();
+      expectCollapsed('Förderabo 2026');
     });
   });
 

@@ -15,6 +15,12 @@ export const HISTORY_STACKED_MAX_WIDTH = 1150; // px
 export const HISTORY_STACKED = `@container (max-width: ${HISTORY_STACKED_MAX_WIDTH}px)`;
 export const HISTORY_COLUMNS_SHOWN = `@container (min-width: ${HISTORY_STACKED_MAX_WIDTH + 1}px)`;
 
+/**
+ * The plan column has a little more room on the left; the invoice column
+ * below it uses the same, so subscription and invoice labels line up.
+ */
+export const PLAN_PADDING = 2.5; // theme spacing units
+
 /** Container the tables measure themselves against. */
 export const HistoryTableWrapper = styled('div')`
   container-type: inline-size;
@@ -26,6 +32,22 @@ export const HistoryTableWrapper = styled('div')`
  * every cell shows its column label (`data-label`) in front of its value.
  */
 export const HistoryTable = styled(Table)`
+  // a closed subscription's invoices: hidden in the table, shown when stacked;
+  // rows only the stacked layout needs
+  ${HISTORY_COLUMNS_SHOWN} {
+    tr[data-collapsed='true'],
+    tr[data-stacked-only='true'] {
+      display: none;
+    }
+  }
+
+  // invoices past the stacked layout's limit, until the reader asks for all
+  ${HISTORY_STACKED} {
+    tr[data-beyond-limit='true'] {
+      display: none;
+    }
+  }
+
   // the website's global styles frame every table cell (meant for article
   // tables); this table only separates its rows
   &,
@@ -78,7 +100,7 @@ export const HistoryTable = styled(Table)`
       grid-template-columns: 40% 1fr;
       gap: ${({ theme }) => theme.spacing(1)};
       border: none;
-      padding: ${({ theme }) => theme.spacing(0.5, 1)};
+      padding: ${({ theme }) => theme.spacing(0.5, PLAN_PADDING)};
     }
 
     td[data-label]::before {
@@ -104,12 +126,6 @@ export const HistoryCell = styled(TableCell)`
 export const HistoryArrowCell = styled(HistoryCell)`
   padding-right: 0;
 `;
-
-/**
- * The plan column has a little more room on the left; the invoice column
- * below it uses the same, so subscription and invoice labels line up.
- */
-export const PLAN_PADDING = 2.5; // theme spacing units
 
 /**
  * The plan column keeps its width when invoices open below it: their labels

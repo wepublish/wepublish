@@ -76,6 +76,9 @@ export const SubscriptionEditWrapper = styled('div')`
 export const SubscriptionEditSection = styled('section')`
   display: grid;
   border: 1px solid ${({ theme }) => theme.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  // the heading band follows the rounding
+  overflow: hidden;
 `;
 
 /** The section's title on a band, like the history table's header. */

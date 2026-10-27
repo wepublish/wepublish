@@ -487,7 +487,9 @@
       "canceled": "Storniert",
       "unpaid": "Offen"
     },
-    "edit": "Abo anpassen"
+    "edit": "Abo anpassen",
+    "moreInvoices": "{count, plural, one {# weitere Rechnung} other {# weitere Rechnungen}}",
+    "hideMoreInvoices": "Rechnungen ausblenden"
   },
   "subscriptionEdit": {
     "title": "Abo anpassen",

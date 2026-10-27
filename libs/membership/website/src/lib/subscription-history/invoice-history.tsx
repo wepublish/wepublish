@@ -106,6 +106,17 @@ export const InvoiceHistoryNested = styled('span')`
   align-items: center;
   gap: ${({ theme }) => theme.spacing(NESTED_ICON_GAP)};
 
+  // stacked, the box shows which subscription the invoice belongs to; the
+  // label may only take the value column, so it ends in an ellipsis
+  ${HISTORY_STACKED} {
+    display: flex;
+    min-width: 0;
+
+    svg {
+      display: none;
+    }
+  }
+
   svg {
     flex-shrink: 0;
     color: ${({ theme }) => theme.palette.text.secondary};
@@ -131,6 +142,11 @@ export const InvoiceHistoryLabel = styled('span')`
   text-overflow: ellipsis;
   white-space: nowrap;
 
+  // stacked, as wide as the value column
+  ${HISTORY_STACKED} {
+    min-width: 0;
+  }
+
   // the column's width without its padding (cells default to 2 units right)
   ${HISTORY_COLUMNS_SHOWN} {
     max-width: calc(
@@ -144,13 +160,25 @@ const time = (date: string) => new Date(date).getTime();
 /** How many invoices a subscription shows in the profile's table. */
 export const LATEST_INVOICES = 2;
 
+/** How many invoices a subscription's own page shows when stacked. */
+export const STACKED_INVOICES = 3;
+
 type InvoiceHistoryRowProps = {
   invoice: FullInvoiceFragment;
   onPay: BuilderInvoiceListProps['onPay'];
   nested: boolean;
+  collapsed: boolean;
+  /** Past the stacked layout's limit, until the reader asks for all. */
+  beyondLimit?: boolean;
 };
 
-function InvoiceHistoryRow({ invoice, onPay, nested }: InvoiceHistoryRowProps) {
+function InvoiceHistoryRow({
+  invoice,
+  onPay,
+  nested,
+  collapsed,
+  beyondLimit = false,
+}: InvoiceHistoryRowProps) {
   const {
     meta: { locale },
     elements: { Button, Alert },
@@ -173,7 +201,10 @@ function InvoiceHistoryRow({ invoice, onPay, nested }: InvoiceHistoryRowProps) {
   const payable = canPayInvoice(invoice) && !!paymentMethodId;
 
   return (
-    <TableRow>
+    <TableRow
+      data-collapsed={collapsed ? 'true' : undefined}
+      data-beyond-limit={beyondLimit ? 'true' : undefined}
+    >
       {nested ?
         <>
           <InvoiceHistorySpacerCell data-label="" />
@@ -276,6 +307,11 @@ export type InvoiceHistoryProps = BuilderInvoiceListProps & {
    * paid, and links here for all of them (instead of the cancelled toggle).
    */
   allInvoicesUrl?: string;
+  /**
+   * Its subscription is closed: the table hides these rows, the stacked
+   * layout shows them anyway.
+   */
+  collapsed?: boolean;
 };
 
 export function InvoiceHistory({
@@ -285,6 +321,7 @@ export function InvoiceHistory({
   onPay,
   nested = true,
   allInvoicesUrl,
+  collapsed = false,
 }: InvoiceHistoryProps) {
   const {
     elements: { Alert, Button, Link },
@@ -311,8 +348,14 @@ export function InvoiceHistory({
     : showCanceled ? invoices
     : uncanceled;
 
+  // on its own page, the stacked layout starts with the latest few
+  const [showAllStacked, setShowAllStacked] = useState(false);
+  const stackedLimit =
+    !nested && shown.length > STACKED_INVOICES ? STACKED_INVOICES : undefined;
+
+  const collapsedRow = collapsed ? 'true' : undefined;
   const fullRow = (content: ReactNode) => (
-    <TableRow>
+    <TableRow data-collapsed={collapsedRow}>
       <HistoryCell
         colSpan={HISTORY_COLUMNS}
         data-label=""
@@ -337,7 +380,10 @@ export function InvoiceHistory({
   return (
     <>
       {!!shown.length && (
-        <InvoiceHistoryHeaderRow data-nested={nested}>
+        <InvoiceHistoryHeaderRow
+          data-nested={nested}
+          data-collapsed={collapsedRow}
+        >
           {nested ?
             <>
               <HistoryArrowCell component="th" />
@@ -368,14 +414,43 @@ export function InvoiceHistory({
         </InvoiceHistoryHeaderRow>
       )}
 
-      {shown.map(invoice => (
+      {shown.map((invoice, index) => (
         <InvoiceHistoryRow
           key={invoice.id}
           invoice={invoice}
           onPay={onPay}
           nested={nested}
+          collapsed={collapsed}
+          beyondLimit={
+            stackedLimit !== undefined &&
+            !showAllStacked &&
+            index >= stackedLimit
+          }
         />
       ))}
+
+      {stackedLimit !== undefined && (
+        // the table shows them all
+        <TableRow data-stacked-only="true">
+          <HistoryCell
+            colSpan={HISTORY_COLUMNS}
+            data-label=""
+          >
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => setShowAllStacked(show => !show)}
+            >
+              {showAllStacked ?
+                t('subscriptionHistory.hideMoreInvoices')
+              : t('subscriptionHistory.moreInvoices', {
+                  count: shown.length - stackedLimit,
+                })
+              }
+            </Button>
+          </HistoryCell>
+        </TableRow>
+      )}
 
       {allInvoicesUrl ?
         shown.length < invoices.length &&
