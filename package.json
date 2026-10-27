@@ -191,6 +191,7 @@
     "prisma": "catalog:",
     "querystring-es3": "^0.2.1",
     "react-refresh": "^0.10.0",
+    "schema-dts": "^2.1.0",
     "snapshot-diff": "^0.9.0",
     "storybook": "10.6.3",
     "storybook-addon-apollo-client": "^10.0.0",
