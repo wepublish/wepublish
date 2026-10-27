@@ -615,12 +615,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       setValue<'autoRenew'>('autoRenew', true);
     }
 
-    if (!selectedMemberPlan?.extendable) {
+    if (selectedMemberPlan && !selectedMemberPlan.extendable) {
       setValue<'autoRenew'>('autoRenew', false);
     }
   }, [
     selectedAvailablePaymentMethod?.forceAutoRenewal,
-    selectedMemberPlan?.extendable,
+    selectedMemberPlan,
     setValue,
   ]);
 
@@ -677,6 +677,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   ]);
 
   useEffect(() => {
+    if (!selectedMemberPlanId) {
+      return;
+    }
+
     fetchSubscribeInfo({
       variables: {
         memberPlanId: selectedMemberPlanId,
@@ -1184,15 +1188,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             setOpenConfirm(false);
           }}
           onCancel={() => setOpenConfirm(false)}
+          title={t('subscribe.warning.confirmationTitle')}
           submitText={paymentText}
         >
-          <H5
-            id="modal-modal-title"
-            component="h1"
-          >
-            {t('subscribe.warning.confirmationTitle')}
-          </H5>
-
           {hasOpenInvoices && (
             <Paragraph gutterBottom={false}>
               <Trans

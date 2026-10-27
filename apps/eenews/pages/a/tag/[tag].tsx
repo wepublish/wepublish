@@ -1,3 +1,4 @@
+import { resolveWhitelistTagIds } from '@wepublish/tenant/eenews';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -12,8 +13,6 @@ import {
   TagType,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-
-import { resolveWhitelistTagIds } from '../../../src/components/teasers/eenews-teaser-selectors';
 
 export {
   TagPage as default,

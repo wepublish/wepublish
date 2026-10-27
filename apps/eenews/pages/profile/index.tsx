@@ -1,8 +1,6 @@
+import { EenewsPageShell, EenewsProfile } from '@wepublish/tenant/eenews';
 import { ProfilePage, withAuthGuard } from '@wepublish/utils/website';
 import { NextPage } from 'next';
-
-import { EenewsPageShell } from '../../src/components/eenews-page-shell';
-import { EenewsProfile } from '../../src/components/eenews-profile';
 
 function Profile() {
   return (

@@ -90,6 +90,7 @@
       "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
       "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
       "@wepublish/membership/website": ["libs/membership/website/src/index.ts"],
+      "@wepublish/mocks/website": ["libs/mocks/website/src/index.ts"],
       "@wepublish/navigation/api": ["libs/navigation/api/src/index.ts"],
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
@@ -133,11 +134,27 @@
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/settings/editor": ["libs/settings/editor/src/index.ts"],
       "@wepublish/stats/api": ["libs/stats/api/src/index.ts"],
-      "@wepublish/storybook": ["libs/storybook/src/index.ts"],
-      "@wepublish/storybook/mocks": ["libs/storybook/mocks/src/index.ts"],
       "@wepublish/system-info": ["libs/system-info/api/src/index.ts"],
       "@wepublish/tag/api": ["libs/tag/api/src/index.ts"],
       "@wepublish/tag/website": ["libs/tag/website/src/index.ts"],
+      "@wepublish/tenant/babanews": ["libs/tenants/babanews/src/index.ts"],
+      "@wepublish/tenant/bajour": ["libs/tenants/bajour/src/index.ts"],
+      "@wepublish/tenant/cultur": ["libs/tenants/cultur/src/index.ts"],
+      "@wepublish/tenant/eenews":["libs/tenants/eenews/src/index.ts"],
+      "@wepublish/tenant/factuel": ["libs/tenants/factuel/src/index.ts"],
+      "@wepublish/tenant/fazetten": ["libs/tenants/fazetten/src/index.ts"],
+      "@wepublish/tenant/flimmer": ["libs/tenants/flimmer/src/index.ts"],
+      "@wepublish/tenant/ganzgraz":["libs/tenants/ganzgraz/src/index.ts"],
+      "@wepublish/tenant/gruppetto": ["libs/tenants/gruppetto/src/index.ts"],
+      "@wepublish/tenant/hauptstadt":["libs/tenants/hauptstadt/src/index.ts"],
+      "@wepublish/tenant/mannschaft": ["libs/tenants/mannschaft/src/index.ts"],
+      "@wepublish/tenant/munotgloeggli": ["libs/tenants/munotgloeggli/src/index.ts"],
+      "@wepublish/tenant/onlinereports": ["libs/tenants/onlinereports/src/index.ts"],
+      "@wepublish/tenant/reflekt":["libs/tenants/reflekt/src/index.ts"],
+      "@wepublish/tenant/tsri": ["libs/tenants/tsri/src/index.ts"],
+      "@wepublish/tenant/wepublish-site": ["libs/tenants/wepublish-site/src/index.ts"],
+      "@wepublish/tenant/wnti": ["libs/tenants/wnti/src/index.ts"],
+      "@wepublish/tenant/zwoelf": ["libs/tenants/zwoelf/src/index.ts"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],
       "@wepublish/testing/prisma": ["libs/testing/src/lib/prisma-utils.ts"],
       "@wepublish/tracking-pixel/api": ["libs/tracking-pixel/api/src/index.ts"],
@@ -155,6 +172,18 @@
         "libs/utils/api/src/lib/sentry/instrumentation.ts"
       ],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
+      "@wepublish/utils/website/daily-briefing": [
+        "libs/utils/website/src/lib/components/daily-briefing-teaser.tsx"
+      ],
+      "@wepublish/utils/website/google-fonts": [
+        "libs/utils/website/src/lib/google-fonts.ts"
+      ],
+      "@wepublish/utils/website/i18n": [
+        "libs/utils/website/src/lib/i18n-formatter.tsx"
+      ],
+      "@wepublish/utils/website/link": [
+        "libs/utils/website/src/lib/next-wepublish-link.tsx"
+      ],
       "@wepublish/utils/website/sentry": [
         "libs/utils/website/src/lib/sentry/instrumentation.ts"
       ],

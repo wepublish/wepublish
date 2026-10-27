@@ -2137,7 +2137,29 @@
     "richtext": {
       "menuBar": {
         "paragraph": "Absatz",
-        "heading": "Überschrift {{level}}"
+        "heading": "Überschrift {{level}}",
+        "label": "Formatierung",
+        "textStyle": "Textstil",
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "underline": "Unterstrichen",
+        "strike": "Durchgestrichen",
+        "subscript": "Tiefgestellt",
+        "superscript": "Hochgestellt",
+        "textColor": "Textfarbe",
+        "backgroundColor": "Hintergrundfarbe",
+        "bulletList": "Aufzählung",
+        "orderedList": "Nummerierte Liste",
+        "alignLeft": "Linksbündig",
+        "alignCenter": "Zentriert",
+        "alignRight": "Rechtsbündig",
+        "link": "Link",
+        "table": "Tabelle einfügen",
+        "codeBlock": "Codeblock",
+        "blockquote": "Zitat",
+        "invisibleCharacters": "Unsichtbare Zeichen anzeigen"
       },
       "link": {
         "title": "Text verlinken mit",
@@ -2154,6 +2176,18 @@
         "remove": "Link entfernen",
         "variantButtonMain": "Button (primär)",
         "variantButtonSecondary": "Button (sekundär)"
+      },
+      "table": {
+        "label": "Tabelle",
+        "addColumnBefore": "Spalte links einfügen",
+        "addColumnAfter": "Spalte rechts einfügen",
+        "deleteColumn": "Spalte löschen",
+        "addRowBefore": "Zeile oberhalb einfügen",
+        "addRowAfter": "Zeile unterhalb einfügen",
+        "deleteRow": "Zeile löschen",
+        "mergeCells": "Zellen verbinden",
+        "splitCell": "Zelle teilen",
+        "headerCell": "Kopfzelle"
       },
       "colorPicker": {
         "clear": "Farbe zurücksetzen"

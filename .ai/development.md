@@ -71,8 +71,9 @@ pnpm run test-u               # All tests with snapshot update
 nx test <project-name>       # Test a specific library/app
 ```
 
-Two runners are in play and they are **not** interchangeable — read
-[testing.md](../.claude/docs/testing.md) before writing a test. For which of
+Everything is Vitest; website specs render through
+`@wepublish/mocks/website`. Read [testing.md](../.claude/docs/testing.md)
+before writing a test. For which of
 these to run before claiming a change is done, see
 [verification.md](../.claude/docs/verification.md).
 

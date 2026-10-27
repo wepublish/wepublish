@@ -301,17 +301,3 @@ COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100
 USER 1001
 CMD ["node", "main.js"]
-
-######
-## Storybook
-######
-
-FROM ${BUILD_IMAGE} AS storybook-builder
-COPY . .
-RUN pnpm exec nx run website:build-storybook
-
-
-FROM nginx:alpine AS storybook
-COPY --from=storybook-builder /wepublish/dist/storybook/website /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]

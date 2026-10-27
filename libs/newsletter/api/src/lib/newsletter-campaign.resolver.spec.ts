@@ -3,6 +3,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { INestApplication } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test } from '@nestjs/testing';
+import { NewsletterCampaignStatus } from '@prisma/client';
 import { FeaturesService } from '@wepublish/features/api';
 import { ImageDataloaderService } from '@wepublish/image/api';
 import type { NewsletterDocument } from '@wepublish/newsletter/email';
@@ -25,11 +26,12 @@ const campaign = {
   title: 'Ausgabe 1',
   document,
   blockCount: 2,
-  status: 'active',
+  status: NewsletterCampaignStatus.active,
   createdAt: new Date('2026-10-01'),
   modifiedAt: new Date('2026-10-02'),
   mailchimpCampaignId: null,
   mailchimpCampaignWebId: null,
+  mailchimpEditUrl: undefined,
 };
 
 const image = {

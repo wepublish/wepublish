@@ -1,7 +1,6 @@
+import { BajourContainer as Container } from '@wepublish/tenant/bajour';
 import { TagPage } from '@wepublish/utils/website';
 import { ComponentProps } from 'react';
-
-import { Container } from '../../../src/components/layout/container';
 
 export default function ArticleListByTag(
   props: ComponentProps<typeof TagPage>
