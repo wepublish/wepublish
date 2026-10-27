@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { withAuthGuard } from '../../../auth-guard';
-import { ssrAuthLink } from '../../../auth-link';
+import { ssrAuthLink } from '../../../../lib/auth-link';
 import { getSessionTokenProps } from '../../../get-session-token-props';
 import { handleJwtLogin } from '../../../handle-jwt-login';
 import { ComponentProps } from 'react';
@@ -31,8 +31,8 @@ import { fetch404 } from '../../../fetch-404';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
 
-import { getApiUrl } from '../../../api-url';
-import { useWebsiteFeature } from '../../../use-website-feature';
+import { getApiUrl } from '../../../../lib/api-url';
+import { useWebsiteFeature } from '../../../../lib/use-website-feature';
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;

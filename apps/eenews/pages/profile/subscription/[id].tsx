@@ -2,7 +2,7 @@ import {
   EenewsPageShell,
   EenewsSubscriptionDetail,
 } from '@wepublish/tenant/eenews';
-import { SubscriptionPage, withAuthGuard } from '@wepublish/utils/website';
+import { SubscriptionPage, withAuthGuard } from '@wepublish/utils/website/next';
 import { NextPage } from 'next';
 
 function Subscription() {

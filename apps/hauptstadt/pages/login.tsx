@@ -6,7 +6,8 @@ import {
 } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
 import { HauptstadtContentFullWidth } from '@wepublish/tenant/hauptstadt';
-import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
+import { getApiUrl } from '@wepublish/utils/website';
+import { handleJwtLogin } from '@wepublish/utils/website/next';
 import {
   FullSessionWithTokenWithoutUserFragment,
   PageDocument,

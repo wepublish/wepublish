@@ -21,7 +21,7 @@ import {
 import { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useWebsiteFeature } from '../../use-website-feature';
+import { useWebsiteFeature } from '../../../lib/use-website-feature';
 
 export const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({ theme }) => theme.spacing(2)};

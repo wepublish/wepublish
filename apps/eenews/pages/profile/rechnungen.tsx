@@ -1,5 +1,5 @@
 import { EenewsOpenInvoices, EenewsPageShell } from '@wepublish/tenant/eenews';
-import { ProfilePage, withAuthGuard } from '@wepublish/utils/website';
+import { ProfilePage, withAuthGuard } from '@wepublish/utils/website/next';
 import { NextPage } from 'next';
 
 function Rechnungen() {

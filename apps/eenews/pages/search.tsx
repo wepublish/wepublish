@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { articleToTeaser } from '@wepublish/article/website';
 import { EenewsPageShell, EenewsTeaserGrid } from '@wepublish/tenant/eenews';
-import { SearchPageGetServerSideProps } from '@wepublish/utils/website';
+import { SearchPageGetServerSideProps } from '@wepublish/utils/website/next';
 import {
   FullArticleTeaserFragment,
   FullPageTeaserFragment,

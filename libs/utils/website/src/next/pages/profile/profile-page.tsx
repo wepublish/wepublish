@@ -18,10 +18,10 @@ import { ComponentProps, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { handleJwtLogin } from '../../handle-jwt-login';
 import { withAuthGuard } from '../../auth-guard';
-import { ssrAuthLink } from '../../auth-link';
+import { ssrAuthLink } from '../../../lib/auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
 
-import { getApiUrl } from '../../api-url';
+import { getApiUrl } from '../../../lib/api-url';
 import { ProfileDetails } from './profile-details';
 import { ProfileSubscriptions } from './profile-subscriptions';
 

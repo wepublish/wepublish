@@ -19,7 +19,7 @@ import {
 } from '@wepublish/website/api';
 import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { useTranslation } from 'react-i18next';
-import { useWebsiteFeature } from '../../use-website-feature';
+import { useWebsiteFeature } from '../../../lib/use-website-feature';
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;

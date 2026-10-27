@@ -1,5 +1,5 @@
 import { BajourContainer as Container } from '@wepublish/tenant/bajour';
-import { DeactivatedSubscriptionsPage } from '@wepublish/utils/website';
+import { DeactivatedSubscriptionsPage } from '@wepublish/utils/website/next';
 
 export default function DeactivatedSubscriptions() {
   return (
