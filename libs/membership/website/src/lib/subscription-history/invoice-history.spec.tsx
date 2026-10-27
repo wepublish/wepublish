@@ -92,14 +92,16 @@ describe('InvoiceHistory', () => {
     expect(onPay).toHaveBeenCalledWith('open-2026', 'payrexx');
   });
 
-  it('explains bexio invoices instead of offering to pay them', () => {
+  it('points to the invoice for paying bexio invoices instead of offering to pay them', () => {
     renderHistory(WithBexio);
 
     expect(
       screen.queryByRole('button', { name: 'Jetzt Bezahlen' })
     ).not.toBeInTheDocument();
+    // the invoice may reach the reader by email or letter, before or after
+    // they look here
     expect(
-      screen.getByText('Du erhältst eine PDF-Rechnung per E-Mail zugeschickt.')
+      screen.getByText('Die Zahlungsangaben findest du auf deiner Rechnung.')
     ).toBeInTheDocument();
   });
 

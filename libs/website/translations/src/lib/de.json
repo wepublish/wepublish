@@ -202,7 +202,7 @@
     "paidAt": "Bezahlt am",
     "canceledAt": "Storniert am",
     "sepaWarning": "Die Rechnung wird automatisch per Lastschriftverfahren beglichen. Dies kann einige Tage in Anspruch nehmen.",
-    "bexioWarning": "Du erhältst eine PDF-Rechnung per E-Mail zugeschickt.",
+    "bexioWarning": "Die Zahlungsangaben findest du auf deiner Rechnung.",
     "payrexxWarning": "Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet. Es wird automatisch angepasst wenn du auf \"Jetzt Bezahlen\" drückst.",
     "payNow": "Jetzt Bezahlen"
   },

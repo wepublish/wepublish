@@ -202,7 +202,7 @@
     "paidAt": "Payé le",
     "canceledAt": "Annulé le",
     "sepaWarning": "La facture sera automatiquement réglée par prélèvement automatique. Cela peut prendre quelques jours.",
-    "bexioWarning": "Vous recevrez une facture PDF par e-mail.",
+    "bexioWarning": "Vous trouverez les informations de paiement sur votre facture.",
     "payrexxWarning": "Nous avons récemment mis à jour le système des membres et votre abonnement est obsolète. Il sera automatiquement mis à jour lorsque vous cliquerez sur \"Payer maintenant\".",
     "payNow": "Payer maintenant"
   },
