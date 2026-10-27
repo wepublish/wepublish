@@ -1,33 +1,24 @@
-import { useQuery } from '@apollo/client/react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useUser } from '@wepublish/authentication/website';
 import { SubscribeBlock } from '@wepublish/block-content/website';
 import {
   PaymentRadioWrapper,
   Subscribe,
   SubscribeButton,
   SubscribeCancelable,
+  SubscribeExistingSubscriptionNotice,
   SubscribeNarrowSection,
+  SubscribeOpenInvoicesNotice,
   SubscribePayment,
   SubscribeSection,
   TransactionFeeIcon,
   TransactionFeeWrapper,
-  getMonthlyEquivalentRange,
 } from '@wepublish/membership/website';
-import {
-  FullMemberPlanFragment,
-  FullSubscriptionFragment,
-  ProductType,
-  SubscriptionsDocument,
-} from '@wepublish/website/api';
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
-import { ascend, descend, prop, sortWith } from 'ramda';
-import { ComponentProps, useContext, useMemo } from 'react';
+import { ComponentProps, useMemo } from 'react';
 
 import { buttonLinkSecondaryStyles } from '../theme';
-import { ForceUpgradeContext } from './reflekt-force-upgrade-context';
+import { useForceUpgradeRedirect } from './hooks/use-force-upgrade-redirect';
 import { AllGoodiesContext } from './reflekt-goodie-picker';
 
 export const ReflektSubscribeForm = styled(
@@ -52,20 +43,61 @@ export const ReflektSubscribeForm = styled(
   background-color: orange;
 `;
 
-export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
-  background-color: transparent;
-  grid-template-columns: 1fr;
-  grid-template-areas:
+const subscribeGridAreas = (
+  showGoodies?: boolean,
+  showDiscountCodes?: boolean,
+  withNotices?: boolean,
+  withError?: boolean,
+  withChallenge?: boolean
+) => `
     'memberPlans'
     'monthlyAmount'
     'userForm'
-    ${({ showGoodies }) => (showGoodies ? "'goodie' 'goodieError'" : '')}
+    ${showGoodies ? "'goodie' 'goodieError'" : ''}
     'transactionFee'
-    ${({ showDiscountCodes }) => (showDiscountCodes ? "'discountCode'" : '')}
+    ${showDiscountCodes ? "'discountCode'" : ''}
+    ${withNotices ? "'notices'" : ''}
+    ${withError ? "'error'" : ''}
+    ${withChallenge ? "'challenge'" : ''}
     'submit'
     'paymentPeriodicity'
-    'challenge'
-    ${({ showGoodies }) => (showGoodies ? "'goodieSlider'" : '')};
+    ${showGoodies ? "'goodieSlider'" : ''}
+  `;
+
+export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
+  background-color: transparent;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+    subscribeGridAreas(showGoodies, showDiscountCodes, false, false, false)};
+
+  &:has([data-area='notices']:not(:empty)) {
+    grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+      subscribeGridAreas(showGoodies, showDiscountCodes, true, false, false)};
+  }
+
+  &:has(> .MuiAlert-root) {
+    grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+      subscribeGridAreas(showGoodies, showDiscountCodes, false, true, false)};
+  }
+
+  &:has([data-area='notices']:not(:empty)):has(> .MuiAlert-root) {
+    grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+      subscribeGridAreas(showGoodies, showDiscountCodes, true, true, false)};
+  }
+
+  &:has([data-area='challenge']) {
+    grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+      subscribeGridAreas(showGoodies, showDiscountCodes, false, false, true)};
+  }
+
+  &:has([data-area='challenge']):has(> .MuiAlert-root) {
+    grid-template-areas: ${({ showGoodies, showDiscountCodes }) =>
+      subscribeGridAreas(showGoodies, showDiscountCodes, false, true, true)};
+  }
+
+  & > .MuiAlert-root {
+    grid-area: error;
+  }
 
   ${SubscribeSection},
   ${SubscribeNarrowSection} {
@@ -140,80 +172,31 @@ export const StyledReflektSubscribeBlock = styled(SubscribeBlock)`
     white-space: pre-line;
     color: ${({ theme }) => theme.palette.common.black};
   }
+
+  ${SubscribeOpenInvoicesNotice} .MuiAlert-root,
+  ${SubscribeExistingSubscriptionNotice} .MuiAlert-root {
+    background-color: transparent;
+    color: ${({ theme }) => theme.palette.text.secondary};
+    padding: 0;
+    font-size: 0.875rem;
+    max-width: 30rem;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  ${SubscribeOpenInvoicesNotice} .MuiAlert-icon,
+  ${SubscribeExistingSubscriptionNotice} .MuiAlert-icon {
+    display: none;
+  }
+
+  ${SubscribeOpenInvoicesNotice} .MuiAlert-message,
+  ${SubscribeExistingSubscriptionNotice} .MuiAlert-message {
+    padding: 0;
+  }
 `;
 
-const isMemberplanUpgradeable = (memberPlan: FullMemberPlanFragment) =>
-  memberPlan.productType === ProductType.Subscription;
-
-const isMemberplanUpgradeableTo = (memberPlan: FullMemberPlanFragment) =>
-  memberPlan.productType === ProductType.Subscription && memberPlan.extendable;
-
-const isSubscriptionUpgradeable = (subscription: FullSubscriptionFragment) =>
-  subscription.extendable &&
-  subscription.isActive &&
-  // isActive includes the grace period, which we want to ignore here
-  (!subscription.deactivation ||
-    new Date(subscription.deactivation.date) > new Date()) &&
-  isMemberplanUpgradeable(subscription.memberPlan);
-
 export const ReflektSubscribeBlock = (props: BuilderSubscribeBlockProps) => {
-  const { hasUser } = useUser();
-  const router = useRouter();
-  const forceUpgrade = useContext(ForceUpgradeContext);
-
-  const { data } = useQuery(SubscriptionsDocument, {
-    fetchPolicy: 'cache-only',
-    skip: !hasUser,
-  });
-
-  const filteredSubscriptions = useMemo(
-    () => data?.userSubscriptions.filter(isSubscriptionUpgradeable) ?? [],
-    [data?.userSubscriptions]
-  );
-
-  const canUpgradeTo = useMemo(
-    () =>
-      props.memberPlans.some(
-        memberPlan =>
-          isMemberplanUpgradeableTo(memberPlan) &&
-          filteredSubscriptions.every(
-            sub => sub.memberPlan.id !== memberPlan.id
-          ) &&
-          filteredSubscriptions.some(
-            sub =>
-              getMonthlyEquivalentRange(memberPlan).amountPerMonthMin >
-              getMonthlyEquivalentRange(sub.memberPlan).amountPerMonthMin
-          )
-      ),
-    [filteredSubscriptions, props.memberPlans]
-  );
-
-  const cheapestSubscription = useMemo(
-    () =>
-      sortWith(
-        [
-          descend(prop('monthlyAmount')),
-          ascend((sub: FullSubscriptionFragment) => Number(!!sub.deactivation)),
-        ],
-        filteredSubscriptions
-      ).at(0),
-    [filteredSubscriptions]
-  );
-
-  if (
-    forceUpgrade &&
-    canUpgradeTo &&
-    cheapestSubscription &&
-    !router.query.upgradeSubscriptionId
-  ) {
-    router.replace({
-      pathname: router.pathname,
-      query: {
-        ...router.query,
-        upgradeSubscriptionId: encodeURIComponent(cheapestSubscription.id),
-      },
-    });
-  }
+  useForceUpgradeRedirect(props.memberPlans);
 
   return <StyledReflektSubscribeBlock {...props} />;
 };

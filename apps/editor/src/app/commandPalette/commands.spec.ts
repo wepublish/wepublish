@@ -20,9 +20,11 @@ const catalogs = {
 const lookup = (catalog: Catalog, key: string) =>
   key
     .split('.')
-    .reduce<
-      string | Catalog | undefined
-    >((value, part) => (value && typeof value !== 'string' ? value[part] : undefined), catalog);
+    .reduce<string | Catalog | undefined>(
+      (value, part) =>
+        value && typeof value !== 'string' ? value[part] : undefined,
+      catalog
+    );
 
 const pathOf = (tag: ts.JsxOpeningLikeElement) => {
   if (tag.tagName.getText() !== 'Route') {
