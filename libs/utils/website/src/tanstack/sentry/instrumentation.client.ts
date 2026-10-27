@@ -5,7 +5,7 @@ import {
   setCommonTags,
 } from '@wepublish/utils';
 
-type RouterLike = Parameters<
+export type RouterLike = Parameters<
   typeof SentryTypes.tanstackRouterBrowserTracingIntegration
 >[0];
 

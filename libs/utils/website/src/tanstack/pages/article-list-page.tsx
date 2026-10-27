@@ -1,4 +1,5 @@
 import { ApolloClient } from '@apollo/client';
+import { createServerFn } from '@tanstack/react-start';
 import { useQuery } from '@apollo/client/react';
 import { ArticleListContainer } from '@wepublish/article/website';
 import { ArticleListDocument } from '@wepublish/website/api';
@@ -7,6 +8,7 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
+import { runContentQueries } from '../ssr';
 
 export const DEFAULT_ARTICLE_LIST_TAKE = 25;
 
@@ -27,6 +29,15 @@ export const prefetchArticleList = (
     query: ArticleListDocument,
     variables: listVariables(page, take),
   });
+
+/** Server-side half of the article index loader. See `runContentQueries`. */
+export const loadArticleList = createServerFn({ method: 'GET' })
+  .validator((data: { page?: number; take?: number }) => data)
+  .handler(async ({ data }) => ({
+    apollo: await runContentQueries(client =>
+      prefetchArticleList(client, data)
+    ),
+  }));
 
 /**
  * Paginated article index — `pages/a/index.tsx` in the Next apps, which was

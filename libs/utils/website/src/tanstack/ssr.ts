@@ -3,6 +3,7 @@ import {
   getCookie,
   getRequestHeader,
   setCookie,
+  setResponseHeader,
 } from '@tanstack/react-start/server';
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import {
@@ -13,7 +14,7 @@ import {
 
 import { getApiUrl } from '../lib/api-url';
 import { ssrAuthLink } from '../lib/auth-link';
-import { SerializedApolloState } from './apollo';
+import { createRouterApolloClient, SerializedApolloState } from './apollo';
 
 /**
  * **Server only.** Everything here reads or writes the current request and may
@@ -174,4 +175,43 @@ export const getSiteUrl = () => {
   const host = getRequestHeader('host');
 
   return host ? `https://${host}` : '';
+};
+
+/**
+ * Mirrors the ISR window the HTML responses use (`ISR_60` in `src/start.ts`),
+ * so a navigation payload and the page it belongs to go stale together.
+ */
+const CONTENT_CACHE_CONTROL =
+  'public, max-age=0, s-maxage=60, stale-while-revalidate=604800, stale-if-error=86400';
+
+/**
+ * Runs content queries on the server and hands the cache back to the caller.
+ *
+ * Route loaders are isomorphic: on a client-side navigation they execute in
+ * the browser, so querying the router's Apollo client there sends GraphQL
+ * straight from the visitor to the API — one round trip per query, per
+ * navigation, per visitor, with nothing in front of it. Next never did that;
+ * it fetched one `getStaticProps` payload from its own origin and served it
+ * from the shared page cache.
+ *
+ * Wrapping a prefetch in a server function restores that shape: the browser
+ * makes a single request to this origin, the queries run here, and the
+ * extracted cache travels back as JSON for `mergeApolloCache`.
+ *
+ * The client is anonymous by construction — it never reads the request's auth
+ * cookie — which is what makes the response safe to share. Opting into the
+ * cache header explicitly, here, keeps the policy deny-by-default: every
+ * `/_serverFn` request is `no-store` under `src/start.ts` unless a response
+ * overrides it. An authenticated loader that forgets simply is not cached.
+ */
+export const runContentQueries = async (
+  run: (client: ApolloClient) => Promise<unknown>
+) => {
+  const client = createRouterApolloClient();
+
+  await run(client);
+
+  setResponseHeader('cache-control', CONTENT_CACHE_CONTROL);
+
+  return extractCache(client);
 };

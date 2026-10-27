@@ -1,4 +1,5 @@
 import { ApolloClient } from '@apollo/client';
+import { createServerFn } from '@tanstack/react-start';
 import { useQuery } from '@apollo/client/react';
 import {
   ArticleListContainer,
@@ -16,6 +17,8 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
+import { runContentQueries } from '../ssr';
+import { isNotFoundError } from '../prefetch';
 
 const take = 10;
 
@@ -57,6 +60,25 @@ export const prefetchAuthor = async (
 };
 
 /** TanStack port of `AuthorPage`. */
+/** Server-side half of the author loader. See `runContentQueries`. */
+export const loadAuthor = createServerFn({ method: 'GET' })
+  .validator((data: { slug: string }) => data)
+  .handler(async ({ data }) => {
+    let notFound = false;
+
+    const apollo = await runContentQueries(async client => {
+      const { author, prefetchArticles } = await prefetchAuthor(client, data);
+
+      notFound = isNotFoundError(author.error);
+
+      if (!notFound) {
+        await prefetchArticles();
+      }
+    });
+
+    return { apollo, notFound };
+  });
+
 export function AuthorPage({ className }: { className?: string }) {
   const {
     Head,

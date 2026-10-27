@@ -7,8 +7,9 @@ import {
   HeadContent,
   Scripts,
 } from '@tanstack/react-router';
-import { googleFontsUrl } from '@wepublish/utils/website/google-fonts';
+import { gruppettoConfig, gruppettoTheme } from '@wepublish/tenant/gruppetto';
 import { initWePublishTranslator } from '@wepublish/utils/website';
+import { googleFontsUrl } from '@wepublish/utils/website/google-fonts';
 import {
   ApolloRouterContext,
   prefetchShared,
@@ -19,8 +20,6 @@ import { setDefaultOptions } from 'date-fns';
 import { ReactNode, useState } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
-
-import { gruppettoConfig, gruppettoTheme } from '@wepublish/tenant/gruppetto';
 
 import { App } from '../app';
 import { getPublicEnvFn } from '../integration/public-env';
@@ -103,9 +102,12 @@ function RootDocument({ children }: { children: ReactNode }) {
   // would ship HTML with no styles at all. In the browser this runs once and
   // `createCache` adopts the SSR `<style data-emotion>` tags, so hydration
   // does not duplicate them.
-  const [emotionCache] = useState(() =>
-    createEmotionCache({ key: 'css', prepend: true })
-  );
+  const [emotionCache] = useState(() => {
+    const cache = createEmotionCache({ key: 'css', prepend: true });
+    cache.compat = true;
+
+    return cache;
+  });
 
   return (
     <html lang="de">

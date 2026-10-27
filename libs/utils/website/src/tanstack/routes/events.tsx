@@ -1,15 +1,15 @@
 import { EventContainer } from '@wepublish/event/website';
-import { EventDocument } from '@wepublish/website/api';
 import { z } from 'zod';
 
+import { mergeApolloCache } from '../apollo';
 import { FourOhFourPage } from '../pages/404-page';
 import {
   DEFAULT_EVENT_LIST_TAKE,
   EventListPage,
   eventListSearchSchema,
-  prefetchEventList,
+  loadEvent,
+  loadEventList,
 } from '../pages/event-list-page';
-import { isNotFoundError } from '../prefetch';
 import { ApolloRouterContext, bailOutNotFound, useRouteParams } from './shared';
 
 /** `pages/event/index.tsx` */
@@ -20,13 +20,17 @@ export const eventListRoute = ({
   validateSearch: eventListSearchSchema,
   loaderDeps: ({ search }: { search: z.infer<typeof eventListSearchSchema> }) =>
     search,
-  loader: ({
+  loader: async ({
     context: { apolloClient },
     deps,
   }: {
     context: ApolloRouterContext;
     deps: z.infer<typeof eventListSearchSchema>;
-  }) => prefetchEventList(apolloClient, deps, { take }),
+  }) => {
+    const { apollo } = await loadEventList({ data: { search: deps, take } });
+
+    mergeApolloCache(apolloClient, apollo);
+  },
   component: () => (
     <EventListPage
       take={take}
@@ -44,12 +48,11 @@ export const eventRoute = () => ({
     context: ApolloRouterContext;
     params: { id: string };
   }) => {
-    const event = await context.apolloClient.query({
-      query: EventDocument,
-      variables: { id },
-    });
+    const { apollo, notFound } = await loadEvent({ data: { id } });
 
-    if (isNotFoundError(event.error)) {
+    mergeApolloCache(context.apolloClient, apollo);
+
+    if (notFound) {
       await bailOutNotFound(context);
     }
   },

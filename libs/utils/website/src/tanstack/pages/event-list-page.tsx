@@ -1,8 +1,10 @@
 import { ApolloClient } from '@apollo/client';
+import { createServerFn } from '@tanstack/react-start';
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import {
+  EventDocument,
   EventListDocument,
   EventListQueryVariables,
   EventSort,
@@ -14,6 +16,8 @@ import { Suspense, lazy, useMemo } from 'react';
 import { z } from 'zod';
 
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
+import { runContentQueries } from '../ssr';
+import { isNotFoundError } from '../prefetch';
 
 const Filter = styled('div')`
   display: grid;
@@ -80,6 +84,33 @@ export const prefetchEventList = (
   client.query({
     query: EventListDocument,
     variables: listVariables(search, take),
+  });
+
+/** Server-side half of the event index loader. See `runContentQueries`. */
+export const loadEventList = createServerFn({ method: 'GET' })
+  .validator((data: { search: EventListSearch; take?: number }) => data)
+  .handler(async ({ data: { search, take } }) => ({
+    apollo: await runContentQueries(client =>
+      prefetchEventList(client, search, { take })
+    ),
+  }));
+
+/** Server-side half of the single-event loader. See `runContentQueries`. */
+export const loadEvent = createServerFn({ method: 'GET' })
+  .validator((data: { id: string }) => data)
+  .handler(async ({ data }) => {
+    let notFound = false;
+
+    const apollo = await runContentQueries(async client => {
+      const event = await client.query({
+        query: EventDocument,
+        variables: data,
+      });
+
+      notFound = isNotFoundError(event.error);
+    });
+
+    return { apollo, notFound };
   });
 
 /** `pages/event/index.tsx` */

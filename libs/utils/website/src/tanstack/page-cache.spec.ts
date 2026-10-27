@@ -134,19 +134,81 @@ describe('createStartPageCache', () => {
     );
 
     await fetch(document('https://site.test/a/one', { method: 'POST' }));
-    await fetch(document('https://site.test/_serverFn/getUser'));
     await fetch(document('https://site.test/rss.xml'));
     await fetch(new Request('https://site.test/a/one'));
     await settled();
     await fetch(document('https://site.test/a/one'));
 
-    expect(calls).toEqual([
-      '/a/one',
-      '/_serverFn/getUser',
-      '/rss.xml',
-      '/a/one',
-      '/a/one',
-    ]);
+    expect(calls).toEqual(['/a/one', '/rss.xml', '/a/one', '/a/one']);
+  });
+
+  /**
+   * A client-side navigation fetches a server function payload instead of
+   * HTML, so those are cacheable — but only the content loaders opt in. The
+   * authenticated ones stay `no-store`, and getting that backwards would
+   * serve one reader's profile to the next.
+   */
+  it('stores a server function payload that opted into caching', async () => {
+    const { fetch, calls, settled } = setup(
+      () =>
+        new Response('{"apollo":{}}', {
+          headers: {
+            'content-type': 'application/json',
+            'cache-control': ISR_60,
+          },
+        })
+    );
+
+    const url = 'https://site.test/_serverFn/loadArticle?slug=one';
+
+    await fetch(new Request(url));
+    await settled();
+    const second = await fetch(new Request(url));
+
+    expect(second.headers.get('x-page-cache')).toBe('HIT');
+    expect(calls).toEqual(['/_serverFn/loadArticle']);
+  });
+
+  it('never stores an authenticated server function payload', async () => {
+    const { fetch, calls, settled } = setup(
+      () =>
+        new Response('{"me":{"email":"reader@example.com"}}', {
+          headers: {
+            'content-type': 'application/json',
+            'cache-control': 'no-store',
+          },
+        })
+    );
+
+    const url = 'https://site.test/_serverFn/loadProfile';
+
+    await fetch(new Request(url));
+    await settled();
+    const second = await fetch(new Request(url));
+
+    expect(second.headers.get('x-page-cache')).toBeNull();
+    expect(calls).toEqual(['/_serverFn/loadProfile', '/_serverFn/loadProfile']);
+  });
+
+  it('keys a server function payload by its arguments', async () => {
+    const { fetch, calls, settled } = setup(
+      request =>
+        new Response(new URL(request.url).search, {
+          headers: {
+            'content-type': 'application/json',
+            'cache-control': ISR_60,
+          },
+        })
+    );
+
+    await fetch(new Request('https://site.test/_serverFn/loadArticle?slug=a'));
+    await settled();
+    const other = await fetch(
+      new Request('https://site.test/_serverFn/loadArticle?slug=b')
+    );
+
+    expect(await other.text()).toBe('?slug=b');
+    expect(calls).toEqual(['/_serverFn/loadArticle', '/_serverFn/loadArticle']);
   });
 
   it('drops a stored page once revalidation finds it unpublished', async () => {

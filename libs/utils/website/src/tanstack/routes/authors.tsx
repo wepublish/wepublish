@@ -1,11 +1,11 @@
+import { mergeApolloCache } from '../apollo';
 import { FourOhFourPage } from '../pages/404-page';
 import {
   AuthorListPage,
   DEFAULT_AUTHOR_LIST_TAKE,
-  prefetchAuthorList,
+  loadAuthorList,
 } from '../pages/author-list-page';
-import { AuthorPage, prefetchAuthor } from '../pages/author-page';
-import { isNotFoundError } from '../prefetch';
+import { AuthorPage, loadAuthor } from '../pages/author-page';
 import {
   ApolloRouterContext,
   bailOutNotFound,
@@ -21,13 +21,17 @@ export const authorListRoute = ({
   loaderDeps: ({ search: { page } }: { search: { page?: number } }) => ({
     page,
   }),
-  loader: ({
+  loader: async ({
     context: { apolloClient },
     deps: { page },
   }: {
     context: ApolloRouterContext;
     deps: { page?: number };
-  }) => prefetchAuthorList(apolloClient, { page, take }),
+  }) => {
+    const { apollo } = await loadAuthorList({ data: { page, take } });
+
+    mergeApolloCache(apolloClient, apollo);
+  },
   component: () => (
     <AuthorListPage
       take={take}
@@ -46,16 +50,13 @@ export const authorRoute = () => ({
     context: ApolloRouterContext;
     params: { slug: string };
   }) => {
-    const { author, prefetchArticles } = await prefetchAuthor(
-      context.apolloClient,
-      { slug }
-    );
+    const { apollo, notFound } = await loadAuthor({ data: { slug } });
 
-    if (isNotFoundError(author.error)) {
+    mergeApolloCache(context.apolloClient, apollo);
+
+    if (notFound) {
       await bailOutNotFound(context);
     }
-
-    await prefetchArticles();
   },
   component: AuthorPage,
   notFoundComponent: FourOhFourPage,

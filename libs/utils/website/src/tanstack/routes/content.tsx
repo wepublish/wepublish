@@ -1,9 +1,8 @@
 import { PageContainer } from '@wepublish/page/website';
-import { getPageShell } from '../../lib/website-shell';
-import { PageDocument, PageQuery } from '@wepublish/website/api';
 
+import { mergeApolloCache } from '../apollo';
 import { FourOhFourPage } from '../pages/404-page';
-import { isNotFoundError } from '../prefetch';
+import { loadPage } from '../pages/page-page';
 import { ApolloRouterContext, bailOutNotFound, useRouteParams } from './shared';
 
 /** The home page: `pages/index.tsx`. */
@@ -13,12 +12,11 @@ export const homePageRoute = () => ({
   }: {
     context: ApolloRouterContext;
   }) => {
-    const page = await apolloClient.query<PageQuery>({
-      query: PageDocument,
-      variables: { slug: '' },
-    });
+    const { apollo, shell } = await loadPage({ data: { slug: '' } });
 
-    return { shell: getPageShell(page.data?.page) };
+    mergeApolloCache(apolloClient, apollo);
+
+    return { shell };
   },
   component: () => <PageContainer slug={''} />,
 });
@@ -32,16 +30,17 @@ export const pageBySlugRoute = () => ({
     context: ApolloRouterContext;
     params: { slug: string };
   }) => {
-    const page = await context.apolloClient.query<PageQuery>({
-      query: PageDocument,
-      variables: { slug },
+    const { apollo, notFound, shell } = await loadPage({
+      data: { slug },
     });
 
-    if (isNotFoundError(page.error)) {
+    mergeApolloCache(context.apolloClient, apollo);
+
+    if (notFound) {
       await bailOutNotFound(context);
     }
 
-    return { shell: getPageShell(page.data?.page) };
+    return { shell };
   },
   component: PageBySlug,
   notFoundComponent: FourOhFourPage,
@@ -56,16 +55,17 @@ export const pageByIdRoute = () => ({
     context: ApolloRouterContext;
     params: { id: string };
   }) => {
-    const page = await context.apolloClient.query<PageQuery>({
-      query: PageDocument,
-      variables: { id },
+    const { apollo, notFound, shell } = await loadPage({
+      data: { id },
     });
 
-    if (isNotFoundError(page.error)) {
+    mergeApolloCache(context.apolloClient, apollo);
+
+    if (notFound) {
       await bailOutNotFound(context);
     }
 
-    return { shell: getPageShell(page.data?.page) };
+    return { shell };
   },
   component: PageById,
   notFoundComponent: FourOhFourPage,

@@ -53,7 +53,15 @@ const PAGES = { kind: 'PAGES' } as const;
  * Paths that are never a cacheable document. `/api` and `/_serverFn` are
  * per-user by definition, `/_build` is hashed and immutable.
  */
-const NEVER_A_DOCUMENT = /^\/(_serverFn|_build|api)(\/|$)/;
+const NEVER_A_DOCUMENT = /^\/(_build|api)(\/|$)/;
+
+/**
+ * Server function payloads are documents for caching purposes: a client-side
+ * navigation fetches one instead of HTML. They are admitted here, never
+ * trusted — storage is still decided by the response, which is `no-store`
+ * under `src/start.ts` unless the handler opted in (`runContentQueries`).
+ */
+const SERVER_FUNCTION = /^\/_serverFn(\/|$)/;
 
 /** `no-store` and `private` both mean "do not keep this anywhere shared". */
 const NEVER_STORE = /(^|[\s,])(no-store|private)(\s*[,;]|\s*$)/;
@@ -121,7 +129,17 @@ const isDocumentRequest = (request: Request) => {
 
   // A dot means a file: `/favicon.ico`, `/rss.xml`, `/sitemap.xml`. None of
   // them are documents and all of them set their own cache headers.
-  if (NEVER_A_DOCUMENT.test(pathname) || pathname.includes('.')) {
+  if (NEVER_A_DOCUMENT.test(pathname)) {
+    return false;
+  }
+
+  if (SERVER_FUNCTION.test(pathname)) {
+    return true;
+  }
+
+  // A dot means a file: `/favicon.ico`, `/rss.xml`, `/sitemap.xml`. None of
+  // them are documents and all of them set their own cache headers.
+  if (pathname.includes('.')) {
     return false;
   }
 
