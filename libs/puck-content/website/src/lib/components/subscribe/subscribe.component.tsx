@@ -5,10 +5,10 @@ import {
   SubscribeBlock,
 } from '@wepublish/website/builder';
 
-import { DatasourceValueType } from '@wepublish/puck-content/editor';
+import { DatasourcesValue } from '@wepublish/puck-content/editor';
 
 export type SubscribeConfigProps = BuilderSubscribeBlockProps & {
-  datasource: DatasourceValueType<'items'>;
+  datasources: DatasourcesValue;
 };
 
 export const SubscribeRender: PuckComponent<SubscribeConfigProps> = props => (

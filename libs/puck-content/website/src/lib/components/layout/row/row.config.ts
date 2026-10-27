@@ -22,11 +22,11 @@ export const Row: ComponentConfig<{
       type: 'breakpoints',
       label: 'Layout',
       objectFields: {
-        columnGap: gapFields.columnGap,
+        ...gapFields(['column']),
         ...itemsAlignmentFields,
       },
       ai: breakpointsFieldAi({
-        columnGap: gapSchema.columnGap,
+        ...gapSchema(['column']),
         ...itemsAlignmentSchema,
       }),
     },
@@ -35,7 +35,7 @@ export const Row: ComponentConfig<{
     content: [],
     layout: {
       xs: {
-        columnGap: defaultGap,
+        gap: { column: defaultGap.column },
         alignItems: 'center',
         justifyContent: 'start',
       },

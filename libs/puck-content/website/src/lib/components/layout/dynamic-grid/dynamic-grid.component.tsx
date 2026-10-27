@@ -8,7 +8,7 @@ import {
   VisibilityValue,
 } from '@wepublish/puck-content/editor';
 import { columnSpanStyles, ColumnSpanValue } from '../column-span';
-import { gapStyles, GapValue } from '../gap';
+import { GapLayout, gapStyles } from '../gap';
 import { ItemsAlignment, itemsAlignmentStyles } from '../items-alignment';
 import { visibilityStyles } from '../with-visibility';
 
@@ -18,7 +18,7 @@ export type DynamicGridItem = {
   content: Slot;
 };
 
-export type DynamicGridLayout = GapValue & ItemsAlignment;
+export type DynamicGridLayout = GapLayout & ItemsAlignment;
 
 export type DynamicGridProps = {
   className?: string;

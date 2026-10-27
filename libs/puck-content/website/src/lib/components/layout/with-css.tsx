@@ -6,13 +6,13 @@ import {
   alignmentFieldAi,
   AlignmentValue,
   borderFieldAi,
-  borderSides,
   BorderValue,
   colorFieldAi,
   ColorValue,
   paddingFieldAi,
   PaddingValue,
   resolveColor,
+  sides,
 } from '@wepublish/puck-content/editor';
 import { UserFields } from '../../types';
 
@@ -46,16 +46,18 @@ export const cssStyles = (theme: Theme, css: CSSValue = {}): CSSObject => {
     styles.textAlign = css.textAlign;
   }
 
-  for (const side of borderSides) {
-    const border = css.border?.[side];
+  const borderColor = resolveColor(theme, css.border?.color) ?? 'currentColor';
 
-    if (border?.width) {
+  for (const side of sides) {
+    const width = css.border?.width?.[side];
+
+    if (width) {
       styles[`border${capitalize(side)}`] =
-        `${border.width}px ${border.style ?? 'solid'} currentColor`;
+        `${width}px ${css.border?.style ?? 'solid'} ${borderColor}`;
     }
   }
 
-  for (const side of borderSides) {
+  for (const side of sides) {
     const padding = css.padding?.[side];
 
     if (padding !== undefined) {
@@ -98,19 +100,21 @@ export function withCSS<
             },
           },
           textAlign: {
+            label: 'Text align',
             type: 'alignment',
+            orientation: 'text',
             alignments: ['left', 'center', 'right'],
-            ai: alignmentFieldAi(['left', 'center', 'right']),
-          },
-          border: {
-            type: 'border',
-            visible: false,
-            ai: borderFieldAi,
+            ai: alignmentFieldAi(['left', 'center', 'right'], 'text'),
           },
           padding: {
+            label: 'Padding',
             type: 'padding',
-            visible: false,
             ai: paddingFieldAi,
+          },
+          border: {
+            label: 'Border',
+            type: 'border',
+            ai: borderFieldAi,
           },
         },
       },

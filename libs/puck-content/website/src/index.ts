@@ -1,3 +1,4 @@
+export * from './lib/api-blocks/api-blocks';
 export * from './lib/components/break/break.component';
 export * from './lib/components/break/break.config';
 export * from './lib/components/content/button/button.component';

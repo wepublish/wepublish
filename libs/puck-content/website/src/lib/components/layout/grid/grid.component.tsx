@@ -7,10 +7,10 @@ import {
   columnsPresets,
   ColumnsValue,
 } from '@wepublish/puck-content/editor';
-import { gapStyles, GapValue } from '../gap';
+import { GapLayout, gapStyles } from '../gap';
 import { ItemsAlignment, itemsAlignmentStyles } from '../items-alignment';
 
-export type GridLayout = GapValue &
+export type GridLayout = GapLayout &
   ItemsAlignment & {
     columns: ColumnsValue;
   };

@@ -1,114 +1,39 @@
-import { FieldLabel, FieldProps } from '@puckeditor/core';
-
-import { FieldCheckboxLabel, FieldInput, FieldStack } from '../field-controls';
-import {
-  PaddingField,
-  PaddingSide,
-  paddingSides,
-  PaddingValue,
-} from './padding.field';
-import { useState } from 'react';
+import { FieldProps } from '@puckeditor/core';
 import { useTranslation } from 'react-i18next';
 
-const usePaddingLabels = () => {
-  const { t } = useTranslation();
+import { ToggleableField } from '../field-controls.component';
+import { SidesInput } from '../sides/sides.component';
+import { PaddingField, PaddingValue } from './padding.field';
 
-  return {
-    all: t('', 'All sides'),
-    top: t('', 'Top'),
-    right: t('', 'Right'),
-    bottom: t('', 'Bottom'),
-    left: t('', 'Left'),
-    moreOptions: t('', 'More options'),
-  };
-};
-
-const allSidesEqual = (value: PaddingValue) => {
-  return (
-    value.top === value.right &&
-    value.right === value.bottom &&
-    value.bottom === value.left
-  );
-};
-
-export type PaddingFieldRenderProps = FieldProps<PaddingField, PaddingValue> & {
+export type PaddingFieldRenderProps = FieldProps<
+  PaddingField,
+  PaddingValue | undefined
+> & {
   name: string;
 };
 
 export const PaddingFieldRender = ({
   field,
+  name,
   value,
   onChange,
   readOnly,
 }: PaddingFieldRenderProps) => {
-  const labels = usePaddingLabels();
-  const current = value ?? {};
-  const [showMore, setShowMore] = useState(() => !allSidesEqual(current));
-
-  const handleAllChange = (raw: string) => {
-    const parsed = +raw;
-
-    onChange({
-      top: parsed,
-      right: parsed,
-      bottom: parsed,
-      left: parsed,
-    });
-  };
-
-  const handleSideChange = (side: PaddingSide, raw: string) => {
-    onChange({
-      ...current,
-      [side]: +raw,
-    });
-  };
+  const { t } = useTranslation();
 
   return (
-    <FieldLabel
-      label={field.label ?? 'Padding'}
+    <ToggleableField
+      label={field.label ?? t('', 'Padding')}
+      value={value}
       readOnly={readOnly}
-      el="div"
+      onChange={onChange}
     >
-      <FieldStack>
-        {!showMore && (
-          <FieldInput
-            type="number"
-            value={current.top ?? ''}
-            disabled={readOnly}
-            placeholder={labels.all}
-            onChange={event => handleAllChange(event.currentTarget.value)}
-          />
-        )}
-
-        {showMore &&
-          paddingSides.map(side => (
-            <FieldLabel
-              key={side}
-              label={labels[side]}
-              readOnly={readOnly}
-              el="div"
-            >
-              <FieldInput
-                type="number"
-                value={current[side] ?? ''}
-                disabled={readOnly}
-                onChange={event =>
-                  handleSideChange(side, event.currentTarget.value)
-                }
-              />
-            </FieldLabel>
-          ))}
-
-        <FieldCheckboxLabel>
-          <input
-            type="checkbox"
-            checked={showMore}
-            disabled={readOnly}
-            onChange={event => setShowMore(event.currentTarget.checked)}
-          />
-          {labels.moreOptions}
-        </FieldCheckboxLabel>
-      </FieldStack>
-    </FieldLabel>
+      <SidesInput
+        name={name}
+        value={value}
+        readOnly={readOnly}
+        onChange={onChange}
+      />
+    </ToggleableField>
   );
 };

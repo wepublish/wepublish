@@ -77,9 +77,17 @@ export const resolveBreakpointValue = <Props extends object>(
 
   return sorted
     .filter(key => theme.breakpoints.values[key] <= target)
-    .reduce<
-      Partial<Props> | undefined
-    >((acc, key) => ({ ...acc, ...value[key] }), undefined);
+    .reduce<Partial<Props> | undefined>(
+      (acc, key) => ({
+        ...acc,
+        ...Object.fromEntries(
+          Object.entries(value[key] ?? {}).filter(
+            ([, subValue]) => subValue !== undefined
+          )
+        ),
+      }),
+      undefined
+    );
 };
 
 /**

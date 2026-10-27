@@ -10,14 +10,23 @@ export type AlignmentValue =
   | 'center'
   | 'right'
   | 'end'
-  | 'stretch';
+  | 'stretch'
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly';
 
-export type AlignmentOrientation = 'horizontal' | 'vertical';
+export type AlignmentOrientation = 'horizontal' | 'vertical' | 'text';
 
 export type AlignmentField = BaseField & {
   type: 'alignment';
   alignments?: AlignmentValue[];
   orientation?: AlignmentOrientation;
+};
+
+const orientationLabels: Record<AlignmentOrientation, string> = {
+  horizontal: 'Horizontal alignment',
+  vertical: 'Vertical alignment',
+  text: 'Text alignment',
 };
 
 export const alignmentSchema = (
@@ -28,6 +37,6 @@ export const alignmentFieldAi = (
   alignments: AlignmentValue[] = ['start', 'center', 'end'],
   orientation: AlignmentOrientation = 'horizontal'
 ): FieldAiParams => ({
-  instructions: `${orientation === 'vertical' ? 'Vertical' : 'Horizontal'} alignment of the element. One of: ${alignments.join(', ')}.`,
+  instructions: `${orientationLabels[orientation]} of the element. One of: ${alignments.join(', ')}.`,
   schema: toAiSchema(alignmentSchema(alignments)),
 });

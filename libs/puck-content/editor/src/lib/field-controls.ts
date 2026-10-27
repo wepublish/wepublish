@@ -86,3 +86,101 @@ export const FieldStack = styled.div`
   display: grid;
   gap: var(--puck-space-2);
 `;
+
+export const ToggleOptions = styled.div`
+  display: flex;
+  gap: 4px;
+`;
+
+export const ToggleOption = styled.label<{
+  active: boolean;
+  disabled: boolean;
+}>`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px;
+  border: 1px solid
+    ${({ active }) =>
+      active ? 'var(--puck-color-interactive)' : 'var(--puck-color-border)'};
+  border-radius: 4px;
+  background: ${({ active }) =>
+    active ?
+      'var(--puck-color-interactive-soft)'
+    : 'var(--puck-color-surface)'};
+  color: ${({ active }) =>
+    active ? 'var(--puck-color-interactive)' : 'var(--puck-color-text)'};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+
+  &:has(:focus-visible) {
+    outline: var(--puck-border-width-focus) solid var(--puck-color-focus-ring);
+    outline-offset: 1px;
+  }
+
+  input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+`;
+
+export const NumberInputWrapper = styled.label`
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+
+  > svg {
+    position: absolute;
+    left: 10px;
+    width: 16px;
+    height: 16px;
+    color: var(--puck-color-text-secondary);
+    pointer-events: none;
+  }
+
+  > input {
+    padding-inline-start: 34px;
+    padding-inline-end: 30px;
+    -moz-appearance: textfield;
+  }
+
+  > input::-webkit-outer-spin-button,
+  > input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+`;
+
+export const NumberInputUnit = styled.span`
+  position: absolute;
+  right: 10px;
+  color: var(--puck-color-text-muted);
+  font-size: var(--puck-font-size-xxxs);
+  pointer-events: none;
+`;
+
+export const FieldGrid = styled.div<{ columns: number }>`
+  display: grid;
+  grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));
+  gap: var(--puck-space-2);
+`;
+
+export const ToggleableFieldWrapper = styled.div`
+  position: relative;
+
+  > .MuiSwitch-root {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    z-index: 1;
+  }
+`;

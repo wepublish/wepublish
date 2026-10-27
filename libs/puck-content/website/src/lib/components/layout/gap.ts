@@ -1,41 +1,37 @@
 import { CSSObject } from '@emotion/react';
-import { z } from 'zod/v4';
 
-import { BreakpointsField } from '@wepublish/puck-content/editor';
+import {
+  GapAxis,
+  GapField,
+  gapFieldAi,
+  gapSchema as gapValueSchema,
+  GapValue,
+} from '@wepublish/puck-content/editor';
 
-export type GapValue = {
-  columnGap?: number;
-  rowGap?: number;
+export type GapLayout = {
+  gap?: GapValue;
 };
 
-export const defaultGap = 16;
+export const defaultGap: GapValue = { row: 16, column: 16 };
 
 /**
- * Sub fields for a breakpoints field controlling the gaps between the
+ * Sub field for a breakpoints field controlling the gaps between the
  * children of a grid-like layout.
  */
-export const gapFields = {
-  columnGap: {
-    type: 'number',
-    label: 'Column gap',
-    min: 0,
+export const gapFields = (axes?: GapAxis[]): { gap: GapField } => ({
+  gap: {
+    type: 'gap',
+    label: 'Gap',
+    axes,
+    ai: gapFieldAi(axes),
   },
-  rowGap: {
-    type: 'number',
-    label: 'Row gap',
-    min: 0,
-  },
-} satisfies BreakpointsField<GapValue>['objectFields'];
+});
 
-export const gapSchema = {
-  columnGap: z
-    .number()
-    .min(0)
-    .describe('Horizontal gap between columns in pixels'),
-  rowGap: z.number().min(0).describe('Vertical gap between rows in pixels'),
-};
+export const gapSchema = (axes?: GapAxis[]) => ({
+  gap: gapValueSchema(axes).describe('Gap between the children in pixels'),
+});
 
-export const gapStyles = (gap: GapValue | undefined): CSSObject => ({
-  columnGap: gap?.columnGap,
-  rowGap: gap?.rowGap,
+export const gapStyles = (layout: GapLayout | undefined): CSSObject => ({
+  rowGap: layout?.gap?.row,
+  columnGap: layout?.gap?.column,
 });

@@ -92,27 +92,27 @@ export const config: UserConfig = {
     Space: withVisibility(Space),
     Grid: withVisibility(
       withDataSource(withCSS(Grid), undefined, {
-        types: ['autofill', 'list', 'items'],
+        types: ['uniqueList', 'list', 'multiple'],
       })
     ),
     DynamicGrid: withVisibility(
       withDataSource(withCSS(DynamicGrid), undefined, {
-        types: ['autofill', 'list', 'items'],
+        types: ['uniqueList', 'list', 'multiple'],
       })
     ),
     Row: withVisibility(
       withDataSource(withCSS(Row), undefined, {
-        types: ['autofill', 'list', 'items'],
+        types: ['uniqueList', 'list', 'multiple'],
       })
     ),
     Slider: withVisibility(
       withDataSource(withCSS(Slider), undefined, {
-        types: ['autofill', 'list', 'items'],
+        types: ['uniqueList', 'list', 'multiple'],
       })
     ),
     Container: withVisibility(
       withDataSource(withCSS(ContainerConfig), undefined, {
-        types: ['autofill', 'list', 'items'],
+        types: ['uniqueList', 'list', 'multiple'],
       })
     ),
     Collapsible: withVisibility(withCSS(CollapsibleConfig)),
