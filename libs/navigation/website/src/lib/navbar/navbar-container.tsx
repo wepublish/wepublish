@@ -54,23 +54,23 @@ export function NavbarContainer({
   const { data: peerInfoData } = useQuery(PeerProfileDocument, {
     fetchPolicy: 'cache-first',
   });
-  const hasUnpaidInvoices = useHasUnpaidInvoices();
   const hasRunningSubscription = useHasRunningSubscription();
 
-  // In the account with the subscription history, the link to it is only
-  // worth showing as the warning about an unpaid invoice. The features are
-  // only asked for there: they need a session, and the pages prefetch them.
+  // With the subscription history, the warning is about due invoices only,
+  // and in the account the link to it is only worth showing as that warning.
+  // The features need a session, so they are asked for only with one.
   const { hasUser } = useUser();
   const { asPath } = useRouter();
   const accountPath = profileBtn?.href ?? '/profile';
   const inAccount =
     asPath === accountPath || asPath.startsWith(`${accountPath}/`);
   const { data: features } = useQuery(FeaturesDocument, {
-    skip: !hasUser || !inAccount,
+    skip: !hasUser,
   });
   const withinHistory = !!features?.features.includes(
     'profile-subscription-history'
   );
+  const hasUnpaidInvoices = useHasUnpaidInvoices({ dueOnly: withinHistory });
   // null, not undefined: the navbar would fall back to its default button
   const accountBtn =
     inAccount && withinHistory && !hasUnpaidInvoices ? null : profileBtn;

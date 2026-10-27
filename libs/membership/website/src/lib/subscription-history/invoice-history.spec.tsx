@@ -379,15 +379,33 @@ describe('InvoiceHistory', () => {
   });
 
   describe('in the profile', () => {
-    it('shows the latest two invoices and older open ones', () => {
+    it('shows the latest two invoices, not an older open one left over', () => {
       renderHistory(Latest);
 
       const rows = rowTexts().join();
       expect(rows).toContain('Jahresabo 2026');
       expect(rows).toContain('Jahresabo 2025');
-      expect(rows).toContain('Jahresabo 2023'); // open, so it can be paid
+      // open, but 2024 and 2025 were paid after it
+      expect(rows).not.toContain('Jahresabo 2023');
       expect(rows).not.toContain('Jahresabo 2024');
       expect(rows).not.toContain('(storniert)');
+    });
+
+    it('also shows older open invoices the reader still owes', () => {
+      renderHistory({
+        ...Latest,
+        data: {
+          __typename: 'Query',
+          userInvoices: (Latest.data?.userInvoices ?? []).map(invoice => ({
+            ...invoice,
+            paidAt: null,
+          })),
+        },
+      });
+
+      const rows = rowTexts().join();
+      expect(rows).toContain('Jahresabo 2024');
+      expect(rows).toContain('Jahresabo 2023');
     });
 
     it('links to all invoices on the edit page instead of the cancelled toggle', () => {

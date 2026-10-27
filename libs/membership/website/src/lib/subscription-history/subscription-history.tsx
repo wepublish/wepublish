@@ -38,6 +38,7 @@ import {
   SubscriptionActions,
   SubscriptionListItemActions,
 } from '../subscription-list/subscription-actions';
+import { isInvoiceDue } from '../invoice-due';
 import { isSubscriptionDeactivated } from '../subscription-state';
 import {
   HISTORY_COLUMNS,
@@ -516,10 +517,20 @@ export function SubscriptionHistory({
         invoice.subscriptionID === subscriptionId && isInvoiceOpen(invoice)
     )?.total;
 
+  // opened when the reader has to act on one of its invoices, not for one
+  // left over from before later payments
+  const hasDueInvoice = (subscriptionId: string) =>
+    !!invoices.data?.userInvoices.some(
+      invoice =>
+        invoice.subscriptionID === subscriptionId &&
+        isInvoiceDue(invoice, invoices.data?.userInvoices ?? [])
+    );
+
   const rows = (subscriptions: FullSubscriptionFragment[]) =>
     subscriptions.map(subscription => {
       const total = openInvoiceTotal(subscription.id);
-      const expanded = toggled[subscription.id] ?? total != null;
+      const expanded =
+        toggled[subscription.id] ?? hasDueInvoice(subscription.id);
 
       return (
         <SubscriptionHistoryRow

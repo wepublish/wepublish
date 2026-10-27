@@ -102,7 +102,10 @@ const handlers = {
 
 export const Default: SubscriptionHistoryFixture = {
   props: {
-    data: { __typename: 'Query', userSubscriptions: [trial, supporter, yearly] },
+    data: {
+      __typename: 'Query',
+      userSubscriptions: [trial, supporter, yearly],
+    },
     invoices: {
       data: { __typename: 'Query', userInvoices: invoices },
       loading: false,
@@ -122,6 +125,55 @@ export const Default: SubscriptionHistoryFixture = {
       variables: { id: openInvoice.id },
       maxUsageCount: Number.POSITIVE_INFINITY,
       data: { __typename: 'Query', checkInvoiceStatus: openInvoice },
+    }),
+  ],
+};
+
+// Förderabo: open since 2023, while the reader paid every year after it
+const leftOverInvoices: FullInvoiceFragment[] = [
+  ...invoices,
+  invoiceFixture(supporter, {
+    id: 'supporter-2025',
+    description: 'Förderabo 2025',
+    dueAt: '2025-01-01T00:00:00.000Z',
+    paidAt: '2024-11-03T00:00:00.000Z',
+  }),
+  invoiceFixture(supporter, {
+    id: 'supporter-2024',
+    description: 'Förderabo 2024',
+    dueAt: '2024-01-01T00:00:00.000Z',
+    paidAt: '2023-11-03T00:00:00.000Z',
+  }),
+  invoiceFixture(supporter, {
+    id: 'supporter-2023',
+    description: 'Förderabo 2023',
+    dueAt: '2023-01-01T00:00:00.000Z',
+  }),
+];
+
+export const WithLeftOverInvoice: SubscriptionHistoryFixture = {
+  props: {
+    ...Default.props,
+    invoices: {
+      data: { __typename: 'Query', userInvoices: leftOverInvoices },
+      loading: false,
+      error: undefined,
+    },
+  },
+  mocks: [
+    mockOperation(InvoicesDocument, {
+      maxUsageCount: Number.POSITIVE_INFINITY,
+      data: { __typename: 'Query', userInvoices: leftOverInvoices },
+    }),
+    ...Default.mocks.slice(1),
+    // the container checks every open invoice with the payment provider
+    mockOperation(CheckInvoiceStatusDocument, {
+      variables: { id: 'supporter-2023' },
+      maxUsageCount: Number.POSITIVE_INFINITY,
+      data: {
+        __typename: 'Query',
+        checkInvoiceStatus: leftOverInvoices[leftOverInvoices.length - 1],
+      },
     }),
   ],
 };

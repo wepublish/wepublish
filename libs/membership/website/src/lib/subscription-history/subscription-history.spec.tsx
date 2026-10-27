@@ -11,7 +11,7 @@ import { SubscriptionHistory } from './subscription-history';
 import * as fixtures from './subscription-history.fixtures';
 import { SubscriptionHistoryFixture } from './subscription-history.fixtures';
 
-const { Default, Empty } = fixtures;
+const { Default, Empty, WithLeftOverInvoice } = fixtures;
 
 const renderStory = async (
   { props, mocks }: SubscriptionHistoryFixture,
@@ -121,6 +121,25 @@ describe('SubscriptionHistory', () => {
     expect(
       within(subscriptionRow('Probeabo')).getByText('Gekündigt')
     ).toBeInTheDocument();
+  });
+
+  describe('with an open invoice left over from before later payments', () => {
+    it('keeps its subscription closed', async () => {
+      await renderStory(WithLeftOverInvoice);
+
+      expect(
+        within(subscriptionRow('Förderabo')).getByRole('button', {
+          name: 'Rechnungen anzeigen',
+        })
+      ).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('does not list it beside the latest invoices', async () => {
+      await renderStory(WithLeftOverInvoice);
+
+      expect(screen.getByText('Förderabo 2026')).toBeInTheDocument();
+      expect(screen.queryByText('Förderabo 2023')).not.toBeInTheDocument();
+    });
   });
 
   it('opens the invoices of a subscription with an open invoice', async () => {

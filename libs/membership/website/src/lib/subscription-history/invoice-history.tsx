@@ -1,10 +1,6 @@
 import styled from '@emotion/styled';
 import { Skeleton, TableRow } from '@mui/material';
-import {
-  getInvoiceState,
-  InvoiceStatusIcon,
-  isInvoiceOpen,
-} from '@wepublish/ui';
+import { getInvoiceState, InvoiceStatusIcon } from '@wepublish/ui';
 import { FullInvoiceFragment } from '@wepublish/website/api';
 import {
   BuilderInvoiceListProps,
@@ -16,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { MdSubdirectoryArrowRight } from 'react-icons/md';
 
 import { formatCurrency } from '../formatters/format-currency';
+import { isInvoiceDue } from '../invoice-due';
 import {
   canPayInvoice,
   isBexio,
@@ -362,7 +359,9 @@ export function InvoiceHistory({
   const shown =
     allInvoicesUrl ?
       uncanceled.filter(
-        (invoice, index) => index < LATEST_INVOICES || isInvoiceOpen(invoice)
+        // older ones only while the reader has to act on them
+        (invoice, index) =>
+          index < LATEST_INVOICES || isInvoiceDue(invoice, invoices)
       )
     : showCanceled ? invoices
     : uncanceled;
