@@ -202,6 +202,12 @@ export const SubscriptionHistoryActionBar = styled('div')`
   justify-content: flex-end;
   align-items: flex-start;
   gap: ${({ theme }) => theme.spacing(1, 2)};
+
+  // in the text colour: a tenant's primary can be too light for an outline
+  & > [data-edit='true'] {
+    color: ${({ theme }) => theme.palette.text.primary};
+    border-color: currentColor;
+  }
 `;
 
 /** In the table, so it lines up with the actions' last button. */
@@ -413,16 +419,6 @@ function SubscriptionHistoryRow({
           data-label=""
         >
           <SubscriptionHistoryActionBar>
-            {/* everything else is on the subscription's edit page */}
-            <Button
-              variant="outlined"
-              color="primary"
-              LinkComponent={BuilderLink}
-              href={url}
-            >
-              {t('subscriptionHistory.edit', { type: memberPlan.productType })}
-            </Button>
-
             <SubscriptionHistoryActions>
               <SubscriptionActions
                 {...subscription}
@@ -449,6 +445,18 @@ function SubscriptionHistoryRow({
                 cancelPaymentMethodChange={onCancelPaymentMethodChange}
               />
             </SubscriptionHistoryActions>
+
+            {/* every row has it, so it keeps the far right; everything else
+                is on the subscription's edit page */}
+            <Button
+              variant="outlined"
+              color="primary"
+              LinkComponent={BuilderLink}
+              href={url}
+              data-edit="true"
+            >
+              {t('subscriptionHistory.edit', { type: memberPlan.productType })}
+            </Button>
           </SubscriptionHistoryActionBar>
         </HistoryCell>
       </SubscriptionHistoryActionRow>

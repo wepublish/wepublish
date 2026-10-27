@@ -446,7 +446,8 @@ describe('SubscriptionHistory', () => {
       'href',
       'https://example.com/profile/subscription/subscription-1'
     );
-    // secondary, right-aligned just before the subscription's own actions
+    // secondary, always at the far right: the subscription's own actions,
+    // which only some rows have, come before it
     expect(edit.className).toMatch(/MuiButton-outlined/);
     expect(
       getComputedStyle(edit.parentElement as HTMLElement).justifyContent
@@ -455,8 +456,25 @@ describe('SubscriptionHistory', () => {
       name: 'Jetzt verlängern',
     });
     expect(
-      edit.compareDocumentPosition(extend) & Node.DOCUMENT_POSITION_FOLLOWING
+      edit.compareDocumentPosition(extend) & Node.DOCUMENT_POSITION_PRECEDING
     ).toBeTruthy();
+    expect(edit.parentElement?.lastElementChild).toBe(edit);
+  });
+
+  it('draws the edit button in the text colour, whatever the primary colour', async () => {
+    await renderStory(Default);
+
+    const edit = within(
+      subscriptionRow('Förderabo').nextElementSibling as HTMLElement
+    ).getByRole('link', { name: 'Abo anpassen' });
+    const text = getComputedStyle(
+      screen.getByRole('rowheader', { name: 'Förderabo' })
+    ).color;
+
+    expect(getComputedStyle(edit).color).toBe(text);
+    expect(getComputedStyle(edit).borderColor).toMatch(
+      /^(currentcolor|currentColor)$/
+    );
   });
 
   it('changes the payment method from an early extension by name, like the edit page', async () => {
