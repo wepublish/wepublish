@@ -2,6 +2,8 @@
 vi.mock('@wepublish/website/translations/de.json', () => ({
   default: {
     lang: 'Deutsch',
+    paymentMethod: 'Zahlungsmethode: {paymentMethod}',
+    cancel: '{type, select, Donation {Spende} other {Abo}} kündigen',
     zod: {
       required: 'Erforderlich',
     },
@@ -44,6 +46,14 @@ describe('initWePublishTranslator', () => {
     expect(i18n.language).toBe('de');
     expect(i18n.t('lang')).toBe('Deutsch');
   });
+  // the server renders with the package Node loads, not the bundler's build
+  it('formats ICU arguments and selects', () => {
+    expect(i18n.t('paymentMethod', { paymentMethod: 'bexio' })).toBe(
+      'Zahlungsmethode: bexio'
+    );
+    expect(i18n.t('cancel', { type: 'Subscription' })).toBe('Abo kündigen');
+  });
+
   it('should be able to switch to French', () => {
     i18n.changeLanguage('fr');
     expect(i18n.language).toBe('fr');

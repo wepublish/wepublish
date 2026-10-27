@@ -1,7 +1,12 @@
+/// <reference path="./i18next-icu-cjs.d.ts" />
 import i18next, { i18n, Resource } from 'i18next';
 
 import LanguageDetector from 'i18next-browser-languagedetector';
-import ICU from 'i18next-icu';
+// The ES build default-imports intl-messageformat, a CommonJS package without
+// ESM exports: under Node (server rendering) that import is the module object,
+// so every message fails to format and is rendered as its raw template. The
+// CommonJS build imports it correctly in Node and in the bundles.
+import ICU from 'i18next-icu/cjs';
 import { initReactI18next } from 'react-i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import { mergeDeepRight, map, pick } from 'ramda';
