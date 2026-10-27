@@ -328,13 +328,20 @@ describe('SubscriptionHistory', () => {
   });
 
   it('never wraps a date', async () => {
+    // as a website's global styles do
+    const reset = document.createElement('style');
+    reset.textContent = 'span { white-space: normal; }';
+    document.head.appendChild(reset);
     await renderStory(Default);
 
-    const dates = subscriptionRow('Jahresabo').querySelectorAll('time');
+    // the forms inside, too
+    const dates =
+      subscriptionRow('Jahresabo').querySelectorAll('time, [data-date]');
     expect(dates.length).toBeGreaterThan(0);
     for (const date of dates) {
       expect(getComputedStyle(date).whiteSpace).toBe('nowrap');
     }
+    reset.remove();
   });
 
   it('gives the plan column more room on the left, and lines the invoices up with it', async () => {

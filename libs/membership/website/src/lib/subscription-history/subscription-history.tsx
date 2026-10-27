@@ -42,8 +42,12 @@ import { isInvoiceDue } from '../invoice-due';
 import { isSubscriptionDeactivated } from '../subscription-state';
 import {
   HISTORY_COLUMNS,
+  HISTORY_COLUMN_MIN_WIDTHS,
   HISTORY_COLUMNS_SHOWN,
+  HISTORY_LONG_DATES,
+  HISTORY_SHORT_DATES,
   HISTORY_STACKED,
+  historyColumnWidths,
   historyHalves,
   PLAN_PADDING,
   HistoryAmount,
@@ -57,6 +61,24 @@ import {
   HistoryTableWrapper,
 } from './history-table';
 import { InvoiceHistory } from './invoice-history';
+
+/**
+ * The same columns in every history (subscriptions, donations), whatever they
+ * hold: fixed, from the header's widths.
+ */
+export const SubscriptionHistoryTable = styled(HistoryTable)`
+  ${HISTORY_COLUMNS_SHOWN} {
+    table-layout: fixed;
+  }
+
+  ${HISTORY_SHORT_DATES} {
+    ${historyColumnWidths(HISTORY_COLUMN_MIN_WIDTHS.shortDates)}
+  }
+
+  ${HISTORY_LONG_DATES} {
+    ${historyColumnWidths(HISTORY_COLUMN_MIN_WIDTHS.longDates)}
+  }
+`;
 
 export const SubscriptionHistoryWrapper = styled(HistoryTableWrapper)`
   display: grid;
@@ -563,7 +585,7 @@ export function SubscriptionHistory({
 
   return (
     <SubscriptionHistoryWrapper className={className}>
-      <HistoryTable>
+      <SubscriptionHistoryTable>
         <TableHead>
           <TableRow>
             <HistoryArrowCell />
@@ -606,7 +628,7 @@ export function SubscriptionHistory({
             </SubscriptionHistorySubscribeRow>
           )}
         </TableBody>
-      </HistoryTable>
+      </SubscriptionHistoryTable>
 
       {!!ended.length && (
         <div>

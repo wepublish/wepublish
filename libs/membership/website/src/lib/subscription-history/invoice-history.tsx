@@ -22,10 +22,7 @@ import {
 import {
   HISTORY_COLUMNS,
   HISTORY_COLUMNS_SHOWN,
-  HISTORY_SHORT_DATES,
   HISTORY_STACKED,
-  PLAN_COLUMN_WIDTH,
-  PLAN_COLUMN_WIDTH_SHORT,
   PLAN_PADDING,
   HistoryAmount,
   HistoryArrowCell,
@@ -129,8 +126,11 @@ export const InvoiceHistoryNested = styled('span')`
     font-size: ${NESTED_ICON_SIZE}px;
   }
 
+  // as wide as the cell at most, so the label ends in an ellipsis
   ${HISTORY_COLUMNS_SHOWN} {
     position: relative;
+    display: flex;
+    min-width: 0;
 
     svg {
       position: absolute;
@@ -148,24 +148,8 @@ export const InvoiceHistoryLabel = styled('span')`
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  // stacked, as wide as the value column
-  ${HISTORY_STACKED} {
-    min-width: 0;
-  }
-
-  // the column's width without its padding (cells default to 2 units right)
-  ${HISTORY_COLUMNS_SHOWN} {
-    max-width: calc(
-      ${PLAN_COLUMN_WIDTH} - ${({ theme }) => theme.spacing(PLAN_PADDING + 1)}
-    );
-  }
-
-  ${HISTORY_SHORT_DATES} {
-    max-width: calc(
-      ${PLAN_COLUMN_WIDTH_SHORT} -
-        ${({ theme }) => theme.spacing(PLAN_PADDING + 1)}
-    );
-  }
+  // as wide as its column
+  min-width: 0;
 `;
 
 /**

@@ -8,21 +8,47 @@ import { format } from 'date-fns';
 export const HISTORY_COLUMNS = 8;
 
 /**
- * Below this container width the rows stack: the table with its invoices open
- * needs about this much room for its nine columns and unwrapped dates.
+ * The least each column of the table needs, padding included, in px: arrow,
+ * plan, state, start, paid until, amount, payment method, renewal (measured
+ * with the longest values). With short dates (07.10.2026) and with long ones
+ * (28. September 2026, the widest month). Each set adds up to the narrowest table it is used for;
+ * a wider table shares the rest among the columns in the same proportion.
  */
-export const HISTORY_STACKED_MAX_WIDTH = 864; // px
+export const HISTORY_COLUMN_MIN_WIDTHS = {
+  shortDates: [44, 144, 103, 90, 90, 143, 141, 110],
+  longDates: [44, 200, 144, 150, 150, 143, 141, 110],
+};
+
+const sum = (widths: number[]) => widths.reduce((a, b) => a + b, 0);
+
+/** Below this container width the rows stack: the table would not fit. */
+export const HISTORY_STACKED_MAX_WIDTH =
+  sum(HISTORY_COLUMN_MIN_WIDTHS.shortDates) - 1; // 864px
+
+/** Up to this container width, the table shows its dates short. */
+export const HISTORY_SHORT_DATES_MAX_WIDTH =
+  sum(HISTORY_COLUMN_MIN_WIDTHS.longDates) - 1; // 1081px
 
 /**
- * Up to this container width, the table shows its dates short (07.10.2026),
- * which is what lets it stay a table that far down.
+ * The widths of the table's columns, from its header cells: each column's
+ * share of the table is its share of the least the columns need together.
  */
-export const HISTORY_SHORT_DATES_MAX_WIDTH = 919; // px
+export const historyColumnWidths = (widths: number[]) =>
+  widths
+    .map(
+      (width, index) => `
+        thead th:nth-of-type(${index + 1}) {
+          width: ${((width / sum(widths)) * 100).toFixed(3)}%;
+        }
+      `
+    )
+    .join('');
 
 /** Container queries for the stacked layout and for the table columns. */
 export const HISTORY_STACKED = `@container (max-width: ${HISTORY_STACKED_MAX_WIDTH}px)`;
 export const HISTORY_COLUMNS_SHOWN = `@container (min-width: ${HISTORY_STACKED_MAX_WIDTH + 1}px)`;
 export const HISTORY_SHORT_DATES = `@container (min-width: ${HISTORY_STACKED_MAX_WIDTH + 1}px) and (max-width: ${HISTORY_SHORT_DATES_MAX_WIDTH}px)`;
+export const HISTORY_LONG_DATES = `@container (min-width: ${HISTORY_SHORT_DATES_MAX_WIDTH + 1}px)`;
 
 /**
  * From this container width up to the table, a stacked row shows its values
@@ -154,7 +180,9 @@ export const HistoryTable = styled(Table)`
     border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
   }
 
-  & time {
+  // the forms inside too: a website's styles can reset spans
+  & time,
+  & [data-date] {
     white-space: nowrap;
   }
 
@@ -227,25 +255,16 @@ export const HistoryArrowCell = styled(HistoryCell)`
 `;
 
 /**
- * The plan column keeps its width when invoices open below it: their labels
- * are longer than the plan names and are cut short instead (narrow layouts
- * stack the cells anyway).
+ * The plan column. Its width comes from the table (`historyColumnWidths`);
+ * the invoices' labels below it are longer than the plan names and are cut
+ * short instead of widening it.
  */
-export const PLAN_COLUMN_WIDTH = '12.5rem';
-/** Narrower where the table shows short dates. */
-export const PLAN_COLUMN_WIDTH_SHORT = '9.25rem';
-
 export const HistoryPlanCell = styled(HistoryCell)`
   padding-left: ${({ theme }) => theme.spacing(PLAN_PADDING)};
 
   // again in the query, or the narrower padding of the table's cells wins
   ${HISTORY_COLUMNS_SHOWN} {
-    width: ${PLAN_COLUMN_WIDTH};
     padding-left: ${({ theme }) => theme.spacing(PLAN_PADDING)};
-  }
-
-  ${HISTORY_SHORT_DATES} {
-    width: ${PLAN_COLUMN_WIDTH_SHORT};
   }
 `;
 
