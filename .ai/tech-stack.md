@@ -1,7 +1,10 @@
 # We.Publish
 
-Nx monorepo: NestJS/GraphQL API, a React admin editor, and ~20 Next.js tenant
-websites, sharing code through `libs/`. **Different parts of this repo use
+Nx monorepo: NestJS/GraphQL API, a React admin editor, and ~20 tenant
+websites, sharing code through `libs/`. All tenant sites are Next.js 16 (Pages
+Router) except `apps/gruppetto`, which runs on TanStack Start — read
+[tanstack-start-migration.md](.claude/docs/tanstack-start-migration.md) before
+working on it or migrating another tenant (it is not `@`-included). **Different parts of this repo use
 different test runners and different verification commands** — read
 [repo-map.md](.claude/docs/repo-map.md) to work out which stack you are in
 before you start.
