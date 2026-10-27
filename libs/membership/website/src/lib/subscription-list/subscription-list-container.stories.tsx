@@ -2,6 +2,13 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SubscriptionListContainer } from './subscription-list-container';
 import {
   CancelSubscriptionDocument,
+  CancelSubscriptionPaymentMethodChangeDocument,
+  ChangeSubscriptionPaymentMethodDocument,
+  CheckSubscriptionPaymentMethodChangeDocument,
+  Currency,
+  FullSubscriptionPaymentMethodChangeFragment,
+  PaymentMethodChangeKind,
+  PaymentMethodChangeState,
   ReactivateSubscriptionDocument,
   Exact,
   ExtendSubscriptionDocument,
@@ -15,7 +22,11 @@ import {
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 
-import { mockMemberPlan, mockPaymentMethod } from '@wepublish/storybook/mocks';
+import {
+  mockAvailablePaymentMethod,
+  mockMemberPlan,
+  mockPaymentMethod,
+} from '@wepublish/storybook/mocks';
 import { InvoiceListContainer } from '../invoice-list/invoice-list-container';
 import { waitFor, within } from 'storybook/test';
 import {
@@ -47,6 +58,8 @@ const subscription = {
   canRevertUpgrade: false,
   goodie: null,
   externalReward: 'https://example.com/external-reward-mock-url',
+  pendingPaymentMethodChange: null,
+  canRenewPaymentMethod: false,
   // `satisfies`, not `as`: a field missing here leaves the subscription
   // incomplete in the cache, and Apollo refetches it from a mock that is used up.
 } satisfies Exact<FullSubscriptionFragment>;
@@ -272,6 +285,181 @@ export const CancelWithInvoiceList: StoryObj = {
           },
         },
         ...Cancel.parameters!.apolloClient.mocks,
+      ],
+    },
+  },
+};
+
+const invoicePaymentMethod = mockPaymentMethod({
+  id: 'invoice',
+  name: 'Rechnung',
+  description: 'Per Post',
+  paymentProviderID: 'bexio',
+});
+
+const onlinePaymentMethod = mockPaymentMethod({
+  id: 'online',
+  name: 'Online',
+  description: 'Karte, TWINT',
+  paymentProviderID: 'payrexx',
+});
+
+const changeableSubscription = {
+  ...subscription,
+  canExtend: false,
+  paymentPeriodicity: PaymentPeriodicity.Yearly,
+  paymentMethod: invoicePaymentMethod,
+  memberPlan: mockMemberPlan({
+    availablePaymentMethods: [
+      mockAvailablePaymentMethod({
+        paymentPeriodicities: [PaymentPeriodicity.Yearly],
+        paymentMethods: [invoicePaymentMethod, onlinePaymentMethod],
+      }),
+    ],
+  }),
+} satisfies Exact<FullSubscriptionFragment>;
+
+const pendingChange = (
+  state = PaymentMethodChangeState.Pending
+): Exact<FullSubscriptionPaymentMethodChangeFragment> => ({
+  __typename: 'SubscriptionPaymentMethodChange',
+  id: 'change-1',
+  createdAt: '2026-10-21T10:00:00.000Z',
+  kind: PaymentMethodChangeKind.Authorization,
+  state,
+  amount: 1,
+  currency: Currency.Chf,
+  expiresAt: '2026-11-04T10:00:00.000Z',
+  completedAt: null,
+  paymentMethod: onlinePaymentMethod,
+});
+
+const subscriptionsMock = (subscriptions: FullSubscriptionFragment[]) => ({
+  request: {
+    query: SubscriptionsDocument,
+  },
+  result: {
+    data: {
+      userSubscriptions: subscriptions,
+    },
+  },
+});
+
+const noInvoicesMock = {
+  request: {
+    query: InvoicesDocument,
+  },
+  result: {
+    data: {
+      userInvoices: [],
+    },
+  },
+};
+
+export const ChangePaymentMethod: StoryObj = {
+  ...Default,
+  parameters: {
+    apolloClient: {
+      mocks: [
+        subscriptionsMock([changeableSubscription]),
+        noInvoicesMock,
+        {
+          request: {
+            query: ChangeSubscriptionPaymentMethodDocument,
+            variables: () => true,
+          },
+          result: {
+            data: {
+              changeSubscriptionPaymentMethod: {
+                __typename: 'StartedSubscriptionPaymentMethodChange',
+                change: {
+                  ...pendingChange(PaymentMethodChangeState.Completed),
+                  kind: PaymentMethodChangeKind.Immediate,
+                },
+                intentSecret: null,
+                paymentProviderID: 'bexio',
+              },
+            },
+          },
+        },
+        subscriptionsMock([
+          { ...changeableSubscription, paymentMethod: onlinePaymentMethod },
+        ]),
+      ],
+    },
+  },
+};
+
+export const PaymentMethodChangePending: StoryObj = {
+  ...Default,
+  parameters: {
+    apolloClient: {
+      mocks: [
+        subscriptionsMock([
+          {
+            ...changeableSubscription,
+            pendingPaymentMethodChange: pendingChange(),
+          },
+        ]),
+        noInvoicesMock,
+        {
+          request: {
+            query: CheckSubscriptionPaymentMethodChangeDocument,
+            variables: { id: 'change-1' },
+          },
+          result: {
+            data: {
+              checkSubscriptionPaymentMethodChange: pendingChange(),
+            },
+          },
+        },
+        {
+          request: {
+            query: CancelSubscriptionPaymentMethodChangeDocument,
+            variables: { id: 'change-1' },
+          },
+          result: {
+            data: {
+              cancelSubscriptionPaymentMethodChange: pendingChange(
+                PaymentMethodChangeState.Canceled
+              ),
+            },
+          },
+        },
+        subscriptionsMock([changeableSubscription]),
+      ],
+    },
+  },
+};
+
+export const PaymentMethodChangeCompletedMeanwhile: StoryObj = {
+  ...Default,
+  parameters: {
+    apolloClient: {
+      mocks: [
+        subscriptionsMock([
+          {
+            ...changeableSubscription,
+            pendingPaymentMethodChange: pendingChange(),
+          },
+        ]),
+        noInvoicesMock,
+        {
+          request: {
+            query: CheckSubscriptionPaymentMethodChangeDocument,
+            variables: { id: 'change-1' },
+          },
+          result: {
+            data: {
+              checkSubscriptionPaymentMethodChange: pendingChange(
+                PaymentMethodChangeState.Completed
+              ),
+            },
+          },
+        },
+        subscriptionsMock([
+          { ...changeableSubscription, paymentMethod: onlinePaymentMethod },
+        ]),
       ],
     },
   },

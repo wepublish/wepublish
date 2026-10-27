@@ -889,6 +889,11 @@ mock) turn the race into a test that fails every time.
 Pinned by `subscription-list-container.spec.tsx` ("should keep the list when
 the invoices arrive after the subscriptions").
 
+The top-level `variableMatcher` of Apollo 3 is silently ignored in Apollo 4:
+match any variables with `request: { query, variables: () => true }`. A mock
+that never matches fails the call, and a spec can still pass when the error
+path ends up rendering the same thing (2026-10-23, `ChangePaymentMethod`).
+
 ---
 
 ### ⚠️ `theme.palette` is the light scheme, frozen
