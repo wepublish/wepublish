@@ -4,7 +4,8 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
+import { PublicContentCacheModule } from '@wepublish/public-content-cache/api';
 import {
   HOT_AND_TRENDING_DATA_SOURCE,
   HotAndTrendingResolver,
@@ -77,7 +78,8 @@ describe('HotAndTrendingResolver anonymous answers', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GraphqlResponseCacheModule,
+        NamespacedCacheTestingModule.forRoot(),
+        PublicContentCacheModule,
         GraphQLModule.forRoot<ApolloDriverConfig>({
           driver: ApolloDriver,
           autoSchemaFile: true,

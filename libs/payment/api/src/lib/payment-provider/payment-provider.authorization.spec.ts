@@ -1,5 +1,8 @@
 import { Currency, PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  type NamespacedCache,
+  type NamespaceResets,
+} from '@wepublish/kv-ttl-cache/api';
 import {
   BasePaymentProvider,
   PaymentProviderProps,
@@ -30,11 +33,12 @@ describe('BasePaymentProvider authorization defaults', () => {
     findUnique: vi.fn(),
     update: vi.fn(),
   };
-  const kv = { resetNamespace: vi.fn() };
+  const resets = { reset: vi.fn() } satisfies Pick<NamespaceResets, 'reset'>;
   const provider = new PlainPaymentProvider({
     id: 'plain',
     prisma: { user } as unknown as PrismaClient,
-    kv: kv as unknown as KvTtlCacheService,
+    kv: {} as NamespacedCache,
+    resets,
   });
 
   it('does not support authorizing without a charge', () => {

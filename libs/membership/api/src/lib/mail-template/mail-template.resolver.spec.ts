@@ -20,6 +20,7 @@ import {
   registerPaymentMethodModule,
 } from '../testing/module-registrars';
 import { PaymentsModule } from '@wepublish/payment/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 
 const mailTemplatesQuery = `
   query MailTemplates {
@@ -102,6 +103,7 @@ const mailTemplateServiceMock = {
       path: '/',
     }),
     PrismaModule,
+    NamespacedCacheTestingModule.forRoot(),
     registerMailsModule(),
     registerPaymentMethodModule(),
     PaymentsModule,

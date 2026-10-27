@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { PrismaModule } from '@wepublish/nest-modules';
@@ -9,7 +8,7 @@ import { AuditLogResolver } from './audit-log.resolver';
 import { AuditLogService } from './audit-log.service';
 
 @Module({
-  imports: [PrismaModule, ConfigModule, KvTtlCacheModule],
+  imports: [PrismaModule, ConfigModule],
   providers: [
     AuditLogService,
     AuditLogResolver,

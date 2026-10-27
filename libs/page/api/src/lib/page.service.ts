@@ -1,9 +1,9 @@
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   PublicContentCacheInvalidator,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import {
   BadRequestException,
   Injectable,
@@ -33,7 +33,7 @@ export class PageService {
   constructor(
     private prisma: PrismaClient,
     private publicContentCache: PublicContentCacheInvalidator,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   @PrimeDataLoader(PageDataloaderService)

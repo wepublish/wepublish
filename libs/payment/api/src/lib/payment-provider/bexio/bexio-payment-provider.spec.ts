@@ -5,7 +5,10 @@ import {
   PaymentPeriodicity,
   PaymentState,
 } from '@prisma/client';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { CreatePaymentIntentProps } from '../payment-provider';
 
 vi.mock('axios');
@@ -95,14 +98,14 @@ vi.mock('bexio', () => {
 describe('BexioPaymentProvider', () => {
   let mockProps;
   let bexioPaymentProvider;
-  let kvMock;
+  let testing: NamespacedCacheTesting;
 
   beforeEach(async () => {
-    kvMock = createKvMock();
-    await kvMock.setNs(
+    testing = await createNamespacedCacheTesting();
+    await testing.cache.setNs(
       'settings:paymentprovider',
       'bexio',
-      JSON.stringify({
+      {
         id: 'bexio',
         type: 'bexio',
         name: 'Bexio',
@@ -122,7 +125,8 @@ describe('BexioPaymentProvider', () => {
         bexio_invoiceMailSubjectRenewalMembership: 'Subject2',
         bexio_invoiceMailBodyRenewalMembership: 'Body2',
         bexio_markInvoiceAsOpen: true,
-      })
+      },
+      60
     );
     mockProps = {
       id: 'bexio',
@@ -134,11 +138,14 @@ describe('BexioPaymentProvider', () => {
           findUnique: mockFindUnique,
         },
       } as any,
-      kv: kvMock,
+      kv: testing.cache,
+      resets: testing.resets,
     };
 
     bexioPaymentProvider = new BexioPaymentProvider(mockProps);
   });
+
+  afterEach(() => testing.close());
 
   describe('when Bexio refuses', () => {
     const unauthorized = { code: 401, message: { message: 'Unauthorized' } };

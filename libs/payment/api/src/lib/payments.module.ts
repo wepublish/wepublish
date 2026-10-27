@@ -1,6 +1,5 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { PaymentsService } from './payments.service';
 
 import { PaymentDataloader } from './payment.dataloader';
@@ -14,7 +13,7 @@ import { InvoicePaidNotifier } from './invoice-paid.listener';
 import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
 
 @Module({
-  imports: [PrismaModule, PaymentMethodModule, KvTtlCacheModule],
+  imports: [PrismaModule, PaymentMethodModule],
   providers: [
     PaymentsService,
     PaymentDataloader,

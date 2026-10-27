@@ -8,16 +8,18 @@ import {
 } from './banner.model';
 import { PaginationArgs } from './pagination.model';
 import { findIndex, sortBy } from 'ramda';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-
-const CACHE_NAMESPACE = 'banners';
-const CACHE_TTL_SECONDS = 300;
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
+import {
+  BANNER_CACHE_NAMESPACE,
+  BANNER_CACHE_TTL_SECONDS,
+} from './banner-cache';
 
 @Injectable()
 export class BannerService {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache,
+    private resets: NamespaceResets
   ) {}
 
   async findOne(id: string) {
@@ -37,10 +39,10 @@ export class BannerService {
 
   async findFirst(args: PrimaryBannerArgs) {
     const { banner } = await this.kv.getOrLoadNs(
-      CACHE_NAMESPACE,
+      BANNER_CACHE_NAMESPACE,
       `primary:${JSON.stringify(args)}`,
       async () => ({ banner: (await this.loadPrimaryBanner(args)) ?? null }),
-      CACHE_TTL_SECONDS
+      BANNER_CACHE_TTL_SECONDS
     );
 
     return banner ?? undefined;
@@ -151,7 +153,7 @@ export class BannerService {
         },
       },
     });
-    await this.kv.resetNamespace(CACHE_NAMESPACE);
+    await this.resets.reset(BANNER_CACHE_NAMESPACE);
 
     return banner;
   }
@@ -176,7 +178,7 @@ export class BannerService {
         },
       },
     });
-    await this.kv.resetNamespace(CACHE_NAMESPACE);
+    await this.resets.reset(BANNER_CACHE_NAMESPACE);
 
     return banner;
   }
@@ -187,6 +189,6 @@ export class BannerService {
         id,
       },
     });
-    await this.kv.resetNamespace(CACHE_NAMESPACE);
+    await this.resets.reset(BANNER_CACHE_NAMESPACE);
   }
 }

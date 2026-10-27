@@ -21,6 +21,7 @@ async function bootstrap() {
   const nestApp = await NestFactory.create(AppModule, {
     bodyParser: false,
   });
+  nestApp.enableShutdownHooks();
   nestApp.enableCors({
     origin: true,
     credentials: true,

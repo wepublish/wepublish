@@ -23,7 +23,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { SESSION_CACHE_NAMESPACE } from '@wepublish/authentication/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
@@ -54,7 +54,7 @@ export class PaymentsService {
     @Inject(PAYMENT_METHOD_CONFIG)
     private config: PaymentMethodConfig,
     private invoicePaidNotifier: InvoicePaidNotifier,
-    private kv: KvTtlCacheService
+    private resets: NamespaceResets
   ) {}
 
   getProviders() {
@@ -117,7 +117,7 @@ export class PaymentsService {
 
     await this.prisma.$transaction(updates);
     // sessions carry the customers
-    await this.kv.resetNamespace(SESSION_CACHE_NAMESPACE);
+    await this.resets.reset(SESSION_CACHE_NAMESPACE);
 
     return updates.length;
   }
