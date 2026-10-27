@@ -441,5 +441,61 @@
     "next": "Image suivante",
     "fullscreen": "Plein écran",
     "exitFullscreen": "Quitter le plein écran"
+  },
+  "subscriptionHistory": {
+    "title": "Abonnements et factures",
+    "plan": "Abonnement",
+    "state": "Statut",
+    "startsAt": "Début",
+    "paidUntil": "Payé jusqu'au",
+    "amount": "Montant",
+    "amountPerPeriod": "{amount} {periodicity, select, monthly {par mois} quarterly {par trimestre} biannual {par semestre} yearly {par an} biennial {tous les 2 ans} lifetime {unique} other {}}",
+    "paymentMethod": "Moyen de paiement",
+    "renewal": "Renouvellement",
+    "renews": "Automatique",
+    "ends": "Se termine",
+    "showInvoices": "Afficher les factures",
+    "hideInvoices": "Masquer les factures",
+    "ended": "Abonnements terminés ({count})",
+    "noSubscriptions": "Tu n'as pas encore d'abonnement.",
+    "invoice": "Facture",
+    "createdAt": "Créée le",
+    "dueAt": "Échéance",
+    "total": "Montant",
+    "noInvoices": "Pas encore de factures",
+    "allInvoices": "Toutes les factures ({count})",
+    "showCanceled": "Afficher les factures annulées ({count})",
+    "hideCanceled": "Masquer les factures annulées",
+    "states": {
+      "active": "Actif",
+      "planned": "Planifié",
+      "unpaid": "Non payé",
+      "expired": "Expiré",
+      "deactivated": "Résilié"
+    },
+    "invoiceStates": {
+      "paid": "Payée le {date}",
+      "canceled": "Annulée le {date}",
+      "unpaid": "Ouverte"
+    },
+    "endsOn": "au {date}",
+    "invoiceStateNames": {
+      "paid": "Payée",
+      "canceled": "Annulée",
+      "unpaid": "Ouverte"
+    },
+    "action": "Action",
+    "edit": "Modifier l'abonnement"
+  },
+  "subscriptionEdit": {
+    "title": "Modifier l'abonnement",
+    "sections": {
+      "plan": "Abonnement",
+      "payment": "Paiement",
+      "renewal": "Renouvellement & résiliation",
+      "invoices": "Factures"
+    },
+    "upgrade": "Passer à un abonnement supérieur",
+    "paymentMethodNotChangeable": "Le moyen de paiement de cet abonnement ne peut pas être modifié en ligne."
   }
 }

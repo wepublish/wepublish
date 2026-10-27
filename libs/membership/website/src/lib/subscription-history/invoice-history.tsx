@@ -1,0 +1,414 @@
+import styled from '@emotion/styled';
+import { Skeleton, TableRow } from '@mui/material';
+import {
+  getInvoiceState,
+  InvoiceStatusIcon,
+  isInvoiceOpen,
+} from '@wepublish/ui';
+import { FullInvoiceFragment } from '@wepublish/website/api';
+import {
+  BuilderInvoiceListProps,
+  useAsyncAction,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { ReactNode, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdSubdirectoryArrowRight } from 'react-icons/md';
+
+import { formatCurrency } from '../formatters/format-currency';
+import {
+  canPayInvoice,
+  isBexio,
+  isPayrexxSubscription,
+  isSepa,
+} from '../invoice-list/invoice-list';
+import {
+  HISTORY_COLUMNS,
+  HISTORY_COLUMNS_SHOWN,
+  HISTORY_STACKED,
+  PLAN_COLUMN_WIDTH,
+  PLAN_PADDING,
+  HistoryAmount,
+  HistoryArrowCell,
+  HistoryCell,
+  HistoryPlanCell,
+  HistoryState,
+  HistoryStateCell,
+} from './history-table';
+
+/** Labels the invoice rows of one subscription, in its columns. */
+export const InvoiceHistoryHeaderRow = styled(TableRow)`
+  && > th {
+    background-color: ${({ theme }) => theme.palette.grey[50]};
+    color: ${({ theme }) => theme.palette.text.secondary};
+    font-size: 0.875em;
+    font-weight: 600;
+    white-space: nowrap;
+    hyphens: manual;
+  }
+
+  // nested: the arrow column stays outside the invoices' block
+  &&[data-nested='true'] > th:first-of-type {
+    background-color: transparent;
+    border-bottom: none;
+  }
+
+  // the block starts 8px before the invoice label, which stays in line with
+  // the plan column's; its line starts there too
+  &&[data-nested='true'] > th:nth-of-type(2) {
+    border-bottom: none;
+    background:
+      linear-gradient(
+          ${({ theme }) => theme.palette.divider},
+          ${({ theme }) => theme.palette.divider}
+        )
+        ${({ theme }) => theme.spacing(PLAN_PADDING - 1)} 100% /
+        calc(100% - ${({ theme }) => theme.spacing(PLAN_PADDING - 1)}) 1px
+        no-repeat,
+      linear-gradient(
+        to right,
+        transparent ${({ theme }) => theme.spacing(PLAN_PADDING - 1)},
+        ${({ theme }) => theme.palette.grey[50]}
+          ${({ theme }) => theme.spacing(PLAN_PADDING - 1)}
+      );
+  }
+
+  // on narrow containers every cell carries its own label
+  ${HISTORY_STACKED} {
+    && {
+      display: none;
+    }
+  }
+`;
+
+/** Keeps the expand column of the subscription rows free. */
+export const InvoiceHistorySpacerCell = styled(HistoryArrowCell)`
+  ${HISTORY_STACKED} {
+    && {
+      display: none;
+    }
+  }
+`;
+
+const NESTED_ICON_SIZE = 16;
+const NESTED_ICON_GAP = 2.5; // theme spacing units
+
+/**
+ * The invoice column: label and values start where the plan column's do; the
+ * arrow hangs into the free column in front. The table's narrow layout
+ * replaces the padding.
+ */
+export const InvoiceHistoryIndentedCell = HistoryPlanCell;
+
+/** Like the editor's user view: the arrow hangs in front of the invoice. */
+export const InvoiceHistoryNested = styled('span')`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(NESTED_ICON_GAP)};
+
+  svg {
+    flex-shrink: 0;
+    color: ${({ theme }) => theme.palette.text.secondary};
+    font-size: ${NESTED_ICON_SIZE}px;
+  }
+
+  ${HISTORY_COLUMNS_SHOWN} {
+    position: relative;
+
+    svg {
+      position: absolute;
+      left: calc(
+        -${NESTED_ICON_SIZE}px -
+          ${({ theme }) => theme.spacing(NESTED_ICON_GAP)}
+      );
+    }
+  }
+`;
+
+/** Cut short where it is longer than the column; the full label on hover. */
+export const InvoiceHistoryLabel = styled('span')`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  // the column's width without its padding (cells default to 2 units right)
+  ${HISTORY_COLUMNS_SHOWN} {
+    max-width: calc(
+      ${PLAN_COLUMN_WIDTH} - ${({ theme }) => theme.spacing(PLAN_PADDING + 2)}
+    );
+  }
+`;
+
+const time = (date: string) => new Date(date).getTime();
+
+/** How many invoices a subscription shows in the profile's table. */
+export const LATEST_INVOICES = 2;
+
+type InvoiceHistoryRowProps = {
+  invoice: FullInvoiceFragment;
+  onPay: BuilderInvoiceListProps['onPay'];
+  nested: boolean;
+};
+
+function InvoiceHistoryRow({ invoice, onPay, nested }: InvoiceHistoryRowProps) {
+  const {
+    meta: { locale },
+    elements: { Button, Alert },
+    date,
+  } = useWebsiteBuilder();
+  const { t } = useTranslation();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error>();
+  const callAction = useAsyncAction(setLoading, setError);
+
+  const state = getInvoiceState(invoice);
+  const stateLabel = t(`subscriptionHistory.invoiceStates.${state}`, {
+    date: date.format(
+      new Date(invoice.paidAt ?? invoice.canceledAt ?? 0),
+      false
+    ),
+  });
+  const currency = invoice.subscription?.memberPlan.currency;
+  const paymentMethodId = invoice.subscription?.paymentMethod.id;
+  const payable = canPayInvoice(invoice) && !!paymentMethodId;
+
+  return (
+    <TableRow>
+      {nested ?
+        <>
+          <InvoiceHistorySpacerCell data-label="" />
+
+          <InvoiceHistoryIndentedCell
+            data-label={t('subscriptionHistory.invoice')}
+          >
+            <InvoiceHistoryNested>
+              <MdSubdirectoryArrowRight aria-hidden />
+              <InvoiceHistoryLabel title={invoice.description ?? invoice.id}>
+                {invoice.description ?? invoice.id}
+              </InvoiceHistoryLabel>
+            </InvoiceHistoryNested>
+          </InvoiceHistoryIndentedCell>
+
+          {/* under the subscription's action */}
+          <InvoiceHistorySpacerCell data-label="" />
+        </>
+      : <HistoryCell data-label={t('subscriptionHistory.invoice')}>
+          {invoice.description ?? invoice.id}
+        </HistoryCell>
+      }
+
+      <HistoryStateCell data-label={t('subscriptionHistory.state')}>
+        {/* the date of the state on hovering the icon */}
+        <HistoryState>
+          <InvoiceStatusIcon
+            status={state}
+            title={stateLabel}
+          />
+          {t(`subscriptionHistory.invoiceStateNames.${state}`)}
+        </HistoryState>
+      </HistoryStateCell>
+
+      <HistoryCell data-label={t('subscriptionHistory.createdAt')}>
+        <time
+          suppressHydrationWarning
+          dateTime={invoice.createdAt}
+        >
+          {date.format(new Date(invoice.createdAt), false)}
+        </time>
+      </HistoryCell>
+
+      <HistoryCell data-label={t('subscriptionHistory.dueAt')}>
+        {!isSepa(invoice) && (
+          <time
+            suppressHydrationWarning
+            dateTime={invoice.dueAt}
+          >
+            {date.format(new Date(invoice.dueAt), false)}
+          </time>
+        )}
+      </HistoryCell>
+
+      <HistoryCell data-label={t('subscriptionHistory.total')}>
+        <HistoryAmount>
+          {currency ?
+            formatCurrency(invoice.total / 100, currency, locale)
+          : (invoice.total / 100).toFixed(2)}
+        </HistoryAmount>
+      </HistoryCell>
+
+      {/* under the subscription's payment method and renewal */}
+      <HistoryCell
+        colSpan={nested ? 2 : 1}
+        data-label=""
+      >
+        {payable && (
+          <Button
+            size="small"
+            disabled={loading}
+            onClick={callAction(async () =>
+              onPay?.(invoice.id, paymentMethodId)
+            )}
+          >
+            {t('invoice.payNow')}
+          </Button>
+        )}
+
+        {state === 'unpaid' && isBexio(invoice) && t('invoice.bexioWarning')}
+        {state === 'unpaid' && isSepa(invoice) && t('invoice.sepaWarning')}
+        {payable && isPayrexxSubscription(invoice) && (
+          <Alert severity="warning">{t('invoice.payrexxWarning')}</Alert>
+        )}
+        {error && <Alert severity="error">{error.message}</Alert>}
+      </HistoryCell>
+    </TableRow>
+  );
+}
+
+/**
+ * A subscription's invoices as rows of the subscription history's table, in
+ * its columns: invoice under subscription, status under status, created under
+ * start, due under paid-until, amount under amount. Newest due first;
+ * cancelled ones (often left over from imports or replaced invoices) only on
+ * request.
+ */
+export type InvoiceHistoryProps = BuilderInvoiceListProps & {
+  /** Below a subscription row of the history (default), or on its own. */
+  nested?: boolean;
+  /**
+   * Shows only the latest invoices, plus older open ones so they can still be
+   * paid, and links here for all of them (instead of the cancelled toggle).
+   */
+  allInvoicesUrl?: string;
+};
+
+export function InvoiceHistory({
+  data,
+  loading,
+  error,
+  onPay,
+  nested = true,
+  allInvoicesUrl,
+}: InvoiceHistoryProps) {
+  const {
+    elements: { Alert, Button, Link },
+  } = useWebsiteBuilder();
+  const { t } = useTranslation();
+  const [showCanceled, setShowCanceled] = useState(false);
+
+  const invoices = useMemo(
+    () =>
+      [...(data?.userInvoices ?? [])].sort(
+        (a, b) => time(b.dueAt) - time(a.dueAt)
+      ),
+    [data]
+  );
+  const uncanceled = invoices.filter(
+    invoice => getInvoiceState(invoice) !== 'canceled'
+  );
+  const canceledCount = invoices.length - uncanceled.length;
+  const shown =
+    allInvoicesUrl ?
+      uncanceled.filter(
+        (invoice, index) => index < LATEST_INVOICES || isInvoiceOpen(invoice)
+      )
+    : showCanceled ? invoices
+    : uncanceled;
+
+  const fullRow = (content: ReactNode) => (
+    <TableRow>
+      <HistoryCell
+        colSpan={HISTORY_COLUMNS}
+        data-label=""
+      >
+        {content}
+      </HistoryCell>
+    </TableRow>
+  );
+
+  if (loading && !invoices.length) {
+    return fullRow(<Skeleton variant="rectangular" />);
+  }
+
+  if (error) {
+    return fullRow(<Alert severity="error">{error.message}</Alert>);
+  }
+
+  if (!invoices.length) {
+    return fullRow(t('subscriptionHistory.noInvoices'));
+  }
+
+  return (
+    <>
+      {!!shown.length && (
+        <InvoiceHistoryHeaderRow data-nested={nested}>
+          {nested ?
+            <>
+              <HistoryArrowCell component="th" />
+              <InvoiceHistoryIndentedCell component="th">
+                {t('subscriptionHistory.invoice')}
+              </InvoiceHistoryIndentedCell>
+              <HistoryCell component="th" />
+            </>
+          : <HistoryCell component="th">
+              {t('subscriptionHistory.invoice')}
+            </HistoryCell>
+          }
+          <HistoryStateCell component="th">
+            {t('subscriptionHistory.state')}
+          </HistoryStateCell>
+          <HistoryCell component="th">
+            {t('subscriptionHistory.createdAt')}
+          </HistoryCell>
+          <HistoryCell component="th">
+            {t('subscriptionHistory.dueAt')}
+          </HistoryCell>
+          <HistoryCell component="th">
+            {t('subscriptionHistory.total')}
+          </HistoryCell>
+          <HistoryCell
+            component="th"
+            colSpan={nested ? 2 : 1}
+          />
+        </InvoiceHistoryHeaderRow>
+      )}
+
+      {shown.map(invoice => (
+        <InvoiceHistoryRow
+          key={invoice.id}
+          invoice={invoice}
+          onPay={onPay}
+          nested={nested}
+        />
+      ))}
+
+      {allInvoicesUrl ?
+        shown.length < invoices.length &&
+        fullRow(
+          <Link href={allInvoicesUrl}>
+            {t('subscriptionHistory.allInvoices', { count: invoices.length })}
+          </Link>
+        )
+      : !!canceledCount &&
+        fullRow(
+          <Button
+            variant="text"
+            size="small"
+            onClick={() => setShowCanceled(show => !show)}
+          >
+            {showCanceled ?
+              t('subscriptionHistory.hideCanceled')
+            : t('subscriptionHistory.showCanceled', { count: canceledCount })}
+          </Button>
+        )
+      }
+    </>
+  );
+}
+
+/** For `InvoiceListContainer` on a subscription's own page. */
+export const InvoiceHistoryStandalone = (props: BuilderInvoiceListProps) => (
+  <InvoiceHistory
+    {...props}
+    nested={false}
+  />
+);

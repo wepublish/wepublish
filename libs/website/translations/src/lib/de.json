@@ -441,5 +441,61 @@
     "next": "Nächstes Bild",
     "fullscreen": "Vollbild",
     "exitFullscreen": "Vollbild beenden"
+  },
+  "subscriptionHistory": {
+    "title": "Abos und Rechnungen",
+    "plan": "Abo",
+    "state": "Status",
+    "startsAt": "Beginn",
+    "paidUntil": "Bezahlt bis",
+    "amount": "Betrag",
+    "amountPerPeriod": "{amount} {periodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} lifetime {einmalig} other {}}",
+    "paymentMethod": "Zahlungsmethode",
+    "renewal": "Verlängerung",
+    "renews": "Automatisch",
+    "ends": "Endet",
+    "showInvoices": "Rechnungen anzeigen",
+    "hideInvoices": "Rechnungen ausblenden",
+    "ended": "Beendete Abos ({count})",
+    "noSubscriptions": "Du hast noch kein Abo.",
+    "invoice": "Rechnung",
+    "createdAt": "Erstellt am",
+    "dueAt": "Fällig am",
+    "total": "Betrag",
+    "noInvoices": "Noch keine Rechnungen",
+    "allInvoices": "Alle Rechnungen ({count})",
+    "showCanceled": "Stornierte Rechnungen anzeigen ({count})",
+    "hideCanceled": "Stornierte Rechnungen ausblenden",
+    "states": {
+      "active": "Aktiv",
+      "planned": "Geplant",
+      "unpaid": "Unbezahlt",
+      "expired": "Abgelaufen",
+      "deactivated": "Gekündigt"
+    },
+    "invoiceStates": {
+      "paid": "Bezahlt am {date}",
+      "canceled": "Storniert am {date}",
+      "unpaid": "Offen"
+    },
+    "endsOn": "per {date}",
+    "invoiceStateNames": {
+      "paid": "Bezahlt",
+      "canceled": "Storniert",
+      "unpaid": "Offen"
+    },
+    "action": "Aktion",
+    "edit": "Abo bearbeiten"
+  },
+  "subscriptionEdit": {
+    "title": "Abo bearbeiten",
+    "sections": {
+      "plan": "Abo",
+      "payment": "Zahlung",
+      "renewal": "Verlängerung & Kündigung",
+      "invoices": "Rechnungen"
+    },
+    "upgrade": "Abo upgraden",
+    "paymentMethodNotChangeable": "Die Zahlungsmethode dieses Abos kann online nicht geändert werden."
   }
 }

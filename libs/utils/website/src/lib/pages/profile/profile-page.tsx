@@ -1,33 +1,22 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { css } from '@mui/material';
 import { useApolloClient } from '@apollo/client/react';
 import { ContentWrapper } from '@wepublish/content/website';
-import {
-  InvoiceListContainer,
-  InvoiceListItemWrapper,
-  SubscriptionListContainer,
-  SubscriptionListItemContent,
-  SubscriptionListItemWrapper,
-  isSubscriptionActive,
-  isSubscriptionDeactivated,
-  useHasUnpaidInvoices,
-} from '@wepublish/membership/website';
 import {
   PersonalDataFormContainer,
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import {
   ConfirmEmailChangeDocument,
+  FeaturesDocument,
   InvoicesDocument,
   MeDocument,
   NavigationListDocument,
-  ProductType,
   SubscriptionsDocument,
   addClientCacheToProps,
   getApiClient,
 } from '@wepublish/website/api';
-import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps, useEffect } from 'react';
@@ -38,44 +27,7 @@ import { ssrAuthLink } from '../../auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
 
 import { getApiUrl } from '../../api-url';
-
-const SubscriptionsWrapper = styled('div')`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing(3)};
-
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('md')} {
-      flex-wrap: nowrap;
-      gap: ${theme.spacing(10)};
-    }
-  `}
-`;
-const SubscriptionListWrapper = styled('div')`
-  display: flex;
-  flex-flow: column;
-  width: 100%;
-  gap: ${({ theme }) => theme.spacing(2)};
-
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('md')} {
-      width: 50%;
-    }
-  `}
-`;
-
-const UnpaidInvoiceListContainer = styled(InvoiceListContainer)`
-  ${InvoiceListItemWrapper} {
-    border-width: 4px;
-    border-color: ${({ theme }) => theme.palette.error.main};
-  }
-`;
-
-const DeactivatedSubscriptions = styled('div')`
-  display: grid;
-  justify-content: center;
-`;
+import { ProfileSubscriptions } from './profile-subscriptions';
 
 export const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({ theme }) => theme.spacing(2)};
@@ -116,26 +68,6 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
     }
   }, [router.query.confirmEmailChange, confirmEmailChange, router, client]);
 
-  const { data: subscriptonData } = useQuery(SubscriptionsDocument, {
-    fetchPolicy: 'cache-only',
-  });
-
-  const hasDeactivatedSubscriptions = subscriptonData?.userSubscriptions.some(
-    isSubscriptionDeactivated
-  );
-  const hasActiveSubscriptions = subscriptonData?.userSubscriptions.some(
-    subscription =>
-      isSubscriptionActive(subscription) &&
-      subscription.memberPlan.productType === ProductType.Subscription
-  );
-  const hasActiveDonations = subscriptonData?.userSubscriptions.some(
-    subscription =>
-      isSubscriptionActive(subscription) &&
-      subscription.memberPlan.productType === ProductType.Donation
-  );
-
-  const hasUnpaidInvoices = useHasUnpaidInvoices();
-
   return (
     <>
       {confirmData && (
@@ -144,85 +76,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
 
       {confirmError && <Alert severity="error">{confirmError.message}</Alert>}
 
-      <SubscriptionsWrapper className={className}>
-        {hasUnpaidInvoices && (
-          <SubscriptionListWrapper>
-            <H4 component={'h1'}>{t('invoice.openInvoices')}</H4>
-
-            <UnpaidInvoiceListContainer
-              filter={invoices =>
-                invoices.filter(
-                  invoice =>
-                    invoice.subscription &&
-                    !invoice.canceledAt &&
-                    !invoice.paidAt
-                )
-              }
-            />
-          </SubscriptionListWrapper>
-        )}
-
-        <SubscriptionListWrapper>
-          <H4 component={'h1'}>
-            {t('user.activeSubscriptions', {
-              type: ProductType.Subscription,
-            })}
-          </H4>
-
-          <SubscriptionListContainer
-            filter={subscriptions =>
-              subscriptions.filter(
-                subscription =>
-                  isSubscriptionActive(subscription) &&
-                  subscription.memberPlan.productType ===
-                    ProductType.Subscription
-              )
-            }
-          />
-
-          {hasActiveDonations && (
-            <>
-              <H4 component={'h2'}>
-                {t('user.activeSubscriptions', {
-                  type: ProductType.Donation,
-                })}
-              </H4>
-
-              <SubscriptionListContainer
-                filter={subscriptions =>
-                  subscriptions.filter(
-                    subscription =>
-                      isSubscriptionActive(subscription) &&
-                      subscription.memberPlan.productType ===
-                        ProductType.Donation
-                  )
-                }
-              />
-            </>
-          )}
-
-          {hasActiveSubscriptions && (
-            <SubscriptionListItemWrapper>
-              <SubscriptionListItemContent>
-                <Button
-                  LinkComponent={Link}
-                  href={'/mitmachen'}
-                >
-                  {t('user.subscribeAnother')}
-                </Button>
-              </SubscriptionListItemContent>
-            </SubscriptionListItemWrapper>
-          )}
-
-          {hasDeactivatedSubscriptions && (
-            <DeactivatedSubscriptions>
-              <Link href="/profile/subscription/deactivated">
-                {t('user.viewCancelledSubscriptions')}
-              </Link>
-            </DeactivatedSubscriptions>
-          )}
-        </SubscriptionListWrapper>
-      </SubscriptionsWrapper>
+      <ProfileSubscriptions className={className} />
 
       <ProfileWrapper className={className}>
         <H4 component={'h1'}>{t('navbar.profile')}</H4>
@@ -266,6 +120,10 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
       }),
       client.query({
         query: SubscriptionsDocument,
+      }),
+      // tells ProfileSubscriptions which layout this medium has
+      client.query({
+        query: FeaturesDocument,
       }),
     ]);
   }
