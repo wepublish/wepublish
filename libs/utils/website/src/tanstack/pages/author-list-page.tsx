@@ -1,4 +1,5 @@
 import { ApolloClient } from '@apollo/client';
+import { createServerFn } from '@tanstack/react-start';
 import { useQuery } from '@apollo/client/react';
 import { AuthorListContainer } from '@wepublish/author/website';
 import {
@@ -11,6 +12,7 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
+import { runContentQueries } from '../ssr';
 
 export const DEFAULT_AUTHOR_LIST_TAKE = 25;
 
@@ -34,6 +36,13 @@ export const prefetchAuthorList = (
     query: AuthorListDocument,
     variables: listVariables(page, take),
   });
+
+/** Server-side half of the author index loader. See `runContentQueries`. */
+export const loadAuthorList = createServerFn({ method: 'GET' })
+  .validator((data: { page?: number; take?: number }) => data)
+  .handler(async ({ data }) => ({
+    apollo: await runContentQueries(client => prefetchAuthorList(client, data)),
+  }));
 
 /** `pages/author/index.tsx` */
 export function AuthorListPage({

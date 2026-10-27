@@ -46,7 +46,10 @@ const CACHE_RULES: Array<[RegExp, string]> = [
   [/^\/(login|signup)(\/|$)/, NO_STORE],
   // Search was `getServerSideProps`, i.e. uncached.
   [/^\/search(\/|$)/, NO_STORE],
-  // Server function RPC calls are per-user by definition.
+  // Server functions default to `no-store`: most carry a session. The content
+  // loaders are the exception and say so themselves, by setting their own
+  // `cache-control` (see `runContentQueries`), which the check above honours
+  // before this table is consulted.
   [/^\/_serverFn(\/|$)/, NO_STORE],
   // Hashed build assets.
   [/^\/_build\//, 'public, max-age=31536000, immutable'],

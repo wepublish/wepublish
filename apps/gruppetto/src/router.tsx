@@ -23,7 +23,12 @@ export function getRouter() {
     // (hover/focus) is the closest TanStack equivalent and is what
     // `LinkContext.prefetch` maps onto.
     defaultPreload: 'intent',
-    defaultPreloadStaleTime: 0,
+    // Next's client router kept the `getStaticProps` JSON it had already
+    // fetched. At 0 the hover preload is thrown away on click, so the loader
+    // runs twice per navigation and again on every back-navigation. These
+    // match the 60s ISR window the cache headers in `start.ts` use.
+    defaultPreloadStaleTime: 60_000,
+    defaultStaleTime: 60_000,
     scrollRestoration: true,
     // Reached only for URLs no file route matches. Anything the API answers
     // with a 404 is handled by the route itself so the response can carry both

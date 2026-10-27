@@ -52,7 +52,23 @@ export const createRouterApolloClient = (): ApolloClient => {
     return getApiClient(getApiUrl(), []);
   }
 
-  return getApiClient(getBrowserApiUrl(), [authLink, previewLink]);
+  const client = getApiClient(getBrowserApiUrl(), [authLink, previewLink]);
+
+  // The shared default is `cache-and-network`, which the Next apps needed:
+  // there, a client-side navigation had no data until the component asked for
+  // it. Here the route loader has already run — on the server, through a
+  // server function — and merged the result into this cache, so refetching
+  // every one of those queries from the browser duplicates work the origin
+  // just did and puts the API back in the per-navigation path.
+  client.defaultOptions = {
+    ...client.defaultOptions,
+    watchQuery: {
+      ...client.defaultOptions.watchQuery,
+      fetchPolicy: 'cache-first',
+    },
+  };
+
+  return client;
 };
 
 export type ApolloRouterContext = { apolloClient: ApolloClient };

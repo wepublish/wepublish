@@ -1,4 +1,5 @@
 import { ApolloClient } from '@apollo/client';
+import { createServerFn } from '@tanstack/react-start';
 import { TagContainer } from '@wepublish/tag/website';
 import {
   ArticleListDocument,
@@ -8,6 +9,7 @@ import {
 import { z } from 'zod';
 
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
+import { runContentQueries } from '../ssr';
 
 const take = 25;
 
@@ -15,6 +17,19 @@ const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional().default(1),
   tag: z.string(),
 });
+
+/** Server-side half of the tag loader. See `runContentQueries`. */
+export const loadTag = createServerFn({ method: 'GET' })
+  .validator((data: { tag: string }) => data)
+  .handler(async ({ data }) => {
+    let found = false;
+
+    const apollo = await runContentQueries(async client => {
+      found = !!(await prefetchTag(client, data));
+    });
+
+    return { apollo, found };
+  });
 
 /**
  * TanStack port of `TagPageGetStaticProps`. Returns `null` when the tag does

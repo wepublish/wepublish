@@ -1,5 +1,6 @@
 import { ApolloClient } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
+import { createServerFn } from '@tanstack/react-start';
 import {
   ArticleContainer,
   ArticleListContainer,
@@ -16,6 +17,8 @@ import {
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 
+import { runContentQueries } from '../ssr';
+import { isNotFoundError } from '../prefetch';
 import { useQueryParams } from '../router-hooks';
 
 export type ArticleIdentifier = { slug?: string; id?: string };
@@ -28,6 +31,30 @@ export const prefetchArticle = (
   client.query<ArticleQuery>({
     query: ArticleDocument,
     variables,
+  });
+
+/**
+ * The server-side half of the article route's loader. See `runContentQueries`
+ * for why content goes through a server function at all.
+ */
+export const loadArticle = createServerFn({ method: 'GET' })
+  .validator((data: ArticleIdentifier & { relatedTake?: number }) => data)
+  .handler(async ({ data: { relatedTake, ...identifier } }) => {
+    let notFound = false;
+
+    const apollo = await runContentQueries(async client => {
+      const article = await prefetchArticle(client, identifier);
+
+      notFound = isNotFoundError(article.error);
+
+      if (!notFound) {
+        await prefetchArticleExtras(client, article.data?.article, {
+          relatedTake,
+        });
+      }
+    });
+
+    return { apollo, notFound };
   });
 
 /** Related articles and comments — only fetched once the article resolved. */

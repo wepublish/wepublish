@@ -200,7 +200,7 @@
         "libs/utils/website/src/tanstack/sentry/instrumentation.ts"
       ],
       "@wepublish/utils/website/tanstack/sentry/client": [
-        "libs/utils/website/src/tanstack/sentry/instrumentation.client.ts"
+        "libs/utils/website/src/tanstack/sentry/register-client.ts"
       ],
       "@wepublish/utils/website/next/sentry": [
         "libs/utils/website/src/next/sentry/instrumentation.ts"

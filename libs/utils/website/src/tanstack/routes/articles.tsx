@@ -2,16 +2,15 @@ import { FourOhFourPage } from '../pages/404-page';
 import {
   ArticleListPage,
   DEFAULT_ARTICLE_LIST_TAKE,
-  prefetchArticleList,
+  loadArticleList,
 } from '../pages/article-list-page';
+import { mergeApolloCache } from '../apollo';
 import {
   ArticlePage,
   ArticlePageProps,
-  prefetchArticle,
-  prefetchArticleExtras,
+  loadArticle,
 } from '../pages/article-page';
-import { prefetchTag, TagPage } from '../pages/tag-page';
-import { isNotFoundError } from '../prefetch';
+import { loadTag, TagPage } from '../pages/tag-page';
 import {
   ApolloRouterContext,
   bailOutNotFound,
@@ -27,13 +26,17 @@ export const articleListRoute = ({
   loaderDeps: ({ search: { page } }: { search: { page?: number } }) => ({
     page,
   }),
-  loader: ({
+  loader: async ({
     context: { apolloClient },
     deps: { page },
   }: {
     context: ApolloRouterContext;
     deps: { page?: number };
-  }) => prefetchArticleList(apolloClient, { page, take }),
+  }) => {
+    const { apollo } = await loadArticleList({ data: { page, take } });
+
+    mergeApolloCache(apolloClient, apollo);
+  },
   component: () => (
     <ArticleListPage
       take={take}
@@ -52,17 +55,15 @@ const articleRouteFor =
       context: ApolloRouterContext;
       params: Record<string, string>;
     }) => {
-      const article = await prefetchArticle(context.apolloClient, {
-        [by]: params[by],
+      const { apollo, notFound } = await loadArticle({
+        data: { [by]: params[by], relatedTake: props.relatedTake },
       });
 
-      if (isNotFoundError(article.error)) {
+      mergeApolloCache(context.apolloClient, apollo);
+
+      if (notFound) {
         await bailOutNotFound(context);
       }
-
-      await prefetchArticleExtras(context.apolloClient, article.data?.article, {
-        relatedTake: props.relatedTake,
-      });
     },
     component: () => <ArticlePage {...props} />,
     notFoundComponent: FourOhFourPage,
@@ -84,7 +85,9 @@ export const tagRoute = () => ({
     context: ApolloRouterContext;
     params: { tag: string };
   }) => {
-    const found = await prefetchTag(context.apolloClient, { tag });
+    const { apollo, found } = await loadTag({ data: { tag } });
+
+    mergeApolloCache(context.apolloClient, apollo);
 
     if (!found) {
       await bailOutNotFound(context);
