@@ -1205,7 +1205,27 @@
         "description": "Beschreibung",
         "goodie": "Goodie",
         "status": "Status",
-        "idCopied": "Rechnungs-ID kopiert"
+        "idCopied": "Rechnungs-ID kopiert",
+        "paidAt": "Bezahlt am",
+        "paidVia": "Bezahlt via",
+        "paymentState": "Zahlungsstatus",
+        "manuallyPaidBy": "Als bezahlt markiert von",
+        "canceledAt": "Storniert am",
+        "scheduledDeactivationAt": "Deaktivierung falls unbezahlt",
+        "createdAt": "Erstellt am",
+        "modifiedAt": "Zuletzt geändert",
+        "mail": "Rechnungs-E-Mail",
+        "positions": "Positionen"
+      },
+      "paymentState": {
+        "created": "Erstellt",
+        "submitted": "Übermittelt",
+        "requiresUserAction": "Aktion erforderlich",
+        "processing": "In Bearbeitung",
+        "paid": "Bezahlt",
+        "canceled": "Abgebrochen",
+        "declined": "Abgelehnt",
+        "chargeback": "Rückbuchung"
       }
     },
     "linkPageBreakEditPanel": {

@@ -19,6 +19,12 @@ export class Payment extends HasPaymentMethod {
   id!: string;
 
   @Field()
+  createdAt!: Date;
+
+  @Field()
+  modifiedAt!: Date;
+
+  @Field()
   intentSecret!: string;
 
   @Field(() => PaymentState)

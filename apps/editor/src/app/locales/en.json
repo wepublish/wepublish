@@ -1205,7 +1205,27 @@
         "description": "Description",
         "goodie": "Goodie",
         "status": "Status",
-        "idCopied": "Invoice ID copied"
+        "idCopied": "Invoice ID copied",
+        "paidAt": "Paid on",
+        "paidVia": "Paid via",
+        "paymentState": "Payment status",
+        "manuallyPaidBy": "Marked paid by",
+        "canceledAt": "Canceled on",
+        "scheduledDeactivationAt": "Deactivation if unpaid",
+        "createdAt": "Created on",
+        "modifiedAt": "Last modified",
+        "mail": "Invoice email",
+        "positions": "Items"
+      },
+      "paymentState": {
+        "created": "Created",
+        "submitted": "Submitted",
+        "requiresUserAction": "Action required",
+        "processing": "Processing",
+        "paid": "Paid",
+        "canceled": "Canceled",
+        "declined": "Declined",
+        "chargeback": "Chargeback"
       }
     },
     "linkPageBreakEditPanel": {
