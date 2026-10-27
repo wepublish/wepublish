@@ -279,8 +279,8 @@ function PageEditor() {
   const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     pageData?.page?.draft ||
-      pageData?.page?.published ||
-      pageData?.page?.pending
+    pageData?.page?.published ||
+    pageData?.page?.pending
   );
 
   const [hasChanged, setChanged] = useState(false);

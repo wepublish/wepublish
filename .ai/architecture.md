@@ -120,6 +120,7 @@ Frontend (Apollo Client)
 - Decorators: `@Public()` (no auth), `@CurrentUser()` (inject session), `@Permissions(...)` (RBAC check)
 - Permission constants: `CanCreateArticle`, `CanDeleteArticle`, `CanPublishArticle`, `CanGetArticle`, etc.
 - `@PreviewMode()` for draft content access
+- External apps (`libs/external-apps/api`): the editor mints a 4 h EdDSA JWT per opened app (`createExternalAppToken`, audience = the app's origin) and hands it over in the URL fragment (`#token=…`, never a query parameter: fragments reach no server or log); apps verify it via `GET /external-apps/userinfo` or the JWKS at `/.well-known/jwks.json`
 - API keys (`libs/api-token`, editor «API Keys»): `Authorization: Bearer wep_…`, stored hashed, scopes are permission IDs, they expire (≤ 3 years) and the API announces the expiry in the `wepublish-api-key-expiration` response header. Never send them with the peering user agent: that path only reads peering tokens and refuses the key.
 - External apps (`libs/external-apps`) that read the API bring their own API key with the minimal scopes, kept in the app. `ExternalApps.apiTokenId` records which key, so the Apps dashboard and the app's edit page warn 30 days before it expires and once it is expired or revoked. The key is linkable and its metadata visible only to editors who see it in the API keys list.
 - Per-medium feature toggles (`libs/features`, state from We.Publish One): `@Feature('key')` in the API, `useFeature` / `FeatureControl` in the editor — see [conventions.md](conventions.md#feature-toggles-per-medium)

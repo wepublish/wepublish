@@ -3425,7 +3425,8 @@
       "apps": "Apps",
       "noAppsFound": "No external apps configured.",
       "notFound": "External app not found",
-      "appsInfo": "Shortcuts to external tools that appear on the dashboard under «We.Publish Apps». «Target» decides whether an app opens in a new browser tab or inside the editor. Some websites can't be shown inside the editor – open those in a new tab."
+      "appsInfo": "Shortcuts to external tools that appear on the dashboard under «We.Publish Apps». «Target» decides whether an app opens in a new browser tab or inside the editor. Some websites can't be shown inside the editor – open those in a new tab.",
+      "noToken": "The app could not be opened: no access token was issued."
     },
     "externalAppForm": {
       "apiKey": "API key",
