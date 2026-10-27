@@ -61,7 +61,7 @@ export const InvoiceHistoryHeaderRow = styled(TableRow)`
   // the plan column's; its line below starts there too
   &&[data-nested='true'] > th:nth-of-type(2) {
     position: relative;
-    border-bottom-color: transparent;
+    border-bottom: none;
     background: linear-gradient(
       to right,
       transparent ${({ theme }) => theme.spacing(PLAN_PADDING - 1)},

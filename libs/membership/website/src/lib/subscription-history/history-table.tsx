@@ -236,7 +236,9 @@ export const PLAN_COLUMN_WIDTH = '12.5rem';
 export const PLAN_COLUMN_WIDTH_SHORT = '9.25rem';
 
 export const HistoryPlanCell = styled(HistoryCell)`
-  // in the query, or the narrower padding of the table's cells wins
+  padding-left: ${({ theme }) => theme.spacing(PLAN_PADDING)};
+
+  // again in the query, or the narrower padding of the table's cells wins
   ${HISTORY_COLUMNS_SHOWN} {
     width: ${PLAN_COLUMN_WIDTH};
     padding-left: ${({ theme }) => theme.spacing(PLAN_PADDING)};
