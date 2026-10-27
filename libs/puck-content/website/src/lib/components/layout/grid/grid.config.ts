@@ -26,12 +26,12 @@ export const Grid: ComponentConfig<{
         columns: {
           type: 'columns',
         },
-        ...gapFields,
+        ...gapFields(),
         ...itemsAlignmentFields,
       },
       ai: breakpointsFieldAi({
         columns: columnsSchema,
-        ...gapSchema,
+        ...gapSchema(),
         ...itemsAlignmentSchema,
       }),
     },
@@ -43,8 +43,7 @@ export const Grid: ComponentConfig<{
     layout: {
       xs: {
         columns: columnsPresets[0],
-        columnGap: defaultGap,
-        rowGap: defaultGap,
+        gap: defaultGap,
         alignItems: 'stretch',
         justifyContent: 'start',
       },

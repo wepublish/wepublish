@@ -1,6 +1,4 @@
 import { CSSObject } from '@emotion/react';
-import { SelectField } from '@puckeditor/core';
-import { z } from 'zod/v4';
 
 import {
   AlignmentField,
@@ -21,24 +19,18 @@ export const alignItemsValues: AlignItemsValue[] = [
   'stretch',
 ];
 
-export type JustifyContentValue =
-  | 'start'
-  | 'center'
-  | 'end'
-  | 'space-between'
-  | 'space-around'
-  | 'space-evenly';
+export type JustifyContentValue = Extract<
+  AlignmentValue,
+  'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly'
+>;
 
-export const justifyContentOptions: {
-  label: string;
-  value: JustifyContentValue;
-}[] = [
-  { label: 'Start', value: 'start' },
-  { label: 'Center', value: 'center' },
-  { label: 'End', value: 'end' },
-  { label: 'Space between', value: 'space-between' },
-  { label: 'Space around', value: 'space-around' },
-  { label: 'Space evenly', value: 'space-evenly' },
+export const justifyContentValues: JustifyContentValue[] = [
+  'start',
+  'center',
+  'end',
+  'space-between',
+  'space-around',
+  'space-evenly',
 ];
 
 export type ItemsAlignment = {
@@ -53,7 +45,7 @@ export type ItemsAlignment = {
  */
 export const itemsAlignmentFields: {
   alignItems: AlignmentField;
-  justifyContent: SelectField;
+  justifyContent: AlignmentField;
 } = {
   alignItems: {
     type: 'alignment',
@@ -63,9 +55,11 @@ export const itemsAlignmentFields: {
     ai: alignmentFieldAi(alignItemsValues, 'vertical'),
   },
   justifyContent: {
-    type: 'select',
+    type: 'alignment',
     label: 'Justify content',
-    options: justifyContentOptions,
+    orientation: 'horizontal',
+    alignments: justifyContentValues,
+    ai: alignmentFieldAi(justifyContentValues, 'horizontal'),
   },
 };
 
@@ -73,9 +67,9 @@ export const itemsAlignmentSchema = {
   alignItems: alignmentSchema(alignItemsValues).describe(
     'Vertical alignment of the children within their row'
   ),
-  justifyContent: z
-    .enum(justifyContentOptions.map(({ value }) => value))
-    .describe('Horizontal distribution of the columns along the row'),
+  justifyContent: alignmentSchema(justifyContentValues).describe(
+    'Horizontal distribution of the columns along the row'
+  ),
 };
 
 export const itemsAlignmentStyles = (

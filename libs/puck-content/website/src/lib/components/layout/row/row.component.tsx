@@ -6,10 +6,10 @@ import {
   breakpointsStyles,
   BreakpointsValue,
 } from '@wepublish/puck-content/editor';
-import { gapStyles, GapValue } from '../gap';
+import { GapLayout, gapStyles } from '../gap';
 import { ItemsAlignment, itemsAlignmentStyles } from '../items-alignment';
 
-export type RowLayout = Pick<GapValue, 'columnGap'> & ItemsAlignment;
+export type RowLayout = GapLayout & ItemsAlignment;
 
 export type RowProps = {
   className?: string;

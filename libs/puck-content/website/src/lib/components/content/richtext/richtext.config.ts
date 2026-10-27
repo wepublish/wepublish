@@ -1,5 +1,5 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { mockRichText } from '@wepublish/storybook/mocks';
+import { mockRichText } from '@wepublish/mocks/website';
 import {
   BuilderRichTextBlockProps,
   RichTextBlock,

@@ -7,23 +7,23 @@ import {
 import {
   DatasourceField,
   datasourceFieldAi,
-  DatasourceValue,
+  DatasourcesValue,
 } from '@wepublish/puck-content/editor';
 import { UserFields } from '../types';
 
 export type WithDataSource<Props> = Props & {
-  datasource?: DatasourceValue;
+  datasources?: DatasourcesValue;
 };
 
 export function withDataSource<Props extends DefaultComponentProps>(
   config: Omit<
     ComponentConfig<{
-      props: Omit<Props, 'datasource'>;
+      props: Omit<Props, 'datasources'>;
       fields: UserFields;
     }>,
     'render'
   > & { render: PuckComponent<WithDataSource<Props>> },
-  defaultProps?: DatasourceValue,
+  defaultProps?: DatasourcesValue,
   settings?: Omit<DatasourceField, 'type' | 'ai'>
 ): ComponentConfig<{ props: WithDataSource<Props>; fields: UserFields }> {
   const baseResolveFields = config.resolveFields;
@@ -42,7 +42,7 @@ export function withDataSource<Props extends DefaultComponentProps>(
 
       fields = {
         ...fields,
-        datasource: {
+        datasources: {
           type: 'datasource',
           ai: datasourceFieldAi(settings?.types, settings?.models),
           ...(settings ?? {}),
@@ -62,8 +62,8 @@ export function withDataSource<Props extends DefaultComponentProps>(
 
       const props = { ...((resolved.props ?? {}) as Record<string, unknown>) };
 
-      if (!props.datasource) {
-        props.datasource = defaultProps;
+      if (!props.datasources) {
+        props.datasources = defaultProps ?? {};
       }
 
       return { ...resolved, props };

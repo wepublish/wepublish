@@ -1,178 +1,81 @@
-import { FieldLabel, FieldProps } from '@puckeditor/core';
+import styled from '@emotion/styled';
+import { FieldProps } from '@puckeditor/core';
+import { useTranslation } from 'react-i18next';
 
-import { FieldSelect } from '../field-controls.component';
-import { FieldCheckboxLabel, FieldInput, FieldStack } from '../field-controls';
+import { ColorFieldRender } from '../color/color.component';
+import { FieldToggleGroup, ToggleableField } from '../field-controls.component';
+import { FieldStack } from '../field-controls';
+import { SidesInput } from '../sides/sides.component';
 import {
   BorderField,
-  BorderSide,
-  borderSides,
-  BorderSideValue,
   BorderStyle,
   borderStyles,
   BorderValue,
 } from './border.field';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
-const useBorderLabels = () => {
-  const { t } = useTranslation();
+const LinePreview = styled.span<{ lineStyle: BorderStyle }>`
+  width: 20px;
+  border-top: 2px ${({ lineStyle }) => lineStyle} currentColor;
+`;
 
-  return {
-    all: t('', 'All sides'),
-    top: t('', 'Top'),
-    right: t('', 'Right'),
-    bottom: t('', 'Bottom'),
-    left: t('', 'Left'),
-    width: t('', 'Width'),
-    moreOptions: t('', 'More options'),
-    solid: t('', 'Solid'),
-    dashed: t('', 'Dashed'),
-    dotted: t('', 'Dotted'),
-  };
-};
-
-const sidesEqual = (a?: BorderSideValue, b?: BorderSideValue) => {
-  return a?.width === b?.width && a?.style === b?.style;
-};
-
-const allSidesEqual = (value: BorderValue) => {
-  return (
-    sidesEqual(value.top, value.right) &&
-    sidesEqual(value.right, value.bottom) &&
-    sidesEqual(value.bottom, value.left)
-  );
-};
-
-export type BorderFieldRenderProps = FieldProps<BorderField, BorderValue> & {
+export type BorderFieldRenderProps = FieldProps<
+  BorderField,
+  BorderValue | undefined
+> & {
   name: string;
 };
 
 export const BorderFieldRender = ({
   field,
+  name,
   value,
   onChange,
   readOnly,
 }: BorderFieldRenderProps) => {
-  const labels = useBorderLabels();
+  const { t } = useTranslation();
   const current = value ?? {};
-  const [showMore, setShowMore] = useState(() => !allSidesEqual(current));
-
   const styleLabels: Record<BorderStyle, string> = {
-    solid: labels.solid,
-    dashed: labels.dashed,
-    dotted: labels.dotted,
+    solid: t('', 'Solid'),
+    dashed: t('', 'Dashed'),
+    dotted: t('', 'Dotted'),
   };
-
-  const applyToAll = (side: BorderSideValue) => {
-    onChange({
-      top: side,
-      right: side,
-      bottom: side,
-      left: side,
-    });
-  };
-
-  const handleAllWidthChange = (raw: string) => {
-    applyToAll({ ...current.top, width: +raw });
-  };
-
-  const handleAllStyleChange = (style: BorderStyle) => {
-    applyToAll({ ...current.top, style });
-  };
-
-  const handleSideWidthChange = (side: BorderSide, raw: string) => {
-    onChange({
-      ...current,
-      [side]: { ...current[side], width: +raw },
-    });
-  };
-
-  const handleSideStyleChange = (side: BorderSide, style: BorderStyle) => {
-    onChange({
-      ...current,
-      [side]: { ...current[side], style },
-    });
-  };
-
-  const renderStyleSelect = (
-    sideValue: BorderSideValue | undefined,
-    onStyleChange: (style: BorderStyle) => void
-  ) => (
-    <FieldSelect
-      value={sideValue?.style ?? 'solid'}
-      disabled={readOnly}
-      onChange={event =>
-        onStyleChange(event.currentTarget.value as BorderStyle)
-      }
-    >
-      {borderStyles.map(style => (
-        <option
-          key={style}
-          value={style}
-        >
-          {styleLabels[style]}
-        </option>
-      ))}
-    </FieldSelect>
-  );
 
   return (
-    <FieldLabel
-      label={field.label ?? 'Border'}
+    <ToggleableField
+      label={field.label ?? t('', 'Border')}
+      value={value}
       readOnly={readOnly}
-      el="div"
+      onChange={onChange}
     >
       <FieldStack>
-        {!showMore && (
-          <>
-            <FieldInput
-              type="number"
-              value={current.top?.width ?? ''}
-              disabled={readOnly}
-              placeholder={labels.width}
-              onChange={event =>
-                handleAllWidthChange(event.currentTarget.value)
-              }
-            />
+        <SidesInput
+          name={`${name}-width`}
+          value={current.width}
+          readOnly={readOnly}
+          onChange={width => onChange({ ...current, width })}
+        />
 
-            {renderStyleSelect(current.top, handleAllStyleChange)}
-          </>
-        )}
+        <FieldToggleGroup
+          name={`${name}-style`}
+          value={current.style ?? 'solid'}
+          readOnly={readOnly}
+          onChange={style => onChange({ ...current, style })}
+          options={borderStyles.map(style => ({
+            value: style,
+            label: styleLabels[style],
+            icon: <LinePreview lineStyle={style} />,
+          }))}
+        />
 
-        {showMore &&
-          borderSides.map(side => (
-            <FieldLabel
-              key={side}
-              label={labels[side]}
-              readOnly={readOnly}
-              el="div"
-            >
-              <FieldInput
-                type="number"
-                value={current[side]?.width ?? ''}
-                disabled={readOnly}
-                placeholder={labels.width}
-                onChange={event =>
-                  handleSideWidthChange(side, event.currentTarget.value)
-                }
-              />
-
-              {renderStyleSelect(current[side], style =>
-                handleSideStyleChange(side, style)
-              )}
-            </FieldLabel>
-          ))}
-
-        <FieldCheckboxLabel>
-          <input
-            type="checkbox"
-            checked={showMore}
-            disabled={readOnly}
-            onChange={event => setShowMore(event.currentTarget.checked)}
-          />
-          {labels.moreOptions}
-        </FieldCheckboxLabel>
+        <ColorFieldRender
+          id={`${name}-color`}
+          name={`${name}-color`}
+          field={{ type: 'color', label: t('', 'Colour') }}
+          value={current.color}
+          readOnly={readOnly}
+          onChange={color => onChange({ ...current, color })}
+        />
       </FieldStack>
-    </FieldLabel>
+    </ToggleableField>
   );
 };

@@ -36,11 +36,11 @@ export const DynamicGrid: DynamicGridConfig = {
       type: 'breakpoints',
       label: 'Layout',
       objectFields: {
-        ...gapFields,
+        ...gapFields(),
         ...itemsAlignmentFields,
       },
       ai: breakpointsFieldAi({
-        ...gapSchema,
+        ...gapSchema(),
         ...itemsAlignmentSchema,
       }),
     },
@@ -66,8 +66,7 @@ export const DynamicGrid: DynamicGridConfig = {
   defaultProps: {
     layout: {
       xs: {
-        columnGap: defaultGap,
-        rowGap: defaultGap,
+        gap: defaultGap,
         alignItems: 'stretch',
         justifyContent: 'start',
       },

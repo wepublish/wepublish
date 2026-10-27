@@ -7,6 +7,7 @@ import { BreakpointsField } from './breakpoints/breakpoints.field';
 import { ColorField } from './color/color.field';
 import { ColumnsField } from './columns/columns.field';
 import { DatasourceField } from './datasource/datasource.field';
+import { GapField } from './gap/gap.field';
 import { ImageField } from './image/image.field';
 import { ListField } from './list/list.field';
 import { PaddingField } from './padding/padding.field';
@@ -23,6 +24,7 @@ export type UserFields = {
   datasource: DatasourceField;
   padding: PaddingField;
   border: BorderField;
+  gap: GapField;
   breakpoints: BreakpointsField;
   columns: ColumnsField;
   list: ListField;

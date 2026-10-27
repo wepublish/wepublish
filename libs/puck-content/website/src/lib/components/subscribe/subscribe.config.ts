@@ -104,12 +104,11 @@ export const SubscribeConfig: ComponentConfig<{
     render: SubscribeRender,
   },
   {
-    model: 'Memberplan',
-    type: 'items',
+    memberplan: { type: 'multiple', ids: [] },
   },
   {
-    models: ['Memberplan'],
-    types: ['items'],
+    models: ['memberplan'],
+    types: ['multiple'],
     label: 'Memberplans',
   }
 );

@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import { Breakpoint } from '@mui/material';
-import { FieldLabel, FieldProps } from '@puckeditor/core';
+import { FieldProps } from '@puckeditor/core';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { sortBreakpoints } from '../breakpoints/breakpoints.field';
+import { ToggleableField } from '../field-controls.component';
 import { useWebsiteTheme } from '../website-theme';
 import { VisibilityField, VisibilityValue } from './visibility.field';
 
@@ -88,10 +89,11 @@ export const VisibilityFieldRender = ({
   };
 
   return (
-    <FieldLabel
+    <ToggleableField
       label={field.label ?? t('', 'Visibility')}
+      value={value}
       readOnly={readOnly}
-      el="div"
+      onChange={onChange}
     >
       <Options>
         {breakpoints.map(breakpoint => {
@@ -117,6 +119,6 @@ export const VisibilityFieldRender = ({
           );
         })}
       </Options>
-    </FieldLabel>
+    </ToggleableField>
   );
 };

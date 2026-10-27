@@ -3,47 +3,32 @@ import { FieldAiParams } from '@puckeditor/plugin-ai';
 import { z } from 'zod/v4';
 
 import { toAiSchema } from '../ai-schema';
-
-export type BorderSide = 'top' | 'right' | 'bottom' | 'left';
-export const borderSides = ['top', 'right', 'bottom', 'left'] as BorderSide[];
+import { colorSchema, ColorValue } from '../color/color.field';
+import { sidesSchema, SidesValue } from '../sides/sides';
 
 export type BorderStyle = 'solid' | 'dashed' | 'dotted';
-export const borderStyles = ['solid', 'dashed', 'dotted'] as BorderStyle[];
-
-export type BorderSideValue = {
-  width?: number;
-  style?: BorderStyle;
-};
+export const borderStyles: BorderStyle[] = ['solid', 'dashed', 'dotted'];
 
 export type BorderValue = {
-  top?: BorderSideValue;
-  right?: BorderSideValue;
-  bottom?: BorderSideValue;
-  left?: BorderSideValue;
+  width?: SidesValue;
+  style?: BorderStyle;
+  color?: ColorValue;
 };
 
 export type BorderField = BaseField & {
   type: 'border';
 };
 
-export const borderSideSchema = z
-  .object({
-    width: z.number().describe('Border width in pixels'),
-    style: z.enum(borderStyles),
-  })
-  .partial();
-
 export const borderSchema = z
   .object({
-    top: borderSideSchema,
-    right: borderSideSchema,
-    bottom: borderSideSchema,
-    left: borderSideSchema,
+    width: sidesSchema('border width'),
+    style: z.enum(borderStyles).describe('Line style of the border'),
+    color: colorSchema().describe('Border colour, defaults to the text colour'),
   })
   .partial();
 
 export const borderFieldAi: FieldAiParams = {
   instructions:
-    'Border of the element, per side. Each side takes a width in pixels and a style (solid, dashed or dotted). Use the same value on all four sides for a uniform border; omitted sides have no border.',
+    'Border of the element: a width in pixels per side (same number on all sides for a uniform border, omitted sides have none), one line style (solid, dashed or dotted) and an optional colour that defaults to the text colour.',
   schema: toAiSchema(borderSchema),
 };

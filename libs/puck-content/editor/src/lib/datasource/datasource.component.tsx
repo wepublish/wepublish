@@ -1,33 +1,48 @@
 import { FieldLabel, FieldProps } from '@puckeditor/core';
+import { useTranslation } from 'react-i18next';
 
 import { FieldSelect } from '../field-controls.component';
-import { FieldStack } from '../field-controls';
+import { FieldInput, FieldStack } from '../field-controls';
 import {
   DatasourceField,
-  DatasourceModels,
+  DatasourceModel,
+  datasourceModels,
+  DatasourcesValue,
   DatasourceType,
   datasourceTypes,
-  DatasourceValue,
-  requiresModel,
+  setDatasourceIds,
+  setDatasourceType,
+  toDatasourceTypes,
 } from './datasource.field';
-import { useTranslation } from 'react-i18next';
 
 const useDatasourceLabels = () => {
   const { t } = useTranslation();
 
   return {
-    none: t('', 'None'),
-    slot: t('', 'Slot'),
-    list: t('', 'List'),
-    autofill: t('', 'Autofill'),
-    item: t('', 'Item'),
-    items: t('', 'Multiple items'),
+    unused: t('', 'Not used'),
+    ids: t('', 'Comma separated ids'),
+    id: t('', 'Id'),
+    types: {
+      list: t('', 'List'),
+      uniqueList: t('', 'Unique list'),
+      slot: t('', 'Slot'),
+      single: t('', 'Single'),
+      multiple: t('', 'Multiple'),
+    } satisfies Record<DatasourceType, string>,
+    models: {
+      article: t('', 'Articles'),
+      page: t('', 'Pages'),
+      event: t('', 'Events'),
+      image: t('', 'Images'),
+      memberplan: t('', 'Member plans'),
+      userSubscription: t('', 'User subscriptions'),
+    } satisfies Record<DatasourceModel, string>,
   };
 };
 
 export type DatasourceFieldRenderProps = FieldProps<
   DatasourceField,
-  DatasourceValue
+  DatasourcesValue | undefined
 > & {
   name: string;
 };
@@ -38,24 +53,10 @@ export const DatasourceFieldRender = ({
   onChange,
   readOnly,
 }: DatasourceFieldRenderProps) => {
-  const datasourceLabels = useDatasourceLabels();
-  const models = field.models ?? ['Article', 'Page', 'Event', 'Memberplan'];
+  const labels = useDatasourceLabels();
+  const models = field.models ?? datasourceModels;
   const types = field.types ?? datasourceTypes;
-  let current = value ?? { type: types[0] };
-
-  if (requiresModel(current)) {
-    current = { ...current, model: models[0] };
-  }
-
-  const handleTypeChange = (type: DatasourceType) => {
-    let value = { ...current, type } as DatasourceValue;
-
-    if (!requiresModel(value)) {
-      value = { type } as typeof value;
-    }
-
-    onChange(value);
-  };
+  const current = value ?? {};
 
   return (
     <FieldLabel
@@ -64,48 +65,82 @@ export const DatasourceFieldRender = ({
       el="div"
     >
       <FieldStack>
-        {types.length > 1 && (
-          <FieldSelect
-            value={current.type}
-            disabled={readOnly}
-            onChange={event =>
-              handleTypeChange(event.currentTarget.value as DatasourceType)
-            }
-          >
-            {types.map(type => (
-              <option
-                key={type}
-                value={type}
-              >
-                {datasourceLabels[type]}
-              </option>
-            ))}
-          </FieldSelect>
-        )}
+        {models.map(model => {
+          const datasource = current[model];
 
-        {requiresModel(current) && models.length > 1 && (
-          <FieldSelect
-            value={current.model}
-            disabled={readOnly}
-            onChange={event =>
-              onChange({
-                ...current,
-                model: event.currentTarget.value as DatasourceModels,
-              })
-            }
-          >
-            <option value="">Select a model…</option>
+          return (
+            <FieldLabel
+              key={model}
+              label={labels.models[model]}
+              readOnly={readOnly}
+              el="div"
+            >
+              <FieldStack>
+                <FieldSelect
+                  value={datasource?.type ?? ''}
+                  disabled={readOnly}
+                  onChange={event =>
+                    onChange(
+                      setDatasourceType(
+                        current,
+                        model,
+                        (event.currentTarget.value || undefined) as
+                          DatasourceType | undefined
+                      )
+                    )
+                  }
+                >
+                  <option value="">{labels.unused}</option>
 
-            {models.map(model => (
-              <option
-                key={model}
-                value={model}
-              >
-                {model}
-              </option>
-            ))}
-          </FieldSelect>
-        )}
+                  {toDatasourceTypes(model, types).map(type => (
+                    <option
+                      key={type}
+                      value={type}
+                    >
+                      {labels.types[type]}
+                    </option>
+                  ))}
+                </FieldSelect>
+
+                {datasource?.type === 'single' && (
+                  <FieldInput
+                    type="text"
+                    value={datasource.id}
+                    disabled={readOnly}
+                    placeholder={labels.id}
+                    onChange={event =>
+                      onChange(
+                        setDatasourceIds(
+                          current,
+                          model,
+                          event.currentTarget.value
+                        )
+                      )
+                    }
+                  />
+                )}
+
+                {datasource?.type === 'multiple' && (
+                  <FieldInput
+                    type="text"
+                    defaultValue={datasource.ids.join(', ')}
+                    disabled={readOnly}
+                    placeholder={labels.ids}
+                    onBlur={event =>
+                      onChange(
+                        setDatasourceIds(
+                          current,
+                          model,
+                          event.currentTarget.value
+                        )
+                      )
+                    }
+                  />
+                )}
+              </FieldStack>
+            </FieldLabel>
+          );
+        })}
       </FieldStack>
     </FieldLabel>
   );
