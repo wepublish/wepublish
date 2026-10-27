@@ -1,3 +1,6 @@
+// an import cannot load a .d.ts; the reference brings the subpath's types to
+// every app that compiles this file through its path aliases
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="./i18next-icu-cjs.d.ts" />
 import i18next, { Resource } from 'i18next';
 
