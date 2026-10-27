@@ -202,4 +202,3 @@ tenant has to do the same.
   `<name>.model.ts`, `<name>-dataloader.service.ts`
 - Specs: `<name>.spec.ts`, co-located with the source — never `.test.ts`
 - React components: PascalCase function, kebab-case file name
-- Storybook: `<name>.stories.tsx`

@@ -87,13 +87,8 @@ export const SubscriptionListItemPaymentMethodChange = styled('div')`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-/** Held by some payment providers to authorize a payment method, in cents. */
 const AUTHORIZATION_AMOUNT = 1;
 
-/**
- * The payment methods of the member plan a subscription can move to: those
- * offered for its billing period (and auto-renewal), without its current one.
- */
 export const useChangeablePaymentMethods = ({
   paymentMethod,
   memberPlan,
@@ -113,9 +108,7 @@ export const useChangeablePaymentMethods = ({
       .flatMap(({ paymentMethods }) => paymentMethods)
       .filter(
         ({ id, slug }) =>
-          id !== paymentMethod?.id &&
-          // managed by the payment provider, cannot be switched to
-          slug !== 'payrexx-subscription'
+          id !== paymentMethod?.id && slug !== 'payrexx-subscription'
       );
 
     return options.filter(
@@ -152,7 +145,7 @@ export function SubscriptionListItem({
   const { image, name, currency, productType } = memberPlan;
   const {
     meta: { locale },
-    elements: { Image, H6, Button, Link, Alert, H5, Paragraph },
+    elements: { Image, H6, Button, Link, Alert, Paragraph },
     PaymentMethodPicker,
     date,
   } = useWebsiteBuilder();
@@ -190,7 +183,6 @@ export function SubscriptionListItem({
     !deactivation &&
     !pendingPaymentMethodChange &&
     changeablePaymentMethods.length > 0;
-  // e.g. a new card or TWINT account for the same payment method
   const canRenewCurrentPaymentMethod =
     !!changePaymentMethod &&
     !deactivation &&
@@ -488,13 +480,10 @@ export function SubscriptionListItem({
           type: productType,
         })}
         cancelText={t('user.cancel')}
+        title={t('subscription.cancelProduct', {
+          productName: productType,
+        })}
       >
-        <H5 component="h1">
-          {t('subscription.cancelProduct', {
-            productName: productType,
-          })}
-        </H5>
-
         <Paragraph gutterBottom={false}>
           {t('subscription.cancelConfirmation', {
             type: productType,
@@ -511,9 +500,8 @@ export function SubscriptionListItem({
         onCancel={() => setConfirmRevertUpgrade(false)}
         submitText={t('subscription.revertUpgrade')}
         cancelText={t('user.cancel')}
+        title={t('subscription.revertUpgradeTitle')}
       >
-        <H5 component="h1">{t('subscription.revertUpgradeTitle')}</H5>
-
         <Paragraph gutterBottom={false}>
           {t('subscription.revertUpgradeConfirmation', {
             type: productType,
@@ -532,13 +520,10 @@ export function SubscriptionListItem({
           type: productType,
         })}
         cancelText={t('user.cancel')}
+        title={t('subscription.reactivateProduct', {
+          productName: productType,
+        })}
       >
-        <H5 component="h1">
-          {t('subscription.reactivateProduct', {
-            productName: productType,
-          })}
-        </H5>
-
         <Paragraph gutterBottom={false}>
           {t('subscription.reactivateConfirmation', {
             type: productType,
@@ -557,13 +542,10 @@ export function SubscriptionListItem({
           subscriptionDuration,
         })}
         cancelText={t('user.cancel')}
+        title={t('subscription.extendEarly', {
+          type: productType,
+        })}
       >
-        <H5 component="h1">
-          {t('subscription.extendEarly', {
-            type: productType,
-          })}
-        </H5>
-
         <Paragraph gutterBottom={!!paymentMethod?.name}>
           {t('subscription.extendEarlyConfirmation', {
             subscriptionDuration,
@@ -605,9 +587,8 @@ export function SubscriptionListItem({
         }}
         submitText={t('subscription.changePaymentMethodSubmit')}
         cancelText={t('user.cancel')}
+        title={t('subscription.changePaymentMethodTitle')}
       >
-        <H5 component="h1">{t('subscription.changePaymentMethodTitle')}</H5>
-
         <PaymentMethodPicker
           paymentMethods={changeablePaymentMethods}
           value={chosenPaymentMethodId}
@@ -631,9 +612,8 @@ export function SubscriptionListItem({
         }}
         submitText={t('subscription.changePaymentMethodSubmit')}
         cancelText={t('user.cancel')}
+        title={t('subscription.renewPaymentMethodTitle')}
       >
-        <H5 component="h1">{t('subscription.renewPaymentMethodTitle')}</H5>
-
         <Paragraph>
           {t('subscription.renewPaymentMethodConfirmation', {
             paymentMethod: paymentMethod?.name,

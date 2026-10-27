@@ -1,8 +1,6 @@
 import { NormalizedCacheObject } from '@apollo/client';
 import { DocumentContext } from 'next/document';
 import {
-  FontStyle,
-  FontWeight,
   PublicEnv,
   WebsiteSettingsDocument,
   WebsiteSettingsFragment,
@@ -14,6 +12,7 @@ import {
   DocumentHeadTags as MuiDocumentHeadTags,
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { getApiUrl } from '../api-url';
+import { googleFontsUrl } from '../google-fonts';
 
 declare global {
   interface Window {
@@ -27,44 +26,12 @@ export type DocumentProps = DocumentHeadTagsProps & {
   publicEnv: PublicEnv;
 };
 
-const fontWeightToNumber: Record<FontWeight, number> = {
-  [FontWeight.Thin]: 100,
-  [FontWeight.ExtraLight]: 200,
-  [FontWeight.Light]: 300,
-  [FontWeight.Regular]: 400,
-  [FontWeight.Medium]: 500,
-  [FontWeight.SemiBold]: 600,
-  [FontWeight.Bold]: 700,
-  [FontWeight.ExtraBold]: 800,
-  [FontWeight.Black]: 900,
-  [FontWeight.Variable]: 400, // dont care about variable here
-};
-
 export const DocumentHeadTags = (props: DocumentProps) => {
-  const fonts =
-    props.websiteSettings?.fonts.flatMap(font => {
-      if (!font.name) {
-        return [];
-      }
-
-      const fontName = font.name.replace(/ /g, '+');
-      const supportsItalic = font.style.includes(FontStyle.Italic);
-      const weights = new Set(
-        font.weight.map(weight => fontWeightToNumber[weight])
-      );
-      const weightStr = Array.from(
-        weights.values(),
-        weight => `0,${weight}`
-      ).join(';');
-      const italicStr =
-        supportsItalic ? `;${weightStr.replace(/0,/g, '1,')}` : '';
-
-      return `family=${fontName}:ital,wght@${weightStr}${italicStr}`;
-    }) ?? [];
+  const fontsUrl = googleFontsUrl(props.websiteSettings?.fonts);
 
   return (
     <>
-      {!!fonts.length && (
+      {fontsUrl && (
         <>
           <link
             rel="preconnect"
@@ -78,7 +45,7 @@ export const DocumentHeadTags = (props: DocumentProps) => {
           />
 
           <link
-            href={`https://fonts.googleapis.com/css2?${fonts.join('&')}&display=swap`}
+            href={fontsUrl}
             rel="stylesheet"
           />
         </>

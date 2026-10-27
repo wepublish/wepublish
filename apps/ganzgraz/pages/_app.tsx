@@ -1,12 +1,6 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import {
-  Container,
-  createTheme,
-  css,
-  CssBaseline,
-  ThemeProvider,
-} from '@mui/material';
+import { Container, css, ThemeOptions } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -15,59 +9,44 @@ import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import { FooterContainer } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
-import { minimalTheme } from '@wepublish/ui';
+import {
+  GanzGrazNavbar,
+  GanzGrazNavbarActions,
+  GanzGrazPaperActions,
+  ganzgrazTenant,
+} from '@wepublish/tenant/ganzgraz';
 import {
   authLink,
   getWebsiteShell,
   initWePublishTranslator,
-  NextWepublishLink,
   RoutedAdminBar,
   WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
-import { WebsiteProvider } from '@wepublish/website';
+import { TenantProviders } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
+  createWithApiClient,
   FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
-  createWithApiClient,
 } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import { format, setDefaultOptions } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { setDefaultOptions } from 'date-fns';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
-import { mergeDeepRight } from 'ramda';
-import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import deOverriden from '../locales/deOverriden.json';
-import { GanzGrazAuthor } from '../src/components/ganzgraz-author';
-import { GanzgrazBreakBlock } from '../src/components/ganzgraz-break-block';
-import { GanzGrazContentWrapper } from '../src/components/ganzgraz-content-wrapper';
-import { GanzGrazEvent } from '../src/components/ganzgraz-event';
-import { GanzGrazEventListItem } from '../src/components/ganzgraz-event-list-item';
-import {
-  GanzGrazNavbar,
-  GanzGrazNavbarActions,
-  GanzGrazPaperActions,
-} from '../src/components/ganzgraz-navbar';
-import { GanzGrazPaymentAmountPicker } from '../src/components/ganzgraz-payment-amount-picker';
-import { GanzGrazTransactionFee } from '../src/components/ganzgraz-transaction-fee';
-import { GanzGrazTeaserSlots } from '../src/components/teaser-layouts/ganzgraz-base-teaser-slots';
-import { GanzGrazBaseTeaser } from '../src/components/teasers/ganzgraz-base-teaser';
-import ganzgrazTheme from '../src/theme';
-
 setDefaultOptions({
-  locale: de,
+  locale: ganzgrazTenant.dateLocale,
 });
 
-initWePublishTranslator(deOverriden);
+initWePublishTranslator(
+  ganzgrazTenant.translations.overrides?.[ganzgrazTenant.translations.lng]
+);
 
 z.setErrorMap(zodI18nMap);
 
@@ -90,11 +69,6 @@ const MainSpacer = styled(Container)`
   `}
 `;
 
-const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-  : format(date, 'dd. MMMM yyyy');
-
 export type CustomAppProps = AppProps<
   {
     sessionToken?: FullSessionWithTokenWithoutUserFragment;
@@ -111,7 +85,7 @@ function CustomApp({
   emotionCache,
   websiteSettings,
 }: CustomAppProps) {
-  const siteTitle = 'Der Graz-Newsletter von ganzgraz';
+  const siteTitle = ganzgrazTenant.builder.meta?.siteTitle;
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -121,15 +95,6 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
-
-  const theme = useMemo(
-    () =>
-      createTheme(
-        minimalTheme,
-        mergeDeepRight(ganzgrazTheme, settings?.theme ?? {})
-      ),
-    [settings]
-  );
 
   const shell = getWebsiteShell(pageProps);
 
@@ -142,97 +107,75 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <ThemeProvider theme={theme}>
-          <WebsiteProvider>
-            <WebsiteBuilderProvider
-              Head={Head}
-              Script={Script}
-              Author={GanzGrazAuthor}
-              PaymentAmountPicker={GanzGrazPaymentAmountPicker}
-              TransactionFee={GanzGrazTransactionFee}
-              EventListItem={GanzGrazEventListItem}
-              Event={GanzGrazEvent}
-              ContentWrapper={GanzGrazContentWrapper}
-              elements={{ Link: NextWepublishLink }}
-              blocks={{
-                TeaserSlots: GanzGrazTeaserSlots,
-                BaseTeaser: GanzGrazBaseTeaser,
-                Break: GanzgrazBreakBlock,
-              }}
-              date={{ format: dateFormatter }}
-              meta={{ siteTitle, locale: 'de-AT' }}
-            >
-              <CssBaseline />
+        <TenantProviders
+          config={ganzgrazTenant}
+          settingsTheme={settings?.theme as ThemeOptions | undefined}
+          extra={{ Head, Script }}
+        >
+          <Head>
+            <title key="title">{siteTitle}</title>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0"
+            />
+          </Head>
 
-              <Head>
-                <title key="title">{siteTitle}</title>
-                <meta
-                  name="viewport"
-                  content="width=device-width, initial-scale=1.0"
-                />
-              </Head>
+          <Spacer>
+            {shell.showNavigation && (
+              <GanzGrazNavbar
+                categorySlugs={[['categories', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+                iconSlug="icons"
+                paperActions={<GanzGrazPaperActions />}
+                navbarActions={<GanzGrazNavbarActions />}
+              />
+            )}
 
-              <Spacer>
-                {shell.showNavigation && (
-                  <GanzGrazNavbar
-                    categorySlugs={[['categories', 'about-us']]}
-                    slug="main"
-                    headerSlug="header"
-                    iconSlug="icons"
-                    paperActions={<GanzGrazPaperActions />}
-                    navbarActions={<GanzGrazNavbarActions />}
-                  />
-                )}
+            <main>
+              <MainSpacer maxWidth="lg">
+                <Component {...pageProps} />
+              </MainSpacer>
+            </main>
 
-                <main>
-                  <MainSpacer maxWidth="lg">
-                    <Component {...pageProps} />
-                  </MainSpacer>
-                </main>
+            {shell.showFooter && (
+              <FooterContainer
+                slug="footer"
+                categorySlugs={[['categories', 'about-us']]}
+                iconSlug="icons"
+              />
+            )}
+          </Spacer>
 
-                {shell.showFooter && (
-                  <FooterContainer
-                    slug="footer"
-                    categorySlugs={[['categories', 'about-us']]}
-                    iconSlug="icons"
-                  />
-                )}
-              </Spacer>
+          <RoutedAdminBar />
 
-              <RoutedAdminBar />
+          {settings?.analytics.googleAnalytics.enabled &&
+            settings?.analytics.googleAnalytics.key && (
+              <GoogleAnalytics gaId={settings.analytics.googleAnalytics.key} />
+            )}
 
-              {settings?.analytics.googleAnalytics.enabled &&
-                settings?.analytics.googleAnalytics.key && (
-                  <GoogleAnalytics
-                    gaId={settings.analytics.googleAnalytics.key}
-                  />
-                )}
+          {settings?.analytics.googleTagManager.enabled &&
+            settings?.analytics.googleTagManager.key && (
+              <GoogleTagManager
+                gtmId={settings.analytics.googleTagManager.key}
+              />
+            )}
 
-              {settings?.analytics.googleTagManager.enabled &&
-                settings?.analytics.googleTagManager.key && (
-                  <GoogleTagManager
-                    gtmId={settings.analytics.googleTagManager.key}
-                  />
-                )}
+          {settings?.analytics.piwik.enabled &&
+            settings?.analytics.piwik.key && (
+              <Script id="piwik-pro">
+                {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
+              </Script>
+            )}
 
-              {settings?.analytics.piwik.enabled &&
-                settings?.analytics.piwik.key && (
-                  <Script id="piwik-pro">
-                    {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
-                  </Script>
-                )}
-
-              {settings?.ads.sparkLoop.enabled &&
-                settings?.ads.sparkLoop.key && (
-                  <Script
-                    src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
-                    strategy="lazyOnload"
-                    data-sparkloop
-                  />
-                )}
-            </WebsiteBuilderProvider>
-          </WebsiteProvider>
-        </ThemeProvider>
+          {settings?.ads.sparkLoop.enabled && settings?.ads.sparkLoop.key && (
+            <Script
+              src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+              strategy="lazyOnload"
+              data-sparkloop
+            />
+          )}
+        </TenantProviders>
       </AppCacheProvider>
     </PlausibleProvider>
   );

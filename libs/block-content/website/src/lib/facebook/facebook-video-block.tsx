@@ -4,7 +4,6 @@ import {
   FullFacebookVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderFacebookVideoBlockProps } from '@wepublish/website/builder';
-import ReactPlayer from 'react-player';
 
 export const isFacebookVideoBlock = (
   block: Partial<Pick<FullBlockFragment, '__typename'>>
@@ -16,20 +15,26 @@ export const FacebookVideoBlockWrapper = styled('div')`
   justify-content: center;
 `;
 
-export const FacebookVideoBlockPlayer = styled(ReactPlayer)``;
+export const FacebookVideoBlockPlayer = styled('iframe')`
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 0;
+`;
 
 export const FacebookVideoBlock = ({
   userID,
   videoID,
   className,
 }: BuilderFacebookVideoBlockProps) => {
+  const videoUrl = `https://www.facebook.com/${userID}/videos/${videoID}/`;
+
   return (
     <FacebookVideoBlockWrapper className={className}>
       <FacebookVideoBlockPlayer
-        width={'auto'}
-        height={'auto'}
-        src={`https://www.facebook.com/${userID}/videos/${videoID}/`}
-        controls={true}
+        src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(videoUrl)}&show_text=false`}
+        title="Embedded Facebook Video"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        allowFullScreen
       />
     </FacebookVideoBlockWrapper>
   );
