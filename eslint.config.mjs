@@ -64,6 +64,10 @@ export default [
               sourceTag: '*',
               onlyDependOnLibsWithTags: ['*'],
             },
+            {
+              sourceTag: 'scope:runtime-shared',
+              notDependOnLibsWithTags: ['scope:api-only'],
+            },
           ],
         },
       ],

@@ -54,7 +54,10 @@ deleted after each deploy.
 `dragonfly01.wepublish.cloud:6379` (TLS, internal CA `/wepublish/ca.crt`)
 serves all media. Terraform in `application-configuration` creates a user
 `wepublish-<app>-<env>` per medium and sets `REDIS_URL`, `REDIS_KEY_PREFIX` and
-`NODE_EXTRA_CA_CERTS` on api and website pods; media are separated by key
+`NODE_EXTRA_CA_CERTS` on api and website pods. The media server reads the same
+three variables through `DragonflyModule` + `MediaLinkCacheModule` for its link
+cache (`media:links`, `media:rejected-variants` and `media:generations`; misses stay per pod) and caches per pod when
+they're unset; media are separated by key
 prefix ([gotchas.md](gotchas.md)), mirrored locally by `docker/dragonfly/users.acl`.
 In production the api refuses `redis://` and verifies Dragonfly against the CA.
 It holds page data, articles/pages/authors/images and anonymous GraphQL

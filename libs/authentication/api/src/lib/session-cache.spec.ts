@@ -1,4 +1,4 @@
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { type NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import {
   SESSION_CACHE_NAMESPACE,
   SessionCacheInvalidator,
@@ -6,12 +6,14 @@ import {
 
 describe('SessionCacheInvalidator', () => {
   it('clears every cached session', async () => {
-    const kv = { resetNamespace: vi.fn().mockResolvedValue(undefined) };
+    const resets = {
+      reset: vi.fn().mockResolvedValue(undefined),
+    } satisfies Pick<NamespaceResets, 'reset'>;
 
     await new SessionCacheInvalidator(
-      kv as unknown as KvTtlCacheService
+      resets as unknown as NamespaceResets
     ).invalidate();
 
-    expect(kv.resetNamespace).toHaveBeenCalledWith(SESSION_CACHE_NAMESPACE);
+    expect(resets.reset).toHaveBeenCalledWith(SESSION_CACHE_NAMESPACE);
   });
 });

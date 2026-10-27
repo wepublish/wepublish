@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient, SettingChallengeProvider } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { ChallengeProviderSettingsDataloaderService } from './challenge-provider-settings-dataloader.service';
 import { ChallengeProviderSettingsService } from './challenge-provider-settings.service';
@@ -27,7 +27,12 @@ describe('ChallengeProviderSettingsService', () => {
       imports: [PrismaModule],
       providers: [
         ChallengeProviderSettingsService,
-        { provide: KvTtlCacheService, useValue: { resetNamespace: vi.fn() } },
+        {
+          provide: NamespaceResets,
+          useValue: {
+            reset: vi.fn(),
+          } satisfies Pick<NamespaceResets, 'reset'>,
+        },
         { provide: ProviderSettingsChanged, useValue: { notify: vi.fn() } },
         {
           provide: ChallengeProviderSettingsDataloaderService,

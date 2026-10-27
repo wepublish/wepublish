@@ -93,7 +93,7 @@ describe('PaymentsService.createPaymentWithProvider', () => {
         paymentProviders: [stripeProvider, payrexxProvider],
       } as any,
       invoicePaidNotifier as any,
-      { resetNamespace: vi.fn() } as any
+      { reset: vi.fn() } as any
     );
 
     return {
@@ -234,15 +234,15 @@ describe('PaymentsService.setPaymentProviderCustomers', () => {
         Promise.all(operations)
       ),
     };
-    const kv = { resetNamespace: vi.fn().mockResolvedValue(undefined) };
+    const resets = { reset: vi.fn().mockResolvedValue(undefined) };
     const service = new PaymentsService(
       prisma as any,
       { paymentProviders: [fakeProvider('bexio')] } as any,
       { notify: vi.fn() } as any,
-      kv as any
+      resets as any
     );
 
-    return { service, prisma, kv };
+    return { service, prisma, resets };
   }
 
   const customers = [
@@ -286,15 +286,15 @@ describe('PaymentsService.setPaymentProviderCustomers', () => {
 
   // sessions carry the customers
   it('clears the cached sessions once per call', async () => {
-    const { service, kv } = setup();
+    const { service, resets } = setup();
 
     await service.setPaymentProviderCustomers({
       paymentProviderId: 'bexio',
       customers,
     });
 
-    expect(kv.resetNamespace).toHaveBeenCalledTimes(1);
-    expect(kv.resetNamespace).toHaveBeenCalledWith(SESSION_CACHE_NAMESPACE);
+    expect(resets.reset).toHaveBeenCalledTimes(1);
+    expect(resets.reset).toHaveBeenCalledWith(SESSION_CACHE_NAMESPACE);
   });
 
   it('refuses an unknown payment provider', async () => {
