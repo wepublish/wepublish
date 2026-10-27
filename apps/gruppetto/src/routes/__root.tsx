@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
-import createEmotionCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
+import { getRenderEmotionCache } from '@wepublish/utils/website/tanstack';
 import { ThemeProvider } from '@mui/material';
 import {
   createRootRouteWithContext,
@@ -54,7 +54,16 @@ export const Route = createRootRouteWithContext<ApolloRouterContext>()({
    * Runs against the router's Apollo client, so whatever it loads is
    * dehydrated into the SSR payload automatically — no `pageProps` plumbing.
    * Must stay **user agnostic**: this response is CDN cached.
+   *
+   * `_document.getInitialProps` ran once per document and never again on a
+   * client-side navigation. The two options below say the same thing to the
+   * router: this data belongs to the document, not to a route, so a
+   * navigation must neither reload nor invalidate it. Without them it falls
+   * back to `defaultStaleTime`, and the chrome every page shares would be
+   * re-resolved while the reader moves around the site.
    */
+  staleTime: Infinity,
+  shouldReload: false,
   loader: async ({ context: { apolloClient } }) => {
     const [websiteSettings, publicEnv] = await Promise.all([
       prefetchShared(apolloClient),
@@ -102,16 +111,23 @@ function RootDocument({ children }: { children: ReactNode }) {
   // would ship HTML with no styles at all. In the browser this runs once and
   // `createCache` adopts the SSR `<style data-emotion>` tags, so hydration
   // does not duplicate them.
-  const [emotionCache] = useState(() => {
-    const cache = createEmotionCache({ key: 'css', prepend: true });
-    cache.compat = true;
-
-    return cache;
-  });
+  //
+  // `cache.compat` stays off on purpose. It tells emotion that a compat layer
+  // is extracting the styles, which suppresses the inline `<style>` tags it
+  // would otherwise render into the tree. `pages/_app.tsx` could set it
+  // because `AppCacheProvider` plus `_document`'s `documentGetInitialProps`
+  // did that extraction; nothing here does, so setting it ships HTML with no
+  // emotion rules at all and the page is unstyled until hydration.
+  const [emotionCache] = useState(getRenderEmotionCache);
 
   return (
     <html lang="de">
       <head>
+        <meta
+          name="emotion-insertion-point"
+          content=""
+        />
+
         <HeadContent />
 
         {/*

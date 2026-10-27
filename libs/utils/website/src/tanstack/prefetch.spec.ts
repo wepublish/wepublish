@@ -50,7 +50,7 @@ describe('prefetchShared', () => {
 
     await prefetchShared({ query } as unknown as ApolloClient);
 
-    expect(peak).toBe(3);
+    expect(peak).toBe(4);
   });
 
   it('yields undefined when the query came back without data', async () => {

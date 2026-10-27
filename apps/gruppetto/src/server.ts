@@ -12,6 +12,7 @@
  * so `vite dev` behaves exactly as it did before.
  */
 import handler, { createServerEntry } from '@tanstack/react-start/server-entry';
+import { withEmotionExtraction } from '@wepublish/utils/website/tanstack/server';
 import { withPageCache } from '@wepublish/utils/website/tanstack/page-cache';
 import {
   captureServerError,
@@ -20,7 +21,9 @@ import {
 
 await registerSentry();
 
-const cached = withPageCache(handler.fetch);
+// Extraction runs inside the cache, so a stored page already has the
+// styles in its `<head>` and a hit never re-extracts.
+const cached = withPageCache(withEmotionExtraction(handler.fetch));
 
 export default createServerEntry({
   fetch: async (...args: Parameters<typeof cached>) => {

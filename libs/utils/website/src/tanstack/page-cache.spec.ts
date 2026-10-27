@@ -190,6 +190,40 @@ describe('createStartPageCache', () => {
     expect(calls).toEqual(['/_serverFn/loadProfile', '/_serverFn/loadProfile']);
   });
 
+  it('re-renders a stale server function payload in the background', async () => {
+    const clock = new FakeClock();
+    let body = 'first';
+    const { fetch, calls, settled } = setup(
+      () =>
+        new Response(body, {
+          headers: {
+            'content-type': 'application/json',
+            'cache-control': ISR_60,
+          },
+        }),
+      clock
+    );
+
+    const url = 'https://site.test/_serverFn/loadArticle?slug=one';
+
+    await fetch(new Request(url));
+    await settled();
+
+    clock.advance(61_000);
+    body = 'second';
+
+    const stale = await fetch(new Request(url));
+    await settled();
+
+    expect(stale.headers.get('x-page-cache')).toBe('STALE');
+    expect(await stale.text()).toBe('first');
+    expect(calls).toEqual(['/_serverFn/loadArticle', '/_serverFn/loadArticle']);
+
+    const fresh = await fetch(new Request(url));
+
+    expect(await fresh.text()).toBe('second');
+  });
+
   it('keys a server function payload by its arguments', async () => {
     const { fetch, calls, settled } = setup(
       request =>

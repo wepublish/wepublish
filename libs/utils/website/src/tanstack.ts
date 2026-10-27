@@ -20,6 +20,7 @@
 export * from './tanstack/admin-bar';
 export * from './tanstack/analytics';
 export * from './tanstack/apollo';
+export * from './tanstack/emotion';
 export * from './tanstack/auth-guard';
 export * from './tanstack/head';
 export * from './tanstack/link';
