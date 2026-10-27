@@ -356,14 +356,26 @@ export function InvoiceHistory({
     !nested && shown.length > STACKED_INVOICES ? STACKED_INVOICES : undefined;
 
   const collapsedRow = collapsed ? 'true' : undefined;
+  // under a subscription, a note starts where its name and invoices do
   const fullRow = (content: ReactNode) => (
     <TableRow data-collapsed={collapsedRow}>
-      <HistoryCell
-        colSpan={HISTORY_COLUMNS}
-        data-label=""
-      >
-        {content}
-      </HistoryCell>
+      {nested ?
+        <>
+          <InvoiceHistorySpacerCell data-label="" />
+          <InvoiceHistoryIndentedCell
+            colSpan={HISTORY_COLUMNS - 1}
+            data-label=""
+          >
+            {content}
+          </InvoiceHistoryIndentedCell>
+        </>
+      : <HistoryCell
+          colSpan={HISTORY_COLUMNS}
+          data-label=""
+        >
+          {content}
+        </HistoryCell>
+      }
     </TableRow>
   );
 

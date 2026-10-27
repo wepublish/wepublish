@@ -7,7 +7,7 @@ import {
 } from '@wepublish/mocks/website';
 
 import { invoiceFixture } from '../membership.fixtures';
-import { HistoryTable } from './history-table';
+import { HistoryTable, PLAN_PADDING } from './history-table';
 import { InvoiceHistory, InvoiceHistoryProps } from './invoice-history';
 import * as fixtures from './invoice-history.fixtures';
 
@@ -109,6 +109,25 @@ describe('InvoiceHistory', () => {
     renderHistory(Empty);
 
     expect(screen.getByText('Noch keine Rechnungen')).toBeInTheDocument();
+  });
+
+  // below a subscription, every note starts where its name and its invoices do
+  it.each([
+    ['no invoices yet', Empty, 'Noch keine Rechnungen'],
+    ['the link to all invoices', Latest, 'Alle Rechnungen (5)'],
+  ])('lines up %s with the invoices', (_, props, text) => {
+    renderHistory(props);
+
+    const cell = screen.getByText(text).closest('td') as HTMLElement;
+    const row = cell.closest('tr') as HTMLElement;
+    const padding = (element: HTMLElement) =>
+      parseFloat(getComputedStyle(element).paddingLeft || '0');
+
+    // the arrow column stays free, as in the invoice rows
+    expect(row.firstElementChild).not.toBe(cell);
+    expect(row.firstElementChild?.textContent).toBe('');
+    // the plan column's (theme spacing of 8px)
+    expect(padding(cell)).toBe(PLAN_PADDING * 8);
   });
 
   it('shows dates without the time of day', async () => {
