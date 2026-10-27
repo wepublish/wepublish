@@ -171,6 +171,21 @@ reader types.
 The palette itself is generic and lives in
 [libs/ui/editor/src/lib/commandPalette](../libs/ui/editor/src/lib/commandPalette).
 
+### Editor page titles
+
+A new `app.tsx` route also needs an entry in
+[pageTitles.ts](../apps/editor/src/app/pageTitle/pageTitles.ts) (path →
+`pageTitles.*` key, translated in en/de/fr); `DocumentTitle` sets
+`<page> · We.Publish` from it, and `pageTitles.spec.ts` fails on any route
+without one, `:id` routes included. The editor's favicons
+(`apps/editor/public/assets`, path `/assets/`) and wepublish-site's
+(`apps/wepublish-site/public`, path `/`) come from RealFaviconGenerator
+(`npx realfavicon generate`), fed the "we" path of `ui/logo.tsx` clipped to
+the "w" (`<clipPath>` rect `x=-1 y=0 w=43 h=45`, viewBox `-5.25 -3.2 52 52`)
+at `imageScale: 1`; the tab icon sits on a white tile with
+`backgroundRadius: 0.4` so it reads on dark tabs. Crop with the viewBox alone
+and RFG sizes the icon from the whole "we", leaving it off-centre.
+
 ### Website shell (header / footer per route)
 
 Every tenant `_app.tsx` renders `NavBar` / `FooterContainer` only when
