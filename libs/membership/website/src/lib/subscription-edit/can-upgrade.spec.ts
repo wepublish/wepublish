@@ -4,6 +4,7 @@ import {
   mockPaymentMethod,
 } from '@wepublish/mocks/website';
 import {
+  Currency,
   FullMemberPlanFragment,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
@@ -75,6 +76,25 @@ describe('canUpgrade', () => {
         plan('one-off', 1250, undefined, { extendable: false }),
       ])
     ).toBe(false);
+  });
+
+  it('is not possible to a plan in another currency', () => {
+    expect(
+      canUpgrade(subscription(), [
+        yearly,
+        plan('euro', 1250, undefined, { currency: Currency.Eur }),
+      ])
+    ).toBe(false);
+  });
+
+  // the server credits the rest of a paid period that is still running
+  it.each([
+    ['nothing has been paid yet', { paidUntil: null }],
+    ['its paid period is over', { paidUntil: '2020-01-01T00:00:00.000Z' }],
+  ])('is not possible when %s', (_, overrides) => {
+    expect(canUpgrade(subscription(overrides), [yearly, solidarity])).toBe(
+      false
+    );
   });
 
   it.each([
