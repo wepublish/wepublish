@@ -1,14 +1,24 @@
-import { screen } from '@testing-library/react';
-import { renderWithProviders } from '@wepublish/mocks/website';
+import { screen, within } from '@testing-library/react';
+import {
+  mockMemberPlan,
+  mockSubscription,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
 import {
   FeaturesDocument,
+  FullSubscriptionFragment,
   InvoicesDocument,
+  ProductType,
+  SubscriptionDeactivationReason,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 
 import { ProfileSubscriptions } from './profile-subscriptions';
 
-const mocks = (features: string[]) => [
+const mocks = (
+  features: string[],
+  subscriptions: FullSubscriptionFragment[] = []
+) => [
   {
     request: { query: FeaturesDocument },
     result: { data: { features } },
@@ -16,7 +26,7 @@ const mocks = (features: string[]) => [
   },
   {
     request: { query: SubscriptionsDocument },
-    result: { data: { userSubscriptions: [] } },
+    result: { data: { userSubscriptions: subscriptions } },
     maxUsageCount: Number.POSITIVE_INFINITY,
   },
   {
@@ -26,8 +36,29 @@ const mocks = (features: string[]) => [
   },
 ];
 
-const renderWith = (features: string[]) =>
-  renderWithProviders(<ProfileSubscriptions />, { mocks: mocks(features) });
+const renderWith = (
+  features: string[],
+  subscriptions?: FullSubscriptionFragment[]
+) =>
+  renderWithProviders(<ProfileSubscriptions />, {
+    mocks: mocks(features, subscriptions),
+  });
+
+// ended, so it only shows where ended ones are listed too
+const donation = mockSubscription({
+  id: 'donation',
+  memberPlan: mockMemberPlan({
+    name: 'Spende monatlich',
+    productType: ProductType.Donation,
+  }),
+  isActive: false,
+  paidUntil: '2026-01-01T00:00:00.000Z',
+  deactivation: {
+    __typename: 'SubscriptionDeactivation',
+    date: '2026-01-01T00:00:00.000Z',
+    reason: SubscriptionDeactivationReason.UserSelfDeactivated,
+  },
+}) as FullSubscriptionFragment;
 
 describe('ProfileSubscriptions', () => {
   it('shows subscriptions and invoices as one history when the medium has it', async () => {
@@ -38,6 +69,22 @@ describe('ProfileSubscriptions', () => {
     ).toBeInTheDocument();
     expect(
       screen.queryByRole('heading', { name: 'Aktive Abos' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('lists donations in a history of their own, ended ones included', async () => {
+    renderWith(['profile-subscription-history'], [donation]);
+
+    const heading = await screen.findByRole('heading', {
+      name: 'Spenden und Rechnungen',
+    });
+    const section = heading.parentElement as HTMLElement;
+
+    expect(
+      within(section).getByRole('button', { name: 'Beendete Spenden (1)' })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'Aktive Spenden' })
     ).not.toBeInTheDocument();
   });
 

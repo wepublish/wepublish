@@ -17,7 +17,12 @@ import {
   ProductType,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
-import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
+import {
+  BuilderSubscriptionListProps,
+  Button,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 import { useTranslation } from 'react-i18next';
 import { useWebsiteFeature } from '../../../lib/use-website-feature';
 
@@ -65,11 +70,26 @@ const SubscriptionHistoryWrapper = styled('div')`
   gap: ${({ theme }) => theme.spacing(2)};
 `;
 
-const onlySubscriptions = (subscriptions: FullSubscriptionFragment[]) =>
-  subscriptions.filter(
-    subscription =>
-      subscription.memberPlan.productType === ProductType.Subscription
-  );
+/** The donations below the subscriptions, under their own heading. */
+const SubscriptionHistorySection = styled('section')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
+
+const ofType =
+  (type: ProductType) => (subscriptions: FullSubscriptionFragment[]) =>
+    subscriptions.filter(
+      subscription => subscription.memberPlan.productType === type
+    );
+const onlySubscriptions = ofType(ProductType.Subscription);
+const onlyDonations = ofType(ProductType.Donation);
+
+const DonationHistory = (props: BuilderSubscriptionListProps) => (
+  <SubscriptionHistory
+    {...props}
+    type={ProductType.Donation}
+  />
+);
 
 export function ProfileSubscriptions({ className }: { className?: string }) {
   const {
@@ -90,6 +110,9 @@ export function ProfileSubscriptions({ className }: { className?: string }) {
       isSubscriptionActive(subscription) &&
       subscription.memberPlan.productType === ProductType.Subscription
   );
+  const hasDonations = subscriptonData?.userSubscriptions.some(
+    subscription => subscription.memberPlan.productType === ProductType.Donation
+  );
   const hasActiveDonations = subscriptonData?.userSubscriptions.some(
     subscription =>
       isSubscriptionActive(subscription) &&
@@ -101,31 +124,27 @@ export function ProfileSubscriptions({ className }: { className?: string }) {
   if (showHistory) {
     return (
       <SubscriptionHistoryWrapper className={className}>
-        <H4 component={'h1'}>{t('subscriptionHistory.title')}</H4>
+        <H4 component={'h1'}>
+          {t('subscriptionHistory.title', { type: ProductType.Subscription })}
+        </H4>
 
         <SubscriptionListContainer
           filter={onlySubscriptions}
           List={SubscriptionHistory}
         />
 
-        {hasActiveDonations && (
-          <>
+        {/* the same history, ended ones included */}
+        {hasDonations && (
+          <SubscriptionHistorySection>
             <H4 component={'h2'}>
-              {t('user.activeSubscriptions', {
-                type: ProductType.Donation,
-              })}
+              {t('subscriptionHistory.title', { type: ProductType.Donation })}
             </H4>
 
             <SubscriptionListContainer
-              filter={subscriptions =>
-                subscriptions.filter(
-                  subscription =>
-                    isSubscriptionActive(subscription) &&
-                    subscription.memberPlan.productType === ProductType.Donation
-                )
-              }
+              filter={onlyDonations}
+              List={DonationHistory}
             />
-          </>
+          </SubscriptionHistorySection>
         )}
       </SubscriptionHistoryWrapper>
     );

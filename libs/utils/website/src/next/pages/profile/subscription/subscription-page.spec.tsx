@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 import {
   mockInvoice,
+  mockMemberPlan,
   mockSubscription,
   renderWithProviders,
 } from '@wepublish/mocks/website';
@@ -9,6 +10,7 @@ import {
   FullInvoiceFragment,
   InvoicesDocument,
   MemberPlanListDocument,
+  ProductType,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 
@@ -28,7 +30,8 @@ const invoices = (count: number, canceled = 0) =>
 
 const mocks = (
   features: string[],
-  userInvoices: FullInvoiceFragment[] = []
+  userInvoices: FullInvoiceFragment[] = [],
+  userSubscriptions = [subscription]
 ) => [
   {
     request: { query: FeaturesDocument },
@@ -37,7 +40,7 @@ const mocks = (
   },
   {
     request: { query: SubscriptionsDocument },
-    result: { data: { userSubscriptions: [subscription] } },
+    result: { data: { userSubscriptions } },
     maxUsageCount: Number.POSITIVE_INFINITY,
   },
   {
@@ -72,10 +75,11 @@ const mocks = (
 
 const renderWith = (
   features: string[],
-  userInvoices: FullInvoiceFragment[] = []
+  userInvoices: FullInvoiceFragment[] = [],
+  userSubscriptions = [subscription]
 ) => {
   renderWithProviders(<ProfileSubscription id="yearly" />, {
-    mocks: mocks(features, userInvoices),
+    mocks: mocks(features, userInvoices, userSubscriptions),
   });
 };
 
@@ -88,6 +92,23 @@ describe('ProfileSubscription', () => {
     ).toBeInTheDocument();
     expect(
       await screen.findByRole('heading', { name: 'Zahlung' })
+    ).toBeInTheDocument();
+  });
+
+  it('names a donation as such in the title', async () => {
+    renderWith(
+      ['profile-subscription-history'],
+      [],
+      [
+        mockSubscription({
+          id: 'yearly',
+          memberPlan: mockMemberPlan({ productType: ProductType.Donation }),
+        }),
+      ]
+    );
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Spende anpassen' })
     ).toBeInTheDocument();
   });
 

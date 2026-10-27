@@ -17,6 +17,7 @@ import {
 import {
   FullInvoiceFragment,
   FullSubscriptionFragment,
+  ProductType,
 } from '@wepublish/website/api';
 import {
   BuilderInvoiceListProps,
@@ -361,7 +362,9 @@ function SubscriptionHistoryRow({
         <HistoryPlanCell
           component="th"
           scope="row"
-          data-label={t('subscriptionHistory.plan')}
+          data-label={t('subscriptionHistory.plan', {
+            type: memberPlan.productType,
+          })}
         >
           <PlanName>{memberPlan.name}</PlanName>
         </HistoryPlanCell>
@@ -417,7 +420,7 @@ function SubscriptionHistoryRow({
               LinkComponent={BuilderLink}
               href={url}
             >
-              {t('subscriptionHistory.edit')}
+              {t('subscriptionHistory.edit', { type: memberPlan.productType })}
             </Button>
 
             <SubscriptionHistoryActions>
@@ -472,8 +475,12 @@ export function SubscriptionHistory({
   invoices,
   subscribeUrl,
   className,
+  type = ProductType.Subscription,
   ...actions
-}: BuilderSubscriptionListProps) {
+}: BuilderSubscriptionListProps & {
+  /** What the list holds, for its wording: subscriptions or donations. */
+  type?: ProductType;
+}) {
   const {
     elements: { Alert, Button, Link },
   } = useWebsiteBuilder();
@@ -539,7 +546,9 @@ export function SubscriptionHistory({
         <TableHead>
           <TableRow>
             <HistoryArrowCell />
-            <HistoryPlanCell>{t('subscriptionHistory.plan')}</HistoryPlanCell>
+            <HistoryPlanCell>
+              {t('subscriptionHistory.plan', { type })}
+            </HistoryPlanCell>
             <HistoryStateCell>
               {t('subscriptionHistory.state')}
             </HistoryStateCell>
@@ -555,7 +564,8 @@ export function SubscriptionHistory({
         {showEnded && rows(ended)}
 
         <TableBody>
-          {!!running.length && (
+          {/* donations: the subscriptions above already offer it */}
+          {!!running.length && type !== ProductType.Donation && (
             <SubscriptionHistorySubscribeRow>
               <HistoryCell
                 colSpan={HISTORY_COLUMNS}
@@ -583,7 +593,7 @@ export function SubscriptionHistory({
             variant="text"
             onClick={() => setShowEnded(show => !show)}
           >
-            {t('subscriptionHistory.ended', { count: ended.length })}
+            {t('subscriptionHistory.ended', { count: ended.length, type })}
           </Button>
         </div>
       )}

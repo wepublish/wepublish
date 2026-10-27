@@ -1,6 +1,7 @@
 import {
   FullMemberPlanFragment,
   FullSubscriptionFragment,
+  ProductType,
 } from '@wepublish/website/api';
 
 import { getMonthlyEquivalentRange } from '../formatters/format-payment-period';
@@ -11,6 +12,8 @@ import { getMonthlyEquivalentRange } from '../formatters/format-payment-period';
  * the server accepts (same currency and billing period), and only while the
  * subscription is running in a paid period (the server credits its rest),
  * without a cancellation, a payment method change or an unpaid upgrade.
+ * Subscriptions only, and only to subscription plans: a donation is not
+ * upgraded.
  */
 export function canUpgrade(
   subscription: Pick<
@@ -26,6 +29,7 @@ export function canUpgrade(
   memberPlans: FullMemberPlanFragment[]
 ): boolean {
   if (
+    subscription.memberPlan.productType !== ProductType.Subscription ||
     !subscription.isActive ||
     !subscription.paidUntil ||
     new Date(subscription.paidUntil) <= new Date() ||
@@ -42,6 +46,7 @@ export function canUpgrade(
 
   return memberPlans.some(
     plan =>
+      plan.productType === ProductType.Subscription &&
       plan.extendable &&
       plan.id !== subscription.memberPlan.id &&
       plan.currency === subscription.memberPlan.currency &&

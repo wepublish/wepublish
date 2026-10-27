@@ -5,6 +5,7 @@ import {
   RenderWithProvidersOptions,
 } from '@wepublish/mocks/website';
 import { actWait } from '@wepublish/testing';
+import { ProductType } from '@wepublish/website/api';
 
 import { SubscriptionHistory } from './subscription-history';
 import * as fixtures from './subscription-history.fixtures';
@@ -43,6 +44,58 @@ const expectCollapsed = (text: string) =>
   expect(invoiceRow(text)).toHaveAttribute('data-collapsed', 'true');
 
 describe('SubscriptionHistory', () => {
+  describe('of donations', () => {
+    // the same subscriptions, as donations
+    const renderDonations = () =>
+      renderStory({
+        ...Default,
+        props: {
+          ...Default.props,
+          type: ProductType.Donation,
+          data: {
+            ...Default.props.data,
+            userSubscriptions: (
+              Default.props.data?.userSubscriptions ?? []
+            ).map(subscription => ({
+              ...subscription,
+              memberPlan: {
+                ...subscription.memberPlan,
+                productType: ProductType.Donation,
+              },
+            })),
+          },
+        },
+      });
+
+    it('names them donations', async () => {
+      await renderDonations();
+
+      expect(
+        screen.getByRole('columnheader', { name: 'Spende' })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('columnheader', { name: 'Abo' })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getAllByRole('link', { name: 'Spende anpassen' }).length
+      ).toBeGreaterThan(0);
+      expect(
+        screen.queryByRole('link', { name: 'Abo anpassen' })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /^Beendete Spenden \(\d+\)$/ })
+      ).toBeInTheDocument();
+    });
+
+    it('offers no other subscription below them', async () => {
+      await renderDonations();
+
+      expect(
+        screen.queryByRole('link', { name: 'Anderes Abo lösen' })
+      ).not.toBeInTheDocument();
+    });
+  });
+
   for (const [name, fixture] of [
     ['Default', Default],
     ['Empty', Empty],

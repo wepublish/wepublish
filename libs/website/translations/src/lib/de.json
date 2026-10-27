@@ -451,8 +451,8 @@
     "exitFullscreen": "Vollbild beenden"
   },
   "subscriptionHistory": {
-    "title": "Abos und Rechnungen",
-    "plan": "Abo",
+    "title": "{type, select, Donation {Spenden und Rechnungen} other {Abos und Rechnungen}}",
+    "plan": "{type, select, Donation {Spende} other {Abo}}",
     "state": "Status",
     "startsAt": "Beginn",
     "paidUntil": "Bezahlt bis",
@@ -464,7 +464,7 @@
     "ends": "Endet",
     "showInvoices": "Rechnungen anzeigen",
     "hideInvoices": "Rechnungen ausblenden",
-    "ended": "Beendete Abos ({count})",
+    "ended": "{type, select, Donation {Beendete Spenden} other {Beendete Abos}} ({count})",
     "noSubscriptions": "Du hast noch kein Abo.",
     "invoice": "Rechnung",
     "createdAt": "Erstellt am",
@@ -492,20 +492,20 @@
       "canceled": "Storniert",
       "unpaid": "Offen"
     },
-    "edit": "Abo anpassen",
+    "edit": "{type, select, Donation {Spende anpassen} other {Abo anpassen}}",
     "moreInvoices": "{count, plural, one {# weitere Rechnung} other {# weitere Rechnungen}}",
     "hideMoreInvoices": "Rechnungen ausblenden"
   },
   "subscriptionEdit": {
-    "title": "Abo anpassen",
+    "title": "{type, select, Donation {Spende anpassen} other {Abo anpassen}}",
     "sections": {
-      "plan": "Abo",
+      "plan": "{type, select, Donation {Spende} other {Abo}}",
       "payment": "Zahlung",
       "renewal": "Verlängerung & Kündigung",
       "invoices": "Rechnungen"
     },
     "upgrade": "Abo upgraden",
-    "paymentMethodNotChangeable": "Die Zahlungsmethode dieses Abos kann online nicht geändert werden."
+    "paymentMethodNotChangeable": "Die Zahlungsmethode {type, select, Donation {dieser Spende} other {dieses Abos}} kann online nicht geändert werden."
   },
   "paymentMethodLabels": {
     "bexio": "Rechnung",

@@ -244,7 +244,9 @@ function SubscriptionEditDetails({
   return (
     <SubscriptionEditWrapper>
       <Section
-        title={t('subscriptionEdit.sections.plan')}
+        title={t('subscriptionEdit.sections.plan', {
+          type: memberPlan.productType,
+        })}
         area="plan"
       >
         <PlanName>{memberPlan.name}</PlanName>
@@ -329,7 +331,9 @@ function SubscriptionEditDetails({
             actions={PAYMENT_ACTIONS}
           />
         : <Paragraph gutterBottom={false}>
-            {t('subscriptionEdit.paymentMethodNotChangeable')}
+            {t('subscriptionEdit.paymentMethodNotChangeable', {
+              type: memberPlan.productType,
+            })}
           </Paragraph>
         }
       </Section>

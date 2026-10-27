@@ -7,6 +7,7 @@ import {
   Currency,
   FullMemberPlanFragment,
   PaymentPeriodicity,
+  ProductType,
   SubscriptionDeactivationReason,
 } from '@wepublish/website/api';
 
@@ -74,6 +75,36 @@ describe('canUpgrade', () => {
       canUpgrade(subscription(), [
         yearly,
         plan('one-off', 1250, undefined, { extendable: false }),
+      ])
+    ).toBe(false);
+  });
+
+  it('is not possible for a donation', () => {
+    const donation = plan('spende', 700, undefined, {
+      productType: ProductType.Donation,
+    });
+
+    expect(
+      canUpgrade(
+        subscriptionFixture(
+          { memberPlan: donation, paymentMethod: mockPaymentMethod() },
+          { paymentPeriodicity: PaymentPeriodicity.Yearly }
+        ),
+        [
+          donation,
+          plan('grosse-spende', 1250, undefined, {
+            productType: ProductType.Donation,
+          }),
+        ]
+      )
+    ).toBe(false);
+  });
+
+  it('is not possible to a donation plan', () => {
+    expect(
+      canUpgrade(subscription(), [
+        yearly,
+        plan('spende', 1250, undefined, { productType: ProductType.Donation }),
       ])
     ).toBe(false);
   });

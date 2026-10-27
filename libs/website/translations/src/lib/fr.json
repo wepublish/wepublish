@@ -451,8 +451,8 @@
     "exitFullscreen": "Quitter le plein écran"
   },
   "subscriptionHistory": {
-    "title": "Abonnements et factures",
-    "plan": "Abonnement",
+    "title": "{type, select, Donation {Dons et factures} other {Abonnements et factures}}",
+    "plan": "{type, select, Donation {Don} other {Abonnement}}",
     "state": "Statut",
     "startsAt": "Début",
     "paidUntil": "Payé jusqu'au",
@@ -464,7 +464,7 @@
     "ends": "Se termine",
     "showInvoices": "Afficher les factures",
     "hideInvoices": "Masquer les factures",
-    "ended": "Abonnements terminés ({count})",
+    "ended": "{type, select, Donation {Dons terminés} other {Abonnements terminés}} ({count})",
     "noSubscriptions": "Tu n'as pas encore d'abonnement.",
     "invoice": "Facture",
     "createdAt": "Créée le",
@@ -492,20 +492,20 @@
       "canceled": "Annulée",
       "unpaid": "Ouverte"
     },
-    "edit": "Adapter l'abonnement",
+    "edit": "{type, select, Donation {Adapter le don} other {Adapter l'abonnement}}",
     "moreInvoices": "{count, plural, one {# autre facture} other {# autres factures}}",
     "hideMoreInvoices": "Masquer les factures"
   },
   "subscriptionEdit": {
-    "title": "Adapter l'abonnement",
+    "title": "{type, select, Donation {Adapter le don} other {Adapter l'abonnement}}",
     "sections": {
-      "plan": "Abonnement",
+      "plan": "{type, select, Donation {Don} other {Abonnement}}",
       "payment": "Paiement",
       "renewal": "Renouvellement & résiliation",
       "invoices": "Factures"
     },
     "upgrade": "Passer à un abonnement supérieur",
-    "paymentMethodNotChangeable": "Le moyen de paiement de cet abonnement ne peut pas être modifié en ligne."
+    "paymentMethodNotChangeable": "Le moyen de paiement de {type, select, Donation {ce don} other {cet abonnement}} ne peut pas être modifié en ligne."
   },
   "paymentMethodLabels": {
     "bexio": "Facture",

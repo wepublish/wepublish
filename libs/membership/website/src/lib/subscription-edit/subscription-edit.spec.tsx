@@ -7,6 +7,7 @@ import { actWait } from '@wepublish/testing';
 import {
   FullSubscriptionFragment,
   PaymentPeriodicity,
+  ProductType,
 } from '@wepublish/website/api';
 
 import { SubscriptionEdit } from './subscription-edit';
@@ -226,6 +227,40 @@ describe('SubscriptionEdit', () => {
         'Die Zahlungsmethode dieses Abos kann online nicht geändert werden.'
       )
     ).toBeInTheDocument();
+  });
+
+  describe('of a donation', () => {
+    const asDonation = (story: Story) => ({
+      memberPlan: {
+        ...subscriptionOf(story).memberPlan,
+        productType: ProductType.Donation,
+      },
+    });
+
+    it('names it a donation and offers no upgrade', async () => {
+      await renderStory(Default, asDonation(Default));
+
+      expect(section('Spende')).toBeInTheDocument();
+      expect(
+        screen.queryByRole('region', { name: 'Abo' })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: /upgraden/ })
+      ).not.toBeInTheDocument();
+    });
+
+    it('says so when its payment method cannot be changed', async () => {
+      await renderStory(
+        PaymentMethodNotChangeable,
+        asDonation(PaymentMethodNotChangeable)
+      );
+
+      expect(
+        within(section('Zahlung')).getByText(
+          'Die Zahlungsmethode dieser Spende kann online nicht geändert werden.'
+        )
+      ).toBeInTheDocument();
+    });
   });
 
   it('offers cancelling with the renewal', async () => {

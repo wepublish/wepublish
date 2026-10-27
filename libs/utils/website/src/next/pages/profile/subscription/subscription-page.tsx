@@ -14,6 +14,7 @@ import {
   MeDocument,
   MemberPlanListDocument,
   NavigationListDocument,
+  ProductType,
   SubscriptionsDocument,
   SubscriptionsQuery,
   addClientCacheToProps,
@@ -164,7 +165,13 @@ export function ProfileSubscription({ id }: { id: string }) {
       <SubscriptionEditWrapper>
         <SubscriptionEditTitleRow>
           {back}
-          <H4 component={'h1'}>{t('subscriptionEdit.title')}</H4>
+          <H4 component={'h1'}>
+            {t('subscriptionEdit.title', {
+              type:
+                subscription?.memberPlan.productType ??
+                ProductType.Subscription,
+            })}
+          </H4>
         </SubscriptionEditTitleRow>
 
         <SubscriptionListContainer
