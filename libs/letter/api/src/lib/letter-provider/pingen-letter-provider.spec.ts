@@ -16,7 +16,6 @@ import {
   PingenLetterProvider,
   RawBodyRequest,
 } from './pingen-letter-provider';
-import type { Mock } from 'vitest';
 
 vi.mock('pingen2-sdk-js', async () => {
   const actual =

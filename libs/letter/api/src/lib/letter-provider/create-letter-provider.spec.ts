@@ -1,7 +1,18 @@
 import { LetterProviderType } from '@prisma/client';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { loadLetterProvider } from './create-letter-provider';
 import { PingenLetterProvider } from './pingen-letter-provider';
+
+let testing: NamespacedCacheTesting;
+
+beforeEach(async () => {
+  testing = await createNamespacedCacheTesting();
+});
+
+afterEach(() => testing.close());
 
 describe('loadLetterProvider', () => {
   it('builds the provider of the configured type', async () => {
@@ -11,7 +22,7 @@ describe('loadLetterProvider', () => {
 
     const provider = await loadLetterProvider({
       prisma: { settingLetterProvider: { findFirst } } as never,
-      kv: createKvMock(),
+      kv: testing.cache,
     });
 
     expect(provider).toBeInstanceOf(PingenLetterProvider);
@@ -23,7 +34,7 @@ describe('loadLetterProvider', () => {
 
     const provider = await loadLetterProvider({
       prisma: { settingLetterProvider: { findFirst } } as never,
-      kv: createKvMock(),
+      kv: testing.cache,
     });
 
     expect(provider).toBeNull();
