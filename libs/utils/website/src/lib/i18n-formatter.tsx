@@ -1,3 +1,4 @@
+/// <reference path="./i18next-icu-cjs.d.ts" />
 import i18next, { i18n, Resource } from 'i18next';
 
 import LanguageDetector from 'i18next-browser-languagedetector';
