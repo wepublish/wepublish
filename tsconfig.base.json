@@ -53,6 +53,10 @@
         "libs/crowdfunding/editor/src/index.ts"
       ],
       "@wepublish/document/api": ["libs/document/api/src/index.ts"],
+      "@wepublish/dragonfly/api": ["libs/dragonfly/api/src/index.ts"],
+      "@wepublish/dragonfly/api/testing": [
+        "libs/dragonfly/api/src/testing.ts"
+      ],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
       "@wepublish/errors": ["libs/errors/src/index.ts"],
       "@wepublish/errors/website": ["libs/errors/website/src/index.ts"],
@@ -71,6 +75,12 @@
       "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/image/website": ["libs/image/website/src/index.ts"],
       "@wepublish/kv-ttl-cache/api": ["libs/kv-ttl-cache/api/src/index.ts"],
+      "@wepublish/kv-ttl-cache/api/prisma": [
+        "libs/kv-ttl-cache/api/src/prisma.ts"
+      ],
+      "@wepublish/kv-ttl-cache/api/testing": [
+        "libs/kv-ttl-cache/api/src/testing.ts"
+      ],
       "@wepublish/letter/api": ["libs/letter/api/src/index.ts"],
       "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
       "@wepublish/media-transform-guard": [
@@ -110,6 +120,9 @@
       "@wepublish/phrase/api": ["libs/phrase/api/src/index.ts"],
       "@wepublish/poll/api": ["libs/poll/api/src/index.ts"],
       "@wepublish/property/api": ["libs/property/api/src/index.ts"],
+      "@wepublish/public-content-cache/api": [
+        "libs/public-content-cache/api/src/index.ts"
+      ],
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
       "@wepublish/richtext/api": ["libs/richtext/api/src/index.ts"],
       "@wepublish/richtext/editor": ["libs/richtext/editor/src/index.ts"],
@@ -154,6 +167,9 @@
         "libs/versionInformation/api/src/index.ts"
       ],
       "@wepublish/website": ["libs/website/src/index.ts"],
+      "@wepublish/website-revalidation/api": [
+        "libs/website-revalidation/api/src/index.ts"
+      ],
       "@wepublish/website/admin": ["libs/website/admin/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],

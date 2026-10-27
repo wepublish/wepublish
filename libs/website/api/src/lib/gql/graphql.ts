@@ -4,407 +4,9 @@ type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** Internal type. DO NOT USE DIRECTLY. */
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 import {RichtextJSONDocument} from '@wepublish/richtext';
+import type * as Types from '../schema-types';
+
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export type ArticleFilter = {
-  /** Only include articles that have every one of these tags */
-  allTagsIn?: Array<string> | null | undefined;
-  authors?: Array<string> | null | undefined;
-  body?: string | null | undefined;
-  draft?: boolean | null | undefined;
-  excludeHideAuthor?: boolean | null | undefined;
-  excludeIds?: Array<string> | null | undefined;
-  ids?: Array<string> | null | undefined;
-  includeHidden?: boolean | null | undefined;
-  lead?: string | null | undefined;
-  peerId?: string | null | undefined;
-  pending?: boolean | null | undefined;
-  preTitle?: string | null | undefined;
-  publicationDateFrom?: DateFilter | null | undefined;
-  publicationDateTo?: DateFilter | null | undefined;
-  published?: boolean | null | undefined;
-  shared?: boolean | null | undefined;
-  tags?: Array<string> | null | undefined;
-  tagsNotIn?: Array<string> | null | undefined;
-  title?: string | null | undefined;
-};
-
-export enum ArticleSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  PublishedAt = 'PublishedAt'
-}
-
-export type AuthorFilter = {
-  hideOnTeam?: boolean | null | undefined;
-  name?: string | null | undefined;
-  tagIds?: Array<string> | null | undefined;
-};
-
-/** Sorting options for authors */
-export enum AuthorSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Name = 'Name'
-}
-
-export enum BannerActionRole {
-  Cancel = 'CANCEL',
-  Other = 'OTHER',
-  Primary = 'PRIMARY'
-}
-
-export enum BannerDocumentType {
-  Article = 'ARTICLE',
-  Page = 'PAGE'
-}
-
-export enum BlockType {
-  BildwurfAd = 'BildwurfAd',
-  BlockTemplate = 'BlockTemplate',
-  Comment = 'Comment',
-  Crowdfunding = 'Crowdfunding',
-  Embed = 'Embed',
-  Event = 'Event',
-  FacebookPost = 'FacebookPost',
-  FacebookVideo = 'FacebookVideo',
-  FlexBlock = 'FlexBlock',
-  Html = 'HTML',
-  Image = 'Image',
-  ImageGallery = 'ImageGallery',
-  InstagramPost = 'InstagramPost',
-  LinkPageBreak = 'LinkPageBreak',
-  Listicle = 'Listicle',
-  MailchimpForm = 'MailchimpForm',
-  PolisConversation = 'PolisConversation',
-  Poll = 'Poll',
-  Quote = 'Quote',
-  RichText = 'RichText',
-  SoundCloudTrack = 'SoundCloudTrack',
-  StreamableVideo = 'StreamableVideo',
-  Subscribe = 'Subscribe',
-  TeaserGrid = 'TeaserGrid',
-  TeaserGridFlex = 'TeaserGridFlex',
-  TeaserList = 'TeaserList',
-  TeaserSlots = 'TeaserSlots',
-  TikTokVideo = 'TikTokVideo',
-  Title = 'Title',
-  TwitterTweet = 'TwitterTweet',
-  VimeoVideo = 'VimeoVideo',
-  YouTubeVideo = 'YouTubeVideo'
-}
-
-export enum CaptchaType {
-  CfTurnstile = 'CfTurnstile',
-  HCaptcha = 'HCaptcha'
-}
-
-export type ChallengeInput = {
-  challengeID: string;
-  challengeSolution: string;
-};
-
-export enum CommentAuthorType {
-  Author = 'author',
-  GuestUser = 'guestUser',
-  Team = 'team',
-  VerifiedUser = 'verifiedUser'
-}
-
-export enum CommentItemType {
-  Article = 'article',
-  Page = 'page'
-}
-
-export enum CommentRejectionReason {
-  Misconduct = 'misconduct',
-  Spam = 'spam'
-}
-
-export enum CommentSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Rating = 'Rating'
-}
-
-export enum CommentState {
-  Approved = 'approved',
-  PendingApproval = 'pendingApproval',
-  PendingUserChanges = 'pendingUserChanges',
-  Rejected = 'rejected'
-}
-
-export enum CrowdfundingGoalType {
-  Revenue = 'Revenue',
-  Subscription = 'Subscription'
-}
-
-export enum Currency {
-  Chf = 'CHF',
-  Eur = 'EUR'
-}
-
-export type DateFilter = {
-  comparison: DateFilterComparison;
-  date?: string | null | undefined;
-};
-
-export enum DateFilterComparison {
-  Equal = 'Equal',
-  GreaterThan = 'GreaterThan',
-  GreaterThanOrEqual = 'GreaterThanOrEqual',
-  LowerThan = 'LowerThan',
-  LowerThanOrEqual = 'LowerThanOrEqual'
-}
-
-export type DiscountCodeFilter = {
-  from?: string | null | undefined;
-  memberPlans?: Array<string> | null | undefined;
-  to?: string | null | undefined;
-};
-
-export enum DiscountCodesort {
-  CreatedAt = 'CreatedAt',
-  Discount = 'Discount',
-  ModifiedAt = 'ModifiedAt'
-}
-
-export type EventFilter = {
-  from?: string | null | undefined;
-  location?: string | null | undefined;
-  name?: string | null | undefined;
-  tags?: Array<string> | null | undefined;
-  to?: string | null | undefined;
-  upcomingOnly?: boolean | null | undefined;
-};
-
-export enum EventSort {
-  CreatedAt = 'CreatedAt',
-  EndsAt = 'EndsAt',
-  ModifiedAt = 'ModifiedAt',
-  StartsAt = 'StartsAt'
-}
-
-export enum EventStatus {
-  Cancelled = 'Cancelled',
-  Postponed = 'Postponed',
-  Rescheduled = 'Rescheduled',
-  Scheduled = 'Scheduled'
-}
-
-export enum FontStyle {
-  Italic = 'italic',
-  Normal = 'normal'
-}
-
-export enum FontWeight {
-  Black = 'Black',
-  Bold = 'Bold',
-  ExtraBold = 'ExtraBold',
-  ExtraLight = 'ExtraLight',
-  Light = 'Light',
-  Medium = 'Medium',
-  Regular = 'Regular',
-  SemiBold = 'SemiBold',
-  Thin = 'Thin',
-  Variable = 'Variable'
-}
-
-export type MailchimpContactInput = {
-  email: string;
-  interests?: unknown;
-  listId: string;
-  mergeFields?: unknown;
-  status: MailchimpContactStatus;
-  syncProviderId: string;
-};
-
-export enum MailchimpContactStatus {
-  Pending = 'Pending',
-  Subscribed = 'Subscribed'
-}
-
-export enum MailchimpFormOptionsLayout {
-  Grid = 'Grid',
-  List = 'List'
-}
-
-export type MemberPlanFilter = {
-  active?: boolean | null | undefined;
-  name?: string | null | undefined;
-  productType?: ProductType | null | undefined;
-  tags?: Array<string> | null | undefined;
-};
-
-export enum MemberPlanSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt'
-}
-
-export type PageFilter = {
-  description?: string | null | undefined;
-  draft?: boolean | null | undefined;
-  includeHidden?: boolean | null | undefined;
-  pending?: boolean | null | undefined;
-  publicationDateFrom?: DateFilter | null | undefined;
-  publicationDateTo?: DateFilter | null | undefined;
-  published?: boolean | null | undefined;
-  slug?: string | null | undefined;
-  tags?: Array<string> | null | undefined;
-  title?: string | null | undefined;
-};
-
-export enum PageSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  PublishedAt = 'PublishedAt'
-}
-
-/** How the reader proves the new payment method: by paying the open invoice with it, by authorizing it without a charge, or not at all. */
-export enum PaymentMethodChangeKind {
-  Authorization = 'authorization',
-  Immediate = 'immediate',
-  InvoicePayment = 'invoicePayment'
-}
-
-export enum PaymentMethodChangeState {
-  Canceled = 'canceled',
-  Completed = 'completed',
-  Expired = 'expired',
-  Failed = 'failed',
-  Pending = 'pending'
-}
-
-export enum PaymentPeriodicity {
-  Biannual = 'biannual',
-  Biennial = 'biennial',
-  Lifetime = 'lifetime',
-  Monthly = 'monthly',
-  Quarterly = 'quarterly',
-  Yearly = 'yearly'
-}
-
-export enum PaymentState {
-  Canceled = 'canceled',
-  Chargeback = 'chargeback',
-  Created = 'created',
-  Declined = 'declined',
-  Paid = 'paid',
-  Processing = 'processing',
-  RequiresUserAction = 'requiresUserAction',
-  Submitted = 'submitted'
-}
-
-export enum ProductType {
-  Donation = 'Donation',
-  Subscription = 'Subscription'
-}
-
-export type PropertyInput = {
-  id?: string | null | undefined;
-  key: string;
-  public: boolean;
-  value: string;
-};
-
-export enum RatingSystemType {
-  Star = 'star'
-}
-
-export enum SettingName {
-  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
-  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
-  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
-  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
-  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  MailProviderName = 'MAIL_PROVIDER_NAME',
-  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
-  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
-  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
-  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
-  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
-  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
-  NewArticlePaywall = 'NEW_ARTICLE_PAYWALL',
-  NewArticlePeering = 'NEW_ARTICLE_PEERING',
-  PaymentMethodChangeExpiryDays = 'PAYMENT_METHOD_CHANGE_EXPIRY_DAYS',
-  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
-  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
-  SessionTtlDays = 'SESSION_TTL_DAYS',
-  ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',
-  SubscriptionExtendWindowDays = 'SUBSCRIPTION_EXTEND_WINDOW_DAYS',
-  SubscriptionUpgradeBillsFullDifference = 'SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE'
-}
-
-export enum SortOrder {
-  Ascending = 'Ascending',
-  Descending = 'Descending'
-}
-
-export enum SubscribeBlockField {
-  Address = 'Address',
-  Birthday = 'Birthday',
-  EmailRepeated = 'EmailRepeated',
-  FirstName = 'FirstName',
-  Password = 'Password',
-  PasswordRepeated = 'PasswordRepeated'
-}
-
-export enum SubscribeBlockRenderLayout {
-  None = 'None',
-  Picker = 'Picker',
-  Slider = 'Slider'
-}
-
-export enum SubscribePeriodicityDisplay {
-  Dropdown = 'Dropdown',
-  OfferCards = 'OfferCards',
-  Toggle = 'Toggle'
-}
-
-export enum SubscriptionDeactivationReason {
-  Chargeback = 'chargeback',
-  InvoiceNotPaid = 'invoiceNotPaid',
-  None = 'none',
-  UserReplacedSubscription = 'userReplacedSubscription',
-  UserSelfDeactivated = 'userSelfDeactivated'
-}
-
-export type TagFilter = {
-  tag?: string | null | undefined;
-  tags?: Array<string> | null | undefined;
-  type?: TagType | null | undefined;
-};
-
-export enum TagSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Tag = 'Tag'
-}
-
-/** Type of tag. */
-export enum TagType {
-  Article = 'Article',
-  Author = 'Author',
-  Comment = 'Comment',
-  Event = 'Event',
-  Page = 'Page'
-}
-
-export enum TrackingPixelProviderType {
-  Prolitteris = 'prolitteris'
-}
-
-export type UserAddressInput = {
-  city?: string | null | undefined;
-  company?: string | null | undefined;
-  country?: string | null | undefined;
-  streetAddress?: string | null | undefined;
-  streetAddress2?: string | null | undefined;
-  streetAddress2Number?: string | null | undefined;
-  streetAddressNumber?: string | null | undefined;
-  zipCode?: string | null | undefined;
-};
-
 export type HotAndTrendingQueryVariables = Exact<{
   take?: number | null | undefined;
   start?: string | null | undefined;
@@ -589,12 +191,12 @@ export type ArticleQuery = { __typename: 'Query', article: (
   ) };
 
 export type ArticleListQueryVariables = Exact<{
-  filter?: ArticleFilter | null | undefined;
+  filter?: Types.ArticleFilter | null | undefined;
   cursor?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: ArticleSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.ArticleSort | null | undefined;
 }>;
 
 
@@ -604,12 +206,12 @@ export type ArticleListQuery = { __typename: 'Query', articles: { __typename: 'P
     )>, pageInfo: { __typename: 'PageInfo', startCursor: string | null, endCursor: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type FullArticleListQueryVariables = Exact<{
-  filter?: ArticleFilter | null | undefined;
+  filter?: Types.ArticleFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: ArticleSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.ArticleSort | null | undefined;
 }>;
 
 
@@ -663,12 +265,12 @@ export type AuthorQuery = { __typename: 'Query', author: (
   ) | null };
 
 export type AuthorListQueryVariables = Exact<{
-  filter?: AuthorFilter | null | undefined;
+  filter?: Types.AuthorFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  sort?: AuthorSort | null | undefined;
-  order?: SortOrder | null | undefined;
+  sort?: Types.AuthorSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
 }>;
 
 
@@ -688,12 +290,12 @@ export type FullBannerFragment = { __typename: 'Banner', id: string, title: stri
     & FullBannerActionFragment
   )> | null };
 
-export type FullBannerActionFragment = { __typename: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole };
+export type FullBannerActionFragment = { __typename: 'BannerAction', id: string, label: string, url: string, style: string, role: Types.BannerActionRole };
 
 export type PageRefFragment = { __typename: 'PageModel', id: string };
 
 export type PrimaryBannerQueryVariables = Exact<{
-  documentType: BannerDocumentType;
+  documentType: Types.BannerDocumentType;
   documentId: string;
   loggedIn: boolean;
   hasSubscription: boolean;
@@ -788,16 +390,16 @@ export type FullRichTextBlockFragment = { __typename: 'RichTextBlock', disabled:
 
 export type FullHtmlBlockFragment = { __typename: 'HTMLBlock', disabled: boolean | null, html: string | null, blockStyle: string | null };
 
-export type FullSubscribeBlockFragment = { __typename: 'SubscribeBlock', disabled: boolean | null, memberPlanIds: Array<string>, periodicityDisplay: SubscribePeriodicityDisplay | null, fields: Array<SubscribeBlockField>, showGoodies: boolean, showDiscountCodes: boolean, goodieMinValue: number | null, goodieMinValueAppliesToUpgrade: boolean, hideRepeatGoodieOnUpgrade: boolean, blockStyle: string | null, memberPlanRenderSettings: Array<{ __typename: 'SubscribeBlockMemberPlanRenderSetting', isDefault: boolean, memberPlanId: string, layout:
-      | { __typename: 'SubscribeBlockLayoutNoneConfig', showInput: boolean, type: SubscribeBlockRenderLayout }
-      | { __typename: 'SubscribeBlockLayoutPickerConfig', showInput: boolean, values: Array<number>, type: SubscribeBlockRenderLayout, valuesByPeriodicity: Array<{ __typename: 'SubscribeBlockPeriodicityValues', periodicity: PaymentPeriodicity, values: Array<number> }> }
-      | { __typename: 'SubscribeBlockLayoutSliderConfig', showInput: boolean, type: SubscribeBlockRenderLayout }
+export type FullSubscribeBlockFragment = { __typename: 'SubscribeBlock', disabled: boolean | null, memberPlanIds: Array<string>, periodicityDisplay: Types.SubscribePeriodicityDisplay | null, fields: Array<Types.SubscribeBlockField>, showGoodies: boolean, showDiscountCodes: boolean, goodieMinValue: number | null, goodieMinValueAppliesToUpgrade: boolean, hideRepeatGoodieOnUpgrade: boolean, blockStyle: string | null, memberPlanRenderSettings: Array<{ __typename: 'SubscribeBlockMemberPlanRenderSetting', isDefault: boolean, memberPlanId: string, layout:
+      | { __typename: 'SubscribeBlockLayoutNoneConfig', showInput: boolean, type: Types.SubscribeBlockRenderLayout }
+      | { __typename: 'SubscribeBlockLayoutPickerConfig', showInput: boolean, values: Array<number>, type: Types.SubscribeBlockRenderLayout, valuesByPeriodicity: Array<{ __typename: 'SubscribeBlockPeriodicityValues', periodicity: Types.PaymentPeriodicity, values: Array<number> }> }
+      | { __typename: 'SubscribeBlockLayoutSliderConfig', showInput: boolean, type: Types.SubscribeBlockRenderLayout }
      }>, memberPlans: Array<(
     { __typename: 'MemberPlan' }
     & FullMemberPlanFragment
   )> };
 
-export type FullMailchimpFormBlockFragment = { __typename: 'MailchimpFormBlock', disabled: boolean | null, syncProviderId: string | null, listId: string | null, interests: Array<string>, autoFocus: boolean, doubleOptIn: boolean | null, buttonColor: string | null, buttonFontColor: string | null, submitButtonLabel: string | null, successUrl: string | null, blockStyle: string | null, steps: Array<{ __typename: 'MailchimpFormStep', skipIfFieldsFilled: Array<string>, skipIfInterestsFilled: Array<string>, showIfInterestsFilled: Array<string>, inputs: Array<{ __typename: 'MailchimpFormFieldConfig', inputType: string | null, name: string | null, label: string | null, description: string | null, required: boolean | null, urlParam: string | null, defaultValue: string | null, value: string | null, optionsLayout: MailchimpFormOptionsLayout, options: Array<{ __typename: 'MailchimpFormInterestOption', id: string, name: string, description: string | null, image: (
+export type FullMailchimpFormBlockFragment = { __typename: 'MailchimpFormBlock', disabled: boolean | null, syncProviderId: string | null, listId: string | null, interests: Array<string>, autoFocus: boolean, doubleOptIn: boolean | null, buttonColor: string | null, buttonFontColor: string | null, submitButtonLabel: string | null, successUrl: string | null, blockStyle: string | null, steps: Array<{ __typename: 'MailchimpFormStep', skipIfFieldsFilled: Array<string>, skipIfInterestsFilled: Array<string>, showIfInterestsFilled: Array<string>, inputs: Array<{ __typename: 'MailchimpFormFieldConfig', inputType: string | null, name: string | null, label: string | null, description: string | null, required: boolean | null, urlParam: string | null, defaultValue: string | null, value: string | null, optionsLayout: Types.MailchimpFormOptionsLayout, options: Array<{ __typename: 'MailchimpFormInterestOption', id: string, name: string, description: string | null, image: (
           { __typename: 'Image' }
           & FullImageFragment
         ) | null }> }> }>, successPage: { __typename: 'MailchimpFormSuccessPage', description: string | null, options: Array<{ __typename: 'MailchimpFormSuccessOption', label: string, background: string, url: string, mergeFieldName: string | null, mergeFieldValue: string | null }> } | null };
@@ -1065,7 +667,7 @@ export type FullTeaserFragment =
   | FullTeaser_PageTeaser_Fragment
 ;
 
-export type FullFlexBlockFragment = { __typename: 'FlexBlock', disabled: boolean | null, type: BlockType, blockStyle: string | null, blocks: Array<{ __typename: 'BlockWithAlignment', alignment: (
+export type FullFlexBlockFragment = { __typename: 'FlexBlock', disabled: boolean | null, type: Types.BlockType, blockStyle: string | null, blocks: Array<{ __typename: 'BlockWithAlignment', alignment: (
       { __typename: 'FlexAlignment' }
       & FullFlexAlignmentFragment
     ), block:
@@ -1227,12 +829,12 @@ export type FullFlexTeaserFragment = { __typename: 'FlexTeaser', alignment: (
     )
    | null };
 
-export type FullTeaserGridFlexBlockFragment = { __typename: 'TeaserGridFlexBlock', title: string | null, type: BlockType, disabled: boolean | null, blockStyle: string | null, flexTeasers: Array<(
+export type FullTeaserGridFlexBlockFragment = { __typename: 'TeaserGridFlexBlock', title: string | null, type: Types.BlockType, disabled: boolean | null, blockStyle: string | null, flexTeasers: Array<(
     { __typename: 'FlexTeaser' }
     & FullFlexTeaserFragment
   )> };
 
-export type FullTeaserGridBlockFragment = { __typename: 'TeaserGridBlock', title: string | null, type: BlockType, disabled: boolean | null, numColumns: number, blockStyle: string | null, teasers: Array<
+export type FullTeaserGridBlockFragment = { __typename: 'TeaserGridBlock', title: string | null, type: Types.BlockType, disabled: boolean | null, numColumns: number, blockStyle: string | null, teasers: Array<
     | (
       { __typename: 'ArticleTeaser' }
       & FullTeaser_ArticleTeaser_Fragment
@@ -1251,7 +853,7 @@ export type FullTeaserGridBlockFragment = { __typename: 'TeaserGridBlock', title
     )
    | null> };
 
-export type FullTeaserListBlockFragment = { __typename: 'TeaserListBlock', title: string | null, type: BlockType, disabled: boolean | null, blockStyle: string | null, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null }, teasers: Array<
+export type FullTeaserListBlockFragment = { __typename: 'TeaserListBlock', title: string | null, type: Types.BlockType, disabled: boolean | null, blockStyle: string | null, filter: { __typename: 'TeaserListBlockFilter', tags: Array<string> | null }, teasers: Array<
     | (
       { __typename: 'ArticleTeaser' }
       & FullTeaser_ArticleTeaser_Fragment
@@ -1270,7 +872,7 @@ export type FullTeaserListBlockFragment = { __typename: 'TeaserListBlock', title
     )
    | null> };
 
-export type FullTeaserSlotsBlockFragment = { __typename: 'TeaserSlotsBlock', title: string | null, type: BlockType, disabled: boolean | null, blockStyle: string | null, teasers: Array<
+export type FullTeaserSlotsBlockFragment = { __typename: 'TeaserSlotsBlock', title: string | null, type: Types.BlockType, disabled: boolean | null, blockStyle: string | null, teasers: Array<
     | (
       { __typename: 'ArticleTeaser' }
       & FullTeaser_ArticleTeaser_Fragment
@@ -1289,7 +891,7 @@ export type FullTeaserSlotsBlockFragment = { __typename: 'TeaserSlotsBlock', tit
     )
    | null> };
 
-export type FullBlockTemplateBlockFragment = { __typename: 'BlockTemplateBlock', disabled: boolean | null, type: BlockType, templateId: string, blockStyle: string | null, template: { __typename: 'BlockTemplate', id: string, name: string, blocks: Array<
+export type FullBlockTemplateBlockFragment = { __typename: 'BlockTemplateBlock', disabled: boolean | null, type: Types.BlockType, templateId: string, blockStyle: string | null, template: { __typename: 'BlockTemplate', id: string, name: string, blocks: Array<
       | (
         { __typename: 'BildwurfAdBlock' }
         & BlockWithoutTeaser_BildwurfAdBlock_Fragment
@@ -1637,7 +1239,7 @@ export type FullBlockFragment =
 ;
 
 export type AddMailchimpContactMutationVariables = Exact<{
-  input: MailchimpContactInput;
+  input: Types.MailchimpContactInput;
 }>;
 
 
@@ -1646,9 +1248,9 @@ export type AddMailchimpContactMutation = { __typename: 'Mutation', addMailchimp
 export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChallengeQuery = { __typename: 'Query', challenge: { __typename: 'Challenge', type: CaptchaType, challengeID: string | null, challenge: string | null, validUntil: string | null } };
+export type ChallengeQuery = { __typename: 'Query', challenge: { __typename: 'Challenge', type: Types.CaptchaType, challengeID: string | null, challenge: string | null, validUntil: string | null } };
 
-export type FullCommentRatingSystemAnswerFragment = { __typename: 'CommentRatingSystemAnswer', id: string, ratingSystemId: string, answer: string | null, type: RatingSystemType };
+export type FullCommentRatingSystemAnswerFragment = { __typename: 'CommentRatingSystemAnswer', id: string, ratingSystemId: string, answer: string | null, type: Types.RatingSystemType };
 
 export type FullCommentRatingFragment = { __typename: 'CommentRating', id: string, commentId: string, userId: string | null, disabled: boolean | null, value: number, answer: (
     { __typename: 'CommentRatingSystemAnswer' }
@@ -1662,7 +1264,7 @@ export type FullCalculatedRatingFragment = { __typename: 'CalculatedRating', cou
 
 export type FullOverriddenRatingFragment = { __typename: 'OverriddenRating', answerId: string, value: number | null };
 
-export type CommentWithoutNestingFragment = { __typename: 'Comment', id: string, itemID: string, itemType: CommentItemType, parentID: string | null, createdAt: string, modifiedAt: string, title: string | null, lead: string | null, text: RichtextJSONDocument | null, authorType: CommentAuthorType, rejectionReason: CommentRejectionReason | null, state: CommentState, url: string, source: string | null, guestUsername: string | null, featured: boolean | null, tags: Array<(
+export type CommentWithoutNestingFragment = { __typename: 'Comment', id: string, itemID: string, itemType: Types.CommentItemType, parentID: string | null, createdAt: string, modifiedAt: string, title: string | null, lead: string | null, text: RichtextJSONDocument | null, authorType: Types.CommentAuthorType, rejectionReason: Types.CommentRejectionReason | null, state: Types.CommentState, url: string, source: string | null, guestUsername: string | null, featured: boolean | null, tags: Array<(
     { __typename: 'Tag' }
     & FullTagFragment
   )>, user: (
@@ -1702,7 +1304,7 @@ export type FullCommentFragment = (
   & CommentWithoutNestingFragment
 );
 
-export type FullRatingSystemAnswerFragment = { __typename: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer: string | null, ratingSystemId: string };
+export type FullRatingSystemAnswerFragment = { __typename: 'CommentRatingSystemAnswer', id: string, type: Types.RatingSystemType, answer: string | null, ratingSystemId: string };
 
 export type FullRatingSystemFragment = { __typename: 'CommentRatingSystem', id: string, name: string | null, answers: Array<(
     { __typename: 'CommentRatingSystemAnswer' }
@@ -1711,8 +1313,8 @@ export type FullRatingSystemFragment = { __typename: 'CommentRatingSystem', id: 
 
 export type CommentListQueryVariables = Exact<{
   itemId: string;
-  order?: SortOrder | null | undefined;
-  sort?: CommentSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.CommentSort | null | undefined;
 }>;
 
 
@@ -1730,7 +1332,7 @@ export type AddCommentMutationVariables = Exact<{
   guestUsername?: string | null | undefined;
   title?: string | null | undefined;
   text: RichtextJSONDocument;
-  challenge?: ChallengeInput | null | undefined;
+  challenge?: Types.ChallengeInput | null | undefined;
 }>;
 
 
@@ -1764,9 +1366,9 @@ export type RateCommentMutation = { __typename: 'Mutation', rateComment: (
     & FullCommentFragment
   ) };
 
-export type FullCrowdfundingFragment = { __typename: 'Crowdfunding', id: string, name: string, revenue: number | null, subscriptions: number | null, goalType: CrowdfundingGoalType, countSubscriptionsUntil: string | null, activeGoal: { __typename: 'CrowdfundingGoalWithProgress', id: string, title: string, description: string | null, amount: number, progress: number | null } | null };
+export type FullCrowdfundingFragment = { __typename: 'Crowdfunding', id: string, name: string, revenue: number | null, subscriptions: number | null, goalType: Types.CrowdfundingGoalType, countSubscriptionsUntil: string | null, activeGoal: { __typename: 'CrowdfundingGoalWithProgress', id: string, title: string, description: string | null, amount: number, progress: number | null } | null };
 
-export type FullEventFragment = { __typename: 'Event', id: string, name: string, lead: string | null, description: RichtextJSONDocument | null, status: EventStatus, location: string | null, startsAt: string, endsAt: string | null, url: string, image: (
+export type FullEventFragment = { __typename: 'Event', id: string, name: string, lead: string | null, description: RichtextJSONDocument | null, status: Types.EventStatus, location: string | null, startsAt: string, endsAt: string | null, url: string, image: (
     { __typename: 'Image' }
     & FullImageFragment
   ) | null, tags: Array<(
@@ -1775,12 +1377,12 @@ export type FullEventFragment = { __typename: 'Event', id: string, name: string,
   )> | null };
 
 export type EventListQueryVariables = Exact<{
-  filter?: EventFilter | null | undefined;
+  filter?: Types.EventFilter | null | undefined;
   cursor?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: EventSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.EventSort | null | undefined;
 }>;
 
 
@@ -1836,7 +1438,7 @@ export type FullPaymentMethodFragment = { __typename: 'PaymentMethod', id: strin
     & FullImageFragment
   ) | null };
 
-export type FullAvailablePaymentMethodFragment = { __typename: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<(
+export type FullAvailablePaymentMethodFragment = { __typename: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<(
     { __typename: 'PaymentMethod' }
     & FullPaymentMethodFragment
   )> };
@@ -1846,10 +1448,10 @@ export type FullGoodieFragment = { __typename: 'Goodie', id: string, name: strin
     & FullImageFragment
   ) | null };
 
-export type FullMemberPlanFragment = { __typename: 'MemberPlan', id: string, slug: string, name: string, tags: Array<string> | null, description: RichtextJSONDocument | null, shortDescription: RichtextJSONDocument | null, defaultPaymentPeriodicity: PaymentPeriodicity | null, currency: Currency, extendable: boolean, productType: ProductType, successPageId: string | null, failPageId: string | null, confirmationPageId: string | null, image: (
+export type FullMemberPlanFragment = { __typename: 'MemberPlan', id: string, slug: string, name: string, tags: Array<string> | null, description: RichtextJSONDocument | null, shortDescription: RichtextJSONDocument | null, defaultPaymentPeriodicity: Types.PaymentPeriodicity | null, currency: Types.Currency, extendable: boolean, productType: Types.ProductType, successPageId: string | null, failPageId: string | null, confirmationPageId: string | null, image: (
     { __typename: 'Image' }
     & FullImageFragment
-  ) | null, periodicityPricing: Array<{ __typename: 'PeriodicityPrice', periodicity: PaymentPeriodicity, label: string | null, amountMin: number | null, amountTarget: number | null, amountMax: number | null }>, availablePaymentMethods: Array<(
+  ) | null, periodicityPricing: Array<{ __typename: 'PeriodicityPrice', periodicity: Types.PaymentPeriodicity, label: string | null, amountMin: number | null, amountTarget: number | null, amountMax: number | null }>, availablePaymentMethods: Array<(
     { __typename: 'AvailablePaymentMethod' }
     & FullAvailablePaymentMethodFragment
   )>, successPage: { __typename: 'Page', url: string } | null, failPage: { __typename: 'Page', url: string } | null, confirmationPage: { __typename: 'Page', url: string } | null, goodies: Array<(
@@ -1857,14 +1459,14 @@ export type FullMemberPlanFragment = { __typename: 'MemberPlan', id: string, slu
     & FullGoodieFragment
   )> };
 
-export type FullPaymentFragment = { __typename: 'Payment', id: string, intentSecret: string, state: PaymentState, paymentMethod: (
+export type FullPaymentFragment = { __typename: 'Payment', id: string, intentSecret: string, state: Types.PaymentState, paymentMethod: (
     { __typename: 'PaymentMethod' }
     & FullPaymentMethodFragment
   ) };
 
-export type FullSubscriptionDeactivationFragment = { __typename: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason };
+export type FullSubscriptionDeactivationFragment = { __typename: 'SubscriptionDeactivation', date: string, reason: Types.SubscriptionDeactivationReason };
 
-export type FullSubscriptionFragment = { __typename: 'PublicSubscription', id: string, url: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, extendable: boolean, externalReward: string | null, paidUntil: string | null, canExtend: boolean, canRevertUpgrade: boolean, canRenewPaymentMethod: boolean, isActive: boolean, paymentMethod: (
+export type FullSubscriptionFragment = { __typename: 'PublicSubscription', id: string, url: string, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, extendable: boolean, externalReward: string | null, paidUntil: string | null, canExtend: boolean, canRevertUpgrade: boolean, canRenewPaymentMethod: boolean, isActive: boolean, paymentMethod: (
     { __typename: 'PaymentMethod' }
     & FullPaymentMethodFragment
   ), deactivation: (
@@ -1884,7 +1486,7 @@ export type FullSubscriptionFragment = { __typename: 'PublicSubscription', id: s
     & FullSubscriptionPaymentMethodChangeFragment
   ) | null };
 
-export type FullSubscriptionPaymentMethodChangeFragment = { __typename: 'SubscriptionPaymentMethodChange', id: string, createdAt: string, kind: PaymentMethodChangeKind, state: PaymentMethodChangeState, amount: number, currency: Currency, expiresAt: string, completedAt: string | null, paymentMethod: (
+export type FullSubscriptionPaymentMethodChangeFragment = { __typename: 'SubscriptionPaymentMethodChange', id: string, createdAt: string, kind: Types.PaymentMethodChangeKind, state: Types.PaymentMethodChangeState, amount: number, currency: Types.Currency, expiresAt: string, completedAt: string | null, paymentMethod: (
     { __typename: 'PaymentMethod' }
     & FullPaymentMethodFragment
   ) };
@@ -1911,11 +1513,11 @@ export type SubscribeMutationVariables = Exact<{
   memberPlanId?: string | null | undefined;
   memberPlanSlug?: string | null | undefined;
   autoRenew: boolean;
-  paymentPeriodicity: PaymentPeriodicity;
+  paymentPeriodicity: Types.PaymentPeriodicity;
   monthlyAmount: number;
   paymentMethodId?: string | null | undefined;
   paymentMethodSlug?: string | null | undefined;
-  subscriptionProperties?: Array<PropertyInput> | PropertyInput | null | undefined;
+  subscriptionProperties?: Array<Types.PropertyInput> | Types.PropertyInput | null | undefined;
   successURL?: string | null | undefined;
   failureURL?: string | null | undefined;
   deactivateSubscriptionId?: string | null | undefined;
@@ -1934,11 +1536,11 @@ export type ResubscribeMutationVariables = Exact<{
   memberPlanId?: string | null | undefined;
   memberPlanSlug?: string | null | undefined;
   autoRenew: boolean;
-  paymentPeriodicity: PaymentPeriodicity;
+  paymentPeriodicity: Types.PaymentPeriodicity;
   monthlyAmount: number;
   paymentMethodId?: string | null | undefined;
   paymentMethodSlug?: string | null | undefined;
-  subscriptionProperties?: Array<PropertyInput> | PropertyInput | null | undefined;
+  subscriptionProperties?: Array<Types.PropertyInput> | Types.PropertyInput | null | undefined;
   discountCode?: string | null | undefined;
   goodieId?: string | null | undefined;
 }>;
@@ -2091,12 +1693,12 @@ export type CheckInvoiceStatusQuery = { __typename: 'Query', checkInvoiceStatus:
   ) };
 
 export type MemberPlanListQueryVariables = Exact<{
-  filter?: MemberPlanFilter | null | undefined;
+  filter?: Types.MemberPlanFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: MemberPlanSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.MemberPlanSort | null | undefined;
 }>;
 
 
@@ -2133,12 +1735,12 @@ export type UpgradeSubscriptionInfoQuery = { __typename: 'Query', upgradeUserSub
 export type FullDiscountCodeFragment = { __typename: 'DiscountCode', id: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename: 'MemberPlan', id: string, name: string } };
 
 export type DiscountCodeListQueryVariables = Exact<{
-  filter?: DiscountCodeFilter | null | undefined;
+  filter?: Types.DiscountCodeFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: DiscountCodesort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.DiscountCodesort | null | undefined;
 }>;
 
 
@@ -2325,12 +1927,12 @@ export type PageQuery = { __typename: 'Query', page: (
   ) };
 
 export type PageListQueryVariables = Exact<{
-  filter?: PageFilter | null | undefined;
+  filter?: Types.PageFilter | null | undefined;
   cursor?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: PageSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.PageSort | null | undefined;
 }>;
 
 
@@ -2422,7 +2024,7 @@ export type PollVoteMutation = { __typename: 'Mutation', voteOnPoll: { __typenam
 
 export type FullPropertyFragment = { __typename: 'Property', key: string, value: string };
 
-export type FullSettingFragment = { __typename: 'Setting', id: string, name: SettingName, value: unknown };
+export type FullSettingFragment = { __typename: 'Setting', id: string, name: Types.SettingName, value: unknown };
 
 export type SettingListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2442,7 +2044,7 @@ export type SettingQuery = { __typename: 'Query', setting: (
     & FullSettingFragment
   ) };
 
-export type WebsiteSettingsFragment = { __typename: 'WebsiteSettings', theme: unknown, analytics: { __typename: 'WebsiteAnalytics', googleAnalytics: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, googleTagManager: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, plausible: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, piwik: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } }, ads: { __typename: 'WebsiteAds', sparkLoop: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } }, fonts: Array<{ __typename: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> };
+export type WebsiteSettingsFragment = { __typename: 'WebsiteSettings', theme: unknown, analytics: { __typename: 'WebsiteAnalytics', googleAnalytics: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, googleTagManager: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, plausible: { __typename: 'KeyEnabled', enabled: boolean, key: string | null }, piwik: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } }, ads: { __typename: 'WebsiteAds', sparkLoop: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } }, fonts: Array<{ __typename: 'WebsiteRemoteFont', weight: Array<Types.FontWeight>, style: Array<Types.FontStyle>, name: string }> };
 
 export type SensitiveWebsiteSettingsFragment = { __typename: 'WebsiteSettings', mail: { __typename: 'WebsiteMail', mailchimp: { __typename: 'KeyEnabled', enabled: boolean, key: string | null } | null } };
 
@@ -2467,11 +2069,11 @@ export type SitemapArticleFragment = { __typename: 'Article', id: string, slug: 
 export type SitemapPageFragment = { __typename: 'Page', id: string, slug: string | null, url: string, publishedAt: string | null, latest: { __typename: 'PageRevision', publishedAt: string | null } };
 
 export type SitemapArticlesQueryVariables = Exact<{
-  filter?: ArticleFilter | null | undefined;
+  filter?: Types.ArticleFilter | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: ArticleSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.ArticleSort | null | undefined;
 }>;
 
 
@@ -2481,11 +2083,11 @@ export type SitemapArticlesQuery = { __typename: 'Query', articles: { __typename
     )>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean } } };
 
 export type SitemapPagesQueryVariables = Exact<{
-  filter?: PageFilter | null | undefined;
+  filter?: Types.PageFilter | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: PageSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.PageSort | null | undefined;
 }>;
 
 
@@ -3799,11 +3401,11 @@ export type StatsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type StatsQuery = { __typename: 'Query', stats: { __typename: 'Stats', articlesCount: number, authorsCount: number, firstArticleDate: string | null } | null };
 
-export type FullTagFragment = { __typename: 'Tag', id: string, tag: string | null, description: RichtextJSONDocument | null, type: TagType, main: boolean, url: string, color: string | null };
+export type FullTagFragment = { __typename: 'Tag', id: string, tag: string | null, description: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color: string | null };
 
 export type TagQueryVariables = Exact<{
   tag: string;
-  type: TagType;
+  type: Types.TagType;
 }>;
 
 
@@ -3813,12 +3415,12 @@ export type TagQuery = { __typename: 'Query', tag: (
   ) };
 
 export type TagListQueryVariables = Exact<{
-  filter?: TagFilter | null | undefined;
+  filter?: Types.TagFilter | null | undefined;
   cursorId?: string | null | undefined;
   take?: number | null | undefined;
   skip?: number | null | undefined;
-  order?: SortOrder | null | undefined;
-  sort?: TagSort | null | undefined;
+  order?: Types.SortOrder | null | undefined;
+  sort?: Types.TagSort | null | undefined;
 }>;
 
 
@@ -3829,7 +3431,7 @@ export type TagListQuery = { __typename: 'Query', tags: { __typename: 'Paginated
 
 export type FullTrackingPixelFragment = { __typename: 'TrackingPixel', id: string, uri: string | null };
 
-export type FullTrackingPixelMethodFragment = { __typename: 'TrackingPixelMethod', trackingPixelProviderType: TrackingPixelProviderType };
+export type FullTrackingPixelMethodFragment = { __typename: 'TrackingPixelMethod', trackingPixelProviderType: Types.TrackingPixelProviderType };
 
 export type FullPaymentProviderCustomerFragment = { __typename: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string };
 
@@ -3926,10 +3528,10 @@ export type RegisterMutationVariables = Exact<{
   flair?: string | null | undefined;
   firstName?: string | null | undefined;
   birthday?: string | null | undefined;
-  address?: UserAddressInput | null | undefined;
+  address?: Types.UserAddressInput | null | undefined;
   email: string;
   password?: string | null | undefined;
-  challengeAnswer: ChallengeInput;
+  challengeAnswer: Types.ChallengeInput;
 }>;
 
 
@@ -3945,7 +3547,7 @@ export type UpdateUserMutationVariables = Exact<{
   firstName?: string | null | undefined;
   flair?: string | null | undefined;
   name?: string | null | undefined;
-  address?: UserAddressInput | null | undefined;
+  address?: Types.UserAddressInput | null | undefined;
   birthday?: string | null | undefined;
 }>;
 

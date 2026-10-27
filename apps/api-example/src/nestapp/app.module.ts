@@ -25,6 +25,7 @@ import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
 import { ApiTokenModule } from '@wepublish/api-token/api';
 import { NewsletterModule } from '@wepublish/newsletter/api';
 import { DocumentModule } from '@wepublish/document/api';
+import { DragonflyModule } from '@wepublish/dragonfly/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -40,10 +41,11 @@ import {
 import { HealthModule } from '@wepublish/health';
 import { MediaAdapter, MediaAdapterModule } from '@wepublish/image/api';
 import {
-  GraphqlResponseCacheModule,
-  KvTtlCacheModule,
-  KvTtlCacheService,
+  KvCacheModule,
+  NamespacedCache,
+  NamespacedCacheModule,
 } from '@wepublish/kv-ttl-cache/api';
+import { prismaDecimalCodec } from '@wepublish/kv-ttl-cache/api/prisma';
 import { MailsModule } from '@wepublish/mail/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import {
@@ -73,6 +75,7 @@ import { ImportPeerArticleModule } from '@wepublish/peering/api/import';
 import { PermissionModule } from '@wepublish/permissions/api';
 import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
+import { PublicContentCacheModule } from '@wepublish/public-content-cache/api';
 import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SessionModule } from '@wepublish/session/api';
 import { OneModule } from '@wepublish/one/api';
@@ -91,12 +94,14 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 import { UserModule } from '@wepublish/user/api';
 import { generateJWT } from '@wepublish/utils/api';
 import { VersionInformationModule } from '@wepublish/versionInformation/api';
+import { WebsiteRevalidationModule } from '@wepublish/website-revalidation/api';
 import { readConfig } from '../readConfig';
 import {
   ProviderRegistryModule,
   ProviderRegistryService,
 } from '@wepublish/provider-registry/api';
 import { reconcileProviderRegistry } from './reconcile-provider-registry';
+import { API_SHARED_NAMESPACES } from './shared-namespaces';
 
 @Global()
 @Module({
@@ -131,10 +136,13 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
         } as ApolloDriverConfig & GqlModuleOptions;
       },
     }),
-    KvTtlCacheModule,
-    GraphqlResponseCacheModule,
+    DragonflyModule.forRoot(),
+    KvCacheModule.forRoot({ codec: prismaDecimalCodec }),
+    NamespacedCacheModule.forRoot({ sharedNamespaces: API_SHARED_NAMESPACES }),
+    WebsiteRevalidationModule,
+    PublicContentCacheModule,
     V0Module.registerAsync({
-      imports: [PrismaModule, KvTtlCacheModule],
+      imports: [PrismaModule],
     }),
     AuthorModule,
     PrismaModule,
@@ -145,7 +153,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
         reconcileProviderRegistry(prisma, config.get('CONFIG_FILE_PATH')),
     }),
     MailsModule.registerAsync({
-      imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
+      imports: [ConfigModule, PrismaModule],
       useFactory: async (
         config: ConfigService,
         prisma: PrismaClient,
@@ -327,9 +335,9 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     HotAndTrendingModule.registerAsync({
       imports: [
         GoogleAnalyticsModule.registerAsync({
-          imports: [PrismaModule, KvTtlCacheModule],
-          inject: [PrismaClient, KvTtlCacheService],
-          useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
+          imports: [PrismaModule],
+          inject: [PrismaClient, NamespacedCache],
+          useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
             const dbConfig = new GoogleAnalyticsDbConfig(
               prisma,
               kv,

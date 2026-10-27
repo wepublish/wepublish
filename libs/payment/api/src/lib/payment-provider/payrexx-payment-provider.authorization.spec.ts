@@ -2,8 +2,18 @@ import { Gateway, GatewayClient } from '../payrexx/gateway-client';
 import { Transaction, TransactionClient } from '../payrexx/transaction-client';
 import { PayrexxPaymentProvider } from './payrexx-payment-provider';
 import express from 'express';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
+import { prismaDecimalCodec } from '@wepublish/kv-ttl-cache/api/prisma';
 import { Currency, Prisma, PrismaClient } from '@prisma/client';
+
+const harnesses: NamespacedCacheTesting[] = [];
+
+afterEach(async () => {
+  await Promise.all(harnesses.splice(0).map(testing => testing.close()));
+});
 
 describe('PayrexxPaymentProvider authorization', () => {
   let payrexx: PayrexxPaymentProvider;
@@ -49,24 +59,34 @@ describe('PayrexxPaymentProvider authorization', () => {
       }
     }
 
-    const kv = createKvMock();
-    await kv.setNs('settings:paymentprovider', 'payrexx', {
-      id: 'payrexx',
-      type: 'payrexx',
-      name: 'Payrexx',
-      offSessionPayments: true,
-      apiKey: 'key',
-      webhookEndpointSecret: 'secret',
-      payrexx_instancename: 'instancename',
-      payrexx_psp: ['TWINT'],
-      payrexx_pm: ['TWINT'],
-      payrexx_vatrate: new Prisma.Decimal('8.1'),
+    const testing = await createNamespacedCacheTesting({
+      codec: prismaDecimalCodec,
     });
+    harnesses.push(testing);
+    const kv = testing.cache;
+    await kv.setNs(
+      'settings:paymentprovider',
+      'payrexx',
+      {
+        id: 'payrexx',
+        type: 'payrexx',
+        name: 'Payrexx',
+        offSessionPayments: true,
+        apiKey: 'key',
+        webhookEndpointSecret: 'secret',
+        payrexx_instancename: 'instancename',
+        payrexx_psp: ['TWINT'],
+        payrexx_pm: ['TWINT'],
+        payrexx_vatrate: new Prisma.Decimal('8.1'),
+      },
+      60
+    );
 
     payrexx = new PayrexxPaymentProvider({
       id: 'payrexx',
       prisma: {} as PrismaClient,
       kv,
+      resets: testing.resets,
     });
     payrexx.overridePayrexxFactory(PayrexxFactoryMock as any);
   });

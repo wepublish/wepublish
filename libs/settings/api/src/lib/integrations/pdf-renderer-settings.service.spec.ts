@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient, SettingPdfRenderer } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { PdfRendererSettingsDataloaderService } from './pdf-renderer-settings-dataloader.service';
@@ -31,7 +31,7 @@ describe('PdfRendererSettingsService', () => {
       imports: [PrismaModule],
       providers: [
         PdfRendererSettingsService,
-        { provide: KvTtlCacheService, useValue: { resetNamespace: vi.fn() } },
+        { provide: NamespaceResets, useValue: { reset: vi.fn() } },
         { provide: ProviderSettingsChanged, useValue: { notify: vi.fn() } },
         {
           provide: PdfRendererSettingsDataloaderService,

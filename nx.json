@@ -229,6 +229,7 @@
         "libs/crowdfunding/api/**/*",
         "libs/crowdfunding/editor/**/*",
         "libs/document/api/**/*",
+        "libs/dragonfly/api/**/*",
         "libs/editor/api/**/*",
         "libs/errors/**/*",
         "libs/errors/website/**/*",
@@ -268,6 +269,7 @@
         "libs/phrase/api/**/*",
         "libs/poll/api/**/*",
         "libs/property/api/**/*",
+        "libs/public-content-cache/api/**/*",
         "libs/richtext/api/**/*",
         "libs/richtext/editor/**/*",
         "libs/richtext/**/*",
@@ -295,7 +297,8 @@
         "libs/website/api/**/*",
         "libs/website/builder/**/*",
         "libs/website/**/*",
-        "libs/website/translations/**/*"
+        "libs/website/translations/**/*",
+        "libs/website-revalidation/api/**/*"
       ]
     },
     {

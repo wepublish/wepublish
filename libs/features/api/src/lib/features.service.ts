@@ -5,7 +5,7 @@ import {
   FEATURE_KEY_PATTERN,
   isKnownFeature,
 } from '@wepublish/features';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { FEATURE_ENV_KEYS, FEATURE_REGISTRY } from './features.tokens';
 
 export const FEATURES_CACHE_NAMESPACE = 'features';
@@ -21,7 +21,8 @@ export const parseFeatureList = (raw: string | undefined): string[] =>
 export class FeaturesService {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private kv: NamespacedCache,
+    private resets: NamespaceResets,
     @Inject(FEATURE_REGISTRY) private registry: readonly Feature[],
     @Inject(FEATURE_ENV_KEYS) private envKeys: string[]
   ) {}
@@ -76,6 +77,6 @@ export class FeaturesService {
       }),
     ]);
 
-    await this.kv.resetNamespace(FEATURES_CACHE_NAMESPACE, { pages: false });
+    await this.resets.reset(FEATURES_CACHE_NAMESPACE);
   }
 }

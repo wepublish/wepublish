@@ -1,7 +1,16 @@
 import { Currency, PrismaClient } from '@prisma/client';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import express from 'express';
 import { StripePaymentProvider } from './stripe-payment-provider';
+
+const harnesses: NamespacedCacheTesting[] = [];
+
+afterEach(async () => {
+  await Promise.all(harnesses.splice(0).map(testing => testing.close()));
+});
 
 describe('StripePaymentProvider', () => {
   let provider: StripePaymentProvider;
@@ -23,16 +32,23 @@ describe('StripePaymentProvider', () => {
   });
 
   beforeEach(async () => {
-    const kv = createKvMock();
-    await kv.setNs('settings:paymentprovider', 'stripe', {
-      id: 'stripe',
-      type: 'stripe',
-      name: 'Stripe',
-      offSessionPayments: true,
-      apiKey: 'sk_test',
-      webhookEndpointSecret: 'whsec',
-      stripe_methods: ['CARD'],
-    });
+    const testing = await createNamespacedCacheTesting();
+    harnesses.push(testing);
+    const kv = testing.cache;
+    await kv.setNs(
+      'settings:paymentprovider',
+      'stripe',
+      {
+        id: 'stripe',
+        type: 'stripe',
+        name: 'Stripe',
+        offSessionPayments: true,
+        apiKey: 'sk_test',
+        webhookEndpointSecret: 'whsec',
+        stripe_methods: ['CARD'],
+      },
+      60
+    );
 
     stripe = {
       setupIntents: {
@@ -50,6 +66,7 @@ describe('StripePaymentProvider', () => {
       id: 'stripe',
       prisma: {} as PrismaClient,
       kv,
+      resets: testing.resets,
     });
     vi.spyOn(provider, 'getStripeGateway').mockResolvedValue(stripe as any);
   });

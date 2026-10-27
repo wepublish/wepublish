@@ -1,8 +1,8 @@
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import { Injectable, Scope } from '@nestjs/common';
 import { PageRevision, PrismaClient } from '@prisma/client';
 import { Primeable } from '@wepublish/utils/api';
@@ -32,7 +32,7 @@ export class PageRevisionDataloaderService implements Primeable<RevisionMap> {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   private async loadRevisions(pageIds: string[]): Promise<RevisionMap[]> {

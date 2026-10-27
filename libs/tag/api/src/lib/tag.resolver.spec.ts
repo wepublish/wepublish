@@ -1,10 +1,6 @@
 import { INestApplication } from '@nestjs/common';
-import {
-  createMock,
-  PartialMocked,
-  TagList,
-  TagType,
-} from '@wepublish/testing';
+import { TagType } from '@prisma/client';
+import { createMock, PartialMocked } from '@wepublish/testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -13,6 +9,41 @@ import { TagResolver } from './tag.resolver';
 import { TagService } from './tag.service';
 import request from 'supertest';
 import { TagDataloader } from './tag.dataloader';
+
+const TagList = `
+  query TagList(
+    $filter: TagFilter
+    $cursorId: String
+    $take: Int
+    $skip: Int
+    $order: SortOrder
+    $sort: TagSort
+  ) {
+    tags(
+      filter: $filter
+      cursorId: $cursorId
+      take: $take
+      skip: $skip
+      order: $order
+      sort: $sort
+    ) {
+      nodes {
+        id
+        tag
+        url
+      }
+
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+
+      totalCount
+    }
+  }
+`;
 
 describe('TagResolver', () => {
   let app: INestApplication;

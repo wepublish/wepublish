@@ -1,7 +1,16 @@
 import { Currency, PrismaClient } from '@prisma/client';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import express from 'express';
 import { MolliePaymentProvider } from './mollie-payment-provider';
+
+const harnesses: NamespacedCacheTesting[] = [];
+
+afterEach(async () => {
+  await Promise.all(harnesses.splice(0).map(testing => testing.close()));
+});
 
 describe('MolliePaymentProvider authorization', () => {
   let provider: MolliePaymentProvider;
@@ -21,17 +30,24 @@ describe('MolliePaymentProvider authorization', () => {
   });
 
   beforeEach(async () => {
-    const kv = createKvMock();
-    await kv.setNs('settings:paymentprovider', 'mollie', {
-      id: 'mollie',
-      type: 'mollie',
-      name: 'Mollie',
-      offSessionPayments: true,
-      apiKey: 'test_key',
-      webhookEndpointSecret: 'secret',
-      mollie_apiBaseUrl: 'https://api.example.com',
-      mollie_methods: ['CREDITCARD'],
-    });
+    const testing = await createNamespacedCacheTesting();
+    harnesses.push(testing);
+    const kv = testing.cache;
+    await kv.setNs(
+      'settings:paymentprovider',
+      'mollie',
+      {
+        id: 'mollie',
+        type: 'mollie',
+        name: 'Mollie',
+        offSessionPayments: true,
+        apiKey: 'test_key',
+        webhookEndpointSecret: 'secret',
+        mollie_apiBaseUrl: 'https://api.example.com',
+        mollie_methods: ['CREDITCARD'],
+      },
+      60
+    );
 
     mollie = {
       payments: {
@@ -48,6 +64,7 @@ describe('MolliePaymentProvider authorization', () => {
       id: 'mollie',
       prisma: {} as PrismaClient,
       kv,
+      resets: testing.resets,
     });
     vi.spyOn(provider, 'getMollieGateway').mockResolvedValue(mollie as any);
   });

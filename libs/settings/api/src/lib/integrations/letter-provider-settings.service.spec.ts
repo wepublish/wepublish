@@ -1,7 +1,7 @@
 import type { Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient, SettingLetterProvider } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { LetterProviderSettingsDataloaderService } from './letter-provider-settings-dataloader.service';
@@ -36,7 +36,7 @@ describe('LetterProviderSettingsService', () => {
       imports: [PrismaModule],
       providers: [
         LetterProviderSettingsService,
-        { provide: KvTtlCacheService, useValue: { resetNamespace: vi.fn() } },
+        { provide: NamespaceResets, useValue: { reset: vi.fn() } },
         { provide: ProviderSettingsChanged, useValue: { notify } },
         {
           provide: LetterProviderSettingsDataloaderService,

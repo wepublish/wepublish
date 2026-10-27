@@ -6,6 +6,7 @@ export * from './lib/media-service/media-service.module';
 
 export * from './lib/storage/storage-fetch';
 export * from './lib/link-cache/link-cache';
+export * from './lib/link-cache/media-link-cache.module';
 
 export * from './lib/authentication/jwt-auth.guard';
 export * from './lib/authentication/jwt-auth.module';

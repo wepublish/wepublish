@@ -17,7 +17,4 @@ export default [
     // Override or add rules here
     rules: {},
   },
-  {
-    ignores: ['__tests__/api/**/*.ts'],
-  },
 ];
