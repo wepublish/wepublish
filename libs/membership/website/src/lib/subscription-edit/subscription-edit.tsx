@@ -13,7 +13,7 @@ import {
   Link as BuilderLink,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { ReactNode, useId, useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatCurrency } from '../formatters/format-currency';
@@ -23,7 +23,6 @@ import { paymentMethodLabel } from '../payment-method-label';
 import {
   HistoryTable,
   HistoryTableWrapper,
-  PLAN_PADDING,
 } from '../subscription-history/history-table';
 import { InvoiceHistoryStandalone } from '../subscription-history/invoice-history';
 import { SubscriptionStateChip } from '../subscription-history/subscription-history';
@@ -34,6 +33,7 @@ import {
   usePaymentMethodActions,
 } from '../subscription-list/subscription-actions';
 import { SubscriptionReward } from '../subscription-list/subscription-reward';
+import { SectionBox, SectionBoxContent } from '../section-box/section-box';
 import { canUpgrade } from './can-upgrade';
 
 const PAYMENT_ACTIONS: readonly SubscriptionAction[] = [
@@ -64,6 +64,13 @@ export const SubscriptionEditWrapper = styled('div')`
   align-items: start;
   grid-template-areas: 'plan' 'payment' 'renewal' 'invoices';
 
+  // the buttons on the right, as in the history's action rows
+  ${SectionBoxContent} ${SubscriptionListItemActions} {
+    justify-self: stretch;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
   @container (min-width: 800px) {
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
@@ -73,59 +80,10 @@ export const SubscriptionEditWrapper = styled('div')`
   }
 `;
 
-export const SubscriptionEditSection = styled('section')`
-  display: grid;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-  // the heading band follows the rounding
-  overflow: hidden;
-`;
-
-/** The section's title on a band, like the history table's header. */
-export const SubscriptionEditSectionTitle = styled('header')`
-  background-color: ${({ theme }) => theme.palette.grey[100]};
-  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
-  padding: ${({ theme }) => theme.spacing(1.5, PLAN_PADDING)};
-
-  h2 {
-    margin: 0;
-  }
-`;
-
-/** Indented like the plan column of the history table. */
-export const SubscriptionEditSectionContent = styled('div')`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(2)};
-  justify-items: start;
-  padding: ${({ theme }) => theme.spacing(2, PLAN_PADDING)};
-
-  & > * {
-    margin: 0;
-  }
-
-  // the buttons on the right, as in the history's action rows
-  ${SubscriptionListItemActions} {
-    justify-self: stretch;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-  }
-`;
-
 export const SubscriptionEditButtons = styled('div')`
   display: flex;
   justify-content: flex-end;
   justify-self: stretch;
-`;
-
-/** The invoice table brings its own cell padding and lines. */
-const SubscriptionEditTableContent = styled('div')`
-  & table {
-    margin: 0;
-  }
-
-  & tr:last-of-type > td {
-    border-bottom: none;
-  }
 `;
 
 /** Label and value per row, the rows divided like the table's. */
@@ -169,29 +127,14 @@ function Section({
   table?: boolean;
   children: ReactNode;
 }) {
-  const {
-    elements: { H6 },
-  } = useWebsiteBuilder();
-  const id = useId();
-  const Content =
-    table ? SubscriptionEditTableContent : SubscriptionEditSectionContent;
-
   return (
-    <SubscriptionEditSection
-      aria-labelledby={id}
+    <SectionBox
+      title={title}
+      table={table}
       style={{ gridArea: area }}
     >
-      <SubscriptionEditSectionTitle>
-        <H6
-          component="h2"
-          id={id}
-        >
-          {title}
-        </H6>
-      </SubscriptionEditSectionTitle>
-
-      <Content>{children}</Content>
-    </SubscriptionEditSection>
+      {children}
+    </SectionBox>
   );
 }
 

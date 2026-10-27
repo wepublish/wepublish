@@ -40,11 +40,14 @@ import {
 import { isSubscriptionDeactivated } from '../subscription-state';
 import {
   HISTORY_COLUMNS,
+  HISTORY_COLUMNS_SHOWN,
   HISTORY_STACKED,
+  historyHalves,
   PLAN_PADDING,
   HistoryAmount,
   HistoryArrowCell,
   HistoryCell,
+  HistoryDate,
   HistoryPlanCell,
   HistoryState,
   HistoryStateCell,
@@ -63,6 +66,18 @@ export const SubscriptionHistoryWrapper = styled(HistoryTableWrapper)`
  * sections of the edit page, its name on a band like their headings.
  */
 export const SubscriptionHistoryBody = styled(TableBody)`
+  // in the table, a darker line below each subscription's last shown row
+  ${HISTORY_COLUMNS_SHOWN} {
+    &
+      > tr:not([data-stacked-only], [data-collapsed]):not(
+        :has(~ tr:not([data-stacked-only], [data-collapsed]))
+      )
+      > :is(td, th) {
+      border-bottom-color: ${({ theme }) =>
+        alpha(theme.palette.common.black, 0.12)};
+    }
+  }
+
   ${HISTORY_STACKED} {
     border: 1px solid ${({ theme }) => theme.palette.divider};
     border-radius: ${({ theme }) => theme.shape.borderRadius}px;
@@ -120,13 +135,26 @@ export const SubscriptionHistoryMainRow = styled(TableRow)`
     border-bottom: none;
   }
 
+  // below the name, state and dates on the left; amount, payment method and
+  // renewal on the right (the cells after the hidden arrow, state and dates)
+  ${({ theme }) =>
+    historyHalves(theme, {
+      pairs: 3,
+      top: 'th',
+      right: 'td:nth-of-type(n + 5)',
+    })}
+
   // the whole block, also when its action row is hovered; lighter than the
-  // header rows, so it does not read as one
-  &:hover > td,
-  &:hover > th,
-  &:has(+ tr:hover) > td,
-  &:has(+ tr:hover) > th {
-    background-color: ${({ theme }) => alpha(theme.palette.common.black, 0.02)};
+  // header rows, so it does not read as one. Only in the table: stacked, the
+  // block does not open anything.
+  ${HISTORY_COLUMNS_SHOWN} {
+    &:hover > td,
+    &:hover > th,
+    &:has(+ tr:hover) > td,
+    &:has(+ tr:hover) > th {
+      background-color: ${({ theme }) =>
+        alpha(theme.palette.common.black, 0.02)};
+    }
   }
 `;
 
@@ -138,9 +166,17 @@ export const SubscriptionHistoryActionRow = styled(TableRow)`
     cursor: auto;
   }
 
-  &:hover > td,
-  ${SubscriptionHistoryMainRow}:hover + && > td {
-    background-color: ${({ theme }) => alpha(theme.palette.common.black, 0.02)};
+  ${HISTORY_COLUMNS_SHOWN} {
+    &:hover > td,
+    ${SubscriptionHistoryMainRow}:hover + && > td {
+      background-color: ${({ theme }) =>
+        alpha(theme.palette.common.black, 0.02)};
+    }
+
+    // open invoices draw the line themselves, from where their block starts
+    &&:has(+ tr[data-nested='true']:not([data-collapsed])) > td {
+      border-bottom: none;
+    }
   }
 `;
 
@@ -258,7 +294,6 @@ function SubscriptionHistoryRow({
   const {
     meta: { locale },
     elements: { Button },
-    date,
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const {
@@ -338,23 +373,11 @@ function SubscriptionHistoryRow({
         </HistoryStateCell>
 
         <HistoryCell data-label={t('subscriptionHistory.startsAt')}>
-          <time
-            suppressHydrationWarning
-            dateTime={startsAt}
-          >
-            {date.format(new Date(startsAt), false)}
-          </time>
+          <HistoryDate date={startsAt} />
         </HistoryCell>
 
         <HistoryCell data-label={t('subscriptionHistory.paidUntil')}>
-          {paidUntil && (
-            <time
-              suppressHydrationWarning
-              dateTime={paidUntil}
-            >
-              {date.format(new Date(paidUntil), false)}
-            </time>
-          )}
+          {paidUntil && <HistoryDate date={paidUntil} />}
         </HistoryCell>
 
         <HistoryCell data-label={t('subscriptionHistory.amount')}>

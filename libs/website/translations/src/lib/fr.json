@@ -266,7 +266,12 @@
       "suggested": "Suggéré",
       "occupation": "Fonction / Profession",
       "passwordsDoNotMatch": "Les mots de passe ne correspondent pas."
-    }
+    },
+    "sections": {
+      "personalData": "Données personnelles",
+      "security": "Sécurité"
+    },
+    "changePassword": "Changer le mot de passe"
   },
   "article": {
     "noArticles": "Aucun article disponible",

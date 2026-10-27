@@ -1,11 +1,6 @@
 import { useMutation } from '@apollo/client/react';
-import styled from '@emotion/styled';
 import { useApolloClient } from '@apollo/client/react';
-import { ContentWrapper } from '@wepublish/content/website';
-import {
-  PersonalDataFormContainer,
-  TotpSetupContainer,
-} from '@wepublish/user/website';
+import { PersonalDataFormContainer } from '@wepublish/user/website';
 import {
   ConfirmEmailChangeDocument,
   FeaturesDocument,
@@ -27,11 +22,8 @@ import { ssrAuthLink } from '../../auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
 
 import { getApiUrl } from '../../api-url';
+import { ProfileDetails } from './profile-details';
 import { ProfileSubscriptions } from './profile-subscriptions';
-
-export const ProfileWrapper = styled(ContentWrapper)`
-  gap: ${({ theme }) => theme.spacing(2)};
-`;
 
 type ProfilePageProps = Omit<
   ComponentProps<typeof PersonalDataFormContainer>,
@@ -40,7 +32,7 @@ type ProfilePageProps = Omit<
 
 function ProfilePage({ className, ...props }: ProfilePageProps) {
   const {
-    elements: { H4, Alert },
+    elements: { Alert },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const router = useRouter();
@@ -78,13 +70,10 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
 
       <ProfileSubscriptions className={className} />
 
-      <ProfileWrapper className={className}>
-        <H4 component={'h1'}>{t('navbar.profile')}</H4>
-
-        <PersonalDataFormContainer {...props} />
-
-        <TotpSetupContainer />
-      </ProfileWrapper>
+      <ProfileDetails
+        className={className}
+        {...props}
+      />
     </>
   );
 }

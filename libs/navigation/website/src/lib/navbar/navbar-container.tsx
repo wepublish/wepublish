@@ -1,9 +1,11 @@
 import { useQuery } from '@apollo/client/react';
+import { useUser } from '@wepublish/authentication/website';
 import {
   useHasRunningSubscription,
   useHasUnpaidInvoices,
 } from '@wepublish/membership/website';
 import {
+  FeaturesDocument,
   NavigationListDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
@@ -13,6 +15,7 @@ import {
   LinkContext,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
 import { PropsWithChildren } from 'react';
 
 export type NavbarContainerProps = PropsWithChildren<
@@ -54,6 +57,24 @@ export function NavbarContainer({
   const hasUnpaidInvoices = useHasUnpaidInvoices();
   const hasRunningSubscription = useHasRunningSubscription();
 
+  // In the account with the subscription history, the link to it is only
+  // worth showing as the warning about an unpaid invoice. The features are
+  // only asked for there: they need a session, and the pages prefetch them.
+  const { hasUser } = useUser();
+  const { asPath } = useRouter();
+  const accountPath = profileBtn?.href ?? '/profile';
+  const inAccount =
+    asPath === accountPath || asPath.startsWith(`${accountPath}/`);
+  const { data: features } = useQuery(FeaturesDocument, {
+    skip: !hasUser || !inAccount,
+  });
+  const withinHistory = !!features?.features.includes(
+    'profile-subscription-history'
+  );
+  // null, not undefined: the navbar would fall back to its default button
+  const accountBtn =
+    inAccount && withinHistory && !hasUnpaidInvoices ? null : profileBtn;
+
   const logo = peerInfoData?.peerProfile.logo;
 
   return (
@@ -64,7 +85,7 @@ export function NavbarContainer({
         categorySlugs={categorySlugs}
         slug={slug}
         loginBtn={loginBtn}
-        profileBtn={profileBtn}
+        profileBtn={accountBtn}
         subscribeBtn={subscribeBtn}
         data={data}
         loading={loading}

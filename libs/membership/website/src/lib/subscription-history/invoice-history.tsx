@@ -25,15 +25,19 @@ import {
 import {
   HISTORY_COLUMNS,
   HISTORY_COLUMNS_SHOWN,
+  HISTORY_SHORT_DATES,
   HISTORY_STACKED,
   PLAN_COLUMN_WIDTH,
+  PLAN_COLUMN_WIDTH_SHORT,
   PLAN_PADDING,
   HistoryAmount,
   HistoryArrowCell,
   HistoryCell,
+  HistoryDate,
   HistoryPlanCell,
   HistoryState,
   HistoryStateCell,
+  historyHalves,
 } from './history-table';
 
 /** Labels the invoice rows of one subscription, in its columns. */
@@ -54,23 +58,28 @@ export const InvoiceHistoryHeaderRow = styled(TableRow)`
   }
 
   // the block starts 8px before the invoice label, which stays in line with
-  // the plan column's; its line starts there too
+  // the plan column's; its line below starts there too
   &&[data-nested='true'] > th:nth-of-type(2) {
-    border-bottom: none;
-    background:
-      linear-gradient(
-          ${({ theme }) => theme.palette.divider},
-          ${({ theme }) => theme.palette.divider}
-        )
-        ${({ theme }) => theme.spacing(PLAN_PADDING - 1)} 100% /
-        calc(100% - ${({ theme }) => theme.spacing(PLAN_PADDING - 1)}) 1px
-        no-repeat,
-      linear-gradient(
-        to right,
-        transparent ${({ theme }) => theme.spacing(PLAN_PADDING - 1)},
-        ${({ theme }) => theme.palette.grey[50]}
-          ${({ theme }) => theme.spacing(PLAN_PADDING - 1)}
-      );
+    position: relative;
+    border-bottom-color: transparent;
+    background: linear-gradient(
+      to right,
+      transparent ${({ theme }) => theme.spacing(PLAN_PADDING - 1)},
+      ${({ theme }) => theme.palette.grey[50]}
+        ${({ theme }) => theme.spacing(PLAN_PADDING - 1)}
+    );
+
+    // the lower line in the row of the other cells' borders, which a
+    // background cannot reach
+    &::after {
+      content: '';
+      position: absolute;
+      left: ${({ theme }) => theme.spacing(PLAN_PADDING - 1)};
+      right: 0;
+      bottom: -1px;
+      height: 1px;
+      background-color: ${({ theme }) => theme.palette.divider};
+    }
   }
 
   // on narrow containers every cell carries its own label
@@ -150,9 +159,31 @@ export const InvoiceHistoryLabel = styled('span')`
   // the column's width without its padding (cells default to 2 units right)
   ${HISTORY_COLUMNS_SHOWN} {
     max-width: calc(
-      ${PLAN_COLUMN_WIDTH} - ${({ theme }) => theme.spacing(PLAN_PADDING + 2)}
+      ${PLAN_COLUMN_WIDTH} - ${({ theme }) => theme.spacing(PLAN_PADDING + 1)}
     );
   }
+
+  ${HISTORY_SHORT_DATES} {
+    max-width: calc(
+      ${PLAN_COLUMN_WIDTH_SHORT} -
+        ${({ theme }) => theme.spacing(PLAN_PADDING + 1)}
+    );
+  }
+`;
+
+/**
+ * An invoice. In two halves (HISTORY_HALVES): the invoice across the top,
+ * state and created on the left, due and amount on the right, payment below.
+ * Counted from the end: in the profile, a hidden spacer cell comes first.
+ */
+export const InvoiceHistoryDataRow = styled(TableRow)`
+  ${({ theme }) =>
+    historyHalves(theme, {
+      pairs: 2,
+      top: 'td:nth-last-of-type(6)',
+      bottom: 'td:last-of-type',
+      right: 'td:nth-last-of-type(2), td:nth-last-of-type(3)',
+    })}
 `;
 
 const time = (date: string) => new Date(date).getTime();
@@ -201,7 +232,7 @@ function InvoiceHistoryRow({
   const payable = canPayInvoice(invoice) && !!paymentMethodId;
 
   return (
-    <TableRow
+    <InvoiceHistoryDataRow
       data-collapsed={collapsed ? 'true' : undefined}
       data-beyond-limit={beyondLimit ? 'true' : undefined}
     >
@@ -221,7 +252,7 @@ function InvoiceHistoryRow({
           </InvoiceHistoryIndentedCell>
         </>
       : <HistoryCell data-label={t('subscriptionHistory.invoice')}>
-          {invoice.description ?? invoice.id}
+          <span>{invoice.description ?? invoice.id}</span>
         </HistoryCell>
       }
 
@@ -237,23 +268,11 @@ function InvoiceHistoryRow({
       </HistoryStateCell>
 
       <HistoryCell data-label={t('subscriptionHistory.createdAt')}>
-        <time
-          suppressHydrationWarning
-          dateTime={invoice.createdAt}
-        >
-          {date.format(new Date(invoice.createdAt), false)}
-        </time>
+        <HistoryDate date={invoice.createdAt} />
       </HistoryCell>
 
       <HistoryCell data-label={t('subscriptionHistory.dueAt')}>
-        {!isSepa(invoice) && (
-          <time
-            suppressHydrationWarning
-            dateTime={invoice.dueAt}
-          >
-            {date.format(new Date(invoice.dueAt), false)}
-          </time>
-        )}
+        {!isSepa(invoice) && <HistoryDate date={invoice.dueAt} />}
       </HistoryCell>
 
       <HistoryCell data-label={t('subscriptionHistory.total')}>
@@ -288,7 +307,7 @@ function InvoiceHistoryRow({
         )}
         {error && <Alert severity="error">{error.message}</Alert>}
       </HistoryCell>
-    </TableRow>
+    </InvoiceHistoryDataRow>
   );
 }
 

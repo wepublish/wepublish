@@ -244,6 +244,17 @@ describe('SubscriptionHistory', () => {
     ).toBe('Beginn');
   });
 
+  it('has each date in a long and a short form, for narrower tables', async () => {
+    await renderStory(Default);
+
+    const start = within(subscriptionRow('Jahresabo')).getAllByRole('time')[0];
+    expect(start).toHaveAttribute('datetime', '2024-01-01T00:00:00.000Z');
+    expect(start.querySelector('[data-date="short"]')).toHaveTextContent(
+      '01.01.2024'
+    );
+    expect(start.querySelector('[data-date="long"]')).not.toBeNull();
+  });
+
   it('never wraps a date', async () => {
     await renderStory(Default);
 

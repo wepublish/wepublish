@@ -17,8 +17,10 @@ import {
   InvoicesDocument,
   NavigationListDocument,
   PeerProfileDocument,
+  FeaturesDocument,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
+import { actWait } from '@wepublish/testing';
 import { t } from 'i18next';
 import { FooterContainer } from '../footer/footer-container';
 import { NavbarContainer } from './navbar-container';
@@ -143,6 +145,64 @@ describe('NavbarContainer', () => {
     expect(
       screen.queryByRole('link', { name: t('navbar.subscribe') })
     ).not.toBeInTheDocument();
+  });
+
+  describe('in the account, with the subscription history', () => {
+    const features = (enabled: string[]) =>
+      mockOperation(FeaturesDocument, {
+        maxUsageCount: Number.POSITIVE_INFINITY,
+        data: { __typename: 'Query', features: enabled },
+      });
+    const renderInAccount = (
+      path: string,
+      {
+        unpaid = false,
+        enabled = ['profile-subscription-history'],
+      }: { unpaid?: boolean; enabled?: string[] } = {}
+    ) =>
+      renderContainer({
+        user: mockSensitiveDataUser(),
+        router: { pathname: path, asPath: path },
+        mocks: [
+          navigationList,
+          mockPeerProfileQuery(),
+          invoices(
+            unpaid ? [mockInvoice({ paidAt: null, canceledAt: null })] : []
+          ),
+          subscriptions([mockSubscription({ deactivation: null })]),
+          features(enabled),
+        ],
+      });
+
+    it.each(['/profile', '/profile/subscription/abc'])(
+      'leaves out the link to the account on %s',
+      async path => {
+        renderInAccount(path);
+        await actWait(150);
+
+        expect(
+          screen.queryByRole('link', { name: t('navbar.myAccount') })
+        ).not.toBeInTheDocument();
+      }
+    );
+
+    it('still warns about an unpaid invoice there', async () => {
+      renderInAccount('/profile', { unpaid: true });
+
+      expect(
+        await screen.findByRole('link', {
+          name: new RegExp(t('navbar.invoice')),
+        })
+      ).toHaveAttribute('href', '/profile');
+    });
+
+    it('keeps the link to the account without the subscription history', async () => {
+      renderInAccount('/profile', { enabled: [] });
+
+      expect(
+        await screen.findByRole('link', { name: t('navbar.myAccount') })
+      ).toHaveAttribute('href', '/profile');
+    });
   });
 
   it('reuses the navigations and the peer profile from the cache on the next page', async () => {

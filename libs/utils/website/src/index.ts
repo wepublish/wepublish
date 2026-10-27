@@ -7,6 +7,7 @@ export * from './lib/session.provider';
 export * from './lib/async-session.provider';
 export * from './lib/user-country';
 
+export * from './lib/pages/profile/profile-details';
 export * from './lib/pages/profile/profile-page';
 export * from './lib/pages/profile/subscription/subscription-page';
 export * from './lib/pages/profile/subscription/deactivated-subscriptions-page';

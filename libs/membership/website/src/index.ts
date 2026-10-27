@@ -42,6 +42,7 @@ export * from './lib/subscription-state';
 export * from './lib/subscription-history/history-table';
 export * from './lib/subscription-history/subscription-history';
 export * from './lib/subscription-history/invoice-history';
+export * from './lib/section-box/section-box';
 export * from './lib/subscription-edit/subscription-edit';
 export * from './lib/subscription-edit/can-upgrade';
 export * from './lib/payment-method-label';

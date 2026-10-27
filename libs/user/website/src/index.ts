@@ -1,3 +1,6 @@
+export * from './lib/password-fields/password-fields';
+export * from './lib/password-form/password-form';
+export * from './lib/password-form/password-form-container';
 export * from './lib/personal-data-form/personal-data-form';
 export * from './lib/personal-data-form/personal-data-form-container';
 
