@@ -461,6 +461,19 @@ describe('SubscriptionHistory', () => {
     expect(edit.parentElement?.lastElementChild).toBe(edit);
   });
 
+  it('lines the edit button up with the actions on their text', async () => {
+    await renderStory(Default);
+
+    const edit = within(
+      subscriptionRow('Förderabo').nextElementSibling as HTMLElement
+    ).getByRole('link', { name: 'Abo anpassen' });
+
+    // a button, a link and a note above a button are of different heights
+    expect(getComputedStyle(edit.parentElement as HTMLElement).alignItems).toBe(
+      'baseline'
+    );
+  });
+
   it('draws the edit button in the text colour, whatever the primary colour', async () => {
     await renderStory(Default);
 

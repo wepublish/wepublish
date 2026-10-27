@@ -200,7 +200,9 @@ export const SubscriptionHistoryActionBar = styled('div')`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  align-items: flex-start;
+  // on their labels: the buttons differ in height, and an action can have a
+  // note above it
+  align-items: baseline;
   gap: ${({ theme }) => theme.spacing(1, 2)};
 
   // in the text colour: a tenant's primary can be too light for an outline
