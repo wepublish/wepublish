@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/react';
+import type * as SentryTypes from '@sentry/react';
 import {
   getBaseConfig,
   getBrowserTracePropagationTargets,
@@ -6,15 +6,17 @@ import {
 } from '@wepublish/utils';
 
 type RouterLike = Parameters<
-  typeof Sentry.tanstackRouterBrowserTracingIntegration
+  typeof SentryTypes.tanstackRouterBrowserTracingIntegration
 >[0];
 
-export const registerSentryClient = (router: RouterLike) => {
+export const registerSentryClient = async (router: RouterLike) => {
   if (!process.env.SENTRY_DSN) {
     return;
   }
 
   try {
+    const Sentry = await import('@sentry/react');
+
     Sentry.init({
       ...getBaseConfig(),
       tracePropagationTargets: getBrowserTracePropagationTargets(),

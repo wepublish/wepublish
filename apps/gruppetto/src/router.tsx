@@ -33,7 +33,7 @@ export function getRouter() {
   });
 
   if (typeof window !== 'undefined') {
-    registerSentryClient(router);
+    void registerSentryClient(router);
   }
 
   return router;

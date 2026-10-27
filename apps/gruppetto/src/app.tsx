@@ -23,7 +23,7 @@ import {
   GruppettoMainSpacer,
   GruppettoNavBar,
   GruppettoSpacer,
-  gruppettoTenant,
+  gruppettoConfig,
 } from '@wepublish/tenant/gruppetto';
 
 type AppShellProps = PropsWithChildren<{
@@ -44,7 +44,7 @@ function AppShell({ websiteSettings, children }: AppShellProps) {
   return (
     <WebsiteProvider>
       <WebsiteBuilderProvider
-        meta={gruppettoTenant.builder.meta}
+        meta={gruppettoConfig.builder.meta}
         Head={Head}
         Script={Script}
         Footer={GruppettoFooter}
@@ -64,9 +64,7 @@ function AppShell({ websiteSettings, children }: AppShellProps) {
           )}
 
           <main>
-            <GruppettoMainSpacer maxWidth="lg">
-              {children}
-            </GruppettoMainSpacer>
+            <GruppettoMainSpacer maxWidth="lg">{children}</GruppettoMainSpacer>
           </main>
 
           {shell.showFooter && (
