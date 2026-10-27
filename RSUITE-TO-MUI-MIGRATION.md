@@ -849,8 +849,7 @@ codemod had to learn the hard way.
 
 - **Never run `nx affected -t lint --fix` on this repo.** It reformats imports
   across every project in the affected graph, including untouched website apps
-  and at least one generated file (`libs/website/api/src/lib/gql/index.ts`,
-  whose `/* eslint-disable */` header it strips). Lint one project at a time:
+  and generated files (it strips their `/* eslint-disable */` headers). Lint one project at a time:
   `nx lint <project> --fix`.
 - **Scope every codemod by import source, not by tag name.** `<Button>` means
   rsuite in `libs/*/editor` and MUI in `libs/*/website`. An early pass keyed on

@@ -56,7 +56,7 @@ The Prisma schema is at `libs/api/prisma/schema.prisma`.
 ## GraphQL Code Generation
 
 ```bash
-pnpm run generate-api         # Regenerate TypeScript types + hooks from GraphQL schema
+pnpm run generate-api         # Regenerate TypeScript types + typed documents from GraphQL schema
 ```
 
 Configuration: `codegen.yml`

@@ -141,7 +141,6 @@ export default [
       'libs/editor/api/src/lib/gql/**',
       'libs/website/api/src/lib/gql/**',
       'libs/peering/api/src/lib/remote/graphql.ts',
-      'libs/testing/src/graphql/graphql-public.ts',
     ],
   },
 ];
