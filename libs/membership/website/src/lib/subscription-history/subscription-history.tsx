@@ -60,7 +60,7 @@ import {
   HistoryTable,
   HistoryTableWrapper,
 } from './history-table';
-import { InvoiceHistory } from './invoice-history';
+import { InvoiceHistory, InvoiceHistorySpacerCell } from './invoice-history';
 
 /**
  * The same columns in every history (subscriptions, donations), whatever they
@@ -262,6 +262,28 @@ export const SubscriptionHistorySubscribeRow = styled(TableRow)`
     && {
       border-bottom: none;
       padding-bottom: ${({ theme }) => theme.spacing(2)};
+    }
+  }
+`;
+
+/**
+ * The toggle for the ended subscriptions, right below the list; its text
+ * starts where the plan column's heading does.
+ */
+export const SubscriptionHistoryEndedRow = styled(TableRow)`
+  && > td {
+    border-bottom: none;
+  }
+
+  && button {
+    padding-left: 0;
+    padding-right: 0;
+    min-width: 0;
+  }
+
+  ${HISTORY_STACKED} {
+    && {
+      border-bottom: none;
     }
   }
 `;
@@ -637,6 +659,27 @@ export function SubscriptionHistory({
         {showEnded && rows(ended)}
 
         <TableBody>
+          {/* right after the list they belong to, before what is new */}
+          {!!ended.length && (
+            <SubscriptionHistoryEndedRow>
+              <InvoiceHistorySpacerCell data-label="" />
+              <HistoryPlanCell
+                colSpan={HISTORY_COLUMNS - 1}
+                data-label=""
+              >
+                <Button
+                  variant="text"
+                  onClick={() => setShowEnded(show => !show)}
+                >
+                  {t('subscriptionHistory.ended', {
+                    count: ended.length,
+                    type,
+                  })}
+                </Button>
+              </HistoryPlanCell>
+            </SubscriptionHistoryEndedRow>
+          )}
+
           {/* donations: the subscriptions above already offer it */}
           {!!running.length && type !== ProductType.Donation && (
             <SubscriptionHistorySubscribeRow>
@@ -659,17 +702,6 @@ export function SubscriptionHistory({
           )}
         </TableBody>
       </SubscriptionHistoryTable>
-
-      {!!ended.length && (
-        <div>
-          <Button
-            variant="text"
-            onClick={() => setShowEnded(show => !show)}
-          >
-            {t('subscriptionHistory.ended', { count: ended.length, type })}
-          </Button>
-        </div>
-      )}
     </SubscriptionHistoryWrapper>
   );
 }
