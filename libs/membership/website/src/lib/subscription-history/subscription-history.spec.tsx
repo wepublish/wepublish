@@ -123,6 +123,40 @@ describe('SubscriptionHistory', () => {
     ).toBeInTheDocument();
   });
 
+  // arriving from the navbar's open-invoice warning, the invoice is in view
+  it('puts subscriptions with a due invoice first', async () => {
+    await renderStory(Default);
+
+    expect(
+      screen.getAllByRole('rowheader').map(cell => cell.textContent)
+    ).toEqual(['Jahresabo', 'Förderabo']);
+  });
+
+  it('does not put a subscription first for an invoice left over', async () => {
+    // Jahresabo paid; Förderabo has only its invoice from 2023 open
+    const userInvoices = (
+      WithLeftOverInvoice.props.invoices.data?.userInvoices ?? []
+    ).map(invoice =>
+      invoice.id === 'yearly-2026' ?
+        { ...invoice, paidAt: '2025-12-20T00:00:00.000Z' }
+      : invoice
+    );
+    await renderStory({
+      ...WithLeftOverInvoice,
+      props: {
+        ...WithLeftOverInvoice.props,
+        invoices: {
+          ...WithLeftOverInvoice.props.invoices,
+          data: { __typename: 'Query', userInvoices },
+        },
+      },
+    });
+
+    expect(
+      screen.getAllByRole('rowheader').map(cell => cell.textContent)
+    ).toEqual(['Förderabo', 'Jahresabo']);
+  });
+
   describe('with an open invoice left over from before later payments', () => {
     it('keeps its subscription closed', async () => {
       await renderStory(WithLeftOverInvoice);

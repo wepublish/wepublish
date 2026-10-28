@@ -105,6 +105,12 @@ export const SubscriptionHistoryBody = styled(TableBody)`
   ${HISTORY_STACKED} {
     border: 1px solid ${({ theme }) => theme.palette.divider};
     border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+
+    // with a due invoice, in the colour of the navbar's warning about it
+    &:has(tr[data-due='true']) {
+      border-color: ${({ theme }) => theme.palette.warning.main};
+    }
+
     // the heading band follows the rounding
     overflow: hidden;
     margin-bottom: ${({ theme }) => theme.spacing(3)};
@@ -521,17 +527,28 @@ export function SubscriptionHistory({
   const [toggled, setToggled] = useState<Record<string, boolean>>({});
   const [showEnded, setShowEnded] = useState(false);
 
+  const userInvoices = invoices.data?.userInvoices;
+
+  // those with a due invoice first: arriving from the navbar's warning, the
+  // invoice is in view
   const [running, ended] = useMemo(() => {
     const now = new Date();
-    const sorted = [...(data?.userSubscriptions ?? [])].sort((a, b) =>
-      compareSubscriptions(a, b, now)
+    const withDue = new Set(
+      (userInvoices ?? [])
+        .filter(invoice => isInvoiceDue(invoice, userInvoices ?? []))
+        .map(invoice => invoice.subscriptionID)
+    );
+    const sorted = [...(data?.userSubscriptions ?? [])].sort(
+      (a, b) =>
+        Number(withDue.has(b.id)) - Number(withDue.has(a.id)) ||
+        compareSubscriptions(a, b, now)
     );
 
     return [
       sorted.filter(subscription => !isSubscriptionDeactivated(subscription)),
       sorted.filter(isSubscriptionDeactivated),
     ];
-  }, [data]);
+  }, [data, userInvoices]);
 
   const openInvoiceTotal = (subscriptionId: string) =>
     invoices.data?.userInvoices.find(

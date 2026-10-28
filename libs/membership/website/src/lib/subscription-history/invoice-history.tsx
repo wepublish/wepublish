@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Skeleton, TableRow } from '@mui/material';
+import { alpha, Skeleton, TableRow } from '@mui/material';
 import { getInvoiceState, InvoiceStatusIcon } from '@wepublish/ui';
 import { FullInvoiceFragment } from '@wepublish/website/api';
 import {
@@ -9,7 +9,7 @@ import {
 } from '@wepublish/website/builder';
 import { ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdSubdirectoryArrowRight } from 'react-icons/md';
+import { MdSubdirectoryArrowRight, MdWarning } from 'react-icons/md';
 
 import { formatCurrency } from '../formatters/format-currency';
 import { isInvoiceDue } from '../invoice-due';
@@ -157,6 +157,26 @@ export const InvoiceHistoryLabel = styled('span')`
  * state and created on the left, due and amount on the right, payment below.
  * Counted from the end: in the profile, a hidden spacer cell comes first.
  */
+const DUE_STRIP_WIDTH = 15;
+
+/** The navbar's warning sign, centred on a due row's strip in the table. */
+export const InvoiceHistoryDueMark = styled('span')`
+  display: none;
+
+  ${HISTORY_COLUMNS_SHOWN} {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: ${DUE_STRIP_WIDTH}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: ${({ theme }) => theme.palette.warning.contrastText};
+    font-size: 11px;
+  }
+`;
+
 export const InvoiceHistoryDataRow = styled(TableRow)`
   ${({ theme }) =>
     historyHalves(theme, {
@@ -165,6 +185,51 @@ export const InvoiceHistoryDataRow = styled(TableRow)`
       bottom: 'td:last-of-type',
       right: 'td:nth-last-of-type(2), td:nth-last-of-type(3)',
     })}
+
+  // due: tinted in the colour of the navbar's warning about it
+  ${HISTORY_COLUMNS_SHOWN} {
+    &&[data-due='true'] > td {
+      background-color: ${({ theme }) => alpha(theme.palette.warning.main, 0.08)};
+    }
+
+    // nested: tinted from where the invoice block starts, like the labels'
+    // band; its arrow in the warning colour instead of a bar
+    &&[data-due='true'][data-nested='true'] > td:first-of-type {
+      background: none;
+    }
+
+    &&[data-due='true'][data-nested='true'] > td:nth-of-type(2) {
+      background: linear-gradient(
+        to right,
+        transparent ${({ theme }) => theme.spacing(PLAN_PADDING - 1)},
+        ${({ theme }) => alpha(theme.palette.warning.main, 0.08)}
+          ${({ theme }) => theme.spacing(PLAN_PADDING - 1)}
+      );
+
+      svg {
+        color: ${({ theme }) => theme.palette.warning.main};
+      }
+    }
+  }
+
+  // a strip at the row's end with the warning sign of the navbar's button
+  ${HISTORY_COLUMNS_SHOWN} {
+    &&[data-due='true'] > td:last-of-type {
+      position: relative;
+      box-shadow: inset -${DUE_STRIP_WIDTH}px 0
+        ${({ theme }) => theme.palette.warning.main};
+      padding-right: calc(
+        ${({ theme }) => theme.spacing(1)} + ${DUE_STRIP_WIDTH}px
+      );
+    }
+  }
+
+  ${HISTORY_STACKED} {
+    &&[data-due='true'] {
+      background-color: ${({ theme }) => alpha(theme.palette.warning.main, 0.08)};
+      box-shadow: inset 3px 0 ${({ theme }) => theme.palette.warning.main};
+    }
+  }
 `;
 
 const time = (date: string) => new Date(date).getTime();
@@ -180,6 +245,8 @@ type InvoiceHistoryRowProps = {
   onPay: BuilderInvoiceListProps['onPay'];
   nested: boolean;
   collapsed: boolean;
+  /** The reader has to act on it now (`isInvoiceDue`). */
+  due?: boolean;
   /** Past the stacked layout's limit, until the reader asks for all. */
   beyondLimit?: boolean;
 };
@@ -190,6 +257,7 @@ function InvoiceHistoryRow({
   nested,
   collapsed,
   beyondLimit = false,
+  due = false,
 }: InvoiceHistoryRowProps) {
   const {
     meta: { locale },
@@ -216,6 +284,8 @@ function InvoiceHistoryRow({
     <InvoiceHistoryDataRow
       data-collapsed={collapsed ? 'true' : undefined}
       data-beyond-limit={beyondLimit ? 'true' : undefined}
+      data-due={due ? 'true' : undefined}
+      data-nested={nested ? 'true' : undefined}
     >
       {nested ?
         <>
@@ -269,6 +339,15 @@ function InvoiceHistoryRow({
         colSpan={nested ? 2 : 1}
         data-label=""
       >
+        {due && (
+          <InvoiceHistoryDueMark
+            data-due-mark
+            aria-hidden
+          >
+            <MdWarning />
+          </InvoiceHistoryDueMark>
+        )}
+
         {payable && (
           <Button
             size="small"
@@ -435,6 +514,7 @@ export function InvoiceHistory({
           onPay={onPay}
           nested={nested}
           collapsed={collapsed}
+          due={isInvoiceDue(invoice, invoices)}
           beyondLimit={
             stackedLimit !== undefined &&
             !showAllStacked &&

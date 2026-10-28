@@ -172,6 +172,27 @@ describe('InvoiceHistory', () => {
     expect(style.overflow).toBe('hidden');
   });
 
+  // highlighted like the navbar's warning about them
+  it('marks the invoices due, not the paid or left-over ones', () => {
+    renderHistory({ ...Latest, allInvoicesUrl: undefined });
+
+    const row = (text: string) =>
+      screen.getByText(text).closest('tr') as HTMLElement;
+    expect(row('Jahresabo 2026')).toHaveAttribute('data-due', 'true');
+    expect(row('Jahresabo 2025')).not.toHaveAttribute('data-due');
+    // open, but 2024 and 2025 were paid after it
+    expect(row('Jahresabo 2023')).not.toHaveAttribute('data-due');
+
+    // the warning sign of the navbar's button, at the row's end
+    const mark = (text: string) => row(text).querySelector('[data-due-mark]');
+    expect(mark('Jahresabo 2026')).toHaveAttribute('aria-hidden', 'true');
+    expect(row('Jahresabo 2026').lastElementChild).toContainElement(
+      mark('Jahresabo 2026') as HTMLElement
+    );
+    expect(mark('Jahresabo 2025')).toBeNull();
+    expect(mark('Jahresabo 2023')).toBeNull();
+  });
+
   it('marks every row of a closed subscription as collapsed', () => {
     renderHistory({ ...Default, collapsed: true });
 
