@@ -27,6 +27,7 @@ import {
   createCheckedPermissionComponent,
   DataTable,
   enqueueSnackbar,
+  getOperationNameFromDocument,
   humanizeError,
   IconButton,
   IconButtonTooltip,
@@ -59,12 +60,13 @@ function EngagementRuleList() {
   const { t } = useTranslation();
   const [ruleToDelete, setRuleToDelete] =
     useState<FullEngagementRuleFragment>();
-  const { data, loading, refetch } = useQuery(EngagementRulesDocument);
+  const { data, loading } = useQuery(EngagementRulesDocument);
   const { data: paywallData } = useQuery(PaywallListDocument);
   const [updateRule] = useMutation(UpdateEngagementRuleDocument, {
     onError: showError,
   });
   const [deleteRule] = useMutation(DeleteEngagementRuleDocument, {
+    refetchQueries: [getOperationNameFromDocument(EngagementRulesDocument)],
     onError: showError,
     onCompleted: () =>
       enqueueSnackbar(t('toast.deletedSuccess'), {
@@ -287,7 +289,6 @@ function EngagementRuleList() {
               }
 
               setRuleToDelete(undefined);
-              await refetch();
             }}
           >
             {t('engagement.delete.confirm')}

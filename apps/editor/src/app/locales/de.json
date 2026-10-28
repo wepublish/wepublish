@@ -4425,13 +4425,17 @@
       },
       "preset": {
         "growNewsletter": "Newsletter ausbauen",
-        "growNewsletterInfo": "Anonyme Leser*innen nach ein paar Artikeln zum Newsletter einladen, danach um eine Registrierung bitten.",
+        "growNewsletterInfo": "Mach aus regelmässigen Leser*innen Newsletter-Abonnent*innen.",
         "promoteMemberships": "Mitgliedschaften fördern",
-        "promoteMembershipsInfo": "Leser*innen ohne Mitgliedschaft im Artikel einladen, Mitglied zu werden.",
+        "promoteMembershipsInfo": "Lade engagierte Leser*innen ein, deine Publikation mit einer Mitgliedschaft zu unterstützen.",
         "restrictPremium": "Premium-Inhalte einschränken",
-        "restrictPremiumInfo": "Artikel Mitgliedern bestimmter Abos vorbehalten, auf dem Server durchgesetzt. Öffnet eine neue Paywall.",
+        "restrictPremiumInfo": "Reserviere ausgewählte Artikel für zahlende Mitglieder. Öffnet eine neue Paywall.",
         "displayAnnouncement": "Ankündigung anzeigen",
-        "displayAnnouncementInfo": "Ein Banner oder Hinweis auf Artikeln und Seiten, z. B. für ein Crowdfunding."
+        "displayAnnouncementInfo": "Informiere alle Leser*innen über etwas, z. B. ein Crowdfunding oder einen Anlass.",
+        "restrictPremiumAudience": "Leser*innen ohne eines der gewählten Abos",
+        "restrictPremiumStep": "Jeder Artikel der Paywall: nach der Vorschau abgeschnitten, auf dem Server geprüft",
+        "for": "Für",
+        "steps": "Was Leser*innen sehen"
       },
       "goal": {
         "ANNOUNCEMENT": "Ankündigung",
