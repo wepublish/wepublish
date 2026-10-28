@@ -92,7 +92,8 @@ split and encodes that exception.
 | `router.events.on('routeChangeComplete')` | watch `useRouterState({select: s => s.location})` |
 | `_app.tsx` + `_document.tsx` | `src/routes/__root.tsx` + `src/app.tsx` |
 | `next.config.js#redirects()` | a route that throws `redirect()` |
-| `next.config.js#headers()` + per-page `revalidate` | one path-based request middleware in `src/start.ts` |
+| `next.config.js#headers()` | a path-based request middleware in `src/start.ts` |
+| per-page `revalidate` | `contentCacheControl` on the content loader's response |
 | `next.config.js#cacheHandler` | `withPageCache` wrapped around the fetch handler in `src/server.ts` |
 | `instrumentation.ts` / `-client.ts` | `/tanstack/sentry` + `/tanstack/sentry/client` |
 | `getPageShell` in `getStaticProps` | loader returns `{shell}`; `useWebsiteShell()` reads the deepest match |
@@ -175,15 +176,20 @@ needs a reachable API at build time. Not a regression — the Next app used
 **ISR does not exist.** There is no `revalidate`, and `res.revalidate(path)` has
 no equivalent. Two things replace it:
 
-1. **CDN policy** — a path-based request middleware in `src/start.ts` sets
-   `cache-control` per route. Next applied headers by path in `next.config.js`
-   anyway, and the per-page `revalidate` only ever took two values, so one
-   middleware reproduces it. **Add every new route to `CACHE_RULES`** — a route
-   that is missing gets the default, and for a user-specific page that means
-   one visitor's HTML is served to another.
-2. **The shared page cache** — `withPageCache` in `src/server.ts` runs the exact
+1. **The window** — a content loader sets its own `cache-control` from
+   `contentCacheControl`, which runs the same `revalidateFor()` the Next apps
+   used: an hour for a static page, a minute for one with a live block, an API
+   error or missing content, and sooner when a block is scheduled to change.
+2. **Everything else** — a path-based request middleware in `src/start.ts`
+   covers the routes with no content to judge, and leaves alone any response
+   that already decided for itself. **Add every new route to `CACHE_RULES`** —
+   a route that is missing gets the default, and for a user-specific page that
+   means one visitor's HTML is served to another.
+3. **The shared page cache** — `withPageCache` in `src/server.ts` runs the exact
    pod-local-LRU-in-front-of-Dragonfly the Next tenants use, invalidated by the
-   namespace versions the API writes. No-ops without `REDIS_URL`.
+   namespace versions the API writes. It reads `s-maxage` off the response, so
+   the window from step 1 is the one it stores against — this header is the ISR
+   window, not merely a hint to the CDN. No-ops without `REDIS_URL`.
 
 ---
 
@@ -472,12 +478,6 @@ as the alternative.
 - **`website-shell` for the next tenant.** gruppetto now has it, so there *is* a
   reference implementation (`useWebsiteShell` + loaders returning `{shell}`),
   but each tenant's `_app.tsx` wires it by hand.
-- **Per-page `revalidate` is flattened.** `revalidateFor()` chose 3600s for a
-  static page, 60s for one with a live block or an API error, and 1s for
-  missing content. A path rule cannot see block types, so the middleware uses
-  the shortest. Safe (it can only under-cache) but more origin renders than
-  Next did. Restoring the split means letting the content loaders set the
-  header.
 - **No `defaultErrorComponent`.** An unhandled render error shows the raw
   error rather than a styled page.
 - **Several routes have no `<title>`** — the list, tag, login and search routes

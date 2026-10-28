@@ -14,6 +14,7 @@ import {
 
 import { getApiUrl } from '../lib/api-url';
 import { ssrAuthLink } from '../lib/auth-link';
+import { contentCacheControl } from './content-cache-control';
 import { createRouterApolloClient, SerializedApolloState } from './apollo';
 
 /**
@@ -183,11 +184,23 @@ export const getSiteUrl = () => {
 };
 
 /**
- * Mirrors the ISR window the HTML responses use (`ISR_60` in `src/start.ts`),
- * so a navigation payload and the page it belongs to go stale together.
+ * What a content loader hands back so the window can be derived from it.
+ *
+ * An Apollo `QueryResult` is the common case and is understood directly; a
+ * loader that fetches several things returns the one that decides the window.
+ * Returning nothing still works and falls back to the shortest window, which
+ * is what every loader did before this existed.
  */
-const CONTENT_CACHE_CONTROL =
-  'public, max-age=0, s-maxage=60, stale-while-revalidate=604800, stale-if-error=86400';
+export type ContentResult =
+  { data?: unknown; error?: unknown } | unknown | void;
+
+const toContent = (result: ContentResult) => {
+  const asQuery = result as { data?: unknown; error?: unknown } | undefined;
+
+  return asQuery && typeof asQuery === 'object' && 'data' in asQuery ?
+      { content: asQuery.data, errors: asQuery.error }
+    : { content: result, errors: undefined };
+};
 
 /**
  * Runs content queries on the server and hands the cache back to the caller.
@@ -210,13 +223,14 @@ const CONTENT_CACHE_CONTROL =
  * overrides it. An authenticated loader that forgets simply is not cached.
  */
 export const runContentQueries = async (
-  run: (client: ApolloClient) => Promise<unknown>
+  run: (client: ApolloClient) => Promise<ContentResult>
 ) => {
   const client = createRouterApolloClient();
 
-  await run(client);
+  const result = await run(client);
+  const { content, errors } = toContent(result);
 
-  setResponseHeader('cache-control', CONTENT_CACHE_CONTROL);
+  setResponseHeader('cache-control', contentCacheControl(content, errors));
 
   return extractCache(client);
 };

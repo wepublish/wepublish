@@ -25,7 +25,11 @@ export const loadTag = createServerFn({ method: 'GET' })
     let found = false;
 
     const apollo = await runContentQueries(async client => {
-      found = !!(await prefetchTag(client, data));
+      const tag = await prefetchTag(client, data);
+
+      found = !!tag;
+
+      return tag;
     });
 
     return { apollo, found };

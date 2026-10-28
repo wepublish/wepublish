@@ -26,13 +26,11 @@ import {
  * default below, and for a user-specific route that means one visitor's HTML
  * is served to the next.
  *
- * The per-page `revalidate` is NOT fully reproduced. `revalidateFor()` chose
- * 3600s for a static page, 60s when the page carries a live block (poll,
- * crowdfunding) or the API errored, and 1s when content was missing. A path
- * rule cannot see block types, so this flattens to the *shortest* of those.
- * That is the safe direction — it can only under-cache, never serve a stale
- * poll — but it does mean more origin renders than Next did for static pages.
- * Restoring the split means letting the content loaders set the header.
+ * The per-page `revalidate` is reproduced, but not here: a path rule cannot
+ * see block types, so the content loaders set their own `cache-control` from
+ * `revalidateFor()` (see `contentCacheControl`) and the check below leaves it
+ * alone. What is left in this table is everything that has no content to
+ * judge — `no-store` routes, assets, and the default for anything new.
  */
 
 // Split deliberately. `stale-while-revalidate` belongs to the CDN: on the
@@ -47,6 +45,11 @@ const NO_STORE = 'no-store';
 /** `serverFns.base` in the Start plugin config, which we leave at its default. */
 const SERVER_FUNCTION_BASE = '/_serverFn';
 
+/**
+ * The fallback for a route that does not set its own `cache-control`. A
+ * content route does — one minute is simply the safe assumption for anything
+ * whose content we have not inspected.
+ */
 const CACHE_RULES: Array<[RegExp, string]> = [
   // `next.config.js` set `no-store` for /profile and /profile/:path*
   [/^\/profile(\/|$)/, NO_STORE],
