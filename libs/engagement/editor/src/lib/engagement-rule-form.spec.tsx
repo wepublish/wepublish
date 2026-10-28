@@ -320,7 +320,15 @@ describe('EngagementRuleForm', () => {
       name: /engagement.form.stage/,
     });
 
-    expect(first).toHaveTextContent('engagement.summary.afterReadRange');
+    expect(first).toHaveTextContent('engagement.summary.articles');
+  });
+
+  it('sums up the rule one stage per line', () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    expect(
+      screen.getByTestId('rule-summary').querySelectorAll('li')
+    ).toHaveLength(2);
   });
 
   it('opens collapsed stages that have errors on submit', async () => {

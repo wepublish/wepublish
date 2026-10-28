@@ -172,6 +172,21 @@ describe('EngagementRuleList', () => {
     expect(screen.getAllByText('engagement.list.showsFirst')).toHaveLength(1);
   });
 
+  it('sums up each rule one stage per line', async () => {
+    renderList([
+      {
+        ...rule,
+        goal: EngagementGoal.Membership,
+        stages: [rule.stages[0], { ...rule.stages[0], afterArticles: 3 }],
+      },
+    ]);
+
+    await settled();
+    expect(
+      screen.getByTestId('rule-summary-rule-1').querySelectorAll('li')
+    ).toHaveLength(2);
+  });
+
   it('says nothing about conflicts for a rule on its own', async () => {
     renderList();
 

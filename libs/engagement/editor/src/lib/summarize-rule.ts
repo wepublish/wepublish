@@ -6,41 +6,31 @@ import {
 } from './engagement-rule-values';
 
 /**
- * When a stage shows, by the articles a reader already read in the window:
- * that is what `afterArticles` counts.
+ * When a stage shows, by the reader's nth article in the window: a stage
+ * after `afterArticles` read articles shows from article `afterArticles + 1`.
  */
 const when = (
   afterArticles: number,
   nextAfterArticles: number | undefined,
   t: TFunction
 ) => {
-  // Stages out of order are refused on save; until then, no made-up range.
-  if (nextAfterArticles != null && nextAfterArticles <= afterArticles) {
-    return t('engagement.summary.afterRead', { count: afterArticles });
-  }
+  const from = afterArticles + 1;
 
   if (nextAfterArticles == null) {
-    return afterArticles === 0 ?
-        t('engagement.summary.always')
-      : t('engagement.summary.afterReadOrMore', { count: afterArticles });
+    return t('engagement.summary.fromArticle', { number: from });
   }
 
-  if (afterArticles === 0) {
-    return t('engagement.summary.untilRead', { count: nextAfterArticles });
+  // Stages out of order are refused on save; until then, no made-up range.
+  if (nextAfterArticles <= from) {
+    return t('engagement.summary.article', { number: from });
   }
 
-  return nextAfterArticles - 1 === afterArticles ?
-      t('engagement.summary.afterRead', { count: afterArticles })
-    : t('engagement.summary.afterReadRange', {
-        from: afterArticles,
-        to: nextAfterArticles - 1,
-      });
+  return t('engagement.summary.articles', { from, to: nextAfterArticles });
 };
 
 /**
- * The stages one by one, e.g. ["After 2–3 read articles: pop-up over the
- * article, can be closed", "After 4 or more read articles: article stops
- * after 3 blocks, reading on requires registration"].
+ * The stages one by one, e.g. ["Articles 3–4: pop-up, can be closed",
+ * "From article 5: registration required, 3 blocks preview"].
  */
 export function summarizeStages(
   rule: Pick<EngagementRuleValues, 'goal' | 'stages'>,
@@ -71,14 +61,6 @@ export function summarizeStages(
 
     return `${when(stage.afterArticles, rule.stages[index + 1]?.afterArticles, t)}: ${what}`;
   });
-}
-
-/** The stages in one line, separated by " · ". */
-export function summarizeRule(
-  rule: Pick<EngagementRuleValues, 'goal' | 'stages'>,
-  t: TFunction
-): string {
-  return summarizeStages(rule, t).join(' · ');
 }
 
 /** Where a rule shows, e.g. "Articles, 2 pages, peered articles". */

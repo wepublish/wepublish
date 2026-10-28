@@ -48,7 +48,8 @@ import {
   toEngagementRuleInput,
 } from './engagement-rule-values';
 import { describeConflict, findConflicts } from './engagement-conflicts';
-import { summarizeRule, summarizeWhere } from './summarize-rule';
+import { StageSummary } from './stage-summary';
+import { summarizeWhere } from './summarize-rule';
 
 export const ENGAGEMENT_PATH = '/audience-engagement';
 
@@ -188,13 +189,13 @@ function EngagementRuleList() {
               minWidth: 280,
               render: rule => (
                 <>
-                  {summarizeRule(
-                    {
+                  <StageSummary
+                    rule={{
                       goal: rule.goal,
                       stages: engagementRuleToValues(rule).stages,
-                    },
-                    t
-                  )}
+                    }}
+                    testId={`rule-summary-${rule.id}`}
+                  />
                   {rule.active &&
                     findConflicts(ruleValues(rule), rules.map(ruleValues)).map(
                       conflict => (

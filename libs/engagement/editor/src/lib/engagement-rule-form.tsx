@@ -71,7 +71,8 @@ import {
 } from './engagement-rule-values';
 import { EngagementConflictNotice } from './engagement-conflict-notice';
 import { findConflicts } from './engagement-conflicts';
-import { summarizeRule, summarizeStages } from './summarize-rule';
+import { StageSummary } from './stage-summary';
+import { summarizeStages } from './summarize-rule';
 import { useStickyWhenFits } from './use-sticky-when-fits';
 
 // Columns follow the width of the form, not the window: the sidebar takes a
@@ -1182,9 +1183,16 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
                 <ShowFirstField ruleId={ruleId} />
 
                 {stages?.length > 0 && (
-                  <FormHelperText data-testid="rule-summary">
-                    {summarizeRule({ goal, stages }, t)}
-                  </FormHelperText>
+                  <Typography
+                    variant="body2"
+                    component="div"
+                    color="text.secondary"
+                  >
+                    <StageSummary
+                      rule={{ goal, stages }}
+                      testId="rule-summary"
+                    />
+                  </Typography>
                 )}
               </FormFields>
             </CardContent>
