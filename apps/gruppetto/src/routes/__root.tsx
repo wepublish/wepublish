@@ -1,6 +1,5 @@
 /// <reference types="vite/client" />
 import { CacheProvider } from '@emotion/react';
-import { getRenderEmotionCache } from '@wepublish/utils/website/tanstack';
 import { ThemeProvider } from '@mui/material';
 import {
   createRootRouteWithContext,
@@ -11,6 +10,7 @@ import {
 import { gruppettoConfig, gruppettoTheme } from '@wepublish/tenant/gruppetto';
 import { initWePublishTranslator } from '@wepublish/utils/website';
 import { googleFontsUrl } from '@wepublish/utils/website/google-fonts';
+import { getRenderEmotionCache } from '@wepublish/utils/website/tanstack';
 import {
   ApolloRouterContext,
   prefetchShared,
@@ -147,12 +147,12 @@ function RootDocument({ children }: { children: ReactNode }) {
           the hydrated DOM. Neither changes *when* they execute: still inline,
           still parsed before the deferred module bundle.
         */}
-        <ScriptOnce>
-          {`window.PUBLIC_ENV = Object.assign({}, window.PUBLIC_ENV, ${toInlineJson(publicEnv)})`}
-        </ScriptOnce>
-        <ScriptOnce>
-          {`window.WEBSITE_SETTINGS = ${toInlineJson(websiteSettings)}`}
-        </ScriptOnce>
+        <ScriptOnce
+          children={`window.PUBLIC_ENV = Object.assign({}, window.PUBLIC_ENV, ${toInlineJson(publicEnv)})`}
+        />
+        <ScriptOnce
+          children={`window.WEBSITE_SETTINGS = ${toInlineJson(websiteSettings)}`}
+        />
       </head>
 
       <body>
