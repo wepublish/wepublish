@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom/vitest';
 
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
+import { renderWithTheme } from '../templates/testUtils';
 import { PageEditor } from './pageEditor';
 
 const queries = vi.hoisted(() => ({
@@ -147,7 +148,7 @@ function CurrentLocation() {
 }
 
 const renderEditor = (path: string) =>
-  render(
+  renderWithTheme(
     <MemoryRouter initialEntries={[path]}>
       <Routes>
         <Route

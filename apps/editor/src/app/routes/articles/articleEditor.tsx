@@ -48,8 +48,8 @@ import {
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
-  getSeoBlockContext,
   enqueueSnackbar,
+  getSeoBlockContext,
   InfoData,
   ListicleBlockListValue,
   mapBlockValueToBlockInput,
@@ -63,7 +63,6 @@ import {
   TitleBlockValue,
   useAuthorisation,
   useHasPermission,
-  useSeededState,
   useUnsavedChangesDialog,
   VersionHistory,
   VersionHistoryRevision,
@@ -95,8 +94,8 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import { copyLinkToClipboard } from '../../copyLink';
 import { AutosaveToggle } from '../../autosaveToggle';
+import { copyLinkToClipboard } from '../../copyLink';
 import { LastSavedAt } from '../../lastSavedAt';
 import {
   PreviewControls,
@@ -104,14 +103,14 @@ import {
   PreviewFrame,
 } from '../../previewFrame';
 import { useAutosave } from '../../useAutosave';
+import { useAutosaveEnabled } from '../../useAutosaveEnabled';
+import { useArticleTemplatePrefill } from '../articleTemplate/articleTemplatePrefill';
+import { TemplateLoadingBackdrop } from '../templates/templateLoadingBackdrop';
 import { emptyArticleMetadata, InitialArticleBlocks } from './articleDefaults';
 import {
   articleMetadataToMetadataInput,
   articleToArticleMetadata,
 } from './articleMapping';
-import { useAutosaveEnabled } from '../../useAutosaveEnabled';
-import { useArticleTemplatePrefill } from '../articleTemplate/articleTemplatePrefill';
-import { TemplateLoadingBackdrop } from '../templates/templateLoadingBackdrop';
 import { useNewArticleDefaults } from './useNewArticleDefaults';
 
 const EditorContent = styled.div`
@@ -778,29 +777,27 @@ function ArticleEditor() {
               : []),
             ]}
             secondaryActions={
-              <>
-                <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  {showPreview && previewUrl && (
-                    <PreviewControls
-                      device={previewDevice}
-                      onDeviceChange={setPreviewDevice}
-                      previewUrl={previewUrl}
-                    />
-                  )}
-
-                  <EditorHeaderButton
-                    variant="outlined"
-                    icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
-                    label={
-                      showPreview ?
-                        t('preview.backToEditor')
-                      : t('articleEditor.overview.preview')
-                    }
-                    disabled={isPreviewDisabled}
-                    onClick={() => setPreviewOpen(!showPreview)}
+              <PermissionControl qualifyingPermissions={[CanPreview.id]}>
+                {showPreview && previewUrl && (
+                  <PreviewControls
+                    device={previewDevice}
+                    onDeviceChange={setPreviewDevice}
+                    previewUrl={previewUrl}
                   />
-                </PermissionControl>
-              </>
+                )}
+
+                <EditorHeaderButton
+                  variant="outlined"
+                  icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
+                  label={
+                    showPreview ?
+                      t('preview.backToEditor')
+                    : t('articleEditor.overview.preview')
+                  }
+                  disabled={isPreviewDisabled}
+                  onClick={() => setPreviewOpen(!showPreview)}
+                />
+              </PermissionControl>
             }
             primaryActions={
               isNew && createData == null ?

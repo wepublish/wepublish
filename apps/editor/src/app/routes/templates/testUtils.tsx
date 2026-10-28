@@ -4,6 +4,10 @@
  * the imports of the spec.
  */
 
+import { createTheme, ThemeProvider } from '@mui/material';
+import { render } from '@testing-library/react';
+import { ReactElement } from 'react';
+
 type AnyFunction = (...args: never[]) => unknown;
 
 export const operationName = (document: unknown) =>
@@ -47,3 +51,12 @@ export const translationMock = {
   Trans: ({ children }: { children?: unknown }) => children,
   initReactI18next: { type: '3rdParty', init: () => undefined },
 };
+
+const theme = createTheme({ cssVariables: true });
+
+export const renderWithTheme = (ui: ReactElement) =>
+  render(ui, {
+    wrapper: ({ children }) => (
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+    ),
+  });

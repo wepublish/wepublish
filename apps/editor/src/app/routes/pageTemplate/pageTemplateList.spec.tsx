@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom/vitest';
 
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { renderWithTheme } from '../templates/testUtils';
 import { PageTemplateList } from './pageTemplateList';
 
 const pageTemplateListQueryMock = vi.fn();
@@ -52,7 +53,7 @@ beforeEach(() => {
 
 describe('PageTemplateList', () => {
   it('should list page templates under the page routes', async () => {
-    render(
+    renderWithTheme(
       <MemoryRouter>
         <PageTemplateList />
       </MemoryRouter>

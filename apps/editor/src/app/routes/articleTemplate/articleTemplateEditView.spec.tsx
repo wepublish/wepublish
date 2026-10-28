@@ -1,15 +1,15 @@
 import '@testing-library/jest-dom/vitest';
 
 import { MockedProvider } from '@apollo/client/testing/react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { BlockStylesDocument } from '@wepublish/editor/api';
 import {
   CanCreateArticleTemplate,
   CanUpdateArticleTemplate,
 } from '@wepublish/permissions';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
+import { renderWithTheme } from '../templates/testUtils';
 import { ArticleTemplateEditView } from './articleTemplateEditView';
 
 const articleTemplateQueryMock = vi.fn();
@@ -183,7 +183,7 @@ beforeEach(() => {
 
 describe('ArticleTemplateEditView', () => {
   it('should take over the loaded article template', () => {
-    render(view());
+    renderWithTheme(view());
 
     expect(articleTemplateQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -196,7 +196,7 @@ describe('ArticleTemplateEditView', () => {
   });
 
   it('should show the metadata of the article template', async () => {
-    render(view());
+    renderWithTheme(view());
 
     fireEvent.click(
       screen.getByRole('button', { name: /articleTemplates.edit.metadata/ })
@@ -211,7 +211,7 @@ describe('ArticleTemplateEditView', () => {
   });
 
   it('should save the content and the metadata of the article template', async () => {
-    render(view());
+    renderWithTheme(view());
 
     fireEvent.change(nameInput(), { target: { value: 'Renamed Template' } });
     fireEvent.click(screen.getByRole('button', { name: /^save$/i }));
@@ -239,7 +239,7 @@ describe('ArticleTemplateEditView', () => {
   });
 
   it('should keep unsaved changes when the query result changes without a new revision', () => {
-    const { rerender } = render(view());
+    const { rerender } = renderWithTheme(view());
 
     fireEvent.change(nameInput(), { target: { value: 'Renamed Template' } });
 
@@ -259,7 +259,7 @@ describe('ArticleTemplateEditView', () => {
       data: { createArticleTemplate: { id: 'new-template' } },
     });
 
-    render(view('/articles/templates/create'));
+    renderWithTheme(view('/articles/templates/create'));
 
     expect(articleTemplateQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({ skip: true })
@@ -297,7 +297,9 @@ describe('ArticleTemplateEditView', () => {
       data: { createArticleTemplate: { id: 'copied-template' } },
     });
 
-    render(view('/articles/templates/create?copyFrom=article-template-1'));
+    renderWithTheme(
+      view('/articles/templates/create?copyFrom=article-template-1')
+    );
 
     expect(nameInput().value).toBe(
       'articleTemplates.edit.copyName:News Template'
@@ -381,7 +383,7 @@ describe('ArticleTemplateEditView', () => {
       data: { createArticleTemplate: { id: 'new-template' } },
     });
 
-    render(view('/articles/templates/create?fromArticle=article-1'));
+    renderWithTheme(view('/articles/templates/create?fromArticle=article-1'));
 
     expect(nameInput().value).toBe('Article Title');
     expect(screen.getByDisplayValue('Article Block Title')).toBeInTheDocument();
@@ -416,7 +418,9 @@ describe('ArticleTemplateEditView', () => {
         : { data: undefined, loading: true, refetch }
     );
 
-    render(view('/articles/templates/create?copyFrom=article-template-1'));
+    renderWithTheme(
+      view('/articles/templates/create?copyFrom=article-template-1')
+    );
 
     expect(
       screen.getByText('articleTemplates.edit.loadingTemplate')
@@ -431,7 +435,7 @@ describe('ArticleTemplateEditView', () => {
     });
     articleQueryMock.mockReturnValue({ data: undefined, loading: true });
 
-    render(view('/articles/templates/create?fromArticle=article-1'));
+    renderWithTheme(view('/articles/templates/create?fromArticle=article-1'));
 
     expect(
       screen.getByText('articleTemplates.edit.loadingArticle')
@@ -445,7 +449,7 @@ describe('ArticleTemplateEditView', () => {
       loading: false,
     });
 
-    render(view('/articles/templates/create'));
+    renderWithTheme(view('/articles/templates/create'));
 
     expect(
       screen.queryByText('articleTemplates.edit.loadingTemplate')
@@ -461,7 +465,7 @@ describe('ArticleTemplateEditView', () => {
 
     it('should allow saving an existing template with the update permission', () => {
       onlyPermitted(CanUpdateArticleTemplate.id);
-      render(view());
+      renderWithTheme(view());
 
       expect(nameInput()).toBeEnabled();
       expect(screen.getByRole('button', { name: /^save$/i })).toBeEnabled();
@@ -469,7 +473,7 @@ describe('ArticleTemplateEditView', () => {
 
     it('should not allow saving an existing template with the create permission only', () => {
       onlyPermitted(CanCreateArticleTemplate.id);
-      render(view());
+      renderWithTheme(view());
 
       expect(screen.getByRole('button', { name: /^save$/i })).toBeDisabled();
     });
@@ -481,7 +485,7 @@ describe('ArticleTemplateEditView', () => {
         loading: false,
       });
       onlyPermitted(CanCreateArticleTemplate.id);
-      render(view('/articles/templates/create'));
+      renderWithTheme(view('/articles/templates/create'));
 
       expect(screen.getByRole('button', { name: /^create$/i })).toBeEnabled();
     });
@@ -493,7 +497,7 @@ describe('ArticleTemplateEditView', () => {
         loading: false,
       });
       onlyPermitted(CanUpdateArticleTemplate.id);
-      render(view('/articles/templates/create'));
+      renderWithTheme(view('/articles/templates/create'));
 
       expect(screen.getByRole('button', { name: /^create$/i })).toBeDisabled();
     });

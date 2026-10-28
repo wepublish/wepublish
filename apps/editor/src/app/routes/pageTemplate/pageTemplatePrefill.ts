@@ -9,8 +9,8 @@ import {
 import { blockForQueryBlock, PageMetadata } from '@wepublish/ui/editor';
 
 import {
-  PageTemplatePageMetadata,
   pageTemplateMetadataToPageMetadata,
+  PageTemplatePageMetadata,
   pageToPageMetadata,
 } from '../pages/pageMapping';
 import { TemplatePrefill, usePrefillOnce } from '../templates/usePrefillOnce';
@@ -52,13 +52,9 @@ export function usePageTemplatePrefill(
     fetchPolicy: 'network-only',
   });
 
-  const isPrefilling = usePrefillOnce(
-    data?.pageTemplate,
-    pageTemplateToPrefill,
-    onPrefill
-  );
+  usePrefillOnce(data?.pageTemplate, pageTemplateToPrefill, onPrefill);
 
-  return { loading: loading || isPrefilling };
+  return { loading };
 }
 
 export function usePagePrefill(
@@ -71,7 +67,7 @@ export function usePagePrefill(
     fetchPolicy: 'network-only',
   });
 
-  const isPrefilling = usePrefillOnce(data?.page, pageToPrefill, onPrefill);
+  usePrefillOnce(data?.page, pageToPrefill, onPrefill);
 
-  return { loading: loading || isPrefilling };
+  return { loading };
 }

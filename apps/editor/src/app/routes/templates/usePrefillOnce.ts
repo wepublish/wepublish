@@ -1,5 +1,4 @@
-import { BlockValue } from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
+import { BlockValue, useSeededState } from '@wepublish/ui/editor';
 
 export type TemplatePrefill<Metadata> = {
   name: string;
@@ -8,25 +7,14 @@ export type TemplatePrefill<Metadata> = {
 };
 
 /**
- * Hands `source` over to `onPrefill` once per source id. Returns whether the
- * source is still waiting to be handed over, so callers can keep showing a
- * loader until the prefilled values are in their state.
+ * Hands `source` over to `onPrefill` once per source id. The hand-over happens
+ * while rendering, so the prefilled values are already in the caller's state
+ * on the first commit that has the source.
  */
 export function usePrefillOnce<Source extends { id: string }, Prefill>(
   source: Source | null | undefined,
   toPrefill: (source: Source) => Prefill,
   onPrefill: (prefill: Prefill) => void
 ) {
-  const [prefilledId, setPrefilledId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!source || prefilledId === source.id) {
-      return;
-    }
-
-    setPrefilledId(source.id);
-    onPrefill(toPrefill(source));
-  }, [source, prefilledId, toPrefill, onPrefill]);
-
-  return !!source && prefilledId !== source.id;
+  useSeededState(source, value => onPrefill(toPrefill(value)), source?.id);
 }

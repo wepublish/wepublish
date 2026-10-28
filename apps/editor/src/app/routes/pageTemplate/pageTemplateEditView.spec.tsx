@@ -1,15 +1,15 @@
 import '@testing-library/jest-dom/vitest';
 
 import { MockedProvider } from '@apollo/client/testing/react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { BlockStylesDocument } from '@wepublish/editor/api';
 import {
   CanCreatePageTemplate,
   CanUpdatePageTemplate,
 } from '@wepublish/permissions';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
+import { renderWithTheme } from '../templates/testUtils';
 import { PageTemplateEditView } from './pageTemplateEditView';
 
 const pageTemplateQueryMock = vi.fn();
@@ -170,7 +170,7 @@ beforeEach(() => {
 
 describe('PageTemplateEditView', () => {
   it('should take over the loaded page template', () => {
-    render(view());
+    renderWithTheme(view());
 
     expect(pageTemplateQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -183,7 +183,7 @@ describe('PageTemplateEditView', () => {
   });
 
   it('should show the metadata of the page template', async () => {
-    render(view());
+    renderWithTheme(view());
 
     fireEvent.click(
       screen.getByRole('button', { name: /pageTemplates.edit.metadata/ })
@@ -201,7 +201,7 @@ describe('PageTemplateEditView', () => {
   });
 
   it('should save the content and the metadata of the page template', async () => {
-    render(view());
+    renderWithTheme(view());
 
     fireEvent.change(nameInput(), { target: { value: 'Renamed Template' } });
     fireEvent.click(screen.getByRole('button', { name: /^save$/i }));
@@ -228,7 +228,7 @@ describe('PageTemplateEditView', () => {
   });
 
   it('should keep unsaved changes when the query result changes without a new revision', () => {
-    const { rerender } = render(view());
+    const { rerender } = renderWithTheme(view());
 
     fireEvent.change(nameInput(), { target: { value: 'Renamed Template' } });
 
@@ -248,7 +248,7 @@ describe('PageTemplateEditView', () => {
       data: { createPageTemplate: { id: 'new-template' } },
     });
 
-    render(view('/pages/templates/create'));
+    renderWithTheme(view('/pages/templates/create'));
 
     expect(pageTemplateQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({ skip: true })
@@ -284,7 +284,7 @@ describe('PageTemplateEditView', () => {
       data: { createPageTemplate: { id: 'copied-template' } },
     });
 
-    render(view('/pages/templates/create?copyFrom=page-template-1'));
+    renderWithTheme(view('/pages/templates/create?copyFrom=page-template-1'));
 
     expect(nameInput().value).toBe(
       'pageTemplates.edit.copyName:Landing Template'
@@ -357,7 +357,7 @@ describe('PageTemplateEditView', () => {
       data: { createPageTemplate: { id: 'new-template' } },
     });
 
-    render(view('/pages/templates/create?fromPage=page-1'));
+    renderWithTheme(view('/pages/templates/create?fromPage=page-1'));
 
     expect(nameInput().value).toBe('Page Title');
     expect(screen.getByDisplayValue('Page Block Title')).toBeInTheDocument();
@@ -391,7 +391,7 @@ describe('PageTemplateEditView', () => {
       : { data: undefined, loading: true, refetch }
     );
 
-    render(view('/pages/templates/create?copyFrom=page-template-1'));
+    renderWithTheme(view('/pages/templates/create?copyFrom=page-template-1'));
 
     expect(
       screen.getByText('pageTemplates.edit.loadingTemplate')
@@ -406,7 +406,7 @@ describe('PageTemplateEditView', () => {
     });
     pageQueryMock.mockReturnValue({ data: undefined, loading: true });
 
-    render(view('/pages/templates/create?fromPage=page-1'));
+    renderWithTheme(view('/pages/templates/create?fromPage=page-1'));
 
     expect(
       screen.getByText('pageTemplates.edit.loadingPage')
@@ -420,7 +420,7 @@ describe('PageTemplateEditView', () => {
       loading: false,
     });
 
-    render(view('/pages/templates/create'));
+    renderWithTheme(view('/pages/templates/create'));
 
     expect(
       screen.queryByText('pageTemplates.edit.loadingTemplate')
@@ -436,7 +436,7 @@ describe('PageTemplateEditView', () => {
 
     it('should allow saving an existing template with the update permission', () => {
       onlyPermitted(CanUpdatePageTemplate.id);
-      render(view());
+      renderWithTheme(view());
 
       expect(nameInput()).toBeEnabled();
       expect(screen.getByRole('button', { name: /^save$/i })).toBeEnabled();
@@ -444,7 +444,7 @@ describe('PageTemplateEditView', () => {
 
     it('should not allow saving an existing template with the create permission only', () => {
       onlyPermitted(CanCreatePageTemplate.id);
-      render(view());
+      renderWithTheme(view());
 
       expect(screen.getByRole('button', { name: /^save$/i })).toBeDisabled();
     });
@@ -456,7 +456,7 @@ describe('PageTemplateEditView', () => {
         loading: false,
       });
       onlyPermitted(CanCreatePageTemplate.id);
-      render(view('/pages/templates/create'));
+      renderWithTheme(view('/pages/templates/create'));
 
       expect(screen.getByRole('button', { name: /^create$/i })).toBeEnabled();
     });
@@ -468,7 +468,7 @@ describe('PageTemplateEditView', () => {
         loading: false,
       });
       onlyPermitted(CanUpdatePageTemplate.id);
-      render(view('/pages/templates/create'));
+      renderWithTheme(view('/pages/templates/create'));
 
       expect(screen.getByRole('button', { name: /^create$/i })).toBeDisabled();
     });

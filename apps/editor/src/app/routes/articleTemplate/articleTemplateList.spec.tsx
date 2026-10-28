@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom/vitest';
 
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { renderWithTheme } from '../templates/testUtils';
 import { ArticleTemplateList } from './articleTemplateList';
 
 const articleTemplateListQueryMock = vi.fn();
@@ -52,7 +53,7 @@ beforeEach(() => {
 
 describe('ArticleTemplateList', () => {
   it('should list article templates under the article routes', async () => {
-    render(
+    renderWithTheme(
       <MemoryRouter>
         <ArticleTemplateList />
       </MemoryRouter>

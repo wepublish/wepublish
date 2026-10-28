@@ -8,12 +8,12 @@ import {
 } from '@wepublish/editor/api';
 import { ArticleMetadata, blockForQueryBlock } from '@wepublish/ui/editor';
 
-import { TemplatePrefill, usePrefillOnce } from '../templates/usePrefillOnce';
 import {
   ArticleTemplateArticleMetadata,
   articleTemplateMetadataToArticleMetadata,
   articleToArticleMetadata,
 } from '../articles/articleMapping';
+import { TemplatePrefill, usePrefillOnce } from '../templates/usePrefillOnce';
 
 export type ArticleTemplatePrefill =
   TemplatePrefill<ArticleTemplateArticleMetadata>;
@@ -57,13 +57,9 @@ export function useArticleTemplatePrefill(
     fetchPolicy: 'network-only',
   });
 
-  const isPrefilling = usePrefillOnce(
-    data?.articleTemplate,
-    articleTemplateToPrefill,
-    onPrefill
-  );
+  usePrefillOnce(data?.articleTemplate, articleTemplateToPrefill, onPrefill);
 
-  return { loading: loading || isPrefilling };
+  return { loading };
 }
 
 export function useArticlePrefill(
@@ -76,11 +72,7 @@ export function useArticlePrefill(
     fetchPolicy: 'network-only',
   });
 
-  const isPrefilling = usePrefillOnce(
-    data?.article,
-    articleToPrefill,
-    onPrefill
-  );
+  usePrefillOnce(data?.article, articleToPrefill, onPrefill);
 
-  return { loading: loading || isPrefilling };
+  return { loading };
 }

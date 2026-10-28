@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react';
+import { useLayoutEffect, useState } from 'react';
 
 import { usePrefillOnce } from './usePrefillOnce';
 
@@ -14,7 +15,7 @@ describe('usePrefillOnce', () => {
   it('should not prefill without a source', () => {
     const onPrefill = vi.fn();
 
-    const { result } = renderHook(() =>
+    renderHook(() =>
       usePrefillOnce<Source, ReturnType<typeof toPrefill>>(
         undefined,
         toPrefill,
@@ -23,7 +24,6 @@ describe('usePrefillOnce', () => {
     );
 
     expect(onPrefill).not.toHaveBeenCalled();
-    expect(result.current).toBe(false);
   });
 
   it('should prefill a source once', () => {
@@ -62,22 +62,20 @@ describe('usePrefillOnce', () => {
     );
   });
 
-  it('should be prefilling until the source has been handed over', () => {
-    const onPrefill = vi.fn();
-    const renders: { prefilling: boolean; prefilled: boolean }[] = [];
+  it('should hand the source over before the first commit', () => {
+    const committed: (string | null)[] = [];
 
-    const { result } = renderHook(() => {
-      const prefilling = usePrefillOnce(
-        { id: '1', name: 'First' },
-        toPrefill,
-        onPrefill
+    renderHook(() => {
+      const [name, setName] = useState<string | null>(null);
+
+      usePrefillOnce({ id: '1', name: 'First' }, toPrefill, prefill =>
+        setName(prefill.name)
       );
-      renders.push({ prefilling, prefilled: onPrefill.mock.calls.length > 0 });
-
-      return prefilling;
+      useLayoutEffect(() => {
+        committed.push(name);
+      });
     });
 
-    expect(renders[0]).toEqual({ prefilling: true, prefilled: false });
-    expect(result.current).toBe(false);
+    expect(committed).toEqual(['First']);
   });
 });
