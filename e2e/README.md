@@ -163,6 +163,13 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   compiles. Ignored when `CI` is set. A Next.js app runs one dev server at a
   time, so stop your own `nx serve <tenant>` first, and don't commit the
   `next-env.d.ts` it rewrites.
+- Nx runs a task once per checkout: while your own `nx serve editor` (or
+  `api-example`) runs **in the same checkout**, the run's server only prints
+  "Waiting for editor:serve:development in another nx process" and the run
+  fails with `Timed out waiting 180000ms from config.webServer`. Stop yours, or
+  serve the e2e editor outside Nx and pass it in:
+  `cd apps/editor && API_URL=http://localhost:4010 pnpm exec vite --port 3010`,
+  then `E2E_EDITOR_URL=http://localhost:3010 pnpm run e2e …`.
 - Reset the e2e data with
   `docker exec wepublish-database-1 psql -U postgres -c "DROP DATABASE wepublish_e2e"`;
   the next run recreates it.
