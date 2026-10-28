@@ -1134,9 +1134,10 @@ gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
 
 ### ⚠️ A TanStack build that works locally can still ship a broken `.output`
 
-[`apps/gruppetto/vite.config.mts`](../../apps/gruppetto/vite.config.mts) lists
-`react` and `react-dom` in `ssr.noExternal`. They look redundant — nothing in
-the app imports React from a CJS module, and the build is green without them.
+[`apps/gruppetto/vite.config.mts`](../../apps/gruppetto/vite.config.mts) aliases
+two specifiers to their ESM equivalents in `resolve.alias`. They look
+redundant — nothing in the app imports React from a CJS module, and the build
+is green without them.
 
 Vite externalises `react` for the SSR environment. Rolldown then inlines any
 CJS dependency it cannot externalise safely and emits a literal
@@ -1158,12 +1159,17 @@ your own `node_modules`.
 Do **not** "fix" it by adding `react` to the nitro `traceDeps`. The require then
 resolves to a second React copy, hooks fail against the bundled copy's
 dispatcher, and SSR degrades to an empty shell while still returning 200.
+`ssr.noExternal: ['react']` removes the require too, but hands react-dom/server
+its own copy and every render dies on a null hook dispatcher — hence the
+aliases.
 
 [`docker/check-nitro-output.js`](../../docker/check-nitro-output.js) runs in the
-`build-website-tanstack` stage and fails the image build on any runtime
-`require()` that is neither bundled, traced, nor a node builtin. The same bug
-hid `@sentry/server-runtime-injection`, which `@sentry/node` imports and nitro
-did not trace.
+`build-website-tanstack` stage and fails the image build on any specifier —
+`require()`, dynamic `import()` or static `import ... from` — that is neither
+bundled, traced, nor a node builtin. The same bug hid
+`@sentry/server-runtime-injection`, which `@sentry/node` imports and nitro did
+not trace, and later `@sentry/tanstackstart-react`, which the `--import`
+preload resolves at runtime from a build of its own.
 
 ---
 

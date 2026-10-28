@@ -110,6 +110,9 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   on the right (secondary subtle, Save/Publish primary). Labels collapse to
   icons by container width (`collapse="md" | "sm" | false`). The bar bleeds to
   the content card's edges through `--wep-page-padding-*` set in `base.tsx`.
+  The bar is sticky; `EditorTemplate` publishes its measured height as
+  `--wep-sticky-top`, so anything else sticky (the richtext toolbar) uses
+  `top: var(--wep-sticky-top, 0px)` instead of hardcoding it.
 - **An edit panel's form *is* the record.** `useForm` fetches what it edits
   through `defaultValues` as an async callback (`useApolloClient().query`),
   rather than a `useQuery` whose result is copied into a parallel set of
