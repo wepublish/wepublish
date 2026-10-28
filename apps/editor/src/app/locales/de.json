@@ -4776,6 +4776,7 @@
         "paramKey": "Parameter, z. B. utm_medium",
         "paramValue": "Wert, z. B. email",
         "addParam": "Parameter hinzufügen",
+        "problems": "Die Regel kann so nicht gespeichert werden:",
         "presentation": "Darstellung und Aktionen",
         "message": "Hinweis",
         "stage": "Stufe {{number}}",
@@ -4821,7 +4822,7 @@
       "validation": {
         "required": "Pflichtfeld",
         "min": "Zu klein",
-        "ascending": "Muss höher sein als bei der Stufe davor",
+        "ascending": "Muss höher sein als bei Stufe {{step}} ({{count}})",
         "hardNotLast": "Nur die letzte Stufe kann den Artikel einschränken",
         "hardNeedsCutoff": "Eine einschränkende Stufe steht nach dem Artikel",
         "onlyHard": "Nur für eine Stufe, die den Artikel einschränkt",
