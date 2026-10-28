@@ -1132,6 +1132,30 @@ gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
 
 ---
 
+### ⚠️ An inline script in a route's `head()` re-runs on every navigation
+
+`head()` can return `scripts`, and `RouterManagedScriptTag` takes `children`,
+so an inline snippet type-checks and server-renders correctly. It is still the
+wrong home for anything that must run once.
+
+`HeadContent` is a `"use client"` component that renders those tags from
+reactive router state, on the server *and* the client. Measured on the built
+server: a counter in the root route's `head().scripts` read 1 after hydration,
+then 2 and 3 after two client-side navigations, with the `<script>` tags
+piling up in `<head>`. Being identical across routes does not help — the tag
+is re-rendered per match.
+
+So analytics initialisers (`gtag('config')`, the GTM IIFE, the Plausible
+shim) stay in the `Analytics` component. They are not idempotent, and moving
+them would double-fire them on every navigation.
+
+For a one-shot bootstrap — `window.PUBLIC_ENV`, `window.WEBSITE_SETTINGS` —
+use `ScriptOnce` from `@tanstack/react-router`. It renders server-side only,
+carries the CSP nonce from `router.options.ssr.nonce`, and appends
+`document.currentScript.remove()` so nothing survives in the hydrated DOM.
+
+---
+
 ### ⚠️ A TanStack build that works locally can still ship a broken `.output`
 
 [`apps/gruppetto/vite.config.mts`](../../apps/gruppetto/vite.config.mts) aliases
