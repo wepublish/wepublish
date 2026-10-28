@@ -3,6 +3,7 @@ export * from './lib/edit-engagement-rule';
 export * from './lib/engagement-preset-cards';
 export * from './lib/engagement-rule-form';
 export * from './lib/engagement-rule-list';
+export * from './lib/engagement-rule-review';
 export * from './lib/engagement-rule-values';
 export * from './lib/presets';
 export * from './lib/summarize-rule';

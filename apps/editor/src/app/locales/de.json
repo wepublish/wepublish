@@ -4599,7 +4599,19 @@
         "high": "Hoch",
         "highest": "Sehr hoch"
       },
-      "copyName": "{{name}} (Kopie)"
+      "copyName": "{{name}} (Kopie)",
+      "review": {
+        "title": "Bevor du speicherst: Das passiert",
+        "goesLive": "Aktiv: Leser:innen sehen es, sobald du speicherst.",
+        "inactive": "Inaktiv: gespeichert, aber niemand sieht es, bis du es einschaltest.",
+        "who": "Wer",
+        "where": "Wo",
+        "nowhere": "Noch nirgends: wähle Artikel oder Seiten",
+        "steps": "Was Leser:innen sehen, Schritt für Schritt",
+        "untitled": "Kein Titel",
+        "back": "Zurück zur Bearbeitung",
+        "confirm": "Regel erstellen"
+      }
     }
   }
 }
