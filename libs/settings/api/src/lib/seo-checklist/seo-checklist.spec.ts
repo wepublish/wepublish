@@ -1,5 +1,6 @@
 import {
   deriveSeoChecks,
+  getNewsSitemapUrl,
   getSeoUrls,
   SEO_CHECKLIST_ITEM_ID,
   SeoChecksInput,
@@ -18,6 +19,13 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   <url><loc>https://example.com</loc></url>
   <url><loc>https://example.com/a/foo</loc></url>
 </urlset>`;
+
+const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<sitemap><loc>https://example.com/api/sitemap/news</loc></sitemap>
+<sitemap><loc>https://example.com/api/sitemap/pages</loc></sitemap>
+<sitemap><loc>https://example.com/api/sitemap/articles-2026-10</loc></sitemap>
+</sitemapindex>`;
 
 const articleHtml = `<html><head>
 <link rel="canonical" href="https://example.com/a/foo"/>
@@ -86,6 +94,43 @@ describe('deriveSeoChecks', () => {
         SeoCheckId.Sitemap
       )?.status
     ).toBe(SeoCheckStatus.Error);
+  });
+
+  test('accepts a sitemap index', () => {
+    const input = {
+      ...baseInput,
+      sitemap: ok(sitemapIndex),
+      newsSitemap: ok(sitemap),
+    };
+
+    expect(getCheck(input, SeoCheckId.Sitemap)).toMatchObject({
+      status: SeoCheckStatus.Ok,
+      url: 'https://example.com/api/sitemap',
+    });
+    expect(getCheck(input, SeoCheckId.NewsSitemap)).toMatchObject({
+      status: SeoCheckStatus.Ok,
+      url: 'https://example.com/api/sitemap/news',
+    });
+  });
+
+  test('reports news entries as info when the indexed news sitemap lacks them', () => {
+    expect(
+      getCheck(
+        {
+          ...baseInput,
+          sitemap: ok(sitemapIndex),
+          newsSitemap: { reachable: true, status: 500, body: '' },
+        },
+        SeoCheckId.NewsSitemap
+      )?.status
+    ).toBe(SeoCheckStatus.Info);
+
+    expect(
+      getCheck(
+        { ...baseInput, sitemap: ok(sitemapIndex), newsSitemap: null },
+        SeoCheckId.NewsSitemap
+      )?.status
+    ).toBe(SeoCheckStatus.Info);
   });
 
   test('detects the existing rss feed', () => {
@@ -159,6 +204,23 @@ describe('deriveSeoChecks', () => {
         SeoCheckId.PublicationMetadata
       )?.status
     ).toBe(SeoCheckStatus.Warning);
+  });
+});
+
+describe('getNewsSitemapUrl', () => {
+  test('finds the news sitemap in a sitemap index', () => {
+    expect(getNewsSitemapUrl(sitemapIndex)).toBe(
+      'https://example.com/api/sitemap/news'
+    );
+  });
+
+  test('ignores urlsets and indexes without a news sitemap', () => {
+    expect(getNewsSitemapUrl(sitemap)).toBeNull();
+    expect(
+      getNewsSitemapUrl(
+        '<sitemapindex><sitemap><loc>https://example.com/api/sitemap/pages</loc></sitemap></sitemapindex>'
+      )
+    ).toBeNull();
   });
 });
 

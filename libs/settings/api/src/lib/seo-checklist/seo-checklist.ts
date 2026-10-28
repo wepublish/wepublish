@@ -7,6 +7,8 @@ export type SeoProbeResult =
 export type SeoChecksInput = {
   websiteUrl: string;
   sitemap: SeoProbeResult;
+  // the news sitemap listed in a sitemap index, see getNewsSitemapUrl
+  newsSitemap?: SeoProbeResult | null;
   rssFeed: SeoProbeResult;
   latestArticleUrl: string | null;
   latestArticle: SeoProbeResult | null;
@@ -29,6 +31,22 @@ export const getSeoUrls = (websiteUrl: string) => {
   };
 };
 
+const isSitemapIndex = (body: string) => body.includes('<sitemapindex');
+
+// Sites in sitemap `index` mode serve a <sitemapindex> whose news entries live
+// in a separate child sitemap (/api/sitemap/news)
+export const getNewsSitemapUrl = (body: string) => {
+  if (!isSitemapIndex(body)) {
+    return null;
+  }
+
+  const locs = [...body.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map(
+    ([, loc]) => loc.replace(/&amp;/g, '&')
+  );
+
+  return locs.find(loc => /\/news\/?$/.test(loc)) ?? null;
+};
+
 const isOk = (
   probe: SeoProbeResult | null
 ): probe is Extract<SeoProbeResult, { reachable: true }> =>
@@ -39,8 +57,13 @@ const describeFailure = (probe: SeoProbeResult) =>
 
 const checkSitemap = (input: SeoChecksInput): SeoCheck[] => {
   const { sitemapUrl } = getSeoUrls(input.websiteUrl);
-
-  if (!isOk(input.sitemap) || !input.sitemap.body.includes('<urlset')) {
+  if (
+    !isOk(input.sitemap) ||
+    !(
+      input.sitemap.body.includes('<urlset') ||
+      isSitemapIndex(input.sitemap.body)
+    )
+  ) {
     return [
       {
         id: SeoCheckId.Sitemap,
@@ -55,6 +78,22 @@ const checkSitemap = (input: SeoChecksInput): SeoCheck[] => {
         id: SeoCheckId.NewsSitemap,
         status: SeoCheckStatus.Info,
         url: sitemapUrl,
+      },
+    ];
+  }
+
+  if (isSitemapIndex(input.sitemap.body)) {
+    const newsSitemapUrl = getNewsSitemapUrl(input.sitemap.body);
+    const newsSitemap = input.newsSitemap ?? null;
+    const hasNews =
+      isOk(newsSitemap) && newsSitemap.body.includes(NEWS_SITEMAP_NAMESPACE);
+
+    return [
+      { id: SeoCheckId.Sitemap, status: SeoCheckStatus.Ok, url: sitemapUrl },
+      {
+        id: SeoCheckId.NewsSitemap,
+        status: hasNews ? SeoCheckStatus.Ok : SeoCheckStatus.Info,
+        url: newsSitemapUrl ?? sitemapUrl,
       },
     ];
   }

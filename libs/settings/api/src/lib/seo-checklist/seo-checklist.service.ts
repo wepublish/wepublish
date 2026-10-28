@@ -3,13 +3,15 @@ import { PrismaClient } from '@prisma/client';
 import { URLAdapter } from '@wepublish/nest-modules';
 import {
   deriveSeoChecks,
+  getNewsSitemapUrl,
   getSeoUrls,
   SEO_CHECKLIST_ITEM_ID,
   SeoProbeResult,
 } from './seo-checklist';
 import { SeoChecklist, SeoChecklistItem } from './seo-checklist.model';
 
-const PROBE_TIMEOUT = 5000;
+// generous, since a cold sitemap index queries the API once per archive period
+const PROBE_TIMEOUT = 10000;
 
 @Injectable()
 export class SeoChecklistService {
@@ -44,12 +46,18 @@ export class SeoChecklistService {
       latestArticleUrl ? this.probe(latestArticleUrl) : null,
     ]);
 
+    const newsSitemapUrl =
+      sitemap.reachable ? getNewsSitemapUrl(sitemap.body) : null;
+    const newsSitemap =
+      newsSitemapUrl ? await this.probe(newsSitemapUrl) : null;
+
     return {
       websiteUrl,
       ...urls,
       checks: deriveSeoChecks({
         websiteUrl,
         sitemap,
+        newsSitemap,
         rssFeed,
         latestArticleUrl,
         latestArticle: latestArticleProbe,

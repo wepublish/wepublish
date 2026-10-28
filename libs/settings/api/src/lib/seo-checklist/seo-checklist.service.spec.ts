@@ -99,6 +99,38 @@ describe('SeoChecklistService', () => {
     });
   });
 
+  test('probes the news sitemap of a sitemap index', async () => {
+    mockPrisma.article.findFirst.mockResolvedValue(null);
+    mockPrisma.peerProfile.findFirst.mockResolvedValue(null);
+    fetchSpy.mockImplementation(async (input: string | URL | Request) => {
+      switch (input.toString()) {
+        case 'https://example.com/api/sitemap':
+          return new Response(
+            '<sitemapindex><sitemap><loc>https://example.com/api/sitemap/news</loc></sitemap></sitemapindex>'
+          );
+        case 'https://example.com/api/sitemap/news':
+          return new Response(
+            responses['https://example.com/api/sitemap'].body
+          );
+        default:
+          return new Response('', { status: 404 });
+      }
+    });
+
+    const checklist = await service.getChecklist();
+
+    expect(fetchSpy.mock.calls.map(([url]) => url)).toContain(
+      'https://example.com/api/sitemap/news'
+    );
+    expect(
+      checklist.checks
+        .filter(check =>
+          [SeoCheckId.Sitemap, SeoCheckId.NewsSitemap].includes(check.id)
+        )
+        .map(check => check.status)
+    ).toEqual([SeoCheckStatus.Ok, SeoCheckStatus.Ok]);
+  });
+
   test('does not probe an article when none is published', async () => {
     mockPrisma.article.findFirst.mockResolvedValue(null);
     mockPrisma.peerProfile.findFirst.mockResolvedValue(null);
