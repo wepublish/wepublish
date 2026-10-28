@@ -94,8 +94,12 @@ describe('EngagementRuleList', () => {
   const mocks = () => [
     {
       request: { query: EngagementRulesDocument },
-      maxUsageCount: Number.POSITIVE_INFINITY,
       result: { data: { engagementRules: [rule] } },
+    },
+    {
+      request: { query: EngagementRulesDocument },
+      maxUsageCount: Number.POSITIVE_INFINITY,
+      result: { data: { engagementRules: [] } },
     },
     {
       request: { query: PaywallListDocument },
@@ -180,5 +184,9 @@ describe('EngagementRuleList', () => {
     fireEvent.click(await screen.findByText('engagement.delete.confirm'));
 
     await waitFor(() => expect(deletes).toEqual([{ id: 'rule-1' }]));
+    // The list is fetched again without it; leaving earlier aborts that fetch.
+    await waitFor(() =>
+      expect(screen.queryByText('Crowdfunding')).not.toBeInTheDocument()
+    );
   });
 });
