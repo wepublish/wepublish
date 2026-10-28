@@ -348,6 +348,7 @@
     "i18next-icu": "^2.6.1",
     "i18next-resources-to-backend": "^1.2.3",
     "immer": "^10.2.0",
+    "intl-messageformat": "^12.1.4",
     "jose": "catalog:",
     "js-cookie": "^3.0.8",
     "keen-slider": "^6.8.6",

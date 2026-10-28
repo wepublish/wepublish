@@ -142,7 +142,7 @@ function CreateEngagementRule() {
       <ListViewContainer>
         <ListViewHeader>
           <PageTitle>{t('engagement.create.title')}</PageTitle>
-          <p>{t('engagement.create.pickPreset')}</p>
+          {/*<p>{t('engagement.create.pickPreset')}</p>*/}
         </ListViewHeader>
       </ListViewContainer>
 

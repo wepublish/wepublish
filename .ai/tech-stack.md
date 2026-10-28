@@ -49,7 +49,7 @@ before you start.
 | `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils` | Vitest                      | `pnpm nx test <domain>-website`                                        |
 | `apps/<tenant>` (Next.js)                                  | Vitest + tsc                | `pnpm tsc -p ./apps/<app> --noEmit`                                    |
 | `libs/api/prisma`                                          | —                           | `pnpm prisma migrate dev --name ...`                                   |
-| `e2e/` (Gherkin E2E)                                       | Playwright + playwright-bdd | `pnpm run e2e <tenant>[,editor] [--environment <env>]` — specs from a diff: `gherkin-from-changes`; steps: `gherkin-to-playwright` |
+| `e2e/` (Gherkin E2E)                                       | Playwright + playwright-bdd | `pnpm run e2e <tenant> [--environment <env>]` (website + editor) — specs from a diff: `gherkin-from-changes`; steps: `gherkin-to-playwright` |
 
 Every project except `e2e/` runs on Vitest — use `vi.fn()` / `vi.mock()` everywhere. NestJS
 libs get their config from `createVitestConfig({nest: true})`.

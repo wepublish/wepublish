@@ -124,6 +124,7 @@ const NumberField = ({
           error={Boolean(error)}
           helperText={error?.message}
           fullWidth
+          hidden
         />
       )}
     />
@@ -861,13 +862,13 @@ export const EngagementRuleForm = () => {
               </Alert>
             )}
 
-            <NumberField
+            {/*<NumberField
               name="priority"
               label={label(
                 t('engagement.form.priority'),
                 t('engagement.form.priorityInfo')
               )}
-            />
+            />*/}
 
             {stages?.length > 0 && (
               <FormHelperText data-testid="rule-summary">
