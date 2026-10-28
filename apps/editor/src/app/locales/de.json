@@ -4521,7 +4521,7 @@
         "name": "Name",
         "active": "Aktiv",
         "priority": "Priorität",
-        "priorityInfo": "Gelten mehrere Regeln, erhält die höhere Priorität zuerst ihren Platz. Es erscheinen höchstens ein Banner, ein Modal und ein Hinweis im Artikel.",
+        "priorityInfo": "Eine Person sieht höchstens ein Banner, ein Pop-up und eine Box im Artikel gleichzeitig. Wollen mehrere Regeln denselben Platz, wird die mit der höheren Priorität angezeigt. Lass die meisten Regeln auf Normal und nutze Hoch für zeitlich begrenzte Kampagnen.",
         "newsletterNote": "Newsletter-Abos lassen sich noch nicht überprüfen. Eine einschränkende Stufe einer Newsletter-Regel verlangt deshalb eine Registrierung oder Mitgliedschaft und muss zusätzlich eine Newsletter-Anmeldung anbieten.",
         "audience": "Zielgruppe",
         "trigger": "Wo und wann",
@@ -4591,6 +4591,12 @@
         "announcementNoMeter": "Eine Ankündigung zählt keine Artikel",
         "announcementNoReferral": "Eine Ankündigung hat keine Newsletter-Einstellungen",
         "newsletterActionRequired": "Biete auch eine Newsletter-Anmeldung an"
+      },
+      "priority": {
+        "low": "Tief",
+        "normal": "Normal",
+        "high": "Hoch",
+        "highest": "Sehr hoch"
       }
     }
   }

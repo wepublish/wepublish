@@ -4521,7 +4521,7 @@
         "name": "Name",
         "active": "Active",
         "priority": "Priority",
-        "priorityInfo": "When several rules apply, the higher priority gets its place first. One banner, one modal and one prompt in the article show at a time.",
+        "priorityInfo": "A reader sees at most one banner, one pop-up and one box in the article at a time. If several rules want the same spot, the one with the higher priority is shown. Leave most rules on Normal and use High for time-limited campaigns.",
         "newsletterNote": "Newsletter subscriptions can not be verified yet. A hard stage of a newsletter rule therefore asks for a registration or membership, and must also offer a newsletter signup.",
         "audience": "Audience",
         "trigger": "Where and when",
@@ -4591,6 +4591,12 @@
         "announcementNoMeter": "An announcement does not count articles",
         "announcementNoReferral": "An announcement has no newsletter settings",
         "newsletterActionRequired": "Offer a newsletter signup too"
+      },
+      "priority": {
+        "low": "Low",
+        "normal": "Normal",
+        "high": "High",
+        "highest": "Highest"
       }
     }
   }

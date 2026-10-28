@@ -22,6 +22,8 @@ import {
   Stack,
   Switch,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from '@mui/material';
 import {
@@ -57,7 +59,10 @@ import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdExpandMore } from 'react-icons/md';
 import {
   EngagementRuleValues,
+  PRIORITY_LEVELS,
+  PriorityLevel,
   actionDefaults,
+  priorityLevel,
   actionNeedsUrl,
   hardStage,
   isAnnouncement,
@@ -753,6 +758,48 @@ const StageFields = ({
   );
 };
 
+const PriorityField = () => {
+  const { t } = useTranslation();
+  const { control } = useFormContext<EngagementRuleValues>();
+
+  return (
+    <Controller
+      control={control}
+      name="priority"
+      render={({ field }) => (
+        <FormControl>
+          <FormLabel id="engagement-priority">
+            {t('engagement.form.priority')}
+          </FormLabel>
+          <ToggleButtonGroup
+            exclusive
+            size="small"
+            aria-labelledby="engagement-priority"
+            value={priorityLevel(field.value)}
+            onChange={(_event, level: PriorityLevel | null) => {
+              // Clicking the selected level again would leave none selected.
+              if (level) {
+                field.onChange(PRIORITY_LEVELS[level]);
+              }
+            }}
+            sx={{ mt: 1 }}
+          >
+            {(Object.keys(PRIORITY_LEVELS) as PriorityLevel[]).map(level => (
+              <ToggleButton
+                key={level}
+                value={level}
+              >
+                {t(`engagement.priority.${level}`)}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+          <FormHelperText>{t('engagement.form.priorityInfo')}</FormHelperText>
+        </FormControl>
+      )}
+    />
+  );
+};
+
 const ReferralFields = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<EngagementRuleValues>();
@@ -972,13 +1019,7 @@ export const EngagementRuleForm = () => {
                   </Alert>
                 )}
 
-                {/*<NumberField
-              name="priority"
-              label={label(
-                t('engagement.form.priority'),
-                t('engagement.form.priorityInfo')
-              )}
-            />*/}
+                <PriorityField />
 
                 {stages?.length > 0 && (
                   <FormHelperText data-testid="rule-summary">

@@ -44,6 +44,7 @@ import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   engagementRuleToValues,
+  priorityLevel,
   toEngagementRuleInput,
 } from './engagement-rule-values';
 import { summarizeRule } from './summarize-rule';
@@ -185,13 +186,13 @@ function EngagementRuleList() {
                   t
                 ),
             },
-            // {
-            //   id: 'priority',
-            //   label: t('engagement.list.priority'),
-            //   width: 90,
-            //   align: 'right',
-            //   render: rule => rule.priority,
-            // },
+            {
+              id: 'priority',
+              label: t('engagement.list.priority'),
+              width: 110,
+              render: rule =>
+                t(`engagement.priority.${priorityLevel(rule.priority)}`),
+            },
             {
               id: 'action',
               label: t('action'),
