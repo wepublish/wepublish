@@ -1,6 +1,6 @@
 //@ts-check
 
-const wepNextConfig = require('../../../libs/utils/website/src/lib/next.config');
+const wepNextConfig = require('../../../libs/utils/website/src/next/next.config');
 
 async function redirects() {
   return [
