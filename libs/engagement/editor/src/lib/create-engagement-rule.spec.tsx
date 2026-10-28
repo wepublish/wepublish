@@ -147,6 +147,15 @@ describe('CreateEngagementRule', () => {
     ).toBeInTheDocument();
   });
 
+  it('leads back to the rules from the presets', () => {
+    renderCreate('/audience-engagement/create');
+
+    expect(screen.getByRole('link', { name: 'back' })).toHaveAttribute(
+      'href',
+      '/audience-engagement'
+    );
+  });
+
   it('opens a preset straight away when the link names one', () => {
     renderCreate('/audience-engagement/create?preset=displayAnnouncement');
 
