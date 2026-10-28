@@ -1,7 +1,7 @@
 import 'react-og-preview/styles.css';
 
 import styled from '@emotion/styled';
-import { Alert, useTheme } from '@mui/material';
+import { Alert, useColorScheme, useTheme } from '@mui/material';
 import { FullImageFragment } from '@wepublish/editor/api';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,17 @@ const toOgImage = (image?: FullImageFragment, square?: boolean) => {
   const url = square ? image?.squareURL : (image?.largeURL ?? image?.url);
 
   return url ? { url, alt: image?.description ?? '' } : null;
+};
+
+// The editor switches modes via color schemes, which leaves
+// theme.palette.mode at the default ('light'), so resolve the active scheme
+const useDarkMode = () => {
+  const theme = useTheme();
+  const { mode, systemMode } = useColorScheme();
+
+  return (
+    ((mode === 'system' ? systemMode : mode) ?? theme.palette.mode) === 'dark'
+  );
 };
 
 const Previews = styled.div`
@@ -167,7 +178,7 @@ export interface GooglePreviewProps {
 
 export function GooglePreview({ data, siteName, favicon }: GooglePreviewProps) {
   const { t } = useTranslation();
-  const dark = useTheme().palette.mode === 'dark';
+  const dark = useDarkMode();
 
   const domain = data.domain ?? '';
   const path = data.url?.replace(/^https?:\/\/[^/]+/, '').replace(/\//g, ' › ');
@@ -227,7 +238,7 @@ export interface SocialPreviewsProps {
 export function SocialPreviews({ data }: SocialPreviewsProps) {
   const { t } = useTranslation();
   // react-og-preview switches to its dark card styles under a `.dark` parent
-  const dark = useTheme().palette.mode === 'dark';
+  const dark = useDarkMode();
 
   const social = {
     url: data.url ?? '',

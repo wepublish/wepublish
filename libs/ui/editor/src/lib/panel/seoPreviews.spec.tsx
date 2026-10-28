@@ -31,10 +31,16 @@ const data: SeoPreviewData = {
   ignoredFields: [],
 };
 
+// mirrors the editor theme: the mode is switched via color schemes, so
+// theme.palette.mode stays 'light' even when dark mode is active
 const renderInMode = (ui: ReactElement, mode: PaletteMode) =>
   render(
     <ThemeProvider
-      theme={createTheme({ cssVariables: true, palette: { mode } })}
+      theme={createTheme({
+        cssVariables: { colorSchemeSelector: 'data-mui-color-scheme' },
+        colorSchemes: { light: true, dark: true },
+      })}
+      defaultMode={mode}
     >
       {ui}
     </ThemeProvider>
