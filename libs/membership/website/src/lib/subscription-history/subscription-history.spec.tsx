@@ -7,6 +7,7 @@ import {
 import { actWait } from '@wepublish/testing';
 import { ProductType } from '@wepublish/website/api';
 
+import { PLAN_PADDING } from './history-table';
 import { SubscriptionHistory } from './subscription-history';
 import * as fixtures from './subscription-history.fixtures';
 import { SubscriptionHistoryFixture } from './subscription-history.fixtures';
@@ -310,6 +311,43 @@ describe('SubscriptionHistory', () => {
     const subscribe = screen.getByRole('link', { name: 'Anderes Abo lösen' });
     expect(subscribe.closest('table')).not.toBeNull();
     expect(subscribe).toHaveAttribute('href', '/mitmachen');
+  });
+
+  // the ended ones belong to the list: right after it, before what is new
+  it('offers the ended subscriptions right after the list, before another subscription', async () => {
+    await renderStory(Default);
+
+    const ended = screen.getByRole('button', { name: 'Beendete Abos (1)' });
+    const subscribe = screen.getByRole('link', { name: 'Anderes Abo lösen' });
+    expect(ended.closest('table')).toBe(subscribe.closest('table'));
+    expect(
+      ended.compareDocumentPosition(subscribe) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+
+    // opened, the ended subscriptions come before the toggle too
+    fireEvent.click(ended);
+    expect(
+      subscriptionRow('Probeabo').compareDocumentPosition(
+        screen.getByRole('button', { name: /Beendete Abos/ })
+      ) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it('lines up the ended subscriptions with the column heading', async () => {
+    await renderStory(Default);
+
+    const toggle = screen.getByRole('button', { name: 'Beendete Abos (1)' });
+    const cell = toggle.closest('td') as HTMLElement;
+    const row = cell.closest('tr') as HTMLElement;
+    const padding = (element: Element) =>
+      parseFloat(getComputedStyle(element).paddingLeft || '0');
+
+    // the arrow column stays free, the text starts where the heading's does
+    expect(row.firstElementChild).not.toBe(cell);
+    expect(row.firstElementChild?.textContent).toBe('');
+    expect(padding(cell)).toBe(PLAN_PADDING * 8);
+    expect(padding(toggle)).toBe(0);
   });
 
   it('sets another subscription apart from the actions', async () => {
