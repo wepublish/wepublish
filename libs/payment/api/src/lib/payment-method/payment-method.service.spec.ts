@@ -1,4 +1,4 @@
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentMethodService } from './payment-method.service';
 import { PaymentMethodDataloader } from './payment-method.dataloader';
@@ -33,7 +33,10 @@ describe('PaymentMethodService', () => {
         PaymentMethodService,
         {
           provide: PublicContentCacheInvalidator,
-          useValue: { invalidate: vi.fn() },
+          useValue: { invalidate: vi.fn() } satisfies Pick<
+            PublicContentCacheInvalidator,
+            'invalidate'
+          >,
         },
         { provide: PaymentMethodDataloader, useValue: dataloader },
         { provide: PrismaClient, useValue: prismaMock },

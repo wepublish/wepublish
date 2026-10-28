@@ -6,19 +6,18 @@ import {
   useContext,
   useEffect,
   useRef,
-  useState,
 } from 'react';
 
 export interface Point {
-  readonly x: number;
-  readonly y: number;
+  x: number;
+  y: number;
 }
 
 export const DraggableContext =
   createContext<RefObject<HTMLDivElement | null> | null>(null);
 
 export interface DraggableContainerProps {
-  readonly children?: ReactNode;
+  children?: ReactNode;
 }
 
 const Container = styled.div`
@@ -29,13 +28,17 @@ const Container = styled.div`
   user-select: none;
 `;
 
-const DraggableWrapper = styled.div<{ layouted: boolean }>`
+const DraggableWrapper = styled.div`
   cursor: move;
   position: absolute;
   transform: translate(-50%, -50%);
   transform-origin: center;
   user-select: none;
-  display: ${({ layouted }) => (layouted ? 'block' : 'none')};
+  display: none;
+
+  &[data-layouted='true'] {
+    display: block;
+  }
 `;
 
 export function DraggableContainer({ children }: DraggableContainerProps) {
@@ -51,9 +54,9 @@ export function DraggableContainer({ children }: DraggableContainerProps) {
 }
 
 export interface DraggableProps {
-  readonly point: Point;
-  readonly children?: ReactNode;
-  readonly disabled?: boolean;
+  point: Point;
+  children?: ReactNode;
+  disabled?: boolean;
 
   onChange?(point: Point): void;
 }
@@ -64,13 +67,12 @@ export function Draggable({
   disabled,
   onChange,
 }: DraggableProps) {
-  const [layouted, setLayouted] = useState(false);
-
   const draggableRef = useRef<HTMLDivElement>(null);
   const containerRef = useContext(DraggableContext);
 
-  if (!containerRef)
+  if (!containerRef) {
     throw new Error('Draggable cannot be used without a DraggableContainer.');
+  }
 
   useEffect(() => {
     let containerWidth = containerRef.current!.clientWidth;
@@ -81,9 +83,6 @@ export function Draggable({
       y: containerHeight * point.y,
     };
     let lastMousePosition: Point | null = null;
-
-    setTransform(realPoint);
-    setLayouted(true);
 
     function clampPoint(point: Point) {
       return {
@@ -96,6 +95,9 @@ export function Draggable({
       const clampedPoint = clampPoint(point);
       draggableRef.current!.style.transform = `translate(-50%, -50%) translate(${clampedPoint.x}px, ${clampedPoint.y}px)`;
     }
+
+    setTransform(realPoint);
+    draggableRef.current!.dataset.layouted = 'true';
 
     function handleMouseMove(e: MouseEvent) {
       if (lastMousePosition) {
@@ -166,12 +168,5 @@ export function Draggable({
     };
   }, [containerRef, draggableRef, point, disabled]);
 
-  return (
-    <DraggableWrapper
-      layouted={layouted}
-      ref={draggableRef}
-    >
-      {children}
-    </DraggableWrapper>
-  );
+  return <DraggableWrapper ref={draggableRef}>{children}</DraggableWrapper>;
 }

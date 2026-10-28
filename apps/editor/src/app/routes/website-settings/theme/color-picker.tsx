@@ -9,6 +9,7 @@ import {
 import { Sketch } from '@uiw/react-color';
 import { IconButtonTooltip } from '@wepublish/ui/editor';
 import {
+  ChangeEvent,
   ChangeEventHandler,
   FocusEventHandler,
   forwardRef,
@@ -64,7 +65,7 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
               cursor: 'pointer',
               borderRadius: `3px`,
               bgcolor: props.value ?? '#000',
-              border: `1px solid ${theme.palette.divider}`,
+              border: `1px solid ${theme.vars.palette.divider}`,
             })}
             onClick={() => setOpen(true)}
           />
@@ -75,7 +76,6 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
           value={props.value}
           onBlur={props.onBlur}
           onChange={props.onChange}
-          size="small"
           type="text"
           error={!!props.error}
           label={props.label}
@@ -103,7 +103,7 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
               onChange={color => {
                 props.onChange({
                   target: { value: color.hexa },
-                } as React.ChangeEvent<HTMLInputElement>);
+                } as ChangeEvent<HTMLInputElement>);
               }}
             />
           </ClickAwayListener>

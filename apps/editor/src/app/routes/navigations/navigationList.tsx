@@ -1,41 +1,52 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
+import {
   DeleteNavigationDocument,
   FullNavigationFragment,
   NavigationListDocument,
-  SlimNavigationFragment,
 } from '@wepublish/editor/api';
 import {
+  CanCreateNavigation,
+  CanDeleteNavigation,
+  CanGetNavigation,
+  CanGetNavigations,
+} from '@wepublish/permissions';
+import {
   createCheckedPermissionComponent,
+  DataTable,
   DescriptionList,
   DescriptionListItem,
+  DRAWER_WIDTHS,
   IconButton,
   IconButtonTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
-  ListViewFilterArea,
   ListViewHeader,
   NavigationEditPanel,
-  PaddedCell,
   PermissionControl,
-  Table,
   TableWrapper,
+  useSeededState,
+  PageTitle,
 } from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
-  Button,
-  Drawer,
-  Input,
-  InputGroup,
-  Modal,
-  Table as RTable,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+  Link as RouterLink,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 
 function NavigationList() {
   const { t } = useTranslation();
@@ -58,7 +69,6 @@ function NavigationList() {
   const [filter, setFilter] = useState('');
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-  const [navigations, setNavigations] = useState<SlimNavigationFragment[]>([]);
   const [currentNavigation, setCurrentNavigation] =
     useState<FullNavigationFragment>();
 
@@ -68,116 +78,120 @@ function NavigationList() {
     loading: isLoading,
   } = useQuery(NavigationListDocument, {});
 
+  const navigations = data?.navigations ?? [];
+
   const [deleteNavigation, { loading: isDeleting }] = useMutation(
     DeleteNavigationDocument
   );
 
-  useEffect(() => {
-    if (isCreateRoute) {
-      setEditID(undefined);
+  useSeededState(
+    isCreateRoute || isEditRoute ? location.pathname : undefined,
+    () => {
+      setEditID(isEditRoute ? id : undefined);
       setEditModalOpen(true);
     }
-
-    if (isEditRoute) {
-      setEditID(id);
-      setEditModalOpen(true);
-    }
-  }, [location]);
-
-  useEffect(() => {
-    if (data?.navigations) {
-      setNavigations(data.navigations);
-    }
-  }, [data?.navigations]);
+  );
 
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('navigation.overview.navigations')}</h2>
+          <PageTitle>{t('navigation.overview.navigations')}</PageTitle>
         </ListViewHeader>
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
+        <PermissionControl qualifyingPermissions={[CanCreateNavigation.id]}>
           <ListViewActions>
-            <Link to="/navigations/create">
-              <IconButton
-                appearance="primary"
-                disabled={isLoading}
-                icon={<MdAdd />}
-              >
-                {t('navigation.overview.newNavigation')}
-              </IconButton>
-            </Link>
+            <Button
+              component={RouterLink}
+              to="/navigations/create"
+              variant="contained"
+              startIcon={<MdAdd />}
+              disabled={isLoading}
+            >
+              {t('navigation.overview.newNavigation')}
+            </Button>
           </ListViewActions>
         </PermissionControl>
-
-        <ListViewFilterArea>
-          <InputGroup>
-            <Input
-              value={filter}
-              onChange={value => setFilter(value)}
-            />
-            <InputGroup.Addon>
-              <MdSearch />
-            </InputGroup.Addon>
-          </InputGroup>
-        </ListViewFilterArea>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={isLoading}
+        <DataTable
+          filters={
+            <TextField
+              label={t('search')}
+              value={filter}
+              onChange={event => setFilter(event.target.value)}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <MdSearch />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          }
+          filterCount={filter ? 1 : 0}
+          onResetFilters={() => {
+            setFilter('');
+          }}
+          storageKey="navigations"
           data={navigations}
-        >
-          <Column
-            width={400}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullNavigationFragment>) => (
+          loading={isLoading}
+          columns={[
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('navigation.overview.name'),
+              width: 400,
+              align: 'left',
+              render: rowData => (
                 <Link to={`/navigations/edit/${rowData.id}`}>
                   {rowData.name || t('navigation.overview.unknown')}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-          <Column
-            width={100}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <PaddedCell>
-              {(rowData: RowDataType<FullNavigationFragment>) => (
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
                 <PermissionControl
-                  qualifyingPermissions={['CAN_DELETE_NAVIGATION']}
+                  qualifyingPermissions={[CanDeleteNavigation.id]}
                 >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       aria-label={t('delete')}
-                      icon={<MdDelete />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
+                      size="small"
+                      color="error"
                       onClick={() => {
                         setCurrentNavigation(rowData as FullNavigationFragment);
                         setConfirmationDialogOpen(true);
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </IconButtonTooltip>
                 </PermissionControl>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => {
           setEditModalOpen(false);
           navigate('/navigations');
@@ -196,27 +210,35 @@ function NavigationList() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('navigation.overview.deleteNavigation')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('navigation.overview.deleteNavigation')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('navigation.overview.name')}>
               {currentNavigation?.name || t('navigation.overview.unknown')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setConfirmationDialogOpen(false)}
+          >
+            {t('navigation.overview.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentNavigation) return;
+              if (!currentNavigation) {
+                return;
+              }
               await deleteNavigation({
                 variables: { id: currentNavigation.id },
               });
@@ -224,26 +246,20 @@ function NavigationList() {
               setConfirmationDialogOpen(false);
               refetch();
             }}
-            color="red"
+            color="error"
           >
             {t('navigation.overview.confirm')}
           </Button>
-          <Button
-            onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
-          >
-            {t('navigation.overview.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_NAVIGATIONS',
-  'CAN_GET_NAVIGATION',
-  'CAN_CREATE_NAVIGATION',
-  'CAN_DELETE_NAVIGATION',
+  CanGetNavigations.id,
+  CanGetNavigation.id,
+  CanCreateNavigation.id,
+  CanDeleteNavigation.id,
 ])(NavigationList);
 export { CheckedPermissionComponent as NavigationList };

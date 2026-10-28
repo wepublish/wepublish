@@ -6,7 +6,7 @@ import {
   Prisma,
   PrismaClient,
 } from '@prisma/client';
-import { SettingName, SettingsService } from '@wepublish/settings/api';
+import { SettingName } from '@wepublish/settings/api';
 import { EmailQualityRecorder, MailQualitySignal } from '@wepublish/mail/api';
 import {
   EmailQualityConfig,
@@ -38,10 +38,9 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 export class EmailQualityService implements EmailQualityRecorder {
   private logger = new Logger('EmailQualityService');
 
-  constructor(
-    private prisma: PrismaClient,
-    private settings: SettingsService
-  ) {}
+  // Reads settings from Prisma, not the SettingsService: that one is request
+  // scoped, and the mail context of the nightly jobs depends on this service.
+  constructor(private prisma: PrismaClient) {}
 
   async getConfig(): Promise<EmailQualityConfig> {
     const [unresponsiveAfterDays, minMailsForUnresponsive] = await Promise.all([
@@ -56,11 +55,9 @@ export class EmailQualityService implements EmailQualityRecorder {
   }
 
   private async settingValue(name: SettingName): Promise<unknown> {
-    try {
-      return (await this.settings.settingByName(name)).value;
-    } catch {
-      return undefined;
-    }
+    const setting = await this.prisma.setting.findUnique({ where: { name } });
+
+    return setting?.value;
   }
 
   /**

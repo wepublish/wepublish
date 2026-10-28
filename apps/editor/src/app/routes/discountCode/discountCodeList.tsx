@@ -1,5 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   DeleteDiscountCodeDocument,
   DiscountCodeListDocument,
   DiscountCodesort,
@@ -13,35 +20,26 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   IconButton,
   IconButtonTooltip,
   InfoTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
-  PaddedCell,
-  Table,
+  Pagination,
   TableWrapper,
   useAuthorisation,
   useListViewState,
+  useTableExportQuery,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+import { Link as RouterLink } from 'react-router-dom';
 
 function DiscountCodeList() {
   const { t } = useTranslation();
@@ -64,6 +62,14 @@ function DiscountCodeList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
+  const exportDiscountCodes = useTableExportQuery(
+    DiscountCodeListDocument,
+    {
+      sort: sortField ? (sortField as DiscountCodesort) : undefined,
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    },
+    data => data.discountCodes
+  );
   const [deleteDiscountCode] = useMutation(DeleteDiscountCodeDocument, {
     onCompleted() {
       refetch();
@@ -81,94 +87,81 @@ function DiscountCodeList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('discountCode.overview.title')}</h2>
+          <PageTitle>{t('discountCode.overview.title')}</PageTitle>
         </ListViewHeader>
 
         <ListViewActions>
-          <Link to="create">
-            <RIconButton
-              appearance="primary"
-              loading={false}
-            >
-              <MdAdd />
-              {t('discountCode.overview.createDiscountCode')}
-            </RIconButton>
-          </Link>
+          <Button
+            component={RouterLink}
+            to="create"
+            variant="contained"
+            loading={false}
+            startIcon={<MdAdd />}
+          >
+            {t('discountCode.overview.createDiscountCode')}
+          </Button>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey="discount-codes"
+          exportRows={exportDiscountCodes}
+          exportTotalCount={data?.discountCodes?.totalCount ?? 0}
           data={data?.discountCodes.nodes ?? []}
+          loading={loading}
           sortColumn={sortField}
-          sortType={sortOrder}
-          onSortColumn={(sortColumn, sortType) => {
-            setSort(sortColumn, sortType ?? 'asc');
+          sortOrder={sortOrder}
+          onSort={(sortColumn, sortType) => {
+            setSort(sortColumn, sortType);
             setPage(1);
           }}
-        >
-          <Column
-            width={100}
-            resizable
-          >
-            <HeaderCell>
-              {t('discountCode.overview.valid')}{' '}
-              <InfoTooltip text={t('discountCode.overview.validInfo')} />
-            </HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<FullDiscountCodeFragment>) =>
+          sortable={['discountpercent']}
+          columns={[
+            {
+              id: 'valid',
+              label: (
+                <>
+                  {t('discountCode.overview.valid')}{' '}
+                  <InfoTooltip text={t('discountCode.overview.validInfo')} />
+                </>
+              ),
+              width: 100,
+              render: rowData =>
                 (
                   new Date() > new Date(rowData.validFrom) &&
                   new Date(rowData.validTo) > new Date()
                 ) ?
                   `✅`
-                : `❌`
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={150}
-            resizable
-          >
-            <HeaderCell>{t('discountCode.overview.code')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<FullDiscountCodeFragment>) => (
+                : `❌`,
+              exportValue: rowData =>
+                new Date() > new Date(rowData.validFrom) &&
+                new Date(rowData.validTo) > new Date(),
+            },
+            {
+              id: 'code',
+              alwaysVisible: true,
+              label: t('discountCode.overview.code'),
+              width: 150,
+              render: rowData => (
                 <Link to={`edit/${rowData.id}`}>
                   {rowData.code.toUpperCase()}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={100}
-            resizable
-            sortable
-          >
-            <HeaderCell>
-              {t('discountCode.overview.discountPercent')}
-            </HeaderCell>
-
-            <RCell dataKey={DiscountCodesort.Discount}>
-              {(rowData: FullDiscountCodeFragment) =>
-                `${rowData.discountPercent}%`
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={160}
-            resizable
-          >
-            <HeaderCell>{t('discountCode.overview.usage')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<FullDiscountCodeFragment>) => {
+              ),
+              exportValue: rowData => rowData.code.toUpperCase(),
+            },
+            {
+              id: 'discountpercent',
+              label: t('discountCode.overview.discountPercent'),
+              width: 100,
+              render: rowData => `${rowData.discountPercent}%`,
+              exportValue: rowData => rowData.discountPercent,
+            },
+            {
+              id: 'usage',
+              label: t('discountCode.overview.usage'),
+              width: 160,
+              render: rowData => {
                 const usage = t('discountCode.overview.usageValue', {
                   total: rowData.usageCount,
                   paid: rowData.paidUsageCount,
@@ -179,117 +172,97 @@ function DiscountCodeList() {
                 }
 
                 return <Link to={`usage/${rowData.id}`}>{usage}</Link>;
-              }}
-            </RCell>
-          </Column>
-
-          <Column
-            width={150}
-            resizable
-          >
-            <HeaderCell>{t('discountCode.overview.memberPlan')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<FullDiscountCodeFragment>) =>
-                rowData.memberPlan.name
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('discountCode.overview.validFrom')}</HeaderCell>
-
-            <RCell>
-              {(rowData: FullDiscountCodeFragment) =>
-                `${new Date(rowData.validFrom).toDateString()}`
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('discountCode.overview.validTo')}</HeaderCell>
-
-            <RCell>
-              {(rowData: FullDiscountCodeFragment) =>
-                `${new Date(rowData.validTo).toDateString()}`
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={100}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <PaddedCell>
-              {(discountCode: RowDataType<FullDiscountCodeFragment>) => (
+              },
+              exportValue: rowData =>
+                t('discountCode.overview.usageValue', {
+                  total: rowData.usageCount,
+                  paid: rowData.paidUsageCount,
+                }),
+            },
+            {
+              id: 'memberplan',
+              label: t('discountCode.overview.memberPlan'),
+              width: 150,
+              render: rowData => rowData.memberPlan.name,
+            },
+            {
+              id: 'validfrom',
+              label: t('discountCode.overview.validFrom'),
+              width: 200,
+              render: rowData =>
+                `${new Date(rowData.validFrom).toDateString()}`,
+              exportValue: rowData => new Date(rowData.validFrom),
+            },
+            {
+              id: 'validto',
+              label: t('discountCode.overview.validTo'),
+              width: 200,
+              render: rowData => `${new Date(rowData.validTo).toDateString()}`,
+              exportValue: rowData => new Date(rowData.validTo),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: discountCode => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    icon={<MdDelete />}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
+                    color="error"
+                    size="small"
                     aria-label={t('delete')}
                     onClick={() =>
                       setDiscountCodeToDelete(
                         discountCode as FullDiscountCodeFragment
                       )
                     }
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
 
       <Pagination
-        limit={limit}
-        limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-        maxButtons={DEFAULT_MAX_TABLE_PAGES}
-        first
-        last
-        prev
-        next
-        ellipsis
-        boundaryLinks
-        layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-        total={data?.discountCodes?.totalCount ?? 0}
-        activePage={page}
-        onChangePage={page => setPage(page)}
-        onChangeLimit={limit => {
-          setLimit(limit);
-          setPage(1);
+        state={{
+          page,
+          limit,
+          setPage,
+          setLimit,
         }}
+        totalCount={data?.discountCodes?.totalCount ?? 0}
       />
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!discountCodeToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setDiscountCodeToDelete(undefined)}
       >
-        <Modal.Title>{t('discountCode.overview.areYouSure')}</Modal.Title>
+        <DialogTitle>{t('discountCode.overview.areYouSure')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {discountCodeToDelete &&
             t('discountCode.overview.areYouSureBody', {
               discountCode: discountCodeToDelete.code,
             })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="text"
+            onClick={() => setDiscountCodeToDelete(undefined)}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
             onClick={() => {
               deleteDiscountCode({
                 variables: {
@@ -301,15 +274,8 @@ function DiscountCodeList() {
           >
             {t('discountCode.overview.areYouSureConfirmation')}
           </Button>
-
-          <Button
-            appearance="subtle"
-            onClick={() => setDiscountCodeToDelete(undefined)}
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

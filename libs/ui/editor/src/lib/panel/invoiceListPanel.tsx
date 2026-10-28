@@ -1,63 +1,43 @@
-import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import {
+  Alert,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import {
   InvoiceFragment,
   InvoicePaymentMailDocument,
   MarkInvoiceAsPaidDocument,
-  MeDocument,
+  PaymentState,
 } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { LiaFileInvoiceSolid } from 'react-icons/lia';
-import { MdAccessTime, MdClose, MdContentCopy, MdDone } from 'react-icons/md';
 import {
-  Button,
-  Message,
-  Modal,
-  Notification,
-  Panel as RPanel,
-  Table as RTable,
-  toaster,
-  Tooltip,
-  Whisper,
-} from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
+  CanCreateInvoice,
+  CanDeleteInvoice,
+  CanGetInvoice,
+  CanGetInvoices,
+} from '@wepublish/permissions';
+import { useMemo, useState } from 'react';
+import { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
+import { MdContentCopy } from 'react-icons/md';
 
-import { createCheckedPermissionComponent, SingleLineTooltip } from '../atoms';
+import {
+  createCheckedPermissionComponent,
+  InvoiceStatus,
+  InvoiceStatusIcon,
+  SingleLineTooltip,
+} from '../atoms';
 import { useActionMailQuestion } from '../hooks';
-import { ColumnConfigurator } from '../listView/column-configurator';
-import { ListColumn, renderListColumns } from '../listView/list-columns';
-import { Table } from '../listView/list-view';
-import { useColumnConfig } from '../listView/use-column-config';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
-
-const InvoiceIconWrapper = styled('span')`
-  position: relative;
-  display: inline-flex;
-  vertical-align: middle;
-`;
-
-const InvoiceIcon = styled(LiaFileInvoiceSolid)`
-  color: grey;
-  font-size: 26px;
-`;
-
-const StatusPill = styled('span')<{ pillColor: string }>`
-  position: absolute;
-  right: -5px;
-  top: 55%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: ${({ pillColor }) => pillColor};
-  color: white;
-  font-size: 10px;
-  box-shadow: 0 0 0 2px var(--rs-bg-card);
-`;
+import { DataTable } from '../listView/data-table';
+import { ListColumn } from '../listView/list-columns';
+import { enqueueSnackbar } from '../snackbar';
 
 const IdButton = styled('button')`
   display: inline-flex;
@@ -75,10 +55,6 @@ const formatDate = (date: string | Date) =>
     timeZone: 'europe/zurich',
   });
 
-/**
- * dueAt is the billing date: imported history carries its real period start
- * there, while createdAt is the moment of the import.
- */
 const billingDate = (invoice: Pick<InvoiceFragment, 'createdAt' | 'dueAt'>) =>
   invoice.dueAt ?? invoice.createdAt;
 
@@ -98,11 +74,249 @@ export const sortByBillingDate = <
 const findGoodieItem = (invoice: InvoiceFragment) =>
   invoice.items?.find(({ goodieId }) => goodieId);
 
-const PanelHeader = styled('div')`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-`;
+const optionalDate = (date?: string | Date | null) =>
+  date ? formatDate(date) : '—';
+
+type InvoicePayment = InvoiceFragment['payments'][number];
+
+/** The payment that settled the invoice, else the latest attempt. */
+const settlingPayment = (
+  invoice: InvoiceFragment
+): InvoicePayment | undefined =>
+  invoice.payments.find(payment => payment.state === PaymentState.Paid) ??
+  invoice.payments.at(-1);
+
+const manuallyPaidBy = (invoice: InvoiceFragment) => {
+  const user = invoice.manuallySetAsPaidByUser;
+
+  return user ?
+      [user.firstName, user.name].filter(Boolean).join(' ')
+    : undefined;
+};
+
+const positions = (invoice: InvoiceFragment) =>
+  invoice.items.map(item => `${item.quantity} × ${item.name}`).join(', ');
+
+export type InvoiceColumnsOptions = {
+  t: TFunction;
+  disabled?: boolean;
+  onPay(invoice: InvoiceFragment): void;
+};
+
+/**
+ * The columns of a subscription's invoice table. Beyond the basics, the
+ * column menu offers more details, hidden until switched on.
+ */
+export const invoiceColumns = ({
+  t,
+  disabled,
+  onPay,
+}: InvoiceColumnsOptions): ListColumn<InvoiceFragment>[] => {
+  const paymentStateLabel = (invoice: InvoiceFragment) => {
+    const payment = invoice.payments.at(-1);
+
+    return payment ? t(`invoice.paymentState.${payment.state}`) : undefined;
+  };
+
+  const invoiceStatus = (
+    invoice: InvoiceFragment
+  ): { status: InvoiceStatus; title: string } =>
+    invoice.paidAt ?
+      {
+        status: 'paid',
+        title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
+      }
+    : invoice.canceledAt ?
+      {
+        status: 'canceled',
+        title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
+      }
+    : { status: 'unpaid', title: t('invoice.unpaid') };
+
+  return [
+    {
+      id: 'id',
+      label: t('invoice.invoiceNo'),
+      width: 110,
+      render: invoice => (
+        <SingleLineTooltip
+          title={invoice.id}
+          placement="top"
+        >
+          <IdButton
+            type="button"
+            onClick={() => {
+              navigator.clipboard.writeText(invoice.id);
+              enqueueSnackbar(t('invoice.table.idCopied'), {
+                variant: 'success',
+                autoHideDuration: 2000,
+              });
+            }}
+          >
+            {invoice.id.slice(0, 4)}…
+            <MdContentCopy />
+          </IdButton>
+        </SingleLineTooltip>
+      ),
+      exportValue: invoice => invoice.id,
+    },
+    {
+      id: 'date',
+      label: t('invoice.table.date'),
+      width: 100,
+      alwaysVisible: true,
+      sortable: true,
+      dataKey: 'dueAt',
+      sortKey: 'dueAt',
+      render: invoice => formatDate(billingDate(invoice)),
+      exportValue: invoice => new Date(billingDate(invoice)),
+    },
+    {
+      id: 'description',
+      label: t('invoice.table.description'),
+      width: 260,
+      minWidth: 160,
+      resizable: false,
+      alwaysVisible: true,
+      render: invoice => invoice.description,
+    },
+    {
+      id: 'total',
+      label: t('invoice.total'),
+      width: 110,
+      alwaysVisible: true,
+      render: invoice =>
+        `${(invoice.total / 100).toFixed(2)} ${invoice.currency}`,
+    },
+    {
+      id: 'goodie',
+      label: t('invoice.table.goodie'),
+      width: 140,
+      render: invoice => {
+        const goodieItem = findGoodieItem(invoice);
+
+        return goodieItem?.goodie?.name ?? goodieItem?.name ?? '—';
+      },
+    },
+    {
+      id: 'status',
+      label: t('invoice.table.status'),
+      width: 80,
+      resizable: false,
+      alwaysVisible: true,
+      render: invoice => {
+        const status = invoiceStatus(invoice);
+
+        return (
+          <InvoiceStatusIcon
+            status={status.status}
+            title={status.title}
+          />
+        );
+      },
+      exportValue: invoice => invoiceStatus(invoice).title,
+    },
+    {
+      id: 'paidAt',
+      label: t('invoice.table.paidAt'),
+      width: 100,
+      render: invoice => optionalDate(invoice.paidAt),
+      exportValue: invoice =>
+        invoice.paidAt ? new Date(invoice.paidAt) : null,
+    },
+    {
+      id: 'paidVia',
+      label: t('invoice.table.paidVia'),
+      width: 120,
+      defaultHidden: true,
+      render: invoice => settlingPayment(invoice)?.paymentMethod.name ?? '—',
+      exportValue: invoice =>
+        settlingPayment(invoice)?.paymentMethod.name ?? null,
+    },
+    {
+      id: 'paymentState',
+      label: t('invoice.table.paymentState'),
+      width: 120,
+      defaultHidden: true,
+      render: invoice => paymentStateLabel(invoice) ?? '—',
+      exportValue: invoice => paymentStateLabel(invoice) ?? null,
+    },
+    {
+      id: 'manuallyPaidBy',
+      label: t('invoice.table.manuallyPaidBy'),
+      width: 140,
+      defaultHidden: true,
+      render: invoice => manuallyPaidBy(invoice) ?? '—',
+      exportValue: invoice => manuallyPaidBy(invoice) ?? null,
+    },
+    {
+      id: 'canceledAt',
+      label: t('invoice.table.canceledAt'),
+      width: 100,
+      defaultHidden: true,
+      render: invoice => optionalDate(invoice.canceledAt),
+      exportValue: invoice =>
+        invoice.canceledAt ? new Date(invoice.canceledAt) : null,
+    },
+    {
+      id: 'scheduledDeactivationAt',
+      label: t('invoice.table.scheduledDeactivationAt'),
+      width: 120,
+      defaultHidden: true,
+      render: invoice => optionalDate(invoice.scheduledDeactivationAt),
+      exportValue: invoice => new Date(invoice.scheduledDeactivationAt),
+    },
+    {
+      id: 'createdAt',
+      label: t('invoice.table.createdAt'),
+      width: 100,
+      defaultHidden: true,
+      render: invoice => formatDate(invoice.createdAt),
+      exportValue: invoice => new Date(invoice.createdAt),
+    },
+    {
+      id: 'modifiedAt',
+      label: t('invoice.table.modifiedAt'),
+      width: 100,
+      defaultHidden: true,
+      render: invoice => formatDate(invoice.modifiedAt),
+      exportValue: invoice => new Date(invoice.modifiedAt),
+    },
+    {
+      id: 'mail',
+      label: t('invoice.table.mail'),
+      width: 200,
+      defaultHidden: true,
+      render: invoice => invoice.mail,
+    },
+    {
+      id: 'positions',
+      label: t('invoice.table.positions'),
+      width: 220,
+      defaultHidden: true,
+      render: invoice => positions(invoice),
+      exportValue: invoice => positions(invoice),
+    },
+    {
+      id: 'action',
+      label: t('action'),
+      width: 160,
+      align: 'center',
+      fixed: true,
+      render: (invoice: InvoiceFragment) =>
+        !invoice.paidAt && !invoice.canceledAt ?
+          <Button
+            size="small"
+            variant="contained"
+            disabled={disabled}
+            onClick={() => onPay(invoice)}
+          >
+            {t('invoice.payManually')}
+          </Button>
+        : null,
+    },
+  ];
+};
 
 export interface InvoiceListPanelProps {
   subscriptionId?: string;
@@ -119,10 +333,8 @@ function InvoiceListPanel({
   disabled,
   onInvoicePaid,
 }: InvoiceListPanelProps) {
-  const { data: me } = useQuery(MeDocument, {});
   const { t } = useTranslation();
   const [invoiceToPay, setInvoiceToPay] = useState<InvoiceFragment>();
-  // latest first by default; the date column header toggles
   const [sortType, setSortType] = useState<'asc' | 'desc'>('desc');
   const sortedInvoices = useMemo(
     () => sortByBillingDate(invoices ?? [], sortType),
@@ -130,121 +342,9 @@ function InvoiceListPanel({
   );
   const client = useApolloClient();
   const { askMail, actionMailDialog } = useActionMailQuestion();
-  const columns = useMemo<ListColumn<InvoiceFragment>[]>(
-    () => [
-      {
-        id: 'id',
-        label: t('invoice.invoiceNo'),
-        width: 110,
-        render: invoice => (
-          <Whisper
-            placement="top"
-            trigger="hover"
-            speaker={<SingleLineTooltip>{invoice.id}</SingleLineTooltip>}
-          >
-            <IdButton
-              type="button"
-              onClick={() => {
-                navigator.clipboard.writeText(invoice.id);
-                toaster.push(
-                  <Notification
-                    type="success"
-                    header={t('invoice.table.idCopied')}
-                    duration={2000}
-                  />,
-                  { placement: 'topEnd' }
-                );
-              }}
-            >
-              {invoice.id.slice(0, 4)}…
-              <MdContentCopy />
-            </IdButton>
-          </Whisper>
-        ),
-      },
-      {
-        id: 'date',
-        label: t('invoice.table.date'),
-        width: 100,
-        alwaysVisible: true,
-        sortable: true,
-        dataKey: 'dueAt',
-        render: invoice => formatDate(billingDate(invoice)),
-      },
-      {
-        id: 'description',
-        label: t('invoice.table.description'),
-        flexGrow: 1,
-        minWidth: 160,
-        resizable: false,
-        alwaysVisible: true,
-        render: invoice => invoice.description,
-      },
-      {
-        id: 'total',
-        label: t('invoice.total'),
-        width: 110,
-        alwaysVisible: true,
-        render: invoice =>
-          `${(invoice.total / 100).toFixed(2)} ${invoice.currency}`,
-      },
-      {
-        id: 'goodie',
-        label: t('invoice.table.goodie'),
-        width: 140,
-        render: invoice => {
-          const goodieItem = findGoodieItem(invoice);
-
-          return goodieItem?.goodie?.name ?? goodieItem?.name ?? '—';
-        },
-      },
-      {
-        id: 'status',
-        label: t('invoice.table.status'),
-        width: 80,
-        alwaysVisible: true,
-        render: invoice => {
-          const status =
-            invoice.paidAt ?
-              {
-                title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
-                color: 'var(--rs-state-success)',
-                icon: <MdDone />,
-              }
-            : invoice.canceledAt ?
-              {
-                title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
-                color: 'var(--rs-state-error)',
-                icon: <MdClose />,
-              }
-            : {
-                title: t('invoice.unpaid'),
-                color: 'var(--rs-state-warning)',
-                icon: <MdAccessTime />,
-              };
-
-          return (
-            <Whisper
-              placement="top"
-              trigger="hover"
-              speaker={<Tooltip>{status.title}</Tooltip>}
-            >
-              <InvoiceIconWrapper>
-                <InvoiceIcon />
-
-                <StatusPill pillColor={status.color}>{status.icon}</StatusPill>
-              </InvoiceIconWrapper>
-            </Whisper>
-          );
-        },
-      },
-    ],
-    [t]
-  );
-
-  const { isVisible, toggle, configurableColumns } = useColumnConfig(
-    'subscription-invoices',
-    columns
+  const columns = useMemo(
+    () => invoiceColumns({ t, disabled, onPay: setInvoiceToPay }),
+    [disabled, t]
   );
 
   const [markInvoiceAsPaid] = useMutation(MarkInvoiceAsPaidDocument);
@@ -257,14 +357,6 @@ function InvoiceListPanel({
     const invoice = invoiceToPay;
     setInvoiceToPay(undefined);
 
-    if (!me?.me?.id) {
-      toaster.push(
-        <Message type="error">{t('invoice.userNotLoaded')}</Message>
-      );
-
-      return;
-    }
-
     if (!invoice) {
       return;
     }
@@ -274,6 +366,7 @@ function InvoiceListPanel({
       variables: { invoiceId: invoice.id },
       fetchPolicy: 'network-only',
     });
+
     const mail = data?.invoicePaymentMail;
 
     if (!mail) {
@@ -299,115 +392,84 @@ function InvoiceListPanel({
         }),
       },
     });
+
     onInvoicePaid();
   }
 
-  const panelHeader = (
-    <PanelHeader>
-      {t('invoice.panel.invoiceHistory')}
-
-      <ColumnConfigurator
-        columns={configurableColumns}
-        isVisible={isVisible}
-        onToggle={toggle}
-      />
-    </PanelHeader>
-  );
+  const panelTitle = t('invoice.panel.invoiceHistory');
 
   if (!subscriptionId) {
     return (
-      <RPanel
-        bordered
-        header={panelHeader}
-      >
-        <Message type="error">
-          {t('invoice.panel.missingSubscriptionId')}
-        </Message>
-      </RPanel>
+      <Card>
+        <CardHeader title={panelTitle} />
+
+        <CardContent>
+          <Alert severity="error">
+            {t('invoice.panel.missingSubscriptionId')}
+          </Alert>
+        </CardContent>
+      </Card>
     );
   }
 
   if (!invoices?.length) {
     return (
-      <RPanel
-        bordered
-        header={panelHeader}
-      >
-        <Message type="info">{t('invoice.panel.noInvoices')}</Message>
-      </RPanel>
+      <Card>
+        <CardHeader title={panelTitle} />
+
+        <CardContent>
+          <Alert severity="info">{t('invoice.panel.noInvoices')}</Alert>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <RPanel
-      bordered
-      header={panelHeader}
-    >
-      <Table
-        autoHeight
-        wordWrap="break-word"
-        data={sortedInvoices}
-        sortColumn="dueAt"
-        sortType={sortType}
-        onSortColumn={(_, type) => setSortType(type ?? 'desc')}
-      >
-        {renderListColumns(columns, isVisible)}
+    <Card>
+      <CardHeader title={panelTitle} />
 
-        <Column
-          width={160}
-          align="center"
-          fixed="right"
-        >
-          <HeaderCell align="center">{t('action')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<InvoiceFragment>) =>
-              !rowData.paidAt && !rowData.canceledAt ?
-                <Button
-                  size="xs"
-                  appearance="primary"
-                  disabled={!me?.me?.id || disabled}
-                  onClick={() => setInvoiceToPay(rowData as InvoiceFragment)}
-                >
-                  {t('invoice.payManually')}
-                </Button>
-              : null
-            }
-          </RCell>
-        </Column>
-      </Table>
+      <CardContent>
+        <DataTable
+          data={sortedInvoices}
+          sortable={['dueAt']}
+          sortColumn="dueAt"
+          sortOrder={sortType}
+          onSort={(_column, order) => setSortType(order)}
+          getRowId={row => row.id}
+          storageKey="invoices"
+          exportRows={() => sortedInvoices}
+          columns={columns}
+        />
+      </CardContent>
 
-      <Modal
+      <Dialog
         open={!!invoiceToPay}
-        backdrop="static"
-        size="xs"
         onClose={closePayModal}
+        maxWidth="xs"
       >
-        <Modal.Title>{t('invoice.areYouSure')}</Modal.Title>
-        <Modal.Body>{t('invoice.manuallyPaidModalBody')}</Modal.Body>
-        <Modal.Footer>
+        <DialogTitle>{t('invoice.areYouSure')}</DialogTitle>
+        <DialogContent>{t('invoice.manuallyPaidModalBody')}</DialogContent>
+
+        <DialogActions>
+          <Button onClick={closePayModal}>{t('cancel')}</Button>
+
           <Button
-            appearance="primary"
+            variant="contained"
             onClick={payManually}
           >
             {t('confirm')}
           </Button>
-          <Button
-            appearance="subtle"
-            onClick={closePayModal}
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
 
       {actionMailDialog}
-    </RPanel>
+    </Card>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_INVOICES',
-  'CAN_GET_INVOICE',
-  'CAN_CREATE_INVOICE',
-  'CAN_DELETE_INVOICE',
+  CanGetInvoices.id,
+  CanGetInvoice.id,
+  CanCreateInvoice.id,
+  CanDeleteInvoice.id,
 ])(InvoiceListPanel);
 export { CheckedPermissionComponent as InvoiceListPanel };

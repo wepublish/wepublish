@@ -11,7 +11,7 @@ import {
 } from './mail-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { MailProviderSettingsDataloaderService } from './mail-provider-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { clearProviderConfig } from './clear-provider-config';
@@ -22,7 +22,7 @@ export class MailProviderSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private resets: NamespaceResets,
     private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
@@ -92,7 +92,7 @@ export class MailProviderSettingsService {
       data: output,
     });
 
-    await this.kv.resetNamespace('settings:mailprovider');
+    await this.resets.reset('settings:mailprovider');
     await this.providerSettingsChanged.notify('Mail provider');
     return returnValue;
   }
@@ -137,7 +137,7 @@ export class MailProviderSettingsService {
       data,
     });
 
-    await this.kv.resetNamespace('settings:mailprovider');
+    await this.resets.reset('settings:mailprovider');
     await this.providerSettingsChanged.notify('Mail provider');
     return returnValue;
   }
@@ -169,7 +169,7 @@ export class MailProviderSettingsService {
       where: { id },
     });
 
-    await this.kv.resetNamespace('settings:mailprovider');
+    await this.resets.reset('settings:mailprovider');
     await this.providerSettingsChanged.notify('Mail provider');
     return returnValue;
   }

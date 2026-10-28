@@ -23,6 +23,7 @@
       "@wepublish/ai/editor": ["libs/ai/editor/src/index.ts"],
       "@wepublish/ai/website": ["libs/ai/website/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
+      "@wepublish/api-token/api": ["libs/api-token/api/src/index.ts"],
       "@wepublish/audit-log/api": ["libs/audit-log/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
       "@wepublish/article/api": ["libs/article/api/src/index.ts"],
@@ -52,6 +53,10 @@
         "libs/crowdfunding/editor/src/index.ts"
       ],
       "@wepublish/document/api": ["libs/document/api/src/index.ts"],
+      "@wepublish/dragonfly/api": ["libs/dragonfly/api/src/index.ts"],
+      "@wepublish/dragonfly/api/testing": [
+        "libs/dragonfly/api/src/testing.ts"
+      ],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
       "@wepublish/errors": ["libs/errors/src/index.ts"],
       "@wepublish/errors/website": ["libs/errors/website/src/index.ts"],
@@ -69,8 +74,13 @@
       "@wepublish/health": ["libs/health/api/src/index.ts"],
       "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/image/website": ["libs/image/website/src/index.ts"],
-      "@wepublish/jobs": ["libs/jobs/src/index.ts"],
       "@wepublish/kv-ttl-cache/api": ["libs/kv-ttl-cache/api/src/index.ts"],
+      "@wepublish/kv-ttl-cache/api/prisma": [
+        "libs/kv-ttl-cache/api/src/prisma.ts"
+      ],
+      "@wepublish/kv-ttl-cache/api/testing": [
+        "libs/kv-ttl-cache/api/src/testing.ts"
+      ],
       "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
       "@wepublish/media-transform-guard": [
         "libs/media-transform-guard/api/src/index.ts"
@@ -80,9 +90,18 @@
       "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
       "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
       "@wepublish/membership/website": ["libs/membership/website/src/index.ts"],
+      "@wepublish/mocks/website": ["libs/mocks/website/src/index.ts"],
       "@wepublish/navigation/api": ["libs/navigation/api/src/index.ts"],
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
+      "@wepublish/features": ["libs/features/src/index.ts"],
+      "@wepublish/features/api": ["libs/features/api/src/index.ts"],
+      "@wepublish/newsletter/api": ["libs/newsletter/api/src/index.ts"],
+      "@wepublish/newsletter/editor": ["libs/newsletter/editor/src/index.ts"],
+      "@wepublish/newsletter/email": ["libs/newsletter/email/src/index.ts"],
+      "@wepublish/newsletter/email/render": [
+        "libs/newsletter/email/src/render.ts"
+      ],
       "@wepublish/one/api": ["libs/one/api/src/index.ts"],
       "@wepublish/page/api": ["libs/page/api/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
@@ -101,6 +120,9 @@
       "@wepublish/phrase/api": ["libs/phrase/api/src/index.ts"],
       "@wepublish/poll/api": ["libs/poll/api/src/index.ts"],
       "@wepublish/property/api": ["libs/property/api/src/index.ts"],
+      "@wepublish/public-content-cache/api": [
+        "libs/public-content-cache/api/src/index.ts"
+      ],
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
       "@wepublish/richtext/api": ["libs/richtext/api/src/index.ts"],
       "@wepublish/richtext/editor": ["libs/richtext/editor/src/index.ts"],
@@ -112,11 +134,27 @@
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/settings/editor": ["libs/settings/editor/src/index.ts"],
       "@wepublish/stats/api": ["libs/stats/api/src/index.ts"],
-      "@wepublish/storybook": ["libs/storybook/src/index.ts"],
-      "@wepublish/storybook/mocks": ["libs/storybook/mocks/src/index.ts"],
       "@wepublish/system-info": ["libs/system-info/api/src/index.ts"],
       "@wepublish/tag/api": ["libs/tag/api/src/index.ts"],
       "@wepublish/tag/website": ["libs/tag/website/src/index.ts"],
+      "@wepublish/tenant/babanews": ["libs/tenants/babanews/src/index.ts"],
+      "@wepublish/tenant/bajour": ["libs/tenants/bajour/src/index.ts"],
+      "@wepublish/tenant/cultur": ["libs/tenants/cultur/src/index.ts"],
+      "@wepublish/tenant/eenews":["libs/tenants/eenews/src/index.ts"],
+      "@wepublish/tenant/factuel": ["libs/tenants/factuel/src/index.ts"],
+      "@wepublish/tenant/fazetten": ["libs/tenants/fazetten/src/index.ts"],
+      "@wepublish/tenant/flimmer": ["libs/tenants/flimmer/src/index.ts"],
+      "@wepublish/tenant/ganzgraz":["libs/tenants/ganzgraz/src/index.ts"],
+      "@wepublish/tenant/gruppetto": ["libs/tenants/gruppetto/src/index.ts"],
+      "@wepublish/tenant/hauptstadt":["libs/tenants/hauptstadt/src/index.ts"],
+      "@wepublish/tenant/mannschaft": ["libs/tenants/mannschaft/src/index.ts"],
+      "@wepublish/tenant/munotgloeggli": ["libs/tenants/munotgloeggli/src/index.ts"],
+      "@wepublish/tenant/onlinereports": ["libs/tenants/onlinereports/src/index.ts"],
+      "@wepublish/tenant/reflekt":["libs/tenants/reflekt/src/index.ts"],
+      "@wepublish/tenant/tsri": ["libs/tenants/tsri/src/index.ts"],
+      "@wepublish/tenant/wepublish-site": ["libs/tenants/wepublish-site/src/index.ts"],
+      "@wepublish/tenant/wnti": ["libs/tenants/wnti/src/index.ts"],
+      "@wepublish/tenant/zwoelf": ["libs/tenants/zwoelf/src/index.ts"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],
       "@wepublish/testing/prisma": ["libs/testing/src/lib/prisma-utils.ts"],
       "@wepublish/tracking-pixel/api": ["libs/tracking-pixel/api/src/index.ts"],
@@ -130,21 +168,38 @@
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
-      "@wepublish/utils/sentry": ["libs/utils/sentry/instrumentation.ts"],
-      "@wepublish/utils/sentry/client": [
-        "libs/utils/sentry/instrumentation.client.ts"
-      ],
-      "@wepublish/utils/sentry/nestjs": [
-        "libs/utils/sentry/instrumentation.nestjs.ts"
-      ],
-      "@wepublish/utils/sentry/nextjs": [
-        "libs/utils/sentry/instrumentation.nextjs.ts"
+      "@wepublish/utils/api/sentry": [
+        "libs/utils/api/src/lib/sentry/instrumentation.ts"
       ],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
+      "@wepublish/utils/website/daily-briefing": [
+        "libs/utils/website/src/lib/components/daily-briefing-teaser.tsx"
+      ],
+      "@wepublish/utils/website/google-fonts": [
+        "libs/utils/website/src/lib/google-fonts.ts"
+      ],
+      "@wepublish/utils/website/i18n": [
+        "libs/utils/website/src/lib/i18n-formatter.tsx"
+      ],
+      "@wepublish/utils/website/link": [
+        "libs/utils/website/src/next/next-wepublish-link.tsx"
+      ],
+      "@wepublish/utils/website/next": [
+        "libs/utils/website/src/next.ts"
+      ],
+      "@wepublish/utils/website/next/sentry": [
+        "libs/utils/website/src/next/sentry/instrumentation.ts"
+      ],
+      "@wepublish/utils/website/next/sentry/client": [
+        "libs/utils/website/src/next/sentry/instrumentation.client.ts"
+      ],
       "@wepublish/versionInformation/api": [
         "libs/versionInformation/api/src/index.ts"
       ],
       "@wepublish/website": ["libs/website/src/index.ts"],
+      "@wepublish/website-revalidation/api": [
+        "libs/website-revalidation/api/src/index.ts"
+      ],
       "@wepublish/website/admin": ["libs/website/admin/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],

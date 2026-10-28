@@ -5,6 +5,11 @@ export * from './lib/settings.module';
 export * from './lib/settings.service';
 export * from './lib/setting-dataloader.service';
 export * from './lib/settings-utils';
+export {
+  SETTINGS_CACHE_NAMESPACE,
+  SETTINGS_SHARED_NAMESPACES,
+  WEBSITE_SETTINGS_CACHE_NAMESPACE,
+} from './lib/settings-cache';
 
 export * from './lib/integrations/tracking-pixel-provider-settings.model';
 export * from './lib/integrations/tracking-pixel-provider-settings.service';
@@ -37,4 +42,10 @@ export * from './lib/website-settings/website-settings.module';
 export * from './lib/website-settings/website-settings.model';
 export * from './lib/website-settings/website-settings.service';
 export * from './lib/website-settings/website-settings.resolver';
+
+export * from './lib/seo-checklist/seo-checklist.module';
+export * from './lib/seo-checklist/seo-checklist.model';
+export * from './lib/seo-checklist/seo-checklist';
+export * from './lib/seo-checklist/seo-checklist.service';
+export * from './lib/seo-checklist/seo-checklist.resolver';
 export * from './lib/integrations/provider-settings-changed';

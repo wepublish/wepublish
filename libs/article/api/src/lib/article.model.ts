@@ -3,8 +3,10 @@ import {
   Field,
   InputType,
   Int,
+  IntersectionType,
   ObjectType,
   OmitType,
+  PickType,
   registerEnumType,
 } from '@nestjs/graphql';
 import { Image } from '@wepublish/image/api';
@@ -265,6 +267,48 @@ export class CreateArticleInput extends OmitType(
 
   @Field(() => [PropertyInput])
   properties!: PropertyInput[];
+}
+
+@InputType()
+export class ArticleTemplateMetadataInput extends OmitType(
+  CreateArticleInput,
+  ['blocks', 'slug', 'likes'] as const,
+  InputType
+) {}
+
+@ObjectType()
+export class ArticleTemplateMetadata extends IntersectionType(
+  PickType(
+    ArticleRevision,
+    [
+      'preTitle',
+      'title',
+      'lead',
+      'seoTitle',
+      'seoDescription',
+      'canonicalUrl',
+      'breaking',
+      'hideAuthor',
+      'imageID',
+      'image',
+      'authors',
+      'properties',
+      'socialMediaTitle',
+      'socialMediaDescription',
+      'socialMediaAuthors',
+      'socialMediaImageID',
+      'socialMediaImage',
+    ] as const,
+    ObjectType
+  ),
+  PickType(
+    Article,
+    ['shared', 'hidden', 'disableComments', 'tags'] as const,
+    ObjectType
+  )
+) {
+  @Field({ nullable: true })
+  paywallId?: string;
 }
 
 @ArgsType()

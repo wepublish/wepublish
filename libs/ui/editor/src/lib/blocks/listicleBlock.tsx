@@ -1,34 +1,38 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useState } from 'react';
+import { Drawer } from '@mui/material';
+import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Drawer } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { ChooseEditImage } from '../atoms/chooseEditImage';
 import { FieldProps, ListInput } from '../atoms/listInput';
 import { TypographicTextArea } from '../atoms/typographicTextArea';
+import { DRAWER_WIDTHS } from '../drawer';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import { isFunctionalUpdate } from '../utility';
 import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { ListicleBlockValue, ListicleItem, RichTextBlockValue } from './types';
 
-const ListicleWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
+const ListicleItemContainer = styled('div')`
+  container-type: inline-size;
 `;
 
-const ImageWrapper = styled.div`
+const ListicleItemLayout = styled('div')`
   display: grid;
-  overflow: hidden;
-  width: 200px;
-  height: 150px;
-  margin-right: 10px;
-  flex-shrink: 0;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-items: start;
+
+  @container (max-width: 520px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 `;
 
-const TextAreaWrapper = styled.div`
-  flex-grow: 1;
+const ListicleContent = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(1)};
+  min-width: 0;
 `;
 
 export function ListicleBlock({
@@ -47,7 +51,12 @@ export function ListicleBlock({
       defaultValue={{ image: null, richText: undefined, title: '' }}
       disabled={disabled}
     >
-      {props => <ListicleItemElement {...props} />}
+      {props => (
+        <ListicleItemElement
+          {...props}
+          disabled={disabled}
+        />
+      )}
     </ListInput>
   );
 }
@@ -55,7 +64,8 @@ export function ListicleBlock({
 export function ListicleItemElement({
   value,
   onChange,
-}: FieldProps<ListicleItem>) {
+  disabled,
+}: FieldProps<ListicleItem> & { disabled?: boolean }) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
@@ -64,7 +74,7 @@ export function ListicleItemElement({
   const { t } = useTranslation();
 
   const handleRichTextChange = useCallback(
-    (richText: React.SetStateAction<RichTextBlockValue['richText']>) =>
+    (richText: SetStateAction<RichTextBlockValue['richText']>) =>
       onChange(value => ({
         ...value,
         richText:
@@ -75,39 +85,53 @@ export function ListicleItemElement({
 
   return (
     <>
-      <ListicleWrapper>
-        <ImageWrapper>
+      <ListicleItemContainer>
+        <ListicleItemLayout>
           <ChooseEditImage
-            header={''}
+            onSelect={image => {
+              setChooseModalOpen(false);
+              onChange(value => ({ ...value, image }));
+            }}
             image={image}
-            disabled={false}
+            disabled={!!disabled}
+            maxHeight={150}
             openChooseModalOpen={() => setChooseModalOpen(true)}
             openEditModalOpen={() => setEditModalOpen(true)}
-            removeImage={() => onChange?.({ ...value, image: null })}
-          />
-        </ImageWrapper>
-
-        <TextAreaWrapper>
-          <TypographicTextArea
-            variant="h1"
-            placeholder={t('blocks.listicle.title')}
-            value={title ?? ''}
-            onChange={e => {
-              const title = e.target.value;
-              onChange(value => ({ ...value, title }));
-            }}
+            removeImage={() => onChange(value => ({ ...value, image: null }))}
           />
 
-          <RichTextBlock
-            value={richText}
-            onChange={handleRichTextChange}
-          />
-        </TextAreaWrapper>
-      </ListicleWrapper>
+          <ListicleContent>
+            <TypographicTextArea
+              variant="h3"
+              placeholder={t('blocks.listicle.title')}
+              value={title ?? ''}
+              disabled={disabled}
+              onChange={e => {
+                const title = e.target.value;
+                onChange(value => ({ ...value, title }));
+              }}
+            />
+
+            <RichTextBlock
+              value={richText}
+              disabled={disabled}
+              onChange={handleRichTextChange}
+            />
+          </ListicleContent>
+        </ListicleItemLayout>
+      </ListicleItemContainer>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -120,8 +144,18 @@ export function ListicleItemElement({
       </Drawer>
       {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel

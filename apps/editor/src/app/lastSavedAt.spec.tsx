@@ -1,4 +1,6 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
+import { ReactNode } from 'react';
 
 import { LastSavedAt } from './lastSavedAt';
 
@@ -9,9 +11,14 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+const theme = createTheme({ cssVariables: true });
+
+const renderWithTheme = (ui: ReactNode) =>
+  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+
 describe('LastSavedAt', () => {
   it('shows when the document was last saved', () => {
-    render(<LastSavedAt date="2026-09-30T14:05:00.000Z" />);
+    renderWithTheme(<LastSavedAt date="2026-09-30T14:05:00.000Z" />);
 
     expect(
       screen.queryByText('lastSavedAt 2026-09-30T14:05:00.000Z')
@@ -19,7 +26,7 @@ describe('LastSavedAt', () => {
   });
 
   it('renders nothing for a document that was never saved', () => {
-    const { container } = render(<LastSavedAt date={undefined} />);
+    const { container } = renderWithTheme(<LastSavedAt date={undefined} />);
 
     expect(container.innerHTML).toBe('');
   });

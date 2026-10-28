@@ -1,7 +1,6 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -15,13 +14,12 @@ import {
   UpdateWebsiteSettingsDocument,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
-import { Controller, useForm } from 'react-hook-form';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { MdArrowBack } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
+
+import { WebsiteSettingsHeader } from './website-settings-header';
 
 import { lazyMessage } from '../../utility';
 import { Explainer, WebsiteAnalyticsWrapper } from './website-analytics';
@@ -46,28 +44,16 @@ export const WebsiteMail = () => {
     UpdateWebsiteSettingsDocument,
     {
       onCompleted: () => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('websiteSettings.saveSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
       onError: error => {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={8000}
-          >
-            {humanizeError(error)}
-          </Message>
-        );
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       },
     }
   );
@@ -75,7 +61,6 @@ export const WebsiteMail = () => {
   const {
     control,
     handleSubmit,
-    watch,
     formState: { isLoading },
   } = useForm<z.infer<typeof mailSchema>>({
     resolver: zodResolver(mailSchema),
@@ -89,6 +74,8 @@ export const WebsiteMail = () => {
       } as z.infer<typeof mailSchema>;
     },
   });
+
+  const mailchimpEnabled = useWatch({ control, name: 'mailchimp.enabled' });
 
   const onSubmit = handleSubmit(data => {
     updateWebsiteSettings({
@@ -110,16 +97,19 @@ export const WebsiteMail = () => {
 
   return (
     <WebsiteAnalyticsWrapper onSubmit={onSubmit}>
-      <Link to={'/settings/website'}>
+      <WebsiteSettingsHeader title={t('websiteSettings.mail.title')}>
         <Button
-          size="small"
-          variant="text"
-          startIcon={<MdArrowBack />}
+          type="submit"
+          variant="contained"
+          color="primary"
+          loading={saving}
         >
-          {t('websiteSettings.backToOverview')}
+          {t('save')}
         </Button>
-      </Link>
-      <h3>{t('websiteSettings.mail.mailchimp.title')}</h3>
+      </WebsiteSettingsHeader>
+      <Typography variant="h3">
+        {t('websiteSettings.mail.mailchimp.title')}
+      </Typography>
       <Controller
         name="mailchimp.enabled"
         control={control}
@@ -159,7 +149,7 @@ export const WebsiteMail = () => {
         name="mailchimp.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('mailchimp.enabled') ?
+          mailchimpEnabled ?
             <TextField
               {...field}
               label="Mailchimp API-Key"
@@ -204,24 +194,6 @@ export const WebsiteMail = () => {
           : <></>
         }
       />
-      <Box>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={saving}
-        >
-          {saving && (
-            <CircularProgress
-              size={14}
-              color="inherit"
-              sx={{ mr: 1 }}
-            />
-          )}
-
-          {t('save')}
-        </Button>
-      </Box>
     </WebsiteAnalyticsWrapper>
   );
 };

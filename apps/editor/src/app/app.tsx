@@ -1,5 +1,3 @@
-import 'rsuite/dist/rsuite.css';
-
 import { gql } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
 import { css, Global } from '@emotion/react';
@@ -40,25 +38,28 @@ import {
   AuthContext,
   AuthDispatchActionType,
   AuthDispatchContext,
+  createCheckedFeatureComponent,
+  SnackbarHost,
+  useReportQueryErrors,
 } from '@wepublish/ui/editor';
-import { useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { lazy, Suspense, useContext, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { CustomProvider } from 'rsuite';
-import de from 'rsuite/locales/de_DE';
-import enGB from 'rsuite/locales/en_GB';
-import fr from 'rsuite/locales/fr_FR';
 
 import { Base } from './base';
-import { useColorMode } from './colorMode';
+import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalette';
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
-import { LoginJwt } from './loginJwt';
 import { LoginImpersonate } from './loginImpersonate';
+import { LoginJwt } from './loginJwt';
+import { DocumentTitle } from './pageTitle/documentTitle';
 import { ResetPassword } from './resetPassword';
+import { ArticleTemplateEditView } from './routes/articleTemplate/articleTemplateEditView';
+import { ArticleTemplateList } from './routes/articleTemplate/articleTemplateList';
+import { RouteErrorBoundary } from './routeErrorBoundary';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
 import { AudienceDashboard } from './routes/audience/audience-dashboard';
+import { AuditLogList } from './routes/auditLog/auditLogList';
 import { AuthorList } from './routes/authors/authorList';
 import { BlockStyleList } from './routes/blockStyles/blockStyleList';
 import { BlockTemplateEditView } from './routes/blockTemplate/blockTemplateEditView';
@@ -71,8 +72,6 @@ import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreate
 import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
-import { NotificationsPage } from './routes/notifications/notificationsPage';
-import { AuditLogList } from './routes/auditLog/auditLogList';
 import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
@@ -88,6 +87,9 @@ import { IntegrationList } from './routes/integrations/integrationList';
 import { MemberPlanList } from './routes/memberPlans/memberPlanList';
 import { NavigationList } from './routes/navigations/navigationList';
 import { NetworkContentPage } from './routes/networkContent/networkContentPage';
+import { PageTemplateEditView } from './routes/pageTemplate/pageTemplateEditView';
+import { PageTemplateList } from './routes/pageTemplate/pageTemplateList';
+import { NotificationsPage } from './routes/notifications/notificationsPage';
 import { PageEditor } from './routes/pages/pageEditor';
 import { PageList } from './routes/pages/pageList';
 import { PaymentMethodList } from './routes/paymentMethods/paymentMethodList';
@@ -99,11 +101,14 @@ import { PeerList } from './routes/peers/peerList';
 import { PollEditView } from './routes/polls/pollEditView';
 import { PollList } from './routes/polls/pollList';
 import { PollVoteListContainer } from './routes/polls/PollVotesListContainer';
+import { SeoChecklist } from './routes/seo/seoChecklist';
 import { SubscriptionEditView } from './routes/subscriptions/subscriptionEditView';
 import { SubscriptionList } from './routes/subscriptions/subscriptionList';
 import { TagCreateView } from './routes/tags/tagCreateView';
 import { TagEditView } from './routes/tags/tagEditView';
 import { TagList } from './routes/tags/tagList';
+import { ApiTokenGenerateRoute } from './routes/apiTokens/apiTokenGenerateRoute';
+import { ApiTokenList } from './routes/apiTokens/apiTokenList';
 import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
@@ -111,6 +116,21 @@ import { UserList } from './routes/users/userList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
+
+// For the time being, lazy load the newsletter editor.
+// Checked outside the lazy so the chunk is not even fetched while it is off.
+const newsletter = () => import('@wepublish/newsletter/editor');
+const withNewsletterFeature =
+  createCheckedFeatureComponent('newsletter-editor');
+const NewsletterCampaignList = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignList })))
+);
+const NewsletterCampaignEditor = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignEditor })))
+);
+const NewsletterCampaignPreview = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignPreview })))
+);
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -142,20 +162,9 @@ const Logout = () => {
 };
 
 export function App() {
-  const { i18n } = useTranslation();
-  const [lng, setLang] = useState<Record<string, any>>(enGB);
-  const currentLanguageMap = new Map<string, any>([
-    ['fr', fr],
-    ['en', enGB],
-    ['de', de],
-  ]);
-
-  i18n.on('languageChanged', lng => {
-    setLang(currentLanguageMap.get(lng));
-  });
-
   const { session } = useContext(AuthContext);
-  const { mode: colorMode } = useColorMode();
+
+  useReportQueryErrors();
 
   useEffect(() => {
     if (session === null && !window.location.pathname.startsWith('/login')) {
@@ -166,77 +175,55 @@ export function App() {
   return (
     <>
       <Global
-        styles={css`
-          .rs-table {
-            .highlighted-row,
-            .highlighted-row &-cell-group &-cell {
-              background-color: var(--wep-row-highlight);
+        styles={theme => css`
+          .MuiTableRow-root {
+            &.highlighted-row .MuiTableCell-root {
+              background-image: linear-gradient(
+                var(--wep-row-highlight),
+                var(--wep-row-highlight)
+              );
             }
 
-            &-row.approved:not(&-row-header),
-            &-row.approved &-cell-group,
-            &-row.approved &-cell {
-              background: var(--wep-row-approved);
+            &.approved .MuiTableCell-root {
+              background-image: linear-gradient(
+                var(--wep-row-approved),
+                var(--wep-row-approved)
+              );
             }
 
-            &-row.approved &-cell-first {
+            &.approved .MuiTableCell-root:first-of-type {
               box-shadow: inset 3px 0 0 var(--wep-accent-approved);
             }
 
-            &-row.pending-user:not(&-row-header),
-            &-row.pending-user &-cell-group,
-            &-row.pending-user &-cell {
-              background: var(--wep-row-pending);
+            &.pending-user .MuiTableCell-root,
+            &.pending-approval .MuiTableCell-root {
+              background-image: linear-gradient(
+                var(--wep-row-pending),
+                var(--wep-row-pending)
+              );
             }
 
-            &-row.pending-user &-cell-first,
-            &-row.pending-approval &-cell-first {
+            &.pending-user .MuiTableCell-root:first-of-type,
+            &.pending-approval .MuiTableCell-root:first-of-type {
               box-shadow: inset 3px 0 0 var(--wep-accent-pending);
             }
 
-            &-row.pending-approval:not(&-row-header),
-            &-row.pending-approval &-cell-group,
-            &-row.pending-approval &-cell {
-              background: var(--wep-row-pending);
-            }
-
-            &-row.rejected:not(&-row-header),
-            &-row.rejected &-cell-group,
-            &-row.rejected &-cell {
-              background: rgb(83, 85, 83);
+            &.rejected .MuiTableCell-root {
+              background-color: rgb(83, 85, 83);
               color: white;
-              text-decoration: line-through;
-            }
-
-            &-hover &-row.rejected:not(&-row-header):hover,
-            &-hover &-row.rejected:hover &-cell-group,
-            &-hover &-row.rejected:hover &-cell {
-              color: var(--rs-text-secondary);
               text-decoration: line-through;
             }
           }
 
           .icon-selector {
-            fill: var(--rs-text-secondary);
+            fill: ${theme.vars.palette.text.secondary};
 
             &:hover {
-              fill: var(--rs-text-link);
+              fill: ${theme.vars.palette.primary.main};
             }
 
             svg {
               fill: inherit;
-            }
-          }
-
-          .unsaved {
-            .rs-badge-content {
-              background: darkorange;
-            }
-          }
-
-          .saved {
-            .rs-badge-content {
-              visibility: hidden;
             }
           }
 
@@ -247,45 +234,21 @@ export function App() {
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
             word-wrap: break-word;
+            white-space: normal;
           }
 
           .authorLinks div {
             overflow: visible;
           }
-
-          /* overwrite the horizontal gutter of r-suite's <Row> component */
-          .rs-row [class*='rs-col-'] {
-            margin-bottom: 5px;
-            margin-top: 5px;
-          }
-
-          // Styles missing from v6 of rsuite
-          :root {
-            --rs-form-control-width: 100%;
-            --rs-form-group-direction: column;
-            --rs-form-group-spacing: var(--rs-spacing);
-          }
-
-          .rs-picker-toggle.rs-btn {
-            max-width: 100%;
-          }
-
-          .rs-grid-container-fluid,
-          .rs-form-group {
-            width: 100%;
-          }
-
-          .rs-drawer-header {
-            width: 100%;
-          }
         `}
       />
       <EditorGlobalStyles />
-      <CustomProvider
-        locale={lng}
-        theme={colorMode}
-      >
-        <BrowserRouter>
+      <SnackbarHost />
+      <BrowserRouter>
+        <RouteErrorBoundary>
+          <EditorCommandPaletteSurface />
+          <DocumentTitle />
+
           <Routes>
             <Route
               path="login"
@@ -371,6 +334,22 @@ export function App() {
               element={<ArticleEditor />}
             />
             <Route
+              path="articles/templates"
+              element={
+                <Base>
+                  <ArticleTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/templates/create"
+              element={<ArticleTemplateEditView />}
+            />
+            <Route
+              path="articles/templates/edit/:id"
+              element={<ArticleTemplateEditView />}
+            />
+            <Route
               path="articles/edit/:id"
               element={<ArticleEditor />}
             />
@@ -442,6 +421,22 @@ export function App() {
             <Route
               path="pages/create"
               element={<PageEditor />}
+            />
+            <Route
+              path="pages/templates"
+              element={
+                <Base>
+                  <PageTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="pages/templates/create"
+              element={<PageTemplateEditView />}
+            />
+            <Route
+              path="pages/templates/edit/:id"
+              element={<PageTemplateEditView />}
             />
             <Route
               path="pages/edit/:id"
@@ -738,6 +733,33 @@ export function App() {
                 <Base>
                   <NavigationList />
                 </Base>
+              }
+            />
+            {/* Newsletter Routes */}
+            <Route
+              path="newsletter"
+              element={
+                <Base>
+                  <Suspense>
+                    <NewsletterCampaignList />
+                  </Suspense>
+                </Base>
+              }
+            />
+            <Route
+              path="newsletter/edit/:id"
+              element={
+                <Suspense>
+                  <NewsletterCampaignEditor />
+                </Suspense>
+              }
+            />
+            <Route
+              path="newsletter/preview/:id"
+              element={
+                <Suspense>
+                  <NewsletterCampaignPreview />
+                </Suspense>
               }
             />
             <Route
@@ -1159,6 +1181,19 @@ export function App() {
             />
             {/* Tokens Routes */}
             <Route
+              path="api-tokens"
+              element={
+                <Base>
+                  <ApiTokenList />
+                </Base>
+              }
+            >
+              <Route
+                path="generate"
+                element={<ApiTokenGenerateRoute />}
+              />
+            </Route>
+            <Route
               path="tokens"
               element={
                 <Base>
@@ -1216,14 +1251,22 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="settings/seo"
+              element={
+                <Base>
+                  <SeoChecklist />
+                </Base>
+              }
+            />
             {/* Logout */}
             <Route
               path="logout"
               element={<Logout />}
             />
           </Routes>
-        </BrowserRouter>
-      </CustomProvider>
+        </RouteErrorBoundary>
+      </BrowserRouter>
     </>
   );
 }

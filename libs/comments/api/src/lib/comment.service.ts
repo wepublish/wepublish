@@ -27,12 +27,12 @@ import {
   NotAuthorisedError,
 } from '@wepublish/api';
 import { ChallengeService } from '@wepublish/challenge/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   PUBLIC_COMMENTS_NAMESPACE,
   PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { UserSession } from '@wepublish/authentication/api';
 import { CalculatedRating } from './rating-system/rating-system.model';
@@ -52,7 +52,7 @@ import {
   graphQLSortOrderToPrisma,
   SortOrder,
 } from '@wepublish/utils/api';
-import { hasPermission } from '@wepublish/permissions/api';
+import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { CanCreateApprovedComment } from '@wepublish/permissions';
 import { toPlaintext } from '@wepublish/richtext';
 
@@ -223,7 +223,7 @@ export class CommentService {
     private settingsService: SettingsService,
     private challengeService: ChallengeService,
     private publicContentCache: PublicContentCacheInvalidator,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   async getAdminCommennts({
@@ -650,7 +650,7 @@ export class CommentService {
 
     const canSkipApproval = hasPermission(
       CanCreateApprovedComment,
-      session?.roles ?? []
+      permissionsOf(session)
     );
 
     // Challenge

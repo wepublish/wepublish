@@ -6,11 +6,11 @@ import {
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  getApiUrl,
   getSessionTokenProps,
   handleJwtLogin,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 import {
   FullSessionWithTokenWithoutUserFragment,
   getApiClient,
@@ -67,7 +67,7 @@ export default function Login({ sessionToken }: LoginProps) {
 
   return (
     <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
+      <H3 component="h1">Login für Mitglieder</H3>
       <Typography
         variant="body1"
         sx={{

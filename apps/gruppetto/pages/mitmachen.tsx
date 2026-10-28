@@ -1,27 +1,35 @@
-import { SubscribePage } from '@wepublish/utils/website';
-import { useRouter } from 'next/router';
+import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl, ssrAuthLink } from '@wepublish/utils/website';
+import {
+  getSessionTokenProps,
+  SubscribePage,
+} from '@wepublish/utils/website/next';
+import { getApiClient, PageDocument } from '@wepublish/website/api';
+import { NextPageContext } from 'next';
 
 export default function Mitmachen() {
-  const {
-    query: { tag },
-  } = useRouter();
-
-  return (
-    <SubscribePage
-      defaults={{
-        memberPlanSlug: 'gruppetto',
-      }}
-      filter={memberPlans =>
-        memberPlans.filter(mb => {
-          if (!tag) {
-            return !mb.tags?.length;
-          }
-
-          return mb.tags?.includes(tag as string);
-        })
-      }
-    />
-  );
+  return <PageContainer slug="mitmachen" />;
 }
 
-Mitmachen.getInitialProps = SubscribePage.getInitialProps;
+Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
+  if (typeof window !== 'undefined') {
+    return {};
+  }
+
+  const client = getApiClient(getApiUrl(), [
+    ssrAuthLink(
+      async () => (await getSessionTokenProps(ctx)).sessionToken?.token
+    ),
+  ]);
+
+  await Promise.all([
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'mitmachen',
+      },
+    }),
+  ]);
+
+  return SubscribePage.getInitialProps(ctx);
+};

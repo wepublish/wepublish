@@ -6,7 +6,7 @@ import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { SettingsResolver } from './settings.resolver';
 import { SettingsService } from './settings.service';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { GraphQLSettingValueType } from './settings.model';
 import { SettingDataloaderService } from './setting-dataloader.service';
 
@@ -141,7 +141,7 @@ vi.mock('@prisma/client', async importOriginal => {
       path: '/',
       cache: 'bounded',
     }),
-    KvTtlCacheModule,
+    NamespacedCacheTestingModule.forRoot(),
     PrismaModule,
   ],
   providers: [
@@ -168,7 +168,7 @@ describe('SettingsResolver', () => {
     }).compile();
 
     app = module.createNestApplication();
-    await app.init();
+    await app.listen(0, '127.0.0.1');
   });
 
   afterAll(async () => {

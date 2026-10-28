@@ -1,37 +1,37 @@
 import { EmotionCache } from '@emotion/cache';
-import styled from '@emotion/styled';
-import { CssBaseline, ThemeProvider } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
-import {
-  FooterContainer,
-  FooterPaperWrapper,
-  NavbarContainer,
-} from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
+  BajourFooter,
+  BajourMainGrid,
+  BajourNavbar,
+  bajourTenant,
+} from '@wepublish/tenant/bajour';
+import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
-  NextWepublishLink,
-  RoutedAdminBar,
-  withBuilderRouter,
+  WebsiteShellProps,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
-import { WebsiteProvider } from '@wepublish/website';
+import {
+  RoutedAdminBar,
+  withBuilderRouter,
+} from '@wepublish/utils/website/next';
+import { TenantProviders } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
+  createWithApiClient,
   FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
-  createWithApiClient,
 } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import { format, setDefaultOptions } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { setDefaultOptions } from 'date-fns';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -40,37 +40,20 @@ import PlausibleProvider from 'next-plausible';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import { BajourArticleDateWithShare } from '../src/bajour-article-date-with-share';
-import { BajourTitleBlock } from '../src/components/bajour-title-block';
-import { MainGrid } from '../src/components/layout/main-grid';
-import { BajourBanner } from '../src/components/website-builder-overwrites/banner/bajour-banner';
-import { BajourBlockRenderer } from '../src/components/website-builder-overwrites/block-renderer/block-renderer';
-import { BajourTeaser } from '../src/components/website-builder-overwrites/blocks/teaser';
-import { BajourTeaserSlider } from '../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider';
-import { BajourBreakBlock } from '../src/components/website-builder-overwrites/break/bajour-break';
-import { BajourContextBox } from '../src/components/website-builder-overwrites/context-box/context-box';
-import { BajourQuoteBlock } from '../src/components/website-builder-overwrites/quote/bajour-quote';
-import {
-  BajourTeaserGrid,
-  BajourTeaserList,
-} from '../src/components/website-builder-styled/blocks/teaser-grid-styled';
-import theme, { navbarTheme } from '../src/styles/theme';
-
 setDefaultOptions({
-  locale: de,
+  locale: bajourTenant.dateLocale,
 });
 
-initWePublishTranslator();
+initWePublishTranslator(
+  bajourTenant.translations.overrides?.[bajourTenant.translations.lng]
+);
 z.setErrorMap(zodI18nMap);
 
-const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-  : format(date, 'dd. MMMM yyyy');
-
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: {
@@ -80,19 +63,6 @@ export type CustomAppProps = AppProps<{
   };
 };
 
-const NavBar = styled(NavbarContainer)`
-  grid-column: -1/1;
-  z-index: 12;
-`;
-
-const Footer = styled(FooterContainer)`
-  grid-column: -1/1;
-
-  ${FooterPaperWrapper} {
-    color: ${({ theme }) => theme.palette.common.white};
-  }
-`;
-
 function CustomApp({
   Component,
   pageProps,
@@ -100,7 +70,7 @@ function CustomApp({
   websiteSettings,
   publicEnv,
 }: CustomAppProps) {
-  const siteTitle = 'Bajour';
+  const siteTitle = bajourTenant.builder.meta?.siteTitle;
   const router = useRouter();
   const { popup } = router.query;
 
@@ -119,6 +89,8 @@ function CustomApp({
       (window.PUBLIC_ENV as typeof publicEnv)
     : undefined);
 
+  const shell = getWebsiteShell(pageProps);
+
   return (
     <PlausibleProvider
       enabled={
@@ -136,94 +108,72 @@ function CustomApp({
           />
         </Head>
 
-        <ThemeProvider theme={theme}>
-          <WebsiteProvider>
-            <WebsiteBuilderProvider
-              meta={{ siteTitle }}
-              Head={Head}
-              Script={Script}
-              elements={{ Link: NextWepublishLink }}
-              date={{ format: dateFormatter }}
-              blocks={{
-                Renderer: BajourBlockRenderer,
-                BaseTeaser: BajourTeaser,
-                TeaserGrid: BajourTeaserGrid,
-                TeaserList: BajourTeaserList,
-                Break: BajourBreakBlock,
-                Quote: BajourQuoteBlock,
-                Title: BajourTitleBlock,
-              }}
-              blockStyles={{
-                ContextBox: BajourContextBox,
-                TeaserSlider: BajourTeaserSlider,
-              }}
-              thirdParty={{
-                stripe: env?.stripeKey,
-              }}
-              ArticleDate={BajourArticleDateWithShare}
-              Banner={BajourBanner}
-            >
-              <CssBaseline />
+        <TenantProviders
+          config={bajourTenant}
+          extra={{
+            Head,
+            Script,
+            thirdParty: {
+              stripe: env?.stripeKey,
+            },
+          }}
+        >
+          <BajourMainGrid>
+            {shell.showNavigation && (
+              <BajourNavbar
+                slug="main"
+                categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
+                headerSlug="header"
+                iconSlug="icons"
+              />
+            )}
 
-              <MainGrid>
-                <ThemeProvider theme={navbarTheme}>
-                  <NavBar
-                    slug="main"
-                    categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
-                    headerSlug="header"
-                    iconSlug="icons"
-                  />
-                </ThemeProvider>
+            <Component {...pageProps} />
 
-                <Component {...pageProps} />
+            {shell.showFooter && (
+              <BajourFooter
+                slug="main"
+                categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
+              />
+            )}
+          </BajourMainGrid>
 
-                <Footer
-                  slug="main"
-                  categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
-                />
-              </MainGrid>
+          <RoutedAdminBar />
 
-              <RoutedAdminBar />
+          {settings?.analytics.googleAnalytics.enabled &&
+            settings?.analytics.googleAnalytics.key && (
+              <GoogleAnalytics gaId={settings.analytics.googleAnalytics.key} />
+            )}
 
-              {settings?.analytics.googleAnalytics.enabled &&
-                settings?.analytics.googleAnalytics.key && (
-                  <GoogleAnalytics
-                    gaId={settings.analytics.googleAnalytics.key}
-                  />
-                )}
+          {settings?.analytics.googleTagManager.enabled &&
+            settings?.analytics.googleTagManager.key && (
+              <GoogleTagManager
+                gtmId={settings.analytics.googleTagManager.key}
+              />
+            )}
 
-              {settings?.analytics.googleTagManager.enabled &&
-                settings?.analytics.googleTagManager.key && (
-                  <GoogleTagManager
-                    gtmId={settings.analytics.googleTagManager.key}
-                  />
-                )}
+          {settings?.analytics.piwik.enabled &&
+            settings?.analytics.piwik.key && (
+              <Script id="piwik-pro">
+                {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
+              </Script>
+            )}
 
-              {settings?.analytics.piwik.enabled &&
-                settings?.analytics.piwik.key && (
-                  <Script id="piwik-pro">
-                    {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
-                  </Script>
-                )}
+          {settings?.ads.sparkLoop.enabled && settings?.ads.sparkLoop.key && (
+            <Script
+              src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+              strategy="lazyOnload"
+              data-sparkloop
+            />
+          )}
 
-              {settings?.ads.sparkLoop.enabled &&
-                settings?.ads.sparkLoop.key && (
-                  <Script
-                    src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
-                    strategy="lazyOnload"
-                    data-sparkloop
-                  />
-                )}
-
-              {popup && (
-                <Script
-                  src={env?.mailchimpPopupScriptUrl}
-                  strategy="afterInteractive"
-                />
-              )}
-            </WebsiteBuilderProvider>
-          </WebsiteProvider>
-        </ThemeProvider>
+          {popup && (
+            <Script
+              src={env?.mailchimpPopupScriptUrl}
+              strategy="afterInteractive"
+            />
+          )}
+        </TenantProviders>
       </AppCacheProvider>
     </PlausibleProvider>
   );

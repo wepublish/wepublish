@@ -222,6 +222,33 @@ export const getPeriodPriceRange = (
   };
 };
 
+/**
+ * The yearly price (in currency units, not cents) that member plan cards
+ * advertise. A card for a single offer shows the price of its whole period
+ * instead, and so does a lifetime offer, as a yearly share of it
+ * (price / 100 years) would undersell it.
+ */
+export const getAdvertisedYearlyAmount = (
+  memberPlan: MemberPlanPeriodicityPricing,
+  offerPeriodicity: PaymentPeriodicity,
+  isOffer = false
+): number => {
+  if (isOffer || offerPeriodicity === PaymentPeriodicity.Lifetime) {
+    return getPeriodPriceRange(memberPlan, offerPeriodicity).amountMin / 100;
+  }
+
+  const hasYearlyPricing = !!memberPlan.periodicityPricing?.some(
+    price =>
+      price.periodicity === PaymentPeriodicity.Yearly && price.amountMin != null
+  );
+
+  return hasYearlyPricing ?
+      getPeriodPriceRange(memberPlan, PaymentPeriodicity.Yearly).amountMin / 100
+    : Math.ceil(
+        (getMonthlyEquivalentRange(memberPlan).amountPerMonthMin / 100) * 12
+      );
+};
+
 export const getMonthlyEquivalentRange = (
   memberPlan: MemberPlanPeriodicityPricing
 ): {

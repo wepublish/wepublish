@@ -64,7 +64,10 @@ type WithBlockProps<T> = Omit<T, 'type' | OptionalBlockKeys<T>> &
   Partial<Pick<T, OptionalBlockKeys<T>>> &
   BlockProps;
 
-export type BuilderFlexBlockProps = WithBlockProps<FullFlexBlockFragment>;
+export type BuilderFlexBlockProps = WithBlockProps<FullFlexBlockFragment> & {
+  type?: BuilderBlockRendererProps['type'];
+  level?: number;
+};
 export type BuilderBlockTemplateBlockProps =
   WithBlockProps<FullBlockTemplateBlockFragment>;
 export type BuilderTitleBlockProps = WithBlockProps<FullTitleBlockFragment>;

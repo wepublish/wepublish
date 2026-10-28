@@ -124,7 +124,26 @@ fragment FullSubscription on PublicSubscription {
 
   canExtend
   canRevertUpgrade
+  canRenewPaymentMethod
   isActive
+
+  pendingPaymentMethodChange {
+    ...FullSubscriptionPaymentMethodChange
+  }
+}
+
+fragment FullSubscriptionPaymentMethodChange on SubscriptionPaymentMethodChange {
+  id
+  createdAt
+  kind
+  state
+  amount
+  currency
+  expiresAt
+  completedAt
+  paymentMethod {
+    ...FullPaymentMethod
+  }
 }
 
 fragment FullInvoiceItem on InvoiceItem {
@@ -320,6 +339,38 @@ mutation ExtendSubscription(
     failureURL: $failureURL
   ) {
     ...FullPayment
+  }
+}
+
+mutation ChangeSubscriptionPaymentMethod(
+  $subscriptionId: String!
+  $paymentMethodId: String!
+  $successURL: String
+  $failureURL: String
+) {
+  changeSubscriptionPaymentMethod(
+    subscriptionId: $subscriptionId
+    paymentMethodId: $paymentMethodId
+    successURL: $successURL
+    failureURL: $failureURL
+  ) {
+    change {
+      ...FullSubscriptionPaymentMethodChange
+    }
+    intentSecret
+    paymentProviderID
+  }
+}
+
+mutation CheckSubscriptionPaymentMethodChange($id: String!) {
+  checkSubscriptionPaymentMethodChange(id: $id) {
+    ...FullSubscriptionPaymentMethodChange
+  }
+}
+
+mutation CancelSubscriptionPaymentMethodChange($id: String!) {
+  cancelSubscriptionPaymentMethodChange(id: $id) {
+    ...FullSubscriptionPaymentMethodChange
   }
 }
 

@@ -13,12 +13,12 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
+import { Drawer, IconButton as MuiIconButton } from '@mui/material';
 import { FullImageFragment, TeaserType } from '@wepublish/editor/api';
 import nanoid from 'nanoid';
 import { ChangeEvent, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArticle, MdDelete, MdEdit } from 'react-icons/md';
-import { Drawer, IconButton as RIconButton, Panel as RPanel } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
@@ -27,11 +27,12 @@ import { PlaceholderImage } from '../atoms/placeholderImage';
 import { PlaceholderInput } from '../atoms/placeholderInput';
 import { TypographicTextArea } from '../atoms/typographicTextArea';
 import { Typography } from '../atoms/typography';
+import { DRAWER_WIDTHS } from '../drawer';
 import { TeaserEditPanel } from '../panel/teaserEditPanel';
 import { TeaserSelectAndEditPanel } from '../panel/teaserSelectAndEditPanel';
 import { Teaser as TeaserTypeMixed, TeaserGridBlockValue } from './types';
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   margin: 10px;
 `;
 
@@ -42,14 +43,17 @@ const SortableContainerComponent = styled.div<{ numColumns: number }>`
   user-select: none;
 `;
 
-const Panel = styled(RPanel, {
+const Panel = styled('div', {
   shouldForwardProp: prop => prop !== 'showGrabCursor',
 })<{ showGrabCursor: boolean }>`
+  position: relative;
   display: grid;
   cursor: ${({ showGrabCursor }) => showGrabCursor && 'grab'};
   height: 300px;
   overflow: hidden;
   z-index: 1;
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const Teaser = styled.div`
@@ -69,11 +73,23 @@ const TeaserImage = styled.img`
   object-fit: cover;
 `;
 
-export const IconWrapper = styled.div`
+export const IconWrapper = styled('div')`
   position: absolute;
-  z-index: 1;
-  right: 0;
-  top: 0;
+  z-index: 2;
+  top: ${({ theme }) => theme.spacing(1)};
+  right: ${({ theme }) => theme.spacing(1)};
+  display: flex;
+  gap: ${({ theme }) => theme.spacing(0.25)};
+  padding: ${({ theme }) => theme.spacing(0.25)};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+
+  .MuiIconButton-root {
+    margin: 0;
+    padding: 3px;
+    color: #fff;
+  }
 `;
 
 const PeerInfo = styled.div`
@@ -245,8 +261,16 @@ export function TeaserGridBlock({
         </SortableContext>
       </DndContext>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => setEditModalOpen(false)}
       >
         <TeaserEditPanel
@@ -259,8 +283,16 @@ export function TeaserGridBlock({
         />
       </Drawer>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <TeaserSelectAndEditPanel
@@ -294,10 +326,7 @@ export function TeaserBlock({
 }: TeaserBlockProps) {
   const { t } = useTranslation();
   return (
-    <Panel
-      bodyFill
-      showGrabCursor={showGrabCursor}
-    >
+    <Panel showGrabCursor={showGrabCursor}>
       <PlaceholderInput
         onAddClick={onChoose}
         addLabel={t('blocks.flexTeaser.chooseTeaser')}
@@ -311,26 +340,32 @@ export function TeaserBlock({
             <IconWrapper>
               <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
                 <IconButton
+                  size="small"
                   aria-label={t('blocks.flexTeaser.chooseTeaser')}
-                  icon={<MdArticle />}
                   onClick={onChoose}
-                />
+                >
+                  <MdArticle />
+                </IconButton>
               </IconButtonTooltip>
 
               <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
                 <IconButton
+                  size="small"
                   aria-label={t('blocks.flexTeaser.editTeaser')}
-                  icon={<MdEdit />}
                   onClick={onEdit}
-                />
+                >
+                  <MdEdit />
+                </IconButton>
               </IconButtonTooltip>
 
               <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
                 <IconButton
+                  size="small"
                   aria-label={t('blocks.flexTeaser.deleteTeaser')}
-                  icon={<MdDelete />}
                   onClick={onRemove}
-                />
+                >
+                  <MdDelete />
+                </IconButton>
               </IconButtonTooltip>
             </IconWrapper>
           </Teaser>
@@ -354,12 +389,15 @@ export function ContentForTeaser({
     case TeaserType.Article: {
       const states = [];
 
-      if (teaser?.article?.draft)
+      if (teaser?.article?.draft) {
         states.push(t('articleEditor.panels.stateDraft'));
-      if (teaser?.article?.pending)
+      }
+      if (teaser?.article?.pending) {
         states.push(t('articleEditor.panels.statePending'));
-      if (teaser?.article?.published)
+      }
+      if (teaser?.article?.published) {
         states.push(t('articleEditor.panels.statePublished'));
+      }
 
       return (
         <TeaserContent
@@ -378,12 +416,15 @@ export function ContentForTeaser({
     case TeaserType.Page: {
       const states = [];
 
-      if (teaser?.page?.draft)
+      if (teaser?.page?.draft) {
         states.push(t('articleEditor.panels.stateDraft'));
-      if (teaser?.page?.pending)
+      }
+      if (teaser?.page?.pending) {
         states.push(t('articleEditor.panels.statePending'));
-      if (teaser?.page?.published)
+      }
+      if (teaser?.page?.published) {
         states.push(t('articleEditor.panels.statePublished'));
+      }
 
       return (
         <TeaserContent
@@ -443,6 +484,8 @@ const OverlayComponent = styled(Overlay)<{ isDisabled?: boolean }>`
   bottom: 0;
   width: 100%;
   padding: 10px;
+  border-bottom-left-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  border-bottom-right-radius: ${({ theme }) => theme.shape.borderRadius}px;
   height: ${({ isDisabled }) => (isDisabled ? '100%' : 'auto')};
 `;
 

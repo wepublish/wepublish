@@ -39,6 +39,13 @@ const makeService = ({
   } as Partial<Record<string, unknown>>,
 } = {}) => {
   const prisma = {
+    setting: {
+      findUnique: vi.fn(async ({ where }: { where: { name: string } }) =>
+        where.name in settings ?
+          { name: where.name, value: settings[where.name] }
+        : null
+      ),
+    },
     user: {
       findMany: vi.fn(async () => (user ? [user] : [])),
       findUnique: vi.fn(async () => user),
@@ -58,20 +65,9 @@ const makeService = ({
       aggregate: vi.fn(async () => mails),
     },
   };
-  const settingsService = {
-    settingByName: vi.fn(async (name: string) => {
-      if (!(name in settings)) {
-        throw new Error(`Setting with name ${name} not found`);
-      }
-
-      return { name, value: settings[name] };
-    }),
-  };
-
   return {
     prisma,
-    settingsService,
-    service: new EmailQualityService(prisma as any, settingsService as any),
+    service: new EmailQualityService(prisma as any),
   };
 };
 

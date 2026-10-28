@@ -7,7 +7,7 @@ import { PeerDataloaderService } from './peer-dataloader.service';
 import { PrismaClient } from '@prisma/client';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { CreatePeerInput, UpdatePeerInput } from './peer.model';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { REMOTE_PEER_PROFILE_CACHE_NAMESPACE } from './peer-profile-cache';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class PeerService {
   constructor(
     private peerDataloaderService: PeerDataloaderService,
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private resets: NamespaceResets
   ) {}
 
   @PrimeDataLoader(PeerDataloaderService)
@@ -58,7 +58,7 @@ export class PeerService {
         information: information as any,
       },
     });
-    await this.kv.resetNamespace(REMOTE_PEER_PROFILE_CACHE_NAMESPACE);
+    await this.resets.reset(REMOTE_PEER_PROFILE_CACHE_NAMESPACE);
 
     return peer;
   }
@@ -74,7 +74,7 @@ export class PeerService {
         information: information as any,
       },
     });
-    await this.kv.resetNamespace(REMOTE_PEER_PROFILE_CACHE_NAMESPACE);
+    await this.resets.reset(REMOTE_PEER_PROFILE_CACHE_NAMESPACE);
 
     return peer;
   }
@@ -85,7 +85,7 @@ export class PeerService {
         id,
       },
     });
-    await this.kv.resetNamespace(REMOTE_PEER_PROFILE_CACHE_NAMESPACE);
+    await this.resets.reset(REMOTE_PEER_PROFILE_CACHE_NAMESPACE);
 
     return id;
   }

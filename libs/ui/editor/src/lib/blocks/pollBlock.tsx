@@ -1,73 +1,45 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button, Drawer, Typography } from '@mui/material';
 import { PollDocument } from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton, Panel as RPanel } from 'rsuite';
+import { MdOpenInNew } from 'react-icons/md';
 
 import { BlockProps } from '../atoms/blockList';
-import { PlaceholderInput } from '../atoms/placeholderInput';
+import { BlockPreviewCard } from '../atoms/blockPreviewCard';
 import {
   CopyPollAnswerVoteUrlButton,
   usePollAnswerVoteUrl,
 } from '../atoms/poll/pollAnswerVoteUrl';
+import { DRAWER_WIDTHS } from '../drawer';
 import { SelectPollPanel } from '../panel/selectPollPanel';
 import { PollBlockValue } from '.';
 
-const IconWrapper = styled.div`
-  position: absolute;
-  z-index: 100;
-  height: 100%;
-  right: 0;
-`;
-
-const Poll = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-`;
-
-const Content = styled.div`
+const Answers = styled('ul')`
   display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 12px;
-  height: 100%;
-  padding: 24px 24px 32px;
-`;
-
-const Question = styled.div`
-  font-weight: bold;
-  text-align: center;
-`;
-
-const Answers = styled.div`
-  display: grid;
-  gap: 4px;
-  justify-items: center;
-`;
-
-const Answer = styled.div`
-  align-items: center;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
-  gap: 8px;
-`;
-
-const Panel = styled(RPanel)`
-  display: grid;
-  min-height: 200px;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  margin: 0;
   padding: 0;
-  background-color: var(--rs-bg-well);
+  list-style: none;
+`;
+
+const Answer = styled('li')`
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(1)};
+  align-items: center;
 `;
 
 export const PollBlock = ({
   value: { poll },
   onChange,
   autofocus,
+  disabled,
 }: BlockProps<PollBlockValue>) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(
+    () => Boolean(autofocus) && !poll
+  );
   const { t } = useTranslation();
   const buildVoteUrl = usePollAnswerVoteUrl();
 
@@ -78,56 +50,54 @@ export const PollBlock = ({
 
   const answers = data?.poll?.answers ?? [];
 
-  useEffect(() => {
-    if (autofocus && !poll) {
-      setIsDialogOpen(true);
-    }
-  }, []);
-
   return (
     <>
-      <Panel
-        bodyFill
-        bordered
+      <BlockPreviewCard
+        isEmpty={!poll}
+        emptyLabel={t('blocks.poll.choosePoll')}
+        editLabel={t('blocks.poll.edit')}
+        onEdit={() => setIsDialogOpen(true)}
+        title={poll?.question}
+        disabled={disabled}
+        actions={
+          poll && (
+            <Button
+              size="small"
+              href={`/polls/edit/${poll.id}`}
+              target="_blank"
+              endIcon={<MdOpenInNew />}
+              sx={{ mr: 1 }}
+            >
+              {t('blocks.poll.open')}
+            </Button>
+          )
+        }
       >
-        <PlaceholderInput
-          onAddClick={() => setIsDialogOpen(true)}
-          addLabel={t('blocks.poll.choosePoll')}
-        >
-          {poll && (
-            <Poll>
-              <IconWrapper>
-                <IconButton
-                  size="lg"
-                  icon={<MdEdit />}
-                  onClick={() => setIsDialogOpen(true)}
-                >
-                  {t('blocks.poll.edit')}
-                </IconButton>
-              </IconWrapper>
+        {!!answers.length && (
+          <Answers>
+            {answers.map(answer => (
+              <Answer key={answer.id}>
+                <CopyPollAnswerVoteUrlButton
+                  voteUrl={buildVoteUrl(answer.id)}
+                />
 
-              <Content>
-                <Question>{poll.question}</Question>
-
-                <Answers>
-                  {answers.map(answer => (
-                    <Answer key={answer.id}>
-                      <span>{answer.answer}</span>
-
-                      <CopyPollAnswerVoteUrlButton
-                        voteUrl={buildVoteUrl(answer.id)}
-                      />
-                    </Answer>
-                  ))}
-                </Answers>
-              </Content>
-            </Poll>
-          )}
-        </PlaceholderInput>
-      </Panel>
+                <Typography variant="body2">{answer.answer}</Typography>
+              </Answer>
+            ))}
+          </Answers>
+        )}
+      </BlockPreviewCard>
 
       <Drawer
-        size="lg"
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.lg,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       >
