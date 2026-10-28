@@ -4433,10 +4433,65 @@
       "addBlock": "Ajouter un bloc",
       "hideBlock": "Masquer le bloc sur le site",
       "showBlock": "Afficher à nouveau le bloc sur le site",
+      "timeBlock": "Définir quand ce bloc s'affiche",
       "deleteBlock": "Supprimer le bloc",
       "moveBlockUp": "Déplacer le bloc vers le haut",
       "moveBlockDown": "Déplacer le bloc vers le bas",
       "styleHelp": "Modifie l’apparence de ce bloc sur le site. Laissez vide pour l’affichage par défaut. Les styles se gèrent sous « Styles de blocs »."
+    },
+    "blockTiming": {
+      "title": "Programmer ce bloc",
+      "offAir": "Masqué sur le site pour le moment, car hors de son calendrier.",
+      "dateRange": "Dates",
+      "dateRangeEmpty": "N'importe quelle date",
+      "dateRangeHelp": "Le bloc s'affiche du début du premier jour jusqu'à la fin du dernier.",
+      "weekdays": "Jours",
+      "weekdaysHelp": "N'en choisissez aucun pour afficher le bloc tous les jours.",
+      "timeOfDay": "Heure",
+      "timeOfDayFrom": "De",
+      "timeOfDayTo": "à",
+      "timeOfDayHelp": "Les heures suivent le fuseau horaire du site. Une fin avant le début passe minuit, p. ex. 22:00 à 02:00.",
+      "sameTimes": "Le début et la fin sont identiques, le bloc ne s'affiche donc jamais. Modifiez l'une des heures ou choisissez « Toute la journée ».",
+      "clearTimeOfDay": "Toute la journée",
+      "clear": "Retirer le calendrier",
+      "done": "Terminé",
+      "summary": {
+        "always": "S'affiche toujours. Ajoutez des dates, des jours ou une heure pour limiter l'affichage.",
+        "never": "Ne s'affiche jamais, car le début et la fin sont identiques.",
+        "shows": "S'affiche {{conditions}}.",
+        "between": "du {{from}} au {{to}}",
+        "since": "à partir du {{from}}",
+        "until": "jusqu'au {{to}}",
+        "days": "{{days}}",
+        "hours": "de {{from}} à {{to}}"
+      }
+    },
+    "weekday": {
+      "Monday": "lundi",
+      "Tuesday": "mardi",
+      "Wednesday": "mercredi",
+      "Thursday": "jeudi",
+      "Friday": "vendredi",
+      "Saturday": "samedi",
+      "Sunday": "dimanche"
+    },
+    "weekdayRecurring": {
+      "Monday": "le lundi",
+      "Tuesday": "le mardi",
+      "Wednesday": "le mercredi",
+      "Thursday": "le jeudi",
+      "Friday": "le vendredi",
+      "Saturday": "le samedi",
+      "Sunday": "le dimanche"
+    },
+    "weekdayShort": {
+      "Monday": "lun.",
+      "Tuesday": "mar.",
+      "Wednesday": "mer.",
+      "Thursday": "jeu.",
+      "Friday": "ven.",
+      "Saturday": "sam.",
+      "Sunday": "dim."
     },
     "placeholderInput": {
       "add": "Ajouter"

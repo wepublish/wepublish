@@ -4433,10 +4433,65 @@
       "addBlock": "Add block",
       "hideBlock": "Hide block on the website",
       "showBlock": "Show block on the website again",
+      "timeBlock": "Schedule when this block shows",
       "deleteBlock": "Delete block",
       "moveBlockUp": "Move block up",
       "moveBlockDown": "Move block down",
       "styleHelp": "Changes how this block looks on the website. Leave it empty to use the default look. Styles are managed under «Block Styling»."
+    },
+    "blockTiming": {
+      "title": "Schedule this block",
+      "offAir": "Hidden on the website right now, because it is outside its schedule.",
+      "dateRange": "Dates",
+      "dateRangeEmpty": "Any date",
+      "dateRangeHelp": "The block shows from the start of the first day to the end of the last.",
+      "weekdays": "Days",
+      "weekdaysHelp": "Pick none to show the block every day.",
+      "timeOfDay": "Time of day",
+      "timeOfDayFrom": "From",
+      "timeOfDayTo": "until",
+      "timeOfDayHelp": "Times are in the site's time zone. An end before the start runs past midnight, e.g. 22:00 until 02:00.",
+      "sameTimes": "Start and end are the same, so the block never shows. Change one of them or pick «All day».",
+      "clearTimeOfDay": "All day",
+      "clear": "Remove schedule",
+      "done": "Done",
+      "summary": {
+        "always": "Always shows. Add dates, days or a time of day to limit when.",
+        "never": "Never shows, because its start and end time are the same.",
+        "shows": "Shows {{conditions}}.",
+        "between": "from {{from}} to {{to}}",
+        "since": "from {{from}}",
+        "until": "until {{to}}",
+        "days": "on {{days}}",
+        "hours": "between {{from}} and {{to}}"
+      }
+    },
+    "weekday": {
+      "Monday": "Monday",
+      "Tuesday": "Tuesday",
+      "Wednesday": "Wednesday",
+      "Thursday": "Thursday",
+      "Friday": "Friday",
+      "Saturday": "Saturday",
+      "Sunday": "Sunday"
+    },
+    "weekdayRecurring": {
+      "Monday": "Mondays",
+      "Tuesday": "Tuesdays",
+      "Wednesday": "Wednesdays",
+      "Thursday": "Thursdays",
+      "Friday": "Fridays",
+      "Saturday": "Saturdays",
+      "Sunday": "Sundays"
+    },
+    "weekdayShort": {
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat",
+      "Sunday": "Sun"
     },
     "placeholderInput": {
       "add": "Add"

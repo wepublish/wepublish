@@ -27,6 +27,42 @@ const hasLiveBlock = (value: unknown): boolean => {
   return Object.values(value).some(hasLiveBlock);
 };
 
+const nextBlockChange = (value: unknown, now: number): number | undefined => {
+  if (Array.isArray(value)) {
+    return value.reduce<number | undefined>((next, entry) => {
+      const change = nextBlockChange(entry, now);
+
+      return change !== undefined && (next === undefined || change < next) ?
+          change
+        : next;
+    }, undefined);
+  }
+
+  if (!value || typeof value !== 'object') {
+    return undefined;
+  }
+
+  const { blocksChangeAt } = value as { blocksChangeAt?: unknown };
+  const changeAt =
+    typeof blocksChangeAt === 'string' ?
+      Math.max(1, Math.ceil((Date.parse(blocksChangeAt) - now) / 1000))
+    : undefined;
+
+  return [changeAt, nextBlockChange(Object.values(value), now)].reduce<
+    number | undefined
+  >(
+    (next, change) =>
+      (
+        change !== undefined &&
+        !Number.isNaN(change) &&
+        (next === undefined || change < next)
+      ) ?
+        change
+      : next,
+    undefined
+  );
+};
+
 const HIDDEN_CONTENT = /^Cannot return null for non-nullable field /;
 
 type ApiError = {
@@ -85,7 +121,10 @@ export const revalidateFor = (content: unknown, errors?: unknown) => {
     );
   }
 
-  return !content || errorList.length || hasLiveBlock(content) ?
+  const revalidate =
+    !content || errorList.length || hasLiveBlock(content) ?
       LIVE_REVALIDATE_SECONDS
     : REVALIDATE_SECONDS;
+
+  return Math.min(revalidate, nextBlockChange(content, Date.now()) ?? Infinity);
 };
