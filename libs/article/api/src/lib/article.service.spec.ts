@@ -1,4 +1,8 @@
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
+import {
+  PUBLIC_CONTENT_SHARED_NAMESPACES,
+  PublicContentCacheInvalidator,
+} from '@wepublish/public-content-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArticleService, createArticleFilter } from './article.service';
 import { Article, PrismaClient, TaggedArticles } from '@prisma/client';
@@ -8,7 +12,6 @@ import { ArticleSort } from './article.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { ArticlePublicationWatcher } from './article-publication.watcher';
 import type { Mock } from 'vitest';
 
@@ -95,7 +98,11 @@ describe('ArticleService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: PUBLIC_CONTENT_SHARED_NAMESPACES,
+        }),
+      ],
       providers: [
         ArticleService,
         { provide: PrismaClient, useValue: prismaMock },

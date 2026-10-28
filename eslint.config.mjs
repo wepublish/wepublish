@@ -1,6 +1,5 @@
 import nx from '@nx/eslint-plugin';
 import stylistic from '@stylistic/eslint-plugin';
-import eslintPluginStorybook from 'eslint-plugin-storybook';
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 
@@ -29,7 +28,6 @@ export const reactCompilerRules = level => ({
 });
 
 export default [
-  ...eslintPluginStorybook.configs['flat/recommended'],
   ...nx.configs['flat/base'],
   {
     plugins: {
@@ -58,11 +56,18 @@ export default [
           // Nx 21+ also checks CommonJS require() calls; this pre-existing
           // import in the apps' next.config.js files was not checked before
           // the upgrade.
-          allow: ['../../libs/utils/website/src/lib/next.config'],
+          allow: [
+            '../../libs/utils/website/src/next/next.config',
+            '../../../vitest.shared.ts',
+          ],
           depConstraints: [
             {
               sourceTag: '*',
               onlyDependOnLibsWithTags: ['*'],
+            },
+            {
+              sourceTag: 'scope:runtime-shared',
+              notDependOnLibsWithTags: ['scope:api-only'],
             },
           ],
         },
@@ -141,7 +146,6 @@ export default [
       'libs/editor/api/src/lib/gql/**',
       'libs/website/api/src/lib/gql/**',
       'libs/peering/api/src/lib/remote/graphql.ts',
-      'libs/testing/src/graphql/graphql-public.ts',
     ],
   },
 ];

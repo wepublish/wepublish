@@ -12,16 +12,16 @@ import {
 import { GoogleAnalyticsDbConfig } from './google-analytics-db-config';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { ArticleModule } from '@wepublish/article/api';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 export type GoogleAnalyticsOptionsFactory = {
   createGoogleAnalyticsOptions():
-    | Promise<GoogleAnalyticsDbConfig>
-    | GoogleAnalyticsDbConfig;
+    Promise<GoogleAnalyticsDbConfig> | GoogleAnalyticsDbConfig;
 };
 
-export interface GoogleAnalyticsAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface GoogleAnalyticsAsyncOptions extends Pick<
+  ModuleMetadata,
+  'imports'
+> {
   useExisting?: Type<GoogleAnalyticsOptionsFactory>;
   useClass?: Type<GoogleAnalyticsOptionsFactory>;
   useFactory?: (
@@ -31,7 +31,7 @@ export interface GoogleAnalyticsAsyncOptions
 }
 
 @Module({
-  imports: [PrismaModule, ArticleModule, KvTtlCacheModule],
+  imports: [PrismaModule, ArticleModule],
   providers: [GoogleAnalyticsService],
   exports: [GoogleAnalyticsService],
 })

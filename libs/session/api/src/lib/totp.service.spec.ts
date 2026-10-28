@@ -1,39 +1,30 @@
+import { PrismaClient } from '@prisma/client';
+import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import {
+  DistributedClaims,
+  DistributedCounters,
+  type DragonflyConnection,
+  MemoryDragonflyConnection,
+} from '@wepublish/dragonfly/api';
+import { FakeDragonfly } from '@wepublish/dragonfly/api/testing';
 import * as OTPAuth from 'otpauth';
 import { TotpService } from './totp.service';
 
-const sharedDragonfly = () => {
-  const locks = new Set<string>();
-  const counts = new Map<string, number>();
+const sharedDragonfly = () => new FakeDragonfly();
 
-  return {
-    claim: vi.fn(async (name: string) => {
-      if (locks.has(name)) {
-        return false;
-      }
+const noDragonfly = () => new MemoryDragonflyConnection();
 
-      locks.add(name);
+const unreachableDragonfly = () => {
+  const dragonfly = new FakeDragonfly();
+  dragonfly.down();
 
-      return true;
-    }),
-    increment: vi.fn(async (name: string) => {
-      const count = (counts.get(name) ?? 0) + 1;
-      counts.set(name, count);
-
-      return count;
-    }),
-    count: vi.fn(async (name: string) => counts.get(name) ?? 0),
-    forgetCount: vi.fn(async (name: string) => {
-      counts.delete(name);
-    }),
-  };
+  return dragonfly;
 };
 
-const noDragonfly = () => ({
-  claim: vi.fn(async () => undefined),
-  increment: vi.fn(async () => undefined),
-  count: vi.fn(async () => undefined),
-  forgetCount: vi.fn(async () => undefined),
-});
+const sentKeys = (dragonfly: FakeDragonfly, prefix: string) =>
+  dragonfly.commands
+    .filter(([command, key]) => command === 'SET' && key.startsWith(prefix))
+    .map(([, key]) => key);
 
 describe('TotpService across replicas', () => {
   const originalKey = process.env['APP_SECRET_KEY'];
@@ -68,12 +59,20 @@ describe('TotpService across replicas', () => {
     process.env['APP_SECRET_KEY'] = originalKey;
   });
 
-  const replicas = (kv: object) => {
+  const replicas = (dragonfly: DragonflyConnection) => {
     const prisma = {
       user: { findUnique: vi.fn(), update: vi.fn() },
     };
+    const sessionCache = {
+      invalidate: vi.fn(),
+    } satisfies Pick<SessionCacheInvalidator, 'invalidate'>;
     const create = () =>
-      new TotpService(prisma as any, { invalidate: vi.fn() } as any, kv as any);
+      new TotpService(
+        prisma as unknown as PrismaClient,
+        sessionCache as unknown as SessionCacheInvalidator,
+        new DistributedClaims(dragonfly),
+        new DistributedCounters(dragonfly)
+      );
     const a = create();
     const b = create();
     prisma.user.findUnique.mockResolvedValue({
@@ -165,10 +164,11 @@ describe('TotpService across replicas', () => {
   it.each([
     ['across replicas', sharedDragonfly],
     ['on one replica without Dragonfly', noDragonfly],
+    ['on one replica while Dragonfly is unreachable', unreachableDragonfly],
   ])(
     'refuses guesses sent in parallel once five are used up %s',
-    async (_, kv) => {
-      const { a } = replicas(kv());
+    async (_, dragonfly) => {
+      const { a } = replicas(dragonfly());
       const codes = Array.from({ length: 8 }, () => wrongCode());
 
       const results = await Promise.allSettled(
@@ -202,37 +202,71 @@ describe('TotpService across replicas', () => {
     );
   });
 
-  it('still refuses a reused code on the same replica without Dragonfly', async () => {
-    const { a } = replicas(noDragonfly());
-    const code = totp.generate();
+  it.each([
+    ['without Dragonfly', noDragonfly],
+    ['while Dragonfly is unreachable', unreachableDragonfly],
+  ])(
+    'still refuses a reused code on the same replica %s',
+    async (_, dragonfly) => {
+      const { a } = replicas(dragonfly());
+      const code = totp.generate();
 
-    await expect(a.verifyUserTotp('user-1', code)).resolves.toBe(true);
-    await expect(a.verifyUserTotp('user-1', code)).rejects.toThrow(
-      'already been used'
+      await expect(a.verifyUserTotp('user-1', code)).resolves.toBe(true);
+      await expect(a.verifyUserTotp('user-1', code)).rejects.toThrow(
+        'already been used'
+      );
+    }
+  );
+
+  it('locks the account on one replica after five failed codes while Dragonfly is unreachable', async () => {
+    const { a } = replicas(unreachableDragonfly());
+
+    for (let attempt = 0; attempt < 5; attempt++) {
+      await expect(a.verifyUserTotp('user-1', wrongCode())).rejects.toThrow(
+        'Invalid verification code'
+      );
+    }
+
+    await expect(a.verifyUserTotp('user-1', totp.generate())).rejects.toThrow(
+      'Too many failed attempts'
     );
   });
 
+  it('forgets the shared failure count after a correct code', async () => {
+    const dragonfly = sharedDragonfly();
+    const { a } = replicas(dragonfly);
+
+    await a.verifyUserTotp('user-1', totp.generate());
+
+    expect(dragonfly.commands).toContainEqual([
+      'DEL',
+      'count:totp-failures:user-1',
+    ]);
+  });
+
   it('remembers a used code by its time step, so Dragonfly keys carry no code material', async () => {
-    const kv = sharedDragonfly();
-    const { a } = replicas(kv);
+    const dragonfly = sharedDragonfly();
+    const { a } = replicas(dragonfly);
     const step = Math.floor(Date.now() / 30_000);
 
     await a.verifyUserTotp('user-1', totp.generate());
 
-    expect(kv.claim.mock.calls.map(([name]) => name)).toEqual([
+    expect(sentKeys(dragonfly, 'lock:')).toEqual([
       expect.stringMatching(
-        new RegExp(`^totp-used:user-1:(${step - 1}|${step}|${step + 1})$`)
+        new RegExp(`^lock:totp-used:user-1:(${step - 1}|${step}|${step + 1})$`)
       ),
     ]);
   });
 
   it('never sends the code itself to Dragonfly', async () => {
-    const kv = sharedDragonfly();
-    const { a } = replicas(kv);
+    const dragonfly = sharedDragonfly();
+    const { a } = replicas(dragonfly);
     const code = totp.generate();
 
     await a.verifyUserTotp('user-1', code);
 
-    expect(JSON.stringify(kv.claim.mock.calls)).not.toContain(code);
+    expect(
+      JSON.stringify(dragonfly.commands.map(([, key]) => key))
+    ).not.toContain(code);
   });
 });

@@ -7,11 +7,12 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
+import { BajourContainer as Container } from '@wepublish/tenant/bajour';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  getApiUrl,
   getSessionTokenProps,
   handleJwtLogin,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 import {
   FullSessionWithTokenWithoutUserFragment,
   getApiClient,
@@ -22,8 +23,6 @@ import { add } from 'date-fns';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
-
-import { Container } from '../src/components/layout/container';
 
 const LoginWrapper = styled(ContentWrapper)`
   justify-content: center;

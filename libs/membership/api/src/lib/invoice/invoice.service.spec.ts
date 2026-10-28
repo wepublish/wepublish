@@ -40,6 +40,66 @@ describe('InvoiceService.checkInvoiceStatus', () => {
 
     expect(invoicePaidNotifier.notify).toHaveBeenCalledWith('inv-2');
   });
+
+  // An abandoned checkout the provider no longer knows must not stop the
+  // invoice from being settled through the payment that went through.
+  it('checks the remaining payments when one cannot be checked', async () => {
+    const intentState = { paymentID: 'pay-new', state: 'paid' };
+    const provider = {
+      id: 'payrexx',
+      checkIntentStatus: vi
+        .fn()
+        .mockRejectedValueOnce(
+          new Error('Payrexx Gateway/Transaction not found')
+        )
+        .mockResolvedValueOnce(intentState),
+      updatePaymentWithIntentState: vi.fn().mockResolvedValue({}),
+    };
+    const prisma = {
+      invoice: {
+        findUnique: vi.fn().mockResolvedValue({
+          id: 'inv-2',
+          subscription: { id: 'sub-1', userID: 'user-1' },
+        }),
+      },
+      payment: {
+        findMany: vi.fn().mockResolvedValue([
+          { id: 'pay-abandoned', intentID: '1', paymentMethodID: 'pm-1' },
+          { id: 'pay-new', intentID: '2', paymentMethodID: 'pm-1' },
+        ]),
+      },
+      paymentMethod: {
+        findMany: vi
+          .fn()
+          .mockResolvedValue([{ id: 'pm-1', paymentProviderID: 'payrexx' }]),
+      },
+    };
+    const invoicePaidNotifier = {
+      notify: vi.fn().mockResolvedValue(undefined),
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        InvoiceService,
+        { provide: PrismaClient, useValue: prisma },
+        {
+          provide: PAYMENT_METHOD_CONFIG,
+          useValue: { paymentProviders: [provider] },
+        },
+        { provide: InvoiceDataloader, useValue: { prime: vi.fn() } },
+        { provide: InvoicePaidNotifier, useValue: invoicePaidNotifier },
+      ],
+    }).compile();
+
+    await module
+      .get<InvoiceService>(InvoiceService)
+      .checkInvoiceStatus('inv-2', 'user-1');
+
+    expect(provider.updatePaymentWithIntentState).toHaveBeenCalledWith({
+      intentState,
+    });
+    expect(invoicePaidNotifier.notify).toHaveBeenCalledWith('inv-2');
+  });
 });
 
 async function setup() {

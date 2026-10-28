@@ -1,9 +1,12 @@
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
+import {
+  PUBLIC_CONTENT_SHARED_NAMESPACES,
+  PublicContentCacheInvalidator,
+} from '@wepublish/public-content-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PageService } from './page.service';
 import { Page, PrismaClient, TaggedPages } from '@prisma/client';
 import { PageDataloaderService } from './page-dataloader.service';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { DateFilterComparison, SortOrder } from '@wepublish/utils/api';
 import { PageSort } from './page.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
@@ -69,7 +72,11 @@ describe('PageService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: PUBLIC_CONTENT_SHARED_NAMESPACES,
+        }),
+      ],
       providers: [
         PageService,
         { provide: PrismaClient, useValue: prismaMock },

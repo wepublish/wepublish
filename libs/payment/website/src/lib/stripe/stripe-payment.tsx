@@ -11,6 +11,11 @@ import styled from '@emotion/styled';
 
 export type StripePaymentProps = {
   onClose(success: boolean): void;
+  /**
+   * `setup` confirms a SetupIntent: the payment method is stored for later
+   * payments without charging anything.
+   */
+  mode?: 'payment' | 'setup';
 };
 
 const StripePaymentModalWrapper = styled('section')`
@@ -42,7 +47,10 @@ const StripePaymentModalActions = styled('div')`
   gap: ${({ theme }) => theme.spacing(3)};
 `;
 
-export function StripePayment({ onClose }: StripePaymentProps) {
+export function StripePayment({
+  onClose,
+  mode = 'payment',
+}: StripePaymentProps) {
   const stripe = useStripe();
   const elements = useElements();
   const { t } = useTranslation();
@@ -64,13 +72,17 @@ export function StripePayment({ onClose }: StripePaymentProps) {
       }
 
       try {
-        const { error } = await stripe.confirmPayment({
+        const params = {
           elements,
           confirmParams: {
             return_url: window.location.href,
           },
           redirect: 'if_required',
-        });
+        } as const;
+        const { error } =
+          mode === 'setup' ?
+            await stripe.confirmSetup(params)
+          : await stripe.confirmPayment(params);
 
         if (error) {
           setErrorMessage(error.message);
@@ -86,7 +98,7 @@ export function StripePayment({ onClose }: StripePaymentProps) {
 
       setIsLoading(false);
     },
-    [elements, onClose, stripe]
+    [elements, mode, onClose, stripe]
   );
 
   return (
@@ -115,7 +127,7 @@ export function StripePayment({ onClose }: StripePaymentProps) {
               type="submit"
               disabled={!stripe || isLoading}
             >
-              {t('user.pay')}
+              {mode === 'setup' ? t('user.authorize') : t('user.pay')}
             </Button>
           </StripePaymentModalActions>
         </StripePaymentModalWrapper>

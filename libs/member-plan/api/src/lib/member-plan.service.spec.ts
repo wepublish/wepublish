@@ -1,17 +1,27 @@
 import type { Mock } from 'vitest';
-import { Test } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { PaymentPeriodicity, PrismaClient } from '@prisma/client';
 import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
-  PUBLIC_CONTENT_NAMESPACE,
-  PublicContentCacheInvalidator,
+  NamespacedCache,
+  NamespaceResets,
+  NamespaceVersions,
 } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
+import {
+  PUBLIC_CONTENT_NAMESPACE,
+  PUBLIC_CONTENT_SHARED_NAMESPACES,
+  PublicContentCacheInvalidator,
+  PublicContentInvalidatorModule,
+} from '@wepublish/public-content-cache/api';
+import { MEMBER_PLAN_SHARED_NAMESPACES } from './member-plan-cache';
 import { MemberPlanService } from './member-plan.service';
 import { MemberPlanDataloader } from './member-plan.dataloader';
 
 vi.mock('./member-plan.model', () => ({
   MemberPlanSort: { CreatedAt: 'CreatedAt', ModifiedAt: 'ModifiedAt' },
+  MemberPlanListArgs: class {},
+  CreateMemberPlanInput: class {},
+  UpdateMemberPlanInput: class {},
 }));
 
 describe('MemberPlanService cache', () => {
@@ -32,7 +42,9 @@ describe('MemberPlanService cache', () => {
     periodicityPricing: [],
   };
   let service: MemberPlanService;
-  let kv: KvTtlCacheService;
+  let module: TestingModule;
+  let kv: NamespacedCache;
+  let versions: NamespaceVersions;
   let prisma: {
     memberPlan: {
       findMany: Mock;
@@ -56,19 +68,36 @@ describe('MemberPlanService cache', () => {
       },
     };
 
-    const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+    module = await Test.createTestingModule({
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: [
+            ...PUBLIC_CONTENT_SHARED_NAMESPACES,
+            ...MEMBER_PLAN_SHARED_NAMESPACES,
+          ],
+        }),
+        PublicContentInvalidatorModule,
+      ],
     }).compile();
+    await module.init();
 
-    kv = module.get(KvTtlCacheService);
+    kv = module.get(NamespacedCache);
+    versions = module.get(NamespaceVersions);
     service = new MemberPlanService(
       prisma as unknown as PrismaClient,
       kv,
-      new PublicContentCacheInvalidator(kv)
+      module.get(NamespaceResets),
+      module.get(PublicContentCacheInvalidator)
     );
     Object.assign(service, {
       [`__DATALOADER__${MemberPlanDataloader.name}`]: { prime: vi.fn() },
     });
+  });
+
+  afterEach(() => module.close());
+
+  it('shares the member plans through Dragonfly', () => {
+    expect(MEMBER_PLAN_SHARED_NAMESPACES).toEqual(['member-plans']);
   });
 
   it('serves the active member plans from the cache', async () => {
@@ -127,12 +156,12 @@ describe('MemberPlanService cache', () => {
   );
 
   it('retires anonymous answers after a member plan changed', async () => {
-    const before = await kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE);
+    const before = await versions.current(PUBLIC_CONTENT_NAMESPACE);
 
     await service.updateMemberPlan({ id: 'plan-1', name: 'Abo' });
 
-    await expect(
-      kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE)
-    ).resolves.not.toBe(before);
+    await expect(versions.current(PUBLIC_CONTENT_NAMESPACE)).resolves.not.toBe(
+      before
+    );
   });
 });

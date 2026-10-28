@@ -17,6 +17,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Public } from '@wepublish/authentication/api';
 import { PaymentState } from '@prisma/client';
 import { InvoicePaidNotifier } from './invoice-paid.listener';
+import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks';
 
@@ -27,7 +28,8 @@ export class PaymentWebhookController {
   constructor(
     @Inject(PAYMENT_METHOD_CONFIG)
     private config: PaymentMethodConfig,
-    private invoicePaidNotifier: InvoicePaidNotifier
+    private invoicePaidNotifier: InvoicePaidNotifier,
+    private authorizationNotifier: PaymentAuthorizationNotifier
   ) {}
 
   @Public()
@@ -70,6 +72,13 @@ export class PaymentWebhookController {
                 await this.invoicePaidNotifier.notify(payment.invoiceID);
               }
             }
+          }
+
+          for (const authorizationState of response.authorizationStates ?? []) {
+            await this.authorizationNotifier.notify(
+              provider.id,
+              authorizationState
+            );
           }
 
           if (response.redirectUrl) {

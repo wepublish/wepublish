@@ -7,7 +7,8 @@ import { createHash } from 'crypto';
 import { HotAndTrendingDataSource } from '@wepublish/article/api';
 import { getMaxTake } from '@wepublish/utils/api';
 import { GoogleAnalyticsDbConfig } from './google-analytics-db-config';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { GA4_CACHE_NAMESPACE } from './google-analytics-cache';
 
 export const GA_CLIENT_OPTIONS = Symbol('GA_CLIENT_OPTIONS');
 
@@ -35,7 +36,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     private prisma: PrismaClient,
     @Inject(GA_CLIENT_OPTIONS)
     private configProvider: GoogleAnalyticsDbConfig,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   private isCircuitOpen(): boolean {
@@ -191,7 +192,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     }
 
     const articleViewMap = await this.kv.getOrLoadNs<Record<string, number>>(
-      'ga4',
+      GA4_CACHE_NAMESPACE,
       `article-view-map:${config.property}:${start ? format(start, 'yyyy-MM-dd') : ''}:${config.articlePrefix}`,
       () =>
         this.loadArticleViewMap(

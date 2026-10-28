@@ -1,4 +1,4 @@
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { PaywallDataloaderService } from './paywall-dataloader.service';
@@ -13,7 +13,7 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
 
 @Module({
   imports: [
-    GraphqlResponseCacheModule,
+    PublicContentInvalidatorModule,
     PrismaModule,
     forwardRef(() => MemberPlanModule),
   ],

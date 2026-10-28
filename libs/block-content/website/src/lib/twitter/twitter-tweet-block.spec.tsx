@@ -1,13 +1,30 @@
-import { render } from '@testing-library/react';
-import * as stories from './twitter-tweet-block.stories';
-import { composeStories } from '@storybook/react';
+import { screen } from '@testing-library/react';
+import {
+  mockTwitterTweetBlock,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { TwitterTweetBlock } from './twitter-tweet-block';
 
-const storiesCmp = composeStories(stories);
+describe('TwitterTweetBlock', () => {
+  it('renders the tweet by its id in the dark theme', () => {
+    renderWithProviders(
+      <TwitterTweetBlock
+        {...mockTwitterTweetBlock({ tweetID: '1600079498845863937' })}
+      />
+    );
 
-describe('Twitter Tweet Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
+    const tweet = screen.getByText(
+      `Tweet Mock: ${JSON.stringify({ id: '1600079498845863937' })}`
+    );
+
+    expect(tweet.parentElement).toHaveAttribute('data-theme', 'dark');
+  });
+
+  it('renders nothing without a tweet id', () => {
+    const { container } = renderWithProviders(
+      <TwitterTweetBlock {...mockTwitterTweetBlock({ tweetID: null })} />
+    );
+
+    expect(container).toBeEmptyDOMElement();
   });
 });

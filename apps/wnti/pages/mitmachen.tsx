@@ -2,12 +2,11 @@ import styled from '@emotion/styled';
 import { UserFormWrapper } from '@wepublish/authentication/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
 import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl, ssrAuthLink } from '@wepublish/utils/website';
 import {
-  getApiUrl,
   getSessionTokenProps,
-  ssrAuthLink,
   SubscribePage,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 import { getApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
 

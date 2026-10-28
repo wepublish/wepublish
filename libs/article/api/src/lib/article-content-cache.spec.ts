@@ -1,10 +1,12 @@
 import type { Mock } from 'vitest';
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
+  PUBLIC_CONTENT_SHARED_NAMESPACES,
   PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+  PublicContentInvalidatorModule,
+} from '@wepublish/public-content-cache/api';
 import { ArticleDataloaderService } from './article-dataloader.service';
 import { ArticleRevisionDataloaderService } from './article-revision-dataloader.service';
 import { ArticleService } from './article.service';
@@ -14,7 +16,9 @@ vi.mock('@wepublish/block-content/api');
 const publishedAt = new Date('2026-01-01T00:00:00.000Z');
 
 describe('article content cache', () => {
-  let kv: KvTtlCacheService;
+  let module: TestingModule;
+  let kv: NamespacedCache;
+  let invalidator: PublicContentCacheInvalidator;
   let prisma: {
     $queryRaw: Mock;
     article: {
@@ -28,21 +32,24 @@ describe('article content cache', () => {
 
   const articleService = () =>
     Object.assign(
-      new ArticleService(
-        prisma as any,
-        {} as any,
-        new PublicContentCacheInvalidator(kv),
-        kv,
-        { schedule: vi.fn() } as any
-      ),
+      new ArticleService(prisma as any, {} as any, invalidator, kv, {
+        schedule: vi.fn(),
+      } as any),
       { __DATALOADER__ArticleDataloaderService: { prime: vi.fn() } }
     );
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+    module = await Test.createTestingModule({
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: PUBLIC_CONTENT_SHARED_NAMESPACES,
+        }),
+        PublicContentInvalidatorModule,
+      ],
     }).compile();
-    kv = module.get(KvTtlCacheService);
+    await module.init();
+    kv = module.get(NamespacedCache);
+    invalidator = module.get(PublicContentCacheInvalidator);
     prisma = {
       $queryRaw: vi.fn().mockResolvedValue([]),
       article: {
@@ -57,6 +64,8 @@ describe('article content cache', () => {
     };
   });
 
+  afterEach(() => module.close());
+
   it('loads an article from the database once across requests', async () => {
     await new ArticleDataloaderService(prisma as any, kv).load('a1');
     const article = await new ArticleDataloaderService(prisma as any, kv).load(
@@ -70,7 +79,7 @@ describe('article content cache', () => {
 
   it('loads it again once articles changed', async () => {
     await new ArticleDataloaderService(prisma as any, kv).load('a1');
-    await new PublicContentCacheInvalidator(kv).invalidateDraft('articles');
+    await invalidator.invalidateDraft('articles');
     await new ArticleDataloaderService(prisma as any, kv).load('a1');
 
     expect(prisma.article.findMany).toHaveBeenCalledTimes(2);

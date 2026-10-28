@@ -1,4 +1,4 @@
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { EventScheduleWatcher } from './event-schedule.watcher';
 import { Module } from '@nestjs/common';
 import { ImageModule } from '@wepublish/image/api';
@@ -15,7 +15,12 @@ import { EventResolver } from './event.resolver';
 import { TagModule } from '@wepublish/tag/api';
 
 @Module({
-  imports: [GraphqlResponseCacheModule, PrismaModule, ImageModule, TagModule],
+  imports: [
+    PublicContentInvalidatorModule,
+    PrismaModule,
+    ImageModule,
+    TagModule,
+  ],
   providers: [
     EventScheduleWatcher,
     EventDataloaderService,

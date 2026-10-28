@@ -2,4 +2,4 @@ export {
   TagPage as default,
   TagPageGetStaticPaths as getStaticPaths,
   TagPageGetStaticProps as getStaticProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';

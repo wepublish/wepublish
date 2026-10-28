@@ -1,6 +1,11 @@
 import {
+  AuthorizationIntent,
+  AuthorizationOutcome,
+  AuthorizationState,
   BasePaymentProvider,
+  CheckAuthorizationProps,
   CheckIntentProps,
+  CreateAuthorizationIntentProps,
   CreatePaymentIntentProps,
   Intent,
   IntentState,
@@ -31,6 +36,19 @@ function mapStripeEventToPaymentStatus(event: string): PaymentState | null {
       return PaymentState.canceled;
     default:
       return null;
+  }
+}
+
+function mapSetupIntentStatus(
+  status: Stripe.SetupIntent.Status
+): AuthorizationOutcome {
+  switch (status) {
+    case 'succeeded':
+      return 'authorized';
+    case 'canceled':
+      return 'failed';
+    default:
+      return 'processing';
   }
 }
 
@@ -78,6 +96,24 @@ export class StripePaymentProvider extends BasePaymentProvider {
   ): Promise<WebhookResponse> {
     const signature = props.req.headers['stripe-signature'] as string;
     const event = await this.getWebhookEvent(props.req.body, signature);
+
+    if (event.type.startsWith('setup_intent')) {
+      const setupIntent = event.data.object as Stripe.SetupIntent;
+
+      if (!setupIntent.metadata?.['changeID']) {
+        return { status: 200, authorizationStates: [] };
+      }
+
+      return {
+        status: 200,
+        authorizationStates: [
+          await this.authorizationState(
+            setupIntent,
+            event.type === 'setup_intent.setup_failed'
+          ),
+        ],
+      };
+    }
 
     if (!event.type.startsWith('payment_intent')) {
       return {
@@ -266,5 +302,110 @@ export class StripePaymentProvider extends BasePaymentProvider {
       paymentData: JSON.stringify(intent),
       customerID,
     };
+  }
+
+  override supportsAuthorization(): boolean {
+    return true;
+  }
+
+  /**
+   * A SetupIntent confirms the payment method for off-session use without
+   * charging or holding anything.
+   */
+  override async createAuthorizationIntent({
+    changeID,
+    customerID,
+    email,
+  }: CreateAuthorizationIntentProps): Promise<AuthorizationIntent> {
+    const stripe = await this.getStripeGateway();
+    const config = await this.getConfig();
+
+    const setupIntent = await stripe.setupIntents.create({
+      usage: 'off_session',
+      payment_method_types: mapStripePaymentMethodTypes(config.stripe_methods),
+      ...(customerID ? { customer: customerID } : {}),
+      metadata: {
+        changeID,
+        mail: email ?? '',
+      },
+    });
+
+    logger('stripePaymentProvider').info(
+      'Created Stripe SetupIntent with ID: %s for paymentProvider %s',
+      setupIntent.id,
+      this.id
+    );
+
+    return {
+      intentID: setupIntent.id,
+      intentSecret: setupIntent.client_secret ?? '',
+      intentData: JSON.stringify(setupIntent),
+      state: mapSetupIntentStatus(setupIntent.status),
+      amount: 0,
+    };
+  }
+
+  override async checkAuthorizationStatus({
+    intentID,
+  }: CheckAuthorizationProps): Promise<AuthorizationState | null> {
+    const stripe = await this.getStripeGateway();
+    const setupIntent = await stripe.setupIntents.retrieve(intentID);
+
+    if (!setupIntent.metadata?.['changeID']) {
+      return null;
+    }
+
+    return this.authorizationState(setupIntent, false);
+  }
+
+  private async authorizationState(
+    setupIntent: Stripe.SetupIntent,
+    failed: boolean
+  ): Promise<AuthorizationState> {
+    const state = failed ? 'failed' : mapSetupIntentStatus(setupIntent.status);
+    const paymentMethod = setupIntent.payment_method as string | null;
+    let customerID: string | undefined;
+
+    if (state === 'authorized' && paymentMethod) {
+      customerID = await this.makeDefaultPaymentMethod(
+        setupIntent,
+        paymentMethod
+      );
+    }
+
+    return {
+      changeID: setupIntent.metadata?.['changeID'] ?? '',
+      state,
+      customerID,
+      intentData: JSON.stringify(setupIntent),
+    };
+  }
+
+  /**
+   * Renewals charge the customer's default payment method, so the confirmed
+   * one becomes it.
+   */
+  private async makeDefaultPaymentMethod(
+    setupIntent: Stripe.SetupIntent,
+    paymentMethod: string
+  ): Promise<string> {
+    const stripe = await this.getStripeGateway();
+
+    if (setupIntent.customer) {
+      const customerID = setupIntent.customer as string;
+      await stripe.customers.update(customerID, {
+        invoice_settings: { default_payment_method: paymentMethod },
+      });
+
+      return customerID;
+    }
+
+    const customer = await stripe.customers.create({
+      email: setupIntent.metadata?.['mail'] ?? '',
+      payment_method: paymentMethod,
+      invoice_settings: { default_payment_method: paymentMethod },
+    });
+
+    return customer.id;
   }
 }

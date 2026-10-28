@@ -27,12 +27,12 @@ import {
   NotAuthorisedError,
 } from '@wepublish/api';
 import { ChallengeService } from '@wepublish/challenge/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   PUBLIC_COMMENTS_NAMESPACE,
   PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { UserSession } from '@wepublish/authentication/api';
 import { CalculatedRating } from './rating-system/rating-system.model';
@@ -223,7 +223,7 @@ export class CommentService {
     private settingsService: SettingsService,
     private challengeService: ChallengeService,
     private publicContentCache: PublicContentCacheInvalidator,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   async getAdminCommennts({

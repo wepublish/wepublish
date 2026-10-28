@@ -1,8 +1,8 @@
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import { DataLoaderService } from '@wepublish/utils/api';
 import { PrismaClient, AuthorsLinks } from '@prisma/client';
 import { Injectable, Scope } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { groupBy } from 'ramda';
 export class AuthorLinkDataloader extends DataLoaderService<AuthorsLinks[]> {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {
     super();
   }

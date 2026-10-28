@@ -6,7 +6,8 @@ import {
   PaymentPeriodicity,
   PrismaClient,
 } from '@prisma/client';
-import { createKvMock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
+import { CROWDFUNDING_SHARED_NAMESPACES } from './crowdfunding-cache';
 import { CrowdfundingService } from './crowdfunding.service';
 import { CrowdfundingDataloaderService } from './crowdfunding-dataloader.service';
 import type { Mock } from 'vitest';
@@ -38,6 +39,7 @@ const mockGoal = (override: Partial<CrowdfundingGoal> = {}): CrowdfundingGoal =>
   }) as CrowdfundingGoal;
 
 describe('CrowdfundingService', () => {
+  let module: TestingModule;
   let service: CrowdfundingService;
   let prismaMock: {
     subscription: { findMany: Mock };
@@ -55,11 +57,15 @@ describe('CrowdfundingService', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: CROWDFUNDING_SHARED_NAMESPACES,
+        }),
+      ],
       providers: [
         CrowdfundingService,
         { provide: PrismaClient, useValue: prismaMock },
-        { provide: KvTtlCacheService, useValue: createKvMock() },
         {
           provide: CrowdfundingDataloaderService,
           useValue: { prime: vi.fn() },
@@ -68,6 +74,12 @@ describe('CrowdfundingService', () => {
     }).compile();
 
     service = module.get(CrowdfundingService);
+  });
+
+  afterEach(() => module.close());
+
+  it('shares the crowdfunding progress through Dragonfly', () => {
+    expect(CROWDFUNDING_SHARED_NAMESPACES).toEqual(['crowdfunding']);
   });
 
   describe('getActiveGoalWithProgress', () => {

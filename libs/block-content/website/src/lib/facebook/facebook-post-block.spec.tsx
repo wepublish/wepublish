@@ -1,13 +1,21 @@
-import { render } from '@testing-library/react';
-import * as stories from './facebook-post-block.stories';
-import { composeStories } from '@storybook/react';
+import {
+  mockFacebookPostBlock,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { FacebookPostBlock } from './facebook-post-block';
 
-const storiesCmp = composeStories(stories);
+describe('FacebookPostBlock', () => {
+  it('does not embed anything from Facebook', () => {
+    const { container } = renderWithProviders(
+      <FacebookPostBlock
+        {...mockFacebookPostBlock()}
+        className="facebook-post"
+      />
+    );
 
-describe('Facebook Post Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
+    const wrapper = container.querySelector('.facebook-post');
+
+    expect(wrapper).toBeEmptyDOMElement();
+    expect(container.querySelector('iframe, script')).toBeNull();
   });
 });

@@ -8,6 +8,7 @@ export * from './lib/max-payload-size';
 export * from './lib/constants';
 export * from './lib/error-context';
 export * from './lib/is-active-subscription';
+export * from './lib/publication-timers';
 
 export * from './lib/dataloader/create-optionals-array';
 export * from './lib/dataloader/prime-dataloaders.decorator';

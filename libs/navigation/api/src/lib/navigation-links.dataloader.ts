@@ -2,7 +2,7 @@ import { DataLoaderService } from '@wepublish/utils/api';
 import { NavigationLink, PrismaClient } from '@prisma/client';
 import { Injectable, Scope } from '@nestjs/common';
 import { groupBy } from 'ramda';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   NAVIGATION_CACHE_NAMESPACE,
   NAVIGATION_CACHE_TTL_SECONDS,
@@ -16,7 +16,7 @@ export class NavigationLinksDataloaderService extends DataLoaderService<
 > {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {
     super();
   }

@@ -5,5 +5,4 @@ export * from './commandPaletteContext';
 export * from './fuzzyMatch';
 export * from './groupMatches';
 export * from './searchCommands';
-export * from './modifierKeyLabel';
 export * from './commandPaletteTrigger';

@@ -1,13 +1,24 @@
-import { render } from '@testing-library/react';
-import * as stories from './sound-cloud-block.stories';
-import { composeStories } from '@storybook/react';
+import { screen } from '@testing-library/react';
+import {
+  mockSoundCloudTrackBlock,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { SoundCloudTrackBlock } from './sound-cloud-block';
 
-const storiesCmp = composeStories(stories);
+describe('SoundCloudTrackBlock', () => {
+  it('embeds the track through the visual SoundCloud widget', () => {
+    renderWithProviders(
+      <SoundCloudTrackBlock {...mockSoundCloudTrackBlock({ trackID: '744' })} />
+    );
 
-describe('SoundCloud Track Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
+    const src = new URL(
+      screen.getByTitle('Embedded SoundCloud Track').getAttribute('src') ?? ''
+    );
+
+    expect(src.origin + src.pathname).toBe('https://w.soundcloud.com/player/');
+    expect(src.searchParams.get('url')).toBe(
+      'https://api.soundcloud.com/tracks/744'
+    );
+    expect(src.searchParams.get('visual')).toBe('true');
   });
 });

@@ -1,7 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { SessionCacheInvalidator } from '@wepublish/authentication/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  DistributedClaims,
+  DistributedCounters,
+} from '@wepublish/dragonfly/api';
 import * as OTPAuth from 'otpauth';
 import {
   createCipheriv,
@@ -42,7 +45,8 @@ export class TotpService {
   constructor(
     private prisma: PrismaClient,
     private sessionCache: SessionCacheInvalidator,
-    private kv: KvTtlCacheService
+    private claims: DistributedClaims,
+    private counters: DistributedCounters
   ) {
     const appSecretKey = process.env.APP_SECRET_KEY;
 
@@ -125,14 +129,14 @@ export class TotpService {
 
     this.failedAttempts.set(userId, entry);
 
-    const attempts = await this.kv.increment(
+    const attempts = await this.counters.increment(
       failedAttemptsName(userId),
       LOCKOUT_DURATION_MS
     );
 
     if (
       lockedHere ||
-      (attempts !== undefined && attempts > MAX_FAILED_ATTEMPTS)
+      (attempts.status === 'counted' && attempts.count > MAX_FAILED_ATTEMPTS)
     ) {
       throw new BadRequestException(
         `Too many failed attempts. Account locked for ${
@@ -144,7 +148,7 @@ export class TotpService {
 
   private async clearFailedAttempts(userId: string) {
     this.failedAttempts.delete(userId);
-    await this.kv.forgetCount(failedAttemptsName(userId));
+    await this.counters.forget(failedAttemptsName(userId));
   }
 
   private async markStepUsed(userId: string, step: number) {
@@ -161,8 +165,10 @@ export class TotpService {
 
     if (
       usedHere ||
-      (await this.kv.claim(usedStepName(userId, step), USED_CODE_TTL_MS)) ===
-        false
+      (await this.claims.claim(
+        usedStepName(userId, step),
+        USED_CODE_TTL_MS
+      )) === 'taken'
     ) {
       throw new BadRequestException(
         'This verification code has already been used. Wait for a new code.'

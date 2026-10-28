@@ -5,8 +5,8 @@ import {
   ModuleMetadata,
 } from '@nestjs/common';
 import { ImageModule } from '@wepublish/image/api';
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { EngagementPromptsResolver } from './engagement-prompts.resolver';
 import { EngagementRuleResolver } from './engagement-rule.resolver';
 import { EngagementRuleService } from './engagement-rule.service';
@@ -20,7 +20,7 @@ import {
 import { ReaderContextService } from './reader-context.service';
 
 @Module({
-  imports: [PrismaModule, GraphqlResponseCacheModule, ImageModule],
+  imports: [PrismaModule, PublicContentInvalidatorModule, ImageModule],
   providers: [
     EngagementRuleService,
     EngagementRuleResolver,

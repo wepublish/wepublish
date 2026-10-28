@@ -91,10 +91,10 @@ describe('SessionResolver', () => {
     }).compile();
 
     app = module.createNestApplication();
-    await app.init();
+    await app.listen(0, '127.0.0.1');
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 

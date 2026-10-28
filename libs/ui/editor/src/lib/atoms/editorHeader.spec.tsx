@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { MdSave } from 'react-icons/md';
 
@@ -57,6 +57,75 @@ describe('EditorHeader', () => {
     expect(
       screen.getAllByRole('button').map(button => button.textContent)
     ).toEqual(['Autosave', 'Metadata', 'Publish']);
+  });
+});
+
+describe('EditorHeader menu actions', () => {
+  const renderMenu = (onHistory = vi.fn()) =>
+    renderWithTheme(
+      <EditorHeader
+        state={StateColor.draft}
+        stateLabel="Draft"
+        menuActions={[
+          { label: 'Version history', icon: <MdSave />, onClick: onHistory },
+          {
+            label: 'Discard draft',
+            icon: <MdSave />,
+            onClick: vi.fn(),
+            disabled: true,
+          },
+        ]}
+        secondaryActions={<button>Preview</button>}
+        primaryActions={<button>Publish</button>}
+      />
+    );
+
+  it('shows them as buttons ahead of the other secondary actions', () => {
+    renderMenu();
+
+    expect(
+      screen
+        .getAllByRole('button', { hidden: true })
+        .map(button => button.getAttribute('aria-label') ?? button.textContent)
+    ).toEqual([
+      'Version history',
+      'Discard draft',
+      'editorHeader.moreActions',
+      'Preview',
+      'Publish',
+    ]);
+  });
+
+  it('offers them in a menu for narrow screens', () => {
+    const onHistory = vi.fn();
+    renderMenu(onHistory);
+
+    fireEvent.click(screen.getByLabelText('editorHeader.moreActions'));
+
+    const menu = screen.getByRole('menu');
+
+    expect(
+      within(menu).getByRole('menuitem', { name: 'Discard draft' })
+    ).toHaveAttribute('aria-disabled', 'true');
+
+    fireEvent.click(
+      within(menu).getByRole('menuitem', { name: 'Version history' })
+    );
+
+    expect(onHistory).toHaveBeenCalledOnce();
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
+  it('leaves out the menu when there is nothing to put in it', () => {
+    renderWithTheme(
+      <EditorHeader
+        state={StateColor.draft}
+        stateLabel="Draft"
+        menuActions={[]}
+      />
+    );
+
+    expect(screen.queryByLabelText('editorHeader.moreActions')).toBeNull();
   });
 });
 

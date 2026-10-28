@@ -1,4 +1,4 @@
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { PaywallMemberPlansDataloader } from './paywall-member-plans.dataloader';
@@ -20,7 +20,7 @@ describe('PaywallMemberPlansDataloader', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [NamespacedCacheTestingModule.forRoot()],
       providers: [
         PaywallMemberPlansDataloader,
         {

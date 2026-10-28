@@ -1,4 +1,4 @@
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ImageDataloaderService } from './image-dataloader.service';
 import { PrismaClient } from '@prisma/client';
@@ -31,7 +31,7 @@ describe('ImageDataloaderService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [NamespacedCacheTestingModule.forRoot()],
       providers: [
         ImageDataloaderService,
         {
@@ -64,7 +64,7 @@ describe('ImageDataloaderService', () => {
       });
 
       const module: TestingModule = await Test.createTestingModule({
-        imports: [KvTtlCacheModule],
+        imports: [NamespacedCacheTestingModule.forRoot()],
         providers: [
           ImageDataloaderService,
           {

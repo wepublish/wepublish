@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { PaymentProviderType, PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { isSimulatedPaymentAllowed } from '@wepublish/utils/api';
 import bodyParser from 'body-parser';
 import { PaymentProvider } from './payment-provider';
@@ -15,7 +15,8 @@ import { StripePaymentProvider } from './stripe-payment-provider';
 
 export type PaymentProviderDeps = {
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
+  resets: Pick<NamespaceResets, 'reset'>;
 };
 
 const jsonBody = () => bodyParser.json();
@@ -25,7 +26,7 @@ const formBody = () => bodyParser.urlencoded({ extended: true });
 export const createPaymentProvider = (
   id: string,
   type: PaymentProviderType,
-  { prisma, kv }: PaymentProviderDeps
+  { prisma, kv, resets }: PaymentProviderDeps
 ): PaymentProvider => {
   switch (type) {
     case PaymentProviderType.STRIPE_CHECKOUT:
@@ -34,6 +35,7 @@ export const createPaymentProvider = (
         incomingRequestHandler: rawJsonBody(),
         prisma,
         kv,
+        resets,
       });
     case PaymentProviderType.STRIPE:
       return new StripePaymentProvider({
@@ -41,6 +43,7 @@ export const createPaymentProvider = (
         incomingRequestHandler: rawJsonBody(),
         prisma,
         kv,
+        resets,
       });
     case PaymentProviderType.PAYREXX:
       return new PayrexxPaymentProvider({
@@ -48,20 +51,22 @@ export const createPaymentProvider = (
         incomingRequestHandler: jsonBody(),
         prisma,
         kv,
+        resets,
       });
     case PaymentProviderType.PAYREXX_SUBSCRIPTION:
-      return new PayrexxSubscriptionPaymentProvider({ id, prisma, kv });
+      return new PayrexxSubscriptionPaymentProvider({ id, prisma, kv, resets });
     case PaymentProviderType.BEXIO:
-      return new BexioPaymentProvider({ id, prisma, kv });
+      return new BexioPaymentProvider({ id, prisma, kv, resets });
     case PaymentProviderType.MOLLIE:
       return new MolliePaymentProvider({
         id,
         incomingRequestHandler: formBody(),
         prisma,
         kv,
+        resets,
       });
     case PaymentProviderType.NO_CHARGE:
-      return new NeverChargePaymentProvider({ id, prisma, kv });
+      return new NeverChargePaymentProvider({ id, prisma, kv, resets });
     case PaymentProviderType.SIMULATED:
       // The checkout page posts a plain html form.
       return new SimulatedPaymentProvider({
@@ -69,6 +74,7 @@ export const createPaymentProvider = (
         incomingRequestHandler: formBody(),
         prisma,
         kv,
+        resets,
       });
     default:
       throw new Error(`Unknown payment provider type defined: ${type}`);

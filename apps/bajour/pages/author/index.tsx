@@ -1,14 +1,15 @@
 import { useQuery } from '@apollo/client/react';
 import { AuthorListContainer } from '@wepublish/author/website';
+import { BajourContainer as Container } from '@wepublish/tenant/bajour';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
+  addClientCacheToProps,
   AuthorListDocument,
   AuthorSort,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
-  addClientCacheToProps,
-  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -16,8 +17,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
-
-import { Container } from '../../src/components/layout/container';
 
 const take = 25;
 

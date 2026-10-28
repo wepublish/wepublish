@@ -230,3 +230,74 @@ describe('useColumnConfig ordering', () => {
     ]);
   });
 });
+
+// A table can add columns most users don't need: they start hidden and are
+// switched on in the menu, and a reset hides them again.
+describe('useColumnConfig hidden by default', () => {
+  beforeEach(() => localStorage.clear());
+
+  const withExtra = [
+    { id: 'title', label: 'Title', alwaysVisible: true },
+    { id: 'author', label: 'Author' },
+    { id: 'updated', label: 'Updated', defaultHidden: true },
+  ];
+
+  it('starts with a default-hidden column hidden', () => {
+    const { result } = renderHook(() => useColumnConfig('test', withExtra));
+
+    expect(result.current.hiddenColumns).toEqual(['updated']);
+    expect(result.current.isVisible('updated')).toBe(false);
+    expect(result.current.isCustomised).toBe(false);
+  });
+
+  it('shows it once the user switches it on, and remembers that', () => {
+    const { result } = renderHook(() => useColumnConfig('test', withExtra));
+
+    act(() => result.current.toggle('updated'));
+
+    expect(result.current.isVisible('updated')).toBe(true);
+    expect(result.current.isCustomised).toBe(true);
+
+    const { result: nextVisit } = renderHook(() =>
+      useColumnConfig('test', withExtra)
+    );
+    expect(nextVisit.current.isVisible('updated')).toBe(true);
+  });
+
+  it('hides it again when the user switches it off', () => {
+    const { result } = renderHook(() => useColumnConfig('test', withExtra));
+
+    act(() => result.current.toggle('updated'));
+    act(() => result.current.toggle('updated'));
+
+    expect(result.current.isVisible('updated')).toBe(false);
+  });
+
+  it('hides it again on reset', () => {
+    const { result } = renderHook(() => useColumnConfig('test', withExtra));
+
+    act(() => result.current.toggle('updated'));
+    act(() => result.current.reset());
+
+    expect(result.current.isVisible('updated')).toBe(false);
+  });
+
+  it('keeps it hidden for users who stored a choice before it existed', () => {
+    localStorage.setItem(
+      'wepublish:editor:columns:test',
+      JSON.stringify({ hidden: ['author'], order: [] })
+    );
+
+    const { result } = renderHook(() => useColumnConfig('test', withExtra));
+
+    expect(result.current.hiddenColumns).toEqual(['author', 'updated']);
+  });
+
+  it('still lets the user switch other columns off', () => {
+    const { result } = renderHook(() => useColumnConfig('test', withExtra));
+
+    act(() => result.current.toggle('author'));
+
+    expect(result.current.hiddenColumns).toEqual(['author', 'updated']);
+  });
+});

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import {
   SearchPage,
   SearchPageGetServerSideProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 
 const TsriSearchPage = styled(SearchPage)`
   padding-top: calc(var(--navbar-height) / 2);

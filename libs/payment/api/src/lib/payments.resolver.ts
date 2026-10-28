@@ -1,8 +1,11 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { CanCreateUser } from '@wepublish/permissions';
+import { Permissions } from '@wepublish/permissions/api';
 import {
   Payment,
   PaymentFromInvoiceInput,
   PaymentFromSubscriptionArgs,
+  SetPaymentProviderCustomersArgs,
 } from './payment.model';
 import {
   Authenticated,
@@ -39,5 +42,15 @@ export class PaymentsResolver {
     @CurrentUser() { user }: UserSession
   ) {
     return this.paymentsService.createPaymentFromSubscription(user.id, args);
+  }
+
+  @Permissions(CanCreateUser)
+  @Mutation(() => Int, {
+    description: `Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated.`,
+  })
+  async setPaymentProviderCustomers(
+    @Args() args: SetPaymentProviderCustomersArgs
+  ) {
+    return this.paymentsService.setPaymentProviderCustomers(args);
   }
 }

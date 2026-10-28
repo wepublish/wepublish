@@ -1,3 +1,4 @@
+import type { WebPage, WithContext } from 'schema-dts';
 import { toPlaintext } from '@wepublish/richtext';
 import { stripQueryAndHash } from '@wepublish/utils';
 import { FullTagFragment } from '@wepublish/website/api';
@@ -22,14 +23,14 @@ export const getTagSEO = (tag: FullTagFragment) => {
     url,
     image: undefined,
     schema: {
-      '@context': 'http://schema.org',
+      '@context': 'https://schema.org',
       '@type': 'WebPage',
       description,
-      name: title,
-      headline: title,
+      name: title ?? undefined,
+      headline: title ?? undefined,
       identifier: tag.id,
       url,
-    },
+    } satisfies WithContext<WebPage>,
   };
 };
 

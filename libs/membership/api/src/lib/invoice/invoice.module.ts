@@ -10,6 +10,7 @@ import { InvoiceDataloader } from './invoice.dataloader';
 import { InvoiceItemResolver, InvoiceResolver } from './invoice.resolver';
 import { InvoiceService } from './invoice.service';
 import { InvoiceItemDataloader } from './invoice-items.dataloader';
+import { InvoicePaymentsDataloader } from './invoice-payments.dataloader';
 import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 import { UserModule } from '@wepublish/user/api';
 
@@ -22,6 +23,7 @@ import { UserModule } from '@wepublish/user/api';
     HasOptionalInvoiceLcResolver,
     InvoiceDataloader,
     InvoiceItemDataloader,
+    InvoicePaymentsDataloader,
     InvoiceResolver,
     InvoiceItemResolver,
     InvoiceService,

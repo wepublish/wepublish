@@ -5,6 +5,7 @@ import { CSSProperties } from 'react';
 import { z } from 'zod';
 
 import { lazyMessage } from '../../../utility';
+import { mediaQuery, screenSizes } from './typography-breakpoints';
 
 const hexColor = z
   .string({ errorMap: lazyMessage('websiteSettings.theme.invalidColor') })
@@ -99,43 +100,72 @@ function cssLengthValue(ranges: UnitRanges) {
     .nullish();
 }
 
-export const typographyItem = z.object({
-  fontFamily: z.string().nullish(),
-  fontSize: cssLengthValue({
+const fontSizeValue = () =>
+  cssLengthValue({
     em: { min: 0.5, max: 6.5 },
     rem: { min: 0.5, max: 6.5 },
     px: { min: 8, max: 100 },
-  }),
-  lineHeight: cssLengthValue({
+  });
+
+const lineHeightValue = () =>
+  cssLengthValue({
     em: { min: 1, max: 3 },
     rem: { min: 1, max: 3 },
     px: { min: 12, max: 60 },
-  }),
-  fontWeight: z.number().min(100).max(1000).nullish(),
-  letterSpacing: cssLengthValue({
+  });
+
+const letterSpacingValue = () =>
+  cssLengthValue({
     em: { min: -0.1, max: 0.2 },
     rem: { min: -0.1, max: 1.5 },
     px: { min: -2, max: 5 },
-  }),
+  });
+
+const breakpointOverride = z.object({
+  fontSize: fontSizeValue(),
+  lineHeight: lineHeightValue(),
+  letterSpacing: letterSpacingValue(),
+});
+
+const mediaQueryOverrides = Object.fromEntries(
+  screenSizes.map(screenSize => [
+    mediaQuery(screenSize),
+    breakpointOverride.optional(),
+  ])
+);
+
+const typographyBase = z.object({
+  fontFamily: z.string().nullish(),
+  fontSize: fontSizeValue(),
+  lineHeight: lineHeightValue(),
+  fontWeight: z.number().min(100).max(1000).nullish(),
+  letterSpacing: letterSpacingValue(),
   textTransform: z
     .enum(['none', 'capitalize', 'uppercase', 'lowercase'])
     .nullish(),
   fontStyle: z.enum(['normal', 'italic']).nullish(),
 });
 
+type TypographyItem = z.infer<typeof typographyBase> & {
+  [query: ReturnType<typeof mediaQuery>]:
+    z.infer<typeof breakpointOverride> | undefined;
+};
+
+export const typographyItem = typographyBase.extend(
+  mediaQueryOverrides
+) as unknown as z.ZodObject<
+  (typeof typographyBase)['shape'],
+  'strip',
+  z.ZodTypeAny,
+  TypographyItem,
+  TypographyItem
+>;
+
 export const typographySchema = z.object({
   allVariants: z.object({
     fontFamily: z.string().nullish(),
-    lineHeight: cssLengthValue({
-      em: { min: 0.5, max: 6.5 },
-      rem: { min: 0.5, max: 6.5 },
-      px: { min: 8, max: 100 },
-    }),
-    letterSpacing: cssLengthValue({
-      em: { min: -0.1, max: 0.2 },
-      rem: { min: -0.1, max: 1.5 },
-      px: { min: -2, max: 5 },
-    }),
+    lineHeight: lineHeightValue(),
+    letterSpacing: letterSpacingValue(),
     fontWeight: z.number().min(100).max(1000).nullish(),
   }),
 

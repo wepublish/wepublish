@@ -1,13 +1,15 @@
 import type { Mock } from 'vitest';
-import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
-} from '@wepublish/kv-ttl-cache/api';
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { SettingDataloaderService } from './setting-dataloader.service';
 import { SettingName } from './setting';
-import { SETTINGS_CACHE_NAMESPACE } from './settings-cache';
+import {
+  SETTINGS_CACHE_NAMESPACE,
+  SETTINGS_SHARED_NAMESPACES,
+} from './settings-cache';
 
 describe('SettingDataloaderService', () => {
   const setting = {
@@ -19,18 +21,19 @@ describe('SettingDataloaderService', () => {
     settingRestriction: null,
   };
   let prisma: { setting: { findMany: Mock } };
-  let kv: KvTtlCacheService;
+  let kv: NamespacedCacheTesting;
 
   beforeEach(async () => {
     prisma = { setting: { findMany: vi.fn().mockResolvedValue([setting]) } };
-    const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
-    }).compile();
-    kv = module.get(KvTtlCacheService);
+    kv = await createNamespacedCacheTesting({
+      sharedNamespaces: SETTINGS_SHARED_NAMESPACES,
+    });
   });
 
+  afterEach(() => kv.close());
+
   const newRequest = () =>
-    new SettingDataloaderService(prisma as unknown as PrismaClient, kv);
+    new SettingDataloaderService(prisma as unknown as PrismaClient, kv.cache);
 
   it('shares loaded settings between requests', async () => {
     await newRequest().load(SettingName.ALLOW_GUEST_COMMENTING);
@@ -42,7 +45,7 @@ describe('SettingDataloaderService', () => {
 
   it('loads settings again after the settings changed', async () => {
     await newRequest().load(SettingName.ALLOW_GUEST_COMMENTING);
-    await kv.resetNamespace(SETTINGS_CACHE_NAMESPACE);
+    await kv.resets.reset(SETTINGS_CACHE_NAMESPACE);
     await newRequest().load(SettingName.ALLOW_GUEST_COMMENTING);
 
     expect(prisma.setting.findMany).toHaveBeenCalledTimes(2);

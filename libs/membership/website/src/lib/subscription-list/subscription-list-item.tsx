@@ -1,13 +1,17 @@
 import styled from '@emotion/styled';
-import { SubscriptionDeactivationReason } from '@wepublish/website/api';
+import {
+  FullSubscriptionFragment,
+  SubscriptionDeactivationReason,
+} from '@wepublish/website/api';
 import {
   BuilderSubscriptionListItemProps,
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   MdAttachMoney,
+  MdCreditCard,
   MdAutorenew,
   MdCalendarMonth,
   MdCancel,
@@ -78,6 +82,41 @@ const isURL = (string: string) => {
 
 export const SubscriptionListItemReward = styled('div')``;
 
+export const SubscriptionListItemPaymentMethodChange = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+const AUTHORIZATION_AMOUNT = 1;
+
+export const useChangeablePaymentMethods = ({
+  paymentMethod,
+  memberPlan,
+  paymentPeriodicity,
+  autoRenew,
+}: Pick<
+  FullSubscriptionFragment,
+  'paymentMethod' | 'memberPlan' | 'paymentPeriodicity' | 'autoRenew'
+>) =>
+  useMemo(() => {
+    const options = (memberPlan.availablePaymentMethods ?? [])
+      .filter(
+        ({ paymentPeriodicities, forceAutoRenewal }) =>
+          paymentPeriodicities.includes(paymentPeriodicity) &&
+          (!forceAutoRenewal || autoRenew)
+      )
+      .flatMap(({ paymentMethods }) => paymentMethods)
+      .filter(
+        ({ id, slug }) =>
+          id !== paymentMethod?.id && slug !== 'payrexx-subscription'
+      );
+
+    return options.filter(
+      (option, index) =>
+        options.findIndex(({ id }) => id === option.id) === index
+    );
+  }, [memberPlan, paymentMethod, paymentPeriodicity, autoRenew]);
+
 export function SubscriptionListItem({
   autoRenew,
   startsAt,
@@ -85,7 +124,10 @@ export function SubscriptionListItem({
   paymentPeriodicity,
   monthlyAmount,
   deactivation,
-  memberPlan: { image, name, currency, productType },
+  memberPlan,
+  paymentMethod,
+  pendingPaymentMethodChange,
+  canRenewPaymentMethod,
   extendable,
   url,
   cancel,
@@ -95,11 +137,16 @@ export function SubscriptionListItem({
   canExtend,
   externalReward,
   extend,
+  changePaymentMethod,
+  cancelPaymentMethodChange,
+  openInvoiceTotal,
   className,
 }: BuilderSubscriptionListItemProps) {
+  const { image, name, currency, productType } = memberPlan;
   const {
     meta: { locale },
-    elements: { Image, H6, Button, Link, Alert, H5, Paragraph },
+    elements: { Image, H6, Button, Link, Alert, Paragraph },
+    PaymentMethodPicker,
     date,
   } = useWebsiteBuilder();
   const { t } = useTranslation();
@@ -119,6 +166,39 @@ export function SubscriptionListItem({
   const [confirmReactivate, setConfirmReactivate] = useState(false);
   const [confirmRevertUpgrade, setConfirmRevertUpgrade] = useState(false);
   const [confirmExtend, setConfirmExtend] = useState<boolean>(false);
+  const [confirmChangePaymentMethod, setConfirmChangePaymentMethod] =
+    useState(false);
+  const [confirmRenewPaymentMethod, setConfirmRenewPaymentMethod] =
+    useState(false);
+
+  const changeablePaymentMethods = useChangeablePaymentMethods({
+    paymentMethod,
+    memberPlan,
+    paymentPeriodicity,
+    autoRenew,
+  });
+  const [chosenPaymentMethodId, setChosenPaymentMethodId] = useState<string>();
+  const canChangePaymentMethod =
+    !!changePaymentMethod &&
+    !deactivation &&
+    !pendingPaymentMethodChange &&
+    changeablePaymentMethods.length > 0;
+  const canRenewCurrentPaymentMethod =
+    !!changePaymentMethod &&
+    !deactivation &&
+    !pendingPaymentMethodChange &&
+    !!canRenewPaymentMethod &&
+    !!paymentMethod;
+
+  const paymentMethodChangeExplanation =
+    openInvoiceTotal ?
+      t('subscription.changePaymentMethodOpenInvoice', {
+        amount: formatCurrency(openInvoiceTotal / 100, currency, locale),
+        type: productType,
+      })
+    : t('subscription.changePaymentMethodAuthorization', {
+        amount: formatCurrency(AUTHORIZATION_AMOUNT / 100, currency, locale),
+      });
 
   return (
     <SubscriptionListItemWrapper className={className}>
@@ -236,11 +316,62 @@ export function SubscriptionListItem({
             })}
           </SubscriptionListItemMetaItem>
 
+          {paymentMethod?.name && (
+            <SubscriptionListItemMetaItem>
+              <MdCreditCard />
+              {t('subscription.paymentMethod', {
+                paymentMethod: paymentMethod.name,
+              })}
+            </SubscriptionListItemMetaItem>
+          )}
+
           <SubscriptionListItemMetaItem>
             <MdHistory />{' '}
             <Link href={url}>{t('subscription.detailsAndPayments')}</Link>
           </SubscriptionListItemMetaItem>
         </SubscriptionListItemMeta>
+
+        {pendingPaymentMethodChange && (
+          <SubscriptionListItemPaymentMethodChange>
+            <Alert severity="info">
+              {t('subscription.paymentMethodChangePending', {
+                paymentMethod: pendingPaymentMethodChange.paymentMethod.name,
+                kind: pendingPaymentMethodChange.kind,
+                expiresAt: date.format(
+                  new Date(pendingPaymentMethodChange.expiresAt)
+                ),
+              })}
+            </Alert>
+
+            <SubscriptionListItemActions>
+              {cancelPaymentMethodChange && (
+                <Button
+                  onClick={callAction(() =>
+                    cancelPaymentMethodChange(pendingPaymentMethodChange.id)
+                  )}
+                  disabled={loading}
+                  variant="text"
+                  color="secondary"
+                >
+                  {t('subscription.paymentMethodChangeCancel')}
+                </Button>
+              )}
+
+              {changePaymentMethod && (
+                <Button
+                  onClick={callAction(() =>
+                    changePaymentMethod(
+                      pendingPaymentMethodChange.paymentMethod.id
+                    )
+                  )}
+                  disabled={loading}
+                >
+                  {t('subscription.paymentMethodChangeContinue')}
+                </Button>
+              )}
+            </SubscriptionListItemActions>
+          </SubscriptionListItemPaymentMethodChange>
+        )}
 
         {externalReward && (
           <SubscriptionListItemReward>
@@ -305,6 +436,27 @@ export function SubscriptionListItem({
               </Button>
             )}
 
+            {canRenewCurrentPaymentMethod && (
+              <Button
+                onClick={() => setConfirmRenewPaymentMethod(true)}
+                disabled={loading}
+                variant="text"
+                title={t('subscription.renewPaymentMethodHint')}
+              >
+                {t('subscription.renewPaymentMethod')}
+              </Button>
+            )}
+
+            {canChangePaymentMethod && (
+              <Button
+                onClick={() => setConfirmChangePaymentMethod(true)}
+                disabled={loading}
+                variant="text"
+              >
+                {t('subscription.changePaymentMethod')}
+              </Button>
+            )}
+
             {canExtend && (
               <Button
                 onClick={() => setConfirmExtend(true)}
@@ -328,13 +480,10 @@ export function SubscriptionListItem({
           type: productType,
         })}
         cancelText={t('user.cancel')}
+        title={t('subscription.cancelProduct', {
+          productName: productType,
+        })}
       >
-        <H5 component="h1">
-          {t('subscription.cancelProduct', {
-            productName: productType,
-          })}
-        </H5>
-
         <Paragraph gutterBottom={false}>
           {t('subscription.cancelConfirmation', {
             type: productType,
@@ -351,9 +500,8 @@ export function SubscriptionListItem({
         onCancel={() => setConfirmRevertUpgrade(false)}
         submitText={t('subscription.revertUpgrade')}
         cancelText={t('user.cancel')}
+        title={t('subscription.revertUpgradeTitle')}
       >
-        <H5 component="h1">{t('subscription.revertUpgradeTitle')}</H5>
-
         <Paragraph gutterBottom={false}>
           {t('subscription.revertUpgradeConfirmation', {
             type: productType,
@@ -372,13 +520,10 @@ export function SubscriptionListItem({
           type: productType,
         })}
         cancelText={t('user.cancel')}
+        title={t('subscription.reactivateProduct', {
+          productName: productType,
+        })}
       >
-        <H5 component="h1">
-          {t('subscription.reactivateProduct', {
-            productName: productType,
-          })}
-        </H5>
-
         <Paragraph gutterBottom={false}>
           {t('subscription.reactivateConfirmation', {
             type: productType,
@@ -397,17 +542,86 @@ export function SubscriptionListItem({
           subscriptionDuration,
         })}
         cancelText={t('user.cancel')}
+        title={t('subscription.extendEarly', {
+          type: productType,
+        })}
       >
-        <H5 component="h1">
-          {t('subscription.extendEarly', {
-            type: productType,
-          })}
-        </H5>
-
-        <Paragraph gutterBottom={false}>
+        <Paragraph gutterBottom={!!paymentMethod?.name}>
           {t('subscription.extendEarlyConfirmation', {
             subscriptionDuration,
           })}
+        </Paragraph>
+
+        {paymentMethod?.name && (
+          <Paragraph gutterBottom={false}>
+            {t('subscription.extendChargedWith', {
+              paymentMethod: paymentMethod.name,
+            })}{' '}
+            {canChangePaymentMethod && (
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  setConfirmExtend(false);
+                  setConfirmChangePaymentMethod(true);
+                }}
+              >
+                {t('subscription.changePaymentMethod')}
+              </Button>
+            )}
+          </Paragraph>
+        )}
+      </Modal>
+
+      <Modal
+        open={confirmChangePaymentMethod}
+        onCancel={() => setConfirmChangePaymentMethod(false)}
+        onSubmit={async () => {
+          const paymentMethodId =
+            chosenPaymentMethodId ?? changeablePaymentMethods[0]?.id;
+          setConfirmChangePaymentMethod(false);
+
+          if (paymentMethodId && changePaymentMethod) {
+            await callAction(changePaymentMethod)(paymentMethodId);
+          }
+        }}
+        submitText={t('subscription.changePaymentMethodSubmit')}
+        cancelText={t('user.cancel')}
+        title={t('subscription.changePaymentMethodTitle')}
+      >
+        <PaymentMethodPicker
+          paymentMethods={changeablePaymentMethods}
+          value={chosenPaymentMethodId}
+          onChange={setChosenPaymentMethodId}
+        />
+
+        <Paragraph gutterBottom={false}>
+          {paymentMethodChangeExplanation}
+        </Paragraph>
+      </Modal>
+
+      <Modal
+        open={confirmRenewPaymentMethod}
+        onCancel={() => setConfirmRenewPaymentMethod(false)}
+        onSubmit={async () => {
+          setConfirmRenewPaymentMethod(false);
+
+          if (paymentMethod && changePaymentMethod) {
+            await callAction(changePaymentMethod)(paymentMethod.id);
+          }
+        }}
+        submitText={t('subscription.changePaymentMethodSubmit')}
+        cancelText={t('user.cancel')}
+        title={t('subscription.renewPaymentMethodTitle')}
+      >
+        <Paragraph>
+          {t('subscription.renewPaymentMethodConfirmation', {
+            paymentMethod: paymentMethod?.name,
+          })}
+        </Paragraph>
+
+        <Paragraph gutterBottom={false}>
+          {paymentMethodChangeExplanation}
         </Paragraph>
       </Modal>
     </SubscriptionListItemWrapper>

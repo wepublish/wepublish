@@ -6,12 +6,9 @@ import {
 } from '@wepublish/block-content/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
 import { PageContainer } from '@wepublish/page/website';
-import {
-  getApiUrl,
-  getSessionTokenProps,
-  ssrAuthLink,
-} from '@wepublish/utils/website';
-import { SubscribePage } from '@wepublish/utils/website';
+import { getApiUrl, ssrAuthLink } from '@wepublish/utils/website';
+import { getSessionTokenProps } from '@wepublish/utils/website/next';
+import { SubscribePage } from '@wepublish/utils/website/next';
 import { getApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
 

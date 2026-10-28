@@ -759,6 +759,32 @@ describe('DataTable column visibility', () => {
 
   beforeEach(() => localStorage.clear());
 
+  it('leaves out a default-hidden column until the user switches it on', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <DataTable
+          data={rows}
+          columns={configurable.map(column =>
+            column.id === 'updated' ?
+              { ...column, defaultHidden: true }
+            : column
+          )}
+          storageKey="test-list"
+        />
+      </ThemeProvider>
+    );
+
+    const headers = () =>
+      screen.getAllByRole('columnheader').map(header => header.textContent);
+    expect(headers()).toEqual(['Title', 'Author', 'Action']);
+
+    openMenu();
+    fireEvent.click(screen.getByRole('menuitemcheckbox', { name: 'Updated' }));
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+
+    expect(headers()).toEqual(['Title', 'Author', 'Updated', 'Action']);
+  });
+
   it('offers no column control to a table without a key', () => {
     renderTable();
 
@@ -834,7 +860,7 @@ describe('DataTable column visibility', () => {
     fireEvent.click(screen.getByRole('menuitemcheckbox', { name: 'Author' }));
 
     expect(localStorage.getItem('wepublish:editor:columns:test-list')).toBe(
-      JSON.stringify({ hidden: ['author'], order: [] })
+      JSON.stringify({ hidden: ['author'], order: [], shown: [] })
     );
   });
 

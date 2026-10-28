@@ -176,7 +176,7 @@ Table owns the column model and visibility, MUI owns the markup. Covered by
 ```
 
 - **`storageKey` turns on the column menu**, and names the drawer the choice
-  is kept in (`wepublish:editor:columns:<key>`, holding `{hidden, order}`). One stable key per table —
+  is kept in (`wepublish:editor:columns:<key>`, holding `{hidden, order, shown}`). One stable key per table —
   two tables sharing a key would share each other's hidden columns. Every
   list view passes one; the small pickers inside drawers deliberately do not,
   since a three-column picker has nothing worth hiding.
@@ -191,6 +191,11 @@ Table owns the column model and visibility, MUI owns the markup. Covered by
   does any column whose header is not a plain string — give one a
   `columnLabel` to bring it in. The last remaining column cannot be switched
   off either: an empty table carries no handle to undo itself.
+- **`defaultHidden` columns start hidden.** A table can offer details most
+  users never need (the invoice table's payment method, deactivation date…)
+  without widening it for everyone: the column stays out until the user
+  switches it on, which is kept in `shown`; a reset hides it again, and so does
+  a choice stored before the column existed.
 - **The filter bar is the table's too** (`filters`, `filterCount`,
   `onResetFilters`). A row of fields above every list is a lot of chrome for
   something most visits never touch, so the fields fold away behind a button
@@ -844,8 +849,7 @@ codemod had to learn the hard way.
 
 - **Never run `nx affected -t lint --fix` on this repo.** It reformats imports
   across every project in the affected graph, including untouched website apps
-  and at least one generated file (`libs/website/api/src/lib/gql/index.ts`,
-  whose `/* eslint-disable */` header it strips). Lint one project at a time:
+  and generated files (it strips their `/* eslint-disable */` headers). Lint one project at a time:
   `nx lint <project> --fix`.
 - **Scope every codemod by import source, not by tag name.** `<Button>` means
   rsuite in `libs/*/editor` and MUI in `libs/*/website`. An early pass keyed on

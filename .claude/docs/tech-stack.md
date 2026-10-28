@@ -12,7 +12,6 @@ Align all code suggestions, architecture recommendations, and technical solution
 - **Zod** for schema validation
 - **React Icons** for icons
 - **react-i18next** for internationalization
-- **Storybook 10** for component development and documentation
 - **React Router v6** for client-side routing in the editor app
 
 ## Backend
@@ -43,5 +42,5 @@ Align all code suggestions, architecture recommendations, and technical solution
 - **Vitest 4** as the test runner for every project (backend included); NestJS
   projects transform with swc via `createVitestConfig({nest: true})`
 - **@nestjs/testing** for backend service/resolver unit tests
-- **Testing Library** for frontend component tests
+- **Testing Library** + `user-event` in happy-dom for frontend component tests
 - Test commands: `pnpm run test`, `pnpm run test-backend`, `pnpm run test-website`

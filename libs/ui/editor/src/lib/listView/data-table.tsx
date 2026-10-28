@@ -191,6 +191,11 @@ export type DataTableColumn<Row> = {
   fixed?: boolean;
   resizable?: boolean;
   alwaysVisible?: boolean;
+  /**
+   * Hidden until the user switches it on in the column menu (needs the table's
+   * `storageKey`); a reset hides it again.
+   */
+  defaultHidden?: boolean;
   columnLabel?: string;
   exportValue?: ((row: Row) => TableExportValue) | false;
 };

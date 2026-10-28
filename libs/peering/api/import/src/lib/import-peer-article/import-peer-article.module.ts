@@ -5,11 +5,11 @@ import { ImportPeerArticleService } from './import-peer-article.service';
 import { PeerModule } from '@wepublish/peering/api';
 import { ImportPeerArticleResolver } from './import-peer-article.resolver';
 import { ArticleModule } from '@wepublish/article/api';
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 
 @Module({
   imports: [
-    GraphqlResponseCacheModule,
+    PublicContentInvalidatorModule,
     PrismaModule,
     ArticleModule,
     ImageFetcherModule,

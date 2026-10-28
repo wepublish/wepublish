@@ -6,6 +6,11 @@ import {
   parseThemeImport,
   THEME_EXPORT_VERSION,
 } from './theme-transfer';
+import { mediaQuery } from './typography-breakpoints';
+
+const sm = mediaQuery('sm');
+const md = mediaQuery('md');
+const lg = mediaQuery('lg');
 
 const roboto = {
   name: 'Roboto',
@@ -90,6 +95,71 @@ describe('parseThemeImport', () => {
     expect(result.theme.palette.primary.main).toBe('#e91e63');
     expect(result.theme.typography).not.toHaveProperty('button');
     expect(result.fonts).toEqual([]);
+  });
+
+  it('keeps the media queries through an export and import', () => {
+    const responsive = {
+      ...theme,
+      typography: {
+        ...theme.typography,
+        h1: {
+          ...theme.typography.h1,
+          fontSize: '2rem',
+          [md]: { fontSize: '3rem' },
+          [lg]: { lineHeight: '1.1em' },
+        },
+      },
+    };
+
+    const result = parseThemeImport(
+      JSON.parse(JSON.stringify(createThemeExport(responsive as never, [])))
+    );
+
+    expect(result.theme.typography.h1).toMatchObject({
+      fontSize: '2rem',
+      [md]: { fontSize: '3rem' },
+      [lg]: { lineHeight: '1.1em' },
+    });
+    expect(result.theme.typography.h1).not.toHaveProperty('breakpoints');
+    expect(
+      Object.keys(result.theme.typography.h1).filter(key =>
+        key.startsWith('@media')
+      )
+    ).toEqual([md, lg]);
+  });
+
+  it('exports the media queries of the form unchanged', () => {
+    const h1 = {
+      ...theme.typography.h1,
+      [md]: { fontSize: '3rem', lineHeight: null },
+      [lg]: {},
+    };
+    const result = createThemeExport(
+      { ...theme, typography: { ...theme.typography, h1 } } as never,
+      []
+    );
+
+    expect(result.theme.typography.h1).toEqual(h1);
+  });
+
+  it('imports the media queries of the theme unchanged', () => {
+    const result = parseThemeImport({
+      version: THEME_EXPORT_VERSION,
+      theme: {
+        ...theme,
+        typography: {
+          ...theme.typography,
+          h1: {
+            ...theme.typography.h1,
+            fontSize: '2rem',
+            [sm]: { fontSize: '2.5rem' },
+          },
+        },
+      },
+    });
+
+    expect(result.theme.typography.h1[sm]).toEqual({ fontSize: '2.5rem' });
+    expect(result.theme.typography.h1).not.toHaveProperty('breakpoints');
   });
 
   it('fills values the file leaves out from the default theme', () => {

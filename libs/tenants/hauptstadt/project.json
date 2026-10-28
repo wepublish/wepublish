@@ -1,0 +1,14 @@
+{
+  "name": "tenant-hauptstadt",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/tenants/hauptstadt/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

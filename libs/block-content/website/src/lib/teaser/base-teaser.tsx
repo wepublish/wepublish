@@ -464,7 +464,7 @@ export const BaseTeaserPreTitle: Exclude<
   undefined
 > = ({ preTitle }) => {
   if (!preTitle) {
-    <TeaserPreTitleNoContent />;
+    return <TeaserPreTitleNoContent />;
   }
 
   return (

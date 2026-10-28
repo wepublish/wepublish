@@ -138,6 +138,7 @@ export const PaymentAmountPickerItem = forwardRef<
       ref={ref}
       disableRipple={true}
       sx={{ display: 'none' }}
+      checked={checked}
       {...props}
     />
 

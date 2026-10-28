@@ -1,6 +1,8 @@
 import {
   Currency,
   PaymentPeriodicity,
+  PaymentMethodChangeKind,
+  PaymentMethodChangeState,
   PrismaClient,
   SubscriptionDeactivationReason,
   SubscriptionEvent,
@@ -9,6 +11,7 @@ import nock from 'nock';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { InvoicePaidNotifier, PaymentsModule } from '@wepublish/payment/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { add, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionFlowService } from '../subscription-flow/subscription-flow.service';
@@ -123,6 +126,7 @@ describe('SubscriptionPaymentsService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        NamespacedCacheTestingModule.forRoot(),
         registerMailsModule(),
         registerPaymentMethodModule(),
         PaymentsModule,
@@ -270,6 +274,28 @@ describe('SubscriptionPaymentsService', () => {
     );
     expect(invoicesToCharge.length).toEqual(1);
     expect(prismaMock.invoice.findMany).toHaveBeenCalled();
+  });
+
+  it('does not charge invoices a reader is paying with a new payment method', async () => {
+    prismaMock.invoice.findMany!.mockResolvedValue([]);
+
+    await subscriptionService.findUnpaidDueInvoices(new Date());
+
+    expect(prismaMock.invoice.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          subscription: {
+            confirmed: true,
+            paymentMethodChanges: {
+              none: {
+                state: PaymentMethodChangeState.pending,
+                kind: PaymentMethodChangeKind.invoicePayment,
+              },
+            },
+          },
+        }),
+      })
+    );
   });
 
   it('skips invoices without subscription', async () => {

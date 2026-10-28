@@ -1,5 +1,5 @@
 import { PrismaClient, AnalyticsProviderType } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { JWTInput } from 'google-auth-library';
 import { GoogleAnalyticsConfig } from './google-analytics.service';
@@ -10,7 +10,7 @@ export class GoogleAnalyticsDbConfig {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
     private readonly id: string
   ) {}
 

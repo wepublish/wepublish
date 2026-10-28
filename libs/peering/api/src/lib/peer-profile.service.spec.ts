@@ -1,13 +1,14 @@
 import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
-} from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { PeerProfileService } from './peer-profile.service';
 import { PeerDataloaderService } from './peer-dataloader.service';
-import { REMOTE_PEER_PROFILE_CACHE_NAMESPACE } from './peer-profile-cache';
+import {
+  PEERING_SHARED_NAMESPACES,
+  REMOTE_PEER_PROFILE_CACHE_NAMESPACE,
+} from './peer-profile-cache';
 
 // `vi.mock` is hoisted above ordinary top level consts, so the spy the factory
 // closes over has to be hoisted with it.
@@ -24,7 +25,8 @@ describe('PeerProfileService', () => {
   const originalEnv = process.env['NODE_ENV'];
   const localProfile = { id: 'profile-1', name: 'Local' };
   let service: PeerProfileService;
-  let kv: KvTtlCacheService;
+  let kv: NamespacedCache;
+  let resets: NamespaceResets;
   let prisma: {
     peerProfile: {
       findFirst: Mock;
@@ -52,7 +54,11 @@ describe('PeerProfileService', () => {
     };
 
     const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: PEERING_SHARED_NAMESPACES,
+        }),
+      ],
       providers: [
         PeerProfileService,
         { provide: PrismaClient, useValue: prisma },
@@ -61,11 +67,19 @@ describe('PeerProfileService', () => {
     }).compile();
 
     service = module.get(PeerProfileService);
-    kv = module.get(KvTtlCacheService);
+    kv = module.get(NamespacedCache);
+    resets = module.get(NamespaceResets);
   });
 
   afterEach(() => {
     process.env['NODE_ENV'] = originalEnv;
+  });
+
+  it('shares the local and the remote peer profiles through Dragonfly', () => {
+    expect(PEERING_SHARED_NAMESPACES).toEqual([
+      'peer-profile',
+      'peering:remote-profiles',
+    ]);
   });
 
   it('serves the local peer profile from the cache', async () => {
@@ -110,7 +124,7 @@ describe('PeerProfileService', () => {
     process.env['NODE_ENV'] = 'production';
 
     await service.getRemotePeerProfile('https://peer.example', 'token');
-    await kv.resetNamespace(REMOTE_PEER_PROFILE_CACHE_NAMESPACE);
+    await resets.reset(REMOTE_PEER_PROFILE_CACHE_NAMESPACE);
     await service.getRemotePeerProfile('https://peer.example', 'token');
 
     expect(request).toHaveBeenCalledTimes(2);

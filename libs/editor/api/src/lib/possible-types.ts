@@ -208,7 +208,8 @@ const result: PossibleTypesResultData = {
     ],
     "HasPaymentMethod": [
       "Payment",
-      "PublicSubscription"
+      "PublicSubscription",
+      "SubscriptionPaymentMethodChange"
     ],
     "HasPoll": [
       "PollStartedAction"

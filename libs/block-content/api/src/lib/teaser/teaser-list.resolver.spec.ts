@@ -1,11 +1,13 @@
 import type { Mock } from 'vitest';
-import { skipAnswerCache } from '@wepublish/kv-ttl-cache/api';
+import { skipAnswerCache } from '@wepublish/public-content-cache/api';
 import { TeaserListBlockResolver } from './teaser-list.resolver';
 import { TeaserListBlock, TeaserListBlockSort } from './teaser-list.model';
 import { TeaserType } from './teaser.model';
 
-vi.mock('@wepublish/kv-ttl-cache/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/kv-ttl-cache/api')>()),
+vi.mock('@wepublish/public-content-cache/api', async importOriginal => ({
+  ...(await importOriginal<
+    typeof import('@wepublish/public-content-cache/api')
+  >()),
   skipAnswerCache: vi.fn(),
 }));
 

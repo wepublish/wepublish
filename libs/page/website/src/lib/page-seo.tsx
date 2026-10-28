@@ -1,3 +1,4 @@
+import type { WebPage, WithContext } from 'schema-dts';
 import {
   isImageBlock,
   isRichTextBlock,
@@ -15,6 +16,7 @@ import {
 import {
   BuilderPageSEOProps,
   useWebsiteBuilder,
+  seoImageObject,
 } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 
@@ -60,28 +62,18 @@ export const getPageSEO = (page: FullPageFragment) => {
     updatedAt: page.latest.publishedAt,
     publishedAt: page.publishedAt,
     schema: {
-      '@context': 'http://schema.org',
+      '@context': 'https://schema.org',
       '@type': 'WebPage',
       keywords: page.tags.join(','),
-      image:
-        image ?
-          {
-            height: image.height,
-            width: image.width,
-            representativeOfPage: true,
-            contentUrl: image.url,
-            thumbnailUrl: image.m,
-            url: image.url,
-            encodingFormat: 'image/webp',
-          }
-        : undefined,
+      image: seoImageObject(image),
       description,
-      datePublished: page.publishedAt,
-      name: title,
-      headline,
-      identifier: page.slug,
+      datePublished: page.publishedAt ?? undefined,
+      dateModified: page.latest?.publishedAt ?? page.publishedAt ?? undefined,
+      name: title ?? undefined,
+      headline: headline ?? undefined,
+      identifier: page.slug ?? undefined,
       url,
-    },
+    } satisfies WithContext<WebPage>,
     noIndex: !!page.hidden,
   };
 };

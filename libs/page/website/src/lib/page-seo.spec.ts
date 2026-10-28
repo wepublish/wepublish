@@ -1,4 +1,4 @@
-import { mockPage } from '@wepublish/storybook/mocks';
+import { mockPage } from '@wepublish/mocks/website';
 
 import { getPageSEO } from './page-seo';
 

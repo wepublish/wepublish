@@ -231,6 +231,23 @@ describe('shared page store', () => {
     });
   });
 
+  it('keeps the Redis client on RESP2 without its own command timeout or maintenance handshake', async () => {
+    const { dragonfly, store } = setup();
+
+    await store()?.getVersion();
+
+    expect(dragonfly.clients[0].options).toMatchObject({
+      RESP: 2,
+      maintNotifications: 'disabled',
+      commandOptions: { timeout: undefined },
+      socket: { keepAliveInitialDelay: 5000 },
+    });
+    expect(dragonfly.clients[0].options['commandOptions']).toHaveProperty(
+      'timeout',
+      undefined
+    );
+  });
+
   it('sends only commands the production ACL allows, every key under the prefix of its medium', async () => {
     const { store } = setup();
     const sent = vi.spyOn(FakeClient.prototype, 'sendCommand');

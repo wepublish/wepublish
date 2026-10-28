@@ -463,6 +463,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
 }
 
 export function LinkPopoverButton({ isLink }: { isLink: boolean }) {
+  const { t } = useTranslation();
   const anchorRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
 
@@ -471,6 +472,8 @@ export function LinkPopoverButton({ isLink }: { isLink: boolean }) {
       <IconButton
         size="small"
         ref={anchorRef}
+        aria-label={t('richtext.menuBar.link')}
+        aria-expanded={open}
         color={isLink ? 'primary' : undefined}
         onClick={() => setOpen(true)}
       >

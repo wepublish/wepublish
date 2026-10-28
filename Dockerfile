@@ -278,6 +278,7 @@ FROM ${PLAIN_BUILD_IMAGE} AS media-setup
 WORKDIR /wepublish
 COPY --chown=1001:0 --from=build-media /wepublish/dist/apps/media/ .
 COPY --chown=1001:0 --from=build-media /deploy/node_modules ./node_modules
+COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 RUN chmod -R g=u /wepublish
 
 FROM ${RUNTIME_IMAGE} AS media
@@ -300,17 +301,3 @@ COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100
 USER 1001
 CMD ["node", "main.js"]
-
-######
-## Storybook
-######
-
-FROM ${BUILD_IMAGE} AS storybook-builder
-COPY . .
-RUN pnpm exec nx run website:build-storybook
-
-
-FROM nginx:alpine AS storybook
-COPY --from=storybook-builder /wepublish/dist/storybook/website /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]

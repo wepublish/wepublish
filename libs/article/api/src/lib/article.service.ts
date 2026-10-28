@@ -22,12 +22,12 @@ import {
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   PublicContentCacheInvalidator,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import { uniqBy } from 'ramda';
 import { ArticlePublicationWatcher } from './article-publication.watcher';
 
@@ -48,7 +48,7 @@ export class ArticleService {
     private prisma: PrismaClient,
     private trackingPixelService: TrackingPixelService,
     private publicContentCache: PublicContentCacheInvalidator,
-    private kv: KvTtlCacheService,
+    private kv: NamespacedCache,
     private publicationWatcher: ArticlePublicationWatcher
   ) {}
 

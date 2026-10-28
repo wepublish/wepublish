@@ -8,6 +8,7 @@
     "@nestjs/core": "catalog:",
     "@nestjs/platform-express": "catalog:",
     "@nestjs/storage": "^0.0.3",
+    "@redis/client": "catalog:",
     "@sentry/nestjs": "catalog:",
     "@sentry/profiling-node": "catalog:",
     "cache-manager": "catalog:",

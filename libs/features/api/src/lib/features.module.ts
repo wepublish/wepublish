@@ -1,6 +1,5 @@
 import { Global, Module } from '@nestjs/common';
 import { FEATURES } from '@wepublish/features';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { FeatureGuard } from './feature.guard';
 import { FeaturesResolver } from './features.resolver';
@@ -9,7 +8,7 @@ import { FEATURE_ENV_KEYS, FEATURE_REGISTRY } from './features.tokens';
 
 @Global()
 @Module({
-  imports: [PrismaModule, KvTtlCacheModule],
+  imports: [PrismaModule],
   providers: [
     { provide: FEATURE_REGISTRY, useValue: FEATURES },
     {

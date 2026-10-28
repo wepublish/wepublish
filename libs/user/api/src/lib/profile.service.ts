@@ -5,7 +5,7 @@ import {
   SessionCacheInvalidator,
   unselectPassword,
 } from '@wepublish/authentication/api';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 
 @Injectable()
 export class ProfileService {

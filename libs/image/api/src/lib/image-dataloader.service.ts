@@ -1,8 +1,8 @@
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import { Injectable, Scope } from '@nestjs/common';
 import { Image, PrismaClient } from '@prisma/client';
 import { createOptionalsArray, Primeable } from '@wepublish/utils/api';
@@ -37,7 +37,7 @@ export class ImageDataloaderService implements Primeable<Image> {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   public prime(

@@ -1,6 +1,6 @@
 import { FullArticleFragment, FullPageFragment } from '@wepublish/website/api';
 import { generateSitemap } from './sitemap-generator';
-import { mockArticle, mockPage } from '@wepublish/storybook/mocks';
+import { mockArticle, mockPage } from '@wepublish/mocks/website';
 
 const pageUrls = [
   'https://example.com',

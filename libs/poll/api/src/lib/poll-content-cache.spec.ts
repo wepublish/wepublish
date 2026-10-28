@@ -1,25 +1,16 @@
-import { Test } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { NamespaceResets, NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
   PUBLIC_CONTENT_NAMESPACE,
+  PUBLIC_CONTENT_SHARED_NAMESPACES,
   PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+  PublicContentInvalidatorModule,
+} from '@wepublish/public-content-cache/api';
 import { PollDataloaderService } from './poll-dataloader.service';
 import { PollService } from './poll.service';
 import { PollVoteService } from './poll-vote.service';
 
-vi.mock('./poll.model', () => ({
-  PollSort: {
-    CreatedAt: 'CreatedAt',
-    ModifiedAt: 'ModifiedAt',
-    OpensAt: 'OpensAt',
-  },
-}));
-vi.mock('./poll-answer.model', () => ({}));
-vi.mock('./poll-vote.model', () => ({
-  PollVoteSort: { CreatedAt: 'CreatedAt' },
-}));
 vi.mock('@wepublish/settings/api', () => ({
   SettingName: { ALLOW_GUEST_POLL_VOTING: 'allowGuestPollVoting' },
   SettingsService: class {},
@@ -42,7 +33,10 @@ const poll = (id: string) => ({
 });
 
 describe('poll content cache', () => {
-  let kv: KvTtlCacheService;
+  let module: TestingModule;
+  let kv: NamespacedCache;
+  let resets: NamespaceResets;
+  let invalidator: PublicContentCacheInvalidator;
   let prisma: ReturnType<typeof createPrisma>;
 
   const createPrisma = () => ({
@@ -82,26 +76,34 @@ describe('poll content cache', () => {
     ).length;
 
   const pollService = () =>
-    Object.assign(
-      new PollService(prisma as any, new PublicContentCacheInvalidator(kv)),
-      { __DATALOADER__PollDataloaderService: { prime: vi.fn() } }
-    );
+    Object.assign(new PollService(prisma as any, invalidator), {
+      __DATALOADER__PollDataloaderService: { prime: vi.fn() },
+    });
 
   const pollVoteService = () =>
     new PollVoteService(
       { settingByName: vi.fn().mockResolvedValue({ value: true }) } as any,
       prisma as any,
       kv,
-      new PublicContentCacheInvalidator(kv)
+      invalidator
     );
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+    module = await Test.createTestingModule({
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: PUBLIC_CONTENT_SHARED_NAMESPACES,
+        }),
+        PublicContentInvalidatorModule,
+      ],
     }).compile();
-    kv = module.get(KvTtlCacheService);
+    kv = module.get(NamespacedCache);
+    invalidator = module.get(PublicContentCacheInvalidator);
+    resets = module.get(NamespaceResets);
     prisma = createPrisma();
   });
+
+  afterEach(() => module.close());
 
   it('loads a poll with its vote counts once across requests', async () => {
     await load('poll-1');
@@ -167,7 +169,7 @@ describe('poll content cache', () => {
     async (_, change) => {
       await load('poll-1');
       await new Promise(resolve => setTimeout(resolve, 2));
-      const resetSpy = vi.spyOn(kv, 'resetNamespace');
+      const resetSpy = vi.spyOn(resets, 'reset');
 
       await change();
       await load('poll-1');

@@ -9,16 +9,20 @@ export type ColumnConfigColumn = {
   columnLabel?: string;
   alwaysVisible?: boolean;
   fixed?: boolean;
+  /** Hidden until the user switches it on in the column menu. */
+  defaultHidden?: boolean;
 };
 
 type ColumnConfig = {
   hidden: string[];
   order: string[];
+  /** Default-hidden columns the user switched on. */
+  shown: string[];
 };
 
 const STORAGE_PREFIX = 'wepublish:editor:columns:';
 
-const EMPTY_CONFIG: ColumnConfig = { hidden: [], order: [] };
+const EMPTY_CONFIG: ColumnConfig = { hidden: [], order: [], shown: [] };
 
 const ids = (value: unknown): string[] =>
   Array.isArray(value) ?
@@ -32,12 +36,13 @@ const deserialize = (value: string): ColumnConfig => {
     const parsed = JSON.parse(value);
 
     if (Array.isArray(parsed)) {
-      return { hidden: ids(parsed), order: [] };
+      return { hidden: ids(parsed), order: [], shown: [] };
     }
 
     return {
       hidden: ids(parsed?.hidden),
       order: ids(parsed?.order),
+      shown: ids(parsed?.shown),
     };
   } catch {
     return EMPTY_CONFIG;
@@ -64,12 +69,32 @@ export const useColumnConfig = (
 
   const stored = listKey ? (config ?? EMPTY_CONFIG) : EMPTY_CONFIG;
 
-  const hiddenSet = useMemo(() => new Set(stored.hidden), [stored.hidden]);
-
   const configurableIds = useMemo(
     () => new Set(columns.filter(isConfigurable).map(column => column.id)),
     [columns]
   );
+
+  const defaultHiddenIds = useMemo(
+    () =>
+      new Set(
+        columns
+          .filter(column => isConfigurable(column) && column.defaultHidden)
+          .map(column => column.id)
+      ),
+    [columns]
+  );
+
+  // what the user hid, plus the default-hidden columns they did not switch on
+  const hiddenSet = useMemo(() => {
+    const shown = new Set(stored.shown);
+    const hidden = new Set(stored.hidden);
+    defaultHiddenIds.forEach(id => {
+      if (!shown.has(id)) {
+        hidden.add(id);
+      }
+    });
+    return hidden;
+  }, [defaultHiddenIds, stored.hidden, stored.shown]);
 
   const movableIds = useMemo(
     () => columns.filter(isMovable).map(column => column.id),
@@ -92,10 +117,14 @@ export const useColumnConfig = (
   const toggle = useCallback(
     (id: string) => {
       const next = new Set(hiddenSet);
+      const isDefaultHidden = defaultHiddenIds.has(id);
 
       if (next.has(id)) {
-        next.delete(id);
-        setConfig({ ...stored, hidden: [...next] });
+        setConfig(
+          isDefaultHidden ?
+            { ...stored, shown: [...stored.shown, id] }
+          : { ...stored, hidden: stored.hidden.filter(h => h !== id) }
+        );
         return;
       }
 
@@ -107,10 +136,13 @@ export const useColumnConfig = (
         return;
       }
 
-      next.add(id);
-      setConfig({ ...stored, hidden: [...next] });
+      setConfig(
+        isDefaultHidden ?
+          { ...stored, shown: stored.shown.filter(shownId => shownId !== id) }
+        : { ...stored, hidden: [...stored.hidden, id] }
+      );
     },
-    [columns, configurableIds, hiddenSet, setConfig, stored]
+    [columns, configurableIds, defaultHiddenIds, hiddenSet, setConfig, stored]
   );
 
   const move = useCallback(
@@ -132,7 +164,10 @@ export const useColumnConfig = (
 
   const reset = useCallback(() => setConfig(EMPTY_CONFIG), [setConfig]);
 
-  const isCustomised = stored.hidden.length > 0 || stored.order.length > 0;
+  const isCustomised =
+    stored.hidden.length > 0 ||
+    stored.order.length > 0 ||
+    stored.shown.length > 0;
 
   const orderColumns = useCallback(
     <T extends ColumnConfigColumn>(all: ReadonlyArray<T>): T[] => {

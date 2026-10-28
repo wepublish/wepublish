@@ -122,7 +122,6 @@ mutation UpdateUser(
   $firstName: String
   $flair: String
   $name: String
-  $password: String
   $address: UserAddressInput
   $birthday: DateTime
 ) {
@@ -130,7 +129,6 @@ mutation UpdateUser(
     name: $name
     firstName: $firstName
     flair: $flair
-    password: $password
     address: $address
     birthday: $birthday
   ) {

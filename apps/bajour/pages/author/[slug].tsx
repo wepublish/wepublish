@@ -1,6 +1,5 @@
-import { AuthorPage } from '@wepublish/utils/website';
-
-import { Container } from '../../src/components/layout/container';
+import { BajourContainer as Container } from '@wepublish/tenant/bajour';
+import { AuthorPage } from '@wepublish/utils/website/next';
 
 export default function AuthorBySlug() {
   return (
@@ -13,4 +12,4 @@ export default function AuthorBySlug() {
 export {
   getAuthorStaticPaths as getStaticPaths,
   getAuthorStaticProps as getStaticProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';

@@ -39,6 +39,24 @@ describe('enqueueSnackbar', () => {
     expect(screen.getByRole('alert').className).toContain('Info');
   });
 
+  it('runs the action and closes the snackbar when its button is pressed', () => {
+    renderHost();
+    const onClick = vi.fn();
+
+    act(() => {
+      enqueueSnackbar('md removed', { action: { label: 'Undo', onClick } });
+    });
+
+    expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+
+    act(() => {
+      screen.getByRole('button', { name: 'Undo' }).click();
+    });
+
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText('md removed')).not.toBeInTheDocument();
+  });
+
   it('renders a title above the message when given', () => {
     renderHost();
 

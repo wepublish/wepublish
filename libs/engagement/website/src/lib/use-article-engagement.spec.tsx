@@ -10,7 +10,7 @@ import {
   mockArticleRevision,
   mockEngagementPrompt,
   mockRichTextBlock,
-} from '@wepublish/storybook/mocks';
+} from '@wepublish/mocks/website';
 import {
   ArticleDocument,
   SubscriptionsDocument,
@@ -97,7 +97,7 @@ describe('useArticleEngagement', () => {
     client.writeQuery({
       query: ArticleDocument,
       variables: { id: article.id },
-      data: { article },
+      data: { __typename: 'Query', article },
     });
   });
 

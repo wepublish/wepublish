@@ -5,6 +5,11 @@ export * from './lib/settings.module';
 export * from './lib/settings.service';
 export * from './lib/setting-dataloader.service';
 export * from './lib/settings-utils';
+export {
+  SETTINGS_CACHE_NAMESPACE,
+  SETTINGS_SHARED_NAMESPACES,
+  WEBSITE_SETTINGS_CACHE_NAMESPACE,
+} from './lib/settings-cache';
 
 export * from './lib/integrations/tracking-pixel-provider-settings.model';
 export * from './lib/integrations/tracking-pixel-provider-settings.service';

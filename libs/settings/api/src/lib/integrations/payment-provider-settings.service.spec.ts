@@ -4,7 +4,7 @@ import {
   PrismaClient,
   SettingPaymentProvider,
 } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import * as Sentry from '@sentry/nestjs';
@@ -38,8 +38,10 @@ describe('PaymentProviderSettingsService', () => {
       providers: [
         PaymentProviderSettingsService,
         {
-          provide: KvTtlCacheService,
-          useValue: { resetNamespace: vi.fn() },
+          provide: NamespaceResets,
+          useValue: {
+            reset: vi.fn(),
+          } satisfies Pick<NamespaceResets, 'reset'>,
         },
         {
           provide: ProviderSettingsChanged,

@@ -86,8 +86,13 @@ const paymentMethod = {
   gracePeriod: 0,
 };
 
-const subscription = (deactivation: unknown, canRevertUpgrade = false) => ({
+const subscription = (
+  deactivation: unknown,
+  canRevertUpgrade = false,
+  pendingPaymentMethodChange: unknown = null
+) => ({
   canRevertUpgrade,
+  pendingPaymentMethodChange,
   id: 'subscription-1',
   createdAt: '2026-01-02T10:00:00.000Z',
   modifiedAt: '2026-01-02T10:00:00.000Z',
@@ -113,7 +118,11 @@ const subscription = (deactivation: unknown, canRevertUpgrade = false) => ({
   periods: [],
 });
 
-const mockQueries = (deactivation: unknown, canRevertUpgrade = false) => {
+const mockQueries = (
+  deactivation: unknown,
+  canRevertUpgrade = false,
+  pendingPaymentMethodChange: unknown = null
+) => {
   // The results have to be referentially stable, the view reacts to them in effects.
   const refetch = vi.fn();
   const results = new Map<unknown, unknown>([
@@ -123,7 +132,11 @@ const mockQueries = (deactivation: unknown, canRevertUpgrade = false) => {
         loading: false,
         refetch,
         data: {
-          subscription: subscription(deactivation, canRevertUpgrade),
+          subscription: subscription(
+            deactivation,
+            canRevertUpgrade,
+            pendingPaymentMethodChange
+          ),
         },
       },
     ],
@@ -196,6 +209,35 @@ describe('SubscriptionEditView', () => {
       })
     ).toBeNull();
     expect(screen.queryByText('userSubscriptionEdit.renewNow')).toBeNull();
+  });
+
+  it('shows a payment method change the reader has not finished yet', async () => {
+    mockQueries(null, false, {
+      id: 'change-1',
+      kind: 'invoicePayment',
+      state: 'pending',
+      expiresAt: '2026-11-04T10:00:00.000Z',
+      paymentMethod: { id: 'payment-method-2', name: 'TWINT' },
+    });
+    renderEditView();
+
+    expect(
+      await screen.findByText(
+        'userSubscriptionEdit.paymentMethodChange.pending'
+      )
+    ).toBeTruthy();
+  });
+
+  it('shows no payment method change when there is none', async () => {
+    mockQueries(null);
+    renderEditView();
+
+    await screen.findByText(
+      'userSubscriptionEdit.deactivation.title.activated'
+    );
+    expect(
+      screen.queryByText('userSubscriptionEdit.paymentMethodChange.pending')
+    ).toBeNull();
   });
 
   it('offers no reactivation for a running subscription', async () => {

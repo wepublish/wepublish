@@ -35,6 +35,17 @@ fragment FullSubscription on PublicSubscription {
     id
     name
   }
+  pendingPaymentMethodChange {
+    id
+    kind
+    state
+    createdAt
+    expiresAt
+    paymentMethod {
+      id
+      name
+    }
+  }
 }
 
 fragment Deactivation on SubscriptionDeactivation {

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient, SettingSyncProvider } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
 import { SyncProviderSettingsService } from './sync-provider-settings.service';
@@ -24,7 +24,12 @@ describe('SyncProviderSettingsService', () => {
       imports: [PrismaModule],
       providers: [
         SyncProviderSettingsService,
-        { provide: KvTtlCacheService, useValue: { resetNamespace: vi.fn() } },
+        {
+          provide: NamespaceResets,
+          useValue: {
+            reset: vi.fn(),
+          } satisfies Pick<NamespaceResets, 'reset'>,
+        },
         {
           provide: SyncProviderSettingsDataloaderService,
           useValue: { prime: vi.fn() },

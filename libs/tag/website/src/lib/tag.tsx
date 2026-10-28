@@ -60,7 +60,7 @@ export function Tag({
     return;
   }
 
-  const canonicalUrl = `/a/tag/${tag}`;
+  const canonicalUrl = `/a/tag/${tag.tag}`;
 
   return (
     <TagWrapper className={className}>

@@ -9,6 +9,7 @@ import {
 import { ArticleAuthor } from '@wepublish/author/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
+import { TsriAdHeader } from '@wepublish/tenant/wnti';
 import { H2 } from '@wepublish/ui';
 import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
@@ -25,8 +26,6 @@ import {
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
-
-import { TsriAdHeader } from '../../src/components/tsri-ad-header';
 
 const AfterArticleTitle = styled(H2)`
   ${({ theme }) => theme.breakpoints.down('sm')} {

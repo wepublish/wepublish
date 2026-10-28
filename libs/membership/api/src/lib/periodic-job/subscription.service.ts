@@ -8,6 +8,8 @@ import {
   InvoiceItem,
   MemberPlan,
   PaymentMethod,
+  PaymentMethodChangeKind,
+  PaymentMethodChangeState,
   PaymentPeriodicity,
   PaymentProviderCustomer,
   PaymentState,
@@ -160,6 +162,14 @@ export class SubscriptionService {
         },
         subscription: {
           confirmed: true,
+          // the reader is paying it with the payment method they change to;
+          // charging the current one as well could bill them twice
+          paymentMethodChanges: {
+            none: {
+              state: PaymentMethodChangeState.pending,
+              kind: PaymentMethodChangeKind.invoicePayment,
+            },
+          },
         },
       },
       include: {

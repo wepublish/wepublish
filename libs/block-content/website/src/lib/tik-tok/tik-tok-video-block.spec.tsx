@@ -1,13 +1,22 @@
-import { render } from '@testing-library/react';
-import * as stories from './tik-tok-video-block.stories';
-import { composeStories } from '@storybook/react';
+import { screen } from '@testing-library/react';
+import {
+  mockTikTokVideoBlock,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { TikTokVideoBlock } from './tik-tok-video-block';
 
-const storiesCmp = composeStories(stories);
+describe('TikTokVideoBlock', () => {
+  it('embeds the video through the TikTok v2 player', () => {
+    renderWithProviders(
+      <TikTokVideoBlock {...mockTikTokVideoBlock({ videoID: '6718335390' })} />
+    );
 
-describe('TikTok Video Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
+    const player = screen.getByTitle('Embedded TikTok Video');
+
+    expect(player).toHaveAttribute(
+      'src',
+      'https://www.tiktok.com/embed/v2/6718335390'
+    );
+    expect(player).toHaveAttribute('allowfullscreen');
   });
 });

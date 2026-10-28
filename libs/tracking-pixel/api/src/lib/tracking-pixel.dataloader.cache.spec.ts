@@ -1,10 +1,15 @@
-import { createCache } from 'cache-manager';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { type NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import {
+  type NamespacedCacheTesting,
+  createNamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
+import { DistributedClaims } from '@wepublish/dragonfly/api';
 import { TrackingPixelDataloader } from './tracking-pixel.dataloader';
 import { TrackingPixelService } from './tracking-pixel.service';
 
 describe('tracking pixel row cache', () => {
-  let kv: KvTtlCacheService;
+  let testing: NamespacedCacheTesting;
+  let kv: NamespacedCache;
   let prisma: {
     articleTrackingPixels: {
       findMany: ReturnType<typeof vi.fn>;
@@ -15,8 +20,11 @@ describe('tracking pixel row cache', () => {
     article: { findUnique: ReturnType<typeof vi.fn> };
   };
 
-  beforeEach(() => {
-    kv = new KvTtlCacheService(createCache());
+  beforeEach(async () => {
+    testing = await createNamespacedCacheTesting({
+      sharedNamespaces: ['tracking-pixels'],
+    });
+    kv = testing.cache;
     prisma = {
       articleTrackingPixels: {
         findMany: vi.fn().mockResolvedValue([]),
@@ -29,6 +37,8 @@ describe('tracking pixel row cache', () => {
       article: { findUnique: vi.fn().mockResolvedValue({ slug: 'a1' }) },
     };
   });
+
+  afterEach(() => testing.close());
 
   const rowQueries = () =>
     prisma.articleTrackingPixels.findMany.mock.calls.filter(
@@ -65,6 +75,7 @@ describe('tracking pixel row cache', () => {
         ],
       } as any,
       kv,
+      testing.module.get(DistributedClaims),
       { invalidateArticleAnswers: vi.fn() } as any
     ).addMissingArticleTrackingPixels('a1');
     await new TrackingPixelDataloader(prisma as any, kv).load('a1');

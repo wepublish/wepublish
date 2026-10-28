@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { AuthorListContainer } from '@wepublish/author/website';
 import { PageContainer } from '@wepublish/page/website';
+import { MainSpacer } from '@wepublish/tenant/reflekt';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   AuthorListDocument,
@@ -17,8 +18,6 @@ import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
-
-import { MainSpacer } from '../../src/components/main-spacer';
 
 const take = 25;
 

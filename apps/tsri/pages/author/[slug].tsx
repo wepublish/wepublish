@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
-import { AuthorPage } from '@wepublish/utils/website';
-
-import { TsriAuthorLinks } from '../../src/components/tsri-author-links';
-import theme from '../../src/theme';
+import { TsriAuthorLinks, tsriTheme as theme } from '@wepublish/tenant/tsri';
+import { AuthorPage } from '@wepublish/utils/website/next';
 
 const TsriAuthorPage = styled(AuthorPage)`
   & > h2.MuiTypography-root {
@@ -27,5 +25,5 @@ const TsriAuthorPage = styled(AuthorPage)`
 export {
   getAuthorStaticPaths as getStaticPaths,
   getAuthorStaticProps as getStaticProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 export { TsriAuthorPage as default };

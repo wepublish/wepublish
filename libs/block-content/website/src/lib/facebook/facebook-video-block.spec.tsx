@@ -1,13 +1,28 @@
-import { render } from '@testing-library/react';
-import * as stories from './facebook-video-block.stories';
-import { composeStories } from '@storybook/react';
+import { screen } from '@testing-library/react';
+import {
+  mockFacebookVideoBlock,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { FacebookVideoBlock } from './facebook-video-block';
 
-const storiesCmp = composeStories(stories);
+describe('FacebookVideoBlock', () => {
+  it('embeds the video through the Facebook video plugin without its text', () => {
+    renderWithProviders(
+      <FacebookVideoBlock
+        {...mockFacebookVideoBlock({ userID: 'wepublish', videoID: '42' })}
+      />
+    );
 
-describe('Facebook Video Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
+    const player = screen.getByTitle('Embedded Facebook Video');
+    const src = new URL(player.getAttribute('src') ?? '');
+
+    expect(src.origin + src.pathname).toBe(
+      'https://www.facebook.com/plugins/video.php'
+    );
+    expect(src.searchParams.get('href')).toBe(
+      'https://www.facebook.com/wepublish/videos/42/'
+    );
+    expect(src.searchParams.get('show_text')).toBe('false');
+    expect(player).toHaveAttribute('allowfullscreen');
   });
 });

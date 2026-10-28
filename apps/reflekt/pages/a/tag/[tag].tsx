@@ -1,4 +1,5 @@
 import { TagContainer } from '@wepublish/tag/website';
+import { TagAwareArticleListContext } from '@wepublish/tenant/reflekt';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   ArticleListDocument,
@@ -12,8 +13,6 @@ import {
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
-
-import { TagAwareArticleListContext } from '../../../src/components/teaser-layouts/reflekt-article-list';
 
 const take = 50;
 

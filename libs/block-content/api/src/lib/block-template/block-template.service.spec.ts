@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { BlockContentInput } from '../block-content.model';
 import { BlockType } from '../block-type.model';
 import { BlockTemplateDataloaderService } from './block-template-dataloader.service';

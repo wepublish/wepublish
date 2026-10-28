@@ -23,7 +23,7 @@ import { Article } from '@prisma/client';
 import { SortOrder } from '@wepublish/utils/api';
 import { EventService, EventSort } from '@wepublish/event/api';
 import { Tag, TagDataloader } from '@wepublish/tag/api';
-import { skipAnswerCache } from '@wepublish/kv-ttl-cache/api';
+import { skipAnswerCache } from '@wepublish/public-content-cache/api';
 
 @Resolver(() => TeaserListBlock)
 export class TeaserListBlockResolver {

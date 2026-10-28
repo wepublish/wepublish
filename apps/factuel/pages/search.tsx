@@ -1,4 +1,4 @@
 export {
   SearchPage as default,
   SearchPageGetServerSideProps as getServerSideProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';

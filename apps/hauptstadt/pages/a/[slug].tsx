@@ -1,10 +1,8 @@
 import { CombinedGraphQLErrors } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
-import styled from '@emotion/styled';
 import {
   ArticleContainer,
   ArticleListContainer,
-  ArticleWrapper,
 } from '@wepublish/article/website';
 import {
   isTeaserGridBlock,
@@ -14,6 +12,11 @@ import {
 } from '@wepublish/block-content/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ShowPaywallContext, useShowPaywall } from '@wepublish/paywall/website';
+import {
+  ArticleWrapperAppendix,
+  ArticleWrapperComments,
+  DuplicatedPaywall,
+} from '@wepublish/tenant/hauptstadt';
 import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -34,10 +37,6 @@ import { anyPass } from 'ramda';
 import { ComponentProps } from 'react';
 
 import { isArchived, isNachtleben } from '../../src/archiviert';
-import { DuplicatedPaywall } from '../../src/components/hauptstadt-paywall';
-
-export const ArticleWrapperComments = styled(ArticleWrapper)``;
-export const ArticleWrapperAppendix = styled(ArticleWrapper)``;
 
 export interface StandaloneArticlePageProps {
   slug?: string;

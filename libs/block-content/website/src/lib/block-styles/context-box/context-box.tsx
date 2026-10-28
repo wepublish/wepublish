@@ -1,6 +1,7 @@
 import { css } from '@mui/material';
 import styled from '@emotion/styled';
 import { useReducer } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdInfoOutline } from 'react-icons/md';
 import { RichTextBlock } from '../../richtext/richtext-block';
 import { allPass } from 'ramda';
@@ -69,6 +70,7 @@ export const ContextBox = ({
   text,
 }: BuilderBlockStyleProps['ContextBox']) => {
   const [expanded, toggleExpanded] = useReducer(exp => !exp, false);
+  const { t } = useTranslation();
   const {
     elements: { Button },
   } = useWebsiteBuilder();
@@ -77,7 +79,7 @@ export const ContextBox = ({
     <ContextBoxWrapper className={className}>
       <ContextBoxIcon size="36" />
 
-      <ContextBoxTitle>{text || `Darum geht's`}</ContextBoxTitle>
+      <ContextBoxTitle>{text || t('contextBox.defaultTitle')}</ContextBoxTitle>
 
       <ContextBoxLine />
       <ContextBoxContent>
@@ -86,7 +88,7 @@ export const ContextBox = ({
         </ContextBoxCollapse>
 
         <Button onClick={toggleExpanded}>
-          {expanded ? 'Weniger lesen' : 'Alles lesen'}
+          {expanded ? t('contextBox.readLess') : t('contextBox.readMore')}
         </Button>
       </ContextBoxContent>
     </ContextBoxWrapper>

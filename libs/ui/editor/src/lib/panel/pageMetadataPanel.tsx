@@ -69,18 +69,17 @@ const InputWidth60 = styled(TextField)`
 
 const InputWidth40 = styled(TextField)`
   width: 40%;
-  margin-right: 8px;
 `;
 
 const InputList = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 8px;
 `;
 
 const PropertyFlag = styled(Box)`
   flex-shrink: 0;
-  padding-top: 6px;
-  padding-left: 8px;
   white-space: nowrap;
 `;
 

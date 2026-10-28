@@ -1,0 +1,55 @@
+import { css, GlobalStyles } from '@mui/material';
+import { ArticleWrapper } from '@wepublish/article/website';
+import { BannerWrapper } from '@wepublish/banner/website';
+import {
+  ImageBlockCaption,
+  RichTextBlockWrapper,
+  TeaserGridBlockWrapper,
+} from '@wepublish/block-content/website';
+import { FooterWrapper } from '@wepublish/navigation/website';
+import { PaywallWrapper } from '@wepublish/paywall/website';
+
+import { HauptstadtArticleMetaWrapper } from './components/hauptstadt-article';
+import {
+  ArticleWrapperAppendix,
+  ArticleWrapperComments,
+} from './components/hauptstadt-article-wrappers';
+import { HauptstadtBannerContainer } from './components/hauptstadt-banner';
+import { NavbarWrapper } from './components/hauptstadt-navbar';
+
+export const HauptstadtPrintStyles = () => (
+  <GlobalStyles
+    styles={css`
+      @media print {
+        ${HauptstadtArticleMetaWrapper},
+        ${BannerWrapper},
+        ${HauptstadtBannerContainer},
+        ${NavbarWrapper},
+        ${FooterWrapper},
+        ${ArticleWrapperComments},
+        ${ArticleWrapperAppendix},
+        ${TeaserGridBlockWrapper},
+        ${PaywallWrapper}${PaywallWrapper} {
+          display: none !important;
+        }
+
+        ${ArticleWrapper} {
+          padding-left: 15%;
+          padding-right: 15%;
+        }
+
+        ${ImageBlockCaption} {
+          width: initial !important;
+        }
+
+        ${RichTextBlockWrapper} :is(p, ul, li, ol) {
+          font-size: 13px !important;
+        }
+
+        iframe {
+          max-height: 90vh;
+        }
+      }
+    `}
+  />
+);

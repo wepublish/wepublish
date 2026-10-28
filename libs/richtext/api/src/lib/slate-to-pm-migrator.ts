@@ -6,10 +6,9 @@ import {
 } from '@wepublish/richtext';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma, PrismaClient } from '@prisma/client';
-import {
-  KvTtlCacheService,
-  PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+import { DistributedClaims } from '@wepublish/dragonfly/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 
 // Slate keeps a node's visible text in `text`, or nested in `children`.
 const slateText = (node: any): string => {
@@ -247,12 +246,13 @@ export class SlateToPmMigrator {
   constructor(
     private prisma: PrismaClient,
     private schedulerRegistry: SchedulerRegistry,
-    private kv: KvTtlCacheService,
+    private claims: DistributedClaims,
+    private resets: NamespaceResets,
     private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   private async isAnotherReplicasTurn(job: string, intervalMs: number) {
-    return (await this.kv.claim(job, intervalMs - 1000)) === false;
+    return (await this.claims.claim(job, intervalMs - 1000)) === 'taken';
   }
 
   private async forgetMigrated(table: MigratedTable, changed: number) {
@@ -268,15 +268,15 @@ export class SlateToPmMigrator {
       case 'events':
         return this.publicContentCache.invalidate();
       case 'peerProfiles':
-        return this.kv.resetNamespace(PEER_PROFILE_NAMESPACE);
+        return this.resets.reset(PEER_PROFILE_NAMESPACE);
       case 'peers':
-        return this.kv.resetNamespace(REMOTE_PEER_PROFILES_NAMESPACE);
+        return this.resets.reset(REMOTE_PEER_PROFILES_NAMESPACE);
       case 'polls':
         return this.publicContentCache.invalidate('polls');
       case 'tags':
         return this.publicContentCache.invalidate('articles');
       case 'member.plans':
-        await this.kv.resetNamespace(MEMBER_PLANS_NAMESPACE);
+        await this.resets.reset(MEMBER_PLANS_NAMESPACE);
         return this.publicContentCache.invalidate('paywalls');
       case 'paywalls':
         return this.publicContentCache.invalidate('paywalls');

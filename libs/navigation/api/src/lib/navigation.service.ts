@@ -6,7 +6,7 @@ import {
 import { PrismaClient } from '@prisma/client';
 import { NavigationDataloaderService } from './navigation-dataloader.service';
 import { PrimeDataLoader } from '@wepublish/utils/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import {
   NAVIGATION_CACHE_NAMESPACE,
   NAVIGATION_CACHE_TTL_SECONDS,
@@ -16,7 +16,8 @@ import {
 export class NavigationService {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache,
+    private resets: NamespaceResets
   ) {}
 
   @PrimeDataLoader(NavigationDataloaderService)
@@ -44,7 +45,7 @@ export class NavigationService {
         },
       },
     });
-    await this.kv.resetNamespace(NAVIGATION_CACHE_NAMESPACE);
+    await this.resets.reset(NAVIGATION_CACHE_NAMESPACE);
 
     return navigation;
   }
@@ -53,7 +54,7 @@ export class NavigationService {
     const navigation = await this.prisma.navigation.delete({
       where: { id },
     });
-    await this.kv.resetNamespace(NAVIGATION_CACHE_NAMESPACE);
+    await this.resets.reset(NAVIGATION_CACHE_NAMESPACE);
 
     return navigation;
   }
@@ -75,7 +76,7 @@ export class NavigationService {
         },
       },
     });
-    await this.kv.resetNamespace(NAVIGATION_CACHE_NAMESPACE);
+    await this.resets.reset(NAVIGATION_CACHE_NAMESPACE);
 
     return navigation;
   }

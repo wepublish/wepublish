@@ -1,4 +1,8 @@
 import { useQuery } from '@apollo/client/react';
+import {
+  EenewsTagPage,
+  resolveWhitelistTagIds,
+} from '@wepublish/tenant/eenews';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   ArticleListDocument,
@@ -16,9 +20,6 @@ import { BuilderTagProps } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
-
-import { EenewsTagPage } from '../../../src/components/eenews-tag-page';
-import { resolveWhitelistTagIds } from '../../../src/components/teasers/eenews-teaser-selectors';
 
 const TAKE = 24;
 

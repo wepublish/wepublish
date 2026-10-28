@@ -5,7 +5,7 @@ import { Permissions } from '@wepublish/permissions/api';
 import { CanCreateArticle, CanCreatePage } from '@wepublish/permissions';
 import { BadRequestException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 
 type V0Settings = { apiKey: string | null; systemPrompt: string | null };
@@ -16,7 +16,7 @@ class V0Config {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
     private readonly id: string
   ) {}
 
@@ -81,7 +81,7 @@ export class V0Resolver {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   @Permissions(CanCreateArticle, CanCreatePage)

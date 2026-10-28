@@ -3,7 +3,7 @@ import { Inject, Logger } from '@nestjs/common';
 import { Article as ArticleModel } from '../article.model';
 import { Article } from '@prisma/client';
 import { Public } from '@wepublish/authentication/api';
-import { skipAnswerCache } from '@wepublish/kv-ttl-cache/api';
+import { skipAnswerCache } from '@wepublish/public-content-cache/api';
 
 export const HOT_AND_TRENDING_DATA_SOURCE = Symbol(
   'HOT_AND_TRENDING_DATA_SOURCE'

@@ -268,7 +268,6 @@ export const CommentEditor = ({
         guestUsername: z.string().min(1),
         challenge: z.object({
           challengeSolution: z.string().min(1),
-          challengeID: z.string().min(1),
         }),
       }),
     [maxCommentLength]
@@ -284,8 +283,7 @@ export const CommentEditor = ({
   );
 
   type FormInput =
-    | z.infer<typeof loggedInSchema>
-    | z.infer<typeof anonymousSchema>;
+    z.infer<typeof loggedInSchema> | z.infer<typeof anonymousSchema>;
   const schema = hasUser ? loggedInSchema : anonymousSchema;
 
   const { handleSubmit, control, reset } = useForm<FormInput>({
@@ -295,7 +293,6 @@ export const CommentEditor = ({
       title: title ?? '',
       guestUsername: '',
       challenge: {
-        challengeID: challenge?.data?.challenge.challengeID ?? '',
         challengeSolution: '',
       },
     },
@@ -305,7 +302,15 @@ export const CommentEditor = ({
   const submit = handleSubmit(({ comment, ...data }) => {
     challengeRef.current?.reset();
     onSubmit({
-      ...data,
+      ...('challenge' in data ?
+        {
+          ...data,
+          challenge: {
+            challengeSolution: data.challenge.challengeSolution,
+            challengeID: challenge?.data?.challenge.challengeID ?? '',
+          },
+        }
+      : data),
       text: {
         attrs: undefined,
         type: 'doc',
@@ -360,8 +365,8 @@ export const CommentEditor = ({
               <TextField
                 {...field}
                 fullWidth
-                placeholder="Dein Name"
-                label="Name"
+                placeholder={t('commentEditor.namePlaceholder')}
+                label={t('commentEditor.name')}
                 error={!!error}
                 helperText={error?.message}
               />
@@ -376,8 +381,8 @@ export const CommentEditor = ({
             <TextField
               {...field}
               fullWidth
-              placeholder="Gib Deinem Beitrag einen Titel."
-              label="Titel"
+              placeholder={t('commentEditor.titlePlaceholder')}
+              label={t('commentEditor.title')}
               error={!!error}
               helperText={error?.message}
             />
@@ -393,10 +398,13 @@ export const CommentEditor = ({
               multiline
               fullWidth
               minRows={5}
-              label="Kommentar"
-              placeholder="Beitrag verfassen"
+              label={t('commentEditor.text')}
+              placeholder={t('commentEditor.textPlaceholder')}
               error={!!error}
-              helperText={`${field.value.length} / ${maxCommentLength} Zeichen`}
+              helperText={t('commentEditor.characterCount', {
+                length: field.value.length,
+                max: maxCommentLength,
+              })}
             />
           )}
         />

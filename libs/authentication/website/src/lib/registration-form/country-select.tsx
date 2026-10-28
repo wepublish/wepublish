@@ -59,7 +59,7 @@ export const CountrySelect = forwardRef<
       ref={ref}
       value={countryOptions.find(option => option.value === value) ?? null}
       onChange={(_, value) => {
-        onChange(value?.value);
+        onChange(value?.value || '');
       }}
       options={countryOptions.sort((a, b) =>
         a.suggested ?

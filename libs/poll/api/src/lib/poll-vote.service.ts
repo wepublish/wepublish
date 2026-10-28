@@ -17,18 +17,18 @@ import {
 } from '@nestjs/common';
 import { AnonymousPollVotingDisabledError } from '@wepublish/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
-  KvTtlCacheService,
   PublicContentCacheInvalidator,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 
 @Injectable()
 export class PollVoteService {
   constructor(
     readonly settings: SettingsService,
     readonly prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private kv: NamespacedCache,
     private publicContentCache: PublicContentCacheInvalidator
   ) {}
 

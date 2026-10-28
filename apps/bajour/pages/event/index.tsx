@@ -3,16 +3,17 @@ import styled from '@emotion/styled';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { EventListContainer } from '@wepublish/event/website';
+import { BajourContainer as Container } from '@wepublish/tenant/bajour';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
+  addClientCacheToProps,
   EventListDocument,
   EventListQueryVariables,
   EventSort,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
-  addClientCacheToProps,
-  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -20,8 +21,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
-
-import { Container } from '../../src/components/layout/container';
 
 const Filter = styled('div')`
   display: grid;

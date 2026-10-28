@@ -1,4 +1,5 @@
-import { SubscribePage, useUserCountry } from '@wepublish/utils/website';
+import { useUserCountry } from '@wepublish/utils/website';
+import { SubscribePage } from '@wepublish/utils/website/next';
 import { Currency } from '@wepublish/website/api';
 
 export default function Mitmachen() {

@@ -1,17 +1,19 @@
 import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { PeerService } from './peer.service';
 import { PeerDataloaderService } from './peer-dataloader.service';
 import { REMOTE_PEER_PROFILE_CACHE_NAMESPACE } from './peer-profile-cache';
 
 describe('PeerService', () => {
   let service: PeerService;
-  let kv: { resetNamespace: Mock };
+  let resets: { reset: Mock };
 
   beforeEach(async () => {
-    kv = { resetNamespace: vi.fn().mockResolvedValue(undefined) };
+    resets = {
+      reset: vi.fn().mockResolvedValue(undefined),
+    } satisfies Pick<NamespaceResets, 'reset'>;
     const peer = { id: 'peer-1', hostURL: 'https://peer.example' };
 
     const module = await Test.createTestingModule({
@@ -28,7 +30,7 @@ describe('PeerService', () => {
           },
         },
         { provide: PeerDataloaderService, useValue: { prime: vi.fn() } },
-        { provide: KvTtlCacheService, useValue: kv },
+        { provide: NamespaceResets, useValue: resets },
       ],
     }).compile();
 
@@ -43,7 +45,7 @@ describe('PeerService', () => {
       token: 'peer-token',
     } as never);
 
-    expect(kv.resetNamespace).toHaveBeenCalledWith(
+    expect(resets.reset).toHaveBeenCalledWith(
       REMOTE_PEER_PROFILE_CACHE_NAMESPACE
     );
   });
@@ -51,7 +53,7 @@ describe('PeerService', () => {
   it('forgets cached remote profiles after a peer was changed', async () => {
     await service.updatePeer({ id: 'peer-1', name: 'Peer' } as never);
 
-    expect(kv.resetNamespace).toHaveBeenCalledWith(
+    expect(resets.reset).toHaveBeenCalledWith(
       REMOTE_PEER_PROFILE_CACHE_NAMESPACE
     );
   });
@@ -59,7 +61,7 @@ describe('PeerService', () => {
   it('forgets cached remote profiles after a peer was deleted', async () => {
     await service.deletePeer('peer-1');
 
-    expect(kv.resetNamespace).toHaveBeenCalledWith(
+    expect(resets.reset).toHaveBeenCalledWith(
       REMOTE_PEER_PROFILE_CACHE_NAMESPACE
     );
   });
