@@ -7,6 +7,8 @@ import {
 
 import { registerSentryClient } from '@wepublish/utils/website/tanstack/sentry/client';
 
+import { RoutePending } from './route-pending';
+
 import { routeTree } from './routeTree.gen';
 
 /**
@@ -34,6 +36,12 @@ export function getRouter() {
     // with a 404 is handled by the route itself so the response can carry both
     // a 404 status and the CMS 404 content.
     defaultNotFoundComponent: FourOhFourPage,
+    // The router uses this as the Suspense fallback for a route whose
+    // component chunk or data is still arriving. Without one, a suspended
+    // boundary renders nothing: on a slow connection the article body went
+    // blank for 1.3s while the URL and chrome had already switched, which
+    // reads as the page losing its content rather than loading.
+    defaultPendingComponent: RoutePending,
     ...apolloRouterOptions(apolloClient),
   });
 
