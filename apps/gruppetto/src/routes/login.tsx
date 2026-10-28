@@ -45,21 +45,31 @@ function Login() {
     }
   }, [sessionToken, setToken]);
 
-  if (intended?.startsWith('/')) {
-    setCookie(IntendedRouteStorageKey, intended, {
-      expires: add(new Date(), { seconds: IntendedRouteExpiryInSeconds }),
-    });
-  }
+  // Both of these used to run during render, which read and wrote
+  // `isRedirecting.current` and touched cookies on a pass React is free to
+  // throw away or repeat. The React Compiler rejects that outright
+  // (`react-hooks/refs`), and it was a real hazard: a double render would
+  // consume the intended route twice.
+  useEffect(() => {
+    if (intended?.startsWith('/')) {
+      setCookie(IntendedRouteStorageKey, intended, {
+        expires: add(new Date(), { seconds: IntendedRouteExpiryInSeconds }),
+      });
+    }
+  }, [intended]);
 
-  if (hasUser && typeof window !== 'undefined') {
+  useEffect(() => {
+    if (!hasUser || isRedirecting.current) {
+      return;
+    }
+
+    isRedirecting.current = true;
+
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();
     deleteCookie(IntendedRouteStorageKey);
 
-    if (!isRedirecting.current) {
-      isRedirecting.current = true;
-      navigate({ to: intendedRoute ?? '/profile', replace: true });
-    }
-  }
+    navigate({ to: intendedRoute ?? '/profile', replace: true });
+  }, [hasUser, navigate]);
 
   return (
     <LoginWrapper>
