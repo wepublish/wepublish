@@ -12,6 +12,7 @@ import {
 import { TFunction } from 'i18next';
 import {
   EngagementRuleValues,
+  copyEngagementRule,
   createEngagementRuleSchema,
   engagementRuleProblems,
   engagementRuleToValues,
@@ -224,5 +225,22 @@ describe('priority levels', () => {
     expect(priorityLevel(PRIORITY_LEVELS.high)).toBe('high');
     expect(priorityLevel(PRIORITY_LEVELS.highest)).toBe('highest');
     expect(priorityLevel(100)).toBe('highest');
+  });
+});
+
+describe('copyEngagementRule', () => {
+  const t = ((key: string, params: Record<string, string> = {}) =>
+    key === 'engagement.copyName' ?
+      `${params['name']} (copy)`
+    : key) as unknown as TFunction;
+
+  it('copies everything but marks the name and stays inactive', () => {
+    const copy = copyEngagementRule(rule, t);
+
+    expect(copy).toEqual({
+      ...engagementRuleToValues(rule),
+      name: 'Grow newsletter (copy)',
+      active: false,
+    });
   });
 });

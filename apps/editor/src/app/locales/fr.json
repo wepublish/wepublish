@@ -4409,7 +4409,8 @@
         "managePaywalls": "Gérer les paywalls",
         "enforced": "Appliquée",
         "inactive": "Inactive",
-        "anyMemberPlan": "Tout abonnement"
+        "anyMemberPlan": "Tout abonnement",
+        "copy": "Copier"
       },
       "delete": {
         "title": "Supprimer la règle d’engagement ?",
@@ -4597,7 +4598,8 @@
         "normal": "Normale",
         "high": "Haute",
         "highest": "Très haute"
-      }
+      },
+      "copyName": "{{name}} (copie)"
     }
   }
 }
