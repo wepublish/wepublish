@@ -84,8 +84,11 @@ newsletter/membership prompts and metered content gates are one
 `EngagementRule` model with ordered `EngagementStage`s (by `afterArticles`,
 the articles a reader already read in `meterWindowDays`) and their actions.
 Only the last stage may be `HARD` (cut the article to `previewBlocks`).
-`evaluate.ts` picks the prompts, highest `priority` first; the website shows at
-most one per slot (banner, modal, in-article) in `resolve-engagement.ts`.
+`evaluate.ts` orders the prompts: `priority` (an editor "show this first"
+override), then the more specific rule (narrower audience, pages only), then
+the newest; the website shows at most one per slot (banner, modal, in-article)
+in `resolve-engagement.ts`. The editor mirrors this order to show conflicts
+(`engagement-conflicts.ts`) — change both together.
 **Paywalls stay their own model** (`libs/paywall`): they are attached per
 article (`Article.paywallId`), check specific member plans and bypass tokens,
 and the website and peering still read `Article.paywall`. Who gets every block

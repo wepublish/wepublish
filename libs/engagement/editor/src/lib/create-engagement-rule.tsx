@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CreateEngagementRuleDocument,
   EngagementRuleDocument,
+  EngagementRulesDocument,
 } from '@wepublish/editor/api';
 import {
   CanCreateEngagementRule,
@@ -22,6 +23,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { EngagementPresetCards } from './engagement-preset-cards';
+import { findConflicts } from './engagement-conflicts';
 import { EngagementRuleForm } from './engagement-rule-form';
 import { EngagementRuleReview } from './engagement-rule-review';
 import { ENGAGEMENT_PATH } from './engagement-rule-list';
@@ -29,6 +31,7 @@ import {
   EngagementRuleValues,
   copyEngagementRule,
   createEngagementRuleSchema,
+  engagementRuleToValues,
   toEngagementRuleInput,
 } from './engagement-rule-values';
 import { ENGAGEMENT_PRESETS } from './presets';
@@ -38,6 +41,7 @@ const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
   const { t } = useTranslation();
   const [shouldClose, setShouldClose] = useState(false);
   const [review, setReview] = useState<EngagementRuleValues>();
+  const { data: rulesData } = useQuery(EngagementRulesDocument);
   const form = useForm<EngagementRuleValues>({
     resolver: zodResolver(createEngagementRuleSchema(t)),
     defaultValues: values,
@@ -76,6 +80,17 @@ const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
 
       <EngagementRuleReview
         rule={review}
+        conflicts={
+          review ?
+            findConflicts(
+              review,
+              (rulesData?.engagementRules ?? []).map(other => ({
+                ...other,
+                stages: engagementRuleToValues(other).stages,
+              }))
+            )
+          : []
+        }
         saving={loading}
         onBack={() => setReview(undefined)}
         onConfirm={() =>

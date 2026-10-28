@@ -4399,7 +4399,6 @@
         "audience": "Audience",
         "where": "Where",
         "summary": "Summary",
-        "priority": "Priority",
         "articles": "Articles",
         "pages_one": "{{count}} page",
         "pages_other": "{{count}} pages",
@@ -4410,7 +4409,8 @@
         "enforced": "Enforced",
         "inactive": "Inactive",
         "anyMemberPlan": "Any member plan",
-        "copy": "Copy"
+        "copy": "Copy",
+        "showsFirst": "Shown first"
       },
       "delete": {
         "title": "Delete engagement rule?",
@@ -4523,8 +4523,6 @@
         "goal": "Goal",
         "name": "Name",
         "active": "Active",
-        "priority": "Priority",
-        "priorityInfo": "A reader sees at most one banner, one pop-up and one box in the article at a time. If several rules want the same spot, the one with the higher priority is shown. Leave most rules on Normal and use High for time-limited campaigns.",
         "newsletterNote": "Newsletter subscriptions can not be verified yet. A hard stage of a newsletter rule therefore asks for a registration or membership, and must also offer a newsletter signup.",
         "audience": "Audience",
         "trigger": "Where and when",
@@ -4580,7 +4578,9 @@
         "actionUrl": "Url",
         "actionRole": "Role",
         "addAction": "Add action",
-        "audienceMemberPlans": "Member plans"
+        "audienceMemberPlans": "Member plans",
+        "showFirst": "Show this first",
+        "showFirstInfo": "A reader sees at most one banner, one pop-up and one box in the article at a time. Without this, the more specific rule is shown first (a narrower audience, chosen pages only), then the newest."
       },
       "validation": {
         "required": "Required",
@@ -4596,12 +4596,6 @@
         "announcementNoReferral": "An announcement has no newsletter settings",
         "newsletterActionRequired": "Offer a newsletter signup too"
       },
-      "priority": {
-        "low": "Low",
-        "normal": "Normal",
-        "high": "High",
-        "highest": "Highest"
-      },
       "copyName": "{{name}} (copy)",
       "review": {
         "title": "Before you save: here is what will happen",
@@ -4614,6 +4608,18 @@
         "untitled": "No title",
         "back": "Back to editing",
         "confirm": "Create rule"
+      },
+      "conflict": {
+        "title": "Competes with other rules",
+        "competes": "Competes with “{{name}}” for the {{slots}} ({{audience}}).",
+        "thisFirst": "This rule is shown first.",
+        "otherFirst": "“{{name}}” is shown first.",
+        "slot": {
+          "banner": "banner",
+          "modal": "pop-up",
+          "inline": "box in the article",
+          "restriction": "restriction of the article"
+        }
       }
     }
   }

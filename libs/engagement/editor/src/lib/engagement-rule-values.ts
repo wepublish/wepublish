@@ -111,20 +111,13 @@ export const hardStage = (
 export const isHard = (stage: Pick<EngagementStageValues, 'enforcement'>) =>
   stage.enforcement === EngagementEnforcement.Hard;
 
-export const PRIORITY_LEVELS = {
-  low: -10,
-  normal: 0,
-  high: 10,
-  highest: 20,
-} as const;
+/**
+ * The priority of a rule that is shown before the rules it competes with.
+ * Without it the more specific rule goes first, then the newest.
+ */
+export const SHOW_FIRST_PRIORITY = 10;
 
-export type PriorityLevel = keyof typeof PRIORITY_LEVELS;
-
-export const priorityLevel = (priority: number): PriorityLevel =>
-  priority >= PRIORITY_LEVELS.highest ? 'highest'
-  : priority > PRIORITY_LEVELS.normal ? 'high'
-  : priority < PRIORITY_LEVELS.normal ? 'low'
-  : 'normal';
+export const showsFirst = (priority: number) => priority > 0;
 
 export const isAnnouncement = (rule: Pick<EngagementRuleValues, 'goal'>) =>
   rule.goal === EngagementGoal.Announcement;

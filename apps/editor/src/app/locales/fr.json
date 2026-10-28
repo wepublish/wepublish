@@ -4399,7 +4399,6 @@
         "audience": "Public",
         "where": "Où",
         "summary": "Résumé",
-        "priority": "Priorité",
         "articles": "Articles",
         "pages_one": "{{count}} page",
         "pages_other": "{{count}} pages",
@@ -4410,7 +4409,8 @@
         "enforced": "Appliquée",
         "inactive": "Inactive",
         "anyMemberPlan": "Tout abonnement",
-        "copy": "Copier"
+        "copy": "Copier",
+        "showsFirst": "Affichée en premier"
       },
       "delete": {
         "title": "Supprimer la règle d’engagement ?",
@@ -4523,8 +4523,6 @@
         "goal": "Objectif",
         "name": "Nom",
         "active": "Active",
-        "priority": "Priorité",
-        "priorityInfo": "Une personne voit au plus une bannière, un pop-up et un encadré dans l’article à la fois. Si plusieurs règles veulent la même place, celle avec la priorité la plus haute s’affiche. Laisse la plupart des règles sur Normale et utilise Haute pour les campagnes limitées dans le temps.",
         "newsletterNote": "Les abonnements à la newsletter ne peuvent pas encore être vérifiés. Une étape restrictive d’une règle newsletter exige donc une inscription ou un abonnement et doit aussi proposer l’inscription à la newsletter.",
         "audience": "Public",
         "trigger": "Où et quand",
@@ -4580,7 +4578,9 @@
         "actionUrl": "URL",
         "actionRole": "Rôle",
         "addAction": "Ajouter une action",
-        "audienceMemberPlans": "Plans d’abonnement"
+        "audienceMemberPlans": "Plans d’abonnement",
+        "showFirst": "Afficher cette règle en premier",
+        "showFirstInfo": "Une personne voit au plus une bannière, un pop-up et un encadré dans l’article à la fois. Sans ce réglage, la règle la plus précise s’affiche en premier (public plus restreint, pages choisies uniquement), puis la plus récente."
       },
       "validation": {
         "required": "Obligatoire",
@@ -4596,12 +4596,6 @@
         "announcementNoReferral": "Une annonce n’a pas de réglages de newsletter",
         "newsletterActionRequired": "Propose aussi l’inscription à la newsletter"
       },
-      "priority": {
-        "low": "Basse",
-        "normal": "Normale",
-        "high": "Haute",
-        "highest": "Très haute"
-      },
       "copyName": "{{name}} (copie)",
       "review": {
         "title": "Avant d’enregistrer : voici ce qui va se passer",
@@ -4614,6 +4608,18 @@
         "untitled": "Sans titre",
         "back": "Retour à l’édition",
         "confirm": "Créer la règle"
+      },
+      "conflict": {
+        "title": "En concurrence avec d’autres règles",
+        "competes": "En concurrence avec « {{name}} » pour : {{slots}} ({{audience}}).",
+        "thisFirst": "Cette règle s’affiche en premier.",
+        "otherFirst": "« {{name}} » s’affiche en premier.",
+        "slot": {
+          "banner": "bannière",
+          "modal": "pop-up",
+          "inline": "encadré dans l’article",
+          "restriction": "restriction de l’article"
+        }
       }
     }
   }

@@ -17,8 +17,8 @@ import {
   engagementRuleProblems,
   engagementRuleToValues,
   hardStage,
-  PRIORITY_LEVELS,
-  priorityLevel,
+  SHOW_FIRST_PRIORITY,
+  showsFirst,
   stageDefaults,
   toEngagementRuleInput,
 } from './engagement-rule-values';
@@ -249,22 +249,12 @@ describe('engagement rule values', () => {
   });
 });
 
-describe('priority levels', () => {
-  it('orders the levels from low to highest', () => {
-    expect(PRIORITY_LEVELS.low).toBeLessThan(PRIORITY_LEVELS.normal);
-    expect(PRIORITY_LEVELS.normal).toBe(0);
-    expect(PRIORITY_LEVELS.normal).toBeLessThan(PRIORITY_LEVELS.high);
-    expect(PRIORITY_LEVELS.high).toBeLessThan(PRIORITY_LEVELS.highest);
-  });
-
-  it('finds the level of a priority, also of one saved as a plain number', () => {
-    expect(priorityLevel(PRIORITY_LEVELS.low)).toBe('low');
-    expect(priorityLevel(-1)).toBe('low');
-    expect(priorityLevel(0)).toBe('normal');
-    expect(priorityLevel(1)).toBe('high');
-    expect(priorityLevel(PRIORITY_LEVELS.high)).toBe('high');
-    expect(priorityLevel(PRIORITY_LEVELS.highest)).toBe('highest');
-    expect(priorityLevel(100)).toBe('highest');
+describe('showsFirst', () => {
+  it('is any priority above the default', () => {
+    expect(showsFirst(SHOW_FIRST_PRIORITY)).toBe(true);
+    expect(showsFirst(3)).toBe(true);
+    expect(showsFirst(0)).toBe(false);
+    expect(showsFirst(-10)).toBe(false);
   });
 });
 
