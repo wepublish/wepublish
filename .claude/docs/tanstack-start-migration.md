@@ -504,8 +504,6 @@ as the alternative.
   it silently ignores the CMS `hideHeader`/`hideFooter` flags.
   `routes/content.spec.tsx` guards the shared factories against the same slip;
   nothing can guard a route that has not been written yet.
-- **No `defaultErrorComponent`.** An unhandled render error shows the raw
-  error rather than a styled page.
 - **The image is unverified locally.** `dhi.io/node` needs auth; CI overrides
   those ARGs. Validate with public bases:
   `podman build --target website-tanstack --build-arg BUILD_IMAGE=node:22 …`

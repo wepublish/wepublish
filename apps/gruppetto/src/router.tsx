@@ -2,6 +2,7 @@ import { createRouter } from '@tanstack/react-router';
 import {
   apolloRouterOptions,
   createRouterApolloClient,
+  ErrorPage,
   FourOhFourPage,
 } from '@wepublish/utils/website/tanstack';
 
@@ -49,6 +50,9 @@ export function getRouter() {
     // with a 404 is handled by the route itself so the response can carry both
     // a 404 status and the CMS 404 content.
     defaultNotFoundComponent: FourOhFourPage,
+    // Without this a render error falls through to React's own output: a blank
+    // page in production, the whole stack in the reader's browser in dev.
+    defaultErrorComponent: ErrorPage,
     ...apolloRouterOptions(apolloClient),
   });
 
