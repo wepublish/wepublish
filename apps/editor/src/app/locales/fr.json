@@ -4772,6 +4772,7 @@
         "paramValue": "Valeur, p. ex. email",
         "addParam": "Ajouter un paramètre",
         "problems": "La règle ne peut pas être enregistrée ainsi :",
+        "moreOptions": "Plus d’options",
         "presentation": "Présentation et actions",
         "message": "Message",
         "stage": "Étape {{number}}",
