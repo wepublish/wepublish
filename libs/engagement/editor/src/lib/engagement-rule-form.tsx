@@ -1,6 +1,9 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Alert,
   Autocomplete,
   Box,
@@ -47,10 +50,11 @@ import {
   FieldPath,
   useFieldArray,
   useFormContext,
+  useFormState,
   useWatch,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete } from 'react-icons/md';
+import { MdAdd, MdDelete, MdExpandMore } from 'react-icons/md';
 import {
   EngagementRuleValues,
   actionDefaults,
@@ -59,7 +63,7 @@ import {
   isAnnouncement,
   stageDefaults,
 } from './engagement-rule-values';
-import { summarizeRule } from './summarize-rule';
+import { summarizeRule, summarizeStages } from './summarize-rule';
 
 // Columns follow the width of the form, not the window: the sidebar takes a
 // good part of it.
@@ -96,8 +100,12 @@ const RuleSettings = styled('div')`
   }
 `;
 
-const StageCard = styled(Card)`
+const StageAccordion = styled(Accordion)`
   overflow: initial;
+
+  &::before {
+    display: none;
+  }
 `;
 
 /** Related fields side by side, stacked when there is no room. */
@@ -387,6 +395,7 @@ type StageFieldsProps = {
   index: number;
   count: number;
   announcement: boolean;
+  summary?: string;
   onRemove?: () => void;
 };
 
@@ -394,12 +403,30 @@ const StageFields = ({
   index,
   count,
   announcement,
+  summary,
   onRemove,
 }: StageFieldsProps) => {
   const { t } = useTranslation();
   const { control, setValue, getValues } =
     useFormContext<EngagementRuleValues>();
   const stage = useWatch({ control, name: `stages.${index}` });
+  const { errors, submitCount } = useFormState({
+    control,
+    name: `stages.${index}`,
+  });
+  const hasErrors = Boolean(errors.stages?.[index]);
+  const [expanded, setExpanded] = useState(true);
+  const [seenSubmitCount, setSeenSubmitCount] = useState(submitCount);
+
+  // A collapsed stage would hide why saving failed.
+  if (submitCount !== seenSubmitCount) {
+    setSeenSubmitCount(submitCount);
+
+    if (hasErrors) {
+      setExpanded(true);
+    }
+  }
+
   const [chooseImage, setChooseImage] = useState(false);
   const [editImage, setEditImage] = useState(false);
   const isLast = index === count - 1;
@@ -436,227 +463,256 @@ const StageFields = ({
   };
 
   return (
-    <StageCard
-      variant="outlined"
-      data-testid={`stage-${index}`}
-    >
-      <CardContent>
-        <FormFields>
-          <Stack
-            direction="row"
-            sx={{ justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <Typography variant="h4">
+    <>
+      <StageAccordion
+        variant="outlined"
+        disableGutters
+        expanded={expanded}
+        onChange={(_event, isExpanded) => setExpanded(isExpanded)}
+        data-testid={`stage-${index}`}
+      >
+        <AccordionSummary expandIcon={<MdExpandMore />}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography
+              variant="h4"
+              component="span"
+              sx={{ display: 'block' }}
+              color={hasErrors ? 'error' : undefined}
+            >
               {announcement ?
                 t('engagement.form.message')
               : t('engagement.form.stage', { number: index + 1 })}
             </Typography>
 
-            {onRemove && (
-              <IconButton
-                aria-label={t('engagement.form.removeStage')}
-                onClick={onRemove}
+            {summary && (
+              <Typography
+                variant="body2"
+                component="span"
+                color="text.secondary"
+                sx={{
+                  display: 'block',
+                  '&::first-letter': { textTransform: 'uppercase' },
+                }}
               >
-                <MdDelete />
-              </IconButton>
+                {summary}
+              </Typography>
             )}
-          </Stack>
+          </Box>
+        </AccordionSummary>
 
-          <FieldRow>
-            {!announcement && (
-              <NumberField
-                name={`stages.${index}.afterArticles`}
-                label={label(
-                  t('engagement.form.afterArticles'),
-                  t('engagement.form.afterArticlesInfo')
-                )}
-              />
-            )}
-
-            <Controller
-              control={control}
-              name={`stages.${index}.placement`}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  select
-                  label={label(
-                    t('engagement.form.placement'),
-                    t('engagement.form.placementInfo')
-                  )}
-                  error={Boolean(error)}
-                  helperText={error?.message}
-                  fullWidth
-                >
-                  {placements.map(placement => (
-                    <MenuItem
-                      key={placement}
-                      value={placement}
-                    >
-                      {t(`engagement.placement.${placement}`)}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </FieldRow>
-
-          {!announcement &&
-            isLast &&
-            stage?.placement === EngagementPlacement.Cutoff && (
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={hard}
-                    onChange={(_event, checked) => setHard(checked)}
-                  />
-                }
-                label={label(
-                  t('engagement.form.hard'),
-                  t('engagement.form.hardInfo')
-                )}
-              />
-            )}
-
-          {hard && (
+        <AccordionDetails>
+          <FormFields>
             <FieldRow>
+              {!announcement && (
+                <NumberField
+                  name={`stages.${index}.afterArticles`}
+                  label={label(
+                    t('engagement.form.afterArticles'),
+                    t('engagement.form.afterArticlesInfo')
+                  )}
+                />
+              )}
+
               <Controller
                 control={control}
-                name={`stages.${index}.requirement`}
+                name={`stages.${index}.placement`}
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
-                    value={field.value ?? ''}
                     select
                     label={label(
-                      t('engagement.form.requirement'),
-                      t('engagement.form.requirementInfo')
+                      t('engagement.form.placement'),
+                      t('engagement.form.placementInfo')
                     )}
                     error={Boolean(error)}
                     helperText={error?.message}
                     fullWidth
                   >
-                    {Object.values(EngagementRequirement).map(requirement => (
+                    {placements.map(placement => (
                       <MenuItem
-                        key={requirement}
-                        value={requirement}
+                        key={placement}
+                        value={placement}
                       >
-                        {t(`engagement.requirement.${requirement}`)}
+                        {t(`engagement.placement.${placement}`)}
                       </MenuItem>
                     ))}
                   </TextField>
                 )}
               />
-
-              <NumberField
-                name={`stages.${index}.previewBlocks`}
-                label={label(
-                  t('engagement.form.previewBlocks'),
-                  t('engagement.form.previewBlocksInfo')
-                )}
-                nullable
-              />
             </FieldRow>
-          )}
 
-          <TextFieldControl
-            name={`stages.${index}.title`}
-            label={t('engagement.form.title')}
-          />
-
-          <FormControl fullWidth>
-            <FormLabel>{t('engagement.form.description')}</FormLabel>
-            <Controller
-              control={control}
-              name={`stages.${index}.description`}
-              render={({ field }) => (
-                <RichTextBlock
-                  value={field.value ?? undefined}
-                  onChange={field.onChange}
+            {!announcement &&
+              isLast &&
+              stage?.placement === EngagementPlacement.Cutoff && (
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={hard}
+                      onChange={(_event, checked) => setHard(checked)}
+                    />
+                  }
+                  label={label(
+                    t('engagement.form.hard'),
+                    t('engagement.form.hardInfo')
+                  )}
                 />
               )}
-            />
-          </FormControl>
 
-          {stage?.placement === EngagementPlacement.Banner && (
-            <>
-              <TextFieldControl
-                name={`stages.${index}.text`}
-                label={t('engagement.form.text')}
-              />
-              <TextFieldControl
-                name={`stages.${index}.html`}
-                label={label(
-                  t('engagement.form.html'),
-                  t('engagement.form.htmlInfo')
-                )}
-                multiline
-              />
-              <TextFieldControl
-                name={`stages.${index}.embedUrl`}
-                label={label(
-                  t('engagement.form.embedUrl'),
-                  t('engagement.form.embedUrlInfo')
-                )}
-              />
-            </>
-          )}
-
-          <TextFieldControl
-            name={`stages.${index}.cta`}
-            label={label(
-              t('engagement.form.cta'),
-              t('engagement.form.ctaInfo')
-            )}
-          />
-
-          <FormControl fullWidth>
-            <FormLabel>{t('engagement.form.image')}</FormLabel>
-            <ChooseEditImage
-              image={stage?.image}
-              disabled={false}
-              openChooseModalOpen={() => setChooseImage(true)}
-              openEditModalOpen={() => setEditImage(true)}
-              removeImage={() => {
-                setValue(`stages.${index}.image`, null, { shouldDirty: true });
-                setValue(`stages.${index}.imageId`, null, {
-                  shouldDirty: true,
-                });
-              }}
-            />
-          </FormControl>
-
-          {!hard && (
-            <>
-              <SwitchControl
-                name={`stages.${index}.dismissible`}
-                label={label(
-                  t('engagement.form.dismissible'),
-                  t('engagement.form.dismissibleInfo')
-                )}
-              />
-
+            {hard && (
               <FieldRow>
-                <NumberField
-                  name={`stages.${index}.hideForMinutes`}
-                  label={label(
-                    t('engagement.form.hideForMinutes'),
-                    t('engagement.form.hideForMinutesInfo')
+                <Controller
+                  control={control}
+                  name={`stages.${index}.requirement`}
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      value={field.value ?? ''}
+                      select
+                      label={label(
+                        t('engagement.form.requirement'),
+                        t('engagement.form.requirementInfo')
+                      )}
+                      error={Boolean(error)}
+                      helperText={error?.message}
+                      fullWidth
+                    >
+                      {Object.values(EngagementRequirement).map(requirement => (
+                        <MenuItem
+                          key={requirement}
+                          value={requirement}
+                        >
+                          {t(`engagement.requirement.${requirement}`)}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   )}
-                  disabled={!stage?.dismissible}
                 />
 
                 <NumberField
-                  name={`stages.${index}.delaySeconds`}
-                  label={t('engagement.form.delaySeconds')}
+                  name={`stages.${index}.previewBlocks`}
+                  label={label(
+                    t('engagement.form.previewBlocks'),
+                    t('engagement.form.previewBlocksInfo')
+                  )}
+                  nullable
                 />
               </FieldRow>
-            </>
-          )}
+            )}
 
-          <ActionList stageIndex={index} />
-        </FormFields>
-      </CardContent>
+            <TextFieldControl
+              name={`stages.${index}.title`}
+              label={t('engagement.form.title')}
+            />
+
+            <FormControl fullWidth>
+              <FormLabel>{t('engagement.form.description')}</FormLabel>
+              <Controller
+                control={control}
+                name={`stages.${index}.description`}
+                render={({ field }) => (
+                  <RichTextBlock
+                    value={field.value ?? undefined}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+            </FormControl>
+
+            {stage?.placement === EngagementPlacement.Banner && (
+              <>
+                <TextFieldControl
+                  name={`stages.${index}.text`}
+                  label={t('engagement.form.text')}
+                />
+                <TextFieldControl
+                  name={`stages.${index}.html`}
+                  label={label(
+                    t('engagement.form.html'),
+                    t('engagement.form.htmlInfo')
+                  )}
+                  multiline
+                />
+                <TextFieldControl
+                  name={`stages.${index}.embedUrl`}
+                  label={label(
+                    t('engagement.form.embedUrl'),
+                    t('engagement.form.embedUrlInfo')
+                  )}
+                />
+              </>
+            )}
+
+            <TextFieldControl
+              name={`stages.${index}.cta`}
+              label={label(
+                t('engagement.form.cta'),
+                t('engagement.form.ctaInfo')
+              )}
+            />
+
+            <FormControl fullWidth>
+              <FormLabel>{t('engagement.form.image')}</FormLabel>
+              <ChooseEditImage
+                image={stage?.image}
+                disabled={false}
+                openChooseModalOpen={() => setChooseImage(true)}
+                openEditModalOpen={() => setEditImage(true)}
+                removeImage={() => {
+                  setValue(`stages.${index}.image`, null, {
+                    shouldDirty: true,
+                  });
+                  setValue(`stages.${index}.imageId`, null, {
+                    shouldDirty: true,
+                  });
+                }}
+              />
+            </FormControl>
+
+            {!hard && (
+              <>
+                <SwitchControl
+                  name={`stages.${index}.dismissible`}
+                  label={label(
+                    t('engagement.form.dismissible'),
+                    t('engagement.form.dismissibleInfo')
+                  )}
+                />
+
+                <FieldRow>
+                  <NumberField
+                    name={`stages.${index}.hideForMinutes`}
+                    label={label(
+                      t('engagement.form.hideForMinutes'),
+                      t('engagement.form.hideForMinutesInfo')
+                    )}
+                    disabled={!stage?.dismissible}
+                  />
+
+                  <NumberField
+                    name={`stages.${index}.delaySeconds`}
+                    label={t('engagement.form.delaySeconds')}
+                  />
+                </FieldRow>
+              </>
+            )}
+
+            <ActionList stageIndex={index} />
+
+            {onRemove && (
+              <Box>
+                <Button
+                  variant="text"
+                  color="error"
+                  startIcon={<MdDelete />}
+                  onClick={onRemove}
+                >
+                  {t('engagement.form.removeStage')}
+                </Button>
+              </Box>
+            )}
+          </FormFields>
+        </AccordionDetails>
+      </StageAccordion>
 
       <Drawer
         anchor="right"
@@ -693,7 +749,7 @@ const StageFields = ({
           />
         </Drawer>
       )}
-    </StageCard>
+    </>
   );
 };
 
@@ -827,6 +883,7 @@ export const EngagementRuleForm = () => {
   const pages = pageData?.pages.nodes ?? [];
   const stagesError =
     formState.errors.stages?.root?.message ?? formState.errors.stages?.message;
+  const stageSummaries = stages ? summarizeStages({ goal, stages }, t) : [];
 
   const changeGoal = (next: EngagementGoal) => {
     const current = getValues();
@@ -1042,6 +1099,7 @@ export const EngagementRuleForm = () => {
               index={index}
               count={stageFields.length}
               announcement={announcement}
+              summary={stageSummaries[index]}
               onRemove={
                 !announcement && stageFields.length > 1 ?
                   () => removeStage(index)

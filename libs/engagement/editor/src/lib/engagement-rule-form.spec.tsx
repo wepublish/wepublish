@@ -180,6 +180,57 @@ describe('EngagementRuleForm', () => {
     expect(settings).not.toContainElement(screen.getAllByTestId(/^stage-/)[0]);
   });
 
+  it('collapses and expands each stage on its own', () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    const [first, last] = screen.getAllByRole('button', {
+      name: /engagement.form.stage/,
+    });
+
+    expect(first).toHaveAttribute('aria-expanded', 'true');
+    expect(last).toHaveAttribute('aria-expanded', 'true');
+
+    fireEvent.click(first);
+
+    expect(first).toHaveAttribute('aria-expanded', 'false');
+    expect(last).toHaveAttribute('aria-expanded', 'true');
+
+    fireEvent.click(first);
+
+    expect(first).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('sums up each stage in its header, to tell collapsed stages apart', () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    const [first] = screen.getAllByRole('button', {
+      name: /engagement.form.stage/,
+    });
+
+    expect(first).toHaveTextContent('engagement.summary.afterReadRange');
+  });
+
+  it('opens collapsed stages that have errors on submit', async () => {
+    const preset = ENGAGEMENT_PRESETS.promoteMemberships();
+
+    renderForm({
+      ...preset,
+      name: 'Members',
+      stages: [...preset.stages, { ...preset.stages[0], afterArticles: 1 }],
+    });
+
+    const [, last] = screen.getAllByRole('button', {
+      name: /engagement.form.stage/,
+    });
+
+    fireEvent.click(last);
+    expect(last).toHaveAttribute('aria-expanded', 'false');
+
+    fireEvent.click(screen.getByText('submit'));
+
+    await waitFor(() => expect(last).toHaveAttribute('aria-expanded', 'true'));
+  });
+
   it('saves a consistent rule', async () => {
     const onSubmit = vi.fn();
     const preset = ENGAGEMENT_PRESETS.promoteMemberships();
