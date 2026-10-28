@@ -979,6 +979,9 @@
       "ignoreDeactivatedSubscriptions": "E-Mails an deaktivierte Abos werden nicht verschickt!"
     },
     "edit": "Bearbeiten",
+    "editorHeader": {
+      "moreActions": "Weitere Aktionen"
+    },
     "errors": {
       "uniqueEmail": "Diese E-Mail-Adresse wird bereits verwendet.",
       "uniqueField": "Dieser Wert ist bereits vergeben ({{field}}).",
