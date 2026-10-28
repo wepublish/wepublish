@@ -7,12 +7,12 @@ import {
   Prisma,
   PrismaClient,
 } from '@prisma/client';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   PublicContentCacheInvalidator,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { EvaluatedRule, ReferralParam } from './evaluate';
 import {
@@ -102,7 +102,7 @@ const stageData = ({
 export class EngagementRuleService {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private kv: NamespacedCache,
     private publicContentCache: PublicContentCacheInvalidator
   ) {}
 

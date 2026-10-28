@@ -1,7 +1,7 @@
 import {
   mockAnnouncementPrompt,
   mockEngagementAction,
-} from '@wepublish/storybook/mocks';
+} from '@wepublish/mocks/website';
 import {
   BannerActionRole,
   EngagementActionRole,

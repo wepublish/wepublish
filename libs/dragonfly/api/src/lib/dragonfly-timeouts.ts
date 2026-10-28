@@ -1,0 +1,2 @@
+export const CONNECTION_TIMEOUT_MS = 1000;
+export const KEEP_ALIVE_INITIAL_DELAY_MS = 5000;

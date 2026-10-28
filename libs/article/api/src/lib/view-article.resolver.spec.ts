@@ -12,15 +12,14 @@ import {
   EngagementRuleWithStages,
   EngagementStageWithActions,
   METER_SECRET,
+  ENGAGEMENT_SHARED_NAMESPACES,
   MeterService,
   ReaderContext,
   deriveMeterSecret,
   signMeter,
 } from '@wepublish/engagement/api';
-import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
-} from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { ArticleAccessService, ArticleRequest } from './article-access.service';
 import { ArticleAccessSource } from './article-access';
 import { ArticleRevisionResolver } from './article-revision.resolver';
@@ -104,7 +103,7 @@ describe('viewArticle', () => {
   let paywall: Record<string, unknown> | null;
   let rules: EngagementRuleWithStages[];
   let meters: MeterService;
-  let kv: KvTtlCacheService;
+  let kv: NamespacedCache;
   let bypassTokens: string[];
 
   const articleOf = (id: string) => ({
@@ -171,12 +170,17 @@ describe('viewArticle', () => {
     bypassTokens = ['secret'];
 
     const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: ENGAGEMENT_SHARED_NAMESPACES,
+        }),
+      ],
       providers: [MeterService, { provide: METER_SECRET, useValue: secret }],
     }).compile();
 
+    await module.init();
     meters = module.get(MeterService);
-    kv = module.get(KvTtlCacheService);
+    kv = module.get(NamespacedCache);
   });
 
   it('meters an anonymous reader through the token: two clean, two modals, then the cutoff', async () => {

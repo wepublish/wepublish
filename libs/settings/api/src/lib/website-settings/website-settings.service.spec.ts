@@ -1,7 +1,7 @@
 import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { WebsiteSettingsService } from './website-settings.service';
 
 describe('WebsiteSettingsService', () => {
@@ -25,7 +25,7 @@ describe('WebsiteSettingsService', () => {
     };
 
     const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [NamespacedCacheTestingModule.forRoot()],
       providers: [
         WebsiteSettingsService,
         { provide: PrismaClient, useValue: prisma },

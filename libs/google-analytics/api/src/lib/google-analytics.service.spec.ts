@@ -5,8 +5,8 @@ import {
   GoogleAnalyticsConfig,
   GoogleAnalyticsService,
 } from './google-analytics.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
+import { GOOGLE_ANALYTICS_SHARED_NAMESPACES } from '../index';
 import type { Mock } from 'vitest';
 
 // Held in variables rather than reached for with `requireMock`, which vitest
@@ -32,6 +32,7 @@ vi.mock('@google-analytics/data', () => ({
 }));
 
 describe('GoogleAnalyticsService', () => {
+  let module: TestingModule;
   let config: GoogleAnalyticsConfig;
   let service: GoogleAnalyticsService;
   let prismaMock: {
@@ -47,8 +48,13 @@ describe('GoogleAnalyticsService', () => {
     vi.useRealTimers();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     vi.clearAllMocks();
+    await module.close();
+  });
+
+  it('shares the article views through Dragonfly', () => {
+    expect(GOOGLE_ANALYTICS_SHARED_NAMESPACES).toEqual(['ga4']);
   });
 
   beforeEach(async () => {
@@ -72,7 +78,12 @@ describe('GoogleAnalyticsService', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: GOOGLE_ANALYTICS_SHARED_NAMESPACES,
+        }),
+      ],
       providers: [
         GoogleAnalyticsService,
         { provide: PrismaClient, useValue: prismaMock },
@@ -82,7 +93,6 @@ describe('GoogleAnalyticsService', () => {
             getGoogleAnalytics: () => Promise.resolve(config),
           },
         },
-        { provide: KvTtlCacheService, useValue: createKvMock() },
       ],
     }).compile();
 

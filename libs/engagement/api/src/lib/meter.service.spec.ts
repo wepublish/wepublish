@@ -1,9 +1,7 @@
 import { Test } from '@nestjs/testing';
-import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
-} from '@wepublish/kv-ttl-cache/api';
-import { MeterService } from './meter.service';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
+import { ENGAGEMENT_SHARED_NAMESPACES, MeterService } from './meter.service';
 import { METER_SECRET, deriveMeterSecret, signMeter } from './meter-token';
 import { ReaderContext } from './reader-context';
 import { Meter } from './meter';
@@ -26,16 +24,21 @@ const meter: Meter = { reads: [['a', 1]] };
 
 describe('MeterService', () => {
   let service: MeterService;
-  let kv: KvTtlCacheService;
+  let kv: NamespacedCache;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: ENGAGEMENT_SHARED_NAMESPACES,
+        }),
+      ],
       providers: [MeterService, { provide: METER_SECRET, useValue: secret }],
     }).compile();
 
     service = module.get(MeterService);
-    kv = module.get(KvTtlCacheService);
+    await module.init();
+    kv = module.get(NamespacedCache);
   });
 
   it("reads an anonymous reader's meter from the token", async () => {

@@ -2,6 +2,10 @@ import {
   SettingTrackingPixel,
   TrackingPixelProviderType,
 } from '@prisma/client';
+import {
+  type NamespacedCacheTesting,
+  createNamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { of } from 'rxjs';
 
@@ -22,18 +26,17 @@ const setting = (
     ...overrides,
   }) as SettingTrackingPixel;
 
-const createProvider = (config: SettingTrackingPixel) => {
+const harnesses: NamespacedCacheTesting[] = [];
+
+const createProvider = async (config: SettingTrackingPixel) => {
   const prisma = {
     settingTrackingPixel: {
       update: vi.fn().mockResolvedValue(config),
       findUnique: vi.fn().mockResolvedValue(config),
     },
   };
-  const kv = {
-    getOrLoadNs: vi.fn(
-      (_ns: string, _key: string, load: () => Promise<unknown>) => load()
-    ),
-  };
+  const testing = await createNamespacedCacheTesting();
+  harnesses.push(testing);
   const post = vi.fn().mockReturnValue(
     of({
       data: { domain: 'pl02.owen.prolitteris.ch', pixelUids: ['plzm.abc'] },
@@ -43,7 +46,7 @@ const createProvider = (config: SettingTrackingPixel) => {
   const provider = new ProlitterisTrackingPixelProvider(
     'prolitteris',
     prisma as any,
-    kv as any,
+    testing.cache,
     { post } as any
   );
 
@@ -61,8 +64,12 @@ describe('ProlitterisTrackingPixelProvider', () => {
     process.env['APP_SECRET_KEY'] = originalSecret;
   });
 
+  afterEach(async () => {
+    await Promise.all(harnesses.splice(0).map(harness => harness.close()));
+  });
+
   it('treats an unset publisher internal key switch as off and fetches the pixel from ProLitteris', async () => {
-    const { provider, post } = createProvider(
+    const { provider, post } = await createProvider(
       setting({ prolitteris_usePublisherInternalKey: null })
     );
 
@@ -74,7 +81,7 @@ describe('ProlitterisTrackingPixelProvider', () => {
   });
 
   it('builds the pixel from the member number when the publisher internal key is on', async () => {
-    const { provider, post } = createProvider(
+    const { provider, post } = await createProvider(
       setting({
         prolitteris_usePublisherInternalKey: true,
         prolitteris_publisherInternalKeyDomain: 'pl01.owen.prolitteris.ch',
@@ -89,7 +96,7 @@ describe('ProlitterisTrackingPixelProvider', () => {
   });
 
   it('still needs the member number', async () => {
-    const { provider } = createProvider(
+    const { provider } = await createProvider(
       setting({ prolitteris_memberNr: null })
     );
 

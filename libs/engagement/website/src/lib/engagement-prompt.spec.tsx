@@ -1,25 +1,44 @@
-import { composeStories } from '@storybook/react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import * as stories from './engagement-prompt.stories';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
+import {
+  mockEngagementAction,
+  mockEngagementPrompt,
+  mockHardEngagementPrompt,
+  mockImage,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import {
+  EngagementActionType,
+  EngagementPlacement,
+} from '@wepublish/website/api';
+import { t } from 'i18next';
+import { EngagementPrompt } from './engagement-prompt';
 
-const storiesCmp = composeStories(stories);
-const { Modal, Inline, NotDismissible, HardCutoff, HardCutoffForMembers } =
-  storiesCmp;
-
-describe('EngagementPrompt', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
+const inline = () =>
+  mockEngagementPrompt({
+    stage: {
+      placement: EngagementPlacement.Inline,
+      image: mockImage(),
+      cta: 'Every Friday in your inbox.',
+    },
   });
 
+const linkOf = (text: string) =>
+  screen.getByText(text).closest('a')?.getAttribute('href');
+
+describe('EngagementPrompt', () => {
   it('shows a soft modal the reader can dismiss', async () => {
     const onDismiss = vi.fn();
-    render(<Modal onDismiss={onDismiss} />);
 
-    expect(screen.getByText('Enjoying our journalism?')).toBeTruthy();
+    renderWithProviders(
+      <EngagementPrompt
+        prompt={mockEngagementPrompt()}
+        onDismiss={onDismiss}
+      />
+    );
 
-    fireEvent.click(screen.getByText('Weiterlesen'));
+    expect(screen.getByText('Enjoying our journalism?')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText(t('engagement.dismiss')));
 
     expect(onDismiss).toHaveBeenCalledTimes(1);
     await waitFor(() =>
@@ -30,8 +49,10 @@ describe('EngagementPrompt', () => {
   it('lets the reader dismiss an inline prompt, which reports the click on an action', () => {
     const onDismiss = vi.fn();
     const onAction = vi.fn();
-    render(
-      <Inline
+
+    renderWithProviders(
+      <EngagementPrompt
+        prompt={inline()}
         onDismiss={onDismiss}
         onAction={onAction}
       />
@@ -42,43 +63,59 @@ describe('EngagementPrompt', () => {
       expect.objectContaining({ id: 'action-1' })
     );
 
-    fireEvent.click(screen.getByText('Weiterlesen'));
+    fireEvent.click(screen.getByText(t('engagement.dismiss')));
     expect(onDismiss).toHaveBeenCalled();
     expect(screen.queryByText('Subscribe to our newsletter')).toBeNull();
   });
 
   it('offers no dismissal when the prompt can not be dismissed', () => {
-    render(<NotDismissible />);
+    renderWithProviders(
+      <EngagementPrompt
+        prompt={mockEngagementPrompt({
+          stage: { placement: EngagementPlacement.Inline, dismissible: false },
+        })}
+      />
+    );
 
-    expect(screen.queryByText('Weiterlesen')).toBeNull();
+    expect(screen.queryByText(t('engagement.dismiss'))).toBeNull();
   });
 
   it('sends readers past a registration cutoff to signup or login', () => {
-    render(<HardCutoff />);
-
-    expect(
-      screen
-        .getByText('Kostenlos registrieren')
-        .closest('a')
-        ?.getAttribute('href')
-    ).toBe('/signup');
-    expect(screen.getByText('Login').closest('a')?.getAttribute('href')).toBe(
-      '/login'
+    renderWithProviders(
+      <EngagementPrompt prompt={mockHardEngagementPrompt()} />
     );
-    expect(screen.queryByText('Weiterlesen')).toBeNull();
+
+    expect(linkOf(t('engagement.action.REGISTER'))).toBe('/signup');
+    expect(linkOf(t('engagement.action.LOGIN'))).toBe('/login');
+    expect(screen.queryByText(t('engagement.dismiss'))).toBeNull();
   });
 
   it('sends readers past a membership cutoff to the membership page, keeping the newsletter path open', () => {
-    render(<HardCutoffForMembers />);
+    renderWithProviders(
+      <EngagementPrompt
+        prompt={mockHardEngagementPrompt({
+          title: 'Become a member to keep reading',
+          actions: [
+            mockEngagementAction({
+              id: 'membership',
+              type: EngagementActionType.Membership,
+              label: '',
+              url: '',
+            }),
+            mockEngagementAction({
+              id: 'newsletter',
+              type: EngagementActionType.Newsletter,
+              label: 'Or get our newsletter',
+              url: 'https://example.com/newsletter',
+            }),
+          ],
+        })}
+      />
+    );
 
-    expect(
-      screen.getByText('Abonnent*in werden').closest('a')?.getAttribute('href')
-    ).toBe('/mitmachen');
-    expect(
-      screen
-        .getByText('Or get our newsletter')
-        .closest('a')
-        ?.getAttribute('href')
-    ).toBe('https://example.com/newsletter');
+    expect(linkOf(t('engagement.action.MEMBERSHIP'))).toBe('/mitmachen');
+    expect(linkOf('Or get our newsletter')).toBe(
+      'https://example.com/newsletter'
+    );
   });
 });

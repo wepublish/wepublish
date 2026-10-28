@@ -4,7 +4,7 @@ import {
   mockEngagementPrompt,
   mockHardEngagementPrompt,
   mockRestrictedByRule,
-} from '@wepublish/storybook/mocks';
+} from '@wepublish/mocks/website';
 import {
   ArticleAccessSource,
   EngagementGoal,

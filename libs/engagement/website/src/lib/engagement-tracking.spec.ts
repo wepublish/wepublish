@@ -1,4 +1,4 @@
-import { mockEngagementPrompt } from '@wepublish/storybook/mocks';
+import { mockEngagementPrompt } from '@wepublish/mocks/website';
 import {
   EngagementEvent,
   engagementEvent,
@@ -10,7 +10,6 @@ import {
 declare global {
   interface Window {
     dataLayer?: unknown[];
-    plausible?: (...args: unknown[]) => void;
   }
 }
 

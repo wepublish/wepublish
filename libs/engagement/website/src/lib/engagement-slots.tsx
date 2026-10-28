@@ -131,7 +131,10 @@ export function EngagementBannerSlot({
   const { Banner } = useWebsiteBuilder();
   const closedBefore = useRef<string | null>(null);
   const data = useMemo(
-    () => ({ primaryBanner: promptToBanner(prompt, t) }),
+    () => ({
+      __typename: 'Query' as const,
+      primaryBanner: promptToBanner(prompt, t),
+    }),
     [prompt, t]
   );
 

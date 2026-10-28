@@ -1,11 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { createHmac } from 'crypto';
 import { Meter, emptyMeter, isMeter, mergeMeters } from './meter';
 import { METER_SECRET, signMeter, verifyMeterToken } from './meter-token';
 import { ReaderContext } from './reader-context';
 
 export const METER_NAMESPACE = 'engagement:meters';
+
+// Keyed by an HMAC of the user id and holding article ids only, so a website
+// pod can not tell whose reading history it is.
+export const ENGAGEMENT_SHARED_NAMESPACES: readonly string[] = [
+  METER_NAMESPACE,
+];
 
 /**
  * Logged-in readers keep their meter on the server (the same on every device,
@@ -17,7 +23,7 @@ export const METER_NAMESPACE = 'engagement:meters';
 export class MeterService {
   constructor(
     @Inject(METER_SECRET) private secret: Buffer,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   async load(

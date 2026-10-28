@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import { mockEngagementPrompt } from '@wepublish/storybook/mocks';
+import { mockEngagementPrompt } from '@wepublish/mocks/website';
 import {
   ENGAGEMENT_DISMISSALS_KEY,
   LEGACY_BANNER_CLOSED_KEY,

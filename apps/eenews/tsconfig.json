@@ -21,7 +21,14 @@
     "types": ["vitest/globals", "node"],
     "ignoreDeprecations": "6.0"
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "next-env.d.ts",
+    "../../libs/tenants/eenews/src/mui-augmentation.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "vitest.config.ts",

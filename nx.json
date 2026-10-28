@@ -58,7 +58,9 @@
           "^production",
           "{workspaceRoot}/vitest.shared.ts",
           "{workspaceRoot}/vitest.setup-tests.ts",
-          "{workspaceRoot}/vitest.emotion-serializer.ts"
+          "{workspaceRoot}/vitest.emotion-serializer.ts",
+          "{workspaceRoot}/libs/testing/**/*",
+          "{workspaceRoot}/libs/mocks/website/**/*"
         ],
         "cache": true
       },
@@ -77,16 +79,6 @@
         }
       }
     ],
-    "build-storybook": {
-      "inputs": [
-        "default",
-        "^production",
-        "{workspaceRoot}/.storybook/**/*",
-        "{projectRoot}/.storybook/**/*",
-        "{projectRoot}/tsconfig.storybook.json"
-      ],
-      "cache": true
-    },
     "browser": {
       "cache": true
     },
@@ -127,10 +119,7 @@
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/vitest.config.[jt]s",
-      "!{projectRoot}/.storybook/**/*",
-      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
-      "!{projectRoot}/src/test-setup.[jt]s",
-      "!{projectRoot}/tsconfig.storybook.json"
+      "!{projectRoot}/src/test-setup.[jt]s"
     ],
     "sharedGlobals": [
       "{workspaceRoot}/babel.config.json",
@@ -228,6 +217,7 @@
         "libs/crowdfunding/api/**/*",
         "libs/crowdfunding/editor/**/*",
         "libs/document/api/**/*",
+        "libs/dragonfly/api/**/*",
         "libs/editor/api/**/*",
         "libs/engagement/api/**/*",
         "libs/engagement/editor/**/*",
@@ -269,6 +259,7 @@
         "libs/phrase/api/**/*",
         "libs/poll/api/**/*",
         "libs/property/api/**/*",
+        "libs/public-content-cache/api/**/*",
         "libs/richtext/api/**/*",
         "libs/richtext/editor/**/*",
         "libs/richtext/**/*",
@@ -280,6 +271,24 @@
         "libs/system-info/api/**/*",
         "libs/tag/api/**/*",
         "libs/tag/website/**/*",
+        "libs/tenants/babanews/**/*",
+        "libs/tenants/bajour/**/*",
+        "libs/tenants/cultur/**/*",
+        "libs/tenants/eenews/**/*",
+        "libs/tenants/factuel/**/*",
+        "libs/tenants/fazetten/**/*",
+        "libs/tenants/flimmer/**/*",
+        "libs/tenants/ganzgraz/**/*",
+        "libs/tenants/gruppetto/**/*",
+        "libs/tenants/hauptstadt/**/*",
+        "libs/tenants/mannschaft/**/*",
+        "libs/tenants/munotgloeggli/**/*",
+        "libs/tenants/onlinereports/**/*",
+        "libs/tenants/reflekt/**/*",
+        "libs/tenants/tsri/**/*",
+        "libs/tenants/wepublish-site/**/*",
+        "libs/tenants/wnti/**/*",
+        "libs/tenants/zwoelf/**/*",
         "libs/tracking-pixel/api/**/*",
         "libs/ui/editor/**/*",
         "libs/ui/**/*",
@@ -295,7 +304,8 @@
         "libs/website/api/**/*",
         "libs/website/builder/**/*",
         "libs/website/**/*",
-        "libs/website/translations/**/*"
+        "libs/website/translations/**/*",
+        "libs/website-revalidation/api/**/*"
       ]
     },
     {

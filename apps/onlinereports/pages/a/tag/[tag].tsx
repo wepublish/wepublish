@@ -1,14 +1,14 @@
 export {
   TagPageGetStaticPaths as getStaticPaths,
   TagPageGetStaticProps as getStaticProps,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ArticleListWrapper } from '@wepublish/article/website';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 import { TagTitle, TagTitleWrapper, TagWrapper } from '@wepublish/tag/website';
-import { TagPage as TagPageDefault } from '@wepublish/utils/website';
+import { TagPage as TagPageDefault } from '@wepublish/utils/website/next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 import { z } from 'zod';

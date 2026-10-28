@@ -93,7 +93,8 @@ export const EngagementPrompt = ({
     onDismiss?.();
   };
 
-  const content = (
+  // A modal names itself by the title, so it is left out of the body there.
+  const content = (withTitle: boolean) => (
     <>
       {stage.image?.url && (
         <EngagementPromptImage
@@ -101,7 +102,7 @@ export const EngagementPrompt = ({
           alt={stage.image.description ?? ''}
         />
       )}
-      {stage.title && <H4 component="p">{stage.title}</H4>}
+      {withTitle && stage.title && <H4 component="p">{stage.title}</H4>}
       {stage.description && <RichText richText={stage.description} />}
       {stage.text && <Paragraph>{stage.text}</Paragraph>}
       {stage.html && <div dangerouslySetInnerHTML={{ __html: stage.html }} />}
@@ -114,6 +115,7 @@ export const EngagementPrompt = ({
       <Modal
         className={className}
         open={!delayed && !closed}
+        title={stage.title ?? ''}
         submitText={primary ? actionLabel(primary, t) : t('engagement.dismiss')}
         cancelText={t('engagement.dismiss')}
         onCancel={dismiss}
@@ -126,7 +128,7 @@ export const EngagementPrompt = ({
           window.location.assign(actionHref(primary));
         }}
       >
-        {content}
+        {content(false)}
       </Modal>
     );
   }
@@ -141,7 +143,7 @@ export const EngagementPrompt = ({
       data-placement={stage.placement}
       data-enforcement={stage.enforcement}
     >
-      {content}
+      {content(true)}
 
       <EngagementPromptActions>
         {actions.map(action => (

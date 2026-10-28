@@ -12,11 +12,13 @@ import {
   NewsletterReferralMode,
   PrismaClient,
 } from '@prisma/client';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
+  PUBLIC_CONTENT_SHARED_NAMESPACES,
   PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+  PublicContentInvalidatorModule,
+} from '@wepublish/public-content-cache/api';
 import { EngagementRuleService } from './engagement-rule.service';
 import { CreateEngagementRuleInput } from './engagement-rule.model';
 
@@ -127,7 +129,7 @@ const metered: CreateEngagementRuleInput = {
 
 describe('EngagementRuleService', () => {
   let service: EngagementRuleService;
-  let kv: KvTtlCacheService;
+  let kv: NamespacedCache;
   let invalidator: PublicContentCacheInvalidator;
   let prisma: {
     engagementRule: Record<
@@ -155,11 +157,17 @@ describe('EngagementRuleService', () => {
     );
 
     const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: PUBLIC_CONTENT_SHARED_NAMESPACES,
+        }),
+        PublicContentInvalidatorModule,
+      ],
     }).compile();
 
-    kv = module.get(KvTtlCacheService);
-    invalidator = new PublicContentCacheInvalidator(kv);
+    await module.init();
+    kv = module.get(NamespacedCache);
+    invalidator = module.get(PublicContentCacheInvalidator);
     vi.spyOn(invalidator, 'invalidate');
     service = new EngagementRuleService(
       prisma as unknown as PrismaClient,
