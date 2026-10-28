@@ -4425,13 +4425,17 @@
       },
       "preset": {
         "growNewsletter": "Grow the newsletter",
-        "growNewsletterInfo": "Ask anonymous readers to subscribe after a few articles, then ask them to register.",
+        "growNewsletterInfo": "Turn regular readers into newsletter subscribers.",
         "promoteMemberships": "Promote memberships",
-        "promoteMembershipsInfo": "Show an invitation to become a member in articles, for readers without a membership.",
+        "promoteMembershipsInfo": "Invite engaged readers to support your publication with a membership.",
         "restrictPremium": "Restrict premium content",
-        "restrictPremiumInfo": "Keep articles for members of certain plans, enforced on the server. Opens a new paywall.",
+        "restrictPremiumInfo": "Keep selected articles for paying members. Opens a new paywall.",
         "displayAnnouncement": "Display an announcement",
-        "displayAnnouncementInfo": "A banner or message on articles and pages, e.g. for a crowdfunding."
+        "displayAnnouncementInfo": "Tell every reader about something, e.g. a crowdfunding or an event.",
+        "restrictPremiumAudience": "Readers without one of the chosen plans",
+        "restrictPremiumStep": "Every article of the paywall: cut off after the preview, checked on the server",
+        "for": "For",
+        "steps": "What readers see"
       },
       "goal": {
         "ANNOUNCEMENT": "Announcement",

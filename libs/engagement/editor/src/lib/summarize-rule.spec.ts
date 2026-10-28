@@ -5,7 +5,7 @@ import {
 } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { hardStage, stageDefaults } from './engagement-rule-values';
-import { summarizeRule } from './summarize-rule';
+import { summarizeRule, summarizeStages } from './summarize-rule';
 
 const en: Record<string, string> = {
   'engagement.summary.announcement': '{{placement}} from the first visit',
@@ -77,5 +77,27 @@ describe('summarizeRule', () => {
         t
       )
     ).toBe('banner from the first visit');
+  });
+
+  it('lists the stages one by one, for a step by step view', () => {
+    expect(
+      summarizeStages(
+        {
+          goal: EngagementGoal.Newsletter,
+          stages: [
+            stageDefaults({ afterArticles: 2 }),
+            hardStage({
+              afterArticles: 4,
+              requirement: EngagementRequirement.Registration,
+              previewBlocks: 3,
+            }),
+          ],
+        },
+        t
+      )
+    ).toEqual([
+      'Articles 3–4: dismissible modal',
+      'from 5: requires registration, 3 preview blocks',
+    ]);
   });
 });
