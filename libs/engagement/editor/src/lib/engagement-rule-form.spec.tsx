@@ -293,6 +293,17 @@ describe('EngagementRuleForm', () => {
     expect(settings).not.toContainElement(screen.getAllByTestId(/^stage-/)[0]);
   });
 
+  it('spaces the stages with a gap, which open stages can not collapse', () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    // An open accordion drops its top margin when it is the first of its
+    // type, so margins put the first stage right under the heading.
+    const column = screen.getByTestId('stages');
+
+    expect(getComputedStyle(column).gap).not.toBe('');
+    expect(getComputedStyle(column).gap).not.toBe('0');
+  });
+
   it('collapses and expands each stage on its own', () => {
     renderForm(ENGAGEMENT_PRESETS.growNewsletter());
 
