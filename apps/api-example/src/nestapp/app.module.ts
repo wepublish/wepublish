@@ -91,7 +91,7 @@ import { TagModule } from '@wepublish/tag/api';
 import { TrackingPixelsModule } from '@wepublish/tracking-pixel/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 import { UserModule } from '@wepublish/user/api';
-import { generateJWT } from '@wepublish/utils/api';
+import { generateJWT, NodeApolloDriver } from '@wepublish/utils/api';
 import { VersionInformationModule } from '@wepublish/versionInformation/api';
 import { WebsiteRevalidationModule } from '@wepublish/website-revalidation/api';
 import { readConfig } from '../readConfig';
@@ -100,7 +100,6 @@ import {
   ProviderRegistryService,
 } from '@wepublish/provider-registry/api';
 import { reconcileProviderRegistry } from './reconcile-provider-registry';
-import { NodeApolloDriver } from './node-apollo.driver';
 import { API_SHARED_NAMESPACES } from './shared-namespaces';
 
 @Global()

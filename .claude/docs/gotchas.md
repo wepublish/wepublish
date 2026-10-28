@@ -546,7 +546,7 @@ exactly `express` and `fastify`. `@nestjs/platform-node` reports `node`, so the
 whole API dies on boot with _No support for current HttpAdapter: node_ — the
 error comes from `GraphQLModule.onModuleInit`, not from anything we wrote.
 
-[apps/api-example/src/nestapp/node-apollo.driver.ts](../../apps/api-example/src/nestapp/node-apollo.driver.ts)
+[libs/utils/api/src/lib/graphql/node-apollo.driver.ts](../../libs/utils/api/src/lib/graphql/node-apollo.driver.ts)
 overrides `registerServer` to call the `protected registerExpress` directly.
 That path only needs `getInstance().use(path, handler)` and Express-shaped
 `req`/`res`, both of which platform-node provides, so Apollo runs unmodified on

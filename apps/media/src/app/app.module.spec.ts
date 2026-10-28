@@ -7,6 +7,7 @@ import { FakeDragonfly } from '@wepublish/dragonfly/api/testing';
 import { MediaService } from '@wepublish/media/api';
 import { AppController } from './app.controller';
 import { AppModule } from './app.module';
+import { NodeAdapter } from '@nestjs/platform-node';
 
 const ENV = {
   S3_ENDPOINT: 's3.example',
@@ -61,7 +62,7 @@ describe('AppModule', () => {
       .useValue(media)
       .compile();
 
-    app = module.createNestApplication();
+    app = module.createNestApplication(new NodeAdapter());
     await app.init();
 
     return app;
