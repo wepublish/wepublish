@@ -6,7 +6,6 @@ import {
   CardActionArea,
   CardContent,
   Divider,
-  Grid,
   Stack,
   Typography,
   useTheme,
@@ -346,21 +345,30 @@ export const EngagementPresetCards = ({
   const facts = usePresetFacts();
 
   return (
-    <Grid
-      container
-      spacing={2}
-    >
-      {PRESET_ORDER.map(preset => {
-        const { icon: Icon, color } = PRESET_LOOK[preset];
-        const accent = theme.palette[color].main;
-        const { placement, audience, steps } = facts[preset];
+    // Columns follow the width of the page, not the window: the sidebar takes
+    // a good part of it, and four cards need room for their illustrations.
+    <Box sx={{ containerType: 'inline-size' }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gap: 2,
+          gridTemplateColumns: '1fr',
+          '@container (min-width: 520px)': {
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+          },
+          '@container (min-width: 1100px)': {
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+          },
+        }}
+      >
+        {PRESET_ORDER.map(preset => {
+          const { icon: Icon, color } = PRESET_LOOK[preset];
+          const accent = theme.palette[color].main;
+          const { placement, audience, steps } = facts[preset];
 
-        return (
-          <Grid
-            key={preset}
-            size={{ xs: 12, sm: 6, lg: 3 }}
-          >
+          return (
             <Card
+              key={preset}
               variant="outlined"
               data-preset={preset}
               sx={{
@@ -474,9 +482,9 @@ export const EngagementPresetCards = ({
                 </CardContent>
               </CardActionArea>
             </Card>
-          </Grid>
-        );
-      })}
-    </Grid>
+          );
+        })}
+      </Box>
+    </Box>
   );
 };
