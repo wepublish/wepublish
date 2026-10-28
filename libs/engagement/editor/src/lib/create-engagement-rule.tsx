@@ -1,12 +1,5 @@
 import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  Grid,
-  Typography,
-} from '@mui/material';
 import { CreateEngagementRuleDocument } from '@wepublish/editor/api';
 import {
   CanCreateEngagementRule,
@@ -24,7 +17,8 @@ import {
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { EngagementPresetCards } from './engagement-preset-cards';
 import { EngagementRuleForm } from './engagement-rule-form';
 import { ENGAGEMENT_PATH } from './engagement-rule-list';
 import {
@@ -32,57 +26,7 @@ import {
   createEngagementRuleSchema,
   toEngagementRuleInput,
 } from './engagement-rule-values';
-import {
-  ENGAGEMENT_PRESETS,
-  EngagementPresetId,
-  RESTRICT_PREMIUM_PATH,
-} from './presets';
-
-const PRESET_ORDER: EngagementPresetId[] = [
-  'growNewsletter',
-  'promoteMemberships',
-  'restrictPremium',
-  'displayAnnouncement',
-];
-
-export const EngagementPresetCards = ({
-  onPick,
-}: {
-  onPick: (preset: keyof typeof ENGAGEMENT_PRESETS) => void;
-}) => {
-  const { t } = useTranslation();
-
-  return (
-    <Grid
-      container
-      spacing={2}
-    >
-      {PRESET_ORDER.map(preset => (
-        <Grid
-          key={preset}
-          size={{ xs: 12, md: 6 }}
-        >
-          <Card variant="outlined">
-            <CardActionArea
-              {...(preset === 'restrictPremium' ?
-                { component: RouterLink, to: RESTRICT_PREMIUM_PATH }
-              : { onClick: () => onPick(preset) })}
-            >
-              <CardContent>
-                <Typography variant="h4">
-                  {t(`engagement.preset.${preset}`)}
-                </Typography>
-                <Typography variant="body2">
-                  {t(`engagement.preset.${preset}Info`)}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
-  );
-};
+import { ENGAGEMENT_PRESETS } from './presets';
 
 const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
   const navigate = useNavigate();
