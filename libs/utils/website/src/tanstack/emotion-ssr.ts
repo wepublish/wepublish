@@ -3,7 +3,7 @@ import type { EmotionCache } from '@emotion/cache';
 import createEmotionServer from '@emotion/server/create-instance';
 import { AsyncLocalStorage } from 'node:async_hooks';
 
-export const EMOTION_KEY = 'css';
+import { EMOTION_KEY } from './emotion';
 
 /**
  * Server-side emotion extraction — the TanStack half of what
@@ -39,8 +39,23 @@ export const EMOTION_KEY = 'css';
  */
 const storage = new AsyncLocalStorage<EmotionCache>();
 
-/** The cache for the request being rendered, on the server only. */
-export const getRequestEmotionCache = () => storage.getStore();
+/**
+ * Handed over on `globalThis` rather than exported.
+ *
+ * `emotion.ts` runs in both worlds and must not *import* this module: in a
+ * production build the isomorphic transform strips the server branch and its
+ * imports, but `vite dev` leaves them, and `@emotion/server` reaches
+ * `html-tokenize`, which needs `Buffer`. That lands in the browser as
+ * "Buffer is not defined", hydration dies, and every effect — including the
+ * one sizing image captions — silently never runs.
+ */
+declare global {
+  // eslint-disable-next-line no-var
+  var __wepublishRequestEmotionCache:
+    (() => EmotionCache | undefined) | undefined;
+}
+
+globalThis.__wepublishRequestEmotionCache = () => storage.getStore();
 
 const HEAD_CLOSE = '</head>';
 
