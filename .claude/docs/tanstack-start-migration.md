@@ -408,12 +408,44 @@ Two traps:
 
 ---
 
+## 7b. Sentry
+
+`@sentry/tanstackstart-react` — not `@sentry/node` + `@sentry/react`. It
+resolves to one or the other through its exports map and adds the Start-aware
+pieces on top, so both sides configure the *same* client.
+
+Four places, and the order of each matters:
+
+- `src/instrument.server.ts` → built separately by
+  `vite.instrument.config.mts` into `.output/server/instrument.server.mjs` and
+  loaded through `node --import`. `Sentry.init` has to run before the server
+  bundle is evaluated or auto-instrumentation attaches to nothing.
+- `src/server.ts` wraps the entry in `wrapFetchWithSentry`, **outside**
+  `withPageCache`: it opens the request span and writes the `sentry-trace`
+  meta tags, both of which are per-request and must not be stored with a
+  cached page.
+- `src/start.ts` puts `sentryGlobalRequestMiddleware` /
+  `sentryGlobalFunctionMiddleware` first in their arrays — behind
+  `createIsomorphicFn`, because a top-level import of the SDK from this file
+  lands all of `@sentry/react` in the browser entry chunk (+457 KB raw /
+  +152 KB gzip, measured).
+- `vite.config.mts` runs `sentryTanstackStart` last, for source map upload and
+  the route-pattern table that names request spans `GET /a/$slug` rather than
+  one bucket per article. `autoInstrumentMiddleware: false`, for the same
+  bundle reason — it injects an SDK import into `start.ts` in both
+  environments. `@sentry/tanstackstart-react` must therefore stay *out* of
+  `ssr.external`: the plugin can only substitute the table into a module it
+  bundles.
+
+The build prints a warning that `@redis/client` is external and "needs to be
+bundled for Sentry instrumentation to work". It is a false positive here — the
+`--import` preload is exactly the runtime instrumentation the message points at
+as the alternative.
+
+---
+
 ## 8. Known gaps
 
-- **Sentry source maps.** Client/server init is wired, but `withSentryConfig`
-  from `@sentry/nextjs` is what uploads maps today and has no TanStack
-  counterpart. The Dockerfile comment forbidding a manual `sentry-cli` upload
-  applies to the *Next* path only.
 - **On-demand revalidation.** `/api/revalidate` is a stub. Invalidation relies
   on the API bumping the page-cache namespace versions.
 - **`website-shell` for the next tenant.** gruppetto now has it, so there *is* a

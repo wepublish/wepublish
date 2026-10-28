@@ -1,4 +1,4 @@
-import type * as SentryTypes from '@sentry/react';
+import type * as SentryTypes from '@sentry/tanstackstart-react';
 import {
   getBaseConfig,
   getBrowserTracePropagationTargets,
@@ -9,13 +9,19 @@ export type RouterLike = Parameters<
   typeof SentryTypes.tanstackRouterBrowserTracingIntegration
 >[0];
 
+/**
+ * The browser half resolves `@sentry/tanstackstart-react` to its client build:
+ * `@sentry/react` plus an `init` that knows about Start's router and server
+ * functions. Same reasoning as `instrumentation.ts` — one package, one client,
+ * whichever side the module ends up on.
+ */
 export const registerSentryClient = async (router: RouterLike) => {
   if (!process.env.SENTRY_DSN) {
     return;
   }
 
   try {
-    const Sentry = await import('@sentry/react');
+    const Sentry = await import('@sentry/tanstackstart-react');
 
     Sentry.init({
       ...getBaseConfig(),

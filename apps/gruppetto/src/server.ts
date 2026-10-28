@@ -14,7 +14,10 @@
 import handler, { createServerEntry } from '@tanstack/react-start/server-entry';
 import { withEmotionExtraction } from '@wepublish/utils/website/tanstack/server';
 import { withPageCache } from '@wepublish/utils/website/tanstack/page-cache';
-import { captureServerError } from '@wepublish/utils/website/tanstack/sentry';
+import {
+  captureServerError,
+  wrapFetchWithSentry,
+} from '@wepublish/utils/website/tanstack/sentry';
 
 // `Sentry.init` deliberately does NOT happen here. It runs in
 // `src/instrument.server.ts`, which `node --import` loads before this module,
@@ -25,13 +28,23 @@ import { captureServerError } from '@wepublish/utils/website/tanstack/sentry';
 // styles in its `<head>` and a hit never re-extracts.
 const cached = withPageCache(withEmotionExtraction(handler.fetch));
 
-export default createServerEntry({
-  fetch: async (...args: Parameters<typeof cached>) => {
-    try {
-      return await cached(...args);
-    } catch (error) {
-      captureServerError(error);
-      throw error;
-    }
-  },
-});
+// `wrapFetchWithSentry` is the outermost wrapper on purpose. It opens the
+// request span and writes the `sentry-trace` / `baggage` meta tags into the
+// document, and both have to be per-request: applied *inside* `withPageCache`
+// the trace of whichever request happened to render the page would be stored
+// with it and replayed to every later visitor.
+//
+// It does not see exceptions thrown while React renders — Start catches those
+// itself — which is why `captureServerError` stays.
+export default createServerEntry(
+  wrapFetchWithSentry({
+    fetch: async (...args: Parameters<typeof cached>) => {
+      try {
+        return await cached(...args);
+      } catch (error) {
+        captureServerError(error);
+        throw error;
+      }
+    },
+  })
+);

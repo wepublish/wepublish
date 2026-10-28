@@ -1,10 +1,18 @@
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/tanstackstart-react';
 import {
   getServerConfig,
   setCommonTags,
   withoutKeySpans,
 } from '@wepublish/utils';
 
+/**
+ * `@sentry/tanstackstart-react` resolves to its *server* build here, which is
+ * `@sentry/node` plus the Start-aware `init` and the request/server-function
+ * instrumentation. Importing `@sentry/node` directly — what this used to do —
+ * configures a different client than the one `wrapFetchWithSentry` and the
+ * global middlewares reach for, so spans and errors end up on two clients and
+ * only one of them has a DSN.
+ */
 export async function registerSentry() {
   if (!process.env.SENTRY_DSN) {
     return;
@@ -15,9 +23,8 @@ export async function registerSentry() {
   // request after it — including the k8s health probe, which would then
   // restart-loop the pod.
   try {
-    const { forbidCachingErrors } = await import(
-      '../../lib/sentry/error-no-store'
-    );
+    const { forbidCachingErrors } =
+      await import('../../lib/sentry/error-no-store');
     forbidCachingErrors();
 
     const { nodeProfilingIntegration } = await import('@sentry/profiling-node');
@@ -42,3 +49,5 @@ export async function registerSentry() {
 export const captureServerError = (error: unknown) => {
   Sentry.captureException(error);
 };
+
+export { wrapFetchWithSentry } from '@sentry/tanstackstart-react';

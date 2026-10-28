@@ -1,5 +1,10 @@
 import {
+  sentryGlobalFunctionMiddleware,
+  sentryGlobalRequestMiddleware,
+} from '@sentry/tanstackstart-react';
+import {
   createCsrfMiddleware,
+  createIsomorphicFn,
   createMiddleware,
   createStart,
 } from '@tanstack/react-start';
@@ -110,6 +115,38 @@ const csrf = createCsrfMiddleware({
   allowRequestsWithoutOriginCheck: true,
 });
 
+/**
+ * Both Sentry middlewares are server-only in every sense: their handlers are
+ * `options.server`, and `requestMiddleware` is never consulted in the browser
+ * at all.
+ *
+ * `createIsomorphicFn` is here for the bundle, not the behaviour. This module
+ * is part of the client graph, and `@sentry/tanstackstart-react` resolves
+ * there to the whole `@sentry/react` surface — replay, feedback, profiling.
+ * A plain top-level import puts all of it in the entry chunk: measured at
+ * +457 KB raw / +152 KB gzip, which is most of what splitting the SDK out
+ * into its own lazily-imported chunk bought (see `sentry/register-client.ts`).
+ * The transform drops the server branch *and the import that only it uses*
+ * from the client build, so the cost goes back to zero.
+ */
+const sentryMiddleware = createIsomorphicFn()
+  .server(() => ({
+    request: [sentryGlobalRequestMiddleware],
+    fn: [sentryGlobalFunctionMiddleware],
+  }))
+  .client(() => ({ request: [], fn: [] }));
+
+/**
+ * Sentry goes first in both arrays so its handler is the outermost `next()`
+ * and sees anything the middlewares after it throw. The request middleware
+ * only reports — the span itself is opened by `wrapFetchWithSentry` in
+ * `server.ts` — while the function middleware is what renames that span after
+ * the server function it actually ran, instead of leaving the generated id in
+ * the trace.
+ */
+const sentry = sentryMiddleware();
+
 export const startInstance = createStart(() => ({
-  requestMiddleware: [cacheHeaders, csrf],
+  requestMiddleware: [...sentry.request, cacheHeaders, csrf],
+  functionMiddleware: [...sentry.fn],
 }));
