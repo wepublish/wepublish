@@ -1,4 +1,4 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
@@ -91,7 +91,7 @@ import { TagModule } from '@wepublish/tag/api';
 import { TrackingPixelsModule } from '@wepublish/tracking-pixel/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 import { UserModule } from '@wepublish/user/api';
-import { generateJWT } from '@wepublish/utils/api';
+import { generateJWT, NodeApolloDriver } from '@wepublish/utils/api';
 import { VersionInformationModule } from '@wepublish/versionInformation/api';
 import { WebsiteRevalidationModule } from '@wepublish/website-revalidation/api';
 import { readConfig } from '../readConfig';
@@ -107,7 +107,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
   imports: [
     SentryModule.forRoot(),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: NodeApolloDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {

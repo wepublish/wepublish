@@ -3,7 +3,9 @@ import { TagType } from '@prisma/client';
 import { createMock, PartialMocked } from '@wepublish/testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { TagResolver } from './tag.resolver';
 import { TagService } from './tag.service';
@@ -59,7 +61,7 @@ describe('TagResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -82,7 +84,7 @@ describe('TagResolver', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
+    app = module.createNestApplication(new NodeAdapter());
     await app.listen(0, '127.0.0.1');
   });
 
