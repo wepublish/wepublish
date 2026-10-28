@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Tooltip } from '@mui/material';
 import {
   FullPaymentMethodFragment,
   FullSubscriptionFragment,
@@ -11,6 +12,7 @@ import {
 } from '@wepublish/website/builder';
 import { PropsWithChildren, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { MdInfoOutline } from 'react-icons/md';
 import { formatCurrency } from '../formatters/format-currency';
 import { PaymentMethodChoice } from './payment-method-choice';
 
@@ -39,6 +41,42 @@ export const SubscriptionExtendPaymentMethod = styled('div')`
 export const SubscriptionListItemPaymentMethodChange = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+/**
+ * A pending payment method change in the table: one line, outlined, in line
+ * with the other actions; where to and until when on its icon.
+ */
+export const SubscriptionPendingChange = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1, 2)};
+  // the alert's blue: its light background would barely show as a line
+  border: 1px solid ${({ theme }) => theme.palette.info.main};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: transparent;
+  padding: ${({ theme }) => theme.spacing(0.5, 1, 0.5, 1.5)};
+`;
+
+export const SubscriptionPendingChangeLabel = styled('span')`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1)};
+  margin-right: auto;
+`;
+
+export const SubscriptionPendingChangeInfo = styled('span')`
+  display: inline-flex;
+  color: ${({ theme }) => theme.palette.info.main};
+  font-size: 1.375em;
+  cursor: help;
+  border-radius: 50%;
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
 `;
 
 /** Held by some payment providers to authorize a payment method, in cents. */
@@ -269,51 +307,74 @@ export function SubscriptionActions({
         amount: formatCurrency(AUTHORIZATION_AMOUNT / 100, currency, locale),
       });
 
+  const pendingChangeDetails =
+    pendingPaymentMethodChange &&
+    t('subscription.paymentMethodChangePending', {
+      paymentMethod: paymentMethodLabel(
+        pendingPaymentMethodChange.paymentMethod
+      ),
+      kind: pendingPaymentMethodChange.kind,
+      expiresAt: date.format(new Date(pendingPaymentMethodChange.expiresAt)),
+    });
+
+  const pendingChangeButtons = pendingPaymentMethodChange && (
+    <>
+      {cancelPaymentMethodChange && (
+        <Button
+          onClick={callAction(() =>
+            cancelPaymentMethodChange(pendingPaymentMethodChange.id)
+          )}
+          disabled={loading}
+          variant="text"
+          color="secondary"
+        >
+          {t('subscription.paymentMethodChangeCancel')}
+        </Button>
+      )}
+
+      {changePaymentMethod && (
+        <Button
+          onClick={callAction(() =>
+            changePaymentMethod(pendingPaymentMethodChange.paymentMethod.id)
+          )}
+          disabled={loading}
+        >
+          {t('subscription.paymentMethodChangeContinue')}
+        </Button>
+      )}
+    </>
+  );
+
   return (
     <>
-      {show('pendingChange') && pendingPaymentMethodChange && (
-        <SubscriptionListItemPaymentMethodChange>
-          <Alert severity="info">
-            {t('subscription.paymentMethodChangePending', {
-              paymentMethod: paymentMethodLabel(
-                pendingPaymentMethodChange.paymentMethod
-              ),
-              kind: pendingPaymentMethodChange.kind,
-              expiresAt: date.format(
-                new Date(pendingPaymentMethodChange.expiresAt)
-              ),
-            })}
-          </Alert>
-
-          <SubscriptionListItemActions>
-            {cancelPaymentMethodChange && (
-              <Button
-                onClick={callAction(() =>
-                  cancelPaymentMethodChange(pendingPaymentMethodChange.id)
-                )}
-                disabled={loading}
-                variant="text"
-                color="secondary"
+      {show('pendingChange') &&
+        pendingPaymentMethodChange &&
+        (variant === 'table' ?
+          <SubscriptionPendingChange data-pending-change>
+            <SubscriptionPendingChangeLabel>
+              {/* on tapping too: touch has no hover */}
+              <Tooltip
+                title={pendingChangeDetails}
+                placement="top"
+                enterTouchDelay={0}
+                leaveTouchDelay={6000}
               >
-                {t('subscription.paymentMethodChangeCancel')}
-              </Button>
-            )}
+                <SubscriptionPendingChangeInfo tabIndex={0}>
+                  <MdInfoOutline />
+                </SubscriptionPendingChangeInfo>
+              </Tooltip>
+              {t('subscription.paymentMethodChangePendingShort')}
+            </SubscriptionPendingChangeLabel>
 
-            {changePaymentMethod && (
-              <Button
-                onClick={callAction(() =>
-                  changePaymentMethod(
-                    pendingPaymentMethodChange.paymentMethod.id
-                  )
-                )}
-                disabled={loading}
-              >
-                {t('subscription.paymentMethodChangeContinue')}
-              </Button>
-            )}
-          </SubscriptionListItemActions>
-        </SubscriptionListItemPaymentMethodChange>
-      )}
+            {pendingChangeButtons}
+          </SubscriptionPendingChange>
+        : <SubscriptionListItemPaymentMethodChange>
+            <Alert severity="info">{pendingChangeDetails}</Alert>
+
+            <SubscriptionListItemActions>
+              {pendingChangeButtons}
+            </SubscriptionListItemActions>
+          </SubscriptionListItemPaymentMethodChange>)}
 
       {children}
 

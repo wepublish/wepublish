@@ -126,6 +126,7 @@
     "changePaymentMethodOpenInvoice": "Die offene Rechnung über {amount} bezahlst du mit der neuen Zahlungsmethode. Erst danach wird sie für dein {type, select, Donation {Spende} other {Abo}} übernommen.",
     "changePaymentMethodAuthorization": "Eine Online-Zahlungsmethode bestätigst du einmal beim Zahlungsanbieter. Dafür kann ein Betrag von {amount} reserviert werden, der dir nie belastet wird. Bis dahin bleibt deine bisherige Zahlungsmethode aktiv.",
     "paymentMethodChangePending": "Wechsel zu {paymentMethod} ausstehend: {kind, select, invoicePayment {wird aktiv, sobald die offene Rechnung bezahlt ist} other {wird aktiv, sobald du die Zahlungsmethode bestätigt hast}}. Möglich bis {expiresAt}.",
+    "paymentMethodChangePendingShort": "Wechsel Zahlungsmethode ausstehend",
     "paymentMethodChangeContinue": "Fortsetzen",
     "paymentMethodChangeCancel": "Wechsel abbrechen",
     "extendChargedWith": "Zahlung per: <strong>{paymentMethod}</strong>",

@@ -219,6 +219,11 @@ export const SubscriptionHistoryActions = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(1)};
 
+  // no actions offered: no gap for them
+  & > :empty {
+    display: none;
+  }
+
   ${SubscriptionListItemActions} {
     justify-content: flex-end;
   }
@@ -233,6 +238,11 @@ export const SubscriptionHistoryActionBar = styled('div')`
   // note above it
   align-items: baseline;
   gap: ${({ theme }) => theme.spacing(1, 2)};
+
+  // the framed pending change: centred, its frame would sit lower
+  &:has([data-pending-change]) {
+    align-items: center;
+  }
 
   // in the text colour: a tenant's primary can be too light for an outline
   & > [data-edit='true'] {

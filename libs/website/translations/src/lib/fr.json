@@ -126,6 +126,7 @@
     "changePaymentMethodOpenInvoice": "Vous payez la facture ouverte de {amount} avec le nouveau moyen de paiement. Ce n'est qu'ensuite qu'il sera repris pour votre {type, select, Donation {don} other {abonnement}}.",
     "changePaymentMethodAuthorization": "Vous confirmez une fois un moyen de paiement en ligne auprès du prestataire de paiement. Un montant de {amount} peut être réservé à cet effet, il ne vous sera jamais débité. D'ici là, votre moyen de paiement actuel reste actif.",
     "paymentMethodChangePending": "Changement vers {paymentMethod} en attente : {kind, select, invoicePayment {actif dès que la facture ouverte est payée} other {actif dès que vous avez confirmé le moyen de paiement}}. Possible jusqu'au {expiresAt}.",
+    "paymentMethodChangePendingShort": "Changement de moyen de paiement en attente",
     "paymentMethodChangeContinue": "Continuer",
     "paymentMethodChangeCancel": "Annuler le changement",
     "extendChargedWith": "Paiement par : <strong>{paymentMethod}</strong>",

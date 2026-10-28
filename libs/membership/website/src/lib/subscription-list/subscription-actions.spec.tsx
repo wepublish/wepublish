@@ -102,6 +102,53 @@ describe('SubscriptionActions', () => {
     expect(buttonNames()).toEqual(['Wechsel abbrechen', 'Fortsetzen']);
   });
 
+  // in the table it stays in line with the other actions: the details are
+  // on the icon, not spelled out
+  describe('a pending payment method change in the table', () => {
+    const renderPending = () =>
+      renderActions({
+        pendingPaymentMethodChange: pendingChange,
+        actions: ['pendingChange'],
+        variant: 'table',
+      });
+
+    it('names it briefly in an outlined box, with its own buttons', () => {
+      const { container } = renderPending();
+
+      const box = container.querySelector('[data-pending-change]');
+      expect(box).toHaveTextContent(/^Wechsel Zahlungsmethode ausstehend/);
+      expect(screen.queryByRole('alert')).toBeNull();
+      expect(
+        within(box as HTMLElement)
+          .getAllByRole('button')
+          .map(button => button.textContent)
+      ).toEqual(['Wechsel abbrechen', 'Fortsetzen']);
+
+      const style = getComputedStyle(box as HTMLElement);
+      expect(style.borderStyle).toBe('solid');
+      expect(style.backgroundColor).toMatch(
+        /^(transparent|rgba\(0, 0, 0, 0\))?$/
+      );
+    });
+
+    it('tells where to, how and until when on the info icon', async () => {
+      renderPending();
+      const details = t('subscription.paymentMethodChangePending', {
+        paymentMethod: 'Payrexx',
+        kind: pendingChange.kind,
+        expiresAt: '',
+      }).split('Möglich bis')[0];
+
+      const icon = screen.getByLabelText(new RegExp(`^${details}`));
+      expect(icon).toHaveAttribute('tabindex', '0');
+
+      await userEvent.setup().hover(icon);
+      expect(await screen.findByRole('tooltip')).toHaveTextContent(
+        /Wechsel zu Payrexx ausstehend: .*Möglich bis /
+      );
+    });
+  });
+
   it('asks to extend early in plain words', async () => {
     renderActions({ actions: ['extend'] });
 
