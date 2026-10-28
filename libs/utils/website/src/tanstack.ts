@@ -26,6 +26,7 @@ export * from './tanstack/head';
 export * from './tanstack/link';
 export * from './tanstack/prefetch';
 export * from './tanstack/router-hooks';
+export * from './tanstack/session-token';
 export * from './tanstack/website-shell';
 export * from './tanstack/routes';
 
