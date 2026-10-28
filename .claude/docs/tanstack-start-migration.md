@@ -408,6 +408,26 @@ Two traps:
 
 ---
 
+## 6b. The session on render one
+
+`SessionProvider` seeds its state from `pageProps.sessionToken` and only reads
+the cookie afterwards, in an effect. Next filled that prop from the page's
+`getInitialProps`; here `useRouteSessionToken` reads it off the matched
+routes, because the authenticated loaders in
+`libs/utils/website/src/tanstack/routes/account.ts` already return it.
+
+Do not drop it and rely on the cookie effect alone. A first render that is
+logged out when the reader is not is a bug in its own right, not a frame of
+latency — `/mitmachen` starts `useQuery(ChallengeDocument, {skip: hasUser})`
+on render one and skips it on render two, which leaves Apollo at
+`loading: true` forever and permanently disables the subscribe button. It only
+shows on a direct entry; a client-side navigation already has the session.
+
+Routes that do not authenticate still get `null`, so their HTML stays user
+agnostic and CDN cacheable.
+
+---
+
 ## 7b. Sentry
 
 `@sentry/tanstackstart-react` — not `@sentry/node` + `@sentry/react`. It

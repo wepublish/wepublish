@@ -9,6 +9,7 @@ import {
   Head,
   RoutedAdminBar,
   Script,
+  useRouteSessionToken,
   useWebsiteShell,
   WepublishLink,
 } from '@wepublish/utils/website/tanstack';
@@ -86,9 +87,14 @@ function AppShell({ websiteSettings, children }: AppShellProps) {
 
 /**
  * `withSessionProvider` expects `props.pageProps.sessionToken`; there are no
- * page props any more, so hand it the shape it wants. The session itself is
- * restored from the cookie inside `SessionProvider` on the client, which is
- * what keeps the SSR response user-agnostic and therefore CDN cacheable.
+ * page props any more, so hand it the shape it wants.
+ *
+ * The token comes from whichever matched route authenticated — the same value
+ * Next read off `pageProps` — so the first render already knows who is
+ * reading. `SessionProvider` still falls back to the cookie in an effect, for
+ * every route that does not authenticate; those keep rendering user-agnostic,
+ * CDN cacheable HTML. See `useRouteSessionToken` for what a render-one-logged-
+ * out page breaks.
  */
 const Wrapped = withErrorSnackbar(
   withPaywallBypassToken(
@@ -96,11 +102,15 @@ const Wrapped = withErrorSnackbar(
   )
 ) as React.ComponentType<AppShellProps & { pageProps: object }>;
 
-export const App = (props: AppShellProps) => (
-  <BuilderRouterProvider>
-    <Wrapped
-      {...props}
-      pageProps={{}}
-    />
-  </BuilderRouterProvider>
-);
+export const App = (props: AppShellProps) => {
+  const sessionToken = useRouteSessionToken();
+
+  return (
+    <BuilderRouterProvider>
+      <Wrapped
+        {...props}
+        pageProps={{ sessionToken: sessionToken ?? undefined }}
+      />
+    </BuilderRouterProvider>
+  );
+};

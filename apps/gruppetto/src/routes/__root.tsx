@@ -106,18 +106,15 @@ function RootDocument({ children }: { children: ReactNode }) {
     websiteSettings: WebsiteSettingsFragment | undefined;
   };
 
-  // New per render on the server — one cache per request. A shared server
-  // cache would consider rules already `inserted` and the second request
-  // would ship HTML with no styles at all. In the browser this runs once and
-  // `createCache` adopts the SSR `<style data-emotion>` tags, so hydration
-  // does not duplicate them.
+  // One cache per request on the server, one for the life of the document in
+  // the browser — see `getRenderEmotionCache`. A shared server cache would
+  // consider rules already `inserted` and the second request would ship HTML
+  // with no styles at all.
   //
-  // `cache.compat` stays off on purpose. It tells emotion that a compat layer
-  // is extracting the styles, which suppresses the inline `<style>` tags it
-  // would otherwise render into the tree. `pages/_app.tsx` could set it
-  // because `AppCacheProvider` plus `_document`'s `documentGetInitialProps`
-  // did that extraction; nothing here does, so setting it ships HTML with no
-  // emotion rules at all and the page is unstyled until hydration.
+  // Both carry `cache.compat`, which tells emotion something else decides
+  // where the rules go: `withEmotionExtraction` puts them in `<head>` on the
+  // server, `insertionPoint` does in the browser. Setting it without that
+  // extraction is what once shipped HTML with no emotion rules at all.
   const [emotionCache] = useState(getRenderEmotionCache);
 
   return (
