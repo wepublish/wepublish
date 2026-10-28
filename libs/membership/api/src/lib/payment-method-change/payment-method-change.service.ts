@@ -23,7 +23,7 @@ import {
   PaymentProvider,
   PaymentsService,
 } from '@wepublish/payment/api';
-import { SettingName, SettingsService } from '@wepublish/settings/api';
+import { SettingName } from '@wepublish/settings/api';
 import { MemberContextService } from '../legacy/member-context.service';
 
 /** Used when the PAYMENT_METHOD_CHANGE_EXPIRY_DAYS setting has no value. */
@@ -63,7 +63,6 @@ export class PaymentMethodChangeService
     private prisma: PrismaClient,
     private payments: PaymentsService,
     private memberContext: MemberContextService,
-    private settings: SettingsService,
     private invoicePaidNotifier: InvoicePaidNotifier,
     private authorizationNotifier: PaymentAuthorizationNotifier
   ) {}
@@ -596,16 +595,12 @@ export class PaymentMethodChangeService
   }
 
   private async expiryDays() {
-    try {
-      const setting = await this.settings.settingByName(
-        SettingName.PAYMENT_METHOD_CHANGE_EXPIRY_DAYS
-      );
+    const setting = await this.prisma.setting.findUnique({
+      where: { name: SettingName.PAYMENT_METHOD_CHANGE_EXPIRY_DAYS },
+    });
 
-      if (typeof setting?.value === 'number' && setting.value > 0) {
-        return setting.value;
-      }
-    } catch {
-      return DEFAULT_EXPIRY_DAYS;
+    if (typeof setting?.value === 'number' && setting.value > 0) {
+      return setting.value;
     }
 
     return DEFAULT_EXPIRY_DAYS;
