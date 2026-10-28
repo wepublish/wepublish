@@ -4521,7 +4521,7 @@
         "name": "Nom",
         "active": "Active",
         "priority": "Priorité",
-        "priorityInfo": "Si plusieurs règles s’appliquent, la priorité la plus haute obtient sa place en premier. Au plus une bannière, une modale et un message dans l’article apparaissent.",
+        "priorityInfo": "Une personne voit au plus une bannière, un pop-up et un encadré dans l’article à la fois. Si plusieurs règles veulent la même place, celle avec la priorité la plus haute s’affiche. Laisse la plupart des règles sur Normale et utilise Haute pour les campagnes limitées dans le temps.",
         "newsletterNote": "Les abonnements à la newsletter ne peuvent pas encore être vérifiés. Une étape restrictive d’une règle newsletter exige donc une inscription ou un abonnement et doit aussi proposer l’inscription à la newsletter.",
         "audience": "Public",
         "trigger": "Où et quand",
@@ -4591,6 +4591,12 @@
         "announcementNoMeter": "Une annonce ne compte pas les articles",
         "announcementNoReferral": "Une annonce n’a pas de réglages de newsletter",
         "newsletterActionRequired": "Propose aussi l’inscription à la newsletter"
+      },
+      "priority": {
+        "low": "Basse",
+        "normal": "Normale",
+        "high": "Haute",
+        "highest": "Très haute"
       }
     }
   }

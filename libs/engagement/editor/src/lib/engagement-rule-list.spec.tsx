@@ -159,6 +159,13 @@ describe('EngagementRuleList', () => {
     await settled();
   });
 
+  it('shows the priority by name', async () => {
+    renderList();
+
+    await settled();
+    expect(screen.getByText('engagement.priority.normal')).toBeInTheDocument();
+  });
+
   it('switches a rule off, keeping everything else', async () => {
     renderList();
 

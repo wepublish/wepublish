@@ -231,6 +231,24 @@ describe('EngagementRuleForm', () => {
     await waitFor(() => expect(last).toHaveAttribute('aria-expanded', 'true'));
   });
 
+  it('offers named priorities instead of a number, with an explanation', () => {
+    renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
+
+    expect(screen.getByText('engagement.form.priorityInfo')).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: 'engagement.priority.normal' })
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'engagement.priority.high' })
+    );
+
+    expect(values().priority).toBe(10);
+    expect(
+      screen.getByRole('button', { name: 'engagement.priority.high' })
+    ).toHaveAttribute('aria-pressed', 'true');
+  });
+
   it('saves a consistent rule', async () => {
     const onSubmit = vi.fn();
     const preset = ENGAGEMENT_PRESETS.promoteMemberships();
