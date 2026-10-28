@@ -1,12 +1,9 @@
 import {
   alpha,
   Box,
-  Button,
+  Card,
+  CardContent,
   Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Stack,
   Typography,
   useTheme,
@@ -122,50 +119,47 @@ const PromptPreview = ({
   );
 };
 
-type EngagementRuleReviewProps = {
-  rule?: EngagementRuleValues;
+type EngagementRuleOverviewProps = {
+  rule: EngagementRuleValues;
   conflicts?: EngagementConflict[];
-  saving?: boolean;
-  onBack: () => void;
-  onConfirm: () => void;
+  /** E.g. back to editing, or creating the rule. */
+  actions?: ReactNode;
 };
 
 /**
- * What a new rule will do, step by step, before it is saved: hard to imagine
- * from the form when setting one up for the first time.
+ * What a rule will do, step by step: hard to imagine from the form when
+ * setting one up for the first time. Its own view next to the form, with room
+ * for the previews.
  */
-export const EngagementRuleReview = ({
+export const EngagementRuleOverview = ({
   rule,
   conflicts = [],
-  saving,
-  onBack,
-  onConfirm,
-}: EngagementRuleReviewProps) => {
+  actions,
+}: EngagementRuleOverviewProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
-
-  if (!rule) {
-    return null;
-  }
-
   const accent = theme.palette[GOAL_COLOR[rule.goal]].main;
   const steps = summarizeStages(rule, t);
   const where = summarizeWhere(rule, t);
 
   return (
-    <Dialog
-      open
-      onClose={onBack}
-      maxWidth="md"
-      fullWidth
+    <Card
+      variant="outlined"
+      component="section"
       aria-labelledby="rule-review-title"
+      data-testid="rule-review"
+      sx={{ maxWidth: 960 }}
     >
-      <DialogTitle id="rule-review-title">
-        {t('engagement.review.title')}
-      </DialogTitle>
-
-      <DialogContent data-testid="rule-review">
+      <CardContent>
         <Stack sx={{ gap: 3 }}>
+          <Typography
+            id="rule-review-title"
+            variant="h3"
+            component="h2"
+          >
+            {t('engagement.review.title')}
+          </Typography>
+
           <Stack sx={{ gap: 1 }}>
             <Stack
               direction="row"
@@ -263,24 +257,17 @@ export const EngagementRuleReview = ({
               ))}
             </Box>
           </Box>
-        </Stack>
-      </DialogContent>
 
-      <DialogActions>
-        <Button
-          variant="text"
-          onClick={onBack}
-        >
-          {t('engagement.review.back')}
-        </Button>
-        <Button
-          variant="contained"
-          onClick={onConfirm}
-          disabled={saving}
-        >
-          {t('engagement.review.confirm')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+          {actions && (
+            <Stack
+              direction="row"
+              sx={{ gap: 1, justifyContent: 'flex-end', flexWrap: 'wrap' }}
+            >
+              {actions}
+            </Stack>
+          )}
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };

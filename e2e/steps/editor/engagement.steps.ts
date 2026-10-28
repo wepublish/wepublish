@@ -122,8 +122,9 @@ async function announce(
 
   await page.getByRole('button', { name: 'Save & Close' }).click();
 
-  // A new rule is summed up before it is saved, with a preview of its prompt.
-  const review = page.getByRole('dialog');
+  // A new rule is summed up in its overview before it is saved, with a
+  // preview of its prompt.
+  const review = page.getByRole('region', { name: 'What this rule does' });
   // The rule's name, then the title in the preview of its prompt.
   await expect(
     review.getByRole('heading', { name: rule.name, level: 5 })

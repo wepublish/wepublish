@@ -4830,8 +4830,12 @@
         "newsletterActionRequired": "Propose aussi l’inscription à la newsletter"
       },
       "copyName": "{{name}} (copie)",
+      "view": {
+        "edit": "Modifier la règle",
+        "overview": "Aperçu"
+      },
       "review": {
-        "title": "Avant d’enregistrer : voici ce qui va se passer",
+        "title": "Ce que fait cette règle",
         "goesLive": "Active : les lecteur·rice·s la voient dès que tu enregistres.",
         "inactive": "Inactive : enregistrée, mais personne ne la voit tant que tu ne l’actives pas.",
         "who": "Qui",

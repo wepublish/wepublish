@@ -232,6 +232,53 @@ describe('CreateEngagementRule', () => {
     await waitFor(() =>
       expect(screen.queryByTestId('rule-review')).not.toBeInTheDocument()
     );
+    expect(screen.getByLabelText('engagement.form.name')).toBeVisible();
+    expect(creates).toHaveLength(0);
+  });
+
+  it('shows the overview as its own view, instead of over the form', async () => {
+    fillAnnouncement();
+
+    await screen.findByTestId('rule-review');
+
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(screen.getByLabelText('engagement.form.name')).not.toBeVisible();
+  });
+
+  it('switches between the rule and its overview, keeping what was entered', async () => {
+    renderCreate('/audience-engagement/create?preset=displayAnnouncement');
+
+    fireEvent.change(screen.getByLabelText('engagement.form.name'), {
+      target: { value: 'Crowdfunding' },
+    });
+    fireEvent.click(
+      screen.getByRole('tab', { name: 'engagement.view.overview' })
+    );
+
+    expect(await screen.findByTestId('rule-review')).toHaveTextContent(
+      'Crowdfunding'
+    );
+
+    fireEvent.click(screen.getByRole('tab', { name: 'engagement.view.edit' }));
+
+    expect(screen.queryByTestId('rule-review')).toBeNull();
+    expect(screen.getByLabelText('engagement.form.name')).toHaveValue(
+      'Crowdfunding'
+    );
+    expect(creates).toHaveLength(0);
+  });
+
+  it('goes back to the form when the overview is confirmed with problems', async () => {
+    renderCreate('/audience-engagement/create?preset=displayAnnouncement');
+
+    fireEvent.click(
+      screen.getByRole('tab', { name: 'engagement.view.overview' })
+    );
+    fireEvent.click(await screen.findByText('engagement.review.confirm'));
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('engagement.form.name')).toBeVisible()
+    );
     expect(creates).toHaveLength(0);
   });
 });

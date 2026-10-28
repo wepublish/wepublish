@@ -4830,8 +4830,12 @@
         "newsletterActionRequired": "Biete auch eine Newsletter-Anmeldung an"
       },
       "copyName": "{{name}} (Kopie)",
+      "view": {
+        "edit": "Regel bearbeiten",
+        "overview": "Übersicht"
+      },
       "review": {
-        "title": "Bevor du speicherst: Das passiert",
+        "title": "Was diese Regel macht",
         "goesLive": "Aktiv: Leser:innen sehen es, sobald du speicherst.",
         "inactive": "Inaktiv: gespeichert, aber niemand sieht es, bis du es einschaltest.",
         "who": "Wer",
