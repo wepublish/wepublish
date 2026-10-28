@@ -900,8 +900,12 @@ const ShowFirstField = ({ ruleId }: { ruleId?: string }) => {
       )
     : [];
 
-  if (!conflicts.length && !showsFirst(rule.priority ?? 0)) {
-    return null;
+  const undecided = conflicts.some(({ settled }) => !settled);
+
+  // Nothing to choose without conflicts, or when the other rule is already
+  // set to show first.
+  if (!undecided && !showsFirst(rule.priority ?? 0)) {
+    return <EngagementConflictNotice conflicts={conflicts} />;
   }
 
   const showFirst = (

@@ -3,6 +3,7 @@ import { TFunction } from 'i18next';
 import {
   EngagementRuleValues,
   EngagementStageValues,
+  isAnnouncement,
   isHard,
 } from './engagement-rule-values';
 
@@ -10,17 +11,21 @@ import {
 export type ConflictRule = Pick<
   EngagementRuleValues,
   | 'name'
+  | 'goal'
   | 'active'
   | 'priority'
   | 'audience'
   | 'audienceMemberPlanIds'
   | 'showOnArticles'
   | 'showOnPageIds'
+  | 'meterWindowDays'
 > & {
   /** Missing on a rule that was not saved yet. */
   id?: string;
   createdAt?: string;
-  stages: Array<Pick<EngagementStageValues, 'placement' | 'enforcement'>>;
+  stages: Array<
+    Pick<EngagementStageValues, 'placement' | 'enforcement' | 'afterArticles'>
+  >;
 };
 
 /**
@@ -36,6 +41,11 @@ export type EngagementConflict<Rule extends ConflictRule = ConflictRule> = {
   audience: EngagementAudience;
   /** Whether the rule the conflicts were found for is shown first. */
   first: boolean;
+  /**
+   * One of the two rules is set to show first: the order was chosen, nothing
+   * is left to decide.
+   */
+  settled: boolean;
 };
 
 /** Mirrors `AUDIENCE_SPECIFICITY` in `engagement-api`'s `evaluate.ts`. */
@@ -95,7 +105,47 @@ const slotOf = (
   }
 };
 
-const slotsOf = (rule: ConflictRule) => new Set(rule.stages.map(slotOf));
+type ReadRange = { slot: EngagementSlot; from: number; to: number };
+
+/**
+ * Which spot a rule fills at which read counts: a stage shows from its
+ * `afterArticles` until the next stage. An announcement shows at every count.
+ */
+const rangesOf = (rule: ConflictRule): ReadRange[] =>
+  rule.stages.map((stage, index) => ({
+    slot: slotOf(stage),
+    from: isAnnouncement(rule) ? 0 : stage.afterArticles,
+    to:
+      isAnnouncement(rule) ? Infinity : (
+        (rule.stages[index + 1]?.afterArticles ?? Infinity)
+      ),
+  }));
+
+/**
+ * The spots both rules can fill for the same reader at once. Read counts only
+ * compare within the same window: in different windows, any two counts can
+ * meet.
+ */
+const sharedSlots = (a: ConflictRule, b: ConflictRule): EngagementSlot[] => {
+  const sameCount =
+    !isAnnouncement(a) &&
+    !isAnnouncement(b) &&
+    a.meterWindowDays === b.meterWindowDays;
+  const slots = new Set<EngagementSlot>();
+
+  for (const x of rangesOf(a)) {
+    for (const y of rangesOf(b)) {
+      if (
+        x.slot === y.slot &&
+        (!sameCount || (x.from < y.to && y.from < x.to))
+      ) {
+        slots.add(x.slot);
+      }
+    }
+  }
+
+  return [...slots];
+};
 
 const audiencesOverlap = (a: ConflictRule, b: ConflictRule) => {
   if (
@@ -128,22 +178,19 @@ const showsBefore = (a: ConflictRule, b: ConflictRule) =>
     createdAtOf(b) - createdAtOf(a)) < 0;
 
 /**
- * The active rules that may want the same spot as `rule` for the same reader
- * on the same article or page. Stages are not compared by read count, so two
- * stages that never show at the same time still count.
+ * The active rules that want the same spot as `rule` for the same reader on
+ * the same article or page, at the same time.
  */
 export function findConflicts<Rule extends ConflictRule>(
   rule: ConflictRule,
   others: Rule[]
 ): Array<EngagementConflict<Rule>> {
-  const slots = slotsOf(rule);
-
   return others.flatMap(other => {
     if (!other.active || (rule.id && other.id === rule.id)) {
       return [];
     }
 
-    const shared = [...slotsOf(other)].filter(slot => slots.has(slot));
+    const shared = sharedSlots(rule, other);
 
     if (
       !shared.length ||
@@ -165,6 +212,7 @@ export function findConflicts<Rule extends ConflictRule>(
             other.audience
           : rule.audience,
         first: showsBefore(rule, other),
+        settled: rule.priority !== other.priority,
       },
     ];
   });

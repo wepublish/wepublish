@@ -196,18 +196,25 @@ function EngagementRuleList() {
                     }}
                     testId={`rule-summary-${rule.id}`}
                   />
+                  {/* A settled conflict only matters to the rule shown
+                      second: the first one says so with its chip. */}
                   {rule.active &&
-                    findConflicts(ruleValues(rule), rules.map(ruleValues)).map(
-                      conflict => (
+                    findConflicts(ruleValues(rule), rules.map(ruleValues))
+                      .filter(({ settled, first }) => !settled || !first)
+                      .map(conflict => (
                         <Typography
                           key={conflict.rule.id}
                           variant="body2"
-                          color="warning.main"
+                          color={
+                            conflict.settled ? 'text.secondary' : 'warning.main'
+                          }
+                          data-testid={
+                            conflict.settled ? 'conflict-settled' : 'conflict'
+                          }
                         >
                           {describeConflict(conflict, t)}
                         </Typography>
-                      )
-                    )}
+                      ))}
                 </>
               ),
             },

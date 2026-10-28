@@ -1,4 +1,8 @@
-import { EngagementAudience, EngagementPlacement } from '@wepublish/editor/api';
+import {
+  EngagementAudience,
+  EngagementGoal,
+  EngagementPlacement,
+} from '@wepublish/editor/api';
 import { findConflicts, ConflictRule } from './engagement-conflicts';
 import { hardStage, stageDefaults } from './engagement-rule-values';
 import { ENGAGEMENT_PRESETS } from './presets';
@@ -26,6 +30,7 @@ describe('findConflicts', () => {
         audience: EngagementAudience.All,
         // An unsaved rule is the newest.
         first: true,
+        settled: false,
       },
     ]);
   });
@@ -117,5 +122,67 @@ describe('findConflicts', () => {
 
     expect(byPriority.first).toBe(true);
     expect(byAge.first).toBe(false);
+  });
+
+  const metered = (
+    id: string,
+    stages: Array<[number, EngagementPlacement]>,
+    meterWindowDays = 30
+  ): ConflictRule =>
+    banner({
+      id,
+      goal: EngagementGoal.Membership,
+      meterWindowDays,
+      stages: stages.map(([afterArticles, placement]) =>
+        stageDefaults({ afterArticles, placement })
+      ),
+    });
+
+  it('ignores stages that never show at the same read count', () => {
+    // Pop-up for articles 1–2 against a pop-up from article 6 on.
+    const early = metered('new', [
+      [0, EngagementPlacement.Modal],
+      [2, EngagementPlacement.Inline],
+    ]);
+
+    expect(
+      findConflicts(early, [metered('other', [[5, EngagementPlacement.Modal]])])
+    ).toEqual([]);
+    expect(
+      findConflicts(early, [metered('other', [[1, EngagementPlacement.Modal]])])
+    ).toMatchObject([{ slots: ['modal'] }]);
+  });
+
+  it('compares read counts only within the same window', () => {
+    const early = metered('new', [
+      [0, EngagementPlacement.Modal],
+      [2, EngagementPlacement.Inline],
+    ]);
+
+    expect(
+      findConflicts(early, [
+        metered('other', [[5, EngagementPlacement.Modal]], 7),
+      ])
+    ).toMatchObject([{ slots: ['modal'] }]);
+  });
+
+  it('has an announcement compete at every read count', () => {
+    expect(
+      findConflicts(banner({ id: 'new' }), [
+        metered('other', [[9, EngagementPlacement.Banner]]),
+      ])
+    ).toMatchObject([{ slots: ['banner'] }]);
+  });
+
+  it('marks a conflict settled once one of the rules is shown first', () => {
+    const [settled] = findConflicts(banner({ id: 'new' }), [
+      banner({ priority: 10 }),
+    ]);
+    const [tie] = findConflicts(banner({ id: 'new', priority: 10 }), [
+      banner({ priority: 10 }),
+    ]);
+
+    expect(settled).toMatchObject({ settled: true, first: false });
+    expect(tie).toMatchObject({ settled: false });
   });
 });

@@ -161,14 +161,26 @@ describe('EngagementRuleList', () => {
     await settled();
   });
 
-  it('says which rules compete and which one is shown first', async () => {
+  it('warns about rules that compete without an order', async () => {
+    renderList([rule, { ...rule, id: 'rule-2', name: 'Newsletter' }]);
+
+    await settled();
+    expect(screen.getAllByTestId('conflict')).toHaveLength(2);
+    expect(screen.queryAllByTestId('conflict-settled')).toHaveLength(0);
+  });
+
+  it('only notes a settled conflict at the rule shown second', async () => {
     renderList([
       rule,
       { ...rule, id: 'rule-2', name: 'Newsletter', priority: 10 },
     ]);
 
     await settled();
-    expect(screen.getAllByText(/engagement.conflict.competes/)).toHaveLength(2);
+    expect(screen.queryAllByTestId('conflict')).toHaveLength(0);
+    expect(screen.getAllByTestId('conflict-settled')).toHaveLength(1);
+    expect(screen.getByTestId('conflict-settled')).toHaveTextContent(
+      'engagement.conflict.otherFirst'
+    );
     expect(screen.getAllByText('engagement.list.showsFirst')).toHaveLength(1);
   });
 

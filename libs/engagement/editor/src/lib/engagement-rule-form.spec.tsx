@@ -475,6 +475,18 @@ describe('EngagementRuleForm', () => {
     expect(values().priority).toBe(0);
   });
 
+  it('only informs about a conflict the other rule already settles', async () => {
+    renderForm(ENGAGEMENT_PRESETS.displayAnnouncement(), undefined, [
+      rulesMock([{ ...competing, priority: SHOW_FIRST_PRIORITY }]),
+    ]);
+
+    expect(await screen.findByTestId('conflicts-settled')).toHaveTextContent(
+      'engagement.conflict.otherFirst'
+    );
+    expect(screen.queryByTestId('conflicts')).toBeNull();
+    expect(screen.queryByLabelText('engagement.form.showFirst')).toBeNull();
+  });
+
   it('keeps the override of a rule that is shown first', () => {
     renderForm({
       ...ENGAGEMENT_PRESETS.displayAnnouncement(),
