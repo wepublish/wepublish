@@ -70,27 +70,11 @@ import {
   stageDefaults,
 } from './engagement-rule-values';
 import { EngagementConflictNotice } from './engagement-conflict-notice';
+import { RuleColumns, RuleContainer } from './engagement-layout';
 import { findConflicts } from './engagement-conflicts';
 import { StageSummary } from './stage-summary';
 import { summarizeStages } from './summarize-rule';
 import { useStickyWhenFits } from './use-sticky-when-fits';
-
-// Columns follow the width of the form, not the window: the sidebar takes a
-// good part of it.
-const FormContainer = styled('div')`
-  container-type: inline-size;
-`;
-
-const FormColumns = styled('div')`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: start;
-  gap: ${({ theme }) => theme.spacing(2)};
-
-  @container (min-width: 900px) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  }
-`;
 
 const STICKY_OFFSET = 16;
 
@@ -1205,10 +1189,10 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
   };
 
   return (
-    <FormContainer>
+    <RuleContainer>
       <RuleProblems announcement={announcement} />
 
-      <FormColumns>
+      <RuleColumns>
         <RuleSettings
           ref={settingsRef}
           data-sticky={settingsSticky}
@@ -1448,7 +1432,7 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
             </Box>
           )}
         </Stack>
-      </FormColumns>
-    </FormContainer>
+      </RuleColumns>
+    </RuleContainer>
   );
 };

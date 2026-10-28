@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { MdOutlinePlace, MdPeopleOutline } from 'react-icons/md';
 import { EngagementConflictNotice } from './engagement-conflict-notice';
 import { EngagementConflict } from './engagement-conflicts';
+import { RuleColumns, RuleContainer } from './engagement-layout';
 import { PresetIllustration } from './engagement-preset-cards';
 import {
   EngagementRuleValues,
@@ -143,101 +144,128 @@ export const EngagementRuleOverview = ({
   const where = summarizeWhere(rule, t);
 
   return (
-    <Card
-      variant="outlined"
-      component="section"
+    <RuleContainer
+      as="section"
       aria-labelledby="rule-review-title"
       data-testid="rule-review"
-      sx={{ maxWidth: 960 }}
     >
-      <CardContent>
-        <Stack sx={{ gap: 3 }}>
-          <Typography
-            id="rule-review-title"
-            variant="h3"
-            component="h2"
-          >
-            {t('engagement.review.title')}
-          </Typography>
+      <RuleColumns>
+        <Card
+          variant="outlined"
+          data-testid="overview-rule"
+        >
+          <CardContent>
+            <Stack sx={{ gap: 3 }}>
+              <Typography
+                id="rule-review-title"
+                variant="h3"
+                component="h2"
+              >
+                {t('engagement.review.title')}
+              </Typography>
 
-          <Stack sx={{ gap: 1 }}>
-            <Stack
-              direction="row"
-              sx={{ gap: 1, alignItems: 'center', flexWrap: 'wrap' }}
-            >
-              <Typography variant="h5">{rule.name}</Typography>
-              <Chip
-                size="small"
-                label={t(`engagement.goal.${rule.goal}`)}
-                sx={{ bgcolor: alpha(accent, 0.16) }}
-              />
+              <Stack sx={{ gap: 1 }}>
+                <Stack
+                  direction="row"
+                  sx={{ gap: 1, alignItems: 'center', flexWrap: 'wrap' }}
+                >
+                  <Typography variant="h5">{rule.name}</Typography>
+                  <Chip
+                    size="small"
+                    label={t(`engagement.goal.${rule.goal}`)}
+                    sx={{ bgcolor: alpha(accent, 0.16) }}
+                  />
+                </Stack>
+
+                <Typography
+                  variant="body2"
+                  color={rule.active ? 'success.main' : 'text.secondary'}
+                >
+                  {rule.active ?
+                    t('engagement.review.goesLive')
+                  : t('engagement.review.inactive')}
+                </Typography>
+              </Stack>
+
+              <Fact
+                icon={MdPeopleOutline}
+                label={t('engagement.review.who')}
+              >
+                {t(`engagement.audience.${rule.audience}`)}
+              </Fact>
+              <Fact
+                icon={MdOutlinePlace}
+                label={t('engagement.review.where')}
+              >
+                {where || t('engagement.review.nowhere')}
+              </Fact>
+
+              <EngagementConflictNotice conflicts={conflicts} />
+
+              {actions && (
+                <Stack
+                  direction="row"
+                  sx={{ gap: 1, justifyContent: 'flex-end', flexWrap: 'wrap' }}
+                >
+                  {actions}
+                </Stack>
+              )}
             </Stack>
+          </CardContent>
+        </Card>
 
-            <Typography
-              variant="body2"
-              color={rule.active ? 'success.main' : 'text.secondary'}
-            >
-              {rule.active ?
-                t('engagement.review.goesLive')
-              : t('engagement.review.inactive')}
-            </Typography>
-          </Stack>
+        <Stack
+          spacing={2}
+          useFlexGap
+          data-testid="overview-steps"
+        >
+          <Typography variant="h3">{t('engagement.review.steps')}</Typography>
 
-          <Box
-            sx={{
-              display: 'grid',
-              gap: 2,
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            }}
-          >
-            <Fact
-              icon={MdPeopleOutline}
-              label={t('engagement.review.who')}
+          {rule.stages.map((stage, index) => (
+            <Card
+              key={index}
+              variant="outlined"
+              data-testid="overview-step"
             >
-              {t(`engagement.audience.${rule.audience}`)}
-            </Fact>
-            <Fact
-              icon={MdOutlinePlace}
-              label={t('engagement.review.where')}
-            >
-              {where || t('engagement.review.nowhere')}
-            </Fact>
-          </Box>
-
-          <EngagementConflictNotice conflicts={conflicts} />
-
-          <Box>
-            <Typography
-              variant="subtitle1"
-              sx={{ mb: 1.5 }}
-            >
-              {t('engagement.review.steps')}
-            </Typography>
-
-            <Box
-              component="ol"
-              sx={{ m: 0, p: 0, listStyle: 'none', display: 'grid', gap: 2 }}
-            >
-              {rule.stages.map((stage, index) => (
+              <CardContent
+                sx={{
+                  display: 'grid',
+                  gap: 3,
+                  alignItems: 'center',
+                  gridTemplateColumns: 'minmax(0, 1fr)',
+                  [theme.breakpoints.up('md')]: {
+                    gridTemplateColumns: '220px minmax(0, 1fr)',
+                  },
+                }}
+              >
                 <Box
-                  component="li"
-                  key={index}
                   sx={{
-                    display: 'grid',
-                    gap: 2,
-                    alignItems: 'start',
-                    gridTemplateColumns: '1fr',
-                    [theme.breakpoints.up('sm')]: {
-                      gridTemplateColumns: '160px minmax(0, 1fr)',
-                    },
+                    display: 'flex',
+                    justifyContent: 'center',
+                    p: 2,
+                    borderRadius: 1,
+                    bgcolor: alpha(accent, 0.08),
                   }}
                 >
                   <PresetIllustration
                     placement={stage.placement}
                     accent={accent}
                   />
+                </Box>
 
-                  <Stack sx={{ gap: 1, minWidth: 0 }}>
+                <Stack sx={{ gap: 1.5, minWidth: 0 }}>
+                  <Stack
+                    direction="row"
+                    sx={{ gap: 1, alignItems: 'center' }}
+                  >
+                    {rule.stages.length > 1 && (
+                      <Chip
+                        size="small"
+                        label={t('engagement.form.stage', {
+                          number: index + 1,
+                        })}
+                      />
+                    )}
                     <Typography
                       variant="body2"
                       sx={{
@@ -247,27 +275,18 @@ export const EngagementRuleOverview = ({
                     >
                       {steps[index]}
                     </Typography>
-
-                    <PromptPreview
-                      stage={stage}
-                      accent={accent}
-                    />
                   </Stack>
-                </Box>
-              ))}
-            </Box>
-          </Box>
 
-          {actions && (
-            <Stack
-              direction="row"
-              sx={{ gap: 1, justifyContent: 'flex-end', flexWrap: 'wrap' }}
-            >
-              {actions}
-            </Stack>
-          )}
+                  <PromptPreview
+                    stage={stage}
+                    accent={accent}
+                  />
+                </Stack>
+              </CardContent>
+            </Card>
+          ))}
         </Stack>
-      </CardContent>
-    </Card>
+      </RuleColumns>
+    </RuleContainer>
   );
 };
