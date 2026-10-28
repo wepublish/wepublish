@@ -4160,7 +4160,11 @@
         "peer": "Create peer",
         "userRole": "Create user role",
         "token": "Generate token",
-        "apiToken": "Generate API key"
+        "apiToken": "Generate API key",
+        "newsletterPrompt": "Grow the newsletter (new engagement rule)",
+        "membershipPrompt": "Promote memberships (new engagement rule)",
+        "announcement": "Display an announcement (new engagement rule)",
+        "restrictPremium": "Restrict premium content (new paywall)"
       },
       "trigger": "Search or jump to…",
       "keys": {

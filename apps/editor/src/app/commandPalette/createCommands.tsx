@@ -31,7 +31,9 @@ import {
   MdAutorenew,
   MdBadge,
   MdBookOnline,
+  MdCampaign,
   MdCardGiftcard,
+  MdCardMembership,
   MdContentCopy,
   MdCountertops,
   MdCreditCard,
@@ -42,6 +44,7 @@ import {
   MdGroup,
   MdKey,
   MdLocationPin,
+  MdLock,
   MdMail,
   MdMoney,
   MdPayment,
@@ -152,6 +155,38 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdSignpost />,
     permissions: [CanCreateEngagementRule.id],
     perform: ({ navigate }) => navigate('/audience-engagement/create'),
+  },
+  {
+    id: 'createNewsletterPrompt',
+    titleKey: 'commandPalette.create.newsletterPrompt',
+    icon: <MdMail />,
+    permissions: [CanCreateEngagementRule.id],
+    perform: ({ navigate }) =>
+      navigate('/audience-engagement/create?preset=growNewsletter'),
+  },
+  {
+    id: 'createMembershipPrompt',
+    titleKey: 'commandPalette.create.membershipPrompt',
+    icon: <MdCardMembership />,
+    permissions: [CanCreateEngagementRule.id],
+    perform: ({ navigate }) =>
+      navigate('/audience-engagement/create?preset=promoteMemberships'),
+  },
+  {
+    id: 'createAnnouncement',
+    titleKey: 'commandPalette.create.announcement',
+    icon: <MdCampaign />,
+    permissions: [CanCreateEngagementRule.id],
+    perform: ({ navigate }) =>
+      navigate('/audience-engagement/create?preset=displayAnnouncement'),
+  },
+  {
+    id: 'restrictPremiumContent',
+    titleKey: 'commandPalette.create.restrictPremium',
+    icon: <MdLock />,
+    permissions: [CanCreatePaywall.id],
+    perform: ({ navigate }) =>
+      navigate('/articles/paywalls/create?enforced=true'),
   },
   {
     id: 'createAuthor',
