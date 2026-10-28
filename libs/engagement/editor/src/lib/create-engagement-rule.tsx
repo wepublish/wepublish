@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@mui/material';
+import styled from '@emotion/styled';
+import { Button, Stack } from '@mui/material';
 import {
   CreateEngagementRuleDocument,
   EngagementRuleDocument,
@@ -13,6 +14,8 @@ import {
   createCheckedPermissionComponent,
   enqueueSnackbar,
   humanizeError,
+  IconButtonTooltip,
+  Link,
   ListViewContainer,
   ListViewHeader,
   PageTitle,
@@ -21,6 +24,7 @@ import {
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { MdChevronLeft } from 'react-icons/md';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { EngagementPresetCards } from './engagement-preset-cards';
 import { ENGAGEMENT_PATH } from './engagement-rule-list';
@@ -35,6 +39,10 @@ import {
   EngagementRuleViews,
 } from './engagement-rule-views';
 import { ENGAGEMENT_PRESETS } from './presets';
+
+const BackLink = styled(Link)`
+  display: flex;
+`;
 
 const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
   const navigate = useNavigate();
@@ -147,7 +155,22 @@ function CreateEngagementRule() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <PageTitle>{t('engagement.create.title')}</PageTitle>
+          {/* Like the back link of `SingleViewTitle` on the other pages. */}
+          <Stack
+            direction="row"
+            sx={{ alignItems: 'center' }}
+          >
+            <IconButtonTooltip caption={t('back')}>
+              <BackLink
+                to={ENGAGEMENT_PATH}
+                aria-label={t('back')}
+              >
+                <MdChevronLeft size={32} />
+              </BackLink>
+            </IconButtonTooltip>
+
+            <PageTitle>{t('engagement.create.title')}</PageTitle>
+          </Stack>
           {/*<p>{t('engagement.create.pickPreset')}</p>*/}
         </ListViewHeader>
       </ListViewContainer>
