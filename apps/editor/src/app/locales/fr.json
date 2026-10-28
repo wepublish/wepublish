@@ -4462,7 +4462,9 @@
         "PAYING_MEMBERS": "Membres payant·e·s",
         "PAYING_MEMBERSInfo": "Les lecteur·rice·s avec un abonnement actif payant.",
         "PAYWALL_BYPASSED": "Lecteur·rice·s avec un lien de déblocage",
-        "PAYWALL_BYPASSEDInfo": "Les lecteur·rice·s qui ont ouvert un lien de déblocage d’une paywall active."
+        "PAYWALL_BYPASSEDInfo": "Les lecteur·rice·s qui ont ouvert un lien de déblocage d’une paywall active.",
+        "MEMBER_PLANS": "Lecteur·rice·s avec un abonnement précis",
+        "MEMBER_PLANSInfo": "Lecteur·rice·s avec un abonnement actif à l’un des plans que tu choisis, p. ex. pour proposer une mise à niveau."
       },
       "placement": {
         "BANNER": "Bannière en haut de la page",
@@ -4577,7 +4579,8 @@
         "actionLabelDefault": "Par défaut du site",
         "actionUrl": "URL",
         "actionRole": "Rôle",
-        "addAction": "Ajouter une action"
+        "addAction": "Ajouter une action",
+        "audienceMemberPlans": "Plans d’abonnement"
       },
       "validation": {
         "required": "Obligatoire",

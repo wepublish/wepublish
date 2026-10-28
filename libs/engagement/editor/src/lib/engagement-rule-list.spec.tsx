@@ -31,6 +31,7 @@ const rule: FullEngagementRuleFragment = {
   priority: 0,
   version: 1,
   audience: EngagementAudience.All,
+  audienceMemberPlanIds: [],
   showOnArticles: true,
   showOnPageIds: [],
   includePeeredArticles: false,

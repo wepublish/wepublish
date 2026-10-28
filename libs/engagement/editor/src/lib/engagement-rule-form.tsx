@@ -34,6 +34,7 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
+  MemberPlanListDocument,
   NewsletterReferralMode,
   PageListDocument,
 } from '@wepublish/editor/api';
@@ -758,6 +759,42 @@ const StageFields = ({
   );
 };
 
+const MemberPlansField = () => {
+  const { t } = useTranslation();
+  const { control } = useFormContext<EngagementRuleValues>();
+  const { data } = useQuery(MemberPlanListDocument, {
+    variables: { take: 100 },
+  });
+  const plans = data?.memberPlans.nodes ?? [];
+
+  return (
+    <Controller
+      control={control}
+      name="audienceMemberPlanIds"
+      render={({ field, fieldState: { error } }) => (
+        <Autocomplete
+          multiple
+          disableCloseOnSelect
+          options={plans.map(plan => plan.id)}
+          getOptionLabel={option =>
+            plans.find(plan => plan.id === option)?.name ?? option
+          }
+          value={field.value ?? []}
+          onChange={(_event, ids) => field.onChange(ids ?? [])}
+          renderInput={params => (
+            <TextField
+              {...params}
+              label={t('engagement.form.audienceMemberPlans')}
+              error={Boolean(error)}
+              helperText={error?.message}
+            />
+          )}
+        />
+      )}
+    />
+  );
+};
+
 const PriorityField = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<EngagementRuleValues>();
@@ -917,7 +954,10 @@ export const EngagementRuleForm = () => {
   const { t } = useTranslation();
   const { control, setValue, getValues, formState } =
     useFormContext<EngagementRuleValues>();
-  const [goal, stages] = useWatch({ control, name: ['goal', 'stages'] });
+  const [goal, stages, audience] = useWatch({
+    control,
+    name: ['goal', 'stages', 'audience'],
+  });
   const announcement = isAnnouncement({ goal });
   const {
     fields: stageFields,
@@ -1059,6 +1099,10 @@ export const EngagementRuleForm = () => {
                     </RadioGroup>
                   )}
                 />
+
+                {audience === EngagementAudience.MemberPlans && (
+                  <MemberPlansField />
+                )}
               </FormFields>
             </CardContent>
           </Card>

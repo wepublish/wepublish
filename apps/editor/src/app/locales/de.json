@@ -4462,7 +4462,9 @@
         "PAYING_MEMBERS": "Zahlende Mitglieder",
         "PAYING_MEMBERSInfo": "Leser*innen mit aktiver, kostenpflichtiger Mitgliedschaft.",
         "PAYWALL_BYPASSED": "Leser*innen mit Paywall-Freischaltlink",
-        "PAYWALL_BYPASSEDInfo": "Leser*innen, die einen Freischaltlink einer aktiven Paywall geöffnet haben."
+        "PAYWALL_BYPASSEDInfo": "Leser*innen, die einen Freischaltlink einer aktiven Paywall geöffnet haben.",
+        "MEMBER_PLANS": "Leser:innen mit einem bestimmten Abo",
+        "MEMBER_PLANSInfo": "Leser:innen mit einem aktiven Abo eines der Pläne, die du wählst, z. B. um ein Upgrade anzubieten."
       },
       "placement": {
         "BANNER": "Banner oben auf der Seite",
@@ -4577,7 +4579,8 @@
         "actionLabelDefault": "Standard der Website",
         "actionUrl": "URL",
         "actionRole": "Rolle",
-        "addAction": "Aktion hinzufügen"
+        "addAction": "Aktion hinzufügen",
+        "audienceMemberPlans": "Abo-Pläne"
       },
       "validation": {
         "required": "Pflichtfeld",

@@ -49,6 +49,8 @@ export type EngagementRuleValues = {
   active: boolean;
   priority: number;
   audience: EngagementAudience;
+  /** Only saved for the member plans audience. */
+  audienceMemberPlanIds: string[];
   showOnArticles: boolean;
   showOnPageIds: string[];
   includePeeredArticles: boolean;
@@ -241,6 +243,13 @@ export function engagementRuleProblems(
     problem('newsletterReferralLimit', 'min');
   }
 
+  if (
+    rule.audience === EngagementAudience.MemberPlans &&
+    !rule.audienceMemberPlanIds.length
+  ) {
+    problem('audienceMemberPlanIds', 'required');
+  }
+
   return problems;
 }
 
@@ -282,6 +291,7 @@ export const createEngagementRuleSchema = (
       active: z.boolean(),
       priority: z.number().int(),
       audience: z.nativeEnum(EngagementAudience),
+      audienceMemberPlanIds: z.array(z.string()),
       showOnArticles: z.boolean(),
       showOnPageIds: z.array(z.string()),
       includePeeredArticles: z.boolean(),
@@ -308,9 +318,14 @@ export const createEngagementRuleSchema = (
 export const toEngagementRuleInput = ({
   stages,
   newsletterParams,
+  audienceMemberPlanIds,
   ...rule
 }: EngagementRuleValues): CreateEngagementRuleInput => ({
   ...rule,
+  audienceMemberPlanIds:
+    rule.audience === EngagementAudience.MemberPlans ?
+      audienceMemberPlanIds
+    : [],
   newsletterParams: newsletterParams.filter(({ key }) => key.trim()),
   stages: stages.map(({ image: _image, actions, ...stage }) => ({
     ...stage,
@@ -324,6 +339,7 @@ export const engagementRuleToValues = ({
   active,
   priority,
   audience,
+  audienceMemberPlanIds,
   showOnArticles,
   showOnPageIds,
   includePeeredArticles,
@@ -338,6 +354,7 @@ export const engagementRuleToValues = ({
   active,
   priority,
   audience,
+  audienceMemberPlanIds,
   showOnArticles,
   showOnPageIds,
   includePeeredArticles,
