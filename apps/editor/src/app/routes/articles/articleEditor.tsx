@@ -66,6 +66,7 @@ import {
   TitleBlockListValue,
   TitleBlockValue,
   useAuthorisation,
+  useHasPermission,
   useSeededState,
   useUnsavedChangesDialog,
   VersionHistory,
@@ -802,6 +803,9 @@ function ArticleEditor() {
     [isMetaDrawerOpen]
   );
 
+  const canSeeVersionHistory = useHasPermission([CanGetArticle.id]);
+  const canDiscardDraft = useHasPermission([CanCreateArticle.id]);
+
   return (
     <>
       <EditorTemplate
@@ -827,65 +831,59 @@ function ArticleEditor() {
                 <MdKeyboardBackspace />
               </IconButton>
             }
+            menuActions={[
+              {
+                label: t('articleEditor.overview.metadata'),
+                icon: <MdIntegrationInstructions />,
+                disabled: isDisabled,
+                onClick: () => {
+                  syncFirstTitleBlockWithMetadata();
+                  setMetaDrawerOpen(true);
+                },
+              },
+              ...(!isNew && canSeeVersionHistory ?
+                [
+                  {
+                    label: t('versionHistory.title'),
+                    icon: <MdHistory />,
+                    disabled: isDisabled,
+                    onClick: () => {
+                      if (isVersionHistoryRequested) {
+                        refetchRevisions();
+                      }
+                      setVersionHistoryRequested(true);
+                      setVersionHistoryOpen(true);
+                    },
+                  },
+                ]
+              : []),
+              ...(!isNew && publishedUrl ?
+                [
+                  {
+                    label: t('copyLink.button'),
+                    icon: <MdLink />,
+                    onClick: () => copyLinkToClipboard(publishedUrl, t),
+                  },
+                ]
+              : []),
+              ...((
+                !isNew &&
+                canDiscardDraft &&
+                !!articleData?.article?.draft &&
+                !!articleData?.article?.published
+              ) ?
+                [
+                  {
+                    label: t('discardDraft.button'),
+                    icon: <MdDeleteOutline />,
+                    disabled: isDisabled,
+                    onClick: () => setDiscardDialogOpen(true),
+                  },
+                ]
+              : []),
+            ]}
             secondaryActions={
               <>
-                <EditorHeaderButton
-                  variant="text"
-                  icon={<MdIntegrationInstructions />}
-                  label={t('articleEditor.overview.metadata')}
-                  disabled={isDisabled}
-                  onClick={() => {
-                    syncFirstTitleBlockWithMetadata();
-                    setMetaDrawerOpen(true);
-                  }}
-                />
-
-                {!isNew && (
-                  <>
-                    <PermissionControl
-                      qualifyingPermissions={[CanGetArticle.id]}
-                    >
-                      <EditorHeaderButton
-                        variant="text"
-                        icon={<MdHistory />}
-                        label={t('versionHistory.title')}
-                        disabled={isDisabled}
-                        onClick={() => {
-                          if (isVersionHistoryRequested) {
-                            refetchRevisions();
-                          }
-                          setVersionHistoryRequested(true);
-                          setVersionHistoryOpen(true);
-                        }}
-                      />
-                    </PermissionControl>
-
-                    {publishedUrl && (
-                      <EditorHeaderButton
-                        variant="text"
-                        icon={<MdLink />}
-                        label={t('copyLink.button')}
-                        onClick={() => copyLinkToClipboard(publishedUrl, t)}
-                      />
-                    )}
-
-                    {articleData?.article?.draft &&
-                      articleData?.article?.published && (
-                        <PermissionControl
-                          qualifyingPermissions={[CanCreateArticle.id]}
-                        >
-                          <EditorHeaderButton
-                            variant="text"
-                            icon={<MdDeleteOutline />}
-                            label={t('discardDraft.button')}
-                            disabled={isDisabled}
-                            onClick={() => setDiscardDialogOpen(true)}
-                          />
-                        </PermissionControl>
-                      )}
-                  </>
-                )}
-
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
                   {showPreview && previewUrl && (
                     <PreviewControls

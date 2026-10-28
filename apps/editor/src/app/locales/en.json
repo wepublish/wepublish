@@ -975,6 +975,9 @@
       "ignoreDeactivatedSubscriptions": "No emails will be sent to deactivated subscriptions!"
     },
     "edit": "Edit",
+    "editorHeader": {
+      "moreActions": "More actions"
+    },
     "errors": {
       "uniqueEmail": "This email address is already in use.",
       "uniqueField": "This value is already taken ({{field}}).",
