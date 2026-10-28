@@ -81,6 +81,12 @@ const RUNTIME_ENV = [
   'APP_RELEASE_ID',
   'SSR_FETCH_TIMEOUT_MS',
   'SENTRY_DSN',
+  // Read by `toInternalHref` to tell a hand-written link to this site from one
+  // to another site. It must be the *same* string on both sides or the two
+  // renders disagree on the href, so the browser reads it from
+  // `window.PUBLIC_ENV` like everything else here rather than from its own
+  // `location`.
+  'WEBSITE_URL',
 ] as const;
 
 export default defineConfig(({ mode }) => {

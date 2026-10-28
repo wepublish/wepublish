@@ -3,6 +3,8 @@ import { Link as BuilderLink } from '@wepublish/ui';
 import { BuilderLinkProps, useLinkProps } from '@wepublish/website/builder';
 import { AnchorHTMLAttributes, forwardRef } from 'react';
 
+import { toInternalHref } from './internal-href';
+
 /**
  * Replacement for `NextWepublishLink`.
  *
@@ -15,13 +17,11 @@ import { AnchorHTMLAttributes, forwardRef } from 'react';
  *  - `prefetch` becomes `preload`: `true -> 'intent'` (hover/focus),
  *    `false -> false`. `next/link` prefetched on viewport entry; there is no
  *    exact equivalent.
- *  - Absolute URLs, `mailto:`, `tel:` and bare hashes must bypass the router,
- *    otherwise TanStack tries to resolve them as internal paths.
+ *  - `mailto:`, `tel:`, bare hashes and URLs on *another* origin must bypass
+ *    the router, otherwise TanStack tries to resolve them as internal paths.
+ *    An absolute URL on this site's own origin is not one of them — see
+ *    `toInternalHref`.
  */
-const isExternal = (href: string) =>
-  /^([a-z][a-z0-9+.-]*:)?\/\//i.test(href) ||
-  /^(mailto:|tel:|sms:)/i.test(href) ||
-  href.startsWith('#');
 
 type AnchorProps = AnchorHTMLAttributes<HTMLAnchorElement>;
 
@@ -57,6 +57,7 @@ export const WepublishLink = forwardRef<
 >(function WepublishLink({ children, href, variant, ...props }, ref) {
   const linkProps = useLinkProps(props);
   const target = href ?? '';
+  const internal = toInternalHref(target, process.env.WEBSITE_URL);
 
   if (process.env.APP_ENVIRONMENT !== 'production') {
     linkProps.prefetch = false;
@@ -65,7 +66,7 @@ export const WepublishLink = forwardRef<
   // `prefetch` and `locale` are next/link props; never let them reach the DOM.
   const { prefetch, locale: _locale, ...rest } = linkProps;
 
-  if (!target || isExternal(target)) {
+  if (internal === null) {
     return (
       <BuilderLink
         {...rest}
@@ -83,7 +84,7 @@ export const WepublishLink = forwardRef<
       {...rest}
       ref={ref}
       component={prefetch ? PreloadingAnchor : PlainAnchor}
-      href={target}
+      href={internal}
       variant={variant}
     >
       {children}
