@@ -108,6 +108,8 @@ export const loadEvent = createServerFn({ method: 'GET' })
       });
 
       notFound = isNotFoundError(event.error);
+
+      return event;
     });
 
     return { apollo, notFound };

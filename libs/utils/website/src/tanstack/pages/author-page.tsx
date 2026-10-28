@@ -74,6 +74,8 @@ export const loadAuthor = createServerFn({ method: 'GET' })
       if (!notFound) {
         await prefetchArticles();
       }
+
+      return author;
     });
 
     return { apollo, notFound };

@@ -52,6 +52,8 @@ export const loadArticle = createServerFn({ method: 'GET' })
           relatedTake,
         });
       }
+
+      return article;
     });
 
     return { apollo, notFound };

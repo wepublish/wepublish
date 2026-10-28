@@ -26,6 +26,8 @@ export const loadPage = createServerFn({ method: 'GET' })
 
       notFound = isNotFoundError(page.error);
       shell = getPageShell(page.data?.page);
+
+      return page;
     });
 
     return { apollo, notFound, shell };
