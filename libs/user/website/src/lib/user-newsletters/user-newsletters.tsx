@@ -5,7 +5,7 @@ import {
   BuilderUserNewslettersProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const UserNewslettersWrapper = styled('div')`
@@ -44,6 +44,7 @@ export function UserNewsletters({
   } = useWebsiteBuilder();
   const { t } = useTranslation();
 
+  const [prevGroups, setPrevGroups] = useState(groups);
   const [saved, setSaved] = useState(() => toSelection(groups));
   const [selection, setSelection] = useState(saved);
   const [isSaving, setIsSaving] = useState(false);
@@ -51,10 +52,11 @@ export function UserNewsletters({
     { success: true } | { success: false; message: string } | null
   >(null);
 
-  useEffect(() => {
+  if (groups !== prevGroups) {
+    setPrevGroups(groups);
     setSaved(toSelection(groups));
     setSelection(toSelection(groups));
-  }, [groups]);
+  }
 
   const changes = groups
     .map(({ syncProviderId, newsletters }) => ({

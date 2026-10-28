@@ -1,65 +1,61 @@
-import { composeStories } from '@storybook/react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import * as stories from './user-newsletters.stories';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
+import {
+  mockUserNewsletterGroup,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { MailchimpFormOptionsLayout } from '@wepublish/website/api';
+import { BuilderUserNewslettersProps } from '@wepublish/website/builder';
+import { UserNewsletters } from './user-newsletters';
 
-const { Default, AsList, Empty } = composeStories(stories);
+const renderNewsletters = (
+  overrides: Partial<BuilderUserNewslettersProps> = {}
+) =>
+  renderWithProviders(
+    <UserNewsletters
+      groups={[mockUserNewsletterGroup()]}
+      onSave={vi.fn().mockResolvedValue(undefined)}
+      {...overrides}
+    />
+  );
 
 const saveButton = () => screen.getByRole('button') as HTMLButtonElement;
 
+const checkbox = (name: RegExp) =>
+  screen.getByRole('checkbox', { name }) as HTMLInputElement;
+
 describe('UserNewsletters', () => {
   it('ticks the newsletters the user is subscribed to', () => {
-    render(<Default />);
+    renderNewsletters();
 
-    expect(
-      (
-        screen.getByRole('checkbox', {
-          name: /Daily Briefing/,
-        }) as HTMLInputElement
-      ).checked
-    ).toBe(true);
-    expect(
-      (
-        screen.getByRole('checkbox', {
-          name: /Weekly Digest/,
-        }) as HTMLInputElement
-      ).checked
-    ).toBe(false);
-    expect(
-      (screen.getByRole('checkbox', { name: /Events/ }) as HTMLInputElement)
-        .checked
-    ).toBe(false);
+    expect(checkbox(/Daily Briefing/).checked).toBe(true);
+    expect(checkbox(/Weekly Digest/).checked).toBe(false);
+    expect(checkbox(/Events/).checked).toBe(false);
   });
 
   it('renders as a list as well', () => {
-    render(<AsList />);
+    renderNewsletters({ layout: MailchimpFormOptionsLayout.List });
 
-    expect(
-      (
-        screen.getByRole('checkbox', {
-          name: /Daily Briefing/,
-        }) as HTMLInputElement
-      ).checked
-    ).toBe(true);
+    expect(checkbox(/Daily Briefing/).checked).toBe(true);
   });
 
   it('only allows saving once something changed', () => {
-    render(<Default />);
+    renderNewsletters();
 
     expect(saveButton()).toHaveProperty('disabled', true);
 
-    fireEvent.click(screen.getByRole('checkbox', { name: /Weekly Digest/ }));
+    fireEvent.click(checkbox(/Weekly Digest/));
     expect(saveButton()).toHaveProperty('disabled', false);
 
-    fireEvent.click(screen.getByRole('checkbox', { name: /Weekly Digest/ }));
+    fireEvent.click(checkbox(/Weekly Digest/));
     expect(saveButton()).toHaveProperty('disabled', true);
   });
 
   it('saves only the changed newsletters', async () => {
     const onSave = vi.fn().mockResolvedValue(undefined);
-    render(<Default onSave={onSave} />);
+    renderNewsletters({ onSave });
 
-    fireEvent.click(screen.getByRole('checkbox', { name: /Daily Briefing/ }));
-    fireEvent.click(screen.getByRole('checkbox', { name: /Weekly Digest/ }));
+    fireEvent.click(checkbox(/Daily Briefing/));
+    fireEvent.click(checkbox(/Weekly Digest/));
     fireEvent.click(saveButton());
 
     await waitFor(() =>
@@ -77,9 +73,9 @@ describe('UserNewsletters', () => {
 
   it('shows an error when saving fails', async () => {
     const onSave = vi.fn().mockRejectedValue(new Error('Mailchimp is down'));
-    render(<Default onSave={onSave} />);
+    renderNewsletters({ onSave });
 
-    fireEvent.click(screen.getByRole('checkbox', { name: /Weekly Digest/ }));
+    fireEvent.click(checkbox(/Weekly Digest/));
     fireEvent.click(saveButton());
 
     expect((await screen.findByRole('alert')).textContent).toContain(
@@ -88,8 +84,35 @@ describe('UserNewsletters', () => {
     expect(saveButton()).toHaveProperty('disabled', false);
   });
 
+  it('takes over new groups passed in from outside', () => {
+    const group = mockUserNewsletterGroup();
+    const { rerender } = renderNewsletters({ groups: [group] });
+
+    fireEvent.click(checkbox(/Events/));
+    expect(saveButton()).toHaveProperty('disabled', false);
+
+    rerender(
+      <UserNewsletters
+        groups={[
+          {
+            ...group,
+            newsletters: group.newsletters.map(newsletter =>
+              newsletter.interestId === 'events' ?
+                { ...newsletter, subscribed: true }
+              : newsletter
+            ),
+          },
+        ]}
+        onSave={vi.fn()}
+      />
+    );
+
+    expect(checkbox(/Events/).checked).toBe(true);
+    expect(saveButton()).toHaveProperty('disabled', true);
+  });
+
   it('renders nothing without newsletters', () => {
-    render(<Empty />);
+    renderNewsletters({ groups: [] });
 
     expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
     expect(screen.queryByRole('button')).toBeNull();
