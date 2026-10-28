@@ -12,7 +12,12 @@ import {
   EngagementStageWithActions,
 } from '@wepublish/engagement/api';
 import { BannerResolver } from './banner.resolver';
-import { BannerDocumentType, PrimaryBannerArgs } from './banner.model';
+import {
+  BannerDocumentType,
+  LoginStatus,
+  PrimaryBannerArgs,
+} from './banner.model';
+import { toBanner } from './to-banner';
 
 const stage = (
   overrides: Partial<EngagementStageWithActions> = {}
@@ -230,5 +235,17 @@ describe('BannerResolver', () => {
 
     expect(await resolver().image(banner!)).toEqual({ id: 'image-1' });
     expect(images.load).toHaveBeenCalledWith('image-1');
+  });
+});
+
+describe('toBanner', () => {
+  it('shows a rule for specific plans to subscribers on older websites', () => {
+    const rule = announcement('plans', {
+      audience: EngagementAudience.MEMBER_PLANS,
+    });
+
+    expect(toBanner(rule, rule.stages[0]).showForLoginStatus).toBe(
+      LoginStatus.SUBSCRIBED
+    );
   });
 });
