@@ -820,6 +820,8 @@
       "panels": {
         "approve": "Approuver",
         "approveComment": "Approuver le commentaire",
+        "inReplyTo": "En réponse à {{name}}",
+        "earlierRevisions": "Versions précédentes ({{count}})",
         "cancel": "Annuler",
         "createdAt": "Créé le",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
