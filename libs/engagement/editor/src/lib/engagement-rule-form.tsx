@@ -71,6 +71,7 @@ import {
 import { EngagementConflictNotice } from './engagement-conflict-notice';
 import { findConflicts } from './engagement-conflicts';
 import { summarizeRule, summarizeStages } from './summarize-rule';
+import { useStickyWhenFits } from './use-sticky-when-fits';
 
 // Columns follow the width of the form, not the window: the sidebar takes a
 // good part of it.
@@ -89,20 +90,22 @@ const FormColumns = styled('div')`
   }
 `;
 
+const STICKY_OFFSET = 16;
+
 /**
  * Goal, audience and where/when stay together at the top instead of spreading
- * along the stages, and follow the scroll when the window is tall enough.
+ * along the stages, and follow the scroll while they fit the editor's page
+ * (`useStickyWhenFits`). No scrollbar of their own: it cut the cards off and
+ * only scrolled once the page was at its end.
  */
 const RuleSettings = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(2)};
 
   @container (min-width: 900px) {
-    @media (min-height: 800px) {
+    &[data-sticky='true'] {
       position: sticky;
-      top: ${({ theme }) => theme.spacing(2)};
-      max-height: calc(100vh - ${({ theme }) => theme.spacing(4)});
-      overflow-y: auto;
+      top: ${STICKY_OFFSET}px;
     }
   }
 `;
@@ -969,6 +972,8 @@ const ReferralFields = () => {
 
 export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
   const { t } = useTranslation();
+  const [settingsRef, settingsSticky] =
+    useStickyWhenFits<HTMLDivElement>(STICKY_OFFSET);
   const { control, setValue, getValues, formState } =
     useFormContext<EngagementRuleValues>();
   const [goal, stages, audience] = useWatch({
@@ -1028,7 +1033,11 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
   return (
     <FormContainer>
       <FormColumns>
-        <RuleSettings data-testid="rule-settings">
+        <RuleSettings
+          ref={settingsRef}
+          data-sticky={settingsSticky}
+          data-testid="rule-settings"
+        >
           <Card variant="outlined">
             <CardContent>
               <FormFields>
