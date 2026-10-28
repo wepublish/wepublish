@@ -434,8 +434,9 @@ Four places, and the order of each matters:
   one bucket per article. `autoInstrumentMiddleware: false`, for the same
   bundle reason — it injects an SDK import into `start.ts` in both
   environments. `@sentry/tanstackstart-react` must therefore stay *out* of
-  `ssr.external`: the plugin can only substitute the table into a module it
-  bundles.
+  `ssr.external` — the plugin can only substitute the table into a module it
+  bundles — while still being listed in nitro's `traceDeps`, because the
+  `--import` preload is a separate build that resolves it at runtime.
 
 The build prints a warning that `@redis/client` is external and "needs to be
 bundled for Sentry instrumentation to work". It is a false positive here — the
