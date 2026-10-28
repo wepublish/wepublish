@@ -4848,6 +4848,7 @@
       },
       "conflict": {
         "title": "Competes with other rules",
+        "settledTitle": "Order set",
         "competes": "Competes with “{{name}}” for the {{slots}} ({{audience}}).",
         "thisFirst": "This rule is shown first.",
         "otherFirst": "“{{name}}” is shown first.",

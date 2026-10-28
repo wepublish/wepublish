@@ -885,8 +885,10 @@ const ShowFirstField = ({ ruleId }: { ruleId?: string }) => {
       )
     : [];
 
-  if (!conflicts.length && !showsFirst(rule.priority ?? 0)) {
-    return null;
+  const undecided = conflicts.some(({ settled }) => !settled);
+
+  if (!undecided && !showsFirst(rule.priority ?? 0)) {
+    return <EngagementConflictNotice conflicts={conflicts} />;
   }
 
   const showFirst = (

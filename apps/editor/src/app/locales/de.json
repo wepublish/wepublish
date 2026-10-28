@@ -4848,6 +4848,7 @@
       },
       "conflict": {
         "title": "Konkurriert mit anderen Regeln",
+        "settledTitle": "Reihenfolge festgelegt",
         "competes": "Konkurriert mit «{{name}}» um: {{slots}} ({{audience}}).",
         "thisFirst": "Diese Regel wird zuerst gezeigt.",
         "otherFirst": "«{{name}}» wird zuerst gezeigt.",

@@ -4848,6 +4848,7 @@
       },
       "conflict": {
         "title": "En concurrence avec d’autres règles",
+        "settledTitle": "Ordre défini",
         "competes": "En concurrence avec « {{name}} » pour : {{slots}} ({{audience}}).",
         "thisFirst": "Cette règle s’affiche en premier.",
         "otherFirst": "« {{name}} » s’affiche en premier.",
