@@ -15,6 +15,8 @@ import { EngagementGoal } from '@wepublish/editor/api';
 import { ComponentType, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutlinePlace, MdPeopleOutline } from 'react-icons/md';
+import { EngagementConflictNotice } from './engagement-conflict-notice';
+import { EngagementConflict } from './engagement-conflicts';
 import { PresetIllustration } from './engagement-preset-cards';
 import {
   EngagementRuleValues,
@@ -122,6 +124,7 @@ const PromptPreview = ({
 
 type EngagementRuleReviewProps = {
   rule?: EngagementRuleValues;
+  conflicts?: EngagementConflict[];
   saving?: boolean;
   onBack: () => void;
   onConfirm: () => void;
@@ -133,6 +136,7 @@ type EngagementRuleReviewProps = {
  */
 export const EngagementRuleReview = ({
   rule,
+  conflicts = [],
   saving,
   onBack,
   onConfirm,
@@ -205,6 +209,8 @@ export const EngagementRuleReview = ({
               {where || t('engagement.review.nowhere')}
             </Fact>
           </Box>
+
+          <EngagementConflictNotice conflicts={conflicts} />
 
           <Box>
             <Typography

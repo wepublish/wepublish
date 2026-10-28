@@ -22,8 +22,6 @@ import {
   Stack,
   Switch,
   TextField,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
 } from '@mui/material';
 import {
@@ -34,6 +32,7 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRequirement,
+  EngagementRulesDocument,
   MemberPlanListDocument,
   NewsletterReferralMode,
   PageListDocument,
@@ -60,15 +59,17 @@ import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdExpandMore } from 'react-icons/md';
 import {
   EngagementRuleValues,
-  PRIORITY_LEVELS,
-  PriorityLevel,
+  SHOW_FIRST_PRIORITY,
   actionDefaults,
-  priorityLevel,
+  engagementRuleToValues,
+  showsFirst,
   actionNeedsUrl,
   hardStage,
   isAnnouncement,
   stageDefaults,
 } from './engagement-rule-values';
+import { EngagementConflictNotice } from './engagement-conflict-notice';
+import { findConflicts } from './engagement-conflicts';
 import { summarizeRule, summarizeStages } from './summarize-rule';
 
 // Columns follow the width of the form, not the window: the sidebar takes a
@@ -795,46 +796,62 @@ const MemberPlansField = () => {
   );
 };
 
-const PriorityField = () => {
+/**
+ * Priority stays out of the way until the rule competes with another one for
+ * the same spot: then the form says with which, and offers to show it first.
+ */
+const ShowFirstField = ({ ruleId }: { ruleId?: string }) => {
   const { t } = useTranslation();
   const { control } = useFormContext<EngagementRuleValues>();
+  const rule = useWatch({ control }) as EngagementRuleValues;
+  const { data } = useQuery(EngagementRulesDocument);
+  const rules = data?.engagementRules ?? [];
+  const self = rules.find(({ id }) => id === ruleId);
+  const conflicts =
+    rule.stages ?
+      findConflicts(
+        { ...rule, id: ruleId, createdAt: self?.createdAt },
+        rules.map(other => ({
+          ...other,
+          stages: engagementRuleToValues(other).stages,
+        }))
+      )
+    : [];
 
-  return (
+  if (!conflicts.length && !showsFirst(rule.priority ?? 0)) {
+    return null;
+  }
+
+  const showFirst = (
     <Controller
       control={control}
       name="priority"
       render={({ field }) => (
         <FormControl>
-          <FormLabel id="engagement-priority">
-            {t('engagement.form.priority')}
-          </FormLabel>
-          <ToggleButtonGroup
-            exclusive
-            size="small"
-            aria-labelledby="engagement-priority"
-            value={priorityLevel(field.value)}
-            onChange={(_event, level: PriorityLevel | null) => {
-              // Clicking the selected level again would leave none selected.
-              if (level) {
-                field.onChange(PRIORITY_LEVELS[level]);
-              }
-            }}
-            sx={{ mt: 1 }}
-          >
-            {(Object.keys(PRIORITY_LEVELS) as PriorityLevel[]).map(level => (
-              <ToggleButton
-                key={level}
-                value={level}
-              >
-                {t(`engagement.priority.${level}`)}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-          <FormHelperText>{t('engagement.form.priorityInfo')}</FormHelperText>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={showsFirst(field.value)}
+                onChange={(_event, checked) =>
+                  field.onChange(checked ? SHOW_FIRST_PRIORITY : 0)
+                }
+              />
+            }
+            label={t('engagement.form.showFirst')}
+          />
+          <FormHelperText sx={{ mx: 0 }}>
+            {t('engagement.form.showFirstInfo')}
+          </FormHelperText>
         </FormControl>
       )}
     />
   );
+
+  return conflicts.length ?
+      <EngagementConflictNotice conflicts={conflicts}>
+        <Box sx={{ mt: 1 }}>{showFirst}</Box>
+      </EngagementConflictNotice>
+    : showFirst;
 };
 
 const ReferralFields = () => {
@@ -950,7 +967,7 @@ const ReferralFields = () => {
   );
 };
 
-export const EngagementRuleForm = () => {
+export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
   const { t } = useTranslation();
   const { control, setValue, getValues, formState } =
     useFormContext<EngagementRuleValues>();
@@ -1059,7 +1076,7 @@ export const EngagementRuleForm = () => {
                   </Alert>
                 )}
 
-                <PriorityField />
+                <ShowFirstField ruleId={ruleId} />
 
                 {stages?.length > 0 && (
                   <FormHelperText data-testid="rule-summary">

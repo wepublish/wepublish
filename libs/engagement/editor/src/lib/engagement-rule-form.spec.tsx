@@ -1,3 +1,4 @@
+import { MockedResponse } from '@apollo/client/testing';
 import { MockedProvider } from '@apollo/client/testing/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createTheme, ThemeProvider } from '@mui/material';
@@ -5,14 +6,80 @@ import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { TFunction } from 'i18next';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import {
+  EngagementActionRole,
+  EngagementActionType,
+  EngagementAudience,
+  EngagementEnforcement,
+  EngagementGoal,
+  EngagementPlacement,
+  EngagementRulesDocument,
+  FullEngagementRuleFragment,
+  NewsletterReferralMode,
+} from '@wepublish/editor/api';
 import { EngagementRuleForm } from './engagement-rule-form';
 import {
   EngagementRuleValues,
+  SHOW_FIRST_PRIORITY,
   createEngagementRuleSchema,
 } from './engagement-rule-values';
 import { ENGAGEMENT_PRESETS } from './presets';
 
 const t = ((key: string) => key) as unknown as TFunction;
+
+const competing: FullEngagementRuleFragment = {
+  __typename: 'EngagementRule',
+  id: 'rule-1',
+  createdAt: '2026-01-01T00:00:00.000Z',
+  modifiedAt: '2026-01-01T00:00:00.000Z',
+  name: 'Crowdfunding',
+  goal: EngagementGoal.Announcement,
+  active: true,
+  priority: 0,
+  version: 1,
+  audience: EngagementAudience.All,
+  audienceMemberPlanIds: [],
+  showOnArticles: true,
+  showOnPageIds: [],
+  includePeeredArticles: false,
+  meterWindowDays: null,
+  newsletterReferral: NewsletterReferralMode.None,
+  newsletterReferralLimit: 0,
+  newsletterParams: [],
+  stages: [
+    {
+      __typename: 'EngagementStage',
+      id: 'stage-1',
+      afterArticles: 0,
+      placement: EngagementPlacement.Banner,
+      enforcement: EngagementEnforcement.Soft,
+      requirement: null,
+      previewBlocks: null,
+      dismissible: true,
+      hideForMinutes: 1440,
+      delaySeconds: 0,
+      title: 'Help us',
+      text: null,
+      cta: null,
+      description: null,
+      html: null,
+      embedUrl: null,
+      imageId: null,
+      image: null,
+      actions: [
+        {
+          __typename: 'EngagementAction',
+          id: 'action-1',
+          type: EngagementActionType.Url,
+          label: 'Give',
+          url: 'https://example.com',
+          style: '',
+          role: EngagementActionRole.Primary,
+        },
+      ],
+    },
+  ],
+};
 
 const Values = () => {
   const values = useWatch<EngagementRuleValues>();
@@ -43,13 +110,20 @@ const Harness = ({
   );
 };
 
+const rulesMock = (rules: FullEngagementRuleFragment[]) => ({
+  request: { query: EngagementRulesDocument },
+  maxUsageCount: Number.POSITIVE_INFINITY,
+  result: { data: { engagementRules: rules } },
+});
+
 const renderForm = (
   values: EngagementRuleValues,
-  onSubmit?: (values: EngagementRuleValues) => void
+  onSubmit?: (values: EngagementRuleValues) => void,
+  mocks: MockedResponse[] = []
 ) =>
   render(
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
-      <MockedProvider>
+      <MockedProvider mocks={mocks}>
         <Harness
           values={values}
           onSubmit={onSubmit}
@@ -231,22 +305,40 @@ describe('EngagementRuleForm', () => {
     await waitFor(() => expect(last).toHaveAttribute('aria-expanded', 'true'));
   });
 
-  it('offers named priorities instead of a number, with an explanation', () => {
-    renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
+  it('hides the priority while no other rule competes', async () => {
+    renderForm(ENGAGEMENT_PRESETS.displayAnnouncement(), undefined, [
+      rulesMock([]),
+    ]);
 
-    expect(screen.getByText('engagement.form.priorityInfo')).toBeVisible();
-    expect(
-      screen.getByRole('button', { name: 'engagement.priority.normal' })
-    ).toHaveAttribute('aria-pressed', 'true');
+    await waitFor(() =>
+      expect(screen.queryByTestId('conflicts')).not.toBeInTheDocument()
+    );
+    expect(screen.queryByLabelText('engagement.form.showFirst')).toBeNull();
+  });
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'engagement.priority.high' })
+  it('shows the competing rules and offers to show this one first', async () => {
+    renderForm(ENGAGEMENT_PRESETS.displayAnnouncement(), undefined, [
+      rulesMock([competing]),
+    ]);
+
+    expect(await screen.findByTestId('conflicts')).toHaveTextContent(
+      'engagement.conflict.competes'
     );
 
-    expect(values().priority).toBe(10);
-    expect(
-      screen.getByRole('button', { name: 'engagement.priority.high' })
-    ).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(screen.getByLabelText('engagement.form.showFirst'));
+    expect(values().priority).toBe(SHOW_FIRST_PRIORITY);
+
+    fireEvent.click(screen.getByLabelText('engagement.form.showFirst'));
+    expect(values().priority).toBe(0);
+  });
+
+  it('keeps the override of a rule that is shown first', () => {
+    renderForm({
+      ...ENGAGEMENT_PRESETS.displayAnnouncement(),
+      priority: SHOW_FIRST_PRIORITY,
+    });
+
+    expect(screen.getByLabelText('engagement.form.showFirst')).toBeChecked();
   });
 
   it('asks for the member plans when the rule is for specific plans', () => {

@@ -92,10 +92,10 @@ describe('EngagementRuleList', () => {
   let updates: unknown[];
   let deletes: unknown[];
 
-  const mocks = () => [
+  const mocks = (rules: FullEngagementRuleFragment[]) => [
     {
       request: { query: EngagementRulesDocument },
-      result: { data: { engagementRules: [rule] } },
+      result: { data: { engagementRules: rules } },
     },
     // Fetched again once a rule was deleted.
     {
@@ -132,11 +132,11 @@ describe('EngagementRuleList', () => {
     },
   ];
 
-  const renderList = () =>
+  const renderList = (rules = [rule]) =>
     render(
       <ThemeProvider theme={createTheme({ cssVariables: true })}>
         <AuthContext.Provider value={session}>
-          <MockedProvider mocks={mocks()}>
+          <MockedProvider mocks={mocks(rules)}>
             <MemoryRouter>
               <EngagementRuleList />
             </MemoryRouter>
@@ -161,11 +161,22 @@ describe('EngagementRuleList', () => {
     await settled();
   });
 
-  it('shows the priority by name', async () => {
+  it('says which rules compete and which one is shown first', async () => {
+    renderList([
+      rule,
+      { ...rule, id: 'rule-2', name: 'Newsletter', priority: 10 },
+    ]);
+
+    await settled();
+    expect(screen.getAllByText(/engagement.conflict.competes/)).toHaveLength(2);
+    expect(screen.getAllByText('engagement.list.showsFirst')).toHaveLength(1);
+  });
+
+  it('says nothing about conflicts for a rule on its own', async () => {
     renderList();
 
     await settled();
-    expect(screen.getByText('engagement.priority.normal')).toBeInTheDocument();
+    expect(screen.queryByText(/engagement.conflict.competes/)).toBeNull();
   });
 
   it('offers to copy a rule into a new, unsaved one', async () => {

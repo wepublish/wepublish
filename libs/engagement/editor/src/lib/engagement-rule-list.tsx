@@ -44,12 +44,18 @@ import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   engagementRuleToValues,
-  priorityLevel,
+  showsFirst,
   toEngagementRuleInput,
 } from './engagement-rule-values';
+import { describeConflict, findConflicts } from './engagement-conflicts';
 import { summarizeRule, summarizeWhere } from './summarize-rule';
 
 export const ENGAGEMENT_PATH = '/audience-engagement';
+
+const ruleValues = (rule: FullEngagementRuleFragment) => ({
+  ...rule,
+  stages: engagementRuleToValues(rule).stages,
+});
 
 const showError = (error: Error) =>
   enqueueSnackbar(humanizeError(error), {
@@ -62,6 +68,7 @@ function EngagementRuleList() {
   const [ruleToDelete, setRuleToDelete] =
     useState<FullEngagementRuleFragment>();
   const { data, loading } = useQuery(EngagementRulesDocument);
+  const rules = data?.engagementRules ?? [];
   const { data: paywallData } = useQuery(PaywallListDocument);
   const [updateRule] = useMutation(UpdateEngagementRuleDocument, {
     onError: showError,
@@ -135,12 +142,24 @@ function EngagementRuleList() {
               id: 'name',
               label: t('engagement.list.name'),
               render: rule => (
-                <Link
-                  component={RouterLink}
-                  to={`${ENGAGEMENT_PATH}/edit/${rule.id}`}
+                <Stack
+                  direction="row"
+                  sx={{ gap: 1, alignItems: 'center', flexWrap: 'wrap' }}
                 >
-                  {rule.name}
-                </Link>
+                  <Link
+                    component={RouterLink}
+                    to={`${ENGAGEMENT_PATH}/edit/${rule.id}`}
+                  >
+                    {rule.name}
+                  </Link>
+                  {showsFirst(rule.priority) && (
+                    <Chip
+                      size="small"
+                      variant="outlined"
+                      label={t('engagement.list.showsFirst')}
+                    />
+                  )}
+                </Stack>
               ),
             },
             {
@@ -167,21 +186,29 @@ function EngagementRuleList() {
               id: 'summary',
               label: t('engagement.list.summary'),
               minWidth: 280,
-              render: rule =>
-                summarizeRule(
-                  {
-                    goal: rule.goal,
-                    stages: engagementRuleToValues(rule).stages,
-                  },
-                  t
-                ),
-            },
-            {
-              id: 'priority',
-              label: t('engagement.list.priority'),
-              width: 110,
-              render: rule =>
-                t(`engagement.priority.${priorityLevel(rule.priority)}`),
+              render: rule => (
+                <>
+                  {summarizeRule(
+                    {
+                      goal: rule.goal,
+                      stages: engagementRuleToValues(rule).stages,
+                    },
+                    t
+                  )}
+                  {rule.active &&
+                    findConflicts(ruleValues(rule), rules.map(ruleValues)).map(
+                      conflict => (
+                        <Typography
+                          key={conflict.rule.id}
+                          variant="body2"
+                          color="warning.main"
+                        >
+                          {describeConflict(conflict, t)}
+                        </Typography>
+                      )
+                    )}
+                </>
+              ),
             },
             {
               id: 'action',

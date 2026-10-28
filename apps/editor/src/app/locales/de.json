@@ -4399,7 +4399,6 @@
         "audience": "Zielgruppe",
         "where": "Wo",
         "summary": "Zusammenfassung",
-        "priority": "Priorität",
         "articles": "Artikel",
         "pages_one": "{{count}} Seite",
         "pages_other": "{{count}} Seiten",
@@ -4410,7 +4409,8 @@
         "enforced": "Durchgesetzt",
         "inactive": "Inaktiv",
         "anyMemberPlan": "Jedes Abo",
-        "copy": "Kopieren"
+        "copy": "Kopieren",
+        "showsFirst": "Wird zuerst gezeigt"
       },
       "delete": {
         "title": "Engagement-Regel löschen?",
@@ -4523,8 +4523,6 @@
         "goal": "Ziel",
         "name": "Name",
         "active": "Aktiv",
-        "priority": "Priorität",
-        "priorityInfo": "Eine Person sieht höchstens ein Banner, ein Pop-up und eine Box im Artikel gleichzeitig. Wollen mehrere Regeln denselben Platz, wird die mit der höheren Priorität angezeigt. Lass die meisten Regeln auf Normal und nutze Hoch für zeitlich begrenzte Kampagnen.",
         "newsletterNote": "Newsletter-Abos lassen sich noch nicht überprüfen. Eine einschränkende Stufe einer Newsletter-Regel verlangt deshalb eine Registrierung oder Mitgliedschaft und muss zusätzlich eine Newsletter-Anmeldung anbieten.",
         "audience": "Zielgruppe",
         "trigger": "Wo und wann",
@@ -4580,7 +4578,9 @@
         "actionUrl": "URL",
         "actionRole": "Rolle",
         "addAction": "Aktion hinzufügen",
-        "audienceMemberPlans": "Abo-Pläne"
+        "audienceMemberPlans": "Abo-Pläne",
+        "showFirst": "Diese Regel zuerst zeigen",
+        "showFirstInfo": "Eine Person sieht höchstens ein Banner, ein Pop-up und eine Box im Artikel gleichzeitig. Ohne diese Einstellung wird die spezifischere Regel zuerst gezeigt (engeres Publikum, nur gewählte Seiten), danach die neuste."
       },
       "validation": {
         "required": "Pflichtfeld",
@@ -4596,12 +4596,6 @@
         "announcementNoReferral": "Eine Ankündigung hat keine Newsletter-Einstellungen",
         "newsletterActionRequired": "Biete auch eine Newsletter-Anmeldung an"
       },
-      "priority": {
-        "low": "Tief",
-        "normal": "Normal",
-        "high": "Hoch",
-        "highest": "Sehr hoch"
-      },
       "copyName": "{{name}} (Kopie)",
       "review": {
         "title": "Bevor du speicherst: Das passiert",
@@ -4614,6 +4608,18 @@
         "untitled": "Kein Titel",
         "back": "Zurück zur Bearbeitung",
         "confirm": "Regel erstellen"
+      },
+      "conflict": {
+        "title": "Konkurriert mit anderen Regeln",
+        "competes": "Konkurriert mit «{{name}}» um: {{slots}} ({{audience}}).",
+        "thisFirst": "Diese Regel wird zuerst gezeigt.",
+        "otherFirst": "«{{name}}» wird zuerst gezeigt.",
+        "slot": {
+          "banner": "Banner",
+          "modal": "Pop-up",
+          "inline": "Box im Artikel",
+          "restriction": "Einschränkung des Artikels"
+        }
       }
     }
   }

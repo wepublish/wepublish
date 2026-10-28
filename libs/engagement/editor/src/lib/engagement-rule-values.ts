@@ -112,23 +112,12 @@ export const isHard = (stage: Pick<EngagementStageValues, 'enforcement'>) =>
   stage.enforcement === EngagementEnforcement.Hard;
 
 /**
- * Named priorities for the form. The api orders by the number, highest first,
- * so the gaps leave room for rules saved with other numbers.
+ * The priority of a rule that is shown before the rules it competes with.
+ * Without it the more specific rule goes first, then the newest.
  */
-export const PRIORITY_LEVELS = {
-  low: -10,
-  normal: 0,
-  high: 10,
-  highest: 20,
-} as const;
+export const SHOW_FIRST_PRIORITY = 10;
 
-export type PriorityLevel = keyof typeof PRIORITY_LEVELS;
-
-export const priorityLevel = (priority: number): PriorityLevel =>
-  priority >= PRIORITY_LEVELS.highest ? 'highest'
-  : priority > PRIORITY_LEVELS.normal ? 'high'
-  : priority < PRIORITY_LEVELS.normal ? 'low'
-  : 'normal';
+export const showsFirst = (priority: number) => priority > 0;
 
 export const isAnnouncement = (rule: Pick<EngagementRuleValues, 'goal'>) =>
   rule.goal === EngagementGoal.Announcement;

@@ -11,6 +11,7 @@ import {
   EngagementGoal,
   EngagementPlacement,
   EngagementRuleDocument,
+  EngagementRulesDocument,
   FullEngagementRuleFragment,
   NewsletterReferralMode,
 } from '@wepublish/editor/api';
@@ -105,6 +106,11 @@ const renderCreate = (path: string) =>
               result: { data: { engagementRule: rule } },
             },
             {
+              request: { query: EngagementRulesDocument },
+              maxUsageCount: Number.POSITIVE_INFINITY,
+              result: { data: { engagementRules: [rule] } },
+            },
+            {
               request: {
                 query: CreateEngagementRuleDocument,
                 variables: (variables: unknown) => {
@@ -179,6 +185,14 @@ describe('CreateEngagementRule', () => {
       review.querySelector('[data-testid="preset-illustration"]')
     ).toHaveAttribute('data-placement', 'BANNER');
     expect(creates).toHaveLength(0);
+  });
+
+  it('warns about competing rules in the summary', async () => {
+    fillAnnouncement();
+
+    expect(await screen.findByTestId('rule-review')).toHaveTextContent(
+      'engagement.conflict.competes'
+    );
   });
 
   it('saves once the summary was confirmed', async () => {

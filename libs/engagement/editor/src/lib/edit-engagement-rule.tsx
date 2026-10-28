@@ -84,7 +84,7 @@ function EditEngagementRule() {
           setCloseFn={setShouldClose}
         />
 
-        <EngagementRuleForm />
+        <EngagementRuleForm ruleId={ruleId} />
       </form>
     </FormProvider>
   );
