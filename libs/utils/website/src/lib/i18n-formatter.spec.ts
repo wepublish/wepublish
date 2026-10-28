@@ -17,8 +17,28 @@ vi.mock('@wepublish/website/translations/fr.json', () => ({
   },
 }));
 
+import { execFileSync } from 'node:child_process';
 import { i18n } from 'i18next';
 import { initWePublishTranslator } from './i18n-formatter';
+
+describe('ICU messages on the server', () => {
+  it('are formatted when Node loads i18next-icu natively', () => {
+    const output = execFileSync(
+      process.execPath,
+      [
+        '--input-type=module',
+        '-e',
+        `import ICU from 'i18next-icu';
+        const icu = new ICU({ parseErrorHandler: error => 'failed: ' + error.message });
+        icu.init({ options: {}, on() {}, store: { on() {} } }, {});
+        process.stdout.write(icu.parse('Von {authors}', { authors: 'A, B' }, 'de', 'translation', 'key'));`,
+      ],
+      { cwd: __dirname, encoding: 'utf8' }
+    );
+
+    expect(output).toBe('Von A, B');
+  });
+});
 
 describe('initWePublishTranslator', () => {
   let i18n: i18n;

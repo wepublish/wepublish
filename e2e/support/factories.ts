@@ -68,6 +68,23 @@ export type Paywall = {
   description: string;
 };
 
+export type Page = {
+  kind: 'page';
+  id: string;
+  title: string;
+  /** Path on the website, resolved against BASE_URL. */
+  path: string;
+};
+
+export type EngagementRule = {
+  kind: 'engagementRule';
+  /** Unknown until the editor saved a rule it created through the UI. */
+  id?: string;
+  name: string;
+  /** Unique title its stage shows, used to find the prompt on the page. */
+  title: string;
+};
+
 export type MemberPlan = {
   id: string;
   name: string;
@@ -75,7 +92,7 @@ export type MemberPlan = {
   paymentMethods: { id: string; slug: string; name: string }[];
 };
 
-export type Entity = Reader | Article | Paywall;
+export type Entity = Reader | Article | Paywall | Page | EngagementRule;
 
 type Cleanup = { label: string; run: () => Promise<unknown> };
 
@@ -252,9 +269,12 @@ export class TestData {
 
   async createPaywall({
     memberPlanSlugs,
+    enforced = false,
     alias,
   }: {
     memberPlanSlugs: string[];
+    /** Cut on the server instead of hidden on the website. */
+    enforced?: boolean;
     alias?: string;
   }) {
     const api = await this.api();
@@ -263,13 +283,14 @@ export class TestData {
     const description = `Paywall ${runId}: ${this.faker.lorem.sentence()}`;
 
     const { createPaywall } = await api.gql<{ createPaywall: { id: string } }>(
-      `mutation CreatePaywall($name: String, $description: RichText, $memberPlanIds: [String!]!) {
+      `mutation CreatePaywall($name: String, $description: RichText, $memberPlanIds: [String!]!, $enforced: Boolean!) {
         createPaywall(name: $name, description: $description, circumventDescription: $description,
-          memberPlanIds: $memberPlanIds, active: true, anyMemberPlan: false,
+          memberPlanIds: $memberPlanIds, active: true, anyMemberPlan: false, enforced: $enforced,
           bypassTokens: [], fadeout: false, hideContentAfter: 2) { id }
       }`,
       {
         name: runId,
+        enforced,
         description: richText(description),
         memberPlanIds: plans.map(({ id }) => id),
       }
@@ -347,11 +368,13 @@ export class TestData {
   async createPaywalledArticle({
     alias,
     memberPlanSlugs,
+    enforced,
   }: {
     alias?: string;
     memberPlanSlugs: string[];
+    enforced?: boolean;
   }) {
-    const paywall = await this.createPaywall({ memberPlanSlugs });
+    const paywall = await this.createPaywall({ memberPlanSlugs, enforced });
 
     return this.createArticle({ alias, paywall });
   }
@@ -399,6 +422,157 @@ export class TestData {
     );
 
     return createSubscription;
+  }
+
+  /**
+   * Long enough to keep the footer below the fold: while the footer is on
+   * screen, the website hides its banners (`hideBannerOnIntersecting`).
+   */
+  async createPage(alias?: string) {
+    const api = await this.api();
+    const runId = this.runId();
+    const title = this.faker.lorem.words(3);
+
+    const { createPage } = await api.gql<{ createPage: { id: string } }>(
+      `mutation CreatePage($slug: String, $title: String, $blocks: [BlockContentInput!]!) {
+        createPage(slug: $slug, title: $title, hidden: false, properties: [], tagIds: [],
+          blocks: $blocks) { id }
+      }`,
+      {
+        slug: runId,
+        title,
+        blocks: [
+          {
+            richText: {
+              richText: richText(
+                ...Array.from({ length: 12 }, () => this.faker.lorem.paragraph())
+              ),
+            },
+          },
+        ],
+      }
+    );
+
+    this.onCleanup(`page ${runId}`, () =>
+      api.gql(`mutation { deletePage(id: "${createPage.id}") }`)
+    );
+
+    const { publishPage } = await api.gql<{ publishPage: { url: string } }>(
+      `mutation PublishPage($id: String!, $publishedAt: DateTime!) {
+        publishPage(id: $id, publishedAt: $publishedAt) { url }
+      }`,
+      { id: createPage.id, publishedAt: new Date(Date.now() - 60_000).toISOString() }
+    );
+
+    return this.remember(alias, {
+      kind: 'page',
+      id: createPage.id,
+      title,
+      path: new URL(publishPage.url).pathname,
+    } satisfies Page);
+  }
+
+  /**
+   * A metered rule that lets anonymous readers read `freeArticles` articles,
+   * then cuts the next one after the title and first paragraph until they
+   * sign in. Engagement rules apply to every article of the instance, so it
+   * only targets anonymous readers and outranks the tenant's own rules. Its
+   * priority is its creation time in seconds: rules left by an aborted run
+   * would otherwise tie with it and win on their older id.
+   */
+  async createRegistrationWall({
+    alias,
+    freeArticles,
+  }: {
+    alias?: string;
+    freeArticles: number;
+  }) {
+    const api = await this.api();
+    const runId = this.runId();
+    const title = `Registration wall ${runId}`;
+
+    const { createEngagementRule } = await api.gql<{
+      createEngagementRule: { id: string };
+    }>(
+      `mutation CreateEngagementRule($input: CreateEngagementRuleInput!) {
+        createEngagementRule(input: $input) { id }
+      }`,
+      {
+        input: {
+          name: runId,
+          goal: 'MEMBERSHIP',
+          active: true,
+          priority: Math.floor(Date.now() / 1000),
+          audience: 'ANONYMOUS',
+          showOnArticles: true,
+          meterWindowDays: 30,
+          stages: [
+            {
+              afterArticles: freeArticles,
+              placement: 'CUTOFF',
+              enforcement: 'HARD',
+              requirement: 'REGISTRATION',
+              previewBlocks: 2,
+              dismissible: false,
+              title,
+              actions: [
+                { type: 'LOGIN', label: `Sign in ${runId}`, role: 'PRIMARY' },
+                { type: 'REGISTER', role: 'OTHER' },
+              ],
+            },
+          ],
+        },
+      }
+    );
+
+    this.onCleanup(`engagement rule ${runId}`, () =>
+      this.deleteEngagementRule(createEngagementRule.id)
+    );
+
+    return this.remember(alias, {
+      kind: 'engagementRule',
+      id: createEngagementRule.id,
+      name: runId,
+      title,
+    } satisfies EngagementRule);
+  }
+
+  /**
+   * A rule staff create in the editor: names it uniquely and deletes it after
+   * the scenario, looked up by that name, whether or not it was saved.
+   */
+  planEngagementRule(alias: string) {
+    const runId = this.runId();
+    const rule: EngagementRule = {
+      kind: 'engagementRule',
+      name: `${alias} ${runId}`,
+      title: `${alias} ${runId}`,
+    };
+
+    this.onCleanup(`engagement rule ${rule.name}`, async () => {
+      const id = rule.id ?? (await this.findEngagementRule(rule.name))?.id;
+
+      if (id) {
+        await this.deleteEngagementRule(id);
+      }
+    });
+
+    return this.remember(alias, rule);
+  }
+
+  async findEngagementRule(name: string) {
+    const api = await this.api();
+    const { engagementRules } = await api.gql<{
+      engagementRules: { id: string; name: string; active: boolean }[];
+    }>(`query { engagementRules { id name active } }`);
+
+    return engagementRules.find(rule => rule.name === name);
+  }
+
+  private async deleteEngagementRule(id: string) {
+    const api = await this.api();
+
+    await api.gql(`mutation { deleteEngagementRule(id: "${id}") { id } }`);
   }
 
   /**

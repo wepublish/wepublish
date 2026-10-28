@@ -20,9 +20,11 @@ const catalogs = {
 const lookup = (catalog: Catalog, key: string) =>
   key
     .split('.')
-    .reduce<
-      string | Catalog | undefined
-    >((value, part) => (value && typeof value !== 'string' ? value[part] : undefined), catalog);
+    .reduce<string | Catalog | undefined>(
+      (value, part) =>
+        value && typeof value !== 'string' ? value[part] : undefined,
+      catalog
+    );
 
 const pathOf = (tag: ts.JsxOpeningLikeElement) => {
   if (tag.tagName.getText() !== 'Route') {
@@ -44,7 +46,33 @@ const pathOf = (tag: ts.JsxOpeningLikeElement) => {
     : undefined;
 };
 
-/** Every route path in app.tsx, a nested route joined to its parents. */
+const isRedirect = (tag: ts.JsxOpeningLikeElement) => {
+  const element = tag.attributes.properties.find(
+    property =>
+      ts.isJsxAttribute(property) && property.name.getText() === 'element'
+  );
+  const expression =
+    (
+      element &&
+      ts.isJsxAttribute(element) &&
+      element.initializer &&
+      ts.isJsxExpression(element.initializer)
+    ) ?
+      element.initializer.expression
+    : undefined;
+
+  return (
+    !!expression &&
+    (ts.isJsxSelfClosingElement(expression) || ts.isJsxElement(expression)) &&
+    /^(Navigate|Redirect\w*)$/.test(
+      (ts.isJsxElement(expression) ?
+        expression.openingElement
+      : expression
+      ).tagName.getText()
+    )
+  );
+};
+
 const routerPaths = () => {
   const file = ts.createSourceFile(
     'app.tsx',
@@ -66,7 +94,7 @@ const routerPaths = () => {
         `${parent.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
       );
 
-    if (path !== undefined) {
+    if (path !== undefined && tag && !isRedirect(tag)) {
       paths.push(full);
     }
 

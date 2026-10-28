@@ -33,11 +33,12 @@ a slot hosts one app at a time). `BASE_URL`, `E2E_EDITOR_URL` and
 `wepublish-site`).
 
 ```sh
-pnpm run e2e tsri                                         # tsri website, local
+pnpm run e2e tsri                                         # tsri website + editor, local
+pnpm run e2e tsri --only website                          # tsri website only
 pnpm run e2e tsri --dev                                   # same, on `next dev` (hot reload)
 pnpm run e2e:dev tsri                                     # start:docker, then --dev --ui
-pnpm run e2e editor                                       # editor only
-pnpm run e2e tsri,editor --environment staging            # both apps of tsri
+pnpm run e2e editor                                       # editor only (still serves the website)
+pnpm run e2e tsri --environment staging                   # both apps of tsri on staging
 pnpm run e2e tsri,bajour                                  # one run per tenant
 pnpm run e2e bajour --environment review --review-slot 3
 pnpm run e2e tsri --environment production --grep @smoke
@@ -45,9 +46,14 @@ pnpm run e2e -- --grep @app:tsri                          # only tsri-specific s
 pnpm run e2e:report                                       # HTML report
 ```
 
-Leading comma-separated words are targets: `editor` selects the editor
-project, a tenant name sets `E2E_APP` and selects the website project; without
-them both projects of `E2E_APP` run. `--app`, `--environment` and
+Leading comma-separated words are targets: a tenant name sets `E2E_APP` and
+selects its website and editor projects (the editor talks to the tenant's
+API); `editor` alone selects only the editor; without targets both projects of
+`E2E_APP` run. `--only website|editor` replaces the selection — not
+Playwright's `--project`, which Nx's `run` swallows. Locally the website is
+served for the editor too: editor scenarios check what readers see. UI mode
+(`--ui`) shows only the first project (website) until you tick `editor` under
+Projects in its sidebar; it remembers the choice. `--app`, `--environment` and
 `--review-slot` are shorthands for `E2E_APP`, `E2E_ENV` and
 `E2E_REVIEW_SLOT` (`run.ts`); every other flag goes to
 `playwright test`. It is `--environment`, not `--env`: Nx's run-commands owns

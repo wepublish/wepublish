@@ -40,7 +40,7 @@ export function ArticleContainer({
     data?.article?.paywall,
     data?.article?.id
   );
-  const { dismissals, legacyBannerClosedAt, dismiss } =
+  const { dismissals, legacyBannerClosedAt, now, dismiss } =
     useEngagementDismissals();
   const { banner, modal, inline, restriction } = useMemo(
     () =>
@@ -49,9 +49,9 @@ export function ArticleContainer({
         prompts,
         dismissals,
         legacyBannerClosedAt,
-        now: Date.now(),
+        now,
       }),
-    [access, prompts, dismissals, legacyBannerClosedAt]
+    [access, prompts, dismissals, legacyBannerClosedAt, now]
   );
   const tags = useMemo(
     () =>

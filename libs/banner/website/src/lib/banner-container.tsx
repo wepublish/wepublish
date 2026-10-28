@@ -33,7 +33,7 @@ export function BannerContainer({
 }: BannerContainerProps) {
   const { user } = useUser();
   const [paywallBypassToken, setPaywallBypassToken] = useState<string>();
-  const { dismissals, legacyBannerClosedAt, dismiss } =
+  const { dismissals, legacyBannerClosedAt, now, dismiss } =
     useEngagementDismissals();
 
   useEffect(() => setPaywallBypassToken(getPaywallBypassToken()), []);
@@ -62,9 +62,9 @@ export function BannerContainer({
         prompts: data?.engagementPrompts ?? [],
         dismissals,
         legacyBannerClosedAt,
-        now: Date.now(),
+        now,
       }),
-    [data?.engagementPrompts, dismissals, legacyBannerClosedAt]
+    [data?.engagementPrompts, dismissals, legacyBannerClosedAt, now]
   );
 
   return (

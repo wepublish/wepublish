@@ -1,5 +1,6 @@
 import { expect, Page } from '@playwright/test';
 import { Article } from '../support/factories';
+import { waitForOperation } from '../support/graphql-traffic';
 import { Given, Then, When } from './fixtures';
 
 const escapeRegExp = (text: string) =>
@@ -21,24 +22,39 @@ const paywallOf = (page: Page, article: Article) => {
     .last();
 };
 
+const paywallKinds = ['ordinary', 'enforced'];
+
 Given(
-  'a paywalled article {string} for the plan {string}',
-  async ({ data }, alias: string, memberPlanSlug: string) => {
+  'an article {string} behind an {word} paywall for the plan {string}',
+  async ({ data }, alias: string, kind: string, memberPlanSlug: string) => {
+    if (!paywallKinds.includes(kind)) {
+      throw new Error(
+        `Unknown paywall "${kind}", expected one of ${paywallKinds.join(', ')}.`
+      );
+    }
+
     await data.ensureSubscribePage();
     await data.createPaywalledArticle({
       alias,
       memberPlanSlugs: [memberPlanSlug],
+      enforced: kind === 'enforced',
     });
   }
 );
 
+/**
+ * Opened means the site told the API about the visit (`viewArticle`): only
+ * then is the read on the reader's meter and the access decided.
+ */
 When(
   '{string} opens the article {string}',
   async ({ page, data, ctx }, _reader: string, alias: string) => {
     const article = data.get('article', alias);
+    const viewed = waitForOperation(page, 'ViewArticle');
 
     await page.goto(article.path);
     await expect(page.getByText(article.title).first()).toBeVisible();
+    await viewed;
     ctx.currentArticle = alias;
   }
 );

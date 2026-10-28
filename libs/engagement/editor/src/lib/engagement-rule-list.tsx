@@ -98,7 +98,6 @@ function EngagementRuleList() {
       <ListViewContainer>
         <ListViewHeader>
           <PageTitle>{t('engagement.list.title')}</PageTitle>
-          <p>{t('engagement.list.description')}</p>
         </ListViewHeader>
 
         <ListViewActions>
@@ -182,13 +181,6 @@ function EngagementRuleList() {
                   },
                   t
                 ),
-            },
-            {
-              id: 'priority',
-              label: t('engagement.list.priority'),
-              width: 90,
-              align: 'right',
-              render: rule => rule.priority,
             },
             {
               id: 'action',
