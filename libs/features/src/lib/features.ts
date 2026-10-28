@@ -39,6 +39,12 @@ export const FEATURES = [
       'Per-user delivery mode: automated subscription mails printed as letters, with suggestions from the email quality',
     stage: 'alpha',
   },
+  {
+    key: 'profile-subscription-history',
+    description:
+      'Profile: subscriptions with their latest invoices as one table, and an edit page per subscription',
+    stage: 'alpha',
+  },
 ] as const satisfies readonly Feature[];
 
 export type FeatureKey = (typeof FEATURES)[number]['key'];

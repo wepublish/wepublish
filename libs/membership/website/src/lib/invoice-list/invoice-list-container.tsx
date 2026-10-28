@@ -11,11 +11,19 @@ import {
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
+  BuilderInvoiceListProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { produce } from 'immer';
 import { anyPass } from 'ramda';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ComponentType,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { isPayrexxSubscription } from './invoice-list';
 
 const isInNeedOfMigration = anyPass([
@@ -37,13 +45,17 @@ const mapMigratePaymentMethod = (invoice: FullInvoiceFragment) => {
 
 export type InvoiceListContainerProps = {
   filter?: (invoices: FullInvoiceFragment[]) => FullInvoiceFragment[];
+  /** Renders the invoices instead of the builder's InvoiceList. */
+  List?: ComponentType<BuilderInvoiceListProps>;
 } & BuilderContainerProps;
 
 export function InvoiceListContainer({
   filter,
   className,
+  List,
 }: InvoiceListContainerProps) {
-  const { InvoiceList } = useWebsiteBuilder();
+  const { InvoiceList: BuilderInvoiceList } = useWebsiteBuilder();
+  const InvoiceList = List ?? BuilderInvoiceList;
   const client = useApolloClient();
   const requestedChecks = useRef(new Set<string>());
   const [checkedInvoices, setCheckedInvoices] = useState<ReadonlySet<string>>(
@@ -51,12 +63,28 @@ export function InvoiceListContainer({
   );
   const { data, loading: loadingInvoices, error } = useQuery(InvoicesDocument);
 
+  const [pay, redirectPages1, stripeClientSecret1] = usePayInvoice();
+  const [migrate, redirectPages2, stripeClientSecret2] = useSubscribe();
+
+  const filteredInvoices = useMemo(
+    () =>
+      produce(data, draftData => {
+        if (filter && draftData?.userInvoices) {
+          draftData.userInvoices = filter(draftData.userInvoices);
+        }
+      }),
+    [data, filter]
+  );
+
+  // Asks the payment provider about each open invoice shown here, once: only
+  // these, as several containers can be on one page, and one query each, as
+  // repeated calls of one lazy query only run the last.
   const openInvoiceIds = useMemo(
     () =>
-      (data?.userInvoices ?? [])
+      (filteredInvoices?.userInvoices ?? [])
         .filter(({ id, paidAt, canceledAt }) => id && !paidAt && !canceledAt)
         .map(({ id }) => id),
-    [data]
+    [filteredInvoices]
   );
 
   useEffect(() => {
@@ -77,27 +105,9 @@ export function InvoiceListContainer({
     }
   }, [openInvoiceIds, client]);
 
-  const loadingCheckInvoice = openInvoiceIds.some(
-    id => !checkedInvoices.has(id)
-  );
-
-  const [pay, redirectPages1, stripeClientSecret1] = usePayInvoice();
-  const [migrate, redirectPages2, stripeClientSecret2] = useSubscribe();
-
-  const filteredInvoices = useMemo(
-    () =>
-      produce(data, draftData => {
-        if (filter && draftData?.userInvoices) {
-          draftData.userInvoices = filter(draftData.userInvoices);
-        }
-      }),
-    [data, filter]
-  );
-
-  const loading = useMemo(
-    () => loadingInvoices || loadingCheckInvoice,
-    [loadingInvoices, loadingCheckInvoice]
-  );
+  // loading until every open invoice shown is checked, from the first render on
+  const loading =
+    loadingInvoices || openInvoiceIds.some(id => !checkedInvoices.has(id));
 
   const handlePay = useCallback(
     async (invoice: FullInvoiceFragment) => {

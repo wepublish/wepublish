@@ -30,12 +30,14 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { produce } from 'immer';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { ComponentType, useEffect, useMemo, useRef, useState } from 'react';
 
 export type SubscriptionListContainerProps = {
   filter?: (
     subscriptions: FullSubscriptionFragment[]
   ) => FullSubscriptionFragment[];
+  /** Renders the subscriptions instead of the builder's SubscriptionList. */
+  List?: ComponentType<BuilderSubscriptionListProps>;
 } & BuilderContainerProps &
   Partial<Pick<BuilderSubscriptionListProps, 'subscribeUrl'>>;
 
@@ -43,6 +45,7 @@ export function SubscriptionListContainer({
   filter,
   subscribeUrl = '/mitmachen',
   className,
+  List,
 }: SubscriptionListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [stripeMemberPlan, setStripeMemberPlan] =
@@ -52,7 +55,8 @@ export function SubscriptionListContainer({
     id: string;
     mode: NonNullable<StripePaymentProps['mode']>;
   }>();
-  const { SubscriptionList } = useWebsiteBuilder();
+  const { SubscriptionList: BuilderSubscriptionList } = useWebsiteBuilder();
+  const SubscriptionList = List ?? BuilderSubscriptionList;
   const { data, loading, error, refetch } = useQuery(SubscriptionsDocument);
   const invoices = useQuery(InvoicesDocument);
 
