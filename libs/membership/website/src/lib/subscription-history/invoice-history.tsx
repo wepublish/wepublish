@@ -253,11 +253,6 @@ export const InvoiceHistoryDataRow = styled(TableRow)`
     &&[data-due='true'] {
       background-color: ${({ theme }) => alpha(theme.palette.warning.main, 0.08)};
     }
-
-    // in the profile's subscription box; the edit page has the tint only
-    &&[data-due='true'][data-nested='true'] {
-      box-shadow: inset 3px 0 ${({ theme }) => theme.palette.warning.main};
-    }
   }
 `;
 
