@@ -1,7 +1,8 @@
 import createCache from '@emotion/cache';
 import { createIsomorphicFn } from '@tanstack/react-start';
 
-import { EMOTION_KEY, getRequestEmotionCache } from './emotion-ssr';
+/** Kept in sync with `emotion-ssr.ts`, which must not be imported here. */
+export const EMOTION_KEY = 'css';
 
 /**
  * The emotion cache the document renders with.
@@ -23,14 +24,28 @@ export const getRenderEmotionCache = createIsomorphicFn()
   // `withEmotionExtraction`. It deliberately leaves `compat` off, so emotion
   // emits its `<style>` tags inline: nothing would extract them, and an
   // unstyled page is the worse failure.
-  .server(() => getRequestEmotionCache() ?? createCache({ key: EMOTION_KEY }))
-  .client(() =>
-    createCache({
+  .server(
+    () =>
+      globalThis.__wepublishRequestEmotionCache?.() ??
+      createCache({ key: EMOTION_KEY })
+  )
+  .client(() => {
+    const cache = createCache({
       key: EMOTION_KEY,
       speedy: true,
       insertionPoint:
         document.querySelector<HTMLElement>(
           'meta[name="emotion-insertion-point"]'
         ) ?? undefined,
-    })
-  );
+    });
+
+    // Same flag the server cache carries, for the same reason: something else
+    // owns where the rules go. In the browser that is the sheet at
+    // `insertionPoint`, in `<head>`, so nothing is ever interleaved with the
+    // markup and emotion's ":nth-child is potentially unsafe when doing
+    // server-side rendering" warning is a false positive here — it is guarded
+    // on `compat` alone and would otherwise fire on every hydrated style.
+    cache.compat = true;
+
+    return cache;
+  });
