@@ -90,6 +90,12 @@ describe('EngagementPresetCards', () => {
     expect(premium.getAllByRole('listitem')).toHaveLength(1);
   });
 
+  it('does not number the steps, which name their articles themselves', () => {
+    const { container } = renderCards();
+
+    expect(container.querySelector('ol')).toBeNull();
+  });
+
   it('starts the form with the picked preset', () => {
     const onPick = vi.fn();
     renderCards(onPick);

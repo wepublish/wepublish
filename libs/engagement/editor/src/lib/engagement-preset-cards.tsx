@@ -457,12 +457,15 @@ export const EngagementPresetCards = ({
                     icon={MdOutlineTimeline}
                     label={t('engagement.preset.steps')}
                   >
+                    {/* No numbers: the steps start with their articles. */}
                     <Box
-                      component="ol"
+                      component="ul"
                       sx={{
                         m: 0,
-                        pl: steps.length > 1 ? 2.5 : 0,
-                        listStyle: steps.length > 1 ? 'decimal' : 'none',
+                        p: 0,
+                        listStyle: 'none',
+                        display: 'grid',
+                        gap: 0.75,
                       }}
                     >
                       {steps.map(step => (
@@ -471,6 +474,8 @@ export const EngagementPresetCards = ({
                           component="li"
                           variant="body2"
                           sx={{
+                            pl: 1,
+                            borderLeft: `2px solid ${alpha(accent, 0.5)}`,
                             '&::first-letter': { textTransform: 'uppercase' },
                           }}
                         >
