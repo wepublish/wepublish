@@ -16,6 +16,21 @@ registerEnumType(SyncProviderType, {
   name: 'SyncProviderType',
 });
 
+@InputType()
+export class SettingSyncProviderNewsletterInput {
+  @Field()
+  interestId!: string;
+
+  @Field()
+  name!: string;
+
+  @Field({ nullable: true })
+  description?: string;
+
+  @Field({ nullable: true })
+  imageID?: string;
+}
+
 @ObjectType({
   implements: () => [SettingProvider],
 })
@@ -81,6 +96,9 @@ export class CreateSettingSyncProviderInput extends OmitType(
 
   @Field({ nullable: true })
   mailchimp_apiKey?: string;
+
+  @Field(() => [SettingSyncProviderNewsletterInput], { nullable: true })
+  newsletters?: SettingSyncProviderNewsletterInput[];
 }
 
 @ArgsType()

@@ -7,8 +7,9 @@ import { SyncProviderSettingsService } from './sync-provider-settings.service';
 
 const existing = {
   id: 'mailchimp-sync',
+  mailchimp_listId: 'list-1',
   name: 'Mailchimp',
-  type: 'mailchimp',
+  type: 'MAILCHIMP',
   enabled: false,
   createdAt: new Date('2026-01-01'),
   modifiedAt: new Date('2026-01-01'),
@@ -41,9 +42,108 @@ describe('SyncProviderSettingsService', () => {
     service = module.get<SyncProviderSettingsService>(
       SyncProviderSettingsService
     );
+    vi.spyOn(prisma.settingSyncProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
   });
 
   afterEach(() => vi.restoreAllMocks());
+
+  test('replaces the newsletters in the given order', async () => {
+    const update = vi
+      .spyOn(prisma.settingSyncProvider, 'update')
+      .mockResolvedValue(existing);
+
+    await service.updateSyncProviderSetting({
+      id: 'mailchimp-sync',
+      newsletters: [
+        { interestId: 'b', name: 'Daily', description: 'Every day' },
+        { interestId: 'a', name: 'Weekly', imageID: 'image-1' },
+      ],
+    });
+
+    expect(update).toHaveBeenCalledWith({
+      where: { id: 'mailchimp-sync' },
+      data: {
+        newsletters: {
+          deleteMany: {},
+          create: [
+            {
+              interestId: 'b',
+              name: 'Daily',
+              description: 'Every day',
+              imageID: undefined,
+              sort: 0,
+            },
+            {
+              interestId: 'a',
+              name: 'Weekly',
+              description: undefined,
+              imageID: 'image-1',
+              sort: 1,
+            },
+          ],
+        },
+      },
+    });
+  });
+
+  test('keeps the newsletters when none are passed', async () => {
+    const update = vi
+      .spyOn(prisma.settingSyncProvider, 'update')
+      .mockResolvedValue(existing);
+
+    await service.updateSyncProviderSetting({
+      id: 'mailchimp-sync',
+      name: 'Renamed',
+    });
+
+    expect(update).toHaveBeenCalledWith({
+      where: { id: 'mailchimp-sync' },
+      data: { name: 'Renamed' },
+    });
+  });
+
+  test('rejects the same interest twice', async () => {
+    await expect(
+      service.updateSyncProviderSetting({
+        id: 'mailchimp-sync',
+        newsletters: [
+          { interestId: 'a', name: 'Daily' },
+          { interestId: 'a', name: 'Weekly' },
+        ],
+      })
+    ).rejects.toThrow('more than once');
+  });
+
+  test('rejects a newsletter without interest or name', async () => {
+    await expect(
+      service.updateSyncProviderSetting({
+        id: 'mailchimp-sync',
+        newsletters: [{ interestId: '', name: 'Daily' }],
+      })
+    ).rejects.toThrow('interest and a name');
+
+    await expect(
+      service.updateSyncProviderSetting({
+        id: 'mailchimp-sync',
+        newsletters: [{ interestId: 'a', name: ' ' }],
+      })
+    ).rejects.toThrow('interest and a name');
+  });
+
+  test('lists the newsletters of a provider by sort order', async () => {
+    const findMany = vi
+      .spyOn(prisma.settingSyncProviderNewsletter, 'findMany')
+      .mockResolvedValue([]);
+
+    await service.newsletters('mailchimp-sync');
+
+    expect(findMany).toHaveBeenCalledWith({
+      where: { syncProviderId: 'mailchimp-sync' },
+      orderBy: { sort: 'asc' },
+    });
+  });
 
   test('sets up the sync provider when none is configured yet', async () => {
     vi.spyOn(prisma.settingSyncProvider, 'count').mockResolvedValue(0);
@@ -53,7 +153,7 @@ describe('SyncProviderSettingsService', () => {
 
     await service.createSyncProviderSetting({
       id: 'mailchimp-sync',
-      type: 'mailchimp',
+      type: 'MAILCHIMP',
     } as never);
 
     expect(create).toHaveBeenCalled();
@@ -66,7 +166,7 @@ describe('SyncProviderSettingsService', () => {
     await expect(
       service.createSyncProviderSetting({
         id: 'another-sync',
-        type: 'mailchimp',
+        type: 'MAILCHIMP',
       } as never)
     ).rejects.toThrow('already set up');
     expect(create).not.toHaveBeenCalled();

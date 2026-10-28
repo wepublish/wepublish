@@ -3536,7 +3536,7 @@ type Mutation {
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
 
   """Updates an existing sync provider setting."""
-  updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
+  updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, newsletters: [SettingSyncProviderNewsletterInput!]): SettingSyncProvider!
 
   """Updates an existing mail flow"""
   updateSystemMail(
@@ -3560,6 +3560,9 @@ type Mutation {
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
+
+  """Subscribes or unsubscribes the user from the given newsletters."""
+  updateUserNewsletters(input: UpdateUserNewslettersInput!): UserNewsletterGroup!
 
   """Updates an existing userrole."""
   updateUserRole(description: String, id: String!, name: String, permissionIDs: [String!]): UserRole!
@@ -5231,6 +5234,11 @@ type Query {
 
   """Get all invoices for the authenticated user"""
   userInvoices: [Invoice!]!
+
+  """
+  Returns the newsletters the user can subscribe to and whether they are subscribed.
+  """
+  userNewsletters: [UserNewsletterGroup!]!
   userPollVote(pollId: String!): String
 
   """Returns a userrole by id."""
@@ -5622,6 +5630,7 @@ type SettingSyncProvider implements SettingProvider {
   mailchimp_mergeFieldMappings: [JSONObject!]
   modifiedAt: DateTime!
   name: String
+  newsletters: [SettingSyncProviderNewsletter!]!
   type: SyncProviderType!
 }
 
@@ -5630,6 +5639,22 @@ input SettingSyncProviderFilter {
   id: String
   name: String
   type: SyncProviderType
+}
+
+type SettingSyncProviderNewsletter implements HasImage {
+  description: String
+  id: String!
+  image: Image
+  imageID: String
+  interestId: String!
+  name: String!
+}
+
+input SettingSyncProviderNewsletterInput {
+  description: String
+  imageID: String
+  interestId: String!
+  name: String!
 }
 
 input SettingTrackingPixelFilter {
@@ -6271,6 +6296,11 @@ input UpdateCrowdfundingInput {
   name: String
 }
 
+input UpdateUserNewslettersInput {
+  newsletters: [UserNewsletterSubscriptionInput!]!
+  syncProviderId: String!
+}
+
 input UpdateUserSubscriptionInput {
   autoRenew: Boolean!
   id: String!
@@ -6352,6 +6382,25 @@ input UserFilter {
   name: String
   text: String
   userRole: [String!]
+}
+
+type UserNewsletter implements HasImage {
+  description: String
+  image: Image
+  imageID: String
+  interestId: String!
+  name: String!
+  subscribed: Boolean!
+}
+
+type UserNewsletterGroup {
+  newsletters: [UserNewsletter!]!
+  syncProviderId: String!
+}
+
+input UserNewsletterSubscriptionInput {
+  interestId: String!
+  subscribed: Boolean!
 }
 
 type UserRole {

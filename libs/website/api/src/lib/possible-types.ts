@@ -152,7 +152,9 @@ const result: PossibleTypesResultData = {
       "MailchimpFormInterestOption",
       "MemberPlan",
       "PageTeaser",
-      "QuoteBlock"
+      "QuoteBlock",
+      "SettingSyncProviderNewsletter",
+      "UserNewsletter"
     ],
     "HasImageLc": [
       "PaymentMethod"

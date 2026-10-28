@@ -47,10 +47,13 @@ import {
   UpdateSyncProviderSettingDocument,
 } from '@wepublish/editor/api';
 import {
+  emptyInterestOption,
   enqueueSnackbar,
   humanizeError,
   IconButtonTooltip,
   InfoTooltip,
+  MailchimpFormInterestOptionItem,
+  MailchimpFormInterestOptionValue,
 } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
@@ -113,6 +116,13 @@ const clickTrackingExtensionSchema = z.object({
     .default({}),
 });
 
+const newsletterSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().trim().min(1),
+  description: z.string().nullish(),
+  image: z.any().nullish(),
+});
+
 const syncProviderSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
   enabled: z.boolean().optional(),
@@ -123,6 +133,7 @@ const syncProviderSchema = z.object({
     .array(interestGroupMappingSchema)
     .optional(),
   mailchimp_defaultInterestGroupIds: z.array(z.string()).optional(),
+  newsletters: z.array(newsletterSchema).optional(),
   mailchimp_extensions: z
     .object({
       'click-tracking': clickTrackingExtensionSchema.optional(),
@@ -767,7 +778,7 @@ function SyncProviderSettingCard({
   const {
     control,
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, errors },
     watch,
   } = useForm<SyncProviderFormValues>({
     resolver: zodResolver(syncProviderSchema),
@@ -783,6 +794,14 @@ function SyncProviderSettingCard({
           []) as SyncProviderFormValues['mailchimp_interestGroupMappings'],
       mailchimp_defaultInterestGroupIds:
         setting.mailchimp_defaultInterestGroupIds ?? [],
+      newsletters: setting.newsletters.map(
+        ({ interestId, name, description, image }) => ({
+          id: interestId,
+          name,
+          description,
+          image,
+        })
+      ),
       mailchimp_extensions: {
         'click-tracking': {
           enabled:
@@ -861,6 +880,14 @@ function SyncProviderSettingCard({
           formData.mailchimp_interestGroupMappings,
         mailchimp_defaultInterestGroupIds:
           formData.mailchimp_defaultInterestGroupIds,
+        newsletters: (formData.newsletters ?? []).map(
+          ({ id, name, description, image }) => ({
+            interestId: id,
+            name,
+            description,
+            imageID: image?.id,
+          })
+        ),
         mailchimp_extensions: formData.mailchimp_extensions ?? {},
       };
 
@@ -1384,6 +1411,82 @@ function SyncProviderSettingCard({
                     )}
                   />
                 )}
+              />
+
+              {/* Newsletters in the user profile */}
+              <SectionTitle variant="h6">
+                {t('integrations.mailchimpSyncSettings.newsletters')}
+              </SectionTitle>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                gutterBottom
+              >
+                {t('integrations.mailchimpSyncSettings.newslettersHelp')}
+              </Typography>
+              <Controller
+                name="newsletters"
+                control={control}
+                render={({ field: { value, onChange } }) => {
+                  const newsletters = (value ??
+                    []) as MailchimpFormInterestOptionValue[];
+                  const interestOptions = availableInterestGroups.map(
+                    group => ({
+                      value: group.id,
+                      label: group.name,
+                    })
+                  );
+                  const update = (next: MailchimpFormInterestOptionValue[]) =>
+                    onChange(next);
+                  const move = (from: number, to: number) => {
+                    const next = [...newsletters];
+                    const [item] = next.splice(from, 1);
+                    next.splice(to, 0, item);
+                    update(next);
+                  };
+
+                  return (
+                    <>
+                      {newsletters.map((newsletter, index) => (
+                        <MailchimpFormInterestOptionItem
+                          key={index}
+                          value={newsletter}
+                          number={index + 1}
+                          interestOptions={interestOptions}
+                          showErrors={!!errors.newsletters}
+                          onChange={patch =>
+                            update(
+                              newsletters.map((item, i) =>
+                                i === index ? { ...item, ...patch } : item
+                              )
+                            )
+                          }
+                          onMoveUp={
+                            index > 0 ? () => move(index, index - 1) : undefined
+                          }
+                          onMoveDown={
+                            index < newsletters.length - 1 ?
+                              () => move(index, index + 1)
+                            : undefined
+                          }
+                          onRemove={() =>
+                            update(newsletters.filter((_, i) => i !== index))
+                          }
+                        />
+                      ))}
+
+                      <Button
+                        size="small"
+                        startIcon={<MdAdd />}
+                        onClick={() =>
+                          update([...newsletters, emptyInterestOption()])
+                        }
+                      >
+                        {t('integrations.mailchimpSyncSettings.addNewsletter')}
+                      </Button>
+                    </>
+                  );
+                }}
               />
 
               <Accordion

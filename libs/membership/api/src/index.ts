@@ -28,6 +28,9 @@ export * from './lib/invoice/has-invoice/has-invoice.model';
 
 export * from './lib/mailchimp-sync/mailchimp-sync.module';
 export * from './lib/mailchimp-sync/mailchimp-sync.service';
+export * from './lib/mailchimp-newsletter/mailchimp-newsletter.module';
+export * from './lib/mailchimp-newsletter/mailchimp-newsletter.model';
+export * from './lib/mailchimp-newsletter/mailchimp-newsletter.service';
 
 export * from './lib/goodie/goodie.model';
 export * from './lib/goodie/goodie.service';

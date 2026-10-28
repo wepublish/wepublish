@@ -3251,6 +3251,8 @@ export type Mutation = {
    *
    */
   updateUserConsent: UserConsent;
+  /** Subscribes or unsubscribes the user from the given newsletters. */
+  updateUserNewsletters: UserNewsletterGroup;
   /** Updates an existing userrole. */
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
@@ -4839,6 +4841,7 @@ export type MutationUpdateSyncProviderSettingArgs = {
   mailchimp_listId?: InputMaybe<Scalars['String']['input']>;
   mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
+  newsletters?: InputMaybe<Array<SettingSyncProviderNewsletterInput>>;
 };
 
 
@@ -4899,6 +4902,11 @@ export type MutationUpdateUserCommentArgs = {
 export type MutationUpdateUserConsentArgs = {
   id: Scalars['String']['input'];
   value: Scalars['Boolean']['input'];
+};
+
+
+export type MutationUpdateUserNewslettersArgs = {
+  input: UpdateUserNewslettersInput;
 };
 
 
@@ -6445,6 +6453,8 @@ export type Query = {
   userConsents: Array<UserConsent>;
   /** Get all invoices for the authenticated user */
   userInvoices: Array<Invoice>;
+  /** Returns the newsletters the user can subscribe to and whether they are subscribed. */
+  userNewsletters: Array<UserNewsletterGroup>;
   userPollVote?: Maybe<Scalars['String']['output']>;
   /** Returns a userrole by id. */
   userRole: UserRole;
@@ -7671,6 +7681,7 @@ export type SettingSyncProvider = SettingProvider & {
   mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
+  newsletters: Array<SettingSyncProviderNewsletter>;
   type: SyncProviderType;
 };
 
@@ -7679,6 +7690,23 @@ export type SettingSyncProviderFilter = {
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<SyncProviderType>;
+};
+
+export type SettingSyncProviderNewsletter = HasImage & {
+  __typename?: 'SettingSyncProviderNewsletter';
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  interestId: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type SettingSyncProviderNewsletterInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  interestId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type SettingTrackingPixelFilter = {
@@ -8350,6 +8378,11 @@ export type UpdateCrowdfundingInput = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateUserNewslettersInput = {
+  newsletters: Array<UserNewsletterSubscriptionInput>;
+  syncProviderId: Scalars['String']['input'];
+};
+
 export type UpdateUserSubscriptionInput = {
   autoRenew: Scalars['Boolean']['input'];
   id: Scalars['String']['input'];
@@ -8433,6 +8466,27 @@ export type UserFilter = {
   name?: InputMaybe<Scalars['String']['input']>;
   text?: InputMaybe<Scalars['String']['input']>;
   userRole?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type UserNewsletter = HasImage & {
+  __typename?: 'UserNewsletter';
+  description?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  interestId: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  subscribed: Scalars['Boolean']['output'];
+};
+
+export type UserNewsletterGroup = {
+  __typename?: 'UserNewsletterGroup';
+  newsletters: Array<UserNewsletter>;
+  syncProviderId: Scalars['String']['output'];
+};
+
+export type UserNewsletterSubscriptionInput = {
+  interestId: Scalars['String']['input'];
+  subscribed: Scalars['Boolean']['input'];
 };
 
 export type UserRole = {

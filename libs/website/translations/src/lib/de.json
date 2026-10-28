@@ -204,12 +204,18 @@
     "payNow": "Jetzt Bezahlen"
   },
   "user": {
+    "newsletters": {
+      "title": "Newsletter",
+      "save": "Speichern",
+      "saveSuccess": "Deine Newsletter-Auswahl wurde gespeichert. Für neue Newsletter erhältst du eventuell eine E-Mail zur Bestätigung."
+    },
     "authorize": "Bestätigen",
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",
     "email": "E-Mail",
     "changeEmail": "E-Mail-Adresse ändern",
     "newEmail": "Neue E-Mail-Adresse",
     "password": "Passwort",
+    "passwordChangeWarning": "Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.",
     "passwordRepeat": "Passwort wiederholen",
     "requestEmailChange": "Änderung beantragen",
     "emailChangeRequested": "Eine Bestätigungs-E-Mail wurde an deine aktuelle E-Mail-Adresse gesendet. Bitte klicke auf den Link in der E-Mail, um die Änderung zu bestätigen.",

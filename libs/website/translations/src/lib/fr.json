@@ -204,12 +204,18 @@
     "payNow": "Payer maintenant"
   },
   "user": {
+    "newsletters": {
+      "title": "Newsletters",
+      "save": "Enregistrer",
+      "saveSuccess": "Ton choix de newsletters a été enregistré. Pour les nouvelles newsletters, tu recevras peut-être un e-mail de confirmation."
+    },
     "authorize": "Confirmer",
     "changeEmailRequest": "Cliquez ici pour modifier votre adresse e-mail",
     "email": "E-Mail",
     "changeEmail": "Modifier l'adresse e-mail",
     "newEmail": "Nouvelle adresse e-mail",
     "password": "Mot de passe",
+    "passwordChangeWarning": "À remplir uniquement si vous souhaitez modifier le mot de passe. Sinon, laissez ce champ vide.",
     "passwordRepeat": "Répéter le mot de passe",
     "requestEmailChange": "Demander la modification",
     "emailChangeRequested": "Un e-mail de confirmation a été envoyé à votre adresse e-mail actuelle. Cliquez sur le lien dans l'e-mail pour confirmer la modification.",
