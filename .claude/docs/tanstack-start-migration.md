@@ -473,17 +473,25 @@ as the alternative.
 
 ## 8. Known gaps
 
-- **On-demand revalidation.** `/api/revalidate` is a stub. Invalidation relies
-  on the API bumping the page-cache namespace versions.
-- **`website-shell` for the next tenant.** gruppetto now has it, so there *is* a
-  reference implementation (`useWebsiteShell` + loaders returning `{shell}`),
-  but each tenant's `_app.tsx` wires it by hand.
+- **`website-shell` on a bespoke route.** The shared factories already return
+  `{shell}` (`homePageRoute`, `pageBySlugRoute`), and `app.tsx` reads it with
+  one `useWebsiteShell()` call, so the per-page wiring every Next tenant
+  repeats is gone. A route that composes its own loader still has to return
+  `shell` itself — `routes/mitmachen.tsx` is the one such case — and forgetting
+  it silently ignores the CMS `hideHeader`/`hideFooter` flags.
 - **No `defaultErrorComponent`.** An unhandled render error shows the raw
   error rather than a styled page.
-- **Several routes have no `<title>`** — the list, tag, login and search routes
-  have no SEO component and no `head()`.
-- **`eslint-config-next/core-web-vitals` dropped** with no replacement; the
-  react-hooks and jsx-a11y rules it provided are not enforced for gruppetto.
+- **Four routes have no `<title>`** — `/search`, `/login`, `/abo` and
+  `/author/:slug` render none at all. Measured against the built server; the
+  tag and article routes do have one.
+- **No React or a11y lint rules.** `eslint-config-next/core-web-vitals` is
+  gone and nothing replaced it. Nx's `flat/react-typescript` preset enforces
+  only TS and core rules — no `react-hooks`, no `jsx-a11y` — so gruppetto has
+  none of either. Do **not** add the Next config back: 44 of its rules are
+  `@next/next/*` and assume `next/image`, `next/head` and a pages directory.
+  The replacements are `eslint-plugin-react-hooks` and `eslint-plugin-jsx-a11y`
+  directly (both already installed), plus `@tanstack/eslint-plugin-router` for
+  the router-specific rules.
 - **The image is unverified locally.** `dhi.io/node` needs auth; CI overrides
   those ARGs. Validate with public bases:
   `podman build --target website-tanstack --build-arg BUILD_IMAGE=node:22 …`
