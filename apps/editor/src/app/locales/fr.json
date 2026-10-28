@@ -4792,7 +4792,7 @@
         "description": "Texte",
         "text": "Texte court",
         "html": "HTML",
-        "htmlInfo": "Remplace titre, texte et actions dans la bannière.",
+        "htmlInfo": "Ton propre HTML. Dans la bannière, il remplace titre, texte et actions, ailleurs il s’affiche sous le texte.",
         "embedUrl": "URL intégrée",
         "embedUrlInfo": "Un iframe dans la bannière, p. ex. un formulaire.",
         "cta": "Appel à l’action",

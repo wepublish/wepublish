@@ -4792,7 +4792,7 @@
         "description": "Text",
         "text": "Kurzer Text",
         "html": "HTML",
-        "htmlInfo": "Ersetzt Titel, Text und Aktionen im Banner.",
+        "htmlInfo": "Eigenes HTML. Im Banner ersetzt es Titel, Text und Aktionen, sonst steht es unter dem Text.",
         "embedUrl": "Embed-URL",
         "embedUrlInfo": "Ein Iframe im Banner, z. B. ein Formular.",
         "cta": "Call to Action",
