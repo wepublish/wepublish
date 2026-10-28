@@ -1,5 +1,5 @@
 import { TableBody } from '@mui/material';
-import { act, fireEvent, screen } from '@testing-library/react';
+import { act, fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   renderWithProviders,
@@ -191,6 +191,19 @@ describe('InvoiceHistory', () => {
     );
     expect(mark('Jahresabo 2025')).toBeNull();
     expect(mark('Jahresabo 2023')).toBeNull();
+  });
+
+  // the colour of the navbar's warning about it
+  it('offers to pay a due invoice in the warning colour, a left-over one not', () => {
+    renderHistory({ ...Latest, allInvoicesUrl: undefined });
+
+    const pay = (text: string) =>
+      within(screen.getByText(text).closest('tr') as HTMLElement).getByRole(
+        'button',
+        { name: 'Jetzt Bezahlen' }
+      );
+    expect(pay('Jahresabo 2026')).toHaveClass('MuiButton-colorWarning');
+    expect(pay('Jahresabo 2023')).toHaveClass('MuiButton-colorPrimary');
   });
 
   it('marks every row of a closed subscription as collapsed', () => {

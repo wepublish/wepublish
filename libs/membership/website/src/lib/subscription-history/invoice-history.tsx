@@ -376,6 +376,8 @@ function InvoiceHistoryRow({
         {payable && (
           <Button
             size="small"
+            // the colour of the navbar's warning about it
+            color={due ? 'warning' : 'primary'}
             disabled={loading}
             onClick={callAction(async () =>
               onPay?.(invoice.id, paymentMethodId)

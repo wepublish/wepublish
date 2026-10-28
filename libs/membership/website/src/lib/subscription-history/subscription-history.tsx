@@ -266,7 +266,10 @@ const PlanName = styled('span')`
   color: ${({ theme }) => theme.palette.text.primary};
 `;
 
-/** The subscription's state; when it ends on hovering (or focusing) it. */
+/**
+ * The subscription's state, lighter than in the editor: outline and text in
+ * its colour. When it ends on hovering (or focusing) it.
+ */
 export function SubscriptionStateChip({
   subscription,
 }: {
@@ -291,14 +294,14 @@ export function SubscriptionStateChip({
           tabIndex={0}
           label={t(`subscriptionHistory.states.${state}`)}
           color={chip.color}
-          variant={chip.variant}
+          variant="outlined"
         />
       </Tooltip>
     : <Chip
         size="small"
         label={t(`subscriptionHistory.states.${state}`)}
         color={chip.color}
-        variant={chip.variant}
+        variant="outlined"
       />;
 }
 

@@ -123,6 +123,24 @@ describe('SubscriptionHistory', () => {
     ).toBeInTheDocument();
   });
 
+  // light: only the outline and the text in the state's colour
+  it('shows the states as outlined pills in their colours', async () => {
+    await renderStory(Default);
+
+    const pill = (planName: string, state: string) =>
+      within(subscriptionRow(planName))
+        .getByText(state)
+        .closest('.MuiChip-root');
+    expect(pill('Förderabo', 'Aktiv')).toHaveClass(
+      'MuiChip-outlined',
+      'MuiChip-colorSuccess'
+    );
+    expect(pill('Jahresabo', 'Abgelaufen')).toHaveClass(
+      'MuiChip-outlined',
+      'MuiChip-colorWarning'
+    );
+  });
+
   // arriving from the navbar's open-invoice warning, the invoice is in view
   it('puts subscriptions with a due invoice first', async () => {
     await renderStory(Default);
