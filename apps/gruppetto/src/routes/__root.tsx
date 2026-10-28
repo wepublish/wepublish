@@ -5,6 +5,7 @@ import { ThemeProvider } from '@mui/material';
 import {
   createRootRouteWithContext,
   HeadContent,
+  ScriptOnce,
   Scripts,
 } from '@tanstack/react-router';
 import { gruppettoConfig, gruppettoTheme } from '@wepublish/tenant/gruppetto';
@@ -137,17 +138,21 @@ function RootDocument({ children }: { children: ReactNode }) {
                object is a ReferenceError in the bundle, not a silent default.
           `Object.assign` rather than a plain assignment so a partially
           rendered shell cannot wipe values a previous script already set.
+
+          `ScriptOnce` rather than a bare `<script>`: it carries the CSP nonce
+          from `router.options.ssr.nonce`, and these two are precisely what a
+          nonce-based policy would block — with `PUBLIC_ENV` missing, every
+          rewritten `process.env.X` in the bundle throws. It also renders on
+          the server only and deletes itself once run, so nothing is left in
+          the hydrated DOM. Neither changes *when* they execute: still inline,
+          still parsed before the deferred module bundle.
         */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.PUBLIC_ENV = Object.assign({}, window.PUBLIC_ENV, ${toInlineJson(publicEnv)})`,
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.WEBSITE_SETTINGS = ${toInlineJson(websiteSettings)}`,
-          }}
-        />
+        <ScriptOnce>
+          {`window.PUBLIC_ENV = Object.assign({}, window.PUBLIC_ENV, ${toInlineJson(publicEnv)})`}
+        </ScriptOnce>
+        <ScriptOnce>
+          {`window.WEBSITE_SETTINGS = ${toInlineJson(websiteSettings)}`}
+        </ScriptOnce>
       </head>
 
       <body>
