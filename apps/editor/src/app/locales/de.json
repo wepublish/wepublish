@@ -4772,6 +4772,7 @@
         "paramValue": "Wert, z. B. email",
         "addParam": "Parameter hinzufügen",
         "problems": "Die Regel kann so nicht gespeichert werden:",
+        "moreOptions": "Weitere Optionen",
         "presentation": "Darstellung und Aktionen",
         "message": "Hinweis",
         "stage": "Stufe {{number}}",

@@ -4772,6 +4772,7 @@
         "paramValue": "Value, e.g. email",
         "addParam": "Add param",
         "problems": "The rule can not be saved like this:",
+        "moreOptions": "More options",
         "presentation": "Presentation and actions",
         "message": "Message",
         "stage": "Stage {{number}}",

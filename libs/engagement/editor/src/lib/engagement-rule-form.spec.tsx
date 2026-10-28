@@ -3,7 +3,13 @@ import { MockedProvider } from '@apollo/client/testing/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createTheme, ThemeProvider } from '@mui/material';
 import '@testing-library/jest-dom/vitest';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { TFunction } from 'i18next';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import {
@@ -237,7 +243,9 @@ describe('EngagementRuleForm', () => {
     const [, last] = screen.getAllByTestId(/^stage-/);
 
     fireEvent.change(
-      last.querySelector('input[name="stages.1.afterArticles"]')!,
+      last.querySelector(
+        'input[name="stages.1.afterArticles"]'
+      ) as HTMLInputElement,
       { target: { value: '1' } }
     );
 
@@ -266,6 +274,83 @@ describe('EngagementRuleForm', () => {
     expect(problems).toHaveTextContent('engagement.form.name');
     expect(problems).toHaveTextContent('engagement.form.stage');
     expect(problems).toHaveTextContent('engagement.validation.ascending');
+  });
+
+  it('keeps rarely needed stage options behind more options', () => {
+    renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
+
+    const [stage] = screen.getAllByTestId(/^stage-/);
+
+    expect(stage).toHaveTextContent('engagement.form.title');
+    expect(stage).not.toHaveTextContent('engagement.form.delaySeconds');
+    expect(stage).not.toHaveTextContent('engagement.form.cta');
+
+    fireEvent.click(
+      within(stage).getByRole('button', { name: /engagement.form.moreOptions/ })
+    );
+
+    expect(stage).toHaveTextContent('engagement.form.delaySeconds');
+    expect(stage).toHaveTextContent('engagement.form.cta');
+  });
+
+  it('shows the options a stage already uses', () => {
+    const preset = ENGAGEMENT_PRESETS.promoteMemberships();
+
+    renderForm({
+      ...preset,
+      stages: [{ ...preset.stages[0], delaySeconds: 5 }],
+    });
+
+    expect(screen.getAllByTestId(/^stage-/)[0]).toHaveTextContent(
+      'engagement.form.delaySeconds'
+    );
+  });
+
+  it('keeps newsletter links and peered articles behind more options', () => {
+    renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
+
+    const settings = screen.getByTestId('rule-settings');
+
+    expect(settings).toHaveTextContent('engagement.form.meterWindowDays');
+    expect(settings).not.toHaveTextContent(
+      'engagement.form.newsletterReferral'
+    );
+    expect(settings).not.toHaveTextContent(
+      'engagement.form.includePeeredArticles'
+    );
+
+    fireEvent.click(
+      within(settings).getByRole('button', {
+        name: /engagement.form.moreOptions/,
+      })
+    );
+
+    expect(settings).toHaveTextContent('engagement.form.newsletterReferral');
+    expect(settings).toHaveTextContent('engagement.form.includePeeredArticles');
+  });
+
+  it('opens more options that hide an error on submit', async () => {
+    const preset = ENGAGEMENT_PRESETS.promoteMemberships();
+
+    renderForm({
+      ...preset,
+      name: 'Members',
+      stages: [{ ...preset.stages[0], delaySeconds: -1 }],
+    });
+
+    const [stage] = screen.getAllByTestId(/^stage-/);
+    const moreOptions = within(stage).getByRole('button', {
+      name: /engagement.form.moreOptions/,
+    });
+
+    fireEvent.click(moreOptions);
+    expect(stage).not.toHaveTextContent('engagement.form.delaySeconds');
+
+    fireEvent.click(screen.getByText('submit'));
+
+    await waitFor(() =>
+      expect(stage).toHaveTextContent('engagement.form.delaySeconds')
+    );
   });
 
   it('does not mark number fields as hidden', () => {

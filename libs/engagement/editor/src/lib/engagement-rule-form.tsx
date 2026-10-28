@@ -56,7 +56,7 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdExpandMore } from 'react-icons/md';
+import { MdAdd, MdDelete, MdExpandLess, MdExpandMore } from 'react-icons/md';
 import {
   EngagementRuleValues,
   SHOW_FIRST_PRIORITY,
@@ -406,6 +406,51 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
   );
 };
 
+/**
+ * Rarely needed fields, out of the way until asked for. Open from the start
+ * when one of them is in use, and again when saving failed on one.
+ */
+const MoreOptions = ({
+  inUse,
+  hasErrors,
+  children,
+}: {
+  inUse: boolean;
+  hasErrors: boolean;
+  children: ReactNode;
+}) => {
+  const { t } = useTranslation();
+  const { submitCount } = useFormState();
+  const [open, setOpen] = useState(inUse);
+  const [seenSubmitCount, setSeenSubmitCount] = useState(submitCount);
+
+  if (submitCount !== seenSubmitCount) {
+    setSeenSubmitCount(submitCount);
+
+    if (hasErrors) {
+      setOpen(true);
+    }
+  }
+
+  return (
+    <>
+      <Box>
+        <Button
+          variant="text"
+          size="small"
+          aria-expanded={open}
+          endIcon={open ? <MdExpandLess /> : <MdExpandMore />}
+          onClick={() => setOpen(!open)}
+        >
+          {t('engagement.form.moreOptions')}
+        </Button>
+      </Box>
+
+      {open && children}
+    </>
+  );
+};
+
 type StageFieldsProps = {
   index: number;
   count: number;
@@ -444,6 +489,23 @@ const StageFields = ({
       setExpanded(true);
     }
   }
+
+  const stageErrors = errors.stages?.[index];
+  const moreOptionsInUse = Boolean(
+    stage?.cta ||
+    stage?.imageId ||
+    stage?.html ||
+    stage?.embedUrl ||
+    stage?.delaySeconds ||
+    (stage && stage.hideForMinutes !== stageDefaults().hideForMinutes)
+  );
+  const moreOptionsHaveErrors = Boolean(
+    stageErrors?.cta ||
+    stageErrors?.html ||
+    stageErrors?.embedUrl ||
+    stageErrors?.delaySeconds ||
+    stageErrors?.hideForMinutes
+  );
 
   const [chooseImage, setChooseImage] = useState(false);
   const [editImage, setEditImage] = useState(false);
@@ -638,65 +700,75 @@ const StageFields = ({
             </FormControl>
 
             {stage?.placement === EngagementPlacement.Banner && (
-              <>
-                <TextFieldControl
-                  name={`stages.${index}.text`}
-                  label={t('engagement.form.text')}
-                />
-                <TextFieldControl
-                  name={`stages.${index}.html`}
-                  label={label(
-                    t('engagement.form.html'),
-                    t('engagement.form.htmlInfo')
-                  )}
-                  multiline
-                />
-                <TextFieldControl
-                  name={`stages.${index}.embedUrl`}
-                  label={label(
-                    t('engagement.form.embedUrl'),
-                    t('engagement.form.embedUrlInfo')
-                  )}
-                />
-              </>
+              <TextFieldControl
+                name={`stages.${index}.text`}
+                label={t('engagement.form.text')}
+              />
             )}
 
-            <TextFieldControl
-              name={`stages.${index}.cta`}
-              label={label(
-                t('engagement.form.cta'),
-                t('engagement.form.ctaInfo')
-              )}
-            />
-
-            <FormControl fullWidth>
-              <FormLabel>{t('engagement.form.image')}</FormLabel>
-              <ChooseEditImage
-                image={stage?.image}
-                disabled={false}
-                openChooseModalOpen={() => setChooseImage(true)}
-                openEditModalOpen={() => setEditImage(true)}
-                removeImage={() => {
-                  setValue(`stages.${index}.image`, null, {
-                    shouldDirty: true,
-                  });
-                  setValue(`stages.${index}.imageId`, null, {
-                    shouldDirty: true,
-                  });
-                }}
-              />
-            </FormControl>
-
             {!hard && (
-              <>
-                <SwitchControl
-                  name={`stages.${index}.dismissible`}
-                  label={label(
-                    t('engagement.form.dismissible'),
-                    t('engagement.form.dismissibleInfo')
-                  )}
-                />
+              <SwitchControl
+                name={`stages.${index}.dismissible`}
+                label={label(
+                  t('engagement.form.dismissible'),
+                  t('engagement.form.dismissibleInfo')
+                )}
+              />
+            )}
 
+            <ActionList stageIndex={index} />
+
+            <MoreOptions
+              inUse={moreOptionsInUse}
+              hasErrors={moreOptionsHaveErrors}
+            >
+              <TextFieldControl
+                name={`stages.${index}.cta`}
+                label={label(
+                  t('engagement.form.cta'),
+                  t('engagement.form.ctaInfo')
+                )}
+              />
+
+              <FormControl fullWidth>
+                <FormLabel>{t('engagement.form.image')}</FormLabel>
+                <ChooseEditImage
+                  image={stage?.image}
+                  disabled={false}
+                  openChooseModalOpen={() => setChooseImage(true)}
+                  openEditModalOpen={() => setEditImage(true)}
+                  removeImage={() => {
+                    setValue(`stages.${index}.image`, null, {
+                      shouldDirty: true,
+                    });
+                    setValue(`stages.${index}.imageId`, null, {
+                      shouldDirty: true,
+                    });
+                  }}
+                />
+              </FormControl>
+
+              {stage?.placement === EngagementPlacement.Banner && (
+                <>
+                  <TextFieldControl
+                    name={`stages.${index}.html`}
+                    label={label(
+                      t('engagement.form.html'),
+                      t('engagement.form.htmlInfo')
+                    )}
+                    multiline
+                  />
+                  <TextFieldControl
+                    name={`stages.${index}.embedUrl`}
+                    label={label(
+                      t('engagement.form.embedUrl'),
+                      t('engagement.form.embedUrlInfo')
+                    )}
+                  />
+                </>
+              )}
+
+              {!hard && (
                 <FieldRow>
                   <NumberField
                     name={`stages.${index}.hideForMinutes`}
@@ -712,10 +784,8 @@ const StageFields = ({
                     label={t('engagement.form.delaySeconds')}
                   />
                 </FieldRow>
-              </>
-            )}
-
-            <ActionList stageIndex={index} />
+              )}
+            </MoreOptions>
 
             {onRemove && (
               <Box>
@@ -1059,10 +1129,17 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
     useStickyWhenFits<HTMLDivElement>(STICKY_OFFSET);
   const { control, setValue, getValues, formState } =
     useFormContext<EngagementRuleValues>();
-  const [goal, stages, audience] = useWatch({
-    control,
-    name: ['goal', 'stages', 'audience'],
-  });
+  const [goal, stages, audience, includePeeredArticles, newsletterReferral] =
+    useWatch({
+      control,
+      name: [
+        'goal',
+        'stages',
+        'audience',
+        'includePeeredArticles',
+        'newsletterReferral',
+      ],
+    });
   const announcement = isAnnouncement({ goal });
   const {
     fields: stageFields,
@@ -1250,14 +1327,6 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
                   label={t('engagement.form.showOnArticles')}
                 />
 
-                <SwitchControl
-                  name="includePeeredArticles"
-                  label={label(
-                    t('engagement.form.includePeeredArticles'),
-                    t('engagement.form.includePeeredArticlesInfo')
-                  )}
-                />
-
                 <Controller
                   control={control}
                   name="showOnPageIds"
@@ -1283,19 +1352,36 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
                 />
 
                 {!announcement && (
-                  <>
-                    <NumberField
-                      name="meterWindowDays"
-                      label={label(
-                        t('engagement.form.meterWindowDays'),
-                        t('engagement.form.meterWindowDaysInfo')
-                      )}
-                      nullable
-                    />
-
-                    <ReferralFields />
-                  </>
+                  <NumberField
+                    name="meterWindowDays"
+                    label={label(
+                      t('engagement.form.meterWindowDays'),
+                      t('engagement.form.meterWindowDaysInfo')
+                    )}
+                    nullable
+                  />
                 )}
+
+                <MoreOptions
+                  inUse={
+                    includePeeredArticles ||
+                    newsletterReferral !== NewsletterReferralMode.None
+                  }
+                  hasErrors={Boolean(
+                    formState.errors.newsletterReferralLimit ??
+                    formState.errors.newsletterParams
+                  )}
+                >
+                  <SwitchControl
+                    name="includePeeredArticles"
+                    label={label(
+                      t('engagement.form.includePeeredArticles'),
+                      t('engagement.form.includePeeredArticlesInfo')
+                    )}
+                  />
+
+                  {!announcement && <ReferralFields />}
+                </MoreOptions>
               </FormFields>
             </CardContent>
           </Card>
