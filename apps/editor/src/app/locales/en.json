@@ -4830,8 +4830,12 @@
         "newsletterActionRequired": "Offer a newsletter signup too"
       },
       "copyName": "{{name}} (copy)",
+      "view": {
+        "edit": "Edit rule",
+        "overview": "Overview"
+      },
       "review": {
-        "title": "Before you save: here is what will happen",
+        "title": "What this rule does",
         "goesLive": "Active: readers see it as soon as you save.",
         "inactive": "Inactive: saved, but nobody sees it until you switch it on.",
         "who": "Who",

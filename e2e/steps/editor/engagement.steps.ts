@@ -118,7 +118,7 @@ async function announce(
 
   await page.getByRole('button', { name: 'Save & Close' }).click();
 
-  const review = page.getByRole('dialog');
+  const review = page.getByRole('region', { name: 'What this rule does' });
   await expect(
     review.getByRole('heading', { name: rule.name, level: 5 })
   ).toBeVisible();

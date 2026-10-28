@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@mui/material';
 import {
   CreateEngagementRuleDocument,
   EngagementRuleDocument,
-  EngagementRulesDocument,
 } from '@wepublish/editor/api';
 import {
   CanCreateEngagementRule,
@@ -23,37 +23,35 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { EngagementPresetCards } from './engagement-preset-cards';
-import { findConflicts } from './engagement-conflicts';
-import { EngagementRuleForm } from './engagement-rule-form';
-import { EngagementRuleReview } from './engagement-rule-review';
 import { ENGAGEMENT_PATH } from './engagement-rule-list';
 import {
   EngagementRuleValues,
   copyEngagementRule,
   createEngagementRuleSchema,
-  engagementRuleToValues,
   toEngagementRuleInput,
 } from './engagement-rule-values';
+import {
+  EngagementRuleView,
+  EngagementRuleViews,
+} from './engagement-rule-views';
 import { ENGAGEMENT_PRESETS } from './presets';
 
 const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [shouldClose, setShouldClose] = useState(false);
-  const [review, setReview] = useState<EngagementRuleValues>();
-  const { data: rulesData } = useQuery(EngagementRulesDocument);
+  // Saving a new rule shows what it will do first, and creates it from there.
+  const [view, setView] = useState<EngagementRuleView>('edit');
   const form = useForm<EngagementRuleValues>({
     resolver: zodResolver(createEngagementRuleSchema(t)),
     defaultValues: values,
   });
   const [createRule, { loading }] = useMutation(CreateEngagementRuleDocument, {
-    onError: error => {
-      setReview(undefined);
+    onError: error =>
       enqueueSnackbar(humanizeError(error), {
         variant: 'error',
         autoHideDuration: 8000,
-      });
-    },
+      }),
     onCompleted: data =>
       navigate(
         shouldClose ? ENGAGEMENT_PATH : (
@@ -64,7 +62,15 @@ const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(setReview)}>
+      <form
+        onSubmit={form.handleSubmit(
+          rule =>
+            view === 'overview' ?
+              createRule({ variables: { input: toEngagementRuleInput(rule) } })
+            : setView('overview'),
+          () => setView('edit')
+        )}
+      >
         <SingleViewTitle
           loading={loading}
           title={t('engagement.create.title')}
@@ -75,29 +81,28 @@ const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
           setCloseFn={setShouldClose}
         />
 
-        <EngagementRuleForm />
+        <EngagementRuleViews
+          view={view}
+          onViewChange={setView}
+          overviewActions={
+            <>
+              <Button
+                variant="text"
+                onClick={() => setView('edit')}
+              >
+                {t('engagement.review.back')}
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={loading}
+              >
+                {t('engagement.review.confirm')}
+              </Button>
+            </>
+          }
+        />
       </form>
-
-      <EngagementRuleReview
-        rule={review}
-        conflicts={
-          review ?
-            findConflicts(
-              review,
-              (rulesData?.engagementRules ?? []).map(other => ({
-                ...other,
-                stages: engagementRuleToValues(other).stages,
-              }))
-            )
-          : []
-        }
-        saving={loading}
-        onBack={() => setReview(undefined)}
-        onConfirm={() =>
-          review &&
-          createRule({ variables: { input: toEngagementRuleInput(review) } })
-        }
-      />
     </FormProvider>
   );
 };
