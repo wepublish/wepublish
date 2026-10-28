@@ -288,8 +288,8 @@ model Image {
   paymentMethods PaymentMethod[]
 
   engagementStages      EngagementStage[]
-  peerProfileLogo       PeerProfile[] @relation("logo")
-  peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
+  peerProfileLogo       PeerProfile[]     @relation("logo")
+  peerProfileSquareLogo PeerProfile[]     @relation("squareLogo")
   goodies               Goodie[]
 
   @@index([createdAt])
@@ -538,11 +538,11 @@ model Invoice {
   // When the RENEWAL_SUCCESS mail for this invoice went out. Claimed
   // atomically so the webhook, the nightly job and the admin path can never
   // send it twice.
-  renewalSuccessMailSentAt   DateTime? @db.Timestamptz(3)
+  renewalSuccessMailSentAt  DateTime?     @db.Timestamptz(3)
 
   // Set when an admin marked the invoice as paid and explicitly asked for no
   // mail. Blocks every later path from sending one.
-  suppressRenewalSuccessMail Boolean   @default(false)
+  suppressRenewalSuccessMail Boolean @default(false)
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
@@ -775,7 +775,7 @@ model MemberPlan {
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name                           String
-  slug                           String                   @unique
+  slug                           String                       @unique
   tags                           String[]
   shortDescription               Json?
   slateShortDescription          Json?
@@ -786,11 +786,11 @@ model MemberPlan {
   periodicityPricing             MemberPlanPeriodicityPrice[]
   defaultPaymentPeriodicity      PaymentPeriodicity?
   availablePaymentMethods        AvailablePaymentMethod[]
-  migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
+  migrateToTargetPaymentMethod   PaymentMethod?               @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
-  extendable                     Boolean                  @default(true)
+  extendable                     Boolean                      @default(true)
   maxCount                       Int?
-  productType                    ProductType              @default(Subscription)
+  productType                    ProductType                  @default(Subscription)
   externalReward                 String?
 
   imageID String?
@@ -808,10 +808,11 @@ model MemberPlan {
   subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
-  crowdfundings Crowdfunding[]
-  paywalls      PaywallMemberplan[]
-  discountCodes DiscountCode[]
-  goodies       Goodie[]
+  crowdfundings   Crowdfunding[]
+  paywalls        PaywallMemberplan[]
+  discountCodes   DiscountCode[]
+  engagementRules EngagementRule[]    @relation("EngagementRuleAudienceMemberPlans")
+  goodies         Goodie[]
 
   @@index([name])
   @@map("member.plans")
@@ -897,8 +898,8 @@ model Page {
   modifiedAt  DateTime  @updatedAt @db.Timestamptz(3)
   publishedAt DateTime? @db.Timestamptz(3)
 
-  slug   String?
-  hidden Boolean @default(false)
+  slug       String?
+  hidden     Boolean @default(false)
   hideHeader Boolean @default(false)
   hideFooter Boolean @default(false)
 
@@ -1090,8 +1091,8 @@ model ImpersonationGrant {
   id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
-  jti       String    @unique
-  expiresAt DateTime  @db.Timestamptz(3)
+  jti        String    @unique
+  expiresAt  DateTime  @db.Timestamptz(3)
   redeemedAt DateTime? @db.Timestamptz(3)
 
   @@index([expiresAt])
@@ -1691,6 +1692,8 @@ enum EngagementAudience {
   NON_PAYING
   PAYING_MEMBERS
   PAYWALL_BYPASSED
+  /// Readers with an active subscription to one of `audienceMemberPlans`.
+  MEMBER_PLANS
 }
 
 enum EngagementPlacement {
@@ -1746,6 +1749,8 @@ model EngagementRule {
   version  Int            @default(1)
 
   audience              EngagementAudience @default(ALL)
+  /// Only for the MEMBER_PLANS audience.
+  audienceMemberPlans   MemberPlan[]       @relation("EngagementRuleAudienceMemberPlans")
   showOnArticles        Boolean            @default(true)
   showOnPages           Page[]
   includePeeredArticles Boolean            @default(false)
@@ -2119,11 +2124,11 @@ model SettingPaymentProvider {
 
   stripe_methods StripePaymentMethod[]
 
-  payrexx_instancename String?
-  payrexx_psp          PayrexxPSP[]
-  payrexx_pm           PayrexxPM[]
-  payrexx_vatrate      Decimal?     @db.Decimal(5, 4)
-  simulated_declineRenewals Boolean  @default(false)
+  payrexx_instancename      String?
+  payrexx_psp               PayrexxPSP[]
+  payrexx_pm                PayrexxPM[]
+  payrexx_vatrate           Decimal?     @db.Decimal(5, 4)
+  simulated_declineRenewals Boolean      @default(false)
 
   bexio_userId                              Int?
   bexio_countryId                           Int?

@@ -40,6 +40,7 @@ export type EngagementRuleWithStages = Omit<
 
 const include = {
   showOnPages: { select: { id: true } },
+  audienceMemberPlans: { select: { id: true } },
   stages: {
     orderBy: { afterArticles: 'asc' },
     include: { actions: { orderBy: { id: 'asc' } } },
@@ -56,12 +57,14 @@ const isReferralParam = (value: unknown): value is ReferralParam =>
 
 const toRule = ({
   showOnPages,
+  audienceMemberPlans,
   newsletterParams,
   stages,
   ...rule
 }: StoredRule): EngagementRuleWithStages => ({
   ...rule,
   showOnPageIds: showOnPages.map(({ id }) => id),
+  audienceMemberPlanIds: audienceMemberPlans.map(({ id }) => id),
   newsletterParams:
     Array.isArray(newsletterParams) ?
       newsletterParams.filter(isReferralParam)
@@ -139,10 +142,11 @@ export class EngagementRuleService {
   async create({
     stages,
     showOnPageIds,
+    audienceMemberPlanIds = [],
     newsletterParams,
     ...rule
   }: CreateEngagementRuleInput) {
-    this.validate({ ...rule, stages });
+    this.validate({ ...rule, audienceMemberPlanIds, stages });
 
     const created = await this.prisma.engagementRule.create({
       data: {
@@ -152,6 +156,9 @@ export class EngagementRuleService {
           value,
         })),
         showOnPages: { connect: showOnPageIds.map(id => ({ id })) },
+        audienceMemberPlans: {
+          connect: audienceMemberPlanIds.map(id => ({ id })),
+        },
         stages: { create: stages.map(stageData) },
       },
       include,
@@ -166,10 +173,11 @@ export class EngagementRuleService {
     id,
     stages,
     showOnPageIds,
+    audienceMemberPlanIds = [],
     newsletterParams,
     ...rule
   }: UpdateEngagementRuleInput) {
-    this.validate({ ...rule, stages });
+    this.validate({ ...rule, audienceMemberPlanIds, stages });
 
     const updated = await this.prisma.$transaction(async prisma => {
       await prisma.engagementStage.deleteMany({ where: { ruleId: id } });
@@ -184,6 +192,9 @@ export class EngagementRuleService {
             value,
           })),
           showOnPages: { set: showOnPageIds.map(pageId => ({ id: pageId })) },
+          audienceMemberPlans: {
+            set: audienceMemberPlanIds.map(planId => ({ id: planId })),
+          },
           stages: { create: stages.map(stageData) },
         },
         include,

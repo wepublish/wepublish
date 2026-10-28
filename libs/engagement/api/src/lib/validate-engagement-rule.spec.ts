@@ -1,5 +1,6 @@
 import {
   EngagementActionType,
+  EngagementAudience,
   EngagementEnforcement,
   EngagementGoal,
   EngagementPlacement,
@@ -226,5 +227,27 @@ describe('validateEngagementRule', () => {
         })
       )
     ).toEqual([]);
+  });
+
+  it('needs plans for the member plans audience, and only there', () => {
+    expect(
+      codes(metered({ audience: EngagementAudience.MEMBER_PLANS }))
+    ).toEqual(['audienceMemberPlanIds: required']);
+    expect(
+      codes(
+        metered({
+          audience: EngagementAudience.MEMBER_PLANS,
+          audienceMemberPlanIds: ['plan-1'],
+        })
+      )
+    ).toEqual([]);
+    expect(
+      codes(
+        metered({
+          audience: EngagementAudience.MEMBERS,
+          audienceMemberPlanIds: ['plan-1'],
+        })
+      )
+    ).toEqual(['audienceMemberPlanIds: onlyMemberPlans']);
   });
 });

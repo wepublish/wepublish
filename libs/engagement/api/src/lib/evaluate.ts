@@ -46,6 +46,7 @@ export type EvaluatedRule<Stage extends EvaluatedStage = EvaluatedStage> = Pick<
 > & {
   newsletterParams: ReferralParam[] | null;
   showOnPageIds: string[];
+  audienceMemberPlanIds?: string[];
   /** Ordered by `afterArticles`. */
   stages: Stage[];
 };
@@ -126,7 +127,10 @@ export function matchingRules<Rule extends EvaluatedRule<EvaluatedStage>>(
   target: EngagementTarget
 ): Rule[] {
   return rules.filter(rule => {
-    if (!rule.active || !matchesAudience(rule.audience, reader)) {
+    if (
+      !rule.active ||
+      !matchesAudience(rule.audience, reader, rule.audienceMemberPlanIds)
+    ) {
       return false;
     }
 

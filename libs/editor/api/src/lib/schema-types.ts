@@ -910,6 +910,8 @@ export type CreateCrowdfundingMemberPlan = {
 export type CreateEngagementRuleInput = {
   active?: Scalars['Boolean']['input'];
   audience?: EngagementAudience;
+  /** Only for the MEMBER_PLANS audience, which needs at least one. */
+  audienceMemberPlanIds?: Array<Scalars['String']['input']>;
   goal: EngagementGoal;
   includePeeredArticles?: Scalars['Boolean']['input'];
   meterWindowDays?: InputMaybe<Scalars['Int']['input']>;
@@ -1235,6 +1237,7 @@ export enum EngagementAudience {
   All = 'ALL',
   Anonymous = 'ANONYMOUS',
   Members = 'MEMBERS',
+  MemberPlans = 'MEMBER_PLANS',
   NonMembers = 'NON_MEMBERS',
   NonPaying = 'NON_PAYING',
   PayingMembers = 'PAYING_MEMBERS',
@@ -1287,6 +1290,8 @@ export type EngagementRule = {
   __typename: 'EngagementRule';
   active: Scalars['Boolean']['output'];
   audience: EngagementAudience;
+  /** The plans of the MEMBER_PLANS audience. */
+  audienceMemberPlanIds: Array<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   goal: EngagementGoal;
   id: Scalars['String']['output'];
@@ -8229,6 +8234,8 @@ export type UpdateCrowdfundingInput = {
 export type UpdateEngagementRuleInput = {
   active?: Scalars['Boolean']['input'];
   audience?: EngagementAudience;
+  /** Only for the MEMBER_PLANS audience, which needs at least one. */
+  audienceMemberPlanIds?: Array<Scalars['String']['input']>;
   goal: EngagementGoal;
   id: Scalars['String']['input'];
   includePeeredArticles?: Scalars['Boolean']['input'];

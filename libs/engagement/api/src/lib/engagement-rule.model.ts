@@ -229,6 +229,11 @@ export class EngagementRule {
   @Field(() => EngagementAudience)
   audience!: EngagementAudience;
 
+  @Field(() => [String], {
+    description: `The plans of the MEMBER_PLANS audience.`,
+  })
+  audienceMemberPlanIds!: string[];
+
   @Field()
   showOnArticles!: boolean;
 
@@ -270,6 +275,12 @@ export class CreateEngagementRuleInput {
 
   @Field(() => EngagementAudience, { defaultValue: EngagementAudience.ALL })
   audience!: EngagementAudience;
+
+  @Field(() => [String], {
+    defaultValue: [],
+    description: `Only for the MEMBER_PLANS audience, which needs at least one.`,
+  })
+  audienceMemberPlanIds?: string[];
 
   @Field({ defaultValue: true })
   showOnArticles!: boolean;
