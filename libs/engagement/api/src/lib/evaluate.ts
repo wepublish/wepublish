@@ -1,4 +1,5 @@
 import {
+  EngagementAudience,
   EngagementEnforcement,
   EngagementGoal,
   EngagementRequirement,
@@ -49,6 +50,8 @@ export type EvaluatedRule<Stage extends EvaluatedStage = EvaluatedStage> = Pick<
   showOnPageIds: string[];
   /** The plans of the `MEMBER_PLANS` audience. */
   audienceMemberPlanIds?: string[];
+  /** A string once the rule came back from the cache. */
+  createdAt?: Date | string;
   /** Ordered by `afterArticles`. */
   stages: Stage[];
 };
@@ -153,12 +156,41 @@ export const currentStage = <Stage extends EvaluatedStage>(
 ): Stage | undefined =>
   rule.stages.filter(stage => stage.afterArticles <= count).at(-1);
 
+/**
+ * How narrow an audience is: at the same priority the narrower one goes
+ * first, a rule for everyone last. The editor mirrors this in
+ * `engagement-conflicts.ts`.
+ */
+export const AUDIENCE_SPECIFICITY: Record<EngagementAudience, number> = {
+  ALL: 0,
+  NON_PAYING: 1,
+  NON_MEMBERS: 1,
+  REGISTERED: 1,
+  ANONYMOUS: 2,
+  MEMBERS: 2,
+  PAYING_MEMBERS: 3,
+  PAYWALL_BYPASSED: 3,
+  MEMBER_PLANS: 4,
+};
+
+const createdAtOf = (rule: EvaluatedRule) =>
+  rule.createdAt ? new Date(rule.createdAt).getTime() : 0;
+
+/**
+ * Priority is an override; without one the more specific rule goes first (a
+ * narrower audience, then chosen pages only over every article) and then the
+ * newest rule.
+ */
 const byPromptOrder = (
   a: { rule: EvaluatedRule; stage?: EvaluatedStage },
   b: { rule: EvaluatedRule; stage?: EvaluatedStage }
 ) =>
   b.rule.priority - a.rule.priority ||
   Number(!!b.stage && isHard(b.stage)) - Number(!!a.stage && isHard(a.stage)) ||
+  AUDIENCE_SPECIFICITY[b.rule.audience] -
+    AUDIENCE_SPECIFICITY[a.rule.audience] ||
+  Number(a.rule.showOnArticles) - Number(b.rule.showOnArticles) ||
+  createdAtOf(b.rule) - createdAtOf(a.rule) ||
   a.rule.id.localeCompare(b.rule.id);
 
 const referralMatches = (
