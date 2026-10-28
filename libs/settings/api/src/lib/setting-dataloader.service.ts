@@ -2,7 +2,7 @@ import { Injectable, Scope } from '@nestjs/common';
 import { Setting, PrismaClient } from '@prisma/client';
 import { Primeable, createOptionalsArray } from '@wepublish/utils/api';
 import DataLoader from 'dataloader';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   SETTINGS_CACHE_NAMESPACE,
   SETTINGS_CACHE_TTL_SECONDS,
@@ -36,7 +36,7 @@ export class SettingDataloaderService implements Primeable<Setting> {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   public prime(

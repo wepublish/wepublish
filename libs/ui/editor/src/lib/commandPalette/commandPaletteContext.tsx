@@ -1,9 +1,9 @@
+import { useHotkey } from '@tanstack/react-hotkeys';
 import {
   createContext,
   PropsWithChildren,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -26,10 +26,7 @@ const CommandPaletteContext = createContext<CommandPaletteValue>({
   commands: [],
 });
 
-const isHotkey = (event: KeyboardEvent) =>
-  (event.metaKey || event.ctrlKey) &&
-  !event.altKey &&
-  (event.key.toLowerCase() === 'k' || event.code === 'KeyK');
+export const COMMAND_PALETTE_HOTKEY = 'Mod+K';
 
 export interface CommandPaletteProviderProps {
   commands: Command[];
@@ -47,24 +44,18 @@ export function CommandPaletteProvider({
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen(current => !current), []);
 
-  useEffect(() => {
-    if (!enabled) {
-      return;
-    }
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.defaultPrevented || !isHotkey(event)) {
+  useHotkey(
+    COMMAND_PALETTE_HOTKEY,
+    event => {
+      if (event.defaultPrevented) {
         return;
       }
 
       event.preventDefault();
       toggle();
-    };
-
-    document.addEventListener('keydown', onKeyDown);
-
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [enabled, toggle]);
+    },
+    { enabled, preventDefault: false, stopPropagation: false }
+  );
 
   const value = useMemo(
     () => ({ isOpen, open, close, toggle, commands }),

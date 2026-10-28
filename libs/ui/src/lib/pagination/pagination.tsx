@@ -9,6 +9,6 @@ export const CenteredPagination = styled(MuiPagination)`
   justify-items: center;
 `;
 
-export function Pagination({ className, ...props }: PaginationProps) {
+export function Pagination(props: PaginationProps) {
   return <CenteredPagination {...props} />;
 }
