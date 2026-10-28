@@ -107,6 +107,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   className,
   user,
   schema = defaultSchema,
+  errorMap,
   onUpdate,
   onImageUpload,
   onRequestEmailChange,
@@ -147,12 +148,13 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
             ...(fieldsToDisplay as any),
             passwordRepeated: fieldsToDisplay.password,
           })
-        )
+        ),
+        errorMap && { errorMap }
       ).refine(data => data.password === data.passwordRepeated, {
         message: t('user.form.passwordsDoNotMatch'),
         path: ['passwordRepeated'],
       }),
-    [t, fieldsToDisplay, schema]
+    [t, fieldsToDisplay, schema, errorMap]
   );
 
   const { handleSubmit, control, setValue, watch } = useForm<

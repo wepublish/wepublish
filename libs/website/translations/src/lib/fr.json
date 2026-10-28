@@ -266,7 +266,11 @@
       "country": "Pays",
       "suggested": "Suggéré",
       "occupation": "Fonction / Profession",
-      "passwordsDoNotMatch": "Les mots de passe ne correspondent pas."
+      "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
+      "errors": {
+        "minLength": "{minimum, plural, one {Ne doit pas être vide} other {Min. # caractères}}",
+        "chooseOption": "Veuillez choisir une option"
+      }
     },
     "sections": {
       "personalData": "Données personnelles",

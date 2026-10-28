@@ -266,7 +266,11 @@
       "country": "Land",
       "suggested": "Vorgeschlagen",
       "occupation": "Funktion / Beruf",
-      "passwordsDoNotMatch": "Passwörter stimmen nicht überein."
+      "passwordsDoNotMatch": "Passwörter stimmen nicht überein.",
+      "errors": {
+        "minLength": "{minimum, plural, one {Darf nicht leer sein} other {Mind. # Zeichen}}",
+        "chooseOption": "Bitte eine Option wählen"
+      }
     },
     "sections": {
       "personalData": "Benutzerdaten",

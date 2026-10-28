@@ -9,6 +9,7 @@ import {
   SectionBox,
 } from '@wepublish/membership/website';
 import {
+  formErrorMap,
   PasswordFormContainer,
   PersonalDataFormContainer,
   PersonalDataInputForm,
@@ -18,7 +19,7 @@ import {
   BuilderPersonalDataFormFields,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { ComponentProps } from 'react';
+import { ComponentProps, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useWebsiteFeature } from '../../../lib/use-website-feature';
@@ -144,6 +145,8 @@ export function ProfileDetails({
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const split = useWebsiteFeature('profile-subscription-history');
+  // plainer messages than the global ones, for now only with the history
+  const errorMap = useMemo(() => formErrorMap(t), [t]);
 
   if (!split) {
     return (
@@ -173,6 +176,7 @@ export function ProfileDetails({
             <PersonalDataFormContainer
               fields={allFields.filter(field => field !== 'password')}
               schema={schema}
+              errorMap={errorMap}
             />
           </ProfilePersonalData>
         </SectionBox>
