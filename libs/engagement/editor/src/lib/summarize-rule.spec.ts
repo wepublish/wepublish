@@ -5,26 +5,20 @@ import {
 } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { hardStage, stageDefaults } from './engagement-rule-values';
-import {
-  summarizeRule,
-  summarizeStages,
-  summarizeWhere,
-} from './summarize-rule';
+import { summarizeStages, summarizeWhere } from './summarize-rule';
 
 const en: Record<string, string> = {
   'engagement.summary.announcement': 'From the first visit: {{placement}}',
-  'engagement.summary.always': 'From the first article',
-  'engagement.summary.untilRead': 'Until {{count}} articles are read',
-  'engagement.summary.afterRead': 'After {{count}} read articles',
-  'engagement.summary.afterReadRange': 'After {{from}}–{{to}} read articles',
-  'engagement.summary.afterReadOrMore': 'After {{count}} or more read articles',
+  'engagement.summary.article': 'Article {{number}}',
+  'engagement.summary.articles': 'Articles {{from}}–{{to}}',
+  'engagement.summary.fromArticle': 'From article {{number}}',
   'engagement.summary.closable': '{{placement}}, can be closed',
   'engagement.summary.hard':
-    'article stops after {{count}} blocks, reading on requires {{requirement}}',
-  'engagement.summary.placement.MODAL': 'pop-up over the article',
-  'engagement.summary.placement.BANNER': 'banner at the top',
-  'engagement.summary.placement.INLINE': 'box inside the article',
-  'engagement.summary.requirement.REGISTRATION': 'registration',
+    '{{requirement}} required, {{count}} blocks preview',
+  'engagement.summary.placement.MODAL': 'pop-up',
+  'engagement.summary.placement.BANNER': 'banner',
+  'engagement.summary.placement.INLINE': 'box in the article',
+  'engagement.summary.requirement.REGISTRATION': 'Registration',
 };
 
 const t = ((key: string, params: Record<string, unknown> = {}) =>
@@ -32,10 +26,10 @@ const t = ((key: string, params: Record<string, unknown> = {}) =>
     String(params[name])
   )) as unknown as TFunction;
 
-describe('summarizeRule', () => {
+describe('summarizeStages', () => {
   it('says when each stage shows and what it asks for', () => {
     expect(
-      summarizeRule(
+      summarizeStages(
         {
           goal: EngagementGoal.Newsletter,
           stages: [
@@ -49,14 +43,15 @@ describe('summarizeRule', () => {
         },
         t
       )
-    ).toBe(
-      'After 2–3 read articles: pop-up over the article, can be closed · After 4 or more read articles: article stops after 3 blocks, reading on requires registration'
-    );
+    ).toEqual([
+      'Articles 3–4: pop-up, can be closed',
+      'From article 5: Registration required, 3 blocks preview',
+    ]);
   });
 
   it('names a single article and stages that can not be dismissed', () => {
     expect(
-      summarizeRule(
+      summarizeStages(
         {
           goal: EngagementGoal.Membership,
           stages: [
@@ -70,21 +65,22 @@ describe('summarizeRule', () => {
         },
         t
       )
-    ).toBe(
-      'Until 1 articles are read: box inside the article · After 1 or more read articles: pop-up over the article, can be closed'
-    );
+    ).toEqual([
+      'Article 1: box in the article',
+      'From article 2: pop-up, can be closed',
+    ]);
   });
 
   it('summarizes an announcement by its placement', () => {
     expect(
-      summarizeRule(
+      summarizeStages(
         {
           goal: EngagementGoal.Announcement,
           stages: [stageDefaults({ placement: EngagementPlacement.Banner })],
         },
         t
       )
-    ).toBe('From the first visit: banner at the top');
+    ).toEqual(['From the first visit: banner']);
   });
 
   it('lists the stages one by one, for a step by step view', () => {
@@ -104,8 +100,8 @@ describe('summarizeRule', () => {
         t
       )
     ).toEqual([
-      'After 2–3 read articles: pop-up over the article, can be closed',
-      'After 4 or more read articles: article stops after 3 blocks, reading on requires registration',
+      'Articles 3–4: pop-up, can be closed',
+      'From article 5: Registration required, 3 blocks preview',
     ]);
   });
 
@@ -123,9 +119,9 @@ describe('summarizeRule', () => {
         t
       )
     ).toEqual([
-      'Until 3 articles are read: pop-up over the article',
-      'After 3 read articles: pop-up over the article',
-      'After 4 or more read articles: pop-up over the article',
+      'Articles 1–3: pop-up',
+      'Article 4: pop-up',
+      'From article 5: pop-up',
     ]);
     expect(
       summarizeStages(
@@ -135,7 +131,7 @@ describe('summarizeRule', () => {
         },
         t
       )
-    ).toEqual(['From the first article: pop-up over the article']);
+    ).toEqual(['From article 1: pop-up']);
   });
 
   it('does not make up a range for stages out of order', () => {
@@ -150,10 +146,7 @@ describe('summarizeRule', () => {
         },
         t
       )
-    ).toEqual([
-      'After 14 read articles: pop-up over the article',
-      'After 4 or more read articles: pop-up over the article',
-    ]);
+    ).toEqual(['Article 15: pop-up', 'From article 5: pop-up']);
   });
 });
 

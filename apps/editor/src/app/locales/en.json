@@ -4732,28 +4732,23 @@
       },
       "summary": {
         "announcement": "From the first visit: {{placement}}",
-        "hard_one": "the article stops after {{count}} block, reading on requires {{requirement}}",
-        "hard_other": "the article stops after {{count}} blocks, reading on requires {{requirement}}",
         "placement": {
-          "BANNER": "banner at the top of the page",
-          "MODAL": "pop-up over the article",
-          "INLINE": "box inside the article text",
-          "CUTOFF": "box at the end of the article"
+          "BANNER": "banner",
+          "MODAL": "pop-up",
+          "INLINE": "box in the article",
+          "CUTOFF": "box at the end"
         },
         "requirement": {
-          "REGISTRATION": "registration",
-          "MEMBERSHIP": "a membership",
-          "PAID_MEMBERSHIP": "a paid membership"
+          "REGISTRATION": "Registration",
+          "MEMBERSHIP": "Membership",
+          "PAID_MEMBERSHIP": "Paid membership"
         },
-        "always": "From the first article",
-        "untilRead_one": "Until 1 article is read",
-        "untilRead_other": "Until {{count}} articles are read",
-        "afterRead_one": "After 1 read article",
-        "afterRead_other": "After {{count}} read articles",
-        "afterReadRange": "After {{from}}–{{to}} read articles",
-        "afterReadOrMore_one": "After 1 or more read articles",
-        "afterReadOrMore_other": "After {{count}} or more read articles",
-        "closable": "{{placement}}, can be closed"
+        "closable": "{{placement}}, can be closed",
+        "article": "Article {{number}}",
+        "articles": "Articles {{from}}–{{to}}",
+        "fromArticle": "From article {{number}}",
+        "hard_one": "{{requirement}} required, {{count}} block preview",
+        "hard_other": "{{requirement}} required, {{count}} blocks preview"
       },
       "form": {
         "goal": "Goal",

@@ -4732,28 +4732,23 @@
       },
       "summary": {
         "announcement": "Dès la première visite : {{placement}}",
-        "hard_one": "l’article s’arrête après {{count}} bloc, continuer exige {{requirement}}",
-        "hard_other": "l’article s’arrête après {{count}} blocs, continuer exige {{requirement}}",
         "placement": {
-          "BANNER": "bannière en haut de la page",
-          "MODAL": "pop-up sur l’article",
-          "INLINE": "encadré dans le texte de l’article",
-          "CUTOFF": "encadré à la fin de l’article"
+          "BANNER": "bannière",
+          "MODAL": "pop-up",
+          "INLINE": "encadré dans l’article",
+          "CUTOFF": "encadré en fin d’article"
         },
         "requirement": {
-          "REGISTRATION": "une inscription",
-          "MEMBERSHIP": "un abonnement",
-          "PAID_MEMBERSHIP": "un abonnement payant"
+          "REGISTRATION": "Inscription",
+          "MEMBERSHIP": "Adhésion",
+          "PAID_MEMBERSHIP": "Adhésion payante"
         },
-        "always": "Dès le premier article",
-        "untilRead_one": "Jusqu’à 1 article lu",
-        "untilRead_other": "Jusqu’à {{count}} articles lus",
-        "afterRead_one": "Après 1 article lu",
-        "afterRead_other": "Après {{count}} articles lus",
-        "afterReadRange": "Après {{from}}–{{to}} articles lus",
-        "afterReadOrMore_one": "Après 1 article lu ou plus",
-        "afterReadOrMore_other": "Après {{count}} articles lus ou plus",
-        "closable": "{{placement}}, refermable"
+        "closable": "{{placement}}, refermable",
+        "article": "Article {{number}}",
+        "articles": "Articles {{from}} à {{to}}",
+        "fromArticle": "Dès l’article {{number}}",
+        "hard_one": "{{requirement}} requise, aperçu de {{count}} bloc",
+        "hard_other": "{{requirement}} requise, aperçu de {{count}} blocs"
       },
       "form": {
         "goal": "Objectif",
