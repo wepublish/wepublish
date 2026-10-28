@@ -502,11 +502,10 @@ as the alternative.
   repeats is gone. A route that composes its own loader still has to return
   `shell` itself — `routes/mitmachen.tsx` is the one such case — and forgetting
   it silently ignores the CMS `hideHeader`/`hideFooter` flags.
+  `routes/content.spec.tsx` guards the shared factories against the same slip;
+  nothing can guard a route that has not been written yet.
 - **No `defaultErrorComponent`.** An unhandled render error shows the raw
   error rather than a styled page.
-- **Four routes have no `<title>`** — `/search`, `/login`, `/abo` and
-  `/author/:slug` render none at all. Measured against the built server; the
-  tag and article routes do have one.
 - **The image is unverified locally.** `dhi.io/node` needs auth; CI overrides
   those ARGs. Validate with public bases:
   `podman build --target website-tanstack --build-arg BUILD_IMAGE=node:22 …`
