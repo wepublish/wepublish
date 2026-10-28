@@ -39,6 +39,45 @@ describe('findUnresolvableRequires', () => {
     assert.deepEqual(findUnresolvableRequires(bundle, []), []);
   });
 
+  it('reports a static ESM import of an untraced package', () => {
+    const bundle = [
+      "import * as Sentry from '@sentry/tanstackstart-react';\nSentry.init({});",
+    ];
+
+    assert.deepEqual(findUnresolvableRequires(bundle, []), [
+      '@sentry/tanstackstart-react',
+    ]);
+  });
+
+  it('accepts a static ESM import nitro traced into the output', () => {
+    const bundle = ["import { init } from '@sentry/node';"];
+
+    assert.deepEqual(findUnresolvableRequires(bundle, ['@sentry/node']), []);
+  });
+
+  it('reports a re-export from an untraced package', () => {
+    const bundle = ["export { wrapFetchWithSentry } from '@sentry/tanstack';"];
+
+    assert.deepEqual(findUnresolvableRequires(bundle, []), ['@sentry/tanstack']);
+  });
+
+  it('ignores a static import of a relative module or a builtin', () => {
+    const bundle = [
+      "import './polyfill.js';\nimport { AsyncLocalStorage } from 'node:async_hooks';",
+    ];
+
+    assert.deepEqual(findUnresolvableRequires(bundle, []), []);
+  });
+
+  it('ignores the word import inside a doc comment', () => {
+    const bundle = [
+      " * Loaded through `node --import` before the server bundle.",
+      " * which `import('@wepublish/thing')` used to do.",
+    ];
+
+    assert.deepEqual(findUnresolvableRequires(bundle, []), []);
+  });
+
   it('reports each missing package once and sorted', () => {
     const bundle = [
       '__require("react"); __require("react");',

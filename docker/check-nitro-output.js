@@ -4,6 +4,21 @@ const { builtinModules } = require('module');
 
 const SPECIFIER = /(?:__require|\brequire|\bimport)\("([^"]+)"\)/g;
 
+// Static ESM, which `SPECIFIER` cannot see: it only matches call syntax. The
+// `--import` preload (`instrument.server.ts`) is built by a second Vite pass
+// that keeps `@sentry/*` external, so every specifier it needs is a plain
+// `import ... from '...'` — and an untraced one takes the whole container down
+// at startup with ERR_MODULE_NOT_FOUND, before the health probe can answer.
+//
+// Anchored to a statement start (`m`, so a line start counts) because a doc
+// comment's continuation line begins with `*`. That is what keeps prose about
+// imports out of the results, the same way `SPECIFIER`'s double quotes do.
+const STATIC_IMPORT =
+  /(?:^|[;}])\s*(?:import|export)\b[^;'"`]*?\bfrom\s*['"]([^'"]+)['"]/gm;
+const BARE_IMPORT = /(?:^|[;}])\s*import\s*['"]([^'"]+)['"]/gm;
+
+const PATTERNS = [SPECIFIER, STATIC_IMPORT, BARE_IMPORT];
+
 function packageName(specifier) {
   const parts = specifier.split('/');
 
@@ -22,25 +37,29 @@ function findUnresolvableRequires(bundleSources, availablePackages) {
   const available = new Set(availablePackages);
   const missing = new Set();
 
-  for (const source of bundleSources) {
-    for (const [, specifier] of source.matchAll(SPECIFIER)) {
-      if (
-        specifier.startsWith('.') ||
-        specifier.startsWith('/') ||
-        specifier.includes('${')
-      ) {
-        continue;
-      }
+  const specifiers = bundleSources.flatMap(source =>
+    PATTERNS.flatMap(pattern =>
+      [...source.matchAll(pattern)].map(([, specifier]) => specifier)
+    )
+  );
 
-      if (isBuiltin(specifier)) {
-        continue;
-      }
+  for (const specifier of specifiers) {
+    if (
+      specifier.startsWith('.') ||
+      specifier.startsWith('/') ||
+      specifier.includes('${')
+    ) {
+      continue;
+    }
 
-      const name = packageName(specifier);
+    if (isBuiltin(specifier)) {
+      continue;
+    }
 
-      if (!available.has(name)) {
-        missing.add(name);
-      }
+    const name = packageName(specifier);
+
+    if (!available.has(name)) {
+      missing.add(name);
     }
   }
 
@@ -89,7 +108,7 @@ function main([outputDir]) {
 
   if (missing.length) {
     console.error(
-      `${serverDir} calls require() at runtime for packages that are neither bundled nor traced into it: ${missing.join(', ')}`
+      `${serverDir} resolves packages at runtime that are neither bundled nor traced into it: ${missing.join(', ')}`
     );
     console.error(
       'Add them to `ssr.noExternal` so they are bundled, or to the nitro `traceDeps` so they ship beside the bundle — see .claude/docs/tanstack-start-migration.md'

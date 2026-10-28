@@ -306,6 +306,12 @@ export default defineConfig(({ mode }) => {
           traceDeps: [
             'i18n-iso-countries*',
             '@redis/client*',
+            // Traced even though the SSR bundle inlines it (see `ssr.external`
+            // above): `instrument.server.mjs` is a *second*, separate build
+            // that keeps every `@sentry/*` external, so without a copy beside
+            // the bundle `node --import` dies with ERR_MODULE_NOT_FOUND before
+            // the server ever listens.
+            '@sentry/tanstackstart-react*',
             '@sentry/node*',
             '@sentry/profiling-node*',
             '@sentry/server-runtime-injection*',
