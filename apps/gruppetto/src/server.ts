@@ -14,12 +14,12 @@
 import handler, { createServerEntry } from '@tanstack/react-start/server-entry';
 import { withEmotionExtraction } from '@wepublish/utils/website/tanstack/server';
 import { withPageCache } from '@wepublish/utils/website/tanstack/page-cache';
-import {
-  captureServerError,
-  registerSentry,
-} from '@wepublish/utils/website/tanstack/sentry';
+import { captureServerError } from '@wepublish/utils/website/tanstack/sentry';
 
-await registerSentry();
+// `Sentry.init` deliberately does NOT happen here. It runs in
+// `src/instrument.server.ts`, which `node --import` loads before this module,
+// because an init that happens after the bundle is evaluated cannot attach
+// auto-instrumentation to anything it already imported.
 
 // Extraction runs inside the cache, so a stored page already has the
 // styles in its `<head>` and a hit never re-extracts.

@@ -237,7 +237,18 @@ export default defineConfig(({ mode }) => {
       // a bare `require()` in `shared-store.js`. External, so nitro traces it
       // into `.output/server/node_modules`; bundling it would leave that
       // require unresolvable at runtime.
-      external: ['i18n-iso-countries', '@redis/client'],
+      // `@sentry/node` is external so the `--import` preload
+      // (`instrument.server.ts`, which runs `Sentry.init` before this bundle
+      // is even loaded) and the bundle resolve the *same* module instance
+      // from `.output/server/node_modules`. Two copies would each build their
+      // own client and the one the app captures through would not be the one
+      // the preload configured.
+      external: [
+        'i18n-iso-countries',
+        '@redis/client',
+        '@sentry/node',
+        '@sentry/profiling-node',
+      ],
     },
 
     plugins: [
@@ -285,6 +296,8 @@ export default defineConfig(({ mode }) => {
           traceDeps: [
             'i18n-iso-countries*',
             '@redis/client*',
+            '@sentry/node*',
+            '@sentry/profiling-node*',
             '@sentry/server-runtime-injection*',
           ],
         },

@@ -15,7 +15,7 @@
         "{projectRoot}/src/routeTree.gen.ts"
       ],
       "options": {
-        "command": "NODE_OPTIONS=--max-old-space-size=8192 vite build",
+        "command": "NODE_OPTIONS=--max-old-space-size=8192 vite build && NODE_OPTIONS=--max-old-space-size=8192 vite build --config vite.instrument.config.mts",
         "cwd": "{projectRoot}"
       }
     },
@@ -32,7 +32,7 @@
       "continuous": true,
       "dependsOn": ["build"],
       "options": {
-        "command": "node ../../dist/apps/gruppetto/.output/server/index.mjs",
+        "command": "node --import ../../dist/apps/gruppetto/.output/server/instrument.server.mjs ../../dist/apps/gruppetto/.output/server/index.mjs",
         "cwd": "{projectRoot}"
       }
     },
