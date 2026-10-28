@@ -247,7 +247,7 @@
     "@nestjs/core": "catalog:",
     "@nestjs/graphql": "catalog:",
     "@nestjs/passport": "catalog:",
-    "@nestjs/platform-express": "catalog:",
+    "@nestjs/platform-node": "catalog:",
     "@nestjs/schedule": "catalog:",
     "@nestjs/storage": "^0.0.3",
     "@nestjs/terminus": "catalog:",

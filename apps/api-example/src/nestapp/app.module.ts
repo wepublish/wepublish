@@ -1,4 +1,4 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
@@ -100,6 +100,7 @@ import {
   ProviderRegistryService,
 } from '@wepublish/provider-registry/api';
 import { reconcileProviderRegistry } from './reconcile-provider-registry';
+import { NodeApolloDriver } from './node-apollo.driver';
 import { API_SHARED_NAMESPACES } from './shared-namespaces';
 
 @Global()
@@ -107,7 +108,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
   imports: [
     SentryModule.forRoot(),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: NodeApolloDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
