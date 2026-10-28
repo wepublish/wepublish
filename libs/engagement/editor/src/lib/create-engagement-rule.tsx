@@ -116,11 +116,19 @@ const CopyRuleForm = ({ id }: { id: string }) => {
   return <CreateRuleForm values={copyEngagementRule(data.engagementRule, t)} />;
 };
 
+/** `?preset=growNewsletter` skips the cards, e.g. from the command palette. */
+const presetFrom = (value: string | null) =>
+  value && Object.prototype.hasOwnProperty.call(ENGAGEMENT_PRESETS, value) ?
+    (value as keyof typeof ENGAGEMENT_PRESETS)
+  : undefined;
+
 function CreateEngagementRule() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const copyOf = searchParams.get('copyOf');
-  const [preset, setPreset] = useState<keyof typeof ENGAGEMENT_PRESETS>();
+  const [preset, setPreset] = useState(() =>
+    presetFrom(searchParams.get('preset'))
+  );
 
   if (copyOf) {
     return <CopyRuleForm id={copyOf} />;

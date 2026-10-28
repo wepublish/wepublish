@@ -4160,7 +4160,11 @@
         "peer": "Peer erstellen",
         "userRole": "Benutzerrolle erstellen",
         "token": "Token generieren",
-        "apiToken": "API-Schlüssel generieren"
+        "apiToken": "API-Schlüssel generieren",
+        "newsletterPrompt": "Newsletter ausbauen (neue Engagement-Regel)",
+        "membershipPrompt": "Mitgliedschaften fördern (neue Engagement-Regel)",
+        "announcement": "Ankündigung anzeigen (neue Engagement-Regel)",
+        "restrictPremium": "Premium-Inhalte einschränken (neue Paywall)"
       },
       "trigger": "Suchen oder springen…",
       "keys": {

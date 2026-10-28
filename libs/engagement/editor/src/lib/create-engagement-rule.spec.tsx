@@ -147,6 +147,21 @@ describe('CreateEngagementRule', () => {
     ).toBeInTheDocument();
   });
 
+  it('opens a preset straight away when the link names one', () => {
+    renderCreate('/audience-engagement/create?preset=displayAnnouncement');
+
+    expect(screen.queryByText('engagement.preset.growNewsletter')).toBeNull();
+    expect(screen.getByLabelText('engagement.form.name')).toBeInTheDocument();
+  });
+
+  it('ignores a preset it does not know', () => {
+    renderCreate('/audience-engagement/create?preset=toString');
+
+    expect(
+      screen.getByText('engagement.preset.growNewsletter')
+    ).toBeInTheDocument();
+  });
+
   it('opens a copy of a rule without saving it', async () => {
     renderCreate('/audience-engagement/create?copyOf=rule-1');
 
@@ -190,8 +205,11 @@ describe('CreateEngagementRule', () => {
   it('warns about competing rules in the summary', async () => {
     fillAnnouncement();
 
-    expect(await screen.findByTestId('rule-review')).toHaveTextContent(
-      'engagement.conflict.competes'
+    // The other rules arrive on their own time.
+    await waitFor(() =>
+      expect(screen.getByTestId('rule-review')).toHaveTextContent(
+        'engagement.conflict.competes'
+      )
     );
   });
 
