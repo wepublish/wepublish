@@ -54,7 +54,13 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator();
+initWePublishTranslator({
+  // Neue Wege's Payrexx takes cards and TWINT
+  paymentMethodLabels: {
+    payrexx: 'Karte oder TWINT',
+    'payrexx-subscription': 'Karte oder TWINT',
+  },
+});
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
