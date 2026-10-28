@@ -28,6 +28,8 @@ const LOGIN_STATUS: Record<EngagementAudience, LoginStatus> = {
   MEMBERS: LoginStatus.SUBSCRIBED,
   PAYING_MEMBERS: LoginStatus.SUBSCRIBED,
   PAYWALL_BYPASSED: LoginStatus.PAYWALL_BYPASSED,
+  // Older websites can not tell plans apart.
+  MEMBER_PLANS: LoginStatus.SUBSCRIBED,
 };
 
 const ROLE: Record<EngagementActionRole, BannerActionRole> = {
