@@ -4599,7 +4599,19 @@
         "high": "Haute",
         "highest": "Très haute"
       },
-      "copyName": "{{name}} (copie)"
+      "copyName": "{{name}} (copie)",
+      "review": {
+        "title": "Avant d’enregistrer : voici ce qui va se passer",
+        "goesLive": "Active : les lecteur·rice·s la voient dès que tu enregistres.",
+        "inactive": "Inactive : enregistrée, mais personne ne la voit tant que tu ne l’actives pas.",
+        "who": "Qui",
+        "where": "Où",
+        "nowhere": "Nulle part pour l’instant : choisis des articles ou des pages",
+        "steps": "Ce que voient les lecteur·rice·s, étape par étape",
+        "untitled": "Sans titre",
+        "back": "Retour à l’édition",
+        "confirm": "Créer la règle"
+      }
     }
   }
 }

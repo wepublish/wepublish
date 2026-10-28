@@ -47,7 +47,7 @@ import {
   priorityLevel,
   toEngagementRuleInput,
 } from './engagement-rule-values';
-import { summarizeRule } from './summarize-rule';
+import { summarizeRule, summarizeWhere } from './summarize-rule';
 
 export const ENGAGEMENT_PATH = '/audience-engagement';
 
@@ -85,16 +85,6 @@ function EngagementRuleList() {
         },
       },
     });
-
-  const where = (rule: FullEngagementRuleFragment) =>
-    [
-      rule.showOnArticles && t('engagement.list.articles'),
-      rule.showOnPageIds.length > 0 &&
-        t('engagement.list.pages', { count: rule.showOnPageIds.length }),
-      rule.includePeeredArticles && t('engagement.list.peered'),
-    ]
-      .filter(Boolean)
-      .join(', ');
 
   return (
     <>
@@ -171,7 +161,7 @@ function EngagementRuleList() {
             {
               id: 'where',
               label: t('engagement.list.where'),
-              render: where,
+              render: rule => summarizeWhere(rule, t),
             },
             {
               id: 'summary',

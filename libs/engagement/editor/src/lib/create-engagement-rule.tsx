@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { EngagementPresetCards } from './engagement-preset-cards';
 import { EngagementRuleForm } from './engagement-rule-form';
+import { EngagementRuleReview } from './engagement-rule-review';
 import { ENGAGEMENT_PATH } from './engagement-rule-list';
 import {
   EngagementRuleValues,
@@ -36,16 +37,19 @@ const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [shouldClose, setShouldClose] = useState(false);
+  const [review, setReview] = useState<EngagementRuleValues>();
   const form = useForm<EngagementRuleValues>({
     resolver: zodResolver(createEngagementRuleSchema(t)),
     defaultValues: values,
   });
   const [createRule, { loading }] = useMutation(CreateEngagementRuleDocument, {
-    onError: error =>
+    onError: error => {
+      setReview(undefined);
       enqueueSnackbar(humanizeError(error), {
         variant: 'error',
         autoHideDuration: 8000,
-      }),
+      });
+    },
     onCompleted: data =>
       navigate(
         shouldClose ? ENGAGEMENT_PATH : (
@@ -56,11 +60,7 @@ const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit(rule =>
-          createRule({ variables: { input: toEngagementRuleInput(rule) } })
-        )}
-      >
+      <form onSubmit={form.handleSubmit(setReview)}>
         <SingleViewTitle
           loading={loading}
           title={t('engagement.create.title')}
@@ -73,6 +73,16 @@ const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
 
         <EngagementRuleForm />
       </form>
+
+      <EngagementRuleReview
+        rule={review}
+        saving={loading}
+        onBack={() => setReview(undefined)}
+        onConfirm={() =>
+          review &&
+          createRule({ variables: { input: toEngagementRuleInput(review) } })
+        }
+      />
     </FormProvider>
   );
 };

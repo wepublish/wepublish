@@ -75,3 +75,21 @@ export function summarizeRule(
 ): string {
   return summarizeStages(rule, t).join(' · ');
 }
+
+/** Where a rule shows, e.g. "Articles, 2 pages, peered articles". */
+export function summarizeWhere(
+  rule: Pick<
+    EngagementRuleValues,
+    'showOnArticles' | 'showOnPageIds' | 'includePeeredArticles'
+  >,
+  t: TFunction
+): string {
+  return [
+    rule.showOnArticles && t('engagement.list.articles'),
+    rule.showOnPageIds.length > 0 &&
+      t('engagement.list.pages', { count: rule.showOnPageIds.length }),
+    rule.includePeeredArticles && t('engagement.list.peered'),
+  ]
+    .filter(Boolean)
+    .join(', ');
+}

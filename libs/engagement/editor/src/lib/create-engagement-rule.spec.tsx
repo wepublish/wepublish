@@ -1,8 +1,9 @@
 import { MockedProvider } from '@apollo/client/testing/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import '@testing-library/jest-dom/vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
+  CreateEngagementRuleDocument,
   EngagementActionRole,
   EngagementActionType,
   EngagementAudience,
@@ -83,6 +84,12 @@ const session = {
   },
 } as never;
 
+let creates: unknown[] = [];
+
+beforeEach(() => {
+  creates = [];
+});
+
 const renderCreate = (path: string) =>
   render(
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
@@ -95,6 +102,19 @@ const renderCreate = (path: string) =>
                 variables: { id: 'rule-1' },
               },
               result: { data: { engagementRule: rule } },
+            },
+            {
+              request: {
+                query: CreateEngagementRuleDocument,
+                variables: (variables: unknown) => {
+                  creates.push(variables);
+
+                  return true;
+                },
+              },
+              result: {
+                data: { createEngagementRule: { ...rule, id: 'rule-2' } },
+              },
             },
           ]}
         >
@@ -129,5 +149,56 @@ describe('CreateEngagementRule', () => {
     expect(screen.queryByText('engagement.preset.growNewsletter')).toBeNull();
     expect(screen.getByLabelText('engagement.form.active')).not.toBeChecked();
     expect(screen.getByDisplayValue('Help us')).toBeInTheDocument();
+  });
+
+  const fillAnnouncement = () => {
+    renderCreate('/audience-engagement/create');
+
+    fireEvent.click(screen.getByText('engagement.preset.displayAnnouncement'));
+    fireEvent.change(screen.getByLabelText('engagement.form.name'), {
+      target: { value: 'Crowdfunding' },
+    });
+    fireEvent.change(screen.getByLabelText('engagement.form.title'), {
+      target: { value: 'Help us' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+  };
+
+  it('sums up a new rule visually before it is saved', async () => {
+    fillAnnouncement();
+
+    const review = await screen.findByTestId('rule-review');
+
+    expect(review).toHaveTextContent('Crowdfunding');
+    expect(review).toHaveTextContent('engagement.audience.ALL');
+    expect(review).toHaveTextContent('engagement.summary.announcement');
+    // A preview of the prompt, next to a sketch of where it shows.
+    expect(review).toHaveTextContent('Help us');
+    expect(
+      review.querySelector('[data-testid="preset-illustration"]')
+    ).toHaveAttribute('data-placement', 'BANNER');
+    expect(creates).toHaveLength(0);
+  });
+
+  it('saves once the summary was confirmed', async () => {
+    fillAnnouncement();
+
+    fireEvent.click(await screen.findByText('engagement.review.confirm'));
+
+    await waitFor(() => expect(creates).toHaveLength(1));
+    expect(creates[0]).toMatchObject({
+      input: { name: 'Crowdfunding', stages: [{ title: 'Help us' }] },
+    });
+  });
+
+  it('goes back to editing without saving', async () => {
+    fillAnnouncement();
+
+    fireEvent.click(await screen.findByText('engagement.review.back'));
+
+    await waitFor(() =>
+      expect(screen.queryByTestId('rule-review')).not.toBeInTheDocument()
+    );
+    expect(creates).toHaveLength(0);
   });
 });

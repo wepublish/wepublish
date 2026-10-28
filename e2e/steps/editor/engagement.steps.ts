@@ -71,6 +71,12 @@ When(
     await page.getByLabel('Title', { exact: true }).fill(rule.title);
 
     await page.getByRole('button', { name: 'Save & Close' }).click();
+
+    // A new rule is summed up before it is saved.
+    const review = page.getByRole('dialog');
+    await expect(review.getByText(rule.title)).toBeVisible();
+    await review.getByRole('button', { name: 'Create rule' }).click();
+
     await expect(page).toHaveURL(new RegExp(`${ENGAGEMENT_PATH}$`));
     await expect(page.getByRole('link', { name: rule.name })).toBeVisible();
 

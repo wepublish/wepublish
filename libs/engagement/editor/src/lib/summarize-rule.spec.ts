@@ -5,7 +5,11 @@ import {
 } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { hardStage, stageDefaults } from './engagement-rule-values';
-import { summarizeRule, summarizeStages } from './summarize-rule';
+import {
+  summarizeRule,
+  summarizeStages,
+  summarizeWhere,
+} from './summarize-rule';
 
 const en: Record<string, string> = {
   'engagement.summary.announcement': 'From the first visit: {{placement}}',
@@ -132,5 +136,37 @@ describe('summarizeRule', () => {
         t
       )
     ).toEqual(['From the first article: pop-up over the article']);
+  });
+});
+
+describe('summarizeWhere', () => {
+  const keys = ((key: string, params: Record<string, unknown> = {}) =>
+    params['count'] != null ?
+      `${key}:${params['count']}`
+    : key) as unknown as TFunction;
+
+  it('lists articles, pages and peered articles', () => {
+    expect(
+      summarizeWhere(
+        {
+          showOnArticles: true,
+          showOnPageIds: ['page-1', 'page-2'],
+          includePeeredArticles: true,
+        },
+        keys
+      )
+    ).toBe(
+      'engagement.list.articles, engagement.list.pages:2, engagement.list.peered'
+    );
+    expect(
+      summarizeWhere(
+        {
+          showOnArticles: false,
+          showOnPageIds: ['page-1'],
+          includePeeredArticles: false,
+        },
+        keys
+      )
+    ).toBe('engagement.list.pages:1');
   });
 });

@@ -4599,7 +4599,19 @@
         "high": "High",
         "highest": "Highest"
       },
-      "copyName": "{{name}} (copy)"
+      "copyName": "{{name}} (copy)",
+      "review": {
+        "title": "Before you save: here is what will happen",
+        "goesLive": "Active: readers see it as soon as you save.",
+        "inactive": "Inactive: saved, but nobody sees it until you switch it on.",
+        "who": "Who",
+        "where": "Where",
+        "nowhere": "Nowhere yet: choose articles or pages",
+        "steps": "What readers see, step by step",
+        "untitled": "No title",
+        "back": "Back to editing",
+        "confirm": "Create rule"
+      }
     }
   }
 }
