@@ -266,6 +266,7 @@
     "@sentry/react": "^11.8.0",
     "@stripe/react-stripe-js": "^3.11.0",
     "@stripe/stripe-js": "^5.10.0",
+    "@tanstack/react-hotkeys": "^0.17.0",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.14.21",
     "@tiptap/core": "catalog:",
