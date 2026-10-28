@@ -4462,7 +4462,9 @@
         "PAYING_MEMBERS": "Paying members",
         "PAYING_MEMBERSInfo": "Readers with an active membership that costs something.",
         "PAYWALL_BYPASSED": "Readers with a paywall bypass link",
-        "PAYWALL_BYPASSEDInfo": "Readers who opened a bypass link of an active paywall."
+        "PAYWALL_BYPASSEDInfo": "Readers who opened a bypass link of an active paywall.",
+        "MEMBER_PLANS": "Readers with a specific subscription",
+        "MEMBER_PLANSInfo": "Readers with an active subscription to one of the plans you choose, e.g. to offer an upgrade."
       },
       "placement": {
         "BANNER": "Banner at the top of the page",
@@ -4577,7 +4579,8 @@
         "actionLabelDefault": "Default of the website",
         "actionUrl": "Url",
         "actionRole": "Role",
-        "addAction": "Add action"
+        "addAction": "Add action",
+        "audienceMemberPlans": "Member plans"
       },
       "validation": {
         "required": "Required",

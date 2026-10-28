@@ -26,6 +26,7 @@ const rule = (values: Partial<EngagementRuleValues>): EngagementRuleValues => ({
   active: false,
   priority: 0,
   audience: EngagementAudience.All,
+  audienceMemberPlanIds: [],
   showOnArticles: true,
   showOnPageIds: [],
   includePeeredArticles: false,

@@ -37,6 +37,7 @@ const rule: FullEngagementRuleFragment = {
   priority: 2,
   version: 3,
   audience: EngagementAudience.Anonymous,
+  audienceMemberPlanIds: [],
   showOnArticles: true,
   showOnPageIds: ['page-1'],
   includePeeredArticles: false,
@@ -93,6 +94,7 @@ describe('engagement rule values', () => {
       active: true,
       priority: 2,
       audience: EngagementAudience.Anonymous,
+      audienceMemberPlanIds: [],
       showOnArticles: true,
       showOnPageIds: ['page-1'],
       includePeeredArticles: false,
@@ -129,6 +131,44 @@ describe('engagement rule values', () => {
         },
       ],
     });
+  });
+
+  it('needs member plans for the member plans audience', () => {
+    expect(
+      engagementRuleProblems(
+        metered({ audience: EngagementAudience.MemberPlans })
+      )
+    ).toContainEqual({ path: 'audienceMemberPlanIds', code: 'required' });
+    expect(
+      engagementRuleProblems(
+        metered({
+          audience: EngagementAudience.MemberPlans,
+          audienceMemberPlanIds: ['plan-1'],
+        })
+      )
+    ).not.toContainEqual(
+      expect.objectContaining({ path: 'audienceMemberPlanIds' })
+    );
+  });
+
+  it('only sends member plans for the member plans audience', () => {
+    const values = engagementRuleToValues({
+      ...rule,
+      audience: EngagementAudience.MemberPlans,
+      audienceMemberPlanIds: ['plan-1'],
+    });
+
+    expect(values.audienceMemberPlanIds).toEqual(['plan-1']);
+    expect(toEngagementRuleInput(values).audienceMemberPlanIds).toEqual([
+      'plan-1',
+    ]);
+    // Switching the audience keeps the selection in the form, not on save.
+    expect(
+      toEngagementRuleInput({
+        ...values,
+        audience: EngagementAudience.Members,
+      }).audienceMemberPlanIds
+    ).toEqual([]);
   });
 
   it('leaves out newsletter params without a name', () => {

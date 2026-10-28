@@ -249,6 +249,20 @@ describe('EngagementRuleForm', () => {
     ).toHaveAttribute('aria-pressed', 'true');
   });
 
+  it('asks for the member plans when the rule is for specific plans', () => {
+    renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
+
+    expect(
+      screen.queryByLabelText('engagement.form.audienceMemberPlans')
+    ).toBeNull();
+
+    fireEvent.click(screen.getByDisplayValue('MEMBER_PLANS'));
+
+    expect(
+      screen.getByLabelText('engagement.form.audienceMemberPlans')
+    ).toBeInTheDocument();
+  });
+
   it('saves a consistent rule', async () => {
     const onSubmit = vi.fn();
     const preset = ENGAGEMENT_PRESETS.promoteMemberships();
