@@ -4464,10 +4464,10 @@
         "PAYWALL_BYPASSEDInfo": "Les lecteur·rice·s qui ont ouvert un lien de déblocage d’une paywall active."
       },
       "placement": {
-        "BANNER": "Bannière",
-        "MODAL": "Modale",
-        "INLINE": "Dans l’article",
-        "CUTOFF": "Après l’article"
+        "BANNER": "Bannière en haut de la page",
+        "MODAL": "Pop-up sur l’article",
+        "INLINE": "Encadré dans le texte de l’article",
+        "CUTOFF": "Encadré à la fin de l’article"
       },
       "requirement": {
         "REGISTRATION": "Inscription",
@@ -4492,24 +4492,29 @@
         "LIMITED": "Les liens de newsletter ouvrent un nombre limité d’articles"
       },
       "summary": {
-        "announcement": "{{placement}} dès la première visite",
-        "article": "Article {{from}}",
-        "articles": "Articles {{from}}–{{to}}",
-        "from": "dès {{from}}",
-        "dismissible": "{{placement}}, refermable",
-        "hard_one": "exige {{requirement}}, {{count}} bloc d’aperçu",
-        "hard_other": "exige {{requirement}}, {{count}} blocs d’aperçu",
+        "announcement": "Dès la première visite : {{placement}}",
+        "hard_one": "l’article s’arrête après {{count}} bloc, continuer exige {{requirement}}",
+        "hard_other": "l’article s’arrête après {{count}} blocs, continuer exige {{requirement}}",
         "placement": {
-          "BANNER": "bannière",
-          "MODAL": "modale",
-          "INLINE": "message dans l’article",
-          "CUTOFF": "message après l’article"
+          "BANNER": "bannière en haut de la page",
+          "MODAL": "pop-up sur l’article",
+          "INLINE": "encadré dans le texte de l’article",
+          "CUTOFF": "encadré à la fin de l’article"
         },
         "requirement": {
           "REGISTRATION": "une inscription",
           "MEMBERSHIP": "un abonnement",
           "PAID_MEMBERSHIP": "un abonnement payant"
-        }
+        },
+        "always": "Dès le premier article",
+        "untilRead_one": "Jusqu’à 1 article lu",
+        "untilRead_other": "Jusqu’à {{count}} articles lus",
+        "afterRead_one": "Après 1 article lu",
+        "afterRead_other": "Après {{count}} articles lus",
+        "afterReadRange": "Après {{from}}–{{to}} articles lus",
+        "afterReadOrMore_one": "Après 1 article lu ou plus",
+        "afterReadOrMore_other": "Après {{count}} articles lus ou plus",
+        "closable": "{{placement}}, refermable"
       },
       "form": {
         "goal": "Objectif",
@@ -4539,10 +4544,10 @@
         "stage": "Étape {{number}}",
         "removeStage": "Supprimer l’étape",
         "addStage": "Ajouter une étape",
-        "afterArticles": "Afficher après … articles",
-        "afterArticlesInfo": "Le nombre d’autres articles lus dans la période. 0 l’affiche dès le premier article.",
+        "afterArticles": "Afficher dès que la personne a lu … articles",
+        "afterArticlesInfo": "Compte les autres articles lus par cette personne dans la période, chaque article une fois. 0 l’affiche dès le tout premier article.",
         "placement": "Placement",
-        "placementInfo": "Une bannière en haut, une modale sur l’article, un message dans ou après l’article. Seule la dernière étape peut être après l’article.",
+        "placementInfo": "Où les lecteur·rice·s le voient. Seule la dernière étape peut être à la fin de l’article.",
         "hard": "Restreindre l’article",
         "hardInfo": "Qui ne remplit pas la condition ne reçoit que les blocs d’aperçu. Vérifié sur le serveur.",
         "requirement": "Condition",

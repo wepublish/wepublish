@@ -6,8 +6,36 @@ import {
 } from './engagement-rule-values';
 
 /**
- * The stages one by one, e.g. ["Articles 3–4: dismissible modal", "from 5:
- * requires registration, 3 preview blocks"].
+ * When a stage shows, by the articles a reader already read in the window:
+ * that is what `afterArticles` counts.
+ */
+const when = (
+  afterArticles: number,
+  nextAfterArticles: number | undefined,
+  t: TFunction
+) => {
+  if (nextAfterArticles == null) {
+    return afterArticles === 0 ?
+        t('engagement.summary.always')
+      : t('engagement.summary.afterReadOrMore', { count: afterArticles });
+  }
+
+  if (afterArticles === 0) {
+    return t('engagement.summary.untilRead', { count: nextAfterArticles });
+  }
+
+  return nextAfterArticles - 1 === afterArticles ?
+      t('engagement.summary.afterRead', { count: afterArticles })
+    : t('engagement.summary.afterReadRange', {
+        from: afterArticles,
+        to: nextAfterArticles - 1,
+      });
+};
+
+/**
+ * The stages one by one, e.g. ["After 2–3 read articles: pop-up over the
+ * article, can be closed", "After 4 or more read articles: article stops
+ * after 3 blocks, reading on requires registration"].
  */
 export function summarizeStages(
   rule: Pick<EngagementRuleValues, 'goal' | 'stages'>,
@@ -26,12 +54,6 @@ export function summarizeStages(
   }
 
   return rule.stages.map((stage, index) => {
-    const from = stage.afterArticles + 1;
-    const next = rule.stages[index + 1];
-    const range =
-      !next ? t('engagement.summary.from', { from })
-      : next.afterArticles === from ? t('engagement.summary.article', { from })
-      : t('engagement.summary.articles', { from, to: next.afterArticles });
     const placement = t(`engagement.summary.placement.${stage.placement}`);
     const what =
       isHard(stage) ?
@@ -39,17 +61,14 @@ export function summarizeStages(
           requirement: t(`engagement.summary.requirement.${stage.requirement}`),
           count: stage.previewBlocks ?? 0,
         })
-      : stage.dismissible ? t('engagement.summary.dismissible', { placement })
+      : stage.dismissible ? t('engagement.summary.closable', { placement })
       : placement;
 
-    return `${range}: ${what}`;
+    return `${when(stage.afterArticles, rule.stages[index + 1]?.afterArticles, t)}: ${what}`;
   });
 }
 
-/**
- * The rule in one line, e.g. "Articles 3–4: dismissible modal · from 5:
- * requires registration, 3 preview blocks".
- */
+/** The stages in one line, separated by " · ". */
 export function summarizeRule(
   rule: Pick<EngagementRuleValues, 'goal' | 'stages'>,
   t: TFunction
