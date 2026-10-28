@@ -33,7 +33,7 @@ import {
 } from '@wepublish/permissions';
 import { slugify } from '@wepublish/utils';
 import { useMemo, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
   MdAutoFixHigh,
   MdComment,
@@ -75,6 +75,7 @@ import { AuthorCheckPicker } from './authorCheckPicker';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 import { SeoBlockContext } from './seoBlockContext';
+import { SeoGuideHelpText } from './seoDocumentChecklist';
 import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
 import { SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';
@@ -438,18 +439,10 @@ function ArticleMetadataPanel({
               error={seoTitle.length > seoTitleMax}
               helperText={
                 <>
-                  {
-                    <Trans i18nKey={'articleEditor.panels.seoTitleHelpBlock'}>
-                      text{' '}
-                      <a
-                        href="/settings/seo"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        more text
-                      </a>
-                    </Trans>
-                  }
+                  <SeoGuideHelpText
+                    i18nKey="articleEditor.panels.seoTitleHelpBlock"
+                    guide="seo-titles"
+                  />
                   {' · '}
                   {seoTitle.length}/{seoTitleMax}
                 </>
@@ -470,7 +463,10 @@ function ArticleMetadataPanel({
               error={seoDescription.length > seoDescriptionMax}
               helperText={
                 <>
-                  {t('articleEditor.panels.seoDescriptionHelpBlock')}
+                  <SeoGuideHelpText
+                    i18nKey="articleEditor.panels.seoDescriptionHelpBlock"
+                    guide="meta-descriptions"
+                  />
                   {' · '}
                   {seoDescription.length}/{seoDescriptionMax}
                 </>

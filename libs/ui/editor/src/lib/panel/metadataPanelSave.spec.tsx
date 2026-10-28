@@ -5,14 +5,19 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { ArticleMetadataPanel } from './articleMetadataPanel';
 import { PageMetadataPanel } from './pageMetadataPanel';
-import { JSX } from 'react';
+import { JSX, ReactNode } from 'react';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
     i18n: { language: 'en' },
   }),
-  Trans: ({ i18nKey }: { i18nKey: string }) => i18nKey,
+  Trans: ({ i18nKey, children }: { i18nKey: string; children?: ReactNode }) => (
+    <>
+      {i18nKey}
+      {children}
+    </>
+  ),
 }));
 
 vi.mock('./seoTab', () => ({ SeoTab: () => null }));
@@ -99,6 +104,17 @@ describe.each([
 
     expect(onSave).toHaveBeenCalledTimes(1);
     expect(onClose).not.toHaveBeenCalled();
+  });
+
+  test('links the SEO title and description to their checklist guides', () => {
+    renderPanel(panel(vi.fn(), vi.fn()));
+
+    const hrefs = screen
+      .getAllByRole('link')
+      .map(link => link.getAttribute('href'));
+
+    expect(hrefs).toContain('/settings/seo#seo-titles');
+    expect(hrefs).toContain('/settings/seo#meta-descriptions');
   });
 
   test('shows the social previews in the social media tab', () => {

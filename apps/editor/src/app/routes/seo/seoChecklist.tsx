@@ -32,7 +32,7 @@ import {
   createCheckedPermissionComponent,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCheck,
@@ -44,7 +44,7 @@ import {
   MdRefresh,
   MdWarning,
 } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 type SeoChecklistData = SeoChecklistQuery['seoChecklist'];
 type SeoUrlKey = keyof Pick<
@@ -310,7 +310,13 @@ const StatusIcon = ({ status }: { status?: SeoCheckStatus }) => {
   }
 };
 
-const WritingGuide = ({ entry }: { entry: SeoChecklistEntry }) => {
+const WritingGuide = ({
+  entry,
+  expanded,
+}: {
+  entry: SeoChecklistEntry;
+  expanded?: boolean;
+}) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const key = `seoChecklist.items.${entry.id}.guide`;
@@ -319,6 +325,7 @@ const WritingGuide = ({ entry }: { entry: SeoChecklistEntry }) => {
     <Accordion
       disableGutters
       variant="outlined"
+      defaultExpanded={expanded}
     >
       <AccordionSummary expandIcon={<MdExpandMore />}>
         <Typography variant="body2">{t('seoChecklist.guide.show')}</Typography>
@@ -377,11 +384,15 @@ const ChecklistItem = ({
   onToggle(completed: boolean): void;
 }) => {
   const { t, i18n } = useTranslation();
+  const { hash } = useLocation();
   const check = entry.check && data?.checks.find(c => c.id === entry.check);
   const key = `seoChecklist.items.${entry.id}`;
 
   return (
-    <ItemRow data-testid={`seo-item-${entry.id}`}>
+    <ItemRow
+      id={entry.id}
+      data-testid={`seo-item-${entry.id}`}
+    >
       <ItemMarker>
         {(entry.check || entry.info) && !data ?
           <Skeleton
@@ -419,7 +430,12 @@ const ChecklistItem = ({
           {t(`${key}.description`)}
         </Typography>
 
-        {entry.guide && <WritingGuide entry={entry} />}
+        {entry.guide && (
+          <WritingGuide
+            entry={entry}
+            expanded={hash === `#${entry.id}`}
+          />
+        )}
 
         {check?.detail && (
           <Typography variant="body2">
@@ -584,6 +600,16 @@ function SeoChecklist() {
   );
 
   const checklist = data?.seoChecklist;
+  const hasChecklist = !!checklist;
+
+  // the metadata panels link to the writing guides, e.g. #seo-titles
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (hash && hasChecklist) {
+      document.getElementById(hash.slice(1))?.scrollIntoView();
+    }
+  }, [hash, hasChecklist]);
+
   const initialLoading = !checklist && loading;
   const progress =
     checklist &&

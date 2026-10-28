@@ -2,7 +2,7 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Card, CardContent, CardHeader, Typography } from '@mui/material';
 import { FullImageFragment, SeoCheckStatus } from '@wepublish/editor/api';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { MdCheck, MdInfoOutline, MdWarning } from 'react-icons/md';
 
 import { SeoContentStats } from './seoBlockContext';
@@ -15,6 +15,32 @@ const SLUG_LIMIT = 100;
 interface SeoDocumentCheckValues {
   count?: number;
   limit?: number;
+}
+
+// item ids of the writing guides in the SEO checklist (/settings/seo)
+export type SeoGuide = 'seo-titles' | 'meta-descriptions';
+
+export const getSeoGuideUrl = (guide: SeoGuide) => `/settings/seo#${guide}`;
+
+export function SeoGuideHelpText({
+  i18nKey,
+  guide,
+}: {
+  i18nKey: string;
+  guide: SeoGuide;
+}) {
+  return (
+    <Trans i18nKey={i18nKey}>
+      text{' '}
+      <a
+        href={getSeoGuideUrl(guide)}
+        target="_blank"
+        rel="noreferrer"
+      >
+        more text
+      </a>
+    </Trans>
+  );
 }
 
 export type SeoDocumentCheck =

@@ -59,6 +59,7 @@ import { generateID, isFunctionalUpdate } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 import { SeoBlockContext } from './seoBlockContext';
+import { SeoGuideHelpText } from './seoDocumentChecklist';
 import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
 import { SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';
@@ -345,7 +346,12 @@ function PageMetadataPanel({
               onChange={event =>
                 onChange?.({ ...value, seoTitle: event.target.value })
               }
-              helperText={t('pageEditor.panels.seoTitleHelpBlock')}
+              helperText={
+                <SeoGuideHelpText
+                  i18nKey="pageEditor.panels.seoTitleHelpBlock"
+                  guide="seo-titles"
+                />
+              }
               fullWidth
             />
 
@@ -358,7 +364,12 @@ function PageMetadataPanel({
               onChange={event =>
                 onChange?.({ ...value, seoDescription: event.target.value })
               }
-              helperText={t('pageEditor.panels.seoDescriptionHelpBlock')}
+              helperText={
+                <SeoGuideHelpText
+                  i18nKey="pageEditor.panels.seoDescriptionHelpBlock"
+                  guide="meta-descriptions"
+                />
+              }
               fullWidth
             />
 

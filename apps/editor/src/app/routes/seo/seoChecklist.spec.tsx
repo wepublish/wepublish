@@ -73,10 +73,10 @@ const completedItems = [
   },
 ];
 
-const renderChecklist = () =>
+const renderChecklist = (path = '/settings/seo') =>
   render(
     <ThemeProvider theme={createTheme()}>
-      <MemoryRouter>
+      <MemoryRouter initialEntries={[path]}>
         <SeoChecklist />
       </MemoryRouter>
     </ThemeProvider>
@@ -268,6 +268,29 @@ describe('SeoChecklist', () => {
         name: 'seoChecklist.guide.show',
       })
     ).toBe(null);
+  });
+
+  test('opens and scrolls to the writing guide linked from the editor', () => {
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+
+    renderChecklist('/settings/seo#meta-descriptions');
+
+    const item = screen.getByTestId('seo-item-meta-descriptions');
+
+    expect(item.id).toBe('meta-descriptions');
+    expect(
+      within(item)
+        .getByRole('button', { name: 'seoChecklist.guide.show' })
+        .getAttribute('aria-expanded')
+    ).toBe('true');
+    expect(
+      within(screen.getByTestId('seo-item-seo-titles'))
+        .getByRole('button', { name: 'seoChecklist.guide.show' })
+        .getAttribute('aria-expanded')
+    ).toBe('false');
+    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    expect(scrollIntoView.mock.contexts[0]).toBe(item);
   });
 });
 
