@@ -40,7 +40,7 @@ import {
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete } from 'react-icons/md';
+import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   engagementRuleToValues,
@@ -200,16 +200,29 @@ function EngagementRuleList() {
               align: 'center',
               fixed: true,
               render: rule => (
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButton
-                    aria-label={t('delete')}
-                    color="error"
-                    size="small"
-                    onClick={() => setRuleToDelete(rule)}
-                  >
-                    <MdDelete />
-                  </IconButton>
-                </IconButtonTooltip>
+                <>
+                  <IconButtonTooltip caption={t('engagement.list.copy')}>
+                    <IconButton
+                      component={RouterLink}
+                      to={`${ENGAGEMENT_PATH}/create?copyOf=${rule.id}`}
+                      aria-label={t('engagement.list.copy')}
+                      size="small"
+                    >
+                      <MdContentCopy />
+                    </IconButton>
+                  </IconButtonTooltip>
+
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      aria-label={t('delete')}
+                      color="error"
+                      size="small"
+                      onClick={() => setRuleToDelete(rule)}
+                    >
+                      <MdDelete />
+                    </IconButton>
+                  </IconButtonTooltip>
+                </>
               ),
             },
           ]}

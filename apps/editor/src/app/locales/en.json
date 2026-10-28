@@ -4409,7 +4409,8 @@
         "managePaywalls": "Manage paywalls",
         "enforced": "Enforced",
         "inactive": "Inactive",
-        "anyMemberPlan": "Any member plan"
+        "anyMemberPlan": "Any member plan",
+        "copy": "Copy"
       },
       "delete": {
         "title": "Delete engagement rule?",
@@ -4597,7 +4598,8 @@
         "normal": "Normal",
         "high": "High",
         "highest": "Highest"
-      }
+      },
+      "copyName": "{{name}} (copy)"
     }
   }
 }

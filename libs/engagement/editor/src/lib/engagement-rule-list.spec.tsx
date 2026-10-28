@@ -167,6 +167,15 @@ describe('EngagementRuleList', () => {
     expect(screen.getByText('engagement.priority.normal')).toBeInTheDocument();
   });
 
+  it('offers to copy a rule into a new, unsaved one', async () => {
+    renderList();
+
+    await settled();
+    expect(
+      screen.getByRole('link', { name: 'engagement.list.copy' })
+    ).toHaveAttribute('href', '/audience-engagement/create?copyOf=rule-1');
+  });
+
   it('switches a rule off, keeping everything else', async () => {
     renderList();
 

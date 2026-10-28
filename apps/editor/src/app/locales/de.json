@@ -4409,7 +4409,8 @@
         "managePaywalls": "Paywalls verwalten",
         "enforced": "Durchgesetzt",
         "inactive": "Inaktiv",
-        "anyMemberPlan": "Jedes Abo"
+        "anyMemberPlan": "Jedes Abo",
+        "copy": "Kopieren"
       },
       "delete": {
         "title": "Engagement-Regel löschen?",
@@ -4597,7 +4598,8 @@
         "normal": "Normal",
         "high": "Hoch",
         "highest": "Sehr hoch"
-      }
+      },
+      "copyName": "{{name}} (Kopie)"
     }
   }
 }

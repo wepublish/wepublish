@@ -1,6 +1,9 @@
-import { useMutation } from '@apollo/client/react';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateEngagementRuleDocument } from '@wepublish/editor/api';
+import {
+  CreateEngagementRuleDocument,
+  EngagementRuleDocument,
+} from '@wepublish/editor/api';
 import {
   CanCreateEngagementRule,
   CanUpdateEngagementRule,
@@ -17,12 +20,13 @@ import {
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { EngagementPresetCards } from './engagement-preset-cards';
 import { EngagementRuleForm } from './engagement-rule-form';
 import { ENGAGEMENT_PATH } from './engagement-rule-list';
 import {
   EngagementRuleValues,
+  copyEngagementRule,
   createEngagementRuleSchema,
   toEngagementRuleInput,
 } from './engagement-rule-values';
@@ -73,9 +77,29 @@ const CreateRuleForm = ({ values }: { values: EngagementRuleValues }) => {
   );
 };
 
+const CopyRuleForm = ({ id }: { id: string }) => {
+  const { t } = useTranslation();
+  const { data } = useQuery(EngagementRuleDocument, {
+    variables: { id },
+    fetchPolicy: 'network-only',
+  });
+
+  if (!data) {
+    return null;
+  }
+
+  return <CreateRuleForm values={copyEngagementRule(data.engagementRule, t)} />;
+};
+
 function CreateEngagementRule() {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const copyOf = searchParams.get('copyOf');
   const [preset, setPreset] = useState<keyof typeof ENGAGEMENT_PRESETS>();
+
+  if (copyOf) {
+    return <CopyRuleForm id={copyOf} />;
+  }
 
   if (preset) {
     return <CreateRuleForm values={ENGAGEMENT_PRESETS[preset]()} />;

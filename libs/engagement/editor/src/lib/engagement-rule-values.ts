@@ -357,3 +357,16 @@ export const engagementRuleToValues = ({
     })),
   })),
 });
+
+/**
+ * A new, unsaved rule with the values of another one. It starts inactive, so
+ * it does not show next to the original before it was adjusted.
+ */
+export const copyEngagementRule = (
+  rule: FullEngagementRuleFragment,
+  t: TFunction
+): EngagementRuleValues => ({
+  ...engagementRuleToValues(rule),
+  name: t('engagement.copyName', { name: rule.name }),
+  active: false,
+});
