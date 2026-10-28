@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
-import QRCodeStyling from 'qr-code-styling';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import markUrl from './wepublish-mark.png';
+
+const markSrc: string =
+  typeof markUrl === 'string' ? markUrl : (markUrl as { src: string }).src;
 
 const Wrapper = styled('div')`
   display: flex;
@@ -17,31 +19,38 @@ const Wrapper = styled('div')`
 export function TotpQrCode({ uri }: { uri: string }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const qr = useMemo(
-    () =>
-      new QRCodeStyling({
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    let cancelled = false;
+
+    void import('qr-code-styling').then(({ default: QRCodeStyling }) => {
+      if (cancelled || !ref.current) return;
+
+      const qr = new QRCodeStyling({
         width: 240,
         height: 240,
         type: 'svg',
         data: uri,
         margin: 10,
-        image: markUrl.src,
+        image: markSrc,
         qrOptions: { errorCorrectionLevel: 'H' },
         dotsOptions: { type: 'extra-rounded', color: '#000000' },
         cornersSquareOptions: { type: 'extra-rounded', color: '#000000' },
         cornersDotOptions: { type: 'dot', color: '#000000' },
         backgroundOptions: { color: '#ffffff' },
         imageOptions: { margin: 0, imageSize: 0.4, hideBackgroundDots: true },
-      }),
-    [uri]
-  );
+      });
 
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    node.innerHTML = '';
-    qr.append(node);
-  }, [qr]);
+      ref.current.innerHTML = '';
+      qr.append(ref.current);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [uri]);
 
   return (
     <Wrapper>

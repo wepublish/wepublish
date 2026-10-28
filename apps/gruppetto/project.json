@@ -1,54 +1,48 @@
 {
   "name": "gruppetto",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/gruppetto",
+  "sourceRoot": "apps/gruppetto/src",
   "projectType": "application",
   "tags": [],
   "targets": {
-    "typecheck": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "tsc --noEmit -p apps/gruppetto/tsconfig.json"
-      }
-    },
     "build": {
-      "executor": "@nx/next:build",
+      "executor": "nx:run-commands",
+      "cache": true,
       "dependsOn": [],
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "inputs": ["production", "^production"],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/{projectName}",
+        "{projectRoot}/src/routeTree.gen.ts"
+      ],
       "options": {
-        "outputPath": "dist/apps/gruppetto"
-      },
-      "configurations": {
-        "development": {
-          "outputPath": "apps/gruppetto"
-        },
-        "production": {}
+        "command": "NODE_OPTIONS=--max-old-space-size=8192 vite build && NODE_OPTIONS=--max-old-space-size=8192 vite build --config vite.instrument.config.mts",
+        "cwd": "{projectRoot}"
       }
     },
     "serve": {
-      "executor": "@nx/next:server",
-      "defaultConfiguration": "development",
+      "executor": "nx:run-commands",
+      "continuous": true,
       "options": {
-        "buildTarget": "gruppetto:build",
-        "port": 4202,
-        "dev": true
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "gruppetto:build:development",
-          "dev": true
-        },
-        "production": {
-          "buildTarget": "gruppetto:build:production",
-          "dev": false
-        }
+        "command": "vite dev --port 4202",
+        "cwd": "{projectRoot}"
       }
     },
-    "export": {
-      "executor": "@nx/next:export",
+    "preview": {
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "dependsOn": ["build"],
       "options": {
-        "buildTarget": "gruppetto:build:production"
+        "command": "node --import ../../dist/apps/gruppetto/.output/server/instrument.server.mjs ../../dist/apps/gruppetto/.output/server/index.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["production", "^production"],
+      "options": {
+        "command": "tsc -p tsconfig.json --noEmit",
+        "cwd": "{projectRoot}"
       }
     },
     "test": {

@@ -1132,6 +1132,71 @@ gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
 
 ---
 
+### ⚠️ An inline script in a route's `head()` re-runs on every navigation
+
+`head()` can return `scripts`, and `RouterManagedScriptTag` takes `children`,
+so an inline snippet type-checks and server-renders correctly. It is still the
+wrong home for anything that must run once.
+
+`HeadContent` is a `"use client"` component that renders those tags from
+reactive router state, on the server *and* the client. Measured on the built
+server: a counter in the root route's `head().scripts` read 1 after hydration,
+then 2 and 3 after two client-side navigations, with the `<script>` tags
+piling up in `<head>`. Being identical across routes does not help — the tag
+is re-rendered per match.
+
+So analytics initialisers (`gtag('config')`, the GTM IIFE, the Plausible
+shim) stay in the `Analytics` component. They are not idempotent, and moving
+them would double-fire them on every navigation.
+
+For a one-shot bootstrap — `window.PUBLIC_ENV`, `window.WEBSITE_SETTINGS` —
+use `ScriptOnce` from `@tanstack/react-router`. It renders server-side only,
+carries the CSP nonce from `router.options.ssr.nonce`, and appends
+`document.currentScript.remove()` so nothing survives in the hydrated DOM.
+
+---
+
+### ⚠️ A TanStack build that works locally can still ship a broken `.output`
+
+[`apps/gruppetto/vite.config.mts`](../../apps/gruppetto/vite.config.mts) aliases
+two specifiers to their ESM equivalents in `resolve.alias`. They look
+redundant — nothing in the app imports React from a CJS module, and the build
+is green without them.
+
+Vite externalises `react` for the SSR environment. Rolldown then inlines any
+CJS dependency it cannot externalise safely and emits a literal
+`__require("react")` inside it, which nitro's second pass cannot rewrite. The
+call resolves against `node_modules` on disk, and `.output` ships without one,
+so every SSR render dies with `Cannot find module 'react'` — while `nx build`
+exits 0. The offenders here are `react-transition-group/cjs` (reached through
+MUI) and `use-sync-external-store/shim` (reached through `swr` and
+`@tanstack/react-store`). Upstream closed this as working-as-intended:
+[rolldown#10643](https://github.com/rolldown/rolldown/issues/10643).
+
+Whether it happens depends on whether the package is reachable from the **root**
+`node_modules`. A workspace carrying hoisted leftovers from the npm era
+resolves them to their ESM builds and never reproduces it; CI's clean
+`pnpm install --frozen-lockfile` does. To reproduce a CI build locally,
+`git archive` the branch into a temp directory and install there — do not trust
+your own `node_modules`.
+
+Do **not** "fix" it by adding `react` to the nitro `traceDeps`. The require then
+resolves to a second React copy, hooks fail against the bundled copy's
+dispatcher, and SSR degrades to an empty shell while still returning 200.
+`ssr.noExternal: ['react']` removes the require too, but hands react-dom/server
+its own copy and every render dies on a null hook dispatcher — hence the
+aliases.
+
+[`docker/check-nitro-output.js`](../../docker/check-nitro-output.js) runs in the
+`build-website-tanstack` stage and fails the image build on any specifier —
+`require()`, dynamic `import()` or static `import ... from` — that is neither
+bundled, traced, nor a node builtin. The same bug hid
+`@sentry/server-runtime-injection`, which `@sentry/node` imports and nitro did
+not trace, and later `@sentry/tanstackstart-react`, which the `--import`
+preload resolves at runtime from a build of its own.
+
+---
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell _why_ the obvious
