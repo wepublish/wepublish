@@ -119,8 +119,12 @@ const changePaymentMethodButton = () =>
   button('subscription.changePaymentMethod');
 const queryChangePaymentMethodButton = () =>
   queryButton('subscription.changePaymentMethod');
-const submitChangeButton = () => button('subscription.changePaymentMethodSubmit');
-const paymentMethodRadio = (paymentMethod: { name: string; description: string }) =>
+const submitChangeButton = () =>
+  button('subscription.changePaymentMethodSubmit');
+const paymentMethodRadio = (paymentMethod: {
+  name: string;
+  description: string;
+}) =>
   screen.queryByRole('radio', {
     name: `${paymentMethod.description} ${paymentMethod.name}`,
   });
@@ -677,7 +681,8 @@ describe('SubscriptionListItem', () => {
       canRenewPaymentMethod: true,
     };
     const renewButton = () => button('subscription.renewPaymentMethod');
-    const queryRenewButton = () => queryButton('subscription.renewPaymentMethod');
+    const queryRenewButton = () =>
+      queryButton('subscription.renewPaymentMethod');
 
     it('is not offered for a payment method that cannot be renewed', () => {
       renderItem({ ...changeable, ...changeActions() });

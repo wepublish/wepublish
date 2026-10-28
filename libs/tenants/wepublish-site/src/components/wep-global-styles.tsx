@@ -1,24 +1,26 @@
 import { css, GlobalStyles, Theme } from '@mui/material';
 
 const globalCSS = (theme: Theme, isHomePage: boolean) => css`
-  ${isHomePage &&
-  css`
-    body {
-      background: linear-gradient(
-        to bottom,
-        ${theme.palette.primary.main} 30vh,
-        ${theme.palette.common.white} 55vh
-      );
-
-      ${theme.breakpoints.up('md')} {
+  ${
+    isHomePage &&
+    css`
+      body {
         background: linear-gradient(
           to bottom,
           ${theme.palette.primary.main} 30vh,
-          ${theme.palette.common.white} 110vh
+          ${theme.palette.common.white} 55vh
         );
+
+        ${theme.breakpoints.up('md')} {
+          background: linear-gradient(
+            to bottom,
+            ${theme.palette.primary.main} 30vh,
+            ${theme.palette.common.white} 110vh
+          );
+        }
       }
-    }
-  `}
+    `
+  }
   :root {
     --navbar-bg-color-hero-off-screen: transparent;
     --breakpoint-width: 100%;

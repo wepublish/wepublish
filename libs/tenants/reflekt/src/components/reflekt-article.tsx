@@ -53,10 +53,12 @@ const fullWidthMainSpacer = (theme: Theme) => css`
 `;
 
 const articleDate = (isFlexBlockHero: boolean) => (theme: Theme) => css`
-  ${isFlexBlockHero &&
-  css`
-    margin-top: ${theme.spacing(-6)};
-  `}
+  ${
+    isFlexBlockHero &&
+    css`
+      margin-top: ${theme.spacing(-6)};
+    `
+  }
 `;
 
 const ArticleDateWrapper = styled('span')`
@@ -177,13 +179,15 @@ export const ArticleWrapper = styled(ContentWrapper)<{
         display: none;
       }
 
-      ${fadeout &&
-      css`
-        // fade out the third block (usually richtext) to indicate the user that a paywall is hitting.
-        > :nth-child(${hideContentAfter}) {
-          ${fadeoutStyles}
-        }
-      `}
+      ${
+        fadeout &&
+        css`
+          // fade out the third block (usually richtext) to indicate the user that a paywall is hitting.
+          > :nth-child(${hideContentAfter}) {
+            ${fadeoutStyles}
+          }
+        `
+      }
     `}
 
   ${({ theme }) => theme.breakpoints.up('md')} {

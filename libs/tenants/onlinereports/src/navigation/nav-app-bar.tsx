@@ -306,10 +306,12 @@ const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) => css`
   align-items: center;
   justify-items: center;
   justify-self: center;
-  ${isMenuOpen &&
-  css`
-    z-index: -1;
-  `}
+  ${
+    isMenuOpen &&
+    css`
+      z-index: -1;
+    `
+  }
 `;
 
 export const NavbarLogoWrapper = styled('div')`

@@ -27,9 +27,8 @@ let applyTranslationOverrides: typeof I18nFormatter.applyTranslationOverrides;
 
 beforeAll(async () => {
   vi.resetModules();
-  ({ initWePublishTranslator, applyTranslationOverrides } = await import(
-    './i18n-formatter'
-  ));
+  ({ initWePublishTranslator, applyTranslationOverrides } =
+    await import('./i18n-formatter'));
 });
 
 describe('initWePublishTranslator', () => {

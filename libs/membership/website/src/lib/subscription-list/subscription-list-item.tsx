@@ -108,8 +108,7 @@ export const useChangeablePaymentMethods = ({
       .flatMap(({ paymentMethods }) => paymentMethods)
       .filter(
         ({ id, slug }) =>
-          id !== paymentMethod?.id &&
-          slug !== 'payrexx-subscription'
+          id !== paymentMethod?.id && slug !== 'payrexx-subscription'
       );
 
     return options.filter(
@@ -590,7 +589,6 @@ export function SubscriptionListItem({
         cancelText={t('user.cancel')}
         title={t('subscription.changePaymentMethodTitle')}
       >
-
         <PaymentMethodPicker
           paymentMethods={changeablePaymentMethods}
           value={chosenPaymentMethodId}
@@ -616,7 +614,6 @@ export function SubscriptionListItem({
         cancelText={t('user.cancel')}
         title={t('subscription.renewPaymentMethodTitle')}
       >
-
         <Paragraph>
           {t('subscription.renewPaymentMethodConfirmation', {
             paymentMethod: paymentMethod?.name,
