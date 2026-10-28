@@ -27,12 +27,23 @@ export function getRouter() {
     // blank. Preloading on render is what stops the boundary suspending at
     // all, so the previous page stays up until the new one can render whole.
     defaultPreload: 'render',
-    // Next's client router kept the `getStaticProps` JSON it had already
-    // fetched. At 0 the hover preload is thrown away on click, so the loader
-    // runs twice per navigation and again on every back-navigation. These
-    // match the 60s ISR window the cache headers in `start.ts` use.
-    defaultPreloadStaleTime: 60_000,
-    defaultStaleTime: 60_000,
+    // Next's client router kept the `getStaticProps` JSON for the life of the
+    // document, and these match that rather than the 60s ISR window the
+    // `start.ts` headers use — the two answer different questions. The header
+    // decides how long a *new* document may be served from cache; this decides
+    // whether a tab that is already open refetches on its way to a page it has
+    // visited before.
+    //
+    // A finite window here reopens the flash. Past it the loader re-runs, and
+    // `libs/article/website/.../article.tsx` renders an empty wrapper for the
+    // one state `loading && !article` — no skeleton, no previous content — so
+    // the article body is blank for the length of the round trip.
+    //
+    // The cost is that a tab left open for hours keeps showing what it loaded;
+    // a reload, or any entry that is not a client-side navigation, gets the
+    // current copy.
+    defaultPreloadStaleTime: Infinity,
+    defaultStaleTime: Infinity,
     scrollRestoration: true,
     // Reached only for URLs no file route matches. Anything the API answers
     // with a 404 is handled by the route itself so the response can carry both
