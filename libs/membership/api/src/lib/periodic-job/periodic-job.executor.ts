@@ -24,6 +24,7 @@ export class PeriodicJobExecutor {
     SCHEDULE,
     // Allow only chron that run once a day example: [number] [number] [number] [star] [star] [star]
     {
+      name: 'periodicJob',
       disabled: !/[1-5]?[0-9] [1-5]?[0-9] [1-2]?[0-9] \* \* \*/.test(SCHEDULE),
     }
   )
