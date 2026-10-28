@@ -37,6 +37,7 @@
     "cross-fetch": "catalog:",
     "dataloader": "catalog:",
     "date-fns": "catalog:",
+    "date-fns-tz": "catalog:",
     "form-data": "catalog:",
     "graphql": "catalog:",
     "graphql-request": "catalog:",

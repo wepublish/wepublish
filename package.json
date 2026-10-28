@@ -312,7 +312,7 @@
     "dangerously-set-html-content": "^1.1.1",
     "dataloader": "catalog:",
     "date-fns": "catalog:",
-    "date-fns-tz": "^3.2.0",
+    "date-fns-tz": "catalog:",
     "emoji-mart": "^3.0.1",
     "exifr": "^7.1.3",
     "express": "catalog:",
