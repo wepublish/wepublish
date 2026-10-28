@@ -1842,6 +1842,11 @@ type Invoice implements HasOptionalSubscription {
   manuallySetAsPaidByUserId: String
   modifiedAt: DateTime!
   paidAt: DateTime
+
+  """
+  The payments made or attempted for this invoice, oldest first. Invoices imported from another system have none.
+  """
+  payments: [Payment!]!
   scheduledDeactivationAt: DateTime!
   subscription: PublicSubscription
   subscriptionID: String
@@ -2824,9 +2829,24 @@ type Mutation {
   ): PublicSubscription!
 
   """
+  Cancels a pending payment method change; the subscription keeps its current payment method.
+  """
+  cancelSubscriptionPaymentMethodChange(id: String!): SubscriptionPaymentMethodChange!
+
+  """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
   cancelUserSubscription(id: String!): PublicSubscription
+
+  """
+  Moves one of the authenticated user's subscriptions to another payment method. With an open invoice, the invoice is paid with the new payment method; otherwise the new payment method is authorized without a charge. The subscription keeps its current payment method until then.
+  """
+  changeSubscriptionPaymentMethod(failureURL: String, paymentMethodId: String!, subscriptionId: String!, successURL: String): StartedSubscriptionPaymentMethodChange!
+
+  """
+  Asks the payment provider whether the reader finished paying or authorizing, for when they return before the provider reported it.
+  """
+  checkSubscriptionPaymentMethodChange(id: String!): SubscriptionPaymentMethodChange!
 
   """
   Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings.
@@ -3362,6 +3382,11 @@ type Mutation {
   sendWebsiteLogin(email: String!): String!
 
   """
+  Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated.
+  """
+  setPaymentProviderCustomers(customers: [PaymentProviderCustomerInput!]!, paymentProviderId: String!): Int!
+
+  """
   Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development.
   """
   syncMailLogStates(limit: Int): MailLogSyncModel!
@@ -3414,7 +3439,7 @@ type Mutation {
   updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates the current logged in user."""
-  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+  updateCurrentUser(address: UserAddressInput, birthday: DateTime, firstName: String, flair: String, name: String): SensitiveDataUser!
 
   """Updates an existing discountCode."""
   updateDiscountCode(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): DiscountCode!
@@ -4034,8 +4059,10 @@ type PaginatedUserRoles {
 }
 
 type Payment implements HasPaymentMethod {
+  createdAt: DateTime!
   id: String!
   intentSecret: String!
+  modifiedAt: DateTime!
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   state: PaymentState!
@@ -4062,6 +4089,23 @@ type PaymentMethod implements HasImageLc {
   paymentProvider: PaymentProvider
   paymentProviderID: String!
   slug: Slug!
+}
+
+"""
+How the reader proves the new payment method: by paying the open invoice with it, by authorizing it without a charge, or not at all.
+"""
+enum PaymentMethodChangeKind {
+  authorization
+  immediate
+  invoicePayment
+}
+
+enum PaymentMethodChangeState {
+  canceled
+  completed
+  expired
+  failed
+  pending
 }
 
 enum PaymentMethodMollie {
@@ -4113,6 +4157,12 @@ type PaymentProvider {
 type PaymentProviderCustomer {
   customerID: String!
   paymentProviderID: String!
+}
+
+input PaymentProviderCustomerInput {
+  """The provider's id for the user, e.g. the bexio contact id."""
+  customerId: String!
+  userId: String!
 }
 
 enum PaymentProviderType {
@@ -4531,6 +4581,11 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   canExtend: Boolean!
 
   """
+  Whether the reader can authorize the subscription's payment method anew, e.g. with a new card: only for payment methods renewals are charged with automatically.
+  """
+  canRenewPaymentMethod: Boolean!
+
+  """
   Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet.
   """
   canRevertUpgrade: Boolean!
@@ -4551,6 +4606,11 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   paymentPeriodicity: PaymentPeriodicity!
+
+  """
+  A payment method change that is waiting for the reader to pay or authorize. Until it completes, the subscription keeps its payment method.
+  """
+  pendingPaymentMethodChange: SubscriptionPaymentMethodChange
   periods: [SubscriptionPeriod!]!
   properties: [Property!]!
   startsAt: DateTime!
@@ -5484,11 +5544,13 @@ enum SettingName {
   MAKE_REVENUE_API_PUBLIC
   NEW_ARTICLE_PAYWALL
   NEW_ARTICLE_PEERING
+  PAYMENT_METHOD_CHANGE_EXPIRY_DAYS
   PEERING_TIMEOUT_MS
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
   SESSION_TTL_DAYS
   SHOW_PENDING_WHEN_NOT_PUBLISHED
+  SUBSCRIPTION_EXTEND_WINDOW_DAYS
   SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE
 }
 
@@ -5616,6 +5678,16 @@ input SoundCloudTrackBlockInput {
   blockStyleName: String
   disabled: Boolean
   trackID: String
+}
+
+type StartedSubscriptionPaymentMethodChange {
+  change: SubscriptionPaymentMethodChange!
+
+  """
+  Where the reader pays or authorizes: a redirect URL, or the client secret for Stripe.
+  """
+  intentSecret: String
+  paymentProviderID: String!
 }
 
 type Stats {
@@ -5836,6 +5908,27 @@ type SubscriptionInterval {
   event: SubscriptionEvent!
   id: String!
   mailTemplate: MailTemplateRef
+}
+
+"""
+A reader's request to move a subscription to another payment method. The subscription keeps its current payment method until the change is completed.
+"""
+type SubscriptionPaymentMethodChange implements HasPaymentMethod {
+  """
+  Amount in cents held to authorize the payment method. It is released again and never charged.
+  """
+  amount: Int!
+  completedAt: DateTime
+  createdAt: DateTime!
+  currency: Currency!
+  expiresAt: DateTime!
+  fromPaymentMethodID: String!
+  id: String!
+  kind: PaymentMethodChangeKind!
+  paymentMethod: PaymentMethod!
+  paymentMethodID: String!
+  state: PaymentMethodChangeState!
+  subscriptionID: String!
 }
 
 type SubscriptionPeriod {

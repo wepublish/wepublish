@@ -86,12 +86,13 @@ const ValueInput = styled(TextField)`
 
 const KeyInput = styled(TextField)`
   width: 40%;
-  margin-right: 8px;
 `;
 
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 8px;
 `;
 
 const Stats = styled.div`
@@ -101,8 +102,6 @@ const Stats = styled.div`
 
 const PropertyFlag = styled('div')`
   flex-shrink: 0;
-  padding-top: 6px;
-  padding-left: 8px;
   white-space: nowrap;
 `;
 

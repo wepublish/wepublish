@@ -51,6 +51,7 @@ import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
 import { LoginImpersonate } from './loginImpersonate';
 import { LoginJwt } from './loginJwt';
+import { DocumentTitle } from './pageTitle/documentTitle';
 import { ResetPassword } from './resetPassword';
 import { ArticleTemplateEditView } from './routes/articleTemplate/articleTemplateEditView';
 import { ArticleTemplateList } from './routes/articleTemplate/articleTemplateList';
@@ -246,6 +247,7 @@ export function App() {
       <BrowserRouter>
         <RouteErrorBoundary>
           <EditorCommandPaletteSurface />
+          <DocumentTitle />
 
           <Routes>
             <Route

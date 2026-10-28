@@ -1,4 +1,4 @@
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { ArticlePublicationWatcher } from './article-publication.watcher';
 import { forwardRef, Module } from '@nestjs/common';
 import { ImageModule } from '@wepublish/image/api';
@@ -29,7 +29,7 @@ import { ArticleTemplateService } from './article-template/article-template.serv
 
 @Module({
   imports: [
-    GraphqlResponseCacheModule,
+    PublicContentInvalidatorModule,
     PrismaModule,
     ImageModule,
     AuthorModule,
