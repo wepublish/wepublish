@@ -92,6 +92,7 @@
     "@swc/core": "1.16.12",
     "@swc/helpers": "0.5.23",
     "@swc/jest": "0.2.39",
+    "@tanstack/eslint-plugin-router": "1.162.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^6.10.0",
     "@testing-library/react": "16.3.3",
