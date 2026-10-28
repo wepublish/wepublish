@@ -421,6 +421,26 @@ export class TestData {
       api.gql(`mutation { deleteSubscription(id: "${createSubscription.id}") { id } }`)
     );
 
+    // A new subscription is only active once its first invoice is paid: the
+    // API ignores `paidUntil` and waits for the payment.
+    const { invoices } = await api.gql<{
+      invoices: { nodes: { id: string }[] };
+    }>(
+      `query SubscriptionInvoices($subscriptionID: String) {
+        invoices(filter: { subscriptionID: $subscriptionID }) { nodes { id } }
+      }`,
+      { subscriptionID: createSubscription.id }
+    );
+
+    for (const { id } of invoices.nodes) {
+      await api.gql(
+        `mutation MarkInvoiceAsPaid($id: String!) {
+          markInvoiceAsPaid(id: $id, sendMail: false) { id }
+        }`,
+        { id }
+      );
+    }
+
     return createSubscription;
   }
 
@@ -534,6 +554,53 @@ export class TestData {
       id: createEngagementRule.id,
       name: runId,
       title,
+    } satisfies EngagementRule);
+  }
+
+  /**
+   * An announcement banner for everyone on one page only, as staff would set
+   * it up, at the default priority.
+   */
+  async createAnnouncement({ alias, page }: { alias: string; page: Page }) {
+    const api = await this.api();
+    const runId = this.runId();
+    const name = `${alias} ${runId}`;
+
+    const { createEngagementRule } = await api.gql<{
+      createEngagementRule: { id: string };
+    }>(
+      `mutation CreateEngagementRule($input: CreateEngagementRuleInput!) {
+        createEngagementRule(input: $input) { id }
+      }`,
+      {
+        input: {
+          name,
+          goal: 'ANNOUNCEMENT',
+          active: true,
+          audience: 'ALL',
+          showOnArticles: false,
+          showOnPageIds: [page.id],
+          stages: [
+            {
+              afterArticles: 0,
+              placement: 'BANNER',
+              enforcement: 'SOFT',
+              title: name,
+            },
+          ],
+        },
+      }
+    );
+
+    this.onCleanup(`engagement rule ${name}`, () =>
+      this.deleteEngagementRule(createEngagementRule.id)
+    );
+
+    return this.remember(alias, {
+      kind: 'engagementRule',
+      id: createEngagementRule.id,
+      name,
+      title: name,
     } satisfies EngagementRule);
   }
 

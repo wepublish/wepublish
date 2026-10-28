@@ -78,6 +78,17 @@ export async function createSession(
   return createSession;
 }
 
+/**
+ * The cookie the website keeps its session in (`AuthTokenStorageKey`), for
+ * `context.addCookies`.
+ */
+export const websiteSessionCookie = (session: Session, url: string) => ({
+  name: 'auth.token',
+  value: encodeURIComponent(JSON.stringify(session)),
+  url,
+  sameSite: 'Strict' as const,
+});
+
 /** Admin client: the API token if given, else a session for the admin user. */
 export async function createAdminClient(request: APIRequestContext) {
   if (env.apiToken) {

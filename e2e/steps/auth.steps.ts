@@ -1,13 +1,14 @@
 import { expect } from '@playwright/test';
-import { ApiClient, createSession } from '../support/api-client';
+import {
+  ApiClient,
+  createSession,
+  websiteSessionCookie,
+} from '../support/api-client';
 import { Given, Then, When } from './fixtures';
 
 // Shared website copy (libs/website/translations, de + fr), not tenant copy.
 const emailField = /^e-?mail$/i;
 const loginWithLink = /Mit Link einloggen|Se connecter avec un lien/i;
-
-/** Cookie the website keeps its session in (`AuthTokenStorageKey`). */
-const sessionCookie = 'auth.token';
 
 Given('a reader {string}', async ({ data }, alias: string) => {
   await data.ensureSystemMail('LOGIN_LINK', 'seed-login-link');
@@ -25,12 +26,7 @@ Given(
     );
 
     await context.addCookies([
-      {
-        name: sessionCookie,
-        value: encodeURIComponent(JSON.stringify(session)),
-        url: baseURL,
-        sameSite: 'Strict',
-      },
+      websiteSessionCookie(session, baseURL ?? ''),
     ]);
   }
 );
