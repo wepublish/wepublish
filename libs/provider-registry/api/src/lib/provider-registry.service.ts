@@ -6,7 +6,11 @@ import {
   ChallengeProvider,
   loadChallengeProvider,
 } from '@wepublish/challenge/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  NamespacedCache,
+  NamespaceResets,
+  NamespaceVersions,
+} from '@wepublish/kv-ttl-cache/api';
 import {
   BaseLetterProvider,
   BasePdfRenderer,
@@ -38,9 +42,7 @@ const PROVIDER_SETTINGS_NAMESPACES = [
 const RELOAD_CHECK_MS = 5000;
 
 @Injectable()
-export class ProviderRegistryService
-  implements ProviderSettingsChangedListener
-{
+export class ProviderRegistryService implements ProviderSettingsChangedListener {
   private readonly logger = new Logger(ProviderRegistryService.name);
 
   readonly paymentProviders: PaymentProvider[] = [];
@@ -79,7 +81,9 @@ export class ProviderRegistryService
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
+    private readonly resets: NamespaceResets,
+    private readonly versions: NamespaceVersions,
     private readonly httpClient: HttpService,
     @Optional()
     @Inject(PROVIDER_REGISTRY_BOOTSTRAP)
@@ -158,7 +162,7 @@ export class ProviderRegistryService
 
   private async loadProviders(): Promise<void> {
     const versions = await this.providerSettingsVersions();
-    const deps = { prisma: this.prisma, kv: this.kv };
+    const deps = { prisma: this.prisma, kv: this.kv, resets: this.resets };
 
     const [payment, trackingPixel, mail, challenge, letter, pdfRenderer] =
       await Promise.all([
@@ -223,7 +227,7 @@ export class ProviderRegistryService
 
   private async providerSettingsVersions(): Promise<string> {
     return JSON.stringify(
-      await this.kv.getNamespaceVersions(PROVIDER_SETTINGS_NAMESPACES)
+      await this.versions.currentMany(PROVIDER_SETTINGS_NAMESPACES)
     );
   }
 }

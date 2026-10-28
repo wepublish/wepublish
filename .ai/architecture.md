@@ -85,7 +85,7 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 
 ### Infrastructure Libraries
 
-`kv-ttl-cache`, `tracking-pixel`, `media-transform-guard`, `google-analytics`, `health`, `system-info`, `stats`, `session`, `settings`
+`dragonfly`, `kv-ttl-cache`, `website-revalidation`, `public-content-cache`, `tracking-pixel`, `media-transform-guard`, `google-analytics`, `health`, `system-info`, `stats`, `session`, `settings`
 
 ## Database
 
@@ -101,7 +101,7 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 - Each domain module defines its own models, resolvers, and services
 - **Dataloader pattern** used extensively to prevent N+1 queries (e.g., `ArticleDataloaderService`)
 - Generated schema: `schema-v2.graphql`
-- Frontend hooks generated via **GraphQL Code Generator** (`codegen.yml`)
+- Frontend typed documents generated via **GraphQL Code Generator** (`codegen.yml`)
 
 ## Data Flow
 

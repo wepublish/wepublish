@@ -1,4 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material';
+import { HotkeyManager } from '@tanstack/react-hotkeys';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -121,7 +122,18 @@ const renderInterleaved = () =>
     ),
   });
 
+const onPlatform = (platform: string) => {
+  vi.spyOn(navigator, 'platform', 'get').mockReturnValue(platform);
+  HotkeyManager.resetInstance();
+};
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  HotkeyManager.resetInstance();
+});
+
 beforeEach(() => {
+  onPlatform('MacIntel');
   articles.mockClear();
   createArticle.mockClear();
   tags.mockClear();
@@ -143,11 +155,19 @@ describe('CommandPalette', () => {
     await waitFor(() => expect(input()).toHaveFocus());
   });
 
-  it('opens on Ctrl+K as well, for everyone not on a Mac', () => {
+  it('opens on Ctrl+K for everyone not on a Mac', () => {
+    onPlatform('Win32');
     renderPalette();
     fireEvent.keyDown(document, { key: 'k', ctrlKey: true });
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('leaves Ctrl+K to the text field on a Mac', () => {
+    renderPalette();
+    fireEvent.keyDown(document, { key: 'k', ctrlKey: true });
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('yields the hotkey to a focused widget that already handled it', () => {
@@ -168,7 +188,7 @@ describe('CommandPalette', () => {
   it('keeps working on a layout where mod+K produces another character', () => {
     renderPalette();
     fireEvent.keyDown(document, {
-      key: 'ĸ',
+      key: 'л',
       code: 'KeyK',
       metaKey: true,
     });

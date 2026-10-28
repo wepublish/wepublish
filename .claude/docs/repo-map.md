@@ -16,7 +16,7 @@ The dominant shape. A domain (`article`, `comments`, `payment`, `membership`,
 | Layer | Stack | Contains |
 | --- | --- | --- |
 | `api` | NestJS + Prisma + Apollo Server | Resolvers, services, dataloaders, guards, GraphQL models |
-| `website` | React + Emotion + MUI | Public-facing components, driven by Storybook stories |
+| `website` | React + Emotion + MUI | Public-facing components, tested with specs |
 | `editor` | React + React Router + Apollo | Admin/CMS UI for that domain |
 
 Not every domain has all three. `libs/article` has `api` + `website`;
@@ -35,10 +35,11 @@ the schema and generated types flow downstream from it.
 | `libs/editor` | Editor shell + `editor/api` (generated editor GraphQL) |
 | `libs/ui` | Shared presentational primitives |
 | `libs/utils` | Shared helpers, split `utils/api` and `utils/website` |
-| `libs/testing` | Test helpers — see [testing.md](testing.md) |
+| `libs/testing` | API test helpers — see [testing.md](testing.md) |
+| `libs/mocks/website` | `@wepublish/mocks/website`: seeded fake API data, Apollo mocks and `renderWithProviders` for website specs. Hidden from Nx: [README](../../libs/mocks/website/README.md) |
 | `libs/richtext` | Slate-based richtext, with `api`/`editor`/`website` variants |
 | `libs/nest-modules`, `libs/permissions`, `libs/session`, `libs/authentication` | Backend plumbing, auth, permission guards |
-| `libs/storybook` | Storybook config and shared mocks |
+| `libs/tenants/<tenant>` | One per tenant site (`@wepublish/tenant/<tenant>`, project `tenant-<tenant>`): theme, fonts, builder overrides, block styles, translation overrides, exported as a `WebsiteTenantConfig`. See [libs/tenants/README.md](../../libs/tenants/README.md) |
 
 ## `apps/`
 
@@ -48,7 +49,7 @@ the schema and generated types flow downstream from it.
 | `editor` | The admin SPA (React Router v6) |
 | `media` | Media/image server |
 | `website-example` | Reference tenant site |
-| ~20 tenant sites | `bajour`, `tsri`, `hauptstadt`, `onlinereports`, `mannschaft`, `flimmer`, `cultur`, `zwoelf`, … — Next.js 16 (Pages Router) sites that theme and compose the website libs |
+| ~20 tenant sites | `bajour`, `tsri`, `hauptstadt`, `onlinereports`, `mannschaft`, `flimmer`, `cultur`, `zwoelf`, … — Next.js 16 (Pages Router) sites. Pages, `_app`, feeds and `public/` live here; the tenant's look lives in `libs/tenants/<tenant>` |
 
 **Adding a feature for one tenant?** Build it in the relevant `libs/<domain>/website`
 and let the tenant override it through the Website Builder. Copying components
@@ -69,7 +70,7 @@ Do not import from another project's internals; import from its entry point.
 | --- | --- |
 | New DB field / table | `libs/api/prisma/schema.prisma` → migration → `libs/<domain>/api` |
 | New GraphQL query/mutation | `libs/<domain>/api` resolver + model |
-| Change public site rendering | `libs/<domain>/website` (+ a Storybook story) |
+| Change public site rendering | `libs/<domain>/website` (+ a spec) |
 | Change admin UI | `libs/<domain>/editor` |
-| Tenant-specific look | `apps/<tenant>` theme / Builder override |
+| Tenant-specific look | `libs/tenants/<tenant>` theme / Builder override |
 | Payment/email/letter/analytics integration | `libs/payment`, `libs/mail`, `libs/letter` (Pingen, pdf renderers, letter layouts), `libs/google-analytics` — see [external-services.md](external-services.md) |

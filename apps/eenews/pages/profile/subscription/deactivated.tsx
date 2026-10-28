@@ -1,6 +1,5 @@
-import { DeactivatedSubscriptionsPage } from '@wepublish/utils/website';
-
-import { EenewsPageShell } from '../../../src/components/eenews-page-shell';
+import { EenewsPageShell } from '@wepublish/tenant/eenews';
+import { DeactivatedSubscriptionsPage } from '@wepublish/utils/website/next';
 
 const DeactPage = DeactivatedSubscriptionsPage as any;
 

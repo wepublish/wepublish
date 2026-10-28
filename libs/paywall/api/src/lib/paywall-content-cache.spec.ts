@@ -1,16 +1,20 @@
 import type { Mock } from 'vitest';
-import { Test } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
+  PUBLIC_CONTENT_SHARED_NAMESPACES,
   PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+  PublicContentInvalidatorModule,
+} from '@wepublish/public-content-cache/api';
 import { PaywallDataloaderService } from './paywall-dataloader.service';
 import { PaywallMemberPlansDataloader } from './paywall-member-plans.dataloader';
 import { PaywallService } from './paywall.service';
 
 describe('paywall cache', () => {
-  let kv: KvTtlCacheService;
+  let module: TestingModule;
+  let kv: NamespacedCache;
+  let invalidator: PublicContentCacheInvalidator;
   const prisma = {
     paywall: {
       findMany: vi.fn(),
@@ -22,10 +26,16 @@ describe('paywall cache', () => {
   };
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+    module = await Test.createTestingModule({
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: PUBLIC_CONTENT_SHARED_NAMESPACES,
+        }),
+        PublicContentInvalidatorModule,
+      ],
     }).compile();
-    kv = module.get(KvTtlCacheService);
+    kv = module.get(NamespacedCache);
+    invalidator = module.get(PublicContentCacheInvalidator);
     prisma.paywall.findMany
       .mockReset()
       .mockResolvedValue([{ id: 'paywall-1', name: 'Paywall' }]);
@@ -38,6 +48,8 @@ describe('paywall cache', () => {
       prisma.paywall[write].mockReset().mockResolvedValue({ id: 'paywall-1' });
     }
   });
+
+  afterEach(() => module.close());
 
   it.each<[string, () => { load: (id: string) => Promise<unknown> }, Mock]>([
     [
@@ -60,7 +72,7 @@ describe('paywall cache', () => {
 
   it('loads them again once paywalls changed', async () => {
     await new PaywallDataloaderService(prisma as any, kv).load('paywall-1');
-    await new PublicContentCacheInvalidator(kv).invalidateDraft('paywalls');
+    await invalidator.invalidateDraft('paywalls');
     await new PaywallDataloaderService(prisma as any, kv).load('paywall-1');
 
     expect(prisma.paywall.findMany).toHaveBeenCalledTimes(2);

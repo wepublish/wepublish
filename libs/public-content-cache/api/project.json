@@ -1,0 +1,24 @@
+{
+  "name": "public-content-cache-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/public-content-cache/api/src",
+  "projectType": "library",
+  "tags": ["scope:api-only"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/public-content-cache/api",
+        "tsConfig": "libs/public-content-cache/api/tsconfig.lib.json",
+        "main": "libs/public-content-cache/api/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

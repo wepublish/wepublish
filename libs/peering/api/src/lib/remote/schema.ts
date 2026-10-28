@@ -245,6 +245,76 @@ export type ArticleTeaserInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ArticleTemplate = {
+  __typename?: 'ArticleTemplate';
+  /** The content (name and blocks) of the article template. */
+  blockTemplate: BlockTemplate;
+  blockTemplateId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  metadata: ArticleTemplateMetadata;
+  modifiedAt: Scalars['DateTime']['output'];
+};
+
+export type ArticleTemplateFilter = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ArticleTemplateMetadata = {
+  __typename?: 'ArticleTemplateMetadata';
+  authors: Array<ArticleRevisionAuthor>;
+  breaking: Scalars['Boolean']['output'];
+  canonicalUrl?: Maybe<Scalars['String']['output']>;
+  disableComments: Scalars['Boolean']['output'];
+  hidden: Scalars['Boolean']['output'];
+  hideAuthor: Scalars['Boolean']['output'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  paywallId?: Maybe<Scalars['String']['output']>;
+  preTitle?: Maybe<Scalars['String']['output']>;
+  properties: Array<Property>;
+  seoDescription?: Maybe<Scalars['String']['output']>;
+  seoTitle?: Maybe<Scalars['String']['output']>;
+  shared: Scalars['Boolean']['output'];
+  socialMediaAuthors: Array<Author>;
+  socialMediaDescription?: Maybe<Scalars['String']['output']>;
+  socialMediaImage?: Maybe<Image>;
+  socialMediaImageID?: Maybe<Scalars['String']['output']>;
+  socialMediaTitle?: Maybe<Scalars['String']['output']>;
+  tags: Array<Tag>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type ArticleTemplateMetadataInput = {
+  authors: Array<ArticleRevisionAuthorInput>;
+  breaking: Scalars['Boolean']['input'];
+  canonicalUrl?: InputMaybe<Scalars['String']['input']>;
+  disableComments: Scalars['Boolean']['input'];
+  hidden: Scalars['Boolean']['input'];
+  hideAuthor: Scalars['Boolean']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  paywallId?: InputMaybe<Scalars['String']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
+  properties: Array<PropertyInput>;
+  seoDescription?: InputMaybe<Scalars['String']['input']>;
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  shared: Scalars['Boolean']['input'];
+  socialMediaAuthorIds: Array<Scalars['String']['input']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
+  socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  tagIds: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum ArticleTemplateSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
+
 export type AuditLog = {
   __typename?: 'AuditLog';
   action: AuditLogAction;
@@ -1840,6 +1910,8 @@ export type Invoice = HasOptionalSubscription & {
   manuallySetAsPaidByUserId?: Maybe<Scalars['String']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   paidAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The payments made or attempted for this invoice, oldest first. Invoices imported from another system have none. */
+  payments: Array<Payment>;
   scheduledDeactivationAt: Scalars['DateTime']['output'];
   subscription?: Maybe<PublicSubscription>;
   subscriptionID?: Maybe<Scalars['String']['output']>;
@@ -2891,8 +2963,14 @@ export type Mutation = {
   cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
   cancelSubscription: PublicSubscription;
+  /** Cancels a pending payment method change; the subscription keeps its current payment method. */
+  cancelSubscriptionPaymentMethodChange: SubscriptionPaymentMethodChange;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
+  /** Moves one of the authenticated user's subscriptions to another payment method. With an open invoice, the invoice is paid with the new payment method; otherwise the new payment method is authorized without a charge. The subscription keeps its current payment method until then. */
+  changeSubscriptionPaymentMethod: StartedSubscriptionPaymentMethodChange;
+  /** Asks the payment provider whether the reader finished paying or authorizing, for when they return before the provider reported it. */
+  checkSubscriptionPaymentMethodChange: SubscriptionPaymentMethodChange;
   /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
   confirmChangelogEntry: ChangelogEntry;
   /** Confirms a pending email change for the logged-in user. */
@@ -2907,6 +2985,8 @@ export type Mutation = {
   createApiToken: CreatedApiToken;
   /** Creates an article. */
   createArticle: Article;
+  /** Creates a new article template. */
+  createArticleTemplate: ArticleTemplate;
   /** Creates a new author. */
   createAuthor: Author;
   createBanner: Banner;
@@ -2958,6 +3038,8 @@ export type Mutation = {
   createNewsletterCampaign: NewsletterCampaign;
   /** Creates an page. */
   createPage: Page;
+  /** Creates a new page template. */
+  createPageTemplate: PageTemplate;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>;
   /** This mutation allows to create payment by referencing a subscription. */
@@ -3015,6 +3097,8 @@ export type Mutation = {
   deleteAllMailchimpSyncErrors: Scalars['Boolean']['output'];
   /** Deletes an article. */
   deleteArticle: Scalars['String']['output'];
+  /** Deletes an existing article template. */
+  deleteArticleTemplate: ArticleTemplate;
   /** Deletes an existing author. */
   deleteAuthor: Author;
   deleteBanner?: Maybe<Scalars['Boolean']['output']>;
@@ -3059,6 +3143,8 @@ export type Mutation = {
   deleteNavigation: Navigation;
   /** Deletes an page. */
   deletePage: Scalars['String']['output'];
+  /** Deletes an existing page template. */
+  deletePageTemplate: PageTemplate;
   /** Deletes an existing payment method. */
   deletePaymentMethod: PaymentMethod;
   /** Deletes a payment provider setting. */
@@ -3197,6 +3283,8 @@ export type Mutation = {
   sendTestMailTemplate?: Maybe<Scalars['Boolean']['output']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String']['output'];
+  /** Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated. */
+  setPaymentProviderCustomers: Scalars['Int']['output'];
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
@@ -3214,6 +3302,8 @@ export type Mutation = {
   updateAnalyticsProviderSetting: SettingAnalyticsProvider;
   /** Updates an article. */
   updateArticle: Article;
+  /** Updates an existing article template. */
+  updateArticleTemplate: ArticleTemplate;
   /** Updates an existing author. */
   updateAuthor: Author;
   updateBanner: Banner;
@@ -3264,6 +3354,8 @@ export type Mutation = {
   updateNewsletterCampaign: NewsletterCampaign;
   /** Updates an page. */
   updatePage: Page;
+  /** Updates an existing page template. */
+  updatePageTemplate: PageTemplate;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
   updatePassword: SensitiveDataUser;
   /** Updates an existing payment method. */
@@ -3372,7 +3464,25 @@ export type MutationCancelSubscriptionArgs = {
 };
 
 
+export type MutationCancelSubscriptionPaymentMethodChangeArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationCancelUserSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationChangeSubscriptionPaymentMethodArgs = {
+  failureURL?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodId: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
+  successURL?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCheckSubscriptionPaymentMethodChangeArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -3445,6 +3555,13 @@ export type MutationCreateArticleArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
   tagIds: Array<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateArticleTemplateArgs = {
+  blocks: Array<BlockContentInput>;
+  metadata: ArticleTemplateMetadataInput;
+  name: Scalars['String']['input'];
 };
 
 
@@ -3673,6 +3790,13 @@ export type MutationCreatePageArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
   tagIds: Array<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreatePageTemplateArgs = {
+  blocks: Array<BlockContentInput>;
+  metadata: PageTemplateMetadataInput;
+  name: Scalars['String']['input'];
 };
 
 
@@ -3957,6 +4081,11 @@ export type MutationDeleteArticleArgs = {
 };
 
 
+export type MutationDeleteArticleTemplateArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteAuthorArgs = {
   id: Scalars['String']['input'];
 };
@@ -4058,6 +4187,11 @@ export type MutationDeleteNavigationArgs = {
 
 
 export type MutationDeletePageArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeletePageTemplateArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -4404,6 +4538,12 @@ export type MutationSendWebsiteLoginArgs = {
 };
 
 
+export type MutationSetPaymentProviderCustomersArgs = {
+  customers: Array<PaymentProviderCustomerInput>;
+  paymentProviderId: Scalars['String']['input'];
+};
+
+
 export type MutationSyncMailLogStatesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -4480,6 +4620,14 @@ export type MutationUpdateArticleArgs = {
 };
 
 
+export type MutationUpdateArticleTemplateArgs = {
+  blocks: Array<BlockContentInput>;
+  id: Scalars['String']['input'];
+  metadata: ArticleTemplateMetadataInput;
+  name: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateAuthorArgs = {
   bio?: InputMaybe<Scalars['RichText']['input']>;
   hideOnArticle?: InputMaybe<Scalars['Boolean']['input']>;
@@ -4552,11 +4700,9 @@ export type MutationUpdateCrowdfundingArgs = {
 export type MutationUpdateCurrentUserArgs = {
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  challengeAnswer?: InputMaybe<ChallengeInput>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   flair?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4741,6 +4887,14 @@ export type MutationUpdatePageArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
   tagIds: Array<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdatePageTemplateArgs = {
+  blocks: Array<BlockContentInput>;
+  id: Scalars['String']['input'];
+  metadata: PageTemplateMetadataInput;
+  name: Scalars['String']['input'];
 };
 
 
@@ -5305,6 +5459,62 @@ export type PageTeaserInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type PageTemplate = {
+  __typename?: 'PageTemplate';
+  /** The content (name and blocks) of the page template. */
+  blockTemplate: BlockTemplate;
+  blockTemplateId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  metadata: PageTemplateMetadata;
+  modifiedAt: Scalars['DateTime']['output'];
+};
+
+export type PageTemplateFilter = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageTemplateMetadata = {
+  __typename?: 'PageTemplateMetadata';
+  description?: Maybe<Scalars['String']['output']>;
+  hidden: Scalars['Boolean']['output'];
+  hideFooter: Scalars['Boolean']['output'];
+  hideHeader: Scalars['Boolean']['output'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  properties: Array<Property>;
+  seoDescription?: Maybe<Scalars['String']['output']>;
+  seoTitle?: Maybe<Scalars['String']['output']>;
+  socialMediaDescription?: Maybe<Scalars['String']['output']>;
+  socialMediaImage?: Maybe<Image>;
+  socialMediaImageID?: Maybe<Scalars['String']['output']>;
+  socialMediaTitle?: Maybe<Scalars['String']['output']>;
+  tags: Array<Tag>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageTemplateMetadataInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  hidden: Scalars['Boolean']['input'];
+  hideFooter?: Scalars['Boolean']['input'];
+  hideHeader?: Scalars['Boolean']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  properties: Array<PropertyInput>;
+  seoDescription?: InputMaybe<Scalars['String']['input']>;
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
+  socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  tagIds: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum PageTemplateSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
+
 export type PaginatedApiTokens = {
   __typename?: 'PaginatedApiTokens';
   nodes: Array<ApiToken>;
@@ -5315,6 +5525,13 @@ export type PaginatedApiTokens = {
 export type PaginatedArticleRevisions = {
   __typename?: 'PaginatedArticleRevisions';
   nodes: Array<ArticleRevision>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedArticleTemplate = {
+  __typename?: 'PaginatedArticleTemplate';
+  nodes: Array<ArticleTemplate>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -5447,6 +5664,13 @@ export type PaginatedPageRevisions = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type PaginatedPageTemplate = {
+  __typename?: 'PaginatedPageTemplate';
+  nodes: Array<PageTemplate>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type PaginatedPages = {
   __typename?: 'PaginatedPages';
   nodes: Array<Page>;
@@ -5498,8 +5722,10 @@ export type PaginatedUserRoles = {
 
 export type Payment = HasPaymentMethod & {
   __typename?: 'Payment';
+  createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   intentSecret: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
   paymentMethod: PaymentMethod;
   paymentMethodID: Scalars['String']['output'];
   state: PaymentState;
@@ -5528,6 +5754,21 @@ export type PaymentMethod = HasImageLc & {
   paymentProviderID: Scalars['String']['output'];
   slug: Scalars['Slug']['output'];
 };
+
+/** How the reader proves the new payment method: by paying the open invoice with it, by authorizing it without a charge, or not at all. */
+export enum PaymentMethodChangeKind {
+  Authorization = 'authorization',
+  Immediate = 'immediate',
+  InvoicePayment = 'invoicePayment'
+}
+
+export enum PaymentMethodChangeState {
+  Canceled = 'canceled',
+  Completed = 'completed',
+  Expired = 'expired',
+  Failed = 'failed',
+  Pending = 'pending'
+}
 
 export enum PaymentMethodMollie {
   Alma = 'ALMA',
@@ -5580,6 +5821,12 @@ export type PaymentProviderCustomer = {
   __typename?: 'PaymentProviderCustomer';
   customerID: Scalars['String']['output'];
   paymentProviderID: Scalars['String']['output'];
+};
+
+export type PaymentProviderCustomerInput = {
+  /** The provider's id for the user, e.g. the bexio contact id. */
+  customerId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 export enum PaymentProviderType {
@@ -6023,6 +6270,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean']['output'];
   canExtend: Scalars['Boolean']['output'];
+  /** Whether the reader can authorize the subscription's payment method anew, e.g. with a new card: only for payment methods renewals are charged with automatically. */
+  canRenewPaymentMethod: Scalars['Boolean']['output'];
   /** Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet. */
   canRevertUpgrade: Scalars['Boolean']['output'];
   confirmed: Scalars['Boolean']['output'];
@@ -6042,6 +6291,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   paymentMethod: PaymentMethod;
   paymentMethodID: Scalars['String']['output'];
   paymentPeriodicity: PaymentPeriodicity;
+  /** A payment method change that is waiting for the reader to pay or authorize. Until it completes, the subscription keeps its payment method. */
+  pendingPaymentMethodChange?: Maybe<SubscriptionPaymentMethodChange>;
   periods: Array<SubscriptionPeriod>;
   properties: Array<Property>;
   startsAt: Scalars['DateTime']['output'];
@@ -6086,6 +6337,10 @@ export type Query = {
   articleRevision?: Maybe<ArticleRevision>;
   /** Returns a paginated list of revisions (version history) for an article. */
   articleRevisions: PaginatedArticleRevisions;
+  /** Returns a single article template by ID. */
+  articleTemplate: ArticleTemplate;
+  /** Returns a paginated list of article templates. */
+  articleTemplates: PaginatedArticleTemplate;
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles;
   /** Returns a paginated list of audit log entries based on the filters given. */
@@ -6317,6 +6572,10 @@ export type Query = {
   pageRevision?: Maybe<PageRevision>;
   /** Returns a paginated list of revisions (version history) for a page. */
   pageRevisions: PaginatedPageRevisions;
+  /** Returns a single page template by ID. */
+  pageTemplate: PageTemplate;
+  /** Returns a paginated list of page templates. */
+  pageTemplates: PaginatedPageTemplate;
   /** Returns a paginated list of pages based on the filters given. */
   pages: PaginatedPages;
   /** Returns a payment method by id */
@@ -6510,6 +6769,21 @@ export type QueryArticleRevisionsArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryArticleTemplateArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryArticleTemplatesArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ArticleTemplateFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int']['input'];
+  sort?: ArticleTemplateSort;
+  take?: Scalars['Int']['input'];
 };
 
 
@@ -7020,6 +7294,21 @@ export type QueryPageRevisionsArgs = {
   pageId: Scalars['String']['input'];
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryPageTemplateArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryPageTemplatesArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<PageTemplateFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int']['input'];
+  sort?: PageTemplateSort;
+  take?: Scalars['Int']['input'];
 };
 
 
@@ -7615,11 +7904,13 @@ export enum SettingName {
   MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
   NewArticlePaywall = 'NEW_ARTICLE_PAYWALL',
   NewArticlePeering = 'NEW_ARTICLE_PEERING',
+  PaymentMethodChangeExpiryDays = 'PAYMENT_METHOD_CHANGE_EXPIRY_DAYS',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   SessionTtlDays = 'SESSION_TTL_DAYS',
   ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',
+  SubscriptionExtendWindowDays = 'SUBSCRIPTION_EXTEND_WINDOW_DAYS',
   SubscriptionUpgradeBillsFullDifference = 'SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE'
 }
 
@@ -7770,6 +8061,14 @@ export type SoundCloudTrackBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   trackID?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type StartedSubscriptionPaymentMethodChange = {
+  __typename?: 'StartedSubscriptionPaymentMethodChange';
+  change: SubscriptionPaymentMethodChange;
+  /** Where the reader pays or authorizes: a redirect URL, or the client secret for Stripe. */
+  intentSecret?: Maybe<Scalars['String']['output']>;
+  paymentProviderID: Scalars['String']['output'];
 };
 
 export type Stats = {
@@ -8007,6 +8306,24 @@ export type SubscriptionInterval = {
   event: SubscriptionEvent;
   id: Scalars['String']['output'];
   mailTemplate?: Maybe<MailTemplateRef>;
+};
+
+/** A reader's request to move a subscription to another payment method. The subscription keeps its current payment method until the change is completed. */
+export type SubscriptionPaymentMethodChange = HasPaymentMethod & {
+  __typename?: 'SubscriptionPaymentMethodChange';
+  /** Amount in cents held to authorize the payment method. It is released again and never charged. */
+  amount: Scalars['Int']['output'];
+  completedAt?: Maybe<Scalars['DateTime']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  currency: Currency;
+  expiresAt: Scalars['DateTime']['output'];
+  fromPaymentMethodID: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  kind: PaymentMethodChangeKind;
+  paymentMethod: PaymentMethod;
+  paymentMethodID: Scalars['String']['output'];
+  state: PaymentMethodChangeState;
+  subscriptionID: Scalars['String']['output'];
 };
 
 export type SubscriptionPeriod = {
@@ -8588,252 +8905,3 @@ export type YouTubeVideoBlockInput = {
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   videoID?: InputMaybe<Scalars['String']['input']>;
 };
-
-export interface PossibleTypesResultData {
-  possibleTypes: {
-    [key: string]: string[]
-  }
-}
-const result: PossibleTypesResultData = {
-  "possibleTypes": {
-    "Action": [
-      "ArticleCreatedAction",
-      "AuthorCreatedAction",
-      "CommentCreatedAction",
-      "EventCreatedAction",
-      "PageCreatedAction",
-      "PollStartedAction",
-      "SubscriptionCreatedAction",
-      "UserCreatedAction"
-    ],
-    "BaseAction": [
-      "ArticleCreatedAction",
-      "AuthorCreatedAction",
-      "CommentCreatedAction",
-      "EventCreatedAction",
-      "PageCreatedAction",
-      "PollStartedAction",
-      "SubscriptionCreatedAction",
-      "UserCreatedAction"
-    ],
-    "BaseBlock": [
-      "BildwurfAdBlock",
-      "BlockTemplateBlock",
-      "BreakBlock",
-      "CommentBlock",
-      "CrowdfundingBlock",
-      "EventBlock",
-      "FacebookPostBlock",
-      "FacebookVideoBlock",
-      "FlexBlock",
-      "HTMLBlock",
-      "IFrameBlock",
-      "ImageBlock",
-      "ImageGalleryBlock",
-      "InstagramPostBlock",
-      "ListicleBlock",
-      "MailchimpFormBlock",
-      "PolisConversationBlock",
-      "PollBlock",
-      "QuoteBlock",
-      "RichTextBlock",
-      "SoundCloudTrackBlock",
-      "StreamableVideoBlock",
-      "SubscribeBlock",
-      "TeaserGridBlock",
-      "TeaserGridFlexBlock",
-      "TeaserListBlock",
-      "TeaserSlotsAutofillConfig",
-      "TeaserSlotsBlock",
-      "TikTokVideoBlock",
-      "TitleBlock",
-      "TwitterTweetBlock",
-      "VimeoVideoBlock",
-      "YouTubeVideoBlock"
-    ],
-    "BaseCrowdfundingGoal": [
-      "CrowdfundingGoal",
-      "CrowdfundingGoalWithProgress"
-    ],
-    "BaseNavigationLink": [
-      "ArticleNavigationLink",
-      "ExternalNavigationLink",
-      "PageNavigationLink"
-    ],
-    "BaseTeaser": [
-      "ArticleTeaser",
-      "CustomTeaser",
-      "EventTeaser",
-      "PageTeaser"
-    ],
-    "BaseToken": [
-      "Token",
-      "TokenWithSecret"
-    ],
-    "BaseUser": [
-      "SensitiveDataUser",
-      "User"
-    ],
-    "BlockContent": [
-      "BildwurfAdBlock",
-      "BlockTemplateBlock",
-      "BreakBlock",
-      "CommentBlock",
-      "CrowdfundingBlock",
-      "EventBlock",
-      "FacebookPostBlock",
-      "FacebookVideoBlock",
-      "FlexBlock",
-      "HTMLBlock",
-      "IFrameBlock",
-      "ImageBlock",
-      "ImageGalleryBlock",
-      "InstagramPostBlock",
-      "ListicleBlock",
-      "MailchimpFormBlock",
-      "PolisConversationBlock",
-      "PollBlock",
-      "QuoteBlock",
-      "RichTextBlock",
-      "SoundCloudTrackBlock",
-      "StreamableVideoBlock",
-      "SubscribeBlock",
-      "TeaserGridBlock",
-      "TeaserGridFlexBlock",
-      "TeaserListBlock",
-      "TeaserSlotsBlock",
-      "TikTokVideoBlock",
-      "TitleBlock",
-      "TwitterTweetBlock",
-      "UnknownBlock",
-      "VimeoVideoBlock",
-      "YouTubeVideoBlock"
-    ],
-    "HasArticle": [
-      "ArticleNavigationLink"
-    ],
-    "HasArticleLc": [
-      "ArticleCreatedAction"
-    ],
-    "HasAuthor": [
-      "AuthorCreatedAction"
-    ],
-    "HasBlockContent": [
-      "ArticleRevision",
-      "BlockTemplate",
-      "PageRevision"
-    ],
-    "HasComment": [
-      "CommentCreatedAction"
-    ],
-    "HasEventLc": [
-      "EventCreatedAction"
-    ],
-    "HasImage": [
-      "ArticleTeaser",
-      "Author",
-      "BreakBlock",
-      "CustomTeaser",
-      "EventTeaser",
-      "Goodie",
-      "ImageBlock",
-      "ImageGalleryImage",
-      "ListicleItem",
-      "MailchimpFormInterestOption",
-      "MemberPlan",
-      "PageTeaser",
-      "QuoteBlock"
-    ],
-    "HasImageLc": [
-      "PaymentMethod"
-    ],
-    "HasMemberPlan": [
-      "PublicSubscription"
-    ],
-    "HasMemberPlanLc": [
-      "DiscountCode"
-    ],
-    "HasOneBlockContent": [
-      "BlockWithAlignment"
-    ],
-    "HasOptionalArticle": [
-      "ArticleTeaser"
-    ],
-    "HasOptionalCrowdfunding": [
-      "CrowdfundingBlock"
-    ],
-    "HasOptionalEvent": [
-      "EventTeaser"
-    ],
-    "HasOptionalPage": [
-      "PageTeaser"
-    ],
-    "HasOptionalPaywall": [
-      "Article"
-    ],
-    "HasOptionalPeerLc": [
-      "Article",
-      "Author",
-      "Image",
-      "PeerArticle"
-    ],
-    "HasOptionalPoll": [
-      "PollBlock"
-    ],
-    "HasOptionalSubscription": [
-      "Invoice"
-    ],
-    "HasOptionalUser": [
-      "Comment"
-    ],
-    "HasOptionalUserLc": [
-      "ArticleRevision",
-      "PageRevision"
-    ],
-    "HasPage": [
-      "PageNavigationLink"
-    ],
-    "HasPageLc": [
-      "PageCreatedAction"
-    ],
-    "HasPaymentMethod": [
-      "Payment",
-      "PublicSubscription"
-    ],
-    "HasPoll": [
-      "PollStartedAction"
-    ],
-    "HasSubscriptionLc": [
-      "SubscriptionCreatedAction"
-    ],
-    "HasUser": [
-      "PublicSubscription"
-    ],
-    "HasUserLc": [
-      "UserCreatedAction"
-    ],
-    "SettingProvider": [
-      "SettingAIProvider",
-      "SettingAnalyticsProvider",
-      "SettingChallengeProvider",
-      "SettingLetterProvider",
-      "SettingMailProvider",
-      "SettingPaymentProvider",
-      "SettingPdfRenderer",
-      "SettingSyncProvider",
-      "SettingTrackingPixelProvider"
-    ],
-    "SubscribeBlockLayoutConfig": [
-      "SubscribeBlockLayoutNoneConfig",
-      "SubscribeBlockLayoutPickerConfig",
-      "SubscribeBlockLayoutSliderConfig"
-    ],
-    "Teaser": [
-      "ArticleTeaser",
-      "CustomTeaser",
-      "EventTeaser",
-      "PageTeaser"
-    ]
-  }
-};
-export default result;

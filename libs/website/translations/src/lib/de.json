@@ -9,6 +9,9 @@
     "backToProfile": "Zurück zum Profil",
     "profile": "Profil"
   },
+  "banner": {
+    "close": "Banner schliessen"
+  },
   "paywall": {
     "subscribe": "Abonnent*in werden",
     "login": "Login"
@@ -109,6 +112,20 @@
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
   },
   "subscription": {
+    "renewPaymentMethod": "Bestehende Zahlungsmethode aktualisieren",
+    "renewPaymentMethodHint": "z.B. eine neue Karte hinterlegen",
+    "renewPaymentMethodTitle": "Bestehende Zahlungsmethode aktualisieren",
+    "renewPaymentMethodConfirmation": "Du bestätigst {paymentMethod} neu, zum Beispiel mit einer neuen Karte oder einem neuen TWINT-Konto. Bis dahin bleibt die bisherige Hinterlegung aktiv.",
+    "paymentMethod": "Zahlungsmethode: {paymentMethod}",
+    "changePaymentMethod": "Zahlungsmethode ändern",
+    "changePaymentMethodTitle": "Zahlungsmethode ändern",
+    "changePaymentMethodSubmit": "Weiter",
+    "changePaymentMethodOpenInvoice": "Die offene Rechnung über {amount} bezahlst du mit der neuen Zahlungsmethode. Erst danach wird sie für dein {type, select, Donation {Spende} other {Abo}} übernommen.",
+    "changePaymentMethodAuthorization": "Eine Online-Zahlungsmethode bestätigst du einmal beim Zahlungsanbieter. Dafür kann ein Betrag von {amount} reserviert werden, der dir nie belastet wird. Bis dahin bleibt deine bisherige Zahlungsmethode aktiv.",
+    "paymentMethodChangePending": "Wechsel zu {paymentMethod} ausstehend: {kind, select, invoicePayment {wird aktiv, sobald die offene Rechnung bezahlt ist} other {wird aktiv, sobald du die Zahlungsmethode bestätigt hast}}. Möglich bis {expiresAt}.",
+    "paymentMethodChangeContinue": "Fortsetzen",
+    "paymentMethodChangeCancel": "Wechsel abbrechen",
+    "extendChargedWith": "Belastet wird: {paymentMethod}",
     "externalReward": "{isLink, select, true {Link zu externer Belohnung} other {{externalReward}}}",
     "unpaid": "{type, select, Donation {Spende} other {Abo}} ist unbezahlt",
     "cancel": "{type, select, Donation {Spende} other {Abo}} kündigen",
@@ -187,6 +204,7 @@
     "payNow": "Jetzt Bezahlen"
   },
   "user": {
+    "authorize": "Bestätigen",
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",
     "email": "E-Mail",
     "changeEmail": "E-Mail-Adresse ändern",
@@ -209,6 +227,11 @@
     "saveSuccess": "Änderungen erfolgreich gespeichert!",
     "passwordWarning": "Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.",
     "pay": "Bezahlen",
+    "imageUpload": {
+      "delete": "Bild löschen",
+      "replace": "Neues Bild hochladen",
+      "upload": "Bild hochladen"
+    },
     "totp": {
       "title": "Zwei-Faktor-Authentifizierung",
       "enabled": "Zwei-Faktor-Authentifizierung ist aktiviert.",
@@ -255,7 +278,14 @@
     "loginForReaders": "Login für Leserinnen und Leser",
     "noAccountYet": "Noch keinen Account?",
     "registerNow": "Jetzt registrieren",
-    "notLoggedIn": "Du bist nicht eingeloggt"
+    "notLoggedIn": "Du bist nicht eingeloggt",
+    "name": "Name",
+    "namePlaceholder": "Dein Name",
+    "title": "Titel",
+    "titlePlaceholder": "Gib Deinem Beitrag einen Titel.",
+    "text": "Kommentar",
+    "textPlaceholder": "Beitrag verfassen",
+    "characterCount": "{{length}} / {{max}} Zeichen"
   },
   "comments": {
     "list": {
@@ -271,7 +301,7 @@
   "poll": {
     "totalVotes": "{count} Stimmen",
     "closesAt": "Schliesst am <time>{date}</time>",
-    "closed": "&ndash; Abstimmung beendet."
+    "closed": "Abstimmung beendet."
   },
   "registrationForm": {
     "register": "Registrieren",
@@ -395,6 +425,11 @@
       "map": "Map",
       "set": "Set"
     }
+  },
+  "contextBox": {
+    "defaultTitle": "Darum geht's",
+    "readMore": "Alles lesen",
+    "readLess": "Weniger lesen"
   },
   "slider": {
     "previous": "Zurück",

@@ -8,7 +8,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useUser } from '@wepublish/authentication/website';
-import { useHasActiveSubscription } from '@wepublish/membership/website';
+import { useActiveSubscriptions } from '@wepublish/membership/website';
 import { hasPaywallBypass } from '@wepublish/paywall/website';
 
 export type BannerContainerProps = {
@@ -25,10 +25,11 @@ export function BannerContainer({
 }: BannerContainerProps) {
   const { Banner } = useWebsiteBuilder();
   const { hasUser } = useUser();
-  const hasSubscription = useHasActiveSubscription();
+  const activeSubscriptions = useActiveSubscriptions();
+  const hasSubscription = !!activeSubscriptions?.length;
 
   const { data, loading, error } = useQuery(PrimaryBannerDocument, {
-    skip: hasSubscription == null,
+    skip: hasUser && activeSubscriptions == null,
     variables: {
       documentId: documentId ?? '',
       documentType,

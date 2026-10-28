@@ -1,6 +1,17 @@
 import styled from '@emotion/styled';
-import { Button, ButtonProps, useTheme } from '@mui/material';
-import { ReactNode, useId } from 'react';
+import {
+  Button,
+  ButtonProps,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  useTheme,
+} from '@mui/material';
+import { ReactNode, useId, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdMoreVert } from 'react-icons/md';
 
 import { paletteColor } from '../paletteColor';
 import { StateColor } from '../utility';
@@ -30,7 +41,19 @@ const Bar = styled('header', {
     }
   }
 
+  [data-overflow-toggle] {
+    display: none;
+  }
+
   @container (max-width: 520px) {
+    [data-overflow-item] {
+      display: none;
+    }
+
+    [data-overflow-toggle] {
+      display: inline-flex;
+    }
+
     button[data-collapse='sm'] {
       min-width: 0;
       padding-inline: 9px;
@@ -105,8 +128,10 @@ const Actions = styled('div')`
   gap: 8px;
 
   @container (max-width: 760px) {
-    flex: 1 1 100%;
-    justify-content: space-between;
+    &[data-own-row] {
+      flex: 1 1 100%;
+      justify-content: space-between;
+    }
   }
 `;
 
@@ -130,7 +155,18 @@ const Divider = styled('span')`
   height: 24px;
   margin: 0 4px;
   background-color: ${({ theme }) => theme.vars.palette.divider};
+
+  @container (max-width: 760px) {
+    display: none;
+  }
 `;
+
+export interface EditorHeaderMenuAction {
+  label: string;
+  icon: ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+}
 
 export interface EditorHeaderProps {
   state: StateColor;
@@ -139,8 +175,68 @@ export interface EditorHeaderProps {
   back?: ReactNode;
   statusAction?: ReactNode;
   title?: ReactNode;
+  menuActions?: EditorHeaderMenuAction[];
   secondaryActions?: ReactNode;
   primaryActions?: ReactNode;
+}
+
+function EditorHeaderMenu({ actions }: { actions: EditorHeaderMenuAction[] }) {
+  const { t } = useTranslation();
+  const menuId = useId();
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+
+  if (!actions.length) {
+    return null;
+  }
+
+  return (
+    <>
+      {actions.map(action => (
+        <EditorHeaderButton
+          key={action.label}
+          data-overflow-item
+          variant="text"
+          icon={action.icon}
+          label={action.label}
+          disabled={action.disabled}
+          onClick={action.onClick}
+        />
+      ))}
+
+      <IconButton
+        data-overflow-toggle
+        color="primary"
+        aria-label={t('editorHeader.moreActions')}
+        aria-haspopup="menu"
+        aria-controls={anchor ? menuId : undefined}
+        aria-expanded={anchor ? 'true' : undefined}
+        onClick={event => setAnchor(event.currentTarget)}
+      >
+        <MdMoreVert />
+      </IconButton>
+
+      <Menu
+        id={menuId}
+        anchorEl={anchor}
+        open={!!anchor}
+        onClose={() => setAnchor(null)}
+      >
+        {actions.map(action => (
+          <MenuItem
+            key={action.label}
+            disabled={action.disabled}
+            onClick={() => {
+              setAnchor(null);
+              action.onClick();
+            }}
+          >
+            <ListItemIcon>{action.icon}</ListItemIcon>
+            <ListItemText>{action.label}</ListItemText>
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  );
 }
 
 export function EditorHeader({
@@ -150,6 +246,7 @@ export function EditorHeader({
   back,
   statusAction,
   title,
+  menuActions = [],
   secondaryActions,
   primaryActions,
 }: EditorHeaderProps) {
@@ -179,9 +276,18 @@ export function EditorHeader({
           {statusAction && <StatusAction>{statusAction}</StatusAction>}
         </Start>
 
-        <Actions>
-          <Group>{secondaryActions}</Group>
-          {secondaryActions && primaryActions && <Divider />}
+        <Actions
+          data-own-row={
+            secondaryActions || menuActions.length > 0 ? '' : undefined
+          }
+        >
+          <Group>
+            <EditorHeaderMenu actions={menuActions} />
+            {secondaryActions}
+          </Group>
+          {(secondaryActions || menuActions.length > 0) && primaryActions && (
+            <Divider />
+          )}
           <PrimaryGroup>{primaryActions}</PrimaryGroup>
         </Actions>
       </Inner>

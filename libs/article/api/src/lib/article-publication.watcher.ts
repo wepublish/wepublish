@@ -6,10 +6,8 @@ import {
 } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
 import { PrismaClient } from '@prisma/client';
-import {
-  PublicationTimers,
-  PublicContentCacheInvalidator,
-} from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
+import { PublicationTimers } from '@wepublish/utils/api';
 
 const LOOKAHEAD_MS = 70_000;
 const LONGEST_SCHEDULE_MS = 24 * 60 * 60 * 1000;

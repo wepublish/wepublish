@@ -13,7 +13,7 @@ gets refactored away by the next agent.
 ### ⚠️ Prisma helpers are deliberately absent from the `@wepublish/testing` barrel
 
 [libs/testing/src/index.ts](../../libs/testing/src/index.ts) exports `act-wait`,
-`mock-date`, `create-mock` and `graphql-public` — but **not** the Prisma
+`mock-date` and `create-mock` — but **not** the Prisma
 utilities, with the reason stated inline:
 
 > Prisma utilities (`createPrismaClient`, `clearDatabase`, `clearFullDatabase`)
@@ -155,6 +155,21 @@ database boundary.
 
 ---
 
+### ⚠️ `i18next-icu` is imported from `i18next-icu/cjs` — the main entry breaks server rendering
+
+Its ES build default-imports `intl-messageformat`, a CommonJS package without
+ESM exports. Node (the Next server, and Vitest for anything not inlined) hands
+that import the module object, every message fails to format, and the server
+renders raw templates (`{type, select, …}`) that hydration then flips. The
+browser bundle resolves fine, so it shows only as hydration errors.
+[i18n-formatter.tsx](../../libs/utils/website/src/lib/i18n-formatter.tsx)
+therefore imports the CommonJS build; `i18next-icu-cjs.d.ts` next to it types
+the subpath, which `moduleResolution: node` cannot see. Don't inline
+`i18next-icu` in Vitest again: its spec has to run the package the way Node
+loads it.
+
+---
+
 ### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
 
 The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 1`.
@@ -175,6 +190,23 @@ Local runs don't use `-c ci`. When reproducing CI locally with `-c ci`, add
 
 ---
 
+### ⚠️ A spec must listen on `127.0.0.1` before `supertest` touches the server
+
+On a server that is not listening, supertest calls `listen(0)` per request,
+which binds the IPv6 wildcard `[::]`. macOS hands that bind a port another
+process already holds on `127.0.0.1` (VS Code's extension host keeps ~160 such
+listeners; libuv sets `SO_REUSEADDR` and the kernel only checks same-address
+binds). The request then goes to that process, which never answers, and a
+random test hits the 15 s `testTimeout` — `membership-api`, about 1 request in
+30, reproduced with plain express + supertest, no Nest and no load
+(2026-10-26). A bind to `127.0.0.1` cannot collide, but a `listen` with a host
+is asynchronous, so the spec has to do it before the first request:
+`await app.listen(0, '127.0.0.1')` instead of `app.init()`, closed in the
+matching `after*` hook. `vitest.setup-nest.ts` makes supertest throw on a server
+that is not listening, so the old form cannot creep back.
+
+---
+
 ### ⚠️ Every Dragonfly key must start with `REDIS_KEY_PREFIX`
 
 All media share database 0; a medium's user may only touch `<prefix>:*` /
@@ -185,26 +217,27 @@ media, hence `-@admin -client -script -function -memory -pubsub -scan -randomkey
 
 **Load-bearing:** `docker/dragonfly/users.acl` must match `redisacl_user` in
 `application-configuration` (`modules/wepublish_app/dragonfly.tf`). The command
-allowlist tests in `kv-ttl-cache-atomic-store.spec.ts` and `shared-store.spec.ts`
+allowlist tests in `redis-dragonfly-connection.spec.ts` and `shared-store.spec.ts`
 pin that our code only sends `GET`/`MGET`/`SET`/`INCR`/`PEXPIRE`/`DEL`/`PING`
 under the prefix; a new command needs a look at the ACL first.
 
 ---
 
-### ⚠️ `KvTtlCacheModule` builds `CACHE_MANAGER` itself; only listed namespaces leave the process
+### ⚠️ Caches are `KvCacheModule.forFeature` profiles; only listed namespaces leave the process
 
-Not `CacheModule.register`: `@nestjs/cache-manager` checks `store instanceof
-Keyv`, which fails under Vitest (ESM vs CJS `keyv`) with _"Cannot read
-properties of undefined (reading 'includes')"_. Only `SHARED_NAMESPACES` go to
-Dragonfly; integration settings (`settings:*`) must never be added (startup
-throws). Values are JSON even in memory (master kept live objects):
-`kv-ttl-cache-serializer.ts` keeps `Date`s and Prisma `Decimal`s
-(`payrexx_vatrate.toNumber()`); `BigInt`/`Map` do not survive. See the
+Each cache is a `CacheModule.registerAsync` profile over one `TieredKeyvStore`.
+Never use cache-manager's `stores: [...]` tiering, `wrap`, `clear` or
+`nonBlocking` (see the cache-manager entry; `no-wrap.spec.ts`), and never
+export `CACHE_MANAGER` (events-import registers its own). The store strips
+`expires` before handing a value to Keyv, so Keyv never sends `DEL` for an
+expired one (`keyv-contract.spec.ts`); `keyv` and `cache-manager` are pinned
+exactly in the catalog because of it. Shared values are `val:…` keys; bump the
+prefix whenever the payload format changes, or pods of two releases misread
+each other. The API's shared namespaces are composed in
+`apps/api-example/src/nestapp/shared-namespaces.ts`; `settings:*` throws at
+boot (`shared-namespaces.spec.ts`). Values are JSON even in memory:
+`Date`s and Prisma `Decimal`s survive, `BigInt`/`Map` do not. See the
 [lib README](../../libs/kv-ttl-cache/api/README.md).
-
-Pinned by `kv-ttl-cache-shared-namespaces.spec.ts`,
-`kv-ttl-cache.service.spec.ts`, `kv-ttl-cache-serializer.spec.ts` and
-`kv-ttl-cache-options.spec.ts`.
 
 ---
 
@@ -212,13 +245,15 @@ Pinned by `kv-ttl-cache-shared-namespaces.spec.ts`,
 
 Sessions, page data, articles, pages, authors, images, polls, readers'
 comments and anonymous GraphQL answers are cached for 5 min — for logged-in
-requests too. Writers call
-`kv.resetNamespace(...)`, `SessionCacheInvalidator` (user, role, session, peer
-token) or `PublicContentCacheInvalidator` (`invalidate` for public changes,
-`invalidateDraft` for drafts, `invalidateComments`); otherwise stale data shows
-until the TTL ends, in the editor as well. A field joins `CACHEABLE_QUERIES`
-only if its anonymous answer is the same for every visitor; see the
-[lib README](../../libs/kv-ttl-cache/api/README.md).
+requests too. Writers call `NamespaceResets.reset(...)`,
+`SessionCacheInvalidator` (user, role, session, peer token) or
+`PublicContentCacheInvalidator` from `@wepublish/public-content-cache/api`
+(`invalidate` for public changes, `invalidateDraft` for drafts,
+`invalidateComments`); otherwise stale data shows until the TTL ends, in the
+editor as well. Website pages rebuild only through `WebsiteResetListener`, so
+`PublicContentCacheModule` must stay imported by the API root, or resets
+silently stop rebuilding them (`app.module.boot.spec.ts`). See the
+[public-content-cache README](../../libs/public-content-cache/api/README.md).
 
 Pinned by the `*session-cache*`, `*.cache.spec.ts` and `*content-cache*` specs;
 a new write path needs its own test.
@@ -229,7 +264,7 @@ a new write path needs its own test.
 
 `.env` sets `REDIS_URL` and nx passes it into tests (verified 2026-10-01), so
 `vitest.setup-tests.ts` and `vitest.setup-nest.ts` delete it (along with
-`REDIS_KEY_PREFIX`). Pinned by `kv-ttl-cache.module.spec.ts`. The built api
+`REDIS_KEY_PREFIX`). Pinned by `dragonfly.module.spec.ts`. The built api
 loads `.env` too (`ConfigModule.forRoot()`), so to run it without Dragonfly set
 `REDIS_URL=` (empty) instead of unsetting it.
 
@@ -331,7 +366,7 @@ not true. Pinned by `page-cache.spec.ts` and `page-cache-handler.spec.ts`.
 `Cache-Control` already set (`pages-handler.js`); without it Next still sends
 `s-maxage=1` for `notFound`, and a 500 (api down while a page renders for the
 first time) went out as `public, s-maxage=59` (verified end-to-end 2026-10-02).
-`register()` in `libs/utils/website/src/lib/sentry/instrumentation.ts` makes
+`register()` in `libs/utils/website/src/next/sentry/instrumentation.ts` makes
 every 404 and 5xx `private, no-store, max-age=0` (`error-no-store.ts`, same
 folder) so Cloudflare never keeps one. Pinned by `error-no-store.spec.ts`;
 nothing checks the wiring in CI (verified end-to-end 2026-10-01).
@@ -359,23 +394,26 @@ passes `errors`.
 
 ---
 
-### ⚠️ Loading the Redis client slows every string method until `restoreFastStringPrototype` runs
+### ⚠️ Never let `@redis/client` resolve below 6.3.0
 
-`@redis/client` 5 (via `@keyv/redis`) defines `class VerbatimString extends
-String`; loading it puts `String.prototype` into V8 dictionary mode, and every
-string method in the process gets slower. Next's ETag hash over each cached page
-took 3 ms instead of 0.7 ms, cache hits per pod dropped from ~290/s to ~170/s
-(verified with `%HasFastProperties` and a CPU profile, Node 22.20, 2026-10-02).
-`restoreFastStringPrototype()` reads a property 1 000 times through an object
-whose prototype is `String.prototype`, which makes V8 turn it fast again; fewer
-than ~100 reads do not.
+`class VerbatimString extends String` puts `String.prototype` into V8 dictionary
+mode, and V8 never makes it fast again on its own. 6.3.0 fixes it in
+`verbatim-string.js` (`Object.create(String.prototype)` store); 5.x and 6.0–6.2
+do not. Benchmark with 5.12.1, Node 22.23, 2026-10-24:
 
-**Load-bearing:** the call after the imports in `kv-ttl-cache-atomic-store.ts`
-(`fast-string-prototype.ts`) and in `createRedisClient` in
-`page-cache/shared-store.js`, which also loads the client only when it connects.
-Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts`
-(fresh `node --allow-natives-syntax`); a new place that loads `@keyv/redis` or
-`@redis/client` needs the same call.
+| Workload | Not loaded | Loaded |
+| --- | --- | --- |
+| Website: Next ETag hash over a ~150 KB page | 2030 ops/s | 640 (32 %) |
+| String methods (`toLowerCase`, `split`, `replace`, …) | 18870 | 13560 (72 %) |
+| API: sha256 key + JSON round trip of an article | 1850 | 1820 (98 %) |
+
+Nothing guards this — a regression here is silent. Any package that brings its
+own older copy re-slows the process as soon as it loads.
+
+v6 defaults both clients override: `RESP: 2` (no `HELLO 3` against the ACL),
+`maintNotifications: 'disabled'`, `commandOptions: { timeout: undefined }`
+(its 5 s timeout would beat our own and stop silent sockets from being dropped)
+and `socket.keepAliveInitialDelay: 5000`.
 
 ### ⚠️ The Sentry packages must move as one, and must stay on 11+
 
@@ -494,7 +532,7 @@ too.**
 A `middleware.ts` runs on the Edge runtime, and since Next 16.4 (#3195) its
 bundle also pulls in our `cacheHandler`
 (`libs/utils/website/src/lib/page-cache/page-cache-handler.js`). That brings in
-`@keyv/redis` → `@redis/client` → `@node-rs/xxhash`, whose browser build needs
+`@redis/client` → `@node-rs/xxhash`, whose browser build needs
 the uninstalled `@node-rs/xxhash-wasm32-wasi`, so `nx build <tenant>` fails
 with _Module not found_. `proxy.ts` (`export function proxy`) runs on Node and
 builds fine; every tenant uses it.
@@ -547,6 +585,22 @@ Guarded for `SlotTeasersLoader` only: `slot-teasers-loader.spec.ts` starts with
 `import './article.service';`, which enters the cycle from the article side and
 reproduces the boot error in a unit test. A new injection site needs the same
 trick or nothing catches it before `nx serve api-example`.
+
+---
+
+### ⚠️ A service with `@PrimeDataLoader` makes everything that injects it request-scoped
+
+`@PrimeDataLoader(X)` property-injects the request-scoped dataloader `X`, so the
+service (e.g. `SettingsService`) and every provider above it in the dependency
+tree become request-scoped. Nest then skips their `@Cron`/`@Interval` with only
+a startup warning (`Cannot register cron job … non static provider`) and never
+calls their `onModuleInit`. On 2026-10-27 `PaymentMethodChangeService` injected
+`SettingsService`, and the nightly periodic job silently stopped in every tenant.
+
+Providers with a schedule or lifecycle hook read through Prisma, not through
+such a service. Pinned by `app.module.boot.spec.ts` (`keeps every scheduled or
+lifecycle-hooked provider out of request scope`), which walks the real module
+graph and names each offender; the unit specs mock the dependencies away.
 
 ---
 
@@ -914,26 +968,18 @@ reproduce.
 
 ---
 
-### ⚠️ An incomplete Apollo mock turns a story spec into a race
+### ⚠️ Apollo mocks: incomplete data and Apollo 3 matchers
 
-Apollo 4's `MockLink` delays each response by a random 20–50 ms. When two
-queries return the same normalised object (a `PublicSubscription` in both
-`Subscriptions` and `Invoices`), and its mock lacks a fragment field
-(`Missing field 'goodie' while writing result` in stderr), the second response
-leaves the object incomplete. Apollo then refetches the first query, finds its
-mock used up, and the component shows "No more mocked responses" instead of its
-content. That depends on which response comes first and how fast the runner
-renders, so `membership-website`'s "should render Extend" failed now and then on
-CI and never locally (2026-10-16).
+A mocked result that lacks a fragment field (`Missing field 'goodie' while
+writing result` in stderr) leaves the normalised object incomplete, and Apollo
+refetches with a mock that is already used up. Type mocks with
+`satisfies Exact<…Fragment>` (never `as`) or build them with the
+`@wepublish/mocks/website` factories, and write "no value" as `null`, not
+`undefined`. Treat any `Missing field` line in a spec's stderr as a bug.
 
-Type a mock with `satisfies Exact<…Fragment>`, never `as`, so a missing field
-shows in the editor. Stories aren't type-checked in CI (excluded from
-`tsconfig.lib.json`). Write "no value" as `null`, not `undefined`. Treat any
-`Missing field` line in a spec's stderr as a bug. Fixed delays (`delay` on each
-mock) turn the race into a test that fails every time.
-
-Pinned by `subscription-list-container.spec.tsx` ("should keep the list when
-the invoices arrive after the subscriptions").
+The top-level `variableMatcher` of Apollo 3 is silently ignored in Apollo 4:
+match any variables with `request: { query, variables: () => true }`
+(`anyVariables` in the mocks lib).
 
 ---
 
@@ -1029,15 +1075,55 @@ only there because undici's types and `@types/node`'s don't line up.
 Pinned by `storage-fetch.spec.ts`, which checks the cap and the timeouts through
 the real `fetch` against a local server. The wiring in `app.module.ts` is not tested.
 
-### ⚠️ cache-manager 7 TTLs are milliseconds, and `max` is ignored
+### ⚠️ cache-manager 7: TTLs are milliseconds, `max` is ignored, tiers don't backfill
 
-`CacheModule.register({ttl, max})` without `stores` builds a plain Keyv `Map`:
-`ttl` is **milliseconds** (the media server's `259200` meant 3 days but was
-4.3 min, so nearly every image hit R2 again) and `max` is silently dropped, so
-the map grew with every variant ever requested. The media server uses
-`createLinkCacheOptions()` ([`link-cache.ts`](../../libs/media/api/src/lib/link-cache/link-cache.ts)):
-a Keyv over a `Map` that evicts the least recently written entry beyond
-50 000, with `LINK_TTL`/`MISSING_LINK_TTL` in ms.
+`CacheModule.register({ttl, max})` without `stores` builds a plain Keyv `Map`.
+`ttl` is in **milliseconds**: the media server's old `259200` was meant as 3 days
+but gave 4.3 min, so nearly every image went back to R2. `max` is silently
+dropped, so the map grew with every variant ever requested.
+
+Layered `stores: [memory, redis]` don't work as a two-level cache either
+(`cache-manager/dist/index.mjs` `get`):
+- A hit in a later store is never copied into an earlier one, so every replica
+  would ask Redis on every request.
+- `nonBlocking` races the stores. The memory store answers `undefined` first
+  and Redis is never asked.
+
+`TieredKeyvStore` (`libs/kv-ttl-cache/api`) is the two-level cache instead:
+one store per cache that reads memory, then Dragonfly, and copies hits back.
+
+### ⚠️ The media server shares its link cache, but never its misses
+
+`apps/media` imports `DragonflyModule.forRoot()`, `KvCacheModule.forRoot()`
+(no Prisma codec) and `MediaLinkCacheModule`; it runs no website or release
+code. `libs/media/api` and `apps/media` are tagged `scope:runtime-shared` and
+may not import `scope:api-only` libs (`website-revalidation`,
+`public-content-cache`); `check-runtime-deps.js` still guards the image
+against Apollo and Prisma. The profiles behind
+[`LinkCache`](../../libs/media/api/src/lib/link-cache/link-cache.ts), each
+shared one kept locally for 2 s:
+- `media:links` (`val:media:links:<sha>`): objects that exist. Shared, 3 days,
+  across releases.
+- `media:rejected-variants` (`val:<release>:media:rejected-variants:<sha>`):
+  variants the guard rejects (400), 1 h, per release since a deploy can change
+  the guard's limits. Only signed requests get that far.
+- `media:missing-links`: objects that don't exist. 4 h and **local only**.
+- `media:generations` (`val:media:generations:<sha>`): written only by the
+  authenticated image/document `DELETE`, 3 days. Every link key hashes
+  `[id, generation, variant]`, so a delete orphans all variants of that id on
+  every replica within 2 s (each replica re-reads an id's generation at most
+  every 2 s, remembered in the local `media:generation-checks`). Variants
+  cannot be deleted one by one: their keys are hashes and `SCAN` is denied.
+
+**Load-bearing:** anyone can request random image or document ids without a
+signature, and production Dragonfly never evicts and is shared by every
+medium. Sharing misses would let one medium's media server fill it for all of
+them, and so would keys as long as the request line. That is why misses stay
+local and every key is a sha256. While Dragonfly is unreachable every value,
+misses included, is kept for at most 30 s, so the media server goes back to R2
+more often for the length of the outage.
+A Dragonfly misconfiguration crash-loops the media pod, as it does the API's,
+so the media image ships `/wepublish/ca.crt` for `NODE_EXTRA_CA_CERTS`.
 
 ---
 

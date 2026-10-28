@@ -53,7 +53,7 @@ export const BlockStyleIconWrapper = styled.div`
   position: absolute;
   left: 100%;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     position: static;
     flex-direction: row;
     align-items: center;
@@ -89,7 +89,7 @@ export const PanelWrapper = styled.div<{ disabled?: boolean }>`
   display: flex;
   width: 100%;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     flex-direction: column;
   }
 
@@ -120,7 +120,7 @@ export const LeftButtonsWrapper = styled.div`
   position: absolute;
   right: 100%;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     position: static;
     flex-direction: row;
     align-items: center;
@@ -139,7 +139,7 @@ export const ListItem = styled.div`
   width: 100%;
   position: relative;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     flex-direction: column;
   }
 `;
@@ -304,8 +304,9 @@ const AddBlockButton = memo(function AddBlockButton({
   );
 });
 
-export interface BlockListProps<V extends BlockListValue>
-  extends BlockProps<V[]> {
+export interface BlockListProps<V extends BlockListValue> extends BlockProps<
+  V[]
+> {
   blockMap: BlockMapForValue<V>;
 }
 

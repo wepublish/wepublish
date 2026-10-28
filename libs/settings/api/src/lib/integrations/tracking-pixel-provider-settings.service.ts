@@ -7,7 +7,7 @@ import {
 } from './tracking-pixel-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { TrackingPixelSettingsProviderDataloaderService } from './tracking-pixel-settings-provider-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import * as Sentry from '@sentry/nestjs';
@@ -20,7 +20,7 @@ export class TrackingPixelProviderSettingsService {
   );
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private resets: NamespaceResets,
     private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
@@ -78,7 +78,7 @@ export class TrackingPixelProviderSettingsService {
       create: output,
       update: { deletedAt: null },
     });
-    await this.kv.resetNamespace('settings:tracking-pixel');
+    await this.resets.reset('settings:tracking-pixel');
     await this.providerSettingsChanged.notify('Tracking pixel provider');
     return returnValue;
   }
@@ -108,7 +108,7 @@ export class TrackingPixelProviderSettingsService {
       where: { id },
       data: filteredUpdateData,
     });
-    await this.kv.resetNamespace('settings:tracking-pixel');
+    await this.resets.reset('settings:tracking-pixel');
     await this.providerSettingsChanged.notify('Tracking pixel provider');
     return returnValue;
   }
@@ -140,7 +140,7 @@ export class TrackingPixelProviderSettingsService {
       where: { id },
       data: { deletedAt: new Date() },
     });
-    await this.kv.resetNamespace('settings:tracking-pixel');
+    await this.resets.reset('settings:tracking-pixel');
     await this.providerSettingsChanged.notify('Tracking pixel provider');
     return returnValue;
   }

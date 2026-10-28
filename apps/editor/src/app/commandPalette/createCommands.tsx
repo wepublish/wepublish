@@ -1,6 +1,7 @@
 import {
   CanCreateApiToken,
   CanCreateArticle,
+  CanCreateArticleTemplate,
   CanCreateAuthor,
   CanCreateBanner,
   CanCreateBlockTemplate,
@@ -15,6 +16,7 @@ import {
   CanCreateMemberPlan,
   CanCreateNavigation,
   CanCreatePage,
+  CanCreatePageTemplate,
   CanCreatePaymentMethod,
   CanCreatePaywall,
   CanCreatePeer,
@@ -44,6 +46,7 @@ import {
   MdLocationPin,
   MdMail,
   MdMoney,
+  MdNoteAdd,
   MdPayment,
   MdPersonAddAlt1,
   MdPhoto,
@@ -61,6 +64,13 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdDescription />,
     permissions: [CanCreateArticle.id],
     perform: ({ navigate }) => navigate('/articles/create'),
+  },
+  {
+    id: 'createArticleTemplate',
+    titleKey: 'commandPalette.create.articleTemplate',
+    icon: <MdNoteAdd />,
+    permissions: [CanCreateArticleTemplate.id],
+    perform: ({ navigate }) => navigate('/articles/templates/create'),
   },
   {
     id: 'createArticleTag',
@@ -82,6 +92,13 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdDashboard />,
     permissions: [CanCreatePage.id],
     perform: ({ navigate }) => navigate('/pages/create'),
+  },
+  {
+    id: 'createPageTemplate',
+    titleKey: 'commandPalette.create.pageTemplate',
+    icon: <MdNoteAdd />,
+    permissions: [CanCreatePageTemplate.id],
+    perform: ({ navigate }) => navigate('/pages/templates/create'),
   },
   {
     id: 'createPageTag',

@@ -5,6 +5,7 @@ import mailchimp, {
 import { captureException } from '@sentry/nextjs';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { DailyBriefingContext } from '@wepublish/tenant/tsri';
 import {
   getApiUrl,
   getPageShell,
@@ -20,8 +21,6 @@ import {
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { ResponseError } from 'superagent';
-
-import { DailyBriefingContext } from '../src/components/teasers/teaser-sidebar-daily-briefing-context';
 
 type IndexProps = {
   campaigns: campaigns.Campaigns[];
@@ -52,9 +51,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const client = getApiClient(getApiUrl(), []);
 
   let mailchimpResponse:
-    | mailchimp.campaigns.CampaignsSuccessResponse
-    | ErrorResponse
-    | null = null;
+    mailchimp.campaigns.CampaignsSuccessResponse | ErrorResponse | null = null;
   try {
     mailchimpResponse = await mailchimp.campaigns.list({
       count: 4,

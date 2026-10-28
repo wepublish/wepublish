@@ -1,5 +1,6 @@
 import { CombinedGraphQLErrors } from '@apollo/client';
 import { PageContainer } from '@wepublish/page/website';
+import { BajourContainer as Container } from '@wepublish/tenant/bajour';
 import {
   getApiUrl,
   getPageShell,
@@ -16,8 +17,6 @@ import {
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
-
-import { Container } from '../src/components/layout/container';
 
 export default function PageBySlug() {
   const {

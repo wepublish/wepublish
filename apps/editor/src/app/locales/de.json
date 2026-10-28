@@ -97,6 +97,7 @@
       "saveValidationFailed": "Speichern fehlgeschlagen",
       "publishValidationFailed": "Publizieren fehlgeschlagen",
       "overview": {
+        "loadingTemplate": "Vorlage wird geladen…",
         "articlePending": "Artikel geplant",
         "articlePublished": "Artikel publiziert",
         "back": "Zurück",
@@ -122,6 +123,7 @@
         "warningLabel": "Warnung"
       },
       "panels": {
+        "createTemplate": "Vorlage aus Artikel erstellen",
         "firstPublishedAtDate": "Erstpublikation am {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Artikel wurde noch nicht publiziert",
         "addSlug": "Bitte Slug erfassen",
@@ -242,6 +244,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "Neuer Artikel",
+        "blank": "Leerer Artikel",
+        "search": "Vorlagen durchsuchen",
+        "noResults": "Keine Vorlagen gefunden"
+      },
       "overview": {
         "articles": "Artikel",
         "authors": "Autor*innen",
@@ -816,6 +824,8 @@
       "panels": {
         "approve": "Annehmen",
         "approveComment": "Kommentar freischalten",
+        "inReplyTo": "Antwort auf {{name}}",
+        "earlierRevisions": "Frühere Versionen ({{count}})",
         "cancel": "Abbrechen",
         "createdAt": "Erstellt am",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
@@ -973,6 +983,9 @@
       "ignoreDeactivatedSubscriptions": "E-Mails an deaktivierte Abos werden nicht verschickt!"
     },
     "edit": "Bearbeiten",
+    "editorHeader": {
+      "moreActions": "Weitere Aktionen"
+    },
     "errors": {
       "uniqueEmail": "Diese E-Mail-Adresse wird bereits verwendet.",
       "uniqueField": "Dieser Wert ist bereits vergeben ({{field}}).",
@@ -1201,7 +1214,27 @@
         "description": "Beschreibung",
         "goodie": "Goodie",
         "status": "Status",
-        "idCopied": "Rechnungs-ID kopiert"
+        "idCopied": "Rechnungs-ID kopiert",
+        "paidAt": "Bezahlt am",
+        "paidVia": "Bezahlt via",
+        "paymentState": "Zahlungsstatus",
+        "manuallyPaidBy": "Als bezahlt markiert von",
+        "canceledAt": "Storniert am",
+        "scheduledDeactivationAt": "Deaktivierung falls unbezahlt",
+        "createdAt": "Erstellt am",
+        "modifiedAt": "Zuletzt geändert",
+        "mail": "Rechnungs-E-Mail",
+        "positions": "Positionen"
+      },
+      "paymentState": {
+        "created": "Erstellt",
+        "submitted": "Übermittelt",
+        "requiresUserAction": "Aktion erforderlich",
+        "processing": "In Bearbeitung",
+        "paid": "Bezahlt",
+        "canceled": "Abgebrochen",
+        "declined": "Abgelehnt",
+        "chargeback": "Rückbuchung"
       }
     },
     "linkPageBreakEditPanel": {
@@ -1608,6 +1641,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Blockvorlagen"
       },
+      "articleTemplates": "Artikelvorlagen",
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
       "commentTags": "Tags",
@@ -1634,6 +1668,7 @@
       "memberPlans": "Abo-Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
+      "pageTemplates": "Seitenvorlagen",
       "paymentMethods": "Zahlungsmethoden",
       "peerArticles": "Peerbare Artikel",
       "networkContent": "We.Publish-Netzwerk",
@@ -1659,6 +1694,137 @@
       "auditLog": "Audit-Log",
       "letterLayouts": "Briefpapier",
       "language": "Sprache"
+    },
+    "pageTitles": {
+      "login": "Anmelden",
+      "impersonate": "Als User anmelden",
+      "resetPassword": "Passwort zurücksetzen",
+      "setPassword": "Neues Passwort festlegen",
+      "dashboard": "Dashboard",
+      "notifications": "Mitteilungen",
+      "auditLog": "Audit-Log",
+      "apps": "Apps",
+      "externalApp": "App",
+      "articles": "Artikel",
+      "articleCreate": "Neuer Artikel",
+      "articleEdit": "Artikel bearbeiten",
+      "peerArticles": "Peerbare Artikel",
+      "articleTags": "Artikel-Tags",
+      "articleTagCreate": "Neuer Artikel-Tag",
+      "articleTagEdit": "Artikel-Tag bearbeiten",
+      "paywalls": "Paywalls",
+      "paywallCreate": "Neue Paywall",
+      "paywallEdit": "Paywall bearbeiten",
+      "pages": "Seiten",
+      "pageCreate": "Neue Seite",
+      "pageEdit": "Seite bearbeiten",
+      "pageTags": "Seiten-Tags",
+      "pageTagCreate": "Neuer Seiten-Tag",
+      "pageTagEdit": "Seiten-Tag bearbeiten",
+      "blockStyles": "Block-Styling",
+      "blockTemplates": "Blockvorlagen",
+      "blockTemplateCreate": "Neue Blockvorlage",
+      "blockTemplateEdit": "Blockvorlage bearbeiten",
+      "articleTemplates": "Artikelvorlagen",
+      "articleTemplateCreate": "Neue Artikelvorlage",
+      "articleTemplateEdit": "Artikelvorlage bearbeiten",
+      "pageTemplates": "Seitenvorlagen",
+      "pageTemplateCreate": "Neue Seitenvorlage",
+      "pageTemplateEdit": "Seitenvorlage bearbeiten",
+      "crowdfundings": "Crowdfundings",
+      "crowdfundingCreate": "Neues Crowdfunding",
+      "crowdfundingEdit": "Crowdfunding bearbeiten",
+      "polls": "Umfragen",
+      "pollEdit": "Umfrage bearbeiten",
+      "pollVotes": "Umfrage-Stimmen",
+      "comments": "Kommentare",
+      "commentEdit": "Kommentar bearbeiten",
+      "commentTags": "Kommentar-Tags",
+      "commentTagCreate": "Neuer Kommentar-Tag",
+      "commentTagEdit": "Kommentar-Tag bearbeiten",
+      "commentRating": "Bewertungssystem",
+      "events": "Events",
+      "eventCreate": "Neuer Event",
+      "eventEdit": "Event bearbeiten",
+      "eventTags": "Event-Tags",
+      "eventTagCreate": "Neuer Event-Tag",
+      "eventTagEdit": "Event-Tag bearbeiten",
+      "importableEvents": "Importierbare Events",
+      "images": "Bilder",
+      "imageUpload": "Bilder hochladen",
+      "imageEdit": "Bild bearbeiten",
+      "documents": "Dokumente",
+      "documentUpload": "Dokumente hochladen",
+      "documentEdit": "Dokument bearbeiten",
+      "navigations": "Navigationen",
+      "navigationCreate": "Neue Navigation",
+      "navigationEdit": "Navigation bearbeiten",
+      "newsletter": "Newsletter",
+      "newsletterEdit": "Newsletter bearbeiten",
+      "newsletterPreview": "Newsletter-Vorschau",
+      "banners": "Banner",
+      "bannerCreate": "Neues Banner",
+      "bannerEdit": "Banner bearbeiten",
+      "authors": "Autor*innen",
+      "authorCreate": "Neue*r Autor*in",
+      "authorEdit": "Autor*in bearbeiten",
+      "authorTags": "Autor*innen-Tags",
+      "authorTagCreate": "Neuer Autor*innen-Tag",
+      "authorTagEdit": "Autor*innen-Tag bearbeiten",
+      "users": "User",
+      "userCreate": "Neuer User",
+      "userEdit": "User bearbeiten",
+      "userRoles": "Benutzerrollen",
+      "userRoleCreate": "Neue Benutzerrolle",
+      "userRoleEdit": "Benutzerrolle bearbeiten",
+      "audience": "Audience",
+      "subscriptions": "Abonnements",
+      "subscriptionCreate": "Neues Abonnement",
+      "subscriptionEdit": "Abonnement bearbeiten",
+      "memberPlans": "Abo-Pläne",
+      "memberPlanCreate": "Neuer Abo-Plan",
+      "memberPlanEdit": "Abo-Plan bearbeiten",
+      "paymentMethods": "Zahlungsmethoden",
+      "paymentMethodCreate": "Neue Zahlungsmethode",
+      "paymentMethodEdit": "Zahlungsmethode bearbeiten",
+      "discountCodes": "Rabattcodes",
+      "discountCodeCreate": "Neuer Rabattcode",
+      "discountCodeEdit": "Rabattcode bearbeiten",
+      "discountCodeUsage": "Rabattcode-Nutzung",
+      "goodies": "Goodies",
+      "goodieCreate": "Neues Goodie",
+      "goodieEdit": "Goodie bearbeiten",
+      "consents": "Einwilligungen",
+      "consentCreate": "Neue Einwilligung",
+      "consentEdit": "Einwilligung bearbeiten",
+      "userConsents": "Benutzer-Einwilligungen",
+      "userConsentCreate": "Neue Benutzer-Einwilligung",
+      "userConsentEdit": "Benutzer-Einwilligung bearbeiten",
+      "automaticEmails": "Automatische E-Mails",
+      "mailTemplates": "E-Mail-Vorlagen",
+      "mailTemplateCreate": "Neue E-Mail-Vorlage",
+      "mailTemplateEdit": "E-Mail-Vorlage bearbeiten",
+      "letterLayouts": "Briefpapier",
+      "letterLayoutCreate": "Neues Briefpapier",
+      "letterLayoutEdit": "Briefpapier bearbeiten",
+      "systemMails": "Konto- & Login-E-Mails",
+      "mailSend": "E-Mail senden",
+      "mailLog": "Gesendete E-Mails",
+      "networkContent": "We.Publish-Netzwerk",
+      "peers": "Peers",
+      "peerCreate": "Neuer Peer",
+      "peerEdit": "Peer bearbeiten",
+      "peerProfile": "Peering-Profil",
+      "apiTokens": "API-Schlüssel",
+      "apiTokenGenerate": "Neuer API-Schlüssel",
+      "tokens": "Tokens",
+      "tokenGenerate": "Neuer Token",
+      "integrations": "Integrationen",
+      "integrationEdit": "Integration bearbeiten",
+      "settings": "Einstellungen",
+      "websiteSettings": "Website-Einstellungen",
+      "seo": "SEO-Checkliste",
+      "logout": "Logout"
     },
     "navigation": {
       "overview": {
@@ -1723,7 +1889,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
-        "unpublished": "Nicht publiziert"
+        "unpublished": "Nicht publiziert",
+        "loadingTemplate": "Vorlage wird geladen…"
       },
       "panels": {
         "close": "Schliessen",
@@ -1771,7 +1938,8 @@
         "hideHeaderInfo": "Blendet den Header der Website auf dieser Seite aus, z.B. für Landingpages.",
         "hideFooter": "Footer ausblenden",
         "hideFooterInfo": "Blendet den Footer der Website auf dieser Seite aus, z.B. für Landingpages.",
-        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
+        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
+        "createTemplate": "Vorlage aus Seite erstellen"
       }
     },
     "pages": {
@@ -1804,6 +1972,12 @@
         "untitled": "Ohne Titel",
         "updatedAt": "Aktualisiert am",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "Neue Seite",
+        "blank": "Leere Seite",
+        "search": "Vorlagen durchsuchen",
+        "noResults": "Keine Vorlagen gefunden"
       }
     },
     "paymentMethodList": {
@@ -2001,7 +2175,29 @@
     "richtext": {
       "menuBar": {
         "paragraph": "Absatz",
-        "heading": "Überschrift {{level}}"
+        "heading": "Überschrift {{level}}",
+        "label": "Formatierung",
+        "textStyle": "Textstil",
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "underline": "Unterstrichen",
+        "strike": "Durchgestrichen",
+        "subscript": "Tiefgestellt",
+        "superscript": "Hochgestellt",
+        "textColor": "Textfarbe",
+        "backgroundColor": "Hintergrundfarbe",
+        "bulletList": "Aufzählung",
+        "orderedList": "Nummerierte Liste",
+        "alignLeft": "Linksbündig",
+        "alignCenter": "Zentriert",
+        "alignRight": "Rechtsbündig",
+        "link": "Link",
+        "table": "Tabelle einfügen",
+        "codeBlock": "Codeblock",
+        "blockquote": "Zitat",
+        "invisibleCharacters": "Unsichtbare Zeichen anzeigen"
       },
       "link": {
         "title": "Text verlinken mit",
@@ -2018,6 +2214,18 @@
         "remove": "Link entfernen",
         "variantButtonMain": "Button (primär)",
         "variantButtonSecondary": "Button (sekundär)"
+      },
+      "table": {
+        "label": "Tabelle",
+        "addColumnBefore": "Spalte links einfügen",
+        "addColumnAfter": "Spalte rechts einfügen",
+        "deleteColumn": "Spalte löschen",
+        "addRowBefore": "Zeile oberhalb einfügen",
+        "addRowAfter": "Zeile unterhalb einfügen",
+        "deleteRow": "Zeile löschen",
+        "mergeCells": "Zellen verbinden",
+        "splitCell": "Zelle teilen",
+        "headerCell": "Kopfzelle"
       },
       "colorPicker": {
         "clear": "Farbe zurücksetzen"
@@ -2058,6 +2266,8 @@
       "newArticlePaywall": "Neu erstellte Artikel benötigen ein Abo, um gelesen zu werden.",
       "subscriptionPlans": "Abo-Pläne",
       "subscriptionUpgradeModel": "Beim Upgrade die volle Preisdifferenz verrechnen (statt des anteiligen Restguthabens)",
+      "subscriptionExtendWindowDays": "Verlängerungsfenster (Tage vor Ablauf)",
+      "paymentMethodChangeExpiryDays": "Wartezeit für Zahlungsmethoden-Wechsel (Tage)",
       "warnings": {
         "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum Abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren.",
         "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
@@ -2087,6 +2297,8 @@
       "info": {
         "allowCommentEditing": "Leser*innen können den Text ihrer eigenen Kommentare nach dem Abschicken noch ändern.",
         "commentCharLimit": "Maximale Anzahl Zeichen, die ein Kommentar enthalten darf. Längere Kommentare können nicht abgeschickt werden.",
+        "subscriptionExtendWindowDays": "Wie viele Tage vor Ablauf eines Abos Leser*innen im Profil «Jetzt verlängern» sehen. 30 = wie bisher; 365 = jederzeit, solange keine Rechnung offen ist.",
+        "paymentMethodChangeExpiryDays": "Wie viele Tage ein angefangener Wechsel der Zahlungsmethode auf die Zahlung der offenen Rechnung oder die Bestätigung durch den Zahlungsanbieter wartet. Danach verfällt er und das Abo behält die bisherige Zahlungsmethode.",
         "newSubscriptionsApiPublic": "Macht die neuen Abos eines gewählten Zeitraums ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
         "activeSubscriptionsApiPublic": "Macht alle aktuell aktiven Abos ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
         "renewingSubscriptionsApiPublic": "Macht die Abos, die sich in einem gewählten Zeitraum erneuern, ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
@@ -2369,6 +2581,14 @@
       }
     },
     "userSubscriptionEdit": {
+      "paymentMethodChange": {
+        "pending": "Die Leser*in wechselt zu {{paymentMethod}}: {{waitingFor}}. Bis dahin bleibt die aktuelle Zahlungsmethode. Der Wechsel verfällt am {{expiresAt, PP}}.",
+        "waitingFor": {
+          "invoicePayment": "wartet auf die Zahlung der offenen Rechnung",
+          "authorization": "wartet auf die Bestätigung beim Zahlungsanbieter",
+          "immediate": "wird sofort übernommen"
+        }
+      },
       "autoRenew": "Automatische Erneuerung",
       "autoRenewDescription": "Abonnement automatisch verlängern",
       "createTitle": "Abonnement erstellen",
@@ -2484,6 +2704,62 @@
       "subscriptionStartsAt": "Abo startet am {{date}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
     },
+    "articleTemplates": {
+      "list": {
+        "action": "Aktion",
+        "copy": "Kopieren",
+        "title": "Artikelvorlagen",
+        "newTemplate": "Neue Artikelvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "info": "Artikelvorlagen legen den Inhalt und die Metadaten fest, mit denen ein neuer Artikel beginnt. Änderungen an einer Vorlage wirken sich nicht auf bereits daraus erstellte Artikel aus."
+      },
+      "edit": {
+        "loadingTemplate": "Vorlage wird geladen…",
+        "loadingArticle": "Artikel wird geladen…",
+        "copyName": "{{name}} (Kopie)",
+        "name": "Name",
+        "backToList": "Zurück zur Liste",
+        "metadata": "Metadaten",
+        "saved": "Gespeichert",
+        "created": "Erstellt",
+        "new": "Neu",
+        "editing": "In Bearbeitung",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
+      },
+      "delete": {
+        "title": "Artikelvorlage löschen?",
+        "body": "Möchtest du die Artikelvorlage \"{{name}}\" wirklich löschen? Daraus erstellte Artikel sind nicht betroffen."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Aktion",
+        "copy": "Kopieren",
+        "title": "Seitenvorlagen",
+        "newTemplate": "Neue Seitenvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "info": "Seitenvorlagen legen den Inhalt und die Metadaten fest, mit denen eine neue Seite beginnt. Änderungen an einer Vorlage wirken sich nicht auf bereits daraus erstellte Seiten aus."
+      },
+      "edit": {
+        "loadingTemplate": "Vorlage wird geladen…",
+        "loadingPage": "Seite wird geladen…",
+        "copyName": "{{name}} (Kopie)",
+        "name": "Name",
+        "backToList": "Zurück zur Liste",
+        "metadata": "Metadaten",
+        "saved": "Gespeichert",
+        "created": "Erstellt",
+        "new": "Neu",
+        "editing": "In Bearbeitung",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
+      },
+      "delete": {
+        "title": "Seitenvorlage löschen?",
+        "body": "Möchtest du die Seitenvorlage \"{{name}}\" wirklich löschen? Daraus erstellte Seiten sind nicht betroffen."
+      }
+    },
     "blockTemplates": {
       "list": {
         "title": "Blockvorlagen",
@@ -2504,7 +2780,8 @@
         "editing": "In Bearbeitung",
         "saveConfirmMessage": "Beim Speichern wird der Inhalt dieser Vorlage sofort in allen Artikeln und Seiten aktualisiert, die sie verwenden, auch in bereits veröffentlichten.",
         "saveConfirmTitle": "Vorlage speichern?",
-        "created": "Erstellt"
+        "created": "Erstellt",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
       }
     },
     "yes": "Ja",
@@ -3328,12 +3605,52 @@
           "fontWeightBold": "Fett",
           "fontWeightExtraBold": "Extrafett",
           "fontWeightBlack": "Schwarz",
-          "fontFamilyInfo": "Wähle aus den Schriften, die unter «Schriften» hinzugefügt sind. «Standard» verwendet die Standardschrift der Website.",
+          "fontFamilyInfo": "Wähle aus den Schriften, die unter «Schriften» hinzugefügt sind. «Standard» verwendet die Schrift aus «Basis für alle Stile».",
+          "baseFontFamilyInfo": "Wähle aus den Schriften, die unter «Schriften» hinzugefügt sind. «Standard» verwendet die Standardschrift des Browsers.",
           "fontSizeInfo": "Die Grösse des Textes. rem bezieht sich auf die Grundgrösse der Website (1rem sind meist 16px), px ist eine feste Pixelgrösse.",
           "lineHeightInfo": "Der Abstand zwischen den Zeilen eines Absatzes. 1.5em bedeutet das Anderthalbfache der Schriftgrösse.",
           "letterSpacingInfo": "Der Abstand zwischen den einzelnen Buchstaben. 0 ist der normale Abstand der Schrift; kleine Werte wie 0.02em reichen meist.",
           "textTransformInfo": "Ändert die Gross- und Kleinschreibung automatisch – z. B. zeigt «Grossbuchstaben» den ganzen Text in Grossbuchstaben, egal wie er eingegeben wurde.",
-          "overrideInfo": "Einschalten, um für diesen Textstil einen eigenen Wert festzulegen. Ausgeschaltet gilt der allgemeine Wert oben in diesem Tab."
+          "overrideInfo": "Einschalten, um für diesen Textstil einen eigenen Wert festzulegen. Ausgeschaltet gilt der Wert aus «Basis für alle Stile» oder, falls auch dort keiner gesetzt ist, der eingebaute Standardwert.",
+          "screenSizes": "Bildschirmgrössen",
+          "baseline": "Ausgangswert",
+          "belowWidth": "Unter {{width}}px",
+          "fromWidth": "ab {{width}}px",
+          "addScreenSize": "Bildschirmgrösse hinzufügen",
+          "screenSizeRemoved": "{{name}} entfernt",
+          "removeScreenSizeHint": "Mit der Entf-Taste entfernen Sie diese Bildschirmgrösse",
+          "undo": "Rückgängig",
+          "screenSizeInfo": "Diese Werte gelten für Bildschirme ab {{width}}px Breite. Was ausgeschaltet ist, wird von der nächstkleineren Bildschirmgrösse übernommen.",
+          "inheritedFromBaseline": "Übernommen: {{value}} vom «Ausgangswert»",
+          "inheritedFromWidth": "Übernommen: {{value}} von «{{name}}» (ab {{width}}px)",
+          "inheritedFromGeneral": "Übernommen: {{value}} von «Basis für alle Stile»",
+          "inheritedNone": "Nichts zu übernehmen – es gilt der eingebaute Standardwert",
+          "inheritedFromTheme": "Übernommen: {{value}}, der eingebaute Standardwert dieses Stils",
+          "inheritedFromBrowser": "Übernommen: {{value}}, der Standardwert des Browsers",
+          "replacesFromBaseline": "Ersetzt {{value}} vom «Ausgangswert»",
+          "replacesFromWidth": "Ersetzt {{value}} von «{{name}}» (ab {{width}}px)",
+          "replacesFromGeneral": "Ersetzt {{value}} von «Basis für alle Stile»",
+          "replacesFromTheme": "Ersetzt {{value}}, den eingebauten Standardwert dieses Stils",
+          "replacesFromBrowser": "Ersetzt {{value}}, den Standardwert des Browsers",
+          "replacesNone": "Ersetzt den eingebauten Standardwert",
+          "fieldAtWidth": "{{label}} bei {{name}} (ab {{width}}px)",
+          "unitOf": "Einheit von {{label}}",
+          "hasErrors": "(enthält Fehler)",
+          "notSet": "Standard",
+          "base": "Basis für alle Stile",
+          "baseInfo": "Alle Stile unten übernehmen diese Werte, solange sie keine eigenen festlegen.",
+          "screenSizeOverrides": "Eigene Werte für Bildschirmgrössen: {{names}}",
+          "screenSizeName": "{{name}} (ab {{width}}px)",
+          "preview": "Vorschau",
+          "previewScreenSize": "Bildschirmgrösse der Vorschau",
+          "groups": {
+            "headings": "Überschriften",
+            "text": "Text",
+            "teasers": "Teaser",
+            "article": "Artikel",
+            "banner": "Banner",
+            "blocks": "Blöcke"
+          }
         },
         "tabs": "Theme-Registerkarten",
         "paletteTab": "Palette",
@@ -4323,9 +4640,11 @@
       },
       "create": {
         "article": "Artikel erstellen",
+        "articleTemplate": "Artikelvorlage erstellen",
         "articleTag": "Artikel-Tag erstellen",
         "paywall": "Paywall erstellen",
         "page": "Seite erstellen",
+        "pageTemplate": "Seitenvorlage erstellen",
         "pageTag": "Seiten-Tag erstellen",
         "crowdfunding": "Crowdfunding erstellen",
         "blockTemplate": "Block-Vorlage erstellen",

@@ -1,12 +1,12 @@
 import { PdfRendererType, PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { BasePdfRenderer } from './base-pdf-renderer';
 import { CloudflarePdfRenderer } from './cloudflare-pdf-renderer';
 import { GotenbergPdfRenderer } from './gotenberg-pdf-renderer';
 
 export type PdfRendererDeps = {
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
 };
 
 export const createPdfRenderer = (
