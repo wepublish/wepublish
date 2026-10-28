@@ -1284,7 +1284,13 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
           </Card>
         </RuleSettings>
 
-        <Stack spacing={2}>
+        {/* A gap, not margins: an open accordion drops its top margin when it
+            is the first of its type, right under the heading. */}
+        <Stack
+          spacing={2}
+          useFlexGap
+          data-testid="stages"
+        >
           <Typography variant="h3">
             {t('engagement.form.presentation')}
           </Typography>
