@@ -1,4 +1,5 @@
 /// <reference types="vitest" />
+import { sentryTanstackStart } from '@sentry/tanstackstart-react/vite';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import viteReact from '@vitejs/plugin-react';
 import { nitro } from 'nitro/vite';
@@ -237,12 +238,21 @@ export default defineConfig(({ mode }) => {
       // a bare `require()` in `shared-store.js`. External, so nitro traces it
       // into `.output/server/node_modules`; bundling it would leave that
       // require unresolvable at runtime.
-      // `@sentry/node` is external so the `--import` preload
+      // The Sentry packages are external so the `--import` preload
       // (`instrument.server.ts`, which runs `Sentry.init` before this bundle
       // is even loaded) and the bundle resolve the *same* module instance
       // from `.output/server/node_modules`. Two copies would each build their
       // own client and the one the app captures through would not be the one
       // the preload configured.
+      //
+      // `@sentry/tanstackstart-react` is deliberately NOT in this list. Its
+      // own Vite plugin sets `noExternal` on it for the server build so it can
+      // substitute the route-pattern table into `wrapFetchWithSentry` — an
+      // external copy is never transformed, and every request span is then
+      // named after the raw URL instead of its route, which makes the trace
+      // view one bucket per article. The wrapper sitting in the bundle is
+      // harmless: the client it reaches for lives on `globalThis.__SENTRY__`,
+      // keyed by SDK version, so it is the one the preload configured.
       external: [
         'i18n-iso-countries',
         '@redis/client',
@@ -301,6 +311,35 @@ export default defineConfig(({ mode }) => {
             '@sentry/server-runtime-injection*',
           ],
         },
+      }),
+
+      // Last on purpose: it reads the finished bundle. It is here for source
+      // maps — without an upload, every stack trace from the browser bundle
+      // is unreadable minified output. No auth token means nothing to upload
+      // to, so a local `nx build` skips that half instead of failing;
+      // `SENTRY_AUTH_TOKEN`/`ORG`/`PROJECT` are build args the Dockerfile
+      // already passes.
+      //
+      // `autoInstrumentMiddleware` is off. It rewrites the middleware arrays
+      // in `src/start.ts` and adds a `@sentry/tanstackstart-react` import to
+      // that file in *both* environments — which in the browser is the entire
+      // `@sentry/react` surface, the 457 KB `src/start.ts` goes out of its way
+      // to keep out of the entry chunk. What it buys is a span around
+      // `cacheHeaders` and `csrf`, two header reads.
+      //
+      // `telemetry` is off because a build should not call out to a third
+      // party; CI builds run unattended and nobody consented for them.
+      ...sentryTanstackStart({
+        autoInstrumentMiddleware: false,
+        telemetry: false,
+        ...(process.env.SENTRY_AUTH_TOKEN ?
+          {
+            org: process.env.SENTRY_ORG,
+            project: process.env.SENTRY_PROJECT,
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            release: { name: process.env.SENTRY_RELEASE },
+          }
+        : { sourcemaps: { disable: true } }),
       }),
     ],
   };
