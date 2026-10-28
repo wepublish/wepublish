@@ -5,6 +5,29 @@ import {
   isHard,
 } from './engagement-rule-values';
 
+const when = (
+  afterArticles: number,
+  nextAfterArticles: number | undefined,
+  t: TFunction
+) => {
+  if (nextAfterArticles == null) {
+    return afterArticles === 0 ?
+        t('engagement.summary.always')
+      : t('engagement.summary.afterReadOrMore', { count: afterArticles });
+  }
+
+  if (afterArticles === 0) {
+    return t('engagement.summary.untilRead', { count: nextAfterArticles });
+  }
+
+  return nextAfterArticles - 1 === afterArticles ?
+      t('engagement.summary.afterRead', { count: afterArticles })
+    : t('engagement.summary.afterReadRange', {
+        from: afterArticles,
+        to: nextAfterArticles - 1,
+      });
+};
+
 export function summarizeStages(
   rule: Pick<EngagementRuleValues, 'goal' | 'stages'>,
   t: TFunction
@@ -22,12 +45,6 @@ export function summarizeStages(
   }
 
   return rule.stages.map((stage, index) => {
-    const from = stage.afterArticles + 1;
-    const next = rule.stages[index + 1];
-    const range =
-      !next ? t('engagement.summary.from', { from })
-      : next.afterArticles === from ? t('engagement.summary.article', { from })
-      : t('engagement.summary.articles', { from, to: next.afterArticles });
     const placement = t(`engagement.summary.placement.${stage.placement}`);
     const what =
       isHard(stage) ?
@@ -35,10 +52,10 @@ export function summarizeStages(
           requirement: t(`engagement.summary.requirement.${stage.requirement}`),
           count: stage.previewBlocks ?? 0,
         })
-      : stage.dismissible ? t('engagement.summary.dismissible', { placement })
+      : stage.dismissible ? t('engagement.summary.closable', { placement })
       : placement;
 
-    return `${range}: ${what}`;
+    return `${when(stage.afterArticles, rule.stages[index + 1]?.afterArticles, t)}: ${what}`;
   });
 }
 

@@ -8,16 +8,18 @@ import { hardStage, stageDefaults } from './engagement-rule-values';
 import { summarizeRule, summarizeStages } from './summarize-rule';
 
 const en: Record<string, string> = {
-  'engagement.summary.announcement': '{{placement}} from the first visit',
-  'engagement.summary.article': 'Article {{from}}',
-  'engagement.summary.articles': 'Articles {{from}}–{{to}}',
-  'engagement.summary.from': 'from {{from}}',
-  'engagement.summary.dismissible': 'dismissible {{placement}}',
+  'engagement.summary.announcement': 'From the first visit: {{placement}}',
+  'engagement.summary.always': 'From the first article',
+  'engagement.summary.untilRead': 'Until {{count}} articles are read',
+  'engagement.summary.afterRead': 'After {{count}} read articles',
+  'engagement.summary.afterReadRange': 'After {{from}}–{{to}} read articles',
+  'engagement.summary.afterReadOrMore': 'After {{count}} or more read articles',
+  'engagement.summary.closable': '{{placement}}, can be closed',
   'engagement.summary.hard':
-    'requires {{requirement}}, {{count}} preview blocks',
-  'engagement.summary.placement.MODAL': 'modal',
-  'engagement.summary.placement.BANNER': 'banner',
-  'engagement.summary.placement.INLINE': 'prompt in the article',
+    'article stops after {{count}} blocks, reading on requires {{requirement}}',
+  'engagement.summary.placement.MODAL': 'pop-up over the article',
+  'engagement.summary.placement.BANNER': 'banner at the top',
+  'engagement.summary.placement.INLINE': 'box inside the article',
   'engagement.summary.requirement.REGISTRATION': 'registration',
 };
 
@@ -44,7 +46,7 @@ describe('summarizeRule', () => {
         t
       )
     ).toBe(
-      'Articles 3–4: dismissible modal · from 5: requires registration, 3 preview blocks'
+      'After 2–3 read articles: pop-up over the article, can be closed · After 4 or more read articles: article stops after 3 blocks, reading on requires registration'
     );
   });
 
@@ -64,7 +66,9 @@ describe('summarizeRule', () => {
         },
         t
       )
-    ).toBe('Article 1: prompt in the article · from 2: dismissible modal');
+    ).toBe(
+      'Until 1 articles are read: box inside the article · After 1 or more read articles: pop-up over the article, can be closed'
+    );
   });
 
   it('summarizes an announcement by its placement', () => {
@@ -76,7 +80,7 @@ describe('summarizeRule', () => {
         },
         t
       )
-    ).toBe('banner from the first visit');
+    ).toBe('From the first visit: banner at the top');
   });
 
   it('lists the stages one by one, for a step by step view', () => {
@@ -96,8 +100,37 @@ describe('summarizeRule', () => {
         t
       )
     ).toEqual([
-      'Articles 3–4: dismissible modal',
-      'from 5: requires registration, 3 preview blocks',
+      'After 2–3 read articles: pop-up over the article, can be closed',
+      'After 4 or more read articles: article stops after 3 blocks, reading on requires registration',
     ]);
+  });
+
+  it('says when a stage shows from the first article on', () => {
+    expect(
+      summarizeStages(
+        {
+          goal: EngagementGoal.Membership,
+          stages: [
+            stageDefaults({ afterArticles: 0, dismissible: false }),
+            stageDefaults({ afterArticles: 3, dismissible: false }),
+            stageDefaults({ afterArticles: 4, dismissible: false }),
+          ],
+        },
+        t
+      )
+    ).toEqual([
+      'Until 3 articles are read: pop-up over the article',
+      'After 3 read articles: pop-up over the article',
+      'After 4 or more read articles: pop-up over the article',
+    ]);
+    expect(
+      summarizeStages(
+        {
+          goal: EngagementGoal.Membership,
+          stages: [stageDefaults({ afterArticles: 0, dismissible: false })],
+        },
+        t
+      )
+    ).toEqual(['From the first article: pop-up over the article']);
   });
 });

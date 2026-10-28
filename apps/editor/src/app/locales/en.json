@@ -4464,10 +4464,10 @@
         "PAYWALL_BYPASSEDInfo": "Readers who opened a bypass link of an active paywall."
       },
       "placement": {
-        "BANNER": "Banner",
-        "MODAL": "Modal",
-        "INLINE": "In the article",
-        "CUTOFF": "After the article"
+        "BANNER": "Banner at the top of the page",
+        "MODAL": "Pop-up over the article",
+        "INLINE": "Box inside the article text",
+        "CUTOFF": "Box at the end of the article"
       },
       "requirement": {
         "REGISTRATION": "Registration",
@@ -4492,24 +4492,29 @@
         "LIMITED": "Newsletter links open a limited number of articles"
       },
       "summary": {
-        "announcement": "{{placement}} from the first visit",
-        "article": "Article {{from}}",
-        "articles": "Articles {{from}}–{{to}}",
-        "from": "from {{from}}",
-        "dismissible": "dismissible {{placement}}",
-        "hard_one": "requires {{requirement}}, {{count}} preview block",
-        "hard_other": "requires {{requirement}}, {{count}} preview blocks",
+        "announcement": "From the first visit: {{placement}}",
+        "hard_one": "the article stops after {{count}} block, reading on requires {{requirement}}",
+        "hard_other": "the article stops after {{count}} blocks, reading on requires {{requirement}}",
         "placement": {
-          "BANNER": "banner",
-          "MODAL": "modal",
-          "INLINE": "prompt in the article",
-          "CUTOFF": "prompt after the article"
+          "BANNER": "banner at the top of the page",
+          "MODAL": "pop-up over the article",
+          "INLINE": "box inside the article text",
+          "CUTOFF": "box at the end of the article"
         },
         "requirement": {
           "REGISTRATION": "registration",
           "MEMBERSHIP": "a membership",
           "PAID_MEMBERSHIP": "a paid membership"
-        }
+        },
+        "always": "From the first article",
+        "untilRead_one": "Until 1 article is read",
+        "untilRead_other": "Until {{count}} articles are read",
+        "afterRead_one": "After 1 read article",
+        "afterRead_other": "After {{count}} read articles",
+        "afterReadRange": "After {{from}}–{{to}} read articles",
+        "afterReadOrMore_one": "After 1 or more read articles",
+        "afterReadOrMore_other": "After {{count}} or more read articles",
+        "closable": "{{placement}}, can be closed"
       },
       "form": {
         "goal": "Goal",
@@ -4539,10 +4544,10 @@
         "stage": "Stage {{number}}",
         "removeStage": "Remove stage",
         "addStage": "Add stage",
-        "afterArticles": "Show after … articles",
-        "afterArticlesInfo": "The number of other articles the reader read in the window. 0 shows it from the first article on.",
+        "afterArticles": "Show once a reader has read … articles",
+        "afterArticlesInfo": "Counts the other articles this reader read in the time window, each article once. 0 shows it from the very first article.",
         "placement": "Placement",
-        "placementInfo": "A banner on top, a modal over the article, a prompt in the article, or after the article. Only the last stage can be after the article.",
+        "placementInfo": "Where readers see it. Only the last stage can be at the end of the article.",
         "hard": "Restrict the article",
         "hardInfo": "Readers who do not meet the requirement only get the preview blocks. Checked on the server.",
         "requirement": "Requirement",

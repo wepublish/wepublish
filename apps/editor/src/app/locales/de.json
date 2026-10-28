@@ -4464,10 +4464,10 @@
         "PAYWALL_BYPASSEDInfo": "Leser*innen, die einen Freischaltlink einer aktiven Paywall geöffnet haben."
       },
       "placement": {
-        "BANNER": "Banner",
-        "MODAL": "Modal",
-        "INLINE": "Im Artikel",
-        "CUTOFF": "Nach dem Artikel"
+        "BANNER": "Banner oben auf der Seite",
+        "MODAL": "Pop-up über dem Artikel",
+        "INLINE": "Box im Artikeltext",
+        "CUTOFF": "Box am Ende des Artikels"
       },
       "requirement": {
         "REGISTRATION": "Registrierung",
@@ -4492,24 +4492,29 @@
         "LIMITED": "Newsletter-Links öffnen eine begrenzte Anzahl Artikel"
       },
       "summary": {
-        "announcement": "{{placement}} ab dem ersten Besuch",
-        "article": "Artikel {{from}}",
-        "articles": "Artikel {{from}}–{{to}}",
-        "from": "ab {{from}}",
-        "dismissible": "{{placement}}, schliessbar",
-        "hard_one": "verlangt {{requirement}}, {{count}} Vorschau-Block",
-        "hard_other": "verlangt {{requirement}}, {{count}} Vorschau-Blöcke",
+        "announcement": "Ab dem ersten Besuch: {{placement}}",
+        "hard_one": "der Artikel endet nach {{count}} Block, weiterlesen verlangt {{requirement}}",
+        "hard_other": "der Artikel endet nach {{count}} Blöcken, weiterlesen verlangt {{requirement}}",
         "placement": {
-          "BANNER": "Banner",
-          "MODAL": "Modal",
-          "INLINE": "Hinweis im Artikel",
-          "CUTOFF": "Hinweis nach dem Artikel"
+          "BANNER": "Banner oben auf der Seite",
+          "MODAL": "Pop-up über dem Artikel",
+          "INLINE": "Box im Artikeltext",
+          "CUTOFF": "Box am Ende des Artikels"
         },
         "requirement": {
           "REGISTRATION": "eine Registrierung",
           "MEMBERSHIP": "eine Mitgliedschaft",
           "PAID_MEMBERSHIP": "eine bezahlte Mitgliedschaft"
-        }
+        },
+        "always": "Ab dem ersten Artikel",
+        "untilRead_one": "Bis 1 Artikel gelesen ist",
+        "untilRead_other": "Bis {{count}} Artikel gelesen sind",
+        "afterRead_one": "Nach 1 gelesenen Artikel",
+        "afterRead_other": "Nach {{count}} gelesenen Artikeln",
+        "afterReadRange": "Nach {{from}}–{{to}} gelesenen Artikeln",
+        "afterReadOrMore_one": "Nach 1 oder mehr gelesenen Artikeln",
+        "afterReadOrMore_other": "Nach {{count}} oder mehr gelesenen Artikeln",
+        "closable": "{{placement}}, schliessbar"
       },
       "form": {
         "goal": "Ziel",
@@ -4539,10 +4544,10 @@
         "stage": "Stufe {{number}}",
         "removeStage": "Stufe entfernen",
         "addStage": "Stufe hinzufügen",
-        "afterArticles": "Nach … Artikeln anzeigen",
-        "afterArticlesInfo": "Die Anzahl anderer Artikel, die die Person im Zeitraum gelesen hat. 0 zeigt ihn ab dem ersten Artikel.",
+        "afterArticles": "Anzeigen, sobald jemand … Artikel gelesen hat",
+        "afterArticlesInfo": "Zählt die anderen Artikel, die diese Person im Zeitraum gelesen hat, jeden Artikel einmal. 0 zeigt es ab dem allerersten Artikel.",
         "placement": "Platzierung",
-        "placementInfo": "Ein Banner oben, ein Modal über dem Artikel, ein Hinweis im oder nach dem Artikel. Nur die letzte Stufe kann nach dem Artikel stehen.",
+        "placementInfo": "Wo Leser:innen es sehen. Nur die letzte Stufe kann am Ende des Artikels stehen.",
         "hard": "Artikel einschränken",
         "hardInfo": "Wer die Voraussetzung nicht erfüllt, erhält nur die Vorschau-Blöcke. Wird auf dem Server geprüft.",
         "requirement": "Voraussetzung",
