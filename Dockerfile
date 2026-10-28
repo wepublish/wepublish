@@ -149,6 +149,7 @@ RUN cp version apps/${NEXT_PROJECT}/public/deployed_version && \
     pnpm exec prisma generate && \
     pnpm exec nx build ${NEXT_PROJECT} --skip-nx-cache && \
     node docker/check-nitro-output.js dist/apps/${NEXT_PROJECT}/.output && \
+    test -f dist/apps/${NEXT_PROJECT}/.output/server/instrument.server.mjs && \
     node /wepublish/deployment/map-secrets.js clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website-tanstack-setup
@@ -176,6 +177,14 @@ ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
+# Sentry initialises here, not inside the server bundle: `Sentry.init` has to
+# run before the modules it instruments are imported, and `map-secrets.js`
+# spawns `node <serverPath>` with the environment it inherits, so this is the
+# only place the flag can be set. Without it the SDK never starts at all —
+# nothing else calls `init` any more — so treat a missing
+# `instrument.server.mjs` as a build failure rather than losing observability
+# quietly.
+ENV NODE_OPTIONS="--import /wepublish/.output/server/instrument.server.mjs"
 WORKDIR /wepublish
 COPY --from=website-tanstack-setup /wepublish /wepublish
 EXPOSE 4001
