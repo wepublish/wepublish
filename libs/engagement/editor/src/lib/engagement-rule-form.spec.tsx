@@ -169,6 +169,17 @@ describe('EngagementRuleForm', () => {
     expect(last.querySelectorAll('[data-testid="action"]')).toHaveLength(3);
   });
 
+  it('keeps the rule settings in one column, independent of the stages', () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    const settings = screen.getByTestId('rule-settings');
+
+    expect(settings).toHaveTextContent('engagement.form.goal');
+    expect(settings).toHaveTextContent('engagement.form.audience');
+    expect(settings).toHaveTextContent('engagement.form.trigger');
+    expect(settings).not.toContainElement(screen.getAllByTestId(/^stage-/)[0]);
+  });
+
   it('saves a consistent rule', async () => {
     const onSubmit = vi.fn();
     const preset = ENGAGEMENT_PRESETS.promoteMemberships();

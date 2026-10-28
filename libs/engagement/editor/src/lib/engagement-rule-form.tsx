@@ -61,15 +61,39 @@ import {
 } from './engagement-rule-values';
 import { summarizeRule } from './summarize-rule';
 
+// Columns follow the width of the form, not the window: the sidebar takes a
+// good part of it.
 const FormContainer = styled('div')`
+  container-type: inline-size;
+`;
+
+const FormColumns = styled('div')`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: 16px;
-  grid-template-areas:
-    'goal     presentation'
-    'audience presentation'
-    'trigger  presentation';
+  gap: ${({ theme }) => theme.spacing(2)};
+
+  @container (min-width: 900px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+`;
+
+/**
+ * Goal, audience and where/when stay together at the top instead of spreading
+ * along the stages, and follow the scroll when the window is tall enough.
+ */
+const RuleSettings = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
+
+  @container (min-width: 900px) {
+    @media (min-height: 800px) {
+      position: sticky;
+      top: ${({ theme }) => theme.spacing(2)};
+      max-height: calc(100vh - ${({ theme }) => theme.spacing(4)});
+      overflow-y: auto;
+    }
+  }
 `;
 
 const StageCard = styled(Card)`
@@ -842,55 +866,56 @@ export const EngagementRuleForm = () => {
 
   return (
     <FormContainer>
-      <Card
-        variant="outlined"
-        style={{ gridArea: 'goal' }}
-      >
-        <CardContent>
-          <FormFields>
-            <Typography variant="h3">{t('engagement.form.goal')}</Typography>
+      <FormColumns>
+        <RuleSettings data-testid="rule-settings">
+          <Card variant="outlined">
+            <CardContent>
+              <FormFields>
+                <Typography variant="h3">
+                  {t('engagement.form.goal')}
+                </Typography>
 
-            <TextFieldControl
-              name="name"
-              label={t('engagement.form.name')}
-            />
+                <TextFieldControl
+                  name="name"
+                  label={t('engagement.form.name')}
+                />
 
-            <SwitchControl
-              name="active"
-              label={t('engagement.form.active')}
-            />
+                <SwitchControl
+                  name="active"
+                  label={t('engagement.form.active')}
+                />
 
-            <FormControl>
-              <RadioGroup
-                value={goal}
-                onChange={(_event, value) =>
-                  changeGoal(value as EngagementGoal)
-                }
-              >
-                {Object.values(EngagementGoal).map(value => (
-                  <FormControlLabel
-                    key={value}
-                    value={value}
-                    control={<Radio />}
-                    label={label(
-                      t(`engagement.goal.${value}`),
-                      t(`engagement.goal.${value}Info`)
-                    )}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
+                <FormControl>
+                  <RadioGroup
+                    value={goal}
+                    onChange={(_event, value) =>
+                      changeGoal(value as EngagementGoal)
+                    }
+                  >
+                    {Object.values(EngagementGoal).map(value => (
+                      <FormControlLabel
+                        key={value}
+                        value={value}
+                        control={<Radio />}
+                        label={label(
+                          t(`engagement.goal.${value}`),
+                          t(`engagement.goal.${value}Info`)
+                        )}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
 
-            {goal === EngagementGoal.Newsletter && (
-              <Alert
-                severity="info"
-                data-testid="newsletter-note"
-              >
-                {t('engagement.form.newsletterNote')}
-              </Alert>
-            )}
+                {goal === EngagementGoal.Newsletter && (
+                  <Alert
+                    severity="info"
+                    data-testid="newsletter-note"
+                  >
+                    {t('engagement.form.newsletterNote')}
+                  </Alert>
+                )}
 
-            {/*<NumberField
+                {/*<NumberField
               name="priority"
               label={label(
                 t('engagement.form.priority'),
@@ -898,166 +923,164 @@ export const EngagementRuleForm = () => {
               )}
             />*/}
 
-            {stages?.length > 0 && (
-              <FormHelperText data-testid="rule-summary">
-                {summarizeRule({ goal, stages }, t)}
-              </FormHelperText>
-            )}
-          </FormFields>
-        </CardContent>
-      </Card>
+                {stages?.length > 0 && (
+                  <FormHelperText data-testid="rule-summary">
+                    {summarizeRule({ goal, stages }, t)}
+                  </FormHelperText>
+                )}
+              </FormFields>
+            </CardContent>
+          </Card>
 
-      <Card
-        variant="outlined"
-        style={{ gridArea: 'audience' }}
-      >
-        <CardContent>
-          <FormFields>
-            <Typography variant="h3">
-              {t('engagement.form.audience')}
-            </Typography>
+          <Card variant="outlined">
+            <CardContent>
+              <FormFields>
+                <Typography variant="h3">
+                  {t('engagement.form.audience')}
+                </Typography>
 
-            <Controller
-              control={control}
-              name="audience"
-              render={({ field }) => (
-                <RadioGroup
-                  {...field}
-                  onChange={(_event, value) => field.onChange(value)}
-                >
-                  {Object.values(EngagementAudience).map(value => (
-                    <FormControlLabel
-                      key={value}
-                      value={value}
-                      control={<Radio />}
-                      label={label(
-                        t(`engagement.audience.${value}`),
-                        t(`engagement.audience.${value}Info`)
+                <Controller
+                  control={control}
+                  name="audience"
+                  render={({ field }) => (
+                    <RadioGroup
+                      {...field}
+                      onChange={(_event, value) => field.onChange(value)}
+                    >
+                      {Object.values(EngagementAudience).map(value => (
+                        <FormControlLabel
+                          key={value}
+                          value={value}
+                          control={<Radio />}
+                          label={label(
+                            t(`engagement.audience.${value}`),
+                            t(`engagement.audience.${value}Info`)
+                          )}
+                        />
+                      ))}
+                    </RadioGroup>
+                  )}
+                />
+              </FormFields>
+            </CardContent>
+          </Card>
+
+          <Card
+            variant="outlined"
+            style={{ overflow: 'initial' }}
+          >
+            <CardContent>
+              <FormFields>
+                <Typography variant="h3">
+                  {t('engagement.form.trigger')}
+                </Typography>
+
+                <SwitchControl
+                  name="showOnArticles"
+                  label={t('engagement.form.showOnArticles')}
+                />
+
+                <SwitchControl
+                  name="includePeeredArticles"
+                  label={label(
+                    t('engagement.form.includePeeredArticles'),
+                    t('engagement.form.includePeeredArticlesInfo')
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="showOnPageIds"
+                  render={({ field }) => (
+                    <Autocomplete
+                      multiple
+                      disableCloseOnSelect
+                      options={pages.map(page => page.id)}
+                      getOptionLabel={option =>
+                        pages.find(page => page.id === option)?.latest.title ??
+                        option
+                      }
+                      value={field.value ?? []}
+                      onChange={(_event, ids) => field.onChange(ids ?? [])}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          label={t('engagement.form.showOnPages')}
+                        />
                       )}
                     />
-                  ))}
-                </RadioGroup>
-              )}
-            />
-          </FormFields>
-        </CardContent>
-      </Card>
+                  )}
+                />
 
-      <Card
-        variant="outlined"
-        style={{ gridArea: 'trigger', overflow: 'initial' }}
-      >
-        <CardContent>
-          <FormFields>
-            <Typography variant="h3">{t('engagement.form.trigger')}</Typography>
-
-            <SwitchControl
-              name="showOnArticles"
-              label={t('engagement.form.showOnArticles')}
-            />
-
-            <SwitchControl
-              name="includePeeredArticles"
-              label={label(
-                t('engagement.form.includePeeredArticles'),
-                t('engagement.form.includePeeredArticlesInfo')
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="showOnPageIds"
-              render={({ field }) => (
-                <Autocomplete
-                  multiple
-                  disableCloseOnSelect
-                  options={pages.map(page => page.id)}
-                  getOptionLabel={option =>
-                    pages.find(page => page.id === option)?.latest.title ??
-                    option
-                  }
-                  value={field.value ?? []}
-                  onChange={(_event, ids) => field.onChange(ids ?? [])}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      label={t('engagement.form.showOnPages')}
+                {!announcement && (
+                  <>
+                    <NumberField
+                      name="meterWindowDays"
+                      label={label(
+                        t('engagement.form.meterWindowDays'),
+                        t('engagement.form.meterWindowDaysInfo')
+                      )}
+                      nullable
                     />
-                  )}
-                />
-              )}
+
+                    <ReferralFields />
+                  </>
+                )}
+              </FormFields>
+            </CardContent>
+          </Card>
+        </RuleSettings>
+
+        <Stack spacing={2}>
+          <Typography variant="h3">
+            {t('engagement.form.presentation')}
+          </Typography>
+
+          {stageFields.map((stage, index) => (
+            <StageFields
+              key={stage.id}
+              index={index}
+              count={stageFields.length}
+              announcement={announcement}
+              onRemove={
+                !announcement && stageFields.length > 1 ?
+                  () => removeStage(index)
+                : undefined
+              }
             />
+          ))}
 
-            {!announcement && (
-              <>
-                <NumberField
-                  name="meterWindowDays"
-                  label={label(
-                    t('engagement.form.meterWindowDays'),
-                    t('engagement.form.meterWindowDaysInfo')
-                  )}
-                  nullable
-                />
+          {stagesError && <FormHelperText error>{stagesError}</FormHelperText>}
 
-                <ReferralFields />
-              </>
-            )}
-          </FormFields>
-        </CardContent>
-      </Card>
+          {!announcement && (
+            <Box>
+              <Button
+                variant="outlined"
+                startIcon={<MdAdd />}
+                onClick={() => {
+                  const last = stages?.at(-1);
 
-      <Stack
-        spacing={2}
-        style={{ gridArea: 'presentation' }}
-      >
-        <Typography variant="h3">
-          {t('engagement.form.presentation')}
-        </Typography>
-
-        {stageFields.map((stage, index) => (
-          <StageFields
-            key={stage.id}
-            index={index}
-            count={stageFields.length}
-            announcement={announcement}
-            onRemove={
-              !announcement && stageFields.length > 1 ?
-                () => removeStage(index)
-              : undefined
-            }
-          />
-        ))}
-
-        {stagesError && <FormHelperText error>{stagesError}</FormHelperText>}
-
-        {!announcement && (
-          <Box>
-            <Button
-              variant="outlined"
-              startIcon={<MdAdd />}
-              onClick={() => {
-                const last = stages?.at(-1);
-
-                addStage(
-                  stageDefaults({
-                    afterArticles: last ? last.afterArticles + 2 : 0,
-                    actions: [
-                      actionDefaults({
-                        type:
-                          goal === EngagementGoal.Newsletter ?
-                            EngagementActionType.Newsletter
-                          : EngagementActionType.Membership,
-                      }),
-                    ],
-                  })
-                );
-              }}
-            >
-              {t('engagement.form.addStage')}
-            </Button>
-          </Box>
-        )}
-      </Stack>
+                  addStage(
+                    stageDefaults({
+                      afterArticles: last ? last.afterArticles + 2 : 0,
+                      actions: [
+                        actionDefaults({
+                          type:
+                            goal === EngagementGoal.Newsletter ?
+                              EngagementActionType.Newsletter
+                            : EngagementActionType.Membership,
+                        }),
+                      ],
+                    })
+                  );
+                }}
+              >
+                {t('engagement.form.addStage')}
+              </Button>
+            </Box>
+          )}
+        </Stack>
+      </FormColumns>
     </FormContainer>
   );
 };
