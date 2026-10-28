@@ -732,24 +732,23 @@ const StageFields = ({
                 />
               </FormControl>
 
+              <TextFieldControl
+                name={`stages.${index}.html`}
+                label={label(
+                  t('engagement.form.html'),
+                  t('engagement.form.htmlInfo')
+                )}
+                multiline
+              />
+
               {stage?.placement === EngagementPlacement.Banner && (
-                <>
-                  <TextFieldControl
-                    name={`stages.${index}.html`}
-                    label={label(
-                      t('engagement.form.html'),
-                      t('engagement.form.htmlInfo')
-                    )}
-                    multiline
-                  />
-                  <TextFieldControl
-                    name={`stages.${index}.embedUrl`}
-                    label={label(
-                      t('engagement.form.embedUrl'),
-                      t('engagement.form.embedUrlInfo')
-                    )}
-                  />
-                </>
+                <TextFieldControl
+                  name={`stages.${index}.embedUrl`}
+                  label={label(
+                    t('engagement.form.embedUrl'),
+                    t('engagement.form.embedUrlInfo')
+                  )}
+                />
               )}
 
               {!hard && (

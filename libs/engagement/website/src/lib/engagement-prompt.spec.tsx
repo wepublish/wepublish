@@ -68,6 +68,25 @@ describe('EngagementPrompt', () => {
     expect(screen.queryByText('Subscribe to our newsletter')).toBeNull();
   });
 
+  it('adds its own html to pop-ups and boxes in the article', () => {
+    for (const placement of [
+      EngagementPlacement.Modal,
+      EngagementPlacement.Inline,
+      EngagementPlacement.Cutoff,
+    ]) {
+      const { unmount } = renderWithProviders(
+        <EngagementPrompt
+          prompt={mockEngagementPrompt({
+            stage: { placement, html: '<p>Our <b>own</b> markup</p>' },
+          })}
+        />
+      );
+
+      expect(screen.getByText('own').tagName).toBe('B');
+      unmount();
+    }
+  });
+
   it('offers no dismissal when the prompt can not be dismissed', () => {
     renderWithProviders(
       <EngagementPrompt

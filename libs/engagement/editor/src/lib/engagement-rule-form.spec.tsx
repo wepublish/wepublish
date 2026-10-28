@@ -293,6 +293,19 @@ describe('EngagementRuleForm', () => {
     expect(stage).toHaveTextContent('engagement.form.cta');
   });
 
+  it('offers html for every placement, the embed only for banners', () => {
+    renderForm(ENGAGEMENT_PRESETS.promoteMemberships());
+
+    const [stage] = screen.getAllByTestId(/^stage-/);
+
+    fireEvent.click(
+      within(stage).getByRole('button', { name: /engagement.form.moreOptions/ })
+    );
+
+    expect(stage).toHaveTextContent('engagement.form.html');
+    expect(stage).not.toHaveTextContent('engagement.form.embedUrl');
+  });
+
   it('shows the options a stage already uses', () => {
     const preset = ENGAGEMENT_PRESETS.promoteMemberships();
 
