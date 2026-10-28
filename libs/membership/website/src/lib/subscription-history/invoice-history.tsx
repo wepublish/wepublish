@@ -186,6 +186,31 @@ export const InvoiceHistoryDataRow = styled(TableRow)`
       right: 'td:nth-last-of-type(2), td:nth-last-of-type(3)',
     })}
 
+  // between invoices, the line starts where the invoice block does, like the
+  // labels' band; under the last row it separates the subscription, across
+  ${HISTORY_COLUMNS_SHOWN} {
+    &&[data-nested='true']:has(~ tr:not([data-stacked-only], [data-collapsed]))
+      > td:first-of-type {
+      border-bottom: none;
+    }
+
+    &&[data-nested='true']:has(~ tr:not([data-stacked-only], [data-collapsed]))
+      > td:nth-of-type(2) {
+      position: relative;
+      border-bottom: none;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: ${({ theme }) => theme.spacing(PLAN_PADDING - 1)};
+        right: 0;
+        bottom: -1px;
+        height: 1px;
+        background-color: ${({ theme }) => theme.palette.divider};
+      }
+    }
+  }
+
   // due: tinted in the colour of the navbar's warning about it
   ${HISTORY_COLUMNS_SHOWN} {
     &&[data-due='true'] > td {
