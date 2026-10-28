@@ -130,7 +130,27 @@ const ACTIONS_WITH_URL = [
 export const actionNeedsUrl = (type: EngagementActionType) =>
   ACTIONS_WITH_URL.includes(type);
 
-export type EngagementRuleProblem = { path: string; code: string };
+/**
+ * The stage before one that does not show later than it, e.g. step 2 after 1
+ * article while step 1 waits for 5.
+ */
+export const outOfOrderAfter = (
+  stages: Pick<EngagementStageValues, 'afterArticles'>[],
+  index: number
+) => {
+  const previous = stages[index - 1];
+
+  return previous && stages[index].afterArticles <= previous.afterArticles ?
+      previous
+    : undefined;
+};
+
+export type EngagementRuleProblem = {
+  path: string;
+  code: string;
+  /** For the message, e.g. the stage before one that is out of order. */
+  params?: Record<string, number>;
+};
 
 /**
  * The same rules as `validateEngagementRule` in `engagement-api`, with the
@@ -140,7 +160,11 @@ export function engagementRuleProblems(
   rule: EngagementRuleValues
 ): EngagementRuleProblem[] {
   const problems: EngagementRuleProblem[] = [];
-  const problem = (path: string, code: string) => problems.push({ path, code });
+  const problem = (
+    path: string,
+    code: string,
+    params?: EngagementRuleProblem['params']
+  ) => problems.push(params ? { path, code, params } : { path, code });
   const announcement = isAnnouncement(rule);
 
   if (!rule.stages.length) {
@@ -153,12 +177,15 @@ export function engagementRuleProblems(
 
   rule.stages.forEach((stage, index) => {
     const path = `stages.${index}`;
-    const previous = rule.stages[index - 1];
+    const previous = outOfOrderAfter(rule.stages, index);
 
     if (stage.afterArticles < 0) {
       problem(`${path}.afterArticles`, 'min');
-    } else if (previous && stage.afterArticles <= previous.afterArticles) {
-      problem(`${path}.afterArticles`, 'ascending');
+    } else if (previous) {
+      problem(`${path}.afterArticles`, 'ascending', {
+        step: index,
+        count: previous.afterArticles,
+      });
     }
 
     if (announcement && stage.afterArticles !== 0) {
@@ -293,13 +320,13 @@ export const createEngagementRuleSchema = (
       stages: z.array(stageSchema),
     })
     .superRefine((rule, context) => {
-      for (const { path, code } of engagementRuleProblems(rule)) {
+      for (const { path, code, params } of engagementRuleProblems(rule)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: path
             .split('.')
             .map(part => (/^\d+$/.test(part) ? +part : part)),
-          message: t(`engagement.validation.${code}`),
+          message: t(`engagement.validation.${code}`, params),
         });
       }
     });

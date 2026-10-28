@@ -137,6 +137,24 @@ describe('summarizeRule', () => {
       )
     ).toEqual(['From the first article: pop-up over the article']);
   });
+
+  it('does not make up a range for stages out of order', () => {
+    expect(
+      summarizeStages(
+        {
+          goal: EngagementGoal.Membership,
+          stages: [
+            stageDefaults({ afterArticles: 14, dismissible: false }),
+            stageDefaults({ afterArticles: 4, dismissible: false }),
+          ],
+        },
+        t
+      )
+    ).toEqual([
+      'After 14 read articles: pop-up over the article',
+      'After 4 or more read articles: pop-up over the article',
+    ]);
+  });
 });
 
 describe('summarizeWhere', () => {

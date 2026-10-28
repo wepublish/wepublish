@@ -224,9 +224,48 @@ describe('EngagementRuleForm', () => {
     fireEvent.click(screen.getByText('submit'));
 
     expect(
-      await screen.findByText('engagement.validation.ascending')
-    ).toBeInTheDocument();
+      (await screen.findAllByText('engagement.validation.ascending')).length
+    ).toBeGreaterThan(0);
     expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('points out stages out of order while editing, before saving', () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    expect(screen.queryByText('engagement.validation.ascending')).toBeNull();
+
+    const [, last] = screen.getAllByTestId(/^stage-/);
+
+    fireEvent.change(
+      last.querySelector('input[name="stages.1.afterArticles"]')!,
+      { target: { value: '1' } }
+    );
+
+    expect(last).toHaveTextContent('engagement.validation.ascending');
+    // Also in the header, for a collapsed stage.
+    expect(
+      screen.getAllByRole('button', { name: /engagement.form.stage/ })[1]
+    ).toHaveTextContent('engagement.validation.ascending');
+  });
+
+  it('lists what keeps the rule from being saved, by stage', async () => {
+    const preset = ENGAGEMENT_PRESETS.growNewsletter();
+
+    renderForm({
+      ...preset,
+      name: '',
+      stages: preset.stages.map(stage => ({ ...stage, afterArticles: 2 })),
+    });
+
+    expect(screen.queryByTestId('rule-problems')).toBeNull();
+
+    fireEvent.click(screen.getByText('submit'));
+
+    const problems = await screen.findByTestId('rule-problems');
+
+    expect(problems).toHaveTextContent('engagement.form.name');
+    expect(problems).toHaveTextContent('engagement.form.stage');
+    expect(problems).toHaveTextContent('engagement.validation.ascending');
   });
 
   it('does not mark number fields as hidden', () => {

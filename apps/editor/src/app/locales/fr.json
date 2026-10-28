@@ -4776,6 +4776,7 @@
         "paramKey": "Paramètre, p. ex. utm_medium",
         "paramValue": "Valeur, p. ex. email",
         "addParam": "Ajouter un paramètre",
+        "problems": "La règle ne peut pas être enregistrée ainsi :",
         "presentation": "Présentation et actions",
         "message": "Message",
         "stage": "Étape {{number}}",
@@ -4821,7 +4822,7 @@
       "validation": {
         "required": "Obligatoire",
         "min": "Trop petit",
-        "ascending": "Doit être plus élevé qu’à l’étape précédente",
+        "ascending": "Doit être plus élevé qu’à l’étape {{step}} ({{count}})",
         "hardNotLast": "Seule la dernière étape peut restreindre l’article",
         "hardNeedsCutoff": "Une étape restrictive se place après l’article",
         "onlyHard": "Seulement pour une étape qui restreint l’article",

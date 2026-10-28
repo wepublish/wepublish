@@ -14,6 +14,11 @@ const when = (
   nextAfterArticles: number | undefined,
   t: TFunction
 ) => {
+  // Stages out of order are refused on save; until then, no made-up range.
+  if (nextAfterArticles != null && nextAfterArticles <= afterArticles) {
+    return t('engagement.summary.afterRead', { count: afterArticles });
+  }
+
   if (nextAfterArticles == null) {
     return afterArticles === 0 ?
         t('engagement.summary.always')

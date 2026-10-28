@@ -4776,6 +4776,7 @@
         "paramKey": "Param, e.g. utm_medium",
         "paramValue": "Value, e.g. email",
         "addParam": "Add param",
+        "problems": "The rule can not be saved like this:",
         "presentation": "Presentation and actions",
         "message": "Message",
         "stage": "Stage {{number}}",
@@ -4821,7 +4822,7 @@
       "validation": {
         "required": "Required",
         "min": "Too small",
-        "ascending": "Must be higher than the stage before",
+        "ascending": "Must be higher than in stage {{step}} ({{count}})",
         "hardNotLast": "Only the last stage can restrict the article",
         "hardNeedsCutoff": "A restricting stage is shown after the article",
         "onlyHard": "Only for a stage that restricts the article",

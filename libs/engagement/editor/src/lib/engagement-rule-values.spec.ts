@@ -197,7 +197,11 @@ describe('engagement rule values', () => {
     ).toEqual([
       { path: 'stages.0.enforcement', code: 'hardNotLast' },
       { path: 'stages.0.actions', code: 'newsletterActionRequired' },
-      { path: 'stages.1.afterArticles', code: 'ascending' },
+      {
+        path: 'stages.1.afterArticles',
+        code: 'ascending',
+        params: { step: 1, count: 4 },
+      },
     ]);
   });
 

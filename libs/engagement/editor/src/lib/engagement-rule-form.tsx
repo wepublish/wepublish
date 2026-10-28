@@ -66,6 +66,7 @@ import {
   actionNeedsUrl,
   hardStage,
   isAnnouncement,
+  outOfOrderAfter,
   stageDefaults,
 } from './engagement-rule-values';
 import { EngagementConflictNotice } from './engagement-conflict-notice';
@@ -153,6 +154,8 @@ type NumberFieldProps = {
   /** An empty field is null instead of 0. */
   nullable?: boolean;
   disabled?: boolean;
+  /** Shown while editing, before the form was submitted. */
+  liveError?: string;
 };
 
 const NumberField = ({
@@ -160,6 +163,7 @@ const NumberField = ({
   label: fieldLabel,
   nullable,
   disabled,
+  liveError,
 }: NumberFieldProps) => {
   const { control } = useFormContext<EngagementRuleValues>();
 
@@ -185,8 +189,8 @@ const NumberField = ({
           type="number"
           slotProps={{ htmlInput: { min: 0 } }}
           disabled={disabled}
-          error={Boolean(error)}
-          helperText={error?.message}
+          error={Boolean(error ?? liveError)}
+          helperText={error?.message ?? liveError}
           fullWidth
         />
       )}
@@ -406,6 +410,8 @@ type StageFieldsProps = {
   count: number;
   announcement: boolean;
   summary?: string;
+  /** Why the stage does not fit the others, before saving. */
+  orderProblem?: string;
   onRemove?: () => void;
 };
 
@@ -414,6 +420,7 @@ const StageFields = ({
   count,
   announcement,
   summary,
+  orderProblem,
   onRemove,
 }: StageFieldsProps) => {
   const { t } = useTranslation();
@@ -424,7 +431,7 @@ const StageFields = ({
     control,
     name: `stages.${index}`,
   });
-  const hasErrors = Boolean(errors.stages?.[index]);
+  const hasErrors = Boolean(errors.stages?.[index] ?? orderProblem);
   const [expanded, setExpanded] = useState(true);
   const [seenSubmitCount, setSeenSubmitCount] = useState(submitCount);
 
@@ -494,17 +501,17 @@ const StageFields = ({
               : t('engagement.form.stage', { number: index + 1 })}
             </Typography>
 
-            {summary && (
+            {(orderProblem ?? summary) && (
               <Typography
                 variant="body2"
                 component="span"
-                color="text.secondary"
+                color={orderProblem ? 'error' : 'text.secondary'}
                 sx={{
                   display: 'block',
                   '&::first-letter': { textTransform: 'uppercase' },
                 }}
               >
-                {summary}
+                {orderProblem ?? summary}
               </Typography>
             )}
           </Box>
@@ -520,6 +527,7 @@ const StageFields = ({
                     t('engagement.form.afterArticles'),
                     t('engagement.form.afterArticlesInfo')
                   )}
+                  liveError={orderProblem}
                 />
               )}
 
@@ -857,6 +865,80 @@ const ShowFirstField = ({ ruleId }: { ruleId?: string }) => {
     : showFirst;
 };
 
+type FieldErrorLeaf = { path: string[]; message: string };
+
+/** The messages in react-hook-form's nested errors, with their paths. */
+const flattenErrors = (
+  errors: unknown,
+  path: string[] = []
+): FieldErrorLeaf[] => {
+  if (!errors || typeof errors !== 'object') {
+    return [];
+  }
+
+  const { message } = errors as { message?: unknown };
+
+  if (typeof message === 'string') {
+    return [{ path, message }];
+  }
+
+  return Object.entries(errors).flatMap(([key, value]) =>
+    key === 'ref' ? [] : flattenErrors(value, [...path, key])
+  );
+};
+
+const PROBLEM_FIELD_LABELS: Record<string, string> = {
+  name: 'engagement.form.name',
+  meterWindowDays: 'engagement.form.meterWindowDays',
+  newsletterReferralLimit: 'engagement.form.newsletterReferralLimit',
+  audienceMemberPlanIds: 'engagement.form.audienceMemberPlans',
+};
+
+/**
+ * What keeps the rule from being saved, in one place: the fields can be far
+ * down the page or in a collapsed stage.
+ */
+const RuleProblems = ({ announcement }: { announcement: boolean }) => {
+  const { t } = useTranslation();
+  const { control } = useFormContext<EngagementRuleValues>();
+  const { errors, submitCount } = useFormState({ control });
+  const problems = flattenErrors(errors);
+
+  if (!submitCount || !problems.length) {
+    return null;
+  }
+
+  const where = ([field, index]: string[]) =>
+    field === 'stages' && index != null && /^\d+$/.test(index) ?
+      announcement ? t('engagement.form.message')
+      : t('engagement.form.stage', { number: +index + 1 })
+    : PROBLEM_FIELD_LABELS[field] && t(PROBLEM_FIELD_LABELS[field]);
+
+  return (
+    <Alert
+      severity="error"
+      data-testid="rule-problems"
+      sx={{ mb: 2 }}
+    >
+      {t('engagement.form.problems')}
+      <Box
+        component="ul"
+        sx={{ m: 0, pl: 2.5 }}
+      >
+        {problems.map(({ path, message }) => {
+          const location = where(path);
+
+          return (
+            <li key={path.join('.')}>
+              {location ? `${location}: ${message}` : message}
+            </li>
+          );
+        })}
+      </Box>
+    </Alert>
+  );
+};
+
 const ReferralFields = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<EngagementRuleValues>();
@@ -993,6 +1075,16 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
   const stagesError =
     formState.errors.stages?.root?.message ?? formState.errors.stages?.message;
   const stageSummaries = stages ? summarizeStages({ goal, stages }, t) : [];
+  const orderProblems = (stages ?? []).map((_stage, index) => {
+    const previous = outOfOrderAfter(stages, index);
+
+    return previous ?
+        t('engagement.validation.ascending', {
+          step: index,
+          count: previous.afterArticles,
+        })
+      : undefined;
+  });
 
   const changeGoal = (next: EngagementGoal) => {
     const current = getValues();
@@ -1032,6 +1124,8 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
 
   return (
     <FormContainer>
+      <RuleProblems announcement={announcement} />
+
       <FormColumns>
         <RuleSettings
           ref={settingsRef}
@@ -1211,6 +1305,7 @@ export const EngagementRuleForm = ({ ruleId }: { ruleId?: string }) => {
               count={stageFields.length}
               announcement={announcement}
               summary={stageSummaries[index]}
+              orderProblem={announcement ? undefined : orderProblems[index]}
               onRemove={
                 !announcement && stageFields.length > 1 ?
                   () => removeStage(index)
