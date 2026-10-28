@@ -60,6 +60,7 @@ const storedRule = {
   newsletterReferralLimit: 0,
   newsletterParams: [{ key: 'utm_medium', value: 'email' }],
   showOnPages: [{ id: 'page-1' }],
+  audienceMemberPlans: [{ id: 'plan-1' }],
   stages: [stage],
 };
 
@@ -172,6 +173,7 @@ describe('EngagementRuleService', () => {
       expect.objectContaining({
         id: 'rule-1',
         showOnPageIds: ['page-1'],
+        audienceMemberPlanIds: ['plan-1'],
         newsletterParams: [{ key: 'utm_medium', value: 'email' }],
         stages: [expect.objectContaining({ id: 'stage-1', actions: [] })],
       }),
@@ -214,6 +216,21 @@ describe('EngagementRuleService', () => {
     expect(data).not.toHaveProperty('showOnPageIds');
   });
 
+  it('connects the plans of a member plans audience', async () => {
+    await service.create({
+      ...metered,
+      audience: EngagementAudience.MEMBER_PLANS,
+      audienceMemberPlanIds: ['plan-1'],
+    });
+
+    const { data } = prisma.engagementRule.create.mock.calls[0][0];
+
+    expect(data).toMatchObject({
+      audienceMemberPlans: { connect: [{ id: 'plan-1' }] },
+    });
+    expect(data).not.toHaveProperty('audienceMemberPlanIds');
+  });
+
   it('refuses an inconsistent rule, saying what is wrong', async () => {
     const invalid = {
       ...metered,
@@ -243,6 +260,7 @@ describe('EngagementRuleService', () => {
         data: expect.objectContaining({
           version: { increment: 1 },
           showOnPages: { set: [{ id: 'page-1' }] },
+          audienceMemberPlans: { set: [] },
         }),
       })
     );

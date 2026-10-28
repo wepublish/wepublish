@@ -42,6 +42,7 @@ fragment FullEngagementRule on EngagementRule {
   priority
   version
   audience
+  audienceMemberPlanIds
   showOnArticles
   showOnPageIds
   includePeeredArticles

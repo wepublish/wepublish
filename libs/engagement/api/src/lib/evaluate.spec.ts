@@ -136,6 +136,23 @@ describe('matchingRules', () => {
     ).toEqual(expected);
   });
 
+  it('matches subscribers of the chosen plans', () => {
+    const forPlan = announcement({
+      audience: EngagementAudience.MEMBER_PLANS,
+      audienceMemberPlanIds: ['plan'],
+    });
+    const forOtherPlan = announcement({
+      id: 'other',
+      audience: EngagementAudience.MEMBER_PLANS,
+      audienceMemberPlanIds: ['other-plan'],
+    });
+
+    expect(
+      ids(matchingRules([forPlan, forOtherPlan], member, article()))
+    ).toEqual(['announcement']);
+    expect(ids(matchingRules([forPlan], registered, article()))).toEqual([]);
+  });
+
   it('skips a rule whose hard requirement the reader already meets', () => {
     expect(ids(matchingRules([rule()], registered, article()))).toEqual([]);
     expect(

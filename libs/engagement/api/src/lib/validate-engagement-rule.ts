@@ -1,5 +1,6 @@
 import {
   EngagementActionType,
+  EngagementAudience,
   EngagementEnforcement,
   EngagementGoal,
   EngagementPlacement,
@@ -18,6 +19,8 @@ export type EngagementStageDraft = {
 
 export type EngagementRuleDraft = {
   goal: EngagementGoal;
+  audience?: EngagementAudience;
+  audienceMemberPlanIds?: string[];
   meterWindowDays?: number | null;
   newsletterReferral: NewsletterReferralMode;
   newsletterReferralLimit: number;
@@ -130,6 +133,16 @@ export function validateEngagementRule(
     rule.newsletterReferralLimit < 1
   ) {
     problem('newsletterReferralLimit', 'min');
+  }
+
+  const memberPlans = rule.audienceMemberPlanIds ?? [];
+
+  if (rule.audience === EngagementAudience.MEMBER_PLANS) {
+    if (!memberPlans.length) {
+      problem('audienceMemberPlanIds', 'required');
+    }
+  } else if (memberPlans.length) {
+    problem('audienceMemberPlanIds', 'onlyMemberPlans');
   }
 
   return problems;

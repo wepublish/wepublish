@@ -881,6 +881,9 @@ input CreateCrowdfundingMemberPlan {
 input CreateEngagementRuleInput {
   active: Boolean! = true
   audience: EngagementAudience! = ALL
+
+  """Only for the MEMBER_PLANS audience, which needs at least one."""
+  audienceMemberPlanIds: [String!]! = []
   goal: EngagementGoal!
   includePeeredArticles: Boolean! = false
   meterWindowDays: Int
@@ -1205,6 +1208,7 @@ enum EngagementAudience {
   ALL
   ANONYMOUS
   MEMBERS
+  MEMBER_PLANS
   NON_MEMBERS
   NON_PAYING
   PAYING_MEMBERS
@@ -1261,6 +1265,9 @@ enum EngagementRequirement {
 type EngagementRule {
   active: Boolean!
   audience: EngagementAudience!
+
+  """The plans of the MEMBER_PLANS audience."""
+  audienceMemberPlanIds: [String!]!
   createdAt: DateTime!
   goal: EngagementGoal!
   id: String!
@@ -6232,6 +6239,9 @@ input UpdateCrowdfundingInput {
 input UpdateEngagementRuleInput {
   active: Boolean! = true
   audience: EngagementAudience! = ALL
+
+  """Only for the MEMBER_PLANS audience, which needs at least one."""
+  audienceMemberPlanIds: [String!]! = []
   goal: EngagementGoal!
   id: String!
   includePeeredArticles: Boolean! = false

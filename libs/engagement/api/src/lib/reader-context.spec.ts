@@ -175,6 +175,8 @@ describe('matchesAudience', () => {
     [EngagementAudience.NON_PAYING, [true, true, true, false]],
     [EngagementAudience.PAYING_MEMBERS, [false, false, false, true]],
     [EngagementAudience.PAYWALL_BYPASSED, [false, false, false, false]],
+    // Without plans to match.
+    [EngagementAudience.MEMBER_PLANS, [false, false, false, false]],
   ])(
     '%s matches [anonymous, registered, free member, paying member] = %j',
     (audience, expected) => {
@@ -185,6 +187,20 @@ describe('matchesAudience', () => {
       ).toEqual(expected);
     }
   );
+
+  it('matches readers with a subscription to one of the plans', () => {
+    expect(
+      [anonymous, registered, freeMember, payingMember].map(r =>
+        matchesAudience(EngagementAudience.MEMBER_PLANS, r, ['paid', 'other'])
+      )
+    ).toEqual([false, false, false, true]);
+  });
+
+  it('ignores plans for the other audiences', () => {
+    expect(
+      matchesAudience(EngagementAudience.ANONYMOUS, anonymous, ['paid'])
+    ).toBe(true);
+  });
 
   it('matches readers with a valid paywall bypass', () => {
     expect(

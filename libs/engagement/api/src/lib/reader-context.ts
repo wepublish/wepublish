@@ -94,7 +94,8 @@ export function readerContextFrom({
 
 export function matchesAudience(
   audience: EngagementAudience,
-  reader: ReaderContext
+  reader: ReaderContext,
+  memberPlanIds: string[] = []
 ): boolean {
   const member = reader.activeMemberPlanIds.length > 0;
 
@@ -115,6 +116,8 @@ export function matchesAudience(
       return reader.paying;
     case EngagementAudience.PAYWALL_BYPASSED:
       return !!reader.paywallBypassed;
+    case EngagementAudience.MEMBER_PLANS:
+      return memberPlanIds.some(id => reader.activeMemberPlanIds.includes(id));
   }
 }
 
