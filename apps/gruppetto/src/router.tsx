@@ -7,8 +7,6 @@ import {
 
 import { registerSentryClient } from '@wepublish/utils/website/tanstack/sentry/client';
 
-import { RoutePending } from './route-pending';
-
 import { routeTree } from './routeTree.gen';
 
 /**
@@ -21,10 +19,14 @@ export function getRouter() {
 
   const router = createRouter({
     routeTree,
-    // `next/link` prefetched when a link entered the viewport. 'intent'
-    // (hover/focus) is the closest TanStack equivalent and is what
-    // `LinkContext.prefetch` maps onto.
-    defaultPreload: 'intent',
+    // `next/link` prefetched when a link entered the viewport, which is what
+    // kept its navigations instant. 'intent' (hover/focus) misses touch and
+    // keyboard entirely, and Start forces `autoCodeSplitting`, so a route
+    // whose chunk has not been fetched yet mounts a fresh Suspense boundary —
+    // and React always renders a fallback for one of those, which is the
+    // blank. Preloading on render is what stops the boundary suspending at
+    // all, so the previous page stays up until the new one can render whole.
+    defaultPreload: 'render',
     // Next's client router kept the `getStaticProps` JSON it had already
     // fetched. At 0 the hover preload is thrown away on click, so the loader
     // runs twice per navigation and again on every back-navigation. These
@@ -36,12 +38,6 @@ export function getRouter() {
     // with a 404 is handled by the route itself so the response can carry both
     // a 404 status and the CMS 404 content.
     defaultNotFoundComponent: FourOhFourPage,
-    // The router uses this as the Suspense fallback for a route whose
-    // component chunk or data is still arriving. Without one, a suspended
-    // boundary renders nothing: on a slow connection the article body went
-    // blank for 1.3s while the URL and chrome had already switched, which
-    // reads as the page losing its content rather than loading.
-    defaultPendingComponent: RoutePending,
     ...apolloRouterOptions(apolloClient),
   });
 
