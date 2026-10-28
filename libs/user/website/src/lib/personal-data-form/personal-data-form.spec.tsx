@@ -271,4 +271,41 @@ describe('PersonalDataForm', () => {
       )
     ).toBeInTheDocument();
   });
+
+  // the field and the validation agree on a cleared country
+  describe('clearing the country', () => {
+    it('empties the field and marks it until a country is picked again', async () => {
+      const { user: reader } = renderForm();
+
+      await reader.clear(field('user.form.country'));
+      await reader.click(field('user.form.zipCode'));
+
+      expect(field('user.form.country')).toHaveValue('');
+      expect(field('user.form.country')).toHaveAttribute(
+        'aria-invalid',
+        'true'
+      );
+
+      await reader.type(field('user.form.country'), 'Australien{enter}');
+
+      expect(field('user.form.country')).toHaveAttribute(
+        'aria-invalid',
+        'false'
+      );
+    });
+
+    it('saves nothing, not the country from before', async () => {
+      const { user: reader, onUpdate } = renderForm();
+
+      await reader.clear(field('user.form.country'));
+      await reader.click(field('user.form.zipCode'));
+      await reader.click(saveButton());
+
+      expect(field('user.form.country')).toHaveAttribute(
+        'aria-invalid',
+        'true'
+      );
+      expect(onUpdate).not.toHaveBeenCalled();
+    });
+  });
 });

@@ -145,9 +145,16 @@ state, and report to Sentry alongside the backend.
 
 ### Editor command palette
 
-Cmd/Ctrl+K opens a command palette over the whole editor, unless a focused
-widget already handled the keystroke (`event.defaultPrevented`) — the richtext
-editor claims it for its link menu. Its commands are
+`Mod+K` (Cmd on a Mac, Ctrl elsewhere) opens a command palette over the whole
+editor, unless a focused widget already handled the keystroke
+(`event.defaultPrevented`) — the richtext editor claims it for its link menu.
+The binding is a `useHotkey` from `@tanstack/react-hotkeys` registered with
+`preventDefault: false`: the library prevents the default *before* the
+callback runs, so leaving it on would make every press look already handled.
+The trigger's shortcut label comes from `formatForDisplay` on the same
+`COMMAND_PALETTE_HOTKEY`, and specs that pin a platform must call
+`HotkeyManager.resetInstance()`, because the manager reads the platform once.
+Its commands are
 plain data, split across `navigationCommands.tsx`, `createCommands.tsx` and
 `accountCommands.tsx`, and brought together by
 [apps/editor/src/app/commandPalette/commands.tsx](../apps/editor/src/app/commandPalette/commands.tsx).

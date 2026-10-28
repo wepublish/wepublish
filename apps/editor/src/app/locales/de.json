@@ -820,6 +820,8 @@
       "panels": {
         "approve": "Annehmen",
         "approveComment": "Kommentar freischalten",
+        "inReplyTo": "Antwort auf {{name}}",
+        "earlierRevisions": "Frühere Versionen ({{count}})",
         "cancel": "Abbrechen",
         "createdAt": "Erstellt am",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
@@ -977,6 +979,9 @@
       "ignoreDeactivatedSubscriptions": "E-Mails an deaktivierte Abos werden nicht verschickt!"
     },
     "edit": "Bearbeiten",
+    "editorHeader": {
+      "moreActions": "Weitere Aktionen"
+    },
     "errors": {
       "uniqueEmail": "Diese E-Mail-Adresse wird bereits verwendet.",
       "uniqueField": "Dieser Wert ist bereits vergeben ({{field}}).",

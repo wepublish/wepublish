@@ -55,6 +55,7 @@ import {
   StateColor,
   TeaserOverviewPanel,
   useAuthorisation,
+  useHasPermission,
   useUnsavedChangesDialog,
   VersionHistory,
   VersionHistoryRevision,
@@ -279,8 +280,8 @@ function PageEditor() {
   const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     pageData?.page?.draft ||
-      pageData?.page?.published ||
-      pageData?.page?.pending
+    pageData?.page?.published ||
+    pageData?.page?.pending
   );
 
   const [hasChanged, setChanged] = useState(false);
@@ -619,6 +620,9 @@ function PageEditor() {
     }
   }, [isNotFound, t]);
 
+  const canSeeVersionHistory = useHasPermission([CanGetPage.id]);
+  const canDiscardDraft = useHasPermission([CanCreatePage.id]);
+
   return (
     <>
       <EditorTemplate
@@ -644,59 +648,56 @@ function PageEditor() {
                 <MdKeyboardBackspace />
               </IconButton>
             }
+            menuActions={[
+              {
+                label: t('pageEditor.overview.metadata'),
+                icon: <MdIntegrationInstructions />,
+                disabled: isDisabled,
+                onClick: () => setMetaDrawerOpen(true),
+              },
+              ...(!isNew && canSeeVersionHistory ?
+                [
+                  {
+                    label: t('versionHistory.title'),
+                    icon: <MdHistory />,
+                    disabled: isDisabled,
+                    onClick: () => {
+                      if (isVersionHistoryRequested) {
+                        refetchRevisions();
+                      }
+                      setVersionHistoryRequested(true);
+                      setVersionHistoryOpen(true);
+                    },
+                  },
+                ]
+              : []),
+              ...(!isNew && publishedUrl ?
+                [
+                  {
+                    label: t('copyLink.button'),
+                    icon: <MdLink />,
+                    onClick: () => copyLinkToClipboard(publishedUrl, t),
+                  },
+                ]
+              : []),
+              ...((
+                !isNew &&
+                canDiscardDraft &&
+                !!pageData?.page?.draft &&
+                !!pageData?.page?.published
+              ) ?
+                [
+                  {
+                    label: t('discardDraft.button'),
+                    icon: <MdDeleteOutline />,
+                    disabled: isDisabled,
+                    onClick: () => setDiscardDialogOpen(true),
+                  },
+                ]
+              : []),
+            ]}
             secondaryActions={
               <>
-                <EditorHeaderButton
-                  variant="text"
-                  icon={<MdIntegrationInstructions />}
-                  label={t('pageEditor.overview.metadata')}
-                  disabled={isDisabled}
-                  onClick={() => setMetaDrawerOpen(true)}
-                />
-
-                {!isNew && (
-                  <>
-                    <PermissionControl qualifyingPermissions={[CanGetPage.id]}>
-                      <EditorHeaderButton
-                        variant="text"
-                        icon={<MdHistory />}
-                        label={t('versionHistory.title')}
-                        disabled={isDisabled}
-                        onClick={() => {
-                          if (isVersionHistoryRequested) {
-                            refetchRevisions();
-                          }
-                          setVersionHistoryRequested(true);
-                          setVersionHistoryOpen(true);
-                        }}
-                      />
-                    </PermissionControl>
-
-                    {publishedUrl && (
-                      <EditorHeaderButton
-                        variant="text"
-                        icon={<MdLink />}
-                        label={t('copyLink.button')}
-                        onClick={() => copyLinkToClipboard(publishedUrl, t)}
-                      />
-                    )}
-
-                    {pageData?.page?.draft && pageData?.page?.published && (
-                      <PermissionControl
-                        qualifyingPermissions={[CanCreatePage.id]}
-                      >
-                        <EditorHeaderButton
-                          variant="text"
-                          icon={<MdDeleteOutline />}
-                          label={t('discardDraft.button')}
-                          disabled={isDisabled}
-                          onClick={() => setDiscardDialogOpen(true)}
-                        />
-                      </PermissionControl>
-                    )}
-                  </>
-                )}
-
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
                   {showPreview && previewUrl && (
                     <PreviewControls

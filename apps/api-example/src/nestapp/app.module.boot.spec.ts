@@ -1,5 +1,7 @@
 import { generateKeyPairSync } from 'node:crypto';
 import { join } from 'node:path';
+import { MetadataScanner, ModulesContainer } from '@nestjs/core';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { type TestingModule, Test } from '@nestjs/testing';
 import {
   DistributedClaims,
@@ -7,7 +9,12 @@ import {
   DragonflyHealth,
 } from '@wepublish/dragonfly/api';
 import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
+import { PaymentMethodChangeService } from '@wepublish/membership/api';
 import { PrismaService } from '@wepublish/nest-modules';
+import {
+  type AuthorizationState,
+  PaymentAuthorizationNotifier,
+} from '@wepublish/payment/api';
 import { AppModule } from './app.module';
 
 const keys = generateKeyPairSync('ed25519', {
@@ -25,6 +32,18 @@ const ENV = {
   JWT_PUBLIC_KEY: keys.publicKey,
   REDIS_URL: '',
 };
+
+const LIFECYCLE_HOOKS = [
+  'onModuleInit',
+  'onApplicationBootstrap',
+  'onModuleDestroy',
+  'beforeApplicationShutdown',
+  'onApplicationShutdown',
+];
+
+// What @Cron, @Interval and @Timeout set on the method; @nestjs/schedule does
+// not export the constant.
+const SCHEDULER_TYPE = 'SCHEDULER_TYPE';
 
 const resultFor = (method: string) => {
   if (method === 'findMany' || method === 'groupBy') {
@@ -113,5 +132,56 @@ describe('AppModule', () => {
 
   it('registers the website reset listener exactly once', () => {
     expect(module?.get(NamespaceResets).listenerCount()).toBe(1);
+  });
+
+  // A provider whose dependency tree reaches a request-scoped dataloader
+  // turns request-scoped itself: Nest skips its cron with a warning and never
+  // calls its onModuleInit. The unit specs mock the dependencies, so only
+  // booting the real modules shows it.
+  it('keeps every scheduled or lifecycle-hooked provider out of request scope', () => {
+    const scanner = new MetadataScanner();
+    const needsSingleton = (prototype: object) =>
+      LIFECYCLE_HOOKS.some(hook => hook in prototype) ||
+      scanner
+        .getAllMethodNames(prototype)
+        .some(name =>
+          Reflect.hasMetadata(
+            SCHEDULER_TYPE,
+            (prototype as Record<string, object>)[name]
+          )
+        );
+
+    const offenders = [...(module?.get(ModulesContainer).values() ?? [])]
+      .flatMap(nestModule => [...nestModule.providers.values()])
+      .filter(
+        wrapper =>
+          wrapper.metatype?.prototype &&
+          needsSingleton(wrapper.metatype.prototype) &&
+          !wrapper.isDependencyTreeStatic()
+      )
+      .map(wrapper => wrapper.name);
+
+    expect(offenders).toEqual([]);
+  });
+
+  it('schedules the nightly periodic job', () => {
+    expect(
+      module?.get(SchedulerRegistry).getCronJob('periodicJob')
+    ).toBeDefined();
+  });
+
+  it('hands payment authorizations to the payment method changes', async () => {
+    const onAuthorization = vi
+      .spyOn(PaymentMethodChangeService.prototype, 'onAuthorization')
+      .mockResolvedValue();
+    const state: AuthorizationState = {
+      changeID: 'change-1',
+      state: 'authorized',
+    };
+
+    await module?.get(PaymentAuthorizationNotifier).notify('stripe', state);
+
+    expect(onAuthorization).toHaveBeenCalledWith('stripe', state);
+    onAuthorization.mockRestore();
   });
 });

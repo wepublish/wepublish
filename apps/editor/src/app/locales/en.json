@@ -820,6 +820,8 @@
       "panels": {
         "approve": "Approve",
         "approveComment": "Approve Comment",
+        "inReplyTo": "In reply to {{name}}",
+        "earlierRevisions": "Earlier versions ({{count}})",
         "cancel": "Cancel",
         "createdAt": "Created At",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
@@ -977,6 +979,9 @@
       "ignoreDeactivatedSubscriptions": "No emails will be sent to deactivated subscriptions!"
     },
     "edit": "Edit",
+    "editorHeader": {
+      "moreActions": "More actions"
+    },
     "errors": {
       "uniqueEmail": "This email address is already in use.",
       "uniqueField": "This value is already taken ({{field}}).",

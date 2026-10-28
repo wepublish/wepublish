@@ -80,7 +80,6 @@ describe('PaymentMethodChangeService', () => {
   let prisma: any;
   let payments: any;
   let memberContext: any;
-  let settings: any;
   let invoicePaidNotifier: any;
   let authorizationNotifier: any;
   let providers: Record<string, ReturnType<typeof provider>>;
@@ -117,6 +116,9 @@ describe('PaymentMethodChangeService', () => {
     };
 
     prisma = {
+      setting: {
+        findUnique: vi.fn().mockResolvedValue({ value: 14 }),
+      },
       subscription: {
         findUnique: vi.fn(async () => subscription),
         update: vi.fn(async ({ data }: any) => {
@@ -228,9 +230,6 @@ describe('PaymentMethodChangeService', () => {
       ),
     };
 
-    settings = {
-      settingByName: vi.fn().mockResolvedValue({ value: 14 }),
-    };
     invoicePaidNotifier = { register: vi.fn(), notify: vi.fn() };
     authorizationNotifier = { register: vi.fn() };
 
@@ -238,7 +237,6 @@ describe('PaymentMethodChangeService', () => {
       prisma,
       payments,
       memberContext,
-      settings,
       invoicePaidNotifier,
       authorizationNotifier
     );
@@ -424,7 +422,7 @@ describe('PaymentMethodChangeService', () => {
     });
 
     it('falls back to 14 days when the expiry setting is missing', async () => {
-      settings.settingByName.mockRejectedValue(new Error('no setting'));
+      prisma.setting.findUnique.mockResolvedValue(null);
 
       const result = await start('pm-card');
 
@@ -432,7 +430,7 @@ describe('PaymentMethodChangeService', () => {
     });
 
     it('uses the configured expiry', async () => {
-      settings.settingByName.mockResolvedValue({ value: 3 });
+      prisma.setting.findUnique.mockResolvedValue({ value: 3 });
 
       const result = await start('pm-card');
 

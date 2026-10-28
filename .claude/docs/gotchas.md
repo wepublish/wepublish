@@ -563,6 +563,22 @@ trick or nothing catches it before `nx serve api-example`.
 
 ---
 
+### ⚠️ A service with `@PrimeDataLoader` makes everything that injects it request-scoped
+
+`@PrimeDataLoader(X)` property-injects the request-scoped dataloader `X`, so the
+service (e.g. `SettingsService`) and every provider above it in the dependency
+tree become request-scoped. Nest then skips their `@Cron`/`@Interval` with only
+a startup warning (`Cannot register cron job … non static provider`) and never
+calls their `onModuleInit`. On 2026-10-27 `PaymentMethodChangeService` injected
+`SettingsService`, and the nightly periodic job silently stopped in every tenant.
+
+Providers with a schedule or lifecycle hook read through Prisma, not through
+such a service. Pinned by `app.module.boot.spec.ts` (`keeps every scheduled or
+lifecycle-hooked provider out of request scope`), which walks the real module
+graph and names each offender; the unit specs mock the dependencies away.
+
+---
+
 ### ⚠️ The editor's `refetchOn` config does nothing; a refocus reload is `AuthProvider`
 
 [setup.tsx](../../libs/editor/api/src/lib/setup.tsx) sets
