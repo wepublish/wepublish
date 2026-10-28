@@ -9,7 +9,7 @@ import { checkSettingRestrictions } from './settings-utils';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SettingDataloaderService } from './setting-dataloader.service';
 import { SettingName } from './setting';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import {
   SETTINGS_CACHE_NAMESPACE,
   SETTINGS_CACHE_TTL_SECONDS,
@@ -21,7 +21,8 @@ const KNOWN_SETTING_NAMES = new Set<string>(Object.values(SettingName));
 export class SettingsService {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache,
+    private resets: NamespaceResets
   ) {}
 
   @PrimeDataLoader(SettingDataloaderService, 'name')
@@ -101,7 +102,7 @@ export class SettingsService {
         value: value as unknown as Prisma.InputJsonValue,
       },
     });
-    await this.kv.resetNamespace(SETTINGS_CACHE_NAMESPACE);
+    await this.resets.reset(SETTINGS_CACHE_NAMESPACE);
 
     return updated;
   }

@@ -34,10 +34,9 @@ import { AnalyticsProviderSettingsDataloaderService } from './integrations/analy
 import { SyncProviderSettingsResolver } from './integrations/sync-provider-settings.resolver';
 import { SyncProviderSettingsService } from './integrations/sync-provider-settings.service';
 import { SyncProviderSettingsDataloaderService } from './integrations/sync-provider-settings-dataloader.service';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 @Module({
-  imports: [PrismaModule, KvTtlCacheModule],
+  imports: [PrismaModule],
   providers: [
     ProviderSettingsChanged,
     SettingsGuard,

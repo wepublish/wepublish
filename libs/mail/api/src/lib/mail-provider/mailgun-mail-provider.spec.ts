@@ -1,6 +1,9 @@
 import { createHmac } from 'crypto';
 import { EmailQualityEventType, MailLogState } from '@prisma/client';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import {
   MailProviderError,
   MailWebhookSignatureError,
@@ -29,13 +32,21 @@ vi.mock('form-data', () => ({
   },
 }));
 
+const harnesses: NamespacedCacheTesting[] = [];
+
+afterEach(async () => {
+  await Promise.all(harnesses.splice(0).map(testing => testing.close()));
+});
+
 const makeProvider = async () => {
-  const kv = createKvMock();
+  const testing = await createNamespacedCacheTesting();
+  const kv = testing.cache;
+  harnesses.push(testing);
 
   await kv.setNs(
     'settings:mailprovider',
     'mailgun',
-    JSON.stringify({
+    {
       id: 'mailgun',
       type: 'mailgun',
       name: 'Mailgun',
@@ -44,7 +55,8 @@ const makeProvider = async () => {
       mailgun_baseDomain: 'api.eu.mailgun.net',
       mailgun_mailDomain: 'mg.wepublish.ch',
       webhookEndpointSecret: 'webhook-key',
-    })
+    },
+    60
   );
 
   return new MailgunMailProvider({ id: 'mailgun', kv, prisma: {} as never });

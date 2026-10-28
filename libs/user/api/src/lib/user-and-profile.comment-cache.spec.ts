@@ -6,7 +6,7 @@ import {
   SessionCacheInvalidator,
 } from '@wepublish/authentication/api';
 import { ImageUploadService } from '@wepublish/image/api';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
 import { HibpService } from './hibp.service';
 import { ProfileService } from './profile.service';

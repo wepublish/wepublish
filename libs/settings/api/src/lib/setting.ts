@@ -40,6 +40,8 @@ export enum SettingName {
 
   EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS = 'emailQualityUnresponsiveAfterDays',
   EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE = 'emailQualityMinMailsForUnresponsive',
+  SUBSCRIPTION_EXTEND_WINDOW_DAYS = 'subscriptionExtendWindowDays',
+  PAYMENT_METHOD_CHANGE_EXPIRY_DAYS = 'paymentMethodChangeExpiryDays',
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>;

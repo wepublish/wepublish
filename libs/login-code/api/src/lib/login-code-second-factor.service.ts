@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { DistributedCounters } from '@wepublish/dragonfly/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SettingName } from '@wepublish/settings/api';
 import {
   SecondFactorInvalidError,
@@ -14,17 +15,23 @@ import {
   parseLoginCodeSecondFactor,
   SecondFactorUser,
 } from './login-code-second-factor';
+import { FailureCounter } from './failure-counter';
 
 export const SECOND_FACTOR_MAX_FAILURES = 5;
-const SECOND_FACTOR_WINDOW_SECONDS = 60 * 60;
+const SECOND_FACTOR_WINDOW_MS = 60 * 60 * 1000;
 const FACTOR_CACHE_SECONDS = 60;
 
 @Injectable()
 export class LoginCodeSecondFactorService {
+  private failures: FailureCounter;
+
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
-  ) {}
+    private kv: NamespacedCache,
+    counters: DistributedCounters
+  ) {
+    this.failures = new FailureCounter(counters);
+  }
 
   private failureKey(userId: string) {
     return `login-code:second-factor:${userId}`;
@@ -64,21 +71,20 @@ export class LoginCodeSecondFactorService {
     }
 
     const key = this.failureKey(user.id);
-    const failures = (await this.kv.get<number>(key)) ?? 0;
 
-    if (failures >= SECOND_FACTOR_MAX_FAILURES) {
+    if (this.failures.count(key) >= SECOND_FACTOR_MAX_FAILURES) {
       throw new TooManyAttemptsError();
     }
 
     if (matchesSecondFactor(factor, user, answer)) {
-      await this.kv.del(key);
+      await this.failures.forget(key);
       return;
     }
 
-    const next = failures + 1;
-    await this.kv.set(key, next, SECOND_FACTOR_WINDOW_SECONDS);
-
-    if (next >= SECOND_FACTOR_MAX_FAILURES) {
+    if (
+      (await this.failures.record(key, SECOND_FACTOR_WINDOW_MS)) >=
+      SECOND_FACTOR_MAX_FAILURES
+    ) {
       throw new TooManyAttemptsError();
     }
 

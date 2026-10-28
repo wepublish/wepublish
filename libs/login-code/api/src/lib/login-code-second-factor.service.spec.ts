@@ -1,4 +1,6 @@
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import { DistributedCounters } from '@wepublish/dragonfly/api';
+import { FakeDragonfly } from '@wepublish/dragonfly/api/testing';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SettingName } from '@wepublish/settings/api';
 import { LoginCodeSecondFactor } from './login-code-second-factor';
 import {
@@ -10,7 +12,15 @@ import {
   TooManyAttemptsError,
 } from './login-code.errors';
 
-const createService = (value: unknown) => {
+const uncached = {
+  getOrLoadNs: async <T>(
+    _namespace: string,
+    _key: string,
+    loader: () => Promise<T> | T
+  ) => loader(),
+} satisfies Pick<NamespacedCache, 'getOrLoadNs'>;
+
+const createService = (value: unknown, dragonfly = new FakeDragonfly()) => {
   const prisma = {
     setting: {
       findUnique: vi.fn(async ({ where }: { where: { name: SettingName } }) =>
@@ -21,7 +31,11 @@ const createService = (value: unknown) => {
 
   return {
     prisma,
-    service: new LoginCodeSecondFactorService(prisma as never, createKvMock()),
+    service: new LoginCodeSecondFactorService(
+      prisma as never,
+      uncached as unknown as NamespacedCache,
+      new DistributedCounters(dragonfly)
+    ),
   };
 };
 
@@ -86,6 +100,22 @@ describe('LoginCodeSecondFactorService', () => {
     await expect(
       service.assert({ ...user, id: 'user-2' }, '8000')
     ).resolves.toBeUndefined();
+  });
+
+  it('locks the user after too many failures spread over replicas', async () => {
+    const dragonfly = new FakeDragonfly();
+    const a = createService('postalCode', dragonfly).service;
+    const b = createService('postalCode', dragonfly).service;
+
+    for (let i = 1; i < SECOND_FACTOR_MAX_FAILURES; i++) {
+      await expect(a.assert(user, 'wrong')).rejects.toBeInstanceOf(
+        SecondFactorInvalidError
+      );
+    }
+
+    await expect(b.assert(user, 'wrong')).rejects.toBeInstanceOf(
+      TooManyAttemptsError
+    );
   });
 
   it('reports whether the user can satisfy the factor', async () => {

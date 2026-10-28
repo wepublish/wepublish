@@ -47,6 +47,7 @@ import {
   ResetUserPasswordForm,
   TableWrapper,
   useListViewState,
+  useTableExportQuery,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
@@ -100,6 +101,16 @@ function UserList() {
   });
 
   const users = data?.users?.nodes ?? [];
+
+  const exportUsers = useTableExportQuery(
+    TinyUserListDocument,
+    {
+      filter: filter || undefined,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    },
+    data => data.users
+  );
 
   const updateFilter = (filter: UserFilter) => {
     setFilter(filter);
@@ -268,6 +279,8 @@ function UserList() {
             updateFilter(clearFilters(USER_FILTER_FIELDS, filter))
           }
           storageKey="users"
+          exportRows={exportUsers}
+          exportTotalCount={data?.users.totalCount ?? 0}
           data={users}
           loading={isLoading}
           sortColumn={sortField}
@@ -294,6 +307,7 @@ function UserList() {
                 t('userList.overview.createdAtDate', {
                   createdAtDate: new Date(createdAt),
                 }),
+              exportValue: ({ createdAt }) => new Date(createdAt),
             },
             {
               id: 'modifiedat',
@@ -305,6 +319,7 @@ function UserList() {
                 t('userList.overview.modifiedAtDate', {
                   modifiedAtDate: new Date(modifiedAt),
                 }),
+              exportValue: ({ modifiedAt }) => new Date(modifiedAt),
             },
             {
               id: 'firstname',
@@ -316,6 +331,7 @@ function UserList() {
                   {rowData.firstName || ''}
                 </Link>
               ),
+              exportValue: rowData => rowData.firstName,
             },
             {
               id: 'name',
@@ -328,6 +344,7 @@ function UserList() {
                   {rowData.name || t('userList.overview.unknown')}
                 </Link>
               ),
+              exportValue: rowData => rowData.name,
             },
             {
               id: 'email',
@@ -354,6 +371,7 @@ function UserList() {
               width: 200,
               align: 'left',
               sortKey: 'subscriptionCount',
+              exportValue: rowData => rowData.subscriptionCount,
               render: (rowData: TinyUserFragment) => {
                 const user = rowData as TinyUserFragment;
                 const cell = <div>{getSubscriptionCellView(user)}</div>;

@@ -14,7 +14,7 @@
   // "forwardPorts": [3000, 9001, 8000],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "pnpm install",
 
   "containerEnv": {
     "TZ": "Europe/Zurich",

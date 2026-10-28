@@ -43,7 +43,7 @@ exports[`SettingList > renders successfully 1`] = `
                 fill="none"
               />
               <path
-                d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
+                d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2m5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12z"
               />
             </svg>
           </span>
@@ -72,7 +72,7 @@ exports[`SettingList > renders successfully 1`] = `
                 fill="none"
               />
               <path
-                d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
+                d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3m3-10H5V5h10z"
               />
             </svg>
           </span>
@@ -169,11 +169,11 @@ exports[`SettingList > renders successfully 1`] = `
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
-                                  d="M0 0h24v24H0V0z"
+                                  d="M0 0h24v24H0z"
                                   fill="none"
                                 />
                                 <path
-                                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                 />
                               </svg>
                             </button>
@@ -228,11 +228,11 @@ exports[`SettingList > renders successfully 1`] = `
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
-                                  d="M0 0h24v24H0V0z"
+                                  d="M0 0h24v24H0z"
                                   fill="none"
                                 />
                                 <path
-                                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                 />
                               </svg>
                             </button>
@@ -287,11 +287,11 @@ exports[`SettingList > renders successfully 1`] = `
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
-                                  d="M0 0h24v24H0V0z"
+                                  d="M0 0h24v24H0z"
                                   fill="none"
                                 />
                                 <path
-                                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                 />
                               </svg>
                             </button>
@@ -325,11 +325,11 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
@@ -370,11 +370,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -461,11 +461,11 @@ exports[`SettingList > renders successfully 1`] = `
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
-                                d="M0 0h24v24H0V0z"
+                                d="M0 0h24v24H0z"
                                 fill="none"
                               />
                               <path
-                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                               />
                             </svg>
                           </button>
@@ -553,11 +553,11 @@ exports[`SettingList > renders successfully 1`] = `
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
-                                  d="M0 0h24v24H0V0z"
+                                  d="M0 0h24v24H0z"
                                   fill="none"
                                 />
                                 <path
-                                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                 />
                               </svg>
                             </button>
@@ -612,11 +612,11 @@ exports[`SettingList > renders successfully 1`] = `
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
-                                  d="M0 0h24v24H0V0z"
+                                  d="M0 0h24v24H0z"
                                   fill="none"
                                 />
                                 <path
-                                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                 />
                               </svg>
                             </button>
@@ -671,11 +671,11 @@ exports[`SettingList > renders successfully 1`] = `
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
-                                  d="M0 0h24v24H0V0z"
+                                  d="M0 0h24v24H0z"
                                   fill="none"
                                 />
                                 <path
-                                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                 />
                               </svg>
                             </button>
@@ -730,11 +730,11 @@ exports[`SettingList > renders successfully 1`] = `
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
-                                  d="M0 0h24v24H0V0z"
+                                  d="M0 0h24v24H0z"
                                   fill="none"
                                 />
                                 <path
-                                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                 />
                               </svg>
                             </button>
@@ -789,11 +789,11 @@ exports[`SettingList > renders successfully 1`] = `
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
-                                  d="M0 0h24v24H0V0z"
+                                  d="M0 0h24v24H0z"
                                   fill="none"
                                 />
                                 <path
-                                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                 />
                               </svg>
                             </button>
@@ -848,11 +848,11 @@ exports[`SettingList > renders successfully 1`] = `
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
-                                  d="M0 0h24v24H0V0z"
+                                  d="M0 0h24v24H0z"
                                   fill="none"
                                 />
                                 <path
-                                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                 />
                               </svg>
                             </button>
@@ -938,16 +938,202 @@ exports[`SettingList > renders successfully 1`] = `
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
-                                d="M0 0h24v24H0V0z"
+                                d="M0 0h24v24H0z"
                                 fill="none"
                               />
                               <path
-                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                               />
                             </svg>
                           </button>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_h_"
+                        id="_r_h_-label"
+                      >
+                        settingList.subscriptionExtendWindowDays 
+                        <button
+                          aria-label="settingList.info.subscriptionExtendWindowDays"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                            />
+                          </svg>
+                        </button>
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_h_"
+                          name="SUBSCRIPTION_EXTEND_WINDOW_DAYS"
+                          type="number"
+                          value="30"
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
+                          >
+                            settingList.days
+                          </p>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.subscriptionExtendWindowDays 
+                              <button
+                                aria-label="settingList.info.subscriptionExtendWindowDays"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                  />
+                                </svg>
+                              </button>
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_k_"
+                        id="_r_k_-label"
+                      >
+                        settingList.paymentMethodChangeExpiryDays 
+                        <button
+                          aria-label="settingList.info.paymentMethodChangeExpiryDays"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                            />
+                          </svg>
+                        </button>
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_k_"
+                          name="PAYMENT_METHOD_CHANGE_EXPIRY_DAYS"
+                          type="number"
+                          value="14"
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
+                          >
+                            settingList.days
+                          </p>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.paymentMethodChangeExpiryDays 
+                              <button
+                                aria-label="settingList.info.paymentMethodChangeExpiryDays"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                  />
+                                </svg>
+                              </button>
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -993,8 +1179,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_h_"
-                        id="_r_h_-label"
+                        for="_r_n_"
+                        id="_r_n_-label"
                       >
                         settingList.sessionTtlDays 
                         <button
@@ -1013,31 +1199,31 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_h_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_n_"
                           name="SESSION_TTL_DAYS"
                           type="number"
                           value="7"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.days
                           </p>
@@ -1067,11 +1253,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -1086,8 +1272,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_k_"
-                        id="_r_k_-label"
+                        for="_r_q_"
+                        id="_r_q_-label"
                       >
                         settingList.loginMinutes 
                         <button
@@ -1106,31 +1292,31 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_k_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_q_"
                           name="SEND_LOGIN_JWT_EXPIRES_MIN"
                           type="number"
                           value="0"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.minutes
                           </p>
@@ -1160,11 +1346,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -1221,11 +1407,11 @@ exports[`SettingList > renders successfully 1`] = `
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
-                                d="M0 0h24v24H0V0z"
+                                d="M0 0h24v24H0z"
                                 fill="none"
                               />
                               <path
-                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                               />
                             </svg>
                           </button>
@@ -1238,8 +1424,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_o_"
-                        id="_r_o_-label"
+                        for="_r_u_"
+                        id="_r_u_-label"
                       >
                         settingList.loginCodeMaxUses 
                         <button
@@ -1258,31 +1444,31 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_o_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_u_"
                           name="LOGIN_CODE_MAX_USES"
                           type="number"
                           value="5"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.loginCodeUses
                           </p>
@@ -1312,11 +1498,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -1331,8 +1517,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_r_"
-                        id="_r_r_-label"
+                        for="_r_11_"
+                        id="_r_11_-label"
                       >
                         settingList.loginCodeValidDays 
                         <button
@@ -1351,31 +1537,31 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_r_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_11_"
                           name="LOGIN_CODE_VALID_DAYS"
                           type="number"
                           value="90"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.days
                           </p>
@@ -1405,11 +1591,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -1424,7 +1610,7 @@ exports[`SettingList > renders successfully 1`] = `
                       <div
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        id="_r_u_-label"
+                        id="_r_14_-label"
                       >
                         settingList.loginCodeSecondFactor 
                         <button
@@ -1443,11 +1629,11 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
@@ -1458,9 +1644,9 @@ exports[`SettingList > renders successfully 1`] = `
                         <div
                           aria-expanded="false"
                           aria-haspopup="listbox"
-                          aria-labelledby="_r_u_-label"
-                          class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-213"
-                          id="_r_u_"
+                          aria-labelledby="_r_14_-label"
+                          class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-237"
+                          id="_r_14_"
                           role="combobox"
                           tabindex="0"
                         >
@@ -1469,15 +1655,15 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-hidden="true"
                           aria-invalid="false"
-                          class="MuiSelect-nativeInput emotion-214"
-                          id="_r_11_"
+                          class="MuiSelect-nativeInput emotion-238"
+                          id="_r_17_"
                           name="LOGIN_CODE_SECOND_FACTOR"
                           tabindex="-1"
                           value="none"
                         />
                         <svg
                           aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon emotion-215"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon emotion-239"
                           data-testid="ArrowDropDownIcon"
                           focusable="false"
                           viewBox="0 0 24 24"
@@ -1511,11 +1697,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -1528,10 +1714,10 @@ exports[`SettingList > renders successfully 1`] = `
                       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
                     >
                       <label
-                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-221"
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-245"
                         data-shrink="false"
-                        for="_r_13_"
-                        id="_r_13_-label"
+                        for="_r_19_"
+                        id="_r_19_-label"
                       >
                         settingList.placeholderEmailPatterns 
                         <button
@@ -1550,11 +1736,11 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
@@ -1565,7 +1751,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-invalid="false"
                           class="MuiInputBase-input MuiOutlinedInput-input emotion-52"
-                          id="_r_13_"
+                          id="_r_19_"
                           name="PLACEHOLDER_EMAIL_PATTERNS"
                           type="text"
                           value=""
@@ -1575,7 +1761,7 @@ exports[`SettingList > renders successfully 1`] = `
                           class="MuiOutlinedInput-notchedOutline emotion-53"
                         >
                           <legend
-                            class="emotion-227"
+                            class="emotion-251"
                           >
                             <span>
                               settingList.placeholderEmailPatterns 
@@ -1595,11 +1781,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -1614,8 +1800,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_16_"
-                        id="_r_16_-label"
+                        for="_r_1c_"
+                        id="_r_1c_-label"
                       >
                         settingList.passwordToken 
                         <button
@@ -1634,31 +1820,31 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_16_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_1c_"
                           name="RESET_PASSWORD_JWT_EXPIRES_MIN"
                           type="number"
                           value="0"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.minutes
                           </p>
@@ -1688,11 +1874,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -1737,8 +1923,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_19_"
-                        id="_r_19_-label"
+                        for="_r_1f_"
+                        id="_r_1f_-label"
                       >
                         settingList.emailQualityUnresponsiveAfterDays 
                         <button
@@ -1757,31 +1943,31 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_19_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_1f_"
                           name="EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS"
                           type="number"
                           value="180"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.days
                           </p>
@@ -1811,11 +1997,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -1830,8 +2016,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_1c_"
-                        id="_r_1c_-label"
+                        for="_r_1i_"
+                        id="_r_1i_-label"
                       >
                         settingList.emailQualityMinMailsForUnresponsive 
                         <button
@@ -1850,11 +2036,11 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
@@ -1865,7 +2051,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-invalid="false"
                           class="MuiInputBase-input MuiOutlinedInput-input emotion-52"
-                          id="_r_1c_"
+                          id="_r_1i_"
                           name="EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE"
                           type="number"
                           value="1"
@@ -1895,11 +2081,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -1944,8 +2130,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_1f_"
-                        id="_r_1f_-label"
+                        for="_r_1l_"
+                        id="_r_1l_-label"
                       >
                         settingList.peerToken 
                         <button
@@ -1964,31 +2150,31 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_1f_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_1l_"
                           name="PEERING_TIMEOUT_MS"
                           type="number"
                           value="100"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.ms
                           </p>
@@ -2018,11 +2204,11 @@ exports[`SettingList > renders successfully 1`] = `
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M0 0h24v24H0V0z"
+                                    d="M0 0h24v24H0z"
                                     fill="none"
                                   />
                                   <path
-                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
                               </button>
@@ -2109,11 +2295,11 @@ exports[`SettingList > renders successfully 1`] = `
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
-                                d="M0 0h24v24H0V0z"
+                                d="M0 0h24v24H0z"
                                 fill="none"
                               />
                               <path
-                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                               />
                             </svg>
                           </button>
@@ -2121,10 +2307,10 @@ exports[`SettingList > renders successfully 1`] = `
                       </label>
                     </div>
                     <div
-                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-305"
+                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-329"
                     >
                       <label
-                        class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-306"
+                        class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-330"
                       >
                         settingList.newArticlePaywall 
                         <button
@@ -2143,23 +2329,23 @@ exports[`SettingList > renders successfully 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0V0z"
+                              d="M0 0h24v24H0z"
                               fill="none"
                             />
                             <path
-                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
                         </button>
                       </label>
                       <div
-                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-309"
+                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-333"
                       >
                         <div
                           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
                         >
                           <div
-                            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-156"
+                            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-147"
                           >
                             <input
                               aria-autocomplete="list"
@@ -2167,19 +2353,19 @@ exports[`SettingList > renders successfully 1`] = `
                               aria-invalid="false"
                               autocapitalize="none"
                               autocomplete="off"
-                              class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-157"
-                              id="_r_1k_"
+                              class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-148"
+                              id="_r_1q_"
                               role="combobox"
                               spellcheck="false"
                               type="text"
                               value=""
                             />
                             <div
-                              class="MuiAutocomplete-endAdornment emotion-313"
+                              class="MuiAutocomplete-endAdornment emotion-337"
                             >
                               <button
                                 aria-label="Open"
-                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-314"
+                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-338"
                                 tabindex="-1"
                                 title="Open"
                                 type="button"
@@ -2202,7 +2388,7 @@ exports[`SettingList > renders successfully 1`] = `
                               class="MuiOutlinedInput-notchedOutline emotion-53"
                             >
                               <legend
-                                class="emotion-317"
+                                class="emotion-341"
                               >
                                 <span
                                   aria-hidden="true"
@@ -2264,11 +2450,11 @@ exports[`SettingList > renders successfully 1`] = `
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
-                                d="M0 0h24v24H0V0z"
+                                d="M0 0h24v24H0z"
                                 fill="none"
                               />
                               <path
-                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                               />
                             </svg>
                           </button>

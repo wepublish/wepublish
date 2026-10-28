@@ -7,7 +7,7 @@ import {
   PrismaClient,
   User,
 } from '@prisma/client';
-import { randomUUID } from 'crypto';
+import { v7 as uuidv7 } from 'uuid';
 import { MailContext } from './mail-context';
 import { templateUsesJwt } from './mail-data';
 import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
@@ -129,7 +129,7 @@ export class MailController {
       return;
     }
 
-    const mailLogId = this.config.mailLogId ?? randomUUID();
+    const mailLogId = this.config.mailLogId ?? uuidv7();
     const recipientEmail =
       this.config.recipientEmailOverride ?? this.config.recipient.email;
 

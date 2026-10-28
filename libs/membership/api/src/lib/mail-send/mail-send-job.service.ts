@@ -16,7 +16,7 @@ import {
   Prisma,
   PrismaClient,
 } from '@prisma/client';
-import { randomUUID } from 'crypto';
+import { v7 as uuidv7 } from 'uuid';
 import {
   MailContext,
   composeMail,
@@ -554,7 +554,7 @@ export class MailSendJobService {
     entry: Pick<MailSendJobRecipient, 'id'>,
     recipient: MailRecipient
   ): Promise<void> {
-    const mailLogId = randomUUID();
+    const mailLogId = uuidv7();
     const isLetter = job.channel === MailChannel.letter;
 
     try {

@@ -13,6 +13,7 @@ import {
 } from '@wepublish/website/builder';
 import { differenceInMinutes } from 'date-fns';
 import { MouseEvent, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BANNER_STORAGE_KEY, collapseBanner } from './collapse-banner';
 
 export const BannerImage = styled('div')(
@@ -69,8 +70,13 @@ export const BannerCtaText = styled('p')`
   text-align: center;
 `;
 
-export const BannerCloseButton = styled('span')`
+export const BannerCloseButton = styled('button')`
   position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-family: inherit;
   top: ${({ theme }) => theme.spacing(1)};
   right: ${({ theme }) => theme.spacing(1)};
   cursor: pointer;
@@ -147,6 +153,7 @@ export const Banner = ({
     elements: { Link },
   } = useWebsiteBuilder();
   const setIntendedRoute = useSetIntendedRoute();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!data?.primaryBanner) {
@@ -257,7 +264,13 @@ export const Banner = ({
       data-embed={!!embedSrc}
       data-banner
     >
-      <BannerCloseButton onClick={handleClose}>&#x2715;</BannerCloseButton>
+      <BannerCloseButton
+        type="button"
+        aria-label={t('banner.close')}
+        onClick={handleClose}
+      >
+        &#x2715;
+      </BannerCloseButton>
 
       {data.primaryBanner.image && (
         <BannerImage

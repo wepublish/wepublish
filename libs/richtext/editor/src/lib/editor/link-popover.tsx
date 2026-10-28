@@ -29,6 +29,7 @@ import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import {
   EditorStateSnapshot,
+  posToDOMRect,
   useCurrentEditor,
   useEditorState,
 } from '@tiptap/react';
@@ -462,6 +463,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
 }
 
 export function LinkPopoverButton({ isLink }: { isLink: boolean }) {
+  const { t } = useTranslation();
   const anchorRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
 
@@ -470,6 +472,8 @@ export function LinkPopoverButton({ isLink }: { isLink: boolean }) {
       <IconButton
         size="small"
         ref={anchorRef}
+        aria-label={t('richtext.menuBar.link')}
+        aria-expanded={open}
         color={isLink ? 'primary' : undefined}
         onClick={() => setOpen(true)}
       >
@@ -482,5 +486,40 @@ export function LinkPopoverButton({ isLink }: { isLink: boolean }) {
         onClose={() => setOpen(false)}
       />
     </>
+  );
+}
+
+export function CaretLinkPopover() {
+  const editor = useCurrentEditor().editor!;
+  const [anchorEl, setAnchorEl] = useState<PopperProps['anchorEl']>(null);
+
+  useEffect(() => {
+    const openLinkMenu = () => {
+      const { empty, from, to } = editor.state.selection;
+
+      if (!empty) {
+        return;
+      }
+
+      const rect = posToDOMRect(editor.view, from, to);
+      setAnchorEl({ getBoundingClientRect: () => rect });
+    };
+
+    editor.on('openLinkMenu', openLinkMenu);
+
+    return () => {
+      editor.off('openLinkMenu', openLinkMenu);
+    };
+  }, [editor]);
+
+  return (
+    <LinkPopover
+      open={!!anchorEl}
+      anchorEl={anchorEl}
+      onClose={() => {
+        setAnchorEl(null);
+        editor.commands.focus();
+      }}
+    />
   );
 }

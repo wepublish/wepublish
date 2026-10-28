@@ -1,4 +1,4 @@
-import { createLoginCodePage } from '@wepublish/utils/website';
+import { createLoginCodePage } from '@wepublish/utils/website/next';
 
 const { Page, getServerSideProps } = createLoginCodePage({
   next: '/welcome?src=purl',

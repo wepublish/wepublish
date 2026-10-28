@@ -8,6 +8,7 @@ import { PageContainer } from '@wepublish/page/website';
 import {
   DailyBriefingContext,
   getApiUrl,
+  getPageShell,
   revalidateFor,
 } from '@wepublish/utils/website';
 import {
@@ -50,9 +51,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const client = getApiClient(getApiUrl(), []);
 
   let mailchimpResponse:
-    | mailchimp.campaigns.CampaignsSuccessResponse
-    | ErrorResponse
-    | null = null;
+    mailchimp.campaigns.CampaignsSuccessResponse | ErrorResponse | null = null;
   try {
     mailchimpResponse = await mailchimp.campaigns.list({
       count: 4,
@@ -92,7 +91,10 @@ export const getStaticProps: GetStaticProps = async () => {
   const { campaigns = [] } =
     (mailchimpResponse as campaigns.CampaignsSuccessResponse) ?? {};
 
-  const props = addClientCacheToProps(client, { campaigns });
+  const props = addClientCacheToProps(client, {
+    campaigns,
+    shell: getPageShell(page.data?.page),
+  });
 
   return {
     props,

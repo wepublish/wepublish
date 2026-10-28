@@ -9,6 +9,7 @@ import {
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
+import { PaywallBlock } from '@wepublish/tenant/mannschaft';
 import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -25,8 +26,6 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
-
-import { PaywallBlock } from '../../src/paywall/paywall-block';
 
 const paywallCss = css`
   // Shows the first 3 blocks (usually title, image, richtext) and hides the rest

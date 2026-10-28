@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { BlockContentInput, mapBlockUnionMap } from '../block-content.model';
 import { BlockType } from '../block-type.model';
 import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
@@ -81,6 +81,8 @@ export class BlockTemplateService {
     name,
     blocks,
   }: UpdateBlockTemplateInput) {
+    await this.assertNotOwnedByTemplate(id);
+
     const blockTemplate = await this.prisma.blockTemplate.update({
       where: {
         id,
@@ -97,6 +99,8 @@ export class BlockTemplateService {
   }
 
   public async deleteBlockTemplate(id: string) {
+    await this.assertNotOwnedByTemplate(id);
+
     const blockTemplate = await this.prisma.blockTemplate.delete({
       where: {
         id,
@@ -113,7 +117,7 @@ export class BlockTemplateService {
     await this.publicContentCache.invalidateArticleLayout();
   }
 
-  private async mapBlocks(
+  public async mapBlocks(
     blocks: BlockContentInput[],
     id?: string
   ): Promise<Prisma.InputJsonValue> {
@@ -125,11 +129,56 @@ export class BlockTemplateService {
       );
     }
 
+    if (referencedIDs.length) {
+      await this.assertNoTemplateReference(referencedIDs);
+    }
+
     if (id) {
       await this.assertNoCircularReference(id, referencedIDs);
     }
 
     return blocks.map(mapBlockUnionMap) as unknown as Prisma.InputJsonValue;
+  }
+
+  private async assertNotOwnedByTemplate(id: string) {
+    const [articleTemplates, pageTemplates] = await Promise.all([
+      this.prisma.articleTemplate.count({
+        where: {
+          blockTemplateId: id,
+        },
+      }),
+      this.prisma.pageTemplate.count({
+        where: {
+          blockTemplateId: id,
+        },
+      }),
+    ]);
+
+    if (articleTemplates || pageTemplates) {
+      throw new BadRequestException(
+        `Article and page templates can only be changed as article or page templates.`
+      );
+    }
+  }
+
+  private async assertNoTemplateReference(templateIds: string[]) {
+    const templates = await this.prisma.blockTemplate.count({
+      where: {
+        id: {
+          in: templateIds,
+        },
+        OR: [
+          { articleTemplate: { isNot: null } },
+          { pageTemplate: { isNot: null } },
+        ],
+      },
+    });
+
+    if (templates) {
+      throw new BadRequestException(
+        `Article and page templates can not be used as block templates.`
+      );
+    }
   }
 
   private async assertNoCircularReference(id: string, templateIds: string[]) {
@@ -197,7 +246,9 @@ function createBlockTemplateOrder(
 function createBlockTemplateFilter(
   filter?: BlockTemplateFilter
 ): Prisma.BlockTemplateWhereInput {
-  const conditions: Prisma.BlockTemplateWhereInput[] = [];
+  const conditions: Prisma.BlockTemplateWhereInput[] = [
+    { articleTemplate: null, pageTemplate: null },
+  ];
 
   if (filter?.name) {
     conditions.push({
@@ -208,7 +259,7 @@ function createBlockTemplateFilter(
     });
   }
 
-  return conditions.length ? { AND: conditions } : {};
+  return { AND: conditions };
 }
 
 function getInputTemplateIDs(blocks: BlockContentInput[]): string[] {

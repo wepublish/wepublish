@@ -1,10 +1,11 @@
-import { ButtonGroup, IconButton } from '@mui/material';
+import { Box, ButtonGroup, IconButton } from '@mui/material';
 import {
   EditorStateSnapshot,
   useCurrentEditor,
   useEditorState,
 } from '@tiptap/react';
 import { equals } from 'ramda';
+import { useTranslation } from 'react-i18next';
 import {
   TbColumnInsertLeft,
   TbColumnInsertRight,
@@ -32,6 +33,7 @@ const selectTableState = ({ editor }: EditorStateSnapshot) => {
 };
 
 export function TableActions() {
+  const { t } = useTranslation();
   const editor = useCurrentEditor().editor!;
 
   const editorState = useEditorState({
@@ -45,10 +47,15 @@ export function TableActions() {
   }
 
   return (
-    <>
+    <Box
+      role="toolbar"
+      aria-label={t('richtext.table.label')}
+      sx={{ display: 'contents' }}
+    >
       <ButtonGroup>
         <IconButton
           size="small"
+          aria-label={t('richtext.table.addColumnBefore')}
           onClick={() => editor.commands.addColumnBefore()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -57,6 +64,7 @@ export function TableActions() {
 
         <IconButton
           size="small"
+          aria-label={t('richtext.table.addColumnAfter')}
           onClick={() => editor.commands.addColumnAfter()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -65,6 +73,7 @@ export function TableActions() {
 
         <IconButton
           size="small"
+          aria-label={t('richtext.table.deleteColumn')}
           onClick={() => editor.commands.deleteColumn()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -75,6 +84,7 @@ export function TableActions() {
       <ButtonGroup>
         <IconButton
           size="small"
+          aria-label={t('richtext.table.addRowBefore')}
           onClick={() => editor.commands.addRowBefore()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -83,6 +93,7 @@ export function TableActions() {
 
         <IconButton
           size="small"
+          aria-label={t('richtext.table.addRowAfter')}
           onClick={() => editor.commands.addRowAfter()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -91,6 +102,7 @@ export function TableActions() {
 
         <IconButton
           size="small"
+          aria-label={t('richtext.table.deleteRow')}
           onClick={() => editor.commands.deleteRow()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -101,6 +113,7 @@ export function TableActions() {
       <ButtonGroup>
         <IconButton
           size="small"
+          aria-label={t('richtext.table.mergeCells')}
           onClick={() => editor.commands.mergeCells()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -109,6 +122,7 @@ export function TableActions() {
 
         <IconButton
           size="small"
+          aria-label={t('richtext.table.splitCell')}
           onClick={() => editor.commands.splitCell()}
           onMouseDown={e => e.preventDefault()}
         >
@@ -119,6 +133,8 @@ export function TableActions() {
       <ButtonGroup>
         <IconButton
           size="small"
+          aria-label={t('richtext.table.headerCell')}
+          aria-pressed={editorState.isHeader}
           color={editorState.isHeader ? 'primary' : undefined}
           onClick={() => editor.commands.toggleHeaderCell()}
           onMouseDown={e => e.preventDefault()}
@@ -126,6 +142,6 @@ export function TableActions() {
           <LuHeading size={18} />
         </IconButton>
       </ButtonGroup>
-    </>
+    </Box>
   );
 }

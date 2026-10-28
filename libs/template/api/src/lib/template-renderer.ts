@@ -159,6 +159,24 @@ export function renderTemplate(
 const LOCALE = 'de-CH';
 const FALLBACK_TIME_ZONE = 'Europe/Zurich';
 
+// Cache the formatters to prevent leaking ~5MB per email
+const formatters = new Map<string, Intl.DateTimeFormat>();
+
+function formatterFor(
+  locale: string,
+  options: Intl.DateTimeFormatOptions
+): Intl.DateTimeFormat {
+  const key = `${locale}|${JSON.stringify(options)}`;
+  let formatter = formatters.get(key);
+
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locale, options);
+    formatters.set(key, formatter);
+  }
+
+  return formatter;
+}
+
 /**
  * Timezone for derived date formats. Taken from the standard `TZ` env var,
  * falling back to Europe/Zurich. Invalid values fall back too.
@@ -172,7 +190,7 @@ function resolveTimeZone(): string {
 
   try {
     // Throws RangeError on an unknown timezone.
-    new Intl.DateTimeFormat(LOCALE, { timeZone: tz });
+    formatterFor(LOCALE, { timeZone: tz });
     return tz;
   } catch {
     return FALLBACK_TIME_ZONE;
@@ -207,7 +225,7 @@ function formatDate(
   options: Intl.DateTimeFormatOptions,
   locale: string = LOCALE
 ): string {
-  return new Intl.DateTimeFormat(locale, {
+  return formatterFor(locale, {
     timeZone: resolveTimeZone(),
     ...options,
   }).format(new Date(iso));

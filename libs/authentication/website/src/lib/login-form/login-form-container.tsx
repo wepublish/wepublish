@@ -12,7 +12,7 @@ import {
   BuilderLoginFormProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useUser } from '../session.context';
 import { useLoginLinkCooldown } from './login-link-cooldown';
 
@@ -88,21 +88,26 @@ export function LoginFormContainer({
     }
   );
 
+  const otpCheckTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => () => clearTimeout(otpCheckTimeout.current), []);
+
   const handleEmailChange = useCallback(
     (email: string) => {
       setTotpRedirectToPassword(false);
+      clearTimeout(otpCheckTimeout.current);
 
       if (!isValidEmail(email)) {
         setOtpRequired(false);
         return;
       }
 
-      const timeout = setTimeout(async () => {
-        const result = await checkLoginOtp({ variables: { email } });
-        setOtpRequired(result.data?.checkLoginOtp ?? false);
+      otpCheckTimeout.current = setTimeout(async () => {
+        const result = await checkLoginOtp({ variables: { email } }).catch(
+          () => undefined
+        );
+        setOtpRequired(result?.data?.checkLoginOtp ?? false);
       }, 300);
-
-      return () => clearTimeout(timeout);
     },
     [checkLoginOtp]
   );
@@ -126,9 +131,9 @@ export function LoginFormContainer({
         setTotpRedirectToPassword(false);
         const loginResult = await loginWithCredentials({
           variables: { email, password, totpToken },
-        });
+        }).catch(() => undefined);
 
-        if (loginResult.data?.createSession && afterLoginCallback) {
+        if (loginResult?.data?.createSession && afterLoginCallback) {
           afterLoginCallback();
         }
       }}

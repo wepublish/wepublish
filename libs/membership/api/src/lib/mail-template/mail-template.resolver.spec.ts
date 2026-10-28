@@ -21,6 +21,7 @@ import {
   registerPaymentMethodModule,
 } from '../testing/module-registrars';
 import { PaymentsModule } from '@wepublish/payment/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 
 const mailTemplatesQuery = `
   query MailTemplates {
@@ -124,6 +125,7 @@ const mailTemplateServiceMock = {
       path: '/',
     }),
     PrismaModule,
+    NamespacedCacheTestingModule.forRoot(),
     registerMailsModule(),
     registerPaymentMethodModule(),
     PaymentsModule,
@@ -150,7 +152,7 @@ describe('MailTemplatesResolver', () => {
       imports: [AppModule],
     }).compile();
     app = module.createNestApplication();
-    await app.init();
+    await app.listen(0, '127.0.0.1');
   });
 
   beforeEach(async () => {

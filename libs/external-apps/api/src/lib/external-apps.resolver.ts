@@ -4,7 +4,7 @@ import {
   CanUpdateExternalApp,
   CanDeleteExternalApp,
 } from '@wepublish/permissions';
-import { Permissions } from '@wepublish/permissions/api';
+import { Permissions, permissionsOf } from '@wepublish/permissions/api';
 import {
   ExternalApp,
   ExternalAppToken,
@@ -12,7 +12,7 @@ import {
   UpdateExternalAppInput,
   ExternalAppFilter,
 } from './external-apps.model';
-import { ExternalAppsService } from './external-apps.service';
+import { ApiTokenReader, ExternalAppsService } from './external-apps.service';
 import { ExternalAppsDataloaderService } from './external-apps-dataloader.service';
 import {
   Authenticated,
@@ -21,6 +21,13 @@ import {
   UserSession,
 } from '@wepublish/authentication/api';
 import { JwtService } from '@wepublish/session/api';
+
+export const apiTokenReader = (
+  session: UserSession | undefined
+): ApiTokenReader => ({
+  userId: session?.user?.id,
+  permissions: permissionsOf(session),
+});
 
 @Resolver()
 export class ExternalAppsResolver {
@@ -54,8 +61,14 @@ export class ExternalAppsResolver {
     name: 'createExternalApp',
     description: 'Creates a new external app.',
   })
-  createExternalApp(@Args('input') input: CreateExternalAppInput) {
-    return this.externalAppsService.createExternalApp(input);
+  createExternalApp(
+    @Args('input') input: CreateExternalAppInput,
+    @CurrentUser() session: UserSession
+  ) {
+    return this.externalAppsService.createExternalApp(
+      input,
+      apiTokenReader(session)
+    );
   }
 
   @Permissions(CanUpdateExternalApp)
@@ -63,8 +76,14 @@ export class ExternalAppsResolver {
     name: 'updateExternalApp',
     description: 'Updates an existing external app.',
   })
-  updateExternalApp(@Args() input: UpdateExternalAppInput) {
-    return this.externalAppsService.updateExternalApp(input);
+  updateExternalApp(
+    @Args() input: UpdateExternalAppInput,
+    @CurrentUser() session: UserSession
+  ) {
+    return this.externalAppsService.updateExternalApp(
+      input,
+      apiTokenReader(session)
+    );
   }
 
   @Permissions(CanDeleteExternalApp)
