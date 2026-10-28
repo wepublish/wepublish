@@ -155,6 +155,20 @@ describe('EngagementRuleForm', () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
+  it('does not mark number fields as hidden', () => {
+    const { container } = renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    expect(container.querySelectorAll('[hidden]')).toHaveLength(0);
+  });
+
+  it('lays out each action as its own group', () => {
+    renderForm(ENGAGEMENT_PRESETS.growNewsletter());
+
+    const [, last] = screen.getAllByTestId(/^stage-/);
+
+    expect(last.querySelectorAll('[data-testid="action"]')).toHaveLength(3);
+  });
+
   it('saves a consistent rule', async () => {
     const onSubmit = vi.fn();
     const preset = ENGAGEMENT_PRESETS.promoteMemberships();

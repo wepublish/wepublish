@@ -76,6 +76,28 @@ const StageCard = styled(Card)`
   overflow: initial;
 `;
 
+/** Related fields side by side, stacked when there is no room. */
+const FieldRow = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-items: start;
+`;
+
+const ActionGroup = styled('div')`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: ${({ theme }) => theme.spacing(1.5)};
+  align-items: start;
+  padding: ${({ theme }) => theme.spacing(1.5)};
+  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+`;
+
+const ActionDetails = styled(FieldRow)`
+  grid-column: 1 / 3;
+`;
+
 const label = (text: string, info?: string): ReactNode =>
   info ?
     <>
@@ -124,7 +146,6 @@ const NumberField = ({
           error={Boolean(error)}
           helperText={error?.message}
           fullWidth
-          hidden
         />
       )}
     />
@@ -213,13 +234,14 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
         {label(t('engagement.form.actions'), t('engagement.form.actionsInfo'))}
       </FormLabel>
 
-      <Stack spacing={1}>
+      <Stack
+        spacing={1.5}
+        sx={{ mt: 1 }}
+      >
         {fields.map((action, actionIndex) => (
-          <Stack
+          <ActionGroup
             key={action.id}
-            direction="row"
-            spacing={1}
-            sx={{ alignItems: 'start' }}
+            data-testid="action"
           >
             <Controller
               control={control}
@@ -230,7 +252,7 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
                   select
                   size="small"
                   label={t('engagement.form.actionType')}
-                  sx={{ minWidth: 160 }}
+                  fullWidth
                 >
                   {Object.values(EngagementActionType).map(type => (
                     <MenuItem
@@ -246,39 +268,6 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
 
             <Controller
               control={control}
-              name={`stages.${stageIndex}.actions.${actionIndex}.label`}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  size="small"
-                  label={t('engagement.form.actionLabel')}
-                  placeholder={t('engagement.form.actionLabelDefault')}
-                  fullWidth
-                />
-              )}
-            />
-
-            {actionNeedsUrl(
-              actions?.[actionIndex]?.type ?? EngagementActionType.Url
-            ) && (
-              <Controller
-                control={control}
-                name={`stages.${stageIndex}.actions.${actionIndex}.url`}
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    size="small"
-                    label={t('engagement.form.actionUrl')}
-                    error={Boolean(error)}
-                    helperText={error?.message}
-                    fullWidth
-                  />
-                )}
-              />
-            )}
-
-            <Controller
-              control={control}
               name={`stages.${stageIndex}.actions.${actionIndex}.role`}
               render={({ field }) => (
                 <TextField
@@ -286,7 +275,7 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
                   select
                   size="small"
                   label={t('engagement.form.actionRole')}
-                  sx={{ minWidth: 140 }}
+                  fullWidth
                 >
                   {Object.values(EngagementActionRole).map(role => (
                     <MenuItem
@@ -306,7 +295,42 @@ const ActionList = ({ stageIndex }: { stageIndex: number }) => {
             >
               <MdDelete />
             </IconButton>
-          </Stack>
+
+            <ActionDetails>
+              <Controller
+                control={control}
+                name={`stages.${stageIndex}.actions.${actionIndex}.label`}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    size="small"
+                    label={t('engagement.form.actionLabel')}
+                    placeholder={t('engagement.form.actionLabelDefault')}
+                    fullWidth
+                  />
+                )}
+              />
+
+              {actionNeedsUrl(
+                actions?.[actionIndex]?.type ?? EngagementActionType.Url
+              ) && (
+                <Controller
+                  control={control}
+                  name={`stages.${stageIndex}.actions.${actionIndex}.url`}
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      size="small"
+                      label={t('engagement.form.actionUrl')}
+                      error={Boolean(error)}
+                      helperText={error?.message}
+                      fullWidth
+                    />
+                  )}
+                />
+              )}
+            </ActionDetails>
+          </ActionGroup>
         ))}
 
         {actionsError && <FormHelperText error>{actionsError}</FormHelperText>}
@@ -414,42 +438,44 @@ const StageFields = ({
             )}
           </Stack>
 
-          {!announcement && (
-            <NumberField
-              name={`stages.${index}.afterArticles`}
-              label={label(
-                t('engagement.form.afterArticles'),
-                t('engagement.form.afterArticlesInfo')
+          <FieldRow>
+            {!announcement && (
+              <NumberField
+                name={`stages.${index}.afterArticles`}
+                label={label(
+                  t('engagement.form.afterArticles'),
+                  t('engagement.form.afterArticlesInfo')
+                )}
+              />
+            )}
+
+            <Controller
+              control={control}
+              name={`stages.${index}.placement`}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  select
+                  label={label(
+                    t('engagement.form.placement'),
+                    t('engagement.form.placementInfo')
+                  )}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                >
+                  {placements.map(placement => (
+                    <MenuItem
+                      key={placement}
+                      value={placement}
+                    >
+                      {t(`engagement.placement.${placement}`)}
+                    </MenuItem>
+                  ))}
+                </TextField>
               )}
             />
-          )}
-
-          <Controller
-            control={control}
-            name={`stages.${index}.placement`}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                select
-                label={label(
-                  t('engagement.form.placement'),
-                  t('engagement.form.placementInfo')
-                )}
-                error={Boolean(error)}
-                helperText={error?.message}
-                fullWidth
-              >
-                {placements.map(placement => (
-                  <MenuItem
-                    key={placement}
-                    value={placement}
-                  >
-                    {t(`engagement.placement.${placement}`)}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
+          </FieldRow>
 
           {!announcement &&
             isLast &&
@@ -469,7 +495,7 @@ const StageFields = ({
             )}
 
           {hard && (
-            <>
+            <FieldRow>
               <Controller
                 control={control}
                 name={`stages.${index}.requirement`}
@@ -506,7 +532,7 @@ const StageFields = ({
                 )}
                 nullable
               />
-            </>
+            </FieldRow>
           )}
 
           <TextFieldControl
@@ -586,19 +612,21 @@ const StageFields = ({
                 )}
               />
 
-              <NumberField
-                name={`stages.${index}.hideForMinutes`}
-                label={label(
-                  t('engagement.form.hideForMinutes'),
-                  t('engagement.form.hideForMinutesInfo')
-                )}
-                disabled={!stage?.dismissible}
-              />
+              <FieldRow>
+                <NumberField
+                  name={`stages.${index}.hideForMinutes`}
+                  label={label(
+                    t('engagement.form.hideForMinutes'),
+                    t('engagement.form.hideForMinutesInfo')
+                  )}
+                  disabled={!stage?.dismissible}
+                />
 
-              <NumberField
-                name={`stages.${index}.delaySeconds`}
-                label={t('engagement.form.delaySeconds')}
-              />
+                <NumberField
+                  name={`stages.${index}.delaySeconds`}
+                  label={t('engagement.form.delaySeconds')}
+                />
+              </FieldRow>
             </>
           )}
 
