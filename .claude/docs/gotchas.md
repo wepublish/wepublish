@@ -366,7 +366,7 @@ not true. Pinned by `page-cache.spec.ts` and `page-cache-handler.spec.ts`.
 `Cache-Control` already set (`pages-handler.js`); without it Next still sends
 `s-maxage=1` for `notFound`, and a 500 (api down while a page renders for the
 first time) went out as `public, s-maxage=59` (verified end-to-end 2026-10-02).
-`register()` in `libs/utils/website/src/lib/sentry/instrumentation.ts` makes
+`register()` in `libs/utils/website/src/next/sentry/instrumentation.ts` makes
 every 404 and 5xx `private, no-store, max-age=0` (`error-no-store.ts`, same
 folder) so Cloudflare never keeps one. Pinned by `error-no-store.spec.ts`;
 nothing checks the wiring in CI (verified end-to-end 2026-10-01).
@@ -585,6 +585,22 @@ Guarded for `SlotTeasersLoader` only: `slot-teasers-loader.spec.ts` starts with
 `import './article.service';`, which enters the cycle from the article side and
 reproduces the boot error in a unit test. A new injection site needs the same
 trick or nothing catches it before `nx serve api-example`.
+
+---
+
+### ⚠️ A service with `@PrimeDataLoader` makes everything that injects it request-scoped
+
+`@PrimeDataLoader(X)` property-injects the request-scoped dataloader `X`, so the
+service (e.g. `SettingsService`) and every provider above it in the dependency
+tree become request-scoped. Nest then skips their `@Cron`/`@Interval` with only
+a startup warning (`Cannot register cron job … non static provider`) and never
+calls their `onModuleInit`. On 2026-10-27 `PaymentMethodChangeService` injected
+`SettingsService`, and the nightly periodic job silently stopped in every tenant.
+
+Providers with a schedule or lifecycle hook read through Prisma, not through
+such a service. Pinned by `app.module.boot.spec.ts` (`keeps every scheduled or
+lifecycle-hooked provider out of request scope`), which walks the real module
+graph and names each offender; the unit specs mock the dependencies away.
 
 ---
 

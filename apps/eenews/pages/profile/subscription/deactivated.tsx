@@ -1,5 +1,5 @@
 import { EenewsPageShell } from '@wepublish/tenant/eenews';
-import { DeactivatedSubscriptionsPage } from '@wepublish/utils/website';
+import { DeactivatedSubscriptionsPage } from '@wepublish/utils/website/next';
 
 const DeactPage = DeactivatedSubscriptionsPage as any;
 

@@ -1,11 +1,10 @@
 import { PageContainer } from '@wepublish/page/website';
 import { EenewsPageShell } from '@wepublish/tenant/eenews';
+import { getApiUrl, ssrAuthLink } from '@wepublish/utils/website';
 import {
-  getApiUrl,
   getSessionTokenProps,
-  ssrAuthLink,
   SubscribePage,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 import { getApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
 

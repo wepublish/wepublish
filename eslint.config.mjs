@@ -57,7 +57,7 @@ export default [
           // import in the apps' next.config.js files was not checked before
           // the upgrade.
           allow: [
-            '../../libs/utils/website/src/lib/next.config',
+            '../../libs/utils/website/src/next/next.config',
             '../../../vitest.shared.ts',
           ],
           depConstraints: [

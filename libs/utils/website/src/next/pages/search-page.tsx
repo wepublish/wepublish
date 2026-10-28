@@ -23,7 +23,7 @@ import { MdSearch } from 'react-icons/md';
 import { z } from 'zod';
 import { PageWrapper } from '@wepublish/page/website';
 
-import { getApiUrl } from '../api-url';
+import { getApiUrl } from '../../lib/api-url';
 import { useTranslation } from 'react-i18next';
 
 const SearchForm = styled('form')`

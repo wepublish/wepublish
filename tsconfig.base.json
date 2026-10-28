@@ -184,13 +184,16 @@
         "libs/utils/website/src/lib/i18n-formatter.tsx"
       ],
       "@wepublish/utils/website/link": [
-        "libs/utils/website/src/lib/next-wepublish-link.tsx"
+        "libs/utils/website/src/next/next-wepublish-link.tsx"
       ],
-      "@wepublish/utils/website/sentry": [
-        "libs/utils/website/src/lib/sentry/instrumentation.ts"
+      "@wepublish/utils/website/next": [
+        "libs/utils/website/src/next.ts"
       ],
-      "@wepublish/utils/website/sentry/client": [
-        "libs/utils/website/src/lib/sentry/instrumentation.client.ts"
+      "@wepublish/utils/website/next/sentry": [
+        "libs/utils/website/src/next/sentry/instrumentation.ts"
+      ],
+      "@wepublish/utils/website/next/sentry/client": [
+        "libs/utils/website/src/next/sentry/instrumentation.client.ts"
       ],
       "@wepublish/versionInformation/api": [
         "libs/versionInformation/api/src/index.ts"

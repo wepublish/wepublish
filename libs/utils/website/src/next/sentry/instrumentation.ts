@@ -8,7 +8,8 @@ import {
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
-    const { forbidCachingErrors } = await import('./error-no-store');
+    const { forbidCachingErrors } =
+      await import('../../lib/sentry/error-no-store');
     forbidCachingErrors();
 
     const { nodeProfilingIntegration } = await import('@sentry/profiling-node');

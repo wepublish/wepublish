@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
-import { ssrAuthLink } from '../auth-link';
+import { ssrAuthLink } from '../../lib/auth-link';
 import { getSessionTokenProps } from '../get-session-token-props';
 import { handleJwtLogin } from '../handle-jwt-login';
 import {
@@ -23,7 +23,7 @@ import {
 } from '@wepublish/membership/website';
 import { ComponentProps, useMemo } from 'react';
 
-import { getApiUrl } from '../api-url';
+import { getApiUrl } from '../../lib/api-url';
 
 type SubscribePageProps = Omit<ComponentProps<typeof SubscribeContainer>, ''>;
 

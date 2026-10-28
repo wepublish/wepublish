@@ -2,7 +2,7 @@
 
 const { composePlugins, withNx } = require('@nx/next');
 const { withSentryConfig } = require('@sentry/nextjs/config');
-const wepNextConfig = require('../../libs/utils/website/src/lib/next.config');
+const wepNextConfig = require('../../libs/utils/website/src/next/next.config');
 const { redirects } = require('./src/redirects');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled:
