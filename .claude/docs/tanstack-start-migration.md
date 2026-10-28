@@ -434,6 +434,29 @@ agnostic and CDN cacheable.
 
 ---
 
+## 6c. The React Compiler
+
+`apps/gruppetto` compiles, like `apps/editor`:
+`['babel-plugin-react-compiler', { target: '19' }]` ahead of
+`@emotion/babel-plugin` in `vite.config.mts` — ahead, because the compiler
+reads the JSX that emotion's plugin would otherwise have rewritten into calls.
+
+Its lint rules come with it. `eslint.config.mjs` uses nx's **`flat/react`**,
+not `flat/react-typescript`: only the former registers `react-hooks`,
+`jsx-a11y`, `react` and `import`. The typescript variant registers no plugins
+at all, which is how this app ended up with no React or a11y lint when
+`eslint-config-next/core-web-vitals` left with Next. Do not reach for the Next
+config to get them back — 44 of its rules are `@next/next/*` and assume
+`next/image`, `next/head` and a pages directory.
+
+`reactCompilerRules('error')` from the root config then switches on the
+compiler's own diagnostics, the same way the editor projects do. The first run
+found one real defect: `routes/login.tsx` wrote a ref, set cookies and
+navigated *during render*, so a double render consumed the intended route
+twice. Both now live in effects.
+
+---
+
 ## 7b. Sentry
 
 `@sentry/tanstackstart-react` — not `@sentry/node` + `@sentry/react`. It
@@ -484,14 +507,6 @@ as the alternative.
 - **Four routes have no `<title>`** — `/search`, `/login`, `/abo` and
   `/author/:slug` render none at all. Measured against the built server; the
   tag and article routes do have one.
-- **No React or a11y lint rules.** `eslint-config-next/core-web-vitals` is
-  gone and nothing replaced it. Nx's `flat/react-typescript` preset enforces
-  only TS and core rules — no `react-hooks`, no `jsx-a11y` — so gruppetto has
-  none of either. Do **not** add the Next config back: 44 of its rules are
-  `@next/next/*` and assume `next/image`, `next/head` and a pages directory.
-  The replacements are `eslint-plugin-react-hooks` and `eslint-plugin-jsx-a11y`
-  directly (both already installed), plus `@tanstack/eslint-plugin-router` for
-  the router-specific rules.
 - **The image is unverified locally.** `dhi.io/node` needs auth; CI overrides
   those ARGs. Validate with public bases:
   `podman build --target website-tanstack --build-arg BUILD_IMAGE=node:22 …`

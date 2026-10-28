@@ -297,9 +297,17 @@ export default defineConfig(({ mode }) => {
         sitemap: { enabled: false },
       }),
 
+      // The React Compiler, same as `apps/editor`. It must come before
+      // `@emotion/babel-plugin`: the compiler reads the JSX, and emotion's
+      // plugin rewrites `css` props into calls it would then have to re-infer.
       viteReact({
         jsxImportSource: '@emotion/react',
-        babel: { plugins: ['@emotion/babel-plugin'] },
+        babel: {
+          plugins: [
+            ['babel-plugin-react-compiler', { target: '19' }],
+            '@emotion/babel-plugin',
+          ],
+        },
       }),
 
       // Turns the SSR bundle into a runnable server at
