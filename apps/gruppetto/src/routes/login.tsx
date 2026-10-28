@@ -16,6 +16,8 @@ import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import { add } from 'date-fns';
 import { useEffect, useRef } from 'react';
 
+import { defaultHead } from '../integration/default-head';
+
 const LoginWrapper = styled('div')`
   display: grid;
   justify-content: center;
@@ -27,6 +29,7 @@ export const Route = createFileRoute('/login')({
   loaderDeps: ({ search: { jwt } }) => ({ jwt }),
   loader: loginRouteLoader,
   component: Login,
+  head: defaultHead,
 });
 
 function Login() {
