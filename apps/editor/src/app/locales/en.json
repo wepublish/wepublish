@@ -820,6 +820,8 @@
       "panels": {
         "approve": "Approve",
         "approveComment": "Approve Comment",
+        "inReplyTo": "In reply to {{name}}",
+        "earlierRevisions": "Earlier versions ({{count}})",
         "cancel": "Cancel",
         "createdAt": "Created At",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
