@@ -483,10 +483,18 @@ describe('meteredAccess', () => {
 });
 
 describe('resolvePrompts', () => {
-  it('orders by priority, hard before soft, then id', () => {
+  it('orders by priority, hard before soft, then the newest rule', () => {
     const rules = [
-      announcement({ id: 'b', priority: 1 }),
-      announcement({ id: 'a', priority: 1 }),
+      announcement({
+        id: 'a',
+        priority: 1,
+        createdAt: new Date('2026-01-01'),
+      }),
+      announcement({
+        id: 'b',
+        priority: 1,
+        createdAt: new Date('2026-02-01'),
+      }),
       rule({ id: 'hard', priority: 1, stages: [hardStage('h', 0)] }),
       announcement({ id: 'top', priority: 9 }),
     ];
@@ -498,7 +506,61 @@ describe('resolvePrompts', () => {
         now,
         restriction: { ruleId: 'hard', stageId: 'h' },
       }).map(({ rule }) => rule.id)
-    ).toEqual(['top', 'hard', 'a', 'b']);
+    ).toEqual(['top', 'hard', 'b', 'a']);
+  });
+
+  it('puts the more specific rule first at the same priority', () => {
+    const everyone = announcement({ id: 'everyone' });
+    const anonymousOnly = announcement({
+      id: 'anonymous',
+      audience: EngagementAudience.ANONYMOUS,
+    });
+    const plans = announcement({
+      id: 'plans',
+      audience: EngagementAudience.MEMBER_PLANS,
+      audienceMemberPlanIds: ['plan'],
+    });
+
+    expect(
+      resolvePrompts({
+        rules: [everyone, anonymousOnly, plans],
+        articleId: 'x',
+        now,
+      }).map(({ rule }) => rule.id)
+    ).toEqual(['plans', 'anonymous', 'everyone']);
+  });
+
+  it('puts rules for chosen pages before rules for every article', () => {
+    const everywhere = announcement({
+      id: 'everywhere',
+      showOnPageIds: ['page-1'],
+    });
+    const pageOnly = announcement({
+      id: 'page-only',
+      showOnArticles: false,
+      showOnPageIds: ['page-1'],
+    });
+
+    expect(
+      resolvePrompts({ rules: [everywhere, pageOnly], now }).map(
+        ({ rule }) => rule.id
+      )
+    ).toEqual(['page-only', 'everywhere']);
+  });
+
+  it('accepts dates that came back from the cache as strings', () => {
+    const older = announcement({
+      id: 'older',
+      createdAt: '2026-01-01T00:00:00.000Z' as unknown as Date,
+    });
+    const newer = announcement({
+      id: 'newer',
+      createdAt: '2026-02-01T00:00:00.000Z' as unknown as Date,
+    });
+
+    expect(
+      resolvePrompts({ rules: [older, newer], now }).map(({ rule }) => rule.id)
+    ).toEqual(['newer', 'older']);
   });
 
   it('falls back to the soft stage when the hard one does not restrict', () => {
