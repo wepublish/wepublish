@@ -38,10 +38,10 @@ let CACHED_CLIENT: ApolloClient;
 const isFile = (value: unknown): boolean =>
   Boolean(
     (typeof File !== 'undefined' && value instanceof File) ||
-      (typeof Blob !== 'undefined' && value instanceof Blob) ||
-      (typeof value === 'object' &&
-        value !== null &&
-        Object.values(value).some(isFile))
+    (typeof Blob !== 'undefined' && value instanceof Blob) ||
+    (typeof value === 'object' &&
+      value !== null &&
+      Object.values(value).some(isFile))
   );
 
 const SSR_FETCH_TIMEOUT_MS = Number(process.env.SSR_FETCH_TIMEOUT_MS) || 10_000;

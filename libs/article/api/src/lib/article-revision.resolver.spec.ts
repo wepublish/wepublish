@@ -1,5 +1,8 @@
 import { Test } from '@nestjs/testing';
-import { limitAnswerCache, skipAnswerCache } from '@wepublish/public-content-cache/api';
+import {
+  limitAnswerCache,
+  skipAnswerCache,
+} from '@wepublish/public-content-cache/api';
 import { CanGetArticle } from '@wepublish/permissions';
 import type { UserSession } from '@wepublish/authentication/api';
 import { createMock } from '@wepublish/testing';

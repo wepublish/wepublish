@@ -5,7 +5,10 @@ import { Property } from '@wepublish/property/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { BlockContent, BlockTreeLoader } from '@wepublish/block-content/api';
-import { limitAnswerCache, skipAnswerCache } from '@wepublish/public-content-cache/api';
+import {
+  limitAnswerCache,
+  skipAnswerCache,
+} from '@wepublish/public-content-cache/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { CanGetPage } from '@wepublish/permissions';
 

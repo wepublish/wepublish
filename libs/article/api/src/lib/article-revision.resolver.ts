@@ -10,7 +10,10 @@ import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { CanGetArticle } from '@wepublish/permissions';
 import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { BlockTreeLoader, BlockContent } from '@wepublish/block-content/api';
-import { limitAnswerCache, skipAnswerCache } from '@wepublish/public-content-cache/api';
+import {
+  limitAnswerCache,
+  skipAnswerCache,
+} from '@wepublish/public-content-cache/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
 

@@ -38,7 +38,6 @@ export * from './singleLineTooltip';
 export * from './imageMetaData';
 export * from './infoMessage';
 export * from './infoTooltip';
-export * from './invoiceStatusIcon';
 export * from './link';
 export * from './listInput';
 export * from './loginTemplate';
