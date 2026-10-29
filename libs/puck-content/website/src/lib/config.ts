@@ -35,8 +35,8 @@ import { withCSS } from './components/layout/with-css';
 import { withVisibility } from './components/layout/with-visibility';
 import { SubscribeConfig } from './components/subscribe/subscribe.config';
 import { withDataSource } from './components/with-datasource';
-import { seoField, switchFieldAi } from '@wepublish/puck-content/editor';
-import { Root } from './root.component';
+import { withFieldTabsAll } from './field-tabs/field-tabs';
+import { RootConfig } from './root.config';
 import { UserConfig } from './types';
 import { ImageConfig } from './components/content/image/image.config';
 import { LightboxConfig } from './components/content/lightbox/lightbox.config';
@@ -48,43 +48,9 @@ import { TeaserPreTitleConfig } from './components/teaser/teaser-pre-title/tease
 import { TeaserTagsConfig } from './components/teaser/teaser-tags/teaser-tags.config';
 import { TeaserTitleConfig } from './components/teaser/teaser-title/teaser-title.config';
 
-type RootSEOField = NonNullable<
-  NonNullable<UserConfig['root']>['fields']
->['seo'];
-
 export const config: UserConfig = {
-  root: {
-    fields: {
-      showNavigation: {
-        type: 'switch',
-        label: 'Show Navbar',
-        ai: switchFieldAi(
-          'Whether the website navigation bar is shown above the page content.'
-        ),
-      },
-      showFooter: {
-        type: 'switch',
-        label: 'Show Footer',
-        ai: switchFieldAi(
-          'Whether the website footer is shown below the page content.'
-        ),
-      },
-      seo: seoField({
-        label: 'SEO',
-        instructions: 'Metadata shown to search engines.',
-      }) as RootSEOField,
-      socialMedia: seoField({
-        label: 'Social Media',
-        instructions: 'Metadata shown when the page is shared on social media.',
-      }) as RootSEOField,
-    },
-    defaultProps: {
-      showFooter: true,
-      showNavigation: true,
-    },
-    render: Root,
-  },
-  components: {
+  root: RootConfig,
+  components: withFieldTabsAll({
     Title: withVisibility(TitleConfig),
     Quote: withVisibility(QuoteConfig),
     Html: withVisibility(HtmlConfig),
@@ -111,9 +77,13 @@ export const config: UserConfig = {
       })
     ),
     Container: withVisibility(
-      withDataSource(withCSS(ContainerConfig), undefined, {
-        types: ['uniqueList', 'list', 'multiple'],
-      })
+      withDataSource(
+        withCSS(ContainerConfig, { marginSides: ['top', 'bottom'] }),
+        undefined,
+        {
+          types: ['uniqueList', 'list', 'multiple'],
+        }
+      )
     ),
     Collapsible: withVisibility(withCSS(CollapsibleConfig)),
     RichText: withVisibility(RichTextConfig),
@@ -146,7 +116,7 @@ export const config: UserConfig = {
     TeaserAuthors: withVisibility(TeaserAuthorsConfig),
     TeaserDate: withVisibility(TeaserDateConfig),
     TeaserTags: withVisibility(TeaserTagsConfig),
-  },
+  }),
   categories: {
     recommended: {
       components: ['Title', 'RichText', 'Subscribe'],

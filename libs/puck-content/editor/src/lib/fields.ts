@@ -2,6 +2,7 @@ import { Config } from '@puckeditor/core';
 
 import { AlignmentField } from './alignment/alignment.field';
 import { ApiField } from './api/api.field';
+import { BlockVisibilityField } from './block-visibility/block-visibility.field';
 import { BorderField } from './border/border.field';
 import { BreakpointsField } from './breakpoints/breakpoints.field';
 import { ColorField } from './color/color.field';
@@ -14,9 +15,11 @@ import { PaddingField } from './padding/padding.field';
 import { PaletteField } from './palette/palette.field';
 import { ResolvedField } from './resolved';
 import { RichtextField } from './richtext/richtext.field';
+import { StylingField } from './styling/styling.field';
 import { VisibilityField } from './visibility/visibility.field';
 import { SwitchField } from './switch/switch.field';
 import { TagField } from './tag/tag.field';
+import { TagSelectField } from './tag-select/tag-select.field';
 import { TypographyField } from './typography/typography.field';
 
 export type UserFields = {
@@ -25,10 +28,12 @@ export type UserFields = {
   padding: PaddingField;
   border: BorderField;
   gap: GapField;
+  styling: StylingField;
   breakpoints: BreakpointsField;
   columns: ColumnsField;
   list: ListField;
   tag: TagField;
+  tagSelect: TagSelectField;
   alignment: AlignmentField;
   palette: PaletteField;
   richtext: RichtextField;
@@ -37,6 +42,7 @@ export type UserFields = {
   switch: SwitchField;
   image: ImageField;
   visibility: VisibilityField;
+  blockVisibility: BlockVisibilityField;
   resolved: ResolvedField;
 };
 

@@ -33,7 +33,7 @@ export const RowRender: PuckComponent<RowProps> = ({
     {...props}
     css={(theme: Theme) =>
       breakpointsStyles(theme, layout, resolved => ({
-        ...gapStyles(resolved),
+        ...gapStyles(theme, resolved),
         ...itemsAlignmentStyles(resolved),
       }))
     }

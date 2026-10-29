@@ -1,7 +1,11 @@
 import { ComponentData, Data } from '@puckeditor/core';
 import { z } from 'zod/v4';
 
-import { datasourcesSchema } from '@wepublish/puck-content/editor';
+import {
+  blockVisibilitySchema,
+  datasourcesSchema,
+  rootMetadataSchema,
+} from '@wepublish/puck-content/editor';
 
 const blockDataSchema = z
   .object({
@@ -11,6 +15,7 @@ const blockDataSchema = z
 
 export type ApiBlock = {
   id: string;
+  visibility: z.infer<typeof blockVisibilitySchema>;
   datasources: z.infer<typeof datasourcesSchema>;
   data: z.infer<typeof blockDataSchema>;
   children?: ApiBlock[];
@@ -18,6 +23,7 @@ export type ApiBlock = {
 
 export const apiBlockSchema: z.ZodType<ApiBlock> = z.object({
   id: z.guid(),
+  visibility: blockVisibilitySchema,
   datasources: datasourcesSchema,
   data: blockDataSchema,
   get children() {
@@ -35,17 +41,30 @@ const toChildProps = (type: string, children: ApiBlock[]) =>
   : { content: toPuckContent(children) };
 
 export const toPuckContent = (blocks: ApiBlock[]): ComponentData[] =>
-  blocks.map(({ id, datasources, data: { type, ...props }, children }) => ({
-    type,
-    props: {
-      ...props,
-      ...(children ? toChildProps(type, children) : {}),
-      id,
-      datasources,
-    },
-  }));
+  blocks.map(
+    ({ id, visibility, datasources, data: { type, ...props }, children }) => ({
+      type,
+      props: {
+        ...props,
+        ...(children ? toChildProps(type, children) : {}),
+        id,
+        visibility,
+        datasources,
+      },
+    })
+  );
 
-export const toPuckData = (blocks: unknown): Data => ({
-  root: { props: {} },
+const withoutNulls = (value: unknown) =>
+  value && typeof value === 'object' ?
+    Object.fromEntries(
+      Object.entries(value).filter(([, entry]) => entry !== null)
+    )
+  : value;
+
+export const toPuckRootProps = (metadata: unknown = {}) =>
+  rootMetadataSchema.partial().parse(withoutNulls(metadata));
+
+export const toPuckData = (blocks: unknown, metadata?: unknown): Data => ({
+  root: { props: toPuckRootProps(metadata) },
   content: toPuckContent(apiBlocksSchema.parse(blocks)),
 });

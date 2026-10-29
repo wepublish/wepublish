@@ -21,6 +21,7 @@ export const Row: ComponentConfig<{
     layout: {
       type: 'breakpoints',
       label: 'Layout',
+      hideLabel: true,
       objectFields: {
         ...gapFields(['column']),
         ...itemsAlignmentFields,

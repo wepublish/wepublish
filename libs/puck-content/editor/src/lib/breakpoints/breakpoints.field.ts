@@ -17,6 +17,7 @@ export type BreakpointsValue<Props extends object = Record<string, unknown>> =
 export type BreakpointsField<Props extends object = Record<string, any>> =
   BaseField & {
     type: 'breakpoints';
+    hideLabel?: boolean;
     objectFields: {
       [SubPropName in keyof Props]:
         | Field<Props[SubPropName], UserFields[keyof UserFields]>

@@ -15,7 +15,7 @@ import { DragHandle } from './editor/drag-handle';
 import { CaretLinkPopover } from './editor/link-popover';
 import { FooterActions } from './editor/footer-actions';
 import { RichtextJSONDocument } from '@wepublish/richtext';
-import { forwardRef, useEffect, useMemo } from 'react';
+import { forwardRef, useEffect, useMemo, useRef } from 'react';
 import { equals } from 'ramda';
 import { useTranslation } from 'react-i18next';
 
@@ -185,15 +185,19 @@ type RichtextEditorProps = {
 export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
   ({ defaultValue, value, onChange, disabled, autofocus }, ref) => {
     const { t } = useTranslation();
+    const emitted = useRef<RichtextJSONDocument | null>(null);
     const editor = useEditor({
       ...editorConfig,
       content: null,
       autofocus,
       editable: !disabled,
       onUpdate: arg => {
+        const json = arg.editor.getJSON() as RichtextJSONDocument;
+        emitted.current = json;
+
         onChange?.({
           html: arg.editor.getHTML(),
-          json: arg.editor.getJSON() as RichtextJSONDocument,
+          json,
         });
       },
     });
@@ -222,7 +226,7 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
     }, []);
 
     useEffect(() => {
-      if (!editorReady || !value || editor.isFocused) {
+      if (!editorReady || !value || equals(value, emitted.current)) {
         return;
       }
 

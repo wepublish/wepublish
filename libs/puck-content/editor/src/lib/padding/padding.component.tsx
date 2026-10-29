@@ -33,6 +33,7 @@ export const PaddingFieldRender = ({
         value={value}
         readOnly={readOnly}
         onChange={onChange}
+        allowed={field.sides}
       />
     </ToggleableField>
   );

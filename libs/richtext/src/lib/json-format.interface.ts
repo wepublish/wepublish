@@ -1,4 +1,4 @@
-import { MarkType } from '@tiptap/core';
+import { JSONContent, MarkType } from '@tiptap/core';
 
 type Bold = MarkType<'bold'>;
 type Italic = MarkType<'italic'>;
@@ -37,11 +37,14 @@ export type RichtextMarks =
   | Link
   | TextStyle;
 
-type RichtextNode<Type extends string, Attrs = undefined, Content = void> = {
+type NestedContent = JSONContent[];
+
+type RichtextNode<Type extends string, Attrs = undefined, Content = never> = {
   type: Type;
   attrs: Attrs;
   marks?: RichtextMarks[];
-} & (Content extends void ? unknown : { content?: Content });
+  content?: Content;
+};
 
 export type Text = RichtextNode<'text', undefined> & {
   text: string;
@@ -57,7 +60,7 @@ type Heading = RichtextNode<
   Text[]
 >;
 type HardBreak = RichtextNode<'hardBreak', undefined>;
-type Blockquote = RichtextNode<'blockquote', undefined, RichtextElements[]>;
+type Blockquote = RichtextNode<'blockquote', undefined, NestedContent>;
 type Codeblock = RichtextNode<'codeBlock', { language: string }, Text[]>;
 type Image = RichtextNode<
   'image',
@@ -76,7 +79,7 @@ type TableHeader = RichtextNode<
     colwidth: number[] | null;
     borderColor: string;
   },
-  RichtextElements[]
+  NestedContent
 >;
 type TableCell = RichtextNode<
   'tableCell',
@@ -86,7 +89,7 @@ type TableCell = RichtextNode<
     colwidth: number[] | null;
     borderColor?: string | null;
   },
-  RichtextElements[]
+  NestedContent
 >;
 type TableRow = RichtextNode<
   'tableRow',
@@ -96,7 +99,7 @@ type TableRow = RichtextNode<
 type Table = RichtextNode<'table', undefined, TableRow[]>;
 export type RichtextTableElements = Table | TableRow | TableHeader | TableCell;
 
-type ListItem = RichtextNode<'listItem', undefined, RichtextElements[]>;
+type ListItem = RichtextNode<'listItem', undefined, NestedContent>;
 type BulletList = RichtextNode<'bulletList', undefined, ListItem[]>;
 type OrderedList = RichtextNode<
   'orderedList',

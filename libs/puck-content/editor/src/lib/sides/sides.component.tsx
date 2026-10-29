@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { IconType } from 'react-icons';
 import {
   LuArrowDownToLine,
   LuArrowLeftToLine,
@@ -14,8 +15,10 @@ import {
 
 import {
   FieldNumberInput,
+  FieldSpacingInput,
   FieldToggleGroup,
 } from '../field-controls.component';
+import { SpacingValue } from '../spacing/spacing';
 import { FieldGrid, FieldStack } from '../field-controls';
 import {
   getSidesMode,
@@ -23,8 +26,9 @@ import {
   setAxis,
   setSide,
   Side,
+  sides,
   SidesMode,
-  sidesModes,
+  sidesModesFor,
   SidesValue,
   toSidesMode,
 } from './sides';
@@ -68,17 +72,45 @@ export type SidesInputProps = {
   value: SidesValue | undefined;
   onChange: (value: SidesValue) => void;
   readOnly?: boolean;
+  unit?: 'spacing' | 'px';
+  allowed?: Side[];
 };
+
+type SideInputProps = {
+  unit: 'spacing' | 'px';
+  label: string;
+  icon: IconType;
+  value: SpacingValue | undefined;
+  onChange: (value: SpacingValue | undefined) => void;
+  readOnly?: boolean;
+};
+
+const SideInput = ({ unit, value, ...props }: SideInputProps) =>
+  unit === 'px' ?
+    <FieldNumberInput
+      {...props}
+      value={typeof value === 'number' ? value : undefined}
+    />
+  : <FieldSpacingInput
+      {...props}
+      value={value}
+    />;
 
 export const SidesInput = ({
   name,
   value,
   onChange,
   readOnly,
+  unit = 'spacing',
+  allowed = sides,
 }: SidesInputProps) => {
   const labels = useSidesLabels();
   const current = value ?? {};
-  const [mode, setMode] = useState(() => getSidesMode(value));
+  const [mode, setMode] = useState(() => getSidesMode(value, allowed));
+  const isVertical =
+    allowed.length === 2 &&
+    allowed.includes('top') &&
+    allowed.includes('bottom');
 
   const changeMode = (next: SidesMode | undefined) => {
     if (!next) {
@@ -86,7 +118,7 @@ export const SidesInput = ({
     }
 
     setMode(next);
-    onChange(toSidesMode(current, next));
+    onChange(toSidesMode(current, next, allowed));
   };
 
   return (
@@ -96,7 +128,7 @@ export const SidesInput = ({
         value={mode}
         readOnly={readOnly}
         onChange={changeMode}
-        options={sidesModes.map(option => ({
+        options={sidesModesFor(allowed).map(option => ({
           value: option,
           label: labels.modes[option],
           icon: modeIcons[option],
@@ -104,18 +136,20 @@ export const SidesInput = ({
       />
 
       {mode === 'all' && (
-        <FieldNumberInput
-          label={labels.all}
-          icon={LuSquare}
-          value={current.top}
+        <SideInput
+          unit={unit}
+          label={isVertical ? labels.vertical : labels.all}
+          icon={isVertical ? LuMoveVertical : LuSquare}
+          value={current[allowed[0]]}
           readOnly={readOnly}
-          onChange={amount => onChange(setAllSides(amount))}
+          onChange={amount => onChange(setAllSides(amount, allowed))}
         />
       )}
 
       {mode === 'axis' && (
         <FieldGrid columns={2}>
-          <FieldNumberInput
+          <SideInput
+            unit={unit}
             label={labels.vertical}
             icon={LuMoveVertical}
             value={current.top}
@@ -123,7 +157,8 @@ export const SidesInput = ({
             onChange={amount => onChange(setAxis(current, 'vertical', amount))}
           />
 
-          <FieldNumberInput
+          <SideInput
+            unit={unit}
             label={labels.horizontal}
             icon={LuMoveHorizontal}
             value={current.left}
@@ -137,9 +172,10 @@ export const SidesInput = ({
 
       {mode === 'individual' && (
         <FieldGrid columns={2}>
-          {(['top', 'right', 'bottom', 'left'] as const).map(side => (
-            <FieldNumberInput
+          {allowed.map(side => (
+            <SideInput
               key={side}
+              unit={unit}
               label={labels.sides[side]}
               icon={sideIcons[side]}
               value={current[side]}

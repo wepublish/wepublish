@@ -21,7 +21,7 @@ export type BorderField = BaseField & {
 
 export const borderSchema = z
   .object({
-    width: sidesSchema('border width'),
+    width: sidesSchema('border width', 'px'),
     style: z.enum(borderStyles).describe('Line style of the border'),
     color: colorSchema().describe('Border colour, defaults to the text colour'),
   })

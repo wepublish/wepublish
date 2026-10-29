@@ -86,7 +86,7 @@ const alignmentIcons: Record<
 
 const AlignmentOptions = styled.div`
   display: flex;
-  gap: 4px;
+  gap: var(--puck-space-2);
 `;
 
 const AlignmentOption = styled.label<{ active: boolean; disabled: boolean }>`

@@ -38,7 +38,7 @@ export const GridRender: PuckComponent<GridProps> = ({
         gridTemplateColumns: toGridTemplateColumns(
           resolved?.columns ?? columnsPresets[0]
         ),
-        ...gapStyles(resolved),
+        ...gapStyles(theme, resolved),
         ...itemsAlignmentStyles(resolved),
       })),
     })}

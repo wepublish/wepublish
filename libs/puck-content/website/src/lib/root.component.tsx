@@ -70,14 +70,10 @@ export const Root: PuckComponent<RootProps> = ({
   puck: { renderDropZone },
   showFooter,
   showNavigation,
-  seo,
-  socialMedia,
+  ...metadata
 }) => (
   <>
-    <RootSEO
-      seo={seo}
-      socialMedia={socialMedia}
-    />
+    <RootSEO {...metadata} />
 
     <RootRender
       DropZone={renderDropZone}
