@@ -95,6 +95,8 @@ export class MailWebhookController {
         req,
       });
 
+      await this.noteProviderReachedUs(provider.id);
+
       for (const mailLogStatus of mailLogStatuses) {
         await this.apply(mailLogStatus);
       }
@@ -113,6 +115,25 @@ export class MailWebhookController {
     }
 
     return res.status(200).send();
+  }
+
+  /**
+   * A verified call, whatever it carried, proves the provider can reach this
+   * installation; the admin reads the time off the integration settings.
+   */
+  private async noteProviderReachedUs(providerId: string) {
+    try {
+      await this.prisma.settingMailProvider.update({
+        where: { id: providerId },
+        data: { lastWebhookAt: new Date() },
+      });
+    } catch (error) {
+      this.logger.warn(
+        `Could not note the webhook on mailProvider ${providerId}: ${
+          (error as Error).message
+        }`
+      );
+    }
   }
 
   private async apply(mailLogStatus: MailLogStatus) {

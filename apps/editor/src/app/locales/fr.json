@@ -2433,6 +2433,7 @@
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
         "emailQualityUnresponsiveAfterDays": "Une adresse e-mail est considérée « sans réaction » lorsque ce nombre de jours s’est écoulé sans connexion ni clic dans un e-mail, alors que des e-mails ont été remis. Réévalué chaque nuit et via « Actualiser les statuts ».",
         "emailQualityMinMailsForUnresponsive": "Ce nombre d’e-mails doit avoir été remis à l’adresse avant qu’elle puisse être considérée « sans réaction ».",
+        "emailQualityEvidenceWarnAfterDays": "Après ce nombre de jours sans rapport de distribution du service d’e-mail (webhook, interrogation, audience newsletter), l’outil de communication et la page du canal de distribution signalent que le statut e-mail ne repose que sur les connexions.",
         "newArticlePaywall": "N’affectera pas les articles déjà créés",
         "newArticlePeering": "N’affectera pas les articles déjà créés",
         "showPendingWhenNotPublished": "Cela exposera publiquement les articles et pages en attente (et donc aussi les robots d’indexation), même s’ils n’ont encore jamais été publiés."
@@ -2441,6 +2442,7 @@
       "emailQuality": "Qualité des e-mails",
       "emailQualityUnresponsiveAfterDays": "« Sans réaction » après … jours",
       "emailQualityMinMailsForUnresponsive": "… e-mails remis",
+      "emailQualityEvidenceWarnAfterDays": "Avertir sans rapport de distribution après … jours",
       "activeSubscriptionsApiPublic": "Rendre l’API des abonnements actifs accessible au public",
       "expectedRevenueApiPublic": "Rendre l’API des revenus attendus accessible au public",
       "newDeactivationsApiPublic": "Rendre l’API des nouvelles désactivations accessible au public",
@@ -3445,17 +3447,26 @@
         "smtpUser": "Nom d’utilisateur SMTP",
         "smtpPassword": "Mot de passe SMTP",
         "webhookEndpointSecret": "Secret du point de terminaison du webhook",
-        "typeInfo": "Le service qui envoie les e-mails. MAILCHIMP correspond à Mailchimp Transactional (Mandrill). SLACK et LOG ne distribuent rien aux lecteur·trice·s – ils servent uniquement aux tests.",
+        "typeInfo": "Le service qui envoie les e-mails. MAILCHIMP correspond à Mailchimp Transactional (Mandrill), BREVO à Brevo (anciennement Sendinblue). SLACK et LOG ne distribuent rien aux lecteur·trice·s – ils servent uniquement aux tests.",
         "fromAddressInfo": "L’adresse d’expéditeur visible par les lecteur·trice·s, p. ex. abo@example.ch. Son domaine doit être vérifié auprès du service d’e-mail, sinon les e-mails risquent d’arriver dans les spams.",
         "replyToAddressInfo": "L’adresse à laquelle arrivent les réponses à vos e-mails. Si le champ est vide, les réponses vont à l’adresse d’expéditeur.",
-        "apiKeyInfo": "La clé API de votre compte auprès du service d’e-mail (Mailchimp Transactional/Mandrill ou Mailgun). Sans elle, aucun e-mail ne peut être envoyé.",
-        "webhookEndpointSecretInfo": "Permet à We.Publish de vérifier que les rapports de distribution (p. ex. rebonds) proviennent bien du service d’e-mail. Copiez la clé de signature du webhook depuis Mandrill ou Mailgun. Sans elle, le statut de distribution n’est pas mis à jour.",
+        "apiKeyInfo": "La clé API de votre compte auprès du service d’e-mail (Mailchimp Transactional/Mandrill, Mailgun ou Brevo). Sans elle, aucun e-mail ne peut être envoyé.",
+        "webhookEndpointSecretInfo": "Permet à We.Publish de vérifier que les rapports de distribution (p. ex. rebonds) proviennent bien du service d’e-mail. Copiez la clé de signature du webhook depuis Mandrill ou Mailgun. Pour Brevo, choisissez un mot de passe aléatoire et ajoutez-le sous la forme ?key=… à l’URL du webhook que vous saisissez dans Brevo. Sans elle, le statut de distribution n’est pas mis à jour.",
         "mailgunBaseDomainInfo": "L’adresse de l’API Mailgun sans https:// : api.mailgun.net, ou api.eu.mailgun.net si votre compte est hébergé dans l’UE.",
         "mailgunMailDomainInfo": "Le domaine d’envoi que vous avez configuré dans Mailgun, p. ex. mg.example.ch.",
         "slackWebhookUrlInfo": "L’adresse d’un webhook entrant Slack. Au lieu d’être distribué, chaque e-mail est publié dans ce canal Slack – pratique pour les tests.",
         "smtpHostInfo": "L’adresse du serveur d’envoi, p. ex. smtp.example.ch. Votre fournisseur de messagerie vous l’indique.",
         "smtpPortInfo": "Généralement 587 ou 465 – voir les indications de votre fournisseur de messagerie.",
-        "smtpSecureInfo": "À activer pour le port 465. Pour le port 587, laissez désactivé – la connexion est alors chiffrée via STARTTLS."
+        "smtpSecureInfo": "À activer pour le port 465. Pour le port 587, laissez désactivé – la connexion est alors chiffrée via STARTTLS.",
+        "evidence": {
+          "title": "Rapports de distribution",
+          "info": "Indique si le service d’e-mail atteint We.Publish. Si les deux restent vides, le statut e-mail des utilisateur·trice·s ne repose que sur les connexions et les clics dans la newsletter.",
+          "lastWebhookAt": "Dernier rapport par webhook",
+          "lastPollAt": "Dernière interrogation",
+          "lastPollError": "Erreur lors de la dernière interrogation",
+          "never": "jamais",
+          "notReporting": "Ce service ne signale aucun statut de distribution."
+        }
       },
       "trackingPixelSettings": {
         "type": "Type",
@@ -3487,6 +3498,18 @@
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
+        "audienceWebhook": {
+          "title": "Rapports de l’audience",
+          "info": "Mailchimp informe We.Publish immédiatement lorsqu’un contact a été nettoyé (rebonds, abus) ou s’est désabonné. Sans webhook, cela n’arrive qu’avec la synchronisation nocturne. We.Publish enregistre lui-même le webhook auprès de Mailchimp ; l’API doit pour cela être accessible depuis Mailchimp.",
+          "registeredAt": "Enregistré auprès de Mailchimp le {{date}}",
+          "notRegistered": "Pas encore enregistré auprès de Mailchimp.",
+          "lastReceived": "Dernier rapport",
+          "never": "aucun pour l’instant",
+          "register": "Enregistrer le webhook auprès de Mailchimp",
+          "renew": "Renouveler l’enregistrement",
+          "registered": "Le webhook est enregistré auprès de Mailchimp.",
+          "failed": "Mailchimp a refusé l’enregistrement : {{error}}"
+        },
         "enabled": "Activé",
         "apiKey": "Clé API Mailchimp",
         "listId": "ID de liste/audience Mailchimp",
@@ -4131,6 +4154,12 @@
         "refresh": "Actualiser les statuts",
         "refreshing": "Actualisation des statuts …",
         "refreshed": "{{updated}} statuts de remise récupérés chez le fournisseur ({{checked}} vérifiés), {{recomputed}} personnes réévaluées."
+      },
+      "emailEvidence": {
+        "noProviderReports": "Le service d’e-mail ({{provider}}) ne signale aucun statut de distribution. Le statut e-mail ne repose que sur les connexions, les adresses confirmées et les clics dans la newsletter.",
+        "never": "Aucun rapport de distribution n’est jamais arrivé du service d’e-mail. Le statut e-mail ne repose que sur les connexions. Vérifiez le secret du webhook dans les intégrations et l’interrogation nocturne.",
+        "stale": "Aucun rapport de distribution du service d’e-mail depuis {{days}} jours (dernier : {{lastAt}}). Vérifiez le webhook et l’interrogation nocturne.",
+        "pollError": "La dernière interrogation du service d’e-mail a échoué : {{error}}"
       },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",

@@ -2451,12 +2451,14 @@
         "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
         "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime.",
         "emailQualityUnresponsiveAfterDays": "An email address counts as “unresponsive” when this many days passed without a login or a click in a mail, although mails were delivered. Re-evaluated nightly and via “Refresh statuses”.",
-        "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”."
+        "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”.",
+        "emailQualityEvidenceWarnAfterDays": "After this many days without a delivery report from the mail service (webhook, poll, newsletter audience), the communication tool and the delivery channel page warn that the email status rests on logins alone."
       },
       "sessionTtlDays": "Session lifetime",
       "emailQuality": "Email quality",
       "emailQualityUnresponsiveAfterDays": "“Unresponsive” after … days",
       "emailQualityMinMailsForUnresponsive": "… delivered mails",
+      "emailQualityEvidenceWarnAfterDays": "Warn without delivery reports after … days",
       "info": {
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
@@ -3529,17 +3531,26 @@
         "smtpUser": "SMTP Username",
         "smtpPassword": "SMTP Password",
         "webhookEndpointSecret": "Webhook Endpoint Secret",
-        "typeInfo": "The service that sends the emails. MAILCHIMP stands for Mailchimp Transactional (Mandrill). SLACK and LOG don't deliver anything to readers – they are only meant for testing.",
+        "typeInfo": "The service that sends the emails. MAILCHIMP stands for Mailchimp Transactional (Mandrill), BREVO for Brevo (formerly Sendinblue). SLACK and LOG don't deliver anything to readers – they are only meant for testing.",
         "fromAddressInfo": "The sender address readers see, e.g. abo@example.ch. Its domain must be verified with the mail service, otherwise emails may end up in spam.",
         "replyToAddressInfo": "Where replies go when someone answers one of your emails. If empty, replies go to the sender address.",
-        "apiKeyInfo": "The API key from your account with the mail service (Mailchimp Transactional/Mandrill or Mailgun). Without it, no emails can be sent.",
-        "webhookEndpointSecretInfo": "Lets We.Publish check that delivery reports (e.g. bounces) really come from the mail service. Copy the webhook signing key from Mandrill or Mailgun. Without it, the delivery status is not updated.",
+        "apiKeyInfo": "The API key from your account with the mail service (Mailchimp Transactional/Mandrill, Mailgun or Brevo). Without it, no emails can be sent.",
+        "webhookEndpointSecretInfo": "Lets We.Publish check that delivery reports (e.g. bounces) really come from the mail service. Copy the webhook signing key from Mandrill or Mailgun. For Brevo, choose a random password and append it as ?key=… to the webhook URL you enter in Brevo. Without it, the delivery status is not updated.",
         "mailgunBaseDomainInfo": "The address of the Mailgun API without https://: api.mailgun.net, or api.eu.mailgun.net if your account is hosted in the EU.",
         "mailgunMailDomainInfo": "The sending domain you set up in Mailgun, e.g. mg.example.ch.",
         "slackWebhookUrlInfo": "The address of a Slack incoming webhook. Instead of being delivered, every email is posted to that Slack channel – useful for testing.",
         "smtpHostInfo": "The address of the outgoing mail server, e.g. smtp.example.ch. Your email provider tells you which one to use.",
         "smtpPortInfo": "Usually 587 or 465 – see your email provider's instructions.",
-        "smtpSecureInfo": "Enable it for port 465. For port 587, leave it off – the connection is then encrypted via STARTTLS."
+        "smtpSecureInfo": "Enable it for port 465. For port 587, leave it off – the connection is then encrypted via STARTTLS.",
+        "evidence": {
+          "title": "Delivery reports",
+          "info": "Shows whether the mail service reaches We.Publish. If both stay empty, the email status of your users rests on logins and newsletter clicks alone.",
+          "lastWebhookAt": "Last report by webhook",
+          "lastPollAt": "Last poll",
+          "lastPollError": "Error on the last poll",
+          "never": "never",
+          "notReporting": "This service reports no delivery states."
+        }
       },
       "trackingPixelSettings": {
         "type": "Type",
@@ -3571,6 +3582,18 @@
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
+        "audienceWebhook": {
+          "title": "Reports from the audience",
+          "info": "Mailchimp tells We.Publish right away when a contact was cleaned (bounces, abuse) or unsubscribed. Without the webhook this arrives with the nightly sync only. We.Publish registers the webhook at Mailchimp itself; the API has to be reachable from Mailchimp for that.",
+          "registeredAt": "Registered at Mailchimp on {{date}}",
+          "notRegistered": "Not registered at Mailchimp yet.",
+          "lastReceived": "Last report",
+          "never": "none yet",
+          "register": "Register webhook at Mailchimp",
+          "renew": "Renew registration",
+          "registered": "The webhook is registered at Mailchimp.",
+          "failed": "Mailchimp refused the registration: {{error}}"
+        },
         "enabled": "Enabled",
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp List/Audience ID",
@@ -4158,6 +4181,12 @@
         "refresh": "Refresh statuses",
         "refreshing": "Refreshing statuses …",
         "refreshed": "{{updated}} delivery states fetched from the provider ({{checked}} checked), {{recomputed}} people re-evaluated."
+      },
+      "emailEvidence": {
+        "noProviderReports": "The mail service ({{provider}}) reports no delivery states. The email status rests on logins, confirmed addresses and newsletter clicks alone.",
+        "never": "No delivery report has ever arrived from the mail service. The email status rests on logins alone. Check the webhook secret in the integrations and the nightly poll.",
+        "stale": "No delivery report from the mail service for {{days}} days (last one {{lastAt}}). Check the webhook and the nightly poll.",
+        "pollError": "The last poll of the mail service failed: {{error}}"
       },
       "endedWindow": {
         "label": "When the subscription was deactivated",

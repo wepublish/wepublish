@@ -128,6 +128,8 @@ export interface GenericIntegrationFormProps<
   getLogo?: (setting: TSetting) => string | undefined;
 
   renderActions?: (setting: TSetting) => ReactNode;
+  /** Read-only state of the integration, shown between the title and the fields. */
+  renderStatus?: (setting: TSetting) => ReactNode;
 }
 
 export function SingleGenericIntegrationForm<
@@ -140,6 +142,7 @@ export function SingleGenericIntegrationForm<
   fields,
   getLogo,
   renderActions,
+  renderStatus,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
 
@@ -235,6 +238,8 @@ export function SingleGenericIntegrationForm<
                 />
               )}
             </Typography>
+
+            {renderStatus?.(setting)}
 
             {resolvedFields.map(({ info, ...field }) => (
               <FormControl

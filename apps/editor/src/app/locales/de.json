@@ -2437,12 +2437,14 @@
         "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit.",
         "emailQualityUnresponsiveAfterDays": "Eine E-Mail-Adresse gilt als «reagiert nicht», wenn so viele Tage lang weder ein Login noch ein Klick in einer Mail erfolgt ist, obwohl Mails zugestellt wurden. Wird nächtlich und über «Status aktualisieren» neu bewertet.",
         "emailQualityMinMailsForUnresponsive": "So viele Mails müssen an die Adresse zugestellt worden sein, bevor sie als «reagiert nicht» gelten kann.",
+        "emailQualityEvidenceWarnAfterDays": "Nach so vielen Tagen ohne Zustellmeldung vom E-Mail-Dienst (Webhook, Abgleich, Newsletter-Audience) zeigen das Kommunikations-Tool und der Zustellkanal einen Hinweis, dass der E-Mail-Status nur auf Logins beruht.",
         "showPendingWhenNotPublished": "Dadurch werden geplante Artikel und Seiten öffentlich sichtbar (und damit auch für Crawler), obwohl sie noch nie publiziert wurden."
       },
       "sessionTtlDays": "Gültigkeitsdauer der Anmeldung",
       "emailQuality": "E-Mail-Qualität",
       "emailQualityUnresponsiveAfterDays": "«Reagiert nicht» nach … Tagen",
       "emailQualityMinMailsForUnresponsive": "… zugestellten Mails",
+      "emailQualityEvidenceWarnAfterDays": "Hinweis ohne Zustellmeldung nach … Tagen",
       "activeSubscriptionsApiPublic": "API für aktive Abos öffentlich zugänglich machen",
       "expectedRevenueApiPublic": "API für erwartete Einnahmen öffentlich zugänglich machen",
       "newDeactivationsApiPublic": "API für neue Deaktivierungen öffentlich zugänglich machen",
@@ -3468,17 +3470,26 @@
         "smtpUser": "SMTP-Benutzername",
         "smtpPassword": "SMTP-Passwort",
         "webhookEndpointSecret": "Webhook-Endpoint-Secret",
-        "typeInfo": "Der Dienst, der die E-Mails verschickt. MAILCHIMP steht für Mailchimp Transactional (Mandrill). SLACK und LOG stellen Leserinnen und Lesern nichts zu – sie sind nur zum Testen gedacht.",
+        "typeInfo": "Der Dienst, der die E-Mails verschickt. MAILCHIMP steht für Mailchimp Transactional (Mandrill), BREVO für Brevo (früher Sendinblue). SLACK und LOG stellen Leserinnen und Lesern nichts zu – sie sind nur zum Testen gedacht.",
         "fromAddressInfo": "Die Absenderadresse, die Leserinnen und Leser sehen, z. B. abo@example.ch. Ihre Domain muss beim E-Mail-Dienst verifiziert sein, sonst landen E-Mails womöglich im Spam.",
         "replyToAddressInfo": "Wohin Antworten gehen, wenn jemand auf eine deiner E-Mails antwortet. Bleibt das Feld leer, gehen Antworten an die Absenderadresse.",
-        "apiKeyInfo": "Der API-Schlüssel aus deinem Konto beim E-Mail-Dienst (Mailchimp Transactional/Mandrill oder Mailgun). Ohne ihn können keine E-Mails verschickt werden.",
-        "webhookEndpointSecretInfo": "Damit prüft We.Publish, dass Zustellmeldungen (z. B. Bounces) wirklich vom E-Mail-Dienst stammen. Kopiere den Webhook-Signaturschlüssel aus Mandrill bzw. Mailgun. Ohne ihn wird der Zustellstatus nicht aktualisiert.",
+        "apiKeyInfo": "Der API-Schlüssel aus deinem Konto beim E-Mail-Dienst (Mailchimp Transactional/Mandrill, Mailgun oder Brevo). Ohne ihn können keine E-Mails verschickt werden.",
+        "webhookEndpointSecretInfo": "Damit prüft We.Publish, dass Zustellmeldungen (z. B. Bounces) wirklich vom E-Mail-Dienst stammen. Kopiere den Webhook-Signaturschlüssel aus Mandrill bzw. Mailgun. Bei Brevo wählst du ein zufälliges Passwort und hängst es als ?key=… an die Webhook-URL an, die du in Brevo einträgst. Ohne ihn wird der Zustellstatus nicht aktualisiert.",
         "mailgunBaseDomainInfo": "Die Adresse der Mailgun-API ohne https://: api.mailgun.net bzw. api.eu.mailgun.net, wenn dein Konto in der EU liegt.",
         "mailgunMailDomainInfo": "Die Versand-Domain, die du in Mailgun eingerichtet hast, z. B. mg.example.ch.",
         "slackWebhookUrlInfo": "Die Adresse eines Slack-Incoming-Webhooks. Statt zugestellt zu werden, landet jede E-Mail in diesem Slack-Kanal – praktisch zum Testen.",
         "smtpHostInfo": "Die Adresse des Postausgangsservers, z. B. smtp.example.ch. Du erhältst sie von deinem E-Mail-Anbieter.",
         "smtpPortInfo": "Meist 587 oder 465 – siehe Angaben deines E-Mail-Anbieters.",
-        "smtpSecureInfo": "Für Port 465 einschalten. Bei Port 587 ausgeschaltet lassen – die Verbindung wird dann über STARTTLS verschlüsselt."
+        "smtpSecureInfo": "Für Port 465 einschalten. Bei Port 587 ausgeschaltet lassen – die Verbindung wird dann über STARTTLS verschlüsselt.",
+        "evidence": {
+          "title": "Zustellmeldungen",
+          "info": "Daran siehst du, ob der E-Mail-Dienst We.Publish erreicht. Bleibt beides leer, beruht der E-Mail-Status der User nur auf Logins und Newsletter-Klicks.",
+          "lastWebhookAt": "Letzte Meldung per Webhook",
+          "lastPollAt": "Letzter Abgleich",
+          "lastPollError": "Fehler beim letzten Abgleich",
+          "never": "noch nie",
+          "notReporting": "Dieser Dienst meldet keine Zustellstatus."
+        }
       },
       "trackingPixelSettings": {
         "type": "Typ",
@@ -3510,6 +3521,18 @@
       },
       "mailchimpSync": "Mailchimp-Sync",
       "mailchimpSyncSettings": {
+        "audienceWebhook": {
+          "title": "Meldungen aus der Audience",
+          "info": "Mailchimp meldet We.Publish sofort, wenn ein Kontakt bereinigt wurde (Bounces, Missbrauch) oder sich abgemeldet hat. Ohne Webhook kommt das erst mit dem nächtlichen Abgleich an. We.Publish registriert den Webhook selbst bei Mailchimp; dafür muss die API von Mailchimp aus erreichbar sein.",
+          "registeredAt": "Bei Mailchimp registriert am {{date}}",
+          "notRegistered": "Noch nicht bei Mailchimp registriert.",
+          "lastReceived": "Letzte Meldung",
+          "never": "noch keine",
+          "register": "Webhook bei Mailchimp registrieren",
+          "renew": "Registrierung erneuern",
+          "registered": "Der Webhook ist bei Mailchimp registriert.",
+          "failed": "Mailchimp hat die Registrierung abgelehnt: {{error}}"
+        },
         "enabled": "Aktiviert",
         "apiKey": "Mailchimp-API-Schlüssel",
         "listId": "Mailchimp Listen-/Zielgruppen-ID",
@@ -4139,6 +4162,12 @@
         "refresh": "Status aktualisieren",
         "refreshing": "Status werden aktualisiert …",
         "refreshed": "{{updated}} Zustellstatus vom Provider geholt ({{checked}} geprüft), {{recomputed}} User neu bewertet."
+      },
+      "emailEvidence": {
+        "noProviderReports": "Der E-Mail-Dienst ({{provider}}) meldet keine Zustellstatus. Der E-Mail-Status beruht nur auf Logins, bestätigten Adressen und Newsletter-Klicks.",
+        "never": "Noch nie eine Zustellmeldung vom E-Mail-Dienst erhalten. Der E-Mail-Status beruht nur auf Logins. Webhook-Secret in den Integrationen und den nächtlichen Abgleich prüfen.",
+        "stale": "Seit {{days}} Tagen keine Zustellmeldung vom E-Mail-Dienst (zuletzt {{lastAt}}). Webhook und nächtlichen Abgleich prüfen.",
+        "pollError": "Der letzte Abgleich mit dem E-Mail-Dienst ist fehlgeschlagen: {{error}}"
       },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
