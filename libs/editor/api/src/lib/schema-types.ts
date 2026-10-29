@@ -1434,6 +1434,43 @@ export enum EditorBlockType {
   Title = 'Title'
 }
 
+/** Where the email status comes from: whether the mail provider reports anything, when it last did, and how much evidence arrived lately. */
+export type EmailEvidenceModel = {
+  __typename: 'EmailEvidenceModel';
+  /** When the provider was last asked for delivery states. */
+  lastPollAt?: Maybe<Scalars['DateTime']['output']>;
+  /** What went wrong on the last poll; null when it succeeded. */
+  lastPollError?: Maybe<Scalars['String']['output']>;
+  /** Newest evidence from any provider source. Null means the status rests on logins and confirmations alone. */
+  lastProviderEvidenceAt?: Maybe<Scalars['DateTime']['output']>;
+  /** When the provider last called the webhook with a verified request. */
+  lastWebhookAt?: Maybe<Scalars['DateTime']['output']>;
+  providerName?: Maybe<Scalars['String']['output']>;
+  /** Whether the configured provider reports delivery outcomes at all. SMTP never does. */
+  providerReportsDelivery: Scalars['Boolean']['output'];
+  providerType?: Maybe<MailProviderType>;
+  sources: Array<EmailEvidenceSourceModel>;
+  /** Days without provider evidence after which the editor warns (setting emailQualityEvidenceWarnAfterDays). */
+  warnAfterDays: Scalars['Int']['output'];
+};
+
+export type EmailEvidenceSourceModel = {
+  __typename: 'EmailEvidenceSourceModel';
+  /** Events of this source in the last 30 days. */
+  count: Scalars['Int']['output'];
+  /** When the newest event of this source arrived, ever. */
+  lastAt?: Maybe<Scalars['DateTime']['output']>;
+  source: EmailQualityEventSource;
+};
+
+/** send: the provider refused the address when a mail was sent. webhook: the provider reported it. poll: asked of the provider or read from a newsletter audience. verification: an address verification service. */
+export enum EmailQualityEventSource {
+  Poll = 'poll',
+  Send = 'send',
+  Verification = 'verification',
+  Webhook = 'webhook'
+}
+
 /** active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed. */
 export enum EmailQualityLevel {
   Active = 'active',
@@ -2520,6 +2557,7 @@ export type MailProviderModel = {
 };
 
 export enum MailProviderType {
+  Brevo = 'BREVO',
   Log = 'LOG',
   Mailchimp = 'MAILCHIMP',
   Mailgun = 'MAILGUN',
@@ -2759,6 +2797,14 @@ export type MailTemplateSubscriptionOption = {
   __typename: 'MailTemplateSubscriptionOption';
   id: Scalars['String']['output'];
   label: Scalars['String']['output'];
+};
+
+/** The audience webhook the api registered at Mailchimp; the URL carries the secret. */
+export type MailchimpAudienceWebhook = {
+  __typename: 'MailchimpAudienceWebhook';
+  registeredAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
+  webhookId: Scalars['String']['output'];
 };
 
 export type MailchimpContactInput = {
@@ -3586,6 +3632,8 @@ export type Mutation = {
   recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult;
   /** Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now. */
   refreshEmailQuality: EmailQualityRefreshModel;
+  /** Registers (or renews) the audience webhook at Mailchimp, so cleaned and unsubscribed members reach the email quality as they happen. */
+  registerMailchimpAudienceWebhook: MailchimpAudienceWebhook;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Rejects a comment */
@@ -4791,6 +4839,11 @@ export type MutationReactivateSubscriptionArgs = {
 
 
 export type MutationReactivateUserSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationRegisterMailchimpAudienceWebhookArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -6846,6 +6899,8 @@ export type Query = {
   documentStorageUsage: DocumentStorageUsage;
   /** Returns a paginated list of documents based on the filters given. */
   documents: PaginatedDocuments;
+  /** Where the email status comes from: whether and when the mail provider reported anything. The editor warns when no provider evidence arrived for a while. */
+  emailEvidence: EmailEvidenceModel;
   /** Returns an event by id. */
   event: Event;
   /**
@@ -8368,6 +8423,12 @@ export type SettingMailProvider = SettingProvider & {
   fromAddress?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
+  /** When the provider was last asked for delivery states. */
+  lastPollAt?: Maybe<Scalars['DateTime']['output']>;
+  /** What went wrong on the last poll; null when it succeeded. */
+  lastPollError?: Maybe<Scalars['String']['output']>;
+  /** When the provider last called the webhook with a verified request. */
+  lastWebhookAt?: Maybe<Scalars['DateTime']['output']>;
   mailchimp_baseURL?: Maybe<Scalars['String']['output']>;
   mailgun_baseDomain?: Maybe<Scalars['String']['output']>;
   mailgun_mailDomain?: Maybe<Scalars['String']['output']>;
@@ -8394,6 +8455,7 @@ export enum SettingName {
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  EmailQualityEvidenceWarnAfterDays = 'EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS',
   EmailQualityMinMailsForUnresponsive = 'EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE',
   EmailQualityUnresponsiveAfterDays = 'EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS',
   MailProviderName = 'MAIL_PROVIDER_NAME',
@@ -8499,11 +8561,16 @@ export type SettingSyncProvider = SettingProvider & {
   lastLoadedAt: Scalars['DateTime']['output'];
   lastSyncAt?: Maybe<Scalars['DateTime']['output']>;
   lastSyncError?: Maybe<Scalars['String']['output']>;
+  /** When the audience webhook last delivered a verified call. */
+  lastWebhookAt?: Maybe<Scalars['DateTime']['output']>;
   mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']['output']>>;
   mailchimp_extensions?: Maybe<Scalars['JSONObject']['output']>;
   mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
   mailchimp_listId?: Maybe<Scalars['String']['output']>;
   mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
+  /** Id of the audience webhook the api registered at Mailchimp. */
+  mailchimp_webhookId?: Maybe<Scalars['String']['output']>;
+  mailchimp_webhookRegisteredAt?: Maybe<Scalars['DateTime']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
   type: SyncProviderType;

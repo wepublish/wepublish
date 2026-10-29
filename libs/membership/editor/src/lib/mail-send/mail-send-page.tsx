@@ -53,6 +53,7 @@ import { MdAdd, MdEdit, MdSend } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useLetterChannel } from '../mail-template/use-letter-channel';
 import { canGoToStep, StepNav, WizardStepper } from './step-nav';
+import { EmailEvidenceNotice } from './email-evidence-notice';
 import { mailErrorHelpKey } from './mail-log-common';
 import {
   CancelJobButton,
@@ -297,6 +298,10 @@ function MailSendPage() {
           <PageTitle>{t('mailSend.title')}</PageTitle>
         </ListViewHeader>
       </ListViewContainer>
+
+      {/* The email status segments below rest on what the provider reports;
+          say so when it reports nothing. */}
+      <EmailEvidenceNotice sx={{ marginBottom: 2 }} />
 
       {/* The preview sits beside the wizard on the send step only, as the last
           check before sending. The wizard column is a fixed width on every

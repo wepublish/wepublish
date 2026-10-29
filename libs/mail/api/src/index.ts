@@ -18,3 +18,4 @@ export * from './lib/mails.module';
 export * from './lib/mailchimp-contact/mailchimp-contact.service';
 export * from './lib/mailchimp-contact/mailchimp-error';
 export * from './lib/mailchimp-contact/mailchimp-contact.module';
+export * from './lib/mail-provider/brevo-mail-provider';

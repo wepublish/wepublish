@@ -2004,6 +2004,7 @@ model PaywallBypass {
 enum MailProviderType {
   MAILGUN   @map("mailgun")
   MAILCHIMP @map("mailchimp")
+  BREVO     @map("brevo")
   SLACK     @map("slack")
   SMTP      @map("smtp")
   LOG       @map("log")
@@ -2030,6 +2031,12 @@ model SettingMailProvider {
   smtp_port             Int?
   smtp_secure           Boolean?
   smtp_user             String?
+
+  // When the provider last reached us and when we last asked it, so an admin
+  // can tell whether the email status rests on provider evidence at all.
+  lastWebhookAt DateTime? @db.Timestamptz(3)
+  lastPollAt    DateTime? @db.Timestamptz(3)
+  lastPollError String?
 
   @@map("settings.mailprovider")
 }
@@ -2428,6 +2435,15 @@ model SettingSyncProvider {
   mailchimp_defaultInterestGroupIds Json    @default("[]")
   mailchimp_extensions              Json    @default("{}")
 
+  // Audience webhook (cleaned, unsubscribe, upemail), registered at Mailchimp
+  // by the api itself. The secret is in the webhook URL, since Mailchimp
+  // signs nothing; encrypted like the api key.
+  mailchimp_webhookSecret       String?
+  mailchimp_webhookId           String?
+  mailchimp_webhookRegisteredAt DateTime? @db.Timestamptz(3)
+  // When the audience webhook last delivered a verified call.
+  lastWebhookAt DateTime? @db.Timestamptz(3)
+
   // Last sync execution info
   lastSyncAt    DateTime? @db.Timestamptz(3)
   lastSyncError String?
@@ -2686,12 +2702,16 @@ enum EmailQualityLevel {
 
 // verified / invalid are reserved for an address verification service; nothing
 // records verified yet.
+// unsubscribed: the mail provider refuses the address from now on (Mandrill's
+// rejects list, Mailgun's unsubscribes), so it is as dead as a bounce.
+// optedOut: the person left a newsletter audience; the inbox still works.
 enum EmailQualityEventType {
   hardBounce    @map("hardBounce")
   invalid       @map("invalid")
   blocked       @map("blocked")
   spamComplaint @map("spamComplaint")
   unsubscribed  @map("unsubscribed")
+  optedOut      @map("optedOut")
   clicked       @map("clicked")
   verified      @map("verified")
 }
