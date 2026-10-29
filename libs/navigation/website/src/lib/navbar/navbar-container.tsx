@@ -15,11 +15,11 @@ import {
 import {
   BuilderContainerProps,
   BuilderNavbarProps,
+  BuilderRouterContext,
   LinkContext,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useRouter } from 'next/router';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useContext } from 'react';
 
 export type NavbarContainerProps = PropsWithChildren<
   Pick<
@@ -64,7 +64,7 @@ export function NavbarContainer({
   // and in the account the link to it is only worth showing as that warning.
   // The features need a session, so they are asked for only with one.
   const { hasUser } = useUser();
-  const { asPath } = useRouter();
+  const { asPath } = useContext(BuilderRouterContext);
   const accountPath = profileBtn?.href ?? '/profile';
   const inAccount =
     asPath === accountPath || asPath.startsWith(`${accountPath}/`);
