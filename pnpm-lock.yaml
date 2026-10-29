@@ -435,6 +435,9 @@ catalogs:
     pg:
       specifier: ^8.23.1
       version: 8.23.1
+    pingen2-sdk-js:
+      specifier: ^0.3.0
+      version: 0.3.0
     pino:
       specifier: ^6.14.0
       version: 6.14.0
@@ -924,7 +927,7 @@ importers:
         specifier: 'catalog:'
         version: 8.23.1
       pingen2-sdk-js:
-        specifier: ^0.3.0
+        specifier: 'catalog:'
         version: 0.3.0
       pino:
         specifier: 'catalog:'
@@ -1693,6 +1696,9 @@ importers:
       passport-http-bearer:
         specifier: 'catalog:'
         version: 1.0.1
+      pingen2-sdk-js:
+        specifier: 'catalog:'
+        version: 0.3.0
       pino:
         specifier: 'catalog:'
         version: 6.14.0
