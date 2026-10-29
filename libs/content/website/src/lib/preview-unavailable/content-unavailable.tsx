@@ -1,5 +1,4 @@
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import Head from 'next/head';
 
 import {
   PreviewUnavailable,
@@ -11,6 +10,7 @@ export function ContentUnavailable() {
   const { mounted, previewRequested, previewModeStored, sessionAuthPossible } =
     usePreviewAuthState();
   const {
+    Head,
     elements: { H5, Paragraph },
   } = useWebsiteBuilder();
 
