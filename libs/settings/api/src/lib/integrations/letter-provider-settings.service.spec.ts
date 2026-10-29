@@ -6,7 +6,6 @@ import { PrismaModule } from '@wepublish/nest-modules';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { LetterProviderSettingsDataloaderService } from './letter-provider-settings-dataloader.service';
 import { LetterProviderSettingsService } from './letter-provider-settings.service';
-import type { Mock } from 'vitest';
 
 const existing = {
   id: 'pingen',
@@ -36,7 +35,12 @@ describe('LetterProviderSettingsService', () => {
       imports: [PrismaModule],
       providers: [
         LetterProviderSettingsService,
-        { provide: NamespaceResets, useValue: { reset: vi.fn() } },
+        {
+          provide: NamespaceResets,
+          useValue: {
+            reset: vi.fn(),
+          } satisfies Pick<NamespaceResets, 'reset'>,
+        },
         { provide: ProviderSettingsChanged, useValue: { notify } },
         {
           provide: LetterProviderSettingsDataloaderService,
@@ -76,6 +80,26 @@ describe('LetterProviderSettingsService', () => {
     expect(data['webhookSigningKey']).toBeNull();
     expect(data['environment']).toBe('staging');
     expect(data['autoSend']).toBe(false);
+  });
+
+  test('stores the print defaults for automated letters', async () => {
+    vi.spyOn(prisma.settingLetterProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    const update = vi
+      .spyOn(prisma.settingLetterProvider, 'update')
+      .mockResolvedValue(existing);
+
+    await service.updateLetterProviderSetting({
+      id: 'pingen',
+      defaultPrintMode: 'duplex',
+      defaultDeliveryProduct: null,
+    } as never);
+
+    expect(update.mock.calls[0][0].data).toEqual({
+      defaultPrintMode: 'duplex',
+      defaultDeliveryProduct: null,
+    });
   });
 
   test('leaves the configuration alone when the type stays the same', async () => {

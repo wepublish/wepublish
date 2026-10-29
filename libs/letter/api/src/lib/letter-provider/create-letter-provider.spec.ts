@@ -15,6 +15,14 @@ beforeEach(async () => {
 afterEach(() => testing.close());
 
 describe('loadLetterProvider', () => {
+  let testing: NamespacedCacheTesting;
+
+  beforeEach(async () => {
+    testing = await createNamespacedCacheTesting();
+  });
+
+  afterEach(() => testing.close());
+
   it('builds the provider of the configured type', async () => {
     const findFirst = vi
       .fn()

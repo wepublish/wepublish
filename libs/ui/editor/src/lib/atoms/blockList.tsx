@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import {
   BlockStylesDocument,
+  BlockTimingInput,
   EditorBlockType,
   FullBlockStyleFragment,
 } from '@wepublish/editor/api';
@@ -41,6 +42,7 @@ import {
   ValueConstructor,
 } from '../utility';
 import { AddBlockInput, AddBlockMenuItem } from './addBlockInput';
+import { BlockTimingButton } from './blockTiming';
 import { BlockGroup } from './blockGroups';
 import { IconButtonTooltip } from './iconButtonTooltip';
 import { InfoTooltip } from './infoTooltip';
@@ -53,7 +55,7 @@ export const BlockStyleIconWrapper = styled.div`
   position: absolute;
   left: 100%;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     position: static;
     flex-direction: row;
     align-items: center;
@@ -89,7 +91,7 @@ export const PanelWrapper = styled.div<{ disabled?: boolean }>`
   display: flex;
   width: 100%;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     flex-direction: column;
   }
 
@@ -120,7 +122,7 @@ export const LeftButtonsWrapper = styled.div`
   position: absolute;
   right: 100%;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     position: static;
     flex-direction: row;
     align-items: center;
@@ -139,7 +141,7 @@ export const ListItem = styled.div`
   width: 100%;
   position: relative;
 
-  @media (max-width: 899px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     flex-direction: column;
   }
 `;
@@ -254,6 +256,7 @@ export const BlockListItem = memo(function BlockListItem({
       disabled={disabled}
       onDelete={() => onDelete(index)}
       onDisable={disabled => handleValueChange({ ...value.value, disabled })}
+      onTiming={timing => handleValueChange({ ...value.value, timing })}
       onMoveUp={onMoveUp ? () => onMoveUp(index) : undefined}
       onMoveDown={onMoveDown ? () => onMoveDown(index) : undefined}
       onStyleChange={(blockStyleName, blockStyle) =>
@@ -469,6 +472,7 @@ interface ListItemWrapperProps {
 
   onDelete?: () => void;
   onDisable?: (disable: boolean) => void;
+  onTiming?: (timing: BlockTimingInput | null) => void;
   onMoveUp?: () => void;
   onMoveDown?: () => void;
   onStyleChange?: (
@@ -484,6 +488,7 @@ function ListItemWrapper({
   bare,
   disabled,
   onDisable,
+  onTiming,
   onDelete,
   onMoveUp,
   onMoveDown,
@@ -521,6 +526,15 @@ function ListItemWrapper({
             </IconButton>
           </IconButtonTooltip>
         </UpwardButtonWrapper>
+
+        <DownwardButtonWrapper>
+          <BlockTimingButton
+            timing={value.value.timing}
+            shouldDisplay={value.value.shouldDisplay}
+            disabled={disabled}
+            onChange={timing => onTiming?.(timing)}
+          />
+        </DownwardButtonWrapper>
 
         <DownwardButtonWrapper>
           <IconButtonTooltip caption={t('blockList.deleteBlock')}>

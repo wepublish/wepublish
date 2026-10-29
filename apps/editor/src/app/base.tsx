@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import {
   CanCreateArticle,
+  CanCreateArticleTemplate,
   CanCreateAuthor,
   CanCreateBanner,
   CanCreateBlockStyle,
@@ -22,6 +23,7 @@ import {
   CanCreateMemberPlan,
   CanCreateNavigation,
   CanCreatePage,
+  CanCreatePageTemplate,
   CanCreatePaymentMethod,
   CanCreatePaywall,
   CanCreatePeer,
@@ -32,6 +34,7 @@ import {
   CanCreateUser,
   CanCreateUserRole,
   CanDeleteArticle,
+  CanDeleteArticleTemplate,
   CanDeleteAuthor,
   CanDeleteBanner,
   CanDeleteBlockStyle,
@@ -45,6 +48,7 @@ import {
   CanDeleteMemberPlan,
   CanDeleteNavigation,
   CanDeletePage,
+  CanDeletePageTemplate,
   CanDeletePaymentMethod,
   CanDeletePeer,
   CanDeletePoll,
@@ -112,6 +116,7 @@ import {
   CanSendMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
+  CanUpdateArticleTemplate,
   CanUpdateBlockTemplate,
   CanUpdateCommentRatingSystem,
   CanUpdateComments,
@@ -123,6 +128,7 @@ import {
   CanUpdateGoodie,
   CanUpdateMailTemplates,
   CanUpdatePaywall,
+  CanUpdatePageTemplate,
   CanUpdateSettings,
   CanUpdateSystemMails,
   CanUpdateTag,
@@ -170,10 +176,12 @@ import {
   MdLocationPin,
   MdLogout,
   MdMail,
+  MdMarkunreadMailbox,
   MdMenu,
   MdNewspaper,
   MdMoney,
   MdMultilineChart,
+  MdNoteAdd,
   MdNotificationsNone,
   MdOutgoingMail,
   MdOutlineGridView,
@@ -568,6 +576,21 @@ export function Base({ children }: BaseProps) {
 
                   <PermissionControl
                     qualifyingPermissions={[
+                      CanCreateArticleTemplate.id,
+                      CanUpdateArticleTemplate.id,
+                      CanDeleteArticleTemplate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/articles/templates"
+                      icon={<MdNoteAdd />}
+                    >
+                      {t('navbar.articleTemplates')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
                       CanGetPeerArticles.id,
                       CanGetPeerArticle.id,
                     ]}
@@ -652,6 +675,21 @@ export function Base({ children }: BaseProps) {
                       icon={<MdDashboard />}
                     >
                       {t('navbar.pages')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreatePageTemplate.id,
+                      CanUpdatePageTemplate.id,
+                      CanDeletePageTemplate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/pages/templates"
+                      icon={<MdNoteAdd />}
+                    >
+                      {t('navbar.pageTemplates')}
                     </SidebarNavItem>
                   </PermissionControl>
 
@@ -1130,6 +1168,18 @@ export function Base({ children }: BaseProps) {
                       {t('navbar.subscriptionSettings')}
                     </SidebarNavItem>
                   </PermissionControl>
+
+                  {/* Right after the messages whose way it decides. */}
+                  <FeatureControl feature="paper-letter-flow">
+                    <PermissionControl qualifyingPermissions={[CanGetUsers.id]}>
+                      <SidebarNavItem
+                        href="/deliverychannel"
+                        icon={<MdMarkunreadMailbox />}
+                      >
+                        {t('navbar.deliverySuggestions')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
 
                   <PermissionControl
                     qualifyingPermissions={[

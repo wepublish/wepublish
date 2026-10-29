@@ -872,6 +872,13 @@ export const CanGetMailLogs: Permission = {
   deprecated: false,
 };
 
+export const CanManageUserDeliveryMode: Permission = {
+  id: 'CAN_MANAGE_USER-DELIVERY-MODE',
+  description:
+    'Allows to switch users between mailed and printed subscription mails, singly or by audience, and to confirm suggestions.',
+  deprecated: false,
+};
+
 /**
  * System mails
  */
@@ -985,6 +992,50 @@ export const CanDeleteNewsletterCampaign: Permission = {
 export const CanPublishNewsletterCampaign: Permission = {
   id: 'CAN_PUBLISH_NEWSLETTER_CAMPAIGN',
   description: 'Allows to push a newsletter campaign into a Mailchimp draft',
+  deprecated: false,
+};
+
+/**
+ * Article Templates
+ */
+
+export const CanCreateArticleTemplate: Permission = {
+  id: 'CAN_CREATE_ARTICLE_TEMPLATE',
+  description: 'Allows to create an article template',
+  deprecated: false,
+};
+
+export const CanUpdateArticleTemplate: Permission = {
+  id: 'CAN_UPDATE_ARTICLE_TEMPLATE',
+  description: 'Allows to update an article template',
+  deprecated: false,
+};
+
+export const CanDeleteArticleTemplate: Permission = {
+  id: 'CAN_DELETE_ARTICLE_TEMPLATE',
+  description: 'Allows to delete an article template',
+  deprecated: false,
+};
+
+/**
+ * Page Templates
+ */
+
+export const CanCreatePageTemplate: Permission = {
+  id: 'CAN_CREATE_PAGE_TEMPLATE',
+  description: 'Allows to create a page template',
+  deprecated: false,
+};
+
+export const CanUpdatePageTemplate: Permission = {
+  id: 'CAN_UPDATE_PAGE_TEMPLATE',
+  description: 'Allows to update a page template',
+  deprecated: false,
+};
+
+export const CanDeletePageTemplate: Permission = {
+  id: 'CAN_DELETE_PAGE_TEMPLATE',
+  description: 'Allows to delete a page template',
   deprecated: false,
 };
 
@@ -1440,6 +1491,7 @@ export const AllPermissions = [
   CanSendTestMailTemplates,
   CanSendMailTemplates,
   CanGetMailLogs,
+  CanManageUserDeliveryMode,
   CanGetSystemMails,
   CanUpdateSystemMails,
   CanTestSystemMails,
@@ -1450,6 +1502,12 @@ export const AllPermissions = [
   CanCreateBlockTemplate,
   CanUpdateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanCreateArticleTemplate,
+  CanUpdateArticleTemplate,
+  CanDeleteArticleTemplate,
+  CanCreatePageTemplate,
+  CanUpdatePageTemplate,
+  CanDeletePageTemplate,
   CanGetNewsletterCampaigns,
   CanCreateNewsletterCampaign,
   CanUpdateNewsletterCampaign,
@@ -1569,11 +1627,18 @@ export const EditorPermissions = [
   CanGetSubscriptionFlows,
   CanGetMailTemplates,
   CanGetMailLogs,
+  CanManageUserDeliveryMode,
   CanGetPeriodicJobLog,
   CanCreateApprovedComment,
   CanCreateBlockTemplate,
   CanUpdateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanCreateArticleTemplate,
+  CanUpdateArticleTemplate,
+  CanDeleteArticleTemplate,
+  CanCreatePageTemplate,
+  CanUpdatePageTemplate,
+  CanDeletePageTemplate,
   CanGetNewsletterCampaigns,
   CanCreateNewsletterCampaign,
   CanUpdateNewsletterCampaign,

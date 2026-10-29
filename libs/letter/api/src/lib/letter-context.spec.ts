@@ -5,6 +5,7 @@ import {
   LetterPrintSpectrum,
   MailChannel,
   MailLogState,
+  MailLogType,
   PrismaClient,
 } from '@prisma/client';
 import { PageSizes, PDFDocument } from 'pdf-lib';
@@ -90,6 +91,8 @@ function createContext(
     findFirst: vi.fn().mockResolvedValue(null),
   };
 
+  const providerSettings = { findUnique: vi.fn().mockResolvedValue(null) };
+
   const prisma = {
     mailTemplate: {
       findUnique: vi.fn().mockResolvedValue({
@@ -102,6 +105,7 @@ function createContext(
       }),
     },
     letterLayout: layouts,
+    settingLetterProvider: providerSettings,
     mailLog: { create },
   } as unknown as PrismaClient;
 
@@ -116,8 +120,102 @@ function createContext(
     documentUrl,
   });
 
-  return { context, rendered, create, prisma, layouts, documentUrl };
+  return {
+    context,
+    rendered,
+    create,
+    prisma,
+    layouts,
+    documentUrl,
+    providerSettings,
+  };
 }
+
+describe('LetterContext automated sends', () => {
+  const sendLetter = () =>
+    vi.fn().mockResolvedValue({
+      providerLetterID: 'pingen-1',
+      state: LetterState.submitted,
+    });
+
+  it('logs under the identifier and type an automated send hands in', async () => {
+    const { context, create } = createContext(sendLetter());
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+      log: {
+        mailIdentifier: 'subscriptionFlow-run-3-template-1-user-1',
+        type: MailLogType.subscriptionFlow,
+      },
+    });
+
+    expect(create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        mailIdentifier: 'subscriptionFlow-run-3-template-1-user-1',
+        type: MailLogType.subscriptionFlow,
+      }),
+    });
+  });
+
+  it('logs a manual send under its own id, as before', async () => {
+    const { context, create } = createContext(sendLetter());
+
+    const mailLogId = await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    expect(create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        mailIdentifier: mailLogId,
+        type: MailLogType.manual,
+      }),
+    });
+  });
+
+  it('prints with the provider defaults when nobody chose print options', async () => {
+    const send = sendLetter();
+    const { context, providerSettings } = createContext(send);
+    providerSettings.findUnique.mockResolvedValue({
+      defaultPrintMode: LetterPrintMode.duplex,
+      defaultAddressPosition: null,
+      defaultDeliveryProduct: null,
+      defaultPrintSpectrum: null,
+    });
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+    });
+
+    expect(providerSettings.findUnique).toHaveBeenCalledWith({
+      where: { id: 'pingen' },
+    });
+    expect(send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        printMode: LetterPrintMode.duplex,
+        deliveryProduct: LetterDeliveryProduct.cheap,
+        addressPosition: LetterAddressPosition.left,
+        printSpectrum: LetterPrintSpectrum.grayscale,
+      })
+    );
+  });
+
+  it('can tell whether a user has a usable address', () => {
+    const { context } = createContext();
+
+    expect(context.canReceiveLetters(user)).toBe(true);
+    expect(
+      context.canReceiveLetters({ ...user, address: null } as UserWithAddress)
+    ).toBe(false);
+  });
+});
 
 describe('LetterContext appendix', () => {
   const fetchMock = vi.fn();

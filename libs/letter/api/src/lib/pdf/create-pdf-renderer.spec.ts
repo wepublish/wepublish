@@ -16,6 +16,14 @@ beforeEach(async () => {
 afterEach(() => testing.close());
 
 describe('loadPdfRenderer', () => {
+  let testing: NamespacedCacheTesting;
+
+  beforeEach(async () => {
+    testing = await createNamespacedCacheTesting();
+  });
+
+  afterEach(() => testing.close());
+
   it('builds the renderer of the configured type', async () => {
     const findFirst = vi.fn().mockResolvedValue({
       id: 'cloudflare',
@@ -44,6 +52,14 @@ describe('loadPdfRenderer', () => {
 });
 
 describe('createPdfRenderer', () => {
+  let testing: NamespacedCacheTesting;
+
+  beforeEach(async () => {
+    testing = await createNamespacedCacheTesting();
+  });
+
+  afterEach(() => testing.close());
+
   const env = process.env;
 
   afterEach(() => {

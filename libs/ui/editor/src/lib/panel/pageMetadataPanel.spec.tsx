@@ -85,4 +85,64 @@ describe('PageMetadataPanel', () => {
       });
     }
   );
+
+  it('shows the slug for pages', () => {
+    render(<PageMetadataPanel value={metadata} />);
+
+    expect(screen.getByDisplayValue('foo')).toBeTruthy();
+  });
+
+  it('hides the slug for page templates', () => {
+    render(
+      <PageMetadataPanel
+        value={metadata}
+        isTemplate
+      />
+    );
+
+    expect(screen.queryByDisplayValue('foo')).toBeNull();
+    expect(screen.getByDisplayValue('Foo')).toBeTruthy();
+  });
+
+  it('creates a template from the page', () => {
+    const onCreateTemplate = vi.fn();
+    render(
+      <PageMetadataPanel
+        value={metadata}
+        onCreateTemplate={onCreateTemplate}
+      />
+    );
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /pageEditor.panels.createTemplate/ })
+    );
+
+    expect(onCreateTemplate).toHaveBeenCalled();
+  });
+
+  it('does not offer to create a template without a handler', () => {
+    render(<PageMetadataPanel value={metadata} />);
+
+    expect(
+      screen.queryByRole('button', {
+        name: /pageEditor.panels.createTemplate/,
+      })
+    ).toBeNull();
+  });
+
+  it('does not offer to create a template from a template', () => {
+    render(
+      <PageMetadataPanel
+        value={metadata}
+        isTemplate
+        onCreateTemplate={vi.fn()}
+      />
+    );
+
+    expect(
+      screen.queryByRole('button', {
+        name: /pageEditor.panels.createTemplate/,
+      })
+    ).toBeNull();
+  });
 });

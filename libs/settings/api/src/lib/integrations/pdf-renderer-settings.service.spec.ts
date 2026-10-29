@@ -31,7 +31,12 @@ describe('PdfRendererSettingsService', () => {
       imports: [PrismaModule],
       providers: [
         PdfRendererSettingsService,
-        { provide: NamespaceResets, useValue: { reset: vi.fn() } },
+        {
+          provide: NamespaceResets,
+          useValue: {
+            reset: vi.fn(),
+          } satisfies Pick<NamespaceResets, 'reset'>,
+        },
         { provide: ProviderSettingsChanged, useValue: { notify: vi.fn() } },
         {
           provide: PdfRendererSettingsDataloaderService,

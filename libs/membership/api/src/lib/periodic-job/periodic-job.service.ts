@@ -21,10 +21,11 @@ import {
   User,
 } from '@prisma/client';
 import {
+  LetterDeliveryError,
   MailContext,
   MailController,
-  mailLogType,
   MailProviderRecipientError,
+  mailLogType,
 } from '@wepublish/mail/api';
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
 import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
@@ -969,9 +970,15 @@ export class PeriodicJobService {
         optionalData,
         periodicJobRunDate,
         mailType: mailLogType.SubscriptionFlow,
+        asLetter: action.sendAsLetter,
       }).sendMail();
     } catch (error) {
-      if (!(error instanceof MailProviderRecipientError)) {
+      // A refused address or a print vendor outage concerns this recipient
+      // only; the run goes on with the others.
+      if (
+        !(error instanceof MailProviderRecipientError) &&
+        !(error instanceof LetterDeliveryError)
+      ) {
         throw error;
       }
 

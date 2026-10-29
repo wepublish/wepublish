@@ -20,12 +20,8 @@ import {
   CreateJwtForWebsiteLoginDocument,
   DiscardArticleDraftDocument,
   EditorBlockType,
-  FullAuthorFragment,
-  FullImageFragment,
   PublishArticleDocument,
   RestoreArticleRevisionDocument,
-  SettingName,
-  SettingsListDocument,
   UpdateArticleDocument,
 } from '@wepublish/editor/api';
 import {
@@ -52,8 +48,8 @@ import {
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
-  getSeoBlockContext,
   enqueueSnackbar,
+  getSeoBlockContext,
   InfoData,
   ListicleBlockListValue,
   mapBlockValueToBlockInput,
@@ -67,7 +63,6 @@ import {
   TitleBlockValue,
   useAuthorisation,
   useHasPermission,
-  useSeededState,
   useUnsavedChangesDialog,
   VersionHistory,
   VersionHistoryRevision,
@@ -92,10 +87,15 @@ import {
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import {
+  Link as RouterLink,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 
-import { copyLinkToClipboard } from '../../copyLink';
 import { AutosaveToggle } from '../../autosaveToggle';
+import { copyLinkToClipboard } from '../../copyLink';
 import { LastSavedAt } from '../../lastSavedAt';
 import {
   PreviewControls,
@@ -104,6 +104,14 @@ import {
 } from '../../previewFrame';
 import { useAutosave } from '../../useAutosave';
 import { useAutosaveEnabled } from '../../useAutosaveEnabled';
+import { useArticleTemplatePrefill } from '../articleTemplate/articleTemplatePrefill';
+import { TemplateLoadingBackdrop } from '../templates/templateLoadingBackdrop';
+import { emptyArticleMetadata, InitialArticleBlocks } from './articleDefaults';
+import {
+  articleMetadataToMetadataInput,
+  articleToArticleMetadata,
+} from './articleMapping';
+import { useNewArticleDefaults } from './useNewArticleDefaults';
 
 const EditorContent = styled.div`
   width: 100%;
@@ -112,19 +120,6 @@ const EditorContent = styled.div`
     display: none;
   }
 `;
-
-const InitialArticleBlocks: BlockValue[] = [
-  {
-    key: '0',
-    type: EditorBlockType.Title,
-    value: { preTitle: '', title: '', lead: '' },
-  },
-  {
-    key: '1',
-    type: EditorBlockType.Image,
-    value: { image: null, caption: '' },
-  },
-];
 
 const REVISIONS_PAGE_SIZE = 20;
 
@@ -147,6 +142,7 @@ function ArticleEditor() {
   const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
+  const [searchParams] = useSearchParams();
 
   const { t } = useTranslation();
 
@@ -185,52 +181,28 @@ function ArticleEditor() {
 
   const [publishedAt, setPublishedAt] = useState<Date>();
 
-  const [metadata, setMetadata] = useState<ArticleMetadata>({
-    slug: '',
-    preTitle: '',
-    title: '',
-    lead: '',
-    seoTitle: '',
-    seoDescription: '',
-    authors: [],
-    tags: [],
-    defaultTags: [],
-    url: '',
-    properties: [],
-    canonicalUrl: '',
-    shared: undefined,
-    paywall: undefined,
-    hidden: false,
-    disableComments: false,
-    breaking: false,
-    image: undefined,
-    hideAuthor: false,
-    socialMediaTitle: undefined,
-    socialMediaDescription: undefined,
-    socialMediaAuthors: [],
-    socialMediaImage: undefined,
-    likes: 0,
-    trackingPixels: undefined,
-  });
+  const [metadata, setMetadata] =
+    useState<ArticleMetadata>(emptyArticleMetadata);
 
-  const { data: settingsData } = useQuery(SettingsListDocument);
-
-  useSeededState(settingsData, settings => {
-    const setting = (name: SettingName) =>
-      settings.settings.find(candidate => candidate.name === name)?.value;
-
-    setMetadata(meta => ({
-      ...meta,
-      shared: meta.shared ?? !!setting(SettingName.NewArticlePeering),
-      paywall:
-        meta.paywall ??
-        (setting(SettingName.NewArticlePaywall) as string | null | undefined),
-    }));
-  });
+  useNewArticleDefaults(setMetadata);
 
   const isNew = id === undefined;
+  const [hasChanged, setChanged] = useState(false);
   const [blocks, setBlocks] = useState<BlockValue[]>(
     isNew ? InitialArticleBlocks : []
+  );
+
+  const { loading: isLoadingTemplate } = useArticleTemplatePrefill(
+    isNew ? searchParams.get('templateId') : null,
+    useCallback(({ blocks, metadata: templateMetadata }) => {
+      setBlocks(blocks);
+      setMetadata(meta => ({
+        ...meta,
+        ...templateMetadata,
+        paywall: templateMetadata.paywall ?? meta.paywall,
+      }));
+      setChanged(true);
+    }, [])
   );
 
   const seoContext = useMemo(
@@ -333,6 +305,7 @@ function ArticleEditor() {
     isPublishing ||
     isRestoring ||
     isDiscarding ||
+    isLoadingTemplate ||
     isNotFound;
   // Autosaving must not disable the blocks, as that would blur whatever the user is typing in.
   const isDisabled = isBusy || isAutosaving;
@@ -342,7 +315,6 @@ function ArticleEditor() {
     articleData?.article?.pending
   );
 
-  const [hasChanged, setChanged] = useState(false);
   const changeVersion = useRef(0);
   const skipRepopulate = useRef(false);
 
@@ -365,72 +337,14 @@ function ArticleEditor() {
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (articleData?.article && !hasChanged && !skipRepopulate.current) {
-      const {
-        latest,
-        shared,
-        hidden,
-        disableComments,
-        tags,
-        url,
-        slug,
-        trackingPixels,
-        likes,
-        paywallId,
-      } = articleData.article;
-      const {
-        preTitle,
-        title,
-        seoTitle,
-        seoDescription,
-        lead,
-        breaking,
-        authors,
-        image,
-        blocks,
-        properties,
-        hideAuthor,
-        canonicalUrl,
-        socialMediaTitle,
-        socialMediaDescription,
-        socialMediaAuthors,
-        socialMediaImage,
-      } = latest;
+      const { latest } = articleData.article;
 
       if (latest.publishedAt) {
         setPublishedAt(new Date(latest.publishedAt));
       }
 
-      setMetadata({
-        slug,
-        preTitle: preTitle ?? '',
-        title: title ?? '',
-        lead: lead ?? '',
-        seoTitle: seoTitle ?? '',
-        seoDescription: seoDescription ?? '',
-        tags: tags.map(({ id }) => id),
-        defaultTags: tags,
-        url,
-        properties,
-        canonicalUrl: canonicalUrl ?? '',
-        shared,
-        paywall: paywallId,
-        hidden,
-        disableComments,
-        breaking,
-        authors,
-        image: (image as FullImageFragment) || undefined,
-        hideAuthor,
-        socialMediaTitle: socialMediaTitle || '',
-        socialMediaDescription: socialMediaDescription || '',
-        socialMediaAuthors: socialMediaAuthors?.filter(
-          socialMediaAuthor => socialMediaAuthor != null
-        ) as FullAuthorFragment[],
-        socialMediaImage: (socialMediaImage as FullImageFragment) || undefined,
-        likes: likes ?? 0,
-        trackingPixels: trackingPixels || undefined,
-      });
-
-      setBlocks(blocks.map(blockForQueryBlock));
+      setMetadata(articleToArticleMetadata(articleData.article));
+      setBlocks(latest.blocks.map(blockForQueryBlock));
     }
   }, [articleData]);
   /* eslint-enable react-hooks/set-state-in-effect */
@@ -589,30 +503,10 @@ function ArticleEditor() {
 
   function createInput(): CreateArticleMutationVariables {
     return {
+      ...articleMetadataToMetadataInput(metadata),
       slug: metadata.slug,
-      preTitle: metadata.preTitle || undefined,
-      title: metadata.title,
-      lead: metadata.lead,
-      seoTitle: metadata.seoTitle,
-      seoDescription: metadata.seoDescription,
-      authors: metadata.authors.flatMap(({ author, role }) =>
-        author ? [{ authorId: author.id, role: role || undefined }] : []
-      ),
-      imageID: metadata.image?.id,
-      breaking: metadata.breaking,
-      shared: !!metadata.shared,
-      paywallId: metadata.paywall,
-      hidden: metadata.hidden ?? false,
-      disableComments: metadata.disableComments ?? false,
-      tagIds: metadata.tags,
       canonicalUrl: metadata.canonicalUrl,
-      properties: metadata.properties,
       blocks: blocks.map(mapBlockValueToBlockInput),
-      hideAuthor: metadata.hideAuthor,
-      socialMediaTitle: metadata.socialMediaTitle || undefined,
-      socialMediaDescription: metadata.socialMediaDescription || undefined,
-      socialMediaAuthorIds: metadata.socialMediaAuthors.map(({ id }) => id),
-      socialMediaImageID: metadata.socialMediaImage?.id || undefined,
       likes: metadata.likes ?? 0,
     };
   }
@@ -883,29 +777,27 @@ function ArticleEditor() {
               : []),
             ]}
             secondaryActions={
-              <>
-                <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  {showPreview && previewUrl && (
-                    <PreviewControls
-                      device={previewDevice}
-                      onDeviceChange={setPreviewDevice}
-                      previewUrl={previewUrl}
-                    />
-                  )}
-
-                  <EditorHeaderButton
-                    variant="outlined"
-                    icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
-                    label={
-                      showPreview ?
-                        t('preview.backToEditor')
-                      : t('articleEditor.overview.preview')
-                    }
-                    disabled={isPreviewDisabled}
-                    onClick={() => setPreviewOpen(!showPreview)}
+              <PermissionControl qualifyingPermissions={[CanPreview.id]}>
+                {showPreview && previewUrl && (
+                  <PreviewControls
+                    device={previewDevice}
+                    onDeviceChange={setPreviewDevice}
+                    previewUrl={previewUrl}
                   />
-                </PermissionControl>
-              </>
+                )}
+
+                <EditorHeaderButton
+                  variant="outlined"
+                  icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
+                  label={
+                    showPreview ?
+                      t('preview.backToEditor')
+                    : t('articleEditor.overview.preview')
+                  }
+                  disabled={isPreviewDisabled}
+                  onClick={() => setPreviewOpen(!showPreview)}
+                />
+              </PermissionControl>
             }
             primaryActions={
               isNew && createData == null ?
@@ -1004,6 +896,11 @@ function ArticleEditor() {
         </EditorContent>
       </EditorTemplate>
 
+      <TemplateLoadingBackdrop
+        open={isLoadingTemplate}
+        label={t('articleEditor.overview.loadingTemplate')}
+      />
+
       <Drawer
         anchor="right"
         slotProps={{
@@ -1033,6 +930,17 @@ function ArticleEditor() {
             changeVersion.current++;
             setChanged(true);
           }}
+          onCreateTemplate={
+            articleID ?
+              () => {
+                if (unsavedChangesDialog()) {
+                  navigate(
+                    `/articles/templates/create?fromArticle=${encodeURIComponent(articleID)}`
+                  );
+                }
+              }
+            : undefined
+          }
         />
       </Drawer>
 

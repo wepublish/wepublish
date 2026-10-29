@@ -97,6 +97,7 @@
       "saveValidationFailed": "Saving failed",
       "publishValidationFailed": "Publishing failed",
       "overview": {
+        "loadingTemplate": "Loading template…",
         "articlePending": "Article Pending",
         "articlePublished": "Article Published",
         "back": "Back",
@@ -122,6 +123,7 @@
         "warningLabel": "Warning"
       },
       "panels": {
+        "createTemplate": "Create template from article",
         "firstPublishedAtDate": "First published on {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Article not yet published",
         "addSlug": "Please add a slug",
@@ -242,6 +244,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "New Article",
+        "blank": "Blank article",
+        "search": "Search templates",
+        "noResults": "No templates found"
+      },
       "overview": {
         "articles": "Articles",
         "authors": "Authors",
@@ -1291,7 +1299,7 @@
     },
     "name": "Name",
     "mailTemplates": {
-      "availableTemplates": "Mailing templates",
+      "availableTemplates": "Message templates",
       "cancel": "Cancel",
       "content": "Content",
       "create": "Create template",
@@ -1508,7 +1516,7 @@
         "subscription": "Covers the subscription itself: newly started, confirmed or deactivated. Additionally available: subscription data such as amount and term.",
         "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
         "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
-        "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Manual mailings”. Additionally available: the subscription and the latest invoices.",
+        "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Manual messages”. Additionally available: the subscription and the latest invoices.",
         "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
       },
       "placeholderDescriptions": {
@@ -1557,10 +1565,12 @@
         "optional_invoices_0_id": "ID of the latest invoice (array, index 0).",
         "optional_invoices_0_description": "Description of the latest invoice."
       },
-      "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual mailings».",
+      "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual messages».",
       "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "Also by letter",
+      "sendAsLetterHint": "People on the letter channel get this message printed instead of emailed.",
       "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
@@ -1623,7 +1633,161 @@
       "title": "Subscription Plans",
       "paymentProviderStatusInfo": "✅ means every payment method of this plan is connected to a payment provider. ❌ means at least one payment method has no provider, so readers cannot pay with it."
     },
+    "deliveryMode": {
+      "panelTitle": "Delivery channel",
+      "channel": {
+        "mail": "Email",
+        "letter": "Letter"
+      },
+      "origin": {
+        "manual": "By hand",
+        "suggestion": "From a suggestion"
+      },
+      "reason": {
+        "emailQuality_dead": "Email address unreachable",
+        "placeholderEmail": "Placeholder address",
+        "bulk": "By user group",
+        "emailQuality_active": "Email address active again",
+        "kept": "Kept"
+      },
+      "noAddress": "No complete postal address – letter not possible.",
+      "switchToLetter": "Switch to letter",
+      "switchToMail": "Switch to email",
+      "suggestionsTitle": "Delivery channel for automated messages",
+      "suggestionsIntro": "The delivery channel decides whether a user gets their automated messages by email or by letter. Switching happens by hand, based on a suggestion, or through user group filters. Suggestions are computed daily from automatic feedback on email deliverability, but only take effect after manual confirmation.",
+      "kind": {
+        "toLetter": "Switch to letter ({{count}})",
+        "toMail": "Switch to email ({{count}})"
+      },
+      "recompute": "Recompute suggestions",
+      "recomputed": "Recomputed: {{toLetter}} to letter, {{toMail}} to email, {{removed}} settled.",
+      "confirm": "Apply",
+      "confirmAll": "Apply all {{count}}",
+      "confirmAllTitle": "Apply all suggestions",
+      "confirmAllText": {
+        "toLetter": "{{count}} people will get their automated messages by letter from now on.",
+        "toMail": "{{count}} people will get their automated messages by email again."
+      },
+      "confirmAllYes": "Yes, apply all",
+      "confirmedAll": "{{confirmed}} applied, {{skipped}} no longer applied.",
+      "table": {
+        "user": "Person",
+        "emailQuality": "Email status",
+        "reason": "Reason",
+        "since": "Suggested since"
+      },
+      "audience": {
+        "open": "Switch the audience’s delivery channel",
+        "title": "Switch the audience’s delivery channel",
+        "intro": "Everyone in the chosen audience will get their automated messages this way from now on:",
+        "previewLetter": "{{userCount}} people; {{withoutAddressCount}} of them without a complete postal address stay on email.",
+        "previewMail": "{{userCount}} people.",
+        "apply": "Switch",
+        "done": {
+          "letter": "{{changed}} switched to letter, {{skippedWithoutAddress}} without a complete postal address stay on email.",
+          "mail": "{{changed}} switched to email."
+        }
+      },
+      "bulk": {
+        "title": "Switch an audience",
+        "intro": "Narrow the audience like for manual messages and switch the delivery channel for everyone in it.",
+        "people": "{{count}} people in this audience",
+        "history": {
+          "title": "Switches by user group",
+          "empty": "No switch by user group yet.",
+          "when": "When",
+          "who": "By",
+          "channel": "Delivery channel",
+          "people": "People",
+          "changed": "Switched",
+          "skipped": "Skipped",
+          "filter": "User group",
+          "unknownUser": "Unknown"
+        }
+      }
+    },
+    "deliveryChannel": {
+      "tabs": {
+        "suggestions": "Suggested changes ({{count}})",
+        "assign": "Switch a user group",
+        "history": "History of user group switches",
+        "overview": "Overview"
+      },
+      "overview": {
+        "people": "{{count}} people",
+        "showPeople": "Show people",
+        "openSuggestions": "{{count}} open",
+        "review": "Review suggestions",
+        "peopleOn": "People on {{channel}}",
+        "search": "Search name or email address",
+        "lastChange": "Last change",
+        "noDecision": "None (default)",
+        "empty": "Nobody on this channel.",
+        "suggestionsHeading": "Suggested changes",
+        "activeFor": "Active for {{count}} automated message types",
+        "channelHeadingDefault": "Delivery channel (default)",
+        "channelHeadingAlternative": "Delivery channel (alternative)"
+      },
+      "suggestions": {
+        "cardTitle": "{{move}} · {{count}} suggestions",
+        "empty": "No open suggestions for a switch to {{channel}}.",
+        "keep": "Keep",
+        "keepTitle": "Keep the delivery channel?",
+        "keepText": "{{name}} stays on {{channel}}. This counts as a decision by hand: the nightly run never suggests this person again, in either direction.",
+        "keepYes": "Yes, keep",
+        "readOnly": "Only people who may manage delivery channels can apply or keep suggestions.",
+        "emailStatus": {
+          "dead": "Unreachable since {{date}}",
+          "active": "Active since {{date}}",
+          "unresponsive": "Unresponsive since {{date}}",
+          "unknown": "Unknown since {{date}}"
+        },
+        "recomputedDaily": "(recomputed automatically every day)"
+      },
+      "assign": {
+        "steps": {
+          "audience": {
+            "title": "User group",
+            "description": "Who is switched"
+          },
+          "channel": {
+            "title": "Delivery channel",
+            "description": "To which"
+          },
+          "review": {
+            "title": "Review & switch",
+            "description": "Last look"
+          }
+        },
+        "people": "{{count}} people",
+        "noAddress": "{{count}} people without a complete postal address cannot be switched to letter and stay on email.",
+        "summary": {
+          "letter": "{{changed}} will be switched to letter, {{skipped}} without a complete postal address stay on email.",
+          "mail": "{{changed}} will be switched to email."
+        },
+        "confirmTitle": "Switch the user group to {{channel}}?",
+        "showHistory": "Show in history",
+        "again": "New switch",
+        "unreachableEmail": "{{count}} people with an unreachable email address (placeholder or dead) are switched anyway – email will not reach them.",
+        "filterTitle": "Filter the user group",
+        "segmentsLabel": "Filter the user group by email status"
+      },
+      "history": {
+        "allChannels": "All"
+      },
+      "user": {
+        "switched": "Delivery channel switched to {{channel}}.",
+        "suggestion": "Suggestion: {{move}}",
+        "channelLabel": "Delivery channel for automated messages:",
+        "emailUnreachable": "Email address unreachable ({{segment}}) – email will not reach this person."
+      },
+      "flows": {
+        "letterHint": "Messages marked «Also by letter» reach people on the letter channel in print; everyone else gets email.",
+        "manage": "Manage delivery channels"
+      }
+    },
     "navbar": {
+      "deliverySuggestions": "Delivery channel",
       "articles": "Articles",
       "authors": "Authors",
       "banners": "Banners",
@@ -1634,6 +1798,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Block Templates"
       },
+      "articleTemplates": "Article Templates",
       "commentRating": "Rating System",
       "comments": "Comments",
       "commentTags": "Tags",
@@ -1656,10 +1821,11 @@
         "system": "Match system"
       },
       "logout": "Logout",
-      "mailTemplates": "Mailing templates",
+      "mailTemplates": "Message templates",
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
+      "pageTemplates": "Page Templates",
       "paymentMethods": "Payment Methods",
       "peerArticles": "Peerable Articles",
       "networkContent": "We.Publish Network",
@@ -1668,7 +1834,7 @@
       "settings": "Settings",
       "subscriptionPlans": "Subscription Plans",
       "subscriptions": "Subscriptions",
-      "subscriptionSettings": "Automatic emails",
+      "subscriptionSettings": "Automated messages",
       "tokens": "Tokens",
       "apiTokens": "API Keys",
       "userConsents": "User Consents",
@@ -1679,8 +1845,8 @@
       "audienceDashboard": "Dashboard",
       "integrations": "Integrations",
       "apps": "Apps",
-      "mailSend": "Manual mailings",
-      "mailLog": "Completed mailings",
+      "mailSend": "Manual messages",
+      "mailLog": "Sent messages",
       "communication": "Communication",
       "auditLog": "Audit log",
       "letterLayouts": "Stationery",
@@ -1716,6 +1882,12 @@
       "blockTemplates": "Block templates",
       "blockTemplateCreate": "New block template",
       "blockTemplateEdit": "Edit block template",
+      "articleTemplates": "Article templates",
+      "articleTemplateCreate": "New article template",
+      "articleTemplateEdit": "Edit article template",
+      "pageTemplates": "Page templates",
+      "pageTemplateCreate": "New page template",
+      "pageTemplateEdit": "Edit page template",
       "crowdfundings": "Crowdfundings",
       "crowdfundingCreate": "New crowdfunding",
       "crowdfundingEdit": "Edit crowdfunding",
@@ -1794,6 +1966,7 @@
       "letterLayoutEdit": "Edit stationery",
       "systemMails": "Account & login emails",
       "mailSend": "Send email",
+      "deliveryChannel": "Delivery channel",
       "mailLog": "Sent emails",
       "networkContent": "We.Publish Network",
       "peers": "Peers",
@@ -1874,7 +2047,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Unpublish",
-        "unpublished": "Unpublished"
+        "unpublished": "Unpublished",
+        "loadingTemplate": "Loading template…"
       },
       "panels": {
         "chooseBlock": "Choose Block",
@@ -1922,7 +2096,8 @@
         "hideHeaderInfo": "Hides the website's header on this page, e.g. for landing pages.",
         "hideFooter": "Hide footer",
         "hideFooterInfo": "Hides the website's footer on this page, e.g. for landing pages.",
-        "enterSocialMediaImage": "Please add an image for social media"
+        "enterSocialMediaImage": "Please add an image for social media",
+        "createTemplate": "Create template from page"
       }
     },
     "pages": {
@@ -1955,6 +2130,12 @@
         "untitled": "Untitled",
         "updatedAt": "Updated At",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "New Page",
+        "blank": "Blank page",
+        "search": "Search templates",
+        "noResults": "No templates found"
       }
     },
     "paymentMethodList": {
@@ -2268,9 +2449,14 @@
         "newArticlePeering": "Will not affect already created articles",
         "newArticlePaywall": "Will not affect already created articles",
         "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
-        "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime."
+        "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime.",
+        "emailQualityUnresponsiveAfterDays": "An email address counts as “unresponsive” when this many days passed without a login or a click in a mail, although mails were delivered. Re-evaluated nightly and via “Refresh statuses”.",
+        "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”."
       },
       "sessionTtlDays": "Session lifetime",
+      "emailQuality": "Email quality",
+      "emailQualityUnresponsiveAfterDays": "“Unresponsive” after … days",
+      "emailQualityMinMailsForUnresponsive": "… delivered mails",
       "info": {
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
@@ -2288,7 +2474,7 @@
       }
     },
     "automaticMails": {
-      "title": "Automatic emails",
+      "title": "Automated messages",
       "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
       "example": "Example: {{example}}"
     },
@@ -2333,7 +2519,7 @@
       "addMail": "Add email",
       "deleteMail": "Remove email",
       "defaultFlow": "Default flow",
-      "defaultFlowDescription": "Applies to every subscription no other flow matches. Changes here also apply under «Automatic emails».",
+      "defaultFlowDescription": "Applies to every subscription no other flow matches. Changes here also apply under «Automated messages».",
       "flowNumber": "Flow {{number}}",
       "newFlow": "New flow",
       "newDayTitle": "New day in the timeline",
@@ -2513,6 +2699,7 @@
       "confirm": "Confirm",
       "country": "Country",
       "createNewUser": "Create new user",
+      "emailQuality": "Email status: {{level}} – {{reason}}, since {{since}}",
       "deleteUser": "Delete User?",
       "email": "Email",
       "errorCreatingUser": "User could not be created. Unexpected error: {{error}}",
@@ -2746,6 +2933,62 @@
       "blockTypesPlaceholder": "Available for block types",
       "noStyle": "No style"
     },
+    "articleTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Article Templates",
+        "newTemplate": "New Article Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Article templates define the content and metadata a new article starts with. Changing a template does not affect articles that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingArticle": "Loading article…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
+      },
+      "delete": {
+        "title": "Delete article template?",
+        "body": "Do you really want to delete the article template \"{{name}}\"? Articles created from it are not affected."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Page Templates",
+        "newTemplate": "New Page Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Page templates define the content and metadata a new page starts with. Changing a template does not affect pages that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingPage": "Loading page…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
+      },
+      "delete": {
+        "title": "Delete page template?",
+        "body": "Do you really want to delete the page template \"{{name}}\"? Pages created from it are not affected."
+      }
+    },
     "blockTemplates": {
       "list": {
         "title": "Block Templates",
@@ -2766,7 +3009,8 @@
         "editing": "Editing",
         "saveConfirmMessage": "Saving updates this template's content right away in every article and page that uses it, including published ones.",
         "saveConfirmTitle": "Save template?",
-        "created": "Created"
+        "created": "Created",
+        "empty": "This template has no blocks yet. Add the first one with +."
       }
     },
     "yes": "Yes",
@@ -3264,7 +3508,11 @@
         "organisationId": "Organisation ID",
         "webhookSigningKey": "Webhook Signing Key",
         "autoSend": "Send letters automatically",
-        "placeholderEmailContains": "Placeholder email contains"
+        "placeholderEmailContains": "Placeholder email contains",
+        "defaultAddressPosition": "Address window (automated letters)",
+        "defaultDeliveryProduct": "Delivery (automated letters)",
+        "defaultPrintMode": "Print (automated letters)",
+        "defaultPrintSpectrum": "Colour (automated letters)"
       },
       "mailSettings": {
         "type": "Type",
@@ -3804,11 +4052,11 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Content & delivery",
+          "title": "Content & delivery channel",
           "description": "Template, email or letter"
         },
         "send": {
-          "title": "Send email",
+          "title": "Send",
           "description": "Review and send"
         }
       },
@@ -3818,7 +4066,7 @@
       "summary": {
         "title": "Summary"
       },
-      "title": "Manual mailings",
+      "title": "Manual messages",
       "template": "Mailing template",
       "selectTemplate": "Select template",
       "audience": {
@@ -3831,9 +4079,15 @@
         "noActiveSubscription": "Without active subscription",
         "endedSubscription": "Win-back — subscription deactivated recently",
         "allUsersHint": "Everyone registered, with or without a subscription.",
-        "hasSubscriptionHint": "People with a subscription. Subscription placeholders are available.",
-        "noActiveSubscriptionHint": "People without an active subscription. Subscription placeholders stay empty.",
-        "endedSubscriptionHint": "People whose subscription was deactivated recently and who have not subscribed again since. The deactivated subscription is attached to the email, so its placeholders are available."
+        "hasSubscriptionHint": "People with a subscription.",
+        "noActiveSubscriptionHint": "People without an active subscription.",
+        "endedSubscriptionHint": "People whose subscription was deactivated recently and who have not subscribed again since.",
+        "placeholderNote": {
+          "allUsers": "Subscription placeholders stay empty.",
+          "hasSubscription": "Subscription placeholders are available.",
+          "noActiveSubscription": "Subscription placeholders stay empty.",
+          "endedSubscription": "The deactivated subscription is attached, so its placeholders are available."
+        }
       },
       "memberPlans": "Subscription plans",
       "memberPlansAll": "All subscription plans",
@@ -3886,16 +4140,24 @@
         "memberPlan": "Subscription plan",
         "address": "Address",
         "withAddress": "Address present",
-        "withoutAddress": "No valid address – will be skipped"
+        "withoutAddress": "No valid address – will be skipped",
+        "emailSegment": "Email status"
       },
       "endedWithinDays": "Deactivated within the last … days",
       "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
-      "emailFilter": {
-        "label": "Email address",
-        "all": "All",
-        "placeholder": "Placeholders only",
-        "real": "Real only",
-        "hint": "Placeholder addresses are defined in the letter integration."
+      "emailSegments": {
+        "label": "Email status",
+        "placeholder": "Placeholder address",
+        "dead": "Dead (bounce, invalid, complaint, unsubscribed)",
+        "unresponsive": "Unresponsive",
+        "unknown": "Unknown",
+        "active": "Active",
+        "pick": "Any status",
+        "hint": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”). Reachable by letter: placeholder + dead.",
+        "overview": "People in this audience by email status (regardless of the selection)",
+        "refresh": "Refresh statuses",
+        "refreshing": "Refreshing statuses …",
+        "refreshed": "{{updated}} delivery states fetched from the provider ({{checked}} checked), {{recomputed}} people re-evaluated."
       },
       "endedWindow": {
         "label": "When the subscription was deactivated",
@@ -3931,7 +4193,7 @@
       "lettersCount": "{{count}} letters to {{people}} people",
       "confirmTextLetter": "Send this letter to {{count}} recipients?",
       "channel": {
-        "label": "Delivery",
+        "label": "Delivery channel",
         "mail": "Email",
         "letter": "Letter",
         "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
@@ -3962,10 +4224,55 @@
         }
       },
       "stateHelp": "Active: confirmed, not deactivated and paid. Pending: taken out but not confirmed yet, e.g. because the first payment is still missing. Deactivated: the subscription has ended or its end is already scheduled.",
-      "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves."
+      "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves.",
+      "mailHistory": {
+        "label": "Messages received",
+        "hint": "Only people who did (or did not) get a given template — on one channel only, if you like.",
+        "add": "Add condition",
+        "remove": "Remove condition",
+        "received": "was sent",
+        "notReceived": "was not sent",
+        "template": "Choose template …",
+        "state": "Status",
+        "anyState": "Any",
+        "channel": "Delivery channel",
+        "anyChannel": "Any",
+        "sentBetween": "Sent between",
+        "match": {
+          "all": "All conditions must hold",
+          "any": "One condition is enough"
+        },
+        "states": {
+          "submitted": "Submitted",
+          "accepted": "Accepted",
+          "delivered": "Delivered",
+          "deferred": "Deferred",
+          "bounced": "Bounced",
+          "rejected": "Rejected",
+          "dispatched": "Dispatched",
+          "undeliverable": "Undeliverable",
+          "canceled": "Canceled"
+        }
+      },
+      "audienceSummary": {
+        "base": "Base",
+        "memberPlans": "Member plans",
+        "state": "Subscription status",
+        "segments": "Email status",
+        "mailHistory": "Messages",
+        "received": "received",
+        "notReceived": "not received",
+        "between": "{{from}} – {{to}}",
+        "from": "from {{from}}",
+        "to": "until {{to}}",
+        "matchAny": "one condition is enough",
+        "matchAll": "all conditions",
+        "more": "{{count}} more filters"
+      },
+      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …"
     },
     "mailLog": {
-      "title": "Completed mailings",
+      "title": "Sent messages",
       "empty": "No emails found.",
       "sentDate": "Date",
       "template": "Template",
@@ -3984,7 +4291,7 @@
         "reset": "Reset filters",
         "typeHint": "What triggered this send.",
         "channel": "Delivery",
-        "jobHelp": "A send job groups all emails sent with one click via «Manual mailings». Pick one to see only its emails."
+        "jobHelp": "A send job groups all emails sent with one click via «Manual messages». Pick one to see only its emails."
       },
       "types": {
         "subscriptionFlow": "Subscription mailing",
@@ -3994,10 +4301,10 @@
       },
       "error": "Error",
       "typeDescriptions": {
-        "manual": "Sent by hand via “Manual mailings” or “Send test”. Example: a newsletter to all subscribers.",
-        "subscriptionFlow": "Time-based, from “Automatic emails”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
+        "manual": "Sent by hand via “Manual messages” or “Send test”. Example: a newsletter to all subscribers.",
+        "subscriptionFlow": "Time-based, from “Automated messages”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
-        "systemMail": "Account mails, configured under “Automatic emails” in the “Account & login” section. Examples: welcome mail after registration, password reset."
+        "systemMail": "Account mails, configured under “Automated messages” in the “Account & login” section. Examples: welcome mail after registration, password reset."
       },
       "errorHelp": {
         "causeTitle": "What happened?",
@@ -4037,7 +4344,7 @@
         },
         "templateMissing": {
           "cause": "The mailing template used here no longer exists.",
-          "fix": "Pick an existing template under “Mailing templates” or create it again, then start the send once more."
+          "fix": "Pick an existing template under “Message templates” or create it again, then start the send once more."
         },
         "generic": {
           "cause": "The mail server rejected the send with the message below.",
@@ -4112,12 +4419,13 @@
     },
     "userMail": {
       "sendTitle": "Send email",
-      "logTitle": "Completed mailings",
+      "logTitle": "Sent messages",
       "customOnlyHint": "Only custom templates can be sent to a single user.",
       "selectTemplate": "Select template",
       "send": "Send",
       "sent": "Email sent",
-      "title": "Emails"
+      "title": "Emails",
+      "titleWithLetters": "Messages"
     },
     "mailJobs": {
       "created": "Started",
@@ -4158,6 +4466,14 @@
         "failed": "Failed",
         "sending": "Delivering",
         "interrupted": "Interrupted"
+      },
+      "outcome": {
+        "title": "Result",
+        "hint": "Delivery states and clicks come from the mail provider – bounces often hours or days later. “Address dead” counts the recipients whose address is considered dead by now. “Refresh statuses” pulls what the provider has not reported yet.",
+        "delivered": "Delivered",
+        "bounced": "Bounced / rejected",
+        "dead": "Address dead",
+        "clicked": "Clicked"
       },
       "recipientState": {
         "pending": "Pending",
@@ -4453,10 +4769,65 @@
       "addBlock": "Add block",
       "hideBlock": "Hide block on the website",
       "showBlock": "Show block on the website again",
+      "timeBlock": "Schedule when this block shows",
       "deleteBlock": "Delete block",
       "moveBlockUp": "Move block up",
       "moveBlockDown": "Move block down",
       "styleHelp": "Changes how this block looks on the website. Leave it empty to use the default look. Styles are managed under «Block Styling»."
+    },
+    "blockTiming": {
+      "title": "Schedule this block",
+      "offAir": "Hidden on the website right now, because it is outside its schedule.",
+      "dateRange": "Dates",
+      "dateRangeEmpty": "Any date",
+      "dateRangeHelp": "The block shows from the start of the first day to the end of the last.",
+      "weekdays": "Days",
+      "weekdaysHelp": "Pick none to show the block every day.",
+      "timeOfDay": "Time of day",
+      "timeOfDayFrom": "From",
+      "timeOfDayTo": "until",
+      "timeOfDayHelp": "Times are in the site's time zone. An end before the start runs past midnight, e.g. 22:00 until 02:00.",
+      "sameTimes": "Start and end are the same, so the block never shows. Change one of them or pick «All day».",
+      "clearTimeOfDay": "All day",
+      "clear": "Remove schedule",
+      "done": "Done",
+      "summary": {
+        "always": "Always shows. Add dates, days or a time of day to limit when.",
+        "never": "Never shows, because its start and end time are the same.",
+        "shows": "Shows {{conditions}}.",
+        "between": "from {{from}} to {{to}}",
+        "since": "from {{from}}",
+        "until": "until {{to}}",
+        "days": "on {{days}}",
+        "hours": "between {{from}} and {{to}}"
+      }
+    },
+    "weekday": {
+      "Monday": "Monday",
+      "Tuesday": "Tuesday",
+      "Wednesday": "Wednesday",
+      "Thursday": "Thursday",
+      "Friday": "Friday",
+      "Saturday": "Saturday",
+      "Sunday": "Sunday"
+    },
+    "weekdayRecurring": {
+      "Monday": "Mondays",
+      "Tuesday": "Tuesdays",
+      "Wednesday": "Wednesdays",
+      "Thursday": "Thursdays",
+      "Friday": "Fridays",
+      "Saturday": "Saturdays",
+      "Sunday": "Sundays"
+    },
+    "weekdayShort": {
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat",
+      "Sunday": "Sun"
     },
     "placeholderInput": {
       "add": "Add"
@@ -4470,7 +4841,7 @@
     },
     "letterLayouts": {
       "title": "Stationery",
-      "intro": "Header and footer for printed letters. Mailing templates print on the default stationery unless they choose their own.",
+      "intro": "Header and footer for printed letters. Message templates print on the default stationery unless they choose their own.",
       "create": "Create stationery",
       "createHeader": "Create stationery",
       "editHeader": "Edit stationery",
@@ -4566,9 +4937,11 @@
       },
       "create": {
         "article": "Create article",
+        "articleTemplate": "Create article template",
         "articleTag": "Create article tag",
         "paywall": "Create paywall",
         "page": "Create page",
+        "pageTemplate": "Create page template",
         "pageTag": "Create page tag",
         "crowdfunding": "Create crowdfunding",
         "blockTemplate": "Create block template",

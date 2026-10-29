@@ -1,6 +1,6 @@
 import { LetterProviderType } from '@prisma/client';
 import { NextHandleFunction } from 'connect';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 
 export enum LetterState {
   submitted = 'submitted',
@@ -15,11 +15,7 @@ export enum LetterState {
 export type LetterAddressPosition = 'left' | 'right';
 
 export type LetterDeliveryProduct =
-  | 'fast'
-  | 'cheap'
-  | 'bulk'
-  | 'premium'
-  | 'registered';
+  'fast' | 'cheap' | 'bulk' | 'premium' | 'registered';
 
 export type LetterPrintMode = 'simplex' | 'duplex';
 
@@ -65,7 +61,7 @@ export interface DispatchLetterProps {
 }
 
 export interface WebhookForSendLetterProps {
-  req: express.Request;
+  req: NodeRequest;
 }
 
 export interface LetterLogStatus {

@@ -28,6 +28,7 @@ import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailLogList,
   MailSendPage,
+  DeliveryChannelPage,
   LetterLayoutEdit,
   LetterLayoutList,
   MailTemplateEdit,
@@ -55,6 +56,8 @@ import { LoginImpersonate } from './loginImpersonate';
 import { LoginJwt } from './loginJwt';
 import { DocumentTitle } from './pageTitle/documentTitle';
 import { ResetPassword } from './resetPassword';
+import { ArticleTemplateEditView } from './routes/articleTemplate/articleTemplateEditView';
+import { ArticleTemplateList } from './routes/articleTemplate/articleTemplateList';
 import { RouteErrorBoundary } from './routeErrorBoundary';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
@@ -87,6 +90,8 @@ import { IntegrationList } from './routes/integrations/integrationList';
 import { MemberPlanList } from './routes/memberPlans/memberPlanList';
 import { NavigationList } from './routes/navigations/navigationList';
 import { NetworkContentPage } from './routes/networkContent/networkContentPage';
+import { PageTemplateEditView } from './routes/pageTemplate/pageTemplateEditView';
+import { PageTemplateList } from './routes/pageTemplate/pageTemplateList';
 import { NotificationsPage } from './routes/notifications/notificationsPage';
 import { PageEditor } from './routes/pages/pageEditor';
 import { PageList } from './routes/pages/pageList';
@@ -164,6 +169,8 @@ const PaperLetterLayoutList =
   createCheckedFeatureComponent('paper-letters')(LetterLayoutList);
 const PaperLetterLayoutEdit =
   createCheckedFeatureComponent('paper-letters')(LetterLayoutEdit);
+const PaperLetterDeliveryChannel =
+  createCheckedFeatureComponent('paper-letter-flow')(DeliveryChannelPage);
 
 export function App() {
   const { session } = useContext(AuthContext);
@@ -338,6 +345,22 @@ export function App() {
               element={<ArticleEditor />}
             />
             <Route
+              path="articles/templates"
+              element={
+                <Base>
+                  <ArticleTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/templates/create"
+              element={<ArticleTemplateEditView />}
+            />
+            <Route
+              path="articles/templates/edit/:id"
+              element={<ArticleTemplateEditView />}
+            />
+            <Route
               path="articles/edit/:id"
               element={<ArticleEditor />}
             />
@@ -409,6 +432,22 @@ export function App() {
             <Route
               path="pages/create"
               element={<PageEditor />}
+            />
+            <Route
+              path="pages/templates"
+              element={
+                <Base>
+                  <PageTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="pages/templates/create"
+              element={<PageTemplateEditView />}
+            />
+            <Route
+              path="pages/templates/edit/:id"
+              element={<PageTemplateEditView />}
             />
             <Route
               path="pages/edit/:id"
@@ -1124,6 +1163,32 @@ export function App() {
                 <Base>
                   <MailSendPage />
                 </Base>
+              }
+            />
+            <Route
+              path="deliverychannel"
+              element={
+                <Base>
+                  <PaperLetterDeliveryChannel />
+                </Base>
+              }
+            />
+            <Route
+              path="deliverychannel/:view"
+              element={
+                <Base>
+                  <PaperLetterDeliveryChannel />
+                </Base>
+              }
+            />
+            {/* The suggestions are one view of the delivery channel area now */}
+            <Route
+              path="deliverysuggestions"
+              element={
+                <Navigate
+                  to="/deliverychannel/suggestions"
+                  replace
+                />
               }
             />
             <Route

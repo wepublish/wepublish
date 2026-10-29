@@ -13,6 +13,7 @@ import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanGetMailLogs, CanSendMailTemplates } from '@wepublish/permissions';
 import {
+  EmailQualityRefreshModel,
   MailAudienceInput,
   MailLogFilter,
   MailLogSyncModel,
@@ -27,8 +28,12 @@ import {
   PaginatedMailSendRecipient,
 } from './mail-send.model';
 import { MailSendJobService } from './mail-send-job.service';
-import { MailSendRecipientService } from './mail-send-recipient.service';
+import {
+  emailSegmentOf,
+  MailSendRecipientService,
+} from './mail-send-recipient.service';
 import { MailLogSyncService } from './mail-log-sync.service';
+import { EmailQualityService } from '../email-quality/email-quality.service';
 
 /**
  * `MailLogTemplate` and `MailLogRecipient` expose only these fields, so there is
@@ -47,7 +52,8 @@ export class MailSendResolver {
     private prisma: PrismaClient,
     private mailSendJobService: MailSendJobService,
     private recipientService: MailSendRecipientService,
-    private mailLogSyncService: MailLogSyncService
+    private mailLogSyncService: MailLogSyncService,
+    private emailQualityService: EmailQualityService
   ) {}
 
   @Permissions(CanSendMailTemplates)
@@ -59,16 +65,20 @@ export class MailSendResolver {
     @Args('channel', { type: () => MailChannel, nullable: true })
     channel?: MailChannel
   ): Promise<MailSendRecipientPreview> {
-    const [count, userCount, withoutAddressCount] = await Promise.all([
-      this.recipientService.count(audience, channel),
-      this.recipientService.countUsers(audience),
-      this.recipientService.countWithoutAddress(audience, channel),
-    ]);
+    const [count, userCount, withoutAddressCount, segments] = await Promise.all(
+      [
+        this.recipientService.count(audience, channel),
+        this.recipientService.countUsers(audience),
+        this.recipientService.countWithoutAddress(audience, channel),
+        this.recipientService.countUsersBySegment(audience),
+      ]
+    );
 
     return {
       count,
       userCount,
       withoutAddressCount,
+      segments,
       allowsSubscriptionTemplates:
         this.recipientService.allowsSubscriptionTemplates(audience),
     };
@@ -87,7 +97,7 @@ export class MailSendResolver {
   ): Promise<PaginatedMailSendRecipient> {
     const boundedTake = Math.min(take, 100);
 
-    const [totalCount, recipients] = await Promise.all([
+    const [totalCount, recipients, patterns] = await Promise.all([
       this.recipientService.count(audience, channel),
       this.recipientService.resolvePreviewPage(
         audience,
@@ -95,6 +105,7 @@ export class MailSendResolver {
         boundedTake + 1,
         channel
       ),
+      this.recipientService.placeholderPatterns(),
     ]);
 
     const rows = recipients.map(({ user, subscription }) => ({
@@ -109,6 +120,7 @@ export class MailSendResolver {
         (subscription?.memberPlan as { name?: string } | undefined)?.name ??
         null,
       hasAddress: canReceiveLetters(user),
+      emailSegment: emailSegmentOf(user, patterns),
     }));
 
     return this.paginate(rows, totalCount, skip, boundedTake);
@@ -136,7 +148,10 @@ export class MailSendResolver {
   async mailSendPreview(
     @Args('input') input: MailSendPreviewInput
   ): Promise<MailSendPreviewModel> {
-    const result = await this.mailSendJobService.previewForAudience(input);
+    const [result, patterns] = await Promise.all([
+      this.mailSendJobService.previewForAudience(input),
+      this.recipientService.placeholderPatterns(),
+    ]);
 
     return {
       subject: result.subject,
@@ -157,10 +172,10 @@ export class MailSendResolver {
             memberPlanName:
               (
                 result.recipient.subscription?.memberPlan as
-                  | { name?: string }
-                  | undefined
+                  { name?: string } | undefined
               )?.name ?? null,
             hasAddress: canReceiveLetters(result.recipient.user),
+            emailSegment: emailSegmentOf(result.recipient.user, patterns),
           }
         : null,
     };
@@ -353,6 +368,17 @@ export class MailSendResolver {
     @Args('limit', { type: () => Int, nullable: true }) limit?: number
   ): Promise<MailLogSyncModel> {
     return this.mailLogSyncService.syncOpenStates(limit ?? undefined);
+  }
+
+  @Permissions(CanGetMailLogs)
+  @Mutation(() => EmailQualityRefreshModel, {
+    description: `Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now.`,
+  })
+  async refreshEmailQuality(): Promise<EmailQualityRefreshModel> {
+    const synced = await this.mailLogSyncService.syncOpenStates();
+    const { recomputed } = await this.emailQualityService.recomputeAll();
+
+    return { ...synced, recomputed };
   }
 
   private paginate<T extends { id: string }>(
