@@ -10,6 +10,7 @@ import {
   RichTextBlockInput,
 } from './richtext/richtext-block.model';
 import { BaseBlock, UnknownBlock } from './base-block.model';
+import { assertValidTiming } from './timing/block-timing';
 import { HTMLBlock, HTMLBlockInput } from './html/html-block.model';
 import { TitleBlock, TitleBlockInput } from './title/title-block.model';
 import { ImageBlock, ImageBlockInput } from './image/image-block.model';
@@ -308,6 +309,8 @@ export function mapBlockUnionMap(
   }
 
   const type = Object.keys(value)[0] as BlockType;
+
+  assertValidTiming(value[type]?.timing);
 
   switch (type) {
     case BlockType.TeaserGrid: {

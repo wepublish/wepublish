@@ -2,7 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Module } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import { PrismaClient } from '@prisma/client';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { StatsResolver } from './stats.resolver';
@@ -12,7 +14,7 @@ import type { Mock } from 'vitest';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: NodeApolloDriver,
       autoSchemaFile: true,
       path: '/',
       cache: 'bounded',
@@ -47,7 +49,7 @@ describe('StatsResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -66,7 +68,7 @@ describe('StatsResolver', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
+    app = module.createNestApplication(new NodeAdapter());
     await app.listen(0, '127.0.0.1');
   });
 

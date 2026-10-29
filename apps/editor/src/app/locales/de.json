@@ -4527,10 +4527,65 @@
       "addBlock": "Block hinzufügen",
       "hideBlock": "Block auf der Website ausblenden",
       "showBlock": "Block auf der Website wieder anzeigen",
+      "timeBlock": "Festlegen, wann dieser Block erscheint",
       "deleteBlock": "Block löschen",
       "moveBlockUp": "Block nach oben verschieben",
       "moveBlockDown": "Block nach unten verschieben",
       "styleHelp": "Ändert, wie dieser Block auf der Website aussieht. Leer lassen für die Standarddarstellung. Die Styles verwaltest du unter «Block Styling»."
+    },
+    "blockTiming": {
+      "title": "Block zeitlich steuern",
+      "offAir": "Derzeit auf der Website ausgeblendet, weil er ausserhalb seines Zeitplans liegt.",
+      "dateRange": "Zeitraum",
+      "dateRangeEmpty": "Beliebiges Datum",
+      "dateRangeHelp": "Der Block erscheint vom Beginn des ersten bis zum Ende des letzten Tags.",
+      "weekdays": "Wochentage",
+      "weekdaysHelp": "Keinen wählen, damit der Block jeden Tag erscheint.",
+      "timeOfDay": "Tageszeit",
+      "timeOfDayFrom": "Von",
+      "timeOfDayTo": "bis",
+      "timeOfDayHelp": "Die Zeiten gelten in der Zeitzone der Website. Liegt das Ende vor dem Beginn, läuft das Fenster über Mitternacht, z. B. 22:00 bis 02:00.",
+      "sameTimes": "Beginn und Ende sind gleich, so erscheint der Block nie. Ändere eine der Zeiten oder wähle «Ganztägig».",
+      "clearTimeOfDay": "Ganztägig",
+      "clear": "Zeitplan entfernen",
+      "done": "Fertig",
+      "summary": {
+        "always": "Erscheint immer. Lege einen Zeitraum, Wochentage oder eine Tageszeit fest, um das einzuschränken.",
+        "never": "Erscheint nie, weil Beginn und Ende gleich sind.",
+        "shows": "Erscheint {{conditions}}.",
+        "between": "vom {{from}} bis {{to}}",
+        "since": "ab {{from}}",
+        "until": "bis {{to}}",
+        "days": "{{days}}",
+        "hours": "von {{from}} bis {{to}} Uhr"
+      }
+    },
+    "weekday": {
+      "Monday": "Montag",
+      "Tuesday": "Dienstag",
+      "Wednesday": "Mittwoch",
+      "Thursday": "Donnerstag",
+      "Friday": "Freitag",
+      "Saturday": "Samstag",
+      "Sunday": "Sonntag"
+    },
+    "weekdayRecurring": {
+      "Monday": "montags",
+      "Tuesday": "dienstags",
+      "Wednesday": "mittwochs",
+      "Thursday": "donnerstags",
+      "Friday": "freitags",
+      "Saturday": "samstags",
+      "Sunday": "sonntags"
+    },
+    "weekdayShort": {
+      "Monday": "Mo",
+      "Tuesday": "Di",
+      "Wednesday": "Mi",
+      "Thursday": "Do",
+      "Friday": "Fr",
+      "Saturday": "Sa",
+      "Sunday": "So"
     },
     "placeholderInput": {
       "add": "Hinzufügen"
