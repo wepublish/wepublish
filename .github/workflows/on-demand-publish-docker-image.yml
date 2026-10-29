@@ -200,3 +200,14 @@ jobs:
             SENTRY_PROJECT=wepublish-cms
             SENTRY_RELEASE=${{ github.sha }}
             APP_RELEASE_ID=${{ github.sha }}
+
+  # Placeholder: master's branch protection still requires the check
+  # "Docker backend images / Build and push storybook", and the storybook
+  # image is no longer built. Always skipped, which counts as passed. Remove
+  # it together with that required check.
+  build-and-push-storybook:
+    name: Build and push storybook
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - run: echo "No storybook image is built any more."
