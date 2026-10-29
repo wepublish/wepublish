@@ -1704,7 +1704,7 @@ model MailTemplate {
 // page of the pdf. Independent of the template, which only carries the words,
 // so the same words can still go out as a mail without any of this.
 model LetterLayout {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
