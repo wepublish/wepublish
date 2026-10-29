@@ -69,6 +69,10 @@ export default [
               sourceTag: 'scope:runtime-shared',
               notDependOnLibsWithTags: ['scope:api-only'],
             },
+            {
+              sourceTag: 'scope:website',
+              bannedExternalImports: ['next', 'next/*'],
+            },
           ],
         },
       ],
