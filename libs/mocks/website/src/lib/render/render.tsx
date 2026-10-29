@@ -119,7 +119,9 @@ export const renderWithProviders = (
     >
       <ApolloProvider client={client}>
         <TestRouterProvider router={router}>
-          <BuilderRouterContext.Provider value={{ query: router.query }}>
+          <BuilderRouterContext.Provider
+            value={{ query: router.query, asPath: router.asPath }}
+          >
             <TestSessionProvider
               user={user}
               setToken={setToken}
