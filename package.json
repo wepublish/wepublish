@@ -352,7 +352,7 @@
     "nodemailer": "catalog:",
     "otpauth": "catalog:",
     "passport-http-bearer": "catalog:",
-    "pdf-lib": "^1.17.1",
+    "pdf-lib": "catalog:",
     "pg": "catalog:",
     "pingen2-sdk-js": "^0.3.0",
     "pino": "catalog:",

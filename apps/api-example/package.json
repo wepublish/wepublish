@@ -58,6 +58,7 @@
     "nodemailer": "catalog:",
     "otpauth": "catalog:",
     "passport-http-bearer": "catalog:",
+    "pdf-lib": "catalog:",
     "pino": "catalog:",
     "prosemirror-model": "catalog:",
     "qs": "catalog:",
