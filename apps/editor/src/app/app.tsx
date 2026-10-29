@@ -28,6 +28,7 @@ import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailLogList,
   MailSendPage,
+  DeliveryChannelPage,
   LetterLayoutEdit,
   LetterLayoutList,
   MailTemplateEdit,
@@ -168,6 +169,8 @@ const PaperLetterLayoutList =
   createCheckedFeatureComponent('paper-letters')(LetterLayoutList);
 const PaperLetterLayoutEdit =
   createCheckedFeatureComponent('paper-letters')(LetterLayoutEdit);
+const PaperLetterDeliveryChannel =
+  createCheckedFeatureComponent('paper-letter-flow')(DeliveryChannelPage);
 
 export function App() {
   const { session } = useContext(AuthContext);
@@ -1160,6 +1163,32 @@ export function App() {
                 <Base>
                   <MailSendPage />
                 </Base>
+              }
+            />
+            <Route
+              path="deliverychannel"
+              element={
+                <Base>
+                  <PaperLetterDeliveryChannel />
+                </Base>
+              }
+            />
+            <Route
+              path="deliverychannel/:view"
+              element={
+                <Base>
+                  <PaperLetterDeliveryChannel />
+                </Base>
+              }
+            />
+            {/* The suggestions are one view of the delivery channel area now */}
+            <Route
+              path="deliverysuggestions"
+              element={
+                <Navigate
+                  to="/deliverychannel/suggestions"
+                  replace
+                />
               }
             />
             <Route

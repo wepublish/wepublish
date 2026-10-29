@@ -243,6 +243,7 @@ export class SubscriptionFlowService {
     await this.prismaService.subscriptionInterval.create({
       data: {
         daysAwayFromEnding: interval.daysAwayFromEnding,
+        sendAsLetter: interval.sendAsLetter ?? false,
         subscriptionFlow: {
           connect: {
             id: interval.subscriptionFlowId,
@@ -275,11 +276,15 @@ export class SubscriptionFlowService {
       throw new NotFoundException('The given interval not found!');
     }
 
+    // A partial update (e.g. only the letter switch) is validated against
+    // what stays in place.
     await this.isIntervalValid(
       {
         event: eventToUpdate.event,
         subscriptionFlowId: eventToUpdate.subscriptionFlowId,
         ...interval,
+        daysAwayFromEnding:
+          interval.daysAwayFromEnding ?? eventToUpdate.daysAwayFromEnding,
       },
       false
     );
@@ -303,6 +308,11 @@ export class SubscriptionFlowService {
               }
             : {},
           daysAwayFromEnding: interval.daysAwayFromEnding,
+          // The flow editor updates days and template without mentioning the
+          // switch; only an explicit value changes it.
+          ...(interval.sendAsLetter === undefined ?
+            {}
+          : { sendAsLetter: interval.sendAsLetter }),
         },
       }),
     ]);

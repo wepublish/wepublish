@@ -4,7 +4,14 @@ import type { i18n as I18n, TFunction } from 'i18next';
 import { catalogs, lookup, routerPaths } from '../testing/routerPaths';
 import { allCommands, editorCommands } from './commands';
 
-const NOT_A_DESTINATION = [/^\/login/, /^\/$/, /:/, /^\/systemmails$/];
+// Redirects to a route that is reachable itself.
+const NOT_A_DESTINATION = [
+  /^\/login/,
+  /^\/$/,
+  /:/,
+  /^\/systemmails$/,
+  /^\/deliverysuggestions$/,
+];
 
 const commandPaths = () => {
   const paths: string[] = [];
@@ -65,9 +72,18 @@ describe('editor command registry', () => {
   it.each([
     ['letterLayouts', 'paper-letters'],
     ['createLetterLayout', 'paper-letters'],
+    ['deliverySuggestions', 'paper-letter-flow'],
   ])('offers %s only where %s is switched on', (id, feature) => {
     expect(allCommands.find(command => command.id === id)?.feature).toBe(
       feature
+    );
+  });
+
+  it('lists the delivery channel right after the automated messages it delivers', () => {
+    const ids = allCommands.map(({ id }) => id);
+
+    expect(ids.indexOf('deliverySuggestions')).toBe(
+      ids.indexOf('subscriptionSettings') + 1
     );
   });
 

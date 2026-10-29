@@ -8,9 +8,10 @@ import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { InvoicePaidListener } from '@wepublish/payment/api';
 import { ActionMailNoMailReason } from '../action-mail/action-mail-reason';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
+import { TemplateAction } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 
 export type PaymentMail =
-  | { mailTemplateId: string }
+  | TemplateAction
   | { noMailReason: ActionMailNoMailReason };
 
 type TemplateLookupSubscription = {
@@ -60,7 +61,7 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
       return;
     }
 
-    const { mailTemplateId } = mail;
+    const { mailTemplateId, sendAsLetter } = mail;
 
     const { subscription, items, subscriptionPeriods, ...invoiceData } =
       invoice;
@@ -84,6 +85,7 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
         mailTemplateId,
         recipient: user,
         mailType: mailLogType.SubscriptionFlow,
+        asLetter: sendAsLetter,
         optionalData: {
           errorCode: '',
           invoice: invoiceData,
@@ -156,9 +158,9 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
       return { noMailReason: ActionMailNoMailReason.firstPeriod };
     }
 
-    const mailTemplateId = await this.findRenewalSuccessTemplate(subscription);
+    const action = await this.findRenewalSuccessTemplate(subscription);
 
-    if (!mailTemplateId) {
+    if (!action) {
       this.logger.log(
         `No RENEWAL_SUCCESS template configured for subscription ${subscription.id}, skipping invoice ${invoice.id}`
       );
@@ -166,7 +168,7 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
       return { noMailReason: ActionMailNoMailReason.noTemplate };
     }
 
-    return { mailTemplateId };
+    return action;
   }
 
   private async releaseClaim(invoiceId: string, claimedAt: Date) {
@@ -184,7 +186,7 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
 
   private async findRenewalSuccessTemplate(
     subscription: TemplateLookupSubscription
-  ): Promise<string | null> {
+  ): Promise<TemplateAction | null> {
     try {
       const actions =
         await this.subscriptionEventDictionary.getActionsForSubscriptions({
@@ -195,11 +197,16 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
           events: [SubscriptionEvent.RENEWAL_SUCCESS],
         });
 
-      return (
-        actions.find(
-          action => action.type === SubscriptionEvent.RENEWAL_SUCCESS
-        )?.mailTemplateId ?? null
+      const action = actions.find(
+        action => action.type === SubscriptionEvent.RENEWAL_SUCCESS
       );
+
+      return action?.mailTemplateId ?
+          {
+            mailTemplateId: action.mailTemplateId,
+            sendAsLetter: action.sendAsLetter,
+          }
+        : null;
     } catch (error) {
       this.logger.error(
         `Could not resolve the RENEWAL_SUCCESS template for subscription ${subscription.id}: ${(error as Error).message}`

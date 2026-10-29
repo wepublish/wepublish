@@ -1298,7 +1298,7 @@
       "goToLogin": "Zum Login"
     },
     "mailTemplates": {
-      "availableTemplates": "Sendungsvorlagen",
+      "availableTemplates": "Mitteilungsvorlagen",
       "cancel": "Abbrechen",
       "content": "Inhalt",
       "create": "Vorlage erstellen",
@@ -1515,7 +1515,7 @@
         "subscription": "Rund um das Abo selbst: neu abgeschlossen, bestätigt oder deaktiviert. Zusätzlich verfügbar: Abo-Stammdaten wie Betrag und Laufzeit.",
         "renewal": "Automatische Verlängerung – erfolgreich oder fehlgeschlagen. Zusätzlich verfügbar: Plan- und Zahlungsmethoden-Name sowie die Rechnungsdaten.",
         "invoiceCreation": "Sobald eine neue Rechnung erstellt wurde. Zusätzlich verfügbar: die Rechnung und das zugehörige Abo.",
-        "custom": "Frei verschickbare E-Mail an Abonnent:innen, z.B. ein Newsletter über «Manuelle Sendungen». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
+        "custom": "Frei verschickbare E-Mail an Abonnent:innen, z.B. ein Newsletter über «Manuelle Mitteilungen». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
         "customNoSubscription": "Frei verschickbare E-Mail an Personen ohne Abo, z.B. eine Einladung oder Reaktivierung. Verfügbar sind nur die Empfänger-Felder – Abo-Platzhalter bleiben leer."
       },
       "placeholderDescriptions": {
@@ -1564,10 +1564,12 @@
         "optional_invoices_0_id": "ID der neuesten Rechnung (Array, Index 0).",
         "optional_invoices_0_description": "Beschreibung der neuesten Rechnung."
       },
-      "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «Manuelle Sendungen» kannst du sie trotzdem von Hand verschicken.",
+      "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «Manuelle Mitteilungen» kannst du sie trotzdem von Hand verschicken.",
       "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "Auch per Brief",
+      "sendAsLetterHint": "Personen mit Zustellkanal Brief bekommen diese Mitteilung gedruckt statt per E-Mail.",
       "noMailSentSelectNow": "Keine E-Mail senden"
     },
     "memberPlanEdit": {
@@ -1630,7 +1632,161 @@
       "title": "Abo-Pläne",
       "paymentProviderStatusInfo": "✅ heisst, alle Zahlungsmethoden dieses Abo-Plans sind mit einem Zahlungsanbieter verbunden. ❌ heisst, mindestens einer Zahlungsmethode fehlt der Anbieter – damit können Leser:innen nicht bezahlen."
     },
+    "deliveryMode": {
+      "panelTitle": "Zustellkanal",
+      "channel": {
+        "mail": "E-Mail",
+        "letter": "Brief"
+      },
+      "origin": {
+        "manual": "Von Hand",
+        "suggestion": "Nach Vorschlag"
+      },
+      "reason": {
+        "emailQuality_dead": "E-Mail-Adresse nicht erreichbar",
+        "placeholderEmail": "Platzhalter-Adresse",
+        "bulk": "Nach Benutzergruppe",
+        "emailQuality_active": "E-Mail-Adresse wieder aktiv",
+        "kept": "Beibehalten"
+      },
+      "noAddress": "Ohne vollständige Postadresse – Brief nicht möglich.",
+      "switchToLetter": "Auf Brief umstellen",
+      "switchToMail": "Auf E-Mail umstellen",
+      "suggestionsTitle": "Zustellkanal für automatische Mitteilungen",
+      "suggestionsIntro": "Der Zustellkanal legt fest, ob ein User seine automatischen Mitteilungen per E-Mail oder per Brief bekommt. Die Umstellung erfolgt von Hand, vorschlag-basiert oder über Benutzergruppen-Filter. Vorschläge werden täglich auf Basis von automatischen Rückmeldungen zur E-Mail-Zustellbarkeit berechnet, kommen jedoch erst nach der manuellen Bestätigung zur Anwendung.",
+      "kind": {
+        "toLetter": "Auf Brief umstellen ({{count}})",
+        "toMail": "Auf E-Mail umstellen ({{count}})"
+      },
+      "recompute": "Vorschläge neu berechnen",
+      "recomputed": "Neu berechnet: {{toLetter}} auf Brief, {{toMail}} auf E-Mail, {{removed}} erledigt.",
+      "confirm": "Übernehmen",
+      "confirmAll": "Alle {{count}} übernehmen",
+      "confirmAllTitle": "Alle Vorschläge übernehmen",
+      "confirmAllText": {
+        "toLetter": "{{count}} User bekommen ihre automatischen Mitteilungen künftig per Brief.",
+        "toMail": "{{count}} User bekommen ihre automatischen Mitteilungen wieder per E-Mail."
+      },
+      "confirmAllYes": "Ja, alle übernehmen",
+      "confirmedAll": "{{confirmed}} übernommen, {{skipped}} galten nicht mehr.",
+      "table": {
+        "user": "User",
+        "emailQuality": "E-Mail-Status",
+        "reason": "Grund",
+        "since": "Vorgeschlagen seit"
+      },
+      "audience": {
+        "open": "Zustellkanal der Zielgruppe umstellen",
+        "title": "Zustellkanal der Zielgruppe umstellen",
+        "intro": "Alle User der gewählten Zielgruppe bekommen ihre automatischen Mitteilungen künftig so:",
+        "previewLetter": "{{userCount}} User; {{withoutAddressCount}} davon ohne vollständige Postadresse bleiben bei E-Mail.",
+        "previewMail": "{{userCount}} User.",
+        "apply": "Umstellen",
+        "done": {
+          "letter": "{{changed}} auf Brief umgestellt, {{skippedWithoutAddress}} ohne vollständige Postadresse bleiben bei E-Mail.",
+          "mail": "{{changed}} auf E-Mail umgestellt."
+        }
+      },
+      "bulk": {
+        "title": "Zielgruppe umstellen",
+        "intro": "Zielgruppe wie bei den manuellen Mitteilungen eingrenzen und den Zustellkanal für alle darin umstellen.",
+        "people": "{{count}} User in dieser Zielgruppe",
+        "history": {
+          "title": "Umstellungen nach Benutzergruppe",
+          "empty": "Noch keine Umstellung nach Benutzergruppe.",
+          "when": "Wann",
+          "who": "Durch",
+          "channel": "Zustellkanal",
+          "people": "User",
+          "changed": "Umgestellt",
+          "skipped": "Übersprungen",
+          "filter": "Benutzergruppe",
+          "unknownUser": "Unbekannt"
+        }
+      }
+    },
+    "deliveryChannel": {
+      "tabs": {
+        "suggestions": "Änderungsvorschläge ({{count}})",
+        "assign": "Zustellkanal für Benutzergruppe umstellen",
+        "history": "Verlauf Benutzergruppen-Umstellung",
+        "overview": "Übersicht"
+      },
+      "overview": {
+        "people": "{{count}} User",
+        "showPeople": "User anzeigen",
+        "openSuggestions": "{{count}} offene",
+        "review": "Vorschläge prüfen",
+        "peopleOn": "User mit Zustellkanal {{channel}}",
+        "search": "Name oder E-Mail-Adresse suchen",
+        "lastChange": "Letzte Änderung",
+        "noDecision": "Keine (Standard)",
+        "empty": "Niemand mit diesem Zustellkanal.",
+        "suggestionsHeading": "Änderungsvorschläge",
+        "activeFor": "Bei {{count}} automatischen Mitteilungstypen aktiviert",
+        "channelHeadingDefault": "Zustellkanal (Standard)",
+        "channelHeadingAlternative": "Zustellkanal (Alternativ)"
+      },
+      "suggestions": {
+        "cardTitle": "{{move}} · {{count}} Vorschläge",
+        "empty": "Keine offenen Vorschläge für Umstellung auf {{channel}}.",
+        "keep": "Beibehalten",
+        "keepTitle": "Zustellkanal beibehalten?",
+        "keepText": "{{name}} bleibt bei {{channel}}. Das gilt als Entscheidung von Hand: die nächtliche Berechnung schlägt diesen User nicht mehr vor, in keine Richtung.",
+        "keepYes": "Ja, beibehalten",
+        "readOnly": "Vorschläge übernehmen oder beibehalten kann nur, wer Zustellkanäle verwalten darf.",
+        "emailStatus": {
+          "dead": "Nicht erreichbar seit {{date}}",
+          "active": "Aktiv seit {{date}}",
+          "unresponsive": "Reagiert nicht seit {{date}}",
+          "unknown": "Unbekannt seit {{date}}"
+        },
+        "recomputedDaily": "(täglich automatisch neu berechnet)"
+      },
+      "assign": {
+        "steps": {
+          "audience": {
+            "title": "Benutzergruppe",
+            "description": "Wer umgestellt wird"
+          },
+          "channel": {
+            "title": "Zustellkanal",
+            "description": "Wohin"
+          },
+          "review": {
+            "title": "Prüfen & umstellen",
+            "description": "Letzter Blick"
+          }
+        },
+        "people": "{{count}} User",
+        "noAddress": "{{count}} User ohne vollständige Postadresse können nicht auf Brief umgestellt werden und bleiben bei E-Mail.",
+        "summary": {
+          "letter": "{{changed}} werden auf Brief umgestellt, {{skipped}} ohne vollständige Postadresse bleiben bei E-Mail.",
+          "mail": "{{changed}} werden auf E-Mail umgestellt."
+        },
+        "confirmTitle": "Benutzergruppe auf {{channel}} umstellen?",
+        "showHistory": "Im Verlauf anzeigen",
+        "again": "Neue Umstellung",
+        "unreachableEmail": "{{count}} User mit nicht erreichbarer E-Mail-Adresse (Platzhalter oder unzustellbar) werden trotzdem umgestellt – Mitteilungen per E-Mail kommen dort nicht an.",
+        "filterTitle": "Benutzergruppe filtern",
+        "segmentsLabel": "Benutzergruppe nach E-Mail-Status filtern"
+      },
+      "history": {
+        "allChannels": "Alle"
+      },
+      "user": {
+        "switched": "Zustellkanal auf {{channel}} umgestellt.",
+        "suggestion": "Vorschlag: {{move}}",
+        "channelLabel": "Zustellkanal für automatische Mitteilungen:",
+        "emailUnreachable": "E-Mail-Adresse nicht erreichbar ({{segment}}) – Mitteilungen per E-Mail kommen nicht an."
+      },
+      "flows": {
+        "letterHint": "Mitteilungen mit «Auch per Brief» erreichen User mit Zustellkanal Brief in gedruckter Form; alle anderen gehen per E-Mail.",
+        "manage": "Zustellkanäle verwalten"
+      }
+    },
     "navbar": {
+      "deliverySuggestions": "Zustellkanal",
       "articles": "Artikel",
       "authors": "Autor*innen",
       "banners": "Banner",
@@ -1664,7 +1820,7 @@
         "system": "Wie System"
       },
       "logout": "Logout",
-      "mailTemplates": "Sendungsvorlagen",
+      "mailTemplates": "Mitteilungsvorlagen",
       "memberPlans": "Abo-Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
@@ -1677,7 +1833,7 @@
       "settings": "Einstellungen",
       "subscriptionPlans": "Abo-Pläne",
       "subscriptions": "Abonnements",
-      "subscriptionSettings": "Automatische E-Mails",
+      "subscriptionSettings": "Automatische Mitteilungen",
       "tokens": "Tokens",
       "apiTokens": "API-Schlüssel",
       "userConsents": "Benutzer-Einwilligungen",
@@ -1688,8 +1844,8 @@
       "audienceDashboard": "Dashboard",
       "integrations": "Integrationen",
       "apps": "Apps",
-      "mailSend": "Manuelle Sendungen",
-      "mailLog": "Abgeschlossene Sendungen",
+      "mailSend": "Manuelle Mitteilungen",
+      "mailLog": "Gesendete Mitteilungen",
       "communication": "Kommunikation",
       "auditLog": "Audit-Log",
       "letterLayouts": "Briefpapier",
@@ -1809,6 +1965,7 @@
       "letterLayoutEdit": "Briefpapier bearbeiten",
       "systemMails": "Konto- & Login-E-Mails",
       "mailSend": "E-Mail senden",
+      "deliveryChannel": "Zustellkanal",
       "mailLog": "Gesendete E-Mails",
       "networkContent": "We.Publish-Netzwerk",
       "peers": "Peers",
@@ -2278,9 +2435,14 @@
         "newArticlePaywall": "Hat keinen Einfluss auf bereits erstellte Artikel",
         "subscriptionUpgradeModel": "Wenn aktiviert, wird bei einem Upgrade immer die Differenz zwischen dem neuen und dem aktuellen Plan-Preis verrechnet, unabhängig davon, wie viel Zeit in der aktuellen Periode noch verbleibt. Wenn deaktiviert, wird nur das ungenutzte (anteilige) Restguthaben der aktuellen Periode angerechnet.",
         "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit.",
+        "emailQualityUnresponsiveAfterDays": "Eine E-Mail-Adresse gilt als «reagiert nicht», wenn so viele Tage lang weder ein Login noch ein Klick in einer Mail erfolgt ist, obwohl Mails zugestellt wurden. Wird nächtlich und über «Status aktualisieren» neu bewertet.",
+        "emailQualityMinMailsForUnresponsive": "So viele Mails müssen an die Adresse zugestellt worden sein, bevor sie als «reagiert nicht» gelten kann.",
         "showPendingWhenNotPublished": "Dadurch werden geplante Artikel und Seiten öffentlich sichtbar (und damit auch für Crawler), obwohl sie noch nie publiziert wurden."
       },
       "sessionTtlDays": "Gültigkeitsdauer der Anmeldung",
+      "emailQuality": "E-Mail-Qualität",
+      "emailQualityUnresponsiveAfterDays": "«Reagiert nicht» nach … Tagen",
+      "emailQualityMinMailsForUnresponsive": "… zugestellten Mails",
       "activeSubscriptionsApiPublic": "API für aktive Abos öffentlich zugänglich machen",
       "expectedRevenueApiPublic": "API für erwartete Einnahmen öffentlich zugänglich machen",
       "newDeactivationsApiPublic": "API für neue Deaktivierungen öffentlich zugänglich machen",
@@ -2311,7 +2473,7 @@
       }
     },
     "automaticMails": {
-      "title": "Automatische E-Mails",
+      "title": "Automatische Mitteilungen",
       "intro": "Hier legst du fest, welche E-Mail-Vorlage bei welchem Ereignis automatisch verschickt wird. Wähle pro Ereignis eine Vorlage – oder lass das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
       "example": "Beispiel: {{example}}"
     },
@@ -2356,7 +2518,7 @@
       "addMail": "E-Mail hinzufügen",
       "deleteMail": "E-Mail entfernen",
       "defaultFlow": "Standard-Ablauf",
-      "defaultFlowDescription": "Gilt für alle Abos, auf die kein anderer Ablauf passt. Änderungen hier gelten auch unter «Automatische E-Mails».",
+      "defaultFlowDescription": "Gilt für alle Abos, auf die kein anderer Ablauf passt. Änderungen hier gelten auch unter «Automatische Mitteilungen».",
       "flowNumber": "Ablauf {{number}}",
       "newFlow": "Neuer Ablauf",
       "newDayTitle": "Neuer Tag in der Zeitleiste",
@@ -2483,6 +2645,7 @@
       "confirm": "Bestätigen",
       "country": "Land",
       "createNewUser": "Neue:n Benutzer:in erstellen",
+      "emailQuality": "E-Mail-Status: {{level}} – {{reason}}, seit {{since}}",
       "deleteUser": "Benutzer:in löschen?",
       "email": "E-Mail",
       "errorCreatingUser": "Benutzer:in konnte nicht erstellt werden. Unerwarteter Fehler: {{error}}",
@@ -3278,7 +3441,11 @@
         "organisationId": "Organisations-ID",
         "webhookSigningKey": "Webhook Signing Key",
         "autoSend": "Briefe automatisch versenden",
-        "placeholderEmailContains": "Platzhalter-E-Mail enthält"
+        "placeholderEmailContains": "Platzhalter-E-Mail enthält",
+        "defaultAddressPosition": "Adressfenster (automatische Briefe)",
+        "defaultDeliveryProduct": "Zustellung (automatische Briefe)",
+        "defaultPrintMode": "Druck (automatische Briefe)",
+        "defaultPrintSpectrum": "Farbe (automatische Briefe)"
       },
       "mailSettings": {
         "type": "Typ",
@@ -3856,14 +4023,14 @@
       "steps": {
         "audience": {
           "title": "Empfänger wählen",
-          "description": "Empfängergruppe und Filter"
+          "description": "Zielgruppe und Filter"
         },
         "content": {
-          "title": "Inhalt & Versandart",
+          "title": "Inhalt & Zustellkanal",
           "description": "Vorlage, E-Mail oder Brief"
         },
         "send": {
-          "title": "E-Mail senden",
+          "title": "Senden",
           "description": "Prüfen und absenden"
         }
       },
@@ -3873,22 +4040,28 @@
       "summary": {
         "title": "Zusammenfassung"
       },
-      "title": "Manuelle Sendungen",
+      "title": "Manuelle Mitteilungen",
       "template": "Sendungsvorlage",
       "selectTemplate": "Vorlage auswählen",
       "audience": {
         "title": "Empfänger"
       },
       "base": {
-        "label": "Empfängergruppe",
+        "label": "Zielgruppe",
         "allUsers": "Alle Benutzer",
         "hasSubscription": "Abonnent:innen (mit Abo)",
         "noActiveSubscription": "Ohne aktives Abo",
         "endedSubscription": "Rückgewinnung – Abo kürzlich deaktiviert",
-        "allUsersHint": "Alle registrierten Personen, unabhängig von einem Abo.",
-        "hasSubscriptionHint": "Personen mit einem Abo. Abo-Platzhalter sind verfügbar.",
-        "noActiveSubscriptionHint": "Personen ohne aktives Abo. Abo-Platzhalter bleiben leer.",
-        "endedSubscriptionHint": "Personen, deren Abo kürzlich deaktiviert wurde und die seither kein neues Abo haben. Das deaktivierte Abo wird mitgeschickt – die Abo-Platzhalter stehen also zur Verfügung."
+        "allUsersHint": "Alle registrierten User, unabhängig von einem Abo.",
+        "hasSubscriptionHint": "User mit einem Abo.",
+        "noActiveSubscriptionHint": "User ohne aktives Abo.",
+        "endedSubscriptionHint": "User, deren Abo kürzlich deaktiviert wurde und die seither kein neues Abo haben.",
+        "placeholderNote": {
+          "allUsers": "Abo-Platzhalter bleiben leer.",
+          "hasSubscription": "Abo-Platzhalter sind verfügbar.",
+          "noActiveSubscription": "Abo-Platzhalter bleiben leer.",
+          "endedSubscription": "Das deaktivierte Abo wird mitgeschickt – die Abo-Platzhalter stehen zur Verfügung."
+        }
       },
       "memberPlans": "Abo-Pläne",
       "memberPlansAll": "Alle Abo-Pläne",
@@ -3907,7 +4080,7 @@
       "no": "Nein",
       "counting": "Empfänger werden gezählt …",
       "send": "Senden",
-      "templateNeedsSubscription": "Diese Vorlage benötigt eine Abo-basierte Empfängergruppe, damit die Abo-Platzhalter gefüllt werden können.",
+      "templateNeedsSubscription": "Diese Vorlage benötigt eine Abo-basierte Zielgruppe, damit die Abo-Platzhalter gefüllt werden können.",
       "confirmTitle": "E-Mail senden",
       "confirmText": "Diese E-Mail an {{count}} Empfänger senden?",
       "confirm": "Senden",
@@ -3941,16 +4114,24 @@
         "memberPlan": "Abo-Plan",
         "address": "Adresse",
         "withAddress": "Adresse vorhanden",
-        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt"
+        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt",
+        "emailSegment": "E-Mail-Status"
       },
       "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
       "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
-      "emailFilter": {
-        "label": "E-Mail-Adresse",
-        "all": "Alle",
-        "placeholder": "Nur Platzhalter",
-        "real": "Nur echt",
-        "hint": "Platzhalter-Adressen werden in der Brief-Integration festgelegt."
+      "emailSegments": {
+        "label": "E-Mail-Status",
+        "placeholder": "Platzhalter-Adresse",
+        "dead": "Nicht erreichbar (Bounce, ungültig, Beschwerde, abgemeldet)",
+        "unresponsive": "Reagiert nicht",
+        "unknown": "Unbekannt",
+        "active": "Aktiv",
+        "pick": "Alle Status",
+        "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichen: Platzhalter + Nicht erreichbar.",
+        "overview": "User dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
+        "refresh": "Status aktualisieren",
+        "refreshing": "Status werden aktualisiert …",
+        "refreshed": "{{updated}} Zustellstatus vom Provider geholt ({{checked}} geprüft), {{recomputed}} User neu bewertet."
       },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
@@ -3968,7 +4149,7 @@
         "firstRecipient": "Erste:r Empfänger:in",
         "hint": "So sieht die E-Mail für diese Person aus – mit ihren echten Daten.",
         "loading": "Vorschau wird geladen …",
-        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen.",
+        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Zielgruppe anpassen.",
         "letterTitle": "Briefvorschau"
       },
       "recipientsCountPerPerson": "{{count}} E-Mails an {{people}} Personen",
@@ -3986,7 +4167,7 @@
       "lettersCount": "{{count}} Briefe an {{people}} Personen",
       "confirmTextLetter": "Diesen Brief an {{count}} Empfänger:innen senden?",
       "channel": {
-        "label": "Versand",
+        "label": "Zustellkanal",
         "mail": "E-Mail",
         "letter": "Brief",
         "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
@@ -4017,10 +4198,55 @@
         }
       },
       "stateHelp": "Aktiv: bestätigt, nicht deaktiviert und bezahlt. Ausstehend: abgeschlossen, aber noch nicht bestätigt – z. B. weil die erste Zahlung noch fehlt. Deaktiviert: Das Abo wurde beendet oder die Beendigung ist bereits eingetragen.",
-      "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst."
+      "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst.",
+      "mailHistory": {
+        "label": "Erhaltene Mitteilungen",
+        "hint": "Nur User, die eine bestimmte Vorlage erhalten (oder nicht erhalten) haben – auf Wunsch nur über einen bestimmten Zustellkanal.",
+        "add": "Bedingung hinzufügen",
+        "remove": "Bedingung entfernen",
+        "received": "hat erhalten",
+        "notReceived": "hat nicht erhalten",
+        "template": "Vorlage wählen …",
+        "state": "Status",
+        "anyState": "Beliebig",
+        "channel": "Zustellkanal",
+        "anyChannel": "Beliebig",
+        "sentBetween": "Versandt zwischen",
+        "match": {
+          "all": "Alle Bedingungen müssen zutreffen",
+          "any": "Eine Bedingung genügt"
+        },
+        "states": {
+          "submitted": "Übermittelt",
+          "accepted": "Angenommen",
+          "delivered": "Zugestellt",
+          "deferred": "Verzögert",
+          "bounced": "Bounce",
+          "rejected": "Abgelehnt",
+          "dispatched": "Aufgegeben",
+          "undeliverable": "Unzustellbar",
+          "canceled": "Storniert"
+        }
+      },
+      "audienceSummary": {
+        "base": "Basis",
+        "memberPlans": "Abo-Pläne",
+        "state": "Abo-Status",
+        "segments": "E-Mail-Status",
+        "mailHistory": "Mitteilungen",
+        "received": "erhalten",
+        "notReceived": "nicht erhalten",
+        "between": "{{from}} – {{to}}",
+        "from": "ab {{from}}",
+        "to": "bis {{to}}",
+        "matchAny": "eine Bedingung genügt",
+        "matchAll": "alle Bedingungen",
+        "more": "{{count}} weitere Filter"
+      },
+      "deliveryChannelHandOff": "Zustellkanal dieser Benutzergruppe dauerhaft umstellen …"
     },
     "mailLog": {
-      "title": "Abgeschlossene Sendungen",
+      "title": "Gesendete Mitteilungen",
       "empty": "Keine E-Mails gefunden.",
       "sentDate": "Datum",
       "template": "Vorlage",
@@ -4039,7 +4265,7 @@
         "reset": "Filter zurücksetzen",
         "typeHint": "Wodurch der Versand angestossen wurde.",
         "channel": "Versand",
-        "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «Manuelle Sendungen» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."
+        "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «Manuelle Mitteilungen» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."
       },
       "types": {
         "subscriptionFlow": "Abo-E-Mail",
@@ -4049,10 +4275,10 @@
       },
       "error": "Fehler",
       "typeDescriptions": {
-        "manual": "Von Hand über «Manuelle Sendungen» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
-        "subscriptionFlow": "Zeitgesteuert aus «Automatische E-Mails», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
+        "manual": "Von Hand über «Manuelle Mitteilungen» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
+        "subscriptionFlow": "Zeitgesteuert aus «Automatische Mitteilungen», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
         "userFlow": "Sofort ausgelöst durch eine konkrete Aktion oder ein Ereignis. Beispiele: Login-Link angefordert, E-Mail-Adresse geändert, Zahlung für die Verlängerung fehlgeschlagen.",
-        "systemMail": "Konto-E-Mails, konfiguriert unter «Automatische E-Mails» im Abschnitt «Konto & Login». Beispiele: Willkommens-E-Mail nach Registrierung, Passwort zurücksetzen."
+        "systemMail": "Konto-E-Mails, konfiguriert unter «Automatische Mitteilungen» im Abschnitt «Konto & Login». Beispiele: Willkommens-E-Mail nach Registrierung, Passwort zurücksetzen."
       },
       "errorHelp": {
         "causeTitle": "Was ist passiert?",
@@ -4092,7 +4318,7 @@
         },
         "templateMissing": {
           "cause": "Die verwendete Sendungsvorlage existiert nicht mehr.",
-          "fix": "Wähle unter «Sendungsvorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
+          "fix": "Wähle unter «Mitteilungsvorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
         },
         "generic": {
           "cause": "Der E-Mail-Server hat den Versand mit der unten stehenden Meldung abgelehnt.",
@@ -4167,17 +4393,18 @@
     },
     "userMail": {
       "sendTitle": "E-Mail senden",
-      "logTitle": "Abgeschlossene Sendungen",
+      "logTitle": "Gesendete Mitteilungen",
       "customOnlyHint": "An einen einzelnen Benutzer können nur benutzerdefinierte Vorlagen gesendet werden.",
       "selectTemplate": "Vorlage auswählen",
       "send": "Senden",
       "sent": "E-Mail gesendet",
-      "title": "E-Mails"
+      "title": "E-Mails",
+      "titleWithLetters": "Mitteilungen"
     },
     "mailJobs": {
       "created": "Gestartet",
       "template": "Vorlage",
-      "audience": "Empfängergruppe",
+      "audience": "Zielgruppe",
       "state": "Status",
       "progress": "Fortschritt",
       "details": "Details",
@@ -4213,6 +4440,14 @@
         "failed": "Fehlgeschlagen",
         "sending": "In Zustellung",
         "interrupted": "Unterbrochen"
+      },
+      "outcome": {
+        "title": "Ergebnis",
+        "hint": "Zustellstatus und Klicks meldet der Mail-Provider – Bounces oft erst nach Stunden oder Tagen. «Nicht erreichbar» zählt die Empfänger:innen, deren Adresse inzwischen als nicht erreichbar gilt. «Status aktualisieren» holt nach, was der Provider noch nicht gemeldet hat.",
+        "delivered": "Zugestellt",
+        "bounced": "Bounces / abgelehnt",
+        "dead": "Nicht erreichbar",
+        "clicked": "Geklickt"
       },
       "recipientState": {
         "pending": "Ausstehend",
@@ -4599,7 +4834,7 @@
     },
     "letterLayouts": {
       "title": "Briefpapier",
-      "intro": "Kopf- und Fusszeile für gedruckte Briefe. Sendungsvorlagen drucken auf dem Standard-Briefpapier, sofern sie kein eigenes wählen.",
+      "intro": "Kopf- und Fusszeile für gedruckte Briefe. Mitteilungsvorlagen drucken auf dem Standard-Briefpapier, sofern sie kein eigenes wählen.",
       "create": "Briefpapier erstellen",
       "createHeader": "Briefpapier erstellen",
       "editHeader": "Briefpapier bearbeiten",

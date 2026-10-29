@@ -83,6 +83,65 @@ the feature is off — the api refuses it then. Locally: `WEP_FEATURES=paper-let
 Renders letters to pdf. One `settings.pdfrenderer` row; editors switch by its
 `type` (which clears the other type's credentials).
 
+### Letters instead of mails per user (`paper-letter-flow`)
+
+Automated subscription mails can reach a user as a printed letter. The pieces:
+
+- `UserDeliveryPreference` (`user_delivery_preferences`): per user `channel`
+  mail|letter, `origin` manual|suggestion, reason, who/when. No row = mail.
+  Service `libs/membership/api/src/lib/delivery-mode/`, permission
+  `CanManageUserDeliveryMode`, resolver gated by both letter features.
+- `SubscriptionInterval.sendAsLetter`: only events switched on in the flow
+  editor («Auch per Brief») print; user-flow mails (login, password, email
+  change) never do. The three senders (periodic job, legacy `member-context`,
+  renewal success) pass it as `asLetter` into `MailController`.
+- `MailController.sendMail` (`libs/mail/api`) branches before mailing when
+  `asLetter`, the user prefers letters and the `LETTER_SENDER` is configured;
+  it reloads the user with address and falls back to mail without a usable
+  one. The letter is logged under the same `mailIdentifier`/`type` as a mail
+  would be, so retried runs skip it. A failed print throws
+  `LetterDeliveryError`; the periodic job steps over it.
+- `LETTER_SENDER` is a `GatedLetterSender` from `LettersModule`
+  (`libs/letter/api`): `isConfigured()` = `paper-letters` && `paper-letter-flow`
+  && letter integration configured. The feature keys live only there and in
+  the resolvers/editor gates.
+- Print options for unattended sends come from `SettingLetterProvider.default*`
+  (editor → Integrations → Briefversand), over `DEFAULT_PRINT`
+  (`letter-print-defaults.ts`).
+- Nothing switches on its own: the nightly `DeliverySuggestionService`
+  (after email quality) rebuilds `user_delivery_suggestions` — dead or
+  placeholder address with a usable postal address → `toLetter`;
+  suggestion-made letter users that became `active` → `toMail`; manual
+  decisions are never suggested again, in either direction. A suggestion is
+  answered with `confirmDeliverySuggestion` (re-validated; a stale one is
+  dropped and refused) or `keepDeliverySuggestion`, which stores the user's
+  current channel as a manual decision with reason `kept` — that is what makes
+  «Beibehalten» survive the nightly recompute without a column of its own.
+- Editor: one area, «Zustellkanal», at `/deliverychannel/:view`
+  (`libs/membership/editor/src/lib/delivery-mode/delivery-channel-page.tsx`,
+  `/deliverysuggestions` redirects). Views: `overview` (default; counts per
+  channel from `deliveryChannelCounts`, the people of one channel from
+  `usersByDeliveryChannel`, open suggestions, how many flow events print),
+  `suggestions` (a card per move, Übernehmen / Beibehalten), `assign` (a
+  three-step wizard over the send tool's `AudienceFilter`; the send page hands
+  its audience over through `location.state`), `history`. The user page card
+  switches one person and answers their `userDeliverySuggestion`. Reads need
+  `CanGetUsers` (`CanGetUser` per user), writes `CanManageUserDeliveryMode`.
+  Everything the editor knows about a channel (label, icon, default, needs a
+  postal address, which move a suggestion kind is) sits in `channels.ts`; the
+  api still speaks `toLetter|toMail`.
+- Every audience switch is recorded in `DeliveryModeBulkChange`
+  (`user_delivery_bulk_changes`: channel, the `MailAudienceInput` as JSON,
+  counts, who, when; query `deliveryModeBulkChanges(channel?)`), because the
+  preference rows only keep their last change. The history view lists them
+  with the filter read back as phrases (`describeAudience`, names through
+  `useAudienceLookups`, shared with the wizard's review step).
+- `MailAudienceInput.mailHistory` filters any base by the mail log:
+  `{ match: all|any, conditions: [{ mailTemplateId, negate, states?, channel?, from?, to? }] }`.
+  Built in `mail-send-recipient.service.ts` as `mailSent: { some | none }`
+  on the user (`none` for «not sent», never `NOT`, so people without any mail
+  stay in), ANDed with the email segments through `buildUserLevelWhere`.
+
 - Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
 - Cloudflare Browser Rendering
 

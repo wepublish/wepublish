@@ -1243,6 +1243,112 @@ export type DeletePollVotesResult = {
   count: Scalars['Int']['output'];
 };
 
+export type DeliveryChannelCount = {
+  __typename?: 'DeliveryChannelCount';
+  channel: MailChannel;
+  /** People on this channel; mail also counts everyone without a decision. */
+  userCount: Scalars['Int']['output'];
+};
+
+/** One person and how their messages reach them. */
+export type DeliveryChannelUserModel = {
+  __typename?: 'DeliveryChannelUserModel';
+  /** Whether the postal address is complete enough for letters; letters cannot be chosen otherwise. */
+  canReceiveLetters: Scalars['Boolean']['output'];
+  changedAt?: Maybe<Scalars['DateTime']['output']>;
+  changedBy?: Maybe<MailLogRecipient>;
+  /** How automated subscription mails reach this user. */
+  channel: MailChannel;
+  /** How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen. */
+  emailSegment: MailEmailSegment;
+  origin?: Maybe<DeliveryPreferenceOrigin>;
+  reason?: Maybe<Scalars['String']['output']>;
+  user: MailLogRecipient;
+};
+
+export type DeliveryModeAudiencePreview = {
+  __typename?: 'DeliveryModeAudiencePreview';
+  /** How the people split by email segment. */
+  segments: Array<MailSegmentCount>;
+  /** People in the audience. */
+  userCount: Scalars['Int']['output'];
+  /** People without a usable postal address; they are skipped when moving to letters. */
+  withoutAddressCount: Scalars['Int']['output'];
+};
+
+/** One bulk switch of an audience, kept for the record with the filter that chose them. */
+export type DeliveryModeBulkChangeModel = {
+  __typename?: 'DeliveryModeBulkChangeModel';
+  /** The MailAudienceInput that was applied. */
+  audience: Scalars['JSONObject']['output'];
+  changed: Scalars['Int']['output'];
+  changedBy?: Maybe<MailLogRecipient>;
+  channel: MailChannel;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  skippedWithoutAddress: Scalars['Int']['output'];
+  /** People the filter matched. */
+  userCount: Scalars['Int']['output'];
+};
+
+export type DeliveryModeBulkResult = {
+  __typename?: 'DeliveryModeBulkResult';
+  changed: Scalars['Int']['output'];
+  skippedWithoutAddress: Scalars['Int']['output'];
+};
+
+/** manual: set by an admin, final until an admin changes it. suggestion: set by confirming a suggestion, may be suggested back. */
+export enum DeliveryPreferenceOrigin {
+  Manual = 'manual',
+  Suggestion = 'suggestion'
+}
+
+export type DeliverySuggestionConfirmAllResult = {
+  __typename?: 'DeliverySuggestionConfirmAllResult';
+  confirmed: Scalars['Int']['output'];
+  /** Suggestions that no longer applied. */
+  skipped: Scalars['Int']['output'];
+};
+
+export type DeliverySuggestionCounts = {
+  __typename?: 'DeliverySuggestionCounts';
+  toLetter: Scalars['Int']['output'];
+  toMail: Scalars['Int']['output'];
+};
+
+export type DeliverySuggestionEmailQuality = {
+  __typename?: 'DeliverySuggestionEmailQuality';
+  level: EmailQualityLevel;
+  reason: Scalars['String']['output'];
+  since: Scalars['DateTime']['output'];
+};
+
+/** toLetter: move to printed letters. toMail: move back to mail. */
+export enum DeliverySuggestionKind {
+  ToLetter = 'toLetter',
+  ToMail = 'toMail'
+}
+
+export type DeliverySuggestionModel = {
+  __typename?: 'DeliverySuggestionModel';
+  /** Suggested since. */
+  createdAt: Scalars['DateTime']['output'];
+  emailQuality?: Maybe<DeliverySuggestionEmailQuality>;
+  id: Scalars['String']['output'];
+  kind: DeliverySuggestionKind;
+  /** Why, e.g. emailQuality:dead or placeholderEmail. */
+  reason: Scalars['String']['output'];
+  user: MailLogRecipient;
+};
+
+export type DeliverySuggestionRecomputeResult = {
+  __typename?: 'DeliverySuggestionRecomputeResult';
+  /** Suggestions that no longer apply. */
+  removed: Scalars['Int']['output'];
+  toLetter: Scalars['Int']['output'];
+  toMail: Scalars['Int']['output'];
+};
+
 export type DiscountCode = HasMemberPlanLc & {
   __typename?: 'DiscountCode';
   code: Scalars['String']['output'];
@@ -1327,6 +1433,24 @@ export enum EditorBlockType {
   TeaserSlots = 'TeaserSlots',
   Title = 'Title'
 }
+
+/** active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed. */
+export enum EmailQualityLevel {
+  Active = 'active',
+  Dead = 'dead',
+  Unknown = 'unknown',
+  Unresponsive = 'unresponsive'
+}
+
+export type EmailQualityRefreshModel = {
+  __typename?: 'EmailQualityRefreshModel';
+  /** Mails that were still in an open state and could be looked up at the provider. */
+  checked: Scalars['Int']['output'];
+  /** People whose email level was re-evaluated. */
+  recomputed: Scalars['Int']['output'];
+  /** Mails whose state the provider reported differently. */
+  updated: Scalars['Int']['output'];
+};
 
 export type Event = {
   __typename?: 'Event';
@@ -2239,6 +2363,8 @@ export type MailAudienceInput = {
   base: MailRecipientBase;
   /** Restrict to placeholder or real email addresses. Defaults to all. */
   emailFilter?: InputMaybe<MailEmailFilter>;
+  /** Restrict to people in any of these email segments. Empty or absent means everyone. */
+  emailSegments?: InputMaybe<Array<MailEmailSegment>>;
   /** Win-back audience only: start of an explicit period the subscription ended in. */
   endedFrom?: InputMaybe<Scalars['DateTime']['input']>;
   /** Win-back audience only: end of an explicit period the subscription ended in. */
@@ -2255,6 +2381,8 @@ export type MailAudienceInput = {
   isCanceled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered. */
   isPaid?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Applies to every base: which mails the person did or did not receive. An empty list means no restriction. */
+  mailHistory?: InputMaybe<MailHistoryFilterInput>;
   /** Restrict to subscriptions of these member plans. */
   memberPlanIDs?: InputMaybe<Array<Scalars['String']['input']>>;
   paymentMethodID?: InputMaybe<Scalars['String']['input']>;
@@ -2276,6 +2404,42 @@ export enum MailEmailFilter {
   All = 'all',
   Placeholder = 'placeholder',
   Real = 'real'
+}
+
+/** placeholder: generated address, reachable by letter only. dead: bounced, invalid, complained or unsubscribed. unresponsive: mails delivered, no login or click for a long time. unknown: nothing decided yet. active: logged in or clicked recently. */
+export enum MailEmailSegment {
+  Active = 'active',
+  Dead = 'dead',
+  Placeholder = 'placeholder',
+  Unknown = 'unknown',
+  Unresponsive = 'unresponsive'
+}
+
+export type MailHistoryCondition = {
+  /** Only mails sent on this channel. Absent means either. */
+  channel?: InputMaybe<MailChannel>;
+  /** Sent on or after. */
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The mail template that was, or was not, sent. */
+  mailTemplateId: Scalars['String']['input'];
+  /** true: keeps people who did NOT receive such a mail, including people with no mail at all. */
+  negate?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Only mails that ended in one of these states. Empty or absent means any. */
+  states?: InputMaybe<Array<MailLogState>>;
+  /** Sent on or before. */
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type MailHistoryFilterInput = {
+  conditions: Array<MailHistoryCondition>;
+  /** Defaults to all. */
+  match?: InputMaybe<MailHistoryMatch>;
+};
+
+/** all: every condition must hold (AND). any: one condition suffices (OR). */
+export enum MailHistoryMatch {
+  All = 'all',
+  Any = 'any'
 }
 
 export type MailLogFilter = {
@@ -2371,6 +2535,12 @@ export enum MailRecipientBase {
   NoActiveSubscription = 'noActiveSubscription'
 }
 
+export type MailSegmentCount = {
+  __typename?: 'MailSegmentCount';
+  segment: MailEmailSegment;
+  userCount: Scalars['Int']['output'];
+};
+
 export enum MailSendAudience {
   AllUsers = 'allUsers',
   FilteredSubscriptions = 'filteredSubscriptions',
@@ -2401,6 +2571,8 @@ export type MailSendJobModel = {
   mailTemplate?: Maybe<MailLogTemplate>;
   mailTemplateId: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
+  /** What became of the mails after sending. Bounces arrive over hours or days; refresh to pull late ones. */
+  outcome: MailSendJobOutcome;
   /** How often the job was picked up again after an interruption. */
   resumeCount: Scalars['Int']['output'];
   /** Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own. */
@@ -2409,6 +2581,18 @@ export type MailSendJobModel = {
   startedAt?: Maybe<Scalars['DateTime']['output']>;
   status: MailSendJobState;
   totalCount: Scalars['Int']['output'];
+};
+
+export type MailSendJobOutcome = {
+  __typename?: 'MailSendJobOutcome';
+  /** Mails that bounced or were rejected by the provider. */
+  bounced: Scalars['Int']['output'];
+  /** Mails somebody clicked a link in. */
+  clicked: Scalars['Int']['output'];
+  /** Recipients whose address counts as dead by now, from this or a later mail. */
+  dead: Scalars['Int']['output'];
+  /** Mails the provider reported as delivered. */
+  delivered: Scalars['Int']['output'];
 };
 
 export type MailSendJobRecipientModel = {
@@ -2466,6 +2650,8 @@ export type MailSendPreviewModel = {
 export type MailSendRecipientModel = {
   __typename?: 'MailSendRecipientModel';
   email: Scalars['String']['output'];
+  /** Which email segment the recipient falls into. */
+  emailSegment: MailEmailSegment;
   firstName?: Maybe<Scalars['String']['output']>;
   /** Whether the user has a postal address a letter can be sent to. A letter send skips recipients without one. */
   hasAddress: Scalars['Boolean']['output'];
@@ -2483,6 +2669,8 @@ export type MailSendRecipientPreview = {
   allowsSubscriptionTemplates: Scalars['Boolean']['output'];
   /** Number of messages that would be sent over the given channel. A letter send reaches every person once, so it equals `userCount`. */
   count: Scalars['Int']['output'];
+  /** How the people of this audience split into email segments, ignoring the segments picked, so the split stays visible while choosing. */
+  segments: Array<MailSegmentCount>;
   /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
   userCount: Scalars['Int']['output'];
   /** How many of the recipients have no usable postal address and would be skipped by a letter send. */
@@ -3121,8 +3309,12 @@ export type Mutation = {
   changeSubscriptionPaymentMethod: StartedSubscriptionPaymentMethodChange;
   /** Asks the payment provider whether the reader finished paying or authorizing, for when they return before the provider reported it. */
   checkSubscriptionPaymentMethodChange: SubscriptionPaymentMethodChange;
+  /** Apply every open suggestion of a direction */
+  confirmAllDeliverySuggestions: DeliverySuggestionConfirmAllResult;
   /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
   confirmChangelogEntry: ChangelogEntry;
+  /** Apply one suggestion; refused when it no longer holds */
+  confirmDeliverySuggestion: Scalars['Boolean']['output'];
   /** Confirms a pending email change for the logged-in user. */
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
@@ -3371,6 +3563,8 @@ export type Mutation = {
   importPeerArticle: Article;
   /** Imports a subscription. */
   importSubscription: PublicSubscription;
+  /** Decline one suggestion: the user stays on their channel as a manual decision, never suggested again */
+  keepDeliverySuggestion: Scalars['Boolean']['output'];
   /** Likes an article. */
   likeArticle: Article;
   /** Marks an invoice as paid. */
@@ -3388,6 +3582,10 @@ export type Mutation = {
   reactivateSubscription: PublicSubscription;
   /** Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created. */
   reactivateUserSubscription: PublicSubscription;
+  /** Rebuild the suggestions now instead of waiting for the night */
+  recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult;
+  /** Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now. */
+  refreshEmailQuality: EmailQualityRefreshModel;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Rejects a comment */
@@ -3433,8 +3631,12 @@ export type Mutation = {
   sendTestMailTemplate?: Maybe<Scalars['Boolean']['output']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String']['output'];
+  /** Switch everyone in an audience; letters skip people without a usable address */
+  setDeliveryModeForAudience: DeliveryModeBulkResult;
   /** Stores which customer of a payment provider each user is (for bexio the contact id), replacing the user's previous one of that provider; up to 500 users per call. Users that do not exist are skipped. Returns how many users were updated. */
   setPaymentProviderCustomers: Scalars['Int']['output'];
+  /** Switch a user between mailed and printed subscription mails */
+  setUserDeliveryMode: UserDeliveryPreferenceModel;
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
@@ -3637,9 +3839,19 @@ export type MutationCheckSubscriptionPaymentMethodChangeArgs = {
 };
 
 
+export type MutationConfirmAllDeliverySuggestionsArgs = {
+  kind: DeliverySuggestionKind;
+};
+
+
 export type MutationConfirmChangelogEntryArgs = {
   id: Scalars['String']['input'];
   locale?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationConfirmDeliverySuggestionArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -3849,6 +4061,10 @@ export type MutationCreateLetterProviderSettingArgs = {
   autoSend?: InputMaybe<Scalars['Boolean']['input']>;
   clientId?: InputMaybe<Scalars['String']['input']>;
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  defaultAddressPosition?: InputMaybe<LetterAddressPosition>;
+  defaultDeliveryProduct?: InputMaybe<LetterDeliveryProduct>;
+  defaultPrintMode?: InputMaybe<LetterPrintMode>;
+  defaultPrintSpectrum?: InputMaybe<LetterPrintSpectrum>;
   environment?: InputMaybe<LetterProviderEnvironment>;
   id: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
@@ -4111,6 +4327,7 @@ export type MutationCreateSubscriptionIntervalArgs = {
   daysAwayFromEnding?: InputMaybe<Scalars['Int']['input']>;
   event: SubscriptionEvent;
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  sendAsLetter?: InputMaybe<Scalars['Boolean']['input']>;
   subscriptionFlowId: Scalars['String']['input'];
 };
 
@@ -4522,6 +4739,11 @@ export type MutationImportSubscriptionArgs = {
 };
 
 
+export type MutationKeepDeliverySuggestionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationLikeArticleArgs = {
   id: Scalars['String']['input'];
 };
@@ -4688,9 +4910,22 @@ export type MutationSendWebsiteLoginArgs = {
 };
 
 
+export type MutationSetDeliveryModeForAudienceArgs = {
+  audience: MailAudienceInput;
+  channel: MailChannel;
+};
+
+
 export type MutationSetPaymentProviderCustomersArgs = {
   customers: Array<PaymentProviderCustomerInput>;
   paymentProviderId: Scalars['String']['input'];
+};
+
+
+export type MutationSetUserDeliveryModeArgs = {
+  channel: MailChannel;
+  reason?: InputMaybe<Scalars['String']['input']>;
+  userId: Scalars['String']['input'];
 };
 
 
@@ -4946,6 +5181,10 @@ export type MutationUpdateLetterProviderSettingArgs = {
   autoSend?: InputMaybe<Scalars['Boolean']['input']>;
   clientId?: InputMaybe<Scalars['String']['input']>;
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  defaultAddressPosition?: InputMaybe<LetterAddressPosition>;
+  defaultDeliveryProduct?: InputMaybe<LetterDeliveryProduct>;
+  defaultPrintMode?: InputMaybe<LetterPrintMode>;
+  defaultPrintSpectrum?: InputMaybe<LetterPrintSpectrum>;
   environment?: InputMaybe<LetterProviderEnvironment>;
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -5208,6 +5447,7 @@ export type MutationUpdateSubscriptionIntervalArgs = {
   daysAwayFromEnding?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['String']['input'];
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  sendAsLetter?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -5734,6 +5974,24 @@ export type PaginatedComments = {
   __typename?: 'PaginatedComments';
   nodes: Array<Comment>;
   pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedDeliveryChannelUsers = {
+  __typename?: 'PaginatedDeliveryChannelUsers';
+  nodes: Array<DeliveryChannelUserModel>;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedDeliveryModeBulkChanges = {
+  __typename?: 'PaginatedDeliveryModeBulkChanges';
+  nodes: Array<DeliveryModeBulkChangeModel>;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedDeliverySuggestions = {
+  __typename?: 'PaginatedDeliverySuggestions';
+  nodes: Array<DeliverySuggestionModel>;
   totalCount: Scalars['Int']['output'];
 };
 
@@ -6568,6 +6826,16 @@ export type Query = {
    *
    */
   dailySubscriptionStats: Array<DailySubscriptionStats>;
+  /** How many people each channel reaches, the default channel first */
+  deliveryChannelCounts: Array<DeliveryChannelCount>;
+  /** What switching an audience's delivery mode would touch */
+  deliveryModeAudiencePreview: DeliveryModeAudiencePreview;
+  /** Recent bulk switches of an audience's delivery mode, newest first */
+  deliveryModeBulkChanges: PaginatedDeliveryModeBulkChanges;
+  /** How many suggestions are open, per direction */
+  deliverySuggestionCounts: DeliverySuggestionCounts;
+  /** Open suggestions to move users to letters or back to mail */
+  deliverySuggestions: PaginatedDeliverySuggestions;
   /** Returns an discountCode by id or discountCode. */
   discountCode: DiscountCode;
   /** This query returns a list of discountCodes */
@@ -6867,6 +7135,10 @@ export type Query = {
    *
    */
   userConsents: Array<UserConsent>;
+  /** How a user's automated subscription mails are delivered */
+  userDeliveryPreference: UserDeliveryPreferenceModel;
+  /** The open suggestion for one user, if any */
+  userDeliverySuggestion?: Maybe<DeliverySuggestionModel>;
   /** Get all invoices for the authenticated user */
   userInvoices: Array<Invoice>;
   userPollVote?: Maybe<Scalars['String']['output']>;
@@ -6878,6 +7150,8 @@ export type Query = {
   userSubscriptions: Array<PublicSubscription>;
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
+  /** The people on one channel, by name, with how they got there */
+  usersByDeliveryChannel: PaginatedDeliveryChannelUsers;
   versionInformation: VersionInformation;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
@@ -7094,6 +7368,26 @@ export type QueryDailySubscriptionStatsArgs = {
   end?: InputMaybe<Scalars['DateTime']['input']>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
   start: Scalars['DateTime']['input'];
+};
+
+
+export type QueryDeliveryModeAudiencePreviewArgs = {
+  audience: MailAudienceInput;
+  channel: MailChannel;
+};
+
+
+export type QueryDeliveryModeBulkChangesArgs = {
+  channel?: InputMaybe<MailChannel>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryDeliverySuggestionsArgs = {
+  kind: DeliverySuggestionKind;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -7745,6 +8039,16 @@ export type QueryUserConsentsArgs = {
 };
 
 
+export type QueryUserDeliveryPreferenceArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
+export type QueryUserDeliverySuggestionArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
 export type QueryUserPollVoteArgs = {
   pollId: Scalars['String']['input'];
 };
@@ -7772,6 +8076,14 @@ export type QueryUsersArgs = {
   skip?: Scalars['Int']['input'];
   sort?: UserSort;
   take?: Scalars['Int']['input'];
+};
+
+
+export type QueryUsersByDeliveryChannelArgs = {
+  channel: MailChannel;
+  search?: InputMaybe<Scalars['String']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {
@@ -7866,6 +8178,8 @@ export type SensitiveDataUser = BaseUser & {
   birthday?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
+  /** How usable the address is, derived from bounces, logins and clicks. Null until evaluated, which counts as unknown. */
+  emailQuality?: Maybe<UserEmailQualityModel>;
   emailVerifiedAt?: Maybe<Scalars['DateTime']['output']>;
   firstName?: Maybe<Scalars['String']['output']>;
   flair?: Maybe<Scalars['String']['output']>;
@@ -8027,6 +8341,10 @@ export type SettingLetterProvider = SettingProvider & {
   autoSend: Scalars['Boolean']['output'];
   clientId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  defaultAddressPosition?: Maybe<LetterAddressPosition>;
+  defaultDeliveryProduct?: Maybe<LetterDeliveryProduct>;
+  defaultPrintMode?: Maybe<LetterPrintMode>;
+  defaultPrintSpectrum?: Maybe<LetterPrintSpectrum>;
   environment: LetterProviderEnvironment;
   id: Scalars['String']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
@@ -8076,6 +8394,8 @@ export enum SettingName {
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  EmailQualityMinMailsForUnresponsive = 'EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE',
+  EmailQualityUnresponsiveAfterDays = 'EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS',
   MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
@@ -8505,6 +8825,8 @@ export type SubscriptionInterval = {
   event: SubscriptionEvent;
   id: Scalars['String']['output'];
   mailTemplate?: Maybe<MailTemplateRef>;
+  /** Users in letter mode get this event printed instead of mailed. */
+  sendAsLetter: Scalars['Boolean']['output'];
 };
 
 /** A reader's request to move a subscription to another payment method. The subscription keeps its current payment method until the change is completed. */
@@ -9002,6 +9324,29 @@ export type UserCreatedAction = BaseAction & HasUserLc & {
   date: Scalars['DateTime']['output'];
   user: User;
   userId: Scalars['String']['output'];
+};
+
+export type UserDeliveryPreferenceModel = {
+  __typename?: 'UserDeliveryPreferenceModel';
+  /** Whether the postal address is complete enough for letters; letters cannot be chosen otherwise. */
+  canReceiveLetters: Scalars['Boolean']['output'];
+  changedAt?: Maybe<Scalars['DateTime']['output']>;
+  changedBy?: Maybe<MailLogRecipient>;
+  /** How automated subscription mails reach this user. */
+  channel: MailChannel;
+  /** How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen. */
+  emailSegment: MailEmailSegment;
+  origin?: Maybe<DeliveryPreferenceOrigin>;
+  reason?: Maybe<Scalars['String']['output']>;
+};
+
+export type UserEmailQualityModel = {
+  __typename?: 'UserEmailQualityModel';
+  level: EmailQualityLevel;
+  /** The deciding evidence, e.g. hardBounce or login. */
+  reason: Scalars['String']['output'];
+  /** When the level was first reached. */
+  since: Scalars['DateTime']['output'];
 };
 
 export enum UserEvent {
