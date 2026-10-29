@@ -3,7 +3,7 @@ import {
   SettingLetterProvider,
 } from '@prisma/client';
 import bodyParser from 'body-parser';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 import { NextHandleFunction } from 'connect';
 import {
   AddressPosition,
@@ -100,7 +100,7 @@ const LETTER_STATES: Record<string, LetterState> = {
   cancelled: LetterState.canceled,
 };
 
-export interface RawBodyRequest extends express.Request {
+export interface RawBodyRequest extends NodeRequest {
   rawBody?: Buffer;
 }
 
@@ -369,7 +369,7 @@ export class PingenLetterProvider extends BaseLetterProvider {
     ];
   }
 
-  private signatureHeader(req: express.Request): string {
+  private signatureHeader(req: NodeRequest): string {
     for (const header of SIGNATURE_HEADERS) {
       const value = req.headers[header];
 
