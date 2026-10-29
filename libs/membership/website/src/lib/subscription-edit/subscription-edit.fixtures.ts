@@ -141,7 +141,10 @@ const story = (
   overrides: Partial<FullSubscriptionFragment> = {}
 ): SubscriptionEditFixture => ({
   props: {
-    data: { __typename: 'Query', userSubscriptions: [{ ...subscription, ...overrides }] },
+    data: {
+      __typename: 'Query',
+      userSubscriptions: [{ ...subscription, ...overrides }],
+    },
     invoices: {
       data: { __typename: 'Query', userInvoices: invoices },
       loading: false,

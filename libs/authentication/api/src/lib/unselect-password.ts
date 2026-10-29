@@ -22,6 +22,13 @@ export const unselectPassword: Record<
     | 'changelogConfirmations'
     | 'notificationReads'
     | 'notificationConfirmations'
+    | 'loginCodes'
+    | 'emailQuality'
+    | 'emailQualityEvents'
+    | 'deliveryPreference'
+    | 'deliverySuggestion'
+    | 'deliveryPreferenceChanges'
+    | 'deliveryModeBulkChanges'
     | 'seoChecklistItems'
     | 'apiTokens'
   >,
@@ -38,6 +45,7 @@ export const unselectPassword: Record<
   emailVerifiedAt: true,
   pendingEmail: true,
   pendingEmailAt: true,
+  pendingEmailTokenHash: false,
   name: true,
   firstName: true,
   flair: true,

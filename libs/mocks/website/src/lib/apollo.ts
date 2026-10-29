@@ -11,11 +11,14 @@ import {
   ChallengeDocument,
   ChallengeQuery,
   CheckLoginOtpDocument,
+  CurrentSessionDocument,
+  CurrentSessionQuery,
   FullBannerFragment,
   FullPeerProfileFragment,
   FullSettingFragment,
   PeerProfileDocument,
   PrimaryBannerDocument,
+  SessionOrigin,
   SettingListDocument,
 } from '@wepublish/website/api';
 import type { GraphQLFormattedError } from 'graphql';
@@ -92,6 +95,28 @@ export const mockCheckLoginOtpQuery = (checkLoginOtp = false) =>
     variables: anyVariables,
     maxUsageCount: Number.POSITIVE_INFINITY,
     data: { __typename: 'Query', checkLoginOtp },
+  });
+
+export const mockCurrentSessionQuery = (
+  overrides: Partial<CurrentSessionQuery['currentSession']> = {}
+) =>
+  mockOperation(CurrentSessionDocument, {
+    variables: anyVariables,
+    maxUsageCount: Number.POSITIVE_INFINITY,
+    data: {
+      __typename: 'Query',
+      currentSession: {
+        __typename: 'SessionInfo',
+        origin: SessionOrigin.Password,
+        restricted: false,
+        placeholderEmail: false,
+        secondFactor: 'none',
+        canReplaceEmail: false,
+        createdAt: '2026-01-01T00:00:00.000Z',
+        expiresAt: '2030-01-01T00:00:00.000Z',
+        ...overrides,
+      },
+    },
   });
 
 export const mockMutationResult = <TData>(

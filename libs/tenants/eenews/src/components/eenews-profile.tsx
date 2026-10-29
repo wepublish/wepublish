@@ -1,5 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client/react';
-import { useApolloClient } from '@apollo/client/react';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { SubscriptionListContainer } from '@wepublish/membership/website';
@@ -7,13 +6,9 @@ import {
   PersonalDataFormContainer,
   TotpSetupContainer,
 } from '@wepublish/user/website';
-import {
-  ConfirmEmailChangeDocument,
-  SubscriptionsDocument,
-} from '@wepublish/website/api';
+import { SubscriptionsDocument } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { OpenInvoicesCard } from './eenews-open-invoices';
@@ -58,30 +53,6 @@ export const EenewsProfile = () => {
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const router = useRouter();
-  const client = useApolloClient();
-  const [confirmEmailChange, { data: confirmData, error: confirmError }] =
-    useMutation(ConfirmEmailChangeDocument);
-
-  useEffect(() => {
-    const newEmail = router.query.confirmEmailChange as string | undefined;
-
-    if (newEmail) {
-      const { confirmEmailChange: _, jwt: __, ...query } = router.query;
-      confirmEmailChange({ variables: { newEmail } })
-        .then(async () => {
-          await router.replace({ pathname: '/profile', query }, undefined, {
-            shallow: true,
-          });
-          await client.refetchQueries({ include: ['Me'] });
-        })
-        .catch(async () => {
-          await router.replace({ pathname: '/profile', query }, undefined, {
-            shallow: true,
-          });
-        });
-    }
-  }, [router.query.confirmEmailChange, confirmEmailChange, router, client]);
-
   const { data: subscriptionData } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
   });
@@ -94,10 +65,9 @@ export const EenewsProfile = () => {
 
   return (
     <Page>
-      {confirmData && (
+      {router.query.emailConfirmed && (
         <Alert severity="success">{t('user.emailChangeConfirmed')}</Alert>
       )}
-      {confirmError && <Alert severity="error">{confirmError.message}</Alert>}
 
       <OpenInvoicesCard />
 

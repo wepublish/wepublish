@@ -3,6 +3,7 @@ import {
   PaymentProviderCustomer,
   SensitiveDataUser,
   UserAddress,
+  UserEmailQualityModel,
   UserSubscriptionOverview,
 } from './user.model';
 import { PrismaClient } from '@prisma/client';
@@ -12,6 +13,7 @@ import { UserRole } from './user-role.model';
 import { User as PUser } from '@prisma/client';
 import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
 import { UserSubscriptionOverviewDataloader } from './user-subscription-overview.dataloader';
+import { UserEmailQualityDataloader } from './user-email-quality.dataloader';
 
 @Resolver(() => SensitiveDataUser)
 export class SensitiveDataUserResolver {
@@ -19,7 +21,8 @@ export class SensitiveDataUserResolver {
     private prisma: PrismaClient,
     private userRoleDataloader: UserRoleDataloader,
     private subscriptionCountDataloader: UserSubscriptionCountDataloader,
-    private subscriptionOverviewDataloader: UserSubscriptionOverviewDataloader
+    private subscriptionOverviewDataloader: UserSubscriptionOverviewDataloader,
+    private emailQualityDataloader: UserEmailQualityDataloader
   ) {}
 
   @ResolveField(() => UserAddress, { nullable: true })
@@ -73,5 +76,10 @@ export class SensitiveDataUserResolver {
   @ResolveField(() => [UserSubscriptionOverview])
   public async subscriptionOverview(@Parent() { id }: SensitiveDataUser) {
     return await this.subscriptionOverviewDataloader.load(id);
+  }
+
+  @ResolveField(() => UserEmailQualityModel, { nullable: true })
+  public async emailQuality(@Parent() { id }: SensitiveDataUser) {
+    return await this.emailQualityDataloader.load(id);
   }
 }

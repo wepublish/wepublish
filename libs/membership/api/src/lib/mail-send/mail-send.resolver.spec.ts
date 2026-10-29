@@ -1,10 +1,13 @@
-import { PrismaClient } from '@prisma/client';
+import { MailChannel, PrismaClient } from '@prisma/client';
 import { UserSession } from '@wepublish/authentication/api';
 import { MailSendResolver } from './mail-send.resolver';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailLogSyncService } from './mail-log-sync.service';
-import { MailRecipientBase } from './mail-send.model';
+import { EmailQualityService } from '../email-quality/email-quality.service';
+import { EmailEvidenceService } from './email-evidence.service';
+import { SuppressionSyncService } from './suppression-sync.service';
+import { MailEmailSegment, MailRecipientBase } from './mail-send.model';
 import type { Mock } from 'vitest';
 
 const session = { user: { id: 'editor-1' } } as UserSession;
@@ -13,16 +16,40 @@ const makeResolver = (
   prisma: any,
   jobService: any = {},
   recipientService: any = {},
-  mailLogSyncService: any = {}
+  mailLogSyncService: any = {},
+  emailQualityService: any = {},
+  emailEvidenceService: any = {},
+  suppressionSyncService: any = {
+    syncSuppressions: async () => ({ listed: 0, recorded: 0 }),
+  }
 ) =>
   new MailSendResolver(
     prisma as PrismaClient,
     jobService as MailSendJobService,
     recipientService as MailSendRecipientService,
-    mailLogSyncService as MailLogSyncService
+    mailLogSyncService as MailLogSyncService,
+    emailQualityService as EmailQualityService,
+    emailEvidenceService as EmailEvidenceService,
+    suppressionSyncService as SuppressionSyncService
   );
 
 describe('MailSendResolver', () => {
+  it('emailEvidence hands out the evidence summary', async () => {
+    const summary = { providerType: null, sources: [] };
+    const resolver = makeResolver(
+      {},
+      {},
+      {},
+      {},
+      {},
+      {
+        summary: vi.fn(async () => summary),
+      }
+    );
+
+    await expect(resolver.emailEvidence()).resolves.toBe(summary);
+  });
+
   // The GraphQL types for these relations are trimmed (`MailLogTemplate` exposes
   // only id+name, `MailLogRecipient` only id/email/name/firstName), so
   // `include: true` fetched whole rows — every template body, and the user's
@@ -82,9 +109,18 @@ describe('MailSendResolver', () => {
 
   it('mailSendRecipientPreview returns both counts and template-eligibility', async () => {
     // Twelve mails, ten people: two of them match through a second subscription.
+    const segments = [
+      { segment: MailEmailSegment.placeholder, userCount: 4 },
+      { segment: MailEmailSegment.dead, userCount: 1 },
+      { segment: MailEmailSegment.unresponsive, userCount: 0 },
+      { segment: MailEmailSegment.unknown, userCount: 3 },
+      { segment: MailEmailSegment.active, userCount: 2 },
+    ];
     const recipientService = {
       count: vi.fn(async () => 12),
       countUsers: vi.fn(async () => 10),
+      countWithoutAddress: vi.fn(async () => 3),
+      countUsersBySegment: vi.fn(async () => segments),
       allowsSubscriptionTemplates: vi.fn(() => true),
     };
 
@@ -97,7 +133,66 @@ describe('MailSendResolver', () => {
     expect(preview).toEqual({
       count: 12,
       userCount: 10,
+      withoutAddressCount: 3,
       allowsSubscriptionTemplates: true,
+      segments,
+    });
+  });
+
+  it('mailSendRecipients lists through the preview order', async () => {
+    // The preview puts the people a letter would skip first; the plain page
+    // is the send order and must stay untouched.
+    const recipientService = {
+      count: vi.fn(async () => 1),
+      resolvePage: vi.fn(),
+      placeholderPatterns: vi.fn(async () => ['@placeholder.neuewege.ch']),
+      resolvePreviewPage: vi.fn(async () => [
+        {
+          user: {
+            id: 'u1',
+            email: 'a@b.ch',
+            name: 'A',
+            address: null,
+            emailQuality: { level: 'dead' },
+          },
+        },
+        {
+          user: {
+            id: 'u2',
+            email: 'nw-2@placeholder.neuewege.ch',
+            name: 'B',
+            address: null,
+            emailQuality: null,
+          },
+        },
+      ]),
+    };
+
+    const result = await makeResolver(
+      {},
+      {},
+      recipientService
+    ).mailSendRecipients(
+      { base: MailRecipientBase.allUsers },
+      0,
+      50,
+      MailChannel.letter
+    );
+
+    expect(recipientService.resolvePreviewPage).toHaveBeenCalledWith(
+      { base: MailRecipientBase.allUsers },
+      0,
+      51,
+      MailChannel.letter
+    );
+    expect(recipientService.resolvePage).not.toHaveBeenCalled();
+    expect(result.nodes[0]).toMatchObject({
+      userId: 'u1',
+      hasAddress: false,
+      emailSegment: MailEmailSegment.dead,
+    });
+    expect(result.nodes[1]).toMatchObject({
+      emailSegment: MailEmailSegment.placeholder,
     });
   });
 
@@ -179,6 +274,68 @@ describe('MailSendResolver', () => {
       expect(result.pageInfo.hasNextPage).toBe(true);
       expect(result.pageInfo.hasPreviousPage).toBe(false);
     });
+  });
+
+  // The feedback loop of a campaign: states a provider reported late, then
+  // the levels. Manual, because the media decide when to look.
+  it('refreshEmailQuality polls the provider and then re-evaluates', async () => {
+    const order: string[] = [];
+    const mailLogSyncService = {
+      syncOpenStates: vi.fn(async () => {
+        order.push('sync');
+
+        return { checked: 5, updated: 2 };
+      }),
+    };
+    const emailQualityService = {
+      recomputeAll: vi.fn(async () => {
+        order.push('recompute');
+
+        return { recomputed: 7 };
+      }),
+    };
+    const suppressionSyncService = {
+      syncSuppressions: vi.fn(async () => {
+        order.push('suppressions');
+
+        return { listed: 0, recorded: 0 };
+      }),
+    };
+
+    await expect(
+      makeResolver(
+        {},
+        {},
+        {},
+        mailLogSyncService,
+        emailQualityService,
+        {},
+        suppressionSyncService
+      ).refreshEmailQuality()
+    ).resolves.toEqual({ checked: 5, updated: 2, recomputed: 7 });
+
+    expect(order).toEqual(['sync', 'suppressions', 'recompute']);
+  });
+
+  it('refreshEmailQuality still re-evaluates when the suppression lists cannot be read', async () => {
+    const emailQualityService = {
+      recomputeAll: vi.fn(async () => ({ recomputed: 1 })),
+    };
+
+    await expect(
+      makeResolver(
+        {},
+        {},
+        {},
+        { syncOpenStates: async () => ({ checked: 0, updated: 0 }) },
+        emailQualityService,
+        {},
+        {
+          syncSuppressions: vi.fn().mockRejectedValue(new Error('Invalid_Key')),
+        }
+      ).refreshEmailQuality()
+    ).resolves.toEqual({ checked: 0, updated: 0, recomputed: 1 });
+    expect(emailQualityService.recomputeAll).toHaveBeenCalled();
   });
 
   describe('mailSendJobs', () => {

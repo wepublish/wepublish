@@ -19,6 +19,7 @@ export * from './next/next-wepublish-link';
 export * from './next/handle-jwt-login';
 export * from './next/routed-admin-bar';
 export * from './next/with-builder-router';
+export * from './next/with-restricted-session-redirect';
 
 export * from './next/pages/404-page';
 export * from './next/pages/author-page';
@@ -30,3 +31,6 @@ export * from './next/pages/profile/profile-details';
 export * from './next/pages/profile/profile-page';
 export * from './next/pages/profile/subscription/subscription-page';
 export * from './next/pages/profile/subscription/deactivated-subscriptions-page';
+export * from './next/pages/confirm-email-page';
+export * from './next/pages/login-code-page';
+export * from './next/pages/welcome/welcome-page';

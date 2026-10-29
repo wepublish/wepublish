@@ -1,6 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { MailLogState, PrismaClient } from '@prisma/client';
-import { MailContext } from '@wepublish/mail/api';
+import {
+  EmailQualityEventSource,
+  MailLogState,
+  PrismaClient,
+} from '@prisma/client';
+import {
+  MailContext,
+  recordEmailQualitySafely,
+  shouldUpdateMailLogState,
+} from '@wepublish/mail/api';
 
 /**
  * States that can still change. Everything else is an end state the provider
@@ -48,14 +56,56 @@ export class MailLogSyncService {
       return { checked: 0, updated: 0 };
     }
 
+    try {
+      const result = await this.poll(provider, limit);
+      await this.notePoll(provider.id, null);
+
+      return result;
+    } catch (error) {
+      await this.notePoll(provider.id, (error as Error).message);
+      throw error;
+    }
+  }
+
+  /**
+   * When the provider was last asked and what went wrong, on its settings
+   * row, so an admin can tell a silent provider from a broken poll.
+   */
+  private async notePoll(providerId: string, error: string | null) {
+    try {
+      await this.prisma.settingMailProvider.update({
+        where: { id: providerId },
+        data: { lastPollAt: new Date(), lastPollError: error },
+      });
+    } catch (noteError) {
+      this.logger.warn(
+        `Could not note the poll on mailProvider ${providerId}: ${
+          (noteError as Error).message
+        }`
+      );
+    }
+  }
+
+  private async poll(
+    provider: NonNullable<MailContext['mailProvider']>,
+    limit: number
+  ): Promise<MailLogSyncResult> {
     // Only mails the provider gave us a handle for can be looked up. SMTP and
     // Slack never return one, so their logs are simply left alone.
+    // Message ids belong to the provider that sent the mail; after switching
+    // providers the old ones cannot be looked up with the new one.
     const logs = await this.prisma.mailLog.findMany({
       where: {
         state: { in: OPEN_STATES },
         mailProviderMessageID: { not: null },
+        mailProviderID: provider.id,
       },
-      select: { id: true, state: true, mailProviderMessageID: true },
+      select: {
+        id: true,
+        state: true,
+        mailProviderMessageID: true,
+        recipientID: true,
+      },
       orderBy: { sentDate: 'desc' },
       take: Math.min(limit, MAX_LIMIT),
     });
@@ -75,8 +125,13 @@ export class MailLogSyncService {
     for (const log of logs) {
       const remote = byMessageID.get(log.mailProviderMessageID as string);
 
-      // Absent (provider no longer knows the id) or unchanged — nothing to do.
-      if (!remote || remote.state === log.state) {
+      // Absent (provider no longer knows the id), unchanged or older than
+      // what a webhook already reported — nothing to do.
+      if (
+        !remote ||
+        remote.state === log.state ||
+        !shouldUpdateMailLogState(log.state, remote.state)
+      ) {
         continue;
       }
 
@@ -85,6 +140,19 @@ export class MailLogSyncService {
         data: { state: remote.state, mailData: remote.mailData },
       });
       updated++;
+
+      if (remote.qualitySignals?.length) {
+        await recordEmailQualitySafely(
+          this.mailContext.emailQualityRecorder,
+          recorder =>
+            recorder.recordMailSignals({
+              mailLogId: log.id,
+              userId: log.recipientID,
+              signals: remote.qualitySignals!,
+              source: EmailQualityEventSource.poll,
+            })
+        );
+      }
     }
 
     this.logger.log(
