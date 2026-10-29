@@ -13,6 +13,7 @@ import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanGetMailLogs, CanSendMailTemplates } from '@wepublish/permissions';
 import {
+  EmailEvidenceModel,
   EmailQualityRefreshModel,
   MailAudienceInput,
   MailLogFilter,
@@ -34,6 +35,8 @@ import {
 } from './mail-send-recipient.service';
 import { MailLogSyncService } from './mail-log-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
+import { EmailEvidenceService } from './email-evidence.service';
+import { SuppressionSyncService } from './suppression-sync.service';
 
 /**
  * `MailLogTemplate` and `MailLogRecipient` expose only these fields, so there is
@@ -53,7 +56,9 @@ export class MailSendResolver {
     private mailSendJobService: MailSendJobService,
     private recipientService: MailSendRecipientService,
     private mailLogSyncService: MailLogSyncService,
-    private emailQualityService: EmailQualityService
+    private emailQualityService: EmailQualityService,
+    private emailEvidenceService: EmailEvidenceService,
+    private suppressionSyncService: SuppressionSyncService
   ) {}
 
   @Permissions(CanSendMailTemplates)
@@ -172,8 +177,7 @@ export class MailSendResolver {
             memberPlanName:
               (
                 result.recipient.subscription?.memberPlan as
-                  | { name?: string }
-                  | undefined
+                  { name?: string } | undefined
               )?.name ?? null,
             hasAddress: canReceiveLetters(result.recipient.user),
             emailSegment: emailSegmentOf(result.recipient.user, patterns),
@@ -377,9 +381,20 @@ export class MailSendResolver {
   })
   async refreshEmailQuality(): Promise<EmailQualityRefreshModel> {
     const synced = await this.mailLogSyncService.syncOpenStates();
+    // The suppression lists are read whole, so a failure here is the
+    // provider's and the recompute is still worth running.
+    await this.suppressionSyncService.syncSuppressions().catch(() => undefined);
     const { recomputed } = await this.emailQualityService.recomputeAll();
 
     return { ...synced, recomputed };
+  }
+
+  @Permissions(CanGetMailLogs)
+  @Query(() => EmailEvidenceModel, {
+    description: `Where the email status comes from: whether and when the mail provider reported anything. The editor warns when no provider evidence arrived for a while.`,
+  })
+  async emailEvidence(): Promise<EmailEvidenceModel> {
+    return this.emailEvidenceService.summary();
   }
 
   private paginate<T extends { id: string }>(

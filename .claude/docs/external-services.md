@@ -63,12 +63,61 @@ The periodic job expires pending changes after
 - Mailchimp — the newsletter editor (`libs/newsletter`, behind the
   `newsletter-editor` feature, `WEP_FEATURES=newsletter-editor` locally) pushes
   drafts, never sends, through the Marketing API key and list of the sync-provider integration
+- Brevo (`brevo-mail-provider.ts`, plain `fetch` against api.brevo.com; mail
+  log id in the `X-Mailin-custom` header; the webhook URL in Brevo carries
+  `?key=<webhookEndpointSecret>` since Brevo signs nothing; blocked contacts
+  are its suppression list, the events endpoint its poll)
 
 Mail, challenge (captcha) and Mailchimp sync run with exactly one provider
 each: the runtime uses the first non-deleted row. Their `create*Setting`
 mutations only succeed while none exists (the editor then shows «Einrichten»),
 and there is no delete mutation, so a medium never ends up without one. Change
 type or credentials on the existing row instead.
+
+### Email quality evidence (what providers tell us about addresses)
+
+Everything lands in `email_quality_events` through `EMAIL_QUALITY_RECORDER`
+(`EmailQualityService`, `libs/membership/api/.../email-quality/`), deduped on
+`providerEventId`; the level in `user_email_quality` is recomputed on record
+and nightly. Sources today:
+
+- Transactional mail provider (one per installation): send-time refusal
+  (Mandrill only), webhook (Mandrill, Mailgun, Brevo; `mail.webhook.ts`),
+  nightly poll of open mail logs (`MailLogSyncService`; Mandrill
+  `messages/info`, Mailgun events API by the Message-Id kept from the send
+  answer, Brevo `smtp/statistics/events`). SMTP, Slack and Log report nothing.
+- Provider suppression lists, nightly after the mail log poll and on the
+  refresh button (`SuppressionSyncService` → `provider.listSuppressions()`):
+  Mandrill's rejects denylist (expired entries included), Mailgun's bounces,
+  complaints and unsubscribes of the sending domain, Brevo's blocked
+  contacts (every reason code blocks transactional mail). Account-wide, so they
+  cover mails sent outside We.Publish. A Mailgun unsubscribe from a tag is
+  `optedOut`; domain-wide (`*`) it is `unsubscribed`. Entries already stored
+  (by `providerEventId`) are skipped so nobody is re-evaluated for nothing.
+- Mailchimp audience, inside the nightly Mailchimp sync (never on a dry run):
+  `cleaned` members → `hardBounce`, `unsubscribed` → `optedOut`
+  (`mailchimp-audience-evidence.ts`), and the clickers of the last 7 days of
+  campaigns → `clicked`, dated by the campaign's send time
+  (`mailchimp-campaign-clicks.ts`). These reach every user with that address.
+- Mailchimp audience webhook, `POST /audience-webhooks/mailchimp/:configId?key=…`
+  (`mailchimp-audience-webhook.ts`, membership lib): `cleaned` → hardBounce
+  (reason `abuse` → spamComplaint), `unsubscribe` → optedOut (`abuse` →
+  spamComplaint), `upemail` only logged. Mailchimp signs nothing, so the URL
+  carries a secret stored encrypted on the sync provider row
+  (`mailchimp_webhookSecret`); the api registers the webhook itself
+  (`registerMailchimpAudienceWebhook`, needs `HOST_URL`, button in the sync
+  integration), keeps `mailchimp_webhookId` and adopts one Mailchimp already
+  has. Mailchimp documents no retry, so the nightly audience pull stays the
+  fallback and the controller answers 200 to anything but a bad key.
+- `optedOut` is not in the evaluator's `DEAD_TYPES`: leaving a newsletter does
+  not make an inbox dead. `unsubscribed` stays dead, because Mandrill and
+  Mailgun refuse every further mail to such an address.
+
+Observability: `SettingMailProvider.lastWebhookAt` (every verified webhook
+call), `lastPollAt` / `lastPollError` (every poll), shown on the mail
+integration; query `emailEvidence` (`CanGetMailLogs`) sums events per source and
+the editor warns on the communication tool and the delivery channel page when
+no provider evidence arrived for `emailQualityEvidenceWarnAfterDays` (14).
 
 ## PDF Renderer
 

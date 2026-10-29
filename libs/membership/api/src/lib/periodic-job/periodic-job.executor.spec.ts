@@ -6,6 +6,7 @@ import {
 import { PeriodicJobExecutor } from './periodic-job.executor';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
 import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
+import { SuppressionSyncService } from '../mail-send/suppression-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
 import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.service';
 
@@ -34,6 +35,11 @@ describe('PeriodicJobExecutor', () => {
         ran.push('mail log sync');
       }),
     };
+    const suppressionSync = {
+      syncSuppressions: vi.fn(async () => {
+        ran.push('suppression sync');
+      }),
+    };
     const emailQuality = {
       recomputeAll: vi.fn(async () => {
         ran.push('email quality');
@@ -47,6 +53,7 @@ describe('PeriodicJobExecutor', () => {
     const services = new Map<unknown, unknown>([
       [MailchimpSyncService, mailchimpSync],
       [MailLogSyncService, mailLogSync],
+      [SuppressionSyncService, suppressionSync],
       [EmailQualityService, emailQuality],
       [DeliverySuggestionService, deliverySuggestions],
     ]);
@@ -70,7 +77,7 @@ describe('PeriodicJobExecutor', () => {
     return { executor, ran, claims, periodicJobs, mailLogSync };
   };
 
-  it('runs the periodic jobs, the Mailchimp sync, the mail log sync and the email quality on the replica that claims the night', async () => {
+  it('runs the periodic jobs, the Mailchimp sync, both provider syncs and the email quality on the replica that claims the night', async () => {
     const { executor, ran } = setup('claimed');
 
     await executor.handleCron();
@@ -79,6 +86,7 @@ describe('PeriodicJobExecutor', () => {
       'periodic jobs',
       'mailchimp sync',
       'mail log sync',
+      'suppression sync',
       'email quality',
       'delivery suggestions',
     ]);
@@ -94,6 +102,7 @@ describe('PeriodicJobExecutor', () => {
     expect(ran).toEqual([
       'periodic jobs',
       'mailchimp sync',
+      'suppression sync',
       'email quality',
       'delivery suggestions',
     ]);
@@ -131,6 +140,7 @@ describe('PeriodicJobExecutor', () => {
       'periodic jobs guarded by the database',
       'mailchimp sync',
       'mail log sync',
+      'suppression sync',
       'email quality',
       'delivery suggestions',
     ]);
@@ -149,6 +159,7 @@ describe('PeriodicJobExecutor', () => {
     expect(ran).toEqual([
       'mailchimp sync',
       'mail log sync',
+      'suppression sync',
       'email quality',
       'delivery suggestions',
     ]);

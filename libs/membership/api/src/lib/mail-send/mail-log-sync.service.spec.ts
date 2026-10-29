@@ -20,7 +20,11 @@ const makeService = (
 ) => {
   const findMany = vi.fn(async () => logs);
   const update = vi.fn(async (args: any) => args);
-  const prisma = { mailLog: { findMany, update } };
+  const noteProvider = vi.fn(async (args: any) => args);
+  const prisma = {
+    mailLog: { findMany, update },
+    settingMailProvider: { update: noteProvider },
+  };
   const recordMailSignals = vi.fn(async () => undefined);
   const mailContext = {
     mailProvider:
@@ -41,11 +45,79 @@ const makeService = (
     ),
     findMany,
     update,
+    noteProvider,
     recordMailSignals,
   };
 };
 
 describe('MailLogSyncService', () => {
+  // So an admin can see when the provider was last asked, and what it said.
+  describe('noting the poll on the provider settings', () => {
+    it('notes a poll that had nothing to ask', async () => {
+      const { service, noteProvider } = makeService(
+        [],
+        vi.fn(async () => [])
+      );
+
+      await service.syncOpenStates();
+
+      expect(noteProvider).toHaveBeenCalledWith({
+        where: { id: 'mailchimp' },
+        data: { lastPollAt: expect.any(Date), lastPollError: null },
+      });
+    });
+
+    it('clears an earlier error once a poll succeeds', async () => {
+      const { service, noteProvider } = makeService(
+        [
+          {
+            id: 'log1',
+            state: MailLogState.submitted,
+            mailProviderMessageID: 'm1',
+          },
+        ],
+        vi.fn(async () => [])
+      );
+
+      await service.syncOpenStates();
+
+      expect(noteProvider).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ lastPollError: null }),
+        })
+      );
+    });
+
+    it('keeps what the provider answered when the poll fails, and still fails', async () => {
+      const { service, noteProvider } = makeService(
+        [
+          {
+            id: 'log1',
+            state: MailLogState.submitted,
+            mailProviderMessageID: 'm1',
+          },
+        ],
+        vi.fn(async () => {
+          throw new Error('rate limited');
+        })
+      );
+
+      await expect(service.syncOpenStates()).rejects.toThrow('rate limited');
+      expect(noteProvider).toHaveBeenCalledWith({
+        where: { id: 'mailchimp' },
+        data: { lastPollAt: expect.any(Date), lastPollError: 'rate limited' },
+      });
+    });
+
+    it('notes nothing without a provider', async () => {
+      const { service, noteProvider } = makeService([], vi.fn(), false);
+
+      await service.syncOpenStates();
+
+      expect(noteProvider).not.toHaveBeenCalled();
+    });
+  });
+
   it('writes the state the provider reports back to the log', async () => {
     const getMessageStates = vi.fn(async () => [
       {

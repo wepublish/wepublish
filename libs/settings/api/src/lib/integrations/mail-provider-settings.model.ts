@@ -60,6 +60,25 @@ export class SettingMailProvider extends SettingProvider {
 
   @Field({ nullable: true })
   smtp_user?: string;
+
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'When the provider last called the webhook with a verified request.',
+  })
+  lastWebhookAt?: Date | null;
+
+  @Field(() => Date, {
+    nullable: true,
+    description: 'When the provider was last asked for delivery states.',
+  })
+  lastPollAt?: Date | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'What went wrong on the last poll; null when it succeeded.',
+  })
+  lastPollError?: string | null;
 }
 
 @InputType()
@@ -71,7 +90,16 @@ export class SettingMailProviderFilter extends PartialType(
 @ArgsType()
 export class CreateSettingMailProviderInput extends OmitType(
   SettingMailProvider,
-  ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
+  [
+    'id',
+    'type',
+    'createdAt',
+    'lastLoadedAt',
+    'modifiedAt',
+    'lastWebhookAt',
+    'lastPollAt',
+    'lastPollError',
+  ] as const,
   ArgsType
 ) {
   @Field()

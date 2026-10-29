@@ -18,8 +18,20 @@ import {
   WebhookForSendMailProps,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
+import { qualityTypeForRejectReason } from '../email-quality-recorder';
 
 type MessageMetadata = NonNullable<mailchimp.MessagesMessage['metadata']>;
+
+/** Mandrill's timestamps come as `YYYY-MM-DD HH:MM:SS` in UTC, without a zone. */
+const mandrillDate = (value: string | null | undefined): Date | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  const date = new Date(`${value.replace(' ', 'T')}Z`);
+
+  return Number.isNaN(date.getTime()) ? undefined : date;
+};
 
 /** The typings demand a `website` key that Mandrill neither needs nor reads. */
 const mailLogMetadata = (mailLogID: string): MessageMetadata =>
@@ -334,6 +346,46 @@ export class MailchimpMailProvider extends BaseMailProvider {
     }
 
     return states;
+  }
+
+  /**
+   * Mandrill's rejection denylist: every address that hard-bounced, complained,
+   * unsubscribed or was blocked by hand, for any mail sent through the account.
+   * Expired entries still say what happened at `created_at`. Soft bounces and
+   * account-level reasons say nothing about the address and are skipped. The
+   * endpoint answers up to 1000 entries.
+   */
+  override async listSuppressions(): Promise<MailQualitySignal[]> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.rejects.list({
+      include_expired: true,
+    });
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Failed to list the rejection denylist'
+      );
+    }
+
+    return response.flatMap(entry => {
+      const type = qualityTypeForRejectReason(entry.reason);
+      const email = entry.email?.trim().toLowerCase();
+
+      if (!type || !email) {
+        return [];
+      }
+
+      return [
+        {
+          type,
+          email,
+          detail: entry.detail || null,
+          occurredAt: mandrillDate(entry.created_at),
+          providerEventId: `mailchimp-reject:${email}:${entry.created_at}`,
+        },
+      ];
+    });
   }
 
   /**

@@ -213,10 +213,10 @@ describe('SettingList', () => {
       expect(screen.getByText('settingList.ms')).toBeInTheDocument()
     );
     expect(screen.getAllByText('settingList.minutes')).toHaveLength(2);
-    // session lifetime, email-quality window, login-code validity, the
-    // subscription renewal window and the expiry of a pending payment method
-    // change
-    expect(screen.getAllByText('settingList.days')).toHaveLength(5);
+    // session lifetime, the email-quality window, the evidence warning,
+    // login-code validity, the subscription renewal window and the expiry of
+    // a pending payment method change
+    expect(screen.getAllByText('settingList.days')).toHaveLength(6);
   });
 
   test('spaces every card in the second column alike', async () => {
