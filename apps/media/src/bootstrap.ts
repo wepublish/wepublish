@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { NodeAdapter } from '@nestjs/platform-node';
 import sharp from 'sharp';
 
 import { AppModule } from './app/app.module';
@@ -10,9 +11,10 @@ sharp.cache({ memory: 50, items: 20 });
 sharp.concurrency(2);
 
 export async function bootstrap(logger?: NestApplicationOptions['logger']) {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create(AppModule, new NodeAdapter(), {
     logger,
   });
+  app.enableShutdownHooks();
   app.useGlobalPipes(new ZodValidationPipe());
   app.enableCors({
     origin: true,

@@ -1,16 +1,21 @@
 import styled from '@emotion/styled';
-import { Button, ButtonProps, useTheme } from '@mui/material';
-import { ReactNode, useId } from 'react';
+import {
+  Button,
+  ButtonProps,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  useTheme,
+} from '@mui/material';
+import { ReactNode, useId, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdMoreVert } from 'react-icons/md';
 
 import { paletteColor } from '../paletteColor';
 import { StateColor } from '../utility';
-
-const stateTextColors: Record<StateColor, string> = {
-  [StateColor.pending]: 'var(--wep-state-pending-text)',
-  [StateColor.published]: 'var(--wep-state-published-text)',
-  [StateColor.draft]: 'var(--wep-state-draft-text)',
-  [StateColor.none]: 'text.secondary',
-};
+import { StatePill, stateTextColors } from './statePill';
 
 const Bar = styled('header', {
   shouldForwardProp: prop => prop !== 'accent',
@@ -36,7 +41,19 @@ const Bar = styled('header', {
     }
   }
 
+  [data-overflow-toggle] {
+    display: none;
+  }
+
   @container (max-width: 520px) {
+    [data-overflow-item] {
+      display: none;
+    }
+
+    [data-overflow-toggle] {
+      display: inline-flex;
+    }
+
     button[data-collapse='sm'] {
       min-width: 0;
       padding-inline: 9px;
@@ -81,38 +98,6 @@ const Status = styled('div')`
   min-width: 0;
 `;
 
-const Chip = styled('span', {
-  shouldForwardProp: prop => prop !== 'background' && prop !== 'color',
-})<{ background: string; color: string }>`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  max-width: 100%;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background-color: ${({ background }) => background};
-  color: ${({ color }) => color};
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 20px;
-  white-space: nowrap;
-
-  &::before {
-    content: '';
-    flex-shrink: 0;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: currentColor;
-  }
-
-  > span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-`;
-
 const Meta = styled('span')`
   max-width: 100%;
   overflow: hidden;
@@ -143,8 +128,10 @@ const Actions = styled('div')`
   gap: 8px;
 
   @container (max-width: 760px) {
-    flex: 1 1 100%;
-    justify-content: space-between;
+    &[data-own-row] {
+      flex: 1 1 100%;
+      justify-content: space-between;
+    }
   }
 `;
 
@@ -168,7 +155,18 @@ const Divider = styled('span')`
   height: 24px;
   margin: 0 4px;
   background-color: ${({ theme }) => theme.vars.palette.divider};
+
+  @container (max-width: 760px) {
+    display: none;
+  }
 `;
+
+export interface EditorHeaderMenuAction {
+  label: string;
+  icon: ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+}
 
 export interface EditorHeaderProps {
   state: StateColor;
@@ -177,8 +175,68 @@ export interface EditorHeaderProps {
   back?: ReactNode;
   statusAction?: ReactNode;
   title?: ReactNode;
+  menuActions?: EditorHeaderMenuAction[];
   secondaryActions?: ReactNode;
   primaryActions?: ReactNode;
+}
+
+function EditorHeaderMenu({ actions }: { actions: EditorHeaderMenuAction[] }) {
+  const { t } = useTranslation();
+  const menuId = useId();
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+
+  if (!actions.length) {
+    return null;
+  }
+
+  return (
+    <>
+      {actions.map(action => (
+        <EditorHeaderButton
+          key={action.label}
+          data-overflow-item
+          variant="text"
+          icon={action.icon}
+          label={action.label}
+          disabled={action.disabled}
+          onClick={action.onClick}
+        />
+      ))}
+
+      <IconButton
+        data-overflow-toggle
+        color="primary"
+        aria-label={t('editorHeader.moreActions')}
+        aria-haspopup="menu"
+        aria-controls={anchor ? menuId : undefined}
+        aria-expanded={anchor ? 'true' : undefined}
+        onClick={event => setAnchor(event.currentTarget)}
+      >
+        <MdMoreVert />
+      </IconButton>
+
+      <Menu
+        id={menuId}
+        anchorEl={anchor}
+        open={!!anchor}
+        onClose={() => setAnchor(null)}
+      >
+        {actions.map(action => (
+          <MenuItem
+            key={action.label}
+            disabled={action.disabled}
+            onClick={() => {
+              setAnchor(null);
+              action.onClick();
+            }}
+          >
+            <ListItemIcon>{action.icon}</ListItemIcon>
+            <ListItemText>{action.label}</ListItemText>
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  );
 }
 
 export function EditorHeader({
@@ -188,6 +246,7 @@ export function EditorHeader({
   back,
   statusAction,
   title,
+  menuActions = [],
   secondaryActions,
   primaryActions,
 }: EditorHeaderProps) {
@@ -205,12 +264,9 @@ export function EditorHeader({
             role="group"
             aria-labelledby={statusId}
           >
-            <Chip
-              background={state}
-              color={textColor}
-            >
+            <StatePill state={state}>
               <span id={statusId}>{stateLabel}</span>
-            </Chip>
+            </StatePill>
 
             {meta && <Meta>{meta}</Meta>}
           </Status>
@@ -220,9 +276,18 @@ export function EditorHeader({
           {statusAction && <StatusAction>{statusAction}</StatusAction>}
         </Start>
 
-        <Actions>
-          <Group>{secondaryActions}</Group>
-          {secondaryActions && primaryActions && <Divider />}
+        <Actions
+          data-own-row={
+            secondaryActions || menuActions.length > 0 ? '' : undefined
+          }
+        >
+          <Group>
+            <EditorHeaderMenu actions={menuActions} />
+            {secondaryActions}
+          </Group>
+          {(secondaryActions || menuActions.length > 0) && primaryActions && (
+            <Divider />
+          )}
           <PrimaryGroup>{primaryActions}</PrimaryGroup>
         </Actions>
       </Inner>

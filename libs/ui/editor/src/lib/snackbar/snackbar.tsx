@@ -2,11 +2,14 @@ import {
   Alert,
   AlertColor,
   AlertTitle,
+  Button,
+  IconButton,
   Snackbar,
   SnackbarOrigin,
   Stack,
 } from '@mui/material';
 import { ReactNode, useSyncExternalStore } from 'react';
+import { MdClose } from 'react-icons/md';
 
 export type SnackbarVariant = AlertColor;
 
@@ -15,12 +18,19 @@ export type EnqueueSnackbarOptions = {
   title?: ReactNode;
   autoHideDuration?: number | null;
   key?: string;
+  action?: SnackbarAction;
+};
+
+export type SnackbarAction = {
+  label: ReactNode;
+  onClick: () => void;
 };
 
 type SnackbarEntry = Required<Pick<EnqueueSnackbarOptions, 'variant'>> & {
   key: string;
   message: ReactNode;
   title?: ReactNode;
+  action?: SnackbarAction;
   autoHideDuration: number | null;
 };
 
@@ -50,6 +60,7 @@ export const enqueueSnackbar = (
     key,
     message,
     title: options.title,
+    action: options.action,
     variant: options.variant ?? 'info',
     autoHideDuration:
       options.autoHideDuration === undefined ?
@@ -114,6 +125,34 @@ export function SnackbarHost({
             severity={entry.variant}
             variant="filled"
             onClose={() => closeSnackbar(entry.key)}
+            action={
+              entry.action ?
+                <Stack
+                  direction="row"
+                  sx={{ alignItems: 'center', gap: 0.5 }}
+                >
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      entry.action?.onClick();
+                      closeSnackbar(entry.key);
+                    }}
+                  >
+                    {entry.action.label}
+                  </Button>
+
+                  <IconButton
+                    color="inherit"
+                    size="small"
+                    aria-label="Close"
+                    onClick={() => closeSnackbar(entry.key)}
+                  >
+                    <MdClose />
+                  </IconButton>
+                </Stack>
+              : undefined
+            }
             sx={{
               width: '100%',
               alignItems: 'center',

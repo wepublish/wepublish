@@ -1,0 +1,5 @@
+{
+  "prisma": {
+    "schema": "../../api/prisma/schema.prisma"
+  }
+}

@@ -1,5 +1,5 @@
 import { PrismaClient, SettingLetterProvider } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { FakeLetterProvider } from './fake-letter-provider';
 
 function createProvider(config: SettingLetterProvider | null) {
@@ -12,7 +12,7 @@ function createProvider(config: SettingLetterProvider | null) {
 
   const kv = {
     getOrLoadNs: vi.fn((_ns, _key, loader: () => Promise<unknown>) => loader()),
-  } as unknown as KvTtlCacheService;
+  } as unknown as NamespacedCache;
 
   return {
     provider: new FakeLetterProvider({ id: 'fakeLetter', prisma, kv }),

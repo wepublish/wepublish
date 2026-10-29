@@ -30,9 +30,9 @@ interface GenericIntegrationListProps<
   TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
 > extends Omit<
-    GenericIntegrationFormProps<TSetting, TFormValues>,
-    'setting' | 'renderActions'
-  > {
+  GenericIntegrationFormProps<TSetting, TFormValues>,
+  'setting' | 'renderActions'
+> {
   query: DocumentNode;
   dataKey: string;
 

@@ -19,7 +19,8 @@ import {
   PeriodicJobService,
 } from './periodic-job.service';
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
+import { DistributedLocks, type LockResult } from '@wepublish/dragonfly/api';
 import type { Mock } from 'vitest';
 import {
   MailContext,
@@ -193,16 +194,20 @@ const createMockInvoicePaidNotifier = () => ({
   notify: vi.fn().mockResolvedValue(undefined),
 });
 
+const createMockPaymentMethodChanges = () => ({
+  expirePending: vi.fn().mockResolvedValue(0),
+});
+
 type FakeLock = { lost: boolean; release: () => Promise<void> };
+
+type Locks = Pick<DistributedLocks, 'acquire' | 'isLocked'>;
 
 const createDragonflyLocks = () => {
   const held = new Map<string, FakeLock>();
-
-  return {
-    held,
-    lock: vi.fn(async (name: string) => {
+  const locks = {
+    acquire: vi.fn(async (name: string): Promise<LockResult> => {
       if (held.has(name)) {
-        return false;
+        return { status: 'taken' };
       }
 
       const lock: FakeLock = {
@@ -215,20 +220,21 @@ const createDragonflyLocks = () => {
       };
       held.set(name, lock);
 
-      return lock;
+      return { status: 'acquired', lock };
     }),
     isLocked: vi.fn(async (name: string) => held.has(name)),
-    dragonflyStatus: vi.fn(async () => 'reachable'),
-  };
+  } satisfies Locks;
+
+  return { held, ...locks };
 };
 
 const createLocksWithoutDragonfly = (
-  status: 'not-configured' | 'unreachable' = 'not-configured'
-) => ({
-  lock: vi.fn(async () => undefined),
-  isLocked: vi.fn(async () => undefined),
-  dragonflyStatus: vi.fn(async () => status),
-});
+  status: 'not-configured' | 'unavailable' = 'not-configured'
+) =>
+  ({
+    acquire: vi.fn(async (): Promise<LockResult> => ({ status })),
+    isLocked: vi.fn(async () => status),
+  }) satisfies Locks;
 
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
@@ -239,6 +245,9 @@ describe('PeriodicJobService', () => {
   let mockMailContext: ReturnType<typeof createMockMailContext>;
   let mockPaymentsService: ReturnType<typeof createMockPaymentsService>;
   let mockInvoicePaidNotifier: ReturnType<typeof createMockInvoicePaidNotifier>;
+  let mockPaymentMethodChanges: ReturnType<
+    typeof createMockPaymentMethodChanges
+  >;
   let locks: ReturnType<typeof createDragonflyLocks>;
 
   beforeEach(async () => {
@@ -248,6 +257,7 @@ describe('PeriodicJobService', () => {
     mockMailContext = createMockMailContext();
     mockPaymentsService = createMockPaymentsService();
     mockInvoicePaidNotifier = createMockInvoicePaidNotifier();
+    mockPaymentMethodChanges = createMockPaymentMethodChanges();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -260,7 +270,11 @@ describe('PeriodicJobService', () => {
           provide: InvoicePaidNotifier,
           useValue: mockInvoicePaidNotifier,
         },
-        { provide: KvTtlCacheService, useValue: locks },
+        { provide: DistributedLocks, useValue: locks },
+        {
+          provide: PaymentMethodChangeService,
+          useValue: mockPaymentMethodChanges,
+        },
       ],
     }).compile();
 
@@ -269,6 +283,27 @@ describe('PeriodicJobService', () => {
 
   it('is defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('expires unfinished payment method changes before charging invoices', async () => {
+    const calls: string[] = [];
+    mockPaymentMethodChanges.expirePending.mockImplementation(async () => {
+      calls.push('expire');
+      return 0;
+    });
+    mockSubscriptionController.findUnpaidDueInvoices.mockImplementation(
+      async () => {
+        calls.push('charge');
+        return [];
+      }
+    );
+
+    await service.execute(new Date('2026-10-21T03:00:00Z'));
+
+    expect(mockPaymentMethodChanges.expirePending).toHaveBeenCalledWith(
+      expect.any(Date)
+    );
+    expect(calls).toEqual(['expire', 'charge']);
   });
 
   it('create invoice', async () => {
@@ -1560,14 +1595,15 @@ describe('PeriodicJobService', () => {
         error: 'provider down',
       });
 
-    const startPod = (kv: object = locks) =>
+    const startPod = (podLocks: Locks = locks) =>
       new PeriodicJobService(
         mockPrisma as unknown as PrismaClient,
         mockMailContext as unknown as MailContext,
         mockSubscriptionController as unknown as SubscriptionService,
         mockPaymentsService as unknown as PaymentsService,
         mockInvoicePaidNotifier as unknown as InvoicePaidNotifier,
-        kv as unknown as KvTtlCacheService
+        podLocks as unknown as DistributedLocks,
+        mockPaymentMethodChanges as unknown as PaymentMethodChangeService
       );
 
     const holdFirstRun = () => {
@@ -1845,7 +1881,7 @@ describe('PeriodicJobService', () => {
       });
 
       it('refuses while Dragonfly is configured but unreachable', async () => {
-        const pod = startPod(createLocksWithoutDragonfly('unreachable'));
+        const pod = startPod(createLocksWithoutDragonfly('unavailable'));
         failedNight(daysAgo(1));
 
         await expect(pod.retryAndCatchUp()).rejects.toBeInstanceOf(

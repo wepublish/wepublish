@@ -1,7 +1,15 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { StripeElement, StripePayment } from '@wepublish/payment/website';
+import {
+  relativeToAbsolute,
+  StripeElement,
+  StripePayment,
+  StripePaymentProps,
+} from '@wepublish/payment/website';
 import {
   CancelSubscriptionDocument,
+  CancelSubscriptionPaymentMethodChangeDocument,
+  ChangeSubscriptionPaymentMethodDocument,
+  CheckSubscriptionPaymentMethodChangeDocument,
   CancelSubscriptionMutation,
   CancelSubscriptionMutationVariables,
   ExtendSubscriptionDocument,
@@ -10,6 +18,8 @@ import {
   FullSubscriptionFragment,
   InvoicesDocument,
   InvoicesQuery,
+  PaymentMethodChangeKind,
+  PaymentMethodChangeState,
   ReactivateSubscriptionDocument,
   RevertSubscriptionUpgradeDocument,
   SubscriptionsDocument,
@@ -20,12 +30,14 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { produce } from 'immer';
-import { useMemo, useState } from 'react';
+import { ComponentType, useEffect, useMemo, useRef, useState } from 'react';
 
 export type SubscriptionListContainerProps = {
   filter?: (
     subscriptions: FullSubscriptionFragment[]
   ) => FullSubscriptionFragment[];
+  /** Renders the subscriptions instead of the builder's SubscriptionList. */
+  List?: ComponentType<BuilderSubscriptionListProps>;
 } & BuilderContainerProps &
   Partial<Pick<BuilderSubscriptionListProps, 'subscribeUrl'>>;
 
@@ -33,12 +45,19 @@ export function SubscriptionListContainer({
   filter,
   subscribeUrl = '/mitmachen',
   className,
+  List,
 }: SubscriptionListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [stripeMemberPlan, setStripeMemberPlan] =
     useState<FullMemberPlanFragment>();
-  const { SubscriptionList } = useWebsiteBuilder();
-  const { data, loading, error } = useQuery(SubscriptionsDocument);
+  // set while Stripe collects the payment method of a payment method change
+  const [stripeChange, setStripeChange] = useState<{
+    id: string;
+    mode: NonNullable<StripePaymentProps['mode']>;
+  }>();
+  const { SubscriptionList: BuilderSubscriptionList } = useWebsiteBuilder();
+  const SubscriptionList = List ?? BuilderSubscriptionList;
+  const { data, loading, error, refetch } = useQuery(SubscriptionsDocument);
   const invoices = useQuery(InvoicesDocument);
 
   const [cancel] = useCancelSubscriptionMutationWithCacheUpdate();
@@ -72,6 +91,46 @@ export function SubscriptionListContainer({
     },
   });
 
+  const [changePaymentMethod] = useMutation(
+    ChangeSubscriptionPaymentMethodDocument
+  );
+  const [cancelPaymentMethodChange] = useMutation(
+    CancelSubscriptionPaymentMethodChangeDocument
+  );
+  const [checkPaymentMethodChange] = useMutation(
+    CheckSubscriptionPaymentMethodChangeDocument
+  );
+
+  const refreshAfterPaymentMethodChange = async () => {
+    await Promise.all([refetch(), invoices.refetch()]);
+  };
+
+  const checkChange = async (id: string) => {
+    const result = await checkPaymentMethodChange({ variables: { id } });
+
+    if (
+      result.data?.checkSubscriptionPaymentMethodChange.state !==
+      PaymentMethodChangeState.Pending
+    ) {
+      await refreshAfterPaymentMethodChange();
+    }
+  };
+
+  // The reader may come back from the payment provider before it reported
+  // the outcome, so a pending change is asked for once.
+  const checkedChanges = useRef(new Set<string>());
+  useEffect(() => {
+    for (const subscription of data?.userSubscriptions ?? []) {
+      const change = subscription.pendingPaymentMethodChange;
+
+      if (change && !checkedChanges.current.has(change.id)) {
+        checkedChanges.current.add(change.id);
+        checkChange(change.id).catch(() => undefined);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
   const filteredSubscriptions = useMemo(
     () =>
       produce(data, draftData => {
@@ -87,7 +146,19 @@ export function SubscriptionListContainer({
       {stripeClientSecret && (
         <StripeElement clientSecret={stripeClientSecret}>
           <StripePayment
+            mode={stripeChange?.mode}
             onClose={async success => {
+              if (stripeChange) {
+                const { id } = stripeChange;
+                setStripeChange(undefined);
+                setStripeClientSecret(undefined);
+
+                if (success) {
+                  await checkChange(id);
+                }
+                return;
+              }
+
               if (stripeMemberPlan) {
                 window.location.href =
                   success ?
@@ -133,13 +204,56 @@ export function SubscriptionListContainer({
           )?.memberPlan;
           setStripeMemberPlan(memberPlan);
 
+          // payment providers reject relative return urls
           await extend({
             variables: {
               subscriptionId,
-              failureURL: memberPlan?.failPage?.url,
-              successURL: memberPlan?.successPage?.url,
+              failureURL: relativeToAbsolute(
+                memberPlan?.failPage?.url ?? '/profile'
+              ),
+              successURL: relativeToAbsolute(
+                memberPlan?.successPage?.url ?? '/profile'
+              ),
             },
           });
+        }}
+        onChangePaymentMethod={async (subscriptionId, paymentMethodId) => {
+          // back to this page, which then asks for the outcome
+          const returnURL = window.location.href;
+          const { data } = await changePaymentMethod({
+            variables: {
+              subscriptionId,
+              paymentMethodId,
+              successURL: returnURL,
+              failureURL: returnURL,
+            },
+          });
+          const started = data?.changeSubscriptionPaymentMethod;
+
+          if (!started?.intentSecret) {
+            await refreshAfterPaymentMethodChange();
+            return;
+          }
+
+          if (started.paymentProviderID === 'stripe') {
+            setStripeChange({
+              id: started.change.id,
+              mode:
+                started.change.kind === PaymentMethodChangeKind.Authorization ?
+                  'setup'
+                : 'payment',
+            });
+            setStripeClientSecret(started.intentSecret);
+            return;
+          }
+
+          if (started.intentSecret.startsWith('http')) {
+            window.location.href = started.intentSecret;
+          }
+        }}
+        onCancelPaymentMethodChange={async id => {
+          await cancelPaymentMethodChange({ variables: { id } });
+          await refreshAfterPaymentMethodChange();
         }}
       />
     </>

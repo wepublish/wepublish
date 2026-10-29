@@ -19,8 +19,7 @@ export const useThemePresetColors = (): string[] => {
 
   return useMemo(() => {
     const theme = data?.websiteSettings?.theme as
-      | Record<string, unknown>
-      | undefined;
+      Record<string, unknown> | undefined;
     const palette = theme?.['palette'] as Record<string, unknown> | undefined;
 
     if (!palette) {

@@ -45,7 +45,7 @@ import {
   SnackbarHost,
   useReportQueryErrors,
 } from '@wepublish/ui/editor';
-import { useContext, useEffect } from 'react';
+import { lazy, Suspense, useContext, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { Base } from './base';
@@ -54,7 +54,10 @@ import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
 import { LoginImpersonate } from './loginImpersonate';
 import { LoginJwt } from './loginJwt';
+import { DocumentTitle } from './pageTitle/documentTitle';
 import { ResetPassword } from './resetPassword';
+import { ArticleTemplateEditView } from './routes/articleTemplate/articleTemplateEditView';
+import { ArticleTemplateList } from './routes/articleTemplate/articleTemplateList';
 import { RouteErrorBoundary } from './routeErrorBoundary';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
@@ -87,6 +90,8 @@ import { IntegrationList } from './routes/integrations/integrationList';
 import { MemberPlanList } from './routes/memberPlans/memberPlanList';
 import { NavigationList } from './routes/navigations/navigationList';
 import { NetworkContentPage } from './routes/networkContent/networkContentPage';
+import { PageTemplateEditView } from './routes/pageTemplate/pageTemplateEditView';
+import { PageTemplateList } from './routes/pageTemplate/pageTemplateList';
 import { NotificationsPage } from './routes/notifications/notificationsPage';
 import { PageEditor } from './routes/pages/pageEditor';
 import { PageList } from './routes/pages/pageList';
@@ -99,6 +104,7 @@ import { PeerList } from './routes/peers/peerList';
 import { PollEditView } from './routes/polls/pollEditView';
 import { PollList } from './routes/polls/pollList';
 import { PollVoteListContainer } from './routes/polls/PollVotesListContainer';
+import { SeoChecklist } from './routes/seo/seoChecklist';
 import { SubscriptionEditView } from './routes/subscriptions/subscriptionEditView';
 import { SubscriptionList } from './routes/subscriptions/subscriptionList';
 import { TagCreateView } from './routes/tags/tagCreateView';
@@ -113,6 +119,21 @@ import { UserList } from './routes/users/userList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
+
+// For the time being, lazy load the newsletter editor.
+// Checked outside the lazy so the chunk is not even fetched while it is off.
+const newsletter = () => import('@wepublish/newsletter/editor');
+const withNewsletterFeature =
+  createCheckedFeatureComponent('newsletter-editor');
+const NewsletterCampaignList = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignList })))
+);
+const NewsletterCampaignEditor = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignEditor })))
+);
+const NewsletterCampaignPreview = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignPreview })))
+);
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -237,6 +258,7 @@ export function App() {
       <BrowserRouter>
         <RouteErrorBoundary>
           <EditorCommandPaletteSurface />
+          <DocumentTitle />
 
           <Routes>
             <Route
@@ -323,6 +345,22 @@ export function App() {
               element={<ArticleEditor />}
             />
             <Route
+              path="articles/templates"
+              element={
+                <Base>
+                  <ArticleTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/templates/create"
+              element={<ArticleTemplateEditView />}
+            />
+            <Route
+              path="articles/templates/edit/:id"
+              element={<ArticleTemplateEditView />}
+            />
+            <Route
               path="articles/edit/:id"
               element={<ArticleEditor />}
             />
@@ -394,6 +432,22 @@ export function App() {
             <Route
               path="pages/create"
               element={<PageEditor />}
+            />
+            <Route
+              path="pages/templates"
+              element={
+                <Base>
+                  <PageTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="pages/templates/create"
+              element={<PageTemplateEditView />}
+            />
+            <Route
+              path="pages/templates/edit/:id"
+              element={<PageTemplateEditView />}
             />
             <Route
               path="pages/edit/:id"
@@ -690,6 +744,33 @@ export function App() {
                 <Base>
                   <NavigationList />
                 </Base>
+              }
+            />
+            {/* Newsletter Routes */}
+            <Route
+              path="newsletter"
+              element={
+                <Base>
+                  <Suspense>
+                    <NewsletterCampaignList />
+                  </Suspense>
+                </Base>
+              }
+            />
+            <Route
+              path="newsletter/edit/:id"
+              element={
+                <Suspense>
+                  <NewsletterCampaignEditor />
+                </Suspense>
+              }
+            />
+            <Route
+              path="newsletter/preview/:id"
+              element={
+                <Suspense>
+                  <NewsletterCampaignPreview />
+                </Suspense>
               }
             />
             <Route
@@ -1228,6 +1309,14 @@ export function App() {
               element={
                 <Base>
                   <WebsiteSettingsItem />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/seo"
+              element={
+                <Base>
+                  <SeoChecklist />
                 </Base>
               }
             />

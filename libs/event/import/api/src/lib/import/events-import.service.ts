@@ -1,4 +1,4 @@
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { Inject, Injectable } from '@nestjs/common';
 
 import {

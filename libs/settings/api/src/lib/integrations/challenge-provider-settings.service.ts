@@ -11,7 +11,7 @@ import {
 } from './challenge-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { ChallengeProviderSettingsDataloaderService } from './challenge-provider-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { clearProviderConfig } from './clear-provider-config';
@@ -21,7 +21,7 @@ export class ChallengeProviderSettingsService {
   private readonly crypto = new SecretCrypto();
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private resets: NamespaceResets,
     private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
@@ -86,7 +86,7 @@ export class ChallengeProviderSettingsService {
       data,
     });
 
-    await this.kv.resetNamespace('settings:challenge');
+    await this.resets.reset('settings:challenge');
     await this.providerSettingsChanged.notify('Challenge provider');
     return returnValue;
   }
@@ -133,7 +133,7 @@ export class ChallengeProviderSettingsService {
       data: updatePayload,
     });
 
-    await this.kv.resetNamespace('settings:challenge');
+    await this.resets.reset('settings:challenge');
     await this.providerSettingsChanged.notify('Challenge provider');
     return returnValue;
   }
@@ -169,7 +169,7 @@ export class ChallengeProviderSettingsService {
       where: { id },
     });
 
-    await this.kv.resetNamespace('settings:challenge');
+    await this.resets.reset('settings:challenge');
     await this.providerSettingsChanged.notify('Challenge provider');
     return returnValue;
   }

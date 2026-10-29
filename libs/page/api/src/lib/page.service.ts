@@ -1,9 +1,9 @@
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   PublicContentCacheInvalidator,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import {
   BadRequestException,
   Injectable,
@@ -33,7 +33,7 @@ export class PageService {
   constructor(
     private prisma: PrismaClient,
     private publicContentCache: PublicContentCacheInvalidator,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   @PrimeDataLoader(PageDataloaderService)
@@ -116,13 +116,24 @@ export class PageService {
 
   @PrimeDataLoader(PageDataloaderService)
   async createPage(
-    { slug, hidden, tagIds, properties, blocks, ...revision }: CreatePageInput,
+    {
+      slug,
+      hidden,
+      hideHeader,
+      hideFooter,
+      tagIds,
+      properties,
+      blocks,
+      ...revision
+    }: CreatePageInput,
     userId: string | null | undefined
   ) {
     const result = await this.prisma.page.create({
       data: {
         slug,
         hidden,
+        hideHeader,
+        hideFooter,
         tags: {
           createMany: {
             data: tagIds.map(tagId => ({
@@ -151,6 +162,8 @@ export class PageService {
     {
       id,
       hidden,
+      hideHeader,
+      hideFooter,
       slug,
       tagIds,
       properties,
@@ -175,6 +188,8 @@ export class PageService {
       data: {
         slug,
         hidden,
+        hideHeader,
+        hideFooter,
         revisions: {
           updateMany: {
             where: {
@@ -399,6 +414,8 @@ export class PageService {
     const result = await this.prisma.page.create({
       data: {
         hidden: page.hidden,
+        hideHeader: page.hideHeader,
+        hideFooter: page.hideFooter,
         tags: {
           createMany: {
             data: page.tags.map(({ tagId }) => ({

@@ -157,6 +157,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [EditorBlockType.Embed]: {
     group: 'media',
+    bare: true,
     field: props => <EmbedBlock {...props} />,
     defaultValue: { type: EmbedType.Other, blockStyle: undefined },
     label: 'blocks.embeds.label',
@@ -272,6 +273,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [EditorBlockType.Html]: {
     group: 'text',
+    bare: true,
     field: props => <HTMLBlock {...props} />,
     defaultValue: { html: '', blockStyle: undefined },
     label: 'blocks.html.label',
@@ -345,6 +347,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [EditorBlockType.Poll]: {
     group: 'interaction',
+    bare: true,
     field: props => <PollBlock {...props} />,
     defaultValue: { poll: null, blockStyle: undefined },
     label: 'blocks.poll.label',
@@ -353,6 +356,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [EditorBlockType.Crowdfunding]: {
     group: 'interaction',
+    bare: true,
     field: props => <CrowdfundingBlock {...props} />,
     defaultValue: { crowdfunding: null, blockStyle: undefined },
     label: 'blocks.crowdfunding.label',
@@ -361,6 +365,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [EditorBlockType.Comment]: {
     group: 'interaction',
+    bare: true,
     field: props => <CommentBlock {...props} />,
     defaultValue: { filter: {}, comments: [], blockStyle: undefined },
     label: 'blocks.comment.label',
@@ -369,6 +374,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [EditorBlockType.Event]: {
     group: 'interaction',
+    bare: true,
     field: props => <EventBlock {...props} />,
     defaultValue: { filter: {}, events: [], blockStyle: undefined },
     label: 'blocks.event.label',

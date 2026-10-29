@@ -1,19 +1,28 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import {
+  InjectDisk,
+  StorageDisk,
+  StorageFileNotFoundError,
+} from '@nestjs/storage';
 import sharp from 'sharp';
-import { StorageClient } from '../storage-client/storage-client.service';
 import { TransformGuard } from './transform.guard';
+import { createConcurrencyLimit } from './concurrency-limit';
 import { createHash } from 'crypto';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
-import { Readable } from 'stream';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
 const execFileAsync = promisify(execFile);
+
+export const MAX_CONCURRENT_TRANSFORMS = 4;
+
+const PDF_RENDER_TIMEOUT = 15_000;
 import {
   removeSignatureFromTransformations,
   getTransformationKey,
+  OutputFormat,
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
 import { JwksClientService } from '../authentication/jwks-client.service';
@@ -23,18 +32,13 @@ import {
   DocumentCategory,
 } from './supported-documents-validator';
 
-export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol(
-  'MEDIA_SERVICE_MODULE_OPTIONS'
-);
+export const UPLOAD_DISK = 'upload';
+
+export const TRANSFORMATION_DISK = 'transformation';
 
 const GENERIC_CONTENT_TYPE = 'application/octet-stream';
 
 const GENERIC_CONTENT_TYPES = [GENERIC_CONTENT_TYPE, 'binary/octet-stream'];
-
-export type MediaServiceConfig = {
-  uploadBucket: string;
-  transformationBucket: string;
-};
 
 export type FallbackImageRatio = {
   widthRatio: number;
@@ -67,6 +71,28 @@ const fallbackImageRatios: FallbackImageRatio[] = [
     heightRatio: 16,
   },
 ];
+// Only these keep every frame; jpeg and png would get all frames stacked on top of each other.
+const ANIMATED_FORMATS: OutputFormat[] = ['webp', 'gif'];
+
+const encode = (
+  image: sharp.Sharp,
+  format: OutputFormat,
+  quality: number | undefined,
+  effort: number
+) => {
+  switch (format) {
+    case 'jpeg':
+      // jpeg has no alpha channel, sharp would otherwise fill it black
+      return image.flatten({ background: '#ffffff' }).jpeg({ quality });
+    case 'png':
+      return image.png();
+    case 'gif':
+      return image.gif();
+    case 'webp':
+      return image.webp({ quality, effort });
+  }
+};
+
 export type ImageURIObject = {
   uri: string;
   exists: boolean;
@@ -74,9 +100,15 @@ export type ImageURIObject = {
 
 @Injectable()
 export class MediaService {
+  private readonly pendingImages = new Map<string, Promise<ImageURIObject>>();
+
+  private readonly limitTransforms = createConcurrencyLimit(
+    MAX_CONCURRENT_TRANSFORMS
+  );
+
   constructor(
-    @Inject(MEDIA_SERVICE_MODULE_OPTIONS) private config: MediaServiceConfig,
-    private storage: StorageClient,
+    @InjectDisk(UPLOAD_DISK) private uploads: StorageDisk,
+    @InjectDisk(TRANSFORMATION_DISK) private transformations: StorageDisk,
     private jwksClient: JwksClientService
   ) {}
 
@@ -84,6 +116,21 @@ export class MediaService {
     const hash = createHash('md5');
     hash.update(buffer);
     return `"${hash.digest('hex')}"`;
+  }
+
+  private async listKeys(disk: StorageDisk, prefix: string): Promise<string[]> {
+    const keys: string[] = [];
+    for await (const entry of disk.listAll({ prefix })) {
+      keys.push(entry.key);
+    }
+    return keys;
+  }
+
+  private async deleteKeys(disk: StorageDisk, prefix: string): Promise<void> {
+    const keys = await this.listKeys(disk, prefix);
+    if (keys.length) {
+      await disk.delete(keys);
+    }
   }
 
   public async getImageUri(
@@ -94,15 +141,40 @@ export class MediaService {
       removeSignatureFromTransformations(transformations)
     );
     const objectUri = `images/${imageId}/${transformationsKey}`;
-    if (
-      !(await this.storage.hasFile(this.config.transformationBucket, objectUri))
-    ) {
-      return await this.transformImage(imageId, transformations);
+    const pendingKey = `${objectUri}#${transformations.sig ?? ''}`;
+
+    const pending = this.pendingImages.get(pendingKey);
+    if (pending) {
+      return await pending;
     }
-    return { uri: objectUri, exists: true };
+
+    const request = this.resolveImageUri(
+      imageId,
+      objectUri,
+      transformations
+    ).finally(() => this.pendingImages.delete(pendingKey));
+    this.pendingImages.set(pendingKey, request);
+
+    return await request;
   }
 
-  private getFallbackImage(transformations: TransformationsDto): Readable {
+  private async resolveImageUri(
+    imageId: string,
+    objectUri: string,
+    transformations: TransformationsDto
+  ): Promise<ImageURIObject> {
+    if (await this.transformations.exists(objectUri)) {
+      return { uri: objectUri, exists: true };
+    }
+
+    return await this.limitTransforms(() =>
+      this.transformImage(imageId, transformations)
+    );
+  }
+
+  private async getFallbackImage(
+    transformations: TransformationsDto
+  ): Promise<Buffer> {
     // Modify transformations based on resize properties
     if (transformations.resize) {
       const hasWidth = 'width' in transformations.resize;
@@ -134,7 +206,7 @@ export class MediaService {
       'assets',
       'fallback-image.webp'
     );
-    return fs.createReadStream(defaultImagePath);
+    return await fs.promises.readFile(defaultImagePath);
   }
 
   private hasTransformations(t: TransformationsDto): boolean {
@@ -147,39 +219,6 @@ export class MediaService {
     transformations: TransformationsDto
   ): Promise<ImageURIObject> {
     const originalTransformations = structuredClone(transformations);
-    let imageStream: Readable;
-    let imageExists = true;
-    try {
-      imageStream = await this.storage.getFile(
-        this.config.uploadBucket,
-        `images/${imageId}`
-      );
-    } catch (e: any) {
-      if (e.code == 'NoSuchKey') {
-        imageExists = false;
-        imageStream = this.getFallbackImage(
-          removeSignatureFromTransformations(transformations)
-        );
-      } else {
-        throw e;
-      }
-    }
-
-    const transformationsKey = getTransformationKey(
-      removeSignatureFromTransformations(transformations)
-    );
-
-    if (!imageExists) {
-      if (
-        await this.storage.hasFile(
-          this.config.transformationBucket,
-          `images/fallback/${transformationsKey}`
-        )
-      ) {
-        return { uri: `images/fallback/${transformationsKey}`, exists: false };
-      }
-    }
-
     const transformGuard = new TransformGuard();
 
     // Validate signature when transformations are requested.
@@ -193,95 +232,109 @@ export class MediaService {
       );
     }
 
-    const sharpInstance = imageStream.pipe(
-      sharp({
-        animated: true,
-        failOn: 'error',
-      })
-    );
-
+    let image: Buffer;
+    let imageExists = true;
     try {
-      const metadata = await sharpInstance.metadata();
-
-      const effort = transformGuard.checkDimensions(metadata, transformations);
-      transformGuard.checkQuality(transformations);
-
-      if (transformations.extend) {
-        sharpInstance.extend(transformations.extend);
-      }
-
-      if (transformations.resize) {
-        // Prevent animated image from enlarging (DOS prevention)
-        if (transformGuard.isAnimatedImage(metadata)) {
-          transformations.resize.withoutEnlargement = true;
-        }
-        sharpInstance.resize(transformations.resize);
-      }
-
-      if (transformations.blur) {
-        sharpInstance.blur(transformations.blur);
-      }
-
-      if (transformations.sharpen) {
-        sharpInstance.sharpen();
-      }
-
-      if (transformations.flip) {
-        sharpInstance.flip(transformations.flip);
-      }
-
-      if (transformations.flop) {
-        sharpInstance.flop(transformations.flop);
-      }
-
-      if (transformations.rotate) {
-        sharpInstance.rotate(transformations.rotate);
-      }
-
-      if (transformations.negate) {
-        sharpInstance.negate(transformations.negate);
-      }
-
-      if (transformations.grayscale) {
-        sharpInstance.grayscale(transformations.grayscale);
-      }
-
-      const transformedImage = sharpInstance.webp({
-        quality: transformations.quality,
-        effort,
-      });
-
-      const { data: transformedBuffer, info } = await transformedImage.toBuffer(
-        { resolveWithObject: true }
-      );
-      transformGuard.checkImageSize({ size: info.size } as sharp.Metadata);
-
-      let uri;
-      let exists = true;
-      if (imageExists) {
-        uri = `images/${imageId}/${transformationsKey}`;
-        await this.storage.saveFile(
-          this.config.transformationBucket,
-          uri,
-          transformedBuffer,
-          info.size,
-          { 'Content-Type': `image/webp` }
+      image = await this.uploads.getBuffer(`images/${imageId}`);
+    } catch (e: any) {
+      if (e instanceof StorageFileNotFoundError) {
+        imageExists = false;
+        image = await this.getFallbackImage(
+          removeSignatureFromTransformations(transformations)
         );
       } else {
-        exists = false;
-        uri = `images/fallback/${transformationsKey}`;
-        await this.storage.saveFile(
-          this.config.transformationBucket,
-          uri,
-          transformedBuffer,
-          info.size,
-          { 'Content-Type': `image/webp` }
-        );
+        throw e;
       }
-      return { uri, exists };
-    } finally {
-      imageStream.destroy();
     }
+
+    const transformationsKey = getTransformationKey(
+      removeSignatureFromTransformations(transformations)
+    );
+
+    if (
+      !imageExists &&
+      (await this.transformations.exists(
+        `images/fallback/${transformationsKey}`
+      ))
+    ) {
+      return { uri: `images/fallback/${transformationsKey}`, exists: false };
+    }
+
+    const format = transformations.format ?? 'webp';
+    const sharpInstance = sharp(image, {
+      animated: ANIMATED_FORMATS.includes(format),
+      failOn: 'error',
+    });
+
+    const metadata = await sharpInstance.metadata();
+
+    const effort = transformGuard.checkDimensions(metadata, transformations);
+    transformGuard.checkQuality(transformations);
+
+    if (transformations.extend) {
+      sharpInstance.extend(transformations.extend);
+    }
+
+    if (transformations.resize) {
+      // Prevent animated image from enlarging (DOS prevention)
+      if (transformGuard.isAnimatedImage(metadata)) {
+        transformations.resize.withoutEnlargement = true;
+      }
+      sharpInstance.resize(transformations.resize);
+    }
+
+    if (transformations.blur) {
+      sharpInstance.blur(transformations.blur);
+    }
+
+    if (transformations.sharpen) {
+      sharpInstance.sharpen();
+    }
+
+    if (transformations.flip) {
+      sharpInstance.flip(transformations.flip);
+    }
+
+    if (transformations.flop) {
+      sharpInstance.flop(transformations.flop);
+    }
+
+    if (transformations.rotate) {
+      sharpInstance.rotate(transformations.rotate);
+    }
+
+    if (transformations.negate) {
+      sharpInstance.negate(transformations.negate);
+    }
+
+    if (transformations.grayscale) {
+      sharpInstance.grayscale(transformations.grayscale);
+    }
+
+    const transformedImage = encode(
+      sharpInstance,
+      format,
+      transformations.quality,
+      effort
+    );
+
+    const { data: transformedBuffer, info } = await transformedImage.toBuffer({
+      resolveWithObject: true,
+    });
+    transformGuard.checkImageSize({ size: info.size } as sharp.Metadata);
+
+    const exists = imageExists;
+    const uri =
+      imageExists ?
+        `images/${imageId}/${transformationsKey}`
+      : `images/fallback/${transformationsKey}`;
+
+    await this.transformations.put(uri, transformedBuffer, {
+      contentType: `image/${format}`,
+      contentLength: info.size,
+    });
+
+    return { uri, exists };
   }
 
   public async saveImage(imageId: string, image: Buffer) {
@@ -298,40 +351,21 @@ export class MediaService {
       metadata = await sharp(buffer).metadata();
     }
 
-    await this.storage.saveFile(
-      this.config.uploadBucket,
-      `images/${imageId}`,
-      buffer,
-      metadata.size,
-      { 'Content-Type': `image/${metadata.format}` }
-    );
+    await this.uploads.put(`images/${imageId}`, buffer, {
+      contentType: `image/${metadata.format}`,
+      contentLength: buffer.length,
+    });
     return metadata;
   }
 
   public async hasImage(imageId: string): Promise<boolean> {
-    return await this.storage.hasFile(
-      this.config.uploadBucket,
-      `images/${imageId}`
-    );
+    return await this.uploads.exists(`images/${imageId}`);
   }
 
   public async deleteImage(imageId: string) {
-    // Delete Transformations
-    const objects = await this.storage.listFiles(
-      this.config.transformationBucket,
-      `images/${imageId}`,
-      true
-    );
-    await this.storage.deleteFiles(
-      this.config.transformationBucket,
-      objects.map(file => file.name || '')
-    );
+    await this.deleteKeys(this.transformations, `images/${imageId}`);
 
-    // Delete main image
-    return await this.storage.deleteFile(
-      this.config.uploadBucket,
-      `images/${imageId}`
-    );
+    return await this.uploads.delete(`images/${imageId}`);
   }
 
   public async saveDocument(
@@ -341,34 +375,25 @@ export class MediaService {
     originalFilename: string
   ) {
     const objectKey = `documents/${documentId}/${originalFilename}`;
-    await this.storage.saveFile(
-      this.config.uploadBucket,
-      objectKey,
-      document,
-      document.length,
-      { 'Content-Type': mimeType }
-    );
+    await this.uploads.put(objectKey, document, {
+      contentType: mimeType,
+      contentLength: document.length,
+    });
     return { size: document.length };
   }
 
   public async getDocumentUri(documentId: string): Promise<ImageURIObject> {
     // List files under documents/{documentId}/ to find the stored file with its original name
-    const files = await this.storage.listFiles(
-      this.config.uploadBucket,
-      `documents/${documentId}/`,
-      false
-    );
-    const uploadedFile = files[0];
-    if (!uploadedFile?.name) {
+    const keys = await this.listKeys(this.uploads, `documents/${documentId}/`);
+    const objectUri = keys[0];
+    if (!objectUri) {
       return { uri: `documents/${documentId}`, exists: false };
     }
-
-    const objectUri = uploadedFile.name;
 
     // Check if already copied to transformation bucket with the current content type
     const [contentType, copiedContentType] = await Promise.all([
       this.getDocumentContentType(objectUri),
-      this.getStoredContentType(this.config.transformationBucket, objectUri),
+      this.getStoredContentType(this.transformations, objectUri),
     ]);
     if (copiedContentType === contentType) {
       return { uri: objectUri, exists: true };
@@ -376,28 +401,16 @@ export class MediaService {
 
     // Copy from upload bucket to transformation bucket on first request
     try {
-      const stream = await this.storage.getFile(
-        this.config.uploadBucket,
-        objectUri
-      );
+      const document = await this.uploads.getBuffer(objectUri);
 
-      const chunks: Buffer[] = [];
-      for await (const chunk of stream) {
-        chunks.push(Buffer.from(chunk));
-      }
-      const buffer = Buffer.concat(chunks);
-
-      await this.storage.saveFile(
-        this.config.transformationBucket,
-        objectUri,
-        buffer,
-        buffer.length,
-        { 'Content-Type': contentType }
-      );
+      await this.transformations.put(objectUri, document, {
+        contentType,
+        contentLength: document.length,
+      });
 
       return { uri: objectUri, exists: true };
     } catch (e: any) {
-      if (e.code === 'NoSuchKey') {
+      if (e instanceof StorageFileNotFoundError) {
         return { uri: objectUri, exists: false };
       }
       throw e;
@@ -405,21 +418,18 @@ export class MediaService {
   }
 
   private async getStoredContentType(
-    bucket: string,
+    disk: StorageDisk,
     objectUri: string
   ): Promise<string | undefined> {
-    const information = await this.storage
-      .getFileInformation(bucket, objectUri)
+    return await disk
+      .stat(objectUri)
+      .then(file => file.contentType)
       .catch(() => undefined);
-    const contentType = Object.entries(information?.metaData ?? {}).find(
-      ([key]) => key.toLowerCase() === 'content-type'
-    )?.[1];
-    return typeof contentType === 'string' ? contentType : undefined;
   }
 
   private async getDocumentContentType(objectUri: string): Promise<string> {
     const uploadedContentType = await this.getStoredContentType(
-      this.config.uploadBucket,
+      this.uploads,
       objectUri
     );
     if (
@@ -433,40 +443,10 @@ export class MediaService {
     );
   }
 
-  public async hasDocument(documentId: string): Promise<boolean> {
-    const files = await this.storage.listFiles(
-      this.config.uploadBucket,
-      `documents/${documentId}/`,
-      false
-    );
-    return files.length > 0;
-  }
-
   public async deleteDocument(documentId: string) {
     // Delete all files under documents/{documentId}/ from both buckets
-    const transformFiles = await this.storage.listFiles(
-      this.config.transformationBucket,
-      `documents/${documentId}/`,
-      true
-    );
-    if (transformFiles.length) {
-      await this.storage.deleteFiles(
-        this.config.transformationBucket,
-        transformFiles.map(f => f.name || '')
-      );
-    }
-
-    const uploadFiles = await this.storage.listFiles(
-      this.config.uploadBucket,
-      `documents/${documentId}/`,
-      true
-    );
-    if (uploadFiles.length) {
-      await this.storage.deleteFiles(
-        this.config.uploadBucket,
-        uploadFiles.map(f => f.name || '')
-      );
-    }
+    await this.deleteKeys(this.transformations, `documents/${documentId}/`);
+    await this.deleteKeys(this.uploads, `documents/${documentId}/`);
   }
 
   private readonly thumbnailLogger = new Logger('DocumentThumbnail');
@@ -477,36 +457,26 @@ export class MediaService {
     const thumbnailUri = `documents/${documentId}/thumbnail`;
 
     // Return cached thumbnail if it exists
-    if (
-      await this.storage.hasFile(this.config.transformationBucket, thumbnailUri)
-    ) {
+    if (await this.transformations.exists(thumbnailUri)) {
       return { uri: thumbnailUri, exists: true };
     }
 
     // Find the original file from upload bucket
-    const files = await this.storage.listFiles(
-      this.config.uploadBucket,
-      `documents/${documentId}/`,
-      false
-    );
-    const uploadedFile = files.find(
-      f => f.name && !f.name.endsWith('/thumbnail')
-    );
-    if (!uploadedFile?.name) {
+    const keys = await this.listKeys(this.uploads, `documents/${documentId}/`);
+    const objectKey = keys.find(key => !key.endsWith('/thumbnail'));
+    if (!objectKey) {
       return { uri: thumbnailUri, exists: false };
     }
 
     // Determine file category from the stored content type
     const category = getDocumentCategory(
-      await this.getDocumentContentType(uploadedFile.name)
+      await this.getDocumentContentType(objectKey)
     );
 
     // For PDFs, generate a preview of the first page
     if (category === 'pdf') {
-      return this.generatePdfThumbnail(
-        documentId,
-        uploadedFile.name,
-        thumbnailUri
+      return this.limitTransforms(() =>
+        this.generatePdfThumbnail(documentId, objectKey, thumbnailUri)
       );
     }
 
@@ -532,13 +502,10 @@ export class MediaService {
         .webp({ quality: 80 })
         .toBuffer();
 
-      await this.storage.saveFile(
-        this.config.transformationBucket,
-        thumbnailUri,
-        thumbnailBuffer,
-        thumbnailBuffer.length,
-        { 'Content-Type': 'image/webp' }
-      );
+      await this.transformations.put(thumbnailUri, thumbnailBuffer, {
+        contentType: 'image/webp',
+        contentLength: thumbnailBuffer.length,
+      });
 
       return { uri: thumbnailUri, exists: true };
     } catch (err) {
@@ -554,24 +521,15 @@ export class MediaService {
     objectKey: string,
     thumbnailUri: string
   ): Promise<ImageURIObject> {
-    let pdfStream: Readable;
+    let pdfBuffer: Buffer;
     try {
-      pdfStream = await this.storage.getFile(
-        this.config.uploadBucket,
-        objectKey
-      );
+      pdfBuffer = await this.uploads.getBuffer(objectKey);
     } catch (e: any) {
-      if (e.code === 'NoSuchKey') {
+      if (e instanceof StorageFileNotFoundError) {
         return { uri: thumbnailUri, exists: false };
       }
       throw e;
     }
-
-    const chunks: Buffer[] = [];
-    for await (const chunk of pdfStream) {
-      chunks.push(Buffer.from(chunk));
-    }
-    const pdfBuffer = Buffer.concat(chunks);
 
     // Create a secure temp directory for this operation
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'media-thumb-'));
@@ -594,17 +552,21 @@ export class MediaService {
     try {
       fs.writeFileSync(tmpPdf, pdfBuffer);
 
-      await execFileAsync('pdftoppm', [
-        '-png',
-        '-f',
-        '1',
-        '-l',
-        '1',
-        '-scale-to',
-        '600',
-        tmpPdf,
-        tmpOutPrefix,
-      ]);
+      await execFileAsync(
+        'pdftoppm',
+        [
+          '-png',
+          '-f',
+          '1',
+          '-l',
+          '1',
+          '-scale-to',
+          '600',
+          tmpPdf,
+          tmpOutPrefix,
+        ],
+        { timeout: PDF_RENDER_TIMEOUT, killSignal: 'SIGKILL' }
+      );
 
       const thumbPath = `${tmpOutPrefix}-1.png`;
       if (!fs.existsSync(thumbPath)) {
@@ -624,13 +586,10 @@ export class MediaService {
         .webp({ quality: 80 })
         .toBuffer();
 
-      await this.storage.saveFile(
-        this.config.transformationBucket,
-        thumbnailUri,
-        thumbnailBuffer,
-        thumbnailBuffer.length,
-        { 'Content-Type': 'image/webp' }
-      );
+      await this.transformations.put(thumbnailUri, thumbnailBuffer, {
+        contentType: 'image/webp',
+        contentLength: thumbnailBuffer.length,
+      });
 
       cleanup();
       return { uri: thumbnailUri, exists: true };

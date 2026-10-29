@@ -13,10 +13,12 @@ import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from './payment-method/payment-method.config';
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction } from 'connect';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { Public } from '@wepublish/authentication/api';
 import { PaymentState } from '@prisma/client';
 import { InvoicePaidNotifier } from './invoice-paid.listener';
+import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks';
 
@@ -27,15 +29,16 @@ export class PaymentWebhookController {
   constructor(
     @Inject(PAYMENT_METHOD_CONFIG)
     private config: PaymentMethodConfig,
-    private invoicePaidNotifier: InvoicePaidNotifier
+    private invoicePaidNotifier: InvoicePaidNotifier,
+    private authorizationNotifier: PaymentAuthorizationNotifier
   ) {}
 
   @Public()
   @All(':providerId')
   async receiveWebhook(
     @Param('providerId') providerId: string,
-    @Req() req: Request,
-    @Res() res: Response
+    @Req() req: NodeRequest,
+    @Res() res: NodeResponse
   ) {
     this.logger.log(
       `Received webhook from ${req.get('origin')} for paymentProvider ${providerId}`
@@ -72,6 +75,13 @@ export class PaymentWebhookController {
             }
           }
 
+          for (const authorizationState of response.authorizationStates ?? []) {
+            await this.authorizationNotifier.notify(
+              provider.id,
+              authorizationState
+            );
+          }
+
           if (response.redirectUrl) {
             return await res.redirect(303, response.redirectUrl);
           }
@@ -105,7 +115,7 @@ export class PaymentWebhookMiddleware implements NestMiddleware {
     private config: PaymentMethodConfig
   ) {}
 
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: NodeRequest, res: NodeResponse, next: NextFunction) {
     const providerId = req.params['providerId'];
 
     const provider = this.config.paymentProviders.find(

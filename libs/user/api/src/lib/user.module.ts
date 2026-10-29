@@ -4,7 +4,7 @@ import { ImageModule } from '@wepublish/image/api';
 import { MailchimpContactModule } from '@wepublish/mail/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { SessionCacheModule } from '@wepublish/authentication/api';
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { UserDataloaderService } from './user-dataloader.service';
 import {
   HasOptionalUserLcResolver,
@@ -34,7 +34,7 @@ import { UserEmailQualityDataloader } from './user-email-quality.dataloader';
 
 @Module({
   imports: [
-    GraphqlResponseCacheModule,
+    PublicContentInvalidatorModule,
     PrismaModule,
     ImageModule,
     HttpModule,

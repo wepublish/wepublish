@@ -1,5 +1,5 @@
 import { PrismaClient, SettingPdfRenderer } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   GotenbergPdfRenderer,
   GotenbergPdfRendererProps,
@@ -52,7 +52,7 @@ describe('GotenbergPdfRenderer', () => {
     const renderer = new GotenbergPdfRenderer({
       id: 'gotenberg',
       prisma: {} as PrismaClient,
-      kv: {} as KvTtlCacheService,
+      kv: {} as NamespacedCache,
       fallback,
     });
 

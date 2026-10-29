@@ -9,6 +9,9 @@
     "backToProfile": "Retour au profil",
     "profile": "Profil"
   },
+  "banner": {
+    "close": "Fermer la bannière"
+  },
   "paywall": {
     "subscribe": "S'abonner",
     "login": "Login"
@@ -29,7 +32,10 @@
   },
   "subscribe": {
     "memberplan": {
-      "price": "{amountPerMonthMin, select, 0 {Gratuit} other {À partir de {monthlyPrice} {extendable, select, true {par mois} other {}}}}"
+      "price": "{amountPerMonthMin, select, 0 {Gratuit} other {À partir de {monthlyPrice} {extendable, select, true {par mois} other {}}}}",
+      "offerPrice": "{amountMin, select, 0 {Gratuit} other {{exactAmount, select, true {} other {À partir de }}{periodPrice} {periodicity, select, monthly {par mois} quarterly {par trimestre} biannual {par semestre} yearly {par an} biennial {par 2 ans} lifetime {une seule fois} other {}}}}",
+      "amountMin": "Au moins {amount}",
+      "periodicityUnavailable": "Non disponible pour cet intervalle de paiement"
     },
     "periodicity": "Intervalle de paiement",
     "continuation": "Après {afterFirstPaymentPeriod}, {formattedAmount} {renewalPeriodL}.",
@@ -106,15 +112,33 @@
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Image : {source})</ImageSource>}}"
   },
   "subscription": {
+    "renewPaymentMethod": "Mettre à jour le moyen de paiement actuel",
+    "renewPaymentMethodHint": "p.ex. enregistrer une nouvelle carte",
+    "renewPaymentMethodTitle": "Mettre à jour le moyen de paiement actuel",
+    "renewPaymentMethodConfirmation": "Vous confirmez à nouveau {paymentMethod}, par exemple avec une nouvelle carte ou un nouveau compte TWINT. D'ici là, l'enregistrement actuel reste actif.",
+    "paymentMethod": "Moyen de paiement : {paymentMethod}",
+    "changePaymentMethod": "Adapter le moyen de paiement",
+    "changePaymentMethodTitle": "Adapter le moyen de paiement",
+    "changePaymentMethodCurrent": "Moyen de paiement actuel : <strong>{paymentMethod}</strong>",
+    "changePaymentMethodChoose": "Changer le moyen de paiement pour :",
+    "changePaymentMethodNew": "Changer le moyen de paiement pour : <strong>{paymentMethod}</strong>",
+    "changePaymentMethodSubmit": "Continuer",
+    "changePaymentMethodOpenInvoice": "Vous payez la facture ouverte de {amount} avec le nouveau moyen de paiement. Ce n'est qu'ensuite qu'il sera repris pour votre {type, select, Donation {don} other {abonnement}}.",
+    "changePaymentMethodAuthorization": "Vous confirmez une fois un moyen de paiement en ligne auprès du prestataire de paiement. Un montant de {amount} peut être réservé à cet effet, il ne vous sera jamais débité. D'ici là, votre moyen de paiement actuel reste actif.",
+    "paymentMethodChangePending": "Changement vers {paymentMethod} en attente : {kind, select, invoicePayment {actif dès que la facture ouverte est payée} other {actif dès que vous avez confirmé le moyen de paiement}}. Possible jusqu'au {expiresAt}.",
+    "paymentMethodChangePendingShort": "Changement de moyen de paiement en attente",
+    "paymentMethodChangeContinue": "Continuer",
+    "paymentMethodChangeCancel": "Annuler le changement",
+    "extendChargedWith": "Paiement par : <strong>{paymentMethod}</strong>",
     "externalReward": "{isLink, select, true {Lien vers une récompense externe} other {{externalReward}}}",
     "unpaid": "{type, select, Donation {Don} other {Abonnement}} impayé",
     "cancel": "Résilier {type, select, Donation {le don} other {l'abonnement}}",
-    "cancelConfirmation": "{type, select, Donation {Toutes les factures ouvertes du don seront annulées.} other {L'abonnement ne sera pas renouvelé, mais restera valable jusqu'à sa date d'expiration. Toutes les factures ouvertes de l'abonnement seront annulées.}}",
+    "cancelConfirmation": "{type, select, Donation {En résiliant, vous mettez fin à un soutien précieux. Les factures ouvertes du don seront annulées.} other {En résiliant, vous mettez fin à un soutien précieux. Votre abonnement ne sera plus prolongé, mais reste valable jusqu'à sa date d'échéance. Les factures ouvertes de l'abonnement seront annulées.}}",
     "costs": "Coûte {amount} {extendable, select, true {{periodicity, select, monthly {par mois} quarterly {par trimestre} biannual {par semestre} yearly {par an} biennial {par 2 ans} lifetime {une seule fois} other {}}} other {}}",
     "extendNow": "Prolonger maintenant",
     "extendBy": "Prolonger maintenant de {subscriptionDuration}",
-    "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}} à l'avance ?",
-    "extendEarlyConfirmation": "Nous sommes ravis que vous souhaitiez prolonger votre {type, select, Donation {don} other {abonnement}} de {subscriptionDuration} à l'avance. Continuer ?",
+    "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}}",
+    "extendEarlyConfirmation": "Votre prolongation anticipée {type, select, Donation {du don} other {de l'abonnement}} de {subscriptionDuration} renforce notre sécurité de planification. Merci pour ce soutien !",
     "noActiveSubscriptions": "Vous n'avez pas encore d'abonnement actif.",
     "subscribeNow": "S'abonner maintenant.",
     "startsAt": "{type, select, Donation {Effectué le} other {Souscrit le}} <time>{startsAt}</time>",
@@ -125,9 +149,9 @@
     "cancelledDueToUnknownReason": "Le motif de résiliation est inconnu",
     "autoRenew": "Sera renouvelé automatiquement {periodicityTimeline}",
     "validFor": "Valable {subscriptionDuration}",
-    "cancelProduct": "Voulez-vous vraiment résilier {productName} ?",
+    "cancelProduct": "Voulez-vous vraiment résilier {productName, select, Donation {votre don} other {votre abonnement}} ?",
     "reactivate": "Réactiver {type, select, Donation {le don} other {l’abonnement}}",
-    "reactivateProduct": "Réactiver vraiment {productName} ?",
+    "reactivateProduct": "Réactiver {productName, select, Donation {le don} other {l'abonnement}}",
     "revertUpgrade": "Annuler le changement",
     "revertUpgradeTitle": "Vraiment annuler le changement ?",
     "revertUpgradeConfirmation": "{type, select, Donation {Le nouveau don et sa facture ouverte sont supprimés, le don précédent se poursuit normalement.} other {Le nouvel abonnement et sa facture ouverte sont supprimés, ton abonnement précédent se poursuit normalement.}}",
@@ -179,11 +203,12 @@
     "paidAt": "Payé le",
     "canceledAt": "Annulé le",
     "sepaWarning": "La facture sera automatiquement réglée par prélèvement automatique. Cela peut prendre quelques jours.",
-    "bexioWarning": "Vous recevrez une facture PDF par e-mail.",
+    "bexioWarning": "Vous trouverez les informations de paiement sur votre facture.",
     "payrexxWarning": "Nous avons récemment mis à jour le système des membres et votre abonnement est obsolète. Il sera automatiquement mis à jour lorsque vous cliquerez sur \"Payer maintenant\".",
     "payNow": "Payer maintenant"
   },
   "user": {
+    "authorize": "Confirmer",
     "changeEmailRequest": "Cliquez ici pour modifier votre adresse e-mail",
     "email": "E-Mail",
     "changeEmail": "Modifier l'adresse e-mail",
@@ -206,6 +231,11 @@
     "saveSuccess": "Modifications enregistrées avec succès !",
     "passwordWarning": "Remplissez uniquement si vous souhaitez modifier le mot de passe. Sinon laissez vide.",
     "pay": "Payer",
+    "imageUpload": {
+      "delete": "Supprimer l'image",
+      "replace": "Téléverser une nouvelle image",
+      "upload": "Téléverser une image"
+    },
     "totp": {
       "title": "Authentification à deux facteurs",
       "enabled": "L'authentification à deux facteurs est activée.",
@@ -236,8 +266,17 @@
       "country": "Pays",
       "suggested": "Suggéré",
       "occupation": "Fonction / Profession",
-      "passwordsDoNotMatch": "Les mots de passe ne correspondent pas."
-    }
+      "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
+      "errors": {
+        "minLength": "{minimum, plural, one {Ne doit pas être vide} other {Min. # caractères}}",
+        "chooseOption": "Veuillez choisir une option"
+      }
+    },
+    "sections": {
+      "personalData": "Données personnelles",
+      "security": "Sécurité"
+    },
+    "changePassword": "Changer le mot de passe"
   },
   "article": {
     "noArticles": "Aucun article disponible",
@@ -252,7 +291,14 @@
     "loginForReaders": "Connexion pour les lecteurs",
     "noAccountYet": "Pas encore de compte?",
     "registerNow": "S'inscrire maintenant",
-    "notLoggedIn": "Vous n'êtes pas connecté"
+    "notLoggedIn": "Vous n'êtes pas connecté",
+    "name": "Nom",
+    "namePlaceholder": "Votre nom",
+    "title": "Titre",
+    "titlePlaceholder": "Donnez un titre à votre contribution.",
+    "text": "Commentaire",
+    "textPlaceholder": "Rédiger une contribution",
+    "characterCount": "{{length}} / {{max}} caractères"
   },
   "comments": {
     "list": {
@@ -268,7 +314,7 @@
   "poll": {
     "totalVotes": "{count} votes",
     "closesAt": "Clôture le <time>{date}</time>",
-    "closed": "&ndash; Vote terminé."
+    "closed": "Vote terminé."
   },
   "registrationForm": {
     "register": "S'inscrire",
@@ -392,5 +438,87 @@
       "map": "Map",
       "set": "Ensemble"
     }
+  },
+  "contextBox": {
+    "defaultTitle": "De quoi s'agit-il",
+    "readMore": "Lire la suite",
+    "readLess": "Réduire"
+  },
+  "slider": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "slide": "Diapositive {index}"
+  },
+  "lightbox": {
+    "previous": "Image précédente",
+    "next": "Image suivante",
+    "fullscreen": "Plein écran",
+    "exitFullscreen": "Quitter le plein écran"
+  },
+  "subscriptionHistory": {
+    "title": "{type, select, Donation {Dons et factures} other {Abonnements et factures}}",
+    "plan": "{type, select, Donation {Don} other {Abonnement}}",
+    "state": "Statut",
+    "startsAt": "Début",
+    "paidUntil": "Payé jusqu'au",
+    "amount": "Montant",
+    "amountPerPeriod": "{amount} {periodicity, select, monthly {par mois} quarterly {par trimestre} biannual {par semestre} yearly {par an} biennial {tous les 2 ans} lifetime {unique} other {}}",
+    "paymentMethod": "Moyen de paiement",
+    "renewal": "Renouvellement",
+    "renews": "Automatique",
+    "ends": "Se termine",
+    "showInvoices": "Afficher les factures",
+    "hideInvoices": "Masquer les factures",
+    "ended": "{type, select, Donation {Dons terminés} other {Abonnements terminés}} ({count})",
+    "noSubscriptions": "Tu n'as pas encore d'abonnement.",
+    "invoice": "Facture",
+    "createdAt": "Créée le",
+    "dueAt": "Échéance",
+    "total": "Montant",
+    "noInvoices": "Pas encore de factures",
+    "allInvoices": "Toutes les factures ({count})",
+    "showCanceled": "Afficher les factures annulées ({count})",
+    "hideCanceled": "Masquer les factures annulées",
+    "states": {
+      "active": "Actif",
+      "planned": "Planifié",
+      "unpaid": "Non payé",
+      "expired": "Expiré",
+      "deactivated": "Résilié"
+    },
+    "invoiceStates": {
+      "paid": "Payée le {date}",
+      "canceled": "Annulée le {date}",
+      "unpaid": "Ouverte"
+    },
+    "endsOn": "au {date}",
+    "invoiceStateNames": {
+      "paid": "Payée",
+      "canceled": "Annulée",
+      "unpaid": "Ouverte"
+    },
+    "edit": "{type, select, Donation {Adapter le don} other {Adapter l'abonnement}}",
+    "moreInvoices": "{count, plural, one {# autre facture} other {# autres factures}}",
+    "hideMoreInvoices": "Masquer les factures"
+  },
+  "subscriptionEdit": {
+    "title": "{type, select, Donation {Adapter le don} other {Adapter l'abonnement}}",
+    "sections": {
+      "plan": "{type, select, Donation {Don} other {Abonnement}}",
+      "payment": "Paiement",
+      "renewal": "Renouvellement & résiliation",
+      "invoices": "Factures"
+    },
+    "upgrade": "Passer à un abonnement supérieur",
+    "paymentMethodNotChangeable": "Le moyen de paiement de {type, select, Donation {ce don} other {cet abonnement}} ne peut pas être modifié en ligne."
+  },
+  "paymentMethodLabels": {
+    "bexio": "Facture",
+    "payrexx": "Paiement en ligne",
+    "payrexx-subscription": "Paiement en ligne",
+    "stripe": "Carte de crédit",
+    "stripe-checkout": "Carte de crédit",
+    "mollie": "Paiement en ligne",
+    "no-charge": "Gratuit"
   }
 }
