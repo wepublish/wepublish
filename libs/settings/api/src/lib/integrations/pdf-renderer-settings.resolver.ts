@@ -5,6 +5,7 @@ import {
   CanGetPdfRendererSettings,
   CanUpdatePdfRendererSettings,
 } from '@wepublish/permissions';
+import { Feature } from '@wepublish/features/api';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   CreateSettingPdfRendererInput,
@@ -15,6 +16,8 @@ import {
 import { PdfRendererSettingsService } from './pdf-renderer-settings.service';
 import { PdfRendererSettingsDataloaderService } from './pdf-renderer-settings-dataloader.service';
 
+// Letters ship dark: the integration stays invisible until the feature is on.
+@Feature('paper-letters')
 @Resolver()
 export class PdfRendererSettingsResolver {
   constructor(

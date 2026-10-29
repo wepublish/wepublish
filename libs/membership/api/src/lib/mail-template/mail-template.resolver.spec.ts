@@ -15,6 +15,7 @@ import { NodeAdapter } from '@nestjs/platform-node';
 import { NodeApolloDriver } from '@wepublish/utils/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { APP_GUARD } from '@nestjs/core';
+import { FeaturesService } from '@wepublish/features/api';
 import { PermissionsGuard } from '@wepublish/permissions/api';
 import request from 'supertest';
 import {
@@ -105,6 +106,11 @@ const mailContextMock = {
   getUsedTemplateIdentifiers: vi.fn((): string[] => [mockTemplate2.id]),
 };
 
+// Paper letters ship dark; the guard asks this before every letter operation.
+const featuresMock = {
+  isEnabled: vi.fn(async () => true),
+};
+
 const mailTemplateServiceMock = {
   deleteMailTemplate: vi.fn(async () => undefined),
   preview: vi.fn(async () => ({ subject: 's', html: 'h', text: undefined })),
@@ -130,6 +136,7 @@ const mailTemplateServiceMock = {
     MailTemplatesResolver,
     UsedMailTemplateDataloader,
     { provide: MailTemplateService, useValue: mailTemplateServiceMock },
+    { provide: FeaturesService, useValue: featuresMock },
     {
       provide: APP_GUARD,
       useClass: PermissionsGuard,
@@ -158,6 +165,7 @@ describe('MailTemplatesResolver', () => {
         { provide: PrismaClient, useValue: prismaServiceMock },
         { provide: MailContext, useValue: mailContextMock },
         { provide: MailTemplateService, useValue: mailTemplateServiceMock },
+        { provide: FeaturesService, useValue: featuresMock },
       ],
     }).compile();
 

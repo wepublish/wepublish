@@ -62,6 +62,15 @@ describe('editor command registry', () => {
     expect(commandPaths().length).toBeLessThanOrEqual(allCommands.length);
   });
 
+  it.each([
+    ['letterLayouts', 'paper-letters'],
+    ['createLetterLayout', 'paper-letters'],
+  ])('offers %s only where %s is switched on', (id, feature) => {
+    expect(allCommands.find(command => command.id === id)?.feature).toBe(
+      feature
+    );
+  });
+
   it('marks the three favourites, and nothing else', () => {
     expect(
       allCommands.filter(({ favourite }) => favourite).map(({ id }) => id)
