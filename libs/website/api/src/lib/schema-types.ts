@@ -1328,6 +1328,24 @@ export enum EditorBlockType {
   Title = 'Title'
 }
 
+/** active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed. */
+export enum EmailQualityLevel {
+  Active = 'active',
+  Dead = 'dead',
+  Unknown = 'unknown',
+  Unresponsive = 'unresponsive'
+}
+
+export type EmailQualityRefreshModel = {
+  __typename: 'EmailQualityRefreshModel';
+  /** Mails that were still in an open state and could be looked up at the provider. */
+  checked: Scalars['Int']['output'];
+  /** People whose email level was re-evaluated. */
+  recomputed: Scalars['Int']['output'];
+  /** Mails whose state the provider reported differently. */
+  updated: Scalars['Int']['output'];
+};
+
 export type Event = {
   __typename: 'Event';
   createdAt: Scalars['DateTime']['output'];
@@ -2110,6 +2128,46 @@ export type KeyEnabledInput = {
   key?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Where the address window sits on the printed sheet. */
+export enum LetterAddressPosition {
+  Left = 'left',
+  Right = 'right'
+}
+
+export enum LetterDeliveryProduct {
+  Bulk = 'bulk',
+  Cheap = 'cheap',
+  Fast = 'fast',
+  Premium = 'premium',
+  Registered = 'registered'
+}
+
+export type LetterPrintInput = {
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
+  printMode?: InputMaybe<LetterPrintMode>;
+  printSpectrum?: InputMaybe<LetterPrintSpectrum>;
+};
+
+export enum LetterPrintMode {
+  Duplex = 'duplex',
+  Simplex = 'simplex'
+}
+
+export enum LetterPrintSpectrum {
+  Color = 'color',
+  Grayscale = 'grayscale'
+}
+
+export enum LetterProviderEnvironment {
+  Production = 'production',
+  Staging = 'staging'
+}
+
+export enum LetterProviderType {
+  Pingen = 'pingen'
+}
+
 export type ListicleBlock = BaseBlock & {
   __typename: 'ListicleBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -2158,6 +2216,10 @@ export enum LoginStatus {
 export type MailAudienceInput = {
   autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   base: MailRecipientBase;
+  /** Restrict to placeholder or real email addresses. Defaults to all. */
+  emailFilter?: InputMaybe<MailEmailFilter>;
+  /** Restrict to people in any of these email segments. Empty or absent means everyone. */
+  emailSegments?: InputMaybe<Array<MailEmailSegment>>;
   /** Win-back audience only: start of an explicit period the subscription ended in. */
   endedFrom?: InputMaybe<Scalars['DateTime']['input']>;
   /** Win-back audience only: end of an explicit period the subscription ended in. */
@@ -2185,7 +2247,29 @@ export type MailAudienceInput = {
   subscriptionState?: InputMaybe<MailSubscriptionState>;
 };
 
+/** Whether a send goes out as an email or as a printed letter. */
+export enum MailChannel {
+  Letter = 'letter',
+  Mail = 'mail'
+}
+
+export enum MailEmailFilter {
+  All = 'all',
+  Placeholder = 'placeholder',
+  Real = 'real'
+}
+
+/** placeholder: generated address, reachable by letter only. dead: bounced, invalid, complained or unsubscribed. unresponsive: mails delivered, no login or click for a long time. unknown: nothing decided yet. active: logged in or clicked recently. */
+export enum MailEmailSegment {
+  Active = 'active',
+  Dead = 'dead',
+  Placeholder = 'placeholder',
+  Unknown = 'unknown',
+  Unresponsive = 'unresponsive'
+}
+
 export type MailLogFilter = {
+  channel?: InputMaybe<MailChannel>;
   mailSendJobId?: InputMaybe<Scalars['String']['input']>;
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
   recipientId?: InputMaybe<Scalars['String']['input']>;
@@ -2195,6 +2279,9 @@ export type MailLogFilter = {
 
 export type MailLogModel = {
   __typename: 'MailLogModel';
+  /** Letters only: the address the letter was sent to. */
+  address?: Maybe<Scalars['String']['output']>;
+  channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
   /** Why a rejected mail could not be delivered. */
   error?: Maybe<Scalars['String']['output']>;
@@ -2202,6 +2289,8 @@ export type MailLogModel = {
   mailProviderID: Scalars['String']['output'];
   mailSendJobId?: Maybe<Scalars['String']['output']>;
   mailTemplate: MailLogTemplate;
+  /** Letters only: id the print vendor assigned to the letter. */
+  providerLetterID?: Maybe<Scalars['String']['output']>;
   recipient: MailLogRecipient;
   sentDate: Scalars['DateTime']['output'];
   state: MailLogState;
@@ -2220,10 +2309,13 @@ export type MailLogRecipient = {
 export enum MailLogState {
   Accepted = 'accepted',
   Bounced = 'bounced',
+  Canceled = 'canceled',
   Deferred = 'deferred',
   Delivered = 'delivered',
+  Dispatched = 'dispatched',
   Rejected = 'rejected',
-  Submitted = 'submitted'
+  Submitted = 'submitted',
+  Undeliverable = 'undeliverable'
 }
 
 export type MailLogSyncModel = {
@@ -2269,6 +2361,12 @@ export enum MailRecipientBase {
   NoActiveSubscription = 'noActiveSubscription'
 }
 
+export type MailSegmentCount = {
+  __typename: 'MailSegmentCount';
+  segment: MailEmailSegment;
+  userCount: Scalars['Int']['output'];
+};
+
 export enum MailSendAudience {
   AllUsers = 'allUsers',
   FilteredSubscriptions = 'filteredSubscriptions',
@@ -2277,12 +2375,17 @@ export enum MailSendAudience {
 
 export type MailSendJobInput = {
   audience: MailAudienceInput;
+  /** Defaults to mail. */
+  channel?: InputMaybe<MailChannel>;
   mailTemplateId: Scalars['String']['input'];
+  /** Letter sends only. Ignored for mail. */
+  print?: InputMaybe<LetterPrintInput>;
 };
 
 export type MailSendJobModel = {
   __typename: 'MailSendJobModel';
   audience: MailSendAudience;
+  channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
   createdByUserId: Scalars['String']['output'];
   error?: Maybe<Scalars['String']['output']>;
@@ -2294,6 +2397,8 @@ export type MailSendJobModel = {
   mailTemplate?: Maybe<MailLogTemplate>;
   mailTemplateId: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
+  /** What became of the mails after sending. Bounces arrive over hours or days; refresh to pull late ones. */
+  outcome: MailSendJobOutcome;
   /** How often the job was picked up again after an interruption. */
   resumeCount: Scalars['Int']['output'];
   /** Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own. */
@@ -2302,6 +2407,18 @@ export type MailSendJobModel = {
   startedAt?: Maybe<Scalars['DateTime']['output']>;
   status: MailSendJobState;
   totalCount: Scalars['Int']['output'];
+};
+
+export type MailSendJobOutcome = {
+  __typename: 'MailSendJobOutcome';
+  /** Mails that bounced or were rejected by the provider. */
+  bounced: Scalars['Int']['output'];
+  /** Mails somebody clicked a link in. */
+  clicked: Scalars['Int']['output'];
+  /** Recipients whose address counts as dead by now, from this or a later mail. */
+  dead: Scalars['Int']['output'];
+  /** Mails the provider reported as delivered. */
+  delivered: Scalars['Int']['output'];
 };
 
 export type MailSendJobRecipientModel = {
@@ -2336,14 +2453,20 @@ export enum MailSendJobState {
 
 export type MailSendPreviewInput = {
   audience: MailAudienceInput;
+  /** Defaults to mail. A letter preview renders the pdf. */
+  channel?: InputMaybe<MailChannel>;
   mailTemplateId: Scalars['String']['input'];
+  print?: InputMaybe<LetterPrintInput>;
   /** Row id of the recipient to render for. Defaults to the first of the audience. */
   recipientId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MailSendPreviewModel = {
   __typename: 'MailSendPreviewModel';
+  /** Empty for a letter preview. */
   html: Scalars['String']['output'];
+  /** Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed. */
+  pdf?: Maybe<Scalars['String']['output']>;
   /** The recipient this preview was rendered for. */
   recipient?: Maybe<MailSendRecipientModel>;
   subject: Scalars['String']['output'];
@@ -2353,7 +2476,11 @@ export type MailSendPreviewModel = {
 export type MailSendRecipientModel = {
   __typename: 'MailSendRecipientModel';
   email: Scalars['String']['output'];
+  /** Which email segment the recipient falls into. */
+  emailSegment: MailEmailSegment;
   firstName?: Maybe<Scalars['String']['output']>;
+  /** Whether the user has a postal address a letter can be sent to. A letter send skips recipients without one. */
+  hasAddress: Scalars['Boolean']['output'];
   /** Row identity. A user appears once per matching subscription, so this combines both. */
   id: Scalars['String']['output'];
   memberPlanName?: Maybe<Scalars['String']['output']>;
@@ -2366,10 +2493,14 @@ export type MailSendRecipientPreview = {
   __typename: 'MailSendRecipientPreview';
   /** Whether recipients carry subscription data (subscription-context templates allowed). */
   allowsSubscriptionTemplates: Scalars['Boolean']['output'];
-  /** Number of mails that would be sent. */
+  /** Number of messages that would be sent over the given channel. A letter send reaches every person once, so it equals `userCount`. */
   count: Scalars['Int']['output'];
+  /** How the people of this audience split into email segments, ignoring the segments picked, so the split stays visible while choosing. */
+  segments: Array<MailSegmentCount>;
   /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
   userCount: Scalars['Int']['output'];
+  /** How many of the recipients have no usable postal address and would be skipped by a letter send. */
+  withoutAddressCount: Scalars['Int']['output'];
 };
 
 export enum MailSubscriptionState {
@@ -2396,6 +2527,12 @@ export type MailTemplateInput = {
   name: Scalars['String']['input'];
   subject: Scalars['String']['input'];
   textContent?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MailTemplateLetterPreviewModel = {
+  __typename: 'MailTemplateLetterPreviewModel';
+  /** The rendered letter as a base64 encoded pdf. */
+  pdf: Scalars['String']['output'];
 };
 
 export type MailTemplateModel = {
@@ -3037,6 +3174,8 @@ export type Mutation = {
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Creates a new letter provider setting. */
+  createLetterProviderSetting: SettingLetterProvider;
   /** Sets up the mail provider. Only possible while none is configured. */
   createMailProviderSetting: SettingMailProvider;
   /** Start a background job sending a template to a filtered audience */
@@ -3062,6 +3201,8 @@ export type Mutation = {
   createPaymentProviderSetting: SettingPaymentProvider;
   /** Creates a paywall. */
   createPaywall: Paywall;
+  /** Creates a new pdf renderer setting. */
+  createPdfRendererSetting: SettingPdfRenderer;
   /** Creates a new peer. */
   createPeer: Peer;
   /** Creates a new poll. */
@@ -3139,6 +3280,8 @@ export type Mutation = {
   deleteImage: Scalars['String']['output'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Deletes an existing letter provider setting. */
+  deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes a single sync error so the contact will be retried. */
@@ -3157,6 +3300,8 @@ export type Mutation = {
   deletePaymentProviderSetting: SettingPaymentProvider;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
+  /** Deletes an existing pdf renderer setting. */
+  deletePdfRendererSetting: SettingPdfRenderer;
   /** Deletes an existing peer. */
   deletePeer: Scalars['String']['output'];
   /** Deletes an existing poll. */
@@ -3242,11 +3387,13 @@ export type Mutation = {
   reactivateSubscription: PublicSubscription;
   /** Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created. */
   reactivateUserSubscription: PublicSubscription;
+  /** Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now. */
+  refreshEmailQuality: EmailQualityRefreshModel;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Rejects a comment */
   rejectComment: Comment;
-  /** Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API. */
+  /** Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API. */
   reloadProviders: Scalars['Boolean']['output'];
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
@@ -3343,6 +3490,8 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
+  /** Updates an existing letter provider setting. */
+  updateLetterProviderSetting: SettingLetterProvider;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
   /** Update an existing mail template */
@@ -3364,6 +3513,8 @@ export type Mutation = {
   updatePaymentProviderSetting: SettingPaymentProvider;
   /** Updates a paywall. */
   updatePaywall: Paywall;
+  /** Updates an existing pdf renderer setting. */
+  updatePdfRendererSetting: SettingPdfRenderer;
   /** Updates an existing peer. */
   updatePeer: Peer;
   /** Updates the peer profile of the current media. */
@@ -3688,6 +3839,20 @@ export type MutationCreateInvoiceArgs = {
 };
 
 
+export type MutationCreateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']['input']>;
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  organisationId?: InputMaybe<Scalars['String']['input']>;
+  placeholderEmailContains?: InputMaybe<Scalars['String']['input']>;
+  type: LetterProviderType;
+  webhookSigningKey?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationCreateMailProviderSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']['input']>;
   fromAddress?: InputMaybe<Scalars['String']['input']>;
@@ -3847,6 +4012,19 @@ export type MutationCreatePaywallArgs = {
   name?: InputMaybe<Scalars['String']['input']>;
   upgradeCircumventDescription?: InputMaybe<Scalars['RichText']['input']>;
   upgradeDescription?: InputMaybe<Scalars['RichText']['input']>;
+};
+
+
+export type MutationCreatePdfRendererSettingArgs = {
+  cloudflare_accountId?: InputMaybe<Scalars['String']['input']>;
+  cloudflare_apiToken?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_password?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_url?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_username?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  timeoutMs?: InputMaybe<Scalars['Int']['input']>;
+  type: PdfRendererType;
 };
 
 
@@ -4122,6 +4300,11 @@ export type MutationDeleteInvoiceArgs = {
 };
 
 
+export type MutationDeleteLetterProviderSettingArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String']['input'];
 };
@@ -4163,6 +4346,11 @@ export type MutationDeletePaymentProviderSettingArgs = {
 
 
 export type MutationDeletePaywallArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeletePdfRendererSettingArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -4737,6 +4925,20 @@ export type MutationUpdateInvoiceArgs = {
 };
 
 
+export type MutationUpdateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']['input']>;
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  organisationId?: InputMaybe<Scalars['String']['input']>;
+  placeholderEmailContains?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<LetterProviderType>;
+  webhookSigningKey?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationUpdateMailProviderSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']['input']>;
   fromAddress?: InputMaybe<Scalars['String']['input']>;
@@ -4892,6 +5094,19 @@ export type MutationUpdatePaywallArgs = {
   name?: InputMaybe<Scalars['String']['input']>;
   upgradeCircumventDescription?: InputMaybe<Scalars['RichText']['input']>;
   upgradeDescription?: InputMaybe<Scalars['RichText']['input']>;
+};
+
+
+export type MutationUpdatePdfRendererSettingArgs = {
+  cloudflare_accountId?: InputMaybe<Scalars['String']['input']>;
+  cloudflare_apiToken?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_password?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_url?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_username?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  timeoutMs?: InputMaybe<Scalars['Int']['input']>;
+  type?: InputMaybe<PdfRendererType>;
 };
 
 
@@ -5883,6 +6098,11 @@ export type PaywallBypass = {
   token: Scalars['String']['output'];
 };
 
+export enum PdfRendererType {
+  Cloudflare = 'cloudflare',
+  Gotenberg = 'gotenberg'
+}
+
 export type Peer = {
   __typename: 'Peer';
   createdAt: Scalars['DateTime']['output'];
@@ -6407,6 +6627,12 @@ export type Query = {
   invoicePaymentMail: ActionMail;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Whether a letter integration is configured, so letters can be previewed and sent */
+  letterChannelAvailable: Scalars['Boolean']['output'];
+  /** Returns a single letter provider setting by id. */
+  letterProviderSetting: SettingLetterProvider;
+  /** Returns all letter provider settings. */
+  letterProviderSettings: Array<SettingLetterProvider>;
   /** Paginated list of sent mails */
   mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
@@ -6427,6 +6653,8 @@ export type Query = {
   mailSendRecipients: PaginatedMailSendRecipient;
   /** Return a single mail template, including its html and text body. */
   mailTemplate?: Maybe<MailTemplateModel>;
+  /** Render a draft mail template as the letter a send would print */
+  mailTemplateLetterPreview: MailTemplateLetterPreviewModel;
   /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
   mailTemplateMissingPlaceholders: Array<Scalars['String']['output']>;
   /** Render a draft mail template with a mail type's sample data */
@@ -6510,6 +6738,10 @@ export type Query = {
   paywall: Paywall;
   /** Returns a list of paywalls based on the filters given. */
   paywalls: Array<Paywall>;
+  /** Returns a single pdf renderer setting by id. */
+  pdfRendererSetting: SettingPdfRenderer;
+  /** Returns all pdf renderer settings. */
+  pdfRendererSettings: Array<SettingPdfRenderer>;
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>;
   /** Returns a paginated list of peer articles based on the filters given. */
@@ -6984,6 +7216,16 @@ export type QueryInvoicesArgs = {
 };
 
 
+export type QueryLetterProviderSettingArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryLetterProviderSettingsArgs = {
+  filter?: InputMaybe<SettingLetterProviderFilter>;
+};
+
+
 export type QueryMailLogsArgs = {
   filter?: InputMaybe<MailLogFilter>;
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -7027,11 +7269,13 @@ export type QueryMailSendPreviewArgs = {
 
 export type QueryMailSendRecipientPreviewArgs = {
   audience: MailAudienceInput;
+  channel?: InputMaybe<MailChannel>;
 };
 
 
 export type QueryMailSendRecipientsArgs = {
   audience: MailAudienceInput;
+  channel?: InputMaybe<MailChannel>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -7039,6 +7283,11 @@ export type QueryMailSendRecipientsArgs = {
 
 export type QueryMailTemplateArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryMailTemplateLetterPreviewArgs = {
+  input: MailTemplatePreviewInput;
 };
 
 
@@ -7226,6 +7475,16 @@ export type QueryPaymentProviderSettingsArgs = {
 
 export type QueryPaywallArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryPdfRendererSettingArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryPdfRendererSettingsArgs = {
+  filter?: InputMaybe<SettingPdfRendererFilter>;
 };
 
 
@@ -7574,6 +7833,8 @@ export type SensitiveDataUser = BaseUser & {
   birthday?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
+  /** How usable the address is, derived from bounces, logins and clicks. Null until evaluated, which counts as unknown. */
+  emailQuality?: Maybe<UserEmailQualityModel>;
   emailVerifiedAt?: Maybe<Scalars['DateTime']['output']>;
   firstName?: Maybe<Scalars['String']['output']>;
   flair?: Maybe<Scalars['String']['output']>;
@@ -7730,6 +7991,28 @@ export type SettingFilter = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type SettingLetterProvider = SettingProvider & {
+  __typename: 'SettingLetterProvider';
+  autoSend: Scalars['Boolean']['output'];
+  clientId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  environment: LetterProviderEnvironment;
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  organisationId?: Maybe<Scalars['String']['output']>;
+  /** Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com). */
+  placeholderEmailContains?: Maybe<Scalars['String']['output']>;
+  type: LetterProviderType;
+};
+
+export type SettingLetterProviderFilter = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<LetterProviderType>;
+};
+
 export type SettingMailProvider = SettingProvider & {
   __typename: 'SettingMailProvider';
   createdAt: Scalars['DateTime']['output'];
@@ -7762,6 +8045,8 @@ export enum SettingName {
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  EmailQualityMinMailsForUnresponsive = 'EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE',
+  EmailQualityUnresponsiveAfterDays = 'EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS',
   MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
@@ -7819,6 +8104,26 @@ export type SettingPaymentProviderFilter = {
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<PaymentProviderType>;
+};
+
+export type SettingPdfRenderer = SettingProvider & {
+  __typename: 'SettingPdfRenderer';
+  cloudflare_accountId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  gotenberg_url?: Maybe<Scalars['String']['output']>;
+  gotenberg_username?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  timeoutMs?: Maybe<Scalars['Int']['output']>;
+  type: PdfRendererType;
+};
+
+export type SettingPdfRendererFilter = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<PdfRendererType>;
 };
 
 export type SettingProvider = {
@@ -8668,6 +8973,15 @@ export type UserCreatedAction = BaseAction & HasUserLc & {
   date: Scalars['DateTime']['output'];
   user: User;
   userId: Scalars['String']['output'];
+};
+
+export type UserEmailQualityModel = {
+  __typename: 'UserEmailQualityModel';
+  level: EmailQualityLevel;
+  /** The deciding evidence, e.g. hardBounce or login. */
+  reason: Scalars['String']['output'];
+  /** When the level was first reached. */
+  since: Scalars['DateTime']['output'];
 };
 
 export enum UserEvent {

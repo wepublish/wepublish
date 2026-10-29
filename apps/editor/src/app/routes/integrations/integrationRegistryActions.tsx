@@ -128,8 +128,7 @@ export function AddIntegrationButton({
       const { data } = await create({ variables: { id, type, name: id } });
 
       const created = Object.values(data ?? {})[0] as
-        | { createdAt?: string }
-        | undefined;
+        { createdAt?: string } | undefined;
       const restored =
         !!created?.createdAt &&
         Date.now() - new Date(created.createdAt).getTime() > 60_000;

@@ -8,6 +8,7 @@ export * from './lib/mail-provider/log-mail-provider';
 export * from './lib/mail-provider/create-mail-provider';
 export * from './lib/mail-provider/fake-mail-provider';
 
+export * from './lib/email-quality-recorder';
 export * from './lib/mail.webhook';
 export * from './lib/mail.controller';
 export * from './lib/mail-context';

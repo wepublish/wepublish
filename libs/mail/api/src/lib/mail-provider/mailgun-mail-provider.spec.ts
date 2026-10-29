@@ -1,9 +1,13 @@
 import { createHmac } from 'crypto';
+import { EmailQualityEventType, MailLogState } from '@prisma/client';
 import {
   createNamespacedCacheTesting,
   type NamespacedCacheTesting,
 } from '@wepublish/kv-ttl-cache/api/testing';
-import { MailProviderError } from './mail-provider.interface';
+import {
+  MailProviderError,
+  MailWebhookSignatureError,
+} from './mail-provider.interface';
 import { MailgunMailProvider } from './mailgun-mail-provider';
 
 const { answer } = vi.hoisted(() => ({
@@ -47,6 +51,7 @@ const makeProvider = async () => {
       type: 'mailgun',
       name: 'Mailgun',
       fromAddress: 'dev@wepublish.ch',
+      apiKey: 'key',
       mailgun_baseDomain: 'api.eu.mailgun.net',
       mailgun_mailDomain: 'mg.wepublish.ch',
       webhookEndpointSecret: 'webhook-key',
@@ -100,36 +105,125 @@ describe('MailgunMailProvider', () => {
 });
 
 describe('MailgunMailProvider webhook', () => {
-  const webhook = (signature: string) => ({
-    req: {
-      body: {
-        signature: { timestamp: '1700000000', token: 'token-1', signature },
-        'event-data': {
-          event: 'delivered',
-          'user-variables': { mail_log_id: 'log-1' },
-        },
-      },
-    },
-  });
+  const request = (
+    eventData: Record<string, unknown>,
+    secret = 'webhook-key'
+  ) => {
+    const timestamp = '1790000000';
+    const token = 'token';
 
-  const signedWith = (key: string) =>
-    createHmac('sha256', key).update('1700000000token-1').digest('hex');
+    return {
+      req: {
+        body: {
+          signature: {
+            timestamp,
+            token,
+            signature: createHmac('sha256', secret)
+              .update(timestamp + token)
+              .digest('hex'),
+          },
+          'event-data': {
+            recipient: 'jane@example.com',
+            timestamp: 1790000000,
+            'user-variables': { mail_log_id: 'log-1' },
+            ...eventData,
+          },
+        },
+      } as never,
+    };
+  };
 
   it('refuses a webhook that was not signed with the webhook key', async () => {
     const provider = await makeProvider();
 
     await expect(
-      provider.webhookForSendMail(webhook(signedWith('forged')) as never)
-    ).rejects.toThrow('Webhook signature failed');
+      provider.webhookForSendMail(request({ event: 'delivered' }, 'forged'))
+    ).rejects.toBeInstanceOf(MailWebhookSignatureError);
   });
 
   it('accepts a webhook signed with the webhook key', async () => {
     const provider = await makeProvider();
 
     await expect(
-      provider.webhookForSendMail(webhook(signedWith('webhook-key')) as never)
+      provider.webhookForSendMail(request({ event: 'delivered' }))
     ).resolves.toEqual([
       expect.objectContaining({ mailLogID: 'log-1', state: 'delivered' }),
     ]);
+  });
+
+  it('reports a permanent failure as a hard bounce', async () => {
+    const [status] = await (
+      await makeProvider()
+    ).webhookForSendMail(
+      request({
+        id: 'evt-1',
+        event: 'failed',
+        severity: 'permanent',
+        'delivery-status': { description: 'mailbox unavailable' },
+      })
+    );
+
+    expect(status.state).toBe(MailLogState.bounced);
+    expect(status.qualitySignals).toEqual([
+      {
+        type: EmailQualityEventType.hardBounce,
+        email: 'jane@example.com',
+        detail: 'mailbox unavailable',
+        occurredAt: new Date(1790000000 * 1000),
+        providerEventId: 'mailgun:evt-1',
+      },
+    ]);
+  });
+
+  // Mailgun retries a temporary failure; the mail may still get through.
+  it('reports a temporary failure only as a state', async () => {
+    const [status] = await (
+      await makeProvider()
+    ).webhookForSendMail(request({ event: 'failed', severity: 'temporary' }));
+
+    expect(status.state).toBe(MailLogState.bounced);
+    expect(status.qualitySignals).toEqual([]);
+  });
+
+  it('reports a rejection as blocked', async () => {
+    const [status] = await (
+      await makeProvider()
+    ).webhookForSendMail(request({ event: 'rejected', reason: 'suppressed' }));
+
+    expect(status.state).toBe(MailLogState.rejected);
+    expect(status.qualitySignals).toEqual([
+      expect.objectContaining({
+        type: EmailQualityEventType.blocked,
+        detail: 'suppressed',
+      }),
+    ]);
+  });
+
+  it.each([
+    ['complained', EmailQualityEventType.spamComplaint],
+    ['unsubscribed', EmailQualityEventType.unsubscribed],
+    ['clicked', EmailQualityEventType.clicked],
+  ])('reports %s without touching the delivery state', async (event, type) => {
+    const [status] = await (
+      await makeProvider()
+    ).webhookForSendMail(request({ id: 'evt-2', event }));
+
+    expect(status.state).toBeNull();
+    expect(status.qualitySignals).toEqual([
+      expect.objectContaining({ type, providerEventId: 'mailgun:evt-2' }),
+    ]);
+  });
+
+  it('reports nothing about a plain delivery or an open', async () => {
+    const provider = await makeProvider();
+    const [delivered] = await provider.webhookForSendMail(
+      request({ event: 'delivered' })
+    );
+
+    expect(delivered.state).toBe(MailLogState.delivered);
+    expect(delivered.qualitySignals).toEqual([]);
+    await expect(
+      provider.webhookForSendMail(request({ event: 'opened' }))
+    ).resolves.toEqual([]);
   });
 });
