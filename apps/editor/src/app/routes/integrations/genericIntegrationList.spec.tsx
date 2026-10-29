@@ -1,4 +1,3 @@
-import type { Mock } from 'vitest';
 import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
 import {
@@ -6,6 +5,7 @@ import {
   MailProviderSettingsDocument,
   UpdateMailProviderSettingDocument,
 } from '@wepublish/editor/api';
+import type { Mock } from 'vitest';
 import { z } from 'zod';
 
 import { GenericIntegrationList } from './genericIntegrationList';

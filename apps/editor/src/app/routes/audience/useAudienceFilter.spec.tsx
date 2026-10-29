@@ -15,7 +15,10 @@ let currentSearch = '';
 
 function SearchProbe() {
   const [params] = useSearchParams();
+
+  // eslint-disable-next-line react-hooks/globals
   currentSearch = params.toString();
+
   return null;
 }
 

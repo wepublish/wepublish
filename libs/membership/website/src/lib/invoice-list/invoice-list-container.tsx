@@ -1,4 +1,4 @@
-import { useLazyQuery, useQuery } from '@apollo/client/react';
+import { useApolloClient, useQuery } from '@apollo/client/react';
 import {
   PaymentForm,
   usePayInvoice,
@@ -15,7 +15,7 @@ import {
 } from '@wepublish/website/builder';
 import { produce } from 'immer';
 import { anyPass } from 'ramda';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isPayrexxSubscription } from './invoice-list';
 
 const isInNeedOfMigration = anyPass([
@@ -44,24 +44,42 @@ export function InvoiceListContainer({
   className,
 }: InvoiceListContainerProps) {
   const { InvoiceList } = useWebsiteBuilder();
-  const [checkInvoice, { loading: loadingCheckInvoice }] = useLazyQuery(
-    CheckInvoiceStatusDocument
+  const client = useApolloClient();
+  const requestedChecks = useRef(new Set<string>());
+  const [checkedInvoices, setCheckedInvoices] = useState<ReadonlySet<string>>(
+    () => new Set()
   );
   const { data, loading: loadingInvoices, error } = useQuery(InvoicesDocument);
 
+  const openInvoiceIds = useMemo(
+    () =>
+      (data?.userInvoices ?? [])
+        .filter(({ id, paidAt, canceledAt }) => id && !paidAt && !canceledAt)
+        .map(({ id }) => id),
+    [data]
+  );
+
   useEffect(() => {
-    for (const { id, paidAt, canceledAt } of data?.userInvoices ?? []) {
-      if (paidAt || canceledAt || typeof window === 'undefined' || !id) {
+    for (const id of openInvoiceIds) {
+      if (requestedChecks.current.has(id)) {
         continue;
       }
 
-      checkInvoice({
-        variables: {
-          id,
-        },
-      });
+      requestedChecks.current.add(id);
+      client
+        .query({
+          query: CheckInvoiceStatusDocument,
+          variables: { id },
+          fetchPolicy: 'network-only',
+        })
+        .catch(() => undefined)
+        .finally(() => setCheckedInvoices(checked => new Set(checked).add(id)));
     }
-  }, [data, checkInvoice]);
+  }, [openInvoiceIds, client]);
+
+  const loadingCheckInvoice = openInvoiceIds.some(
+    id => !checkedInvoices.has(id)
+  );
 
   const [pay, redirectPages1, stripeClientSecret1] = usePayInvoice();
   const [migrate, redirectPages2, stripeClientSecret2] = useSubscribe();

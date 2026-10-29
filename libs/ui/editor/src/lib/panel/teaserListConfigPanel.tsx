@@ -1,24 +1,40 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, FormLabel, MenuItem, TextField } from '@mui/material';
 import {
   TagType,
   TeaserListBlockSort,
   TeaserType,
 } from '@wepublish/editor/api';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Button, Drawer, Form, Schema, SelectPicker } from 'rsuite';
+import { z } from 'zod';
 
-import { InfoTooltip } from '../atoms/infoTooltip';
 import { SelectTags } from '../atoms/tag/selectTags';
 import { TeaserListBlockValue } from '../blocks/types';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerForm,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 
-const DrawerBody = styled(Drawer.Body)`
-  padding: 24px;
+const Fields = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-items: start;
 `;
 
-const inputStyles = css`
-  width: 200px !important;
+const Form = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(3)};
+`;
+
+const TagsField = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 export type TeaserListConfigPanelProps = {
@@ -34,73 +50,67 @@ export const useTeaserTypeText = () => {
     t(`resources.teaserType.${tagType.toLowerCase()}`);
 };
 
+const teaserListSchema = z.object({
+  skip: z.coerce.number().min(0),
+  take: z.coerce.number().min(0).max(100),
+  teaserType: z.enum([TeaserType.Article, TeaserType.Page, TeaserType.Event]),
+  sort: z.nativeEnum(TeaserListBlockSort),
+  tags: z.array(z.string()),
+});
+
+type TeaserListConfigValues = z.infer<typeof teaserListSchema>;
+
+const tagTypeFor = (teaserType: TeaserType) => {
+  switch (teaserType) {
+    case TeaserType.Article:
+      return TagType.Article;
+    case TeaserType.Page:
+      return TagType.Page;
+    case TeaserType.Event:
+      return TagType.Event;
+  }
+
+  throw new Error('Somehow an unsupported teaser type was selected');
+};
+
 export function TeaserListConfigPanel({
   value,
   onClose,
   onSelect,
 }: TeaserListConfigPanelProps) {
-  const previousType = useRef<TeaserType>(undefined);
-  const [tagFilter, setTagFilter] = useState(value.filter.tags ?? []);
-  const [take, setTake] = useState(value.take);
-  const [skip, setSkip] = useState(value.skip);
-  const [sort, setSort] = useState(value.sort);
-  const [teaserType, setTeaserType] = useState(value.teaserType);
   const { t } = useTranslation();
   const teaserTypeText = useTeaserTypeText();
 
-  const { NumberType, StringType } = Schema.Types;
-  const validationModel = Schema.Model({
-    skip: NumberType().min(0).isRequired(),
-    take: NumberType().min(0).max(100).isRequired(),
-    teaserType: StringType()
-      .isOneOf([TeaserType.Article, TeaserType.Page, TeaserType.Event])
-      .isRequired(),
+  const { control, handleSubmit, setValue } = useForm<TeaserListConfigValues>({
+    resolver: zodResolver(teaserListSchema),
+    defaultValues: {
+      skip: value.skip,
+      take: value.take,
+      teaserType: value.teaserType as TeaserListConfigValues['teaserType'],
+      sort: value.sort ?? TeaserListBlockSort.PublishedAt,
+      tags: value.filter.tags ?? [],
+    },
   });
 
-  const tagType = useMemo(() => {
-    switch (teaserType) {
-      case TeaserType.Article:
-        return TagType.Article;
-      case TeaserType.Page:
-        return TagType.Page;
-      case TeaserType.Event:
-        return TagType.Event;
-    }
-
-    throw new Error('Somehow an unsupported teaser type was selected');
-  }, [teaserType]);
-
-  useEffect(() => {
-    if (previousType.current && previousType.current !== teaserType) {
-      setTagFilter([]);
-      setSort(TeaserListBlockSort.PublishedAt);
-    }
-
-    previousType.current = teaserType;
-  }, [teaserType]);
+  const teaserType = useWatch({ control, name: 'teaserType' });
+  const sort = useWatch({ control, name: 'sort' });
 
   return (
-    <Form
-      formValue={{ tagFilter, skip, take, sort, teaserType }}
-      model={validationModel}
-      onSubmit={validationPassed =>
-        validationPassed &&
+    <DrawerForm
+      onSubmit={handleSubmit(({ tags, ...settings }) =>
         onSelect({
           ...value,
-          filter: { ...value.filter, tags: tagFilter },
-          skip,
-          sort,
-          take,
-          teaserType,
+          ...settings,
+          filter: { ...value.filter, tags },
         })
-      }
+      )}
     >
-      <Drawer.Header>
-        <Drawer.Title>{t('blocks.teaserList.edit')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('blocks.teaserList.edit')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'ghost'}
+            variant="text"
             onClick={() => onClose()}
             type="button"
           >
@@ -108,123 +118,134 @@ export function TeaserListConfigPanel({
           </Button>
 
           <Button
-            appearance={'primary'}
+            variant="contained"
             type="submit"
           >
             {t('saveAndClose')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
       <DrawerBody>
-        <Form.Group controlId="teaserType">
-          <Form.Label>{t('blocks.teaserList.teaserTypeLabel')}</Form.Label>
-
-          <SelectPicker
-            name="teaserType"
-            cleanable={false}
-            value={teaserType}
-            onChange={value => setTeaserType(value!)}
-            data={[
-              {
-                label: teaserTypeText(TeaserType.Article),
-                value: TeaserType.Article,
-              },
-              {
-                label: teaserTypeText(TeaserType.Event),
-                value: TeaserType.Event,
-              },
-              {
-                label: teaserTypeText(TeaserType.Page),
-                value: TeaserType.Page,
-              },
-            ]}
-            css={inputStyles}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="sort">
-          <Form.Label>
-            {t('blocks.teaserList.sortLabel')}{' '}
-            <InfoTooltip text={t('blocks.teaserList.sortInfo')} />
-          </Form.Label>
-
-          <SelectPicker
-            name="sort"
-            cleanable={false}
-            value={sort}
-            defaultValue={TeaserListBlockSort.PublishedAt}
-            onChange={value => setSort(value!)}
-            data={[
-              {
-                label: t(
-                  `resources.teaserSort.${TeaserListBlockSort.PublishedAt}`
-                ),
-                value: TeaserListBlockSort.PublishedAt,
-              },
-              {
-                label: t(
-                  `resources.teaserSort.${TeaserListBlockSort.UpdatedAt}`
-                ),
-                value: TeaserListBlockSort.UpdatedAt,
-              },
-              ...(teaserType === TeaserType.Article ?
-                [
-                  {
-                    label: t(
-                      `resources.teaserSort.${TeaserListBlockSort.HotAndTrending}`
-                    ),
-                    value: TeaserListBlockSort.HotAndTrending,
-                  },
-                ]
-              : []),
-            ]}
-            css={inputStyles}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="skip">
-          <Form.Label>
-            {t('blocks.teaserList.skipLabel')}{' '}
-            <InfoTooltip text={t('blocks.teaserList.skipInfo')} />
-          </Form.Label>
-
-          <Form.Control
-            name="skip"
-            type="number"
-            value={skip}
-            onChange={s => setSkip(+s)}
-            css={inputStyles}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="take">
-          <Form.Label>{t('blocks.teaserList.takeLabel')}</Form.Label>
-
-          <Form.Control
-            name="take"
-            type="number"
-            value={take}
-            onChange={t => setTake(+t)}
-            css={inputStyles}
-          />
-        </Form.Group>
-
-        {sort !== TeaserListBlockSort.HotAndTrending && (
-          <Form.Group controlId="tags">
-            <Form.Label>{t('blocks.teaserList.tagsLabel')}</Form.Label>
-
-            <SelectTags
-              defaultTags={value.filter.tagObjects}
-              name="tags"
-              tagType={tagType}
-              setSelectedTags={setTagFilter}
-              selectedTags={tagFilter}
-              css={inputStyles}
+        <Form>
+          <Fields>
+            <Controller
+              control={control}
+              name="teaserType"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  select
+                  label={t('blocks.teaserList.teaserTypeLabel')}
+                  onChange={event => {
+                    field.onChange(event);
+                    setValue('tags', []);
+                    setValue('sort', TeaserListBlockSort.PublishedAt);
+                  }}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                >
+                  {[TeaserType.Article, TeaserType.Event, TeaserType.Page].map(
+                    type => (
+                      <MenuItem
+                        key={type}
+                        value={type}
+                      >
+                        {teaserTypeText(type)}
+                      </MenuItem>
+                    )
+                  )}
+                </TextField>
+              )}
             />
-          </Form.Group>
-        )}
+
+            <Controller
+              control={control}
+              name="sort"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  select
+                  label={t('blocks.teaserList.sortLabel')}
+                  error={Boolean(error)}
+                  helperText={error?.message ?? t('blocks.teaserList.sortInfo')}
+                  fullWidth
+                >
+                  {[
+                    TeaserListBlockSort.PublishedAt,
+                    TeaserListBlockSort.UpdatedAt,
+                    ...(teaserType === TeaserType.Article ?
+                      [TeaserListBlockSort.HotAndTrending]
+                    : []),
+                  ].map(option => (
+                    <MenuItem
+                      key={option}
+                      value={option}
+                    >
+                      {t(`resources.teaserSort.${option}`)}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Fields>
+
+          <Fields>
+            <Controller
+              control={control}
+              name="take"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('blocks.teaserList.takeLabel')}
+                  type="number"
+                  onChange={event => field.onChange(+event.target.value)}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="skip"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('blocks.teaserList.skipLabel')}
+                  type="number"
+                  onChange={event => field.onChange(+event.target.value)}
+                  error={Boolean(error)}
+                  helperText={error?.message ?? t('blocks.teaserList.skipInfo')}
+                  fullWidth
+                />
+              )}
+            />
+          </Fields>
+
+          {sort !== TeaserListBlockSort.HotAndTrending && (
+            <TagsField>
+              <FormLabel>{t('blocks.teaserList.tagsLabel')}</FormLabel>
+
+              <Controller
+                control={control}
+                name="tags"
+                render={({ field }) => (
+                  <SelectTags
+                    defaultTags={value.filter.tagObjects}
+                    name={field.name}
+                    tagType={tagTypeFor(teaserType)}
+                    setSelectedTags={field.onChange}
+                    selectedTags={field.value}
+                  />
+                )}
+              />
+            </TagsField>
+          )}
+        </Form>
       </DrawerBody>
-    </Form>
+    </DrawerForm>
   );
 }

@@ -1,3 +1,7 @@
+import {
+  type ClaimResult,
+  type DistributedClaims,
+} from '@wepublish/dragonfly/api';
 import { SlateToPmMigrator } from './slate-to-pm-migrator';
 
 const TEN_SECONDS = 10_000;
@@ -24,6 +28,21 @@ const JOBS: Array<[keyof SlateToPmMigrator, string, number]> = [
   ],
   ['remigrateUnmigratedPages', 'slate.remigrateUnmigratedPages', FIVE_SECONDS],
   ['remigrateBuggyEntities', 'slate.remigrateBuggyEntities', FIVE_SECONDS],
+  [
+    'normalizeNestedListsInArticles',
+    'slate.normalizeNestedListsInArticles',
+    FIVE_SECONDS,
+  ],
+  [
+    'normalizeNestedListsInPages',
+    'slate.normalizeNestedListsInPages',
+    FIVE_SECONDS,
+  ],
+  [
+    'normalizeNestedListsInEntities',
+    'slate.normalizeNestedListsInEntities',
+    FIVE_SECONDS,
+  ],
 ];
 
 const untouchable = new Proxy(
@@ -36,7 +55,7 @@ const untouchable = new Proxy(
 );
 
 describe('SlateToPmMigrator across replicas', () => {
-  const setup = (claimed: boolean | undefined) => {
+  const setup = (claimed: ClaimResult) => {
     const prisma = {
       author: {
         findMany: vi.fn().mockResolvedValue([]),
@@ -44,18 +63,22 @@ describe('SlateToPmMigrator across replicas', () => {
       },
     };
     const scheduler = { deleteCronJob: vi.fn() };
-    const kv = { claim: vi.fn().mockResolvedValue(claimed) };
+    const claims = {
+      claim: vi.fn().mockResolvedValue(claimed),
+    } satisfies Pick<DistributedClaims, 'claim'>;
     const migrator = new SlateToPmMigrator(
       prisma as any,
       scheduler as any,
-      kv as any
+      claims as unknown as DistributedClaims,
+      undefined as any,
+      undefined as any
     );
 
-    return { migrator, prisma, scheduler, kv };
+    return { migrator, prisma, scheduler, claims };
   };
 
   it('migrates on the replica that claims the tick', async () => {
-    const { migrator, prisma, scheduler } = setup(true);
+    const { migrator, prisma, scheduler } = setup('claimed');
 
     await migrator.migrateAuthors();
 
@@ -66,7 +89,7 @@ describe('SlateToPmMigrator across replicas', () => {
   });
 
   it('leaves the tick to the replica that claimed it and keeps ticking', async () => {
-    const { migrator, prisma, scheduler } = setup(false);
+    const { migrator, prisma, scheduler } = setup('taken');
 
     await migrator.migrateAuthors();
 
@@ -74,27 +97,34 @@ describe('SlateToPmMigrator across replicas', () => {
     expect(scheduler.deleteCronJob).not.toHaveBeenCalled();
   });
 
-  it('migrates like before without Dragonfly, since unmigrated content stays broken', async () => {
-    const { migrator, prisma } = setup(undefined);
+  it.each<ClaimResult>(['not-configured', 'unavailable'])(
+    'migrates like before when Dragonfly cannot tell (%s), since unmigrated content stays broken',
+    async claimed => {
+      const { migrator, prisma } = setup(claimed);
 
-    await migrator.migrateAuthors();
+      await migrator.migrateAuthors();
 
-    expect(prisma.author.findMany).toHaveBeenCalled();
-  });
+      expect(prisma.author.findMany).toHaveBeenCalled();
+    }
+  );
 
   it.each(JOBS)(
     'lets only one replica run %s per tick',
     async (method, name, intervalMs) => {
-      const kv = { claim: vi.fn().mockResolvedValue(false) };
+      const claims = {
+        claim: vi.fn().mockResolvedValue('taken'),
+      } satisfies Pick<DistributedClaims, 'claim'>;
       const migrator = new SlateToPmMigrator(
         untouchable as any,
         untouchable as any,
-        kv as any
+        claims as unknown as DistributedClaims,
+        untouchable as any,
+        untouchable as any
       );
 
       await (migrator[method] as () => Promise<void>).call(migrator);
 
-      const [[claimedName, ttlMs]] = kv.claim.mock.calls;
+      const [[claimedName, ttlMs]] = claims.claim.mock.calls;
       expect(claimedName).toBe(name);
       expect(ttlMs).toBeGreaterThan(0);
       expect(ttlMs).toBeLessThan(intervalMs);

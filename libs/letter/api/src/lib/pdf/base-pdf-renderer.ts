@@ -3,7 +3,7 @@ import {
   PrismaClient,
   SettingPdfRenderer,
 } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   PDF_RENDERER_SETTINGS_NAMESPACE,
   SecretCrypto,
@@ -13,13 +13,13 @@ import { PdfRenderer, PdfRendererError } from './pdf-renderer';
 export interface PdfRendererProps {
   id: string;
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
 }
 
 export abstract class BasePdfRenderer implements PdfRenderer {
   readonly id: string;
   readonly prisma: PrismaClient;
-  readonly kv: KvTtlCacheService;
+  readonly kv: NamespacedCache;
 
   protected constructor(props: PdfRendererProps) {
     this.id = props.id;
@@ -117,7 +117,7 @@ class PdfRendererConfig {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
     private readonly id: string
   ) {}
 

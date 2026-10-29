@@ -18,15 +18,46 @@
 ## Containerization
 
 - **Docker** for local development (`docker-compose.yml`)
-- Multi-stage Dockerfile for all production builds (API, editor, website, media, migration, storybook)
+- Multi-stage Dockerfile for all production builds (API, editor, website, media, migration)
 - **MinIO** as S3-compatible object storage for media in local dev
+
+### Runtime dependencies of api, media and editor
+
+pnpm workspace. `apps/api-example`, `apps/media`, `apps/editor` and
+`docker/migration` are the only workspace packages besides the root.
+`docker/migration` holds the runtime dependencies of the migration image
+(`prisma migrate deploy`, seed, changelog sync), and the image ships its
+`pnpm deploy --prod` output; the Dockerfile has no `npm install`/`npx` left
+(`sentry-cli` is the pinned root devDependency `@sentry/cli`). Each app
+`package.json` lists exactly the
+packages its webpack bundle `require()`s at runtime, as `"catalog:"` entries
+whose versions live in the `catalog:` of `pnpm-workspace.yaml` (the root
+`package.json` points at the same entries). The image ships the bundle plus
+`pnpm --filter <app> deploy --prod` output and runs it with plain `node` — no
+pkg binary. **Adding a runtime import to code these apps reach means adding the
+package to the catalog and to that app's `package.json`**; otherwise the
+image boots with `Cannot find module`. Each image build fails fast on that:
+`docker/check-runtime-deps.js` runs right after `nx build` and rejects both
+missing and unused entries — a listed peer of a loaded package counts as used,
+which is how lazily loaded optional peers pass (run it locally the same way:
+`node docker/check-runtime-deps.js dist/apps/<app> apps/<app>/package.json`;
+its spec runs with `node --test docker/check-runtime-deps.spec.js`). It only counts double-quoted
+`require("…")` / `import("…")`, which is how webpack and vite emit externals;
+single-quoted ones are third-party code inlined into the bundle, like
+node-fetch's optional `require('encoding')`. The API's Prisma client is generated inside the deploy
+directory (`prisma generate` resolves `@prisma/client` from the schema's
+location), and pnpm 12.9's unreferenced `.pnpm/@` / `.pnpm/@<scope>` copies are
+deleted after each deploy.
 
 ## Dragonfly (shared cache)
 
 `dragonfly01.wepublish.cloud:6379` (TLS, internal CA `/wepublish/ca.crt`)
 serves all media. Terraform in `application-configuration` creates a user
 `wepublish-<app>-<env>` per medium and sets `REDIS_URL`, `REDIS_KEY_PREFIX` and
-`NODE_EXTRA_CA_CERTS` on api and website pods; media are separated by key
+`NODE_EXTRA_CA_CERTS` on api and website pods. The media server reads the same
+three variables through `DragonflyModule` + `MediaLinkCacheModule` for its link
+cache (`media:links`, `media:rejected-variants` and `media:generations`; misses stay per pod) and caches per pod when
+they're unset; media are separated by key
 prefix ([gotchas.md](gotchas.md)), mirrored locally by `docker/dragonfly/users.acl`.
 In production the api refuses `redis://` and verifies Dragonfly against the CA.
 It holds page data, articles/pages/authors/images and anonymous GraphQL
@@ -53,22 +84,22 @@ cached, not even by Cloudflare.
 
 ## Migration flow
 
-The migration container (and `npm run migrate` locally) runs three steps in order:
+The migration container (and `pnpm run migrate` locally) runs three steps in order:
 
 1. `prisma migrate deploy` — applies `libs/api/prisma/migrations/`
 2. seed (`run-seed.js` / `prisma db seed`)
-3. **user-facing changelog sync** (`npm run changelog:sync`) — copies every entry
+3. **user-facing changelog sync** (`pnpm run changelog:sync`) — copies every entry
    from `libs/api/changelogs/` into the instance's `changelog.entries` table (see
    `libs/api/changelogs/README.md`; sync code lives in
    `libs/changelog/api/src/lib/sync/`). Every PR that changes something an editor
    user can notice should add a changelog entry folder there — scaffold it with
-   `npm run changelog:create -- "Title" [--action-required]`, or let Claude Code
-   draft it (en/de/fr) from the branch diff with `npm run changelog:generate`
+   `pnpm run changelog:create "Title" [--action-required]`, or let Claude Code
+   draft it (en/de/fr) from the branch diff with `pnpm run changelog:generate`
    (uses the developer's local Claude Code login, no API key). Entries support
    translations via `changelog.<locale>.md` files (de/en/fr).
    The sync source files are compiled standalone in the Dockerfile seed stage
-   (`docker/tsconfig.yaml_seed`), so they must stay dependency-free (node builtins
-   plus `@prisma/client` only).
+   (`docker/tsconfig.yaml_seed`), so they may only import node builtins and the
+   packages in `docker/migration/package.json`.
 
 ## Infrastructure as Code
 

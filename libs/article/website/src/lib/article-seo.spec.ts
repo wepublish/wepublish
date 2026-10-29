@@ -1,4 +1,4 @@
-import { mockArticle, mockArticleRevision } from '@wepublish/storybook/mocks';
+import { mockArticle, mockArticleRevision } from '@wepublish/mocks/website';
 
 import { getArticleSEO } from './article-seo';
 

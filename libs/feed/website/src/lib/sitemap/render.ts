@@ -21,25 +21,13 @@ import {
 import { buildSitemapIndex, buildUrlset, SitemapUrl } from './xml';
 
 export type SitemapSiteConfig = {
-  /** The publication's name, used in Google News entries. */
   title: string;
   lang?: string;
-  /**
-   * `single`: one sitemap with the newest `maxArticles` articles.
-   * `index`: a sitemap index pointing to a news sitemap, a pages sitemap and
-   * one sitemap per past year and per month of the current year, which covers
-   * the whole archive.
-   */
   mode?: 'single' | 'index';
-  /** Paths such as `/login`, listed next to the pages. */
   pageUrls?: string[];
-  /** Slug of the page rendered as the homepage. */
   homepageSlug?: string;
-  /** Articles younger than this get a Google News entry. */
   newsMaxAgeDays?: number;
-  /** `single` mode only. */
   maxArticles?: number;
-  /** Return false to leave an article out. Peered articles are always left out. */
   filterArticle?: (article: SitemapArticleFragment) => boolean;
   articleUrl?: (article: SitemapArticleFragment, siteUrl: string) => string;
   pageUrl?: (page: SitemapPageFragment, siteUrl: string) => string;
@@ -53,11 +41,8 @@ export type SitemapContext = {
   now: Date;
 };
 
-/** Where the chunk handler is mounted, relative to the site. */
 export const SITEMAP_PATH = '/api/sitemap';
 
-// The protocol allows 50,000 urls per sitemap; the API returns at most 100
-// nodes per call.
 const MAX_URLS = 50_000;
 const API_PAGE_SIZE = 100;
 const PARALLEL_REQUESTS = 4;
@@ -74,7 +59,6 @@ const DEFAULTS = {
 
 type Paginated<T> = { nodes: T[]; pageInfo: { hasNextPage: boolean } };
 
-/** Fetches up to `limit` nodes, a few API pages at a time. */
 const fetchAll = async <T>(
   fetchPage: (take: number, skip: number) => Promise<Paginated<T> | undefined>,
   limit: number
@@ -192,7 +176,6 @@ const articleUrls = (
         : undefined,
     }));
 
-/** The homepage, the static paths and every page but the homepage. */
 const pageUrls = async (
   config: Resolved,
   context: SitemapContext
@@ -206,8 +189,6 @@ const pageUrls = async (
         fetchPolicy: 'no-cache',
       })
       .then(({ data }) => data?.page)
-      // A missing homepage page (the API answers NotFound) only costs the
-      // homepage its date, not the whole sitemap.
       .catch(() => undefined),
     fetchPages(context),
   ]);
@@ -219,13 +200,11 @@ const pageUrls = async (
       changefreq: 'daily',
       priority: 1,
     },
-    ...config.pageUrls.map(
-      (path): SitemapUrl => ({
-        loc: `${siteUrl}${path}`,
-        changefreq: 'weekly',
-        priority: 0.8,
-      })
-    ),
+    ...config.pageUrls.map((path): SitemapUrl => ({
+      loc: `${siteUrl}${path}`,
+      changefreq: 'weekly',
+      priority: 0.8,
+    })),
     ...pages
       .filter(({ slug }) => slug !== config.homepageSlug)
       .map(page => ({
@@ -267,7 +246,6 @@ const renderSingle = async (config: Resolved, context: SitemapContext) => {
   );
 };
 
-/** The first article published at or after `from`, oldest first. */
 const firstArticleFrom = async ({ client }: SitemapContext, from?: Date) => {
   const { data } = await client.query({
     query: SitemapArticlesDocument,
@@ -283,11 +261,6 @@ const firstArticleFrom = async ({ client }: SitemapContext, from?: Date) => {
   return data?.articles.nodes[0];
 };
 
-/**
- * The periods that contain articles, oldest first: one query per period, as
- * each lookup jumps to the first article after the previous period. Sparse
- * archives (a magazine back to 1929) so skip the empty years.
- */
 const periodsWithArticles = async (context: SitemapContext) => {
   const periods: Period[] = [];
   let next = await firstArticleFrom(context);
@@ -312,7 +285,6 @@ const renderIndex = async (context: SitemapContext) => {
 
 const isFuture = (period: Period, now: Date) => periodRange(period).from > now;
 
-/** The sitemap at {@link SITEMAP_PATH}: an index or the whole sitemap. */
 export const renderSitemap = (
   config: SitemapSiteConfig,
   context: SitemapContext
@@ -324,7 +296,6 @@ export const renderSitemap = (
     : renderSingle(resolved, context);
 };
 
-/** A sitemap listed in the index, or `null` when there is no such sitemap. */
 export const renderSitemapChunk = async (
   config: SitemapSiteConfig,
   chunk: SitemapChunk,

@@ -1,34 +1,52 @@
 import styled from '@emotion/styled';
+import { ButtonBase, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAddCircle } from 'react-icons/md';
-import { IconButton } from 'rsuite';
+import { MdAddCircleOutline } from 'react-icons/md';
 
-import { IconButtonTooltip } from './iconButtonTooltip';
-
-const PlaceholderInputWrapper = styled.div<{
+const PlaceholderButton = styled(ButtonBase, {
+  shouldForwardProp: prop => prop !== 'maxHeight' && prop !== 'minHeight',
+})<{
   maxHeight: number;
   minHeight: number;
 }>`
   display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: ${({ theme }) => theme.spacing(1)};
   width: 100%;
   height: 100%;
-  place-items: center;
-  border-radius: var(--rs-radius-md);
-  background-color: var(--rs-bg-well);
+  padding: ${({ theme }) => theme.spacing(2)};
   max-height: ${({ maxHeight }) => `${maxHeight}px`};
   min-height: ${({ minHeight }) => `${minHeight}px`};
+  border: 1px dashed ${({ theme }) => theme.vars.palette.action.disabled};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
+  text-align: center;
+  transition: ${({ theme }) =>
+    theme.transitions.create(['border-color', 'background-color', 'color'])};
+
+  &:hover,
+  &.Mui-focusVisible {
+    border-color: ${({ theme }) => theme.vars.palette.primary.main};
+    color: ${({ theme }) => theme.vars.palette.primary.main};
+    background-color: rgba(
+      ${({ theme }) => theme.vars.palette.primary.mainChannel} / 0.08
+    );
+  }
+
+  &.Mui-disabled {
+    opacity: 0.5;
+  }
+
+  svg {
+    font-size: 28px;
+  }
 `;
 
 export interface PlaceholderInputProps {
-  /**
-   * Setting children will directly render them.
-   */
   children?: ReactNode;
-
-  /**
-   * Called when the add button is clicked.
-   */
   onAddClick?: () => void;
   addLabel?: string;
   disabled?: boolean;
@@ -36,9 +54,6 @@ export interface PlaceholderInputProps {
   minHeight?: number;
 }
 
-/**
- * A placeholder for a block.
- */
 export function PlaceholderInput({
   children,
   onAddClick,
@@ -53,20 +68,17 @@ export function PlaceholderInput({
     return <>{children}</>;
   }
 
+  const label = addLabel ?? t('placeholderInput.add');
+
   return (
-    <PlaceholderInputWrapper
+    <PlaceholderButton
       maxHeight={maxHeight}
       minHeight={minHeight}
+      disabled={disabled}
+      onClick={() => onAddClick?.()}
     >
-      <IconButtonTooltip caption={addLabel ?? t('placeholderInput.add')}>
-        <IconButton
-          disabled={disabled}
-          size="sm"
-          aria-label={addLabel ?? t('placeholderInput.add')}
-          icon={<MdAddCircle />}
-          onClick={() => onAddClick && onAddClick()}
-        />
-      </IconButtonTooltip>
-    </PlaceholderInputWrapper>
+      <MdAddCircleOutline aria-hidden />
+      <Typography variant="body2">{label}</Typography>
+    </PlaceholderButton>
   );
 }

@@ -1,46 +1,71 @@
 import { useQuery } from '@apollo/client/react';
-import React from 'react';
 import styled from '@emotion/styled';
 import {
   CreateBannerActionInput,
-  CreateBannerInput,
   FullImageFragment,
   LoginStatus,
   PageListDocument,
-  UpdateBannerInput,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
-  CheckPicker,
-  Drawer,
-  Form,
-  Input,
-  Panel,
-  RadioGroup,
-  Toggle,
-  Radio,
-  NumberInput,
-} from 'rsuite';
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
+import { z } from 'zod';
 import { BannerActionList } from './banner-action-list';
 import {
   ChooseEditImage,
+  DRAWER_WIDTHS,
+  FormFields,
   ImageEditPanel,
   ImageSelectPanel,
   InfoTooltip,
 } from '@wepublish/ui/editor';
+import {
+  Autocomplete,
+  Box,
+  Card,
+  CardContent,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
 
-type BannerFormData = (CreateBannerInput | UpdateBannerInput) & {
-  image?: FullImageFragment | null;
-  actions?: CreateBannerActionInput[] | null;
-};
+export const createBannerSchema = (t: TFunction) =>
+  z.object({
+    id: z.string().optional(),
+    title: z.string().min(1, t('errorMessages.required')),
+    text: z.string().min(1, t('errorMessages.required')),
+    cta: z.string().nullish(),
+    html: z.string().nullish(),
+    embedUrl: z.string().nullish(),
+    active: z.boolean(),
+    collapsible: z.boolean(),
+    delay: z.coerce.number(),
+    hideForMinutes: z.coerce.number(),
+    showForLoginStatus: z.nativeEnum(LoginStatus),
+    showOnArticles: z.boolean(),
+    showOnPages: z.array(z.object({ id: z.string() })),
+    imageId: z.string().nullish(),
+    image: z.custom<FullImageFragment>().nullish(),
+    actions: z.array(z.custom<CreateBannerActionInput>()),
+  });
+
+export type BannerFormValues = z.infer<ReturnType<typeof createBannerSchema>>;
 
 interface BannerFormProps {
   create?: boolean;
-  banner: BannerFormData;
-  onChange: (banner: BannerFormData) => void;
-  onAddAction: (action: CreateBannerActionInput) => void;
-  onRemoveAction: (index: number) => void;
 }
 
 const BannerFormContainer = styled('div')`
@@ -54,6 +79,14 @@ const BannerFormContainer = styled('div')`
 
 export const BannerForm = (props: BannerFormProps) => {
   const { t } = useTranslation();
+  const { control, setValue } = useFormContext<BannerFormValues>();
+  const imageId = useWatch({ control, name: 'imageId' });
+  const {
+    fields: actions,
+    append,
+    remove,
+    update,
+  } = useFieldArray({ control, name: 'actions' as never });
 
   const { data: pageData } = useQuery(PageListDocument, {
     variables: { take: 50 },
@@ -65,266 +98,322 @@ export const BannerForm = (props: BannerFormProps) => {
 
   return (
     <BannerFormContainer>
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ overflow: 'initial', gridArea: 'displayoptions' }}
       >
-        <h3>{t('banner.form.displayOptions')}</h3>
+        <CardContent>
+          <FormFields>
+            <Typography variant="h3">
+              {t('banner.form.displayOptions')}
+            </Typography>
 
-        <Form.Group controlId="active">
-          <Form.Control
-            name="active"
-            checked={props.banner.active}
-            onChange={value =>
-              props.onChange({ ...props.banner, active: value })
-            }
-            accepter={Toggle}
-            label={t('banner.form.active')}
-          />
-        </Form.Group>
+            <Controller
+              control={control}
+              name="active"
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={Boolean(field.value)}
+                      onChange={(_event, checked) => field.onChange(checked)}
+                    />
+                  }
+                  label={t('banner.form.active')}
+                />
+              )}
+            />
 
-        <Form.Group controlId="collapsible">
-          <Form.Control
-            name="collapsible"
-            checked={props.banner.collapsible}
-            onChange={value =>
-              props.onChange({ ...props.banner, collapsible: value })
-            }
-            accepter={Toggle}
-            label={
-              <>
-                {t('banner.form.collapsible')}{' '}
-                <InfoTooltip text={t('banner.form.collapsibleInfo')} />
-              </>
-            }
-          />
-        </Form.Group>
+            <Controller
+              control={control}
+              name="collapsible"
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={Boolean(field.value)}
+                      onChange={(_event, checked) => field.onChange(checked)}
+                    />
+                  }
+                  label={
+                    <>
+                      {t('banner.form.collapsible')}{' '}
+                      <InfoTooltip text={t('banner.form.collapsibleInfo')} />
+                    </>
+                  }
+                />
+              )}
+            />
 
-        <Form.Group controlId="delay">
-          <Form.Label>
-            {t('banner.form.delay')}{' '}
-            <InfoTooltip text={t('banner.form.delayInfo')} />
-          </Form.Label>
+            <Controller
+              control={control}
+              name="delay"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={
+                    <>
+                      {t('banner.form.delay')}{' '}
+                      <InfoTooltip text={t('banner.form.delayInfo')} />
+                    </>
+                  }
+                  type="number"
+                  onChange={event => field.onChange(+event.target.value)}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
 
-          <Form.Control
-            name="delay"
-            accepter={NumberInput}
-            value={props.banner.delay}
-            onChange={v => props.onChange({ ...props.banner, delay: +v })}
-          />
-        </Form.Group>
+            <Controller
+              control={control}
+              name="hideForMinutes"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('banner.form.hideForMinutes')}
+                  type="number"
+                  onChange={event => field.onChange(+event.target.value)}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
 
-        <Form.Group controlId="hideForMinutes">
-          <Form.Label>{t('banner.form.hideForMinutes')}</Form.Label>
+            <FormControl>
+              <FormLabel>
+                {t('banner.form.showForLoginStatus')}{' '}
+                <InfoTooltip text={t('banner.form.showForLoginStatusInfo')} />
+              </FormLabel>
 
-          <Form.Control
-            name="hideForMinutes"
-            accepter={NumberInput}
-            value={props.banner.hideForMinutes}
-            onChange={v =>
-              props.onChange({ ...props.banner, hideForMinutes: +v })
-            }
-          />
-        </Form.Group>
+              <Controller
+                control={control}
+                name="showForLoginStatus"
+                render={({ field }) => (
+                  <RadioGroup {...field}>
+                    {Object.values(LoginStatus).map((status: LoginStatus) => (
+                      <FormControlLabel
+                        key={status}
+                        value={status}
+                        control={<Radio />}
+                        label={t(`banner.form.loginStatus.${status}`)}
+                      />
+                    ))}
+                  </RadioGroup>
+                )}
+              />
+            </FormControl>
 
-        <Form.Group controlId="showForLoginStatus">
-          <Form.Label>
-            {t('banner.form.showForLoginStatus')}{' '}
-            <InfoTooltip text={t('banner.form.showForLoginStatusInfo')} />
-          </Form.Label>
+            <Controller
+              control={control}
+              name="showOnArticles"
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={Boolean(field.value)}
+                      onChange={(_event, checked) => field.onChange(checked)}
+                    />
+                  }
+                  label={t('banner.form.showOnArticles')}
+                />
+              )}
+            />
 
-          <RadioGroup
-            name="showForLoginStatus"
-            value={props.banner.showForLoginStatus}
-            onChange={value =>
-              props.onChange({
-                ...props.banner,
-                showForLoginStatus: value as LoginStatus,
-              })
-            }
-          >
-            {Object.values(LoginStatus).map((status: LoginStatus) => (
-              <Radio
-                key={status}
-                value={status}
-              >
-                {t(`banner.form.loginStatus.${status}`)}
-              </Radio>
-            ))}
-          </RadioGroup>
-        </Form.Group>
+            <FormControl fullWidth>
+              <FormLabel>
+                {t('banner.form.showOnPages')}{' '}
+                <InfoTooltip text={t('banner.form.showOnPagesInfo')} />
+              </FormLabel>
 
-        <Form.Group controlId="showOnArticles">
-          <Form.Control
-            name="showOnArticles"
-            checked={props.banner.showOnArticles}
-            onChange={value =>
-              props.onChange({ ...props.banner, showOnArticles: value })
-            }
-            accepter={Toggle}
-            label={t('banner.form.showOnArticles')}
-          />
-        </Form.Group>
+              <Controller
+                control={control}
+                name="showOnPages"
+                render={({ field }) => (
+                  <Autocomplete
+                    multiple
+                    disableCloseOnSelect
+                    options={pages.map(page => page.id)}
+                    getOptionLabel={option =>
+                      pages
+                        .filter(page => page.id === option)
+                        .map(page => page.latest.title)[0] ?? option
+                    }
+                    value={field.value?.map(page => page.id) ?? []}
+                    onChange={(_event, ids) =>
+                      field.onChange((ids ?? []).map(id => ({ id })))
+                    }
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        placeholder={t('navigation.panels.selectPage')}
+                      />
+                    )}
+                  />
+                )}
+              />
+            </FormControl>
+          </FormFields>
+        </CardContent>
+      </Card>
 
-        <Form.Group controlId="showOnPages">
-          <Form.Label>
-            {t('banner.form.showOnPages')}{' '}
-            <InfoTooltip text={t('banner.form.showOnPagesInfo')} />
-          </Form.Label>
-
-          <CheckPicker
-            block
-            virtualized
-            placeholder={t('navigation.panels.selectPage')}
-            value={props.banner.showOnPages?.map(p => p.id) || []}
-            data={pages.map(page => ({
-              value: page.id,
-              label: page.latest.title,
-            }))}
-            onChange={ids => {
-              if (!ids) return;
-              props.onChange({
-                ...props.banner,
-                showOnPages: ids.map(i => {
-                  return { id: i };
-                }),
-              });
-            }}
-          />
-        </Form.Group>
-      </Panel>
-
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ overflow: 'initial', gridArea: 'content' }}
       >
-        <h3>{t('banner.form.content')}</h3>
+        <CardContent>
+          <FormFields>
+            <Typography variant="h3">{t('banner.form.content')}</Typography>
 
-        <Form.Group controlId="title">
-          <Form.Label>{t('banner.form.title')}</Form.Label>
+            <Controller
+              control={control}
+              name="title"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('banner.form.title')}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
 
-          <Form.Control
-            name="title"
-            value={props.banner.title}
-            onChange={value =>
-              props.onChange({ ...props.banner, title: value })
-            }
-          />
-        </Form.Group>
+            <Controller
+              control={control}
+              name="text"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('banner.form.text')}
+                  multiline
+                  rows={5}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
 
-        <Form.Group controlId="text">
-          <Form.Label>{t('banner.form.text')}</Form.Label>
+            <Controller
+              control={control}
+              name="cta"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  label={
+                    <>
+                      {t('banner.form.cta')}{' '}
+                      <InfoTooltip text={t('banner.form.ctaInfo')} />
+                    </>
+                  }
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
 
-          <Form.Control
-            name="text"
-            componentClass="textarea"
-            rows={5}
-            value={props.banner.text}
-            onChange={value => props.onChange({ ...props.banner, text: value })}
-          />
-        </Form.Group>
+            <FormControl fullWidth>
+              <FormLabel>{t('banner.form.image')}</FormLabel>
 
-        <Form.Group controlId="cta">
-          <Form.Label>
-            {t('banner.form.cta')}{' '}
-            <InfoTooltip text={t('banner.form.ctaInfo')} />
-          </Form.Label>
+              <Controller
+                control={control}
+                name="image"
+                render={({ field }) => (
+                  <ChooseEditImage
+                    onSelect={image => {
+                      setChooseModalOpen(false);
+                      setValue('imageId', image.id);
+                      setValue('image', image);
+                    }}
+                    image={field.value}
+                    disabled={false}
+                    openChooseModalOpen={() => setChooseModalOpen(true)}
+                    openEditModalOpen={() => setEditModalOpen(true)}
+                    removeImage={() => {
+                      field.onChange(undefined);
+                      setValue('imageId', undefined);
+                    }}
+                  />
+                )}
+              />
+            </FormControl>
 
-          <Form.Control
-            name="cta"
-            value={props.banner.cta}
-            onChange={value => props.onChange({ ...props.banner, cta: value })}
-          />
-        </Form.Group>
+            <FormControl fullWidth>
+              <FormLabel>
+                {t('banner.form.html')}{' '}
+                <InfoTooltip text={t('banner.form.htmlInfo')} />
+              </FormLabel>
 
-        <Form.Group controlId="images">
-          <Form.Label>{t('banner.form.image')}</Form.Label>
+              <Controller
+                control={control}
+                name="html"
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    rows={5}
+                    multiline
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                  />
+                )}
+              />
+            </FormControl>
 
-          <Form.Control
-            name="image"
-            header={''}
-            image={props.banner.image}
-            disabled={false}
-            openChooseModalOpen={() => setChooseModalOpen(true)}
-            openEditModalOpen={() => setEditModalOpen(true)}
-            removeImage={() => {
-              props.onChange({
-                ...props.banner,
-                imageId: undefined,
-                image: undefined,
-              });
-            }}
-            accepter={ChooseEditImage}
-            minHeight={200}
-          />
-        </Form.Group>
+            <FormControl fullWidth>
+              <FormLabel>{t('banner.form.embedUrl')}</FormLabel>
 
-        <Form.Group controlId="html">
-          <Form.Label>
-            {t('banner.form.html')}{' '}
-            <InfoTooltip text={t('banner.form.htmlInfo')} />
-          </Form.Label>
+              <Controller
+                control={control}
+                name="embedUrl"
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                  />
+                )}
+              />
+              <FormHelperText>{t('banner.form.embedUrlHelp')}</FormHelperText>
+            </FormControl>
+          </FormFields>
+        </CardContent>
+      </Card>
 
-          <Input
-            name="html"
-            as="textarea"
-            rows={5}
-            value={props.banner.html ?? undefined}
-            onChange={value => props.onChange({ ...props.banner, html: value })}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="embedUrl">
-          <Form.ControlLabel>{t('banner.form.embedUrl')}</Form.ControlLabel>
-
-          <Input
-            name="embedUrl"
-            value={props.banner.embedUrl ?? undefined}
-            onChange={value =>
-              props.onChange({ ...props.banner, embedUrl: value })
-            }
-          />
-          <Form.HelpText>{t('banner.form.embedUrlHelp')}</Form.HelpText>
-        </Form.Group>
-      </Panel>
-
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ overflow: 'initial', gridArea: 'actions' }}
       >
-        <Form.Group controlId="actions">
-          <h3>{t('banner.form.actions')}</h3>
-          <BannerActionList
-            actions={props.banner.actions || []}
-            onAdd={action =>
-              props.onChange({
-                ...props.banner,
-                actions: [...(props.banner.actions || []), action],
-              })
-            }
-            onRemove={index =>
-              props.onChange({
-                ...props.banner,
-                actions:
-                  props.banner.actions?.filter((_, i) => i !== index) || [],
-              })
-            }
-            onUpdate={(index, updatedAction) => {
-              const updatedActions = props.banner.actions?.map((action, i) =>
-                i === index ? updatedAction : action
-              );
-              props.onChange({
-                ...props.banner,
-                actions: updatedActions,
-              });
-            }}
-          />
-        </Form.Group>
-      </Panel>
+        <CardContent>
+          <Box>
+            <Typography variant="h3">{t('banner.form.actions')}</Typography>
+            <BannerActionList
+              actions={actions as unknown as CreateBannerActionInput[]}
+              onAdd={append}
+              onRemove={remove}
+              onUpdate={update}
+            />
+          </Box>
+        </CardContent>
+      </Card>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size={'sm'}
         onClose={() => {
           setChooseModalOpen(false);
         }}
@@ -333,19 +422,30 @@ export const BannerForm = (props: BannerFormProps) => {
           onClose={() => setChooseModalOpen(false)}
           onSelect={image => {
             setChooseModalOpen(false);
-            props.onChange({ ...props.banner, imageId: image.id, image });
+            setValue('imageId', image.id);
+            setValue('image', image);
           }}
         />
       </Drawer>
 
-      {props.banner.imageId && (
+      {imageId && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size={'sm'}
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel
-            id={props.banner.imageId}
+            id={imageId as string}
             onClose={() => setEditModalOpen(false)}
           />
         </Drawer>

@@ -1,10 +1,21 @@
 import { PdfRendererType } from '@prisma/client';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { CloudflarePdfRenderer } from './cloudflare-pdf-renderer';
 import { createPdfRenderer, loadPdfRenderer } from './create-pdf-renderer';
 import { GotenbergPdfRenderer } from './gotenberg-pdf-renderer';
 
 describe('loadPdfRenderer', () => {
+  let testing: NamespacedCacheTesting;
+
+  beforeEach(async () => {
+    testing = await createNamespacedCacheTesting();
+  });
+
+  afterEach(() => testing.close());
+
   it('builds the renderer of the configured type', async () => {
     const findFirst = vi.fn().mockResolvedValue({
       id: 'cloudflare',
@@ -13,7 +24,7 @@ describe('loadPdfRenderer', () => {
 
     const renderer = await loadPdfRenderer({
       prisma: { settingPdfRenderer: { findFirst } } as never,
-      kv: createKvMock(),
+      kv: testing.cache,
     });
 
     expect(renderer).toBeInstanceOf(CloudflarePdfRenderer);
@@ -25,7 +36,7 @@ describe('loadPdfRenderer', () => {
 
     const renderer = await loadPdfRenderer({
       prisma: { settingPdfRenderer: { findFirst } } as never,
-      kv: createKvMock(),
+      kv: testing.cache,
     });
 
     expect(renderer).toBeNull();
@@ -33,6 +44,14 @@ describe('loadPdfRenderer', () => {
 });
 
 describe('createPdfRenderer', () => {
+  let testing: NamespacedCacheTesting;
+
+  beforeEach(async () => {
+    testing = await createNamespacedCacheTesting();
+  });
+
+  afterEach(() => testing.close());
+
   const env = process.env;
 
   afterEach(() => {
@@ -57,7 +76,7 @@ describe('createPdfRenderer', () => {
       PdfRendererType.cloudflare,
       {
         prisma: {} as never,
-        kv: createKvMock(),
+        kv: testing.cache,
       }
     );
     vi.spyOn(renderer, 'getConfig').mockResolvedValue(null);
@@ -85,7 +104,7 @@ describe('createPdfRenderer', () => {
 
     const renderer = createPdfRenderer('gotenberg', PdfRendererType.gotenberg, {
       prisma: {} as never,
-      kv: createKvMock(),
+      kv: testing.cache,
     });
     vi.spyOn(renderer, 'getConfig').mockResolvedValue(null);
 

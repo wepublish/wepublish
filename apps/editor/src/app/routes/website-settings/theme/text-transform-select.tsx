@@ -17,19 +17,20 @@ type TextTransformSelectProps = {
   onChange: (value: TextTransformValue | null) => void;
   onBlur?: () => void;
   error?: FieldError;
+  labelId?: string;
 };
 
 export const TextTransformSelect = memo(
   forwardRef<HTMLDivElement, TextTransformSelectProps>(
-    ({ name, value, onChange, onBlur, error }, ref) => {
+    ({ name, value, onChange, onBlur, error, labelId }, ref) => {
       const { t } = useTranslation();
 
       return (
         <Select
           ref={ref}
           name={name}
+          labelId={labelId}
           value={value ?? ''}
-          size="small"
           displayEmpty
           error={!!error}
           onChange={e =>

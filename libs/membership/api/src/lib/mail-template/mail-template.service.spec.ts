@@ -3,6 +3,7 @@ import { MailContext } from '@wepublish/mail/api';
 import { LetterContext } from '@wepublish/letter/api';
 import { PrismaClient } from '@prisma/client';
 import { MailTemplateService } from './mail-template.service';
+import { version } from 'uuid';
 
 const makeService = (
   prisma: any,
@@ -316,6 +317,28 @@ describe('MailTemplateService', () => {
         })
       ).rejects.toThrow(BadRequestException);
       expect(render).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('sendTest', () => {
+    it('logs the test mail under a uuidv7', async () => {
+      const mailContext = {
+        jwtGenerator: vi.fn(async () => 'jwt'),
+        sendComposedContent: vi.fn(async () => undefined),
+      };
+
+      await makeService({}, mailContext).sendTest({
+        contextId: 'renewal',
+        subscriptionId: null,
+        currentUserId: 'u1',
+        recipient: 'test@wepublish.ch',
+        subject: 'Hi',
+        html: '<p>Hi</p>',
+      });
+
+      const [{ mailLogID }] = mailContext.sendComposedContent.mock
+        .calls[0] as any;
+      expect(version(mailLogID)).toBe(7);
     });
   });
 

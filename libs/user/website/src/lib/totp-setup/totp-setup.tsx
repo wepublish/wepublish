@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TotpQrCode } from './totp-qr-code';
 
@@ -141,7 +141,7 @@ export function TotpSetup({
 
         <TextField
           value={totpToken}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setTotpToken(e.target.value)
           }
           autoComplete="one-time-code"

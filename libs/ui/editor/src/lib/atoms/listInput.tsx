@@ -1,6 +1,7 @@
 import {
   DndContext,
   DragEndEvent,
+  KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
@@ -8,16 +9,17 @@ import {
 import {
   arrayMove,
   SortableContext,
+  sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
+import { Button, IconButton } from '@mui/material';
 import nanoid from 'nanoid';
-import React, { JSX, useCallback, useState } from 'react';
+import { Dispatch, JSX, SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAddCircle, MdDelete, MdDragIndicator } from 'react-icons/md';
-import { IconButton, Panel as RPanel } from 'rsuite';
+import { MdAdd, MdDelete, MdDragIndicator } from 'react-icons/md';
 
 import { generateID, isFunctionalUpdate } from '../utility';
 import { IconButtonTooltip } from './iconButtonTooltip';
@@ -27,24 +29,14 @@ const IconButtonWrapper = styled.div`
 `;
 
 const ChildrenWrapper = styled.div`
+  flex: 1 1 auto;
+  min-width: 0;
   min-height: 100%;
   display: flex;
 
   > * {
     flex: 1 1 auto;
     min-width: 0;
-  }
-`;
-
-/* only a layout wrapper: rsuite's .rs-panel clips its content to its
-   (larger) border radius, which cut off the rounded corners and focus rings
-   of the fields at its edges; && beats .rs-panel regardless of sheet order */
-const Panel = styled(RPanel)`
-  flex: 1 1 auto;
-  min-width: 0;
-
-  && {
-    overflow: visible;
   }
 `;
 
@@ -55,38 +47,42 @@ const DragHandleWrapper = styled.div`
 const ListItemWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   margin-bottom: 8px;
 `;
 
 export interface FieldProps<V = any> {
-  readonly value: V;
-  readonly onChange: React.Dispatch<React.SetStateAction<V>>;
+  value: V;
+  onChange: Dispatch<SetStateAction<V>>;
 }
 
-export interface ListFieldProps<T = any> extends FieldProps<ListValue<T>[]> {
-  readonly label?: string;
-  readonly defaultValue: T | (() => T);
-  readonly disabled?: boolean;
-  readonly children: (props: FieldProps<T>) => JSX.Element;
+export interface ListFieldProps<T = any> {
+  value: ListValue<T>[];
+  // Always receives the new list, never an updater function, so react-hook-form's
+  // field.onChange can be passed as well as a state setter.
+  onChange: (value: ListValue<T>[]) => void;
+  label?: string;
+  defaultValue: T | (() => T);
+  disabled?: boolean;
+  children: (props: FieldProps<T>) => JSX.Element;
 }
 
 export interface ListValue<T = any> {
-  readonly id: string;
-  readonly value: T;
+  id: string;
+  value: T;
 }
 
 export function useListInputState<T>(
   initialValues: T[],
   onCommit: (values: T[]) => void
-): [ListValue<T>[], React.Dispatch<React.SetStateAction<ListValue<T>[]>>] {
+): [ListValue<T>[], Dispatch<SetStateAction<ListValue<T>[]>>] {
   const [items, setItems] = useState<ListValue<T>[]>(() =>
     initialValues.map(value => ({ id: generateID(), value }))
   );
 
   const handleChange = useCallback(
-    (update: React.SetStateAction<ListValue<T>[]>) => {
+    (update: SetStateAction<ListValue<T>[]>) => {
       const nextItems = isFunctionalUpdate(update) ? update(items) : update;
 
       setItems(nextItems);
@@ -99,15 +95,12 @@ export function useListInputState<T>(
 }
 
 export interface ListItemProps<T = any> {
-  readonly value: ListValue<T>;
-  readonly itemIndex: number;
-  readonly itemDisabled?: boolean;
-  readonly onChange: (
-    index: number,
-    value: React.SetStateAction<ListValue<T>>
-  ) => void;
-  readonly onRemove: (index: number) => void;
-  readonly children: (props: FieldProps<T>) => JSX.Element;
+  value: ListValue<T>;
+  itemIndex: number;
+  itemDisabled?: boolean;
+  onChange: (index: number, value: SetStateAction<ListValue<T>>) => void;
+  onRemove: (index: number) => void;
+  children: (props: FieldProps<T>) => JSX.Element;
 }
 
 function ListItem({
@@ -129,7 +122,7 @@ function ListItem({
     isDragging,
   } = useSortable({ id: value.id, disabled: itemDisabled });
 
-  function handleValueChange(fieldValue: React.SetStateAction<any>) {
+  function handleValueChange(fieldValue: SetStateAction<any>) {
     onChange(itemIndex, value => ({
       ...value,
       value:
@@ -158,25 +151,30 @@ function ListItem({
       >
         <IconButtonTooltip caption={t('listInput.dragToReorder')}>
           <IconButton
+            size="small"
             aria-label={t('listInput.dragToReorder')}
-            icon={<MdDragIndicator />}
             disabled={itemDisabled}
-          />
+          >
+            <MdDragIndicator />
+          </IconButton>
         </IconButtonTooltip>
       </DragHandleWrapper>
-      <Panel bodyFill>
-        <ChildrenWrapper>
-          {children({ value: value.value, onChange: handleValueChange })}
-        </ChildrenWrapper>
-      </Panel>
+
+      <ChildrenWrapper>
+        {children({ value: value.value, onChange: handleValueChange })}
+      </ChildrenWrapper>
+
       <IconButtonWrapper>
         <IconButtonTooltip caption={t('delete')}>
           <IconButton
+            size="small"
+            color="error"
             aria-label={t('delete')}
-            icon={<MdDelete />}
             onClick={handleRemove}
             disabled={itemDisabled}
-          />
+          >
+            <MdDelete />
+          </IconButton>
         </IconButtonTooltip>
       </IconButtonWrapper>
     </ListItemWrapper>
@@ -193,14 +191,17 @@ export function ListInput<T>({
 }: ListFieldProps<T>) {
   const { t } = useTranslation();
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
   function handleItemChange(
     itemIndex: number,
-    itemValue: React.SetStateAction<ListValue>
+    itemValue: SetStateAction<ListValue>
   ) {
-    onChange(value =>
+    onChange(
       Object.assign([], value, {
         [itemIndex]:
           isFunctionalUpdate(itemValue) ?
@@ -211,11 +212,11 @@ export function ListInput<T>({
   }
 
   function handleAdd() {
-    onChange(value => [...value, { id: nanoid(), value: defaultValue as T }]);
+    onChange([...value, { id: nanoid(), value: defaultValue as T }]);
   }
 
   function handleRemove(itemIndex: number) {
-    onChange(value => value.filter((_, index) => index !== itemIndex));
+    onChange(value.filter((_, index) => index !== itemIndex));
   }
 
   function handleDragEnd({ active, over }: DragEndEvent) {
@@ -258,15 +259,15 @@ export function ListInput<T>({
           ))}
         </SortableContext>
       </DndContext>
-      <IconButtonTooltip caption={t('listInput.add')}>
-        <IconButton
-          aria-label={t('listInput.add')}
-          icon={<MdAddCircle />}
-          onClick={handleAdd}
-          disabled={disabled}
-          data-testid="addProperty"
-        />
-      </IconButtonTooltip>
+      <Button
+        variant="text"
+        startIcon={<MdAdd />}
+        onClick={handleAdd}
+        disabled={disabled}
+        data-testid="addProperty"
+      >
+        {t('listInput.add')}
+      </Button>
     </div>
   );
 }

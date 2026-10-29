@@ -1,5 +1,7 @@
+import styled from '@emotion/styled';
 import {
   ChangeEvent,
+  ComponentPropsWithRef,
   forwardRef,
   useEffect,
   useImperativeHandle,
@@ -15,10 +17,39 @@ import {
 
 const AutoSizeBuffer = 2;
 
-export interface TypographicTextAreaProps
-  extends React.ComponentPropsWithRef<'textarea'> {
-  readonly variant?: TypographyVariant;
-  readonly align?: TypographyTextAlign;
+const StyledTextArea = styled('textarea', {
+  shouldForwardProp: prop => prop !== 'variant' && prop !== 'align',
+})<{
+  variant: TypographyVariant;
+  align: TypographyTextAlign;
+}>`
+  display: block;
+  width: 100%;
+  resize: none;
+  border: none;
+  font-family: inherit;
+  line-height: 1.375;
+  color: ${({ theme }) => theme.vars.palette.text.primary};
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
+  caret-color: ${({ theme }) => theme.vars.palette.text.primary};
+  text-align: ${({ align }) => align};
+  outline: none !important;
+
+  ${({ variant }) => ({ ...stylesForTypographyVariant(variant) })}
+
+  &::placeholder {
+    color: ${({ theme }) => theme.vars.palette.text.disabled};
+  }
+
+  &:disabled {
+    color: ${({ theme }) => theme.vars.palette.text.disabled};
+    -webkit-text-fill-color: ${({ theme }) => theme.vars.palette.text.disabled};
+  }
+`;
+
+export interface TypographicTextAreaProps extends ComponentPropsWithRef<'textarea'> {
+  variant?: TypographyVariant;
+  align?: TypographyTextAlign;
 }
 
 export const TypographicTextArea = forwardRef<
@@ -29,9 +60,10 @@ export const TypographicTextArea = forwardRef<
 
   useImperativeHandle(forwardRef, () => ref.current!, []);
 
+  // Also resize when the value is set from outside, e.g. after a query loads.
   useLayoutEffect(() => {
     handleResize();
-  }, []);
+  }, [props.value]);
 
   useEffect(() => {
     if (typeof ResizeObserver !== 'undefined') {
@@ -66,28 +98,10 @@ export const TypographicTextArea = forwardRef<
   }
 
   return (
-    <textarea
+    <StyledTextArea
       ref={ref}
-      style={{
-        display: 'block',
-
-        width: '100%',
-        resize: 'none',
-
-        borderStyle: 'none',
-        borderWidth: 0,
-        borderColor: 'transparent',
-
-        fontFamily: 'inherit',
-        lineHeight: 1.375,
-
-        color: 'var(--rs-text-primary)',
-        backgroundColor: 'var(--rs-bg-card)',
-        textAlign: align,
-        ...stylesForTypographyVariant(variant),
-
-        outline: 'none !important',
-      }}
+      variant={variant}
+      align={align}
       onChange={handleChange}
       rows={1}
       {...props}

@@ -52,11 +52,6 @@ function usedKeys() {
   return [...used];
 }
 
-/**
- * Keys that appear twice in the same object. JSON.parse silently keeps the
- * last one, so a duplicate can hide a translation that was edited in the
- * other copy.
- */
 function duplicateKeys(json: string): string[] {
   const duplicates: string[] = [];
   const objects: { path: string; keys: Set<string> }[] = [];
@@ -106,6 +101,30 @@ function duplicateKeys(json: string): string[] {
   return duplicates;
 }
 
+function usedPrefixes() {
+  const prefixes = new Set<string>();
+
+  for (const dir of sourceDirs.map(dir => join(root, dir))) {
+    if (!existsSync(dir)) {
+      continue;
+    }
+
+    for (const file of readdirSync(dir, { recursive: true }) as string[]) {
+      if (!/\.tsx?$/.test(file) || /\.(spec|stories)\.tsx?$/.test(file)) {
+        continue;
+      }
+
+      const source = readFileSync(join(dir, file), 'utf8');
+
+      for (const match of source.matchAll(/\bt\(\s*`([\w.-]+)\.\$\{/g)) {
+        prefixes.add(match[1]);
+      }
+    }
+  }
+
+  return [...prefixes];
+}
+
 const hasKey = (lang: keyof typeof keys, key: string) =>
   keys[lang].has(key) ||
   [...keys[lang]].some(existing => existing.startsWith(`${key}_`));
@@ -121,6 +140,17 @@ describe('editor translations', () => {
     'contain every key the editor uses (%s)',
     lang => {
       expect(usedKeys().filter(key => !hasKey(lang, key))).toEqual([]);
+    }
+  );
+
+  it.each(['en', 'de', 'fr'] as const)(
+    'keep the key families the editor builds at runtime (%s)',
+    lang => {
+      const missing = usedPrefixes().filter(
+        prefix => ![...keys[lang]].some(key => key.startsWith(`${prefix}.`))
+      );
+
+      expect(missing).toEqual([]);
     }
   );
 

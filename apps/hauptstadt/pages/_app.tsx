@@ -1,6 +1,6 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { Container, CssBaseline, ThemeProvider } from '@mui/material';
+import { Container } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -13,25 +13,31 @@ import {
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
+  hauptstadtTenant,
+  PrintLogo,
+  withTrackFirstRoute,
+} from '@wepublish/tenant/hauptstadt';
+import {
   AsyncSessionProvider,
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
-  NextWepublishLink,
-  RoutedAdminBar,
-  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
+  WebsiteShellProps,
 } from '@wepublish/utils/website';
-import { WebsiteProvider } from '@wepublish/website';
+import {
+  RoutedAdminBar,
+  withBuilderRouter,
+} from '@wepublish/utils/website/next';
+import { TenantProviders } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
+  createWithApiClient,
   FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
-  createWithApiClient,
 } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import { format, setDefaultOptions } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { setDefaultOptions } from 'date-fns';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -39,59 +45,13 @@ import PlausibleProvider from 'next-plausible';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import deOverriden from '../locales/deOverriden.json';
-import { FontSizeProvider } from '../src/components/font-size-picker';
-import {
-  HauptstadtArticle,
-  HauptstadtArticleAuthors,
-  HauptstadtArticleMeta,
-} from '../src/components/hauptstadt-article';
-import { HauptstadtArticleDate } from '../src/components/hauptstadt-article-date';
-import { HauptstadtAuthorChip } from '../src/components/hauptstadt-author-chip';
-import { HauptstadtBanner } from '../src/components/hauptstadt-banner';
-import { HauptstadtBlockRenderer } from '../src/components/hauptstadt-block-renderer';
-import { HauptstadtBreakBlock } from '../src/components/hauptstadt-break';
-import { HauptstadtCommentList } from '../src/components/hauptstadt-comment';
-import { HauptstadtContentWrapper } from '../src/components/hauptstadt-content-wrapper';
-import { HauptstadtEvent } from '../src/components/hauptstadt-event';
-import {
-  HauptstadtImageBlock,
-  HauptstadtImageGalleryBlock,
-} from '../src/components/hauptstadt-image-block';
-import { HauptstadtLightbox } from '../src/components/hauptstadt-lightbox';
-import { HauptstadtListicle } from '../src/components/hauptstadt-listicle';
-import {
-  HauptstadtMemberPlanItem,
-  HauptstadtMemberPlanPicker,
-} from '../src/components/hauptstadt-memberplan-picker';
-import { HauptstadtNavbar } from '../src/components/hauptstadt-navbar';
-import { HauptstadtFooter } from '../src/components/hauptstadt-navigation';
-import { HauptstadtPage } from '../src/components/hauptstadt-page';
-import { HauptstadtPaymentMethodPicker } from '../src/components/hauptstadt-payment-method-picker';
-import { HauptstadtPaywall } from '../src/components/hauptstadt-paywall';
-import { HauptstadtQuoteBlock } from '../src/components/hauptstadt-quote';
-import { HauptstadtSubscribe } from '../src/components/hauptstadt-subscribe';
-import { HauptstadtSubscriptionListItem } from '../src/components/hauptstadt-subscription-list-item';
-import {
-  HauptstadtAlternatingTeaser,
-  HauptstadtFocusTeaser,
-  HauptstadtTeaser,
-  HauptstadtTeaserGrid,
-  HauptstadtTeaserList,
-  HauptstadtTeaserSlider,
-  HauptstadtTeaserSlots,
-} from '../src/components/hauptstadt-teaser';
-import { HauptstadtTitleBlock } from '../src/components/hauptstadt-title-block';
-import { PrintLogo } from '../src/components/print-logo';
-import { withTrackFirstRoute } from '../src/hooks/use-is-first-route';
-import { printStyles } from '../src/print-styles';
-import theme from '../src/theme';
-
 setDefaultOptions({
-  locale: de,
+  locale: hauptstadtTenant.dateLocale,
 });
 
-initWePublishTranslator(deOverriden);
+initWePublishTranslator(
+  hauptstadtTenant.translations.overrides?.[hauptstadtTenant.translations.lng]
+);
 
 z.setErrorMap(zodI18nMap);
 
@@ -117,14 +77,11 @@ const Main = styled('main')`
   }
 `;
 
-const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-  : format(date, 'dd. MMMM yyyy');
-
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -136,7 +93,7 @@ function CustomApp({
   emotionCache,
   websiteSettings,
 }: CustomAppProps) {
-  const siteTitle = 'Hauptstadt';
+  const siteTitle = hauptstadtTenant.builder.meta?.siteTitle;
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -147,6 +104,8 @@ function CustomApp({
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
+  const shell = getWebsiteShell(pageProps);
+
   return (
     <PlausibleProvider
       enabled={
@@ -156,122 +115,74 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <ThemeProvider theme={theme}>
-          <WebsiteProvider>
-            <WebsiteBuilderProvider
-              Head={Head}
-              Script={Script}
-              elements={{ Link: NextWepublishLink }}
-              Footer={HauptstadtFooter}
-              Navbar={HauptstadtNavbar}
-              ContentWrapper={HauptstadtContentWrapper}
-              AuthorChip={HauptstadtAuthorChip}
-              Page={HauptstadtPage}
-              Article={HauptstadtArticle}
-              ArticleAuthors={HauptstadtArticleAuthors}
-              ArticleMeta={HauptstadtArticleMeta}
-              ArticleDate={HauptstadtArticleDate}
-              Event={HauptstadtEvent}
-              Banner={HauptstadtBanner}
-              Paywall={HauptstadtPaywall}
-              MemberPlanPicker={HauptstadtMemberPlanPicker}
-              MemberPlanItem={HauptstadtMemberPlanItem}
-              CommentList={HauptstadtCommentList}
-              SubscriptionListItem={HauptstadtSubscriptionListItem}
-              PaymentMethodPicker={HauptstadtPaymentMethodPicker}
-              blocks={{
-                Renderer: HauptstadtBlockRenderer,
-                Title: HauptstadtTitleBlock,
-                Quote: HauptstadtQuoteBlock,
-                BaseTeaser: HauptstadtTeaser,
-                TeaserList: HauptstadtTeaserList,
-                TeaserGrid: HauptstadtTeaserGrid,
-                TeaserSlots: HauptstadtTeaserSlots,
-                Image: HauptstadtImageBlock,
-                ImageGallery: HauptstadtImageGalleryBlock,
-                Break: HauptstadtBreakBlock,
-                Listicle: HauptstadtListicle,
-                Subscribe: HauptstadtSubscribe,
-              }}
-              blockStyles={{
-                FocusTeaser: HauptstadtFocusTeaser,
-                AlternatingTeaser: HauptstadtAlternatingTeaser,
-                TeaserSlider: HauptstadtTeaserSlider,
-                Lightbox: HauptstadtLightbox,
-              }}
-              date={{ format: dateFormatter }}
-              meta={{ siteTitle }}
-            >
-              <FontSizeProvider>
-                <CssBaseline />
-                {printStyles}
+        <TenantProviders
+          config={hauptstadtTenant}
+          extra={{ Head, Script }}
+        >
+          <Head>
+            <title key="title">{siteTitle}</title>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0"
+            />
+          </Head>
 
-                <Head>
-                  <title key="title">{siteTitle}</title>
-                  <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1.0"
-                  />
-                </Head>
+          <Spacer>
+            {shell.showNavigation && (
+              <NavBar
+                categorySlugs={[['pages']]}
+                slug="main"
+                headerSlug="header"
+                iconSlug="icons"
+              />
+            )}
 
-                <Spacer>
-                  <NavBar
-                    categorySlugs={[['pages']]}
-                    slug="main"
-                    headerSlug="header"
-                    iconSlug="icons"
-                  />
+            <Main>
+              <Container maxWidth="lg">
+                <PrintLogo />
+                <Component {...pageProps} />
+              </Container>
+            </Main>
 
-                  <Main>
-                    <Container maxWidth="lg">
-                      <PrintLogo />
-                      <Component {...pageProps} />
-                    </Container>
-                  </Main>
+            {shell.showFooter && (
+              <FooterContainer
+                slug="main"
+                categorySlugs={[['pages']]}
+                iconSlug="icons"
+                hideBannerOnIntersecting={false}
+              />
+            )}
+          </Spacer>
 
-                  <FooterContainer
-                    slug="main"
-                    categorySlugs={[['pages']]}
-                    iconSlug="icons"
-                    hideBannerOnIntersecting={false}
-                  />
-                </Spacer>
+          <RoutedAdminBar />
 
-                <RoutedAdminBar />
+          {settings?.analytics.googleAnalytics.enabled &&
+            settings?.analytics.googleAnalytics.key && (
+              <GoogleAnalytics gaId={settings.analytics.googleAnalytics.key} />
+            )}
 
-                {settings?.analytics.googleAnalytics.enabled &&
-                  settings?.analytics.googleAnalytics.key && (
-                    <GoogleAnalytics
-                      gaId={settings.analytics.googleAnalytics.key}
-                    />
-                  )}
+          {settings?.analytics.googleTagManager.enabled &&
+            settings?.analytics.googleTagManager.key && (
+              <GoogleTagManager
+                gtmId={settings.analytics.googleTagManager.key}
+              />
+            )}
 
-                {settings?.analytics.googleTagManager.enabled &&
-                  settings?.analytics.googleTagManager.key && (
-                    <GoogleTagManager
-                      gtmId={settings.analytics.googleTagManager.key}
-                    />
-                  )}
+          {settings?.analytics.piwik.enabled &&
+            settings?.analytics.piwik.key && (
+              <Script id="piwik-pro">
+                {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
+              </Script>
+            )}
 
-                {settings?.analytics.piwik.enabled &&
-                  settings?.analytics.piwik.key && (
-                    <Script id="piwik-pro">
-                      {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
-                    </Script>
-                  )}
-
-                {settings?.ads.sparkLoop.enabled &&
-                  settings?.ads.sparkLoop.key && (
-                    <Script
-                      src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
-                      strategy="lazyOnload"
-                      data-sparkloop
-                    />
-                  )}
-              </FontSizeProvider>
-            </WebsiteBuilderProvider>
-          </WebsiteProvider>
-        </ThemeProvider>
+          {settings?.ads.sparkLoop.enabled && settings?.ads.sparkLoop.key && (
+            <Script
+              src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+              strategy="lazyOnload"
+              data-sparkloop
+            />
+          )}
+        </TenantProviders>
       </AppCacheProvider>
     </PlausibleProvider>
   );

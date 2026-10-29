@@ -12,7 +12,7 @@ before you start.
    the right reason, then implement. Never write implementation before a failing
    test exists. Details and per-stack patterns:
    [testing.md](.claude/docs/testing.md).
-2. **Verify before claiming done.** Run `npx nx affected -t lint test --uncommitted`
+2. **Verify before claiming done.** Run `pnpm nx affected -t lint test --uncommitted`
    (plus `tsc --noEmit` if you touched `apps/`) and read the output. Never say
    "done", "fixed", or "tests pass" without having run the command in this
    session: [verification.md](.claude/docs/verification.md).
@@ -24,9 +24,8 @@ before you start.
    thinking and put it in the reply. Scratch files go in a temp directory, never
    in the working tree.
 5. **Never edit generated code** — the codegen output (`gql/`,
-   `schema-types.ts`, `possible-types.ts`, the `editor`/`website` api
-   `index.ts`), `schema-v2.graphql`, `__generated__/`, Prisma client. Fix the
-   source and regenerate:
+   `schema-types.ts`, `possible-types.ts`), `schema-v2.graphql`,
+   `__generated__/`, Prisma client. Fix the source and regenerate:
    [graphql-prisma.md](.claude/docs/graphql-prisma.md).
 6. **Never run Prettier.** A Husky pre-commit hook handles it.
 7. **Check [gotchas.md](.claude/docs/gotchas.md) before "simplifying"** config,
@@ -37,20 +36,21 @@ before you start.
    integration, or convention — or makes something written here wrong (paths
    renamed, a framework swapped). Skip the update for routine bug fixes,
    refactors that don't change shape, dependency bumps, and copy/UI tweaks. The
-   test: *would the next agent be misled by the current text?* If yes, fix it in
+   test: _would the next agent be misled by the current text?_ If yes, fix it in
    the same change. If you burned real time on a subtle failure, add a
    [gotchas.md](.claude/docs/gotchas.md) entry so nobody repeats it.
 
 ## Right runner, right command
 
-| You are editing | Runner | Verify with |
-| --- | --- | --- |
-| `libs/*/api` (NestJS) | Vitest | `npx nx test <domain>-api` |
-| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils` | Vitest | `npx nx test <domain>-website` |
-| `apps/<tenant>` (Next.js) | Vitest + tsc | `npx tsc -p ./apps/<app> --noEmit` |
-| `libs/api/prisma` | — | `npx prisma migrate dev --name ...` |
+| You are editing                                            | Runner                      | Verify with                                                            |
+| ---------------------------------------------------------- | --------------------------- | ---------------------------------------------------------------------- |
+| `libs/*/api` (NestJS)                                      | Vitest                      | `pnpm nx test <domain>-api`                                            |
+| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils` | Vitest                      | `pnpm nx test <domain>-website`                                        |
+| `apps/<tenant>` (Next.js)                                  | Vitest + tsc                | `pnpm tsc -p ./apps/<app> --noEmit`                                    |
+| `libs/api/prisma`                                          | —                           | `pnpm prisma migrate dev --name ...`                                   |
+| `e2e/` (Gherkin E2E)                                       | Playwright + playwright-bdd | `pnpm run e2e <tenant>[,editor] [--environment <env>]` — specs from a diff: `gherkin-from-changes`; steps: `gherkin-to-playwright` |
 
-Every project runs on Vitest — use `vi.fn()` / `vi.mock()` everywhere. NestJS
+Every project except `e2e/` runs on Vitest — use `vi.fn()` / `vi.mock()` everywhere. NestJS
 libs get their config from `createVitestConfig({nest: true})`.
 
 ## Detailed guidance
@@ -60,8 +60,10 @@ reference — architecture, repo-specific patterns, commands, env vars.
 `.claude/docs/` holds agent behaviour — what to do, what never to do, and what
 to run before claiming something is done.
 
-**Keep the whole set under ~60 KB** (it is ~60 KB today). This is context every
-task pays for, so a new doc earns its place by changing what an agent *does*.
+**Keep the whole set under ~60 KB** (it is ~121 KB today — over budget,
+mostly [gotchas.md](.claude/docs/gotchas.md) at 44 KB; prune before adding).
+This is context every task pays for, so a new doc earns its place by
+changing what an agent _does_.
 Prose restating what a competent reader already knows about Nest, React or
 Prisma does not. Prefer editing an existing file over adding one, and when a
 fact would land in two files, put it in one and link to it — duplicated facts
@@ -89,7 +91,7 @@ drift, and two documents disagreeing is worse than neither existing.
 
 - For navigating/exploring the workspace, invoke the `nx-workspace` skill first - it has patterns for querying projects, targets, and dependencies
 - When running tasks (for example build, lint, test, e2e, etc.), always prefer running the task through `nx` (i.e. `nx run`, `nx run-many`, `nx affected`) instead of using the underlying tooling directly
-- Prefix nx commands with the workspace's package manager (e.g., `pnpm nx build`, `npm exec nx test`) - avoids using globally installed CLI
+- Prefix nx commands with the workspace's package manager (e.g., `pnpm nx build`, `pnpm nx test`) - avoids using globally installed CLI
 - You have access to the Nx MCP server and its tools, use them to help the user
 - For Nx plugin best practices, check `node_modules/@nx/<plugin>/PLUGIN.md`. Not all plugins have this file - proceed without it if unavailable.
 - NEVER guess CLI flags - always check nx_docs or `--help` first when unsure

@@ -1,9 +1,9 @@
 import { useMutation } from '@apollo/client/react';
+import { Button } from '@mui/material';
 import { RefreshEmailQualityDocument } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdRefresh } from 'react-icons/md';
-import { Button, Message, toaster } from 'rsuite';
 
 /**
  * Pulls late delivery states from the mail provider and re-evaluates every
@@ -11,34 +11,20 @@ import { Button, Message, toaster } from 'rsuite';
  * looks at a campaign's result and plans the next pass.
  */
 export function EmailQualityRefreshButton({
-  size = 'sm',
+  size = 'small',
   onDone,
 }: {
-  size?: 'xs' | 'sm';
+  size?: 'small' | 'medium';
   onDone?: () => void;
 }) {
   const { t } = useTranslation();
   const [refresh, { loading }] = useMutation(RefreshEmailQualityDocument, {
     onError: error =>
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {humanizeError(error)}
-        </Message>
-      ),
+      enqueueSnackbar(humanizeError(error), { variant: 'error' }),
     onCompleted: ({ refreshEmailQuality }) => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={6000}
-        >
-          {t('mailSend.emailSegments.refreshed', refreshEmailQuality)}
-        </Message>
+      enqueueSnackbar(
+        t('mailSend.emailSegments.refreshed', refreshEmailQuality),
+        { variant: 'success', autoHideDuration: 6000 }
       );
       onDone?.();
     },
@@ -47,7 +33,7 @@ export function EmailQualityRefreshButton({
   return (
     <Button
       size={size}
-      appearance="ghost"
+      variant="outlined"
       loading={loading}
       startIcon={<MdRefresh />}
       onClick={() => refresh()}

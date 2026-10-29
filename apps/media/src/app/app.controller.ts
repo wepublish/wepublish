@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Delete,
   Get,
@@ -12,16 +13,16 @@ import {
   UseGuards,
   UseInterceptors,
   NotFoundException,
-  Inject,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
-  ImageURIObject,
   MediaService,
   SupportedImagesValidator,
   SupportedDocumentsValidator,
   getExtensionForMimeType,
   JwtAuthGuard,
+  LinkCache,
+  MISSING_LINK_TTL,
 } from '@wepublish/media/api';
 import {
   getTransformationKey,
@@ -31,13 +32,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import 'multer';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
 import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
 
 const HTTP_CODE_FOUND = 301;
 const HTTP_CODE_NOT_FOUND = 307;
-let S3_HOST_CHECKED = false;
 
 /** Sanitize user-provided IDs to prevent path traversal */
 const sanitizeId = (id: string): string => id.replace(/[^a-zA-Z0-9_-]/g, '');
@@ -48,12 +46,23 @@ const sanitizeId = (id: string): string => id.replace(/[^a-zA-Z0-9_-]/g, '');
 export class AppController {
   private readonly fallbackUrl?: string;
 
+  private publicHostCheck?: Promise<boolean>;
+
   constructor(
     private media: MediaService,
-    @Inject(CACHE_MANAGER) private linkCache: Cache,
+    private linkCache: LinkCache,
     config: ConfigService
   ) {
     this.fallbackUrl = config.get<string>('MEDIA_FALLBACK_URL');
+  }
+
+  private async checkPublicHost(url: string) {
+    this.publicHostCheck ??= assertRemoteFileIsAccessible(url).catch(error => {
+      this.publicHostCheck = undefined;
+      throw error;
+    });
+
+    await this.publicHostCheck;
   }
 
   private setProductionCacheHeaders(res: Response) {
@@ -111,12 +120,12 @@ export class AppController {
     @Param('imageId') imageId: string,
     @Query() transformations: TransformationsDto
   ) {
-    const cacheKey = `${imageId}-${getTransformationKey(
+    const variant = getTransformationKey(
       removeSignatureFromTransformations(transformations)
-    )}`;
+    );
 
     // Check if image is cached
-    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
+    const uriFromCache = await this.linkCache.get(imageId, variant);
 
     if (uriFromCache) {
       if (!uriFromCache.exists && this.fallbackUrl) {
@@ -130,8 +139,6 @@ export class AppController {
         httpCode = HTTP_CODE_NOT_FOUND;
       } else {
         this.setProductionCacheHeaders(res);
-        // On access refresh cache ttl
-        await this.linkCache.set(cacheKey, uriFromCache);
       }
       res.redirect(
         httpCode,
@@ -146,26 +153,38 @@ export class AppController {
       return;
     }
 
-    const { uri, exists } = await this.media.getImageUri(
-      imageId,
-      transformations
-    );
+    const rejection = await this.linkCache.rejection(imageId, variant);
+    if (rejection) {
+      throw new BadRequestException(rejection);
+    }
+
+    const { uri, exists } = await this.media
+      .getImageUri(imageId, transformations)
+      .catch(async error => {
+        if (error instanceof BadRequestException) {
+          await this.linkCache.reject(imageId, variant, error.message);
+        }
+        throw error;
+      });
 
     const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
 
-    if (!S3_HOST_CHECKED) {
-      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
-    }
+    await this.checkPublicHost(url);
 
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
       if (!this.fallbackUrl) {
-        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+        await this.linkCache.set(
+          imageId,
+          variant,
+          { uri, exists: false },
+          MISSING_LINK_TTL
+        );
       }
       return;
     } else {
-      await this.linkCache.set(cacheKey, { uri, exists: true });
+      await this.linkCache.set(imageId, variant, { uri, exists: true });
     }
 
     this.setProductionCacheHeaders(res);
@@ -176,6 +195,7 @@ export class AppController {
   @Delete(':imageId')
   async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
     await this.media.deleteImage(imageId);
+    await this.linkCache.forget(imageId);
 
     return res.sendStatus(204);
   }
@@ -218,9 +238,10 @@ export class AppController {
     @Param('documentId') documentId: string
   ) {
     const safeId = sanitizeId(documentId);
-    const cacheKey = `doc-thumb-${safeId}`;
+    const cacheKey = `document:${safeId}`;
+    const variant = 'thumbnail';
 
-    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
+    const uriFromCache = await this.linkCache.get(cacheKey, variant);
 
     if (uriFromCache) {
       if (!uriFromCache.exists && this.fallbackUrl) {
@@ -234,7 +255,6 @@ export class AppController {
         httpCode = HTTP_CODE_NOT_FOUND;
       } else {
         this.setProductionCacheHeaders(res);
-        await this.linkCache.set(cacheKey, uriFromCache);
       }
       res.redirect(
         httpCode,
@@ -243,29 +263,30 @@ export class AppController {
       return;
     }
 
-    if (this.fallbackUrl && !(await this.media.hasDocument(safeId))) {
+    const { uri, exists } = await this.media.getDocumentThumbnailUri(safeId);
+
+    if (!exists && this.fallbackUrl) {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
       return;
     }
 
-    const { uri, exists } = await this.media.getDocumentThumbnailUri(safeId);
     const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
-
-    if (!S3_HOST_CHECKED) {
-      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
-    }
 
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
-      if (!this.fallbackUrl) {
-        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
-      }
+      await this.linkCache.set(
+        cacheKey,
+        variant,
+        { uri, exists: false },
+        MISSING_LINK_TTL
+      );
       return;
     }
 
-    await this.linkCache.set(cacheKey, { uri, exists: true });
+    await this.checkPublicHost(url);
+    await this.linkCache.set(cacheKey, variant, { uri, exists: true });
     this.setProductionCacheHeaders(res);
     res.redirect(HTTP_CODE_FOUND, url);
   }
@@ -286,9 +307,10 @@ export class AppController {
     @Param('documentId') documentId: string
   ) {
     const safeId = sanitizeId(documentId);
-    const cacheKey = `doc-${safeId}`;
+    const cacheKey = `document:${safeId}`;
+    const variant = 'file';
 
-    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
+    const uriFromCache = await this.linkCache.get(cacheKey, variant);
 
     if (uriFromCache) {
       if (!uriFromCache.exists && this.fallbackUrl) {
@@ -302,7 +324,6 @@ export class AppController {
         httpCode = HTTP_CODE_NOT_FOUND;
       } else {
         this.setProductionCacheHeaders(res);
-        await this.linkCache.set(cacheKey, uriFromCache);
       }
       res.redirect(
         httpCode,
@@ -311,29 +332,30 @@ export class AppController {
       return;
     }
 
-    if (this.fallbackUrl && !(await this.media.hasDocument(safeId))) {
+    const { uri, exists } = await this.media.getDocumentUri(safeId);
+
+    if (!exists && this.fallbackUrl) {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
       return;
     }
 
-    const { uri, exists } = await this.media.getDocumentUri(safeId);
     const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
-
-    if (!S3_HOST_CHECKED) {
-      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
-    }
 
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
-      if (!this.fallbackUrl) {
-        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
-      }
+      await this.linkCache.set(
+        cacheKey,
+        variant,
+        { uri, exists: false },
+        MISSING_LINK_TTL
+      );
       return;
     }
 
-    await this.linkCache.set(cacheKey, { uri, exists: true });
+    await this.checkPublicHost(url);
+    await this.linkCache.set(cacheKey, variant, { uri, exists: true });
     this.setProductionCacheHeaders(res);
     res.redirect(HTTP_CODE_FOUND, url);
   }
@@ -345,6 +367,7 @@ export class AppController {
     @Param('documentId') documentId: string
   ) {
     await this.media.deleteDocument(sanitizeId(documentId));
+    await this.linkCache.forget(`document:${sanitizeId(documentId)}`);
 
     return res.sendStatus(204);
   }

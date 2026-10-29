@@ -24,7 +24,6 @@ import { faker } from '@faker-js/faker';
 import { createReadStream } from 'fs';
 import { seed as rootSeed } from '../../../libs/api/prisma/seed';
 import { NovaMediaAdapter } from '../../../libs/api/src/lib/media/novaMediaAdapter';
-import { capitalize } from '@mui/material';
 import { NavigationLinkType } from '../../../libs/navigation/api/src/lib/navigation.model';
 import {
   TeaserGridFlexBlock,
@@ -74,6 +73,9 @@ const pickRandom = <T>(value: T, chance = 0.5): T[] | never[] => {
 
   return [value];
 };
+
+const capitalize = (value: string) =>
+  value.charAt(0).toUpperCase() + value.slice(1);
 
 function getText(min = 1, max = 10) {
   const text = Array.from({ length: faker.number.int({ min, max }) }, () => ({

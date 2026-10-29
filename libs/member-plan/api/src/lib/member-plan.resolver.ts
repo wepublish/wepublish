@@ -21,7 +21,11 @@ import {
 } from './member-plan.model';
 import { MemberPlanService } from './member-plan.service';
 import { MemberPlanDataloader } from './member-plan.dataloader';
-import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import {
+  hasPermission,
+  Permissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
 import {
   CanCreateMemberPlan,
   CanDeleteMemberPlan,
@@ -117,7 +121,7 @@ export class MemberPlanResolver {
   ) {
     const canManage = hasPermission(
       [CanGetMemberPlan, CanGetMemberPlans],
-      user?.roles ?? []
+      permissionsOf(user)
     );
 
     return canManage ? parent.externalReward : null;

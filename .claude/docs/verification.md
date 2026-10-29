@@ -14,47 +14,47 @@ projects**, then **typecheck what you touched**.
 
 ```bash
 # 1. Lint + test everything your change touches (fast — Nx caches)
-npx nx affected -t lint test --uncommitted
+pnpm nx affected -t lint test --uncommitted
 
 # On a feature branch, compare against the base branch instead:
-npx nx affected -t lint test --base=origin/development
+pnpm nx affected -t lint test --base=origin/master
 ```
 
 ```bash
 # 2a. Libs — typecheck through the build target
-npx nx build <project>                    # e.g. membership-api
+pnpm nx build <project>                    # e.g. membership-api
 
 # 2b. Apps — not covered by lint, test, or any build target
-npx tsc -p ./apps/<app> --noEmit          # single app
-bash ./tools/typecheck-websites.sh        # all apps, as CI runs it
+pnpm tsc -p ./apps/<app> --noEmit          # single app
+pnpm nx affected -t typecheck --exclude=editor   # apps, as CI runs it (cached)
 ```
 
 `nx build <project>` runs `tsc` across the whole library rather than only the
 files a spec happens to import, so it is what catches a type error in a file no
 test reaches — including a **stale generated client**. If `@prisma/client` is
-missing fields you just added to `schema.prisma`, run `npx prisma generate`.
+missing fields you just added to `schema.prisma`, run `pnpm prisma generate`.
 When a lib has no `build` target, add one where it makes sense.
 
 If `--uncommitted` returns nothing but you know you changed files, you have
-probably already staged or committed them — use `--base=origin/development`.
+probably already staged or committed them — use `--base=origin/master`.
 
 ### Single project (while iterating)
 
 ```bash
-npx nx test <project>            # e.g. article-api, article-website
-npx nx lint <project>
-npx nx test <project> --watch    # Vitest projects only
+pnpm nx test <project>            # e.g. article-api, article-website
+pnpm nx lint <project>
+pnpm nx test <project> --watch    # Vitest projects only
 ```
 
-Nx project names are `<domain>-<layer>`. List them with `npx nx show projects`.
+Nx project names are `<domain>-<layer>`. List them with `pnpm nx show projects`.
 
 ### Whole workspace (rarely needed)
 
 ```bash
-npm run lint            # all projects
-npm run test            # all projects, serial — many minutes
-npm run test-backend    # NestJS/backend projects
-npm run test-website    # *website* projects
+pnpm run lint            # all projects
+pnpm run test            # all projects, serial — many minutes
+pnpm run test-backend    # NestJS/backend projects
+pnpm run test-website    # *website* projects
 ```
 
 Prefer `nx affected`. The full run is what CI is for; running it locally on every
@@ -67,22 +67,66 @@ still a broken change.
 
 | Workflow | Command | Covers |
 | --- | --- | --- |
-| `lint.yml` | `npm run lint` | ESLint, all projects |
-| `test.yml` | `npm run test-backend -- --configuration=ci` | Vitest backend/NestJS + coverage, with Postgres 17 |
-| `website-tests.yml` | `npm run test-website -- --configuration=ci` | Vitest website projects + coverage |
-| `website-typecheck.yml` | `bash ./tools/typecheck-websites.sh` | `tsc --noEmit` per app |
+| `lint.yml` | `nx-scoped.sh -t lint` | ESLint |
+| `test.yml` | `nx-scoped.sh -t test` | All Vitest projects (backend and website) + coverage, with Postgres 18. Split over 4 shard jobs, with Nx projects balanced by spec-file count, at `--parallel=6`. The `Test` job only reports whether all shards passed |
+| `website-typecheck.yml` | `nx-scoped.sh -t typecheck --exclude=editor`, plus `nx run api-example:build --skip-nx-cache` | Each website app's `typecheck` target (`tsc --noEmit`), cached by Nx, `--parallel=3`. The `Build apps` job compiles the whole API (`api-example`) on every code change, including `master`, and builds `editor` and `media` through `nx-scoped.sh` (only when affected on PRs, always on `master`) |
 
-Note `website-typecheck.yml` **excludes** `api-example`, `editor`, `bka`, `media`
-— those are known not to typecheck cleanly. Do not "fix" that exclusion as a
-side quest, but do not let a change you make add a new app to that list either.
+All three go through [tools/ci/nx-scoped.sh](../../tools/ci/nx-scoped.sh).
+Pushes to `master` always run the full set. On PRs the
+`NX_AFFECTED_SCOPE` repository variable picks the mode. It is set to `affected`,
+which runs only what `nx affected` picks against the merge base from
+`nrwl/nx-set-shas`. `shadow` (also the default when unset) still runs
+everything, logs what `nx affected` would have picked, and warns if a failing
+project was outside that set. `.nxignore` hides `image/api`,
+`block-content/api`, `testing` and `mocks/website` from Nx, so `nx affected` never
+selects their dependents; the always-on `api-example` build is what catches
+breakage in the API ones. Their own tests run outside Nx: shard 1 of
+`test.yml` calls Vitest on `libs/image/api`, `libs/block-content/api`
+and `libs/mocks/website` on every PR and every `master` push, and
+`codecov-upload.sh` falls back to the
+`name` in `project.json` for their Codecov flags. Even in
+`affected` mode the script runs the full set when the base doesn't resolve, or
+when the diff touches non-Markdown files but affects no project besides the
+root `wepublish` project. The three workflow files are `sharedGlobals` in
+`nx.json`, so editing one marks every project affected.
 
-Coverage is uploaded to Codecov with `fail_ci_if_error: true`.
+A PR that only touches docs and AI tooling (`docs/`, `agent/`, `.agents/`,
+`.ai/`, `.claude/`, any `*.md`, the editor rule files) skips lint, tests,
+typecheck, the `api-example` build and CodeQL. The reusable
+[changes.yml](../../.github/workflows/changes.yml) workflow runs
+[tools/ci/changes.sh](../../tools/ci/changes.sh) to decide. The gate is a
+job-level `if:`, never an `on: paths` filter: a workflow skipped by a path
+filter leaves its required checks Pending forever, while a job skipped by `if:`
+reports Success. Both secret scans always run. If the file list can't be read,
+everything runs.
+
+Docker images are only built when something deploys them: on `master`
+(`on-master-publish-master-artifacts.yml`), for a `review_<nn>_<project>`
+label (`on-pr-label-deploy-review.yml`), and for `deploy_*` tags. Unlabelled
+PRs build no images. `on-pr-review.yml` still calls the backend image workflow,
+but with no tags, so every build job is skipped. Branch protection on `master`
+requires the five `Docker backend images / Build and push …` checks, and a
+skipped job reports Success. A Docker-only break therefore shows up on the
+`master` build.
+
+`website-typecheck.yml` **skips** `api-example`, `editor`, `bka`, and `media`;
+see [gotchas.md](gotchas.md#️-four-apps-are-excluded-from-the-typecheck-ci-job).
+
+Coverage is uploaded by [tools/ci/codecov-upload.sh](../../tools/ci/codecov-upload.sh):
+one upload per Nx project, flagged with the project name, and a failed upload
+fails the job. `.codecov.yml` turns on carryforward for every flag, so a project
+that a run skipped keeps its last coverage instead of dropping to 0%. lcov paths
+are repo-relative (`projectRoot: workspaceRoot` in `vitest.shared.ts`); without
+that, every project's `src/index.ts` collides at Codecov. The script skips
+reports with no lines outside the `.codecov.yml` `ignore` list (every `apps/*`
+project, libs without real tests): Codecov rejects those as `REPORT_EMPTY`, and
+one errored upload hides the whole commit's coverage ("incomplete uploads").
 
 ## Reporting results
 
 State the actual outcome:
 
-- ✅ `npx nx affected -t lint test --uncommitted` — 4 projects, all passed
+- ✅ `pnpm nx affected -t lint test --uncommitted` — 4 projects, all passed
 - ❌ 2 tests fail in `article-api` — paste the failing assertion
 - ⚠️ Did not typecheck; change was library-only
 

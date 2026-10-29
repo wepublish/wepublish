@@ -1,5 +1,13 @@
-import styled from '@emotion/styled';
 import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
+import {
+  Button,
+  Card,
+  CardContent,
+  IconButton,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import {
   BlockTemplateDocument,
   BlockTemplateListDocument,
@@ -8,12 +16,6 @@ import {
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit, MdOutput, MdRefresh } from 'react-icons/md';
-import {
-  ButtonToolbar,
-  IconButton,
-  Panel as RPanel,
-  SelectPicker,
-} from 'rsuite';
 
 import { BlockMapType, BlockProps } from '../atoms/blockList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
@@ -23,26 +25,41 @@ import { blockForQueryBlock, BlockTemplateBlockValue } from './types';
 
 const Wrapper = styled.div`
   display: grid;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(2)};
 `;
 
-const Toolbar = styled.div`
+const Picker = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr) max-content;
-  align-items: center;
-  gap: 12px;
+  align-items: start;
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+const Actions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(1)};
+  margin: ${({ theme }) => theme.spacing(-1, 0, 0, -1)};
+
+  > * {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
 `;
 
 const Preview = styled.div`
+  container-type: inline-size;
   display: grid;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(1.5)};
   pointer-events: none;
   user-select: none;
 `;
 
-const PreviewItem = styled(RPanel)`
+const PreviewItem = styled(Card)`
   padding: 0;
-  background-color: var(--rs-bg-well);
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const PreviewLabel = styled.div`
@@ -51,12 +68,18 @@ const PreviewLabel = styled.div`
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-bottom: 1px solid var(--rs-border-primary);
-  color: var(--rs-text-secondary);
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const PreviewBlock = styled.div`
+  min-width: 0;
+  overflow: hidden;
   padding: 12px;
+
+  @container (max-width: 520px) {
+    zoom: 0.6;
+  }
 `;
 
 export const BlockTemplateBlock = ({
@@ -100,83 +123,96 @@ export const BlockTemplateBlock = ({
 
   return (
     <Wrapper>
-      <Toolbar>
-        <SelectPicker
-          block
-          cleanable
-          virtualized
+      <Picker>
+        <TextField
+          select
+          label={t('blocks.blockTemplate.select')}
           disabled={disabled}
-          loading={loading}
-          data={templates.map(({ id, name }) => ({ value: id, label: name }))}
-          value={selectedTemplate?.id ?? null}
-          placeholder={t('blocks.blockTemplate.select')}
-          onChange={id =>
+          value={selectedTemplate?.id ?? ''}
+          helperText={t('blocks.blockTemplate.linkedInfo')}
+          onChange={event =>
             onChange({
-              template: templates.find(template => template.id === id) ?? null,
+              template:
+                templates.find(
+                  template => template.id === event.target.value
+                ) ?? null,
             })
           }
-        />
+          fullWidth
+        >
+          <MenuItem value="">{t('blocks.blockTemplate.select')}</MenuItem>
 
-        <ButtonToolbar>
-          <IconButtonTooltip caption={t('blocks.blockTemplate.reload')}>
-            <IconButton
-              aria-label={t('blocks.blockTemplate.reload')}
-              icon={<MdRefresh />}
-              onClick={event => {
-                refetch();
-                event.preventDefault();
-              }}
-            />
-          </IconButtonTooltip>
+          {templates.map(({ id, name }) => (
+            <MenuItem
+              key={id}
+              value={id}
+            >
+              {name}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <IconButtonTooltip caption={t('blocks.blockTemplate.reload')}>
           <IconButton
-            icon={<MdEdit />}
-            disabled={!selectedTemplate}
-            href={
-              selectedTemplate ?
-                `/block-content/templates/edit/${selectedTemplate.id}`
-              : undefined
-            }
+            aria-label={t('blocks.blockTemplate.reload')}
+            onClick={event => {
+              refetch();
+              event.preventDefault();
+            }}
+          >
+            <MdRefresh />
+          </IconButton>
+        </IconButtonTooltip>
+      </Picker>
+
+      {!!selectedTemplate && (
+        <Actions>
+          <Button
+            variant="text"
+            startIcon={<MdEdit />}
+            href={`/block-content/templates/edit/${selectedTemplate.id}`}
             target="_blank"
           >
             {t('blocks.blockTemplate.editTemplate')}
-          </IconButton>
+          </Button>
 
-          <IconButton
-            icon={<MdOutput />}
+          <Button
+            variant="text"
+            startIcon={<MdOutput />}
             disabled={disabled || !onReplace || !blocks.length}
             onClick={() => setConfirmOpen(true)}
           >
             {t('blocks.blockTemplate.useContent')}
-          </IconButton>
-        </ButtonToolbar>
-      </Toolbar>
+          </Button>
+        </Actions>
+      )}
 
       {!!selectedTemplate && (
         <Preview>
           {blocks
-            // hidden blocks of the template are not rendered on the website
             .filter(block => !block.value.disabled)
             .map(block => {
               const { field, label, icon } = blockMap[block.type];
 
               return (
                 <PreviewItem
+                  variant="outlined"
                   key={block.key}
-                  bordered
-                  bodyFill
                 >
-                  <PreviewLabel>
-                    {icon}
-                    <span>{t(label)}</span>
-                  </PreviewLabel>
+                  <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+                    <PreviewLabel>
+                      {icon}
+                      <span>{t(label)}</span>
+                    </PreviewLabel>
 
-                  <PreviewBlock>
-                    {field({
-                      value: block.value,
-                      onChange: () => undefined,
-                      disabled: true,
-                    })}
-                  </PreviewBlock>
+                    <PreviewBlock>
+                      {field({
+                        value: block.value,
+                        onChange: () => undefined,
+                        disabled: true,
+                      })}
+                    </PreviewBlock>
+                  </CardContent>
                 </PreviewItem>
               );
             })}

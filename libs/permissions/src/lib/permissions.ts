@@ -160,6 +160,36 @@ export const CanDeleteDocument: Permission = {
   deprecated: false,
 };
 
+export const CanCreateApiToken: Permission = {
+  id: 'CAN_CREATE_API_TOKEN',
+  description: 'Allows to create api tokens',
+  deprecated: false,
+};
+
+export const CanGetApiTokens: Permission = {
+  id: 'CAN_GET_API_TOKENS',
+  description: 'Allows to get your own api tokens',
+  deprecated: false,
+};
+
+export const CanGetAllApiTokens: Permission = {
+  id: 'CAN_GET_ALL_API_TOKENS',
+  description: 'Allows to get the api tokens of every user',
+  deprecated: false,
+};
+
+export const CanRevokeApiToken: Permission = {
+  id: 'CAN_REVOKE_API_TOKEN',
+  description: 'Allows to revoke your own api tokens',
+  deprecated: false,
+};
+
+export const CanRevokeAllApiTokens: Permission = {
+  id: 'CAN_REVOKE_ALL_API_TOKENS',
+  description: 'Allows to revoke the api tokens of every user',
+  deprecated: false,
+};
+
 export const CanCreateArticle: Permission = {
   id: 'CAN_CREATE_ARTICLE',
   description: 'Allows to create articles',
@@ -928,6 +958,80 @@ export const CanDeleteBlockTemplate: Permission = {
   deprecated: false,
 };
 
+export const CanGetNewsletterCampaigns: Permission = {
+  id: 'CAN_GET_NEWSLETTER_CAMPAIGNS',
+  description: 'Allows to get newsletter campaigns',
+  deprecated: false,
+};
+
+export const CanCreateNewsletterCampaign: Permission = {
+  id: 'CAN_CREATE_NEWSLETTER_CAMPAIGN',
+  description: 'Allows to create a newsletter campaign',
+  deprecated: false,
+};
+
+export const CanUpdateNewsletterCampaign: Permission = {
+  id: 'CAN_UPDATE_NEWSLETTER_CAMPAIGN',
+  description: 'Allows to update a newsletter campaign',
+  deprecated: false,
+};
+
+export const CanDeleteNewsletterCampaign: Permission = {
+  id: 'CAN_DELETE_NEWSLETTER_CAMPAIGN',
+  description: 'Allows to delete a newsletter campaign',
+  deprecated: false,
+};
+
+export const CanPublishNewsletterCampaign: Permission = {
+  id: 'CAN_PUBLISH_NEWSLETTER_CAMPAIGN',
+  description: 'Allows to push a newsletter campaign into a Mailchimp draft',
+  deprecated: false,
+};
+
+/**
+ * Article Templates
+ */
+
+export const CanCreateArticleTemplate: Permission = {
+  id: 'CAN_CREATE_ARTICLE_TEMPLATE',
+  description: 'Allows to create an article template',
+  deprecated: false,
+};
+
+export const CanUpdateArticleTemplate: Permission = {
+  id: 'CAN_UPDATE_ARTICLE_TEMPLATE',
+  description: 'Allows to update an article template',
+  deprecated: false,
+};
+
+export const CanDeleteArticleTemplate: Permission = {
+  id: 'CAN_DELETE_ARTICLE_TEMPLATE',
+  description: 'Allows to delete an article template',
+  deprecated: false,
+};
+
+/**
+ * Page Templates
+ */
+
+export const CanCreatePageTemplate: Permission = {
+  id: 'CAN_CREATE_PAGE_TEMPLATE',
+  description: 'Allows to create a page template',
+  deprecated: false,
+};
+
+export const CanUpdatePageTemplate: Permission = {
+  id: 'CAN_UPDATE_PAGE_TEMPLATE',
+  description: 'Allows to update a page template',
+  deprecated: false,
+};
+
+export const CanDeletePageTemplate: Permission = {
+  id: 'CAN_DELETE_PAGE_TEMPLATE',
+  description: 'Allows to delete a page template',
+  deprecated: false,
+};
+
 /**
  * Paywall
  */
@@ -1244,7 +1348,7 @@ export const CanUpdateWebsiteSettings: Permission = {
   deprecated: false,
 };
 
-export const AllPermissions: Permission[] = [
+export const AllPermissions = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
   CanCreateCrowdfunding,
@@ -1272,6 +1376,11 @@ export const AllPermissions: Permission[] = [
   CanGetDocument,
   CanGetDocuments,
   CanDeleteDocument,
+  CanCreateApiToken,
+  CanGetApiTokens,
+  CanGetAllApiTokens,
+  CanRevokeApiToken,
+  CanRevokeAllApiTokens,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,
@@ -1385,6 +1494,17 @@ export const AllPermissions: Permission[] = [
   CanCreateBlockTemplate,
   CanUpdateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanCreateArticleTemplate,
+  CanUpdateArticleTemplate,
+  CanDeleteArticleTemplate,
+  CanCreatePageTemplate,
+  CanUpdatePageTemplate,
+  CanDeletePageTemplate,
+  CanGetNewsletterCampaigns,
+  CanCreateNewsletterCampaign,
+  CanUpdateNewsletterCampaign,
+  CanDeleteNewsletterCampaign,
+  CanPublishNewsletterCampaign,
   CanCreatePaywall,
   CanUpdatePaywall,
   CanDeletePaywall,
@@ -1433,9 +1553,9 @@ export const AllPermissions: Permission[] = [
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
   CanGetAuditLogs,
-];
+] as const;
 
-export const EditorPermissions: Permission[] = [
+export const EditorPermissions = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
   CanCreateCrowdfunding,
@@ -1459,6 +1579,9 @@ export const EditorPermissions: Permission[] = [
   CanGetDocument,
   CanGetDocuments,
   CanDeleteDocument,
+  CanCreateApiToken,
+  CanGetApiTokens,
+  CanRevokeApiToken,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,
@@ -1501,13 +1624,24 @@ export const EditorPermissions: Permission[] = [
   CanCreateBlockTemplate,
   CanUpdateBlockTemplate,
   CanDeleteBlockTemplate,
+  CanCreateArticleTemplate,
+  CanUpdateArticleTemplate,
+  CanDeleteArticleTemplate,
+  CanCreatePageTemplate,
+  CanUpdatePageTemplate,
+  CanDeletePageTemplate,
+  CanGetNewsletterCampaigns,
+  CanCreateNewsletterCampaign,
+  CanUpdateNewsletterCampaign,
+  CanDeleteNewsletterCampaign,
+  CanPublishNewsletterCampaign,
   CanPreview,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
-];
+] as const;
 
-export const PeerPermissions: Permission[] = [
+export const PeerPermissions = [
   CanGetPeerProfile,
   CanGetSharedArticle,
   CanGetSharedArticles,
-];
+] as const;

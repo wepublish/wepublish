@@ -1,7 +1,6 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  Setting,
   SettingName,
   SettingsListDocument,
   UpdateSettingDocument,
@@ -19,46 +18,45 @@ import {
   SelectPaywall,
   useAuthorisation,
   useUnsavedChangesDialog,
+  enqueueSnackbar,
+  PageTitle,
 } from '@wepublish/ui/editor';
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdCancel, MdSave, MdWarning } from 'react-icons/md';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm, useWatch } from 'react-hook-form';
+import { z } from 'zod';
+import { CanGetSettings, CanUpdateSettings } from '@wepublish/permissions';
 import {
+  Box,
   Button,
-  Col,
-  Form,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
   Grid,
-  IconButton,
-  InputGroup,
-  NumberInput,
-  Modal,
-  Notification,
-  Panel as RPanel,
-  Row,
-  Schema,
-  toaster,
-  Toggle,
-} from 'rsuite';
-import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon';
-
-const Panel = styled(RPanel)`
-  margin-bottom: 16px;
-`;
+  InputAdornment,
+  Stack,
+  TextField,
+} from '@mui/material';
 
 const WarningIcon = styled(MdWarning)`
-  color: var(--rs-state-warning);
+  color: ${({ theme }) => theme.vars.palette.warning.main};
   font-size: 32px;
   margin-left: 20px;
 `;
 
 const DescriptionListItemWrapper = styled(DescriptionListItem)`
   min-width: 100px;
-`;
-
-const WideInputGroup = styled(InputGroup)`
-  &&& {
-    width: 100%;
-  }
 `;
 
 type SettingLabelProps = {
@@ -72,334 +70,237 @@ const SettingLabel = ({ label, info }: SettingLabelProps) => (
   </>
 );
 
-interface Label {
-  label: string;
-}
+const SETTINGS = {
+  [SettingName.AllowGuestCommenting]: {
+    label: 'settingList.guestCommenting',
+    value: false,
+  },
+  [SettingName.AllowGuestPollVoting]: {
+    label: 'settingList.guestPollVote',
+    value: false,
+  },
+  [SettingName.AllowGuestCommentRating]: {
+    label: 'settingList.allowGuestCommentRating',
+    value: false,
+  },
+  [SettingName.SessionTtlDays]: {
+    label: 'settingList.sessionTtlDays',
+    value: 7,
+  },
+  [SettingName.EmailQualityUnresponsiveAfterDays]: {
+    label: 'settingList.emailQualityUnresponsiveAfterDays',
+    value: 180,
+  },
+  [SettingName.EmailQualityMinMailsForUnresponsive]: {
+    label: 'settingList.emailQualityMinMailsForUnresponsive',
+    value: 1,
+  },
+  [SettingName.SendLoginJwtExpiresMin]: {
+    label: 'settingList.loginMinutes',
+    value: 0,
+  },
+  [SettingName.ResetPasswordJwtExpiresMin]: {
+    label: 'settingList.passwordToken',
+    value: 0,
+  },
+  [SettingName.PeeringTimeoutMs]: {
+    label: 'settingList.peerToken',
+    value: 0,
+  },
+  [SettingName.MakeActiveSubscribersApiPublic]: {
+    label: 'settingList.activeSubscriptionsApiPublic',
+    value: false,
+  },
+  [SettingName.MakeNewSubscribersApiPublic]: {
+    label: 'settingList.newSubscriptionsApiPublic',
+    value: false,
+  },
+  [SettingName.MakeRenewingSubscribersApiPublic]: {
+    label: 'settingList.renewingSubscriptionsApiPublic',
+    value: false,
+  },
+  [SettingName.MakeNewDeactivationsApiPublic]: {
+    label: 'settingList.newDeactivationsApiPublic',
+    value: false,
+  },
+  [SettingName.MakeExpectedRevenueApiPublic]: {
+    label: 'settingList.expectedRevenueApiPublic',
+    value: false,
+  },
+  [SettingName.MakeRevenueApiPublic]: {
+    label: 'settingList.revenueApiPublic',
+    value: false,
+  },
+  [SettingName.CommentCharLimit]: {
+    label: 'settingList.commentCharLimit',
+    value: 0,
+  },
+  [SettingName.AllowCommentEditing]: {
+    label: 'settingList.allowCommentEditing',
+    value: false,
+  },
+  [SettingName.ShowPendingWhenNotPublished]: {
+    label: 'settingList.showPendingWhenNotPublished',
+    value: false,
+  },
+  [SettingName.NewArticlePaywall]: {
+    label: 'settingList.newArticlePaywall',
+    value: null,
+  },
+  [SettingName.NewArticlePeering]: {
+    label: 'settingList.newArticlePeering',
+    value: false,
+  },
+  [SettingName.SubscriptionUpgradeBillsFullDifference]: {
+    label: 'settingList.subscriptionUpgradeModel',
+    value: false,
+  },
+  [SettingName.SubscriptionExtendWindowDays]: {
+    label: 'settingList.subscriptionExtendWindowDays',
+    value: 30,
+  },
+  [SettingName.PaymentMethodChangeExpiryDays]: {
+    label: 'settingList.paymentMethodChangeExpiryDays',
+    value: 14,
+  },
+} as Record<SettingName, { label: string; value: unknown }>;
 
-type SettingWithLabel = Label & Setting;
+type SettingValues = Record<SettingName, unknown>;
 
-function settingsReducer(
-  settings: Record<SettingName, SettingWithLabel>,
-  changedSetting: Setting
-) {
-  return {
-    ...settings,
-    [changedSetting.name]: {
-      ...settings[changedSetting.name],
-      value: changedSetting.value,
-    },
-  };
-}
+const EMPTY_SETTINGS = Object.fromEntries(
+  Object.entries(SETTINGS).map(([name, { value }]) => [name, value])
+) as SettingValues;
+
+const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
+  [SettingName.SessionTtlDays]: [1, 365],
+  [SettingName.EmailQualityUnresponsiveAfterDays]: [1, 3650],
+  [SettingName.EmailQualityMinMailsForUnresponsive]: [1, 100],
+  [SettingName.SendLoginJwtExpiresMin]: [1, 10080],
+  [SettingName.ResetPasswordJwtExpiresMin]: [10, 10080],
+  [SettingName.PeeringTimeoutMs]: [1000, 10000],
+  [SettingName.CommentCharLimit]: [0, 10000],
+  [SettingName.SubscriptionExtendWindowDays]: [0, 366],
+  [SettingName.PaymentMethodChangeExpiryDays]: [1, 90],
+};
+
+type Restrictions = Partial<
+  Record<SettingName, { minValue?: number | null; maxValue?: number | null }>
+>;
+
+const buildSchema = (restrictions: Restrictions) =>
+  z.object(
+    Object.fromEntries(
+      Object.entries(NUMBER_FALLBACK_RANGES).map(([name, [min, max]]) => {
+        const restriction = restrictions[name as SettingName];
+
+        return [
+          name,
+          z.coerce
+            .number()
+            .min(restriction?.minValue ?? min)
+            .max(restriction?.maxValue ?? max),
+        ];
+      })
+    )
+  );
 
 function SettingList() {
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const { t } = useTranslation();
+  const client = useApolloClient();
 
-  const isAuthorized = useAuthorisation('CAN_UPDATE_SETTINGS');
+  const isAuthorized = useAuthorisation(CanUpdateSettings.id);
+  const [fetchError, setFetchError] = useState<Error>();
+
+  const restrictions = useRef<Restrictions>({});
+
+  const loadSettings = useCallback(async (): Promise<SettingValues> => {
+    try {
+      const { data } = await client.query({
+        query: SettingsListDocument,
+        fetchPolicy: 'network-only',
+      });
+
+      restrictions.current = Object.fromEntries(
+        (data?.settings ?? []).map(setting => [
+          setting.name,
+          setting.settingRestriction ?? undefined,
+        ])
+      );
+
+      return {
+        ...EMPTY_SETTINGS,
+        ...Object.fromEntries(
+          (data?.settings ?? []).map(setting => [setting.name, setting.value])
+        ),
+      } as SettingValues;
+    } catch (error) {
+      setFetchError(error as Error);
+
+      return EMPTY_SETTINGS;
+    }
+  }, [client]);
 
   const {
-    data: settingListData,
-    loading,
-    refetch,
-    error: fetchError,
-  } = useQuery(SettingsListDocument, {});
+    control,
+    handleSubmit,
+    reset,
+    getValues,
+    formState: { isLoading, dirtyFields, defaultValues },
+  } = useForm<SettingValues>({
+    resolver: (values, context, options) =>
+      zodResolver(buildSchema(restrictions.current))(values, context, options),
+    defaultValues: loadSettings,
+  });
 
-  const isDisabled = loading || !settingListData || !isAuthorized;
+  const loading = isLoading;
+  const isDisabled = loading || !isAuthorized;
 
-  const [settings, setSetting] = useReducer(settingsReducer, {
-    [SettingName.AllowGuestCommenting]: {
-      value: false,
-      name: SettingName.AllowGuestCommenting,
-      label: 'settingList.guestCommenting',
-    },
-    [SettingName.AllowGuestPollVoting]: {
-      value: false,
-      name: SettingName.AllowGuestPollVoting,
-      label: 'settingList.guestPollVote',
-    },
-    [SettingName.AllowGuestCommentRating]: {
-      value: false,
-      name: SettingName.AllowGuestCommentRating,
-      label: 'settingList.allowGuestCommentRating',
-    },
-    [SettingName.SessionTtlDays]: {
-      value: 7,
-      name: SettingName.SessionTtlDays,
-      label: 'settingList.sessionTtlDays',
-    },
-    [SettingName.EmailQualityUnresponsiveAfterDays]: {
-      value: 180,
-      name: SettingName.EmailQualityUnresponsiveAfterDays,
-      label: 'settingList.emailQualityUnresponsiveAfterDays',
-    },
-    [SettingName.EmailQualityMinMailsForUnresponsive]: {
-      value: 1,
-      name: SettingName.EmailQualityMinMailsForUnresponsive,
-      label: 'settingList.emailQualityMinMailsForUnresponsive',
-    },
-    [SettingName.SendLoginJwtExpiresMin]: {
-      value: 0,
-      name: SettingName.SendLoginJwtExpiresMin,
-      label: 'settingList.loginMinutes',
-    },
-    [SettingName.ResetPasswordJwtExpiresMin]: {
-      value: 0,
-      name: SettingName.ResetPasswordJwtExpiresMin,
-      label: 'settingList.passwordToken',
-    },
-    [SettingName.PeeringTimeoutMs]: {
-      value: 0,
-      name: SettingName.PeeringTimeoutMs,
-      label: 'settingList.peerToken',
-    },
-    [SettingName.MakeActiveSubscribersApiPublic]: {
-      value: false,
-      name: SettingName.MakeActiveSubscribersApiPublic,
-      label: 'settingList.activeSubscriptionsApiPublic',
-    },
-    [SettingName.MakeNewSubscribersApiPublic]: {
-      value: false,
-      name: SettingName.MakeNewSubscribersApiPublic,
-      label: 'settingList.newSubscriptionsApiPublic',
-    },
-    [SettingName.MakeRenewingSubscribersApiPublic]: {
-      value: false,
-      name: SettingName.MakeRenewingSubscribersApiPublic,
-      label: 'settingList.renewingSubscriptionsApiPublic',
-    },
-    [SettingName.MakeNewDeactivationsApiPublic]: {
-      value: false,
-      name: SettingName.MakeNewDeactivationsApiPublic,
-      label: 'settingList.newDeactivationsApiPublic',
-    },
-    [SettingName.MakeExpectedRevenueApiPublic]: {
-      value: false,
-      name: SettingName.MakeExpectedRevenueApiPublic,
-      label: 'settingList.expectedRevenueApiPublic',
-    },
-    [SettingName.MakeRevenueApiPublic]: {
-      value: false,
-      name: SettingName.MakeRevenueApiPublic,
-      label: 'settingList.revenueApiPublic',
-    },
-    [SettingName.CommentCharLimit]: {
-      value: 0,
-      name: SettingName.CommentCharLimit,
-      label: 'settingList.commentCharLimit',
-    },
-    [SettingName.AllowCommentEditing]: {
-      value: false,
-      name: SettingName.AllowCommentEditing,
-      label: 'settingList.allowCommentEditing',
-    },
-    [SettingName.ShowPendingWhenNotPublished]: {
-      value: false,
-      name: SettingName.ShowPendingWhenNotPublished,
-      label: 'settingList.showPendingWhenNotPublished',
-    },
-    [SettingName.NewArticlePaywall]: {
-      value: null,
-      name: SettingName.NewArticlePaywall,
-      label: 'settingList.newArticlePaywall',
-    },
-    [SettingName.NewArticlePeering]: {
-      value: false,
-      name: SettingName.NewArticlePeering,
-      label: 'settingList.newArticlePeering',
-    },
-    [SettingName.SubscriptionUpgradeBillsFullDifference]: {
-      value: false,
-      name: SettingName.SubscriptionUpgradeBillsFullDifference,
-      label: 'settingList.subscriptionUpgradeModel',
-    },
-  } as Record<SettingName, SettingWithLabel>);
-
-  useEffect(() => {
-    settingListData?.settings.forEach(setSetting);
-  }, [settingListData]);
+  const changedSettings = Object.keys(dirtyFields) as SettingName[];
+  const values = useWatch({ control });
 
   const [updateSetting, { error: updateSettingError }] = useMutation(
     UpdateSettingDocument,
     {}
   );
 
-  const [changedSetting, setChangedSetting] = useState(
-    settingListData?.settings.filter(
-      setting => setting.value !== settings[setting.name].value
-    ) ?? []
-  );
-  useUnsavedChangesDialog(changedSetting.length > 0);
+  useUnsavedChangesDialog(changedSettings.length > 0);
 
   async function handleSettingListUpdate() {
     setShowWarning(false);
 
-    const batchedUpdates = Object.values(settings).map(({ name, value }) => {
-      return updateSetting({ variables: { name, value } });
-    });
+    const batchedUpdates = Object.entries(getValues()).map(([name, value]) =>
+      updateSetting({ variables: { name: name as SettingName, value } })
+    );
 
     try {
       await Promise.all(batchedUpdates);
-      toaster.push(
-        <Notification
-          header={t('settingList.successTitle')}
-          type="success"
-          duration={2000}
-        >
-          {t('settingList.successMessage')}
-        </Notification>
-      );
-      await refetch();
+      enqueueSnackbar(t('settingList.successMessage'), {
+        variant: 'success',
+        title: t('settingList.successTitle'),
+        autoHideDuration: 2000,
+      });
+      reset(await loadSettings());
     } catch (error) {
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('settingList.errorTitle')}
-          duration={2000}
-        >
-          {t('toast.updateError')}
-        </Notification>
-      );
+      enqueueSnackbar(t('toast.updateError'), {
+        variant: 'error',
+        title: t('settingList.errorTitle'),
+        autoHideDuration: 2000,
+      });
     }
-  }
-
-  useEffect(() => {
-    setChangedSetting(
-      settingListData?.settings.filter(
-        setting => setting.value !== settings[setting.name].value
-      ) ?? []
-    );
-  }, [settingListData, settings]);
-
-  async function handleCancel() {
-    settingListData?.settings.forEach(setSetting);
   }
 
   useEffect(() => {
     const error = updateSettingError ?? fetchError;
 
-    if (error)
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('settingList.errorTitle')}
-          duration={2000}
-        >
-          {humanizeError(error)}
-        </Notification>
-      );
+    if (error) {
+      enqueueSnackbar(humanizeError(error), {
+        variant: 'error',
+        title: t('settingList.errorTitle'),
+        autoHideDuration: 2000,
+      });
+    }
   }, [fetchError, t, updateSettingError]);
-
-  const { NumberType } = Schema.Types;
-
-  const numberInRange = (name: SettingName, fallbackMax: number) =>
-    NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[name].settingRestriction?.minValue ?? 1,
-        settings[name].settingRestriction?.maxValue ?? fallbackMax,
-        t('errorMessages.invalidRange', {
-          min: settings[name].settingRestriction?.minValue ?? 1,
-          max: settings[name].settingRestriction?.maxValue ?? fallbackMax,
-        })
-      );
-
-  const validationModel = Schema.Model({
-    [SettingName.EmailQualityUnresponsiveAfterDays]: numberInRange(
-      SettingName.EmailQualityUnresponsiveAfterDays,
-      3650
-    ),
-    [SettingName.EmailQualityMinMailsForUnresponsive]: numberInRange(
-      SettingName.EmailQualityMinMailsForUnresponsive,
-      100
-    ),
-    [SettingName.SessionTtlDays]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.SessionTtlDays].settingRestriction?.minValue ?? 1,
-        settings[SettingName.SessionTtlDays].settingRestriction?.maxValue ??
-          365,
-        t('errorMessages.invalidRange', {
-          min:
-            settings[SettingName.SessionTtlDays].settingRestriction?.minValue ??
-            1,
-          max:
-            settings[SettingName.SessionTtlDays].settingRestriction?.maxValue ??
-            365,
-        })
-      ),
-    [SettingName.SendLoginJwtExpiresMin]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.SendLoginJwtExpiresMin].settingRestriction
-          ?.minValue ?? 1,
-        settings[SettingName.SendLoginJwtExpiresMin].settingRestriction
-          ?.maxValue ?? 10080,
-        t('errorMessages.invalidRange', {
-          min:
-            settings[SettingName.SendLoginJwtExpiresMin].settingRestriction
-              ?.minValue ?? 1,
-          max:
-            settings[SettingName.SendLoginJwtExpiresMin].settingRestriction
-              ?.maxValue ?? 10080,
-        })
-      ),
-    [SettingName.ResetPasswordJwtExpiresMin]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction
-          ?.minValue ?? 10,
-        settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction
-          ?.maxValue ?? 10080,
-        t('errorMessages.invalidRange', {
-          min:
-            settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction
-              ?.minValue ?? 10,
-          max:
-            settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction
-              ?.maxValue ?? 10080,
-        })
-      ),
-    [SettingName.PeeringTimeoutMs]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.PeeringTimeoutMs].settingRestriction?.minValue ??
-          1000,
-        settings[SettingName.PeeringTimeoutMs].settingRestriction?.maxValue ??
-          10000,
-        t('errorMessages.invalidRange', {
-          min:
-            settings[SettingName.PeeringTimeoutMs].settingRestriction
-              ?.minValue ?? 1000,
-          max:
-            settings[SettingName.PeeringTimeoutMs].settingRestriction
-              ?.maxValue ?? 10000,
-        })
-      ),
-    [SettingName.CommentCharLimit]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.CommentCharLimit].settingRestriction?.minValue ??
-          0,
-        settings[SettingName.CommentCharLimit].settingRestriction?.maxValue ??
-          10000,
-        t('errorMessages.invalidRange', {
-          min:
-            settings[SettingName.CommentCharLimit].settingRestriction
-              ?.minValue ?? 0,
-          max:
-            settings[SettingName.CommentCharLimit].settingRestriction
-              ?.maxValue ?? 10000,
-        })
-      ),
-  });
-
-  const formValue = Object.values(settings).reduce(
-    (values, setting) => ({
-      ...values,
-      [setting.name]: setting.value,
-    }),
-    {} as Record<SettingName, unknown>
-  );
 
   const valueText = useCallback(
     (value: boolean | string): string => {
@@ -417,24 +318,29 @@ function SettingList() {
   );
 
   const renderToggle = (name: SettingName, info: string) => (
-    <Form.Group controlId={name}>
-      <Toggle
-        disabled={isDisabled}
-        checked={settings[name].value as boolean}
-        onChange={checked =>
-          setSetting({
-            ...settings[name],
-            value: checked,
-          })
-        }
-        label={
-          <SettingLabel
-            label={t(settings[name].label)}
-            info={info}
+    <Box>
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <FormControlLabel
+            control={
+              <Checkbox
+                {...field}
+                disabled={isDisabled}
+                checked={field.value as boolean}
+              />
+            }
+            label={
+              <SettingLabel
+                label={t(SETTINGS[name].label)}
+                info={info}
+              />
+            }
           />
-        }
+        )}
       />
-    </Form.Group>
+    </Box>
   );
 
   const renderNumberInput = (
@@ -442,196 +348,235 @@ function SettingList() {
     info: string,
     unit?: string
   ) => (
-    <Form.Group controlId={name}>
-      <Form.Label>
-        <SettingLabel
-          label={t(settings[name].label)}
-          info={info}
-        />
-      </Form.Label>
-
-      <InputGroup>
-        <Form.Control
-          name={name}
-          accepter={NumberInput}
-          value={settings[name].value}
-          onChange={(value: string) => {
-            setSetting({
-              ...settings[name],
-              value: +value,
-            });
+    <Controller
+      control={control}
+      name={name}
+      render={({ field, fieldState: { error } }) => (
+        <TextField
+          {...field}
+          value={field.value as number}
+          label={
+            <SettingLabel
+              label={t(SETTINGS[name].label)}
+              info={info}
+            />
+          }
+          type="number"
+          disabled={isDisabled}
+          onChange={event => field.onChange(+event.target.value)}
+          error={Boolean(error)}
+          helperText={error?.message}
+          fullWidth
+          slotProps={{
+            input: {
+              endAdornment:
+                unit ?
+                  <InputAdornment position="end">{unit}</InputAdornment>
+                : undefined,
+            },
           }}
         />
-
-        {unit && <InputGroupAddon>{unit}</InputGroupAddon>}
-      </InputGroup>
-    </Form.Group>
+      )}
+    />
   );
 
+  if (loading) {
+    return;
+  }
+
   return (
-    !loading && (
-      <>
-        <Form
-          data-testid="form"
-          disabled={isDisabled}
-          model={validationModel}
-          formValue={formValue}
-          onSubmit={validationPassed => {
-            return validationPassed && setShowWarning(true);
-          }}
-        >
-          <ListViewContainer>
-            <ListViewHeader>
-              <h2>{t('settingList.settings')}</h2>
-            </ListViewHeader>
-            <ListViewActions>
-              <PermissionControl
-                qualifyingPermissions={['CAN_UPDATE_SETTINGS']}
+    <>
+      <form
+        data-testid="form"
+        onSubmit={handleSubmit(() => setShowWarning(true))}
+      >
+        <ListViewContainer>
+          <ListViewHeader>
+            <PageTitle>{t('settingList.settings')}</PageTitle>
+          </ListViewHeader>
+
+          <ListViewActions>
+            <PermissionControl qualifyingPermissions={[CanUpdateSettings.id]}>
+              <Button
+                variant="outlined"
+                startIcon={<MdCancel />}
+                onClick={() => reset()}
+                type="reset"
+                disabled={isDisabled || !changedSettings.length}
               >
-                {/* cancel btn */}
-                <IconButton
-                  icon={<MdCancel />}
-                  onClick={() => handleCancel()}
-                  type="reset"
-                  size="lg"
-                  appearance="default"
-                  disabled={isDisabled || changedSetting.length === 0}
-                >
-                  {t('cancel')}
-                </IconButton>
-                {/* save btn */}
-                <IconButton
-                  icon={<MdSave />}
-                  type="submit"
-                  size="lg"
-                  appearance="primary"
-                  disabled={isDisabled || changedSetting.length === 0}
-                >
-                  {t('save')}
-                </IconButton>
-              </PermissionControl>
-            </ListViewActions>
-          </ListViewContainer>
+                {t('cancel')}
+              </Button>
 
-          <Grid fluid>
-            <Row>
-              {/* first column */}
-              <Col xs={12}>
-                <Row>
-                  {/* comments */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.comments')}
-                    >
-                      <Form.Stack fluid>
-                        {renderToggle(
-                          SettingName.AllowGuestCommenting,
-                          t('settingList.warnings.guestCommenting')
-                        )}
+              <Button
+                variant="contained"
+                startIcon={<MdSave />}
+                type="submit"
+                disabled={isDisabled || !changedSettings.length}
+              >
+                {t('save')}
+              </Button>
+            </PermissionControl>
+          </ListViewActions>
+        </ListViewContainer>
 
-                        {/* Allow guest rating of a comment */}
-                        {renderToggle(
-                          SettingName.AllowGuestCommentRating,
-                          t('settingList.warnings.guestCommentRating')
-                        )}
+        <Grid
+          container
+          spacing={2}
+        >
+          <Grid
+            container
+            spacing={2}
+          >
+            <Grid size={{ xs: 6 }}>
+              <Grid
+                container
+                spacing={2}
+              >
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.comments')} />
 
-                        {/* Allow editing of a comment */}
-                        {renderToggle(
-                          SettingName.AllowCommentEditing,
-                          t('settingList.info.allowCommentEditing')
-                        )}
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        <FormGroup>
+                          {renderToggle(
+                            SettingName.AllowGuestCommenting,
+                            t('settingList.warnings.guestCommenting')
+                          )}
+
+                          {renderToggle(
+                            SettingName.AllowGuestCommentRating,
+                            t('settingList.warnings.guestCommentRating')
+                          )}
+
+                          {renderToggle(
+                            SettingName.AllowCommentEditing,
+                            t('settingList.info.allowCommentEditing')
+                          )}
+                        </FormGroup>
 
                         {/* Comment char limit */}
                         {renderNumberInput(
                           SettingName.CommentCharLimit,
                           t('settingList.info.commentCharLimit')
                         )}
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-                  {/* polls */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.polls')}
-                    >
-                      <Form.Stack fluid>
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.polls')} />
+
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
                         {renderToggle(
                           SettingName.AllowGuestPollVoting,
                           t('settingList.warnings.guestPollVote')
                         )}
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-                  {/* Memberships */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.memberships')}
-                    >
-                      <Form.Stack fluid>
-                        {renderToggle(
-                          SettingName.MakeNewSubscribersApiPublic,
-                          t('settingList.info.newSubscriptionsApiPublic')
-                        )}
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.memberships')} />
 
-                        {renderToggle(
-                          SettingName.MakeActiveSubscribersApiPublic,
-                          t('settingList.info.activeSubscriptionsApiPublic')
-                        )}
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        <FormGroup>
+                          {renderToggle(
+                            SettingName.MakeNewSubscribersApiPublic,
+                            t('settingList.info.newSubscriptionsApiPublic')
+                          )}
 
-                        {renderToggle(
-                          SettingName.MakeRenewingSubscribersApiPublic,
-                          t('settingList.info.renewingSubscriptionsApiPublic')
-                        )}
+                          {renderToggle(
+                            SettingName.MakeActiveSubscribersApiPublic,
+                            t('settingList.info.activeSubscriptionsApiPublic')
+                          )}
 
-                        {renderToggle(
-                          SettingName.MakeNewDeactivationsApiPublic,
-                          t('settingList.info.newDeactivationsApiPublic')
-                        )}
+                          {renderToggle(
+                            SettingName.MakeRenewingSubscribersApiPublic,
+                            t('settingList.info.renewingSubscriptionsApiPublic')
+                          )}
 
-                        {renderToggle(
-                          SettingName.MakeExpectedRevenueApiPublic,
-                          t('settingList.info.expectedRevenueApiPublic')
-                        )}
+                          {renderToggle(
+                            SettingName.MakeNewDeactivationsApiPublic,
+                            t('settingList.info.newDeactivationsApiPublic')
+                          )}
 
-                        {renderToggle(
-                          SettingName.MakeRevenueApiPublic,
-                          t('settingList.info.revenueApiPublic')
-                        )}
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
+                          {renderToggle(
+                            SettingName.MakeExpectedRevenueApiPublic,
+                            t('settingList.info.expectedRevenueApiPublic')
+                          )}
 
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.subscriptionPlans')}
-                    >
-                      <Form.Stack fluid>
+                          {renderToggle(
+                            SettingName.MakeRevenueApiPublic,
+                            t('settingList.info.revenueApiPublic')
+                          )}
+                        </FormGroup>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.subscriptionPlans')} />
+
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
                         {renderToggle(
                           SettingName.SubscriptionUpgradeBillsFullDifference,
                           t('settingList.warnings.subscriptionUpgradeModel')
                         )}
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
-                </Row>
-              </Col>
 
-              {/* second column */}
-              <Col xs={12}>
-                <Row>
-                  {/* login */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.login')}
-                    >
-                      <Form.Stack fluid>
+                        {renderNumberInput(
+                          SettingName.SubscriptionExtendWindowDays,
+                          t('settingList.info.subscriptionExtendWindowDays'),
+                          t('settingList.days')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.PaymentMethodChangeExpiryDays,
+                          t('settingList.info.paymentMethodChangeExpiryDays'),
+                          t('settingList.days')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid size={{ xs: 6 }}>
+              <Grid
+                container
+                spacing={2}
+              >
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.login')} />
+
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
                         {renderNumberInput(
                           SettingName.SessionTtlDays,
                           t('settingList.warnings.sessionTtlDays'),
@@ -649,17 +594,21 @@ function SettingList() {
                           t('settingList.info.passwordToken'),
                           t('settingList.minutes')
                         )}
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-                  {/* email quality: when a mailed address counts as unresponsive */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.emailQuality')}
-                    >
-                      <Form.Stack fluid>
+                {/* email quality: when a mailed address counts as unresponsive */}
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.emailQuality')} />
+
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
                         {renderNumberInput(
                           SettingName.EmailQualityUnresponsiveAfterDays,
                           t(
@@ -674,126 +623,131 @@ function SettingList() {
                             'settingList.warnings.emailQualityMinMailsForUnresponsive'
                           )
                         )}
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-                  {/* peering */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.peering')}
-                    >
-                      <Form.Stack fluid>
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.peering')} />
+
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
                         {renderNumberInput(
                           SettingName.PeeringTimeoutMs,
                           t('settingList.info.peerToken'),
                           t('settingList.ms')
                         )}
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
-                </Row>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
                 {/* articlePage */}
-                <Col xs={24}>
-                  <Panel
-                    bordered
-                    header={t('settingList.articlePage')}
-                  >
-                    <Form.Stack fluid>
-                      {renderToggle(
-                        SettingName.NewArticlePeering,
-                        t('settingList.warnings.newArticlePeering')
-                      )}
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.articlePage')} />
 
-                      <Form.Group controlId={SettingName.NewArticlePaywall}>
-                        <Form.Label>
-                          <SettingLabel
-                            label={t(
-                              settings[SettingName.NewArticlePaywall].label
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        {renderToggle(
+                          SettingName.NewArticlePeering,
+                          t('settingList.warnings.newArticlePeering')
+                        )}
+
+                        <FormControl fullWidth>
+                          <FormLabel>
+                            <SettingLabel
+                              label={t(
+                                SETTINGS[SettingName.NewArticlePaywall].label
+                              )}
+                              info={t('settingList.warnings.newArticlePaywall')}
+                            />
+                          </FormLabel>
+
+                          <Controller
+                            control={control}
+                            name={SettingName.NewArticlePaywall}
+                            render={({ field }) => (
+                              <SelectPaywall
+                                disabled={isDisabled}
+                                selectedPaywall={field.value as string | null}
+                                setSelectedPaywall={field.onChange}
+                              />
                             )}
-                            info={t('settingList.warnings.newArticlePaywall')}
                           />
-                        </Form.Label>
+                        </FormControl>
 
-                        <SelectPaywall
-                          disabled={isDisabled}
-                          selectedPaywall={
-                            settings[SettingName.NewArticlePaywall].value as
-                              | string
-                              | null
-                          }
-                          setSelectedPaywall={paywall =>
-                            setSetting({
-                              ...settings[SettingName.NewArticlePaywall],
-                              value: paywall,
-                            })
-                          }
-                        />
-                      </Form.Group>
-
-                      {renderToggle(
-                        SettingName.ShowPendingWhenNotPublished,
-                        t('settingList.warnings.showPendingWhenNotPublished')
-                      )}
-                    </Form.Stack>
-                  </Panel>
-                </Col>
-              </Col>
-            </Row>
+                        {renderToggle(
+                          SettingName.ShowPendingWhenNotPublished,
+                          t('settingList.warnings.showPendingWhenNotPublished')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
-        </Form>
+        </Grid>
+      </form>
 
-        <Modal
-          open={showWarning}
-          backdrop="static"
-          size="xs"
-          onClose={() => setShowWarning(false)}
-        >
-          <Modal.Title>
-            {t('invoice.areYouSure')}
-            <WarningIcon />
-          </Modal.Title>
+      <Dialog
+        fullWidth
+        open={showWarning}
+        maxWidth="xs"
+        onClose={() => setShowWarning(false)}
+      >
+        <DialogTitle>
+          {t('invoice.areYouSure')}
+          <WarningIcon />
+        </DialogTitle>
 
-          <Modal.Body>{t('settingList.warnings.askOperators')}</Modal.Body>
-          <Modal.Body>
-            <DescriptionList>
-              {changedSetting.map(setting => (
-                <DescriptionListItemWrapper
-                  label={t(settings[setting.name].label)}
-                  key={setting.name}
-                >
-                  <s>{valueText(setting.value as boolean | string)}</s>{' '}
-                  {valueText(settings[setting.name].value as boolean | string)}
-                </DescriptionListItemWrapper>
-              ))}
-            </DescriptionList>
-          </Modal.Body>
+        <DialogContent>{t('settingList.warnings.askOperators')}</DialogContent>
 
-          <Modal.Footer>
-            <Button
-              appearance="primary"
-              onClick={handleSettingListUpdate}
-            >
-              {t('confirm')}
-            </Button>
+        <DialogContent>
+          <DescriptionList>
+            {changedSettings.map(name => (
+              <DescriptionListItemWrapper
+                label={t(SETTINGS[name].label)}
+                key={name}
+              >
+                <s>{valueText(defaultValues?.[name] as boolean | string)}</s>{' '}
+                {valueText(values[name] as boolean | string)}
+              </DescriptionListItemWrapper>
+            ))}
+          </DescriptionList>
+        </DialogContent>
 
-            <Button
-              appearance="subtle"
-              onClick={() => setShowWarning(false)}
-            >
-              {t('cancel')}
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </>
-    )
+        <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setShowWarning(false)}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={handleSettingListUpdate}
+          >
+            {t('confirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_SETTINGS',
-  'CAN_UPDATE_SETTINGS',
+  CanGetSettings.id,
+  CanUpdateSettings.id,
 ])(SettingList);
 export { CheckedPermissionComponent as SettingList };

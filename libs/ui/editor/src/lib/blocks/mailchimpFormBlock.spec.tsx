@@ -1,5 +1,6 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import {
   act,
   fireEvent,
@@ -29,6 +30,8 @@ import {
   MailchimpFormFieldConfigValue,
   MailchimpFormInterestOptionValue,
 } from './types';
+
+const theme = createTheme({ cssVariables: true });
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -135,11 +138,13 @@ const renderBlock = (value: Partial<MailchimpFormBlockValue> = {}) => {
   }
 
   render(
-    <MockedProvider mocks={mocks}>
-      <EditorValidationProvider runAllRef={runAllRef}>
-        <Harness />
-      </EditorValidationProvider>
-    </MockedProvider>
+    <ThemeProvider theme={theme}>
+      <MockedProvider mocks={mocks}>
+        <EditorValidationProvider runAllRef={runAllRef}>
+          <Harness />
+        </EditorValidationProvider>
+      </MockedProvider>
+    </ThemeProvider>
   );
 
   return latest;
@@ -152,7 +157,7 @@ const openPicker = async (field: HTMLElement) => {
   await waitForQueries();
 
   await act(async () => {
-    fireEvent.click(within(field).getByRole('combobox'));
+    fireEvent.click(within(field).getByRole('button', { name: /open/i }));
   });
 };
 
@@ -216,13 +221,13 @@ const itemHeader = (heading: string) =>
   screen.getByText(heading).parentElement!;
 
 const itemPanel = (heading: string) =>
-  screen.getByText(heading).closest('.rs-panel') as HTMLElement;
+  screen.getByText(heading).closest('li') as HTMLElement;
 
 const stepHeader = (index: number) =>
   screen.getByText(`blocks.mailchimpForm.step ${index + 1}`).parentElement!;
 
 const stepPanel = (index: number) =>
-  stepHeader(index).closest('.rs-panel') as HTMLElement;
+  stepHeader(index).closest('li') as HTMLElement;
 
 const moveUp = (header: HTMLElement) =>
   within(header).getByLabelText('blocks.mailchimpForm.moveUp');
@@ -279,25 +284,18 @@ describe('MailchimpFormBlock', () => {
 
     expect(getOptions(latest.value)).toEqual([emptyOption, emptyOption]);
 
-    const [firstName, secondName] = screen.getAllByText(
+    const [firstName, secondName] = screen.getAllByLabelText(
       'blocks.mailchimpForm.interestOptionName'
     );
-    fireEvent.change(firstName.parentElement!.querySelector('input')!, {
-      target: { value: 'Daily Briefing' },
-    });
-    fireEvent.change(secondName.parentElement!.querySelector('input')!, {
-      target: { value: 'Weekly Culture' },
-    });
+    fireEvent.change(firstName, { target: { value: 'Daily Briefing' } });
+    fireEvent.change(secondName, { target: { value: 'Weekly Culture' } });
 
-    const [firstDescription] = screen.getAllByText(
+    const [firstDescription] = screen.getAllByLabelText(
       'blocks.mailchimpForm.interestOptionDescription'
     );
-    fireEvent.change(
-      firstDescription.parentElement!.querySelector('textarea')!,
-      {
-        target: { value: 'Every morning' },
-      }
-    );
+    fireEvent.change(firstDescription, {
+      target: { value: 'Every morning' },
+    });
 
     expect(getOptions(latest.value)).toMatchObject([
       { name: 'Daily Briefing', description: 'Every morning' },
@@ -315,12 +313,15 @@ describe('MailchimpFormBlock', () => {
     ]);
   });
 
+  // The naming rules are covered by `nameForPickedInterest` in
+  // mailchimpFormBlock.types.spec.ts; opening the picker is slow in happy-dom,
+  // so only this test checks that picking an interest goes through them.
   it('should prefill the name with the name of the picked interest', async () => {
     const latest = renderWithGroupsInput({ options: [emptyOption] });
 
-    const itemPicker = screen.getByText(
-      'blocks.mailchimpForm.interestOption'
-    ).parentElement!;
+    const itemPicker = screen
+      .getByLabelText('blocks.mailchimpForm.interestOption')
+      .closest('.MuiAutocomplete-root') as HTMLElement;
 
     await openPicker(itemPicker);
 
@@ -331,76 +332,6 @@ describe('MailchimpFormBlock', () => {
     await waitFor(() =>
       expect(getOptions(latest.value)).toMatchObject([
         { id: 'interest-weekly', name: 'Weekly Culture' },
-      ])
-    );
-  });
-
-  it('should not overwrite a custom name when picking an interest', async () => {
-    const latest = renderWithGroupsInput({
-      options: [{ ...emptyOption, name: 'My newsletter' }],
-    });
-
-    const itemPicker = screen.getByText(
-      'blocks.mailchimpForm.interestOption'
-    ).parentElement!;
-
-    await openPicker(itemPicker);
-
-    fireEvent.click(
-      await screen.findByRole('option', { name: 'Daily Briefing' })
-    );
-
-    await waitFor(() =>
-      expect(getOptions(latest.value)).toMatchObject([
-        { id: 'interest-daily', name: 'My newsletter' },
-      ])
-    );
-  });
-
-  it('should update a prefilled name when picking a different interest', async () => {
-    const latest = renderWithGroupsInput({
-      options: [
-        { ...emptyOption, id: 'interest-daily', name: 'Daily Briefing' },
-      ],
-    });
-
-    const itemPicker = screen.getByText(
-      'blocks.mailchimpForm.interestOption'
-    ).parentElement!;
-
-    await openPicker(itemPicker);
-
-    fireEvent.click(
-      await screen.findByRole('option', { name: 'Weekly Culture' })
-    );
-
-    await waitFor(() =>
-      expect(getOptions(latest.value)).toMatchObject([
-        { id: 'interest-weekly', name: 'Weekly Culture' },
-      ])
-    );
-  });
-
-  it('should keep a custom name when picking a different interest', async () => {
-    const latest = renderWithGroupsInput({
-      options: [
-        { ...emptyOption, id: 'interest-daily', name: 'My newsletter' },
-      ],
-    });
-
-    const itemPicker = screen.getByText(
-      'blocks.mailchimpForm.interestOption'
-    ).parentElement!;
-
-    await openPicker(itemPicker);
-
-    fireEvent.click(
-      await screen.findByRole('option', { name: 'Weekly Culture' })
-    );
-
-    await waitFor(() =>
-      expect(getOptions(latest.value)).toMatchObject([
-        { id: 'interest-weekly', name: 'My newsletter' },
       ])
     );
   });
@@ -451,21 +382,21 @@ describe('MailchimpFormBlock', () => {
     renderBlock();
 
     expect(
-      screen.queryByText('blocks.mailchimpForm.skipIfFieldsFilled')
+      screen.queryByLabelText('blocks.mailchimpForm.skipIfFieldsFilled')
     ).toBeNull();
 
     const [stepAdvanced] = screen.getAllByText('blocks.mailchimpForm.advanced');
 
-    fireEvent.click(within(stepAdvanced.parentElement!).getByRole('switch'));
+    fireEvent.click(within(stepAdvanced.parentElement!).getByRole('checkbox'));
 
     expect(
-      screen.getByText('blocks.mailchimpForm.skipIfFieldsFilled')
+      screen.getByLabelText('blocks.mailchimpForm.skipIfFieldsFilled')
     ).toBeTruthy();
     expect(
-      screen.getByText('blocks.mailchimpForm.skipIfInterestsFilled')
+      screen.getByLabelText('blocks.mailchimpForm.skipIfInterestsFilled')
     ).toBeTruthy();
     expect(
-      screen.getByText('blocks.mailchimpForm.showIfInterestsFilled')
+      screen.getByLabelText('blocks.mailchimpForm.showIfInterestsFilled')
     ).toBeTruthy();
   });
 
@@ -485,7 +416,7 @@ describe('MailchimpFormBlock', () => {
     );
 
     expect(
-      screen.getByText('blocks.mailchimpForm.skipIfFieldsFilled')
+      screen.getByLabelText('blocks.mailchimpForm.skipIfFieldsFilled')
     ).toBeTruthy();
   });
 
@@ -498,7 +429,9 @@ describe('MailchimpFormBlock', () => {
     expect(
       screen.getByText('blocks.mailchimpForm.inputLabelGroupsHelp')
     ).toBeTruthy();
-    expect(screen.queryByText('blocks.mailchimpForm.inputName')).toBeNull();
+    expect(
+      screen.queryByLabelText('blocks.mailchimpForm.inputName')
+    ).toBeNull();
     expect(
       screen.queryByText('blocks.mailchimpForm.interestOptionsNoList')
     ).toBeNull();
@@ -578,7 +511,7 @@ describe('MailchimpFormBlock', () => {
         .parentElement!.querySelector('input')!
     );
     expect(
-      within(itemPanel('Input A')).queryByText(
+      within(itemPanel('Input A')).queryByLabelText(
         'blocks.mailchimpForm.inputDescription'
       )
     ).toBeTruthy();
@@ -586,12 +519,12 @@ describe('MailchimpFormBlock', () => {
     fireEvent.click(moveDown(itemHeader('Input A')));
 
     expect(
-      within(itemPanel('Input A')).queryByText(
+      within(itemPanel('Input A')).queryByLabelText(
         'blocks.mailchimpForm.inputDescription'
       )
     ).toBeTruthy();
     expect(
-      within(itemPanel('Input B')).queryByText(
+      within(itemPanel('Input B')).queryByLabelText(
         'blocks.mailchimpForm.inputDescription'
       )
     ).toBeNull();
@@ -610,12 +543,12 @@ describe('MailchimpFormBlock', () => {
     fireEvent.click(moveDown(stepHeader(0)));
 
     expect(
-      within(itemPanel('Input A')).queryByText(
+      within(itemPanel('Input A')).queryByLabelText(
         'blocks.mailchimpForm.inputDescription'
       )
     ).toBeTruthy();
     expect(
-      within(itemPanel('Input B')).queryByText(
+      within(itemPanel('Input B')).queryByLabelText(
         'blocks.mailchimpForm.inputDescription'
       )
     ).toBeNull();
@@ -630,16 +563,16 @@ describe('MailchimpFormBlock', () => {
       'blocks.mailchimpForm.advanced'
     );
 
-    fireEvent.click(within(stepAdvanced.parentElement!).getByRole('switch'));
+    fireEvent.click(within(stepAdvanced.parentElement!).getByRole('checkbox'));
     fireEvent.click(moveDown(stepHeader(0)));
 
     expect(
-      within(stepPanel(1)).queryByText(
+      within(stepPanel(1)).queryByLabelText(
         'blocks.mailchimpForm.skipIfFieldsFilled'
       )
     ).toBeTruthy();
     expect(
-      within(stepPanel(0)).queryByText(
+      within(stepPanel(0)).queryByLabelText(
         'blocks.mailchimpForm.skipIfFieldsFilled'
       )
     ).toBeNull();
@@ -671,6 +604,79 @@ describe('MailchimpFormBlock', () => {
 
     fireEvent.click(moveDown(itemHeader('Option B')));
     expect(names()).toEqual(['Option A', 'Option B', 'Option C']);
+  });
+
+  it('should toggle the form settings with checkboxes', () => {
+    const latest = renderBlock({ autoFocus: false, doubleOptIn: false });
+
+    fireEvent.click(
+      screen.getByRole('checkbox', { name: /blocks.mailchimpForm.autoFocus/ })
+    );
+    fireEvent.click(
+      screen.getByRole('checkbox', {
+        name: /blocks.mailchimpForm.doubleOptIn/,
+      })
+    );
+    fireEvent.click(
+      screen.getByRole('checkbox', { name: 'blocks.mailchimpForm.required' })
+    );
+    fireEvent.click(
+      screen.getByRole('checkbox', {
+        name: 'blocks.mailchimpForm.useSuccessPage',
+      })
+    );
+
+    expect(latest.value).toMatchObject({
+      autoFocus: true,
+      doubleOptIn: true,
+      successPage: { description: '', options: [] },
+    });
+    expect(latest.value.steps[0].inputs[0].required).toBe(
+      !defaultValue.steps[0].inputs[0].required
+    );
+    expect(screen.queryByRole('switch')).toBeNull();
+  });
+
+  it('should pick colours with the colour picker', () => {
+    const latest = renderBlock({
+      successPage: {
+        description: '',
+        options: [
+          {
+            label: 'Read more',
+            background: '#ff8900',
+            url: '',
+            mergeFieldName: null,
+            mergeFieldValue: null,
+          },
+        ],
+      },
+    });
+
+    expect(screen.getAllByLabelText('colorPicker.pickColor')).toHaveLength(3);
+
+    fireEvent.change(
+      screen.getByRole('textbox', { name: 'blocks.mailchimpForm.buttonColor' }),
+      { target: { value: '#123456' } }
+    );
+    fireEvent.change(
+      screen.getByRole('textbox', {
+        name: 'blocks.mailchimpForm.buttonFontColor',
+      }),
+      { target: { value: '#ffffff' } }
+    );
+    fireEvent.change(
+      screen.getByRole('textbox', {
+        name: 'blocks.mailchimpForm.optionBackground',
+      }),
+      { target: { value: '#00ff00' } }
+    );
+
+    expect(latest.value).toMatchObject({
+      buttonColor: '#123456',
+      buttonFontColor: '#ffffff',
+      successPage: { options: [{ background: '#00ff00' }] },
+    });
   });
 
   it('should hint to select a list before interests can be picked', () => {

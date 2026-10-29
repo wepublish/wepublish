@@ -5,7 +5,7 @@ import {
   mockArticleRevisionAuthor,
   mockAuthor,
   mockImage,
-} from '@wepublish/storybook/mocks';
+} from '@wepublish/mocks/website';
 import { faker } from '@faker-js/faker';
 
 const author = mockAuthor();

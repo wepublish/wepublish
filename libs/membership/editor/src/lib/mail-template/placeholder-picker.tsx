@@ -1,15 +1,29 @@
-import { Typography } from '@mui/material';
+import { Box, Chip, TextField, Tooltip, Typography } from '@mui/material';
+import styled from '@emotion/styled';
+import { TFunction } from 'i18next';
 import { MailTemplateContext } from '@wepublish/editor/api';
 import { InfoTooltip } from '@wepublish/ui/editor';
-import { TFunction } from 'i18next';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Tooltip, Whisper } from 'rsuite';
 import {
   ALWAYS_PLACEHOLDERS,
   MAIL_PLACEHOLDER_CONTEXTS,
   MailPlaceholder,
 } from './mail-placeholders';
+
+const PlaceholderGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+`;
+
+const PlaceholderFormats = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  gap: ${({ theme }) => theme.spacing(0.75)};
+`;
 
 interface PlaceholderPickerProps {
   /** Inserts the given `{{token}}` into the active editor/field. */
@@ -124,14 +138,14 @@ export function PlaceholderPicker({
     });
   }, [search, scopedPlaceholders, t]);
 
-  const tooltip = (description: string, token: string, example: string) => (
-    <Tooltip>
+  const tooltipText = (description: string, token: string, example: string) => (
+    <>
       {description}
       <br />
       <code>{token}</code>
       <br />
       {t('mailTemplates.placeholderExample', 'Example')}: {example}
-    </Tooltip>
+    </>
   );
 
   const renderPlaceholder = (placeholder: MailPlaceholder) => {
@@ -146,83 +160,55 @@ export function PlaceholderPicker({
 
     if (formats) {
       return (
-        <div
-          key={placeholder.key}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            marginBottom: 2,
-          }}
-        >
-          <Typography
-            variant="caption"
-            style={{
-              flex: 1,
-              minWidth: 0,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {name}
-          </Typography>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+        <PlaceholderFormats key={placeholder.key}>
+          <Typography variant="caption">{name}</Typography>
+          <PlaceholderGroup>
             {formats.map(format => (
-              <Whisper
+              <Tooltip
                 key={format.suffix}
-                trigger="hover"
                 placement="left"
-                speaker={tooltip(
+                title={tooltipText(
                   describePlaceholder(t, placeholder),
                   `{{${placeholder.key}${format.suffix}}}`,
                   format.example
                 )}
               >
-                <Button
-                  appearance="ghost"
-                  size="xs"
-                  style={{ padding: '1px 6px' }}
-                  // Keep the caret where it is — the button must not become
-                  // the focused element before the token is inserted.
+                <Chip
+                  label={t(format.labelKey, format.label)}
+                  variant="outlined"
+                  size="small"
+                  clickable
                   onMouseDown={event => event.preventDefault()}
                   onClick={() =>
                     onInsert(`{{${placeholder.key}${format.suffix}}}`)
                   }
-                >
-                  {t(format.labelKey, format.label)}
-                </Button>
-              </Whisper>
+                />
+              </Tooltip>
             ))}
-          </div>
-        </div>
+          </PlaceholderGroup>
+        </PlaceholderFormats>
       );
     }
 
     return (
-      <Whisper
+      <Tooltip
         key={placeholder.key}
-        trigger="hover"
         placement="left"
-        speaker={tooltip(
+        title={tooltipText(
           describePlaceholder(t, placeholder),
           `{{${placeholder.key}}}`,
           placeholder.example
         )}
       >
-        <Button
-          appearance="ghost"
-          size="xs"
-          block
-          // Keep the caret where it is — the button must not become the
-          // focused element before the token is inserted.
+        <Chip
+          label={name}
+          variant="outlined"
+          size="small"
+          clickable
           onMouseDown={event => event.preventDefault()}
           onClick={() => onInsert(`{{${placeholder.key}}}`)}
-          style={{ textAlign: 'left', padding: '1px 8px', marginBottom: 2 }}
-        >
-          {name}
-        </Button>
-      </Whisper>
+        />
+      </Tooltip>
     );
   };
 
@@ -239,19 +225,21 @@ export function PlaceholderPicker({
       >
         {t('mailTemplates.placeholdersHint')}
       </Typography>
-      <Input
-        size="sm"
+      <TextField
+        fullWidth
         placeholder={t('mailTemplates.searchPlaceholders', 'Search…')}
         value={search}
-        onChange={setSearch}
-        style={{ marginBottom: 12 }}
+        onChange={event => setSearch(event.target.value)}
+        sx={{ marginBottom: 1.5 }}
       />
       {searchResults ?
         searchResults.length ?
-          searchResults.map(renderPlaceholder)
+          <PlaceholderGroup>
+            {searchResults.map(renderPlaceholder)}
+          </PlaceholderGroup>
         : <Typography
             variant="caption"
-            style={{ color: 'var(--rs-text-secondary)' }}
+            color="text.secondary"
           >
             {t('mailTemplates.noPlaceholders', 'No matching placeholders.')}
           </Typography>
@@ -268,7 +256,8 @@ export function PlaceholderPicker({
           </Typography>
           <Typography
             variant="caption"
-            style={{ marginBottom: 8, color: 'var(--rs-text-secondary)' }}
+            color="text.secondary"
+            style={{ marginBottom: 8 }}
             sx={{
               display: 'block',
             }}
@@ -278,19 +267,22 @@ export function PlaceholderPicker({
               'These recipient fields work in every template, no matter which purpose is selected.'
             )}
           </Typography>
-          {ALWAYS_PLACEHOLDERS.map(renderPlaceholder)}
+          <PlaceholderGroup>
+            {ALWAYS_PLACEHOLDERS.map(renderPlaceholder)}
+          </PlaceholderGroup>
 
-          <div
-            style={{
-              marginTop: 20,
-              paddingTop: 12,
-              borderTop: '1px solid var(--rs-border-primary)',
+          <Box
+            sx={{
+              marginTop: 2.5,
+              paddingTop: 1.5,
+              borderTop: '1px solid',
+              borderTopColor: 'divider',
             }}
           >
             {!selectedContext ?
               <Typography
                 variant="caption"
-                style={{ color: 'var(--rs-text-secondary)' }}
+                color="text.secondary"
                 sx={{
                   display: 'block',
                 }}
@@ -310,10 +302,8 @@ export function PlaceholderPicker({
                 {selectedContext.note && (
                   <Typography
                     variant="caption"
-                    style={{
-                      marginBottom: 8,
-                      color: 'var(--rs-text-secondary)',
-                    }}
+                    color="text.secondary"
+                    style={{ marginBottom: 8 }}
                     sx={{
                       display: 'block',
                     }}
@@ -325,10 +315,12 @@ export function PlaceholderPicker({
                   </Typography>
                 )}
                 {selectedContext.placeholders.length > 0 ?
-                  selectedContext.placeholders.map(renderPlaceholder)
+                  <PlaceholderGroup>
+                    {selectedContext.placeholders.map(renderPlaceholder)}
+                  </PlaceholderGroup>
                 : <Typography
                     variant="caption"
-                    style={{ color: 'var(--rs-text-secondary)' }}
+                    color="text.secondary"
                     sx={{
                       display: 'block',
                     }}
@@ -341,7 +333,7 @@ export function PlaceholderPicker({
                 }
               </>
             }
-          </div>
+          </Box>
         </>
       }
     </div>

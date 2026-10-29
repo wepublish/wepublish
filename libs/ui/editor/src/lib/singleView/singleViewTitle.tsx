@@ -1,17 +1,15 @@
 import styled from '@emotion/styled';
+import { Button, CircularProgress } from '@mui/material';
+import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdChevronLeft } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Button, Loader as RLoader } from 'rsuite';
 
+import { Link } from '../atoms';
+import { PageTitle } from '../atoms/pageTitle';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 
 const ChevronLeft = styled(MdChevronLeft)`
-  font-size: 48px;
-
-  @media (max-width: 640px) {
-    font-size: 32px;
-  }
+  font-size: 32px;
 `;
 
 const Grid = styled.div`
@@ -29,12 +27,10 @@ const Grid = styled.div`
   }
 `;
 
-const Loader = styled(RLoader)`
-  margin-right: 4px;
-`;
-
-const SaveButton = styled(Button)`
-  margin-right: 8px;
+const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1)};
 `;
 
 const PaddedCol = styled.div`
@@ -42,22 +38,16 @@ const PaddedCol = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding-top: 3px;
-  margin-right: 1rem;
 `;
 
 const FlexLink = styled(Link)`
   display: flex;
 `;
 
-const Heading = styled.h1`
-  font-size: var(--rs-heading-h1-font-size, 36px);
-  line-height: var(--rs-heading-h1-line-height, 50px);
-  overflow-wrap: anywhere;
-`;
-
 interface SingleViewTitleProps {
   title?: string;
+  children?: ReactNode;
+  disabled?: boolean;
   loading: boolean;
   loadingTitle?: string;
   saveBtnTitle: string;
@@ -68,6 +58,8 @@ interface SingleViewTitleProps {
 
 export function SingleViewTitle({
   title,
+  children,
+  disabled,
   loading,
   loadingTitle,
   saveBtnTitle,
@@ -81,7 +73,7 @@ export function SingleViewTitle({
     if (loading) {
       return (
         <>
-          <Loader />
+          <CircularProgress />
           {loadingTitle ?? title}
         </>
       );
@@ -102,29 +94,33 @@ export function SingleViewTitle({
           </FlexLink>
         </IconButtonTooltip>
 
-        <Heading>{titleView()}</Heading>
+        <PageTitle>{titleView()}</PageTitle>
       </PaddedCol>
 
-      <div>
-        <SaveButton
-          appearance="ghost"
+      <Actions>
+        {children}
+
+        <Button
+          variant="outlined"
           loading={loading}
+          disabled={disabled}
           type="submit"
           data-testid="saveButton"
         >
           {saveBtnTitle}
-        </SaveButton>
+        </Button>
 
         <Button
-          appearance="primary"
+          variant="contained"
           loading={loading}
+          disabled={disabled}
           type="submit"
           data-testid="saveAndCloseButton"
           onClick={() => setCloseFn(true)}
         >
           {saveAndCloseBtnTitle}
         </Button>
-      </div>
+      </Actions>
     </Grid>
   );
 }
