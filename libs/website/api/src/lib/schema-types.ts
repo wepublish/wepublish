@@ -181,6 +181,8 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   archivedAt?: Maybe<Scalars['DateTime']['output']>;
   authors: Array<ArticleRevisionAuthor>;
   blocks: Array<BlockContent>;
+  /** When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed. */
+  blocksChangeAt?: Maybe<Scalars['DateTime']['output']>;
   breaking: Scalars['Boolean']['output'];
   canonicalUrl?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
@@ -202,6 +204,11 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   title?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type ArticleRevisionBlocksArgs = {
+  onlyDisplayed?: Scalars['Boolean']['input'];
 };
 
 export type ArticleRevisionAuthor = {
@@ -483,6 +490,10 @@ export type BaseBlock = {
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -536,6 +547,10 @@ export type BildwurfAdBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
   zoneID?: Maybe<Scalars['String']['output']>;
 };
@@ -544,6 +559,8 @@ export type BildwurfAdBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']['input']>;
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   zoneID?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -602,13 +619,22 @@ export type BlockTemplate = HasBlockContent & {
   name: Scalars['String']['output'];
 };
 
+
+export type BlockTemplateBlocksArgs = {
+  onlyDisplayed?: Scalars['Boolean']['input'];
+};
+
 export type BlockTemplateBlock = BaseBlock & {
   __typename: 'BlockTemplateBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
   template?: Maybe<BlockTemplate>;
   templateId: Scalars['String']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -617,6 +643,8 @@ export type BlockTemplateBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   templateId: Scalars['String']['input'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type BlockTemplateFilter = {
@@ -628,6 +656,44 @@ export enum BlockTemplateSort {
   ModifiedAt = 'ModifiedAt',
   Name = 'Name'
 }
+
+export type BlockTimeOfDay = {
+  __typename: 'BlockTimeOfDay';
+  /** Start of the daily window, as `HH:mm` in the site timezone. */
+  from: Scalars['String']['output'];
+  /** End of the daily window, as `HH:mm` in the site timezone. An end before the start wraps over midnight. */
+  to: Scalars['String']['output'];
+};
+
+export type BlockTimeOfDayInput = {
+  /** Start of the daily window, as `HH:mm` in the site timezone. */
+  from: Scalars['String']['input'];
+  /** End of the daily window, as `HH:mm` in the site timezone. An end before the start wraps over midnight. */
+  to: Scalars['String']['input'];
+};
+
+export type BlockTiming = {
+  __typename: 'BlockTiming';
+  /** The block is hidden before this moment. */
+  from?: Maybe<Scalars['DateTime']['output']>;
+  /** The block is only displayed during this daily window. */
+  timeOfDay?: Maybe<BlockTimeOfDay>;
+  /** The block is hidden from this moment on. */
+  to?: Maybe<Scalars['DateTime']['output']>;
+  /** The block is only displayed on these weekdays. Empty means every day. */
+  weekdays?: Maybe<Array<Weekday>>;
+};
+
+export type BlockTimingInput = {
+  /** The block is hidden before this moment. */
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The block is only displayed during this daily window. */
+  timeOfDay?: InputMaybe<BlockTimeOfDayInput>;
+  /** The block is hidden from this moment on. */
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The block is only displayed on these weekdays. Empty means every day. */
+  weekdays?: InputMaybe<Array<Weekday>>;
+};
 
 export enum BlockType {
   BildwurfAd = 'BildwurfAd',
@@ -687,7 +753,11 @@ export type BreakBlock = BaseBlock & HasImage & {
   linkText?: Maybe<Scalars['String']['output']>;
   linkURL?: Maybe<Scalars['String']['output']>;
   richText?: Maybe<Scalars['RichText']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
   text?: Maybe<Scalars['String']['output']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -702,6 +772,8 @@ export type BreakBlockInput = {
   linkURL?: InputMaybe<Scalars['String']['input']>;
   richText?: InputMaybe<Scalars['RichText']['input']>;
   text?: InputMaybe<Scalars['String']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type CalculatedRating = {
@@ -806,6 +878,10 @@ export type CommentBlock = BaseBlock & {
   comments: Array<Comment>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   filter: CommentBlockFilter;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -827,6 +903,8 @@ export type CommentBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   filter: CommentBlockFilterInput;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type CommentCreatedAction = BaseAction & HasComment & {
@@ -1018,6 +1096,10 @@ export type CrowdfundingBlock = BaseBlock & HasOptionalCrowdfunding & {
   crowdfunding?: Maybe<Crowdfunding>;
   crowdfundingId?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -1026,6 +1108,8 @@ export type CrowdfundingBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   crowdfundingId?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type CrowdfundingGoal = BaseCrowdfundingGoal & {
@@ -1289,6 +1373,10 @@ export type EventBlock = BaseBlock & {
   disabled?: Maybe<Scalars['Boolean']['output']>;
   events: Array<Event>;
   filter: EventBlockFilter;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -1308,6 +1396,8 @@ export type EventBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   filter: EventBlockFilterInput;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type EventCreatedAction = BaseAction & HasEventLc & {
@@ -1428,6 +1518,10 @@ export type FacebookPostBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   postID?: Maybe<Scalars['String']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
   userID?: Maybe<Scalars['String']['output']>;
 };
@@ -1437,6 +1531,8 @@ export type FacebookPostBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   postID?: InputMaybe<Scalars['String']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   userID?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1445,6 +1541,10 @@ export type FacebookVideoBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
   userID?: Maybe<Scalars['String']['output']>;
   videoID?: Maybe<Scalars['String']['output']>;
@@ -1454,6 +1554,8 @@ export type FacebookVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']['input']>;
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   userID?: InputMaybe<Scalars['String']['input']>;
   videoID?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1483,6 +1585,10 @@ export type FlexBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   blocks: Array<BlockWithAlignment>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -1491,6 +1597,8 @@ export type FlexBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   blocks: Array<BlockWithAlignmentInput>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type FlexTeaser = {
@@ -1566,6 +1674,10 @@ export type HtmlBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   html?: Maybe<Scalars['String']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -1574,6 +1686,8 @@ export type HtmlBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   html?: InputMaybe<Scalars['String']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type HasArticle = {
@@ -1721,7 +1835,11 @@ export type IFrameBlock = BaseBlock & {
   disabled?: Maybe<Scalars['Boolean']['output']>;
   height?: Maybe<Scalars['Int']['output']>;
   sandbox?: Maybe<Scalars['String']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
   styleCustom?: Maybe<Scalars['String']['output']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
   url?: Maybe<Scalars['String']['output']>;
@@ -1735,6 +1853,8 @@ export type IFrameBlockInput = {
   height?: InputMaybe<Scalars['Int']['input']>;
   sandbox?: InputMaybe<Scalars['String']['input']>;
   styleCustom?: InputMaybe<Scalars['String']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   title?: InputMaybe<Scalars['String']['input']>;
   url?: InputMaybe<Scalars['String']['input']>;
   width?: InputMaybe<Scalars['Int']['input']>;
@@ -1780,6 +1900,10 @@ export type ImageBlock = BaseBlock & HasImage & {
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']['output']>;
   linkUrl?: Maybe<Scalars['String']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -1790,6 +1914,8 @@ export type ImageBlockInput = {
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   imageID?: InputMaybe<Scalars['String']['input']>;
   linkUrl?: InputMaybe<Scalars['String']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type ImageFilter = {
@@ -1803,6 +1929,10 @@ export type ImageGalleryBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   images: Array<ImageGalleryImage>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -1811,6 +1941,8 @@ export type ImageGalleryBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   images: Array<ImageGalleryImageInput>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type ImageGalleryImage = HasImage & {
@@ -1904,6 +2036,10 @@ export type InstagramPostBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   postID?: Maybe<Scalars['String']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -1912,6 +2048,8 @@ export type InstagramPostBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   postID?: InputMaybe<Scalars['String']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type Invoice = HasOptionalSubscription & {
@@ -2036,6 +2174,10 @@ export type ListicleBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   items: Array<ListicleItem>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -2044,6 +2186,8 @@ export type ListicleBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   items: Array<ListicleItemInput>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type ListicleItem = HasImage & {
@@ -2465,11 +2609,15 @@ export type MailchimpFormBlock = BaseBlock & {
   doubleOptIn?: Maybe<Scalars['Boolean']['output']>;
   interests: Array<Scalars['String']['output']>;
   listId?: Maybe<Scalars['String']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
   steps: Array<MailchimpFormStep>;
   submitButtonLabel?: Maybe<Scalars['String']['output']>;
   successPage?: Maybe<MailchimpFormSuccessPage>;
   successUrl?: Maybe<Scalars['String']['output']>;
   syncProviderId?: Maybe<Scalars['String']['output']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -2488,6 +2636,8 @@ export type MailchimpFormBlockInput = {
   successPage?: InputMaybe<MailchimpFormSuccessPageInput>;
   successUrl?: InputMaybe<Scalars['String']['input']>;
   syncProviderId?: InputMaybe<Scalars['String']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type MailchimpFormFieldConfig = {
@@ -5394,6 +5544,8 @@ export type PageRevision = HasBlockContent & HasOptionalUserLc & {
   __typename: 'PageRevision';
   archivedAt?: Maybe<Scalars['DateTime']['output']>;
   blocks: Array<BlockContent>;
+  /** When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed. */
+  blocksChangeAt?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
@@ -5410,6 +5562,11 @@ export type PageRevision = HasBlockContent & HasOptionalUserLc & {
   title?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type PageRevisionBlocksArgs = {
+  onlyDisplayed?: Scalars['Boolean']['input'];
 };
 
 export type PageRevisionFilter = {
@@ -6107,6 +6264,10 @@ export type PolisConversationBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   conversationID?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -6115,6 +6276,8 @@ export type PolisConversationBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   conversationID?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type Poll = {
@@ -6152,6 +6315,10 @@ export type PollBlock = BaseBlock & HasOptionalPoll & {
   disabled?: Maybe<Scalars['Boolean']['output']>;
   poll?: Maybe<FullPoll>;
   pollId?: Maybe<Scalars['String']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -6160,6 +6327,8 @@ export type PollBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   pollId?: InputMaybe<Scalars['String']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type PollExternalVote = {
@@ -7581,6 +7750,10 @@ export type QuoteBlock = BaseBlock & HasImage & {
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']['output']>;
   quote?: Maybe<Scalars['String']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -7591,6 +7764,8 @@ export type QuoteBlockInput = {
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   imageID?: InputMaybe<Scalars['String']['input']>;
   quote?: InputMaybe<Scalars['String']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export enum RatingSystemType {
@@ -7627,6 +7802,10 @@ export type RichTextBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   richText?: Maybe<Scalars['RichText']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -7635,6 +7814,8 @@ export type RichTextBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   richText?: InputMaybe<Scalars['RichText']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type SendTestMailTemplateInput = {
@@ -8023,6 +8204,10 @@ export type SoundCloudTrackBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   trackID?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
@@ -8031,6 +8216,8 @@ export type SoundCloudTrackBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']['input']>;
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   trackID?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8054,6 +8241,10 @@ export type StreamableVideoBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
   videoID?: Maybe<Scalars['String']['output']>;
 };
@@ -8062,6 +8253,8 @@ export type StreamableVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']['input']>;
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   videoID?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8103,8 +8296,12 @@ export type SubscribeBlock = BaseBlock & {
   memberPlanRenderSettings: Array<SubscribeBlockMemberPlanRenderSetting>;
   memberPlans: Array<MemberPlan>;
   periodicityDisplay?: Maybe<SubscribePeriodicityDisplay>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
   showDiscountCodes: Scalars['Boolean']['output'];
   showGoodies: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -8130,6 +8327,8 @@ export type SubscribeBlockInput = {
   periodicityDisplay?: InputMaybe<SubscribePeriodicityDisplay>;
   showDiscountCodes?: Scalars['Boolean']['input'];
   showGoodies?: Scalars['Boolean']['input'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
 };
 
 export type SubscribeBlockLayoutConfig = {
@@ -8365,7 +8564,11 @@ export type TeaserGridBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   numColumns: Scalars['Int']['output'];
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
   teasers: Array<Maybe<Teaser>>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
@@ -8376,6 +8579,8 @@ export type TeaserGridBlockInput = {
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   numColumns: Scalars['Int']['input'];
   teasers: Array<InputMaybe<TeaserInput>>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8385,6 +8590,10 @@ export type TeaserGridFlexBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   flexTeasers: Array<FlexTeaser>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
@@ -8394,6 +8603,8 @@ export type TeaserGridFlexBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   flexTeasers: Array<FlexTeaserInput>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8410,11 +8621,15 @@ export type TeaserListBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
   filter: TeaserListBlockFilter;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
   skip?: Maybe<Scalars['Int']['output']>;
   sort?: Maybe<TeaserListBlockSort>;
   take?: Maybe<Scalars['Int']['output']>;
   teaserType: TeaserType;
   teasers: Array<Maybe<Teaser>>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
@@ -8438,6 +8653,8 @@ export type TeaserListBlockInput = {
   sort?: InputMaybe<TeaserListBlockSort>;
   take?: InputMaybe<Scalars['Int']['input']>;
   teaserType: TeaserType;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8470,8 +8687,12 @@ export type TeaserSlotsAutofillConfig = BaseBlock & {
   disabled?: Maybe<Scalars['Boolean']['output']>;
   enabled: Scalars['Boolean']['output'];
   filter?: Maybe<TeaserListBlockFilter>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
   sort?: Maybe<TeaserListBlockSort>;
   teaserType?: Maybe<TeaserType>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -8489,8 +8710,12 @@ export type TeaserSlotsBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
   slots: Array<TeaserSlot>;
   teasers: Array<Maybe<Teaser>>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
@@ -8501,6 +8726,8 @@ export type TeaserSlotsBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   slots: Array<TeaserSlotInput>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8516,6 +8743,10 @@ export type TikTokVideoBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
   userID?: Maybe<Scalars['String']['output']>;
   videoID?: Maybe<Scalars['String']['output']>;
@@ -8525,6 +8756,8 @@ export type TikTokVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']['input']>;
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   userID?: InputMaybe<Scalars['String']['input']>;
   videoID?: InputMaybe<Scalars['String']['input']>;
 };
@@ -8536,6 +8769,10 @@ export type TitleBlock = BaseBlock & {
   disabled?: Maybe<Scalars['Boolean']['output']>;
   lead?: Maybe<Scalars['String']['output']>;
   preTitle?: Maybe<Scalars['String']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   title?: Maybe<Scalars['String']['output']>;
   type: BlockType;
 };
@@ -8546,6 +8783,8 @@ export type TitleBlockInput = {
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   lead?: InputMaybe<Scalars['String']['input']>;
   preTitle?: InputMaybe<Scalars['String']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8599,6 +8838,10 @@ export type TwitterTweetBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   tweetID?: Maybe<Scalars['String']['output']>;
   type: BlockType;
   userID?: Maybe<Scalars['String']['output']>;
@@ -8608,6 +8851,8 @@ export type TwitterTweetBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']['input']>;
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   tweetID?: InputMaybe<Scalars['String']['input']>;
   userID?: InputMaybe<Scalars['String']['input']>;
 };
@@ -8617,6 +8862,10 @@ export type UnknownBlock = {
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
 };
 
@@ -8804,6 +9053,10 @@ export type VimeoVideoBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
   videoID?: Maybe<Scalars['String']['output']>;
 };
@@ -8812,6 +9065,8 @@ export type VimeoVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']['input']>;
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   videoID?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8870,11 +9125,26 @@ export type WebsiteSettings = {
   theme: Scalars['JSONObject']['output'];
 };
 
+/** A day of the week, used to time blocks. */
+export enum Weekday {
+  Friday = 'Friday',
+  Monday = 'Monday',
+  Saturday = 'Saturday',
+  Sunday = 'Sunday',
+  Thursday = 'Thursday',
+  Tuesday = 'Tuesday',
+  Wednesday = 'Wednesday'
+}
+
 export type YouTubeVideoBlock = BaseBlock & {
   __typename: 'YouTubeVideoBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
   blockStyleName?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the block should display. */
+  shouldDisplay: Scalars['Boolean']['output'];
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: Maybe<BlockTiming>;
   type: BlockType;
   videoID?: Maybe<Scalars['String']['output']>;
 };
@@ -8883,5 +9153,7 @@ export type YouTubeVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']['input']>;
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows. */
+  timing?: InputMaybe<BlockTimingInput>;
   videoID?: InputMaybe<Scalars['String']['input']>;
 };

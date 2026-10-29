@@ -26,6 +26,21 @@ const type = (value: string) =>
   fireEvent.change(field(), { target: { value } });
 
 describe('CalendarTimeInput', () => {
+  it('selects a filled-in time on focus, so typing replaces it', () => {
+    renderInput('00:00');
+
+    fireEvent.focus(field());
+
+    expect((field() as HTMLInputElement).selectionStart).toBe(0);
+    expect((field() as HTMLInputElement).selectionEnd).toBe(5);
+  });
+
+  it('can be labelled for a form that holds more than one time', () => {
+    render(<CalendarTimeInput label="from" />);
+
+    expect(screen.getByRole('textbox', { name: 'from' })).toBeInTheDocument();
+  });
+
   it('is one field the user types into, not a pair of dropdowns', () => {
     renderInput();
 
