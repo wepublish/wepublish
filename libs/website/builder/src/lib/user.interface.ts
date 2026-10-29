@@ -36,8 +36,7 @@ export type PersonalDataFormFields = UpdateUserMutationVariables &
   Partial<UpdatePasswordMutationVariables>;
 
 export type BuilderPersonalDataFormFields =
-  | Exclude<BuilderUserFormFields, 'passwordRepeated'>
-  | 'image';
+  Exclude<BuilderUserFormFields, 'passwordRepeated'> | 'image';
 
 export type BuilderPersonalDataFormProps<
   T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields,
@@ -56,6 +55,8 @@ export type BuilderPersonalDataFormProps<
       birthday: z.ZodDate | z.ZodOptional<z.ZodDate>;
     }>
   >;
+  /** Messages for this form only, over the global error map. */
+  errorMap?: z.ZodErrorMap;
   user: FullSensitiveDataUserFragment;
   className?: string;
   onUpdate?: (

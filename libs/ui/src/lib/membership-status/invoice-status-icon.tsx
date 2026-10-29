@@ -1,20 +1,21 @@
 import styled from '@emotion/styled';
-import { Tooltip } from '@mui/material';
+import { Theme, Tooltip } from '@mui/material';
 import { ReactNode } from 'react';
 import { LiaFileInvoiceSolid } from 'react-icons/lia';
 import { MdAccessTime, MdClose, MdDone } from 'react-icons/md';
 
-import { paletteColor } from '../paletteColor';
+import { InvoiceState } from './invoice-state';
 
-export type InvoiceStatus = 'paid' | 'canceled' | 'unpaid';
+// The editor's theme has CSS variables, the websites' does not.
+const palette = (theme: Theme) => (theme.vars ?? theme).palette;
 
-const statusColors: Record<InvoiceStatus, string> = {
-  paid: 'success.main',
-  canceled: 'error.main',
-  unpaid: 'warning.main',
+const statusColors: Record<InvoiceState, (theme: Theme) => string> = {
+  paid: theme => palette(theme).success.main,
+  canceled: theme => palette(theme).error.main,
+  unpaid: theme => palette(theme).warning.main,
 };
 
-const statusIcons: Record<InvoiceStatus, ReactNode> = {
+const statusIcons: Record<InvoiceState, ReactNode> = {
   paid: <MdDone />,
   canceled: <MdClose />,
   unpaid: <MdAccessTime />,
@@ -27,11 +28,11 @@ const InvoiceIconWrapper = styled('span')`
 `;
 
 const InvoiceIcon = styled(LiaFileInvoiceSolid)`
-  color: ${({ theme }) => theme.vars.palette.text.secondary};
+  color: ${({ theme }) => palette(theme).text.secondary};
   font-size: 26px;
 `;
 
-const StatusPill = styled('span')<{ pillColor: string }>`
+const StatusPill = styled('span')<{ status: InvoiceState }>`
   position: absolute;
   right: -5px;
   top: 55%;
@@ -41,14 +42,14 @@ const StatusPill = styled('span')<{ pillColor: string }>`
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background-color: ${({ theme, pillColor }) => paletteColor(theme, pillColor)};
-  color: ${({ theme }) => theme.vars.palette.common.white};
+  background-color: ${({ theme, status }) => statusColors[status](theme)};
+  color: ${({ theme }) => palette(theme).common.white};
   font-size: 10px;
-  box-shadow: 0 0 0 2px ${({ theme }) => theme.vars.palette.background.paper};
+  box-shadow: 0 0 0 2px ${({ theme }) => palette(theme).background.paper};
 `;
 
 export interface InvoiceStatusIconProps {
-  status: InvoiceStatus;
+  status: InvoiceState;
   title: string;
 }
 
@@ -61,9 +62,7 @@ export function InvoiceStatusIcon({ status, title }: InvoiceStatusIconProps) {
       <InvoiceIconWrapper>
         <InvoiceIcon />
 
-        <StatusPill pillColor={statusColors[status]}>
-          {statusIcons[status]}
-        </StatusPill>
+        <StatusPill status={status}>{statusIcons[status]}</StatusPill>
       </InvoiceIconWrapper>
     </Tooltip>
   );

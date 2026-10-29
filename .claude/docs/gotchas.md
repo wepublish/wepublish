@@ -475,9 +475,12 @@ peer at runtime — Nest's `loadPackage` / `loadAdapter`, `ApolloDriver`,
 terminus's `import.meta.resolve` + `await import(...)` — never show up there,
 so unless the peer is listed too, `pnpm deploy` leaves it out and the image
 dies on boot with `No driver (HTTP) has been selected` or _The "<pkg>" package
-is missing_. The API lists three such peers: `@nestjs/platform-express`
-(`@nestjs/core`), `@as-integrations/express5` (`@nestjs/apollo`) and
-`@nestjs/axios` (`@nestjs/terminus`). `docker/check-runtime-deps.js` accepts a
+is missing_. The API lists two such peers: `@as-integrations/express5`
+(`@nestjs/apollo`) and `@nestjs/axios` (`@nestjs/terminus`). The HTTP adapter
+used to be a third — `@nestjs/core` still declares `@nestjs/platform-express`
+as an optional peer and resolves it through `loadAdapter` — but both apps now
+pass `new NodeAdapter()` to `NestFactory.create`, so the bundle names
+`@nestjs/platform-node` outright. `docker/check-runtime-deps.js` accepts a
 listed package the bundle never loads when a loaded package declares it as a
 peer (`peerDependencies` or `peerDependenciesMeta`), so they pass the check.
 
@@ -514,6 +517,48 @@ builds fine; every tenant uses it.
 
 ---
 
+### ⚠️ node:http has no `req.res` back-reference
+
+Express assigns `req.res` (and `res.req`) on every request. Raw `node:http`
+does not, and `@nestjs/platform-node` does not add it — `NodeRequest` only
+extends `IncomingMessage`. Anything reaching the response through the request
+silently stops working, and because the call sites were written
+`req.res?.setHeader(...)`, the optional chain swallows it: no crash, just
+headers that never get sent.
+
+[api-token.strategy.ts](../../libs/api-token/api/src/lib/api-token.strategy.ts)
+needs it, since a passport `validate()` gets the request and nothing else.
+[responseBackReference](../../libs/api-token/api/src/lib/response-back-reference.ts)
+restores the link and api-example installs it in `main.ts` before helmet.
+
+**A unit test cannot catch this** — the existing strategy spec fakes
+`{ res: { setHeader } }` and passes either way. Only an HTTP-level test on a
+real `NodeAdapter` app shows it, which is what
+[response-back-reference.spec.ts](../../libs/api-token/api/src/lib/response-back-reference.spec.ts)
+does: one case asserts the link is *absent* without the middleware.
+
+---
+
+### ⚠️ `@nestjs/apollo` refuses the node:http adapter
+
+`ApolloDriver.registerServer()` switches on `httpAdapter.getType()` and handles
+exactly `express` and `fastify`. `@nestjs/platform-node` reports `node`, so the
+whole API dies on boot with _No support for current HttpAdapter: node_ — the
+error comes from `GraphQLModule.onModuleInit`, not from anything we wrote.
+
+[libs/utils/api/src/lib/graphql/node-apollo.driver.ts](../../libs/utils/api/src/lib/graphql/node-apollo.driver.ts)
+overrides `registerServer` to call the `protected registerExpress` directly.
+That path only needs `getInstance().use(path, handler)` and Express-shaped
+`req`/`res`, both of which platform-node provides, so Apollo runs unmodified on
+top of it — `@as-integrations/express5` stays a runtime dependency.
+
+**Drop the subclass once Apollo knows the adapter.** It depends on a protected
+method, so a `@nestjs/apollo` bump can break it; the failure is loud and caught
+by
+[app.module.http.spec.ts](../../apps/api-example/src/nestapp/app.module.http.spec.ts).
+
+---
+
 ### ⚠️ Express 5 has no bare `*` route
 
 [apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
@@ -544,11 +589,11 @@ and block-content imports them back. Every block-content provider that takes
 `ArticleService`, `PageService` or `HOT_AND_TRENDING_DATA_SOURCE` therefore
 uses `@Inject(forwardRef(() => …))` — see
 [teaser-list.resolver.ts](../../libs/block-content/api/src/lib/teaser/teaser-list.resolver.ts)
-and [slot-teasers-loader.ts](../../libs/block-content/api/src/lib/teaser/slot-teasers-loader.ts).
+and [block-tree-loader.ts](../../libs/block-content/api/src/lib/block-tree/block-tree-loader.ts).
 
 Without it the class or token is still `undefined` when the decorator runs,
 and the API dies at boot: `Nest can't resolve dependencies of the
-SlotTeasersLoader (EventService, ?, BlockTemplateDataloaderService)`. Whether
+BlockTreeLoader (EventService, ?, BlockTemplateDataloaderService)`. Whether
 it dies depends on module load order: until 2026-10-07 the `ActionModule`
 happened to import `ArticleModule` early enough to hide two missing
 `forwardRef`s; deleting that module exposed both.
@@ -556,7 +601,7 @@ happened to import `ArticleModule` early enough to hide two missing
 **Load-bearing:** the `forwardRef` wrappers. Removing or reordering a module in
 `app.module.ts` can make a cycle that "worked" fail at the next start.
 
-Guarded for `SlotTeasersLoader` only: `slot-teasers-loader.spec.ts` starts with
+Guarded for `BlockTreeLoader` only: `block-tree-loader.spec.ts` starts with
 `import './article.service';`, which enters the cycle from the article side and
 reproduces the boot error in a unit test. A new injection site needs the same
 trick or nothing catches it before `nx serve api-example`.
