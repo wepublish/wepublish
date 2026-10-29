@@ -2094,6 +2094,99 @@ exports[`SettingList > renders successfully 1`] = `
                         </fieldset>
                       </div>
                     </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_1l_"
+                        id="_r_1l_-label"
+                      >
+                        settingList.emailQualityEvidenceWarnAfterDays 
+                        <button
+                          aria-label="settingList.warnings.emailQualityEvidenceWarnAfterDays"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                            />
+                          </svg>
+                        </button>
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_1l_"
+                          name="EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS"
+                          type="number"
+                          value="14"
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
+                          >
+                            settingList.days
+                          </p>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.emailQualityEvidenceWarnAfterDays 
+                              <button
+                                aria-label="settingList.warnings.emailQualityEvidenceWarnAfterDays"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                  />
+                                </svg>
+                              </button>
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2130,8 +2223,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_1l_"
-                        id="_r_1l_-label"
+                        for="_r_1o_"
+                        id="_r_1o_-label"
                       >
                         settingList.peerToken 
                         <button
@@ -2165,7 +2258,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-invalid="false"
                           class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
-                          id="_r_1l_"
+                          id="_r_1o_"
                           name="PEERING_TIMEOUT_MS"
                           type="number"
                           value="100"
@@ -2307,10 +2400,10 @@ exports[`SettingList > renders successfully 1`] = `
                       </label>
                     </div>
                     <div
-                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-329"
+                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-341"
                     >
                       <label
-                        class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-330"
+                        class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-342"
                       >
                         settingList.newArticlePaywall 
                         <button
@@ -2339,7 +2432,7 @@ exports[`SettingList > renders successfully 1`] = `
                         </button>
                       </label>
                       <div
-                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-333"
+                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-345"
                       >
                         <div
                           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
@@ -2354,18 +2447,18 @@ exports[`SettingList > renders successfully 1`] = `
                               autocapitalize="none"
                               autocomplete="off"
                               class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-148"
-                              id="_r_1q_"
+                              id="_r_1t_"
                               role="combobox"
                               spellcheck="false"
                               type="text"
                               value=""
                             />
                             <div
-                              class="MuiAutocomplete-endAdornment emotion-337"
+                              class="MuiAutocomplete-endAdornment emotion-349"
                             >
                               <button
                                 aria-label="Open"
-                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-338"
+                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-350"
                                 tabindex="-1"
                                 title="Open"
                                 type="button"
@@ -2388,7 +2481,7 @@ exports[`SettingList > renders successfully 1`] = `
                               class="MuiOutlinedInput-notchedOutline emotion-53"
                             >
                               <legend
-                                class="emotion-341"
+                                class="emotion-353"
                               >
                                 <span
                                   aria-hidden="true"
