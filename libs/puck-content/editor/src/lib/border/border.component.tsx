@@ -50,6 +50,7 @@ export const BorderFieldRender = ({
       <FieldStack>
         <SidesInput
           name={`${name}-width`}
+          unit="px"
           value={current.width}
           readOnly={readOnly}
           onChange={width => onChange({ ...current, width })}

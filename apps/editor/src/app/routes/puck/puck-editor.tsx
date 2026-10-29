@@ -11,6 +11,7 @@ import {
   alignmentPlugin,
   apiPlugin,
   BlocksPlugin,
+  blockVisibilityPlugin,
   borderPlugin,
   breakpointsPlugin,
   colorPlugin,
@@ -33,8 +34,10 @@ import {
   SearchPlugin,
   SEOPreviewPlugin,
   StockImagePlugin,
+  stylingPlugin,
   switchPlugin,
   tagPlugin,
+  tagSelectPlugin,
   themePlugin,
   typographyPlugin,
   viewportSelectionPlugin,
@@ -165,7 +168,7 @@ export function PuckEditor() {
         <WebsiteBuilderProvider elements={{ Link }}>
           <SessionTokenContext.Provider value={anonymousSession}>
             <Puck
-              dnd={{ behavior: 'static' }}
+              dnd={{ behavior: 'static', enableDragHandle: true }}
               iframe={{ syncHostStyles: false }}
               config={dynamicConfig}
               data={initialData}
@@ -192,6 +195,7 @@ export function PuckEditor() {
                 apiPlugin,
                 paddingPlugin,
                 gapPlugin,
+                stylingPlugin,
                 borderPlugin,
                 breakpointsPlugin,
                 alignmentPlugin,
@@ -199,6 +203,7 @@ export function PuckEditor() {
                 columnsPlugin,
                 listPlugin,
                 tagPlugin,
+                tagSelectPlugin,
                 richtextPlugin,
                 colorPlugin,
                 typographyPlugin,
@@ -206,6 +211,7 @@ export function PuckEditor() {
                 switchPlugin,
                 imagePlugin,
                 visibilityPlugin,
+                blockVisibilityPlugin,
               ]}
               onPublish={data => {
                 console.warn(data);

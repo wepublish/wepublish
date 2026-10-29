@@ -40,7 +40,7 @@ export const DynamicGridRender: PuckComponent<DynamicGridProps> = ({
     {...props}
     css={(theme: Theme) =>
       breakpointsStyles(theme, layout, resolved => ({
-        ...gapStyles(resolved),
+        ...gapStyles(theme, resolved),
         ...itemsAlignmentStyles(resolved),
       }))
     }
@@ -51,7 +51,7 @@ export const DynamicGridRender: PuckComponent<DynamicGridProps> = ({
         minEmptyHeight={100}
         css={theme => ({
           ...columnSpanStyles(span)(theme),
-          ...visibilityStyles(visibility)(theme),
+          ...visibilityStyles({ breakpoints: visibility })(theme),
         })}
       />
     ))}

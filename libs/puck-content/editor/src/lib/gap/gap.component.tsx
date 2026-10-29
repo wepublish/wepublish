@@ -1,10 +1,16 @@
 import { FieldProps } from '@puckeditor/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LuColumns2, LuLink2, LuRows2, LuUnlink2 } from 'react-icons/lu';
+import {
+  LuColumns2,
+  LuGrid2X2,
+  LuLink2,
+  LuRows2,
+  LuUnlink2,
+} from 'react-icons/lu';
 
 import {
-  FieldNumberInput,
+  FieldSpacingInput,
   FieldToggleGroup,
   ToggleableField,
 } from '../field-controls.component';
@@ -83,16 +89,16 @@ export const GapFieldRender = ({
         )}
 
         {both && linked ?
-          <FieldNumberInput
+          <FieldSpacingInput
             label={t('', 'Gap')}
-            icon={LuLink2}
+            icon={LuGrid2X2}
             value={current.column}
             readOnly={readOnly}
             onChange={amount => onChange(setLinkedGap(amount))}
           />
         : <FieldGrid columns={axes.length}>
             {axes.map(axis => (
-              <FieldNumberInput
+              <FieldSpacingInput
                 key={axis}
                 label={labels[axis]}
                 icon={axisIcons[axis]}

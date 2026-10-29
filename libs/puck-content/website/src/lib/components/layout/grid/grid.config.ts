@@ -22,6 +22,7 @@ export const Grid: ComponentConfig<{
     layout: {
       type: 'breakpoints',
       label: 'Layout',
+      hideLabel: true,
       objectFields: {
         columns: {
           type: 'columns',

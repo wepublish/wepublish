@@ -1,12 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { ComponentConfig } from '@puckeditor/core';
-import { mockRichText } from '@wepublish/mocks/website';
 
 import {
   imageFieldAi,
   richtextFieldAi,
   switchFieldAi,
 } from '@wepublish/puck-content/editor';
+import { placeholderRichText } from '../placeholder-richtext';
 import { UserFields } from '../../types';
 import { BreakConfigProps, BreakRender } from './break.component';
 
@@ -86,7 +86,7 @@ export const BreakConfig: ComponentConfig<{
     linkText: 'Learn more',
     linkURL: faker.internet.url(),
     linkTarget: '_blank',
-    richText: mockRichText(),
+    richText: placeholderRichText(),
   },
 
   render: BreakRender,

@@ -267,12 +267,8 @@ export const BreakpointsFieldRender = ({
     });
   };
 
-  return (
-    <FieldLabel
-      label={field.label ?? t('', 'Breakpoints')}
-      readOnly={readOnly}
-      el="div"
-    >
+  const content = (
+    <>
       <Tabs>
         {activeBreakpoints.map(breakpoint => (
           <Tab
@@ -369,6 +365,20 @@ export const BreakpointsFieldRender = ({
           })}
         </Fields>
       )}
+    </>
+  );
+
+  if (field.hideLabel) {
+    return <div>{content}</div>;
+  }
+
+  return (
+    <FieldLabel
+      label={field.label ?? t('', 'Breakpoints')}
+      readOnly={readOnly}
+      el="div"
+    >
+      {content}
     </FieldLabel>
   );
 };

@@ -114,3 +114,6 @@ minimumReleaseAgeExclude:
   - '@mui/x-internals@9.16.0'
   - '@nestjs/cli@12.0.10'
   - '@nestjs/schematics@12.0.10'
+  - '@puckeditor/core@0.24.0'
+  - '@puckeditor/plugin-emotion-cache@0.24.0'
+  - '@puckeditor/plugin-heading-analyzer@0.24.0'

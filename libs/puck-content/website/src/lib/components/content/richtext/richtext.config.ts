@@ -1,11 +1,11 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { mockRichText } from '@wepublish/mocks/website';
 import {
   BuilderRichTextBlockProps,
   RichTextBlock,
 } from '@wepublish/website/builder';
 
 import { richtextFieldAi } from '@wepublish/puck-content/editor';
+import { placeholderRichText } from '../../placeholder-richtext';
 import { UserFields } from '../../../types';
 
 export const RichTextConfig: ComponentConfig<{
@@ -23,7 +23,7 @@ export const RichTextConfig: ComponentConfig<{
     },
   },
   defaultProps: {
-    richText: mockRichText(),
+    richText: placeholderRichText(),
   },
 
   render: RichTextBlock,

@@ -34,6 +34,7 @@ export const PAGE_TITLES: Record<string, string> = {
   '/pages/templates': 'pageTitles.pageTemplates',
   '/pages/templates/create': 'pageTitles.pageTemplateCreate',
   '/pages/templates/edit/:id': 'pageTitles.pageTemplateEdit',
+  '/puck': 'pageTitles.puck',
   '/block-content/styles': 'pageTitles.blockStyles',
   '/block-content/templates': 'pageTitles.blockTemplates',
   '/block-content/templates/create': 'pageTitles.blockTemplateCreate',

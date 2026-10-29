@@ -1,19 +1,14 @@
 import { Head, useWebsiteBuilder } from '@wepublish/website/builder';
 
-import { SEOValue } from '@wepublish/puck-content/editor';
+import { RootMetadata } from '@wepublish/puck-content/editor';
+import { resolveRootSEO } from './root-seo';
 
-export type RootSEOProps = {
-  seo?: SEOValue;
-  socialMedia?: SEOValue;
-};
+export type RootSEOProps = RootMetadata;
 
-export const RootSEO = ({ seo, socialMedia }: RootSEOProps) => {
+export const RootSEO = (props: RootSEOProps) => {
   const { meta } = useWebsiteBuilder();
-
-  const title = seo?.title || socialMedia?.title;
-  const description = seo?.lead || socialMedia?.lead;
-  const socialMediaTitle = socialMedia?.title || seo?.title;
-  const socialMediaDescription = socialMedia?.lead || seo?.lead;
+  const { title, description, socialMediaTitle, socialMediaDescription } =
+    resolveRootSEO(props);
 
   return (
     <Head>
@@ -26,6 +21,14 @@ export const RootSEO = ({ seo, socialMedia }: RootSEOProps) => {
         property="og:type"
         content="website"
       />
+
+      {props.hidden && (
+        <meta
+          key="robots"
+          name="robots"
+          content="noindex"
+        />
+      )}
 
       {description && (
         <meta

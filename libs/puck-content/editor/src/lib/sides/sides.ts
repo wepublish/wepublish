@@ -1,9 +1,11 @@
 import { z } from 'zod/v4';
 
+import { spacingSchema, SpacingValue } from '../spacing/spacing';
+
 export type Side = 'top' | 'right' | 'bottom' | 'left';
 export const sides: Side[] = ['top', 'right', 'bottom', 'left'];
 
-export type SidesValue = Partial<Record<Side, number>>;
+export type SidesValue = Partial<Record<Side, SpacingValue>>;
 
 export type SidesMode = 'all' | 'axis' | 'individual';
 export const sidesModes: SidesMode[] = ['all', 'axis', 'individual'];
@@ -15,20 +17,39 @@ const axisSides: Record<Axis, [Side, Side]> = {
   horizontal: ['left', 'right'],
 };
 
-export const sidesSchema = (unit: string) =>
-  z
-    .object({
-      top: z.number().min(0).describe(`Top ${unit} in pixels`),
-      right: z.number().min(0).describe(`Right ${unit} in pixels`),
-      bottom: z.number().min(0).describe(`Bottom ${unit} in pixels`),
-      left: z.number().min(0).describe(`Left ${unit} in pixels`),
-    })
+export const sidesModesFor = (allowed: Side[] = sides): SidesMode[] =>
+  allowed.length === sides.length ? sidesModes : ['all', 'individual'];
+
+const sideLabels: Record<Side, string> = {
+  top: 'Top',
+  right: 'Right',
+  bottom: 'Bottom',
+  left: 'Left',
+};
+
+export const sidesSchema = (
+  name: string,
+  unit: 'spacing' | 'px' = 'spacing',
+  allowed: Side[] = sides
+) => {
+  const side = (label: string) =>
+    unit === 'px' ?
+      z.number().min(0).describe(`${label} ${name} in pixels`)
+    : spacingSchema.describe(`${label} ${name}. ${spacingSchema.description}`);
+
+  return z
+    .object(
+      Object.fromEntries(
+        allowed.map(key => [key, side(sideLabels[key])])
+      ) as Partial<Record<Side, ReturnType<typeof side>>>
+    )
     .partial();
+};
 
 const withSides = (
   value: SidesValue,
   targets: Side[],
-  amount: number | undefined
+  amount: SpacingValue | undefined
 ): SidesValue => {
   const next = { ...value };
 
@@ -43,8 +64,16 @@ const withSides = (
   return next;
 };
 
-export const getSidesMode = (value: SidesValue | undefined): SidesMode => {
+export const getSidesMode = (
+  value: SidesValue | undefined,
+  allowed: Side[] = sides
+): SidesMode => {
   const { top, right, bottom, left } = value ?? {};
+
+  if (allowed.length !== sides.length) {
+    return allowed.every(side => value?.[side] === value?.[allowed[0]]) ? 'all'
+      : 'individual';
+  }
 
   if (top === right && top === bottom && top === left) {
     return 'all';
@@ -57,25 +86,31 @@ export const getSidesMode = (value: SidesValue | undefined): SidesMode => {
   return 'individual';
 };
 
-export const setAllSides = (amount: number | undefined): SidesValue =>
-  withSides({}, sides, amount);
+export const setAllSides = (
+  amount: SpacingValue | undefined,
+  allowed: Side[] = sides
+): SidesValue => withSides({}, allowed, amount);
 
 export const setAxis = (
   value: SidesValue,
   axis: Axis,
-  amount: number | undefined
+  amount: SpacingValue | undefined
 ): SidesValue => withSides(value, axisSides[axis], amount);
 
 export const setSide = (
   value: SidesValue,
   side: Side,
-  amount: number | undefined
+  amount: SpacingValue | undefined
 ): SidesValue => withSides(value, [side], amount);
 
-export const toSidesMode = (value: SidesValue, mode: SidesMode): SidesValue => {
+export const toSidesMode = (
+  value: SidesValue,
+  mode: SidesMode,
+  allowed: Side[] = sides
+): SidesValue => {
   switch (mode) {
     case 'all':
-      return setAllSides(value.top);
+      return setAllSides(value[allowed[0]], allowed);
     case 'axis':
       return setAxis(
         setAxis(value, 'vertical', value.top),

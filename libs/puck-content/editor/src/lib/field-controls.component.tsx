@@ -1,8 +1,16 @@
 import { Switch, Tooltip } from '@mui/material';
 import { FieldLabel } from '@puckeditor/core';
 import { ComponentProps, ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
 
+import {
+  fromSpacingParts,
+  SpacingUnit,
+  SpacingValue,
+  toSpacingParts,
+} from './spacing/spacing';
+import { useWebsiteTheme } from './website-theme';
 import {
   FieldInput,
   NativeSelect,
@@ -13,6 +21,7 @@ import {
   ToggleableFieldWrapper,
   ToggleOption,
   ToggleOptions,
+  UnitSelect,
 } from './field-controls';
 
 export const FieldSelect = (props: ComponentProps<typeof NativeSelect>) => (
@@ -178,5 +187,78 @@ export const ToggleableField = <Value,>({
         {enabled && children}
       </FieldLabel>
     </ToggleableFieldWrapper>
+  );
+};
+
+export type FieldSpacingInputProps = {
+  label: string;
+  icon: IconType;
+  value: SpacingValue | undefined;
+  onChange: (value: SpacingValue | undefined) => void;
+  readOnly?: boolean;
+};
+
+export const FieldSpacingInput = ({
+  label,
+  icon: Icon,
+  value,
+  onChange,
+  readOnly,
+}: FieldSpacingInputProps) => {
+  const { t } = useTranslation();
+  const theme = useWebsiteTheme();
+  const parts = toSpacingParts(value);
+  const [unit, setUnit] = useState<SpacingUnit>(parts.unit);
+  const unitPx = parseFloat(theme.spacing(1)) || 8;
+
+  const changeUnit = (next: SpacingUnit) => {
+    setUnit(next);
+
+    if (parts.amount === undefined || next === parts.unit) {
+      return;
+    }
+
+    const amount =
+      next === 'px' ? parts.amount * unitPx : parts.amount / unitPx;
+
+    onChange(fromSpacingParts(Math.round(amount * 100) / 100, next));
+  };
+
+  return (
+    <Tooltip
+      title={label}
+      disableInteractive
+    >
+      <NumberInputWrapper>
+        <Icon aria-hidden />
+
+        <FieldInput
+          type="number"
+          inputMode="decimal"
+          min={0}
+          step={unit === 'px' ? 1 : 0.5}
+          aria-label={label}
+          value={parts.amount ?? ''}
+          disabled={readOnly}
+          onChange={event =>
+            onChange(
+              fromSpacingParts(toNumber(event.currentTarget.value), unit)
+            )
+          }
+        />
+
+        <UnitSelect
+          aria-label={t('', 'Unit')}
+          value={unit}
+          disabled={readOnly}
+          onChange={event =>
+            changeUnit(event.currentTarget.value as SpacingUnit)
+          }
+        >
+          <option value="spacing">{t('', 'units')}</option>
+          <option value="px">px</option>
+        </UnitSelect>
+      </NumberInputWrapper>
+    </Tooltip>
   );
 };

@@ -89,7 +89,7 @@ export const FieldStack = styled.div`
 
 export const ToggleOptions = styled.div`
   display: flex;
-  gap: 4px;
+  gap: var(--puck-space-2);
 `;
 
 export const ToggleOption = styled.label<{
@@ -153,6 +153,10 @@ export const NumberInputWrapper = styled.label`
     -moz-appearance: textfield;
   }
 
+  &:has(select) > input {
+    padding-inline-end: 64px;
+  }
+
   > input::-webkit-outer-spin-button,
   > input::-webkit-inner-spin-button {
     margin: 0;
@@ -182,5 +186,27 @@ export const ToggleableFieldWrapper = styled.div`
     top: -6px;
     right: -8px;
     z-index: 1;
+  }
+`;
+
+export const UnitSelect = styled.select`
+  position: absolute;
+  right: 6px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: var(--puck-radius-s);
+  background: transparent;
+  color: var(--puck-color-text-muted);
+  font-family: inherit;
+  font-size: var(--puck-font-size-xxxs);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--puck-color-interactive-neutral-hover);
+    color: var(--puck-color-text);
+  }
+
+  &:focus-visible {
+    outline: var(--puck-border-width-focus) solid var(--puck-color-focus-ring);
   }
 `;

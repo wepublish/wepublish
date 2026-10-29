@@ -11,7 +11,8 @@ import {
 } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 
-import { RootSEOProps, toSeoPreviewMetadata } from './seo-preview-metadata';
+import { RootMetadata } from '../seo/seo.field';
+import { toSeoPreviewMetadata } from './seo-preview-metadata';
 
 const usePuck = createUsePuck();
 
@@ -27,16 +28,16 @@ const useImage = (id?: string) => {
 export function SeoPreview() {
   const { t } = useTranslation();
   const rootProps = usePuck(
-    puck => puck.appState.data.root.props as RootSEOProps | undefined
+    puck => puck.appState.data.root.props as RootMetadata | undefined
   );
   const { data: peerProfile } = useQuery(PeerProfileDocument);
   const profile = peerProfile?.peerProfile;
 
-  const image = useImage(rootProps?.seo?.imageId);
-  const socialMediaImage = useImage(rootProps?.socialMedia?.imageId);
+  const image = useImage(rootProps?.imageId);
+  const socialMediaImage = useImage(rootProps?.socialMediaImageId);
 
   const previewData = getSeoPreviewData(
-    SeoContentType.Article,
+    SeoContentType.Page,
     toSeoPreviewMetadata(
       rootProps,
       { image, socialMediaImage },

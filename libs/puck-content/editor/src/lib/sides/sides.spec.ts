@@ -3,8 +3,12 @@ import {
   setAllSides,
   setAxis,
   setSide,
+  sidesModesFor,
+  sidesSchema,
   toSidesMode,
 } from './sides';
+
+const vertical = ['top', 'bottom'] as const;
 
 describe('getSidesMode', () => {
   it('detects a uniform value', () => {
@@ -73,5 +77,30 @@ describe('toSidesMode', () => {
       left: 8,
     });
     expect(toSidesMode(value, 'individual')).toBe(value);
+  });
+});
+
+describe('restricted sides', () => {
+  it('only describes the allowed sides in the schema', () => {
+    expect(
+      Object.keys(sidesSchema('margin', 'spacing', [...vertical]).shape)
+    ).toEqual(['top', 'bottom']);
+  });
+
+  it('drops the axis mode when not every side is allowed', () => {
+    expect(sidesModesFor([...vertical])).toEqual(['all', 'individual']);
+    expect(sidesModesFor(undefined)).toEqual(['all', 'axis', 'individual']);
+  });
+
+  it('only sets and compares the allowed sides', () => {
+    expect(setAllSides(2, [...vertical])).toEqual({ top: 2, bottom: 2 });
+    expect(getSidesMode({ top: 2, bottom: 2 }, [...vertical])).toBe('all');
+    expect(getSidesMode({ top: 2, bottom: 4 }, [...vertical])).toBe(
+      'individual'
+    );
+    expect(toSidesMode({ top: 4, bottom: 2 }, 'all', [...vertical])).toEqual({
+      top: 4,
+      bottom: 4,
+    });
   });
 });

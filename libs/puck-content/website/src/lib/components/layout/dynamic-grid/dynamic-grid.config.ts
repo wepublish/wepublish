@@ -35,6 +35,7 @@ export const DynamicGrid: DynamicGridConfig = {
     layout: {
       type: 'breakpoints',
       label: 'Layout',
+      hideLabel: true,
       objectFields: {
         ...gapFields(),
         ...itemsAlignmentFields,

@@ -1,7 +1,7 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { mockRichText } from '@wepublish/mocks/website';
 
 import { imageFieldAi, richtextFieldAi } from '@wepublish/puck-content/editor';
+import { placeholderRichText } from '../../placeholder-richtext';
 import { UserFields } from '../../../types';
 import { ListicleConfigProps, ListicleRender } from './listicle.component';
 
@@ -34,7 +34,7 @@ export const ListicleConfig: ComponentConfig<{
       },
       defaultItemProps: {
         title: 'Title',
-        richText: mockRichText(),
+        richText: placeholderRichText(),
       },
     },
   },
@@ -42,7 +42,7 @@ export const ListicleConfig: ComponentConfig<{
     items: [
       {
         title: 'Title',
-        richText: mockRichText(),
+        richText: placeholderRichText(),
       },
     ],
   },
