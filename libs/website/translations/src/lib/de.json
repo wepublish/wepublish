@@ -172,24 +172,28 @@
     "renewPaymentMethodTitle": "Bestehende Zahlungsmethode aktualisieren",
     "renewPaymentMethodConfirmation": "Du bestätigst {paymentMethod} neu, zum Beispiel mit einer neuen Karte oder einem neuen TWINT-Konto. Bis dahin bleibt die bisherige Hinterlegung aktiv.",
     "paymentMethod": "Zahlungsmethode: {paymentMethod}",
-    "changePaymentMethod": "Zahlungsmethode ändern",
-    "changePaymentMethodTitle": "Zahlungsmethode ändern",
+    "changePaymentMethod": "Zahlungsmethode anpassen",
+    "changePaymentMethodTitle": "Zahlungsmethode anpassen",
+    "changePaymentMethodCurrent": "Aktuelle Zahlungsmethode: <strong>{paymentMethod}</strong>",
+    "changePaymentMethodChoose": "Zahlungsmethode ändern auf:",
+    "changePaymentMethodNew": "Zahlungsmethode ändern auf: <strong>{paymentMethod}</strong>",
     "changePaymentMethodSubmit": "Weiter",
     "changePaymentMethodOpenInvoice": "Die offene Rechnung über {amount} bezahlst du mit der neuen Zahlungsmethode. Erst danach wird sie für dein {type, select, Donation {Spende} other {Abo}} übernommen.",
     "changePaymentMethodAuthorization": "Eine Online-Zahlungsmethode bestätigst du einmal beim Zahlungsanbieter. Dafür kann ein Betrag von {amount} reserviert werden, der dir nie belastet wird. Bis dahin bleibt deine bisherige Zahlungsmethode aktiv.",
     "paymentMethodChangePending": "Wechsel zu {paymentMethod} ausstehend: {kind, select, invoicePayment {wird aktiv, sobald die offene Rechnung bezahlt ist} other {wird aktiv, sobald du die Zahlungsmethode bestätigt hast}}. Möglich bis {expiresAt}.",
+    "paymentMethodChangePendingShort": "Wechsel Zahlungsmethode ausstehend",
     "paymentMethodChangeContinue": "Fortsetzen",
     "paymentMethodChangeCancel": "Wechsel abbrechen",
-    "extendChargedWith": "Belastet wird: {paymentMethod}",
+    "extendChargedWith": "Zahlung per: <strong>{paymentMethod}</strong>",
     "externalReward": "{isLink, select, true {Link zu externer Belohnung} other {{externalReward}}}",
     "unpaid": "{type, select, Donation {Spende} other {Abo}} ist unbezahlt",
     "cancel": "{type, select, Donation {Spende} other {Abo}} kündigen",
-    "cancelConfirmation": "{type, select, Donation {Alle offenen Rechnungen zur Spende werden storniert.} other {Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.}}",
+    "cancelConfirmation": "{type, select, Donation {Durch die Kündigung beendest du eine wertvolle Unterstützung. Gibt es offene Rechnungen zur Spende, werden diese storniert.} other {Durch die Kündigung beendest du eine wertvolle Unterstützung. Dein Abo wird danach nicht mehr verlängert, bleibt aber bis zum Ablaufdatum gültig. Gibt es offene Rechnungen zum Abo, werden diese storniert.}}",
     "costs": "Kostet {amount} {extendable, select, true {{periodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} lifetime {einmalig} other {}}} other {}}",
     "extendNow": "Jetzt verlängern",
     "extendBy": "Jetzt um {subscriptionDuration} verlängern",
-    "extendEarly": "{type, select, Donation {Spende} other {Abo}} frühzeitig verlängern?",
-    "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, Donation {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
+    "extendEarly": "{type, select, Donation {Spende} other {Abo}} verlängern",
+    "extendEarlyConfirmation": "Deine frühzeitige {type, select, Donation {Spenden} other {Abo}}-Verlängerung um {subscriptionDuration} erhöht unsere Planungssicherheit. Danke für diese Unterstützung!",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
     "subscribeNow": "Jetzt ein Abo lösen.",
     "startsAt": "Abgeschlossen am <time>{startsAt}</time>",
@@ -200,9 +204,9 @@
     "cancelledDueToUnknownReason": "Kündigungsgrund ist unbekannt",
     "autoRenew": "Wird automatisch {periodicityTimeline} erneuert",
     "validFor": "Gültig für {subscriptionDuration}",
-    "cancelProduct": "{productName} wirklich kündigen?",
+    "cancelProduct": "Willst du {productName, select, Donation {deine Spende} other {dein Abo}} wirklich kündigen?",
     "reactivate": "{type, select, Donation {Spende} other {Abo}} reaktivieren",
-    "reactivateProduct": "{productName} wirklich reaktivieren?",
+    "reactivateProduct": "{productName, select, Donation {Spende} other {Abo}} reaktivieren",
     "revertUpgrade": "Upgrade rückgängig machen",
     "revertUpgradeTitle": "Upgrade wirklich rückgängig machen?",
     "revertUpgradeConfirmation": "{type, select, Donation {Die neue Spende wird samt offener Rechnung entfernt und die bisherige Spende läuft normal weiter.} other {Das neue Abo wird samt offener Rechnung entfernt und dein bisheriges Abo läuft normal weiter.}}",
@@ -254,7 +258,7 @@
     "paidAt": "Bezahlt am",
     "canceledAt": "Storniert am",
     "sepaWarning": "Die Rechnung wird automatisch per Lastschriftverfahren beglichen. Dies kann einige Tage in Anspruch nehmen.",
-    "bexioWarning": "Du erhältst eine PDF-Rechnung per E-Mail zugeschickt.",
+    "bexioWarning": "Die Zahlungsangaben findest du auf deiner Rechnung.",
     "payrexxWarning": "Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet. Es wird automatisch angepasst wenn du auf \"Jetzt Bezahlen\" drückst.",
     "payNow": "Jetzt Bezahlen"
   },
@@ -320,8 +324,17 @@
       "country": "Land",
       "suggested": "Vorgeschlagen",
       "occupation": "Funktion / Beruf",
-      "passwordsDoNotMatch": "Passwörter stimmen nicht überein."
-    }
+      "passwordsDoNotMatch": "Passwörter stimmen nicht überein.",
+      "errors": {
+        "minLength": "{minimum, plural, one {Darf nicht leer sein} other {Mind. # Zeichen}}",
+        "chooseOption": "Bitte eine Option wählen"
+      }
+    },
+    "sections": {
+      "personalData": "Benutzerdaten",
+      "security": "Sicherheit"
+    },
+    "changePassword": "Passwort ändern"
   },
   "article": {
     "noArticles": "Keine Artikel vorhanden",
@@ -499,5 +512,71 @@
     "next": "Nächstes Bild",
     "fullscreen": "Vollbild",
     "exitFullscreen": "Vollbild beenden"
+  },
+  "subscriptionHistory": {
+    "title": "{type, select, Donation {Spenden und Rechnungen} other {Abos und Rechnungen}}",
+    "plan": "{type, select, Donation {Spende} other {Abo}}",
+    "state": "Status",
+    "startsAt": "Beginn",
+    "paidUntil": "Bezahlt bis",
+    "amount": "Betrag",
+    "amountPerPeriod": "{amount} {periodicity, select, monthly {pro Monat} quarterly {pro Quartal} biannual {pro Halbjahr} yearly {pro Jahr} biennial {pro 2 Jahre} lifetime {einmalig} other {}}",
+    "paymentMethod": "Zahlungsmethode",
+    "renewal": "Verlängerung",
+    "renews": "Automatisch",
+    "ends": "Endet",
+    "showInvoices": "Rechnungen anzeigen",
+    "hideInvoices": "Rechnungen ausblenden",
+    "ended": "{type, select, Donation {Beendete Spenden} other {Beendete Abos}} ({count})",
+    "noSubscriptions": "Du hast noch kein Abo.",
+    "invoice": "Rechnung",
+    "createdAt": "Erstellt am",
+    "dueAt": "Fällig am",
+    "total": "Betrag",
+    "noInvoices": "Noch keine Rechnungen",
+    "allInvoices": "Alle Rechnungen ({count})",
+    "showCanceled": "Stornierte Rechnungen anzeigen ({count})",
+    "hideCanceled": "Stornierte Rechnungen ausblenden",
+    "states": {
+      "active": "Aktiv",
+      "planned": "Geplant",
+      "unpaid": "Unbezahlt",
+      "expired": "Abgelaufen",
+      "deactivated": "Gekündigt"
+    },
+    "invoiceStates": {
+      "paid": "Bezahlt am {date}",
+      "canceled": "Storniert am {date}",
+      "unpaid": "Offen"
+    },
+    "endsOn": "per {date}",
+    "invoiceStateNames": {
+      "paid": "Bezahlt",
+      "canceled": "Storniert",
+      "unpaid": "Offen"
+    },
+    "edit": "{type, select, Donation {Spende anpassen} other {Abo anpassen}}",
+    "moreInvoices": "{count, plural, one {# weitere Rechnung} other {# weitere Rechnungen}}",
+    "hideMoreInvoices": "Rechnungen ausblenden"
+  },
+  "subscriptionEdit": {
+    "title": "{type, select, Donation {Spende anpassen} other {Abo anpassen}}",
+    "sections": {
+      "plan": "{type, select, Donation {Spende} other {Abo}}",
+      "payment": "Zahlung",
+      "renewal": "Verlängerung & Kündigung",
+      "invoices": "Rechnungen"
+    },
+    "upgrade": "Abo upgraden",
+    "paymentMethodNotChangeable": "Die Zahlungsmethode {type, select, Donation {dieser Spende} other {dieses Abos}} kann online nicht geändert werden."
+  },
+  "paymentMethodLabels": {
+    "bexio": "Rechnung",
+    "payrexx": "Online-Zahlung",
+    "payrexx-subscription": "Online-Zahlung",
+    "stripe": "Kreditkarte",
+    "stripe-checkout": "Kreditkarte",
+    "mollie": "Online-Zahlung",
+    "no-charge": "Kostenlos"
   }
 }

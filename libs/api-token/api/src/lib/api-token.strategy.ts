@@ -6,7 +6,7 @@ import {
   AuthSessionType,
   EXPIRED_API_TOKEN,
 } from '@wepublish/authentication/api';
-import { Request } from 'express';
+import type { RequestWithResponse } from './response-back-reference';
 import { Strategy } from 'passport-http-bearer';
 
 import { API_TOKEN_PREFIX } from './api-token.crypto';
@@ -35,7 +35,7 @@ export class ApiTokenStrategy extends PassportStrategy(
     super({ passReqToCallback: true });
   }
 
-  public async validate(req: Request, token: string) {
+  public async validate(req: RequestWithResponse, token: string) {
     if (!token.startsWith(API_TOKEN_PREFIX)) {
       return false;
     }

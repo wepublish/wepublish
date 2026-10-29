@@ -23,17 +23,13 @@ import {
   CanGetInvoice,
   CanGetInvoices,
 } from '@wepublish/permissions';
+import { InvoiceState, InvoiceStatusIcon } from '@wepublish/ui';
 import { useMemo, useState } from 'react';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MdContentCopy } from 'react-icons/md';
 
-import {
-  createCheckedPermissionComponent,
-  InvoiceStatus,
-  InvoiceStatusIcon,
-  SingleLineTooltip,
-} from '../atoms';
+import { createCheckedPermissionComponent, SingleLineTooltip } from '../atoms';
 import { useActionMailQuestion } from '../hooks';
 import { DataTable } from '../listView/data-table';
 import { ListColumn } from '../listView/list-columns';
@@ -120,7 +116,7 @@ export const invoiceColumns = ({
 
   const invoiceStatus = (
     invoice: InvoiceFragment
-  ): { status: InvoiceStatus; title: string } =>
+  ): { status: InvoiceState; title: string } =>
     invoice.paidAt ?
       {
         status: 'paid',

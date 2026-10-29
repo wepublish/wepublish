@@ -65,6 +65,13 @@ describe('PersonalDataForm', () => {
     expect(field('user.email')).toBeDisabled();
   });
 
+  it('explains that the password fields are only for changing it', () => {
+    renderForm();
+
+    expect(screen.getByText(t('user.passwordWarning'))).toBeInTheDocument();
+    expect(screen.queryByText(/user\.password/)).toBeNull();
+  });
+
   it('saves the changed data together with the new password', async () => {
     const { user: reader, onUpdate } = renderForm();
 
@@ -297,14 +304,5 @@ describe('PersonalDataForm', () => {
       );
       expect(onUpdate).not.toHaveBeenCalled();
     });
-  });
-});
-
-describe('PersonalDataForm password hint', () => {
-  it('explains the password field in words, not as a translation key', () => {
-    renderForm();
-
-    expect(screen.getByText(t('user.passwordWarning'))).toBeInTheDocument();
-    expect(screen.queryByText(/user\.password/)).toBeNull();
   });
 });

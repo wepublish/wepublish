@@ -27,6 +27,7 @@ export * from './next/pages/document-page';
 export * from './next/pages/search-page';
 export * from './next/pages/subscribe-page';
 export * from './next/pages/tag-page';
+export * from './next/pages/profile/profile-details';
 export * from './next/pages/profile/profile-page';
 export * from './next/pages/profile/subscription/subscription-page';
 export * from './next/pages/profile/subscription/deactivated-subscriptions-page';

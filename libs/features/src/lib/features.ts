@@ -28,6 +28,12 @@ export const FEATURES = [
     stage: 'alpha',
   },
   {
+    key: 'profile-subscription-history',
+    description:
+      'Profile: subscriptions with their latest invoices as one table, and an edit page per subscription',
+    stage: 'alpha',
+  },
+  {
     key: 'paper-letters',
     description:
       'Printed letters: letter provider and pdf renderer integrations, letter layouts, the letter channel in the communication tool',

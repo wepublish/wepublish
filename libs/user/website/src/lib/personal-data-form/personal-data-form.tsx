@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { css, InputAdornment, Theme, useTheme } from '@mui/material';
+import { css, Theme, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import {
   requiredRegisterSchema,
@@ -15,11 +15,11 @@ import {
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useMemo, useReducer, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
-import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
+import { PasswordFields } from '../password-fields/password-fields';
 
 const fullWidth = css`
   grid-column: 1 / -1;
@@ -107,12 +107,13 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   className,
   user,
   schema = defaultSchema,
+  errorMap,
   onUpdate,
   onImageUpload,
   onRequestEmailChange,
 }: BuilderPersonalDataFormProps<T>) {
   const {
-    elements: { TextField, Alert, Button, Paragraph, ImageUpload, IconButton },
+    elements: { TextField, Alert, Button, Paragraph, ImageUpload },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const theme = useTheme();
@@ -120,11 +121,6 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   const [error, setError] = useState<Error>();
   const [success, setSuccess] = useState(false);
   const callAction = useAsyncAction(setLoading, setError, setSuccess);
-  const [showPassword, togglePassword] = useReducer(state => !state, false);
-  const [showRepeatPassword, toggleRepeatPassword] = useReducer(
-    state => !state,
-    false
-  );
   const [showEmailChange, setShowEmailChange] = useState(false);
   const [emailChangeLoading, setEmailChangeLoading] = useState(false);
   const [emailChangeSuccess, setEmailChangeSuccess] = useState(false);
@@ -152,12 +148,13 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
             ...(fieldsToDisplay as any),
             passwordRepeated: fieldsToDisplay.password,
           })
-        )
+        ),
+        errorMap && { errorMap }
       ).refine(data => data.password === data.passwordRepeated, {
         message: t('user.form.passwordsDoNotMatch'),
         path: ['passwordRepeated'],
       }),
-    [t, fieldsToDisplay, schema]
+    [t, fieldsToDisplay, schema, errorMap]
   );
 
   const { handleSubmit, control, setValue, watch } = useForm<
@@ -218,81 +215,16 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
 
         {fieldsToDisplay.password && (
           <PersonalDataPasswordWrapper>
-            <Controller
-              name={'password'}
+            <PasswordFields
               control={control}
-              render={({ field, fieldState: { error } }) => (
-                <>
-                  <Paragraph
-                    css={passwordNoteStyles(theme)}
-                    gutterBottom={false}
-                  >
-                    {t('user.passwordWarning')}
-                  </Paragraph>
-
-                  <TextField
-                    {...field}
-                    value={field.value ?? ''}
-                    type={showPassword ? 'text' : 'password'}
-                    fullWidth
-                    autoComplete="new-password"
-                    label={t('user.password')}
-                    error={!!error}
-                    helperText={error?.message}
-                    slotProps={{
-                      input: {
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={togglePassword}
-                              onMouseDown={event => event.preventDefault()}
-                              edge="end"
-                            >
-                              {showPassword ?
-                                <MdVisibilityOff />
-                              : <MdVisibility />}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      },
-                    }}
-                  />
-                </>
-              )}
-            />
-
-            <Controller
-              name={'passwordRepeated'}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  value={field.value ?? ''}
-                  type={showRepeatPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  fullWidth
-                  label={t('user.passwordRepeat')}
-                  error={!!error}
-                  helperText={error?.message}
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={toggleRepeatPassword}
-                            onMouseDown={event => event.preventDefault()}
-                            edge="end"
-                          >
-                            {showRepeatPassword ?
-                              <MdVisibilityOff />
-                            : <MdVisibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    },
-                  }}
-                />
-              )}
+              note={
+                <Paragraph
+                  css={passwordNoteStyles(theme)}
+                  gutterBottom={false}
+                >
+                  {t('user.passwordWarning')}
+                </Paragraph>
+              }
             />
           </PersonalDataPasswordWrapper>
         )}

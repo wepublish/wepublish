@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SlotTeasersLoader > should return unique teasers 1`] = `
+exports[`BlockTreeLoader > should return unique teasers 1`] = `
 [
   {
     "blockStyle": undefined,

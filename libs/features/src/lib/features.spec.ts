@@ -53,6 +53,10 @@ describe('isKnownFeature', () => {
   it('checks the real registry by default', () => {
     expect(isKnownFeature('surely-not-a-feature')).toBe(false);
   });
+
+  it('knows the profile subscription history', () => {
+    expect(isKnownFeature('profile-subscription-history')).toBe(true);
+  });
 });
 
 describe('registered features', () => {

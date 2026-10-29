@@ -32,3 +32,4 @@ export * from './lib/i18n-formatter';
 export * from './lib/components/daily-briefing-teaser';
 export * from './lib/website-token';
 export * from './lib/revalidate-for';
+export * from './lib/use-website-feature';
