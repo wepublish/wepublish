@@ -1,6 +1,7 @@
 import {
   DndContext,
   DragEndEvent,
+  KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
@@ -8,6 +9,7 @@ import {
 import {
   arrayMove,
   SortableContext,
+  sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
@@ -55,7 +57,11 @@ export interface FieldProps<V = any> {
   onChange: Dispatch<SetStateAction<V>>;
 }
 
-export interface ListFieldProps<T = any> extends FieldProps<ListValue<T>[]> {
+export interface ListFieldProps<T = any> {
+  value: ListValue<T>[];
+  // Always receives the new list, never an updater function, so react-hook-form's
+  // field.onChange can be passed as well as a state setter.
+  onChange: (value: ListValue<T>[]) => void;
   label?: string;
   defaultValue: T | (() => T);
   disabled?: boolean;
@@ -185,14 +191,17 @@ export function ListInput<T>({
 }: ListFieldProps<T>) {
   const { t } = useTranslation();
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
   function handleItemChange(
     itemIndex: number,
     itemValue: SetStateAction<ListValue>
   ) {
-    onChange(value =>
+    onChange(
       Object.assign([], value, {
         [itemIndex]:
           isFunctionalUpdate(itemValue) ?
@@ -203,11 +212,11 @@ export function ListInput<T>({
   }
 
   function handleAdd() {
-    onChange(value => [...value, { id: nanoid(), value: defaultValue as T }]);
+    onChange([...value, { id: nanoid(), value: defaultValue as T }]);
   }
 
   function handleRemove(itemIndex: number) {
-    onChange(value => value.filter((_, index) => index !== itemIndex));
+    onChange(value.filter((_, index) => index !== itemIndex));
   }
 
   function handleDragEnd({ active, over }: DragEndEvent) {

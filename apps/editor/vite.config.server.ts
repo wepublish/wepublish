@@ -11,13 +11,12 @@ export default defineConfig(({ mode }) => ({
   publicDir: false,
 
   build: {
-    // `@yao-pkg/pkg` snapshots dist/apps/editor/main.js, so the entry has to
-    // land on that exact path next to the browser/ folder.
+    // The image runs dist/apps/editor/main.js with the browser/ folder next to
+    // it, so the entry has to land on that exact path.
     outDir: '../../dist/apps/editor',
     emptyOutDir: false,
     ssr: 'server.ts',
     target: 'node22',
-    // pkg only understands CommonJS with statically analyzable requires.
     minify: false,
     sourcemap: mode === 'production' ? false : true,
     rollupOptions: {

@@ -1,5 +1,5 @@
 import { MailProviderType, PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import bodyParser from 'body-parser';
 import { BaseMailProvider } from './base-mail-provider';
 import { BrevoMailProvider } from './brevo-mail-provider';
@@ -11,7 +11,7 @@ import { SmtpMailProvider } from './smtp-mail-provider';
 
 export type MailProviderDeps = {
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
 };
 
 export const createMailProvider = (

@@ -1,5 +1,10 @@
 import { loadPaymentProviders } from '@wepublish/payment/api';
 import { loadMailProvider } from '@wepublish/mail/api';
+import { type NamespaceVersions } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { ProviderRegistryService } from './provider-registry.service';
 
 const { loads } = vi.hoisted(() => ({ loads: { count: 0 } }));
@@ -25,14 +30,28 @@ vi.mock('@wepublish/letter/api', () => ({
   loadPdfRenderer: vi.fn(async () => null),
 }));
 
+let testing: NamespacedCacheTesting;
+
+beforeEach(async () => {
+  testing = await createNamespacedCacheTesting();
+});
+
+afterEach(() => testing.close());
+
 const createReplica = () => {
   const versions: Record<string, string> = {};
-  const kv = {
-    getNamespaceVersions: vi.fn(async (namespaces: string[]) =>
+  const namespaceVersions = {
+    currentMany: vi.fn(async (namespaces: readonly string[]) =>
       namespaces.map(namespace => versions[namespace] ?? 'v1')
     ),
-  };
-  const registry = new ProviderRegistryService({} as any, kv as any, {} as any);
+  } satisfies Pick<NamespaceVersions, 'currentMany'>;
+  const registry = new ProviderRegistryService(
+    {} as any,
+    testing.cache,
+    testing.resets,
+    namespaceVersions as unknown as NamespaceVersions,
+    {} as any
+  );
 
   return {
     registry,
@@ -86,6 +105,16 @@ describe('ProviderRegistryService across replicas', () => {
     await registry.reloadWhenChanged();
 
     expect(loads.count).toBe(2);
+  });
+
+  it('hands the cache and the namespace resets to the payment providers', async () => {
+    const { registry } = createReplica();
+
+    await registry.ensureLoaded();
+
+    expect(loadPaymentProviders).toHaveBeenCalledWith(
+      expect.objectContaining({ kv: testing.cache, resets: testing.resets })
+    );
   });
 
   it('loads nothing before providers are first needed', async () => {

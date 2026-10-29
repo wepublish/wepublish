@@ -16,7 +16,7 @@ import {
   MailProviderType,
   SettingMailProvider,
 } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 
 export interface MailProviderProps {
@@ -27,14 +27,14 @@ export interface MailProviderProps {
 export interface MailProviderProps {
   id: string;
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
   incomingRequestHandler?: NextHandleFunction;
 }
 
 export abstract class BaseMailProvider implements MailProvider {
   readonly id: string;
   readonly prisma: PrismaClient;
-  readonly kv: KvTtlCacheService;
+  readonly kv: NamespacedCache;
   readonly incomingRequestHandler: NextHandleFunction;
 
   protected constructor(props: MailProviderProps) {
@@ -106,7 +106,7 @@ class MailProviderConfig {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
     private readonly id: string
   ) {}
 

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient, SettingSyncProvider } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
 import { SyncProviderSettingsService } from './sync-provider-settings.service';
@@ -18,13 +18,19 @@ const existing = {
 describe('SyncProviderSettingsService', () => {
   let service: SyncProviderSettingsService;
   let prisma: PrismaClient;
+  let resets: Pick<NamespaceResets, 'reset'>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule],
       providers: [
         SyncProviderSettingsService,
-        { provide: KvTtlCacheService, useValue: { resetNamespace: vi.fn() } },
+        {
+          provide: NamespaceResets,
+          useValue: {
+            reset: vi.fn(),
+          } satisfies Pick<NamespaceResets, 'reset'>,
+        },
         {
           provide: SyncProviderSettingsDataloaderService,
           useValue: { prime: vi.fn() },
@@ -33,6 +39,7 @@ describe('SyncProviderSettingsService', () => {
     }).compile();
 
     prisma = module.get<PrismaClient>(PrismaClient);
+    resets = module.get(NamespaceResets);
     service = module.get<SyncProviderSettingsService>(
       SyncProviderSettingsService
     );
@@ -91,9 +98,12 @@ describe('SyncProviderSettingsService', () => {
         mailchimp_webhookSecret: stored.mailchimp_webhookSecret,
       });
 
-      await expect(service.getSyncConfig('mailchimp-sync')).resolves.toMatchObject(
-        { decryptedWebhookSecret: 'plain-secret', decryptedApiKey: null }
-      );
+      await expect(
+        service.getSyncConfig('mailchimp-sync')
+      ).resolves.toMatchObject({
+        decryptedWebhookSecret: 'plain-secret',
+        decryptedApiKey: null,
+      });
     });
 
     test('keeps the secret when only the registration is renewed', async () => {
@@ -109,6 +119,19 @@ describe('SyncProviderSettingsService', () => {
       expect(update.mock.calls[0][0].data).not.toHaveProperty(
         'mailchimp_webhookSecret'
       );
+    });
+
+    test('drops the cached settings once the webhook is registered', async () => {
+      vi.spyOn(prisma.settingSyncProvider, 'update').mockResolvedValue(
+        existing
+      );
+
+      await service.setMailchimpWebhook('mailchimp-sync', {
+        webhookId: 'hook-1',
+        registeredAt: new Date('2026-10-29'),
+      });
+
+      expect(resets.reset).toHaveBeenCalledWith('settings:syncprovider');
     });
 
     test('notes a delivered webhook call', async () => {

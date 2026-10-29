@@ -23,6 +23,17 @@ export const FEATURE_KEY_PATTERN = /^[a-z][a-z0-9-]{1,47}$/;
  */
 export const FEATURES = [
   {
+    key: 'newsletter-editor',
+    description: 'Newsletter editor: build issues and push them to Mailchimp',
+    stage: 'alpha',
+  },
+  {
+    key: 'profile-subscription-history',
+    description:
+      'Profile: subscriptions with their latest invoices as one table, and an edit page per subscription',
+    stage: 'alpha',
+  },
+  {
     key: 'paper-letters',
     description:
       'Printed letters: letter provider and pdf renderer integrations, letter layouts, the letter channel in the communication tool',

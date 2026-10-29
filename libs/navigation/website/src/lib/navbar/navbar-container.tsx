@@ -1,9 +1,11 @@
 import { useQuery } from '@apollo/client/react';
+import { useUser } from '@wepublish/authentication/website';
 import {
   useHasRunningSubscription,
   useHasUnpaidInvoices,
 } from '@wepublish/membership/website';
 import {
+  FeaturesDocument,
   NavigationListDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
@@ -13,6 +15,7 @@ import {
   LinkContext,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
 import { PropsWithChildren } from 'react';
 
 export type NavbarContainerProps = PropsWithChildren<
@@ -51,8 +54,26 @@ export function NavbarContainer({
   const { data: peerInfoData } = useQuery(PeerProfileDocument, {
     fetchPolicy: 'cache-first',
   });
-  const hasUnpaidInvoices = useHasUnpaidInvoices();
   const hasRunningSubscription = useHasRunningSubscription();
+
+  // With the subscription history, the warning is about due invoices only,
+  // and in the account the link to it is only worth showing as that warning.
+  // The features need a session, so they are asked for only with one.
+  const { hasUser } = useUser();
+  const { asPath } = useRouter();
+  const accountPath = profileBtn?.href ?? '/profile';
+  const inAccount =
+    asPath === accountPath || asPath.startsWith(`${accountPath}/`);
+  const { data: features } = useQuery(FeaturesDocument, {
+    skip: !hasUser,
+  });
+  const withinHistory = !!features?.features.includes(
+    'profile-subscription-history'
+  );
+  const hasUnpaidInvoices = useHasUnpaidInvoices({ dueOnly: withinHistory });
+  // null, not undefined: the navbar would fall back to its default button
+  const accountBtn =
+    inAccount && withinHistory && !hasUnpaidInvoices ? null : profileBtn;
 
   const logo = peerInfoData?.peerProfile.logo;
 
@@ -64,7 +85,7 @@ export function NavbarContainer({
         categorySlugs={categorySlugs}
         slug={slug}
         loginBtn={loginBtn}
-        profileBtn={profileBtn}
+        profileBtn={accountBtn}
         subscribeBtn={subscribeBtn}
         data={data}
         loading={loading}

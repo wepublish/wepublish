@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import {
   CanCreateArticle,
+  CanCreateArticleTemplate,
   CanCreateAuthor,
   CanCreateBanner,
   CanCreateBlockStyle,
@@ -22,6 +23,7 @@ import {
   CanCreateMemberPlan,
   CanCreateNavigation,
   CanCreatePage,
+  CanCreatePageTemplate,
   CanCreatePaymentMethod,
   CanCreatePaywall,
   CanCreatePeer,
@@ -32,6 +34,7 @@ import {
   CanCreateUser,
   CanCreateUserRole,
   CanDeleteArticle,
+  CanDeleteArticleTemplate,
   CanDeleteAuthor,
   CanDeleteBanner,
   CanDeleteBlockStyle,
@@ -45,6 +48,7 @@ import {
   CanDeleteMemberPlan,
   CanDeleteNavigation,
   CanDeletePage,
+  CanDeletePageTemplate,
   CanDeletePaymentMethod,
   CanDeletePeer,
   CanDeletePoll,
@@ -78,6 +82,7 @@ import {
   CanGetMailLogs,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
+  CanGetNewsletterCampaigns,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetNavigation,
@@ -111,6 +116,7 @@ import {
   CanSendMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
+  CanUpdateArticleTemplate,
   CanUpdateBlockTemplate,
   CanUpdateCommentRatingSystem,
   CanUpdateComments,
@@ -122,6 +128,7 @@ import {
   CanUpdateGoodie,
   CanUpdateMailTemplates,
   CanUpdatePaywall,
+  CanUpdatePageTemplate,
   CanUpdateSettings,
   CanUpdateSystemMails,
   CanUpdateTag,
@@ -129,8 +136,8 @@ import {
 } from '@wepublish/permissions';
 import {
   ClickMenu,
-  FeatureControl,
   CommandPaletteTrigger,
+  FeatureControl,
   Link,
   PermissionControl,
   SidebarNav,
@@ -171,8 +178,10 @@ import {
   MdMail,
   MdMarkunreadMailbox,
   MdMenu,
+  MdNewspaper,
   MdMoney,
   MdMultilineChart,
+  MdNoteAdd,
   MdNotificationsNone,
   MdOutgoingMail,
   MdOutlineGridView,
@@ -190,6 +199,7 @@ import {
   MdStar,
   MdStyle,
   MdTranslate,
+  MdTravelExplore,
   MdKey,
   MdVpnKey,
 } from 'react-icons/md';
@@ -566,6 +576,21 @@ export function Base({ children }: BaseProps) {
 
                   <PermissionControl
                     qualifyingPermissions={[
+                      CanCreateArticleTemplate.id,
+                      CanUpdateArticleTemplate.id,
+                      CanDeleteArticleTemplate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/articles/templates"
+                      icon={<MdNoteAdd />}
+                    >
+                      {t('navbar.articleTemplates')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
                       CanGetPeerArticles.id,
                       CanGetPeerArticle.id,
                     ]}
@@ -650,6 +675,21 @@ export function Base({ children }: BaseProps) {
                       icon={<MdDashboard />}
                     >
                       {t('navbar.pages')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreatePageTemplate.id,
+                      CanUpdatePageTemplate.id,
+                      CanDeletePageTemplate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/pages/templates"
+                      icon={<MdNoteAdd />}
+                    >
+                      {t('navbar.pageTemplates')}
                     </SidebarNavItem>
                   </PermissionControl>
 
@@ -1093,6 +1133,7 @@ export function Base({ children }: BaseProps) {
                   CanSendMailTemplates.id,
                   CanGetMailLogs.id,
                   CanGetSubscriptionFlows.id,
+                  CanGetNewsletterCampaigns.id,
                 ]}
               >
                 <SidebarNavMenu
@@ -1153,6 +1194,19 @@ export function Base({ children }: BaseProps) {
                       {t('navbar.mailTemplates')}
                     </SidebarNavItem>
                   </PermissionControl>
+
+                  <FeatureControl feature="newsletter-editor">
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetNewsletterCampaigns.id]}
+                    >
+                      <SidebarNavItem
+                        href="/newsletter"
+                        icon={<MdNewspaper />}
+                      >
+                        {t('newsletter.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
 
                   <FeatureControl feature="paper-letters">
                     <PermissionControl
@@ -1413,6 +1467,17 @@ export function Base({ children }: BaseProps) {
                       icon={<MdAutoFixHigh />}
                     >
                       {t('websiteSettings.navbar')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[CanGetSettings.id]}
+                  >
+                    <SidebarNavItem
+                      href="/settings/seo"
+                      icon={<MdTravelExplore />}
+                    >
+                      {t('seoChecklist.navbar')}
                     </SidebarNavItem>
                   </PermissionControl>
                 </SidebarNavMenu>

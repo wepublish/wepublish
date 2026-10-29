@@ -1229,7 +1229,7 @@ function SyncProviderSettingCard({
                     control={control}
                     render={({ field: { value, onChange } }) => (
                       <MergeFieldExpressionEditor
-                        value={value}
+                        value={value ?? ''}
                         onChange={onChange}
                         memberPlanSlugs={memberPlanSlugs}
                         paymentMethodSlugs={paymentMethodSlugs}
@@ -1324,7 +1324,7 @@ function SyncProviderSettingCard({
                     control={control}
                     render={({ field: { value, onChange } }) => (
                       <InterestExpressionEditor
-                        value={value}
+                        value={value ?? ''}
                         onChange={onChange}
                         memberPlanSlugs={memberPlanSlugs}
                       />
@@ -1637,7 +1637,9 @@ function SyncProviderSettingCard({
                       date: new Intl.DateTimeFormat('de-CH', {
                         dateStyle: 'short',
                         timeStyle: 'short',
-                      }).format(new Date(setting.mailchimp_webhookRegisteredAt)),
+                      }).format(
+                        new Date(setting.mailchimp_webhookRegisteredAt)
+                      ),
                     }
                   )
                 : t(

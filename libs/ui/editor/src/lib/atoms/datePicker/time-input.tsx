@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 
 const Field = styled.div`
   .MuiInputBase-root {
@@ -38,10 +38,15 @@ export function maskTime(input: string): string {
 
 export interface CalendarTimeInputProps {
   value?: string;
+  label?: string;
   onChange?: (time: string) => void;
 }
 
-export function CalendarTimeInput({ value, onChange }: CalendarTimeInputProps) {
+export function CalendarTimeInput({
+  value,
+  label,
+  onChange,
+}: CalendarTimeInputProps) {
   const [time, setTime] = useState(value ?? '');
   const [seeded, setSeeded] = useState(value);
 
@@ -66,9 +71,21 @@ export function CalendarTimeInput({ value, onChange }: CalendarTimeInputProps) {
         value={time}
         placeholder="HH:MM"
         onChange={event => handleChange(event.target.value)}
+        onFocus={event => event.target.select()}
+        onMouseUp={event => event.preventDefault()}
         slotProps={{
           htmlInput: {
-            'aria-label': 'time',
+            // A native focus change blurs the date input first, and the
+            // calendar re-renders during that blur and moves focus onto the
+            // selected day. Focusing from inside the handler defers that
+            // re-render until this input already has focus.
+            onMouseDown: (event: MouseEvent<HTMLInputElement>) => {
+              if (document.activeElement !== event.currentTarget) {
+                event.preventDefault();
+                event.currentTarget.focus();
+              }
+            },
+            'aria-label': label ?? 'time',
             inputMode: 'numeric',
             maxLength: COMPLETE,
           },

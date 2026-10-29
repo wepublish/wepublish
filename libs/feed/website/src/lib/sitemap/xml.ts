@@ -3,13 +3,7 @@ const SITEMAP_NS = 'http://www.sitemaps.org/schemas/sitemap/0.9';
 const NEWS_NS = 'http://www.google.com/schemas/sitemap-news/0.9';
 
 export type SitemapChangefreq =
-  | 'always'
-  | 'hourly'
-  | 'daily'
-  | 'weekly'
-  | 'monthly'
-  | 'yearly'
-  | 'never';
+  'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
 
 export type SitemapUrl = {
   loc: string;

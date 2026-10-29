@@ -11,7 +11,7 @@ import {
 } from './pdf-renderer-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { PdfRendererSettingsDataloaderService } from './pdf-renderer-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { clearProviderConfig } from './clear-provider-config';
@@ -24,7 +24,7 @@ export class PdfRendererSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private resets: NamespaceResets,
     private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
@@ -86,7 +86,7 @@ export class PdfRendererSettingsService {
     const returnValue = await this.prisma.settingPdfRenderer.create({
       data: output,
     });
-    await this.kv.resetNamespace(PDF_RENDERER_SETTINGS_NAMESPACE);
+    await this.resets.reset(PDF_RENDERER_SETTINGS_NAMESPACE);
     await this.providerSettingsChanged.notify('Pdf renderer');
     return returnValue;
   }
@@ -130,7 +130,7 @@ export class PdfRendererSettingsService {
       where: { id },
       data,
     });
-    await this.kv.resetNamespace(PDF_RENDERER_SETTINGS_NAMESPACE);
+    await this.resets.reset(PDF_RENDERER_SETTINGS_NAMESPACE);
     await this.providerSettingsChanged.notify('Pdf renderer');
     return returnValue;
   }
@@ -157,7 +157,7 @@ export class PdfRendererSettingsService {
     const returnValue = await this.prisma.settingPdfRenderer.delete({
       where: { id },
     });
-    await this.kv.resetNamespace(PDF_RENDERER_SETTINGS_NAMESPACE);
+    await this.resets.reset(PDF_RENDERER_SETTINGS_NAMESPACE);
     await this.providerSettingsChanged.notify('Pdf renderer');
     return returnValue;
   }

@@ -3,7 +3,7 @@ import {
   PrismaClient,
   SettingLetterProvider,
 } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import bodyParser from 'body-parser';
 import { NextHandleFunction } from 'connect';
@@ -22,14 +22,14 @@ export const LETTER_PROVIDER_SETTINGS_NAMESPACE = 'settings:letterprovider';
 export interface LetterProviderProps {
   id: string;
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
   incomingRequestHandler?: NextHandleFunction;
 }
 
 export abstract class BaseLetterProvider implements LetterProvider {
   readonly id: string;
   readonly prisma: PrismaClient;
-  readonly kv: KvTtlCacheService;
+  readonly kv: NamespacedCache;
   readonly incomingRequestHandler: NextHandleFunction;
 
   protected constructor(props: LetterProviderProps) {
@@ -94,7 +94,7 @@ class LetterProviderConfig {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
     private readonly id: string
   ) {}
 

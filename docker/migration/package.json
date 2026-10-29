@@ -1,0 +1,12 @@
+{
+  "name": "@wepublish/migration",
+  "private": true,
+  "dependencies": {
+    "@node-rs/argon2": "catalog:",
+    "@prisma/adapter-pg": "catalog:",
+    "@prisma/client": "catalog:",
+    "dotenv": "catalog:",
+    "pg": "catalog:",
+    "prisma": "catalog:"
+  }
+}

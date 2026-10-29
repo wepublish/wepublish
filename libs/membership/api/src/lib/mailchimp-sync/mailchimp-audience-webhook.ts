@@ -20,7 +20,7 @@ import {
 } from '@wepublish/mail/api';
 import { SyncProviderSettingsService } from '@wepublish/settings/api';
 import { timingSafeEqual } from 'crypto';
-import { Request, Response } from 'express';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 
 export const AUDIENCE_WEBHOOK_PATH_PREFIX = 'audience-webhooks';
 
@@ -127,8 +127,8 @@ export class MailchimpAudienceWebhookController {
   @All(':configId')
   async receive(
     @Param('configId') configId: string,
-    @Req() req: Request,
-    @Res() res: Response
+    @Req() req: NodeRequest,
+    @Res() res: NodeResponse
   ) {
     // Mailchimp fetches the URL once before it accepts the registration.
     if (req.method !== 'POST') {

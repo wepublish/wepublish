@@ -15,7 +15,7 @@ import {
 } from './sync-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class SyncProviderSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private resets: NamespaceResets
   ) {}
 
   private encryptSecretsIfPresent<
@@ -106,7 +106,7 @@ export class SyncProviderSettingsService {
         mailchimp_webhookRegisteredAt: registeredAt,
       },
     });
-    await this.kv.resetNamespace('settings:syncprovider');
+    await this.resets.reset('settings:syncprovider');
   }
 
   /** The audience webhook delivered a verified call. */
@@ -156,7 +156,7 @@ export class SyncProviderSettingsService {
     const returnValue = await this.prisma.settingSyncProvider.create({
       data: output as any,
     });
-    await this.kv.resetNamespace('settings:syncprovider');
+    await this.resets.reset('settings:syncprovider');
     return returnValue;
   }
 
@@ -186,7 +186,7 @@ export class SyncProviderSettingsService {
       where: { id },
       data: filteredUpdateData,
     });
-    await this.kv.resetNamespace('settings:syncprovider');
+    await this.resets.reset('settings:syncprovider');
     return returnValue;
   }
 
@@ -205,7 +205,7 @@ export class SyncProviderSettingsService {
     const returnValue = await this.prisma.settingSyncProvider.delete({
       where: { id },
     });
-    await this.kv.resetNamespace('settings:syncprovider');
+    await this.resets.reset('settings:syncprovider');
     return returnValue;
   }
 

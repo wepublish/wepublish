@@ -1,5 +1,7 @@
 import type { Mock } from 'vitest';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import {
   CanActivate,
   ExecutionContext,
@@ -135,7 +137,7 @@ describe('Subscription Flow Resolver', () => {
       @Module({
         imports: [
           GraphQLModule.forRoot<ApolloDriverConfig>({
-            driver: ApolloDriver,
+            driver: NodeApolloDriver,
             autoSchemaFile: true,
             path: '/',
           }),
@@ -166,8 +168,8 @@ describe('Subscription Flow Resolver', () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [AppUnauthenticatedModule],
       }).compile();
-      app = module.createNestApplication();
-      await app.init();
+      app = module.createNestApplication(new NodeAdapter());
+      await app.listen(0, '127.0.0.1');
     });
 
     afterAll(async () => {

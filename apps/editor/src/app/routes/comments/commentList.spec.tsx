@@ -15,6 +15,7 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
   useMutation: () => [vi.fn(), { loading: false }],
+  useApolloClient: () => ({ query: vi.fn() }),
 }));
 
 vi.mock('react-i18next', () => ({

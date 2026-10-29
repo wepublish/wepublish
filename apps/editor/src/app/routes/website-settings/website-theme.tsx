@@ -27,7 +27,6 @@ import { useTranslation } from 'react-i18next';
 import { MdFileDownload, MdFileUpload } from 'react-icons/md';
 import { z } from 'zod';
 
-import { WebsiteSettingsHeader } from './website-settings-header';
 import { downloadJson } from './theme/download-json';
 import { PaletteList } from './theme/palette-list';
 import { normalizeTheme, themeSchema } from './theme/schema';
@@ -36,7 +35,8 @@ import {
   mergeFonts,
   parseThemeImport,
 } from './theme/theme-transfer';
-import { TypographyList } from './theme/typography-list';
+import { TypographyTab } from './theme/typography-tab';
+import { WebsiteSettingsHeader } from './website-settings-header';
 
 const WebsiteThemeWrapper = styled.form`
   display: grid;
@@ -47,10 +47,11 @@ const WebsiteThemeWrapper = styled.form`
 type TabPanelProps = PropsWithChildren<{
   activeValue: number;
   value: number;
+  maxWidth?: number | 'none';
 }>;
 
 function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, activeValue, ...other } = props;
+  const { children, value, activeValue, maxWidth = 500, ...other } = props;
 
   return (
     <div
@@ -58,7 +59,7 @@ function CustomTabPanel(props: TabPanelProps) {
       hidden={value !== activeValue}
       id={`simple-tabpanel-${activeValue}`}
       aria-labelledby={`simple-tab-${activeValue}`}
-      css={{ maxWidth: 500 }}
+      css={{ maxWidth }}
       {...other}
     >
       {value === activeValue && children}
@@ -240,8 +241,9 @@ export const WebsiteTheme = memo(() => {
         <CustomTabPanel
           value={activeTab}
           activeValue={1}
+          maxWidth="none"
         >
-          <TypographyList name={'typography'} />
+          <TypographyTab name={'typography'} />
         </CustomTabPanel>
       </FormProvider>
     </WebsiteThemeWrapper>

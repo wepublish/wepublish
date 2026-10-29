@@ -91,13 +91,31 @@ Ship unfinished work on master behind a flag instead of on a deploy branch:
 2. Gate the API with `@Feature('key')` (`@wepublish/features/api`).
 3. Gate the editor with `<FeatureControl feature="key">` around nav items and
    `createCheckedFeatureComponent('key')` around routes (`@wepublish/ui/editor`).
+   Gate a website page with `useWebsiteFeature('key')` (`@wepublish/utils/website`).
+   The `features` query needs a session, so only use it on pages behind the auth
+   guard, and prefetch `FeaturesDocument` in their `getInitialProps`.
 4. Once the CMS reports the key, staff switch it on per medium in One
    (Clients → features); see [external-services.md](../.claude/docs/external-services.md).
 
 The schema and the migrations stay the same for every medium; only access is
 gated. When the feature is ready for every medium, delete the entry and its
-`@Feature` / `FeatureControl` checks in the same change. `FeatureKey` is typed
+`@Feature` / `FeatureControl` / `useWebsiteFeature` checks in the same change. `FeatureKey` is typed
 from the registry, so a forgotten check fails to compile.
+
+### Settings (per instance, edited in the editor)
+
+An option the medium changes itself lives in the `settings` table, not in env.
+Reference: `SUBSCRIPTION_EXTEND_WINDOW_DAYS`. Adding one touches four places:
+
+1. `SettingName` in `libs/settings/api/src/lib/setting.ts` (key = GraphQL enum
+   value, string = row name); read it via `SettingDataloaderService` or
+   `SettingsService.settingByName` with a code default for a missing row.
+2. A migration that inserts the default with `ON CONFLICT ("name") DO NOTHING`,
+   plus the same upsert in `libs/api/prisma/seed.ts`.
+3. Editor: `SETTINGS` (and `NUMBER_FALLBACK_RANGES`) plus a `renderToggle` /
+   `renderNumberInput` in `libs/settings/editor/src/lib/settings-list.tsx`;
+   labels in all three `apps/editor/src/app/locales/*.json`; snapshot update.
+4. A changelog entry (`libs/api/changelogs/README.md`).
 
 ### Models
 
@@ -116,9 +134,10 @@ export class ArticleListArgs {
 ## React
 
 Styling, forms, i18n and Website Builder rules are in
-[code-style.md](../.claude/docs/code-style.md). Apollo hooks are generated —
-import them from `@wepublish/editor/api` or `@wepublish/website/api`, never
-hand-write a query hook; see
+[code-style.md](../.claude/docs/code-style.md). Operations are generated as
+`XDocument`s — import them from `@wepublish/editor/api` or
+`@wepublish/website/api` and pass them to Apollo's `useQuery` / `useMutation`,
+never hand-write a query; see
 [graphql-prisma.md](../.claude/docs/graphql-prisma.md).
 
 Frontend errors surface through the Apollo `onError` link plus per-query error
@@ -126,12 +145,22 @@ state, and report to Sentry alongside the backend.
 
 ### Editor command palette
 
-Cmd/Ctrl+K opens a command palette over the whole editor. Its commands are
+`Mod+K` (Cmd on a Mac, Ctrl elsewhere) opens a command palette over the whole
+editor, unless a focused widget already handled the keystroke
+(`event.defaultPrevented`) — the richtext editor claims it for its link menu.
+The binding is a `useHotkey` from `@tanstack/react-hotkeys` registered with
+`preventDefault: false`: the library prevents the default *before* the
+callback runs, so leaving it on would make every press look already handled.
+The trigger's shortcut label comes from `formatForDisplay` on the same
+`COMMAND_PALETTE_HOTKEY`, and specs that pin a platform must call
+`HotkeyManager.resetInstance()`, because the manager reads the platform once.
+Its commands are
 plain data, split across `navigationCommands.tsx`, `createCommands.tsx` and
 `accountCommands.tsx`, and brought together by
 [apps/editor/src/app/commandPalette/commands.tsx](../apps/editor/src/app/commandPalette/commands.tsx).
 **Add a route to `app.tsx` and you add it here**, with the same
-`qualifyingPermissions` the sidebar uses;
+`qualifyingPermissions` the sidebar uses, and the same `feature` wherever the
+sidebar wraps the entry in `FeatureControl`;
 `commands.spec.ts` runs every command's `perform` against a fake `navigate`
 and fails on any route the router serves that no command reaches (routes
 needing an `:id` are excluded by name).
@@ -152,10 +181,34 @@ reader types.
 The palette itself is generic and lives in
 [libs/ui/editor/src/lib/commandPalette](../libs/ui/editor/src/lib/commandPalette).
 
+### Editor page titles
+
+A new `app.tsx` route also needs an entry in
+[pageTitles.ts](../apps/editor/src/app/pageTitle/pageTitles.ts) (path →
+`pageTitles.*` key, translated in en/de/fr); `DocumentTitle` sets
+`<page> · We.Publish` from it, and `pageTitles.spec.ts` fails on any route
+without one, `:id` routes included. The editor's favicons
+(`apps/editor/public/assets`, path `/assets/`) and wepublish-site's
+(`apps/wepublish-site/public`, path `/`) come from RealFaviconGenerator
+(`npx realfavicon generate`), fed the "we" path of `ui/logo.tsx` clipped to
+the "w" (`<clipPath>` rect `x=-1 y=0 w=43 h=45`, viewBox `-5.25 -3.2 52 52`)
+at `imageScale: 1`; the tab icon sits on a white tile with
+`backgroundRadius: 0.4` so it reads on dark tabs. Crop with the viewBox alone
+and RFG sizes the icon from the whole "we", leaving it off-centre.
+
+### Website shell (header / footer per route)
+
+Every tenant `_app.tsx` renders `NavBar` / `FooterContainer` only when
+`getWebsiteShell(pageProps)` says so. A route hides them by returning
+`shell: {showNavigation?, showFooter?}` in its `getStaticProps` props, so
+don't hide them with CSS. Page routes (`[slug].tsx`, `index.tsx`) build
+`shell` from the page's `hideHeader` / `hideFooter` with `getPageShell`
+([website-shell.ts](../libs/utils/website/src/lib/website-shell.ts)). A new
+tenant has to do the same.
+
 ## File naming
 
 - Nest: `<name>.module.ts`, `<name>.service.ts`, `<name>.resolver.ts`,
   `<name>.model.ts`, `<name>-dataloader.service.ts`
 - Specs: `<name>.spec.ts`, co-located with the source — never `.test.ts`
 - React components: PascalCase function, kebab-case file name
-- Storybook: `<name>.stories.tsx`

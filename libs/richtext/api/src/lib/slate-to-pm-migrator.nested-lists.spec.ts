@@ -1,3 +1,5 @@
+import { type DistributedClaims } from '@wepublish/dragonfly/api';
+import { type NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SlateToPmMigrator } from './slate-to-pm-migrator';
 
 const text = (value: string) => ({ type: 'text', text: value });
@@ -25,10 +27,12 @@ const setup = (raw: (sql: string) => Promise<unknown[]>) => {
     $executeRawUnsafe: vi.fn().mockResolvedValue(1),
   };
   const scheduler = { deleteCronJob: vi.fn() };
-  const kv = {
-    claim: vi.fn().mockResolvedValue(true),
-    resetNamespace: vi.fn().mockResolvedValue(undefined),
-  };
+  const claims = {
+    claim: vi.fn().mockResolvedValue('claimed'),
+  } satisfies Pick<DistributedClaims, 'claim'>;
+  const namespaceResets = {
+    reset: vi.fn().mockResolvedValue(undefined),
+  } satisfies Pick<NamespaceResets, 'reset'>;
   const publicContentCache = {
     invalidate: vi.fn().mockResolvedValue(undefined),
     invalidateComments: vi.fn().mockResolvedValue(undefined),
@@ -37,7 +41,8 @@ const setup = (raw: (sql: string) => Promise<unknown[]>) => {
   const migrator = new SlateToPmMigrator(
     prisma as any,
     scheduler as any,
-    kv as any,
+    claims as unknown as DistributedClaims,
+    namespaceResets as unknown as NamespaceResets,
     publicContentCache as any
   );
 

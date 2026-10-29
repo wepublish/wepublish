@@ -12,13 +12,12 @@ Align all code suggestions, architecture recommendations, and technical solution
 - **Zod** for schema validation
 - **React Icons** for icons
 - **react-i18next** for internationalization
-- **Storybook 10** for component development and documentation
 - **React Router v6** for client-side routing in the editor app
 
 ## Backend
 
 - **NestJS 11** as the server framework
-- **PostgreSQL 17** as the database
+- **PostgreSQL 18** as the database
 - **Prisma 7** as ORM — schema at `libs/api/prisma/schema.prisma`
 - **Apollo Server** for GraphQL API (code-first approach with NestJS decorators)
 - **Pino** for structured logging
@@ -43,5 +42,5 @@ Align all code suggestions, architecture recommendations, and technical solution
 - **Vitest 4** as the test runner for every project (backend included); NestJS
   projects transform with swc via `createVitestConfig({nest: true})`
 - **@nestjs/testing** for backend service/resolver unit tests
-- **Testing Library** for frontend component tests
-- Test commands: `npm run test`, `npm run test-backend`, `npm run test-website`
+- **Testing Library** + `user-event` in happy-dom for frontend component tests
+- Test commands: `pnpm run test`, `pnpm run test-backend`, `pnpm run test-website`

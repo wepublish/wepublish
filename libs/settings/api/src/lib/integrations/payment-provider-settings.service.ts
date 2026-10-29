@@ -19,7 +19,7 @@ import {
   PrimeDataLoader,
 } from '@wepublish/utils/api';
 import { PaymentProviderSettingsDataloaderService } from './payment-provider-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import * as Sentry from '@sentry/nestjs';
@@ -30,7 +30,7 @@ export class PaymentProviderSettingsService {
   private readonly logger = new Logger(PaymentProviderSettingsService.name);
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private resets: NamespaceResets,
     private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
@@ -102,7 +102,7 @@ export class PaymentProviderSettingsService {
       update: { deletedAt: null },
     });
 
-    await this.kv.resetNamespace('settings:paymentprovider');
+    await this.resets.reset('settings:paymentprovider');
     await this.providerSettingsChanged.notify('Payment provider');
 
     return returnValue;
@@ -135,7 +135,7 @@ export class PaymentProviderSettingsService {
       where: { id },
       data: filteredUpdateData,
     });
-    await this.kv.resetNamespace('settings:paymentprovider');
+    await this.resets.reset('settings:paymentprovider');
     await this.providerSettingsChanged.notify('Payment provider');
     return returnValue;
   }
@@ -171,7 +171,7 @@ export class PaymentProviderSettingsService {
       where: { id },
       data: { deletedAt: new Date() },
     });
-    await this.kv.resetNamespace('settings:paymentprovider');
+    await this.resets.reset('settings:paymentprovider');
     await this.providerSettingsChanged.notify('Payment provider');
     return returnValue;
   }

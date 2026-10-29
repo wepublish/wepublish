@@ -85,7 +85,12 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   the available width (`listView/fit-column-widths.ts`) and releases `fixed`
   columns under 600 px — so don't hand-tune column widths to a screen size.
   List pages use that table, not a hand-rolled one, or columns don't fill the
-  width.
+  width. Data lists (users, comments, invoices, audit log… — not config or
+  content lists like tags, blocks or navigations) pass `exportRows` (CSV/Excel
+  download, via `useTableExportQuery` for paginated queries, plus
+  `exportTotalCount` so the user is asked page-or-all and warned above 1000);
+  columns that render JSX need an `exportValue`, a JSX `label` needs a
+  `columnLabel`, and secrets get `exportValue: false`.
 - **Drawers scroll only `DrawerBody`.** `DrawerHeader`/`DrawerBody` are the
   shared styled elements from `@wepublish/ui/editor`; the body is the flex
   child that scrolls. Don't give it a fixed height — a hard-coded
@@ -105,6 +110,9 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   on the right (secondary subtle, Save/Publish primary). Labels collapse to
   icons by container width (`collapse="md" | "sm" | false`). The bar bleeds to
   the content card's edges through `--wep-page-padding-*` set in `base.tsx`.
+  The bar is sticky; `EditorTemplate` publishes its measured height as
+  `--wep-sticky-top`, so anything else sticky (the richtext toolbar) uses
+  `top: var(--wep-sticky-top, 0px)` instead of hardcoding it.
 - **An edit panel's form *is* the record.** `useForm` fetches what it edits
   through `defaultValues` as an async callback (`useApolloClient().query`),
   rather than a `useQuery` whose result is copied into a parallel set of
@@ -147,8 +155,7 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
 - Website components are built through the **Website Builder** — get shared
   components from `useWebsiteBuilder()` rather than importing them directly, so
   tenants can override them.
-- Every new website component needs a Storybook story; stories are how these
-  components are tested. See [testing.md](testing.md).
+- Every new website component needs a spec; see [testing.md](testing.md).
 - Forms use React Hook Form with Zod resolvers. Icons come from React Icons.
   User-facing strings go through react-i18next — never hardcode copy; see
   [Translations](#translations).
@@ -160,6 +167,13 @@ key to all three. `locales.spec.ts` fails when a literal `t('…')` key is
 missing or the three catalogs drift apart. Zod messages live at module level,
 so use `lazyMessage('key')` from `apps/editor/src/app/utility.ts` instead of
 `t()`.
+
+Website copy lives in `libs/website/translations/src/lib/{de,fr}.json`, and
+`catalogs.spec.ts` fails when the two drift apart. A tenant overrides single
+keys in `libs/tenants/<tenant>/src/locales/*.json` through its config's
+`translations.overrides`; the app passes them to `initWePublishTranslator`, and
+specs load them with `applyTenantTranslations(tenant)`. Override a key there rather than editing the shared catalog for one
+site.
 
 - **German:** Swiss Standard German (no `ß`), lowercase `du`. `E-Mail`, never
   `Mail` — compounds too (`E-Mail-Vorlage`, `Test-E-Mail`, `E-Mail-Server`).

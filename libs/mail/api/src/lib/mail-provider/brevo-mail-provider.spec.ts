@@ -1,5 +1,8 @@
 import { EmailQualityEventType, MailLogState } from '@prisma/client';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { BrevoMailProvider } from './brevo-mail-provider';
 import {
   MailProviderError,
@@ -21,13 +24,21 @@ const fetchMock = vi.fn(async (url: string, init: RequestInit) => {
   });
 });
 
+const harnesses: NamespacedCacheTesting[] = [];
+
+afterEach(async () => {
+  await Promise.all(harnesses.splice(0).map(testing => testing.close()));
+});
+
 const makeProvider = async (secret: string | null = 'hook-key') => {
-  const kv = createKvMock();
+  const testing = await createNamespacedCacheTesting();
+  const kv = testing.cache;
+  harnesses.push(testing);
 
   await kv.setNs(
     'settings:mailprovider',
     'brevo',
-    JSON.stringify({
+    {
       id: 'brevo',
       type: 'brevo',
       name: 'Brevo',
@@ -35,7 +46,8 @@ const makeProvider = async (secret: string | null = 'hook-key') => {
       replyToAddress: 'reply@wepublish.ch',
       apiKey: 'xkeysib-secret',
       webhookEndpointSecret: secret,
-    })
+    },
+    60
   );
 
   return new BrevoMailProvider({ id: 'brevo', kv, prisma: {} as never });
@@ -50,7 +62,10 @@ const sendProps = {
   messageHtml: '<p>Hello</p>',
 };
 
-const webhook = (event: Record<string, unknown>, key: string | null = 'hook-key') => ({
+const webhook = (
+  event: Record<string, unknown>,
+  key: string | null = 'hook-key'
+) => ({
   req: {
     method: 'POST',
     query: key === null ? {} : { key },
@@ -108,7 +123,9 @@ describe('BrevoMailProvider', () => {
         body: { code: 'invalid_parameter', message: 'sender email not valid' },
       });
 
-      const error = await (await makeProvider())
+      const error = await (
+        await makeProvider()
+      )
         .sendMail(sendProps)
         .catch(e => e);
 

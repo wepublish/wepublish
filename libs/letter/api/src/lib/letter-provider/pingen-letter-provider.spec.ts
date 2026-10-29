@@ -1,6 +1,6 @@
 import type { Mock } from 'vitest';
 import { PrismaClient, SettingLetterProvider } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { createHmac } from 'crypto';
 import express from 'express';
 import {
@@ -87,7 +87,7 @@ function createProvider() {
   const kv = {
     getOrLoadNs: vi.fn(),
     delNs: vi.fn(),
-  } as unknown as KvTtlCacheService;
+  } as unknown as NamespacedCache;
 
   const provider = new PingenLetterProvider({
     id: 'pingen',
