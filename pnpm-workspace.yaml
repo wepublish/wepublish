@@ -92,6 +92,7 @@ catalog:
   passport-http-bearer: '^1.0.1'
   pdf-lib: '^1.17.1'
   pg: '^8.23.1'
+  pingen2-sdk-js: '^0.3.0'
   pino: '^6.14.0'
   prisma: 7.10.1
   prosemirror-model: '^1.25.12'
