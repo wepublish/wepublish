@@ -1152,7 +1152,7 @@ model ImpersonationGrant {
 }
 
 model UserLoginCode {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -1753,7 +1753,7 @@ model MailTemplate {
 // page of the pdf. Independent of the template, which only carries the words,
 // so the same words can still go out as a mail without any of this.
 model LetterLayout {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -2744,7 +2744,7 @@ enum EmailQualityEventSource {
 /// confirmed email changes are not stored here: the evaluator reads them from
 /// User.lastLogin and User.emailVerifiedAt.
 model EmailQualityEvent {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   occurredAt DateTime @db.Timestamptz(3)
 
@@ -2820,7 +2820,7 @@ model UserDeliveryPreference {
 /// per-user preference only remembers its last change, not which filter
 /// produced it.
 model DeliveryModeBulkChange {
-  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  id        String   @id @default(dbgenerated("uuidv7()"))
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   channel MailChannel
@@ -2845,7 +2845,7 @@ enum DeliverySuggestionKind {
 
 /// Open suggestions to change a user's delivery mode, rebuilt nightly as a set.
 model DeliverySuggestion {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
