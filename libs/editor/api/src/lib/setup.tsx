@@ -63,7 +63,7 @@ let settings: ClientSettings;
 export function getSettings(): ClientSettings {
   if (!settings) {
     const defaultSettings = {
-      apiURL: 'http://localhost:4000',
+      apiURL: process.env.API_URL || 'http://localhost:4000',
       wepOneURL: 'https://one-admin.wepublish.cloud',
       medium: '',
       imgMinSizeToCompress: 10,
@@ -88,8 +88,8 @@ let client: ApolloClient;
 const isFile = (value: unknown): boolean =>
   Boolean(
     (typeof File !== 'undefined' && value instanceof File) ||
-      (typeof Blob !== 'undefined' && value instanceof Blob) ||
-      (value && typeof value === 'object' && Object.values(value).some(isFile))
+    (typeof Blob !== 'undefined' && value instanceof Blob) ||
+    (value && typeof value === 'object' && Object.values(value).some(isFile))
   );
 
 export function getApiClientV2() {

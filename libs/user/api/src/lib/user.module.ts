@@ -5,7 +5,7 @@ import { MailchimpContactModule } from '@wepublish/mail/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { SessionCacheModule } from '@wepublish/authentication/api';
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { UserDataloaderService } from './user-dataloader.service';
 import {
   HasOptionalUserLcResolver,
@@ -34,7 +34,7 @@ import { UserSubscriptionOverviewDataloader } from './user-subscription-overview
 
 @Module({
   imports: [
-    GraphqlResponseCacheModule,
+    PublicContentInvalidatorModule,
     PrismaModule,
     ImageModule,
     HttpModule,

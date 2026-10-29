@@ -1,4 +1,5 @@
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import { DistributedCounters } from '@wepublish/dragonfly/api';
+import { FakeDragonfly } from '@wepublish/dragonfly/api/testing';
 import { LoginCodeRateLimiter } from './login-code-rate-limiter';
 import {
   ChallengeRequiredError,
@@ -6,7 +7,8 @@ import {
 } from './login-code.errors';
 
 describe('LoginCodeRateLimiter', () => {
-  const limiter = () => new LoginCodeRateLimiter(createKvMock());
+  const limiter = (dragonfly = new FakeDragonfly()) =>
+    new LoginCodeRateLimiter(new DistributedCounters(dragonfly));
 
   it('locks a client after ten failures', async () => {
     const subject = limiter();
@@ -47,5 +49,20 @@ describe('LoginCodeRateLimiter', () => {
       ChallengeRequiredError
     );
     await expect(subject.assertAllowed('fresh', true)).resolves.toBeUndefined();
+  });
+
+  it('locks a client whose failures are spread over replicas', async () => {
+    const dragonfly = new FakeDragonfly();
+    const a = limiter(dragonfly);
+    const b = limiter(dragonfly);
+
+    for (let i = 0; i < 9; i++) {
+      await a.recordFailure('fp');
+    }
+
+    await b.recordFailure('fp');
+    await expect(b.assertAllowed('fp', false)).rejects.toBeInstanceOf(
+      TooManyAttemptsError
+    );
   });
 });

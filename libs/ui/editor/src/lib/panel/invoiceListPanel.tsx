@@ -10,12 +10,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Tooltip,
 } from '@mui/material';
 import {
   InvoiceFragment,
   InvoicePaymentMailDocument,
   MarkInvoiceAsPaidDocument,
+  PaymentState,
 } from '@wepublish/editor/api';
 import {
   CanCreateInvoice,
@@ -23,43 +23,17 @@ import {
   CanGetInvoice,
   CanGetInvoices,
 } from '@wepublish/permissions';
+import { InvoiceState, InvoiceStatusIcon } from '@wepublish/ui';
 import { useMemo, useState } from 'react';
+import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { LiaFileInvoiceSolid } from 'react-icons/lia';
-import { MdAccessTime, MdClose, MdContentCopy, MdDone } from 'react-icons/md';
+import { MdContentCopy } from 'react-icons/md';
 
 import { createCheckedPermissionComponent, SingleLineTooltip } from '../atoms';
 import { useActionMailQuestion } from '../hooks';
 import { DataTable } from '../listView/data-table';
 import { ListColumn } from '../listView/list-columns';
 import { enqueueSnackbar } from '../snackbar';
-
-const InvoiceIconWrapper = styled('span')`
-  position: relative;
-  display: inline-flex;
-  vertical-align: middle;
-`;
-
-const InvoiceIcon = styled(LiaFileInvoiceSolid)`
-  color: grey;
-  font-size: 26px;
-`;
-
-const StatusPill = styled('span')<{ pillColor: string }>`
-  position: absolute;
-  right: -5px;
-  top: 55%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: ${({ pillColor }) => pillColor};
-  color: white;
-  font-size: 10px;
-  box-shadow: 0 0 0 2px ${({ theme }) => theme.vars.palette.background.paper};
-`;
 
 const IdButton = styled('button')`
   display: inline-flex;
@@ -96,6 +70,250 @@ export const sortByBillingDate = <
 const findGoodieItem = (invoice: InvoiceFragment) =>
   invoice.items?.find(({ goodieId }) => goodieId);
 
+const optionalDate = (date?: string | Date | null) =>
+  date ? formatDate(date) : '—';
+
+type InvoicePayment = InvoiceFragment['payments'][number];
+
+/** The payment that settled the invoice, else the latest attempt. */
+const settlingPayment = (
+  invoice: InvoiceFragment
+): InvoicePayment | undefined =>
+  invoice.payments.find(payment => payment.state === PaymentState.Paid) ??
+  invoice.payments.at(-1);
+
+const manuallyPaidBy = (invoice: InvoiceFragment) => {
+  const user = invoice.manuallySetAsPaidByUser;
+
+  return user ?
+      [user.firstName, user.name].filter(Boolean).join(' ')
+    : undefined;
+};
+
+const positions = (invoice: InvoiceFragment) =>
+  invoice.items.map(item => `${item.quantity} × ${item.name}`).join(', ');
+
+export type InvoiceColumnsOptions = {
+  t: TFunction;
+  disabled?: boolean;
+  onPay(invoice: InvoiceFragment): void;
+};
+
+/**
+ * The columns of a subscription's invoice table. Beyond the basics, the
+ * column menu offers more details, hidden until switched on.
+ */
+export const invoiceColumns = ({
+  t,
+  disabled,
+  onPay,
+}: InvoiceColumnsOptions): ListColumn<InvoiceFragment>[] => {
+  const paymentStateLabel = (invoice: InvoiceFragment) => {
+    const payment = invoice.payments.at(-1);
+
+    return payment ? t(`invoice.paymentState.${payment.state}`) : undefined;
+  };
+
+  const invoiceStatus = (
+    invoice: InvoiceFragment
+  ): { status: InvoiceState; title: string } =>
+    invoice.paidAt ?
+      {
+        status: 'paid',
+        title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
+      }
+    : invoice.canceledAt ?
+      {
+        status: 'canceled',
+        title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
+      }
+    : { status: 'unpaid', title: t('invoice.unpaid') };
+
+  return [
+    {
+      id: 'id',
+      label: t('invoice.invoiceNo'),
+      width: 110,
+      render: invoice => (
+        <SingleLineTooltip
+          title={invoice.id}
+          placement="top"
+        >
+          <IdButton
+            type="button"
+            onClick={() => {
+              navigator.clipboard.writeText(invoice.id);
+              enqueueSnackbar(t('invoice.table.idCopied'), {
+                variant: 'success',
+                autoHideDuration: 2000,
+              });
+            }}
+          >
+            {invoice.id.slice(0, 4)}…
+            <MdContentCopy />
+          </IdButton>
+        </SingleLineTooltip>
+      ),
+      exportValue: invoice => invoice.id,
+    },
+    {
+      id: 'date',
+      label: t('invoice.table.date'),
+      width: 100,
+      alwaysVisible: true,
+      sortable: true,
+      dataKey: 'dueAt',
+      sortKey: 'dueAt',
+      render: invoice => formatDate(billingDate(invoice)),
+      exportValue: invoice => new Date(billingDate(invoice)),
+    },
+    {
+      id: 'description',
+      label: t('invoice.table.description'),
+      width: 260,
+      minWidth: 160,
+      resizable: false,
+      alwaysVisible: true,
+      render: invoice => invoice.description,
+    },
+    {
+      id: 'total',
+      label: t('invoice.total'),
+      width: 110,
+      alwaysVisible: true,
+      render: invoice =>
+        `${(invoice.total / 100).toFixed(2)} ${invoice.currency}`,
+    },
+    {
+      id: 'goodie',
+      label: t('invoice.table.goodie'),
+      width: 140,
+      render: invoice => {
+        const goodieItem = findGoodieItem(invoice);
+
+        return goodieItem?.goodie?.name ?? goodieItem?.name ?? '—';
+      },
+    },
+    {
+      id: 'status',
+      label: t('invoice.table.status'),
+      width: 80,
+      resizable: false,
+      alwaysVisible: true,
+      render: invoice => {
+        const status = invoiceStatus(invoice);
+
+        return (
+          <InvoiceStatusIcon
+            status={status.status}
+            title={status.title}
+          />
+        );
+      },
+      exportValue: invoice => invoiceStatus(invoice).title,
+    },
+    {
+      id: 'paidAt',
+      label: t('invoice.table.paidAt'),
+      width: 100,
+      render: invoice => optionalDate(invoice.paidAt),
+      exportValue: invoice =>
+        invoice.paidAt ? new Date(invoice.paidAt) : null,
+    },
+    {
+      id: 'paidVia',
+      label: t('invoice.table.paidVia'),
+      width: 120,
+      defaultHidden: true,
+      render: invoice => settlingPayment(invoice)?.paymentMethod.name ?? '—',
+      exportValue: invoice =>
+        settlingPayment(invoice)?.paymentMethod.name ?? null,
+    },
+    {
+      id: 'paymentState',
+      label: t('invoice.table.paymentState'),
+      width: 120,
+      defaultHidden: true,
+      render: invoice => paymentStateLabel(invoice) ?? '—',
+      exportValue: invoice => paymentStateLabel(invoice) ?? null,
+    },
+    {
+      id: 'manuallyPaidBy',
+      label: t('invoice.table.manuallyPaidBy'),
+      width: 140,
+      defaultHidden: true,
+      render: invoice => manuallyPaidBy(invoice) ?? '—',
+      exportValue: invoice => manuallyPaidBy(invoice) ?? null,
+    },
+    {
+      id: 'canceledAt',
+      label: t('invoice.table.canceledAt'),
+      width: 100,
+      defaultHidden: true,
+      render: invoice => optionalDate(invoice.canceledAt),
+      exportValue: invoice =>
+        invoice.canceledAt ? new Date(invoice.canceledAt) : null,
+    },
+    {
+      id: 'scheduledDeactivationAt',
+      label: t('invoice.table.scheduledDeactivationAt'),
+      width: 120,
+      defaultHidden: true,
+      render: invoice => optionalDate(invoice.scheduledDeactivationAt),
+      exportValue: invoice => new Date(invoice.scheduledDeactivationAt),
+    },
+    {
+      id: 'createdAt',
+      label: t('invoice.table.createdAt'),
+      width: 100,
+      defaultHidden: true,
+      render: invoice => formatDate(invoice.createdAt),
+      exportValue: invoice => new Date(invoice.createdAt),
+    },
+    {
+      id: 'modifiedAt',
+      label: t('invoice.table.modifiedAt'),
+      width: 100,
+      defaultHidden: true,
+      render: invoice => formatDate(invoice.modifiedAt),
+      exportValue: invoice => new Date(invoice.modifiedAt),
+    },
+    {
+      id: 'mail',
+      label: t('invoice.table.mail'),
+      width: 200,
+      defaultHidden: true,
+      render: invoice => invoice.mail,
+    },
+    {
+      id: 'positions',
+      label: t('invoice.table.positions'),
+      width: 220,
+      defaultHidden: true,
+      render: invoice => positions(invoice),
+      exportValue: invoice => positions(invoice),
+    },
+    {
+      id: 'action',
+      label: t('action'),
+      width: 160,
+      align: 'center',
+      fixed: true,
+      render: (invoice: InvoiceFragment) =>
+        !invoice.paidAt && !invoice.canceledAt ?
+          <Button
+            size="small"
+            variant="contained"
+            disabled={disabled}
+            onClick={() => onPay(invoice)}
+          >
+            {t('invoice.payManually')}
+          </Button>
+        : null,
+    },
+  ];
+};
+
 export interface InvoiceListPanelProps {
   subscriptionId?: string;
   invoices?: InvoiceFragment[];
@@ -120,129 +338,8 @@ function InvoiceListPanel({
   );
   const client = useApolloClient();
   const { askMail, actionMailDialog } = useActionMailQuestion();
-  const columns = useMemo<ListColumn<InvoiceFragment>[]>(
-    () => [
-      {
-        id: 'id',
-        label: t('invoice.invoiceNo'),
-        width: 110,
-        render: invoice => (
-          <SingleLineTooltip
-            title={invoice.id}
-            placement="top"
-          >
-            <IdButton
-              type="button"
-              onClick={() => {
-                navigator.clipboard.writeText(invoice.id);
-                enqueueSnackbar(t('invoice.table.idCopied'), {
-                  variant: 'success',
-                  autoHideDuration: 2000,
-                });
-              }}
-            >
-              {invoice.id.slice(0, 4)}…
-              <MdContentCopy />
-            </IdButton>
-          </SingleLineTooltip>
-        ),
-      },
-      {
-        id: 'date',
-        label: t('invoice.table.date'),
-        width: 100,
-        alwaysVisible: true,
-        sortable: true,
-        dataKey: 'dueAt',
-        sortKey: 'dueAt',
-        render: invoice => formatDate(billingDate(invoice)),
-      },
-      {
-        id: 'description',
-        label: t('invoice.table.description'),
-        width: 260,
-        minWidth: 160,
-        resizable: false,
-        alwaysVisible: true,
-        render: invoice => invoice.description,
-      },
-      {
-        id: 'total',
-        label: t('invoice.total'),
-        width: 110,
-        alwaysVisible: true,
-        render: invoice =>
-          `${(invoice.total / 100).toFixed(2)} ${invoice.currency}`,
-      },
-      {
-        id: 'goodie',
-        label: t('invoice.table.goodie'),
-        width: 140,
-        render: invoice => {
-          const goodieItem = findGoodieItem(invoice);
-
-          return goodieItem?.goodie?.name ?? goodieItem?.name ?? '—';
-        },
-      },
-      {
-        id: 'status',
-        label: t('invoice.table.status'),
-        width: 80,
-        resizable: false,
-        alwaysVisible: true,
-        render: invoice => {
-          const status =
-            invoice.paidAt ?
-              {
-                title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
-                color: 'success.main',
-                icon: <MdDone />,
-              }
-            : invoice.canceledAt ?
-              {
-                title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
-                color: 'error.main',
-                icon: <MdClose />,
-              }
-            : {
-                title: t('invoice.unpaid'),
-                color: 'warning.main',
-                icon: <MdAccessTime />,
-              };
-
-          return (
-            <Tooltip
-              title={status.title}
-              placement="top"
-            >
-              <InvoiceIconWrapper>
-                <InvoiceIcon />
-
-                <StatusPill pillColor={status.color}>{status.icon}</StatusPill>
-              </InvoiceIconWrapper>
-            </Tooltip>
-          );
-        },
-      },
-      {
-        id: 'action',
-        label: t('action'),
-        width: 160,
-        align: 'center',
-        fixed: true,
-        render: (invoice: InvoiceFragment) =>
-          !invoice.paidAt && !invoice.canceledAt ?
-            <Button
-              size="small"
-              variant="contained"
-              disabled={disabled}
-              onClick={() => setInvoiceToPay(invoice)}
-            >
-              {t('invoice.payManually')}
-            </Button>
-          : null,
-      },
-    ],
+  const columns = useMemo(
+    () => invoiceColumns({ t, disabled, onPay: setInvoiceToPay }),
     [disabled, t]
   );
 
@@ -336,6 +433,7 @@ function InvoiceListPanel({
           onSort={(_column, order) => setSortType(order)}
           getRowId={row => row.id}
           storageKey="invoices"
+          exportRows={() => sortedInvoices}
           columns={columns}
         />
       </CardContent>

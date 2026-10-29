@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import {
   createContext,
   forwardRef,
@@ -10,7 +10,9 @@ import {
   useRef,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 import ReactDatePicker from 'react-datepicker';
+import { useTranslation } from 'react-i18next';
 import { MdClear, MdEvent } from 'react-icons/md';
 
 import { MaterialCalendarStyles } from './material-calendar';
@@ -26,9 +28,58 @@ const FullWidthWrapper = styled.div`
   }
 `;
 
+const InlineWrapper = styled.div`
+  display: contents;
+`;
+
+// The calendar has to live inside the surrounding dialog or drawer: MUI's
+// focus trap pulls focus out of anything rendered outside of it, and a
+// calendar portaled to the body ends up behind dialogs opened later on.
+const MODAL_ROOT = '.MuiDialog-container, .MuiDrawer-paper';
+
+const PopperAnchorContext = createContext<HTMLElement | null>(null);
+
+function PopperContainer({ children }: { children?: ReactNode }) {
+  const anchor = useContext(PopperAnchorContext);
+  const host = anchor?.closest<HTMLElement>(MODAL_ROOT) ?? document.body;
+
+  return createPortal(children, host);
+}
+
 const CloseCalendarContext = createContext<() => void>(() => undefined);
 
 export const useCloseCalendar = () => useContext(CloseCalendarContext);
+
+export const DatePickerFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing(1)};
+  padding-top: ${({ theme }) => theme.spacing(1)};
+  border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
+`;
+
+export const DatePickerShortcuts = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+`;
+
+export function DatePickerDone() {
+  const { t } = useTranslation();
+  const close = useCloseCalendar();
+
+  return (
+    <Button
+      size="small"
+      variant="contained"
+      onMouseDown={event => event.preventDefault()}
+      onClick={close}
+    >
+      {t('dateTimePicker.done')}
+    </Button>
+  );
+}
 
 export const DATE_FORMAT = 'dd.MM.yyyy';
 export const DATE_TIME_FORMAT = 'dd.MM.yyyy HH:mm';
@@ -121,13 +172,26 @@ export interface DatePickerProps extends FieldProps {
   children?: ReactNode;
 }
 
-const Wrapper = ({
+function Wrapper({
   fullWidth,
   children,
 }: {
   fullWidth?: boolean;
   children: ReactNode;
-}) => (fullWidth ? <FullWidthWrapper>{children}</FullWidthWrapper> : children);
+}) {
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const Element = fullWidth ? FullWidthWrapper : InlineWrapper;
+
+  return (
+    <Element ref={setAnchor}>
+      <PopperAnchorContext.Provider value={anchor}>
+        {children}
+      </PopperAnchorContext.Provider>
+    </Element>
+  );
+}
+
+const popperProps = { strategy: 'fixed' } as const;
 
 export function DatePicker({
   value,
@@ -164,7 +228,8 @@ export function DatePicker({
         ariaLabelledBy={field['aria-labelledby']}
         showPopperArrow={false}
         popperPlacement="bottom-start"
-        portalId="wep-datepicker-portal"
+        popperContainer={PopperContainer}
+        popperProps={popperProps}
         customInput={
           <PickerInput
             {...field}
@@ -230,7 +295,8 @@ export function DateRangePicker({
         ariaLabelledBy={field['aria-labelledby']}
         showPopperArrow={false}
         popperPlacement="bottom-start"
-        portalId="wep-datepicker-portal"
+        popperContainer={PopperContainer}
+        popperProps={popperProps}
         monthsShown={2}
         onCalendarClose={() => setPendingStart(null)}
         customInput={

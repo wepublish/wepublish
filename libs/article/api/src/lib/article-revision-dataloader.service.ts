@@ -1,8 +1,8 @@
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CONTENT_CACHE_TTL_SECONDS,
-  KvTtlCacheService,
   contentCacheNamespace,
-} from '@wepublish/kv-ttl-cache/api';
+} from '@wepublish/public-content-cache/api';
 import { Injectable, Logger, Scope } from '@nestjs/common';
 import { ArticleRevision, PrismaClient } from '@prisma/client';
 import { Primeable } from '@wepublish/utils/api';
@@ -17,9 +17,7 @@ type RevisionMap = Partial<{
 @Injectable({
   scope: Scope.REQUEST,
 })
-export class ArticleRevisionDataloaderService
-  implements Primeable<RevisionMap>
-{
+export class ArticleRevisionDataloaderService implements Primeable<RevisionMap> {
   private logger = new Logger('ArticleRevisionDataloaderService');
 
   private dataloader = new DataLoader<string, RevisionMap>(
@@ -36,7 +34,7 @@ export class ArticleRevisionDataloaderService
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache
   ) {}
 
   private async loadRevisions(articleIds: string[]): Promise<RevisionMap[]> {

@@ -1,5 +1,8 @@
 import type { PrismaClient } from '@prisma/client';
-import type { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import type { Feature } from '@wepublish/features';
 import type { Mock } from 'vitest';
 import {
@@ -39,17 +42,18 @@ describe('FeaturesService', () => {
     mediumFeature: { findMany: Mock; upsert: Mock; updateMany: Mock };
     $transaction: Mock;
   };
-  let kv: { getOrLoadNs: Mock; resetNamespace: Mock };
+  let kv: NamespacedCacheTesting;
 
   const makeService = (envKeys: string[] = []) =>
     new FeaturesService(
       prisma as unknown as PrismaClient,
-      kv as unknown as KvTtlCacheService,
+      kv.cache,
+      kv.resets,
       registry,
       envKeys
     );
 
-  beforeEach(() => {
+  beforeEach(async () => {
     prisma = {
       mediumFeature: {
         findMany: vi.fn().mockResolvedValue([]),
@@ -58,11 +62,10 @@ describe('FeaturesService', () => {
       },
       $transaction: vi.fn().mockResolvedValue([]),
     };
-    kv = {
-      getOrLoadNs: vi.fn((_ns, _key, loader: () => unknown) => loader()),
-      resetNamespace: vi.fn().mockResolvedValue(undefined),
-    };
+    kv = await createNamespacedCacheTesting();
   });
+
+  afterEach(() => kv.close());
 
   describe('enabledKeys', () => {
     it('returns the features One switched on', async () => {
@@ -101,9 +104,11 @@ describe('FeaturesService', () => {
     });
 
     it('is cached in its own namespace', async () => {
+      const getOrLoadNs = vi.spyOn(kv.cache, 'getOrLoadNs');
+
       await makeService().enabledKeys();
 
-      expect(kv.getOrLoadNs).toHaveBeenCalledWith(
+      expect(getOrLoadNs).toHaveBeenCalledWith(
         FEATURES_CACHE_NAMESPACE,
         'enabled',
         expect.any(Function),
@@ -175,11 +180,21 @@ describe('FeaturesService', () => {
     });
 
     it('resets the cache so the change applies at once', async () => {
+      const reset = vi.spyOn(kv.resets, 'reset');
+
       await makeService().apply({ newsletter: true });
 
-      expect(kv.resetNamespace).toHaveBeenCalledWith(FEATURES_CACHE_NAMESPACE, {
-        pages: false,
-      });
+      expect(reset).toHaveBeenCalledWith(FEATURES_CACHE_NAMESPACE);
+    });
+
+    it('serves the new state right after it was applied', async () => {
+      const service = makeService();
+      await service.enabledKeys();
+      prisma.mediumFeature.findMany.mockResolvedValue([{ key: 'newsletter' }]);
+
+      await service.apply({ newsletter: true });
+
+      await expect(service.enabledKeys()).resolves.toEqual(['newsletter']);
     });
   });
 });

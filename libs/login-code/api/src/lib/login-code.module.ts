@@ -1,5 +1,4 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
 import {
@@ -13,7 +12,7 @@ import { LoginCodeSecondFactorService } from './login-code-second-factor.service
 import { LoginCodeService } from './login-code.service';
 
 @Module({
-  imports: [PrismaModule, KvTtlCacheModule],
+  imports: [PrismaModule],
   exports: [
     LoginCodeService,
     LoginCodeRateLimiter,

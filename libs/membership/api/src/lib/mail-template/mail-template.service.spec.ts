@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { MailContext } from '@wepublish/mail/api';
 import { PrismaClient } from '@prisma/client';
 import { MailTemplateService } from './mail-template.service';
+import { version } from 'uuid';
 
 const makeService = (prisma: any, mailContext: any = {}) =>
   new MailTemplateService(
@@ -182,6 +183,28 @@ describe('MailTemplateService', () => {
 
       expect(result.subject).toBe('Hi Jane — Jahres-Abo');
       expect(result.html).toContain('CHF 10.00');
+    });
+  });
+
+  describe('sendTest', () => {
+    it('logs the test mail under a uuidv7', async () => {
+      const mailContext = {
+        jwtGenerator: vi.fn(async () => 'jwt'),
+        sendComposedContent: vi.fn(async () => undefined),
+      };
+
+      await makeService({}, mailContext).sendTest({
+        contextId: 'renewal',
+        subscriptionId: null,
+        currentUserId: 'u1',
+        recipient: 'test@wepublish.ch',
+        subject: 'Hi',
+        html: '<p>Hi</p>',
+      });
+
+      const [{ mailLogID }] = mailContext.sendComposedContent.mock
+        .calls[0] as any;
+      expect(version(mailLogID)).toBe(7);
     });
   });
 

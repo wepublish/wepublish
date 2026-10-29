@@ -3,8 +3,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
-import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
+import { PublicContentCacheModule } from '@wepublish/public-content-cache/api';
 import {
   HOT_AND_TRENDING_DATA_SOURCE,
   HotAndTrendingResolver,
@@ -26,7 +29,7 @@ describe('HotAndTrendingResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -47,11 +50,11 @@ describe('HotAndTrendingResolver', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 
@@ -77,9 +80,10 @@ describe('HotAndTrendingResolver anonymous answers', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GraphqlResponseCacheModule,
+        NamespacedCacheTestingModule.forRoot(),
+        PublicContentCacheModule,
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -94,8 +98,8 @@ describe('HotAndTrendingResolver anonymous answers', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
   afterEach(async () => {

@@ -13,10 +13,9 @@ import {
 } from '@wepublish/payment/api';
 import bodyParser from 'body-parser';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
-} from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
+
+const SEED_TTL_SECONDS = 60 * 60;
 
 export function registerPrismaModule(
   prismaClient: PrismaClient
@@ -26,18 +25,23 @@ export function registerPrismaModule(
 
 export function registerMailsModule(): DynamicModule {
   return MailsModule.registerAsync({
-    imports: [PrismaModule, KvTtlCacheModule],
-    inject: [PrismaClient, KvTtlCacheService],
-    useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
-      await kv.setNs('settings:mailprovider', 'fakeMail', {
-        id: 'slack',
-        type: 'slack',
-        name: 'Fake Mail',
-        fromAddress: 'fakeMail@wepublish.ch',
-        replyTpAddress: 'dev@wepublish.ch',
-        webhookEndpointSecret: 'secret',
-        apiKey: 'key',
-      });
+    imports: [PrismaModule],
+    inject: [PrismaClient, NamespacedCache],
+    useFactory: async (prisma: PrismaClient, kv: NamespacedCache) => {
+      await kv.setNs(
+        'settings:mailprovider',
+        'fakeMail',
+        {
+          id: 'slack',
+          type: 'slack',
+          name: 'Fake Mail',
+          fromAddress: 'fakeMail@wepublish.ch',
+          replyTpAddress: 'dev@wepublish.ch',
+          webhookEndpointSecret: 'secret',
+          apiKey: 'key',
+        },
+        SEED_TTL_SECONDS
+      );
 
       return {
         mailProvider: new FakeMailProvider({
@@ -53,11 +57,12 @@ export function registerMailsModule(): DynamicModule {
 
 export function registerPaymentMethodModule(): DynamicModule {
   return PaymentMethodModule.registerAsync({
-    imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
+    imports: [ConfigModule, PrismaModule],
     useFactory: async (
       config: ConfigService,
       prisma: PrismaClient,
-      kv: KvTtlCacheService
+      kv: NamespacedCache,
+      resets: NamespaceResets
     ) => {
       const paymentProviders: PaymentProvider[] = [];
       paymentProviders.push(
@@ -68,6 +73,7 @@ export function registerPaymentMethodModule(): DynamicModule {
           }),
           prisma,
           kv,
+          resets,
         }),
         new StripePaymentProvider({
           id: 'stripe',
@@ -76,27 +82,38 @@ export function registerPaymentMethodModule(): DynamicModule {
           }),
           prisma,
           kv,
+          resets,
         })
       );
 
-      await kv.setNs('settings:paymentprovider', 'stripe_checkout', {
-        id: 'stripe_checkout',
-        type: 'stripe-checkout',
-        name: 'Stripe Checkout',
-        offSessionPayments: false,
-        apiKey: '123',
-        webhookEndpointSecret: '123',
-        stripe_methods: ['CARD'],
-      });
-      await kv.setNs('settings:paymentprovider', 'stripe', {
-        id: 'stripe',
-        type: 'Stripe',
-        name: 'Stripe',
-        offSessionPayments: true,
-        apiKey: '123',
-        webhookEndpointSecret: '123',
-        stripe_methods: ['CARD'],
-      });
+      await kv.setNs(
+        'settings:paymentprovider',
+        'stripe_checkout',
+        {
+          id: 'stripe_checkout',
+          type: 'stripe-checkout',
+          name: 'Stripe Checkout',
+          offSessionPayments: false,
+          apiKey: '123',
+          webhookEndpointSecret: '123',
+          stripe_methods: ['CARD'],
+        },
+        SEED_TTL_SECONDS
+      );
+      await kv.setNs(
+        'settings:paymentprovider',
+        'stripe',
+        {
+          id: 'stripe',
+          type: 'Stripe',
+          name: 'Stripe',
+          offSessionPayments: true,
+          apiKey: '123',
+          webhookEndpointSecret: '123',
+          stripe_methods: ['CARD'],
+        },
+        SEED_TTL_SECONDS
+      );
 
       paymentProviders.push(
         new PayrexxPaymentProvider({
@@ -104,6 +121,7 @@ export function registerPaymentMethodModule(): DynamicModule {
           incomingRequestHandler: bodyParser.json(),
           prisma,
           kv,
+          resets,
         })
       );
       paymentProviders.push(
@@ -111,52 +129,69 @@ export function registerPaymentMethodModule(): DynamicModule {
           id: 'payrexx-subscription',
           prisma,
           kv,
+          resets,
         })
       );
 
-      await kv.setNs('settings:paymentprovider', 'payrexx', {
-        id: 'payrexx',
-        type: 'payrexx',
-        name: 'Payrexx',
-        offSessionPayments: false,
-        apiKey: '1234',
-        webhookEndpointSecret: 'secret',
-        payrexx_instancename: 'test',
-        payrexx_psp: ['PAYPAL', 'TWINT', 'STRIPE'],
-        payrexx_pm: ['PAYPAL', 'TWINT', 'APPLE_PAY'],
-        payrexx_vatrate: 7.7,
-      });
+      await kv.setNs(
+        'settings:paymentprovider',
+        'payrexx',
+        {
+          id: 'payrexx',
+          type: 'payrexx',
+          name: 'Payrexx',
+          offSessionPayments: false,
+          apiKey: '1234',
+          webhookEndpointSecret: 'secret',
+          payrexx_instancename: 'test',
+          payrexx_psp: ['PAYPAL', 'TWINT', 'STRIPE'],
+          payrexx_pm: ['PAYPAL', 'TWINT', 'APPLE_PAY'],
+          payrexx_vatrate: 7.7,
+        },
+        SEED_TTL_SECONDS
+      );
 
-      await kv.setNs('settings:paymentprovider', 'payrexx-subscription', {
-        id: 'payrexx-subscription',
-        type: 'payrexx-subscription',
-        name: 'Payrexx Subscription',
-        offSessionPayments: false,
-        apiKey: '1234',
-        webhookEndpointSecret: 'secret',
-        payrexx_instancename: 'test',
-      });
+      await kv.setNs(
+        'settings:paymentprovider',
+        'payrexx-subscription',
+        {
+          id: 'payrexx-subscription',
+          type: 'payrexx-subscription',
+          name: 'Payrexx Subscription',
+          offSessionPayments: false,
+          apiKey: '1234',
+          webhookEndpointSecret: 'secret',
+          payrexx_instancename: 'test',
+        },
+        SEED_TTL_SECONDS
+      );
       paymentProviders.push(
         new MolliePaymentProvider({
           id: 'mollie',
           incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
           prisma,
           kv,
+          resets,
         })
       );
-      await kv.setNs('settings:paymentprovider', 'mollie', {
-        id: 'mollie',
-        type: 'mollie',
-        name: 'Mollie',
-        offSessionPayments: true,
-        apiKey: 'secret',
-        webhookEndpointSecret: 'secret',
-        mollie_apiBaseUrl: "https://wepublish.ch'",
-        stripe_methods: ['PAYPAL', 'TWINT', 'IDEAL'],
-      });
+      await kv.setNs(
+        'settings:paymentprovider',
+        'mollie',
+        {
+          id: 'mollie',
+          type: 'mollie',
+          name: 'Mollie',
+          offSessionPayments: true,
+          apiKey: 'secret',
+          webhookEndpointSecret: 'secret',
+          mollie_apiBaseUrl: "https://wepublish.ch'",
+          stripe_methods: ['PAYPAL', 'TWINT', 'IDEAL'],
+        },
+        SEED_TTL_SECONDS
+      );
       return { paymentProviders };
     },
-    inject: [ConfigService, PrismaClient, KvTtlCacheService],
+    inject: [ConfigService, PrismaClient, NamespacedCache, NamespaceResets],
     global: true,
   });
 }

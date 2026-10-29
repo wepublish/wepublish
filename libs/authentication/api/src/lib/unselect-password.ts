@@ -23,6 +23,8 @@ export const unselectPassword: Record<
     | 'notificationReads'
     | 'notificationConfirmations'
     | 'loginCodes'
+    | 'seoChecklistItems'
+    | 'apiTokens'
   >,
   boolean
 > = {

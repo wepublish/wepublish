@@ -8,12 +8,12 @@ import { OneOfGuard, PrismaModule } from '@wepublish/nest-modules';
 import { PublicGuard } from './public.guard';
 import { AuthenticatedGuard } from './authenticated.guard';
 import { FullSessionGuard } from './full-session.guard';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { SessionCacheModule } from './session-cache';
 
 @Module({
   imports: [
     PrismaModule,
-    KvTtlCacheModule,
+    SessionCacheModule,
     PassportModule.register({
       session: false, // would use a cookie if set to true
       defaultStrategy: 'session',

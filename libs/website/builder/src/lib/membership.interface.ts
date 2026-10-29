@@ -37,6 +37,14 @@ export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   reactivate?: () => Promise<void>;
   revertUpgrade?: () => Promise<void>;
   extend?: () => Promise<void>;
+  /** Moves the subscription to another payment method of its member plan. */
+  changePaymentMethod?: (paymentMethodId: string) => Promise<void>;
+  cancelPaymentMethodChange?: (changeId: string) => Promise<void>;
+  /**
+   * Total in cents of the subscription's open invoice, which is paid with the
+   * new payment method when changing it.
+   */
+  openInvoiceTotal?: number;
 };
 
 export type BuilderSubscriptionListProps = Pick<
@@ -53,6 +61,11 @@ export type BuilderSubscriptionListProps = Pick<
   onReactivate?: (subscriptionId: string) => Promise<void>;
   onRevertUpgrade?: (subscriptionId: string) => Promise<void>;
   onExtend?: (subscriptionId: string) => Promise<void>;
+  onChangePaymentMethod?: (
+    subscriptionId: string,
+    paymentMethodId: string
+  ) => Promise<void>;
+  onCancelPaymentMethodChange?: (changeId: string) => Promise<void>;
 };
 
 export type BuilderInvoiceListItemProps = FullInvoiceFragment & {
@@ -114,6 +127,9 @@ export type BuilderMemberPlanItemProps = Pick<
     slug: string;
     paymentPeriodicity?: PaymentPeriodicity;
     showPeriodicity?: boolean;
+    // the card stands for one offer of a plan and periodicity, so its price
+    // is the one for that whole period
+    isOffer?: boolean;
     amountLayout?: BuilderMemberPlanLayout;
     amount?: number;
     onAmountChange?: (monthlyAmount: number) => void;

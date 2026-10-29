@@ -1,4 +1,4 @@
-import { WelcomePage } from '@wepublish/utils/website';
+import { WelcomePage } from '@wepublish/utils/website/next';
 
 export default function Welcome() {
   return <WelcomePage />;

@@ -169,6 +169,14 @@ const SETTINGS = {
     label: 'settingList.subscriptionUpgradeModel',
     value: false,
   },
+  [SettingName.SubscriptionExtendWindowDays]: {
+    label: 'settingList.subscriptionExtendWindowDays',
+    value: 30,
+  },
+  [SettingName.PaymentMethodChangeExpiryDays]: {
+    label: 'settingList.paymentMethodChangeExpiryDays',
+    value: 14,
+  },
 } as Record<SettingName, { label: string; value: unknown }>;
 
 type SettingValues = Record<SettingName, unknown>;
@@ -185,6 +193,8 @@ const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
   [SettingName.ResetPasswordJwtExpiresMin]: [10, 10080],
   [SettingName.PeeringTimeoutMs]: [1000, 10000],
   [SettingName.CommentCharLimit]: [0, 10000],
+  [SettingName.SubscriptionExtendWindowDays]: [0, 366],
+  [SettingName.PaymentMethodChangeExpiryDays]: [1, 90],
 };
 
 type Restrictions = Partial<
@@ -547,6 +557,18 @@ function SettingList() {
                         {renderToggle(
                           SettingName.SubscriptionUpgradeBillsFullDifference,
                           t('settingList.warnings.subscriptionUpgradeModel')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.SubscriptionExtendWindowDays,
+                          t('settingList.info.subscriptionExtendWindowDays'),
+                          t('settingList.days')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.PaymentMethodChangeExpiryDays,
+                          t('settingList.info.paymentMethodChangeExpiryDays'),
+                          t('settingList.days')
                         )}
                       </Stack>
                     </CardContent>

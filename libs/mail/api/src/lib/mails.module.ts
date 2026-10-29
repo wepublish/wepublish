@@ -13,7 +13,7 @@ import {
 } from './mails-module-options';
 import { PrismaClient } from '@prisma/client';
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { MailWebhookController, MailWebhookMiddleware } from './mail.webhook';
 
 @Module({
@@ -50,7 +50,7 @@ export class MailsModule {
         useFactory: (
           { mailProvider, jwtGenerator, purlProvider }: MailsModuleOptions,
           prisma: PrismaClient,
-          kv: KvTtlCacheService
+          kv: NamespacedCache
         ) =>
           new MailContext({
             prisma,
@@ -59,7 +59,7 @@ export class MailsModule {
             jwtGenerator,
             purlProvider,
           }),
-        inject: [MAILS_MODULE_OPTIONS, PrismaClient, KvTtlCacheService],
+        inject: [MAILS_MODULE_OPTIONS, PrismaClient, NamespacedCache],
       },
     ];
   }

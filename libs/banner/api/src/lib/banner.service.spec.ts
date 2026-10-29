@@ -2,7 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Banner, LoginStatus, PrismaClient } from '@prisma/client';
 import { BannerService } from './banner.service';
 import { BannerDocumentType } from './banner.model';
-import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
+import { BANNER_SHARED_NAMESPACES } from '../index';
 import type { Mock } from 'vitest';
 
 describe('BannerService', () => {
@@ -33,9 +34,17 @@ describe('BannerService', () => {
     hideForMinutes: 24 * 60,
   } as Banner;
 
+  it('shares the banners through Dragonfly', () => {
+    expect(BANNER_SHARED_NAMESPACES).toEqual(['banners']);
+  });
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [KvTtlCacheModule],
+      imports: [
+        NamespacedCacheTestingModule.forRoot({
+          sharedNamespaces: BANNER_SHARED_NAMESPACES,
+        }),
+      ],
       providers: [
         BannerService,
         {

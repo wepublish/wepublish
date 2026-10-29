@@ -5,7 +5,7 @@ import {
   AuthenticationService,
   SessionCacheInvalidator,
 } from '@wepublish/authentication/api';
-import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
 import { UserService } from './user.service';
 import { HibpService } from './hibp.service';
@@ -72,7 +72,10 @@ describe('UserService session cache', () => {
         { provide: SessionCacheInvalidator, useValue: sessionCache },
         {
           provide: PublicContentCacheInvalidator,
-          useValue: { invalidateComments: vi.fn() },
+          useValue: { invalidateComments: vi.fn() } satisfies Pick<
+            PublicContentCacheInvalidator,
+            'invalidateComments'
+          >,
         },
       ],
     }).compile();

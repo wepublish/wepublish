@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { randomUUID } from 'crypto';
+import { v7 as uuidv7 } from 'uuid';
 import {
   composeMail,
   convertMandrillPlaceholders,
@@ -219,7 +219,7 @@ export class MailTemplateService {
     );
 
     await this.mailContext.sendComposedContent({
-      mailLogID: randomUUID(),
+      mailLogID: uuidv7(),
       recipient: input.recipient,
       data,
       content: this.toContent({

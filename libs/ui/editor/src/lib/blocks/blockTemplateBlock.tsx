@@ -6,7 +6,6 @@ import {
   CardContent,
   IconButton,
   MenuItem,
-  Stack,
   TextField,
 } from '@mui/material';
 import {
@@ -26,19 +25,34 @@ import { blockForQueryBlock, BlockTemplateBlockValue } from './types';
 
 const Wrapper = styled.div`
   display: grid;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(2)};
 `;
 
-const Toolbar = styled.div`
+const Picker = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr) max-content;
-  align-items: center;
-  gap: 12px;
+  align-items: start;
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+const Actions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(1)};
+  margin: ${({ theme }) => theme.spacing(-1, 0, 0, -1)};
+
+  > * {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
 `;
 
 const Preview = styled.div`
+  container-type: inline-size;
   display: grid;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(1.5)};
   pointer-events: none;
   user-select: none;
 `;
@@ -59,7 +73,13 @@ const PreviewLabel = styled.div`
 `;
 
 const PreviewBlock = styled.div`
+  min-width: 0;
+  overflow: hidden;
   padding: 12px;
+
+  @container (max-width: 520px) {
+    zoom: 0.6;
+  }
 `;
 
 export const BlockTemplateBlock = ({
@@ -103,12 +123,13 @@ export const BlockTemplateBlock = ({
 
   return (
     <Wrapper>
-      <Toolbar>
+      <Picker>
         <TextField
           select
           label={t('blocks.blockTemplate.select')}
           disabled={disabled}
           value={selectedTemplate?.id ?? ''}
+          helperText={t('blocks.blockTemplate.linkedInfo')}
           onChange={event =>
             onChange({
               template:
@@ -117,7 +138,6 @@ export const BlockTemplateBlock = ({
                 ) ?? null,
             })
           }
-          slotProps={{ select: { displayEmpty: true } }}
           fullWidth
         >
           <MenuItem value="">{t('blocks.blockTemplate.select')}</MenuItem>
@@ -132,51 +152,44 @@ export const BlockTemplateBlock = ({
           ))}
         </TextField>
 
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{ flexWrap: 'wrap' }}
-        >
-          <IconButtonTooltip caption={t('blocks.blockTemplate.reload')}>
-            <IconButton
-              aria-label={t('blocks.blockTemplate.reload')}
-              onClick={event => {
-                refetch();
-                event.preventDefault();
-              }}
-            >
-              <MdRefresh />
-            </IconButton>
-          </IconButtonTooltip>
+        <IconButtonTooltip caption={t('blocks.blockTemplate.reload')}>
+          <IconButton
+            aria-label={t('blocks.blockTemplate.reload')}
+            onClick={event => {
+              refetch();
+              event.preventDefault();
+            }}
+          >
+            <MdRefresh />
+          </IconButton>
+        </IconButtonTooltip>
+      </Picker>
+
+      {!!selectedTemplate && (
+        <Actions>
           <Button
-            variant="outlined"
+            variant="text"
             startIcon={<MdEdit />}
-            disabled={!selectedTemplate}
-            href={
-              selectedTemplate ?
-                `/block-content/templates/edit/${selectedTemplate.id}`
-              : ''
-            }
+            href={`/block-content/templates/edit/${selectedTemplate.id}`}
             target="_blank"
           >
             {t('blocks.blockTemplate.editTemplate')}
           </Button>
 
           <Button
-            variant="outlined"
+            variant="text"
             startIcon={<MdOutput />}
             disabled={disabled || !onReplace || !blocks.length}
             onClick={() => setConfirmOpen(true)}
           >
             {t('blocks.blockTemplate.useContent')}
           </Button>
-        </Stack>
-      </Toolbar>
+        </Actions>
+      )}
 
       {!!selectedTemplate && (
         <Preview>
           {blocks
-            // hidden blocks of the template are not rendered on the website
             .filter(block => !block.value.disabled)
             .map(block => {
               const { field, label, icon } = blockMap[block.type];

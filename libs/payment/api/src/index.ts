@@ -13,6 +13,7 @@ export * from './lib/payment.dataloader';
 export * from './lib/payments.module';
 export * from './lib/payment.model';
 export * from './lib/invoice-paid.listener';
+export * from './lib/payment-authorization.notifier';
 
 export * from './lib/payrexx/gateway-client';
 export * from './lib/payrexx/transaction-client';

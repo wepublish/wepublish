@@ -14,3 +14,10 @@ export const getWebsiteShell = (
   showFooter: true,
   ...pageProps?.shell,
 });
+
+export const getPageShell = (
+  page: { hideHeader?: boolean; hideFooter?: boolean } | null | undefined
+): WebsiteShell => ({
+  showNavigation: !page?.hideHeader,
+  showFooter: !page?.hideFooter,
+});

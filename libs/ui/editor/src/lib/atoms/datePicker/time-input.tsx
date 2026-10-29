@@ -1,82 +1,96 @@
 import styled from '@emotion/styled';
-import { MenuItem, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
+import { MouseEvent, useState } from 'react';
 
-const Fields = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing(0.5)};
-
+const Field = styled.div`
   .MuiInputBase-root {
-    min-width: 72px;
+    width: 88px;
+  }
+
+  input {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
   }
 `;
 
-const Separator = styled.span`
-  color: ${({ theme }) => theme.vars.palette.text.secondary};
-`;
+const COMPLETE = 5;
 
-const MINUTE_STEP = 5;
+export function maskTime(input: string): string {
+  let digits = input.replace(/\D/g, '').slice(0, 4);
 
-const pad = (value: number) => String(value).padStart(2, '0');
+  if (digits.length === 1 && Number(digits) > 2) {
+    digits = `0${digits}`;
+  }
 
-const HOURS = Array.from({ length: 24 }, (_, hour) => pad(hour));
-const MINUTES = Array.from({ length: 60 / MINUTE_STEP }, (_, index) =>
-  pad(index * MINUTE_STEP)
-);
+  if (digits.length > 1 && Number(digits.slice(0, 2)) > 23) {
+    digits = `0${digits}`.slice(0, 4);
+  }
+
+  const hours = digits.slice(0, 2);
+  let minutes = digits.slice(2);
+
+  if (minutes.length && Number(minutes[0]) > 5) {
+    minutes = `0${minutes[0]}`;
+  }
+
+  return minutes.length ? `${hours}:${minutes}` : hours;
+}
 
 export interface CalendarTimeInputProps {
   value?: string;
+  label?: string;
   onChange?: (time: string) => void;
 }
 
-export function CalendarTimeInput({ value, onChange }: CalendarTimeInputProps) {
-  const [hours = '', minutes = ''] = (value ?? '').split(':');
-  const nearestMinute =
-    minutes ?
-      pad((Math.round(Number(minutes) / MINUTE_STEP) * MINUTE_STEP) % 60)
-    : '';
+export function CalendarTimeInput({
+  value,
+  label,
+  onChange,
+}: CalendarTimeInputProps) {
+  const [time, setTime] = useState(value ?? '');
+  const [seeded, setSeeded] = useState(value);
 
-  const report = (nextHours: string, nextMinutes: string) =>
-    onChange?.(`${nextHours || '00'}:${nextMinutes || '00'}`);
+  if (value !== seeded) {
+    setSeeded(value);
+    setTime(value ?? '');
+  }
+
+  const handleChange = (input: string) => {
+    const masked = maskTime(input);
+    setTime(masked);
+
+    if (masked.length === COMPLETE) {
+      onChange?.(masked);
+    }
+  };
 
   return (
-    <Fields>
+    <Field>
       <TextField
-        select
         size="small"
-        label={undefined}
-        value={HOURS.includes(hours) ? hours : ''}
-        onChange={event => report(event.target.value, nearestMinute)}
-        slotProps={{ htmlInput: { 'aria-label': 'hours' } }}
-      >
-        {HOURS.map(hour => (
-          <MenuItem
-            key={hour}
-            value={hour}
-          >
-            {hour}
-          </MenuItem>
-        ))}
-      </TextField>
-
-      <Separator>:</Separator>
-
-      <TextField
-        select
-        size="small"
-        value={MINUTES.includes(nearestMinute) ? nearestMinute : ''}
-        onChange={event => report(hours, event.target.value)}
-        slotProps={{ htmlInput: { 'aria-label': 'minutes' } }}
-      >
-        {MINUTES.map(minute => (
-          <MenuItem
-            key={minute}
-            value={minute}
-          >
-            {minute}
-          </MenuItem>
-        ))}
-      </TextField>
-    </Fields>
+        value={time}
+        placeholder="HH:MM"
+        onChange={event => handleChange(event.target.value)}
+        onFocus={event => event.target.select()}
+        onMouseUp={event => event.preventDefault()}
+        slotProps={{
+          htmlInput: {
+            // A native focus change blurs the date input first, and the
+            // calendar re-renders during that blur and moves focus onto the
+            // selected day. Focusing from inside the handler defers that
+            // re-render until this input already has focus.
+            onMouseDown: (event: MouseEvent<HTMLInputElement>) => {
+              if (document.activeElement !== event.currentTarget) {
+                event.preventDefault();
+                event.currentTarget.focus();
+              }
+            },
+            'aria-label': label ?? 'time',
+            inputMode: 'numeric',
+            maxLength: COMPLETE,
+          },
+        }}
+      />
+    </Field>
   );
 }

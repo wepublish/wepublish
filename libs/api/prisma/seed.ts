@@ -284,6 +284,28 @@ const seedSettings = (prisma: PrismaClient) =>
         settingRestriction: { allowedValues: { boolChoice: true } },
       },
     }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.SUBSCRIPTION_EXTEND_WINDOW_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.SUBSCRIPTION_EXTEND_WINDOW_DAYS,
+        value: 30,
+        settingRestriction: { minValue: 0, maxValue: 366 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.PAYMENT_METHOD_CHANGE_EXPIRY_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.PAYMENT_METHOD_CHANGE_EXPIRY_DAYS,
+        value: 14,
+        settingRestriction: { minValue: 1, maxValue: 90 },
+      },
+    }),
 
     prisma.settingAIProvider.upsert({
       where: {

@@ -3,26 +3,29 @@ import { PrismaClient } from '@prisma/client';
 import { TestingModule, Test } from '@nestjs/testing';
 import { AuthenticationService } from './authentication.service';
 import { AuthSession, AuthSessionType } from './auth-session';
-import {
-  KvTtlCacheModule,
-  KvTtlCacheService,
-} from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { createHash } from 'crypto';
-import { SESSION_CACHE_NAMESPACE } from './session-cache';
+import {
+  SESSION_CACHE_NAMESPACE,
+  SessionCacheInvalidator,
+} from './session-cache';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
   let prisma: PrismaClient;
-  let kv: KvTtlCacheService;
+  let kv: NamespacedCache;
+  let resets: NamespaceResets;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule, KvTtlCacheModule],
-      providers: [AuthenticationService],
+      imports: [PrismaModule, NamespacedCacheTestingModule.forRoot()],
+      providers: [AuthenticationService, SessionCacheInvalidator],
     }).compile();
 
     prisma = module.get<PrismaClient>(PrismaClient);
-    kv = module.get(KvTtlCacheService);
+    kv = module.get(NamespacedCache);
+    resets = module.get(NamespaceResets);
     service = module.get<AuthenticationService>(AuthenticationService);
 
     vi.spyOn(prisma.setting, 'findUnique').mockResolvedValue(null as any);
@@ -302,7 +305,7 @@ describe('AuthenticationService', () => {
 
       await service.getUserSession('secret-token');
       await new Promise(resolve => setTimeout(resolve, 2));
-      await kv.resetNamespace(SESSION_CACHE_NAMESPACE);
+      await resets.reset(SESSION_CACHE_NAMESPACE);
       await service.getUserSession('secret-token');
 
       expect(sessionSpy).toHaveBeenCalledTimes(2);

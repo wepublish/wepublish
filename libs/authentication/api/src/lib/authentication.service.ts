@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { AuthSessionType, AuthSession } from './auth-session';
 import { unselectPassword } from './unselect-password';
 import { addPredefinedPermissions } from '@wepublish/permissions/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   matchesPlaceholderEmail,
   parsePlaceholderEmailPatterns,
@@ -13,6 +13,7 @@ import { isSessionRestricted } from './session-restriction';
 import {
   SESSION_CACHE_NAMESPACE,
   SESSION_CACHE_TTL_SECONDS,
+  SessionCacheInvalidator,
   sessionCacheKey,
 } from './session-cache';
 
@@ -28,7 +29,8 @@ const withoutToken = <T extends { token: string }>(
 export class AuthenticationService {
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: NamespacedCache,
+    private sessionCache: SessionCacheInvalidator
   ) {}
 
   public async getPlaceholderEmailPatterns(): Promise<string[]> {
@@ -183,7 +185,7 @@ export class AuthenticationService {
     });
     // Sessions are cached by token, so a revoked one would otherwise keep
     // working until its cache entry expires.
-    await this.kv.resetNamespace(SESSION_CACHE_NAMESPACE);
+    await this.sessionCache.invalidate();
 
     return count;
   }
