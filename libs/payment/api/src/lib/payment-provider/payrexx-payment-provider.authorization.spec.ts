@@ -1,7 +1,7 @@
 import { Gateway, GatewayClient } from '../payrexx/gateway-client';
 import { Transaction, TransactionClient } from '../payrexx/transaction-client';
 import { PayrexxPaymentProvider } from './payrexx-payment-provider';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 import {
   createNamespacedCacheTesting,
   type NamespacedCacheTesting,
@@ -133,7 +133,7 @@ describe('PayrexxPaymentProvider authorization', () => {
         query: { apiKey: 'secret' },
         headers: { 'content-type': 'application/json' },
         body,
-      } as unknown as express.Request,
+      } as unknown as NodeRequest,
     });
 
   it('stores the authorized transaction as the token', async () => {

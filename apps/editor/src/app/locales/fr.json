@@ -101,6 +101,7 @@
       "saveValidationFailed": "Échec de l’enregistrement",
       "publishValidationFailed": "Échec de la publication",
       "overview": {
+        "loadingTemplate": "Chargement du modèle…",
         "articlePending": "Article en attente",
         "articlePublished": "Article publié",
         "back": "Retour",
@@ -126,6 +127,7 @@
         "warningLabel": "Attention"
       },
       "panels": {
+        "createTemplate": "Créer un modèle à partir de l'article",
         "firstPublishedAtDate": "Première publication le {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "L’article n’est pas encore publié",
         "addSlug": "Veuillez ajouter un slug",
@@ -246,6 +248,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "Nouvel article",
+        "blank": "Article vide",
+        "search": "Rechercher des modèles",
+        "noResults": "Aucun modèle trouvé"
+      },
       "overview": {
         "slug": "Slug",
         "articles": "Articles",
@@ -1646,6 +1654,7 @@
       "memberPlans": "Plans d’abonnement",
       "navigations": "Menus",
       "pages": "Pages",
+      "pageTemplates": "Modèles de pages",
       "paymentMethods": "Méthodes de paiement",
       "peerArticles": "Articles peerables",
       "networkContent": "Réseau We.Publish",
@@ -1677,6 +1686,7 @@
         "polls": "Sondages",
         "topMenu": "Blocs de contenu"
       },
+      "articleTemplates": "Modèles d'articles",
       "language": "Langue"
     },
     "pageTitles": {
@@ -1709,6 +1719,12 @@
       "blockTemplates": "Modèles de blocs",
       "blockTemplateCreate": "Nouveau modèle de bloc",
       "blockTemplateEdit": "Modifier le modèle de bloc",
+      "articleTemplates": "Modèles d'articles",
+      "articleTemplateCreate": "Nouveau modèle d'article",
+      "articleTemplateEdit": "Modifier le modèle d'article",
+      "pageTemplates": "Modèles de pages",
+      "pageTemplateCreate": "Nouveau modèle de page",
+      "pageTemplateEdit": "Modifier le modèle de page",
       "crowdfundings": "Crowdfundings",
       "crowdfundingCreate": "Nouveau crowdfunding",
       "crowdfundingEdit": "Modifier le crowdfunding",
@@ -1864,7 +1880,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Dépublier",
-        "unpublished": "Non publié"
+        "unpublished": "Non publié",
+        "loadingTemplate": "Chargement du modèle…"
       },
       "panels": {
         "chooseBlock": "Choisir le bloc",
@@ -1912,7 +1929,8 @@
         "hideHeaderInfo": "Masque l’en-tête du site sur cette page, p.ex. pour les landing pages.",
         "hideFooter": "Masquer le pied de page",
         "hideFooterInfo": "Masque le pied de page du site sur cette page, p.ex. pour les landing pages.",
-        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
+        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
+        "createTemplate": "Créer un modèle à partir de la page"
       }
     },
     "pages": {
@@ -1945,6 +1963,12 @@
         "untitled": "Sans titre",
         "updatedAt": "Mis à jour le",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "Nouvelle page",
+        "blank": "Page vide",
+        "search": "Rechercher des modèles",
+        "noResults": "Aucun modèle trouvé"
       }
     },
     "paymentMethodList": {
@@ -2671,6 +2695,62 @@
       "subscriptionStartsAt": "L’abonnement débute le {{date}}",
       "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
     },
+    "articleTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copier",
+        "title": "Modèles d'articles",
+        "newTemplate": "Nouveau modèle d'article",
+        "name": "Nom",
+        "noName": "Sans nom",
+        "info": "Les modèles d'articles définissent le contenu et les métadonnées avec lesquels un nouvel article commence. Modifier un modèle n'affecte pas les articles déjà créés à partir de celui-ci."
+      },
+      "edit": {
+        "loadingTemplate": "Chargement du modèle…",
+        "loadingArticle": "Chargement de l'article…",
+        "copyName": "{{name}} (copie)",
+        "name": "Nom",
+        "backToList": "Retour à la liste",
+        "metadata": "Métadonnées",
+        "saved": "Enregistré",
+        "created": "Créé",
+        "new": "Nouveau",
+        "editing": "En cours d'édition",
+        "empty": "Ce modèle n'a pas encore de blocs. Ajoute le premier avec +."
+      },
+      "delete": {
+        "title": "Supprimer le modèle d'article ?",
+        "body": "Voulez-vous vraiment supprimer le modèle d'article « {{name}} » ? Les articles créés à partir de celui-ci ne sont pas affectés."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copier",
+        "title": "Modèles de pages",
+        "newTemplate": "Nouveau modèle de page",
+        "name": "Nom",
+        "noName": "Sans nom",
+        "info": "Les modèles de pages définissent le contenu et les métadonnées avec lesquels une nouvelle page commence. Modifier un modèle n'affecte pas les pages déjà créées à partir de celui-ci."
+      },
+      "edit": {
+        "loadingTemplate": "Chargement du modèle…",
+        "loadingPage": "Chargement de la page…",
+        "copyName": "{{name}} (copie)",
+        "name": "Nom",
+        "backToList": "Retour à la liste",
+        "metadata": "Métadonnées",
+        "saved": "Enregistré",
+        "created": "Créé",
+        "new": "Nouveau",
+        "editing": "En cours d'édition",
+        "empty": "Ce modèle n'a pas encore de blocs. Ajoute le premier avec +."
+      },
+      "delete": {
+        "title": "Supprimer le modèle de page ?",
+        "body": "Veux-tu vraiment supprimer le modèle de page « {{name}} » ? Les pages créées à partir de celui-ci ne sont pas affectées."
+      }
+    },
     "blockTemplates": {
       "list": {
         "title": "Modèles de blocs",
@@ -2691,7 +2771,8 @@
         "editing": "Modification",
         "saveConfirmMessage": "L’enregistrement met immédiatement à jour le contenu de ce modèle dans tous les articles et pages qui l’utilisent, y compris ceux déjà publiés.",
         "saveConfirmTitle": "Enregistrer le modèle ?",
-        "created": "Créé"
+        "created": "Créé",
+        "empty": "Ce modèle n'a pas encore de blocs. Ajoute le premier avec +."
       }
     },
     "yes": "Oui",
@@ -4352,10 +4433,65 @@
       "addBlock": "Ajouter un bloc",
       "hideBlock": "Masquer le bloc sur le site",
       "showBlock": "Afficher à nouveau le bloc sur le site",
+      "timeBlock": "Définir quand ce bloc s'affiche",
       "deleteBlock": "Supprimer le bloc",
       "moveBlockUp": "Déplacer le bloc vers le haut",
       "moveBlockDown": "Déplacer le bloc vers le bas",
       "styleHelp": "Modifie l’apparence de ce bloc sur le site. Laissez vide pour l’affichage par défaut. Les styles se gèrent sous « Styles de blocs »."
+    },
+    "blockTiming": {
+      "title": "Programmer ce bloc",
+      "offAir": "Masqué sur le site pour le moment, car hors de son calendrier.",
+      "dateRange": "Dates",
+      "dateRangeEmpty": "N'importe quelle date",
+      "dateRangeHelp": "Le bloc s'affiche du début du premier jour jusqu'à la fin du dernier.",
+      "weekdays": "Jours",
+      "weekdaysHelp": "N'en choisissez aucun pour afficher le bloc tous les jours.",
+      "timeOfDay": "Heure",
+      "timeOfDayFrom": "De",
+      "timeOfDayTo": "à",
+      "timeOfDayHelp": "Les heures suivent le fuseau horaire du site. Une fin avant le début passe minuit, p. ex. 22:00 à 02:00.",
+      "sameTimes": "Le début et la fin sont identiques, le bloc ne s'affiche donc jamais. Modifiez l'une des heures ou choisissez « Toute la journée ».",
+      "clearTimeOfDay": "Toute la journée",
+      "clear": "Retirer le calendrier",
+      "done": "Terminé",
+      "summary": {
+        "always": "S'affiche toujours. Ajoutez des dates, des jours ou une heure pour limiter l'affichage.",
+        "never": "Ne s'affiche jamais, car le début et la fin sont identiques.",
+        "shows": "S'affiche {{conditions}}.",
+        "between": "du {{from}} au {{to}}",
+        "since": "à partir du {{from}}",
+        "until": "jusqu'au {{to}}",
+        "days": "{{days}}",
+        "hours": "de {{from}} à {{to}}"
+      }
+    },
+    "weekday": {
+      "Monday": "lundi",
+      "Tuesday": "mardi",
+      "Wednesday": "mercredi",
+      "Thursday": "jeudi",
+      "Friday": "vendredi",
+      "Saturday": "samedi",
+      "Sunday": "dimanche"
+    },
+    "weekdayRecurring": {
+      "Monday": "le lundi",
+      "Tuesday": "le mardi",
+      "Wednesday": "le mercredi",
+      "Thursday": "le jeudi",
+      "Friday": "le vendredi",
+      "Saturday": "le samedi",
+      "Sunday": "le dimanche"
+    },
+    "weekdayShort": {
+      "Monday": "lun.",
+      "Tuesday": "mar.",
+      "Wednesday": "mer.",
+      "Thursday": "jeu.",
+      "Friday": "ven.",
+      "Saturday": "sam.",
+      "Sunday": "dim."
     },
     "placeholderInput": {
       "add": "Ajouter"
@@ -4434,9 +4570,11 @@
       },
       "create": {
         "article": "Créer un article",
+        "articleTemplate": "Créer un modèle d'article",
         "articleTag": "Créer un tag d'article",
         "paywall": "Créer un paywall",
         "page": "Créer une page",
+        "pageTemplate": "Créer un modèle de page",
         "pageTag": "Créer un tag de page",
         "crowdfunding": "Créer un crowdfunding",
         "blockTemplate": "Créer un modèle de bloc",

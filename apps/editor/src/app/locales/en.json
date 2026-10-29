@@ -101,6 +101,7 @@
       "saveValidationFailed": "Saving failed",
       "publishValidationFailed": "Publishing failed",
       "overview": {
+        "loadingTemplate": "Loading template…",
         "articlePending": "Article Pending",
         "articlePublished": "Article Published",
         "back": "Back",
@@ -126,6 +127,7 @@
         "warningLabel": "Warning"
       },
       "panels": {
+        "createTemplate": "Create template from article",
         "firstPublishedAtDate": "First published on {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Article not yet published",
         "addSlug": "Please add a slug",
@@ -246,6 +248,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "New Article",
+        "blank": "Blank article",
+        "search": "Search templates",
+        "noResults": "No templates found"
+      },
       "overview": {
         "slug": "Slug",
         "articles": "Articles",
@@ -1629,6 +1637,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Block Templates"
       },
+      "articleTemplates": "Article Templates",
       "commentRating": "Rating System",
       "comments": "Comments",
       "commentTags": "Tags",
@@ -1655,6 +1664,7 @@
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
+      "pageTemplates": "Page Templates",
       "paymentMethods": "Payment Methods",
       "peerArticles": "Peerable Articles",
       "networkContent": "We.Publish Network",
@@ -1710,6 +1720,12 @@
       "blockTemplates": "Block templates",
       "blockTemplateCreate": "New block template",
       "blockTemplateEdit": "Edit block template",
+      "articleTemplates": "Article templates",
+      "articleTemplateCreate": "New article template",
+      "articleTemplateEdit": "Edit article template",
+      "pageTemplates": "Page templates",
+      "pageTemplateCreate": "New page template",
+      "pageTemplateEdit": "Edit page template",
       "crowdfundings": "Crowdfundings",
       "crowdfundingCreate": "New crowdfunding",
       "crowdfundingEdit": "Edit crowdfunding",
@@ -1865,7 +1881,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Unpublish",
-        "unpublished": "Unpublished"
+        "unpublished": "Unpublished",
+        "loadingTemplate": "Loading template…"
       },
       "panels": {
         "chooseBlock": "Choose Block",
@@ -1913,7 +1930,8 @@
         "hideHeaderInfo": "Hides the website's header on this page, e.g. for landing pages.",
         "hideFooter": "Hide footer",
         "hideFooterInfo": "Hides the website's footer on this page, e.g. for landing pages.",
-        "enterSocialMediaImage": "Please add an image for social media"
+        "enterSocialMediaImage": "Please add an image for social media",
+        "createTemplate": "Create template from page"
       }
     },
     "pages": {
@@ -1946,6 +1964,12 @@
         "untitled": "Untitled",
         "updatedAt": "Updated At",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "New Page",
+        "blank": "Blank page",
+        "search": "Search templates",
+        "noResults": "No templates found"
       }
     },
     "paymentMethodList": {
@@ -2731,6 +2755,62 @@
       "blockTypesPlaceholder": "Available for block types",
       "noStyle": "No style"
     },
+    "articleTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Article Templates",
+        "newTemplate": "New Article Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Article templates define the content and metadata a new article starts with. Changing a template does not affect articles that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingArticle": "Loading article…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
+      },
+      "delete": {
+        "title": "Delete article template?",
+        "body": "Do you really want to delete the article template \"{{name}}\"? Articles created from it are not affected."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Page Templates",
+        "newTemplate": "New Page Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Page templates define the content and metadata a new page starts with. Changing a template does not affect pages that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingPage": "Loading page…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
+      },
+      "delete": {
+        "title": "Delete page template?",
+        "body": "Do you really want to delete the page template \"{{name}}\"? Pages created from it are not affected."
+      }
+    },
     "blockTemplates": {
       "list": {
         "title": "Block Templates",
@@ -2751,7 +2831,8 @@
         "editing": "Editing",
         "saveConfirmMessage": "Saving updates this template's content right away in every article and page that uses it, including published ones.",
         "saveConfirmTitle": "Save template?",
-        "created": "Created"
+        "created": "Created",
+        "empty": "This template has no blocks yet. Add the first one with +."
       }
     },
     "yes": "Yes",
@@ -4352,10 +4433,65 @@
       "addBlock": "Add block",
       "hideBlock": "Hide block on the website",
       "showBlock": "Show block on the website again",
+      "timeBlock": "Schedule when this block shows",
       "deleteBlock": "Delete block",
       "moveBlockUp": "Move block up",
       "moveBlockDown": "Move block down",
       "styleHelp": "Changes how this block looks on the website. Leave it empty to use the default look. Styles are managed under «Block Styling»."
+    },
+    "blockTiming": {
+      "title": "Schedule this block",
+      "offAir": "Hidden on the website right now, because it is outside its schedule.",
+      "dateRange": "Dates",
+      "dateRangeEmpty": "Any date",
+      "dateRangeHelp": "The block shows from the start of the first day to the end of the last.",
+      "weekdays": "Days",
+      "weekdaysHelp": "Pick none to show the block every day.",
+      "timeOfDay": "Time of day",
+      "timeOfDayFrom": "From",
+      "timeOfDayTo": "until",
+      "timeOfDayHelp": "Times are in the site's time zone. An end before the start runs past midnight, e.g. 22:00 until 02:00.",
+      "sameTimes": "Start and end are the same, so the block never shows. Change one of them or pick «All day».",
+      "clearTimeOfDay": "All day",
+      "clear": "Remove schedule",
+      "done": "Done",
+      "summary": {
+        "always": "Always shows. Add dates, days or a time of day to limit when.",
+        "never": "Never shows, because its start and end time are the same.",
+        "shows": "Shows {{conditions}}.",
+        "between": "from {{from}} to {{to}}",
+        "since": "from {{from}}",
+        "until": "until {{to}}",
+        "days": "on {{days}}",
+        "hours": "between {{from}} and {{to}}"
+      }
+    },
+    "weekday": {
+      "Monday": "Monday",
+      "Tuesday": "Tuesday",
+      "Wednesday": "Wednesday",
+      "Thursday": "Thursday",
+      "Friday": "Friday",
+      "Saturday": "Saturday",
+      "Sunday": "Sunday"
+    },
+    "weekdayRecurring": {
+      "Monday": "Mondays",
+      "Tuesday": "Tuesdays",
+      "Wednesday": "Wednesdays",
+      "Thursday": "Thursdays",
+      "Friday": "Fridays",
+      "Saturday": "Saturdays",
+      "Sunday": "Sundays"
+    },
+    "weekdayShort": {
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat",
+      "Sunday": "Sun"
     },
     "placeholderInput": {
       "add": "Add"
@@ -4434,9 +4570,11 @@
       },
       "create": {
         "article": "Create article",
+        "articleTemplate": "Create article template",
         "articleTag": "Create article tag",
         "paywall": "Create paywall",
         "page": "Create page",
+        "pageTemplate": "Create page template",
         "pageTag": "Create page tag",
         "crowdfunding": "Create crowdfunding",
         "blockTemplate": "Create block template",

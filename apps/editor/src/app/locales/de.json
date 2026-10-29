@@ -101,6 +101,7 @@
       "saveValidationFailed": "Speichern fehlgeschlagen",
       "publishValidationFailed": "Publizieren fehlgeschlagen",
       "overview": {
+        "loadingTemplate": "Vorlage wird geladen…",
         "articlePending": "Artikel geplant",
         "articlePublished": "Artikel publiziert",
         "back": "Zurück",
@@ -126,6 +127,7 @@
         "warningLabel": "Warnung"
       },
       "panels": {
+        "createTemplate": "Vorlage aus Artikel erstellen",
         "firstPublishedAtDate": "Erstpublikation am {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Artikel wurde noch nicht publiziert",
         "addSlug": "Bitte Slug erfassen",
@@ -246,6 +248,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "Neuer Artikel",
+        "blank": "Leerer Artikel",
+        "search": "Vorlagen durchsuchen",
+        "noResults": "Keine Vorlagen gefunden"
+      },
       "overview": {
         "slug": "Slug",
         "articles": "Artikel",
@@ -1628,6 +1636,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Blockvorlagen"
       },
+      "articleTemplates": "Artikelvorlagen",
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
       "commentTags": "Tags",
@@ -1654,6 +1663,7 @@
       "memberPlans": "Abo-Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
+      "pageTemplates": "Seitenvorlagen",
       "paymentMethods": "Zahlungsmethoden",
       "peerArticles": "Peerbare Artikel",
       "networkContent": "We.Publish-Netzwerk",
@@ -1709,6 +1719,12 @@
       "blockTemplates": "Blockvorlagen",
       "blockTemplateCreate": "Neue Blockvorlage",
       "blockTemplateEdit": "Blockvorlage bearbeiten",
+      "articleTemplates": "Artikelvorlagen",
+      "articleTemplateCreate": "Neue Artikelvorlage",
+      "articleTemplateEdit": "Artikelvorlage bearbeiten",
+      "pageTemplates": "Seitenvorlagen",
+      "pageTemplateCreate": "Neue Seitenvorlage",
+      "pageTemplateEdit": "Seitenvorlage bearbeiten",
       "crowdfundings": "Crowdfundings",
       "crowdfundingCreate": "Neues Crowdfunding",
       "crowdfundingEdit": "Crowdfunding bearbeiten",
@@ -1864,7 +1880,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
-        "unpublished": "Nicht publiziert"
+        "unpublished": "Nicht publiziert",
+        "loadingTemplate": "Vorlage wird geladen…"
       },
       "panels": {
         "close": "Schliessen",
@@ -1912,7 +1929,8 @@
         "hideHeaderInfo": "Blendet den Header der Website auf dieser Seite aus, z.B. für Landingpages.",
         "hideFooter": "Footer ausblenden",
         "hideFooterInfo": "Blendet den Footer der Website auf dieser Seite aus, z.B. für Landingpages.",
-        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
+        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
+        "createTemplate": "Vorlage aus Seite erstellen"
       }
     },
     "pages": {
@@ -1945,6 +1963,12 @@
         "untitled": "Ohne Titel",
         "updatedAt": "Aktualisiert am",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "Neue Seite",
+        "blank": "Leere Seite",
+        "search": "Vorlagen durchsuchen",
+        "noResults": "Keine Vorlagen gefunden"
       }
     },
     "paymentMethodList": {
@@ -2671,6 +2695,62 @@
       "subscriptionStartsAt": "Abo startet am {{date}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
     },
+    "articleTemplates": {
+      "list": {
+        "action": "Aktion",
+        "copy": "Kopieren",
+        "title": "Artikelvorlagen",
+        "newTemplate": "Neue Artikelvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "info": "Artikelvorlagen legen den Inhalt und die Metadaten fest, mit denen ein neuer Artikel beginnt. Änderungen an einer Vorlage wirken sich nicht auf bereits daraus erstellte Artikel aus."
+      },
+      "edit": {
+        "loadingTemplate": "Vorlage wird geladen…",
+        "loadingArticle": "Artikel wird geladen…",
+        "copyName": "{{name}} (Kopie)",
+        "name": "Name",
+        "backToList": "Zurück zur Liste",
+        "metadata": "Metadaten",
+        "saved": "Gespeichert",
+        "created": "Erstellt",
+        "new": "Neu",
+        "editing": "In Bearbeitung",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
+      },
+      "delete": {
+        "title": "Artikelvorlage löschen?",
+        "body": "Möchtest du die Artikelvorlage \"{{name}}\" wirklich löschen? Daraus erstellte Artikel sind nicht betroffen."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Aktion",
+        "copy": "Kopieren",
+        "title": "Seitenvorlagen",
+        "newTemplate": "Neue Seitenvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "info": "Seitenvorlagen legen den Inhalt und die Metadaten fest, mit denen eine neue Seite beginnt. Änderungen an einer Vorlage wirken sich nicht auf bereits daraus erstellte Seiten aus."
+      },
+      "edit": {
+        "loadingTemplate": "Vorlage wird geladen…",
+        "loadingPage": "Seite wird geladen…",
+        "copyName": "{{name}} (Kopie)",
+        "name": "Name",
+        "backToList": "Zurück zur Liste",
+        "metadata": "Metadaten",
+        "saved": "Gespeichert",
+        "created": "Erstellt",
+        "new": "Neu",
+        "editing": "In Bearbeitung",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
+      },
+      "delete": {
+        "title": "Seitenvorlage löschen?",
+        "body": "Möchtest du die Seitenvorlage \"{{name}}\" wirklich löschen? Daraus erstellte Seiten sind nicht betroffen."
+      }
+    },
     "blockTemplates": {
       "list": {
         "title": "Blockvorlagen",
@@ -2691,7 +2771,8 @@
         "editing": "In Bearbeitung",
         "saveConfirmMessage": "Beim Speichern wird der Inhalt dieser Vorlage sofort in allen Artikeln und Seiten aktualisiert, die sie verwenden, auch in bereits veröffentlichten.",
         "saveConfirmTitle": "Vorlage speichern?",
-        "created": "Erstellt"
+        "created": "Erstellt",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
       }
     },
     "yes": "Ja",
@@ -4352,10 +4433,65 @@
       "addBlock": "Block hinzufügen",
       "hideBlock": "Block auf der Website ausblenden",
       "showBlock": "Block auf der Website wieder anzeigen",
+      "timeBlock": "Festlegen, wann dieser Block erscheint",
       "deleteBlock": "Block löschen",
       "moveBlockUp": "Block nach oben verschieben",
       "moveBlockDown": "Block nach unten verschieben",
       "styleHelp": "Ändert, wie dieser Block auf der Website aussieht. Leer lassen für die Standarddarstellung. Die Styles verwaltest du unter «Block Styling»."
+    },
+    "blockTiming": {
+      "title": "Block zeitlich steuern",
+      "offAir": "Derzeit auf der Website ausgeblendet, weil er ausserhalb seines Zeitplans liegt.",
+      "dateRange": "Zeitraum",
+      "dateRangeEmpty": "Beliebiges Datum",
+      "dateRangeHelp": "Der Block erscheint vom Beginn des ersten bis zum Ende des letzten Tags.",
+      "weekdays": "Wochentage",
+      "weekdaysHelp": "Keinen wählen, damit der Block jeden Tag erscheint.",
+      "timeOfDay": "Tageszeit",
+      "timeOfDayFrom": "Von",
+      "timeOfDayTo": "bis",
+      "timeOfDayHelp": "Die Zeiten gelten in der Zeitzone der Website. Liegt das Ende vor dem Beginn, läuft das Fenster über Mitternacht, z. B. 22:00 bis 02:00.",
+      "sameTimes": "Beginn und Ende sind gleich, so erscheint der Block nie. Ändere eine der Zeiten oder wähle «Ganztägig».",
+      "clearTimeOfDay": "Ganztägig",
+      "clear": "Zeitplan entfernen",
+      "done": "Fertig",
+      "summary": {
+        "always": "Erscheint immer. Lege einen Zeitraum, Wochentage oder eine Tageszeit fest, um das einzuschränken.",
+        "never": "Erscheint nie, weil Beginn und Ende gleich sind.",
+        "shows": "Erscheint {{conditions}}.",
+        "between": "vom {{from}} bis {{to}}",
+        "since": "ab {{from}}",
+        "until": "bis {{to}}",
+        "days": "{{days}}",
+        "hours": "von {{from}} bis {{to}} Uhr"
+      }
+    },
+    "weekday": {
+      "Monday": "Montag",
+      "Tuesday": "Dienstag",
+      "Wednesday": "Mittwoch",
+      "Thursday": "Donnerstag",
+      "Friday": "Freitag",
+      "Saturday": "Samstag",
+      "Sunday": "Sonntag"
+    },
+    "weekdayRecurring": {
+      "Monday": "montags",
+      "Tuesday": "dienstags",
+      "Wednesday": "mittwochs",
+      "Thursday": "donnerstags",
+      "Friday": "freitags",
+      "Saturday": "samstags",
+      "Sunday": "sonntags"
+    },
+    "weekdayShort": {
+      "Monday": "Mo",
+      "Tuesday": "Di",
+      "Wednesday": "Mi",
+      "Thursday": "Do",
+      "Friday": "Fr",
+      "Saturday": "Sa",
+      "Sunday": "So"
     },
     "placeholderInput": {
       "add": "Hinzufügen"
@@ -4434,9 +4570,11 @@
       },
       "create": {
         "article": "Artikel erstellen",
+        "articleTemplate": "Artikelvorlage erstellen",
         "articleTag": "Artikel-Tag erstellen",
         "paywall": "Paywall erstellen",
         "page": "Seite erstellen",
+        "pageTemplate": "Seitenvorlage erstellen",
         "pageTag": "Seiten-Tag erstellen",
         "crowdfunding": "Crowdfunding erstellen",
         "blockTemplate": "Block-Vorlage erstellen",

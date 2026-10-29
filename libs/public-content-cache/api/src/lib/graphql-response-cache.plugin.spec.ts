@@ -15,7 +15,7 @@ import {
   PUBLIC_CONTENT_NAMESPACE,
   PUBLIC_CONTENT_SHARED_NAMESPACES,
 } from './public-content-namespaces';
-import { skipAnswerCache } from './skip-answer-cache';
+import { limitAnswerCache, skipAnswerCache } from './skip-answer-cache';
 
 const { spans } = vi.hoisted(() => ({
   spans: [] as Array<{
@@ -123,6 +123,23 @@ const createApi = async (dragonfly: FakeDragonfly) => {
 
           if (id === 'not-to-store') {
             skipAnswerCache(context);
+          }
+
+          if (id.startsWith('timed-')) {
+            limitAnswerCache(
+              context,
+              new Date(Date.now() + Number(id.slice('timed-'.length)) * 1000)
+            );
+          }
+
+          if (id.startsWith('slow-timed-')) {
+            limitAnswerCache(
+              context,
+              new Date(
+                Date.now() + Number(id.slice('slow-timed-'.length)) * 1000
+              )
+            );
+            vi.advanceTimersByTime(10_000);
           }
 
           if (failNext) {
@@ -354,6 +371,83 @@ describe('GraphqlResponseCachePlugin', () => {
 
       vi.advanceTimersByTime(3_000);
       await api.query(ARTICLE);
+
+      expect(api.calls.article).toBe(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('drops an answer once a resolver says it goes stale', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+
+    try {
+      const api = await start();
+      const timed = '{ article(id: "timed-60") { id title } }';
+
+      await api.query(timed);
+      vi.advanceTimersByTime(59_000);
+      await api.query(timed);
+
+      expect(api.calls.article).toBe(1);
+
+      vi.advanceTimersByTime(5_000);
+      await api.query(timed);
+
+      expect(api.calls.article).toBe(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('drops an answer at the moment the resolver named, however long the request took', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+
+    try {
+      const api = await start();
+      const timed = '{ article(id: "slow-timed-60") { id title } }';
+
+      await api.query(timed);
+      vi.advanceTimersByTime(45_000);
+      await api.query(timed);
+
+      expect(api.calls.article).toBe(1);
+
+      vi.advanceTimersByTime(6_000);
+      await api.query(timed);
+
+      expect(api.calls.article).toBe(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('does not store an answer that is already stale', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+
+    try {
+      const api = await start();
+      const timed = '{ article(id: "slow-timed-5") { id title } }';
+
+      await api.query(timed);
+      await api.query(timed);
+
+      expect(api.calls.article).toBe(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('never keeps an answer longer than the resolvers allow', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+
+    try {
+      const api = await start();
+      const timed = '{ article(id: "timed-900") { id title } }';
+
+      await api.query(timed);
+      vi.advanceTimersByTime(301_000);
+      await api.query(timed);
 
       expect(api.calls.article).toBe(2);
     } finally {

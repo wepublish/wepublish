@@ -66,9 +66,10 @@ import {
   MdLink,
   MdUnpublished,
 } from 'react-icons/md';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { copyLinkToClipboard } from '../../copyLink';
+import { CreateArticleModal } from './createArticleModal';
 
 interface State {
   state: string;
@@ -122,6 +123,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     });
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [currentArticle, setCurrentArticle] = useState<FullArticleFragment>();
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>();
 
@@ -305,8 +307,8 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
         <PermissionControl qualifyingPermissions={[CanCreateArticle.id]}>
           <ListViewActions>
             <Button
-              component={RouterLink}
-              to="/articles/create"
+              disabled={isLoading}
+              onClick={() => setCreateModalOpen(true)}
               variant="contained"
               startIcon={<MdAdd />}
             >
@@ -637,6 +639,11 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <CreateArticleModal
+        open={isCreateModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+      />
     </>
   );
 }

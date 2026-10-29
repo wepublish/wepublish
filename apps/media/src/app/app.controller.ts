@@ -14,7 +14,7 @@ import {
   UseInterceptors,
   NotFoundException,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-node';
 import {
   MediaService,
   SupportedImagesValidator,
@@ -30,7 +30,7 @@ import {
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
 import { ConfigService } from '@nestjs/config';
-import { Response } from 'express';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import 'multer';
 import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
 
@@ -65,7 +65,7 @@ export class AppController {
     await this.publicHostCheck;
   }
 
-  private setProductionCacheHeaders(res: Response) {
+  private setProductionCacheHeaders(res: NodeResponse) {
     if (process.env['NODE_ENV'] === 'production') {
       // max-age = 12hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
       res.setHeader(
@@ -76,12 +76,12 @@ export class AppController {
   }
 
   @Get('/health')
-  async healthCheck(@Res() res: Response) {
+  async healthCheck(@Res() res: NodeResponse) {
     res.status(200).send({ status: 'ok' });
   }
 
   @Get('/favicon.ico')
-  async favicon(@Res() res: Response) {
+  async favicon(@Res() res: NodeResponse) {
     throw new NotFoundException();
   }
 
@@ -89,7 +89,7 @@ export class AppController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
-    @Res() res: Response,
+    @Res() res: NodeResponse,
     @Query('imageId') imageId: string,
     @UploadedFile(
       new ParseFilePipe({
@@ -115,8 +115,8 @@ export class AppController {
 
   @Get(':imageId')
   async transformImage(
-    @Res() res: Response,
-    @Req() req: Request,
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
     @Param('imageId') imageId: string,
     @Query() transformations: TransformationsDto
   ) {
@@ -193,7 +193,10 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':imageId')
-  async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
+  async deleteImage(
+    @Res() res: NodeResponse,
+    @Param('imageId') imageId: string
+  ) {
     await this.media.deleteImage(imageId);
     await this.linkCache.forget(imageId);
 
@@ -204,7 +207,7 @@ export class AppController {
   @Post('document')
   @UseInterceptors(FileInterceptor('file'))
   async uploadDocument(
-    @Res() res: Response,
+    @Res() res: NodeResponse,
     @Query('documentId') documentId: string,
     @UploadedFile(
       new ParseFilePipe({
@@ -233,8 +236,8 @@ export class AppController {
 
   @Get('document/:documentId/thumbnail')
   async getDocumentThumbnail(
-    @Res() res: Response,
-    @Req() req: Request,
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
     @Param('documentId') documentId: string
   ) {
     const safeId = sanitizeId(documentId);
@@ -293,8 +296,8 @@ export class AppController {
 
   @Get('document/:documentId/:filename')
   async getDocumentWithFilename(
-    @Res() res: Response,
-    @Req() req: Request,
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
     @Param('documentId') documentId: string
   ) {
     return this.getDocument(res, req, documentId);
@@ -302,8 +305,8 @@ export class AppController {
 
   @Get('document/:documentId')
   async getDocument(
-    @Res() res: Response,
-    @Req() req: Request,
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
     @Param('documentId') documentId: string
   ) {
     const safeId = sanitizeId(documentId);
@@ -363,7 +366,7 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @Delete('document/:documentId')
   async deleteDocument(
-    @Res() res: Response,
+    @Res() res: NodeResponse,
     @Param('documentId') documentId: string
   ) {
     await this.media.deleteDocument(sanitizeId(documentId));
