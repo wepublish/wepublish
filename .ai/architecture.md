@@ -11,7 +11,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 ├── apps/               # Deployable applications
 │   ├── api-example/    # NestJS GraphQL API server (main backend)
 │   ├── editor/         # React CMS admin panel (Vite SPA, React Router)
-│   ├── media/          # Express media server (image transform + S3)
+│   ├── media/          # NestJS media server (image transform + S3)
 │   ├── website-example/# Reference Next.js website frontend
 │   └── <publisher>/    # Publisher-specific websites (bajour, tsri, mannschaft, etc.)
 ├── libs/               # Reusable libraries (~50 modules)
@@ -28,9 +28,9 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 
 | App | Tech | Port | Purpose |
 |-----|------|------|---------|
-| `api-example` | NestJS + Apollo Server | 4000 | GraphQL API backend |
+| `api-example` | NestJS (node:http adapter) + Apollo Server | 4000 | GraphQL API backend |
 | `editor` | Vite + React + React Router (client-rendered; Express host) | 3000 | Admin CMS interface |
-| `media` | Express | 4100 | Image upload, transformation, S3 storage |
+| `media` | NestJS (node:http adapter) | 4100 | Image upload, transformation, S3 storage |
 | `website-example` | Next.js | 4200 | Reference website frontend |
 
 **The editor is client-rendered — there is no SSR.** `nx build editor` produces
@@ -85,7 +85,7 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 
 ### Infrastructure Libraries
 
-`kv-ttl-cache`, `tracking-pixel`, `media-transform-guard`, `google-analytics`, `health`, `system-info`, `stats`, `session`, `settings`
+`dragonfly`, `kv-ttl-cache`, `website-revalidation`, `public-content-cache`, `tracking-pixel`, `media-transform-guard`, `google-analytics`, `health`, `system-info`, `stats`, `session`, `settings`
 
 ## Database
 
@@ -101,7 +101,7 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 - Each domain module defines its own models, resolvers, and services
 - **Dataloader pattern** used extensively to prevent N+1 queries (e.g., `ArticleDataloaderService`)
 - Generated schema: `schema-v2.graphql`
-- Frontend hooks generated via **GraphQL Code Generator** (`codegen.yml`)
+- Frontend typed documents generated via **GraphQL Code Generator** (`codegen.yml`)
 
 ## Data Flow
 

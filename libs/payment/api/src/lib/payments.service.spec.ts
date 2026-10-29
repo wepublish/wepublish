@@ -4,6 +4,8 @@ import {
   PaymentState,
   ProductType,
 } from '@prisma/client';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { SESSION_CACHE_NAMESPACE } from '@wepublish/authentication/api';
 import { PaymentsService } from './payments.service';
 import { Intent, PaymentProvider } from './payment-provider/payment-provider';
 
@@ -90,7 +92,8 @@ describe('PaymentsService.createPaymentWithProvider', () => {
       {
         paymentProviders: [stripeProvider, payrexxProvider],
       } as any,
-      invoicePaidNotifier as any
+      invoicePaidNotifier as any,
+      { reset: vi.fn() } as any
     );
 
     return {
@@ -213,5 +216,125 @@ describe('PaymentsService.createPaymentWithProvider', () => {
     });
 
     expect(invoicePaidNotifier.notify).not.toHaveBeenCalled();
+  });
+});
+
+// Stores the customer (for bexio: the contact id) renewals of a user are matched
+// with, for many users at once — e.g. the bexio contacts of imported readers.
+describe('PaymentsService.setPaymentProviderCustomers', () => {
+  function setup(knownUserIds = ['user-1', 'user-2']) {
+    const prisma = {
+      user: {
+        findMany: vi.fn(async () => knownUserIds.map(id => ({ id }))),
+        update: vi.fn(async ({ where }: { where: { id: string } }) => ({
+          id: where.id,
+        })),
+      },
+      $transaction: vi.fn(async (operations: Promise<unknown>[]) =>
+        Promise.all(operations)
+      ),
+    };
+    const resets = { reset: vi.fn().mockResolvedValue(undefined) };
+    const service = new PaymentsService(
+      prisma as any,
+      { paymentProviders: [fakeProvider('bexio')] } as any,
+      { notify: vi.fn() } as any,
+      resets as any
+    );
+
+    return { service, prisma, resets };
+  }
+
+  const customers = [
+    { userId: 'user-1', customerId: '542' },
+    { userId: 'user-2', customerId: '823' },
+  ];
+
+  it("replaces each user's customer of this provider", async () => {
+    const { service, prisma } = setup();
+
+    await expect(
+      service.setPaymentProviderCustomers({
+        paymentProviderId: 'bexio',
+        customers,
+      })
+    ).resolves.toBe(2);
+
+    expect(prisma.user.update).toHaveBeenCalledWith({
+      where: { id: 'user-1' },
+      data: {
+        paymentProviderCustomers: {
+          deleteMany: { paymentProviderID: 'bexio' },
+          create: { paymentProviderID: 'bexio', customerID: '542' },
+        },
+      },
+    });
+    expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+  });
+
+  it('skips users that do not exist and counts only the updated ones', async () => {
+    const { service, prisma } = setup(['user-2']);
+
+    await expect(
+      service.setPaymentProviderCustomers({
+        paymentProviderId: 'bexio',
+        customers,
+      })
+    ).resolves.toBe(1);
+    expect(prisma.user.update).toHaveBeenCalledTimes(1);
+  });
+
+  // sessions carry the customers
+  it('clears the cached sessions once per call', async () => {
+    const { service, resets } = setup();
+
+    await service.setPaymentProviderCustomers({
+      paymentProviderId: 'bexio',
+      customers,
+    });
+
+    expect(resets.reset).toHaveBeenCalledTimes(1);
+    expect(resets.reset).toHaveBeenCalledWith(SESSION_CACHE_NAMESPACE);
+  });
+
+  it('refuses an unknown payment provider', async () => {
+    const { service, prisma } = setup();
+
+    await expect(
+      service.setPaymentProviderCustomers({
+        paymentProviderId: 'unknown',
+        customers,
+      })
+    ).rejects.toThrow(NotFoundException);
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['no customers', []],
+    [
+      'more than 500 customers',
+      Array.from({ length: 501 }, (_, i) => ({
+        userId: `user-${i}`,
+        customerId: `${i}`,
+      })),
+    ],
+    [
+      'the same user twice',
+      [
+        { userId: 'user-1', customerId: '542' },
+        { userId: 'user-1', customerId: '543' },
+      ],
+    ],
+    ['an empty customer id', [{ userId: 'user-1', customerId: ' ' }]],
+  ])('refuses %s', async (_, input) => {
+    const { service, prisma } = setup();
+
+    await expect(
+      service.setPaymentProviderCustomers({
+        paymentProviderId: 'bexio',
+        customers: input,
+      })
+    ).rejects.toThrow(BadRequestException);
+    expect(prisma.user.update).not.toHaveBeenCalled();
   });
 });

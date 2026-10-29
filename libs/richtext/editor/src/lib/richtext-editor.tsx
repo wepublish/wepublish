@@ -11,10 +11,12 @@ import { Box, css, Paper } from '@mui/material';
 import { BubbleMenu } from './editor/bubble-menu';
 import { editorConfig } from './richtext-editor.config';
 import { DragHandle } from './editor/drag-handle';
+import { CaretLinkPopover } from './editor/link-popover';
 import { FooterActions } from './editor/footer-actions';
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import { forwardRef, useEffect, useMemo } from 'react';
 import { equals } from 'ramda';
+import { useTranslation } from 'react-i18next';
 
 export const RichtextEditorWrapper = styled(Paper)``;
 
@@ -173,6 +175,7 @@ type RichtextEditorProps = {
 
 export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
   ({ defaultValue, value, onChange, disabled, autofocus }, ref) => {
+    const { t } = useTranslation();
     const editor = useEditor({
       ...editorConfig,
       content: null,
@@ -223,6 +226,8 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
         >
           {editorReady && (
             <Box
+              role="toolbar"
+              aria-label={t('richtext.menuBar.label')}
               sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
@@ -231,6 +236,12 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
                 p: 1,
                 borderBottom: 1,
                 borderColor: 'divider',
+                position: 'sticky',
+                top: 'var(--wep-sticky-top, 0px)',
+                zIndex: 2,
+                bgcolor: 'background.paper',
+                borderTopLeftRadius: 'inherit',
+                borderTopRightRadius: 'inherit',
               }}
             >
               <MenuBar />
@@ -238,6 +249,7 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
           )}
 
           {editorReady && <BubbleMenu />}
+          {editorReady && <CaretLinkPopover />}
           {editorReady && <DragHandle />}
 
           <Editor

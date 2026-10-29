@@ -3,7 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/kv-ttl-cache/api/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:runtime-shared"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

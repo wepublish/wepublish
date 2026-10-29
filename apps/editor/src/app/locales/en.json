@@ -97,6 +97,7 @@
       "saveValidationFailed": "Saving failed",
       "publishValidationFailed": "Publishing failed",
       "overview": {
+        "loadingTemplate": "Loading template…",
         "articlePending": "Article Pending",
         "articlePublished": "Article Published",
         "back": "Back",
@@ -122,6 +123,7 @@
         "warningLabel": "Warning"
       },
       "panels": {
+        "createTemplate": "Create template from article",
         "firstPublishedAtDate": "First published on {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Article not yet published",
         "addSlug": "Please add a slug",
@@ -242,6 +244,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "New Article",
+        "blank": "Blank article",
+        "search": "Search templates",
+        "noResults": "No templates found"
+      },
       "overview": {
         "articles": "Articles",
         "authors": "Authors",
@@ -816,6 +824,8 @@
       "panels": {
         "approve": "Approve",
         "approveComment": "Approve Comment",
+        "inReplyTo": "In reply to {{name}}",
+        "earlierRevisions": "Earlier versions ({{count}})",
         "cancel": "Cancel",
         "createdAt": "Created At",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
@@ -973,6 +983,9 @@
       "ignoreDeactivatedSubscriptions": "No emails will be sent to deactivated subscriptions!"
     },
     "edit": "Edit",
+    "editorHeader": {
+      "moreActions": "More actions"
+    },
     "errors": {
       "uniqueEmail": "This email address is already in use.",
       "uniqueField": "This value is already taken ({{field}}).",
@@ -1201,7 +1214,27 @@
         "description": "Description",
         "goodie": "Goodie",
         "status": "Status",
-        "idCopied": "Invoice ID copied"
+        "idCopied": "Invoice ID copied",
+        "paidAt": "Paid on",
+        "paidVia": "Paid via",
+        "paymentState": "Payment status",
+        "manuallyPaidBy": "Marked paid by",
+        "canceledAt": "Canceled on",
+        "scheduledDeactivationAt": "Deactivation if unpaid",
+        "createdAt": "Created on",
+        "modifiedAt": "Last modified",
+        "mail": "Invoice email",
+        "positions": "Items"
+      },
+      "paymentState": {
+        "created": "Created",
+        "submitted": "Submitted",
+        "requiresUserAction": "Action required",
+        "processing": "Processing",
+        "paid": "Paid",
+        "canceled": "Canceled",
+        "declined": "Declined",
+        "chargeback": "Chargeback"
       }
     },
     "linkPageBreakEditPanel": {
@@ -1609,6 +1642,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Block Templates"
       },
+      "articleTemplates": "Article Templates",
       "commentRating": "Rating System",
       "comments": "Comments",
       "commentTags": "Tags",
@@ -1635,6 +1669,7 @@
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
+      "pageTemplates": "Page Templates",
       "paymentMethods": "Payment Methods",
       "peerArticles": "Peerable Articles",
       "networkContent": "We.Publish Network",
@@ -1660,6 +1695,137 @@
       "auditLog": "Audit log",
       "letterLayouts": "Stationery",
       "language": "Language"
+    },
+    "pageTitles": {
+      "login": "Log in",
+      "impersonate": "Log in as user",
+      "resetPassword": "Reset password",
+      "setPassword": "Set new password",
+      "dashboard": "Dashboard",
+      "notifications": "Notifications",
+      "auditLog": "Audit log",
+      "apps": "Apps",
+      "externalApp": "App",
+      "articles": "Articles",
+      "articleCreate": "New article",
+      "articleEdit": "Edit article",
+      "peerArticles": "Peerable articles",
+      "articleTags": "Article tags",
+      "articleTagCreate": "New article tag",
+      "articleTagEdit": "Edit article tag",
+      "paywalls": "Paywalls",
+      "paywallCreate": "New paywall",
+      "paywallEdit": "Edit paywall",
+      "pages": "Pages",
+      "pageCreate": "New page",
+      "pageEdit": "Edit page",
+      "pageTags": "Page tags",
+      "pageTagCreate": "New page tag",
+      "pageTagEdit": "Edit page tag",
+      "blockStyles": "Block styling",
+      "blockTemplates": "Block templates",
+      "blockTemplateCreate": "New block template",
+      "blockTemplateEdit": "Edit block template",
+      "articleTemplates": "Article templates",
+      "articleTemplateCreate": "New article template",
+      "articleTemplateEdit": "Edit article template",
+      "pageTemplates": "Page templates",
+      "pageTemplateCreate": "New page template",
+      "pageTemplateEdit": "Edit page template",
+      "crowdfundings": "Crowdfundings",
+      "crowdfundingCreate": "New crowdfunding",
+      "crowdfundingEdit": "Edit crowdfunding",
+      "polls": "Polls",
+      "pollEdit": "Edit poll",
+      "pollVotes": "Poll votes",
+      "comments": "Comments",
+      "commentEdit": "Edit comment",
+      "commentTags": "Comment tags",
+      "commentTagCreate": "New comment tag",
+      "commentTagEdit": "Edit comment tag",
+      "commentRating": "Rating system",
+      "events": "Events",
+      "eventCreate": "New event",
+      "eventEdit": "Edit event",
+      "eventTags": "Event tags",
+      "eventTagCreate": "New event tag",
+      "eventTagEdit": "Edit event tag",
+      "importableEvents": "Importable events",
+      "images": "Images",
+      "imageUpload": "Upload images",
+      "imageEdit": "Edit image",
+      "documents": "Documents",
+      "documentUpload": "Upload documents",
+      "documentEdit": "Edit document",
+      "navigations": "Navigations",
+      "navigationCreate": "New navigation",
+      "navigationEdit": "Edit navigation",
+      "newsletter": "Newsletter",
+      "newsletterEdit": "Edit newsletter",
+      "newsletterPreview": "Newsletter preview",
+      "banners": "Banners",
+      "bannerCreate": "New banner",
+      "bannerEdit": "Edit banner",
+      "authors": "Authors",
+      "authorCreate": "New author",
+      "authorEdit": "Edit author",
+      "authorTags": "Author tags",
+      "authorTagCreate": "New author tag",
+      "authorTagEdit": "Edit author tag",
+      "users": "Users",
+      "userCreate": "New user",
+      "userEdit": "Edit user",
+      "userRoles": "User roles",
+      "userRoleCreate": "New user role",
+      "userRoleEdit": "Edit user role",
+      "audience": "Audience",
+      "subscriptions": "Subscriptions",
+      "subscriptionCreate": "New subscription",
+      "subscriptionEdit": "Edit subscription",
+      "memberPlans": "Subscription plans",
+      "memberPlanCreate": "New subscription plan",
+      "memberPlanEdit": "Edit subscription plan",
+      "paymentMethods": "Payment methods",
+      "paymentMethodCreate": "New payment method",
+      "paymentMethodEdit": "Edit payment method",
+      "discountCodes": "Discount codes",
+      "discountCodeCreate": "New discount code",
+      "discountCodeEdit": "Edit discount code",
+      "discountCodeUsage": "Discount code usage",
+      "goodies": "Goodies",
+      "goodieCreate": "New goodie",
+      "goodieEdit": "Edit goodie",
+      "consents": "Consents",
+      "consentCreate": "New consent",
+      "consentEdit": "Edit consent",
+      "userConsents": "User consents",
+      "userConsentCreate": "New user consent",
+      "userConsentEdit": "Edit user consent",
+      "automaticEmails": "Automatic emails",
+      "mailTemplates": "Email templates",
+      "mailTemplateCreate": "New email template",
+      "mailTemplateEdit": "Edit email template",
+      "letterLayouts": "Stationery",
+      "letterLayoutCreate": "New stationery",
+      "letterLayoutEdit": "Edit stationery",
+      "systemMails": "Account & login emails",
+      "mailSend": "Send email",
+      "mailLog": "Sent emails",
+      "networkContent": "We.Publish Network",
+      "peers": "Peers",
+      "peerCreate": "New peer",
+      "peerEdit": "Edit peer",
+      "peerProfile": "Peering profile",
+      "apiTokens": "API keys",
+      "apiTokenGenerate": "New API key",
+      "tokens": "Tokens",
+      "tokenGenerate": "New token",
+      "integrations": "Integrations",
+      "integrationEdit": "Edit integration",
+      "settings": "Settings",
+      "websiteSettings": "Website settings",
+      "seo": "SEO checklist",
+      "logout": "Logout"
     },
     "navigation": {
       "overview": {
@@ -1724,7 +1890,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Unpublish",
-        "unpublished": "Unpublished"
+        "unpublished": "Unpublished",
+        "loadingTemplate": "Loading template…"
       },
       "panels": {
         "chooseBlock": "Choose Block",
@@ -1772,7 +1939,8 @@
         "hideHeaderInfo": "Hides the website's header on this page, e.g. for landing pages.",
         "hideFooter": "Hide footer",
         "hideFooterInfo": "Hides the website's footer on this page, e.g. for landing pages.",
-        "enterSocialMediaImage": "Please add an image for social media"
+        "enterSocialMediaImage": "Please add an image for social media",
+        "createTemplate": "Create template from page"
       }
     },
     "pages": {
@@ -1805,6 +1973,12 @@
         "untitled": "Untitled",
         "updatedAt": "Updated At",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "New Page",
+        "blank": "Blank page",
+        "search": "Search templates",
+        "noResults": "No templates found"
       }
     },
     "paymentMethodList": {
@@ -2002,7 +2176,29 @@
     "richtext": {
       "menuBar": {
         "paragraph": "Paragraph",
-        "heading": "Heading {{level}}"
+        "heading": "Heading {{level}}",
+        "label": "Formatting",
+        "textStyle": "Text style",
+        "undo": "Undo",
+        "redo": "Redo",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "strike": "Strikethrough",
+        "subscript": "Subscript",
+        "superscript": "Superscript",
+        "textColor": "Text color",
+        "backgroundColor": "Background color",
+        "bulletList": "Bulleted list",
+        "orderedList": "Numbered list",
+        "alignLeft": "Align left",
+        "alignCenter": "Align center",
+        "alignRight": "Align right",
+        "link": "Link",
+        "table": "Insert table",
+        "codeBlock": "Code block",
+        "blockquote": "Quote",
+        "invisibleCharacters": "Show invisible characters"
       },
       "link": {
         "title": "Link text with",
@@ -2019,6 +2215,18 @@
         "remove": "Remove link",
         "variantButtonMain": "Button (main)",
         "variantButtonSecondary": "Button (secondary)"
+      },
+      "table": {
+        "label": "Table",
+        "addColumnBefore": "Insert column left",
+        "addColumnAfter": "Insert column right",
+        "deleteColumn": "Delete column",
+        "addRowBefore": "Insert row above",
+        "addRowAfter": "Insert row below",
+        "deleteRow": "Delete row",
+        "mergeCells": "Merge cells",
+        "splitCell": "Split cell",
+        "headerCell": "Header cell"
       },
       "colorPicker": {
         "clear": "Clear color"
@@ -2072,6 +2280,8 @@
       "newArticlePaywall": "Freshly created articles will require a subscription by default",
       "subscriptionPlans": "Subscription Plans",
       "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
+      "subscriptionExtendWindowDays": "Renewal window (days before the end)",
+      "paymentMethodChangeExpiryDays": "Payment method change waiting time (days)",
       "warnings": {
         "askOperators": "Warning: changing one or more of the settings may break the page or have other unpredictable consequences. If you are unsure, please try talking to the operators first. If you are sure, feel free to continue.",
         "guestCommenting": "Allow guest visitors (not logged in) to write and publish comments on articles.",
@@ -2088,6 +2298,8 @@
       "info": {
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
+        "subscriptionExtendWindowDays": "How many days before a subscription ends readers see \"Renew now\" in their profile. 30 = as before; 365 = any time, as long as no invoice is open.",
+        "paymentMethodChangeExpiryDays": "How many days a started payment method change waits for the open invoice to be paid or for the payment provider to confirm it. After that it expires and the subscription keeps its current payment method.",
         "newSubscriptionsApiPublic": "Makes the new subscriptions of a chosen period available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
         "activeSubscriptionsApiPublic": "Makes all currently active subscriptions available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
         "renewingSubscriptionsApiPublic": "Makes the subscriptions that renew in a chosen period available via the public API without login, e.g. for live figures on your website. The data is anonymised. Leave it off if you don't need it.",
@@ -2417,6 +2629,14 @@
       }
     },
     "userSubscriptionEdit": {
+      "paymentMethodChange": {
+        "pending": "The reader is switching to {{paymentMethod}}: {{waitingFor}}. Until then the current payment method stays. The change expires on {{expiresAt, PP}}.",
+        "waitingFor": {
+          "invoicePayment": "waiting for the open invoice to be paid",
+          "authorization": "waiting for the payment provider to confirm it",
+          "immediate": "applied straight away"
+        }
+      },
       "autoRenew": "Auto Renew",
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
@@ -2544,6 +2764,62 @@
       "blockTypesPlaceholder": "Available for block types",
       "noStyle": "No style"
     },
+    "articleTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Article Templates",
+        "newTemplate": "New Article Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Article templates define the content and metadata a new article starts with. Changing a template does not affect articles that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingArticle": "Loading article…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
+      },
+      "delete": {
+        "title": "Delete article template?",
+        "body": "Do you really want to delete the article template \"{{name}}\"? Articles created from it are not affected."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Page Templates",
+        "newTemplate": "New Page Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Page templates define the content and metadata a new page starts with. Changing a template does not affect pages that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingPage": "Loading page…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
+      },
+      "delete": {
+        "title": "Delete page template?",
+        "body": "Do you really want to delete the page template \"{{name}}\"? Pages created from it are not affected."
+      }
+    },
     "blockTemplates": {
       "list": {
         "title": "Block Templates",
@@ -2564,7 +2840,8 @@
         "editing": "Editing",
         "saveConfirmMessage": "Saving updates this template's content right away in every article and page that uses it, including published ones.",
         "saveConfirmTitle": "Save template?",
-        "created": "Created"
+        "created": "Created",
+        "empty": "This template has no blocks yet. Add the first one with +."
       }
     },
     "yes": "Yes",
@@ -3388,12 +3665,52 @@
           "fontWeightBold": "Bold",
           "fontWeightExtraBold": "Extra Bold",
           "fontWeightBlack": "Black",
-          "fontFamilyInfo": "Choose from the fonts added under «Fonts». «Default» uses the website's standard font.",
+          "fontFamilyInfo": "Choose from the fonts added under «Fonts». «Default» uses the font from «Base for all styles».",
+          "baseFontFamilyInfo": "Choose from the fonts added under «Fonts». «Default» uses the browser's standard font.",
           "fontSizeInfo": "The size of the text. rem refers to the website's base size (1rem is usually 16px), px is a fixed pixel size.",
           "lineHeightInfo": "The space between the lines of a paragraph. 1.5em means one and a half times the font size.",
           "letterSpacingInfo": "The space between the individual letters. 0 is the font's normal spacing; small values such as 0.02em are usually enough.",
           "textTransformInfo": "Changes the letter case automatically – e.g. «Uppercase» shows the whole text in capital letters, no matter how it was typed.",
-          "overrideInfo": "Turn it on to set a value just for this text style. When it is off, the general value at the top of this tab applies."
+          "overrideInfo": "Turn it on to set a value just for this text style. When it is off, the value from «Base for all styles» applies, or the built-in default if that is not set either.",
+          "screenSizes": "Screen sizes",
+          "baseline": "Baseline",
+          "belowWidth": "Below {{width}}px",
+          "fromWidth": "{{width}}px and up",
+          "addScreenSize": "Add screen size",
+          "screenSizeRemoved": "{{name}} removed",
+          "removeScreenSizeHint": "Press Delete to remove this screen size",
+          "undo": "Undo",
+          "screenSizeInfo": "These values apply to screens {{width}}px wide and larger. Anything switched off is taken from the next smaller screen size.",
+          "inheritedFromBaseline": "Inherited: {{value}} from «Baseline»",
+          "inheritedFromWidth": "Inherited: {{value}} from «{{name}}» ({{width}}px and up)",
+          "inheritedFromGeneral": "Inherited: {{value}} from «Base for all styles»",
+          "inheritedNone": "Nothing to inherit – the built-in default applies",
+          "inheritedFromTheme": "Inherited: {{value}}, the built-in default of this style",
+          "inheritedFromBrowser": "Inherited: {{value}}, the browser's standard value",
+          "replacesFromBaseline": "Replaces {{value}} from «Baseline»",
+          "replacesFromWidth": "Replaces {{value}} from «{{name}}» ({{width}}px and up)",
+          "replacesFromGeneral": "Replaces {{value}} from «Base for all styles»",
+          "replacesFromTheme": "Replaces {{value}}, the built-in default of this style",
+          "replacesFromBrowser": "Replaces {{value}}, the browser's standard value",
+          "replacesNone": "Replaces the built-in default",
+          "fieldAtWidth": "{{label}} at {{name}} ({{width}}px and up)",
+          "unitOf": "Unit of {{label}}",
+          "hasErrors": "(has errors)",
+          "notSet": "Default",
+          "base": "Base for all styles",
+          "baseInfo": "Every style below inherits these values unless it sets its own.",
+          "screenSizeOverrides": "Custom values for screen sizes: {{names}}",
+          "screenSizeName": "{{name}} ({{width}}px and up)",
+          "preview": "Preview",
+          "previewScreenSize": "Screen size of the preview",
+          "groups": {
+            "headings": "Headings",
+            "text": "Text",
+            "teasers": "Teasers",
+            "article": "Article",
+            "banner": "Banner",
+            "blocks": "Blocks"
+          }
         },
         "tabs": "Theme tabs",
         "paletteTab": "Palette",
@@ -4210,10 +4527,65 @@
       "addBlock": "Add block",
       "hideBlock": "Hide block on the website",
       "showBlock": "Show block on the website again",
+      "timeBlock": "Schedule when this block shows",
       "deleteBlock": "Delete block",
       "moveBlockUp": "Move block up",
       "moveBlockDown": "Move block down",
       "styleHelp": "Changes how this block looks on the website. Leave it empty to use the default look. Styles are managed under «Block Styling»."
+    },
+    "blockTiming": {
+      "title": "Schedule this block",
+      "offAir": "Hidden on the website right now, because it is outside its schedule.",
+      "dateRange": "Dates",
+      "dateRangeEmpty": "Any date",
+      "dateRangeHelp": "The block shows from the start of the first day to the end of the last.",
+      "weekdays": "Days",
+      "weekdaysHelp": "Pick none to show the block every day.",
+      "timeOfDay": "Time of day",
+      "timeOfDayFrom": "From",
+      "timeOfDayTo": "until",
+      "timeOfDayHelp": "Times are in the site's time zone. An end before the start runs past midnight, e.g. 22:00 until 02:00.",
+      "sameTimes": "Start and end are the same, so the block never shows. Change one of them or pick «All day».",
+      "clearTimeOfDay": "All day",
+      "clear": "Remove schedule",
+      "done": "Done",
+      "summary": {
+        "always": "Always shows. Add dates, days or a time of day to limit when.",
+        "never": "Never shows, because its start and end time are the same.",
+        "shows": "Shows {{conditions}}.",
+        "between": "from {{from}} to {{to}}",
+        "since": "from {{from}}",
+        "until": "until {{to}}",
+        "days": "on {{days}}",
+        "hours": "between {{from}} and {{to}}"
+      }
+    },
+    "weekday": {
+      "Monday": "Monday",
+      "Tuesday": "Tuesday",
+      "Wednesday": "Wednesday",
+      "Thursday": "Thursday",
+      "Friday": "Friday",
+      "Saturday": "Saturday",
+      "Sunday": "Sunday"
+    },
+    "weekdayRecurring": {
+      "Monday": "Mondays",
+      "Tuesday": "Tuesdays",
+      "Wednesday": "Wednesdays",
+      "Thursday": "Thursdays",
+      "Friday": "Fridays",
+      "Saturday": "Saturdays",
+      "Sunday": "Sundays"
+    },
+    "weekdayShort": {
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat",
+      "Sunday": "Sun"
     },
     "placeholderInput": {
       "add": "Add"
@@ -4323,9 +4695,11 @@
       },
       "create": {
         "article": "Create article",
+        "articleTemplate": "Create article template",
         "articleTag": "Create article tag",
         "paywall": "Create paywall",
         "page": "Create page",
+        "pageTemplate": "Create page template",
         "pageTag": "Create page tag",
         "crowdfunding": "Create crowdfunding",
         "blockTemplate": "Create block template",

@@ -163,12 +163,13 @@ export class MediaService {
     objectUri: string,
     transformations: TransformationsDto
   ): Promise<ImageURIObject> {
-    if (!(await this.transformations.exists(objectUri))) {
-      return await this.limitTransforms(() =>
-        this.transformImage(imageId, transformations)
-      );
+    if (await this.transformations.exists(objectUri)) {
+      return { uri: objectUri, exists: true };
     }
-    return { uri: objectUri, exists: true };
+
+    return await this.limitTransforms(() =>
+      this.transformImage(imageId, transformations)
+    );
   }
 
   private async getFallbackImage(
@@ -440,11 +441,6 @@ export class MediaService {
     return (
       getMimeTypeForExtension(path.extname(objectUri)) ?? GENERIC_CONTENT_TYPE
     );
-  }
-
-  public async hasDocument(documentId: string): Promise<boolean> {
-    const keys = await this.listKeys(this.uploads, `documents/${documentId}/`);
-    return keys.length > 0;
   }
 
   public async deleteDocument(documentId: string) {

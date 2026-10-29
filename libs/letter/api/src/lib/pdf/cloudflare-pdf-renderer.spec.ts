@@ -1,5 +1,5 @@
 import { PrismaClient, SettingPdfRenderer } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
   CloudflarePdfRenderer,
   CloudflarePdfRendererProps,
@@ -56,7 +56,7 @@ describe('CloudflarePdfRenderer', () => {
     const renderer = new CloudflarePdfRenderer({
       id: 'cloudflare',
       prisma: {} as PrismaClient,
-      kv: {} as KvTtlCacheService,
+      kv: {} as NamespacedCache,
       fallback,
     });
 

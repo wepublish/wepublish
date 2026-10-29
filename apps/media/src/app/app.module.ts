@@ -7,24 +7,24 @@ import {
   UPLOAD_DISK,
   TRANSFORMATION_DISK,
   createStorageFetch,
-  createLinkCacheOptions,
+  MediaLinkCacheModule,
 } from '@wepublish/media/api';
+import { DragonflyModule } from '@wepublish/dragonfly/api';
+import { KvCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MulterModule } from '@nestjs/platform-express';
+import { MulterModule } from '@nestjs/platform-node';
 import { StorageModule, S3Disk } from '@nestjs/storage';
 import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { APP_FILTER } from '@nestjs/core';
-import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
     }),
-    CacheModule.register({
-      ...createLinkCacheOptions(),
-      isGlobal: true,
-    }),
+    DragonflyModule.forRoot(),
+    KvCacheModule.forRoot(),
+    MediaLinkCacheModule,
     MulterModule.register({
       limits: {
         fileSize: 20 * 1024 * 1024, // 20 MB

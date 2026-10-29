@@ -1,13 +1,22 @@
-import { render } from '@testing-library/react';
-import * as stories from './youtube-video-block.stories';
-import { composeStories } from '@storybook/react';
+import { screen } from '@testing-library/react';
+import {
+  mockYouTubeVideoBlock,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { YouTubeVideoBlock } from './youtube-video-block';
 
-const storiesCmp = composeStories(stories);
+describe('YouTubeVideoBlock', () => {
+  it('plays the video from its YouTube watch url', () => {
+    renderWithProviders(
+      <YouTubeVideoBlock
+        {...mockYouTubeVideoBlock({ videoID: 'CCOdQsZa15o' })}
+      />
+    );
 
-describe('YouTube Video Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      render(<Component />);
-    });
+    expect(
+      screen.getByText(
+        'ReactPlayer Mock: https://www.youtube.com/watch?v=CCOdQsZa15o'
+      )
+    ).toBeInTheDocument();
   });
 });

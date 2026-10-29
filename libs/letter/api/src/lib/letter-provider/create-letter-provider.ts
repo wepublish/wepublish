@@ -1,11 +1,11 @@
 import { LetterProviderType, PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { BaseLetterProvider } from './base-letter-provider';
 import { PingenLetterProvider } from './pingen-letter-provider';
 
 export type LetterProviderDeps = {
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
 };
 
 export const createLetterProvider = (

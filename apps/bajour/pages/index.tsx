@@ -3,11 +3,16 @@ import { SliderWrapper } from '@wepublish/block-content/website';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import {
+  BestOfWePublishWrapper,
+  isFrageDesTages,
+} from '@wepublish/tenant/bajour';
+import {
   getApiUrl,
   getPageShell,
   revalidateFor,
 } from '@wepublish/utils/website';
 import {
+  addClientCacheToProps,
   CommentListDocument,
   CommentSort,
   FullTeaserListBlockFragment,
@@ -19,13 +24,9 @@ import {
   PeerProfileDocument,
   SettingListDocument,
   SortOrder,
-  addClientCacheToProps,
 } from '@wepublish/website/api';
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-
-import { BestOfWePublishWrapper } from '../src/components/best-of-wepublish/best-of-wepublish';
-import { isFrageDesTages } from '../src/components/frage-des-tages/is-frage-des-tages';
 
 const Homepage = styled(PageContainer)`
   grid-column: -1/1;

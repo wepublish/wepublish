@@ -10,7 +10,8 @@ import {
   Res,
 } from '@nestjs/common';
 
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction } from 'connect';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { Public } from '@wepublish/authentication/api';
 import {
   MAILS_MODULE_OPTIONS,
@@ -34,8 +35,8 @@ export class MailWebhookController {
   @All(':providerId')
   async receiveWebhook(
     @Param('providerId') providerId: string,
-    @Req() req: Request,
-    @Res() res: Response
+    @Req() req: NodeRequest,
+    @Res() res: NodeResponse
   ) {
     this.logger.log(
       `Received webhook from ${req.get('origin')} for mailProvider ${providerId}`
@@ -98,7 +99,7 @@ export class MailWebhookMiddleware implements NestMiddleware {
     private config: MailsModuleOptions
   ) {}
 
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: NodeRequest, res: NodeResponse, next: NextFunction) {
     const providerId = req.params['providerId'];
 
     const provider =

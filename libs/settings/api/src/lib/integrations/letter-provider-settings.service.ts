@@ -15,7 +15,7 @@ import {
 } from './letter-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { LetterProviderSettingsDataloaderService } from './letter-provider-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { clearProviderConfig } from './clear-provider-config';
@@ -26,7 +26,7 @@ export class LetterProviderSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService,
+    private resets: NamespaceResets,
     private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
@@ -91,7 +91,7 @@ export class LetterProviderSettingsService {
     const returnValue = await this.prisma.settingLetterProvider.create({
       data: output,
     });
-    await this.kv.resetNamespace('settings:letterprovider');
+    await this.resets.reset('settings:letterprovider');
     await this.providerSettingsChanged.notify('Letter provider');
     return returnValue;
   }
@@ -138,7 +138,7 @@ export class LetterProviderSettingsService {
       where: { id },
       data,
     });
-    await this.kv.resetNamespace('settings:letterprovider');
+    await this.resets.reset('settings:letterprovider');
     await this.providerSettingsChanged.notify('Letter provider');
     return returnValue;
   }
@@ -167,7 +167,7 @@ export class LetterProviderSettingsService {
     const returnValue = await this.prisma.settingLetterProvider.delete({
       where: { id },
     });
-    await this.kv.resetNamespace('settings:letterprovider');
+    await this.resets.reset('settings:letterprovider');
     await this.providerSettingsChanged.notify('Letter provider');
     return returnValue;
   }
