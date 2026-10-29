@@ -1,10 +1,12 @@
 import { css } from '@mui/material';
 import styled from '@emotion/styled';
+import { FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderImageUploadProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useId, useRef, forwardRef, useImperativeHandle } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdDelete, MdEdit, MdOutlineUploadFile } from 'react-icons/md';
 import { ImageUploadPlaceholder } from './image-upload-placeholder';
 
@@ -47,6 +49,7 @@ export const ImageUpload = forwardRef<
     elements: { Image, IconButton },
   } = useWebsiteBuilder();
   const inputId = useId();
+  const { t } = useTranslation();
 
   useImperativeHandle(parentRef, () => fileInputRef.current!, []);
 
@@ -56,7 +59,7 @@ export const ImageUpload = forwardRef<
         {image ?
           <Image
             css={avatarStyles}
-            image={image}
+            image={image as unknown as FullImageFragment}
           />
         : <ImageUploadPlaceholder css={avatarStyles} />}
 
@@ -76,7 +79,7 @@ export const ImageUpload = forwardRef<
             <IconButton
               color="error"
               onClick={() => onUpload(null)}
-              title="Bild löschen"
+              title={t('user.imageUpload.delete')}
             >
               <MdDelete />
             </IconButton>
@@ -84,7 +87,7 @@ export const ImageUpload = forwardRef<
             <IconButton
               color="primary"
               onClick={() => fileInputRef.current?.click()}
-              title="Neues Bild hochladen"
+              title={t('user.imageUpload.replace')}
             >
               <MdEdit />
             </IconButton>
@@ -92,7 +95,7 @@ export const ImageUpload = forwardRef<
         : <IconButton
             color="primary"
             onClick={() => fileInputRef.current?.click()}
-            title="Bild hochladen"
+            title={t('user.imageUpload.upload')}
           >
             <MdOutlineUploadFile />
           </IconButton>

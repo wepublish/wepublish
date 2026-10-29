@@ -1,27 +1,29 @@
-import { ApolloError } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  MemberPlan,
+  Autocomplete,
+  Divider as MuiDivider,
+  Paper,
+  PaperProps,
+  TextField,
+} from '@mui/material';
+import {
+  FullMemberPlanFragment,
+  MemberPlanListDocument,
   MemberPlanSort,
   SortOrder,
-  useMemberPlanListQuery,
 } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
-import {
-  Divider as RDivider,
-  Message,
-  Pagination as RPagination,
-  SelectPicker,
-  toaster,
-} from 'rsuite';
+import { useCallback, useMemo, useState } from 'react';
 
-import { DEFAULT_MAX_TABLE_PAGES } from '../../utility';
+import { humanizeError } from '../../humanizeError';
+import { Pagination } from '../../listView/pagination';
+import { enqueueSnackbar } from '../../snackbar';
 
-const Divider = styled(RDivider)`
+const Divider = styled(MuiDivider)`
   margin: '12px 0';
 `;
 
-const Pagination = styled(RPagination)`
+const StyledPagination = styled(Pagination)`
   margin: 0 12px 12px;
 `;
 
@@ -29,7 +31,7 @@ interface SelectMemberPlanProps {
   className?: string;
   disabled?: boolean;
   name?: string;
-  defaultMemberPlan?: Pick<MemberPlan, 'id' | 'name'> | null;
+  defaultMemberPlan?: Pick<FullMemberPlanFragment, 'id' | 'name'> | null;
   selectedMemberPlan?: string | null;
   setSelectedMemberPlan(memberPlanId: string | null): void;
 }
@@ -44,26 +46,19 @@ export function SelectMemberPlan({
 }: SelectMemberPlanProps) {
   const [page, setPage] = useState(1);
 
-  const showErrors = (error: ApolloError): void => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {error.message}
-      </Message>
-    );
+  const showErrors = (error: Error): void => {
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
 
-  const { data: memberplansData, refetch } = useMemberPlanListQuery({
+  const { data: memberplansData, refetch } = useQuery(MemberPlanListDocument, {
     variables: {
       sort: MemberPlanSort.CreatedAt,
       order: SortOrder.Ascending,
       take: 50,
     },
-    onError: showErrors,
   });
 
   const availableMemberPlans = useMemo(() => {
@@ -86,50 +81,56 @@ export function SelectMemberPlan({
     return items;
   }, [memberplansData, defaultMemberPlan]);
 
+  const PaperWithPager = useCallback(
+    ({ children, ...props }: PaperProps) => (
+      <Paper {...props}>
+        {children}
+
+        <Divider />
+
+        <div onMouseDown={event => event.preventDefault()}>
+          <StyledPagination
+            state={{
+              page,
+              limit: 50,
+              setPage,
+              setLimit: () => undefined /* page size is fixed here */,
+            }}
+            totalCount={memberplansData?.memberPlans?.totalCount ?? 0}
+          />
+        </div>
+      </Paper>
+    ),
+    [page, setPage, memberplansData]
+  );
+
   return (
-    <SelectPicker
-      block
-      virtualized
+    <Autocomplete
       disabled={disabled}
       className={className}
-      name={name}
-      value={selectedMemberPlan}
-      data={availableMemberPlans}
-      onSearch={word => {
+      options={availableMemberPlans.map(plan => plan.value)}
+      getOptionLabel={id =>
+        availableMemberPlans.find(plan => plan.value === id)?.label ?? id
+      }
+      filterOptions={options => options}
+      onInputChange={(_event, word) =>
         refetch({
           filter: word ? { name: word } : undefined,
           sort: MemberPlanSort.CreatedAt,
           order: SortOrder.Ascending,
           take: 50,
-        });
-      }}
-      onChange={(value, event) => {
-        setSelectedMemberPlan(value);
-      }}
-      renderListbox={menu => {
-        return (
-          <>
-            {menu}
-
-            <Divider />
-
-            <Pagination
-              limit={50}
-              maxButtons={DEFAULT_MAX_TABLE_PAGES}
-              first
-              last
-              prev
-              next
-              ellipsis
-              boundaryLinks
-              layout={['total', '-', '|', 'pager']}
-              total={memberplansData?.memberPlans?.totalCount ?? 0}
-              activePage={page}
-              onChangePage={page => setPage(page)}
-            />
-          </>
-        );
-      }}
+        })
+      }
+      value={selectedMemberPlan ?? null}
+      onChange={(_event, value) => setSelectedMemberPlan(value)}
+      slots={{ paper: PaperWithPager }}
+      renderInput={params => (
+        <TextField
+          {...params}
+          name={name}
+        />
+      )}
+      fullWidth
     />
   );
 }

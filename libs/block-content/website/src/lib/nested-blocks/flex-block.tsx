@@ -1,15 +1,13 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
   FullBlockFragment,
+  FullFlexAlignmentFragment,
   FullFlexBlockFragment,
 } from '@wepublish/website/api';
 import {
-  BuilderBlockRendererProps,
   BuilderFlexBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
 
 export const FlexBlockWrapper = styled('div')`
@@ -20,7 +18,7 @@ export const FlexBlockWrapper = styled('div')`
   grid-column: -1 / 1;
 `;
 
-export const BlockWithAlignment = styled('div')<FlexAlignment>`
+export const BlockWithAlignment = styled('div')<FullFlexAlignmentFragment>`
   grid-column: -1 / 1;
 
   ${({ theme, w }) =>
@@ -40,7 +38,7 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
 `;
 
 export const isFlexBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullFlexBlockFragment => {
   return block.__typename === 'FlexBlock';
 };
@@ -50,10 +48,7 @@ export const FlexBlock = ({
   blocks,
   type,
   level,
-}: BuilderFlexBlockProps & {
-  type?: BuilderBlockRendererProps['type'];
-  level?: number;
-}) => {
+}: BuilderFlexBlockProps) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
@@ -68,7 +63,7 @@ export const FlexBlock = ({
         return (
           <BlockWithAlignment
             key={index}
-            {...(nestedBlock.alignment as FlexAlignment)}
+            {...(nestedBlock.alignment as FullFlexAlignmentFragment)}
           >
             <Renderer
               block={nestedBlock.block as FullBlockFragment}

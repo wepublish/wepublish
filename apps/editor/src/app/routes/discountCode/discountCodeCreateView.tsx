@@ -1,31 +1,29 @@
-import { ApolloError } from '@apollo/client';
-import {
-  MutationCreateDiscountCodeArgs,
-  useCreateDiscountCodeMutation,
-} from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CreateDiscountCodeDocument } from '@wepublish/editor/api';
 import { CanCreateDiscountCode } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
+  humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { DiscountCodeForm } from './discountCodeForm';
+import {
+  DiscountCodeForm,
+  DiscountCodeFormValues,
+  discountCodeSchema,
+} from './discountCodeForm';
 
-const onErrorToast = (error: ApolloError) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+const onErrorToast = (error: Error) => {
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const DiscountCodeCreateView = () => {
@@ -34,11 +32,20 @@ const DiscountCodeCreateView = () => {
   const navigate = useNavigate();
   const closePath = './..';
 
-  const [discountCode, setDiscountCode] =
-    useState<MutationCreateDiscountCodeArgs>();
+  const form = useForm<DiscountCodeFormValues>({
+    resolver: zodResolver(discountCodeSchema),
+    defaultValues: {
+      code: '',
+      discountPercent: 0,
+      memberPlanId: '',
+      validFrom: '',
+      validTo: '',
+    },
+  });
 
-  const [createDiscountCode, { loading: updateLoading }] =
-    useCreateDiscountCodeMutation({
+  const [createDiscountCode, { loading: updateLoading }] = useMutation(
+    CreateDiscountCodeDocument,
+    {
       onError: onErrorToast,
       onCompleted: data => {
         if (data.createDiscountCode) {
@@ -49,50 +56,29 @@ const DiscountCodeCreateView = () => {
           }
         }
       },
-    });
-
-  const loading = updateLoading;
-  const onSubmit = () => createDiscountCode({ variables: discountCode });
-
-  const { StringType, DateType, NumberType } = Schema.Types;
-  const validationModel = Schema.Model({
-    code: StringType().minLength(3).isRequired(),
-    discountPercent: NumberType().min(0).max(100).isInteger().isRequired(),
-    validFrom: DateType().isRequired(),
-    validTo: DateType()
-      .min(new Date(discountCode?.validFrom ?? new Date()))
-      .isRequired(),
-    memberPlanId: StringType().isRequired(),
-  });
+    }
+  );
 
   return (
-    <Form
-      fluid
-      formValue={discountCode || {}}
-      model={validationModel}
-      disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}
-    >
-      <SingleViewTitle
-        loading={loading}
-        title={t('discountCode.form.createTitle')}
-        loadingTitle={t('loading')}
-        saveBtnTitle={t('save')}
-        saveAndCloseBtnTitle={t('saveAndClose')}
-        closePath={closePath}
-        setCloseFn={setShouldClose}
-      />
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(({ memberPlan, id, ...discountCode }) =>
+          createDiscountCode({ variables: discountCode })
+        )}
+      >
+        <SingleViewTitle
+          loading={updateLoading}
+          title={t('discountCode.form.createTitle')}
+          loadingTitle={t('loading')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setShouldClose}
+        />
 
-      <DiscountCodeForm
-        discountCode={discountCode ?? {}}
-        onChange={changes =>
-          setDiscountCode(oldDiscountCode => ({
-            ...oldDiscountCode,
-            ...(changes as any),
-          }))
-        }
-      />
-    </Form>
+        <DiscountCodeForm create />
+      </form>
+    </FormProvider>
   );
 };
 

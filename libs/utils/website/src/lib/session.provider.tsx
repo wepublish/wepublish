@@ -1,12 +1,14 @@
+import { useLazyQuery } from '@apollo/client/react';
 import {
-  SessionWithTokenWithoutUser,
-  SensitiveDataUser,
+  FullSensitiveDataUserFragment,
+  FullSessionWithTokenWithoutUserFragment,
+  MeDocument,
 } from '@wepublish/website/api';
 import {
   AuthTokenStorageKey,
+  isFramed,
   SessionTokenContext,
 } from '@wepublish/authentication/website';
-import { useMeLazyQuery } from '@wepublish/website/api';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import {
   memo,
@@ -17,42 +19,61 @@ import {
 } from 'react';
 
 export const SessionProvider = memo<
-  PropsWithChildren<{ sessionToken: SessionWithTokenWithoutUser | null }>
+  PropsWithChildren<{
+    sessionToken: FullSessionWithTokenWithoutUserFragment | null;
+  }>
 >(function SessionProvider({ sessionToken, children }) {
   const [token, setToken] = useState<typeof sessionToken>(sessionToken);
-  const [user, setUser] = useState<SensitiveDataUser | null>(null);
+  const [user, setUser] = useState<FullSensitiveDataUserFragment | null>(null);
 
-  const [getMe] = useMeLazyQuery({
+  const [getMe] = useLazyQuery(MeDocument, {
     fetchPolicy: 'network-only',
-    onCompleted(data) {
-      setUser((data.me as SensitiveDataUser) ?? null);
-    },
   });
 
+  const fetchMe = useCallback(async () => {
+    try {
+      const { data } = await getMe();
+      setUser((data?.me as FullSensitiveDataUserFragment) ?? null);
+    } catch {
+      setUser(null);
+    }
+  }, [getMe]);
+
   const setCookieAndToken = useCallback(
-    async (newToken: SessionWithTokenWithoutUser | null) => {
+    async (newToken: FullSessionWithTokenWithoutUserFragment | null) => {
       setToken(newToken);
 
       if (newToken) {
+        // Browsers drop this SameSite=strict cookie inside a cross-site frame
+        // (the editor's preview), so a framed page keeps a per-tab copy that
+        // authLink falls back to. Top-level pages stay cookie-only, so a logout
+        // in one tab still ends the session in all of them.
+        if (isFramed()) {
+          sessionStorage.setItem(AuthTokenStorageKey, JSON.stringify(newToken));
+        }
+
         await setCookie(AuthTokenStorageKey, JSON.stringify(newToken), {
           expires: new Date(newToken.expiresAt),
           sameSite: 'strict',
           secure: process.env.NODE_ENV === 'production',
         });
-        getMe();
+        fetchMe();
       } else {
         setUser(null);
+        sessionStorage.removeItem(AuthTokenStorageKey);
         deleteCookie(AuthTokenStorageKey);
       }
     },
-    [getMe]
+    [fetchMe]
   );
 
   useEffect(() => {
-    const cookie = getCookie(AuthTokenStorageKey);
+    const stored =
+      getCookie(AuthTokenStorageKey)?.toString() ??
+      (isFramed() ? sessionStorage.getItem(AuthTokenStorageKey) : null);
     const sToken =
       sessionToken ? sessionToken
-      : cookie ? (JSON.parse(cookie.toString()) as SessionWithTokenWithoutUser)
+      : stored ? (JSON.parse(stored) as FullSessionWithTokenWithoutUserFragment)
       : null;
 
     if (sToken) {

@@ -1,43 +1,37 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
-  Banner,
-  BannersQuery,
-  useDeleteBannerMutation,
+  DeleteBannerDocument,
+  FullBannerFragment,
 } from '@wepublish/editor/api';
+import { humanizeError, enqueueSnackbar } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, Modal, toaster } from 'rsuite';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';
 
 type DeleteBannerProps = {
-  banner: Banner | undefined;
+  banner: FullBannerFragment | undefined;
   onClose(): void;
-  onDelete(): Promise<ApolloQueryResult<BannersQuery>>;
+  onDelete(): Promise<unknown>;
 };
 
-const onErrorToast = (error: ApolloError) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+const onErrorToast = (error: Error) => {
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const onCompletedToast = (t: TFunction) => () => {
-  toaster.push(
-    <Message
-      type="success"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {t('toast.deletedSuccess')}
-    </Message>
-  );
+  enqueueSnackbar(t('toast.deletedSuccess'), {
+    variant: 'success',
+    autoHideDuration: 3000,
+  });
 };
 
 export function BannerDeleteModal({
@@ -47,7 +41,7 @@ export function BannerDeleteModal({
 }: DeleteBannerProps) {
   const { t } = useTranslation();
 
-  const [deleteBannerMutation] = useDeleteBannerMutation({
+  const [deleteBannerMutation] = useMutation(DeleteBannerDocument, {
     onError: onErrorToast,
     onCompleted: onCompletedToast(t),
   });
@@ -68,36 +62,34 @@ export function BannerDeleteModal({
   }
 
   return (
-    <Modal
+    <Dialog
       open={!!banner}
       onClose={onClose}
     >
-      <Modal.Header>
-        <Modal.Title>{t('banner.delete.title')}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{t('banner.delete.title')}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         {t('banner.delete.body', {
           name: banner?.title,
         })}
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          onClick={deleteBanner}
-          appearance="primary"
-          color="red"
-        >
-          {t('banner.delete.delete')}
-        </Button>
-
-        <Button
+          variant="text"
           onClick={onClose}
-          appearance="subtle"
         >
           {t('cancel')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+
+        <Button
+          variant="contained"
+          onClick={deleteBanner}
+          color="error"
+        >
+          {t('banner.delete.delete')}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

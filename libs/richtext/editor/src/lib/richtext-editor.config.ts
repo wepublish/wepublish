@@ -17,6 +17,8 @@ import { HeadingId } from './editor/extensions/heading-id';
 import { LinkVariant } from './editor/extensions/link-variant';
 import { TableCellWithBorder, TableHeaderWithBorder } from './editor/table';
 import { SmilieReplacer } from './editor/extensions/emoji';
+import { PasteNeutralColor } from './editor/extensions/paste-neutral-color';
+import { LinkShortcut } from './editor/extensions/link-shortcut';
 
 const extensions = [
   TextStyleKit.configure({
@@ -85,6 +87,8 @@ const extensions = [
   }),
   // We.Publish Extensions
   SmilieReplacer,
+  PasteNeutralColor,
+  LinkShortcut,
   Commands.configure({
     suggestions: commandSuggestions,
   }),
@@ -92,8 +96,11 @@ const extensions = [
   TableHeaderWithBorder,
   LinkVariant.configure({
     variants: [
-      { value: 'buttonLinkMain', label: 'Button (Main)' },
-      { value: 'buttonLinkSecondary', label: 'Button (Secondary)' },
+      { value: 'buttonLinkMain', labelKey: 'richtext.link.variantButtonMain' },
+      {
+        value: 'buttonLinkSecondary',
+        labelKey: 'richtext.link.variantButtonSecondary',
+      },
     ],
   }),
 ];

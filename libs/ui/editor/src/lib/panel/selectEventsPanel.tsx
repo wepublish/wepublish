@@ -1,47 +1,38 @@
-import { ApolloError } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import {
-  FullEventFragment,
-  TagType,
-  useEventListLazyQuery,
-} from '@wepublish/editor/api';
-import { useEffect, useReducer, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { MdEdit } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import {
+  Alert,
   Button,
   Checkbox,
-  Drawer,
-  Form,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   IconButton,
-  Message,
-  Pagination,
-  Table,
-  toaster,
-  Toggle,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
+  Switch,
+} from '@mui/material';
+import {
+  EventListDocument,
+  FullEventFragment,
+  TagType,
+} from '@wepublish/editor/api';
+import { CanUpdateEvent } from '@wepublish/permissions';
+import { useReducer, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdEdit } from 'react-icons/md';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { PermissionControl } from '../atoms/permissionControl';
 import { SelectTags } from '../atoms/tag/selectTags';
 import { EventBlockValue } from '../blocks/types';
-import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
-
-const onErrorToast = (error: ApolloError) => {
-  if (error?.message) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {error?.message}
-      </Message>
-    );
-  }
-};
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { DataTable } from '../listView/data-table';
+import { Pagination } from '../listView/pagination';
 
 export type SelectEventPanelProps = {
   selectedFilter: EventBlockValue['filter'];
@@ -67,8 +58,14 @@ export function SelectEventPanel({
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
 
-  const [fetchEvents, { data, loading }] = useEventListLazyQuery({
-    onError: onErrorToast,
+  const { data, loading } = useQuery(EventListDocument, {
+    variables: {
+      take: limit,
+      skip: (page - 1) * limit,
+      filter: {
+        tags: tagFilter,
+      },
+    },
   });
 
   const saveSelection = () => {
@@ -84,44 +81,35 @@ export function SelectEventPanel({
     }
   };
 
-  useEffect(() => {
-    fetchEvents({
-      variables: {
-        take: limit,
-        skip: (page - 1) * limit,
-        filter: {
-          tags: tagFilter,
-        },
-      },
-    });
-  }, [page, limit, tagFilter]);
-
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('blocks.event.title')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('blocks.event.title')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'ghost'}
+            variant="text"
             onClick={() => onClose()}
           >
             {t('close')}
           </Button>
 
           <Button
-            appearance={'primary'}
+            variant="contained"
             onClick={() => saveSelection()}
           >
             {t('saveAndClose')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body style={{ padding: '24px' }}>
+      <DrawerBody style={{ padding: '24px' }}>
         <div style={{ width: '250px' }}>
-          <Form.Group controlId="tags">
-            <Form.Label>{t('blocks.event.filterByTag')}</Form.Label>
+          <FormControl
+            fullWidth
+            sx={{ marginBottom: 3 }}
+          >
+            <FormLabel>{t('blocks.event.filterByTag')}</FormLabel>
 
             <SelectTags
               defaultTags={[]}
@@ -130,17 +118,16 @@ export function SelectEventPanel({
               setSelectedTags={setTagFilter}
               selectedTags={tagFilter}
             />
-          </Form.Group>
+          </FormControl>
         </div>
 
         {!allowCherryPicking && !!tagFilter?.length && (
-          <Message
-            showIcon
-            type="info"
+          <Alert
+            severity="info"
             style={{ marginTop: '12px' }}
           >
             {t('blocks.event.eventsFilterByTagInformation')}
-          </Message>
+          </Alert>
         )}
 
         <div
@@ -151,108 +138,93 @@ export function SelectEventPanel({
             marginTop: '48px',
           }}
         >
-          <Toggle
-            defaultChecked={allowCherryPicking}
-            onChange={toggleCherryPicking}
+          <FormControlLabel
+            control={
+              <Switch
+                defaultChecked={allowCherryPicking}
+                onChange={() => toggleCherryPicking()}
+              />
+            }
+            label={
+              <>
+                {t('blocks.event.cherryPick')}{' '}
+                <InfoTooltip text={t('blocks.event.cherryPickInfo')} />
+              </>
+            }
           />
-          {t('blocks.event.cherryPick')}
         </div>
 
-        <Table
-          minHeight={600}
-          autoHeight
+        <DataTable
           loading={loading}
           data={data?.events?.nodes || []}
-          rowClassName={rowData =>
-            eventFilter?.includes(rowData?.id) ? 'highlighted-row' : ''
+          getRowId={row => row.id}
+          rowClassName={row =>
+            eventFilter?.includes(row.id) ? 'highlighted-row' : ''
           }
-        >
-          {allowCherryPicking && (
-            <Table.Column width={36}>
-              <Table.HeaderCell>{''}</Table.HeaderCell>
-              <Table.Cell style={{ padding: 0 }}>
-                {(rowData: RowDataType<FullEventFragment>) => (
-                  <div
-                    style={{
-                      height: '46px',
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
+          columns={[
+            ...(allowCherryPicking ?
+              [
+                {
+                  id: 'select',
+                  label: '',
+                  width: 48,
+                  render: (row: FullEventFragment) => (
                     <Checkbox
-                      defaultChecked={
-                        eventFilter?.includes(rowData.id) ?? false
-                      }
-                      checked={eventFilter?.includes(rowData.id) ?? false}
-                      value={eventFilter?.includes(rowData.id) ? 0 : 1}
-                      onChange={shouldInclude =>
+                      size="small"
+                      checked={eventFilter?.includes(row.id) ?? false}
+                      onChange={(_event, shouldInclude) =>
                         setEventFilter(old =>
                           shouldInclude ?
-                            [...(old ?? []), rowData.id]
-                          : old?.filter(id => id !== rowData.id)
+                            [...(old ?? []), row.id]
+                          : old?.filter(id => id !== row.id)
                         )
                       }
                     />
-                  </div>
-                )}
-              </Table.Cell>
-            </Table.Column>
-          )}
-
-          <Table.Column
-            width={250}
-            resizable
-          >
-            <Table.HeaderCell>{t('event.list.name')}</Table.HeaderCell>
-            <Table.Cell>
-              {(rowData: RowDataType<FullEventFragment>) => rowData.name}
-            </Table.Cell>
-          </Table.Column>
-
-          <Table.Column
-            width={150}
-            align="center"
-            fixed="right"
-          >
-            <Table.HeaderCell>{t('event.list.edit')}</Table.HeaderCell>
-            <Table.Cell style={{ padding: '6px 0' }}>
-              {(rowData: RowDataType<FullEventFragment>) => (
-                <PermissionControl qualifyingPermissions={['CAN_UPDATE_EVENT']}>
+                  ),
+                },
+              ]
+            : []),
+            {
+              id: 'name',
+              label: t('event.list.name'),
+              width: 250,
+              render: row => row.name,
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: row => (
+                <PermissionControl qualifyingPermissions={[CanUpdateEvent.id]}>
                   <IconButtonTooltip caption={t('event.list.edit')}>
-                    <Link
+                    <IconButton
+                      component={RouterLink}
                       target="_blank"
-                      to={`/events/edit/${rowData.id}`}
+                      to={`/events/edit/${row.id}`}
+                      aria-label={t('event.list.edit')}
+                      size="small"
                     >
-                      <IconButton
-                        icon={<MdEdit />}
-                        circle
-                        size="sm"
-                      />
-                    </Link>
+                      <MdEdit />
+                    </IconButton>
                   </IconButtonTooltip>
                 </PermissionControl>
-              )}
-            </Table.Cell>
-          </Table.Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager']}
-          total={data?.events?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
+          }}
+          totalCount={data?.events?.totalCount ?? 0}
         />
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }

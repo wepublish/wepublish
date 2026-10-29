@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
@@ -9,11 +10,15 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  useWebsiteSettingsQuery,
-  WebsiteSettings,
+  FullWebsiteSettingsFragment,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { CanGetAISettings } from '@wepublish/permissions';
-import { PermissionControl } from '@wepublish/ui/editor';
+import {
+  IconButtonTooltip,
+  PageTitle,
+  PermissionControl,
+} from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -26,7 +31,7 @@ import {
   MdOutlineFontDownload,
   MdWarning,
 } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { z } from 'zod';
 
 import { ThemeColorItem } from './theme/palette-list-item';
@@ -46,7 +51,7 @@ const WebsiteSettingsListWrapper = styled.div`
   }
 `;
 
-const Title = styled.h3`
+const Title = styled(PageTitle)`
   grid-column: -1/1;
 `;
 
@@ -66,17 +71,21 @@ const CardIntegration = styled.div`
   align-items: center;
 `;
 
+const StatusIcon = styled.span`
+  display: inline-flex;
+`;
+
 const CardColors = styled.div`
   display: flex;
   flex-flow: row wrap;
-  gap: 2px;
+  gap: 4px;
 `;
 
 export const WebsiteSettingsList = () => {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const { data, loading } = useWebsiteSettingsQuery();
+  const { data, loading } = useQuery(WebsiteSettingsDocument);
 
   const settings = useMemo(() => {
     if (loading || !data) {
@@ -89,17 +98,17 @@ export const WebsiteSettingsList = () => {
       { id: 'plausible', text: 'Plausible Analytics' },
       { id: 'piwik', text: 'Piwik PRO' },
     ] as Array<{
-      id: Exclude<keyof WebsiteSettings['analytics'], '__typename'>;
+      id: Exclude<keyof FullWebsiteSettingsFragment['analytics'], '__typename'>;
       text: string;
     }>;
 
     const mailIntegrations = [{ id: 'mailchimp', text: 'Mailchimp' }] as Array<{
-      id: Exclude<keyof WebsiteSettings['mail'], '__typename'>;
+      id: Exclude<keyof FullWebsiteSettingsFragment['mail'], '__typename'>;
       text: string;
     }>;
 
     const adsIntegrations = [{ id: 'sparkLoop', text: 'SparkLoop' }] as Array<{
-      id: Exclude<keyof WebsiteSettings['ads'], '__typename'>;
+      id: Exclude<keyof FullWebsiteSettingsFragment['ads'], '__typename'>;
       text: string;
     }>;
 
@@ -212,13 +221,19 @@ export const WebsiteSettingsList = () => {
         >
           <Card
             variant="outlined"
-            sx={{ display: 'flex', flexFlow: 'column' }}
+            sx={{
+              display: 'flex',
+              flexFlow: 'column',
+              borderRadius: 1,
+            }}
           >
             <CardContent sx={{ flex: 1 }}>
               <Typography
                 variant="h6"
                 component={CardTitle}
-                marginBottom={2}
+                sx={{
+                  marginBottom: 2,
+                }}
               >
                 {category.icon}
                 {category.title}
@@ -230,13 +245,28 @@ export const WebsiteSettingsList = () => {
                   component={CardIntegration}
                   key={index}
                 >
-                  <MdWarning color={theme.palette.error.main} />
+                  <IconButtonTooltip
+                    caption={t('websiteSettings.list.statusMissingKey')}
+                  >
+                    <StatusIcon
+                      role="img"
+                      aria-label={t('websiteSettings.list.statusMissingKey')}
+                    >
+                      <MdWarning color={theme.vars.palette.error.main} />
+                    </StatusIcon>
+                  </IconButtonTooltip>
                   {integration.text}
                 </Typography>
               ))}
 
               {!!category.faulyIntegrations.length &&
-                !!category.enabledIntegrations.length && <Box pt={1} />}
+                !!category.enabledIntegrations.length && (
+                  <Box
+                    sx={{
+                      pt: 1,
+                    }}
+                  />
+                )}
 
               {category.enabledIntegrations.map((integration, index) => (
                 <Typography
@@ -244,13 +274,28 @@ export const WebsiteSettingsList = () => {
                   component={CardIntegration}
                   key={index}
                 >
-                  <MdCheck color={theme.palette.success.main} />
+                  <IconButtonTooltip
+                    caption={t('websiteSettings.list.statusActive')}
+                  >
+                    <StatusIcon
+                      role="img"
+                      aria-label={t('websiteSettings.list.statusActive')}
+                    >
+                      <MdCheck color={theme.vars.palette.success.main} />
+                    </StatusIcon>
+                  </IconButtonTooltip>
                   {integration.text}
                 </Typography>
               ))}
 
               {!!category.enabledIntegrations.length &&
-                !!category.disabledIntegrations.length && <Box pt={1} />}
+                !!category.disabledIntegrations.length && (
+                  <Box
+                    sx={{
+                      pt: 1,
+                    }}
+                  />
+                )}
 
               {category.disabledIntegrations.map((integration, index) => (
                 <Typography
@@ -258,7 +303,16 @@ export const WebsiteSettingsList = () => {
                   component={CardIntegration}
                   key={index}
                 >
-                  <MdClose color={theme.palette.info.main} />
+                  <IconButtonTooltip
+                    caption={t('websiteSettings.list.statusInactive')}
+                  >
+                    <StatusIcon
+                      role="img"
+                      aria-label={t('websiteSettings.list.statusInactive')}
+                    >
+                      <MdClose color={theme.vars.palette.info.main} />
+                    </StatusIcon>
+                  </IconButtonTooltip>
                   {integration.text}
                 </Typography>
               ))}
@@ -278,9 +332,13 @@ export const WebsiteSettingsList = () => {
             </CardContent>
 
             <CardActions>
-              <Link to={category.path}>
-                <Button size="small">{t('edit')}</Button>
-              </Link>
+              <Button
+                component={RouterLink}
+                to={category.path}
+                size="small"
+              >
+                {t('edit')}
+              </Button>
             </CardActions>
           </Card>
         </PermissionControl>

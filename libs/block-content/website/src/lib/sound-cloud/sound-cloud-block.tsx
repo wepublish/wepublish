@@ -1,21 +1,21 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullSoundCloudTrackBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderSoundCloudTrackBlockProps } from '@wepublish/website/builder';
-import ReactPlayer from 'react-player';
 
 export const isSoundCloudTrackBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullSoundCloudTrackBlockFragment =>
   block.__typename === 'SoundCloudTrackBlock';
 
 export const SoundCloudTrackBlockWrapper = styled('div')``;
 
-export const SoundCloudTrackBlockPlayer = styled(ReactPlayer)`
+export const SoundCloudTrackBlockPlayer = styled('iframe')`
   width: 100%;
-  aspect-ratio: 16/9;
+  height: 300px;
+  border: 0;
 `;
 
 export const SoundCloudTrackBlock = ({
@@ -24,10 +24,11 @@ export const SoundCloudTrackBlock = ({
 }: BuilderSoundCloudTrackBlockProps) => (
   <SoundCloudTrackBlockWrapper className={className}>
     <SoundCloudTrackBlockPlayer
-      width={'auto'}
-      height={'auto'}
-      src={`https://api.soundcloud.com/tracks/${trackID}`}
-      controls={true}
+      src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(
+        `https://api.soundcloud.com/tracks/${trackID}`
+      )}&visual=true`}
+      title="Embedded SoundCloud Track"
+      allow="autoplay"
     />
   </SoundCloudTrackBlockWrapper>
 );

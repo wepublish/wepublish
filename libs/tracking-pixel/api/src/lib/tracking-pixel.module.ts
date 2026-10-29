@@ -1,3 +1,4 @@
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import {
   DynamicModule,
   Global,
@@ -16,12 +17,13 @@ import { TrackingPixelDataloader } from './tracking-pixel.dataloader';
 
 export type TrackingPixelsOptionsFactory = {
   createTrackingPixelsOptions():
-    | Promise<TrackingPixelModuleOptions>
-    | TrackingPixelModuleOptions;
+    Promise<TrackingPixelModuleOptions> | TrackingPixelModuleOptions;
 };
 
-export interface TrackingPixelsAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface TrackingPixelsAsyncOptions extends Pick<
+  ModuleMetadata,
+  'imports'
+> {
   useExisting?: Type<TrackingPixelsOptionsFactory>;
   useClass?: Type<TrackingPixelsOptionsFactory>;
   useFactory?: (
@@ -32,7 +34,7 @@ export interface TrackingPixelsAsyncOptions
 
 @Global()
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, PublicContentInvalidatorModule],
   providers: [TrackingPixelService, TrackingPixelDataloader],
   exports: [TrackingPixelService, TrackingPixelDataloader],
 })

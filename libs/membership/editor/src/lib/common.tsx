@@ -1,31 +1,15 @@
-import { ApolloError } from '@apollo/client';
 import { TFunction } from 'i18next';
-import { Message, toaster } from 'rsuite';
+import { humanizeError, enqueueSnackbar } from '@wepublish/ui/editor';
 
-const showErrors = (error: ApolloError): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+export const showErrors = (error: Error): void => {
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const showSuccessToast = (message: string): void => {
-  toaster.push(
-    <Message
-      type="success"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {message}
-    </Message>
-  );
+  enqueueSnackbar(message, { variant: 'success', autoHideDuration: 3000 });
 };
 
 /**
@@ -46,18 +30,7 @@ export const DEFAULT_MUTATION_OPTIONS = (t: TFunction) => {
  */
 export const MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE = (message: string) => {
   return {
-    ...DEFAULT_QUERY_OPTIONS(),
-    onCompleted: () => showSuccessToast(message),
-  };
-};
-
-/**
- * Default options for the GraphQL client. Displays errors.
- * @param client the graphql client to make the request with
- * @returns QueryHookOptions for the GraphQL client
- */
-export const DEFAULT_QUERY_OPTIONS = () => {
-  return {
     onError: showErrors,
+    onCompleted: () => showSuccessToast(message),
   };
 };

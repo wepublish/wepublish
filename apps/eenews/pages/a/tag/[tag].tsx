@@ -1,3 +1,4 @@
+import { resolveWhitelistTagIds } from '@wepublish/tenant/eenews';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -13,17 +14,15 @@ import {
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
 
-import { resolveWhitelistTagIds } from '../../../src/components/teasers/eenews-teaser-selectors';
-
 export {
   TagPage as default,
   TagPageGetStaticPaths as getStaticPaths,
-} from '@wepublish/utils/website';
+} from '@wepublish/utils/website/next';
 
 const TAKE = 25;
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { tag } = params || {};
+  const tag = params!.tag!.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const tagResult = await client.query<TagQuery>({

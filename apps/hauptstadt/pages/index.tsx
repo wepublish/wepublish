@@ -1,6 +1,10 @@
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import {
+  getApiUrl,
+  getPageShell,
+  revalidateFor,
+} from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -50,10 +54,12 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToProps(client, {});
+  const props = addClientCacheToProps(client, {
+    shell: getPageShell(page.data?.page),
+  });
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(page.data?.page, page.error),
   };
 };

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { PollVoteResolver } from './poll-vote.resolver';
 import { PollVoteService } from './poll-vote.service';
 import { PrismaModule } from '@wepublish/nest-modules';
@@ -13,7 +14,7 @@ import { PollAnswerResolver } from './poll-answer.resolver';
 import { PollService } from './poll.service';
 
 @Module({
-  imports: [PrismaModule, SettingModule],
+  imports: [PublicContentInvalidatorModule, PrismaModule, SettingModule],
   providers: [
     PollVoteResolver,
     PollVoteService,

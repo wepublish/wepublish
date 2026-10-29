@@ -1,240 +1,310 @@
+import { useQuery } from '@apollo/client/react';
 import {
   CreateCrowdfundingGoalInput,
-  CreateCrowdfundingInput,
-  UpdateCrowdfundingInput,
-  FullCrowdfundingFragment,
   CrowdfundingGoalType,
+  FullCrowdfundingFragment,
+  MemberPlanListDocument,
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-import { CheckPicker, Form, Panel, SelectPicker } from 'rsuite';
-import { useMemberPlanListQuery } from '@wepublish/editor/api';
+import {
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
+import { TFunction } from 'i18next';
+import { z } from 'zod';
 import { CrowdfundingGoalList } from './crowdfunding-goal-list';
 import {
+  CrowdfundingProgressBar,
   CurrencyInput,
   DateTimePicker,
-  CrowdfundingProgressBar,
+  InfoTooltip,
 } from '@wepublish/ui/editor';
 import styled from '@emotion/styled';
+import {
+  Autocomplete,
+  Box,
+  Card,
+  CardContent,
+  FormControl,
+  FormLabel,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 
-type CrowdfundingFormData = CreateCrowdfundingInput | UpdateCrowdfundingInput;
+export const createCrowdfundingSchema = (t: TFunction) =>
+  z.object({
+    id: z.string().optional(),
+    name: z.string().min(1, t('errorMessages.noNameErrorMessage')),
+    additionalRevenue: z.coerce.number().nullish(),
+    goalType: z.nativeEnum(CrowdfundingGoalType),
+    memberPlans: z.array(z.object({ id: z.string() })),
+    countSubscriptionsFrom: z.string().nullish(),
+    countSubscriptionsUntil: z.string().nullish(),
+    goals: z.array(z.custom<CreateCrowdfundingGoalInput>()),
+  });
+
+export type CrowdfundingFormValues = z.infer<
+  ReturnType<typeof createCrowdfundingSchema>
+>;
 
 interface CrowdfundingFormProps {
   create?: boolean;
-  crowdfunding: CrowdfundingFormData;
-  onChange: (crowdfunding: CrowdfundingFormData) => void;
-  onAddGoal: (goal: CreateCrowdfundingGoalInput) => void;
-  onRemoveGoal: (index: number) => void;
 }
 
 const CrowdfundingFormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 12px;
+  gap: 16px;
 `;
 
 export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
   const { t } = useTranslation();
+  const { control } = useFormContext<CrowdfundingFormValues>();
+  const {
+    fields: goals,
+    append,
+    remove,
+    update,
+  } = useFieldArray({ control, name: 'goals' as never });
 
-  const { data: memberPlanData } = useMemberPlanListQuery({
+  const { data: memberPlanData } = useQuery(MemberPlanListDocument, {
     variables: { take: 50 },
     fetchPolicy: 'no-cache',
   });
 
   const memberPlans = memberPlanData?.memberPlans?.nodes ?? [];
-
-  const goalType =
-    props.crowdfunding.goalType ?? CrowdfundingGoalType.Subscription;
+  const values = useWatch({ control });
+  const goalType = values.goalType ?? CrowdfundingGoalType.Subscription;
   const isSubscriptionGoal = goalType === CrowdfundingGoalType.Subscription;
 
   return (
     <CrowdfundingFormWrapper>
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ overflow: 'initial' }}
       >
-        <Form.Stack fluid>
-          <Form.Group controlId="name">
-            <h3>{t('crowdfunding.form.crowdfunding')}</h3>
-
-            <Form.Label>{t('crowdfunding.form.name')}</Form.Label>
-
-            <Form.Control
+        <CardContent>
+          <Stack
+            spacing={3}
+            sx={{ width: '100%' }}
+          >
+            <Controller
+              control={control}
               name="name"
-              value={props.crowdfunding.name}
-              onChange={value =>
-                props.onChange({ ...props.crowdfunding, name: value })
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('crowdfunding.form.name')}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="additionalRevenue"
+              render={({ field, fieldState: { error } }) =>
+                isSubscriptionGoal ?
+                  <TextField
+                    {...field}
+                    value={field.value ?? 0}
+                    label={
+                      <>
+                        {t('crowdfunding.form.additionalSubscriptions')}{' '}
+                        <InfoTooltip
+                          text={t(
+                            'crowdfunding.form.additionalSubscriptionsInfo'
+                          )}
+                        />
+                      </>
+                    }
+                    type="number"
+                    onChange={event =>
+                      field.onChange(+(event.target.value || 0))
+                    }
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                : <CurrencyInput
+                    name={field.name}
+                    label={
+                      <>
+                        {t('crowdfunding.form.additionalRevenue')}{' '}
+                        <InfoTooltip
+                          text={t('crowdfunding.form.additionalRevenueInfo')}
+                        />
+                      </>
+                    }
+                    currency={'CHF'}
+                    centAmount={field.value ?? 0}
+                    onChange={field.onChange}
+                  />
               }
             />
-          </Form.Group>
+          </Stack>
+        </CardContent>
+      </Card>
 
-          <Form.Group controlId="additionalRevenue">
-            <Form.Label>
-              {isSubscriptionGoal ?
-                t('crowdfunding.form.additionalSubscriptions')
-              : t('crowdfunding.form.additionalRevenue')}
-            </Form.Label>
-
-            {isSubscriptionGoal ?
-              <Form.Control
-                name="additionalRevenue"
-                type="number"
-                value={props.crowdfunding.additionalRevenue || 0}
-                onChange={value =>
-                  props.onChange({
-                    ...props.crowdfunding,
-                    additionalRevenue: +(value || 0),
-                  })
-                }
-              />
-            : <CurrencyInput
-                name="additionalRevenue"
-                currency={'CHF'}
-                centAmount={props.crowdfunding.additionalRevenue || 0}
-                onChange={(additionalRevenue: number) =>
-                  props.onChange({ ...props.crowdfunding, additionalRevenue })
-                }
-              />
-            }
-          </Form.Group>
-        </Form.Stack>
-      </Panel>
-
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ overflow: 'initial' }}
       >
-        <CrowdfundingProgressBar
-          crowdfunding={props.crowdfunding as Partial<FullCrowdfundingFragment>}
-        />
-      </Panel>
+        <CardContent>
+          <CrowdfundingProgressBar
+            crowdfunding={values as Partial<FullCrowdfundingFragment>}
+          />
+        </CardContent>
+      </Card>
 
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ overflow: 'initial' }}
       >
-        <h3>{t('crowdfunding.form.filter')}</h3>
+        <CardContent>
+          <Typography variant="h3">{t('crowdfunding.form.filter')}</Typography>
 
-        <Form.Stack fluid>
-          <Form.Group controlId="memberPlans">
-            <Form.Label>{t('crowdfunding.form.memberPlans')}</Form.Label>
+          <Stack
+            spacing={3}
+            sx={{ width: '100%' }}
+          >
+            <FormControl fullWidth>
+              <FormLabel>
+                {t('crowdfunding.form.memberPlans')}{' '}
+                <InfoTooltip text={t('crowdfunding.form.memberPlansInfo')} />
+              </FormLabel>
 
-            <CheckPicker
-              block
-              virtualized
-              placeholder={t('crowdfunding.form.selectMemberPlans')}
-              value={props.crowdfunding.memberPlans?.map(p => p.id) || []}
-              data={memberPlans.map(memberPlan => ({
-                value: memberPlan.id!,
-                label: memberPlan.name,
-              }))}
-              onChange={ids => {
-                if (!ids) return;
-                props.onChange({
-                  ...props.crowdfunding,
-                  memberPlans: ids.map(i => {
-                    return { id: i };
-                  }),
-                });
-              }}
-            />
-          </Form.Group>
-
-          <Form.Group controlId="countSubscriptionsFrom">
-            <Form.Control
-              name="countSubscriptionsFrom"
-              label={t('crowdfunding.form.countSubscriptionsFrom')}
-              dateTime={
-                props.crowdfunding?.countSubscriptionsFrom ?
-                  new Date(props.crowdfunding?.countSubscriptionsFrom)
-                : undefined
-              }
-              changeDate={(date: Date) =>
-                props.onChange({
-                  ...props.crowdfunding,
-                  countSubscriptionsFrom: date?.toISOString() || null,
-                })
-              }
-              accepter={DateTimePicker}
-            />
-          </Form.Group>
-
-          <Form.Group controlId="countSubscriptionsUntil">
-            <Form.Control
-              name="countSubscriptionsUntil"
-              label={t('crowdfunding.form.countSubscriptionsUntil')}
-              dateTime={
-                props.crowdfunding?.countSubscriptionsUntil ?
-                  new Date(props.crowdfunding?.countSubscriptionsUntil)
-                : undefined
-              }
-              changeDate={(date: Date) =>
-                props.onChange({
-                  ...props.crowdfunding,
-                  countSubscriptionsUntil: date?.toISOString() || null,
-                })
-              }
-              accepter={DateTimePicker}
-            />
-          </Form.Group>
-        </Form.Stack>
-      </Panel>
-
-      <Panel
-        bordered
-        style={{ overflow: 'initial' }}
-      >
-        <Form.Stack fluid>
-          <Form.Group controlId="goals">
-            <h3>{t('crowdfunding.form.goals')}</h3>
-
-            <Form.Group controlId="goalType">
-              <Form.Label>{t('crowdfunding.form.goalType')}</Form.Label>
-
-              <SelectPicker
-                cleanable={false}
-                value={props.crowdfunding.goalType}
-                onChange={(value: CrowdfundingGoalType | null) =>
-                  props.onChange({ ...props.crowdfunding, goalType: value! })
-                }
-                data={Object.entries(CrowdfundingGoalType).map(
-                  ([label, value]) => ({
-                    label: t(`crowdfunding.form.goalType_${label}`),
-                    value,
-                  })
+              <Controller
+                control={control}
+                name="memberPlans"
+                render={({ field }) => (
+                  <Autocomplete
+                    multiple
+                    disableCloseOnSelect
+                    options={memberPlans.map(memberPlan => memberPlan.id!)}
+                    getOptionLabel={option =>
+                      memberPlans
+                        .filter(memberPlan => memberPlan.id! === option)
+                        .map(memberPlan => memberPlan.name)[0] ?? option
+                    }
+                    value={field.value?.map(memberPlan => memberPlan.id) ?? []}
+                    onChange={(_event, ids) =>
+                      field.onChange((ids ?? []).map(id => ({ id })))
+                    }
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        placeholder={t('crowdfunding.form.selectMemberPlans')}
+                      />
+                    )}
+                  />
                 )}
               />
-            </Form.Group>
+            </FormControl>
 
-            <CrowdfundingGoalList
-              goalType={goalType}
-              goals={props.crowdfunding.goals || []}
-              onAdd={goal =>
-                props.onChange({
-                  ...props.crowdfunding,
-                  goals: [...(props.crowdfunding.goals || []), goal],
-                })
-              }
-              onRemove={index =>
-                props.onChange({
-                  ...props.crowdfunding,
-                  goals:
-                    props.crowdfunding.goals?.filter((_, i) => i !== index) ||
-                    [],
-                })
-              }
-              onUpdate={(index, updatedGoal) => {
-                const updatedGoals = props.crowdfunding.goals?.map((goal, i) =>
-                  i === index ? updatedGoal : goal
-                );
-                props.onChange({
-                  ...props.crowdfunding,
-                  goals: updatedGoals,
-                });
-              }}
-            />
-          </Form.Group>
-        </Form.Stack>
-      </Panel>
+            <Box>
+              <Controller
+                control={control}
+                name="countSubscriptionsFrom"
+                render={({ field, fieldState: { error } }) => (
+                  <DateTimePicker
+                    label={t('crowdfunding.form.countSubscriptionsFrom')}
+                    dateTime={field.value ? new Date(field.value) : undefined}
+                    changeDate={(date: Date) =>
+                      field.onChange(date?.toISOString() || null)
+                    }
+                    helperText={error?.message}
+                  />
+                )}
+              />
+            </Box>
+
+            <Box>
+              <Controller
+                control={control}
+                name="countSubscriptionsUntil"
+                render={({ field, fieldState: { error } }) => (
+                  <DateTimePicker
+                    label={t('crowdfunding.form.countSubscriptionsUntil')}
+                    dateTime={field.value ? new Date(field.value) : undefined}
+                    changeDate={(date: Date) =>
+                      field.onChange(date?.toISOString() || null)
+                    }
+                    helperText={error?.message}
+                  />
+                )}
+              />
+            </Box>
+          </Stack>
+        </CardContent>
+      </Card>
+
+      <Card
+        variant="outlined"
+        style={{ overflow: 'initial' }}
+      >
+        <CardContent>
+          <Stack
+            spacing={3}
+            sx={{ width: '100%' }}
+          >
+            <Box>
+              <Typography variant="h3">
+                {t('crowdfunding.form.goals')}{' '}
+                <InfoTooltip text={t('crowdfunding.form.goalsInfo')} />
+              </Typography>
+
+              <FormControl fullWidth>
+                <FormLabel>
+                  {t('crowdfunding.form.goalType')}{' '}
+                  <InfoTooltip text={t('crowdfunding.form.goalTypeInfo')} />
+                </FormLabel>
+
+                <Controller
+                  control={control}
+                  name="goalType"
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      select
+                      error={Boolean(error)}
+                      helperText={error?.message}
+                      fullWidth
+                    >
+                      {Object.entries(CrowdfundingGoalType).map(
+                        ([label, value]) => (
+                          <MenuItem
+                            key={value}
+                            value={value}
+                          >
+                            {t(`crowdfunding.form.goalType_${label}`)}
+                          </MenuItem>
+                        )
+                      )}
+                    </TextField>
+                  )}
+                />
+              </FormControl>
+
+              <Box sx={{ marginTop: 3 }}>
+                <CrowdfundingGoalList
+                  goalType={goalType}
+                  goals={goals as unknown as CreateCrowdfundingGoalInput[]}
+                  onAdd={append}
+                  onRemove={remove}
+                  onUpdate={update}
+                />
+              </Box>
+            </Box>
+          </Stack>
+        </CardContent>
+      </Card>
     </CrowdfundingFormWrapper>
   );
 };

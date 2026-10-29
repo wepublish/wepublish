@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { DiscountCodeUsageDataloader } from './discount-code-usage.dataloader';
+import type { Mock } from 'vitest';
 
 type UsageRow = { discountCodeId: string; paid: boolean };
 
@@ -13,10 +14,10 @@ const usageRows: UsageRow[] = [
 
 describe('DiscountCodeUsageDataloader', () => {
   let dataloader: DiscountCodeUsageDataloader;
-  let groupBy: jest.Mock;
+  let groupBy: Mock;
 
   beforeEach(async () => {
-    groupBy = jest.fn(async ({ where }) => {
+    groupBy = vi.fn(async ({ where }) => {
       const ids: string[] = where.discountCodeId.in;
       const paidOnly = Boolean(where.invoices);
 

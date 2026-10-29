@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -18,27 +19,38 @@ import {
   TextField,
 } from '@mui/material';
 import {
+  ApiTokenListDocument,
+  ApiTokenStatus,
+  CreateExternalAppDocument,
+  DeleteExternalAppDocument,
   ExternalAppFragment,
   ExternalAppsDocument,
   ExternalAppsTarget,
-  useCreateExternalAppMutation,
-  useDeleteExternalAppMutation,
-  useUpdateExternalAppMutation,
+  UpdateExternalAppDocument,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { CanGetApiTokens } from '@wepublish/permissions';
+import {
+  enqueueSnackbar,
+  humanizeError,
+  useAuthorisation,
+} from '@wepublish/ui/editor';
+import { useMemo, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSave } from 'react-icons/md';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../utility';
+
+import { ApiKeyWarning } from './apiKeyWarning';
 import { IconPickerSelect } from './iconPicker';
 
 const Form = styled('form')`
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 24px;
+  padding: 28px;
 `;
 
 const FormRow = styled('div')`
@@ -46,17 +58,23 @@ const FormRow = styled('div')`
   grid-template-columns: 1fr;
   gap: 24px;
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: 1fr 1fr;
+  @container (min-width: 480px) {
+    grid-template-columns: minmax(160px, 1fr) 2fr;
   }
 `;
 
 const validationSchema = z.object({
-  name: z.string().min(1),
+  name: z
+    .string({ errorMap: lazyMessage('errorMessages.noNameErrorMessage') })
+    .min(1),
   description: z.string().optional(),
-  url: z.string().url(),
+  url: z
+    .string({ errorMap: lazyMessage('errorMessages.invalidUrlErrorMessage') })
+    .url(),
   target: z.nativeEnum(ExternalAppsTarget),
   icon: z.string().optional(),
+  /** '' links no key */
+  apiTokenId: z.string().optional(),
 });
 
 interface ExternalAppFormProps {
@@ -66,17 +84,24 @@ interface ExternalAppFormProps {
 export function ExternalAppForm({ app }: ExternalAppFormProps) {
   const { t } = useTranslation();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  // only editors who see API keys can link one; for everyone else the link
+  // is left as it is
+  const canLinkApiKey = useAuthorisation(CanGetApiTokens.id);
+  const { data: apiTokenData } = useQuery(ApiTokenListDocument, {
+    variables: { status: ApiTokenStatus.Active, take: 100 },
+    skip: !canLinkApiKey,
+  });
 
   const [createExternalApp, { loading: isCreating, error: createError }] =
-    useCreateExternalAppMutation({
+    useMutation(CreateExternalAppDocument, {
       refetchQueries: [ExternalAppsDocument],
     });
 
   const [updateExternalApp, { loading: isUpdating, error: updateError }] =
-    useUpdateExternalAppMutation();
+    useMutation(UpdateExternalAppDocument);
 
   const [deleteExternalApp, { loading: isDeleting, error: deleteError }] =
-    useDeleteExternalAppMutation({
+    useMutation(DeleteExternalAppDocument, {
       refetchQueries: [ExternalAppsDocument],
     });
 
@@ -93,10 +118,29 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
       url: app?.url || '',
       target: app?.target || ExternalAppsTarget.Blank,
       icon: app?.icon || '',
+      apiTokenId: app?.apiTokenId || '',
     },
     mode: 'onTouched',
     reValidateMode: 'onChange',
   });
+
+  // the linked key stays selectable once it is no longer active
+  const apiKeyOptions = useMemo(() => {
+    const active = apiTokenData?.apiTokens.nodes ?? [];
+    const linked = app?.apiToken;
+
+    return linked && !active.some(({ id }) => id === linked.id) ?
+        [linked, ...active]
+      : active;
+  }, [apiTokenData, app?.apiToken]);
+
+  const selectedApiTokenId = useWatch({ control, name: 'apiTokenId' });
+  const selectedApiKey = apiKeyOptions.find(
+    ({ id }) => id === selectedApiTokenId
+  );
+
+  const apiKeyVariables = (data: z.infer<typeof validationSchema>) =>
+    canLinkApiKey ? { apiTokenId: data.apiTokenId || null } : {};
 
   const handleDelete = () => {
     if (!app) {
@@ -110,37 +154,18 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
     })
       .then(() => {
         setDeleteDialogOpen(false);
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('externalAppForm.successDelete', {
-              defaultValue: 'External app deleted successfully',
-            })}
-          </Message>,
-          { placement: 'topCenter' }
-        );
+        enqueueSnackbar(t('externalAppForm.successDelete'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       })
       .catch(err => {
         console.error(err);
         setDeleteDialogOpen(false);
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {err.message ||
-              t('externalAppForm.errorDelete', {
-                defaultValue: 'Failed to delete external app',
-              })}
-          </Message>,
-          { placement: 'topCenter' }
-        );
+        enqueueSnackbar(humanizeError(err), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       });
   };
 
@@ -154,39 +179,21 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           url: data.url,
           target: data.target,
           icon: data.icon,
+          ...apiKeyVariables(data),
         },
       })
         .then(() => {
-          toaster.push(
-            <Message
-              type="success"
-              showIcon
-              closable
-              duration={3000}
-            >
-              {t('externalAppForm.successUpdate', {
-                defaultValue: 'External app updated successfully',
-              })}
-            </Message>,
-            { placement: 'topCenter' }
-          );
+          enqueueSnackbar(t('externalAppForm.successUpdate'), {
+            variant: 'success',
+            autoHideDuration: 3000,
+          });
         })
         .catch(err => {
           console.error(err);
-          toaster.push(
-            <Message
-              type="error"
-              showIcon
-              closable
-              duration={3000}
-            >
-              {err.message ||
-                t('externalAppForm.errorUpdate', {
-                  defaultValue: 'Failed to update external app',
-                })}
-            </Message>,
-            { placement: 'topCenter' }
-          );
+          enqueueSnackbar(humanizeError(err), {
+            variant: 'error',
+            autoHideDuration: 8000,
+          });
         });
     } else {
       createExternalApp({
@@ -197,47 +204,29 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             url: data.url,
             target: data.target,
             icon: data.icon,
+            ...apiKeyVariables(data),
           },
         },
       })
         .then(() => {
           reset();
-          toaster.push(
-            <Message
-              type="success"
-              showIcon
-              closable
-              duration={3000}
-            >
-              {t('externalAppForm.successCreate', {
-                defaultValue: 'External app created successfully',
-              })}
-            </Message>,
-            { placement: 'topCenter' }
-          );
+          enqueueSnackbar(t('externalAppForm.successCreate'), {
+            variant: 'success',
+            autoHideDuration: 3000,
+          });
         })
         .catch(err => {
           console.error(err);
-          toaster.push(
-            <Message
-              type="error"
-              showIcon
-              closable
-              duration={3000}
-            >
-              {err.message ||
-                t('externalAppForm.errorCreate', {
-                  defaultValue: 'Failed to create external app',
-                })}
-            </Message>,
-            { placement: 'topCenter' }
-          );
+          enqueueSnackbar(humanizeError(err), {
+            variant: 'error',
+            autoHideDuration: 8000,
+          });
         });
     }
   };
 
   return (
-    <Card variant="outlined">
+    <Card>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="name"
@@ -261,9 +250,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           render={({ field, fieldState }) => (
             <TextField
               {...field}
-              label={t('externalAppForm.description', {
-                defaultValue: 'Description',
-              })}
+              label={t('externalAppForm.description')}
               variant="outlined"
               fullWidth
               multiline
@@ -298,7 +285,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
                       key={target}
                       value={target}
                     >
-                      {target}
+                      {target === ExternalAppsTarget.Iframe ?
+                        t('externalAppForm.targetIframe')
+                      : t('externalAppForm.targetBlank')}
                     </MenuItem>
                   ))}
                 </Select>
@@ -342,11 +331,61 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           )}
         />
 
-        {error && <FormHelperText error>{error.message}</FormHelperText>}
+        {canLinkApiKey && (
+          <Controller
+            name="apiTokenId"
+            control={control}
+            render={({ field }) => (
+              <FormControl
+                fullWidth
+                disabled={loading}
+              >
+                <InputLabel id="api-key-label">
+                  {t('externalAppForm.apiKey')}
+                </InputLabel>
+                <Select
+                  {...field}
+                  labelId="api-key-label"
+                  label={t('externalAppForm.apiKey')}
+                >
+                  <MenuItem value="">{t('externalAppForm.noApiKey')}</MenuItem>
+                  {apiKeyOptions.map(apiKey => (
+                    <MenuItem
+                      key={apiKey.id}
+                      value={apiKey.id}
+                    >
+                      {t('externalAppForm.apiKeyOption', {
+                        name: apiKey.name,
+                        prefix: apiKey.prefix,
+                      })}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>
+                  {selectedApiKey ?
+                    t('externalAppForm.apiKeyDetails', {
+                      prefix: selectedApiKey.prefix,
+                      scopes: selectedApiKey.scopes.length,
+                      expiresAt: new Date(selectedApiKey.expiresAt),
+                    })
+                  : t('externalAppForm.apiKeyHelp')}
+                </FormHelperText>
+              </FormControl>
+            )}
+          />
+        )}
+
+        {app?.apiToken && selectedApiTokenId === app.apiToken.id && (
+          <ApiKeyWarning apiToken={app.apiToken} />
+        )}
+
+        {error && <FormHelperText error>{humanizeError(error)}</FormHelperText>}
 
         <Box
-          display="flex"
-          gap={2}
+          sx={{
+            display: 'flex',
+            gap: 2,
+          }}
         >
           <Button
             disabled={loading}
@@ -371,12 +410,11 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             >
               {loading && isDeleting ?
                 <CircularProgress size={24} />
-              : t('externalAppForm.delete', { defaultValue: 'Delete' })}
+              : t('externalAppForm.delete')}
             </Button>
           )}
         </Box>
       </Form>
-
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
@@ -384,16 +422,11 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
         aria-describedby="delete-dialog-description"
       >
         <DialogTitle id="delete-dialog-title">
-          {t('externalAppForm.deleteConfirmationTitle', {
-            defaultValue: 'Delete External App',
-          })}
+          {t('externalAppForm.deleteConfirmationTitle')}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-dialog-description">
-            {t('externalAppForm.deleteConfirmationText', {
-              defaultValue:
-                'Are you sure you want to delete this external app? This action cannot be undone.',
-            })}
+            {t('externalAppForm.deleteConfirmationText')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -401,15 +434,16 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             onClick={() => setDeleteDialogOpen(false)}
             disabled={loading}
           >
-            {t('cancel', { defaultValue: 'Cancel' })}
+            {t('cancel')}
           </Button>
           <Button
+            variant="contained"
             onClick={handleDelete}
             color="error"
             autoFocus
             disabled={loading}
           >
-            {t('externalAppForm.delete', { defaultValue: 'Delete' })}
+            {t('externalAppForm.delete')}
           </Button>
         </DialogActions>
       </Dialog>

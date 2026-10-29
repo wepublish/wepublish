@@ -1,40 +1,62 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
+import {
+  DeleteMemberPlanDocument,
   FullMemberPlanFragment,
   MemberPlanListDocument,
   MemberPlanListQuery,
-  useDeleteMemberPlanMutation,
-  useMemberPlanListQuery,
+  MemberPlanSort,
 } from '@wepublish/editor/api';
 import {
+  CanCreateMemberPlan,
+  CanDeleteMemberPlan,
+  CanGetMemberPlan,
+  CanGetMemberPlans,
+  CanGetSubscriptionFlows,
+} from '@wepublish/permissions';
+import {
   createCheckedPermissionComponent,
+  DataTable,
   DescriptionList,
   DescriptionListItem,
   IconButton,
   IconButtonTooltip,
+  InfoTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
-  ListViewFilterArea,
   ListViewHeader,
-  PaddedCell,
+  mapTableSortTypeToGraphQLSortOrder,
   PermissionControl,
-  Table,
   TableWrapper,
+  useListViewState,
+  PageTitle,
 } from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Table as RTable,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
+import { Link as RouterLink } from 'react-router-dom';
 
-const { Column, HeaderCell, Cell: RCell } = RTable;
+function mapColumnFieldToGraphQLField(
+  columnField: string
+): MemberPlanSort | null {
+  switch (columnField) {
+    case 'createdAt':
+      return MemberPlanSort.CreatedAt;
+    case 'modifiedAt':
+      return MemberPlanSort.ModifiedAt;
+    default:
+      return null;
+  }
+}
 
 const hasBrokenPaymentProvider = (memberPlan: FullMemberPlanFragment) =>
   memberPlan.availablePaymentMethods.every(({ paymentMethods }) =>
@@ -44,167 +66,210 @@ const hasBrokenPaymentProvider = (memberPlan: FullMemberPlanFragment) =>
 function MemberPlanList() {
   const { t } = useTranslation();
   const [filter, setFilter] = useState('');
-  const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([]);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentMemberPlan, setCurrentMemberPlan] =
     useState<FullMemberPlanFragment>();
 
-  const { data, loading: isLoading } = useMemberPlanListQuery({
-    variables: {
-      filter: filter ? { name: filter } : undefined,
-      take: 50,
-    },
+  const { sortField, sortOrder, setSort } = useListViewState('memberPlans', {
+    defaultSortField: 'modifiedAt',
+    defaultSortOrder: 'desc',
   });
 
-  const [deleteMemberPlan, { loading: isDeleting }] =
-    useDeleteMemberPlanMutation();
+  const variables = useMemo(
+    () => ({
+      filter: filter ? { name: filter } : undefined,
+      take: 50,
+      sort: mapColumnFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    }),
+    [filter, sortField, sortOrder]
+  );
 
-  useEffect(() => {
-    if (data?.memberPlans?.nodes) {
-      setMemberPlans(data.memberPlans.nodes);
-    }
-  }, [data?.memberPlans]);
+  const { data, loading: isLoading } = useQuery(MemberPlanListDocument, {
+    variables,
+  });
+
+  const memberPlans = data?.memberPlans.nodes ?? [];
+
+  const [deleteMemberPlan, { loading: isDeleting }] = useMutation(
+    DeleteMemberPlanDocument
+  );
 
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('memberPlanList.title')}</h2>
+          <PageTitle>{t('memberPlanList.title')}</PageTitle>
         </ListViewHeader>
 
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
+        <PermissionControl qualifyingPermissions={[CanCreateMemberPlan.id]}>
           <ListViewActions>
-            <Link to="/memberplans/create">
-              <RIconButton
-                appearance="primary"
-                disabled={isLoading}
-                icon={<MdAdd />}
-              >
-                {t('memberPlanList.createNew')}
-              </RIconButton>
-            </Link>
+            <Button
+              component={RouterLink}
+              to="/memberplans/create"
+              variant="contained"
+              startIcon={<MdAdd />}
+              disabled={isLoading}
+            >
+              {t('memberPlanList.createNew')}
+            </Button>
           </ListViewActions>
         </PermissionControl>
-
-        <ListViewFilterArea>
-          <InputGroup>
-            <Input
-              value={filter}
-              onChange={value => setFilter(value)}
-            />
-            <InputGroup.Addon>
-              <MdSearch />
-            </InputGroup.Addon>
-          </InputGroup>
-        </ListViewFilterArea>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={isLoading}
+        <DataTable
+          filters={
+            <TextField
+              label={t('search')}
+              value={filter}
+              onChange={event => setFilter(event.target.value)}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <MdSearch />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          }
+          filterCount={filter ? 1 : 0}
+          onResetFilters={() => {
+            setFilter('');
+          }}
+          storageKey="member-plans"
           data={memberPlans}
-        >
-          <Column
-            width={40}
-            align="left"
-          >
-            <HeaderCell>{''}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullMemberPlanFragment>) =>
+          loading={isLoading}
+          sortColumn={sortField}
+          sortOrder={sortOrder}
+          onSort={(sortColumn, sortType) => setSort(sortColumn, sortType)}
+          sortable={['createdAt', 'modifiedAt']}
+          columns={[
+            {
+              id: 'paymentproviderstatusinfo',
+              label: (
+                <InfoTooltip
+                  text={t('memberPlanList.paymentProviderStatusInfo')}
+                />
+              ),
+              width: 40,
+              align: 'left',
+              render: rowData =>
                 hasBrokenPaymentProvider(rowData as FullMemberPlanFragment) ?
                   `✅`
-                : `❌`
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullMemberPlanFragment>) => (
+                : `❌`,
+            },
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('memberPlanList.name'),
+              width: 200,
+              align: 'left',
+              render: rowData => (
                 <Link to={`/memberplans/edit/${rowData.id}`}>
                   {rowData.name || t('untitled')}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={100}
-            align="center"
-          >
-            <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
-            <PaddedCell>
-              {(rowData: RowDataType<FullMemberPlanFragment>) => (
+              ),
+            },
+            {
+              id: 'created',
+              label: t('memberPlanList.created'),
+              width: 200,
+              align: 'left',
+              sortKey: 'createdAt',
+              render: rowData =>
+                t('memberPlanList.createdAt', {
+                  createdAt: new Date(rowData.createdAt),
+                }),
+            },
+            {
+              id: 'modified',
+              label: t('memberPlanList.modified'),
+              width: 200,
+              align: 'left',
+              sortKey: 'modifiedAt',
+              render: rowData =>
+                t('memberPlanList.modifiedAt', {
+                  modifiedAt: new Date(rowData.modifiedAt),
+                }),
+            },
+            {
+              id: 'editflowshort',
+              label: t('memberPlanList.editFlowShort'),
+              width: 250,
+              align: 'left',
+              render: rowData => (
                 <PermissionControl
-                  qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}
+                  qualifyingPermissions={[CanGetSubscriptionFlows.id]}
+                >
+                  <Link to={`/communicationflows/edit/${rowData.id}`}>
+                    {t('memberPlanList.editFlow')}
+                  </Link>
+                </PermissionControl>
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
+                <PermissionControl
+                  qualifyingPermissions={[CanDeleteMemberPlan.id]}
                 >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
-                      icon={<MdDelete />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
+                      size="small"
+                      color="error"
+                      aria-label={t('delete')}
                       onClick={() => {
                         setConfirmationDialogOpen(true);
                         setCurrentMemberPlan(rowData as FullMemberPlanFragment);
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </IconButtonTooltip>
                 </PermissionControl>
-              )}
-            </PaddedCell>
-          </Column>
-          <Column
-            width={400}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell>{t('memberPlanList.editFlowShort')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullMemberPlanFragment>) => (
-                <PermissionControl
-                  qualifyingPermissions={['CAN_GET_SUBSCRIPTION_FLOWS']}
-                >
-                  <IconButtonTooltip caption={t('memberPlanList.editFlow')}>
-                    <Link to={`/communicationflows/edit/${rowData.id}`}>
-                      {t('memberPlanList.editFlow')}
-                    </Link>
-                  </IconButtonTooltip>
-                </PermissionControl>
-              )}
-            </RCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={isConfirmationDialogOpen}
-        size="sm"
+        maxWidth="sm"
       >
-        <Modal.Header>
-          <Modal.Title>{t('memberPlanList.deleteModalTitle')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('memberPlanList.deleteModalTitle')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('memberPlanList.name')}>
               {currentMemberPlan?.name || t('untitled')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setConfirmationDialogOpen(false)}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentMemberPlan) return;
+              if (!currentMemberPlan) {
+                return;
+              }
 
               await deleteMemberPlan({
                 variables: { id: currentMemberPlan.id },
@@ -217,11 +282,14 @@ function MemberPlanList() {
                     },
                   });
 
-                  if (!query) return;
+                  if (!query) {
+                    return;
+                  }
 
                   cache.writeQuery<MemberPlanListQuery>({
                     query: MemberPlanListDocument,
                     data: {
+                      __typename: 'Query',
                       memberPlans: {
                         ...query.memberPlans,
                         nodes: query.memberPlans.nodes.filter(
@@ -235,26 +303,20 @@ function MemberPlanList() {
 
               setConfirmationDialogOpen(false);
             }}
-            color="red"
+            color="error"
           >
             {t('confirm')}
           </Button>
-          <Button
-            onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_MEMBER_PLANS',
-  'CAN_GET_MEMBER_PLAN',
-  'CAN_CREATE_MEMBER_PLAN',
-  'CAN_DELETE_MEMBER_PLAN',
+  CanGetMemberPlans.id,
+  CanGetMemberPlan.id,
+  CanCreateMemberPlan.id,
+  CanDeleteMemberPlan.id,
 ])(MemberPlanList);
 export { CheckedPermissionComponent as MemberPlanList };

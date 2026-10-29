@@ -1,43 +1,56 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  MenuItem,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import {
+  ApproveCommentDocument,
   CommentRejectionReason,
-  CommentRevision,
+  CommentRevisionFragment,
   CommentState,
   FullCommentFragment,
-  useApproveCommentMutation,
-  useRejectCommentMutation,
-  useRequestChangesOnCommentMutation,
+  RejectCommentDocument,
+  RequestChangesOnCommentDocument,
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
+import { TFunction } from 'i18next';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdReplay } from 'react-icons/md';
-import {
-  Button,
-  Dropdown,
-  Message,
-  Modal,
-  Panel,
-  Timeline,
-  toaster,
-} from 'rsuite';
+import { MdExpandMore } from 'react-icons/md';
 
-import { DescriptionList, DescriptionListItem } from '../descriptionList';
+import { enqueueSnackbar } from '../../snackbar';
 
-const ParentCommentPanel = styled(Panel)`
-  margin-right: 40px;
-  font-style: italic;
-  color: lightslategrey;
+const ParentComment = styled.div`
+  padding-left: ${({ theme }) => theme.spacing(1.5)};
+  border-left: 3px solid ${({ theme }) => theme.vars.palette.divider};
 `;
 
-const IconWrapper = styled.div`
-  margin-top: 8px;
-  margin-left: 10px;
+const ClampedText = styled(Typography)`
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 `;
 
-const RevisionPanel = styled(Panel)`
-  max-height: 300px;
-  overflow-y: scroll;
+const CommentText = styled(Paper)`
+  max-height: 40vh;
+  overflow-y: auto;
+  padding: ${({ theme }) => theme.spacing(2)};
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 `;
 
 function mapModalTitle(commentState: CommentState): string {
@@ -52,6 +65,17 @@ function mapModalTitle(commentState: CommentState): string {
   }
 }
 
+export function mapRejectionReasonToLabel(
+  rejectionReason: CommentRejectionReason
+) {
+  switch (rejectionReason) {
+    case CommentRejectionReason.Spam:
+      return 'comments.panels.rejectionReasons.spam';
+    case CommentRejectionReason.Misconduct:
+      return 'comments.panels.rejectionReasons.misconduct';
+  }
+}
+
 export function mapCommentActionToBtnTitle(commentState: CommentState) {
   switch (commentState) {
     case CommentState.Approved:
@@ -62,6 +86,17 @@ export function mapCommentActionToBtnTitle(commentState: CommentState) {
     case CommentState.Rejected:
       return 'comments.panels.reject';
   }
+}
+
+function printUsername(
+  comment: Pick<FullCommentFragment, 'user' | 'guestUsername'>,
+  t: TFunction
+) {
+  return comment.user?.name ?
+      comment.user.name
+    : `${comment.guestUsername || t('comments.panels.noUserName')} ${t(
+        'comments.panels.unregisteredUser'
+      )}`;
 }
 
 interface CommentStateChangeModalProps {
@@ -81,39 +116,32 @@ export function CommentStateChangeModal({
   onClose,
 }: CommentStateChangeModalProps) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState<boolean>(false);
   const [rejectionReason, setRejectionReason] =
     useState<CommentRejectionReason>();
 
   const [approveComment, { loading: isApproving, error: errorApprove }] =
-    useApproveCommentMutation();
+    useMutation(ApproveCommentDocument);
   const [
     requestChanges,
     { loading: isRequestingChanges, error: errorRequestingChanges },
-  ] = useRequestChangesOnCommentMutation();
+  ] = useMutation(RequestChangesOnCommentDocument);
   const [rejectComment, { loading: isRejecting, error: errorRejecting }] =
-    useRejectCommentMutation();
+    useMutation(RejectCommentDocument);
 
   useEffect(() => {
     const error =
       errorApprove?.message ??
       errorRequestingChanges?.message ??
       errorRejecting?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [errorApprove, errorRequestingChanges, errorRejecting]);
 
   async function changeState() {
-    if (!comment) return;
+    if (!comment) {
+      return;
+    }
     switch (newCommentState) {
       case CommentState.Approved:
         await approveComment({
@@ -126,7 +154,7 @@ export function CommentStateChangeModal({
             }
           },
         });
-        setOpen(false);
+        onClose?.();
         break;
       case CommentState.PendingUserChanges:
         if (!rejectionReason) {
@@ -145,14 +173,17 @@ export function CommentStateChangeModal({
             }
           },
         });
-        setOpen(false);
+        onClose?.();
         break;
       case CommentState.Rejected:
+        if (!rejectionReason) {
+          return;
+        }
+
         await rejectComment({
           variables: {
             id: comment.id,
-            rejectionReason:
-              rejectionReason ?? CommentRejectionReason.Misconduct,
+            rejectionReason,
           },
           onCompleted: data => {
             if (onStateChanged) {
@@ -161,179 +192,176 @@ export function CommentStateChangeModal({
             }
           },
         });
-        setOpen(false);
+        onClose?.();
         break;
     }
   }
 
-  const sortedRevisions = useMemo(() => {
-    const dcRevisions = [...comment.revisions];
-    return dcRevisions.sort(
-      (a: CommentRevision, b: CommentRevision) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }, [comment.revisions]);
+  const [latestRevision, ...earlierRevisions] = useMemo(
+    () =>
+      [...comment.revisions].sort(
+        (a: CommentRevisionFragment, b: CommentRevisionFragment) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      ),
+    [comment.revisions]
+  );
 
-  // handling the modal visibility
-  useEffect(() => {
-    if (comment && comment.state !== newCommentState) {
-      setOpen(true);
-    } else {
-      setOpen(false);
-    }
-  }, [newCommentState]);
+  const open = Boolean(comment) && comment.state !== newCommentState;
+  const needsReason =
+    newCommentState === CommentState.Rejected ||
+    newCommentState === CommentState.PendingUserChanges;
+  const isSaving = isApproving || isRequestingChanges || isRejecting;
 
-  useEffect(() => {
-    if (!open && onClose) {
-      onClose();
-    }
-  }, [open]);
-
-  const printUsername =
-    comment?.user?.name ?
-      `${comment.user.name}`
-    : `${comment?.guestUsername || t('comments.panels.noUserName')} ${t(
-        'comments.panels.unregisteredUser'
-      )}`;
+  const parent = comment.parentComment;
+  const parentRevision = parent?.revisions[parent.revisions.length - 1];
 
   return (
-    <Modal
+    <Dialog
+      fullWidth
       open={open}
-      size="sm"
-      overflow
+      maxWidth="sm"
+      onClose={() => onClose?.()}
+      aria-labelledby="comment-state-change-title"
     >
-      <Modal.Header onClose={() => setOpen(false)}>
-        <Modal.Title>
-          <div>{t(mapModalTitle(newCommentState))}</div>
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <DescriptionList>
-          <DescriptionListItem label={t('comments.panels.id')}>
-            {comment?.id}
-          </DescriptionListItem>
-          <DescriptionListItem label={t('comments.panels.userName')}>
-            {printUsername}
-          </DescriptionListItem>
-          <DescriptionListItem label={t('comments.panels.createdAt')}>
-            {comment?.createdAt &&
-              t('comments.panels.createdAtDate', {
-                createdAtDate: new Date(comment?.createdAt),
-              })}
-          </DescriptionListItem>
-          <DescriptionListItem label={t('comments.panels.updatedAt')}>
-            {comment?.modifiedAt &&
-              t('comments.panels.modifiedAt', {
-                modifiedAt: new Date(comment.modifiedAt),
-              })}
-          </DescriptionListItem>
+      <DialogTitle id="comment-state-change-title">
+        {t(mapModalTitle(newCommentState))}
+      </DialogTitle>
 
-          {comment?.parentComment && (
-            <DescriptionListItem label={t('comments.panels.parent')}>
-              <ParentCommentPanel bordered>
-                <>
-                  <div>
-                    {t('comments.panels.parentDate', {
-                      parentDate: new Date(comment.parentComment.createdAt),
-                    })}
-                  </div>
-                  <p>{printUsername}:</p>
-
-                  {toPlaintext(
-                    comment.parentComment.revisions[
-                      comment.parentComment.revisions.length - 1
-                    ]?.text?.content
-                  )}
-                </>
-              </ParentCommentPanel>
-              <IconWrapper>
-                <MdReplay rotate={180} />
-              </IconWrapper>
-            </DescriptionListItem>
+      <DialogContent>
+        <Stack spacing={2}>
+          {parent && (
+            <ParentComment>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                component="div"
+              >
+                {t('comments.panels.inReplyTo', {
+                  name: printUsername(parent, t),
+                })}
+              </Typography>
+              <ClampedText
+                variant="body2"
+                color="text.secondary"
+              >
+                {toPlaintext(parentRevision?.text?.content)}
+              </ClampedText>
+            </ParentComment>
           )}
 
-          {(
-            newCommentState === CommentState.Rejected ||
-            newCommentState === CommentState.PendingUserChanges
-          ) ?
-            <DescriptionListItem
+          <div>
+            <Typography
+              variant="subtitle2"
+              component="div"
+            >
+              {printUsername(comment, t)}
+            </Typography>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              component="div"
+            >
+              {t('comments.panels.createdAtDate', {
+                createdAtDate: new Date(comment.createdAt),
+              })}
+            </Typography>
+          </div>
+
+          <CommentText variant="outlined">
+            <Typography variant="body1">
+              {toPlaintext(latestRevision?.text?.content)}
+            </Typography>
+          </CommentText>
+
+          {earlierRevisions.length > 0 && (
+            <Accordion
+              variant="outlined"
+              disableGutters
+            >
+              <AccordionSummary expandIcon={<MdExpandMore />}>
+                <Typography variant="body2">
+                  {t('comments.panels.earlierRevisions', {
+                    count: earlierRevisions.length,
+                  })}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack
+                  spacing={2}
+                  divider={<Divider flexItem />}
+                >
+                  {earlierRevisions.map(({ text, createdAt }) => (
+                    <div key={createdAt}>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        component="div"
+                      >
+                        {t('comments.panels.revisionCreatedAtDate', {
+                          revisionCreatedAtDate: new Date(createdAt),
+                        })}
+                      </Typography>
+                      <Typography variant="body2">
+                        {toPlaintext(text?.content)}
+                      </Typography>
+                    </div>
+                  ))}
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          )}
+
+          {needsReason && (
+            <TextField
+              select
+              required
+              fullWidth
               label={t(
                 newCommentState === CommentState.Rejected ?
                   'comments.panels.rejectionReason'
                 : 'comments.panels.requestChangesReason'
               )}
+              value={rejectionReason ?? ''}
+              onChange={event =>
+                setRejectionReason(event.target.value as CommentRejectionReason)
+              }
             >
-              <Dropdown
-                title={t(
-                  rejectionReason ||
-                    (newCommentState === CommentState.Rejected ?
-                      'comments.panels.rejectionReason'
-                    : 'comments.panels.requestChangesReason')
-                )}
-                placement="topEnd"
-              >
-                <Dropdown.Item
-                  key={CommentRejectionReason.Spam}
-                  active={CommentRejectionReason.Spam === rejectionReason}
-                  onSelect={() =>
-                    setRejectionReason(CommentRejectionReason.Spam)
-                  }
+              {[
+                CommentRejectionReason.Spam,
+                CommentRejectionReason.Misconduct,
+              ].map(reason => (
+                <MenuItem
+                  key={reason}
+                  value={reason}
                 >
-                  {CommentRejectionReason.Spam}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  key={CommentRejectionReason.Misconduct}
-                  active={CommentRejectionReason.Misconduct === rejectionReason}
-                  onSelect={() => {
-                    setRejectionReason(CommentRejectionReason.Misconduct);
-                  }}
-                >
-                  {CommentRejectionReason.Misconduct}
-                </Dropdown.Item>
-              </Dropdown>
-            </DescriptionListItem>
-          : null}
+                  {t(mapRejectionReasonToLabel(reason))}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+        </Stack>
+      </DialogContent>
 
-          <DescriptionListItem label={t('comments.panels.revisions')} />
-          <RevisionPanel bordered>
-            <Timeline align="left">
-              {sortedRevisions.length ?
-                sortedRevisions.map(({ text, createdAt }, index) => (
-                  <Timeline.Item
-                    key={`timeline-item-${index}`}
-                    className={index === 0 ? 'rs-timeline-item-last' : ''}
-                  >
-                    <div>
-                      {t('comments.panels.revisionCreatedAtDate', {
-                        revisionCreatedAtDate: new Date(createdAt),
-                      })}
-                    </div>
-
-                    {toPlaintext(text?.content)}
-                  </Timeline.Item>
-                ))
-              : null}
-            </Timeline>
-          </RevisionPanel>
-        </DescriptionList>
-      </Modal.Body>
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          disabled={isApproving || isRequestingChanges || isRejecting}
-          appearance={'primary'}
+          variant="text"
+          onClick={() => onClose?.()}
+        >
+          {t('comments.panels.cancel')}
+        </Button>
+
+        <Button
+          variant="contained"
+          color={
+            newCommentState === CommentState.Rejected ? 'error' : 'primary'
+          }
+          loading={isSaving}
+          disabled={needsReason && !rejectionReason}
           onClick={async () => await changeState()}
         >
           {t(mapCommentActionToBtnTitle(newCommentState))}
         </Button>
-        <Button
-          onClick={() => {
-            setOpen(false);
-          }}
-          appearance="subtle"
-        >
-          {t('comments.panels.cancel')}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }

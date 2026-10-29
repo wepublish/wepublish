@@ -1,35 +1,42 @@
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { getApiClientV2, usePromptHtmlLazyQuery } from '@wepublish/editor/api';
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  FormLabel,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
+import { getApiClientV2, PromptHtmlDocument } from '@wepublish/editor/api';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAutoFixHigh } from 'react-icons/md';
-import {
-  Button,
-  Drawer,
-  Form,
-  Input as RInput,
-  InputGroup,
-  Loader,
-  Message,
-  Tooltip,
-  Whisper,
-} from 'rsuite';
 
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { HTMLBlockValue } from '../blocks/types';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { humanizeError } from '../humanizeError';
 
 const Warning = styled.div``;
 
-const Input = styled(RInput)`
+const Input = styled(TextField)`
   width: 100%;
 `;
 
-const StyledDrawer = styled(Drawer.Body)`
+const StyledDrawer = styled(DrawerBody)`
   display: grid;
   grid-auto-rows: max-content;
   grid-gap: 20px;
 `;
 
-const StyledForm = styled(Form)`
+const StyledForm = styled('form')`
   display: flex;
   flex-flow: column;
   grid-gap: 8px;
@@ -40,7 +47,7 @@ const HtmlContainer = styled.div`
 `;
 
 export interface HtmlEditPanelProps {
-  readonly value: HTMLBlockValue;
+  value: HTMLBlockValue;
   onClose(): void;
   onConfirm(value: HTMLBlockValue): void;
 }
@@ -55,11 +62,13 @@ export function HtmlEditPanel({
   const { t } = useTranslation();
 
   const [prompt, setPrompt] = useState('');
-  const [promptHTML, { loading: thinking, error, data: v0Data }] =
-    usePromptHtmlLazyQuery({
+  const [promptHTML, { loading: thinking, error, data: v0Data }] = useLazyQuery(
+    PromptHtmlDocument,
+    {
       fetchPolicy: 'no-cache',
       client: getApiClientV2(),
-    });
+    }
+  );
 
   const onGenerateHTML = useCallback(
     async (query: string) => {
@@ -83,80 +92,73 @@ export function HtmlEditPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('blocks.html.edit')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('blocks.html.edit')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance="primary"
+            variant="contained"
             disabled={isEmpty}
             onClick={() => onConfirm(htmlBlock)}
           >
             {t('blocks.html.confirm')}
           </Button>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('blocks.html.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
       <StyledDrawer>
         <StyledForm onSubmit={() => onGenerateHTML(prompt)}>
           <div>
-            <Form.Label>{t('blocks.html.generate')}</Form.Label>
+            <FormLabel>{t('blocks.html.generate')}</FormLabel>
 
-            <InputGroup inside>
-              <Form.Control
-                name="aiPrompt"
-                value={prompt}
-                onChange={setPrompt}
-              />
-
-              <Whisper
-                placement="top"
-                trigger="hover"
-                speaker={<Tooltip>{t('blocks.html.prompt')}</Tooltip>}
-              >
-                <InputGroup.Button
-                  type="submit"
-                  disabled={thinking || !prompt}
-                >
-                  {thinking ?
-                    <Loader size={'xs'} />
-                  : <MdAutoFixHigh />}
-                </InputGroup.Button>
-              </Whisper>
-            </InputGroup>
+            <TextField
+              value={prompt}
+              onChange={event => setPrompt(event.target.value)}
+              fullWidth
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButtonTooltip caption={t('blocks.html.prompt')}>
+                        <IconButton
+                          type="submit"
+                          edge="end"
+                          aria-label={t('blocks.html.prompt')}
+                          disabled={thinking || !prompt}
+                        >
+                          {thinking ?
+                            <CircularProgress size={16} />
+                          : <MdAutoFixHigh />}
+                        </IconButton>
+                      </IconButtonTooltip>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
           </div>
 
-          {error && (
-            <Message
-              showIcon
-              type="error"
-            >
-              {error.message}
-            </Message>
-          )}
+          {error && <Alert severity="error">{humanizeError(error)}</Alert>}
 
           {v0Data && (
-            <Message
-              showIcon
-              type="success"
-            >
-              {t('blocks.html.promptSuccess')}
-            </Message>
+            <Alert severity="success">{t('blocks.html.promptSuccess')}</Alert>
           )}
         </StyledForm>
 
-        <Input
-          as="textarea"
+        <TextField
           rows={3}
           placeholder={t('blocks.html.placeholder')}
           value={htmlBlock.html}
-          onChange={input => setHtmlBlock({ ...htmlBlock, html: input })}
+          onChange={event =>
+            setHtmlBlock({ ...htmlBlock, html: event.target.value })
+          }
+          multiline
         />
 
         <Warning>{t('blocks.html.warning')}</Warning>

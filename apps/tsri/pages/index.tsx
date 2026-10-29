@@ -5,7 +5,12 @@ import mailchimp, {
 import { captureException } from '@sentry/nextjs';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { DailyBriefingContext } from '@wepublish/tenant/tsri';
+import {
+  getApiUrl,
+  getPageShell,
+  revalidateFor,
+} from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -16,8 +21,6 @@ import {
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { ResponseError } from 'superagent';
-
-import { DailyBriefingContext } from '../src/components/teasers/teaser-sidebar-daily-briefing-context';
 
 type IndexProps = {
   campaigns: campaigns.Campaigns[];
@@ -48,9 +51,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const client = getApiClient(getApiUrl(), []);
 
   let mailchimpResponse:
-    | mailchimp.campaigns.CampaignsSuccessResponse
-    | ErrorResponse
-    | null = null;
+    mailchimp.campaigns.CampaignsSuccessResponse | ErrorResponse | null = null;
   try {
     mailchimpResponse = await mailchimp.campaigns.list({
       count: 4,
@@ -74,7 +75,7 @@ export const getStaticProps: GetStaticProps = async () => {
     captureException(e);
   }
 
-  await Promise.all([
+  const [page] = await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
@@ -92,10 +93,13 @@ export const getStaticProps: GetStaticProps = async () => {
   const { campaigns = [] } =
     (mailchimpResponse as campaigns.CampaignsSuccessResponse) ?? {};
 
-  const props = addClientCacheToProps(client, { campaigns });
+  const props = addClientCacheToProps(client, {
+    campaigns,
+    shell: getPageShell(page.data?.page),
+  });
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(page.data?.page, page.error),
   };
 };

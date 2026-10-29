@@ -1,15 +1,15 @@
-import { FullUserFragment, useUserListQuery } from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
-import { CheckPicker } from 'rsuite';
+import { useQuery } from '@apollo/client/react';
+import { Autocomplete, TextField } from '@mui/material';
+import { FullUserFragment, UserListDocument } from '@wepublish/editor/api';
+import { useMemo, useState } from 'react';
 
 export interface UserCheckPickerProps {
-  readonly list: FullUserFragment[];
+  list: FullUserFragment[];
   onClose?(): void;
   onChange?(users: FullUserFragment[]): void;
 }
 
 export function UserCheckPicker({ list, onChange }: UserCheckPickerProps) {
-  const [foundUsers, setFoundUsers] = useState<FullUserFragment[]>([]);
   const [usersFilter, setUsersFilter] = useState('');
 
   const usersVariables = {
@@ -19,36 +19,30 @@ export function UserCheckPicker({ list, onChange }: UserCheckPickerProps) {
     take: 10,
   };
 
-  const { data } = useUserListQuery({
+  const { data } = useQuery(UserListDocument, {
     variables: usersVariables,
   });
 
-  useEffect(() => {
-    if (data?.users?.nodes) {
-      const userIDs = data.users.nodes.map(user => user.id);
-      const selectedUsers = list.filter(user => !userIDs.includes(user.id));
-      setFoundUsers([...data.users.nodes, ...selectedUsers]);
-    }
-  }, [data?.users, list]);
+  const foundUsers = useMemo(() => {
+    const found = data?.users?.nodes ?? [];
+    const foundIDs = found.map(user => user.id);
+
+    return [...found, ...list.filter(user => !foundIDs.includes(user.id))];
+  }, [data?.users?.nodes, list]);
 
   return (
-    <CheckPicker
-      cleanable
-      value={list.map(user => user.id)}
-      data={foundUsers.map(user => ({ value: user.id, label: user.name }))}
-      onSearch={searchKeyword => {
-        setUsersFilter(searchKeyword);
-      }}
-      onChange={authorsID => {
-        const authors = foundUsers.filter(author =>
-          authorsID.includes(author.id)
-        );
-        onChange?.(authors);
-      }}
-      onExit={() => {
-        setUsersFilter('');
-      }}
-      block
+    <Autocomplete
+      multiple
+      options={foundUsers}
+      value={list}
+      getOptionLabel={user => user.name}
+      isOptionEqualToValue={(option, selected) => option.id === selected.id}
+      filterOptions={options => options}
+      onInputChange={(_event, searchKeyword) => setUsersFilter(searchKeyword)}
+      onChange={(_event, users) => onChange?.(users)}
+      sx={{ minWidth: 200 }}
+      renderInput={params => <TextField {...params} />}
+      fullWidth
     />
   );
 }

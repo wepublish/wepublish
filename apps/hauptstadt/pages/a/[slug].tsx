@@ -1,8 +1,8 @@
-import styled from '@emotion/styled';
+import { CombinedGraphQLErrors } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import {
   ArticleContainer,
   ArticleListContainer,
-  ArticleWrapper,
 } from '@wepublish/article/website';
 import {
   isTeaserGridBlock,
@@ -12,18 +12,22 @@ import {
 } from '@wepublish/block-content/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ShowPaywallContext, useShowPaywall } from '@wepublish/paywall/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import {
+  ArticleWrapperAppendix,
+  ArticleWrapperComments,
+  DuplicatedPaywall,
+} from '@wepublish/tenant/hauptstadt';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   CommentItemType,
   CommentListDocument,
+  FullTagFragment,
   getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  Tag,
-  useArticleQuery,
 } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -33,10 +37,6 @@ import { anyPass } from 'ramda';
 import { ComponentProps } from 'react';
 
 import { isArchived, isNachtleben } from '../../src/archiviert';
-import { DuplicatedPaywall } from '../../src/components/hauptstadt-paywall';
-
-export const ArticleWrapperComments = styled(ArticleWrapper)``;
-export const ArticleWrapperAppendix = styled(ArticleWrapper)``;
 
 export interface StandaloneArticlePageProps {
   slug?: string;
@@ -55,7 +55,7 @@ export function StandaloneArticlePage({
     elements: { H4 },
   } = useWebsiteBuilder();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug,
@@ -176,7 +176,8 @@ type ArticlePageVariant = 'default' | 'archive';
 const createArticleGetStaticProps =
   (variant: ArticlePageVariant): GetStaticProps =>
   async ({ params }) => {
-    const { id, slug } = params || {};
+    const id = params?.id?.toString();
+    const slug = params?.slug?.toString();
     const client = getApiClient(getApiUrl(), []);
 
     const [article] = await Promise.all([
@@ -194,9 +195,9 @@ const createArticleGetStaticProps =
         query: PeerProfileDocument,
       }),
     ]);
-    const is404 = article.errors?.find(
-      ({ extensions }) => extensions?.status === 404
-    );
+    const is404 =
+      CombinedGraphQLErrors.is(article.error) &&
+      article.error.errors.find(({ extensions }) => extensions?.status === 404);
     if (is404) {
       return {
         notFound: true,
@@ -253,7 +254,7 @@ const createArticleGetStaticProps =
           query: ArticleListDocument,
           variables: {
             filter: {
-              tags: articleData.tags.map((tag: Tag) => tag.id),
+              tags: articleData.tags.map((tag: FullTagFragment) => tag.id),
             },
             take: 4,
           },
@@ -271,7 +272,7 @@ const createArticleGetStaticProps =
 
     return {
       props,
-      revalidate: 60, // every 60 seconds
+      revalidate: revalidateFor(article.data?.article, article.error),
     };
   };
 

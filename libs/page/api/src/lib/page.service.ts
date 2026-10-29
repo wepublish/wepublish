@@ -1,3 +1,9 @@
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
+import {
+  CONTENT_CACHE_TTL_SECONDS,
+  PublicContentCacheInvalidator,
+  contentCacheNamespace,
+} from '@wepublish/public-content-cache/api';
 import {
   BadRequestException,
   Injectable,
@@ -24,10 +30,23 @@ import { mapBlockUnionMap } from '@wepublish/block-content/api';
 
 @Injectable()
 export class PageService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator,
+    private kv: NamespacedCache
+  ) {}
 
   @PrimeDataLoader(PageDataloaderService)
   async getPageBySlug(slug: string) {
+    return this.kv.getOrLoadNs(
+      contentCacheNamespace('pages'),
+      `slug:${slug.toLowerCase()}`,
+      () => this.loadPageBySlug(slug),
+      CONTENT_CACHE_TTL_SECONDS
+    );
+  }
+
+  private loadPageBySlug(slug: string) {
     return this.prisma.page.findFirst({
       where: {
         slug: {
@@ -42,7 +61,16 @@ export class PageService {
   }
 
   @PrimeDataLoader(PageDataloaderService)
-  async getPages({
+  async getPages(args: PageListArgs) {
+    return this.kv.getOrLoadNs(
+      contentCacheNamespace('pages'),
+      `list:${JSON.stringify(args)}`,
+      () => this.loadPages(args),
+      CONTENT_CACHE_TTL_SECONDS
+    );
+  }
+
+  private async loadPages({
     filter,
     cursorId,
     sort = PageSort.PublishedAt,
@@ -88,13 +116,24 @@ export class PageService {
 
   @PrimeDataLoader(PageDataloaderService)
   async createPage(
-    { slug, hidden, tagIds, properties, blocks, ...revision }: CreatePageInput,
+    {
+      slug,
+      hidden,
+      hideHeader,
+      hideFooter,
+      tagIds,
+      properties,
+      blocks,
+      ...revision
+    }: CreatePageInput,
     userId: string | null | undefined
   ) {
-    return this.prisma.page.create({
+    const result = await this.prisma.page.create({
       data: {
         slug,
         hidden,
+        hideHeader,
+        hideFooter,
         tags: {
           createMany: {
             data: tagIds.map(tagId => ({
@@ -113,6 +152,9 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('pages');
+
+    return result;
   }
 
   @PrimeDataLoader(PageDataloaderService)
@@ -120,6 +162,8 @@ export class PageService {
     {
       id,
       hidden,
+      hideHeader,
+      hideFooter,
       slug,
       tagIds,
       properties,
@@ -139,11 +183,13 @@ export class PageService {
       throw new NotFoundException(`Page with id ${id} not found`);
     }
 
-    return this.prisma.page.update({
+    const result = await this.prisma.page.update({
       where: { id },
       data: {
         slug,
         hidden,
+        hideHeader,
+        hideFooter,
         revisions: {
           updateMany: {
             where: {
@@ -177,6 +223,13 @@ export class PageService {
         },
       },
     });
+    if (page.publishedAt) {
+      await this.publicContentCache.invalidate('pages');
+    } else {
+      await this.publicContentCache.invalidateDraft('pages');
+    }
+
+    return result;
   }
 
   async deletePage(id: string) {
@@ -188,11 +241,16 @@ export class PageService {
       throw new NotFoundException(`Page with id ${id} not found`);
     }
 
-    return this.prisma.page.delete({
+    const deleted = await this.prisma.page.delete({
       where: {
         id,
       },
     });
+    await this.publicContentCache.invalidate('pages');
+    await this.publicContentCache.invalidateArticleLayout();
+    await this.publicContentCache.invalidateNavigations();
+
+    return deleted;
   }
 
   @PrimeDataLoader(PageDataloaderService)
@@ -237,7 +295,7 @@ export class PageService {
         (page.publishedAt ?? publishedAt)
       );
 
-    return this.prisma.page.update({
+    const published = await this.prisma.page.update({
       where: {
         id,
       },
@@ -256,6 +314,11 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidate('pages');
+    this.publicContentCache.invalidateAt(publishedAt, 'pages');
+    this.publicContentCache.invalidateAt(pagePublishedAt, 'pages');
+
+    return published;
   }
 
   @PrimeDataLoader(PageDataloaderService)
@@ -310,6 +373,9 @@ export class PageService {
       });
     }
 
+    await this.publicContentCache.invalidate('pages');
+    await this.publicContentCache.invalidateArticleLayout();
+
     return updatedPage;
   }
 
@@ -345,9 +411,11 @@ export class PageService {
       },
     ] = page.revisions;
 
-    return this.prisma.page.create({
+    const result = await this.prisma.page.create({
       data: {
         hidden: page.hidden,
+        hideHeader: page.hideHeader,
+        hideFooter: page.hideFooter,
         tags: {
           createMany: {
             data: page.tags.map(({ tagId }) => ({
@@ -366,6 +434,9 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('pages');
+
+    return result;
   }
 
   /**
@@ -421,6 +492,8 @@ export class PageService {
       where: { id: draft.id },
       data: { archivedAt: new Date() },
     });
+
+    await this.publicContentCache.invalidateDraft('pages');
 
     return page;
   }
@@ -520,7 +593,7 @@ export class PageService {
       ...content
     } = revision;
 
-    return this.prisma.page.update({
+    const result = await this.prisma.page.update({
       where: { id: pageId },
       data: {
         modifiedAt: new Date(),
@@ -543,6 +616,9 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('pages');
+
+    return result;
   }
 
   async performPageFullTextSearch(searchQuery: string): Promise<string[]> {

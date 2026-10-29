@@ -1,6 +1,6 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -11,27 +11,27 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
-import { Controller, useForm } from 'react-hook-form';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { MdArrowBack } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { WebsiteSettingsHeader } from './website-settings-header';
+
+import { lazyMessage } from '../../utility';
 import { Explainer, WebsiteAnalyticsWrapper } from './website-analytics';
 
 const adsSchema = z.object({
   sparkLoop: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^pub_[a-f0-9]{12}$/,
-        'Must be a valid SparkLoop ID (e.g., pub_xxxxxxxxxxxx)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.ads.sparkLoop.idInvalid'),
+      })
+      .regex(/^pub_[a-f0-9]{12}$/)
       .or(z.literal(''))
       .nullish(),
   }),
@@ -39,39 +39,28 @@ const adsSchema = z.object({
 
 export const WebsiteAds = () => {
   const { t } = useTranslation();
-  const [loadSettings] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('websiteSettings.saveSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
       onError: error => {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {error.message}
-          </Message>
-        );
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       },
-    });
+    }
+  );
 
   const {
     control,
     handleSubmit,
-    watch,
     formState: { isLoading },
   } = useForm<z.infer<typeof adsSchema>>({
     resolver: zodResolver(adsSchema),
@@ -84,6 +73,8 @@ export const WebsiteAds = () => {
       );
     },
   });
+
+  const sparkLoopEnabled = useWatch({ control, name: 'sparkLoop.enabled' });
 
   const onSubmit = handleSubmit(data => {
     updateWebsiteSettings({
@@ -105,18 +96,19 @@ export const WebsiteAds = () => {
 
   return (
     <WebsiteAnalyticsWrapper onSubmit={onSubmit}>
-      <Link to={'/settings/website'}>
+      <WebsiteSettingsHeader title={t('websiteSettings.ads.title')}>
         <Button
-          size="small"
-          variant="text"
-          startIcon={<MdArrowBack />}
+          type="submit"
+          variant="contained"
+          color="primary"
+          loading={saving}
         >
-          {t('websiteSettings.backToOverview')}
+          {t('save')}
         </Button>
-      </Link>
-
-      <h3>{t('websiteSettings.ads.sparkLoop.title')}</h3>
-
+      </WebsiteSettingsHeader>
+      <Typography variant="h3">
+        {t('websiteSettings.ads.sparkLoop.title')}
+      </Typography>
       <Controller
         name="sparkLoop.enabled"
         control={control}
@@ -152,34 +144,16 @@ export const WebsiteAds = () => {
           </div>
         )}
       />
-
       <Controller
         name="sparkLoop.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('sparkLoop.enabled') ?
+          sparkLoopEnabled ?
             <TextField
               {...field}
               label="SparkLoop ID"
               placeholder="pub_xxxxxxxxxxxx"
               error={!!error}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
-              }}
               helperText={
                 error?.message || (
                   <Trans
@@ -196,29 +170,29 @@ export const WebsiteAds = () => {
                   />
                 )
               }
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
           : <></>
         }
       />
-
-      <Box>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={saving}
-        >
-          {saving && (
-            <CircularProgress
-              size={14}
-              color="inherit"
-              sx={{ mr: 1 }}
-            />
-          )}
-
-          {t('save')}
-        </Button>
-      </Box>
     </WebsiteAnalyticsWrapper>
   );
 };

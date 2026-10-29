@@ -1,211 +1,301 @@
 import {
+  Box,
+  Card,
+  CardContent,
+  Drawer,
+  FormControl,
+  FormLabel,
+  MenuItem,
+  TextField,
+} from '@mui/material';
+import {
   EventStatus,
   FullImageFragment,
-  MutationCreateEventArgs,
-  MutationUpdateEventArgs,
-  Tag,
+  FullTagFragment,
   TagType,
 } from '@wepublish/editor/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   ChooseEditImage,
   DateTimePicker,
+  DRAWER_WIDTHS,
+  FormFields,
   ImageEditPanel,
   ImageSelectPanel,
+  InfoTooltip,
   RichTextBlock,
-  RichTextBlockValue,
   SelectTags,
-  Textarea,
 } from '@wepublish/ui/editor';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Drawer, Form, Panel, SelectPicker } from 'rsuite';
+import { z } from 'zod';
 
-type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
-  image?: FullImageFragment | null;
-  tags?: Pick<Tag, 'id' | 'tag'>[];
-  externalSourceName?: string;
-};
+export const eventSchema = z
+  .object({
+    id: z.string().optional(),
+    name: z.string().min(1),
+    location: z.string().nullish(),
+    startsAt: z.string().min(1),
+    endsAt: z.string().nullish(),
+    lead: z.string().nullish(),
+    description: z.custom<RichtextJSONDocument>().nullish(),
+    status: z.nativeEnum(EventStatus).optional(),
+    tagIds: z.array(z.string()).optional(),
+    tags: z.array(z.custom<Pick<FullTagFragment, 'id' | 'tag'>>()).optional(),
+    imageId: z.string().nullish(),
+    image: z.custom<FullImageFragment>().nullish(),
+    externalSourceName: z.string().optional(),
+  })
+  .refine(
+    value =>
+      !value.endsAt || new Date(value.endsAt) >= new Date(value.startsAt),
+    { path: ['endsAt'] }
+  );
+
+export type EventFormValues = z.infer<typeof eventSchema>;
 
 type EventFormProps = {
   create?: boolean;
-  event: EventFormData;
-  onChange: (changes: Partial<EventFormData>) => void;
 };
 
-export const EventForm = ({ event, onChange, create }: EventFormProps) => {
+export const EventForm = ({ create }: EventFormProps) => {
   const { t } = useTranslation();
+  const { control, setValue } = useFormContext<EventFormValues>();
+  const tags = useWatch({ control, name: 'tags' });
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
+  const externalSourceName = useWatch({ control, name: 'externalSourceName' });
+  const imageId = useWatch({ control, name: 'imageId' });
+
   return (
     <>
       <div
-        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}
+        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}
       >
-        <Panel
-          bordered
+        <Card
+          variant="outlined"
           style={{ overflow: 'initial' }}
         >
-          <Form.Group controlId="name">
-            <Form.Label>{t('event.form.name')}</Form.Label>
-            <Form.Control
-              name="name"
-              value={event.name ?? ''}
-              onChange={(name: string) => onChange({ name })}
-            />
-          </Form.Group>
-
-          {event.externalSourceName && (
-            <Form.Group controlId="externalSourceName">
-              <Form.Label>{t('event.form.externalSource')}</Form.Label>
-              <Form.Control
-                name="externalSourceName"
-                value={event.externalSourceName ?? ''}
-                disabled
+          <CardContent>
+            <FormFields>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    label={t('event.form.name')}
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                )}
               />
-            </Form.Group>
-          )}
 
-          <Form.Group controlId="location">
-            <Form.Label>{t('event.form.location')}</Form.Label>
-            <Form.Control
-              name="location"
-              value={event.location ?? ''}
-              onChange={(location: string) => onChange({ location })}
-            />
-          </Form.Group>
+              {externalSourceName && (
+                <TextField
+                  label={t('event.form.externalSource')}
+                  name="externalSourceName"
+                  value={externalSourceName}
+                  disabled
+                  fullWidth
+                />
+              )}
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '12px',
-              marginTop: '20px',
-            }}
-          >
-            <Form.Group controlId="startsAt">
-              <Form.Control
-                name="startsAt"
-                label={t('event.form.startsAt')}
-                dateTime={event.startsAt ? new Date(event.startsAt) : undefined}
-                changeDate={(date: Date) =>
-                  onChange({ startsAt: date?.toISOString() })
-                }
-                accepter={DateTimePicker}
+              <Controller
+                control={control}
+                name="location"
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    label={t('event.form.location')}
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                )}
               />
-            </Form.Group>
 
-            <Form.Group controlId="endsAt">
-              <Form.Control
-                name="endsAt"
-                label={t('event.form.endsAt')}
-                dateTime={event.endsAt ? new Date(event.endsAt) : undefined}
-                changeDate={(date: Date) =>
-                  onChange({ endsAt: date?.toISOString() })
-                }
-                accepter={DateTimePicker}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '12px',
+                }}
+              >
+                <Controller
+                  control={control}
+                  name="startsAt"
+                  render={({ field, fieldState: { error } }) => (
+                    <Box>
+                      <DateTimePicker
+                        label={t('event.form.startsAt')}
+                        dateTime={
+                          field.value ? new Date(field.value) : undefined
+                        }
+                        changeDate={(date: Date) =>
+                          field.onChange(date?.toISOString())
+                        }
+                        helperText={error?.message}
+                      />
+                    </Box>
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="endsAt"
+                  render={({ field, fieldState: { error } }) => (
+                    <Box>
+                      <DateTimePicker
+                        label={t('event.form.endsAt')}
+                        dateTime={
+                          field.value ? new Date(field.value) : undefined
+                        }
+                        changeDate={(date: Date) =>
+                          field.onChange(date?.toISOString() ?? null)
+                        }
+                        helperText={error?.message}
+                      />
+                    </Box>
+                  )}
+                />
+              </div>
+
+              <Controller
+                control={control}
+                name="lead"
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    label={t('event.form.lead')}
+                    multiline
+                    rows={3}
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                )}
               />
-            </Form.Group>
-          </div>
 
-          <Form.Group controlId="lead">
-            <Form.Label>{t('event.form.lead')}</Form.Label>
-            <Form.Control
-              name="lead"
-              rows={3}
-              value={event.lead ?? ''}
-              onChange={(lead: string) => onChange({ lead })}
-              accepter={Textarea}
-            />
-          </Form.Group>
+              <FormControl fullWidth>
+                <FormLabel>{t('event.form.description')}</FormLabel>
 
-          <Form.Group controlId="description">
-            <Form.Label>{t('event.form.description')}</Form.Label>
-            <Panel bordered>
-              <Form.Control
-                name="description"
-                value={event.description}
-                onChange={(description: RichTextBlockValue['richText']) =>
-                  onChange({ description })
-                }
-                accepter={RichTextBlock}
-              />
-            </Panel>
-          </Form.Group>
-        </Panel>
+                <Controller
+                  control={control}
+                  name="description"
+                  render={({ field }) => (
+                    <RichTextBlock
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </FormControl>
+            </FormFields>
+          </CardContent>
+        </Card>
 
-        <Panel bordered>
-          {!create && (
-            <Form.Group controlId="status">
-              <Form.Label>{t('event.form.status')}</Form.Label>
-              <Form.Control
-                name="status"
-                block
-                placement="auto"
-                cleanable={false}
-                searchable={false}
-                accepter={SelectPicker}
-                value={(event as MutationUpdateEventArgs).status ?? ''}
-                data={[
-                  {
-                    value: EventStatus.Scheduled,
-                    label: t('event.form.scheduled'),
-                  },
-                  {
-                    value: EventStatus.Cancelled,
-                    label: t('event.form.cancelled'),
-                  },
-                  {
-                    value: EventStatus.Postponed,
-                    label: t('event.form.postponed'),
-                  },
-                  {
-                    value: EventStatus.Rescheduled,
-                    label: t('event.form.rescheduled'),
-                  },
-                ]}
-                onChange={(status: any) =>
-                  onChange({ status: status as EventStatus })
-                }
-              />
-            </Form.Group>
-          )}
+        <Card>
+          <CardContent>
+            <FormFields>
+              {!create && (
+                <FormControl
+                  fullWidth
+                  sx={{ marginBottom: 3 }}
+                >
+                  <FormLabel>
+                    {t('event.form.status')}{' '}
+                    <InfoTooltip text={t('event.form.statusInfo')} />
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="status"
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        value={field.value ?? ''}
+                        select
+                        error={Boolean(error)}
+                        helperText={error?.message}
+                        fullWidth
+                      >
+                        {[
+                          [EventStatus.Scheduled, 'event.form.scheduled'],
+                          [EventStatus.Cancelled, 'event.form.cancelled'],
+                          [EventStatus.Postponed, 'event.form.postponed'],
+                          [EventStatus.Rescheduled, 'event.form.rescheduled'],
+                        ].map(([status, label]) => (
+                          <MenuItem
+                            key={status}
+                            value={status}
+                          >
+                            {t(label)}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )}
+                  />
+                </FormControl>
+              )}
 
-          <Form.Group controlId="tagIds">
-            <Form.Label>{t('event.form.tags')}</Form.Label>
-            <Form.Control
-              name="tagIds"
-              defaultTags={event.tags ?? []}
-              selectedTags={event.tagIds ?? []}
-              setSelectedTags={(tagIds: string[]) => onChange({ tagIds })}
-              tagType={TagType.Event}
-              accepter={SelectTags}
-            />
-          </Form.Group>
+              <FormControl fullWidth>
+                <FormLabel>{t('event.form.tags')}</FormLabel>
+                <Controller
+                  control={control}
+                  name="tagIds"
+                  render={({ field }) => (
+                    <SelectTags
+                      defaultTags={tags ?? []}
+                      selectedTags={field.value ?? []}
+                      setSelectedTags={field.onChange}
+                      tagType={TagType.Event}
+                    />
+                  )}
+                />
+              </FormControl>
 
-          <Form.Group controlId="tagIds">
-            <Form.Label>{t('event.form.image')}</Form.Label>
-            <Form.Control
-              name="image"
-              header={''}
-              image={event.image}
-              disabled={false}
-              openChooseModalOpen={() => setChooseModalOpen(true)}
-              openEditModalOpen={() => setEditModalOpen(true)}
-              removeImage={() => {
-                onChange({ imageId: undefined, image: undefined });
-              }}
-              accepter={ChooseEditImage}
-              minHeight={200}
-            />
-          </Form.Group>
-        </Panel>
+              <FormControl fullWidth>
+                <FormLabel>{t('event.form.image')}</FormLabel>
+                <Controller
+                  control={control}
+                  name="image"
+                  render={({ field }) => (
+                    <ChooseEditImage
+                      onSelect={image => {
+                        setChooseModalOpen(false);
+                        setValue('imageId', image.id);
+                        setValue('image', image);
+                      }}
+                      image={field.value}
+                      disabled={false}
+                      openChooseModalOpen={() => setChooseModalOpen(true)}
+                      openEditModalOpen={() => setEditModalOpen(true)}
+                      removeImage={() => {
+                        field.onChange(undefined);
+                        setValue('imageId', undefined);
+                      }}
+                    />
+                  )}
+                />
+              </FormControl>
+            </FormFields>
+          </CardContent>
+        </Card>
       </div>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: { sx: { width: DRAWER_WIDTHS.sm, maxWidth: '100vw' } },
+        }}
         open={isChooseModalOpen}
-        size={'sm'}
         onClose={() => {
           setChooseModalOpen(false);
         }}
@@ -214,19 +304,23 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
           onClose={() => setChooseModalOpen(false)}
           onSelect={image => {
             setChooseModalOpen(false);
-            onChange({ imageId: image.id, image });
+            setValue('imageId', image.id);
+            setValue('image', image);
           }}
         />
       </Drawer>
 
-      {event.imageId && (
+      {imageId && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: { sx: { width: DRAWER_WIDTHS.sm, maxWidth: '100vw' } },
+          }}
           open={isEditModalOpen}
-          size={'sm'}
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel
-            id={event.imageId}
+            id={imageId}
             onClose={() => setEditModalOpen(false)}
           />
         </Drawer>

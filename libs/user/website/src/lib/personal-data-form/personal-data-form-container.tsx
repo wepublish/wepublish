@@ -1,11 +1,12 @@
+import { useMutation } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import {
+  RequestEmailChangeDocument,
+  UpdatePasswordDocument,
   UpdatePasswordMutationVariables,
+  UpdateUserDocument,
   UpdateUserMutationVariables,
-  useRequestEmailChangeMutation,
-  useUpdatePasswordMutation,
-  useUpdateUserMutation,
-  useUploadImageMutation,
+  UploadImageDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -18,18 +19,18 @@ import { ChangeEvent, useCallback } from 'react';
 export type PersonalDataFormContainerProps<
   T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields,
 > = BuilderContainerProps &
-  Pick<BuilderPersonalDataFormProps<T>, 'fields' | 'schema'>;
+  Pick<BuilderPersonalDataFormProps<T>, 'fields' | 'schema' | 'errorMap'>;
 
 export function PersonalDataFormContainer<
   T extends BuilderPersonalDataFormFields,
->({ className, schema, fields }: PersonalDataFormContainerProps<T>) {
+>({ className, schema, fields, errorMap }: PersonalDataFormContainerProps<T>) {
   const { PersonalDataForm } = useWebsiteBuilder();
   const { user } = useUser();
 
-  const [uploadImage] = useUploadImageMutation();
-  const [updatePassword] = useUpdatePasswordMutation();
-  const [updateUser] = useUpdateUserMutation();
-  const [requestEmailChange] = useRequestEmailChangeMutation();
+  const [uploadImage] = useMutation(UploadImageDocument);
+  const [updatePassword] = useMutation(UpdatePasswordDocument);
+  const [updateUser] = useMutation(UpdateUserDocument);
+  const [requestEmailChange] = useMutation(RequestEmailChangeDocument);
 
   const handleOnImageUpload = useCallback(
     async (input: ChangeEvent<HTMLInputElement> | null) => {
@@ -94,6 +95,7 @@ export function PersonalDataFormContainer<
       onRequestEmailChange={handleRequestEmailChange}
       fields={fields}
       schema={schema}
+      errorMap={errorMap}
     />
   );
 }

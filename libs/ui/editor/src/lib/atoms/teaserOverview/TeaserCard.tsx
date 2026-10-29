@@ -28,14 +28,14 @@ import { SlotType } from './useWorkingBlocks';
 
 export function groupColor(groupIndex: number, theme: Theme): string {
   const colors = [
-    theme.palette.secondary.main,
-    theme.palette.success.main,
-    theme.palette.warning.main,
-    theme.palette.info.dark,
-    theme.palette.secondary.dark,
-    theme.palette.success.dark,
-    theme.palette.warning.dark,
-    theme.palette.error.main,
+    theme.vars.palette.secondary.main,
+    theme.vars.palette.success.main,
+    theme.vars.palette.warning.main,
+    theme.vars.palette.info.dark,
+    theme.vars.palette.secondary.dark,
+    theme.vars.palette.success.dark,
+    theme.vars.palette.warning.dark,
+    theme.vars.palette.error.main,
   ];
   return colors[groupIndex % colors.length];
 }
@@ -67,7 +67,7 @@ const Card = styled('div', {
   display: flex;
   align-items: stretch;
   height: 72px;
-  border-radius: 6px;
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
   border: ${({ isDropTarget, isOver }) =>
       isDropTarget || isOver ? '3px' : '2px'}
     ${({ isScratch, isEmptyReal }) =>
@@ -81,11 +81,11 @@ const Card = styled('div', {
       groupColor,
       theme,
     }) =>
-      isDropTarget ? theme.palette.primary.main
-      : isOver ? theme.palette.primary.main
-      : isShifting ? theme.palette.primary.light
-      : isSelected ? theme.palette.primary.main
-      : isEmptyReal ? theme.palette.error.main
+      isDropTarget ? theme.vars.palette.primary.main
+      : isOver ? theme.vars.palette.primary.main
+      : isShifting ? theme.vars.palette.primary.light
+      : isSelected ? theme.vars.palette.primary.main
+      : isEmptyReal ? theme.vars.palette.error.main
       : groupColor};
   background: ${({
     isDropTarget,
@@ -95,12 +95,12 @@ const Card = styled('div', {
     isEmptyReal,
     theme,
   }) =>
-    isDropTarget ? `${theme.palette.primary.main}22`
-    : isOver ? `${theme.palette.primary.main}22`
-    : isShifting ? `${theme.palette.primary.light}15`
-    : isEmptyReal ? `${theme.palette.error.main}11`
-    : isScratch ? theme.palette.action.disabledBackground
-    : theme.palette.background.paper};
+    isDropTarget ? `${theme.vars.palette.primary.main}22`
+    : isOver ? `${theme.vars.palette.primary.main}22`
+    : isShifting ? `${theme.vars.palette.primary.light}15`
+    : isEmptyReal ? `${theme.vars.palette.error.main}11`
+    : isScratch ? theme.vars.palette.action.disabledBackground
+    : theme.vars.palette.background.paper};
   cursor: ${({ selectionActive, isEmpty }) =>
     selectionActive ? 'pointer'
     : isEmpty ? 'default'
@@ -120,10 +120,10 @@ const Card = styled('div', {
     box-shadow 0.15s,
     background 0.15s;
   box-shadow: ${({ isSelected, isDropTarget, isOver, isShifting, theme }) =>
-    isDropTarget ? `0 0 0 4px ${theme.palette.primary.main}55`
-    : isOver ? `0 0 0 3px ${theme.palette.primary.main}55`
-    : isShifting ? `0 0 0 2px ${theme.palette.primary.light}33`
-    : isSelected ? `0 0 0 3px ${theme.palette.primary.main}55`
+    isDropTarget ? `0 0 0 4px ${theme.vars.palette.primary.main}55`
+    : isOver ? `0 0 0 3px ${theme.vars.palette.primary.main}55`
+    : isShifting ? `0 0 0 2px ${theme.vars.palette.primary.light}33`
+    : isSelected ? `0 0 0 3px ${theme.vars.palette.primary.main}55`
     : 'none'};
 
   &:hover {
@@ -136,10 +136,10 @@ const Card = styled('div', {
       theme,
     }) => {
       const base =
-        isDropTarget ? `0 0 0 4px ${theme.palette.primary.main}55`
-        : isOver ? `0 0 0 3px ${theme.palette.primary.main}55`
-        : isShifting ? `0 0 0 2px ${theme.palette.primary.light}33`
-        : isSelected ? `0 0 0 3px ${theme.palette.primary.main}55`
+        isDropTarget ? `0 0 0 4px ${theme.vars.palette.primary.main}55`
+        : isOver ? `0 0 0 3px ${theme.vars.palette.primary.main}55`
+        : isShifting ? `0 0 0 2px ${theme.vars.palette.primary.light}33`
+        : isSelected ? `0 0 0 3px ${theme.vars.palette.primary.main}55`
         : null;
       if (base) {
         return base;
@@ -161,7 +161,9 @@ const ShiftArrowOverlay = styled('div', {
   transform: translateY(-50%);
   font-size: ${({ strong }) => (strong ? '32px' : '28px')};
   color: ${({ strong, theme }) =>
-    strong ? theme.palette.primary.main : theme.palette.primary.light};
+    strong ?
+      theme.vars.palette.primary.main
+    : theme.vars.palette.primary.light};
   pointer-events: none;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
   z-index: 2;
@@ -181,7 +183,7 @@ const Thumbnail = styled('div', {
 })<{ isScratch: boolean }>`
   width: 88px;
   flex-shrink: 0;
-  background: ${({ theme }) => theme.palette.action.hover};
+  background: ${({ theme }) => theme.vars.palette.action.hover};
   overflow: hidden;
 
   img {
@@ -199,7 +201,7 @@ const ThumbnailPlaceholder = styled('div')`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.palette.text.disabled};
+  color: ${({ theme }) => theme.vars.palette.text.disabled};
   font-size: 24px;
 `;
 
@@ -216,7 +218,7 @@ const TextArea = styled('div')`
 const PreTitle = styled('div')`
   ${({ theme }) => css`
     font-size: ${theme.typography.caption.fontSize};
-    color: ${theme.palette.text.secondary};
+    color: ${theme.vars.palette.text.secondary};
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -227,7 +229,7 @@ const Title = styled('div')`
   ${({ theme }) => css`
     font-size: ${theme.typography.body2.fontSize};
     font-weight: ${theme.typography.fontWeightMedium};
-    color: ${theme.palette.text.primary};
+    color: ${theme.vars.palette.text.primary};
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -244,7 +246,7 @@ const EmptyScratchContent = styled('div')`
     justify-content: center;
     text-align: center;
     gap: 2px;
-    color: ${theme.palette.text.secondary};
+    color: ${theme.vars.palette.text.secondary};
     font-size: ${theme.typography.body2.fontSize};
     padding: 4px 8px;
   `}
@@ -252,7 +254,7 @@ const EmptyScratchContent = styled('div')`
 
 const EmptyHint = styled('div')`
   ${({ theme }) => css`
-    color: ${theme.palette.text.disabled};
+    color: ${theme.vars.palette.text.disabled};
     font-size: ${theme.typography.caption.fontSize};
   `}
 `;
@@ -284,8 +286,8 @@ const DragHandle = styled('div')`
   padding: 0 6px;
   pointer-events: none;
   font-size: 22px;
-  color: ${({ theme }) => theme.palette.text.secondary};
-  background: ${({ theme }) => theme.palette.action.hover};
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
+  background: ${({ theme }) => theme.vars.palette.action.hover};
   flex-shrink: 0;
 `;
 

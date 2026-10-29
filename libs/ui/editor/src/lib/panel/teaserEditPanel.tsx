@@ -1,66 +1,19 @@
-import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import { TeaserType } from '@wepublish/editor/api';
-import { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Drawer,
-  Form,
-  Input,
-  Panel as RPanel,
-  Toggle as RToggle,
-} from 'rsuite';
 
-import { ChooseEditImage } from '../atoms/chooseEditImage';
-import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
-import { ListInput, ListValue } from '../atoms/listInput';
 import { Teaser } from '../blocks/types';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { generateID } from '../utility';
-import { ImageEditPanel } from './imageEditPanel';
-import { ImageSelectPanel } from './imageSelectPanel';
+import { TeaserForm, TeaserFormValues } from './teaserForm';
 
-const { Group, Label, Control } = Form;
-
-const Panel = styled(RPanel)<{ imageUrl?: string | null }>`
-  height: 200px;
-  background-size: cover;
-  background-image: url();
-  margin-bottom: 12px;
-  background-image: ${({ imageUrl }) =>
-    `url(${imageUrl || 'https://via.placeholder.com/240x240'})`};
-`;
-
-const Toggle = styled(RToggle)`
-  max-width: 70px;
-  min-width: 70px;
-`;
-
-const InputWidth60 = styled(Input)`
-  width: 60%;
-`;
-
-const InputWidth40 = styled(Input)`
-  width: 40%;
-  margin-right: 10px;
-`;
-
-const InputsWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const FormGroup = styled(Group)`
-  padding-top: 6px;
-  padding-left: 8px;
-`;
-
-export interface TeaserMetadataProperty {
-  readonly id?: string | null;
-  readonly key: string;
-  readonly value: string;
-  readonly public: boolean;
-}
+export type { TeaserMetadataProperty } from './teaserForm';
 
 export interface TeaserEditPanelProps {
   initialTeaser: Teaser;
@@ -75,297 +28,69 @@ export function TeaserEditPanel({
   initialTeaser,
   onClose,
   onConfirm,
-  closeLabel = 'Close',
+  closeLabel,
 }: TeaserEditPanelProps) {
-  const [image, setImage] = useState(initialTeaser.image);
-  const [contentUrl, setContentUrl] = useState(
-    initialTeaser.type === TeaserType.Custom ?
-      initialTeaser.contentUrl
-    : undefined
-  );
-  const [openInNewTab, setOpenInNewTab] = useState(
-    initialTeaser.type === TeaserType.Custom ?
-      initialTeaser.openInNewTab
-    : false
-  );
-  const [preTitle, setPreTitle] = useState(initialTeaser.preTitle);
-  const [title, setTitle] = useState(initialTeaser.title);
-  const [lead, setLead] = useState(initialTeaser.lead);
-  const [metaDataProperties, setMetadataProperties] = useState<
-    ListValue<TeaserMetadataProperty>[]
-  >(
-    initialTeaser.type === TeaserType.Custom && initialTeaser.properties ?
-      initialTeaser.properties.map(metaDataProperty => ({
-        id: generateID(),
-        value: metaDataProperty,
-      }))
-    : []
-  );
-
-  const [isChooseModalOpen, setChooseModalOpen] = useState(false);
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-
   const { t } = useTranslation();
+  const isCustom = initialTeaser.type === TeaserType.Custom;
+
+  const [values, setValues] = useState<TeaserFormValues>(() => ({
+    preTitle: initialTeaser.preTitle,
+    title: initialTeaser.title,
+    lead: initialTeaser.lead,
+    image: initialTeaser.image,
+    contentUrl: isCustom ? initialTeaser.contentUrl : undefined,
+    openInNewTab: isCustom ? initialTeaser.openInNewTab : false,
+    properties:
+      isCustom && initialTeaser.properties ?
+        initialTeaser.properties.map(property => ({
+          id: generateID(),
+          value: property,
+        }))
+      : [],
+  }));
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('articleEditor.panels.editTeaser')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('articleEditor.panels.editTeaser')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'primary'}
-            onClick={() => {
+            variant="text"
+            onClick={() => onClose?.()}
+          >
+            {closeLabel ?? t('articleEditor.panels.close')}
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() =>
               onConfirm({
                 ...initialTeaser,
-                preTitle: preTitle || undefined,
-                title: title || undefined,
-                lead: lead || undefined,
-                image,
-                ...(initialTeaser.type === TeaserType.Custom && {
-                  contentUrl: contentUrl || undefined,
-                  openInNewTab: openInNewTab || false,
-                  properties:
-                    metaDataProperties.map(({ value }) => value) || undefined,
+                preTitle: values.preTitle || undefined,
+                title: values.title || undefined,
+                lead: values.lead || undefined,
+                image: values.image ?? undefined,
+                ...(isCustom && {
+                  contentUrl: values.contentUrl || undefined,
+                  openInNewTab: !!values.openInNewTab,
+                  properties: values.properties.map(({ value }) => value),
                 }),
-              });
-            }}
+              } as Teaser)
+            }
           >
             {t('articleEditor.panels.confirm')}
           </Button>
-          <Button
-            appearance={'subtle'}
-            onClick={() => onClose?.()}
-          >
-            {closeLabel}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
-        {previewForTeaser(initialTeaser, t)}
-
-        <RPanel header={t('articleEditor.panels.displayOptions')}>
-          <Form>
-            <Form.Stack fluid>
-              <Group controlId="articlePreTitle">
-                <Label>{t('articleEditor.panels.preTitle')}</Label>
-                <Control
-                  name="pre-title"
-                  value={preTitle}
-                  onChange={(preTitle: string) => setPreTitle(preTitle)}
-                />
-              </Group>
-
-              <Group controlId="articleTitle">
-                <Label>{t('articleEditor.panels.title')}</Label>
-                <Control
-                  name="title"
-                  value={title}
-                  onChange={(title: string) => setTitle(title)}
-                />
-              </Group>
-
-              <Group controlId="articleLead">
-                <Label>{t('articleEditor.panels.lead')}</Label>
-                <Control
-                  name="lead"
-                  value={lead}
-                  onChange={(lead: string) => setLead(lead)}
-                />
-              </Group>
-
-              {initialTeaser.type === TeaserType.Custom && (
-                <>
-                  <Group controlId="contentUrl">
-                    <Label>{t('articleEditor.panels.contentUrl')}</Label>
-
-                    <Control
-                      name="content-url"
-                      value={contentUrl}
-                      onChange={(contentUrl: string) =>
-                        setContentUrl(contentUrl)
-                      }
-                    />
-                  </Group>
-
-                  <Group controlId="openInNewTab">
-                    <Label>{t('articleEditor.panels.openInNewTab')}</Label>
-
-                    <Toggle
-                      checked={!!openInNewTab}
-                      onChange={(isChecked: boolean) =>
-                        setOpenInNewTab(isChecked)
-                      }
-                      checkedChildren={t('articleEditor.panels.yes')}
-                      unCheckedChildren={t('articleEditor.panels.no')}
-                    />
-                  </Group>
-
-                  <Group controlId="properties">
-                    <Label>{t('articleEditor.panels.properties')}</Label>
-
-                    <ListInput
-                      value={metaDataProperties}
-                      onChange={propertiesItemInput =>
-                        setMetadataProperties(propertiesItemInput)
-                      }
-                      defaultValue={{ key: '', value: '', public: true }}
-                    >
-                      {({ value, onChange }) => (
-                        <InputsWrapper>
-                          <InputWidth40
-                            placeholder={t('articleEditor.panels.key')}
-                            value={value.key}
-                            onChange={propertyKey =>
-                              onChange({ ...value, key: propertyKey })
-                            }
-                          />
-
-                          <InputWidth60
-                            placeholder={t('articleEditor.panels.value')}
-                            value={value.value}
-                            onChange={propertyValue =>
-                              onChange({ ...value, value: propertyValue })
-                            }
-                          />
-
-                          <FormGroup controlId="articleProperty">
-                            <Toggle
-                              checkedChildren={t('articleEditor.panels.public')}
-                              unCheckedChildren={t(
-                                'articleEditor.panels.private'
-                              )}
-                              checked={value.public}
-                              onChange={isPublic =>
-                                onChange({ ...value, public: isPublic })
-                              }
-                            />
-                          </FormGroup>
-                        </InputsWrapper>
-                      )}
-                    </ListInput>
-                  </Group>
-                </>
-              )}
-            </Form.Stack>
-          </Form>
-        </RPanel>
-
-        <ChooseEditImage
-          image={image}
-          disabled={false}
-          openChooseModalOpen={() => setChooseModalOpen(true)}
-          openEditModalOpen={() => setEditModalOpen(true)}
-          removeImage={() => setImage(undefined)}
+      <DrawerBody>
+        <TeaserForm
+          teaser={initialTeaser}
+          values={values}
+          onChange={patch => setValues(current => ({ ...current, ...patch }))}
         />
-      </Drawer.Body>
-
-      <Drawer
-        open={isChooseModalOpen}
-        size="sm"
-        onClose={() => setChooseModalOpen(false)}
-      >
-        <ImageSelectPanel
-          onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
-            setChooseModalOpen(false);
-            setImage(value);
-          }}
-        />
-      </Drawer>
-
-      {image && (
-        <Drawer
-          open={isEditModalOpen}
-          size="sm"
-          onClose={() => setEditModalOpen(false)}
-        >
-          <ImageEditPanel
-            id={image!.id}
-            onClose={() => setEditModalOpen(false)}
-          />
-        </Drawer>
-      )}
+      </DrawerBody>
     </>
-  );
-}
-
-export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
-  let type: string;
-  let imageURL: string | undefined | null;
-  let contentUrl: string | undefined | null;
-  let openInNewTab: boolean | undefined | null;
-  let preTitle: string | undefined | null;
-  let title: string | undefined | null;
-  let lead: string | undefined | null;
-
-  switch (teaser.type) {
-    case TeaserType.Article:
-      type = 'Article';
-      imageURL = teaser.article?.latest.image?.previewURL ?? undefined;
-      preTitle = teaser.article?.latest.preTitle ?? undefined;
-      title = teaser.article?.latest.title ?? undefined;
-      lead = teaser.article?.latest.lead ?? undefined;
-      break;
-
-    case TeaserType.Page:
-      type = 'Page';
-      imageURL = teaser.page?.latest.image?.previewURL ?? undefined;
-      title = teaser.page?.latest.title ?? undefined;
-      lead = teaser.page?.latest.description ?? undefined;
-      break;
-
-    case TeaserType.Event:
-      type = 'Event';
-      imageURL = teaser.event?.image?.previewURL ?? undefined;
-      title = teaser.event?.name ?? undefined;
-      lead = teaser.event?.lead || teaser.event?.location || undefined;
-      break;
-
-    case TeaserType.Custom:
-      type = 'Custom';
-      imageURL = teaser.image?.previewURL ?? undefined;
-      title = teaser.title;
-      lead = teaser.lead ?? undefined;
-      preTitle = teaser.preTitle ?? undefined;
-      contentUrl = teaser.contentUrl;
-      openInNewTab = teaser.openInNewTab;
-      break;
-  }
-
-  return (
-    <RPanel>
-      <Panel
-        bordered
-        imageUrl={imageURL}
-      />
-      <DescriptionList>
-        {contentUrl && (
-          <DescriptionListItem label={t('articleEditor.panels.contentUrl')}>
-            {contentUrl}
-          </DescriptionListItem>
-        )}
-        {openInNewTab !== undefined && (
-          <DescriptionListItem label={t('articleEditor.panels.openInNewTab')}>
-            {openInNewTab ?
-              t('articleEditor.panels.yes')
-            : t('articleEditor.panels.no')}
-          </DescriptionListItem>
-        )}
-        <DescriptionListItem label={t('articleEditor.panels.type')}>
-          {type || '-'}
-        </DescriptionListItem>
-        <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
-          {preTitle || '-'}
-        </DescriptionListItem>
-        <DescriptionListItem label={t('articleEditor.panels.title')}>
-          {title || '-'}
-        </DescriptionListItem>
-        <DescriptionListItem label={t('articleEditor.panels.lead')}>
-          {lead || '-'}
-        </DescriptionListItem>
-      </DescriptionList>
-    </RPanel>
   );
 }

@@ -1,7 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
+import {
+  normalizeListNesting,
+  RichtextElements,
+  RichtextJSONDocument,
+} from '@wepublish/richtext';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { DistributedClaims } from '@wepublish/dragonfly/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
 
 // Slate keeps a node's visible text in `text`, or nested in `children`.
 const slateText = (node: any): string => {
@@ -212,20 +219,84 @@ const slateToPm = (content: any): RichtextElements | [] => {
   return [];
 };
 
+const TEN_SECONDS = 10_000;
+const FIVE_SECONDS = 5_000;
+
+const PEER_PROFILE_NAMESPACE = 'peer-profile';
+const REMOTE_PEER_PROFILES_NAMESPACE = 'peering:remote-profiles';
+const MEMBER_PLANS_NAMESPACE = 'member-plans';
+
+type MigratedTable =
+  | 'authors'
+  | 'comments.revisions'
+  | 'events'
+  | 'peerProfiles'
+  | 'peers'
+  | 'polls'
+  | 'tags'
+  | 'member.plans'
+  | 'paywalls'
+  | 'articles.revisions'
+  | 'pages.revisions';
+
 @Injectable()
 export class SlateToPmMigrator {
   private readonly logger = new Logger(SlateToPmMigrator.name);
 
   constructor(
     private prisma: PrismaClient,
-    private schedulerRegistry: SchedulerRegistry
+    private schedulerRegistry: SchedulerRegistry,
+    private claims: DistributedClaims,
+    private resets: NamespaceResets,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
+
+  private async isAnotherReplicasTurn(job: string, intervalMs: number) {
+    return (await this.claims.claim(job, intervalMs - 1000)) === 'taken';
+  }
+
+  private async forgetMigrated(table: MigratedTable, changed: number) {
+    if (!changed) {
+      return;
+    }
+
+    switch (table) {
+      case 'authors':
+        return this.publicContentCache.invalidate('authors');
+      case 'comments.revisions':
+        return this.publicContentCache.invalidateComments(true);
+      case 'events':
+        return this.publicContentCache.invalidate();
+      case 'peerProfiles':
+        return this.resets.reset(PEER_PROFILE_NAMESPACE);
+      case 'peers':
+        return this.resets.reset(REMOTE_PEER_PROFILES_NAMESPACE);
+      case 'polls':
+        return this.publicContentCache.invalidate('polls');
+      case 'tags':
+        return this.publicContentCache.invalidate('articles');
+      case 'member.plans':
+        await this.resets.reset(MEMBER_PLANS_NAMESPACE);
+        return this.publicContentCache.invalidate('paywalls');
+      case 'paywalls':
+        return this.publicContentCache.invalidate('paywalls');
+      case 'articles.revisions':
+        await this.publicContentCache.invalidate('articles');
+        return this.publicContentCache.invalidateArticleLayout();
+      case 'pages.revisions':
+        return this.publicContentCache.invalidate('pages');
+    }
+  }
 
   @Cron(CronExpression.EVERY_10_SECONDS, {
     name: 'slate.migrateAuthors',
     waitForCompletion: true,
   })
   async migrateAuthors() {
+    if (await this.isAnotherReplicasTurn('slate.migrateAuthors', TEN_SECONDS)) {
+      return;
+    }
+
     const authors = await this.prisma.author.findMany({
       where: {
         slateBio: {
@@ -249,6 +320,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('authors', authors.length);
+
     if (authors.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migrateAuthors');
       this.logger.warn(
@@ -262,6 +335,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateComments() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migrateComments', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const revisions = await this.prisma.commentsRevisions.findMany({
       where: {
         slateText: {
@@ -286,6 +365,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('comments.revisions', revisions.length);
+
     if (revisions.length < 300) {
       this.schedulerRegistry.deleteCronJob('slate.migrateComments');
       this.logger.warn(
@@ -299,6 +380,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateEvents() {
+    if (await this.isAnotherReplicasTurn('slate.migrateEvents', TEN_SECONDS)) {
+      return;
+    }
+
     const events = await this.prisma.event.findMany({
       where: {
         slateDescription: {
@@ -323,6 +408,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('events', events.length);
+
     if (events.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migrateEvents');
       this.logger.warn(
@@ -336,6 +423,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePeerProfiles() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migratePeerProfiles', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const peerProfiles = await this.prisma.peerProfile.findMany({
       where: {
         slateCallToActionText: {
@@ -363,6 +456,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('peerProfiles', peerProfiles.length);
+
     if (peerProfiles.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migratePeerProfiles');
       this.logger.warn(
@@ -376,6 +471,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePeers() {
+    if (await this.isAnotherReplicasTurn('slate.migratePeers', TEN_SECONDS)) {
+      return;
+    }
+
     const peers = await this.prisma.peer.findMany({
       where: {
         slateInformation: {
@@ -401,6 +500,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('peers', peers.length);
+
     if (peers.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migratePeers');
       this.logger.warn(
@@ -414,6 +515,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePolls() {
+    if (await this.isAnotherReplicasTurn('slate.migratePolls', TEN_SECONDS)) {
+      return;
+    }
+
     const polls = await this.prisma.poll.findMany({
       where: {
         slateInfoText: {
@@ -440,6 +545,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('polls', polls.length);
+
     if (polls.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migratePolls');
       this.logger.warn(
@@ -453,6 +560,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateTags() {
+    if (await this.isAnotherReplicasTurn('slate.migrateTags', TEN_SECONDS)) {
+      return;
+    }
+
     const tags = await this.prisma.tag.findMany({
       where: {
         slateDescription: {
@@ -479,6 +590,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('tags', tags.length);
+
     if (tags.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migrateTags');
       this.logger.warn(
@@ -492,6 +605,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateMemberPlans() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migrateMemberPlans', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const memberPlansByDescription = await this.prisma.memberPlan.findMany({
       where: {
         slateDescription: {
@@ -543,6 +662,11 @@ export class SlateToPmMigrator {
       }),
     ]);
 
+    await this.forgetMigrated(
+      'member.plans',
+      memberPlansByDescription.length + memberPlansByShortDescription.length
+    );
+
     if (
       memberPlansByDescription.length < 30 &&
       memberPlansByShortDescription.length < 30
@@ -559,6 +683,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePaywalls() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migratePaywalls', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const paywallsByDescription = await this.prisma.paywall.findMany({
       where: {
         slateDescription: {
@@ -657,6 +787,14 @@ export class SlateToPmMigrator {
       }),
     ]);
 
+    await this.forgetMigrated(
+      'paywalls',
+      paywallsByDescription.length +
+        paywallsByUpgradeDescription.length +
+        paywallsByCircumventDescription.length +
+        paywallsByUpgradeCircumventDescription.length
+    );
+
     if (
       paywallsByDescription.length < 30 &&
       paywallsByUpgradeDescription.length < 30 &&
@@ -675,6 +813,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateArticles() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migrateArticles', FIVE_SECONDS)
+    ) {
+      return;
+    }
+
     const revisionIds: { id: string }[] = await this.prisma.$queryRaw`
         SELECT id from "articles.revisions" WHERE blocks::text LIKE '%"richText": null%' OR blocks::text LIKE '%"richText":null%';
     `;
@@ -716,6 +860,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('articles.revisions', revisions.length);
+
     if (revisions.length < 300) {
       this.schedulerRegistry.deleteCronJob('slate.migrateArticles');
       this.logger.warn(
@@ -729,6 +875,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePages() {
+    if (await this.isAnotherReplicasTurn('slate.migratePages', FIVE_SECONDS)) {
+      return;
+    }
+
     const revisionIds: { id: string }[] = await this.prisma.$queryRaw`
         SELECT id from "pages.revisions" WHERE blocks::text LIKE '%"richText": null%' OR blocks::text LIKE '%"richText":null%';
     `;
@@ -770,6 +920,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('pages.revisions', revisions.length);
+
     if (revisions.length < 300) {
       this.schedulerRegistry.deleteCronJob('slate.migratePages');
       this.logger.warn(
@@ -779,11 +931,13 @@ export class SlateToPmMigrator {
   }
 
   migrate(slate: Array<any>): RichtextJSONDocument {
-    const result = {
+    // A slate list-item may hold list-items directly; tiptap needs them in a
+    // list (`listItem > bulletList > listItem`), or they render as `<li><li>`.
+    const result = normalizeListNesting({
       type: 'doc',
       attrs: undefined,
       content: slate.flatMap(slateToPm),
-    } satisfies RichtextJSONDocument;
+    } satisfies RichtextJSONDocument);
 
     this.logger.debug(`Previous: ${JSON.stringify(slate)}`);
     this.logger.debug(`Next: ${JSON.stringify(result)}`);
@@ -894,7 +1048,7 @@ export class SlateToPmMigrator {
   // `transform`, write back only changed rows, stop when none match or no progress.
   private async remigrateRevisionTable(
     cronName: string,
-    table: string,
+    table: 'articles.revisions' | 'pages.revisions',
     predicate: string,
     transform: (blocks: any[]) => any[]
   ): Promise<void> {
@@ -927,6 +1081,7 @@ export class SlateToPmMigrator {
       );
       this.logger.log(`Re-migrated ${table} ${row.id}`);
     }
+    await this.forgetMigrated(table, changed);
     if (changed === 0) {
       this.stopCron(
         cronName,
@@ -940,6 +1095,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateBuggyArticles() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateBuggyArticles',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateBuggyArticles',
       'articles.revisions',
@@ -953,6 +1117,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateBuggyPages() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateBuggyPages',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateBuggyPages',
       'pages.revisions',
@@ -966,6 +1139,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateUnmigratedArticles() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateUnmigratedArticles',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateUnmigratedArticles',
       'articles.revisions',
@@ -979,6 +1161,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateUnmigratedPages() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateUnmigratedPages',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateUnmigratedPages',
       'pages.revisions',
@@ -1033,8 +1224,18 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateBuggyEntities() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateBuggyEntities',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     let matched = 0;
     let changed = 0;
+    const changedRows = new Map<MigratedTable, number>();
     for (const {
       table,
       source,
@@ -1063,6 +1264,7 @@ export class SlateToPmMigrator {
           continue;
         }
         changed++;
+        changedRows.set(table, (changedRows.get(table) ?? 0) + 1);
         await this.prisma.$executeRawUnsafe(
           `UPDATE "${table}" SET "${target}" = $1::jsonb WHERE id = $2`,
           JSON.stringify(next),
@@ -1071,11 +1273,155 @@ export class SlateToPmMigrator {
         this.logger.log(`Re-migrated ${table}.${target} ${row.id}`);
       }
     }
+    for (const [table, rows] of changedRows) {
+      await this.forgetMigrated(table, rows);
+    }
     if (matched === 0) {
       this.stopCron('slate.remigrateBuggyEntities', 'none left');
     } else if (changed === 0) {
       this.stopCron(
         'slate.remigrateBuggyEntities',
+        `no progress (${matched} matched, 0 changed)`
+      );
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // TEMPORARY nested-list repair — runs AUTOMATICALLY on deploy, like the
+  // re-migrations above, and stops itself once nothing matches.
+  //
+  // The slate migration turned a slate list-item holding list-items directly
+  // into `listItem > listItem` (no list in between), which renders as invalid
+  // `<li><li>` and breaks hydration. `migrate` no longer does that; these passes
+  // repair what it already wrote. They fix the CURRENT richtext in place (not
+  // from `slateRichText`), so edits made since the migration are kept — an
+  // editor save does not repair it, tiptap loads the content unchecked.
+  // Idempotent; remove once it has run on every instance.
+  // ───────────────────────────────────────────────────────────────────────────
+
+  // A listItem with a listItem child. Recursive; `[*]` matches any child.
+  private static readonly NESTED_LIST_ITEM =
+    '$.** ? (@.type == "listItem" && @.content[*].type == "listItem")';
+
+  // Repairs every richtext document (`type: "doc"`) anywhere in `value`, so
+  // richtext inside flex blocks, listicles, breaks etc. is covered without
+  // listing each block type.
+  private normalizeNestedListsDeep(value: unknown): unknown {
+    if (Array.isArray(value)) {
+      return value.map(item => this.normalizeNestedListsDeep(item));
+    }
+    if (!value || typeof value !== 'object') {
+      return value;
+    }
+    if ((value as { type?: unknown }).type === 'doc') {
+      return normalizeListNesting(value as RichtextJSONDocument);
+    }
+    return Object.fromEntries(
+      Object.entries(value).map(([key, child]) => [
+        key,
+        this.normalizeNestedListsDeep(child),
+      ])
+    );
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.normalizeNestedListsInArticles',
+    waitForCompletion: true,
+  })
+  async normalizeNestedListsInArticles() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.normalizeNestedListsInArticles',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
+    await this.remigrateRevisionTable(
+      'slate.normalizeNestedListsInArticles',
+      'articles.revisions',
+      SlateToPmMigrator.NESTED_LIST_ITEM,
+      blocks => this.normalizeNestedListsDeep(blocks) as any[]
+    );
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.normalizeNestedListsInPages',
+    waitForCompletion: true,
+  })
+  async normalizeNestedListsInPages() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.normalizeNestedListsInPages',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
+    await this.remigrateRevisionTable(
+      'slate.normalizeNestedListsInPages',
+      'pages.revisions',
+      SlateToPmMigrator.NESTED_LIST_ITEM,
+      blocks => this.normalizeNestedListsDeep(blocks) as any[]
+    );
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.normalizeNestedListsInEntities',
+    waitForCompletion: true,
+  })
+  async normalizeNestedListsInEntities() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.normalizeNestedListsInEntities',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
+    let matched = 0;
+    let changed = 0;
+    const changedRows = new Map<MigratedTable, number>();
+    for (const { table, target } of SlateToPmMigrator.BUGGY_ENTITY_COLUMNS) {
+      const rows = await this.prisma.$queryRawUnsafe<
+        { id: string; value: unknown }[]
+      >(
+        `SELECT id, "${target}" AS value FROM "${table}"
+         WHERE "${target}" @? $1::jsonpath
+         LIMIT 100`,
+        SlateToPmMigrator.NESTED_LIST_ITEM
+      );
+      matched += rows.length;
+      for (const row of rows) {
+        const value =
+          typeof row.value === 'string' ? JSON.parse(row.value) : row.value;
+        const next = this.normalizeNestedListsDeep(value);
+        if (JSON.stringify(next) === JSON.stringify(value)) {
+          continue;
+        }
+        changed++;
+        changedRows.set(table, (changedRows.get(table) ?? 0) + 1);
+        await this.prisma.$executeRawUnsafe(
+          `UPDATE "${table}" SET "${target}" = $1::jsonb WHERE id = $2`,
+          JSON.stringify(next),
+          row.id
+        );
+        this.logger.log(
+          `Normalized nested lists in ${table}.${target} ${row.id}`
+        );
+      }
+    }
+    for (const [table, rows] of changedRows) {
+      await this.forgetMigrated(table, rows);
+    }
+    if (matched === 0) {
+      this.stopCron('slate.normalizeNestedListsInEntities', 'none left');
+    } else if (changed === 0) {
+      this.stopCron(
+        'slate.normalizeNestedListsInEntities',
         `no progress (${matched} matched, 0 changed)`
       );
     }

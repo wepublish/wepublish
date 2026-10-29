@@ -1,5 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import {
+  DistributedClaims,
+  DistributedCounters,
+} from '@wepublish/dragonfly/api';
 import * as OTPAuth from 'otpauth';
 import {
   createCipheriv,
@@ -20,6 +25,10 @@ const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 const USED_CODE_TTL_MS = 90 * 1000; // 90 seconds (3 TOTP periods)
 
+const failedAttemptsName = (userId: string) => `totp-failures:${userId}`;
+const usedStepName = (userId: string, step: number) =>
+  `totp-used:${userId}:${step}`;
+
 @Injectable()
 export class TotpService {
   private encryptionKey: Buffer;
@@ -27,13 +36,18 @@ export class TotpService {
   // Rate limiting: track failed TOTP attempts per user
   private failedAttempts = new Map<
     string,
-    { count: number; lockedUntil?: number }
+    { count: number; lockedUntil?: number; lastAttemptAt: number }
   >();
 
-  // Replay protection: track used TOTP codes per user
-  private usedCodes = new Map<string, { code: string; usedAt: number }[]>();
+  // Replay protection: track used TOTP time steps per user
+  private usedSteps = new Map<string, { step: number; usedAt: number }[]>();
 
-  constructor(private prisma: PrismaClient) {
+  constructor(
+    private prisma: PrismaClient,
+    private sessionCache: SessionCacheInvalidator,
+    private claims: DistributedClaims,
+    private counters: DistributedCounters
+  ) {
     const appSecretKey = process.env.APP_SECRET_KEY;
 
     if (!appSecretKey) {
@@ -86,54 +100,87 @@ export class TotpService {
     };
   }
 
-  private checkRateLimit(userId: string) {
-    const entry = this.failedAttempts.get(userId);
-    if (entry?.lockedUntil && Date.now() < entry.lockedUntil) {
-      const remainingMin = Math.ceil((entry.lockedUntil - Date.now()) / 60000);
+  private async reserveAttempt(userId: string) {
+    const now = Date.now();
+    const known = this.failedAttempts.get(userId);
+
+    if (known?.lockedUntil && now < known.lockedUntil) {
+      const remainingMin = Math.ceil((known.lockedUntil - now) / 60000);
       throw new BadRequestException(
         `Too many failed attempts. Account locked for ${remainingMin} more minute(s).`
       );
     }
 
-    // Clear expired lockout
-    if (entry?.lockedUntil && Date.now() >= entry.lockedUntil) {
-      this.failedAttempts.delete(userId);
-    }
-  }
-
-  private recordFailedAttempt(userId: string) {
-    const entry = this.failedAttempts.get(userId) || { count: 0 };
+    const entry =
+      (
+        known &&
+        !known.lockedUntil &&
+        now - known.lastAttemptAt < LOCKOUT_DURATION_MS
+      ) ?
+        known
+      : { count: 0, lockedUntil: undefined, lastAttemptAt: now };
     entry.count++;
+    entry.lastAttemptAt = now;
+    const lockedHere = entry.count > MAX_FAILED_ATTEMPTS;
 
-    if (entry.count >= MAX_FAILED_ATTEMPTS) {
-      entry.lockedUntil = Date.now() + LOCKOUT_DURATION_MS;
+    if (lockedHere) {
+      entry.lockedUntil = now + LOCKOUT_DURATION_MS;
     }
 
     this.failedAttempts.set(userId, entry);
+
+    const attempts = await this.counters.increment(
+      failedAttemptsName(userId),
+      LOCKOUT_DURATION_MS
+    );
+
+    if (
+      lockedHere ||
+      (attempts.status === 'counted' && attempts.count > MAX_FAILED_ATTEMPTS)
+    ) {
+      throw new BadRequestException(
+        `Too many failed attempts. Account locked for ${
+          LOCKOUT_DURATION_MS / 60000
+        } more minute(s).`
+      );
+    }
   }
 
-  private clearFailedAttempts(userId: string) {
+  private async clearFailedAttempts(userId: string) {
     this.failedAttempts.delete(userId);
+    await this.counters.forget(failedAttemptsName(userId));
   }
 
-  private checkReplay(userId: string, token: string) {
+  private async markStepUsed(userId: string, step: number) {
     const now = Date.now();
-    const codes = this.usedCodes.get(userId) || [];
+    const steps = (this.usedSteps.get(userId) ?? []).filter(
+      used => now - used.usedAt < USED_CODE_TTL_MS
+    );
+    const usedHere = steps.some(used => used.step === step);
 
-    // Clean expired entries
-    const valid = codes.filter(c => now - c.usedAt < USED_CODE_TTL_MS);
+    if (!usedHere) {
+      steps.push({ step, usedAt: now });
+      this.usedSteps.set(userId, steps);
+    }
 
-    if (valid.some(c => c.code === token)) {
+    if (
+      usedHere ||
+      (await this.claims.claim(
+        usedStepName(userId, step),
+        USED_CODE_TTL_MS
+      )) === 'taken'
+    ) {
       throw new BadRequestException(
         'This verification code has already been used. Wait for a new code.'
       );
     }
-
-    valid.push({ code: token, usedAt: now });
-    this.usedCodes.set(userId, valid);
   }
 
   verifyToken(secret: string, token: string): boolean {
+    return this.matchingStep(secret, token) !== undefined;
+  }
+
+  private matchingStep(secret: string, token: string): number | undefined {
     const totp = new OTPAuth.TOTP({
       algorithm: TOTP_ALGORITHM,
       digits: TOTP_DIGITS,
@@ -141,8 +188,10 @@ export class TotpService {
       secret: OTPAuth.Secret.fromBase32(secret),
     });
 
-    const delta = totp.validate({ token, window: 1 });
-    return delta !== null;
+    const timestamp = Date.now();
+    const delta = totp.validate({ token, timestamp, window: 1 });
+
+    return delta === null ? undefined : totp.counter({ timestamp }) + delta;
   }
 
   async setupTotp(userId: string, email: string, website?: boolean) {
@@ -163,6 +212,7 @@ export class TotpService {
       where: { id: userId },
       data: { totpSecret: this.encrypt(secret) },
     });
+    await this.sessionCache.invalidate();
 
     return { secret, uri };
   }
@@ -189,28 +239,27 @@ export class TotpService {
       );
     }
 
-    this.checkRateLimit(userId);
-    this.checkReplay(userId, token);
+    await this.reserveAttempt(userId);
+    const step = this.matchingStep(this.decrypt(user.totpSecret), token);
 
-    const decryptedSecret = this.decrypt(user.totpSecret);
-
-    if (!this.verifyToken(decryptedSecret, token)) {
-      this.recordFailedAttempt(userId);
+    if (step === undefined) {
       throw new BadRequestException('Invalid verification code.');
     }
 
-    this.clearFailedAttempts(userId);
+    await this.markStepUsed(userId, step);
+    await this.clearFailedAttempts(userId);
 
     await this.prisma.user.update({
       where: { id: userId },
       data: { totpEnabled: true },
     });
+    await this.sessionCache.invalidate();
 
     return true;
   }
 
   async verifyUserTotp(userId: string, token: string): Promise<boolean> {
-    this.checkRateLimit(userId);
+    await this.reserveAttempt(userId);
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -223,16 +272,14 @@ export class TotpService {
       );
     }
 
-    this.checkReplay(userId, token);
+    const step = this.matchingStep(this.decrypt(user.totpSecret), token);
 
-    const decryptedSecret = this.decrypt(user.totpSecret);
-
-    if (!this.verifyToken(decryptedSecret, token)) {
-      this.recordFailedAttempt(userId);
+    if (step === undefined) {
       throw new BadRequestException('Invalid verification code.');
     }
 
-    this.clearFailedAttempts(userId);
+    await this.markStepUsed(userId, step);
+    await this.clearFailedAttempts(userId);
     return true;
   }
 
@@ -253,6 +300,7 @@ export class TotpService {
         totpEnabled: false,
       },
     });
+    await this.sessionCache.invalidate();
 
     return true;
   }

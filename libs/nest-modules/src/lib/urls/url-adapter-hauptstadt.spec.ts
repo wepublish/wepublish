@@ -1,5 +1,6 @@
 import { Article, PrismaClient } from '@prisma/client';
 import { HauptstadtURLAdapter } from './url-adapter-hauptstadt';
+import type { Mock } from 'vitest';
 
 const article = {
   id: 'article-id',
@@ -10,10 +11,10 @@ const row = (articleId: string, tag: string) => ({ articleId, tag: { tag } });
 
 describe('HauptstadtURLAdapter', () => {
   let adapter: HauptstadtURLAdapter;
-  let findManyMock: jest.Mock;
+  let findManyMock: Mock;
 
   beforeEach(() => {
-    findManyMock = jest.fn().mockResolvedValue([]);
+    findManyMock = vi.fn().mockResolvedValue([]);
     adapter = new HauptstadtURLAdapter('https://example.com', {
       taggedArticles: { findMany: findManyMock },
     } as unknown as PrismaClient);

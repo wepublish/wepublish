@@ -1,18 +1,8 @@
-import {
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from '@mui/material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Autocomplete, InputAdornment, TextField } from '@mui/material';
 import { format } from 'date-fns';
+import { DatePicker } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
-import { MdClear } from 'react-icons/md';
+import { MdSearch } from 'react-icons/md';
 
 import { FilterBar } from './networkContent.styles';
 import type { ArticleFilterParams, WepOneClient } from './networkContent.types';
@@ -35,99 +25,66 @@ export function NetworkContentArticleFilters({
   };
 
   const toDate = (iso: string): Date | null => {
-    if (!iso) return null;
+    if (!iso) {
+      return null;
+    }
     const d = new Date(iso);
     return isNaN(d.getTime()) ? null : d;
   };
 
   const toIso = (d: Date | null): string => {
-    if (!d || isNaN(d.getTime())) return '';
+    if (!d || isNaN(d.getTime())) {
+      return '';
+    }
     return format(d, 'yyyy-MM-dd');
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <FilterBar>
-        <TextField
-          size="small"
-          label={t('networkContentPage.searchLabel')}
-          value={filters.search}
-          onChange={e => updateFilter({ search: e.target.value })}
-          InputProps={{
-            endAdornment:
-              filters.search ?
-                <InputAdornment position="end">
-                  <IconButton
-                    size="small"
-                    onClick={() => updateFilter({ search: '' })}
-                  >
-                    <MdClear />
-                  </IconButton>
-                </InputAdornment>
-              : undefined,
-          }}
-        />
+    <FilterBar>
+      <TextField
+        type="search"
+        label={t('networkContentPage.searchLabel')}
+        value={filters.search}
+        onChange={event => updateFilter({ search: event.target.value })}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <MdSearch />
+              </InputAdornment>
+            ),
+          },
+        }}
+      />
 
-        <FormControl size="small">
-          <InputLabel>{t('networkContentPage.mediaFilter')}</InputLabel>
-          <Select
-            value={filters.clientName}
+      <Autocomplete
+        options={clients.map(client => client.name)}
+        value={filters.clientName || null}
+        onChange={(_event, clientName) =>
+          updateFilter({ clientName: clientName ?? '' })
+        }
+        renderInput={params => (
+          <TextField
+            {...params}
             label={t('networkContentPage.mediaFilter')}
-            onChange={e => updateFilter({ clientName: e.target.value })}
-            endAdornment={
-              filters.clientName ?
-                <InputAdornment position="end">
-                  <IconButton
-                    size="small"
-                    sx={{ mr: 1 }}
-                    onClick={() => updateFilter({ clientName: '' })}
-                  >
-                    <MdClear />
-                  </IconButton>
-                </InputAdornment>
-              : undefined
-            }
-          >
-            <MenuItem value="">{t('networkContentPage.allMedia')}</MenuItem>
-            {clients.map(client => (
-              <MenuItem
-                key={client.name}
-                value={client.name}
-              >
-                {client.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            placeholder={t('networkContentPage.allMedia')}
+          />
+        )}
+      />
 
-        <DatePicker
-          format="dd.MM.yyyy"
-          label={t('networkContentPage.dateFrom')}
-          value={toDate(filters.dateFrom)}
-          onChange={d => updateFilter({ dateFrom: toIso(d) })}
-          slotProps={{
-            textField: { size: 'small' },
-            field: {
-              clearable: true,
-              onClear: () => updateFilter({ dateFrom: '' }),
-            },
-          }}
-        />
+      <DatePicker
+        label={t('networkContentPage.dateFrom')}
+        value={toDate(filters.dateFrom)}
+        onChange={date => updateFilter({ dateFrom: toIso(date) })}
+        size="small"
+      />
 
-        <DatePicker
-          format="dd.MM.yyyy"
-          label={t('networkContentPage.dateTo')}
-          value={toDate(filters.dateTo)}
-          onChange={d => updateFilter({ dateTo: toIso(d) })}
-          slotProps={{
-            textField: { size: 'small' },
-            field: {
-              clearable: true,
-              onClear: () => updateFilter({ dateTo: '' }),
-            },
-          }}
-        />
-      </FilterBar>
-    </LocalizationProvider>
+      <DatePicker
+        label={t('networkContentPage.dateTo')}
+        value={toDate(filters.dateTo)}
+        onChange={date => updateFilter({ dateTo: toIso(date) })}
+        size="small"
+      />
+    </FilterBar>
   );
 }

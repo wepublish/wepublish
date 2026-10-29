@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`UpgradeSubscriptionService happy path should upgrade a subscription 1`] = `
+exports[`UpgradeSubscriptionService > happy path > should upgrade a subscription 1`] = `
 {
   "cancelInvoicesForSubscription": [
     "subscriptionId",
@@ -74,32 +74,32 @@ exports[`UpgradeSubscriptionService happy path should upgrade a subscription 1`]
 }
 `;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the memberplan can not be found 1`] = `[NotFoundException: MemberPlan with id memberPlanId was not found.]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the memberplan can not be found 1`] = `[NotFoundException: MemberPlan with id memberPlanId was not found.]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the memberplan can not be found 2`] = `[NotFoundException: MemberPlan with id memberPlanId was not found.]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the memberplan can not be found 2`] = `[NotFoundException: MemberPlan with id memberPlanId was not found.]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the paymentMethodId is not allowed on the new memberplan 1`] = `[BadRequestException: New memberplan with id memberPlanId does not support the same payment periodicity as memberplan with id undefined]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the paymentMethodId is not allowed on the new memberplan 1`] = `[BadRequestException: New memberplan with id memberPlanId does not support the same payment periodicity as memberplan with id undefined]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription can not be found 1`] = `[NotFoundException: Subscription with id subscriptionId was not found.]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription can not be found 1`] = `[NotFoundException: Subscription with id subscriptionId was not found.]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription can not be found 2`] = `[NotFoundException: Subscription with id subscriptionId was not found.]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription can not be found 2`] = `[NotFoundException: Subscription with id subscriptionId was not found.]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription does not belong to the current user 1`] = `[ForbiddenException: Subscription with id subscriptionId does not belong to current user.]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription does not belong to the current user 1`] = `[ForbiddenException: Subscription with id subscriptionId does not belong to current user.]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription does not belong to the current user 2`] = `[ForbiddenException: Subscription with id subscriptionId does not belong to current user.]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription does not belong to the current user 2`] = `[ForbiddenException: Subscription with id subscriptionId does not belong to current user.]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription has no period 1`] = `[BadRequestException: Subscription has no subscription period subscriptionId]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription has no period 1`] = `[BadRequestException: Subscription has no subscription period subscriptionId]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription has no period 2`] = `[BadRequestException: Subscription has no subscription period subscriptionId]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription has no period 2`] = `[BadRequestException: Subscription has no subscription period subscriptionId]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription's currency is not the same 1`] = `[BadRequestException: New memberplan with id memberPlanId does not support the same currency as memberplan with id undefined]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription's currency is not the same 1`] = `[BadRequestException: New memberplan with id memberPlanId does not support the same currency as memberplan with id undefined]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription's currency is not the same 2`] = `[BadRequestException: New memberplan with id memberPlanId does not support the same currency as memberplan with id undefined]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription's currency is not the same 2`] = `[BadRequestException: New memberplan with id memberPlanId does not support the same currency as memberplan with id undefined]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription's memberplan is the same as the new one 1`] = `[BadRequestException: Subscription is already of memberplan memberPlanId]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription's memberplan is the same as the new one 1`] = `[BadRequestException: Subscription is already of memberplan memberPlanId]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription's memberplan is the same as the new one 2`] = `[BadRequestException: Subscription is already of memberplan memberPlanId]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription's memberplan is the same as the new one 2`] = `[BadRequestException: Subscription is already of memberplan memberPlanId]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription's periodicity is not the same 1`] = `[BadRequestException: New memberplan with id memberPlanId does not support the same payment periodicity as memberplan with id undefined]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription's periodicity is not the same 1`] = `[BadRequestException: New memberplan with id memberPlanId does not support the same payment periodicity as memberplan with id undefined]`;
 
-exports[`UpgradeSubscriptionService unhappy path should throw an error if the subscription's periodicity is not the same 2`] = `[BadRequestException: New memberplan with id memberPlanId does not support the same payment periodicity as memberplan with id undefined]`;
+exports[`UpgradeSubscriptionService > unhappy path > should throw an error if the subscription's periodicity is not the same 2`] = `[BadRequestException: New memberplan with id memberPlanId does not support the same payment periodicity as memberplan with id undefined]`;

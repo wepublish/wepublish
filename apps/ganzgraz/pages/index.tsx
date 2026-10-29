@@ -5,7 +5,12 @@ import mailchimp, {
 } from '@mailchimp/mailchimp_marketing';
 import { captureException } from '@sentry/react';
 import { PageContainer } from '@wepublish/page/website';
-import { DailyBriefingContext, getApiUrl } from '@wepublish/utils/website';
+import {
+  DailyBriefingContext,
+  getApiUrl,
+  getPageShell,
+  revalidateFor,
+} from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -47,9 +52,7 @@ export const getStaticProps: GetStaticProps = (async () => {
   }
 
   let mailchimpResponse:
-    | mailchimp.campaigns.CampaignsSuccessResponse
-    | ErrorResponse
-    | null = null;
+    mailchimp.campaigns.CampaignsSuccessResponse | ErrorResponse | null = null;
   try {
     mailchimp.setConfig({
       apiKey: process.env.MAILCHIMP_API_KEY,
@@ -79,7 +82,7 @@ export const getStaticProps: GetStaticProps = (async () => {
   }
 
   const client = getApiClient(getApiUrl(), []);
-  await Promise.all([
+  const [page] = await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
@@ -97,10 +100,13 @@ export const getStaticProps: GetStaticProps = (async () => {
   const { campaigns = [] } =
     (mailchimpResponse as campaigns.CampaignsSuccessResponse) ?? {};
 
-  const props = addClientCacheToProps(client, { campaigns });
+  const props = addClientCacheToProps(client, {
+    campaigns,
+    shell: getPageShell(page.data?.page),
+  });
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(page.data?.page, page.error),
   };
 }) satisfies GetStaticProps;

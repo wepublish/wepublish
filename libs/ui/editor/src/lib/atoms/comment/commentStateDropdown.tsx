@@ -1,48 +1,39 @@
 import styled from '@emotion/styled';
+import { Button, ButtonProps, MenuItem, Typography } from '@mui/material';
 import {
   CommentRejectionReason,
   CommentState,
   FullCommentFragment,
 } from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArrowDropDown } from 'react-icons/md';
-import {
-  Badge,
-  ButtonGroup,
-  Dropdown,
-  IconButton as RIconButton,
-  Popover as RPopover,
-  Whisper,
-} from 'rsuite';
-import type { BasicSize } from 'rsuite/esm/internals/types';
 
+import { useSeededState } from '../../hooks/use-seeded-state';
+import { ClickMenu } from '../../popover';
 import {
   CommentStateChangeModal,
   mapCommentActionToBtnTitle,
+  mapRejectionReasonToLabel,
 } from './commentStateChangeModal';
 
-const BadgeWrapper = styled.div`
-  margin-bottom: 5px;
+const State = styled.div`
+  display: inline-grid;
+  justify-items: start;
+  gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
-const Popover = styled(RPopover)<{ left: number; top: number }>`
-  left: ${({ left }) => left};
-  top: ${({ top }) => top};
-`;
-const IconButton = styled(RIconButton)`
-  padding: 2px;
-`;
-
-export function mapCommentStateToColor(commentState: CommentState) {
+export function mapCommentStateToColor(
+  commentState: CommentState
+): 'success' | 'warning' | 'error' | undefined {
   switch (commentState) {
     case CommentState.Approved:
-      return 'green';
+      return 'success';
     case CommentState.PendingApproval:
     case CommentState.PendingUserChanges:
-      return 'yellow';
+      return 'warning';
     case CommentState.Rejected:
-      return 'red';
+      return 'error';
   }
 }
 
@@ -61,7 +52,7 @@ export function humanReadableCommentState(commentState: CommentState) {
 
 interface CommentStateViewProps {
   comment: FullCommentFragment;
-  size?: BasicSize;
+  size?: ButtonProps['size'];
   onStateChanged?(
     commentState: CommentState,
     rejectReason?: CommentRejectionReason | null
@@ -78,85 +69,68 @@ export function CommentStateDropdown({
     comment.state
   );
 
-  useEffect(() => {
-    setNewCommentState(comment.state);
-  }, [comment]);
+  useSeededState(comment, ({ state }) => setNewCommentState(state));
 
-  const showBadge =
-    comment.state === CommentState.Rejected ||
-    comment.state === CommentState.PendingUserChanges;
-
-  const renderMenu = (
-    {
-      onClose,
-      className,
-    }: { className?: string; onClose?: (delay?: number) => void },
-    ref: any
-  ) => {
-    const handleSelect = (eventKey: string | number | undefined) => {
-      onClose?.();
-      if (eventKey) {
-        setNewCommentState(eventKey as CommentState);
-      }
-    };
-
-    return (
-      <RPopover
-        ref={ref}
-        className={className}
-        full
-      >
-        <Dropdown.Menu onSelect={handleSelect}>
-          {Object.values(CommentState)
-            .filter(tmpState => tmpState !== CommentState.PendingApproval)
-            .map((tmpState, index) => (
-              <Dropdown.Item
-                key={index}
-                eventKey={tmpState}
-              >
-                {t(mapCommentActionToBtnTitle(tmpState))}
-              </Dropdown.Item>
-            ))}
-        </Dropdown.Menu>
-      </RPopover>
-    );
-  };
+  const rejectionReason =
+    (
+      comment.state === CommentState.Rejected ||
+      comment.state === CommentState.PendingUserChanges
+    ) ?
+      comment.rejectionReason
+    : null;
 
   return (
     <>
-      {showBadge && (
-        <BadgeWrapper>
-          <Badge
-            content={comment.rejectionReason}
-            color={mapCommentStateToColor(comment.state)}
-          />
-        </BadgeWrapper>
-      )}
-      <div>
-        <ButtonGroup>
-          <IconButton
-            appearance="ghost"
-            icon={<MdArrowDropDown />}
-            placement="left"
-            color={mapCommentStateToColor(comment.state)}
-            size={size || 'md'}
-          >
-            {t(humanReadableCommentState(comment.state))}
-          </IconButton>
-          <Whisper
-            placement="bottomEnd"
-            trigger="click"
-            speaker={renderMenu}
-          >
-            <IconButton
-              size={size || 'md'}
-              appearance="primary"
+      <State>
+        {/*
+          One control: the button says which state the comment is in and opens
+          the states. It used to be a `ButtonGroup` of a button that showed the
+          state and did nothing, plus an icon button carrying the same caret.
+
+          `ClickMenu` rather than `ClickPopover`, which pads its paper for
+          free-form content and left the items inset inside a second box.
+        */}
+        <ClickMenu
+          trigger={
+            <Button
+              variant="outlined"
+              endIcon={<MdArrowDropDown />}
               color={mapCommentStateToColor(comment.state)}
-              icon={<MdArrowDropDown />}
-            />
-          </Whisper>
-        </ButtonGroup>
-      </div>
+              size={size ?? 'medium'}
+              title={t('comments.overview.editState')}
+            >
+              {t(humanReadableCommentState(comment.state))}
+            </Button>
+          }
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          {close =>
+            Object.values(CommentState)
+              .filter(tmpState => tmpState !== CommentState.PendingApproval)
+              .map(tmpState => (
+                <MenuItem
+                  key={tmpState}
+                  onClick={() => {
+                    close();
+                    setNewCommentState(tmpState);
+                  }}
+                >
+                  {t(mapCommentActionToBtnTitle(tmpState))}
+                </MenuItem>
+              ))
+          }
+        </ClickMenu>
+
+        {rejectionReason && (
+          <Typography
+            variant="caption"
+            color={`${mapCommentStateToColor(comment.state)}.main`}
+          >
+            {t(mapRejectionReasonToLabel(rejectionReason))}
+          </Typography>
+        )}
+      </State>
 
       {/* modal */}
       <CommentStateChangeModal

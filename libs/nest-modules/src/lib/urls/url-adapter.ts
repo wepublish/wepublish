@@ -17,6 +17,10 @@ export class URLAdapter {
     this.baseURL = baseURL.trim();
   }
 
+  getWebsiteUrl() {
+    return this.baseURL;
+  }
+
   async getSubscriptionURL(subscription: Subscription) {
     return `${this.baseURL}/profile/subscription/${subscription.id}`;
   }

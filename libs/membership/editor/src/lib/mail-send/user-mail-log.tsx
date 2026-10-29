@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import {
   Table,
   TableBody,
@@ -5,11 +6,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Alert,
 } from '@mui/material';
-import { useMailLogsQuery } from '@wepublish/editor/api';
+import { MailLogsDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-import { Message } from 'rsuite';
-import { DEFAULT_QUERY_OPTIONS } from '../common';
 import { formatDateTime, MailLogStateTag } from './mail-log-common';
 
 interface UserMailLogPanelProps {
@@ -20,20 +20,24 @@ interface UserMailLogPanelProps {
 export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
   const { t } = useTranslation();
 
-  const { data } = useMailLogsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
+  const { data } = useQuery(MailLogsDocument, {
     variables: { filter: { recipientId: userId }, take: 20 },
   });
 
   const logs = data?.mailLogs.nodes ?? [];
 
   if (logs.length === 0) {
-    return <Message type="info">{t('mailLog.empty')}</Message>;
+    return <Alert severity="info">{t('mailLog.empty')}</Alert>;
   }
 
   return (
-    <TableContainer>
-      <Table size="small">
+    <TableContainer
+      sx={{ overflowX: 'auto', overflowY: 'auto', maxHeight: 300 }}
+    >
+      <Table
+        size="small"
+        stickyHeader
+      >
         <TableHead>
           <TableRow>
             <TableCell>
@@ -56,7 +60,7 @@ export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
               <TableCell>{formatDateTime(log.sentDate)}</TableCell>
               <TableCell>{log.mailTemplate.name}</TableCell>
               <TableCell>{log.subject ?? '—'}</TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <MailLogStateTag state={log.state} />
               </TableCell>
             </TableRow>

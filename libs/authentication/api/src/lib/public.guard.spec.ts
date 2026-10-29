@@ -3,13 +3,13 @@ import { Reflector } from '@nestjs/core';
 import { PublicGuard } from './public.guard';
 import { PUBLIC_METADATA_KEY } from './public.decorator';
 
-jest.mock('@nestjs/graphql', () => {
-  const original = jest.requireActual('@nestjs/graphql');
+vi.mock('@nestjs/graphql', async () => {
+  const original = await vi.importActual('@nestjs/graphql');
 
   return {
     ...original,
     GqlExecutionContext: {
-      create: jest.fn(),
+      create: vi.fn(),
     },
   };
 });
@@ -29,9 +29,7 @@ describe('AuthenticatedGuard', () => {
   });
 
   it('should return false if decorator is not set', () => {
-    const spy = jest
-      .spyOn(reflector, 'getAllAndOverride')
-      .mockReturnValue(false);
+    const spy = vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
     const mockContext = {
       getHandler: () => ({}),
       getClass: () => ({}),
@@ -43,9 +41,7 @@ describe('AuthenticatedGuard', () => {
   });
 
   it('should return true if decorator is set', () => {
-    const spy = jest
-      .spyOn(reflector, 'getAllAndOverride')
-      .mockReturnValue(true);
+    const spy = vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue(true);
     const mockContext = {
       getHandler: () => ({}),
       getClass: () => ({}),

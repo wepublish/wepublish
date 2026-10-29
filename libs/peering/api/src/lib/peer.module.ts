@@ -1,3 +1,4 @@
+import { SessionCacheModule } from '@wepublish/authentication/api';
 import {
   DynamicModule,
   forwardRef,
@@ -19,7 +20,6 @@ import { PeerResolver } from './peer.resolver';
 import { PeerProfileResolver } from './peer-profile.resolver';
 import { PEER_MODULE_OPTIONS, PeerModuleOptions } from './peer.constants';
 import { ImageModule } from '@wepublish/image/api';
-import { CacheModule } from '@nestjs/cache-manager';
 import { RemotePeerProfileDataloaderService } from './remote-peer-profile.dataloader';
 import { TokenResolver } from './token.resolver';
 import { TokenService } from './token.service';
@@ -33,11 +33,7 @@ export interface PeerModuleAsyncOptions {
 }
 
 @Module({
-  imports: [
-    PrismaModule,
-    forwardRef(() => ImageModule),
-    CacheModule.register(),
-  ],
+  imports: [PrismaModule, forwardRef(() => ImageModule), SessionCacheModule],
   providers: [
     {
       provide: PEER_MODULE_OPTIONS,

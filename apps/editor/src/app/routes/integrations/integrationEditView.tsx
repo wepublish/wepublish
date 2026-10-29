@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import {
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
@@ -9,10 +9,10 @@ import {
   CanGetTrackingPixelSettings,
   Permission,
 } from '@wepublish/permissions';
-import { PermissionControl } from '@wepublish/ui/editor';
+import { InfoTooltip, PermissionControl } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
-import { Link, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { AnalyticsIntegrationForm } from './analyticsIntegrationForm';
@@ -45,6 +45,29 @@ const useIntegrationTitle = (type: string | undefined) => {
   }
 };
 
+const useIntegrationInfo = (type: string | undefined) => {
+  const { t } = useTranslation();
+
+  switch (type) {
+    case 'ai':
+      return t('integrations.aiInfo');
+    case 'challenge':
+      return t('integrations.challengeProviderInfo');
+    case 'payment':
+      return t('integrations.paymentProviderInfo');
+    case 'tracking-pixel':
+      return t('integrations.trackingPixelInfo');
+    case 'analytics':
+      return t('integrations.analyticsInfo');
+    case 'mail':
+      return t('integrations.mailProviderInfo');
+    case 'mailchimp-sync':
+      return t('integrations.mailchimpSyncInfo');
+    default:
+      return undefined;
+  }
+};
+
 const getPermission = (type: string | undefined): Permission | undefined => {
   switch (type) {
     case 'ai':
@@ -72,6 +95,7 @@ export function IntegrationEditView() {
 
   const permission = getPermission(type);
   const title = useIntegrationTitle(type);
+  const info = useIntegrationInfo(type);
 
   const renderConfiguration = (() => {
     switch (type) {
@@ -90,7 +114,11 @@ export function IntegrationEditView() {
       case 'mailchimp-sync':
         return <MailchimpSyncIntegrationForm />;
       default:
-        return <p>{t('integrations.configure', { integration: title })}</p>;
+        return (
+          <Typography>
+            {t('integrations.configure', { integration: title })}
+          </Typography>
+        );
     }
   })();
 
@@ -99,17 +127,25 @@ export function IntegrationEditView() {
       qualifyingPermissions={permission ? [permission.id] : []}
     >
       <div>
-        <Link to={'/integrations'}>
-          <Button
-            size="small"
-            variant="text"
-            startIcon={<MdArrowBack />}
-          >
-            {t('integrations.back')}
-          </Button>
-        </Link>
+        <Button
+          component={RouterLink}
+          to={'/integrations'}
+          size="small"
+          variant="text"
+          startIcon={<MdArrowBack />}
+        >
+          {t('integrations.back')}
+        </Button>
 
-        <h1>{title}</h1>
+        <Typography variant="h1">
+          {title}
+          {info && (
+            <>
+              {' '}
+              <InfoTooltip text={info} />
+            </>
+          )}
+        </Typography>
 
         <div style={{ marginTop: 20 }}>{renderConfiguration}</div>
       </div>

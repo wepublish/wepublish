@@ -1,10 +1,11 @@
 import 'reflect-metadata';
+import type { Mock } from 'vitest';
 
 type Constructor<T = any> = new (...args: any[]) => T;
 
 export type DeepMocked<T> = Partial<{
   [K in keyof T]: T[K] extends (...args: any[]) => any ?
-    jest.Mock<ReturnType<T[K]>, Parameters<T[K]>>
+    Mock<(...args: Parameters<T[K]>) => ReturnType<T[K]>>
   : T[K] extends object ? DeepMocked<T[K]>
   : T[K];
 }>;
@@ -12,23 +13,27 @@ export type DeepMocked<T> = Partial<{
 export type Mocked<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any ?
     T[K] extends (...args: any[]) => Promise<infer R> ?
-      jest.Mock<Promise<Partial<R>>, Parameters<T[K]>>
-    : jest.Mock<Partial<ReturnType<T[K]>>, Parameters<T[K]>>
+      Mock<(...args: Parameters<T[K]>) => Promise<Partial<R>>>
+    : Mock<(...args: Parameters<T[K]>) => Partial<ReturnType<T[K]>>>
   : T[K];
 };
 
 export type PartialMocked<T> = Partial<Mocked<T>>;
 
+// Works under both jest and vitest test runners
+const mockFn: () => Mock = () =>
+  ((globalThis as any).vi ?? (globalThis as any).jest).fn();
+
 export function createMock<T>(cls: Constructor<T>): PartialMocked<T> {
   const proto = cls?.prototype || {};
-  const mock: Record<string, jest.Mock> = {};
+  const mock: Record<string, Mock> = {};
 
   for (const prop of Object.getOwnPropertyNames(proto)) {
     if (prop === 'constructor' || typeof proto[prop] !== 'function') {
       continue;
     }
 
-    mock[prop] = jest.fn().mockImplementation(() => {
+    mock[prop] = mockFn().mockImplementation(() => {
       throw new Error(
         `Method ${prop} not implemented. You need to mock this method before using it.`
       );

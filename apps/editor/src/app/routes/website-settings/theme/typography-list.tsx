@@ -1,277 +1,243 @@
-import { FormControl, FormLabel, List, Stack } from '@mui/material';
-import { memo, useCallback, useState } from 'react';
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  List,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { InfoTooltip } from '@wepublish/ui/editor';
+import { memo, RefObject, useId } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 
 import { AvailableFontsPicker } from './available-fonts-picker';
 import { FontWeightSelect } from './font-weight-select';
 import { LengthSlider } from './length-slider';
-import { typographySchema } from './schema';
+import { typographyGroups, TypographyVariant } from './typography-groups';
 import {
   letterSpacingConfig,
   lineHeightConfig,
   TypographyListItem,
 } from './typography-list-item';
 
+export type TypographyHeaderRefs = RefObject<
+  Partial<Record<TypographyVariant, HTMLElement | null>>
+>;
+
 type TypographyListProps = {
   name: string;
+  headerIdPrefix: string;
+  headerRefs?: TypographyHeaderRefs;
+  openTypography?: TypographyVariant;
+  compact?: boolean;
+  onToggleTypography: (variant: TypographyVariant) => void;
+  onOpened?: (variant: TypographyVariant) => void;
+  onClosed?: (variant: TypographyVariant) => void;
 };
 
-export const TypographyList = memo(({ name }: TypographyListProps) => {
-  const { t } = useTranslation();
-  const { control } = useFormContext();
-  const [openTypography, setOpenTypography] =
-    useState<keyof z.infer<typeof typographySchema>>();
+export const TypographyList = memo(
+  ({
+    name,
+    headerIdPrefix,
+    headerRefs,
+    openTypography,
+    compact,
+    onToggleTypography,
+    onOpened,
+    onClosed,
+  }: TypographyListProps) => {
+    const { t } = useTranslation();
+    const { control } = useFormContext();
+    const idPrefix = useId();
+    const fontFamilyLabelId = `${idPrefix}-font-family`;
+    const fontWeightLabelId = `${idPrefix}-font-weight`;
+    const lineHeightLabel = t('websiteSettings.theme.typography.lineHeight');
+    const letterSpacingLabel = t(
+      'websiteSettings.theme.typography.letterSpacing'
+    );
 
-  const handleOpenTypography = useCallback(
-    (type: typeof openTypography) => () =>
-      setOpenTypography(oldType => (oldType === type ? undefined : type)),
-    []
-  );
-
-  return (
-    <List>
-      <Stack
-        gap={5}
-        sx={{
-          borderRadius: '6px',
-          bgcolor: '#00000008',
-          p: 3,
-          mb: 2,
-        }}
-      >
+    return (
+      <Stack sx={{ gap: 4 }}>
         <Stack
-          direction="row"
-          spacing={1}
+          sx={{
+            gap: 2,
+            borderRadius: 0.75,
+            border: 1,
+            borderColor: 'divider',
+            p: 2,
+          }}
         >
-          <Controller
-            name={`${name}.allVariants.fontFamily`}
-            control={control}
-            render={({ field }) => (
-              <FormControl fullWidth>
-                <FormLabel>
-                  {t('websiteSettings.theme.typography.fontFamily')}
-                </FormLabel>
+          <Stack sx={{ gap: 0.5 }}>
+            <Typography
+              component="h2"
+              variant="subtitle1"
+              sx={{ fontWeight: 600 }}
+            >
+              {t('websiteSettings.theme.typography.base')}
+            </Typography>
 
-                <AvailableFontsPicker {...field} />
-              </FormControl>
-            )}
-          />
+            <Typography
+              variant="body2"
+              sx={{ color: 'text.secondary' }}
+            >
+              {t('websiteSettings.theme.typography.baseInfo')}
+            </Typography>
+          </Stack>
 
-          <Controller
-            name={`${name}.allVariants.fontWeight`}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <FormControl fullWidth>
-                <FormLabel>
-                  {t('websiteSettings.theme.typography.fontWeight')}
-                </FormLabel>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+          >
+            <Controller
+              name={`${name}.allVariants.fontFamily`}
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <FormLabel>
+                    <span id={fontFamilyLabelId}>
+                      {t('websiteSettings.theme.typography.fontFamily')}
+                    </span>{' '}
+                    <InfoTooltip
+                      text={t(
+                        'websiteSettings.theme.typography.baseFontFamilyInfo'
+                      )}
+                    />
+                  </FormLabel>
 
-                <FontWeightSelect
-                  {...field}
-                  error={error}
-                />
-              </FormControl>
-            )}
-          />
+                  <AvailableFontsPicker
+                    {...field}
+                    labelId={fontFamilyLabelId}
+                  />
+                </FormControl>
+              )}
+            />
+
+            <Controller
+              name={`${name}.allVariants.fontWeight`}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormControl fullWidth>
+                  <FormLabel id={fontWeightLabelId}>
+                    {t('websiteSettings.theme.typography.fontWeight')}
+                  </FormLabel>
+
+                  <FontWeightSelect
+                    {...field}
+                    error={error}
+                    labelId={fontWeightLabelId}
+                  />
+                </FormControl>
+              )}
+            />
+          </Stack>
+
+          <Stack
+            direction="column"
+            spacing={2}
+          >
+            <Controller
+              name={`${name}.allVariants.lineHeight`}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormControl fullWidth>
+                  <FormLabel>
+                    {lineHeightLabel}{' '}
+                    <InfoTooltip
+                      text={t(
+                        'websiteSettings.theme.typography.lineHeightInfo'
+                      )}
+                    />
+                  </FormLabel>
+
+                  <LengthSlider
+                    {...field}
+                    error={error}
+                    defaultUnit="em"
+                    unitConfig={lineHeightConfig}
+                    label={lineHeightLabel}
+                    unitLabel={t('websiteSettings.theme.typography.unitOf', {
+                      label: lineHeightLabel,
+                    })}
+                  />
+                </FormControl>
+              )}
+            />
+
+            <Controller
+              name={`${name}.allVariants.letterSpacing`}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormControl fullWidth>
+                  <FormLabel>
+                    {letterSpacingLabel}{' '}
+                    <InfoTooltip
+                      text={t(
+                        'websiteSettings.theme.typography.letterSpacingInfo'
+                      )}
+                    />
+                  </FormLabel>
+
+                  <LengthSlider
+                    {...field}
+                    error={error}
+                    defaultUnit="em"
+                    unitConfig={letterSpacingConfig}
+                    label={letterSpacingLabel}
+                    unitLabel={t('websiteSettings.theme.typography.unitOf', {
+                      label: letterSpacingLabel,
+                    })}
+                  />
+                </FormControl>
+              )}
+            />
+          </Stack>
         </Stack>
 
-        <Stack
-          direction="column"
-          spacing={3}
-        >
-          <Controller
-            name={`${name}.allVariants.lineHeight`}
-            control={control}
-            render={({ field }) => (
-              <FormControl fullWidth>
-                <FormLabel>
-                  {t('websiteSettings.theme.typography.lineHeight')}
-                </FormLabel>
+        {typographyGroups.map(group => {
+          const headingId = `${idPrefix}-${group.key}`;
 
-                <LengthSlider
-                  {...field}
-                  defaultUnit="em"
-                  unitConfig={lineHeightConfig}
-                />
-              </FormControl>
-            )}
-          />
+          return (
+            <Box
+              key={group.key}
+              component="section"
+            >
+              <Typography
+                id={headingId}
+                component="h2"
+                variant="subtitle1"
+                sx={{ fontWeight: 600, px: 2, mb: 0.5 }}
+              >
+                {t(`websiteSettings.theme.typography.groups.${group.key}`)}
+              </Typography>
 
-          <Controller
-            name={`${name}.allVariants.letterSpacing`}
-            control={control}
-            render={({ field }) => (
-              <FormControl fullWidth>
-                <FormLabel>
-                  {t('websiteSettings.theme.typography.letterSpacing')}
-                </FormLabel>
-
-                <LengthSlider
-                  {...field}
-                  defaultUnit="em"
-                  unitConfig={letterSpacingConfig}
-                />
-              </FormControl>
-            )}
-          />
-        </Stack>
+              <List
+                aria-labelledby={headingId}
+                disablePadding
+              >
+                {group.variants.map(variant => (
+                  <TypographyListItem
+                    key={variant}
+                    headerId={`${headerIdPrefix}-${variant}-header`}
+                    headerRef={header => {
+                      if (headerRefs) {
+                        headerRefs.current[variant] = header;
+                      }
+                    }}
+                    parentName={name}
+                    name={`${name}.${variant}`}
+                    compact={compact}
+                    onOpen={() => onToggleTypography(variant)}
+                    onOpened={() => onOpened?.(variant)}
+                    onClosed={() => onClosed?.(variant)}
+                    isOpen={openTypography === variant}
+                  />
+                ))}
+              </List>
+            </Box>
+          );
+        })}
       </Stack>
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.h1`}
-        onOpen={handleOpenTypography('h1')}
-        isOpen={openTypography === 'h1'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.h2`}
-        onOpen={handleOpenTypography('h2')}
-        isOpen={openTypography === 'h2'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.h3`}
-        onOpen={handleOpenTypography('h3')}
-        isOpen={openTypography === 'h3'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.h4`}
-        onOpen={handleOpenTypography('h4')}
-        isOpen={openTypography === 'h4'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.h5`}
-        onOpen={handleOpenTypography('h5')}
-        isOpen={openTypography === 'h5'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.h6`}
-        onOpen={handleOpenTypography('h6')}
-        isOpen={openTypography === 'h6'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.body1`}
-        onOpen={handleOpenTypography('body1')}
-        isOpen={openTypography === 'body1'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.body2`}
-        onOpen={handleOpenTypography('body2')}
-        isOpen={openTypography === 'body2'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.caption`}
-        onOpen={handleOpenTypography('caption')}
-        isOpen={openTypography === 'caption'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.teaserPretitle`}
-        onOpen={handleOpenTypography('teaserPretitle')}
-        isOpen={openTypography === 'teaserPretitle'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.teaserTitle`}
-        onOpen={handleOpenTypography('teaserTitle')}
-        isOpen={openTypography === 'teaserTitle'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.teaserLead`}
-        onOpen={handleOpenTypography('teaserLead')}
-        isOpen={openTypography === 'teaserLead'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.teaserMeta`}
-        onOpen={handleOpenTypography('teaserMeta')}
-        isOpen={openTypography === 'teaserMeta'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.articleAuthors`}
-        onOpen={handleOpenTypography('articleAuthors')}
-        isOpen={openTypography === 'articleAuthors'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.peerInformation`}
-        onOpen={handleOpenTypography('peerInformation')}
-        isOpen={openTypography === 'peerInformation'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.bannerTitle`}
-        onOpen={handleOpenTypography('bannerTitle')}
-        isOpen={openTypography === 'bannerTitle'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.bannerText`}
-        onOpen={handleOpenTypography('bannerText')}
-        isOpen={openTypography === 'bannerText'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.bannerCta`}
-        onOpen={handleOpenTypography('bannerCta')}
-        isOpen={openTypography === 'bannerCta'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.blockBreakTitle`}
-        onOpen={handleOpenTypography('blockBreakTitle')}
-        isOpen={openTypography === 'blockBreakTitle'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.blockBreakBody`}
-        onOpen={handleOpenTypography('blockBreakBody')}
-        isOpen={openTypography === 'blockBreakBody'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.blockTitlePreTitle`}
-        onOpen={handleOpenTypography('blockTitlePreTitle')}
-        isOpen={openTypography === 'blockTitlePreTitle'}
-      />
-
-      <TypographyListItem
-        parentName={name}
-        name={`${name}.blockQuote`}
-        onOpen={handleOpenTypography('blockQuote')}
-        isOpen={openTypography === 'blockQuote'}
-      />
-    </List>
-  );
-});
+    );
+  }
+);

@@ -1,17 +1,17 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface MenuProps {
-  readonly items: Array<ListItem>;
+  items: Array<ListItem>;
 
   onItemClick(item: ListItem): void;
 }
 
 export interface ListItem {
-  readonly id: string;
-  readonly icon: React.ReactElement;
-  readonly label: string;
+  id: string;
+  icon: ReactElement;
+  label: string;
 }
 
 export interface AddBlockListProps {
@@ -32,10 +32,11 @@ export const BlockList = styled('ul')`
 export const BlockListItem = styled('li')`
   margin: 0;
   padding: 0.25rem 0.5rem;
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
 
   &:hover {
     cursor: pointer;
-    background-color: #f5f5f5;
+    background-color: ${({ theme }) => theme.vars.palette.background.default};
   }
 `;
 

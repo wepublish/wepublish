@@ -2,10 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Module } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { SettingsResolver } from './settings.resolver';
 import { SettingsService } from './settings.service';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { GraphQLSettingValueType } from './settings.model';
 import { SettingDataloaderService } from './setting-dataloader.service';
 
@@ -56,7 +59,7 @@ const updateSettingMutation = `
   }
 `;
 
-const mockSettingFindMany = jest.fn().mockResolvedValue([
+const mockSettingFindMany = vi.fn().mockResolvedValue([
   {
     id: '123',
     name: 'allowCommentEditing',
@@ -87,7 +90,7 @@ const mockSettingFindMany = jest.fn().mockResolvedValue([
   },
 ]);
 
-const mockSettingFindUnique = jest.fn().mockResolvedValue({
+const mockSettingFindUnique = vi.fn().mockResolvedValue({
   id: '123',
   name: 'allowCommentEditing',
   value: true,
@@ -102,7 +105,7 @@ const mockSettingFindUnique = jest.fn().mockResolvedValue({
   },
 });
 
-const mockSettingUpdate = jest.fn().mockResolvedValue({
+const mockSettingUpdate = vi.fn().mockResolvedValue({
   id: '123',
   name: 'allowCommentEditing',
   value: true,
@@ -117,9 +120,10 @@ const mockSettingUpdate = jest.fn().mockResolvedValue({
   },
 });
 
-jest.mock('@prisma/client', () => {
+vi.mock('@prisma/client', async importOriginal => {
   return {
-    PrismaClient: jest.fn().mockImplementation(() => {
+    ...(await importOriginal<typeof import('@prisma/client')>()),
+    PrismaClient: vi.fn().mockImplementation(function () {
       return {
         setting: {
           findMany: mockSettingFindMany,
@@ -134,11 +138,12 @@ jest.mock('@prisma/client', () => {
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: NodeApolloDriver,
       autoSchemaFile: true,
       path: '/',
       cache: 'bounded',
     }),
+    NamespacedCacheTestingModule.forRoot(),
     PrismaModule,
   ],
   providers: [
@@ -149,7 +154,7 @@ jest.mock('@prisma/client', () => {
       provide: SettingDataloaderService,
       useValue: {
         load: () => mockSettingFindUnique,
-        prime: jest.fn(),
+        prime: vi.fn(),
       },
     },
   ],
@@ -164,8 +169,8 @@ describe('SettingsResolver', () => {
       imports: [AppModule],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
   afterAll(async () => {

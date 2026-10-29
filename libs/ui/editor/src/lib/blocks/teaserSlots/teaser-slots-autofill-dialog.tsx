@@ -1,11 +1,18 @@
 'use client';
 
 import styled from '@emotion/styled';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import { TeaserSlotsAutofillConfigInput } from '@wepublish/editor/api';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Modal } from 'rsuite';
 
+import { useSeededState } from '../../hooks/use-seeded-state';
 import { TeaserSlotsAutofillConfigPanel } from './teaser-slots-autofill-config';
 
 interface TeaserSlotsDialogProps {
@@ -16,14 +23,8 @@ interface TeaserSlotsDialogProps {
   onCancel: () => void;
 }
 
-const StyledModal = styled(Modal)`
-  .rs-modal-content {
-    border-radius: 8px;
-  }
-`;
-
 const Description = styled('p')`
-  color: #6b7280;
+  color: var(--mui-palette-text-secondary);
   margin-top: 8px;
   margin-bottom: 16px;
 `;
@@ -50,11 +51,11 @@ export function TeaserSlotsAutofillDialog({
   const [localConfig, setLocalConfig] =
     useState<TeaserSlotsAutofillConfigInput>({ ...config });
 
-  useEffect(() => {
-    if (open) {
-      setLocalConfig({ ...config });
-    }
-  }, [open, config]);
+  useSeededState(
+    open ? config : undefined,
+    saved => setLocalConfig({ ...saved }),
+    open || undefined
+  );
 
   const handleSave = () => {
     onSave({ ...localConfig });
@@ -70,50 +71,52 @@ export function TeaserSlotsAutofillDialog({
   };
 
   return (
-    <StyledModal
+    <Dialog
       open={open}
       onClose={handleClose}
-      size="sm"
+      fullWidth
+      maxWidth="sm"
     >
-      <Modal.Header>
-        <Modal.Title>
-          {localConfig.enabled ?
-            'Enable & Configure Auto-loading'
-          : 'Configure Auto-loading'}
-        </Modal.Title>
+      <DialogTitle>
+        {!localConfig.enabled ?
+          t('blocks.teaserSlots.dialogTitleEnable')
+        : t('blocks.teaserSlots.dialogTitleConfigure')}
+
         <Description>
           {!localConfig.enabled ?
-            'Enable and configure how teasers are automatically loaded into the grid.'
-          : 'Configure how teasers are loaded and displayed in the grid.'}
+            t('blocks.teaserSlots.dialogDescriptionEnable')
+          : t('blocks.teaserSlots.dialogDescriptionConfigure')}
         </Description>
-      </Modal.Header>
+      </DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         <ContentContainer>
           <TeaserSlotsAutofillConfigPanel
             config={localConfig}
             onChange={setLocalConfig}
           />
         </ContentContainer>
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <FooterContainer>
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={handleCancel}
           >
             {t('cancel')}
           </Button>
 
           <Button
-            appearance="primary"
+            variant="contained"
             onClick={handleSave}
           >
-            {!localConfig.enabled ? 'Enable & Save' : 'Save Configuration'}
+            {!localConfig.enabled ?
+              t('blocks.teaserSlots.enableAndSave')
+            : t('blocks.teaserSlots.saveConfiguration')}
           </Button>
         </FooterContainer>
-      </Modal.Footer>
-    </StyledModal>
+      </DialogActions>
+    </Dialog>
   );
 }

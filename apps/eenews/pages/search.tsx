@@ -1,13 +1,14 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { articleToTeaser } from '@wepublish/article/website';
-import { SearchPageGetServerSideProps } from '@wepublish/utils/website';
+import { EenewsPageShell, EenewsTeaserGrid } from '@wepublish/tenant/eenews';
+import { SearchPageGetServerSideProps } from '@wepublish/utils/website/next';
 import {
   FullArticleTeaserFragment,
-  Page,
-  PageTeaser,
+  FullPageTeaserFragment,
+  PhraseDocument,
   TeaserType,
-  usePhraseQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { InferGetServerSidePropsType } from 'next';
@@ -16,9 +17,6 @@ import { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdSearch } from 'react-icons/md';
 import { z } from 'zod';
-
-import { EenewsTeaserGrid } from '../src/components/blocks/eenews-teaser-grid';
-import { EenewsPageShell } from '../src/components/eenews-page-shell';
 
 export { SearchPageGetServerSideProps as getServerSideProps };
 
@@ -31,7 +29,9 @@ const SearchForm = styled('form')`
   grid-template-columns: 1fr max-content;
 `;
 
-const pageToTeaser = (page: Page): PageTeaser => ({
+const pageToTeaser = (
+  page: FullPageTeaserFragment['page']
+): FullPageTeaserFragment => ({
   __typename: 'PageTeaser',
   type: TeaserType.Page,
   page,
@@ -72,7 +72,7 @@ export default function Search({
     data: phraseData,
     loading,
     error,
-  } = usePhraseQuery({
+  } = useQuery(PhraseDocument, {
     skip: !phraseQuery,
     variables: {
       query: phraseQuery ?? '',
@@ -96,7 +96,7 @@ export default function Search({
       articleToTeaser(node as FullArticleTeaserFragment['article'])
     );
     const pageTeasers = phraseData.phrase.pages.nodes.map(node =>
-      pageToTeaser(node as Page)
+      pageToTeaser(node as FullPageTeaserFragment['page'])
     );
 
     return [...articleTeasers, ...pageTeasers];

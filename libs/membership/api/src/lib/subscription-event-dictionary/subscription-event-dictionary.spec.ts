@@ -7,14 +7,15 @@ import { add, format, sub } from 'date-fns';
 
 import nock from 'nock';
 import { SubscriptionEventDictionary } from './subscription-event-dictionary';
+import type { Mock } from 'vitest';
 
 describe('SubscriptionEventDictionary', () => {
   let prismaMock: {
     subscriptionFlow: {
-      [method in keyof PrismaClient['subscriptionFlow']]?: jest.Mock;
+      [method in keyof PrismaClient['subscriptionFlow']]?: Mock;
     };
     subscriptionInterval: {
-      [method in keyof PrismaClient['subscriptionInterval']]?: jest.Mock;
+      [method in keyof PrismaClient['subscriptionInterval']]?: Mock;
     };
   };
 
@@ -23,11 +24,11 @@ describe('SubscriptionEventDictionary', () => {
 
     prismaMock = {
       subscriptionFlow: {
-        findMany: jest.fn(),
-        findFirst: jest.fn(),
+        findMany: vi.fn(),
+        findFirst: vi.fn(),
       },
       subscriptionInterval: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
     } as any;
   });

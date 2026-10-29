@@ -10,5 +10,5 @@
     "src/**/*.ts",
     "../../authentication/api/src/lib/unselect-password.ts"
   ],
-  "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
+  "exclude": ["vitest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

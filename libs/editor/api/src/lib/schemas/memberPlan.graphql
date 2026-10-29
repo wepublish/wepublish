@@ -8,6 +8,8 @@ fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
 
 fragment FullMemberPlan on MemberPlan {
   id
+  createdAt
+  modifiedAt
   name
   description
   shortDescription

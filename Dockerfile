@@ -1,16 +1,19 @@
 ARG BUILD_IMAGE=dhi.io/node:22-debian13-dev
 ARG PLAIN_BUILD_IMAGE=dhi.io/node:22-debian13-dev
 ARG RUNTIME_IMAGE=dhi.io/node:22-debian13
+ARG PNPM_VERSION=12.9.1
 
 #######
 ## Base Image
 #######
 FROM ${PLAIN_BUILD_IMAGE} AS base-image-build
+ARG PNPM_VERSION
 WORKDIR /wepublish
-COPY ./package.json .
-COPY ./package-lock.json .
-COPY ./.npmrc .
-COPY ./build ./build
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
+COPY ./apps/api-example/package.json ./apps/api-example/package.json
+COPY ./apps/editor/package.json ./apps/editor/package.json
+COPY ./apps/media/package.json ./apps/media/package.json
+COPY ./docker/migration/package.json ./docker/migration/package.json
 COPY ./libs/api/prisma/schema.prisma ./libs/api/prisma/schema.prisma
 COPY ./prisma.config.ts ./prisma.config.ts
 
@@ -18,14 +21,22 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl python3 build-essential && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm ci --no-audit --no-fund
+    npm install -g --no-audit --no-fund pnpm@${PNPM_VERSION} && \
+    pnpm install --frozen-lockfile
 
 FROM ${PLAIN_BUILD_IMAGE} AS base-image
+ARG PNPM_VERSION
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 WORKDIR /wepublish
+RUN npm install -g --no-audit --no-fund pnpm@${PNPM_VERSION}
 COPY --chown=1001:0 --from=base-image-build /wepublish/node_modules/ node_modules/
 RUN chmod -R g=u /wepublish
+
+# The api, editor and media stages ship `pnpm deploy --prod` output: exactly the
+# runtime dependencies listed in apps/<app>/package.json. pnpm 12.9 also leaves
+# an unreferenced copy of every package under `.pnpm/@` and `.pnpm/@<scope>`
+# (real scoped packages live in `.pnpm/@scope+name@…`), so those are deleted.
 
 #######
 ## Website (needs bash at runtime for entrypoint)
@@ -53,8 +64,8 @@ COPY . .
 # (it picks up SENTRY_AUTH_TOKEN/ORG/PROJECT/RELEASE from the env set above).
 # Do not add a manual `sentry-cli sourcemaps upload` here: the client maps are
 # already deleted by then, and it would walk .next/standalone/node_modules.
-RUN npx prisma generate && \
-    npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
+RUN pnpm exec prisma generate && \
+    pnpm exec nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
     node /wepublish/deployment/map-secrets.js clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website-setup
@@ -75,6 +86,7 @@ COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.n
 COPY --chown=1001:0 version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
 COPY --chown=1001:0 --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
 COPY --chown=1001:0 --from=build-website /wepublish/deployment/map-secrets.js /wepublish/map-secrets.js
+COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 RUN printf '{"serverPath":"/wepublish/apps/%s/server.js"}' "${NEXT_PROJECT}" > /wepublish/startup-config.json && \
     chmod -R g=u /wepublish
 
@@ -100,26 +112,16 @@ ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 COPY . .
-RUN npx prisma generate && \
-    node docker/inline-pkg-imports.js && \
-    npx nx build api-example --skip-nx-cache && \
-    npx @sentry/cli sourcemaps inject ./dist/apps/api-example && \
-    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example || echo "sentry sourcemaps upload failed, continuing build"; } && \
-    node docker/generate-pkg-shims.js && \
-    cp docker/api_build_package.json package.json && \
-    npx @yao-pkg/pkg package.json
-
-# Collect only Prisma + pg runtime deps for the API binary
-FROM ${PLAIN_BUILD_IMAGE} AS api-prisma-deps
-WORKDIR /deps
-RUN --mount=from=build-api,source=/wepublish/node_modules,target=/src \
-    mkdir -p node_modules && \
-    cp -a /src/.prisma /src/@prisma node_modules/ && \
-    cd /src && cp -a \
-    pg pg-pool pg-protocol pg-types pg-connection-string \
-    pgpass pg-int8 postgres-array postgres-bytea postgres-date \
-    postgres-interval split2 \
-    /deps/node_modules/
+RUN pnpm exec prisma generate && \
+    pnpm exec nx build api-example --skip-nx-cache && \
+    node docker/check-runtime-deps.js dist/apps/api-example apps/api-example/package.json && \
+    pnpm exec sentry-cli sourcemaps inject ./dist/apps/api-example && \
+    { pnpm exec sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example || echo "sentry sourcemaps upload failed, continuing build"; } && \
+    pnpm --filter @wepublish/api-example deploy --prod /deploy && \
+    find /deploy/node_modules/.pnpm -maxdepth 1 -name '@*' ! -name '*+*' -exec rm -rf {} + && \
+    mkdir -p /deploy/prisma && \
+    cp libs/api/prisma/schema.prisma /deploy/prisma/schema.prisma && \
+    cd /deploy && /wepublish/node_modules/.bin/prisma generate --schema prisma/schema.prisma
 
 FROM ${PLAIN_BUILD_IMAGE} AS api-setup
 WORKDIR /wepublish
@@ -130,10 +132,9 @@ RUN apt-get update && \
 COPY --chown=1001:0 apps/api-example/src/default.yaml /wepublish/config/default.yaml
 COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=1001:0 .version /wepublish/.version
-COPY --chown=1001:0 --from=build-api /wepublish/api /wepublish/
-COPY --chown=1001:0 --from=api-prisma-deps /deps/node_modules ./node_modules
-RUN mkdir -p /wepublish/.cache/pkg && \
-    chmod -R g=u /wepublish
+COPY --chown=1001:0 --from=build-api /wepublish/dist/apps/api-example/ /wepublish/
+COPY --chown=1001:0 --from=build-api /deploy/node_modules ./node_modules
+RUN chmod -R g=u /wepublish
 
 FROM ${RUNTIME_IMAGE} AS api
 LABEL org.opencontainers.image.authors="WePublish Foundation"
@@ -152,7 +153,7 @@ COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libzstd.so* /usr/lib/x86_64-linu
 COPY --from=api-setup /wepublish /wepublish
 EXPOSE 4000
 USER 1001
-CMD ["/wepublish/api"]
+CMD ["node", "main.js"]
 
 #######
 ## Editor
@@ -166,17 +167,19 @@ ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 ENV NODE_OPTIONS="--max-old-space-size=6144"
 COPY . .
-RUN npx prisma generate && \
-    npx nx build editor --skip-nx-cache && \
-    npx @sentry/cli sourcemaps inject ./dist/apps/editor && \
-    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor || echo "sentry sourcemaps upload failed, continuing build"; } && \
-    cp docker/editor_build_package.json package.json && \
-    npx @yao-pkg/pkg package.json
+RUN pnpm exec prisma generate && \
+    pnpm exec nx build editor --skip-nx-cache && \
+    node docker/check-runtime-deps.js dist/apps/editor apps/editor/package.json && \
+    pnpm exec sentry-cli sourcemaps inject ./dist/apps/editor && \
+    { pnpm exec sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor || echo "sentry sourcemaps upload failed, continuing build"; } && \
+    pnpm --filter @wepublish/editor deploy --prod /deploy && \
+    find /deploy/node_modules/.pnpm -maxdepth 1 -name '@*' ! -name '*+*' -exec rm -rf {} +
 
 FROM ${PLAIN_BUILD_IMAGE} AS editor-setup
 WORKDIR /wepublish
-COPY --chown=1001:0 --from=build-editor /wepublish/editor /wepublish/
+COPY --chown=1001:0 --from=build-editor /wepublish/dist/apps/editor/main.js /wepublish/main.js
 COPY --chown=1001:0 --from=build-editor /wepublish/dist/apps/editor/browser dist/apps/editor/browser
+COPY --chown=1001:0 --from=build-editor /deploy/node_modules ./node_modules
 RUN chmod -R g=u /wepublish
 
 FROM ${RUNTIME_IMAGE} AS editor
@@ -190,41 +193,40 @@ WORKDIR /wepublish
 COPY --from=editor-setup /wepublish /wepublish
 EXPOSE 3000
 USER 1001
-CMD ["/wepublish/editor"]
+CMD ["node", "main.js"]
 
 #######
-## Migrations (needs bash + npm at runtime)
+## Migrations
 #######
-FROM ${PLAIN_BUILD_IMAGE} AS build-migration
+FROM ${BUILD_IMAGE} AS build-migration
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_ORG
 ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
-ENV NODE_ENV=production
-WORKDIR /wepublish
-COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
-COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
-COPY libs/api/prisma/seed.ts api/prisma/seed.ts
-COPY libs/changelog/api/src/lib/sync/run-sync-changelogs.ts changelog/run-sync-changelogs.ts
-COPY libs/changelog/api/src/lib/sync/sync-changelogs.ts changelog/sync-changelogs.ts
-COPY libs/changelog/api/src/lib/sync/parse-changelog-markdown.ts changelog/parse-changelog-markdown.ts
-COPY libs/api/prisma/schema.prisma prisma/schema.prisma
-COPY prisma.config.ts prisma.config.ts
-COPY libs/api/prisma/ca.crt /wepublish/ca.crt
-COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install --no-audit --no-fund prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
-    npx prisma generate && \
-    npx tsc -p tsconfig.yaml && \
-    npx @sentry/cli sourcemaps inject ./dist && \
-    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist || echo "sentry sourcemaps upload failed, continuing build"; }
+COPY . .
+RUN pnpm exec prisma generate && \
+    mkdir -p migration-build/api/prisma migration-build/settings/api/src/lib migration-build/changelog && \
+    cp libs/api/prisma/run-seed.ts libs/api/prisma/seed.ts migration-build/api/prisma/ && \
+    cp libs/settings/api/src/lib/setting.ts migration-build/settings/api/src/lib/ && \
+    cp libs/changelog/api/src/lib/sync/run-sync-changelogs.ts libs/changelog/api/src/lib/sync/sync-changelogs.ts libs/changelog/api/src/lib/sync/parse-changelog-markdown.ts migration-build/changelog/ && \
+    cp docker/tsconfig.yaml_seed migration-build/tsconfig.json && \
+    pnpm exec tsc -p migration-build/tsconfig.json && \
+    pnpm exec sentry-cli sourcemaps inject ./migration-build/dist && \
+    { pnpm exec sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./migration-build/dist || echo "sentry sourcemaps upload failed, continuing build"; } && \
+    pnpm --filter @wepublish/migration deploy --prod /deploy && \
+    find /deploy/node_modules/.pnpm -maxdepth 1 -name '@*' ! -name '*+*' -exec rm -rf {} + && \
+    mkdir -p /deploy/prisma && \
+    cp libs/api/prisma/schema.prisma /deploy/prisma/schema.prisma && \
+    cd /deploy && /wepublish/node_modules/.bin/prisma generate --schema prisma/schema.prisma
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration-setup
 ARG APP_RELEASE_ID
 ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ENV NODE_ENV=production
 WORKDIR /wepublish
-COPY --from=build-migration /wepublish/dist ./dist
+COPY --from=build-migration /wepublish/migration-build/dist ./dist
+COPY --from=build-migration /deploy/node_modules ./node_modules
 COPY libs/api/prisma/migrations prisma/migrations
 COPY libs/api/changelogs changelogs
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
@@ -235,8 +237,6 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install --no-audit --no-fund prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @node-rs/argon2 && \
-    npx prisma generate && \
     chmod -R g=u /wepublish
 
 FROM ${RUNTIME_IMAGE} AS migration
@@ -256,30 +256,29 @@ CMD ["node", "start.js"]
 ## Media Server
 #######
 
-FROM ${PLAIN_BUILD_IMAGE} AS build-media
+FROM ${BUILD_IMAGE} AS build-media
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_ORG
 ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
-ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
-WORKDIR /app
 RUN apt-get update && apt-get install -y libjemalloc-dev poppler-utils fonts-liberation
 COPY . .
-COPY ./apps/media/package.json ./package.json
-COPY ./apps/media/package-lock.json ./package-lock.json
-RUN npm ci --no-audit --no-fund
-RUN npx nx build media --skip-nx-cache && \
-    npx @sentry/cli sourcemaps inject ./dist/apps/media && \
-    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media || echo "sentry sourcemaps upload failed, continuing build"; } && \
+RUN pnpm exec nx build media --skip-nx-cache && \
+    node docker/check-runtime-deps.js dist/apps/media apps/media/package.json && \
+    pnpm exec sentry-cli sourcemaps inject ./dist/apps/media && \
+    { pnpm exec sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media || echo "sentry sourcemaps upload failed, continuing build"; } && \
+    pnpm --filter @wepublish/media deploy --prod /deploy && \
+    find /deploy/node_modules/.pnpm -maxdepth 1 -name '@*' ! -name '*+*' -exec rm -rf {} + && \
     mkdir -p /poppler-dist/bin /poppler-dist/lib && \
     cp /usr/bin/pdftoppm /poppler-dist/bin/ && \
-    ldd /usr/bin/pdftoppm | awk '/=>/ {print $3}' | xargs -I{} cp -L {} /poppler-dist/lib/ 2>/dev/null || true
+    { ldd /usr/bin/pdftoppm | awk '/=>/ {print $3}' | xargs -I{} cp -L {} /poppler-dist/lib/ 2>/dev/null || true; }
 
 FROM ${PLAIN_BUILD_IMAGE} AS media-setup
 WORKDIR /wepublish
-COPY --chown=1001:0 --from=build-media /app/dist/apps/media/ .
-COPY --chown=1001:0 --from=build-media /app/node_modules ./node_modules
+COPY --chown=1001:0 --from=build-media /wepublish/dist/apps/media/ .
+COPY --chown=1001:0 --from=build-media /deploy/node_modules ./node_modules
+COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 RUN chmod -R g=u /wepublish
 
 FROM ${RUNTIME_IMAGE} AS media
@@ -292,6 +291,7 @@ LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 ENV NODE_OPTIONS="--max-old-space-size=512"
+ENV UV_THREADPOOL_SIZE=16
 COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-linux-gnu/
 COPY --from=build-media /poppler-dist/bin/pdftoppm /usr/bin/pdftoppm
 COPY --from=build-media /usr/share/fonts/ /usr/share/fonts/
@@ -301,17 +301,3 @@ COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100
 USER 1001
 CMD ["node", "main.js"]
-
-######
-## Storybook
-######
-
-FROM ${BUILD_IMAGE} AS storybook-builder
-COPY . .
-RUN npx nx run website:build-storybook
-
-
-FROM nginx:alpine AS storybook
-COPY --from=storybook-builder /wepublish/dist/storybook/website /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]

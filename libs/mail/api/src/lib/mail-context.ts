@@ -3,9 +3,10 @@ import { BaseMailProvider } from './mail-provider/base-mail-provider';
 
 import { Injectable } from '@nestjs/common';
 import { MailController, MailControllerConfig } from './mail.controller';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { composeMail, MailTemplateContent } from './mail-renderer';
+import { EmailQualityRecorder } from './email-quality-recorder';
 
 export interface SendComposedMailProps {
   readonly mailTemplateId: string;
@@ -33,7 +34,7 @@ class MailContextConfig {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
     private readonly id: string
   ) {}
 
@@ -105,22 +106,25 @@ export interface MailContextInterface {
 export interface MailContextProps {
   readonly mailProvider: BaseMailProvider;
   readonly prisma: PrismaClient;
-  readonly kv: KvTtlCacheService;
+  readonly kv: NamespacedCache;
   readonly jwtGenerator: (userId: string) => Promise<string>;
+  readonly emailQualityRecorder?: EmailQualityRecorder;
 }
 
 @Injectable()
 export class MailContext implements MailContextInterface {
   mailProvider: BaseMailProvider;
   prisma: PrismaClient;
-  kv: KvTtlCacheService;
+  kv: NamespacedCache;
   jwtGenerator: (userId: string) => Promise<string>;
+  emailQualityRecorder?: EmailQualityRecorder;
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider;
     this.prisma = props.prisma;
     this.kv = props.kv;
     this.jwtGenerator = props.jwtGenerator;
+    this.emailQualityRecorder = props.emailQualityRecorder;
   }
 
   async sendMail(

@@ -2,16 +2,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Module } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import { PrismaClient } from '@prisma/client';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { StatsResolver } from './stats.resolver';
 import { StatsService } from './stats.service';
+import type { Mock } from 'vitest';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: NodeApolloDriver,
       autoSchemaFile: true,
       path: '/',
       cache: 'bounded',
@@ -34,19 +37,19 @@ const statsQuery = `
 
 describe('StatsResolver', () => {
   let app: INestApplication;
-  let statsServiceMock: { [method in keyof StatsService]?: jest.Mock };
+  let statsServiceMock: { [method in keyof StatsService]?: Mock };
 
   beforeEach(async () => {
     statsServiceMock = {
-      getArticlesCount: jest.fn(),
-      getAuthorsCount: jest.fn(),
-      getFirstArticleDate: jest.fn(),
+      getArticlesCount: vi.fn(),
+      getAuthorsCount: vi.fn(),
+      getFirstArticleDate: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -60,16 +63,16 @@ describe('StatsResolver', () => {
         },
         {
           provide: PrismaClient,
-          useValue: jest.fn(),
+          useValue: vi.fn(),
         },
       ],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 

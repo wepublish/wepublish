@@ -93,6 +93,12 @@ export class MemberPlan extends HasImage {
   id!: string;
 
   @Field()
+  createdAt!: Date;
+
+  @Field()
+  modifiedAt!: Date;
+
+  @Field()
   name!: string;
 
   @Field()

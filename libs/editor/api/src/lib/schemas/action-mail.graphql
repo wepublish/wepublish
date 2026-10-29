@@ -1,0 +1,46 @@
+fragment ActionMail on ActionMail {
+  event
+  recipientEmail
+  mailTemplateId
+  mailTemplateName
+  noMailReason
+}
+
+query SubscriptionCreationMail(
+  $userID: String!
+  $memberPlanID: String!
+  $paymentMethodID: String!
+  $paymentPeriodicity: PaymentPeriodicity!
+  $autoRenew: Boolean!
+) {
+  subscriptionCreationMail(
+    userID: $userID
+    memberPlanID: $memberPlanID
+    paymentMethodID: $paymentMethodID
+    paymentPeriodicity: $paymentPeriodicity
+    autoRenew: $autoRenew
+  ) {
+    ...ActionMail
+  }
+}
+
+query SubscriptionCancellationMail(
+  $id: String!
+  $reason: SubscriptionDeactivationReason!
+) {
+  subscriptionCancellationMail(id: $id, reason: $reason) {
+    ...ActionMail
+  }
+}
+
+query AccountCreationMail {
+  accountCreationMail {
+    ...ActionMail
+  }
+}
+
+query InvoicePaymentMail($invoiceId: String!) {
+  invoicePaymentMail(invoiceId: $invoiceId) {
+    ...ActionMail
+  }
+}

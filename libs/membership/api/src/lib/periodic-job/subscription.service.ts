@@ -8,6 +8,8 @@ import {
   InvoiceItem,
   MemberPlan,
   PaymentMethod,
+  PaymentMethodChangeKind,
+  PaymentMethodChangeState,
   PaymentPeriodicity,
   PaymentProviderCustomer,
   PaymentState,
@@ -19,11 +21,16 @@ import {
   SubscriptionPeriod,
   User,
 } from '@prisma/client';
-import { PaymentProvider, PaymentsService } from '@wepublish/payment/api';
+import {
+  InvoicePaidNotifier,
+  PaymentProvider,
+  PaymentsService,
+} from '@wepublish/payment/api';
 import { add, endOfDay, startOfDay, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import {
   calculatePeriodAmount,
+  describeError,
   logger,
   mapPaymentPeriodToMonths,
 } from '@wepublish/utils/api';
@@ -51,7 +58,8 @@ interface PeriodBounds {
 export class SubscriptionService {
   constructor(
     private prismaService: PrismaClient,
-    private payments: PaymentsService
+    private payments: PaymentsService,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   public async getActiveSubscriptionsWithoutInvoice(
@@ -154,6 +162,14 @@ export class SubscriptionService {
         },
         subscription: {
           confirmed: true,
+          // the reader is paying it with the payment method they change to;
+          // charging the current one as well could bill them twice
+          paymentMethodChanges: {
+            none: {
+              state: PaymentMethodChangeState.pending,
+              kind: PaymentMethodChangeKind.invoicePayment,
+            },
+          },
         },
       },
       include: {
@@ -542,10 +558,12 @@ export class SubscriptionService {
           payment.id,
           payment.intentID,
           payment.paymentMethodID,
-          e
+          describeError(e)
         );
       }
     }
+
+    await this.invoicePaidNotifier.notify(invoice.id);
   }
 
   /**
@@ -660,11 +678,17 @@ export class SubscriptionService {
         errorCode: 'user-action-required',
       };
     } catch (e) {
+      logger('offSessionPayment').error(
+        'Charging invoice %s with payment %s failed: %s',
+        invoice.id,
+        payment.id,
+        describeError(e)
+      );
       await this.prismaService.payment.update({
         where: { id: payment.id },
         data: {
           state: PaymentState.requiresUserAction,
-          paymentData: JSON.stringify(e),
+          paymentData: JSON.stringify({ error: describeError(e) }),
           paymentMethodID: payment.paymentMethodID,
           invoiceID: payment.invoiceID,
         },
@@ -672,7 +696,7 @@ export class SubscriptionService {
 
       return {
         action: renewalFailedAction,
-        errorCode: JSON.stringify(e),
+        errorCode: 'payment-provider-error',
       };
     }
   }

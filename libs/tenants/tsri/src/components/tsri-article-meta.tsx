@@ -1,0 +1,218 @@
+import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
+import { Badge, css, Theme } from '@mui/material';
+import {
+  ArticleTags as ArticleTagsDefault,
+  ArticleTagsWrapper,
+} from '@wepublish/article/website';
+import { CommentListDocument } from '@wepublish/website/api';
+import {
+  BuilderArticleMetaProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { FaCommentSlash } from 'react-icons/fa6';
+import { FiMessageCircle as FiMessageCircleDefault } from 'react-icons/fi';
+
+export const ArticleMetaWrapper = styled('div', {
+  shouldForwardProp: prop => prop !== 'hideAuthor',
+})<{ hideAuthor?: boolean }>`
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  position: relative;
+  gap: 4px;
+  padding: 0.5rem 0 0.75rem 0;
+
+  grid-column: 1 / 4;
+  grid-row: 4 / 5;
+
+  ${({ theme, hideAuthor }) =>
+    hideAuthor &&
+    css`
+      margin-top: ${theme.spacing(-5)};
+    `}
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    gap: 8px;
+    grid-column: 2 / 4;
+    padding: 0 0 0.75rem 0;
+
+    ${({ theme, hideAuthor }) =>
+      hideAuthor &&
+      css`
+        margin-top: ${theme.spacing(-4)};
+      `}
+  }
+
+  ${ArticleTagsWrapper} {
+    display: contents;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      gap: 8px;
+    }
+  }
+`;
+
+export const ArticleMetaComments = styled('div')`
+  display: contents;
+`;
+
+const ArticleMetaBadge = styled(Badge)`
+  & .MuiBadge-badge {
+    top: 22px;
+    border: 1px solid ${({ theme }) => theme.palette.common.white};
+    background: ${({ theme }) => theme.palette.common.black};
+    color: ${({ theme }) => theme.palette.common.white};
+    right: unset;
+    left: -22px;
+    aspect-ratio: 1;
+    color: ${({ theme }) => theme.palette.common.white};
+    scale: 0.8;
+    display: inline-block;
+    text-align: center;
+    padding: 0;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      border-width: 2px;
+      top: 27px;
+      left: -24px;
+      scale: 1;
+    }
+  }
+
+  @supports (-webkit-text-size-adjust: none) and (font: -apple-system-body) {
+    & .MuiBadge-badge {
+      border: none;
+      height: 16px;
+      min-width: 16px;
+      left: -19px;
+      outline: 2px solid ${({ theme }) => theme.palette.common.white};
+    }
+  }
+
+  @supports (not (-webkit-text-size-adjust: none)) and
+    (font: -apple-system-body) {
+    & .MuiBadge-badge {
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        border: none;
+        height: 16px;
+        min-width: 16px;
+        left: -19px;
+        outline: 2px solid ${({ theme }) => theme.palette.common.white};
+      }
+    }
+  }
+`;
+
+const FiMessageCircle = styled(FiMessageCircleDefault)`
+  transform: scale(-1, 1);
+  scale: 0.6;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    scale: 1;
+  }
+`;
+
+const ArticleTags = styled(ArticleTagsDefault)`
+  & > .MuiChip-root {
+    padding: 0.4rem 0.1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-color: ${({ theme }) => theme.palette.common.black};
+    color: ${({ theme }) => theme.palette.common.black};
+    height: 1.3rem;
+    overflow: hidden;
+
+    &:hover {
+      border-color: ${({ theme }) => theme.palette.primary.light};
+
+      & > *:first-of-type {
+        z-index: 5;
+        background-color: ${({ theme }) => theme.palette.primary.light};
+        color: ${({ theme }) => theme.palette.common.black};
+      }
+    }
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      padding: 0.9rem 0.25rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      height: 1.5rem;
+    }
+  }
+`;
+
+const commentsLinkStyles = (theme: Theme) => css`
+  margin: 0;
+  font: inherit;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid;
+  border-color: currentcolor;
+  border-radius: 50%;
+  display: flex;
+  aspect-ratio: 1/1;
+  box-sizing: content-box;
+  width: 1.3rem;
+  height: 1.3rem;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: ${theme.palette.primary.light};
+    color: ${theme.palette.common.black};
+    border-color: ${theme.palette.primary.light};
+  }
+
+  ${theme.breakpoints.up('md')} {
+    width: 2rem;
+    height: 2rem;
+  }
+`;
+
+export const TsriArticleMeta = ({
+  article,
+  className,
+}: BuilderArticleMetaProps) => {
+  const {
+    elements: { Link },
+  } = useWebsiteBuilder();
+  const { data } = useQuery(CommentListDocument, {
+    fetchPolicy: 'cache-only',
+    variables: {
+      itemId: article.id,
+    },
+  });
+
+  const commentCount = data?.commentsForItem.length;
+
+  return (
+    <ArticleMetaWrapper
+      className={className}
+      hideAuthor={article.latest.hideAuthor}
+    >
+      <ArticleTags article={article} />
+
+      <ArticleMetaComments>
+        <Link
+          href="#comments"
+          color="inherit"
+          css={commentsLinkStyles}
+          aria-label="Kommentare"
+          title="Kommentare"
+        >
+          <ArticleMetaBadge
+            max={99}
+            showZero={true}
+            badgeContent={commentCount}
+            invisible={!!article.disableComments}
+          >
+            {article.disableComments ?
+              <FaCommentSlash size={24} />
+            : <FiMessageCircle size={24} />}
+          </ArticleMetaBadge>
+        </Link>
+      </ArticleMetaComments>
+    </ArticleMetaWrapper>
+  );
+};

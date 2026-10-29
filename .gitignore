@@ -4,16 +4,14 @@ dist/
 node_modules
 npm-debug.log
 .media
-.changelog
-.CHANGELOG-next.md
 coverage/
 screenshots
+docs/superpowers
 
 # Nx
 tmp
 .env.local
 .nx
-lerna-debug.log
 
 # Next.js
 .next
@@ -30,3 +28,11 @@ tsconfig.tsbuildinfo
 
 .claude/worktrees
 /plan.json
+
+.claude/settings.local.json
+
+# e2e (playwright-bdd)
+/e2e/.features-gen
+/e2e/playwright-report
+/e2e/cucumber-report
+/e2e/test-results

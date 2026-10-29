@@ -2,13 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import {
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
 } from '@prisma/client';
 import { DashboardSubscriptionResolver } from './dashboard-subscription.resolver';
 import { DashboardSubscriptionService } from './dashboard-subscription.service';
+import type { Mocked } from 'vitest';
 
 const newSubscribersQuery = `
   query Dashboard($end:DateTime!, $start:DateTime!) {
@@ -66,7 +69,7 @@ const newDeactivationsQuery = `
 
 describe('DashboardSubscriptionResolver', () => {
   let app: INestApplication;
-  let dashboardSubscriptionService: jest.Mocked<
+  let dashboardSubscriptionService: Mocked<
     Pick<
       DashboardSubscriptionService,
       | 'newSubscribers'
@@ -78,16 +81,16 @@ describe('DashboardSubscriptionResolver', () => {
 
   beforeEach(async () => {
     dashboardSubscriptionService = {
-      newSubscribers: jest.fn(),
-      activeSubscribers: jest.fn(),
-      renewingSubscribers: jest.fn(),
-      newDeactivations: jest.fn(),
+      newSubscribers: vi.fn(),
+      activeSubscribers: vi.fn(),
+      renewingSubscribers: vi.fn(),
+      newDeactivations: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -102,11 +105,11 @@ describe('DashboardSubscriptionResolver', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 

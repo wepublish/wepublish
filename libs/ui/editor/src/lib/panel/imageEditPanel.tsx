@@ -1,30 +1,31 @@
-import styled from '@emotion/styled';
+import { useApolloClient, useMutation } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Autocomplete, Button, Link, TextField } from '@mui/material';
 import {
   FullImageFragment,
+  ImageDocument,
   ImageListDocument,
-  useImageQuery,
-  useUpdateImageMutation,
-  useUploadImageMutation,
+  UpdateImageDocument,
+  UploadImageDocument,
 } from '@wepublish/editor/api';
+import {
+  CanCreateImage,
+  CanDeleteImage,
+  CanGetImage,
+  CanGetImages,
+} from '@wepublish/permissions';
 import imageCompression from 'browser-image-compression';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Drawer,
-  Form as RForm,
-  Message,
-  Panel as RPanel,
-  Schema,
-  TagPicker,
-  toaster,
-} from 'rsuite';
+import { z } from 'zod';
 
 import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
 import { Point } from '../atoms/draggable';
 import { FocalPointInput } from '../atoms/focalPointInput';
 import { ImageMetaData } from '../atoms/imageMetaData';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import {
   createCheckedPermissionComponent,
   PermissionControl,
@@ -32,29 +33,74 @@ import {
 } from '../atoms/permissionControl';
 import { ImageBlockValue } from '../blocks';
 import {
+  DrawerActions,
+  DrawerBody,
+  DrawerForm,
+  DrawerHeader,
+  DrawerTitle,
+  FormFields,
+  FormSectionTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
+import {
   getImgMinSizeToCompress,
   getOperationNameFromDocument,
 } from '../utility';
 
-const { Label, Control, Group } = RForm;
-
-const Panel = styled(RPanel)`
-  background-color: dark;
-`;
-
-const Form = styled(RForm)`
-  height: 100%;
-`;
-
 export interface ImageEditPanelProps {
-  readonly block?: ImageBlockValue;
-  readonly id?: string;
-  readonly file?: File;
-  readonly imageMetaData?: ImageMetaData;
+  block?: ImageBlockValue;
+  id?: string;
+  file?: File;
+  imageMetaData?: ImageMetaData;
 
   onClose?(): void;
   onSave?(image: FullImageFragment, block: ImageBlockValue | undefined): void;
 }
+
+const EMPTY_IMAGE = {
+  filename: '',
+  title: '',
+  description: '',
+  tags: [] as string[],
+  source: '',
+  link: '',
+  license: '',
+  focalPoint: { x: 0.5, y: 0.5 } as Point,
+  imageBlock: undefined as ImageBlockValue | undefined,
+  fileSize: 0,
+  extension: '',
+  imageURL: '',
+  originalImageURL: undefined as string | undefined,
+  imageWidth: 0,
+  imageHeight: 0,
+  createdAt: undefined as string | undefined,
+  updatedAt: undefined as string | undefined,
+};
+
+type ImageFormValues = typeof EMPTY_IMAGE;
+
+const readFile = (file: File) =>
+  new Promise<{ url: string; width: number; height: number }>(
+    (resolve, reject) => {
+      const reader = new FileReader();
+      const image = new Image();
+
+      reader.addEventListener('load', () => {
+        image.src = reader.result as string;
+      });
+      reader.addEventListener('error', reject);
+      image.addEventListener('load', () =>
+        resolve({
+          url: reader.result as string,
+          width: image.width,
+          height: image.height,
+        })
+      );
+      image.addEventListener('error', reject);
+
+      reader.readAsDataURL(file);
+    }
+  );
 
 function ImageEditPanel({
   id,
@@ -64,170 +110,163 @@ function ImageEditPanel({
   onSave,
   imageMetaData,
 }: ImageEditPanelProps) {
-  const [imageBlock, setImageBlock] = useState<ImageBlockValue | undefined>(
-    block
-  );
-
-  const [filename, setFilename] = useState('');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [tags, setTags] = useState<string[]>([]);
-
-  const [source, setSource] = useState('');
-  const [link, setLink] = useState('');
-  const [license, setLicense] = useState('');
-
-  const [fileSize, setFileSize] = useState(0);
-  const [extension, setExtension] = useState('');
-
-  const [originalImageURL, setOriginalImageURL] = useState<string>();
-
-  const [imageURL, setImageURL] = useState('');
-  const [imageWidth, setImageWidth] = useState(0);
-  const [imageHeight, setImageHeight] = useState(0);
-
-  const [createdAt, setCreatedAt] = useState<string>();
-  const [updatedAt, setUpdatedAt] = useState<string>();
-
-  const [focalPoint, setFocalPoint] = useState<Point>();
-
-  const { data, error: loadingError } = useImageQuery({
-    variables: { id: id! },
-    skip: id === undefined,
-  });
+  const { t } = useTranslation();
+  const client = useApolloClient();
+  const [loadingError, setLoadingError] = useState<Error>();
 
   const [updateImage, { loading: isUpdating, error: savingError }] =
-    useUpdateImageMutation();
+    useMutation(UpdateImageDocument);
 
   const [uploadImage, { loading: isUploading, error: uploadError }] =
-    useUploadImageMutation({
+    useMutation(UploadImageDocument, {
       refetchQueries: [getOperationNameFromDocument(ImageListDocument)],
     });
 
-  const [isLoading, setLoading] = useState(true);
-  const isAuthorized = useAuthorisation('CAN_CREATE_IMAGE');
-  const isDisabled = isLoading || isUpdating || isUploading || !isAuthorized;
+  const isAuthorized = useAuthorisation(CanCreateImage.id);
   const isUpload = file !== undefined;
-  const { t } = useTranslation();
 
-  useEffect(() => {
-    if (file) {
-      const reader = new FileReader();
-      const [filename, ...extensions] = file.name.split('.');
-      const extension = `.${extensions.join('.')}`;
-      const image = new Image();
+  const schema = z.object({
+    filename: z.string(),
+    title: z.string(),
+    description: z.string(),
+    tags: z.array(z.string()),
+    source: z.string(),
+    link: z
+      .union([
+        z.literal(''),
+        z.string().url(t('errorMessages.invalidUrlErrorMessage')),
+      ])
+      .nullish(),
+    license: z.string(),
+    focalPoint: z.custom<Point>(),
+    imageBlock: z.custom<ImageBlockValue>().optional(),
+    fileSize: z.number(),
+    extension: z.string(),
+    imageURL: z.string(),
+    originalImageURL: z.string().optional(),
+    imageWidth: z.number(),
+    imageHeight: z.number(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional(),
+  });
 
-      const handleReaderLoad = function () {
-        image.src = reader.result as string;
-      };
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { isLoading },
+  } = useForm<ImageFormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: async () => {
+      if (file) {
+        const [filename, ...extensions] = file.name.split('.');
 
-      const handleImageLoad = function () {
-        setCreatedAt(undefined);
-        setUpdatedAt(undefined);
+        try {
+          const { url, width, height } = await readFile(file);
 
-        setFilename(filename);
-        setFileSize(file!.size);
-        setExtension(extension);
+          return {
+            ...EMPTY_IMAGE,
+            filename,
+            extension: `.${extensions.join('.')}`,
+            fileSize: file.size,
+            imageURL: url,
+            imageWidth: width,
+            imageHeight: height,
+            imageBlock: block,
+            title: imageMetaData?.title ?? '',
+            description: imageMetaData?.description ?? '',
+            license: imageMetaData?.licence ?? '',
+            link: imageMetaData?.link ?? '',
+            source: imageMetaData?.source ?? '',
+          };
+        } catch (error) {
+          setLoadingError(error as Error);
 
-        setOriginalImageURL(undefined);
-        setImageURL(reader.result as string);
-        setImageWidth(image.width);
-        setImageHeight(image.height);
-        setFocalPoint({ x: 0.5, y: 0.5 });
+          return { ...EMPTY_IMAGE, imageBlock: block };
+        }
+      }
 
-        if (imageMetaData) {
-          setTitle(imageMetaData.title);
-          setDescription(imageMetaData.description);
-          setLicense(imageMetaData.licence);
-          setLink(imageMetaData.link);
-          setSource(imageMetaData.source);
+      if (!id) {
+        return { ...EMPTY_IMAGE, imageBlock: block };
+      }
+
+      try {
+        const { data } = await client.query({
+          query: ImageDocument,
+          variables: { id },
+        });
+        const image = data?.image;
+
+        if (!image) {
+          enqueueSnackbar(t('images.panels.notFound'), {
+            variant: 'error',
+            autoHideDuration: null,
+          });
+
+          return { ...EMPTY_IMAGE, imageBlock: block };
         }
 
-        setLoading(false);
-      };
+        return {
+          filename: image.filename || '',
+          title: image.title ?? '',
+          description: image.description ?? '',
+          tags: image.tags,
+          source: image.source ?? '',
+          link: image.link ?? '',
+          license: image.license ?? '',
+          focalPoint: { x: image.focalPointX, y: image.focalPointY },
+          imageBlock: block,
+          fileSize: image.fileSize,
+          extension: image.extension,
+          imageURL: image.mediumURL ?? '',
+          originalImageURL: image.url ?? '',
+          imageWidth: image.width,
+          imageHeight: image.height,
+          createdAt: image.createdAt,
+          updatedAt: image.modifiedAt,
+        };
+      } catch (error) {
+        setLoadingError(error as Error);
 
-      reader.addEventListener('load', handleReaderLoad);
-      image.addEventListener('load', handleImageLoad);
-
-      reader.readAsDataURL(file);
-
-      return () => {
-        reader.removeEventListener('load', handleReaderLoad);
-        image.removeEventListener('load', handleImageLoad);
-      };
-    } else if (data) {
-      const { image } = data;
-
-      if (image) {
-        setCreatedAt(image.createdAt);
-        setUpdatedAt(image.modifiedAt);
-
-        setFilename(image.filename || '');
-        setFileSize(image.fileSize);
-        setExtension(image.extension);
-
-        setTitle(image.title ?? '');
-        setDescription(image.description ?? '');
-        setTags(image.tags);
-
-        setSource(image.source ?? '');
-        setLink(image.link ?? '');
-        setLicense(image.license ?? '');
-
-        setOriginalImageURL(image.url ?? '');
-        setImageURL(image.mediumURL ?? '');
-        setImageWidth(image.width);
-        setImageHeight(image.height);
-        setFocalPoint({ x: image.focalPointX, y: image.focalPointY });
-        setLoading(false);
-      } else {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={0}
-          >
-            {t('images.panels.notFound')}
-          </Message>
-        );
+        return { ...EMPTY_IMAGE, imageBlock: block };
       }
-    }
+    },
+  });
 
-    return () => {
-      /* do nothing */
-    };
-  }, [file, data]);
+  const isDisabled = isLoading || isUpdating || isUploading || !isAuthorized;
+
+  const imageBlock = useWatch({ control, name: 'imageBlock' });
+  const filename = useWatch({ control, name: 'filename' });
+  const extension = useWatch({ control, name: 'extension' });
+  const fileSize = useWatch({ control, name: 'fileSize' });
+  const imageURL = useWatch({ control, name: 'imageURL' });
+  const originalImageURL = useWatch({ control, name: 'originalImageURL' });
+  const imageWidth = useWatch({ control, name: 'imageWidth' });
+  const imageHeight = useWatch({ control, name: 'imageHeight' });
+  const createdAt = useWatch({ control, name: 'createdAt' });
+  const updatedAt = useWatch({ control, name: 'updatedAt' });
 
   useEffect(() => {
     const error =
       loadingError?.message ?? savingError?.message ?? uploadError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [loadingError, savingError, uploadError]);
 
-  async function handleSave() {
+  async function handleSave(values: ImageFormValues) {
     const commonInput = {
-      filename: filename || undefined,
-      title: title || undefined,
-      description: description || undefined,
-      tags,
+      filename: values.filename || undefined,
+      title: values.title || undefined,
+      description: values.description || undefined,
+      tags: values.tags,
 
-      source: source || undefined,
-      link: link || undefined,
-      license: license || undefined,
+      source: values.source || undefined,
+      link: values.link || undefined,
+      license: values.license || undefined,
 
-      focalPointX: focalPoint?.x ?? 0.5,
-      focalPointY: focalPoint?.y ?? 0.5,
+      focalPointX: values.focalPoint?.x ?? 0.5,
+      focalPointY: values.focalPoint?.y ?? 0.5,
     };
 
     if (isUpload) {
@@ -240,26 +279,20 @@ function ImageEditPanel({
       });
 
       if (data?.uploadImage) {
-        onSave?.(data.uploadImage, imageBlock);
+        onSave?.(data.uploadImage, values.imageBlock);
       }
     } else {
       const { data } = await updateImage({
         variables: { id: id!, ...commonInput },
       });
 
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={2000}
-        >
-          {t('images.panels.imageUpdated')}
-        </Message>
-      );
+      enqueueSnackbar(t('images.panels.imageUpdated'), {
+        variant: 'success',
+        autoHideDuration: 2000,
+      });
 
       if (data?.updateImage) {
-        onSave?.(data.updateImage, imageBlock);
+        onSave?.(data.updateImage, values.imageBlock);
       }
     }
   }
@@ -295,28 +328,19 @@ function ImageEditPanel({
     return false;
   }
 
-  // Schema used for form validation
-  const { StringType } = Schema.Types;
-  const validationModel = Schema.Model({
-    link: StringType().isURL(t('errorMessages.invalidUrlErrorMessage')),
-  });
-
   return (
-    <Form
-      model={validationModel}
-      onSubmit={validationPassed => validationPassed && handleSave()}
-    >
-      <Drawer.Header>
-        <Drawer.Title>
+    <DrawerForm onSubmit={handleSubmit(handleSave)}>
+      <DrawerHeader>
+        <DrawerTitle>
           {isUpload ?
             t('images.panels.uploadImage')
           : t('images.panels.editImage')}
-        </Drawer.Title>
+        </DrawerTitle>
 
-        <Drawer.Actions>
-          <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
+        <DrawerActions>
+          <PermissionControl qualifyingPermissions={[CanCreateImage.id]}>
             <Button
-              appearance={'primary'}
+              variant="contained"
               disabled={isDisabled}
               type="submit"
             >
@@ -325,185 +349,247 @@ function ImageEditPanel({
           </PermissionControl>
 
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         {!isLoading && (
-          <>
-            <Panel>
-              {imageURL && imageWidth && imageHeight && (
-                <FocalPointInput
-                  imageURL={imageURL}
-                  imageWidth={imageWidth}
-                  imageHeight={imageHeight}
-                  maxHeight={300}
-                  focalPoint={focalPoint}
-                  onChange={point => setFocalPoint(point)}
-                />
-              )}
-            </Panel>
+          <FormFields>
+            <FormSectionTitle>
+              {t('images.panels.focalPoint')}{' '}
+              <InfoTooltip text={t('images.panels.focalPointInfo')} />
+            </FormSectionTitle>
 
-            <RPanel header={t('images.panels.description')}>
-              <DescriptionList>
-                <DescriptionListItem label={t('images.panels.filename')}>
-                  {filename || t('images.panels.untitled')}
-                  {extension}
-                </DescriptionListItem>
+            {imageURL && imageWidth && imageHeight && (
+              <Controller
+                control={control}
+                name="focalPoint"
+                render={({ field }) => (
+                  <FocalPointInput
+                    imageURL={imageURL}
+                    imageWidth={imageWidth}
+                    imageHeight={imageHeight}
+                    maxHeight={420}
+                    focalPoint={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+            )}
 
-                <DescriptionListItem label={t('images.panels.dimension')}>
-                  {t('images.panels.imageDimension', {
-                    imageWidth,
-                    imageHeight,
+            <FormSectionTitle>
+              {t('images.panels.description')}
+            </FormSectionTitle>
+
+            <DescriptionList>
+              <DescriptionListItem label={t('images.panels.filename')}>
+                {filename || t('images.panels.untitled')}
+                {extension}
+              </DescriptionListItem>
+
+              <DescriptionListItem label={t('images.panels.dimension')}>
+                {t('images.panels.imageDimension', {
+                  imageWidth,
+                  imageHeight,
+                })}
+              </DescriptionListItem>
+
+              {createdAt && (
+                <DescriptionListItem label={t('images.panels.created')}>
+                  {t('images.panels.createdAt', {
+                    createdAt: new Date(createdAt),
                   })}
                 </DescriptionListItem>
+              )}
 
-                {createdAt && (
-                  <DescriptionListItem label={t('images.panels.created')}>
-                    {t('images.panels.createdAt', {
-                      createdAt: new Date(createdAt),
-                    })}
-                  </DescriptionListItem>
-                )}
-
-                {updatedAt && (
-                  <DescriptionListItem label={t('images.panels.updated')}>
-                    {t('images.panels.updatedAt', {
-                      updatedAt: new Date(updatedAt),
-                    })}
-                  </DescriptionListItem>
-                )}
-
-                <DescriptionListItem label={t('images.panels.fileSize')}>
-                  {prettyBytes(fileSize)}
+              {updatedAt && (
+                <DescriptionListItem label={t('images.panels.updated')}>
+                  {t('images.panels.updatedAt', {
+                    updatedAt: new Date(updatedAt),
+                  })}
                 </DescriptionListItem>
+              )}
 
-                <DescriptionListItem label={t('images.panels.fileSize')}>
-                  {prettyBytes(fileSize)}
+              <DescriptionListItem label={t('images.panels.fileSize')}>
+                {prettyBytes(fileSize)}
+              </DescriptionListItem>
+
+              {originalImageURL && (
+                <DescriptionListItem label={t('images.panels.link')}>
+                  <Link
+                    href={originalImageURL}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {t('images.panels.openOriginal')}
+                  </Link>
                 </DescriptionListItem>
+              )}
+            </DescriptionList>
 
-                {originalImageURL && (
-                  <DescriptionListItem label={t('images.panels.link')}>
-                    <a
-                      href={originalImageURL}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {originalImageURL}
-                    </a>
-                  </DescriptionListItem>
-                )}
-              </DescriptionList>
-            </RPanel>
+            <FormSectionTitle>
+              {t('images.panels.information')}
+            </FormSectionTitle>
 
-            <RPanel header={t('images.panels.information')}>
-              <RForm.Stack fluid>
-                <Group controlId="imageFilename">
-                  <Label>{t('images.panels.filename')}</Label>
-                  <Control
-                    name="filename"
-                    value={filename}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setFilename(value)}
-                  />
-                </Group>
-
-                <Group controlId="imageTitle">
-                  <Label>{t('images.panels.title')}</Label>
-                  <Control
-                    name="title"
-                    value={title}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setTitle(value)}
-                  />
-                </Group>
-
-                <Group controlId="imageDescription">
-                  <Label>{t('images.panels.description')}</Label>
-                  <Control
-                    name="description"
-                    value={description}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setDescription(value)}
-                  />
-                </Group>
-
-                {imageBlock && (
-                  <Group controlId="imageLinkUrl">
-                    <Label>{t('images.panels.linkUrl')}</Label>
-                    <Control
-                      name="linkUrl"
-                      value={imageBlock.linkUrl}
-                      disabled={isDisabled}
-                      onChange={(value: string) =>
-                        setImageBlock({ ...imageBlock, linkUrl: value })
-                      }
-                    />
-                  </Group>
-                )}
-
-                <Group controlId="imageTags">
-                  <Label>{t('images.panels.tags')}</Label>
-                  <TagPicker
-                    virtualized
-                    block
-                    creatable
-                    disabled={isDisabled}
-                    value={tags}
-                    data={tags.map(tag => ({ value: tag, label: tag }))}
-                    onChange={value => setTags(value ?? [])}
-                  />
-                </Group>
-              </RForm.Stack>
-            </RPanel>
-
-            <RPanel header={t('images.panels.attribution')}>
-              <Group controlId="imageSource">
-                <Label>{t('images.panels.source')}</Label>
-                <Control
-                  name="source"
-                  value={source}
+            <Controller
+              control={control}
+              name="filename"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('images.panels.filename')}
                   disabled={isDisabled}
-                  onChange={(value: string) => setSource(value)}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
                 />
-              </Group>
-              <Group controlId="imageLink">
-                <Label>{t('images.panels.link')}</Label>
-                <Control
-                  name="link"
-                  value={link}
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="title"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('images.panels.title')}
+                  disabled={isDisabled}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="description"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={
+                    <>
+                      {t('images.panels.description')}{' '}
+                      <InfoTooltip text={t('images.panels.descriptionInfo')} />
+                    </>
+                  }
+                  disabled={isDisabled}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
+
+            {imageBlock && (
+              <TextField
+                name="linkUrl"
+                label={
+                  <>
+                    {t('images.panels.linkUrl')}{' '}
+                    <InfoTooltip text={t('images.panels.linkUrlInfo')} />
+                  </>
+                }
+                value={imageBlock.linkUrl ?? ''}
+                disabled={isDisabled}
+                onChange={event =>
+                  setValue('imageBlock', {
+                    ...imageBlock,
+                    linkUrl: event.target.value,
+                  })
+                }
+                fullWidth
+              />
+            )}
+
+            <Controller
+              control={control}
+              name="tags"
+              render={({ field }) => (
+                <Autocomplete
+                  multiple
+                  freeSolo
+                  disabled={isDisabled}
+                  options={field.value}
+                  value={field.value}
+                  onChange={(_event, value) => field.onChange(value)}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label={t('images.panels.tags')}
+                    />
+                  )}
+                  fullWidth
+                />
+              )}
+            />
+
+            <FormSectionTitle>
+              {t('images.panels.attribution')}
+            </FormSectionTitle>
+
+            <Controller
+              control={control}
+              name="source"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('images.panels.source')}
+                  disabled={isDisabled}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="link"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  label={t('images.panels.link')}
                   placeholder={t('images.panels.urlPlaceholder')}
                   disabled={isDisabled}
-                  onChange={(value: string) => setLink(value)}
+                  error={Boolean(error)}
+                  helperText={error?.message ?? t('images.panels.sourceLink')}
+                  fullWidth
                 />
-                <p>{t('images.panels.sourceLink')}</p>
-              </Group>
-              <Group controlId="imageLicense">
-                <Label>{t('images.panels.license')}</Label>
-                <Control
-                  name="license"
-                  value={license}
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="license"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={t('images.panels.license')}
                   disabled={isDisabled}
-                  onChange={(value: string) => setLicense(value)}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
                 />
-              </Group>
-            </RPanel>
-          </>
+              )}
+            />
+          </FormFields>
         )}
-      </Drawer.Body>
-    </Form>
+      </DrawerBody>
+    </DrawerForm>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_IMAGE',
-  'CAN_GET_IMAGES',
-  'CAN_DELETE_IMAGE',
-  'CAN_CREATE_IMAGE',
+  CanGetImage.id,
+  CanGetImages.id,
+  CanDeleteImage.id,
+  CanCreateImage.id,
 ])(ImageEditPanel);
 export { CheckedPermissionComponent as ImageEditPanel };

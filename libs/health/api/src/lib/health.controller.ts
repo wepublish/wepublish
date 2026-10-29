@@ -9,6 +9,7 @@ import { PrismaClient } from '@prisma/client';
 import * as process from 'process';
 import { promises as fs } from 'fs';
 import { Public } from '@wepublish/authentication/api';
+import { DragonflyHealthIndicator } from './dragonfly.health';
 
 @Controller('health')
 export class HealthController {
@@ -18,7 +19,8 @@ export class HealthController {
     private health: HealthCheckService,
     private db: PrismaHealthIndicator,
     private http: HttpHealthIndicator,
-    private prisma: PrismaClient
+    private prisma: PrismaClient,
+    private dragonfly: DragonflyHealthIndicator
   ) {}
 
   async onModuleInit() {
@@ -36,6 +38,7 @@ export class HealthController {
   readiness() {
     return this.health.check([
       async () => this.db.pingCheck('database', this.prisma, { timeout: 5000 }),
+      async () => this.dragonfly.isHealthy('dragonfly'),
       async () =>
         this.http.pingCheck('editor', `${process.env['EDITOR_URL']}/health`, {
           timeout: 5000,

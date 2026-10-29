@@ -1,10 +1,13 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  CanCreateTrackingPixelSettings,
+  CanDeleteTrackingPixelSettings,
   CanGetTrackingPixelSettings,
   CanUpdateTrackingPixelSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  CreateSettingTrackingPixelProviderInput,
   SettingTrackingPixelProvider,
   UpdateSettingTrackingPixelProviderInput,
   SettingTrackingPixelFilter,
@@ -39,16 +42,16 @@ export class TrackingPixelProviderSettingsResolver {
     return this.trackingPixelSettingsDataloader.load(id);
   }
 
-  /** DISABLE FOR NOW
   @Permissions(CanCreateTrackingPixelSettings)
-  @Mutation(returns => SettingTrackingPixel, {
+  @Mutation(returns => SettingTrackingPixelProvider, {
     name: 'createTrackingPixelSetting',
     description: 'Creates a new tracking pixel setting.',
   })
-  createTrackingPixelSetting(@Args('input') input: CreateSettingTrackingPixelInput) {
+  createTrackingPixelSetting(
+    @Args() input: CreateSettingTrackingPixelProviderInput
+  ) {
     return this.trackingPixelSettingsService.createTrackingPixelSetting(input);
   }
- **/
 
   @Permissions(CanUpdateTrackingPixelSettings)
   @Mutation(returns => SettingTrackingPixelProvider, {
@@ -61,14 +64,12 @@ export class TrackingPixelProviderSettingsResolver {
     return this.trackingPixelSettingsService.updateTrackingPixelSetting(input);
   }
 
-  /** DISABLE FOR NOW
   @Permissions(CanDeleteTrackingPixelSettings)
-  @Mutation(returns => SettingTrackingPixel, {
+  @Mutation(returns => SettingTrackingPixelProvider, {
     name: 'deleteTrackingPixelSetting',
     description: 'Deletes a tracking pixel setting.',
   })
   deleteTrackingPixelSetting(@Args('id') id: string) {
     return this.trackingPixelSettingsService.deleteTrackingPixelSetting(id);
   }
-    **/
 }

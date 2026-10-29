@@ -1,30 +1,37 @@
 import './instrument.ts';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NodeAdapter } from '@nestjs/platform-node';
 import { AppModule } from './nestapp/app.module';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { runExampleSeed } from '../prisma/seed';
 
+import { responseBackReference } from '@wepublish/api-token/api';
 import { MAIL_WEBHOOK_PATH_PREFIX } from '@wepublish/mail/api';
 import helmet from 'helmet';
 
 import { MAX_PAYLOAD_SIZE } from '@wepublish/utils/api';
-import { json, urlencoded } from 'body-parser';
-import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import {
+  json,
+  urlencoded,
+} from '@nestjs/platform-node/body-parser/body-parser.js';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/payment/api';
 import { graphqlUploadExpress } from 'graphql-upload';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
 
-  const nestApp = await NestFactory.create(AppModule, {
+  const nestApp = await NestFactory.create(AppModule, new NodeAdapter(), {
     bodyParser: false,
   });
+  nestApp.enableShutdownHooks();
   nestApp.enableCors({
     origin: true,
     credentials: true,
   });
+  nestApp.use(responseBackReference);
   nestApp.use(helmet());
 
   const skipPrefixes = [
@@ -34,10 +41,10 @@ async function bootstrap() {
   const jsonParser = json({ limit: MAX_PAYLOAD_SIZE });
 
   // Apply JSON parsing only when the path doesn't match any webhook prefix
-  const conditionalJson: RequestHandler = (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  const conditionalJson = (
+    req: NodeRequest,
+    res: NodeResponse,
+    next: (err?: unknown) => void
   ) => {
     const path: string = req.path ?? req.url;
     for (let i = 0; i < skipPrefixes.length; i++) {

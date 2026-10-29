@@ -10,4 +10,9 @@ export * from './lib/peer-profile.resolver';
 export * from './lib/peer.service';
 export * from './lib/peer-profile.service';
 export * from './lib/peer.constants';
-export * as remote from './lib/remote/graphql';
+export {
+  LOCAL_PEER_PROFILE_CACHE_NAMESPACE,
+  PEERING_SHARED_NAMESPACES,
+  REMOTE_PEER_PROFILE_CACHE_NAMESPACE,
+} from './lib/peer-profile-cache';
+export * as remote from './lib/remote';

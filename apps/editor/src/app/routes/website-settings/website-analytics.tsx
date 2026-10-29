@@ -1,7 +1,7 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -12,44 +12,46 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
-import { Controller, useForm } from 'react-hook-form';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { MdArrowBack } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
+
+import { WebsiteSettingsHeader } from './website-settings-header';
+
+import { lazyMessage } from '../../utility';
 
 const analyticsSchema = z.object({
   googleAnalytics: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^(G|UA|YT|MO)-[A-Za-z0-9-]+$/,
-        'Must be a valid GA ID (e.g., G-XXXXXXXXXX or UA-XXXXXXXX-X)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.google.gaInvalid'),
+      })
+      .regex(/^(G|UA|YT|MO)-[A-Za-z0-9-]+$/)
       .or(z.literal(''))
       .nullish(),
   }),
   googleTagManager: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(/^GTM-[A-Za-z0-9]+$/, 'Must be a valid GTM ID (e.g., GTM-XXXXXXX)')
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.google.gtmInvalid'),
+      })
+      .regex(/^GTM-[A-Za-z0-9]+$/)
       .or(z.literal(''))
       .nullish(),
   }),
   plausible: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^PA-[A-Za-z0-9_-]+$/i,
-        'Must be a valid PA ID (e.g., pa-XXXXXXXXXXXXXXXXXXXX)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.plausible.paInvalid'),
+      })
+      .regex(/^PA-[A-Za-z0-9_-]+$/i)
       .or(z.literal(''))
       .nullish(),
   }),
@@ -57,8 +59,7 @@ const analyticsSchema = z.object({
     enabled: z.boolean(),
     key: z
       .string({
-        message:
-          'Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)',
+        errorMap: lazyMessage('websiteSettings.analytics.piwik.proInvalid'),
       })
       .or(z.literal(''))
       .nullish(),
@@ -77,38 +78,27 @@ export const Explainer = styled.p`
 
 export const WebsiteAnalytics = () => {
   const { t } = useTranslation();
-  const [loadSettings] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('websiteSettings.saveSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
       onError: error => {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {error.message}
-          </Message>
-        );
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       },
-    });
+    }
+  );
   const {
     control,
     handleSubmit,
-    watch,
     formState: { isLoading },
   } = useForm<z.infer<typeof analyticsSchema>>({
     resolver: zodResolver(analyticsSchema),
@@ -122,6 +112,17 @@ export const WebsiteAnalytics = () => {
       );
     },
   });
+
+  const googleAnalyticsEnabled = useWatch({
+    control,
+    name: 'googleAnalytics.enabled',
+  });
+  const googleTagManagerEnabled = useWatch({
+    control,
+    name: 'googleTagManager.enabled',
+  });
+  const plausibleEnabled = useWatch({ control, name: 'plausible.enabled' });
+  const piwikEnabled = useWatch({ control, name: 'piwik.enabled' });
 
   const onSubmit = handleSubmit(data => {
     updateWebsiteSettings({
@@ -143,18 +144,19 @@ export const WebsiteAnalytics = () => {
 
   return (
     <WebsiteAnalyticsWrapper onSubmit={onSubmit}>
-      <Link to={'/settings/website'}>
+      <WebsiteSettingsHeader title={t('websiteSettings.analytics.title')}>
         <Button
-          size="small"
-          variant="text"
-          startIcon={<MdArrowBack />}
+          type="submit"
+          variant="contained"
+          color="primary"
+          loading={saving}
         >
-          {t('websiteSettings.backToOverview')}
+          {t('save')}
         </Button>
-      </Link>
-
-      <h3>{t('websiteSettings.analytics.google.title')}</h3>
-
+      </WebsiteSettingsHeader>
+      <Typography variant="h3">
+        {t('websiteSettings.analytics.google.title')}
+      </Typography>
       <Controller
         name="googleAnalytics.enabled"
         control={control}
@@ -191,12 +193,11 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="googleAnalytics.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('googleAnalytics.enabled') ?
+          googleAnalyticsEnabled ?
             <TextField
               {...field}
               label="Google Analytics ID"
@@ -218,28 +219,29 @@ export const WebsiteAnalytics = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
       <Controller
         name="googleTagManager.enabled"
         control={control}
@@ -275,12 +277,11 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="googleTagManager.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('googleTagManager.enabled') ?
+          googleTagManagerEnabled ?
             <TextField
               {...field}
               label="Google Tag Manager ID"
@@ -302,30 +303,32 @@ export const WebsiteAnalytics = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
-      <h3>{t('websiteSettings.analytics.plausible.title')}</h3>
-
+      <Typography variant="h3">
+        {t('websiteSettings.analytics.plausible.title')}
+      </Typography>
       <Controller
         name="plausible.enabled"
         control={control}
@@ -361,12 +364,11 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="plausible.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('plausible.enabled') ?
+          plausibleEnabled ?
             <TextField
               {...field}
               label="Plausible ID"
@@ -388,30 +390,32 @@ export const WebsiteAnalytics = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
-      <h3>{t('websiteSettings.analytics.piwik.title')}</h3>
-
+      <Typography variant="h3">
+        {t('websiteSettings.analytics.piwik.title')}
+      </Typography>
       <Controller
         name="piwik.enabled"
         control={control}
@@ -447,12 +451,11 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="piwik.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('piwik.enabled') ?
+          piwikEnabled ?
             <TextField
               {...field}
               label="piwik ID"
@@ -463,46 +466,29 @@ export const WebsiteAnalytics = () => {
                   <Trans i18nKey="websiteSettings.analytics.piwik.proLocator" />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
-      <Box>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={saving}
-        >
-          {saving && (
-            <CircularProgress
-              size={14}
-              color="inherit"
-              sx={{ mr: 1 }}
-            />
-          )}
-
-          {t('save')}
-        </Button>
-      </Box>
     </WebsiteAnalyticsWrapper>
   );
 };

@@ -19,6 +19,9 @@ fragment SlimPage on Page {
   modifiedAt
   url
   slug
+  hidden
+  hideHeader
+  hideFooter
 
   tags {
     ...FullTag

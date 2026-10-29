@@ -4,11 +4,17 @@ import {
   useSubscribe,
   useUpgrade,
 } from '@wepublish/payment/website';
+import type { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
-  useResubscribeMutation,
-  useUpgradeSubscriptionInfoLazyQuery,
+  ResubscribeMutation,
+  ResubscribeMutationVariables,
+  UpgradeSubscriptionInfoQuery,
+  UpgradeSubscriptionInfoQueryVariables,
 } from '@wepublish/website/api';
-import { BuilderSubscribeProps } from '@wepublish/website/builder';
+import {
+  BuilderSubscribeProps,
+  BuilderUpgradeProps,
+} from '@wepublish/website/builder';
 
 import { ComponentProps, createContext, useContext } from 'react';
 
@@ -24,8 +30,17 @@ export type SubscribeBlockContextProps = {
 
   subscribe: ReturnType<typeof useSubscribe>[0];
   upgrade: ReturnType<typeof useUpgrade>[0];
-  resubscribe: ReturnType<typeof useResubscribeMutation>;
-  upgradeInfo: ReturnType<typeof useUpgradeSubscriptionInfoLazyQuery>;
+  resubscribe: useMutation.ResultTuple<
+    ResubscribeMutation,
+    ResubscribeMutationVariables
+  >;
+  upgradeInfo: [
+    useLazyQuery.ExecFunction<
+      UpgradeSubscriptionInfoQuery,
+      UpgradeSubscriptionInfoQueryVariables
+    >,
+    BuilderUpgradeProps['upgradeInfo'],
+  ];
   register: ReturnType<typeof useRegister>['register'];
 
   redirectPages: ComponentProps<typeof PaymentForm>['redirectPages'];

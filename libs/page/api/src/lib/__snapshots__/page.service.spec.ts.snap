@@ -1,10 +1,12 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PageService should create an page 1`] = `
+exports[`PageService > should create an page 1`] = `
 [
   {
     "data": {
       "hidden": false,
+      "hideFooter": undefined,
+      "hideHeader": undefined,
       "revisions": {
         "create": {
           "blocks": [
@@ -40,7 +42,7 @@ exports[`PageService should create an page 1`] = `
 ]
 `;
 
-exports[`PageService should create an page 2`] = `
+exports[`PageService > should create an page 2`] = `
 [
   {
     "title": {
@@ -60,7 +62,7 @@ exports[`PageService should create an page 2`] = `
 ]
 `;
 
-exports[`PageService should delete an page 1`] = `
+exports[`PageService > should delete an page 1`] = `
 [
   {
     "where": {
@@ -70,7 +72,7 @@ exports[`PageService should delete an page 1`] = `
 ]
 `;
 
-exports[`PageService should not override the original publication date if newer 1`] = `
+exports[`PageService > should not override the original publication date if newer 1`] = `
 [
   {
     "data": {
@@ -94,7 +96,7 @@ exports[`PageService should not override the original publication date if newer 
 ]
 `;
 
-exports[`PageService should override the original publication date if older 1`] = `
+exports[`PageService > should override the original publication date if older 1`] = `
 [
   {
     "data": {
@@ -118,7 +120,7 @@ exports[`PageService should override the original publication date if older 1`] 
 ]
 `;
 
-exports[`PageService should override the original publication date if the original date is in the future 1`] = `
+exports[`PageService > should override the original publication date if the original date is in the future 1`] = `
 [
   {
     "data": {
@@ -142,7 +144,7 @@ exports[`PageService should override the original publication date if the origin
 ]
 `;
 
-exports[`PageService should publish a revision 1`] = `
+exports[`PageService > should publish a revision 1`] = `
 [
   {
     "data": {
@@ -166,7 +168,7 @@ exports[`PageService should publish a revision 1`] = `
 ]
 `;
 
-exports[`PageService should query an page by slug 1`] = `
+exports[`PageService > should query an page by slug 1`] = `
 [
   {
     "orderBy": {
@@ -182,9 +184,9 @@ exports[`PageService should query an page by slug 1`] = `
 ]
 `;
 
-exports[`PageService should query pages based on filter 1`] = `undefined`;
+exports[`PageService > should query pages based on filter 1`] = `undefined`;
 
-exports[`PageService should query pages based on filter 2`] = `
+exports[`PageService > should query pages based on filter 2`] = `
 [
   {
     "cursor": undefined,
@@ -313,7 +315,7 @@ exports[`PageService should query pages based on filter 2`] = `
 ]
 `;
 
-exports[`PageService should query pages based on filter 3`] = `
+exports[`PageService > should query pages based on filter 3`] = `
 [
   {
     "orderBy": {
@@ -439,9 +441,9 @@ exports[`PageService should query pages based on filter 3`] = `
 ]
 `;
 
-exports[`PageService should query pages on all revisions 1`] = `undefined`;
+exports[`PageService > should query pages on all revisions 1`] = `undefined`;
 
-exports[`PageService should query pages on all revisions 2`] = `
+exports[`PageService > should query pages on all revisions 2`] = `
 [
   {
     "cursor": undefined,
@@ -523,7 +525,7 @@ exports[`PageService should query pages on all revisions 2`] = `
 ]
 `;
 
-exports[`PageService should query pages on all revisions 3`] = `
+exports[`PageService > should query pages on all revisions 3`] = `
 [
   {
     "orderBy": {
@@ -602,7 +604,7 @@ exports[`PageService should query pages on all revisions 3`] = `
 ]
 `;
 
-exports[`PageService should query pages using cursor based pagination 1`] = `
+exports[`PageService > should query pages using cursor based pagination 1`] = `
 [
   {
     "cursor": {
@@ -637,7 +639,7 @@ exports[`PageService should query pages using cursor based pagination 1`] = `
 ]
 `;
 
-exports[`PageService should query pages using cursor based pagination 2`] = `
+exports[`PageService > should query pages using cursor based pagination 2`] = `
 [
   {
     "orderBy": {
@@ -667,7 +669,7 @@ exports[`PageService should query pages using cursor based pagination 2`] = `
 ]
 `;
 
-exports[`PageService should return paginated pages 1`] = `
+exports[`PageService > should return paginated pages 1`] = `
 {
   "nodes": [
     {
@@ -684,7 +686,7 @@ exports[`PageService should return paginated pages 1`] = `
 }
 `;
 
-exports[`PageService should unpublish & archive all pending revisions on publish 1`] = `
+exports[`PageService > should unpublish & archive all pending revisions on publish 1`] = `
 [
   {
     "data": {
@@ -701,7 +703,7 @@ exports[`PageService should unpublish & archive all pending revisions on publish
 ]
 `;
 
-exports[`PageService should unpublish an page 1`] = `
+exports[`PageService > should unpublish an page 1`] = `
 [
   {
     "data": {
@@ -735,7 +737,7 @@ exports[`PageService should unpublish an page 1`] = `
 ]
 `;
 
-exports[`PageService should unpublish an page 2`] = `
+exports[`PageService > should unpublish an page 2`] = `
 [
   {
     "data": {
@@ -748,7 +750,7 @@ exports[`PageService should unpublish an page 2`] = `
 ]
 `;
 
-exports[`PageService should update an page 1`] = `
+exports[`PageService > should update an page 1`] = `
 [
   {
     "include": {
@@ -761,11 +763,13 @@ exports[`PageService should update an page 1`] = `
 ]
 `;
 
-exports[`PageService should update an page 2`] = `
+exports[`PageService > should update an page 2`] = `
 [
   {
     "data": {
       "hidden": false,
+      "hideFooter": undefined,
+      "hideHeader": undefined,
       "revisions": {
         "create": {
           "blocks": [
@@ -817,7 +821,7 @@ exports[`PageService should update an page 2`] = `
 ]
 `;
 
-exports[`PageService should update an page 3`] = `
+exports[`PageService > should update an page 3`] = `
 [
   {
     "title": {
@@ -837,7 +841,7 @@ exports[`PageService should update an page 3`] = `
 ]
 `;
 
-exports[`PageService version history should restore a revision as a new draft 1`] = `
+exports[`PageService > version history > should restore a revision as a new draft 1`] = `
 [
   {
     "data": {

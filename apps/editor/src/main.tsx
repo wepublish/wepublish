@@ -1,21 +1,27 @@
 import './polyfills';
 
-import { ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import * as Sentry from '@sentry/react';
 import { getApiClientV2, getSettings } from '@wepublish/editor/api';
 import {
   AuthProvider,
   FacebookProvider,
+  FeaturesProvider,
   InstagramProvider,
   TwitterProvider,
 } from '@wepublish/ui/editor';
+import { Locale } from 'date-fns';
+import { de, enGB, fr } from 'date-fns/locale';
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import { createRoot } from 'react-dom/client';
+import { useTranslation } from 'react-i18next';
 import { IconContext } from 'react-icons';
 
 import { App } from './app/app';
+import { EditorCommandPaletteProvider } from './app/commandPalette/editorCommandPalette';
 import { initI18N } from './app/i18n';
-import { theme } from './app/theme';
+import { createEditorTheme } from './app/theme';
 import { ElementID } from './shared/elementID';
 
 const { sentryDSN, apiURL, appName, appEnvironment } = getSettings();
@@ -46,6 +52,32 @@ if (sentryDSN) {
   Sentry.setTag('component', 'editor');
 }
 
+const DATE_LOCALES: Record<string, Locale> = { de, en: enGB, fr };
+
+Object.entries(DATE_LOCALES).forEach(([language, locale]) =>
+  registerLocale(language, locale)
+);
+
+const editorTheme = createEditorTheme();
+
+function ThemedApp() {
+  const { i18n } = useTranslation();
+
+  setDefaultLocale(DATE_LOCALES[i18n.language] ? i18n.language : 'en');
+
+  return (
+    <ThemeProvider
+      theme={editorTheme}
+      defaultMode="system"
+      noSsr
+      disableTransitionOnChange
+    >
+      <CssBaseline enableColorScheme />
+      <App />
+    </ThemeProvider>
+  );
+}
+
 const onDOMContentLoaded = async () => {
   const client = getApiClientV2();
 
@@ -58,18 +90,19 @@ const onDOMContentLoaded = async () => {
   root.render(
     <ApolloProvider client={client}>
       <AuthProvider>
-        <IconContext.Provider value={{ className: 'rs-icon' }}>
-          <FacebookProvider sdkLanguage={'en_US'}>
-            <InstagramProvider>
-              <TwitterProvider>
-                <ThemeProvider theme={theme}>
-                  <CssBaseline />
-                  <App />
-                </ThemeProvider>
-              </TwitterProvider>
-            </InstagramProvider>
-          </FacebookProvider>
-        </IconContext.Provider>
+        <FeaturesProvider>
+          <EditorCommandPaletteProvider>
+            <IconContext.Provider value={{ className: 'rs-icon' }}>
+              <FacebookProvider sdkLanguage={'en_US'}>
+                <InstagramProvider>
+                  <TwitterProvider>
+                    <ThemedApp />
+                  </TwitterProvider>
+                </InstagramProvider>
+              </FacebookProvider>
+            </IconContext.Provider>
+          </EditorCommandPaletteProvider>
+        </FeaturesProvider>
       </AuthProvider>
     </ApolloProvider>
   );

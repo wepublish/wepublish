@@ -1,6 +1,11 @@
 import { getArticleSEO } from '@wepublish/article/website';
-import { Article, Page } from '@wepublish/website/api';
-import { escape } from 'lodash';
+import {
+  FullArticleFragment,
+  FullPageFragment,
+  SlimArticleFragment,
+  SlimPageFragment,
+} from '@wepublish/website/api';
+import { buildUrlset } from './sitemap/xml';
 
 const SITEMAP_MAX_ENTRIES = 49999;
 
@@ -12,7 +17,11 @@ export type SitemapConfig = {
 
 export const generateSitemap =
   ({ lang = 'de', title, siteUrl }: SitemapConfig) =>
-  (articles: Article[], pages: Page[], pageUrls: string[]) => {
+  (
+    articles: (FullArticleFragment | SlimArticleFragment)[],
+    pages: (FullPageFragment | SlimPageFragment)[],
+    pageUrls: string[]
+  ) => {
     if (
       articles.length + pages.length + pageUrls.length >
       SITEMAP_MAX_ENTRIES
@@ -20,62 +29,29 @@ export const generateSitemap =
       throw new Error('Too many URLs for sitemap.xml');
     }
 
-    const sitemap = `
-    <?xml version="1.0" encoding="UTF-8"?>
-        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-
-        <url>
-            <loc>${siteUrl}</loc>
-            <changefreq>daily</changefreq>
-            <priority>1.0</priority>
-        </url>
-
-        ${pageUrls
-          .map(
-            pageUrl =>
-              `<url>
-                <loc>${pageUrl}</loc>
-                <changefreq>weekly</changefreq>
-                <priority>0.8</priority>
-            </url>`
-          )
-          .join('\n')}
-
-          ${pages
-            .map(page => {
-              return `
-              <url>
-                  <loc>${page.url}</loc>
-                  <lastmod>${page.latest.publishedAt}</lastmod>
-              </url>
-          `;
-            })
-            .join('\n')}
-
-        ${articles
-          .map(article => {
-            const seo = getArticleSEO(article);
-
-            return `
-            <url>
-                <loc>${article.url}</loc>
-                <lastmod>${article.latest.publishedAt}</lastmod>
-
-                <news:news>
-                    <news:publication>
-                        <news:name>${escape(title)}</news:name>
-                        <news:language>${lang}</news:language>
-                    </news:publication>
-
-                    <news:publication_date>${article.publishedAt}</news:publication_date>
-                    <news:title>${escape(seo.socialMediaTitle ?? '')}</news:title>
-                </news:news>
-            </url>
-        `;
-          })
-          .join('\n')}
-    </urlset>
-    `;
-
-    return sitemap.trim();
+    return buildUrlset(
+      [
+        { loc: siteUrl, changefreq: 'daily', priority: 1 },
+        ...pageUrls.map(pageUrl => ({
+          loc: pageUrl,
+          changefreq: 'weekly' as const,
+          priority: 0.8,
+        })),
+        ...pages.map(page => ({
+          loc: page.url,
+          lastmod: page.latest.publishedAt,
+        })),
+        ...articles.map(article => ({
+          loc: article.url,
+          lastmod: article.latest.publishedAt,
+          news: {
+            title:
+              getArticleSEO(article as FullArticleFragment).socialMediaTitle ??
+              '',
+            publicationDate: article.publishedAt ?? '',
+          },
+        })),
+      ],
+      { name: title, language: lang }
+    );
   };

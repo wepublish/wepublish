@@ -1,6 +1,9 @@
 /* eslint-disable i18next/no-literal-string */
 import styled from '@emotion/styled';
 import {
+  FormControl,
+  FormHelperText,
+  InputAdornment,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -11,13 +14,18 @@ import {
 import {
   ChangeEvent,
   ChangeEventHandler,
+  FocusEvent,
   FocusEventHandler,
   forwardRef,
+  KeyboardEvent,
   ReactNode,
   useCallback,
+  useId,
   useMemo,
+  useState,
 } from 'react';
 import { FieldError } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 type CssUnit = 'em' | 'rem' | 'px';
 export type UnitConfig = Record<
@@ -25,33 +33,26 @@ export type UnitConfig = Record<
   { min: number; max: number; step: number }
 >;
 
-const StyledSlider = styled(Slider)`
-  & .MuiSlider-markLabel[data-index='0'] {
-    transform: none;
-    top: 20px;
-  }
-  & .MuiSlider-markLabel[data-index='1'] {
-    transform: translateX(-100%);
-    top: 20px;
-  }
-`;
-
 const StyledTextField = styled(TextField)`
-  width: 130px;
+  width: 136px;
+  flex-shrink: 0;
 
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number']::-webkit-outer-spin-button {
-    display: none;
-  }
-
-  input[type='number'] {
-    -moz-appearance: textfield;
+  .MuiInputBase-root {
+    padding-right: 6px;
   }
 `;
 
-const StyledSelect = styled(Select)`
-  width: 100px;
-`;
+const unitSelectSx = {
+  fontSize: '0.875rem',
+  color: 'text.secondary',
+  '& .MuiSelect-select': { py: 0, pl: 0.5 },
+  '& .MuiSelect-select:focus-visible': {
+    outline: '2px solid',
+    outlineColor: 'primary.main',
+    outlineOffset: 2,
+    borderRadius: 1,
+  },
+};
 
 function parseCssLength(
   value: string | number | null | undefined,
@@ -90,10 +91,30 @@ function convertCssLength(num: number, from: CssUnit, to: CssUnit): number {
   return to === 'px' ? px : px / 16;
 }
 
-function formatCssLength(num: number, unit: CssUnit): string {
+function roundCssLength(num: number, unit: CssUnit): number {
   const decimals = unit === 'px' ? 1 : 3;
 
-  return `${parseFloat(num.toFixed(decimals))}${unit}`;
+  return parseFloat(num.toFixed(decimals));
+}
+
+function formatCssLength(num: number, unit: CssUnit): string {
+  return `${roundCssLength(num, unit)}${unit}`;
+}
+
+function clamp(num: number, { min, max }: { min: number; max: number }) {
+  return Math.min(max, Math.max(min, num));
+}
+
+function parseDraft(draft: string | null) {
+  const trimmed = draft?.trim().replace(',', '.');
+
+  if (!trimmed) {
+    return undefined;
+  }
+
+  const parsed = Number(trimmed);
+
+  return Number.isFinite(parsed) ? parsed : undefined;
 }
 
 type CssLengthSliderProps = {
@@ -106,112 +127,222 @@ type CssLengthSliderProps = {
   onChange: ChangeEventHandler<HTMLInputElement>;
   error?: FieldError;
   disabled?: boolean;
+  label?: string;
+  unitLabel?: string;
+  describedBy?: string;
 };
 
-const stackSx = { alignItems: 'center', width: '100%' };
+const rootSx = { width: '100%' };
+const stackSx = { alignItems: 'center', width: '100%', gap: 2 };
+const sliderSx = { flex: 1, minWidth: 0 };
 
 export const LengthSlider = forwardRef<HTMLInputElement, CssLengthSliderProps>(
   (
-    { name, value, defaultUnit, unitConfig, onChange, onBlur, error, disabled },
+    {
+      name,
+      value,
+      defaultUnit,
+      unitConfig,
+      onChange,
+      onBlur,
+      error,
+      disabled,
+      label,
+      unitLabel,
+      describedBy,
+    },
     ref
   ) => {
+    const { t } = useTranslation();
+    const errorId = useId();
+    const isEmpty = value == null || value === '';
+    const notSet = t('websiteSettings.theme.typography.notSet');
     const { num, unit } = useMemo(
       () => parseCssLength(value, defaultUnit),
       [value, defaultUnit]
     );
+    const [draft, setDraft] = useState<string | null>(null);
 
     const config = unitConfig[unit];
+    const shown = roundCssLength(num, unit);
+    const errorMessage = error?.message;
+    const ariaDescribedBy =
+      [describedBy, errorMessage ? errorId : undefined]
+        .filter(Boolean)
+        .join(' ') || undefined;
 
-    const marks = useMemo(
-      () => [
-        { value: config.min, label: `${config.min}${unit}` },
-        { value: config.max, label: `${config.max}${unit}` },
-      ],
-      [config.min, config.max, unit]
+    const emit = useCallback(
+      (next: string) =>
+        onChange({
+          target: { value: next },
+        } as ChangeEvent<HTMLInputElement>),
+      [onChange]
     );
 
     const valueLabelFormat = useCallback((v: number) => `${v}${unit}`, [unit]);
 
     const handleSliderChange = useCallback(
       (_: Event, val: number | number[]) => {
-        onChange({
-          target: { value: formatCssLength(val as number, unit) },
-        } as ChangeEvent<HTMLInputElement>);
+        emit(formatCssLength(val as number, unit));
       },
-      [onChange, unit]
+      [emit, unit]
     );
 
     const handleTextChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        const parsed = parseFloat(e.target.value);
+        setDraft(e.target.value);
 
-        if (!isNaN(parsed)) {
-          onChange({
-            target: { value: formatCssLength(parsed, unit) },
-          } as ChangeEvent<HTMLInputElement>);
+        const parsed = parseDraft(e.target.value);
+
+        if (parsed !== undefined) {
+          emit(formatCssLength(parsed, unit));
         }
       },
-      [onChange, unit]
+      [emit, unit]
+    );
+
+    const handleTextBlur = useCallback(
+      (e: FocusEvent<HTMLInputElement>) => {
+        const parsed = parseDraft(draft);
+
+        if (parsed !== undefined) {
+          const clamped = clamp(roundCssLength(parsed, unit), config);
+
+          if (clamped !== roundCssLength(parsed, unit)) {
+            emit(formatCssLength(clamped, unit));
+          }
+        }
+
+        setDraft(null);
+        onBlur(e);
+      },
+      [config, draft, emit, onBlur, unit]
+    );
+
+    const notSetText = useCallback(() => notSet, [notSet]);
+
+    const handleKeyDown = useCallback(
+      (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') {
+          return;
+        }
+
+        e.preventDefault();
+
+        const current = parseDraft(draft) ?? num;
+        const step = config.step * (e.shiftKey ? 10 : 1);
+        const next = clamp(
+          roundCssLength(current + (e.key === 'ArrowUp' ? step : -step), unit),
+          config
+        );
+
+        setDraft(null);
+        emit(formatCssLength(next, unit));
+      },
+      [config, draft, emit, num, unit]
     );
 
     const handleUnitChange = useCallback(
       (e: SelectChangeEvent<unknown>) => {
         const newUnit = e.target.value as CssUnit;
-        const converted = convertCssLength(num, unit, newUnit);
+        const converted = roundCssLength(
+          convertCssLength(num, unit, newUnit),
+          newUnit
+        );
 
-        onChange({
-          target: { value: formatCssLength(converted, newUnit) },
-        } as ChangeEvent<HTMLInputElement>);
+        setDraft(null);
+        emit(formatCssLength(clamp(converted, unitConfig[newUnit]), newUnit));
       },
-      [onChange, num, unit]
+      [emit, num, unit, unitConfig]
     );
 
     return (
       <Stack
-        direction="row"
-        spacing={1}
-        sx={stackSx}
+        direction="column"
+        sx={rootSx}
       >
-        <StyledSlider
-          name={name}
-          value={num}
-          onChange={handleSliderChange}
-          min={config.min}
-          max={config.max}
-          step={config.step}
-          color="primary"
-          size="small"
-          valueLabelDisplay="auto"
-          valueLabelFormat={valueLabelFormat}
-          marks={marks}
-          onBlur={onBlur}
-          disabled={disabled}
-        />
-
-        <StyledTextField
-          ref={ref}
-          name={`${name}.input`}
-          error={!!error}
-          value={num}
-          size="small"
-          type="number"
-          onChange={handleTextChange}
-          onBlur={onBlur}
-          disabled={disabled}
-        />
-
-        <StyledSelect
-          name={`${name}.unit`}
-          value={unit}
-          size="small"
-          onChange={handleUnitChange}
-          onBlur={onBlur}
-          disabled={disabled}
+        <Stack
+          direction="row"
+          sx={stackSx}
         >
-          <MenuItem value="em">em</MenuItem>
-          <MenuItem value="rem">rem</MenuItem>
-          <MenuItem value="px">px</MenuItem>
-        </StyledSelect>
+          <Slider
+            name={name}
+            value={isEmpty ? config.min : num}
+            onChange={handleSliderChange}
+            min={config.min}
+            max={config.max}
+            step={config.step}
+            color="primary"
+            size="small"
+            valueLabelDisplay="auto"
+            valueLabelFormat={valueLabelFormat}
+            onBlur={onBlur}
+            disabled={disabled}
+            aria-label={label}
+            getAriaValueText={isEmpty ? notSetText : undefined}
+            slotProps={{ input: { 'aria-describedby': ariaDescribedBy } }}
+            sx={sliderSx}
+          />
+
+          <StyledTextField
+            inputRef={ref}
+            name={`${name}.input`}
+            error={!!error}
+            value={draft ?? (isEmpty ? '' : String(shown))}
+            placeholder={isEmpty ? notSet : undefined}
+            onChange={handleTextChange}
+            onBlur={handleTextBlur}
+            disabled={disabled}
+            slotProps={{
+              htmlInput: {
+                role: 'spinbutton',
+                inputMode: 'decimal',
+                autoComplete: 'off',
+                onKeyDown: handleKeyDown,
+                'aria-label': label,
+                'aria-describedby': ariaDescribedBy,
+                'aria-valuenow': isEmpty ? undefined : shown,
+                'aria-valuemin': config.min,
+                'aria-valuemax': config.max,
+                'aria-valuetext': isEmpty ? notSet : `${shown}${unit}`,
+              },
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <FormControl
+                      variant="standard"
+                      size="small"
+                      disabled={disabled}
+                    >
+                      <Select
+                        name={`${name}.unit`}
+                        value={unit}
+                        onChange={handleUnitChange}
+                        onBlur={onBlur}
+                        disableUnderline
+                        inputProps={{ 'aria-label': unitLabel }}
+                        sx={unitSelectSx}
+                      >
+                        <MenuItem value="em">em</MenuItem>
+                        <MenuItem value="rem">rem</MenuItem>
+                        <MenuItem value="px">px</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        </Stack>
+
+        {errorMessage && (
+          <FormHelperText
+            id={errorId}
+            error
+          >
+            {errorMessage}
+          </FormHelperText>
+        )}
       </Stack>
     );
   }

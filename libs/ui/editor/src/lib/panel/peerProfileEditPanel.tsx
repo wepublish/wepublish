@@ -1,24 +1,21 @@
-import styled from '@emotion/styled';
+import { useApolloClient, useMutation } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Alert, Button, Drawer, FormLabel, TextField } from '@mui/material';
 import {
   FullImageFragment,
   Maybe,
   PeerProfileDocument,
   PeerProfileQuery,
-  usePeerProfileQuery,
-  useUpdatePeerProfileMutation,
+  UpdatePeerProfileDocument,
 } from '@wepublish/editor/api';
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
-  Button,
-  Drawer,
-  Form as RForm,
-  Message as RMessage,
-  Panel as RPanel,
-  Schema,
-  toaster,
-} from 'rsuite';
-import { FormInstance } from 'rsuite/esm/Form';
+  CanGetPeerProfile,
+  CanUpdatePeerProfile,
+} from '@wepublish/permissions';
+import { useEffect, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 
 import {
   ChooseEditImage,
@@ -27,7 +24,19 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { RichTextBlock, RichTextBlockValue } from '../blocks';
+import {
+  DRAWER_WIDTHS,
+  DrawerActions,
+  DrawerBody,
+  DrawerForm,
+  DrawerHeader,
+  DrawerTitle,
+  FormFields,
+  FormSectionTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { getOperationNameFromDocument } from '../utility';
 import { ImageEditPanel, ImageEditPanelProps } from './imageEditPanel';
@@ -35,167 +44,137 @@ import { ImageSelectPanel } from './imageSelectPanel';
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo'];
 
-const { Group, Label, Control } = RForm;
-
-const Form = styled(RForm)`
-  height: 100%;
-`;
-
-const HiddenFontControl = styled(Control)`
-  display: none;
-`;
-
-const BoxWrapper = styled.div`
-  border: solid 1px #cad5e4;
-  border-radius: 8px;
-  padding: 12px;
-  margin-top: 4px;
-`;
-
-const Panel = styled(RPanel)`
-  overflow: initial;
-`;
-
-const Message = styled(RMessage)`
-  margin-top: 5px;
-`;
+const EMPTY_PEER_PROFILE = {
+  name: '',
+  themeColor: '',
+  themeFontColor: '',
+  callToActionText: undefined as RichTextBlockValue['richText'] | undefined,
+  callToActionTextURL: '',
+  callToActionImage: undefined as Maybe<FullImageFragment> | undefined,
+  callToActionImageURL: '',
+  logoImage: undefined as PeerProfileImage | undefined,
+  squareLogoImage: undefined as PeerProfileImage | undefined,
+};
 
 function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
-  const isAuthorized = useAuthorisation('CAN_UPDATE_PEER_PROFILE');
+  const { t } = useTranslation();
+  const isAuthorized = useAuthorisation(CanUpdatePeerProfile.id);
+  const client = useApolloClient();
+
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-
-  const [logoImage, setLogoImage] = useState<PeerProfileImage>();
-  const [squareLogoImage, setSquareLogoImage] = useState<PeerProfileImage>();
-  const [name, setName] = useState('');
-  const [themeColor, setThemeColor] = useState('');
-  const [themeFontColor, setThemeFontColor] = useState('');
-  const [callToActionText, setCallToActionText] =
-    useState<RichTextBlockValue['richText']>();
-  const [callToActionTextURL, setCallToActionTextURL] = useState('');
-  const [callToActionImage, setCallToActionImage] =
-    useState<Maybe<FullImageFragment>>();
-  const [callToActionImageURL, setCallToActionImageURL] = useState('');
   const [whatImageChange, setWhatImageChange] = useState<
     'logo' | 'squareLogo' | 'cta'
   >();
+  const [fetchError, setFetchError] = useState<Error>();
+
+  const schema = z.object({
+    name: z.string().min(1, t('errorMessages.noNameErrorMessage')),
+    themeColor: z.string(),
+    themeFontColor: z.string(),
+    callToActionText: z.any(),
+    callToActionTextURL: z
+      .string()
+      .min(1, t('errorMessages.noUrlErrorMessage'))
+      .url(t('errorMessages.invalidUrlErrorMessage')),
+    callToActionImage: z.any().refine(image => image != null, {
+      message: t('errorMessages.noCallToActionImageErrorMessage'),
+    }),
+    callToActionImageURL: z
+      .string()
+      .min(1, t('errorMessages.noUrlErrorMessage'))
+      .url(t('errorMessages.invalidUrlErrorMessage')),
+    logoImage: z
+      .any()
+      .refine(image => image != null, t('errorMessages.noImageErrorMessage')),
+    squareLogoImage: z
+      .any()
+      .refine(image => image != null, t('errorMessages.noImageErrorMessage')),
+  });
 
   const {
-    data,
-    loading: isLoading,
-    error: fetchError,
-  } = usePeerProfileQuery({});
+    control,
+    handleSubmit,
+    setValue,
+    trigger,
+    formState: { isLoading },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: async () => {
+      try {
+        const { data } = await client.query({ query: PeerProfileDocument });
+        const peerProfile = data?.peerProfile;
 
-  const [updateSettings, { loading: isSaving, error: saveError }] =
-    useUpdatePeerProfileMutation({
+        return peerProfile ?
+            {
+              name: peerProfile.name,
+              themeColor: peerProfile.themeColor,
+              themeFontColor: peerProfile.themeFontColor,
+              callToActionText: peerProfile.callToActionText,
+              callToActionTextURL: peerProfile.callToActionURL,
+              callToActionImage: peerProfile.callToActionImage,
+              callToActionImageURL: peerProfile.callToActionImageURL ?? '',
+              logoImage: peerProfile.logo,
+              squareLogoImage: peerProfile.squareLogo,
+            }
+          : EMPTY_PEER_PROFILE;
+      } catch (error) {
+        setFetchError(error as Error);
+
+        return EMPTY_PEER_PROFILE;
+      }
+    },
+  });
+
+  const logoImage = useWatch({ control, name: 'logoImage' });
+  const squareLogoImage = useWatch({ control, name: 'squareLogoImage' });
+  const callToActionImage = useWatch({ control, name: 'callToActionImage' });
+
+  const [updateSettings, { loading: isSaving, error: saveError }] = useMutation(
+    UpdatePeerProfileDocument,
+    {
       refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)],
-    });
-  const isDisabled = isLoading || isSaving || !isAuthorized;
-
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    if (data?.peerProfile) {
-      setLogoImage(data.peerProfile.logo);
-      setSquareLogoImage(data.peerProfile.squareLogo);
-      setName(data.peerProfile.name);
-      setThemeColor(data.peerProfile.themeColor);
-      setThemeFontColor(data.peerProfile.themeFontColor);
-      setCallToActionText(data.peerProfile.callToActionText);
-      setCallToActionTextURL(data.peerProfile.callToActionURL);
-      setCallToActionImage(data?.peerProfile?.callToActionImage);
-      setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '');
     }
-  }, [data?.peerProfile]);
+  );
+  const isDisabled = isLoading || isSaving || !isAuthorized;
 
   useEffect(() => {
     const error = fetchError?.message ?? saveError?.message;
-    if (error)
-      toaster.push(
-        <RMessage
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </RMessage>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [fetchError, saveError]);
 
-  async function handleSave() {
+  async function handleSave(values: z.infer<typeof schema>) {
     await updateSettings({
       variables: {
-        name,
-        logoID: logoImage!.id,
-        squareLogoId: squareLogoImage!.id,
-        themeColor,
-        themeFontColor,
-        callToActionText: callToActionText!,
-        callToActionURL: callToActionTextURL,
-        callToActionImageID: callToActionImage!.id,
-        callToActionImageURL,
+        name: values.name,
+        logoID: values.logoImage.id,
+        squareLogoId: values.squareLogoImage.id,
+        themeColor: values.themeColor,
+        themeFontColor: values.themeFontColor,
+        callToActionText: values.callToActionText,
+        callToActionURL: values.callToActionTextURL,
+        callToActionImageID: values.callToActionImage.id,
+        callToActionImageURL: values.callToActionImageURL,
       },
     });
 
-    toaster.push(
-      <Message
-        type="success"
-        showIcon
-        closable
-        duration={2000}
-      >
-        {t('peerList.panels.peerInfoUpdated')}
-      </Message>
-    );
+    enqueueSnackbar(t('peerList.panels.peerInfoUpdated'), {
+      variant: 'success',
+      autoHideDuration: 2000,
+    });
     onClose?.();
   }
 
-  const form = useRef<FormInstance>(null);
-  const { StringType, ObjectType } = Schema.Types;
-
-  const validationModel = Schema.Model({
-    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
-    callToActionTextURL: StringType()
-      .isURL(t('errorMessages.invalidUrlErrorMessage'))
-      .isRequired(t('errorMessages.noUrlErrorMessage')),
-    callToActionImage: ObjectType().isRequired(
-      t('errorMessages.noCallToActionImageErrorMessage')
-    ),
-    callToActionImageURL: StringType()
-      .isURL(t('errorMessages.invalidUrlErrorMessage'))
-      .isRequired(t('errorMessages.noUrlErrorMessage')),
-    profileImg: StringType().isRequired(t('errorMessages.noImageErrorMessage')),
-    squareProfileImg: StringType().isRequired(
-      t('errorMessages.noImageErrorMessage')
-    ),
-  });
-
   return (
-    <Form
-      onSubmit={validationPassed => validationPassed && handleSave()}
-      fluid
-      disabled={isDisabled}
-      ref={form}
-      model={validationModel}
-      formValue={{
-        name,
-        callToActionText,
-        callToActionImage,
-        callToActionTextURL,
-        callToActionImageURL,
-        profileImg: logoImage?.id,
-        squareProfileImg: squareLogoImage?.id,
-      }}
-    >
-      <Drawer.Header>
-        <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
-        <Drawer.Actions>
-          <PermissionControl
-            qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}
-          >
+    <DrawerForm onSubmit={handleSubmit(handleSave)}>
+      <DrawerHeader>
+        <DrawerTitle>{t('peerList.panels.editPeerInfo')}</DrawerTitle>
+        <DrawerActions>
+          <PermissionControl qualifyingPermissions={[CanUpdatePeerProfile.id]}>
             <Button
-              appearance="primary"
+              variant="contained"
               disabled={isDisabled}
               type="submit"
             >
@@ -203,173 +182,226 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
             </Button>
           </PermissionControl>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('peerList.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
-        <Panel
-          bodyFill
-          header={toggleRequiredLabel(t('peerList.panels.image'))}
-        >
-          <ChooseEditImage
-            image={logoImage}
-            header={''}
-            top={0}
-            left={20}
-            disabled={isLoading}
-            openChooseModalOpen={() => {
-              setWhatImageChange('logo');
-              setChooseModalOpen(true);
-            }}
-            openEditModalOpen={() => {
-              setWhatImageChange('logo');
-              setEditModalOpen(true);
-            }}
-            removeImage={() => setLogoImage(undefined)}
-          />
-          <Group>
-            <HiddenFontControl
-              name="profileImg"
-              value={logoImage?.id || ''}
+      <DrawerBody>
+        {!isLoading && (
+          <FormFields>
+            <FormLabel>
+              {toggleRequiredLabel(t('peerList.panels.image'))}
+            </FormLabel>
+
+            <ChooseEditImage
+              onSelect={(value: any) => {
+                setChooseModalOpen(false);
+
+                switch (whatImageChange) {
+                  case 'cta': {
+                    setValue('callToActionImage', value);
+                    break;
+                  }
+                  case 'logo': {
+                    setValue('logoImage', value);
+                    break;
+                  }
+                  case 'squareLogo': {
+                    setValue('squareLogoImage', value);
+                    break;
+                  }
+                }
+
+                trigger();
+              }}
+              image={logoImage}
+              disabled={isLoading}
+              openChooseModalOpen={() => {
+                setWhatImageChange('logo');
+                setChooseModalOpen(true);
+              }}
+              openEditModalOpen={() => {
+                setWhatImageChange('logo');
+                setEditModalOpen(true);
+              }}
+              removeImage={() => setValue('logoImage', undefined)}
             />
-          </Group>
-        </Panel>
 
-        <Panel
-          bodyFill
-          header={toggleRequiredLabel(t('peerList.panels.squareImage'))}
-        >
-          <ChooseEditImage
-            image={squareLogoImage}
-            header={''}
-            top={0}
-            left={20}
-            disabled={isLoading}
-            openChooseModalOpen={() => {
-              setWhatImageChange('squareLogo');
-              setChooseModalOpen(true);
-            }}
-            openEditModalOpen={() => {
-              setWhatImageChange('squareLogo');
-              setEditModalOpen(true);
-            }}
-            removeImage={() => setSquareLogoImage(undefined)}
-          />
-          <Group>
-            <HiddenFontControl
-              name="squareProfileImg"
-              value={squareLogoImage?.id || ''}
+            <FormLabel>
+              {toggleRequiredLabel(t('peerList.panels.squareImage'))}
+            </FormLabel>
+
+            <ChooseEditImage
+              image={squareLogoImage}
+              disabled={isLoading}
+              openChooseModalOpen={() => {
+                setWhatImageChange('squareLogo');
+                setChooseModalOpen(true);
+              }}
+              openEditModalOpen={() => {
+                setWhatImageChange('squareLogo');
+                setEditModalOpen(true);
+              }}
+              removeImage={() => setValue('squareLogoImage', undefined)}
             />
-          </Group>
-        </Panel>
 
-        <Panel header={t('peerList.panels.information')}>
-          <Group controlId="peerListName">
-            <Label>{toggleRequiredLabel(t('peerList.panels.name'))}</Label>
-            <Control
+            <FormSectionTitle>
+              {t('peerList.panels.information')}
+            </FormSectionTitle>
+
+            <Controller
+              control={control}
               name="name"
-              value={name}
-              onChange={(value: string) => setName(value)}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label={toggleRequiredLabel(t('peerList.panels.name'))}
+                  disabled={isDisabled}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
             />
-          </Group>
-          <Group controlId="peerListThemeColor">
-            <Label>{t('peerList.panels.themeColor')}</Label>
-            <ColorPicker
-              disabled={isDisabled}
-              setColor={color => {
-                setThemeColor(color);
-              }}
-              currentColor={themeColor}
-            />
-          </Group>
-          <Group controlId="peerListThemeFontColor">
-            <Label>{t('peerList.panels.themeFontColor')}</Label>
-            <ColorPicker
-              disabled={isDisabled}
-              setColor={color => {
-                setThemeFontColor(color);
-              }}
-              currentColor={themeFontColor}
-            />
-          </Group>
 
-          <Label>{t('peerList.panels.callToActionText')}</Label>
-          <BoxWrapper>
-            <Group controlId="peerListCallToAction">
-              <Label>{t('peerList.panels.text')}</Label>
-              <Control
-                name="callToActionText"
-                value={callToActionText}
-                onChange={setCallToActionText}
-                accepter={RichTextBlock}
-                disabled={isDisabled}
+            <div>
+              <FormLabel>
+                {t('peerList.panels.themeColor')}{' '}
+                <InfoTooltip text={t('peerList.panels.themeColorInfo')} />
+              </FormLabel>
+              <Controller
+                control={control}
+                name="themeColor"
+                render={({ field }) => (
+                  <ColorPicker
+                    {...field}
+                    value={field.value ?? ''}
+                    disabled={isDisabled}
+                  />
+                )}
               />
-            </Group>
-            <Group>
-              <Control
-                placeholder={t('peerList.panels.URL')}
-                name="callToActionTextURL"
-                value={callToActionTextURL}
-                onChange={setCallToActionTextURL}
-              />
-            </Group>
-          </BoxWrapper>
+            </div>
 
-          <br />
+            <div>
+              <FormLabel>{t('peerList.panels.themeFontColor')}</FormLabel>
+              <Controller
+                control={control}
+                name="themeFontColor"
+                render={({ field }) => (
+                  <ColorPicker
+                    {...field}
+                    value={field.value ?? ''}
+                    disabled={isDisabled}
+                  />
+                )}
+              />
+            </div>
 
-          <Label>
-            {toggleRequiredLabel(t('peerList.panels.callToActionImage'))}
-          </Label>
-          <BoxWrapper>
-            <Group controlId="peerListImage">
-              <Label>{toggleRequiredLabel(t('peerList.panels.image'))}</Label>
-              <ChooseEditImage
-                image={callToActionImage}
-                header={''}
-                top={0}
-                left={20}
-                disabled={isLoading}
-                openChooseModalOpen={() => {
-                  setWhatImageChange('cta');
-                  setChooseModalOpen(true);
-                }}
-                openEditModalOpen={() => {
-                  setWhatImageChange('cta');
-                  setEditModalOpen(true);
-                }}
-                removeImage={() => setCallToActionImage(undefined)}
-              />
-              <HiddenFontControl
-                name="callToActionImage"
-                value={callToActionImage?.filename}
-              />
-            </Group>
-            <Group>
-              <Control
-                placeholder={t('peerList.panels.URL')}
-                name="callToActionImageURL"
-                value={callToActionImageURL}
-                onChange={setCallToActionImageURL}
-              />
-              <Message
-                showIcon
-                type="info"
-              >
-                {t('peerList.panels.ctaImageInfo')}
-              </Message>
-            </Group>
-          </BoxWrapper>
-        </Panel>
-      </Drawer.Body>
+            <div>
+              <FormLabel>
+                {t('peerList.panels.callToActionText')}{' '}
+                <InfoTooltip text={t('peerList.panels.callToActionInfo')} />
+              </FormLabel>
+
+              <FormFields>
+                <div>
+                  <FormLabel>{t('peerList.panels.text')}</FormLabel>
+
+                  <Controller
+                    control={control}
+                    name="callToActionText"
+                    render={({ field }) => (
+                      <RichTextBlock
+                        value={field.value}
+                        onChange={field.onChange}
+                        disabled={isDisabled}
+                      />
+                    )}
+                  />
+                </div>
+
+                <Controller
+                  control={control}
+                  name="callToActionTextURL"
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      placeholder={t('peerList.panels.URL')}
+                      disabled={isDisabled}
+                      error={Boolean(error)}
+                      helperText={error?.message}
+                      fullWidth
+                    />
+                  )}
+                />
+              </FormFields>
+            </div>
+
+            <div>
+              <FormLabel>
+                {toggleRequiredLabel(t('peerList.panels.callToActionImage'))}
+              </FormLabel>
+
+              <FormFields>
+                <div>
+                  <FormLabel>
+                    {toggleRequiredLabel(t('peerList.panels.image'))}
+                  </FormLabel>
+                  <ChooseEditImage
+                    image={callToActionImage}
+                    disabled={isLoading}
+                    openChooseModalOpen={() => {
+                      setWhatImageChange('cta');
+                      setChooseModalOpen(true);
+                    }}
+                    openEditModalOpen={() => {
+                      setWhatImageChange('cta');
+                      setEditModalOpen(true);
+                    }}
+                    removeImage={() => setValue('callToActionImage', undefined)}
+                  />
+                </div>
+
+                <div>
+                  <Controller
+                    control={control}
+                    name="callToActionImageURL"
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        placeholder={t('peerList.panels.URL')}
+                        disabled={isDisabled}
+                        error={Boolean(error)}
+                        helperText={error?.message}
+                        fullWidth
+                      />
+                    )}
+                  />
+                  <Alert severity="info">
+                    {t('peerList.panels.ctaImageInfo')}
+                  </Alert>
+                </div>
+              </FormFields>
+            </div>
+          </FormFields>
+        )}
+      </DrawerBody>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -379,29 +411,35 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
 
             switch (whatImageChange) {
               case 'cta': {
-                setCallToActionImage(value);
+                setValue('callToActionImage', value);
                 break;
               }
               case 'logo': {
-                setLogoImage(value);
+                setValue('logoImage', value);
                 break;
               }
               case 'squareLogo': {
-                setSquareLogoImage(value);
+                setValue('squareLogoImage', value);
                 break;
               }
             }
 
-            setTimeout(() => {
-              form.current?.check?.();
-            }, 500);
+            trigger();
           }}
         />
       </Drawer>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => setEditModalOpen(false)}
       >
         {(logoImage || squareLogoImage || callToActionImage) && (
@@ -416,11 +454,11 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
           />
         )}
       </Drawer>
-    </Form>
+    </DrawerForm>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_PEER_PROFILE',
-  'CAN_UPDATE_PEER_PROFILE',
+  CanGetPeerProfile.id,
+  CanUpdatePeerProfile.id,
 ])(PeerInfoEditPanel);
 export { CheckedPermissionComponent as PeerInfoEditPanel };

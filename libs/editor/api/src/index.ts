@@ -1,4 +1,4 @@
-export * from './lib/graphql';
-export * from './lib/schemas';
-export { default as possibleTypes } from './lib/graphql';
+export * from './lib/gql/graphql';
+export * from './lib/schema-types';
+export { default as possibleTypes } from './lib/possible-types';
 export * from './lib/setup';

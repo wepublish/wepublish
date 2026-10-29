@@ -1,121 +1,172 @@
-import { ApolloError } from '@apollo/client';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Alert } from '@mui/material';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Alert,
+  Button as RButton,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  MenuItem,
+  TextField,
+  Typography,
+} from '@mui/material';
+import {
+  CancelSubscriptionDocument,
+  CreateSubscriptionDocument,
   Currency,
   DeactivationFragment,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullSubscriptionFragment,
   FullUserFragment,
-  InvoiceFragment,
+  InvoicesDocument,
+  MemberPlanListDocument,
+  PaymentMethodListDocument,
   PaymentPeriodicity,
   PropertyInput,
+  ReactivateSubscriptionDocument,
+  RenewSubscriptionDocument,
+  RevertSubscriptionUpgradeDocument,
+  SubscriptionCancellationMailDocument,
+  SubscriptionCreationMailDocument,
   SubscriptionDeactivationReason,
-  useCancelSubscriptionMutation,
-  useCreateSubscriptionMutation,
-  useInvoicesQuery,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
-  useRenewSubscriptionMutation,
-  useSubscriptionQuery,
-  useUpdateSubscriptionMutation,
-  useUserQuery,
+  SubscriptionDocument,
+  UpdateSubscriptionDocument,
+  UserDocument,
 } from '@wepublish/editor/api';
 import {
+  CanCancelSubscription,
+  CanCreateSubscription,
+  CanGetSubscription,
+  CanGetSubscriptions,
+} from '@wepublish/permissions';
+import {
   ALL_PAYMENT_PERIODICITIES,
-  getMonthlyEquivalentRange,
-  PAYMENT_PERIODICITY_MONTHS,
   createCheckedPermissionComponent,
   CurrencyInput,
-  DescriptionList,
-  DescriptionListItem,
+  DatePicker,
+  enqueueSnackbar,
+  FormFields,
+  getMonthlyEquivalentRange,
+  InfoTooltip,
   InvoiceListPanel,
-  ListViewActions,
-  ListViewContainer as ListViewContainerDefault,
-  ListViewHeader,
+  Link,
+  PAYMENT_PERIODICITY_MONTHS,
   PermissionControl,
+  SingleViewTitle,
+  skipMailFor,
   TableWrapper,
   toggleRequiredLabel,
+  useActionMailQuestion,
   useAuthorisation,
   UserSearch,
   UserSubscriptionDeactivatePanel,
 } from '@wepublish/ui/editor';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   MdAutoFixHigh,
   MdCheck,
-  MdChevronLeft,
   MdOpenInNew,
+  MdRestartAlt,
+  MdUndo,
   MdUnpublished,
 } from 'react-icons/md';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import {
-  Button as RButton,
-  Col,
-  DatePicker,
-  Form as RForm,
-  Grid as RGrid,
-  IconButton,
-  Message,
-  Modal,
-  Panel as RPanel,
-  Row,
-  Schema,
-  SelectPicker,
-  toaster,
-  Toggle,
-} from 'rsuite';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { z } from 'zod';
 
-const { Group, Label, Control, Text } = RForm;
-
-const Form = styled(RForm)`
-  height: 100%;
-`;
-
-const FormLabelMarginLeft = styled(Label)`
-  margin-left: 10px;
-`;
+import { ReactivateSubscriptionModal } from './reactivateSubscriptionModal';
 
 const Button = styled(RButton)`
-  margin-top: 10px;
+  margin-top: 8px;
 `;
 
-const Grid = styled(RGrid)`
-  padding-right: 0px;
-`;
-
-const RowPaddingTop = styled(Row)`
-  padding-top: 12px;
-`;
-
-const ListViewContainer = styled(ListViewContainerDefault)`
-  grid-template-columns: 1fr 1fr;
-`;
-
-const UserFormGrid = styled(RGrid)`
+const Body = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-content: start;
   width: 100%;
-  padding-left: 0px;
-  height: auto;
-  overflow-y: auto;
-  margin-top: 2rem;
-  padding-bottom: 2rem;
+  padding-bottom: ${({ theme }) => theme.spacing(4)};
 `;
 
-const ButtonMarginRight = styled(Button)`
-  margin-right: 10px;
+const Columns = styled('div')`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-items: start;
+
+  ${({ theme }) => theme.breakpoints.down('lg')} {
+    grid-template-columns: minmax(0, 1fr);
+  }
 `;
 
-const IconButtonMarginRight = styled(IconButton)`
-  margin-right: 10px;
-  margin-top: 10px;
+const CardFooter = styled(CardActions)`
+  padding: ${({ theme }) => theme.spacing(0, 2, 2)};
+`;
+
+const ExternalLinkIcon = styled(MdOpenInNew)`
+  margin-left: ${({ theme }) => theme.spacing(0.5)};
+`;
+
+const TwoUp = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: ${({ theme }) => theme.spacing(3)};
+  align-items: start;
 `;
 
 export interface SubscriptionEditViewProps {
   onClose?(): void;
   onSave?(subscription: FullSubscriptionFragment): void;
 }
+
+const EMPTY_SUBSCRIPTION = {
+  user: null as FullUserFragment | null,
+  memberPlan: undefined as FullMemberPlanFragment | undefined,
+  paymentMethod: undefined as FullPaymentMethodFragment | undefined,
+  paymentPeriodicity: PaymentPeriodicity.Yearly,
+  monthlyAmount: 500,
+  autoRenew: false,
+  startsAt: new Date(),
+  paidUntil: null as Date | null,
+  properties: [] as PropertyInput[],
+  deactivation: null as DeactivationFragment | null,
+  extendable: false,
+  currency: Currency.Chf,
+};
+
+const periodMinAmountOf = (
+  memberPlan: FullMemberPlanFragment | null | undefined,
+  paymentPeriodicity: PaymentPeriodicity
+): number => {
+  if (!memberPlan) {
+    return 0;
+  }
+
+  const months = PAYMENT_PERIODICITY_MONTHS[paymentPeriodicity];
+  const override = memberPlan.periodicityPricing?.find(
+    price => price.periodicity === paymentPeriodicity && price.amountMin != null
+  );
+
+  return (
+    override?.amountMin ??
+    Math.round(
+      getMonthlyEquivalentRange(memberPlan.periodicityPricing)
+        .amountPerMonthMin * months
+    )
+  );
+};
 
 function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const { t } = useTranslation();
@@ -127,75 +178,173 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
   const { id } = params;
 
-  const isAuthorized = useAuthorisation('CAN_CREATE_SUBSCRIPTION');
+  const isAuthorized = useAuthorisation(CanCreateSubscription.id);
 
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] =
     useState<boolean>(false);
+  const [isReactivationModalOpen, setReactivationModalOpen] =
+    useState<boolean>(false);
+  const [isRevertUpgradeModalOpen, setRevertUpgradeModalOpen] =
+    useState<boolean>(false);
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false);
-  const [user, setUser] = useState<FullUserFragment | null>();
-  const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>();
-  const [paymentPeriodicity, setPaymentPeriodicity] =
-    useState<PaymentPeriodicity>(PaymentPeriodicity.Yearly);
-  const [monthlyAmount, setMonthlyAmount] = useState<number>(500);
-  const [autoRenew, setAutoRenew] = useState<boolean>(false);
-  const [startsAt, setStartsAt] = useState<Date>(new Date());
-  const [paidUntil, setPaidUntil] = useState<Date | null>();
-  const [paymentMethod, setPaymentMethod] =
-    useState<FullPaymentMethodFragment>();
-  const [properties, setProperties] = useState<PropertyInput[]>([]);
-  const [deactivation, setDeactivation] =
-    useState<DeactivationFragment | null>();
-  const [extendable, setExtendable] = useState<boolean>(false);
-
-  const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([]);
-  const [paymentMethods, setPaymentMethods] = useState<
-    FullPaymentMethodFragment[]
-  >([]);
-
-  const [invoices, setInvoices] = useState<InvoiceFragment[] | undefined>(
-    undefined
-  );
-  const [currency, setCurrency] = useState<Currency>(Currency.Chf);
-
+  const client = useApolloClient();
+  const { askMail, actionMailDialog } = useActionMailQuestion();
   const [extendModal, setExtendModal] = useState<boolean>(false);
+  const [loadError, setLoadError] = useState<Error>();
+
+  const schema = z
+    .object({
+      user: z.custom<FullUserFragment>().nullish(),
+      memberPlan: z.custom<FullMemberPlanFragment>().nullish(),
+      paymentMethod: z.custom<FullPaymentMethodFragment>().nullish(),
+      paymentPeriodicity: z.nativeEnum(PaymentPeriodicity),
+      monthlyAmount: z.number(),
+      autoRenew: z.boolean(),
+      startsAt: z.date(),
+      paidUntil: z.date().nullish(),
+      properties: z.array(z.custom<PropertyInput>()),
+      deactivation: z.custom<DeactivationFragment>().nullish(),
+      extendable: z.boolean(),
+      currency: z.nativeEnum(Currency),
+    })
+    .superRefine((subscription, ctx) => {
+      if (!subscription.user) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['user'],
+          message: t('errorMessages.noUserErrorMessage'),
+        });
+      }
+
+      if (!subscription.memberPlan) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['memberPlan'],
+          message: t('errorMessages.noMemberPlanErrorMessage'),
+        });
+
+        return;
+      }
+
+      if (!subscription.paymentMethod) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['paymentMethod'],
+          message: t('errorMessages.noPaymentMethodErrorMessage'),
+        });
+      }
+
+      const months =
+        PAYMENT_PERIODICITY_MONTHS[subscription.paymentPeriodicity];
+
+      if (
+        Math.round(subscription.monthlyAmount * months) <
+        periodMinAmountOf(
+          subscription.memberPlan,
+          subscription.paymentPeriodicity
+        )
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['monthlyAmount'],
+          message: t('errorMessages.amountTooLowErrorMessage'),
+        });
+      }
+    });
+
+  const [canRevertUpgrade, setCanRevertUpgrade] = useState(false);
+  const [pendingPaymentMethodChange, setPendingPaymentMethodChange] =
+    useState<FullSubscriptionFragment['pendingPaymentMethodChange']>(null);
+
+  const loadSubscription = useCallback(async () => {
+    try {
+      if (id) {
+        const { data } = await client.query({
+          query: SubscriptionDocument,
+          variables: { id },
+        });
+        const subscription = data?.subscription;
+
+        setCanRevertUpgrade(!!subscription?.canRevertUpgrade);
+        setPendingPaymentMethodChange(
+          subscription?.pendingPaymentMethodChange ?? null
+        );
+
+        if (subscription) {
+          return {
+            ...EMPTY_SUBSCRIPTION,
+            user: subscription.user as unknown as FullUserFragment,
+            memberPlan: subscription.memberPlan,
+            paymentPeriodicity: subscription.paymentPeriodicity,
+            monthlyAmount: subscription.monthlyAmount,
+            autoRenew: subscription.autoRenew,
+            startsAt: new Date(subscription.startsAt),
+            paidUntil:
+              subscription.paidUntil ? new Date(subscription.paidUntil) : null,
+            paymentMethod: subscription.paymentMethod,
+            properties: subscription.properties.map(
+              ({ key, value, public: isPublic }) => ({
+                key,
+                value,
+                public: isPublic,
+              })
+            ),
+            deactivation: subscription.deactivation,
+            extendable: subscription.extendable,
+            currency: subscription.currency,
+          };
+        }
+      }
+
+      if (editedUserId) {
+        const { data } = await client.query({
+          query: UserDocument,
+          variables: { id: editedUserId },
+        });
+
+        return { ...EMPTY_SUBSCRIPTION, user: data?.user ?? null };
+      }
+
+      return EMPTY_SUBSCRIPTION;
+    } catch (error) {
+      setLoadError(error as Error);
+
+      return EMPTY_SUBSCRIPTION;
+    }
+  }, [client, id, editedUserId]);
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { isLoading },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: loadSubscription,
+  });
+
+  const user = useWatch({ control, name: 'user' });
+  const memberPlan = useWatch({ control, name: 'memberPlan' });
+  const paymentMethod = useWatch({ control, name: 'paymentMethod' });
+  const paymentPeriodicity = useWatch({ control, name: 'paymentPeriodicity' });
+  const monthlyAmount = useWatch({ control, name: 'monthlyAmount' });
+  const autoRenew = useWatch({ control, name: 'autoRenew' });
+  const extendable = useWatch({ control, name: 'extendable' });
+  const deactivation = useWatch({ control, name: 'deactivation' });
+  const currency = useWatch({ control, name: 'currency' });
+  const paidUntil = useWatch({ control, name: 'paidUntil' });
 
   const periodicityMonths = PAYMENT_PERIODICITY_MONTHS[paymentPeriodicity];
   const periodAmount = Math.round(monthlyAmount * periodicityMonths);
-  const periodMinAmount = useMemo(() => {
-    if (!memberPlan) {
-      return 0;
-    }
-
-    const override = memberPlan.periodicityPricing?.find(
-      price =>
-        price.periodicity === paymentPeriodicity && price.amountMin != null
-    );
-
-    return (
-      override?.amountMin ??
-      Math.round(
-        getMonthlyEquivalentRange(memberPlan.periodicityPricing)
-          .amountPerMonthMin * periodicityMonths
-      )
-    );
-  }, [memberPlan, paymentPeriodicity, periodicityMonths]);
-
-  const {
-    data,
-    loading: isLoading,
-    error: loadError,
-    refetch: reloadSubscription,
-  } = useSubscriptionQuery({
-    variables: { id: id! },
-    skip: id === undefined,
-  });
 
   const {
     data: invoicesData,
     loading: isLoadingInvoices,
     error: loadErrorInvoices,
     refetch: reloadInvoices,
-  } = useInvoicesQuery({
+  } = useQuery(InvoicesDocument, {
     variables: {
       take: 100,
       filter: {
@@ -204,77 +353,13 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     },
   });
 
-  /**
-   * Loading the invoices for the current subscription
-   */
-  useEffect(() => {
-    const tmpInvoices = invoicesData?.invoices?.nodes;
-    if (tmpInvoices) {
-      setInvoices(tmpInvoices);
-    }
-  }, [invoicesData?.invoices?.nodes]);
-
-  useEffect(() => {
-    setSubscriptionProperties(data?.subscription);
-  }, [data?.subscription]);
-
-  useEffect(() => {
-    if (!memberPlan) {
-      return;
-    }
-
-    if (memberPlan.extendable === extendable) {
-      return;
-    }
-
-    setExtendable(memberPlan.extendable);
-
-    toaster.push(
-      <Message
-        type="info"
-        showIcon
-        closable
-      >
-        {t('subscriptionEditView.extendableWasChanged')}
-      </Message>,
-      { duration: 6000 }
-    );
-  }, [memberPlan?.id]);
-
-  function setSubscriptionProperties(
-    subscription?: FullSubscriptionFragment | null
-  ) {
-    if (!subscription) {
-      return;
-    }
-    // @ts-expect-error Wrong type for now
-    setUser(subscription.user);
-    setMemberPlan(subscription.memberPlan);
-    setPaymentPeriodicity(subscription.paymentPeriodicity);
-    setMonthlyAmount(subscription.monthlyAmount);
-    setAutoRenew(subscription.autoRenew);
-    setStartsAt(new Date(subscription.startsAt));
-    setPaidUntil(
-      subscription.paidUntil ? new Date(subscription.paidUntil) : null
-    );
-    setPaymentMethod(subscription.paymentMethod);
-    setProperties(
-      subscription.properties.map(({ key, value, public: isPublic }) => ({
-        key,
-        value,
-        public: isPublic,
-      }))
-    );
-    setDeactivation(subscription.deactivation);
-    setExtendable(subscription.extendable);
-    setCurrency(subscription.currency);
-  }
+  const invoices = invoicesData?.invoices?.nodes;
 
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
-  } = useMemberPlanListQuery({
+  } = useQuery(MemberPlanListDocument, {
     variables: {
       take: 100, // TODO: Pagination
     },
@@ -284,46 +369,31 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({});
+  } = useQuery(PaymentMethodListDocument, {});
 
-  const [updateSubscription, { loading: isUpdating }] =
-    useUpdateSubscriptionMutation();
+  const [updateSubscription, { loading: isUpdating }] = useMutation(
+    UpdateSubscriptionDocument
+  );
   const [cancelSubscription, { loading: isCancel, error: cancelError }] =
-    useCancelSubscriptionMutation();
+    useMutation(CancelSubscriptionDocument);
 
-  const [createSubscription, { loading: isCreating }] =
-    useCreateSubscriptionMutation();
-  const [renewSubscription, { error: renewalError }] =
-    useRenewSubscriptionMutation();
+  const [createSubscription, { loading: isCreating }] = useMutation(
+    CreateSubscriptionDocument
+  );
+  const [renewSubscription, { error: renewalError }] = useMutation(
+    RenewSubscriptionDocument
+  );
+  const [
+    reactivateSubscription,
+    { loading: isReactivating, error: reactivationError },
+  ] = useMutation(ReactivateSubscriptionDocument);
+  const [
+    revertSubscriptionUpgrade,
+    { loading: isRevertingUpgrade, error: revertUpgradeError },
+  ] = useMutation(RevertSubscriptionUpgradeDocument);
 
-  /**
-   * fetch edited user from api
-   */
-  const { data: editedUserData } = useUserQuery({
-    variables: { id: editedUserId! },
-    skip: editedUserId === undefined,
-  });
-
-  /**
-   * USE EFFECT HOOKS
-   */
-  useEffect(() => {
-    if (editedUserData) {
-      setUser(editedUserData.user);
-    }
-  }, [editedUserData]);
-
-  useEffect(() => {
-    if (memberPlanData?.memberPlans?.nodes) {
-      setMemberPlans(memberPlanData.memberPlans.nodes);
-    }
-  }, [memberPlanData?.memberPlans]);
-
-  useEffect(() => {
-    if (paymentMethodData?.paymentMethods) {
-      setPaymentMethods(paymentMethodData.paymentMethods);
-    }
-  }, [paymentMethodData?.paymentMethods]);
+  const memberPlans = memberPlanData?.memberPlans?.nodes ?? [];
+  const paymentMethods = paymentMethodData?.paymentMethods ?? [];
 
   useEffect(() => {
     const error =
@@ -332,17 +402,12 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       paymentMethodLoadError?.message ??
       loadErrorInvoices?.message ??
       cancelError?.message ??
-      renewalError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {error}
-        </Message>
-      );
+      renewalError?.message ??
+      reactivationError?.message ??
+      revertUpgradeError?.message;
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error' });
+    }
   }, [
     loadError,
     loadMemberPlanError,
@@ -350,16 +415,18 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loadErrorInvoices,
     cancelError,
     renewalError,
+    reactivationError,
+    revertUpgradeError,
   ]);
 
   /**
    * MEMOS
    */
-  const isDeactivated = useMemo<boolean>(() => {
-    return deactivation?.date ?
-        new Date(deactivation.date) < new Date()
-      : false;
-  }, [deactivation?.date]);
+  const [openedAt] = useState(() => Date.now());
+  const isDeactivated =
+    deactivation?.date ?
+      new Date(deactivation.date).getTime() < openedAt
+    : false;
 
   const isDisabled: boolean = useMemo<boolean>(() => {
     return (
@@ -411,15 +478,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     [autoRenew, extendable]
   );
 
-  const inputBase = {
-    monthlyAmount,
-    paymentPeriodicity,
-    autoRenew,
-    startsAt: startsAt.toISOString(),
-    properties,
-    extendable,
-  };
-
   /**
    * Function to check either extendable or autoRenew flag to be compatible.
    * Database would rise an error if extendable is false and autoRenew is true at the same time.
@@ -427,30 +485,21 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
    * @param checkExtendable
    * @param checkAutoRenew
    */
-  function checkTrialSubscription(
-    checkExtendable: boolean = extendable,
-    checkAutoRenew: boolean = autoRenew
-  ): boolean {
-    if (!checkExtendable && checkAutoRenew) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {t('subscriptionEditView.nonExtendableNotCompatibleWithAutoRenew')}
-        </Message>,
-        { duration: 6000 }
-      );
-      return false;
-    }
-    return true;
-  }
+  async function handleSave(subscription: z.infer<typeof schema>) {
+    const { memberPlan, paymentMethod, user } = subscription;
 
-  async function handleSave() {
     if (!memberPlan || !paymentMethod || !user) {
       return;
     }
+
+    const inputBase = {
+      monthlyAmount: subscription.monthlyAmount,
+      paymentPeriodicity: subscription.paymentPeriodicity,
+      autoRenew: subscription.autoRenew,
+      startsAt: subscription.startsAt.toISOString(),
+      properties: subscription.properties,
+      extendable: subscription.extendable,
+    };
 
     try {
       if (id) {
@@ -468,12 +517,41 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           onSave?.(data.updateSubscription);
         }
       } else {
+        const { data: mailData } = await client.query({
+          query: SubscriptionCreationMailDocument,
+          variables: {
+            userID: user.id,
+            memberPlanID: memberPlan.id,
+            paymentMethodID: paymentMethod.id,
+            paymentPeriodicity: subscription.paymentPeriodicity,
+            autoRenew: subscription.autoRenew,
+          },
+          fetchPolicy: 'network-only',
+        });
+        const mail = mailData?.subscriptionCreationMail;
+
+        if (!mail) {
+          throw new Error('Could not look up the mail of this action');
+        }
+
+        // asked every time: whether the mail goes out, or that none will
+        const decision = await askMail({
+          ...mail,
+          // the address the mail goes to, from the API; the view's user may lack it
+          recipient: mail.recipientEmail ?? user.email,
+        });
+
+        if (decision === 'cancel') {
+          return;
+        }
+
         const { data } = await createSubscription({
           variables: {
             ...inputBase,
             userID: user.id,
             paymentMethodID: paymentMethod.id,
             memberPlanID: memberPlan.id,
+            skipMail: skipMailFor(decision),
           },
         });
 
@@ -491,14 +569,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         }
       }
 
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-        >
-          {id ? `${t('toast.updatedSuccess')}` : `${t('toast.createdSuccess')}`}
-        </Message>
+      enqueueSnackbar(
+        id ? `${t('toast.updatedSuccess')}` : `${t('toast.createdSuccess')}`,
+        { variant: 'success' }
       );
 
       // go back to subscription list or user edit, depending on where we came from
@@ -506,36 +579,113 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         navigate(goBackLink);
       }
     } catch (e) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {t('toast.updateError', { error: (e as ApolloError)?.message })}
-        </Message>,
-        { duration: 6000 }
+      enqueueSnackbar(
+        t('toast.updateError', { error: (e as Error)?.message }),
+        { variant: 'error', autoHideDuration: 6000 }
       );
     }
   }
 
+  /** @returns false when the admin cancelled, so the dialog stays open */
   async function handleDeactivation(
     date: Date,
     reason: SubscriptionDeactivationReason
-  ) {
-    if (!id || !memberPlan || !paymentMethod || !user?.id) return;
+  ): Promise<boolean> {
+    if (!id || !memberPlan || !paymentMethod || !user?.id) {
+      return true;
+    }
+
+    const { data: mailData } = await client.query({
+      query: SubscriptionCancellationMailDocument,
+      variables: { id, reason },
+      fetchPolicy: 'network-only',
+    });
+    const mail = mailData?.subscriptionCancellationMail;
+
+    if (!mail) {
+      throw new Error('Could not look up the mail of this action');
+    }
+
+    // asked every time: whether the mail goes out, or that none will
+    const decision = await askMail({
+      ...mail,
+      // the address the mail goes to, from the API; the view's user may lack it
+      recipient: mail.recipientEmail ?? user.email,
+    });
+
+    if (decision === 'cancel') {
+      return false;
+    }
+
     const { data } = await cancelSubscription({
       variables: {
         reason,
         cancelSubscriptionId: id,
+        skipMail: skipMailFor(decision),
       },
     });
-    if (data?.cancelSubscription) onSave?.(data.cancelSubscription);
+    if (data?.cancelSubscription) {
+      onSave?.(data.cancelSubscription);
+    }
     await reloadInvoices();
+
+    return true;
+  }
+
+  async function handleReactivation() {
+    if (!id) {
+      return;
+    }
+
+    setReactivationModalOpen(false);
+
+    try {
+      const { data } = await reactivateSubscription({
+        variables: { id },
+      });
+
+      if (data?.reactivateSubscription) {
+        onSave?.(data.reactivateSubscription);
+      }
+    } catch (e) {
+      /* error is handled in the mutation definition */
+    }
+
+    // reactivating may create a new invoice and period
+    await Promise.all([reloadSubscription(), reloadInvoices()]);
+  }
+
+  async function handleRevertUpgrade() {
+    if (!id) {
+      return;
+    }
+
+    setRevertUpgradeModalOpen(false);
+
+    try {
+      const { data } = await revertSubscriptionUpgrade({
+        variables: { id },
+      });
+
+      if (data?.revertSubscriptionUpgrade) {
+        onSave?.(data.revertSubscriptionUpgrade);
+      }
+    } catch (e) {
+      /* error is handled in the mutation definition */
+    }
+
+    // the replacement subscription and its invoice are gone now
+    await Promise.all([reloadSubscription(), reloadInvoices()]);
+  }
+
+  async function reloadSubscription() {
+    reset(await loadSubscription());
   }
 
   async function handleRenewal() {
-    if (!id) return;
+    if (!id) {
+      return;
+    }
 
     // close modal
     setExtendModal(false);
@@ -552,29 +702,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     await reloadInvoices();
   }
 
-  // Schema used for form validation --- reference custom field for validation
-  const { StringType, NumberType } = Schema.Types;
-  const validationModel = Schema.Model({
-    memberPlan: StringType().isRequired(
-      t('errorMessages.noMemberPlanErrorMessage')
-    ),
-    user: StringType().isRequired(t('errorMessages.noUserErrorMessage')),
-    monthlyAmount: NumberType()
-      .isRequired(t('errorMessages.noAmountErrorMessage'))
-      .min(
-        periodMinAmount,
-        t(`errorMessages.minimalAmountPerMonth`, {
-          amount: (periodMinAmount / 100).toFixed(2),
-          currency: memberPlan?.currency,
-        })
-      ),
-    paymentPeriodicity: StringType().isRequired(
-      t('errorMessages.noPaymentPeriodicityErrorMessage')
-    ),
-    paymentMethod: StringType().isRequired(
-      t('errorMessages.noPaymentMethodErrorMessage')
-    ),
-  });
   /**
    * UI helper functions
    */
@@ -586,470 +713,532 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <TableWrapper>
-      <Form
-        onSubmit={validationPassed => validationPassed && handleSave()}
-        model={validationModel}
-        formValue={{
-          memberPlan: memberPlan?.name,
-          user: user?.name,
-          paymentMethod: paymentMethod?.name,
-          paymentPeriodicity,
-          monthlyAmount: periodAmount,
-        }}
-      >
-        <ListViewContainer>
-          <ListViewHeader>
-            <h2>
-              <Link to={goBackLink}>
-                <MdChevronLeft />
-              </Link>
-              {id ?
-                t('userSubscriptionEdit.editTitle')
-              : t('userSubscriptionEdit.createTitle')}
-            </h2>
-          </ListViewHeader>
+      <form onSubmit={handleSubmit(handleSave)}>
+        <SingleViewTitle
+          loading={isCreating || isUpdating}
+          disabled={isDisabled || isDeactivated}
+          title={
+            id ?
+              t('userSubscriptionEdit.editTitle')
+            : t('userSubscriptionEdit.createTitle')
+          }
+          saveBtnTitle={id ? t('save') : t('create')}
+          saveAndCloseBtnTitle={user ? t('saveAndClose') : t('createAndClose')}
+          closePath={goBackLink}
+          setCloseFn={setCloseAfterSave}
+        >
+          <PermissionControl qualifyingPermissions={[CanCreateSubscription.id]}>
+            {showInvoiceHistory() && !deactivation && (
+              <RButton
+                variant="outlined"
+                disabled={isDisabled || isDeactivated}
+                onClick={() => setDeactivationPanelOpen(true)}
+                startIcon={<MdUnpublished />}
+              >
+                {t('userSubscriptionEdit.deactivation.title.activated')}
+              </RButton>
+            )}
 
-          <ListViewActions>
-            <PermissionControl
-              qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}
-            >
-              {showInvoiceHistory() && (
-                <IconButtonMarginRight
-                  appearance="ghost"
-                  disabled={isDisabled || isDeactivated}
-                  onClick={() => setDeactivationPanelOpen(true)}
-                >
-                  <MdUnpublished />
-                  {t('userSubscriptionEdit.deactivation.title.activated')}
-                </IconButtonMarginRight>
+            {showInvoiceHistory() && canRevertUpgrade && (
+              <RButton
+                variant="outlined"
+                data-testid="revertSubscriptionUpgrade"
+                disabled={isDisabled || isRevertingUpgrade}
+                onClick={() => setRevertUpgradeModalOpen(true)}
+                startIcon={<MdUndo />}
+              >
+                {t('userSubscriptionEdit.revertUpgrade.title')}
+              </RButton>
+            )}
+
+            {showInvoiceHistory() && deactivation && !canRevertUpgrade && (
+              <RButton
+                variant="outlined"
+                color="success"
+                data-testid="reactivateSubscription"
+                disabled={isDisabled || isReactivating}
+                onClick={() => setReactivationModalOpen(true)}
+                startIcon={<MdRestartAlt />}
+              >
+                {t('userSubscriptionEdit.reactivation.title')}
+              </RButton>
+            )}
+          </PermissionControl>
+        </SingleViewTitle>
+
+        <Body>
+          {deactivation && (
+            <Alert severity="error">
+              {t(
+                new Date(deactivation.date) < new Date() ?
+                  'userSubscriptionEdit.deactivation.isDeactivated'
+                : 'userSubscriptionEdit.deactivation.willBeDeactivated',
+                {
+                  date: new Date(deactivation.date),
+                  reason: t(
+                    `userSubscriptionEdit.deactivation.reason${capitalizeFirstLetter(
+                      deactivation.reason
+                    )}`
+                  ),
+                }
               )}
-              <ButtonMarginRight
-                appearance="primary"
-                disabled={isDisabled || isDeactivated}
-                type="submit"
-              >
-                {id ? t('save') : t('create')}
-              </ButtonMarginRight>
-              <Button
-                disabled={isDisabled || isDeactivated}
-                appearance="primary"
-                loading={isDisabled}
-                type="submit"
-                data-testid="saveAndCloseButton"
-                onClick={() => setCloseAfterSave(true)}
-              >
-                {user ? t('saveAndClose') : t('createAndClose')}
-              </Button>
-            </PermissionControl>
-          </ListViewActions>
-        </ListViewContainer>
+            </Alert>
+          )}
 
-        <UserFormGrid>
-          <Row gutter={10}>
-            <Col xs={12}>
-              <RGrid fluid>
-                {deactivation && (
-                  <Message
-                    showIcon
-                    type="error"
-                    style={{ marginBottom: '12px' }}
-                  >
-                    {t(
-                      new Date(deactivation.date) < new Date() ?
-                        'userSubscriptionEdit.deactivation.isDeactivated'
-                      : 'userSubscriptionEdit.deactivation.willBeDeactivated',
-                      {
-                        date: new Date(deactivation.date),
-                        reason: t(
-                          `userSubscriptionEdit.deactivation.reason${capitalizeFirstLetter(
-                            deactivation.reason
-                          )}`
-                        ),
-                      }
-                    )}
-                  </Message>
-                )}
+          {pendingPaymentMethodChange && (
+            <Alert severity="info">
+              {t('userSubscriptionEdit.paymentMethodChange.pending', {
+                paymentMethod: pendingPaymentMethodChange.paymentMethod.name,
+                waitingFor: t(
+                  `userSubscriptionEdit.paymentMethodChange.waitingFor.${pendingPaymentMethodChange.kind}`
+                ),
+                expiresAt: new Date(pendingPaymentMethodChange.expiresAt),
+              })}
+            </Alert>
+          )}
 
-                <RPanel
-                  bordered
-                  header={
-                    id ?
-                      t('userSubscriptionEdit.editTitle')
-                    : t('userSubscriptionEdit.createTitle')
-                  }
-                >
-                  <Group controlId="memberPlan">
-                    <Grid fluid>
-                      <Row gutter={24}>
-                        {/* user */}
-                        <Col xs={12}>
-                          <Label>
-                            {user?.id ?
-                              <Link
-                                to={`/users/edit/${user.id}`}
-                                target="_blank"
-                              >
-                                {toggleRequiredLabel(
-                                  t('userSubscriptionEdit.selectUser')
-                                )}{' '}
-                                <MdOpenInNew style={{ marginLeft: '4px' }} />
-                              </Link>
-                            : <p>
-                                {toggleRequiredLabel(
-                                  t('userSubscriptionEdit.selectUser')
-                                )}
-                              </p>
-                            }
-                          </Label>
+          <Columns>
+            <Card>
+              <CardHeader title={t('subscriptionEditView.detailsTitle')} />
 
-                          <UserSearch
-                            name="user"
-                            user={user}
-                            onUpdateUser={user => {
-                              setUser(user);
-                            }}
-                          />
-                        </Col>
-                        {/* member plan */}
-                        <Col xs={12}>
-                          <Label>
-                            {memberPlan?.id ?
-                              <Link
-                                to={`/memberplans/edit/${memberPlan?.id}`}
-                                target="_blank"
-                              >
-                                {toggleRequiredLabel(
-                                  t('userSubscriptionEdit.selectMemberPlan')
-                                )}
-                                <MdOpenInNew style={{ marginLeft: '4px' }} />
-                              </Link>
-                            : <p>
-                                {toggleRequiredLabel(
-                                  t('userSubscriptionEdit.selectMemberPlan')
-                                )}
-                              </p>
-                            }
-                          </Label>
-                          <Control
-                            block
-                            name="memberPlan"
+              <CardContent>
+                <FormFields>
+                  <TwoUp>
+                    <div>
+                      <FormLabel>
+                        {user?.id ?
+                          <Link
+                            to={`/users/edit/${user.id}`}
+                            target="_blank"
+                          >
+                            {toggleRequiredLabel(
+                              t('userSubscriptionEdit.selectUser')
+                            )}{' '}
+                            <ExternalLinkIcon />
+                          </Link>
+                        : <Typography>
+                            {toggleRequiredLabel(
+                              t('userSubscriptionEdit.selectUser')
+                            )}
+                          </Typography>
+                        }
+                      </FormLabel>
+
+                      <Controller
+                        control={control}
+                        name="user"
+                        render={({ field, fieldState: { error } }) => (
+                          <>
+                            <UserSearch
+                              name={field.name}
+                              user={field.value}
+                              disableClearable
+                              onUpdateUser={field.onChange}
+                            />
+
+                            {error?.message && (
+                              <FormHelperText error>
+                                {error.message}
+                              </FormHelperText>
+                            )}
+                          </>
+                        )}
+                      />
+                    </div>
+
+                    <div>
+                      <FormLabel>
+                        {memberPlan?.id ?
+                          <Link
+                            to={`/memberplans/edit/${memberPlan?.id}`}
+                            target="_blank"
+                          >
+                            {toggleRequiredLabel(
+                              t('userSubscriptionEdit.selectMemberPlan')
+                            )}
+                            <ExternalLinkIcon />
+                          </Link>
+                        : <Typography>
+                            {toggleRequiredLabel(
+                              t('userSubscriptionEdit.selectMemberPlan')
+                            )}
+                          </Typography>
+                        }
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        name="memberPlan"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            select
                             disabled={isDisabled || isDeactivated}
-                            data={memberPlans.map(mp => ({
-                              value: mp.id,
-                              label: mp.name,
-                            }))}
-                            value={memberPlan?.id}
-                            onChange={(value: any) =>
-                              setMemberPlan(() => {
-                                const foundMemberPlan = memberPlans.find(
-                                  mp => mp.id === value
-                                );
-                                if (!foundMemberPlan) return;
-                                const planPeriodMin =
-                                  foundMemberPlan.periodicityPricing?.find(
-                                    price =>
-                                      price.periodicity === paymentPeriodicity
-                                  )?.amountMin;
-                                setMonthlyAmount(
-                                  planPeriodMin != null ?
-                                    planPeriodMin / periodicityMonths
-                                  : getMonthlyEquivalentRange(
-                                      foundMemberPlan.periodicityPricing
-                                    ).amountPerMonthMin
-                                );
-                                setCurrency(foundMemberPlan.currency);
-                                return foundMemberPlan;
-                              })
-                            }
-                            accepter={SelectPicker}
-                          />
-
-                          {memberPlan && (
-                            <Text>
-                              <DescriptionList>
-                                <DescriptionListItem
-                                  label={t(
-                                    'userSubscriptionEdit.memberPlanMonthlyAmount',
-                                    {
-                                      currency: memberPlan?.currency,
-                                    }
-                                  )}
-                                >
-                                  {(
-                                    getMonthlyEquivalentRange(
-                                      memberPlan.periodicityPricing
-                                    ).amountPerMonthMin / 100
-                                  ).toFixed(2)}
-                                </DescriptionListItem>
-                              </DescriptionList>
-                            </Text>
-                          )}
-                        </Col>
-                      </Row>
-                      <RowPaddingTop>
-                        {/* payment periodicity */}
-                        <Col xs={12}>
-                          <Label>
-                            {toggleRequiredLabel(
-                              t('memberPlanList.paymentPeriodicities')
-                            )}
-                          </Label>
-
-                          <Control
-                            virtualized
-                            value={paymentPeriodicity}
-                            name="paymentPeriodicity"
-                            data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
-                              value: pp,
-                              label: t(
-                                `memberPlanList.paymentPeriodicity.${pp}`
-                              ),
-                            }))}
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                            onChange={(value: any) =>
-                              setPaymentPeriodicity(value)
-                            }
-                            block
-                            accepter={SelectPicker}
-                          />
-                        </Col>
-                        {/* amount per period */}
-                        <Col xs={12}>
-                          <Label>
-                            {toggleRequiredLabel(
-                              t('userSubscriptionEdit.periodAmount')
-                            )}
-                          </Label>
-
-                          <CurrencyInput
-                            name="monthlyAmount"
-                            currency={currency}
-                            centAmount={periodAmount}
-                            onChange={centAmount => {
-                              setMonthlyAmount(
-                                Math.round(centAmount || 0) / periodicityMonths
+                            value={field.value?.id ?? ''}
+                            onChange={event => {
+                              const chosen = memberPlans.find(
+                                mp => mp.id === event.target.value
                               );
-                            }}
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                          />
-                          {paymentPeriodicity !==
-                            PaymentPeriodicity.Monthly && (
-                            <Text>
-                              {t(
-                                'userSubscriptionEdit.monthlyAmountEquivalent',
-                                {
-                                  currency,
-                                  amount: (monthlyAmount / 100).toFixed(2),
-                                }
-                              )}
-                            </Text>
-                          )}
-                        </Col>
-                      </RowPaddingTop>
-                      <RowPaddingTop>
-                        {/* payment method */}
-                        <Col xs={12}>
-                          <Label>
-                            {toggleRequiredLabel(
-                              t('userSubscriptionEdit.paymentMethod')
-                            )}
-                          </Label>
 
-                          <Control
-                            name="paymentMethod"
-                            block
-                            virtualized
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                            data={paymentMethods.map(pm => ({
-                              value: pm.id,
-                              label: pm.name,
-                            }))}
-                            value={paymentMethod?.id}
-                            onChange={(value: any) =>
-                              setPaymentMethod(
-                                paymentMethods.find(pm => pm.id === value)
-                              )
-                            }
-                            accepter={SelectPicker}
-                            placement="auto"
-                          />
-                        </Col>
-                      </RowPaddingTop>
-                      <RowPaddingTop>
-                        {/* subscription start */}
-                        <Col xs={12}>
-                          <Label>{t('userSubscriptionEdit.startsAt')}</Label>
-                          <DatePicker
-                            block
-                            oneTap
-                            cleanable={false}
-                            value={startsAt}
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                            onChange={value => setStartsAt(value!)}
-                          />
-                        </Col>
-                        {/* subscription paid until */}
-                        <Col xs={12}>
-                          <Label>{t('userSubscriptionEdit.paidUntil')}</Label>
-                          <DatePicker
-                            block
-                            value={paidUntil ?? undefined}
-                            disabled
-                          />
-                        </Col>
-                      </RowPaddingTop>
-                    </Grid>
-                  </Group>
-                </RPanel>
-              </RGrid>
-            </Col>
+                              if (!chosen) {
+                                return;
+                              }
 
-            <Col xs={12}>
-              <Grid fluid>
-                <RPanel
-                  bordered
-                  header={t('subscriptionEditView.additionalSettingsTitle')}
-                >
-                  <Grid fluid>
-                    <Row>
-                      <Col xs={24}>
-                        {/* trial member plan & trial subscription */}
-                        {isTrialMemberPlan && isTrialSubscription && (
-                          <Alert
-                            icon={<MdCheck />}
-                            severity="success"
-                          >
-                            {t(
-                              'subscriptionEditView.trialSubscriptionConfigured'
-                            )}
-                          </Alert>
-                        )}
-                        {/* trial member plan but not a trial subscription */}
-                        {isTrialMemberPlan && !isTrialSubscription && (
-                          <Button
-                            startIcon={<MdAutoFixHigh />}
-                            disabled={isTrialSubscription}
-                            onClick={() => {
-                              setAutoRenew(false);
-                              setExtendable(false);
+                              const planPeriodMin =
+                                chosen.periodicityPricing?.find(
+                                  price =>
+                                    price.periodicity === paymentPeriodicity
+                                )?.amountMin;
+
+                              field.onChange(chosen);
+                              setValue(
+                                'monthlyAmount',
+                                planPeriodMin != null ?
+                                  planPeriodMin / periodicityMonths
+                                : getMonthlyEquivalentRange(
+                                    chosen.periodicityPricing
+                                  ).amountPerMonthMin
+                              );
+                              setValue('currency', chosen.currency);
+
+                              if (chosen.extendable !== extendable) {
+                                setValue('extendable', chosen.extendable);
+                                enqueueSnackbar(
+                                  t(
+                                    'subscriptionEditView.extendableWasChanged'
+                                  ),
+                                  { autoHideDuration: 6000 }
+                                );
+                              }
                             }}
-                            color={'green'}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
                           >
-                            {t(
-                              'subscriptionEditView.configureAsTrialSubscription'
-                            )}
-                          </Button>
+                            {memberPlans.map(mp => (
+                              <MenuItem
+                                key={mp.id}
+                                value={mp.id}
+                              >
+                                {mp.name}
+                              </MenuItem>
+                            ))}
+                          </TextField>
                         )}
-                        {/* not a trial member plan. Trial subscription not possible */}
-                        {!isTrialMemberPlan && !isLoading && (
-                          <Alert severity="info">
-                            {t(
-                              'subscriptionEditView.subscriptionTrialNotPossible'
-                            )}
-                          </Alert>
+                      />
+
+                      {memberPlan && (
+                        <FormHelperText>
+                          {t('userSubscriptionEdit.memberPlanMonthlyAmount', {
+                            currency: memberPlan.currency,
+                          })}
+                          {': '}
+                          {(
+                            getMonthlyEquivalentRange(
+                              memberPlan.periodicityPricing
+                            ).amountPerMonthMin / 100
+                          ).toFixed(2)}
+                        </FormHelperText>
+                      )}
+                    </div>
+                  </TwoUp>
+
+                  <TwoUp>
+                    <div>
+                      <FormLabel>
+                        {toggleRequiredLabel(
+                          t('memberPlanList.paymentPeriodicities')
                         )}
-                      </Col>
-                    </Row>
-                    <RowPaddingTop>
-                      {/* extendable */}
-                      <Col xs={12}>
-                        <Toggle
-                          checked={extendable}
-                          onChange={updatedExtendable =>
-                            setExtendable(() =>
-                              checkTrialSubscription(updatedExtendable) ?
-                                updatedExtendable
-                              : extendable
-                            )
-                          }
-                        />
-                        <FormLabelMarginLeft>
-                          {t('memberplanForm.extendableToggle')}
-                        </FormLabelMarginLeft>
-                        <Text>{t('memberplanForm.extendableHelpText')}</Text>
-                      </Col>
-                    </RowPaddingTop>
-                    <RowPaddingTop>
-                      {/* auto renew */}
-                      <Col xs={12}>
-                        <Toggle
-                          checked={autoRenew}
+                      </FormLabel>
+
+                      <Controller
+                        control={control}
+                        name="paymentPeriodicity"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            select
+                            value={field.value ?? ''}
+                            disabled={
+                              isDisabled ||
+                              hasNoMemberPlanSelected ||
+                              isDeactivated
+                            }
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          >
+                            {ALL_PAYMENT_PERIODICITIES.map(pp => (
+                              <MenuItem
+                                key={pp}
+                                value={pp}
+                              >
+                                {t(`memberPlanList.paymentPeriodicity.${pp}`)}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        )}
+                      />
+                    </div>
+
+                    <div>
+                      <FormLabel>
+                        {toggleRequiredLabel(
+                          t('userSubscriptionEdit.periodAmount')
+                        )}
+                      </FormLabel>
+
+                      <Controller
+                        control={control}
+                        name="monthlyAmount"
+                        render={({ field, fieldState: { error } }) => (
+                          <>
+                            <CurrencyInput
+                              name={field.name}
+                              currency={currency}
+                              centAmount={periodAmount}
+                              onChange={centAmount =>
+                                field.onChange(
+                                  Math.round(centAmount || 0) /
+                                    periodicityMonths
+                                )
+                              }
+                              disabled={
+                                isDisabled ||
+                                hasNoMemberPlanSelected ||
+                                isDeactivated
+                              }
+                            />
+
+                            {error?.message && (
+                              <FormHelperText error>
+                                {error.message}
+                              </FormHelperText>
+                            )}
+                          </>
+                        )}
+                      />
+                      {paymentPeriodicity !== PaymentPeriodicity.Monthly && (
+                        <FormHelperText>
+                          {t('userSubscriptionEdit.monthlyAmountEquivalent', {
+                            currency,
+                            amount: (monthlyAmount / 100).toFixed(2),
+                          })}
+                        </FormHelperText>
+                      )}
+                    </div>
+                  </TwoUp>
+
+                  <div>
+                    <FormLabel>
+                      {toggleRequiredLabel(
+                        t('userSubscriptionEdit.paymentMethod')
+                      )}
+                    </FormLabel>
+
+                    <Controller
+                      control={control}
+                      name="paymentMethod"
+                      render={({ field, fieldState: { error } }) => (
+                        <TextField
+                          select
                           disabled={
                             isDisabled ||
                             hasNoMemberPlanSelected ||
                             isDeactivated
                           }
-                          onChange={value =>
-                            setAutoRenew(() =>
-                              checkTrialSubscription(extendable, value) ? value
-                              : autoRenew
+                          value={field.value?.id ?? ''}
+                          onChange={event =>
+                            field.onChange(
+                              paymentMethods.find(
+                                pm => pm.id === event.target.value
+                              )
                             )
                           }
-                        />
-                        <FormLabelMarginLeft>
-                          {t('userSubscriptionEdit.autoRenew')}
-                        </FormLabelMarginLeft>
-                        <Text>
-                          {t('userSubscriptionEdit.autoRenewDescription')}
-                        </Text>
-                      </Col>
-                    </RowPaddingTop>
-                    <RowPaddingTop>
-                      <Col xs={24}>
-                        <Button
-                          appearance="ghost"
-                          color="red"
-                          loading={isDisabled}
-                          onClick={() => setExtendModal(true)}
+                          error={Boolean(error)}
+                          helperText={error?.message}
+                          fullWidth
                         >
-                          {t('userSubscriptionEdit.renewNow')}
-                        </Button>
-                      </Col>
-                    </RowPaddingTop>
-                  </Grid>
-                </RPanel>
-              </Grid>
-            </Col>
+                          {paymentMethods.map(pm => (
+                            <MenuItem
+                              key={pm.id}
+                              value={pm.id}
+                            >
+                              {pm.name}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      )}
+                    />
+                  </div>
+                </FormFields>
+              </CardContent>
+            </Card>
 
-            <Col xs={24}>
-              <Grid fluid>
-                {id && (
-                  <InvoiceListPanel
-                    subscriptionId={id}
-                    invoices={invoices}
-                    disabled={!!deactivation}
-                    onInvoicePaid={() => reloadSubscription()}
-                  />
-                )}
-              </Grid>
-            </Col>
-          </Row>
-        </UserFormGrid>
+            <Card>
+              <CardHeader title={t('subscriptionEditView.renewalTitle')} />
+
+              <CardContent>
+                <FormFields>
+                  <TwoUp>
+                    <div>
+                      <FormLabel>
+                        {t('userSubscriptionEdit.startsAt')}
+                      </FormLabel>
+
+                      <Controller
+                        control={control}
+                        name="startsAt"
+                        render={({ field, fieldState: { error } }) => (
+                          <DatePicker
+                            value={field.value ?? null}
+                            disabled={
+                              isDisabled ||
+                              hasNoMemberPlanSelected ||
+                              isDeactivated
+                            }
+                            onChange={value => field.onChange(value!)}
+                            fullWidth
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <div>
+                      <FormLabel>
+                        {t('userSubscriptionEdit.paidUntil')}{' '}
+                        <InfoTooltip
+                          text={t('userSubscriptionEdit.paidUntilInfo')}
+                        />
+                      </FormLabel>
+
+                      <DatePicker
+                        value={paidUntil ?? null}
+                        disabled
+                        onChange={() => undefined}
+                        fullWidth
+                      />
+                    </div>
+                  </TwoUp>
+
+                  {isTrialMemberPlan && isTrialSubscription && (
+                    <Alert
+                      icon={<MdCheck />}
+                      severity="success"
+                    >
+                      {t('subscriptionEditView.trialSubscriptionConfigured')}
+                    </Alert>
+                  )}
+
+                  {isTrialMemberPlan && !isTrialSubscription && (
+                    <div>
+                      <Button
+                        variant="outlined"
+                        startIcon={<MdAutoFixHigh />}
+                        disabled={isTrialSubscription}
+                        onClick={() => {
+                          setValue('autoRenew', false);
+                          setValue('extendable', false);
+                        }}
+                        color="success"
+                      >
+                        {t('subscriptionEditView.configureAsTrialSubscription')}
+                      </Button>
+                    </div>
+                  )}
+
+                  {!isTrialMemberPlan && !isLoading && (
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                    >
+                      {t('subscriptionEditView.subscriptionTrialNotPossible')}
+                    </Typography>
+                  )}
+
+                  <div>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={extendable}
+                          onChange={(_event, updatedExtendable) => {
+                            setValue('extendable', updatedExtendable);
+
+                            if (!updatedExtendable) {
+                              setValue('autoRenew', false);
+                            }
+                          }}
+                        />
+                      }
+                      label={t('memberplanForm.extendableToggle')}
+                    />
+                    <FormHelperText>
+                      {t('memberplanForm.extendableHelpText')}
+                    </FormHelperText>
+                  </div>
+
+                  {extendable && (
+                    <div>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={autoRenew}
+                            disabled={
+                              isDisabled ||
+                              hasNoMemberPlanSelected ||
+                              isDeactivated
+                            }
+                            onChange={(_event, value) =>
+                              setValue('autoRenew', value)
+                            }
+                          />
+                        }
+                        label={t('userSubscriptionEdit.autoRenew')}
+                      />
+
+                      <FormHelperText>
+                        {t('userSubscriptionEdit.autoRenewDescription')}
+                      </FormHelperText>
+                    </div>
+                  )}
+                </FormFields>
+              </CardContent>
+
+              {extendable && (
+                <CardFooter>
+                  <Button
+                    variant="outlined"
+                    loading={isDisabled}
+                    onClick={() => setExtendModal(true)}
+                  >
+                    {t('userSubscriptionEdit.renewNow')}
+                  </Button>
+                </CardFooter>
+              )}
+            </Card>
+          </Columns>
+
+          {id && (
+            <InvoiceListPanel
+              subscriptionId={id}
+              invoices={invoices}
+              disabled={!!deactivation}
+              onInvoicePaid={async () => reset(await loadSubscription())}
+            />
+          )}
+        </Body>
 
         {id && user && (
-          <Modal
+          <Dialog
+            fullWidth
             open={isDeactivationPanelOpen}
-            size="sm"
-            backdrop={'static'}
-            keyboard={false}
+            maxWidth="sm"
             onClose={() => setDeactivationPanelOpen(false)}
           >
             <UserSubscriptionDeactivatePanel
@@ -1057,50 +1246,102 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               userEmail={user.email}
               paidUntil={paidUntil ?? undefined}
               onDeactivate={async data => {
-                await handleDeactivation(data.date, data.reason);
-                setDeactivationPanelOpen(false);
+                if (await handleDeactivation(data.date, data.reason)) {
+                  setDeactivationPanelOpen(false);
+                }
               }}
               onClose={() => setDeactivationPanelOpen(false)}
             />
-          </Modal>
+          </Dialog>
         )}
 
-        {/* ask user to really extend the subscripion */}
-        <Modal
-          open={extendModal}
-          size="sm"
-          backdrop="static"
-          onClose={() => setExtendModal(false)}
+        {actionMailDialog}
+
+        {/* ask user to really reactivate the subscription */}
+        <ReactivateSubscriptionModal
+          open={isReactivationModalOpen}
+          loading={isReactivating}
+          userName={user?.name || user?.email}
+          memberPlanName={memberPlan?.name}
+          monthlyAmount={monthlyAmount}
+          paymentPeriodicity={paymentPeriodicity}
+          currency={currency}
+          paidUntil={paidUntil}
+          deactivation={deactivation}
+          onClose={() => setReactivationModalOpen(false)}
+          onConfirm={() => handleReactivation()}
+        />
+
+        {/* ask user to really revert the upgrade */}
+        <Dialog
+          fullWidth
+          open={isRevertUpgradeModalOpen}
+          maxWidth="sm"
+          onClose={() => setRevertUpgradeModalOpen(false)}
         >
-          <Modal.Header>
-            <Modal.Title>
-              {t('subscriptionEditView.extendModalTitle')}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>{t('subscriptionEditView.extendModalBody')}</Modal.Body>
-          <Modal.Footer>
+          <DialogTitle>
+            {t('userSubscriptionEdit.revertUpgrade.modalTitle')}
+          </DialogTitle>
+
+          <DialogContent>
+            {t('userSubscriptionEdit.revertUpgrade.modalMessage')}
+          </DialogContent>
+
+          <DialogActions>
             <Button
-              onClick={() => handleRenewal()}
-              appearance="primary"
-            >
-              {t('userSubscriptionEdit.renewNow')}
-            </Button>
-            <Button
-              onClick={() => setExtendModal(false)}
-              appearance="subtle"
+              variant="text"
+              onClick={() => setRevertUpgradeModalOpen(false)}
             >
               {t('cancel')}
             </Button>
-          </Modal.Footer>
-        </Modal>
-      </Form>
+
+            <Button
+              variant="contained"
+              disabled={isRevertingUpgrade}
+              onClick={() => handleRevertUpgrade()}
+            >
+              {t('userSubscriptionEdit.revertUpgrade.confirm')}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* ask user to really extend the subscripion */}
+        <Dialog
+          fullWidth
+          open={extendModal}
+          maxWidth="sm"
+          onClose={() => setExtendModal(false)}
+        >
+          <DialogTitle>
+            {t('subscriptionEditView.extendModalTitle')}
+          </DialogTitle>
+          <DialogContent>
+            {t('subscriptionEditView.extendModalBody')}
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="text"
+              onClick={() => setExtendModal(false)}
+            >
+              {t('cancel')}
+            </Button>
+
+            <Button
+              variant="contained"
+              onClick={() => handleRenewal()}
+            >
+              {t('userSubscriptionEdit.renewNow')}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </form>
     </TableWrapper>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_SUBSCRIPTION',
-  'CAN_GET_SUBSCRIPTIONS',
-  'CAN_CREATE_SUBSCRIPTION',
-  'CAN_DELETE_SUBSCRIPTION',
+  CanGetSubscription.id,
+  CanGetSubscriptions.id,
+  CanCreateSubscription.id,
+  CanCancelSubscription.id,
 ])(SubscriptionEditView);
 export { CheckedPermissionComponent as SubscriptionEditView };

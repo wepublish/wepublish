@@ -2,9 +2,9 @@ import { NoSsr } from '@mui/material';
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import {
-  CalculatedRating,
-  CommentRating,
-  OverriddenRating,
+  FullCalculatedRatingFragment,
+  FullCommentRatingFragment,
+  FullOverriddenRatingFragment,
   RateCommentMutationVariables,
   RatingSystemType,
 } from '@wepublish/website/api';
@@ -23,9 +23,9 @@ export const CommentRatingsWrapper = styled('div')`
 
 const getCommentRating = (
   answerId: string,
-  userRatings: Pick<CommentRating, 'answer' | 'value'>[],
-  calculatedRatings: Pick<CalculatedRating, 'answer' | 'mean'>[],
-  overriddenRatings: Pick<OverriddenRating, 'answerId' | 'value'>[]
+  userRatings: Pick<FullCommentRatingFragment, 'answer' | 'value'>[],
+  calculatedRatings: Pick<FullCalculatedRatingFragment, 'answer' | 'mean'>[],
+  overriddenRatings: Pick<FullOverriddenRatingFragment, 'answerId' | 'value'>[]
 ) => {
   const overriddenRating = overriddenRatings.find(
     rating => rating.answerId === answerId
@@ -42,7 +42,7 @@ const getCommentRating = (
 
 const hasUserRated = (
   answerId: string,
-  userRatings: Pick<CommentRating, 'answer' | 'value'>[]
+  userRatings: Pick<FullCommentRatingFragment, 'answer' | 'value'>[]
 ) => {
   const userRating = userRatings.find(rating => rating.answer.id === answerId);
 

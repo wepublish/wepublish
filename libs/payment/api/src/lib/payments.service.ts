@@ -14,12 +14,21 @@ import { GraphQLError } from 'graphql/index';
 import {
   PaymentFromInvoiceInput,
   PaymentFromSubscriptionArgs,
+  SetPaymentProviderCustomersArgs,
 } from './payment.model';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { SESSION_CACHE_NAMESPACE } from '@wepublish/authentication/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from './payment-method/payment-method.config';
+import { InvoicePaidNotifier } from './invoice-paid.listener';
 import { ErrorCode } from '@wepublish/errors';
 import { logger } from '@wepublish/utils/api';
 
@@ -33,6 +42,9 @@ interface CreatePaymentWithProvider {
   migrateToTargetPaymentMethodID?: string;
 }
 
+/** Customers setPaymentProviderCustomers stores per call. */
+export const MAX_CUSTOMERS_PER_CALL = 500;
+
 @Injectable()
 export class PaymentsService {
   private readonly paymentProviders = this.config.paymentProviders;
@@ -40,11 +52,74 @@ export class PaymentsService {
   constructor(
     private prisma: PrismaClient,
     @Inject(PAYMENT_METHOD_CONFIG)
-    private config: PaymentMethodConfig
+    private config: PaymentMethodConfig,
+    private invoicePaidNotifier: InvoicePaidNotifier,
+    private resets: NamespaceResets
   ) {}
 
   getProviders() {
     return this.paymentProviders;
+  }
+
+  /**
+   * Stores which customer of `paymentProviderId` each user is — the token or
+   * contact renewals are charged or invoiced with (for bexio the contact id) —
+   * replacing the user's previous one of that provider. For data corrections,
+   * e.g. linking imported readers to their bexio contacts; users that do not
+   * exist are skipped. Returns how many users were updated.
+   */
+  async setPaymentProviderCustomers({
+    paymentProviderId,
+    customers,
+  }: SetPaymentProviderCustomersArgs) {
+    if (!this.findById(paymentProviderId)) {
+      throw new NotFoundException('PaymentProvider', paymentProviderId);
+    }
+
+    if (!customers.length || customers.length > MAX_CUSTOMERS_PER_CALL) {
+      throw new BadRequestException(
+        `Pass between 1 and ${MAX_CUSTOMERS_PER_CALL} customers`
+      );
+    }
+
+    if (new Set(customers.map(c => c.userId)).size !== customers.length) {
+      throw new BadRequestException('Each user can only be passed once');
+    }
+
+    if (customers.some(c => !c.customerId.trim())) {
+      throw new BadRequestException('Every customer needs an id');
+    }
+
+    const existing = new Set(
+      (
+        await this.prisma.user.findMany({
+          where: { id: { in: customers.map(c => c.userId) } },
+          select: { id: true },
+        })
+      ).map(user => user.id)
+    );
+    const updates = customers
+      .filter(c => existing.has(c.userId))
+      .map(({ userId, customerId }) =>
+        this.prisma.user.update({
+          where: { id: userId },
+          data: {
+            paymentProviderCustomers: {
+              deleteMany: { paymentProviderID: paymentProviderId },
+              create: {
+                paymentProviderID: paymentProviderId,
+                customerID: customerId.trim(),
+              },
+            },
+          },
+        })
+      );
+
+    await this.prisma.$transaction(updates);
+    // sessions carry the customers
+    await this.resets.reset(SESSION_CACHE_NAMESPACE);
+
+    return updates.length;
   }
 
   findById(id: string) {
@@ -381,6 +456,7 @@ export class PaymentsService {
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
         });
+        await this.invoicePaidNotifier.notify(updatedPayment.invoiceID);
       }
     }
 

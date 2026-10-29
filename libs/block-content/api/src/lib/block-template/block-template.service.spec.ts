@@ -1,0 +1,366 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaClient } from '@prisma/client';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
+import { BlockContentInput } from '../block-content.model';
+import { BlockType } from '../block-type.model';
+import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
+import { BlockTemplateService } from './block-template.service';
+import type { Mock } from 'vitest';
+
+const templateBlock = (templateId: string): BlockContentInput => ({
+  [BlockType.BlockTemplate]: { templateId },
+});
+
+const flexBlock = (...blocks: BlockContentInput[]): BlockContentInput => ({
+  [BlockType.FlexBlock]: {
+    blocks: blocks.map((block, index) => ({
+      alignment: { i: `${index}`, x: 0, y: index, w: 12, h: 1 },
+      block,
+    })),
+  },
+});
+
+const storedTemplateBlock = (templateId: string) => ({
+  type: BlockType.BlockTemplate,
+  templateId,
+});
+
+const storedFlexBlock = (...blocks: unknown[]) => ({
+  type: BlockType.FlexBlock,
+  blocks: blocks.map(block => ({ alignment: {}, block })),
+});
+
+describe('BlockTemplateService', () => {
+  let service: BlockTemplateService;
+  let prismaMock: {
+    blockTemplate: {
+      [method in keyof PrismaClient['blockTemplate']]?: Mock;
+    };
+    articleTemplate: {
+      count: Mock;
+    };
+    pageTemplate: {
+      count: Mock;
+    };
+  };
+  let publicContentCache: {
+    invalidate: Mock;
+    invalidateArticleLayout: Mock;
+  };
+
+  beforeEach(async () => {
+    prismaMock = {
+      blockTemplate: {
+        count: vi.fn(),
+        findMany: vi.fn().mockResolvedValue([]),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+      },
+      articleTemplate: {
+        count: vi.fn().mockResolvedValue(0),
+      },
+      pageTemplate: {
+        count: vi.fn().mockResolvedValue(0),
+      },
+    };
+    publicContentCache = {
+      invalidate: vi.fn(),
+      invalidateArticleLayout: vi.fn(),
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        BlockTemplateService,
+        { provide: PrismaClient, useValue: prismaMock },
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: publicContentCache,
+        },
+        {
+          provide: BlockTemplateDataloaderService,
+          useValue: {
+            prime: vi.fn(),
+          },
+        },
+      ],
+    }).compile();
+
+    service = module.get<BlockTemplateService>(BlockTemplateService);
+  });
+
+  it('should create a block template', async () => {
+    await service.createBlockTemplate({
+      name: 'Name',
+      blocks: [{ [BlockType.Title]: { title: 'Title' } }],
+    });
+
+    expect(prismaMock.blockTemplate.create?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it('should create a block template containing another block template', async () => {
+    await service.createBlockTemplate({
+      name: 'Name',
+      blocks: [templateBlock('other')],
+    });
+
+    expect(prismaMock.blockTemplate.findMany).not.toHaveBeenCalled();
+    expect(prismaMock.blockTemplate.create?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it('should update a block template', async () => {
+    await service.updateBlockTemplate({
+      id: '123',
+      name: 'Name',
+      blocks: [{ [BlockType.Title]: { title: 'Title' } }],
+    });
+
+    expect(prismaMock.blockTemplate.update?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it('should update a block template containing a non circular block template', async () => {
+    prismaMock.blockTemplate.findMany?.mockResolvedValue([
+      { blocks: [storedTemplateBlock('other')] },
+    ]);
+
+    await service.updateBlockTemplate({
+      id: '123',
+      name: 'Name',
+      blocks: [templateBlock('referenced')],
+    });
+
+    expect(prismaMock.blockTemplate.update?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it('should reject a block template containing itself', async () => {
+    await expect(
+      service.updateBlockTemplate({
+        id: '123',
+        name: 'Name',
+        blocks: [templateBlock('123')],
+      })
+    ).rejects.toThrow('Block templates can not contain circular references.');
+
+    expect(prismaMock.blockTemplate.update).not.toHaveBeenCalled();
+  });
+
+  it('should reject a block template containing itself inside a flex block', async () => {
+    await expect(
+      service.updateBlockTemplate({
+        id: '123',
+        name: 'Name',
+        blocks: [flexBlock(flexBlock(templateBlock('123')))],
+      })
+    ).rejects.toThrow('Block templates can not contain circular references.');
+
+    expect(prismaMock.blockTemplate.update).not.toHaveBeenCalled();
+  });
+
+  it('should reject a block template referencing itself transitively', async () => {
+    prismaMock.blockTemplate.findMany
+      ?.mockResolvedValueOnce([{ blocks: [storedTemplateBlock('nested')] }])
+      .mockResolvedValueOnce([
+        { blocks: [storedFlexBlock(storedTemplateBlock('123'))] },
+      ]);
+
+    await expect(
+      service.updateBlockTemplate({
+        id: '123',
+        name: 'Name',
+        blocks: [templateBlock('referenced')],
+      })
+    ).rejects.toThrow('Block templates can not contain circular references.');
+
+    expect(prismaMock.blockTemplate.update).not.toHaveBeenCalled();
+  });
+
+  it('should not loop on cycles between other block templates', async () => {
+    prismaMock.blockTemplate.findMany
+      ?.mockResolvedValueOnce([{ blocks: [storedTemplateBlock('other')] }])
+      .mockResolvedValueOnce([{ blocks: [storedTemplateBlock('referenced')] }]);
+
+    await service.updateBlockTemplate({
+      id: '123',
+      name: 'Name',
+      blocks: [templateBlock('referenced')],
+    });
+
+    expect(prismaMock.blockTemplate.findMany).toHaveBeenCalledTimes(2);
+    expect(prismaMock.blockTemplate.update).toHaveBeenCalled();
+  });
+
+  it('should ignore references to missing block templates', async () => {
+    prismaMock.blockTemplate.findMany?.mockResolvedValue([]);
+
+    await service.updateBlockTemplate({
+      id: '123',
+      name: 'Name',
+      blocks: [templateBlock('missing')],
+    });
+
+    expect(prismaMock.blockTemplate.update).toHaveBeenCalled();
+  });
+
+  it('should reject a block template block without a referenced template', async () => {
+    await expect(
+      service.createBlockTemplate({
+        name: 'Name',
+        blocks: [templateBlock('')],
+      })
+    ).rejects.toThrow(
+      'Block template blocks without a referenced block template can not be saved.'
+    );
+
+    expect(prismaMock.blockTemplate.create).not.toHaveBeenCalled();
+  });
+
+  it('should reject a block template block without a referenced template inside a flex block', async () => {
+    await expect(
+      service.updateBlockTemplate({
+        id: '123',
+        name: 'Name',
+        blocks: [flexBlock(templateBlock(''))],
+      })
+    ).rejects.toThrow(
+      'Block template blocks without a referenced block template can not be saved.'
+    );
+
+    expect(prismaMock.blockTemplate.update).not.toHaveBeenCalled();
+  });
+
+  describe('article and page templates', () => {
+    it('should not list the content of article or page templates', async () => {
+      await service.getBlockTemplates({});
+
+      expect(prismaMock.blockTemplate.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { AND: [{ articleTemplate: null, pageTemplate: null }] },
+        })
+      );
+    });
+
+    it('should not list the content of article or page templates when filtering by name', async () => {
+      await service.getBlockTemplates({ filter: { name: 'Name' } });
+
+      expect(prismaMock.blockTemplate.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            AND: [
+              { articleTemplate: null, pageTemplate: null },
+              { name: { mode: 'insensitive', contains: 'Name' } },
+            ],
+          },
+        })
+      );
+    });
+
+    it('should reject a block template referencing the content of an article or page template', async () => {
+      prismaMock.blockTemplate.count?.mockResolvedValue(1);
+
+      await expect(
+        service.createBlockTemplate({
+          name: 'Name',
+          blocks: [flexBlock(templateBlock('template'))],
+        })
+      ).rejects.toThrow(
+        'Article and page templates can not be used as block templates.'
+      );
+
+      expect(prismaMock.blockTemplate.count).toHaveBeenCalledWith({
+        where: {
+          id: { in: ['template'] },
+          OR: [
+            { articleTemplate: { isNot: null } },
+            { pageTemplate: { isNot: null } },
+          ],
+        },
+      });
+      expect(prismaMock.blockTemplate.create).not.toHaveBeenCalled();
+    });
+
+    it.each(['articleTemplate', 'pageTemplate'] as const)(
+      'should not update the content of a %s as block template',
+      async owner => {
+        prismaMock[owner].count.mockResolvedValue(1);
+
+        await expect(
+          service.updateBlockTemplate({ id: '123', name: 'Name', blocks: [] })
+        ).rejects.toThrow(
+          'Article and page templates can only be changed as article or page templates.'
+        );
+
+        expect(prismaMock[owner].count).toHaveBeenCalledWith({
+          where: { blockTemplateId: '123' },
+        });
+        expect(prismaMock.blockTemplate.update).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each(['articleTemplate', 'pageTemplate'] as const)(
+      'should not delete the content of a %s as block template',
+      async owner => {
+        prismaMock[owner].count.mockResolvedValue(1);
+
+        await expect(service.deleteBlockTemplate('123')).rejects.toThrow(
+          'Article and page templates can only be changed as article or page templates.'
+        );
+
+        expect(prismaMock.blockTemplate.delete).not.toHaveBeenCalled();
+      }
+    );
+
+    it('should not query templates without referenced block templates', async () => {
+      await service.mapBlocks([{ [BlockType.Title]: { title: 'Title' } }]);
+
+      expect(prismaMock.blockTemplate.count).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should delete a block template', async () => {
+    await service.deleteBlockTemplate('1234');
+
+    expect(prismaMock.blockTemplate.delete?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it('should retire cached answers and article pages after an update', async () => {
+    prismaMock.blockTemplate.update?.mockImplementation(async () => {
+      expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+
+      return { id: '1234' };
+    });
+
+    await service.updateBlockTemplate({
+      id: '1234',
+      name: 'Name',
+      blocks: [{ [BlockType.Title]: { title: 'Title' } }],
+    });
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith();
+    expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+  });
+
+  it('should retire cached answers and article pages after a delete', async () => {
+    prismaMock.blockTemplate.delete?.mockResolvedValue({ id: '1234' });
+
+    await expect(service.deleteBlockTemplate('1234')).resolves.toEqual({
+      id: '1234',
+    });
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith();
+    expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+  });
+
+  it('should not retire cached answers when an update is rejected', async () => {
+    await expect(
+      service.updateBlockTemplate({
+        id: '1234',
+        name: 'Name',
+        blocks: [templateBlock('1234')],
+      })
+    ).rejects.toThrow();
+
+    expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+    expect(publicContentCache.invalidateArticleLayout).not.toHaveBeenCalled();
+  });
+});

@@ -1,9 +1,13 @@
-import { MailLogState, MailProviderType } from '@prisma/client';
+import {
+  EmailQualityEventType,
+  MailLogState,
+  MailProviderType,
+} from '@prisma/client';
 import { NextHandleFunction } from 'connect';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 
 export interface WebhookForSendMailProps {
-  req: express.Request;
+  req: NodeRequest;
 }
 
 export interface SendMailProps {
@@ -15,10 +19,33 @@ export interface SendMailProps {
   messageHtml?: string;
 }
 
+/** Evidence about the recipient's address a provider reports for a mail. */
+export interface MailQualitySignal {
+  type: EmailQualityEventType;
+  /** Recipient address as the provider reports it. */
+  email?: string;
+  /** Reject reason or bounce diagnosis. */
+  detail?: string | null;
+  occurredAt?: Date;
+  /**
+   * Provider's id of the event, prefixed with the provider type, so the same
+   * event delivered twice is stored once even without a mail log.
+   */
+  providerEventId?: string;
+}
+
+/**
+ * What a provider event means for us. Either about one of our mails
+ * (`mailLogID`) or only about an address (`email`), like a newsletter
+ * campaign bounce.
+ */
 export interface MailLogStatus {
-  mailLogID: string;
-  state: MailLogState;
+  mailLogID?: string;
+  email?: string;
+  /** Null for events that say something about the address but do not change the delivery state, like clicks or complaints. */
+  state: MailLogState | null;
   mailData?: string;
+  qualitySignals?: MailQualitySignal[];
 }
 
 export interface SendMailResult {
@@ -35,6 +62,7 @@ export interface MailProviderMessageState {
   state: MailLogState;
   /** Raw provider payload, stored for diagnosis. */
   mailData?: string;
+  qualitySignals?: MailQualitySignal[];
 }
 
 export enum MailTemplateStatus {
@@ -60,13 +88,28 @@ export interface MailProviderTemplate {
 export class MailProviderError extends Error {}
 
 /**
+ * A webhook call that did not come from the provider. The controller answers
+ * it with 401; every other error is ours and must not make the provider
+ * retry or, worse, drop the event.
+ */
+export class MailWebhookSignatureError extends MailProviderError {}
+
+/**
  * A send that failed for this one recipient only — their address bounced, they
  * complained, they unsubscribed, the provider will not deliver to them. The
  * provider itself is healthy and the next recipient is unaffected, so a batch
  * job may record the miss and carry on. Everything else stays a plain
  * {@link MailProviderError} and has to bring the batch down.
  */
-export class MailProviderRecipientError extends MailProviderError {}
+export class MailProviderRecipientError extends MailProviderError {
+  constructor(
+    message: string,
+    /** The provider's reason, e.g. `hard-bounce`, `spam` or `invalid`. */
+    readonly reason?: string
+  ) {
+    super(message);
+  }
+}
 
 export interface MailProvider {
   readonly id: string;

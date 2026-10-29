@@ -1,80 +1,85 @@
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import {
+  Autocomplete,
+  FormControlLabel,
+  Switch,
+  TextField,
+} from '@mui/material';
 import {
   ArticleFilter,
   DateFilterComparison,
   EventFilter,
+  EventProvidersDocument,
   FullAuthorFragment,
-  FullUserRoleFragment,
+  ImportedEventFilter,
   InputMaybe,
   PageFilter,
   PeerArticleFilter,
-  PollAnswer,
+  PeerListDocument,
+  PollDocument,
   PollVoteFilter,
   Scalars,
   TagType,
-  useEventProvidersLazyQuery,
-  usePeerListLazyQuery,
-  usePollLazyQuery,
   UserFilter,
-  useUserRoleListLazyQuery,
+  UserRoleListDocument,
 } from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdClose } from 'react-icons/md';
-import {
-  Button,
-  CheckPicker as RCheckPicker,
-  DateRangePicker,
-  Form as RForm,
-  Input,
-  SelectPicker as RSelectPicker,
-  Toggle as RToggle,
-} from 'rsuite';
 
+import { DateRangeFilter } from '../atoms/dateRangeFilter';
 import { SelectTags } from '../atoms/tag/selectTags';
 import { AuthorCheckPicker } from '../panel/authorCheckPicker';
+import { MultiSelectFilter } from './multi-select-filter';
 
-const { Group } = RForm;
-
-const Form = styled(RForm)`
+const Form = styled.div`
   width: 100%;
   display: flex;
   flex-flow: row wrap;
+  align-items: flex-start;
+  gap: 12px;
 
-  .rs-form-group {
-    width: initial;
+  > * {
+    min-width: 180px;
+  }
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: stretch;
   }
 `;
 
-const CloseIcon = styled(MdClose)`
-  margin-right: 5px;
-`;
-
-const SelectPicker = styled(RSelectPicker)`
-  width: 150px;
-`;
-
-const CheckPicker = styled(RCheckPicker)`
-  width: 200px;
-`;
-
-const Toggle = styled(RToggle)`
-  display: inline-block;
-  margin-top: 6px;
-`;
-
-const FormGroup = styled(Group)`
-  width: 100%;
-`;
-
-const WideInput = styled(Input)`
+const WideInput = styled(TextField)`
   width: 400px;
 `;
 
-const formInputStyle = {
-  marginRight: '15px',
-  marginTop: '0',
-  marginBottom: '10px',
+const StateFilter = styled(MultiSelectFilter<PublicationState>)`
+  min-width: 260px;
+`;
+
+const publicationStateFields = ['draft', 'pending', 'published'] as const;
+
+type PublicationState = (typeof publicationStateFields)[number];
+
+const publicationStateLabels: Record<PublicationState, string> = {
+  draft: 'filterableList.filter.isDraft',
+  pending: 'filterableList.filter.isPending',
+  published: 'filterableList.filter.isPublished',
+};
+
+const publicationStateChipSx: Record<PublicationState, object> = {
+  draft: {
+    backgroundColor: 'var(--wep-state-draft)',
+    color: 'var(--wep-state-draft-text)',
+  },
+  pending: {
+    backgroundColor: 'var(--wep-state-pending)',
+    color: 'var(--wep-state-pending-text)',
+  },
+  published: {
+    backgroundColor: 'var(--wep-state-published)',
+    color: 'var(--wep-state-published-text)',
+  },
 };
 
 type Field =
@@ -101,9 +106,9 @@ type Field =
   | 'tags';
 
 export type ImportableEventFilter = {
-  startsAt?: InputMaybe<Scalars['String']>;
-  endsAt?: InputMaybe<Scalars['String']>;
-  providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  startsAt?: InputMaybe<Scalars['String']['input']>;
+  endsAt?: InputMaybe<Scalars['String']['input']>;
+  providers?: ImportedEventFilter['providers'];
 };
 
 type Filter = ArticleFilter &
@@ -115,7 +120,7 @@ type Filter = ArticleFilter &
   PollVoteFilter;
 
 export interface ListViewFiltersProps {
-  fields: Field[];
+  fields: readonly Field[];
   filter: Partial<Filter>;
   isLoading: boolean;
   onSetFilter(filter: Filter): void;
@@ -131,25 +136,22 @@ export function ListViewFilters({
   tagType,
 }: ListViewFiltersProps) {
   const { t } = useTranslation();
-  const [resetFilterKey, setResetFilterkey] = useState<string>(
-    new Date().getTime().toString()
-  );
-  const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
-  const [answers, setAnswers] = useState<PollAnswer[]>([]);
-
-  const [providersFetch, { data: providersData }] = useEventProvidersLazyQuery(
+  const [providersFetch, { data: providersData }] = useLazyQuery(
+    EventProvidersDocument,
     {}
   );
 
-  const [userRoleFetch, { data: userRoleData }] = useUserRoleListLazyQuery({
-    variables: {
-      take: 200,
-    },
-  });
+  const [userRoleFetch, { data: userRoleData }] =
+    useLazyQuery(UserRoleListDocument);
 
-  const [peerListFetch, { data: peerListData }] = usePeerListLazyQuery({});
+  const userRoles = userRoleData?.userRoles?.nodes ?? [];
 
-  const [pollFetch, { data: pollData }] = usePollLazyQuery({});
+  const [peerListFetch, { data: peerListData }] = useLazyQuery(
+    PeerListDocument,
+    {}
+  );
+
+  const [pollFetch, { data: pollData }] = useLazyQuery(PollDocument, {});
 
   // check whether or not we need to get some data based on which filters are required
   const isAnswerFilter = fields.includes('answerIds');
@@ -166,7 +168,11 @@ export function ListViewFilters({
 
   useEffect(() => {
     if (isUserRoleFilter) {
-      userRoleFetch();
+      userRoleFetch({
+        variables: {
+          take: 200,
+        },
+      });
     }
   }, [isUserRoleFilter, userRoleFetch]);
 
@@ -186,71 +192,12 @@ export function ListViewFilters({
     }
   }, [isAnswerFilter, pollFetch, filter]);
 
-  /**
-   * Setup user roles, whenever user role data object changes
-   */
-  useEffect(() => {
-    if (userRoleData?.userRoles?.nodes) {
-      setUserRoles(userRoleData.userRoles.nodes);
-    }
-  }, [userRoleData?.userRoles]);
-
-  /**
-   * Setup poll
-   */
-  useEffect(() => {
-    if (pollData?.poll?.answers) {
-      setAnswers(pollData?.poll?.answers);
-    }
-  }, [pollData?.poll?.answers]);
-
+  const answers = pollData?.poll?.answers ?? [];
   const allPeers = peerListData?.peers;
 
   /**
    * helper functions to manage filter
    */
-  function isAnyFilterSet(): boolean {
-    for (const [filterKey, filterValue] of Object.entries(filter)) {
-      if (
-        filterKey &&
-        fields.includes(
-          mapFilterFieldToField(filterKey as keyof Filter) as Field
-        ) &&
-        filterValue
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function mapFilterFieldToField(name: keyof Filter): Field | null {
-    if (name === 'from' || name === 'to') {
-      return 'dates';
-    } else if (name === 'publicationDateFrom' || name === 'publicationDateTo') {
-      return 'publicationDate';
-    } else if (fields.includes(name as Field)) {
-      return name as Field;
-    } else {
-      return null;
-    }
-  }
-
-  function resetFilter(): void {
-    const cleanFilter: Record<string, any> = {};
-
-    for (const filterKey in filter) {
-      const possibleField = mapFilterFieldToField(filterKey as keyof Filter);
-
-      if (!possibleField || !fields.includes(possibleField)) {
-        cleanFilter[filterKey] = filter[filterKey as keyof Filter];
-      }
-    }
-
-    onSetFilter(cleanFilter);
-    setResetFilterkey(new Date().getTime().toString());
-  }
-
   const updateFilter = (value: Partial<Filter>) => {
     if (value.authors && !value.authors.length) {
       value = { authors: null };
@@ -276,177 +223,142 @@ export function ListViewFilters({
     onSetFilter(newFilter);
   };
 
-  /**
-   * UI helper functions
-   */
-  function resetFilterView() {
-    if (!isAnyFilterSet()) {
-      return null;
-    }
-
-    return (
-      <FormGroup>
-        <Button
-          onClick={() => resetFilter()}
-          color="red"
-          appearance="ghost"
-        >
-          <CloseIcon />
-          {t('filterableList.filter.reset')}
-        </Button>
-      </FormGroup>
-    );
-  }
-
   const authorsData = filter?.authors?.map(author => ({ id: author })) || [];
+
+  const publicationStates = publicationStateFields.filter(state =>
+    fields.includes(state)
+  );
+  const setStates = publicationStates.filter(state => !!filter[state]);
+  const pickedStates = setStates.length ? setStates : publicationStates;
 
   return (
     <Form className={className}>
       {fields.includes('text') && (
-        <Group style={formInputStyle}>
+        <div>
           <WideInput
             value={filter.text || ''}
             placeholder={t('subscriptionList.filter.searchPlaceholder')}
-            onChange={value => updateFilter({ text: value })}
+            onChange={event => updateFilter({ text: event.target.value })}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('userRole') && (
-        <Group style={formInputStyle}>
-          <CheckPicker
+        <div>
+          <MultiSelectFilter
             data-testid="userRole-combobox"
-            name="userRoles"
-            block
-            value={filter?.userRole || []}
-            data={userRoles.map(userRole => ({
+            label={t('userCreateOrEditView.userRoles')}
+            options={userRoles.map(userRole => ({
               value: userRole.id,
               label: userRole.name,
             }))}
-            placement="auto"
-            onChange={value => {
-              updateFilter({
-                userRole:
-                  userRoles
-                    .filter(userRole => value.includes(userRole.id))
-                    .map(r => r.id) || null,
-              });
-            }}
-            onClean={() => {
-              onSetFilter({ userRole: [] });
-            }}
-            placeholder={t('userCreateOrEditView.userRoles')}
+            value={filter?.userRole ?? []}
+            onChange={userRole => updateFilter({ userRole })}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('answerIds') && (
-        <Group style={formInputStyle}>
-          <CheckPicker
+        <div>
+          <MultiSelectFilter
             data-testid="answerIds-combobox"
-            name="answerIds"
-            block
-            value={filter?.answerIds || []}
-            data={answers.map(answer => ({
+            label={t('pollVoteList.answerId')}
+            options={answers.map(answer => ({
               value: answer.id,
-              label: answer.answer,
+              label: answer.answer ?? answer.id,
             }))}
-            placement="auto"
-            onChange={value => {
-              updateFilter({
-                answerIds:
-                  answers
-                    .filter(answer => value.includes(answer.id))
-                    .map(r => r.id) || null,
-              });
-            }}
-            placeholder={t('pollVoteList.answerId')}
+            value={filter?.answerIds ?? []}
+            onChange={answerIds => updateFilter({ answerIds })}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('title') && (
-        <Group style={formInputStyle}>
-          <Input
+        <div>
+          <TextField
             value={filter.title || ''}
             placeholder={t('filterableList.filter.title')}
-            onChange={value => updateFilter({ title: value })}
+            onChange={event => updateFilter({ title: event.target.value })}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('description') && (
-        <Group style={formInputStyle}>
-          <Input
+        <div>
+          <TextField
             value={filter.description || ''}
             placeholder={t('filterableList.filter.description')}
-            onChange={value => updateFilter({ description: value })}
+            onChange={event =>
+              updateFilter({ description: event.target.value })
+            }
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('slug') && (
-        <Group style={formInputStyle}>
-          <Input
+        <div>
+          <TextField
             value={filter.slug || ''}
             placeholder={t('filterableList.filter.slug')}
-            onChange={value => updateFilter({ slug: value })}
+            onChange={event => updateFilter({ slug: event.target.value })}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('preTitle') && (
-        <Group style={formInputStyle}>
-          <Input
+        <div>
+          <TextField
             value={filter.preTitle || ''}
             placeholder={t('filterableList.filter.preTitle')}
-            onChange={value => updateFilter({ preTitle: value })}
+            onChange={event => updateFilter({ preTitle: event.target.value })}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('lead') && (
-        <Group style={formInputStyle}>
-          <Input
+        <div>
+          <TextField
             value={filter.lead || ''}
             placeholder={t('filterableList.filter.lead')}
-            onChange={value => updateFilter({ lead: value })}
+            onChange={event => updateFilter({ lead: event.target.value })}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('fingerprint') && (
-        <Group style={formInputStyle}>
-          <Input
+        <div>
+          <TextField
             value={filter.fingerprint || ''}
             placeholder={t('pollVoteList.fingerprint')}
-            onChange={value => updateFilter({ fingerprint: value })}
+            onChange={event =>
+              updateFilter({ fingerprint: event.target.value })
+            }
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('name') && (
-        <Group style={formInputStyle}>
-          <Input
+        <div>
+          <TextField
             value={filter.name || ''}
             placeholder={t('filterableList.filter.name')}
-            onChange={value => updateFilter({ name: value })}
+            onChange={event => updateFilter({ name: event.target.value })}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('location') && (
-        <Group style={formInputStyle}>
-          <Input
+        <div>
+          <TextField
             value={filter.location || ''}
             placeholder={t('filterableList.filter.location')}
-            onChange={value => updateFilter({ location: value })}
+            onChange={event => updateFilter({ location: event.target.value })}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('authors') && (
-        <Group style={formInputStyle}>
+        <div>
           <AuthorCheckPicker
             list={authorsData as FullAuthorFragment[]}
             onChange={value => {
@@ -455,11 +367,11 @@ export function ListViewFilters({
               });
             }}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('tags') && (
-        <Group style={formInputStyle}>
+        <div>
           <SelectTags
             defaultTags={[]}
             selectedTags={filter.tags ?? null}
@@ -467,193 +379,158 @@ export function ListViewFilters({
             setSelectedTags={tags => updateFilter({ tags })}
             placeholder={t('navbar.articleTags')}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('providers') && (
-        <Group style={formInputStyle}>
-          <CheckPicker
-            disabled={false}
-            searchable={false}
-            virtualized
-            cleanable
-            value={filter.providers || []}
-            data={
-              providersData ?
-                providersData?.eventProviders.map(provider => ({
-                  value: provider,
-                  label: provider,
-                }))
-              : [{ value: undefined, label: undefined }]
-            }
-            placeholder={t('filterableList.filter.providers')}
-            onChange={providers => {
+        <div>
+          <MultiSelectFilter
+            label={t('filterableList.filter.providers')}
+            options={(providersData?.eventProviders ?? [])
+              .filter((provider): provider is string => Boolean(provider))
+              .map(provider => ({ value: provider, label: provider }))}
+            value={(filter.providers ?? []).filter(
+              (provider): provider is string => Boolean(provider)
+            )}
+            onChange={providers =>
               updateFilter({
-                providers:
-                  providers.length ?
-                    (providers.filter(p => p !== '') as string[])
-                  : undefined,
-              });
-            }}
-            block
-          />
-        </Group>
-      )}
-
-      {fields.includes('draft') && (
-        <Group style={formInputStyle}>
-          <Toggle
-            defaultChecked={!!filter.draft}
-            checked={!!filter.draft}
-            onChange={value => updateFilter({ draft: value || null })}
-            checkedChildren={t('filterableList.filter.isDraft')}
-            unCheckedChildren={t('filterableList.filter.isDraft')}
-          />
-        </Group>
-      )}
-
-      {fields.includes('pending') && (
-        <Group style={formInputStyle}>
-          <Toggle
-            defaultChecked={!!filter.pending}
-            checked={!!filter.pending}
-            onChange={value => updateFilter({ pending: value || null })}
-            checkedChildren={t('filterableList.filter.isPending')}
-            unCheckedChildren={t('filterableList.filter.isPending')}
-          />
-        </Group>
-      )}
-
-      {fields.includes('published') && (
-        <Group style={formInputStyle}>
-          <Toggle
-            defaultChecked={!!filter.published}
-            checked={!!filter.published}
-            onChange={value => updateFilter({ published: value || null })}
-            checkedChildren={t('filterableList.filter.isPublished')}
-            unCheckedChildren={t('filterableList.filter.isPublished')}
-          />
-        </Group>
-      )}
-
-      {fields.includes('publicationDate') && (
-        <Group style={formInputStyle}>
-          <DateRangePicker
-            key={`publication-date-${resetFilterKey}`}
-            placeholder={t('filterableList.filter.publicationDate')}
-            block
-            placement="auto"
-            value={
-              (
-                filter.publicationDateFrom?.date &&
-                filter.publicationDateTo?.date
-              ) ?
-                [
-                  new Date(filter.publicationDateFrom.date),
-                  new Date(filter.publicationDateTo.date),
-                ]
-              : null
-            }
-            onChange={value => {
-              if (value && value[0] && value[1]) {
-                updateFilter({
-                  publicationDateFrom: {
-                    date: value[0]?.toISOString(),
-                    comparison: DateFilterComparison.GreaterThan,
-                  },
-                  publicationDateTo: {
-                    date: value[1]?.toISOString(),
-                    comparison: DateFilterComparison.LowerThanOrEqual,
-                  },
-                });
-              }
-            }}
-            onClean={() =>
-              updateFilter({
-                publicationDateFrom: undefined,
-                publicationDateTo: undefined,
+                providers: providers.length ? providers : undefined,
               })
             }
           />
-        </Group>
+        </div>
+      )}
+
+      {!!publicationStates.length && (
+        <div>
+          <StateFilter
+            label={t('filterableList.filter.states')}
+            options={publicationStates.map(state => ({
+              value: state,
+              label: t(publicationStateLabels[state]),
+              chipSx: publicationStateChipSx[state],
+            }))}
+            value={pickedStates}
+            onChange={selected =>
+              updateFilter(
+                Object.fromEntries(
+                  publicationStates.map(state => [
+                    state,
+                    (
+                      !selected.length ||
+                      selected.length === publicationStates.length
+                    ) ?
+                      null
+                    : selected.includes(state) ? true
+                    : null,
+                  ])
+                )
+              )
+            }
+          />
+        </div>
+      )}
+
+      {fields.includes('publicationDate') && (
+        <div>
+          <DateRangeFilter
+            label={t('filterableList.filter.publicationDate')}
+            value={{
+              from:
+                filter.publicationDateFrom?.date ?
+                  new Date(filter.publicationDateFrom.date)
+                : null,
+              to:
+                filter.publicationDateTo?.date ?
+                  new Date(filter.publicationDateTo.date)
+                : null,
+            }}
+            onChange={range =>
+              updateFilter({
+                publicationDateFrom:
+                  range.from ?
+                    {
+                      date: range.from.toISOString(),
+                      comparison: DateFilterComparison.GreaterThan,
+                    }
+                  : undefined,
+                publicationDateTo:
+                  range.to ?
+                    {
+                      date: range.to.toISOString(),
+                      comparison: DateFilterComparison.LowerThanOrEqual,
+                    }
+                  : undefined,
+              })
+            }
+          />
+        </div>
       )}
 
       {fields.includes('dates') && (
-        <Group style={formInputStyle}>
-          <DateRangePicker
-            key={`dates-${resetFilterKey}`}
-            placeholder={t('filterableList.filter.dates')}
-            block
-            placement="auto"
-            value={
-              filter.from && filter.to ?
-                [new Date(filter.from), new Date(filter.to)]
-              : null
-            }
-            onChange={value => {
-              if (value && value[0] && value[1]) {
-                const [from, to] = value;
-                from.setHours(0);
-                from.setMinutes(0);
-                from.setSeconds(0);
-                from.setMilliseconds(0);
-                to.setHours(23);
-                to.setMinutes(59);
-                to.setSeconds(59);
-                to.setMilliseconds(999);
-                updateFilter({
-                  from: from.toISOString(),
-                  to: to.toISOString(),
-                });
-              }
+        <div>
+          <DateRangeFilter
+            label={t('filterableList.filter.dates')}
+            value={{
+              from: filter.from ? new Date(filter.from) : null,
+              to: filter.to ? new Date(filter.to) : null,
             }}
-            onClean={() => updateFilter({ from: undefined, to: undefined })}
+            onChange={range => {
+              const from = range.from ? new Date(range.from) : null;
+              const to = range.to ? new Date(range.to) : null;
+              from?.setHours(0, 0, 0, 0);
+              to?.setHours(23, 59, 59, 999);
+
+              updateFilter({
+                from: from?.toISOString(),
+                to: to?.toISOString(),
+              });
+            }}
           />
-        </Group>
+        </div>
       )}
 
       {isPeerFilter && !!allPeers && (
-        <Group style={formInputStyle}>
-          <SelectPicker
-            virtualized
+        <div>
+          <Autocomplete
+            options={allPeers.map(peer => peer.id)}
+            getOptionLabel={peerId =>
+              allPeers.find(peer => peer.id === peerId)?.name ?? peerId
+            }
             value={filter.peerId ?? null}
-            data={allPeers.map(peer => ({
-              value: peer.id,
-              label: peer.name,
-            }))}
-            placeholder={t('peerArticles.filterByPeer')}
-            searchable
-            onSelect={value => updateFilter({ peerId: value })}
-            onClean={() => updateFilter({ peerId: undefined })}
+            onChange={(_event, peerId) =>
+              updateFilter({ peerId: peerId ?? undefined })
+            }
+            renderInput={params => (
+              <TextField
+                {...params}
+                label={t('peerArticles.filterByPeer')}
+              />
+            )}
+            sx={{ minWidth: 200 }}
           />
-        </Group>
+        </div>
       )}
 
       {fields.includes('includeHidden') && (
-        <Group style={formInputStyle}>
-          <Toggle
-            defaultChecked={!!filter.includeHidden}
-            checked={!!filter.includeHidden}
-            onChange={value => updateFilter({ includeHidden: value || null })}
-            checkedChildren={
-              tagType === TagType.Article ?
-                t('filterableList.filter.includeHiddenArticles')
-              : tagType === TagType.Page ?
-                t('filterableList.filter.includeHiddenPages')
-              : t('filterableList.filter.includeHiddenArticles')
+        <div>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={!!filter.includeHidden}
+                onChange={(_event, value) =>
+                  updateFilter({ includeHidden: value || null })
+                }
+              />
             }
-            unCheckedChildren={
-              tagType === TagType.Article ?
-                t('filterableList.filter.includeHiddenArticles')
-              : tagType === TagType.Page ?
+            label={
+              tagType === TagType.Page ?
                 t('filterableList.filter.includeHiddenPages')
               : t('filterableList.filter.includeHiddenArticles')
             }
           />
-        </Group>
+        </div>
       )}
-
-      {resetFilterView()}
     </Form>
   );
 }

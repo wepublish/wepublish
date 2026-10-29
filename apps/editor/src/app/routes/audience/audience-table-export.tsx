@@ -1,7 +1,8 @@
-import { Ref, useState } from 'react';
+import { Button, MenuItem } from '@mui/material';
+import { ClickMenu, enqueueSnackbar } from '@wepublish/ui/editor';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFileDownload } from 'react-icons/md';
-import { Dropdown, IconButton, Message, toaster } from 'rsuite';
 
 import {
   exportAudienceStatsAsCsv,
@@ -43,43 +44,50 @@ export function AudienceTableExport({
         await exportAudienceStatsAsXlsx({ audienceStats, columns, filename });
       }
     } catch (error) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {(error as Error).message}
-        </Message>
-      );
+      enqueueSnackbar((error as Error).message, {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     } finally {
       setExporting(false);
     }
   }
 
   return (
-    <Dropdown
-      placement="bottomEnd"
-      renderToggle={(props: object, ref: Ref<HTMLButtonElement>) => (
-        <IconButton
-          {...props}
-          ref={ref}
-          appearance="primary"
-          icon={<MdFileDownload />}
+    <ClickMenu
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      trigger={
+        <Button
+          variant="contained"
+          startIcon={<MdFileDownload />}
           loading={loading || exporting}
           disabled={!audienceStats.length}
         >
           {t('audienceTableExport.download')}
-        </IconButton>
-      )}
+        </Button>
+      }
     >
-      <Dropdown.Item onClick={() => exportAudienceStats('csv')}>
-        {t('audienceTableExport.csv')}
-      </Dropdown.Item>
-      <Dropdown.Item onClick={() => exportAudienceStats('xlsx')}>
-        {t('audienceTableExport.xlsx')}
-      </Dropdown.Item>
-    </Dropdown>
+      {close => [
+        <MenuItem
+          key="csv"
+          onClick={() => {
+            exportAudienceStats('csv');
+            close();
+          }}
+        >
+          {t('audienceTableExport.csv')}
+        </MenuItem>,
+        <MenuItem
+          key="xlsx"
+          onClick={() => {
+            exportAudienceStats('xlsx');
+            close();
+          }}
+        >
+          {t('audienceTableExport.xlsx')}
+        </MenuItem>,
+      ]}
+    </ClickMenu>
   );
 }

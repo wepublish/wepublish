@@ -1,3 +1,4 @@
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { TagResolver } from './tag.resolver';
@@ -10,7 +11,7 @@ import { EventTagDataloader } from './event-tag.dataloader';
 import { PageTagDataloader } from './page-tag.dataloader';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PublicContentInvalidatorModule, PrismaModule],
   providers: [
     TagDataloader,
     TagService,

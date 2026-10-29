@@ -1,34 +1,54 @@
+import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
+import { Button, Checkbox } from '@mui/material';
 import {
-  FullPollVoteFragment,
-  FullPollVoteWithAnswerFragment,
-  PollQueryResult,
-  PollVoteListQueryResult,
+  PollQuery,
+  PollQueryVariables,
+  PollVoteListDocument,
+  PollVoteListQuery,
   PollVoteListQueryVariables,
 } from '@wepublish/editor/api';
 import {
+  clearFilters,
+  countActiveFilters,
+  DataTable,
+  InfoTooltip,
   ListFilters,
   ListViewContainer,
   ListViewHeader,
   Pagination,
   QueryState,
   SelectedItemsActions,
-  Table,
   TableWrapper,
   useLoader,
   useSelectableList,
+  useTableExportQuery,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Checkbox, Table as RTable } from 'rsuite';
 
-const { Column, HeaderCell, Cell: RCell } = RTable;
+const HeaderInfo = styled.span`
+  display: inline-flex;
+  margin-left: 4px;
+`;
 
 type PollVotesListProps = {
   listQueryState: QueryState<PollVoteListQueryVariables>;
-  listQuery: PollVoteListQueryResult;
-  pollQuery: PollQueryResult;
+  listQuery: useQuery.Result<
+    PollVoteListQuery,
+    PollVoteListQueryVariables,
+    'complete' | 'streaming' | 'empty'
+  >;
+  pollQuery: useQuery.Result<
+    PollQuery,
+    PollQueryVariables,
+    'complete' | 'streaming' | 'empty'
+  >;
   deleteItems: (ids: string[]) => Promise<void>;
 };
+
+const POLL_VOTE_FILTER_FIELDS = ['dates', 'answerIds', 'fingerprint'] as const;
 
 export function PollVoteList({
   listQueryState,
@@ -47,28 +67,38 @@ export function PollVoteList({
   const { loading, wrapLoading } = useLoader();
   const { t } = useTranslation();
 
+  const voteNodes = listQuery?.data?.pollVotes?.nodes;
   const ids = useMemo(
-    () => listQuery?.data?.pollVotes?.nodes?.map(n => n.id),
-    [listQuery?.data?.pollVotes?.nodes]
+    () =>
+      voteNodes?.map(n => n.id).filter((id): id is string => id !== undefined),
+    [voteNodes]
   );
   const { selectedItems, allSelected, someSelected, toggleItem, toggleAll } =
     useSelectableList({ ids });
+
+  const exportPollVotes = useTableExportQuery(
+    PollVoteListDocument,
+    {
+      filter: listQuery.variables?.filter,
+      sort: listQuery.variables?.sort,
+      order: listQuery.variables?.order,
+    },
+    data => data.pollVotes
+  );
+
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{pollQuery?.data?.poll?.question || t('pollList.noQuestion')}</h2>
+          <PageTitle>
+            {pollQuery?.data?.poll?.question || t('pollList.noQuestion')}
+          </PageTitle>
         </ListViewHeader>
-        <ListFilters
-          fields={['dates', 'answerIds', 'fingerprint']}
-          filter={filter ?? {}}
-          isLoading={listQuery?.loading}
-          onSetFilter={filter => setFilter(filter)}
-        />
       </ListViewContainer>
 
       <SelectedItemsActions selectedItems={selectedItems}>
         <Button
+          variant="outlined"
           onClick={() => wrapLoading(deleteItems(selectedItems))}
           loading={loading}
         >
@@ -76,86 +106,111 @@ export function PollVoteList({
         </Button>
       </SelectedItemsActions>
       <TableWrapper>
-        <Table
-          fillHeight
+        <DataTable
+          filters={
+            <ListFilters
+              fields={POLL_VOTE_FILTER_FIELDS}
+              filter={filter ?? {}}
+              isLoading={listQuery?.loading}
+              onSetFilter={filter => setFilter(filter)}
+            />
+          }
+          filterCount={countActiveFilters(
+            POLL_VOTE_FILTER_FIELDS,
+            filter ?? {}
+          )}
+          onResetFilters={() =>
+            setFilter(clearFilters(POLL_VOTE_FILTER_FIELDS, filter ?? {}))
+          }
+          storageKey="poll-votes"
+          exportRows={exportPollVotes}
+          exportTotalCount={listQuery?.data?.pollVotes?.totalCount}
+          data={listQuery?.data?.pollVotes?.nodes ?? []}
           loading={listQuery.loading}
-          data={listQuery?.data?.pollVotes.nodes}
           sortColumn={sortField ?? 'createdAt'}
-          sortType={sortOrder}
-          onSortColumn={(sortColumn, sortType) => {
+          sortOrder={sortOrder}
+          onSort={(sortColumn, sortType) => {
             setSortOrder(sortType!);
             setSortField(sortColumn);
           }}
-        >
-          <Column width={80}>
-            <HeaderCell>
-              <Checkbox
-                inline
-                onChange={toggleAll}
-                indeterminate={someSelected}
-                checked={allSelected}
-              />
-            </HeaderCell>
-            <RCell>
-              {({ id }: FullPollVoteWithAnswerFragment) => {
+          sortable={['createdAt']}
+          columns={[
+            {
+              id: 'column-1',
+              label: (
+                <Checkbox
+                  size="small"
+                  onChange={() => toggleAll()}
+                  indeterminate={someSelected}
+                  checked={allSelected}
+                />
+              ),
+              width: 80,
+              render: ({ id }) => {
                 return (
                   <Checkbox
-                    inline
+                    size="small"
                     value={id}
-                    onChange={toggleItem}
+                    onChange={(_event, checked) => toggleItem(id, checked)}
                     checked={selectedItems.includes(id)}
                   />
                 );
-              }}
-            </RCell>
-          </Column>
-
-          <Column
-            width={250}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('pollVoteList.createdAt')}</HeaderCell>
-            <RCell dataKey="createdAt">
-              {({ createdAt }: FullPollVoteFragment) =>
+              },
+            },
+            {
+              id: 'createdat',
+              label: t('pollVoteList.createdAt'),
+              width: 250,
+              align: 'left',
+              sortKey: 'createdAt',
+              render: ({ createdAt }) =>
                 `${new Date(createdAt).toLocaleDateString()} ${new Date(
                   createdAt
-                ).toLocaleTimeString()}`
-              }
-            </RCell>
-          </Column>
-          <Column
-            width={250}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('pollVoteList.answerId')}</HeaderCell>
-            <RCell dataKey="answerId">
-              {({ answer }: FullPollVoteWithAnswerFragment) => answer.answer}
-            </RCell>
-          </Column>
-          <Column
-            width={250}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('pollVoteList.userId')}</HeaderCell>
-            <RCell dataKey="userId">
-              {({ userId }: FullPollVoteFragment) => userId}
-            </RCell>
-          </Column>
-          <Column
-            width={250}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('pollVoteList.fingerprint')}</HeaderCell>
-            <RCell dataKey="userId">
-              {({ fingerprint }: FullPollVoteFragment) => fingerprint}
-            </RCell>
-          </Column>
-        </Table>
+                ).toLocaleTimeString()}`,
+              exportValue: ({ createdAt }) => new Date(createdAt),
+            },
+            {
+              id: 'answerid',
+              label: t('pollVoteList.answerId'),
+              width: 250,
+              align: 'left',
+              sortKey: 'answerId',
+              render: ({ answer }) => answer.answer,
+            },
+            {
+              id: 'userid',
+              columnLabel: t('pollVoteList.userId'),
+              label: (
+                <>
+                  {t('pollVoteList.userId')}
+                  <HeaderInfo>
+                    <InfoTooltip text={t('pollVoteList.userIdInfo')} />
+                  </HeaderInfo>
+                </>
+              ),
+              width: 250,
+              align: 'left',
+              sortKey: 'userId',
+              render: ({ userId }) => userId,
+            },
+            {
+              id: 'fingerprint',
+              columnLabel: t('pollVoteList.fingerprint'),
+              label: (
+                <>
+                  {t('pollVoteList.fingerprint')}
+                  <HeaderInfo>
+                    <InfoTooltip text={t('pollVoteList.fingerprintInfo')} />
+                  </HeaderInfo>
+                </>
+              ),
+              width: 250,
+              align: 'left',
+              sortKey: 'userId',
+              render: ({ fingerprint }) => fingerprint,
+            },
+          ]}
+        />
         <Pagination
           state={listQueryState}
           totalCount={listQuery?.data?.pollVotes?.totalCount}

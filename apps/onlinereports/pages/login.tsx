@@ -6,10 +6,11 @@ import {
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
+import { getApiUrl } from '@wepublish/utils/website';
+import { handleJwtLogin } from '@wepublish/utils/website/next';
 import {
+  FullSessionWithTokenWithoutUserFragment,
   getApiClient,
-  SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
@@ -23,7 +24,7 @@ const LoginWrapper = styled('div')`
   justify-content: center;
 `;
 
-type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
+type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();
@@ -64,15 +65,15 @@ export default function Login({ sessionToken }: LoginProps) {
   return (
     <LoginWrapper>
       <H3 component="h1">Login für Leserinnen und Leser</H3>
-
       <Typography
         variant="body1"
-        paragraph
+        sx={{
+          marginBottom: '16px',
+        }}
       >
         (Falls Sie noch keinen Account haben,{' '}
         <Link href={'/signup'}>klicken Sie hier.</Link>)
       </Typography>
-
       <LoginFormContainer
         defaults={{
           email: router.query?.mail as string | undefined,

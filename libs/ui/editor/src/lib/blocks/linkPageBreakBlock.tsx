@@ -1,11 +1,19 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Button, Drawer, Typography } from '@mui/material';
+import {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton, Input as RInput } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { ChooseEditImage } from '../atoms/chooseEditImage';
+import { TypographicTextArea } from '../atoms/typographicTextArea';
+import { DRAWER_WIDTHS } from '../drawer';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import { LinkPageBreakEditPanel } from '../panel/linkPageBreakEditPanel';
@@ -13,38 +21,28 @@ import { isFunctionalUpdate } from '../utility';
 import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { LinkPageBreakBlockValue, RichTextBlockValue } from './types';
 
-const Input = styled(RInput)`
-  font-size: 24px;
-  margin-bottom: 20px;
+const Wrapper = styled('div')`
+  container-type: inline-size;
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
 `;
 
-const InputWrapper = styled.div`
-  flex: 1 0 70%;
+const ContentLayout = styled('div')`
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 5fr);
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-items: start;
+
+  @container (max-width: 600px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 `;
 
-const ChooseImageWrapper = styled.div`
-  flex: 1 0 25%;
-  align-self: flex-start;
-  margin-bottom: 10px;
-`;
-
-const ContentWrapper = styled.div`
+const LinkSummary = styled('div')`
   display: flex;
-  flex-flow: row wrap;
-  margin-top: 50px;
-  gap: 24px;
-`;
-
-const IconWrapper = styled.div`
-  position: absolute;
-  z-index: 1;
-  height: 100%;
-  right: 0;
-`;
-
-const LinkPage = styled.div`
-  position: relative;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(1, 2)};
+  align-items: center;
 `;
 
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>;
@@ -57,16 +55,17 @@ export function LinkPageBreakBlock({
 }: LinkPageBreakBlockProps) {
   const { text, richText, image } = value;
   const focusRef = useRef<HTMLTextAreaElement>(null);
-  const focusInputRef = useRef<HTMLInputElement>(null);
 
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (autofocus) focusRef.current?.focus();
+    if (autofocus) {
+      focusRef.current?.focus();
+    }
   }, []);
 
   const handleRichTextChange = useCallback(
-    (richText: React.SetStateAction<RichTextBlockValue['richText']>) =>
+    (richText: SetStateAction<RichTextBlockValue['richText']>) =>
       onChange(value => ({
         ...value,
         richText:
@@ -80,50 +79,74 @@ export function LinkPageBreakBlock({
   const [isEditPanelOpen, setEditPanelOpen] = useState(false);
 
   return (
-    <>
-      <LinkPage>
-        <IconWrapper>
-          <IconButton
-            size="lg"
-            icon={<MdEdit />}
-            onClick={() => setEditPanelOpen(true)}
-          />
-        </IconWrapper>
-      </LinkPage>
-      <ContentWrapper>
-        <ChooseImageWrapper>
-          <ChooseEditImage
-            header={''}
-            image={image}
-            disabled={false}
-            openChooseModalOpen={() => setChooseModalOpen(true)}
-            openEditModalOpen={() => setEditModalOpen(true)}
-            removeImage={() =>
-              onChange(value => ({ ...value, image: undefined }))
-            }
-            minHeight={150}
-          />
-        </ChooseImageWrapper>
+    <Wrapper>
+      <TypographicTextArea
+        ref={focusRef}
+        variant="title"
+        align="center"
+        placeholder={t('blocks.title.title')}
+        value={text ?? ''}
+        disabled={disabled}
+        onChange={event => {
+          const text = event.target.value;
+          onChange(value => ({ ...value, text }));
+        }}
+      />
 
-        <InputWrapper>
-          <Input
-            ref={focusInputRef}
-            placeholder={t('blocks.linkPageBreak.title')}
-            value={text}
-            disabled={disabled}
-            onChange={text => onChange({ ...value, text })}
-          />
+      <ContentLayout>
+        <ChooseEditImage
+          onSelect={image => {
+            setChooseModalOpen(false);
+            onChange(value => ({ ...value, image, imageID: image.id }));
+          }}
+          image={image}
+          disabled={!!disabled}
+          maxHeight={200}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() =>
+            onChange(value => ({ ...value, image: undefined }))
+          }
+        />
 
-          <RichTextBlock
-            value={richText}
-            onChange={handleRichTextChange}
-          />
-        </InputWrapper>
-      </ContentWrapper>
+        <RichTextBlock
+          value={richText}
+          disabled={disabled}
+          onChange={handleRichTextChange}
+        />
+      </ContentLayout>
+
+      <LinkSummary>
+        <Button
+          variant="text"
+          startIcon={<MdEdit />}
+          disabled={disabled}
+          onClick={() => setEditPanelOpen(true)}
+        >
+          {t('blocks.linkPageBreak.editSettings')}
+        </Button>
+
+        {!value.hideButton && (value.linkText || value.linkURL) && (
+          <Typography
+            variant="caption"
+            color="text.secondary"
+          >
+            {[value.linkText, value.linkURL].filter(Boolean).join(' → ')}
+          </Typography>
+        )}
+      </LinkSummary>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -136,8 +159,18 @@ export function LinkPageBreakBlock({
       </Drawer>
       {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel
@@ -148,8 +181,16 @@ export function LinkPageBreakBlock({
         </Drawer>
       )}
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditPanelOpen}
-        size="sm"
         onClose={() => setEditPanelOpen(false)}
       >
         <LinkPageBreakEditPanel
@@ -158,6 +199,6 @@ export function LinkPageBreakBlock({
           onChange={onChange}
         />
       </Drawer>
-    </>
+    </Wrapper>
   );
 }

@@ -24,6 +24,8 @@ export const unselectPassword: Record<
     | 'notificationConfirmations'
     | 'emailQuality'
     | 'emailQualityEvents'
+    | 'seoChecklistItems'
+    | 'apiTokens'
   >,
   boolean
 > = {

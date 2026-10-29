@@ -3,6 +3,12 @@ export * from './lib/block-styles/block-styles.model';
 export * from './lib/block-styles/block-styles.service';
 export * from './lib/block-styles/block-styles-dataloader.service';
 
+export * from './lib/block-template/block-template.module';
+export * from './lib/block-template/block-template.model';
+export * from './lib/block-template/block-template.service';
+export * from './lib/block-template/block-template-dataloader.service';
+export * from './lib/block-template/block-template-owner';
+
 export * from './lib/title/title-block.model';
 export * from './lib/poll/poll-block.model';
 export * from './lib/comment/comment-block.model';
@@ -21,12 +27,15 @@ export * from './lib/mailchimp-form/mailchimp-subscribe.service';
 export * from './lib/mailchimp-form/mailchimp-subscribe.resolver';
 export * from './lib/embed/iframe-block.model';
 export * from './lib/base-block.model';
+export * from './lib/timing/block-timing.model';
+export * from './lib/timing/block-timing';
+export * from './lib/timing/displayed-blocks';
 
 export * from './lib/teaser/teaser-flex.model';
 export * from './lib/teaser/teaser-grid.model';
 export * from './lib/teaser/teaser-list.model';
 export * from './lib/teaser/teaser.model';
-export * from './lib/teaser/slot-teasers-loader';
+export * from './lib/block-tree/block-tree-loader';
 
 export * from './lib/teaser-slot/teaser-slots-autofill-config.model';
 export * from './lib/teaser-slot/teaser-slot.model';

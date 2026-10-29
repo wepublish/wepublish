@@ -1,64 +1,47 @@
-import { ApolloError } from '@apollo/client';
-import { Poll, usePollsQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { FullPollFragment, PollsDocument } from '@wepublish/editor/api';
+import {
+  CanCreatePoll,
+  CanDeletePoll,
+  CanGetPoll,
+  CanUpdatePoll,
+} from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
   CreatePollBtn,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   DeletePollModal,
+  IconButton,
+  IconButtonTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PaddedCell,
+  PageTitle,
+  Pagination,
   PollClosedAtView,
   PollOpensAtView,
   PollStateIndication,
-  Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdDelete } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton,
-  Message,
-  Pagination,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
-
-const onErrorToast = (error: ApolloError) => {
-  if (error?.message) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {error?.message}
-      </Message>
-    );
-  }
-};
+import { MdDelete, MdHowToVote } from 'react-icons/md';
+import { Link as RouterLink } from 'react-router-dom';
 
 function PollList() {
   const { t } = useTranslation();
-  const [pollDelete, setPollDelete] = useState<Poll | undefined>(undefined);
+  const [pollDelete, setPollDelete] = useState<FullPollFragment | undefined>(
+    undefined
+  );
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const { data, loading, refetch } = usePollsQuery({
+  const { data, loading, refetch } = useQuery(PollsDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
     },
-    onError: onErrorToast,
   });
 
   /**
@@ -76,7 +59,7 @@ function PollList() {
       <ListViewContainer>
         {/* title */}
         <ListViewHeader>
-          <h2>{t('pollList.title')}</h2>
+          <PageTitle>{t('pollList.title')}</PageTitle>
         </ListViewHeader>
 
         <ListViewActions>
@@ -86,113 +69,97 @@ function PollList() {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey="polls"
           data={data?.polls?.nodes || []}
-        >
-          <Column width={50}>
-            <HeaderCell>{t('pollList.state')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<Poll>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'state',
+              label: t('pollList.state'),
+              width: 50,
+              render: rowData => (
                 <PollStateIndication
                   closedAt={rowData.closedAt}
                   opensAt={rowData.opensAt}
                 />
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('pollList.question')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<Poll>) => (
+              ),
+            },
+            {
+              id: 'question',
+              alwaysVisible: true,
+              label: t('pollList.question'),
+              width: 200,
+              render: rowData => (
                 <Link to={`/polls/edit/${rowData.id}`}>
                   {rowData.question || t('pollList.noQuestion')}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={300}
-            resizable
-          >
-            <HeaderCell>{t('pollList.opensAt')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollOpensAtView poll={rowData as Poll} />
-              )}
-            </RCell>
-          </Column>
-          {/* opens at */}
-          <Column
-            width={300}
-            resizable
-          >
-            <HeaderCell>{t('pollList.closedAt')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollClosedAtView poll={rowData as Poll} />
-              )}
-            </RCell>
-          </Column>
-          {/* delete */}
-          <Column
-            resizable
-            fixed="right"
-          >
-            <HeaderCell align={'center'}>{t('pollList.delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(poll: RowDataType<Poll>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setPollDelete(poll as Poll)}
+              ),
+            },
+            {
+              id: 'opensat',
+              label: t('pollList.opensAt'),
+              width: 300,
+              render: rowData => (
+                <PollOpensAtView
+                  poll={rowData as unknown as FullPollFragment}
                 />
-              )}
-            </PaddedCell>
-          </Column>
-          {/* show votes */}
-          <Column
-            resizable
-            fixed="right"
-          >
-            <HeaderCell align={'center'}>{t('pollList.showVotes')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(poll: RowDataType<Poll>) => (
-                <Button
-                  appearance={'primary'}
-                  href={`/polls/votes/${poll?.id}`}
-                >
-                  {t('pollList.showVotes')}
-                </Button>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+            {
+              id: 'closedat',
+              label: t('pollList.closedAt'),
+              width: 300,
+              render: rowData => (
+                <PollClosedAtView
+                  poll={rowData as unknown as FullPollFragment}
+                />
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 140,
+              align: 'center',
+              fixed: true,
+              render: poll => (
+                <>
+                  <IconButtonTooltip caption={t('pollList.showVotes')}>
+                    <IconButton
+                      component={RouterLink}
+                      to={`/polls/votes/${poll?.id}`}
+                      aria-label={t('pollList.showVotes')}
+                      size="small"
+                    >
+                      <MdHowToVote />
+                    </IconButton>
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      aria-label={t('delete')}
+                      color="error"
+                      size="small"
+                      onClick={() =>
+                        setPollDelete(poll as unknown as FullPollFragment)
+                      }
+                    >
+                      <MdDelete />
+                    </IconButton>
+                  </IconButtonTooltip>
+                </>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.polls?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
+          }}
+          totalCount={data?.polls?.totalCount ?? 0}
         />
       </TableWrapper>
 
@@ -206,9 +173,9 @@ function PollList() {
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_POLL',
-  'CAN_CREATE_POLL',
-  'CAN_UPDATE_POLL',
-  'CAN_DELETE_POLL',
+  CanGetPoll.id,
+  CanCreatePoll.id,
+  CanUpdatePoll.id,
+  CanDeletePoll.id,
 ])(PollList);
 export { CheckedPermissionComponent as PollList };
