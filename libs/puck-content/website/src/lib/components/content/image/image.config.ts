@@ -1,22 +1,19 @@
 import { ComponentConfig } from '@puckeditor/core';
 
-import { imageFieldAi, resolvedFieldAi } from '@wepublish/puck-content/editor';
+import { resolvedFieldAi } from '@wepublish/puck-content/editor';
 import { UserFields } from '../../../types';
+import { withImageDataSource } from '../../with-datasource';
 import { ImageConfigProps, ImageRender } from './image.component';
 
 export const ImageConfig: ComponentConfig<{
   props: ImageConfigProps;
   fields: UserFields;
-}> = {
+}> = withImageDataSource<ImageConfigProps>({
   ai: {
     instructions:
-      'A single image from the image library with an optional caption shown below it. Use it to illustrate the surrounding content. imageId references an already uploaded image — keep the existing value and never invent one; caption is a short descriptive text or credit.',
+      'A single image from the image library with an optional caption shown below it. Use it to illustrate the surrounding content. The image is referenced by the single image datasource — keep the existing id and never invent one; caption is a short descriptive text or credit.',
   },
   fields: {
-    imageId: {
-      type: 'image',
-      ai: imageFieldAi,
-    },
     caption: {
       type: 'text',
       ai: {
@@ -26,9 +23,10 @@ export const ImageConfig: ComponentConfig<{
     },
     image: {
       type: 'resolved',
+      visible: false,
       ai: resolvedFieldAi,
     },
   },
   defaultProps: {},
   render: ImageRender,
-};
+});

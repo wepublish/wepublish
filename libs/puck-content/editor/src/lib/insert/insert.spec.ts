@@ -2,11 +2,9 @@ import { Config } from '@puckeditor/core';
 
 import {
   acceptingZones,
-  collectBlockIds,
-  initialSelectionMemory,
   insertZones,
-  nextSelectionMemory,
   slotZones,
+  stopPointerDown,
 } from './insert.helpers';
 
 const config = {
@@ -105,84 +103,18 @@ describe('insertZones', () => {
   });
 });
 
-describe('collectBlockIds', () => {
-  it('collects the ids of all nested blocks', () => {
-    expect(
-      collectBlockIds([
-        {
-          type: 'Container',
-          props: {
-            id: 'c1',
-            content: [{ type: 'Title', props: { id: 't1' } }],
-          },
-        },
-        {
-          type: 'Slider',
-          props: {
-            id: 's1',
-            items: [{ content: [{ type: 'Image', props: { id: 'i1' } }] }],
-          },
-        },
-      ])
-    ).toEqual(new Set(['c1', 't1', 's1', 'i1']));
-  });
-});
+describe('stopPointerDown', () => {
+  it('keeps a pointerdown from reaching the draggable around it', () => {
+    const draggable = document.createElement('div');
+    const button = document.createElement('button');
+    const onDragStart = vi.fn();
 
-describe('nextSelectionMemory', () => {
-  const step = (
-    memory: ReturnType<typeof initialSelectionMemory>,
-    selectedId: string | null,
-    ids: string[],
-    isDragging = false
-  ) =>
-    nextSelectionMemory(memory, {
-      selectedId,
-      ids: new Set(ids),
-      isDragging,
-    });
+    draggable.append(button);
+    draggable.addEventListener('pointerdown', onDragStart);
+    stopPointerDown(button);
 
-  it('restores the selection from before a drag when the dropped block gets selected', () => {
-    let result = step(initialSelectionMemory(), 'c1', ['c1']);
-    expect(result.restore).toBeUndefined();
+    button.dispatchEvent(new Event('pointerdown', { bubbles: true }));
 
-    result = step(result.memory, null, ['c1'], true);
-    result = step(result.memory, null, ['c1', 'new'], true);
-    result = step(result.memory, 'new', ['c1', 'new']);
-
-    expect(result.restore).toEqual({ id: 'c1' });
-  });
-
-  it('restores the root when nothing was selected before the drag', () => {
-    let result = step(initialSelectionMemory(), null, ['c1']);
-    result = step(result.memory, null, ['c1'], true);
-    result = step(result.memory, null, ['c1', 'new']);
-    result = step(result.memory, 'new', ['c1', 'new']);
-
-    expect(result.restore).toEqual({ id: null });
-  });
-
-  it('keeps the selection of a moved block', () => {
-    let result = step(initialSelectionMemory(), 'c1', ['c1', 't1']);
-    result = step(result.memory, null, ['c1', 't1'], true);
-    result = step(result.memory, 't1', ['c1', 't1']);
-
-    expect(result.restore).toBeUndefined();
-  });
-
-  it('keeps a duplicated block selected', () => {
-    let result = step(initialSelectionMemory(), 'c1', ['c1']);
-    result = step(result.memory, 'copy', ['c1', 'copy']);
-
-    expect(result.restore).toBeUndefined();
-  });
-
-  it('lets the user select the inserted block afterwards', () => {
-    let result = step(initialSelectionMemory(), 'c1', ['c1']);
-    result = step(result.memory, null, ['c1'], true);
-    result = step(result.memory, 'new', ['c1', 'new']);
-    result = step(result.memory, 'c1', ['c1', 'new']);
-    result = step(result.memory, 'new', ['c1', 'new']);
-
-    expect(result.restore).toBeUndefined();
+    expect(onDragStart).not.toHaveBeenCalled();
   });
 });

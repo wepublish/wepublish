@@ -1,16 +1,17 @@
 import { ComponentConfig } from '@puckeditor/core';
 
-import { imageFieldAi, resolvedFieldAi } from '@wepublish/puck-content/editor';
+import { resolvedFieldAi } from '@wepublish/puck-content/editor';
+import { withImageDataSource } from '../../with-datasource';
 import { UserFields } from '../../../types';
 import { QuoteConfigProps, QuoteRender } from './quote.component';
 
 export const QuoteConfig: ComponentConfig<{
   props: QuoteConfigProps;
   fields: UserFields;
-}> = {
+}> = withImageDataSource<QuoteConfigProps>({
   ai: {
     instructions:
-      'A highlighted pull quote with an attribution. Use it to emphasise a notable statement or citation. The quote field holds the quoted text and the author field holds the person or source it is attributed to. imageId references an already uploaded image — keep the existing value and never invent one.',
+      'A highlighted pull quote with an attribution. Use it to emphasise a notable statement or citation. The quote field holds the quoted text and the author field holds the person or source it is attributed to. The image is referenced by the single image datasource — keep the existing value and never invent one.',
   },
   fields: {
     quote: {
@@ -21,12 +22,9 @@ export const QuoteConfig: ComponentConfig<{
       type: 'text',
       contentEditable: true,
     },
-    imageId: {
-      type: 'image',
-      ai: imageFieldAi,
-    },
     image: {
       type: 'resolved',
+      visible: false,
       ai: resolvedFieldAi,
     },
   },
@@ -36,4 +34,4 @@ export const QuoteConfig: ComponentConfig<{
   },
 
   render: QuoteRender,
-};
+});

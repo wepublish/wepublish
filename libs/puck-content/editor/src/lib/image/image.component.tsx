@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { Drawer } from '@mui/material';
-import { FieldLabel, FieldProps } from '@puckeditor/core';
+import { Button, FieldLabel, FieldProps } from '@puckeditor/core';
 import { ImageDocument } from '@wepublish/editor/api';
 import {
   ChooseEditImage,
@@ -10,7 +10,9 @@ import {
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MdAdd } from 'react-icons/md';
 
+import { FieldStack } from '../field-controls';
 import { ImageField, ImageValue } from './image.field';
 
 const IMAGE_HEIGHT = 180;
@@ -19,18 +21,42 @@ const drawerSlotProps = {
   paper: { sx: { width: DRAWER_WIDTHS.sm, maxWidth: '100vw' } },
 };
 
-export type ImageFieldRenderProps = FieldProps<
-  ImageField,
-  ImageValue | undefined
->;
+const ImageSelectDrawer = ({
+  open,
+  onClose,
+  onSelect,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onSelect: (id: string) => void;
+}) => (
+  <Drawer
+    anchor="right"
+    slotProps={drawerSlotProps}
+    open={open}
+    onClose={onClose}
+  >
+    <ImageSelectPanel
+      onClose={onClose}
+      onSelect={selected => {
+        onClose();
+        onSelect(selected.id);
+      }}
+    />
+  </Drawer>
+);
 
-export const ImageFieldRender = ({
-  field,
+export type ImagePickerProps = {
+  value: ImageValue | undefined;
+  onChange: (value: ImageValue | undefined) => void;
+  readOnly?: boolean;
+};
+
+export const ImagePicker = ({
   value,
   onChange,
   readOnly,
-}: ImageFieldRenderProps) => {
-  const { t } = useTranslation();
+}: ImagePickerProps) => {
   const [chooseOpen, setChooseOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
 
@@ -41,11 +67,7 @@ export const ImageFieldRender = ({
   const image = value ? data?.image : undefined;
 
   return (
-    <FieldLabel
-      label={field.label ?? t('', 'Image')}
-      readOnly={readOnly}
-      el="div"
-    >
+    <>
       <ChooseEditImage
         image={image}
         disabled={!!readOnly || loading}
@@ -56,20 +78,11 @@ export const ImageFieldRender = ({
         onSelect={selected => onChange(selected.id)}
       />
 
-      <Drawer
-        anchor="right"
-        slotProps={drawerSlotProps}
+      <ImageSelectDrawer
         open={chooseOpen}
         onClose={() => setChooseOpen(false)}
-      >
-        <ImageSelectPanel
-          onClose={() => setChooseOpen(false)}
-          onSelect={selected => {
-            setChooseOpen(false);
-            onChange(selected.id);
-          }}
-        />
-      </Drawer>
+        onSelect={onChange}
+      />
 
       {image && (
         <Drawer
@@ -85,6 +98,84 @@ export const ImageFieldRender = ({
           />
         </Drawer>
       )}
+    </>
+  );
+};
+
+export type ImagePickerListProps = {
+  value: ImageValue[];
+  onChange: (value: ImageValue[]) => void;
+  readOnly?: boolean;
+};
+
+export const ImagePickerList = ({
+  value,
+  onChange,
+  readOnly,
+}: ImagePickerListProps) => {
+  const { t } = useTranslation();
+  const [addOpen, setAddOpen] = useState(false);
+
+  return (
+    <FieldStack>
+      {value.map((id, index) => (
+        <ImagePicker
+          key={`${index}-${id}`}
+          value={id}
+          readOnly={readOnly}
+          onChange={next =>
+            onChange(
+              next ?
+                value.map((current, i) => (i === index ? next : current))
+              : value.filter((_, i) => i !== index)
+            )
+          }
+        />
+      ))}
+
+      <Button
+        variant="secondary"
+        icon={<MdAdd />}
+        disabled={readOnly}
+        fullWidth
+        onClick={() => setAddOpen(true)}
+      >
+        {t('', 'Add image')}
+      </Button>
+
+      <ImageSelectDrawer
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        onSelect={id => onChange([...value, id])}
+      />
+    </FieldStack>
+  );
+};
+
+export type ImageFieldRenderProps = FieldProps<
+  ImageField,
+  ImageValue | undefined
+>;
+
+export const ImageFieldRender = ({
+  field,
+  value,
+  onChange,
+  readOnly,
+}: ImageFieldRenderProps) => {
+  const { t } = useTranslation();
+
+  return (
+    <FieldLabel
+      label={field.label ?? t('', 'Image')}
+      readOnly={readOnly}
+      el="div"
+    >
+      <ImagePicker
+        value={value}
+        onChange={onChange}
+        readOnly={readOnly}
+      />
     </FieldLabel>
   );
 };

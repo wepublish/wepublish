@@ -1,5 +1,7 @@
 import {
+  datasourceIds,
   datasourcesSchema,
+  setDatasourceIdList,
   setDatasourceIds,
   setDatasourceType,
   toDatasourceTypes,
@@ -99,5 +101,50 @@ describe('setDatasourceIds', () => {
         'p1, p2,,'
       )
     ).toEqual({ page: { type: 'multiple', ids: ['p1', 'p2'] } });
+  });
+});
+
+describe('setDatasourceIdList', () => {
+  it('sets the id of a single datasource from the first id', () => {
+    expect(
+      setDatasourceIdList({ image: { type: 'single', id: '' } }, 'image', [
+        'i1',
+      ])
+    ).toEqual({ image: { type: 'single', id: 'i1' } });
+    expect(
+      setDatasourceIdList({ image: { type: 'single', id: 'i1' } }, 'image', [])
+    ).toEqual({ image: { type: 'single', id: '' } });
+  });
+
+  it('sets the ids of a multiple datasource without empty ids', () => {
+    expect(
+      setDatasourceIdList({ image: { type: 'multiple', ids: [] } }, 'image', [
+        'i1',
+        '',
+        'i2',
+      ])
+    ).toEqual({ image: { type: 'multiple', ids: ['i1', 'i2'] } });
+  });
+
+  it('leaves list datasources untouched', () => {
+    const value = { image: { type: 'list' as const } };
+
+    expect(setDatasourceIdList(value, 'image', ['i1'])).toBe(value);
+  });
+});
+
+describe('datasourceIds', () => {
+  it('returns the referenced ids of a model', () => {
+    expect(
+      datasourceIds({ image: { type: 'single', id: 'i1' } }, 'image')
+    ).toEqual(['i1']);
+    expect(
+      datasourceIds({ image: { type: 'single', id: '' } }, 'image')
+    ).toEqual([]);
+    expect(
+      datasourceIds({ image: { type: 'multiple', ids: ['i1', 'i2'] } }, 'image')
+    ).toEqual(['i1', 'i2']);
+    expect(datasourceIds({ image: { type: 'list' } }, 'image')).toEqual([]);
+    expect(datasourceIds(undefined, 'image')).toEqual([]);
   });
 });
