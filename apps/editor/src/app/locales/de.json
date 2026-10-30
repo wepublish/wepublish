@@ -949,6 +949,8 @@
       "newUser": "Neuer <0>User</0> erfasst",
       "dashboard": "Dashboard",
       "notifications": "Mitteilungen",
+      "moreNotifications_one": "+{{count}} weitere Mitteilung",
+      "moreNotifications_other": "+{{count}} weitere Mitteilungen",
       "showAllNotifications": "Alle anzeigen",
       "greeting": "Hallo, {{name}}!",
       "noData": "Keine aktuellen Abo-Daten",

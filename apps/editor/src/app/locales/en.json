@@ -949,6 +949,8 @@
       "newUser": "New <0>user</0> added",
       "dashboard": "Dashboard",
       "notifications": "Notifications",
+      "moreNotifications_one": "+{{count}} more notification",
+      "moreNotifications_other": "+{{count}} more notifications",
       "showAllNotifications": "Show all",
       "greeting": "Hello, {{name}}!",
       "noData": "No current subscriber data",
