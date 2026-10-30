@@ -51,7 +51,6 @@ export * from './lib/visibility-outline/visibility-outline';
 export * from './lib/visibility-outline/visibility-outline.helpers';
 export * from './lib/visibility/visibility';
 export * from './lib/visibility/visibility.field';
-export * from './lib/stock-image/stock-image';
 export * from './lib/switch/switch';
 export * from './lib/switch/switch.field';
 export * from './lib/tag/tag';
