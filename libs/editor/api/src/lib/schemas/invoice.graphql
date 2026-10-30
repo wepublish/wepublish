@@ -40,6 +40,8 @@ fragment Invoice on Invoice {
       paymentProviderID
     }
   }
+  userID
+  sellableKind
 }
 
 query Invoices(

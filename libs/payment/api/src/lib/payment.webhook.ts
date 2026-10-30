@@ -66,7 +66,8 @@ export class PaymentWebhookController {
               });
 
               if (
-                paymentStatus.state === PaymentState.paid &&
+                (paymentStatus.state === PaymentState.paid ||
+                  paymentStatus.state === PaymentState.chargeback) &&
                 payment?.invoiceID
               ) {
                 await this.invoicePaidNotifier.notify(payment.invoiceID);

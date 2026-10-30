@@ -58,6 +58,46 @@ describe('editor command registry', () => {
     expect(ids(['newsletter-editor'])).toContain('newsletter');
   });
 
+  it('hides gift codes while their feature is off, as the sidebar does', () => {
+    const t = ((key: string) => key) as TFunction;
+    const i18n = { getFixedT: () => t } as unknown as I18n;
+    const ids = (features: string[]) =>
+      allowedCommands(
+        editorCommands(t, i18n),
+        undefined,
+        new Set(features)
+      ).map(({ id }) => id);
+    const giftCommands = ['giftCodeOffers', 'giftCodes', 'createGiftCodeOffer'];
+
+    expect(ids([]).filter(id => giftCommands.includes(id))).toEqual([]);
+    expect(ids(['gift-codes'])).toEqual(expect.arrayContaining(giftCommands));
+  });
+
+  it('files gifts under their own section, below /gift-codes', () => {
+    const giftNavigation = allCommands.filter(({ id }) =>
+      ['giftCodeOffers', 'giftCodes'].includes(id)
+    );
+    const giftPaths = (
+      allCommands.filter(({ id }) =>
+        ['giftCodeOffers', 'giftCodes', 'createGiftCodeOffer'].includes(id)
+      ) as typeof allCommands
+    ).map(({ perform }) => {
+      let path = '';
+      perform({ navigate: to => (path = to), close: () => undefined });
+      return path;
+    });
+
+    expect(giftNavigation.map(({ sectionKey }) => sectionKey)).toEqual([
+      'navbar.gifts',
+      'navbar.gifts',
+    ]);
+    expect(giftPaths).toEqual([
+      '/gift-codes/offers',
+      '/gift-codes',
+      '/gift-codes/offers/create',
+    ]);
+  });
+
   it('leaves a command that acts rather than navigates out of the routes', () => {
     expect(commandPaths().length).toBeLessThanOrEqual(allCommands.length);
   });

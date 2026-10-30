@@ -271,6 +271,73 @@ describe('UpgradeSubscriptionService', () => {
       }).toMatchSnapshot();
     });
 
+    it('hands an upgrade a 100 % discount code makes free to the payment service', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        id: 'subscriptionId',
+        userID: 'userId',
+        currency: Currency.CHF,
+        paymentPeriodicity: PaymentPeriodicity.yearly,
+        extendable: true,
+        autoRenew: false,
+        periods: [
+          {
+            id: '1',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 600,
+            endsAt: new Date('2025-07-01'),
+            createdAt: new Date('2024-07-01'),
+            startsAt: new Date('2024-07-01'),
+            invoice: {
+              paidAt: new Date('2024-07-01'),
+            },
+          },
+        ],
+      });
+      prismaMock.memberPlan.findUnique.mockResolvedValue({
+        id: 'memberPlanId',
+        currency: Currency.CHF,
+        availablePaymentMethods: [
+          {
+            paymentMethodIDs: ['paymentMethodId'],
+            paymentPeriodicities: [PaymentPeriodicity.yearly],
+            forceAutoRenewal: true,
+          },
+        ],
+      });
+      discountCodeserviceMock.getValidDiscountCode.mockResolvedValue({
+        id: 'discountCodeId',
+        discountPercent: 100,
+      });
+      memberContextMock.createSubscription.mockResolvedValue({
+        invoice: {
+          id: 'invoiceId',
+        },
+      });
+
+      await service.upgradeSubscription({
+        subscriptionId: 'subscriptionId',
+        memberPlanId: 'memberPlanId',
+        paymentMethodId: 'paymentMethodId',
+        userId: 'userId',
+        monthlyAmount: 80,
+        discountCode: 'FREE',
+      });
+
+      expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
+        expect.objectContaining({
+          discount: 960,
+          discountCodeId: 'discountCodeId',
+        })
+      );
+      expect(paymentServiceMock.createPaymentWithProvider).toHaveBeenCalledWith(
+        expect.objectContaining({
+          invoice: { id: 'invoiceId' },
+          paymentMethodID: 'paymentMethodId',
+          userId: 'userId',
+        })
+      );
+    });
+
     it('should calculate the correct discount', async () => {
       prismaMock.subscription.findUnique.mockResolvedValue({
         userID: 'userId',

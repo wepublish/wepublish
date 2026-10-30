@@ -285,9 +285,10 @@ model Image {
   paymentMethods PaymentMethod[]
 
   banners               Banner[]
-  peerProfileLogo       PeerProfile[] @relation("logo")
-  peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
+  peerProfileLogo       PeerProfile[]   @relation("logo")
+  peerProfileSquareLogo PeerProfile[]   @relation("squareLogo")
   goodies               Goodie[]
+  giftCodeOffers        GiftCodeOffer[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -514,6 +515,10 @@ model InvoiceItem {
   goodie   Goodie? @relation(fields: [goodieId], references: [id], onDelete: SetNull)
   goodieId String?
 
+  fulfilledAt DateTime? @db.Timestamptz(3)
+  revokedAt   DateTime? @db.Timestamptz(3)
+  giftCode    GiftCode?
+
   @@index([invoiceId])
   @@map("invoices.items")
 }
@@ -546,9 +551,18 @@ model Invoice {
 
   subscriptionPeriods SubscriptionPeriod[]
 
+  userID String?
+  user   User?   @relation("InvoiceBuyer", fields: [userID], references: [id], onDelete: SetNull)
+
+  sellableKind SellableKind?
+
+  redeemedGiftCode GiftCode?
+
   @@index([mail])
   @@index([subscriptionID])
   @@index([dueAt])
+  @@index([userID])
+  @@index([sellableKind])
   @@map("invoices")
 }
 
@@ -766,6 +780,16 @@ enum ProductType {
   Donation     @map("Donation")
 }
 
+enum SellableKind {
+  giftCode @map("gift-code")
+}
+
+enum GiftCodeCancellationReason {
+  manual          @map("manual")
+  chargeback      @map("chargeback")
+  invoiceCanceled @map("invoice-canceled")
+}
+
 model MemberPlan {
   id         String   @id @default(dbgenerated("uuidv7()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
@@ -805,10 +829,12 @@ model MemberPlan {
   subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
-  crowdfundings Crowdfunding[]
-  paywalls      PaywallMemberplan[]
-  discountCodes DiscountCode[]
-  goodies       Goodie[]
+  crowdfundings  Crowdfunding[]
+  paywalls       PaywallMemberplan[]
+  discountCodes  DiscountCode[]
+  goodies        Goodie[]
+  giftCodeOffer  GiftCodeOffer?
+  giftCodes      GiftCode[]
 
   @@index([name])
   @@map("member.plans")
@@ -979,6 +1005,9 @@ model PaymentMethod {
   migrateFromPlans         MemberPlan[]                      @relation("PaymentMethodMigration")
   paymentMethodChangesFrom SubscriptionPaymentMethodChange[] @relation("PaymentMethodChangeFrom")
   paymentMethodChangesTo   SubscriptionPaymentMethodChange[] @relation("PaymentMethodChangeTo")
+  giftCodeOffers           GiftCodeOffer[]
+  giftCodeOfferRenewals    GiftCodeOffer[]                   @relation("GiftCodeOfferRenewalPaymentMethod")
+  giftCodeRenewals         GiftCode[]                        @relation("GiftCodeRenewalPaymentMethod")
 
   @@map("payment.methods")
 }
@@ -1176,6 +1205,7 @@ model Subscription {
   mailSendJobEntries MailSendJobRecipient[]
 
   paymentMethodChanges SubscriptionPaymentMethodChange[]
+  redeemedGiftCodes    GiftCode[]
 
   @@index([userID])
   @@index([memberPlanID, createdAt, id])
@@ -1317,6 +1347,10 @@ model User {
   notificationConfirmations NotificationConfirmation[]
   seoChecklistItems         SeoChecklistItem[]
   apiTokens                 ApiToken[]
+  invoices                  Invoice[]                  @relation("InvoiceBuyer")
+  boughtGiftCodes           GiftCode[]                 @relation("GiftCodeBuyer")
+  redeemedGiftCodes         GiftCode[]                 @relation("GiftCodeRedeemer")
+  createdGiftCodes          GiftCode[]                 @relation("GiftCodeCreator")
 
   @@index([createdAt])
   @@map("users")
@@ -2479,4 +2513,82 @@ model AuditLog {
   @@index([sessionId])
   @@index([entity, recordId])
   @@map("audit_logs")
+}
+
+model GiftCodeOffer {
+  id                     String             @id @default(dbgenerated("uuidv7()"))
+  createdAt              DateTime           @default(now()) @db.Timestamptz(3)
+  modifiedAt             DateTime           @updatedAt @db.Timestamptz(3)
+  name                   String
+  description            Json?
+  active                 Boolean            @default(true)
+  imageID                String?
+  image                  Image?             @relation(fields: [imageID], references: [id], onDelete: SetNull)
+  memberPlanId           String             @unique
+  memberPlan             MemberPlan         @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  periodicity            PaymentPeriodicity
+  redemptionWindowMonths Int?
+  issueBeforePayment     Boolean            @default(false)
+  allowDiscountCodes     Boolean            @default(false)
+  autoRenew              Boolean            @default(false)
+  renewalPaymentMethodId String?
+  renewalPaymentMethod   PaymentMethod?     @relation("GiftCodeOfferRenewalPaymentMethod", fields: [renewalPaymentMethodId], references: [id], onDelete: SetNull)
+  paymentMethods         PaymentMethod[]
+  giftCodes              GiftCode[]
+
+  @@map("gift-codes.offers")
+}
+
+model GiftCode {
+  id         String   @id @default(dbgenerated("uuidv7()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  code String @unique
+
+  offerId String
+  offer   GiftCodeOffer @relation(fields: [offerId], references: [id], onDelete: Restrict)
+
+  memberPlanId String
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Restrict)
+
+  periodicity            PaymentPeriodicity
+  redemptionWindowMonths Int?
+
+  autoRenew              Boolean        @default(false)
+  renewalPaymentMethodId String?
+  renewalPaymentMethod   PaymentMethod? @relation("GiftCodeRenewalPaymentMethod", fields: [renewalPaymentMethodId], references: [id], onDelete: SetNull)
+
+  invoiceItemId String?      @unique
+  invoiceItem   InvoiceItem? @relation(fields: [invoiceItemId], references: [id], onDelete: Restrict)
+
+  buyerId String?
+  buyer   User?   @relation("GiftCodeBuyer", fields: [buyerId], references: [id], onDelete: SetNull)
+
+  createdByUserId String?
+  createdBy       User?   @relation("GiftCodeCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  recipientName String?
+
+  issuedAt  DateTime? @db.Timestamptz(3)
+  expiresAt DateTime? @db.Timestamptz(3)
+
+  canceledAt         DateTime?                   @db.Timestamptz(3)
+  cancellationReason GiftCodeCancellationReason?
+  canceledByUserId   String?
+
+  redeemedAt             DateTime?     @db.Timestamptz(3)
+  redeemedByUserId       String?
+  redeemedBy             User?         @relation("GiftCodeRedeemer", fields: [redeemedByUserId], references: [id], onDelete: SetNull)
+  redeemedSubscriptionId String?
+  redeemedSubscription   Subscription? @relation(fields: [redeemedSubscriptionId], references: [id], onDelete: SetNull)
+  redeemedInvoiceId      String?       @unique
+  redeemedInvoice        Invoice?      @relation(fields: [redeemedInvoiceId], references: [id], onDelete: SetNull)
+
+  @@index([buyerId])
+  @@index([offerId])
+  @@index([memberPlanId])
+  @@index([issuedAt])
+  @@index([redeemedSubscriptionId])
+  @@map("gift-codes")
 }

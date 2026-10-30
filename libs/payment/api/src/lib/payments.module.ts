@@ -11,6 +11,7 @@ import {
 } from './payment.webhook';
 import { InvoicePaidNotifier } from './invoice-paid.listener';
 import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
+import { SellableRegistry } from './sellable/sellable-registry.service';
 
 @Module({
   imports: [PrismaModule, PaymentMethodModule],
@@ -20,6 +21,7 @@ import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
     PaymentsResolver,
     InvoicePaidNotifier,
     PaymentAuthorizationNotifier,
+    SellableRegistry,
   ],
   controllers: [PaymentWebhookController],
   exports: [
@@ -27,6 +29,7 @@ import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
     PaymentDataloader,
     InvoicePaidNotifier,
     PaymentAuthorizationNotifier,
+    SellableRegistry,
   ],
 })
 export class PaymentsModule {

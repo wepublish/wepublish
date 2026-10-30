@@ -53,6 +53,8 @@ function mapSetupIntentStatus(
 }
 
 export class StripePaymentProvider extends BasePaymentProvider {
+  override readonly supportsStandaloneInvoices = true;
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }

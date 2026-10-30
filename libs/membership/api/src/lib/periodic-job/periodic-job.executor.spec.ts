@@ -3,6 +3,7 @@ import {
   type ClaimResult,
   type DistributedClaims,
 } from '@wepublish/dragonfly/api';
+import { SellableReconciliationService } from '@wepublish/payment/api';
 import { PeriodicJobExecutor } from './periodic-job.executor';
 
 describe('PeriodicJobExecutor', () => {
@@ -25,6 +26,20 @@ describe('PeriodicJobExecutor', () => {
         ran.push('mailchimp sync');
       }),
     };
+    const sellableReconciliation = {
+      reconcile: vi.fn(async () => {
+        ran.push('sellable reconciliation');
+
+        return { polled: 1, canceled: 2, resynced: 3, failed: 0 };
+      }),
+    };
+    const moduleRef = {
+      resolve: vi.fn(async (token: unknown) =>
+        token === SellableReconciliationService ?
+          sellableReconciliation
+        : mailchimpSync
+      ),
+    };
     const claims = {
       claim: vi.fn(
         async (
@@ -36,19 +51,31 @@ describe('PeriodicJobExecutor', () => {
     } satisfies Pick<DistributedClaims, 'claim'>;
     const executor = new PeriodicJobExecutor(
       periodicJobs as any,
-      { resolve: vi.fn().mockResolvedValue(mailchimpSync) } as any,
+      moduleRef as any,
       claims as unknown as DistributedClaims
     );
 
-    return { executor, ran, claims, periodicJobs };
+    return {
+      executor,
+      ran,
+      claims,
+      periodicJobs,
+      mailchimpSync,
+      sellableReconciliation,
+      moduleRef,
+    };
   };
 
-  it('runs the periodic jobs and then the Mailchimp sync on the replica that claims the night', async () => {
+  it('runs the periodic jobs, the Mailchimp sync and then the sellable reconciliation on the replica that claims the night', async () => {
     const { executor, ran } = setup('claimed');
 
     await executor.handleCron();
 
-    expect(ran).toEqual(['periodic jobs', 'mailchimp sync']);
+    expect(ran).toEqual([
+      'periodic jobs',
+      'mailchimp sync',
+      'sellable reconciliation',
+    ]);
   });
 
   it('leaves the night to the replica that claimed it', async () => {
@@ -82,6 +109,7 @@ describe('PeriodicJobExecutor', () => {
     expect(ran).toEqual([
       'periodic jobs guarded by the database',
       'mailchimp sync',
+      'sellable reconciliation',
     ]);
     expect(failed).not.toHaveBeenCalled();
   });
@@ -95,7 +123,68 @@ describe('PeriodicJobExecutor', () => {
 
     await executor.handleCron();
 
-    expect(ran).toEqual(['mailchimp sync']);
+    expect(ran).toEqual(['mailchimp sync', 'sellable reconciliation']);
+  });
+
+  it('resolves the sellable reconciliation non-strictly', async () => {
+    const { executor, moduleRef } = setup('claimed');
+
+    await executor.handleCron();
+
+    expect(moduleRef.resolve).toHaveBeenCalledWith(
+      SellableReconciliationService,
+      expect.anything(),
+      { strict: false }
+    );
+  });
+
+  it('logs the sellable reconciliation result', async () => {
+    const logged = vi
+      .spyOn(Logger.prototype, 'log')
+      .mockImplementation(() => undefined);
+    const { executor } = setup('claimed');
+
+    await executor.handleCron();
+
+    expect(logged).toHaveBeenCalledWith(
+      expect.stringContaining('Sellable reconciliation')
+    );
+  });
+
+  it('logs a failing sellable reconciliation without affecting the other jobs', async () => {
+    const failed = vi
+      .spyOn(Logger.prototype, 'error')
+      .mockImplementation(() => undefined);
+    const { executor, ran, sellableReconciliation } = setup('claimed');
+    const error = new Error('reconcile down');
+    sellableReconciliation.reconcile.mockRejectedValue(error);
+
+    await expect(executor.handleCron()).resolves.toBeUndefined();
+
+    expect(ran).toEqual(['periodic jobs', 'mailchimp sync']);
+    expect(failed).toHaveBeenCalledWith(
+      'Sellable reconciliation failed during periodic job:',
+      error
+    );
+  });
+
+  it('still runs the sellable reconciliation when the periodic jobs and the Mailchimp sync fail', async () => {
+    vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+    const { executor, ran, periodicJobs, mailchimpSync } = setup('claimed');
+    periodicJobs.execute.mockRejectedValue(new Error('jobs down'));
+    mailchimpSync.executeAllSync.mockRejectedValue(new Error('mailchimp down'));
+
+    await executor.handleCron();
+
+    expect(ran).toEqual(['sellable reconciliation']);
+  });
+
+  it('does not run the sellable reconciliation on a replica that lost the night', async () => {
+    const { executor, sellableReconciliation } = setup('taken');
+
+    await executor.handleCron();
+
+    expect(sellableReconciliation.reconcile).not.toHaveBeenCalled();
   });
 
   it('claims the night for longer than a run takes, but frees it before the next night', async () => {

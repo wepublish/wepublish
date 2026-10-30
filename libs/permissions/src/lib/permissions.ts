@@ -610,6 +610,25 @@ export const CanDeleteDiscountCode: Permission = {
   deprecated: false,
 };
 
+export const CanGetGiftCodes: Permission = {
+  id: 'CAN_GET_GIFT_CODES',
+  description: 'Allows to get gift codes and gift code offers',
+  deprecated: false,
+};
+
+export const CanUpdateGiftCodes: Permission = {
+  id: 'CAN_UPDATE_GIFT_CODES',
+  description:
+    'Allows to create and update gift code offers and to cancel gift codes',
+  deprecated: false,
+};
+
+export const CanDeleteGiftCodes: Permission = {
+  id: 'CAN_DELETE_GIFT_CODES',
+  description: 'Allows to delete gift code offers',
+  deprecated: false,
+};
+
 export const CanGetSettings: Permission = {
   id: 'CAN_GET_SETTINGS',
   description: 'Allows to get all settings',
@@ -1349,6 +1368,9 @@ export const AllPermissions = [
   CanCreateDiscountCode,
   CanUpdateDiscountCode,
   CanDeleteDiscountCode,
+  CanGetGiftCodes,
+  CanUpdateGiftCodes,
+  CanDeleteGiftCodes,
   CanGetSettings,
   CanUpdateSettings,
   CanGetCommentRatingSystem,

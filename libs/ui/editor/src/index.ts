@@ -26,6 +26,7 @@ export * from './lib/listView/use-column-config';
 export * from './lib/listView/use-list-view-state';
 export * from './lib/listView/use-selectable-list';
 export * from './lib/listView/use-table-export-query';
+export * from './lib/memberPlan/periodicity-pricing';
 export * from './lib/navigation/sidebar-nav';
 export * from './lib/paletteColor';
 export * from './lib/panel';

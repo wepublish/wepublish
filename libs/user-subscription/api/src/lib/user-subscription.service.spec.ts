@@ -238,6 +238,32 @@ describe('UserSubscriptionService', () => {
           })
         );
       });
+
+      it('hands the free first invoice of a 100 % discount code to the payment service', async () => {
+        prismaMock.discountCode.findUnique.mockResolvedValue({
+          ...validDiscountCode,
+          discountPercent: 100,
+        });
+
+        await service.createSubscription('userId', {
+          ...baseArgs,
+          discountCode: 'testdiscountCode',
+        });
+
+        expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
+          expect.objectContaining({
+            discount: 100,
+            discountCodeId: 'discountCodeId',
+          })
+        );
+        expect(paymentsMock.createPaymentWithProvider).toHaveBeenCalledWith(
+          expect.objectContaining({
+            paymentMethodID: 'paymentMethodId',
+            saveCustomer: true,
+            userId: 'userId',
+          })
+        );
+      });
     });
 
     describe('unhappy path', () => {
