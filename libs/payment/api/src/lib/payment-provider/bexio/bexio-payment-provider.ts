@@ -1,11 +1,12 @@
 import {
   Invoice,
   InvoiceItem,
+  MailChannel,
   MemberPlan,
+  PaymentProviderCustomer,
   PaymentState,
   Subscription,
   User,
-  UserAddress,
 } from '@prisma/client';
 import { addErrorContext, describeError, logger } from '@wepublish/utils/api';
 import Bexio, { ContactsStatic, InvoicesStatic } from 'bexio';
@@ -19,11 +20,16 @@ import {
   Intent,
   IntentState,
   PaymentProviderProps,
+  RemoteInvoiceDocument,
+  RemoteInvoiceResult,
+  RenderRemoteInvoiceProps,
   WebhookForPaymentIntentProps,
   WebhookResponse,
 } from '../payment-provider';
 import {
+  InvoiceDeliveryError,
   InvoiceNotFoundError,
+  IssuingInvoiceError,
   NoSubscriptionIdInInvoice,
   ResponseNOK,
   SendingInvoiceError,
@@ -36,8 +42,26 @@ import {
   searchForContact,
 } from './bexio-utils';
 import fetch, { RequestInit } from 'node-fetch';
+import { bexioContactFields, ContactUser } from './bexio-contact-mapping';
+import { BexioCountries, BexioCountry } from './bexio-countries';
+
+const BEXIO_BASE_URL = 'https://api.bexio.com/2.0';
+const COUNTRIES_TTL_MS = 24 * 60 * 60 * 1000;
+
+export type SyncContactUser = ContactUser & {
+  paymentProviderCustomers: PaymentProviderCustomer[];
+};
+
+/** What the contact sync did for a reader. */
+export type SyncContactOutcome = 'edited' | 'created' | 'missing';
+
+const isNotFound = (error: unknown) =>
+  (error as { code?: number } | null)?.code === 404;
 
 export class BexioPaymentProvider extends BasePaymentProvider {
+  // bexio's country list changes rarely; one load serves a whole night.
+  private countryList?: { loadedAt: number; countries: BexioCountries };
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }
@@ -70,22 +94,44 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       throw new NoSubscriptionIdInInvoice();
     }
 
-    return await this.bexioCreate(props.invoice.id, false, props.successURL);
+    const { intent, deliveryError } = await this.bexioCreate(
+      props.invoice.id,
+      false,
+      props.successURL
+    );
+
+    // A checkout has nobody to hand the invoice to but the email.
+    if (deliveryError) {
+      throw new InvoiceDeliveryError(deliveryError);
+    }
+
+    return intent;
   }
 
   /**
-   * This function calls the `bexioCreate` method to create an invoice in Bexio.
-   * It is designed to handle the creation of remote invoices, specifically for renewals.
-   *
-   * @async
-   * @function
-   * @param {CreateRemoteInvoiceProps} props - The properties required to create the remote invoice.
-   * @param {string} props.invoice.id - The ID of the invoice.
-   *
-   * @returns {Promise<void>} Resolves when the remote invoice is successfully created.
+   * Creates the renewal invoice in Bexio and either has Bexio email it or, for
+   * a reader who gets letters, issues it and hands back its pdf for printing.
+   * The returned intent carries the Bexio invoice id so the payment can be
+   * polled.
    */
-  override async createRemoteInvoice(props: CreateRemoteInvoiceProps) {
-    await this.bexioCreate(props.invoice.id, true);
+  override async createRemoteInvoice(
+    props: CreateRemoteInvoiceProps
+  ): Promise<RemoteInvoiceResult> {
+    return this.bexioCreate(props.invoice.id, true, '', props.channel);
+  }
+
+  /** The pdf of the Bexio invoice behind a payment, for printing it again. */
+  override async renderRemoteInvoice({
+    payment,
+  }: RenderRemoteInvoiceProps): Promise<RemoteInvoiceDocument | undefined> {
+    if (!payment.intentID || !/^\d+$/.test(payment.intentID)) {
+      return undefined;
+    }
+
+    return this.fetchInvoicePdf(
+      await this.getBexioGateway(),
+      Number(payment.intentID)
+    );
   }
 
   /**
@@ -122,11 +168,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         intentID: {
           not: null,
         },
+        // Polling maps an unpaid or draft Bexio invoice to requiresUserAction,
+        // which is where a renewal invoice sits by the time it is cancelled.
         state: {
           in: [
             PaymentState.created,
             PaymentState.submitted,
             PaymentState.processing,
+            PaymentState.requiresUserAction,
           ],
         },
       },
@@ -238,21 +287,21 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @param {string} invoiceId - The ID of the invoice in the local database.
    * @param {boolean} isRenewal - Indicates whether the invoice is a renewal or a new invoice.
    * @param {string} successURL - The url the client gets redirected after successful invoice creation
+   * @param {MailChannel} channel - Email the invoice (default) or render it for a letter
    *
    * @throws {InvoiceNotFoundError} If the invoice or related data cannot be found in the local database.
    * @throws {Error} For any other generic error.
    *
-   * @returns {Promise<Intent>} An object containing:
-   *   - intentID: The ID of the newly created invoice in Bexio.
-   *   - intentSecret: An empty string (as there's no secret provided in the function).
-   *   - intentData: A JSON string representation of the new invoice from Bexio.
-   *   - state: The state of the payment, set as 'submitted'.
+   * @returns {Promise<RemoteInvoiceResult>} The intent (intentID is the Bexio
+   *   invoice id, state 'submitted'), the rendered pdf for a letter, and the
+   *   delivery error if the invoice was created but not delivered.
    */
   async bexioCreate(
     invoiceId: string,
     isRenewal: boolean,
-    successURL = ''
-  ): Promise<Intent> {
+    successURL = '',
+    channel: MailChannel = MailChannel.mail
+  ): Promise<RemoteInvoiceResult> {
     let step = 'loading the invoice';
 
     try {
@@ -292,12 +341,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         (await searchForContact(bexio, user));
       step = 'saving the contact';
       const updatedContact = await this.createOrUpdateContact(contact, user);
+      // The invoice pushed the reader's data too; the nightly sync may skip them.
+      await this.markSynced(user.id);
       step = 'creating the invoice';
-      const newInvoice = await this.createInvoice(
-        updatedContact,
-        invoice,
-        isRenewal
-      );
+      const {
+        invoice: newInvoice,
+        document,
+        deliveryError,
+      } = await this.createInvoice(updatedContact, invoice, isRenewal, channel);
 
       // The email can differ between we.publish and bexio, so the next
       // invoice finds this contact by its id. Only a convenience: the
@@ -317,10 +368,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       }
 
       return {
-        intentID: newInvoice.id.toString(),
-        intentSecret: successURL,
-        intentData: JSON.stringify(newInvoice),
-        state: PaymentState.submitted,
+        intent: {
+          intentID: newInvoice.id.toString(),
+          intentSecret: successURL,
+          intentData: JSON.stringify(newInvoice),
+          state: PaymentState.submitted,
+        },
+        ...(document && { document }),
+        ...(deliveryError && { deliveryError }),
       };
     } catch (e) {
       const error = addErrorContext(
@@ -373,56 +428,155 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
   async createOrUpdateContact(
     contact: ContactsStatic.ContactSmall,
-    user: User & { address: UserAddress | null }
+    user: ContactUser
   ) {
-    const config = await this.getConfig();
     const bexio = await this.getBexioGateway();
-    const upsertContact: ContactsStatic.ContactOverwrite = {
-      nr: '',
-      name_1: user?.address?.company ? user?.address.company : user.name, // lastname or company name
-      name_2: user?.address?.company ? '' : (user.firstName ?? undefined), // Firstname or none
-      mail: user.email,
-      user_id: this.assertProperty('bexio_userId', config.bexio_userId),
-      contact_type_id: user?.address?.company ? 1 : 2, // 1: Company 2: Person
-      country_id: this.assertProperty(
-        'bexio_countryId',
-        config.bexio_countryId
-      ),
-      owner_id: this.assertProperty('bexio_userId', config.bexio_userId),
-      contact_group_ids: [],
-      postcode: user?.address?.zipCode ?? undefined,
-      city: user?.address?.city ?? undefined,
-      street_name: user?.address?.streetAddress ?? undefined,
-      house_number: user?.address?.streetAddressNumber ?? undefined,
-    };
+    const fields = await this.contactFields(user);
+
     if (!contact) {
-      return await bexio.contacts.create(upsertContact);
-    } else {
-      upsertContact.nr = contact.nr;
-      return await bexio.contacts.edit(contact.id, upsertContact);
+      return bexio.contacts.create(await this.newContact(fields));
+    }
+
+    return bexio.contacts.edit(contact.id, { nr: contact.nr, ...fields });
+  }
+
+  /**
+   * Push the reader's data to their bexio contact: edit the stored one, else
+   * the one found by email, else create one and remember it. A stored contact
+   * bexio no longer knows is a data problem to look at, not a reason to
+   * create a second one.
+   */
+  async syncContact(user: SyncContactUser): Promise<SyncContactOutcome> {
+    const bexio = await this.getBexioGateway();
+    const fields = await this.contactFields(user);
+    const storedId = user.paymentProviderCustomers.find(
+      customer => customer.paymentProviderID === this.id
+    )?.customerID;
+
+    if (storedId && /^\d+$/.test(storedId)) {
+      try {
+        await bexio.contacts.edit(Number(storedId), fields);
+      } catch (error) {
+        if (!isNotFound(error)) {
+          throw error;
+        }
+
+        logger('bexioPaymentProvider').warn(
+          'Bexio contact %s stored for user %s does not exist; not synced',
+          storedId,
+          user.id
+        );
+
+        return 'missing';
+      }
+
+      await this.markSynced(user.id);
+
+      return 'edited';
+    }
+
+    const found = await searchForContact(bexio, user);
+    const contact =
+      found ?
+        await bexio.contacts.edit(found.id, fields)
+      : await bexio.contacts.create(await this.newContact(fields));
+
+    await this.saveCustomer(user.id, String(contact.id));
+    await this.markSynced(user.id);
+
+    return found ? 'edited' : 'created';
+  }
+
+  /** bexio's countries by iso code, the configured one as fallback. */
+  async countries(): Promise<BexioCountries> {
+    const config = await this.getConfig();
+    const fallback = this.assertProperty(
+      'bexio_countryId',
+      config.bexio_countryId
+    );
+    const cached = this.countryList;
+
+    if (
+      cached &&
+      cached.countries.fallback === fallback &&
+      Date.now() - cached.loadedAt < COUNTRIES_TTL_MS
+    ) {
+      return cached.countries;
+    }
+
+    const countries = await BexioCountries.load(
+      () => this.fetchCountries(config.apiKey),
+      fallback
+    );
+    this.countryList = { loadedAt: Date.now(), countries };
+
+    return countries;
+  }
+
+  private async fetchCountries(apiKey: string | null): Promise<BexioCountry[]> {
+    const response = await fetch(`${BEXIO_BASE_URL}/country?limit=500`, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      signal: AbortSignal.timeout(30_000) as unknown as RequestInit['signal'],
+    });
+
+    if (response.status !== 200) {
+      throw new ResponseNOK(response.status);
+    }
+
+    return (await response.json()) as BexioCountry[];
+  }
+
+  private async contactFields(user: ContactUser) {
+    return bexioContactFields(
+      user,
+      (await this.countries()).idFor(user.address?.country)
+    );
+  }
+
+  /** The fields only a new contact needs; bexio fills the rest. */
+  private async newContact(
+    fields: Partial<ContactsStatic.ContactOverwrite>
+  ): Promise<ContactsStatic.ContactCreate> {
+    const config = await this.getConfig();
+    const userId = this.assertProperty('bexio_userId', config.bexio_userId);
+
+    return {
+      nr: '',
+      ...fields,
+      user_id: userId,
+      owner_id: userId,
+      contact_group_ids: [],
+    } as ContactsStatic.ContactCreate;
+  }
+
+  /** Bookkeeping for the nightly sync; must never fail a push that worked. */
+  private async markSynced(userId: string) {
+    try {
+      await this.prisma.paymentProviderCustomer.updateMany({
+        where: { userId, paymentProviderID: this.id },
+        data: { syncedAt: new Date() },
+      });
+    } catch (error) {
+      logger('bexioPaymentProvider').warn(
+        'Could not record the contact sync of user %s: %s',
+        userId,
+        describeError(error)
+      );
     }
   }
 
   /**
-   * Creates and sends an invoice in Bexio based on provided contact, invoice, and renewal status.
+   * Creates an invoice in Bexio for the contact and delivers it: emailed by
+   * Bexio with the pdf attached, or — for a reader who gets letters — issued
+   * and rendered to a pdf that we.publish prints.
    *
-   * This function performs several operations:
-   * 1. Validates the provided invoice and associated data.
-   * 2. Creates a string replace map based on the subscription, user, and memberPlan.
-   * 3. Constructs a new Bexio invoice object and creates the invoice in Bexio.
-   * 4. Sends the created Bexio invoice to the associated contact.
-   *
-   * @async
-   * @function
-   * @param {ContactsStatic.ContactFull} contact - The contact associated with the invoice in Bexio.
-   * @param {Invoice & {subscription: (Subscription & {memberPlan: MemberPlan; user: User}) | null}} invoice -
-   *        The invoice data and its associated subscription, member plan, and user details.
-   * @param {boolean} isRenewal - Indicates whether the invoice is a renewal or a new invoice.
+   * Once Bexio has created the invoice, a delivery failure is returned with it
+   * rather than thrown: the caller would try again and create a second one.
    *
    * @throws {InvoiceNotFoundError} If the provided invoice or related data is not valid.
-   * @throws {SendingInvoiceError} If there's an issue sending the created invoice.
-   *
-   * @returns {Promise<InvoicesStatic.Invoice>} The created invoice object from Bexio.
    */
   async createInvoice(
     contact: ContactsStatic.ContactFull,
@@ -431,8 +585,13 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       subscription:
         (Subscription & { memberPlan: MemberPlan; user: User }) | null;
     },
-    isRenewal: boolean
-  ) {
+    isRenewal: boolean,
+    channel: MailChannel = MailChannel.mail
+  ): Promise<{
+    invoice: InvoicesStatic.Invoice;
+    document?: RemoteInvoiceDocument;
+    deliveryError?: string;
+  }> {
     if (!invoice || !invoice.subscription || !invoice.subscription.user) {
       throw new InvoiceNotFoundError(invoice);
     }
@@ -480,34 +639,92 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       ],
     };
     const bexio = await this.getBexioGateway();
-    const invoiceUpdated = await bexio.invoices.create(bexioInvoice);
-    const sentInvoice = await bexio.invoices.sent(invoiceUpdated.id, {
-      recipient_email: contact.mail,
-      subject: stringReplaceMap.replace(
-        isRenewal ?
-          config.bexio_invoiceMailSubjectRenewalMembership || ''
-        : config.bexio_invoiceMailSubjectNewMembership || ''
-      ),
-      message: stringReplaceMap.replace(
-        isRenewal ?
-          config.bexio_invoiceMailBodyRenewalMembership || ''
-        : config.bexio_invoiceMailBodyNewMembership || ''
-      ),
-      mark_as_open: this.assertProperty(
-        'bexio_markInvoiceAsOpen',
-        config.bexio_markInvoiceAsOpen
-      ),
-      attach_pdf: true,
-    });
+    const created = await bexio.invoices.create(bexioInvoice);
+    const markAsOpen = this.assertProperty(
+      'bexio_markInvoiceAsOpen',
+      config.bexio_markInvoiceAsOpen
+    );
 
     logger('bexioPaymentProvider').info(
       'Created Bexio invoice with ID: %s for paymentProvider %s',
-      invoiceUpdated.id,
+      created.id,
       this.id
     );
-    if (!sentInvoice.success) {
-      throw new SendingInvoiceError(sentInvoice);
+
+    try {
+      if (channel === MailChannel.letter) {
+        return {
+          invoice: created,
+          document: await this.renderInvoiceForLetter(
+            bexio,
+            created.id,
+            markAsOpen
+          ),
+        };
+      }
+
+      const sentInvoice = await bexio.invoices.send(created.id, {
+        recipient_email: contact.mail,
+        subject: stringReplaceMap.replace(
+          isRenewal ?
+            config.bexio_invoiceMailSubjectRenewalMembership || ''
+          : config.bexio_invoiceMailSubjectNewMembership || ''
+        ),
+        message: stringReplaceMap.replace(
+          isRenewal ?
+            config.bexio_invoiceMailBodyRenewalMembership || ''
+          : config.bexio_invoiceMailBodyNewMembership || ''
+        ),
+        mark_as_open: markAsOpen,
+        attach_pdf: true,
+      });
+
+      if (!sentInvoice.success) {
+        throw new SendingInvoiceError(sentInvoice);
+      }
+
+      return { invoice: created };
+    } catch (error) {
+      const deliveryError = describeError(error);
+
+      logger('bexioPaymentProvider').error(
+        'Bexio invoice %s was created but not delivered by %s: %s',
+        created.id,
+        channel,
+        deliveryError
+      );
+
+      return { invoice: created, deliveryError };
     }
-    return invoiceUpdated;
+  }
+
+  /**
+   * What emailing does without the email: issue the invoice, as `mark_as_open`
+   * would, and fetch its pdf on Bexio's letterhead for we.publish to print.
+   */
+  private async renderInvoiceForLetter(
+    bexio: Bexio,
+    invoiceId: number,
+    markAsOpen: boolean
+  ): Promise<RemoteInvoiceDocument> {
+    if (markAsOpen) {
+      const issued = await bexio.invoices.issue(invoiceId);
+
+      if (!issued.success) {
+        throw new IssuingInvoiceError(issued);
+      }
+    }
+
+    return this.fetchInvoicePdf(bexio, invoiceId);
+  }
+
+  /** The invoice on Bexio's letterhead, as it would be attached to the email. */
+  private async fetchInvoicePdf(
+    bexio: Bexio,
+    invoiceId: number
+  ): Promise<RemoteInvoiceDocument> {
+    const pdf = await bexio.invoices.showPdf(invoiceId, 1);
+
+    return { content: pdf.content, name: pdf.name, mime: pdf.mime };
   }
 }

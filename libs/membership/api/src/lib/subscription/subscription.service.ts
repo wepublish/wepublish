@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, PrismaClient, Subscription } from '@prisma/client';
+import { Prisma, PrismaClient, Subscription, User } from '@prisma/client';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -17,6 +17,7 @@ import {
   CancelPublicSubscriptionInput,
   CreatePublicSubscriptionInput,
   ImportPublicSubscriptionInput,
+  UpdateSubscriptionPaymentMethodArgs,
   SubscriptionFilter,
   SubscriptionListArgs,
   SubscriptionsCSVArgs,
@@ -25,9 +26,12 @@ import {
 } from './subscription.model';
 import { MemberContextService } from '../legacy/member-context.service';
 import {
+  InvoiceWithItems,
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from '@wepublish/payment/api';
+import { FeaturesService } from '@wepublish/features/api';
+import { InvoiceDeliveryService } from '../periodic-job/invoice-delivery.service';
 import { SubscriptionWithRelations } from '../legacy/member-context';
 import { unselectPassword } from '@wepublish/authentication/api';
 import { mapSubscriptionsAsCsv } from './subscription-as-csv';
@@ -38,7 +42,9 @@ export class SubscriptionService {
     private prisma: PrismaClient,
     private memberContext: MemberContextService,
     @Inject(PAYMENT_METHOD_CONFIG)
-    private paymentMethodConfig: PaymentMethodConfig
+    private paymentMethodConfig: PaymentMethodConfig,
+    private features: FeaturesService,
+    private invoiceDelivery: InvoiceDeliveryService
   ) {}
 
   @PrimeDataLoader(SubscriptionDataloader)
@@ -244,6 +250,48 @@ export class SubscriptionService {
     });
   }
 
+  /**
+   * Moves a subscription to another payment method and changes nothing else,
+   * for data corrections (e.g. after an import). Unlike updateSubscription it
+   * also takes deactivated subscriptions and never touches invoices, periods
+   * or the payment provider. Only moves it while it is still on
+   * `fromPaymentMethodId`; returns whether it did. The same call with the
+   * payment methods swapped undoes it.
+   */
+  async updateSubscriptionPaymentMethod({
+    subscriptionId,
+    fromPaymentMethodId,
+    toPaymentMethodId,
+  }: UpdateSubscriptionPaymentMethodArgs) {
+    if (fromPaymentMethodId === toPaymentMethodId) {
+      throw new BadRequestException(
+        'The subscription already uses this payment method'
+      );
+    }
+
+    // inactive payment methods are fine: subscriptions keep using them
+    for (const id of [fromPaymentMethodId, toPaymentMethodId]) {
+      if (!(await this.prisma.paymentMethod.findUnique({ where: { id } }))) {
+        throw new NotFoundException('PaymentMethod', id);
+      }
+    }
+
+    if (
+      !(await this.prisma.subscription.findUnique({
+        where: { id: subscriptionId },
+      }))
+    ) {
+      throw new NotFoundException('Subscription', subscriptionId);
+    }
+
+    const { count } = await this.prisma.subscription.updateMany({
+      where: { id: subscriptionId, paymentMethodID: fromPaymentMethodId },
+      data: { paymentMethodID: toPaymentMethodId },
+    });
+
+    return count === 1;
+  }
+
   @PrimeDataLoader(SubscriptionDataloader)
   async reactivateSubscription(id: string) {
     const subscription = await this.prisma.subscription.findUnique({
@@ -251,6 +299,7 @@ export class SubscriptionService {
       include: {
         deactivation: true,
         periods: true,
+        user: true,
       },
     });
 
@@ -277,9 +326,11 @@ export class SubscriptionService {
       subscription.paidUntil && subscription.paidUntil > new Date();
 
     if (!isPaid) {
-      await this.memberContext.renewSubscriptionForUser({
+      const invoice = await this.memberContext.renewSubscriptionForUser({
         subscription: reactivatedSubscription as SubscriptionWithRelations,
       });
+
+      await this.deliverEditorInvoice(reactivatedSubscription, invoice);
     }
 
     return reactivatedSubscription;
@@ -299,6 +350,7 @@ export class SubscriptionService {
       include: {
         deactivation: true,
         periods: true,
+        user: true,
       },
     });
 
@@ -319,11 +371,33 @@ export class SubscriptionService {
       );
     }
 
-    await this.memberContext.renewSubscriptionForUser({
+    const invoice = await this.memberContext.renewSubscriptionForUser({
       subscription,
     });
 
+    await this.deliverEditorInvoice(subscription, invoice);
+
     return subscription;
+  }
+
+  /**
+   * With `editor-renewal-provider-invoice`, an invoice an editor created is
+   * handled like the nightly job's: created at the payment provider, kept as
+   * a payment, mailed or printed. Without it the invoice exists in we.publish
+   * only, as before.
+   */
+  private async deliverEditorInvoice(
+    subscription: Subscription & { user: User },
+    invoice: InvoiceWithItems | null
+  ) {
+    if (
+      !invoice ||
+      !(await this.features.isEnabled('editor-renewal-provider-invoice'))
+    ) {
+      return;
+    }
+
+    await this.invoiceDelivery.deliverRenewal(subscription, invoice);
   }
 }
 

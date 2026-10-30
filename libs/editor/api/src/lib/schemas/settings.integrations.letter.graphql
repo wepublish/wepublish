@@ -1,0 +1,90 @@
+query LetterProviderSettings {
+  letterProviderSettings {
+    autoSend
+    clientId
+    createdAt
+    environment
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    organisationId
+    placeholderEmailContains
+    defaultAddressPosition
+    defaultDeliveryProduct
+    defaultPrintMode
+    defaultPrintSpectrum
+    type
+  }
+}
+
+mutation UpdateLetterProviderSetting(
+  $type: LetterProviderType
+  $autoSend: Boolean
+  $clientId: String
+  $clientSecret: String
+  $environment: LetterProviderEnvironment
+  $id: String!
+  $name: String
+  $organisationId: String
+  $placeholderEmailContains: String
+  $defaultAddressPosition: LetterAddressPosition
+  $defaultDeliveryProduct: LetterDeliveryProduct
+  $defaultPrintMode: LetterPrintMode
+  $defaultPrintSpectrum: LetterPrintSpectrum
+  $webhookSigningKey: String
+) {
+  updateLetterProviderSetting(
+    type: $type
+    autoSend: $autoSend
+    clientId: $clientId
+    clientSecret: $clientSecret
+    environment: $environment
+    id: $id
+    name: $name
+    organisationId: $organisationId
+    placeholderEmailContains: $placeholderEmailContains
+    defaultAddressPosition: $defaultAddressPosition
+    defaultDeliveryProduct: $defaultDeliveryProduct
+    defaultPrintMode: $defaultPrintMode
+    defaultPrintSpectrum: $defaultPrintSpectrum
+    webhookSigningKey: $webhookSigningKey
+  ) {
+    autoSend
+    clientId
+    createdAt
+    environment
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    organisationId
+    placeholderEmailContains
+    defaultAddressPosition
+    defaultDeliveryProduct
+    defaultPrintMode
+    defaultPrintSpectrum
+    type
+  }
+}
+
+mutation CreateLetterProviderSetting(
+  $id: String!
+  $type: LetterProviderType!
+  $name: String
+) {
+  createLetterProviderSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+
+mutation DeleteLetterProviderSetting($id: String!) {
+  deleteLetterProviderSetting(id: $id) {
+    id
+  }
+}

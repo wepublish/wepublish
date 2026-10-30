@@ -11,6 +11,8 @@ import {
   DeleteTokenDocument,
   FullTokenFragment,
   TokenListDocument,
+  UpdateTokenDocument,
+  UserRoleListDocument,
 } from '@wepublish/editor/api';
 import {
   CanCreateToken,
@@ -32,12 +34,13 @@ import {
   PermissionControl,
   TableWrapper,
   TokenGeneratePanel,
+  TokenRolePicker,
   useSeededState,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdDelete, MdGeneratingTokens } from 'react-icons/md';
+import { MdDelete, MdEdit, MdGeneratingTokens } from 'react-icons/md';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
 function TokenList() {
@@ -50,6 +53,8 @@ function TokenList() {
     useState(isGenerateRoute);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentToken, setCurrentToken] = useState<FullTokenFragment>();
+  const [tokenToEdit, setTokenToEdit] = useState<FullTokenFragment>();
+  const [editedRoleIDs, setEditedRoleIDs] = useState<string[]>([]);
 
   const {
     data: tokenListData,
@@ -62,14 +67,29 @@ function TokenList() {
       refetchQueries: [getOperationNameFromDocument(TokenListDocument)],
     });
 
+  const [updateToken, { loading: isUpdating, error: updateTokenError }] =
+    useMutation(UpdateTokenDocument, {
+      refetchQueries: [getOperationNameFromDocument(TokenListDocument)],
+    });
+
+  const { data: roleData } = useQuery(UserRoleListDocument, {
+    variables: { take: 200 },
+  });
+  const roleNames = new Map(
+    (roleData?.userRoles.nodes ?? []).map(role => [role.id, role.name])
+  );
+
   const { t } = useTranslation();
 
   useEffect(() => {
-    const error = tokenListError?.message ?? deleteTokenError?.message;
+    const error =
+      tokenListError?.message ??
+      deleteTokenError?.message ??
+      updateTokenError?.message;
     if (error) {
       enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
     }
-  }, [tokenListError, deleteTokenError]);
+  }, [tokenListError, deleteTokenError, updateTokenError]);
 
   useSeededState(isGenerateRoute ? location.pathname : undefined, () =>
     setTokenGeneratePanelOpen(true)
@@ -115,27 +135,58 @@ function TokenList() {
               render: row => row.name,
             },
             {
+              id: 'roles',
+              label: t('tokenList.panels.roles'),
+              align: 'left',
+              render: row =>
+                row.roleIDs?.length ?
+                  row.roleIDs.map(id => roleNames.get(id) ?? id).join(', ')
+                : t('tokenList.panels.noRoles'),
+            },
+            {
               id: 'action',
               label: t('action'),
-              width: 100,
+              width: 120,
               align: 'center',
               fixed: true,
               render: rowData => (
-                <PermissionControl qualifyingPermissions={[CanDeleteToken.id]}>
-                  <IconButtonTooltip caption={t('delete')}>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      aria-label={t('delete')}
-                      onClick={() => {
-                        setConfirmationDialogOpen(true);
-                        setCurrentToken(rowData as FullTokenFragment);
-                      }}
+                <>
+                  <PermissionControl
+                    qualifyingPermissions={[CanCreateToken.id]}
+                  >
+                    <IconButtonTooltip
+                      caption={t('tokenList.panels.editRoles')}
                     >
-                      <MdDelete />
-                    </IconButton>
-                  </IconButtonTooltip>
-                </PermissionControl>
+                      <IconButton
+                        size="small"
+                        aria-label={t('tokenList.panels.editRoles')}
+                        onClick={() => {
+                          setTokenToEdit(rowData as FullTokenFragment);
+                          setEditedRoleIDs(rowData.roleIDs ?? []);
+                        }}
+                      >
+                        <MdEdit />
+                      </IconButton>
+                    </IconButtonTooltip>
+                  </PermissionControl>
+                  <PermissionControl
+                    qualifyingPermissions={[CanDeleteToken.id]}
+                  >
+                    <IconButtonTooltip caption={t('delete')}>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        aria-label={t('delete')}
+                        onClick={() => {
+                          setConfirmationDialogOpen(true);
+                          setCurrentToken(rowData as FullTokenFragment);
+                        }}
+                      >
+                        <MdDelete />
+                      </IconButton>
+                    </IconButtonTooltip>
+                  </PermissionControl>
+                </>
               ),
             },
           ]}
@@ -165,6 +216,49 @@ function TokenList() {
           }}
         />
       </Drawer>
+
+      <Dialog
+        open={!!tokenToEdit}
+        onClose={() => setTokenToEdit(undefined)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>
+          {t('tokenList.panels.editRolesOf', { name: tokenToEdit?.name })}
+        </DialogTitle>
+        <DialogContent>
+          <p>{t('tokenList.panels.rolesInfo')}</p>
+          <TokenRolePicker
+            value={editedRoleIDs}
+            disabled={isUpdating}
+            onChange={setEditedRoleIDs}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setTokenToEdit(undefined)}
+          >
+            {t('tokenList.panels.cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            disabled={isUpdating}
+            onClick={async () => {
+              if (!tokenToEdit) {
+                return;
+              }
+
+              await updateToken({
+                variables: { id: tokenToEdit.id, roleIDs: editedRoleIDs },
+              });
+              setTokenToEdit(undefined);
+            }}
+          >
+            {t('save')}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog
         open={isConfirmationDialogOpen}

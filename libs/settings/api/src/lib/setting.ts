@@ -32,6 +32,10 @@ export enum SettingName {
   SHOW_PENDING_WHEN_NOT_PUBLISHED = 'showPendingWhenNotPublished',
 
   SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE = 'subscriptionUpgradeBillsFullDifference',
+
+  EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS = 'emailQualityUnresponsiveAfterDays',
+  EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE = 'emailQualityMinMailsForUnresponsive',
+  EMAIL_QUALITY_EVIDENCE_WARN_AFTER_DAYS = 'emailQualityEvidenceWarnAfterDays',
   SUBSCRIPTION_EXTEND_WINDOW_DAYS = 'subscriptionExtendWindowDays',
   PAYMENT_METHOD_CHANGE_EXPIRY_DAYS = 'paymentMethodChangeExpiryDays',
 }

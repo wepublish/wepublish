@@ -14,6 +14,17 @@ query SyncProviderSettings {
     mailchimp_extensions
     lastSyncAt
     lastSyncError
+    mailchimp_webhookId
+    mailchimp_webhookRegisteredAt
+    lastWebhookAt
+  }
+}
+
+mutation RegisterMailchimpAudienceWebhook($id: String!) {
+  registerMailchimpAudienceWebhook(id: $id) {
+    url
+    webhookId
+    registeredAt
   }
 }
 
@@ -53,6 +64,9 @@ mutation UpdateSyncProviderSetting(
     mailchimp_extensions
     lastSyncAt
     lastSyncError
+    mailchimp_webhookId
+    mailchimp_webhookRegisteredAt
+    lastWebhookAt
   }
 }
 

@@ -15,6 +15,11 @@ import { PrismaClient } from '@prisma/client';
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
 import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { MailWebhookController, MailWebhookMiddleware } from './mail.webhook';
+import {
+  EMAIL_QUALITY_RECORDER,
+  EmailQualityRecorder,
+} from './email-quality-recorder';
+import { LETTER_SENDER, LetterSender } from './letter-sender';
 
 @Module({
   imports: [PrismaModule],
@@ -50,15 +55,25 @@ export class MailsModule {
         useFactory: (
           { mailProvider, jwtGenerator }: MailsModuleOptions,
           prisma: PrismaClient,
-          kv: NamespacedCache
+          kv: NamespacedCache,
+          emailQualityRecorder?: EmailQualityRecorder,
+          letterSender?: LetterSender
         ) =>
           new MailContext({
             prisma,
             mailProvider,
             kv,
             jwtGenerator,
+            emailQualityRecorder,
+            letterSender,
           }),
-        inject: [MAILS_MODULE_OPTIONS, PrismaClient, NamespacedCache],
+        inject: [
+          MAILS_MODULE_OPTIONS,
+          PrismaClient,
+          NamespacedCache,
+          { token: EMAIL_QUALITY_RECORDER, optional: true },
+          { token: LETTER_SENDER, optional: true },
+        ],
       },
     ];
   }

@@ -3,6 +3,7 @@
 const { composePlugins, withNx } = require('@nx/next');
 const { withSentryConfig } = require('@sentry/nextjs/config');
 const wepNextConfig = require('../../libs/utils/website/src/next/next.config');
+const { redirects } = require('./src/redirects');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled:
     process.env.NODE_ENV === 'production' && !!process.env.ANALYZE_BUNDLE,
@@ -14,6 +15,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
+  redirects,
 };
 
 const plugins = [

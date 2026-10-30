@@ -1,6 +1,15 @@
-import { PrismaClient } from '@prisma/client';
-import { MailSendRecipientService } from './mail-send-recipient.service';
-import { MailRecipientBase, MailSubscriptionState } from './mail-send.model';
+import { EmailQualityLevel, MailChannel, PrismaClient } from '@prisma/client';
+import {
+  emailSegmentOf,
+  MailSendRecipientService,
+} from './mail-send-recipient.service';
+import {
+  MailEmailFilter,
+  MailEmailSegment,
+  MailHistoryMatch,
+  MailRecipientBase,
+  MailSubscriptionState,
+} from './mail-send.model';
 import { matches } from './where-matcher';
 import type { Mock } from 'vitest';
 
@@ -331,6 +340,218 @@ describe('MailSendRecipientService', () => {
       );
 
       expect(recipients).toHaveLength(1);
+    });
+  });
+
+  describe('letters (one per person)', () => {
+    it('counts people instead of subscriptions', async () => {
+      const prisma = {
+        user: { count: vi.fn(async () => 11) },
+        subscription: { count: vi.fn(async () => 13) },
+      };
+      const service = makeService(prisma);
+
+      expect(
+        await service.count(
+          { base: MailRecipientBase.hasSubscription },
+          MailChannel.letter
+        )
+      ).toBe(11);
+      expect(prisma.subscription.count).not.toHaveBeenCalled();
+
+      expect(
+        await service.count(
+          { base: MailRecipientBase.hasSubscription },
+          MailChannel.mail
+        )
+      ).toBe(13);
+    });
+
+    it('resolves one recipient per user, bound to the first matching subscription', async () => {
+      const prisma = {
+        user: {
+          findMany: vi.fn(async () => [
+            { id: 'u1', subscriptions: [{ id: 's1' }] },
+            { id: 'u2', subscriptions: [{ id: 's3' }] },
+          ]),
+        },
+        subscription: { findMany: vi.fn() },
+      };
+
+      const recipients = await makeService(prisma).resolvePage(
+        { base: MailRecipientBase.hasSubscription, memberPlanIDs: ['p1'] },
+        0,
+        100,
+        MailChannel.letter
+      );
+
+      expect(prisma.subscription.findMany).not.toHaveBeenCalled();
+      expect(recipients.map(({ user }) => user.id)).toEqual(['u1', 'u2']);
+      expect(recipients[0].subscription?.id).toBe('s1');
+      expect((recipients[0].user as any).subscriptions).toBeUndefined();
+
+      const args = (prisma.user.findMany as Mock).mock.calls[0][0];
+      expect(args.where.subscriptions.some).toEqual({
+        AND: [{ memberPlanID: { in: ['p1'] } }],
+      });
+      expect(args.include.subscriptions.take).toBe(1);
+      expect(args.include.subscriptions.where).toEqual(
+        args.where.subscriptions.some
+      );
+    });
+
+    it('binds no subscription for the user-based audiences', async () => {
+      const prisma = {
+        user: { findMany: vi.fn(async () => [{ id: 'u1' }]) },
+      };
+
+      const recipients = await makeService(prisma).resolvePage(
+        { base: MailRecipientBase.allUsers },
+        0,
+        100,
+        MailChannel.letter
+      );
+
+      expect(recipients[0].subscription).toBeUndefined();
+      const args = (prisma.user.findMany as Mock).mock.calls[0][0];
+      expect(args.include.subscriptions).toBeUndefined();
+    });
+
+    it('counts people without an address, not subscriptions', async () => {
+      const prisma = {
+        user: { count: vi.fn(async () => 2) },
+        subscription: { count: vi.fn() },
+      };
+
+      expect(
+        await makeService(prisma).countWithoutAddress(
+          { base: MailRecipientBase.endedSubscription },
+          MailChannel.letter
+        )
+      ).toBe(2);
+      expect(prisma.subscription.count).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('resolvePreviewPage (missing addresses first)', () => {
+    it('pages through the people without an address before the rest', async () => {
+      const prisma = {
+        user: {
+          count: vi.fn(async () => 3),
+          findMany: vi.fn(async (args: any) =>
+            args.skip === 2 ? [{ id: 'missing-3' }] : [{ id: 'ok-1' }]
+          ),
+        },
+      };
+
+      const recipients = await makeService(prisma).resolvePreviewPage(
+        { base: MailRecipientBase.allUsers },
+        2,
+        3,
+        MailChannel.letter
+      );
+
+      expect(recipients.map(({ user }) => user.id)).toEqual([
+        'missing-3',
+        'ok-1',
+      ]);
+
+      const calls = (prisma.user.findMany as Mock).mock.calls.map(
+        ([args]) => args
+      );
+      expect(calls).toHaveLength(2);
+      expect(calls[0]).toMatchObject({ skip: 2, take: 3 });
+      expect(calls[1]).toMatchObject({ skip: 0, take: 2 });
+    });
+
+    it('skips the missing ones entirely once the page is past them', async () => {
+      const prisma = {
+        user: {
+          count: vi.fn(async () => 3),
+          findMany: vi.fn(async () => [{ id: 'ok-3' }]),
+        },
+      };
+
+      await makeService(prisma).resolvePreviewPage(
+        { base: MailRecipientBase.allUsers },
+        5,
+        10,
+        MailChannel.letter
+      );
+
+      const calls = (prisma.user.findMany as Mock).mock.calls;
+      expect(calls).toHaveLength(1);
+      expect(calls[0][0]).toMatchObject({ skip: 2, take: 10 });
+    });
+
+    it('puts every user on exactly one side of the split', async () => {
+      const prisma = {
+        user: {
+          count: vi.fn(async () => 1),
+          findMany: vi.fn(async () => []),
+        },
+      };
+
+      await makeService(prisma).resolvePreviewPage(
+        { base: MailRecipientBase.allUsers },
+        0,
+        10,
+        MailChannel.letter
+      );
+
+      const [[missing], [present]] = (prisma.user.findMany as Mock).mock.calls;
+      const full = {
+        streetAddress: 'Hauptstrasse 1',
+        streetAddress2: null,
+        zipCode: '8000',
+        city: 'Zürich',
+        country: 'CH',
+      };
+      const users = {
+        full: { address: full },
+        street2Only: {
+          address: { ...full, streetAddress: '', streetAddress2: 'Postfach' },
+        },
+        noAddress: { address: null },
+        noZip: { address: { ...full, zipCode: null } },
+        emptyCity: { address: { ...full, city: '' } },
+        noStreet: { address: { ...full, streetAddress: null } },
+      };
+
+      for (const [name, user] of Object.entries(users)) {
+        const isMissing = matches(user, missing.where);
+        expect([name, isMissing, matches(user, present.where)]).toEqual([
+          name,
+          isMissing,
+          !isMissing,
+        ]);
+      }
+
+      expect(matches(users.full, missing.where)).toBe(false);
+      expect(matches(users.street2Only, missing.where)).toBe(false);
+      expect(matches(users.noAddress, missing.where)).toBe(true);
+      expect(matches(users.noZip, missing.where)).toBe(true);
+      expect(matches(users.emptyCity, missing.where)).toBe(true);
+      expect(matches(users.noStreet, missing.where)).toBe(true);
+    });
+
+    it('keeps the plain order for a mail', async () => {
+      const prisma = {
+        user: {
+          count: vi.fn(),
+          findMany: vi.fn(async () => [{ id: 'u1' }]),
+        },
+      };
+
+      await makeService(prisma).resolvePreviewPage(
+        { base: MailRecipientBase.allUsers },
+        0,
+        10,
+        MailChannel.mail
+      );
+
+      expect(prisma.user.count).not.toHaveBeenCalled();
+      expect(prisma.user.findMany).toHaveBeenCalledTimes(1);
     });
   });
 });
@@ -884,5 +1105,554 @@ describe('audience filtering (semantics)', () => {
         })
       ).toBe(false);
     });
+  });
+
+  describe('email filter', () => {
+    const usersWhereFor = async (
+      emailFilter: MailEmailFilter,
+      patterns: (string | null)[],
+      base = MailRecipientBase.allUsers
+    ) => {
+      const prisma = {
+        user: { count: vi.fn(async () => 0) },
+        subscription: { count: vi.fn(async () => 0) },
+        settingLetterProvider: {
+          findMany: vi.fn(async () =>
+            patterns.map(placeholderEmailContains => ({
+              placeholderEmailContains,
+            }))
+          ),
+        },
+      };
+
+      await makeService(prisma).count({ base, emailFilter });
+
+      return base === MailRecipientBase.allUsers ?
+          (prisma.user.count as Mock).mock.calls[0][0].where
+        : (prisma.subscription.count as Mock).mock.calls[0][0].where;
+    };
+
+    const placeholder = { email: 'test1234@Placeholder.neuewege.ch' };
+    const real = { email: 'jane@example.com' };
+
+    it('does not look up the settings when every address is allowed', async () => {
+      const prisma = {
+        user: { count: vi.fn(async () => 5) },
+        settingLetterProvider: { findMany: vi.fn() },
+      };
+
+      await makeService(prisma).count({
+        base: MailRecipientBase.allUsers,
+        emailFilter: MailEmailFilter.all,
+      });
+
+      expect(prisma.settingLetterProvider.findMany).not.toHaveBeenCalled();
+      expect(prisma.user.count).toHaveBeenCalledWith();
+    });
+
+    it('keeps only placeholder addresses, case-insensitively', async () => {
+      const where = await usersWhereFor(MailEmailFilter.placeholder, [
+        '@placeholder.neuewege.ch',
+      ]);
+
+      expect(matches(placeholder, where)).toBe(true);
+      expect(matches(real, where)).toBe(false);
+    });
+
+    it('matches the pattern anywhere in the address', async () => {
+      const where = await usersWhereFor(MailEmailFilter.placeholder, [
+        'placeholder',
+      ]);
+
+      expect(matches({ email: 'placeholder-42@neuewege.ch' }, where)).toBe(
+        true
+      );
+      expect(matches({ email: 'a@placeholder.neuewege.ch' }, where)).toBe(true);
+      expect(matches(real, where)).toBe(false);
+    });
+
+    it('keeps only real addresses', async () => {
+      const where = await usersWhereFor(MailEmailFilter.real, [
+        '@placeholder.neuewege.ch',
+      ]);
+
+      expect(matches(placeholder, where)).toBe(false);
+      expect(matches(real, where)).toBe(true);
+    });
+
+    it('excludes an address matching any of several patterns from real', async () => {
+      const where = await usersWhereFor(MailEmailFilter.real, [
+        '@other.ch',
+        '@placeholder.neuewege.ch',
+      ]);
+
+      expect(matches(placeholder, where)).toBe(false);
+      expect(matches({ email: 'a@OTHER.ch' }, where)).toBe(false);
+      expect(matches(real, where)).toBe(true);
+    });
+
+    it('treats every address as real without a configured pattern', async () => {
+      const placeholderWhere = await usersWhereFor(
+        MailEmailFilter.placeholder,
+        [null, '  ']
+      );
+      const realWhere = await usersWhereFor(MailEmailFilter.real, [null]);
+
+      expect(matches(placeholder, placeholderWhere)).toBe(false);
+      expect(matches(placeholder, realWhere)).toBe(true);
+    });
+
+    it('filters subscription audiences on the owner', async () => {
+      const where = await usersWhereFor(
+        MailEmailFilter.placeholder,
+        ['@placeholder.neuewege.ch'],
+        MailRecipientBase.hasSubscription
+      );
+
+      expect(matches({ user: placeholder }, where)).toBe(true);
+      expect(matches({ user: real }, where)).toBe(false);
+    });
+  });
+
+  describe('email segments', () => {
+    const PATTERN = '@placeholder.neuewege.ch';
+    const segmentWhereFor = async (
+      emailSegments: MailEmailSegment[],
+      {
+        patterns = [PATTERN] as (string | null)[],
+        base = MailRecipientBase.allUsers,
+        emailFilter = undefined as MailEmailFilter | undefined,
+      } = {}
+    ) => {
+      const prisma = {
+        user: { count: vi.fn(async () => 0) },
+        subscription: { count: vi.fn(async () => 0) },
+        settingLetterProvider: {
+          findMany: vi.fn(async () =>
+            patterns.map(placeholderEmailContains => ({
+              placeholderEmailContains,
+            }))
+          ),
+        },
+      };
+
+      await makeService(prisma).count({ base, emailSegments, emailFilter });
+
+      return base === MailRecipientBase.allUsers ?
+          (prisma.user.count as Mock).mock.calls[0][0].where
+        : (prisma.subscription.count as Mock).mock.calls[0][0].where;
+    };
+
+    const level = (level: EmailQualityLevel) => ({ level });
+    const placeholder = {
+      email: 'nw-1@Placeholder.neuewege.ch',
+      emailQuality: null,
+    };
+    // a generated address that once bounced: still a placeholder
+    const placeholderDead = {
+      email: 'nw-2@placeholder.neuewege.ch',
+      emailQuality: level(EmailQualityLevel.dead),
+    };
+    const dead = {
+      email: 'jane@example.com',
+      emailQuality: level(EmailQualityLevel.dead),
+    };
+    const unresponsive = {
+      email: 'jo@example.com',
+      emailQuality: level(EmailQualityLevel.unresponsive),
+    };
+    const active = {
+      email: 'al@example.com',
+      emailQuality: level(EmailQualityLevel.active),
+    };
+    const neverEvaluated = { email: 'bob@example.com', emailQuality: null };
+    const unknown = {
+      email: 'kim@example.com',
+      emailQuality: level(EmailQualityLevel.unknown),
+    };
+
+    it('does not restrict without segments', async () => {
+      const prisma = {
+        user: { count: vi.fn(async () => 5) },
+        settingLetterProvider: { findMany: vi.fn() },
+      };
+
+      await makeService(prisma).count({
+        base: MailRecipientBase.allUsers,
+        emailSegments: [],
+      });
+
+      expect(prisma.settingLetterProvider.findMany).not.toHaveBeenCalled();
+      expect(prisma.user.count).toHaveBeenCalledWith();
+    });
+
+    it('keeps generated addresses for the placeholder segment, whatever their level', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.placeholder]);
+
+      expect(matches(placeholder, where)).toBe(true);
+      expect(matches(placeholderDead, where)).toBe(true);
+      expect(matches(dead, where)).toBe(false);
+      expect(matches(neverEvaluated, where)).toBe(false);
+    });
+
+    it('keeps the stored level for a level segment, but never a generated address', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.dead]);
+
+      expect(matches(dead, where)).toBe(true);
+      expect(matches(placeholderDead, where)).toBe(false);
+      expect(matches(unresponsive, where)).toBe(false);
+      expect(matches(neverEvaluated, where)).toBe(false);
+    });
+
+    it('counts people never evaluated as unknown', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.unknown]);
+
+      expect(matches(neverEvaluated, where)).toBe(true);
+      expect(matches(unknown, where)).toBe(true);
+      expect(matches(placeholder, where)).toBe(false);
+      expect(matches(active, where)).toBe(false);
+    });
+
+    // The analog campaign: everyone who certainly cannot be reached by mail.
+    it('takes anyone in one of several segments', async () => {
+      const where = await segmentWhereFor([
+        MailEmailSegment.placeholder,
+        MailEmailSegment.dead,
+      ]);
+
+      expect(matches(placeholder, where)).toBe(true);
+      expect(matches(dead, where)).toBe(true);
+      expect(matches(unresponsive, where)).toBe(false);
+      expect(matches(neverEvaluated, where)).toBe(false);
+    });
+
+    it('narrows the email filter further instead of replacing it', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.dead], {
+        emailFilter: MailEmailFilter.placeholder,
+      });
+
+      expect(matches(dead, where)).toBe(false);
+      expect(matches(placeholderDead, where)).toBe(false);
+    });
+
+    it('filters subscription audiences on the owner', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.unresponsive], {
+        base: MailRecipientBase.hasSubscription,
+      });
+
+      expect(matches({ user: unresponsive }, where)).toBe(true);
+      expect(matches({ user: active }, where)).toBe(false);
+    });
+
+    // Prisma's nested `not` filter has no `mode`; putting it there is a
+    // runtime validation error, not a type error, so the shape is pinned here.
+    it('spells the real-address clause in a shape Prisma accepts', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.dead]);
+      const clauses = JSON.stringify(where);
+
+      expect(clauses).toContain(
+        JSON.stringify({ mode: 'insensitive', not: { contains: PATTERN } })
+      );
+      expect(clauses).not.toMatch(/"not":\{[^}]*"mode"/);
+    });
+
+    it('has no placeholders without a configured pattern, and plain levels', async () => {
+      const placeholderWhere = await segmentWhereFor(
+        [MailEmailSegment.placeholder],
+        { patterns: [null] }
+      );
+      const deadWhere = await segmentWhereFor([MailEmailSegment.dead], {
+        patterns: [null],
+      });
+
+      expect(matches(placeholder, placeholderWhere)).toBe(false);
+      expect(matches(dead, deadWhere)).toBe(true);
+      expect(matches(placeholderDead, deadWhere)).toBe(true);
+    });
+
+    it('counts the people of every segment, whatever segments are picked', async () => {
+      const service = makeService({});
+      const countUsers = vi
+        .spyOn(service, 'countUsers')
+        .mockImplementation(async ({ emailSegments }) =>
+          emailSegments?.[0] === MailEmailSegment.dead ? 7 : 1
+        );
+
+      await expect(
+        service.countUsersBySegment({
+          base: MailRecipientBase.hasSubscription,
+          emailSegments: [MailEmailSegment.placeholder],
+        })
+      ).resolves.toEqual([
+        { segment: MailEmailSegment.placeholder, userCount: 1 },
+        { segment: MailEmailSegment.dead, userCount: 7 },
+        { segment: MailEmailSegment.unresponsive, userCount: 1 },
+        { segment: MailEmailSegment.unknown, userCount: 1 },
+        { segment: MailEmailSegment.active, userCount: 1 },
+      ]);
+      expect(countUsers).toHaveBeenCalledWith({
+        base: MailRecipientBase.hasSubscription,
+        emailSegments: [MailEmailSegment.dead],
+      });
+    });
+
+    it('loads the trimmed patterns once for the recipient rows', async () => {
+      const prisma = {
+        settingLetterProvider: {
+          findMany: vi.fn(async () => [
+            { placeholderEmailContains: ` ${PATTERN} ` },
+            { placeholderEmailContains: null },
+          ]),
+        },
+      };
+
+      await expect(makeService(prisma).placeholderPatterns()).resolves.toEqual([
+        PATTERN,
+      ]);
+    });
+  });
+
+  describe('emailSegmentOf', () => {
+    const patterns = ['@placeholder.neuewege.ch'];
+
+    it('is the stored level for a real address', () => {
+      expect(
+        emailSegmentOf(
+          { email: 'jane@example.com', emailQuality: { level: 'dead' } },
+          patterns
+        )
+      ).toBe(MailEmailSegment.dead);
+    });
+
+    it('is unknown for a real address never evaluated', () => {
+      expect(
+        emailSegmentOf(
+          { email: 'jane@example.com', emailQuality: null },
+          patterns
+        )
+      ).toBe(MailEmailSegment.unknown);
+    });
+
+    it('is placeholder for a generated address, whatever its level', () => {
+      expect(
+        emailSegmentOf(
+          {
+            email: 'NW-1@Placeholder.neuewege.ch',
+            emailQuality: { level: 'active' },
+          },
+          patterns
+        )
+      ).toBe(MailEmailSegment.placeholder);
+    });
+  });
+});
+
+describe('audience filtering by mail history', () => {
+  const days = (offset: number) =>
+    new Date(Date.now() + offset * 24 * 60 * 60 * 1000);
+
+  const userWhereFor = async (audience: any) => {
+    const prisma = { user: { count: vi.fn(async () => 0) } };
+    await makeService(prisma).count(audience);
+
+    return (prisma.user.count as Mock).mock.calls[0][0]?.where;
+  };
+
+  const subscriptionWhereFor = async (audience: any) => {
+    const prisma = { subscription: { count: vi.fn(async () => 0) } };
+    await makeService(prisma).count(audience);
+
+    return (prisma.subscription.count as Mock).mock.calls[0][0].where;
+  };
+
+  const invoiceMail = (overrides: Record<string, any> = {}) => ({
+    mailTemplateId: 'invoice',
+    state: 'delivered',
+    channel: 'mail',
+    sentDate: days(-3),
+    ...overrides,
+  });
+
+  const person = (mailSent: any[]) => ({ mailSent });
+
+  const condition = (overrides: Record<string, any> = {}) => ({
+    mailTemplateId: 'invoice',
+    ...overrides,
+  });
+
+  const included = async (row: any, mailHistory: any) =>
+    matches(
+      row,
+      await userWhereFor({ base: MailRecipientBase.allUsers, mailHistory })
+    );
+
+  it('keeps the people who were sent the template', async () => {
+    const history = { conditions: [condition()] };
+
+    expect(await included(person([invoiceMail()]), history)).toBe(true);
+    expect(
+      await included(
+        person([invoiceMail({ mailTemplateId: 'other' })]),
+        history
+      )
+    ).toBe(false);
+    expect(await included(person([]), history)).toBe(false);
+  });
+
+  it('keeps the people who were not sent it, including people without any mail', async () => {
+    // The point of `none` over `NOT`: a person with no log at all must stay.
+    const history = { conditions: [condition({ negate: true })] };
+
+    expect(await included(person([]), history)).toBe(true);
+    expect(
+      await included(
+        person([invoiceMail({ mailTemplateId: 'other' })]),
+        history
+      )
+    ).toBe(true);
+    expect(await included(person([invoiceMail()]), history)).toBe(false);
+  });
+
+  it('narrows to the given delivery states, any state when none are given', async () => {
+    const bounced = { conditions: [condition({ states: ['bounced'] })] };
+
+    expect(await included(person([invoiceMail()]), bounced)).toBe(false);
+    expect(
+      await included(person([invoiceMail({ state: 'bounced' })]), bounced)
+    ).toBe(true);
+    expect(
+      await included(person([invoiceMail()]), {
+        conditions: [condition({ states: [] })],
+      })
+    ).toBe(true);
+  });
+
+  it('narrows to the given channel', async () => {
+    const printed = { conditions: [condition({ channel: 'letter' })] };
+
+    expect(await included(person([invoiceMail()]), printed)).toBe(false);
+    expect(
+      await included(person([invoiceMail({ channel: 'letter' })]), printed)
+    ).toBe(true);
+  });
+
+  it('bounds the send date on either side, inclusively, from iso strings too', async () => {
+    const lastWeek = {
+      conditions: [
+        condition({
+          from: days(-7).toISOString(),
+          to: days(-1).toISOString(),
+        }),
+      ],
+    };
+
+    expect(await included(person([invoiceMail()]), lastWeek)).toBe(true);
+    expect(
+      await included(person([invoiceMail({ sentDate: days(-10) })]), lastWeek)
+    ).toBe(false);
+    expect(
+      await included(person([invoiceMail({ sentDate: days(-10) })]), {
+        conditions: [condition({ to: days(-1) })],
+      })
+    ).toBe(true);
+  });
+
+  it('requires every condition by default and one of them with any', async () => {
+    const both = [condition(), condition({ mailTemplateId: 'reminder' })];
+    const onlyInvoice = person([invoiceMail()]);
+
+    expect(await included(onlyInvoice, { conditions: both })).toBe(false);
+    expect(
+      await included(onlyInvoice, {
+        match: MailHistoryMatch.all,
+        conditions: both,
+      })
+    ).toBe(false);
+    expect(
+      await included(onlyInvoice, {
+        match: MailHistoryMatch.any,
+        conditions: both,
+      })
+    ).toBe(true);
+  });
+
+  it('lets any mix a sent and a not-sent condition', async () => {
+    const history = {
+      match: MailHistoryMatch.any,
+      conditions: [
+        condition({ mailTemplateId: 'reminder' }),
+        condition({ mailTemplateId: 'invoice', negate: true }),
+      ],
+    };
+
+    // Never got the invoice: in. Got the invoice but also the reminder: in.
+    expect(await included(person([]), history)).toBe(true);
+    expect(
+      await included(
+        person([invoiceMail(), invoiceMail({ mailTemplateId: 'reminder' })]),
+        history
+      )
+    ).toBe(true);
+    // Got only the invoice: out.
+    expect(await included(person([invoiceMail()]), history)).toBe(false);
+  });
+
+  it('adds nothing for an empty list of conditions', async () => {
+    const prisma = { user: { count: vi.fn(async () => 0) } };
+
+    await makeService(prisma).count({
+      base: MailRecipientBase.allUsers,
+      mailHistory: { conditions: [] },
+    });
+
+    expect((prisma.user.count as Mock).mock.calls[0][0]).toBeUndefined();
+  });
+
+  it('combines with the email segments', async () => {
+    // Segments load the placeholder patterns from both of their sources.
+    const prisma = {
+      user: { count: vi.fn(async () => 0) },
+      setting: { findUnique: vi.fn(async () => null) },
+      settingLetterProvider: { findMany: vi.fn(async () => []) },
+    };
+
+    await makeService(prisma).count({
+      base: MailRecipientBase.allUsers,
+      emailSegments: [MailEmailSegment.dead],
+      mailHistory: { conditions: [condition()] },
+    });
+
+    const where = (prisma.user.count as Mock).mock.calls[0][0].where;
+
+    expect(JSON.stringify(where)).toContain('"mailSent"');
+    expect(JSON.stringify(where)).toContain('"emailQuality"');
+  });
+
+  it('applies to the owner for the subscription audiences', async () => {
+    const where = await subscriptionWhereFor({
+      base: MailRecipientBase.hasSubscription,
+      mailHistory: { conditions: [condition()] },
+    });
+    const owner = (mailSent: any[]) => ({
+      confirmed: true,
+      deactivation: null,
+      paidUntil: days(20),
+      user: { mailSent },
+    });
+
+    expect(matches(owner([invoiceMail()]), where)).toBe(true);
+    expect(matches(owner([]), where)).toBe(false);
+  });
+
+  it('applies to the people without an active subscription too', async () => {
+    const where = await userWhereFor({
+      base: MailRecipientBase.noActiveSubscription,
+      mailHistory: { conditions: [condition({ negate: true })] },
+    });
+
+    expect(matches({ subscriptions: [], mailSent: [] }, where)).toBe(true);
+    expect(
+      matches({ subscriptions: [], mailSent: [invoiceMail()] }, where)
+    ).toBe(false);
   });
 });

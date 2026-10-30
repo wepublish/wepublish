@@ -87,6 +87,18 @@ const SETTINGS = {
     label: 'settingList.sessionTtlDays',
     value: 7,
   },
+  [SettingName.EmailQualityUnresponsiveAfterDays]: {
+    label: 'settingList.emailQualityUnresponsiveAfterDays',
+    value: 180,
+  },
+  [SettingName.EmailQualityMinMailsForUnresponsive]: {
+    label: 'settingList.emailQualityMinMailsForUnresponsive',
+    value: 1,
+  },
+  [SettingName.EmailQualityEvidenceWarnAfterDays]: {
+    label: 'settingList.emailQualityEvidenceWarnAfterDays',
+    value: 14,
+  },
   [SettingName.SendLoginJwtExpiresMin]: {
     label: 'settingList.loginMinutes',
     value: 0,
@@ -165,6 +177,8 @@ const EMPTY_SETTINGS = Object.fromEntries(
 
 const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
   [SettingName.SessionTtlDays]: [1, 365],
+  [SettingName.EmailQualityUnresponsiveAfterDays]: [1, 3650],
+  [SettingName.EmailQualityMinMailsForUnresponsive]: [1, 100],
   [SettingName.SendLoginJwtExpiresMin]: [1, 10080],
   [SettingName.ResetPasswordJwtExpiresMin]: [10, 10080],
   [SettingName.PeeringTimeoutMs]: [1000, 10000],
@@ -583,6 +597,43 @@ function SettingList() {
                           SettingName.ResetPasswordJwtExpiresMin,
                           t('settingList.info.passwordToken'),
                           t('settingList.minutes')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* email quality: when a mailed address counts as unresponsive */}
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.emailQuality')} />
+
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        {renderNumberInput(
+                          SettingName.EmailQualityUnresponsiveAfterDays,
+                          t(
+                            'settingList.warnings.emailQualityUnresponsiveAfterDays'
+                          ),
+                          t('settingList.days')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.EmailQualityMinMailsForUnresponsive,
+                          t(
+                            'settingList.warnings.emailQualityMinMailsForUnresponsive'
+                          )
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.EmailQualityEvidenceWarnAfterDays,
+                          t(
+                            'settingList.warnings.emailQualityEvidenceWarnAfterDays'
+                          ),
+                          t('settingList.days')
                         )}
                       </Stack>
                     </CardContent>

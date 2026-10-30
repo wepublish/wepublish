@@ -8,12 +8,8 @@ import {
 } from '@wepublish/editor/api';
 import { usePeriodicJobNotifications } from '@wepublish/membership/editor';
 import { CanGetPeriodicJobLog } from '@wepublish/permissions';
-import {
-  NotificationSeverity,
-  SEVERITY_ORDER,
-  useHasPermission,
-} from '@wepublish/ui/editor';
-import { ReactElement, useCallback, useMemo } from 'react';
+import { NotificationSeverity, useHasPermission } from '@wepublish/ui/editor';
+import { cloneElement, ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
@@ -23,6 +19,7 @@ import {
   useChangelogActionNotifications,
   useChangelogNewsNotifications,
 } from './changelogDashboard';
+import { selectDashboardNotifications } from './dashboardNotificationSelection';
 import { useOneChannelNotifications } from './oneChannelAlert';
 
 // Every source renders its own stack of notification items. Dissolving those
@@ -36,6 +33,17 @@ const Section = styled.div`
   gap: 12px;
 `;
 
+const MoreHint = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+`;
+
+type Item = ReactElement<{
+  severity: NotificationSeverity;
+  compact?: boolean;
+}>;
+
 const EMPTY_SET: ReadonlySet<string> = new Set();
 
 const JOB_LOG_PERMISSION = [CanGetPeriodicJobLog.id];
@@ -45,6 +53,10 @@ const JOB_LOG_PERMISSION = [CanGetPeriodicJobLog.id];
  * by severity: a failing job belongs above a piece of news no matter which
  * source happens to be asked first. Rendering source after source, as this
  * panel used to, let an orange changelog task sit above a red outage.
+ *
+ * The dashboard only has room for a few of them: every source keeps its most
+ * severe item, only the first is shown with its body, and a link says how many
+ * more wait on the notifications page.
  *
  * The whole panel is hidden while nothing has anything to show. The sources
  * keep fetching meanwhile, so a new message or a job that starts failing
@@ -113,27 +125,24 @@ export function DashboardNotifications() {
     onMarkRead: markRead(NotificationSource.Changelog),
   });
 
-  const items = useMemo<ReactElement<{ severity: NotificationSeverity }>[]>(
+  const { visible, hiddenCount } = useMemo(
     () =>
-      (
-        [
-          ...connector,
-          ...team,
-          ...actionRequired.items,
-          ...(mayReadJobLogs ? jobs : []),
-          ...news.items,
-        ] as ReactElement<{ severity: NotificationSeverity }>[]
-      ).sort(
-        (a, b) =>
-          SEVERITY_ORDER[a.props.severity] - SEVERITY_ORDER[b.props.severity]
-      ),
+      selectDashboardNotifications([
+        { category: 'connector', items: connector as Item[] },
+        { category: 'team', items: team as Item[] },
+        {
+          category: 'changelog',
+          items: [...actionRequired.items, ...news.items] as Item[],
+        },
+        { category: 'jobs', items: (mayReadJobLogs ? jobs : []) as Item[] },
+      ]),
     [connector, team, actionRequired.items, jobs, mayReadJobLogs, news.items]
   );
 
   return (
     <Card
       variant="outlined"
-      hidden={!items.length}
+      hidden={!visible.length}
     >
       <CardHeader
         title={t('dashboard.notifications')}
@@ -151,7 +160,24 @@ export function DashboardNotifications() {
       />
 
       <CardContent>
-        <Section>{items}</Section>
+        <Section>
+          {visible.map((item, index) =>
+            index ? cloneElement(item, { compact: true }) : item
+          )}
+        </Section>
+
+        {hiddenCount > 0 && (
+          <MoreHint>
+            <Button
+              component={RouterLink}
+              to="/notifications"
+              variant="text"
+              endIcon={<MdChevronRight />}
+            >
+              {t('dashboard.moreNotifications', { count: hiddenCount })}
+            </Button>
+          </MoreHint>
+        )}
 
         {actionRequired.overlay}
         {news.overlay}

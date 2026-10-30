@@ -71,7 +71,12 @@ describe('BasePaymentProvider authorization defaults', () => {
 
   describe('saveCustomer', () => {
     it("replaces the user's customer of this provider", async () => {
-      user.findUnique.mockResolvedValue({ id: 'user-1' });
+      user.findUnique.mockResolvedValue({
+        id: 'user-1',
+        paymentProviderCustomers: [
+          { paymentProviderID: 'plain', customerID: 'cus-0' },
+        ],
+      });
 
       await provider.saveCustomer('user-1', 'cus-1');
 

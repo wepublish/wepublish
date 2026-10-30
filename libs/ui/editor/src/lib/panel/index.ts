@@ -39,6 +39,7 @@ export * from './teaserEditPanel';
 export * from './teaserSelectAndEditPanel';
 export * from './teaserSelectPanel';
 export * from './tokenGeneratePanel';
+export * from './tokenRolePicker';
 export * from './userCheckPicker';
 export * from './userRoleEditPanel';
 export * from './userSubscriptionDeactivatePanel';

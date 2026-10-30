@@ -28,6 +28,7 @@ import {
   LookupActionInput,
 } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
+import { TemplateAction } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { add, format } from 'date-fns';
 import {
   BadRequestException,
@@ -256,7 +257,8 @@ export class MemberContext implements MemberContextInterface {
       const startDate = new Date(
         (
           paidUntil &&
-          paidUntil.getTime() > new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
+            paidUntil.getTime() >
+              new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
         ) ?
           paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
         : new Date().getTime()
@@ -495,14 +497,14 @@ export class MemberContext implements MemberContextInterface {
         return false;
       }
 
-      const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
+      const action = await this.getSubscriptionTemplateAction(
         subscription,
         SubscriptionEvent.RENEWAL_FAILED
       );
 
-      if (remoteTemplate) {
+      if (action) {
         await this.mailContext.sendMail({
-          mailTemplateId: remoteTemplate,
+          mailTemplateId: action.mailTemplateId,
           recipient: user,
           optionalData: {
             invoice,
@@ -510,6 +512,7 @@ export class MemberContext implements MemberContextInterface {
             errorCode: intent.errorCode,
           },
           mailType: mailLogType.UserFlow,
+          asLetter: action.sendAsLetter,
         });
       } else {
         logger('memberContext').info(
@@ -884,13 +887,13 @@ export class MemberContext implements MemberContextInterface {
     };
   }
 
-  async getSubscriptionTemplateIdentifier(
+  async getSubscriptionTemplateAction(
     subscription: Subscription,
     subscriptionEvent: SubscriptionEvent
-  ): Promise<string | undefined> {
+  ): Promise<TemplateAction | undefined> {
     return new SubscriptionEventDictionary(
       this.prisma
-    ).getSubsciptionTemplateIdentifier(subscription, subscriptionEvent);
+    ).getSubscriptionTemplateAction(subscription, subscriptionEvent);
   }
 
   async getActionsForSubscriptions(
@@ -924,6 +927,8 @@ export class MemberContext implements MemberContextInterface {
     startsAt = new Date(),
     paidUntil,
     skipMail,
+    periods,
+    deactivationReason,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -942,6 +947,26 @@ export class MemberContext implements MemberContextInterface {
      * symmetry and to defend against future hooks.
      */
     skipMail?: boolean;
+    /**
+     * Historical periods: one invoice + one subscription period per entry,
+     * paid entries with a back-dated paidAt. Replaces the single synthesized
+     * invoice/period. `paidUntil` defaults to the latest paid endsAt.
+     */
+    periods?: {
+      startsAt: Date | string;
+      endsAt: Date | string;
+      amount: number;
+      paid: boolean;
+      paidAt?: Date | string | null;
+      invoiceDescription?: string | null;
+    }[];
+    /**
+     * Import as already cancelled: creates the deactivation directly (date =
+     * paidUntil when in the future, else now) and cancels the subscription's
+     * unpaid invoices — without mail and without the payment-provider call
+     * that cancelSubscription/deactivateSubscription would make.
+     */
+    deactivationReason?: SubscriptionDeactivationReason;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -954,6 +979,25 @@ export class MemberContext implements MemberContextInterface {
 
     startsAt = new Date(startsAt);
     paidUntil = paidUntil ? new Date(paidUntil) : undefined;
+
+    const importPeriods = (periods ?? [])
+      .map(period => ({
+        startsAt: new Date(period.startsAt),
+        endsAt: new Date(period.endsAt),
+        amount: period.amount,
+        paid: period.paid,
+        paidAt:
+          period.paid ? new Date(period.paidAt ?? period.startsAt) : undefined,
+        invoiceDescription: period.invoiceDescription ?? undefined,
+      }))
+      .sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime());
+
+    if (importPeriods.length && !paidUntil) {
+      const paidEnds = importPeriods
+        .filter(period => period.paid)
+        .map(period => period.endsAt.getTime());
+      paidUntil = paidEnds.length ? new Date(Math.max(...paidEnds)) : undefined;
+    }
 
     const memberPlan = await this.prisma.memberPlan.findUnique({
       where: { id: memberPlanID },
@@ -1010,6 +1054,104 @@ export class MemberContext implements MemberContextInterface {
         userID
       );
       throw new InternalServerErrorException();
+    }
+
+    // Import-as-cancelled: mirrors deactivateSubscription's date rule and
+    // invoice cancelling, but WITHOUT the payment-provider call and mail.
+    const applyImportDeactivation = async (): Promise<void> => {
+      if (!deactivationReason) return;
+      const deactivationNow = new Date();
+      const date =
+        paidUntil && paidUntil > deactivationNow ? paidUntil : deactivationNow;
+      await this.prisma.subscription.update({
+        where: { id: subscription.id },
+        data: {
+          deactivation: {
+            upsert: {
+              create: { date, reason: deactivationReason },
+              update: { date, reason: deactivationReason },
+            },
+          },
+        },
+      });
+      await this.prisma.invoice.updateMany({
+        where: {
+          subscriptionID: subscription.id,
+          paidAt: null,
+          canceledAt: null,
+        },
+        data: { canceledAt: deactivationNow },
+      });
+    };
+
+    if (importPeriods.length) {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: subscription.userID,
+        },
+        select: unselectPassword,
+      });
+
+      if (!user) {
+        throw new InternalServerErrorException();
+      }
+
+      let lastInvoice: InvoiceWithItems | undefined;
+
+      for (const period of importPeriods) {
+        const invoice = await this.prisma.invoice.create({
+          data: {
+            currency: memberPlan.currency,
+            subscriptionID: subscription.id,
+            description:
+              period.invoiceDescription ??
+              `Membership from ${period.startsAt.toISOString()} for ${user.name || user.email}`,
+            mail: user.email,
+            dueAt: period.startsAt,
+            scheduledDeactivationAt: period.endsAt,
+            items: {
+              create: {
+                name: 'Membership',
+                description: `From ${period.startsAt.toISOString()} to ${period.endsAt.toISOString()}`,
+                amount: period.amount,
+                quantity: 1,
+              },
+            },
+            ...(period.paidAt && { paidAt: period.paidAt }),
+          },
+          include: {
+            items: true,
+          },
+        });
+
+        await this.prisma.subscription.update({
+          where: { id: subscription.id },
+          data: {
+            periods: {
+              create: {
+                startsAt: period.startsAt,
+                amount: period.amount,
+                endsAt: period.endsAt,
+                paymentPeriodicity,
+                invoiceID: invoice.id,
+              },
+            },
+          },
+        });
+
+        lastInvoice = invoice;
+      }
+
+      if (!lastInvoice) {
+        throw new InternalServerErrorException();
+      }
+
+      await applyImportDeactivation();
+
+      return {
+        subscription,
+        invoice: lastInvoice,
+      };
     }
 
     if (startsAt < now || paidUntil) {
@@ -1069,6 +1211,9 @@ export class MemberContext implements MemberContextInterface {
           },
         },
       });
+
+      await applyImportDeactivation();
+
       return {
         subscription,
         invoice,
@@ -1079,6 +1224,8 @@ export class MemberContext implements MemberContextInterface {
       if (!invoice) {
         throw new InternalServerErrorException();
       }
+
+      await applyImportDeactivation();
 
       if (!skipMail) {
         await this.sendMailForSubscriptionEvent(
@@ -1112,12 +1259,12 @@ export class MemberContext implements MemberContextInterface {
       return;
     }
 
-    const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
+    const action = await this.getSubscriptionTemplateAction(
       subscription,
       subscriptionEvent
     );
 
-    if (!remoteTemplate) {
+    if (!action) {
       logger('MemberContext').warn(
         `RemoteTemplate <%s> for subscription <%s> not found!`,
         subscriptionEvent,
@@ -1128,13 +1275,14 @@ export class MemberContext implements MemberContextInterface {
     }
 
     await this.mailContext.sendMail({
-      mailTemplateId: remoteTemplate,
+      mailTemplateId: action.mailTemplateId,
       recipient: user,
       optionalData: {
         subscription,
         ...optionalData,
       },
       mailType: mailLogType.UserFlow,
+      asLetter: action.sendAsLetter,
     });
   }
 }

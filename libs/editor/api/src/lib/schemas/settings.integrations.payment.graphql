@@ -12,6 +12,9 @@ query PaymentProviderSettings {
     bexio_invoiceTitleNewMembership
     bexio_invoiceTitleRenewalMembership
     bexio_markInvoiceAsOpen
+    bexio_contactSync
+    bexio_contactSyncAt
+    bexio_contactSyncError
     bexio_taxId
     bexio_unitId
     bexio_userId
@@ -47,6 +50,7 @@ mutation UpdatePaymentProviderSetting(
   $bexio_invoiceTitleNewMembership: String
   $bexio_invoiceTitleRenewalMembership: String
   $bexio_markInvoiceAsOpen: Boolean
+  $bexio_contactSync: Boolean
   $bexio_taxId: Float
   $bexio_unitId: Float
   $bexio_userId: Float
@@ -76,6 +80,7 @@ mutation UpdatePaymentProviderSetting(
     bexio_invoiceTitleNewMembership: $bexio_invoiceTitleNewMembership
     bexio_invoiceTitleRenewalMembership: $bexio_invoiceTitleRenewalMembership
     bexio_markInvoiceAsOpen: $bexio_markInvoiceAsOpen
+    bexio_contactSync: $bexio_contactSync
     bexio_taxId: $bexio_taxId
     bexio_unitId: $bexio_unitId
     bexio_userId: $bexio_userId
@@ -102,6 +107,9 @@ mutation UpdatePaymentProviderSetting(
     bexio_invoiceTitleNewMembership
     bexio_invoiceTitleRenewalMembership
     bexio_markInvoiceAsOpen
+    bexio_contactSync
+    bexio_contactSyncAt
+    bexio_contactSyncError
     bexio_taxId
     bexio_unitId
     bexio_userId

@@ -432,9 +432,15 @@ catalogs:
     passport-http-bearer:
       specifier: ^1.0.1
       version: 1.0.1
+    pdf-lib:
+      specifier: ^1.17.1
+      version: 1.17.1
     pg:
       specifier: ^8.23.1
       version: 8.23.1
+    pingen2-sdk-js:
+      specifier: ^0.3.0
+      version: 0.3.0
     pino:
       specifier: ^6.14.0
       version: 6.14.0
@@ -920,9 +926,15 @@ importers:
       passport-http-bearer:
         specifier: 'catalog:'
         version: 1.0.1
+      pdf-lib:
+        specifier: 'catalog:'
+        version: 1.17.1
       pg:
         specifier: 'catalog:'
         version: 8.23.1
+      pingen2-sdk-js:
+        specifier: 'catalog:'
+        version: 0.3.0
       pino:
         specifier: 'catalog:'
         version: 6.14.0
@@ -1699,6 +1711,12 @@ importers:
       passport-http-bearer:
         specifier: 'catalog:'
         version: 1.0.1
+      pdf-lib:
+        specifier: 'catalog:'
+        version: 1.17.1
+      pingen2-sdk-js:
+        specifier: 'catalog:'
+        version: 0.3.0
       pino:
         specifier: 'catalog:'
         version: 6.14.0
@@ -6287,6 +6305,12 @@ packages:
   '@parcel/watcher@2.6.0':
     resolution: {integrity: sha512-7FNeNl8NCE7aINx7WXiKQrPYZWC/hvrTsmk6zmxbI7LTXE7hVek/n8AfVgpe2y82zl3w0HvCHN0bVKMBoJcC0w==}
     engines: {node: '>= 10.0.0'}
+
+  '@pdf-lib/standard-fonts@1.0.0':
+    resolution: {integrity: sha512-hU30BK9IUN/su0Mn9VdlVKsWBS6GyhVfqjwl1FjZN4TxP6cCw0jP2w7V3Hf5uX7M0AZJ16vey9yE0ny7Sa59ZA==}
+
+  '@pdf-lib/upng@1.0.1':
+    resolution: {integrity: sha512-dQK2FUMQtowVP00mtIksrlZhdFXQZPC+taih1q4CvPZ5vqdxR/LKBaFg0oAfzd1GlHZXXSPdQfzQnt+ViGvEIQ==}
 
   '@peculiar/asn1-cms@2.8.0':
     resolution: {integrity: sha512-NgekZOrSJFSBFLFoLfwePguAWAx7z1+f2TEsWFUMyiqqfntZ4+S/S5hzqME3q4pCA0iOsFKdwiQ35dwY24eVqA==}
@@ -14312,6 +14336,9 @@ packages:
     resolution: {integrity: sha512-Q3CG/cYvCO1ye4QKkuH7EXxs3VC/rI1/trd+qX2+PolbaKG0H+bgcZzrTt96mMyRtejk+JMCiLUn3y29W8qmFQ==}
     engines: {node: '>= 0.10'}
 
+  pdf-lib@1.17.1:
+    resolution: {integrity: sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw==}
+
   peberminta@0.10.0:
     resolution: {integrity: sha512-80B2AsU+I4Qdb0ZAPSfe9UwvGzwkM37IKIFEvdS3D/3Ndgv2bsuJ0bfG1+iEYO+l7Gfd4EUJmuRyq7efLgRMzQ==}
 
@@ -14391,6 +14418,10 @@ packages:
   pify@3.0.0:
     resolution: {integrity: sha512-C3FsVNH1udSEX48gGX1xfvwTWfsYWj5U+8/uK15BGzIGrKoUpghX8hWZwa/OFnakBiiVNmBvemTJR5mcy7iPcg==}
     engines: {node: '>=4'}
+
+  pingen2-sdk-js@0.3.0:
+    resolution: {integrity: sha512-KOx8O5SRH7naXXxWqynYfuavMAbyYpMgUnpVry34Ai/34W+qSAYnI3kzV4G930jYwk/CBcA2JHu0TeXqHQaQ/g==}
+    engines: {node: '>=18.0.0'}
 
   pino-abstract-transport@3.0.0:
     resolution: {integrity: sha512-wlfUczU+n7Hy/Ha5j9a/gZNy7We5+cXp8YL+X+PG8S0KXxw7n/JXA3c46Y0zQznIJ83URJiwy7Lh56WLokNuxg==}
@@ -22573,6 +22604,14 @@ snapshots:
       '@parcel/watcher-linux-x64-musl': 2.6.0
       '@parcel/watcher-win32-arm64': 2.6.0
       '@parcel/watcher-win32-x64': 2.6.0
+
+  '@pdf-lib/standard-fonts@1.0.0':
+    dependencies:
+      pako: 1.0.11
+
+  '@pdf-lib/upng@1.0.1':
+    dependencies:
+      pako: 1.0.11
 
   '@peculiar/asn1-cms@2.8.0':
     dependencies:
@@ -32002,6 +32041,13 @@ snapshots:
       sha.js: 2.4.12
       to-buffer: 1.2.1
 
+  pdf-lib@1.17.1:
+    dependencies:
+      '@pdf-lib/standard-fonts': 1.0.0
+      '@pdf-lib/upng': 1.0.1
+      pako: 1.0.11
+      tslib: 1.14.1
+
   peberminta@0.10.0: {}
 
   peberminta@0.9.0: {}
@@ -32062,6 +32108,8 @@ snapshots:
   pify@2.3.0: {}
 
   pify@3.0.0: {}
+
+  pingen2-sdk-js@0.3.0: {}
 
   pino-abstract-transport@3.0.0:
     dependencies:

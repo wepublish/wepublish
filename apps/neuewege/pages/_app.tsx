@@ -54,7 +54,13 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator();
+initWePublishTranslator({
+  // Neue Wege's Payrexx takes cards and TWINT
+  paymentMethodLabels: {
+    payrexx: 'Karte oder TWINT',
+    'payrexx-subscription': 'Karte oder TWINT',
+  },
+});
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -102,7 +108,7 @@ function CustomApp({
   emotionCache,
   websiteSettings,
 }: CustomAppProps) {
-  const siteTitle = 'We.Publish';
+  const siteTitle = 'Neue Wege';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
