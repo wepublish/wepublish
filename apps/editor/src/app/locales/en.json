@@ -3464,6 +3464,7 @@
         "bexioInvoiceMailBodyNewMembership": "Invoice Mail Body (New Membership)",
         "bexioInvoiceMailBodyRenewalMembership": "Invoice Mail Body (Renewal Membership)",
         "bexioMarkInvoiceAsOpen": "Mark Invoice as Open",
+        "bexioContactSync": "Sync contacts to Bexio nightly",
         "bexioInvoiceTitleNewMembership": "Invoice Title (New Membership)",
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)",
         "typeInfo": "The payment service this integration is connected to. It is set when the integration is created and cannot be changed.",
@@ -3484,7 +3485,11 @@
         "bexioInvoiceTitleInfo": "The title printed on the invoice. You can use different titles for new subscriptions and renewals.",
         "bexioInvoiceMailSubjectInfo": "The subject of the email Bexio sends with the invoice. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically.",
         "bexioInvoiceMailBodyInfo": "The text of the email Bexio sends with the invoice; the PDF is attached. Placeholders such as :user.firstName: or :memberPlan.name: are replaced automatically. Bexio requires the placeholder [Network Link] in the text.",
-        "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft."
+        "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft.",
+        "bexioContactSyncInfo": "When enabled, We.Publish pushes the name, company, email and address of changed readers to their Bexio contact every night and creates missing contacts for subscriptions paid through Bexio. Groups, phone and everything else on the contact stay as they are in Bexio.",
+        "bexioContactSyncNeverRan": "Has not run yet.",
+        "bexioContactSyncLastRun": "Last run: {{date}}, without errors.",
+        "bexioContactSyncLastRunFailed": "Last run: {{date}}. Error: {{error}}"
       },
       "placeholderSecret": "Unchanged (Hidden)",
       "pdfRendererSettings": {

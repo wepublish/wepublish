@@ -1,5 +1,6 @@
 export * from './lib/payment-provider/payment-provider';
 export * from './lib/payment-provider/bexio/bexio-payment-provider';
+export * from './lib/payment-provider/bexio/bexio-contact-sync.service';
 export * from './lib/payment-provider/payrexx-payment-provider';
 export * from './lib/payment-provider/payrexx-subscription-payment-provider';
 export * from './lib/payment-provider/stripe-payment-provider';

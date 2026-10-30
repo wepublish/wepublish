@@ -3394,6 +3394,7 @@
         "bexioInvoiceMailBodyNewMembership": "Corps de l’e-mail de facture (Nouvelle adhésion)",
         "bexioInvoiceMailBodyRenewalMembership": "Corps de l’e-mail de facture (Renouvellement d’adhésion)",
         "bexioMarkInvoiceAsOpen": "Marquer la facture comme ouverte",
+        "bexioContactSync": "Synchroniser les contacts vers Bexio chaque nuit",
         "bexioInvoiceTitleNewMembership": "Titre de la facture (Nouvelle adhésion)",
         "bexioInvoiceTitleRenewalMembership": "Titre de la facture (Renouvellement d’adhésion)",
         "typeInfo": "Le service de paiement auquel cette intégration est reliée. Il est défini lors de la création et ne peut pas être modifié.",
@@ -3414,7 +3415,11 @@
         "bexioInvoiceTitleInfo": "Le titre imprimé sur la facture. Vous pouvez utiliser des titres différents pour les nouveaux abonnements et les renouvellements.",
         "bexioInvoiceMailSubjectInfo": "L’objet de l’e-mail avec lequel Bexio envoie la facture. Les espaces réservés comme :user.firstName: ou :memberPlan.name: sont remplacés automatiquement.",
         "bexioInvoiceMailBodyInfo": "Le texte de l’e-mail avec lequel Bexio envoie la facture ; le PDF est joint. Les espaces réservés comme :user.firstName: ou :memberPlan.name: sont remplacés automatiquement. Bexio exige l’espace réservé [Network Link] dans le texte.",
-        "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon."
+        "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon.",
+        "bexioContactSyncInfo": "Si activé, We.Publish transmet chaque nuit le nom, l’entreprise, l’e-mail et l’adresse des lecteurs modifiés à leur contact Bexio et crée les contacts manquants pour les abonnements payés via Bexio. Les groupes, le téléphone et tout le reste du contact restent tels qu’ils sont dans Bexio.",
+        "bexioContactSyncNeverRan": "N’a pas encore tourné.",
+        "bexioContactSyncLastRun": "Dernière exécution : {{date}}, sans erreur.",
+        "bexioContactSyncLastRunFailed": "Dernière exécution : {{date}}. Erreur : {{error}}"
       },
       "placeholderSecret": "Inchangé (masqué)",
       "pdfRendererSettings": {
