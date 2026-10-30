@@ -2964,9 +2964,9 @@
           "totalActiveSubscriptionCount": "Abos, die am Stichtag aktiv und bezahlt waren oder künftig bezahlt werden und möglicherweise noch aktiv sind.",
           "overdueSubscriptionCount": "Erneuerte Abos, deren Bezahlung fällig und offen ist. Nicht eingerechnet sind erstmalig gelöste Abos, die nicht bezahlt wurden.",
           "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert und bezahlt wurden.",
-          "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
-          "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
-          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probeabos).",
+          "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden. Ohne Abos, die ein anderes Abo ersetzen (Upgrades).",
+          "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden. Ohne Abos, die durch ein Upgrade ersetzt wurden.",
+          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden, z.B. bei einem Upgrade. Das ersetzte Abo zählt nicht als deaktiviert, das neue nicht als neues Abo.",
           "predictedSubscriptionRenewalCount": "Anzahl Abos, die am Ende ihrer Laufzeit zur Erneuerung anstehen.\n Erstmalige Abo-Erneuerungen sowie\n Abo-Erneuerungen von Stammkunden: Abos, die in der Vergangenheit bereits ein oder mehrmals erneuert worden sind\n Abo-Erneuerungen werden beginnend ab dem gewählten Startdatum (oder ab dem aktuellen Datum, falls der gewählte Zeitraum in der Vergangenheit beginnt) dargestellt.\n Als anstehende Abo-Erneuerungen werden die zurzeit bezahlten und aktiven Abos mit aktivierter automatischer Verlängerung gezählt.",
           "endingSubscriptionCount": "Abos, die am Ende ihrer Laufzeit auslaufen werden, d.h. ohne Abos mit automatischer Verlängerung."
         },
@@ -3022,8 +3022,8 @@
       "showUsers": "Details anzeigen",
       "byDate": "Per",
       "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
-      "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
-      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden.",
+      "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden, gezählt am Tag des Entscheids. Einberechnet werden die erneuerten, ersetzten und deaktivierten Abos; ein Upgrade zählt einmal als Erneuerung. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
+      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden, gezählt am Tag des Entscheids. Einberechnet werden die erneuerten, ersetzten und deaktivierten Abos; ein Upgrade zählt einmal als Erneuerung. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden.",
       "predictedSubscriptionRenewalCountPerDay": {
         "highProbabilityInfo": "Bezahlte Abos mit automatischer Verlängerung, die bereits ein- oder mehrmals erneuert wurden und am Ende ihrer Laufzeit wieder zur Erneuerung anstehen.",
         "lowProbabilityInfo": "Bezahlte Abos mit automatischer Verlängerung, die am Ende ihrer ersten Laufzeit zum ersten Mal zur Erneuerung anstehen."
