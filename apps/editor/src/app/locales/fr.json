@@ -2956,9 +2956,9 @@
           "totalActiveSubscriptionCount": "Abonnements actifs et payés à la date de référence, ou qui seront payés et potentiellement encore actifs à l’avenir.",
           "overdueSubscriptionCount": "Abonnements renouvelés dont le paiement est dû. Ne sont pas inclus les abonnements achetés pour la première fois et qui n’ont pas été payés.",
           "renewedSubscriptionCount": "Abonnements renouvelés et payés pour une nouvelle période.",
-          "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu’à présent.",
-          "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
-          "replacedSubscriptionCount": "Abonnements remplacés par un autre (p. ex. abonnements d’essai).",
+          "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu’à présent. Les abonnements qui en remplacent un autre (upgrades) ne sont pas inclus.",
+          "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés. Les abonnements remplacés par un upgrade ne sont pas inclus.",
+          "replacedSubscriptionCount": "Abonnements remplacés par un autre, p. ex. lors d’un upgrade. L’abonnement remplacé ne compte pas comme désactivé, le nouveau pas comme nouvel abonnement.",
           "predictedSubscriptionRenewalCount": "Nombre d’abonnements arrivant à expiration et prêts à être renouvelés.\n Abonnements pour la première fois, par rapport aux …\n Abonnements avec un historique de renouvellement (renouvellements subséquents)\n Les renouvellements sont affichés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d’abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
           "endingSubscriptionCount": "Abonnements qui expirent à la fin de leur période, excluant ceux configurés pour se renouveler automatiquement."
         },
@@ -3014,8 +3014,8 @@
       "showUsers": "Afficher les détails",
       "byDate": "Par",
       "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
-      "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu’à ce qu’ils soient payés.",
-      "cancellationRateInfo": "Part des abonnements qui n’ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu’à ce qu’ils soient payés.",
+      "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période, comptée le jour de la décision. Les abonnements renouvelés, remplacés et désactivés sont pris en compte ; un upgrade compte une fois comme renouvellement. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu’à ce qu’ils soient payés.",
+      "cancellationRateInfo": "Part des abonnements qui n’ont pas été renouvelés mais résiliés à la fin de leur période, comptée le jour de la décision. Les abonnements renouvelés, remplacés et désactivés sont pris en compte ; un upgrade compte une fois comme renouvellement. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu’à ce qu’ils soient payés.",
       "predictedSubscriptionRenewalCountPerDay": {
         "highProbabilityInfo": "Abonnements payés avec renouvellement automatique, déjà renouvelés au moins une fois, qui arrivent de nouveau à renouvellement à la fin de leur période.",
         "lowProbabilityInfo": "Abonnements payés avec renouvellement automatique qui arrivent pour la première fois à renouvellement à la fin de leur première période."

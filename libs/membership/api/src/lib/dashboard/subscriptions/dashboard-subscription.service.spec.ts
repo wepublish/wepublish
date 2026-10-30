@@ -206,4 +206,165 @@ describe('DashboardSubscriptionService', () => {
     expect(result).toMatchSnapshot();
     expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
   });
+
+  describe('daily stats and upgrades', () => {
+    const day = new Date('2023-01-01');
+
+    // An upgrade creates a replacement subscription and deactivates the old
+    // one with reason userReplacedSubscription. Neither side is a new
+    // subscription or a cancellation; the upgrade only shows as "replaced".
+    const subscriptions = [
+      {
+        id: 'sub-new',
+        createdAt: new Date('2023-01-01T10:00:00.000Z'),
+        paidUntil: new Date('2024-01-01T00:00:00.000Z'),
+        replacesSubscriptionID: null,
+        deactivation: null,
+        user: {
+          id: 'user-new',
+          firstName: 'Nora',
+          name: 'Neu',
+          email: 'nora@example.com',
+        },
+      },
+      {
+        id: 'sub-upgrade',
+        createdAt: new Date('2023-01-01T11:00:00.000Z'),
+        paidUntil: new Date('2024-01-01T00:00:00.000Z'),
+        replacesSubscriptionID: 'sub-old',
+        deactivation: null,
+        user: {
+          id: 'user-up',
+          firstName: 'Ueli',
+          name: 'Upgrade',
+          email: 'ueli@example.com',
+        },
+      },
+      {
+        id: 'sub-old',
+        createdAt: new Date('2022-01-01T10:00:00.000Z'),
+        paidUntil: new Date('2023-01-01T11:00:00.000Z'),
+        replacesSubscriptionID: null,
+        deactivation: {
+          date: new Date('2023-01-01T11:00:00.000Z'),
+          reason: 'userReplacedSubscription',
+        },
+        user: {
+          id: 'user-up',
+          firstName: 'Ueli',
+          name: 'Upgrade',
+          email: 'ueli@example.com',
+        },
+      },
+      {
+        id: 'sub-cancelled',
+        createdAt: new Date('2022-01-01T10:00:00.000Z'),
+        paidUntil: new Date('2023-01-01T00:00:00.000Z'),
+        replacesSubscriptionID: null,
+        deactivation: {
+          date: new Date('2023-01-01T09:00:00.000Z'),
+          reason: 'userSelfDeactivated',
+        },
+        user: {
+          id: 'user-gone',
+          firstName: 'Gabi',
+          name: 'Gone',
+          email: 'gabi@example.com',
+        },
+      },
+    ];
+
+    // Answers the service's queries the way the database would, so the
+    // filters decide what comes back.
+    const findManyLikeTheDatabase = async (args: any) => {
+      const where = args?.where ?? {};
+      const rows = subscriptions.map(subscription => ({
+        ...subscription,
+        user: { ...subscription.user },
+      }));
+
+      if (where.periods) {
+        return [];
+      }
+
+      if (where.deactivation?.date) {
+        return rows.filter(
+          row =>
+            row.deactivation &&
+            row.deactivation.date >= where.deactivation.date.gte &&
+            row.deactivation.date <= where.deactivation.date.lte &&
+            (where.deactivation.reason?.not === undefined ||
+              row.deactivation.reason !== where.deactivation.reason.not)
+        );
+      }
+
+      if (where.createdAt?.gte) {
+        return rows.filter(row => {
+          if (
+            row.createdAt < where.createdAt.gte ||
+            row.createdAt > where.createdAt.lte
+          ) {
+            return false;
+          }
+          if (where.replacesSubscriptionID === null) {
+            return row.replacesSubscriptionID === null;
+          }
+          if (where.replacesSubscriptionID?.not === null) {
+            return row.replacesSubscriptionID !== null;
+          }
+          return true;
+        });
+      }
+
+      return [];
+    };
+
+    beforeEach(() => {
+      vi.spyOn(prisma.subscription, 'findMany').mockImplementation(
+        findManyLikeTheDatabase as any
+      );
+      vi.spyOn(prisma.subscription, 'count').mockResolvedValue(0);
+    });
+
+    test('counts an upgrade only as a replaced subscription', async () => {
+      const stats = await service.generateDailyData(day, [], day);
+
+      expect(stats.createdSubscriptionCount).toBe(1);
+      expect(
+        stats.createdSubscriptionUsers.map(user => user.subscriptionID)
+      ).toEqual(['sub-new']);
+
+      expect(stats.replacedSubscriptionCount).toBe(1);
+      expect(
+        stats.replacedSubscriptionUsers.map(user => user.subscriptionID)
+      ).toEqual(['sub-upgrade']);
+
+      expect(stats.deactivatedSubscriptionCount).toBe(1);
+      expect(
+        stats.deactivatedSubscriptionUsers.map(user => user.subscriptionID)
+      ).toEqual(['sub-cancelled']);
+    });
+
+    test('queries new, replaced and deactivated subscriptions with the upgrade filters', async () => {
+      const findMany = vi.spyOn(prisma.subscription, 'findMany');
+
+      await service['getDailyCreatedSubscriptions'](day);
+      expect(findMany.mock.lastCall?.[0]?.where).toMatchObject({
+        paidUntil: { not: null },
+        replacesSubscriptionID: null,
+      });
+
+      await service['getDailyReplacedSubscriptions'](day);
+      expect(findMany.mock.lastCall?.[0]?.where).toMatchObject({
+        paidUntil: { not: null },
+        replacesSubscriptionID: { not: null },
+      });
+
+      await service['getDailyDeactivatedSubscriptions'](day);
+      expect(findMany.mock.lastCall?.[0]?.where).toMatchObject({
+        paidUntil: { not: null },
+        deactivation: { reason: { not: 'userReplacedSubscription' } },
+      });
+    });
+  });
 });
