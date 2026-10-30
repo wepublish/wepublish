@@ -1,9 +1,16 @@
 import { User, UserAddress } from '@prisma/client';
+import type { LetterRecipientOptions } from '@wepublish/mail/api';
 import countries from 'i18n-iso-countries';
 import germanCountries from 'i18n-iso-countries/langs/de.json';
 import { LetterAddress } from './letter-provider/letter-provider.interface';
 
 export class LetterAddressError extends Error {}
+
+/**
+ * Pingen prints Swiss QR-bills on perforated paper but only posts letters
+ * carrying one within Switzerland.
+ */
+export const PAYMENT_SLIP_COUNTRY = 'CH';
 
 const COUNTRY_CODES: Record<string, string> = {
   schweiz: 'CH',
@@ -122,11 +129,14 @@ export function toLetterAddress(user: UserWithAddress): LetterAddress {
   };
 }
 
-export function canReceiveLetters(user: UserWithAddress): boolean {
+export function canReceiveLetters(
+  user: UserWithAddress,
+  { withPaymentSlip = false }: LetterRecipientOptions = {}
+): boolean {
   try {
-    toLetterAddress(user);
+    const address = toLetterAddress(user);
 
-    return true;
+    return !withPaymentSlip || address.country === PAYMENT_SLIP_COUNTRY;
   } catch {
     return false;
   }

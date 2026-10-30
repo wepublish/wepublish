@@ -194,6 +194,42 @@ describe('MailController letter mode', () => {
     expect(mailContext.sendComposedMail).not.toHaveBeenCalled();
   });
 
+  it('prints a document the caller hands in after the template', async () => {
+    const { send, letterSender } = setup();
+    const attachment = { content: Buffer.from('pdf'), name: 'RE-1.pdf' };
+
+    await send({ letterAttachment: attachment });
+
+    expect(letterSender.sendLetter).toHaveBeenCalledWith(
+      expect.objectContaining({ attachment })
+    );
+  });
+
+  // The nightly job decides on paper before it asks the payment provider for
+  // the invoice, so the decision is handed in rather than made twice.
+  it('trusts a recipient the caller already resolved', async () => {
+    const { send, letterSender, prisma } = setup();
+    const resolved = { ...user(), address };
+
+    await send({ letterRecipient: resolved });
+
+    expect(prisma.userDeliveryPreference.findUnique).not.toHaveBeenCalled();
+    expect(prisma.user.findUnique).not.toHaveBeenCalled();
+    expect(letterSender.sendLetter).toHaveBeenCalledWith(
+      expect.objectContaining({ recipient: resolved })
+    );
+  });
+
+  it('mails when the caller resolved the recipient to nobody', async () => {
+    const { send, letterSender, mailContext, prisma } = setup();
+
+    await send({ letterRecipient: null });
+
+    expect(prisma.userDeliveryPreference.findUnique).not.toHaveBeenCalled();
+    expect(letterSender.sendLetter).not.toHaveBeenCalled();
+    expect(mailContext.sendComposedMail).toHaveBeenCalled();
+  });
+
   it('mails as before when no letter sender is wired', async () => {
     const { send, mailContext, prisma } = setup();
     (mailContext as any).letterSender = undefined;

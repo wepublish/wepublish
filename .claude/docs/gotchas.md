@@ -1238,6 +1238,28 @@ render inside it and must not add one of their own) and the three pages above.
 Nothing guards this — a regression here is silent until someone resizes the
 window.
 
+### ⚠️ Cancelling an unsent renewal invoice does not make the nightly job create it again
+
+`PeriodicJobService.createRemoteInvoice`
+(`libs/membership/api/src/lib/periodic-job/periodic-job.service.ts`)
+hard-deletes the we.publish invoice — payment, `subscriptionPeriod`,
+`invoiceItem`, invoice, in that order — when the payment provider could not
+create its side of it.
+
+`getActiveSubscriptionsWithoutInvoice` (`subscription.service.ts`) requires not
+only no open invoice but `periods: { none: { startsAt: { gt: runDate } } }`.
+The invoice's period starts in the future (the invoice is created up to 90 days
+ahead), so `canceledAt` alone keeps the subscription excluded until `paidUntil`,
+and `getNextPeriod` then continues after the orphaned period: a whole
+periodicity of coverage is skipped.
+
+**Load-bearing:** all four deletes. `SubscriptionPeriod.invoiceID` has no
+cascade and `InvoiceItem.invoiceId` is `SetNull`, so each must go explicitly,
+as `upgrade-subscription.service.ts` does.
+
+Pinned by `periodic-job.service.spec.ts` («removes the invoice when the
+provider could not create it»).
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell _why_ the obvious
