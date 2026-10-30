@@ -3411,6 +3411,7 @@
         "bexioInvoiceMailBodyNewMembership": "Rechnungs-E-Mail-Inhalt (Neue Mitgliedschaft)",
         "bexioInvoiceMailBodyRenewalMembership": "Rechnungs-E-Mail-Inhalt (Mitgliedschafts-Erneuerung)",
         "bexioMarkInvoiceAsOpen": "Rechnung als offen markieren",
+        "bexioContactSync": "Kontakte nächtlich nach Bexio übertragen",
         "bexioInvoiceTitleNewMembership": "Rechnungstitel (Neue Mitgliedschaft)",
         "bexioInvoiceTitleRenewalMembership": "Rechnungstitel (Mitgliedschafts-Erneuerung)",
         "typeInfo": "Der Zahlungsdienst, mit dem diese Integration verbunden ist. Er wird beim Anlegen festgelegt und lässt sich nicht ändern.",
@@ -3431,7 +3432,11 @@
         "bexioInvoiceTitleInfo": "Der Titel, der auf der Rechnung steht. Für neue Abos und Verlängerungen kannst du verschiedene Titel verwenden.",
         "bexioInvoiceMailSubjectInfo": "Der Betreff der E-Mail, mit der Bexio die Rechnung verschickt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt.",
         "bexioInvoiceMailBodyInfo": "Der Text der E-Mail, mit der Bexio die Rechnung verschickt; das PDF wird angehängt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt. Bexio verlangt den Platzhalter [Network Link] im Text.",
-        "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen."
+        "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen.",
+        "bexioContactSyncInfo": "Wenn aktiv, überträgt We.Publish jede Nacht Name, Firma, E-Mail und Adresse geänderter Leser:innen in ihren Bexio-Kontakt und legt für Abos mit Bexio-Zahlung fehlende Kontakte an. Gruppen, Telefon und alles Weitere im Kontakt bleiben, wie sie in Bexio sind.",
+        "bexioContactSyncNeverRan": "Noch nie gelaufen.",
+        "bexioContactSyncLastRun": "Letzter Lauf: {{date}}, ohne Fehler.",
+        "bexioContactSyncLastRunFailed": "Letzter Lauf: {{date}}. Fehler: {{error}}"
       },
       "placeholderSecret": "Unverändert (versteckt)",
       "pdfRendererSettings": {

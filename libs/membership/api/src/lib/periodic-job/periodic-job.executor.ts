@@ -8,6 +8,7 @@ import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
 import { SuppressionSyncService } from '../mail-send/suppression-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
 import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.service';
+import { BexioContactSyncService } from '@wepublish/payment/api';
 
 const SCHEDULE =
   process.env['PERIODIC_JOB_EXECUTION_SCHEDULE'] || '0 0 3 * * *';
@@ -75,6 +76,10 @@ export class PeriodicJobExecutor {
       this.logger.error('Periodic jobs failed:', error);
     }
 
+    // Reader data changed today reaches bexio tonight, for media that want it.
+    await this.runStep('Bexio contact sync', BexioContactSyncService, service =>
+      service.syncAll()
+    );
     await this.runStep('Mailchimp sync', MailchimpSyncService, service =>
       service.executeAllSync()
     );

@@ -11,6 +11,7 @@ import {
   type NamespacedCacheTesting,
 } from '@wepublish/kv-ttl-cache/api/testing';
 import { CreatePaymentIntentProps } from '../payment-provider';
+import { BexioCountries } from './bexio-countries';
 
 vi.mock('axios');
 
@@ -740,6 +741,121 @@ describe('BexioPaymentProvider', () => {
     expect(res.state).toEqual(PaymentState.submitted);
   });
 
+  describe('syncing a contact', () => {
+    const address = {
+      company: null,
+      streetAddress: 'Musterstrasse',
+      streetAddressNumber: '7',
+      streetAddress2: null,
+      streetAddress2Number: null,
+      zipCode: '8000',
+      city: 'Zürich',
+      country: 'Schweiz',
+    };
+    const reader = (overrides: Record<string, unknown> = {}) =>
+      ({
+        id: 'user-1',
+        email: 'jane@example.com',
+        name: 'Doe',
+        firstName: 'Jane',
+        address,
+        paymentProviderCustomers: [],
+        ...overrides,
+      }) as any;
+    const known = reader({
+      paymentProviderCustomers: [
+        { paymentProviderID: 'bexio', customerID: '542' },
+      ],
+    });
+    let provider: BexioPaymentProvider;
+    let updateMany: ReturnType<typeof vi.fn>;
+    let saveCustomer: ReturnType<typeof vi.spyOn>;
+
+    beforeEach(() => {
+      updateMany = vi.fn();
+      provider = new BexioPaymentProvider({
+        ...mockProps,
+        prisma: {
+          ...mockProps.prisma,
+          paymentProviderCustomer: { updateMany },
+        },
+      });
+      vi.spyOn(provider, 'countries').mockResolvedValue(
+        BexioCountries.of([{ id: 5, name: 'Schweiz', name_short: 'CH' }], 22)
+      );
+      saveCustomer = vi
+        .spyOn(provider, 'saveCustomer')
+        .mockResolvedValue(undefined);
+      mockBexioContactEdit.mockReset().mockImplementation(async id => ({
+        id,
+      }));
+      mockBexioContactSearch.mockReset();
+      mockBexioContactCreate.mockReset();
+    });
+
+    it('edits the stored contact with the mapped fields only', async () => {
+      await expect(provider.syncContact(known)).resolves.toBe('edited');
+
+      expect(mockBexioContactEdit).toHaveBeenCalledWith(542, {
+        name_1: 'Doe',
+        name_2: 'Jane',
+        contact_type_id: 2,
+        mail: 'jane@example.com',
+        street_name: 'Musterstrasse',
+        house_number: '7',
+        address_addition: '',
+        postcode: '8000',
+        city: 'Zürich',
+        country_id: 5,
+      });
+      expect(mockBexioContactSearch).not.toHaveBeenCalled();
+      expect(saveCustomer).not.toHaveBeenCalled();
+      expect(updateMany).toHaveBeenCalledWith({
+        where: { userId: 'user-1', paymentProviderID: 'bexio' },
+        data: { syncedAt: expect.any(Date) },
+      });
+    });
+
+    it('finds a reader without a stored contact by email and remembers it', async () => {
+      mockBexioContactSearch.mockResolvedValue([{ id: 7, nr: '1007' }]);
+
+      await expect(provider.syncContact(reader())).resolves.toBe('edited');
+
+      expect(mockBexioContactEdit).toHaveBeenCalledWith(
+        7,
+        expect.objectContaining({ mail: 'jane@example.com' })
+      );
+      expect(saveCustomer).toHaveBeenCalledWith('user-1', '7');
+      expect(updateMany).toHaveBeenCalled();
+    });
+
+    it('creates the contact when bexio has none for the reader', async () => {
+      mockBexioContactSearch.mockResolvedValue([]);
+      mockBexioContactCreate.mockResolvedValue({ id: 9 });
+
+      await expect(provider.syncContact(reader())).resolves.toBe('created');
+
+      expect(mockBexioContactCreate).toHaveBeenCalledWith(
+        expect.objectContaining({ name_1: 'Doe', user_id: 22, owner_id: 22 })
+      );
+      expect(saveCustomer).toHaveBeenCalledWith('user-1', '9');
+    });
+
+    // A stored id bexio no longer knows is a data problem to look at, not a
+    // reason to create a second contact.
+    it('skips a stored contact bexio no longer knows', async () => {
+      mockBexioContactEdit.mockRejectedValue({
+        code: 404,
+        message: 'Not Found',
+      });
+
+      await expect(provider.syncContact(known)).resolves.toBe('missing');
+
+      expect(mockBexioContactCreate).not.toHaveBeenCalled();
+      expect(updateMany).not.toHaveBeenCalled();
+    });
+  });
+
   // The email can differ between we.publish and bexio (a placeholder from an
   // import, a reader who changed it), so the contact an invoice went to is
   // remembered and found by its id first.
@@ -790,6 +906,20 @@ describe('BexioPaymentProvider', () => {
       mockBexioContactEdit.mockReset().mockImplementation(async id => ({
         id,
       }));
+    });
+
+    it('leaves the contact groups and the rest of the contact alone', async () => {
+      mockBexioContactShow.mockResolvedValue({ id: 542, nr: '1042' });
+
+      await createIntent({
+        paymentProviderCustomers: [
+          { paymentProviderID: 'bexio', customerID: '542' },
+        ],
+      });
+
+      const [, fields] = mockBexioContactEdit.mock.calls[0];
+      expect(fields).not.toHaveProperty('contact_group_ids');
+      expect(fields).not.toHaveProperty('owner_id');
     });
 
     it('uses the contact stored for the reader instead of searching by email', async () => {
