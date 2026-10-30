@@ -1,7 +1,8 @@
+import { useQuery } from '@apollo/client/react';
 import {
   FullUserRoleFragment,
   LocalStorageKey,
-  useMeQuery,
+  MeDocument,
 } from '@wepublish/editor/api';
 import {
   createContext,
@@ -13,10 +14,10 @@ import {
 import { usePageVisibility } from 'react-page-visibility';
 
 export interface AuthContextState {
-  readonly session?: {
-    readonly email: string;
-    readonly sessionToken: string;
-    readonly sessionRoles?: FullUserRoleFragment[];
+  session?: {
+    email: string;
+    sessionToken: string;
+    sessionRoles?: FullUserRoleFragment[];
   } | null;
 }
 
@@ -28,16 +29,16 @@ export enum AuthDispatchActionType {
 }
 
 export interface AuthDispatchLoginAction {
-  readonly type: AuthDispatchActionType.Login;
-  readonly payload: {
-    readonly email: string;
-    readonly sessionToken: string;
-    readonly sessionRoles?: FullUserRoleFragment[];
+  type: AuthDispatchActionType.Login;
+  payload: {
+    email: string;
+    sessionToken: string;
+    sessionRoles?: FullUserRoleFragment[];
   } | null;
 }
 
 export interface AuthDispatchLogoutAction {
-  readonly type: AuthDispatchActionType.Logout;
+  type: AuthDispatchActionType.Logout;
 }
 
 export type AuthDispatchAction =
@@ -67,17 +68,21 @@ export function authReducer(
 }
 
 export interface AuthProviderProps {
-  readonly children?: ReactNode;
+  children?: ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { data, loading, refetch, error } = useMeQuery();
+  const { data, loading, refetch, error } = useQuery(MeDocument);
   const [state, dispatch] = useReducer(authReducer, {});
 
   const isPageActive = usePageVisibility();
 
   // when it gets active, fetch the Me query again to know if user still logged in.
   useEffect(() => {
+    if (!isPageActive) {
+      return;
+    }
+
     refetch().catch(() => {
       dispatch({
         type: AuthDispatchActionType.Logout,
@@ -104,7 +109,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [data, error, loading]);
 
-  return loading ? null : (
+  // only the very first load may hide the editor: a refetch flips `loading`
+  // too, and unmounting the tree there would remount (and refetch) everything
+  return loading && !data ? null : (
       <AuthDispatchContext.Provider value={dispatch}>
         {<AuthContext.Provider value={state}>{children}</AuthContext.Provider>}
       </AuthDispatchContext.Provider>

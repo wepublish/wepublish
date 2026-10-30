@@ -1,35 +1,52 @@
-import { ApolloError } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
-  Event,
   EventFilter,
+  EventListDocument,
+  FullEventFragment,
   TagType,
-  useEventListQuery,
 } from '@wepublish/editor/api';
 import {
+  CanCreateEvent,
+  CanDeleteEvent,
+  CanGetEvent,
+  CanUpdateEvent,
+} from '@wepublish/permissions';
+import {
+  clearFilters,
+  countActiveFilters,
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   IconButton,
+  IconButtonTooltip,
+  InfoTooltip,
+  Link,
   ListFilters,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PageTitle,
+  Pagination,
   PermissionControl,
-  Table,
   TableWrapper,
   useListViewState,
+  useTableExportQuery,
 } from '@wepublish/ui/editor';
 import { format as formatDate } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Message, Pagination, Table as RTable, toaster } from 'rsuite';
-import { RowDataType } from 'rsuite-table';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { DeleteEventModal } from './deleteEventModal';
 
-const { Column, HeaderCell, Cell } = RTable;
+const HeaderInfo = styled.span`
+  display: inline-flex;
+  margin-left: 4px;
+`;
+
+const EVENT_FILTER_FIELDS = ['dates', 'name', 'location'] as const;
 
 export function EventStartsAtView({ startsAt }: { startsAt: string }) {
   const startsAtDate = new Date(startsAt);
@@ -58,168 +75,154 @@ export function EventEndsAtView({
   return <>{t('event.list.endsAtNone')}</>;
 }
 
-const onErrorToast = (error: ApolloError) => {
-  if (error?.message) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {error?.message}
-      </Message>
-    );
-  }
-};
-
 function EventListView() {
   const { filter, setFilter, limit, setLimit } =
     useListViewState<EventFilter>('events');
   const { t } = useTranslation();
-  const [eventDelete, setEventDelete] = useState<Event | undefined>(undefined);
+  const [eventDelete, setEventDelete] = useState<FullEventFragment | undefined>(
+    undefined
+  );
   const [page, setPage] = useState<number>(1);
-
-  const eventListVariables = {
-    filter: filter || undefined,
-    take: limit,
-    skip: (page - 1) * limit,
-  };
 
   const {
     data,
     loading: isLoading,
     refetch,
-  } = useEventListQuery({
-    variables: eventListVariables,
-    onError: onErrorToast,
+  } = useQuery(EventListDocument, {
+    variables: {
+      filter: filter || undefined,
+      take: limit,
+      skip: (page - 1) * limit,
+    },
   });
 
-  useEffect(() => {
-    refetch(eventListVariables);
-  }, [page, limit, filter]);
+  const exportEvents = useTableExportQuery(
+    EventListDocument,
+    {
+      filter: filter || undefined,
+    },
+    data => data.events
+  );
 
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('event.list.title')}</h2>
+          <PageTitle>{t('event.list.title')}</PageTitle>
         </ListViewHeader>
 
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_EVENT']}>
+        <PermissionControl qualifyingPermissions={[CanCreateEvent.id]}>
           <ListViewActions>
-            <Link to="create">
-              <IconButton
-                appearance="primary"
-                icon={<MdAdd />}
-              >
-                {t('event.list.create')}
-              </IconButton>
-            </Link>
+            <Button
+              component={RouterLink}
+              to="create"
+              variant="contained"
+              startIcon={<MdAdd />}
+            >
+              {t('event.list.create')}
+            </Button>
           </ListViewActions>
         </PermissionControl>
-        <ListFilters
-          fields={['dates', 'name', 'location']}
-          filter={filter}
-          isLoading={isLoading}
-          onSetFilter={filter => {
-            setFilter(filter);
-            setPage(1);
-          }}
-          tagType={TagType.Event}
-        />
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={isLoading}
+        <DataTable
+          filters={
+            <ListFilters
+              fields={EVENT_FILTER_FIELDS}
+              filter={filter}
+              isLoading={isLoading}
+              onSetFilter={filter => {
+                setFilter(filter);
+                setPage(1);
+              }}
+              tagType={TagType.Event}
+            />
+          }
+          filterCount={countActiveFilters(EVENT_FILTER_FIELDS, filter)}
+          onResetFilters={() =>
+            setFilter(clearFilters(EVENT_FILTER_FIELDS, filter))
+          }
+          storageKey="events"
+          exportRows={exportEvents}
+          exportTotalCount={data?.events?.totalCount ?? 0}
           data={data?.events?.nodes || []}
-        >
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('event.list.name')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<Event>) => (
+          loading={isLoading}
+          columns={[
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('event.list.name'),
+              width: 200,
+              render: rowData => (
                 <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={250}
-            resizable
-          >
-            <HeaderCell>{t('event.list.startsAtHeader')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<Event>) => (
+              ),
+              exportValue: rowData => rowData.name,
+            },
+            {
+              id: 'startsatheader',
+              label: t('event.list.startsAtHeader'),
+              width: 250,
+              render: rowData => (
                 <EventStartsAtView startsAt={rowData.startsAt} />
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={250}
-            resizable
-          >
-            <HeaderCell>{t('event.list.endsAtHeader')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<Event>) => (
-                <EventEndsAtView endsAt={rowData.endsAt} />
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={150}
-            resizable
-          >
-            <HeaderCell>{t('event.list.source')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<Event>) => rowData.externalSourceName}
-            </Cell>
-          </Column>
-
-          <Column width={75}>
-            <HeaderCell align={'center'}>{t('event.list.delete')}</HeaderCell>
-            <Cell
-              align={'center'}
-              style={{ padding: '5px 0' }}
-            >
-              {(event: RowDataType<Event>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  color="red"
-                  appearance="ghost"
-                  circle
-                  size="sm"
-                  onClick={() => setEventDelete(event as Event)}
-                />
-              )}
-            </Cell>
-          </Column>
-        </Table>
+              ),
+              exportValue: rowData => new Date(rowData.startsAt),
+            },
+            {
+              id: 'endsatheader',
+              label: t('event.list.endsAtHeader'),
+              width: 250,
+              render: rowData => <EventEndsAtView endsAt={rowData.endsAt} />,
+              exportValue: rowData =>
+                rowData.endsAt ? new Date(rowData.endsAt) : null,
+            },
+            {
+              id: 'source',
+              columnLabel: t('event.list.source'),
+              label: (
+                <>
+                  {t('event.list.source')}
+                  <HeaderInfo>
+                    <InfoTooltip text={t('event.list.sourceInfo')} />
+                  </HeaderInfo>
+                </>
+              ),
+              width: 150,
+              render: rowData => rowData.externalSourceName,
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: event => (
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    color="error"
+                    size="small"
+                    onClick={() => setEventDelete(event as FullEventFragment)}
+                  >
+                    <MdDelete />
+                  </IconButton>
+                </IconButtonTooltip>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.events?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.events?.totalCount ?? 0}
         />
       </TableWrapper>
 
@@ -233,10 +236,10 @@ function EventListView() {
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_EVENT',
-  'CAN_CREATE_EVENT',
-  'CAN_UPDATE_EVENT',
-  'CAN_DELETE_EVENT',
+  CanGetEvent.id,
+  CanCreateEvent.id,
+  CanUpdateEvent.id,
+  CanDeleteEvent.id,
 ])(EventListView);
 
 export { CheckedPermissionComponent as EventListView };

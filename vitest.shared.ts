@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react';
+import swc from 'unplugin-swc';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { defineConfig, mergeConfig, type ViteUserConfig } from 'vitest/config';
@@ -50,14 +51,67 @@ const tsconfigPathAliases = () => {
   });
 };
 
+// The `graphql` package ships both CJS (`main`) and ESM (`module`) builds.
+// Node loads the CJS build for the externalized @nestjs/graphql (ESM) while
+// vite resolves inlined source imports to the ESM build, yielding two class
+// instances and failing `instanceof GraphQLScalarType` checks inside NestJS.
+// Pin everything to the CJS build that node itself resolves.
+const graphqlSingleInstance = [
+  {
+    find: /^graphql(\/index(\.js)?)?$/,
+    replacement: join(workspaceRoot, 'node_modules/graphql/index.js'),
+  },
+];
+
 // Manual mocks that jest picked up automatically through the root `__mocks__`
 // directory. Vitest has no such convention for node_modules, so they are aliased.
 const manualNodeModuleMocks = [
   { find: /^react-player$/, replacement: join(workspaceRoot, '__mocks__/react-player.tsx') },
   { find: /^react-tweet$/, replacement: join(workspaceRoot, '__mocks__/react-tweet.tsx') },
+  { find: /^next\/font\/google$/, replacement: join(workspaceRoot, '__mocks__/next-font-google.ts') },
+  { find: /^next\/font\/local$/, replacement: join(workspaceRoot, '__mocks__/next-font-local.ts') },
 ];
 
-const emotionImportMap = {
+const mocksWebsiteRoot = join(workspaceRoot, 'libs/mocks/website/src');
+
+const websiteTestAliases = [
+  { find: /^next\/router$/, replacement: join(mocksWebsiteRoot, 'lib/render/next-router.tsx') },
+  { find: /^@marsidev\/react-turnstile$/, replacement: join(mocksWebsiteRoot, 'lib/render/captcha/turnstile.tsx') },
+  { find: /^@hcaptcha\/react-hcaptcha$/, replacement: join(mocksWebsiteRoot, 'lib/render/captcha/hcaptcha.tsx') },
+];
+
+// `libs/block-content/api` requires `../block-content.model` lazily on purpose:
+// a static import would close the module cycle and make webpack initialize
+// block-content.model first, reading `FlexBlockInput` while it is still in its
+// temporal dead zone (see flex-block.model.ts). Those `require()` calls survive
+// swc's ES module output, and vitest executes them through node, which cannot
+// load an extensionless `.ts` path. Rewrite them to a namespace import for the
+// test build only — vite resolves ES module cycles lazily, so the ordering
+// hazard the require() guards against under webpack does not apply here.
+const blockContentLazyRequire = () => {
+  const specifier = '../block-content.model';
+  const binding = '__wepublishBlockContentModel';
+  const libRoot = join(workspaceRoot, 'libs/block-content/api');
+
+  return {
+    name: 'wepublish:block-content-lazy-require',
+    enforce: 'pre' as const,
+    transform(code: string, id: string) {
+      if (!id.startsWith(libRoot) || !code.includes(`require('${specifier}')`)) {
+        return null;
+      }
+
+      return {
+        code:
+          `import * as ${binding} from '${specifier}';\n` +
+          code.split(`require('${specifier}')`).join(binding),
+        map: null,
+      };
+    },
+  };
+};
+
+export const emotionImportMap = {
   '@mui/material': {
     styled: {
       canonicalImport: ['@emotion/styled', 'default'],
@@ -81,6 +135,12 @@ export type VitestProjectOptions = {
   environment?: 'happy-dom' | 'node';
   /** Whether the emotion/react JSX transform is needed. Defaults to `true`. */
   react?: boolean;
+  /**
+   * NestJS projects need swc instead of esbuild so that decorator metadata
+   * (`design:paramtypes`) is emitted for the DI container. Implies `react: false`.
+   */
+  nest?: boolean;
+  website?: boolean;
   /** Additional setup files, relative to the project root. */
   setupFiles?: string[];
   /** Additional test file globs to exclude, relative to the project root. */
@@ -94,6 +154,8 @@ export const createVitestConfig = ({
   dir,
   environment = 'happy-dom',
   react: withReact = true,
+  nest = false,
+  website = false,
   setupFiles = [],
   exclude = [],
   overrides,
@@ -101,8 +163,34 @@ export const createVitestConfig = ({
   const config = defineConfig({
     root: dir,
     cacheDir: join(workspaceRoot, 'node_modules/.vite', name),
-    plugins: withReact
-      ? [
+    plugins:
+      nest ?
+        [
+          blockContentLazyRequire(),
+          swc.vite({
+            jsc: {
+              // es2021 so class fields are downleveled into the constructor
+              // (after parameter property assignments), matching the tsc
+              // output the production build uses. With native es2022 fields,
+              // `field = this.injectedParam.x` initializers run before the
+              // constructor body and crash.
+              target: 'es2021',
+              parser: { syntax: 'typescript', decorators: true },
+              transform: {
+                legacyDecorator: true,
+                decoratorMetadata: true,
+                // Match tsc semantics: field initializers may reference
+                // constructor parameter properties (`= this.config.x`).
+                useDefineForClassFields: false,
+              },
+              keepClassNames: true,
+            },
+            module: { type: 'es6' },
+            sourceMaps: true,
+          }),
+        ]
+      : withReact ?
+        [
           react({
             jsxImportSource: '@emotion/react',
             babel: {
@@ -112,13 +200,21 @@ export const createVitestConfig = ({
         ]
       : [],
     resolve: {
-      alias: [...manualNodeModuleMocks, ...tsconfigPathAliases()],
+      alias: [
+        ...graphqlSingleInstance,
+        ...manualNodeModuleMocks,
+        ...(website ? websiteTestAliases : []),
+        ...tsconfigPathAliases(),
+      ],
     },
     test: {
       name,
       globals: true,
       environment,
       clearMocks: true,
+      // Was a `--passWithNoTests` CLI flag on every project's test command;
+      // it belongs to the config now that targets use the @nx/vitest executor.
+      passWithNoTests: true,
       // Jest ran every project in band, vitest runs test files in parallel
       // workers, so individual tests see more contention than the 5s default.
       testTimeout: 15_000,
@@ -133,14 +229,27 @@ export const createVitestConfig = ({
       ],
       setupFiles: [
         join(workspaceRoot, 'vitest.setup-tests.ts'),
+        ...(environment === 'happy-dom' ?
+          [join(workspaceRoot, 'vitest.setup-dom.ts')]
+        : []),
+        ...(nest ? [join(workspaceRoot, 'vitest.setup-nest.ts')] : []),
+        ...(website ? [join(mocksWebsiteRoot, 'setup.ts')] : []),
         ...setupFiles.map((file) => join(dir, file)),
       ],
       snapshotSerializers: [join(workspaceRoot, 'vitest.emotion-serializer.ts')],
       reporters: process.env['CI'] ? ['default', 'github-actions'] : ['default'],
       coverage: {
         provider: 'v8',
-        reporter: ['html', 'text', 'lcov'],
-        reportsDirectory: join(workspaceRoot, 'coverage', relative(workspaceRoot, dir)),
+        reporter: ['html', 'text', ['lcov', { projectRoot: workspaceRoot }]],
+        // A leaf folder per project: Vitest empties `reportsDirectory` when a run
+        // starts, so `coverage/libs/richtext` would wipe the files of the
+        // `libs/richtext/api` run going on in parallel inside it.
+        reportsDirectory: join(
+          workspaceRoot,
+          'coverage',
+          relative(workspaceRoot, dir),
+          'report'
+        ),
         include: ['src/**/*.{js,jsx,ts,tsx}'],
         exclude: ['**/*.stories.{js,jsx,ts,tsx}'],
       },

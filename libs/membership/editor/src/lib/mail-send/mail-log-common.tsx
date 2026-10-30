@@ -1,19 +1,21 @@
-import { Typography } from '@mui/material';
+import { Typography, Stack, Chip } from '@mui/material';
 import { MailLogState, MailLogType } from '@wepublish/editor/api';
+import { InfoTrigger, ClickPopover } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MdHelpOutline } from 'react-icons/md';
-import { IconButton, Popover, Stack, Tag, Whisper } from 'rsuite';
 
-const STATE_COLORS: Record<MailLogState, 'green' | 'yellow' | 'red' | 'blue'> =
-  {
-    [MailLogState.Submitted]: 'blue',
-    [MailLogState.Accepted]: 'blue',
-    [MailLogState.Delivered]: 'green',
-    [MailLogState.Deferred]: 'yellow',
-    [MailLogState.Bounced]: 'red',
-    [MailLogState.Rejected]: 'red',
-  };
+const STATE_COLORS: Record<
+  MailLogState,
+  'success' | 'warning' | 'error' | 'primary'
+> = {
+  [MailLogState.Submitted]: 'primary',
+  [MailLogState.Accepted]: 'primary',
+  [MailLogState.Delivered]: 'success',
+  [MailLogState.Deferred]: 'warning',
+  [MailLogState.Bounced]: 'error',
+  [MailLogState.Rejected]: 'error',
+};
 
 /**
  * Order the states follow along a delivery, so the legend reads as the path a
@@ -37,48 +39,53 @@ export function MailLogStateTag({ state }: { state: MailLogState }) {
   const { t } = useTranslation();
 
   return (
-    <Whisper
-      trigger="hover"
-      placement="leftStart"
-      speaker={
-        <Popover style={{ maxWidth: 420 }}>
-          <Typography
-            variant="subtitle2"
-            display="block"
-          >
-            {t(`mailLog.stateHelp.${state}.name`)}
-          </Typography>
-          <Typography
-            variant="body2"
-            display="block"
-            style={{ marginBottom: 8 }}
-          >
-            {t(`mailLog.stateHelp.${state}.meaning`)}
-          </Typography>
-
-          <Typography
-            variant="subtitle2"
-            display="block"
-          >
-            {t('mailLog.stateHelp.nextTitle')}
-          </Typography>
-          <Typography
-            variant="body2"
-            display="block"
-            style={{ whiteSpace: 'pre-line' }}
-          >
-            {t(`mailLog.stateHelp.${state}.next`)}
-          </Typography>
-        </Popover>
+    <ClickPopover
+      trigger={
+        <Chip
+          color={STATE_COLORS[state] ?? 'primary'}
+          style={{ cursor: 'help' }}
+          label={state}
+        />
       }
+      anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
-      <Tag
-        color={STATE_COLORS[state] ?? 'blue'}
-        style={{ cursor: 'help' }}
+      <Typography
+        variant="subtitle2"
+        sx={{
+          display: 'block',
+        }}
       >
-        {state}
-      </Tag>
-    </Whisper>
+        {t(`mailLog.stateHelp.${state}.name`)}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ marginBottom: 8 }}
+        sx={{
+          display: 'block',
+        }}
+      >
+        {t(`mailLog.stateHelp.${state}.meaning`)}
+      </Typography>
+
+      <Typography
+        variant="subtitle2"
+        sx={{
+          display: 'block',
+        }}
+      >
+        {t('mailLog.stateHelp.nextTitle')}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ whiteSpace: 'pre-line' }}
+        sx={{
+          display: 'block',
+        }}
+      >
+        {t(`mailLog.stateHelp.${state}.next`)}
+      </Typography>
+    </ClickPopover>
   );
 }
 
@@ -90,67 +97,73 @@ export function MailLogStateLegend() {
   const { t } = useTranslation();
 
   return (
-    <Whisper
-      trigger="click"
-      placement="bottomEnd"
-      speaker={
-        <Popover style={{ maxWidth: 520 }}>
-          <Typography
-            variant="subtitle2"
-            display="block"
-            style={{ marginBottom: 4 }}
+    <ClickPopover
+      trigger={<InfoTrigger aria-label={t('mailLog.stateHelp.legendTitle')} />}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+    >
+      <Typography
+        variant="subtitle2"
+        style={{ marginBottom: 4 }}
+        sx={{
+          display: 'block',
+        }}
+      >
+        {t('mailLog.stateHelp.legendTitle')}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ marginBottom: 12 }}
+        sx={{
+          display: 'block',
+        }}
+      >
+        {t('mailLog.stateHelp.legendIntro')}
+      </Typography>
+
+      {STATE_ORDER.map(state => (
+        <div
+          key={state}
+          style={{ marginBottom: 10 }}
+        >
+          <Stack
+            direction="row"
+            sx={{ alignItems: 'center' }}
+            spacing={1}
+            style={{ marginBottom: 2 }}
           >
-            {t('mailLog.stateHelp.legendTitle')}
-          </Typography>
+            <Chip
+              color={STATE_COLORS[state]}
+              label={state}
+            />
+            <Typography variant="subtitle2">
+              {t(`mailLog.stateHelp.${state}.name`)}
+            </Typography>
+          </Stack>
           <Typography
             variant="body2"
-            display="block"
-            style={{ marginBottom: 12 }}
+            sx={{
+              display: 'block',
+            }}
           >
-            {t('mailLog.stateHelp.legendIntro')}
+            {t(`mailLog.stateHelp.${state}.meaning`)}
           </Typography>
+        </div>
+      ))}
 
-          {STATE_ORDER.map(state => (
-            <div
-              key={state}
-              style={{ marginBottom: 10 }}
-            >
-              <Stack
-                spacing={8}
-                alignItems="center"
-                style={{ marginBottom: 2 }}
-              >
-                <Tag color={STATE_COLORS[state]}>{state}</Tag>
-                <Typography variant="subtitle2">
-                  {t(`mailLog.stateHelp.${state}.name`)}
-                </Typography>
-              </Stack>
-              <Typography
-                variant="body2"
-                display="block"
-              >
-                {t(`mailLog.stateHelp.${state}.meaning`)}
-              </Typography>
-            </div>
-          ))}
-
-          <Typography
-            variant="caption"
-            display="block"
-            style={{ color: '#8e8e93', whiteSpace: 'pre-line' }}
-          >
-            {t('mailLog.stateHelp.legendFooter')}
-          </Typography>
-        </Popover>
-      }
-    >
-      <IconButton
-        size="xs"
-        appearance="subtle"
-        icon={<MdHelpOutline />}
-        aria-label={t('mailLog.stateHelp.legendTitle')}
-      />
-    </Whisper>
+      <Typography
+        variant="caption"
+        style={{
+          color: 'text.secondary',
+          whiteSpace: 'pre-line',
+        }}
+        sx={{
+          display: 'block',
+        }}
+      >
+        {t('mailLog.stateHelp.legendFooter')}
+      </Typography>
+    </ClickPopover>
   );
 }
 
@@ -214,65 +227,73 @@ export function MailErrorCell({ error }: { error?: string | null }) {
   const key = mailErrorHelpKey(error);
 
   return (
-    <Whisper
-      trigger="hover"
-      placement="leftStart"
-      speaker={
-        <Popover style={{ maxWidth: 420 }}>
-          <Typography
-            variant="subtitle2"
-            display="block"
-          >
-            {t('mailLog.errorHelp.causeTitle')}
-          </Typography>
-          <Typography
-            variant="body2"
-            display="block"
-            style={{ marginBottom: 8 }}
-          >
-            {t(`mailLog.errorHelp.${key}.cause`)}
-          </Typography>
-
-          <Typography
-            variant="subtitle2"
-            display="block"
-          >
-            {t('mailLog.errorHelp.fixTitle')}
-          </Typography>
-          <Typography
-            variant="body2"
-            display="block"
-            style={{ marginBottom: 8, whiteSpace: 'pre-line' }}
-          >
-            {t(`mailLog.errorHelp.${key}.fix`)}
-          </Typography>
-
-          <Typography
-            variant="caption"
-            display="block"
-            style={{ color: '#8e8e93' }}
-          >
-            {t('mailLog.errorHelp.raw')}
-          </Typography>
-          <code style={{ fontSize: '0.75rem', wordBreak: 'break-word' }}>
-            {error}
-          </code>
-        </Popover>
+    <ClickPopover
+      trigger={
+        <span
+          style={{
+            color: 'error.main',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 4,
+            cursor: 'help',
+          }}
+        >
+          {error}
+          <MdHelpOutline />
+        </span>
       }
+      anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
-      <span
-        style={{
-          color: '#d9534f',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 4,
-          cursor: 'help',
+      <Typography
+        variant="subtitle2"
+        sx={{
+          display: 'block',
         }}
       >
+        {t('mailLog.errorHelp.causeTitle')}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ marginBottom: 8 }}
+        sx={{
+          display: 'block',
+        }}
+      >
+        {t(`mailLog.errorHelp.${key}.cause`)}
+      </Typography>
+
+      <Typography
+        variant="subtitle2"
+        sx={{
+          display: 'block',
+        }}
+      >
+        {t('mailLog.errorHelp.fixTitle')}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ marginBottom: 8, whiteSpace: 'pre-line' }}
+        sx={{
+          display: 'block',
+        }}
+      >
+        {t(`mailLog.errorHelp.${key}.fix`)}
+      </Typography>
+
+      <Typography
+        variant="caption"
+        style={{ color: 'text.secondary' }}
+        sx={{
+          display: 'block',
+        }}
+      >
+        {t('mailLog.errorHelp.raw')}
+      </Typography>
+      <code style={{ fontSize: '0.75rem', wordBreak: 'break-word' }}>
         {error}
-        <MdHelpOutline />
-      </span>
-    </Whisper>
+      </code>
+    </ClickPopover>
   );
 }
 

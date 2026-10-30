@@ -1,7 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import { NavigationService } from './navigation.service';
 import { NavigationResolver } from './navigation.resolver';
 import { PrismaClient } from '@prisma/client';
@@ -9,6 +11,7 @@ import request from 'supertest';
 import { NavigationDataloaderService } from './navigation-dataloader.service';
 import { NavigationLinksDataloaderService } from './navigation-links.dataloader';
 import { BaseNavigationLink, NavigationLinkType } from './navigation.model';
+import type { Mock } from 'vitest';
 
 const navigationQueryById = `
   query Navigation($id: String!) {
@@ -87,35 +90,35 @@ const deleteNavigationMutation = `
 describe('NavigationResolver', () => {
   let app: INestApplication;
   let navigationServiceMock: {
-    [method in keyof NavigationService]?: jest.Mock;
+    [method in keyof NavigationService]?: Mock;
   };
   let navigationDataloaderService: {
-    [method in keyof NavigationDataloaderService]?: jest.Mock;
+    [method in keyof NavigationDataloaderService]?: Mock;
   };
   let navigationLinksDataloaderService: {
-    [method in keyof NavigationLinksDataloaderService]?: jest.Mock;
+    [method in keyof NavigationLinksDataloaderService]?: Mock;
   };
 
   beforeEach(async () => {
     navigationServiceMock = {
-      getNavigations: jest.fn(),
-      createNavigation: jest.fn(),
-      deleteNavigationById: jest.fn(),
-      updateNavigation: jest.fn(),
+      getNavigations: vi.fn(),
+      createNavigation: vi.fn(),
+      deleteNavigationById: vi.fn(),
+      updateNavigation: vi.fn(),
     };
 
     navigationDataloaderService = {
-      load: jest.fn(),
+      load: vi.fn(),
     };
 
     navigationLinksDataloaderService = {
-      load: jest.fn(),
+      load: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
         }),
@@ -131,15 +134,15 @@ describe('NavigationResolver', () => {
           useValue: navigationLinksDataloaderService,
         },
         { provide: NavigationService, useValue: navigationServiceMock },
-        { provide: PrismaClient, useValue: jest.fn() },
+        { provide: PrismaClient, useValue: vi.fn() },
       ],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 

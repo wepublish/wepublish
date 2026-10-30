@@ -1,38 +1,46 @@
-import { ApolloError } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  DiscountCodeDocument,
   FullDiscountCodeFragment,
-  MutationUpdateDiscountCodeArgs,
-  useDiscountCodeQuery,
-  useUpdateDiscountCodeMutation,
+  UpdateDiscountCodeDocument,
 } from '@wepublish/editor/api';
 import { CanUpdateDiscountCode } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
+  humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { DiscountCodeForm } from './discountCodeForm';
+import {
+  DiscountCodeForm,
+  DiscountCodeFormValues,
+  discountCodeSchema,
+} from './discountCodeForm';
 
-const onErrorToast = (error: ApolloError) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+const onErrorToast = (error: Error) => {
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const mapApiDataToInput = (
   discountCode: FullDiscountCodeFragment
-): MutationUpdateDiscountCodeArgs => discountCode;
+): DiscountCodeFormValues => ({
+  id: discountCode.id,
+  code: discountCode.code,
+  discountPercent: discountCode.discountPercent,
+  memberPlanId: discountCode.memberPlanId,
+  memberPlan: discountCode.memberPlan ?? undefined,
+  validFrom: discountCode.validFrom,
+  validTo: discountCode.validTo,
+});
 
 const DiscountCodeEditView = () => {
   const { t } = useTranslation();
@@ -42,81 +50,66 @@ const DiscountCodeEditView = () => {
   const { id } = params;
   const closePath = './../..';
 
-  const [discountCode, setDiscountCode] =
-    useState<MutationUpdateDiscountCodeArgs>();
+  const client = useApolloClient();
 
-  const { loading: dataLoading } = useDiscountCodeQuery({
-    variables: {
-      id: id as string,
-    },
-    onError: onErrorToast,
-    onCompleted: data => {
-      setDiscountCode(mapApiDataToInput(data.discountCode));
-    },
-  });
-
-  const [updateDiscountCode, { loading: updateLoading }] =
-    useUpdateDiscountCodeMutation({
+  const [updateDiscountCode, { loading: updateLoading }] = useMutation(
+    UpdateDiscountCodeDocument,
+    {
       onError: onErrorToast,
       onCompleted: data => {
         if (data.updateDiscountCode) {
           if (shouldClose) {
             navigate(closePath);
           } else {
-            setDiscountCode(mapApiDataToInput(data.updateDiscountCode));
+            form.reset(mapApiDataToInput(data.updateDiscountCode));
           }
         }
       },
-    });
+    }
+  );
 
-  const loading = dataLoading || updateLoading;
-  const onSubmit = () => updateDiscountCode({ variables: discountCode });
+  const form = useForm<DiscountCodeFormValues>({
+    resolver: zodResolver(discountCodeSchema),
+    defaultValues: async () => {
+      const { data } = await client.query({
+        query: DiscountCodeDocument,
+        variables: { id: id as string },
+      });
 
-  const { StringType, DateType, NumberType } = Schema.Types;
-  const validationModel = Schema.Model({
-    code: StringType().minLength(3).isRequired(),
-    discountPercent: NumberType().min(0).max(100).isInteger().isRequired(),
-    validFrom: DateType().isRequired(),
-    validTo: DateType()
-      .min(new Date(discountCode?.validFrom ?? new Date()))
-      .isRequired(),
-    memberPlanId: StringType().isRequired(),
+      return mapApiDataToInput(data!.discountCode);
+    },
   });
 
-  if (!discountCode) {
-    return;
+  const code = useWatch({ control: form.control, name: 'code' });
+
+  if (form.formState.isLoading) {
+    return null;
   }
 
   return (
-    <Form
-      fluid
-      formValue={discountCode || {}}
-      model={validationModel}
-      disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}
-    >
-      <SingleViewTitle
-        loading={loading}
-        title={t('discountCode.form.editTitle', {
-          discountCode: discountCode.code,
-        })}
-        loadingTitle={t('loading')}
-        saveBtnTitle={t('save')}
-        saveAndCloseBtnTitle={t('saveAndClose')}
-        closePath={closePath}
-        setCloseFn={setShouldClose}
-      />
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(({ memberPlan, ...discountCode }) =>
+          updateDiscountCode({
+            variables: { ...discountCode, id: id as string },
+          })
+        )}
+      >
+        <SingleViewTitle
+          loading={updateLoading}
+          title={t('discountCode.form.editTitle', {
+            discountCode: code,
+          })}
+          loadingTitle={t('loading')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setShouldClose}
+        />
 
-      <DiscountCodeForm
-        discountCode={discountCode}
-        onChange={changes =>
-          setDiscountCode(oldDiscountCode => ({
-            ...oldDiscountCode,
-            ...(changes as any),
-          }))
-        }
-      />
-    </Form>
+        <DiscountCodeForm />
+      </form>
+    </FormProvider>
   );
 };
 

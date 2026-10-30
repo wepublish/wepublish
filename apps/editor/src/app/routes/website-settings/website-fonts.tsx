@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
@@ -10,16 +11,22 @@ import {
 import {
   FontStyle,
   FontWeight,
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
   WebsiteRemoteFontInput,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
+import {
+  enqueueSnackbar,
+  humanizeError,
+  IconButtonTooltip,
+  Link,
+} from '@wepublish/ui/editor';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { MdAdd, MdArrowBack, MdDelete } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
+import { MdAdd, MdDelete } from 'react-icons/md';
 import { z } from 'zod';
+
+import { WebsiteSettingsHeader } from './website-settings-header';
 
 import { FontPicker } from './theme/font-picker';
 import { WebsiteAnalyticsWrapper } from './website-analytics';
@@ -52,34 +59,24 @@ type FormValues = z.infer<typeof formSchema>;
 
 export const WebsiteFonts = () => {
   const { t } = useTranslation();
-  const [loadSettings] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-          >
-            {t('websiteSettings.saveSuccess')}
-          </Message>,
-          { duration: 3000 }
-        );
+        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
       onError: error => {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-          >
-            {error.message}
-          </Message>,
-          { duration: 3000 }
-        );
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 3000,
+        });
       },
-    });
+    }
+  );
 
   const {
     control,
@@ -119,18 +116,16 @@ export const WebsiteFonts = () => {
 
   return (
     <WebsiteAnalyticsWrapper onSubmit={onSubmit}>
-      <Link to="/settings/website">
+      <WebsiteSettingsHeader title={t('websiteSettings.fonts.title')}>
         <Button
-          size="small"
-          variant="text"
-          startIcon={<MdArrowBack />}
+          type="submit"
+          variant="contained"
+          color="primary"
+          loading={saving}
         >
-          {t('websiteSettings.backToOverview')}
+          {t('save')}
         </Button>
-      </Link>
-
-      <h3>{t('websiteSettings.fonts.title')}</h3>
-
+      </WebsiteSettingsHeader>
       <Typography
         variant="body2"
         color={'gray'}
@@ -148,18 +143,21 @@ export const WebsiteFonts = () => {
           }}
         />
       </Typography>
-
       <Stack spacing={2}>
         {fields.map((field, index) => (
           <Stack
             key={field.id}
             direction="row"
             spacing={1}
-            alignItems="center"
+            sx={{
+              alignItems: 'center',
+            }}
           >
             <Box
-              flex={1}
-              sx={{ maxWidth: 300 }}
+              sx={{
+                flex: 1,
+                maxWidth: 300,
+              }}
             >
               <Controller
                 name={`fonts.${index}`}
@@ -174,17 +172,19 @@ export const WebsiteFonts = () => {
               />
             </Box>
 
-            <IconButton
-              onClick={() => remove(index)}
-              size="small"
-              color="error"
-            >
-              <MdDelete />
-            </IconButton>
+            <IconButtonTooltip caption={t('delete')}>
+              <IconButton
+                onClick={() => remove(index)}
+                size="small"
+                color="error"
+                aria-label={t('delete')}
+              >
+                <MdDelete />
+              </IconButton>
+            </IconButtonTooltip>
           </Stack>
         ))}
       </Stack>
-
       <Box>
         <Button
           variant="text"
@@ -193,25 +193,6 @@ export const WebsiteFonts = () => {
           onClick={() => append({ name: '', weight: [], style: [] })}
         >
           {t('websiteSettings.fonts.addFont')}
-        </Button>
-      </Box>
-
-      <Box>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={saving}
-        >
-          {saving && (
-            <CircularProgress
-              size={14}
-              color="inherit"
-              sx={{ mr: 1 }}
-            />
-          )}
-
-          {t('save')}
         </Button>
       </Box>
     </WebsiteAnalyticsWrapper>

@@ -1,31 +1,34 @@
+import type { WebPage, WithContext } from 'schema-dts';
 import {
   isImageBlock,
   isRichTextBlock,
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
+import { stripQueryAndHash } from '@wepublish/utils';
 import {
+  FullImageBlockFragment,
   FullImageFragment,
-  ImageBlock,
-  Page,
-  RichTextBlock,
-  TitleBlock,
+  FullPageFragment,
+  FullRichTextBlockFragment,
+  FullTitleBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderPageSEOProps,
   useWebsiteBuilder,
+  seoImageObject,
 } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 
-export const getPageSEO = (page: Page) => {
-  const firstTitle = page.latest.blocks?.find((block): block is TitleBlock =>
-    isTitleBlock(block)
+export const getPageSEO = (page: FullPageFragment) => {
+  const firstTitle = page.latest.blocks?.find(
+    (block): block is FullTitleBlockFragment => isTitleBlock(block)
   );
   const firstRichText = page.latest.blocks?.find(
-    (block): block is RichTextBlock => isRichTextBlock(block)
+    (block): block is FullRichTextBlockFragment => isRichTextBlock(block)
   );
   const firstImageBlock = page.latest.blocks?.find(
-    (block): block is ImageBlock => isImageBlock(block)
+    (block): block is FullImageBlockFragment => isImageBlock(block)
   );
 
   const socialMediaDescription =
@@ -45,7 +48,7 @@ export const getPageSEO = (page: Page) => {
   const socialMediaTitle =
     page.latest.socialMediaTitle || page.latest.title || firstTitle?.title;
   const headline = firstTitle?.title || page.latest.title;
-  const url = page.url;
+  const url = stripQueryAndHash(page.url);
 
   return {
     type: 'website',
@@ -59,28 +62,18 @@ export const getPageSEO = (page: Page) => {
     updatedAt: page.latest.publishedAt,
     publishedAt: page.publishedAt,
     schema: {
-      '@context': 'http://schema.org',
+      '@context': 'https://schema.org',
       '@type': 'WebPage',
       keywords: page.tags.join(','),
-      image:
-        image ?
-          {
-            height: image.height,
-            width: image.width,
-            representativeOfPage: true,
-            contentUrl: image.url,
-            thumbnailUrl: image.m,
-            url: image.url,
-            encodingFormat: 'image/webp',
-          }
-        : undefined,
+      image: seoImageObject(image),
       description,
-      datePublished: page.publishedAt,
-      name: title,
-      headline,
-      identifier: page.slug,
+      datePublished: page.publishedAt ?? undefined,
+      dateModified: page.latest?.publishedAt ?? page.publishedAt ?? undefined,
+      name: title ?? undefined,
+      headline: headline ?? undefined,
+      identifier: page.slug ?? undefined,
       url,
-    },
+    } satisfies WithContext<WebPage>,
     noIndex: !!page.hidden,
   };
 };

@@ -26,8 +26,8 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    "mui-augmentation.d.ts",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    "../../libs/tenants/ganzgraz/src/mui-augmentation.d.ts"
   ],
   "exclude": [
     "node_modules",

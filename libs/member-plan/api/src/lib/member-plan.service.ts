@@ -16,26 +16,52 @@ import {
   UpdateMemberPlanInput,
 } from './member-plan.model';
 import { MemberPlanDataloader } from './member-plan.dataloader';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
+import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
+import {
+  MEMBER_PLAN_CACHE_NAMESPACE,
+  MEMBER_PLAN_CACHE_TTL_SECONDS,
+} from './member-plan-cache';
 
 @Injectable()
 export class MemberPlanService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: NamespacedCache,
+    private resets: NamespaceResets,
+    private publicContentCache: PublicContentCacheInvalidator
+  ) {}
 
   @PrimeDataLoader(MemberPlanDataloader)
   async getMemberPlanBySlug(slug: string) {
-    return this.prisma.memberPlan.findFirst({
-      where: {
-        slug,
-      },
-      include: {
-        availablePaymentMethods: true,
-        periodicityPricing: true,
-      },
-    });
+    return this.kv.getOrLoadNs(
+      MEMBER_PLAN_CACHE_NAMESPACE,
+      `slug:${slug}`,
+      () =>
+        this.prisma.memberPlan.findFirst({
+          where: {
+            slug,
+          },
+          include: {
+            availablePaymentMethods: true,
+            periodicityPricing: true,
+          },
+        }),
+      MEMBER_PLAN_CACHE_TTL_SECONDS
+    );
   }
 
   @PrimeDataLoader(MemberPlanDataloader)
-  async getMemberPlans({
+  async getMemberPlans(args: MemberPlanListArgs) {
+    return this.kv.getOrLoadNs(
+      MEMBER_PLAN_CACHE_NAMESPACE,
+      `list:${JSON.stringify(args)}`,
+      () => this.loadMemberPlans(args),
+      MEMBER_PLAN_CACHE_TTL_SECONDS
+    );
+  }
+
+  private async loadMemberPlans({
     filter,
     sort = MemberPlanSort.CreatedAt,
     order = SortOrder.Descending,
@@ -85,15 +111,21 @@ export class MemberPlanService {
 
   @PrimeDataLoader(MemberPlanDataloader)
   async getActiveMemberPlans() {
-    return this.prisma.memberPlan.findMany({
-      where: {
-        active: true,
-      },
-      include: {
-        availablePaymentMethods: true,
-        periodicityPricing: true,
-      },
-    });
+    return this.kv.getOrLoadNs(
+      MEMBER_PLAN_CACHE_NAMESPACE,
+      'active',
+      () =>
+        this.prisma.memberPlan.findMany({
+          where: {
+            active: true,
+          },
+          include: {
+            availablePaymentMethods: true,
+            periodicityPricing: true,
+          },
+        }),
+      MEMBER_PLAN_CACHE_TTL_SECONDS
+    );
   }
 
   @PrimeDataLoader(MemberPlanDataloader)
@@ -129,14 +161,14 @@ export class MemberPlanService {
         input.defaultPaymentPeriodicity === null ?
           null
         : ((input.defaultPaymentPeriodicity as
-            | PaymentPeriodicity
-            | undefined) ?? existingMemberPlan.defaultPaymentPeriodicity),
+            PaymentPeriodicity | undefined) ??
+          existingMemberPlan.defaultPaymentPeriodicity),
 
       availablePaymentMethods:
         availablePaymentMethods ?? existingMemberPlan.availablePaymentMethods,
     });
 
-    return this.prisma.memberPlan.update({
+    const memberPlan = await this.prisma.memberPlan.update({
       where: { id },
       data: {
         ...input,
@@ -174,6 +206,9 @@ export class MemberPlanService {
         periodicityPricing: true,
       },
     });
+    await this.forgetMemberPlans();
+
+    return memberPlan;
   }
 
   @PrimeDataLoader(MemberPlanDataloader)
@@ -215,21 +250,32 @@ export class MemberPlanService {
       },
     };
 
-    return this.prisma.memberPlan.create({
+    const memberPlan = await this.prisma.memberPlan.create({
       data,
       include: {
         availablePaymentMethods: true,
         periodicityPricing: true,
       },
     });
+    await this.forgetMemberPlans();
+
+    return memberPlan;
   }
 
   async deleteMemberPlan(id: string) {
-    return this.prisma.memberPlan.delete({
+    const memberPlan = await this.prisma.memberPlan.delete({
       where: {
         id,
       },
     });
+    await this.forgetMemberPlans();
+
+    return memberPlan;
+  }
+
+  private async forgetMemberPlans() {
+    await this.resets.reset(MEMBER_PLAN_CACHE_NAMESPACE);
+    await this.publicContentCache.invalidate('paywalls');
   }
 }
 

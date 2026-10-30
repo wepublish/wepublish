@@ -43,7 +43,11 @@ import {
   CanTakeActionOnComment,
   CanUpdateComments,
 } from '@wepublish/permissions';
-import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import {
+  hasPermission,
+  Permissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
 import { CommentRejectionReason, CommentState } from '@prisma/client';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 
@@ -85,18 +89,13 @@ export class CommentResolver {
     @Args() input: CommentsForItemArgs,
     @CurrentUser() session: UserSession | null
   ) {
-    const publicFilter = {
-      OR: [
-        session?.user.id ? { userID: session?.user.id } : {},
-        { state: CommentState.approved },
-      ],
-    };
+    if (hasPermission(CanGetComments, permissionsOf(session))) {
+      return this.commentService.getCommentsForItem(input);
+    }
 
-    return this.commentService.getCommentsForItem(
+    return this.commentService.getPublicCommentsForItem(
       input,
-      !hasPermission(CanGetComments, session?.roles ?? []) ? publicFilter : (
-        undefined
-      )
+      session?.user?.id
     );
   }
 
@@ -132,7 +131,7 @@ export class CommentResolver {
   ) {
     if (
       input.publish &&
-      !hasPermission(CanTakeActionOnComment, session?.roles ?? [])
+      !hasPermission(CanTakeActionOnComment, permissionsOf(session))
     ) {
       throw new ForbiddenException(
         'You are not allowed to publish comments without approval'
@@ -224,7 +223,7 @@ export class CommentResolver {
   ) {
     const revisions = comment.revisions ?? [];
 
-    if (hasPermission(CanGetComments, session?.roles ?? [])) {
+    if (hasPermission(CanGetComments, permissionsOf(session))) {
       return revisions;
     }
 
@@ -273,7 +272,7 @@ export class CommentResolver {
     @Parent() comment: DecoratedComment,
     @CurrentUser() session?: UserSession
   ) {
-    if (!hasPermission(CanGetComments, session?.roles ?? [])) {
+    if (!hasPermission(CanGetComments, permissionsOf(session))) {
       return [];
     }
 

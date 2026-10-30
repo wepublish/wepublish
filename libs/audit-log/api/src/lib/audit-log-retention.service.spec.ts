@@ -6,10 +6,13 @@ import {
 } from './audit-log-retention.service';
 import { ConfigService } from '@nestjs/config';
 import { AuditLogService } from './audit-log.service';
+import { type ClaimResult, DistributedClaims } from '@wepublish/dragonfly/api';
+import { FakeDragonfly } from '@wepublish/dragonfly/api/testing';
+import type { Mock } from 'vitest';
 
 describe('AuditLogRetentionService', () => {
   let service: AuditLogRetentionService;
-  let auditLogService: { deleteOlderThan: jest.Mock };
+  let auditLogService: { deleteOlderThan: Mock };
   let configured: string | undefined;
 
   const withRetention = (value: string | undefined) => {
@@ -17,16 +20,92 @@ describe('AuditLogRetentionService', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     configured = undefined;
-    auditLogService = { deleteOlderThan: jest.fn().mockResolvedValue(0) };
+    auditLogService = { deleteOlderThan: vi.fn().mockResolvedValue(0) };
 
-    const config = { get: jest.fn(() => configured) };
+    const config = { get: vi.fn(() => configured) };
+    const claims = { claim: vi.fn() } satisfies Pick<
+      DistributedClaims,
+      'claim'
+    >;
 
     service = new AuditLogRetentionService(
       auditLogService as unknown as AuditLogService,
-      config as unknown as ConfigService
+      config as unknown as ConfigService,
+      claims as unknown as DistributedClaims
     );
+  });
+
+  describe('once a night', () => {
+    const night = (claimed: ClaimResult) => {
+      const kv = {
+        claim: vi.fn().mockResolvedValue(claimed),
+      } satisfies Pick<DistributedClaims, 'claim'>;
+      const retention = new AuditLogRetentionService(
+        auditLogService as unknown as AuditLogService,
+        { get: vi.fn() } as unknown as ConfigService,
+        kv as unknown as DistributedClaims
+      );
+
+      return { retention, kv };
+    };
+
+    it('prunes on the replica that claims the night', async () => {
+      await night('claimed').retention.pruneNightly();
+
+      expect(auditLogService.deleteOlderThan).toHaveBeenCalled();
+    });
+
+    it('leaves the night to the replica that claimed it', async () => {
+      await night('taken').retention.pruneNightly();
+
+      expect(auditLogService.deleteOlderThan).not.toHaveBeenCalled();
+    });
+
+    it.each<ClaimResult>(['not-configured', 'unavailable'])(
+      'still prunes when Dragonfly cannot tell who claimed the night (%s), because deleting old entries twice is harmless',
+      async claimed => {
+        auditLogService.deleteOlderThan.mockResolvedValueOnce(3);
+
+        expect(await night(claimed).retention.pruneNightly()).toBe(3);
+        expect(auditLogService.deleteOlderThan).toHaveBeenCalled();
+      }
+    );
+
+    it('prunes on exactly one of several replicas sharing Dragonfly', async () => {
+      const dragonfly = new FakeDragonfly();
+      const replica = () =>
+        new AuditLogRetentionService(
+          auditLogService as unknown as AuditLogService,
+          { get: vi.fn() } as unknown as ConfigService,
+          new DistributedClaims(dragonfly)
+        );
+
+      await Promise.all([replica().pruneNightly(), replica().pruneNightly()]);
+
+      expect(auditLogService.deleteOlderThan).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps trying to claim the night for a while, so a short Dragonfly blip does not skip it', async () => {
+      const { retention, kv } = night('claimed');
+
+      await retention.pruneNightly();
+
+      const [[, , options]] = kv.claim.mock.calls;
+      expect(options.retryForMs).toBeGreaterThanOrEqual(30_000);
+    });
+
+    it('claims the night for longer than a run takes, but frees it before the next night', async () => {
+      const { retention, kv } = night('claimed');
+
+      await retention.pruneNightly();
+
+      const [[name, ttlMs]] = kv.claim.mock.calls;
+      expect(name).toBe('audit-log-retention');
+      expect(ttlMs).toBeGreaterThanOrEqual(2 * 60 * 60 * 1000);
+      expect(ttlMs).toBeLessThan(24 * 60 * 60 * 1000);
+    });
   });
 
   describe('retentionDays', () => {

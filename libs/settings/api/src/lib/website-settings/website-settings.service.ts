@@ -1,19 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { UpdateWebsiteSettingsInput } from './website-settings.model';
+import {
+  SETTINGS_CACHE_TTL_SECONDS,
+  WEBSITE_SETTINGS_CACHE_NAMESPACE,
+} from '../settings-cache';
 
 @Injectable()
 export class WebsiteSettingsService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: NamespacedCache,
+    private resets: NamespaceResets
+  ) {}
 
   async getSettings() {
-    return this.prisma.websiteSettings.findFirst({});
+    return this.kv.getOrLoadNs(
+      WEBSITE_SETTINGS_CACHE_NAMESPACE,
+      'current',
+      () => this.prisma.websiteSettings.findFirst({}),
+      SETTINGS_CACHE_TTL_SECONDS
+    );
   }
 
   async updateSettings(input: UpdateWebsiteSettingsInput) {
     const settings = await this.prisma.websiteSettings.findFirstOrThrow({});
 
-    return this.prisma.websiteSettings.update({
+    const updated = await this.prisma.websiteSettings.update({
       where: {
         id: settings.id,
       },
@@ -52,5 +66,8 @@ export class WebsiteSettingsService {
         fonts: input.fonts as any,
       },
     });
+    await this.resets.reset(WEBSITE_SETTINGS_CACHE_NAMESPACE);
+
+    return updated;
   }
 }

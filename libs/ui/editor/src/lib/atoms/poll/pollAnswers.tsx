@@ -1,35 +1,38 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  FullPoll,
-  PollAnswer,
-  PollExternalVote,
-  useCreatePollAnswerMutation,
-  useDeletePollAnswerMutation,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormHelperText,
+  IconButton as MuiIconButton,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
+import {
+  CreatePollAnswerDocument,
+  DeletePollAnswerDocument,
+  FullPollFragment,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import {
-  Badge as RBadge,
-  Button,
-  Form,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  toaster,
-} from 'rsuite';
 
-const IconButton = styled(RIconButton)`
-  && {
+import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
+import { IconButtonTooltip } from '../iconButtonTooltip';
+
+type PollAnswerFragment = FullPollFragment['answers'][number];
+type PollExternalVoteFragment =
+  FullPollFragment['externalVoteSources'][number]['voteAmounts'][number];
+
+const IconButton = styled(MuiIconButton)`
+  &&:not([data-with-text]) {
     width: 36px;
     height: 36px;
   }
-`;
-
-const Badge = styled(RBadge)`
-  width: 100%;
-  display: grid;
 `;
 
 const Grid = styled.div`
@@ -37,17 +40,20 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr max-content;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 `;
 
-const Hint = styled(Form.HelpText)`
+const Hint = styled(FormHelperText)`
   && {
     display: block;
     margin-top: 12px;
   }
 `;
 
-function getTotalUserVotesByAnswerId(poll: FullPoll, answerId: string): number {
+function getTotalUserVotesByAnswerId(
+  poll: FullPollFragment,
+  answerId: string
+): number {
   const answers = poll?.answers;
   if (!answers) {
     return 0;
@@ -60,7 +66,7 @@ function getTotalUserVotesByAnswerId(poll: FullPoll, answerId: string): number {
 }
 
 function getTotalExternalVotesByAnswerId(
-  poll: FullPoll,
+  poll: FullPollFragment,
   answerId: string
 ): number {
   const externalVoteSources = poll?.externalVoteSources;
@@ -79,7 +85,7 @@ function getTotalExternalVotesByAnswerId(
 
 function getTotalExternalVoteSourcesByAnswerId(
   answerId: string,
-  pollExternalVotes?: PollExternalVote[] | null
+  pollExternalVotes?: PollExternalVoteFragment[] | null
 ): number {
   if (!pollExternalVotes) {
     return 0;
@@ -92,7 +98,10 @@ function getTotalExternalVoteSourcesByAnswerId(
   );
 }
 
-function getTotalVotesByAnswerId(poll: FullPoll, answerId: string): number {
+function getTotalVotesByAnswerId(
+  poll: FullPollFragment,
+  answerId: string
+): number {
   return (
     getTotalUserVotesByAnswerId(poll, answerId) +
     getTotalExternalVotesByAnswerId(poll, answerId)
@@ -100,32 +109,29 @@ function getTotalVotesByAnswerId(poll: FullPoll, answerId: string): number {
 }
 
 interface PollAnswersProps {
-  poll?: FullPoll;
-  onPollChange(poll: FullPoll): void;
+  poll?: FullPollFragment;
+  onPollChange(poll: FullPollFragment): void;
 }
 
 export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [answerToDelete, setAnswerToDelete] = useState<PollAnswer | undefined>(
-    undefined
-  );
+  const [answerToDelete, setAnswerToDelete] = useState<
+    PollAnswerFragment | undefined
+  >(undefined);
   const [newAnswer, setNewAnswer] = useState<string>('');
 
-  const [createAnswerMutation, { loading }] = useCreatePollAnswerMutation({});
-  const [deleteAnswerMutation] = useDeletePollAnswerMutation();
+  const [createAnswerMutation, { loading }] = useMutation(
+    CreatePollAnswerDocument,
+    {}
+  );
+  const [deleteAnswerMutation] = useMutation(DeletePollAnswerDocument);
 
-  const onErrorToast = (error: ApolloError) => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {error.message}
-      </Message>
-    );
+  const onErrorToast = (error: Error) => {
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
 
   /**
@@ -137,16 +143,10 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     }
 
     if (!newAnswer) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('pollAnswer.answerMissing')}
-        </Message>
-      );
+      enqueueSnackbar(t('pollAnswer.answerMissing'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
 
@@ -161,7 +161,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
 
     if (savedAnswer) {
       const updatedPoll = { ...poll };
-      updatedPoll.answers?.push(savedAnswer as PollAnswer);
+      updatedPoll.answers?.push(savedAnswer);
       onPollChange(updatedPoll);
     }
 
@@ -185,7 +185,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     const updatedPoll = {
       ...poll,
       answers: poll?.answers ? [...poll.answers] : [],
-    } as FullPoll | undefined;
+    } as FullPollFragment | undefined;
 
     // delete answer
     const deletedAnswer = answer?.data?.deletePollAnswer;
@@ -206,7 +206,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     // delete external vote sources
     updatedPoll.externalVoteSources?.forEach(tmpSource => {
       tmpSource.voteAmounts = tmpSource.voteAmounts?.filter(
-        (tmpVoteAmount: PollExternalVote) =>
+        (tmpVoteAmount: PollExternalVoteFragment) =>
           tmpVoteAmount.answerId !== deletedAnswer.id
       );
     });
@@ -214,7 +214,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     onPollChange(updatedPoll);
   }
 
-  async function updateAnswer(updatedAnswer: PollAnswer) {
+  async function updateAnswer(updatedAnswer: PollAnswerFragment) {
     if (!poll) {
       return;
     }
@@ -240,86 +240,95 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     <>
       {poll?.answers?.map(answer => (
         <Grid key={answer.id}>
-          <Badge
-            content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}
-          >
-            <Form.Control
-              name={`answer-${answer.id}`}
-              value={answer.answer}
-              onChange={(value: string) => {
-                updateAnswer({
-                  ...answer,
-                  answer: value,
-                });
-              }}
-            />
-          </Badge>
-
-          <IconButton
-            icon={<MdDelete />}
-            circle
-            size="sm"
-            appearance="ghost"
-            color="red"
-            onClick={() => {
-              setAnswerToDelete(answer);
-              setModalOpen(true);
+          <TextField
+            name={`answer-${answer.id}`}
+            value={answer.answer}
+            onChange={event => {
+              updateAnswer({
+                ...answer,
+                answer: event.target.value,
+              });
+            }}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {`${getTotalVotesByAnswerId(poll, answer.id)} ${t(
+                      'pollAnswer.votes'
+                    )}`}
+                  </InputAdornment>
+                ),
+              },
             }}
           />
+
+          <IconButtonTooltip caption={t('delete')}>
+            <IconButton
+              aria-label={t('delete')}
+              size="small"
+              color="error"
+              onClick={() => {
+                setAnswerToDelete(answer);
+                setModalOpen(true);
+              }}
+            >
+              <MdDelete />
+            </IconButton>
+          </IconButtonTooltip>
         </Grid>
       ))}
 
       <Hint>{t('pollAnswer.copyVoteUrlHint')}</Hint>
 
       <Grid css={{ marginTop: 24, marginBottom: 0 }}>
-        <Form.Control
+        <TextField
           name="createNewFormAnswer"
           placeholder={t('pollAnswer.insertYourNewAnswer')}
           value={newAnswer}
-          onChange={(value: string) => {
-            setNewAnswer(value);
-          }}
+          onChange={event => setNewAnswer(event.target.value)}
         />
 
-        <RIconButton
-          icon={<MdAdd />}
+        <Button
+          variant="contained"
+          startIcon={<MdAdd />}
           loading={loading}
-          appearance="primary"
           onClick={createAnswer}
         >
           {t('pollEditView.addAndSaveNewAnswer')}
-        </RIconButton>
+        </Button>
       </Grid>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={modalOpen}
-        size="xs"
+        maxWidth="xs"
         onClose={() => {
           setModalOpen(false);
         }}
       >
-        <Modal.Title>{t('pollAnswer.deleteModalTitle')}</Modal.Title>
+        <DialogTitle>{t('pollAnswer.deleteModalTitle')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {t('pollAnswer.deleteModalBody', { answer: answerToDelete?.answer })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            appearance="primary"
-            onClick={() => deleteAnswer()}
-          >
-            {t('pollAnswer.deleteBtn')}
-          </Button>
-
-          <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setModalOpen(false)}
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => deleteAnswer()}
+          >
+            {t('delete')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

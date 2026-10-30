@@ -1,107 +1,83 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { Button, Drawer, LinearProgress, Typography } from '@mui/material';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdEdit, MdOpenInNew } from 'react-icons/md';
-import { Button, Drawer, IconButton, Panel as RPanel, Progress } from 'rsuite';
+import { MdOpenInNew } from 'react-icons/md';
 
-import { PlaceholderInput } from '../atoms';
 import { BlockProps } from '../atoms/blockList';
+import { BlockPreviewCard } from '../atoms/blockPreviewCard';
+import { DRAWER_WIDTHS } from '../drawer';
 import { SelectCrowdfundingPanel } from '../panel/selectCrowdfundingPanel';
 import { CrowdfundingBlockValue } from '.';
 
-const IconWrapper = styled.div`
-  position: absolute;
-  z-index: 100;
-  height: 100%;
-  right: 0;
-`;
-
-const Crowdfunding = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-`;
-
-const CrowdfundingRow = styled.div`
-  width: 100%;
-  text-align: center;
-`;
-
-const Panel = styled(RPanel)`
+const Progress = styled('div')`
   display: grid;
-  height: 200px;
-  padding: 0;
-  overflow: hidden;
-  background-color: #f7f9fa;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: ${({ theme }) => theme.spacing(1.5)};
+  align-items: center;
 `;
 
 export const CrowdfundingBlock = ({
   value: { crowdfunding },
   onChange,
   autofocus,
+  disabled,
 }: BlockProps<CrowdfundingBlockValue>) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (autofocus && !crowdfunding) {
-      setIsDialogOpen(true);
-    }
-  }, []);
+  const [isDialogOpen, setIsDialogOpen] = useState(
+    () => Boolean(autofocus) && !crowdfunding
+  );
+  const progress = Math.min(crowdfunding?.activeGoal?.progress ?? 0, 100);
 
   return (
     <>
-      <Panel
-        bodyFill
-        bordered
+      <BlockPreviewCard
+        isEmpty={!crowdfunding}
+        emptyLabel={t('blocks.crowdfunding.title')}
+        editLabel={t('blocks.crowdfunding.edit')}
+        onEdit={() => setIsDialogOpen(true)}
+        title={crowdfunding?.name}
+        disabled={disabled}
+        actions={
+          crowdfunding && (
+            <Button
+              size="small"
+              href={`/crowdfundings/edit/${crowdfunding.id}`}
+              target="_blank"
+              endIcon={<MdOpenInNew />}
+              sx={{ mr: 1 }}
+            >
+              {t('blocks.crowdfunding.open')}
+            </Button>
+          )
+        }
       >
-        <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
-          {crowdfunding && (
-            <Crowdfunding>
-              <IconWrapper>
-                <IconButton
-                  size="lg"
-                  icon={<MdEdit />}
-                  onClick={() => setIsDialogOpen(true)}
-                >
-                  {t('blocks.crowdfunding.edit')}
-                </IconButton>
-              </IconWrapper>
-
-              <CrowdfundingRow>
-                <h3>
-                  {t('blocks.crowdfunding.crowdfundingName', {
-                    name: crowdfunding.name,
-                  })}
-                </h3>
-              </CrowdfundingRow>
-              <CrowdfundingRow>
-                <Progress.Line
-                  percent={crowdfunding.activeGoal?.progress || 0}
-                />
-              </CrowdfundingRow>
-              <CrowdfundingRow>
-                <Button
-                  href={`/crowdfundings/edit/${crowdfunding.id}`}
-                  target="_blank"
-                  appearance="ghost"
-                  endIcon={<MdOpenInNew />}
-                >
-                  {crowdfunding.name} {t('blocks.crowdfunding.open')}
-                </Button>
-              </CrowdfundingRow>
-            </Crowdfunding>
-          )}
-        </PlaceholderInput>
-      </Panel>
+        {crowdfunding && (
+          <Progress>
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+            />
+            <Typography
+              variant="caption"
+              color="text.secondary"
+            >
+              {Math.round(crowdfunding.activeGoal?.progress ?? 0)}%
+            </Typography>
+          </Progress>
+        )}
+      </BlockPreviewCard>
 
       <Drawer
-        size="sm"
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       >

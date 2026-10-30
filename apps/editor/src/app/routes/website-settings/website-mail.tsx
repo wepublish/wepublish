@@ -1,6 +1,6 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -11,27 +11,27 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
-import { Controller, useForm } from 'react-hook-form';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { MdArrowBack } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { WebsiteSettingsHeader } from './website-settings-header';
+
+import { lazyMessage } from '../../utility';
 import { Explainer, WebsiteAnalyticsWrapper } from './website-analytics';
 
 const mailSchema = z.object({
   mailchimp: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^[a-f0-9]{32}-us\d{1,2}$/,
-        'Must be a valid Mailchimp API-Key (e.g., XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.mail.mailchimp.apiKeyInvalid'),
+      })
+      .regex(/^[a-f0-9]{32}-us\d{1,2}$/)
       .or(z.literal(''))
       .nullish(),
   }),
@@ -39,39 +39,28 @@ const mailSchema = z.object({
 
 export const WebsiteMail = () => {
   const { t } = useTranslation();
-  const [loadSettings] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('websiteSettings.saveSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
       onError: error => {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {error.message}
-          </Message>
-        );
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       },
-    });
+    }
+  );
 
   const {
     control,
     handleSubmit,
-    watch,
     formState: { isLoading },
   } = useForm<z.infer<typeof mailSchema>>({
     resolver: zodResolver(mailSchema),
@@ -85,6 +74,8 @@ export const WebsiteMail = () => {
       } as z.infer<typeof mailSchema>;
     },
   });
+
+  const mailchimpEnabled = useWatch({ control, name: 'mailchimp.enabled' });
 
   const onSubmit = handleSubmit(data => {
     updateWebsiteSettings({
@@ -106,18 +97,19 @@ export const WebsiteMail = () => {
 
   return (
     <WebsiteAnalyticsWrapper onSubmit={onSubmit}>
-      <Link to={'/settings/website'}>
+      <WebsiteSettingsHeader title={t('websiteSettings.mail.title')}>
         <Button
-          size="small"
-          variant="text"
-          startIcon={<MdArrowBack />}
+          type="submit"
+          variant="contained"
+          color="primary"
+          loading={saving}
         >
-          {t('websiteSettings.backToOverview')}
+          {t('save')}
         </Button>
-      </Link>
-
-      <h3>{t('websiteSettings.mail.mailchimp.title')}</h3>
-
+      </WebsiteSettingsHeader>
+      <Typography variant="h3">
+        {t('websiteSettings.mail.mailchimp.title')}
+      </Typography>
       <Controller
         name="mailchimp.enabled"
         control={control}
@@ -153,12 +145,11 @@ export const WebsiteMail = () => {
           </div>
         )}
       />
-
       <Controller
         name="mailchimp.key"
         control={control}
         render={({ field, fieldState: { error } }) =>
-          watch('mailchimp.enabled') ?
+          mailchimpEnabled ?
             <TextField
               {...field}
               label="Mailchimp API-Key"
@@ -180,46 +171,29 @@ export const WebsiteMail = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      API
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        API
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
-      <Box>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={saving}
-        >
-          {saving && (
-            <CircularProgress
-              size={14}
-              color="inherit"
-              sx={{ mr: 1 }}
-            />
-          )}
-
-          {t('save')}
-        </Button>
-      </Box>
     </WebsiteAnalyticsWrapper>
   );
 };

@@ -1,7 +1,7 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Box,
   Button,
   CircularProgress,
   createTheme,
@@ -9,35 +9,49 @@ import {
   Tabs,
 } from '@mui/material';
 import {
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
+  WebsiteRemoteFontInput,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { minimalTheme } from '@wepublish/ui';
-import { memo, PropsWithChildren, useState } from 'react';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
+import {
+  memo,
+  PropsWithChildren,
+  SyntheticEvent,
+  useRef,
+  useState,
+} from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { MdArrowBack } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
+import { MdFileDownload, MdFileUpload } from 'react-icons/md';
 import { z } from 'zod';
 
+import { downloadJson } from './theme/download-json';
 import { PaletteList } from './theme/palette-list';
 import { normalizeTheme, themeSchema } from './theme/schema';
-import { TypographyList } from './theme/typography-list';
+import {
+  createThemeExport,
+  mergeFonts,
+  parseThemeImport,
+} from './theme/theme-transfer';
+import { TypographyTab } from './theme/typography-tab';
+import { WebsiteSettingsHeader } from './website-settings-header';
 
 const WebsiteThemeWrapper = styled.form`
   display: grid;
-  gap: 24px;
+  gap: ${({ theme }) => theme.spacing(3)};
   grid-auto-columns: auto;
 `;
 
 type TabPanelProps = PropsWithChildren<{
   activeValue: number;
   value: number;
+  maxWidth?: number | 'none';
 }>;
 
 function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, activeValue, ...other } = props;
+  const { children, value, activeValue, maxWidth = 500, ...other } = props;
 
   return (
     <div
@@ -45,7 +59,7 @@ function CustomTabPanel(props: TabPanelProps) {
       hidden={value !== activeValue}
       id={`simple-tabpanel-${activeValue}`}
       aria-labelledby={`simple-tab-${activeValue}`}
-      css={{ maxWidth: 500 }}
+      css={{ maxWidth }}
       {...other}
     >
       {value === activeValue && children}
@@ -63,40 +77,38 @@ function a11yProps(index: number) {
 export const WebsiteTheme = memo(() => {
   const { t } = useTranslation();
 
-  const [loadSettings, { loading }] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings, { loading, data: settings }] = useLazyQuery(
+    WebsiteSettingsDocument
+  );
+  const websiteFonts: WebsiteRemoteFontInput[] = (
+    settings?.websiteSettings.fonts ?? []
+  ).map(({ name, weight, style }) => ({ name, weight, style }));
+  const [importedFonts, setImportedFonts] = useState<WebsiteRemoteFontInput[]>(
+    []
+  );
+
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('websiteSettings.saveSuccess')}
-          </Message>
-        );
+        setImportedFonts([]);
+        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
       onError: error => {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {error.message}
-          </Message>
-        );
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       },
-    });
+    }
+  );
 
   const [activeTab, setActiveTab] = useState<number>(0);
-  const handleChange = (
-    event: React.SyntheticEvent,
-    newValue: typeof activeTab
-  ) => setActiveTab(newValue);
+  const handleChange = (event: SyntheticEvent, newValue: typeof activeTab) =>
+    setActiveTab(newValue);
 
   const form = useForm<z.infer<typeof themeSchema>>({
     resolver: zodResolver(themeSchema),
@@ -115,9 +127,44 @@ export const WebsiteTheme = memo(() => {
     updateWebsiteSettings({
       variables: {
         theme: data,
+        // only sent when an import brought fonts the website does not have yet
+        fonts: mergeFonts(websiteFonts, importedFonts),
       },
     });
   }, console.warn);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // validated like Save, so the file holds exactly what Save would store
+  const exportTheme = handleSubmit(data => {
+    downloadJson(createThemeExport(data, websiteFonts), 'website-theme.json');
+  }, console.warn);
+
+  const importTheme = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const { theme, fonts } = parseThemeImport(JSON.parse(await file.text()));
+
+      form.reset(theme);
+      setImportedFonts(fonts);
+
+      enqueueSnackbar(t('websiteSettings.theme.importSuccess'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
+    } catch {
+      enqueueSnackbar(t('websiteSettings.theme.importError'), {
+        variant: 'error',
+        autoHideDuration: 5000,
+      });
+    }
+  };
 
   if (loading) {
     return (
@@ -131,28 +178,55 @@ export const WebsiteTheme = memo(() => {
 
   return (
     <WebsiteThemeWrapper onSubmit={onSubmit}>
-      <Link to={'/settings/website'}>
+      <WebsiteSettingsHeader title={t('websiteSettings.theme.title')}>
         <Button
-          size="small"
-          variant="text"
-          startIcon={<MdArrowBack />}
+          type="button"
+          variant="outlined"
+          startIcon={<MdFileUpload />}
+          onClick={() => fileInputRef.current?.click()}
         >
-          {t('websiteSettings.backToOverview')}
+          {t('websiteSettings.theme.importTheme')}
         </Button>
-      </Link>
+
+        <Button
+          type="button"
+          variant="outlined"
+          startIcon={<MdFileDownload />}
+          onClick={exportTheme}
+        >
+          {t('websiteSettings.theme.exportTheme')}
+        </Button>
+
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          loading={saving}
+        >
+          {t('save')}
+        </Button>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/json"
+          hidden
+          onChange={importTheme}
+        />
+      </WebsiteSettingsHeader>
 
       <FormProvider {...form}>
         <Tabs
           value={activeTab}
           onChange={handleChange}
-          aria-label="Theme tabs"
+          aria-label={t('websiteSettings.theme.tabs')}
         >
           <Tab
-            label="Palette"
+            label={t('websiteSettings.theme.paletteTab')}
             {...a11yProps(0)}
           />
           <Tab
-            label="Typography"
+            label={t('websiteSettings.theme.typographyTab')}
             {...a11yProps(1)}
           />
         </Tabs>
@@ -167,28 +241,10 @@ export const WebsiteTheme = memo(() => {
         <CustomTabPanel
           value={activeTab}
           activeValue={1}
+          maxWidth="none"
         >
-          <TypographyList name={'typography'} />
+          <TypographyTab name={'typography'} />
         </CustomTabPanel>
-
-        <Box>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={saving}
-          >
-            {saving && (
-              <CircularProgress
-                size={14}
-                color="inherit"
-                sx={{ mr: 1 }}
-              />
-            )}
-
-            {t('save')}
-          </Button>
-        </Box>
       </FormProvider>
     </WebsiteThemeWrapper>
   );

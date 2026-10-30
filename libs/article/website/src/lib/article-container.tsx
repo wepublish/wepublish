@@ -1,8 +1,9 @@
+import { useQuery } from '@apollo/client/react';
 import {
   PollBlockProvider,
   SubscribeBlockProvider,
 } from '@wepublish/block-content/website';
-import { BannerDocumentType, useArticleQuery } from '@wepublish/website/api';
+import { ArticleDocument, BannerDocumentType } from '@wepublish/website/api';
 import { Article, BuilderContainerProps } from '@wepublish/website/builder';
 import { BannerContainer } from '@wepublish/banner/website';
 import { PropsWithChildren } from 'react';
@@ -20,7 +21,7 @@ export function ArticleContainer({
   className,
   children,
 }: ArticleContainerProps) {
-  const { data, loading, error } = useArticleQuery({
+  const { data, loading, error } = useQuery(ArticleDocument, {
     variables: {
       id,
       slug,

@@ -1,48 +1,45 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
-import { Poll, PollsQuery, useDeletePollMutation } from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import { DeletePollDocument, FullPollFragment } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, Modal, toaster } from 'rsuite';
+
+import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
 
 interface DeletePollProps {
-  poll?: Poll;
+  poll?: FullPollFragment;
   onClose(): void;
-  onDelete(): Promise<ApolloQueryResult<PollsQuery>>;
+  onDelete(): Promise<unknown>;
 }
 
 /**
  * Error handling
  */
-const onErrorToast = (error: ApolloError) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+const onErrorToast = (error: Error) => {
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const onCompletedToast = (t: TFunction) => () => {
-  toaster.push(
-    <Message
-      type="success"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {t('pollList.pollDeleted')}
-    </Message>
-  );
+  enqueueSnackbar(t('pollList.pollDeleted'), {
+    variant: 'success',
+    autoHideDuration: 3000,
+  });
 };
 
 export function DeletePollModal({ poll, onClose, onDelete }: DeletePollProps) {
   const { t } = useTranslation();
 
-  const [deletePollMutation] = useDeletePollMutation();
+  const [deletePollMutation] = useMutation(DeletePollDocument);
 
   /**
    * FUNCTIONS
@@ -66,36 +63,34 @@ export function DeletePollModal({ poll, onClose, onDelete }: DeletePollProps) {
   }
 
   return (
-    <Modal
+    <Dialog
       open={!!poll}
       onClose={onClose}
     >
-      <Modal.Header>
-        <Modal.Title>{t('deletePollModal.title')}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{t('deletePollModal.title')}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         {t('deletePollModal.body', {
           pollQuestion: poll?.question || t('pollList.noQuestion'),
         })}
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          onClick={deletePoll}
-          appearance="primary"
-          color="red"
-        >
-          {t('deletePollModal.deleteBtn')}
-        </Button>
-
-        <Button
+          variant="text"
           onClick={onClose}
-          appearance="subtle"
         >
           {t('cancel')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+
+        <Button
+          variant="contained"
+          onClick={deletePoll}
+          color="error"
+        >
+          {t('delete')}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

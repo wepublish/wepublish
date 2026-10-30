@@ -11,20 +11,21 @@ import {
   SortableContext,
 } from '@dnd-kit/sortable';
 import styled from '@emotion/styled';
+import { Button, Drawer, IconButton as MuiIconButton } from '@mui/material';
 import {
   TeaserSlotsAutofillConfigInput,
   TeaserSlotType,
 } from '@wepublish/editor/api';
 import { ChangeEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdArticle, MdDelete, MdEdit } from 'react-icons/md';
 import {
-  Button,
-  Drawer,
-  IconButton as RIconButton,
-  Panel as RPanel,
-  Toggle,
-} from 'rsuite';
+  MdAdd,
+  MdArticle,
+  MdDelete,
+  MdEdit,
+  MdOutlinePushPin,
+  MdPushPin,
+} from 'react-icons/md';
 
 import {
   IconButtonTooltip,
@@ -32,21 +33,37 @@ import {
   TypographicTextArea,
 } from '../atoms';
 import { BlockProps } from '../atoms/blockList';
+import { DRAWER_WIDTHS } from '../drawer';
 import { TeaserEditPanel } from '../panel/teaserEditPanel';
 import { TeaserSelectAndEditPanel } from '../panel/teaserSelectAndEditPanel';
-import { ContentForTeaser, SortableTeaser } from './teaserGridBlock';
+import {
+  ContentForTeaser,
+  IconWrapper,
+  SortableTeaser,
+} from './teaserGridBlock';
 import { TeaserSlotsAutofillControls } from './teaserSlots/teaser-slots-autofill-controls';
 import { Teaser as TeaserTypeMixed, TeaserSlotsBlockValue } from './types';
 // import {AdTeaser, AdTeaserWrapper} from '@wepublish/ui/editor'
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   padding: 5px !important;
 `;
 
 const SortableContainerComponent = styled.div<{ numColumns: number }>`
   display: grid;
-  grid-template-columns: repeat(${({ numColumns }) => `${numColumns}`}, 1fr);
-  grid-gap: 20px;
+  grid-template-columns: repeat(
+    ${({ numColumns }) => numColumns},
+    minmax(0, 1fr)
+  );
+  gap: ${({ theme }) => theme.spacing(2)};
+
+  @media (max-width: 899px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 599px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
   user-select: none;
 
   img {
@@ -54,7 +71,7 @@ const SortableContainerComponent = styled.div<{ numColumns: number }>`
   }
 `;
 
-const Panel = styled(RPanel, {
+const Panel = styled('div', {
   shouldForwardProp: prop => prop !== 'showGrabCursor',
 })<{ showGrabCursor: boolean }>`
   display: grid;
@@ -64,12 +81,13 @@ const Panel = styled(RPanel, {
   z-index: 1;
 `;
 
-const Teaser = styled.div`
+const Teaser = styled('div')`
   position: relative;
   width: 100%;
   height: 100%;
-  border: 2px dashed #ccc;
-  background: #fcfcfc;
+  overflow: hidden;
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const TeaserWrapper = styled('div', {
@@ -80,38 +98,12 @@ const TeaserWrapper = styled('div', {
   opacity: ${({ autofill }) => (autofill ? 0.4 : 1)};
 `;
 
-export const TeaserToolbar = styled.div`
-  position: absolute;
-  z-index: 2;
-  right: 4px;
-  bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  background-color: #fff;
-  padding: 5px;
-  border-radius: 3px;
-  font-size: 0.875rem;
-`;
-export const SlotToolbar = styled.div`
-  position: absolute;
-  z-index: 2;
-  right: 4px;
-  top: 4px;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  background-color: #fff;
-  padding: 5px;
-  border-radius: 3px;
-  font-size: 0.875rem;
-`;
+const TeaserSlotsControls = styled('div')``;
 
-const TeaserSlotsControls = styled.div`
-  margin-top: 20px;
+export const TeaserSlotsBlockWrapper = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
 `;
-
-export const TeaserSlotsBlockWrapper = styled.div``;
 
 export function TeaserSlotsBlock({
   value,
@@ -311,13 +303,25 @@ export function TeaserSlotsBlock({
         </SortableContext>
       </DndContext>
       <TeaserSlotsControls>
-        <Button onClick={handleAddSlot}>
+        <Button
+          variant="text"
+          startIcon={<MdAdd />}
+          onClick={handleAddSlot}
+        >
           {t('blocks.teaserSlots.addSlot')}
         </Button>
       </TeaserSlotsControls>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => setEditModalOpen(false)}
       >
         {slots[editIndex] && (
@@ -332,8 +336,16 @@ export function TeaserSlotsBlock({
         )}
       </Drawer>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.md,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="md"
         onClose={() => setChooseModalOpen(false)}
       >
         <TeaserSelectAndEditPanel
@@ -382,16 +394,15 @@ export function TeaserSlot({
     );
 
   return (
-    <Panel
-      bodyFill
-      showGrabCursor={showGrabCursor}
-    >
+    <Panel showGrabCursor={showGrabCursor}>
       <Teaser>
         <TeaserWrapper autofill={!manualOverride}>
           {manualOverride && !teaser && (
-            <PlaceholderInput onAddClick={onChoose} />
+            <PlaceholderInput
+              onAddClick={onChoose}
+              addLabel={t('blocks.flexTeaser.chooseTeaser')}
+            />
           )}
-          {/*{!manualOverride && <span>Autofilled</span>}*/}
           {teaser && (
             <ContentForTeaser
               teaser={teaser}
@@ -399,52 +410,63 @@ export function TeaserSlot({
             />
           )}
         </TeaserWrapper>
-        <TeaserToolbar>
-          {manualOverride && teaser && (
+        <IconWrapper role="toolbar">
+          {autofillEnabled && (
+            <IconButtonTooltip caption={t('blocks.teaserSlots.manualSlotHelp')}>
+              <MuiIconButton
+                size="small"
+                aria-label={t('blocks.teaserSlots.manualSlot')}
+                aria-pressed={manualOverride}
+                onClick={toggleSlotType}
+              >
+                {manualOverride ?
+                  <MdPushPin />
+                : <MdOutlinePushPin />}
+              </MuiIconButton>
+            </IconButtonTooltip>
+          )}
+
+          {manualOverride && teaser ?
             <>
               <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
-                <IconButton
-                  icon={<MdArticle />}
+                <MuiIconButton
+                  size="small"
+                  aria-label={t('blocks.flexTeaser.chooseTeaser')}
                   onClick={onChoose}
-                  appearance={'subtle'}
-                />
+                >
+                  <MdArticle />
+                </MuiIconButton>
               </IconButtonTooltip>
               <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
-                <IconButton
-                  icon={<MdEdit />}
+                <MuiIconButton
+                  size="small"
+                  aria-label={t('blocks.flexTeaser.editTeaser')}
                   onClick={onEdit}
-                  appearance={'subtle'}
-                />
+                >
+                  <MdEdit />
+                </MuiIconButton>
               </IconButtonTooltip>
               <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
-                <IconButton
-                  icon={<MdDelete />}
+                <MuiIconButton
+                  size="small"
+                  aria-label={t('blocks.flexTeaser.deleteTeaser')}
                   onClick={onRemove}
-                  appearance={'subtle'}
-                />
+                >
+                  <MdDelete />
+                </MuiIconButton>
               </IconButtonTooltip>
             </>
-          )}
-          {autofillEnabled && (
-            <>
-              <span>{manualOverride ? 'Manual' : 'Auto'}</span>
-              <Toggle
-                onClick={toggleSlotType}
-                checked={manualOverride}
-              />
-            </>
-          )}
-        </TeaserToolbar>
-
-        <SlotToolbar>
-          <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
-            <IconButton
-              icon={<MdDelete />}
-              onClick={onDelete}
-              appearance={'subtle'}
-            />
-          </IconButtonTooltip>
-        </SlotToolbar>
+          : <IconButtonTooltip caption={t('blocks.teaserSlots.deleteSlot')}>
+              <MuiIconButton
+                size="small"
+                aria-label={t('blocks.teaserSlots.deleteSlot')}
+                onClick={onDelete}
+              >
+                <MdDelete />
+              </MuiIconButton>
+            </IconButtonTooltip>
+          }
+        </IconWrapper>
       </Teaser>
     </Panel>
   );

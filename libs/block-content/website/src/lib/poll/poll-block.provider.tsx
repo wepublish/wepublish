@@ -1,15 +1,16 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import {
+  PollVoteDocument,
   PollVoteMutation,
   PollVoteMutationVariables,
+  SettingListDocument,
   SettingName,
-  usePollVoteMutation,
-  useSettingListQuery,
-  useUserPollVoteLazyQuery,
+  UserPollVoteDocument,
 } from '@wepublish/website/api';
 import { PropsWithChildren, useCallback, useMemo } from 'react';
 import { PollBlockContext } from './poll-block.context';
-import { FetchResult, MutationFunctionOptions } from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
 
 const getAnonymousVote = (pollId: string): string | null =>
   typeof localStorage !== 'undefined' ?
@@ -23,15 +24,15 @@ const setAnonymousVote = (pollId: string, answerId: string) =>
 
 export function PollBlockProvider({ children }: PropsWithChildren) {
   const { hasUser } = useUser();
-  const [fetchUserVote] = useUserPollVoteLazyQuery();
-  const [voteMutation] = usePollVoteMutation({
+  const [fetchUserVote] = useLazyQuery(UserPollVoteDocument);
+  const [voteMutation] = useMutation(PollVoteDocument, {
     onCompleted(data, clientOptions) {
       if (data.voteOnPoll) {
         setAnonymousVote(data.voteOnPoll.pollId, data.voteOnPoll.answerId);
       }
     },
   });
-  const { data: settings } = useSettingListQuery();
+  const { data: settings } = useQuery(SettingListDocument);
 
   const canVoteAnonymously = useMemo(
     () =>
@@ -43,12 +44,14 @@ export function PollBlockProvider({ children }: PropsWithChildren) {
 
   const vote = useCallback(
     async function vote(
-      options: MutationFunctionOptions<
-        PollVoteMutation,
-        PollVoteMutationVariables
-      >,
+      options: Parameters<
+        useMutation.MutationFunction<
+          PollVoteMutation,
+          PollVoteMutationVariables
+        >
+      >[0],
       pollId: string
-    ): Promise<FetchResult<PollVoteMutation> | undefined> {
+    ): Promise<ApolloClient.MutateResult<PollVoteMutation> | undefined> {
       // user already voted on that poll
       if (getAnonymousVote(pollId)) {
         return;

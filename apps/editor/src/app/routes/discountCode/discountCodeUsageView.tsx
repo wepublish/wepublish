@@ -1,30 +1,31 @@
+import { useQuery } from '@apollo/client/react';
+import { IconButton, Typography } from '@mui/material';
 import {
   Currency,
+  DiscountCodeDocument,
+  DiscountCodeUsagesDocument,
   DiscountCodeUsagesQuery,
   InvoiceSort,
-  useDiscountCodeQuery,
-  useDiscountCodeUsagesQuery,
 } from '@wepublish/editor/api';
 import { CanGetInvoices } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
+  InfoTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
-  Table,
+  Pagination,
   TableWrapper,
+  useTableExportQuery,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdChevronLeft } from 'react-icons/md';
-import { Link, useParams } from 'react-router-dom';
-import { IconButton, Pagination, Table as RTable } from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+import { Link as RouterLink, useParams } from 'react-router-dom';
 
 type Usage = DiscountCodeUsagesQuery['invoices']['nodes'][number];
 
@@ -41,13 +42,13 @@ function DiscountCodeUsageView() {
   const [limit, setLimit] = useState<number>(10);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const { data: discountCodeData } = useDiscountCodeQuery({
+  const { data: discountCodeData } = useQuery(DiscountCodeDocument, {
     variables: {
       id: id as string,
     },
   });
 
-  const { data, loading } = useDiscountCodeUsagesQuery({
+  const { data, loading } = useQuery(DiscountCodeUsagesDocument, {
     variables: {
       discountCodeId: id as string,
       take: limit,
@@ -57,93 +58,96 @@ function DiscountCodeUsageView() {
     },
   });
 
+  const exportUsages = useTableExportQuery(
+    DiscountCodeUsagesDocument,
+    {
+      discountCodeId: id as string,
+      sort: InvoiceSort.CreatedAt,
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    },
+    data => data.invoices
+  );
+
   const discountCode = discountCodeData?.discountCode;
 
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>
+          <PageTitle>
             {t('discountCode.usage.title', {
               discountCode: discountCode?.code.toUpperCase() ?? '',
             })}
-          </h2>
+          </PageTitle>
 
           {discountCode && (
-            <p>
+            <Typography>
               {t('discountCode.usage.summary', {
                 total: discountCode.usageCount,
                 paid: discountCode.paidUsageCount,
               })}
-            </p>
+            </Typography>
           )}
         </ListViewHeader>
 
         <ListViewActions>
-          <Link to="/discountCodes">
-            <IconButton appearance="ghost">
-              <MdChevronLeft />
-              {t('discountCode.usage.back')}
-            </IconButton>
-          </Link>
+          <IconButton
+            component={RouterLink}
+            to="/discountCodes"
+          >
+            <MdChevronLeft />
+            {t('discountCode.usage.back')}
+          </IconButton>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey="discount-code-usage"
+          exportRows={exportUsages}
+          exportTotalCount={data?.invoices.totalCount ?? 0}
           data={data?.invoices.nodes ?? []}
-          sortColumn="createdAt"
-          sortType={sortOrder}
-          onSortColumn={(_, sortType) => setSortOrder(sortType ?? 'desc')}
-        >
-          <Column
-            width={200}
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('discountCode.usage.date')}</HeaderCell>
-
-            <RCell dataKey="createdAt">
-              {(rowData: RowDataType<Usage>) =>
-                new Date(rowData.createdAt).toLocaleDateString('de-CH')
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            flexGrow={1}
-            minWidth={200}
-            resizable
-          >
-            <HeaderCell>{t('discountCode.usage.mail')}</HeaderCell>
-
-            <RCell dataKey="mail" />
-          </Column>
-
-          <Column
-            width={130}
-            resizable
-            align="right"
-          >
-            <HeaderCell>{t('discountCode.usage.amount')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<Usage>) =>
-                formatAmount(rowData.total, rowData.currency)
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={120}
-            resizable
-          >
-            <HeaderCell>{t('discountCode.usage.status')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<Usage>) => {
+          loading={loading}
+          sortColumn={'createdAt'}
+          sortOrder={sortOrder}
+          onSort={(_, sortType) => setSortOrder(sortType ?? 'desc')}
+          sortable={['createdAt']}
+          columns={[
+            {
+              id: 'date',
+              label: t('discountCode.usage.date'),
+              width: 200,
+              sortKey: 'createdAt',
+              render: (rowData: Usage) =>
+                new Date(rowData.createdAt).toLocaleDateString('de-CH'),
+              exportValue: rowData => new Date(rowData.createdAt),
+            },
+            {
+              id: 'mail',
+              label: t('discountCode.usage.mail'),
+              minWidth: 200,
+              sortKey: 'mail',
+              render: row => row.mail,
+            },
+            {
+              id: 'amount',
+              columnLabel: t('discountCode.usage.amount'),
+              label: (
+                <>
+                  {t('discountCode.usage.amount')}{' '}
+                  <InfoTooltip text={t('discountCode.usage.amountInfo')} />
+                </>
+              ),
+              width: 130,
+              align: 'right',
+              render: (rowData: Usage) =>
+                formatAmount(rowData.total, rowData.currency),
+            },
+            {
+              id: 'status',
+              label: t('discountCode.usage.status'),
+              width: 120,
+              render: (rowData: Usage) => {
                 if (rowData.canceledAt) {
                   return t('discountCode.usage.canceled');
                 }
@@ -153,44 +157,32 @@ function DiscountCodeUsageView() {
                 }
 
                 return t('discountCode.usage.open');
-              }}
-            </RCell>
-          </Column>
-
-          <Column
-            width={120}
-            resizable
-          >
-            <HeaderCell>{t('discountCode.usage.subscription')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<Usage>) =>
+              },
+            },
+            {
+              id: 'subscription',
+              label: t('discountCode.usage.subscription'),
+              width: 120,
+              render: (rowData: Usage) =>
                 rowData.subscriptionID ?
                   <Link to={`/subscriptions/edit/${rowData.subscriptionID}`}>
                     {t('discountCode.usage.showSubscription')}
                   </Link>
-                : null
-              }
-            </RCell>
-          </Column>
-        </Table>
+                : null,
+              exportValue: rowData => rowData.subscriptionID,
+            },
+          ]}
+        />
       </TableWrapper>
 
       <Pagination
-        limit={limit}
-        limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-        maxButtons={DEFAULT_MAX_TABLE_PAGES}
-        first
-        last
-        prev
-        next
-        ellipsis
-        boundaryLinks
-        layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-        total={data?.invoices.totalCount ?? 0}
-        activePage={page}
-        onChangePage={page => setPage(page)}
-        onChangeLimit={limit => setLimit(limit)}
+        state={{
+          page,
+          limit,
+          setPage,
+          setLimit,
+        }}
+        totalCount={data?.invoices.totalCount ?? 0}
       />
     </>
   );

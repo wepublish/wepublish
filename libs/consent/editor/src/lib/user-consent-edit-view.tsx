@@ -1,49 +1,48 @@
-import { ApolloError } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { TFunction } from 'i18next';
 import {
   FullUserConsentFragment,
-  MutationUpdateUserConsentArgs,
-  useUpdateUserConsentMutation,
-  useUserConsentQuery,
+  UpdateUserConsentDocument,
+  UserConsentDocument,
 } from '@wepublish/editor/api';
+import {
+  enqueueSnackbar,
+  humanizeError,
+  SingleViewTitle,
+} from '@wepublish/ui/editor';
 import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { SingleViewTitle } from '@wepublish/ui/editor';
-import { UserConsentForm } from './user-consent-form';
+import {
+  UserConsentForm,
+  UserConsentFormValues,
+  userConsentSchema,
+} from './user-consent-form';
 
 const mapApiDataToInput = (
   userConsent: FullUserConsentFragment
-): MutationUpdateUserConsentArgs => ({
-  ...userConsent,
+): UserConsentFormValues => ({
+  id: userConsent.id,
+  userId: userConsent.user.id,
+  consentId: userConsent.consent.id,
   value: userConsent.value,
 });
 
-const onErrorToast = (error: ApolloError, slug?: string) => {
+const onErrorToast = (t: TFunction, error: Error, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {`A user consent with slug '${slug}' already exists. Please choose a different slug.`}
-      </Message>
-    );
+    enqueueSnackbar(t('userConsents.uniqueConstraint', { slug }), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
     return;
   }
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 export const UserConsentEditView = () => {
@@ -52,90 +51,65 @@ export const UserConsentEditView = () => {
 
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const client = useApolloClient();
 
   const closePath = '/userConsents';
-  const [userConsent, setUserConsent] = useState({
-    value: false,
-  } as MutationUpdateUserConsentArgs);
-
   const [shouldClose, setShouldClose] = useState<boolean>(false);
 
-  const { loading: dataLoading } = useUserConsentQuery({
-    variables: {
-      id: userConsentId,
-    },
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.userConsent) {
-        setUserConsent(mapApiDataToInput(data.userConsent));
-      }
+  const form = useForm<UserConsentFormValues>({
+    resolver: zodResolver(userConsentSchema),
+    defaultValues: async () => {
+      const { data } = await client.query({
+        query: UserConsentDocument,
+        variables: { id: userConsentId },
+      });
+
+      return mapApiDataToInput(data!.userConsent);
     },
   });
 
-  const [updateUserConsent, { loading: updateLoading }] =
-    useUpdateUserConsentMutation({
-      onError: error => onErrorToast(error, 'userConsent.consent.slug'),
+  const [updateUserConsent, { loading: updateLoading }] = useMutation(
+    UpdateUserConsentDocument,
+    {
+      onError: error => onErrorToast(t, error, 'userConsent.consent.slug'),
       onCompleted: data => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('toast.updatedSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('toast.updatedSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
         if (shouldClose) {
           navigate(closePath);
         }
         if (data.updateUserConsent) {
-          setUserConsent(mapApiDataToInput(data.updateUserConsent));
+          form.reset(mapApiDataToInput(data.updateUserConsent));
         }
       },
-    });
+    }
+  );
 
-  const onSubmit = () => {
-    updateUserConsent({
-      variables: {
-        id: userConsentId,
-        value: userConsent.value,
-      },
-    });
-  };
-
-  const loading = dataLoading || updateLoading;
-
-  const { BooleanType } = Schema.Types;
-  const validationModel = Schema.Model({
-    value: BooleanType().isRequired(),
-  });
+  if (form.formState.isLoading) {
+    return null;
+  }
 
   return (
-    <Form
-      fluid
-      formValue={userConsent}
-      model={validationModel}
-      disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}
-    >
-      <SingleViewTitle
-        loading={loading}
-        title={t('userConsents.titleEdit')}
-        loadingTitle={t('userConsents.titleEdit')}
-        saveBtnTitle={t('save')}
-        saveAndCloseBtnTitle={t('saveAndClose')}
-        closePath={closePath}
-        setCloseFn={setShouldClose}
-      />
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(({ value }) =>
+          updateUserConsent({ variables: { id: userConsentId, value } })
+        )}
+      >
+        <SingleViewTitle
+          loading={updateLoading}
+          title={t('userConsents.titleEdit')}
+          loadingTitle={t('userConsents.titleEdit')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setShouldClose}
+        />
 
-      <UserConsentForm
-        userConsent={userConsent}
-        isEdit
-        onChange={changes =>
-          setUserConsent(oldConsent => ({ ...oldConsent, ...(changes as any) }))
-        }
-      />
-    </Form>
+        <UserConsentForm isEdit />
+      </form>
+    </FormProvider>
   );
 };

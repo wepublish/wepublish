@@ -14,7 +14,10 @@ const SelectedItemsActionsStyled = styled.div`
   align-content: center;
   gap: 20px;
   padding: 8px 16px;
-  background: #fff4c2;
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background: rgb(
+    from ${({ theme }) => theme.vars.palette.warning.main} r g b / 20%
+  );
   visibility: hidden;
   margin-bottom: -20px;
 

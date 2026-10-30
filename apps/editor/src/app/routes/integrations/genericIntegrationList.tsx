@@ -1,27 +1,67 @@
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import { SettingProvider } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
 import { useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdSearch } from 'react-icons/md';
-import { Input, InputGroup, Loader, Message } from 'rsuite';
 
 import {
   GenericIntegrationFormProps,
   SingleGenericIntegrationForm,
 } from './genericIntegrationForm';
+import {
+  AddIntegrationButton,
+  CreateFixedIntegrationButton,
+  DeleteIntegrationButton,
+  ProviderTypeOption,
+} from './integrationRegistryActions';
 
 interface GenericIntegrationListProps<
   TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
-> extends Omit<GenericIntegrationFormProps<TSetting, TFormValues>, 'setting'> {
+> extends Omit<
+    GenericIntegrationFormProps<TSetting, TFormValues>,
+    'setting' | 'renderActions'
+  > {
   query: DocumentNode;
   dataKey: string;
+
+  registry?: {
+    createMutation: DocumentNode;
+    deleteMutation: DocumentNode;
+    types: ProviderTypeOption[];
+  };
+
+  fixedProvider?: {
+    id: string;
+    type: string;
+    name: string;
+    createMutation: DocumentNode;
+  };
+
+  setup?: {
+    createMutation: DocumentNode;
+    types: ProviderTypeOption[];
+  };
 }
 
-const StyledInputGroup = styled(InputGroup)`
+const StyledSearch = styled(TextField)`
+  margin-bottom: 20px;
+`;
+
+const Toolbar = styled.div`
+  display: flex;
+  justify-content: flex-end;
   margin-bottom: 20px;
 `;
 
@@ -37,12 +77,15 @@ export function GenericIntegrationList<
 >({
   query,
   dataKey,
+  registry,
+  fixedProvider,
+  setup,
   ...formProps
 }: GenericIntegrationListProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
 
-  const { data, loading, error } = useQuery(query, {});
+  const { data, loading, error } = useQuery<Record<string, unknown>>(query, {});
 
   const settings = data?.[dataKey] as TSetting[] | undefined;
 
@@ -65,34 +108,90 @@ export function GenericIntegrationList<
   }, [settings, searchValue]);
 
   if (loading) {
-    return <Loader center />;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
-    return <Message type="error">{error.message}</Message>;
+    return <Alert severity="error">{humanizeError(error)}</Alert>;
   }
+
+  const addButton = registry && (
+    <AddIntegrationButton
+      types={registry.types}
+      mutation={registry.createMutation}
+      refetchQuery={query}
+      existingIds={settings?.map(setting => setting.id) ?? []}
+    />
+  );
 
   if (!settings?.length) {
     return (
-      <Message type="warning">{t('integrations.noSettingsFound')}</Message>
+      <>
+        <Alert severity="warning">
+          {setup ?
+            t('integrations.setUpHint')
+          : t('integrations.noSettingsFound')}
+        </Alert>
+
+        {(addButton || fixedProvider || setup) && (
+          <Toolbar>
+            {addButton}
+
+            {setup && (
+              <AddIntegrationButton
+                types={setup.types}
+                mutation={setup.createMutation}
+                refetchQuery={query}
+                existingIds={[]}
+                label={t('integrations.setUp')}
+              />
+            )}
+
+            {fixedProvider && (
+              <CreateFixedIntegrationButton
+                id={fixedProvider.id}
+                type={fixedProvider.type}
+                name={fixedProvider.name}
+                mutation={fixedProvider.createMutation}
+                refetchQuery={query}
+              />
+            )}
+          </Toolbar>
+        )}
+      </>
     );
   }
 
   return (
     <>
-      {settings?.length > 3 && (
-        <StyledInputGroup>
-          <InputGroup.Addon>
-            <MdSearch />
-          </InputGroup.Addon>
+      {addButton && <Toolbar>{addButton}</Toolbar>}
 
-          <Input
-            value={searchValue}
-            onChange={setSearchValue}
-            placeholder={t('search')}
-            size="lg"
-          />
-        </StyledInputGroup>
+      {settings?.length > 3 && (
+        <StyledSearch
+          value={searchValue}
+          onChange={event => setSearchValue(event.target.value)}
+          placeholder={t('search')}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <MdSearch />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
       )}
 
       <GenericIntegrationGrid>
@@ -100,6 +199,17 @@ export function GenericIntegrationList<
           <SingleGenericIntegrationForm
             key={setting.id}
             setting={setting}
+            renderActions={
+              registry ?
+                current => (
+                  <DeleteIntegrationButton
+                    id={current.id}
+                    mutation={registry.deleteMutation}
+                    refetchQuery={query}
+                  />
+                )
+              : undefined
+            }
             {...formProps}
           />
         ))}

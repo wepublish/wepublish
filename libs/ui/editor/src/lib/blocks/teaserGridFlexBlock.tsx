@@ -2,7 +2,13 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
 import styled from '@emotion/styled';
-import i18next from 'i18next';
+import {
+  Button,
+  Card,
+  Drawer,
+  IconButton as MuiIconButton,
+  Stack,
+} from '@mui/material';
 import nanoid from 'nanoid';
 import {
   ChangeEvent,
@@ -13,30 +19,32 @@ import {
 } from 'react';
 import GridLayoutWithoutChildren, {
   ReactGridLayoutProps,
+  WidthProvider,
 } from 'react-grid-layout';
 import { useTranslation } from 'react-i18next';
 import {
-  MdAddBox,
+  MdAdd,
   MdArticle,
   MdDelete,
   MdEdit,
   MdLock,
   MdLockOpen,
 } from 'react-icons/md';
-import {
-  ButtonToolbar as RButtonToolbar,
-  Drawer,
-  IconButton as RIconButton,
-  Panel as RPanel,
-} from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
-import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import {
+  FLEX_TILE_DRAG_CANCEL,
+  FLEX_TILE_ROW_HEIGHT,
+  FlexGrid,
+  FlexTile,
+  FlexTileAction,
+} from '../atoms/flexTile';
 import { PlaceholderInput } from '../atoms/placeholderInput';
 import { TypographicTextArea } from '../atoms/typographicTextArea';
+import { DRAWER_WIDTHS } from '../drawer';
 import { TeaserEditPanel } from '../panel/teaserEditPanel';
 import { TeaserSelectAndEditPanel } from '../panel/teaserSelectAndEditPanel';
-import { ContentForTeaser, IconWrapper } from './teaserGridBlock';
+import { ContentForTeaser } from './teaserGridBlock';
 import {
   FlexAlignment,
   FlexTeaser,
@@ -44,7 +52,7 @@ import {
   TeaserGridFlexBlockValue,
 } from './types';
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   margin: 10px;
 `;
 
@@ -57,15 +65,20 @@ const Teaser = styled.div`
 // Fixes that pre React 18, all components had the children prop.
 // With React 18 this is not the case anymore, so some types are wrong
 const GridLayout: ComponentType<PropsWithChildren<ReactGridLayoutProps>> =
-  GridLayoutWithoutChildren;
+  WidthProvider(GridLayoutWithoutChildren);
 
-const ButtonToolbar = styled(RButtonToolbar)`
+const AddTileBar = styled('div')`
+  display: flex;
+  margin-block: ${({ theme }) => theme.spacing(1)};
+`;
+
+const ButtonToolbar = styled(Stack)`
   top: 0;
   left: 0;
   position: absolute;
 `;
 
-const Panel = styled(RPanel, {
+const Panel = styled(Card, {
   shouldForwardProp: prop => prop !== 'showGrabCursor',
 })<{ showGrabCursor: boolean }>`
   display: grid;
@@ -77,51 +90,69 @@ const Panel = styled(RPanel, {
 
 export function FlexTeaserBlock({
   teaser,
-  showGrabCursor,
+  locked,
   onEdit,
   onChoose,
   onRemove,
+  onRemoveTile,
+  onToggleLock,
 }: FlexTeaserBlockProps) {
-  return (
-    <Panel
-      bodyFill
-      showGrabCursor={showGrabCursor}
-    >
-      <PlaceholderInput onAddClick={onChoose}>
-        {teaser && (
-          <Teaser>
-            <ContentForTeaser teaser={teaser} />
+  const { t } = useTranslation();
 
-            <IconWrapper>
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexTeaser.chooseTeaser')}
-              >
-                <IconButton
-                  icon={<MdArticle />}
-                  onClick={onChoose}
-                />
-              </IconButtonTooltip>
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexTeaser.editTeaser')}
-              >
-                <IconButton
-                  icon={<MdEdit />}
-                  onClick={onEdit}
-                />
-              </IconButtonTooltip>
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexTeaser.deleteTeaser')}
-              >
-                <IconButton
-                  icon={<MdDelete />}
-                  onClick={onRemove}
-                />
-              </IconButtonTooltip>
-            </IconWrapper>
-          </Teaser>
-        )}
-      </PlaceholderInput>
-    </Panel>
+  const actions: FlexTileAction[] = [
+    ...(teaser ?
+      [
+        {
+          label: t('blocks.flexTeaser.chooseTeaser'),
+          icon: <MdArticle />,
+          onClick: onChoose,
+        },
+        {
+          label: t('blocks.flexTeaser.editTeaser'),
+          icon: <MdEdit />,
+          onClick: onEdit,
+        },
+        {
+          label: t('blocks.flexTeaser.deleteTeaser'),
+          icon: <MdDelete />,
+          onClick: onRemove,
+        },
+      ]
+    : [
+        {
+          label: t('blocks.flexTeaser.removeBlock'),
+          icon: <MdDelete />,
+          onClick: onRemoveTile,
+          disabled: locked,
+        },
+      ]),
+    {
+      label:
+        locked ?
+          t('blocks.flexTeaser.unlockBlock')
+        : t('blocks.flexTeaser.lockBlock'),
+      icon: locked ? <MdLockOpen /> : <MdLock />,
+      onClick: onToggleLock,
+    },
+  ];
+
+  return (
+    <FlexTile
+      locked={locked}
+      empty={!teaser}
+      actions={actions}
+    >
+      {teaser ?
+        <Teaser>
+          <ContentForTeaser teaser={teaser} />
+        </Teaser>
+      : <PlaceholderInput
+          onAddClick={onChoose}
+          addLabel={t('blocks.flexTeaser.chooseTeaser')}
+          minHeight={0}
+        />
+      }
+    </FlexTile>
   );
 }
 
@@ -247,85 +278,70 @@ export function TeaserGridFlexBlock({
         value={value.title ?? ''}
         onChange={handleTitleChange}
       />
-      <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
-        <RIconButton
-          icon={<MdAddBox />}
-          appearance="primary"
-          circle
-          size="md"
-          onClick={handleAddTeaserBlock}
-        />
-      </IconButtonTooltip>
-      <GridLayout
-        onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
-        onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
-        className="layout"
-        onDragStop={layout => {
-          setIsDragging(false);
-          handleLayoutChange(layout as FlexAlignment[]);
-        }}
-        onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
-        cols={12}
-        rowHeight={30}
-        compactType={null}
-        layout={flexTeasers.map(ft => ft.alignment)}
-        width={640}
-      >
-        {flexTeasers.map(flexTeaser => (
-          <div key={flexTeaser.alignment.i}>
-            <FlexTeaserBlock
-              teaser={flexTeaser.teaser}
-              showGrabCursor={!flexTeaser.alignment.static}
-              onEdit={() => {
-                setEditItem(flexTeaser);
-                setEditModalOpen(true);
-              }}
-              onChoose={() => {
-                setEditItem(flexTeaser);
-                setChooseModalOpen(true);
-              }}
-              onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
-            />
 
-            <ButtonToolbar>
-              {!flexTeaser.teaser && (
-                <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
-                  <RIconButton
-                    disabled={flexTeaser.alignment.static}
-                    block
-                    appearance="subtle"
-                    icon={<MdDelete />}
-                    onClick={() =>
-                      handleRemoveTeaserBlock(flexTeaser.alignment.i)
-                    }
-                  />
-                </IconButtonTooltip>
-              )}
-
-              <IconButtonTooltip
-                caption={
-                  !flexTeaser.alignment.static ?
-                    t('blocks.flexTeaser.lockBlock')
-                  : t('blocks.flexTeaser.unlockBlock')
+      <FlexGrid>
+        <GridLayout
+          onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
+          onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
+          onDragStop={layout => {
+            setIsDragging(false);
+            handleLayoutChange(layout as FlexAlignment[]);
+          }}
+          onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
+          cols={12}
+          rowHeight={FLEX_TILE_ROW_HEIGHT}
+          compactType={null}
+          containerPadding={[0, 0]}
+          draggableCancel={FLEX_TILE_DRAG_CANCEL}
+          layout={flexTeasers.map(ft => ft.alignment)}
+        >
+          {flexTeasers.map(flexTeaser => (
+            <div key={flexTeaser.alignment.i}>
+              <FlexTeaserBlock
+                teaser={flexTeaser.teaser}
+                locked={!!flexTeaser.alignment.static}
+                onEdit={() => {
+                  setEditItem(flexTeaser);
+                  setEditModalOpen(true);
+                }}
+                onChoose={() => {
+                  setEditItem(flexTeaser);
+                  setChooseModalOpen(true);
+                }}
+                onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
+                onRemoveTile={() =>
+                  handleRemoveTeaserBlock(flexTeaser.alignment.i)
                 }
-              >
-                <RIconButton
-                  block
-                  appearance="subtle"
-                  icon={
-                    flexTeaser.alignment.static ? <MdLockOpen /> : <MdLock />
-                  }
-                  onClick={() => handlePinTeaserBlock(flexTeaser.alignment.i)}
-                />
-              </IconButtonTooltip>
-            </ButtonToolbar>
-          </div>
-        ))}
-      </GridLayout>
+                onToggleLock={() =>
+                  handlePinTeaserBlock(flexTeaser.alignment.i)
+                }
+              />
+            </div>
+          ))}
+        </GridLayout>
+      </FlexGrid>
+
+      <AddTileBar>
+        <Button
+          variant="text"
+          startIcon={<MdAdd />}
+          onClick={handleAddTeaserBlock}
+        >
+          {t('blocks.flexTeaser.addBlock')}
+        </Button>
+      </AddTileBar>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => setEditModalOpen(false)}
       >
         {editItem?.teaser && (
@@ -341,16 +357,25 @@ export function TeaserGridFlexBlock({
         )}
       </Drawer>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <TeaserSelectAndEditPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={teaser => {
             setChooseModalOpen(false);
-            if (editItem?.alignment.i)
+            if (editItem?.alignment.i) {
               handleTeaserLinkChange(editItem.alignment.i, teaser);
+            }
           }}
         />
       </Drawer>
@@ -360,8 +385,10 @@ export function TeaserGridFlexBlock({
 
 interface FlexTeaserBlockProps {
   teaser: TeaserType | null;
-  showGrabCursor: boolean;
+  locked: boolean;
   onEdit: () => void;
   onChoose: () => void;
   onRemove: () => void;
+  onRemoveTile: () => void;
+  onToggleLock: () => void;
 }

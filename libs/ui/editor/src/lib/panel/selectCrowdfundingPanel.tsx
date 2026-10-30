@@ -1,38 +1,22 @@
-import { ApolloError } from '@apollo/client';
-import styled from '@emotion/styled';
-import { Crowdfunding, useCrowdfundingsQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { Button, IconButton } from '@mui/material';
+import { CrowdfundingsDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
-import { Button, Drawer, IconButton, Message, Table, toaster } from 'rsuite';
-import { RowDataType } from 'rsuite-table';
 
 import { IconButtonTooltip } from '../atoms';
 import { CrowdfundingBlockValue } from '../blocks';
-
-const DrawerBody = styled(Drawer.Body)`
-  padding: 24px;
-`;
-
-const onErrorToast = (error: ApolloError) => {
-  if (error?.message) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {error?.message}
-      </Message>
-    );
-  }
-};
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { DataTable } from '../listView/data-table';
 
 export type SelectCrowdfundingPanelProps = {
   selectedCrowdfunding:
-    | CrowdfundingBlockValue['crowdfunding']
-    | null
-    | undefined;
+    CrowdfundingBlockValue['crowdfunding'] | null | undefined;
   onClose(): void;
   onSelect(
     crowdfunding: CrowdfundingBlockValue['crowdfunding'] | null | undefined
@@ -46,67 +30,62 @@ export function SelectCrowdfundingPanel({
 }: SelectCrowdfundingPanelProps) {
   const { t } = useTranslation();
 
-  const { data, loading } = useCrowdfundingsQuery({
-    onError: onErrorToast,
-  });
+  const { data, loading } = useQuery(CrowdfundingsDocument);
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('blocks.crowdfunding.title')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('blocks.crowdfunding.title')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'ghost'}
+            variant="text"
             onClick={() => onClose()}
           >
             {t('close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
       <DrawerBody>
-        <Table
-          minHeight={600}
-          autoHeight
-          loading={loading}
+        <DataTable
           data={data?.crowdfundings || []}
-          rowClassName={rowData =>
+          loading={loading}
+          rowClassName={(rowData: any) =>
             rowData?.id === selectedCrowdfunding?.id ? 'highlighted-row' : ''
           }
-        >
-          <Table.Column
-            resizable
-            width={200}
-          >
-            <Table.HeaderCell>{t('blocks.crowdfunding.name')}</Table.HeaderCell>
-            <Table.Cell>
-              {(rowData: RowDataType<Crowdfunding>) => rowData.name}
-            </Table.Cell>
-          </Table.Column>
-
-          <Table.Column width={125}>
-            <Table.HeaderCell align="center">
-              {t('blocks.crowdfunding.select')}
-            </Table.HeaderCell>
-            <Table.Cell align="center">
-              {(rowData: RowDataType<Crowdfunding>) => (
+          columns={[
+            {
+              id: 'name',
+              label: t('blocks.crowdfunding.name'),
+              width: 200,
+              render: rowData => rowData.name,
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
                 <IconButtonTooltip caption={t('blocks.crowdfunding.select')}>
                   <IconButton
-                    icon={<MdAddCircle />}
-                    appearance="primary"
-                    circle
-                    size="xs"
+                    aria-label={t('blocks.crowdfunding.select')}
+                    size="small"
                     onClick={() => {
-                      onSelect(rowData as Crowdfunding);
+                      onSelect(
+                        rowData as CrowdfundingBlockValue['crowdfunding']
+                      );
                       onClose();
                     }}
-                  />
+                  >
+                    <MdAddCircle />
+                  </IconButton>
                 </IconButtonTooltip>
-              )}
-            </Table.Cell>
-          </Table.Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
       </DrawerBody>
     </>
   );

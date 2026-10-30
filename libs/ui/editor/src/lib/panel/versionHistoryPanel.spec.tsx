@@ -8,7 +8,7 @@ import {
   VersionHistoryRevision,
 } from './versionHistoryPanel';
 
-const theme = createTheme();
+const theme = createTheme({ cssVariables: true });
 
 // Translate to the raw key so assertions stay deterministic and locale-agnostic.
 vi.mock('react-i18next', () => ({
@@ -114,14 +114,18 @@ describe('VersionHistory', () => {
 
     // draft is current -> shown as current version, the other two are restorable
     expect(screen.getByText('versionHistory.currentVersion')).toBeTruthy();
-    expect(screen.getAllByText('versionHistory.restore')).toHaveLength(2);
+    expect(
+      screen.getAllByRole('button', { name: 'versionHistory.restore' })
+    ).toHaveLength(2);
   });
 
   it('asks for confirmation and restores the chosen revision', () => {
     const { onRestore } = renderPanel();
 
     // first restorable revision is the published one ('pub-1')
-    fireEvent.click(screen.getAllByText('versionHistory.restore')[0]);
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'versionHistory.restore' })[0]
+    );
 
     const dialog = screen.getByRole('dialog');
     expect(
@@ -137,7 +141,9 @@ describe('VersionHistory', () => {
   it('can cancel the restore without calling onRestore', () => {
     const { onRestore } = renderPanel();
 
-    fireEvent.click(screen.getAllByText('versionHistory.restore')[0]);
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'versionHistory.restore' })[0]
+    );
     fireEvent.click(screen.getByText('versionHistory.confirm.cancel'));
 
     expect(onRestore).not.toHaveBeenCalled();
@@ -146,11 +152,9 @@ describe('VersionHistory', () => {
   it('disables restore buttons while a restore is in flight', () => {
     renderPanel({ restoringId: 'pub-1' });
 
-    screen.getAllByText('versionHistory.restore').forEach(label => {
-      // the closest button element should be disabled
-      const button = label.closest('button');
-      expect(button?.disabled).toBe(true);
-    });
+    screen
+      .getAllByRole('button', { name: 'versionHistory.restore' })
+      .forEach(button => expect(button).toBeDisabled());
   });
 
   it('shows an empty state when there are no revisions', () => {
@@ -162,28 +166,47 @@ describe('VersionHistory', () => {
   it('hides restore actions entirely when canRestore is false', () => {
     renderPanel({ canRestore: false });
 
-    expect(screen.queryByText('versionHistory.restore')).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'versionHistory.restore' })
+    ).toBeNull();
   });
 
   it('does not render preview buttons unless onPreview is provided', () => {
     renderPanel();
 
-    expect(screen.queryByText('versionHistory.preview')).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'versionHistory.preview' })
+    ).toBeNull();
   });
 
-  it('calls onPreview with the revision id when preview is clicked', () => {
+  it('previews every revision except the current version', () => {
     const onPreview = vi.fn();
     renderPanel({ onPreview });
 
-    // every revision (including the current draft) is previewable
-    const previewButtons = screen.getAllByText('versionHistory.preview');
-    expect(previewButtons).toHaveLength(3);
+    const previewButtons = screen.getAllByRole('button', {
+      name: 'versionHistory.preview',
+    });
+    expect(previewButtons).toHaveLength(2);
 
     fireEvent.click(previewButtons[0]);
 
     expect(onPreview).toHaveBeenCalledTimes(1);
-    // first revision in the list is the draft
-    expect(onPreview).toHaveBeenCalledWith('draft-1');
+    expect(onPreview).toHaveBeenCalledWith('pub-1');
+  });
+
+  it('puts the actions in the top row of each entry', () => {
+    renderPanel({ onPreview: vi.fn() });
+
+    const header = screen
+      .getByText('versionHistory.state.published')
+      .closest('[data-state]')!.parentElement!;
+
+    expect(
+      within(header).getByRole('button', { name: 'versionHistory.preview' })
+    ).toHaveClass('MuiIconButton-root');
+    expect(
+      within(header).getByRole('button', { name: 'versionHistory.restore' })
+    ).toHaveClass('MuiIconButton-root');
   });
 
   it('shows the author who made each change', () => {
@@ -219,6 +242,74 @@ describe('VersionHistory', () => {
     expect(screen.getByText('versionHistory.showing:3')).toBeTruthy();
     // header subtitle reflects the total, not the loaded count
     expect(screen.getByText('versionHistory.subtitle:10')).toBeTruthy();
+  });
+});
+
+describe('VersionHistory layout', () => {
+  it('closes from a text button in the drawer header', () => {
+    const { onClose } = renderPanel();
+
+    const close = screen.getByRole('button', { name: 'versionHistory.close' });
+
+    expect(close).toHaveClass('MuiButton-text');
+
+    fireEvent.click(close);
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('groups revisions under a heading per day', () => {
+    renderPanel({
+      revisions: [
+        { ...draft, createdAt: new Date().toISOString() },
+        published,
+        archived,
+      ],
+    });
+
+    expect(
+      screen.getByRole('heading', { name: 'versionHistory.today' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /20 May 2026/ })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /1 May 2026/ })
+    ).toBeInTheDocument();
+  });
+
+  it('shows states in the same pill as the editor header', () => {
+    renderPanel();
+
+    expect(
+      screen.getByText('versionHistory.state.draft').closest('[data-state]')
+    ).toHaveAttribute('data-state', 'draft');
+    expect(
+      screen.getByText('versionHistory.state.published').closest('[data-state]')
+    ).toHaveAttribute('data-state', 'published');
+    expect(
+      screen.getByText('versionHistory.state.archived').closest('[data-state]')
+    ).toHaveAttribute('data-state', 'none');
+  });
+
+  it('shows the publication date without a published prefix', () => {
+    renderPanel();
+
+    expect(screen.queryByText(/versionHistory\.published/)).toBeNull();
+    expect(screen.getByText(/21 May 2026/)).toBeInTheDocument();
+  });
+
+  it('only repeats the title when it changed between revisions', () => {
+    renderPanel({
+      revisions: [
+        { ...draft, title: 'Same title' },
+        { ...published, title: 'Same title' },
+        archived,
+      ],
+    });
+
+    expect(screen.getAllByText('Same title')).toHaveLength(1);
+    expect(screen.getByText('Old archived version')).toBeInTheDocument();
   });
 });
 

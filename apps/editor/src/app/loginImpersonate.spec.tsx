@@ -1,4 +1,5 @@
 import { render, waitFor } from '@testing-library/react';
+import { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 
 import { LoginImpersonate } from './loginImpersonate';
@@ -18,13 +19,20 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('@wepublish/editor/api', () => ({
   LocalStorageKey: { SessionToken: 'sessionToken' },
-  useCreateSessionWithJwtMutation: () => [authenticate],
+  CreateSessionWithJwtDocument: 'CreateSessionWithJwtDocument',
+}));
+
+// The component calls Apollo's `useMutation` with a generated document, so the
+// mock sits at the Apollo boundary.
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useMutation: () => [authenticate, { loading: false }],
 }));
 
 vi.mock('@wepublish/ui/editor', () => ({
   AuthDispatchActionType: { Login: 'login' },
   AuthDispatchContext: { Provider: ({ children }: never) => children },
-  LoginTemplate: ({ children }: { children: React.ReactNode }) => (
+  LoginTemplate: ({ children }: { children: ReactNode }) => (
     <div>{children}</div>
   ),
 }));

@@ -18,10 +18,10 @@ import { EditorView } from '@codemirror/view';
 const Wrapper = styled(Box)`
   height: 100%;
   min-height: 400px;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: 6px;
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
   overflow: hidden;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
 
   /* The @uiw root div must fill the wrapper so .cm-editor's 100% height
      resolves and the scroller scrolls instead of overflowing. */

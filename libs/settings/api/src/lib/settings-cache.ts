@@ -1,0 +1,8 @@
+export const SETTINGS_CACHE_NAMESPACE = 'settings';
+export const WEBSITE_SETTINGS_CACHE_NAMESPACE = 'website-settings';
+export const SETTINGS_CACHE_TTL_SECONDS = 300;
+
+export const SETTINGS_SHARED_NAMESPACES: readonly string[] = [
+  SETTINGS_CACHE_NAMESPACE,
+  WEBSITE_SETTINGS_CACHE_NAMESPACE,
+];

@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
+import { Tooltip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
   MdHourglassEmpty,
   MdPlayCircleOutline,
   MdPowerOff,
 } from 'react-icons/md';
-import { Tooltip, Whisper } from 'rsuite';
 
 const ClosedIcon = styled(MdPowerOff)`
   color: red;
@@ -31,11 +31,14 @@ export function PollStateIndication({
   // poll has been closed
   if (closedAt && now.getTime() >= closedAt.getTime()) {
     return (
-      <Whisper speaker={<Tooltip>{t('pollStateIndication.closed')}</Tooltip>}>
-        <span>
+      <Tooltip title={t('pollStateIndication.closed')}>
+        <span
+          role="img"
+          aria-label={t('pollStateIndication.closed')}
+        >
           <ClosedIcon />
         </span>
-      </Whisper>
+      </Tooltip>
     );
   }
 
@@ -43,26 +46,30 @@ export function PollStateIndication({
   const opensAt = new Date(pollOpensAt);
   if (now.getTime() > opensAt.getTime()) {
     return (
-      <Whisper speaker={<Tooltip>{t('pollStateIndication.open')}</Tooltip>}>
-        <span>
+      <Tooltip title={t('pollStateIndication.open')}>
+        <span
+          role="img"
+          aria-label={t('pollStateIndication.open')}
+        >
           <OpensIcon />
         </span>
-      </Whisper>
+      </Tooltip>
     );
   }
 
   // poll is waiting to be opened
   return (
-    <Whisper
-      speaker={
-        <Tooltip>
-          {t('pollStateIndication.waiting', { date: new Date(pollOpensAt) })}
-        </Tooltip>
-      }
+    <Tooltip
+      title={t('pollStateIndication.waiting', { date: new Date(pollOpensAt) })}
     >
-      <span>
+      <span
+        role="img"
+        aria-label={t('pollStateIndication.waiting', {
+          date: new Date(pollOpensAt),
+        })}
+      >
         <MdHourglassEmpty />
       </span>
-    </Whisper>
+    </Tooltip>
   );
 }

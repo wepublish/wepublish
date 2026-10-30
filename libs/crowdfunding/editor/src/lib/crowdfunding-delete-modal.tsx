@@ -1,44 +1,37 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
-  Crowdfunding,
-  CrowdfundingsQuery,
-  useDeleteCrowdfundingMutation,
+  DeleteCrowdfundingDocument,
+  FullCrowdfundingFragment,
 } from '@wepublish/editor/api';
+import { humanizeError, enqueueSnackbar } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, Modal, toaster } from 'rsuite';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';
 
 type DeleteCrowdfundingProps = {
-  crowdfunding: Crowdfunding | undefined;
+  crowdfunding: FullCrowdfundingFragment | undefined;
   onClose(): void;
-  onDelete(): Promise<ApolloQueryResult<CrowdfundingsQuery>>;
+  onDelete(): Promise<unknown>;
 };
 
-const onErrorToast = (error: ApolloError) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+const onErrorToast = (error: Error) => {
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const onCompletedToast = (t: TFunction) => () => {
-  toaster.push(
-    <Message
-      type="success"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {t('toast.deletedSuccess')}
-    </Message>
-  );
+  enqueueSnackbar(t('toast.deletedSuccess'), {
+    variant: 'success',
+    autoHideDuration: 3000,
+  });
 };
 
 export function CrowdfundingDeleteModal({
@@ -48,7 +41,7 @@ export function CrowdfundingDeleteModal({
 }: DeleteCrowdfundingProps) {
   const { t } = useTranslation();
 
-  const [deleteCrowdfundingMutation] = useDeleteCrowdfundingMutation({
+  const [deleteCrowdfundingMutation] = useMutation(DeleteCrowdfundingDocument, {
     onError: onErrorToast,
     onCompleted: onCompletedToast(t),
   });
@@ -69,36 +62,34 @@ export function CrowdfundingDeleteModal({
   }
 
   return (
-    <Modal
+    <Dialog
       open={!!crowdfunding}
       onClose={onClose}
     >
-      <Modal.Header>
-        <Modal.Title>{t('crowdfunding.delete.title')}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{t('crowdfunding.delete.title')}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         {t('crowdfunding.delete.body', {
           name: crowdfunding?.name,
         })}
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          onClick={deleteCrowdfunding}
-          appearance="primary"
-          color="red"
-        >
-          {t('crowdfunding.delete.delete')}
-        </Button>
-
-        <Button
+          variant="text"
           onClick={onClose}
-          appearance="subtle"
         >
           {t('cancel')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+
+        <Button
+          variant="contained"
+          onClick={deleteCrowdfunding}
+          color="error"
+        >
+          {t('crowdfunding.delete.delete')}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

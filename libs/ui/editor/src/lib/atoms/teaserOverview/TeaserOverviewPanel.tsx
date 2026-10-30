@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import {
   DndContext,
   DragEndEvent,
@@ -9,8 +10,16 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import styled from '@emotion/styled';
-import { Chip, Collapse, css, Typography } from '@mui/material';
-import { TeaserType, useBlockStylesQuery } from '@wepublish/editor/api';
+import {
+  Button,
+  Chip,
+  Collapse,
+  css,
+  Drawer,
+  IconButton,
+  Typography,
+} from '@mui/material';
+import { BlockStylesDocument, TeaserType } from '@wepublish/editor/api';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -24,9 +33,9 @@ import {
   MdVisibility,
   MdVisibilityOff,
 } from 'react-icons/md';
-import { Drawer, IconButton } from 'rsuite';
 
 import { BlockValue, Teaser } from '../../blocks/types';
+import { DRAWER_WIDTHS } from '../../drawer';
 import { useRegisterValidator } from '../../hooks/useEditorValidation';
 import { TeaserSelectAndEditPanel } from '../../panel/teaserSelectAndEditPanel';
 import { teaserContentKey } from './extractTeasers';
@@ -41,8 +50,8 @@ const PanelWrapper = styled('div', {
   margin-bottom: 16px;
   border: 1px solid
     ${({ hasError, theme }) =>
-      hasError ? theme.palette.error.main : theme.palette.divider};
-  border-radius: 8px;
+      hasError ? theme.vars.palette.error.main : theme.vars.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
   transition: border-color 0.15s;
 `;
 
@@ -55,9 +64,14 @@ const Header = styled('button', {
   gap: 8px;
   padding: 10px 16px;
   background: ${({ hasError, theme }) =>
-    hasError ? `${theme.palette.error.main}22` : '#f7f9fa'};
+    hasError ?
+      `${theme.vars.palette.error.main}22`
+    : theme.vars.palette.background.default};
   border: none;
-  border-radius: ${({ isOpen }) => (isOpen ? '7px 7px 0 0' : '7px')};
+  border-radius: ${({ isOpen, theme }) =>
+    isOpen ?
+      `calc(${theme.shape.borderRadius}px - 1px) calc(${theme.shape.borderRadius}px - 1px) 0 0`
+    : `calc(${theme.shape.borderRadius}px - 1px)`};
   transition:
     border-radius 0ms ${({ isOpen }) => (isOpen ? '0ms' : '250ms')},
     background 0.15s;
@@ -66,13 +80,15 @@ const Header = styled('button', {
 
   &:hover {
     background: ${({ hasError, theme }) =>
-      hasError ? `${theme.palette.error.main}33` : '#eef1f3'};
+      hasError ?
+        `${theme.vars.palette.error.main}33`
+      : `rgb(from ${theme.vars.palette.text.primary} r g b / 8%)`};
   }
 `;
 
 const HeaderIcon = styled('div')`
   font-size: 20px;
-  color: ${({ theme }) => theme.palette.text.secondary};
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   display: flex;
   align-items: center;
 `;
@@ -80,18 +96,18 @@ const HeaderIcon = styled('div')`
 const HeaderTitle = styled(Typography)`
   ${({ theme }) => css`
     font-weight: ${theme.typography.fontWeightMedium};
-    color: ${theme.palette.text.primary};
+    color: ${theme.vars.palette.text.primary};
     flex: 1;
   `}
 `;
 
 const HeaderMeta = styled(Typography)`
-  color: ${({ theme }) => theme.palette.text.secondary};
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const ChevronIcon = styled('div')`
   font-size: 20px;
-  color: ${({ theme }) => theme.palette.text.secondary};
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   display: flex;
   align-items: center;
 `;
@@ -101,8 +117,10 @@ const Content = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border-radius: 0 0 7px 7px;
-  background: ${({ theme }) => theme.palette.background.default};
+  border-radius: 0 0
+    calc(${({ theme }) => theme.shape.borderRadius + 'px'} - 1px)
+    calc(${({ theme }) => theme.shape.borderRadius + 'px'} - 1px);
+  background: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const StickyActionBar = styled('div', {
@@ -110,10 +128,14 @@ const StickyActionBar = styled('div', {
 })<{ visible: boolean }>`
   ${({ theme }) => css`
     font-size: ${theme.typography.caption.fontSize};
-    color: ${theme.palette.primary.main}99;
-    background: #eef4fb;
-    border: 1px solid ${theme.palette.primary.light}55;
-    border-radius: 4px;
+    color: ${theme.vars.palette.primary.main}99;
+    background: color-mix(
+      in srgb,
+      ${theme.vars.palette.primary.main} 10%,
+      ${theme.vars.palette.background.paper}
+    );
+    border: 1px solid ${theme.vars.palette.primary.light}55;
+    border-radius: calc(${theme.shape.borderRadius}px * 0.75);
     padding: 4px 8px 4px 12px;
   `}
   position: sticky;
@@ -145,7 +167,7 @@ const StickyActionBarRight = styled('div')`
 const HintText = styled('span')`
   flex: 1;
   ${({ theme }) => css`
-    color: ${theme.palette.primary.dark};
+    color: ${theme.vars.palette.primary.dark};
   `}
 `;
 
@@ -162,22 +184,22 @@ const FilterBar = styled('div')`
   justify-content: flex-end;
   gap: 6px;
   padding: 8px 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
-  background: #f7f9fa;
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  background: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const StickyHistoryBtnWrap = styled('span')`
   display: inline-flex;
-  border: 1px solid ${({ theme }) => `${theme.palette.primary.light}88`};
-  border-radius: 4px;
-  color: ${({ theme }) => theme.palette.primary.dark};
+  border: 1px solid ${({ theme }) => `${theme.vars.palette.primary.light}88`};
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  color: ${({ theme }) => theme.vars.palette.primary.dark};
 
   .rs-btn {
     color: inherit;
   }
 
   .rs-btn:disabled {
-    color: ${({ theme }) => theme.palette.primary.light};
+    color: ${({ theme }) => theme.vars.palette.primary.light};
   }
 `;
 
@@ -190,7 +212,7 @@ const StickyHideAllBtnWrap = styled(StickyHistoryBtnWrap)`
 
 const FilterLabel = styled(Typography)`
   ${({ theme }) => css`
-    color: ${theme.palette.text.secondary};
+    color: ${theme.vars.palette.text.secondary};
     margin-right: 4px;
   `}
 `;
@@ -204,20 +226,20 @@ const ChipCount = styled('span', {
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  border-radius: 9px;
+  border-radius: 999px;
   font-size: 11px;
   font-weight: 600;
   line-height: 1;
   margin-left: 4px;
   background: ${({ active, theme }) =>
-    active ? 'rgba(255,255,255,0.25)' : theme.palette.action.hover};
+    active ? 'rgba(255,255,255,0.25)' : theme.vars.palette.action.hover};
   color: ${({ active, theme }) =>
-    active ? '#fff' : theme.palette.text.secondary};
+    active ? '#fff' : theme.vars.palette.text.secondary};
 `;
 
 const EmptyState = styled(Typography)`
   ${({ theme }) => css`
-    color: ${theme.palette.text.disabled};
+    color: ${theme.vars.palette.text.disabled};
     text-align: center;
     padding: 16px;
   `}
@@ -348,7 +370,7 @@ export function TeaserOverviewPanel({
     });
   }, []);
 
-  const { data: blockStylesData } = useBlockStylesQuery();
+  const { data: blockStylesData } = useQuery(BlockStylesDocument);
   const blockStyleNames = useMemo(() => {
     const map = new Map<string, string>();
     for (const style of blockStylesData?.blockStyles ?? []) {
@@ -394,24 +416,15 @@ export function TeaserOverviewPanel({
     setHiddenBlocks(new Set());
   }, []);
 
-  useEffect(() => {
-    setHiddenBlocks(prev => {
-      let changed = false;
-      const next = new Set(prev);
-      for (const b of workingBlocks) {
-        const hasEmpty = b.teasers.some(w => w.type === 'empty');
-        if (hasEmpty && next.has(b.groupKey)) {
-          next.delete(b.groupKey);
-          changed = true;
-        }
-      }
-      if (!changed) {
-        return prev;
-      }
-      persistHidden(next);
-      return next;
-    });
-  }, [workingBlocks, persistHidden]);
+  const mustShow = workingBlocks
+    .filter(block => block.teasers.some(teaser => teaser.type === 'empty'))
+    .map(block => block.groupKey);
+
+  if (mustShow.some(groupKey => hiddenBlocks.has(groupKey))) {
+    const next = new Set(hiddenBlocks);
+    mustShow.forEach(groupKey => next.delete(groupKey));
+    setHiddenBlocks(next);
+  }
 
   useEffect(() => {
     persistHidden(hiddenBlocks);
@@ -501,11 +514,9 @@ export function TeaserOverviewPanel({
     };
   });
 
-  useEffect(() => {
-    if (saveAttempted && validationErrors.length === 0) {
-      setSaveAttempted(false);
-    }
-  }, [saveAttempted, validationErrors.length]);
+  if (saveAttempted && validationErrors.length === 0) {
+    setSaveAttempted(false);
+  }
 
   const errorsByGroup = useMemo(() => {
     if (!showErrors) {
@@ -769,9 +780,7 @@ export function TeaserOverviewPanel({
                 {!selected && (
                   <StickyHideAllBtnWrap>
                     <IconButton
-                      size="xs"
-                      appearance="subtle"
-                      icon={canHideAll ? <MdVisibilityOff /> : <MdVisibility />}
+                      size="small"
                       disabled={!canHideAll && !canUnhideAll}
                       onClick={canHideAll ? hideAll : unhideAll}
                       title={t(
@@ -779,7 +788,16 @@ export function TeaserOverviewPanel({
                           'teaserOverview.hideAllBlocks'
                         : 'teaserOverview.unhideAllBlocks'
                       )}
-                    />
+                      aria-label={t(
+                        canHideAll ?
+                          'teaserOverview.hideAllBlocks'
+                        : 'teaserOverview.unhideAllBlocks'
+                      )}
+                    >
+                      {canHideAll ?
+                        <MdVisibilityOff />
+                      : <MdVisibility />}
+                    </IconButton>
                   </StickyHideAllBtnWrap>
                 )}
               </StickyActionBarLeft>
@@ -792,10 +810,10 @@ export function TeaserOverviewPanel({
                       : t('teaserOverview.hintTextLoad')}
                     </HintText>
                     <HintActions>
-                      <IconButton
-                        size="xs"
-                        appearance="ghost"
-                        icon={<MdClose />}
+                      <Button
+                        variant="outlined"
+                        startIcon={<MdClose />}
+                        size="small"
                         onClick={handleCancelSelection}
                         title={
                           selectedWorking?.teaser ?
@@ -806,11 +824,11 @@ export function TeaserOverviewPanel({
                         {selectedWorking?.teaser ?
                           t('teaserOverview.cancelReplace')
                         : t('teaserOverview.cancelLoad')}
-                      </IconButton>
-                      <IconButton
-                        size="xs"
-                        appearance="primary"
-                        icon={<MdEditNote />}
+                      </Button>
+                      <Button
+                        variant="contained"
+                        startIcon={<MdEditNote />}
+                        size="small"
                         onClick={handleReplaceClick}
                         title={
                           selectedWorking?.teaser ?
@@ -821,15 +839,13 @@ export function TeaserOverviewPanel({
                         {selectedWorking?.teaser ?
                           t('teaserOverview.replaceButton')
                         : t('teaserOverview.loadButton')}
-                      </IconButton>
+                      </Button>
                     </HintActions>
                   </>
                 : <>
                     <StickyHistoryBtnWrap>
                       <IconButton
-                        size="xs"
-                        appearance="subtle"
-                        icon={<MdUndo />}
+                        size="small"
                         disabled={!canUndo}
                         onClick={undo}
                         title={t(
@@ -837,13 +853,14 @@ export function TeaserOverviewPanel({
                             'teaserOverview.undo'
                           : 'teaserOverview.undoEmpty'
                         )}
-                      />
+                        aria-label={t('teaserOverview.undo')}
+                      >
+                        <MdUndo />
+                      </IconButton>
                     </StickyHistoryBtnWrap>
                     <StickyHistoryBtnWrap>
                       <IconButton
-                        size="xs"
-                        appearance="subtle"
-                        icon={<MdRedo />}
+                        size="small"
                         disabled={!canRedo}
                         onClick={redo}
                         title={t(
@@ -851,7 +868,10 @@ export function TeaserOverviewPanel({
                             'teaserOverview.redo'
                           : 'teaserOverview.redoEmpty'
                         )}
-                      />
+                        aria-label={t('teaserOverview.redo')}
+                      >
+                        <MdRedo />
+                      </IconButton>
                     </StickyHistoryBtnWrap>
                   </>
                 }
@@ -933,8 +953,16 @@ export function TeaserOverviewPanel({
       </PanelWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={replaceSlot !== null}
-        size="sm"
         onClose={handleReplaceClose}
       >
         <TeaserSelectAndEditPanel

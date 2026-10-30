@@ -1,129 +1,114 @@
-import React from 'react';
+import { useApolloClient, useMutation } from '@apollo/client/react';
 import {
+  BannerDocument,
   CreateBannerActionInput,
-  FullImageFragment,
   LoginStatus,
-  UpdateBannerInput,
-  useBannerQuery,
-  useUpdateBannerMutation,
+  UpdateBannerDocument,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BannerForm } from './banner-form';
+import {
+  BannerForm,
+  createBannerSchema,
+  BannerFormValues,
+} from './banner-form';
 import { SingleViewTitle } from '@wepublish/ui/editor';
-import { Form, Schema } from 'rsuite';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider, useForm } from 'react-hook-form';
+
+const removeIdAndTypename = (action: CreateBannerActionInput) => {
+  const { id, __typename, ...actionCleaned } =
+    action as CreateBannerActionInput & {
+      id?: string;
+      __typename?: string;
+    };
+  return actionCleaned;
+};
+
+const removeTypename = ({ id }: { id: string }) => ({ id });
 
 export const EditBannerForm = () => {
   const { id } = useParams();
   const bannerId = id!;
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const client = useApolloClient();
 
   const closePath = '/banners';
 
-  const [banner, setBanner] = useState<
-    UpdateBannerInput & { image?: FullImageFragment | null }
-  >({
-    id: bannerId,
-    title: '',
-    text: '',
-    active: false,
-    collapsible: true,
-    hideForMinutes: 24 * 60,
-    delay: 0,
-    showOnArticles: false,
-    showForLoginStatus: LoginStatus.All,
-    //tags: []
-  });
+  const form = useForm<BannerFormValues>({
+    resolver: zodResolver(createBannerSchema(t)),
+    defaultValues: async () => {
+      const { data } = await client.query({
+        query: BannerDocument,
+        variables: { id: bannerId },
+      });
+      const banner = data!.banner!;
 
-  useBannerQuery({
-    variables: {
-      id: id!,
+      return {
+        id: bannerId,
+        title: banner.title,
+        text: banner.text,
+        cta: banner.cta,
+        html: banner.html,
+        embedUrl: banner.embedUrl,
+        active: banner.active,
+        collapsible: banner.collapsible,
+        delay: banner.delay,
+        hideForMinutes: banner.hideForMinutes,
+        showForLoginStatus: banner.showForLoginStatus ?? LoginStatus.All,
+        showOnArticles: banner.showOnArticles,
+        showOnPages: banner.showOnPages?.map(removeTypename) ?? [],
+        imageId: banner.image?.id,
+        image: banner.image,
+        actions: banner.actions ?? [],
+      } satisfies BannerFormValues;
     },
-    skip: !id,
-    onCompleted: data => {
-      setBanner({ imageId: data.banner.image?.id, ...data.banner });
-    },
-  });
-
-  const { StringType } = Schema.Types;
-  const validationModel = Schema.Model({
-    title: StringType().isRequired(),
-    text: StringType().isRequired(),
   });
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [updateBanner, { loading }] = useUpdateBannerMutation({
-    onError: error => {
-      console.log(error);
-    },
-    onCompleted: banner => {
+  const [updateBanner, { loading }] = useMutation(UpdateBannerDocument, {
+    onCompleted: () => {
       if (shouldClose) {
         navigate(closePath);
       }
     },
   });
 
-  const onSubmit = () => {
-    const { image, ...bannerWithoutImage } = banner;
-    const processedBanner = {
-      ...bannerWithoutImage,
-      actions: banner.actions?.map(removeIdAndTypename),
-      showOnPages: banner.showOnPages?.map(removeTypename),
-    };
-    updateBanner({ variables: { input: processedBanner } });
-  };
-
-  const removeIdAndTypename = (action: CreateBannerActionInput) => {
-    const { id, __typename, ...actionCleaned } = action as any;
-    return actionCleaned;
-  };
-
-  const removeTypename = (page: any) => {
-    const { __typename, ...pageCleaned } = page;
-    return pageCleaned;
-  };
-
-  const handleAddAction = (action: CreateBannerActionInput) => {
-    setBanner({
-      ...banner,
-      actions: [...(banner.actions || []), action],
-    });
-  };
-
-  const handleRemoveAction = (index: number) => {
-    setBanner({
-      ...banner,
-      actions: banner.actions?.filter((_, i) => i !== index) || [],
-    });
-  };
+  if (form.formState.isLoading) {
+    return null;
+  }
 
   return (
-    <Form
-      fluid
-      formValue={banner}
-      model={validationModel}
-      disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}
-    >
-      <SingleViewTitle
-        loading={loading}
-        title={t('banner.edit.title')}
-        loadingTitle={t('banner.edit.title')}
-        saveBtnTitle={t('save')}
-        saveAndCloseBtnTitle={t('saveAndClose')}
-        closePath={closePath}
-        setCloseFn={setShouldClose}
-      />
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(({ image, ...banner }) =>
+          updateBanner({
+            variables: {
+              input: {
+                ...banner,
+                id: bannerId,
+                actions: banner.actions?.map(removeIdAndTypename),
+                showOnPages: banner.showOnPages?.map(removeTypename),
+              },
+            },
+          })
+        )}
+      >
+        <SingleViewTitle
+          loading={loading}
+          title={t('banner.edit.title')}
+          loadingTitle={t('banner.edit.title')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setShouldClose}
+        />
 
-      <BannerForm
-        banner={banner}
-        onChange={changes => setBanner({ ...changes, id: banner.id })}
-        onAddAction={handleAddAction}
-        onRemoveAction={handleRemoveAction}
-      />
-    </Form>
+        <BannerForm />
+      </form>
+    </FormProvider>
   );
 };

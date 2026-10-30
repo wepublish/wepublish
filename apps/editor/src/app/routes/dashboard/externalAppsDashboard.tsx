@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Box,
@@ -9,13 +10,15 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  ExternalAppsDocument,
   ExternalAppsTarget,
-  useExternalAppsQuery,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdExtension } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
+import { ApiKeyWarning } from '../externalApps/apiKeyWarning';
 import { ICON_REGISTRY } from '../externalApps/iconRegistry';
 
 const AppGrid = styled(Grid)`
@@ -37,7 +40,7 @@ const AppIconBox = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.palette?.primary?.main};
+  color: ${({ theme }) => theme.vars.palette.primary.main};
 `;
 
 const EmptyText = styled(Typography)`
@@ -61,16 +64,18 @@ function AppIcon({ iconName }: AppIconProps) {
 export function ExternalAppsDashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data, loading, error } = useExternalAppsQuery({
+  const { data, loading, error } = useQuery(ExternalAppsDocument, {
     fetchPolicy: 'cache-and-network',
   });
 
   if (loading) {
     return (
       <Box
-        p={3}
-        display="flex"
-        justifyContent="center"
+        sx={{
+          p: 3,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
       >
         <CircularProgress />
       </Box>
@@ -80,10 +85,12 @@ export function ExternalAppsDashboard() {
   if (error) {
     return (
       <Box
-        p={3}
-        color="error.main"
+        sx={{
+          p: 3,
+          color: 'error.main',
+        }}
       >
-        {error.message}
+        {humanizeError(error)}
       </Box>
     );
   }
@@ -93,9 +100,7 @@ export function ExternalAppsDashboard() {
   if (apps.length === 0) {
     return (
       <EmptyText color="textSecondary">
-        {t('externalApps.noAppsFound', {
-          defaultValue: 'No external apps configured.',
-        })}
+        {t('externalApps.noAppsFound')}
       </EmptyText>
     );
   }
@@ -107,10 +112,7 @@ export function ExternalAppsDashboard() {
     >
       {apps.map(app => (
         <Grid
-          item
-          xs={12}
-          sm={6}
-          md={4}
+          size={{ xs: 12, sm: 6, md: 4 }}
           key={app.id}
         >
           <Card
@@ -127,7 +129,7 @@ export function ExternalAppsDashboard() {
               }}
               sx={{ height: '100%' }}
             >
-              <AppBox p={2}>
+              <AppBox sx={{ p: 2 }}>
                 <AppIconBox style={{ color: '#ea726e' }}>
                   <AppIcon iconName={app.icon} />
                 </AppIconBox>
@@ -158,6 +160,7 @@ export function ExternalAppsDashboard() {
                     </Typography>
                   </Tooltip>
                 )}
+                <ApiKeyWarning apiToken={app.apiToken} />
               </AppBox>
             </CardActionArea>
           </Card>

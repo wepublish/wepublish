@@ -5,6 +5,7 @@ import {
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  CreateSettingSyncProviderInput,
   SettingSyncProvider,
   UpdateSettingSyncProviderInput,
   SettingSyncProviderFilter,
@@ -37,6 +38,16 @@ export class SyncProviderSettingsResolver {
   })
   syncProviderSetting(@Args('id') id: string) {
     return this.syncProviderSettingsDataloader.load(id);
+  }
+
+  @Permissions(CanUpdateMailchimpSyncSettings)
+  @Mutation(returns => SettingSyncProvider, {
+    name: 'createSyncProviderSetting',
+    description:
+      'Sets up the sync provider. Only possible while none is configured.',
+  })
+  createSyncProviderSetting(@Args() input: CreateSettingSyncProviderInput) {
+    return this.syncProviderSettingsService.createSyncProviderSetting(input);
   }
 
   @Permissions(CanUpdateMailchimpSyncSettings)

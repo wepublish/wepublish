@@ -1,5 +1,6 @@
 import {
   EditorBlockType,
+  MailchimpFormOptionsLayout,
   SubscribeBlockField,
   TeaserListBlockSort,
   TeaserSlotType,
@@ -12,6 +13,7 @@ import {
   MdCoffee,
   MdComment,
   MdEvent,
+  MdFileCopy,
   MdFilter,
   MdFilter1,
   MdFilter6,
@@ -32,6 +34,7 @@ import {
 
 import { BlockMapForValue } from '../atoms/blockList';
 import { isFunctionalUpdate } from '../utility';
+import { BlockTemplateBlock } from './blockTemplateBlock';
 import { CommentBlock } from './commentBlock';
 import { CrowdfundingBlock } from './CrowdfundingBlock';
 import { EmbedBlock } from './embedBlock';
@@ -56,6 +59,7 @@ import { BlockValue, EmbedType } from './types';
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.Title]: {
+    group: 'text',
     field: props => <TitleBlock {...props} />,
     defaultValue: { title: '', lead: '', preTitle: '', blockStyle: undefined },
     label: 'blocks.title.label',
@@ -63,6 +67,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.RichText]: {
+    group: 'text',
+    bare: true,
     field: props => (
       <RichTextBlock
         {...props}
@@ -86,6 +92,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Image]: {
+    group: 'media',
     field: props => <ImageBlock {...props} />,
     defaultValue: { image: null, caption: '', blockStyle: undefined },
     label: 'blocks.image.label',
@@ -93,6 +100,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.ImageGallery]: {
+    group: 'media',
     field: props => <ImageGalleryBlock {...props} />,
     defaultValue: {
       images: [{ caption: '', image: null }],
@@ -103,6 +111,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Listicle]: {
+    group: 'text',
     field: props => <ListicleBlock {...props} />,
     defaultValue: {
       items: [
@@ -122,6 +131,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Quote]: {
+    group: 'text',
     field: props => <QuoteBlock {...props} />,
     defaultValue: { quote: '', author: '', image: null, blockStyle: undefined },
     label: 'blocks.quote.label',
@@ -129,6 +139,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.LinkPageBreak]: {
+    group: 'layout',
     field: props => <LinkPageBreakBlock {...props} />,
     defaultValue: {
       text: '',
@@ -145,6 +156,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Embed]: {
+    group: 'media',
+    bare: true,
     field: props => <EmbedBlock {...props} />,
     defaultValue: { type: EmbedType.Other, blockStyle: undefined },
     label: 'blocks.embeds.label',
@@ -152,6 +165,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.TeaserList]: {
+    group: 'teasers',
     field: props => <TeaserListBlock {...props} />,
     defaultValue: {
       title: null,
@@ -170,6 +184,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.TeaserGrid1]: {
+    group: 'teasers',
     field: props => <TeaserGridBlock {...props} />,
     defaultValue: {
       numColumns: 1,
@@ -181,6 +196,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.TeaserGrid6]: {
+    group: 'teasers',
     field: props => <TeaserGridBlock {...props} />,
     defaultValue: {
       numColumns: 3,
@@ -199,6 +215,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.TeaserSlots]: {
+    group: 'teasers',
     field: props => <TeaserSlotsBlock {...props} />,
     defaultValue: {
       title: null,
@@ -227,6 +244,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.TeaserGridFlex]: {
+    group: 'teasers',
     field: props => <TeaserGridFlexBlock {...props} />,
     defaultValue: {
       flexTeasers: [
@@ -254,6 +272,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Html]: {
+    group: 'text',
+    bare: true,
     field: props => <HTMLBlock {...props} />,
     defaultValue: { html: '', blockStyle: undefined },
     label: 'blocks.html.label',
@@ -261,6 +281,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Subscribe]: {
+    group: 'interaction',
     field: props => <SubscribeBlock {...props} />,
     defaultValue: {
       blockStyle: undefined,
@@ -284,6 +305,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.MailchimpForm]: {
+    group: 'interaction',
     field: props => <MailchimpFormBlock {...props} />,
     defaultValue: {
       blockStyle: undefined,
@@ -310,6 +332,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
               urlParam: 'email',
               defaultValue: null,
               value: null,
+              optionsLayout: MailchimpFormOptionsLayout.List,
               options: [],
             },
           ],
@@ -323,6 +346,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Poll]: {
+    group: 'interaction',
+    bare: true,
     field: props => <PollBlock {...props} />,
     defaultValue: { poll: null, blockStyle: undefined },
     label: 'blocks.poll.label',
@@ -330,6 +355,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Crowdfunding]: {
+    group: 'interaction',
+    bare: true,
     field: props => <CrowdfundingBlock {...props} />,
     defaultValue: { crowdfunding: null, blockStyle: undefined },
     label: 'blocks.crowdfunding.label',
@@ -337,6 +364,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Comment]: {
+    group: 'interaction',
+    bare: true,
     field: props => <CommentBlock {...props} />,
     defaultValue: { filter: {}, comments: [], blockStyle: undefined },
     label: 'blocks.comment.label',
@@ -344,6 +373,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Event]: {
+    group: 'interaction',
+    bare: true,
     field: props => <EventBlock {...props} />,
     defaultValue: { filter: {}, events: [], blockStyle: undefined },
     label: 'blocks.event.label',
@@ -351,11 +382,19 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.FlexBlock]: {
+    group: 'layout',
     field: props => <FlexBlock {...props} />,
     defaultValue: {
       blocks: [
         {
-          alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
+          alignment: {
+            __typename: 'FlexAlignment',
+            i: nanoid(),
+            x: 0,
+            y: 0,
+            w: 3,
+            h: 6,
+          },
           block: null,
         },
       ],
@@ -365,5 +404,13 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       return 'blocks.flexBlock.label';
     })(),
     icon: <MdInterests />,
+  },
+
+  [EditorBlockType.BlockTemplate]: {
+    group: 'layout',
+    field: props => <BlockTemplateBlock {...props} />,
+    defaultValue: { template: null, blockStyle: undefined },
+    label: 'blocks.blockTemplate.label',
+    icon: <MdFileCopy />,
   },
 };

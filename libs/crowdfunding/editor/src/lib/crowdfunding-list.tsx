@@ -1,96 +1,103 @@
+import { useQuery } from '@apollo/client/react';
 import { useState } from 'react';
 import {
+  createCheckedPermissionComponent,
+  DataTable,
+  IconButton,
+  IconButtonTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  createCheckedPermissionComponent,
-  IconButton,
   TableWrapper,
-  PaddedCell,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { IconButton as RIconButton, Table as RTable, Table } from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
-import { Crowdfunding, useCrowdfundingsQuery } from '@wepublish/editor/api';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+  CrowdfundingsDocument,
+  FullCrowdfundingFragment,
+} from '@wepublish/editor/api';
 import { CrowdfundingDeleteModal } from './crowdfunding-delete-modal';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+import { Button } from '@mui/material';
+import {
+  CanCreateCrowdfunding,
+  CanDeleteCrowdfunding,
+  CanGetCrowdfunding,
+  CanGetCrowdfundings,
+} from '@wepublish/permissions';
 
 function CrowdfundingList() {
   const { t } = useTranslation();
 
   const [crowdfundingDelete, setCrowdfundingDelete] = useState<
-    Crowdfunding | undefined
+    FullCrowdfundingFragment | undefined
   >(undefined);
 
-  const { data, loading, error, refetch } = useCrowdfundingsQuery({});
+  const { data, loading, error, refetch } = useQuery(CrowdfundingsDocument, {});
 
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('crowdfunding.list.title')}</h2>
+          <PageTitle>{t('crowdfunding.list.title')}</PageTitle>
         </ListViewHeader>
 
         <ListViewActions>
-          <Link to="create">
-            <RIconButton
-              appearance="primary"
-              icon={<MdAdd />}
-            >
-              {t('crowdfunding.list.createNew')}
-            </RIconButton>
-          </Link>
+          <Button
+            component={RouterLink}
+            to="create"
+            variant="contained"
+            startIcon={<MdAdd />}
+          >
+            {t('crowdfunding.list.createNew')}
+          </Button>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey="crowdfundings"
           data={data?.crowdfundings || []}
-        >
-          <Column
-            width={300}
-            resizable
-          >
-            <HeaderCell>{t('crowdfunding.list.name')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<Crowdfunding>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('crowdfunding.list.name'),
+              width: 300,
+              render: rowData => (
                 <Link to={`/crowdfundings/edit/${rowData.id}`}>
-                  {rowData.name || 'Crowdfunding ohne Namen'}
+                  {rowData.name || t('crowdfunding.list.unnamed')}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            resizable
-            width={75}
-            fixed="right"
-          >
-            <HeaderCell align={'center'}>
-              {t('crowdfunding.list.delete')}
-            </HeaderCell>
-
-            <PaddedCell align={'center'}>
-              {(crowdfunding: RowDataType<Crowdfunding>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() =>
-                    setCrowdfundingDelete(crowdfunding as Crowdfunding)
-                  }
-                />
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: crowdfunding => (
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    color="error"
+                    size="small"
+                    onClick={() =>
+                      setCrowdfundingDelete(
+                        crowdfunding as FullCrowdfundingFragment
+                      )
+                    }
+                  >
+                    <MdDelete />
+                  </IconButton>
+                </IconButtonTooltip>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
 
       <CrowdfundingDeleteModal
@@ -103,10 +110,10 @@ function CrowdfundingList() {
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_CROWDFUNDINGS',
-  'CAN_GET_CROWDFUNDING',
-  'CAN_CREATE_CROWDFUNDING',
-  'CAN_DELETE_CROWDFUNDING',
+  CanGetCrowdfundings.id,
+  CanGetCrowdfunding.id,
+  CanCreateCrowdfunding.id,
+  CanDeleteCrowdfunding.id,
 ])(CrowdfundingList);
 
 export { CheckedPermissionComponent as CrowdfundingList };

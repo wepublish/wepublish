@@ -2,6 +2,7 @@
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { Box, FormLabel, MenuItem, TextField } from '@mui/material';
 import {
   TagType,
   TeaserSlotsAutofillConfigInput,
@@ -9,7 +10,6 @@ import {
 } from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form, SelectPicker } from 'rsuite';
 
 import { SelectTags } from '../../atoms/tag/selectTags';
 import { useTeaserTypeText } from '../../panel/teaserListConfigPanel';
@@ -19,19 +19,19 @@ interface TeaserSlotsConfigPanelProps {
   onChange: (config: TeaserSlotsAutofillConfigInput) => void;
 }
 
-const ConfigContainer = styled(Form)`
+const ConfigContainer = styled('form')`
   display: flex;
   flex-direction: column;
   gap: 16px;
 `;
 
-const FormGroup = styled(Form.Group)`
+const FormGroup = styled(Box)`
   margin-bottom: 12px;
 `;
 
 const HelpText = styled('div')`
   font-size: 12px;
-  color: #6b7280;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   margin-top: 4px;
 `;
 
@@ -82,38 +82,32 @@ export function TeaserSlotsAutofillConfigPanel({
   const sortOptions = [{ label: 'Published date', value: 'PublishedAt' }];
 
   return (
-    <ConfigContainer fluid>
+    <ConfigContainer>
       <FormGroup>
-        <Form.Label>{t('blocks.teaserSlots.autofillType')}</Form.Label>
-        <SelectPicker
+        <FormLabel>{t('blocks.teaserSlots.autofillType')}</FormLabel>
+        <TextField
+          select
           name="teaserType"
-          cleanable={false}
           value={teaserType}
-          onChange={value => handleTeaserTypeChange(value!)}
-          data={[
-            {
-              label: teaserTypeText(TeaserType.Article),
-              value: TeaserType.Article,
-            },
-            {
-              label: teaserTypeText(TeaserType.Event),
-              value: TeaserType.Event,
-            },
-            /*
-            not supported yet
-            {
-              label: teaserTypeText(TeaserType.Page),
-              value: TeaserType.Page,
-            },
-            */
-          ]}
+          onChange={event =>
+            handleTeaserTypeChange(event.target.value as TeaserType)
+          }
+          fullWidth
           css={inputStyles}
-        />
+        >
+          <MenuItem value={TeaserType.Article}>
+            {teaserTypeText(TeaserType.Article)}
+          </MenuItem>
+
+          <MenuItem value={TeaserType.Event}>
+            {teaserTypeText(TeaserType.Event)}
+          </MenuItem>
+        </TextField>
       </FormGroup>
 
       {tagType && (
         <FormGroup>
-          <Form.Label>{t('blocks.teaserSlots.filter')}</Form.Label>
+          <FormLabel>{t('blocks.teaserSlots.filter')}</FormLabel>
 
           <SelectTags
             defaultTags={[]}

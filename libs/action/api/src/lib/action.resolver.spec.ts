@@ -1,7 +1,9 @@
 import { ExecutionContext, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import request from 'supertest';
 import { ActionService } from './action.service';
 import { ActionResolver } from './action.resolver';
@@ -9,10 +11,13 @@ import { UserSession } from '@wepublish/authentication/api';
 import { ActionType } from './action.model';
 import { Event } from '@wepublish/event/api';
 import { EventStatus } from '@prisma/client';
+import type { Mock } from 'vitest';
 
-jest.mock('@wepublish/authentication/api', () => ({
-  ...jest.requireActual('@wepublish/authentication/api'),
-  CurrentUser: jest.fn(() => {
+vi.mock('@wepublish/authentication/api', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/authentication/api')>()),
+  ScopedJwtVerifier: vi.fn(),
+  UserSession: vi.fn(),
+  CurrentUser: vi.fn(() => {
     return (
       data: unknown,
       ctx: ExecutionContext
@@ -39,7 +44,6 @@ const actionsQuery = `
     actions {
       __typename
 
-
       ... on EventCreatedAction {
           date
           event {
@@ -54,17 +58,17 @@ const actionsQuery = `
 
 describe('ActionResolver', () => {
   let app: INestApplication;
-  let actionServiceMock: { [method in keyof ActionService]?: jest.Mock };
+  let actionServiceMock: { [method in keyof ActionService]?: Mock };
 
   beforeEach(async () => {
     actionServiceMock = {
-      getActions: jest.fn(),
+      getActions: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
         }),
@@ -75,11 +79,11 @@ describe('ActionResolver', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 

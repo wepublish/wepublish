@@ -1,13 +1,13 @@
 import { allPass } from 'ramda';
 
 import {
-  BlockContent,
+  FullBlockFragment,
   FullImageGalleryBlockFragment,
 } from '@wepublish/website/api';
 import { hasBlockStyle } from '../../has-blockstyle';
 import { isImageGalleryBlock } from '../../image-gallery/image-gallery-block';
 
 export const isLightboxBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullImageGalleryBlockFragment =>
   allPass([hasBlockStyle('Lightbox'), isImageGalleryBlock])(block);

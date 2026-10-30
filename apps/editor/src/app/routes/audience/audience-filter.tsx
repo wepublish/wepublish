@@ -1,61 +1,91 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { useMemberPlanListQuery } from '@wepublish/editor/api';
+import {
+  Autocomplete,
+  Button,
+  Card,
+  CardContent,
+  FormLabel,
+  Grid,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from '@mui/material';
+import { MemberPlanListDocument } from '@wepublish/editor/api';
+import {
+  ClickPopover,
+  DateRangeFilter,
+  DateRangePreset,
+  enqueueSnackbar,
+  InfoTrigger,
+} from '@wepublish/ui/editor';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdInfo, MdLink } from 'react-icons/md';
-import type { DateRangePickerProps } from 'rsuite';
-import {
-  Button,
-  Col,
-  DateRangePicker,
-  Grid,
-  IconButton,
-  Message,
-  Panel,
-  Popover as RPopover,
-  Radio,
-  RadioGroup,
-  Row,
-  TagPicker,
-  toaster,
-  Toggle,
-  Whisper,
-} from 'rsuite';
+import { MdLink } from 'react-icons/md';
 
 import {
   AudienceApiFilter,
   AudienceClientFilter,
   AudienceComponentFilter,
-  preDefinedDates,
+  DATE_RANGE_PRESET_KEYS,
+  DateRange,
+  dateRangeForPreset,
   TimeResolution,
 } from './audience-filter-params';
-import { AudienceFilterToggle, ToggleLable } from './audience-filter-toggle';
+import { AudienceFilterToggle } from './audience-filter-toggle';
 
-type RangeType = NonNullable<DateRangePickerProps['ranges']>[number];
-
-const TagPickerStyled = styled(TagPicker)`
-  margin-top: ${({ theme }) => theme.spacing(2)};
+const Panel = styled(Card)`
+  width: 100%;
 `;
 
-const ComponentFilterContainer = styled.div`
-  margin-top: ${({ theme }) => theme.spacing(2)};
+const PanelContent = styled(CardContent)`
+  &:last-child {
+    padding: ${({ theme }) => theme.spacing(3)};
+  }
+`;
+
+const Series = styled.div`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(1)};
+  align-content: start;
+`;
+
+const SeriesRows = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: ${({ theme }) => theme.spacing(3)};
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+`;
+
+const Controls = styled.div`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
+  align-content: start;
+`;
+
+const Choices = styled.div`
   display: flex;
   flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(3)};
 `;
 
-const ToggleContainer = styled('div')`
-  margin-right: ${({ theme }) => theme.spacing(2)};
-  margin-top: ${({ theme }) => theme.spacing(1)};
+const Choice = styled.div`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  justify-items: start;
 `;
 
-const ActionContainer = styled('div')`
+const Actions = styled.div`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing(1)};
-  margin-top: ${({ theme }) => theme.spacing(1)};
 `;
 
-const HelpPopover = styled(RPopover)`
+const HelpPopover = styled('div')`
   max-width: 320px;
 
   p + p {
@@ -92,31 +122,19 @@ export function AudienceFilter({
     try {
       await navigator.clipboard.writeText(buildPermalink());
 
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('audienceFilter.permalinkCopied')}
-        </Message>
-      );
+      enqueueSnackbar(t('audienceFilter.permalinkCopied'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
     } catch {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('audienceFilter.permalinkCopyFailed')}
-        </Message>
-      );
+      enqueueSnackbar(t('audienceFilter.permalinkCopyFailed'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     }
   };
 
-  const { data: memberPlans } = useMemberPlanListQuery({
+  const { data: memberPlans } = useQuery(MemberPlanListDocument, {
     variables: { take: 100 },
   });
 
@@ -131,179 +149,169 @@ export function AudienceFilter({
     );
   }, [memberPlans]);
 
-  const oneClickDateRanges = useMemo<RangeType[]>(() => {
-    const {
-      today,
-      lastWeek,
-      lastMonth,
-      lastQuarter,
-      lastYear,
-      nextWeek,
-      nextMonth,
-      nextQuarter,
-      nextYear,
-    } = preDefinedDates();
-    return [
-      {
-        label: t('audienceFilter.rangeLastWeek'),
-        value: [lastWeek, today],
-      },
-      {
-        label: t('audienceFilter.rangeLastMonth'),
-        value: [lastMonth, today],
-      },
-      {
-        label: t('audienceFilter.rangeLastQuarter'),
-        value: [lastQuarter, today],
-      },
-      {
-        label: t('audienceFilter.rangeLastYear'),
-        value: [lastYear, today],
-      },
-      {
-        label: t('audienceFilter.rangeNextWeek'),
-        value: [today, nextWeek],
-      },
-      {
-        label: t('audienceFilter.rangeNextMonth'),
-        value: [today, nextMonth],
-      },
-      {
-        label: t('audienceFilter.rangeNextQuarter'),
-        value: [today, nextQuarter],
-      },
-      {
-        label: t('audienceFilter.rangeNextYear'),
-        value: [today, nextYear],
-      },
-    ];
-  }, [t]);
+  const rangePresets = useMemo<DateRangePreset[]>(
+    () =>
+      DATE_RANGE_PRESET_KEYS.map(key => ({
+        label: t(`audienceFilter.range${key[0].toUpperCase()}${key.slice(1)}`),
+        value: dateRangeForPreset(key),
+      })),
+    [t]
+  );
 
   return (
-    <Grid style={{ width: '100%' }}>
-      <Row>
-        {/* select date range */}
-        <Col
-          xs={24}
-          xl={4}
+    <Panel variant="outlined">
+      <PanelContent>
+        <Grid
+          container
+          spacing={3}
         >
-          <RadioGroup
-            name="aggregation-picker"
-            inline
-            appearance="picker"
-            value={resolution}
-            onChange={newResolution =>
-              setResolution(newResolution as TimeResolution)
-            }
-          >
-            <Radio value="daily">{t('audienceFilter.daily')}</Radio>
-            <Radio value="monthly">{t('audienceFilter.monthly')}</Radio>
-          </RadioGroup>
-        </Col>
+          <Grid size={{ xs: 12, lg: 5 }}>
+            <Controls>
+              <Choices>
+                <Choice>
+                  <FormLabel component="legend">
+                    {t('audienceFilter.resolution')}
+                  </FormLabel>
 
-        <Col
-          xs={24}
-          xl={6}
-        >
-          <DateRangePicker
-            size="lg"
-            value={apiFilter.dateRange}
-            onChange={newDateRange => setApiFilter({ dateRange: newDateRange })}
-            format="dd.MM.yyyy"
-            placeholder={t('audienceFilter.rangePickerPlaceholder')}
-            style={{ width: '100%' }}
-            ranges={oneClickDateRanges as RangeType[]}
-          />
-          <TagPickerStyled
-            size="lg"
-            data={memberPlansForPicker}
-            value={apiFilter.memberPlanIds}
-            style={{ width: '100%' }}
-            placeholder={t('audienceFilter.filterSubscriptionPlans')}
-            onChange={newMemberPlanIds =>
-              setApiFilter({ memberPlanIds: newMemberPlanIds })
-            }
-          />
+                  <ToggleButtonGroup
+                    exclusive
+                    size="small"
+                    color="primary"
+                    value={resolution}
+                    aria-label={t('audienceFilter.resolution')}
+                    onChange={(_event, newResolution: TimeResolution | null) =>
+                      newResolution && setResolution(newResolution)
+                    }
+                  >
+                    <ToggleButton value="daily">
+                      {t('audienceFilter.daily')}
+                    </ToggleButton>
+                    <ToggleButton value="monthly">
+                      {t('audienceFilter.monthly')}
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Choice>
 
-          <ComponentFilterContainer>
-            <ToggleContainer>
-              <Toggle
-                checked={componentFilter.chart}
-                onChange={chart =>
-                  setComponentFilter({ ...componentFilter, chart })
+                <Choice>
+                  <FormLabel component="legend">
+                    {t('audienceFilter.view')}
+                  </FormLabel>
+
+                  <ToggleButtonGroup
+                    exclusive
+                    size="small"
+                    color="primary"
+                    value={componentFilter.table ? 'table' : 'chart'}
+                    aria-label={t('audienceFilter.view')}
+                    onChange={(_event, view: 'chart' | 'table' | null) =>
+                      view &&
+                      setComponentFilter({
+                        ...componentFilter,
+                        chart: view === 'chart',
+                        table: view === 'table',
+                      })
+                    }
+                  >
+                    <ToggleButton value="chart">
+                      {t('audienceFilter.chart')}
+                    </ToggleButton>
+                    <ToggleButton value="table">
+                      {t('audienceFilter.table')}
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Choice>
+              </Choices>
+
+              <DateRangeFilter
+                label={t('audienceFilter.dateRange')}
+                presets={rangePresets}
+                value={{
+                  from: apiFilter.dateRange?.[0] ?? null,
+                  to: apiFilter.dateRange?.[1] ?? null,
+                }}
+                onChange={({ from, to }) =>
+                  setApiFilter({
+                    dateRange: from && to ? ([from, to] as DateRange) : null,
+                  })
                 }
-              />{' '}
-              <ToggleLable>{t('audienceFilter.chart')}</ToggleLable>
-            </ToggleContainer>
-            <ToggleContainer>
-              <Toggle
-                checked={componentFilter.table}
-                onChange={table =>
-                  setComponentFilter({ ...componentFilter, table })
+              />
+
+              <Autocomplete
+                multiple
+                disableCloseOnSelect
+                options={memberPlansForPicker.map(plan => plan.value)}
+                getOptionLabel={id =>
+                  memberPlansForPicker.find(plan => plan.value === id)?.label ??
+                  id
                 }
-              />{' '}
-              <ToggleLable>{t('audienceFilter.table')}</ToggleLable>
-            </ToggleContainer>
-
-            <ActionContainer>
-              <Button
-                appearance="ghost"
-                size="sm"
-                startIcon={<MdLink />}
-                onClick={copyPermalink}
-              >
-                {t('audienceFilter.copyPermalink')}
-              </Button>
-
-              <Whisper
-                trigger={['hover', 'focus']}
-                placement="rightStart"
-                speaker={
-                  <HelpPopover>
-                    <p>{t('audienceFilter.permalinkHelpWhat')}</p>
-                    <p>{t('audienceFilter.permalinkHelpWhy')}</p>
-                    <p>{t('audienceFilter.permalinkHelpExample')}</p>
-                  </HelpPopover>
+                value={apiFilter.memberPlanIds ?? []}
+                onChange={(_event, newMemberPlanIds) =>
+                  setApiFilter({ memberPlanIds: newMemberPlanIds })
                 }
-              >
-                <IconButton
-                  icon={<MdInfo size={20} />}
-                  circle
-                  size="sm"
-                  aria-label={t('audienceFilter.permalinkHelpLabel')}
-                />
-              </Whisper>
-            </ActionContainer>
-          </ComponentFilterContainer>
-        </Col>
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label={t('audienceFilter.subscriptionPlans')}
+                    placeholder={t('audienceFilter.filterSubscriptionPlans')}
+                  />
+                )}
+              />
 
-        {/* filter data */}
-        <Col
-          xs={24}
-          xl={14}
-        >
-          <Panel
-            header={t('audienceFilter.panelHeader')}
-            bordered
-          >
-            <Row>
-              {Object.keys(clientFilter).map((filterKey, filterIndex) => (
-                <Col
-                  xs={24}
-                  xl={12}
-                  key={filterIndex}
+              <Actions>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<MdLink />}
+                  onClick={copyPermalink}
                 >
+                  {t('audienceFilter.copyPermalink')}
+                </Button>
+
+                <ClickPopover
+                  trigger={
+                    <InfoTrigger
+                      aria-label={t('audienceFilter.permalinkHelpLabel')}
+                    />
+                  }
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                >
+                  <HelpPopover>
+                    <Typography>
+                      {t('audienceFilter.permalinkHelpWhat')}
+                    </Typography>
+                    <Typography>
+                      {t('audienceFilter.permalinkHelpWhy')}
+                    </Typography>
+                    <Typography>
+                      {t('audienceFilter.permalinkHelpExample')}
+                    </Typography>
+                  </HelpPopover>
+                </ClickPopover>
+              </Actions>
+            </Controls>
+          </Grid>
+
+          <Grid size={{ xs: 12, lg: 7 }}>
+            <Series>
+              <FormLabel component="legend">
+                {t('audienceFilter.panelHeader')}
+              </FormLabel>
+
+              <SeriesRows>
+                {Object.keys(clientFilter).map(filterKey => (
                   <AudienceFilterToggle
+                    key={filterKey}
                     filterKey={filterKey as keyof AudienceClientFilter}
                     clientFilter={clientFilter}
                     setClientFilter={setClientFilter}
                   />
-                </Col>
-              ))}
-            </Row>
-          </Panel>
-        </Col>
-      </Row>
-    </Grid>
+                ))}
+              </SeriesRows>
+            </Series>
+          </Grid>
+        </Grid>
+      </PanelContent>
+    </Panel>
   );
 }

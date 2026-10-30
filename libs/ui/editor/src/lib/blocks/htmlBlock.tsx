@@ -1,56 +1,31 @@
 import styled from '@emotion/styled';
+import { Drawer } from '@mui/material';
 import InnerHTML from 'dangerously-set-html-content';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton, Panel as RPanel } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
-import { PlaceholderInput } from '../atoms/placeholderInput';
+import { BlockPreviewCard } from '../atoms/blockPreviewCard';
+import { DRAWER_WIDTHS } from '../drawer';
 import { HtmlEditPanel } from '../panel/htmlEditPanel';
 import { HTMLBlockValue } from './types';
 
-const Panel = styled(RPanel, {
-  shouldForwardProp: prop => prop !== 'isEmpty',
-})<{ isEmpty: boolean }>`
-  display: grid;
-  height: ${({ isEmpty }) => (isEmpty ? '200px' : undefined)};
-  padding: 0;
-  overflow: hidden;
-  background-color: #f7f9fa;
-`;
-
-const Wrapper = styled.div`
-  position: relative;
-  width: 100%;
-`;
-
-const IconWrapper = styled.div`
-  position: absolute;
-  z-index: 100;
-  height: 100%;
-  right: 0;
-`;
-
-const InnerHtmlWrapper = styled.div`
+const HtmlPreview = styled('div')`
   min-height: 50px;
-  margin-top: 20px;
+  overflow: auto;
 `;
 
 export const HTMLBlock = ({
   value,
   onChange,
   autofocus,
+  disabled,
 }: BlockProps<HTMLBlockValue>) => {
-  const [isHtmlDialogOpen, setHtmlDialogOpen] = useState(false);
   const isEmpty = !value.html;
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (autofocus && isEmpty) {
-      setHtmlDialogOpen(true);
-    }
-  }, []);
+  const [isHtmlDialogOpen, setHtmlDialogOpen] = useState(
+    () => Boolean(autofocus) && isEmpty
+  );
 
   const correctScript = () => {
     if (value.html.includes('/>')) {
@@ -61,34 +36,29 @@ export const HTMLBlock = ({
 
   return (
     <>
-      <Panel
+      <BlockPreviewCard
         isEmpty={isEmpty}
-        bodyFill
-        bordered
+        emptyLabel={t('blocks.html.edit')}
+        editLabel={t('blocks.html.edit')}
+        onEdit={() => setHtmlDialogOpen(true)}
+        title={t('blocks.html.label')}
+        disabled={disabled}
       >
-        <PlaceholderInput onAddClick={() => setHtmlDialogOpen(true)}>
-          {!isEmpty && (
-            <Wrapper>
-              <IconWrapper>
-                <IconButton
-                  size="lg"
-                  icon={<MdEdit />}
-                  onClick={() => setHtmlDialogOpen(true)}
-                >
-                  {t('blocks.html.edit')}
-                </IconButton>
-              </IconWrapper>
-
-              <InnerHtmlWrapper>
-                <InnerHTML html={correctScript()} />
-              </InnerHtmlWrapper>
-            </Wrapper>
-          )}
-        </PlaceholderInput>
-      </Panel>
+        <HtmlPreview>
+          <InnerHTML html={correctScript()} />
+        </HtmlPreview>
+      </BlockPreviewCard>
 
       <Drawer
-        size="sm"
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isHtmlDialogOpen}
         onClose={() => setHtmlDialogOpen(false)}
       >

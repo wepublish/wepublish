@@ -1,7 +1,15 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  Paywall,
-  useDeletePaywallMutation,
-  usePaywallListQuery,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
+  DeletePaywallDocument,
+  FullPaywallFragment,
+  PaywallListDocument,
 } from '@wepublish/editor/api';
 import {
   CanCreatePaywall,
@@ -10,36 +18,29 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  DataTable,
   IconButton,
+  IconButtonTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PaddedCell,
-  Table,
   TableWrapper,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Modal,
-  Table as RTable,
-} from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+import { Link as RouterLink } from 'react-router-dom';
 
 function PaywallList() {
   const { t } = useTranslation();
-  const [paywallToDelete, setPaywallToDelete] = useState<Paywall | undefined>(
-    undefined
-  );
+  const [paywallToDelete, setPaywallToDelete] = useState<
+    FullPaywallFragment | undefined
+  >(undefined);
 
-  const { data, loading, refetch } = usePaywallListQuery({});
-  const [deletePaywall] = useDeletePaywallMutation({
+  const { data, loading, refetch } = useQuery(PaywallListDocument, {});
+  const [deletePaywall] = useMutation(DeletePaywallDocument, {
     onCompleted() {
       refetch();
     },
@@ -49,62 +50,48 @@ function PaywallList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('paywall.overview.title')}</h2>
+          <PageTitle>{t('paywall.overview.title')}</PageTitle>
         </ListViewHeader>
 
         <ListViewActions>
-          <Link to="create">
-            <RIconButton
-              appearance="primary"
-              loading={false}
-            >
-              <MdAdd />
-              {t('paywall.overview.createPaywall')}
-            </RIconButton>
-          </Link>
+          <Button
+            component={RouterLink}
+            to="create"
+            variant="contained"
+            loading={false}
+            startIcon={<MdAdd />}
+          >
+            {t('paywall.overview.createPaywall')}
+          </Button>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey="paywalls"
           data={data?.paywalls ?? []}
-        >
-          <Column
-            width={75}
-            resizable
-          >
-            <HeaderCell>{t('paywall.overview.active')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<Paywall>) =>
-                rowData.active ? `✅` : `❌`
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={300}
-            resizable
-          >
-            <HeaderCell>{t('paywall.overview.name')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<Paywall>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'active',
+              label: t('paywall.overview.active'),
+              width: 75,
+              render: rowData => (rowData.active ? `✅` : `❌`),
+            },
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('paywall.overview.name'),
+              width: 300,
+              render: rowData => (
                 <Link to={`edit/${rowData.id}`}>{rowData.name}</Link>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={500}
-            resizable
-          >
-            <HeaderCell>{t('paywall.overview.memberPlans')}</HeaderCell>
-
-            <RCell>
-              {(rowData: Paywall) =>
+              ),
+            },
+            {
+              id: 'memberplans',
+              label: t('paywall.overview.memberPlans'),
+              width: 500,
+              render: rowData =>
                 rowData.anyMemberPlan ?
                   t('paywall.overview.anyMemberPlan')
                 : rowData.memberPlans.map((mb, index) => (
@@ -113,52 +100,59 @@ function PaywallList() {
 
                       {!!rowData.memberPlans.at(index + 1) && <>, </>}
                     </Fragment>
-                  ))
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            resizable
-            fixed="right"
-            width={75}
-          >
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(paywall: RowDataType<Paywall>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setPaywallToDelete(paywall as Paywall)}
-                />
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+                  )),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: paywall => (
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    color="error"
+                    size="small"
+                    aria-label={t('delete')}
+                    onClick={() =>
+                      setPaywallToDelete(paywall as FullPaywallFragment)
+                    }
+                  >
+                    <MdDelete />
+                  </IconButton>
+                </IconButtonTooltip>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!paywallToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setPaywallToDelete(undefined)}
       >
-        <Modal.Title>{t('paywall.overview.areYouSure')}</Modal.Title>
+        <DialogTitle>{t('paywall.overview.areYouSure')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {paywallToDelete &&
             t('paywall.overview.areYouSureBody', {
               paywall: paywallToDelete.name,
             })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="text"
+            onClick={() => setPaywallToDelete(undefined)}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
             onClick={() => {
               deletePaywall({
                 variables: {
@@ -170,15 +164,8 @@ function PaywallList() {
           >
             {t('paywall.overview.areYouSureConfirmation')}
           </Button>
-
-          <Button
-            appearance="subtle"
-            onClick={() => setPaywallToDelete(undefined)}
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

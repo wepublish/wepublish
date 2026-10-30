@@ -2,14 +2,16 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { lighten } from '@mui/material';
 import {
+  AnalyticsProviderType,
+  CreateAnalyticsProviderSettingDocument,
   SettingAnalyticsProvider,
   SettingsIntegrationsAnalyticsDocument,
   UpdateAnalyticsProviderSettingDocument,
 } from '@wepublish/editor/api';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
 import { ComponentProps, forwardRef, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import googleLogo from './assets/google.svg';
@@ -34,26 +36,27 @@ const analyticsSettingsSchema = z.object({
 type IntegrationFormValues = z.infer<typeof analyticsSettingsSchema>;
 
 const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`
   aspect-ratio: 16/9;
-  border: 2px dashed ${({ theme }) => theme.palette.grey['300']};
-  background-color: ${({ theme }) => theme.palette.grey['100']};
+  border: 2px dashed ${({ theme }) => theme.vars.palette.grey['300']};
+  background-color: ${({ theme }) => theme.vars.palette.grey['100']};
+
+  [data-mui-color-scheme='dark'] & {
+    border-color: ${({ theme }) => theme.vars.palette.grey['700']};
+    background-color: ${({ theme }) => theme.vars.palette.grey['900']};
+  }
+
   display: grid;
   align-items: center;
   justify-content: center;
   text-align: center;
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
   cursor: pointer;
 
   ${({ valid, theme }) =>
@@ -61,13 +64,25 @@ const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`
     css`
       border-color: ${lighten(theme.palette.success.light, 0.5)};
       background-color: ${lighten(theme.palette.success.light, 0.9)};
+
+      [data-mui-color-scheme='dark'] & {
+        border-color: rgba(${theme.vars.palette.success.mainChannel} / 0.5);
+        background-color: rgba(
+          ${theme.vars.palette.success.mainChannel} / 0.12
+        );
+      }
     `}
 
   ${({ dragging, theme }) =>
     dragging &&
     css`
-      border-color: ${theme.palette.grey['200']};
-      background-color: ${theme.palette.grey['50']};
+      border-color: ${theme.vars.palette.grey['200']};
+      background-color: ${theme.vars.palette.grey['50']};
+
+      [data-mui-color-scheme='dark'] & {
+        border-color: ${theme.vars.palette.grey['600']};
+        background-color: ${theme.vars.palette.grey['800']};
+      }
     `}
 `;
 
@@ -93,7 +108,9 @@ const CustomDropzone = forwardRef<
         }
       };
       reader.onerror = () => {
-        showErrors(new Error('Error happened while reading file'));
+        showErrors(
+          new Error(t('integrations.analyticsSettings.readFileError'))
+        );
       };
       reader.readAsText(acceptedFile);
     },
@@ -138,23 +155,32 @@ export function AnalyticsIntegrationForm() {
       mutation={UpdateAnalyticsProviderSettingDocument}
       dataKey="analyticsProviderSettings"
       schema={analyticsSettingsSchema}
+      fixedProvider={{
+        id: 'google-analytics',
+        type: AnalyticsProviderType.Google,
+        name: 'Google Analytics',
+        createMutation: CreateAnalyticsProviderSettingDocument,
+      }}
       getLogo={() => googleLogo}
       fields={[
         {
           name: 'articlePrefix',
           label: t('integrations.analyticsSettings.articlePrefix'),
+          info: t('integrations.analyticsSettings.articlePrefixInfo'),
           type: 'text',
           autoComplete: 'one-time-code',
         },
         {
           name: 'property',
           label: t('integrations.analyticsSettings.property'),
+          info: t('integrations.analyticsSettings.propertyInfo'),
           type: 'text',
           autoComplete: 'one-time-code',
         },
         {
           name: 'credentials',
           label: t('integrations.analyticsSettings.credentials'),
+          info: t('integrations.analyticsSettings.credentialsInfo'),
           type: 'custom',
           render: CustomDropzone,
         },

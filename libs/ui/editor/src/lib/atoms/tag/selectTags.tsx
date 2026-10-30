@@ -1,34 +1,35 @@
-import { ApolloError, useApolloClient } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Autocomplete,
+  Divider as MuiDivider,
+  Paper,
+  PaperProps,
+  TextField,
+} from '@mui/material';
+import {
+  FullTagFragment,
   SortOrder,
-  Tag,
   TagDocument,
+  TagListDocument,
   TagQuery,
   TagQueryVariables,
   TagSort,
   TagType,
-  useTagListQuery,
 } from '@wepublish/editor/api';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Divider as RDivider,
-  Message,
-  Pagination as RPagination,
-  TagPicker,
-  toaster,
-} from 'rsuite';
-import type { Option } from 'rsuite/esm/internals/types';
 
-import { DEFAULT_MAX_TABLE_PAGES } from '../../utility';
+import { humanizeError } from '../../humanizeError';
+import { Pagination } from '../../listView/pagination';
+import { enqueueSnackbar } from '../../snackbar';
 
-const Divider = styled(RDivider)`
+const Divider = styled(MuiDivider)`
   margin: '12px 0';
 `;
 
-const Pagination = styled(RPagination)`
-  margin: 0 12px 12px;
+const StyledPagination = styled(Pagination)`
+  padding: 8px 12px 12px;
 `;
 
 interface SelectTagsProps {
@@ -36,11 +37,13 @@ interface SelectTagsProps {
   disabled?: boolean;
   name?: string;
   tagType: TagType;
-  defaultTags: Pick<Tag, 'id' | 'tag'>[];
+  defaultTags: Pick<FullTagFragment, 'id' | 'tag'>[];
   selectedTags?: string[] | null;
   setSelectedTags(tags: string[]): void;
   placeholder?: string;
 }
+
+type LabelledOption = { label: string; value: string };
 
 export function SelectTags({
   className,
@@ -59,7 +62,7 @@ export function SelectTags({
     defaultTags.map(tag => ({
       label: tag.tag || t('comments.edit.unnamedTag'),
       value: tag.id,
-    })) as Option<string | number>[]
+    })) as LabelledOption[]
   );
   const resolvedTagIdsRef = useRef<Set<string>>(new Set());
 
@@ -126,17 +129,11 @@ export function SelectTags({
    * Error handling
    * @param error
    */
-  const showErrors = (error: ApolloError): void => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {error.message}
-      </Message>
-    );
+  const showErrors = (error: Error): void => {
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
 
   /**
@@ -144,7 +141,7 @@ export function SelectTags({
    */
   const take = 50;
 
-  const { data: tagsData, refetch } = useTagListQuery({
+  const { data: tagsData, refetch } = useQuery(TagListDocument, {
     variables: {
       filter: {
         type: tagType,
@@ -154,7 +151,6 @@ export function SelectTags({
       take,
       skip: (page - 1) * take,
     },
-    onError: showErrors,
   });
 
   /**
@@ -171,57 +167,63 @@ export function SelectTags({
     }));
   }, [tagsData, t]);
 
+  const labelFor = (id: string) =>
+    availableTags.find(option => option.value === id)?.label ??
+    (cacheData.find(item => item.value === id)?.label as string) ??
+    id;
+
+  const PaperWithPager = useCallback(
+    ({ children, ...props }: PaperProps) => (
+      <Paper {...props}>
+        {children}
+
+        <Divider />
+
+        <div onMouseDown={event => event.preventDefault()}>
+          <StyledPagination
+            compact
+            state={{
+              page,
+              limit: take,
+              setPage,
+              setLimit: () => undefined /* page size is fixed here */,
+            }}
+            totalCount={tagsData?.tags?.totalCount ?? 0}
+          />
+        </div>
+      </Paper>
+    ),
+    [page, setPage, tagsData]
+  );
+
   return (
-    <TagPicker
-      block
-      virtualized
-      placeholder={placeholder}
+    <Autocomplete
+      multiple
       disabled={disabled}
       className={className}
-      name={name}
-      value={selectedTags}
-      data={availableTags}
-      cacheData={cacheData}
-      onSearch={word => {
+      options={[
+        ...availableTags.map(option => option.value),
+        ...(selectedTags ?? []).filter(
+          id => !availableTags.some(option => option.value === id)
+        ),
+      ]}
+      getOptionLabel={id => labelFor(id)}
+      filterOptions={options => options}
+      onInputChange={(_event, word) => {
         setPage(1);
-        refetch({
-          filter: {
-            tag: word,
-            type: tagType,
-          },
-        });
+        refetch({ filter: { tag: word, type: tagType } });
       }}
-      onSelect={(value, item, event) => {
-        setCacheData([...cacheData, item]);
-        setPage(1);
-      }}
-      onChange={(value, item) => {
-        setSelectedTags(value);
-      }}
-      renderListbox={menu => {
-        return (
-          <>
-            {menu}
-
-            <Divider />
-
-            <Pagination
-              limit={take}
-              maxButtons={DEFAULT_MAX_TABLE_PAGES}
-              first
-              last
-              prev
-              next
-              ellipsis
-              boundaryLinks
-              layout={['total', '-', '|', 'pager']}
-              total={tagsData?.tags?.totalCount ?? 0}
-              activePage={page}
-              onChangePage={setPage}
-            />
-          </>
-        );
-      }}
+      value={selectedTags ?? []}
+      onChange={(_event, picked) => setSelectedTags(picked)}
+      slots={{ paper: PaperWithPager }}
+      renderInput={params => (
+        <TextField
+          {...params}
+          name={name}
+          placeholder={placeholder}
+        />
+      )}
+      fullWidth
     />
   );
 }

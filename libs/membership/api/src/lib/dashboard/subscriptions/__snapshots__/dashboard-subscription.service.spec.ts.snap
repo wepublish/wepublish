@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DashboardSubscriptionService should get all active subscribers 1`] = `
+exports[`DashboardSubscriptionService > should get all active subscribers 1`] = `
 [
   {
     "deactivationDate": undefined,
@@ -35,7 +35,7 @@ exports[`DashboardSubscriptionService should get all active subscribers 1`] = `
 ]
 `;
 
-exports[`DashboardSubscriptionService should get all active subscribers 2`] = `
+exports[`DashboardSubscriptionService > should get all active subscribers 2`] = `
 {
   "include": {
     "deactivation": true,
@@ -68,7 +68,7 @@ exports[`DashboardSubscriptionService should get all active subscribers 2`] = `
 }
 `;
 
-exports[`DashboardSubscriptionService should get the new deactivations 1`] = `
+exports[`DashboardSubscriptionService > should get the new deactivations 1`] = `
 [
   {
     "deactivationDate": "2023-01-01T00:00:00.000Z",
@@ -82,7 +82,7 @@ exports[`DashboardSubscriptionService should get the new deactivations 1`] = `
 ]
 `;
 
-exports[`DashboardSubscriptionService should get the new deactivations 2`] = `
+exports[`DashboardSubscriptionService > should get the new deactivations 2`] = `
 {
   "include": {
     "deactivation": true,
@@ -108,7 +108,7 @@ exports[`DashboardSubscriptionService should get the new deactivations 2`] = `
 }
 `;
 
-exports[`DashboardSubscriptionService should get the new subscribers 1`] = `
+exports[`DashboardSubscriptionService > should get the new subscribers 1`] = `
 [
   {
     "deactivationDate": "2023-01-20T14:11:26.283Z",
@@ -133,7 +133,7 @@ exports[`DashboardSubscriptionService should get the new subscribers 1`] = `
 ]
 `;
 
-exports[`DashboardSubscriptionService should get the new subscribers 2`] = `
+exports[`DashboardSubscriptionService > should get the new subscribers 2`] = `
 {
   "include": {
     "deactivation": true,
@@ -155,7 +155,7 @@ exports[`DashboardSubscriptionService should get the new subscribers 2`] = `
 }
 `;
 
-exports[`DashboardSubscriptionService should get the renewing subscribers 1`] = `
+exports[`DashboardSubscriptionService > should get the renewing subscribers 1`] = `
 [
   {
     "memberPlan": "foo",
@@ -167,7 +167,7 @@ exports[`DashboardSubscriptionService should get the renewing subscribers 1`] = 
 ]
 `;
 
-exports[`DashboardSubscriptionService should get the renewing subscribers 2`] = `
+exports[`DashboardSubscriptionService > should get the renewing subscribers 2`] = `
 {
   "include": {
     "memberPlan": {

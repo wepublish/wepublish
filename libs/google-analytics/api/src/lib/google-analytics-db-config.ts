@@ -1,5 +1,5 @@
 import { PrismaClient, AnalyticsProviderType } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { JWTInput } from 'google-auth-library';
 import { GoogleAnalyticsConfig } from './google-analytics.service';
@@ -10,7 +10,7 @@ export class GoogleAnalyticsDbConfig {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
+    private readonly kv: NamespacedCache,
     private readonly id: string
   ) {}
 
@@ -18,13 +18,9 @@ export class GoogleAnalyticsDbConfig {
    * Initialize the database record if it doesn't exist
    */
   async initDatabaseConfiguration(): Promise<void> {
-    const existing = await this.prisma.settingAnalyticsProvider.findUnique({
-      where: { id: this.id },
-    });
-
-    if (!existing) {
-      await this.prisma.settingAnalyticsProvider.create({
-        data: {
+    await this.prisma.settingAnalyticsProvider.createMany({
+      data: [
+        {
           id: this.id,
           type: AnalyticsProviderType.GOOGLE,
           name: 'Google Analytics',
@@ -32,8 +28,9 @@ export class GoogleAnalyticsDbConfig {
           property: null,
           articlePrefix: '',
         },
-      });
-    }
+      ],
+      skipDuplicates: true,
+    });
   }
 
   private async loadGoogleAnalytics(): Promise<GoogleAnalyticsConfig> {

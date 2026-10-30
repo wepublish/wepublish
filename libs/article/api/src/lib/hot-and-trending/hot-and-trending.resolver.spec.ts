@@ -1,8 +1,13 @@
+import type { Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
+import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
+import { PublicContentCacheModule } from '@wepublish/public-content-cache/api';
 import {
   HOT_AND_TRENDING_DATA_SOURCE,
   HotAndTrendingResolver,
@@ -24,7 +29,7 @@ describe('HotAndTrendingResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -45,11 +50,11 @@ describe('HotAndTrendingResolver', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 
@@ -63,5 +68,69 @@ describe('HotAndTrendingResolver', () => {
         expect(res.body.data.hotAndTrending).toMatchSnapshot();
       })
       .expect(200);
+  });
+});
+
+describe('HotAndTrendingResolver anonymous answers', () => {
+  let app: INestApplication;
+  let getMostViewedArticles: Mock;
+
+  beforeEach(async () => {
+    getMostViewedArticles = vi.fn();
+
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        NamespacedCacheTestingModule.forRoot(),
+        PublicContentCacheModule,
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+          driver: NodeApolloDriver,
+          autoSchemaFile: true,
+          path: '/',
+          cache: 'bounded',
+        }),
+      ],
+      providers: [
+        HotAndTrendingResolver,
+        {
+          provide: HOT_AND_TRENDING_DATA_SOURCE,
+          useValue: { getMostViewedArticles },
+        },
+      ],
+    }).compile();
+
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
+
+  const askAnonymously = async () =>
+    (
+      await request(app.getHttpServer())
+        .post('')
+        .send({ query: hotAndTrendingQuery })
+        .expect(200)
+    ).body.data.hotAndTrending;
+
+  it('keeps answering an anonymous lookup from the cache', async () => {
+    getMostViewedArticles.mockResolvedValue([{ id: '123' }]);
+
+    await askAnonymously();
+    await askAnonymously();
+
+    expect(getMostViewedArticles).toHaveBeenCalledTimes(1);
+  });
+
+  it('answers a failed lookup with an empty list but does not keep that answer', async () => {
+    getMostViewedArticles
+      .mockRejectedValueOnce(new Error('GA4 unavailable'))
+      .mockResolvedValue([{ id: '123' }]);
+
+    expect(await askAnonymously()).toEqual([]);
+    expect(await askAnonymously()).toEqual([
+      { __typename: 'Article', id: '123' },
+    ]);
   });
 });

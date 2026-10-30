@@ -4,15 +4,24 @@ import { FieldError } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 export const fontWeights = [
-  { value: 100, label: 'Thin' },
-  { value: 200, label: 'Extra Light' },
-  { value: 300, label: 'Light' },
-  { value: 400, label: 'Normal' },
-  { value: 500, label: 'Medium' },
-  { value: 600, label: 'Semi Bold' },
-  { value: 700, label: 'Bold' },
-  { value: 800, label: 'Extra Bold' },
-  { value: 900, label: 'Black' },
+  { value: 100, labelKey: 'websiteSettings.theme.typography.fontWeightThin' },
+  {
+    value: 200,
+    labelKey: 'websiteSettings.theme.typography.fontWeightExtraLight',
+  },
+  { value: 300, labelKey: 'websiteSettings.theme.typography.fontWeightLight' },
+  { value: 400, labelKey: 'websiteSettings.theme.typography.fontWeightNormal' },
+  { value: 500, labelKey: 'websiteSettings.theme.typography.fontWeightMedium' },
+  {
+    value: 600,
+    labelKey: 'websiteSettings.theme.typography.fontWeightSemiBold',
+  },
+  { value: 700, labelKey: 'websiteSettings.theme.typography.fontWeightBold' },
+  {
+    value: 800,
+    labelKey: 'websiteSettings.theme.typography.fontWeightExtraBold',
+  },
+  { value: 900, labelKey: 'websiteSettings.theme.typography.fontWeightBlack' },
 ] as const;
 
 type FontWeightSelectProps = {
@@ -21,24 +30,26 @@ type FontWeightSelectProps = {
   onChange: (value: number | null) => void;
   onBlur?: () => void;
   error?: FieldError;
+  labelId?: string;
 };
 
 export const FontWeightSelect = memo(
   forwardRef<HTMLDivElement, FontWeightSelectProps>(
-    ({ name, value, onChange, onBlur, error }, ref) => {
+    ({ name, value, onChange, onBlur, error, labelId }, ref) => {
       const { t } = useTranslation();
 
       return (
         <Select
           ref={ref}
           name={name}
+          labelId={labelId}
           value={value ?? ''}
-          size="small"
           displayEmpty
           error={!!error}
-          onChange={e =>
-            onChange(e.target.value === '' ? null : Number(e.target.value))
-          }
+          onChange={e => {
+            const newValue = e.target.value as number | '';
+            onChange(newValue === '' ? null : Number(newValue));
+          }}
           onBlur={onBlur}
           sx={{ width: '100%' }}
         >
@@ -48,13 +59,13 @@ export const FontWeightSelect = memo(
             </em>
           </MenuItem>
 
-          {fontWeights.map(({ value: fw, label }) => (
+          {fontWeights.map(({ value: fw, labelKey }) => (
             <MenuItem
               key={fw}
               value={fw}
               sx={{ fontWeight: fw }}
             >
-              {label}
+              {t(labelKey)}
             </MenuItem>
           ))}
         </Select>

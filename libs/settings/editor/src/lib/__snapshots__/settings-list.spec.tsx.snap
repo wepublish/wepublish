@@ -3,8 +3,6 @@
 exports[`SettingList > renders successfully 1`] = `
 <DocumentFragment>
   <form
-    data-disabled="false"
-    data-rs="form"
     data-testid="form"
   >
     <div
@@ -13,413 +11,376 @@ exports[`SettingList > renders successfully 1`] = `
       <div
         class="emotion-2 emotion-3"
       >
-        <h2>
+        <h1
+          class="MuiTypography-root MuiTypography-h2 emotion-4"
+        >
           settingList.settings
-        </h2>
+        </h1>
       </div>
       <div
-        class="emotion-4 emotion-5"
+        class="emotion-5 emotion-6"
       >
         <button
-          class="actionButton rs-btn-icon rs-btn"
-          data-appearance="default"
-          data-disabled="true"
-          data-placement="start"
-          data-size="lg"
-          data-with-text="true"
+          class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-outlined MuiButton-sizeMedium MuiButton-colorPrimary emotion-7"
           disabled=""
+          tabindex="-1"
           type="reset"
         >
-          <svg
-            fill="currentColor"
-            height="1em"
-            stroke="currentColor"
-            stroke-width="0"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
-            />
-          </svg>
-          cancel
           <span
-            class="rs-ripple-pond"
+            class="MuiButton-icon MuiButton-startIcon emotion-8"
           >
-            <span
-              class="rs-ripple"
-            />
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2m5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12z"
+              />
+            </svg>
           </span>
+          cancel
         </button>
         <button
-          class="actionButton rs-btn-icon rs-btn"
-          data-appearance="primary"
-          data-disabled="true"
-          data-placement="start"
-          data-size="lg"
-          data-with-text="true"
+          class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-9"
           disabled=""
+          tabindex="-1"
           type="submit"
         >
-          <svg
-            fill="currentColor"
-            height="1em"
-            stroke="currentColor"
-            stroke-width="0"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
-            />
-          </svg>
-          save
           <span
-            class="rs-ripple-pond"
+            class="MuiButton-icon MuiButton-startIcon emotion-8"
           >
-            <span
-              class="rs-ripple"
-            />
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3m3-10H5V5h10z"
+              />
+            </svg>
           </span>
+          save
         </button>
       </div>
     </div>
     <div
-      class="rs-grid-container-fluid"
+      class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-11"
     >
       <div
-        class="rs-row"
+        class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-12"
       >
         <div
-          class="rs-col rs-col-xs-12"
+          class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-6 emotion-13"
         >
           <div
-            class="rs-row"
+            class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-11"
           >
             <div
-              class="rs-col rs-col-xs-24"
+              class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-15"
             >
               <div
-                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root emotion-16"
+                style="--Paper-shadow: var(--mui-shadows-1);"
               >
                 <div
-                  class="rs-panel-header"
+                  class="MuiCardHeader-root emotion-17"
                 >
                   <div
-                    class="rs-panel-title"
+                    class="MuiCardHeader-content emotion-18"
                   >
-                    settingList.comments
+                    <span
+                      class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title emotion-19"
+                    >
+                      settingList.comments
+                    </span>
                   </div>
                 </div>
                 <div
-                  class="rs-panel-body rs-scroll-view rs-scroll-view-custom-scrollbar"
-                  data-testid="scroll-view"
+                  class="MuiCardContent-root emotion-20"
                 >
                   <div
-                    class="rs-form-stack rs-form-stack-vertical rs-form-stack-fluid"
+                    class="MuiStack-root emotion-21"
                   >
                     <div
-                      class="rs-form-group"
-                      role="group"
+                      class="MuiFormGroup-root emotion-22"
                     >
-                      <label
-                        class="rs-form-control-label"
-                        for="ALLOW_GUEST_COMMENTING"
-                        id="ALLOW_GUEST_COMMENTING-label"
-                      >
-                        settingList.guestCommenting
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
-                      >
-                        <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
-                        />
-                        <span
-                          class="rs-toggle-track"
-                        />
-                      </label>
-                    </div>
-                    <div
-                      class="rs-form-group"
-                      role="group"
-                    >
-                      <label
-                        class="rs-form-control-label"
-                        for="ALLOW_GUEST_COMMENT_RATING"
-                        id="ALLOW_GUEST_COMMENT_RATING-label"
-                      >
-                        settingList.allowGuestCommentRating
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
-                      >
-                        <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
-                        />
-                        <span
-                          class="rs-toggle-track"
-                        />
-                      </label>
-                    </div>
-                    <div
-                      class="rs-form-group"
-                      role="group"
-                    >
-                      <label
-                        class="rs-form-control-label"
-                        for="ALLOW_COMMENT_EDITING"
-                        id="ALLOW_COMMENT_EDITING-label"
-                      >
-                        settingList.allowCommentEditing
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
-                      >
-                        <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
-                        />
-                        <span
-                          class="rs-toggle-track"
-                        />
-                      </label>
-                    </div>
-                    <div
-                      class="rs-form-group"
-                      role="group"
-                    >
-                      <label
-                        class="rs-form-control-label"
-                        for="COMMENT_CHAR_LIMIT"
-                        id="COMMENT_CHAR_LIMIT-label"
-                      >
-                        settingList.commentCharLimit
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
                       <div
-                        class="rs-input-group"
-                        data-focus="false"
-                        data-size="md"
+                        class="MuiBox-root emotion-23"
                       >
-                        <div
-                          class="rs-form-control rs-form-control-wrapper"
-                          data-testid="form-control-wrapper"
+                        <label
+                          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                         >
-                          <div
-                            class="rs-number-input rs-input-group"
-                            data-disabled="false"
-                            data-focus="false"
-                            data-inside="true"
-                            data-size="md"
+                          <span
+                            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
                           >
                             <input
-                              aria-describedby="COMMENT_CHAR_LIMIT-help-text"
-                              aria-labelledby="COMMENT_CHAR_LIMIT-label"
-                              autocomplete="off"
-                              class="rs-input"
-                              data-size="md"
-                              id="COMMENT_CHAR_LIMIT"
-                              inputmode="numeric"
-                              name="COMMENT_CHAR_LIMIT"
-                              step="1"
-                              type="text"
-                              value="0"
+                              class="PrivateSwitchBase-input emotion-26"
+                              data-indeterminate="false"
+                              name="ALLOW_GUEST_COMMENTING"
+                              type="checkbox"
+                              value="false"
                             />
-                            <span
-                              class="rs-number-input-btn-group-vertical"
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                              data-testid="CheckBoxOutlineBlankIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
                             >
+                              <path
+                                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                          >
+                            settingList.guestCommenting 
+                            <button
+                              aria-label="settingList.warnings.guestCommenting"
+                              class="emotion-29 emotion-30"
+                              data-mui-internal-clone-element="true"
+                              type="button"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="16"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 24 24"
+                                width="16"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        </label>
+                      </div>
+                      <div
+                        class="MuiBox-root emotion-23"
+                      >
+                        <label
+                          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
+                        >
+                          <span
+                            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
+                          >
+                            <input
+                              class="PrivateSwitchBase-input emotion-26"
+                              data-indeterminate="false"
+                              name="ALLOW_GUEST_COMMENT_RATING"
+                              type="checkbox"
+                              value="false"
+                            />
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                              data-testid="CheckBoxOutlineBlankIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                          >
+                            settingList.allowGuestCommentRating 
+                            <button
+                              aria-label="settingList.warnings.guestCommentRating"
+                              class="emotion-29 emotion-30"
+                              data-mui-internal-clone-element="true"
+                              type="button"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="16"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 24 24"
+                                width="16"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        </label>
+                      </div>
+                      <div
+                        class="MuiBox-root emotion-23"
+                      >
+                        <label
+                          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
+                        >
+                          <span
+                            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
+                          >
+                            <input
+                              class="PrivateSwitchBase-input emotion-26"
+                              data-indeterminate="false"
+                              name="ALLOW_COMMENT_EDITING"
+                              type="checkbox"
+                              value="false"
+                            />
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                              data-testid="CheckBoxOutlineBlankIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                          >
+                            settingList.allowCommentEditing 
+                            <button
+                              aria-label="settingList.info.allowCommentEditing"
+                              class="emotion-29 emotion-30"
+                              data-mui-internal-clone-element="true"
+                              type="button"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="16"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 24 24"
+                                width="16"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_6_"
+                        id="_r_6_-label"
+                      >
+                        settingList.commentCharLimit 
+                        <button
+                          aria-label="settingList.info.commentCharLimit"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                            />
+                          </svg>
+                        </button>
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl emotion-51"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-52"
+                          id="_r_6_"
+                          name="COMMENT_CHAR_LIMIT"
+                          type="number"
+                          value="0"
+                        />
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.commentCharLimit 
                               <button
-                                aria-label="Increment"
-                                class="rs-number-input-touchspin-up rs-btn"
-                                data-appearance="subtle"
-                                data-disabled="false"
-                                data-size="md"
-                                tabindex="-1"
+                                aria-label="settingList.info.commentCharLimit"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
                                 type="button"
                               >
                                 <svg
-                                  aria-hidden="true"
-                                  aria-label="arrow up line"
-                                  class="rs-icon"
-                                  data-category="direction"
                                   fill="currentColor"
-                                  focusable="false"
-                                  height="1em"
-                                  viewBox="0 0 16 16"
-                                  width="1em"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M3.166 10.872a.5.5 0 0 0 .706-.037L8 6.248l4.128 4.587a.5.5 0 1 0 .743-.669l-4.5-5a.5.5 0 0 0-.744 0l-4.5 5a.5.5 0 0 0 .037.706z"
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
                                   />
-                                </svg>
-                                <span
-                                  class="rs-ripple-pond"
-                                >
-                                  <span
-                                    class="rs-ripple"
-                                  />
-                                </span>
-                              </button>
-                              <button
-                                aria-label="Decrement"
-                                class="rs-number-input-touchspin-down rs-btn"
-                                data-appearance="subtle"
-                                data-disabled="false"
-                                data-size="md"
-                                tabindex="-1"
-                                type="button"
-                              >
-                                <svg
-                                  aria-hidden="true"
-                                  aria-label="arrow down line"
-                                  class="rs-icon"
-                                  data-category="direction"
-                                  fill="currentColor"
-                                  focusable="false"
-                                  height="1em"
-                                  viewBox="0 0 16 16"
-                                  width="1em"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
                                   <path
-                                    d="M3.166 5.128a.5.5 0 0 1 .706.037L8 9.752l4.128-4.587a.5.5 0 1 1 .743.669l-4.5 5a.5.5 0 0 1-.744 0l-4.5-5a.5.5 0 0 1 .037-.706z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
-                                <span
-                                  class="rs-ripple-pond"
-                                >
-                                  <span
-                                    class="rs-ripple"
-                                  />
-                                </span>
                               </button>
                             </span>
-                          </div>
-                        </div>
+                          </legend>
+                        </fieldset>
                       </div>
                     </div>
                   </div>
@@ -427,78 +388,88 @@ exports[`SettingList > renders successfully 1`] = `
               </div>
             </div>
             <div
-              class="rs-col rs-col-xs-24"
+              class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-15"
             >
               <div
-                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root emotion-16"
+                style="--Paper-shadow: var(--mui-shadows-1);"
               >
                 <div
-                  class="rs-panel-header"
+                  class="MuiCardHeader-root emotion-17"
                 >
                   <div
-                    class="rs-panel-title"
+                    class="MuiCardHeader-content emotion-18"
                   >
-                    settingList.polls
-                    <div
-                      class="emotion-8 emotion-9"
+                    <span
+                      class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title emotion-19"
                     >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                        />
-                      </svg>
-                    </div>
+                      settingList.polls
+                    </span>
                   </div>
                 </div>
                 <div
-                  class="rs-panel-body rs-scroll-view rs-scroll-view-custom-scrollbar"
-                  data-testid="scroll-view"
+                  class="MuiCardContent-root emotion-20"
                 >
                   <div
-                    class="rs-form-stack rs-form-stack-vertical rs-form-stack-fluid"
+                    class="MuiStack-root emotion-21"
                   >
                     <div
-                      class="rs-form-group"
-                      role="group"
+                      class="MuiBox-root emotion-23"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="guestPollVote"
-                        id="guestPollVote-label"
+                        class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                       >
-                        settingList.guestPollVote
-                      </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
-                      >
-                        <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
-                        />
                         <span
-                          class="rs-toggle-track"
-                        />
+                          class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
+                        >
+                          <input
+                            class="PrivateSwitchBase-input emotion-26"
+                            data-indeterminate="false"
+                            name="ALLOW_GUEST_POLL_VOTING"
+                            type="checkbox"
+                            value="false"
+                          />
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                            data-testid="CheckBoxOutlineBlankIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                            />
+                          </svg>
+                        </span>
+                        <span
+                          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                        >
+                          settingList.guestPollVote 
+                          <button
+                            aria-label="settingList.warnings.guestPollVote"
+                            class="emotion-29 emotion-30"
+                            data-mui-internal-clone-element="true"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                   </div>
@@ -506,391 +477,501 @@ exports[`SettingList > renders successfully 1`] = `
               </div>
             </div>
             <div
-              class="rs-col rs-col-xs-24"
+              class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-15"
             >
               <div
-                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root emotion-16"
+                style="--Paper-shadow: var(--mui-shadows-1);"
               >
                 <div
-                  class="rs-panel-header"
+                  class="MuiCardHeader-root emotion-17"
                 >
                   <div
-                    class="rs-panel-title"
+                    class="MuiCardHeader-content emotion-18"
                   >
-                    settingList.memberships
+                    <span
+                      class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title emotion-19"
+                    >
+                      settingList.memberships
+                    </span>
                   </div>
                 </div>
                 <div
-                  class="rs-panel-body rs-scroll-view rs-scroll-view-custom-scrollbar"
-                  data-testid="scroll-view"
+                  class="MuiCardContent-root emotion-20"
                 >
                   <div
-                    class="rs-form-stack rs-form-stack-vertical rs-form-stack-fluid"
+                    class="MuiStack-root emotion-21"
                   >
                     <div
-                      class="rs-form-group"
-                      role="group"
+                      class="MuiFormGroup-root emotion-22"
                     >
-                      <label
-                        class="rs-form-control-label"
-                        for="MAKE_NEW_SUBSCRIBERS_API_PUBLIC"
-                        id="MAKE_NEW_SUBSCRIBERS_API_PUBLIC-label"
+                      <div
+                        class="MuiBox-root emotion-23"
                       >
-                        settingList.newSubscriptionsApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
+                        <label
+                          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                         >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <span
+                            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
                           >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
+                            <input
+                              class="PrivateSwitchBase-input emotion-26"
+                              data-indeterminate="false"
+                              name="MAKE_NEW_SUBSCRIBERS_API_PUBLIC"
+                              type="checkbox"
+                              value="false"
                             />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                              data-testid="CheckBoxOutlineBlankIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                          >
+                            settingList.newSubscriptionsApiPublic 
+                            <button
+                              aria-label="settingList.info.newSubscriptionsApiPublic"
+                              class="emotion-29 emotion-30"
+                              data-mui-internal-clone-element="true"
+                              type="button"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="16"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 24 24"
+                                width="16"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        </label>
+                      </div>
+                      <div
+                        class="MuiBox-root emotion-23"
                       >
-                        <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
-                        />
-                        <span
-                          class="rs-toggle-track"
-                        />
-                      </label>
-                    </div>
-                    <div
-                      class="rs-form-group"
-                      role="group"
-                    >
-                      <label
-                        class="rs-form-control-label"
-                        for="MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC"
-                        id="MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC-label"
-                      >
-                        settingList.activeSubscriptionsApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
+                        <label
+                          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                         >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <span
+                            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
                           >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
+                            <input
+                              class="PrivateSwitchBase-input emotion-26"
+                              data-indeterminate="false"
+                              name="MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC"
+                              type="checkbox"
+                              value="false"
                             />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                              data-testid="CheckBoxOutlineBlankIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                          >
+                            settingList.activeSubscriptionsApiPublic 
+                            <button
+                              aria-label="settingList.info.activeSubscriptionsApiPublic"
+                              class="emotion-29 emotion-30"
+                              data-mui-internal-clone-element="true"
+                              type="button"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="16"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 24 24"
+                                width="16"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        </label>
+                      </div>
+                      <div
+                        class="MuiBox-root emotion-23"
                       >
-                        <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
-                        />
-                        <span
-                          class="rs-toggle-track"
-                        />
-                      </label>
-                    </div>
-                    <div
-                      class="rs-form-group"
-                      role="group"
-                    >
-                      <label
-                        class="rs-form-control-label"
-                        for="MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC"
-                        id="MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC-label"
-                      >
-                        settingList.renewingSubscriptionsApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
+                        <label
+                          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                         >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <span
+                            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
                           >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
+                            <input
+                              class="PrivateSwitchBase-input emotion-26"
+                              data-indeterminate="false"
+                              name="MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC"
+                              type="checkbox"
+                              value="false"
                             />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                              data-testid="CheckBoxOutlineBlankIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                          >
+                            settingList.renewingSubscriptionsApiPublic 
+                            <button
+                              aria-label="settingList.info.renewingSubscriptionsApiPublic"
+                              class="emotion-29 emotion-30"
+                              data-mui-internal-clone-element="true"
+                              type="button"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="16"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 24 24"
+                                width="16"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        </label>
+                      </div>
+                      <div
+                        class="MuiBox-root emotion-23"
                       >
-                        <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
-                        />
-                        <span
-                          class="rs-toggle-track"
-                        />
-                      </label>
-                    </div>
-                    <div
-                      class="rs-form-group"
-                      role="group"
-                    >
-                      <label
-                        class="rs-form-control-label"
-                        for="MAKE_NEW_DEACTIVATIONS_API_PUBLIC"
-                        id="MAKE_NEW_DEACTIVATIONS_API_PUBLIC-label"
-                      >
-                        settingList.newDeactivationsApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
+                        <label
+                          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                         >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <span
+                            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
                           >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
+                            <input
+                              class="PrivateSwitchBase-input emotion-26"
+                              data-indeterminate="false"
+                              name="MAKE_NEW_DEACTIVATIONS_API_PUBLIC"
+                              type="checkbox"
+                              value="false"
                             />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                              data-testid="CheckBoxOutlineBlankIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                          >
+                            settingList.newDeactivationsApiPublic 
+                            <button
+                              aria-label="settingList.info.newDeactivationsApiPublic"
+                              class="emotion-29 emotion-30"
+                              data-mui-internal-clone-element="true"
+                              type="button"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="16"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 24 24"
+                                width="16"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        </label>
+                      </div>
+                      <div
+                        class="MuiBox-root emotion-23"
                       >
-                        <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
-                        />
-                        <span
-                          class="rs-toggle-track"
-                        />
-                      </label>
-                    </div>
-                    <div
-                      class="rs-form-group"
-                      role="group"
-                    >
-                      <label
-                        class="rs-form-control-label"
-                        for="MAKE_EXPECTED_REVENUE_API_PUBLIC"
-                        id="MAKE_EXPECTED_REVENUE_API_PUBLIC-label"
-                      >
-                        settingList.expectedRevenueApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
+                        <label
+                          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                         >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <span
+                            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
                           >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
+                            <input
+                              class="PrivateSwitchBase-input emotion-26"
+                              data-indeterminate="false"
+                              name="MAKE_EXPECTED_REVENUE_API_PUBLIC"
+                              type="checkbox"
+                              value="false"
                             />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                              data-testid="CheckBoxOutlineBlankIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                          >
+                            settingList.expectedRevenueApiPublic 
+                            <button
+                              aria-label="settingList.info.expectedRevenueApiPublic"
+                              class="emotion-29 emotion-30"
+                              data-mui-internal-clone-element="true"
+                              type="button"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="16"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 24 24"
+                                width="16"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        </label>
+                      </div>
+                      <div
+                        class="MuiBox-root emotion-23"
                       >
-                        <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
-                        />
-                        <span
-                          class="rs-toggle-track"
-                        />
-                      </label>
-                    </div>
-                    <div
-                      class="rs-form-group"
-                      role="group"
-                    >
-                      <label
-                        class="rs-form-control-label"
-                        for="MAKE_REVENUE_API_PUBLIC"
-                        id="MAKE_REVENUE_API_PUBLIC-label"
-                      >
-                        settingList.revenueApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
+                        <label
+                          class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                         >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <span
+                            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
                           >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
+                            <input
+                              class="PrivateSwitchBase-input emotion-26"
+                              data-indeterminate="false"
+                              name="MAKE_REVENUE_API_PUBLIC"
+                              type="checkbox"
+                              value="false"
                             />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
-                      >
-                        <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
-                        />
-                        <span
-                          class="rs-toggle-track"
-                        />
-                      </label>
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                              data-testid="CheckBoxOutlineBlankIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                          >
+                            settingList.revenueApiPublic 
+                            <button
+                              aria-label="settingList.info.revenueApiPublic"
+                              class="emotion-29 emotion-30"
+                              data-mui-internal-clone-element="true"
+                              type="button"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="16"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 24 24"
+                                width="16"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div
-              class="rs-col rs-col-xs-24"
+              class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-15"
             >
               <div
-                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root emotion-16"
+                style="--Paper-shadow: var(--mui-shadows-1);"
               >
                 <div
-                  class="rs-panel-header"
+                  class="MuiCardHeader-root emotion-17"
                 >
                   <div
-                    class="rs-panel-title"
+                    class="MuiCardHeader-content emotion-18"
                   >
-                    settingList.subscriptionPlans
+                    <span
+                      class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title emotion-19"
+                    >
+                      settingList.subscriptionPlans
+                    </span>
                   </div>
                 </div>
                 <div
-                  class="rs-panel-body rs-scroll-view rs-scroll-view-custom-scrollbar"
-                  data-testid="scroll-view"
+                  class="MuiCardContent-root emotion-20"
                 >
                   <div
-                    class="rs-form-stack rs-form-stack-vertical rs-form-stack-fluid"
+                    class="MuiStack-root emotion-21"
                   >
                     <div
-                      class="rs-form-group"
-                      role="group"
+                      class="MuiBox-root emotion-23"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE"
-                        id="SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE-label"
+                        class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                       >
-                        settingList.subscriptionUpgradeModel
-                        <div
-                          class="emotion-8 emotion-9"
+                        <span
+                          class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
+                        >
+                          <input
+                            class="PrivateSwitchBase-input emotion-26"
+                            data-indeterminate="false"
+                            name="SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE"
+                            type="checkbox"
+                            value="false"
+                          />
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                            data-testid="CheckBoxOutlineBlankIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                            />
+                          </svg>
+                        </span>
+                        <span
+                          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                        >
+                          settingList.subscriptionUpgradeModel 
+                          <button
+                            aria-label="settingList.warnings.subscriptionUpgradeModel"
+                            class="emotion-29 emotion-30"
+                            data-mui-internal-clone-element="true"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                              />
+                            </svg>
+                          </button>
+                        </span>
+                      </label>
+                    </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_h_"
+                        id="_r_h_-label"
+                      >
+                        settingList.subscriptionExtendWindowDays 
+                        <button
+                          aria-label="settingList.info.subscriptionExtendWindowDays"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
                         >
                           <svg
                             fill="currentColor"
-                            height="1em"
+                            height="16"
                             stroke="currentColor"
                             stroke-width="0"
                             viewBox="0 0 24 24"
-                            width="1em"
+                            width="16"
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
@@ -898,31 +979,161 @@ exports[`SettingList > renders successfully 1`] = `
                               fill="none"
                             />
                             <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
-                        </div>
+                        </button>
                       </label>
-                      <label
-                        class="rs-toggle"
-                        data-checked="false"
-                        data-disabled="false"
-                        data-loading="false"
-                        data-placement="end"
-                        data-size="md"
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
-                          aria-checked="false"
-                          aria-disabled="false"
-                          aria-label="OFF"
-                          class="rs-toggle-input"
-                          role="switch"
-                          type="checkbox"
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_h_"
+                          name="SUBSCRIPTION_EXTEND_WINDOW_DAYS"
+                          type="number"
+                          value="30"
                         />
-                        <span
-                          class="rs-toggle-track"
-                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
+                          >
+                            settingList.days
+                          </p>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.subscriptionExtendWindowDays 
+                              <button
+                                aria-label="settingList.info.subscriptionExtendWindowDays"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                  />
+                                </svg>
+                              </button>
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_k_"
+                        id="_r_k_-label"
+                      >
+                        settingList.paymentMethodChangeExpiryDays 
+                        <button
+                          aria-label="settingList.info.paymentMethodChangeExpiryDays"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                            />
+                          </svg>
+                        </button>
                       </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_k_"
+                          name="PAYMENT_METHOD_CHANGE_EXPIRY_DAYS"
+                          type="number"
+                          value="14"
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
+                          >
+                            settingList.days
+                          </p>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.paymentMethodChangeExpiryDays 
+                              <button
+                                aria-label="settingList.info.paymentMethodChangeExpiryDays"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                  />
+                                </svg>
+                              </button>
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -931,53 +1142,60 @@ exports[`SettingList > renders successfully 1`] = `
           </div>
         </div>
         <div
-          class="rs-col rs-col-xs-12"
+          class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-6 emotion-13"
         >
           <div
-            class="rs-row"
+            class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-11"
           >
             <div
-              class="rs-col rs-col-xs-24"
+              class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-15"
             >
               <div
-                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root emotion-16"
+                style="--Paper-shadow: var(--mui-shadows-1);"
               >
                 <div
-                  class="rs-panel-header"
+                  class="MuiCardHeader-root emotion-17"
                 >
                   <div
-                    class="rs-panel-title"
+                    class="MuiCardHeader-content emotion-18"
                   >
-                    settingList.login
+                    <span
+                      class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title emotion-19"
+                    >
+                      settingList.login
+                    </span>
                   </div>
                 </div>
                 <div
-                  class="rs-panel-body rs-scroll-view rs-scroll-view-custom-scrollbar"
-                  data-testid="scroll-view"
+                  class="MuiCardContent-root emotion-20"
                 >
                   <div
-                    class="rs-form-stack rs-form-stack-vertical rs-form-stack-fluid"
+                    class="MuiStack-root emotion-21"
                   >
                     <div
-                      class="rs-form-group"
-                      role="group"
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="SEND_LOGIN_JWT_EXPIRES_MIN"
-                        id="SEND_LOGIN_JWT_EXPIRES_MIN-label"
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_n_"
+                        id="_r_n_-label"
                       >
-                        settingList.loginMinutes
-                        <div
-                          class="emotion-8 emotion-9"
+                        settingList.sessionTtlDays 
+                        <button
+                          aria-label="settingList.warnings.sessionTtlDays"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
                         >
                           <svg
                             fill="currentColor"
-                            height="1em"
+                            height="16"
                             stroke="currentColor"
                             stroke-width="0"
                             viewBox="0 0 24 24"
-                            width="1em"
+                            width="16"
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
@@ -985,139 +1203,92 @@ exports[`SettingList > renders successfully 1`] = `
                               fill="none"
                             />
                             <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
-                        </div>
+                        </button>
                       </label>
                       <div
-                        class="rs-input-group"
-                        data-focus="false"
-                        data-size="md"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_n_"
+                          name="SESSION_TTL_DAYS"
+                          type="number"
+                          value="7"
+                        />
                         <div
-                          class="rs-form-control rs-form-control-wrapper"
-                          data-testid="form-control-wrapper"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
-                          <div
-                            class="rs-number-input rs-input-group"
-                            data-disabled="false"
-                            data-focus="false"
-                            data-inside="true"
-                            data-size="md"
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
-                            <input
-                              aria-describedby="SEND_LOGIN_JWT_EXPIRES_MIN-help-text"
-                              aria-labelledby="SEND_LOGIN_JWT_EXPIRES_MIN-label"
-                              autocomplete="off"
-                              class="rs-input"
-                              data-size="md"
-                              id="SEND_LOGIN_JWT_EXPIRES_MIN"
-                              inputmode="numeric"
-                              name="SEND_LOGIN_JWT_EXPIRES_MIN"
-                              step="1"
-                              type="text"
-                              value="0"
-                            />
-                            <span
-                              class="rs-number-input-btn-group-vertical"
-                            >
+                            settingList.days
+                          </p>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.sessionTtlDays 
                               <button
-                                aria-label="Increment"
-                                class="rs-number-input-touchspin-up rs-btn"
-                                data-appearance="subtle"
-                                data-disabled="false"
-                                data-size="md"
-                                tabindex="-1"
+                                aria-label="settingList.warnings.sessionTtlDays"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
                                 type="button"
                               >
                                 <svg
-                                  aria-hidden="true"
-                                  aria-label="arrow up line"
-                                  class="rs-icon"
-                                  data-category="direction"
                                   fill="currentColor"
-                                  focusable="false"
-                                  height="1em"
-                                  viewBox="0 0 16 16"
-                                  width="1em"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M3.166 10.872a.5.5 0 0 0 .706-.037L8 6.248l4.128 4.587a.5.5 0 1 0 .743-.669l-4.5-5a.5.5 0 0 0-.744 0l-4.5 5a.5.5 0 0 0 .037.706z"
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
                                   />
-                                </svg>
-                                <span
-                                  class="rs-ripple-pond"
-                                >
-                                  <span
-                                    class="rs-ripple"
-                                  />
-                                </span>
-                              </button>
-                              <button
-                                aria-label="Decrement"
-                                class="rs-number-input-touchspin-down rs-btn"
-                                data-appearance="subtle"
-                                data-disabled="false"
-                                data-size="md"
-                                tabindex="-1"
-                                type="button"
-                              >
-                                <svg
-                                  aria-hidden="true"
-                                  aria-label="arrow down line"
-                                  class="rs-icon"
-                                  data-category="direction"
-                                  fill="currentColor"
-                                  focusable="false"
-                                  height="1em"
-                                  viewBox="0 0 16 16"
-                                  width="1em"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
                                   <path
-                                    d="M3.166 5.128a.5.5 0 0 1 .706.037L8 9.752l4.128-4.587a.5.5 0 1 1 .743.669l-4.5 5a.5.5 0 0 1-.744 0l-4.5-5a.5.5 0 0 1 .037-.706z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
-                                <span
-                                  class="rs-ripple-pond"
-                                >
-                                  <span
-                                    class="rs-ripple"
-                                  />
-                                </span>
                               </button>
                             </span>
-                          </div>
-                        </div>
-                        <span
-                          class="rs-input-group-addon"
-                        >
-                          settingList.minutes
-                        </span>
+                          </legend>
+                        </fieldset>
                       </div>
                     </div>
                     <div
-                      class="rs-form-group"
-                      role="group"
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="RESET_PASSWORD_JWT_EXPIRES_MIN"
-                        id="RESET_PASSWORD_JWT_EXPIRES_MIN-label"
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_q_"
+                        id="_r_q_-label"
                       >
-                        settingList.passwordToken
-                        <div
-                          class="emotion-8 emotion-9"
+                        settingList.loginMinutes 
+                        <button
+                          aria-label="settingList.info.loginMinutes"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
                         >
                           <svg
                             fill="currentColor"
-                            height="1em"
+                            height="16"
                             stroke="currentColor"
                             stroke-width="0"
                             viewBox="0 0 24 24"
-                            width="1em"
+                            width="16"
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
@@ -1125,523 +1296,529 @@ exports[`SettingList > renders successfully 1`] = `
                               fill="none"
                             />
                             <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                             />
                           </svg>
-                        </div>
+                        </button>
                       </label>
                       <div
-                        class="rs-input-group"
-                        data-focus="false"
-                        data-size="md"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_q_"
+                          name="SEND_LOGIN_JWT_EXPIRES_MIN"
+                          type="number"
+                          value="0"
+                        />
                         <div
-                          class="rs-form-control rs-form-control-wrapper"
-                          data-testid="form-control-wrapper"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
-                          <div
-                            class="rs-number-input rs-input-group"
-                            data-disabled="false"
-                            data-focus="false"
-                            data-inside="true"
-                            data-size="md"
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
-                            <input
-                              aria-describedby="RESET_PASSWORD_JWT_EXPIRES_MIN-help-text"
-                              aria-labelledby="RESET_PASSWORD_JWT_EXPIRES_MIN-label"
-                              autocomplete="off"
-                              class="rs-input"
-                              data-size="md"
-                              id="RESET_PASSWORD_JWT_EXPIRES_MIN"
-                              inputmode="numeric"
-                              name="RESET_PASSWORD_JWT_EXPIRES_MIN"
-                              step="1"
-                              type="text"
-                              value="0"
-                            />
-                            <span
-                              class="rs-number-input-btn-group-vertical"
-                            >
+                            settingList.minutes
+                          </p>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.loginMinutes 
                               <button
-                                aria-label="Increment"
-                                class="rs-number-input-touchspin-up rs-btn"
-                                data-appearance="subtle"
-                                data-disabled="false"
-                                data-size="md"
-                                tabindex="-1"
+                                aria-label="settingList.info.loginMinutes"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
                                 type="button"
                               >
                                 <svg
-                                  aria-hidden="true"
-                                  aria-label="arrow up line"
-                                  class="rs-icon"
-                                  data-category="direction"
                                   fill="currentColor"
-                                  focusable="false"
-                                  height="1em"
-                                  viewBox="0 0 16 16"
-                                  width="1em"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M3.166 10.872a.5.5 0 0 0 .706-.037L8 6.248l4.128 4.587a.5.5 0 1 0 .743-.669l-4.5-5a.5.5 0 0 0-.744 0l-4.5 5a.5.5 0 0 0 .037.706z"
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
                                   />
-                                </svg>
-                                <span
-                                  class="rs-ripple-pond"
-                                >
-                                  <span
-                                    class="rs-ripple"
-                                  />
-                                </span>
-                              </button>
-                              <button
-                                aria-label="Decrement"
-                                class="rs-number-input-touchspin-down rs-btn"
-                                data-appearance="subtle"
-                                data-disabled="false"
-                                data-size="md"
-                                tabindex="-1"
-                                type="button"
-                              >
-                                <svg
-                                  aria-hidden="true"
-                                  aria-label="arrow down line"
-                                  class="rs-icon"
-                                  data-category="direction"
-                                  fill="currentColor"
-                                  focusable="false"
-                                  height="1em"
-                                  viewBox="0 0 16 16"
-                                  width="1em"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
                                   <path
-                                    d="M3.166 5.128a.5.5 0 0 1 .706.037L8 9.752l4.128-4.587a.5.5 0 1 1 .743.669l-4.5 5a.5.5 0 0 1-.744 0l-4.5-5a.5.5 0 0 1 .037-.706z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
-                                <span
-                                  class="rs-ripple-pond"
-                                >
-                                  <span
-                                    class="rs-ripple"
-                                  />
-                                </span>
                               </button>
                             </span>
-                          </div>
-                        </div>
-                        <span
-                          class="rs-input-group-addon"
-                        >
-                          settingList.minutes
-                        </span>
+                          </legend>
+                        </fieldset>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="rs-col rs-col-xs-24"
-            >
-              <div
-                class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
-              >
-                <div
-                  class="rs-panel-header"
-                >
-                  <div
-                    class="rs-panel-title"
-                  >
-                    settingList.peering
                     <div
-                      class="emotion-8 emotion-9"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="rs-panel-body rs-scroll-view rs-scroll-view-custom-scrollbar"
-                  data-testid="scroll-view"
-                >
-                  <div
-                    class="rs-form-stack rs-form-stack-vertical rs-form-stack-fluid"
-                  >
-                    <div
-                      class="rs-form-group"
-                      role="group"
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="PEERING_TIMEOUT_MS"
-                        id="PEERING_TIMEOUT_MS-label"
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_t_"
+                        id="_r_t_-label"
                       >
-                        settingList.peerToken
+                        settingList.passwordToken 
+                        <button
+                          aria-label="settingList.info.passwordToken"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                            />
+                          </svg>
+                        </button>
                       </label>
                       <div
-                        class="rs-input-group"
-                        data-focus="false"
-                        data-size="md"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_t_"
+                          name="RESET_PASSWORD_JWT_EXPIRES_MIN"
+                          type="number"
+                          value="0"
+                        />
                         <div
-                          class="rs-form-control rs-form-control-wrapper"
-                          data-testid="form-control-wrapper"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
-                          <div
-                            class="rs-number-input rs-input-group"
-                            data-disabled="false"
-                            data-focus="false"
-                            data-inside="true"
-                            data-size="md"
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
-                            <input
-                              aria-describedby="PEERING_TIMEOUT_MS-help-text"
-                              aria-labelledby="PEERING_TIMEOUT_MS-label"
-                              autocomplete="off"
-                              class="rs-input"
-                              data-size="md"
-                              id="PEERING_TIMEOUT_MS"
-                              inputmode="numeric"
-                              name="PEERING_TIMEOUT_MS"
-                              step="1"
-                              type="text"
-                              value="100"
-                            />
-                            <span
-                              class="rs-number-input-btn-group-vertical"
-                            >
+                            settingList.minutes
+                          </p>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.passwordToken 
                               <button
-                                aria-label="Increment"
-                                class="rs-number-input-touchspin-up rs-btn"
-                                data-appearance="subtle"
-                                data-disabled="false"
-                                data-size="md"
-                                tabindex="-1"
+                                aria-label="settingList.info.passwordToken"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
                                 type="button"
                               >
                                 <svg
-                                  aria-hidden="true"
-                                  aria-label="arrow up line"
-                                  class="rs-icon"
-                                  data-category="direction"
                                   fill="currentColor"
-                                  focusable="false"
-                                  height="1em"
-                                  viewBox="0 0 16 16"
-                                  width="1em"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    d="M3.166 10.872a.5.5 0 0 0 .706-.037L8 6.248l4.128 4.587a.5.5 0 1 0 .743-.669l-4.5-5a.5.5 0 0 0-.744 0l-4.5 5a.5.5 0 0 0 .037.706z"
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
                                   />
-                                </svg>
-                                <span
-                                  class="rs-ripple-pond"
-                                >
-                                  <span
-                                    class="rs-ripple"
-                                  />
-                                </span>
-                              </button>
-                              <button
-                                aria-label="Decrement"
-                                class="rs-number-input-touchspin-down rs-btn"
-                                data-appearance="subtle"
-                                data-disabled="false"
-                                data-size="md"
-                                tabindex="-1"
-                                type="button"
-                              >
-                                <svg
-                                  aria-hidden="true"
-                                  aria-label="arrow down line"
-                                  class="rs-icon"
-                                  data-category="direction"
-                                  fill="currentColor"
-                                  focusable="false"
-                                  height="1em"
-                                  viewBox="0 0 16 16"
-                                  width="1em"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
                                   <path
-                                    d="M3.166 5.128a.5.5 0 0 1 .706.037L8 9.752l4.128-4.587a.5.5 0 1 1 .743.669l-4.5 5a.5.5 0 0 1-.744 0l-4.5-5a.5.5 0 0 1 .037-.706z"
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                                   />
                                 </svg>
-                                <span
-                                  class="rs-ripple-pond"
-                                >
-                                  <span
-                                    class="rs-ripple"
-                                  />
-                                </span>
                               </button>
                             </span>
-                          </div>
-                        </div>
-                        <span
-                          class="rs-input-group-addon"
-                        >
-                          settingList.ms
-                        </span>
+                          </legend>
+                        </fieldset>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="rs-col rs-col-xs-24"
-          >
             <div
-              class="emotion-6 emotion-7 rs-panel rs-panel-bordered"
+              class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-15"
             >
               <div
-                class="rs-panel-header"
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root emotion-16"
+                style="--Paper-shadow: var(--mui-shadows-1);"
               >
                 <div
-                  class="rs-panel-title"
+                  class="MuiCardHeader-root emotion-17"
                 >
-                  settingList.articlePage
+                  <div
+                    class="MuiCardHeader-content emotion-18"
+                  >
+                    <span
+                      class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title emotion-19"
+                    >
+                      settingList.peering
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="MuiCardContent-root emotion-20"
+                >
+                  <div
+                    class="MuiStack-root emotion-21"
+                  >
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_10_"
+                        id="_r_10_-label"
+                      >
+                        settingList.peerToken 
+                        <button
+                          aria-label="settingList.info.peerToken"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                            />
+                          </svg>
+                        </button>
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_10_"
+                          name="PEERING_TIMEOUT_MS"
+                          type="number"
+                          value="100"
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
+                          >
+                            settingList.ms
+                          </p>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.peerToken 
+                              <button
+                                aria-label="settingList.info.peerToken"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                                  />
+                                </svg>
+                              </button>
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
+            <div
+              class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-15"
+            >
               <div
-                class="rs-panel-body rs-scroll-view rs-scroll-view-custom-scrollbar"
-                data-testid="scroll-view"
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root emotion-16"
+                style="--Paper-shadow: var(--mui-shadows-1);"
               >
                 <div
-                  class="rs-form-stack rs-form-stack-vertical rs-form-stack-fluid"
+                  class="MuiCardHeader-root emotion-17"
                 >
                   <div
-                    class="rs-form-group"
-                    role="group"
+                    class="MuiCardHeader-content emotion-18"
                   >
-                    <label
-                      class="rs-form-control-label"
-                      for="NEW_ARTICLE_PEERING"
-                      id="NEW_ARTICLE_PEERING-label"
+                    <span
+                      class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title emotion-19"
                     >
-                      settingList.newArticlePeering
-                      <div
-                        class="emotion-8 emotion-9"
-                      >
-                        <svg
-                          fill="currentColor"
-                          height="1em"
-                          stroke="currentColor"
-                          stroke-width="0"
-                          viewBox="0 0 24 24"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0 0h24v24H0z"
-                            fill="none"
-                          />
-                          <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                          />
-                        </svg>
-                      </div>
-                    </label>
-                    <label
-                      class="rs-toggle"
-                      data-checked="false"
-                      data-disabled="false"
-                      data-loading="false"
-                      data-placement="end"
-                      data-size="md"
-                    >
-                      <input
-                        aria-checked="false"
-                        aria-disabled="false"
-                        aria-label="OFF"
-                        class="rs-toggle-input"
-                        role="switch"
-                        type="checkbox"
-                      />
-                      <span
-                        class="rs-toggle-track"
-                      />
-                    </label>
+                      settingList.articlePage
+                    </span>
                   </div>
+                </div>
+                <div
+                  class="MuiCardContent-root emotion-20"
+                >
                   <div
-                    class="rs-form-group"
-                    role="group"
+                    class="MuiStack-root emotion-21"
                   >
-                    <label
-                      class="rs-form-control-label"
-                      for="NEW_ARTICLE_PAYWALL"
-                      id="NEW_ARTICLE_PAYWALL-label"
-                    >
-                      settingList.newArticlePaywall
-                      <div
-                        class="emotion-8 emotion-9"
-                      >
-                        <svg
-                          fill="currentColor"
-                          height="1em"
-                          stroke="currentColor"
-                          stroke-width="0"
-                          viewBox="0 0 24 24"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0 0h24v24H0z"
-                            fill="none"
-                          />
-                          <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                          />
-                        </svg>
-                      </div>
-                    </label>
                     <div
-                      class="rs-picker"
-                      data-appearance="default"
-                      data-block="true"
-                      data-picker="select"
-                      data-testid="picker"
+                      class="MuiBox-root emotion-23"
                     >
-                      <div
-                        aria-controls="rs-_r_5b_-listbox"
-                        aria-describedby="rs-_r_5b_-describe"
-                        aria-disabled="false"
-                        aria-expanded="false"
-                        aria-haspopup="listbox"
-                        class="rs-picker-toggle rs-btn"
-                        data-active="false"
-                        data-appearance="default"
-                        data-cleanable="true"
-                        data-disabled="false"
-                        data-has-value="false"
-                        id="rs-_r_5b_"
-                        role="combobox"
-                        tabindex="0"
+                      <label
+                        class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                       >
-                        <div
-                          class="rs-picker-toggle-stack rs-stack"
+                        <span
+                          class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
                         >
-                          <div
-                            class="rs-stack-item rs-box-_r_5f_"
-                            data-rs="box"
-                            overflow="hidden"
+                          <input
+                            class="PrivateSwitchBase-input emotion-26"
+                            data-indeterminate="false"
+                            name="NEW_ARTICLE_PEERING"
+                            type="checkbox"
+                            value="false"
+                          />
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                            data-testid="CheckBoxOutlineBlankIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
                           >
-                            <input
-                              aria-hidden="true"
-                              class="rs-picker-toggle-textbox"
-                              data-testid="picker-toggle-input"
-                              readonly=""
-                              style="pointer-events: none;"
-                              tabindex="-1"
-                              value=""
+                            <path
+                              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
                             />
-                            <span
-                              class="rs-picker-toggle-placeholder"
-                              data-testid="picker-describe"
-                              id="rs-_r_5b_-describe"
-                            >
-                              Select
-                            </span>
-                          </div>
-                          <div
-                            class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_5g_"
-                            data-rs="box"
+                          </svg>
+                        </span>
+                        <span
+                          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                        >
+                          settingList.newArticlePeering 
+                          <button
+                            aria-label="settingList.warnings.newArticlePeering"
+                            class="emotion-29 emotion-30"
+                            data-mui-internal-clone-element="true"
+                            type="button"
                           >
                             <svg
-                              aria-hidden="true"
-                              aria-label="arrow down line"
-                              class="rs-picker-caret-icon rs-icon rs-icon"
-                              data-category="direction"
-                              data-testid="caret"
                               fill="currentColor"
-                              focusable="false"
-                              height="1em"
-                              viewBox="0 0 16 16"
-                              width="1em"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
-                                d="M3.166 5.128a.5.5 0 0 1 .706.037L8 9.752l4.128-4.587a.5.5 0 1 1 .743.669l-4.5 5a.5.5 0 0 1-.744 0l-4.5-5a.5.5 0 0 1 .037-.706z"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
                               />
                             </svg>
+                          </button>
+                        </span>
+                      </label>
+                    </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-246"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-247"
+                      >
+                        settingList.newArticlePaywall 
+                        <button
+                          aria-label="settingList.warnings.newArticlePaywall"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                            />
+                          </svg>
+                        </button>
+                      </label>
+                      <div
+                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-250"
+                      >
+                        <div
+                          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
+                        >
+                          <div
+                            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-147"
+                          >
+                            <input
+                              aria-autocomplete="list"
+                              aria-expanded="false"
+                              aria-invalid="false"
+                              autocapitalize="none"
+                              autocomplete="off"
+                              class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-148"
+                              id="_r_15_"
+                              role="combobox"
+                              spellcheck="false"
+                              type="text"
+                              value=""
+                            />
+                            <div
+                              class="MuiAutocomplete-endAdornment emotion-254"
+                            >
+                              <button
+                                aria-label="Open"
+                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-255"
+                                tabindex="-1"
+                                title="Open"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                                  data-testid="ArrowDropDownIcon"
+                                  focusable="false"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M7 10l5 5 5-5z"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                            <fieldset
+                              aria-hidden="true"
+                              class="MuiOutlinedInput-notchedOutline emotion-53"
+                            >
+                              <legend
+                                class="emotion-258"
+                              >
+                                <span
+                                  aria-hidden="true"
+                                  class="notranslate"
+                                >
+                                  ​
+                                </span>
+                              </legend>
+                            </fieldset>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rs-form-group"
-                    role="group"
-                  >
-                    <label
-                      class="rs-form-control-label"
-                      for="SHOW_PENDING_WHEN_NOT_PUBLISHED"
-                      id="SHOW_PENDING_WHEN_NOT_PUBLISHED-label"
+                    <div
+                      class="MuiBox-root emotion-23"
                     >
-                      settingList.showPendingWhenNotPublished
-                      <div
-                        class="emotion-8 emotion-9"
+                      <label
+                        class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-24"
                       >
-                        <svg
-                          fill="currentColor"
-                          height="1em"
-                          stroke="currentColor"
-                          stroke-width="0"
-                          viewBox="0 0 24 24"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <span
+                          class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
                         >
-                          <path
-                            d="M0 0h24v24H0z"
-                            fill="none"
+                          <input
+                            class="PrivateSwitchBase-input emotion-26"
+                            data-indeterminate="false"
+                            name="SHOW_PENDING_WHEN_NOT_PUBLISHED"
+                            type="checkbox"
+                            value="false"
                           />
-                          <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                          />
-                        </svg>
-                      </div>
-                    </label>
-                    <label
-                      class="rs-toggle"
-                      data-checked="false"
-                      data-disabled="false"
-                      data-loading="false"
-                      data-placement="end"
-                      data-size="md"
-                    >
-                      <input
-                        aria-checked="false"
-                        aria-disabled="false"
-                        aria-label="OFF"
-                        class="rs-toggle-input"
-                        role="switch"
-                        type="checkbox"
-                      />
-                      <span
-                        class="rs-toggle-track"
-                      />
-                    </label>
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                            data-testid="CheckBoxOutlineBlankIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                            />
+                          </svg>
+                        </span>
+                        <span
+                          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
+                        >
+                          settingList.showPendingWhenNotPublished 
+                          <button
+                            aria-label="settingList.warnings.showPendingWhenNotPublished"
+                            class="emotion-29 emotion-30"
+                            data-mui-internal-clone-element="true"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
+                              />
+                            </svg>
+                          </button>
+                        </span>
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>

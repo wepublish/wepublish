@@ -23,22 +23,22 @@ describe('BannerResolver', () => {
   };
 
   const mockBannerService = {
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    findFirst: jest.fn(),
-    findPages: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
+    findAll: vi.fn(),
+    findOne: vi.fn(),
+    findFirst: vi.fn(),
+    findPages: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
   };
 
   const mockBannerActionService = {
-    findAll: jest.fn(),
+    findAll: vi.fn(),
   };
 
   const mockImageDataloaderService = {
-    load: jest.fn().mockReturnValue({ __typename: 'Image', id: '123' }),
-    prime: jest.fn(),
+    load: vi.fn().mockReturnValue({ __typename: 'Image', id: '123' }),
+    prime: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -64,7 +64,7 @@ describe('BannerResolver', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

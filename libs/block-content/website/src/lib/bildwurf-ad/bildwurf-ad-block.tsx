@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import {
   FullBildwurfAdBlockFragment,
-  BlockContent,
+  FullBlockFragment,
 } from '@wepublish/website/api';
 
 import styled from '@emotion/styled';
@@ -11,7 +11,7 @@ import {
 } from '@wepublish/website/builder';
 
 export const isBildwurfAdBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullBildwurfAdBlockFragment =>
   block.__typename === 'BildwurfAdBlock';
 
@@ -66,7 +66,7 @@ export function BildwurfAdBlock({
           // Bildwurf will dynamically change the DOM which can break the application on navigation
           __html: `
             <div id="bildwurf-injection-wrapper">
-              <ins className="aso-zone" data-zone="${zoneID}"></ins>
+              <ins class="aso-zone" data-zone="${zoneID}"></ins>
             </div>
           `,
         }}

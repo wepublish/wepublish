@@ -1,40 +1,31 @@
-import { ApolloError } from '@apollo/client';
-import {
-  MutationCreateConsentArgs,
-  useCreateConsentMutation,
-} from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { CreateConsentDocument } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { SingleViewTitle } from '@wepublish/ui/editor';
-import { ConsentForm } from './consent-form';
+import {
+  humanizeError,
+  SingleViewTitle,
+  enqueueSnackbar,
+} from '@wepublish/ui/editor';
+import { ConsentForm, ConsentFormValues, consentSchema } from './consent-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { TFunction } from 'i18next';
+import { FormProvider, useForm } from 'react-hook-form';
 
-const onErrorToast = (error: ApolloError, slug?: string) => {
+const onErrorToast = (t: TFunction, error: Error, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {`A consent with slug '${slug}' already exists. Please choose a different slug.`}
-      </Message>
-    );
+    enqueueSnackbar(t('consents.uniqueConstraint', { slug }), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
     return;
   }
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 export const ConsentCreateView = () => {
@@ -42,27 +33,20 @@ export const ConsentCreateView = () => {
   const { t } = useTranslation();
 
   const closePath = '/consents';
-  const [consent, setConsent] = useState({
-    name: '',
-    slug: '',
-    defaultValue: true,
-  } as MutationCreateConsentArgs);
+  const form = useForm<ConsentFormValues>({
+    resolver: zodResolver(consentSchema),
+    defaultValues: { name: '', slug: '', defaultValue: true },
+  });
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [createConsent, { loading }] = useCreateConsentMutation({
-    onError: error => onErrorToast(error, consent.slug),
+  const [createConsent, { loading }] = useMutation(CreateConsentDocument, {
+    onError: error => onErrorToast(t, error, form.getValues('slug')),
     onCompleted: consent => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.createdSuccess')}
-        </Message>
-      );
+      enqueueSnackbar(t('toast.createdSuccess'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
       if (shouldClose) {
         navigate(closePath);
       } else {
@@ -71,44 +55,25 @@ export const ConsentCreateView = () => {
     },
   });
 
-  const onSubmit = () => {
-    createConsent({
-      variables: consent,
-    });
-  };
-
-  const { StringType, BooleanType } = Schema.Types;
-  const validationModel = Schema.Model({
-    name: StringType().isRequired(),
-    slug: StringType().isRequired(),
-    defaultValue: BooleanType().isRequired(),
-  });
-
   return (
-    <Form
-      fluid
-      formValue={consent}
-      model={validationModel}
-      disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}
-    >
-      <SingleViewTitle
-        loading={loading}
-        title={t('consents.titleCreate')}
-        loadingTitle={t('consents.titleCreate')}
-        saveBtnTitle={t('save')}
-        saveAndCloseBtnTitle={t('saveAndClose')}
-        closePath={closePath}
-        setCloseFn={setShouldClose}
-      />
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(({ id, ...consent }) =>
+          createConsent({ variables: consent })
+        )}
+      >
+        <SingleViewTitle
+          loading={loading}
+          title={t('consents.titleCreate')}
+          loadingTitle={t('consents.titleCreate')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setShouldClose}
+        />
 
-      <ConsentForm
-        consent={consent}
-        create
-        onChange={changes =>
-          setConsent(oldConsent => ({ ...oldConsent, ...(changes as any) }))
-        }
-      />
-    </Form>
+        <ConsentForm create />
+      </form>
+    </FormProvider>
   );
 };

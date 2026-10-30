@@ -2,6 +2,7 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
@@ -21,16 +22,20 @@ import {
   UpdateInvoiceInput,
 } from './invoice.model';
 import {
+  InvoicePaidNotifier,
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from '@wepublish/payment/api';
 
 @Injectable()
 export class InvoiceService {
+  private logger = new Logger('InvoiceService');
+
   constructor(
     private prisma: PrismaClient,
     @Inject(PAYMENT_METHOD_CONFIG)
-    private paymentMethodConfig: PaymentMethodConfig
+    private paymentMethodConfig: PaymentMethodConfig,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   @PrimeDataLoader(InvoiceDataloader)
@@ -128,7 +133,7 @@ export class InvoiceService {
   }
 
   @PrimeDataLoader(InvoiceDataloader)
-  async markInvoiceAsPaid(id: string, userId: string) {
+  async markInvoiceAsPaid(id: string, userId: string, sendMail = true) {
     const invoice = await this.prisma.invoice.findUnique({
       where: {
         id,
@@ -173,16 +178,23 @@ export class InvoiceService {
       },
     });
 
-    return this.prisma.invoice.update({
+    const invoiceMarkedAsPaid = await this.prisma.invoice.update({
       where: { id },
       data: {
         manuallySetAsPaidByUserId: userId,
         paidAt: new Date(),
+        ...(sendMail ? {} : { suppressRenewalSuccessMail: true }),
       },
       include: {
         items: true,
       },
     });
+
+    if (sendMail) {
+      await this.invoicePaidNotifier.notify(id);
+    }
+
+    return invoiceMarkedAsPaid;
   }
 
   @PrimeDataLoader(InvoiceDataloader)
@@ -256,19 +268,30 @@ export class InvoiceService {
         continue; // TODO: what happens if we don't find a paymentProvider
       }
 
-      const intentState = await paymentProvider.checkIntentStatus({
-        intentID: payment.intentID,
-        paymentID: payment.id,
-      });
+      // One payment the provider cannot answer for (e.g. an abandoned
+      // checkout) must not keep the others from being checked, nor the
+      // listeners from hearing that the invoice is paid.
+      try {
+        const intentState = await paymentProvider.checkIntentStatus({
+          intentID: payment.intentID,
+          paymentID: payment.id,
+        });
 
-      if (!intentState) {
-        continue;
+        if (!intentState) {
+          continue;
+        }
+
+        await paymentProvider.updatePaymentWithIntentState({
+          intentState,
+        });
+      } catch (error) {
+        this.logger.error(
+          `Checking payment ${payment.id} of invoice ${id} failed: ${(error as Error).message}`
+        );
       }
-
-      await paymentProvider.updatePaymentWithIntentState({
-        intentState,
-      });
     }
+
+    await this.invoicePaidNotifier.notify(id);
 
     // FIXME: We need to implement a way to wait for all the database
     //  event hooks to finish before we return data. Will be solved in WPC-498

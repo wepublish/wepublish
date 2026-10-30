@@ -1,10 +1,11 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
 import { INestApplication } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Event, EventStatus, PrismaClient } from '@prisma/client';
 import { ImageDataloaderService } from '@wepublish/image/api';
-import { SortOrder } from '@wepublish/utils/api';
+import { SortOrder, NodeApolloDriver } from '@wepublish/utils/api';
 import request from 'supertest';
 import { EventDataloaderService } from './event-dataloader.service';
 import {
@@ -18,6 +19,7 @@ import { EventService } from './event.service';
 import { createMock, PartialMocked } from '@wepublish/testing';
 import { EventTagDataloader } from '@wepublish/tag/api';
 import { URLAdapter } from '@wepublish/nest-modules';
+import type { Mock } from 'vitest';
 
 const mockEvent = {
   id: '1234',
@@ -171,30 +173,30 @@ const deleteEventQuery = `
 
 describe('EventResolver', () => {
   let app: INestApplication;
-  let eventServiceMock: { [method in keyof EventService]?: jest.Mock };
+  let eventServiceMock: { [method in keyof EventService]?: Mock };
   let eventDataloaderServiceMock: {
-    [method in keyof EventDataloaderService]?: jest.Mock;
+    [method in keyof EventDataloaderService]?: Mock;
   };
   let imageDataloaderServiceMock: {
-    [method in keyof EventDataloaderService]?: jest.Mock;
+    [method in keyof EventDataloaderService]?: Mock;
   };
   let urlAdapter: PartialMocked<URLAdapter>;
   let tagServiceMock: PartialMocked<EventTagDataloader>;
 
   beforeEach(async () => {
     eventServiceMock = {
-      getEvents: jest.fn(),
-      createEvent: jest.fn(),
-      deleteEvent: jest.fn(),
-      updateEvent: jest.fn(),
+      getEvents: vi.fn(),
+      createEvent: vi.fn(),
+      deleteEvent: vi.fn(),
+      updateEvent: vi.fn(),
     };
 
     eventDataloaderServiceMock = {
-      load: jest.fn(),
+      load: vi.fn(),
     };
 
     imageDataloaderServiceMock = {
-      load: jest.fn(),
+      load: vi.fn(),
     };
     urlAdapter = createMock(URLAdapter);
     tagServiceMock = createMock(EventTagDataloader);
@@ -202,7 +204,7 @@ describe('EventResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -232,16 +234,16 @@ describe('EventResolver', () => {
         },
         {
           provide: PrismaClient,
-          useValue: jest.fn(), // not used due to mocks but needs to be provided
+          useValue: vi.fn(), // not used due to mocks but needs to be provided
         },
       ],
     }).compile();
 
-    app = module.createNestApplication();
-    await app.init();
+    app = module.createNestApplication(new NodeAdapter());
+    await app.listen(0, '127.0.0.1');
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 

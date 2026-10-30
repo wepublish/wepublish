@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullInstagramPostBlockFragment,
 } from '@wepublish/website/api';
 import {
@@ -20,7 +20,7 @@ declare global {
 }
 
 export const isInstagramBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullInstagramPostBlockFragment =>
   block.__typename === 'InstagramPostBlock';
 

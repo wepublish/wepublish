@@ -1,5 +1,7 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { useOneChannelStatusQuery } from '@wepublish/editor/api';
+import {} from '@mui/material';
+import { OneChannelStatusDocument } from '@wepublish/editor/api';
 import { NotificationItem } from '@wepublish/ui/editor';
 import { ReactElement, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +27,7 @@ export function useOneChannelNotifications({
   onVisibilityChange,
 }: OneChannelAlertProps): ReactElement[] {
   const { t } = useTranslation();
-  const { data } = useOneChannelStatusQuery({
+  const { data } = useQuery(OneChannelStatusDocument, {
     fetchPolicy: 'cache-and-network',
   });
 

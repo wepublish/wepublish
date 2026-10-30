@@ -1,35 +1,35 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  MenuItem,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from '@mui/material';
 import {
   MailLogState,
   MailLogType,
-  useMailLogsQuery,
-  useMailSendJobsQuery,
-  useMailTemplateQuery,
-  useSyncMailLogStatesMutation,
+  MailLogsDocument,
+  MailSendJobsDocument,
+  MailTemplateDocument,
+  SyncMailLogStatesDocument,
 } from '@wepublish/editor/api';
 import styled from '@emotion/styled';
+import { InfoTooltip, enqueueSnackbar, Pagination } from '@wepublish/ui/editor';
 import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFilterList, MdSync } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
-import {
-  Button,
-  Message,
-  Pagination,
-  Panel,
-  SelectPicker,
-  Stack,
-  toaster,
-} from 'rsuite';
-import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
+import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import {
   formatDateTime,
   MailErrorCell,
@@ -57,10 +57,12 @@ const FilterGrid = styled.div`
 
 function FilterField({
   label,
+  info,
   hint,
   children,
 }: {
   label: string;
+  info?: string;
   hint?: string;
   children: ReactNode;
 }) {
@@ -68,17 +70,31 @@ function FilterField({
     <div>
       <Typography
         variant="caption"
-        display="block"
         style={{ marginBottom: 4, fontWeight: 600 }}
+        sx={{
+          display: 'block',
+        }}
       >
         {label}
+        {info && (
+          <>
+            {' '}
+            <InfoTooltip text={info} />
+          </>
+        )}
       </Typography>
       {children}
       {hint && (
         <Typography
           variant="caption"
-          display="block"
-          style={{ marginTop: 4, color: '#8e8e93', lineHeight: 1.35 }}
+          style={{
+            marginTop: 4,
+            color: 'text.secondary',
+            lineHeight: 1.35,
+          }}
+          sx={{
+            display: 'block',
+          }}
         >
           {hint}
         </Typography>
@@ -105,13 +121,12 @@ export function MailLogTable() {
   );
   const [type, setType] = useState<MailLogType | null>(null);
 
-  const { data: templateData } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-  const { data: jobData } = useMailSendJobsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
+  const { data: templateData } = useQuery(MailTemplateDocument);
+
+  const { data: jobData } = useQuery(MailSendJobsDocument, {
     variables: { take: JOB_OPTIONS_LIMIT },
   });
-  const { data } = useMailLogsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
+  const { data } = useQuery(MailLogsDocument, {
     variables: {
       filter: {
         mailTemplateId: templateId ?? undefined,
@@ -124,10 +139,13 @@ export function MailLogTable() {
     },
   });
 
-  const [syncStates, { loading: syncing }] = useSyncMailLogStatesMutation({
-    ...DEFAULT_MUTATION_OPTIONS(t),
-    refetchQueries: ['MailLogs'],
-  });
+  const [syncStates, { loading: syncing }] = useMutation(
+    SyncMailLogStatesDocument,
+    {
+      ...DEFAULT_MUTATION_OPTIONS(t),
+      refetchQueries: ['MailLogs'],
+    }
+  );
 
   // Delivery states normally arrive by provider webhook. Locally the provider
   // cannot reach this installation, so offer an explicit pull.
@@ -139,13 +157,12 @@ export function MailLogTable() {
       return;
     }
 
-    toaster.push(
-      <Message type={sync.updated ? 'success' : 'info'}>
-        {t('mailLog.sync.done', {
-          checked: sync.checked,
-          updated: sync.updated,
-        })}
-      </Message>
+    enqueueSnackbar(
+      t('mailLog.sync.done', {
+        checked: sync.checked,
+        updated: sync.updated,
+      }),
+      { variant: sync.updated ? 'success' : 'info' }
     );
   };
 
@@ -203,110 +220,165 @@ export function MailLogTable() {
 
   return (
     <>
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ marginTop: 16, marginBottom: 16 }}
-        header={
-          <Stack
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Stack
-              spacing={8}
-              alignItems="center"
-            >
-              <MdFilterList />
-              <span>{t('mailLog.filter.title')}</span>
-            </Stack>
-            <Stack
-              spacing={8}
-              alignItems="center"
-            >
-              {hasFilters && (
-                <Button
-                  size="xs"
-                  appearance="link"
-                  onClick={resetFilters}
-                >
-                  {t('mailLog.filter.reset')}
-                </Button>
-              )}
-              <Button
-                size="xs"
-                appearance="ghost"
-                loading={syncing}
-                onClick={runSync}
-                title={t('mailLog.sync.hint')}
-              >
-                <MdSync /> {t('mailLog.sync.action')}
-              </Button>
-            </Stack>
-          </Stack>
-        }
       >
-        <FilterGrid>
-          <FilterField label={t('mailLog.filter.job')}>
-            <SelectPicker
-              block
-              data={jobOptions}
-              value={jobId}
-              onChange={selectJob}
-              placeholder={t('mailLog.filter.jobAll')}
-            />
-          </FilterField>
-          <FilterField label={t('mailLog.filter.template')}>
-            <SelectPicker
-              block
-              data={templateOptions}
-              value={templateId}
-              onChange={resetPageThen(setTemplateId)}
-              placeholder={t('mailLog.filter.all')}
-            />
-          </FilterField>
-          <FilterField label={t('mailLog.filter.state')}>
-            <SelectPicker
-              block
-              searchable={false}
-              data={stateOptions}
-              value={state}
-              onChange={resetPageThen(setState)}
-              placeholder={t('mailLog.filter.all')}
-            />
-          </FilterField>
-          <FilterField
-            label={t('mailLog.filter.type')}
-            hint={t('mailLog.filter.typeHint')}
-          >
-            <SelectPicker
-              block
-              searchable={false}
-              data={typeOptions}
-              value={type}
-              onChange={resetPageThen(setType)}
-              placeholder={t('mailLog.filter.all')}
-              // Manual vs. the three automatic origins is not self-evident
-              // from the label alone, so spell each one out in the menu.
-              renderOption={(label, item) => (
-                <div style={{ paddingBlock: 2 }}>
-                  <div>{label}</div>
-                  <Typography
-                    variant="caption"
-                    display="block"
-                    style={{
-                      color: '#8e8e93',
-                      whiteSpace: 'normal',
-                      lineHeight: 1.35,
-                    }}
+        <CardHeader
+          title={
+            <Stack
+              direction="row"
+              sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+            >
+              <Stack
+                direction="row"
+                sx={{ alignItems: 'center' }}
+                spacing={1}
+              >
+                <MdFilterList />
+                <span>{t('mailLog.filter.title')}</span>
+              </Stack>
+              <Stack
+                direction="row"
+                sx={{ alignItems: 'center' }}
+                spacing={1}
+              >
+                {hasFilters && (
+                  <Button
+                    variant="text"
+                    size="small"
+                    onClick={resetFilters}
                   >
-                    {(item as MailTypeOption).description}
-                  </Typography>
-                </div>
-              )}
-            />
-          </FilterField>
-        </FilterGrid>
-      </Panel>
+                    {t('mailLog.filter.reset')}
+                  </Button>
+                )}
+                <Button
+                  variant="outlined"
+                  size="small"
+                  loading={syncing}
+                  onClick={runSync}
+                >
+                  <MdSync /> {t('mailLog.sync.action')}
+                </Button>
+                <InfoTooltip text={t('mailLog.sync.hint')} />
+              </Stack>
+            </Stack>
+          }
+        />
 
+        <CardContent>
+          <FilterGrid>
+            <FilterField
+              label={t('mailLog.filter.job')}
+              info={t('mailLog.filter.jobHelp')}
+            >
+              <TextField
+                select
+                value={jobId ?? ''}
+                onChange={event => selectJob(event.target.value || null)}
+                slotProps={{ select: { displayEmpty: true } }}
+                fullWidth
+              >
+                <MenuItem value="">{t('mailLog.filter.jobAll')}</MenuItem>
+
+                {jobOptions.map(option => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </FilterField>
+            <FilterField label={t('mailLog.filter.template')}>
+              <TextField
+                select
+                value={templateId ?? ''}
+                onChange={event =>
+                  resetPageThen(setTemplateId)(event.target.value || null)
+                }
+                slotProps={{ select: { displayEmpty: true } }}
+                fullWidth
+              >
+                <MenuItem value="">{t('mailLog.filter.all')}</MenuItem>
+
+                {templateOptions.map(option => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </FilterField>
+            <FilterField label={t('mailLog.filter.state')}>
+              <TextField
+                select
+                value={state ?? ''}
+                onChange={event =>
+                  resetPageThen(setState)(
+                    (event.target.value as MailLogState) || null
+                  )
+                }
+                slotProps={{ select: { displayEmpty: true } }}
+                fullWidth
+              >
+                <MenuItem value="">{t('mailLog.filter.all')}</MenuItem>
+
+                {stateOptions.map(option => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </FilterField>
+            <FilterField
+              label={t('mailLog.filter.type')}
+              hint={t('mailLog.filter.typeHint')}
+            >
+              <TextField
+                select
+                value={type ?? ''}
+                onChange={event =>
+                  resetPageThen(setType)(
+                    (event.target.value as MailLogType) || null
+                  )
+                }
+                slotProps={{ select: { displayEmpty: true } }}
+                fullWidth
+              >
+                <MenuItem value="">{t('mailLog.filter.all')}</MenuItem>
+
+                {typeOptions.map(option => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    sx={{ display: 'block', paddingBlock: 0.5 }}
+                  >
+                    <div>{option.label}</div>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{
+                        display: 'block',
+                        whiteSpace: 'normal',
+                        lineHeight: 1.35,
+                      }}
+                    >
+                      {(option as MailTypeOption).description}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </TextField>
+            </FilterField>
+          </FilterGrid>
+        </CardContent>
+      </Card>
       <TableContainer>
         <Table size="small">
           <TableHead>
@@ -328,8 +400,9 @@ export function MailLogTable() {
               </TableCell>
               <TableCell>
                 <Stack
-                  spacing={4}
-                  alignItems="center"
+                  direction="row"
+                  sx={{ alignItems: 'center' }}
+                  spacing={0.5}
                 >
                   <strong>{t('mailLog.state')}</strong>
                   <MailLogStateLegend />
@@ -359,17 +432,14 @@ export function MailLogTable() {
           </TableBody>
         </Table>
       </TableContainer>
-
       <Pagination
-        style={{ marginTop: 16 }}
-        prev
-        next
-        maxButtons={7}
-        size="sm"
-        total={totalCount}
-        limit={PAGE_SIZE}
-        activePage={page}
-        onChangePage={setPage}
+        state={{
+          page,
+          limit: PAGE_SIZE,
+          setPage,
+          setLimit: () => undefined /* page size was fixed here */,
+        }}
+        totalCount={totalCount}
       />
     </>
   );

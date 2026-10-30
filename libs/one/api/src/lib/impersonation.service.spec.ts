@@ -4,6 +4,7 @@ import {
   USER_SEARCH_LIMIT,
   clampSearchLimit,
 } from './impersonation.service';
+import type { Mock } from 'vitest';
 
 describe('clampSearchLimit', () => {
   it('defaults when no limit is given', () => {
@@ -23,15 +24,15 @@ describe('clampSearchLimit', () => {
 
 describe('ImpersonationSearchService', () => {
   let prisma: {
-    user: { findMany: jest.Mock };
-    userRole: { findMany: jest.Mock };
+    user: { findMany: Mock };
+    userRole: { findMany: Mock };
   };
   let service: ImpersonationSearchService;
 
   beforeEach(() => {
     prisma = {
-      user: { findMany: jest.fn().mockResolvedValue([]) },
-      userRole: { findMany: jest.fn().mockResolvedValue([]) },
+      user: { findMany: vi.fn().mockResolvedValue([]) },
+      userRole: { findMany: vi.fn().mockResolvedValue([]) },
     };
     service = new ImpersonationSearchService(prisma as unknown as PrismaClient);
   });

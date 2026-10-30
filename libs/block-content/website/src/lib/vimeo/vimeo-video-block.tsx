@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullVimeoVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderVimeoVideoBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isVimeoVideoBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullVimeoVideoBlockFragment =>
   block.__typename === 'VimeoVideoBlock';
 
