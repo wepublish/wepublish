@@ -8,6 +8,7 @@ import { PaymentsModule } from '@wepublish/payment/api';
 import { SubscriptionService } from './subscription.service';
 import { MailchimpSyncModule } from '../mailchimp-sync/mailchimp-sync.module';
 import { PaymentMethodChangeModule } from '../payment-method-change/payment-method-change.module';
+import { InvoiceDeliveryModule } from './invoice-delivery.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PaymentMethodChangeModule } from '../payment-method-change/payment-meth
     PaymentsModule,
     MailchimpSyncModule,
     PaymentMethodChangeModule,
+    InvoiceDeliveryModule,
   ],
   providers: [
     PeriodicJobExecutor,

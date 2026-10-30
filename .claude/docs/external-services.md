@@ -5,7 +5,18 @@
 - Stripe
 - Mollie
 - Payrexx
-- Bexio
+- Bexio — no charge, an invoice. `createRemoteInvoice` (nightly job, the
+  `INVOICE_CREATION` day) creates the `kb_invoice` and has Bexio email it with
+  the pdf, or — for a reader in letter mode with a Swiss address
+  (`channel: letter`) — issues it (`bexio_markInvoiceAsOpen`) and hands the pdf
+  back to print after the invoice-creation letter. The Bexio invoice id is kept
+  as a `Payment` (`intentID`) so `checkStateOfOpenInvoices` polls it and
+  `cancelRemoteSubscription` can cancel it; `renderRemoteInvoice` fetches the
+  pdf again by that payment. Once Bexio created the invoice, a failed issue /
+  pdf / send is returned as `deliveryError`, never thrown — a retry would
+  create a second invoice. Keep `offSessionPayments` **off** for Bexio: with it
+  on, the due date runs `createIntent` → a second Bexio invoice plus a
+  RENEWAL_FAILED mail.
 
 - Simulated (`simulated` type) — no external service: `createIntent` sends the
   customer to a checkout page served by the API at
@@ -144,12 +155,39 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   editor («Auch per Brief») print; user-flow mails (login, password, email
   change) never do. The three senders (periodic job, legacy `member-context`,
   renewal success) pass it as `asLetter` into `MailController`.
-- `MailController.sendMail` (`libs/mail/api`) branches before mailing when
-  `asLetter`, the user prefers letters and the `LETTER_SENDER` is configured;
-  it reloads the user with address and falls back to mail without a usable
-  one. The letter is logged under the same `mailIdentifier`/`type` as a mail
-  would be, so retried runs skip it. A failed print throws
-  `LetterDeliveryError`; the periodic job steps over it.
+- `MailController.sendMail` (`libs/mail/api`) branches before mailing through
+  `resolveLetterRecipient()`: `asLetter`, the user prefers letters, the
+  `LETTER_SENDER` is configured, the reloaded address is usable — and Swiss
+  when the letter carries a payment slip (`withPaymentSlip`); anything missing
+  means mail. A caller that had to decide earlier hands the result in as
+  `letterRecipient` (`null` = mail) and a pdf to print after the template as
+  `letterAttachment`. The letter is logged under the same
+  `mailIdentifier`/`type` as a mail would be, so retried runs skip it. A failed
+  print throws `LetterDeliveryError`; the periodic job steps over it.
+- Invoice letters: the periodic job resolves the channel *before* it asks the
+  payment provider (`createRemoteInvoice({ channel })`), keeps the provider's
+  invoice as a `Payment`, and prints the returned pdf after the
+  `INVOICE_CREATION` letter. A provider that could not create its invoice makes
+  the job hard-delete the we.publish invoice with its period, items and payment
+  so the next run tries again (cancelling would not, see gotchas). A reader in
+  letter mode whose pdf the provider could not render gets no cover letter
+  that night. The sweep `postMissingInvoiceLetters` (after invoice creation,
+  also run by `createAndChargeInvoices`) posts the invoice letter for every
+  open invoice of a reader in letter mode that has no non-rejected letter log
+  for the template since the invoice was created — refused letters, a missing
+  pdf, or a reader moved to letters after the invoice was emailed — with the
+  pdf fetched again through `renderRemoteInvoice`; at most 3 attempts, nothing
+  when there was never a letter and there is no pdf to print, and another
+  night when the provider cannot render it. All of this lives in
+  `InvoiceDeliveryService` (`libs/membership/api/src/lib/periodic-job/`),
+  which the nightly job and the editor share.
+- Editor renew and reactivate (`renewSubscription`, `reactivateSubscription`)
+  create the we.publish invoice only, as before — unless the feature
+  `editor-renewal-provider-invoice` is on for the medium: then
+  `InvoiceDeliveryService.deliverRenewal` does what the nightly job does
+  (provider invoice, payment, invoice-creation mail or letter), and a provider
+  that could not create its invoice fails the editor action with nothing left
+  behind, so the editor can retry.
 - `LETTER_SENDER` is a `GatedLetterSender` from `LettersModule`
   (`libs/letter/api`): `isConfigured()` = `paper-letters` && `paper-letter-flow`
   && letter integration configured. The feature keys live only there and in
@@ -197,6 +235,9 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
 A template's `letterAppendixId` (an uploaded pdf `Document`, e.g. a static
 QR-bill) is appended after rendering by `appendPdf` (pdf-lib, renderer-agnostic)
 — CH recipients only, padded to an odd page for duplex (Pingen's QR paper rules).
+A document the sender hands in (`attachment`, e.g. the Bexio invoice with its
+per-invoice QR-bill) is appended the same way and takes the static appendix's
+place.
 
 ### Letter layouts (Briefpapier)
 

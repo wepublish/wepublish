@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, PrismaClient, Subscription } from '@prisma/client';
+import { Prisma, PrismaClient, Subscription, User } from '@prisma/client';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -25,9 +25,12 @@ import {
 } from './subscription.model';
 import { MemberContextService } from '../legacy/member-context.service';
 import {
+  InvoiceWithItems,
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from '@wepublish/payment/api';
+import { FeaturesService } from '@wepublish/features/api';
+import { InvoiceDeliveryService } from '../periodic-job/invoice-delivery.service';
 import { SubscriptionWithRelations } from '../legacy/member-context';
 import { unselectPassword } from '@wepublish/authentication/api';
 import { mapSubscriptionsAsCsv } from './subscription-as-csv';
@@ -38,7 +41,9 @@ export class SubscriptionService {
     private prisma: PrismaClient,
     private memberContext: MemberContextService,
     @Inject(PAYMENT_METHOD_CONFIG)
-    private paymentMethodConfig: PaymentMethodConfig
+    private paymentMethodConfig: PaymentMethodConfig,
+    private features: FeaturesService,
+    private invoiceDelivery: InvoiceDeliveryService
   ) {}
 
   @PrimeDataLoader(SubscriptionDataloader)
@@ -251,6 +256,7 @@ export class SubscriptionService {
       include: {
         deactivation: true,
         periods: true,
+        user: true,
       },
     });
 
@@ -277,9 +283,11 @@ export class SubscriptionService {
       subscription.paidUntil && subscription.paidUntil > new Date();
 
     if (!isPaid) {
-      await this.memberContext.renewSubscriptionForUser({
+      const invoice = await this.memberContext.renewSubscriptionForUser({
         subscription: reactivatedSubscription as SubscriptionWithRelations,
       });
+
+      await this.deliverEditorInvoice(reactivatedSubscription, invoice);
     }
 
     return reactivatedSubscription;
@@ -299,6 +307,7 @@ export class SubscriptionService {
       include: {
         deactivation: true,
         periods: true,
+        user: true,
       },
     });
 
@@ -319,11 +328,33 @@ export class SubscriptionService {
       );
     }
 
-    await this.memberContext.renewSubscriptionForUser({
+    const invoice = await this.memberContext.renewSubscriptionForUser({
       subscription,
     });
 
+    await this.deliverEditorInvoice(subscription, invoice);
+
     return subscription;
+  }
+
+  /**
+   * With `editor-renewal-provider-invoice`, an invoice an editor created is
+   * handled like the nightly job's: created at the payment provider, kept as
+   * a payment, mailed or printed. Without it the invoice exists in we.publish
+   * only, as before.
+   */
+  private async deliverEditorInvoice(
+    subscription: Subscription & { user: User },
+    invoice: InvoiceWithItems | null
+  ) {
+    if (
+      !invoice ||
+      !(await this.features.isEnabled('editor-renewal-provider-invoice'))
+    ) {
+      return;
+    }
+
+    await this.invoiceDelivery.deliverRenewal(subscription, invoice);
   }
 }
 
