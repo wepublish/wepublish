@@ -7,7 +7,7 @@
     "@nestjs/config": "catalog:",
     "@nestjs/core": "catalog:",
     "@nestjs/platform-node": "catalog:",
-    "@nestjs/storage": "^0.0.3",
+    "@nestjs/storage": "^0.0.4",
     "@redis/client": "catalog:",
     "@sentry/nestjs": "catalog:",
     "@sentry/profiling-node": "catalog:",
