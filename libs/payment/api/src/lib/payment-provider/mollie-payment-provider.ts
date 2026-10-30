@@ -101,6 +101,8 @@ export function calculateAndFormatAmount(invoice: {
 }
 
 export class MolliePaymentProvider extends BasePaymentProvider {
+  override readonly supportsStandaloneInvoices = true;
+
   constructor(props: PaymentProviderProps) {
     super(props);
   }
@@ -201,11 +203,16 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     paymentID,
     currency,
     successURL,
+    saveCustomer,
+    customerID,
   }: CreatePaymentIntentProps): Promise<Intent> {
     let payment: Payment;
     try {
+      const setUpMandate =
+        (saveCustomer || !!customerID) && (await this.isOffSession());
       let customerId: undefined | string;
-      if (await this.isOffSession()) {
+
+      if (setUpMandate) {
         const mollieClient = await this.getMollieGateway();
         const customer = await mollieClient.customers.create({
           email: invoice.mail,
@@ -225,10 +232,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         description: invoice.description || 'Subscription',
         redirectUrl: successURL,
         webhookUrl: await this.generateWebhookUrl(),
-        sequenceType:
-          (await this.isOffSession()) ?
-            SequenceType.first
-          : SequenceType.oneoff,
+        sequenceType: setUpMandate ? SequenceType.first : SequenceType.oneoff,
         method: mapMolliePaymentMethods(config.mollie_methods),
         metadata: {
           paymentID,

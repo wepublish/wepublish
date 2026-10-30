@@ -2,6 +2,7 @@ import { Cron } from '@nestjs/schedule';
 import { Injectable, Logger, Type } from '@nestjs/common';
 import { ContextIdFactory, ModuleRef } from '@nestjs/core';
 import { DistributedClaims } from '@wepublish/dragonfly/api';
+import { SellableReconciliationService } from '@wepublish/payment/api';
 import { NIGHT_CLAIM_MS, PeriodicJobService } from './periodic-job.service';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
 import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
@@ -91,6 +92,17 @@ export class PeriodicJobExecutor {
       'Delivery suggestions',
       DeliverySuggestionService,
       service => service.recomputeAll()
+    );
+    await this.runStep(
+      'Sellable reconciliation',
+      SellableReconciliationService,
+      async service => {
+        const { polled, canceled, resynced, failed } =
+          await service.reconcile();
+        this.logger.log(
+          `Sellable reconciliation: ${polled} polled, ${canceled} canceled, ${resynced} resynced, ${failed} failed`
+        );
+      }
     );
   }
 

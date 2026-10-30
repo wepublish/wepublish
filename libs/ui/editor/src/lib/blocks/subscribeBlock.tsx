@@ -59,8 +59,13 @@ import {
 } from '../atoms/blockSection';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { InfoTooltip, InfoTrigger } from '../atoms/infoTooltip';
+import {
+  getPeriodPriceRange,
+  getPlanPeriodicities,
+  PlanForPeriodAmount,
+} from '../memberPlan/periodicity-pricing';
 import { ClickPopover } from '../popover';
-import { getMonthlyEquivalentRange } from '../utility';
+import { PAYMENT_PERIODICITY_MONTHS } from '../utility';
 import { SubscribeBlockValue } from './types';
 
 const PlanList = styled('ul')`
@@ -401,7 +406,7 @@ const DEFAULT_MONTHLY_TILE_VALUES = [1000, 1500, 2000];
 
 const defaultAmountTileValues = (periodicity: PaymentPeriodicity) =>
   DEFAULT_MONTHLY_TILE_VALUES.map(
-    value => value * PERIODICITY_MONTHS[periodicity]
+    value => value * PAYMENT_PERIODICITY_MONTHS[periodicity]
   );
 
 const formatValues = (value: number[] | null | undefined) =>
@@ -413,46 +418,6 @@ const formatValues = (value: number[] | null | undefined) =>
 
 const formatPlanAmount = (amount: number | null | undefined) =>
   amount != null ? (amount / 100).toFixed(2) : '–';
-
-const PERIODICITY_ORDER = [
-  PaymentPeriodicity.Monthly,
-  PaymentPeriodicity.Quarterly,
-  PaymentPeriodicity.Biannual,
-  PaymentPeriodicity.Yearly,
-  PaymentPeriodicity.Biennial,
-  PaymentPeriodicity.Lifetime,
-];
-
-const PERIODICITY_MONTHS: Record<PaymentPeriodicity, number> = {
-  [PaymentPeriodicity.Monthly]: 1,
-  [PaymentPeriodicity.Quarterly]: 3,
-  [PaymentPeriodicity.Biannual]: 6,
-  [PaymentPeriodicity.Yearly]: 12,
-  [PaymentPeriodicity.Biennial]: 24,
-  [PaymentPeriodicity.Lifetime]: 1200,
-};
-
-type PlanForPeriodAmount = {
-  defaultPaymentPeriodicity?: PaymentPeriodicity | null;
-  periodicityPricing?: Array<{
-    periodicity: PaymentPeriodicity;
-    amountMin?: number | null;
-    amountTarget?: number | null;
-    amountMax?: number | null;
-  }> | null;
-  availablePaymentMethods?: Array<{
-    paymentPeriodicities: PaymentPeriodicity[];
-  }> | null;
-};
-
-const getPlanPeriodicities = (
-  plan: PlanForPeriodAmount
-): PaymentPeriodicity[] =>
-  PERIODICITY_ORDER.filter(periodicity =>
-    plan.availablePaymentMethods?.some(paymentMethod =>
-      paymentMethod.paymentPeriodicities.includes(periodicity)
-    )
-  );
 
 const hasNonMonthlyPricing = (plan: PlanForPeriodAmount) =>
   !!plan.periodicityPricing?.some(
@@ -474,30 +439,6 @@ const getDefaultPeriodicity = (
   }
 
   return periodicities[0] ?? PaymentPeriodicity.Yearly;
-};
-
-const calculatePeriodAmount = (
-  monthlyAmount: number,
-  periodicity: PaymentPeriodicity
-) => Math.round(monthlyAmount * PERIODICITY_MONTHS[periodicity]);
-
-const getPeriodPriceRange = (
-  plan: PlanForPeriodAmount,
-  periodicity: PaymentPeriodicity
-) => {
-  const row = plan.periodicityPricing?.find(
-    price => price.periodicity === periodicity
-  );
-  const equivalent = getMonthlyEquivalentRange(plan.periodicityPricing);
-
-  const derive = (amount: number | null | undefined) =>
-    amount != null ? calculatePeriodAmount(amount, periodicity) : null;
-
-  return {
-    amountMin: row?.amountMin ?? derive(equivalent.amountPerMonthMin) ?? 0,
-    amountTarget: row?.amountTarget ?? derive(equivalent.amountPerMonthTarget),
-    amountMax: row?.amountMax ?? derive(equivalent.amountPerMonthMax),
-  };
 };
 
 const formatPlanPriceSummary = (

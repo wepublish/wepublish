@@ -34,10 +34,12 @@ interface SelectMemberPlanProps {
   readOnly?: boolean;
   id?: string;
   name?: string;
+  label?: ReactNode;
+  helperText?: ReactNode;
+  error?: boolean;
   defaultMemberPlan?: Pick<FullMemberPlanFragment, 'id' | 'name'> | null;
   selectedMemberPlan?: string | null;
   setSelectedMemberPlan(memberPlanId: string | null): void;
-  label?: ReactNode;
   'aria-labelledby'?: string;
   renderInput?: (params: AutocompleteRenderInputParams) => ReactNode;
 }
@@ -50,10 +52,12 @@ export function SelectMemberPlan({
   readOnly,
   id,
   name,
+  label,
+  helperText,
+  error,
   defaultMemberPlan,
   selectedMemberPlan,
   setSelectedMemberPlan,
-  label,
   'aria-labelledby': ariaLabelledby,
   renderInput,
 }: SelectMemberPlanProps) {
@@ -153,6 +157,8 @@ export function SelectMemberPlan({
               },
             }}
             name={name}
+            helperText={helperText}
+            error={error}
           />
         ))
       }

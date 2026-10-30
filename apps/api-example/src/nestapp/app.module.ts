@@ -71,6 +71,7 @@ import {
   GoodieModule,
   DiscountCodeModule,
 } from '@wepublish/membership/api';
+import { GiftCodeModule } from '@wepublish/gift-code/api';
 import { NavigationModule } from '@wepublish/navigation/api';
 import {
   ApiModule,
@@ -81,7 +82,11 @@ import {
   WepublishSiteURLAdapter,
 } from '@wepublish/nest-modules';
 import { PageModule } from '@wepublish/page/api';
-import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
+import {
+  PaymentMethodModule,
+  PaymentsModule,
+  SellableModule,
+} from '@wepublish/payment/api';
 import { PaywallModule } from '@wepublish/paywall/api';
 import { PeerModule } from '@wepublish/peering/api';
 import { ImportPeerArticleModule } from '@wepublish/peering/api/import';
@@ -235,11 +240,13 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
       global: true,
     }),
     PaymentsModule,
+    SellableModule,
     MemberPlanModule,
     ApiModule,
     MembershipModule,
     InvoiceModule,
     GoodieModule,
+    GiftCodeModule,
     DiscountCodeModule,
     DashboardModule,
     RenewalMailModule,
