@@ -3,9 +3,9 @@ import { Plugin } from '@puckeditor/core';
 import {
   createElement,
   PointerEvent as ReactPointerEvent,
-  ReactNode,
   useEffect,
   useState,
+  PropsWithChildren,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
@@ -118,10 +118,9 @@ const CloseButton = styled.button`
 export const BottomBarLayout = ({
   items,
   children,
-}: {
+}: PropsWithChildren<{
   items: BottomBarItem[];
-  children: ReactNode;
-}) => {
+}>) => {
   const { t } = useTranslation();
   const [openName, setOpenName] = useState<string>();
   const [height, setHeight] = useState(DEFAULT_PANEL_HEIGHT);

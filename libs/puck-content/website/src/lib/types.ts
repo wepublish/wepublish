@@ -92,7 +92,9 @@ type BaseComponents = {
 };
 
 export type Components = {
-  [K in keyof BaseComponents]: WithVisibility<BaseComponents[K]>;
+  [K in keyof BaseComponents]: WithVisibility<BaseComponents[K]> & {
+    locked?: boolean;
+  };
 };
 
 export type { UserFields };
