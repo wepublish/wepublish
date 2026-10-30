@@ -1307,6 +1307,9 @@ model PaymentProviderCustomer {
 
   paymentProviderID String
   customerID        String
+  // When the reader's data was last pushed to the provider's contact. Null:
+  // never pushed by the nightly contact sync.
+  syncedAt          DateTime? @db.Timestamptz(3)
 
   User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
@@ -2324,6 +2327,11 @@ model SettingPaymentProvider {
   bexio_invoiceMailSubjectRenewalMembership String?
   bexio_invoiceMailBodyRenewalMembership    String?
   bexio_markInvoiceAsOpen                   Boolean?
+  // Nightly push of reader data (name, email, address) to bexio contacts;
+  // when it last ran and what went wrong, for the integration form.
+  bexio_contactSync                         Boolean?
+  bexio_contactSyncAt                       DateTime? @db.Timestamptz(3)
+  bexio_contactSyncError                    String?
 
   mollie_apiBaseUrl String?
   mollie_methods    MolliePaymentMethod[]
