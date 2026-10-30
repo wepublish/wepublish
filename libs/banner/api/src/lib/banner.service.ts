@@ -8,10 +8,19 @@ import {
 } from './banner.model';
 import { PaginationArgs } from './pagination.model';
 import { findIndex, sortBy } from 'ramda';
+import { NamespacedCache, NamespaceResets } from '@wepublish/kv-ttl-cache/api';
+import {
+  BANNER_CACHE_NAMESPACE,
+  BANNER_CACHE_TTL_SECONDS,
+} from './banner-cache';
 
 @Injectable()
 export class BannerService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: NamespacedCache,
+    private resets: NamespaceResets
+  ) {}
 
   async findOne(id: string) {
     return this.prisma.banner.findUnique({
@@ -29,6 +38,17 @@ export class BannerService {
   }
 
   async findFirst(args: PrimaryBannerArgs) {
+    const { banner } = await this.kv.getOrLoadNs(
+      BANNER_CACHE_NAMESPACE,
+      `primary:${JSON.stringify(args)}`,
+      async () => ({ banner: (await this.loadPrimaryBanner(args)) ?? null }),
+      BANNER_CACHE_TTL_SECONDS
+    );
+
+    return banner ?? undefined;
+  }
+
+  private async loadPrimaryBanner(args: PrimaryBannerArgs) {
     let showForLoginStatus = [] as Array<{ showForLoginStatus: LoginStatus }>;
 
     if (args.hasSubscription === false && args.loggedIn === false) {
@@ -122,7 +142,7 @@ export class BannerService {
   }
 
   async create({ actions, showOnPages, ...bannerInputs }: CreateBannerInput) {
-    return this.prisma.banner.create({
+    const banner = await this.prisma.banner.create({
       data: {
         ...bannerInputs,
         actions: {
@@ -133,12 +153,15 @@ export class BannerService {
         },
       },
     });
+    await this.resets.reset(BANNER_CACHE_NAMESPACE);
+
+    return banner;
   }
 
   async update(args: UpdateBannerInput) {
     const { id, actions, showOnPages, imageId, ...bannerInputs } = args;
 
-    return this.prisma.banner.update({
+    const banner = await this.prisma.banner.update({
       where: {
         id,
       },
@@ -155,6 +178,9 @@ export class BannerService {
         },
       },
     });
+    await this.resets.reset(BANNER_CACHE_NAMESPACE);
+
+    return banner;
   }
 
   async delete(id: string): Promise<undefined> {
@@ -163,5 +189,6 @@ export class BannerService {
         id,
       },
     });
+    await this.resets.reset(BANNER_CACHE_NAMESPACE);
   }
 }

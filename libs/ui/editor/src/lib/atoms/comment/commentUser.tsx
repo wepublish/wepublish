@@ -1,17 +1,16 @@
+import { Drawer, FormLabel, Grid, TextField } from '@mui/material';
 import { FullCommentFragment, FullImageFragment } from '@wepublish/editor/api';
-import React, { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Col, Drawer, Form, Row } from 'rsuite';
 
+import { DRAWER_WIDTHS } from '../../drawer';
 import { ImageSelectPanel } from '../../panel/imageSelectPanel';
 import { ChooseEditImage } from '../chooseEditImage';
 import { UserSearch } from '../searchAndFilter/userSearch';
 
 interface CommentUserProps {
   comment?: FullCommentFragment;
-  setComment: React.Dispatch<
-    React.SetStateAction<FullCommentFragment | undefined>
-  >;
+  setComment: Dispatch<SetStateAction<FullCommentFragment | undefined>>;
 }
 
 export function CommentUser({ comment, setComment }: CommentUserProps) {
@@ -37,15 +36,20 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
 
   function setImage(guestUserImage: FullImageFragment | undefined) {
     setComment(oldComment =>
-      oldComment ? { ...oldComment, guestUserImage } : oldComment
+      oldComment ?
+        { ...oldComment, guestUserImage: guestUserImage ?? null }
+      : oldComment
     );
   }
 
   return (
     <>
-      <Row>
-        <Col xs={24}>
-          <Form.Label>{t('commentUser.selectExistingUser')}</Form.Label>
+      <Grid
+        container
+        spacing={2}
+      >
+        <Grid size={{ xs: 12 }}>
+          <FormLabel>{t('commentUser.selectExistingUser')}</FormLabel>
 
           <UserSearch
             key={`user-${comment?.user}`}
@@ -56,31 +60,45 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
             // @ts-expect-error test
             user={comment?.user}
           />
-        </Col>
+        </Grid>
 
-        <Col xs={24}>
-          <Form.Label>{t('commentUser.guestUser')}</Form.Label>
-          <Form.Control
+        <Grid size={{ xs: 12 }}>
+          <TextField
             name="guestUser"
+            label={t('commentUser.guestUser')}
             placeholder={t('commentUser.guestUser')}
-            onChange={setGuestUser}
+            onChange={event => setGuestUser(event.target.value)}
             value={comment?.guestUsername || ''}
+            fullWidth
           />
-        </Col>
+        </Grid>
 
-        <Col xs={18}>
+        <Grid size={{ xs: 9 }}>
+          <FormLabel>{t('commentUser.selectImage')}</FormLabel>
+
           <ChooseEditImage
+            onSelect={(image: FullImageFragment) => {
+              setImage(image);
+              setOpen(false);
+            }}
             image={comment?.guestUserImage}
             disabled={false}
             openChooseModalOpen={() => setOpen(true)}
             removeImage={() => setImage(undefined)}
-            header={t('commentUser.selectImage')}
-            minHeight={150}
           />
-        </Col>
-      </Row>
+        </Grid>
+      </Grid>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={open}
         onClose={() => {
           setOpen(false);

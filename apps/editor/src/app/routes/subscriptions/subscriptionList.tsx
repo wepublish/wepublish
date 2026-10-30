@@ -1,64 +1,71 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
+  DeleteSubscriptionDocument,
+  ReactivateSubscriptionDocument,
   SubscriptionFilter,
+  SubscriptionListDocument,
   SubscriptionSort,
   TinySubscriptionFragment,
-  useDeleteSubscriptionMutation,
-  useSubscriptionListQuery,
 } from '@wepublish/editor/api';
 import {
+  CanCancelSubscription,
+  CanCreateSubscription,
+  CanGetSubscription,
+  CanGetSubscriptions,
+} from '@wepublish/permissions';
+import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   DescriptionList,
   DescriptionListItem,
+  enqueueSnackbar,
   ExportSubscriptions,
   IconButton,
   IconButtonTooltip,
+  InfoTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
-  ListViewFilterArea,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
-  PaddedCell,
+  Pagination,
   PermissionControl,
-  SortType,
   SubscriptionListFilter,
-  Table,
   TableWrapper,
   useAuthorisation,
   useListViewState,
+  PageTitle,
 } from '@wepublish/ui/editor';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdInfo } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Pagination,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
+import { MdAdd, MdDelete, MdRestartAlt } from 'react-icons/md';
+import { Link as RouterLink } from 'react-router-dom';
 
-const { Column, HeaderCell, Cell: RCell } = RTable;
-
-const Info = styled.div`
-  position: relative;
-`;
+import { ReactivateSubscriptionModal } from './reactivateSubscriptionModal';
 
 const Actions = styled(ListViewActions)`
   grid-column: 3;
 `;
 
-const DeactivationIcon = styled(MdInfo)<{ deactivated: boolean }>`
-  margin-left: 10px;
-  font-size: 16px;
-  visibility: ${({ deactivated }) => (deactivated ? 'visible' : 'hidden')};
-  color: #3498ff;
+const ActionCell = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  justify-items: center;
+`;
+
+const DeactivationInfo = styled.span`
+  display: inline-flex;
+  margin-left: 4px;
+  vertical-align: middle;
 `;
 
 function mapColumFieldToGraphQLField(
@@ -83,19 +90,19 @@ export const NewSubscriptionButton = ({
 }) => {
   const { t } = useTranslation();
 
-  const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION');
+  const canCreate = useAuthorisation(CanCreateSubscription.id);
   const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`;
 
   return (
-    <Link to={urlToRedirect}>
-      <RIconButton
-        appearance="primary"
-        disabled={isLoading || !canCreate}
-      >
-        <MdAdd />
-        {t('subscriptionList.overview.newSubscription')}
-      </RIconButton>
-    </Link>
+    <Button
+      component={RouterLink}
+      to={urlToRedirect}
+      variant="contained"
+      disabled={isLoading || !canCreate}
+      startIcon={<MdAdd />}
+    >
+      {t('subscriptionList.overview.newSubscription')}
+    </Button>
   );
 };
 
@@ -105,28 +112,27 @@ function SubscriptionList() {
       defaultSortField: 'createdAt',
     });
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [isReactivationDialogOpen, setReactivationDialogOpen] = useState(false);
   const [currentSubscription, setCurrentSubscription] =
     useState<TinySubscriptionFragment>();
 
   const [page, setPage] = useState(1);
-  const [subscriptions, setSubscriptions] = useState<
-    TinySubscriptionFragment[]
-  >([]);
 
-  // double check
-  Object.keys(filter).forEach(el => {
-    if (filter[el as keyof SubscriptionFilter] === null) {
-      delete filter[el as keyof SubscriptionFilter];
-    }
-  });
+  const activeFilter = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(filter).filter(([, value]) => value !== null)
+      ) as SubscriptionFilter,
+    [filter]
+  );
 
   const {
     data,
     refetch,
     loading: isLoading,
-  } = useSubscriptionListQuery({
+  } = useQuery(SubscriptionListDocument, {
     variables: {
-      filter,
+      filter: activeFilter,
       take: limit,
       skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
@@ -134,29 +140,33 @@ function SubscriptionList() {
     },
   });
 
+  const subscriptions = data?.subscriptions?.nodes ?? [];
+
   useEffect(() => {
     refetch({
-      filter,
+      filter: activeFilter,
       take: limit,
       skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     });
-  }, [filter, page, limit, sortOrder, sortField]);
+  }, [activeFilter, page, limit, sortOrder, sortField]);
 
-  const [deleteSubscription, { loading: isDeleting }] =
-    useDeleteSubscriptionMutation();
+  const [deleteSubscription, { loading: isDeleting }] = useMutation(
+    DeleteSubscriptionDocument
+  );
+
+  const [reactivateSubscription, { loading: isReactivating }] = useMutation(
+    ReactivateSubscriptionDocument
+  );
 
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (data?.subscriptions?.nodes) {
-      setSubscriptions(data.subscriptions.nodes);
-      if (Math.ceil(data.subscriptions.totalCount / limit) < page) {
-        setPage(1);
-      }
-    }
-  }, [data?.subscriptions]);
+  const totalPages = Math.ceil((data?.subscriptions?.totalCount ?? 0) / limit);
+
+  if (totalPages > 0 && page > totalPages) {
+    setPage(1);
+  }
 
   /**
    * UI helper
@@ -175,112 +185,110 @@ function SubscriptionList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('subscriptionList.overview.subscription')}</h2>
+          <PageTitle>{t('subscriptionList.overview.subscription')}</PageTitle>
         </ListViewHeader>
 
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
+        <PermissionControl qualifyingPermissions={[CanCreateSubscription.id]}>
           <Actions>
             <ExportSubscriptions filter={filter} />
             <NewSubscriptionButton isLoading={isLoading} />
           </Actions>
         </PermissionControl>
-
-        <ListViewFilterArea>
-          <SubscriptionListFilter
-            filter={filter}
-            isLoading={isLoading}
-            onSetFilter={filter => {
-              setFilter(filter);
-              setPage(1);
-            }}
-          />
-        </ListViewFilterArea>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={isLoading}
-          data={subscriptions}
-          sortColumn={sortField}
-          sortType={sortOrder}
-          onSortColumn={(sortColumn: string, sortType?: SortType) => {
-            setSort(sortColumn, sortType ?? 'asc');
+        <DataTable
+          storageKey="subscriptions"
+          filters={
+            <SubscriptionListFilter
+              filter={filter}
+              isLoading={isLoading}
+              onSetFilter={filter => {
+                setFilter(filter);
+                setPage(1);
+              }}
+            />
+          }
+          filterCount={
+            Object.values(filter).filter(value => value !== undefined).length
+          }
+          onResetFilters={() => {
+            setFilter({});
             setPage(1);
           }}
-        >
-          <Column
-            width={200}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('subscriptionList.overview.createdAt')}</HeaderCell>
-            <RCell dataKey="createdAt">
-              {({ createdAt }: RowDataType<TinySubscriptionFragment>) =>
+          data={subscriptions}
+          loading={isLoading}
+          sortColumn={sortField}
+          sortOrder={sortOrder}
+          onSort={(sortColumn, sortOrder) => {
+            setSort(sortColumn, sortOrder);
+            setPage(1);
+          }}
+          sortable={['createdAt', 'modifiedAt', 'name']}
+          columns={[
+            {
+              id: 'createdat',
+              label: t('subscriptionList.overview.createdAt'),
+              width: 200,
+              align: 'left',
+              sortKey: 'createdAt',
+              render: ({ createdAt }: TinySubscriptionFragment) =>
                 t('subscriptionList.overview.createdAtDate', {
                   createdAtDate: new Date(createdAt),
-                })
-              }
-            </RCell>
-          </Column>
-          <Column
-            width={200}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
-            <RCell dataKey="modifiedAt">
-              {({ modifiedAt }: RowDataType<TinySubscriptionFragment>) =>
+                }),
+            },
+            {
+              id: 'modifiedat',
+              label: t('userList.overview.modifiedAt'),
+              width: 200,
+              align: 'left',
+              sortKey: 'modifiedAt',
+              render: ({ modifiedAt }: TinySubscriptionFragment) =>
                 t('subscriptionList.overview.modifiedAtDate', {
                   modifiedAtDate: new Date(modifiedAt),
-                })
-              }
-            </RCell>
-          </Column>
-          {/* subscription */}
-          <Column width={200}>
-            <HeaderCell>{t('subscriptionList.overview.memberPlan')}</HeaderCell>
-            <RCell dataKey={'subscription'}>
-              {(rowData: RowDataType<TinySubscriptionFragment>) => (
-                <Link to={`/subscriptions/edit/${rowData.id}`}>
-                  {rowData.memberPlan.name}
-                </Link>
-              )}
-            </RCell>
-          </Column>
-          {/* name */}
-          <Column
-            width={300}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('subscriptionList.overview.name')}</HeaderCell>
-            <RCell dataKey={'name'}>
-              {(rowData: RowDataType<TinySubscriptionFragment>) =>
-                userNameView(rowData as TinySubscriptionFragment)
-              }
-            </RCell>
-          </Column>
-          {/* action */}
-          <Column
-            width={100}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell>{t('action')}</HeaderCell>
-            <PaddedCell>
-              {(rowData: RowDataType<TinySubscriptionFragment>) => (
+                }),
+            },
+            {
+              id: 'memberplan',
+              label: t('subscriptionList.overview.memberPlan'),
+              width: 200,
+              render: (rowData: TinySubscriptionFragment) => (
                 <>
+                  <Link to={`/subscriptions/edit/${rowData.id}`}>
+                    {rowData.memberPlan.name}
+                  </Link>
+
+                  {rowData.deactivation && (
+                    <DeactivationInfo data-testid="deactivationIcon">
+                      <InfoTooltip text={t('deactivated')} />
+                    </DeactivationInfo>
+                  )}
+                </>
+              ),
+            },
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('subscriptionList.overview.name'),
+              width: 300,
+              align: 'left',
+              render: (rowData: TinySubscriptionFragment) =>
+                userNameView(rowData as TinySubscriptionFragment),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 120,
+              align: 'center',
+              fixed: true,
+              render: (rowData: TinySubscriptionFragment) => (
+                <ActionCell data-testid="subscriptionActions">
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
-                      icon={<MdDelete />}
+                      size="small"
+                      color="error"
+                      data-testid="deleteSubscription"
+                      aria-label={t('delete')}
                       onClick={e => {
                         e.preventDefault();
                         setCurrentSubscription(
@@ -288,101 +296,137 @@ function SubscriptionList() {
                         );
                         setConfirmationDialogOpen(true);
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </IconButtonTooltip>
 
-                  <IconButtonTooltip caption={t('deactivated')}>
-                    <Info>
-                      <DeactivationIcon deactivated={rowData.deactivation} />
-                    </Info>
-                  </IconButtonTooltip>
-                </>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+                  {rowData.deactivation && (
+                    <IconButtonTooltip
+                      caption={t('subscriptionList.overview.reactivate')}
+                    >
+                      <IconButton
+                        size="small"
+                        color="success"
+                        data-testid="reactivateSubscription"
+                        aria-label={t('subscriptionList.overview.reactivate')}
+                        onClick={e => {
+                          e.preventDefault();
+                          setCurrentSubscription(
+                            rowData as TinySubscriptionFragment
+                          );
+                          setReactivationDialogOpen(true);
+                        }}
+                      >
+                        <MdRestartAlt />
+                      </IconButton>
+                    </IconButtonTooltip>
+                  )}
+                </ActionCell>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.subscriptions.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
           }}
+          totalCount={data?.subscriptions.totalCount ?? 0}
         />
       </TableWrapper>
 
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>
-            {t('subscriptionList.panels.deleteSubscription')}
-          </Modal.Title>
-        </Modal.Header>
+        <DialogTitle>
+          {t('subscriptionList.panels.deleteSubscription')}
+        </DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('subscriptionList.panels.name')}>
               {currentSubscription?.user?.name ||
                 t('subscriptionList.panels.unknown')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setConfirmationDialogOpen(false)}
+          >
+            {t('subscriptionList.panels.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
             disabled={isDeleting}
-            appearance="primary"
             onClick={async () => {
-              if (!currentSubscription) return;
+              if (!currentSubscription) {
+                return;
+              }
 
               await deleteSubscription({
                 variables: { id: currentSubscription.id },
               });
-              toaster.push(
-                <Message
-                  type="success"
-                  showIcon
-                  closable
-                  duration={2000}
-                >
-                  {t('toast.deletedSuccess')}
-                </Message>
-              );
+              enqueueSnackbar(t('toast.deletedSuccess'), {
+                variant: 'success',
+                autoHideDuration: 2000,
+              });
               setConfirmationDialogOpen(false);
               refetch();
             }}
           >
             {t('subscriptionList.panels.confirm')}
           </Button>
-          <Button
-            onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
-          >
-            {t('subscriptionList.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
+
+      <ReactivateSubscriptionModal
+        open={isReactivationDialogOpen}
+        loading={isReactivating}
+        userName={currentSubscription?.user?.name}
+        memberPlanName={currentSubscription?.memberPlan.name}
+        monthlyAmount={currentSubscription?.monthlyAmount}
+        paymentPeriodicity={currentSubscription?.paymentPeriodicity}
+        currency={currentSubscription?.currency}
+        paidUntil={
+          currentSubscription?.paidUntil ?
+            new Date(currentSubscription.paidUntil)
+          : null
+        }
+        deactivation={currentSubscription?.deactivation}
+        onClose={() => setReactivationDialogOpen(false)}
+        onConfirm={async () => {
+          if (!currentSubscription) {
+            return;
+          }
+
+          await reactivateSubscription({
+            variables: { id: currentSubscription.id },
+          });
+          enqueueSnackbar(t('toast.updatedSuccess'), {
+            variant: 'success',
+            autoHideDuration: 2000,
+          });
+          setReactivationDialogOpen(false);
+          refetch();
+        }}
+      />
     </>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_SUBSCRIPTIONS',
-  'CAN_GET_SUBSCRIPTION',
-  'CAN_CREATE_SUBSCRIPTION',
-  'CAN_DELETE_SUBSCRIPTION',
+  CanGetSubscriptions.id,
+  CanGetSubscription.id,
+  CanCreateSubscription.id,
+  CanCancelSubscription.id,
 ])(SubscriptionList);
 export { CheckedPermissionComponent as SubscriptionList };

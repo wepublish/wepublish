@@ -1,16 +1,16 @@
 import styled from '@emotion/styled';
-import { IconButton as RIconButton, Table as RTable } from 'rsuite';
+import { IconButton as MuiIconButton } from '@mui/material';
 
 import { StateColor } from '../utility';
 import { ListViewFilters } from './list-view-filters';
-
-const { Cell } = RTable;
 
 export const ListViewContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
+  row-gap: ${({ theme }) => theme.spacing(1)};
+  margin-bottom: ${({ theme }) => theme.spacing(3)};
 `;
 
 export const ListViewHeader = styled.div`
@@ -27,54 +27,35 @@ export const ListViewActions = styled.div`
 
 export const ListFilters = styled(ListViewFilters)``;
 
-export const ListViewFilterArea = styled.div`
-  width: 100%;
-  gap: 8px;
-  display: flex;
-  margin-bottom: 1rem;
-`;
-
 export const TableWrapper = styled.div`
-  height: 100%;
-`;
-
-export const PaddedCell = styled(Cell)`
-  .rs-table-cell-content {
-    padding: 6px 0;
-  }
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 `;
 
 interface StatusBadgeProps {
   states: string[];
 }
 
+const statusOf = (states: string[]) =>
+  states.includes('pending') ? 'pending'
+  : states.includes('published') ? 'published'
+  : states.includes('draft') ? 'draft'
+  : 'none';
+
 export const StatusBadge = styled.div<StatusBadgeProps>`
   font-size: 0.75em;
+  font-weight: 600;
   text-align: center;
-  border-radius: 15px;
+  border-radius: 999px;
   padding: 2px 8px;
-  background-color: ${props => {
-    if (props.states.includes('pending')) {
-      return StateColor.pending;
-    } else if (props.states.includes('published')) {
-      return StateColor.published;
-    } else if (props.states.includes('draft')) {
-      return StateColor.draft;
-    } else {
-      return StateColor.none;
-    }
-  }};
+  background-color: ${props => StateColor[statusOf(props.states)]};
+  color: ${props => `var(--wep-state-${statusOf(props.states)}-text, inherit)`};
 `;
 
-export const IconButtonCell = styled(RTable.Cell)`
-  padding: 6px 0;
-  & > div {
-    padding: 0;
-  }
-`;
-
-export const IconButton = styled(RIconButton)`
-  && {
+export const IconButton = styled(MuiIconButton)`
+  &&:not([data-with-text]) {
     width: 36px;
     height: 36px;
   }
@@ -82,8 +63,4 @@ export const IconButton = styled(RIconButton)`
   &:not(:first-of-type) {
     margin-left: 4px;
   }
-`;
-
-export const Table = styled(RTable)`
-  height: 100% !important;
-`;
+` as typeof MuiIconButton;

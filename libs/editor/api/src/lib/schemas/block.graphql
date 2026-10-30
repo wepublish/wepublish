@@ -1,4 +1,22 @@
+fragment FullBlockTiming on BlockTiming {
+  from
+  to
+  weekdays
+  timeOfDay {
+    from
+    to
+  }
+}
+
 fragment BlockWithoutTeaser on BlockContent {
+  ... on BaseBlock {
+    shouldDisplay
+
+    timing {
+      ...FullBlockTiming
+    }
+  }
+
   __typename
 
   ... on TitleBlock {
@@ -325,10 +343,14 @@ fragment BlockWithoutTeaser on BlockContent {
         urlParam
         defaultValue
         value
+        optionsLayout
         options {
           id
           name
           description
+          image {
+            ...FullImage
+          }
         }
       }
     }
@@ -427,6 +449,14 @@ fragment FullTeaser on Teaser {
 }
 
 fragment FullBlock on BlockContent {
+  ... on BaseBlock {
+    shouldDisplay
+
+    timing {
+      ...FullBlockTiming
+    }
+  }
+
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {
@@ -531,61 +561,71 @@ fragment FullBlock on BlockContent {
       }
       block {
         __typename
-
-        ... on TeaserSlotsBlock {
-          title
-          disabled
-          blockStyle
-          blockStyleName
-          type
-          autofillConfig {
-            enabled
-            filter {
-              tags
-              tagObjects {
-                id
-                tag
-              }
-            }
-            sort
-            teaserType
-          }
-          slots {
-            type
-            teaser {
-              __typename
-              ...FullTeaser
-            }
-          }
-          autofillTeasers {
-            ...FullTeaser
-          }
-        }
-
-        ... on TeaserListBlock {
-          title
-          disabled
-          blockStyle
-          blockStyleName
-          type
-          skip
-          take
-          sort
-          teaserType
-          filter {
-            tags
-            tagObjects {
-              id
-              tag
-            }
-          }
-          teasers {
-            ...FullTeaser
-          }
-        }
-
         ...BlockWithoutTeaser
+        ...NestedTeaserBlock
+
+        ... on BlockTemplateBlock {
+          ...NestedBlockTemplateBlock
+        }
       }
+    }
+  }
+
+  ... on BlockTemplateBlock {
+    ...NestedBlockTemplateBlock
+  }
+}
+
+fragment NestedTeaserBlock on BlockContent {
+  ... on TeaserSlotsBlock {
+    title
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    autofillConfig {
+      enabled
+      filter {
+        tags
+        tagObjects {
+          id
+          tag
+        }
+      }
+      sort
+      teaserType
+    }
+    slots {
+      type
+      teaser {
+        __typename
+        ...FullTeaser
+      }
+    }
+    autofillTeasers {
+      ...FullTeaser
+    }
+  }
+
+  ... on TeaserListBlock {
+    title
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    skip
+    take
+    sort
+    teaserType
+    filter {
+      tags
+      tagObjects {
+        id
+        tag
+      }
+    }
+    teasers {
+      ...FullTeaser
     }
   }
 }

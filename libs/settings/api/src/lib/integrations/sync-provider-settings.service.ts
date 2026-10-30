@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   PrismaClient,
   SettingSyncProvider,
@@ -11,7 +15,7 @@ import {
 } from './sync-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
@@ -20,7 +24,7 @@ export class SyncProviderSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private resets: NamespaceResets
   ) {}
 
   private encryptSecretsIfPresent<
@@ -68,11 +72,17 @@ export class SyncProviderSettingsService {
   async createSyncProviderSetting(
     input: CreateSettingSyncProviderInput
   ): Promise<SettingSyncProvider> {
+    if (await this.prisma.settingSyncProvider.count()) {
+      throw new BadRequestException(
+        `A sync provider is already set up. Change its settings instead of adding another one.`
+      );
+    }
+
     const output = this.encryptSecretsIfPresent(input);
     const returnValue = await this.prisma.settingSyncProvider.create({
       data: output as any,
     });
-    await this.kv.resetNamespace('settings:syncprovider');
+    await this.resets.reset('settings:syncprovider');
     return returnValue;
   }
 
@@ -102,7 +112,7 @@ export class SyncProviderSettingsService {
       where: { id },
       data: filteredUpdateData,
     });
-    await this.kv.resetNamespace('settings:syncprovider');
+    await this.resets.reset('settings:syncprovider');
     return returnValue;
   }
 
@@ -121,7 +131,7 @@ export class SyncProviderSettingsService {
     const returnValue = await this.prisma.settingSyncProvider.delete({
       where: { id },
     });
-    await this.kv.resetNamespace('settings:syncprovider');
+    await this.resets.reset('settings:syncprovider');
     return returnValue;
   }
 

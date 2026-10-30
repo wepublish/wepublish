@@ -1,3 +1,4 @@
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { PaymentMethodService } from './payment-method.service';
 import { PaymentMethodDataloader } from './payment-method.dataloader';
 import { PaymentProviderDataloader } from './payment-provider.dataloader';
@@ -5,6 +6,7 @@ import { HasPaymentMethodResolver } from './has-payment-method/has-payment-metho
 import { PaymentMethodResolver } from './payment-method.resolver';
 import {
   DynamicModule,
+  FactoryProvider,
   Module,
   ModuleMetadata,
   Provider,
@@ -21,23 +23,24 @@ type PaymentMethodConfigType = Type<PaymentMethodConfig>;
 
 export type PaymentMethodOptionsFactory = {
   createPaymentMethodOptions():
-    | Promise<PaymentMethodConfigType>
-    | PaymentMethodConfigType;
+    Promise<PaymentMethodConfigType> | PaymentMethodConfigType;
 };
 
-export interface PaymentMethodClientAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface PaymentMethodClientAsyncOptions extends Pick<
+  ModuleMetadata,
+  'imports'
+> {
   useExisting?: Type<PaymentMethodOptionsFactory>;
   useClass?: Type<PaymentMethodOptionsFactory>;
   useFactory?: (
     ...args: any[]
   ) => Promise<PaymentMethodConfig> | PaymentMethodConfig;
-  inject?: Type[];
+  inject?: FactoryProvider['inject'];
   global?: boolean;
 }
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PublicContentInvalidatorModule, PrismaModule],
   providers: [
     PaymentMethodService,
     PaymentMethodDataloader,

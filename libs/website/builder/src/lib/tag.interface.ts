@@ -1,20 +1,27 @@
-import { QueryResult } from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
+import type { useQuery } from '@apollo/client/react';
 
 import {
   ArticleListQuery,
   ArticleListQueryVariables,
-  Tag,
+  FullTagFragment,
   TagQuery,
 } from '@wepublish/website/api';
 
 export type BuilderTagProps = {
   className?: string;
-  tag: Pick<QueryResult<TagQuery>, 'data' | 'loading' | 'error'>;
-  articles: Pick<QueryResult<ArticleListQuery>, 'data' | 'loading' | 'error'>;
+  tag: Pick<
+    useQuery.Result<TagQuery, OperationVariables, 'complete' | 'empty'>,
+    'data' | 'loading' | 'error'
+  >;
+  articles: Pick<
+    useQuery.Result<ArticleListQuery, OperationVariables, 'complete' | 'empty'>,
+    'data' | 'loading' | 'error'
+  >;
   variables?: Partial<ArticleListQueryVariables>;
   onVariablesChange?: (variables: Partial<ArticleListQueryVariables>) => void;
 };
 
 export type BuilderTagSEOProps = {
-  tag: Tag;
+  tag: FullTagFragment;
 };

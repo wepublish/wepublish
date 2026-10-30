@@ -5,14 +5,19 @@
   "projectType": "application",
   "tags": [],
   "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p apps/gruppetto/tsconfig.json"
+      }
+    },
     "build": {
       "executor": "@nx/next:build",
       "dependsOn": [],
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/gruppetto",
-        "webpack": true
+        "outputPath": "dist/apps/gruppetto"
       },
       "configurations": {
         "development": {
@@ -27,8 +32,7 @@
       "options": {
         "buildTarget": "gruppetto:build",
         "port": 4202,
-        "dev": true,
-        "webpack": true
+        "dev": true
       },
       "configurations": {
         "development": {
@@ -48,18 +52,8 @@
       }
     },
     "test": {
-      "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
-      },
-      "configurations": {
-        "ci": {
-          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
-        },
-        "update": {
-          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
-        }
+        "config": "../../{projectRoot}/vitest.config.ts"
       }
     },
     "lint": {

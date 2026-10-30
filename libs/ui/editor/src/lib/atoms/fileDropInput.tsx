@@ -1,5 +1,12 @@
 import styled from '@emotion/styled';
-import React, { useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  DragEvent,
+  ReactElement,
+  ReactNode,
+  useRef,
+  useState,
+} from 'react';
 
 const Input = styled.input`
   position: absolute;
@@ -24,24 +31,42 @@ const FileDropInputWrapper = styled.div<{
   padding-bottom: 20px;
   padding-left: 20px;
   padding-right: 20px;
-  border-radius: 3px;
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
   border-style: dashed;
-  border-width: 3px;
+  border-width: 1px;
   position: relative;
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.typography.body2.fontSize};
   text-align: center;
-  border-color: ${({ dragging }) => (dragging ? '#3498ff' : '#004299')};
-  color: ${({ dragging }) => (dragging ? '#3498ff' : '#004299')};
-  fill: ${({ dragging }) => (dragging ? '#3498ff' : '#004299')};
+  transition: ${({ theme }) =>
+    theme.transitions.create(['border-color', 'background-color', 'color'])};
+  border-color: ${({ dragging, theme }) =>
+    dragging ?
+      theme.vars.palette.primary.main
+    : theme.vars.palette.action.disabled};
+  background-color: ${({ dragging, theme }) =>
+    dragging ?
+      `rgba(${theme.vars.palette.primary.mainChannel} / 0.08)`
+    : theme.vars.palette.background.default};
+  color: ${({ dragging, theme }) =>
+    dragging ?
+      theme.vars.palette.primary.main
+    : theme.vars.palette.text.secondary};
+  fill: currentColor;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+
+  &:hover {
+    border-color: ${({ theme }) => theme.vars.palette.text.primary};
+    color: ${({ theme }) => theme.vars.palette.text.primary};
+  }
 `;
 
 export interface FileDropInputProps {
   disabled?: boolean;
   accept?: string;
 
-  icon?: React.ReactElement;
+  icon?: ReactElement;
   text?: string;
+  children?: ReactNode;
 
   onDrop: (fileList: File[]) => void;
 }
@@ -52,25 +77,26 @@ export function FileDropInput({
   onDrop,
   icon,
   text,
+  children,
 }: FileDropInputProps) {
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  function handleDragIn(e: React.DragEvent<HTMLDivElement>) {
+  function handleDragIn(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     e.stopPropagation();
 
     setDragging(true);
   }
 
-  function handleDragOut(e: React.DragEvent<HTMLDivElement>) {
+  function handleDragOut(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     e.stopPropagation();
 
     setDragging(false);
   }
 
-  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     e.stopPropagation();
 
@@ -82,7 +108,7 @@ export function FileDropInput({
     }
   }
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       onDrop(Array.from(e.target.files));
     }
@@ -97,8 +123,12 @@ export function FileDropInput({
       onDragLeave={!disabled ? handleDragOut : undefined}
       onClick={() => inputRef.current!.click()}
     >
-      {icon && icon}
-      <div>{text}</div>
+      {children ?? (
+        <>
+          {icon && icon}
+          <div>{text}</div>
+        </>
+      )}
       <Input
         ref={inputRef}
         type="file"

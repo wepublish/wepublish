@@ -1,8 +1,11 @@
-import { ApolloError } from '@apollo/client';
-import { usePaywallListQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { Autocomplete, TextField } from '@mui/material';
+import { PaywallListDocument } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Message, SelectPicker, toaster } from 'rsuite';
+
+import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
 
 interface SelectPaywallsProps {
   className?: string;
@@ -17,17 +20,11 @@ interface SelectPaywallsProps {
  * Error handling
  * @param error
  */
-const showErrors = (error: ApolloError): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+const showErrors = (error: Error): void => {
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 export function SelectPaywall({
@@ -40,9 +37,7 @@ export function SelectPaywall({
 }: SelectPaywallsProps) {
   const { t } = useTranslation();
 
-  const { data: paywallsData } = usePaywallListQuery({
-    onError: showErrors,
-  });
+  const { data: paywallsData } = useQuery(PaywallListDocument);
 
   /**
    * Prepare available paywalls
@@ -59,17 +54,23 @@ export function SelectPaywall({
   }, [paywallsData, t]);
 
   return (
-    <SelectPicker
-      block
-      placeholder={placeholder}
+    <Autocomplete
       disabled={disabled}
       className={className}
-      name={name}
-      value={selectedPaywall}
-      data={availablePaywalls}
-      onChange={(value, item) => {
-        setSelectedPaywall(value);
-      }}
+      options={availablePaywalls.map(paywall => paywall.value)}
+      getOptionLabel={id =>
+        availablePaywalls.find(paywall => paywall.value === id)?.label ?? id
+      }
+      value={selectedPaywall ?? null}
+      onChange={(_event, value) => setSelectedPaywall(value)}
+      renderInput={params => (
+        <TextField
+          {...params}
+          name={name}
+          placeholder={placeholder}
+        />
+      )}
+      fullWidth
     />
   );
 }

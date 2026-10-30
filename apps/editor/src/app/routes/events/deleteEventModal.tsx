@@ -1,43 +1,34 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
-  Event,
-  EventListQuery,
-  useDeleteEventMutation,
-} from '@wepublish/editor/api';
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import { DeleteEventDocument, FullEventFragment } from '@wepublish/editor/api';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, Modal, toaster } from 'rsuite';
 
 type DeleteEventProps = {
-  event: Event | undefined;
+  event: FullEventFragment | undefined;
   onClose(): void;
-  onDelete(): Promise<ApolloQueryResult<EventListQuery>>;
+  onDelete(): Promise<unknown>;
 };
 
-const onErrorToast = (error: ApolloError) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+const onErrorToast = (error: Error) => {
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const onCompletedToast = (t: TFunction) => () => {
-  toaster.push(
-    <Message
-      type="success"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {t('toast.deletedSuccess')}
-    </Message>
-  );
+  enqueueSnackbar(t('toast.deletedSuccess'), {
+    variant: 'success',
+    autoHideDuration: 3000,
+  });
 };
 
 export function DeleteEventModal({
@@ -47,7 +38,7 @@ export function DeleteEventModal({
 }: DeleteEventProps) {
   const { t } = useTranslation();
 
-  const [deleteEventMutation] = useDeleteEventMutation();
+  const [deleteEventMutation] = useMutation(DeleteEventDocument);
 
   async function deleteEvent() {
     if (!event) {
@@ -67,36 +58,34 @@ export function DeleteEventModal({
   }
 
   return (
-    <Modal
+    <Dialog
       open={!!event}
       onClose={onClose}
     >
-      <Modal.Header>
-        <Modal.Title>{t('event.delete.title')}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{t('event.delete.title')}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         {t('event.delete.body', {
           name: event?.name,
         })}
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          onClick={deleteEvent}
-          appearance="primary"
-          color="red"
-        >
-          {t('event.delete.delete')}
-        </Button>
-
-        <Button
+          variant="text"
           onClick={onClose}
-          appearance="subtle"
         >
           {t('cancel')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+
+        <Button
+          variant="contained"
+          onClick={deleteEvent}
+          color="error"
+        >
+          {t('event.delete.delete')}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

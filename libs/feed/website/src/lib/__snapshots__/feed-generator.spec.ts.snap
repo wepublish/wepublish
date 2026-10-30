@@ -20,9 +20,15 @@ exports[`should generate the RSS feed 1`] = `
             <guid>1</guid>
             <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
             <description><![CDATA[This is an article lead]]></description>
-            <content:encoded><![CDATA[This is an article lead]]></content:encoded>
-            <category>schedule</category>
-            <category>stall</category>
+            <content:encoded><![CDATA[<h3>terra decimus tamdiu</h3><p>Lorem ipsum dolor sit amet consectetur <span style="color: #ff0000;">adipiscing</span> elit. <span style="background-color: #cfcfcf;">Quisque</span> faucibus ex sapien vitae pellentesque sem placerat. In <strong>id cursus</strong> mi pretium tellus duis <em>convallis</em>. <s>Tempus</s> leo eu aenean sed diam urna tempor. <u>Pulvinar</u> vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora <sup>torquent</sup> per conubia nostra <sub>inceptos</sub> himenaeos.</p><h4>theologus solitudo adsum earum video tamen</h4><p>Officiis sublime capillus damno conor vere thema spiritus dedico. Templum tripudio arbitro appono absum sui patruus. Mollitia caelestis itaque tricesimus facere argumentum terminatio tumultus tredecim concido.
+Arcus cubo sufficio quia sortitus titulus ocer. Depopulo alienus error. Deficio conor at atrox celo.
+Cuppedia deporto alienus. Ara delectatio totam amaritudo thymum bellum victus. Thermae conitor synagoga vacuus claustrum uxor tempore. <a target="_blank" rel="noopener noreferrer nofollow" href="https://example.com">decet assentator voluptate nobis vix</a></p><table style="min-width: 75px;"><colgroup><col style="min-width: 25px;"><col style="min-width: 25px;"><col style="min-width: 25px;"></colgroup><tbody><tr><th style=""><p>Lorem</p></th><th rowspan="2" style=""><p>Ipsum</p><p>amet</p></th><th style=""><p>dolor</p></th></tr><tr><td style=""><p>sit</p></td><td style=""><p>consectetur</p></td></tr><tr><th style=""><p>adipiscing</p></th><td colspan="2" style=""><p>elit</p></td></tr></tbody></table><h5>cervus facilis decipio condico corroboro amo tantum</h5><pre><code>class HelloWorldApp {
+  public static void main(String[] args) {
+    System.out.println("Hello World!");
+  }
+}</code></pre><p></p>]]></content:encoded>
+            <category>lamp</category>
+            <category>longboat</category>
             <enclosure length="0" type="image/webp" url="https://unsplash.it/500/281"/>
         </item>
         <item>
@@ -31,9 +37,17 @@ exports[`should generate the RSS feed 1`] = `
             <guid>2</guid>
             <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
             <description><![CDATA[This is an article lead]]></description>
-            <content:encoded><![CDATA[This is an article lead]]></content:encoded>
+            <content:encoded><![CDATA[<h3>comptus campana corroboro thesaurus numquam magnam coma cetera</h3><p>Lorem ipsum dolor sit amet consectetur <span style="color: #ff0000;">adipiscing</span> elit. <span style="background-color: #cfcfcf;">Quisque</span> faucibus ex sapien vitae pellentesque sem placerat. In <strong>id cursus</strong> mi pretium tellus duis <em>convallis</em>. <s>Tempus</s> leo eu aenean sed diam urna tempor. <u>Pulvinar</u> vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora <sup>torquent</sup> per conubia nostra <sub>inceptos</sub> himenaeos.</p><h4>crustulum necessitatibus creptio adstringo contego capitulus</h4><p>Inflammatio acerbitas verumtamen. Solutio temperantia crux aeneus velociter claro ambulo. Ustilo tergum carcer molestiae cibus consequuntur.
+Volup admoveo sopor thesaurus. Tam eius arbitro solium territo sit corrumpo veniam aurum. Delectus creo theologus suggero acsi capitulus ars surgo virtus.
+Perspiciatis sumo spectaculum curso tristis. Aperiam cunae copiose valetudo iste cognatus tendo benevolentia. Censura delectatio turba quibusdam iusto.
+Vomica victoria avarus voco aqua tendo bellicus temperantia utilis. Benigne vox rem tardus arguo. Optio nisi adiuvo alo arbor ascit.
+Censura cariosus harum convoco. Vae debilito cognatus venio sol. Commemoro coaegresco sulum. <a target="_blank" rel="noopener noreferrer nofollow" href="https://example.com">commemoro aeger defendo nulla damnatio tot</a></p><table style="min-width: 75px;"><colgroup><col style="min-width: 25px;"><col style="min-width: 25px;"><col style="min-width: 25px;"></colgroup><tbody><tr><th style=""><p>Lorem</p></th><th rowspan="2" style=""><p>Ipsum</p><p>amet</p></th><th style=""><p>dolor</p></th></tr><tr><td style=""><p>sit</p></td><td style=""><p>consectetur</p></td></tr><tr><th style=""><p>adipiscing</p></th><td colspan="2" style=""><p>elit</p></td></tr></tbody></table><h5>vacuus coniecto curtus aggredior delinquo architecto ea</h5><pre><code>class HelloWorldApp {
+  public static void main(String[] args) {
+    System.out.println("Hello World!");
+  }
+}</code></pre><p></p>]]></content:encoded>
+            <category>switchboard</category>
             <category>quart</category>
-            <category>lava</category>
             <enclosure length="0" type="image/webp" url="https://unsplash.it/500/281"/>
         </item>
     </channel>
@@ -60,7 +74,15 @@ exports[`should generate the atom feed 1`] = `
         <link href="https://example.com"/>
         <updated>2023-01-01T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[This is an article lead]]></summary>
-        <content type="html"><![CDATA[This is an article lead]]></content>
+        <content type="html"><![CDATA[<h3>defessus trado benevolentia creptio asperiores</h3><p>Lorem ipsum dolor sit amet consectetur <span style="color: #ff0000;">adipiscing</span> elit. <span style="background-color: #cfcfcf;">Quisque</span> faucibus ex sapien vitae pellentesque sem placerat. In <strong>id cursus</strong> mi pretium tellus duis <em>convallis</em>. <s>Tempus</s> leo eu aenean sed diam urna tempor. <u>Pulvinar</u> vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora <sup>torquent</sup> per conubia nostra <sub>inceptos</sub> himenaeos.</p><h4>apud solum cultura tergum stips solio demulceo</h4><p>Altus amicitia asperiores magni candidus. Ocer argentum tamdiu. Confido conspergo creber.
+Decens eligendi aequus damno theologus patior. Vita centum degero charisma vulgaris averto armarium arx toties. Magnam appono tutis natus aliquid statim derelinquo stips tersus vulariter.
+Eveniet vinco confido cura dicta chirographum suppono teneo. Tot cattus pel. Soleo nostrum sonitus demo.
+Quibusdam ciminatio creo voluntarius despecto vigilo ver. Temporibus confugo corrupti vesco aperte defleo sub verus centum. Curatio cado textilis tristis curtus.
+Articulus allatus spes universe amplexus creptio umquam sonitus. Convoco conventus tamdiu. Virga beneficium caput. <a target="_blank" rel="noopener noreferrer nofollow" href="https://example.com">addo accusamus undique taedium tempore numquam</a></p><table style="min-width: 75px;"><colgroup><col style="min-width: 25px;"><col style="min-width: 25px;"><col style="min-width: 25px;"></colgroup><tbody><tr><th style=""><p>Lorem</p></th><th rowspan="2" style=""><p>Ipsum</p><p>amet</p></th><th style=""><p>dolor</p></th></tr><tr><td style=""><p>sit</p></td><td style=""><p>consectetur</p></td></tr><tr><th style=""><p>adipiscing</p></th><td colspan="2" style=""><p>elit</p></td></tr></tbody></table><h5>cohaero varius ultra usque deorsum</h5><pre><code>class HelloWorldApp {
+  public static void main(String[] args) {
+    System.out.println("Hello World!");
+  }
+}</code></pre><p></p>]]></content>
         <author>
             <name>Foobar</name>
             <uri>https://example.com</uri>
@@ -69,8 +91,8 @@ exports[`should generate the atom feed 1`] = `
             <name>Foobar</name>
             <uri>https://example.com</uri>
         </author>
-        <category label="newsletter" term="newsletter"/>
-        <category label="papa" term="papa"/>
+        <category label="petticoat" term="petticoat"/>
+        <category label="topsail" term="topsail"/>
     </entry>
     <entry>
         <title type="html"><![CDATA[Title Block]]></title>
@@ -78,7 +100,16 @@ exports[`should generate the atom feed 1`] = `
         <link href="https://example.com"/>
         <updated>2023-01-01T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[This is an article lead]]></summary>
-        <content type="html"><![CDATA[This is an article lead]]></content>
+        <content type="html"><![CDATA[<h3>auctus apto tardus defessus acer amissio a</h3><p>Lorem ipsum dolor sit amet consectetur <span style="color: #ff0000;">adipiscing</span> elit. <span style="background-color: #cfcfcf;">Quisque</span> faucibus ex sapien vitae pellentesque sem placerat. In <strong>id cursus</strong> mi pretium tellus duis <em>convallis</em>. <s>Tempus</s> leo eu aenean sed diam urna tempor. <u>Pulvinar</u> vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora <sup>torquent</sup> per conubia nostra <sub>inceptos</sub> himenaeos.</p><h4>absens articulus coadunatio quasi</h4><p>Vicissitudo pariatur urbs. Quos tollo aperiam amitto annus depulso. Spargo venio cruciamentum socius spes utpote.
+Ipsum quam ascit celer veritas vulpes tenus. Absens ipsam barba astrum supplanto viridis vulpes absque. Vox cum utilis.
+Hic thymum curiositas adeo absque. Trepide aperte suscipit deduco velum tero decimus tamen aetas. Inflammatio torrens adopto denuo demergo utrum vinum.
+Tantum crustulum trans minus vix quo caritas usque cunae incidunt. Arto absconditus deporto cedo venia utrimque vomito agnitio. Perferendis aliqua vulticulus adduco officiis comitatus.
+Peior arbustum aperte sto deludo. Commemoro basium delego. Denuncio amor itaque adaugeo vilis tardus pauper.
+Aperio surculus ago. Velociter curto modi ulciscor. Optio stultus quod facilis. <a target="_blank" rel="noopener noreferrer nofollow" href="https://example.com">aegrus demulceo uredo voluptas</a></p><table style="min-width: 75px;"><colgroup><col style="min-width: 25px;"><col style="min-width: 25px;"><col style="min-width: 25px;"></colgroup><tbody><tr><th style=""><p>Lorem</p></th><th rowspan="2" style=""><p>Ipsum</p><p>amet</p></th><th style=""><p>dolor</p></th></tr><tr><td style=""><p>sit</p></td><td style=""><p>consectetur</p></td></tr><tr><th style=""><p>adipiscing</p></th><td colspan="2" style=""><p>elit</p></td></tr></tbody></table><h5>vulgaris copia averto</h5><pre><code>class HelloWorldApp {
+  public static void main(String[] args) {
+    System.out.println("Hello World!");
+  }
+}</code></pre><p></p>]]></content>
         <author>
             <name>Foobar</name>
             <uri>https://example.com</uri>
@@ -87,8 +118,8 @@ exports[`should generate the atom feed 1`] = `
             <name>Foobar</name>
             <uri>https://example.com</uri>
         </author>
-        <category label="whale" term="whale"/>
-        <category label="shoulder" term="shoulder"/>
+        <category label="puppet" term="puppet"/>
+        <category label="velocity" term="velocity"/>
     </entry>
 </feed>"
 `;
@@ -103,7 +134,7 @@ exports[`should generate the json feed 1`] = `
     },
     "items": [
         {
-            "content_html": "This is an article lead",
+            "content_html": "<h3>advenio adficio artificiose delego astrum vinculum</h3><p>Lorem ipsum dolor sit amet consectetur <span style=\\"color: #ff0000;\\">adipiscing</span> elit. <span style=\\"background-color: #cfcfcf;\\">Quisque</span> faucibus ex sapien vitae pellentesque sem placerat. In <strong>id cursus</strong> mi pretium tellus duis <em>convallis</em>. <s>Tempus</s> leo eu aenean sed diam urna tempor. <u>Pulvinar</u> vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora <sup>torquent</sup> per conubia nostra <sub>inceptos</sub> himenaeos.</p><h4>acceptus vulnero cotidie viriliter summopere possimus</h4><p>Cohaero abbas caecus alii cribro. Constans vulnus quibusdam aeger. Ago caterva amo sub demitto somniculosus aperio veritas iste.\\nAmor corpus solio cometes verus solitudo solus campana curia abeo. Temporibus torqueo creator. Infit auctus usque conor cicuta.\\nCedo sint volaticus sodalitas. Sumo venustas ipsa caste derelinquo ascisco quidem. Tantum terebro decipio.\\nLaboriosam est dapifer voveo balbus voluptatibus reiciendis calculus. Ceno curvo aro calco sufficio. Conturbo cursim adhaero cum. <a target=\\"_blank\\" rel=\\"noopener noreferrer nofollow\\" href=\\"https://example.com\\">vetus tribuo laboriosam arcus tergiversatio</a></p><table style=\\"min-width: 75px;\\"><colgroup><col style=\\"min-width: 25px;\\"><col style=\\"min-width: 25px;\\"><col style=\\"min-width: 25px;\\"></colgroup><tbody><tr><th style=\\"\\"><p>Lorem</p></th><th rowspan=\\"2\\" style=\\"\\"><p>Ipsum</p><p>amet</p></th><th style=\\"\\"><p>dolor</p></th></tr><tr><td style=\\"\\"><p>sit</p></td><td style=\\"\\"><p>consectetur</p></td></tr><tr><th style=\\"\\"><p>adipiscing</p></th><td colspan=\\"2\\" style=\\"\\"><p>elit</p></td></tr></tbody></table><h5>cultellus denique communis</h5><pre><code>class HelloWorldApp {\\n  public static void main(String[] args) {\\n    System.out.println(\\"Hello World!\\");\\n  }\\n}</code></pre><p></p>",
             "url": "https://example.com",
             "title": "Title Block",
             "summary": "This is an article lead",
@@ -117,12 +148,12 @@ exports[`should generate the json feed 1`] = `
                 "url": "https://example.com"
             },
             "tags": [
-                "godparent",
-                "hovercraft"
+                "blight",
+                "gradient"
             ]
         },
         {
-            "content_html": "This is an article lead",
+            "content_html": "<h3>cena contabesco vinculum</h3><p>Lorem ipsum dolor sit amet consectetur <span style=\\"color: #ff0000;\\">adipiscing</span> elit. <span style=\\"background-color: #cfcfcf;\\">Quisque</span> faucibus ex sapien vitae pellentesque sem placerat. In <strong>id cursus</strong> mi pretium tellus duis <em>convallis</em>. <s>Tempus</s> leo eu aenean sed diam urna tempor. <u>Pulvinar</u> vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora <sup>torquent</sup> per conubia nostra <sub>inceptos</sub> himenaeos.</p><h4>timor vesica ut supplanto antea placeat verumtamen</h4><p>Auxilium armarium ceno curto vindico. Casso cur molestiae assumenda repellat amplus stipes degusto. Patruus cur synagoga stipes admoveo universe curis.\\nDucimus tres valens atqui basium temptatio. Appositus cenaculum tepesco modi fuga beatus suasoria capto corrigo. Aeternus crux tersus deduco adversus brevis.\\nAliquid colo vaco tumultus somnus corroboro. Dedico veritas consuasor concedo. Absque tergum stips utrimque bellum consuasor adversus vix decimus.\\nDefendo nesciunt varius. Alveus crux saepe pecus baiulus vitae tristis. Iure amor teres.\\nCalcar spero asperiores consuasor umerus volutabrum decipio cavus uxor dedecor. Arguo adeptio cuius spargo custodia. Compello voro debitis umbra. <a target=\\"_blank\\" rel=\\"noopener noreferrer nofollow\\" href=\\"https://example.com\\">tristis tonsor abduco aut</a></p><table style=\\"min-width: 75px;\\"><colgroup><col style=\\"min-width: 25px;\\"><col style=\\"min-width: 25px;\\"><col style=\\"min-width: 25px;\\"></colgroup><tbody><tr><th style=\\"\\"><p>Lorem</p></th><th rowspan=\\"2\\" style=\\"\\"><p>Ipsum</p><p>amet</p></th><th style=\\"\\"><p>dolor</p></th></tr><tr><td style=\\"\\"><p>sit</p></td><td style=\\"\\"><p>consectetur</p></td></tr><tr><th style=\\"\\"><p>adipiscing</p></th><td colspan=\\"2\\" style=\\"\\"><p>elit</p></td></tr></tbody></table><h5>aperio thymbra unde libero convoco sub</h5><pre><code>class HelloWorldApp {\\n  public static void main(String[] args) {\\n    System.out.println(\\"Hello World!\\");\\n  }\\n}</code></pre><p></p>",
             "url": "https://example.com",
             "title": "Title Block",
             "summary": "This is an article lead",
@@ -136,8 +167,8 @@ exports[`should generate the json feed 1`] = `
                 "url": "https://example.com"
             },
             "tags": [
-                "printer",
-                "spirit"
+                "perfection",
+                "step"
             ]
         }
     ]
@@ -171,15 +202,23 @@ Feed {
       ],
       "category": [
         {
-          "name": "e-mail",
-          "term": "e-mail",
+          "name": "cuckoo",
+          "term": "cuckoo",
         },
         {
-          "name": "swath",
-          "term": "swath",
+          "name": "babushka",
+          "term": "babushka",
         },
       ],
-      "content": "This is an article lead",
+      "content": "<h3>suasoria spargo curvo</h3><p>Lorem ipsum dolor sit amet consectetur <span style="color: #ff0000;">adipiscing</span> elit. <span style="background-color: #cfcfcf;">Quisque</span> faucibus ex sapien vitae pellentesque sem placerat. In <strong>id cursus</strong> mi pretium tellus duis <em>convallis</em>. <s>Tempus</s> leo eu aenean sed diam urna tempor. <u>Pulvinar</u> vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora <sup>torquent</sup> per conubia nostra <sub>inceptos</sub> himenaeos.</p><h4>facilis adflicto appono aut condico admoveo pecco</h4><p>Custodia uberrime defetiscor accendo uterque sollicito trans. Admitto canonicus adversus curis urbanus aggredior demergo antea terebro turba. Depereo capto viridis.
+Porro voluptate conitor velit dapifer canto vilicus stella advoco usus. Pecco synagoga catena pauci torrens adopto aperte turbo. Excepturi carpo claustrum uter curis advoco velit.
+Trepide uxor depono patrocinor. Quibusdam umbra cilicium vacuus minus amplus calamitas. Capto apostolus arx tutis pauper vix coniuratio.
+Patruus praesentium adulatio tandem vinum facere aurum. Absens complectus vero odio umbra pecco traho utroque commemoro. Supplanto decerno antepono.
+Adfectus aveho tertius abundans cognomen acer vulpes. Claudeo vetus dignissimos deficio odio celer cogo. Caries nulla subito aequitas volup. <a target="_blank" rel="noopener noreferrer nofollow" href="https://example.com">timidus tantillus ager dens decumbo spectaculum</a></p><table style="min-width: 75px;"><colgroup><col style="min-width: 25px;"><col style="min-width: 25px;"><col style="min-width: 25px;"></colgroup><tbody><tr><th style=""><p>Lorem</p></th><th rowspan="2" style=""><p>Ipsum</p><p>amet</p></th><th style=""><p>dolor</p></th></tr><tr><td style=""><p>sit</p></td><td style=""><p>consectetur</p></td></tr><tr><th style=""><p>adipiscing</p></th><td colspan="2" style=""><p>elit</p></td></tr></tbody></table><h5>succurro stabilis subiungo quae arcus</h5><pre><code>class HelloWorldApp {
+  public static void main(String[] args) {
+    System.out.println("Hello World!");
+  }
+}</code></pre><p></p>",
       "date": 2023-01-01T00:00:00.000Z,
       "description": "This is an article lead",
       "guid": "1",
@@ -203,15 +242,24 @@ Feed {
       ],
       "category": [
         {
-          "name": "valuable",
-          "term": "valuable",
+          "name": "loyalty",
+          "term": "loyalty",
         },
         {
-          "name": "taxicab",
-          "term": "taxicab",
+          "name": "retrospectivity",
+          "term": "retrospectivity",
         },
       ],
-      "content": "This is an article lead",
+      "content": "<h3>ustulo aufero vespillo suggero tersus color accommodo</h3><p>Lorem ipsum dolor sit amet consectetur <span style="color: #ff0000;">adipiscing</span> elit. <span style="background-color: #cfcfcf;">Quisque</span> faucibus ex sapien vitae pellentesque sem placerat. In <strong>id cursus</strong> mi pretium tellus duis <em>convallis</em>. <s>Tempus</s> leo eu aenean sed diam urna tempor. <u>Pulvinar</u> vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora <sup>torquent</sup> per conubia nostra <sub>inceptos</sub> himenaeos.</p><h4>deserunt quis cito</h4><p>Cibo tergum adfero nemo commodo avarus vis. Delibero congregatio beatae virga undique tendo verto vacuus caute cito. Approbo sol studio.
+Auctus tyrannus agnosco vulgo. Solio vos adicio advoco tubineus. Doloribus claudeo laboriosam colo thorax.
+Deorsum degero strenuus. Blandior vos pariatur. Laudantium commodo vulticulus usus sufficio confido cognatus cernuus voluptates cruciamentum.
+Contigo perferendis bellicus laborum accedo. Deludo volva claudeo. Patrocinor teneo trans comptus delectus desolo hic vacuus aqua.
+Video vitiosus urbanus tantum creator cognatus. Strenuus vobis armarium vorago aggredior. Capto currus curto.
+Adipisci tabgo eveniet suffragium. Custodia tener quos tamen accusator absque somnus supra canto. Alius canis minima paulatim denuncio atavus. <a target="_blank" rel="noopener noreferrer nofollow" href="https://example.com">taceo modi cupiditas</a></p><table style="min-width: 75px;"><colgroup><col style="min-width: 25px;"><col style="min-width: 25px;"><col style="min-width: 25px;"></colgroup><tbody><tr><th style=""><p>Lorem</p></th><th rowspan="2" style=""><p>Ipsum</p><p>amet</p></th><th style=""><p>dolor</p></th></tr><tr><td style=""><p>sit</p></td><td style=""><p>consectetur</p></td></tr><tr><th style=""><p>adipiscing</p></th><td colspan="2" style=""><p>elit</p></td></tr></tbody></table><h5>viduo suspendo ait optio</h5><pre><code>class HelloWorldApp {
+  public static void main(String[] args) {
+    System.out.println("Hello World!");
+  }
+}</code></pre><p></p>",
       "date": 2023-01-01T00:00:00.000Z,
       "description": "This is an article lead",
       "guid": "2",

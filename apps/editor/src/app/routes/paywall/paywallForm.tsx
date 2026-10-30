@@ -1,63 +1,85 @@
 import styled from '@emotion/styled';
-import PlusIcon from '@rsuite/icons/Plus';
-import TrashIcon from '@rsuite/icons/Trash';
 import {
-  MemberPlan,
-  MutationCreatePaywallArgs,
-  MutationUpdatePaywallArgs,
-} from '@wepublish/editor/api';
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  IconButton,
+  Stack,
+  TextField,
+} from '@mui/material';
+import { FullMemberPlanFragment } from '@wepublish/editor/api';
 import {
+  IconButtonTooltip,
+  InfoTooltip,
   RichTextBlock,
   RichTextBlockValue,
   SelectMemberPlans,
 } from '@wepublish/ui/editor';
 import QRCodeStyling from 'qr-code-styling';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { MdDownload, MdQrCode } from 'react-icons/md';
 import {
-  Button,
-  Checkbox,
-  Form,
-  IconButton,
-  Input,
-  Modal,
-  Panel,
-  Stack,
-} from 'rsuite';
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { MdAdd, MdDelete, MdExpandMore, MdQrCode } from 'react-icons/md';
+import { z } from 'zod';
 
 import markUrl from '../../ui/wepublish-mark.png';
 
-type PaywallBypass = {
-  id?: string;
-  token: string;
-};
+export const paywallSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(1).nullable(),
+  description: z.custom<RichTextBlockValue['richText']>().nullish(),
+  circumventDescription: z.custom<RichTextBlockValue['richText']>().nullish(),
+  upgradeDescription: z.custom<RichTextBlockValue['richText']>().nullish(),
+  upgradeCircumventDescription: z
+    .custom<RichTextBlockValue['richText']>()
+    .nullish(),
+  active: z.boolean(),
+  anyMemberPlan: z.boolean(),
+  memberPlanIds: z.array(z.string()),
+  memberPlans: z
+    .array(z.custom<Pick<FullMemberPlanFragment, 'id' | 'name'>>())
+    .optional(),
+  alternativeSubscribeUrl: z.union([z.literal(''), z.string().url()]).nullish(),
+  hideContentAfter: z.coerce.number(),
+  fadeout: z.boolean(),
+  bypasses: z.array(z.object({ id: z.string().optional(), token: z.string() })),
+});
 
-type PaywallFormData = (
-  | MutationCreatePaywallArgs
-  | MutationUpdatePaywallArgs
-) & {
-  memberPlans?: Pick<MemberPlan, 'id' | 'name'>[];
-  bypasses?: PaywallBypass[];
-};
+export type PaywallFormValues = z.infer<typeof paywallSchema>;
 
 type PaywallFormProps = {
   create?: boolean;
-  paywall: PaywallFormData;
-  onChange: (changes: Partial<PaywallFormData>) => void;
 };
 
 const PaywallFormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: start;
-  gap: 12px;
+  gap: 16px;
 `;
 
 const PaywallFormSection = styled.div`
   display: grid;
   align-items: start;
-  gap: 12px;
+  gap: 16px;
 `;
 
 const QRCodeContainer = styled.div`
@@ -66,8 +88,8 @@ const QRCodeContainer = styled.div`
   align-items: center;
   max-width: 100%;
   height: auto;
-  border: 1px solid #ddd;
-  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
   padding: 16px;
   background: #ffffff;
 
@@ -83,16 +105,23 @@ const TokenUrl = styled.p`
   padding-top: ${({ theme }) => theme.spacing(2)};
 `;
 
-const BaseUrlInput = styled(Input)`
+const BaseUrlGroup = styled(Box)`
   margin-bottom: ${({ theme }) => theme.spacing(2)};
+  text-align: left;
 `;
 
-export const PaywallForm = ({
-  paywall,
-  onChange,
-  create,
-}: PaywallFormProps) => {
+export const PaywallForm = ({ create }: PaywallFormProps) => {
   const { t } = useTranslation();
+  const { control } = useFormContext<PaywallFormValues>();
+  const anyMemberPlan = useWatch({ control, name: 'anyMemberPlan' });
+  const memberPlans = useWatch({ control, name: 'memberPlans' });
+  const bypassValues = useWatch({ control, name: 'bypasses' });
+  const hideContentAfter = useWatch({ control, name: 'hideContentAfter' });
+  const {
+    fields: bypasses,
+    append,
+    remove,
+  } = useFieldArray({ control, name: 'bypasses' });
   const [newBypassToken, setNewBypassToken] = useState<string>();
   const [showQRModal, setShowQRModal] = useState(false);
   const [qrBaseUrl, setQrBaseUrl] = useState<string>('https://example.com');
@@ -102,35 +131,9 @@ export const PaywallForm = ({
 
   const addBypass = () => {
     if (newBypassToken?.trim()) {
-      const newBypass: PaywallBypass = {
-        token: newBypassToken.trim(),
-      };
-      const updatedBypasses = [...(paywall.bypasses || []), newBypass];
-
-      onChange({
-        bypasses: updatedBypasses,
-        bypassTokens: updatedBypasses.map(b => b.token),
-      } as Partial<PaywallFormData>);
+      append({ token: newBypassToken.trim() });
       setNewBypassToken('');
     }
-  };
-
-  const removeBypass = (index: number) => {
-    const updatedBypasses = [...(paywall.bypasses || [])];
-    updatedBypasses.splice(index, 1);
-    onChange({
-      bypasses: updatedBypasses,
-      bypassTokens: updatedBypasses.map(b => b.token),
-    } as Partial<PaywallFormData>);
-  };
-
-  const updateBypassToken = (index: number, token: string) => {
-    const updatedBypasses = [...(paywall.bypasses || [])];
-    updatedBypasses[index] = { ...updatedBypasses[index], token };
-    onChange({
-      bypasses: updatedBypasses,
-      bypassTokens: updatedBypasses.map(b => b.token),
-    } as Partial<PaywallFormData>);
   };
 
   const showQRCode = (token: string) => {
@@ -178,281 +181,376 @@ export const PaywallForm = ({
   return (
     <PaywallFormWrapper>
       <PaywallFormSection>
-        <Panel bordered>
-          <Form.Stack fluid>
-            <Form.Group controlId="name">
-              <Form.Label>{t('paywall.form.name')}</Form.Label>
-              <Form.Control
+        <Card>
+          <CardContent>
+            <Stack
+              spacing={3}
+              sx={{ width: '100%' }}
+            >
+              <Controller
+                control={control}
                 name="name"
-                value={paywall.name ?? ''}
-                onChange={(name: string) => onChange({ name })}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    label={t('paywall.form.name')}
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                )}
               />
-            </Form.Group>
 
-            <Form.Group controlId="description">
-              <Form.Label>{t('paywall.form.description')}</Form.Label>
+              <FormControl fullWidth>
+                <FormLabel>{t('paywall.form.description')}</FormLabel>
 
-              <Form.Control
-                name="description"
-                value={paywall.description || []}
-                onChange={(description: RichTextBlockValue['richText']) =>
-                  onChange({ description })
-                }
-                accepter={RichTextBlock}
-              />
-            </Form.Group>
+                <Controller
+                  control={control}
+                  name="description"
+                  render={({ field }) => (
+                    <RichTextBlock
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </FormControl>
 
-            <Form.Group controlId="circumventDescription">
-              <Form.Label>{t('paywall.form.circumventDescription')}</Form.Label>
+              <FormControl fullWidth>
+                <FormLabel>{t('paywall.form.circumventDescription')}</FormLabel>
 
-              <Form.Control
-                name="circumventDescription"
-                value={paywall.circumventDescription || []}
-                onChange={(
-                  circumventDescription: RichTextBlockValue['richText']
-                ) => onChange({ circumventDescription })}
-                accepter={RichTextBlock}
-              />
-            </Form.Group>
-          </Form.Stack>
-        </Panel>
+                <Controller
+                  control={control}
+                  name="circumventDescription"
+                  render={({ field }) => (
+                    <RichTextBlock
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </FormControl>
+            </Stack>
+          </CardContent>
+        </Card>
 
-        <Panel
-          bordered
-          collapsible
-          header={t('paywall.form.upgrade')}
-        >
-          <Form.Stack fluid>
-            <Form.Group controlId="upgradeDescription">
-              <Form.Label>{t('paywall.form.description')}</Form.Label>
+        <Accordion>
+          <AccordionSummary expandIcon={<MdExpandMore />}>
+            {t('paywall.form.upgrade')}
+          </AccordionSummary>
 
-              <Form.Control
-                name="upgradeDescription"
-                value={paywall.upgradeDescription || []}
-                onChange={(
-                  upgradeDescription: RichTextBlockValue['richText']
-                ) => onChange({ upgradeDescription })}
-                accepter={RichTextBlock}
-              />
-            </Form.Group>
+          <AccordionDetails>
+            <Stack
+              spacing={3}
+              sx={{ width: '100%' }}
+            >
+              <FormControl fullWidth>
+                <FormLabel>{t('paywall.form.description')}</FormLabel>
 
-            <Form.Group controlId="upgradeCircumventDescription">
-              <Form.Label>{t('paywall.form.circumventDescription')}</Form.Label>
+                <Controller
+                  control={control}
+                  name="upgradeDescription"
+                  render={({ field }) => (
+                    <RichTextBlock
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </FormControl>
 
-              <Form.Control
-                name="upgradeCircumventDescription"
-                value={paywall.upgradeCircumventDescription || []}
-                onChange={(
-                  upgradeCircumventDescription: RichTextBlockValue['richText']
-                ) => onChange({ upgradeCircumventDescription })}
-                accepter={RichTextBlock}
-              />
-            </Form.Group>
-          </Form.Stack>
-        </Panel>
+              <FormControl fullWidth>
+                <FormLabel>{t('paywall.form.circumventDescription')}</FormLabel>
+
+                <Controller
+                  control={control}
+                  name="upgradeCircumventDescription"
+                  render={({ field }) => (
+                    <RichTextBlock
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </FormControl>
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
       </PaywallFormSection>
 
       <PaywallFormSection>
-        <Panel
-          bordered
+        <Card
+          variant="outlined"
           style={{ overflow: 'initial' }}
         >
-          <Form.Stack fluid>
-            <Form.Group controlId="active">
-              <Form.Control
-                name="active"
-                checked={!!paywall.active}
-                onChange={() => onChange({ active: !paywall.active })}
-                accepter={Checkbox}
-              >
-                {t('paywall.form.active')}
-              </Form.Control>
-
-              <Form.Text>{t('paywall.form.activeHelpText')}</Form.Text>
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Control
-                name="anyMemberPlan"
-                checked={!!paywall.anyMemberPlan}
-                onChange={() =>
-                  onChange({ anyMemberPlan: !paywall.anyMemberPlan })
-                }
-                accepter={Checkbox}
-              >
-                {t('paywall.form.anyMemberPlan')}
-              </Form.Control>
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label>{t('paywall.form.memberPlans')}</Form.Label>
-
-              <Form.Control
-                name="memberPlans"
-                disabled={!!paywall.anyMemberPlan}
-                defaultMemberPlans={paywall.memberPlans ?? []}
-                selectedMemberPlans={paywall.memberPlanIds ?? []}
-                setSelectedMemberPlans={(memberPlanIds: string[]) =>
-                  onChange({ memberPlanIds })
-                }
-                accepter={SelectMemberPlans}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="alternativeSubscribeUrl">
-              <Form.Label>
-                {t('paywall.form.alternativeSubscribeUrl')}
-              </Form.Label>
-
-              <Form.Control
-                name="alternativeSubscribeUrl"
-                value={paywall.alternativeSubscribeUrl ?? ''}
-                onChange={(alternativeSubscribeUrl: string) =>
-                  onChange({ alternativeSubscribeUrl })
-                }
-                type="url"
-              />
-
-              <Form.Text>
-                {t('paywall.form.alternativeSubscribeUrlHelpText')}
-              </Form.Text>
-            </Form.Group>
-          </Form.Stack>
-        </Panel>
-
-        <Panel bordered>
-          <Form.Group>
-            <Form.Label>{t('paywall.form.bypasses')}</Form.Label>
-
-            {(paywall.bypasses || []).map((bypass, index) => (
-              <Stack
-                key={index}
-                alignItems="center"
-                style={{ gap: '8px', marginBottom: '8px' }}
-              >
-                <Stack.Item style={{ flex: 1 }}>
-                  <Input
-                    value={bypass.token}
-                    onChange={value => updateBypassToken(index, value)}
-                    placeholder={t('paywall.form.bypassToken')}
-                  />
-                </Stack.Item>
-                <Stack.Item>
-                  <IconButton
-                    icon={<MdQrCode />}
-                    size="sm"
-                    color="blue"
-                    appearance="ghost"
-                    onClick={() => showQRCode(bypass.token)}
-                    disabled={!bypass.token}
-                  />
-                </Stack.Item>
-                <Stack.Item>
-                  <IconButton
-                    icon={<TrashIcon />}
-                    size="sm"
-                    color="red"
-                    appearance="ghost"
-                    onClick={() => removeBypass(index)}
-                  />
-                </Stack.Item>
-              </Stack>
-            ))}
-
+          <CardContent>
             <Stack
-              alignItems="center"
-              style={{ gap: '8px', marginTop: '8px' }}
+              spacing={3}
+              sx={{ width: '100%' }}
             >
-              <Stack.Item style={{ flex: 1 }}>
-                <Input
-                  value={newBypassToken}
-                  onChange={setNewBypassToken}
-                  placeholder={t('paywall.form.newBypassToken')}
-                  onPressEnter={addBypass}
+              <Box>
+                <Controller
+                  control={control}
+                  name="active"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={Boolean(field.value)}
+                          onChange={(_event, checked) =>
+                            field.onChange(checked)
+                          }
+                        />
+                      }
+                      label={t('paywall.form.active')}
+                    />
+                  )}
                 />
-              </Stack.Item>
 
-              <Stack.Item>
-                <Button
-                  appearance="primary"
-                  startIcon={<PlusIcon />}
-                  onClick={addBypass}
-                  disabled={!newBypassToken?.trim()}
-                >
-                  {t('paywall.form.addBypass')}
-                </Button>
-              </Stack.Item>
+                <FormHelperText>
+                  {t('paywall.form.activeHelpText')}
+                </FormHelperText>
+              </Box>
+
+              <Box>
+                <Controller
+                  control={control}
+                  name="anyMemberPlan"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={Boolean(field.value)}
+                          onChange={(_event, checked) =>
+                            field.onChange(checked)
+                          }
+                        />
+                      }
+                      label={t('paywall.form.anyMemberPlan')}
+                    />
+                  )}
+                />
+              </Box>
+
+              <FormControl fullWidth>
+                <FormLabel>{t('paywall.form.memberPlans')}</FormLabel>
+
+                <Controller
+                  control={control}
+                  name="memberPlanIds"
+                  render={({ field }) => (
+                    <SelectMemberPlans
+                      disabled={Boolean(anyMemberPlan)}
+                      defaultMemberPlans={memberPlans ?? []}
+                      selectedMemberPlans={field.value ?? []}
+                      setSelectedMemberPlans={field.onChange}
+                    />
+                  )}
+                />
+              </FormControl>
+
+              <Controller
+                control={control}
+                name="alternativeSubscribeUrl"
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    label={t('paywall.form.alternativeSubscribeUrl')}
+                    type="url"
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                )}
+              />
             </Stack>
-          </Form.Group>
-        </Panel>
+          </CardContent>
+        </Card>
 
-        <Panel
-          bordered
-          collapsible
-          header={t('paywall.form.display')}
-        >
-          <Form.Stack fluid>
-            <Form.Group controlId="hideContentAfter">
-              <Form.Label>{t('paywall.form.hideContentAfter')}</Form.Label>
+        <Card>
+          <CardContent>
+            <FormControl
+              fullWidth
+              sx={{ marginBottom: 3 }}
+            >
+              <FormLabel>
+                {t('paywall.form.bypasses')}{' '}
+                <InfoTooltip text={t('paywall.form.bypassesInfo')} />
+              </FormLabel>
 
-              <Form.Control
+              {bypasses.map((bypass, index) => (
+                <Stack
+                  direction="row"
+                  sx={{ alignItems: 'center' }}
+                  key={bypass.id}
+                  style={{ gap: '8px', marginBottom: '8px' }}
+                >
+                  <Box style={{ flex: 1 }}>
+                    <Controller
+                      control={control}
+                      name={`bypasses.${index}.token`}
+                      render={({ field, fieldState: { error } }) => (
+                        <TextField
+                          {...field}
+                          placeholder={t('paywall.form.bypassToken')}
+                          error={Boolean(error)}
+                          helperText={error?.message}
+                        />
+                      )}
+                    />
+                  </Box>
+                  <Box>
+                    <IconButtonTooltip caption={t('paywall.form.showQrCode')}>
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        aria-label={t('paywall.form.showQrCode')}
+                        onClick={() =>
+                          showQRCode(bypassValues?.[index]?.token ?? '')
+                        }
+                        disabled={!bypassValues?.[index]?.token}
+                      >
+                        <MdQrCode />
+                      </IconButton>
+                    </IconButtonTooltip>
+                  </Box>
+                  <Box>
+                    <IconButtonTooltip caption={t('delete')}>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        aria-label={t('delete')}
+                        onClick={() => remove(index)}
+                      >
+                        <MdDelete />
+                      </IconButton>
+                    </IconButtonTooltip>
+                  </Box>
+                </Stack>
+              ))}
+
+              <Stack
+                direction="row"
+                sx={{ alignItems: 'center' }}
+                style={{ gap: '8px', marginTop: '8px' }}
+              >
+                <Box style={{ flex: 1 }}>
+                  <TextField
+                    value={newBypassToken}
+                    onChange={event => setNewBypassToken(event.target.value)}
+                    placeholder={t('paywall.form.newBypassToken')}
+                    onKeyDown={event => {
+                      if (event.key === 'Enter') {
+                        addBypass();
+                      }
+                    }}
+                  />
+                </Box>
+
+                <Box>
+                  <Button
+                    variant="contained"
+                    startIcon={<MdAdd />}
+                    onClick={addBypass}
+                    disabled={!newBypassToken?.trim()}
+                  >
+                    {t('paywall.form.addBypass')}
+                  </Button>
+                </Box>
+              </Stack>
+            </FormControl>
+          </CardContent>
+        </Card>
+
+        <Accordion>
+          <AccordionSummary expandIcon={<MdExpandMore />}>
+            {t('paywall.form.display')}
+          </AccordionSummary>
+
+          <AccordionDetails>
+            <Stack
+              spacing={3}
+              sx={{ width: '100%' }}
+            >
+              <TextField
+                label={
+                  <>
+                    {t('paywall.form.hideContentAfter')}{' '}
+                    <InfoTooltip
+                      text={t('paywall.form.hideContentAfterInfo')}
+                    />
+                  </>
+                }
                 name="hideContentAfter"
                 type="number"
-                min={0}
-                value={paywall.hideContentAfter ?? ''}
-                onChange={(hideContentAfter: string) =>
-                  onChange({ hideContentAfter: +hideContentAfter })
-                }
+                slotProps={{ htmlInput: { min: 0 } }}
+                value={hideContentAfter ?? ''}
+                fullWidth
               />
-            </Form.Group>
 
-            <Form.Group controlId="fadeout">
-              <Form.Control
-                name="fadeout"
-                checked={!!paywall.fadeout}
-                onChange={() => onChange({ fadeout: !paywall.fadeout })}
-                accepter={Checkbox}
-              >
-                {t('paywall.form.fadeout')}
-              </Form.Control>
+              <Box>
+                <Controller
+                  control={control}
+                  name="fadeout"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={Boolean(field.value)}
+                          onChange={(_event, checked) =>
+                            field.onChange(checked)
+                          }
+                        />
+                      }
+                      label={t('paywall.form.fadeout')}
+                    />
+                  )}
+                />
 
-              <Form.Text>{t('paywall.form.fadeoutHelpText')}</Form.Text>
-            </Form.Group>
-          </Form.Stack>
-        </Panel>
+                <FormHelperText>
+                  {t('paywall.form.fadeoutHelpText')}
+                </FormHelperText>
+              </Box>
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
       </PaywallFormSection>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={showQRModal}
         onClose={() => setShowQRModal(false)}
-        size="sm"
+        maxWidth="sm"
       >
-        <Modal.Header>
-          <Modal.Title>{t('paywall.form.qrCodeTitle')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('paywall.form.qrCodeTitle')}</DialogTitle>
 
-        <Modal.Body style={{ textAlign: 'center' }}>
-          <BaseUrlInput
-            value={qrBaseUrl}
-            onChange={newUrl => setQrBaseUrl(newUrl)}
-            placeholder={t('paywall.form.baseUrl')}
-          />
+        <DialogContent style={{ textAlign: 'center' }}>
+          <BaseUrlGroup>
+            <FormLabel>{t('paywall.form.baseUrl')}</FormLabel>
+            <TextField
+              id="qrBaseUrl"
+              value={qrBaseUrl}
+              onChange={event => setQrBaseUrl(event.target.value)}
+              placeholder={t('paywall.form.baseUrl')}
+            />
+          </BaseUrlGroup>
           <QRCodeContainer>
             <div ref={qrContainerRef} />
           </QRCodeContainer>
           <TokenUrl>{fullBypassUrl}</TokenUrl>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="contained"
             onClick={downloadQRCode}
-            appearance="primary"
-            startIcon={<MdDownload />}
           >
             {t('paywall.form.downloadSvg')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </PaywallFormWrapper>
   );
 };

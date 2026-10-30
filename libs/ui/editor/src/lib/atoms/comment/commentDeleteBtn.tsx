@@ -1,26 +1,29 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
+  DeleteCommentDocument,
   FullCommentFragment,
-  useDeleteCommentMutation,
 } from '@wepublish/editor/api';
+import { CanDeleteComments } from '@wepublish/permissions';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDelete } from 'react-icons/md';
-import { Button, IconButton, Message, Modal, toaster } from 'rsuite';
 
+import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
 import { PermissionControl } from '../permissionControl';
 
-const onErrorToast = (error: ApolloError) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+const onErrorToast = (error: Error) => {
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 interface CommentDeleteBtnProps {
@@ -35,7 +38,7 @@ export function CommentDeleteBtn({
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const [deleteComment, { loading }] = useDeleteCommentMutation({
+  const [deleteComment, { loading }] = useMutation(DeleteCommentDocument, {
     onCompleted: () => {
       setModalOpen(false);
       if (onCommentDeleted) {
@@ -54,25 +57,33 @@ export function CommentDeleteBtn({
 
   return (
     <>
-      <PermissionControl qualifyingPermissions={['CAN_DELETE_COMMENTS']}>
-        <IconButton
-          color="red"
-          appearance="ghost"
-          icon={<MdDelete />}
+      <PermissionControl qualifyingPermissions={[CanDeleteComments.id]}>
+        <Button
+          variant="outlined"
+          startIcon={<MdDelete />}
+          color="error"
           onClick={() => setModalOpen(true)}
           loading={loading}
         >
           {t('delete')}
-        </IconButton>
+        </Button>
       </PermissionControl>
 
-      <Modal open={modalOpen}>
-        <Modal.Title>{t('commentDeleteBtn.modalTitle')}</Modal.Title>
-        <Modal.Body>{t('commentDeleteBtn.modalBody')}</Modal.Body>
-        <Modal.Footer>
+      <Dialog open={modalOpen}>
+        <DialogTitle>{t('commentDeleteBtn.modalTitle')}</DialogTitle>
+        <DialogContent>{t('commentDeleteBtn.modalBody')}</DialogContent>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="ghost"
+            variant="text"
+            onClick={() => setModalOpen(false)}
+            loading={loading}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
             onClick={async () => {
               await deleteComment({
                 variables: {
@@ -84,15 +95,8 @@ export function CommentDeleteBtn({
           >
             {t('delete')}
           </Button>
-          <Button
-            onClick={() => setModalOpen(false)}
-            appearance="primary"
-            loading={loading}
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

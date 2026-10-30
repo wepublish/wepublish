@@ -6,6 +6,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   forwardRef,
+  HTMLAttributes,
   memo,
   ReactNode,
   useCallback,
@@ -15,6 +16,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { FieldError } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import fontsData from './all-fonts.json';
 
@@ -80,7 +82,7 @@ function getSupportedStyles(font: FontOption): FontStyle[] {
 const loadedFonts = new Set<string>();
 
 type FontListItemProps = {
-  optionProps: React.HTMLAttributes<HTMLLIElement>;
+  optionProps: HTMLAttributes<HTMLLIElement>;
   optionKey: string;
   option: FontOption;
   onVisible: (family: string) => void;
@@ -135,6 +137,7 @@ type FontPickerProps = {
 export const FontPicker = memo(
   forwardRef<HTMLInputElement, FontPickerProps>(
     ({ value, onChange, onBlur, error, name }, ref) => {
+      const { t } = useTranslation();
       const selectedFont = fontFamilyMap.get(value ?? '') ?? null;
 
       const [fontFamilies, setFontFamilies] = useState(() =>
@@ -168,7 +171,6 @@ export const FontPicker = memo(
             )),
             document.head
           )}
-
           <Autocomplete
             options={FONTS}
             getOptionLabel={option => option.family}
@@ -180,6 +182,7 @@ export const FontPicker = memo(
               }
 
               onChange({
+                __typename: 'WebsiteRemoteFont',
                 name: newValue.family,
                 weight: getSupportedWeights(newValue),
                 style: getSupportedStyles(newValue),
@@ -189,7 +192,7 @@ export const FontPicker = memo(
             renderOption={({ key, ...optionProps }, option) => (
               <FontListItem
                 key={key}
-                optionKey={key ?? option.family}
+                optionKey={key != null ? String(key) : option.family}
                 optionProps={optionProps}
                 option={option}
                 onVisible={loadFont}
@@ -199,17 +202,21 @@ export const FontPicker = memo(
               <TextField
                 {...params}
                 name={name}
-                size="small"
-                inputProps={{
-                  ...params.inputProps,
-                  style: {
-                    ...params.inputProps?.style,
-                    ...(value ? { fontFamily: value } : {}),
-                  },
-                }}
                 ref={ref}
+                placeholder={t('websiteSettings.fonts.searchPlaceholder')}
                 error={!!error}
                 helperText={error?.message}
+                slotProps={{
+                  ...params.slotProps,
+
+                  htmlInput: {
+                    ...params.slotProps.htmlInput,
+                    style: {
+                      ...params.slotProps.htmlInput?.style,
+                      ...(value ? { fontFamily: value } : {}),
+                    },
+                  },
+                }}
               />
             )}
             sx={{ width: '100%' }}

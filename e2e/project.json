@@ -1,0 +1,19 @@
+{
+  "name": "e2e",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "e2e",
+  "projectType": "application",
+  "tags": [],
+  "implicitDependencies": [],
+  "targets": {
+    "e2e": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "cwd": "e2e",
+        "commands": ["tsx run.ts"],
+        "forwardAllArgs": true
+      }
+    }
+  }
+}

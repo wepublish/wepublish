@@ -8,7 +8,7 @@ import {
 } from './analytics-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { AnalyticsProviderSettingsDataloaderService } from './analytics-provider-settings-dataloader.service';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
@@ -16,19 +16,25 @@ export class AnalyticsProviderSettingsService {
   private readonly crypto = new SecretCrypto();
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private resets: NamespaceResets
   ) {}
 
   private encryptSecretsIfPresent<
     T extends { credentials?: SettingAnalyticsCredentialsInput | null },
-  >(data: T): T & { credentials?: string | null } {
-    const encryptedCredentials = this.crypto.encrypt(
-      JSON.stringify(data.credentials)
-    );
+  >(data: T): Omit<T, 'credentials'> & { credentials?: string | null } {
+    const { credentials, ...rest } = data;
+
+    if (credentials === undefined) {
+      return rest;
+    }
+
+    if (credentials === null) {
+      return { ...rest, credentials: null };
+    }
 
     return {
-      ...data,
-      credentials: encryptedCredentials,
+      ...rest,
+      credentials: this.crypto.encrypt(JSON.stringify(credentials)),
     };
   }
 
@@ -66,11 +72,14 @@ export class AnalyticsProviderSettingsService {
     input: CreateSettingAnalyticsProviderInput
   ): Promise<SettingAnalyticsProvider> {
     const output = this.encryptSecretsIfPresent(input);
-    const returnValue = await this.prisma.settingAnalyticsProvider.create({
-      data: output,
+
+    const returnValue = await this.prisma.settingAnalyticsProvider.upsert({
+      where: { id: output.id },
+      create: output,
+      update: {},
     });
 
-    await this.kv.resetNamespace('settings:analyticsprovider');
+    await this.resets.reset('settings:analyticsprovider');
 
     return returnValue;
   }
@@ -101,7 +110,7 @@ export class AnalyticsProviderSettingsService {
       where: { id },
       data: filteredUpdateData,
     });
-    await this.kv.resetNamespace('settings:analyticsprovider');
+    await this.resets.reset('settings:analyticsprovider');
     return returnValue;
   }
 
@@ -123,7 +132,7 @@ export class AnalyticsProviderSettingsService {
     const returnValue = await this.prisma.settingAnalyticsProvider.delete({
       where: { id },
     });
-    await this.kv.resetNamespace('settings:analyticsprovider');
+    await this.resets.reset('settings:analyticsprovider');
     return returnValue;
   }
 }

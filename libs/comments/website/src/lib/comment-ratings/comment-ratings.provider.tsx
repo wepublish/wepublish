@@ -1,8 +1,9 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import {
+  RateCommentDocument,
+  SettingListDocument,
   SettingName,
-  useRateCommentMutation,
-  useSettingListQuery,
 } from '@wepublish/website/api';
 import { PropsWithChildren, useMemo } from 'react';
 import { CommentRatingContext } from './comment-ratings.context';
@@ -27,18 +28,16 @@ const setAnonymousRate = (commentId: string, answerId: string, value: number) =>
 
 export function CommentRatingsProvider({ children }: PropsWithChildren) {
   const { hasUser } = useUser();
-  const [rate] = useRateCommentMutation({
+  const [rate] = useMutation(RateCommentDocument, {
     onCompleted(_, options) {
-      if (options?.variables && !hasUser) {
-        setAnonymousRate(
-          options.variables.commentId,
-          options.variables.answerId,
-          options.variables.value
-        );
+      const { commentId, answerId, value } = options?.variables ?? {};
+
+      if (!hasUser && commentId && answerId && value != null) {
+        setAnonymousRate(commentId, answerId, value);
       }
     },
   });
-  const { data: settings } = useSettingListQuery();
+  const { data: settings } = useQuery(SettingListDocument);
 
   const canRateAnonymously = useMemo(
     () =>

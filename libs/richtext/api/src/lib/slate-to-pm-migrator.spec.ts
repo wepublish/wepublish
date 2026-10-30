@@ -1,7 +1,13 @@
 import { SlateToPmMigrator } from './slate-to-pm-migrator';
 
 const makeMigrator = () =>
-  new SlateToPmMigrator(undefined as any, undefined as any);
+  new SlateToPmMigrator(
+    undefined as any,
+    undefined as any,
+    undefined as any,
+    undefined as any,
+    undefined as any
+  );
 
 const linkMarks = (doc: any): { text: string; href: string }[] => {
   const out: { text: string; href: string }[] = [];
@@ -229,6 +235,39 @@ describe('SlateToPmMigrator.migrate', () => {
       text: 'plain item',
     });
   });
+
+  it.each([
+    ['unordered-list', 'bulletList'],
+    ['ordered-list', 'orderedList'],
+  ])(
+    'wraps a %s list-item nested directly in a list-item in a %s',
+    (slateList, pmList) => {
+      const slate = [
+        {
+          type: slateList,
+          children: [
+            {
+              type: 'list-item',
+              children: [
+                { text: 'parent' },
+                { type: 'list-item', children: [{ text: 'child' }] },
+              ],
+            },
+          ],
+        },
+      ];
+
+      const doc: any = makeMigrator().migrate(slate);
+      const parent = doc.content[0].content[0];
+
+      expect(parent.content.map((node: any) => node.type)).toEqual([
+        'paragraph',
+        pmList,
+      ]);
+      expect(parent.content[1].content[0].type).toBe('listItem');
+      expect(JSON.stringify(parent.content[1])).toContain('child');
+    }
+  );
 
   it('migrates flex-nested richtext in the same pass (null → populated doc)', () => {
     const blocks = [

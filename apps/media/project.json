@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/media/src",
   "projectType": "application",
-  "tags": [],
+  "tags": ["scope:runtime-shared"],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
@@ -40,23 +40,12 @@
         }
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
-    },
     "test": {
-      "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "executor": "@nx/vitest:test",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}/report"],
       "options": {
-        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
-      },
-      "configurations": {
-        "ci": {
-          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
-        },
-        "update": {
-          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
-        }
+        "configFile": "{projectRoot}/vitest.config.ts",
+        "watch": false
       }
     }
   }

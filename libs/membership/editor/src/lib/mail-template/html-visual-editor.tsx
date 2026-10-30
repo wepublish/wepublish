@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import {
   Box,
@@ -17,11 +17,11 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
+  Drawer,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { FullImageFragment } from '@wepublish/editor/api';
-import { ImageSelectPanel } from '@wepublish/ui/editor';
-import { Drawer } from 'rsuite';
+import { ImageSelectPanel, DRAWER_WIDTHS } from '@wepublish/ui/editor';
 import {
   MdFormatAlignCenter,
   MdFormatAlignLeft,
@@ -37,7 +37,6 @@ import {
   MdLaptopMac,
   MdLink,
   MdPhoneIphone,
-  MdPhotoLibrary,
   MdSmartButton,
   MdRedo,
   MdStrikethroughS,
@@ -64,9 +63,9 @@ const EditorWrapper = styled(Box)`
   flex-direction: column;
   height: 100%;
   min-height: 480px;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: 6px;
-  background-color: #fff;
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
   overflow: hidden;
 `;
 
@@ -76,7 +75,7 @@ const Toolbar = styled(Box)`
   gap: 4px;
   align-items: center;
   padding: 6px;
-  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
   flex-shrink: 0;
 `;
 
@@ -89,7 +88,7 @@ const Canvas = styled(Box)`
   min-height: 0;
   overflow: auto;
   padding: 24px 16px;
-  background-color: ${({ theme }) => theme.palette.grey[100]};
+  background-color: ${({ theme }) => theme.vars.palette.grey[100]};
   display: flex;
   justify-content: center;
 `;
@@ -98,7 +97,7 @@ const DeviceFrame = styled(Box)`
   width: 100%;
   align-self: stretch;
   background-color: #ffffff;
-  border-radius: 8px;
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: max-width 0.2s ease;
@@ -341,7 +340,10 @@ const HtmlVisualEditorComponent = forwardRef<
   // The iframe listeners are registered once per load, so read the callback
   // through a ref to avoid calling a stale one.
   const onActivateRef = useRef(onActivate);
-  onActivateRef.current = onActivate;
+
+  useEffect(() => {
+    onActivateRef.current = onActivate;
+  });
 
   const getDoc = (): Document | null =>
     frameRef.current?.contentDocument ?? null;
@@ -782,6 +784,7 @@ const HtmlVisualEditorComponent = forwardRef<
       <ToggleButton
         size="small"
         value={command + (argument ?? '')}
+        aria-label={title}
         sx={SQUARE_BUTTON_SX}
         onMouseDown={event => {
           event.preventDefault();
@@ -793,18 +796,21 @@ const HtmlVisualEditorComponent = forwardRef<
     </Tooltip>
   );
 
-  const headingButton = (label: string, block: string) => (
-    <ToggleButton
-      size="small"
-      value={block}
-      sx={LABEL_BUTTON_SX}
-      onMouseDown={event => {
-        event.preventDefault();
-        exec('formatBlock', block);
-      }}
-    >
-      {label}
-    </ToggleButton>
+  const headingButton = (label: string, block: string, title: string) => (
+    <Tooltip title={title}>
+      <ToggleButton
+        size="small"
+        value={block}
+        aria-label={title}
+        sx={LABEL_BUTTON_SX}
+        onMouseDown={event => {
+          event.preventDefault();
+          exec('formatBlock', block);
+        }}
+      >
+        {label}
+      </ToggleButton>
+    </Tooltip>
   );
 
   return (
@@ -818,10 +824,10 @@ const HtmlVisualEditorComponent = forwardRef<
           flexItem
         />
 
-        {headingButton('H1', 'H1')}
-        {headingButton('H2', 'H2')}
-        {headingButton('H3', 'H3')}
-        {headingButton('T', 'P')}
+        {headingButton('H1', 'H1', t('richtext.menuBar.heading', { level: 1 }))}
+        {headingButton('H2', 'H2', t('richtext.menuBar.heading', { level: 2 }))}
+        {headingButton('H3', 'H3', t('richtext.menuBar.heading', { level: 3 }))}
+        {headingButton('T', 'P', t('richtext.menuBar.paragraph'))}
 
         <Divider
           orientation="vertical"
@@ -900,6 +906,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <ToggleButton
             size="small"
             value="fontSize"
+            aria-label={t('mailTemplates.editor.fontSize', 'Size')}
             sx={SQUARE_BUTTON_SX}
             onMouseDown={event => {
               event.preventDefault();
@@ -947,6 +954,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <ToggleButton
             size="small"
             value="link"
+            aria-label={t('mailTemplates.editor.link', 'Link')}
             sx={SQUARE_BUTTON_SX}
             onMouseDown={event => {
               event.preventDefault();
@@ -961,6 +969,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <ToggleButton
             size="small"
             value="image"
+            aria-label={t('mailTemplates.editor.image', 'Image')}
             sx={SQUARE_BUTTON_SX}
             onMouseDown={event => {
               event.preventDefault();
@@ -975,6 +984,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <ToggleButton
             size="small"
             value="button"
+            aria-label={t('mailTemplates.editor.button', 'Button')}
             sx={SQUARE_BUTTON_SX}
             onMouseDown={event => {
               event.preventDefault();
@@ -996,6 +1006,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <Tooltip title={t('mailTemplates.editor.desktop', 'Desktop')}>
             <ToggleButton
               value="desktop"
+              aria-label={t('mailTemplates.editor.desktop', 'Desktop')}
               sx={SQUARE_BUTTON_SX}
             >
               <MdLaptopMac />
@@ -1004,6 +1015,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <Tooltip title={t('mailTemplates.editor.tablet', 'Tablet')}>
             <ToggleButton
               value="tablet"
+              aria-label={t('mailTemplates.editor.tablet', 'Tablet')}
               sx={SQUARE_BUTTON_SX}
             >
               <MdTabletMac />
@@ -1012,6 +1024,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <Tooltip title={t('mailTemplates.editor.mobile', 'Mobile')}>
             <ToggleButton
               value="mobile"
+              aria-label={t('mailTemplates.editor.mobile', 'Mobile')}
               sx={SQUARE_BUTTON_SX}
             >
               <MdPhoneIphone />
@@ -1019,19 +1032,17 @@ const HtmlVisualEditorComponent = forwardRef<
           </Tooltip>
         </ToggleButtonGroup>
       </Toolbar>
-
       <Canvas>
         <DeviceFrame sx={{ maxWidth: DEVICE_WIDTH[device] }}>
           <Frame
             ref={frameRef}
-            title="mail-template-visual-editor"
+            title={t('mailTemplates.editor.frameTitle')}
             sandbox="allow-same-origin"
             srcDoc={value}
             onLoad={handleLoad}
           />
         </DeviceFrame>
       </Canvas>
-
       <Dialog
         open={linkDialog.open}
         onClose={closeLinkDialog}
@@ -1047,7 +1058,6 @@ const HtmlVisualEditorComponent = forwardRef<
             <TextField
               autoFocus
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.linkUrl', 'URL')}
               placeholder="https://"
               value={linkDialog.url}
@@ -1061,7 +1071,6 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <TextField
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.linkText', 'Link text')}
               value={linkDialog.text}
               onChange={event =>
@@ -1096,7 +1105,6 @@ const HtmlVisualEditorComponent = forwardRef<
           </Button>
         </DialogActions>
       </Dialog>
-
       <Dialog
         open={imageDialog.open && !libraryOpen}
         onClose={closeImageDialog}
@@ -1113,7 +1121,6 @@ const HtmlVisualEditorComponent = forwardRef<
           >
             <Button
               variant="outlined"
-              startIcon={<MdPhotoLibrary />}
               onClick={() => setLibraryOpen(true)}
             >
               {t(
@@ -1124,7 +1131,6 @@ const HtmlVisualEditorComponent = forwardRef<
             <TextField
               autoFocus
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.imageUrl', 'Image URL')}
               placeholder="https://"
               value={imageDialog.url}
@@ -1134,8 +1140,8 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <TextField
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.imageAlt', 'Alternative text')}
+              helperText={t('mailTemplates.editor.imageAltHelp')}
               value={imageDialog.alt}
               onChange={event =>
                 setImageDialog(state => ({ ...state, alt: event.target.value }))
@@ -1143,11 +1149,11 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <TextField
               fullWidth
-              size="small"
               label={t(
                 'mailTemplates.editor.imageWidth',
                 'Width (px, optional)'
               )}
+              helperText={t('mailTemplates.editor.imageWidthHelp')}
               value={imageDialog.width}
               onChange={event =>
                 setImageDialog(state => ({
@@ -1158,7 +1164,6 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <TextField
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.imageLink', 'Link (optional)')}
               placeholder="https://"
               value={imageDialog.link}
@@ -1187,7 +1192,6 @@ const HtmlVisualEditorComponent = forwardRef<
           </Button>
         </DialogActions>
       </Dialog>
-
       <Dialog
         open={buttonDialog.open}
         onClose={closeButtonDialog}
@@ -1205,7 +1209,6 @@ const HtmlVisualEditorComponent = forwardRef<
             <TextField
               autoFocus
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.buttonText', 'Button text')}
               value={buttonDialog.text}
               onChange={event =>
@@ -1217,7 +1220,6 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <TextField
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.buttonUrl', 'Link URL')}
               placeholder="https://"
               value={buttonDialog.url}
@@ -1234,11 +1236,12 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <Stack
               spacing={2}
-              alignItems="center"
+              sx={{
+                alignItems: 'center',
+              }}
             >
               <TextField
                 select
-                size="small"
                 label={t('mailTemplates.editor.buttonSize', 'Size')}
                 value={buttonDialog.size}
                 onChange={event =>
@@ -1265,6 +1268,10 @@ const HtmlVisualEditorComponent = forwardRef<
                   <Box sx={{ ml: 1 }}>
                     <MailColorPicker
                       value={buttonDialog.color}
+                      label={t(
+                        'mailTemplates.editor.buttonColor',
+                        'Button color'
+                      )}
                       onChange={color =>
                         setButtonDialog(state => ({ ...state, color }))
                       }
@@ -1287,10 +1294,17 @@ const HtmlVisualEditorComponent = forwardRef<
           </Button>
         </DialogActions>
       </Dialog>
-
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={libraryOpen}
-        size="sm"
         onClose={() => setLibraryOpen(false)}
       >
         <ImageSelectPanel

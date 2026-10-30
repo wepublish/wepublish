@@ -1,16 +1,17 @@
+import { Typography } from '@mui/material';
 import styled from '@emotion/styled';
-
-/* eslint-disable-next-line */
-export interface DashboardProps {}
+import { useTranslation } from 'react-i18next';
 
 const StyledDashboard = styled.div`
   color: pink;
 `;
 
-export function Dashboard(props: DashboardProps) {
+export function Dashboard() {
+  const { t } = useTranslation();
+
   return (
     <StyledDashboard>
-      <h1>Welcome to Dashboard!</h1>
+      <Typography variant="h1">{t('dashboard.welcome')}</Typography>
     </StyledDashboard>
   );
 }

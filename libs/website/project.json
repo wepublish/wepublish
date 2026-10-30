@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/website/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:website"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -15,48 +15,9 @@
         "rootDir": "."
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
-    },
     "test": {
-      "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
-      },
-      "configurations": {
-        "ci": {
-          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
-        },
-        "update": {
-          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
-        }
-      }
-    },
-    "storybook": {
-      "executor": "@nx/storybook:storybook",
-      "options": {
-        "port": 4400,
-        "configDir": "libs/website/.storybook"
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
-      }
-    },
-    "build-storybook": {
-      "executor": "@nx/storybook:build",
-      "outputs": ["{options.outputDir}"],
-      "options": {
-        "configDir": "libs/website/.storybook",
-        "outputDir": "dist/storybook/website"
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
+        "config": "../../{projectRoot}/vitest.config.ts"
       }
     }
   }

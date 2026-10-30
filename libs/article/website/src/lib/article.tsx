@@ -4,13 +4,12 @@ import {
   PeerInformation,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Article as ArticleType } from '@wepublish/website/api';
 import { ArticleListWrapper } from './article-list/article-list';
 import { CommentListWrapper } from '@wepublish/comments/website';
 import {
   ContentWrapper,
   PreviewStatusBanner,
-  PreviewUnavailable,
+  ContentUnavailable,
 } from '@wepublish/content/website';
 import { ArticleTrackingPixels } from './article-tracking-pixels';
 import { Paywall } from '@wepublish/website/builder';
@@ -54,13 +53,15 @@ export const ArticleWrapper = styled(ContentWrapper)<{
         display: none;
       }
 
-      ${fadeout &&
-      css`
-        // fade out the third block (usually richtext) to indicate the user that a paywall is hitting.
-        > :nth-child(${hideContentAfter}) {
-          ${fadeoutStyles}
-        }
-      `}
+      ${
+        fadeout &&
+        css`
+          // fade out the third block (usually richtext) to indicate the user that a paywall is hitting.
+          > :nth-child(${hideContentAfter}) {
+            ${fadeoutStyles}
+          }
+        `
+      }
     `}
 
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -95,10 +96,10 @@ export function Article({
       hideContentAfter={article?.paywall?.hideContentAfter}
       fadeout={article?.paywall?.fadeout}
     >
-      {!article && !loading && <PreviewUnavailable />}
+      {!article && !loading && <ContentUnavailable />}
       {article && <PreviewStatusBanner />}
 
-      {article && <ArticleSEO article={article as ArticleType} />}
+      {article && <ArticleSEO article={article} />}
 
       {article && (
         <Blocks

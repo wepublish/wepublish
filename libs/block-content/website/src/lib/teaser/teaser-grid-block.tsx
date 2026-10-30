@@ -1,8 +1,8 @@
 import { css } from '@mui/material';
 import styled from '@emotion/styled';
 import {
-  BlockContent,
-  FlexAlignment,
+  FullBlockFragment,
+  FullFlexAlignmentFragment,
   FullTeaserFragment,
   FullTeaserGridBlockFragment,
 } from '@wepublish/website/api';
@@ -12,7 +12,7 @@ import {
 } from '@wepublish/website/builder';
 
 export const isTeaserGridBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridBlockFragment =>
   block.__typename === 'TeaserGridBlock';
 
@@ -66,13 +66,13 @@ export const isFilledTeaser = (
 export const alignmentForTeaserBlock = (
   index: number,
   numColumns: number
-): FlexAlignment => {
+): FullFlexAlignmentFragment => {
   const columnIndex = index % numColumns;
   const rowIndex = Math.floor(index / numColumns);
 
   return {
+    __typename: 'FlexAlignment',
     i: index.toString(),
-    static: false,
     h: 1,
     w: 12 / numColumns,
     x: (12 / numColumns) * columnIndex,

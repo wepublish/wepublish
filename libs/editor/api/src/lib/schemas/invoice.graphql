@@ -15,14 +15,31 @@ fragment Invoice on Invoice {
       name
     }
   }
+  dueAt
   paidAt
   description
   mail
   manuallySetAsPaidByUserId
+  manuallySetAsPaidByUser {
+    id
+    firstName
+    name
+  }
   canceledAt
+  scheduledDeactivationAt
   modifiedAt
   createdAt
   currency
+  payments {
+    id
+    state
+    createdAt
+    paymentMethod {
+      id
+      name
+      paymentProviderID
+    }
+  }
 }
 
 query Invoices(
@@ -52,8 +69,8 @@ query Invoices(
   }
 }
 
-mutation MarkInvoiceAsPaid($id: String!) {
-  markInvoiceAsPaid(id: $id) {
+mutation MarkInvoiceAsPaid($id: String!, $sendMail: Boolean) {
+  markInvoiceAsPaid(id: $id, sendMail: $sendMail) {
     ...Invoice
   }
 }

@@ -1,18 +1,35 @@
-import { MockedProvider } from '@apollo/client/testing';
-import { composeStories } from '@storybook/react';
-import { render } from '@testing-library/react';
-import * as stories from './author-list-container.stories';
+import { screen } from '@testing-library/react';
+import {
+  mockAuthor,
+  mockOperation,
+  mockPaginated,
+  renderWithProviders,
+} from '@wepublish/mocks/website';
+import { AuthorListDocument } from '@wepublish/website/api';
+import { AuthorListContainer } from './author-list-container';
 
-const storiesCmp = composeStories(stories);
-
-describe('AuthorList Container', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, async () => {
-      render(
-        <MockedProvider {...Component.parameters?.apolloClient}>
-          <Component />
-        </MockedProvider>
-      );
+describe('AuthorListContainer', () => {
+  it('loads the authors with the given variables and lists them', async () => {
+    renderWithProviders(<AuthorListContainer variables={{ take: 2 }} />, {
+      mocks: [
+        mockOperation(AuthorListDocument, {
+          variables: { take: 2 },
+          data: {
+            __typename: 'Query',
+            authors: mockPaginated('PaginatedAuthors', [
+              mockAuthor({ name: 'Jane Doe' }),
+              mockAuthor({ name: 'John Roe' }),
+            ]),
+          },
+        }),
+      ],
     });
+
+    expect(
+      await screen.findByRole('heading', { name: 'Jane Doe' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'John Roe' })
+    ).toBeInTheDocument();
   });
 });

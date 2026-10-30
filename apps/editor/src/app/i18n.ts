@@ -1,3 +1,4 @@
+import { humanizeError } from '@wepublish/ui/editor';
 import { format as formatDate, isDate, Locale } from 'date-fns';
 import {
   de as deLocale,
@@ -21,10 +22,15 @@ const dateFormatMap = new Map<string, Locale>([
 export const initI18N = () => {
   i18n.init({
     interpolation: {
+      escapeValue: false,
+      alwaysFormat: true,
       format: (value, format, lng = 'en') => {
         if (isDate(value) && format !== undefined) {
           const myLocale = dateFormatMap.get(lng);
           return formatDate(value, format, { locale: myLocale });
+        }
+        if (value instanceof Error) {
+          return humanizeError(value);
         }
         return value;
       },

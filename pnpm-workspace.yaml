@@ -1,0 +1,116 @@
+packages:
+  - .
+  - apps/api-example
+  - apps/editor
+  - apps/media
+  - docker/migration
+
+strictPeerDependencies: false
+
+# Which dependencies are allowed to run post install scripts
+allowBuilds:
+  '@parcel/watcher': true
+  '@prisma/engines': true
+  '@sentry/cli': true
+  '@sentry/node-cpu-profiler': true
+  '@swc/core': true
+  esbuild: true
+  nx: true
+  prisma: true
+  sharp: true
+  unrs-resolver: true
+  '@apollo/protobufjs': false
+  core-js: false
+  core-js-pure: false
+  cypress: false
+  protobufjs: false
+
+# Runtime dependencies of the deployed apps; apps/*/package.json and the root
+# package.json both reference these, so a version lives in exactly one place
+catalog:
+  '@apollo/server': '^5.5.1'
+  '@as-integrations/express5': '^1.1.2'
+  '@faker-js/faker': '^10.6.0'
+  '@google-analytics/data': '^4.12.1'
+  '@mailchimp/mailchimp_marketing': '^3.0.80'
+  '@mailchimp/mailchimp_transactional': '~1.1.2'
+  '@mollie/api-client': '^4.6.0'
+  '@mui/material': '^9.5.0'
+  '@nestjs/apollo': '^14.0.3'
+  '@nestjs/axios': '^12.0.1'
+  '@nestjs/cache-manager': '^12.0.1'
+  '@nestjs/common': '^12.2.0'
+  '@nestjs/config': '^12.0.1'
+  '@nestjs/core': '^12.2.0'
+  '@nestjs/graphql': '^14.0.3'
+  '@nestjs/passport': '^12.0.0'
+  '@nestjs/platform-node': '^12.3.2'
+  '@nestjs/schedule': '^12.0.2'
+  '@nestjs/terminus': '^12.1.0'
+  '@node-rs/argon2': '^2.2.2'
+  '@node-rs/bcrypt': '^1.10.9'
+  '@prisma/adapter-pg': 7.10.1
+  '@prisma/client': 7.10.1
+  '@react-email/components': '^1.0.12'
+  '@redis/client': '^6.3.0'
+  '@sentry/nestjs': '^11.8.0'
+  '@sentry/profiling-node': '^11.8.0'
+  '@tiptap/core': '^3.32.0'
+  '@tiptap/html': '^3.32.0'
+  axios: '^1.20.0'
+  bexio: '^3.8.1'
+  body-parser: '^1.20.8'
+  cache-manager: 7.2.9
+  cors: '~2.8.6'
+  cross-fetch: '^3.2.0'
+  dataloader: '^2.2.3'
+  date-fns: '^4.4.0'
+  date-fns-tz: '^3.2.0'
+  dotenv: '^17.4.2'
+  express: '^5.3.0'
+  form-data: '^3.0.5'
+  graphql: '^16.14.2'
+  graphql-request: '^6.1.0'
+  graphql-scalars: '^1.26.0'
+  graphql-tag: '^2.12.7'
+  graphql-type-json: '^0.3.2'
+  graphql-upload: '^13.0.0'
+  helmet: '^7.2.0'
+  i18n-iso-countries: '^7.14.0'
+  jose: '^5.10.0'
+  keyv: 5.6.0
+  mailgun.js: '^8.2.2'
+  mapped-replacer: '^1.2.2'
+  minio: '^8.0.7'
+  multer: '^2.4.0'
+  nanoid: '^2.1.11'
+  nestjs-zod: '^3.0.0'
+  node-cache: '^5.1.2'
+  node-fetch: 2.7.0
+  nodemailer: '^9.1.1'
+  otpauth: '^9.5.2'
+  passport-http-bearer: '^1.0.1'
+  pg: '^8.23.1'
+  pino: '^6.14.0'
+  prisma: 7.10.1
+  prosemirror-model: '^1.25.12'
+  qs: '^6.16.1'
+  ramda: '^0.28.0'
+  react: '^19.3.1'
+  react-dom: '^19.3.1'
+  rxjs: '^7.8.2'
+  sharp: '^0.33.5'
+  stripe: '^8.222.0'
+  tslib: '^2.8.1'
+  undici: '^7.16.0'
+  uuid: '^11.1.1'
+  v0-sdk: '^0.15.3'
+  xml2js: '^0.4.23'
+  yaml: '^1.10.3'
+  zod: '^3.25.76'
+
+minimumReleaseAgeExclude:
+  - '@mui/x-date-pickers@9.16.0'
+  - '@mui/x-internals@9.16.0'
+  - '@nestjs/cli@12.0.10'
+  - '@nestjs/schematics@12.0.10'

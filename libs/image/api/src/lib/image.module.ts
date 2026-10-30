@@ -1,3 +1,4 @@
+import { PublicContentInvalidatorModule } from '@wepublish/public-content-cache/api';
 import { forwardRef, Module } from '@nestjs/common';
 import { ImageResolver } from './image.resolver';
 import { PrismaModule } from '@wepublish/nest-modules';
@@ -11,7 +12,11 @@ import { ImageUploadService } from './image-upload.service';
 import { PeerModule } from '@wepublish/peering/api';
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => PeerModule)],
+  imports: [
+    PublicContentInvalidatorModule,
+    PrismaModule,
+    forwardRef(() => PeerModule),
+  ],
   providers: [
     ImageResolver,
     ImageDataloaderService,

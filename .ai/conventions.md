@@ -1,10 +1,13 @@
 # We.Publish Coding Conventions
 
-## NestJS Backend Patterns
+Repo-specific Nest and React patterns. Formatting, Emotion, lint-enforced rules
+and the React/Nest style rules live in
+[code-style.md](../.claude/docs/code-style.md); the schema → codegen flow is in
+[graphql-prisma.md](../.claude/docs/graphql-prisma.md).
 
-### Module Structure
+## NestJS
 
-Every domain module follows this pattern:
+### Module shape
 
 ```typescript
 @Module({
@@ -15,9 +18,11 @@ Every domain module follows this pattern:
 export class MyModule {}
 ```
 
-### Service Pattern
+### `@PrimeDataLoader`
 
-Services are `@Injectable()` and inject `PrismaClient` directly. Use `@PrimeDataLoader()` to populate the dataloader cache on service calls:
+Services inject `PrismaClient` directly. Decorating a service method with
+`@PrimeDataLoader(<Dataloader>)` populates the dataloader cache from that
+method's result, so resolving that entity as a field later does not re-query:
 
 ```typescript
 @Injectable()
@@ -34,9 +39,10 @@ export class ArticleService {
 }
 ```
 
-### Resolver Pattern
+Every entity resolved as a field needs a `*-dataloader.service.ts`. Resolving a
+relation with a direct Prisma call inside a list query is an N+1.
 
-Resolvers use NestJS GraphQL decorators with auth/permission decorators:
+### Resolver shape
 
 ```typescript
 @Resolver(() => Article)
@@ -62,29 +68,62 @@ export class ArticleResolver {
 }
 ```
 
-### Dataloader Pattern
+### Auth decorators
 
-Every entity that is resolved as a field should have a dataloader to prevent N+1 queries:
+| Decorator | Effect |
+| --- | --- |
+| `@Public()` | Endpoint requires no authentication |
+| `@CurrentUser()` | Injects the current `UserSession`, or `undefined` |
+| `@Permissions(CanCreateArticle)` | Requires that specific permission |
+| `@PreviewMode()` | Checks whether the user has preview access |
+| `@Feature('key')` | Requires the feature to be switched on for this medium, **in addition** to the above |
+
+Guard every field that exposes user or payment data, and **test the deny
+path** — note the caveat about unguarded resolver specs in
+[testing.md](../.claude/docs/testing.md).
+
+### Feature toggles (per medium)
+
+Ship unfinished work on master behind a flag instead of on a deploy branch:
+
+1. Add `{key, description, stage}` to `FEATURES` in
+   `libs/features/src/lib/features.ts`.
+2. Gate the API with `@Feature('key')` (`@wepublish/features/api`).
+3. Gate the editor with `<FeatureControl feature="key">` around nav items and
+   `createCheckedFeatureComponent('key')` around routes (`@wepublish/ui/editor`).
+   Gate a website page with `useWebsiteFeature('key')` (`@wepublish/utils/website`).
+   The `features` query needs a session, so only use it on pages behind the auth
+   guard, and prefetch `FeaturesDocument` in their `getInitialProps`.
+4. Once the CMS reports the key, staff switch it on per medium in One
+   (Clients → features); see [external-services.md](../.claude/docs/external-services.md).
+
+The schema and the migrations stay the same for every medium; only access is
+gated. When the feature is ready for every medium, delete the entry and its
+`@Feature` / `FeatureControl` / `useWebsiteFeature` checks in the same change. `FeatureKey` is typed
+from the registry, so a forgotten check fails to compile.
+
+### Settings (per instance, edited in the editor)
+
+An option the medium changes itself lives in the `settings` table, not in env.
+Reference: `SUBSCRIPTION_EXTEND_WINDOW_DAYS`. Adding one touches four places:
+
+1. `SettingName` in `libs/settings/api/src/lib/setting.ts` (key = GraphQL enum
+   value, string = row name); read it via `SettingDataloaderService` or
+   `SettingsService.settingByName` with a code default for a missing row.
+2. A migration that inserts the default with `ON CONFLICT ("name") DO NOTHING`,
+   plus the same upsert in `libs/api/prisma/seed.ts`.
+3. Editor: `SETTINGS` (and `NUMBER_FALLBACK_RANGES`) plus a `renderToggle` /
+   `renderNumberInput` in `libs/settings/editor/src/lib/settings-list.tsx`;
+   labels in all three `apps/editor/src/app/locales/*.json`; snapshot update.
+4. A changelog entry (`libs/api/changelogs/README.md`).
+
+### Models
+
+`@ObjectType()` / `@Field()` for output, `@InputType()` for input, `@ArgsType()`
+for query arguments; validation via class-validator or Zod. List args are
+cursor-based:
 
 ```typescript
-@Injectable()
-export class ArticleDataloaderService {
-  constructor(private prisma: PrismaClient) {}
-  // Batches multiple IDs into a single query
-}
-```
-
-### GraphQL Models
-
-Models use `@ObjectType()`, `@Field()`, and `@InputType()` decorators. Input validation uses class-validator or Zod. Args classes use `@ArgsType()`:
-
-```typescript
-@ObjectType()
-export class Article {
-  @Field() id!: string;
-  @Field() title!: string;
-}
-
 @ArgsType()
 export class ArticleListArgs {
   @Field(() => Int, { nullable: true }) take?: number;
@@ -92,101 +131,84 @@ export class ArticleListArgs {
 }
 ```
 
-### Auth Decorators
+## React
 
-- `@Public()` — endpoint requires no authentication
-- `@CurrentUser()` — injects the current `UserSession` (or undefined)
-- `@Permissions(CanCreateArticle)` — requires specific permission
-- `@PreviewMode()` — checks if the user has preview access
+Styling, forms, i18n and Website Builder rules are in
+[code-style.md](../.claude/docs/code-style.md). Operations are generated as
+`XDocument`s — import them from `@wepublish/editor/api` or
+`@wepublish/website/api` and pass them to Apollo's `useQuery` / `useMutation`,
+never hand-write a query; see
+[graphql-prisma.md](../.claude/docs/graphql-prisma.md).
 
-## React Frontend Patterns
+Frontend errors surface through the Apollo `onError` link plus per-query error
+state, and report to Sentry alongside the backend.
 
-### Component Structure
+### Editor command palette
 
-Components use MUI with Emotion styled components:
+`Mod+K` (Cmd on a Mac, Ctrl elsewhere) opens a command palette over the whole
+editor, unless a focused widget already handled the keystroke
+(`event.defaultPrevented`) — the richtext editor claims it for its link menu.
+The binding is a `useHotkey` from `@tanstack/react-hotkeys` registered with
+`preventDefault: false`: the library prevents the default *before* the
+callback runs, so leaving it on would make every press look already handled.
+The trigger's shortcut label comes from `formatForDisplay` on the same
+`COMMAND_PALETTE_HOTKEY`, and specs that pin a platform must call
+`HotkeyManager.resetInstance()`, because the manager reads the platform once.
+Its commands are
+plain data, split across `navigationCommands.tsx`, `createCommands.tsx` and
+`accountCommands.tsx`, and brought together by
+[apps/editor/src/app/commandPalette/commands.tsx](../apps/editor/src/app/commandPalette/commands.tsx).
+**Add a route to `app.tsx` and you add it here**, with the same
+`qualifyingPermissions` the sidebar uses, and the same `feature` wherever the
+sidebar wraps the entry in `FeatureControl`;
+`commands.spec.ts` runs every command's `perform` against a fake `navigate`
+and fails on any route the router serves that no command reaches (routes
+needing an `:id` are excluded by name).
 
-```typescript
-import { Button as MuiButton } from '@mui/material';
-import { ComponentProps, PropsWithChildren } from 'react';
+Every command carries its own `perform(context)`; navigation is just the
+common case of one (`perform: ({navigate}) => navigate('/articles')`), not a
+shape the registry privileges, so a command that opens a dialog or fires a
+mutation fits without changing anything. `context` carries `navigate` and
+`close`.
 
-export type ButtonProps = PropsWithChildren<ComponentProps<typeof MuiButton>>;
+Groups (`favourite`, `navigate`, `create`, `account`) are the headings; add one
+by extending `CommandGroup` and its `commandPalette.groups.*` translations.
+`favourite` is not a list of its own — it is `favourite: true` on a command,
+which promotes it out of whichever group it was declared in. It only forms a
+block while the query is empty, and folds back into `navigate` as soon as the
+reader types.
 
-export function Button({ children, variant = 'contained', ...props }: ButtonProps) {
-  return <MuiButton {...props} variant={variant}>{children}</MuiButton>;
-}
-```
+The palette itself is generic and lives in
+[libs/ui/editor/src/lib/commandPalette](../libs/ui/editor/src/lib/commandPalette).
 
-### Styling
+### Editor page titles
 
-Use `@emotion/styled` with tagged template literals for custom styling:
+A new `app.tsx` route also needs an entry in
+[pageTitles.ts](../apps/editor/src/app/pageTitle/pageTitles.ts) (path →
+`pageTitles.*` key, translated in en/de/fr); `DocumentTitle` sets
+`<page> · We.Publish` from it, and `pageTitles.spec.ts` fails on any route
+without one, `:id` routes included. The editor's favicons
+(`apps/editor/public/assets`, path `/assets/`) and wepublish-site's
+(`apps/wepublish-site/public`, path `/`) come from RealFaviconGenerator
+(`npx realfavicon generate`), fed the "we" path of `ui/logo.tsx` clipped to
+the "w" (`<clipPath>` rect `x=-1 y=0 w=43 h=45`, viewBox `-5.25 -3.2 52 52`)
+at `imageScale: 1`; the tab icon sits on a white tile with
+`backgroundRadius: 0.4` so it reads on dark tabs. Crop with the viewBox alone
+and RFG sizes the icon from the whole "we", leaving it off-centre.
 
-```typescript
-import styled from '@emotion/styled';
+### Website shell (header / footer per route)
 
-const Wrapper = styled('div')`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing(2)};
-`;
-```
+Every tenant `_app.tsx` renders `NavBar` / `FooterContainer` only when
+`getWebsiteShell(pageProps)` says so. A route hides them by returning
+`shell: {showNavigation?, showFooter?}` in its `getStaticProps` props, so
+don't hide them with CSS. Page routes (`[slug].tsx`, `index.tsx`) build
+`shell` from the page's `hideHeader` / `hideFooter` with `getPageShell`
+([website-shell.ts](../libs/utils/website/src/lib/website-shell.ts)). A new
+tenant has to do the same.
 
-Do NOT use CSS files or CSS modules. All styling is CSS-in-JS via Emotion.
+## File naming
 
-### GraphQL Integration
-
-Use Apollo Client with generated hooks from GraphQL Code Generator:
-
-```typescript
-import { useArticleQuery, useCreateArticleMutation } from '@wepublish/editor/api';
-
-function ArticlePage({ id }: { id: string }) {
-  const { data, loading } = useArticleQuery({ variables: { id } });
-  const [createArticle] = useCreateArticleMutation();
-}
-```
-
-### Forms
-
-Use React Hook Form with Zod for validation:
-
-```typescript
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-
-const schema = z.object({ title: z.string().min(1) });
-const { register, handleSubmit } = useForm({ resolver: zodResolver(schema) });
-```
-
-### i18n
-
-Use `react-i18next` for translations:
-
-```typescript
-import { useTranslation } from 'react-i18next';
-const { t } = useTranslation();
-```
-
-## File Naming Conventions
-
-- NestJS files: `<name>.module.ts`, `<name>.service.ts`, `<name>.resolver.ts`, `<name>.model.ts`
-- Test files: `<name>.spec.ts` (co-located with source)
-- React components: PascalCase function names, kebab-case file names
-- Storybook: `<name>.stories.tsx`
-
-## Import Conventions
-
-Always use `@wepublish/` path aliases, never relative imports across library boundaries:
-
-```typescript
-// Correct
-import { ArticleModule } from '@wepublish/article/api';
-
-// Wrong — never cross lib boundaries with relative imports
-import { ArticleModule } from '../../../article/api/src';
-```
-
-## Error Handling
-
-- Backend: throw NestJS exceptions (`NotFoundException`, `BadRequestException`) or custom error classes
-- Frontend: Apollo Client error handling via `onError` link and per-query error states
-- Sentry integration for error tracking in both frontend and backend
+- Nest: `<name>.module.ts`, `<name>.service.ts`, `<name>.resolver.ts`,
+  `<name>.model.ts`, `<name>-dataloader.service.ts`
+- Specs: `<name>.spec.ts`, co-located with the source — never `.test.ts`
+- React components: PascalCase function, kebab-case file name

@@ -5,7 +5,12 @@ import mailchimp, {
 import { captureException } from '@sentry/react';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { DailyBriefingContext, getApiUrl } from '@wepublish/utils/website';
+import {
+  DailyBriefingContext,
+  getApiUrl,
+  getPageShell,
+  revalidateFor,
+} from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -46,9 +51,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const client = getApiClient(getApiUrl(), []);
 
   let mailchimpResponse:
-    | mailchimp.campaigns.CampaignsSuccessResponse
-    | ErrorResponse
-    | null = null;
+    mailchimp.campaigns.CampaignsSuccessResponse | ErrorResponse | null = null;
   try {
     mailchimpResponse = await mailchimp.campaigns.list({
       count: 4,
@@ -70,7 +73,7 @@ export const getStaticProps: GetStaticProps = async () => {
     captureException(e);
   }
 
-  await Promise.all([
+  const [page] = await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
@@ -88,10 +91,13 @@ export const getStaticProps: GetStaticProps = async () => {
   const { campaigns = [] } =
     (mailchimpResponse as campaigns.CampaignsSuccessResponse) ?? {};
 
-  const props = addClientCacheToProps(client, { campaigns });
+  const props = addClientCacheToProps(client, {
+    campaigns,
+    shell: getPageShell(page.data?.page),
+  });
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(page.data?.page, page.error),
   };
 };

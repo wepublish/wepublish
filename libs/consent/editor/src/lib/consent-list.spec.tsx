@@ -1,7 +1,9 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render } from '@testing-library/react';
 import { ConsentList } from './consent-list';
 import { BrowserRouter } from 'react-router-dom';
-import { MockedProvider, MockLink } from '@apollo/client/testing';
+import { MockLink } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import * as v2Client from '@wepublish/editor/api';
 
@@ -19,11 +21,13 @@ describe('ConsentList', () => {
 
   it('should render successfully', () => {
     const { baseElement } = render(
-      <BrowserRouter>
-        <MockedProvider>
-          <ConsentList />
-        </MockedProvider>
-      </BrowserRouter>
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <BrowserRouter>
+          <MockedProvider>
+            <ConsentList />
+          </MockedProvider>
+        </BrowserRouter>
+      </ThemeProvider>
     );
     expect(baseElement).toBeTruthy();
   });

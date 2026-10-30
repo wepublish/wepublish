@@ -1,36 +1,61 @@
-import styled from '@emotion/styled';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  FullUserRoleFragment,
-  Permission,
-  useCreateUserRoleMutation,
-  usePermissionListQuery,
-  useUpdateUserRoleMutation,
-  useUserRoleQuery,
-} from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import {
+  Autocomplete,
   Button,
-  CheckPicker,
-  Drawer,
-  Form as RForm,
-  Message,
-  Schema,
-  toaster,
-} from 'rsuite';
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import {
+  CreateUserRoleDocument,
+  FullPermissionFragment,
+  FullUserRoleFragment,
+  PermissionListDocument,
+  UpdateUserRoleDocument,
+  UserRoleDocument,
+} from '@wepublish/editor/api';
+import {
+  CanCreateUserRole,
+  CanDeleteUserRole,
+  CanGetUserRole,
+  CanGetUserRoles,
+} from '@wepublish/permissions';
+import { useEffect, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 
 import {
   createCheckedPermissionComponent,
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerForm,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 
-const { Group, Label, Control } = RForm;
+const EMPTY_USER_ROLE = {
+  name: '',
+  description: '',
+  systemRole: false,
+  permissions: [] as FullPermissionFragment[],
+};
 
-const Form = styled(RForm)`
-  height: 100%;
-`;
+const toFormValues = (
+  userRole: FullUserRoleFragment
+): typeof EMPTY_USER_ROLE => ({
+  name: userRole.name,
+  description: userRole.description ?? '',
+  systemRole: userRole.systemRole,
+  permissions: userRole.permissions,
+});
 
 export interface UserRoleEditPanelProps {
   id?: string;
@@ -40,32 +65,58 @@ export interface UserRoleEditPanelProps {
 }
 
 function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
-  const isAuthorized = useAuthorisation('CAN_CREATE_USER_ROLE');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [systemRole, setSystemRole] = useState(false);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [allPermissions, setAllPermissions] = useState<Permission[]>([]);
+  const { t } = useTranslation();
+  const isAuthorized = useAuthorisation(CanCreateUserRole.id);
+  const client = useApolloClient();
+  const [loadError, setLoadError] = useState<Error>();
+
+  const schema = z.object({
+    name: z.string().min(1, t('errorMessages.noNameErrorMessage')),
+    description: z.string(),
+    systemRole: z.boolean(),
+    permissions: z.array(z.custom<FullPermissionFragment>()),
+  });
 
   const {
-    data,
-    loading: isLoading,
-    error: loadError,
-  } = useUserRoleQuery({
-    variables: { id: id! },
-    skip: id === undefined,
+    control,
+    handleSubmit,
+    formState: { isLoading },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: async () => {
+      if (!id) {
+        return EMPTY_USER_ROLE;
+      }
+
+      try {
+        const { data } = await client.query({
+          query: UserRoleDocument,
+          variables: { id },
+        });
+
+        return data?.userRole ? toFormValues(data.userRole) : EMPTY_USER_ROLE;
+      } catch (error) {
+        setLoadError(error as Error);
+
+        return EMPTY_USER_ROLE;
+      }
+    },
   });
+
+  const systemRole = useWatch({ control, name: 'systemRole' });
 
   const {
     data: permissionData,
     loading: isPermissionLoading,
     error: loadPermissionError,
-  } = usePermissionListQuery({});
+  } = useQuery(PermissionListDocument, {});
+
+  const allPermissions = permissionData?.permissions ?? [];
 
   const [createUserRole, { loading: isCreating, error: createError }] =
-    useCreateUserRoleMutation();
+    useMutation(CreateUserRoleDocument);
   const [updateUserRole, { loading: isUpdating, error: updateError }] =
-    useUpdateUserRoleMutation();
+    useMutation(UpdateUserRoleDocument);
 
   const isDisabled =
     systemRole ||
@@ -76,43 +127,22 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     loadError !== undefined ||
     !isAuthorized;
 
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    if (data?.userRole) {
-      setName(data.userRole.name);
-      setDescription(data.userRole.description ?? '');
-      setSystemRole(data.userRole.systemRole);
-      setPermissions(data.userRole.permissions);
-    }
-  }, [data?.userRole]);
-
-  useEffect(() => {
-    if (permissionData?.permissions) {
-      setAllPermissions(permissionData.permissions);
-    }
-  }, [permissionData?.permissions]);
-
   useEffect(() => {
     const error =
       loadError?.message ??
       createError?.message ??
       updateError?.message ??
       loadPermissionError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [loadError, createError, updateError, loadPermissionError]);
 
-  async function handleSave() {
+  async function handleSave({
+    name,
+    description,
+    permissions,
+  }: z.infer<typeof schema>) {
     if (id) {
       const { data } = await updateUserRole({
         variables: {
@@ -141,30 +171,24 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     }
   }
 
-  const { StringType } = Schema.Types;
-  const validationModel = Schema.Model({
-    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
-  });
-
   return (
-    <Form
-      onSubmit={validationPassed => validationPassed && handleSave()}
-      model={validationModel}
-      formValue={{ name }}
-    >
-      <RForm.Stack fluid>
-        <Drawer.Header>
-          <Drawer.Title>
+    <DrawerForm onSubmit={handleSubmit(handleSave)}>
+      <Stack
+        direction="column"
+        sx={{ height: '100%' }}
+      >
+        <DrawerHeader>
+          <DrawerTitle>
             {id ?
               t('userRoles.panels.editUserRole')
             : t('userRoles.panels.createUserRole')}
-          </Drawer.Title>
+          </DrawerTitle>
 
-          <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
+          <DrawerActions>
+            <PermissionControl qualifyingPermissions={[CanCreateUserRole.id]}>
               <Button
+                variant="contained"
                 type="submit"
-                appearance="primary"
                 disabled={isDisabled}
                 data-testid="saveButton"
               >
@@ -172,66 +196,91 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
               </Button>
             </PermissionControl>
             <Button
-              appearance={'subtle'}
+              variant="text"
               onClick={() => onClose?.()}
             >
               {t('userRoles.panels.close')}
             </Button>
-          </Drawer.Actions>
-        </Drawer.Header>
+          </DrawerActions>
+        </DrawerHeader>
 
-        <Drawer.Body>
-          <Group controlId="name">
-            <Label>{toggleRequiredLabel(t('userRoles.panels.name'))}</Label>
-            <Control
-              name="name"
-              value={name}
-              disabled={isDisabled}
-              onChange={(value: string) => setName(value)}
-            />
-          </Group>
-          <Group controlId="description">
-            <Label>{t('userRoles.panels.description')}</Label>
-            <Control
-              name={t('userRoles.panels.description')}
-              value={description}
-              disabled={isDisabled}
-              onChange={(value: string) => setDescription(value)}
-            />
-          </Group>
-          {systemRole && <p>{t('userRoles.panels.systemRole')}</p>}
-          <Group controlId="permissions">
-            <Label>{t('userRoles.panels.permissions')}</Label>
-            <CheckPicker
-              disabled={isDisabled}
-              virtualized
-              block
-              disabledItemValues={
-                systemRole ? allPermissions.map(per => per.id) : []
-              }
-              value={permissions.map(per => per.id)}
-              data={allPermissions.map(permission => ({
-                value: permission.id,
-                label: permission.description,
-              }))}
-              onChange={value => {
-                setPermissions(
-                  allPermissions.filter(permissions =>
-                    value.includes(permissions.id)
-                  )
-                );
-              }}
-            />
-          </Group>
-        </Drawer.Body>
-      </RForm.Stack>
-    </Form>
+        <DrawerBody>
+          {!isLoading && (
+            <>
+              <Stack
+                direction="column"
+                spacing={3}
+              >
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      label={toggleRequiredLabel(t('userRoles.panels.name'))}
+                      disabled={isDisabled}
+                      error={Boolean(error)}
+                      helperText={error?.message}
+                      fullWidth
+                    />
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="description"
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      label={t('userRoles.panels.description')}
+                      disabled={isDisabled}
+                      error={Boolean(error)}
+                      helperText={error?.message}
+                      fullWidth
+                    />
+                  )}
+                />
+
+                {systemRole && (
+                  <Typography>{t('userRoles.panels.systemRole')}</Typography>
+                )}
+
+                <Controller
+                  control={control}
+                  name="permissions"
+                  render={({ field }) => (
+                    <Autocomplete
+                      multiple
+                      disabled={isDisabled || systemRole}
+                      options={allPermissions}
+                      value={field.value}
+                      getOptionLabel={permission => permission.description}
+                      isOptionEqualToValue={(option, selected) =>
+                        option.id === selected.id
+                      }
+                      onChange={(_event, selected) => field.onChange(selected)}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          label={t('userRoles.panels.permissions')}
+                        />
+                      )}
+                      fullWidth
+                    />
+                  )}
+                />
+              </Stack>
+            </>
+          )}
+        </DrawerBody>
+      </Stack>
+    </DrawerForm>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_USER_ROLE',
-  'CAN_GET_USER_ROLES',
-  'CAN_CREATE_USER_ROLE',
-  'CAN_DELETE_USER_ROLE',
+  CanGetUserRole.id,
+  CanGetUserRoles.id,
+  CanCreateUserRole.id,
+  CanDeleteUserRole.id,
 ])(UserRoleEditPanel);
 export { CheckedPermissionComponent as UserRoleEditPanel };

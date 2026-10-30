@@ -2,11 +2,12 @@ import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { OneScopedJwtGuard } from './one-scoped-jwt.guard';
+import type { Mock } from 'vitest';
 
-jest.mock('@nestjs/graphql', () => {
-  const original = jest.requireActual('@nestjs/graphql');
+vi.mock('@nestjs/graphql', async importOriginal => {
+  const original = await importOriginal<typeof import('@nestjs/graphql')>();
 
-  return { ...original, GqlExecutionContext: { create: jest.fn() } };
+  return { ...original, GqlExecutionContext: { create: vi.fn() } };
 });
 
 describe('OneScopedJwtGuard', () => {
@@ -15,37 +16,37 @@ describe('OneScopedJwtGuard', () => {
     getClass: () => ({}),
   } as unknown as ExecutionContext;
   let reflector: Reflector;
-  let verifier: { verifyScopedJWT: jest.Mock };
+  let verifier: { verifyScopedJWT: Mock };
   let guard: OneScopedJwtGuard;
 
   function withAuthorizationHeader(authorization?: string) {
-    (GqlExecutionContext.create as unknown as jest.Mock).mockReturnValue({
+    (GqlExecutionContext.create as unknown as Mock).mockReturnValue({
       getContext: () => ({ req: { headers: { authorization } } }),
     });
   }
 
   beforeEach(() => {
     reflector = new Reflector();
-    verifier = { verifyScopedJWT: jest.fn().mockResolvedValue(true) };
+    verifier = { verifyScopedJWT: vi.fn().mockResolvedValue(true) };
     guard = new OneScopedJwtGuard(reflector, verifier);
   });
 
   it('denies when no scope is declared on the handler', async () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(undefined);
+    vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue(undefined);
     withAuthorizationHeader('Bearer token');
 
     await expect(guard.canActivate(context)).resolves.toBe(false);
   });
 
   it('denies when the Authorization header is missing', async () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue('read:content');
+    vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue('read:content');
     withAuthorizationHeader(undefined);
 
     await expect(guard.canActivate(context)).resolves.toBe(false);
   });
 
   it('denies a non-bearer Authorization header', async () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue('read:content');
+    vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue('read:content');
     withAuthorizationHeader('Basic dXNlcjpwYXNz');
 
     await expect(guard.canActivate(context)).resolves.toBe(false);
@@ -53,7 +54,7 @@ describe('OneScopedJwtGuard', () => {
   });
 
   it('passes the bearer token and the required scope to the verifier', async () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue('read:content');
+    vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue('read:content');
     withAuthorizationHeader('Bearer abc.def.ghi');
 
     await expect(guard.canActivate(context)).resolves.toBe(true);
@@ -64,7 +65,7 @@ describe('OneScopedJwtGuard', () => {
   });
 
   it('denies when the verifier rejects the token', async () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue('read:content');
+    vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue('read:content');
     withAuthorizationHeader('Bearer abc.def.ghi');
     verifier.verifyScopedJWT.mockResolvedValue(false);
 

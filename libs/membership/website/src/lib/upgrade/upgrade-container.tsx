@@ -1,10 +1,11 @@
+import { useLazyQuery, useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import { PaymentForm, useUpgrade } from '@wepublish/payment/website';
 import {
   FullMemberPlanFragment,
-  useMemberPlanListQuery,
-  useSubscriptionsQuery,
-  useUpgradeSubscriptionInfoLazyQuery,
+  MemberPlanListDocument,
+  SubscriptionsDocument,
+  UpgradeSubscriptionInfoDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -43,11 +44,14 @@ export const UpgradeContainer = ({
   const { hasUser } = useUser();
 
   const [upgrade, redirectPages, stripeClientSecret] = useUpgrade();
-  const [fetchUpgradeInfo, upgradeInfo] = useUpgradeSubscriptionInfoLazyQuery({
-    fetchPolicy: 'cache-first',
-  });
+  const [fetchUpgradeInfo, upgradeInfo] = useLazyQuery(
+    UpgradeSubscriptionInfoDocument,
+    {
+      fetchPolicy: 'cache-first',
+    }
+  );
 
-  const memberPlanList = useMemberPlanListQuery({
+  const memberPlanList = useQuery(MemberPlanListDocument, {
     variables: {
       take: 50,
       filter: {
@@ -56,7 +60,7 @@ export const UpgradeContainer = ({
     },
   });
 
-  const userSubscriptions = useSubscriptionsQuery({
+  const userSubscriptions = useQuery(SubscriptionsDocument, {
     skip: !hasUser,
   });
 
@@ -117,8 +121,8 @@ export const UpgradeContainer = ({
               },
             });
 
-            if (result.errors) {
-              throw result.errors;
+            if (result.error) {
+              throw result.error;
             }
           }}
         />

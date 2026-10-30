@@ -1,41 +1,47 @@
-import { Typography } from '@mui/material';
+import { useMutation } from '@apollo/client/react';
 import {
+  Alert,
+  Button,
+  Checkbox,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  LinearProgress,
+  Typography,
+} from '@mui/material';
+import {
+  CancelMailSendJobDocument,
   FullMailSendJobFragment,
   MailSendJobState,
-  useCancelMailSendJobMutation,
-  useResumeMailSendJobMutation,
+  ResumeMailSendJobDocument,
 } from '@wepublish/editor/api';
+import { humanizeError, enqueueSnackbar } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdPlayArrow, MdStop } from 'react-icons/md';
-import {
-  Button,
-  Checkbox,
-  Message,
-  Modal,
-  Progress,
-  Tag,
-  toaster,
-} from 'rsuite';
 
 const STATE_COLORS: Record<
   MailSendJobState,
-  'green' | 'yellow' | 'red' | 'blue'
+  'success' | 'warning' | 'error' | 'primary'
 > = {
-  [MailSendJobState.Queued]: 'yellow',
-  [MailSendJobState.Running]: 'blue',
-  [MailSendJobState.Done]: 'green',
-  [MailSendJobState.Failed]: 'red',
-  [MailSendJobState.Cancelled]: 'red',
+  [MailSendJobState.Queued]: 'warning',
+  [MailSendJobState.Running]: 'primary',
+  [MailSendJobState.Done]: 'success',
+  [MailSendJobState.Failed]: 'error',
+  [MailSendJobState.Cancelled]: 'error',
 };
 
 export function MailSendJobStateTag({ status }: { status: MailSendJobState }) {
   const { t } = useTranslation();
 
   return (
-    <Tag color={STATE_COLORS[status] ?? 'blue'}>
-      {t(`mailSend.status.${status}`)}
-    </Tag>
+    <Chip
+      color={STATE_COLORS[status] ?? 'primary'}
+      label={t(`mailSend.status.${status}`)}
+    />
   );
 }
 
@@ -67,16 +73,18 @@ export function JobProgressBar({ job }: { job: FullMailSendJobFragment }) {
     job.totalCount ? Math.round((done / job.totalCount) * 100) : 0;
 
   return (
-    <Progress.Line
-      percent={percent}
-      strokeColor={job.failedCount ? '#f5a623' : undefined}
-      status={
-        job.status === MailSendJobState.Running ? 'active'
+    <LinearProgress
+      variant={
+        job.status === MailSendJobState.Running ?
+          'indeterminate'
+        : 'determinate'
+      }
+      value={percent}
+      color={
+        job.failedCount || job.status === MailSendJobState.Failed ? 'warning'
         : job.status === MailSendJobState.Done ?
           'success'
-        : job.status === MailSendJobState.Failed ?
-          'fail'
-        : undefined
+        : 'primary'
       }
     />
   );
@@ -89,39 +97,25 @@ export function JobProgressBar({ job }: { job: FullMailSendJobFragment }) {
  */
 export function ResumeJobButton({
   job,
-  size = 'sm',
+  size = 'small',
   onDone,
 }: {
   job: FullMailSendJobFragment;
-  size?: 'xs' | 'sm' | 'md';
+  size?: 'small' | 'medium' | 'large';
   onDone?: () => void;
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [retryUnfinished, setRetryUnfinished] = useState(false);
 
-  const [resume, { loading }] = useResumeMailSendJobMutation({
+  const [resume, { loading }] = useMutation(ResumeMailSendJobDocument, {
     onError: error =>
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {error.message}
-        </Message>
-      ),
+      enqueueSnackbar(humanizeError(error), { variant: 'error' }),
     onCompleted: () => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('mailJobs.resumed')}
-        </Message>
-      );
+      enqueueSnackbar(t('mailJobs.resumed'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
       onDone?.();
     },
   });
@@ -133,8 +127,8 @@ export function ResumeJobButton({
   return (
     <>
       <Button
+        variant="contained"
         size={size}
-        appearance="primary"
         startIcon={<MdPlayArrow />}
         onClick={event => {
           event.stopPropagation();
@@ -143,46 +137,62 @@ export function ResumeJobButton({
       >
         {t('mailJobs.resume')}
       </Button>
-
-      <Modal
+      <Dialog
+        fullWidth
         open={open}
         onClose={() => setOpen(false)}
-        size="xs"
+        maxWidth="xs"
       >
-        <Modal.Header>
-          <Modal.Title>{t('mailJobs.resumeTitle')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{t('mailJobs.resumeText', { count: remaining })}</p>
+        <DialogTitle>{t('mailJobs.resumeTitle')}</DialogTitle>
+        <DialogContent>
+          <Typography>
+            {t('mailJobs.resumeText', { count: remaining })}
+          </Typography>
 
           {unfinished > 0 && (
             <div style={{ marginTop: 12 }}>
-              <Checkbox
-                checked={retryUnfinished}
-                onChange={(_, checked) => setRetryUnfinished(checked)}
-              >
-                {t('mailJobs.retryUnfinished', { count: unfinished })}
-              </Checkbox>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={retryUnfinished}
+                    onChange={(_event, checked) => setRetryUnfinished(checked)}
+                  />
+                }
+                label={t('mailJobs.retryUnfinished', { count: unfinished })}
+              />
               <Typography
                 variant="caption"
-                display="block"
-                style={{ color: '#8e8e93', lineHeight: 1.35, marginLeft: 34 }}
+                style={{
+                  color: 'text.secondary',
+                  lineHeight: 1.35,
+                  marginLeft: 34,
+                }}
+                sx={{
+                  display: 'block',
+                }}
               >
                 {t('mailJobs.retryUnfinishedHint')}
               </Typography>
             </div>
           )}
 
-          <Message
-            type="info"
+          <Alert
+            severity="info"
             style={{ marginTop: 12 }}
           >
             {t('mailJobs.resumeSafety', { count: job.sentCount })}
-          </Message>
-        </Modal.Body>
-        <Modal.Footer>
+          </Alert>
+        </DialogContent>
+        <DialogActions>
           <Button
-            appearance="primary"
+            variant="text"
+            onClick={() => setOpen(false)}
+          >
+            {t('mailSend.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
             loading={loading}
             disabled={total === 0}
             onClick={async () => {
@@ -192,14 +202,8 @@ export function ResumeJobButton({
           >
             {t('mailJobs.resumeConfirm', { count: total })}
           </Button>
-          <Button
-            appearance="subtle"
-            onClick={() => setOpen(false)}
-          >
-            {t('mailSend.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
@@ -207,36 +211,28 @@ export function ResumeJobButton({
 /** Stops a running job. What was not sent stays open for a later continue. */
 export function CancelJobButton({
   job,
-  size = 'sm',
+  size = 'small',
   onDone,
 }: {
   job: FullMailSendJobFragment;
-  size?: 'xs' | 'sm' | 'md';
+  size?: 'small' | 'medium' | 'large';
   onDone?: () => void;
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
-  const [cancel, { loading }] = useCancelMailSendJobMutation({
+  const [cancel, { loading }] = useMutation(CancelMailSendJobDocument, {
     onError: error =>
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {error.message}
-        </Message>
-      ),
+      enqueueSnackbar(humanizeError(error), { variant: 'error' }),
     onCompleted: () => onDone?.(),
   });
 
   return (
     <>
       <Button
+        variant="outlined"
         size={size}
-        appearance="ghost"
-        color="red"
+        color="error"
         startIcon={<MdStop />}
         onClick={event => {
           event.stopPropagation();
@@ -246,21 +242,27 @@ export function CancelJobButton({
         {t('mailJobs.cancel')}
       </Button>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={open}
         onClose={() => setOpen(false)}
-        size="xs"
+        maxWidth="xs"
       >
-        <Modal.Header>
-          <Modal.Title>{t('mailJobs.cancelTitle')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <DialogTitle>{t('mailJobs.cancelTitle')}</DialogTitle>
+        <DialogContent>
           {t('mailJobs.cancelText', { count: openCount(job) })}
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+        <DialogActions>
           <Button
-            appearance="primary"
-            color="red"
+            variant="text"
+            onClick={() => setOpen(false)}
+          >
+            {t('mailSend.back')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
             loading={loading}
             onClick={async () => {
               await cancel({ variables: { id: job.id } });
@@ -269,14 +271,8 @@ export function CancelJobButton({
           >
             {t('mailJobs.cancelConfirm')}
           </Button>
-          <Button
-            appearance="subtle"
-            onClick={() => setOpen(false)}
-          >
-            {t('mailSend.back')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

@@ -1,8 +1,5 @@
 export type PreviewHandshakeState =
-  | 'unknown'
-  | 'pending'
-  | 'succeeded'
-  | 'failed';
+  'unknown' | 'pending' | 'succeeded' | 'failed';
 
 let state: PreviewHandshakeState = 'unknown';
 const listeners = new Set<() => void>();
@@ -20,4 +17,18 @@ export const subscribeToPreviewHandshake = (listener: () => void) => {
   return () => {
     listeners.delete(listener);
   };
+};
+
+export const isFramed = () => window.parent !== window;
+
+export const getPreviewHost = (): Window | null => {
+  if (window.opener) {
+    return window.opener;
+  }
+
+  const previewRequested = new URLSearchParams(window.location.search).has(
+    'preview'
+  );
+
+  return isFramed() && previewRequested ? window.parent : null;
 };

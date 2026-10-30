@@ -1,51 +1,64 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormHelperText,
+} from '@mui/material';
 import {
   ArticleSort,
   ImportArticleOptions,
-  PeerArticle,
+  ImportPeerArticleDocument,
   PeerArticleFilter,
-  useImportPeerArticleMutation,
-  usePeerArticleListQuery,
+  PeerArticleListDocument,
+  SlimPeerArticleFragment,
 } from '@wepublish/editor/api';
+import { CanGetPeerArticle, CanGetPeerArticles } from '@wepublish/permissions';
 import {
+  ClickPopover,
+  clearFilters,
+  countActiveFilters,
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
+  enqueueSnackbar,
+  humanizeError,
+  InfoTooltip,
   ListFilters,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
+  Pagination,
   PeerAvatar,
-  Table,
   TableWrapper,
   useListViewState,
+  PageTitle,
 } from '@wepublish/ui/editor';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Checkbox,
-  Form,
-  Message,
-  Modal,
-  Pagination,
-  Popover,
-  Table as RTable,
-  toaster,
-  Whisper,
-} from 'rsuite';
 
-const { Column, HeaderCell, Cell } = RTable;
+const HeaderInfo = styled.span`
+  display: inline-flex;
+  margin-left: 4px;
+`;
 
 const Img = styled.img`
   height: 25px;
   width: auto;
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
 `;
 
 const PopoverImg = styled.img`
   height: 175px;
   width: auto;
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
 `;
 
 const CheckboxGroup = styled.div`
@@ -56,6 +69,14 @@ const CheckboxGroup = styled.div`
     margin-left: -10px;
   }
 `;
+
+const PEER_ARTICLE_FILTER_FIELDS = [
+  'title',
+  'preTitle',
+  'lead',
+  'peerId',
+  'publicationDate',
+] as const;
 
 function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
   switch (columnField) {
@@ -101,39 +122,33 @@ function PeerArticleList() {
   );
 
   const [importPeerArticle, { loading: importingInProgress, error, reset }] =
-    useImportPeerArticleMutation({
+    useMutation(ImportPeerArticleDocument, {
       onCompleted(data) {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-          >
-            {t('toast.createdSuccess')}
-          </Message>,
-          { duration: 3000 }
-        );
+        enqueueSnackbar(t('toast.createdSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
 
         navigate(`/articles/edit/${data.importPeerArticle.id}`);
       },
     });
 
-  const { data: peerArticleListData, loading: isLoading } =
-    usePeerArticleListQuery({
-      variables: listVariables,
-      onError(error) {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-          >
-            {error.message}
-          </Message>,
-          { duration: 0 }
-        );
-      },
-    });
+  const {
+    data: peerArticleListData,
+    loading: isLoading,
+    error: peerArticleListError,
+  } = useQuery(PeerArticleListDocument, {
+    variables: listVariables,
+  });
+
+  useEffect(() => {
+    if (peerArticleListError) {
+      enqueueSnackbar(humanizeError(peerArticleListError), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
+    }
+  }, [peerArticleListError]);
 
   const peerArticles = peerArticleListData?.peerArticles.nodes;
 
@@ -141,40 +156,46 @@ function PeerArticleList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('peerArticles.peerArticles')}</h2>
+          <PageTitle>{t('peerArticles.peerArticles')}</PageTitle>
+          <InfoTooltip text={t('peerArticles.info')} />
         </ListViewHeader>
-
-        <ListFilters
-          fields={['title', 'preTitle', 'lead', 'peerId', 'publicationDate']}
-          filter={filter}
-          isLoading={isLoading}
-          onSetFilter={f => {
-            setFilter(f);
-            setPage(1);
-          }}
-        />
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          onSortColumn={(sortColumn, sortType) => {
-            setSort(sortColumn, sortType ?? 'asc');
+        <DataTable
+          filters={
+            <ListFilters
+              fields={PEER_ARTICLE_FILTER_FIELDS}
+              filter={filter}
+              isLoading={isLoading}
+              onSetFilter={f => {
+                setFilter(f);
+                setPage(1);
+              }}
+            />
+          }
+          filterCount={countActiveFilters(PEER_ARTICLE_FILTER_FIELDS, filter)}
+          onResetFilters={() =>
+            setFilter(clearFilters(PEER_ARTICLE_FILTER_FIELDS, filter))
+          }
+          storageKey="peer-articles"
+          data={peerArticles ?? []}
+          loading={isLoading}
+          sortColumn={sortField}
+          sortOrder={sortOrder}
+          onSort={(sortColumn, sortType) => {
+            setSort(sortColumn, sortType);
             setPage(1);
           }}
-          fillHeight
-          loading={isLoading}
-          data={peerArticles}
-          sortColumn={sortField}
-          sortType={sortOrder}
-        >
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('peerArticles.title')}</HeaderCell>
-            <Cell>
-              {(rowData: PeerArticle) => (
+          sortable={['publishedAt']}
+          columns={[
+            {
+              id: 'title',
+              alwaysVisible: true,
+              label: t('peerArticles.title'),
+              width: 200,
+              align: 'left',
+              render: (rowData: SlimPeerArticleFragment) => (
                 <a
                   href={rowData.url}
                   target="_blank"
@@ -182,241 +203,223 @@ function PeerArticleList() {
                 >
                   {rowData.latest.title || t('articles.overview.untitled')}
                 </a>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('peerArticles.lead')}</HeaderCell>
-            <Cell>
-              {(rowData: PeerArticle) =>
-                rowData.latest.lead || t('articles.overview.untitled')
-              }
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('peerArticles.publishedAt')}</HeaderCell>
-            <Cell dataKey="publishedAt">
-              {(rowData: PeerArticle) =>
+              ),
+            },
+            {
+              id: 'lead',
+              label: t('peerArticles.lead'),
+              width: 200,
+              align: 'left',
+              render: (rowData: SlimPeerArticleFragment) =>
+                rowData.latest.lead || t('articles.overview.untitled'),
+            },
+            {
+              id: 'publishedat',
+              label: t('peerArticles.publishedAt'),
+              width: 200,
+              align: 'left',
+              sortKey: 'publishedAt',
+              render: (rowData: SlimPeerArticleFragment) =>
                 t('peerArticles.publicationDate', {
                   publicationDate: new Date(rowData.publishedAt),
-                })
-              }
-            </Cell>
-          </Column>
-
-          <Column
-            width={150}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('peerArticles.peer')}</HeaderCell>
-            <Cell dataKey="peer">
-              {(rowData: PeerArticle) => (
+                }),
+            },
+            {
+              id: 'peer',
+              label: (
+                <>
+                  {t('peerArticles.peer')}
+                  <HeaderInfo>
+                    <InfoTooltip text={t('peerArticles.peerInfo')} />
+                  </HeaderInfo>
+                </>
+              ),
+              width: 150,
+              align: 'left',
+              sortKey: 'peer',
+              render: (rowData: SlimPeerArticleFragment) => (
                 <PeerAvatar peer={rowData.peer}>
                   <div>{rowData.peer?.name}</div>
                 </PeerAvatar>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={120}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('peerArticles.articleImage')}</HeaderCell>
-
-            <Cell>
-              {(rowData: PeerArticle) =>
+              ),
+            },
+            {
+              id: 'articleimage',
+              label: t('peerArticles.articleImage'),
+              width: 120,
+              align: 'left',
+              render: (rowData: SlimPeerArticleFragment) =>
                 rowData.latest.image?.url ?
-                  <Whisper
-                    placement="left"
-                    trigger="hover"
-                    controlId="control-id-hover"
-                    speaker={
-                      <Popover>
-                        <PopoverImg
-                          src={rowData.latest.image?.url || ''}
-                          alt=""
-                        />
-                      </Popover>
+                  <ClickPopover
+                    trigger={
+                      <Img
+                        src={rowData.latest.image?.url || ''}
+                        alt=""
+                      />
                     }
+                    anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
+                    transformOrigin={{
+                      vertical: 'center',
+                      horizontal: 'right',
+                    }}
                   >
-                    <Img
+                    <PopoverImg
                       src={rowData.latest.image?.url || ''}
                       alt=""
                     />
-                  </Whisper>
-                : ''
-              }
-            </Cell>
-          </Column>
-
-          <Column
-            width={120}
-            align="right"
-          >
-            <HeaderCell>{null}</HeaderCell>
-            <Cell>
-              {(rowData: PeerArticle) => (
+                  </ClickPopover>
+                : '',
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 120,
+              align: 'center',
+              fixed: true,
+              render: (rowData: SlimPeerArticleFragment) => (
                 <Button
-                  appearance="primary"
-                  size="xs"
+                  variant="contained"
+                  size="small"
                   type="submit"
                   disabled={!rowData.peer?.id}
                   onClick={() => {
-                    setArticleToImport({
-                      articleId: rowData.id,
-                      peerId: rowData.peer!.id,
-                    });
+                    const peerId = rowData.peer?.id;
+
+                    if (peerId) {
+                      setArticleToImport({ articleId: rowData.id, peerId });
+                    }
                   }}
                 >
                   {t('peerArticles.import.import')}
                 </Button>
-              )}
-            </Cell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={peerArticleListData?.peerArticles?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
           }}
+          totalCount={peerArticleListData?.peerArticles?.totalCount ?? 0}
         />
       </TableWrapper>
 
-      <Modal
+      <Dialog
         open={!!articleToImport}
         onClose={() => setArticleToImport(undefined)}
-        onExited={() => reset()}
+        slotProps={{ transition: { onExited: () => reset() } }}
       >
-        <Modal.Header>
-          <Modal.Title>{t('peerArticles.import.title')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('peerArticles.import.title')}</DialogTitle>
 
-        <Modal.Body>
-          {error && (
-            <Message
-              type="error"
-              showIcon
-              closable
-            >
-              {error.message}
-            </Message>
-          )}
+        <DialogContent>
+          {error && <Alert severity="error">{humanizeError(error)}</Alert>}
 
           <CheckboxGroup>
-            <Form.Group>
-              <Checkbox
-                checked={!!importArticleOptions.importAuthors}
-                onChange={(value, checked) => {
-                  setImportArticleOptions({
-                    ...importArticleOptions,
-                    importAuthors: checked,
-                  });
-                }}
-              >
-                {t('peerArticles.import.includeAuthors')}
-              </Checkbox>
+            <Box sx={{ marginBottom: 3 }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={!!importArticleOptions.importAuthors}
+                    onChange={(_event, checked) => {
+                      setImportArticleOptions({
+                        ...importArticleOptions,
+                        importAuthors: checked,
+                      });
+                    }}
+                  />
+                }
+                label={t('peerArticles.import.includeAuthors')}
+              />
 
-              <Form.Text>
+              <FormHelperText>
                 {t('peerArticles.import.includeAuthorsHint')}
-              </Form.Text>
-            </Form.Group>
+              </FormHelperText>
+            </Box>
 
-            <Form.Group>
-              <Checkbox
-                checked={!!importArticleOptions.importTags}
-                onChange={(value, checked) => {
-                  setImportArticleOptions({
-                    ...importArticleOptions,
-                    importTags: checked,
-                  });
-                }}
-              >
-                {t('peerArticles.import.includeTags')}
-              </Checkbox>
+            <Box sx={{ marginBottom: 3 }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={!!importArticleOptions.importTags}
+                    onChange={(_event, checked) => {
+                      setImportArticleOptions({
+                        ...importArticleOptions,
+                        importTags: checked,
+                      });
+                    }}
+                  />
+                }
+                label={t('peerArticles.import.includeTags')}
+              />
 
-              <Form.Text>{t('peerArticles.import.includeTagsHint')}</Form.Text>
-            </Form.Group>
+              <FormHelperText>
+                {t('peerArticles.import.includeTagsHint')}
+              </FormHelperText>
+            </Box>
 
-            <Form.Group>
-              <Checkbox
-                checked={!!importArticleOptions.importContentImages}
-                onChange={(value, checked) => {
-                  setImportArticleOptions({
-                    ...importArticleOptions,
-                    importContentImages: checked,
-                  });
-                }}
-              >
-                {t('peerArticles.import.includeImages')}
-              </Checkbox>
+            <Box sx={{ marginBottom: 3 }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={!!importArticleOptions.importContentImages}
+                    onChange={(_event, checked) => {
+                      setImportArticleOptions({
+                        ...importArticleOptions,
+                        importContentImages: checked,
+                      });
+                    }}
+                  />
+                }
+                label={t('peerArticles.import.includeImages')}
+              />
 
-              <Form.Text>
+              <FormHelperText>
                 {t('peerArticles.import.includeImagesHint')}
-              </Form.Text>
-            </Form.Group>
+              </FormHelperText>
+            </Box>
           </CheckboxGroup>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setArticleToImport(undefined)}
+            disabled={importingInProgress}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
             onClick={() => {
+              if (!articleToImport) {
+                return;
+              }
+
               importPeerArticle({
                 variables: {
-                  articleId: articleToImport!.articleId,
-                  peerId: articleToImport!.peerId,
+                  articleId: articleToImport.articleId,
+                  peerId: articleToImport.peerId,
                   options: importArticleOptions,
                 },
               });
             }}
             disabled={importingInProgress}
-            appearance="primary"
           >
             {t('peerArticles.import.confirm')}
           </Button>
-
-          <Button
-            onClick={() => setArticleToImport(undefined)}
-            disabled={importingInProgress}
-            appearance="subtle"
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_PEER_ARTICLES',
-  'CAN_GET_PEER_ARTICLE',
+  CanGetPeerArticles.id,
+  CanGetPeerArticle.id,
 ])(PeerArticleList);
 export { CheckedPermissionComponent as PeerArticleList };

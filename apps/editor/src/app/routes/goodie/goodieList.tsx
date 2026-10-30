@@ -1,8 +1,16 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  Goodie,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
+  DeleteGoodieDocument,
+  FullGoodieFragment,
+  GoodieListDocument,
   GoodieSort,
-  useDeleteGoodieMutation,
-  useGoodieListQuery,
 } from '@wepublish/editor/api';
 import {
   CanCreateGoodie,
@@ -11,31 +19,24 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   IconButton,
+  IconButtonTooltip,
+  InfoTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
-  PaddedCell,
-  Table,
+  Pagination,
   TableWrapper,
+  useTableExportQuery,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+import { Link as RouterLink } from 'react-router-dom';
 
 function GoodieList() {
   const { t } = useTranslation();
@@ -44,11 +45,11 @@ function GoodieList() {
   const [sortField, setSortField] = useState<GoodieSort>();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const [goodieToDelete, setGoodieToDelete] = useState<Goodie | undefined>(
-    undefined
-  );
+  const [goodieToDelete, setGoodieToDelete] = useState<
+    FullGoodieFragment | undefined
+  >(undefined);
 
-  const { data, loading, refetch } = useGoodieListQuery({
+  const { data, loading, refetch } = useQuery(GoodieListDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
@@ -56,7 +57,15 @@ function GoodieList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
-  const [deleteGoodie] = useDeleteGoodieMutation({
+  const exportGoodies = useTableExportQuery(
+    GoodieListDocument,
+    {
+      sort: sortField,
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    },
+    data => data.goodies
+  );
+  const [deleteGoodie] = useMutation(DeleteGoodieDocument, {
     onCompleted() {
       refetch();
     },
@@ -73,171 +82,152 @@ function GoodieList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('goodie.overview.title')}</h2>
+          <PageTitle>{t('goodie.overview.title')}</PageTitle>
         </ListViewHeader>
 
         <ListViewActions>
-          <Link to="create">
-            <RIconButton
-              appearance="primary"
-              loading={false}
-            >
-              <MdAdd />
-              {t('goodie.overview.createGoodie')}
-            </RIconButton>
-          </Link>
+          <Button
+            component={RouterLink}
+            to="create"
+            variant="contained"
+            loading={false}
+            startIcon={<MdAdd />}
+          >
+            {t('goodie.overview.createGoodie')}
+          </Button>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey="goodies"
+          exportRows={exportGoodies}
+          exportTotalCount={data?.goodies?.totalCount ?? 0}
           data={data?.goodies.nodes ?? []}
+          loading={loading}
           sortColumn={sortField}
-          sortType={sortOrder}
-          onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
+          sortOrder={sortOrder}
+          onSort={(sortColumn, sortType) => {
+            setSortOrder(sortType);
             setSortField(sortColumn as GoodieSort);
           }}
-        >
-          <Column
-            width={75}
-            resizable
-          >
-            <HeaderCell>{t('goodie.overview.active')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<Goodie>) => (rowData.active ? `✅` : `❌`)}
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('goodie.overview.name')}</HeaderCell>
-
-            <RCell dataKey={GoodieSort.Name}>
-              {(rowData: RowDataType<Goodie>) => (
+          sortable={['name', 'createdat']}
+          columns={[
+            {
+              id: 'active',
+              label: t('goodie.overview.active'),
+              width: 75,
+              render: rowData => (rowData.active ? `✅` : `❌`),
+              exportValue: rowData => rowData.active,
+            },
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('goodie.overview.name'),
+              width: 200,
+              render: rowData => (
                 <Link to={`edit/${rowData.id}`}>{rowData.name}</Link>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={250}
-            resizable
-          >
-            <HeaderCell>{t('goodie.overview.memberPlans')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<Goodie>) =>
+              ),
+              exportValue: rowData => rowData.name,
+            },
+            {
+              id: 'memberplans',
+              label: t('goodie.overview.memberPlans'),
+              width: 250,
+              render: rowData =>
                 rowData.memberPlans
                   .map((memberPlan: { name: string }) => memberPlan.name)
-                  .join(', ')
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={120}
-            resizable
-          >
-            <HeaderCell>{t('goodie.overview.stock')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<Goodie>) =>
-                rowData.stock ?? t('goodie.overview.unlimited')
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={120}
-            resizable
-          >
-            <HeaderCell>{t('goodie.overview.availableStock')}</HeaderCell>
-
-            <RCell>
-              {(rowData: RowDataType<Goodie>) =>
-                rowData.availableStock ?? t('goodie.overview.unlimited')
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('goodie.overview.createdAt')}</HeaderCell>
-
-            <RCell dataKey={GoodieSort.CreatedAt}>
-              {(rowData: Goodie) =>
-                `${new Date(rowData.createdAt).toDateString()}`
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            fixed="right"
-            width={50}
-          >
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(goodie: RowDataType<Goodie>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setGoodieToDelete(goodie as Goodie)}
-                />
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+                  .join(', '),
+            },
+            {
+              id: 'stock',
+              label: t('goodie.overview.stock'),
+              width: 120,
+              render: rowData =>
+                rowData.stock ?? t('goodie.overview.unlimited'),
+            },
+            {
+              id: 'availablestock',
+              columnLabel: t('goodie.overview.availableStock'),
+              label: (
+                <>
+                  {t('goodie.overview.availableStock')}{' '}
+                  <InfoTooltip text={t('goodie.overview.availableStockInfo')} />
+                </>
+              ),
+              width: 120,
+              render: rowData =>
+                rowData.availableStock ?? t('goodie.overview.unlimited'),
+            },
+            {
+              id: 'createdat',
+              label: t('goodie.overview.createdAt'),
+              width: 200,
+              render: rowData =>
+                `${new Date(rowData.createdAt).toDateString()}`,
+              exportValue: rowData => new Date(rowData.createdAt),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: goodie => (
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    color="error"
+                    size="small"
+                    aria-label={t('delete')}
+                    onClick={() =>
+                      setGoodieToDelete(goodie as FullGoodieFragment)
+                    }
+                  >
+                    <MdDelete />
+                  </IconButton>
+                </IconButtonTooltip>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
 
       <Pagination
-        limit={limit}
-        limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-        maxButtons={DEFAULT_MAX_TABLE_PAGES}
-        first
-        last
-        prev
-        next
-        ellipsis
-        boundaryLinks
-        layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-        total={data?.goodies?.totalCount ?? 0}
-        activePage={page}
-        onChangePage={page => setPage(page)}
-        onChangeLimit={limit => setLimit(limit)}
+        state={{
+          page,
+          limit,
+          setPage,
+          setLimit,
+        }}
+        totalCount={data?.goodies?.totalCount ?? 0}
       />
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!goodieToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setGoodieToDelete(undefined)}
       >
-        <Modal.Title>{t('goodie.overview.areYouSure')}</Modal.Title>
+        <DialogTitle>{t('goodie.overview.areYouSure')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {goodieToDelete &&
             t('goodie.overview.areYouSureBody', {
               goodie: goodieToDelete.name,
             })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="text"
+            onClick={() => setGoodieToDelete(undefined)}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
             onClick={() => {
               deleteGoodie({
                 variables: {
@@ -249,15 +239,8 @@ function GoodieList() {
           >
             {t('goodie.overview.areYouSureConfirmation')}
           </Button>
-
-          <Button
-            appearance="subtle"
-            onClick={() => setGoodieToDelete(undefined)}
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

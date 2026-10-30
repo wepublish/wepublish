@@ -18,6 +18,7 @@ type ColorPickerButtonProps = {
   value: string | null | undefined;
   onChange: (color: string | null) => void;
   presetColors?: string[];
+  label: string;
   children: ReactNode;
 };
 
@@ -25,6 +26,7 @@ export function ColorPickerButton({
   value,
   onChange,
   presetColors,
+  label,
   children,
 }: ColorPickerButtonProps) {
   const { t } = useTranslation();
@@ -36,6 +38,8 @@ export function ColorPickerButton({
       <IconButton
         size="small"
         ref={anchorRef}
+        aria-label={label}
+        aria-expanded={open}
         onClick={() => setOpen(true)}
         sx={{
           border: 1,
@@ -48,7 +52,7 @@ export function ColorPickerButton({
 
       <ElevatedPopper
         open={open}
-        anchorEl={anchorRef.current}
+        anchorEl={() => anchorRef.current!}
         disablePortal
         onKeyDown={e => {
           if (e.key === 'Escape') {

@@ -1,25 +1,27 @@
-import styled from '@emotion/styled';
+import { useMutation } from '@apollo/client/react';
 import {
-  TokenListDocument,
-  useCreateTokenMutation,
-} from '@wepublish/editor/api';
+  Alert,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { CreateTokenDocument, TokenListDocument } from '@wepublish/editor/api';
+import { CanCreateToken } from '@wepublish/permissions';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Drawer,
-  Input,
-  Message as RMessage,
-  Panel,
-  toaster,
-} from 'rsuite';
 
 import { createCheckedPermissionComponent } from '../atoms';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { humanizeError } from '../humanizeError';
+import { enqueueSnackbar } from '../snackbar';
 import { getOperationNameFromDocument } from '../utility';
-
-const Message = styled(RMessage)`
-  margin-top: 5px;
-`;
 
 export interface TokenGeneratePanelProps {
   onClose?(): void;
@@ -29,7 +31,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   const [name, setName] = useState('');
 
   const [createToken, { data, loading: isCreating, error: createError }] =
-    useCreateTokenMutation({
+    useMutation(CreateTokenDocument, {
       refetchQueries: [getOperationNameFromDocument(TokenListDocument)],
     });
 
@@ -40,17 +42,12 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (createError?.message)
-      toaster.push(
-        <RMessage
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {createError.message}
-        </RMessage>
-      );
+    if (createError?.message) {
+      enqueueSnackbar(humanizeError(createError), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
+    }
   }, [createError]);
 
   async function handleSave() {
@@ -59,58 +56,55 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('tokenList.panels.generateToken')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('tokenList.panels.generateToken')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           {!hasGeneratedToken && (
             <Button
+              variant="contained"
               disabled={isDisabled}
               onClick={handleSave}
-              appearance="primary"
             >
               {t('tokenList.panels.generate')}
             </Button>
           )}
           <Button
+            variant="text"
             onClick={() => onClose?.()}
-            appearance="subtle"
           >
             {t('tokenList.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
-      <Drawer.Body>
+        </DrawerActions>
+      </DrawerHeader>
+      <DrawerBody>
         {token ?
           <>
-            <p>{t('tokenList.panels.creationSuccess')}</p>
-            <Panel
-              bordered
+            <Typography>{t('tokenList.panels.creationSuccess')}</Typography>
+            <Card
+              variant="outlined"
               data-sentry-mask
             >
-              {token}
-            </Panel>
-            <Message
-              showIcon
-              type="warning"
-            >
+              <CardContent>{token}</CardContent>
+            </Card>
+            <Alert severity="warning">
               {t('tokenList.panels.tokenWarning')}
-            </Message>
+            </Alert>
           </>
-        : <Input
+        : <TextField
             placeholder={t('tokenList.panels.name')}
             value={name}
             disabled={isDisabled}
-            onChange={value => {
-              setName(value);
+            onChange={event => {
+              setName(event.target.value);
             }}
           />
         }
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_CREATE_TOKEN',
+  CanCreateToken.id,
 ])(TokenGeneratePanel);
 export { CheckedPermissionComponent as TokenGeneratePanel };

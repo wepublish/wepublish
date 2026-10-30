@@ -31,3 +31,15 @@ mutation UpdateSettingsIntegrationsAI(
     type
   }
 }
+
+mutation CreateAISetting($id: String!, $type: AIProviderType!, $name: String) {
+  createAISetting(id: $id, type: $type, name: $name) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    systemPrompt
+    type
+  }
+}

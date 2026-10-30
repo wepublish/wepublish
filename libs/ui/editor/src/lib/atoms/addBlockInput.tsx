@@ -1,34 +1,39 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import {
+  IconButton,
+  ListItemIcon,
+  ListSubheader,
+  MenuItem,
+} from '@mui/material';
+import { Fragment, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
-import { Dropdown, IconButton } from 'rsuite';
 
-export interface MenuProps {
-  readonly items: Array<MenuItem>;
+import { ClickMenu } from '../popover/click-menu';
+import { BLOCK_GROUPS, BlockGroup } from './blockGroups';
 
-  onItemClick(item: MenuItem): void;
-}
-
-export interface MenuItem {
-  readonly id: string;
-  readonly icon: React.ReactElement;
-  readonly label: string;
+export interface AddBlockMenuItem {
+  id: string;
+  icon: ReactElement;
+  label: string;
+  group: BlockGroup;
 }
 
 export interface AddBlockInputProps {
-  menuItems: Array<MenuItem>;
+  menuItems: Array<AddBlockMenuItem>;
   subtle?: boolean;
   disabled?: boolean;
 
-  onMenuItemClick: (item: MenuItem) => void;
+  onMenuItemClick: (item: AddBlockMenuItem) => void;
 }
 
 const Wrapper = styled.div`
   position: relative;
-  left: 41.5%;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
 `;
+
+const MAX_MENU_HEIGHT = 420;
 
 export function AddBlockInput({
   menuItems,
@@ -36,31 +41,50 @@ export function AddBlockInput({
   onMenuItemClick,
 }: AddBlockInputProps) {
   const { t } = useTranslation();
+
   return (
     <Wrapper>
-      <Dropdown
-        disabled={disabled}
-        renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
+      <ClickMenu
+        trigger={
           <IconButton
-            {...props}
-            ref={ref}
-            icon={<MdAdd />}
-            circle
-            appearance="primary"
-          />
-        )}
-      >
-        {menuItems.map((item, index) => (
-          <Dropdown.Item
-            key={index}
-            onSelect={() => {
-              onMenuItemClick(item);
-            }}
+            disabled={disabled}
+            title={t('blockList.addBlock')}
+            aria-label={t('blockList.addBlock')}
           >
-            {item.icon} {t(item.label)}
-          </Dropdown.Item>
-        ))}
-      </Dropdown>
+            <MdAdd />
+          </IconButton>
+        }
+        slotProps={{ paper: { sx: { maxHeight: MAX_MENU_HEIGHT } } }}
+      >
+        {close =>
+          BLOCK_GROUPS.flatMap(group => {
+            const blocks = menuItems.filter(item => item.group === group);
+
+            if (!blocks.length) {
+              return [];
+            }
+
+            return [
+              <Fragment key={group}>
+                <ListSubheader>{t(`blocks.groups.${group}`)}</ListSubheader>
+
+                {blocks.map(item => (
+                  <MenuItem
+                    key={item.id}
+                    onClick={() => {
+                      onMenuItemClick(item);
+                      close();
+                    }}
+                  >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    {t(item.label)}
+                  </MenuItem>
+                ))}
+              </Fragment>,
+            ];
+          })
+        }
+      </ClickMenu>
     </Wrapper>
   );
 }

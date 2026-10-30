@@ -13,19 +13,19 @@ const makeService = ({
 } = {}) => {
   const prisma = {
     user: {
-      findMany: jest.fn(async () => [{ id: 'user-1', email }]),
-      findUnique: jest.fn(async () => ({ email, emailQuality: snapshot })),
+      findMany: vi.fn(async () => [{ id: 'user-1', email }]),
+      findUnique: vi.fn(async () => ({ email, emailQuality: snapshot })),
     },
     emailQualityEvent: {
-      createMany: jest.fn(async () => ({ count: 1 })),
-      findMany: jest.fn(async () => events),
+      createMany: vi.fn(async () => ({ count: 1 })),
+      findMany: vi.fn(async () => events),
     },
     userEmailQuality: {
-      upsert: jest.fn(async ({ create }) => create),
+      upsert: vi.fn(async ({ create }) => create),
     },
   };
   const settings = {
-    settingByName: jest.fn(async () => {
+    settingByName: vi.fn(async () => {
       if (!setting) {
         throw new Error('Setting with name emailQuality not found');
       }

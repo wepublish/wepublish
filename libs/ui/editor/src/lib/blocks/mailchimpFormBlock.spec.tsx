@@ -1,0 +1,849 @@
+import { MockedResponse } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
+import {
+  EditorBlockType,
+  MailchimpFormOptionsLayout,
+  MailchimpInterestGroupsDocument,
+  MailchimpListsDocument,
+  MailchimpMergeFieldsDocument,
+  SyncProviderSettingsDocument,
+} from '@wepublish/editor/api';
+import { SetStateAction, useState } from 'react';
+
+import {
+  AggregatedValidation,
+  EditorValidationProvider,
+} from '../hooks/useEditorValidation';
+import { BlockMap } from './blockMap';
+import { MailchimpFormBlock } from './mailchimpFormBlock';
+import {
+  MailchimpFormBlockValue,
+  MailchimpFormFieldConfigValue,
+  MailchimpFormInterestOptionValue,
+} from './types';
+
+const theme = createTheme({ cssVariables: true });
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string, options?: { number?: number }) =>
+      options?.number ? `${key} ${options.number}` : key,
+    i18n: { language: 'en' },
+  }),
+}));
+
+// Apollo Client 4 matches variables through `request.variables` (which accepts
+// a predicate) instead of the removed top-level `variableMatcher`.
+const anyVariables = () => true;
+const reusable = { maxUsageCount: Number.POSITIVE_INFINITY };
+
+const mocks: MockedResponse[] = [
+  {
+    request: { query: SyncProviderSettingsDocument, variables: anyVariables },
+    ...reusable,
+    result: { data: { syncProviderSettings: [] } },
+  },
+  {
+    request: { query: MailchimpListsDocument, variables: anyVariables },
+    ...reusable,
+    result: {
+      data: {
+        mailchimpLists: [
+          {
+            __typename: 'MailchimpList',
+            id: 'list-daily',
+            name: 'Daily Briefing',
+            memberCount: 10,
+          },
+          {
+            __typename: 'MailchimpList',
+            id: 'list-weekly',
+            name: 'Weekly Culture',
+            memberCount: 5,
+          },
+        ],
+      },
+    },
+  },
+  {
+    request: { query: MailchimpMergeFieldsDocument, variables: anyVariables },
+    ...reusable,
+    result: { data: { mailchimpMergeFields: [] } },
+  },
+  {
+    request: {
+      query: MailchimpInterestGroupsDocument,
+      variables: anyVariables,
+    },
+    ...reusable,
+    result: {
+      data: {
+        mailchimpInterestGroups: [
+          {
+            __typename: 'MailchimpInterestGroup',
+            id: 'interest-daily',
+            name: 'Daily Briefing',
+          },
+          {
+            __typename: 'MailchimpInterestGroup',
+            id: 'interest-weekly',
+            name: 'Weekly Culture',
+          },
+        ],
+      },
+    },
+  },
+];
+
+const defaultValue = BlockMap[EditorBlockType.MailchimpForm]
+  .defaultValue as MailchimpFormBlockValue;
+
+const renderBlock = (value: Partial<MailchimpFormBlockValue> = {}) => {
+  const runAllRef = {
+    current: (): AggregatedValidation => ({ ok: true, failures: [] }),
+  };
+  const latest: {
+    value: MailchimpFormBlockValue;
+    validate: () => AggregatedValidation;
+  } = {
+    value: { ...defaultValue, syncProviderId: 'provider', ...value },
+    validate: () => runAllRef.current(),
+  };
+
+  function Harness() {
+    const [state, setState] = useState(latest.value);
+
+    return (
+      <MailchimpFormBlock
+        value={state}
+        onChange={(update: SetStateAction<MailchimpFormBlockValue>) =>
+          setState(current => {
+            latest.value =
+              typeof update === 'function' ? update(current) : update;
+
+            return latest.value;
+          })
+        }
+      />
+    );
+  }
+
+  render(
+    <ThemeProvider theme={theme}>
+      <MockedProvider mocks={mocks}>
+        <EditorValidationProvider runAllRef={runAllRef}>
+          <Harness />
+        </EditorValidationProvider>
+      </MockedProvider>
+    </ThemeProvider>
+  );
+
+  return latest;
+};
+
+const waitForQueries = () =>
+  act(() => new Promise(resolve => setTimeout(resolve, 0)));
+
+const openPicker = async (field: HTMLElement) => {
+  await waitForQueries();
+
+  await act(async () => {
+    fireEvent.click(within(field).getByRole('button', { name: /open/i }));
+  });
+};
+
+const groupsInput = (
+  input: Partial<MailchimpFormFieldConfigValue> = {}
+): MailchimpFormFieldConfigValue => ({
+  inputType: 'groups',
+  name: null,
+  label: 'Newsletters',
+  description: null,
+  required: false,
+  urlParam: null,
+  defaultValue: null,
+  value: null,
+  optionsLayout: MailchimpFormOptionsLayout.List,
+  options: [],
+  ...input,
+});
+
+const renderWithGroupsInput = (
+  input: Partial<MailchimpFormFieldConfigValue> = {},
+  block: Partial<MailchimpFormBlockValue> = {}
+) =>
+  renderBlock({
+    listId: 'list-daily',
+    steps: [
+      {
+        skipIfFieldsFilled: [],
+        skipIfInterestsFilled: [],
+        showIfInterestsFilled: [],
+        inputs: [groupsInput(input)],
+      },
+    ],
+    ...block,
+  });
+
+const getOptions = (value: MailchimpFormBlockValue) =>
+  value.steps[0].inputs[0].options;
+
+const emptyOption: MailchimpFormInterestOptionValue = {
+  id: '',
+  name: '',
+  description: null,
+  image: null,
+};
+
+const textInput = (label: string): MailchimpFormFieldConfigValue => ({
+  ...groupsInput(),
+  inputType: 'text',
+  label,
+});
+
+const step = (inputs: MailchimpFormFieldConfigValue[]) => ({
+  skipIfFieldsFilled: [],
+  skipIfInterestsFilled: [],
+  showIfInterestsFilled: [],
+  inputs,
+});
+
+const itemHeader = (heading: string) =>
+  screen.getByText(heading).parentElement!;
+
+const itemPanel = (heading: string) =>
+  screen.getByText(heading).closest('li') as HTMLElement;
+
+const stepHeader = (index: number) =>
+  screen.getByText(`blocks.mailchimpForm.step ${index + 1}`).parentElement!;
+
+const stepPanel = (index: number) =>
+  stepHeader(index).closest('li') as HTMLElement;
+
+const moveUp = (header: HTMLElement) =>
+  within(header).getByLabelText('blocks.mailchimpForm.moveUp');
+
+const moveDown = (header: HTMLElement) =>
+  within(header).getByLabelText('blocks.mailchimpForm.moveDown');
+
+describe('MailchimpFormBlock', () => {
+  it('should default to the list layout for new inputs', () => {
+    expect(defaultValue).not.toHaveProperty('multipleLists');
+    expect(defaultValue).not.toHaveProperty('lists');
+    expect(defaultValue.steps[0].inputs[0].optionsLayout).toBe(
+      MailchimpFormOptionsLayout.List
+    );
+  });
+
+  it('should not offer selecting multiple lists', () => {
+    renderBlock();
+
+    expect(screen.queryByText('blocks.mailchimpForm.multipleLists')).toBeNull();
+    expect(screen.queryByText('blocks.mailchimpForm.lists')).toBeNull();
+    expect(screen.queryByText('blocks.mailchimpForm.addList')).toBeNull();
+  });
+
+  it('should only show the layout for groups inputs', () => {
+    renderBlock();
+
+    expect(screen.queryByText('blocks.mailchimpForm.optionsLayout')).toBeNull();
+  });
+
+  it('should switch the layout between list and grid', () => {
+    const latest = renderWithGroupsInput();
+
+    fireEvent.click(
+      screen.getByLabelText('blocks.mailchimpForm.optionsLayoutGrid')
+    );
+    expect(latest.value.steps[0].inputs[0].optionsLayout).toBe(
+      MailchimpFormOptionsLayout.Grid
+    );
+
+    fireEvent.click(
+      screen.getByLabelText('blocks.mailchimpForm.optionsLayoutList')
+    );
+    expect(latest.value.steps[0].inputs[0].optionsLayout).toBe(
+      MailchimpFormOptionsLayout.List
+    );
+  });
+
+  it('should add, edit and remove interest options', () => {
+    const latest = renderWithGroupsInput();
+
+    fireEvent.click(screen.getByText('blocks.mailchimpForm.addInterestOption'));
+    fireEvent.click(screen.getByText('blocks.mailchimpForm.addInterestOption'));
+
+    expect(getOptions(latest.value)).toEqual([emptyOption, emptyOption]);
+
+    const [firstName, secondName] = screen.getAllByLabelText(
+      'blocks.mailchimpForm.interestOptionName'
+    );
+    fireEvent.change(firstName, { target: { value: 'Daily Briefing' } });
+    fireEvent.change(secondName, { target: { value: 'Weekly Culture' } });
+
+    const [firstDescription] = screen.getAllByLabelText(
+      'blocks.mailchimpForm.interestOptionDescription'
+    );
+    fireEvent.change(firstDescription, {
+      target: { value: 'Every morning' },
+    });
+
+    expect(getOptions(latest.value)).toMatchObject([
+      { name: 'Daily Briefing', description: 'Every morning' },
+      { name: 'Weekly Culture', description: null },
+    ]);
+
+    fireEvent.click(
+      within(itemHeader('Daily Briefing')).getByLabelText(
+        'blocks.mailchimpForm.remove'
+      )
+    );
+
+    expect(getOptions(latest.value)).toMatchObject([
+      { name: 'Weekly Culture' },
+    ]);
+  });
+
+  // The naming rules are covered by `nameForPickedInterest` in
+  // mailchimpFormBlock.types.spec.ts; opening the picker is slow in happy-dom,
+  // so only this test checks that picking an interest goes through them.
+  it('should prefill the name with the name of the picked interest', async () => {
+    const latest = renderWithGroupsInput({ options: [emptyOption] });
+
+    const itemPicker = screen
+      .getByLabelText('blocks.mailchimpForm.interestOption')
+      .closest('.MuiAutocomplete-root') as HTMLElement;
+
+    await openPicker(itemPicker);
+
+    fireEvent.click(
+      await screen.findByRole('option', { name: 'Weekly Culture' })
+    );
+
+    await waitFor(() =>
+      expect(getOptions(latest.value)).toMatchObject([
+        { id: 'interest-weekly', name: 'Weekly Culture' },
+      ])
+    );
+  });
+
+  it('should number the titles of items without a name', () => {
+    const successOption = {
+      background: '#ff8900',
+      url: 'https://example.com',
+      mergeFieldName: null,
+      mergeFieldValue: null,
+    };
+
+    renderWithGroupsInput(
+      {
+        label: null,
+        options: [
+          { ...emptyOption, id: 'interest-daily', name: 'Daily Briefing' },
+          emptyOption,
+        ],
+      },
+      {
+        successPage: {
+          description: '',
+          options: [
+            { ...successOption, label: 'Read more' },
+            { ...successOption, label: '' },
+          ],
+        },
+      }
+    );
+
+    expect(screen.getByText('blocks.mailchimpForm.inputTitle 1')).toBeTruthy();
+    expect(
+      screen.getByText('blocks.mailchimpForm.interestOptionTitle 2')
+    ).toBeTruthy();
+    expect(
+      screen.queryByText('blocks.mailchimpForm.interestOptionTitle 1')
+    ).toBeNull();
+    expect(
+      screen.getByText('blocks.mailchimpForm.successOptionTitle 2')
+    ).toBeTruthy();
+    expect(
+      screen.queryByText('blocks.mailchimpForm.successOptionTitle 1')
+    ).toBeNull();
+  });
+
+  it('should hide the step conditions behind the advanced toggle', () => {
+    renderBlock();
+
+    expect(
+      screen.queryByLabelText('blocks.mailchimpForm.skipIfFieldsFilled')
+    ).toBeNull();
+
+    const [stepAdvanced] = screen.getAllByText('blocks.mailchimpForm.advanced');
+
+    fireEvent.click(within(stepAdvanced.parentElement!).getByRole('checkbox'));
+
+    expect(
+      screen.getByLabelText('blocks.mailchimpForm.skipIfFieldsFilled')
+    ).toBeTruthy();
+    expect(
+      screen.getByLabelText('blocks.mailchimpForm.skipIfInterestsFilled')
+    ).toBeTruthy();
+    expect(
+      screen.getByLabelText('blocks.mailchimpForm.showIfInterestsFilled')
+    ).toBeTruthy();
+  });
+
+  it('should show the step conditions if the step already has conditions', () => {
+    renderWithGroupsInput(
+      {},
+      {
+        steps: [
+          {
+            skipIfFieldsFilled: ['FNAME'],
+            skipIfInterestsFilled: [],
+            showIfInterestsFilled: [],
+            inputs: [groupsInput()],
+          },
+        ],
+      }
+    );
+
+    expect(
+      screen.getByLabelText('blocks.mailchimpForm.skipIfFieldsFilled')
+    ).toBeTruthy();
+  });
+
+  it('should explain what a groups input is for', () => {
+    renderWithGroupsInput();
+
+    expect(
+      screen.getByText('blocks.mailchimpForm.inputTypeGroupsHelp')
+    ).toBeTruthy();
+    expect(
+      screen.getByText('blocks.mailchimpForm.inputLabelGroupsHelp')
+    ).toBeTruthy();
+    expect(
+      screen.queryByLabelText('blocks.mailchimpForm.inputName')
+    ).toBeNull();
+    expect(
+      screen.queryByText('blocks.mailchimpForm.interestOptionsNoList')
+    ).toBeNull();
+  });
+
+  it('should label the input types in a readable way', () => {
+    renderWithGroupsInput();
+
+    expect(
+      screen.getByText('blocks.mailchimpForm.inputTypes.groups')
+    ).toBeTruthy();
+  });
+
+  it('should reorder steps', () => {
+    const latest = renderBlock({
+      steps: [step([textInput('Input A')]), step([textInput('Input B')])],
+    });
+
+    expect(
+      within(stepHeader(0)).queryByLabelText('blocks.mailchimpForm.moveUp')
+    ).toBeNull();
+    expect(
+      within(stepHeader(1)).queryByLabelText('blocks.mailchimpForm.moveDown')
+    ).toBeNull();
+
+    fireEvent.click(moveDown(stepHeader(0)));
+    expect(latest.value.steps.map(({ inputs }) => inputs[0].label)).toEqual([
+      'Input B',
+      'Input A',
+    ]);
+
+    fireEvent.click(moveUp(stepHeader(1)));
+    expect(latest.value.steps.map(({ inputs }) => inputs[0].label)).toEqual([
+      'Input A',
+      'Input B',
+    ]);
+  });
+
+  it('should reorder inputs within a step', () => {
+    const latest = renderBlock({
+      steps: [
+        step([
+          textInput('Input A'),
+          textInput('Input B'),
+          textInput('Input C'),
+        ]),
+      ],
+    });
+    const labels = () => latest.value.steps[0].inputs.map(({ label }) => label);
+
+    expect(
+      within(itemHeader('Input A')).queryByLabelText(
+        'blocks.mailchimpForm.moveUp'
+      )
+    ).toBeNull();
+    expect(
+      within(itemHeader('Input C')).queryByLabelText(
+        'blocks.mailchimpForm.moveDown'
+      )
+    ).toBeNull();
+
+    fireEvent.click(moveUp(itemHeader('Input B')));
+    expect(labels()).toEqual(['Input B', 'Input A', 'Input C']);
+
+    fireEvent.click(moveDown(itemHeader('Input B')));
+    expect(labels()).toEqual(['Input A', 'Input B', 'Input C']);
+  });
+
+  it('should keep the advanced settings open on the moved input', () => {
+    renderBlock({
+      steps: [step([textInput('Input A'), textInput('Input B')])],
+    });
+
+    fireEvent.click(
+      within(itemPanel('Input A'))
+        .getByText('blocks.mailchimpForm.advanced')
+        .parentElement!.querySelector('input')!
+    );
+    expect(
+      within(itemPanel('Input A')).queryByLabelText(
+        'blocks.mailchimpForm.inputDescription'
+      )
+    ).toBeTruthy();
+
+    fireEvent.click(moveDown(itemHeader('Input A')));
+
+    expect(
+      within(itemPanel('Input A')).queryByLabelText(
+        'blocks.mailchimpForm.inputDescription'
+      )
+    ).toBeTruthy();
+    expect(
+      within(itemPanel('Input B')).queryByLabelText(
+        'blocks.mailchimpForm.inputDescription'
+      )
+    ).toBeNull();
+  });
+
+  it('should keep the advanced settings open on inputs of a moved step', () => {
+    renderBlock({
+      steps: [step([textInput('Input A')]), step([textInput('Input B')])],
+    });
+
+    fireEvent.click(
+      within(itemPanel('Input A'))
+        .getByText('blocks.mailchimpForm.advanced')
+        .parentElement!.querySelector('input')!
+    );
+    fireEvent.click(moveDown(stepHeader(0)));
+
+    expect(
+      within(itemPanel('Input A')).queryByLabelText(
+        'blocks.mailchimpForm.inputDescription'
+      )
+    ).toBeTruthy();
+    expect(
+      within(itemPanel('Input B')).queryByLabelText(
+        'blocks.mailchimpForm.inputDescription'
+      )
+    ).toBeNull();
+  });
+
+  it('should keep the step conditions open on a moved step', () => {
+    renderBlock({
+      steps: [step([textInput('Input A')]), step([textInput('Input B')])],
+    });
+
+    const [stepAdvanced] = within(stepPanel(0)).getAllByText(
+      'blocks.mailchimpForm.advanced'
+    );
+
+    fireEvent.click(within(stepAdvanced.parentElement!).getByRole('checkbox'));
+    fireEvent.click(moveDown(stepHeader(0)));
+
+    expect(
+      within(stepPanel(1)).queryByLabelText(
+        'blocks.mailchimpForm.skipIfFieldsFilled'
+      )
+    ).toBeTruthy();
+    expect(
+      within(stepPanel(0)).queryByLabelText(
+        'blocks.mailchimpForm.skipIfFieldsFilled'
+      )
+    ).toBeNull();
+  });
+
+  it('should reorder interest options', () => {
+    const latest = renderWithGroupsInput({
+      options: [
+        { ...emptyOption, name: 'Option A' },
+        { ...emptyOption, name: 'Option B' },
+        { ...emptyOption, name: 'Option C' },
+      ],
+    });
+    const names = () => getOptions(latest.value).map(({ name }) => name);
+
+    expect(
+      within(itemHeader('Option A')).queryByLabelText(
+        'blocks.mailchimpForm.moveUp'
+      )
+    ).toBeNull();
+    expect(
+      within(itemHeader('Option C')).queryByLabelText(
+        'blocks.mailchimpForm.moveDown'
+      )
+    ).toBeNull();
+
+    fireEvent.click(moveUp(itemHeader('Option B')));
+    expect(names()).toEqual(['Option B', 'Option A', 'Option C']);
+
+    fireEvent.click(moveDown(itemHeader('Option B')));
+    expect(names()).toEqual(['Option A', 'Option B', 'Option C']);
+  });
+
+  it('should toggle the form settings with checkboxes', () => {
+    const latest = renderBlock({ autoFocus: false, doubleOptIn: false });
+
+    fireEvent.click(
+      screen.getByRole('checkbox', { name: /blocks.mailchimpForm.autoFocus/ })
+    );
+    fireEvent.click(
+      screen.getByRole('checkbox', {
+        name: /blocks.mailchimpForm.doubleOptIn/,
+      })
+    );
+    fireEvent.click(
+      screen.getByRole('checkbox', { name: 'blocks.mailchimpForm.required' })
+    );
+    fireEvent.click(
+      screen.getByRole('checkbox', {
+        name: 'blocks.mailchimpForm.useSuccessPage',
+      })
+    );
+
+    expect(latest.value).toMatchObject({
+      autoFocus: true,
+      doubleOptIn: true,
+      successPage: { description: '', options: [] },
+    });
+    expect(latest.value.steps[0].inputs[0].required).toBe(
+      !defaultValue.steps[0].inputs[0].required
+    );
+    expect(screen.queryByRole('switch')).toBeNull();
+  });
+
+  it('should pick colours with the colour picker', () => {
+    const latest = renderBlock({
+      successPage: {
+        description: '',
+        options: [
+          {
+            label: 'Read more',
+            background: '#ff8900',
+            url: '',
+            mergeFieldName: null,
+            mergeFieldValue: null,
+          },
+        ],
+      },
+    });
+
+    expect(screen.getAllByLabelText('colorPicker.pickColor')).toHaveLength(3);
+
+    fireEvent.change(
+      screen.getByRole('textbox', { name: 'blocks.mailchimpForm.buttonColor' }),
+      { target: { value: '#123456' } }
+    );
+    fireEvent.change(
+      screen.getByRole('textbox', {
+        name: 'blocks.mailchimpForm.buttonFontColor',
+      }),
+      { target: { value: '#ffffff' } }
+    );
+    fireEvent.change(
+      screen.getByRole('textbox', {
+        name: 'blocks.mailchimpForm.optionBackground',
+      }),
+      { target: { value: '#00ff00' } }
+    );
+
+    expect(latest.value).toMatchObject({
+      buttonColor: '#123456',
+      buttonFontColor: '#ffffff',
+      successPage: { options: [{ background: '#00ff00' }] },
+    });
+  });
+
+  it('should hint to select a list before interests can be picked', () => {
+    renderWithGroupsInput({}, { listId: null });
+
+    expect(
+      screen.getByText('blocks.mailchimpForm.interestOptionsNoList')
+    ).toBeTruthy();
+  });
+
+  describe('validation', () => {
+    const emailInput = defaultValue.steps[0].inputs[0];
+
+    const validate = (latest: { validate: () => AggregatedValidation }) => {
+      let result: AggregatedValidation | undefined;
+
+      act(() => {
+        result = latest.validate();
+      });
+
+      return result!;
+    };
+
+    const stepWith = (...inputs: MailchimpFormFieldConfigValue[]) => ({
+      skipIfFieldsFilled: [],
+      skipIfInterestsFilled: [],
+      showIfInterestsFilled: [],
+      inputs,
+    });
+
+    it('should allow saving a complete form', () => {
+      const latest = renderBlock({ listId: 'list-daily' });
+
+      expect(validate(latest)).toEqual({ ok: true, failures: [] });
+    });
+
+    it('should prevent saving a text input without merge field and label', () => {
+      const latest = renderBlock({
+        listId: 'list-daily',
+        steps: [
+          stepWith(emailInput, {
+            ...emailInput,
+            inputType: 'text',
+            name: '',
+            label: '',
+          }),
+        ],
+      });
+
+      expect(
+        screen.queryByText('blocks.mailchimpForm.inputNameRequired')
+      ).toBeNull();
+
+      expect(validate(latest)).toMatchObject({
+        ok: false,
+        failures: [{ summary: 'blocks.mailchimpForm.validationSummaryMany' }],
+      });
+      expect(
+        screen.getByText('blocks.mailchimpForm.inputNameRequired')
+      ).toBeTruthy();
+      expect(
+        screen.getByText('blocks.mailchimpForm.inputLabelRequired')
+      ).toBeTruthy();
+    });
+
+    it('should not require a label for hidden inputs', () => {
+      const latest = renderBlock({
+        listId: 'list-daily',
+        steps: [
+          stepWith(emailInput, {
+            ...emailInput,
+            inputType: 'hidden',
+            name: 'SOURCE',
+            label: '',
+          }),
+        ],
+      });
+
+      expect(validate(latest).ok).toBe(true);
+    });
+
+    it('should prevent saving without account, list and email input', () => {
+      const latest = renderBlock({
+        syncProviderId: null,
+        listId: null,
+        steps: [
+          stepWith(
+            groupsInput({
+              options: [{ ...emptyOption, id: 'interest-daily' }],
+            })
+          ),
+        ],
+      });
+
+      expect(validate(latest)).toMatchObject({
+        ok: false,
+        failures: [{ summary: 'blocks.mailchimpForm.validationSummaryMany' }],
+      });
+      expect(
+        screen.getByText('blocks.mailchimpForm.syncProviderRequired')
+      ).toBeTruthy();
+      expect(
+        screen.getByText('blocks.mailchimpForm.listRequired')
+      ).toBeTruthy();
+      expect(
+        screen.getByText('blocks.mailchimpForm.emailInputRequired')
+      ).toBeTruthy();
+    });
+
+    it('should prevent saving an interest selection without options', () => {
+      const latest = renderBlock({
+        listId: 'list-daily',
+        steps: [stepWith(emailInput, groupsInput({ options: [] }))],
+      });
+
+      expect(validate(latest)).toMatchObject({
+        ok: false,
+        failures: [{ summary: 'blocks.mailchimpForm.validationSummaryOne' }],
+      });
+      expect(
+        screen.getByText('blocks.mailchimpForm.interestOptionsRequired')
+      ).toBeTruthy();
+    });
+
+    it('should prevent saving an interest option without an interest', () => {
+      const latest = renderBlock({
+        listId: 'list-daily',
+        steps: [
+          stepWith(
+            emailInput,
+            groupsInput({
+              options: [
+                { ...emptyOption, name: 'My newsletter' },
+                {
+                  ...emptyOption,
+                  id: 'interest-daily',
+                  name: 'Daily Briefing',
+                },
+              ],
+            })
+          ),
+        ],
+      });
+
+      expect(
+        screen.queryByText('blocks.mailchimpForm.interestOptionRequired')
+      ).toBeNull();
+
+      expect(validate(latest)).toMatchObject({
+        ok: false,
+        failures: [{ summary: 'blocks.mailchimpForm.validationSummaryOne' }],
+      });
+      expect(
+        screen.getAllByText('blocks.mailchimpForm.interestOptionRequired')
+      ).toHaveLength(1);
+      expect(
+        screen.queryByText('blocks.mailchimpForm.interestOptionsRequired')
+      ).toBeNull();
+    });
+
+    it('should not validate a hidden block', () => {
+      const latest = renderBlock({ disabled: true, listId: null });
+
+      expect(validate(latest).ok).toBe(true);
+      expect(
+        screen.queryByText('blocks.mailchimpForm.listRequired')
+      ).toBeNull();
+    });
+  });
+});

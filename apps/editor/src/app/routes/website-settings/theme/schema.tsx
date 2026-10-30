@@ -1,14 +1,15 @@
+import i18n from 'i18next';
 import { parseToRgb } from 'polished';
 import { RgbaColor } from 'polished/lib/types/color';
 import { CSSProperties } from 'react';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../../utility';
+import { mediaQuery, screenSizes } from './typography-breakpoints';
+
 const hexColor = z
-  .string()
-  .regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, {
-    message:
-      'Invalid color format. Must be a 3, 6 or 8-character hex code (e.g., #RRGGBBBAA #RRGGBB or #RGB).',
-  })
+  .string({ errorMap: lazyMessage('websiteSettings.theme.invalidColor') })
+  .regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/)
   .nullish();
 
 export const paletteSchema = z.object({
@@ -69,10 +70,8 @@ type UnitRanges = Record<CssUnit, { min: number; max: number }>;
 
 function cssLengthValue(ranges: UnitRanges) {
   return z
-    .string()
-    .regex(/^-?(\d+\.?\d*|\.\d+)(em|rem|px)$/, {
-      message: 'Must be a value with unit (e.g., "1em", "16px", "1rem").',
-    })
+    .string({ errorMap: lazyMessage('websiteSettings.theme.invalidLength') })
+    .regex(/^-?(\d+\.?\d*|\.\d+)(em|rem|px)$/)
     .refine(
       val => {
         const match = val.match(/^(-?[\d.]+)(em|rem|px)$/);
@@ -91,50 +90,82 @@ function cssLengthValue(ranges: UnitRanges) {
         const unit = (match?.[2] ?? 'em') as CssUnit;
 
         return {
-          message: `Value must be between ${ranges[unit].min}${unit} and ${ranges[unit].max}${unit}.`,
+          message: i18n.t('websiteSettings.theme.lengthOutOfRange', {
+            min: `${ranges[unit].min}${unit}`,
+            max: `${ranges[unit].max}${unit}`,
+          }),
         };
       }
     )
     .nullish();
 }
 
-export const typographyItem = z.object({
-  fontFamily: z.string().nullish(),
-  fontSize: cssLengthValue({
+const fontSizeValue = () =>
+  cssLengthValue({
     em: { min: 0.5, max: 6.5 },
     rem: { min: 0.5, max: 6.5 },
     px: { min: 8, max: 100 },
-  }),
-  lineHeight: cssLengthValue({
+  });
+
+const lineHeightValue = () =>
+  cssLengthValue({
     em: { min: 1, max: 3 },
     rem: { min: 1, max: 3 },
     px: { min: 12, max: 60 },
-  }),
-  fontWeight: z.number().min(100).max(1000).nullish(),
-  letterSpacing: cssLengthValue({
+  });
+
+const letterSpacingValue = () =>
+  cssLengthValue({
     em: { min: -0.1, max: 0.2 },
     rem: { min: -0.1, max: 1.5 },
     px: { min: -2, max: 5 },
-  }),
+  });
+
+const breakpointOverride = z.object({
+  fontSize: fontSizeValue(),
+  lineHeight: lineHeightValue(),
+  letterSpacing: letterSpacingValue(),
+});
+
+const mediaQueryOverrides = Object.fromEntries(
+  screenSizes.map(screenSize => [
+    mediaQuery(screenSize),
+    breakpointOverride.optional(),
+  ])
+);
+
+const typographyBase = z.object({
+  fontFamily: z.string().nullish(),
+  fontSize: fontSizeValue(),
+  lineHeight: lineHeightValue(),
+  fontWeight: z.number().min(100).max(1000).nullish(),
+  letterSpacing: letterSpacingValue(),
   textTransform: z
     .enum(['none', 'capitalize', 'uppercase', 'lowercase'])
     .nullish(),
   fontStyle: z.enum(['normal', 'italic']).nullish(),
 });
 
+type TypographyItem = z.infer<typeof typographyBase> & {
+  [query: ReturnType<typeof mediaQuery>]:
+    z.infer<typeof breakpointOverride> | undefined;
+};
+
+export const typographyItem = typographyBase.extend(
+  mediaQueryOverrides
+) as unknown as z.ZodObject<
+  (typeof typographyBase)['shape'],
+  'strip',
+  z.ZodTypeAny,
+  TypographyItem,
+  TypographyItem
+>;
+
 export const typographySchema = z.object({
   allVariants: z.object({
     fontFamily: z.string().nullish(),
-    lineHeight: cssLengthValue({
-      em: { min: 0.5, max: 6.5 },
-      rem: { min: 0.5, max: 6.5 },
-      px: { min: 8, max: 100 },
-    }),
-    letterSpacing: cssLengthValue({
-      em: { min: -0.1, max: 0.2 },
-      rem: { min: -0.1, max: 1.5 },
-      px: { min: -2, max: 5 },
-    }),
+    lineHeight: lineHeightValue(),
+    letterSpacing: letterSpacingValue(),
     fontWeight: z.number().min(100).max(1000).nullish(),
   }),
 
@@ -217,8 +248,9 @@ export const normalizeValues = (
       value.startsWith('rgba')
     ) {
       const val = parseToRgb(value) as RgbaColor;
+      const alpha = val.alpha ?? 1;
 
-      return `#${decimalToHex(val.red)}${decimalToHex(val.green)}${decimalToHex(val.blue)}${decimalToHex((val.alpha ?? 1) * 100)}`;
+      return `#${decimalToHex(val.red)}${decimalToHex(val.green)}${decimalToHex(val.blue)}${alpha < 1 ? decimalToHex(Math.round(alpha * 255)) : ''}`;
     }
 
     if (value.startsWith('#')) {

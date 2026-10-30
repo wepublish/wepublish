@@ -256,7 +256,8 @@ export class MemberContext implements MemberContextInterface {
       const startDate = new Date(
         (
           paidUntil &&
-          paidUntil.getTime() > new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
+            paidUntil.getTime() >
+              new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
         ) ?
           paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
         : new Date().getTime()
@@ -641,7 +642,7 @@ export class MemberContext implements MemberContextInterface {
       input?.autoRenew === false
     ) {
       throw new Error(
-        `It is not possible to update the subscription with payment provider "${paymentProvider.getName()}".`
+        `It is not possible to update the subscription with payment provider "${await paymentProvider.getName()}".`
       );
     }
 
@@ -770,6 +771,7 @@ export class MemberContext implements MemberContextInterface {
     discount,
     discountCodeId,
     goodieId,
+    skipMail,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -785,6 +787,8 @@ export class MemberContext implements MemberContextInterface {
     discount?: number;
     discountCodeId?: string;
     goodieId?: string;
+    /** Set when an editor creates the subscription and chose not to mail the reader. */
+    skipMail?: boolean;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -863,17 +867,17 @@ export class MemberContext implements MemberContextInterface {
       throw new InternalServerErrorException();
     }
 
-    // Send subscribe mail
-
-    const subscriptionEvent =
-      needsConfirmation ?
-        SubscriptionEvent.CONFIRM_SUBSCRIPTION
-      : SubscriptionEvent.SUBSCRIBE;
-    await this.sendMailForSubscriptionEvent(
-      subscriptionEvent,
-      subscription,
-      {}
-    );
+    if (!skipMail) {
+      const subscriptionEvent =
+        needsConfirmation ?
+          SubscriptionEvent.CONFIRM_SUBSCRIPTION
+        : SubscriptionEvent.SUBSCRIBE;
+      await this.sendMailForSubscriptionEvent(
+        subscriptionEvent,
+        subscription,
+        {}
+      );
+    }
 
     return {
       subscription,

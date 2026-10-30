@@ -9,6 +9,7 @@ import { PrismaModule } from '@wepublish/nest-modules';
 import { StatsModule } from '@wepublish/stats/api';
 import { AuditLogModule } from '@wepublish/audit-log/api';
 import { MediumStatsResolver } from './medium-stats.resolver';
+import { MediumFeaturesResolver } from './medium-features.resolver';
 import { MediumAuditLogResolver } from './medium-audit-log.resolver';
 import { MediumAuditLogService } from './medium-audit-log.service';
 import { ImpersonationResolver } from './impersonation.resolver';
@@ -61,6 +62,7 @@ export class OneModule {
         OneChannelStateService,
         OneChannelStatusResolver,
         MediumStatsResolver,
+        MediumFeaturesResolver,
         MediumAuditLogResolver,
         MediumAuditLogService,
         ImpersonationResolver,

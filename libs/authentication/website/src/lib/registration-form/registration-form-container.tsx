@@ -31,7 +31,7 @@ export function RegistrationFormContainer<
       onRegister={variables =>
         register({
           variables,
-        })
+        }).catch(() => undefined)
       }
       fields={fields}
       schema={schema}

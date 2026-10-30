@@ -10,8 +10,8 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 /
 ├── apps/               # Deployable applications
 │   ├── api-example/    # NestJS GraphQL API server (main backend)
-│   ├── editor/         # React/Next.js CMS admin panel
-│   ├── media/          # Express media server (image transform + S3)
+│   ├── editor/         # React CMS admin panel (Vite SPA, React Router)
+│   ├── media/          # NestJS media server (image transform + S3)
 │   ├── website-example/# Reference Next.js website frontend
 │   └── <publisher>/    # Publisher-specific websites (bajour, tsri, mannschaft, etc.)
 ├── libs/               # Reusable libraries (~50 modules)
@@ -21,18 +21,27 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 │   └── <domain>/       # Domain modules (article, payment, membership, etc.)
 ├── deployment/         # Deployment scripts
 ├── helm/               # Kubernetes Helm charts
-├── docker/             # Docker build utilities
-└── docs/               # Project documentation
+└── docker/             # Docker build utilities
 ```
 
 ## Applications
 
 | App | Tech | Port | Purpose |
 |-----|------|------|---------|
-| `api-example` | NestJS + Apollo Server | 4000 | GraphQL API backend |
-| `editor` | Next.js + React | 3000 | Admin CMS interface |
-| `media` | Express | 4100 | Image upload, transformation, S3 storage |
+| `api-example` | NestJS (node:http adapter) + Apollo Server | 4000 | GraphQL API backend |
+| `editor` | Vite + React + React Router (client-rendered; Express host) | 3000 | Admin CMS interface |
+| `media` | NestJS (node:http adapter) | 4100 | Image upload, transformation, S3 storage |
 | `website-example` | Next.js | 4200 | Reference website frontend |
+
+**The editor is client-rendered — there is no SSR.** `nx build editor` produces
+two bundles: `browser` (the Vite client bundle) and `server`. The server is a
+small Express host ([apps/editor/server.ts](apps/editor/server.ts), whose app is
+built in [src/server-app.ts](apps/editor/src/server-app.ts)) that serves the
+static browser bundle and, in `src/main.server.ts`, splices a
+`<script type="application/json">` settings blob into `index.html` before
+`</head>` — that is how runtime env (`API_URL`, `SENTRY_DSN`, `APP_NAME`) reaches
+the client. It does not render React. Do not mistake `server.ts` for SSR, and do
+not add `renderToString` there expecting the app to hydrate.
 
 ## Library Organization
 
@@ -59,7 +68,16 @@ libs/<domain>/
 
 ### Content Domain Libraries
 
-`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `banner`, `richtext`, `feed`
+`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `banner`, `richtext`, `feed`, `newsletter`
+
+**Sitemaps:** every website serves `/api/sitemap` (plus `/api/sitemap/[chunk]`:
+`news`, `pages`, `articles-YYYY` per past year, `articles-YYYY-MM` per month
+of the current year in `index` mode) through
+`createSitemapHandlers` from `@wepublish/feed/website`. Per-media settings
+(`mode: 'single' | 'index'`, `pageUrls`, `homepageSlug`, `filterArticle`, url
+hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
+documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
+`ArticleList`, and leave peered articles out. `generateSitemap` is deprecated.
 
 ### Business Domain Libraries
 
@@ -67,11 +85,11 @@ libs/<domain>/
 
 ### Infrastructure Libraries
 
-`kv-ttl-cache`, `tracking-pixel`, `media-transform-guard`, `google-analytics`, `health`, `system-info`, `stats`, `session`, `settings`
+`dragonfly`, `kv-ttl-cache`, `website-revalidation`, `public-content-cache`, `tracking-pixel`, `media-transform-guard`, `google-analytics`, `health`, `system-info`, `stats`, `session`, `settings`
 
 ## Database
 
-- **PostgreSQL 17** via **Prisma 5**
+- **PostgreSQL 18** via **Prisma 7**
 - Schema: `libs/api/prisma/schema.prisma`
 - Uses Prisma views for article revision states: `ArticleRevisionPublished`, `ArticleRevisionPending`, `ArticleRevisionDraft`
 - Full-text search via Prisma preview feature
@@ -83,7 +101,7 @@ libs/<domain>/
 - Each domain module defines its own models, resolvers, and services
 - **Dataloader pattern** used extensively to prevent N+1 queries (e.g., `ArticleDataloaderService`)
 - Generated schema: `schema-v2.graphql`
-- Frontend hooks generated via **GraphQL Code Generator** (`codegen.yml`)
+- Frontend typed documents generated via **GraphQL Code Generator** (`codegen.yml`)
 
 ## Data Flow
 
@@ -102,6 +120,9 @@ Frontend (Apollo Client)
 - Decorators: `@Public()` (no auth), `@CurrentUser()` (inject session), `@Permissions(...)` (RBAC check)
 - Permission constants: `CanCreateArticle`, `CanDeleteArticle`, `CanPublishArticle`, `CanGetArticle`, etc.
 - `@PreviewMode()` for draft content access
+- API keys (`libs/api-token`, editor «API Keys»): `Authorization: Bearer wep_…`, stored hashed, scopes are permission IDs, they expire (≤ 3 years) and the API announces the expiry in the `wepublish-api-key-expiration` response header. Never send them with the peering user agent: that path only reads peering tokens and refuses the key.
+- External apps (`libs/external-apps`) that read the API bring their own API key with the minimal scopes, kept in the app. `ExternalApps.apiTokenId` records which key, so the Apps dashboard and the app's edit page warn 30 days before it expires and once it is expired or revoked. The key is linkable and its metadata visible only to editors who see it in the API keys list.
+- Per-medium feature toggles (`libs/features`, state from We.Publish One): `@Feature('key')` in the API, `useFeature` / `FeatureControl` in the editor — see [conventions.md](conventions.md#feature-toggles-per-medium)
 
 ## Import Aliases
 

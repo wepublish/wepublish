@@ -25,7 +25,37 @@ const NavigationBarWrapper = styled.div`
   display: flex;
   overflow: hidden;
   width: 100%;
-  background-color: white;
+
+  @media (max-width: 899px) {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    overflow: visible;
+    border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
+
+    > * {
+      flex: 0 1 auto;
+      margin: 0;
+    }
+
+    > :nth-child(1) {
+      order: 1;
+    }
+
+    > :nth-child(3) {
+      order: 2;
+      margin-left: auto;
+    }
+
+    > :nth-child(2) {
+      order: 3;
+      flex: 1 1 100%;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
 `;
 
 export interface NavigationBarProps {

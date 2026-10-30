@@ -19,6 +19,7 @@ export class CommentDataloaderService extends DataLoaderService<Comment> {
             in: ids as string[],
           },
         },
+        include: { revisions: { orderBy: { createdAt: 'asc' } } },
       }),
       'id'
     );

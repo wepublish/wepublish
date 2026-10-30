@@ -2,8 +2,9 @@ import {
   CheckIntentProps,
   CreatePaymentIntentProps,
   IntentState,
+  PaymentProviderProps,
 } from './payment-provider';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 import {
   calculateAndFormatAmount,
   mapMollieEventToPaymentStatus,
@@ -13,8 +14,12 @@ import bodyParser from 'body-parser';
 import { PaymentState, SubscriptionDeactivationReason } from '@prisma/client';
 import { PaymentMethod } from '@mollie/api-client';
 import { PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { mapMolliePaymentMethods } from '../payment.methode.mapper';
+import type { Mock } from 'vitest';
 const mollieApiPaymentGet = {
   status: 'paid',
   price: 22,
@@ -28,12 +33,12 @@ const mollieApiCustomerCreate = {
 };
 const mollieApiPaymentCreate = {
   id: 1,
-  getCheckoutUrl: jest.fn().mockReturnValue('https://mooked.mollie.com/url'),
+  getCheckoutUrl: vi.fn().mockReturnValue('https://mooked.mollie.com/url'),
   status: 'pending',
 };
 const mollieApiCustomerPaymentCreate = {
   id: 1,
-  getCheckoutUrl: jest.fn().mockReturnValue('https://mooked.mollie.com/url'),
+  getCheckoutUrl: vi.fn().mockReturnValue('https://mooked.mollie.com/url'),
   status: 'pending',
 };
 
@@ -51,6 +56,8 @@ const defaultCreatePaymentIntentProps: CreatePaymentIntentProps = {
     canceledAt: null,
     scheduledDeactivationAt: new Date(),
     manuallySetAsPaidByUserId: null,
+    renewalSuccessMailSentAt: null,
+    suppressRenewalSuccessMail: false,
     currency: 'EUR',
     subscriptionID: '1',
   },
@@ -60,25 +67,25 @@ const defaultCreatePaymentIntentProps: CreatePaymentIntentProps = {
   failureURL: 'http://failure-url.wepublish.ch',
 };
 
-jest.mock('@mollie/api-client', () => {
-  const originalModule = jest.requireActual('@mollie/api-client');
+vi.mock('@mollie/api-client', async () => {
+  const originalModule = await vi.importActual('@mollie/api-client');
   return {
     __esModule: true,
     ...originalModule,
-    default: jest.fn(() => ({
+    default: vi.fn(() => ({
       // Add any mock functions or properties needed here
       payments: {
-        create: jest.fn().mockResolvedValue({
+        create: vi.fn().mockResolvedValue({
           ...mollieApiPaymentCreate,
           getCheckoutUrl: mollieApiPaymentCreate.getCheckoutUrl,
         }),
-        get: jest.fn().mockResolvedValue(mollieApiPaymentGet),
+        get: vi.fn().mockResolvedValue(mollieApiPaymentGet),
       },
       customers: {
-        create: jest.fn().mockResolvedValue(mollieApiCustomerCreate),
+        create: vi.fn().mockResolvedValue(mollieApiCustomerCreate),
       },
       customerPayments: {
-        create: jest.fn().mockResolvedValue({
+        create: vi.fn().mockResolvedValue({
           ...mollieApiCustomerPaymentCreate,
           getCheckoutUrl: mollieApiCustomerPaymentCreate.getCheckoutUrl,
         }),
@@ -87,46 +94,58 @@ jest.mock('@mollie/api-client', () => {
   };
 });
 
+const harnesses: NamespacedCacheTesting[] = [];
+
+const cacheWith = async (
+  config: object
+): Promise<Pick<PaymentProviderProps, 'kv' | 'resets'>> => {
+  const testing = await createNamespacedCacheTesting();
+  harnesses.push(testing);
+  await testing.cache.setNs('settings:paymentprovider', 'mollie', config, 60);
+
+  return { kv: testing.cache, resets: testing.resets };
+};
+
+afterEach(async () => {
+  await Promise.all(harnesses.splice(0).map(testing => testing.close()));
+});
+
 describe('MolliePaymentProvider', () => {
   let mollieOffSession: MolliePaymentProvider;
   let mollieOnSession: MolliePaymentProvider;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const mockPrisma = {} as PrismaClient;
-    const mockKvOffSession = {
-      getOrLoadNs: jest.fn().mockResolvedValue({
-        name: 'Mollie',
-        offSessionPayments: true,
-        webhookEndpointSecret: 'secret',
-        mollie_apiBaseUrl: 'https://api.wepublish.works',
-        apiKey: 'secret',
-        mollie_methods: ['PAYPAL'],
-      }),
-    } as unknown as KvTtlCacheService;
+    const offSessionCache = await cacheWith({
+      name: 'Mollie',
+      offSessionPayments: true,
+      webhookEndpointSecret: 'secret',
+      mollie_apiBaseUrl: 'https://api.wepublish.works',
+      apiKey: 'secret',
+      mollie_methods: ['PAYPAL'],
+    });
 
-    const mockKvOnSession = {
-      getOrLoadNs: jest.fn().mockResolvedValue({
-        name: 'Mollie',
-        offSessionPayments: false,
-        webhookEndpointSecret: 'secret',
-        mollie_apiBaseUrl: 'https://api.wepublish.works',
-        apiKey: 'secret',
-        mollie_methods: ['PAYPAL'],
-      }),
-    } as unknown as KvTtlCacheService;
+    const onSessionCache = await cacheWith({
+      name: 'Mollie',
+      offSessionPayments: false,
+      webhookEndpointSecret: 'secret',
+      mollie_apiBaseUrl: 'https://api.wepublish.works',
+      apiKey: 'secret',
+      mollie_methods: ['PAYPAL'],
+    });
 
     mollieOffSession = new MolliePaymentProvider({
       id: 'mollie',
       incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
       prisma: mockPrisma,
-      kv: mockKvOffSession,
+      ...offSessionCache,
     });
 
     mollieOnSession = new MolliePaymentProvider({
       id: 'mollie',
       incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
       prisma: mockPrisma,
-      kv: mockKvOnSession,
+      ...onSessionCache,
     });
   });
 
@@ -135,7 +154,7 @@ describe('MolliePaymentProvider', () => {
       const response = await mollieOffSession.webhookForPaymentIntent({
         req: {
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(403);
     });
@@ -145,7 +164,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([]);
@@ -158,7 +177,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: { id: transaction.id }, // Pass the transaction id as form data
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([
@@ -182,7 +201,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: { id: transaction.id }, // Pass the transaction id as form data
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([
@@ -348,7 +367,7 @@ describe('MolliePaymentProvider', () => {
 
       const mockClient = {
         customerPayments: {
-          create: jest.fn().mockResolvedValue({
+          create: vi.fn().mockResolvedValue({
             customerId: '22',
             id: 'test_payment_id',
             status: 'paid',
@@ -357,9 +376,9 @@ describe('MolliePaymentProvider', () => {
         },
       };
 
-      jest
-        .spyOn(mollieOffSession, 'getMollieGateway')
-        .mockResolvedValue(mockClient as any);
+      vi.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue(
+        mockClient as any
+      );
       expect(
         await mollieOffSession.createOffsiteTransactionIntent(props)
       ).toEqual({
@@ -375,7 +394,7 @@ describe('MolliePaymentProvider', () => {
       const x = 'tt';
       (
         (await mollieOffSession.getMollieGateway()).customerPayments
-          .create as jest.Mock
+          .create as Mock
       ).mockImplementationOnce(() =>
         Promise.resolve({
           customerId: '22',
@@ -400,7 +419,7 @@ describe('MolliePaymentProvider', () => {
 
   describe('checkIntentStatus', () => {
     afterEach(() => {
-      jest.restoreAllMocks();
+      vi.restoreAllMocks();
     });
 
     it('offsession paid payment', async () => {
@@ -408,7 +427,7 @@ describe('MolliePaymentProvider', () => {
 
       const mockClient = {
         payments: {
-          get: jest.fn().mockResolvedValue({
+          get: vi.fn().mockResolvedValue({
             id: 'test_payment_id',
             status: 'paid',
             customerId: 'customer_id',
@@ -417,9 +436,9 @@ describe('MolliePaymentProvider', () => {
         },
       };
 
-      jest
-        .spyOn(mollieOffSession, 'getMollieGateway')
-        .mockResolvedValue(mockClient as any);
+      vi.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue(
+        mockClient as any
+      );
 
       await expect(mollieOffSession.checkIntentStatus(intent)).resolves.toEqual(
         {
@@ -437,7 +456,7 @@ describe('MolliePaymentProvider', () => {
 
       const mockClient = {
         payments: {
-          get: jest.fn().mockResolvedValue({
+          get: vi.fn().mockResolvedValue({
             id: 'test_payment_id',
             status: 'failed',
             customerId: 'customer_id',
@@ -446,9 +465,9 @@ describe('MolliePaymentProvider', () => {
         },
       };
 
-      jest
-        .spyOn(mollieOffSession, 'getMollieGateway')
-        .mockResolvedValue(mockClient as any);
+      vi.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue(
+        mockClient as any
+      );
 
       await expect(mollieOffSession.checkIntentStatus(intent)).resolves.toEqual(
         {
@@ -466,7 +485,7 @@ describe('MolliePaymentProvider', () => {
 
       const mockClient = {
         payments: {
-          get: jest.fn().mockResolvedValue({
+          get: vi.fn().mockResolvedValue({
             id: 'test_payment_id',
             status: 'paid',
             metadata: { paymentID: '22' },
@@ -474,9 +493,9 @@ describe('MolliePaymentProvider', () => {
         },
       };
 
-      jest
-        .spyOn(mollieOnSession, 'getMollieGateway')
-        .mockResolvedValue(mockClient as any);
+      vi.spyOn(mollieOnSession, 'getMollieGateway').mockResolvedValue(
+        mockClient as any
+      );
 
       await expect(mollieOnSession.checkIntentStatus(intent)).resolves.toEqual({
         customerID: undefined,
@@ -492,7 +511,7 @@ describe('MolliePaymentProvider', () => {
 
       const mockClient = {
         payments: {
-          get: jest.fn().mockResolvedValue({
+          get: vi.fn().mockResolvedValue({
             id: 'test_payment_id',
             status: 'paid',
             metadata: { email: 'admin@wepublish.ch' }, // no paymentID
@@ -500,9 +519,9 @@ describe('MolliePaymentProvider', () => {
         },
       };
 
-      jest
-        .spyOn(mollieOffSession, 'getMollieGateway')
-        .mockResolvedValue(mockClient as any);
+      vi.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue(
+        mockClient as any
+      );
 
       await expect(mollieOffSession.checkIntentStatus(intent)).rejects.toThrow(
         'empty paymentID'
@@ -515,7 +534,7 @@ describe('MolliePaymentProvider', () => {
       const periodEnd = new Date('2027-01-01');
       return {
         payment: {
-          findUnique: jest.fn().mockResolvedValue({
+          findUnique: vi.fn().mockResolvedValue({
             id: 'pay-1',
             invoiceID: 'inv-1',
             intentData: null,
@@ -523,18 +542,18 @@ describe('MolliePaymentProvider', () => {
             intentID: 'intent-1',
             paymentMethodID: 'pm-1',
           }),
-          update: jest.fn().mockResolvedValue({ id: 'pay-1' }),
+          update: vi.fn().mockResolvedValue({ id: 'pay-1' }),
         },
         invoice: {
-          findUnique: jest.fn().mockResolvedValue({
+          findUnique: vi.fn().mockResolvedValue({
             id: 'inv-1',
             subscriptionID: 'sub-1',
             canceledAt: new Date('2026-06-01'),
           }),
-          update: jest.fn().mockResolvedValue({}),
+          update: vi.fn().mockResolvedValue({}),
         },
         subscription: {
-          findUnique: jest.fn().mockResolvedValue({
+          findUnique: vi.fn().mockResolvedValue({
             id: 'sub-1',
             periods: [{ invoiceID: 'inv-1', endsAt: periodEnd }],
             deactivation:
@@ -542,10 +561,10 @@ describe('MolliePaymentProvider', () => {
                 { reason: deactivationReason }
               ),
           }),
-          update: jest.fn().mockResolvedValue({}),
+          update: vi.fn().mockResolvedValue({}),
         },
         subscriptionDeactivation: {
-          deleteMany: jest.fn().mockResolvedValue({ count: 1 }),
+          deleteMany: vi.fn().mockResolvedValue({ count: 1 }),
         },
       };
     };
@@ -558,11 +577,7 @@ describe('MolliePaymentProvider', () => {
         id: 'mollie',
         incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
         prisma: prismaMock as unknown as PrismaClient,
-        kv: {
-          getOrLoadNs: jest
-            .fn()
-            .mockResolvedValue({ offSessionPayments: true }),
-        } as unknown as KvTtlCacheService,
+        ...(await cacheWith({ offSessionPayments: true })),
       });
 
       await provider.updatePaymentWithIntentState({
@@ -592,11 +607,7 @@ describe('MolliePaymentProvider', () => {
         id: 'mollie',
         incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
         prisma: prismaMock as unknown as PrismaClient,
-        kv: {
-          getOrLoadNs: jest
-            .fn()
-            .mockResolvedValue({ offSessionPayments: true }),
-        } as unknown as KvTtlCacheService,
+        ...(await cacheWith({ offSessionPayments: true })),
       });
 
       await provider.updatePaymentWithIntentState({
@@ -623,15 +634,15 @@ describe('MolliePaymentProvider', () => {
     };
 
     it('reports a chargeback from the webhook when the payment was charged back', async () => {
-      jest.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue({
-        payments: { get: jest.fn().mockResolvedValue(chargedBackPayment) },
+      vi.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue({
+        payments: { get: vi.fn().mockResolvedValue(chargedBackPayment) },
       } as any);
 
       const response = await mollieOffSession.webhookForPaymentIntent({
         req: {
           query: { key: 'secret' },
           body: { id: 'tr_1' },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
 
       expect(response.paymentStates?.[0]?.state).toEqual(
@@ -640,8 +651,8 @@ describe('MolliePaymentProvider', () => {
     });
 
     it('reports a chargeback from checkIntentStatus when the payment was charged back', async () => {
-      jest.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue({
-        payments: { get: jest.fn().mockResolvedValue(chargedBackPayment) },
+      vi.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue({
+        payments: { get: vi.fn().mockResolvedValue(chargedBackPayment) },
       } as any);
 
       const result = await mollieOffSession.checkIntentStatus({
@@ -659,7 +670,7 @@ describe('MolliePaymentProvider', () => {
       const periodEnd = new Date('2027-01-01');
       return {
         payment: {
-          findUnique: jest.fn().mockResolvedValue({
+          findUnique: vi.fn().mockResolvedValue({
             id: 'pay-1',
             invoiceID: 'inv-1',
             intentData: null,
@@ -667,44 +678,46 @@ describe('MolliePaymentProvider', () => {
             intentID: 'intent-1',
             paymentMethodID: 'pm-1',
           }),
-          update: jest.fn().mockResolvedValue({ id: 'pay-1' }),
+          update: vi.fn().mockResolvedValue({ id: 'pay-1' }),
         },
         invoice: {
-          findUnique: jest.fn().mockResolvedValue({
+          findUnique: vi.fn().mockResolvedValue({
             id: 'inv-1',
             subscriptionID: 'sub-1',
             paidAt: new Date('2026-01-02'),
             canceledAt: null,
           }),
-          update: jest.fn().mockResolvedValue({}),
+          update: vi.fn().mockResolvedValue({}),
         },
         subscription: {
-          findUnique: jest.fn().mockResolvedValue({
+          findUnique: vi.fn().mockResolvedValue({
             id: 'sub-1',
             periods: [
               { invoiceID: 'inv-1', startsAt: periodStart, endsAt: periodEnd },
             ],
             deactivation: null,
           }),
-          update: jest.fn().mockResolvedValue({}),
+          update: vi.fn().mockResolvedValue({}),
         },
         subscriptionDeactivation: {
-          deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
-          upsert: jest.fn().mockResolvedValue({}),
+          deleteMany: vi.fn().mockResolvedValue({ count: 0 }),
+          upsert: vi.fn().mockResolvedValue({}),
         },
       };
     };
+
+    let cache: Pick<PaymentProviderProps, 'kv' | 'resets'>;
+
+    beforeEach(async () => {
+      cache = await cacheWith({ offSessionPayments: true });
+    });
 
     const buildProvider = (prismaMock: unknown) =>
       new MolliePaymentProvider({
         id: 'mollie',
         incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
         prisma: prismaMock as PrismaClient,
-        kv: {
-          getOrLoadNs: jest
-            .fn()
-            .mockResolvedValue({ offSessionPayments: true }),
-        } as unknown as KvTtlCacheService,
+        ...cache,
       });
 
     it('reverses the invoice and rolls the paid period back on a chargeback', async () => {

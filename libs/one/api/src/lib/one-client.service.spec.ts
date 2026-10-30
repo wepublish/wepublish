@@ -1,18 +1,19 @@
 import { JwtService } from '@wepublish/session/api';
 import { OneClientService } from './one-client.service';
+import type { Mock } from 'vitest';
 
 describe('OneClientService', () => {
-  let jwtService: { generateScopedJWT: jest.Mock };
-  let fetchMock: jest.Mock;
+  let jwtService: { generateScopedJWT: Mock };
+  let fetchMock: Mock;
   let service: OneClientService;
 
   beforeEach(() => {
     jwtService = {
-      generateScopedJWT: jest.fn().mockResolvedValue('signed.jwt'),
+      generateScopedJWT: vi.fn().mockResolvedValue('signed.jwt'),
     };
-    fetchMock = jest
+    fetchMock = vi
       .fn()
-      .mockResolvedValue({ ok: true, status: 200, statusText: 'OK' });
+      .mockResolvedValue({ ok: true, status: 204, statusText: 'No Content' });
     global.fetch = fetchMock as unknown as typeof fetch;
     service = new OneClientService(
       jwtService as unknown as JwtService,
@@ -61,5 +62,41 @@ describe('OneClientService', () => {
     await expect(
       service.post('/channel/heartbeat', 'write:medium-heartbeat', {})
     ).rejects.toThrow('403 Forbidden');
+  });
+
+  it('returns the json body One answers with', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      headers: new Headers({
+        'content-type': 'application/json; charset=utf-8',
+      }),
+      json: vi.fn().mockResolvedValue({ features: { newsletter: true } }),
+    });
+
+    await expect(
+      service.post('/channel/heartbeat', 'write:medium-heartbeat', {})
+    ).resolves.toEqual({ features: { newsletter: true } });
+  });
+
+  it('returns nothing when One answers without a body', async () => {
+    await expect(
+      service.post('/channel/heartbeat', 'write:medium-heartbeat', {})
+    ).resolves.toBeUndefined();
+  });
+
+  it('returns nothing when One answers with something other than json', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      headers: new Headers({ 'content-type': 'text/html' }),
+      json: vi.fn().mockRejectedValue(new Error('not json')),
+    });
+
+    await expect(
+      service.post('/channel/heartbeat', 'write:medium-heartbeat', {})
+    ).resolves.toBeUndefined();
   });
 });

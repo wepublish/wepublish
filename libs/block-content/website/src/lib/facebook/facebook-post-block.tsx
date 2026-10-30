@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullFacebookPostBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderFacebookPostBlockProps } from '@wepublish/website/builder';
 
 export const isFacebookPostBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullFacebookPostBlockFragment =>
   block.__typename === 'FacebookPostBlock';
 

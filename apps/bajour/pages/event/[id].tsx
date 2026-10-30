@@ -1,4 +1,6 @@
+import { CombinedGraphQLErrors } from '@apollo/client';
 import { EventContainer } from '@wepublish/event/website';
+import { BajourContainer as Container } from '@wepublish/tenant/bajour';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -9,8 +11,6 @@ import {
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-
-import { Container } from '../../src/components/layout/container';
 
 export default function EventById() {
   const {
@@ -30,7 +30,7 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { id } = params || {};
+  const id = params!.id!.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const event = await Promise.all([
@@ -48,9 +48,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }),
   ]);
 
-  const is404 = event[0].errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
+  const is404 =
+    CombinedGraphQLErrors.is(event[0].error) &&
+    event[0].error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {

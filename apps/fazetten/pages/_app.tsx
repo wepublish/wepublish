@@ -1,6 +1,5 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -12,49 +11,41 @@ import {
   NavbarContainer,
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
+import { fazettenTenant, MainSpacer } from '@wepublish/tenant/fazetten';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
-  NextWepublishLink,
-  RoutedAdminBar,
-  withBuilderRouter,
+  WebsiteShellProps,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
-import { WebsiteProvider } from '@wepublish/website';
+import {
+  RoutedAdminBar,
+  withBuilderRouter,
+} from '@wepublish/utils/website/next';
+import { TenantProviders } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithApiClient,
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
+  createWithApiClient,
 } from '@wepublish/website/api';
-import {
-  WebsiteBuilderProps,
-  WebsiteBuilderProvider,
-} from '@wepublish/website/builder';
-import { format, setDefaultOptions } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { setDefaultOptions } from 'date-fns';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
-import { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import deOverriden from '../locales/deOverriden.json';
-import { FazettenArticle } from '../src/components/fazetten-article';
-import { FazettenTitleBlock } from '../src/components/fazetten-title-block';
-import { FazettenBaseTeaserSlots } from '../src/components/teaser-layouts/fazetten-base-teaser-slots';
-import { FazettenAlternatingTeaser } from '../src/components/teasers/fazetten-alternating-teaser';
-import { FazettenBaseTeaser } from '../src/components/teasers/fazetten-base-teaser';
-import theme, { globalStyles } from '../src/theme';
-
 setDefaultOptions({
-  locale: de,
+  locale: fazettenTenant.dateLocale,
 });
 
-initWePublishTranslator(deOverriden);
+initWePublishTranslator(
+  fazettenTenant.translations.overrides?.[fazettenTenant.translations.lng]
+);
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -65,50 +56,22 @@ const Spacer = styled('div')`
   min-height: 100vh;
 `;
 
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(5)};
-
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
-    }
-  `}
-`;
-
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
 `;
 
-const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-  : format(date, 'dd. MMMM yyyy');
-
-export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
 };
 
-const siteTitle = 'Fazetten';
-const providerProps: PartialDeep<WebsiteBuilderProps> = {
-  Head,
-  Script,
-  elements: { Link: NextWepublishLink },
-  blocks: {
-    Title: FazettenTitleBlock,
-    TeaserSlots: FazettenBaseTeaserSlots,
-    BaseTeaser: FazettenBaseTeaser,
-  },
-  blockStyles: { AlternatingTeaser: FazettenAlternatingTeaser },
-  date: { format: dateFormatter },
-  Article: FazettenArticle,
-  meta: { siteTitle },
-};
+const siteTitle = fazettenTenant.builder.meta?.siteTitle;
 
 function CustomApp({
   Component,
@@ -125,6 +88,8 @@ function CustomApp({
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
+  const shell = getWebsiteShell(pageProps);
+
   return (
     <PlausibleProvider
       enabled={
@@ -134,75 +99,72 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <ThemeProvider theme={theme}>
-          <WebsiteProvider>
-            <WebsiteBuilderProvider {...providerProps}>
-              <CssBaseline />
-              {globalStyles}
+        <TenantProviders
+          config={fazettenTenant}
+          extra={{ Head, Script }}
+        >
+          <Head>
+            <title key="title">{siteTitle}</title>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0"
+            />
+          </Head>
 
-              <Head>
-                <title key="title">{siteTitle}</title>
-                <meta
-                  name="viewport"
-                  content="width=device-width, initial-scale=1.0"
-                />
-              </Head>
+          <Spacer>
+            {shell.showNavigation && (
+              <NavBar
+                categorySlugs={[['categories', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+                iconSlug="icons"
+              />
+            )}
 
-              <Spacer>
-                <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                />
+            <main>
+              <MainSpacer maxWidth="lg">
+                <Component {...pageProps} />
+              </MainSpacer>
+            </main>
 
-                <main>
-                  <MainSpacer maxWidth="lg">
-                    <Component {...pageProps} />
-                  </MainSpacer>
-                </main>
+            {shell.showFooter && (
+              <FooterContainer
+                slug="footer"
+                categorySlugs={[['categories', 'about-us']]}
+                iconSlug="icons"
+              />
+            )}
+          </Spacer>
 
-                <FooterContainer
-                  slug="footer"
-                  categorySlugs={[['categories', 'about-us']]}
-                  iconSlug="icons"
-                />
-              </Spacer>
+          <RoutedAdminBar />
 
-              <RoutedAdminBar />
+          {settings?.analytics.googleAnalytics.enabled &&
+            settings?.analytics.googleAnalytics.key && (
+              <GoogleAnalytics gaId={settings.analytics.googleAnalytics.key} />
+            )}
 
-              {settings?.analytics.googleAnalytics.enabled &&
-                settings?.analytics.googleAnalytics.key && (
-                  <GoogleAnalytics
-                    gaId={settings.analytics.googleAnalytics.key}
-                  />
-                )}
+          {settings?.analytics.googleTagManager.enabled &&
+            settings?.analytics.googleTagManager.key && (
+              <GoogleTagManager
+                gtmId={settings.analytics.googleTagManager.key}
+              />
+            )}
 
-              {settings?.analytics.googleTagManager.enabled &&
-                settings?.analytics.googleTagManager.key && (
-                  <GoogleTagManager
-                    gtmId={settings.analytics.googleTagManager.key}
-                  />
-                )}
+          {settings?.analytics.piwik.enabled &&
+            settings?.analytics.piwik.key && (
+              <Script id="piwik-pro">
+                {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
+              </Script>
+            )}
 
-              {settings?.analytics.piwik.enabled &&
-                settings?.analytics.piwik.key && (
-                  <Script id="piwik-pro">
-                    {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
-                  </Script>
-                )}
-
-              {settings?.ads.sparkLoop.enabled &&
-                settings?.ads.sparkLoop.key && (
-                  <Script
-                    src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
-                    strategy="lazyOnload"
-                    data-sparkloop
-                  />
-                )}
-            </WebsiteBuilderProvider>
-          </WebsiteProvider>
-        </ThemeProvider>
+          {settings?.ads.sparkLoop.enabled && settings?.ads.sparkLoop.key && (
+            <Script
+              src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+              strategy="lazyOnload"
+              data-sparkloop
+            />
+          )}
+        </TenantProviders>
       </AppCacheProvider>
     </PlausibleProvider>
   );

@@ -5,6 +5,7 @@ import {
   RegistrationFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
+import { EenewsPageShell } from '@wepublish/tenant/eenews';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -16,8 +17,6 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-
-import { EenewsPageShell } from '../src/components/eenews-page-shell';
 
 const SignupWrapper = styled('div')`
   display: grid;
@@ -47,7 +46,9 @@ export default function SignUp() {
 
         <Typography
           variant="body1"
-          paragraph
+          sx={{
+            marginBottom: '16px',
+          }}
         >
           (Falls du schon einen Account hast,{' '}
           <Link href={'/login'}>klicke hier.</Link>)

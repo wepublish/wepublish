@@ -1,6 +1,7 @@
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
+  BlockTimingInput,
   BlockWithAlignment,
   CommentBlockCommentFragment,
   EditorBlockType,
@@ -8,13 +9,15 @@ import {
   FullCrowdfundingFragment,
   FullEventFragment,
   FullImageFragment,
-  FullPoll,
+  FullPollFragment,
+  FullTagFragment,
   FullTeaserFragment,
+  MailchimpFormOptionsLayout,
+  NestedBlockTemplateBlockFragment,
   PageWithoutBlocksFragment,
   SubscribeBlock,
   SubscribeBlockField,
   SubscribePeriodicityDisplay,
-  Tag,
   TeaserInput,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
@@ -28,9 +31,41 @@ import { BlockListValue } from '../atoms/blockList';
 import { ListValue } from '../atoms/listInput';
 import { TeaserMetadataProperty } from '../panel/teaserEditPanel';
 
+/**
+ * The FullTeaser fragment does not select `__typename`, so the generated
+ * union lacks a discriminant even though Apollo Client always adds the
+ * field to the response data at runtime. The per-variant fragment types are
+ * not emitted anymore either, so they get narrowed out of the combined union
+ * by the field that is unique to each variant.
+ */
+type FullTeaser_ArticleTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { article: unknown }
+>;
+type FullTeaser_CustomTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { contentUrl: unknown }
+>;
+type FullTeaser_EventTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { event: unknown }
+>;
+type FullTeaser_PageTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { page: unknown }
+>;
+
+type FullTeaserFragmentWithTypename =
+  | (FullTeaser_ArticleTeaser_Fragment & { __typename: 'ArticleTeaser' })
+  | (FullTeaser_CustomTeaser_Fragment & { __typename: 'CustomTeaser' })
+  | (FullTeaser_EventTeaser_Fragment & { __typename: 'EventTeaser' })
+  | (FullTeaser_PageTeaser_Fragment & { __typename: 'PageTeaser' });
+
 export interface BaseBlockValue {
   blockStyle?: string | null;
   disabled?: boolean | null;
+  timing?: BlockTimingInput | null;
+  shouldDisplay?: boolean | null;
 }
 
 export interface RichTextBlockValue extends BaseBlockValue {
@@ -88,7 +123,22 @@ export interface MailchimpFormInterestOptionValue {
   id: string;
   name: string;
   description?: string | null;
+  image?: FullImageFragment | null;
 }
+
+/**
+ * The name an interest option gets when another interest is picked: an empty
+ * name or the label of the previous interest follows the pick, a name the
+ * editor typed stays.
+ */
+export const nameForPickedInterest = (
+  option: Pick<MailchimpFormInterestOptionValue, 'id' | 'name'>,
+  pickedId: string | null,
+  labelOf: (id: string | null) => string | undefined
+) =>
+  !option.name || option.name === labelOf(option.id) ?
+    (labelOf(pickedId) ?? '')
+  : option.name;
 
 export interface MailchimpFormFieldConfigValue {
   inputType?: string | null;
@@ -99,6 +149,7 @@ export interface MailchimpFormFieldConfigValue {
   urlParam?: string | null;
   defaultValue?: string | null;
   value?: string | null;
+  optionsLayout: MailchimpFormOptionsLayout;
   options: MailchimpFormInterestOptionValue[];
 }
 
@@ -137,7 +188,7 @@ export interface MailchimpFormBlockValue extends BaseBlockValue {
 }
 
 export interface PollBlockValue extends BaseBlockValue {
-  poll: Pick<FullPoll, 'id' | 'question'> | null | undefined;
+  poll: Pick<FullPollFragment, 'id' | 'question'> | null | undefined;
 }
 
 export interface CrowdfundingBlockValue extends BaseBlockValue {
@@ -184,6 +235,10 @@ export type FlexBlockWithAlignment = {
 
 export interface FlexBlockValue extends BaseBlockValue {
   blocks: Array<FlexBlockWithAlignment>;
+}
+
+export interface BlockTemplateBlockValue extends BaseBlockValue {
+  template?: NestedBlockTemplateBlockFragment['template'];
 }
 
 export enum EmbedType {
@@ -290,6 +345,7 @@ export enum MetaDataType {
   Properties = 'properties',
   Comments = 'Comments',
   Tracking = 'Tracking',
+  Seo = 'seo',
 }
 
 export interface ArticleTeaserLink {
@@ -315,10 +371,7 @@ export interface CustomTeaserLink extends BaseTeaser {
 }
 
 export type TeaserLink =
-  | ArticleTeaserLink
-  | PageTeaserLink
-  | CustomTeaserLink
-  | EventTeaserLink;
+  ArticleTeaserLink | PageTeaserLink | CustomTeaserLink | EventTeaserLink;
 
 export interface BaseTeaser {
   image?: FullImageFragment | null;
@@ -346,7 +399,7 @@ export interface TeaserListBlockValue extends BaseBlockValue {
   title?: string | null;
   filter: {
     tags?: string[] | null;
-    tagObjects: Pick<Tag, 'id' | 'tag'>[];
+    tagObjects: Pick<FullTagFragment, 'id' | 'tag'>[];
   };
   teaserType: TeaserType;
   skip: number;
@@ -480,6 +533,10 @@ export type FlexBlockListValue = BlockListValue<
   EditorBlockType.FlexBlock,
   FlexBlockValue
 >;
+export type BlockTemplateListValue = BlockListValue<
+  EditorBlockType.BlockTemplate,
+  BlockTemplateBlockValue
+>;
 
 export type BlockValue =
   | TitleBlockListValue
@@ -502,11 +559,24 @@ export type BlockValue =
   | CommentBlockListValue
   | EventBlockListValue
   | TeaserListBlockListValue
-  | FlexBlockListValue;
+  | FlexBlockListValue
+  | BlockTemplateListValue;
 
 export function mapBlockValueToBlockInput(
   block: BlockValue
 ): BlockContentInput {
+  const input = mapBlockValueToContentInput(block);
+  const [kind, value] = Object.entries(input)[0] as [
+    keyof BlockContentInput,
+    object,
+  ];
+
+  return {
+    [kind]: { ...value, timing: block.value.timing ?? null },
+  } as BlockContentInput;
+}
+
+function mapBlockValueToContentInput(block: BlockValue): BlockContentInput {
   switch (block.type) {
     case EditorBlockType.Comment:
       return {
@@ -605,11 +675,16 @@ export function mapBlockValueToBlockInput(
               urlParam: input.urlParam,
               defaultValue: input.defaultValue,
               value: input.value,
-              options: input.options.map(option => ({
-                id: option.id,
-                name: option.name,
-                description: option.description,
-              })),
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
+              options: input.options
+                .filter(option => !!option.id)
+                .map(option => ({
+                  id: option.id,
+                  name: option.name,
+                  description: option.description,
+                  imageID: option.image?.id,
+                })),
             })),
           })),
           successPage:
@@ -934,6 +1009,15 @@ export function mapBlockValueToBlockInput(
 
       return { flexBlock };
     }
+    case EditorBlockType.BlockTemplate: {
+      return {
+        blockTemplate: {
+          templateId: block.value.template?.id ?? '',
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+        },
+      };
+    }
   }
 }
 
@@ -992,6 +1076,25 @@ export function mapTeaserToTeaserInput(
 }
 
 export function blockForQueryBlock(
+  block: FullBlockFragment | null
+): BlockValue {
+  const mapped = mapQueryBlockToBlockValue(block);
+  const base = block as {
+    timing?: BlockTimingInput | null;
+    shouldDisplay?: boolean | null;
+  } | null;
+
+  return {
+    ...mapped,
+    value: {
+      ...mapped.value,
+      timing: base?.timing ?? null,
+      shouldDisplay: base?.shouldDisplay ?? true,
+    },
+  } as BlockValue;
+}
+
+function mapQueryBlockToBlockValue(
   block: FullBlockFragment | null
 ): BlockValue {
   const key: string = nanoid();
@@ -1293,10 +1396,13 @@ export function blockForQueryBlock(
               urlParam: input.urlParam ?? null,
               defaultValue: input.defaultValue ?? null,
               value: input.value ?? null,
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
               options: (input.options ?? []).map(option => ({
                 id: option.id,
                 name: option.name,
                 description: option.description ?? null,
+                image: option.image ?? null,
               })),
             })),
           })),
@@ -1329,17 +1435,22 @@ export function blockForQueryBlock(
           take: block.take ?? 6,
           sort: block.sort,
           teaserType: block.teaserType ?? TeaserType.Article,
-          teasers: block.teasers.map((teaser, index) => [
-            `${index}`,
-            {
-              ...teaser,
-              type:
-                teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
-                : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
-                : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
-                : TeaserType.Custom,
-            } as Teaser,
-          ]),
+          teasers: block.teasers.map((rawTeaser, index) => {
+            const teaser = rawTeaser as
+              FullTeaserFragmentWithTypename | null | undefined;
+
+            return [
+              `${index}`,
+              {
+                ...teaser,
+                type:
+                  teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
+                  : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
+                  : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
+                  : TeaserType.Custom,
+              } as Teaser,
+            ];
+          }),
         },
       };
 
@@ -1449,6 +1560,17 @@ export function blockForQueryBlock(
         },
       };
 
+    case 'BlockTemplateBlock':
+      return {
+        key,
+        type: EditorBlockType.BlockTemplate,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          template: block.template,
+        },
+      };
+
     case 'PollBlock':
       return {
         key,
@@ -1502,8 +1624,10 @@ export function blockForQueryBlock(
 }
 
 const mapTeaserToQueryTeaser = (
-  teaser: FullTeaserFragment | null | undefined
+  rawTeaser: FullTeaserFragment | null | undefined
 ): Teaser | null => {
+  const teaser = rawTeaser as FullTeaserFragmentWithTypename | null | undefined;
+
   if (!teaser) {
     return null;
   }

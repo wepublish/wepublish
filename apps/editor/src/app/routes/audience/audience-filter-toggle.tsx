@@ -1,55 +1,45 @@
 import styled from '@emotion/styled';
+import { FormControlLabel, Switch } from '@mui/material';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdInfo } from 'react-icons/md';
-import { Form as RForm, Toggle, Tooltip, Whisper } from 'rsuite';
 
-import { chartColors } from './audience-chart';
+import { useAudienceChartColors } from './audience-chart';
 import { AudienceClientFilter } from './audience-filter-params';
 
-const { Label } = RForm;
-
-export const ToggleLable = styled(Label)`
-  padding-left: ${({ theme }) => theme.spacing(1)};
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1)};
+  min-height: 40px;
 `;
 
-const Info = styled.div`
-  margin-left: ${({ theme }) => theme.spacing(1)};
-  position: relative;
-  display: inline-block;
+const Label = styled(FormControlLabel)`
+  flex: 1;
+  min-width: 0;
+  margin: 0;
 `;
 
-const FilterInfo = ({
-  text,
-  color,
-}: {
-  text: string;
-  color: string | undefined;
-}) => (
-  <Whisper
-    trigger="hover"
-    speaker={
-      <Tooltip>
-        {text.split('\n').map((line, index) => (
-          <span
-            style={{ display: 'block', paddingBottom: '.5rem' }}
-            key={index}
-          >
-            {line}
-          </span>
-        ))}
-      </Tooltip>
-    }
-    placement="rightStart"
-  >
-    <Info>
-      <MdInfo
-        size={24}
-        color={color}
-      />
-    </Info>
-  </Whisper>
-);
+const Name = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1)};
+  min-width: 0;
+`;
+
+const Swatch = styled.span<{ color?: string }>`
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: ${({ color }) => color};
+`;
+
+const RowEnd = styled.span`
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
+`;
 
 interface AudienceFilterToggleProps {
   filterKey: keyof AudienceClientFilter;
@@ -63,6 +53,7 @@ export function AudienceFilterToggle({
   setClientFilter,
 }: AudienceFilterToggleProps) {
   const { t } = useTranslation();
+  const chartColors = useAudienceChartColors();
 
   const chartColor =
     typeof chartColors[filterKey] === 'string' ?
@@ -70,23 +61,34 @@ export function AudienceFilterToggle({
     : chartColors[filterKey][0];
 
   return (
-    <>
-      <Toggle
-        checked={clientFilter[filterKey as keyof AudienceClientFilter]}
-        onChange={(checked: boolean) =>
-          setClientFilter({
-            ...clientFilter,
-            [filterKey]: checked,
-          })
+    <Row>
+      <Label
+        control={
+          <Switch
+            size="small"
+            checked={clientFilter[filterKey]}
+            onChange={(_event, checked: boolean) =>
+              setClientFilter({
+                ...clientFilter,
+                [filterKey]: checked,
+              })
+            }
+          />
+        }
+        label={
+          <Name>
+            <Swatch color={chartColor} />
+            {t(`audience.legend.${filterKey}`)}
+          </Name>
         }
       />
 
-      <ToggleLable>{t(`audience.legend.${filterKey}`)}</ToggleLable>
-
-      <FilterInfo
-        text={t(`audience.legend.info.${filterKey}`)}
-        color={chartColor}
-      />
-    </>
+      <RowEnd data-row-end>
+        <InfoTooltip
+          text={t(`audience.legend.info.${filterKey}`)}
+          placement="left-start"
+        />
+      </RowEnd>
+    </Row>
   );
 }

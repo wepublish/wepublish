@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { MailContext } from '@wepublish/mail/api';
 import { PrismaClient } from '@prisma/client';
 import { MailTemplateService } from './mail-template.service';
+import { version } from 'uuid';
 
 const makeService = (prisma: any, mailContext: any = {}) =>
   new MailTemplateService(
@@ -17,8 +18,8 @@ describe('MailTemplateService', () => {
       mailLog: number;
     }) => ({
       mailTemplate: {
-        findUnique: jest.fn(async () => ({ id: 't1', _count: counts })),
-        delete: jest.fn(async () => undefined),
+        findUnique: vi.fn(async () => ({ id: 't1', _count: counts })),
+        delete: vi.fn(async () => undefined),
       },
     });
 
@@ -71,11 +72,11 @@ describe('MailTemplateService', () => {
 
   describe('importFromProvider', () => {
     const makeImportService = (remoteTemplates: any[]) => {
-      const upsert = jest.fn(async (args: any) => args);
+      const upsert = vi.fn(async (args: any) => args);
       const service = makeService(
         { mailTemplate: { upsert } },
         {
-          mailProvider: { listTemplates: jest.fn(async () => remoteTemplates) },
+          mailProvider: { listTemplates: vi.fn(async () => remoteTemplates) },
         }
       );
 
@@ -152,10 +153,10 @@ describe('MailTemplateService', () => {
 
     it('surfaces a provider failure instead of reporting zero imports', async () => {
       const service = makeService(
-        { mailTemplate: { upsert: jest.fn() } },
+        { mailTemplate: { upsert: vi.fn() } },
         {
           mailProvider: {
-            listTemplates: jest.fn(async () => {
+            listTemplates: vi.fn(async () => {
               throw new Error('Invalid API key');
             }),
           },
@@ -182,6 +183,28 @@ describe('MailTemplateService', () => {
 
       expect(result.subject).toBe('Hi Jane — Jahres-Abo');
       expect(result.html).toContain('CHF 10.00');
+    });
+  });
+
+  describe('sendTest', () => {
+    it('logs the test mail under a uuidv7', async () => {
+      const mailContext = {
+        jwtGenerator: vi.fn(async () => 'jwt'),
+        sendComposedContent: vi.fn(async () => undefined),
+      };
+
+      await makeService({}, mailContext).sendTest({
+        contextId: 'renewal',
+        subscriptionId: null,
+        currentUserId: 'u1',
+        recipient: 'test@wepublish.ch',
+        subject: 'Hi',
+        html: '<p>Hi</p>',
+      });
+
+      const [{ mailLogID }] = mailContext.sendComposedContent.mock
+        .calls[0] as any;
+      expect(version(mailLogID)).toBe(7);
     });
   });
 

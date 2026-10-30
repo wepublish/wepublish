@@ -1,7 +1,9 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { EventListContainer } from '@wepublish/event/website';
+import { BajourContainer as Container } from '@wepublish/tenant/bajour';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -12,7 +14,6 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
-  useEventListQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -20,8 +21,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
-
-import { Container } from '../../src/components/layout/container';
 
 const Filter = styled('div')`
   display: grid;
@@ -70,7 +69,7 @@ export default function EventList() {
     [from, page, to, upcomingOnly]
   );
 
-  const { data } = useEventListQuery({
+  const { data } = useQuery(EventListDocument, {
     fetchPolicy: 'cache-only',
     variables,
   });

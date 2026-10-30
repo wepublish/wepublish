@@ -30,6 +30,8 @@ import { InvoiceService } from './invoice.service';
 import { InvoiceDataloader } from './invoice.dataloader';
 import { NotFoundException } from '@nestjs/common';
 import { InvoiceItemDataloader } from './invoice-items.dataloader';
+import { InvoicePaymentsDataloader } from './invoice-payments.dataloader';
+import { Payment } from '@wepublish/payment/api';
 import {
   Authenticated,
   CurrentUser,
@@ -43,7 +45,8 @@ export class InvoiceResolver {
     private service: InvoiceService,
     private dataloader: InvoiceDataloader,
     private itemDataloader: InvoiceItemDataloader,
-    private userDataloader: UserDataloaderService
+    private userDataloader: UserDataloaderService,
+    private paymentsDataloader: InvoicePaymentsDataloader
   ) {}
 
   @Permissions(CanGetInvoice)
@@ -118,9 +121,11 @@ export class InvoiceResolver {
   })
   public markInvoiceAsPaid(
     @Args('id') id: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: UserSession,
+    @Args('sendMail', { type: () => Boolean, defaultValue: true })
+    sendMail: boolean
   ) {
-    return this.service.markInvoiceAsPaid(id, session.user.id);
+    return this.service.markInvoiceAsPaid(id, session.user.id, sendMail);
   }
 
   @ResolveField(() => [InvoiceItem])
@@ -142,6 +147,14 @@ export class InvoiceResolver {
     return invoice.manuallySetAsPaidByUserId ?
         this.userDataloader.load(invoice.manuallySetAsPaidByUserId)
       : null;
+  }
+
+  @Permissions(CanGetInvoice)
+  @ResolveField(() => [Payment], {
+    description: `The payments made or attempted for this invoice, oldest first. Invoices imported from another system have none.`,
+  })
+  async payments(@Parent() invoice: PInvoice) {
+    return (await this.paymentsDataloader.load(invoice.id)) ?? [];
   }
 }
 

@@ -36,6 +36,7 @@ export const ArticleList = ({ data, className }: BuilderArticleListProps) => {
   return (
     <ArticleListWrapper className={className}>
       <TeaserGrid
+        title={null}
         numColumns={3}
         teasers={teasers}
       />

@@ -1,5 +1,5 @@
 import { Box, Button, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type MailchimpSubscribeFormProps = {
   signupUrl: string;
@@ -30,10 +30,12 @@ export default function MailchimpSubscribeForm(
       method="post"
     >
       <Box
-        maxWidth="sm"
-        display={'flex'}
-        flexDirection={'column'}
-        gap={2}
+        sx={{
+          maxWidth: 'sm',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+        }}
       >
         <TextField
           placeholder="Vorname"
@@ -73,10 +75,12 @@ export default function MailchimpSubscribeForm(
         />
 
         <Box
-          display={'flex'}
-          flexDirection={'row'}
-          alignItems={'end'}
-          alignSelf={'end'}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'end',
+            alignSelf: 'end',
+          }}
         >
           <Button
             type="submit"

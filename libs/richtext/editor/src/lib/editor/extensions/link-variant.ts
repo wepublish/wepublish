@@ -2,7 +2,8 @@ import { Extension } from '@tiptap/core';
 
 export type LinkVariantOption = {
   value: string;
-  label: string;
+  /** i18n key of the label shown in the link popover. */
+  labelKey: string;
 };
 
 export type LinkVariantOptions = {

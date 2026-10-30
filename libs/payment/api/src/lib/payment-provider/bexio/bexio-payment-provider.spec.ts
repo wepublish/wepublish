@@ -5,20 +5,23 @@ import {
   PaymentPeriodicity,
   PaymentState,
 } from '@prisma/client';
-import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import {
+  createNamespacedCacheTesting,
+  type NamespacedCacheTesting,
+} from '@wepublish/kv-ttl-cache/api/testing';
 import { CreatePaymentIntentProps } from '../payment-provider';
 
-jest.mock('axios');
+vi.mock('axios');
 
-const mockFindFirst = jest.fn();
-const mockFindUnique = jest.fn();
+const mockFindFirst = vi.fn();
+const mockFindUnique = vi.fn();
 
-jest.mock('@prisma/client', () => {
-  const originalModule = jest.requireActual('@prisma/client');
+vi.mock('@prisma/client', async () => {
+  const originalModule = await vi.importActual('@prisma/client');
   return {
     __esModule: true,
     ...originalModule,
-    PrismaClient: jest.fn().mockImplementation(() => ({
+    PrismaClient: vi.fn().mockImplementation(() => ({
       payment: {
         findFirst: mockFindFirst,
       },
@@ -29,8 +32,8 @@ jest.mock('@prisma/client', () => {
   };
 });
 
-jest.mock('node-fetch', () =>
-  jest.fn(() =>
+vi.mock('node-fetch', () => ({
+  default: vi.fn(() =>
     Promise.resolve({
       json: () =>
         Promise.resolve({
@@ -40,36 +43,47 @@ jest.mock('node-fetch', () =>
         }),
       status: 200,
     })
-  )
-);
+  ),
+}));
 
-const mockBexioContactSearch = jest.fn();
-const mockBexioContactCreate = jest.fn();
-const mockBexioContactEdit = jest.fn();
+const mockLoggerError = vi.fn();
 
-jest.mock('bexio', () => {
+vi.mock('@wepublish/utils/api', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/utils/api')>()),
+  logger: () => ({ error: mockLoggerError, warn: vi.fn(), info: vi.fn() }),
+}));
+
+const mockBexioInvoiceCancel = vi.fn();
+const mockBexioContactSearch = vi.fn();
+const mockBexioContactCreate = vi.fn();
+const mockBexioContactEdit = vi.fn();
+const mockBexioContactShow = vi.fn();
+
+vi.mock('bexio', () => {
   const ContactsStatic = {
     ContactSearchParameters: {
       mail: 'mockMailParameter',
     },
   };
 
-  const Bexio = jest.fn().mockImplementation(() => {
+  const Bexio = vi.fn().mockImplementation(function () {
     return {
       contacts: {
         search: mockBexioContactSearch,
         create: mockBexioContactCreate,
         edit: mockBexioContactEdit,
+        show: mockBexioContactShow,
       },
       invoices: {
-        create: jest.fn().mockImplementation(() => ({
+        create: vi.fn().mockImplementation(() => ({
           id: 'testid',
           intentID: '12345',
           state: PaymentState.submitted,
         })),
-        sent: jest.fn().mockImplementation(() => ({
+        sent: vi.fn().mockImplementation(() => ({
           success: true,
         })),
+        cancel: mockBexioInvoiceCancel,
       },
     };
   });
@@ -84,14 +98,14 @@ jest.mock('bexio', () => {
 describe('BexioPaymentProvider', () => {
   let mockProps;
   let bexioPaymentProvider;
-  let kvMock;
+  let testing: NamespacedCacheTesting;
 
   beforeEach(async () => {
-    kvMock = createKvMock();
-    await kvMock.setNs(
+    testing = await createNamespacedCacheTesting();
+    await testing.cache.setNs(
       'settings:paymentprovider',
       'bexio',
-      JSON.stringify({
+      {
         id: 'bexio',
         type: 'bexio',
         name: 'Bexio',
@@ -111,7 +125,8 @@ describe('BexioPaymentProvider', () => {
         bexio_invoiceMailSubjectRenewalMembership: 'Subject2',
         bexio_invoiceMailBodyRenewalMembership: 'Body2',
         bexio_markInvoiceAsOpen: true,
-      })
+      },
+      60
     );
     mockProps = {
       id: 'bexio',
@@ -123,10 +138,65 @@ describe('BexioPaymentProvider', () => {
           findUnique: mockFindUnique,
         },
       } as any,
-      kv: kvMock,
+      kv: testing.cache,
+      resets: testing.resets,
     };
 
     bexioPaymentProvider = new BexioPaymentProvider(mockProps);
+  });
+
+  afterEach(() => testing.close());
+
+  describe('when Bexio refuses', () => {
+    const unauthorized = { code: 401, message: { message: 'Unauthorized' } };
+
+    it('says which step failed and why, instead of a bare object', async () => {
+      mockFindUnique.mockResolvedValue({
+        id: 'inv-1',
+        items: [],
+        subscription: {
+          user: { email: 'dev@wepublish.ch', paymentProviderCustomers: [] },
+        },
+      });
+      mockBexioContactSearch.mockRejectedValueOnce(unauthorized);
+
+      await expect(
+        bexioPaymentProvider.bexioCreate('inv-1', true)
+      ).rejects.toThrow(
+        'Bexio failed while searching the contact for invoice inv-1: 401 Unauthorized'
+      );
+      expect(mockLoggerError).toHaveBeenCalledWith(
+        expect.any(String),
+        'inv-1',
+        true,
+        'Bexio failed while searching the contact for invoice inv-1: 401 Unauthorized'
+      );
+    });
+
+    it('logs which payment it could not cancel and why', async () => {
+      const provider = new BexioPaymentProvider({
+        ...mockProps,
+        prisma: {
+          invoice: { findFirst: vi.fn().mockResolvedValue({ id: 'inv-1' }) },
+          payment: {
+            findMany: vi
+              .fn()
+              .mockResolvedValue([{ id: 'pay-1', intentID: '42' }]),
+          },
+        },
+      });
+      mockBexioInvoiceCancel.mockRejectedValueOnce(unauthorized);
+
+      await provider.cancelRemoteSubscription({
+        subscription: { id: 'sub-1' },
+      } as never);
+
+      expect(mockLoggerError).toHaveBeenCalledWith(
+        'Error to cancel invoice for payment (id: %s): %s',
+        'pay-1',
+        '401 Unauthorized'
+      );
+    });
   });
 
   describe('Creating an invoice in Bexio', () => {
@@ -194,6 +264,8 @@ describe('BexioPaymentProvider', () => {
           canceledAt: null,
           scheduledDeactivationAt: null,
           manuallySetAsPaidByUserId: null,
+          renewalSuccessMailSentAt: null,
+          suppressRenewalSuccessMail: false,
           subscriptionID: null,
           createdAt: new Date(),
           dueAt: new Date(),
@@ -239,6 +311,8 @@ describe('BexioPaymentProvider', () => {
         canceledAt: null,
         scheduledDeactivationAt: null,
         manuallySetAsPaidByUserId: null,
+        renewalSuccessMailSentAt: null,
+        suppressRenewalSuccessMail: false,
         subscriptionID: '123',
         createdAt: new Date(),
         dueAt: new Date(),
@@ -293,6 +367,7 @@ describe('BexioPaymentProvider', () => {
           email: 'dev@wepublish.ch',
           name: 'name',
           firstName: 'firstName',
+          paymentProviderCustomers: [],
         },
         memberPlan: {
           name: 'Plan Name',
@@ -315,6 +390,8 @@ describe('BexioPaymentProvider', () => {
         canceledAt: null,
         scheduledDeactivationAt: null,
         manuallySetAsPaidByUserId: null,
+        renewalSuccessMailSentAt: null,
+        suppressRenewalSuccessMail: false,
         subscriptionID: '123',
         createdAt: new Date(),
         dueAt: new Date(),
@@ -366,6 +443,7 @@ describe('BexioPaymentProvider', () => {
           email: 'dev@wepublish.ch',
           name: 'name',
           firstName: 'firstName',
+          paymentProviderCustomers: [],
         },
         memberPlan: {
           name: 'Plan Name',
@@ -393,6 +471,8 @@ describe('BexioPaymentProvider', () => {
         canceledAt: null,
         scheduledDeactivationAt: null,
         manuallySetAsPaidByUserId: null,
+        renewalSuccessMailSentAt: null,
+        suppressRenewalSuccessMail: false,
         subscriptionID: '123',
         createdAt: new Date(),
         dueAt: new Date(),
@@ -424,5 +504,149 @@ describe('BexioPaymentProvider', () => {
     expect(res.intentID).toEqual('testid');
     expect(res.intentSecret).toEqual('');
     expect(res.state).toEqual(PaymentState.submitted);
+  });
+
+  // The email can differ between we.publish and bexio (a placeholder from an
+  // import, a reader who changed it), so the contact an invoice went to is
+  // remembered and found by its id first.
+  describe('finding the bexio contact', () => {
+    const invoiceFor = (user: Record<string, unknown>) => ({
+      items: [{ amount: 100, quantity: 1 }] as InvoiceItem[],
+      subscription: {
+        user: {
+          id: 'user-1',
+          email: 'nw-11993@placeholder.neuewege.ch',
+          name: 'name',
+          firstName: 'firstName',
+          paymentProviderCustomers: [],
+          ...user,
+        },
+        memberPlan: { name: 'Plan Name' },
+        monthlyAmount: 10,
+        paymentPeriodicity: PaymentPeriodicity.yearly,
+      },
+    });
+
+    const createIntent = async (user: Record<string, unknown> = {}) => {
+      mockFindUnique.mockResolvedValue(invoiceFor(user));
+      const provider = new BexioPaymentProvider(mockProps);
+      const saveCustomer = vi
+        .spyOn(provider, 'saveCustomer')
+        .mockResolvedValue(undefined);
+
+      await provider.createIntent({
+        invoice: {
+          id: 'invoice-1',
+          subscriptionID: 'subscription-1',
+          items: [{ amount: 100, quantity: 1 }] as InvoiceItem[],
+          currency: Currency.CHF,
+        } as CreatePaymentIntentProps['invoice'],
+        paymentID: 'payment-1',
+        saveCustomer: false,
+        currency: Currency.CHF,
+      });
+
+      return { saveCustomer };
+    };
+
+    beforeEach(() => {
+      mockBexioContactShow.mockReset();
+      mockBexioContactSearch.mockReset();
+      mockBexioContactCreate.mockReset();
+      mockBexioContactEdit.mockReset().mockImplementation(async id => ({
+        id,
+      }));
+    });
+
+    it('uses the contact stored for the reader instead of searching by email', async () => {
+      mockBexioContactShow.mockResolvedValue({ id: 542, nr: '1042' });
+
+      const { saveCustomer } = await createIntent({
+        paymentProviderCustomers: [
+          { paymentProviderID: 'bexio', customerID: '542' },
+        ],
+      });
+
+      expect(mockBexioContactShow).toHaveBeenCalledWith(542);
+      expect(mockBexioContactSearch).not.toHaveBeenCalled();
+      expect(mockBexioContactEdit).toHaveBeenCalledWith(
+        542,
+        expect.objectContaining({ nr: '1042' })
+      );
+      expect(saveCustomer).not.toHaveBeenCalled();
+    });
+
+    it('ignores contacts stored for another payment provider', async () => {
+      mockBexioContactSearch.mockResolvedValue([{ id: 7, nr: '1007' }]);
+
+      await createIntent({
+        paymentProviderCustomers: [
+          { paymentProviderID: 'payrexx', customerID: '542' },
+        ],
+      });
+
+      expect(mockBexioContactShow).not.toHaveBeenCalled();
+      expect(mockBexioContactEdit).toHaveBeenCalledWith(7, expect.anything());
+    });
+
+    it('searches by email when the stored contact is gone', async () => {
+      mockBexioContactShow.mockRejectedValue(new Error('404 Not Found'));
+      mockBexioContactSearch.mockResolvedValue([{ id: 7, nr: '1007' }]);
+
+      const { saveCustomer } = await createIntent({
+        paymentProviderCustomers: [
+          { paymentProviderID: 'bexio', customerID: '542' },
+        ],
+      });
+
+      expect(mockBexioContactEdit).toHaveBeenCalledWith(
+        7,
+        expect.objectContaining({ nr: '1007' })
+      );
+      expect(saveCustomer).toHaveBeenCalledWith('user-1', '7');
+    });
+
+    it('remembers the contact it found by email for the next invoice', async () => {
+      mockBexioContactSearch.mockResolvedValue([{ id: 7, nr: '1007' }]);
+
+      const { saveCustomer } = await createIntent();
+
+      expect(saveCustomer).toHaveBeenCalledWith('user-1', '7');
+    });
+
+    it('still creates the invoice when the contact cannot be remembered', async () => {
+      mockBexioContactSearch.mockResolvedValue([{ id: 7, nr: '1007' }]);
+      mockFindUnique.mockResolvedValue(invoiceFor({}));
+      const provider = new BexioPaymentProvider(mockProps);
+      vi.spyOn(provider, 'saveCustomer').mockRejectedValue(
+        new Error('database down')
+      );
+
+      const intent = await provider.bexioCreate('invoice-1', true);
+
+      expect(intent.intentID).toBe('testid');
+    });
+
+    // a missing id must not end up stored as the text "null" or "undefined"
+    it.each([null, undefined])(
+      'does not remember a contact whose id is %s',
+      async id => {
+        mockBexioContactSearch.mockResolvedValue([]);
+        mockBexioContactCreate.mockResolvedValue({ id });
+
+        const { saveCustomer } = await createIntent();
+
+        expect(saveCustomer).not.toHaveBeenCalled();
+      }
+    );
+
+    it('remembers a contact it had to create', async () => {
+      mockBexioContactSearch.mockResolvedValue([]);
+      mockBexioContactCreate.mockResolvedValue({ id: 900 });
+
+      const { saveCustomer } = await createIntent();
+
+      expect(saveCustomer).toHaveBeenCalledWith('user-1', '900');
+    });
   });
 });

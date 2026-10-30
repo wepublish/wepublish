@@ -50,10 +50,7 @@ export type TeaserFlexBlockPath = {
 };
 
 export type TeaserPath =
-  | TeaserGridPath
-  | TeaserFlexPath
-  | TeaserSlotsPath
-  | TeaserFlexBlockPath;
+  TeaserGridPath | TeaserFlexPath | TeaserSlotsPath | TeaserFlexBlockPath;
 
 export type ExtractedTeaser = {
   address: TeaserPath;
@@ -82,7 +79,9 @@ function blockLabel(
 ): string {
   const typeLabel =
     BLOCK_TYPE_KEY[type] ? t(BLOCK_TYPE_KEY[type]!) : String(type);
-  const base = `${typeLabel} · Block ${blockIndex + 1}`;
+  const base = `${typeLabel} · ${t('teaserOverview.blockNumber', {
+    number: blockIndex + 1,
+  })}`;
   const styleName =
     blockStyleId ? (blockStyleNames?.get(blockStyleId) ?? blockStyleId) : '';
   const detail = title || styleName;

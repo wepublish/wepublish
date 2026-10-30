@@ -4,9 +4,12 @@ import {
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { getApiClient } from '@wepublish/website/api';
+import { getApiUrl } from '@wepublish/utils/website';
+import { handleJwtLogin } from '@wepublish/utils/website/next';
+import {
+  FullSessionWithTokenWithoutUserFragment,
+  getApiClient,
+} from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
@@ -18,7 +21,7 @@ const LoginWrapper = styled('div')`
   justify-content: center;
 `;
 
-type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
+type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();

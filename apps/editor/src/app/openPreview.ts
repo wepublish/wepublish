@@ -12,16 +12,11 @@ export type OpenPreviewOptions = {
   onSilence?: () => void;
 };
 
-export const openPreviewWindow = (
+export const startPreviewHandshake = (
+  previewWindow: Window,
   previewUrl: string,
   { createToken, onSilence }: OpenPreviewOptions
-): OpenPreviewResult => {
-  const previewWindow = window.open(previewUrl, '_blank');
-
-  if (!previewWindow) {
-    return 'popup-blocked';
-  }
-
+): (() => void) => {
   const targetOrigin = new URL(previewUrl).origin;
 
   let token: string | undefined;
@@ -92,6 +87,21 @@ export const openPreviewWindow = (
   const handshakeTimeout = setTimeout(cleanup, HANDSHAKE_TIMEOUT_MS);
 
   void freshToken();
+
+  return cleanup;
+};
+
+export const openPreviewWindow = (
+  previewUrl: string,
+  options: OpenPreviewOptions
+): OpenPreviewResult => {
+  const previewWindow = window.open(previewUrl, '_blank');
+
+  if (!previewWindow) {
+    return 'popup-blocked';
+  }
+
+  startPreviewHandshake(previewWindow, previewUrl, options);
 
   return 'opened';
 };

@@ -5,6 +5,9 @@ import {
   OneHeartbeatService,
   sanitiseVersion,
 } from './one-heartbeat.service';
+import type { Mock } from 'vitest';
+import type { Feature } from '@wepublish/features';
+import type { FeaturesService } from '@wepublish/features/api';
 
 describe('sanitiseVersion', () => {
   it('accepts a git sha', () => {
@@ -36,23 +39,31 @@ describe('sanitiseVersion', () => {
 });
 
 describe('OneHeartbeatService', () => {
-  let client: { post: jest.Mock };
-  let state: { recordSuccess: jest.Mock; recordFailure: jest.Mock };
+  let client: { post: Mock };
+  let state: { recordSuccess: Mock; recordFailure: Mock };
+  let features: { apply: Mock };
+
+  const registry: readonly Feature[] = [
+    { key: 'newsletter', description: 'Newsletter editor', stage: 'alpha' },
+  ];
 
   function makeService(oneURL: string) {
     return new OneHeartbeatService(
       client as unknown as OneClientService,
       state as unknown as OneChannelStateService,
-      oneURL
+      oneURL,
+      features as unknown as FeaturesService,
+      registry
     );
   }
 
   beforeEach(() => {
-    client = { post: jest.fn().mockResolvedValue(undefined) };
+    client = { post: vi.fn().mockResolvedValue(undefined) };
     state = {
-      recordSuccess: jest.fn().mockResolvedValue(undefined),
-      recordFailure: jest.fn(),
+      recordSuccess: vi.fn().mockResolvedValue(undefined),
+      recordFailure: vi.fn(),
     };
+    features = { apply: vi.fn().mockResolvedValue(undefined) };
   });
 
   it('does nothing when WEP_ONE_URL is not configured', async () => {
@@ -88,14 +99,14 @@ describe('OneHeartbeatService', () => {
   });
 
   it('does not send at bootstrap, because the HTTP server is not listening yet', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
     try {
       makeService('https://one.wepublish.ch').onApplicationBootstrap();
 
       expect(client.post).not.toHaveBeenCalled();
     } finally {
-      jest.useRealTimers();
+      vi.useRealTimers();
     }
   });
 
@@ -123,5 +134,61 @@ describe('OneHeartbeatService', () => {
     expect(() =>
       makeService('https://one.wepublish.ch').onApplicationBootstrap()
     ).not.toThrow();
+  });
+
+  it('tells One which features this version can switch', async () => {
+    await makeService('https://one.wepublish.ch').send();
+
+    expect(client.post).toHaveBeenCalledWith(
+      '/channel/heartbeat',
+      'write:medium-heartbeat',
+      expect.objectContaining({
+        features: [
+          {
+            key: 'newsletter',
+            description: 'Newsletter editor',
+            stage: 'alpha',
+          },
+        ],
+      })
+    );
+  });
+
+  it('stores the features One answers with', async () => {
+    client.post.mockResolvedValue({ features: { newsletter: true } });
+
+    await makeService('https://one.wepublish.ch').send();
+
+    expect(features.apply).toHaveBeenCalledWith({ newsletter: true });
+  });
+
+  it('keeps the stored features when One answers without any', async () => {
+    client.post.mockResolvedValue(undefined);
+
+    await makeService('https://one.wepublish.ch').send();
+
+    expect(features.apply).not.toHaveBeenCalled();
+  });
+
+  it('ignores features that are not a key → on/off map', async () => {
+    client.post.mockResolvedValue({ features: ['newsletter'] });
+    await makeService('https://one.wepublish.ch').send();
+
+    client.post.mockResolvedValue({ features: null });
+    await makeService('https://one.wepublish.ch').send();
+
+    expect(features.apply).not.toHaveBeenCalled();
+  });
+
+  it('still counts the heartbeat as delivered when storing the features fails', async () => {
+    client.post.mockResolvedValue({ features: { newsletter: true } });
+    features.apply.mockRejectedValue(new Error('db down'));
+
+    await expect(
+      makeService('https://one.wepublish.ch').send()
+    ).resolves.toBeUndefined();
+
+    expect(state.recordSuccess).toHaveBeenCalled();
+    expect(state.recordFailure).not.toHaveBeenCalled();
   });
 });

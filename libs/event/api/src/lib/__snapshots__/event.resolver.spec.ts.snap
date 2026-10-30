@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`EventResolver create 1`] = `
+exports[`EventResolver > create 1`] = `
 [
   [
     {
@@ -22,7 +22,7 @@ exports[`EventResolver create 1`] = `
 ]
 `;
 
-exports[`EventResolver create 2`] = `
+exports[`EventResolver > create 2`] = `
 {
   "createEvent": {
     "id": "1234",
@@ -36,13 +36,13 @@ exports[`EventResolver create 2`] = `
 }
 `;
 
-exports[`EventResolver delete 1`] = `
+exports[`EventResolver > delete 1`] = `
 [
   "1234",
 ]
 `;
 
-exports[`EventResolver delete 2`] = `
+exports[`EventResolver > delete 2`] = `
 {
   "id": "1234",
   "image": {
@@ -54,7 +54,7 @@ exports[`EventResolver delete 2`] = `
 }
 `;
 
-exports[`EventResolver event 1`] = `
+exports[`EventResolver > event 1`] = `
 [
   [
     "123",
@@ -62,7 +62,7 @@ exports[`EventResolver event 1`] = `
 ]
 `;
 
-exports[`EventResolver event 2`] = `
+exports[`EventResolver > event 2`] = `
 {
   "event": {
     "id": "1234",
@@ -76,7 +76,7 @@ exports[`EventResolver event 2`] = `
 }
 `;
 
-exports[`EventResolver events 1`] = `
+exports[`EventResolver > events 1`] = `
 [
   [
     {
@@ -99,7 +99,7 @@ exports[`EventResolver events 1`] = `
 ]
 `;
 
-exports[`EventResolver events 2`] = `
+exports[`EventResolver > events 2`] = `
 {
   "events": {
     "nodes": [
@@ -121,7 +121,7 @@ exports[`EventResolver events 2`] = `
 }
 `;
 
-exports[`EventResolver update 1`] = `
+exports[`EventResolver > update 1`] = `
 [
   [
     {
@@ -133,7 +133,7 @@ exports[`EventResolver update 1`] = `
 ]
 `;
 
-exports[`EventResolver update 2`] = `
+exports[`EventResolver > update 2`] = `
 {
   "updateEvent": {
     "id": "1234",

@@ -1,12 +1,15 @@
 import { RichtextEditor } from '@wepublish/richtext/editor';
-import React, { memo } from 'react';
+import { memo } from 'react';
 
 import { BlockProps } from '../../atoms/blockList';
 import { RichTextBlockValue } from '../types';
 
-export interface RichTextBlockProps
-  extends BlockProps<RichTextBlockValue['richText']> {
+export interface RichTextBlockProps extends Omit<
+  BlockProps<RichTextBlockValue['richText']>,
+  'onChange'
+> {
   defaultValue?: RichTextBlockProps['value'];
+  onChange(value: RichTextBlockValue['richText']): void;
 }
 
 export const RichTextBlock = memo(function RichTextBlock({

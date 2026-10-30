@@ -26,10 +26,12 @@ const item = (id: string, severity: NotificationSeverity) => (
   />
 );
 
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  useNotificationReadsQuery: () => ({ data: { notificationReads: [] } }),
-  useMarkNotificationReadMutation: () => [vi.fn()],
+// The panel calls Apollo's hooks with generated documents, so the mock sits at
+// the Apollo boundary.
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: () => ({ data: { notificationReads: [] } }),
+  useMutation: () => [vi.fn(), { loading: false }],
 }));
 
 vi.mock('@wepublish/membership/editor', () => ({
@@ -69,7 +71,7 @@ const renderPanel = () => {
     </MemoryRouter>
   );
 
-  const panel = container.querySelector('.rs-panel');
+  const panel = container.querySelector('.MuiCard-root');
 
   if (!panel) {
     throw new Error('panel not rendered');
@@ -80,7 +82,7 @@ const renderPanel = () => {
 
 /** The titles of the rendered notifications, in the order they appear. */
 const renderedOrder = () =>
-  Array.from(document.querySelectorAll('.rs-message')).map(
+  Array.from(document.querySelectorAll('[role="alert"]')).map(
     node => node.textContent ?? ''
   );
 

@@ -1,39 +1,40 @@
-import { ApolloError } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   FullGoodieFragment,
-  MutationUpdateGoodieArgs,
-  useGoodieQuery,
-  useUpdateGoodieMutation,
+  GoodieDocument,
+  UpdateGoodieDocument,
 } from '@wepublish/editor/api';
 import { CanUpdateGoodie } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
+  humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { GoodieForm } from './goodieForm';
+import { GoodieForm, GoodieFormValues, goodieSchema } from './goodieForm';
 
-const onErrorToast = (error: ApolloError) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+const onErrorToast = (error: Error) => {
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
-const mapApiDataToInput = (
-  goodie: FullGoodieFragment
-): MutationUpdateGoodieArgs => ({
-  ...goodie,
+const mapApiDataToInput = (goodie: FullGoodieFragment): GoodieFormValues => ({
+  id: goodie.id,
+  name: goodie.name,
+  stock: goodie.stock,
+  active: goodie.active,
+  description: goodie.description,
+  image: goodie.image,
+  imageID: goodie.image?.id,
+  memberPlans: goodie.memberPlans,
   memberPlanIDs: goodie.memberPlans.map(memberPlan => memberPlan.id),
 });
 
@@ -41,73 +42,64 @@ const GoodieEditView = () => {
   const { t } = useTranslation();
   const [shouldClose, setShouldClose] = useState(false);
   const navigate = useNavigate();
-  const params = useParams();
-  const { id } = params;
+  const { id } = useParams();
   const closePath = './../..';
+  const client = useApolloClient();
 
-  const [goodie, setGoodie] = useState<MutationUpdateGoodieArgs>();
+  const form = useForm<GoodieFormValues>({
+    resolver: zodResolver(goodieSchema),
+    defaultValues: async () => {
+      const { data } = await client.query({
+        query: GoodieDocument,
+        variables: { id: id as string },
+      });
 
-  const { loading: dataLoading } = useGoodieQuery({
-    variables: {
-      id: id as string,
-    },
-    onError: onErrorToast,
-    onCompleted: data => {
-      setGoodie(mapApiDataToInput(data.goodie));
+      return mapApiDataToInput(data!.goodie);
     },
   });
 
-  const [updateGoodie, { loading: updateLoading }] = useUpdateGoodieMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.updateGoodie) {
-        if (shouldClose) {
-          navigate(closePath);
-        } else {
-          setGoodie(mapApiDataToInput(data.updateGoodie));
+  const name = useWatch({ control: form.control, name: 'name' });
+
+  const [updateGoodie, { loading: updateLoading }] = useMutation(
+    UpdateGoodieDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.updateGoodie) {
+          if (shouldClose) {
+            navigate(closePath);
+          } else {
+            form.reset(mapApiDataToInput(data.updateGoodie));
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
-  const loading = dataLoading || updateLoading;
-  const onSubmit = () => updateGoodie({ variables: goodie });
-
-  const { StringType, NumberType } = Schema.Types;
-  const validationModel = Schema.Model({
-    name: StringType().minLength(1).isRequired(),
-    stock: NumberType().min(0).isInteger(),
-  });
-
-  if (!goodie) {
-    return;
+  if (form.formState.isLoading) {
+    return null;
   }
 
   return (
-    <Form
-      fluid
-      formValue={goodie || {}}
-      model={validationModel}
-      disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}
-    >
-      <SingleViewTitle
-        loading={loading}
-        title={t('goodie.form.editTitle', { goodie: goodie.name })}
-        loadingTitle={t('loading')}
-        saveBtnTitle={t('save')}
-        saveAndCloseBtnTitle={t('saveAndClose')}
-        closePath={closePath}
-        setCloseFn={setShouldClose}
-      />
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(({ image, memberPlans, ...goodie }) =>
+          updateGoodie({ variables: { ...goodie, id: id as string } })
+        )}
+      >
+        <SingleViewTitle
+          loading={updateLoading}
+          title={t('goodie.form.editTitle', { goodie: name })}
+          loadingTitle={t('loading')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setShouldClose}
+        />
 
-      <GoodieForm
-        goodie={goodie}
-        onChange={changes =>
-          setGoodie(oldGoodie => ({ ...oldGoodie, ...(changes as any) }))
-        }
-      />
-    </Form>
+        <GoodieForm />
+      </form>
+    </FormProvider>
   );
 };
 

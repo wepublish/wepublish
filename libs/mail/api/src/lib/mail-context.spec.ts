@@ -11,13 +11,13 @@ const createContext = (prisma: unknown) =>
 
 const createPrismaMock = () => ({
   subscriptionInterval: {
-    findMany: jest.fn((_args?: Record<string, unknown>) => [
+    findMany: vi.fn((_args?: Record<string, unknown>) => [
       { mailTemplateId: 'renewal-success' },
       { mailTemplateId: null },
     ]),
   },
   userFlowMail: {
-    findMany: jest.fn((_args?: Record<string, unknown>) => [
+    findMany: vi.fn((_args?: Record<string, unknown>) => [
       { mailTemplateId: 'login-link' },
       { mailTemplateId: null },
     ]),

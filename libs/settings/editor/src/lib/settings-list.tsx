@@ -1,14 +1,16 @@
+import { useApolloClient, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  Setting,
   SettingName,
-  useSettingsListQuery,
-  useUpdateSettingMutation,
+  SettingsListDocument,
+  UpdateSettingDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
+  humanizeError,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -16,45 +18,39 @@ import {
   SelectPaywall,
   useAuthorisation,
   useUnsavedChangesDialog,
+  enqueueSnackbar,
+  PageTitle,
 } from '@wepublish/ui/editor';
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdCancel, MdInfo, MdSave, MdWarning } from 'react-icons/md';
+import { MdCancel, MdSave, MdWarning } from 'react-icons/md';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm, useWatch } from 'react-hook-form';
+import { z } from 'zod';
+import { CanGetSettings, CanUpdateSettings } from '@wepublish/permissions';
 import {
+  Box,
   Button,
-  Col,
-  Form,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
   Grid,
-  IconButton,
-  InputGroup,
-  NumberInput,
-  Modal,
-  Notification,
-  Panel as RPanel,
-  Row,
-  Schema,
-  toaster,
-  Toggle,
-  Tooltip,
-  Whisper,
-} from 'rsuite';
-import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon';
-import FormControl from 'rsuite/FormControl';
-
-const Panel = styled(RPanel)`
-  margin-bottom: 10px;
-`;
-
-const Info = styled.div`
-  margin-left: 10px;
-  position: relative;
-  display: inline-block;
-  font-size: 22px;
-  color: #3498ff;
-`;
+  InputAdornment,
+  Stack,
+  TextField,
+} from '@mui/material';
 
 const WarningIcon = styled(MdWarning)`
-  color: darkorange;
+  color: ${({ theme }) => theme.vars.palette.warning.main};
   font-size: 32px;
   margin-left: 20px;
 `;
@@ -63,304 +59,238 @@ const DescriptionListItemWrapper = styled(DescriptionListItem)`
   min-width: 100px;
 `;
 
-const WideInputGroup = styled(InputGroup)`
-  &&& {
-    width: 100%;
-  }
-`;
-
-type SettingInfoProps = {
-  text: string;
+type SettingLabelProps = {
+  label: string;
+  info: string;
 };
 
-const SettingInfo = ({ text }: SettingInfoProps) => (
-  <Whisper
-    trigger="hover"
-    speaker={<Tooltip>{text}</Tooltip>}
-    placement="top"
-  >
-    <Info>
-      <MdInfo />
-    </Info>
-  </Whisper>
+const SettingLabel = ({ label, info }: SettingLabelProps) => (
+  <>
+    {label} <InfoTooltip text={info} />
+  </>
 );
 
-interface Label {
-  label: string;
-}
+const SETTINGS = {
+  [SettingName.AllowGuestCommenting]: {
+    label: 'settingList.guestCommenting',
+    value: false,
+  },
+  [SettingName.AllowGuestPollVoting]: {
+    label: 'settingList.guestPollVote',
+    value: false,
+  },
+  [SettingName.AllowGuestCommentRating]: {
+    label: 'settingList.allowGuestCommentRating',
+    value: false,
+  },
+  [SettingName.SessionTtlDays]: {
+    label: 'settingList.sessionTtlDays',
+    value: 7,
+  },
+  [SettingName.SendLoginJwtExpiresMin]: {
+    label: 'settingList.loginMinutes',
+    value: 0,
+  },
+  [SettingName.ResetPasswordJwtExpiresMin]: {
+    label: 'settingList.passwordToken',
+    value: 0,
+  },
+  [SettingName.PeeringTimeoutMs]: {
+    label: 'settingList.peerToken',
+    value: 0,
+  },
+  [SettingName.MakeActiveSubscribersApiPublic]: {
+    label: 'settingList.activeSubscriptionsApiPublic',
+    value: false,
+  },
+  [SettingName.MakeNewSubscribersApiPublic]: {
+    label: 'settingList.newSubscriptionsApiPublic',
+    value: false,
+  },
+  [SettingName.MakeRenewingSubscribersApiPublic]: {
+    label: 'settingList.renewingSubscriptionsApiPublic',
+    value: false,
+  },
+  [SettingName.MakeNewDeactivationsApiPublic]: {
+    label: 'settingList.newDeactivationsApiPublic',
+    value: false,
+  },
+  [SettingName.MakeExpectedRevenueApiPublic]: {
+    label: 'settingList.expectedRevenueApiPublic',
+    value: false,
+  },
+  [SettingName.MakeRevenueApiPublic]: {
+    label: 'settingList.revenueApiPublic',
+    value: false,
+  },
+  [SettingName.CommentCharLimit]: {
+    label: 'settingList.commentCharLimit',
+    value: 0,
+  },
+  [SettingName.AllowCommentEditing]: {
+    label: 'settingList.allowCommentEditing',
+    value: false,
+  },
+  [SettingName.ShowPendingWhenNotPublished]: {
+    label: 'settingList.showPendingWhenNotPublished',
+    value: false,
+  },
+  [SettingName.NewArticlePaywall]: {
+    label: 'settingList.newArticlePaywall',
+    value: null,
+  },
+  [SettingName.NewArticlePeering]: {
+    label: 'settingList.newArticlePeering',
+    value: false,
+  },
+  [SettingName.SubscriptionUpgradeBillsFullDifference]: {
+    label: 'settingList.subscriptionUpgradeModel',
+    value: false,
+  },
+  [SettingName.SubscriptionExtendWindowDays]: {
+    label: 'settingList.subscriptionExtendWindowDays',
+    value: 30,
+  },
+  [SettingName.PaymentMethodChangeExpiryDays]: {
+    label: 'settingList.paymentMethodChangeExpiryDays',
+    value: 14,
+  },
+} as Record<SettingName, { label: string; value: unknown }>;
 
-type SettingWithLabel = Label & Setting;
+type SettingValues = Record<SettingName, unknown>;
 
-function settingsReducer(
-  settings: Record<SettingName, SettingWithLabel>,
-  changedSetting: Setting
-) {
-  return {
-    ...settings,
-    [changedSetting.name]: {
-      ...settings[changedSetting.name],
-      value: changedSetting.value,
-    },
-  };
-}
+const EMPTY_SETTINGS = Object.fromEntries(
+  Object.entries(SETTINGS).map(([name, { value }]) => [name, value])
+) as SettingValues;
+
+const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
+  [SettingName.SessionTtlDays]: [1, 365],
+  [SettingName.SendLoginJwtExpiresMin]: [1, 10080],
+  [SettingName.ResetPasswordJwtExpiresMin]: [10, 10080],
+  [SettingName.PeeringTimeoutMs]: [1000, 10000],
+  [SettingName.CommentCharLimit]: [0, 10000],
+  [SettingName.SubscriptionExtendWindowDays]: [0, 366],
+  [SettingName.PaymentMethodChangeExpiryDays]: [1, 90],
+};
+
+type Restrictions = Partial<
+  Record<SettingName, { minValue?: number | null; maxValue?: number | null }>
+>;
+
+const buildSchema = (restrictions: Restrictions) =>
+  z.object(
+    Object.fromEntries(
+      Object.entries(NUMBER_FALLBACK_RANGES).map(([name, [min, max]]) => {
+        const restriction = restrictions[name as SettingName];
+
+        return [
+          name,
+          z.coerce
+            .number()
+            .min(restriction?.minValue ?? min)
+            .max(restriction?.maxValue ?? max),
+        ];
+      })
+    )
+  );
 
 function SettingList() {
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const { t } = useTranslation();
+  const client = useApolloClient();
 
-  const isAuthorized = useAuthorisation('CAN_UPDATE_SETTINGS');
+  const isAuthorized = useAuthorisation(CanUpdateSettings.id);
+  const [fetchError, setFetchError] = useState<Error>();
+
+  const restrictions = useRef<Restrictions>({});
+
+  const loadSettings = useCallback(async (): Promise<SettingValues> => {
+    try {
+      const { data } = await client.query({
+        query: SettingsListDocument,
+        fetchPolicy: 'network-only',
+      });
+
+      restrictions.current = Object.fromEntries(
+        (data?.settings ?? []).map(setting => [
+          setting.name,
+          setting.settingRestriction ?? undefined,
+        ])
+      );
+
+      return {
+        ...EMPTY_SETTINGS,
+        ...Object.fromEntries(
+          (data?.settings ?? []).map(setting => [setting.name, setting.value])
+        ),
+      } as SettingValues;
+    } catch (error) {
+      setFetchError(error as Error);
+
+      return EMPTY_SETTINGS;
+    }
+  }, [client]);
 
   const {
-    data: settingListData,
-    loading,
-    refetch,
-    error: fetchError,
-  } = useSettingsListQuery({});
+    control,
+    handleSubmit,
+    reset,
+    getValues,
+    formState: { isLoading, dirtyFields, defaultValues },
+  } = useForm<SettingValues>({
+    resolver: (values, context, options) =>
+      zodResolver(buildSchema(restrictions.current))(values, context, options),
+    defaultValues: loadSettings,
+  });
 
-  const isDisabled = loading || !settingListData || !isAuthorized;
+  const loading = isLoading;
+  const isDisabled = loading || !isAuthorized;
 
-  const [settings, setSetting] = useReducer(settingsReducer, {
-    [SettingName.AllowGuestCommenting]: {
-      value: false,
-      name: SettingName.AllowGuestCommenting,
-      label: 'settingList.guestCommenting',
-    },
-    [SettingName.AllowGuestPollVoting]: {
-      value: false,
-      name: SettingName.AllowGuestPollVoting,
-      label: 'settingList.guestPollVote',
-    },
-    [SettingName.AllowGuestCommentRating]: {
-      value: false,
-      name: SettingName.AllowGuestCommentRating,
-      label: 'settingList.allowGuestCommentRating',
-    },
-    [SettingName.SendLoginJwtExpiresMin]: {
-      value: 0,
-      name: SettingName.SendLoginJwtExpiresMin,
-      label: 'settingList.loginMinutes',
-    },
-    [SettingName.ResetPasswordJwtExpiresMin]: {
-      value: 0,
-      name: SettingName.ResetPasswordJwtExpiresMin,
-      label: 'settingList.passwordToken',
-    },
-    [SettingName.PeeringTimeoutMs]: {
-      value: 0,
-      name: SettingName.PeeringTimeoutMs,
-      label: 'settingList.peerToken',
-    },
-    [SettingName.MakeActiveSubscribersApiPublic]: {
-      value: false,
-      name: SettingName.MakeActiveSubscribersApiPublic,
-      label: 'settingList.activeSubscriptionsApiPublic',
-    },
-    [SettingName.MakeNewSubscribersApiPublic]: {
-      value: false,
-      name: SettingName.MakeNewSubscribersApiPublic,
-      label: 'settingList.newSubscriptionsApiPublic',
-    },
-    [SettingName.MakeRenewingSubscribersApiPublic]: {
-      value: false,
-      name: SettingName.MakeRenewingSubscribersApiPublic,
-      label: 'settingList.renewingSubscriptionsApiPublic',
-    },
-    [SettingName.MakeNewDeactivationsApiPublic]: {
-      value: false,
-      name: SettingName.MakeNewDeactivationsApiPublic,
-      label: 'settingList.newDeactivationsApiPublic',
-    },
-    [SettingName.MakeExpectedRevenueApiPublic]: {
-      value: false,
-      name: SettingName.MakeExpectedRevenueApiPublic,
-      label: 'settingList.expectedRevenueApiPublic',
-    },
-    [SettingName.MakeRevenueApiPublic]: {
-      value: false,
-      name: SettingName.MakeRevenueApiPublic,
-      label: 'settingList.revenueApiPublic',
-    },
-    [SettingName.CommentCharLimit]: {
-      value: 0,
-      name: SettingName.CommentCharLimit,
-      label: 'settingList.commentCharLimit',
-    },
-    [SettingName.AllowCommentEditing]: {
-      value: false,
-      name: SettingName.AllowCommentEditing,
-      label: 'settingList.allowCommentEditing',
-    },
-    [SettingName.ShowPendingWhenNotPublished]: {
-      value: false,
-      name: SettingName.ShowPendingWhenNotPublished,
-      label: 'settingList.showPendingWhenNotPublished',
-    },
-    [SettingName.NewArticlePaywall]: {
-      value: null,
-      name: SettingName.NewArticlePaywall,
-      label: 'settingList.newArticlePaywall',
-    },
-    [SettingName.NewArticlePeering]: {
-      value: false,
-      name: SettingName.NewArticlePeering,
-      label: 'settingList.newArticlePeering',
-    },
-    [SettingName.SubscriptionUpgradeBillsFullDifference]: {
-      value: false,
-      name: SettingName.SubscriptionUpgradeBillsFullDifference,
-      label: 'settingList.subscriptionUpgradeModel',
-    },
-  } as Record<SettingName, SettingWithLabel>);
+  const changedSettings = Object.keys(dirtyFields) as SettingName[];
+  const values = useWatch({ control });
 
-  useEffect(() => {
-    settingListData?.settings.forEach(setSetting);
-  }, [settingListData]);
-
-  const [updateSetting, { error: updateSettingError }] =
-    useUpdateSettingMutation({});
-
-  const [changedSetting, setChangedSetting] = useState(
-    settingListData?.settings.filter(
-      setting => setting.value !== settings[setting.name].value
-    ) ?? []
+  const [updateSetting, { error: updateSettingError }] = useMutation(
+    UpdateSettingDocument,
+    {}
   );
-  useUnsavedChangesDialog(changedSetting.length > 0);
+
+  useUnsavedChangesDialog(changedSettings.length > 0);
 
   async function handleSettingListUpdate() {
     setShowWarning(false);
 
-    const batchedUpdates = Object.values(settings).map(({ name, value }) => {
-      return updateSetting({ variables: { name, value } });
-    });
+    const batchedUpdates = Object.entries(getValues()).map(([name, value]) =>
+      updateSetting({ variables: { name: name as SettingName, value } })
+    );
 
     try {
       await Promise.all(batchedUpdates);
-      toaster.push(
-        <Notification
-          header={t('settingList.successTitle')}
-          type="success"
-          duration={2000}
-        >
-          {t('settingList.successMessage')}
-        </Notification>
-      );
-      await refetch();
+      enqueueSnackbar(t('settingList.successMessage'), {
+        variant: 'success',
+        title: t('settingList.successTitle'),
+        autoHideDuration: 2000,
+      });
+      reset(await loadSettings());
     } catch (error) {
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('settingList.errorTitle')}
-          duration={2000}
-        >
-          {t('toast.updateError')}
-        </Notification>
-      );
+      enqueueSnackbar(t('toast.updateError'), {
+        variant: 'error',
+        title: t('settingList.errorTitle'),
+        autoHideDuration: 2000,
+      });
     }
-  }
-
-  useEffect(() => {
-    setChangedSetting(
-      settingListData?.settings.filter(
-        setting => setting.value !== settings[setting.name].value
-      ) ?? []
-    );
-  }, [settingListData, settings]);
-
-  async function handleCancel() {
-    settingListData?.settings.forEach(setSetting);
   }
 
   useEffect(() => {
     const error = updateSettingError ?? fetchError;
 
-    if (error)
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('settingList.errorTitle')}
-          duration={2000}
-        >
-          {error.message.toString()}
-        </Notification>
-      );
+    if (error) {
+      enqueueSnackbar(humanizeError(error), {
+        variant: 'error',
+        title: t('settingList.errorTitle'),
+        autoHideDuration: 2000,
+      });
+    }
   }, [fetchError, t, updateSettingError]);
-
-  const { NumberType } = Schema.Types;
-
-  const validationModel = Schema.Model({
-    [SettingName.SendLoginJwtExpiresMin]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.SendLoginJwtExpiresMin].settingRestriction
-          ?.minValue ?? 1,
-        settings[SettingName.SendLoginJwtExpiresMin].settingRestriction
-          ?.maxValue ?? 10080,
-        t('errorMessages.invalidRange', {
-          min:
-            settings[SettingName.SendLoginJwtExpiresMin].settingRestriction
-              ?.minValue ?? 1,
-          max:
-            settings[SettingName.SendLoginJwtExpiresMin].settingRestriction
-              ?.maxValue ?? 10080,
-        })
-      ),
-    [SettingName.ResetPasswordJwtExpiresMin]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction
-          ?.minValue ?? 10,
-        settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction
-          ?.maxValue ?? 10080,
-        t('errorMessages.invalidRange', {
-          min:
-            settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction
-              ?.minValue ?? 10,
-          max:
-            settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction
-              ?.maxValue ?? 10080,
-        })
-      ),
-    [SettingName.PeeringTimeoutMs]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.PeeringTimeoutMs].settingRestriction?.minValue ??
-          1000,
-        settings[SettingName.PeeringTimeoutMs].settingRestriction?.maxValue ??
-          10000,
-        t('errorMessages.invalidRange', {
-          min:
-            settings[SettingName.PeeringTimeoutMs].settingRestriction
-              ?.minValue ?? 1000,
-          max:
-            settings[SettingName.PeeringTimeoutMs].settingRestriction
-              ?.maxValue ?? 10000,
-        })
-      ),
-    [SettingName.CommentCharLimit]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.CommentCharLimit].settingRestriction?.minValue ??
-          0,
-        settings[SettingName.CommentCharLimit].settingRestriction?.maxValue ??
-          10000,
-        t('errorMessages.invalidRange', {
-          min:
-            settings[SettingName.CommentCharLimit].settingRestriction
-              ?.minValue ?? 0,
-          max:
-            settings[SettingName.CommentCharLimit].settingRestriction
-              ?.maxValue ?? 10000,
-        })
-      ),
-  });
-
-  const formValue = Object.values(settings).reduce(
-    (values, setting) => ({
-      ...values,
-      [setting.name]: setting.value,
-    }),
-    {} as Record<SettingName, unknown>
-  );
 
   const valueText = useCallback(
     (value: boolean | string): string => {
@@ -377,743 +307,408 @@ function SettingList() {
     [t]
   );
 
-  return (
-    !loading && (
-      <>
-        <Form
-          data-testid="form"
+  const renderToggle = (name: SettingName, info: string) => (
+    <Box>
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <FormControlLabel
+            control={
+              <Checkbox
+                {...field}
+                disabled={isDisabled}
+                checked={field.value as boolean}
+              />
+            }
+            label={
+              <SettingLabel
+                label={t(SETTINGS[name].label)}
+                info={info}
+              />
+            }
+          />
+        )}
+      />
+    </Box>
+  );
+
+  const renderNumberInput = (
+    name: SettingName,
+    info: string,
+    unit?: string
+  ) => (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field, fieldState: { error } }) => (
+        <TextField
+          {...field}
+          value={field.value as number}
+          label={
+            <SettingLabel
+              label={t(SETTINGS[name].label)}
+              info={info}
+            />
+          }
+          type="number"
           disabled={isDisabled}
-          model={validationModel}
-          formValue={formValue}
-          onSubmit={validationPassed => {
-            return validationPassed && setShowWarning(true);
+          onChange={event => field.onChange(+event.target.value)}
+          error={Boolean(error)}
+          helperText={error?.message}
+          fullWidth
+          slotProps={{
+            input: {
+              endAdornment:
+                unit ?
+                  <InputAdornment position="end">{unit}</InputAdornment>
+                : undefined,
+            },
           }}
-        >
-          <ListViewContainer>
-            <ListViewHeader>
-              <h2>{t('settingList.settings')}</h2>
-            </ListViewHeader>
-            <ListViewActions>
-              <PermissionControl
-                qualifyingPermissions={['CAN_UPDATE_SETTINGS']}
+        />
+      )}
+    />
+  );
+
+  if (loading) {
+    return;
+  }
+
+  return (
+    <>
+      <form
+        data-testid="form"
+        onSubmit={handleSubmit(() => setShowWarning(true))}
+      >
+        <ListViewContainer>
+          <ListViewHeader>
+            <PageTitle>{t('settingList.settings')}</PageTitle>
+          </ListViewHeader>
+
+          <ListViewActions>
+            <PermissionControl qualifyingPermissions={[CanUpdateSettings.id]}>
+              <Button
+                variant="outlined"
+                startIcon={<MdCancel />}
+                onClick={() => reset()}
+                type="reset"
+                disabled={isDisabled || !changedSettings.length}
               >
-                {/* cancel btn */}
-                <IconButton
-                  icon={<MdCancel />}
-                  onClick={() => handleCancel()}
-                  className="actionButton"
-                  type="reset"
-                  size="lg"
-                  appearance="default"
-                  disabled={isDisabled || changedSetting.length === 0}
-                >
-                  {t('cancel')}
-                </IconButton>
-                {/* save btn */}
-                <IconButton
-                  icon={<MdSave />}
-                  className="actionButton"
-                  type="submit"
-                  size="lg"
-                  appearance="primary"
-                  disabled={isDisabled || changedSetting.length === 0}
-                >
-                  {t('save')}
-                </IconButton>
-              </PermissionControl>
-            </ListViewActions>
-          </ListViewContainer>
+                {t('cancel')}
+              </Button>
 
-          <Grid fluid>
-            <Row>
-              {/* first column */}
-              <Col xs={12}>
-                <Row>
-                  {/* comments */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.comments')}
-                    >
-                      <Form.Stack fluid>
-                        <Form.Group
-                          controlId={SettingName.AllowGuestCommenting}
-                        >
-                          <Form.Label>
-                            <>
-                              {t(
-                                settings[SettingName.AllowGuestCommenting].label
-                              )}
-                              <SettingInfo
-                                text={t('settingList.warnings.guestCommenting')}
-                              />
-                            </>
-                          </Form.Label>
+              <Button
+                variant="contained"
+                startIcon={<MdSave />}
+                type="submit"
+                disabled={isDisabled || !changedSettings.length}
+              >
+                {t('save')}
+              </Button>
+            </PermissionControl>
+          </ListViewActions>
+        </ListViewContainer>
 
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[SettingName.AllowGuestCommenting].value
-                            }
-                            onChange={checked =>
-                              setSetting({
-                                ...settings[SettingName.AllowGuestCommenting],
-                                value: checked,
-                              })
-                            }
-                          />
-                        </Form.Group>
+        <Grid
+          container
+          spacing={2}
+        >
+          <Grid
+            container
+            spacing={2}
+          >
+            <Grid size={{ xs: 6 }}>
+              <Grid
+                container
+                spacing={2}
+              >
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.comments')} />
 
-                        {/* Allow guest rating of a comment */}
-                        <Form.Group
-                          controlId={SettingName.AllowGuestCommentRating}
-                        >
-                          <Form.Label>
-                            {t(
-                              settings[SettingName.AllowGuestCommentRating]
-                                .label
-                            )}
-                            <SettingInfo
-                              text={t(
-                                'settingList.warnings.guestCommentRating'
-                              )}
-                            />
-                          </Form.Label>
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        <FormGroup>
+                          {renderToggle(
+                            SettingName.AllowGuestCommenting,
+                            t('settingList.warnings.guestCommenting')
+                          )}
 
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[SettingName.AllowGuestCommentRating]
-                                .value
-                            }
-                            onChange={checked =>
-                              setSetting({
-                                ...settings[
-                                  SettingName.AllowGuestCommentRating
-                                ],
-                                value: checked,
-                              })
-                            }
-                          />
-                        </Form.Group>
+                          {renderToggle(
+                            SettingName.AllowGuestCommentRating,
+                            t('settingList.warnings.guestCommentRating')
+                          )}
 
-                        {/* Allow editing of a comment */}
-                        <Form.Group controlId={SettingName.AllowCommentEditing}>
-                          <Form.Label>
-                            {t(settings[SettingName.AllowCommentEditing].label)}
-                            <SettingInfo
-                              text={t(
-                                'settingList.warnings.allowCommentEditing'
-                              )}
-                            />
-                          </Form.Label>
-
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[SettingName.AllowCommentEditing].value
-                            }
-                            onChange={checked =>
-                              setSetting({
-                                ...settings[SettingName.AllowCommentEditing],
-                                value: checked,
-                              })
-                            }
-                          />
-                        </Form.Group>
+                          {renderToggle(
+                            SettingName.AllowCommentEditing,
+                            t('settingList.info.allowCommentEditing')
+                          )}
+                        </FormGroup>
 
                         {/* Comment char limit */}
-                        <Form.Group controlId={SettingName.CommentCharLimit}>
-                          <Form.Label>
-                            {t(settings[SettingName.CommentCharLimit].label)}
-                            <SettingInfo
-                              text={t('settingList.warnings.commentCharLimit')}
-                            />
-                          </Form.Label>
+                        {renderNumberInput(
+                          SettingName.CommentCharLimit,
+                          t('settingList.info.commentCharLimit')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-                          <InputGroup>
-                            <FormControl
-                              name={SettingName.CommentCharLimit}
-                              accepter={NumberInput}
-                              value={
-                                settings[SettingName.CommentCharLimit].value
-                              }
-                              onChange={(value: string) => {
-                                setSetting({
-                                  ...settings[SettingName.CommentCharLimit],
-                                  value: +value,
-                                });
-                              }}
-                            />
-                          </InputGroup>
-                        </Form.Group>
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.polls')} />
 
-                  {/* polls */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={
-                        <>
-                          {t('settingList.polls')}
-                          <SettingInfo
-                            text={t('settingList.warnings.guestPollVote')}
-                          />
-                        </>
-                      }
-                    >
-                      <Form.Stack fluid>
-                        <Form.Group controlId="guestPollVote">
-                          <Form.Label>
-                            {t(
-                              settings[SettingName.AllowGuestPollVoting].label
-                            )}
-                          </Form.Label>
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[SettingName.AllowGuestPollVoting].value
-                            }
-                            onChange={checked =>
-                              setSetting({
-                                ...settings[SettingName.AllowGuestPollVoting],
-                                value: checked,
-                              })
-                            }
-                          />
-                        </Form.Group>
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        {renderToggle(
+                          SettingName.AllowGuestPollVoting,
+                          t('settingList.warnings.guestPollVote')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-                  {/* Memberships */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.memberships')}
-                    >
-                      <Form.Stack fluid>
-                        <Form.Group
-                          controlId={SettingName.MakeNewSubscribersApiPublic}
-                        >
-                          <Form.Label>
-                            {t(
-                              settings[SettingName.MakeNewSubscribersApiPublic]
-                                .label
-                            )}
-                            <SettingInfo
-                              text={t(
-                                'settingList.warnings.newSubscriptionsApiPublic'
-                              )}
-                            />
-                          </Form.Label>
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.memberships')} />
 
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[SettingName.MakeNewSubscribersApiPublic]
-                                .value
-                            }
-                            onChange={checked => {
-                              setSetting({
-                                ...settings[
-                                  SettingName.MakeNewSubscribersApiPublic
-                                ],
-                                value: checked,
-                              });
-                            }}
-                          />
-                        </Form.Group>
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        <FormGroup>
+                          {renderToggle(
+                            SettingName.MakeNewSubscribersApiPublic,
+                            t('settingList.info.newSubscriptionsApiPublic')
+                          )}
 
-                        <Form.Group
-                          controlId={SettingName.MakeActiveSubscribersApiPublic}
-                        >
-                          <Form.Label>
-                            {t(
-                              settings[
-                                SettingName.MakeActiveSubscribersApiPublic
-                              ].label
-                            )}
-                            <SettingInfo
-                              text={t(
-                                'settingList.warnings.activeSubscriptionsApiPublic'
-                              )}
-                            />
-                          </Form.Label>
+                          {renderToggle(
+                            SettingName.MakeActiveSubscribersApiPublic,
+                            t('settingList.info.activeSubscriptionsApiPublic')
+                          )}
 
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[
-                                SettingName.MakeActiveSubscribersApiPublic
-                              ].value
-                            }
-                            onChange={checked => {
-                              setSetting({
-                                ...settings[
-                                  SettingName.MakeActiveSubscribersApiPublic
-                                ],
-                                value: checked,
-                              });
-                            }}
-                          />
-                        </Form.Group>
+                          {renderToggle(
+                            SettingName.MakeRenewingSubscribersApiPublic,
+                            t('settingList.info.renewingSubscriptionsApiPublic')
+                          )}
 
-                        <Form.Group
-                          controlId={
-                            SettingName.MakeRenewingSubscribersApiPublic
-                          }
-                        >
-                          <Form.Label>
-                            {t(
-                              settings[
-                                SettingName.MakeRenewingSubscribersApiPublic
-                              ].label
-                            )}
-                            <SettingInfo
-                              text={t(
-                                'settingList.warnings.renewingSubscriptionsApiPublic'
-                              )}
-                            />
-                          </Form.Label>
+                          {renderToggle(
+                            SettingName.MakeNewDeactivationsApiPublic,
+                            t('settingList.info.newDeactivationsApiPublic')
+                          )}
 
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[
-                                SettingName.MakeRenewingSubscribersApiPublic
-                              ].value
-                            }
-                            onChange={checked => {
-                              setSetting({
-                                ...settings[
-                                  SettingName.MakeRenewingSubscribersApiPublic
-                                ],
-                                value: checked,
-                              });
-                            }}
-                          />
-                        </Form.Group>
+                          {renderToggle(
+                            SettingName.MakeExpectedRevenueApiPublic,
+                            t('settingList.info.expectedRevenueApiPublic')
+                          )}
 
-                        <Form.Group
-                          controlId={SettingName.MakeNewDeactivationsApiPublic}
-                        >
-                          <Form.Label>
-                            {t(
-                              settings[
-                                SettingName.MakeNewDeactivationsApiPublic
-                              ].label
-                            )}
-                            <SettingInfo
-                              text={t(
-                                'settingList.warnings.newDeactivationsApiPublic'
-                              )}
-                            />
-                          </Form.Label>
+                          {renderToggle(
+                            SettingName.MakeRevenueApiPublic,
+                            t('settingList.info.revenueApiPublic')
+                          )}
+                        </FormGroup>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[
-                                SettingName.MakeNewDeactivationsApiPublic
-                              ].value
-                            }
-                            onChange={checked =>
-                              setSetting({
-                                ...settings[
-                                  SettingName.MakeNewDeactivationsApiPublic
-                                ],
-                                value: checked,
-                              })
-                            }
-                          />
-                        </Form.Group>
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.subscriptionPlans')} />
 
-                        <Form.Group
-                          controlId={SettingName.MakeExpectedRevenueApiPublic}
-                        >
-                          <Form.Label>
-                            {t(
-                              settings[SettingName.MakeExpectedRevenueApiPublic]
-                                .label
-                            )}
-                            <SettingInfo
-                              text={t(
-                                'settingList.warnings.expectedRevenueApiPublic'
-                              )}
-                            />
-                          </Form.Label>
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        {renderToggle(
+                          SettingName.SubscriptionUpgradeBillsFullDifference,
+                          t('settingList.warnings.subscriptionUpgradeModel')
+                        )}
 
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[SettingName.MakeExpectedRevenueApiPublic]
-                                .value
-                            }
-                            onChange={checked =>
-                              setSetting({
-                                ...settings[
-                                  SettingName.MakeExpectedRevenueApiPublic
-                                ],
-                                value: checked,
-                              })
-                            }
-                          />
-                        </Form.Group>
+                        {renderNumberInput(
+                          SettingName.SubscriptionExtendWindowDays,
+                          t('settingList.info.subscriptionExtendWindowDays'),
+                          t('settingList.days')
+                        )}
 
-                        <Form.Group
-                          controlId={SettingName.MakeRevenueApiPublic}
-                        >
-                          <Form.Label>
-                            {t(
-                              settings[SettingName.MakeRevenueApiPublic].label
-                            )}
-                            <SettingInfo
-                              text={t('settingList.warnings.revenueApiPublic')}
-                            />
-                          </Form.Label>
+                        {renderNumberInput(
+                          SettingName.PaymentMethodChangeExpiryDays,
+                          t('settingList.info.paymentMethodChangeExpiryDays'),
+                          t('settingList.days')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Grid>
 
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[SettingName.MakeRevenueApiPublic].value
-                            }
-                            onChange={checked =>
-                              setSetting({
-                                ...settings[SettingName.MakeRevenueApiPublic],
-                                value: checked,
-                              })
-                            }
-                          />
-                        </Form.Group>
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
+            <Grid size={{ xs: 6 }}>
+              <Grid
+                container
+                spacing={2}
+              >
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.login')} />
 
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.subscriptionPlans')}
-                    >
-                      <Form.Stack fluid>
-                        <Form.Group
-                          controlId={
-                            SettingName.SubscriptionUpgradeBillsFullDifference
-                          }
-                        >
-                          <Form.Label>
-                            {t(
-                              settings[
-                                SettingName
-                                  .SubscriptionUpgradeBillsFullDifference
-                              ].label
-                            )}
-                            <SettingInfo
-                              text={t(
-                                'settingList.warnings.subscriptionUpgradeModel'
-                              )}
-                            />
-                          </Form.Label>
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        {renderNumberInput(
+                          SettingName.SessionTtlDays,
+                          t('settingList.warnings.sessionTtlDays'),
+                          t('settingList.days')
+                        )}
 
-                          <Toggle
-                            disabled={isDisabled}
-                            checked={
-                              settings[
-                                SettingName
-                                  .SubscriptionUpgradeBillsFullDifference
-                              ].value
-                            }
-                            onChange={checked =>
-                              setSetting({
-                                ...settings[
-                                  SettingName
-                                    .SubscriptionUpgradeBillsFullDifference
-                                ],
-                                value: checked,
-                              })
-                            }
-                          />
-                        </Form.Group>
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
-                </Row>
-              </Col>
+                        {renderNumberInput(
+                          SettingName.SendLoginJwtExpiresMin,
+                          t('settingList.info.loginMinutes'),
+                          t('settingList.minutes')
+                        )}
 
-              {/* second column */}
-              <Col xs={12}>
-                <Row>
-                  {/* login */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.login')}
-                    >
-                      <Form.Stack fluid>
-                        <Form.Group
-                          controlId={SettingName.SendLoginJwtExpiresMin}
-                        >
-                          <Form.Label>
-                            {t(
-                              settings[SettingName.SendLoginJwtExpiresMin].label
-                            )}
-                            <SettingInfo
-                              text={t('settingList.warnings.loginMinutes')}
-                            />
-                          </Form.Label>
+                        {renderNumberInput(
+                          SettingName.ResetPasswordJwtExpiresMin,
+                          t('settingList.info.passwordToken'),
+                          t('settingList.minutes')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-                          <InputGroup>
-                            <FormControl
-                              name={SettingName.SendLoginJwtExpiresMin}
-                              accepter={NumberInput}
-                              value={
-                                settings[SettingName.SendLoginJwtExpiresMin]
-                                  .value
-                              }
-                              onChange={(value: string) => {
-                                setSetting({
-                                  ...settings[
-                                    SettingName.SendLoginJwtExpiresMin
-                                  ],
-                                  value: +value,
-                                });
-                              }}
-                            />
-                            <InputGroupAddon>
-                              {t('settingList.minutes')}
-                            </InputGroupAddon>
-                          </InputGroup>
-                        </Form.Group>
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.peering')} />
 
-                        <Form.Group
-                          controlId={SettingName.ResetPasswordJwtExpiresMin}
-                        >
-                          <Form.Label>
-                            {t(
-                              settings[SettingName.ResetPasswordJwtExpiresMin]
-                                .label
-                            )}
-                            <SettingInfo
-                              text={t('settingList.warnings.passwordToken')}
-                            />
-                          </Form.Label>
-
-                          <InputGroup>
-                            <Form.Control
-                              name={SettingName.ResetPasswordJwtExpiresMin}
-                              accepter={NumberInput}
-                              value={
-                                settings[SettingName.ResetPasswordJwtExpiresMin]
-                                  .value
-                              }
-                              onChange={(value: string) => {
-                                setSetting({
-                                  ...settings[
-                                    SettingName.ResetPasswordJwtExpiresMin
-                                  ],
-                                  value: +value,
-                                });
-                              }}
-                            />
-
-                            <InputGroupAddon>
-                              {t('settingList.minutes')}
-                            </InputGroupAddon>
-                          </InputGroup>
-                        </Form.Group>
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
-
-                  {/* peering */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={
-                        <>
-                          {t('settingList.peering')}
-                          <SettingInfo
-                            text={t('settingList.warnings.peerToken')}
-                          />
-                        </>
-                      }
-                    >
-                      <Form.Stack fluid>
-                        <Form.Group controlId={SettingName.PeeringTimeoutMs}>
-                          <Form.Label>
-                            {t(settings[SettingName.PeeringTimeoutMs].label)}
-                          </Form.Label>
-                          <InputGroup>
-                            <Form.Control
-                              name={SettingName.PeeringTimeoutMs}
-                              accepter={NumberInput}
-                              value={
-                                settings[SettingName.PeeringTimeoutMs].value
-                              }
-                              onChange={(value: string) => {
-                                setSetting({
-                                  ...settings[SettingName.PeeringTimeoutMs],
-                                  value: +value,
-                                });
-                              }}
-                            />
-                            <InputGroupAddon>
-                              {t('settingList.ms')}
-                            </InputGroupAddon>
-                          </InputGroup>
-                        </Form.Group>
-                      </Form.Stack>
-                    </Panel>
-                  </Col>
-                </Row>
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
+                      >
+                        {renderNumberInput(
+                          SettingName.PeeringTimeoutMs,
+                          t('settingList.info.peerToken'),
+                          t('settingList.ms')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
                 {/* articlePage */}
-                <Col xs={24}>
-                  <Panel
-                    bordered
-                    header={t('settingList.articlePage')}
-                  >
-                    <Form.Stack fluid>
-                      <Form.Group controlId={SettingName.NewArticlePeering}>
-                        <Form.Label>
-                          <>
-                            {t(settings[SettingName.NewArticlePeering].label)}
-                            <SettingInfo
-                              text={t('settingList.warnings.newArticlePeering')}
-                            />
-                          </>
-                        </Form.Label>
+                <Grid size={{ xs: 12 }}>
+                  <Card>
+                    <CardHeader title={t('settingList.articlePage')} />
 
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.NewArticlePeering].value
-                          }
-                          onChange={checked =>
-                            setSetting({
-                              ...settings[SettingName.NewArticlePeering],
-                              value: checked,
-                            })
-                          }
-                        />
-                      </Form.Group>
-
-                      <Form.Group controlId={SettingName.NewArticlePaywall}>
-                        <Form.Label>
-                          <>
-                            {t(settings[SettingName.NewArticlePaywall].label)}
-                            <SettingInfo
-                              text={t('settingList.warnings.newArticlePaywall')}
-                            />
-                          </>
-                        </Form.Label>
-
-                        <SelectPaywall
-                          disabled={isDisabled}
-                          selectedPaywall={
-                            settings[SettingName.NewArticlePaywall].value
-                          }
-                          setSelectedPaywall={paywall =>
-                            setSetting({
-                              ...settings[SettingName.NewArticlePaywall],
-                              value: paywall,
-                            })
-                          }
-                        />
-                      </Form.Group>
-
-                      <Form.Group
-                        controlId={SettingName.ShowPendingWhenNotPublished}
+                    <CardContent>
+                      <Stack
+                        spacing={3}
+                        sx={{ width: '100%' }}
                       >
-                        <Form.Label>
-                          <>
-                            {t(
-                              settings[SettingName.ShowPendingWhenNotPublished]
-                                .label
-                            )}
-                            <SettingInfo
-                              text={t(
-                                'settingList.warnings.showPendingWhenNotPublished'
+                        {renderToggle(
+                          SettingName.NewArticlePeering,
+                          t('settingList.warnings.newArticlePeering')
+                        )}
+
+                        <FormControl fullWidth>
+                          <FormLabel>
+                            <SettingLabel
+                              label={t(
+                                SETTINGS[SettingName.NewArticlePaywall].label
                               )}
+                              info={t('settingList.warnings.newArticlePaywall')}
                             />
-                          </>
-                        </Form.Label>
+                          </FormLabel>
 
-                        <Toggle
-                          disabled={isDisabled}
-                          checked={
-                            settings[SettingName.ShowPendingWhenNotPublished]
-                              .value
-                          }
-                          onChange={checked =>
-                            setSetting({
-                              ...settings[
-                                SettingName.ShowPendingWhenNotPublished
-                              ],
-                              value: checked,
-                            })
-                          }
-                        />
-                      </Form.Group>
-                    </Form.Stack>
-                  </Panel>
-                </Col>
-              </Col>
-            </Row>
+                          <Controller
+                            control={control}
+                            name={SettingName.NewArticlePaywall}
+                            render={({ field }) => (
+                              <SelectPaywall
+                                disabled={isDisabled}
+                                selectedPaywall={field.value as string | null}
+                                setSelectedPaywall={field.onChange}
+                              />
+                            )}
+                          />
+                        </FormControl>
+
+                        {renderToggle(
+                          SettingName.ShowPendingWhenNotPublished,
+                          t('settingList.warnings.showPendingWhenNotPublished')
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
-        </Form>
+        </Grid>
+      </form>
 
-        <Modal
-          open={showWarning}
-          backdrop="static"
-          size="xs"
-          onClose={() => setShowWarning(false)}
-        >
-          <Modal.Title>
-            {t('invoice.areYouSure')}
-            <WarningIcon />
-          </Modal.Title>
+      <Dialog
+        fullWidth
+        open={showWarning}
+        maxWidth="xs"
+        onClose={() => setShowWarning(false)}
+      >
+        <DialogTitle>
+          {t('invoice.areYouSure')}
+          <WarningIcon />
+        </DialogTitle>
 
-          <Modal.Body>{t('settingList.warnings.askOperators')}</Modal.Body>
-          <Modal.Body>
-            <DescriptionList>
-              {changedSetting.map(setting => (
-                <DescriptionListItemWrapper
-                  label={t(settings[setting.name].label)}
-                  key={setting.name}
-                >
-                  <s>{valueText(setting.value)}</s>{' '}
-                  {valueText(settings[setting.name].value)}
-                </DescriptionListItemWrapper>
-              ))}
-            </DescriptionList>
-          </Modal.Body>
+        <DialogContent>{t('settingList.warnings.askOperators')}</DialogContent>
 
-          <Modal.Footer>
-            <Button
-              appearance="primary"
-              onClick={handleSettingListUpdate}
-            >
-              {t('confirm')}
-            </Button>
+        <DialogContent>
+          <DescriptionList>
+            {changedSettings.map(name => (
+              <DescriptionListItemWrapper
+                label={t(SETTINGS[name].label)}
+                key={name}
+              >
+                <s>{valueText(defaultValues?.[name] as boolean | string)}</s>{' '}
+                {valueText(values[name] as boolean | string)}
+              </DescriptionListItemWrapper>
+            ))}
+          </DescriptionList>
+        </DialogContent>
 
-            <Button
-              appearance="subtle"
-              onClick={() => setShowWarning(false)}
-            >
-              {t('cancel')}
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </>
-    )
+        <DialogActions>
+          <Button
+            variant="text"
+            onClick={() => setShowWarning(false)}
+          >
+            {t('cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={handleSettingListUpdate}
+          >
+            {t('confirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_SETTINGS',
-  'CAN_UPDATE_SETTINGS',
+  CanGetSettings.id,
+  CanUpdateSettings.id,
 ])(SettingList);
 export { CheckedPermissionComponent as SettingList };

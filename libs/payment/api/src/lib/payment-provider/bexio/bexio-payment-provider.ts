@@ -7,7 +7,7 @@ import {
   User,
   UserAddress,
 } from '@prisma/client';
-import { logger } from '@wepublish/utils/api';
+import { addErrorContext, describeError, logger } from '@wepublish/utils/api';
 import Bexio, { ContactsStatic, InvoicesStatic } from 'bexio';
 import { MappedReplacer } from 'mapped-replacer';
 import {
@@ -151,7 +151,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         } catch (error) {
           logger('bexioPaymentProvider').error(
             'Error to cancel invoice for payment (id: %s): %s',
-            error instanceof Error ? error.message : `${error}`
+            payment.id,
+            describeError(error)
           );
         }
       })
@@ -252,6 +253,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     isRenewal: boolean,
     successURL = ''
   ): Promise<Intent> {
+    let step = 'loading the invoice';
+
     try {
       const invoice = await this.prisma.invoice.findUnique({
         where: {
@@ -264,6 +267,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
               user: {
                 include: {
                   address: true,
+                  paymentProviderCustomers: true,
                 },
               },
             },
@@ -276,17 +280,41 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         throw new InvoiceNotFoundError(invoice);
       }
 
+      step = 'loading its settings';
       const bexio = await this.getBexioGateway();
-      const contact = await searchForContact(bexio, invoice.subscription.user);
-      const updatedContact = await this.createOrUpdateContact(
-        contact,
-        invoice.subscription.user
-      );
+      step = 'searching the contact';
+      const user = invoice.subscription.user;
+      const storedContactId = user.paymentProviderCustomers.find(
+        customer => customer.paymentProviderID === this.id
+      )?.customerID;
+      const contact =
+        (await this.findStoredContact(bexio, storedContactId)) ??
+        (await searchForContact(bexio, user));
+      step = 'saving the contact';
+      const updatedContact = await this.createOrUpdateContact(contact, user);
+      step = 'creating the invoice';
       const newInvoice = await this.createInvoice(
         updatedContact,
         invoice,
         isRenewal
       );
+
+      // The email can differ between we.publish and bexio, so the next
+      // invoice finds this contact by its id. Only a convenience: the
+      // invoice is out either way, so a missing id is skipped, not thrown.
+      const contactId =
+        updatedContact.id != null ? String(updatedContact.id) : undefined;
+
+      if (contactId && contactId !== storedContactId) {
+        await this.saveCustomer(user.id, contactId).catch(error =>
+          logger('bexioPaymentProvider').warn(
+            'Could not remember Bexio contact %s for user %s: %s',
+            contactId,
+            user.id,
+            describeError(error)
+          )
+        );
+      }
 
       return {
         intentID: newInvoice.id.toString(),
@@ -295,13 +323,17 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         state: PaymentState.submitted,
       };
     } catch (e) {
+      const error = addErrorContext(
+        e,
+        `Bexio failed while ${step} for invoice ${invoiceId}`
+      );
       logger('bexioPaymentProvider').error(
         'Failed to create Bexio invoice for invoiceId %s (renewal: %s): %s',
         invoiceId,
         isRenewal,
-        e instanceof Error ? e.message : String(e)
+        error.message
       );
-      throw e;
+      throw error;
     }
   }
 
@@ -321,6 +353,24 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    *
    * @returns {Promise<ContactsStatic.ContactFull>} The created or updated contact object from Bexio.
    */
+  /** The contact an earlier invoice went to, unless it is gone. */
+  private async findStoredContact(bexio: Bexio, contactId?: string) {
+    if (!contactId || !/^\d+$/.test(contactId)) {
+      return undefined;
+    }
+
+    try {
+      return await bexio.contacts.show(Number(contactId));
+    } catch (error) {
+      logger('bexioPaymentProvider').warn(
+        'Stored Bexio contact %s not found, searching by email: %s',
+        contactId,
+        describeError(error)
+      );
+      return undefined;
+    }
+  }
+
   async createOrUpdateContact(
     contact: ContactsStatic.ContactSmall,
     user: User & { address: UserAddress | null }
@@ -379,8 +429,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     invoice: Invoice & {
       items: InvoiceItem[];
       subscription:
-        | (Subscription & { memberPlan: MemberPlan; user: User })
-        | null;
+        (Subscription & { memberPlan: MemberPlan; user: User }) | null;
     },
     isRenewal: boolean
   ) {

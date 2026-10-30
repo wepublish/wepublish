@@ -1,11 +1,10 @@
 import { useDndContext } from '@dnd-kit/core';
 import styled from '@emotion/styled';
-import { css, Typography, useTheme } from '@mui/material';
+import { css, IconButton, Typography, useTheme } from '@mui/material';
 import { TeaserType } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-import { IconButton } from 'rsuite';
 
 import { teaserContentKey } from './extractTeasers';
 import { groupColor, TeaserCard } from './TeaserCard';
@@ -22,9 +21,9 @@ const GroupWrapper = styled('div', {
   ${({ hasError, theme }) =>
     hasError &&
     css`
-      outline: 1px solid ${theme.palette.error.main};
+      outline: 1px solid ${theme.vars.palette.error.main};
       outline-offset: 4px;
-      border-radius: 4px;
+      border-radius: calc(${theme.shape.borderRadius}px * 0.75);
     `}
 `;
 
@@ -49,10 +48,10 @@ const HideToggle = styled(IconButton)`
     padding: 2px;
     min-height: 0;
     line-height: 1;
-    color: ${({ theme }) => theme.palette.text.secondary};
+    color: ${({ theme }) => theme.vars.palette.text.secondary};
   }
   &.rs-btn:disabled {
-    color: ${({ theme }) => theme.palette.text.disabled};
+    color: ${({ theme }) => theme.vars.palette.text.disabled};
   }
   &.rs-btn svg {
     width: 16px;
@@ -62,7 +61,7 @@ const HideToggle = styled(IconButton)`
 
 const GroupLabel = styled(Typography)`
   ${({ theme }) => css`
-    color: ${theme.palette.text.secondary};
+    color: ${theme.vars.palette.text.secondary};
     letter-spacing: 0.02em;
   `}
 `;
@@ -70,12 +69,12 @@ const GroupLabel = styled(Typography)`
 const GroupLabelHighlight = styled('span')`
   ${({ theme }) => css`
     font-weight: ${theme.typography.fontWeightBold};
-    color: ${theme.palette.text.primary};
+    color: ${theme.vars.palette.text.primary};
   `}
 `;
 
 const ErrorLabel = styled(Typography)`
-  color: ${({ theme }) => theme.palette.error.main};
+  color: ${({ theme }) => theme.vars.palette.error.main};
 `;
 
 const Row = styled('div')`
@@ -231,9 +230,7 @@ export function TeaserBlockGroup({
       <GroupHeader>
         <GroupDot dotColor={color} />
         <HideToggle
-          size="xs"
-          appearance="subtle"
-          icon={isHidden ? <MdVisibilityOff /> : <MdVisibility />}
+          size="small"
           disabled={!canHide && !isHidden}
           onClick={() => onToggleHidden(block.groupKey)}
           title={t(
@@ -241,7 +238,14 @@ export function TeaserBlockGroup({
             : isHidden ? 'teaserOverview.showBlock'
             : 'teaserOverview.hideBlock'
           )}
-        />
+          aria-label={t(
+            isHidden ? 'teaserOverview.showBlock' : 'teaserOverview.hideBlock'
+          )}
+        >
+          {isHidden ?
+            <MdVisibilityOff />
+          : <MdVisibility />}
+        </HideToggle>
         <GroupLabel variant="caption">
           {(() => {
             const [prefix, last] = splitLabel(block.label);

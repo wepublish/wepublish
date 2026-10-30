@@ -15,6 +15,7 @@ export enum SettingName {
   SEND_LOGIN_JWT_EXPIRES_MIN = 'sendLoginJwtExpiresMin',
   RESET_PASSWORD_JWT_EXPIRES_MIN = 'resetPasswordJwtExpiresMin',
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
+  SESSION_TTL_DAYS = 'sessionTtlDays',
   MAIL_PROVIDER_NAME = 'mailProviderName',
 
   MAKE_NEW_SUBSCRIBERS_API_PUBLIC = 'makeNewSubscribersApiPublic',
@@ -31,7 +32,8 @@ export enum SettingName {
   SHOW_PENDING_WHEN_NOT_PUBLISHED = 'showPendingWhenNotPublished',
 
   SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE = 'subscriptionUpgradeBillsFullDifference',
-
+  SUBSCRIPTION_EXTEND_WINDOW_DAYS = 'subscriptionExtendWindowDays',
+  PAYMENT_METHOD_CHANGE_EXPIRY_DAYS = 'paymentMethodChangeExpiryDays',
   EMAIL_QUALITY = 'emailQuality',
 }
 

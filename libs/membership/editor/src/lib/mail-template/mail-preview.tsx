@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdLaptopMac, MdPhoneIphone, MdTabletMac } from 'react-icons/md';
-import { IconButton, Stack } from 'rsuite';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 type Device = 'desktop' | 'tablet' | 'mobile';
 
@@ -42,38 +42,36 @@ export function MailPreview({
   const { t } = useTranslation();
   const [device, setDevice] = useState<Device>('desktop');
 
-  const deviceProps = (value: Device, label: string) => ({
-    size: 'sm' as const,
-    title: label,
-    appearance: (device === value ? 'primary' : 'default') as
-      | 'primary'
-      | 'default',
-    onClick: () => setDevice(value),
-  });
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height }}>
-      <Stack
-        spacing={4}
-        justifyContent="center"
-        style={{ marginBottom: 8 }}
+      <ToggleButtonGroup
+        exclusive
+        size="small"
+        value={device}
+        onChange={(_event, next: Device | null) => next && setDevice(next)}
+        sx={{ justifyContent: 'center', mb: 1 }}
       >
-        <IconButton
-          icon={<MdLaptopMac />}
-          {...deviceProps(
-            'desktop',
-            t('mailTemplates.editor.desktop', 'Desktop')
-          )}
-        />
-        <IconButton
-          icon={<MdTabletMac />}
-          {...deviceProps('tablet', t('mailTemplates.editor.tablet', 'Tablet'))}
-        />
-        <IconButton
-          icon={<MdPhoneIphone />}
-          {...deviceProps('mobile', t('mailTemplates.editor.mobile', 'Mobile'))}
-        />
-      </Stack>
+        <ToggleButton
+          value="desktop"
+          aria-label={t('mailTemplates.editor.desktop', 'Desktop')}
+        >
+          <MdLaptopMac />
+        </ToggleButton>
+
+        <ToggleButton
+          value="tablet"
+          aria-label={t('mailTemplates.editor.tablet', 'Tablet')}
+        >
+          <MdTabletMac />
+        </ToggleButton>
+
+        <ToggleButton
+          value="mobile"
+          aria-label={t('mailTemplates.editor.mobile', 'Mobile')}
+        >
+          <MdPhoneIphone />
+        </ToggleButton>
+      </ToggleButtonGroup>
 
       {subject !== undefined && (
         <div style={{ marginBottom: 8 }}>
@@ -89,17 +87,18 @@ export function MailPreview({
           justifyContent: 'center',
           overflow: 'auto',
           background: '#f4f4f4',
+          borderRadius: 0.75,
         }}
       >
         <iframe
-          title="mail-preview"
+          title={t('mailTemplates.edit.preview')}
           srcDoc={withPreviewStyles(html)}
           style={{
             width: DEVICE_WIDTH[device],
             maxWidth: '100%',
             height: '100%',
             border: '1px solid #e5e5ea',
-            borderRadius: 6,
+            borderRadius: 0.75,
             background: '#fff',
           }}
         />

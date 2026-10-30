@@ -1,8 +1,5 @@
-import {
-  FetchResult,
-  LazyQueryExecFunction,
-  MutationFunctionOptions,
-} from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
+import type { useLazyQuery, useMutation } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import {
   PollVoteMutation,
@@ -15,17 +12,16 @@ import { createContext, useContext } from 'react';
 export type PollBlockContextProps = Partial<{
   canVoteAnonymously: boolean;
   getAnonymousVote: (pollId: string) => string | null;
-  fetchUserVote: LazyQueryExecFunction<
+  fetchUserVote: useLazyQuery.ExecFunction<
     UserPollVoteQuery,
     UserPollVoteQueryVariables
   >;
   vote: (
-    options: MutationFunctionOptions<
-      PollVoteMutation,
-      PollVoteMutationVariables
-    >,
+    options: Parameters<
+      useMutation.MutationFunction<PollVoteMutation, PollVoteMutationVariables>
+    >[0],
     pollId: string
-  ) => Promise<FetchResult<PollVoteMutation> | undefined>;
+  ) => Promise<ApolloClient.MutateResult<PollVoteMutation> | undefined>;
 }>;
 
 export const PollBlockContext = createContext<PollBlockContextProps>({});

@@ -10,6 +10,7 @@ import {
   RichTextBlockInput,
 } from './richtext/richtext-block.model';
 import { BaseBlock, UnknownBlock } from './base-block.model';
+import { assertValidTiming } from './timing/block-timing';
 import { HTMLBlock, HTMLBlockInput } from './html/html-block.model';
 import { TitleBlock, TitleBlockInput } from './title/title-block.model';
 import { ImageBlock, ImageBlockInput } from './image/image-block.model';
@@ -98,6 +99,10 @@ import {
 } from './embed/streamable-block.model';
 import { FlexBlock, FlexBlockInput } from './flex/flex-block.model';
 import {
+  BlockTemplateBlock,
+  BlockTemplateBlockInput,
+} from './block-template/block-template.model';
+import {
   MailchimpFormBlock,
   MailchimpFormBlockInput,
 } from './mailchimp-form/mailchimp-form-block.model';
@@ -138,6 +143,7 @@ export const BlockContent = createUnionType({
       TeaserListBlock,
       TeaserSlotsBlock,
       FlexBlock,
+      BlockTemplateBlock,
     ] as const,
   resolveType: (value: BaseBlock<BlockType>) => {
     switch (value.type) {
@@ -203,6 +209,8 @@ export const BlockContent = createUnionType({
         return TeaserSlotsBlock.name;
       case BlockType.FlexBlock:
         return FlexBlock.name;
+      case BlockType.BlockTemplate:
+        return BlockTemplateBlock.name;
     }
 
     console.warn(`Block ${value.type} not implemented!`);
@@ -279,6 +287,8 @@ export class BlockContentInput {
   [BlockType.TeaserSlots]?: TeaserSlotsBlockInput;
   @Field(() => FlexBlockInput, { nullable: true })
   [BlockType.FlexBlock]?: FlexBlockInput;
+  @Field(() => BlockTemplateBlockInput, { nullable: true })
+  [BlockType.BlockTemplate]?: BlockTemplateBlockInput;
 }
 
 export function mapBlockUnionMap(
@@ -299,6 +309,8 @@ export function mapBlockUnionMap(
   }
 
   const type = Object.keys(value)[0] as BlockType;
+
+  assertValidTiming(value[type]?.timing);
 
   switch (type) {
     case BlockType.TeaserGrid: {
