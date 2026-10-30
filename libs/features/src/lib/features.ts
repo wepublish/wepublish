@@ -45,6 +45,12 @@ export const FEATURES = [
       'Per-user delivery mode: automated subscription mails printed as letters, with suggestions from the email quality',
     stage: 'alpha',
   },
+  {
+    key: 'editor-renewal-provider-invoice',
+    description:
+      'Editor renew and reactivate: the invoice is created at the payment provider and the invoice-creation mail or letter is sent, as the nightly job does',
+    stage: 'alpha',
+  },
 ] as const satisfies readonly Feature[];
 
 export type FeatureKey = (typeof FEATURES)[number]['key'];

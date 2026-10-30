@@ -1,7 +1,6 @@
 import { Logger } from '@nestjs/common';
 import {
   EmailQualityEventSource,
-  MailChannel,
   MailLogState,
   MailLogType,
   PrismaClient,
@@ -14,7 +13,12 @@ import {
   qualityTypeForRejectReason,
   recordEmailQualitySafely,
 } from './email-quality-recorder';
-import { LetterDeliveryError, LetterRecipient } from './letter-sender';
+import {
+  LetterAttachment,
+  LetterDeliveryError,
+  LetterRecipient,
+} from './letter-sender';
+import { resolveLetterRecipient } from './resolve-letter-recipient';
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -54,6 +58,17 @@ export type MailControllerConfig = {
    * link or a password reset is no use on paper.
    */
   asLetter?: boolean;
+  /**
+   * The recipient the caller already resolved to paper (`null`: to mail),
+   * when it had to decide before the send — the nightly job does, before it
+   * asks the payment provider for the invoice. Skips the lookup here.
+   */
+  letterRecipient?: LetterRecipient | null;
+  /**
+   * A pdf printed after the template, e.g. the provider's invoice with its
+   * payment slip. Nothing for a mail: the provider emails that itself.
+   */
+  letterAttachment?: LetterAttachment;
 };
 
 export class MailController {
@@ -197,49 +212,21 @@ export class MailController {
   }
 
   /**
-   * The user with their address when this send goes to paper: the event is
-   * switched to letters, the user prefers them, and letters can be printed.
-   * Anything missing means the mail goes out as usual.
+   * The user with their address when this send goes to paper, as the caller
+   * decided or as `resolveLetterRecipient` decides now.
    */
-  private async resolveLetterRecipient(): Promise<LetterRecipient | null> {
-    const sender = this.mailContext.letterSender;
-
-    if (!this.config.asLetter || !sender) {
-      return null;
+  private resolveLetterRecipient(): Promise<LetterRecipient | null> {
+    if (this.config.letterRecipient !== undefined) {
+      return Promise.resolve(this.config.letterRecipient);
     }
 
-    const preference =
-      await this.prismaService.userDeliveryPreference.findUnique({
-        where: { userId: this.config.recipient.id },
-      });
-
-    if (preference?.channel !== MailChannel.letter) {
-      return null;
-    }
-
-    if (!(await sender.isConfigured())) {
-      this.logger.warn(
-        `No letter integration is configured; mailing <${this.config.recipient.email}> instead.`
-      );
-
-      return null;
-    }
-
-    // The callers hand in a bare user; the address lives in its own row.
-    const user = await this.prismaService.user.findUnique({
-      where: { id: this.config.recipient.id },
-      include: { address: true },
+    return resolveLetterRecipient({
+      prisma: this.prismaService,
+      letterSender: this.mailContext.letterSender,
+      recipient: this.config.recipient,
+      asLetter: this.config.asLetter,
+      logger: this.logger,
     });
-
-    if (!user || !sender.canReceiveLetters(user)) {
-      this.logger.warn(
-        `<${this.config.recipient.email}> prefers letters but has no usable postal address; mailing instead.`
-      );
-
-      return null;
-    }
-
-    return user;
   }
 
   /**
@@ -262,6 +249,9 @@ export class MailController {
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],
         },
+        ...(this.config.letterAttachment && {
+          attachment: this.config.letterAttachment,
+        }),
       });
     } catch (error) {
       throw new LetterDeliveryError(

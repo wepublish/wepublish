@@ -19,6 +19,7 @@ import { InvoiceModule } from '../invoice/invoice.module';
 import { SettingModule } from '@wepublish/settings/api';
 import { PendingPaymentMethodChangeDataloader } from '../payment-method-change/pending-payment-method-change.dataloader';
 import { PaymentMethodChangeModule } from '../payment-method-change/payment-method-change.module';
+import { InvoiceDeliveryModule } from '../periodic-job/invoice-delivery.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PaymentMethodChangeModule } from '../payment-method-change/payment-meth
     InvoiceModule,
     SettingModule,
     PaymentMethodChangeModule,
+    InvoiceDeliveryModule,
   ],
   providers: [
     SubscriptionPeriodResolver,

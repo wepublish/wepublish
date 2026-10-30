@@ -237,6 +237,7 @@ describe('LetterContext appendix', () => {
       letterAppendixId?: string | null;
       country?: string;
       printMode?: LetterPrintMode;
+      attachment?: Buffer;
     }
   ) =>
     context.renderLetter({
@@ -248,6 +249,10 @@ describe('LetterContext appendix', () => {
       data: {},
       recipient: { ...recipient, country: props.country ?? 'CH' },
       printMode: props.printMode,
+      attachment: props.attachment && {
+        content: props.attachment,
+        name: 'RE-1.pdf',
+      },
     });
 
   it('leaves the letter alone without an appendix', async () => {
@@ -290,6 +295,50 @@ describe('LetterContext appendix', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  // The payment provider's own invoice, with its per-invoice payment slip.
+  it('prints a document the caller hands in after the letter', async () => {
+    const { context } = createContext();
+
+    const pdf = await render(context, { attachment: await makePdf(2) });
+
+    expect(await pageCount(pdf)).toBe(3);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('prefers the handed-in document over the static appendix', async () => {
+    const { context } = createContext();
+
+    const pdf = await render(context, {
+      letterAppendixId: 'qr-bill',
+      attachment: await makePdf(2),
+    });
+
+    expect(await pageCount(pdf)).toBe(3);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('pads a handed-in document to an odd page for duplex printing', async () => {
+    const { context } = createContext();
+
+    const pdf = await render(context, {
+      attachment: await makePdf(2),
+      printMode: LetterPrintMode.duplex,
+    });
+
+    expect(await pageCount(pdf)).toBe(4);
+  });
+
+  it('leaves out a handed-in document for a recipient abroad', async () => {
+    const { context } = createContext();
+
+    const pdf = await render(context, {
+      attachment: await makePdf(2),
+      country: 'DE',
+    });
+
+    expect(await pageCount(pdf)).toBe(1);
+  });
+
   it('fetches each appendix only once', async () => {
     const { context } = createContext();
 
@@ -325,6 +374,24 @@ describe('LetterContext appendix', () => {
     });
 
     expect(await pageCount(sendLetter.mock.calls[0][0].file)).toBe(3);
+  });
+
+  it('prints a handed-in document after the letter it sends', async () => {
+    const sendLetter = vi.fn().mockResolvedValue({
+      providerLetterID: 'pingen-1',
+      state: LetterState.submitted,
+    });
+    const { context } = createContext(sendLetter);
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+      attachment: { content: await makePdf(1), name: 'RE-1.pdf' },
+    });
+
+    expect(await pageCount(sendLetter.mock.calls[0][0].file)).toBe(2);
   });
 });
 

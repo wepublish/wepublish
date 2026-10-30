@@ -1,6 +1,7 @@
 import {
   Invoice,
   InvoiceItem,
+  MailChannel,
   MemberPlan,
   PaymentState,
   Subscription,
@@ -19,11 +20,16 @@ import {
   Intent,
   IntentState,
   PaymentProviderProps,
+  RemoteInvoiceDocument,
+  RemoteInvoiceResult,
+  RenderRemoteInvoiceProps,
   WebhookForPaymentIntentProps,
   WebhookResponse,
 } from '../payment-provider';
 import {
+  InvoiceDeliveryError,
   InvoiceNotFoundError,
+  IssuingInvoiceError,
   NoSubscriptionIdInInvoice,
   ResponseNOK,
   SendingInvoiceError,
@@ -70,22 +76,44 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       throw new NoSubscriptionIdInInvoice();
     }
 
-    return await this.bexioCreate(props.invoice.id, false, props.successURL);
+    const { intent, deliveryError } = await this.bexioCreate(
+      props.invoice.id,
+      false,
+      props.successURL
+    );
+
+    // A checkout has nobody to hand the invoice to but the email.
+    if (deliveryError) {
+      throw new InvoiceDeliveryError(deliveryError);
+    }
+
+    return intent;
   }
 
   /**
-   * This function calls the `bexioCreate` method to create an invoice in Bexio.
-   * It is designed to handle the creation of remote invoices, specifically for renewals.
-   *
-   * @async
-   * @function
-   * @param {CreateRemoteInvoiceProps} props - The properties required to create the remote invoice.
-   * @param {string} props.invoice.id - The ID of the invoice.
-   *
-   * @returns {Promise<void>} Resolves when the remote invoice is successfully created.
+   * Creates the renewal invoice in Bexio and either has Bexio email it or, for
+   * a reader who gets letters, issues it and hands back its pdf for printing.
+   * The returned intent carries the Bexio invoice id so the payment can be
+   * polled.
    */
-  override async createRemoteInvoice(props: CreateRemoteInvoiceProps) {
-    await this.bexioCreate(props.invoice.id, true);
+  override async createRemoteInvoice(
+    props: CreateRemoteInvoiceProps
+  ): Promise<RemoteInvoiceResult> {
+    return this.bexioCreate(props.invoice.id, true, '', props.channel);
+  }
+
+  /** The pdf of the Bexio invoice behind a payment, for printing it again. */
+  override async renderRemoteInvoice({
+    payment,
+  }: RenderRemoteInvoiceProps): Promise<RemoteInvoiceDocument | undefined> {
+    if (!payment.intentID || !/^\d+$/.test(payment.intentID)) {
+      return undefined;
+    }
+
+    return this.fetchInvoicePdf(
+      await this.getBexioGateway(),
+      Number(payment.intentID)
+    );
   }
 
   /**
@@ -122,11 +150,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         intentID: {
           not: null,
         },
+        // Polling maps an unpaid or draft Bexio invoice to requiresUserAction,
+        // which is where a renewal invoice sits by the time it is cancelled.
         state: {
           in: [
             PaymentState.created,
             PaymentState.submitted,
             PaymentState.processing,
+            PaymentState.requiresUserAction,
           ],
         },
       },
@@ -238,21 +269,21 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @param {string} invoiceId - The ID of the invoice in the local database.
    * @param {boolean} isRenewal - Indicates whether the invoice is a renewal or a new invoice.
    * @param {string} successURL - The url the client gets redirected after successful invoice creation
+   * @param {MailChannel} channel - Email the invoice (default) or render it for a letter
    *
    * @throws {InvoiceNotFoundError} If the invoice or related data cannot be found in the local database.
    * @throws {Error} For any other generic error.
    *
-   * @returns {Promise<Intent>} An object containing:
-   *   - intentID: The ID of the newly created invoice in Bexio.
-   *   - intentSecret: An empty string (as there's no secret provided in the function).
-   *   - intentData: A JSON string representation of the new invoice from Bexio.
-   *   - state: The state of the payment, set as 'submitted'.
+   * @returns {Promise<RemoteInvoiceResult>} The intent (intentID is the Bexio
+   *   invoice id, state 'submitted'), the rendered pdf for a letter, and the
+   *   delivery error if the invoice was created but not delivered.
    */
   async bexioCreate(
     invoiceId: string,
     isRenewal: boolean,
-    successURL = ''
-  ): Promise<Intent> {
+    successURL = '',
+    channel: MailChannel = MailChannel.mail
+  ): Promise<RemoteInvoiceResult> {
     let step = 'loading the invoice';
 
     try {
@@ -293,11 +324,11 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       step = 'saving the contact';
       const updatedContact = await this.createOrUpdateContact(contact, user);
       step = 'creating the invoice';
-      const newInvoice = await this.createInvoice(
-        updatedContact,
-        invoice,
-        isRenewal
-      );
+      const {
+        invoice: newInvoice,
+        document,
+        deliveryError,
+      } = await this.createInvoice(updatedContact, invoice, isRenewal, channel);
 
       // The email can differ between we.publish and bexio, so the next
       // invoice finds this contact by its id. Only a convenience: the
@@ -317,10 +348,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       }
 
       return {
-        intentID: newInvoice.id.toString(),
-        intentSecret: successURL,
-        intentData: JSON.stringify(newInvoice),
-        state: PaymentState.submitted,
+        intent: {
+          intentID: newInvoice.id.toString(),
+          intentSecret: successURL,
+          intentData: JSON.stringify(newInvoice),
+          state: PaymentState.submitted,
+        },
+        ...(document && { document }),
+        ...(deliveryError && { deliveryError }),
       };
     } catch (e) {
       const error = addErrorContext(
@@ -404,25 +439,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }
 
   /**
-   * Creates and sends an invoice in Bexio based on provided contact, invoice, and renewal status.
+   * Creates an invoice in Bexio for the contact and delivers it: emailed by
+   * Bexio with the pdf attached, or — for a reader who gets letters — issued
+   * and rendered to a pdf that we.publish prints.
    *
-   * This function performs several operations:
-   * 1. Validates the provided invoice and associated data.
-   * 2. Creates a string replace map based on the subscription, user, and memberPlan.
-   * 3. Constructs a new Bexio invoice object and creates the invoice in Bexio.
-   * 4. Sends the created Bexio invoice to the associated contact.
-   *
-   * @async
-   * @function
-   * @param {ContactsStatic.ContactFull} contact - The contact associated with the invoice in Bexio.
-   * @param {Invoice & {subscription: (Subscription & {memberPlan: MemberPlan; user: User}) | null}} invoice -
-   *        The invoice data and its associated subscription, member plan, and user details.
-   * @param {boolean} isRenewal - Indicates whether the invoice is a renewal or a new invoice.
+   * Once Bexio has created the invoice, a delivery failure is returned with it
+   * rather than thrown: the caller would try again and create a second one.
    *
    * @throws {InvoiceNotFoundError} If the provided invoice or related data is not valid.
-   * @throws {SendingInvoiceError} If there's an issue sending the created invoice.
-   *
-   * @returns {Promise<InvoicesStatic.Invoice>} The created invoice object from Bexio.
    */
   async createInvoice(
     contact: ContactsStatic.ContactFull,
@@ -431,8 +455,13 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       subscription:
         (Subscription & { memberPlan: MemberPlan; user: User }) | null;
     },
-    isRenewal: boolean
-  ) {
+    isRenewal: boolean,
+    channel: MailChannel = MailChannel.mail
+  ): Promise<{
+    invoice: InvoicesStatic.Invoice;
+    document?: RemoteInvoiceDocument;
+    deliveryError?: string;
+  }> {
     if (!invoice || !invoice.subscription || !invoice.subscription.user) {
       throw new InvoiceNotFoundError(invoice);
     }
@@ -480,34 +509,92 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       ],
     };
     const bexio = await this.getBexioGateway();
-    const invoiceUpdated = await bexio.invoices.create(bexioInvoice);
-    const sentInvoice = await bexio.invoices.sent(invoiceUpdated.id, {
-      recipient_email: contact.mail,
-      subject: stringReplaceMap.replace(
-        isRenewal ?
-          config.bexio_invoiceMailSubjectRenewalMembership || ''
-        : config.bexio_invoiceMailSubjectNewMembership || ''
-      ),
-      message: stringReplaceMap.replace(
-        isRenewal ?
-          config.bexio_invoiceMailBodyRenewalMembership || ''
-        : config.bexio_invoiceMailBodyNewMembership || ''
-      ),
-      mark_as_open: this.assertProperty(
-        'bexio_markInvoiceAsOpen',
-        config.bexio_markInvoiceAsOpen
-      ),
-      attach_pdf: true,
-    });
+    const created = await bexio.invoices.create(bexioInvoice);
+    const markAsOpen = this.assertProperty(
+      'bexio_markInvoiceAsOpen',
+      config.bexio_markInvoiceAsOpen
+    );
 
     logger('bexioPaymentProvider').info(
       'Created Bexio invoice with ID: %s for paymentProvider %s',
-      invoiceUpdated.id,
+      created.id,
       this.id
     );
-    if (!sentInvoice.success) {
-      throw new SendingInvoiceError(sentInvoice);
+
+    try {
+      if (channel === MailChannel.letter) {
+        return {
+          invoice: created,
+          document: await this.renderInvoiceForLetter(
+            bexio,
+            created.id,
+            markAsOpen
+          ),
+        };
+      }
+
+      const sentInvoice = await bexio.invoices.send(created.id, {
+        recipient_email: contact.mail,
+        subject: stringReplaceMap.replace(
+          isRenewal ?
+            config.bexio_invoiceMailSubjectRenewalMembership || ''
+          : config.bexio_invoiceMailSubjectNewMembership || ''
+        ),
+        message: stringReplaceMap.replace(
+          isRenewal ?
+            config.bexio_invoiceMailBodyRenewalMembership || ''
+          : config.bexio_invoiceMailBodyNewMembership || ''
+        ),
+        mark_as_open: markAsOpen,
+        attach_pdf: true,
+      });
+
+      if (!sentInvoice.success) {
+        throw new SendingInvoiceError(sentInvoice);
+      }
+
+      return { invoice: created };
+    } catch (error) {
+      const deliveryError = describeError(error);
+
+      logger('bexioPaymentProvider').error(
+        'Bexio invoice %s was created but not delivered by %s: %s',
+        created.id,
+        channel,
+        deliveryError
+      );
+
+      return { invoice: created, deliveryError };
     }
-    return invoiceUpdated;
+  }
+
+  /**
+   * What emailing does without the email: issue the invoice, as `mark_as_open`
+   * would, and fetch its pdf on Bexio's letterhead for we.publish to print.
+   */
+  private async renderInvoiceForLetter(
+    bexio: Bexio,
+    invoiceId: number,
+    markAsOpen: boolean
+  ): Promise<RemoteInvoiceDocument> {
+    if (markAsOpen) {
+      const issued = await bexio.invoices.issue(invoiceId);
+
+      if (!issued.success) {
+        throw new IssuingInvoiceError(issued);
+      }
+    }
+
+    return this.fetchInvoicePdf(bexio, invoiceId);
+  }
+
+  /** The invoice on Bexio's letterhead, as it would be attached to the email. */
+  private async fetchInvoicePdf(
+    bexio: Bexio,
+    invoiceId: number
+  ): Promise<RemoteInvoiceDocument> {
+    const pdf = await bexio.invoices.showPdf(invoiceId, 1);
+
+    return { content: pdf.content, name: pdf.name, mime: pdf.mime };
   }
 }
