@@ -17,6 +17,7 @@ const ENV = {
   S3_PUBLIC_HOST: 'https://media.example',
   API_URL: 'https://api.example',
   APP_RELEASE_ID: '2026.10.1',
+  MEDIA_FALLBACK_URL: 'https://fallback.example',
 };
 
 const createResponse = () => {
@@ -54,7 +55,8 @@ describe('AppModule', () => {
       getImageUri: vi
         .fn()
         .mockResolvedValue({ uri: 'images/image-1/{}', exists: true }),
-    } satisfies Pick<MediaService, 'getImageUri'>;
+      hasImage: vi.fn().mockResolvedValue(true),
+    } satisfies Pick<MediaService, 'getImageUri' | 'hasImage'>;
     const module = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(DragonflyConnection)
       .useValue(dragonfly)
