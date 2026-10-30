@@ -39,6 +39,25 @@ describe('NotificationItem', () => {
     expect(screen.getByText('Something broke')).toBeTruthy();
   });
 
+  it('drops the body when compact, but keeps title, source tag and actions', () => {
+    render(
+      <NotificationItem
+        compact
+        severity="error"
+        title="Job failed"
+        sourceTag="Job-Logs"
+        actions={<button>Retry</button>}
+      >
+        Something broke
+      </NotificationItem>
+    );
+
+    expect(screen.getByText('Job failed')).toBeTruthy();
+    expect(screen.getByText('Job-Logs')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeTruthy();
+    expect(screen.queryByText('Something broke')).toBeNull();
+  });
+
   it('carries an order so a stack of items sorts itself by severity', () => {
     const { container } = render(
       <NotificationItem
