@@ -1,4 +1,3 @@
-import { Breakpoint } from '@mui/material';
 import { BaseField } from '@puckeditor/core';
 import { FieldAiParams } from '@puckeditor/plugin-ai';
 import { Weekday } from '@wepublish/editor/api';
@@ -83,69 +82,3 @@ export const blockVisibilityFlags = (
   timed: isTimed(value?.timings),
   breakpoints: value?.breakpoints,
 });
-
-type BlockEntry = { id: string; value: BlockVisibilityValue };
-
-const isRestricted = (value: BlockVisibilityValue) => {
-  const { disabled, timed, breakpoints } = blockVisibilityFlags(value);
-
-  return disabled || timed || !!breakpoints;
-};
-
-export const collectBlockVisibility = (node: unknown): BlockEntry[] => {
-  if (Array.isArray(node)) {
-    return node.flatMap(collectBlockVisibility);
-  }
-
-  if (!node || typeof node !== 'object') {
-    return [];
-  }
-
-  const { type, props } = node as {
-    type?: unknown;
-    props?: Record<string, unknown>;
-  };
-
-  if (typeof type === 'string' && props && typeof props.id === 'string') {
-    const value = props.visibility as BlockVisibilityValue | undefined;
-    const own =
-      value && typeof value === 'object' && isRestricted(value) ?
-        [{ id: props.id, value }]
-      : [];
-
-    return [...own, ...collectBlockVisibility(Object.values(props))];
-  }
-
-  return collectBlockVisibility(Object.values(node));
-};
-
-const cssString = (text: string) => JSON.stringify(text);
-
-export const outlineVisibilityCss = (
-  entries: BlockEntry[],
-  labels: { disabled: string; timed: string },
-  breakpointOrder: Breakpoint[] = defaultBreakpoints
-) =>
-  entries
-    .map(({ id, value }) => {
-      const { disabled, timed, breakpoints } = blockVisibilityFlags(value);
-      const badges = [
-        disabled && labels.disabled,
-        timed && labels.timed,
-        breakpoints &&
-          breakpointOrder
-            .filter(breakpoint => breakpoints.includes(breakpoint))
-            .map(breakpoint => breakpoint.toUpperCase())
-            .join(' '),
-      ].filter(Boolean) as string[];
-      const name = `[data-puck-layer-tree-id=${cssString(id)}] > [class*="_Layer-inner"] [class*="_Layer-name"]`;
-
-      return [
-        disabled && `${name} { opacity: 0.5; text-decoration: line-through; }`,
-        badges.length &&
-          `${name}::after { content: ${cssString(badges.join(' · '))}; margin-left: 8px; font-size: var(--puck-font-size-xxxs); color: var(--puck-color-text-secondary); text-decoration: none; display: inline-block; }`,
-      ]
-        .filter(Boolean)
-        .join('\n');
-    })
-    .join('\n');
