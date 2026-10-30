@@ -1,3 +1,4 @@
+import { ImapConfig, mailBackend } from './inbox';
 import { resolveTarget } from './targets';
 
 /**
@@ -18,6 +19,19 @@ export const env = {
   /** On outside production (which is never written to); `false` opts out. */
   allowMutation: process.env.E2E_ALLOW_MUTATION !== 'false',
   mailpitUrl: process.env.MAILPIT_URL?.replace(/\/+$/, '') || undefined,
+  /** A real mailbox the target's mail provider delivers to (Ethereal on review). */
+  imap:
+    process.env.E2E_IMAP_USER && process.env.E2E_IMAP_PASSWORD ?
+      ({
+        host: process.env.E2E_IMAP_HOST || 'imap.ethereal.email',
+        port: Number(process.env.E2E_IMAP_PORT || 993),
+        user: process.env.E2E_IMAP_USER,
+        password: process.env.E2E_IMAP_PASSWORD,
+      } satisfies ImapConfig)
+    : undefined,
+  /** Deletes older mails from the shared IMAP mailbox once per worker; off by default. */
+  imapPurgeOlderThanDays:
+    Number(process.env.E2E_IMAP_PURGE_OLDER_THAN_DAYS) || undefined,
   /** A real Mailchimp test audience and one of its interests: there is no fake. */
   mailchimp:
     (
@@ -47,7 +61,10 @@ const requirements: Record<string, () => string | undefined> = {
     isProduction ? 'no simulated payments in production'
     : !env.apiUrl ? 'needs E2E_API_URL'
     : undefined,
-  '@mail': () => (!env.mailpitUrl ? 'needs MAILPIT_URL' : undefined),
+  '@mail': () =>
+    !mailBackend(env) ?
+      'needs MAILPIT_URL, or E2E_IMAP_USER and E2E_IMAP_PASSWORD'
+    : undefined,
   // Points the tenant's one sync provider at the test audience.
   '@mailchimp': () =>
     isProduction ? "never reconfigures production's Mailchimp"
