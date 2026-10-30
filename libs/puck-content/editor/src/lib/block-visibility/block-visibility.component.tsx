@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
-import { createUsePuck, FieldLabel, FieldProps } from '@puckeditor/core';
+import { FieldLabel, FieldProps } from '@puckeditor/core';
 import { BlockTimingInput } from '@wepublish/editor/api';
 import { BlockTimingButton, describeTiming } from '@wepublish/ui/editor';
-import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FieldStack } from '../field-controls';
@@ -12,12 +11,8 @@ import {
   BlockTiming,
   BlockVisibilityField,
   BlockVisibilityValue,
-  collectBlockVisibility,
   isTimed,
-  outlineVisibilityCss,
 } from './block-visibility.field';
-
-const usePuck = createUsePuck();
 
 const TimingRow = styled.div`
   display: flex;
@@ -101,30 +96,3 @@ export const BlockVisibilityFieldRender = ({
     </FieldStack>
   );
 };
-
-const OutlineVisibilityStyles = () => {
-  const { t } = useTranslation();
-  const data = usePuck(puck => puck.appState.data);
-
-  const css = useMemo(
-    () =>
-      outlineVisibilityCss(collectBlockVisibility([data.content, data.zones]), {
-        disabled: t('', 'Disabled'),
-        timed: t('', 'Timed'),
-      }),
-    [data, t]
-  );
-
-  return <style>{css}</style>;
-};
-
-export const BlockVisibilityOutline = ({
-  children,
-}: {
-  children: ReactNode;
-}) => (
-  <>
-    {children}
-    <OutlineVisibilityStyles />
-  </>
-);

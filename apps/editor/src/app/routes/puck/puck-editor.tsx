@@ -17,6 +17,7 @@ import {
   colorPlugin,
   columnsPlugin,
   createAIPlugin,
+  createBottomBarPlugin,
   datasourcePlugin,
   EmotionPlugin,
   FieldsPlugin,
@@ -41,6 +42,7 @@ import {
   themePlugin,
   typographyPlugin,
   viewportSelectionPlugin,
+  visibilityOutlinePlugin,
   visibilityPlugin,
   webComponentsPlugin,
   WebsiteThemeContext,
@@ -62,6 +64,12 @@ import {
   MdSmartphone,
   MdTablet,
 } from 'react-icons/md';
+
+const bottomBarPlugin = createBottomBarPlugin([
+  SEOPreviewPlugin,
+  HeadingAnalyzerPlugin,
+  RawDataPlugin,
+]);
 
 const initialData = {
   content: [
@@ -179,14 +187,12 @@ export function PuckEditor() {
                 StockImagePlugin,
                 RevisionHistoryPlugin,
                 SearchPlugin,
-                SEOPreviewPlugin,
-                HeadingAnalyzerPlugin,
-                RawDataPlugin,
                 websiteThemePlugin,
                 EmotionPlugin,
                 webComponentsPlugin,
                 WebsiteTranslationsPlugin,
                 aiPlugin,
+                bottomBarPlugin,
                 //
                 themePlugin,
                 viewportSelectionPlugin,
@@ -212,6 +218,7 @@ export function PuckEditor() {
                 imagePlugin,
                 visibilityPlugin,
                 blockVisibilityPlugin,
+                visibilityOutlinePlugin,
               ]}
               onPublish={data => {
                 console.warn(data);
