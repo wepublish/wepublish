@@ -70,3 +70,13 @@ export function withDataSource<Props extends DefaultComponentProps>(
     },
   } as ComponentConfig<{ props: WithDataSource<Props>; fields: UserFields }>;
 }
+
+export function withImageDataSource<Props extends DefaultComponentProps>(
+  config: Parameters<typeof withDataSource<Props>>[0]
+) {
+  return withDataSource<Props>(
+    config,
+    { image: { type: 'single', id: '' } },
+    { models: ['image'], types: ['single'], label: 'Image' }
+  );
+}

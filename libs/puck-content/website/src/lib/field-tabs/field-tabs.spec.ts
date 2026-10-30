@@ -1,4 +1,10 @@
-import { groupFieldTabs, rootFieldTabs } from './field-tabs';
+import {
+  componentFieldTabs,
+  contentDatasourceFieldTabs,
+  groupFieldTabs,
+  rootFieldTabs,
+  withFieldTabsAll,
+} from './field-tabs';
 
 describe('groupFieldTabs', () => {
   it('puts styling, visibility and datasources into their own tabs', () => {
@@ -74,5 +80,39 @@ describe('rootFieldTabs', () => {
       },
       { value: 'properties', fields: ['properties'] },
     ]);
+  });
+});
+
+describe('contentDatasourceFieldTabs', () => {
+  it('keeps the datasource next to the content', () => {
+    expect(
+      groupFieldTabs(
+        ['caption', 'datasources', 'css'],
+        contentDatasourceFieldTabs
+      )
+    ).toEqual([
+      { value: 'content', fields: ['caption', 'datasources'] },
+      { value: 'style', fields: ['css'] },
+    ]);
+  });
+});
+
+describe('withFieldTabsAll', () => {
+  it('uses the layout given for a component', () => {
+    const render = () => null;
+    const { Image, Title } = withFieldTabsAll(
+      { Image: { render }, Title: { render } },
+      { Image: contentDatasourceFieldTabs }
+    );
+
+    const layoutOf = (config: typeof Image) =>
+      (
+        config.renderFields?.({ fields: {} } as never) as {
+          props: { layout: unknown };
+        }
+      ).props.layout;
+
+    expect(layoutOf(Image)).toBe(contentDatasourceFieldTabs);
+    expect(layoutOf(Title)).toBe(componentFieldTabs);
   });
 });

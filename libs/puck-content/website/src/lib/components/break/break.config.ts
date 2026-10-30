@@ -1,22 +1,19 @@
 import { faker } from '@faker-js/faker';
 import { ComponentConfig } from '@puckeditor/core';
 
-import {
-  imageFieldAi,
-  richtextFieldAi,
-  switchFieldAi,
-} from '@wepublish/puck-content/editor';
+import { richtextFieldAi, switchFieldAi } from '@wepublish/puck-content/editor';
 import { placeholderRichText } from '../placeholder-richtext';
+import { withImageDataSource } from '../with-datasource';
 import { UserFields } from '../../types';
 import { BreakConfigProps, BreakRender } from './break.component';
 
 export const BreakConfig: ComponentConfig<{
   props: BreakConfigProps;
   fields: UserFields;
-}> = {
+}> = withImageDataSource<BreakConfigProps>({
   ai: {
     instructions:
-      'A visually distinct call-to-action break that interrupts the article flow, typically to promote something. It shows a headline (text) or an image (imageId, never both: the image replaces the headline), a rich text body and, unless hidden, a button. Set hideButton to false and provide linkText (button label) and linkURL (button target) to show the button, or set hideButton to true to omit it. imageId references an already uploaded image — keep the existing value and never invent one.',
+      'A visually distinct call-to-action break that interrupts the article flow, typically to promote something. It shows a headline (text) or an image (the image datasource, never both: the image replaces the headline), a rich text body and, unless hidden, a button. Set hideButton to false and provide linkText (button label) and linkURL (button target) to show the button, or set hideButton to true to omit it. The image is referenced by the single image datasource — keep the existing value and never invent one.',
   },
   fields: {
     text: {
@@ -27,10 +24,6 @@ export const BreakConfig: ComponentConfig<{
         instructions:
           'Short attention-grabbing headline. Not shown when an image is set.',
       },
-    },
-    imageId: {
-      type: 'image',
-      ai: imageFieldAi,
     },
     richText: {
       type: 'richtext',
@@ -90,4 +83,4 @@ export const BreakConfig: ComponentConfig<{
   },
 
   render: BreakRender,
-};
+});

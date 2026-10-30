@@ -3,14 +3,19 @@ import { PuckComponent } from '@puckeditor/core';
 import { ImageDocument } from '@wepublish/website/api';
 import { BreakBlock, BuilderBreakBlockProps } from '@wepublish/website/builder';
 
-import { useOverlayPortalOnModifier } from '@wepublish/puck-content/editor';
+import {
+  datasourceIds,
+  useOverlayPortalOnModifier,
+} from '@wepublish/puck-content/editor';
+import { WithDataSource } from '../with-datasource';
 
-export type BreakConfigProps = BuilderBreakBlockProps & { imageId?: string };
+export type BreakConfigProps = WithDataSource<BuilderBreakBlockProps>;
 
 export const BreakRender: PuckComponent<BreakConfigProps> = ({
-  imageId,
+  datasources,
   ...props
 }) => {
+  const [imageId] = datasourceIds(datasources, 'image');
   const { data } = useQuery(ImageDocument, {
     variables: { id: imageId ?? '' },
     skip: !imageId,

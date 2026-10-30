@@ -1,18 +1,12 @@
 import styled from '@emotion/styled';
 import { Menu, MenuItem } from '@mui/material';
 import { Plugin } from '@puckeditor/core';
-import {
-  ComponentProps,
-  ReactNode,
-  SyntheticEvent,
-  useMemo,
-  useState,
-} from 'react';
+import { ComponentProps, SyntheticEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
 
-import { acceptingZones, SlotZone } from './insert.helpers';
-import { useKeepSelectionOnInsert, useSlotInsert } from './insert.hooks';
+import { acceptingZones, SlotZone, stopPointerDown } from './insert.helpers';
+import { useSlotInsert } from './insert.hooks';
 
 type Overrides = NonNullable<Plugin['overrides']>;
 type DrawerItemProps = ComponentProps<NonNullable<Overrides['drawerItem']>>;
@@ -91,7 +85,7 @@ export const InsertDrawerItem = ({ children, name }: DrawerItemProps) => {
             type="button"
             aria-label={t('', 'Add to selected block')}
             title={t('', 'Add to selected block')}
-            onPointerDown={stopPropagation}
+            ref={stopPointerDown}
             onMouseDown={stopPropagation}
             onClick={event => {
               event.stopPropagation();
@@ -119,14 +113,4 @@ export const InsertDrawerItem = ({ children, name }: DrawerItemProps) => {
       )}
     </DrawerItem>
   );
-};
-
-export const KeepSelectionOnInsert = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
-  useKeepSelectionOnInsert();
-
-  return children;
 };

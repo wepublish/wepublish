@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FieldSelect } from '../field-controls.component';
 import { FieldInput, FieldStack } from '../field-controls';
+import { ImagePicker, ImagePickerList } from '../image/image.component';
 import {
   DatasourceField,
   DatasourceModel,
@@ -10,6 +11,7 @@ import {
   DatasourcesValue,
   DatasourceType,
   datasourceTypes,
+  setDatasourceIdList,
   setDatasourceIds,
   setDatasourceType,
   toDatasourceTypes,
@@ -66,16 +68,19 @@ export const DatasourceFieldRender = ({
     >
       <FieldStack>
         {models.map(model => {
-          const datasource = current[model];
+          const available = toDatasourceTypes(model, types);
+          const fixedType = available.length === 1 ? available[0] : undefined;
+          const base =
+            current[model] || !fixedType ?
+              current
+            : setDatasourceType(current, model, fixedType);
+          const datasource = base[model];
+          const setIds = (ids: string[]) =>
+            onChange(setDatasourceIdList(base, model, ids));
 
-          return (
-            <FieldLabel
-              key={model}
-              label={labels.models[model]}
-              readOnly={readOnly}
-              el="div"
-            >
-              <FieldStack>
+          const content = (
+            <FieldStack>
+              {!fixedType && (
                 <FieldSelect
                   value={datasource?.type ?? ''}
                   disabled={readOnly}
@@ -92,7 +97,7 @@ export const DatasourceFieldRender = ({
                 >
                   <option value="">{labels.unused}</option>
 
-                  {toDatasourceTypes(model, types).map(type => (
+                  {available.map(type => (
                     <option
                       key={type}
                       value={type}
@@ -101,45 +106,72 @@ export const DatasourceFieldRender = ({
                     </option>
                   ))}
                 </FieldSelect>
+              )}
 
-                {datasource?.type === 'single' && (
-                  <FieldInput
-                    type="text"
-                    value={datasource.id}
-                    disabled={readOnly}
-                    placeholder={labels.id}
-                    onChange={event =>
-                      onChange(
-                        setDatasourceIds(
-                          current,
-                          model,
-                          event.currentTarget.value
-                        )
-                      )
-                    }
-                  />
-                )}
+              {model === 'image' && datasource?.type === 'single' && (
+                <ImagePicker
+                  value={datasource.id || undefined}
+                  readOnly={readOnly}
+                  onChange={id => setIds(id ? [id] : [])}
+                />
+              )}
 
-                {datasource?.type === 'multiple' && (
-                  <FieldInput
-                    type="text"
-                    defaultValue={datasource.ids.join(', ')}
-                    disabled={readOnly}
-                    placeholder={labels.ids}
-                    onBlur={event =>
-                      onChange(
-                        setDatasourceIds(
-                          current,
-                          model,
-                          event.currentTarget.value
-                        )
+              {model === 'image' && datasource?.type === 'multiple' && (
+                <ImagePickerList
+                  value={datasource.ids}
+                  readOnly={readOnly}
+                  onChange={setIds}
+                />
+              )}
+
+              {model !== 'image' && datasource?.type === 'single' && (
+                <FieldInput
+                  type="text"
+                  value={datasource.id}
+                  disabled={readOnly}
+                  placeholder={labels.id}
+                  onChange={event =>
+                    onChange(
+                      setDatasourceIds(
+                        current,
+                        model,
+                        event.currentTarget.value
                       )
-                    }
-                  />
-                )}
-              </FieldStack>
-            </FieldLabel>
+                    )
+                  }
+                />
+              )}
+
+              {model !== 'image' && datasource?.type === 'multiple' && (
+                <FieldInput
+                  type="text"
+                  defaultValue={datasource.ids.join(', ')}
+                  disabled={readOnly}
+                  placeholder={labels.ids}
+                  onBlur={event =>
+                    onChange(
+                      setDatasourceIds(
+                        current,
+                        model,
+                        event.currentTarget.value
+                      )
+                    )
+                  }
+                />
+              )}
+            </FieldStack>
           );
+
+          return models.length === 1 ?
+              <div key={model}>{content}</div>
+            : <FieldLabel
+                key={model}
+                label={labels.models[model]}
+                readOnly={readOnly}
+                el="div"
+              >
+                {content}
+              </FieldLabel>;
         })}
       </FieldStack>
     </FieldLabel>

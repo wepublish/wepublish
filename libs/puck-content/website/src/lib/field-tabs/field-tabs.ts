@@ -31,6 +31,11 @@ export const componentFieldTabs: FieldTabsLayout = {
   },
 };
 
+export const contentDatasourceFieldTabs: FieldTabsLayout = {
+  ...componentFieldTabs,
+  tabOf: { ...componentFieldTabs.tabOf, datasources: 'content' },
+};
+
 export const rootFieldTabs: FieldTabsLayout = {
   order: ['general', 'seo', 'socialMedia', 'properties'],
   fallback: 'general',
@@ -68,11 +73,12 @@ export const withFieldTabs = <
 export const withFieldTabsAll = <
   Components extends Record<string, ComponentConfig<any>>,
 >(
-  components: Components
+  components: Components,
+  layouts: Partial<Record<keyof Components, FieldTabsLayout>> = {}
 ): Components =>
   Object.fromEntries(
     Object.entries(components).map(([name, component]) => [
       name,
-      withFieldTabs(component),
+      withFieldTabs(component, layouts[name]),
     ])
   ) as Components;

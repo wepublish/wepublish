@@ -135,6 +135,44 @@ export const setDatasourceIds = (
   return value;
 };
 
+export const setDatasourceIdList = (
+  value: DatasourcesValue,
+  model: DatasourceModel,
+  ids: string[]
+): DatasourcesValue => {
+  const current = value[model];
+
+  if (current?.type === 'single') {
+    return { ...value, [model]: { type: 'single', id: ids[0] ?? '' } };
+  }
+
+  if (current?.type === 'multiple') {
+    return {
+      ...value,
+      [model]: { type: 'multiple', ids: ids.filter(Boolean) },
+    };
+  }
+
+  return value;
+};
+
+export const datasourceIds = (
+  value: DatasourcesValue | null | undefined,
+  model: DatasourceModel
+): string[] => {
+  const current = value?.[model];
+
+  if (current?.type === 'single') {
+    return current.id ? [current.id] : [];
+  }
+
+  if (current?.type === 'multiple') {
+    return current.ids;
+  }
+
+  return [];
+};
+
 const aiDatasourceSchema = (types: readonly DatasourceType[]) =>
   z.object({
     type: z.enum(types as [DatasourceType, ...DatasourceType[]]),
