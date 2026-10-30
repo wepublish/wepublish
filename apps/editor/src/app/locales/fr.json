@@ -945,6 +945,8 @@
       "newUser": "Nouvel·le <0>utilisateur·trice</0> ajouté·e",
       "dashboard": "Tableau de bord",
       "notifications": "Notifications",
+      "moreNotifications_one": "+{{count}} autre notification",
+      "moreNotifications_other": "+{{count}} autres notifications",
       "showAllNotifications": "Tout afficher",
       "greeting": "Bonjour, {{name}} !",
       "noData": "Pas de données actuelles sur les abonnés",
