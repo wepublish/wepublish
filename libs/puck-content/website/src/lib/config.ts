@@ -35,6 +35,7 @@ import { withCSS } from './components/layout/with-css';
 import { withVisibility } from './components/layout/with-visibility';
 import { SubscribeConfig } from './components/subscribe/subscribe.config';
 import { withDataSource } from './components/with-datasource';
+import { withLockAll } from './components/with-lock';
 import { withFieldTabsAll } from './field-tabs/field-tabs';
 import { RootConfig } from './root.config';
 import { UserConfig } from './types';
@@ -50,73 +51,75 @@ import { TeaserTitleConfig } from './components/teaser/teaser-title/teaser-title
 
 export const config: UserConfig = {
   root: RootConfig,
-  components: withFieldTabsAll({
-    Title: withVisibility(TitleConfig),
-    Quote: withVisibility(QuoteConfig),
-    Html: withVisibility(HtmlConfig),
-    Break: withVisibility(BreakConfig),
-    Space: withVisibility(Space),
-    Grid: withVisibility(
-      withDataSource(withCSS(Grid), undefined, {
-        types: ['uniqueList', 'list', 'multiple'],
-      })
-    ),
-    DynamicGrid: withVisibility(
-      withDataSource(withCSS(DynamicGrid), undefined, {
-        types: ['uniqueList', 'list', 'multiple'],
-      })
-    ),
-    Row: withVisibility(
-      withDataSource(withCSS(Row), undefined, {
-        types: ['uniqueList', 'list', 'multiple'],
-      })
-    ),
-    Slider: withVisibility(
-      withDataSource(withCSS(Slider), undefined, {
-        types: ['uniqueList', 'list', 'multiple'],
-      })
-    ),
-    Container: withVisibility(
-      withDataSource(
-        withCSS(ContainerConfig, { marginSides: ['top', 'bottom'] }),
-        undefined,
-        {
+  components: withLockAll(
+    withFieldTabsAll({
+      Title: withVisibility(TitleConfig),
+      Quote: withVisibility(QuoteConfig),
+      Html: withVisibility(HtmlConfig),
+      Break: withVisibility(BreakConfig),
+      Space: withVisibility(Space),
+      Grid: withVisibility(
+        withDataSource(withCSS(Grid), undefined, {
           types: ['uniqueList', 'list', 'multiple'],
-        }
-      )
-    ),
-    Collapsible: withVisibility(withCSS(CollapsibleConfig)),
-    RichText: withVisibility(RichTextConfig),
-    Listicle: withVisibility(ListicleConfig),
-    IFrame: withVisibility(IFrameConfig),
-    YouTube: withVisibility(YouTubeConfig),
-    Vimeo: withVisibility(VimeoConfig),
-    TikTok: withVisibility(TikTokConfig),
-    FacebookVideo: withVisibility(FacebookVideoConfig),
-    Facebook: withVisibility(FacebookConfig),
-    Instagram: withVisibility(InstagramConfig),
-    Subscribe: withVisibility(SubscribeConfig),
-    Button: withVisibility(ButtonConfig),
-    Image: withVisibility(ImageConfig),
-    Lightbox: withVisibility(LightboxConfig),
-    Twitter: withVisibility(TwitterConfig),
-    SoundCloud: withVisibility(SoundCloudConfig),
-    Streamable: withVisibility(StreamableConfig),
-    Polis: withVisibility(PolisConfig),
-    BildwurfAd: withVisibility(BildwurfAdConfig),
-    MailchimpForm: withVisibility(MailchimpFormConfig),
-    Comment: withVisibility(CommentConfig),
-    Event: withVisibility(EventConfig),
-    Crowdfunding: withVisibility(CrowdfundingConfig),
-    Poll: withVisibility(PollConfig),
-    TeaserTitle: withVisibility(TeaserTitleConfig),
-    TeaserPreTitle: withVisibility(TeaserPreTitleConfig),
-    TeaserLead: withVisibility(TeaserLeadConfig),
-    TeaserImage: withVisibility(TeaserImageConfig),
-    TeaserAuthors: withVisibility(TeaserAuthorsConfig),
-    TeaserDate: withVisibility(TeaserDateConfig),
-    TeaserTags: withVisibility(TeaserTagsConfig),
-  }),
+        })
+      ),
+      DynamicGrid: withVisibility(
+        withDataSource(withCSS(DynamicGrid), undefined, {
+          types: ['uniqueList', 'list', 'multiple'],
+        })
+      ),
+      Row: withVisibility(
+        withDataSource(withCSS(Row), undefined, {
+          types: ['uniqueList', 'list', 'multiple'],
+        })
+      ),
+      Slider: withVisibility(
+        withDataSource(withCSS(Slider), undefined, {
+          types: ['uniqueList', 'list', 'multiple'],
+        })
+      ),
+      Container: withVisibility(
+        withDataSource(
+          withCSS(ContainerConfig, { marginSides: ['top', 'bottom'] }),
+          undefined,
+          {
+            types: ['uniqueList', 'list', 'multiple'],
+          }
+        )
+      ),
+      Collapsible: withVisibility(withCSS(CollapsibleConfig)),
+      RichText: withVisibility(RichTextConfig),
+      Listicle: withVisibility(ListicleConfig),
+      IFrame: withVisibility(IFrameConfig),
+      YouTube: withVisibility(YouTubeConfig),
+      Vimeo: withVisibility(VimeoConfig),
+      TikTok: withVisibility(TikTokConfig),
+      FacebookVideo: withVisibility(FacebookVideoConfig),
+      Facebook: withVisibility(FacebookConfig),
+      Instagram: withVisibility(InstagramConfig),
+      Subscribe: withVisibility(SubscribeConfig),
+      Button: withVisibility(ButtonConfig),
+      Image: withVisibility(ImageConfig),
+      Lightbox: withVisibility(LightboxConfig),
+      Twitter: withVisibility(TwitterConfig),
+      SoundCloud: withVisibility(SoundCloudConfig),
+      Streamable: withVisibility(StreamableConfig),
+      Polis: withVisibility(PolisConfig),
+      BildwurfAd: withVisibility(BildwurfAdConfig),
+      MailchimpForm: withVisibility(MailchimpFormConfig),
+      Comment: withVisibility(CommentConfig),
+      Event: withVisibility(EventConfig),
+      Crowdfunding: withVisibility(CrowdfundingConfig),
+      Poll: withVisibility(PollConfig),
+      TeaserTitle: withVisibility(TeaserTitleConfig),
+      TeaserPreTitle: withVisibility(TeaserPreTitleConfig),
+      TeaserLead: withVisibility(TeaserLeadConfig),
+      TeaserImage: withVisibility(TeaserImageConfig),
+      TeaserAuthors: withVisibility(TeaserAuthorsConfig),
+      TeaserDate: withVisibility(TeaserDateConfig),
+      TeaserTags: withVisibility(TeaserTagsConfig),
+    })
+  ),
   categories: {
     recommended: {
       components: ['Title', 'RichText', 'Subscribe'],

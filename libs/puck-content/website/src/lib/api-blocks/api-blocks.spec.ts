@@ -174,6 +174,41 @@ describe('visibility', () => {
   });
 });
 
+describe('locked', () => {
+  it('moves the block lock into the component props', () => {
+    expect(
+      toPuckData([
+        {
+          id: id(1),
+          locked: true,
+          visibility: {},
+          datasources: {},
+          data: { type: 'Title' },
+        },
+      ]).content
+    ).toEqual([
+      {
+        type: 'Title',
+        props: { id: id(1), locked: true, visibility: {}, datasources: {} },
+      },
+    ]);
+  });
+
+  it('leaves unlocked blocks without a lock prop', () => {
+    expect(
+      toPuckData([
+        {
+          id: id(1),
+          locked: false,
+          visibility: {},
+          datasources: {},
+          data: { type: 'Title' },
+        },
+      ]).content[0].props
+    ).not.toHaveProperty('locked');
+  });
+});
+
 describe('toPuckData', () => {
   it('validates the API response and puts the blocks into the root content', () => {
     expect(

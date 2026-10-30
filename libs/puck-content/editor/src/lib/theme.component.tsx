@@ -7,6 +7,9 @@ import {
   MdSave,
 } from 'react-icons/md';
 
+import { isLocked } from './lock/lock';
+import { LockAction } from './lock/lock.component';
+
 const usePuck = createUsePuck();
 
 type Overrides = NonNullable<Plugin['overrides']>;
@@ -21,9 +24,11 @@ export const ThemeActionBar = ({ children, label }: ThemeActionBarProps) => {
   const dispatch = usePuck(puck => puck.dispatch);
   const itemSelector = usePuck(puck => puck.appState.ui.itemSelector);
   const getItemBySelector = usePuck(puck => puck.getItemBySelector);
+  const locked = usePuck(puck => isLocked(puck.selectedItem));
 
-  const canMoveUp = itemSelector !== null && itemSelector.index > 0;
+  const canMoveUp = !locked && itemSelector !== null && itemSelector.index > 0;
   const canMoveDown = !!(
+    !locked &&
     itemSelector &&
     getItemBySelector({
       index: itemSelector.index + 1,
@@ -88,6 +93,7 @@ export const ThemeActionBar = ({ children, label }: ThemeActionBarProps) => {
   return (
     <ActionBar label={label}>
       <ActionBar.Group>
+        <LockAction />
         {children}
 
         <ActionBar.Separator />

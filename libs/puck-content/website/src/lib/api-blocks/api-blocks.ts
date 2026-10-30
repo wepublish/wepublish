@@ -15,6 +15,7 @@ const blockDataSchema = z
 
 export type ApiBlock = {
   id: string;
+  locked?: boolean;
   visibility: z.infer<typeof blockVisibilitySchema>;
   datasources: z.infer<typeof datasourcesSchema>;
   data: z.infer<typeof blockDataSchema>;
@@ -23,6 +24,7 @@ export type ApiBlock = {
 
 export const apiBlockSchema: z.ZodType<ApiBlock> = z.object({
   id: z.guid(),
+  locked: z.boolean().optional(),
   visibility: blockVisibilitySchema,
   datasources: datasourcesSchema,
   data: blockDataSchema,
@@ -42,12 +44,20 @@ const toChildProps = (type: string, children: ApiBlock[]) =>
 
 export const toPuckContent = (blocks: ApiBlock[]): ComponentData[] =>
   blocks.map(
-    ({ id, visibility, datasources, data: { type, ...props }, children }) => ({
+    ({
+      id,
+      locked,
+      visibility,
+      datasources,
+      data: { type, ...props },
+      children,
+    }) => ({
       type,
       props: {
         ...props,
         ...(children ? toChildProps(type, children) : {}),
         id,
+        ...(locked ? { locked } : {}),
         visibility,
         datasources,
       },
