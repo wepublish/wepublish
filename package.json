@@ -363,6 +363,7 @@
     "polished": "^4.3.1",
     "pretty-bytes": "5.6.0",
     "prosemirror-model": "catalog:",
+    "qrcode-generator": "catalog:",
     "qr-code-styling": "^1.9.2",
     "qs": "catalog:",
     "ramda": "catalog:",

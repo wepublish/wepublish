@@ -526,6 +526,13 @@ export const CanSendJWTLogin: Permission = {
   deprecated: false,
 };
 
+export const CanManageUserLoginCodes: Permission = {
+  id: 'CAN_MANAGE_USER_LOGIN_CODES',
+  description:
+    'Allows to inspect, revoke and reissue personal login links of users',
+  deprecated: false,
+};
+
 export const CanLoginEditor: Permission = {
   id: 'CAN_LOGIN_EDITOR',
   description: 'Allows to login editor',
@@ -1380,6 +1387,7 @@ export const AllPermissions = [
   CanGetPayments,
   CanGetPaymentProviders,
   CanSendJWTLogin,
+  CanManageUserLoginCodes,
   CanLoginEditor,
   CanCreateSubscription,
   CanGetSubscription,

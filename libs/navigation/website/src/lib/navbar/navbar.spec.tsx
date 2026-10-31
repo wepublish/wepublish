@@ -285,3 +285,48 @@ describe('Navbar', () => {
     expect(queryLink(t('navbar.subscribe'))).not.toBeInTheDocument();
   });
 });
+
+describe('Navbar while the account is being set up', () => {
+  const renderMenu = (accountSetupPending: boolean) =>
+    renderNavbar(
+      {
+        isMenuOpen: true,
+        hasRunningSubscription: true,
+        hasUnpaidInvoices: true,
+        accountSetupPending,
+      },
+      { user: mockSensitiveDataUser() }
+    );
+
+  const linksNamed = (name: string) =>
+    screen
+      .queryAllByRole('link')
+      .filter(link => link.textContent?.includes(name));
+
+  it('hides the account, which cannot be used before the setup', () => {
+    renderMenu(true);
+
+    expect(linksNamed(t('navbar.myAccount'))).toHaveLength(0);
+  });
+
+  it('does not mention unpaid invoices before the setup', () => {
+    renderMenu(true);
+
+    expect(linksNamed(t('navbar.unpaid'))).toHaveLength(0);
+  });
+
+  it('keeps logging out possible', () => {
+    renderMenu(true);
+
+    expect(
+      screen.getByRole('button', { name: t('navbar.logout') })
+    ).toBeInTheDocument();
+  });
+
+  it('keeps the usual account buttons otherwise', () => {
+    renderMenu(false);
+
+    expect(linksNamed(t('navbar.myAccount')).length).toBeGreaterThan(0);
+    expect(linksNamed(t('navbar.unpaid')).length).toBeGreaterThan(0);
+  });
+});

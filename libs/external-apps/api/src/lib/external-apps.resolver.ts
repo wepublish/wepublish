@@ -17,6 +17,7 @@ import { ExternalAppsDataloaderService } from './external-apps-dataloader.servic
 import {
   Authenticated,
   CurrentUser,
+  RequiresFullSession,
   UserSession,
 } from '@wepublish/authentication/api';
 import { JwtService } from '@wepublish/session/api';
@@ -94,7 +95,7 @@ export class ExternalAppsResolver {
     return this.externalAppsService.deleteExternalApp(id);
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(returns => ExternalAppToken, {
     name: 'createExternalAppToken',
     description:

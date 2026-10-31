@@ -23,6 +23,7 @@ fragment FullUser on User {
 }
 
 fragment FullSensitiveDataUser on SensitiveDataUser {
+  emailVerifiedAt
   ...FullBaseUser
   permissions
   birthday
@@ -60,6 +61,20 @@ fragment FullSessionWithToken on SessionWithToken {
   token
   expiresAt
   createdAt
+  origin
+  restricted
+}
+
+query CurrentSession {
+  currentSession {
+    origin
+    restricted
+    placeholderEmail
+    secondFactor
+    canReplaceEmail
+    createdAt
+    expiresAt
+  }
 }
 
 query Me {
@@ -142,8 +157,8 @@ mutation UpdatePassword($password: String!, $passwordRepeated: String!) {
   }
 }
 
-mutation RequestEmailChange($newEmail: String!) {
-  requestEmailChange(newEmail: $newEmail)
+mutation RequestEmailChange($newEmail: String!, $secondFactor: String) {
+  requestEmailChange(newEmail: $newEmail, secondFactor: $secondFactor)
 }
 
 mutation GenerateTotpSetup {
@@ -157,8 +172,12 @@ mutation EnableTotp($totpToken: String!) {
   enableTotp(totpToken: $totpToken)
 }
 
-mutation ConfirmEmailChange($newEmail: String!) {
-  confirmEmailChange(newEmail: $newEmail) {
+mutation RequestEmailVerification {
+  requestEmailVerification
+}
+
+mutation ConfirmEmailChange($token: String!) {
+  confirmEmailChange(token: $token) {
     ...FullSensitiveDataUser
   }
 }
@@ -187,5 +206,19 @@ mutation UploadImage(
     filename: $filename
   ) {
     ...FullSensitiveDataUser
+  }
+}
+
+mutation LoginWithCode(
+  $code: String!
+  $totpToken: String
+  $challengeAnswer: ChallengeInput
+) {
+  createSessionWithLoginCode(
+    code: $code
+    totpToken: $totpToken
+    challengeAnswer: $challengeAnswer
+  ) {
+    ...FullSessionWithToken
   }
 }

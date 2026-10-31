@@ -9,6 +9,8 @@ import {
   mockPeerProfileQuery,
   mockSensitiveDataUser,
   mockSubscription,
+  mockCurrentSessionQuery,
+  mockSettingListQuery,
   renderWithProviders,
 } from '@wepublish/mocks/website';
 import {
@@ -59,9 +61,17 @@ const cacheAndNetwork = {
   watchQuery: { fetchPolicy: 'cache-and-network', errorPolicy: 'all' },
 } as unknown as ApolloClient.DefaultOptions;
 
-const renderContainer = (
-  options: Parameters<typeof renderWithProviders>[1] = {}
-) => renderWithProviders(<NavbarContainer {...props} />, options);
+// The account setup state is only fetched for a logged in reader.
+const accountSetupMocks = [mockSettingListQuery(), mockCurrentSessionQuery()];
+
+const renderContainer = ({
+  mocks = [],
+  ...options
+}: Parameters<typeof renderWithProviders>[1] = {}) =>
+  renderWithProviders(<NavbarContainer {...props} />, {
+    ...options,
+    mocks: [...accountSetupMocks, ...mocks],
+  });
 
 describe('NavbarContainer', () => {
   it('shows the navigations from the API in the menu', async () => {
