@@ -1,57 +1,64 @@
-import { PuckContext } from '@puckeditor/core';
 import { renderWithProviders } from '@wepublish/mocks/website';
 import { fireEvent, screen } from '@testing-library/react';
 import { ReactNode } from 'react';
 
+import { emptyPuckBlockData, PuckSlots } from '../../../blocks/block.types';
+import { PuckSlot } from '../../../blocks/slots.component';
 import { FormInputRender } from '../form-input/form-input.component';
 import { FormProps, FormRender } from './form.component';
+import { useFormContext } from './form.context';
 
-const puckContext = (isEditing: boolean): PuckContext => ({
-  renderDropZone: () => null,
-  isEditing,
-  dragRef: null,
-  metadata: {},
+const contentSlot = (children: ReactNode): PuckSlots => ({
+  content: props => <PuckSlot {...props}>{children}</PuckSlot>,
 });
 
-const slot = (children: ReactNode) => () => <div>{children}</div>;
-
-const renderForm = (
-  props: Partial<Omit<FormProps, 'content'>> & { isEditing?: boolean } = {},
-  children: ReactNode = null
-) => {
-  const { isEditing = false, ...formProps } = props;
-
-  return renderWithProviders(
-    <FormRender
-      id="Form-1"
-      puck={puckContext(isEditing)}
-      action="https://example.us1.list-manage.com/subscribe/post?u=abc&id=def"
-      method="post"
-      content={slot(children)}
-      {...formProps}
-    />
-  );
+const formProps: FormProps = {
+  action: 'https://example.us1.list-manage.com/subscribe/post?u=abc&id=def',
+  method: 'post',
+  content: [],
 };
 
-const getForm = (container: HTMLElement) => {
-  const form = container.querySelector('form');
+const form = (
+  props: Partial<FormProps> = {},
+  children: ReactNode = null,
+  id = 'Form-1'
+) => (
+  <FormRender
+    id={id}
+    props={{ ...formProps, ...props }}
+    data={emptyPuckBlockData}
+    slots={contentSlot(children)}
+    className="styled"
+  />
+);
 
-  if (!form) {
+const renderForm = (props: Partial<FormProps> = {}, children?: ReactNode) =>
+  renderWithProviders(form(props, children));
+
+const getForm = (container: HTMLElement) => {
+  const element = container.querySelector('form');
+
+  if (!element) {
     throw new Error('No form rendered');
   }
 
-  return form;
+  return element;
 };
 
-const emailInput = (isEditing: boolean) => (
+const emailInput = (
   <FormInputRender
     id="FormInput-1"
-    puck={puckContext(isEditing)}
-    name="EMAIL"
-    label="Email"
-    type="email"
+    props={{ name: 'EMAIL', label: 'Email', type: 'email' }}
+    data={emptyPuckBlockData}
+    slots={{}}
   />
 );
+
+const FormProbe = () => {
+  const parent = useFormContext();
+
+  return <p>{parent ? `Inside ${parent.id}` : 'Outside a form'}</p>;
+};
 
 describe('FormRender', () => {
   it('renders a native form with the configured attributes', () => {
@@ -59,24 +66,51 @@ describe('FormRender', () => {
       target: '_blank',
       encType: 'multipart/form-data',
     });
-    const form = getForm(container);
+    const element = getForm(container);
 
-    expect(form.getAttribute('action')).toBe(
+    expect(element.getAttribute('action')).toBe(
       'https://example.us1.list-manage.com/subscribe/post?u=abc&id=def'
     );
-    expect(form.getAttribute('method')).toBe('post');
-    expect(form.getAttribute('target')).toBe('_blank');
-    expect(form.getAttribute('enctype')).toBe('multipart/form-data');
+    expect(element.getAttribute('method')).toBe('post');
+    expect(element.getAttribute('target')).toBe('_blank');
+    expect(element.getAttribute('enctype')).toBe('multipart/form-data');
+  });
+
+  it('renders the form as its single root element with the class name', () => {
+    const { container } = renderForm();
+
+    expect(container.children).toHaveLength(1);
+    expect(container.firstElementChild).toBe(getForm(container));
+    expect(getForm(container).classList).toContain('styled');
   });
 
   it('renders the slot content inside the form', () => {
-    const { container } = renderForm({}, emailInput(false));
+    const { container } = renderForm({}, emailInput);
 
     expect(
       getForm(container).contains(
         screen.getByRole('textbox', { name: 'Email' })
       )
     ).toBe(true);
+  });
+
+  it('keeps the box of an empty content slot', () => {
+    const { container } = renderWithProviders(
+      <FormRender
+        id="Form-1"
+        props={formProps}
+        data={emptyPuckBlockData}
+        slots={{}}
+      />
+    );
+
+    expect(getForm(container).children).toHaveLength(1);
+  });
+
+  it('tells the blocks inside that they are placed in this form', () => {
+    renderForm({}, <FormProbe />);
+
+    expect(screen.getByText('Inside Form-1')).toBeTruthy();
   });
 
   it('leaves out an empty action instead of posting to the current page', () => {
@@ -104,69 +138,34 @@ describe('FormRender', () => {
     expect(container.querySelectorAll('input')).toHaveLength(0);
   });
 
-  it('prevents submitting in the editor', () => {
-    const { container } = renderForm({ isEditing: true });
-
-    expect(fireEvent.submit(getForm(container))).toBe(false);
-  });
-
   it('submits natively on the website', () => {
-    const { container } = renderForm({ isEditing: false });
+    const { container } = renderForm();
 
     expect(fireEvent.submit(getForm(container))).toBe(true);
   });
 
-  it('lets the fields inside know they are placed in a form', () => {
-    renderForm({ isEditing: true }, emailInput(true));
-
-    expect(screen.queryByText('Place this inside a Form block')).toBeNull();
-  });
-
-  it('asks for an action URL in the editor', () => {
-    renderForm({ isEditing: true, action: '' });
-
-    expect(
-      screen.getByText(
-        'Set an action URL so the form knows where to send its data'
-      )
-    ).toBeTruthy();
-  });
-
-  it('does not show editor hints on the website', () => {
-    renderForm({ isEditing: false, action: '' });
-
-    expect(
-      screen.queryByText(
-        'Set an action URL so the form knows where to send its data'
-      )
-    ).toBeNull();
-  });
-
-  it('warns in the editor when a form is nested in another form', () => {
-    renderForm(
-      { isEditing: true },
+  it('hands the submit to the handler the editor passes', () => {
+    const onSubmit = vi.fn((event: { preventDefault: () => void }) =>
+      event.preventDefault()
+    );
+    const { container } = renderWithProviders(
       <FormRender
-        id="Form-2"
-        puck={puckContext(true)}
-        action="https://example.com"
-        content={slot(null)}
+        id="Form-1"
+        props={formProps}
+        data={emptyPuckBlockData}
+        slots={{}}
+        onSubmit={onSubmit}
       />
     );
 
-    expect(
-      screen.getByText('Forms cannot be placed inside another Form')
-    ).toBeTruthy();
+    expect(fireEvent.submit(getForm(container))).toBe(false);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
   it('never renders a form element inside another form', () => {
     const { container } = renderForm(
-      { isEditing: false },
-      <FormRender
-        id="Form-2"
-        puck={puckContext(false)}
-        action="https://example.com"
-        content={slot(emailInput(false))}
-      />
+      {},
+      form({ action: 'https://example.com' }, emailInput, 'Form-2')
     );
 
     expect(container.querySelectorAll('form')).toHaveLength(1);
@@ -175,5 +174,17 @@ describe('FormRender', () => {
         screen.getByRole('textbox', { name: 'Email' })
       )
     ).toBe(true);
+  });
+
+  it('keeps the class name and the content of a nested form on one element', () => {
+    const { container } = renderForm(
+      {},
+      form({ action: 'https://example.com' }, <FormProbe />, 'Form-2')
+    );
+    const nested = getForm(container).querySelectorAll('.styled');
+
+    expect(nested).toHaveLength(1);
+    expect(nested[0].tagName).toBe('DIV');
+    expect(nested[0].contains(screen.getByText('Inside Form-2'))).toBe(true);
   });
 });

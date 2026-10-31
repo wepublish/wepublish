@@ -77,6 +77,36 @@ describe('article puck blocks schema', () => {
     expect(revision.getInterfaces().map(String)).toContain('HasPuckBlocks');
   });
 
+  it('resolves the puck registry of a revision', () => {
+    const revision = schema.getType('ArticleRevision') as GraphQLObjectType;
+
+    expect(String(revision.getFields()['puckRegistry'].type)).toBe(
+      'PuckRegistry'
+    );
+  });
+
+  it('declares the puck registry on the interface', () => {
+    const hasPuckBlocks = schema.getType(
+      'HasPuckBlocks'
+    ) as GraphQLInterfaceType;
+
+    expect(String(hasPuckBlocks.getFields()['puckRegistry'].type)).toBe(
+      'PuckRegistry'
+    );
+  });
+
+  it.each(['create', 'update'])(
+    'accepts an optional puck registry on %s',
+    mutation => {
+      expect(String(mutationArg(mutation, 'puckRegistry')?.type)).toBe(
+        'PuckRegistryInput'
+      );
+      expect(
+        mutationArg(mutation, 'puckRegistry')?.defaultValue
+      ).toBeUndefined();
+    }
+  );
+
   it('declares the puck blocks of the interface as an optional flat list', () => {
     const hasPuckBlocks = schema.getType(
       'HasPuckBlocks'
@@ -119,6 +149,7 @@ describe('article puck blocks schema', () => {
     ) as GraphQLInputObjectType;
 
     expect(metadata.getFields()['puckBlocks']).toBeUndefined();
+    expect(metadata.getFields()['puckRegistry']).toBeUndefined();
     expect(metadata.getFields()['blocks']).toBeUndefined();
   });
 });

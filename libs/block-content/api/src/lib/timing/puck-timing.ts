@@ -35,14 +35,18 @@ const timedTreeOf = (blocks: ApiBlock[]): TimedBlock[] =>
     blocks: timedTreeOf(block.children ?? []),
   }));
 
+export const isPuckBlockDisplayed = (
+  block: ApiBlock,
+  now: Date,
+  timeZone = siteTimeZone()
+) => shouldDisplayBlock(timedBlockOf(block), now, timeZone);
+
 export const displayedPuckBlocks = (
   blocks: ApiBlock[],
   now: Date,
   timeZone = siteTimeZone()
 ): ApiBlock[] =>
-  filterPuckBlocks(blocks, block =>
-    shouldDisplayBlock(timedBlockOf(block), now, timeZone)
-  );
+  filterPuckBlocks(blocks, block => isPuckBlockDisplayed(block, now, timeZone));
 
 export const nextPuckBlocksTimingChange = (
   blocks: ApiBlock[],

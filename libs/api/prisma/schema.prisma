@@ -22,6 +22,7 @@ model ArticleRevision {
   breaking               Boolean
   blocks                 Json
   puckBlocks             Json?
+  puckRegistry           Json?
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
@@ -869,6 +870,7 @@ model PageRevision {
   socialMediaDescription String?
   blocks                 Json
   puckBlocks             Json?
+  puckRegistry           Json?
 
   imageID String?
   image   Image?  @relation("pageRevisionImage", fields: [imageID], references: [id])

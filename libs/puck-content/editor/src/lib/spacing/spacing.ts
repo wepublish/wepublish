@@ -1,8 +1,8 @@
-import { Theme } from '@emotion/react';
 import { z } from 'zod/v4';
+import { SpacingValue } from '@wepublish/puck-content/website';
 
-export type PixelValue = `${number}px`;
-export type SpacingValue = number | PixelValue;
+export { spacingToCss } from '@wepublish/puck-content/website';
+export type { PixelValue, SpacingValue } from '@wepublish/puck-content/website';
 
 export type SpacingUnit = 'spacing' | 'px';
 export const spacingUnits: SpacingUnit[] = ['spacing', 'px'];
@@ -26,17 +26,6 @@ export const fromSpacingParts = (
   }
 
   return unit === 'px' ? `${amount}px` : amount;
-};
-
-export const spacingToCss = (
-  theme: Theme,
-  value: SpacingValue | undefined
-): string | undefined => {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  return typeof value === 'string' ? value : theme.spacing(value);
 };
 
 export const spacingSchema = z

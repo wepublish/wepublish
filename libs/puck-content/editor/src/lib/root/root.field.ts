@@ -115,13 +115,12 @@ export const rootSchemas = {
   article: articleRootSchema,
 } satisfies Record<PuckEditorDocumentKind, z.ZodObject>;
 
-export type RootProperty = z.infer<typeof rootPropertySchema>;
-export type PageRootProps = Partial<z.infer<typeof pageRootSchema>>;
-export type ArticleRootProps = Partial<z.infer<typeof articleRootSchema>>;
-export type DocumentRootProps = Pick<
+export type {
+  ArticleRootProps,
+  DocumentRootProps,
   PageRootProps,
-  keyof PageRootProps & keyof ArticleRootProps
->;
+  RootProperty,
+} from '@wepublish/puck-content/website';
 
 export const rootFieldAi = <Shape extends Record<string, z.ZodType>>(
   schema: z.ZodObject<Shape>,

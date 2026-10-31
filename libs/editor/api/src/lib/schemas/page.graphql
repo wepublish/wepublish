@@ -8,6 +8,10 @@ fragment FullPageRevision on PageRevision {
   puckBlocks(onlyDisplayed: false) {
     ...FullPuckBlock
   }
+
+  puckRegistry {
+    ...FullPuckRegistry
+  }
 }
 
 fragment FullPage on Page {
@@ -45,6 +49,7 @@ query PageList(
 mutation CreatePage(
   $blocks: [BlockContentInput!]
   $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
   $imageID: String
   $description: String
   $seoTitle: String
@@ -63,6 +68,7 @@ mutation CreatePage(
   createPage(
     blocks: $blocks
     puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
     imageID: $imageID
     description: $description
     seoTitle: $seoTitle
@@ -86,6 +92,7 @@ mutation UpdatePage(
   $id: String!
   $blocks: [BlockContentInput!]
   $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
   $imageID: String
   $description: String
   $seoTitle: String
@@ -105,6 +112,7 @@ mutation UpdatePage(
     id: $id
     blocks: $blocks
     puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
     imageID: $imageID
     description: $description
     seoTitle: $seoTitle

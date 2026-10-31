@@ -1,25 +1,16 @@
 import { BaseField } from '@puckeditor/core';
 import { FieldAiParams } from '@puckeditor/plugin-ai';
 import { z } from 'zod/v4';
+import { columnsPresets } from '@wepublish/puck-content/website';
 
 import { toAiSchema } from '../ai-schema';
 
-export type ColumnsValue = number[];
+export { columnsPresets } from '@wepublish/puck-content/website';
+export type { ColumnsValue } from '@wepublish/puck-content/website';
 
 export type ColumnsField = BaseField & {
   type: 'columns';
 };
-
-export const columnsPresets = [
-  [1],
-  [1, 1],
-  [1, 1, 1],
-  [1, 1, 1, 1],
-  [1, 2],
-  [2, 1],
-  [1, 2, 1, 2],
-  [2, 1, 2, 1],
-] satisfies ColumnsValue[];
 
 export const columnsSchema = z.array(z.number().min(1)).min(1);
 

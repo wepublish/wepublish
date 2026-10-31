@@ -15,9 +15,3 @@ export const DocumentLayoutContent = styled('div')`
     flex-grow: 1;
   }
 `;
-
-export const DocumentLayoutNoInteraction = styled('div')`
-  * {
-    pointer-events: none !important;
-  }
-`;

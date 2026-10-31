@@ -5,4 +5,6 @@ export * from './lib/puck-block.scalars';
 export * from './lib/puck-blocks';
 export * from './lib/puck-blocks-column';
 export * from './lib/puck-blocks-flatten';
+export * from './lib/puck-blocks-preview.model';
 export * from './lib/puck-content.module';
+export * from './lib/puck-registry.model';

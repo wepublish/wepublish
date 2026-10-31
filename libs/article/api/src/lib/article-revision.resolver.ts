@@ -8,26 +8,42 @@ import {
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { CanGetArticle } from '@wepublish/permissions';
-import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
+import {
+  hasPermission,
+  permissionsOf,
+  PreviewMode,
+} from '@wepublish/permissions/api';
 import {
   BlockTreeLoader,
   BlockContent,
   displayedPuckBlocks,
   nextPuckBlocksTimingChange,
+  PuckBlockDataLoader,
 } from '@wepublish/block-content/api';
-import { flattenPuckBlocks, PuckBlock } from '@wepublish/puck-content/api';
+import {
+  ApiBlock,
+  PuckBlock,
+  PuckRegistry,
+  readStoredPuckBlocks,
+  readStoredPuckRegistry,
+} from '@wepublish/puck-content/api';
 import {
   limitAnswerCache,
   skipAnswerCache,
 } from '@wepublish/public-content-cache/api';
-import { forwardRef, Inject } from '@nestjs/common';
+import { forwardRef, Inject, Logger } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {
+  private readonly logger = new Logger(ArticleRevisionResolver.name);
+  private storedPuckBlocks = new WeakMap<object, ApiBlock[] | null>();
+
   constructor(
     @Inject(forwardRef(() => BlockTreeLoader))
     private blockTreeLoader: BlockTreeLoader,
+    @Inject(forwardRef(() => PuckBlockDataLoader))
+    private puckBlockData: PuckBlockDataLoader,
     private authorDataLoader: ArticleAuthorDataloader,
     private socialMediaAuthorDataLoader: ArticleSocialMediaAuthorDataloader,
     private imageDataloaderService: ImageDataloaderService
@@ -82,13 +98,14 @@ export class ArticleRevisionResolver {
     })
     onlyDisplayed: boolean,
     @Context() context: object,
-    @CurrentUser() user: UserSession | undefined
+    @CurrentUser() user: UserSession | undefined,
+    @PreviewMode() isPreview: boolean
   ) {
     if (!onlyDisplayed) {
       skipAnswerCache(context);
     }
 
-    const { puckBlocks } = parent;
+    const puckBlocks = this.readPuckBlocks(parent);
 
     if (!puckBlocks) {
       return null;
@@ -101,10 +118,12 @@ export class ArticleRevisionResolver {
       limitAnswerCache(context, changeAt);
     }
 
-    return flattenPuckBlocks(
-      onlyDisplayed || !hasPermission(CanGetArticle, permissionsOf(user)) ?
-        displayedPuckBlocks(puckBlocks, now)
-      : puckBlocks
+    const pruned =
+      onlyDisplayed || !hasPermission(CanGetArticle, permissionsOf(user));
+
+    return this.puckBlockData.flatten(
+      pruned ? displayedPuckBlocks(puckBlocks, now) : puckBlocks,
+      { pruned, now, preview: isPreview }
     );
   }
 
@@ -114,9 +133,47 @@ export class ArticleRevisionResolver {
       'When the set of displayed Puck blocks changes next, so caches can expire in time. Null while no block is timed.',
   })
   puckBlocksChangeAt(@Parent() parent: ArticleRevision) {
-    return parent.puckBlocks ?
-        nextPuckBlocksTimingChange(parent.puckBlocks, this.blockTreeLoader.now)
+    const puckBlocks = this.readPuckBlocks(parent);
+
+    return puckBlocks ?
+        nextPuckBlocksTimingChange(puckBlocks, this.blockTreeLoader.now)
       : null;
+  }
+
+  @ResolveField(() => PuckRegistry, { nullable: true })
+  puckRegistry(@Parent() { id, puckRegistry }: ArticleRevision) {
+    if (puckRegistry == null) {
+      return null;
+    }
+
+    const stored = readStoredPuckRegistry(puckRegistry);
+
+    if (!stored) {
+      this.logger.warn(
+        `Article revision ${id} has a Puck registry that does not parse, reading it as null.`
+      );
+    }
+
+    return stored;
+  }
+
+  private readPuckBlocks(revision: ArticleRevision) {
+    if (this.storedPuckBlocks.has(revision)) {
+      return this.storedPuckBlocks.get(revision) ?? null;
+    }
+
+    const { id, puckBlocks } = revision;
+    const stored = puckBlocks == null ? null : readStoredPuckBlocks(puckBlocks);
+
+    if (puckBlocks != null && !stored) {
+      this.logger.warn(
+        `Article revision ${id} has Puck blocks that do not parse, reading them as null.`
+      );
+    }
+
+    this.storedPuckBlocks.set(revision, stored);
+
+    return stored;
   }
 
   @ResolveField(() => [Property])

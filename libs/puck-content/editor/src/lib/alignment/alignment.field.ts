@@ -1,19 +1,11 @@
 import { BaseField } from '@puckeditor/core';
 import { FieldAiParams } from '@puckeditor/plugin-ai';
 import { z } from 'zod/v4';
+import { AlignmentValue } from '@wepublish/puck-content/website';
 
 import { toAiSchema } from '../ai-schema';
 
-export type AlignmentValue =
-  | 'left'
-  | 'start'
-  | 'center'
-  | 'right'
-  | 'end'
-  | 'stretch'
-  | 'space-between'
-  | 'space-around'
-  | 'space-evenly';
+export type { AlignmentValue } from '@wepublish/puck-content/website';
 
 export type AlignmentOrientation = 'horizontal' | 'vertical' | 'text';
 

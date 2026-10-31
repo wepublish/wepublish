@@ -1,7 +1,6 @@
 import 'keen-slider/keen-slider.min.css';
 
 import styled from '@emotion/styled';
-import { useKeenSlider } from 'keen-slider/react';
 import {
   DOMAttributes,
   useCallback,
@@ -28,6 +27,7 @@ import {
 } from '../../image/image-block';
 import { css } from '@emotion/react';
 import { Theme } from '@mui/material';
+import { useSlider } from '../slider/slider';
 
 export const LightboxImage = styled(ImageBlock)`
   justify-items: initial;
@@ -223,11 +223,12 @@ export const Lightbox = ({
   const { t } = useTranslation();
 
   const swipeStart = useRef<number | null>(null);
+  const [container, setContainer] = useState<HTMLElement | null>(null);
 
   const count = images.length;
   const multiple = count > 1;
 
-  const [ref, sliderRef] = useKeenSlider({
+  const sliderRef = useSlider(container, {
     loop: multiple,
     drag: multiple && !dragDisabled && !dragAnimationDisabled,
     defaultAnimation: animationDisabled ? { duration: 0 } : undefined,
@@ -329,7 +330,7 @@ export const Lightbox = ({
     >
       <LightboxStage>
         <LightboxSlides
-          ref={ref}
+          ref={setContainer}
           className="keen-slider"
           {...swipeWithoutAnimation}
         >

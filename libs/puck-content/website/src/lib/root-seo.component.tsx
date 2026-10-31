@@ -3,8 +3,8 @@ import { Head, useWebsiteBuilder } from '@wepublish/website/builder';
 import {
   ArticleRootProps,
   DocumentRootProps,
-} from '@wepublish/puck-content/editor';
-import { PuckDocumentKind } from './document/document';
+  PuckDocumentKind,
+} from './document/document-props';
 import { resolveRootSEO, rootOgTypes } from './root-seo';
 
 export type RootSEOProps = DocumentRootProps &

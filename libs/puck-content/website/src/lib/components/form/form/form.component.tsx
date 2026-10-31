@@ -1,8 +1,7 @@
-import { PuckComponent, Slot } from '@puckeditor/core';
-import { SyntheticEvent, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { FormEventHandler, useMemo } from 'react';
 
-import { FormEditorWarning } from '../form-field.component';
+import { PuckBlockComponent, PuckSlotValue } from '../../../blocks/block.types';
+import { getSlot } from '../../../blocks/slots';
 import { FormContext, FormContextValue, useFormContext } from './form.context';
 import {
   FormContent,
@@ -19,63 +18,37 @@ export type FormEncType =
   'application/x-www-form-urlencoded' | 'multipart/form-data';
 
 export type FormProps = {
-  className?: string;
   action: string;
   method?: FormMethod;
   target?: FormTarget;
   encType?: FormEncType;
   honeypot?: string;
-  content: Slot;
+  content: PuckSlotValue;
 };
 
-const preventSubmit = (event: SyntheticEvent) => event.preventDefault();
+export type FormExtra = {
+  onSubmit: FormEventHandler<HTMLFormElement>;
+};
 
-export const FormRender: PuckComponent<FormProps> = ({
+export const FormRender: PuckBlockComponent<FormProps, FormExtra> = ({
   id,
   className,
-  action,
-  method,
-  target,
-  encType,
-  honeypot,
-  content: Content,
-  puck: { isEditing },
+  props: { action, method, target, encType, honeypot },
+  slots,
+  onSubmit,
 }) => {
-  const { t } = useTranslation();
   const parentForm = useFormContext();
   const form = useMemo<FormContextValue>(() => ({ id }), [id]);
 
-  const hints = isEditing && (
-    <>
-      {parentForm && (
-        <FormEditorWarning>
-          {t('', 'Forms cannot be placed inside another Form')}
-        </FormEditorWarning>
-      )}
-
-      {!action && (
-        <FormEditorWarning>
-          {t('', 'Set an action URL so the form knows where to send its data')}
-        </FormEditorWarning>
-      )}
-    </>
-  );
-
   const content = (
     <FormContext.Provider value={form}>
-      <Content
-        as={FormContent}
-        minEmptyHeight={120}
-      />
+      {getSlot(slots, 'content')({ as: FormContent })}
     </FormContext.Provider>
   );
 
   if (parentForm) {
     return (
-      <NestedFormElement className={className}>
-        {hints}
-        {content}
-      </NestedFormElement>
+      <NestedFormElement className={className}>{content}</NestedFormElement>
     );
   }
 
@@ -86,9 +59,8 @@ export const FormRender: PuckComponent<FormProps> = ({
       method={method}
       target={target}
       encType={encType}
-      onSubmit={isEditing ? preventSubmit : undefined}
+      onSubmit={onSubmit}
     >
-      {hints}
       {content}
 
       {honeypot && (

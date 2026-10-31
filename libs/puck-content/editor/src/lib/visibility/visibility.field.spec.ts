@@ -3,8 +3,6 @@ import { createTheme } from '@mui/material';
 import {
   breakpointRanges,
   formatBreakpointRange,
-  hiddenBreakpoints,
-  isHiddenOn,
   toggleBreakpoint,
 } from './visibility.field';
 
@@ -72,27 +70,5 @@ describe('toggleBreakpoint', () => {
 
   it('allows hiding the block on every breakpoint', () => {
     expect(toggleBreakpoint(['xs'], 'xs', [...all])).toEqual([]);
-  });
-});
-
-describe('hiddenBreakpoints', () => {
-  it('lists nothing when the block is shown everywhere', () => {
-    expect(hiddenBreakpoints(undefined, [...all])).toEqual([]);
-    expect(hiddenBreakpoints([...all], [...all])).toEqual([]);
-  });
-
-  it('lists the breakpoints missing from the value in breakpoint order', () => {
-    expect(hiddenBreakpoints(['xl', 'xs', 'sm'], [...all])).toEqual([
-      'md',
-      'lg',
-    ]);
-  });
-});
-
-describe('isHiddenOn', () => {
-  it('only hides breakpoints a value leaves out', () => {
-    expect(isHiddenOn(undefined, 'xs')).toBe(false);
-    expect(isHiddenOn(['xs'], 'xs')).toBe(false);
-    expect(isHiddenOn(['xs'], 'md')).toBe(true);
   });
 });

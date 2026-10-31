@@ -1,11 +1,11 @@
 import { BaseField } from '@puckeditor/core';
 import { FieldAiParams } from '@puckeditor/plugin-ai';
 import { Weekday } from '@wepublish/editor/api';
+import { defaultBreakpoints } from '@wepublish/puck-content/website';
 import { z } from 'zod/v4';
 
 import { toAiSchema } from '../ai-schema';
 import {
-  defaultBreakpoints,
   visibilitySchema,
   VisibilityValue,
 } from '../visibility/visibility.field';

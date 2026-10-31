@@ -27,7 +27,7 @@ import {
   SortOrder,
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
-import { puckBlocksColumn } from '@wepublish/puck-content/api';
+import { puckDocumentColumns } from '@wepublish/puck-content/api';
 
 @Injectable()
 export class PageService {
@@ -126,12 +126,13 @@ export class PageService {
       properties,
       blocks,
       puckBlocks,
+      puckRegistry,
       ...revision
     }: CreatePageInput,
     userId: string | null | undefined
   ) {
     const mappedBlocks = (blocks ?? []).map(mapBlockUnionMap);
-    const storedPuckBlocks = puckBlocksColumn(puckBlocks);
+    const puckDocument = puckDocumentColumns({ puckBlocks, puckRegistry });
 
     const result = await this.prisma.page.create({
       data: {
@@ -152,7 +153,7 @@ export class PageService {
             ...revision,
             userId,
             blocks: mappedBlocks as any[],
-            puckBlocks: storedPuckBlocks,
+            ...puckDocument,
             properties: properties as any,
           },
         },
@@ -175,6 +176,7 @@ export class PageService {
       properties,
       blocks,
       puckBlocks,
+      puckRegistry,
       ...revision
     }: UpdatePageInput,
     userId: string | null | undefined
@@ -187,7 +189,7 @@ export class PageService {
           where: { archivedAt: null },
           orderBy: { createdAt: 'desc' },
           take: 1,
-          select: { blocks: true, puckBlocks: true },
+          select: { blocks: true, puckBlocks: true, puckRegistry: true },
         },
       },
     });
@@ -199,10 +201,10 @@ export class PageService {
     const latest = page.revisions?.[0];
     const mappedBlocks =
       blocks ? (blocks.map(mapBlockUnionMap) as any[]) : (latest?.blocks ?? []);
-    const storedPuckBlocks =
-      puckBlocks === undefined ?
-        (latest?.puckBlocks ?? Prisma.DbNull)
-      : puckBlocksColumn(puckBlocks);
+    const puckDocument = puckDocumentColumns(
+      { puckBlocks, puckRegistry },
+      latest
+    );
 
     const result = await this.prisma.page.update({
       where: { id },
@@ -225,7 +227,7 @@ export class PageService {
             ...revision,
             userId,
             blocks: mappedBlocks,
-            puckBlocks: storedPuckBlocks,
+            ...puckDocument,
             properties: properties as any,
           },
         },
@@ -430,6 +432,7 @@ export class PageService {
         pageId: _pageId,
         properties,
         puckBlocks,
+        puckRegistry,
         ...revision
       },
     ] = page.revisions;
@@ -453,6 +456,7 @@ export class PageService {
             userId,
             blocks: revision.blocks ?? [],
             puckBlocks: puckBlocks ?? Prisma.DbNull,
+            puckRegistry: puckRegistry ?? Prisma.DbNull,
             properties: properties as any,
           },
         },
@@ -615,6 +619,7 @@ export class PageService {
       pageId: _pageId,
       properties,
       puckBlocks,
+      puckRegistry,
       ...content
     } = revision;
 
@@ -637,6 +642,7 @@ export class PageService {
             userId,
             blocks: (content.blocks ?? []) as any[],
             puckBlocks: puckBlocks ?? Prisma.DbNull,
+            puckRegistry: puckRegistry ?? Prisma.DbNull,
             properties: properties as any,
           },
         },

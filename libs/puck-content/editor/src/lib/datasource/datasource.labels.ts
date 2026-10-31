@@ -27,16 +27,36 @@ export const useDatasourceLabels = () => {
     userSubscription: t('', 'subscriptions of the signed-in reader'),
   } satisfies Record<DatasourceModel, string>;
 
+  const types = {
+    list: t('', 'Latest'),
+    uniqueList: t('', 'Latest (no duplicates)'),
+    single: t('', 'Pick one'),
+    multiple: t('', 'Pick several'),
+    slot: t('', 'From parent'),
+  } satisfies Record<DatasourceType, string>;
+
+  const collections: Partial<Record<DatasourceModel, string>> = {
+    memberPlan: t('', 'Shows every active member plan.'),
+    userSubscription: t(
+      '',
+      'Shows every subscription of the signed-in reader.'
+    ),
+  };
+
   const descriptions = {
     list: (model: DatasourceModel) =>
-      t('', 'Shows the newest {{items}} automatically.', {
-        items: items[model],
-      }),
-    uniqueList: (model: DatasourceModel) =>
+      collections[model] ??
       t(
         '',
-        'Shows the newest {{items}} automatically, skipping any already shown on the page.',
-        { items: items[model] }
+        'Hands the newest {{items}} to the blocks inside set to "{{slot}}", one each.',
+        { items: items[model], slot: types.slot }
+      ),
+    uniqueList: (model: DatasourceModel) =>
+      collections[model] ??
+      t(
+        '',
+        'Hands the newest {{items}} to the blocks inside set to "{{slot}}", one each, skipping any already shown on the page.',
+        { items: items[model], slot: types.slot }
       ),
     slot: (model: DatasourceModel) =>
       t('', 'Shows the {{items}} handed down by the surrounding block.', {
@@ -55,13 +75,7 @@ export const useDatasourceLabels = () => {
       t('', 'Remove {{model}} data source', { model: models[model] }),
     typeGroup: (model: DatasourceModel) =>
       t('', 'Which {{items}}', { items: items[model] }),
-    types: {
-      list: t('', 'Latest'),
-      uniqueList: t('', 'Latest (no duplicates)'),
-      single: t('', 'Pick one'),
-      multiple: t('', 'Pick several'),
-      slot: t('', 'From parent'),
-    } satisfies Record<DatasourceType, string>,
+    types,
     typeHints: {
       list: t('', 'The newest records, filled in automatically'),
       uniqueList: t(

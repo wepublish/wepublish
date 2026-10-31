@@ -4,8 +4,14 @@ import { z } from 'zod';
 
 export const MAX_PUCK_BLOCKS_LENGTH = 1_000_000;
 export const MAX_PUCK_BLOCKS_DEPTH = 64;
+export const MAX_PUCK_SCRIPT_LENGTH = 100_000;
+export const MAX_PUCK_REGISTRY_COMPONENTS = 100;
+export const MAX_PUCK_COMPONENT_NAME_LENGTH = 100;
+export const MAX_PUCK_BLOCK_CONSUMES = 50;
 
 export const defaultPuckSlot = 'content';
+
+export const puckBlockKinds = ['puck', 'generated'] as const;
 
 export const puckWeekdays = [
   'Monday',
@@ -21,10 +27,11 @@ export const puckBreakpoints = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 export const puckListDatasourceTypes = ['list', 'uniqueList', 'slot'] as const;
 
+export const puckPickDatasourceTypes = ['single', 'multiple'] as const;
+
 export const puckDatasourceTypes = [
   ...puckListDatasourceTypes,
-  'single',
-  'multiple',
+  ...puckPickDatasourceTypes,
 ] as const;
 
 export const puckDatasourceModels = [
@@ -66,7 +73,7 @@ export const puckMaxWidthBreakpoints = ['sm', 'md', 'lg', 'xl'] as const;
 
 export const puckMaxShadow = 24;
 
-const reservedDataKeys = [
+const reservedPropKeys = [
   'id',
   'locked',
   'visibility',
@@ -205,19 +212,26 @@ const listDatasourceOptions = [
   listDatasourceSchema('slot'),
 ] as const;
 
+const pickDatasourceOptions = [
+  z.object({ type: z.literal('single'), id: z.string() }).strict(),
+  z.object({ type: z.literal('multiple'), ids: z.array(z.string()) }).strict(),
+] as const;
+
 export const apiBlockListDatasourceSchema = z.preprocess(
   withoutNullEntries,
   z.discriminatedUnion('type', [...listDatasourceOptions])
+);
+
+export const apiBlockPickDatasourceSchema = z.preprocess(
+  withoutNullEntries,
+  z.discriminatedUnion('type', [...pickDatasourceOptions])
 );
 
 export const apiBlockDatasourceSchema = z.preprocess(
   withoutNullEntries,
   z.discriminatedUnion('type', [
     ...listDatasourceOptions,
-    z.object({ type: z.literal('single'), id: z.string() }).strict(),
-    z
-      .object({ type: z.literal('multiple'), ids: z.array(z.string()) })
-      .strict(),
+    ...pickDatasourceOptions,
   ])
 );
 
@@ -225,7 +239,7 @@ export const apiBlockDatasourcesSchema = strictObject({
   article: apiBlockDatasourceSchema.optional(),
   page: apiBlockDatasourceSchema.optional(),
   event: apiBlockDatasourceSchema.optional(),
-  image: apiBlockDatasourceSchema.optional(),
+  image: apiBlockPickDatasourceSchema.optional(),
   memberPlan: apiBlockDatasourceSchema.optional(),
   userSubscription: apiBlockListDatasourceSchema.optional(),
 });
@@ -280,20 +294,20 @@ const componentPaths = (
     )
   : [];
 
-export const apiBlockDataSchema = z
+export const apiBlockPropsSchema = z
   .record(z.string(), z.unknown())
-  .superRefine((data, ctx) => {
-    reservedDataKeys
-      .filter(key => key in data)
+  .superRefine((props, ctx) => {
+    reservedPropKeys
+      .filter(key => key in props)
       .forEach(key =>
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: [key],
-          message: 'belongs on the block, not inside its data',
+          message: 'belongs on the block, not inside its props',
         })
       );
 
-    componentPaths(data, []).forEach(path =>
+    componentPaths(props, []).forEach(path =>
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path,
@@ -305,12 +319,13 @@ export const apiBlockDataSchema = z
 const apiBlockShape = {
   id: nonEmptyString,
   type: nonEmptyString,
+  props: apiBlockPropsSchema,
   locked: z.boolean().optional(),
   visibility: apiBlockVisibilitySchema.optional(),
   styling: apiBlockStylingSchema.optional(),
   datasources: apiBlockDatasourcesSchema.optional(),
-  data: apiBlockDataSchema,
-  slot: z
+  consumes: z.number().int().min(1).max(MAX_PUCK_BLOCK_CONSUMES).optional(),
+  puckSlot: z
     .string()
     .regex(SLOT_PATH, 'must be a slot path like items[0].content')
     .optional(),
@@ -327,19 +342,133 @@ export type ApiBlockListDatasource = z.output<
 >;
 export type ApiBlockDatasources = z.output<typeof apiBlockDatasourcesSchema>;
 export type ApiBlockStyling = z.output<typeof apiBlockStylingSchema>;
-export type ApiBlockData = z.output<typeof apiBlockDataSchema>;
+export type ApiBlockProps = z.output<typeof apiBlockPropsSchema>;
+export type ApiBlockKind = (typeof puckBlockKinds)[number];
 
-export type ApiBlock = z.output<z.ZodObject<typeof apiBlockShape>> & {
+type ApiBlockFields = z.output<z.ZodObject<typeof apiBlockShape>>;
+type ApiBlockKindField<Kind extends ApiBlockKind> = z.output<
+  z.ZodObject<{ kind: z.ZodLiteral<Kind> }>
+>;
+
+export interface ApiPuckBlock
+  extends ApiBlockFields, ApiBlockKindField<'puck'> {
   children?: ApiBlock[];
-};
+}
+
+export interface ApiGeneratedBlock
+  extends ApiBlockFields, ApiBlockKindField<'generated'> {
+  children?: ApiBlock[];
+}
+
+export type ApiBlock = ApiPuckBlock | ApiGeneratedBlock;
+
+const blockOfKind = <Kind extends ApiBlockKind>(kind: Kind) =>
+  z
+    .object({
+      kind: z.literal(kind),
+      ...apiBlockShape,
+      children: z.lazy(() => z.array(apiBlockSchema)).optional(),
+    })
+    .strict();
 
 export const apiBlockSchema: z.ZodType<ApiBlock, z.ZodTypeDef, unknown> =
-  strictObject({
-    ...apiBlockShape,
-    children: z.lazy(() => z.array(apiBlockSchema)).optional(),
-  });
+  z.preprocess(
+    withoutNullEntries,
+    z.discriminatedUnion('kind', [
+      blockOfKind('puck'),
+      blockOfKind('generated'),
+    ])
+  );
 
-export const apiBlocksSchema = z.array(apiBlockSchema);
+export const orderPuckChildren = <Block extends { puckSlot?: string | null }>(
+  children: readonly Block[]
+): Block[] => {
+  const bySlot = new Map<string, Block[]>();
+
+  for (const child of children) {
+    const slot = child.puckSlot ?? defaultPuckSlot;
+
+    bySlot.set(slot, [...(bySlot.get(slot) ?? []), child]);
+  }
+
+  return [...bySlot.values()].flat();
+};
+
+const orderTree = (blocks: ApiBlock[]): ApiBlock[] =>
+  blocks.map(block =>
+    block.children ?
+      { ...block, children: orderTree(orderPuckChildren(block.children)) }
+    : block
+  );
+
+const uniqueBlockIds = (blocks: ApiBlock[], ctx: z.RefinementCtx) => {
+  const seen = new Set<string>();
+
+  const visit = (siblings: ApiBlock[], path: (string | number)[]) =>
+    siblings.forEach(({ id, children }, index) => {
+      if (seen.has(id)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [...path, index, 'id'],
+          message: 'must be unique in the document',
+        });
+      }
+
+      seen.add(id);
+      visit(children ?? [], [...path, index, 'children']);
+    });
+
+  visit(blocks, []);
+};
+
+export const apiBlocksSchema = z
+  .array(apiBlockSchema)
+  .superRefine(uniqueBlockIds)
+  .transform(orderTree);
+
+const scriptSchema = z.string().max(MAX_PUCK_SCRIPT_LENGTH);
+
+const jsonObjectSchema = z.record(z.string(), z.unknown());
+
+export const puckRegistryComponentSchema = z.preprocess(
+  withoutNullEntries,
+  z
+    .object({
+      html: z.string(),
+      label: z.string().optional(),
+      styles: z.string().optional(),
+      script: scriptSchema.optional(),
+      fields: z.record(z.string(), jsonObjectSchema).optional(),
+      defaultProps: jsonObjectSchema.optional(),
+      streaming: z.boolean().optional(),
+    })
+    .passthrough()
+);
+
+const isComponentName = (name: string) =>
+  name.length > 0 && name.length <= MAX_PUCK_COMPONENT_NAME_LENGTH;
+
+export const puckRegistrySchema = strictObject({
+  components: z
+    .record(z.string(), puckRegistryComponentSchema)
+    .refine(components => Object.keys(components).every(isComponentName), {
+      message: `must name every component with 1 to ${MAX_PUCK_COMPONENT_NAME_LENGTH} characters`,
+    })
+    .refine(
+      components =>
+        Object.keys(components).length <= MAX_PUCK_REGISTRY_COMPONENTS,
+      {
+        message: `must have at most ${MAX_PUCK_REGISTRY_COMPONENTS} components`,
+      }
+    ),
+  styles: z.string().optional(),
+  script: scriptSchema.optional(),
+});
+
+export type ApiPuckRegistryComponent = z.output<
+  typeof puckRegistryComponentSchema
+>;
+export type ApiPuckRegistry = z.output<typeof puckRegistrySchema>;
 
 export class PuckBlocksError extends BadRequestException {}
 
@@ -370,7 +499,12 @@ const puckBlocksErrorMap: z.ZodErrorMap = (issue, { defaultError }) => {
     case z.ZodIssueCode.too_small:
       return { message: `must be at least ${issue.minimum}` };
     case z.ZodIssueCode.too_big:
-      return { message: `must be at most ${issue.maximum}` };
+      return {
+        message:
+          issue.type === 'string' ?
+            `must be at most ${issue.maximum} characters`
+          : `must be at most ${issue.maximum}`,
+      };
     default:
       return { message: defaultError };
   }
@@ -398,14 +532,20 @@ const blockTooDeep = (block: unknown, depth: number): boolean =>
     )
   : valueTooDeep(block, depth));
 
+const blocksTooDeep = (value: unknown) =>
+  Array.isArray(value) && value.some(block => blockTooDeep(block, 1));
+
+const tooLarge = (value: unknown) =>
+  JSON.stringify(value ?? null).length > MAX_PUCK_BLOCKS_LENGTH;
+
 export function parsePuckBlocks(value: unknown): ApiBlock[] {
-  if (Array.isArray(value) && value.some(block => blockTooDeep(block, 1))) {
+  if (blocksTooDeep(value)) {
     throw new PuckBlocksError(
       `Puck blocks are nested too deep (at most ${MAX_PUCK_BLOCKS_DEPTH} levels).`
     );
   }
 
-  if (JSON.stringify(value ?? null).length > MAX_PUCK_BLOCKS_LENGTH) {
+  if (tooLarge(value)) {
     throw new PuckBlocksError(
       `Puck blocks are too large (at most ${MAX_PUCK_BLOCKS_LENGTH} characters).`
     );
@@ -425,6 +565,108 @@ export function parsePuckBlocks(value: unknown): ApiBlock[] {
 
   return result.data;
 }
+
+export function parsePuckRegistry(value: unknown): ApiPuckRegistry {
+  if (valueTooDeep(value, 1)) {
+    throw new PuckBlocksError(
+      `Puck registry is nested too deep (at most ${MAX_PUCK_BLOCKS_DEPTH} levels).`
+    );
+  }
+
+  if (tooLarge(value)) {
+    throw new PuckBlocksError(
+      `Puck registry is too large (at most ${MAX_PUCK_BLOCKS_LENGTH} characters).`
+    );
+  }
+
+  const result = puckRegistrySchema.safeParse(value, {
+    errorMap: puckBlocksErrorMap,
+  });
+
+  if (!result.success) {
+    const [{ path, message }] = result.error.issues;
+
+    throw new PuckBlocksError(
+      `Puck registry is invalid: registry${formatPath(path)} ${message}.`
+    );
+  }
+
+  return result.data;
+}
+
+const unregisteredBlockPath = (
+  blocks: ApiBlock[],
+  registry: ApiPuckRegistry | null,
+  path: (string | number)[]
+): (string | number)[] | null => {
+  for (const [index, { kind, type, children }] of blocks.entries()) {
+    if (
+      kind === 'generated' &&
+      !(registry && Object.hasOwn(registry.components, type))
+    ) {
+      return [...path, index, 'type'];
+    }
+
+    const nested = unregisteredBlockPath(children ?? [], registry, [
+      ...path,
+      index,
+      'children',
+    ]);
+
+    if (nested) {
+      return nested;
+    }
+  }
+
+  return null;
+};
+
+export function assertPuckDocument(
+  blocks: ApiBlock[],
+  registry: ApiPuckRegistry | null
+) {
+  const path = unregisteredBlockPath(blocks, registry, []);
+
+  if (path) {
+    throw new PuckBlocksError(
+      `Puck blocks are invalid: blocks${formatPath(path)} must name a generated component of the registry.`
+    );
+  }
+}
+
+export function parsePuckDocument({
+  blocks,
+  registry,
+}: {
+  blocks: unknown;
+  registry: unknown;
+}): { blocks: ApiBlock[]; registry: ApiPuckRegistry | null } {
+  const parsedBlocks = parsePuckBlocks(blocks);
+  const parsedRegistry =
+    registry === null || registry === undefined ?
+      null
+    : parsePuckRegistry(registry);
+
+  assertPuckDocument(parsedBlocks, parsedRegistry);
+
+  return { blocks: parsedBlocks, registry: parsedRegistry };
+}
+
+export const readStoredPuckBlocks = (json: unknown): ApiBlock[] | null =>
+  blocksTooDeep(json) ? null : (apiBlocksSchema.safeParse(json).data ?? null);
+
+export const readStoredPuckRegistry = (
+  json: unknown
+): ApiPuckRegistry | null =>
+  valueTooDeep(json, 1) ? null : (
+    (puckRegistrySchema.safeParse(json).data ?? null)
+  );
+
+export const isStoredPuckBlocks = (json: unknown): json is ApiBlock[] =>
+  readStoredPuckBlocks(json) !== null;
+
+export const isStoredPuckRegistry = (json: unknown): json is ApiPuckRegistry =>
+  readStoredPuckRegistry(json) !== null;
 
 export const filterPuckBlocks = (
   blocks: ApiBlock[],

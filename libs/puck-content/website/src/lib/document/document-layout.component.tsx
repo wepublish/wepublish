@@ -7,31 +7,26 @@ import { memo, ReactNode } from 'react';
 import {
   DocumentLayoutContainer,
   DocumentLayoutContent,
-  DocumentLayoutNoInteraction,
 } from './document-layout.styles';
 
 export const DocumentLayoutNavbar = memo(function DocumentLayoutNavbar() {
   return (
-    <DocumentLayoutNoInteraction>
-      <NavbarContainer
-        categorySlugs={[['categories', 'about-us']]}
-        slug="main"
-        headerSlug="header"
-        iconSlug="icons"
-      />
-    </DocumentLayoutNoInteraction>
+    <NavbarContainer
+      categorySlugs={[['categories', 'about-us']]}
+      slug="main"
+      headerSlug="header"
+      iconSlug="icons"
+    />
   );
 });
 
 export const DocumentLayoutFooter = memo(function DocumentLayoutFooter() {
   return (
-    <DocumentLayoutNoInteraction>
-      <FooterContainer
-        slug="footer"
-        categorySlugs={[['categories', 'about-us']]}
-        iconSlug="icons"
-      />
-    </DocumentLayoutNoInteraction>
+    <FooterContainer
+      slug="footer"
+      categorySlugs={[['categories', 'about-us']]}
+      iconSlug="icons"
+    />
   );
 });
 
@@ -39,16 +34,20 @@ export type DocumentLayoutProps = {
   children: ReactNode;
   showNavigation?: boolean;
   showFooter?: boolean;
+  navigation?: ReactNode;
+  footer?: ReactNode;
 };
 
 export const DocumentLayout = ({
   children,
   showNavigation = true,
   showFooter = true,
+  navigation = <DocumentLayoutNavbar />,
+  footer = <DocumentLayoutFooter />,
 }: DocumentLayoutProps) => (
   <DocumentLayoutContainer>
-    {showNavigation && <DocumentLayoutNavbar />}
+    {showNavigation && navigation}
     <DocumentLayoutContent>{children}</DocumentLayoutContent>
-    {showFooter && <DocumentLayoutFooter />}
+    {showFooter && footer}
   </DocumentLayoutContainer>
 );

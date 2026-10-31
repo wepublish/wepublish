@@ -11,6 +11,7 @@ import {
   BorderStyle,
   borderStyles,
   BorderValue,
+  toBorderWidth,
 } from './border.field';
 
 const LinePreview = styled.span<{ lineStyle: BorderStyle }>`
@@ -53,7 +54,9 @@ export const BorderFieldRender = ({
           unit="px"
           value={current.width}
           readOnly={readOnly}
-          onChange={width => onChange({ ...current, width })}
+          onChange={width =>
+            onChange({ ...current, width: toBorderWidth(width) })
+          }
         />
 
         <FieldToggleGroup

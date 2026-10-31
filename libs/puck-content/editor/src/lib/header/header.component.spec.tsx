@@ -1,6 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Config, createUsePuck, Data, Puck } from '@puckeditor/core';
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -21,6 +22,7 @@ import {
   PuckDocumentController,
   PuckDocumentControllerContext,
 } from './header.context';
+import { PUCK_AUTOSAVE_INTERVAL_MS } from './header.helpers';
 
 const usePuck = createUsePuck();
 
@@ -523,6 +525,95 @@ describe('PuckDocumentHeader', () => {
     expect(
       screen.getByRole('button', { name: 'Save' })
     ).not.toHaveAccessibleDescription('Unsaved changes');
+  });
+});
+
+describe('PuckDocumentHeader autosave', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const designOf = (hero: Record<string, unknown>) => ({
+    title: 'Home',
+    _dynamicConfig: { components: { Hero: hero } },
+  });
+
+  function Designer() {
+    const dispatch = usePuck(puck => puck.dispatch);
+
+    return (
+      <>
+        <button
+          onClick={() =>
+            dispatch({
+              type: 'replaceRoot',
+              root: {
+                props: designOf({ html: '<h1>Hal', streaming: true }),
+              },
+            })
+          }
+        >
+          Stream
+        </button>
+        <button
+          onClick={() =>
+            dispatch({
+              type: 'replaceRoot',
+              root: { props: designOf({ html: '<h1>Hello</h1>' }) },
+            })
+          }
+        >
+          Settle
+        </button>
+      </>
+    );
+  }
+
+  const renderDesigner = (controller: PuckDocumentController) => {
+    render(
+      <Providers>
+        <PuckDocumentControllerContext.Provider value={controller}>
+          <Puck
+            config={config}
+            data={{
+              root: { props: designOf({ html: '<h1>', streaming: true }) },
+              content: [],
+            }}
+          >
+            <PuckDocumentHeader />
+            <Designer />
+          </Puck>
+        </PuckDocumentControllerContext.Provider>
+      </Providers>
+    );
+
+    fireEvent.pointerDown(document.body);
+  };
+
+  it('waits with the autosave until Puck AI has finished writing the design', async () => {
+    const controller = createController({
+      autosave: { enabled: true, onToggle: vi.fn() },
+    });
+    renderDesigner(controller);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Stream' }));
+    await act(() => vi.advanceTimersByTimeAsync(PUCK_AUTOSAVE_INTERVAL_MS * 2));
+
+    expect(controller.onSave).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Settle' }));
+    await act(() => vi.advanceTimersByTimeAsync(PUCK_AUTOSAVE_INTERVAL_MS));
+
+    expect(controller.onSave).toHaveBeenCalledTimes(1);
+    expect(controller.onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        root: { props: designOf({ html: '<h1>Hello</h1>' }) },
+      })
+    );
   });
 });
 

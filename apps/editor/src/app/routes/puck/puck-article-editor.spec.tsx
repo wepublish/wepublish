@@ -2,8 +2,12 @@ import '@testing-library/jest-dom/vitest';
 
 import { act, screen } from '@testing-library/react';
 import { FullArticleFragment } from '@wepublish/editor/api';
-import { RevisionHistoryPlugin } from '@wepublish/puck-content/editor';
-import { PuckData, toApiDocument } from '@wepublish/puck-content/website';
+import {
+  getPuckConfig,
+  PuckData,
+  RevisionHistoryPlugin,
+  toPuckDocument,
+} from '@wepublish/puck-content/editor';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { renderWithTheme } from '../templates/testUtils';
@@ -279,28 +283,30 @@ describe('PuckArticleEditor', () => {
               {
                 __typename: 'PuckBlock',
                 id: 'Title-2',
+                kind: 'puck',
                 type: 'Title',
                 parentId: 'Grid-1',
-                slot: 'content',
+                puckSlot: 'content',
                 position: 0,
                 locked: null,
                 visibility: null,
                 styling: null,
                 datasources: null,
-                data: { title: 'Nested' },
+                props: { title: 'Nested' },
               },
               {
                 __typename: 'PuckBlock',
                 id: 'Grid-1',
+                kind: 'puck',
                 type: 'Grid',
                 parentId: null,
-                slot: null,
+                puckSlot: null,
                 position: 0,
                 locked: null,
                 visibility: null,
                 styling: null,
                 datasources: null,
-                data: { content: [] },
+                props: { content: [] },
               },
             ],
           },
@@ -321,6 +327,58 @@ describe('PuckArticleEditor', () => {
         },
       },
     ]);
+  });
+
+  it('hands the registry of the latest revision to Puck as its dynamic config', () => {
+    apollo.article.mockReturnValue({
+      ...articleResult,
+      data: {
+        article: {
+          ...article,
+          latest: {
+            ...article.latest,
+            puckRegistry: {
+              __typename: 'PuckRegistry',
+              components: { Hero: { html: '<section></section>' } },
+              styles: null,
+              script: 'console.log("hero")',
+            },
+          },
+        },
+      },
+    });
+
+    renderEditor('/puck/articles/edit/article-1');
+
+    expect(editor.props.data.root.props).toEqual(
+      expect.objectContaining({
+        _dynamicConfig: {
+          components: { Hero: { html: '<section></section>' } },
+          script: 'console.log("hero")',
+        },
+      })
+    );
+  });
+
+  it('saves the components the AI designed as the registry, exactly as Puck keeps them', async () => {
+    renderEditor('/puck/articles/edit/article-1');
+
+    const _dynamicConfig = {
+      components: { Hero: { html: '<section></section>', streaming: true } },
+      styles: 'section { color: red; }',
+    };
+
+    await act(() =>
+      editor.props.controller.onSave({
+        ...editedDocument,
+        root: { props: { ...editedDocument.root.props, _dynamicConfig } },
+      } as PuckData<'article'>)
+    );
+
+    const { variables } = apollo.updateArticle.mock.calls[0][0];
+
+    expect(variables.puckRegistry).toEqual(_dynamicConfig);
+    expect(variables).not.toHaveProperty('_dynamicConfig');
   });
 
   it('builds the publish dialog from the root props being edited', () => {
@@ -372,7 +430,21 @@ describe('PuckArticleEditor', () => {
       data: {
         article: {
           ...article,
-          latest: { ...article.latest, puckBlocks: [{ nonsense: true }] },
+          latest: {
+            ...article.latest,
+            puckBlocks: [
+              {
+                __typename: 'PuckBlock',
+                id: 'Title-1',
+                kind: 'puck',
+                type: 'Title',
+                parentId: 'Grid-9',
+                puckSlot: 'content',
+                position: 0,
+                props: {},
+              },
+            ],
+          },
         },
       },
     });
@@ -392,7 +464,7 @@ describe('PuckArticleEditor', () => {
     expect(variables).toEqual(
       toUpdateArticleVariables(
         'article-1',
-        toApiDocument('article', editedDocument),
+        toPuckDocument('article', editedDocument, getPuckConfig('article')),
         article
       )
     );
@@ -434,7 +506,7 @@ describe('PuckArticleEditor', () => {
 
     expect(apollo.createArticle).toHaveBeenCalledWith({
       variables: toCreateArticleVariables(
-        toApiDocument('article', editedDocument)
+        toPuckDocument('article', editedDocument, getPuckConfig('article'))
       ),
     });
     expect(screen.getByRole('status', { name: 'Location' })).toHaveTextContent(

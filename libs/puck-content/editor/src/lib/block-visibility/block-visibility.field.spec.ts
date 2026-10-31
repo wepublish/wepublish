@@ -1,12 +1,25 @@
 import { Weekday } from '@wepublish/editor/api';
+import {
+  BlockVisibility,
+  defaultBreakpoints,
+} from '@wepublish/puck-content/website';
 
 import {
   blockVisibilityFlags,
   blockVisibilitySchema,
+  BlockVisibilityValue,
   setBlockVisibility,
 } from './block-visibility.field';
 
 describe('blockVisibilitySchema', () => {
+  it('stores what the website renders', () => {
+    expectTypeOf<BlockVisibilityValue>().toExtend<BlockVisibility>();
+    expect(
+      blockVisibilitySchema.safeParse({ breakpoints: [...defaultBreakpoints] })
+        .success
+    ).toBe(true);
+  });
+
   it('accepts the disabled flag, a timing window and breakpoints', () => {
     expect(
       blockVisibilitySchema.safeParse({

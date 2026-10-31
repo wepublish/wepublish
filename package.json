@@ -266,7 +266,6 @@
     "@puckeditor/cloud-client": "0.8.3",
     "@puckeditor/core": "0.24.0",
     "@puckeditor/plugin-ai": "0.8.3",
-    "@puckeditor/plugin-emotion-cache": "0.24.0",
     "@puckeditor/plugin-heading-analyzer": "0.24.0",
     "@react-email/components": "catalog:",
     "@redis/client": "catalog:",

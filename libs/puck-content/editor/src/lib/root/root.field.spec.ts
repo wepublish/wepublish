@@ -1,3 +1,6 @@
+import * as website from '@wepublish/puck-content/website';
+import { z } from 'zod/v4';
+
 import { PuckEditorDocumentKind } from '../document-kind/document-kind';
 import {
   articleRootSchema,
@@ -127,5 +130,27 @@ describe('rootSchemas', () => {
     expectTypeOf<PageRootProps>().not.toHaveProperty('authorIds');
     expectTypeOf<DocumentRootProps>().toHaveProperty('seoTitle');
     expectTypeOf<DocumentRootProps>().not.toHaveProperty('preTitle');
+  });
+});
+
+describe('root props', () => {
+  it('are the root props of the website', () => {
+    expectTypeOf<PageRootProps>().toEqualTypeOf<website.PageRootProps>();
+    expectTypeOf<ArticleRootProps>().toEqualTypeOf<website.ArticleRootProps>();
+    expectTypeOf<DocumentRootProps>().toEqualTypeOf<website.DocumentRootProps>();
+  });
+
+  it('match what the page root schema accepts', () => {
+    type Schema = Partial<z.infer<typeof pageRootSchema>>;
+
+    expectTypeOf<Schema>().toExtend<website.PageRootProps>();
+    expectTypeOf<website.PageRootProps>().toExtend<Schema>();
+  });
+
+  it('match what the article root schema accepts', () => {
+    type Schema = Partial<z.infer<typeof articleRootSchema>>;
+
+    expectTypeOf<Schema>().toExtend<website.ArticleRootProps>();
+    expectTypeOf<website.ArticleRootProps>().toExtend<Schema>();
   });
 });

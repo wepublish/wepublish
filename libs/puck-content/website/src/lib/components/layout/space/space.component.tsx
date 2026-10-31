@@ -1,24 +1,31 @@
 import { Theme } from '@emotion/react';
-import { PuckComponent } from '@puckeditor/core';
+import { useForkRef } from '@mui/material';
 
+import { PuckBlockComponent } from '../../../blocks/block.types';
 import {
   breakpointsStyles,
   BreakpointsValue,
-} from '@wepublish/puck-content/editor';
+} from '../../../values/breakpoints';
 
 export type SpaceSize = { size?: number };
 export type SpaceProps = { size: BreakpointsValue<SpaceSize> };
 
-export const SpaceRender: PuckComponent<SpaceProps> = ({
-  size,
-  puck: { dragRef },
-}) => (
-  <div
-    css={(theme: Theme) =>
-      breakpointsStyles(theme, size, resolved => ({
-        height: resolved?.size ?? 0,
-      }))
-    }
-    ref={dragRef}
-  />
-);
+export const SpaceRender: PuckBlockComponent<SpaceProps> = ({
+  props: { size },
+  className,
+  ref,
+}) => {
+  const rootRef = useForkRef(ref);
+
+  return (
+    <div
+      className={className}
+      css={(theme: Theme) =>
+        breakpointsStyles(theme, size, resolved => ({
+          height: resolved?.size ?? 0,
+        }))
+      }
+      ref={rootRef}
+    />
+  );
+};

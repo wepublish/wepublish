@@ -1,23 +1,53 @@
-import { PuckContext } from '@puckeditor/core';
 import { renderWithProviders } from '@wepublish/mocks/website';
 import { screen, within } from '@testing-library/react';
-import { ReactElement } from 'react';
+import { createElement, ReactElement } from 'react';
 
-import { FormCheckboxRender } from './form-checkbox/form-checkbox.component';
-import { FormHiddenRender } from './form-hidden/form-hidden.component';
-import { FormInputRender } from './form-input/form-input.component';
-import { FormRadioGroupRender } from './form-radio-group/form-radio-group.component';
-import { FormSelectRender } from './form-select/form-select.component';
-import { FormSubmitRender } from './form-submit/form-submit.component';
-import { FormTextareaRender } from './form-textarea/form-textarea.component';
+import {
+  emptyPuckBlockData,
+  PuckBlockComponent,
+} from '../../blocks/block.types';
+import {
+  FormCheckboxProps,
+  FormCheckboxRender,
+} from './form-checkbox/form-checkbox.component';
+import {
+  FormHiddenProps,
+  FormHiddenRender,
+} from './form-hidden/form-hidden.component';
+import {
+  FormInputProps,
+  FormInputRender,
+} from './form-input/form-input.component';
+import {
+  FormRadioGroupProps,
+  FormRadioGroupRender,
+} from './form-radio-group/form-radio-group.component';
+import {
+  FormSelectProps,
+  FormSelectRender,
+} from './form-select/form-select.component';
+import {
+  FormSubmitProps,
+  FormSubmitRender,
+} from './form-submit/form-submit.component';
+import {
+  FormTextareaProps,
+  FormTextareaRender,
+} from './form-textarea/form-textarea.component';
 import { FormContext } from './form/form.context';
 
-const puckContext = (isEditing: boolean): PuckContext => ({
-  renderDropZone: () => null,
-  isEditing,
-  dragRef: null,
-  metadata: {},
-});
+const block = <Props,>(
+  Component: PuckBlockComponent<Props>,
+  props: Props,
+  className?: string
+) =>
+  createElement(Component, {
+    id: 'Field-1',
+    props,
+    data: emptyPuckBlockData,
+    slots: {},
+    className,
+  });
 
 const insideForm = (ui: ReactElement) =>
   renderWithProviders(
@@ -29,23 +59,19 @@ const topics = [
   { label: 'Culture', value: 'culture' },
 ];
 
-const placementWarning = 'Place this inside a Form block';
-
 describe('FormInputRender', () => {
   it('renders a labelled input that is submitted under its name', () => {
     insideForm(
-      <FormInputRender
-        id="FormInput-1"
-        puck={puckContext(false)}
-        name="EMAIL"
-        label="Email"
-        type="email"
-        required
-        autoComplete="email"
-        placeholder="you@example.com"
-        defaultValue="reader@example.com"
-        helperText="We never share it"
-      />
+      block<FormInputProps>(FormInputRender, {
+        name: 'EMAIL',
+        label: 'Email',
+        type: 'email',
+        required: true,
+        autoComplete: 'email',
+        placeholder: 'you@example.com',
+        defaultValue: 'reader@example.com',
+        helperText: 'We never share it',
+      })
     );
 
     const input = screen.getByRole<HTMLInputElement>('textbox', {
@@ -64,13 +90,11 @@ describe('FormInputRender', () => {
 
   it('is optional unless required', () => {
     insideForm(
-      <FormInputRender
-        id="FormInput-1"
-        puck={puckContext(false)}
-        name="FNAME"
-        label="First name"
-        type="text"
-      />
+      block<FormInputProps>(FormInputRender, {
+        name: 'FNAME',
+        label: 'First name',
+        type: 'text',
+      })
     );
 
     expect(
@@ -82,20 +106,16 @@ describe('FormInputRender', () => {
   it('gives every input its own id', () => {
     insideForm(
       <>
-        <FormInputRender
-          id="FormInput-1"
-          puck={puckContext(false)}
-          name="FNAME"
-          label="First name"
-          type="text"
-        />
-        <FormInputRender
-          id="FormInput-2"
-          puck={puckContext(false)}
-          name="LNAME"
-          label="Last name"
-          type="text"
-        />
+        {block<FormInputProps>(FormInputRender, {
+          name: 'FNAME',
+          label: 'First name',
+          type: 'text',
+        })}
+        {block<FormInputProps>(FormInputRender, {
+          name: 'LNAME',
+          label: 'Last name',
+          type: 'text',
+        })}
       </>
     );
 
@@ -108,16 +128,14 @@ describe('FormInputRender', () => {
 describe('FormTextareaRender', () => {
   it('renders a labelled multi-line input', () => {
     insideForm(
-      <FormTextareaRender
-        id="FormTextarea-1"
-        puck={puckContext(false)}
-        name="MESSAGE"
-        label="Message"
-        rows={6}
-        required
-        placeholder="Your message"
-        defaultValue="Hello"
-      />
+      block<FormTextareaProps>(FormTextareaRender, {
+        name: 'MESSAGE',
+        label: 'Message',
+        rows: 6,
+        required: true,
+        placeholder: 'Your message',
+        defaultValue: 'Hello',
+      })
     );
 
     const textarea = screen.getByRole<HTMLTextAreaElement>('textbox', {
@@ -136,15 +154,13 @@ describe('FormTextareaRender', () => {
 describe('FormCheckboxRender', () => {
   it('renders a labelled checkbox that sends its value when checked', () => {
     insideForm(
-      <FormCheckboxRender
-        id="FormCheckbox-1"
-        puck={puckContext(false)}
-        name="group[123][1]"
-        label="Weekly newsletter"
-        value="1"
-        required
-        defaultChecked
-      />
+      block<FormCheckboxProps>(FormCheckboxRender, {
+        name: 'group[123][1]',
+        label: 'Weekly newsletter',
+        value: '1',
+        required: true,
+        defaultChecked: true,
+      })
     );
 
     const checkbox = screen.getByRole<HTMLInputElement>('checkbox', {
@@ -159,12 +175,10 @@ describe('FormCheckboxRender', () => {
 
   it('is unchecked by default', () => {
     insideForm(
-      <FormCheckboxRender
-        id="FormCheckbox-1"
-        puck={puckContext(false)}
-        name="consent"
-        label="I agree"
-      />
+      block<FormCheckboxProps>(FormCheckboxRender, {
+        name: 'consent',
+        label: 'I agree',
+      })
     );
 
     expect(
@@ -177,15 +191,13 @@ describe('FormCheckboxRender', () => {
 describe('FormSelectRender', () => {
   it('renders a labelled native select with an empty choice first', () => {
     insideForm(
-      <FormSelectRender
-        id="FormSelect-1"
-        puck={puckContext(false)}
-        name="TOPIC"
-        label="Topic"
-        placeholder="Choose a topic"
-        options={topics}
-        required
-      />
+      block<FormSelectProps>(FormSelectRender, {
+        name: 'TOPIC',
+        label: 'Topic',
+        placeholder: 'Choose a topic',
+        options: topics,
+        required: true,
+      })
     );
 
     const select = screen.getByRole<HTMLSelectElement>('combobox', {
@@ -207,14 +219,12 @@ describe('FormSelectRender', () => {
 
   it('preselects the default value', () => {
     insideForm(
-      <FormSelectRender
-        id="FormSelect-1"
-        puck={puckContext(false)}
-        name="TOPIC"
-        label="Topic"
-        options={topics}
-        defaultValue="culture"
-      />
+      block<FormSelectProps>(FormSelectRender, {
+        name: 'TOPIC',
+        label: 'Topic',
+        options: topics,
+        defaultValue: 'culture',
+      })
     );
 
     expect(
@@ -226,15 +236,13 @@ describe('FormSelectRender', () => {
 describe('FormRadioGroupRender', () => {
   it('renders a labelled group of radios sharing one name', () => {
     insideForm(
-      <FormRadioGroupRender
-        id="FormRadioGroup-1"
-        puck={puckContext(false)}
-        name="TOPIC"
-        label="Topic"
-        options={topics}
-        defaultValue="politics"
-        required
-      />
+      block<FormRadioGroupProps>(FormRadioGroupRender, {
+        name: 'TOPIC',
+        label: 'Topic',
+        options: topics,
+        defaultValue: 'politics',
+        required: true,
+      })
     );
 
     const group = screen.getByRole('radiogroup', { name: 'Topic' });
@@ -255,12 +263,10 @@ describe('FormRadioGroupRender', () => {
 describe('FormHiddenRender', () => {
   it('renders a hidden input with a fixed value', () => {
     const { container } = insideForm(
-      <FormHiddenRender
-        id="FormHidden-1"
-        puck={puckContext(false)}
-        name="SOURCE"
-        value="website"
-      />
+      block<FormHiddenProps>(FormHiddenRender, {
+        name: 'SOURCE',
+        value: 'website',
+      })
     );
 
     const input = container.querySelector<HTMLInputElement>(
@@ -272,32 +278,16 @@ describe('FormHiddenRender', () => {
     expect(screen.queryByText('Hidden field')).toBeNull();
   });
 
-  it('shows a placeholder in the editor so it can be selected', () => {
-    insideForm(
-      <FormHiddenRender
-        id="FormHidden-1"
-        puck={puckContext(true)}
-        name="SOURCE"
-        value="website"
-      />
-    );
-
-    expect(screen.getByText('Hidden field')).toBeTruthy();
-    expect(screen.getByText('SOURCE = website')).toBeTruthy();
-  });
-
-  it('adds no layout box around the hidden input on the website', () => {
+  it('adds no layout box around the hidden input', () => {
     insideForm(
       <div
         role="group"
         aria-label="Form content"
       >
-        <FormHiddenRender
-          id="FormHidden-1"
-          puck={puckContext(false)}
-          name="SOURCE"
-          value="website"
-        />
+        {block<FormHiddenProps>(FormHiddenRender, {
+          name: 'SOURCE',
+          value: 'website',
+        })}
       </div>
     );
 
@@ -313,13 +303,11 @@ describe('FormHiddenRender', () => {
 describe('FormSubmitRender', () => {
   it('renders a submit button', () => {
     insideForm(
-      <FormSubmitRender
-        id="FormSubmit-1"
-        puck={puckContext(false)}
-        label="Subscribe"
-        color="primary"
-        variant="contained"
-      />
+      block<FormSubmitProps>(FormSubmitRender, {
+        label: 'Subscribe',
+        color: 'primary',
+        variant: 'contained',
+      })
     );
 
     expect(
@@ -328,106 +316,82 @@ describe('FormSubmitRender', () => {
   });
 });
 
-describe('placement warning', () => {
-  const fields: Array<[string, (isEditing: boolean) => ReactElement]> = [
+describe('form fields', () => {
+  const fields: Array<[string, (className?: string) => ReactElement]> = [
     [
       'FormInput',
-      isEditing => (
-        <FormInputRender
-          id="FormInput-1"
-          puck={puckContext(isEditing)}
-          name="EMAIL"
-          label="Email"
-          type="email"
-        />
-      ),
+      className =>
+        block<FormInputProps>(
+          FormInputRender,
+          { name: 'EMAIL', label: 'Email', type: 'email' },
+          className
+        ),
     ],
     [
       'FormTextarea',
-      isEditing => (
-        <FormTextareaRender
-          id="FormTextarea-1"
-          puck={puckContext(isEditing)}
-          name="MESSAGE"
-          label="Message"
-        />
-      ),
+      className =>
+        block<FormTextareaProps>(
+          FormTextareaRender,
+          { name: 'MESSAGE', label: 'Message' },
+          className
+        ),
     ],
     [
       'FormCheckbox',
-      isEditing => (
-        <FormCheckboxRender
-          id="FormCheckbox-1"
-          puck={puckContext(isEditing)}
-          name="consent"
-          label="I agree"
-        />
-      ),
+      className =>
+        block<FormCheckboxProps>(
+          FormCheckboxRender,
+          { name: 'consent', label: 'I agree' },
+          className
+        ),
     ],
     [
       'FormSelect',
-      isEditing => (
-        <FormSelectRender
-          id="FormSelect-1"
-          puck={puckContext(isEditing)}
-          name="TOPIC"
-          label="Topic"
-          options={topics}
-        />
-      ),
+      className =>
+        block<FormSelectProps>(
+          FormSelectRender,
+          { name: 'TOPIC', label: 'Topic', options: topics },
+          className
+        ),
     ],
     [
       'FormRadioGroup',
-      isEditing => (
-        <FormRadioGroupRender
-          id="FormRadioGroup-1"
-          puck={puckContext(isEditing)}
-          name="TOPIC"
-          label="Topic"
-          options={topics}
-        />
-      ),
+      className =>
+        block<FormRadioGroupProps>(
+          FormRadioGroupRender,
+          { name: 'TOPIC', label: 'Topic', options: topics },
+          className
+        ),
     ],
     [
       'FormHidden',
-      isEditing => (
-        <FormHiddenRender
-          id="FormHidden-1"
-          puck={puckContext(isEditing)}
-          name="SOURCE"
-          value="website"
-        />
-      ),
+      className =>
+        block<FormHiddenProps>(
+          FormHiddenRender,
+          { name: 'SOURCE', value: 'website' },
+          className
+        ),
     ],
     [
       'FormSubmit',
-      isEditing => (
-        <FormSubmitRender
-          id="FormSubmit-1"
-          puck={puckContext(isEditing)}
-          label="Send"
-        />
-      ),
+      className =>
+        block<FormSubmitProps>(FormSubmitRender, { label: 'Send' }, className),
     ],
   ];
 
   describe.each(fields)('%s', (_name, field) => {
-    it('warns in the editor when it is placed outside a form', () => {
-      renderWithProviders(field(true));
+    it('renders one root element that carries the class name', () => {
+      const { container } = renderWithProviders(field('styled'));
 
-      expect(screen.getByText(placementWarning)).toBeTruthy();
+      expect(container.children).toHaveLength(1);
+      expect(container.firstElementChild?.classList).toContain('styled');
     });
 
-    it('does not warn inside a form', () => {
-      insideForm(field(true));
+    it('shows no editor hint outside a form', () => {
+      renderWithProviders(field());
 
-      expect(screen.queryByText(placementWarning)).toBeNull();
-    });
-
-    it('does not warn on the website', () => {
-      renderWithProviders(field(false));
-
-      expect(screen.queryByText(placementWarning)).toBeNull();
+      expect(screen.queryByRole('status')).toBeNull();
+      expect(screen.queryByText('Place this inside a Form block')).toBeNull();
     });
   });
 });

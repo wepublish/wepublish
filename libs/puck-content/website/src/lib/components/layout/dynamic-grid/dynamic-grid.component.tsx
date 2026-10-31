@@ -1,27 +1,29 @@
-import { Theme } from '@emotion/react';
+import { ClassNames, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { PuckComponent, Slot } from '@puckeditor/core';
+import { Fragment } from 'react';
 
+import { PuckBlockComponent, PuckSlotValue } from '../../../blocks/block.types';
+import { getSlot } from '../../../blocks/slots';
+import { visibilityCss } from '../../../blocks/visibility-css';
 import {
   breakpointsStyles,
   BreakpointsValue,
-  VisibilityValue,
-} from '@wepublish/puck-content/editor';
+} from '../../../values/breakpoints';
+import { VisibilityValue } from '../../../values/visibility';
 import { columnSpanStyles, ColumnSpanValue } from '../column-span';
 import { GapLayout, gapStyles } from '../gap';
+import { itemContentSlot } from '../item-slot';
 import { ItemsAlignment, itemsAlignmentStyles } from '../items-alignment';
-import { visibilityStyles } from '../with-visibility';
 
 export type DynamicGridItem = {
   span?: ColumnSpanValue;
   visibility?: VisibilityValue;
-  content: Slot;
+  content: PuckSlotValue;
 };
 
 export type DynamicGridLayout = GapLayout & ItemsAlignment;
 
 export type DynamicGridProps = {
-  className?: string;
   layout?: BreakpointsValue<DynamicGridLayout>;
   items: DynamicGridItem[];
 };
@@ -31,13 +33,13 @@ const GridContent = styled.div`
   grid-template-columns: repeat(12, 1fr);
 `;
 
-export const DynamicGridRender: PuckComponent<DynamicGridProps> = ({
-  layout,
-  items,
-  ...props
+export const DynamicGridRender: PuckBlockComponent<DynamicGridProps> = ({
+  props: { layout, items },
+  slots,
+  className,
 }) => (
   <GridContent
-    {...props}
+    className={className}
     css={(theme: Theme) =>
       breakpointsStyles(theme, layout, resolved => ({
         ...gapStyles(theme, resolved),
@@ -45,15 +47,22 @@ export const DynamicGridRender: PuckComponent<DynamicGridProps> = ({
       }))
     }
   >
-    {items.map(({ span, visibility, content: Content }, index) => (
-      <Content
-        key={index}
-        minEmptyHeight={100}
-        css={theme => ({
-          ...columnSpanStyles(span)(theme),
-          ...visibilityStyles({ breakpoints: visibility })(theme),
-        })}
-      />
-    ))}
+    <ClassNames>
+      {({ css, theme }) =>
+        items.map(({ span, visibility }, index) => (
+          <Fragment key={index}>
+            {getSlot(
+              slots,
+              itemContentSlot(index)
+            )({
+              className: css({
+                ...columnSpanStyles(span)(theme),
+                ...visibilityCss(theme, { breakpoints: visibility }),
+              }),
+            })}
+          </Fragment>
+        ))
+      }
+    </ClassNames>
   </GridContent>
 );

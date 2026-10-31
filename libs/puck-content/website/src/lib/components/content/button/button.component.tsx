@@ -1,5 +1,6 @@
-import { Button, ButtonOwnProps } from '@mui/material';
-import { PuckComponent } from '@puckeditor/core';
+import { Button, ButtonOwnProps, useForkRef } from '@mui/material';
+
+import { PuckBlockComponent } from '../../../blocks/block.types';
 
 export type ButtonConfigProps = {
   text: string;
@@ -8,19 +9,22 @@ export type ButtonConfigProps = {
   elevated?: boolean;
 };
 
-export const ButtonRender: PuckComponent<ButtonConfigProps> = ({
-  text,
-  variant,
-  color,
-  elevated,
-  puck: { dragRef },
-}) => (
-  <Button
-    ref={dragRef}
-    variant={variant}
-    color={color}
-    disableElevation={!elevated}
-  >
-    {text}
-  </Button>
-);
+export const ButtonRender: PuckBlockComponent<ButtonConfigProps> = ({
+  props: { text, variant, color, elevated },
+  className,
+  ref,
+}) => {
+  const buttonRef = useForkRef(ref);
+
+  return (
+    <Button
+      ref={buttonRef}
+      className={className}
+      variant={variant}
+      color={color}
+      disableElevation={!elevated}
+    >
+      {text}
+    </Button>
+  );
+};

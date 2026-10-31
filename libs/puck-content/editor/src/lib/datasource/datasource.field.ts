@@ -6,6 +6,8 @@ import { toAiSchema } from '../ai-schema';
 import { ImageListTarget } from '../image/image.field';
 import { RecordModel } from '../record/record.field';
 
+export { datasourceIds } from '@wepublish/puck-content/website';
+
 export const listDatasourceTypes = ['list', 'uniqueList', 'slot'] as const;
 export const specificDatasourceTypes = ['single', 'multiple'] as const;
 export const datasourceTypes = [
@@ -28,31 +30,14 @@ export const datasourceModels = [
 export type DatasourceModel = (typeof datasourceModels)[number];
 
 const listDatasourceSchema = z.union([
-  z.object({
-    type: z.literal('list'),
-    data: z.array(z.json()).nullish(),
-  }),
-  z.object({
-    type: z.literal('uniqueList'),
-    data: z.array(z.json()).nullish(),
-  }),
-  z.object({
-    type: z.literal('slot'),
-    data: z.array(z.json()).nullish(),
-  }),
+  z.object({ type: z.literal('list') }),
+  z.object({ type: z.literal('uniqueList') }),
+  z.object({ type: z.literal('slot') }),
 ]);
 
 const specificDatasourceSchema = z.union([
-  z.object({
-    type: z.literal('single'),
-    data: z.array(z.json()).nullish(),
-    id: z.string(),
-  }),
-  z.object({
-    type: z.literal('multiple'),
-    data: z.array(z.json()).nullish(),
-    ids: z.array(z.string()),
-  }),
+  z.object({ type: z.literal('single'), id: z.string() }),
+  z.object({ type: z.literal('multiple'), ids: z.array(z.string()) }),
 ]);
 
 const datasourceSchema = z.union([
@@ -64,7 +49,7 @@ export const datasourcesSchema = z.object({
   article: datasourceSchema.nullish(),
   page: datasourceSchema.nullish(),
   event: datasourceSchema.nullish(),
-  image: datasourceSchema.nullish(),
+  image: specificDatasourceSchema.nullish(),
   memberPlan: datasourceSchema.nullish(),
   userSubscription: listDatasourceSchema.nullish(),
 });
@@ -79,31 +64,20 @@ export type DatasourceField = BaseField & {
   types?: DatasourceType[];
 };
 
+const datasourceTypesByModel: Partial<
+  Record<DatasourceModel, readonly DatasourceType[]>
+> = {
+  image: specificDatasourceTypes,
+  userSubscription: listDatasourceTypes,
+};
+
 export const toDatasourceTypes = (
   model: DatasourceModel,
   types: readonly DatasourceType[] = datasourceTypes
-): DatasourceType[] =>
-  model === 'userSubscription' ?
-    types.filter((type): type is ListDatasourceType =>
-      (listDatasourceTypes as readonly string[]).includes(type)
-    )
-  : [...types];
+): DatasourceType[] => {
+  const allowed = datasourceTypesByModel[model] ?? datasourceTypes;
 
-export const datasourceIds = (
-  value: DatasourcesValue | null | undefined,
-  model: DatasourceModel
-): string[] => {
-  const current = value?.[model];
-
-  if (current?.type === 'single') {
-    return current.id ? [current.id] : [];
-  }
-
-  if (current?.type === 'multiple') {
-    return current.ids;
-  }
-
-  return [];
+  return types.filter(type => allowed.includes(type));
 };
 
 const toDatasource = (
@@ -151,7 +125,7 @@ export const setDatasourceType = (
     return rest;
   }
 
-  if (value[model]?.type === type) {
+  if (value[model]?.type === type || !toDatasourceTypes(model, [type]).length) {
     return value;
   }
 
@@ -254,15 +228,18 @@ export const datasourceFieldAi = (
   types: readonly DatasourceType[] = datasourceTypes,
   models: readonly DatasourceModel[] = datasourceModels
 ): FieldAiParams => ({
-  instructions: `Connects the component to CMS data, one entry per model (${models.join(', ')}); leave a model out to not use it. Set type to one of: ${types.join(', ')}. "list" loads a feed of records, "uniqueList" a feed that skips records already shown elsewhere on the page, "slot" fills the component from a parent slot, "single" references one record by id and "multiple" several records by ids in display order. id and ids reference existing records — never invent them; only set them to values the user provided.`,
+  instructions: `Connects the component to CMS data, one entry per model (${models.join(', ')}); leave a model out to not use it. Set type to one of: ${types.join(', ')}. "list" loads the newest records, "uniqueList" the newest records not already shown elsewhere on the page, "slot" takes the next record from the nearest surrounding component with data of the same model, "single" references one record by id and "multiple" several records by ids in display order. id and ids reference existing records — never invent them; only set them to values the user provided.`,
   schema: toAiSchema(
     z
       .object(
         Object.fromEntries(
-          models.map(model => [
-            model,
-            aiDatasourceSchema(toDatasourceTypes(model, types)).optional(),
-          ])
+          models.flatMap(model => {
+            const allowed = toDatasourceTypes(model, types);
+
+            return allowed.length ?
+                [[model, aiDatasourceSchema(allowed).optional()]]
+              : [];
+          })
         )
       )
       .describe('Datasources per model')

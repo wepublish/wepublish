@@ -32,9 +32,8 @@ website and editor test bundle. Do not "complete" the barrel file.
 
 ### ⚠️ NestJS runs on Vitest, but only with `nest: true`
 
-Jest is fully removed — every project runs Vitest. NestJS projects must build
-their config with `createVitestConfig({nest: true, environment: 'node', react:
-false})`, which swaps esbuild for `unplugin-swc` (`decoratorMetadata`,
+NestJS projects must build their Vitest config with
+`createVitestConfig({nest: true, environment: 'node', react: false})`, which swaps esbuild for `unplugin-swc` (`decoratorMetadata`,
 `legacyDecorator`, target **es2021**, `useDefineForClassFields: false`). Without
 it Nest DI gets no `design:paramtypes` and injected constructor params resolve
 to `undefined`; with a native es2022 target, class fields like
@@ -69,20 +68,15 @@ file it points at belongs to no Nx project.
 
 ---
 
-### ⚠️ Two ESLint rules are pinned to a pre-upgrade baseline
+### ⚠️ ESLint rules are pinned to a pre-upgrade baseline
 
-In [eslint.config.mjs](../../eslint.config.mjs), several rules are deliberately
-relaxed with the reason written next to them:
-
-- `@typescript-eslint/no-unused-vars` sets `caughtErrors: 'none'` — typescript-eslint
-  v8 changed the default to `'all'`; this pins the previous behaviour.
-- `no-constant-binary-expression`, `@typescript-eslint/no-empty-object-type` and
-  `@typescript-eslint/no-unsafe-function-type` are `off` — newly enabled by the
-  ESLint v9 / typescript-eslint v8 presets, and **not** enforced before the upgrade.
-- `@stylistic/no-extra-semi` replaces the removed `@typescript-eslint/no-extra-semi`.
-
-**These are a deliberate baseline, not neglect.** Turning one on is a repo-wide
-cleanup task with its own PR — not something to flip while doing unrelated work.
+[eslint.config.mjs](../../eslint.config.mjs) keeps `caughtErrors: 'none'`
+(typescript-eslint v8 made it `'all'`), turns off
+`no-constant-binary-expression`, `@typescript-eslint/no-empty-object-type` and
+`@typescript-eslint/no-unsafe-function-type` (new in the ESLint 9 /
+typescript-eslint 8 presets), and swaps the removed
+`@typescript-eslint/no-extra-semi` for `@stylistic/no-extra-semi`. A deliberate
+baseline: turning one on is a repo-wide cleanup with its own PR.
 
 ---
 
@@ -110,26 +104,18 @@ No Nx plugin infers this target here (`@nx/vite` only does it for projects with
 a `vite.config.*`), so each website app declares it in its `project.json`. A new
 app needs one too, or CI silently skips it.
 
-Two failure modes to avoid:
-
-1. Do not "fix" the exclusion as a side quest — those apps fail for unrelated
-   pre-existing reasons.
-2. Do not drop an app's `typecheck` target to get CI green. If an app you
-   touched stops typechecking, fix the app.
+Don't "fix" the exclusion as a side quest (those apps fail for unrelated
+reasons), and never drop an app's `typecheck` target to get CI green: fix the
+app.
 
 ---
 
 ### ⚠️ `schema-v2.graphql` is generated, and only outside production
 
-`apps/api-example/src/nestapp/app.module.ts` sets `autoSchemaFile` to
-`'./apps/api-example/schema-v2.graphql'` **only when `NODE_ENV !== 'production'`**
-(in production it is `true`, i.e. in-memory). The file is therefore refreshed by
-running the API in dev — never by hand.
-
-If codegen produces stale types, the fix is to **start the API** so the SDL is
-rewritten, then run `pnpm run generate-api`. Editing the `.graphql` file directly
-gets silently overwritten on the next dev boot. See
-[graphql-prisma.md](graphql-prisma.md).
+`autoSchemaFile` in `apps/api-example/src/nestapp/app.module.ts` writes it
+**only when `NODE_ENV !== 'production'`** (production keeps it in memory). For
+stale types, start the API in dev, then `pnpm run generate-api`; a hand edit is
+overwritten on the next dev boot ([graphql-prisma.md](graphql-prisma.md)).
 
 ---
 
@@ -141,8 +127,7 @@ before anything else, and also silences one specific React `act(...)` warning.
 A test that passes locally in `Europe/Zurich` but relies on local time will
 behave differently under Vitest. Assert on explicit UTC instants, or freeze time
 (`vi.setSystemTime` with `vi.useFakeTimers({ toFake: ['Date'] })`) rather than
-depending on the ambient zone. Specs carried over from Jest fail with
-`jest is not defined` — use `vi.*`.
+depending on the ambient zone.
 
 To test a real zone, set `TZ` on the host process (`runInThisContext('process.env')`
 from `vm`) in `beforeAll` and restore it in `afterAll`, as
@@ -178,10 +163,9 @@ the cap every task started its own pool of ~3 workers. With ~30 processes on 4
 cores and coverage on, a test was ~30× slower than locally, and MUI specs around
 0.7 s hit the 15 s `testTimeout` (`ui-editor`, 2026-10-16). Don't raise
 `testTimeout` or drop the cap to "speed CI up". Make a slow spec cheaper instead.
-Each uncached run (all 92 tasks) took ~11 min with the cap and 9 m 04 s
-without it, but the run without it failed. Two workers were tried and gave
-nothing: 11 m 24 s, and `membership-editor` timed out again (2026-10-16, one
-run each).
+An uncached run (92 tasks) took ~11 min with the cap and 9 m 04 s without it,
+but failed; two workers took 11 m 24 s and `membership-editor` timed out again
+(2026-10-16, one run each).
 In happy-dom the cost is mostly `getComputedStyle`, which MUI's Popper and
 `TextareaAutosize` call on every open or render.
 
@@ -434,20 +418,15 @@ carriers. Bumping only nestjs + profiling-node did not compile: `Type
 v11 integration handed to a v10 `Sentry.init`. Nothing type-checks this; bump
 all four together.
 
-v11 renames: `beforeSendSpan` gets a streamed span with `attributes`, not
-`data`; `profilesSampleRate` became `profileLifecycle` +
-`profileSessionSampleRate`; `withSentryConfig` moved to `@sentry/nextjs/config`
-— a subpath export node10 `moduleResolution` cannot see, so every app needs
-`moduleResolution: bundler`.
+`withSentryConfig` lives in `@sentry/nextjs/config`, a subpath export node10
+`moduleResolution` cannot see, so every app needs `moduleResolution: bundler`.
 
 **Diagnostics-channel spans need a plain `node` process.** v11 instruments
-`express`, `graphql`, `@nestjs/*`, `pg` and Prisma via diagnostics channels
-injected by runtime module hooks. Until 2026-10-20 the API shipped as a
-`@yao-pkg/pkg` binary, which cannot register them, and booted with _"Failed to
-register diagnostics-channel injection hooks, so channel-based integrations
-will not record spans."_ It now runs under plain `node`; if that warning comes
-back, the cause is something else. Two build-time workarounds failed on
-2026-10-05 — do not redo them:
+`express`, `graphql`, `@nestjs/*`, `pg` and Prisma through channels injected by
+runtime module hooks, which the old `@yao-pkg/pkg` binary could not register
+(_"Failed to register diagnostics-channel injection hooks…"_). The API runs
+under plain `node`, so if that warning returns the cause is something else. Two
+build-time workarounds failed on 2026-10-05 — do not redo them:
 
 - `sentryOrchestrionWebpackPlugin` (build-time injection) builds clean and
   injects **nothing**: `@nx/webpack` externalizes node_modules, so webpack
@@ -476,13 +455,11 @@ terminus's `import.meta.resolve` + `await import(...)` — never show up there,
 so unless the peer is listed too, `pnpm deploy` leaves it out and the image
 dies on boot with `No driver (HTTP) has been selected` or _The "<pkg>" package
 is missing_. The API lists two such peers: `@as-integrations/express5`
-(`@nestjs/apollo`) and `@nestjs/axios` (`@nestjs/terminus`). The HTTP adapter
-used to be a third — `@nestjs/core` still declares `@nestjs/platform-express`
-as an optional peer and resolves it through `loadAdapter` — but both apps now
-pass `new NodeAdapter()` to `NestFactory.create`, so the bundle names
-`@nestjs/platform-node` outright. `docker/check-runtime-deps.js` accepts a
-listed package the bundle never loads when a loaded package declares it as a
-peer (`peerDependencies` or `peerDependenciesMeta`), so they pass the check.
+(`@nestjs/apollo`) and `@nestjs/axios` (`@nestjs/terminus`);
+`@nestjs/platform-express` is not one, since both apps pass `new NodeAdapter()`.
+`docker/check-runtime-deps.js` accepts a listed package the bundle never loads
+when a loaded package declares it as a peer (`peerDependencies` or
+`peerDependenciesMeta`), so they pass the check.
 
 **Before adding a library that lazily resolves an optional peer** — grep it for
 `loadPackage`, `assertPackages`, `loadAdapter`, `import.meta.resolve` and
@@ -626,24 +603,18 @@ graph and names each offender; the unit specs mock the dependencies away.
 
 ### ⚠️ The editor's `refetchOn` config does nothing; a refocus reload is `AuthProvider`
 
-[setup.tsx](../../libs/editor/api/src/lib/setup.tsx) sets
-`defaultOptions.watchQuery.refetchOn = {online: false, windowFocus: false}`. It
-type-checks and has no effect: Apollo Client 4 only reads `refetchOn` when the
-client is built with a `refetchEventManager`, and nothing in this repo
-constructs one, so Apollo never refetches on focus in the first place.
-
-What did reload the whole editor on refocus was
-[authContext.tsx](../../libs/ui/editor/src/lib/authContext.tsx): it re-checks
-the session on every `usePageVisibility()` change and used to render `null`
-while `loading`. Apollo Client 4 flipped the `notifyOnNetworkStatusChange`
-default from `false` to `true` (verified in `QueryManager.js`, @apollo/client
-4.3.1, 2026-10-08), so from AC4 on a `refetch()` sets `loading: true` — the
-provider returned `null`, unmounted the editor, and every remounted query
-re-ran under the `network-only` default.
+`defaultOptions.watchQuery.refetchOn` in
+[setup.tsx](../../libs/editor/api/src/lib/setup.tsx) type-checks but does
+nothing: Apollo Client 4 reads it only with a `refetchEventManager`, which
+nothing here builds. The refocus reload came from
+[authContext.tsx](../../libs/ui/editor/src/lib/authContext.tsx), which
+re-checks the session on every `usePageVisibility()` change. AC4 defaults
+`notifyOnNetworkStatusChange` to `true` (`QueryManager.js`, 4.3.1,
+2026-10-08), so that `refetch()` sets `loading`, and rendering `null` while
+`loading` unmounted the editor and re-ran every query.
 
 **Load-bearing:** `loading && !data` (not `loading`) in the provider's return,
-and the `if (!isPageActive) return` guard, which keeps the tab _losing_ focus
-from triggering the same round trip.
+and the `if (!isPageActive) return` guard for the tab losing focus.
 
 Pinned by [authContext.spec.tsx](../../libs/ui/editor/src/lib/authContext.spec.tsx).
 
@@ -728,13 +699,10 @@ inside `styled.span\`…\``produced`TS1005: ',' expected` three lines later
 (`userSubscriptionsList.tsx:185`), pointing at code that was perfectly fine —
 the parse had already gone off the rails at the backtick.
 
-The obvious alternative — escaping it as `` \` `` — works for the compiler but
-puts a stray backslash in the emitted CSS comment. Just write the name without
-backticks: `alpha()`, not `` `alpha()` ``.
+Escaping it (`` \` ``) leaves a stray backslash in the emitted CSS; write the
+name without backticks: `alpha()`, not `` `alpha()` ``.
 
-**Load-bearing:** nothing enforces this; `tsc` reports it as a syntax error in
-the wrong place, which is what makes it expensive. Nothing guards this — a
-regression here is caught by the build, but the message will mislead you.
+Nothing guards this beyond the build, and `tsc` points at the wrong line.
 
 ---
 
@@ -757,9 +725,8 @@ and the state was `undefined`. `/articles/peer` rendered a blank editor with
 element is built eagerly, it happened even though the dialog had `open={false}`
 and the handler had never run.
 
-The obvious alternative — leaving the `!` because "TypeScript is happy and the
-handler only runs when it is set" — is exactly the assumption the compiler does
-not share. Guard instead:
+"The handler only runs when it is set" is exactly the assumption the compiler
+does not share. Guard instead:
 
 ```tsx
 onClick={() => {
@@ -869,15 +836,12 @@ leaves the caller's `columns` untouched.
 there for why dense did not suit). rsuite's `<Form fluid>` spaced its controls
 for you, and the codemod turned it into `<Stack sx={{ width: '100%' }}>`,
 which does not. With no margin and no gap the fields sit flush and the second
-field's floating label lands _on the border of the first_ — visible on the
-crowdfunding form, the poll editor, the article metadata panel and the
-settings page.
+field's floating label lands _on the border of the first_.
 
 So every form group carries `spacing={3}`, and
 `tools/rsuite-to-mui/codemods/form-bare.mjs` and `form-stack.mjs` emit it, so
-a re-run does not undo the fix. When a group spaces itself, a child carrying
-`sx={{ marginBottom: 3 }}` is the old manual spacing and doubles the gap —
-63 of those came out with the fix.
+a re-run does not undo the fix. A child's `sx={{ marginBottom: 3 }}` in such a
+group is the old manual spacing and doubles the gap.
 
 New groups should use `FormFields` from `@wepublish/ui/editor` instead; the
 `Stack` form is what the migration left behind.
@@ -887,10 +851,8 @@ New groups should use `FormFields` from `@wepublish/ui/editor` instead; the
 ### ⚠️ `CardContent` inside `CardContent` is padding inside padding
 
 The settings page nested three deep (`Card > CardContent > CardContent >
-CardHeader + CardContent`), which is 48px of padding before a single control
-and a header indented away from its own card's edge. A card is
-`CardHeader` + one `CardContent`; anything more is a wrapper someone added to
-get spacing that `gap` should provide.
+CardHeader + CardContent`): 48px of padding before a single control. A card is
+`CardHeader` + one `CardContent`; spacing beyond that comes from `gap`.
 
 ---
 
@@ -928,13 +890,10 @@ every label.
 
 Autosave is on by default (`useAutosaveEnabled`, localStorage key
 `wepublish:editor:autosave`) and `usePuckAutosave` saves 30s after mount
-whenever the document is dirty. A Playwright audit that inserts a block and
-stays on the page that long writes a new revision of a real article — an audit
-of `/puck/articles/edit/…` did exactly that. Set the key to `'false'` in an
-init script before the first load (Playwright `context.addInitScript`), and
-insert test blocks on `/puck/pages/create`, which never autosaves.
-
-Nothing guards this — a regression here is silent.
+whenever the document is dirty, so a Playwright audit of
+`/puck/articles/edit/…` wrote a new revision of a real article. Set the key to
+`'false'` in an init script (`context.addInitScript`), and insert test blocks
+on `/puck/pages/create`, which never autosaves.
 
 ### ⚠️ Overrides of Puck's chrome need `.Puck` in the selector
 
@@ -952,29 +911,61 @@ effect changes Puck's layout but every `usePuck` reader keeps the old value
 until the next change. `sidebar-layout.component.tsx` waits one animation
 frame before it corrects the sidebars.
 
+### ⚠️ Inline-edited text props are React nodes in the Puck editor
+
+While editing, Puck hands every `contentEditable` text prop (`title`, `quote`,
+`linkText`, …) to the component as an editable element. A block that calls
+`.trim()` or `.length` on one, or builds a string from it, works on the website
+and breaks only in the canvas. Render them as children, nothing else. Pinned by
+"passes contentEditable nodes through" in `editor-render.spec.tsx`.
+
+### ⚠️ A block hidden on a breakpoint keeps its grid cell in the Puck canvas only
+
+Puck's drag wrapper is the grid item there; the website collapses the cell.
+
+### ⚠️ Specs of generated Puck blocks need `act`, and one warning shows once per file
+
+The website renders `kind: generated` blocks behind `React.lazy` and `use()`,
+so a plain `render()` can stay suspended forever: render inside
+`await act(async () => render(ui))`. React prints "Cannot update a component
+while rendering a different component" only once per test file, so "never
+updates another component…" must stay the first test in
+`generated-block.spec.tsx`. A component that suspended on `use()` must call it
+again when React replays it (React keeps the first promise and drops a new
+one), or React logs "did not call use() when it finished".
+
+### ⚠️ The two codegen targets emit different enums
+
+`@wepublish/editor/api` and `@wepublish/website/api` each generate their own
+enums (`PuckDatasourceType`, `PuckBlockKind`, …): the same strings, but neither
+is assignable to the other. The Puck editor saves through the first and asks
+for canvas data through the second, so values cross between them. The website
+lib takes `GraphQLShape<T>` (enums as string literals, nulls allowed), the
+editor maps with `enumMember` (`document/graphql-values.ts`); a cast would hide
+real drift. Pinned by `preview-input.spec.ts` and the type tests in
+`styling-to-css.spec.ts`.
+
+### ⚠️ Apollo must not normalise `PuckBlock`
+
+Block ids are unique only within a revision: duplicating a page copies them,
+the latest and published revisions share them, and `data` depends on the page
+around the block. Normalised by `id`, one revision's blocks overwrite
+another's in the cache, so both clients set `PuckBlock: {keyFields: false}`
+(`client.tsx`, `setup.tsx`). Pinned by "keeps puck blocks apart that share an
+id across revisions" in `client.spec.ts` and `setup.spec.ts`.
+
 ### ⚠️ `useLocalStorage` broadcasts to every hook on the page
 
-`set` in `libs/ui/src/lib/hooks/use-local-storage.ts` ends with
-`window.dispatchEvent(new StorageEvent('storage'))` so other hooks sharing the
-same key stay in sync. The listener fires for _every_ mounted instance, whatever
-key it holds, and each one re-reads its own entry and calls
-`setValue(deserialize(item))` — a brand new object for an untouched value.
+`set` in `libs/ui/src/lib/hooks/use-local-storage.ts` dispatches a `storage`
+event so hooks sharing the key stay in sync, but every mounted instance
+listens, whatever its key, and re-reads its entry as a new object. Hiding a
+page-list column handed `useListViewState('pages')` a new `filter`, whose
+refetch effect blanked the rows.
 
-On the page list that meant hiding a column (a write to
-`wepublish:editor:listColumns:pages`) handed `useListViewState('pages')` a new
-`filter` identity, which re-ran `useEffect(() => refetch(…), [filter, …])` and
-blanked the rows while the query came back. The article list had no such effect,
-which is why only one of the two flickered.
-
-**Load-bearing:** the `item === storedRaw.current` early return in the listener.
-Without it any `useLocalStorage` write re-renders every other consumer in the
-app. The redundant `refetch` effect is gone from `pageList` as well — `useQuery`
-already refetches when its variables change.
-
-Pinned by `apps/editor/src/app/routes/pages/pageList.spec.tsx` ("does not
-refetch when a column is hidden"), which seeds the stored list state first: with
-nothing in storage the hook falls back to a stable default and the bug cannot
-reproduce.
+**Load-bearing:** the `item === storedRaw.current` early return in the
+listener; without it any write re-renders every other consumer. Pinned by "does
+not refetch when a column is hidden" in `pageList.spec.tsx`, which seeds the
+stored list state first (with nothing stored the bug cannot reproduce).
 
 ---
 
@@ -995,27 +986,15 @@ match any variables with `request: { query, variables: () => true }`
 
 ### ⚠️ `theme.palette` is the light scheme, frozen
 
-The editor builds one theme with both colour schemes and `cssVariables`, so
-the live colours live in `theme.vars.palette.*` (which compile to
-`var(--mui-palette-…)` and follow `data-mui-color-scheme`). `theme.palette.*`
-is whatever the light scheme was at `createTheme` time — it never changes with
-the toggle.
-
-A styled component that reads `theme.palette.background.paper` therefore paints
-white in dark mode: the dashboard's "Customize dashboard" dialog had white rows
-with grey-on-white labels until its five reads were switched to `theme.vars`.
-Exceptions are deliberate: `analyticsIntegrationForm` passes
-`theme.palette.success.light` through `lighten()` — a colour _function_ cannot
-take a CSS variable — and pairs it with an explicit
-`[data-mui-color-scheme='dark'] &` branch.
-
-**Load-bearing:** `theme.vars.` in every styled rule that names a palette
-colour. A grep for `theme.palette.` outside a dark-mode branch is the check.
-
-Pinned by `apps/editor/src/app/routes/dashboard/dashboardConfig.spec.tsx`,
-which reads the _emitted_ rule rather than the computed value — jsdom resolves
-`var(--mui-palette-background-paper, #fff)` to the light fallback baked into
-it, so `getComputedStyle` cannot tell the two apart.
+The rule (`theme.vars.palette`, never `theme.palette`) is in
+[code-style.md](code-style.md#emotion). Breaking it painted the dashboard's
+"Customize dashboard" dialog white with grey-on-white labels in dark mode until
+its five reads moved to `theme.vars`. `analyticsIntegrationForm` keeps
+`theme.palette` on purpose, because `lighten()` cannot take a CSS variable, and
+pairs it with a `[data-mui-color-scheme='dark'] &` branch. A grep for
+`theme.palette.` outside a dark-mode branch is the check. Pinned by
+`dashboardConfig.spec.tsx`, which reads the emitted rule: jsdom resolves the
+variable to its light fallback, so `getComputedStyle` cannot tell them apart.
 
 ### ⚠️ The R2 client must bound its sockets
 
@@ -1048,32 +1027,19 @@ its original in memory, and sharp's work shares libuv's thread pool with the
 `dns.lookup` behind every R2 connect, so the media image sets
 `UV_THREADPOOL_SIZE=16`.
 
-**What failed.** The media pod periodically lost IPv4 connectivity to Cloudflare
-R2 (`*.eu.r2.cloudflarestorage.com`); its last log line was a burst of
-`AggregateError [ETIMEDOUT]` — every IPv4 address `ETIMEDOUT`, every IPv6
-`ENETUNREACH`. With no socket cap, each image/document request opened another
-connect that hung and piled up until the pod stopped answering `/health`:
-readiness dropped it (a **502** from the OpenShift route, which the API's
-`/health` reports as `media-server: down`) and liveness killed it (**exit 137**).
-`tsri` restarted 15× in 13d, `bajour` 18× in 29d (verified 2026-10-20, still on
-the minio client, whose default agent had no connect timeout either).
+**What failed.** When the pod lost IPv4 to R2 (`AggregateError [ETIMEDOUT]`,
+IPv6 `ENETUNREACH`), every uncapped request opened another hanging connect
+until `/health` stopped answering: readiness dropped the pod (**502**,
+`media-server: down` in the API's `/health`), liveness killed it (**exit
+137**; `tsri` 15× in 13 d, 2026-10-20). The trigger is ~30 media pods sharing
+one NAT IP (`116.202.165.28`), outside this repo, so the cap only turns a blip
+into queued requests.
 
-**The trigger is egress, not the app.** Every media pod egresses through one NAT
-IP (`116.202.165.28`, FRA/DE — `cloudflare.com/cdn-cgi/trace` returns it from
-three pods across two nodes), so ~30 media instances share one source IP to R2
-and the busiest are the canaries. The cap is defence-in-depth so a storage blip
-queues requests instead of killing the pod. The shared-egress bottleneck lives
-outside this repo, and nothing here guards it.
-
-**Why the cap, not just timeouts.** Node's global `fetch` dispatcher opens a
-socket per concurrent request, without limit. A connect timeout bounds how long
-each hung socket lives, not how many there are — that scales with traffic (×3
-with `S3Disk`'s retries). Only the cap bounds it regardless of load.
-
-**Forcing `family: 4` is not needed.** It looks like the fix for the
-`ENETUNREACH` noise but changes nothing in an outage: the IPv6 attempts fail in
-~0 ms, Happy Eyeballs abandons every address but the last after 250 ms, and the
-last one hangs until the connect timeout either way (measured on Node 22.16).
+**Why the cap, not just timeouts.** A connect timeout bounds how long a hung
+socket lives, not how many there are: Node's global dispatcher opens one per
+concurrent request (×3 with `S3Disk`'s retries). **Forcing `family: 4`**
+changes nothing in an outage: IPv6 fails in ~0 ms and the last IPv4 address
+hangs until the connect timeout either way (measured on Node 22.16).
 
 **Load-bearing:** `fetch: createStorageFetch()` sits in the options _shared_ by
 both disks — one dispatcher, so the cap covers the whole R2 origin (a fetch per

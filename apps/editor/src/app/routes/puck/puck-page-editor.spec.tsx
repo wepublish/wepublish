@@ -2,8 +2,12 @@ import '@testing-library/jest-dom/vitest';
 
 import { act, screen } from '@testing-library/react';
 import { FullPageFragment } from '@wepublish/editor/api';
-import { RevisionHistoryPlugin } from '@wepublish/puck-content/editor';
-import { PuckData, toApiDocument } from '@wepublish/puck-content/website';
+import {
+  getPuckConfig,
+  PuckData,
+  RevisionHistoryPlugin,
+  toPuckDocument,
+} from '@wepublish/puck-content/editor';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { renderWithTheme } from '../templates/testUtils';
@@ -252,28 +256,30 @@ describe('PuckPageEditor', () => {
               {
                 __typename: 'PuckBlock',
                 id: 'Title-2',
+                kind: 'puck',
                 type: 'Title',
                 parentId: 'Grid-1',
-                slot: 'content',
+                puckSlot: 'content',
                 position: 0,
                 locked: null,
                 visibility: null,
                 styling: null,
                 datasources: null,
-                data: { title: 'Nested' },
+                props: { title: 'Nested' },
               },
               {
                 __typename: 'PuckBlock',
                 id: 'Grid-1',
+                kind: 'puck',
                 type: 'Grid',
                 parentId: null,
-                slot: null,
+                puckSlot: null,
                 position: 0,
                 locked: null,
                 visibility: null,
                 styling: null,
                 datasources: null,
-                data: { content: [] },
+                props: { content: [] },
               },
             ],
           },
@@ -294,6 +300,58 @@ describe('PuckPageEditor', () => {
         },
       },
     ]);
+  });
+
+  it('hands the registry of the latest revision to Puck as its dynamic config', () => {
+    apollo.page.mockReturnValue({
+      ...pageResult,
+      data: {
+        page: {
+          ...page,
+          latest: {
+            ...page.latest,
+            puckRegistry: {
+              __typename: 'PuckRegistry',
+              components: { Hero: { html: '<section></section>' } },
+              styles: null,
+              script: 'console.log("hero")',
+            },
+          },
+        },
+      },
+    });
+
+    renderEditor('/puck/pages/edit/page-1');
+
+    expect(editor.props.data.root.props).toEqual(
+      expect.objectContaining({
+        _dynamicConfig: {
+          components: { Hero: { html: '<section></section>' } },
+          script: 'console.log("hero")',
+        },
+      })
+    );
+  });
+
+  it('saves the components the AI designed as the registry, exactly as Puck keeps them', async () => {
+    renderEditor('/puck/pages/edit/page-1');
+
+    const _dynamicConfig = {
+      components: { Hero: { html: '<section></section>', streaming: true } },
+      styles: 'section { color: red; }',
+    };
+
+    await act(() =>
+      editor.props.controller.onSave({
+        ...editedDocument,
+        root: { props: { ...editedDocument.root.props, _dynamicConfig } },
+      } as PuckData<'page'>)
+    );
+
+    const { variables } = apollo.updatePage.mock.calls[0][0];
+
+    expect(variables.puckRegistry).toEqual(_dynamicConfig);
+    expect(variables).not.toHaveProperty('_dynamicConfig');
   });
 
   it('builds the publish dialog from the root props being edited', () => {
@@ -325,7 +383,10 @@ describe('PuckPageEditor', () => {
     const { variables } = apollo.updatePage.mock.calls[0][0];
 
     expect(variables).toEqual(
-      toUpdatePageVariables('page-1', toApiDocument('page', editedDocument))
+      toUpdatePageVariables(
+        'page-1',
+        toPuckDocument('page', editedDocument, getPuckConfig('page'))
+      )
     );
     expect(variables).not.toHaveProperty('blocks');
     expect(variables).toEqual(
@@ -364,7 +425,9 @@ describe('PuckPageEditor', () => {
     await act(() => editor.props.controller.onSave(editedDocument));
 
     expect(apollo.createPage).toHaveBeenCalledWith({
-      variables: toCreatePageVariables(toApiDocument('page', editedDocument)),
+      variables: toCreatePageVariables(
+        toPuckDocument('page', editedDocument, getPuckConfig('page'))
+      ),
     });
     expect(screen.getByRole('status', { name: 'Location' })).toHaveTextContent(
       '/puck/pages/edit/page-2'

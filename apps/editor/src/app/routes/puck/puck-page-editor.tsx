@@ -16,11 +16,13 @@ import {
   CanPublishPage,
 } from '@wepublish/permissions';
 import {
+  getPuckConfig,
+  PuckData,
   PuckDocumentController,
   PuckRevisionHistory,
   RevisionHistoryPlugin,
+  toPuckDocument,
 } from '@wepublish/puck-content/editor';
-import { PuckData, toApiDocument } from '@wepublish/puck-content/website';
 import {
   createCheckedPermissionComponent,
   useHasPermission,
@@ -111,6 +113,7 @@ function PageEditor() {
       loadPuckDocument(
         'page',
         page?.latest.puckBlocks,
+        page?.latest.puckRegistry,
         page ? pageToRootProps(page) : {}
       ),
     [page]
@@ -149,7 +152,11 @@ function PageEditor() {
 
   const save = async (document: PuckData<'page'>) => {
     try {
-      const apiDocument = toApiDocument('page', document);
+      const apiDocument = toPuckDocument(
+        'page',
+        document,
+        getPuckConfig('page')
+      );
 
       if (!page) {
         const { data: created } = await createPage({
@@ -185,7 +192,11 @@ function PageEditor() {
     }
 
     try {
-      const apiDocument = toApiDocument('page', document);
+      const apiDocument = toPuckDocument(
+        'page',
+        document,
+        getPuckConfig('page')
+      );
 
       await updatePage({
         variables: toUpdatePageVariables(page.id, apiDocument),

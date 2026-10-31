@@ -6,14 +6,13 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
-import { PuckComponent } from '@puckeditor/core';
 import { useId } from 'react';
 
+import { PuckBlockComponent } from '../../../blocks/block.types';
 import { FormField } from '../form-field.component';
-import { FormOption } from '../form-options';
+import { FormOption } from '../form-option';
 
 export type FormRadioGroupProps = {
-  className?: string;
   name: string;
   label: string;
   options: FormOption[];
@@ -23,24 +22,14 @@ export type FormRadioGroupProps = {
   helperText?: string;
 };
 
-export const FormRadioGroupRender: PuckComponent<FormRadioGroupProps> = ({
+export const FormRadioGroupRender: PuckBlockComponent<FormRadioGroupProps> = ({
   className,
-  name,
-  label,
-  options,
-  row,
-  required,
-  defaultValue,
-  helperText,
-  puck: { isEditing },
+  props: { name, label, options, row, required, defaultValue, helperText },
 }) => {
   const labelId = useId();
 
   return (
-    <FormField
-      className={className}
-      isEditing={isEditing}
-    >
+    <FormField className={className}>
       <FormControl
         component="fieldset"
         required={required}

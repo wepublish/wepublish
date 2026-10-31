@@ -1,23 +1,25 @@
 import { Container } from '@mui/material';
-import { PuckComponent, Slot } from '@puckeditor/core';
 import { ComponentProps } from 'react';
 
-import { DatasourcesValue } from '@wepublish/puck-content/editor';
+import { PuckBlockComponent, PuckSlotValue } from '../../../blocks/block.types';
+import { getSlot } from '../../../blocks/slots';
 
 export type ContainerProps = Pick<
   ComponentProps<typeof Container>,
-  'className' | 'maxWidth'
+  'maxWidth'
 > & {
-  content: Slot;
-  datasources?: DatasourcesValue;
+  content: PuckSlotValue;
 };
 
-export const ContainerRender: PuckComponent<ContainerProps> = ({
-  content: Content,
-  datasources,
-  ...props
+export const ContainerRender: PuckBlockComponent<ContainerProps> = ({
+  props: { maxWidth },
+  slots,
+  className,
 }) => (
-  <Container {...props}>
-    <Content minEmptyHeight={300} />
+  <Container
+    className={className}
+    maxWidth={maxWidth}
+  >
+    {getSlot(slots, 'content')()}
   </Container>
 );

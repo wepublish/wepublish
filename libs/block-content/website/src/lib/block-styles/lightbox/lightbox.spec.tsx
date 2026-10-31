@@ -124,6 +124,19 @@ describe('Lightbox block style', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('slides in the editor canvas, whose elements belong to another window', async () => {
+    const user = userEvent.setup();
+    vi.stubGlobal('HTMLElement', class OtherWindowHTMLElement {});
+    onTestFinished(() => vi.unstubAllGlobals());
+
+    renderLightbox(galleryImages(3));
+
+    await user.click(screen.getByRole('button', { name: t('lightbox.next') }));
+    vi.unstubAllGlobals();
+
+    expect(await screen.findByText('2 / 3')).toBeInTheDocument();
+  });
+
   it('renders nothing without images', () => {
     const { container } = renderLightbox([]);
 

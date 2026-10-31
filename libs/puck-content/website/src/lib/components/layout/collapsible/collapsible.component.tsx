@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { PuckComponent, registerOverlayPortal, Slot } from '@puckeditor/core';
 import {
   MouseEvent,
   PropsWithChildren,
@@ -11,6 +10,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { MdExpandMore } from 'react-icons/md';
 
+import { PuckBlockComponent, PuckSlotValue } from '../../../blocks/block.types';
+import { getSlot } from '../../../blocks/slots';
+
 export type CollapsibleProps = PropsWithChildren<{
   className?: string;
   title: string;
@@ -20,9 +22,13 @@ export type CollapsibleProps = PropsWithChildren<{
   };
 }>;
 
-export type CollapsibleConfigProps = Omit<CollapsibleProps, 'children'> & {
-  content: Slot;
+export type CollapsibleConfigProps = {
+  title: string;
+  defaultOpen?: boolean;
+  content: PuckSlotValue;
 };
+
+export type CollapsibleExtra = Pick<CollapsibleProps, 'refs'>;
 
 const CollapsibleWrapper = styled('details')`
   interpolate-size: allow-keywords;
@@ -126,17 +132,16 @@ export const Collapsible = ({
   );
 };
 
-export const CollapsibleRender: PuckComponent<CollapsibleConfigProps> = ({
-  content: Content,
-  defaultOpen,
-  puck,
-  ...props
-}) => (
+export const CollapsibleRender: PuckBlockComponent<
+  CollapsibleConfigProps,
+  CollapsibleExtra
+> = ({ props: { title, defaultOpen }, slots, className, refs }) => (
   <Collapsible
-    {...props}
-    defaultOpen={defaultOpen || puck.isEditing}
-    refs={{ toggle: registerOverlayPortal }}
+    className={className}
+    title={title}
+    defaultOpen={defaultOpen}
+    refs={refs}
   >
-    <Content minEmptyHeight={120} />
+    {getSlot(slots, 'content')()}
   </Collapsible>
 );

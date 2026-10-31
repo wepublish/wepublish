@@ -1,5 +1,4 @@
 import { useTheme } from '@mui/material';
-import { PuckComponent } from '@puckeditor/core';
 import { MailchimpFormOptionsLayout } from '@wepublish/website/api';
 import {
   BuilderMailchimpFormBlockProps,
@@ -7,7 +6,8 @@ import {
 } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 
-import { ColorValue, resolveColor } from '@wepublish/puck-content/editor';
+import { PuckBlockComponent } from '../../../blocks/block.types';
+import { ColorValue, resolveColor } from '../../../values/color';
 import { OutsideFormOnly } from '../../form/outside-form-only.component';
 
 export type MailchimpFormInputConfig = {
@@ -40,7 +40,7 @@ export type MailchimpFormSuccessOptionConfig = {
 
 export type MailchimpFormConfigProps = Omit<
   BuilderMailchimpFormBlockProps,
-  'buttonColor' | 'buttonFontColor' | 'steps' | 'successPage'
+  'buttonColor' | 'buttonFontColor' | 'steps' | 'successPage' | 'className'
 > & {
   buttonColor?: ColorValue;
   buttonFontColor?: ColorValue;
@@ -51,13 +51,11 @@ export type MailchimpFormConfigProps = Omit<
   };
 };
 
-export const MailchimpFormRender: PuckComponent<MailchimpFormConfigProps> = ({
-  buttonColor,
-  buttonFontColor,
-  steps,
-  successPage,
-  puck: { isEditing },
-  ...props
+export const MailchimpFormRender: PuckBlockComponent<
+  MailchimpFormConfigProps
+> = ({
+  className,
+  props: { buttonColor, buttonFontColor, steps, successPage, ...props },
 }) => {
   const theme = useTheme();
 
@@ -93,9 +91,10 @@ export const MailchimpFormRender: PuckComponent<MailchimpFormConfigProps> = ({
   );
 
   return (
-    <OutsideFormOnly isEditing={isEditing}>
+    <OutsideFormOnly>
       <MailchimpFormBlock
         {...props}
+        className={className}
         steps={blockSteps}
         successPage={blockSuccessPage}
         buttonColor={resolveColor(theme, buttonColor)}

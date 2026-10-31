@@ -1,40 +1,27 @@
-import { PuckComponent, registerOverlayPortal } from '@puckeditor/core';
-import { Lightbox } from '@wepublish/website/builder';
-import { useMemo } from 'react';
+import { BuilderBlockStyleProps, Lightbox } from '@wepublish/website/builder';
 
-import { useImagesById } from '../use-images-by-id';
+import { PuckBlockComponent } from '../../../blocks/block.types';
+import { dataImageById } from '../data-images';
 
 export type LightboxConfigProps = {
   images: Array<{ imageId?: string; caption?: string }>;
 };
 
-export const LightboxRender: PuckComponent<LightboxConfigProps> = ({
-  images,
-  ...props
-}) => {
-  const imagesById = useImagesById(
-    useMemo(() => images.map(({ imageId }) => imageId), [images])
-  );
-
-  const galleryImages = useMemo(
-    () =>
-      images.map(({ imageId, caption }) => ({
-        __typename: 'ImageGalleryImage' as const,
-        caption: caption ?? null,
-        image: imageId ? (imagesById[imageId] ?? null) : null,
-      })),
-    [images, imagesById]
-  );
-
-  return (
-    <Lightbox
-      {...props}
-      images={galleryImages}
-      refs={{
-        fullscreen: registerOverlayPortal,
-        prev: registerOverlayPortal,
-        next: registerOverlayPortal,
-      }}
-    />
-  );
+export type LightboxExtra = {
+  refs: NonNullable<BuilderBlockStyleProps['Lightbox']['refs']>;
 };
+
+export const LightboxRender: PuckBlockComponent<
+  LightboxConfigProps,
+  LightboxExtra
+> = ({ props: { images }, data, className, refs }) => (
+  <Lightbox
+    className={className}
+    refs={refs}
+    images={images.map(({ imageId, caption }) => ({
+      __typename: 'ImageGalleryImage' as const,
+      caption: caption ?? null,
+      image: dataImageById(data, imageId),
+    }))}
+  />
+);

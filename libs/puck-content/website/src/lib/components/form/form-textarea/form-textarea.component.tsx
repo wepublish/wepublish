@@ -1,10 +1,9 @@
 import { TextField } from '@mui/material';
-import { PuckComponent } from '@puckeditor/core';
 
+import { PuckBlockComponent } from '../../../blocks/block.types';
 import { FormField } from '../form-field.component';
 
 export type FormTextareaProps = {
-  className?: string;
   name: string;
   label: string;
   rows?: number;
@@ -14,21 +13,11 @@ export type FormTextareaProps = {
   helperText?: string;
 };
 
-export const FormTextareaRender: PuckComponent<FormTextareaProps> = ({
+export const FormTextareaRender: PuckBlockComponent<FormTextareaProps> = ({
   className,
-  name,
-  label,
-  rows,
-  placeholder,
-  required,
-  defaultValue,
-  helperText,
-  puck: { isEditing },
+  props: { name, label, rows, placeholder, required, defaultValue, helperText },
 }) => (
-  <FormField
-    className={className}
-    isEditing={isEditing}
-  >
+  <FormField className={className}>
     <TextField
       key={defaultValue}
       fullWidth

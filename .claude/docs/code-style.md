@@ -160,6 +160,34 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   User-facing strings go through react-i18next — never hardcode copy; see
   [Translations](#translations).
 
+### Puck content
+
+`libs/puck-content/website` renders Puck documents without Puck;
+`libs/puck-content/editor` holds everything Puck (configs, fields, edit mode,
+save/load). The editor lib imports the website lib, never the reverse: the
+website lib's `eslint.config.mjs` bans `@puckeditor/*` and the editor libs, and
+lets only `generated/generated-block.component.tsx` import Puck, to hand
+AI-generated blocks to Puck's `<Render>`. Only
+`generated/generated-blocks.component.tsx` loads that module, via `React.lazy`;
+a static import from any other website file bundles Puck into every tenant,
+and only `puck-blocks-renderer.lazy.spec.tsx` catches it. Details are in both
+READMEs.
+
+- A block is a `PuckBlockComponent` in its group's `<group>.registry.ts`. It
+  gets `{id, props, data, slots, styling, visibility, className}` and renders
+  one root element that takes `className`, or `null`; a Fragment root breaks
+  grid placement.
+- It never reads editor state (`puck`, `isEditing`, datasources, `locked`), and
+  its records come from `data`, never from a query in the component.
+- Slots are components: call `getSlot(slots, 'content')({ className })`.
+  Assigning one to a capitalised const fails lint ("Cannot create components
+  during render").
+- Edit-mode behaviour lives in the editor config, `render: editorRender(XRender,
+  {inline, minEmptyHeight, editingProps, useExtra, decorate})`: refs and
+  `onSubmit` arrive as `Extra`, editor warnings come from `decorate`.
+- Factories (`builderBlock`, `plainBlock`, `editorRender`) live in `.ts`;
+  `.tsx` files export components only.
+
 ### Puck record pickers
 
 Every Puck field that points at records (article, page, event, member plan,

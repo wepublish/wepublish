@@ -1,44 +1,44 @@
-import { Theme } from '@emotion/react';
-import styled from '@emotion/styled';
-import { PuckComponent, Slot } from '@puckeditor/core';
+import { ClassNames, CSSObject, Theme } from '@emotion/react';
 
+import { PuckBlockComponent, PuckSlotValue } from '../../../blocks/block.types';
+import { getSlot } from '../../../blocks/slots';
 import {
   breakpointsStyles,
   BreakpointsValue,
-  DatasourcesValue,
-} from '@wepublish/puck-content/editor';
+} from '../../../values/breakpoints';
 import { GapLayout, gapStyles } from '../gap';
 import { ItemsAlignment, itemsAlignmentStyles } from '../items-alignment';
 
 export type RowLayout = GapLayout & ItemsAlignment;
 
 export type RowProps = {
-  className?: string;
-  content: Slot;
   layout?: BreakpointsValue<RowLayout>;
-  datasources?: DatasourcesValue;
+  content: PuckSlotValue;
 };
 
-const RowContent = styled.div`
-  display: grid;
-  grid-auto-flow: column;
-`;
+const rowStyles = (
+  theme: Theme,
+  layout: BreakpointsValue<RowLayout> | undefined
+): CSSObject => ({
+  display: 'grid',
+  gridAutoFlow: 'column',
+  ...breakpointsStyles(theme, layout, resolved => ({
+    ...gapStyles(theme, resolved),
+    ...itemsAlignmentStyles(resolved),
+  })),
+});
 
-export const RowRender: PuckComponent<RowProps> = ({
-  content: Content,
-  layout,
-  datasources,
-  ...props
+export const RowRender: PuckBlockComponent<RowProps> = ({
+  props: { layout },
+  slots,
+  className,
 }) => (
-  <Content
-    as={RowContent}
-    minEmptyHeight={100}
-    {...props}
-    css={(theme: Theme) =>
-      breakpointsStyles(theme, layout, resolved => ({
-        ...gapStyles(theme, resolved),
-        ...itemsAlignmentStyles(resolved),
-      }))
+  <ClassNames>
+    {({ css, cx, theme }) =>
+      getSlot(
+        slots,
+        'content'
+      )({ className: cx(className, css(rowStyles(theme, layout))) })
     }
-  />
+  </ClassNames>
 );

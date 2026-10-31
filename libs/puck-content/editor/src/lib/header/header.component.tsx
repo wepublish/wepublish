@@ -35,6 +35,10 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 
 import {
+  dynamicConfigOf,
+  isDynamicConfigStreaming,
+} from '../document/puck-registry';
+import {
   PuckDocumentController,
   usePuckDocumentController,
 } from './header.context';
@@ -327,6 +331,9 @@ function ConnectedPuckDocumentHeader({
   const undo = usePuck(puck => puck.history.back);
   const redo = usePuck(puck => puck.history.forward);
   const previewMode = usePuck(puck => puck.appState.ui.previewMode);
+  const designStreaming = usePuck(puck =>
+    isDynamicConfigStreaming(dynamicConfigOf(puck.appState.data.root.props))
+  );
   const { dirty, markSaved } = usePuckDocumentDirty();
   const [saving, setSaving] = useState(false);
   const blocked = saving || !!controller.busy;
@@ -365,7 +372,8 @@ function ConnectedPuckDocumentHeader({
       !!controller.autosave?.enabled &&
       !controller.isNew &&
       controller.canSave &&
-      !blocked,
+      !blocked &&
+      !designStreaming,
     hasChanged: dirty,
     onAutosave: save,
     savedAt: controller.lastSavedAt,

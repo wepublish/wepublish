@@ -2,9 +2,51 @@ import baseConfig from '../../../eslint.config.mjs';
 import nx from '@nx/eslint-plugin';
 import reactRefresh from 'eslint-plugin-react-refresh';
 
+const [rootRestrictedImportsSeverity, rootRestrictedImports] = baseConfig.find(
+  entry => entry.rules?.['no-restricted-imports']
+).rules['no-restricted-imports'];
+
+const editorOnlyImports = {
+  group: [
+    '@wepublish/puck-content/editor',
+    '@wepublish/puck-content/editor/*',
+    '@wepublish/editor/api',
+    '@wepublish/editor/api/*',
+    '@wepublish/ui/editor',
+    '@wepublish/ui/editor/*',
+  ],
+  message:
+    'The website lib must not depend on the editor. Move the editor behaviour into @wepublish/puck-content/editor.',
+};
+
+const puckImports = {
+  group: ['@puckeditor/*'],
+  message:
+    'The website lib renders without Puck. Only generated/generated-block.component.tsx may import it, to render generated blocks.',
+};
+
+const restrictImports = patterns => [
+  rootRestrictedImportsSeverity,
+  { ...rootRestrictedImports, patterns },
+];
+
+const puckRenderers = ['**/src/lib/generated/generated-block.component.tsx'];
+
 export default [
   ...baseConfig,
   ...nx.configs['flat/react'],
+  {
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+    rules: {
+      'no-restricted-imports': restrictImports([editorOnlyImports, puckImports]),
+    },
+  },
+  {
+    files: puckRenderers,
+    rules: {
+      'no-restricted-imports': restrictImports([editorOnlyImports]),
+    },
+  },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     // Override or add rules here

@@ -3,16 +3,17 @@ import { flattenPuckBlocks } from './puck-blocks-flatten';
 
 const block = (id: string, extra: Partial<ApiBlock> = {}): ApiBlock => ({
   id,
+  kind: 'puck',
   type: 'Heading',
-  data: {},
+  props: {},
   ...extra,
 });
 
 const placement = (blocks: ApiBlock[]) =>
-  flattenPuckBlocks(blocks).map(({ id, parentId, slot, position }) => [
+  flattenPuckBlocks(blocks).map(({ id, parentId, puckSlot, position }) => [
     id,
     parentId,
-    slot,
+    puckSlot,
     position,
   ]);
 
@@ -54,11 +55,10 @@ describe('flattenPuckBlocks', () => {
     const blocks = [
       block('grid', {
         children: [
-          block('a', { slot: 'items[0].content' }),
-          block('b', { slot: 'items[1].content' }),
-          block('c', { slot: 'items[0].content' }),
+          block('a', { puckSlot: 'items[0].content' }),
+          block('b', { puckSlot: 'items[1].content' }),
           block('d'),
-          block('e', { slot: 'content' }),
+          block('e', { puckSlot: 'content' }),
         ],
       }),
     ];
@@ -67,9 +67,54 @@ describe('flattenPuckBlocks', () => {
       ['grid', null, null, 0],
       ['a', 'grid', 'items[0].content', 0],
       ['b', 'grid', 'items[1].content', 0],
-      ['c', 'grid', 'items[0].content', 1],
       ['d', 'grid', 'content', 0],
       ['e', 'grid', 'content', 1],
+    ]);
+  });
+
+  it('lists interleaved children grouped by slot, in the order the slots first appear', () => {
+    const blocks = [
+      block('grid', {
+        children: [
+          block('a', { puckSlot: 'items[1].content' }),
+          block('b', { puckSlot: 'items[0].content' }),
+          block('c', { puckSlot: 'items[1].content' }),
+          block('d', {
+            puckSlot: 'items[0].content',
+            children: [
+              block('x', { puckSlot: 'right' }),
+              block('y', { puckSlot: 'left' }),
+              block('z', { puckSlot: 'right' }),
+            ],
+          }),
+        ],
+      }),
+    ];
+
+    expect(placement(blocks)).toEqual([
+      ['grid', null, null, 0],
+      ['a', 'grid', 'items[1].content', 0],
+      ['c', 'grid', 'items[1].content', 1],
+      ['b', 'grid', 'items[0].content', 0],
+      ['d', 'grid', 'items[0].content', 1],
+      ['x', 'd', 'right', 0],
+      ['z', 'd', 'right', 1],
+      ['y', 'd', 'left', 0],
+    ]);
+  });
+
+  it('keeps the slot names of generated blocks as they are, dots included', () => {
+    expect(
+      placement([
+        block('hero', {
+          kind: 'generated',
+          type: 'HeroBanner',
+          children: [block('a', { puckSlot: 'hero.body' })],
+        }),
+      ])
+    ).toEqual([
+      ['hero', null, null, 0],
+      ['a', 'hero', 'hero.body', 0],
     ]);
   });
 
@@ -89,7 +134,7 @@ describe('flattenPuckBlocks', () => {
   });
 
   it('keeps top level blocks out of any slot they name', () => {
-    expect(placement([block('a', { slot: 'items[0].content' })])).toEqual([
+    expect(placement([block('a', { puckSlot: 'items[0].content' })])).toEqual([
       ['a', null, null, 0],
     ]);
   });
@@ -99,9 +144,10 @@ describe('flattenPuckBlocks', () => {
       block('grid', {
         type: 'Grid',
         locked: true,
-        data: { gap: 2, items: [{ content: [] }] },
+        props: { gap: 2, items: [{ content: [] }] },
         styling: { color: 'primary.main', margin: { top: 2 } },
-        datasources: { article: { type: 'multiple', ids: ['article-1'] } },
+        datasources: { article: { type: 'list' } },
+        consumes: 3,
         visibility: { disabled: false, breakpoints: ['md', 'lg'] },
         children: [block('a')],
       }),
@@ -109,17 +155,41 @@ describe('flattenPuckBlocks', () => {
 
     expect(flat).toEqual({
       id: 'grid',
+      kind: 'puck',
       type: 'Grid',
       parentId: null,
-      slot: null,
+      puckSlot: null,
       position: 0,
       locked: true,
-      data: { gap: 2, items: [{ content: [] }] },
+      props: { gap: 2, items: [{ content: [] }] },
       styling: { color: 'primary.main', margin: { top: 2 } },
-      datasources: { article: { type: 'multiple', ids: ['article-1'] } },
+      datasources: { article: { type: 'list' } },
+      consumes: 3,
       visibility: { disabled: false, breakpoints: ['md', 'lg'] },
     });
     expect(flat).not.toHaveProperty('children');
+  });
+
+  it('carries the kind of generated blocks over', () => {
+    expect(
+      flattenPuckBlocks([
+        block('hero', {
+          kind: 'generated',
+          type: 'HeroBanner',
+          props: { title: 'Hello' },
+        }),
+      ])
+    ).toEqual([
+      {
+        id: 'hero',
+        kind: 'generated',
+        type: 'HeroBanner',
+        props: { title: 'Hello' },
+        parentId: null,
+        puckSlot: null,
+        position: 0,
+      },
+    ]);
   });
 
   it('hands the timing out as dates, so the DateTime scalar can serialize it', () => {

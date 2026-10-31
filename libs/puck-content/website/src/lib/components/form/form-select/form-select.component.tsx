@@ -1,11 +1,10 @@
 import { TextField } from '@mui/material';
-import { PuckComponent } from '@puckeditor/core';
 
+import { PuckBlockComponent } from '../../../blocks/block.types';
 import { FormField } from '../form-field.component';
-import { FormOption } from '../form-options';
+import { FormOption } from '../form-option';
 
 export type FormSelectProps = {
-  className?: string;
   name: string;
   label: string;
   options: FormOption[];
@@ -15,21 +14,19 @@ export type FormSelectProps = {
   helperText?: string;
 };
 
-export const FormSelectRender: PuckComponent<FormSelectProps> = ({
+export const FormSelectRender: PuckBlockComponent<FormSelectProps> = ({
   className,
-  name,
-  label,
-  options,
-  placeholder,
-  required,
-  defaultValue,
-  helperText,
-  puck: { isEditing },
+  props: {
+    name,
+    label,
+    options,
+    placeholder,
+    required,
+    defaultValue,
+    helperText,
+  },
 }) => (
-  <FormField
-    className={className}
-    isEditing={isEditing}
-  >
+  <FormField className={className}>
     <TextField
       key={defaultValue}
       select

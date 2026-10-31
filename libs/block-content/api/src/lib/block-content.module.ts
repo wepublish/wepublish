@@ -23,6 +23,10 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { MailchimpSubscribeResolver } from './mailchimp-form/mailchimp-subscribe.resolver';
 import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.service';
+import { PuckBlockDataLoader } from './puck/puck-block-data.loader';
+import { PuckBlockResolver } from './puck/puck-block.resolver';
+import { PuckBlockStylingResolver } from './puck/puck-block-styling.resolver';
+import { PuckBlocksPreviewResolver } from './puck/puck-blocks-preview.resolver';
 
 @Module({
   imports: [
@@ -50,7 +54,11 @@ import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.
     SubscribeBlockResolver,
     MailchimpSubscribeResolver,
     MailchimpSubscribeService,
+    PuckBlockDataLoader,
+    PuckBlockResolver,
+    PuckBlockStylingResolver,
+    PuckBlocksPreviewResolver,
   ],
-  exports: [BlockTreeLoader],
+  exports: [BlockTreeLoader, PuckBlockDataLoader],
 })
 export class BlockContentModule {}

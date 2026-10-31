@@ -1,6 +1,10 @@
 import type { ApiBlock } from '@wepublish/puck-content/api';
 
-import { displayedPuckBlocks, nextPuckBlocksTimingChange } from './puck-timing';
+import {
+  displayedPuckBlocks,
+  isPuckBlockDisplayed,
+  nextPuckBlocksTimingChange,
+} from './puck-timing';
 
 const ZURICH = 'Europe/Zurich';
 const now = new Date('2026-01-05T09:00:00Z');
@@ -11,8 +15,9 @@ const block = (
   children?: ApiBlock[]
 ): ApiBlock => ({
   id,
+  kind: 'puck',
   type: 'Heading',
-  data: {},
+  props: {},
   ...(visibility === undefined ?
     {}
   : { visibility: visibility as ApiBlock['visibility'] }),
@@ -100,6 +105,35 @@ describe('displayedPuckBlocks', () => {
     const blocks = [block('a', { breakpoints: [] })];
 
     expect(displayedPuckBlocks(blocks, now, ZURICH)).toBe(blocks);
+  });
+});
+
+describe('isPuckBlockDisplayed', () => {
+  it.each([
+    ['an untimed block', block('a'), true],
+    ['a disabled block', block('a', { disabled: true }), false],
+    [
+      'a block before its timing',
+      block('a', { timings: { from: '2026-01-06T00:00:00Z' } }),
+      false,
+    ],
+    [
+      'a block within its timing',
+      block('a', { timings: { to: '2026-01-06T00:00:00Z' } }),
+      true,
+    ],
+  ])('tells whether %s displays', (_, entry, displayed) => {
+    expect(isPuckBlockDisplayed(entry, now, ZURICH)).toBe(displayed);
+  });
+
+  it('judges the block alone, not its hidden children', () => {
+    expect(
+      isPuckBlockDisplayed(
+        block('grid', undefined, [block('a', { disabled: true })]),
+        now,
+        ZURICH
+      )
+    ).toBe(true);
   });
 });
 

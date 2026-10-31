@@ -3,18 +3,16 @@ import { withDynamicConfig } from '@puckeditor/plugin-ai';
 import {
   BOTH_SIDEBARS_MIN_WIDTH,
   createBottomBarPlugin,
+  getPuckConfig,
   HeadingAnalyzerPlugin,
   isCompactSidebarWidth,
   PUCK_MOBILE_LAYOUT_WIDTH,
+  PuckConfig,
+  PuckData,
   RawDataPlugin,
   SEOPreviewPlugin,
 } from '@wepublish/puck-content/editor';
-import {
-  getPuckConfig,
-  PuckConfig,
-  PuckData,
-  PuckDocumentKind,
-} from '@wepublish/puck-content/website';
+import { PuckDocumentKind } from '@wepublish/puck-content/website';
 
 export const bottomBarPlugin = createBottomBarPlugin([
   SEOPreviewPlugin,

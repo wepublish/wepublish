@@ -13,12 +13,13 @@ fragment FullPuckBlockDatasource on PuckBlockDatasource {
 
 fragment FullPuckBlock on PuckBlock {
   id
+  kind
   type
   parentId
-  slot
+  puckSlot
   position
   locked
-  data
+  props
 
   visibility {
     disabled
@@ -107,4 +108,10 @@ fragment FullPuckBlock on PuckBlock {
       type
     }
   }
+}
+
+fragment FullPuckRegistry on PuckRegistry {
+  components
+  styles
+  script
 }

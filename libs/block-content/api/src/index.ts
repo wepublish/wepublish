@@ -31,6 +31,8 @@ export * from './lib/timing/block-timing.model';
 export * from './lib/timing/block-timing';
 export * from './lib/timing/displayed-blocks';
 export * from './lib/timing/puck-timing';
+export * from './lib/puck/puck-block-data.model';
+export * from './lib/puck/puck-block-data.loader';
 
 export * from './lib/teaser/teaser-flex.model';
 export * from './lib/teaser/teaser-grid.model';

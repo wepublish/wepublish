@@ -19,6 +19,7 @@ import { InvoiceModule } from '../invoice/invoice.module';
 import { SettingModule } from '@wepublish/settings/api';
 import { PendingPaymentMethodChangeDataloader } from '../payment-method-change/pending-payment-method-change.dataloader';
 import { PaymentMethodChangeModule } from '../payment-method-change/payment-method-change.module';
+import { PuckBlockDataSubscriptionsResolver } from './puck-block-data-subscriptions.resolver';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { PaymentMethodChangeModule } from '../payment-method-change/payment-meth
     SubscriptionPeriodDataloader,
     PendingPaymentMethodChangeDataloader,
     PublicSubscriptionResolver,
+    PuckBlockDataSubscriptionsResolver,
     SubscriptionService,
   ],
   exports: [SubscriptionDataloader, SubscriptionService],

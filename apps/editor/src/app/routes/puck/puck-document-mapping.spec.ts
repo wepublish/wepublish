@@ -2,23 +2,12 @@ import {
   FullArticleFragment,
   FullPageFragment,
   FullPuckBlockFragment,
-  PuckBackgroundSize,
+  FullPuckRegistryFragment,
   PuckBlockInput,
-  PuckBorderStyle,
-  PuckBreakpoint,
+  PuckBlockKind,
   PuckDatasourceType,
-  PuckFontWeight,
-  PuckListDatasourceType,
-  PuckTextAlign,
-  PuckTextTransform,
-  PuckWeekday,
-  Weekday,
 } from '@wepublish/editor/api';
-import {
-  ApiBlock,
-  PuckData,
-  toApiDocument,
-} from '@wepublish/puck-content/website';
+import { PuckDocument } from '@wepublish/puck-content/editor';
 
 import {
   articleRootPropsToInput,
@@ -28,7 +17,6 @@ import {
   pageToRootProps,
   toCreateArticleVariables,
   toCreatePageVariables,
-  toPuckBlockInputs,
   toUpdateArticleVariables,
   toUpdatePageVariables,
 } from './puck-document-mapping';
@@ -121,174 +109,47 @@ const page = {
   },
 } as unknown as FullPageFragment;
 
-const gridData = {
-  layout: { xs: { columns: [1], gap: 2 } },
-  content: [],
+const puckBlocks: PuckBlockInput[] = [
+  {
+    id: 'Grid-1',
+    kind: PuckBlockKind.Puck,
+    type: 'Grid',
+    locked: true,
+    datasources: { article: { type: PuckDatasourceType.UniqueList } },
+    props: { layout: { xs: { columns: [1], gap: 2 } }, content: [] },
+    children: [
+      {
+        id: 'Hero-2',
+        kind: PuckBlockKind.Generated,
+        type: 'Hero',
+        props: { title: 'Designed' },
+      },
+    ],
+  },
+];
+
+const puckRegistry = {
+  components: { Hero: { html: '<h1 data-puck-field-name="title"></h1>' } },
+  styles: 'h1 { color: red; }',
+  script: 'console.log("hero")',
 };
 
-const blocks: ApiBlock[] = [
-  {
-    id: 'Grid-1',
-    type: 'Grid',
-    locked: true,
-    visibility: {
-      disabled: false,
-      breakpoints: ['md', 'lg'],
-      timings: {
-        from: '2026-11-01T08:00:00.000Z',
-        to: '2026-11-30T08:00:00.000Z',
-        weekdays: [Weekday.Monday, Weekday.Friday],
-        timeOfDay: { from: '08:00', to: '18:00' },
-      },
-    },
-    styling: {
-      typography: 'h2',
-      textAlign: 'center',
-      color: 'primary.main',
-      fontWeight: 'bold',
-      textTransform: 'uppercase',
-      background: '#1a1a1a80',
-      backgroundImage: 'image-1',
-      backgroundSize: 'contain',
-      backgroundPosition: 'left top',
-      overlay: 'common.black',
-      overlayOpacity: 40,
-      margin: { top: 2, bottom: '12px' },
-      padding: { left: 1 },
-      border: { width: { top: 1 }, style: 'dashed', color: '#fff' },
-      borderRadius: { topLeft: 1, bottomRight: '8px' },
-      minHeight: '50vh',
-      maxWidth: 'md',
-      shadow: 4,
-      opacity: 90,
-    },
-    datasources: {
-      article: { type: 'multiple', ids: ['article-2', 'article-3'] },
-      page: { type: 'single', id: 'page-2' },
-      event: { type: 'uniqueList' },
-      userSubscription: { type: 'list' },
-    },
-    data: gridData,
-    children: [
-      {
-        id: 'Title-1',
-        type: 'Title',
-        data: { title: 'First' },
-      },
-      {
-        id: 'Title-2',
-        type: 'Title',
-        data: { title: 'Second' },
-      },
-    ],
-  },
-  {
-    id: 'Title-3',
-    type: 'Title',
-    data: { title: 'After the grid' },
-  },
-];
-
-const blockInputs: PuckBlockInput[] = [
-  {
-    id: 'Grid-1',
-    type: 'Grid',
-    locked: true,
-    visibility: {
-      disabled: false,
-      breakpoints: [PuckBreakpoint.Md, PuckBreakpoint.Lg],
-      timings: {
-        from: '2026-11-01T08:00:00.000Z',
-        to: '2026-11-30T08:00:00.000Z',
-        weekdays: [PuckWeekday.Monday, PuckWeekday.Friday],
-        timeOfDay: { from: '08:00', to: '18:00' },
-      },
-    },
-    styling: {
-      typography: 'h2',
-      textAlign: PuckTextAlign.Center,
-      color: 'primary.main',
-      fontWeight: PuckFontWeight.Bold,
-      textTransform: PuckTextTransform.Uppercase,
-      background: '#1a1a1a80',
-      backgroundImage: 'image-1',
-      backgroundSize: PuckBackgroundSize.Contain,
-      backgroundPosition: 'left top',
-      overlay: 'common.black',
-      overlayOpacity: 40,
-      margin: { top: 2, bottom: '12px' },
-      padding: { left: 1 },
-      border: {
-        width: { top: 1 },
-        style: PuckBorderStyle.Dashed,
-        color: '#fff',
-      },
-      borderRadius: { topLeft: 1, bottomRight: '8px' },
-      minHeight: '50vh',
-      maxWidth: 'md',
-      shadow: 4,
-      opacity: 90,
-    },
-    datasources: {
-      article: {
-        type: PuckDatasourceType.Multiple,
-        ids: ['article-2', 'article-3'],
-      },
-      page: { type: PuckDatasourceType.Single, id: 'page-2' },
-      event: { type: PuckDatasourceType.UniqueList },
-      userSubscription: { type: PuckListDatasourceType.List },
-    },
-    data: gridData,
-    children: [
-      { id: 'Title-1', type: 'Title', data: { title: 'First' } },
-      { id: 'Title-2', type: 'Title', data: { title: 'Second' } },
-    ],
-  },
-  { id: 'Title-3', type: 'Title', data: { title: 'After the grid' } },
-];
-
-const emptyStyling = {
-  __typename: 'PuckBlockStyling',
-  typography: null,
-  textAlign: null,
-  color: null,
-  fontWeight: null,
-  textTransform: null,
-  background: null,
-  backgroundImage: null,
-  backgroundSize: null,
-  backgroundPosition: null,
-  overlay: null,
-  overlayOpacity: null,
-  margin: null,
-  padding: null,
-  border: null,
-  borderRadius: null,
-  minHeight: null,
-  maxWidth: null,
-  shadow: null,
-  opacity: null,
-} as const;
-
-const datasource = (
-  type: PuckDatasourceType,
-  picks: { id?: string; ids?: string[] } = {}
-) => ({
-  __typename: 'PuckBlockDatasource' as const,
-  type,
-  id: picks.id ?? null,
-  ids: picks.ids ?? null,
-});
+const registryFragment: FullPuckRegistryFragment = {
+  __typename: 'PuckRegistry',
+  ...puckRegistry,
+};
 
 const flatBlock = (
-  block: Pick<FullPuckBlockFragment, 'id' | 'type' | 'data'> &
+  block: Pick<FullPuckBlockFragment, 'id' | 'type'> &
     Partial<FullPuckBlockFragment>
 ): FullPuckBlockFragment => ({
   __typename: 'PuckBlock',
+  kind: PuckBlockKind.Puck,
   parentId: null,
-  slot: null,
+  puckSlot: null,
   position: 0,
   locked: null,
+  props: {},
   visibility: null,
   styling: null,
   datasources: null,
@@ -297,112 +158,18 @@ const flatBlock = (
 
 const flatPuckBlocks: FullPuckBlockFragment[] = [
   flatBlock({
+    id: 'Hero-2',
+    kind: PuckBlockKind.Generated,
+    type: 'Hero',
+    parentId: 'Grid-1',
+    puckSlot: 'content',
+    props: { title: 'Designed' },
+  }),
+  flatBlock({
     id: 'Grid-1',
     type: 'Grid',
     locked: true,
-    data: gridData,
-    visibility: {
-      __typename: 'PuckBlockVisibility',
-      disabled: false,
-      breakpoints: [PuckBreakpoint.Md, PuckBreakpoint.Lg],
-      timings: {
-        __typename: 'PuckBlockTimings',
-        from: '2026-11-01T08:00:00.000Z',
-        to: '2026-11-30T08:00:00.000Z',
-        weekdays: [PuckWeekday.Monday, PuckWeekday.Friday],
-        timeOfDay: {
-          __typename: 'PuckBlockTimeOfDay',
-          from: '08:00',
-          to: '18:00',
-        },
-      },
-    },
-    styling: {
-      ...emptyStyling,
-      typography: 'h2',
-      textAlign: PuckTextAlign.Center,
-      color: 'primary.main',
-      fontWeight: PuckFontWeight.Bold,
-      textTransform: PuckTextTransform.Uppercase,
-      background: '#1a1a1a80',
-      backgroundImage: 'image-1',
-      backgroundSize: PuckBackgroundSize.Contain,
-      backgroundPosition: 'left top',
-      overlay: 'common.black',
-      overlayOpacity: 40,
-      margin: {
-        __typename: 'PuckSpacingSides',
-        top: 2,
-        right: null,
-        bottom: '12px',
-        left: null,
-      },
-      padding: {
-        __typename: 'PuckSpacingSides',
-        top: null,
-        right: null,
-        bottom: null,
-        left: 1,
-      },
-      border: {
-        __typename: 'PuckBorder',
-        style: PuckBorderStyle.Dashed,
-        color: '#fff',
-        width: {
-          __typename: 'PuckBorderWidth',
-          top: 1,
-          right: null,
-          bottom: null,
-          left: null,
-        },
-      },
-      borderRadius: {
-        __typename: 'PuckBorderRadius',
-        topLeft: 1,
-        topRight: null,
-        bottomRight: '8px',
-        bottomLeft: null,
-      },
-      minHeight: '50vh',
-      maxWidth: 'md',
-      shadow: 4,
-      opacity: 90,
-    },
-    datasources: {
-      __typename: 'PuckBlockDatasources',
-      article: datasource(PuckDatasourceType.Multiple, {
-        ids: ['article-2', 'article-3'],
-      }),
-      page: datasource(PuckDatasourceType.Single, { id: 'page-2' }),
-      event: datasource(PuckDatasourceType.UniqueList),
-      image: null,
-      memberPlan: null,
-      userSubscription: {
-        __typename: 'PuckBlockListDatasource',
-        type: PuckListDatasourceType.List,
-      },
-    },
-  }),
-  flatBlock({
-    id: 'Title-1',
-    type: 'Title',
-    parentId: 'Grid-1',
-    slot: 'content',
-    data: { title: 'First' },
-  }),
-  flatBlock({
-    id: 'Title-2',
-    type: 'Title',
-    parentId: 'Grid-1',
-    slot: 'content',
-    position: 1,
-    data: { title: 'Second' },
-  }),
-  flatBlock({
-    id: 'Title-3',
-    type: 'Title',
-    position: 1,
-    data: { title: 'After the grid' },
+    props: { layout: { xs: { columns: [1], gap: 2 } }, content: [] },
   }),
 ];
 
@@ -410,19 +177,12 @@ const puckContent = [
   {
     type: 'Grid',
     props: {
-      ...gridData,
-      content: [
-        { type: 'Title', props: { title: 'First', id: 'Title-1' } },
-        { type: 'Title', props: { title: 'Second', id: 'Title-2' } },
-      ],
       id: 'Grid-1',
       locked: true,
-      visibility: blocks[0].visibility,
-      styling: blocks[0].styling,
-      datasources: blocks[0].datasources,
+      layout: { xs: { columns: [1], gap: 2 } },
+      content: [{ type: 'Hero', props: { id: 'Hero-2', title: 'Designed' } }],
     },
   },
-  { type: 'Title', props: { title: 'After the grid', id: 'Title-3' } },
 ];
 
 describe('articleToRootProps', () => {
@@ -550,39 +310,48 @@ describe('articleRootPropsToInput', () => {
 });
 
 describe('article mutation variables', () => {
-  const rootProps = articleToRootProps(article);
+  const document: PuckDocument<'article'> = {
+    puckBlocks,
+    puckRegistry,
+    rootProps: articleToRootProps(article),
+  };
 
-  it('updates an article with its puck blocks and leaves the legacy blocks alone', () => {
-    const variables = toUpdateArticleVariables(
-      'article-1',
-      { blocks, rootProps },
-      article
-    );
+  it('updates an article with its puck blocks and registry and leaves the legacy blocks alone', () => {
+    const variables = toUpdateArticleVariables('article-1', document, article);
 
     expect(variables).toEqual({
       id: 'article-1',
-      ...articleRootPropsToInput(rootProps, article),
-      puckBlocks: blockInputs,
+      ...articleRootPropsToInput(document.rootProps, article),
+      puckBlocks,
+      puckRegistry,
     });
     expect(variables).not.toHaveProperty('blocks');
     expect(variables).not.toHaveProperty('likes');
   });
 
-  it('creates an article with its puck blocks and no likes yet', () => {
-    const variables = toCreateArticleVariables({ blocks, rootProps });
+  it('creates an article with its puck blocks, its registry and no likes yet', () => {
+    const variables = toCreateArticleVariables(document);
 
     expect(variables).toEqual({
-      ...articleRootPropsToInput(rootProps),
+      ...articleRootPropsToInput(document.rootProps),
       likes: 0,
-      puckBlocks: blockInputs,
+      puckBlocks,
+      puckRegistry,
     });
     expect(variables).not.toHaveProperty('blocks');
   });
 
   it('keeps the likes of the article a new one is created from', () => {
-    expect(toCreateArticleVariables({ blocks, rootProps }, article).likes).toBe(
-      7
-    );
+    expect(toCreateArticleVariables(document, article).likes).toBe(7);
+  });
+
+  it('clears the registry of an article without generated components', () => {
+    expect(
+      toUpdateArticleVariables('article-1', {
+        ...document,
+        puckRegistry: null,
+      }).puckRegistry
+    ).toBeNull();
   });
 });
 
@@ -656,125 +425,76 @@ describe('pageRootPropsToInput', () => {
 });
 
 describe('page mutation variables', () => {
-  const rootProps = pageToRootProps(page);
+  const document: PuckDocument<'page'> = {
+    puckBlocks,
+    puckRegistry,
+    rootProps: pageToRootProps(page),
+  };
 
-  it('updates a page with its puck blocks and leaves the legacy blocks alone', () => {
-    const variables = toUpdatePageVariables('page-1', { blocks, rootProps });
+  it('updates a page with its puck blocks and registry and leaves the legacy blocks alone', () => {
+    const variables = toUpdatePageVariables('page-1', document);
 
     expect(variables).toEqual({
       id: 'page-1',
-      ...pageRootPropsToInput(rootProps),
-      puckBlocks: blockInputs,
+      ...pageRootPropsToInput(document.rootProps),
+      puckBlocks,
+      puckRegistry,
     });
     expect(variables).not.toHaveProperty('blocks');
   });
 
-  it('creates a page with its puck blocks', () => {
-    const variables = toCreatePageVariables({ blocks, rootProps });
+  it('creates a page with its puck blocks and registry', () => {
+    const variables = toCreatePageVariables(document);
 
     expect(variables).toEqual({
-      ...pageRootPropsToInput(rootProps),
-      puckBlocks: blockInputs,
+      ...pageRootPropsToInput(document.rootProps),
+      puckBlocks,
+      puckRegistry,
     });
     expect(variables).not.toHaveProperty('blocks');
   });
-});
 
-describe('toPuckBlockInputs', () => {
-  it('sends the blocks as a tree of puck block inputs', () => {
-    expect(toPuckBlockInputs(blocks)).toEqual(blockInputs);
-  });
-
-  it('leaves out what a block does not set', () => {
+  it('clears the registry of a page without generated components', () => {
     expect(
-      toPuckBlockInputs([{ id: 'Title-1', type: 'Title', data: {} }])
-    ).toStrictEqual([{ id: 'Title-1', type: 'Title', data: {} }]);
-  });
-
-  it('drops the values the editor cleared', () => {
-    expect(
-      toPuckBlockInputs([
-        {
-          id: 'Title-1',
-          type: 'Title',
-          data: {},
-          visibility: {
-            timings: { from: null, to: '2026-11-30T08:00:00.000Z' },
-          },
-          datasources: { article: null, page: { type: 'list' } },
-        },
-      ])
-    ).toStrictEqual([
-      {
-        id: 'Title-1',
-        type: 'Title',
-        data: {},
-        visibility: { timings: { to: '2026-11-30T08:00:00.000Z' } },
-        datasources: { page: { type: PuckDatasourceType.List } },
-      },
-    ]);
-  });
-
-  it('sends border widths as pixels', () => {
-    expect(
-      toPuckBlockInputs([
-        {
-          id: 'Title-1',
-          type: 'Title',
-          data: {},
-          styling: { border: { width: { top: '3px', left: 1 } } },
-        },
-      ])[0].styling
-    ).toEqual({ border: { width: { top: 3, left: 1 } } });
-  });
-
-  it('saves what a loaded document holds unchanged', () => {
-    const { data } = loadPuckDocument('article', flatPuckBlocks, {});
-
-    expect(
-      toPuckBlockInputs(
-        toApiDocument('article', data as PuckData<'article'>).blocks
-      )
-    ).toEqual(blockInputs);
+      toCreatePageVariables({ ...document, puckRegistry: null }).puckRegistry
+    ).toBeNull();
   });
 });
 
 describe('loadPuckDocument', () => {
-  it('rebuilds nested puck content from the flat puck blocks of the API', () => {
+  it('rebuilds nested puck content and the dynamic config from the API', () => {
     expect(
-      loadPuckDocument('article', flatPuckBlocks, { title: 'Title' })
+      loadPuckDocument('article', flatPuckBlocks, registryFragment, {
+        title: 'Title',
+      })
     ).toEqual({
-      data: { root: { props: { title: 'Title' } }, content: puckContent },
+      data: {
+        root: { props: { title: 'Title', _dynamicConfig: puckRegistry } },
+        content: puckContent,
+      },
     });
   });
 
-  it('places the blocks by position whatever order the API sends them in', () => {
-    expect(
-      loadPuckDocument('page', [...flatPuckBlocks].reverse(), {}).data?.content
-    ).toEqual(puckContent);
-  });
-
   it('turns saved puck blocks and root props into puck data', () => {
-    expect(loadPuckDocument('page', [], { title: 'About us' })).toEqual({
+    expect(loadPuckDocument('page', [], null, { title: 'About us' })).toEqual({
       data: { root: { props: { title: 'About us' } }, content: [] },
     });
   });
 
   it('starts a document without saved puck blocks empty', () => {
-    expect(loadPuckDocument('article', null, {})).toEqual({
+    expect(loadPuckDocument('article', null, null, {})).toEqual({
       data: { root: { props: {} }, content: [] },
     });
   });
 
-  it('reports puck blocks it cannot load instead of throwing', () => {
+  it('reports puck blocks it cannot place instead of throwing', () => {
     expect(
       loadPuckDocument(
         'page',
-        [{ nonsense: true }] as unknown as FullPuckBlockFragment[],
+        [flatBlock({ id: 'Title-1', type: 'Title', parentId: 'Grid-9' })],
+        null,
         {}
       )
-    ).toEqual({
-      error: expect.any(Error),
-    });
+    ).toEqual({ error: expect.any(Error) });
   });
 });

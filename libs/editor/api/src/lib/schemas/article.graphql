@@ -8,6 +8,10 @@ fragment FullArticleRevision on ArticleRevision {
   puckBlocks(onlyDisplayed: false) {
     ...FullPuckBlock
   }
+
+  puckRegistry {
+    ...FullPuckRegistry
+  }
 }
 
 fragment FullArticle on Article {
@@ -69,6 +73,7 @@ mutation CreateArticle(
   $authors: [ArticleRevisionAuthorInput!]!
   $blocks: [BlockContentInput!]
   $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
   $breaking: Boolean!
   $canonicalUrl: String!
   $disableComments: Boolean!
@@ -95,6 +100,7 @@ mutation CreateArticle(
     authors: $authors
     blocks: $blocks
     puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
     breaking: $breaking
     canonicalUrl: $canonicalUrl
     disableComments: $disableComments
@@ -126,6 +132,7 @@ mutation UpdateArticle(
   $authors: [ArticleRevisionAuthorInput!]!
   $blocks: [BlockContentInput!]
   $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
   $breaking: Boolean!
   $canonicalUrl: String!
   $disableComments: Boolean!
@@ -152,6 +159,7 @@ mutation UpdateArticle(
     authors: $authors
     blocks: $blocks
     puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
     breaking: $breaking
     canonicalUrl: $canonicalUrl
     disableComments: $disableComments

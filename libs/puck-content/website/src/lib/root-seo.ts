@@ -1,6 +1,4 @@
-import { DocumentRootProps } from '@wepublish/puck-content/editor';
-
-import { PuckDocumentKind } from './document/document';
+import { DocumentRootProps, PuckDocumentKind } from './document/document-props';
 
 export const rootOgTypes = {
   page: 'website',

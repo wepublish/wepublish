@@ -2,16 +2,23 @@ import { Breakpoint } from '@mui/material';
 import { BaseField } from '@puckeditor/core';
 import { FieldAiParams } from '@puckeditor/plugin-ai';
 import { z } from 'zod/v4';
+import {
+  defaultBreakpoints,
+  VisibilityValue,
+} from '@wepublish/puck-content/website';
 
 import { toAiSchema } from '../ai-schema';
 
-export type VisibilityValue = Breakpoint[];
+export {
+  defaultBreakpoints,
+  hiddenBreakpoints,
+  isHiddenOn,
+} from '@wepublish/puck-content/website';
+export type { VisibilityValue } from '@wepublish/puck-content/website';
 
 export type VisibilityField = BaseField & {
   type: 'visibility';
 };
-
-export const defaultBreakpoints: Breakpoint[] = ['xs', 'sm', 'md', 'lg', 'xl'];
 
 export const visibilitySchema = (
   breakpoints: Breakpoint[] = defaultBreakpoints
@@ -23,11 +30,6 @@ export const visibilityFieldAi = (
   instructions: `The theme breakpoints (${breakpoints.join(', ')}, from smallest to largest) the component is visible on. Omit it to show the component everywhere; only set it to hide the component on specific screen sizes.`,
   schema: toAiSchema(visibilitySchema(breakpoints)),
 });
-
-export const isHiddenOn = (
-  value: VisibilityValue | undefined,
-  breakpoint: Breakpoint
-) => !!value && !value.includes(breakpoint);
 
 export type ThemeBreakpoints = {
   keys: Breakpoint[];
@@ -72,8 +74,3 @@ export const toggleBreakpoint = (
 
   return sorted.length === breakpoints.length ? undefined : sorted;
 };
-
-export const hiddenBreakpoints = (
-  value: VisibilityValue | undefined,
-  breakpoints: Breakpoint[]
-) => breakpoints.filter(breakpoint => isHiddenOn(value, breakpoint));

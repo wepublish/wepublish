@@ -25,8 +25,10 @@ import { Property, PropertyInput } from '@wepublish/property/api';
 import { HasOptionalUserLc, User } from '@wepublish/user/api';
 import {
   ApiBlock,
+  ApiPuckRegistry,
   HasPuckBlocks,
   PuckBlockInput,
+  PuckRegistry,
 } from '@wepublish/puck-content/api';
 
 export enum ArticleSort {
@@ -69,6 +71,7 @@ export class ArticleRevision
 {
   blocks!: Array<typeof BlockContent>;
   puckBlocks?: ApiBlock[] | null;
+  puckRegistry?: ApiPuckRegistry | null;
 
   // The user who created this revision. `userId` is populated from the DB row;
   // `user` is resolved by the global HasOptionalUserLc resolver.
@@ -245,6 +248,7 @@ export class CreateArticleInput extends OmitType(
     'socialMediaAuthors',
     'blocks',
     'puckBlocks',
+    'puckRegistry',
     'properties',
   ] as const,
   ArgsType
@@ -268,6 +272,9 @@ export class CreateArticleInput extends OmitType(
   @Field(() => [PuckBlockInput], { nullable: true })
   puckBlocks?: PuckBlockInput[] | null;
 
+  @Field(() => PuckRegistry, { nullable: true })
+  puckRegistry?: PuckRegistry | null;
+
   @Field(() => [String])
   tagIds!: string[];
 
@@ -284,7 +291,7 @@ export class CreateArticleInput extends OmitType(
 @InputType()
 export class ArticleTemplateMetadataInput extends OmitType(
   CreateArticleInput,
-  ['blocks', 'puckBlocks', 'slug', 'likes'] as const,
+  ['blocks', 'puckBlocks', 'puckRegistry', 'slug', 'likes'] as const,
   InputType
 ) {}
 

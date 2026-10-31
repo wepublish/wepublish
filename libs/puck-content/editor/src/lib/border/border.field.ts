@@ -4,16 +4,30 @@ import { z } from 'zod/v4';
 
 import { toAiSchema } from '../ai-schema';
 import { colorSchema, ColorValue } from '../color/color.field';
-import { sidesSchema, SidesValue } from '../sides/sides';
+import { Side, sides, sidesSchema, SidesValue } from '../sides/sides';
+import { toSpacingParts } from '../spacing/spacing';
 
 export type BorderStyle = 'solid' | 'dashed' | 'dotted';
 export const borderStyles: BorderStyle[] = ['solid', 'dashed', 'dotted'];
 
+export type BorderWidthValue = Partial<Record<Side, number>>;
+
 export type BorderValue = {
-  width?: SidesValue;
+  width?: BorderWidthValue;
   style?: BorderStyle;
   color?: ColorValue;
 };
+
+export const toBorderWidth = (value: SidesValue): BorderWidthValue =>
+  Object.fromEntries(
+    sides.flatMap(side => {
+      const { amount } = toSpacingParts(value[side]);
+
+      return amount === undefined || Number.isNaN(amount) ?
+          []
+        : [[side, amount]];
+    })
+  );
 
 export type BorderField = BaseField & {
   type: 'border';

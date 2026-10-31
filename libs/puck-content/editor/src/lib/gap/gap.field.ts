@@ -1,14 +1,13 @@
 import { BaseField } from '@puckeditor/core';
 import { FieldAiParams } from '@puckeditor/plugin-ai';
 import { z } from 'zod/v4';
+import { gapAxes, GapAxis, GapValue } from '@wepublish/puck-content/website';
 
 import { toAiSchema } from '../ai-schema';
 import { spacingSchema, SpacingValue } from '../spacing/spacing';
 
-export type GapAxis = 'row' | 'column';
-export const gapAxes: GapAxis[] = ['row', 'column'];
-
-export type GapValue = Partial<Record<GapAxis, SpacingValue>>;
+export { gapAxes } from '@wepublish/puck-content/website';
+export type { GapAxis, GapValue } from '@wepublish/puck-content/website';
 
 export type GapField = BaseField & {
   type: 'gap';

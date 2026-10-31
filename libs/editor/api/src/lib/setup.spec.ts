@@ -1,3 +1,5 @@
+import { gql } from '@apollo/client';
+
 const importSetup = async () => {
   vi.resetModules();
 
@@ -48,5 +50,61 @@ describe('getSettings', () => {
     const { getSettings } = await importSetup();
 
     expect(getSettings().apiURL).toBe('http://localhost:4000');
+  });
+});
+
+describe('getApiClientV2', () => {
+  const query = gql`
+    query PuckRevisions {
+      page(id: "page-1") {
+        id
+        latest {
+          id
+          puckBlocks {
+            id
+            props
+          }
+        }
+        published {
+          id
+          puckBlocks {
+            id
+            props
+          }
+        }
+      }
+    }
+  `;
+
+  const revision = (id: string, text: string) => ({
+    __typename: 'PageRevision',
+    id,
+    puckBlocks: [{ __typename: 'PuckBlock', id: 'heading-1', props: { text } }],
+  });
+
+  it('keeps puck blocks apart that share an id across revisions', async () => {
+    const { getApiClientV2 } = await importSetup();
+    const { cache } = getApiClientV2();
+
+    cache.writeQuery({
+      query,
+      data: {
+        page: {
+          __typename: 'Page',
+          id: 'page-1',
+          latest: revision('draft', 'Draft'),
+          published: revision('live', 'Live'),
+        },
+      },
+    });
+
+    const { page } = cache.readQuery({ query }) as {
+      page: Record<'latest' | 'published', { puckBlocks: { props: object }[] }>;
+    };
+
+    expect([
+      page.latest.puckBlocks[0].props,
+      page.published.puckBlocks[0].props,
+    ]).toEqual([{ text: 'Draft' }, { text: 'Live' }]);
   });
 });

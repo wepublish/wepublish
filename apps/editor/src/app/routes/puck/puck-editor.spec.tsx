@@ -3,11 +3,29 @@ import '@testing-library/jest-dom/vitest';
 import { MockedProvider } from '@apollo/client/testing/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import { PuckDocumentController } from '@wepublish/puck-content/editor';
-import { PuckData } from '@wepublish/puck-content/website';
+import {
+  PuckData,
+  PuckDocumentController,
+} from '@wepublish/puck-content/editor';
+import { PropsWithChildren } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { PuckDocumentEditor, PuckDocumentEditorProps } from './puck-editor';
+
+vi.mock('@wepublish/puck-content/editor', async importOriginal => ({
+  ...(await importOriginal<object>()),
+  puckBlockDataPlugin: {
+    name: 'puck-block-data',
+    overrides: {
+      puck: ({ children }: PropsWithChildren) => (
+        <>
+          <output aria-label="Block data" />
+          {children}
+        </>
+      ),
+    },
+  },
+}));
 
 const theme = createTheme({ cssVariables: true });
 
@@ -96,5 +114,13 @@ describe('PuckDocumentEditor', () => {
 
     expect(onPluginChange).toHaveBeenLastCalledWith('revisioning');
     expect(await screen.findByText('First draft')).toBeInTheDocument();
+  });
+
+  it('gives the blocks in the canvas the data of their datasources', () => {
+    renderEditor();
+
+    expect(
+      screen.getByRole('status', { name: 'Block data' })
+    ).toBeInTheDocument();
   });
 });

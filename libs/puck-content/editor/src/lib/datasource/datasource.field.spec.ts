@@ -1,8 +1,13 @@
+import { PuckDatasources } from '@wepublish/puck-content/website';
+
 import {
   activeDatasourceModels,
   addableDatasourceModels,
   addDatasourceModel,
-  datasourceIds,
+  Datasource,
+  datasourceFieldAi,
+  datasourceModels,
+  DatasourcesValue,
   datasourcesSchema,
   directDatasource,
   imageDatasourceTarget,
@@ -14,16 +19,50 @@ import {
 } from './datasource.field';
 
 describe('datasourcesSchema', () => {
+  it('stores what the website reads', () => {
+    expectTypeOf<DatasourcesValue>().toExtend<PuckDatasources>();
+  });
+
   it('accepts the datasources the API returns for a block', () => {
     const value = {
-      article: { type: 'uniqueList', data: [{ id: 'a1' }] },
-      page: { type: 'single', id: 'p1', data: null },
+      article: { type: 'uniqueList' },
+      page: { type: 'single', id: 'p1' },
       memberPlan: { type: 'multiple', ids: ['m1', 'm2'] },
       image: null,
       userSubscription: { type: 'list' },
     };
 
     expect(datasourcesSchema.parse(value)).toEqual(value);
+  });
+
+  it('keeps only the choice, never records resolved into it', () => {
+    expect(
+      datasourcesSchema.parse({
+        article: { type: 'uniqueList', data: [{ id: 'a1' }] },
+        page: { type: 'single', id: 'p1', data: null },
+        event: { type: 'multiple', ids: ['e1'], data: [] },
+      })
+    ).toEqual({
+      article: { type: 'uniqueList' },
+      page: { type: 'single', id: 'p1' },
+      event: { type: 'multiple', ids: ['e1'] },
+    });
+    expectTypeOf<keyof Datasource>().toEqualTypeOf<'type'>();
+  });
+
+  it('only allows picks for images', () => {
+    for (const type of ['list', 'uniqueList', 'slot']) {
+      expect(datasourcesSchema.safeParse({ image: { type } }).success).toBe(
+        false
+      );
+    }
+
+    expect(
+      datasourcesSchema.parse({ image: { type: 'multiple', ids: ['i1'] } })
+    ).toEqual({ image: { type: 'multiple', ids: ['i1'] } });
+    expectTypeOf<
+      NonNullable<DatasourcesValue['image']>['type']
+    >().toEqualTypeOf<'single' | 'multiple'>();
   });
 
   it('requires the id of a single and the ids of a multiple datasource', () => {
@@ -53,6 +92,23 @@ describe('datasourcesSchema', () => {
 });
 
 describe('toDatasourceTypes', () => {
+  it('keeps offering user subscriptions', () => {
+    expect(datasourceModels).toContain('userSubscription');
+  });
+
+  it('limits images to picks', () => {
+    expect(
+      toDatasourceTypes('image', [
+        'list',
+        'uniqueList',
+        'slot',
+        'single',
+        'multiple',
+      ])
+    ).toEqual(['single', 'multiple']);
+    expect(toDatasourceTypes('image', ['list', 'uniqueList'])).toEqual([]);
+  });
+
   it('limits user subscriptions to list datasources', () => {
     expect(
       toDatasourceTypes('userSubscription', [
@@ -79,17 +135,21 @@ describe('setDatasourceType', () => {
     });
   });
 
-  it('drops the resolved data and keeps the other models', () => {
+  it('changes the type and keeps the other models', () => {
     expect(
       setDatasourceType(
-        {
-          article: { type: 'list', data: [{ id: 'a1' }] },
-          page: { type: 'slot' },
-        },
+        { article: { type: 'list' }, page: { type: 'slot' } },
         'article',
         'uniqueList'
       )
     ).toEqual({ article: { type: 'uniqueList' }, page: { type: 'slot' } });
+  });
+
+  it('ignores a type the model does not allow', () => {
+    const value: DatasourcesValue = { image: { type: 'single', id: 'i1' } };
+
+    expect(setDatasourceType(value, 'image', 'list')).toBe(value);
+    expect(setDatasourceType({}, 'userSubscription', 'single')).toEqual({});
   });
 
   it('removes the model when it is no longer used', () => {
@@ -169,9 +229,7 @@ describe('setDatasourceType', () => {
   });
 
   it('leaves the value alone when the type does not change', () => {
-    const value = {
-      article: { type: 'list' as const, data: [{ id: 'a1' }] },
-    };
+    const value = { article: { type: 'list' as const } };
 
     expect(setDatasourceType(value, 'article', 'list')).toBe(value);
   });
@@ -219,6 +277,15 @@ describe('addDatasourceModel', () => {
     expect(
       addDatasourceModel({}, 'userSubscription', ['multiple', 'list'])
     ).toEqual({ userSubscription: { type: 'list' } });
+  });
+
+  it('adds images as a pick', () => {
+    expect(
+      addDatasourceModel({}, 'image', ['uniqueList', 'list', 'multiple'])
+    ).toEqual({ image: { type: 'multiple', ids: [] } });
+    expect(addDatasourceModel({}, 'image', ['slot', 'single'])).toEqual({
+      image: { type: 'single', id: '' },
+    });
   });
 
   it('keeps a model that is already used', () => {
@@ -277,6 +344,16 @@ describe('addableDatasourceModels', () => {
       )
     ).toEqual(['article']);
   });
+
+  it('does not offer images when only lists are allowed', () => {
+    expect(
+      addableDatasourceModels(
+        {},
+        ['article', 'image'],
+        ['uniqueList', 'list', 'slot']
+      )
+    ).toEqual(['article']);
+  });
 });
 
 describe('directDatasource', () => {
@@ -288,6 +365,10 @@ describe('directDatasource', () => {
     expect(
       directDatasource(['userSubscription'], ['list', 'single', 'multiple'])
     ).toEqual({ model: 'userSubscription', type: 'list' });
+    expect(directDatasource(['image'], ['list', 'single'])).toEqual({
+      model: 'image',
+      type: 'single',
+    });
   });
 
   it('returns nothing when the editor has a choice', () => {
@@ -330,31 +411,49 @@ describe('setDatasourceIdList', () => {
   });
 
   it('leaves list datasources untouched', () => {
-    const value = { image: { type: 'list' as const } };
+    const value = { article: { type: 'list' as const } };
 
-    expect(setDatasourceIdList(value, 'image', ['i1'])).toBe(value);
+    expect(setDatasourceIdList(value, 'article', ['a1'])).toBe(value);
   });
 });
 
-describe('datasourceIds', () => {
-  it('returns the referenced ids of a model', () => {
+describe('datasourceFieldAi', () => {
+  it('only offers picks for images', () => {
     expect(
-      datasourceIds({ image: { type: 'single', id: 'i1' } }, 'image')
-    ).toEqual(['i1']);
-    expect(
-      datasourceIds({ image: { type: 'single', id: '' } }, 'image')
-    ).toEqual([]);
-    expect(
-      datasourceIds({ image: { type: 'multiple', ids: ['i1', 'i2'] } }, 'image')
-    ).toEqual(['i1', 'i2']);
-    expect(datasourceIds({ image: { type: 'list' } }, 'image')).toEqual([]);
-    expect(datasourceIds(undefined, 'image')).toEqual([]);
-    expect(
-      datasourceIds(
-        { memberPlan: { type: 'multiple', ids: ['m1'] } },
-        'memberPlan'
-      )
-    ).toEqual(['m1']);
+      datasourceFieldAi(
+        ['uniqueList', 'list', 'slot', 'single', 'multiple'],
+        ['article', 'image']
+      ).schema
+    ).toMatchObject({
+      properties: {
+        article: {
+          properties: {
+            type: {
+              enum: ['uniqueList', 'list', 'slot', 'single', 'multiple'],
+            },
+          },
+        },
+        image: { properties: { type: { enum: ['single', 'multiple'] } } },
+      },
+    });
+  });
+
+  it('leaves out the models that allow none of the types', () => {
+    const { schema } = datasourceFieldAi(
+      ['uniqueList', 'list', 'slot'],
+      ['article', 'image', 'userSubscription']
+    );
+
+    expect(schema).toHaveProperty('properties.article');
+    expect(schema).toHaveProperty('properties.userSubscription');
+    expect(schema).not.toHaveProperty('properties.image');
+  });
+
+  it('describes a list without a count', () => {
+    const { instructions, schema } = datasourceFieldAi();
+
+    expect(JSON.stringify(schema)).not.toContain('"take"');
+    expect(instructions).not.toMatch(/\btake\b|how many/i);
   });
 });
 

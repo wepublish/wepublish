@@ -638,17 +638,19 @@ describe('PageService', () => {
   });
 
   describe('puck blocks', () => {
-    const puckBlocks = [
+    const puckBlocks: PuckBlockInput[] = [
       {
         id: 'grid-1',
+        kind: 'puck',
         type: 'Grid',
-        data: { items: [{ content: [] }] },
+        props: { items: [{ content: [] }] },
         children: [
           {
             id: 'heading-1',
+            kind: 'puck',
             type: 'Heading',
-            data: { text: 'Hi' },
-            slot: 'items[0].content',
+            props: { text: 'Hi' },
+            puckSlot: 'items[0].content',
           },
         ],
       },
@@ -680,8 +682,9 @@ describe('PageService', () => {
           puckBlocks: [
             {
               id: 'heading-1',
+              kind: 'puck',
               type: 'Heading',
-              data: {},
+              props: {},
               visibility: {
                 timings: { from: new Date('2026-01-05T08:00:00Z') },
               },
@@ -694,8 +697,9 @@ describe('PageService', () => {
       expect(createdRevision().puckBlocks).toEqual([
         {
           id: 'heading-1',
+          kind: 'puck',
           type: 'Heading',
-          data: {},
+          props: {},
           visibility: { timings: { from: '2026-01-05T08:00:00.000Z' } },
         },
       ]);
@@ -732,7 +736,7 @@ describe('PageService', () => {
     describe('when updating', () => {
       const latest = {
         blocks: [{ type: 'title', title: 'Old' }],
-        puckBlocks: [{ id: 'old-1', type: 'Heading', data: {} }],
+        puckBlocks: [{ id: 'old-1', kind: 'puck', type: 'Heading', props: {} }],
       };
 
       beforeEach(() => {
@@ -752,7 +756,7 @@ describe('PageService', () => {
           where: { archivedAt: null },
           orderBy: { createdAt: 'desc' },
           take: 1,
-          select: { blocks: true, puckBlocks: true },
+          select: { blocks: true, puckBlocks: true, puckRegistry: true },
         });
       });
 
@@ -793,7 +797,7 @@ describe('PageService', () => {
             {
               ...input,
               id: '1234',
-              puckBlocks: [{ id: 'a', data: {} }] as PuckBlockInput[],
+              puckBlocks: [{ id: 'a', props: {} }] as PuckBlockInput[],
             },
             '1'
           )
@@ -830,6 +834,179 @@ describe('PageService', () => {
       await service.restorePageRevision('1234', 'rev-old', '1');
 
       expect(updatedRevision().puckBlocks).toBe(expected);
+    });
+
+    describe('puck registry', () => {
+      const hero: PuckBlockInput = {
+        id: 'hero-1',
+        kind: 'generated',
+        type: 'HeroBanner',
+        props: { title: 'Hi' },
+      };
+      const puckRegistry = {
+        components: {
+          HeroBanner: {
+            html: '<section data-puck-field-name="title"></section>',
+          },
+        },
+        styles: '.hero {}',
+        script: 'boot()',
+      };
+      const stored = {
+        blocks: [],
+        puckBlocks: [hero],
+        puckRegistry,
+      };
+
+      it('stores the registry of a new page as parsed, script included', async () => {
+        await service.createPage(
+          {
+            ...input,
+            puckBlocks: [hero],
+            puckRegistry: {
+              ...puckRegistry,
+              components: {
+                HeroBanner: {
+                  ...puckRegistry.components.HeroBanner,
+                  label: null,
+                },
+              },
+            } as never,
+          },
+          '1'
+        );
+
+        expect(createdRevision().puckBlocks).toEqual([hero]);
+        expect(createdRevision().puckRegistry).toEqual(puckRegistry);
+      });
+
+      it('stores no registry for a new page without one', async () => {
+        await service.createPage({ ...input, puckBlocks }, '1');
+
+        expect(createdRevision().puckRegistry).toBe(Prisma.DbNull);
+      });
+
+      it('rejects a new page with generated blocks the registry lacks', async () => {
+        await expect(
+          service.createPage({ ...input, puckBlocks: [hero] }, '1')
+        ).rejects.toThrow(BadRequestException);
+
+        expect(prismaMock.page.create).not.toHaveBeenCalled();
+      });
+
+      describe('when updating', () => {
+        beforeEach(() => {
+          prismaMock.page.findUnique?.mockResolvedValue({
+            id: '1234',
+            tags: [],
+            revisions: [stored],
+          });
+        });
+
+        it('loads the registry of the latest open revision too', async () => {
+          await service.updatePage({ ...input, id: '1234' }, '1');
+
+          expect(
+            prismaMock.page.findUnique?.mock.calls[0][0].include.revisions
+              .select
+          ).toEqual({ blocks: true, puckBlocks: true, puckRegistry: true });
+        });
+
+        it('keeps the registry of the latest revision when none is given', async () => {
+          await service.updatePage({ ...input, id: '1234', puckBlocks }, '1');
+
+          expect(updatedRevision().puckRegistry).toBe(puckRegistry);
+        });
+
+        it('clears the registry when null is given and no block needs it', async () => {
+          await service.updatePage(
+            { ...input, id: '1234', puckBlocks, puckRegistry: null },
+            '1'
+          );
+
+          expect(updatedRevision().puckRegistry).toBe(Prisma.DbNull);
+        });
+
+        it('checks the given blocks against the registry it keeps', async () => {
+          await service.updatePage(
+            { ...input, id: '1234', puckBlocks: [hero, ...puckBlocks] },
+            '1'
+          );
+
+          expect(updatedRevision().puckBlocks).toEqual([hero, ...puckBlocks]);
+        });
+
+        it('rejects a registry that drops a component the kept blocks use', async () => {
+          await expect(
+            service.updatePage(
+              { ...input, id: '1234', puckRegistry: { components: {} } },
+              '1'
+            )
+          ).rejects.toThrow(BadRequestException);
+
+          expect(prismaMock.page.update).not.toHaveBeenCalled();
+        });
+
+        it('rejects a registry with a script that is not text', async () => {
+          await expect(
+            service.updatePage(
+              {
+                ...input,
+                id: '1234',
+                puckRegistry: { components: {}, script: 1 } as never,
+              },
+              '1'
+            )
+          ).rejects.toThrow(BadRequestException);
+        });
+      });
+
+      it('copies the registry when duplicating a page', async () => {
+        prismaMock.page.findUnique?.mockResolvedValue({
+          id: '1234',
+          tags: [],
+          revisions: [{ id: 'rev', properties: [], ...stored }],
+        });
+
+        await service.duplicatePage('1234', '1');
+
+        expect(createdRevision().puckRegistry).toEqual(puckRegistry);
+      });
+
+      it.each([
+        ['its registry', puckRegistry, puckRegistry],
+        ['no registry', null, Prisma.DbNull],
+      ])('restores a revision with %s', async (_, registry, expected) => {
+        prismaMock.pageRevision.findUnique?.mockResolvedValue({
+          id: 'rev-old',
+          pageId: '1234',
+          properties: [],
+          blocks: [],
+          puckBlocks: [],
+          puckRegistry: registry,
+        });
+
+        await service.restorePageRevision('1234', 'rev-old', '1');
+
+        expect(updatedRevision().puckRegistry).toBe(expected);
+      });
+
+      it('publishes the latest revision as it is, registry included', async () => {
+        prismaMock.page.findUnique?.mockResolvedValue({
+          id: '1234',
+          publishedAt: null,
+          revisions: [{ id: 'rev-1', ...stored }],
+        });
+
+        await service.publishPage('1234', new Date('2023-01-01'));
+
+        expect(
+          prismaMock.page.update?.mock.calls[0][0].data.revisions.update
+        ).toEqual({
+          where: { id: 'rev-1' },
+          data: { publishedAt: new Date('2023-01-01') },
+        });
+      });
     });
   });
 

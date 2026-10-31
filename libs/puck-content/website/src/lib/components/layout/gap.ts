@@ -1,38 +1,11 @@
 import { CSSObject, Theme } from '@emotion/react';
 
-import {
-  GapAxis,
-  GapField,
-  gapFieldAi,
-  gapSchema as gapValueSchema,
-  GapValue,
-  spacingToCss,
-} from '@wepublish/puck-content/editor';
+import { GapValue } from '../../values/gap';
+import { spacingToCss } from '../../values/spacing';
 
 export type GapLayout = {
   gap?: GapValue;
 };
-
-export const defaultGap: GapValue = { row: 2, column: 2 };
-
-/**
- * Sub field for a breakpoints field controlling the gaps between the
- * children of a grid-like layout.
- */
-export const gapFields = (axes?: GapAxis[]): { gap: GapField } => ({
-  gap: {
-    type: 'gap',
-    label: 'Gap',
-    axes,
-    ai: gapFieldAi(axes),
-  },
-});
-
-export const gapSchema = (axes?: GapAxis[]) => ({
-  gap: gapValueSchema(axes).describe(
-    'Gap between the children, as a number of theme spacing units (usually 8px each) or an exact pixel string like "12px"'
-  ),
-});
 
 export const gapStyles = (
   theme: Theme,

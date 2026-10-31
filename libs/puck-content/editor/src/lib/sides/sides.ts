@@ -1,11 +1,10 @@
 import { z } from 'zod/v4';
+import { Side, sides, SidesValue } from '@wepublish/puck-content/website';
 
 import { spacingSchema, SpacingValue } from '../spacing/spacing';
 
-export type Side = 'top' | 'right' | 'bottom' | 'left';
-export const sides: Side[] = ['top', 'right', 'bottom', 'left'];
-
-export type SidesValue = Partial<Record<Side, SpacingValue>>;
+export { sides } from '@wepublish/puck-content/website';
+export type { Side, SidesValue } from '@wepublish/puck-content/website';
 
 export type SidesMode = 'all' | 'axis' | 'individual';
 export const sidesModes: SidesMode[] = ['all', 'axis', 'individual'];

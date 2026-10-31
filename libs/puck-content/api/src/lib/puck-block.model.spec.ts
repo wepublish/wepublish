@@ -20,9 +20,12 @@ import {
 
 import { HasPuckBlocks } from './has-puck-blocks.model';
 import { PuckBlock, PuckBlockInput } from './puck-block.model';
+import { PuckBlocksPreview } from './puck-blocks-preview.model';
+import { PuckRegistry } from './puck-registry.model';
 import {
   apiBlockStylingKeys,
   puckBackgroundSizes,
+  puckBlockKinds,
   puckBorderStyles,
   puckBreakpoints,
   puckDatasourceTypes,
@@ -51,11 +54,18 @@ class ProbeResolver {
     return null as never;
   }
 
+  @Query(() => PuckBlocksPreview)
+  preview() {
+    return null as never;
+  }
+
   @Mutation(() => Boolean)
   save(
-    @Args('blocks', { type: () => [PuckBlockInput] }) blocks: PuckBlockInput[]
+    @Args('blocks', { type: () => [PuckBlockInput] }) blocks: PuckBlockInput[],
+    @Args('registry', { type: () => PuckRegistry, nullable: true })
+    registry: PuckRegistry | null
   ) {
-    return !!blocks;
+    return !!blocks && !!registry;
   }
 }
 
@@ -92,40 +102,67 @@ describe('puck block schema', () => {
   it('reads blocks as a flat list that points at the parent slot', () => {
     expect(fieldsOf('PuckBlock')).toEqual({
       id: 'String!',
+      kind: 'PuckBlockKind!',
       type: 'String!',
       parentId: 'String',
-      slot: 'String',
+      puckSlot: 'String',
       position: 'Int!',
+      props: 'JSONObject!',
       locked: 'Boolean',
       visibility: 'PuckBlockVisibility',
       styling: 'PuckBlockStyling',
       datasources: 'PuckBlockDatasources',
-      data: 'JSONObject!',
+      consumes: 'Int',
     });
   });
 
   it('writes blocks as a tree of any depth', () => {
     expect(fieldsOf('PuckBlockInput')).toEqual({
       id: 'String!',
+      kind: 'PuckBlockKind!',
       type: 'String!',
-      data: 'JSONObject!',
+      props: 'JSONObject!',
       locked: 'Boolean',
       visibility: 'PuckBlockVisibilityInput',
       styling: 'PuckBlockStylingInput',
       datasources: 'PuckBlockDatasourcesInput',
-      slot: 'String',
+      consumes: 'Int',
+      puckSlot: 'String',
       children: '[PuckBlockInput!]',
     });
   });
 
-  it('declares the puck blocks of a document as a flat list', () => {
+  it('declares the puck blocks and the registry of a document', () => {
     const hasPuckBlocks = schema.getType(
       'HasPuckBlocks'
     ) as GraphQLInterfaceType;
 
-    expect(String(hasPuckBlocks.getFields()['puckBlocks'].type)).toBe(
-      '[PuckBlock!]'
-    );
+    expect(
+      Object.fromEntries(
+        Object.values(hasPuckBlocks.getFields()).map(field => [
+          field.name,
+          String(field.type),
+        ])
+      )
+    ).toEqual({ puckBlocks: '[PuckBlock!]', puckRegistry: 'PuckRegistry' });
+  });
+
+  it.each(['PuckRegistry', 'PuckRegistryInput'])(
+    'keeps %s the way Puck AI does, scripts included',
+    name => {
+      expect(fieldsOf(name)).toEqual({
+        components: 'JSONObject!',
+        styles: 'String',
+        script: 'String',
+      });
+    }
+  );
+
+  it('previews unsaved blocks the way a saved revision reads them', () => {
+    expect(fieldsOf('PuckBlocksPreview')).toEqual({
+      puckBlocks: '[PuckBlock!]!',
+      puckRegistry: 'PuckRegistry',
+    });
   });
 
   it.each([
@@ -223,6 +260,7 @@ describe('puck block schema', () => {
   });
 
   it.each<[string, readonly string[]]>([
+    ['PuckBlockKind', puckBlockKinds],
     ['PuckWeekday', puckWeekdays],
     ['PuckBreakpoint', puckBreakpoints],
     ['PuckDatasourceType', puckDatasourceTypes],

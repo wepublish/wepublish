@@ -1,7 +1,8 @@
+import { PuckDocumentKind } from '@wepublish/puck-content/website';
 import { createContext, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export type PuckEditorDocumentKind = 'page' | 'article';
+export type PuckEditorDocumentKind = PuckDocumentKind;
 
 export const PuckDocumentKindContext =
   createContext<PuckEditorDocumentKind>('page');

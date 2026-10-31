@@ -21,8 +21,10 @@ import {
 import { HasOptionalUserLc, User } from '@wepublish/user/api';
 import {
   ApiBlock,
+  ApiPuckRegistry,
   HasPuckBlocks,
   PuckBlockInput,
+  PuckRegistry,
 } from '@wepublish/puck-content/api';
 
 export enum PageSort {
@@ -47,6 +49,7 @@ export class PageRevision
 {
   blocks!: Array<typeof BlockContent>;
   puckBlocks?: ApiBlock[] | null;
+  puckRegistry?: ApiPuckRegistry | null;
 
   // The user who created this revision. `userId` is populated from the DB row;
   // `user` is resolved by the global HasOptionalUserLc resolver.
@@ -197,6 +200,7 @@ export class CreatePageInput extends OmitType(
     'socialMediaImage',
     'blocks',
     'puckBlocks',
+    'puckRegistry',
     'properties',
   ] as const,
   ArgsType
@@ -219,6 +223,9 @@ export class CreatePageInput extends OmitType(
   @Field(() => [PuckBlockInput], { nullable: true })
   puckBlocks?: PuckBlockInput[] | null;
 
+  @Field(() => PuckRegistry, { nullable: true })
+  puckRegistry?: PuckRegistry | null;
+
   @Field(() => [String])
   tagIds!: string[];
 
@@ -229,7 +236,7 @@ export class CreatePageInput extends OmitType(
 @InputType()
 export class PageTemplateMetadataInput extends OmitType(
   CreatePageInput,
-  ['blocks', 'puckBlocks', 'slug'] as const,
+  ['blocks', 'puckBlocks', 'puckRegistry', 'slug'] as const,
   InputType
 ) {}
 

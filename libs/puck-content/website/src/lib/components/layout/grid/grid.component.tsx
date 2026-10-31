@@ -1,13 +1,12 @@
-import { Theme } from '@emotion/react';
-import { PuckComponent, Slot } from '@puckeditor/core';
+import { ClassNames, CSSObject, Theme } from '@emotion/react';
 
+import { PuckBlockComponent, PuckSlotValue } from '../../../blocks/block.types';
+import { getSlot } from '../../../blocks/slots';
 import {
   breakpointsStyles,
   BreakpointsValue,
-  columnsPresets,
-  ColumnsValue,
-  DatasourcesValue,
-} from '@wepublish/puck-content/editor';
+} from '../../../values/breakpoints';
+import { columnsPresets, ColumnsValue } from '../../../values/columns';
 import { GapLayout, gapStyles } from '../gap';
 import { ItemsAlignment, itemsAlignmentStyles } from '../items-alignment';
 
@@ -17,33 +16,38 @@ export type GridLayout = GapLayout &
   };
 
 export type GridProps = {
-  className?: string;
   layout: BreakpointsValue<GridLayout>;
-  content: Slot;
-  datasources?: DatasourcesValue;
+  content: PuckSlotValue;
 };
 
 const toGridTemplateColumns = (columns: ColumnsValue) =>
   columns.map(column => `${column}fr`).join(' ');
 
-export const GridRender: PuckComponent<GridProps> = ({
-  layout,
-  content: Content,
-  datasources,
-  ...props
+const gridStyles = (
+  theme: Theme,
+  layout: BreakpointsValue<GridLayout>
+): CSSObject => ({
+  display: 'grid',
+  ...breakpointsStyles(theme, layout, resolved => ({
+    gridTemplateColumns: toGridTemplateColumns(
+      resolved?.columns ?? columnsPresets[0]
+    ),
+    ...gapStyles(theme, resolved),
+    ...itemsAlignmentStyles(resolved),
+  })),
+});
+
+export const GridRender: PuckBlockComponent<GridProps> = ({
+  props: { layout },
+  slots,
+  className,
 }) => (
-  <Content
-    minEmptyHeight={300}
-    {...props}
-    css={(theme: Theme) => ({
-      display: 'grid',
-      ...breakpointsStyles(theme, layout, resolved => ({
-        gridTemplateColumns: toGridTemplateColumns(
-          resolved?.columns ?? columnsPresets[0]
-        ),
-        ...gapStyles(theme, resolved),
-        ...itemsAlignmentStyles(resolved),
-      })),
-    })}
-  />
+  <ClassNames>
+    {({ css, cx, theme }) =>
+      getSlot(
+        slots,
+        'content'
+      )({ className: cx(className, css(gridStyles(theme, layout))) })
+    }
+  </ClassNames>
 );

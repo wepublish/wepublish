@@ -27,6 +27,8 @@ import {
   OutlinePlugin,
   paddingPlugin,
   palettePlugin,
+  puckBlockDataPlugin,
+  PuckData,
   PuckDocumentController,
   PuckDocumentControllerContext,
   PuckDocumentKindContext,
@@ -51,7 +53,7 @@ import {
   websiteThemePlugin,
   WebsiteTranslationsPlugin,
 } from '@wepublish/puck-content/editor';
-import { PuckData, PuckDocumentKind } from '@wepublish/puck-content/website';
+import { PuckDocumentKind } from '@wepublish/puck-content/website';
 import { minimalTheme } from '@wepublish/ui';
 import { WebsiteProvider } from '@wepublish/website';
 import {
@@ -164,6 +166,7 @@ export function PuckDocumentEditor<K extends PuckDocumentKind>({
       actionBarPlugin,
       documentHeaderPlugin,
       documentControllerPlugin,
+      puckBlockDataPlugin,
       viewportSelectionPlugin,
       sidebarLayoutPlugin,
       datasourcePlugin,

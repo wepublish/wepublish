@@ -23,6 +23,9 @@ exports[`PageService > should create an page 1`] = `
           "puckBlocks": DbNull {
             Symbol(prisma.objectEnumValue): true,
           },
+          "puckRegistry": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
           "userId": "1234",
         },
       },
@@ -764,6 +767,7 @@ exports[`PageService > should update an page 1`] = `
         "select": {
           "blocks": true,
           "puckBlocks": true,
+          "puckRegistry": true,
         },
         "take": 1,
         "where": {
@@ -800,6 +804,9 @@ exports[`PageService > should update an page 2`] = `
             },
           ],
           "puckBlocks": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
+          "puckRegistry": DbNull {
             Symbol(prisma.objectEnumValue): true,
           },
           "userId": "1234",
@@ -885,6 +892,9 @@ exports[`PageService > version history > should restore a revision as a new draf
             },
           ],
           "puckBlocks": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
+          "puckRegistry": DbNull {
             Symbol(prisma.objectEnumValue): true,
           },
           "socialMediaDescription": "Old sm description",

@@ -1,30 +1,22 @@
 import { Button, ButtonOwnProps } from '@mui/material';
-import { PuckComponent } from '@puckeditor/core';
 
+import { PuckBlockComponent } from '../../../blocks/block.types';
 import { FormField } from '../form-field.component';
 
 export type FormSubmitVariant = 'contained' | 'outlined' | 'text';
 
 export type FormSubmitProps = {
-  className?: string;
   label: string;
   color?: ButtonOwnProps['color'];
   variant?: FormSubmitVariant;
   fullWidth?: boolean;
 };
 
-export const FormSubmitRender: PuckComponent<FormSubmitProps> = ({
+export const FormSubmitRender: PuckBlockComponent<FormSubmitProps> = ({
   className,
-  label,
-  color,
-  variant,
-  fullWidth,
-  puck: { isEditing },
+  props: { label, color, variant, fullWidth },
 }) => (
-  <FormField
-    className={className}
-    isEditing={isEditing}
-  >
+  <FormField className={className}>
     <Button
       type="submit"
       color={color}

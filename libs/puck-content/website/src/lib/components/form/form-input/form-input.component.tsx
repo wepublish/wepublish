@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material';
-import { PuckComponent } from '@puckeditor/core';
 
+import { PuckBlockComponent } from '../../../blocks/block.types';
 import { FormField } from '../form-field.component';
 
 export type FormInputType =
@@ -21,7 +21,6 @@ export type FormAutoComplete =
   | 'bday';
 
 export type FormInputProps = {
-  className?: string;
   name: string;
   label: string;
   type: FormInputType;
@@ -32,22 +31,20 @@ export type FormInputProps = {
   helperText?: string;
 };
 
-export const FormInputRender: PuckComponent<FormInputProps> = ({
+export const FormInputRender: PuckBlockComponent<FormInputProps> = ({
   className,
-  name,
-  label,
-  type,
-  placeholder,
-  required,
-  defaultValue,
-  autoComplete,
-  helperText,
-  puck: { isEditing },
+  props: {
+    name,
+    label,
+    type,
+    placeholder,
+    required,
+    defaultValue,
+    autoComplete,
+    helperText,
+  },
 }) => (
-  <FormField
-    className={className}
-    isEditing={isEditing}
-  >
+  <FormField className={className}>
     <TextField
       key={defaultValue}
       fullWidth

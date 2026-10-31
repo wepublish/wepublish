@@ -1,10 +1,9 @@
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { PuckComponent } from '@puckeditor/core';
 
+import { PuckBlockComponent } from '../../../blocks/block.types';
 import { FormField } from '../form-field.component';
 
 export type FormCheckboxProps = {
-  className?: string;
   name: string;
   label: string;
   value?: string;
@@ -12,19 +11,11 @@ export type FormCheckboxProps = {
   defaultChecked?: boolean;
 };
 
-export const FormCheckboxRender: PuckComponent<FormCheckboxProps> = ({
+export const FormCheckboxRender: PuckBlockComponent<FormCheckboxProps> = ({
   className,
-  name,
-  label,
-  value,
-  required,
-  defaultChecked,
-  puck: { isEditing },
+  props: { name, label, value, required, defaultChecked },
 }) => (
-  <FormField
-    className={className}
-    isEditing={isEditing}
-  >
+  <FormField className={className}>
     <FormControlLabel
       key={String(!!defaultChecked)}
       label={label}

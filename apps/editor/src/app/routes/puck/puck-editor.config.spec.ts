@@ -1,5 +1,5 @@
 import { Data } from '@puckeditor/core';
-import { PuckData } from '@wepublish/puck-content/website';
+import { PuckData } from '@wepublish/puck-content/editor';
 
 import {
   initialPuckUi,

@@ -151,38 +151,36 @@ boundaries.
   offset for the hour after a DST switch. Read the offset with
   `formatInTimeZone(date, tz, 'xxx')`.
 - **Puck content (`ArticleRevision.puckBlocks`, `PageRevision.puckBlocks`) is
-  pruned the same way**, with the same permission rule and cache handling,
-  plus `puckBlocksChangeAt`. It is stored and written (`puckBlocks:
-  [PuckBlockInput!]`) as a tree of API blocks, not Puck `Data`: the editor
-  converts. Each block is `{id, type, data, locked?, visibility?, styling?,
-  datasources?, slot?, children?}`: `type` is the component name, `data` the
-  component props without those block fields and with every slot emptied to
-  `[]`, `slot` the parent's slot path (`items[2].content`, omitted means
-  `content`). It is **read flat** (`[PuckBlock!]`, depth first, with
-  `parentId`/`slot`/`position`; `flattenPuckBlocks`), because a query cannot
-  select a tree of unknown depth. `visibility`/`styling`/`datasources` are
-  typed objects mirroring the editor's field values: enum values are named
-  exactly as stored, union values use the `PuckSpacing`, `PuckMinHeight`,
-  `PuckMaxWidth` and `PuckBackgroundPosition` scalars (mapped to template
-  literal types in `codegen.yml`). Root props live in the revision fields and
-  zones are not stored. The API never reads `data`; it only walks `children`.
-  A block hides with its subtree through `visibility.disabled` /
-  `visibility.timings` (plural, unlike `timing`) (`timing/puck-timing.ts`);
-  breakpoints are left to the website. `parsePuckBlocks` (zod + date-fns) in
-  `libs/puck-content/api` validates on save and normalises: nulls dropped,
-  timings stored as UTC ISO strings, `flattenPuckBlocks` turns them back into
-  `Date`. That lib must stay a leaf (only `authentication/api`), since
-  article, page and block-content import it, so it has its own `PuckWeekday`
-  instead of block-content's `Weekday`. Keep the website's `apiBlocksSchema`
-  (`puck-content/website` `api-blocks.ts`) in step with it, or the editor
-  cannot open what the API stored: the `storedBlockFormat` table is copied
-  verbatim into both specs, so change it in both. The editor selects
-  `...FullPuckBlock` (`editor/api` `schemas/puck-block.graphql`), rebuilds the
-  tree with `toPuckData`, and saves through `toPuckBlockInputs`
-  (`apps/editor/.../puck/puck-document-mapping.ts`), which maps the website's
-  string values onto the generated enums. On update, an omitted `puckBlocks` or
-  `blocks` carries over from the latest open revision, and an explicit
-  `puckBlocks: null` clears it.
+  pruned the same way**, with the same permissions and caching, plus
+  `puckBlocksChangeAt`. It is written as a tree (`[PuckBlockInput!]`) of
+  envelopes `{kind: puck|generated, id, type, props, locked?, visibility?,
+  styling?, datasources?, consumes?, puckSlot?, children?}`: `props` are the
+  component props with slots emptied to `[]`, `puckSlot` the parent's slot.
+  It is **read flat** (`[PuckBlock!]`, depth first,
+  `parentId`/`puckSlot`/`position`), as a query cannot select an unbounded
+  tree. Union values use the `PuckSpacing`/`PuckMinHeight`/
+  `PuckMaxWidth`/`PuckBackgroundPosition` scalars (typed in `codegen.yml`). A
+  block hides with its subtree through `visibility.disabled`/`timings`
+  (`timing/puck-timing.ts`); breakpoints are left to the website.
+  `puckRegistry` (own column) is Puck AI's `_dynamicConfig` as is (unknown
+  keys and `streaming` pass through).
+  `parsePuckDocument` in `libs/puck-content/api` validates both and checks
+  every `generated` block names a registry component; on update an omitted
+  `puckBlocks`/`puckRegistry`/`blocks` carries over from the latest open
+  revision (`puckDocumentColumns`, checked against the kept value) and `null`
+  clears it. That lib must stay a leaf (only `authentication/api`). Stored
+  values that no longer parse read as `null` (logged). `PuckBlock.data`
+  resolves the datasources in `block-content/api` `puck/` (pure planner +
+  request-scoped loader, never reads `props`): picks keep their order,
+  `list`/`uniqueList` load the block's own `consumes` plus one record per
+  `slot` consumer (nearest provider, hidden consumers last; member plans and
+  the reader's subscriptions load whole), `uniqueList` skips what was shown
+  before. `puckBlocksPreview` reads unsaved content like a saved revision
+  (CanCreateArticle or CanCreatePage). Unpublished articles and pages only
+  under `@PreviewMode`; previews and subscriptions skip the answer cache.
+  `PuckBlockData.userSubscriptions` lives in `membership/api` (importing it
+  into block-content is a cycle). Both Apollo clients set
+  `PuckBlock: {keyFields: false}`, as ids are unique per revision only.
 
 ## Full end-to-end change checklist
 

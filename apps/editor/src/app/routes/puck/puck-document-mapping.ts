@@ -4,55 +4,28 @@ import {
   FullArticleFragment,
   FullPageFragment,
   FullPuckBlockFragment,
-  PuckBackgroundSize,
-  PuckBlockDatasourceInput,
-  PuckBlockDatasourcesInput,
-  PuckBlockInput,
-  PuckBlockStylingInput,
-  PuckBlockTimingsInput,
-  PuckBlockVisibilityInput,
-  PuckBorderInput,
-  PuckBorderStyle,
-  PuckBreakpoint,
-  PuckDatasourceType,
-  PuckFontWeight,
-  PuckListDatasourceType,
-  PuckTextAlign,
-  PuckTextTransform,
-  PuckWeekday,
+  FullPuckRegistryFragment,
   UpdateArticleMutationVariables,
   UpdatePageMutationVariables,
 } from '@wepublish/editor/api';
 import {
   ArticleRootProps,
-  BorderValue,
+  fromPuckDocument,
+  LoadedPuckDocument,
   PageRootProps,
-  RootProperty,
-  SpacingValue,
-  StylingValue,
-} from '@wepublish/puck-content/editor';
-import {
-  ApiBlock,
-  ApiBlockDatasources,
-  ApiBlockVisibility,
-  ApiDocument,
-  PuckData,
-  PuckDocumentKind,
+  PuckDocument,
   PuckRootPropsByKind,
-  toPuckData,
-} from '@wepublish/puck-content/website';
+  RootProperty,
+} from '@wepublish/puck-content/editor';
+import { PuckDocumentKind } from '@wepublish/puck-content/website';
 
 type DocumentInput<Variables> = Omit<
   Variables,
-  'id' | 'blocks' | 'puckBlocks' | 'likes'
+  'id' | 'blocks' | 'puckBlocks' | 'puckRegistry' | 'likes'
 >;
 
 export type ArticleInput = DocumentInput<UpdateArticleMutationVariables>;
 export type PageInput = DocumentInput<UpdatePageMutationVariables>;
-
-export type LoadedPuckDocument<K extends PuckDocumentKind> =
-  | { data: PuckData<K>; error?: undefined }
-  | { data?: undefined; error: unknown };
 
 type Compact<T> = { [K in keyof T]?: Exclude<T[K], null> };
 
@@ -62,146 +35,6 @@ const compact = <T extends Record<string, unknown>>(value: T) =>
       ([, entry]) => entry !== undefined && entry !== null && entry !== ''
     )
   ) as Compact<T>;
-
-const ifPresent = <Value, Result>(
-  value: Value | null | undefined,
-  convert: (value: Value) => Result
-) => (value === null || value === undefined ? undefined : convert(value));
-
-const enumMember = <Member extends string>(
-  members: Record<string, Member>,
-  value: `${Member}`
-): Member => {
-  const member = Object.values(members).find(candidate => candidate === value);
-
-  if (member === undefined) {
-    throw new Error(`The API does not know the puck block value ${value}`);
-  }
-
-  return member;
-};
-
-const toPixels = (value: SpacingValue | undefined) =>
-  typeof value === 'string' ? Number.parseFloat(value) : value;
-
-const toBorderInput = ({ width, style, color }: BorderValue): PuckBorderInput =>
-  compact({
-    width: ifPresent(width, ({ top, right, bottom, left }) =>
-      compact({
-        top: toPixels(top),
-        right: toPixels(right),
-        bottom: toPixels(bottom),
-        left: toPixels(left),
-      })
-    ),
-    style: ifPresent(style, value => enumMember(PuckBorderStyle, value)),
-    color,
-  });
-
-const toStylingInput = ({
-  textAlign,
-  fontWeight,
-  textTransform,
-  backgroundSize,
-  border,
-  ...styling
-}: StylingValue): PuckBlockStylingInput => ({
-  ...styling,
-  ...compact({
-    textAlign: ifPresent(textAlign, value => enumMember(PuckTextAlign, value)),
-    fontWeight: ifPresent(fontWeight, value =>
-      enumMember(PuckFontWeight, value)
-    ),
-    textTransform: ifPresent(textTransform, value =>
-      enumMember(PuckTextTransform, value)
-    ),
-    backgroundSize: ifPresent(backgroundSize, value =>
-      enumMember(PuckBackgroundSize, value)
-    ),
-    border: ifPresent(border, toBorderInput),
-  }),
-});
-
-const toTimingsInput = ({
-  from,
-  to,
-  weekdays,
-  timeOfDay,
-}: NonNullable<ApiBlockVisibility['timings']>): PuckBlockTimingsInput =>
-  compact({
-    from,
-    to,
-    weekdays: weekdays?.map(weekday => enumMember(PuckWeekday, weekday)),
-    timeOfDay,
-  });
-
-const toVisibilityInput = ({
-  disabled,
-  timings,
-  breakpoints,
-}: ApiBlockVisibility): PuckBlockVisibilityInput =>
-  compact({
-    disabled,
-    breakpoints: breakpoints?.map(breakpoint =>
-      enumMember(PuckBreakpoint, breakpoint)
-    ),
-    timings: ifPresent(timings, toTimingsInput),
-  });
-
-const toDatasourceInput = (
-  datasource: NonNullable<ApiBlockDatasources['article']>
-): PuckBlockDatasourceInput => ({
-  ...datasource,
-  type: enumMember(PuckDatasourceType, datasource.type),
-});
-
-const toDatasourcesInput = ({
-  article,
-  page,
-  event,
-  image,
-  memberPlan,
-  userSubscription,
-}: ApiBlockDatasources): PuckBlockDatasourcesInput =>
-  compact({
-    article: ifPresent(article, toDatasourceInput),
-    page: ifPresent(page, toDatasourceInput),
-    event: ifPresent(event, toDatasourceInput),
-    image: ifPresent(image, toDatasourceInput),
-    memberPlan: ifPresent(memberPlan, toDatasourceInput),
-    userSubscription: ifPresent(userSubscription, ({ type }) => ({
-      type: enumMember(PuckListDatasourceType, type),
-    })),
-  });
-
-const toPuckBlockInput = ({
-  id,
-  type,
-  locked,
-  visibility,
-  styling,
-  datasources,
-  data,
-  slot,
-  children,
-}: ApiBlock): PuckBlockInput => ({
-  id,
-  type,
-  ...compact({
-    locked,
-    visibility: ifPresent(visibility, toVisibilityInput),
-    styling: ifPresent(styling, toStylingInput),
-    datasources: ifPresent(datasources, toDatasourcesInput),
-  }),
-  data,
-  ...compact({
-    slot,
-    children: ifPresent(children, toPuckBlockInputs),
-  }),
-});
-
-export const toPuckBlockInputs = (blocks: ApiBlock[]): PuckBlockInput[] =>
-  blocks.map(toPuckBlockInput);
 
 const toProperty = ({ key, value, public: isPublic }: RootProperty) => ({
   key,
@@ -275,21 +108,23 @@ export const articleRootPropsToInput = (
 
 export const toUpdateArticleVariables = (
   id: string,
-  { blocks, rootProps }: ApiDocument<'article'>,
+  { puckBlocks, puckRegistry, rootProps }: PuckDocument<'article'>,
   previous?: FullArticleFragment
 ): UpdateArticleMutationVariables => ({
   id,
   ...articleRootPropsToInput(rootProps, previous),
-  puckBlocks: toPuckBlockInputs(blocks),
+  puckBlocks,
+  puckRegistry,
 });
 
 export const toCreateArticleVariables = (
-  { blocks, rootProps }: ApiDocument<'article'>,
+  { puckBlocks, puckRegistry, rootProps }: PuckDocument<'article'>,
   previous?: FullArticleFragment
 ): CreateArticleMutationVariables => ({
   ...articleRootPropsToInput(rootProps, previous),
   likes: previous?.likes ?? 0,
-  puckBlocks: toPuckBlockInputs(blocks),
+  puckBlocks,
+  puckRegistry,
 });
 
 export const pageToRootProps = ({
@@ -332,29 +167,28 @@ export const pageRootPropsToInput = (props: PageRootProps): PageInput => ({
 
 export const toUpdatePageVariables = (
   id: string,
-  { blocks, rootProps }: ApiDocument<'page'>
+  { puckBlocks, puckRegistry, rootProps }: PuckDocument<'page'>
 ): UpdatePageMutationVariables => ({
   id,
   ...pageRootPropsToInput(rootProps),
-  puckBlocks: toPuckBlockInputs(blocks),
+  puckBlocks,
+  puckRegistry,
 });
 
 export const toCreatePageVariables = ({
-  blocks,
+  puckBlocks,
+  puckRegistry,
   rootProps,
-}: ApiDocument<'page'>): CreatePageMutationVariables => ({
+}: PuckDocument<'page'>): CreatePageMutationVariables => ({
   ...pageRootPropsToInput(rootProps),
-  puckBlocks: toPuckBlockInputs(blocks),
+  puckBlocks,
+  puckRegistry,
 });
 
 export const loadPuckDocument = <K extends PuckDocumentKind>(
   kind: K,
-  puckBlocks: FullPuckBlockFragment[] | null | undefined,
+  puckBlocks: readonly FullPuckBlockFragment[] | null | undefined,
+  puckRegistry: FullPuckRegistryFragment | null | undefined,
   rootProps: PuckRootPropsByKind[K]
-): LoadedPuckDocument<K> => {
-  try {
-    return { data: toPuckData(kind, puckBlocks ?? [], rootProps) };
-  } catch (error) {
-    return { error };
-  }
-};
+): LoadedPuckDocument<K> =>
+  fromPuckDocument(kind, puckBlocks, puckRegistry, rootProps);

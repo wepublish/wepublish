@@ -1,34 +1,20 @@
-import { Theme } from '@emotion/react';
-import { TypographyStyle } from '@mui/material/styles';
 import { BaseField } from '@puckeditor/core';
 import { FieldAiParams } from '@puckeditor/plugin-ai';
 import { z } from 'zod/v4';
+import { TypographyVariant } from '@wepublish/puck-content/website';
 
 import { toAiSchema } from '../ai-schema';
 
-export const customTypographyVariant = 'custom';
-
-/**
- * Name of a typography variant defined on the MUI theme (h1, body1,
- * teaserTitle, ...). Kept as a string because sites can extend the theme with
- * their own variants which are only known at runtime.
- */
-export type TypographyVariant = string;
-
-export type TypographyValue = {
-  variant?: TypographyVariant | typeof customTypographyVariant;
-  /** Only used when `variant` is `custom`. Any CSS length, e.g. `1.25rem` */
-  fontSize?: string;
-  /** Only used when `variant` is `custom`. Unitless number or CSS length */
-  lineHeight?: string;
-  /**
-   * Only used when `variant` is `custom`. Name of one of the fonts configured
-   * in the website settings, unset keeps the theme font.
-   */
-  fontFamily?: string;
-  /** Only used when `variant` is `custom`. Numeric CSS font weight, 100-900 */
-  fontWeight?: number;
-};
+export {
+  customTypographyVariant,
+  getThemeTypographyVariants,
+  resolveFontFamily,
+  resolveTypography,
+} from '@wepublish/puck-content/website';
+export type {
+  TypographyValue,
+  TypographyVariant,
+} from '@wepublish/puck-content/website';
 
 export type TypographyField = BaseField & {
   type: 'typography';
@@ -53,71 +39,3 @@ export const typographyFieldAi: FieldAiParams = {
 };
 
 export const fontWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900];
-
-// Keys on theme.typography that are not variants
-const nonVariantKeys = new Set(['allVariants']);
-
-/**
- * All typography variants defined on the theme, in the order the theme
- * declares them.
- */
-export const getThemeTypographyVariants = (theme: Theme): TypographyVariant[] =>
-  Object.entries(theme.typography)
-    .filter(
-      ([key, value]) =>
-        !nonVariantKeys.has(key) && typeof value === 'object' && value !== null
-    )
-    .map(([key]) => key);
-
-/**
- * Resolves the CSS font-family for one of the website fonts, falling back to
- * the theme font so unknown glyphs still look consistent.
- */
-export const resolveFontFamily = (theme: Theme, fontFamily?: string) => {
-  if (!fontFamily) {
-    return theme.typography.fontFamily;
-  }
-
-  return [`"${fontFamily}"`, theme.typography.fontFamily]
-    .filter(Boolean)
-    .join(', ');
-};
-
-/**
- * Turns a typography value into CSS: either the styles of the chosen theme
- * variant or the custom font settings.
- */
-export const resolveTypography = (
-  theme: Theme,
-  value: TypographyValue | undefined
-): TypographyStyle | undefined => {
-  if (!value?.variant) {
-    return undefined;
-  }
-
-  if (value.variant !== customTypographyVariant) {
-    return theme.typography[value.variant as keyof Theme['typography']] as
-      TypographyStyle | undefined;
-  }
-
-  const styles: TypographyStyle = {};
-
-  if (value.fontSize) {
-    styles.fontSize = value.fontSize;
-  }
-
-  if (value.lineHeight) {
-    const numeric = Number(value.lineHeight);
-    styles.lineHeight = Number.isNaN(numeric) ? value.lineHeight : numeric;
-  }
-
-  if (value.fontFamily) {
-    styles.fontFamily = resolveFontFamily(theme, value.fontFamily);
-  }
-
-  if (value.fontWeight) {
-    styles.fontWeight = value.fontWeight;
-  }
-
-  return styles;
-};

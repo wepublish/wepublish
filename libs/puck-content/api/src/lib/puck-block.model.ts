@@ -15,9 +15,12 @@ import {
   PuckSpacingScalar,
 } from './puck-block.scalars';
 import {
-  ApiBlockData,
+  ApiBlockKind,
+  ApiBlockProps,
   ApiBlockStyling,
+  MAX_PUCK_BLOCK_CONSUMES,
   puckBackgroundSizes,
+  puckBlockKinds,
   puckBorderStyles,
   puckBreakpoints,
   puckDatasourceTypes,
@@ -33,6 +36,9 @@ const enumOf = <Value extends string>(values: readonly Value[]) =>
   Object.fromEntries(values.map(value => [value, value])) as {
     [Key in Value]: Key;
   };
+
+export const PuckBlockKind = enumOf(puckBlockKinds);
+export type PuckBlockKind = ApiBlockKind;
 
 export const PuckWeekday = enumOf(puckWeekdays);
 export type PuckWeekday = (typeof puckWeekdays)[number];
@@ -60,6 +66,12 @@ export type PuckBackgroundSize = (typeof puckBackgroundSizes)[number];
 
 export const PuckBorderStyle = enumOf(puckBorderStyles);
 export type PuckBorderStyle = (typeof puckBorderStyles)[number];
+
+registerEnumType(PuckBlockKind, {
+  name: 'PuckBlockKind',
+  description:
+    'Where the component of a Puck block comes from: `puck` is one of the components the website ships, `generated` one the Puck AI designed and the document registry holds.',
+});
 
 registerEnumType(PuckWeekday, {
   name: 'PuckWeekday',
@@ -182,7 +194,7 @@ export class PuckBlockListDatasource {
 
 @ObjectType('PuckBlockDatasources', {
   description:
-    'The CMS records a Puck block shows, one entry per model. The website resolves them, the API only stores the choice.',
+    'The CMS records a Puck block shows, one entry per model. The API resolves them into `PuckBlock.data`.',
 })
 @InputType('PuckBlockDatasourcesInput')
 export class PuckBlockDatasources {
@@ -272,6 +284,8 @@ export class PuckBorderRadius {
   @Field(() => PuckSpacingScalar, { nullable: true })
   bottomLeft?: PuckSpacingValue | null;
 }
+
+const consumesDescription = `How many records the block shows itself from each of its own \`list\` and \`uniqueList\` datasources, before the blocks in its slots take theirs. Omitted means none, 1 to ${MAX_PUCK_BLOCK_CONSUMES}. Member plans and subscriptions always load all.`;
 
 const colorDescription =
   'A theme colour path like `primary.main` or a hex colour like `#1a1a1a`.';
@@ -363,14 +377,17 @@ export class PuckBlockStyling {
 // nest a fixed number of fragments and silently miss the blocks below.
 // Input objects may nest arbitrarily, so writes stay a typed recursive tree
 // (PuckBlockInput), while reads are this flat list in depth-first order whose
-// parentId, slot and position let clients rebuild the tree.
+// parentId, puckSlot and position let clients rebuild the tree.
 @ObjectType({
   description:
-    'A Puck block in a flat list, parents before their children. Rebuild the tree by grouping on `parentId` and `slot` and sorting by `position`.',
+    'A Puck block in a flat list, parents before their children. Rebuild the tree by grouping on `parentId` and `puckSlot` and sorting by `position`.',
 })
 export class PuckBlock {
   @Field(() => String)
   id!: string;
+
+  @Field(() => PuckBlockKind)
+  kind!: PuckBlockKind;
 
   @Field(() => String, { description: 'The component name.' })
   type!: string;
@@ -384,14 +401,20 @@ export class PuckBlock {
   @Field(() => String, {
     nullable: true,
     description:
-      'The slot path inside the parent data, like `items[2].content`. Null at the top level, `content` by default.',
+      'The slot of the parent this block sits in. Null at the top level, `content` by default. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent.',
   })
-  slot!: string | null;
+  puckSlot!: string | null;
 
   @Field(() => Int, {
     description: 'The index of the block within its parent slot.',
   })
   position!: number;
+
+  @Field(() => GraphQLJSONObject, {
+    description:
+      'The component props, with every slot emptied to `[]`: the blocks of a slot are the ones pointing at it.',
+  })
+  props!: ApiBlockProps;
 
   @Field(() => Boolean, { nullable: true })
   locked?: boolean | null;
@@ -405,11 +428,11 @@ export class PuckBlock {
   @Field(() => PuckBlockDatasources, { nullable: true })
   datasources?: PuckBlockDatasources | null;
 
-  @Field(() => GraphQLJSONObject, {
-    description:
-      'The component props, with every slot emptied to `[]`: the blocks of a slot are the ones pointing at it.',
+  @Field(() => Int, {
+    nullable: true,
+    description: consumesDescription,
   })
-  data!: ApiBlockData;
+  consumes?: number | null;
 }
 
 @InputType({
@@ -419,14 +442,20 @@ export class PuckBlockInput {
   @Field(() => String)
   id!: string;
 
-  @Field(() => String, { description: 'The component name.' })
+  @Field(() => PuckBlockKind)
+  kind!: PuckBlockKind;
+
+  @Field(() => String, {
+    description:
+      'The component name. For a `generated` block, the name of a component in the registry.',
+  })
   type!: string;
 
   @Field(() => GraphQLJSONObject, {
     description:
       'The component props without id, locked, visibility, styling and datasources, with every slot emptied to `[]`.',
   })
-  data!: ApiBlockData;
+  props!: ApiBlockProps;
 
   @Field(() => Boolean, { nullable: true })
   locked?: boolean | null;
@@ -440,12 +469,18 @@ export class PuckBlockInput {
   @Field(() => PuckBlockDatasources, { nullable: true })
   datasources?: PuckBlockDatasources | null;
 
+  @Field(() => Int, {
+    nullable: true,
+    description: consumesDescription,
+  })
+  consumes?: number | null;
+
   @Field(() => String, {
     nullable: true,
     description:
-      'The slot path inside the parent data, like `items[2].content`. Omitted means `content`.',
+      'The slot of the parent this block sits in, omitted means `content`. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent.',
   })
-  slot?: string | null;
+  puckSlot?: string | null;
 
   @Field(() => [PuckBlockInput], { nullable: true })
   children?: PuckBlockInput[] | null;

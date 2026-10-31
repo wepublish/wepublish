@@ -173,8 +173,44 @@ describe('DatasourceFieldRender', () => {
     expect(screen.getAllByRole('region')).toHaveLength(1);
     expect(
       within(card).getByText(
-        'Shows the newest articles automatically, skipping any already shown on the page.'
+        'Hands the newest articles to the blocks inside set to "From parent", one each, skipping any already shown on the page.'
       )
+    ).toBeTruthy();
+  });
+
+  it('says a list hands one record to each block inside that takes it from its parent', () => {
+    renderField({
+      field: { types: layoutTypes },
+      initial: { event: { type: 'list' } },
+      onChange: vi.fn(),
+    });
+
+    expect(
+      within(screen.getByRole('region', { name: 'Events' })).getByText(
+        'Hands the newest events to the blocks inside set to "From parent", one each.'
+      )
+    ).toBeTruthy();
+  });
+
+  it("says member plans and the reader's subscriptions are shown in full", () => {
+    renderField({
+      field: { types: ['list', 'multiple'] },
+      initial: {
+        memberPlan: { type: 'list' },
+        userSubscription: { type: 'list' },
+      },
+      onChange: vi.fn(),
+    });
+
+    expect(
+      within(screen.getByRole('region', { name: 'Member plans' })).getByText(
+        'Shows every active member plan.'
+      )
+    ).toBeTruthy();
+    expect(
+      within(
+        screen.getByRole('region', { name: 'User subscriptions' })
+      ).getByText('Shows every subscription of the signed-in reader.')
     ).toBeTruthy();
   });
 
@@ -320,6 +356,45 @@ describe('DatasourceFieldRender', () => {
     ).toEqual([
       expect.stringContaining('Budget vote'),
       expect.stringContaining('Climate report'),
+    ]);
+  });
+
+  it('offers images only as picks', () => {
+    renderField({
+      field: {},
+      initial: { image: { type: 'single', id: '' } },
+      onChange: vi.fn(),
+    });
+
+    const types = screen.getByRole('radiogroup', { name: 'Which images' });
+
+    expect(within(types).getAllByRole('radio')).toHaveLength(2);
+    expect(within(types).getByRole('radio', { name: 'Pick one' })).toBeTruthy();
+    expect(
+      within(types).getByRole('radio', { name: 'Pick several' })
+    ).toBeTruthy();
+  });
+
+  it('does not offer images when the block only takes lists', async () => {
+    renderField({
+      field: { types: ['uniqueList', 'list', 'slot'] },
+      onChange: vi.fn(),
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Add data source' }));
+
+    const menu = await screen.findByRole('menu');
+
+    expect(
+      within(menu)
+        .getAllByRole('menuitem')
+        .map(item => item.textContent)
+    ).toEqual([
+      'Articles',
+      'Pages',
+      'Events',
+      'Member plans',
+      'User subscriptions',
     ]);
   });
 

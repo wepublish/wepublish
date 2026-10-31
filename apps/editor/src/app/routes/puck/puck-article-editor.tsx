@@ -16,11 +16,13 @@ import {
   CanPublishArticle,
 } from '@wepublish/permissions';
 import {
+  getPuckConfig,
+  PuckData,
   PuckDocumentController,
   PuckRevisionHistory,
   RevisionHistoryPlugin,
+  toPuckDocument,
 } from '@wepublish/puck-content/editor';
-import { PuckData, toApiDocument } from '@wepublish/puck-content/website';
 import {
   createCheckedPermissionComponent,
   useHasPermission,
@@ -117,6 +119,7 @@ function ArticleEditor() {
       loadPuckDocument(
         'article',
         article?.latest.puckBlocks,
+        article?.latest.puckRegistry,
         article ? articleToRootProps(article) : {}
       ),
     [article]
@@ -155,7 +158,11 @@ function ArticleEditor() {
 
   const save = async (document: PuckData<'article'>) => {
     try {
-      const apiDocument = toApiDocument('article', document);
+      const apiDocument = toPuckDocument(
+        'article',
+        document,
+        getPuckConfig('article')
+      );
 
       if (!article) {
         const { data: created } = await createArticle({
@@ -191,7 +198,11 @@ function ArticleEditor() {
     }
 
     try {
-      const apiDocument = toApiDocument('article', document);
+      const apiDocument = toPuckDocument(
+        'article',
+        document,
+        getPuckConfig('article')
+      );
 
       if (!apiDocument.rootProps.slug) {
         throw new Error(t('articleEditor.overview.noSlug'));

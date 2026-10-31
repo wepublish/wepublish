@@ -1,19 +1,21 @@
 import { Theme, useTheme } from '@mui/material';
-import { PuckComponent, Slot } from '@puckeditor/core';
 import { Slider } from '@wepublish/block-content/website';
 import {
   BuilderSlideGap,
   BuilderSlidesPerView,
 } from '@wepublish/website/builder';
+import { Fragment, RefCallback } from 'react';
 
+import { PuckBlockComponent, PuckSlotValue } from '../../../blocks/block.types';
+import { getSlot } from '../../../blocks/slots';
 import {
   BreakpointsValue,
   resolveBreakpointValue,
-  useOverlayPortalOnModifier,
-} from '@wepublish/puck-content/editor';
+} from '../../../values/breakpoints';
+import { itemContentSlot } from '../item-slot';
 
 export type SliderItem = {
-  content: Slot;
+  content: PuckSlotValue;
 };
 
 export type SliderSettings = {
@@ -22,10 +24,13 @@ export type SliderSettings = {
 };
 
 export type SliderProps = {
-  className?: string;
   items: SliderItem[];
   settings: BreakpointsValue<SliderSettings>;
   dragDisabled?: boolean;
+};
+
+export type SliderExtra = {
+  refs: { control?: RefCallback<HTMLDivElement> };
 };
 
 /**
@@ -56,31 +61,27 @@ const toSliderConfig = (
   return { slidesPerViewConfig, slideGapConfig };
 };
 
-export const SliderRender: PuckComponent<SliderProps> = ({
-  items,
-  settings,
-  dragDisabled,
-  puck,
-  ...props
+export const SliderRender: PuckBlockComponent<SliderProps, SliderExtra> = ({
+  props: { items, settings, dragDisabled },
+  slots,
+  className,
+  refs,
 }) => {
   const theme = useTheme();
-
-  const controlRef = useOverlayPortalOnModifier();
 
   return (
     <Slider
       {...toSliderConfig(theme, settings ?? {})}
-      dragDisabled={!!dragDisabled || puck.isEditing}
-      refs={{ control: controlRef }}
+      className={className}
+      dragDisabled={!!dragDisabled}
+      refs={refs}
       origin={'auto'}
       loop={false}
-      {...props}
     >
-      {items.map(({ content: Content }, index) => (
-        <Content
-          key={index}
-          minEmptyHeight={200}
-        />
+      {items.map((_item, index) => (
+        <Fragment key={index}>
+          {getSlot(slots, itemContentSlot(index))()}
+        </Fragment>
       ))}
     </Slider>
   );

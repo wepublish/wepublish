@@ -644,9 +644,6 @@ importers:
       '@puckeditor/plugin-ai':
         specifier: 0.8.3
         version: 0.8.3(@puckeditor/core@0.24.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@10.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1)))(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1)(zod@3.25.76)
-      '@puckeditor/plugin-emotion-cache':
-        specifier: 0.24.0
-        version: 0.24.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1))(react@19.3.1)
       '@puckeditor/plugin-heading-analyzer':
         specifier: 0.24.0
         version: 0.24.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -6587,12 +6584,6 @@ packages:
     peerDependencies:
       '@puckeditor/core': ^0
       react: ^18.0.0 || ^19.0.0
-
-  '@puckeditor/plugin-emotion-cache@0.24.0':
-    resolution: {integrity: sha512-Ie/aBuCtjXlUuA78Q2ghSgtv6rsST0u7JKltdh8AJhsQfB6tbAhucg0jEOzHo3oA/x2FPOzZ+otmBBWyNhmsEg==}
-    peerDependencies:
-      '@emotion/react': ^11.0.0
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@puckeditor/plugin-heading-analyzer@0.24.0':
     resolution: {integrity: sha512-Q509nD4iyidMtKbkDKoI+nlxvUMdGXv0kpr+aJqOiQPkZUNlmvDiS4MDbXk5LjMlPkO8vALPqQP2r8hLbRrVDg==}
@@ -23564,11 +23555,6 @@ snapshots:
       - '@types/react'
       - supports-color
       - zod
-
-  '@puckeditor/plugin-emotion-cache@0.24.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1))(react@19.3.1)':
-    dependencies:
-      '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1)
-      react: 19.3.1
 
   '@puckeditor/plugin-heading-analyzer@0.24.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
