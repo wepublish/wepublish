@@ -1,14 +1,22 @@
-import {createUniqueFieldSchema, useDescription, useTsController} from '@ts-react/form'
-import {z} from 'zod'
+import * as v from 'valibot';
 
-import {TextField} from '../../text-field/text-field'
+import { TextField } from '../../text-field/text-field';
+import { InputComponentProps } from '@wepublish/website/form-builder';
 
-export const EmailInputSchema = createUniqueFieldSchema(z.string().email().min(1), 'email')
+export const EmailInputSchema = v.pipe(
+  v.string(),
+  v.email(),
+  v.nonEmpty(),
+  v.brand('email')
+);
 
-export function EmailInput() {
-  const {field, error} = useTsController<string>()
-  const {label = 'Email', placeholder} = useDescription()
-
+export function EmailInput({
+  field,
+  fieldState: { error },
+  description,
+  title = 'Email',
+  name,
+}: InputComponentProps) {
   return (
     <TextField
       {...field}
@@ -16,10 +24,10 @@ export function EmailInput() {
       autoComplete="email"
       type={'email'}
       fullWidth
-      label={label}
+      label={title}
       error={!!error}
-      helperText={error?.errorMessage ?? placeholder}
+      helperText={error?.message ?? description}
       onChange={e => field.onChange(e.target.value)}
     />
-  )
+  );
 }

@@ -1,18 +1,23 @@
-import {styled} from '@mui/material'
-import {createTsForm} from '@ts-react/form'
-import {PropsWithChildren} from 'react'
-import {formMapping} from './form'
+import { PropsWithChildren } from 'react';
+import { formMapping } from './form';
+import styled from '@emotion/styled';
+import { createFormLayout } from '@wepublish/website/form-builder';
 
 export const StandardFormWrapper = styled('form')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2)};
   justify-items: start;
-`
+`;
 
-function Form({children, onSubmit}: PropsWithChildren<{onSubmit: () => void}>) {
-  return <StandardFormWrapper onSubmit={onSubmit}>{children}</StandardFormWrapper>
+function Form({
+  children,
+  onSubmit,
+}: PropsWithChildren<{ onSubmit: () => void }>) {
+  return (
+    <StandardFormWrapper onSubmit={onSubmit}>{children}</StandardFormWrapper>
+  );
 }
 
-export const StandardForm = createTsForm(formMapping, {
-  FormComponent: Form
-})
+export const StandardForm = createFormLayout(formMapping, {
+  FormComponent: Form,
+});

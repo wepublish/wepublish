@@ -1,20 +1,22 @@
-import {useDescription, useTsController} from '@ts-react/form'
+import { TextField } from '../../text-field/text-field';
+import { InputComponentProps } from '@wepublish/website/form-builder';
 
-import {TextField} from '../../text-field/text-field'
-
-export function TextInput() {
-  const {field, error} = useTsController<string>()
-  const {label, placeholder} = useDescription()
-
+export function TextInput({
+  field,
+  fieldState: { error },
+  description,
+  title,
+  name,
+}: InputComponentProps) {
   return (
     <TextField
       {...field}
       value={field.value ?? ''}
       fullWidth
-      label={label}
+      label={title}
       error={!!error}
-      helperText={error?.errorMessage ?? placeholder}
+      helperText={error?.message ?? description}
       onChange={e => field.onChange(e.target.value)}
     />
-  )
+  );
 }

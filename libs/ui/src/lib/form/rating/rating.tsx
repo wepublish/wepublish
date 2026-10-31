@@ -1,41 +1,42 @@
-import {
-  createUniqueFieldSchema,
-  RTFSupportedZodTypes,
-  useDescription,
-  useNumberFieldInfo,
-  useTsController
-} from '@ts-react/form'
-import {z} from 'zod'
+import * as v from 'valibot';
 
-import {Rating} from '../../rating/rating'
-import {FormControl, FormHelperText} from '@mui/material'
+import { Rating } from '../../rating/rating';
+import { FormControl, FormHelperText } from '@mui/material';
+import { InputComponentProps } from '@wepublish/website/form-builder';
 
-const RATING_BRANDING = 'rating'
+const RATING_BRANDING = 'rating';
 
-export const RatingInputSchema = createUniqueFieldSchema(z.number().min(1).max(5), RATING_BRANDING)
+export const RatingInputSchema = v.pipe(
+  v.number(),
+  v.minValue(1),
+  v.maxValue(5),
+  v.brand(RATING_BRANDING)
+);
 
-export const createRatingInputSchema = <T extends RTFSupportedZodTypes>(zodEffect: T) =>
-  createUniqueFieldSchema(zodEffect.brand(RATING_BRANDING), RATING_BRANDING)
-
-export function RatingInput() {
-  const {error, field} = useTsController<number>()
-  const {maxValue} = useNumberFieldInfo()
-  const {label, placeholder} = useDescription()
-
-  const helperText = error?.errorMessage ?? placeholder
+export function RatingInput({
+  field,
+  fieldState: { error },
+  description,
+  title,
+  name,
+  schema,
+}: InputComponentProps<typeof RatingInputSchema>) {
+  const helperText = error?.message ?? description;
 
   return (
     <FormControl fullWidth>
-      {label && <label>{label}</label>}
+      {title && <label>{title}</label>}
 
       <Rating
         {...field}
-        max={maxValue}
+        // max={maxValue} @TODO:
         value={field.value ?? 0}
         onChange={(_, value) => field.onChange(value ?? 1)}
       />
 
-      {helperText && <FormHelperText error={!!error}>{helperText}</FormHelperText>}
+      {helperText && (
+        <FormHelperText error={!!error}>{helperText}</FormHelperText>
+      )}
     </FormControl>
-  )
+  );
 }

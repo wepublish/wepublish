@@ -1,10 +1,9 @@
-import {createUniqueFieldSchema} from '@ts-react/form'
-import {ReactElement} from 'react'
-import {z} from 'zod'
+import { ReactElement } from 'react';
+import * as v from 'valibot';
 
-export const HiddenInputSchema = createUniqueFieldSchema(z.string(), 'hidden')
+export const HiddenInputSchema = v.pipe(v.string(), v.brand('hidden'));
 
 export function HiddenInput(): ReactElement {
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <></>
+  return <></>;
 }

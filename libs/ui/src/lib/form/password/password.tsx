@@ -1,18 +1,21 @@
-import {InputAdornment} from '@mui/material'
-import {TextField} from '../../text-field/text-field'
-import {useReducer} from 'react'
-import {createUniqueFieldSchema, useDescription, useTsController} from '@ts-react/form'
-import {z} from 'zod'
-import {IconButton} from '../../icon-button/icon-button'
-import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
+import { InputAdornment } from '@mui/material';
+import { TextField } from '../../text-field/text-field';
+import { useReducer } from 'react';
+import { IconButton } from '../../icon-button/icon-button';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { InputComponentProps } from '@wepublish/website/form-builder';
+import * as v from 'valibot';
 
-export const PasswordInputSchema = createUniqueFieldSchema(z.string(), 'password')
+export const PasswordInputSchema = v.pipe(v.string(), v.brand('password'));
 
-export function PasswordInput() {
-  const {field, error} = useTsController<string>()
-  const {label = 'Password', placeholder} = useDescription()
-
-  const [showPassword, togglePassword] = useReducer(state => !state, false)
+export function PasswordInput({
+  field,
+  fieldState: { error },
+  description,
+  title = 'Password',
+  name,
+}: InputComponentProps) {
+  const [showPassword, togglePassword] = useReducer(state => !state, false);
 
   return (
     <TextField
@@ -22,21 +25,24 @@ export function PasswordInput() {
       autoComplete="new-password"
       type={showPassword ? 'text' : 'password'}
       fullWidth
-      label={label}
+      label={title}
       error={!!error}
-      helperText={error?.errorMessage ?? placeholder}
+      helperText={error?.message ?? description}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
             <IconButton
               onClick={togglePassword}
               onMouseDown={event => event.preventDefault()}
-              edge="end">
-              {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+              edge="end"
+            >
+              {showPassword ?
+                <MdVisibilityOff />
+              : <MdVisibility />}
             </IconButton>
           </InputAdornment>
-        )
+        ),
       }}
     />
-  )
+  );
 }

@@ -1,11 +1,19 @@
-import {Checkbox, FormControl, FormControlLabel, FormHelperText} from '@mui/material'
-import {useDescription, useTsController} from '@ts-react/form'
+import {
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+} from '@mui/material';
+import { InputComponentProps } from '@wepublish/website/form-builder';
 
-export function CheckboxInput() {
-  const {field, error} = useTsController<boolean>()
-  const {label, placeholder} = useDescription()
-
-  const helperText = error?.errorMessage ?? placeholder
+export function CheckboxInput({
+  field,
+  fieldState: { error },
+  description,
+  title,
+  name,
+}: InputComponentProps) {
+  const helperText = error?.message ?? description;
 
   return (
     <FormControl fullWidth>
@@ -18,10 +26,12 @@ export function CheckboxInput() {
             color={error ? 'error' : 'default'}
           />
         }
-        label={label}
+        label={title}
       />
 
-      {helperText && <FormHelperText error={!!error}>{helperText}</FormHelperText>}
+      {helperText && (
+        <FormHelperText error={!!error}>{helperText}</FormHelperText>
+      )}
     </FormControl>
-  )
+  );
 }
