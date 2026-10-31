@@ -1,7 +1,5 @@
-import { Config } from '@puckeditor/core';
 import {
   BuilderBildwurfAdBlockProps,
-  BuilderBreakBlockProps,
   BuilderCommentBlockProps,
   BuilderCrowdfundingBlockProps,
   BuilderEventBlockProps,
@@ -9,11 +7,9 @@ import {
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
   BuilderIFrameBlockProps,
-  BuilderImageBlockProps,
   BuilderInstagramPostBlockProps,
   BuilderPolisConversationBlockProps,
   BuilderPollBlockProps,
-  BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderSoundCloudTrackBlockProps,
   BuilderStreamableVideoBlockProps,
@@ -24,7 +20,11 @@ import {
   BuilderYouTubeVideoBlockProps,
 } from '@wepublish/website/builder';
 
+import { BreakConfigProps } from './components/break/break.component';
+import { ButtonConfigProps } from './components/content/button/button.component';
+import { ImageConfigProps } from './components/content/image/image.component';
 import { LightboxConfigProps } from './components/content/lightbox/lightbox.component';
+import { QuoteConfigProps } from './components/content/quote/quote.component';
 import { TeaserAuthorsConfigProps } from './components/teaser/teaser-authors/teaser-authors.component';
 import { TeaserDateConfigProps } from './components/teaser/teaser-date/teaser-date.component';
 import { TeaserImageConfigProps } from './components/teaser/teaser-image/teaser-image.component';
@@ -39,26 +39,35 @@ import { GridProps } from './components/layout/grid/grid.component';
 import { RowProps } from './components/layout/row/row.component';
 import { SliderProps } from './components/layout/slider/slider.component';
 import { SpaceProps } from './components/layout/space/space.component';
+import { WithCSS } from './components/layout/with-css';
 import { WithVisibility } from './components/layout/with-visibility';
 import { MailchimpFormConfigProps } from './components/data/mailchimp-form/mailchimp-form.component';
+import { FormCheckboxProps } from './components/form/form-checkbox/form-checkbox.component';
+import { FormHiddenProps } from './components/form/form-hidden/form-hidden.component';
+import { FormInputProps } from './components/form/form-input/form-input.component';
+import { FormRadioGroupProps } from './components/form/form-radio-group/form-radio-group.component';
+import { FormSelectProps } from './components/form/form-select/form-select.component';
+import { FormSubmitProps } from './components/form/form-submit/form-submit.component';
+import { FormTextareaProps } from './components/form/form-textarea/form-textarea.component';
+import { FormProps } from './components/form/form/form.component';
 import { SubscribeConfigProps } from './components/subscribe/subscribe.component';
 import { WithDataSource } from './components/with-datasource';
-import { AlignmentValue, UserFields } from '@wepublish/puck-content/editor';
+import { UserFields } from '@wepublish/puck-content/editor';
 import { ListicleConfigProps } from './components/content/listicle/listicle.component';
-import { RootProps } from './root.component';
+import { PuckConfig } from './document/document';
 
 type BaseComponents = {
   Title: BuilderTitleBlockProps;
-  Quote: BuilderQuoteBlockProps;
+  Quote: QuoteConfigProps;
   Html: BuilderHTMLBlockProps;
-  Break: BuilderBreakBlockProps;
+  Break: BreakConfigProps;
   Space: SpaceProps;
-  Grid: WithDataSource<GridProps>;
-  DynamicGrid: WithDataSource<DynamicGridProps>;
-  Row: WithDataSource<RowProps>;
-  Slider: WithDataSource<SliderProps>;
-  Container: WithDataSource<ContainerProps>;
-  Collapsible: CollapsibleConfigProps;
+  Grid: WithDataSource<WithCSS<GridProps>>;
+  DynamicGrid: WithDataSource<WithCSS<DynamicGridProps>>;
+  Row: WithDataSource<WithCSS<RowProps>>;
+  Slider: WithDataSource<WithCSS<SliderProps>>;
+  Container: WithDataSource<WithCSS<ContainerProps>>;
+  Collapsible: WithCSS<CollapsibleConfigProps>;
   RichText: BuilderRichTextBlockProps;
   Listicle: ListicleConfigProps;
   IFrame: BuilderIFrameBlockProps;
@@ -69,9 +78,9 @@ type BaseComponents = {
   Facebook: BuilderFacebookPostBlockProps;
   Instagram: BuilderInstagramPostBlockProps;
   Subscribe: SubscribeConfigProps;
-  Image: BuilderImageBlockProps;
+  Image: ImageConfigProps;
   Lightbox: LightboxConfigProps;
-  Button: { text: string; alignment?: AlignmentValue };
+  Button: ButtonConfigProps;
   Twitter: BuilderTwitterTweetBlockProps;
   SoundCloud: BuilderSoundCloudTrackBlockProps;
   Streamable: BuilderStreamableVideoBlockProps;
@@ -82,6 +91,14 @@ type BaseComponents = {
   Event: BuilderEventBlockProps;
   Crowdfunding: BuilderCrowdfundingBlockProps;
   Poll: BuilderPollBlockProps;
+  Form: WithCSS<FormProps>;
+  FormInput: FormInputProps;
+  FormTextarea: FormTextareaProps;
+  FormCheckbox: FormCheckboxProps;
+  FormSelect: FormSelectProps;
+  FormRadioGroup: FormRadioGroupProps;
+  FormHidden: FormHiddenProps;
+  FormSubmit: FormSubmitProps;
   TeaserTitle: TeaserTitleConfigProps;
   TeaserPreTitle: TeaserPreTitleConfigProps;
   TeaserLead: TeaserLeadConfigProps;
@@ -99,9 +116,4 @@ export type Components = {
 
 export type { UserFields };
 
-export type UserConfig = Config<{
-  components: Components;
-  fields: UserFields;
-  root: RootProps;
-  categories: ['recommended', 'content', 'layout', 'embed', 'teaser'];
-}>;
+export type UserConfig = PuckConfig;

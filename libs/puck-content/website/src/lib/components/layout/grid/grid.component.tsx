@@ -6,6 +6,7 @@ import {
   BreakpointsValue,
   columnsPresets,
   ColumnsValue,
+  DatasourcesValue,
 } from '@wepublish/puck-content/editor';
 import { GapLayout, gapStyles } from '../gap';
 import { ItemsAlignment, itemsAlignmentStyles } from '../items-alignment';
@@ -19,6 +20,7 @@ export type GridProps = {
   className?: string;
   layout: BreakpointsValue<GridLayout>;
   content: Slot;
+  datasources?: DatasourcesValue;
 };
 
 const toGridTemplateColumns = (columns: ColumnsValue) =>
@@ -27,6 +29,7 @@ const toGridTemplateColumns = (columns: ColumnsValue) =>
 export const GridRender: PuckComponent<GridProps> = ({
   layout,
   content: Content,
+  datasources,
   ...props
 }) => (
   <Content

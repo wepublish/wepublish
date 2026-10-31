@@ -1189,7 +1189,29 @@
         "focalPoint": "Point focal",
         "focalPointInfo": "Faites glisser le point sur la partie la plus importante de l’image. Lorsque l’image est recadrée, p.ex. dans les teasers, cette zone reste visible.",
         "descriptionInfo": "Décrivez ce que l’on voit sur l’image. Le texte sert de texte alternatif pour les personnes utilisant un lecteur d’écran et pour les moteurs de recherche.",
-        "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien."
+        "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien.",
+        "addImages_one": "Ajouter {{count}} image",
+        "addImages_other": "Ajouter {{count}} images",
+        "chooseImages": "Choisir des images",
+        "clearFinished": "Masquer les terminés",
+        "clearSelection": "Effacer la sélection",
+        "deselectImage": "Désélectionner {{title}}",
+        "done": "Terminé",
+        "dropImages": "Glisser les images ici ou cliquer pour téléverser",
+        "removeUpload": "Retirer",
+        "removeUploadOf": "Retirer {{name}}",
+        "retryUpload": "Réessayer",
+        "retryUploadOf": "Téléverser à nouveau {{name}}",
+        "selectedCount_one": "{{count}} sélectionnée",
+        "selectedCount_other": "{{count}} sélectionnées",
+        "selectedImages": "Images sélectionnées",
+        "selectedOfMax": "{{count}} sur {{max}} sélectionnées",
+        "unsupportedImage": "Ce format d’image n’est pas pris en charge.",
+        "uploadFailed": "Échec du téléversement",
+        "uploadQueued": "En attente",
+        "uploaded": "Téléversée",
+        "uploading": "Téléversement…",
+        "uploads": "Téléversements"
       }
     },
     "importableEvent": {
@@ -4578,6 +4600,7 @@
         "page": "Créer une page",
         "pageTemplate": "Créer un modèle de page",
         "puckPage": "Créer une page avec Puck",
+        "puckArticle": "Créer un article avec Puck",
         "pageTag": "Créer un tag de page",
         "crowdfunding": "Créer un crowdfunding",
         "blockTemplate": "Créer un modèle de bloc",
@@ -4829,6 +4852,7 @@
       }
     },
     "puck": {
+      "loadFailed": "Ce document ne peut pas être ouvert dans le constructeur de pages.",
       "search": {
         "placeholder": "Rechercher des blocs",
         "noResults": "Aucun bloc trouvé"

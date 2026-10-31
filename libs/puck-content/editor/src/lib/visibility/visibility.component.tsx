@@ -1,122 +1,185 @@
-import styled from '@emotion/styled';
 import { Breakpoint } from '@mui/material';
 import { FieldLabel, FieldProps } from '@puckeditor/core';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { IconType } from 'react-icons';
+import {
+  LuCheck,
+  LuLaptop,
+  LuMonitor,
+  LuRotateCcw,
+  LuSmartphone,
+  LuTablet,
+  LuTabletSmartphone,
+  LuTv,
+} from 'react-icons/lu';
 
-import { sortBreakpoints } from '../breakpoints/breakpoints.field';
-import { useWebsiteTheme } from '../website-theme';
-import { VisibilityField, VisibilityValue } from './visibility.field';
+import {
+  BreakpointRange,
+  formatBreakpointRange,
+  isHiddenOn,
+  toggleBreakpoint,
+  VisibilityField,
+  VisibilityValue,
+} from './visibility.field';
+import {
+  useBreakpointVisibility,
+  useFirstControlFocus,
+} from './visibility.hooks';
+import {
+  BreakpointCheck,
+  BreakpointList,
+  BreakpointName,
+  BreakpointOption,
+  BreakpointWidth,
+  VisibilityControl,
+  VisibilitySummary,
+  VisibilitySummaryRow,
+  VisibilityTextButton,
+  VisuallyHiddenInput,
+} from './visibility.styles';
 
-// Mirrors the colours of the alignment field, but as one connected group
-const Options = styled.div`
-  display: flex;
-`;
+const breakpointIcons: Partial<Record<Breakpoint, IconType>> = {
+  xs: LuSmartphone,
+  sm: LuTabletSmartphone,
+  md: LuTablet,
+  lg: LuLaptop,
+  xl: LuMonitor,
+};
 
-const Option = styled.label<{ active: boolean; disabled: boolean }>`
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  border: 1px solid
-    ${({ active }) => (active ? 'var(--puck-color-interactive)' : 'var(--puck-color-border)')};
-  margin-left: -1px;
-  background: ${({ active }) => (active ? 'var(--puck-color-interactive-soft)' : 'var(--puck-color-surface)')};
+export type BreakpointToggleListProps = {
+  name: string;
+  ranges: BreakpointRange[];
+  value: VisibilityValue | undefined;
+  onChange: (value: VisibilityValue | undefined) => void;
+  readOnly?: boolean;
+};
 
-  &:first-of-type {
-    margin-left: 0;
-    border-radius: 4px 0 0 4px;
-  }
+export const BreakpointToggleList = ({
+  name,
+  ranges,
+  value,
+  onChange,
+  readOnly,
+}: BreakpointToggleListProps) => {
+  const breakpoints = ranges.map(range => range.breakpoint);
 
-  &:last-of-type {
-    border-radius: 0 4px 4px 0;
-  }
+  return (
+    <BreakpointList>
+      {ranges.map(range => {
+        const Icon = breakpointIcons[range.breakpoint] ?? LuTv;
+        const width = formatBreakpointRange(range);
+        const shown = !isHiddenOn(value, range.breakpoint);
 
-  /* Keep the highlighted border of an active option above its neighbours */
-  ${({ active }) => (active ? 'position: relative; z-index: 1;' : '')}
-  color: ${({ active }) => (active ? 'var(--puck-color-interactive)' : 'var(--puck-color-text)')};
-  font-size: var(--puck-font-size-xxs);
-  font-weight: 600;
-  text-transform: uppercase;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+        return (
+          <li key={range.breakpoint}>
+            <BreakpointOption
+              shown={shown}
+              locked={!!readOnly}
+            >
+              <VisuallyHiddenInput
+                type="checkbox"
+                name={name}
+                value={range.breakpoint}
+                aria-label={`${range.breakpoint} · ${width}`}
+                checked={shown}
+                disabled={readOnly}
+                onChange={() =>
+                  onChange(
+                    toggleBreakpoint(value, range.breakpoint, breakpoints)
+                  )
+                }
+              />
 
-  input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    border: 0;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-  }
-`;
+              <Icon aria-hidden />
+              <BreakpointName>{range.breakpoint}</BreakpointName>
+              <BreakpointWidth>{width}</BreakpointWidth>
+
+              <BreakpointCheck
+                shown={shown}
+                aria-hidden
+              >
+                {shown && <LuCheck />}
+              </BreakpointCheck>
+            </BreakpointOption>
+          </li>
+        );
+      })}
+    </BreakpointList>
+  );
+};
+
+export type ShowAllBreakpointsButtonProps = {
+  onClick: () => void;
+};
+
+export const ShowAllBreakpointsButton = ({
+  onClick,
+}: ShowAllBreakpointsButtonProps) => {
+  const { t } = useTranslation();
+
+  return (
+    <VisibilityTextButton
+      type="button"
+      onClick={onClick}
+    >
+      <LuRotateCcw aria-hidden />
+      {t('', 'All sizes')}
+    </VisibilityTextButton>
+  );
+};
 
 export type VisibilityFieldRenderProps = FieldProps<
   VisibilityField,
   VisibilityValue | undefined
->;
+> & {
+  name: string;
+};
 
 export const VisibilityFieldRender = ({
   field,
+  name,
   value,
   onChange,
   readOnly,
 }: VisibilityFieldRenderProps) => {
   const { t } = useTranslation();
-  const theme = useWebsiteTheme();
+  const { ranges, hidden, summary } = useBreakpointVisibility(value);
+  const { ref: controlRef, focusFirstControl } =
+    useFirstControlFocus<HTMLDivElement>();
+  const label = field.label ?? t('', 'Screen sizes');
 
-  const breakpoints = useMemo(
-    () => sortBreakpoints(theme, theme.breakpoints.keys),
-    [theme]
-  );
-
-  // Everything is shown unless a value restricts it
-  const selected = value ?? breakpoints;
-
-  const toggle = (breakpoint: Breakpoint, checked: boolean) => {
-    const next = sortBreakpoints(
-      theme,
-      checked ?
-        [...selected, breakpoint]
-      : selected.filter(current => current !== breakpoint)
-    );
-
-    onChange(next.length === breakpoints.length ? undefined : next);
+  const showAll = () => {
+    focusFirstControl();
+    onChange(undefined);
   };
 
   return (
     <FieldLabel
-      label={field.label ?? t('', 'Visibility')}
+      label={label}
       readOnly={readOnly}
       el="div"
     >
-      <Options>
-        {breakpoints.map(breakpoint => {
-          const active = selected.includes(breakpoint);
+      <VisibilityControl
+        ref={controlRef}
+        role="group"
+        aria-label={label}
+      >
+        <BreakpointToggleList
+          name={name}
+          ranges={ranges}
+          value={value}
+          onChange={onChange}
+          readOnly={readOnly}
+        />
 
-          return (
-            <Option
-              key={breakpoint}
-              title={`${theme.breakpoints.values[breakpoint]}px`}
-              active={active}
-              disabled={!!readOnly}
-            >
-              <input
-                type="checkbox"
-                value={breakpoint}
-                checked={active}
-                disabled={readOnly}
-                onChange={event => toggle(breakpoint, event.target.checked)}
-              />
+        <VisibilitySummaryRow>
+          <VisibilitySummary aria-live="polite">{summary}</VisibilitySummary>
 
-              {breakpoint}
-            </Option>
-          );
-        })}
-      </Options>
+          {!readOnly && hidden.length > 0 && (
+            <ShowAllBreakpointsButton onClick={showAll} />
+          )}
+        </VisibilitySummaryRow>
+      </VisibilityControl>
     </FieldLabel>
   );
 };

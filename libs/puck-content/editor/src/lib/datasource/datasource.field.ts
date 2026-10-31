@@ -3,6 +3,8 @@ import { FieldAiParams } from '@puckeditor/plugin-ai';
 import { z } from 'zod/v4';
 
 import { toAiSchema } from '../ai-schema';
+import { ImageListTarget } from '../image/image.field';
+import { RecordModel } from '../record/record.field';
 
 export const listDatasourceTypes = ['list', 'uniqueList', 'slot'] as const;
 export const specificDatasourceTypes = ['single', 'multiple'] as const;
@@ -19,7 +21,7 @@ export const datasourceModels = [
   'page',
   'event',
   'image',
-  'memberplan',
+  'memberPlan',
   'userSubscription',
 ] as const;
 
@@ -63,7 +65,7 @@ export const datasourcesSchema = z.object({
   page: datasourceSchema.nullish(),
   event: datasourceSchema.nullish(),
   image: datasourceSchema.nullish(),
-  memberplan: datasourceSchema.nullish(),
+  memberPlan: datasourceSchema.nullish(),
   userSubscription: listDatasourceSchema.nullish(),
 });
 
@@ -87,53 +89,138 @@ export const toDatasourceTypes = (
     )
   : [...types];
 
-const toDatasource = (type: DatasourceType): Datasource => {
+export const datasourceIds = (
+  value: DatasourcesValue | null | undefined,
+  model: DatasourceModel
+): string[] => {
+  const current = value?.[model];
+
+  if (current?.type === 'single') {
+    return current.id ? [current.id] : [];
+  }
+
+  if (current?.type === 'multiple') {
+    return current.ids;
+  }
+
+  return [];
+};
+
+const toDatasource = (
+  type: DatasourceType,
+  previousIds: string[]
+): Datasource => {
   switch (type) {
     case 'single':
-      return { type, id: '' };
+      return { type, id: previousIds[0] ?? '' };
     case 'multiple':
-      return { type, ids: [] };
+      return { type, ids: previousIds };
     default:
       return { type };
   }
 };
 
+export const rememberDatasourceIds = (
+  remembered: string[],
+  datasource: Datasource | null | undefined
+): string[] => {
+  if (datasource?.type === 'multiple') {
+    return datasource.ids;
+  }
+
+  if (datasource?.type === 'single') {
+    if (!datasource.id) {
+      return [];
+    }
+
+    return remembered[0] === datasource.id ? remembered : [datasource.id];
+  }
+
+  return remembered;
+};
+
 export const setDatasourceType = (
   value: DatasourcesValue,
   model: DatasourceModel,
-  type: DatasourceType | undefined
+  type: DatasourceType | undefined,
+  remembered: string[] = []
 ): DatasourcesValue => {
-  const { [model]: _previous, ...rest } = value;
+  if (!type) {
+    const { [model]: _previous, ...rest } = value;
 
-  return type ? { ...rest, [model]: toDatasource(type) } : rest;
+    return rest;
+  }
+
+  if (value[model]?.type === type) {
+    return value;
+  }
+
+  return {
+    ...value,
+    [model]: toDatasource(
+      type,
+      rememberDatasourceIds(remembered, value[model])
+    ),
+  };
 };
 
-export const setDatasourceIds = (
+export const addDatasourceModel = (
   value: DatasourcesValue,
   model: DatasourceModel,
-  raw: string
+  types: readonly DatasourceType[] = datasourceTypes
 ): DatasourcesValue => {
-  const current = value[model];
+  const [type] = toDatasourceTypes(model, types);
 
-  if (current?.type === 'single') {
-    return { ...value, [model]: { type: 'single', id: raw.trim() } };
+  if (value[model] || !type) {
+    return value;
   }
 
-  if (current?.type === 'multiple') {
-    return {
-      ...value,
-      [model]: {
-        type: 'multiple',
-        ids: raw
-          .split(',')
-          .map(id => id.trim())
-          .filter(Boolean),
-      },
-    };
-  }
-
-  return value;
+  return setDatasourceType(value, model, type);
 };
+
+export const activeDatasourceModels = (
+  value: DatasourcesValue | null | undefined,
+  models: readonly DatasourceModel[] = datasourceModels
+): DatasourceModel[] => models.filter(model => !!value?.[model]);
+
+export const addableDatasourceModels = (
+  value: DatasourcesValue | null | undefined,
+  models: readonly DatasourceModel[] = datasourceModels,
+  types: readonly DatasourceType[] = datasourceTypes
+): DatasourceModel[] =>
+  models.filter(
+    model => !value?.[model] && toDatasourceTypes(model, types).length > 0
+  );
+
+export type DirectDatasource = {
+  model: DatasourceModel;
+  type: DatasourceType;
+};
+
+export const directDatasource = (
+  models: readonly DatasourceModel[] = datasourceModels,
+  types: readonly DatasourceType[] = datasourceTypes
+): DirectDatasource | undefined => {
+  if (models.length !== 1) {
+    return undefined;
+  }
+
+  const [model] = models;
+  const available = toDatasourceTypes(model, types);
+
+  return available.length === 1 ? { model, type: available[0] } : undefined;
+};
+
+const datasourceRecordModels: Partial<Record<DatasourceModel, RecordModel>> = {
+  article: 'article',
+  page: 'page',
+  event: 'event',
+  memberPlan: 'memberPlan',
+};
+
+export const toDatasourceRecordModel = (
+  model: DatasourceModel
+): RecordModel | undefined => datasourceRecordModels[model];
 
 export const setDatasourceIdList = (
   value: DatasourcesValue,
@@ -156,23 +243,6 @@ export const setDatasourceIdList = (
   return value;
 };
 
-export const datasourceIds = (
-  value: DatasourcesValue | null | undefined,
-  model: DatasourceModel
-): string[] => {
-  const current = value?.[model];
-
-  if (current?.type === 'single') {
-    return current.id ? [current.id] : [];
-  }
-
-  if (current?.type === 'multiple') {
-    return current.ids;
-  }
-
-  return [];
-};
-
 const aiDatasourceSchema = (types: readonly DatasourceType[]) =>
   z.object({
     type: z.enum(types as [DatasourceType, ...DatasourceType[]]),
@@ -184,7 +254,7 @@ export const datasourceFieldAi = (
   types: readonly DatasourceType[] = datasourceTypes,
   models: readonly DatasourceModel[] = datasourceModels
 ): FieldAiParams => ({
-  instructions: `Connects the component to CMS data, one entry per model (${models.join(', ')}); leave a model out to not use it. Set type to one of: ${types.join(', ')}. "list" loads a feed of records, "uniqueList" a feed that skips records already shown elsewhere on the page, "slot" fills the component from a parent slot, "single" references one record by id and "multiple" several records by ids. id and ids reference existing records — never invent them; only set them to values the user provided.`,
+  instructions: `Connects the component to CMS data, one entry per model (${models.join(', ')}); leave a model out to not use it. Set type to one of: ${types.join(', ')}. "list" loads a feed of records, "uniqueList" a feed that skips records already shown elsewhere on the page, "slot" fills the component from a parent slot, "single" references one record by id and "multiple" several records by ids in display order. id and ids reference existing records — never invent them; only set them to values the user provided.`,
   schema: toAiSchema(
     z
       .object(
@@ -198,3 +268,19 @@ export const datasourceFieldAi = (
       .describe('Datasources per model')
   ),
 });
+
+const datasourcesOf = (
+  props: Parameters<ImageListTarget['read']>[0]
+): DatasourcesValue => props['datasources'] ?? {};
+
+export const imageDatasourceTarget: ImageListTarget = {
+  read: props => {
+    const image = datasourcesOf(props).image;
+
+    return image?.type === 'multiple' ? image.ids : undefined;
+  },
+  write: (props, ids) => ({
+    ...props,
+    datasources: setDatasourceIdList(datasourcesOf(props), 'image', ids),
+  }),
+};

@@ -8,6 +8,7 @@ import {
 import { useMemo } from 'react';
 
 import { ColorValue, resolveColor } from '@wepublish/puck-content/editor';
+import { OutsideFormOnly } from '../../form/outside-form-only.component';
 
 export type MailchimpFormInputConfig = {
   inputType: string;
@@ -55,6 +56,7 @@ export const MailchimpFormRender: PuckComponent<MailchimpFormConfigProps> = ({
   buttonFontColor,
   steps,
   successPage,
+  puck: { isEditing },
   ...props
 }) => {
   const theme = useTheme();
@@ -91,12 +93,14 @@ export const MailchimpFormRender: PuckComponent<MailchimpFormConfigProps> = ({
   );
 
   return (
-    <MailchimpFormBlock
-      {...props}
-      steps={blockSteps}
-      successPage={blockSuccessPage}
-      buttonColor={resolveColor(theme, buttonColor)}
-      buttonFontColor={resolveColor(theme, buttonFontColor)}
-    />
+    <OutsideFormOnly isEditing={isEditing}>
+      <MailchimpFormBlock
+        {...props}
+        steps={blockSteps}
+        successPage={blockSuccessPage}
+        buttonColor={resolveColor(theme, buttonColor)}
+        buttonFontColor={resolveColor(theme, buttonFontColor)}
+      />
+    </OutsideFormOnly>
   );
 };

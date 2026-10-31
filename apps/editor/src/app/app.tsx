@@ -114,7 +114,6 @@ import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
-import { PuckEditor } from './routes/puck/puck-editor';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
 
@@ -131,6 +130,17 @@ const NewsletterCampaignEditor = withNewsletterFeature(
 );
 const NewsletterCampaignPreview = withNewsletterFeature(
   lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignPreview })))
+);
+
+const PuckArticleEditor = lazy(() =>
+  import('./routes/puck/puck-article-editor').then(m => ({
+    default: m.PuckArticleEditor,
+  }))
+);
+const PuckPageEditor = lazy(() =>
+  import('./routes/puck/puck-page-editor').then(m => ({
+    default: m.PuckPageEditor,
+  }))
 );
 
 const LogoutMutation = gql`
@@ -356,7 +366,44 @@ export function App() {
             />
             <Route
               path="puck"
-              element={<PuckEditor />}
+              element={
+                <Navigate
+                  to="/puck/pages/create"
+                  replace
+                />
+              }
+            />
+            <Route
+              path="puck/articles/create"
+              element={
+                <Suspense>
+                  <PuckArticleEditor />
+                </Suspense>
+              }
+            />
+            <Route
+              path="puck/articles/edit/:id"
+              element={
+                <Suspense>
+                  <PuckArticleEditor />
+                </Suspense>
+              }
+            />
+            <Route
+              path="puck/pages/create"
+              element={
+                <Suspense>
+                  <PuckPageEditor />
+                </Suspense>
+              }
+            />
+            <Route
+              path="puck/pages/edit/:id"
+              element={
+                <Suspense>
+                  <PuckPageEditor />
+                </Suspense>
+              }
             />
             <Route
               path="articles/peer"

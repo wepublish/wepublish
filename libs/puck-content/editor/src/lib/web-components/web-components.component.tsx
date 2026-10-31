@@ -4,16 +4,12 @@ import {
   bridgeDocument,
   isDocumentBridged,
   subscribeToBridgedDocuments,
-} from './web-components';
+} from './web-components.helpers';
 
 type CustomElementsBridgeProps = PropsWithChildren<{
   document?: Document;
 }>;
 
-/**
- * Holds back the preview until the frame document is patched so every
- * element is created through the bridge, see `webComponentsPlugin`.
- */
 export const CustomElementsBridge = ({
   children,
   document: frameDocument,
@@ -32,9 +28,7 @@ export const CustomElementsBridge = ({
     return bridgeDocument(frameDocument);
   }, [frameDocument]);
 
-  // Puck's override has to return an element, not a bare node
   /* eslint-disable react/jsx-no-useless-fragment */
-  // Without an iframe the preview shares the editor document and needs no bridge
   if (frameDocument && !bridged) {
     return <></>;
   }

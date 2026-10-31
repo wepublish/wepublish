@@ -28,6 +28,10 @@ generates:
         Slug: string
         RichText: RichtextJSONDocument
         Upload: File
+        PuckSpacing: "number | `${ number }px`"
+        PuckMinHeight: "`${ number }px` | `${ number }vh`"
+        PuckMaxWidth: "'sm' | 'md' | 'lg' | 'xl' | `${ number }px` | `${ number }%`"
+        PuckBackgroundPosition: "`${'left' | 'center' | 'right'} ${'top' | 'center' | 'bottom'}`"
 
   # The schema's own object types (`Tag`, `MemberPlan`, `Event`, ...) are used
   # as domain models throughout the apps, and the operations file imports its
@@ -113,6 +117,10 @@ generates:
         Slug: string
         RichText: RichtextJSONDocument
         Upload: File
+        PuckSpacing: "number | `${ number }px`"
+        PuckMinHeight: "`${ number }px` | `${ number }vh`"
+        PuckMaxWidth: "'sm' | 'md' | 'lg' | 'xl' | `${ number }px` | `${ number }%`"
+        PuckBackgroundPosition: "`${'left' | 'center' | 'right'} ${'top' | 'center' | 'bottom'}`"
 
   ./libs/peering/api/src/lib/remote/graphql.ts:
     schema:
@@ -135,3 +143,7 @@ generates:
         Slug: string
         RichText: RichtextJSONDocument
         Upload: File
+        PuckSpacing: "number | `${ number }px`"
+        PuckMinHeight: "`${ number }px` | `${ number }vh`"
+        PuckMaxWidth: "'sm' | 'md' | 'lg' | 'xl' | `${ number }px` | `${ number }%`"
+        PuckBackgroundPosition: "`${'left' | 'center' | 'right'} ${'top' | 'center' | 'bottom'}`"

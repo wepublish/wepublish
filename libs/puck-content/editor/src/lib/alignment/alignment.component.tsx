@@ -90,8 +90,10 @@ const AlignmentOptions = styled.div`
 `;
 
 const AlignmentOption = styled.label<{ active: boolean; disabled: boolean }>`
+  position: relative;
   display: flex;
   flex: 1;
+  min-width: 0;
   align-items: center;
   justify-content: center;
   padding: 8px;

@@ -3,11 +3,11 @@ import './puck-dark.css';
 
 import { useQuery } from '@apollo/client/react';
 import { createTheme, Link as MuiLink } from '@mui/material';
-import { Data, Puck, Viewport } from '@puckeditor/core';
-import { withDynamicConfig } from '@puckeditor/plugin-ai';
+import { Puck, Viewport } from '@puckeditor/core';
 import { SessionTokenContext } from '@wepublish/authentication/website';
 import { getSettings, WebsiteSettingsDocument } from '@wepublish/editor/api';
 import {
+  actionBarPlugin,
   alignmentPlugin,
   apiPlugin,
   BlocksPlugin,
@@ -17,29 +17,31 @@ import {
   colorPlugin,
   columnsPlugin,
   createAIPlugin,
-  createBottomBarPlugin,
   datasourcePlugin,
-  EmotionPlugin,
+  documentHeaderPlugin,
   FieldsPlugin,
   gapPlugin,
-  HeadingAnalyzerPlugin,
   imagePlugin,
   insertPlugin,
   listPlugin,
   OutlinePlugin,
   paddingPlugin,
   palettePlugin,
-  RawDataPlugin,
+  PuckDocumentController,
+  PuckDocumentControllerContext,
+  PuckDocumentKindContext,
+  PuckRevisionHistory,
+  PuckRevisionHistoryContext,
+  recordPlugin,
   resolvedPlugin,
   RevisionHistoryPlugin,
   richtextPlugin,
   SearchPlugin,
-  SEOPreviewPlugin,
+  sidebarLayoutPlugin,
   stylingPlugin,
   switchPlugin,
   tagPlugin,
   tagSelectPlugin,
-  themePlugin,
   typographyPlugin,
   viewportSelectionPlugin,
   visibilityOutlinePlugin,
@@ -49,14 +51,14 @@ import {
   websiteThemePlugin,
   WebsiteTranslationsPlugin,
 } from '@wepublish/puck-content/editor';
-import { Components, config } from '@wepublish/puck-content/website';
+import { PuckData, PuckDocumentKind } from '@wepublish/puck-content/website';
 import { minimalTheme } from '@wepublish/ui';
 import { WebsiteProvider } from '@wepublish/website';
 import {
   BuilderLinkProps,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
-import { ContextType, forwardRef, useMemo } from 'react';
+import { ContextType, forwardRef, ReactNode, useMemo, useState } from 'react';
 import {
   Md2K,
   Md4K,
@@ -65,33 +67,35 @@ import {
   MdTablet,
 } from 'react-icons/md';
 
-const bottomBarPlugin = createBottomBarPlugin([
-  SEOPreviewPlugin,
-  HeadingAnalyzerPlugin,
-  RawDataPlugin,
-]);
+import { documentControllerPlugin } from './puck-document-controller';
+import {
+  PuckDocumentEditorEventsContext,
+  PuckPublishDialogOf,
+} from './puck-document-controller.context';
+import {
+  bottomBarPlugin,
+  initialPuckUi,
+  puckEditorConfig,
+  toEditorData,
+  ViewportDevice,
+  viewportPresets,
+  visibleViewportPresets,
+} from './puck-editor.config';
 
-const initialData = {
-  content: [
-    {
-      type: 'Container',
-      props: {
-        id: 'Container-initial',
-        content: [],
-      },
-    },
-  ],
-} satisfies Partial<Data<Components>>;
+const viewportIcons: Record<ViewportDevice, ReactNode> = {
+  phone: <MdSmartphone />,
+  tablet: <MdTablet />,
+  desktop: <MdDesktopWindows />,
+  ultraWide: <Md2K />,
+  '4k': <Md4K />,
+};
 
-// The preview renders the website as an anonymous reader
 const anonymousSession: NonNullable<ContextType<typeof SessionTokenContext>> = [
   null,
   false,
   async () => undefined,
 ];
 
-// The preview renders website components, whose links must not use the
-// editor's router
 const Link = forwardRef<HTMLAnchorElement, BuilderLinkProps>(function Link(
   { prefetch, locale, ...props },
   ref
@@ -104,12 +108,36 @@ const Link = forwardRef<HTMLAnchorElement, BuilderLinkProps>(function Link(
   );
 });
 
-export function PuckEditor() {
-  const { data } = useQuery(WebsiteSettingsDocument);
+export type PuckDocumentEditorProps<K extends PuckDocumentKind> = {
+  kind: K;
+  data: PuckData<K>;
+  controller: PuckDocumentController;
+  publishDialogOf?: PuckPublishDialogOf;
+  revisionHistory?: PuckRevisionHistory;
+  initialPlugin?: string | null;
+  onPluginChange?: (plugin: string | null) => void;
+};
+
+export function PuckDocumentEditor<K extends PuckDocumentKind>({
+  kind,
+  data,
+  controller,
+  publishDialogOf,
+  revisionHistory,
+  initialPlugin,
+  onPluginChange,
+}: PuckDocumentEditorProps<K>) {
+  const { data: settings } = useQuery(WebsiteSettingsDocument);
+  const [initialData] = useState(() => toEditorData(kind, data));
 
   const theme = useMemo(
-    () => createTheme(minimalTheme, data?.websiteSettings.theme ?? {}),
-    [data]
+    () => createTheme(minimalTheme, settings?.websiteSettings.theme ?? {}),
+    [settings]
+  );
+
+  const config = useMemo(
+    () => puckEditorConfig(kind, initialData),
+    [kind, initialData]
   );
 
   const aiPlugin = useMemo(
@@ -120,54 +148,73 @@ export function PuckEditor() {
     []
   );
 
-  const dynamicConfig = useMemo(
-    () => withDynamicConfig(config, initialData as Data),
-    []
+  const plugins = useMemo(
+    () => [
+      BlocksPlugin,
+      FieldsPlugin,
+      OutlinePlugin,
+      RevisionHistoryPlugin,
+      SearchPlugin,
+      insertPlugin,
+      websiteThemePlugin,
+      webComponentsPlugin,
+      WebsiteTranslationsPlugin,
+      aiPlugin,
+      bottomBarPlugin,
+      actionBarPlugin,
+      documentHeaderPlugin,
+      documentControllerPlugin,
+      viewportSelectionPlugin,
+      sidebarLayoutPlugin,
+      datasourcePlugin,
+      apiPlugin,
+      paddingPlugin,
+      gapPlugin,
+      stylingPlugin,
+      borderPlugin,
+      breakpointsPlugin,
+      alignmentPlugin,
+      palettePlugin,
+      columnsPlugin,
+      listPlugin,
+      tagPlugin,
+      tagSelectPlugin,
+      recordPlugin,
+      richtextPlugin,
+      colorPlugin,
+      typographyPlugin,
+      resolvedPlugin,
+      switchPlugin,
+      imagePlugin,
+      visibilityPlugin,
+      blockVisibilityPlugin,
+      visibilityOutlinePlugin,
+    ],
+    [aiPlugin]
+  );
+
+  const events = useMemo(
+    () => ({ publishDialogOf, onPluginChange }),
+    [publishDialogOf, onPluginChange]
+  );
+
+  const [windowWidth] = useState(() => window.innerWidth);
+
+  const ui = useMemo(
+    () => initialPuckUi(initialPlugin, windowWidth),
+    [initialPlugin, windowWidth]
   );
 
   const viewports = useMemo<Viewport[]>(
-    () => [
-      {
-        width: 360,
-        height: (360 / 9) * 19.5,
-        label: 'Small',
-        icon: <MdSmartphone />,
-      },
-      ...Object.entries(theme.breakpoints.values).flatMap<Viewport>(
-        ([key, value]) =>
-          value ?
-            {
-              width: value,
-              height: {
-                sm: (value / 9) * 19.5,
-                md: (value / 9) * 19.5,
-                lg: (value / 16) * 9,
-                xl: (value / 16) * 9,
-              }[key],
-              label: key,
-              icon: {
-                sm: <MdSmartphone />,
-                md: <MdTablet />,
-                lg: <MdDesktopWindows />,
-                xl: <MdDesktopWindows />,
-              }[key],
-            }
-          : []
-      ),
-      {
-        width: 2560,
-        height: 'auto',
-        label: 'Ultra Wide',
-        icon: <Md2K />,
-      },
-      {
-        width: 3840,
-        height: 'auto',
-        label: '4k',
-        icon: <Md4K />,
-      },
-    ],
-    [theme]
+    () =>
+      visibleViewportPresets(
+        viewportPresets(theme.breakpoints.values),
+        windowWidth
+      ).map(({ device, ...preset }) => ({
+        ...preset,
+        icon: viewportIcons[device],
+      })),
+    [theme, windowWidth]
   );
 
   return (
@@ -175,56 +222,25 @@ export function PuckEditor() {
       <WebsiteProvider>
         <WebsiteBuilderProvider elements={{ Link }}>
           <SessionTokenContext.Provider value={anonymousSession}>
-            <Puck
-              dnd={{ behavior: 'static', enableDragHandle: true }}
-              iframe={{ syncHostStyles: false }}
-              config={dynamicConfig}
-              data={initialData}
-              plugins={[
-                BlocksPlugin,
-                FieldsPlugin,
-                OutlinePlugin,
-                RevisionHistoryPlugin,
-                SearchPlugin,
-                insertPlugin,
-                websiteThemePlugin,
-                EmotionPlugin,
-                webComponentsPlugin,
-                WebsiteTranslationsPlugin,
-                aiPlugin,
-                bottomBarPlugin,
-                //
-                themePlugin,
-                viewportSelectionPlugin,
-                //
-                datasourcePlugin,
-                apiPlugin,
-                paddingPlugin,
-                gapPlugin,
-                stylingPlugin,
-                borderPlugin,
-                breakpointsPlugin,
-                alignmentPlugin,
-                palettePlugin,
-                columnsPlugin,
-                listPlugin,
-                tagPlugin,
-                tagSelectPlugin,
-                richtextPlugin,
-                colorPlugin,
-                typographyPlugin,
-                resolvedPlugin,
-                switchPlugin,
-                imagePlugin,
-                visibilityPlugin,
-                blockVisibilityPlugin,
-                visibilityOutlinePlugin,
-              ]}
-              onPublish={data => {
-                console.warn(data);
-              }}
-              viewports={viewports}
-            />
+            <PuckDocumentKindContext.Provider value={kind}>
+              <PuckDocumentControllerContext.Provider value={controller}>
+                <PuckDocumentEditorEventsContext.Provider value={events}>
+                  <PuckRevisionHistoryContext.Provider
+                    value={revisionHistory ?? null}
+                  >
+                    <Puck
+                      dnd={{ behavior: 'static', enableDragHandle: true }}
+                      iframe={{ syncHostStyles: false }}
+                      config={config}
+                      data={initialData}
+                      plugins={plugins}
+                      ui={ui}
+                      viewports={viewports}
+                    />
+                  </PuckRevisionHistoryContext.Provider>
+                </PuckDocumentEditorEventsContext.Provider>
+              </PuckDocumentControllerContext.Provider>
+            </PuckDocumentKindContext.Provider>
           </SessionTokenContext.Provider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

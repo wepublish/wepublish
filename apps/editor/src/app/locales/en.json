@@ -1189,7 +1189,29 @@
         "focalPoint": "Focal point",
         "focalPointInfo": "Drag the point onto the most important part of the image. When the image is cropped, e.g. in teasers, this area stays visible.",
         "descriptionInfo": "Describe what can be seen in the image. The text is used as alternative text for people using screen readers and for search engines.",
-        "linkUrlInfo": "Web address that opens when readers click on the image. Leave empty if the image should not be a link."
+        "linkUrlInfo": "Web address that opens when readers click on the image. Leave empty if the image should not be a link.",
+        "addImages_one": "Add {{count}} image",
+        "addImages_other": "Add {{count}} images",
+        "chooseImages": "Choose images",
+        "clearFinished": "Clear finished",
+        "clearSelection": "Clear selection",
+        "deselectImage": "Deselect {{title}}",
+        "done": "Done",
+        "dropImages": "Drop images here or click to upload",
+        "removeUpload": "Remove",
+        "removeUploadOf": "Remove {{name}}",
+        "retryUpload": "Try again",
+        "retryUploadOf": "Upload {{name}} again",
+        "selectedCount_one": "{{count}} selected",
+        "selectedCount_other": "{{count}} selected",
+        "selectedImages": "Selected images",
+        "selectedOfMax": "{{count}} of {{max}} selected",
+        "unsupportedImage": "This image format is not supported.",
+        "uploadFailed": "Upload failed",
+        "uploadQueued": "Waiting",
+        "uploaded": "Uploaded",
+        "uploading": "Uploading…",
+        "uploads": "Uploads"
       }
     },
     "importableEvent": {
@@ -4578,6 +4600,7 @@
         "page": "Create page",
         "pageTemplate": "Create page template",
         "puckPage": "Create page with Puck",
+        "puckArticle": "Create article with Puck",
         "pageTag": "Create page tag",
         "crowdfunding": "Create crowdfunding",
         "blockTemplate": "Create block template",
@@ -4829,6 +4852,7 @@
       }
     },
     "puck": {
+      "loadFailed": "This document cannot be opened in the page builder.",
       "search": {
         "placeholder": "Search blocks",
         "noResults": "No blocks found"

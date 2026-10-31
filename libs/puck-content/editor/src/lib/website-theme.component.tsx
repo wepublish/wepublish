@@ -24,17 +24,19 @@ export const WebsiteThemePreview = ({
     [frameDocument]
   );
 
-  if (!theme || !cache) {
+  if (!cache) {
     return createElement(Fragment, null, children);
   }
 
   return (
     <CacheProvider value={cache}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline enableColorScheme />
-        <GlobalStyles styles={keenSliderStyles} />
-        {children}
-      </ThemeProvider>
+      {theme ?
+        <ThemeProvider theme={theme}>
+          <CssBaseline enableColorScheme />
+          <GlobalStyles styles={keenSliderStyles} />
+          {children}
+        </ThemeProvider>
+      : children}
     </CacheProvider>
   );
 };

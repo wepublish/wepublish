@@ -1,14 +1,29 @@
-import styled from '@emotion/styled';
-import { Plugin } from '@puckeditor/core';
+import { Tooltip, useMediaQuery } from '@mui/material';
+import { createUsePuck, Plugin } from '@puckeditor/core';
 import {
   createElement,
   PointerEvent as ReactPointerEvent,
+  ReactNode,
   useEffect,
   useState,
   PropsWithChildren,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import { LuPanelLeft, LuPanelRight } from 'react-icons/lu';
 import { MdClose } from 'react-icons/md';
+
+import { PUCK_MOBILE_LAYOUT_WIDTH } from '../sidebar-layout/sidebar-layout.helpers';
+import {
+  BottomBarButton,
+  BottomBarCloseButton,
+  BottomBarIconButton,
+  BottomBarNav,
+  BottomBarPanel,
+  BottomBarPanelBody,
+  BottomBarResizeHandle,
+  BottomBarRoot,
+  BottomBarSideBarToggles,
+} from './bottom-bar.styles';
 
 export type BottomBarItem = Pick<Plugin, 'name' | 'label' | 'icon' | 'render'>;
 
@@ -16,104 +31,83 @@ const keyOf = (item: BottomBarItem) => item.name ?? item.label ?? '';
 
 const MIN_PANEL_HEIGHT = 120;
 const DEFAULT_PANEL_HEIGHT = 320;
+const PHONE_PANEL_SHARE = 0.4;
 
-const Layout = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  min-height: 0;
+const initialPanelHeight = (phone: boolean) =>
+  phone ?
+    Math.max(
+      MIN_PANEL_HEIGHT,
+      Math.round(window.innerHeight * PHONE_PANEL_SHARE)
+    )
+  : DEFAULT_PANEL_HEIGHT;
 
-  & > :first-child {
-    flex: 1;
-    min-height: 0;
-    height: auto !important;
-  }
-`;
+const usePuck = createUsePuck();
 
-const Panel = styled.section`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  max-height: 80%;
-  border-top: 1px solid var(--puck-color-border);
-  background: var(--puck-color-surface);
-  color: var(--puck-color-text);
-`;
+type SideBarToggleProps = {
+  label: string;
+  icon: ReactNode;
+  pressed: boolean;
+  onToggle: () => void;
+};
 
-const ResizeHandle = styled.div`
-  position: absolute;
-  inset: -3px 0 auto;
-  height: 6px;
-  cursor: ns-resize;
-  z-index: 1;
+function SideBarToggle({ label, icon, pressed, onToggle }: SideBarToggleProps) {
+  return (
+    <Tooltip
+      title={label}
+      placement="top"
+    >
+      <BottomBarIconButton
+        type="button"
+        aria-label={label}
+        aria-pressed={pressed}
+        onClick={onToggle}
+      >
+        {icon}
+      </BottomBarIconButton>
+    </Tooltip>
+  );
+}
 
-  &:hover {
-    background: var(--puck-color-interactive);
-  }
-`;
+function SideBarToggles() {
+  const { t } = useTranslation();
+  const dispatch = usePuck(puck => puck.dispatch);
+  const leftSideBarVisible = usePuck(
+    puck => puck.appState.ui.leftSideBarVisible
+  );
+  const rightSideBarVisible = usePuck(
+    puck => puck.appState.ui.rightSideBarVisible
+  );
 
-const PanelBody = styled.div`
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-`;
-
-const Bar = styled.nav`
-  display: flex;
-  flex-shrink: 0;
-  align-items: stretch;
-  height: 26px;
-  padding: 0 8px;
-  border-top: 1px solid var(--puck-color-border);
-  background: var(--puck-color-surface);
-`;
-
-const BarButton = styled.button<{ active: boolean }>`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 8px;
-  border: 0;
-  background: ${({ active }) =>
-    active ? 'var(--puck-color-interactive-soft)' : 'transparent'};
-  color: ${({ active }) =>
-    active ?
-      'var(--puck-color-interactive)'
-    : 'var(--puck-color-text-secondary)'};
-  font: inherit;
-  font-size: var(--puck-font-size-xxs);
-  cursor: pointer;
-
-  &:hover {
-    color: var(--puck-color-text);
-    background: var(--puck-color-interactive-soft);
-  }
-
-  svg {
-    width: 14px;
-    height: 14px;
-  }
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 1;
-  display: inline-flex;
-  padding: 4px;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--puck-color-text-secondary);
-  cursor: pointer;
-
-  &:hover {
-    color: var(--puck-color-text);
-    background: var(--puck-color-interactive-soft);
-  }
-`;
+  return (
+    <BottomBarSideBarToggles
+      role="group"
+      aria-label={t('', 'Sidebars')}
+    >
+      <SideBarToggle
+        label={t('', 'Left sidebar')}
+        icon={<LuPanelLeft />}
+        pressed={leftSideBarVisible}
+        onToggle={() =>
+          dispatch({
+            type: 'setUi',
+            ui: { leftSideBarVisible: !leftSideBarVisible },
+          })
+        }
+      />
+      <SideBarToggle
+        label={t('', 'Right sidebar')}
+        icon={<LuPanelRight />}
+        pressed={rightSideBarVisible}
+        onToggle={() =>
+          dispatch({
+            type: 'setUi',
+            ui: { rightSideBarVisible: !rightSideBarVisible },
+          })
+        }
+      />
+    </BottomBarSideBarToggles>
+  );
+}
 
 export const BottomBarLayout = ({
   items,
@@ -122,9 +116,34 @@ export const BottomBarLayout = ({
   items: BottomBarItem[];
 }>) => {
   const { t } = useTranslation();
+  const phone = useMediaQuery(
+    `(max-width: ${PUCK_MOBILE_LAYOUT_WIDTH - 0.02}px)`,
+    { noSsr: true }
+  );
+  const dispatch = usePuck(puck => puck.dispatch);
+  const puckPanelOpen = usePuck(puck => puck.appState.ui.leftSideBarVisible);
   const [openName, setOpenName] = useState<string>();
-  const [height, setHeight] = useState(DEFAULT_PANEL_HEIGHT);
+  const [height, setHeight] = useState(() => initialPanelHeight(phone));
+  const [wasPuckPanelOpen, setWasPuckPanelOpen] = useState(puckPanelOpen);
   const open = items.find(item => keyOf(item) === openName && item.render);
+
+  if (puckPanelOpen !== wasPuckPanelOpen) {
+    setWasPuckPanelOpen(puckPanelOpen);
+
+    if (puckPanelOpen && phone) {
+      setOpenName(undefined);
+    }
+  }
+
+  const toggle = (name: string) => {
+    const next = name === openName ? undefined : name;
+
+    setOpenName(next);
+
+    if (next && phone && puckPanelOpen) {
+      dispatch({ type: 'setUi', ui: { leftSideBarVisible: false } });
+    }
+  };
 
   useEffect(() => {
     if (!open) {
@@ -160,46 +179,45 @@ export const BottomBarLayout = ({
   };
 
   return (
-    <Layout>
+    <BottomBarRoot>
       {children}
 
       {open && (
-        <Panel
+        <BottomBarPanel
           aria-label={open.label ?? keyOf(open)}
           style={{ height }}
         >
-          <ResizeHandle onPointerDown={startResize} />
+          <BottomBarResizeHandle onPointerDown={startResize} />
 
-          <CloseButton
+          <BottomBarCloseButton
             type="button"
             aria-label={t('', 'Close panel')}
             onClick={() => setOpenName(undefined)}
           >
             <MdClose size={16} />
-          </CloseButton>
+          </BottomBarCloseButton>
 
-          <PanelBody>{open.render && createElement(open.render)}</PanelBody>
-        </Panel>
+          <BottomBarPanelBody>
+            {open.render && createElement(open.render)}
+          </BottomBarPanelBody>
+        </BottomBarPanel>
       )}
 
-      <Bar>
+      <BottomBarNav>
         {items.map(item => (
-          <BarButton
+          <BottomBarButton
             key={keyOf(item)}
             type="button"
-            active={keyOf(item) === openName}
             aria-pressed={keyOf(item) === openName}
-            onClick={() =>
-              setOpenName(current =>
-                current === keyOf(item) ? undefined : keyOf(item)
-              )
-            }
+            onClick={() => toggle(keyOf(item))}
           >
             {item.icon}
             {item.label ?? keyOf(item)}
-          </BarButton>
+          </BottomBarButton>
         ))}
-      </Bar>
-    </Layout>
+
+        <SideBarToggles />
+      </BottomBarNav>
+    </BottomBarRoot>
   );
 };

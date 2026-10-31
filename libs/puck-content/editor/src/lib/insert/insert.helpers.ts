@@ -13,6 +13,9 @@ export type SlotZone = {
   disallow?: string[];
 };
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
 const fieldSlotZones = (
   id: string,
   field: Field,
@@ -51,7 +54,7 @@ const fieldSlotZones = (
     return fieldsSlotZones(
       id,
       field.objectFields,
-      value ?? {},
+      isRecord(value) ? value : {},
       `${path}.`,
       field.label ?? path
     );
@@ -96,11 +99,11 @@ export const acceptingZones = (zones: SlotZone[], type: string) =>
 export const insertZones = (
   config: Config,
   block: InsertableBlock | null | undefined,
-  rootCount: number
+  root: Pick<SlotZone, 'label' | 'count'>
 ): SlotZone[] =>
   block ?
     slotZones(config, block)
-  : [{ zone: 'root:default-zone', label: 'Page', count: rootCount }];
+  : [{ zone: 'root:default-zone', label: root.label, count: root.count }];
 
 export const stopPointerDown = (element: HTMLElement | null) =>
   element?.addEventListener('pointerdown', event => event.stopPropagation());

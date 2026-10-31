@@ -192,6 +192,7 @@ export const ToggleableFieldWrapper = styled.div`
 export const UnitSelect = styled.select`
   position: absolute;
   right: 6px;
+  min-height: 24px;
   padding: 2px 4px;
   border: 0;
   border-radius: var(--puck-radius-s);

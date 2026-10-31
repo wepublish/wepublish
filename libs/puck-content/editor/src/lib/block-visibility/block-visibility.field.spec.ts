@@ -3,6 +3,7 @@ import { Weekday } from '@wepublish/editor/api';
 import {
   blockVisibilityFlags,
   blockVisibilitySchema,
+  setBlockVisibility,
 } from './block-visibility.field';
 
 describe('blockVisibilitySchema', () => {
@@ -49,5 +50,40 @@ describe('blockVisibilityFlags', () => {
     expect(blockVisibilityFlags({ timings: { weekdays: [] } }).timed).toBe(
       false
     );
+  });
+});
+
+describe('setBlockVisibility', () => {
+  it('merges a change into the current value', () => {
+    expect(
+      setBlockVisibility({ breakpoints: ['xs'] }, { disabled: true })
+    ).toEqual({ disabled: true, breakpoints: ['xs'] });
+  });
+
+  it('drops cleared settings and leaves nothing once all are cleared', () => {
+    expect(
+      setBlockVisibility(
+        { disabled: true, breakpoints: ['xs'] },
+        { disabled: undefined }
+      )
+    ).toEqual({ breakpoints: ['xs'] });
+    expect(
+      setBlockVisibility({ disabled: true }, { disabled: undefined })
+    ).toBeUndefined();
+  });
+
+  it('drops a timing window that does not limit anything', () => {
+    expect(
+      setBlockVisibility(
+        { timings: { weekdays: [Weekday.Monday] } },
+        { timings: { weekdays: [], timeOfDay: null } }
+      )
+    ).toBeUndefined();
+  });
+
+  it('keeps a block hidden on every screen size', () => {
+    expect(setBlockVisibility(undefined, { breakpoints: [] })).toEqual({
+      breakpoints: [],
+    });
   });
 });

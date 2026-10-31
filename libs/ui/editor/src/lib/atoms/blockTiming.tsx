@@ -176,6 +176,7 @@ export interface BlockTimingButtonProps {
   onChange: (timing: BlockTimingInput | null) => void;
   shouldDisplay?: boolean | null;
   disabled?: boolean;
+  label?: string;
 }
 
 export function BlockTimingButton({
@@ -183,6 +184,7 @@ export function BlockTimingButton({
   onChange,
   shouldDisplay,
   disabled,
+  label,
 }: BlockTimingButtonProps) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -211,35 +213,51 @@ export function BlockTimingButton({
       },
     });
 
+  const openWindow = () => {
+    setOpenedWith(timingKey(timing));
+    setOpen(true);
+  };
+
   return (
     <>
-      <IconButtonTooltip
-        caption={t(
-          isTimed(timing) && !isShowing ?
-            'blockTiming.offAir'
-          : 'blockList.timeBlock'
-        )}
-      >
-        <IconButton
+      {label ?
+        <Button
           size="small"
-          aria-label={t('blockList.timeBlock')}
-          color={
-            !isTimed(timing) ? 'default'
-            : isShowing ?
-              'primary'
-            : 'warning'
-          }
+          variant="outlined"
+          color={isTimed(timing) && !isShowing ? 'warning' : 'primary'}
+          startIcon={<MdSchedule />}
           data-timed={isTimed(timing) ? 'true' : 'false'}
           data-showing={isShowing ? 'true' : 'false'}
           disabled={disabled}
-          onClick={() => {
-            setOpenedWith(timingKey(timing));
-            setOpen(true);
-          }}
+          onClick={openWindow}
         >
-          <MdSchedule />
-        </IconButton>
-      </IconButtonTooltip>
+          {label}
+        </Button>
+      : <IconButtonTooltip
+          caption={t(
+            isTimed(timing) && !isShowing ?
+              'blockTiming.offAir'
+            : 'blockList.timeBlock'
+          )}
+        >
+          <IconButton
+            size="small"
+            aria-label={t('blockList.timeBlock')}
+            color={
+              !isTimed(timing) ? 'default'
+              : isShowing ?
+                'primary'
+              : 'warning'
+            }
+            data-timed={isTimed(timing) ? 'true' : 'false'}
+            data-showing={isShowing ? 'true' : 'false'}
+            disabled={disabled}
+            onClick={openWindow}
+          >
+            <MdSchedule />
+          </IconButton>
+        </IconButtonTooltip>
+      }
 
       <Dialog
         open={isOpen}

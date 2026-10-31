@@ -1,6 +1,7 @@
 import { FullImageFragment } from '@wepublish/editor/api';
+import { SeoContentType } from '@wepublish/ui/editor';
 
-import { toSeoPreviewMetadata } from './seo-preview-metadata';
+import { seoContentTypes, toSeoPreviewMetadata } from './seo-preview-metadata';
 
 const image = { id: 'image' } as FullImageFragment;
 const socialImage = { id: 'social-image' } as FullImageFragment;
@@ -29,7 +30,20 @@ describe('toSeoPreviewMetadata', () => {
       socialMediaDescription: 'Share lead',
       image,
       socialMediaImage: socialImage,
+      canonicalUrl: undefined,
       url: 'https://wepublish.ch',
+    });
+  });
+
+  it('keeps the canonical URL of an article', () => {
+    expect(
+      toSeoPreviewMetadata(
+        { title: 'Article', canonicalUrl: 'https://example.com/original' },
+        {}
+      )
+    ).toMatchObject({
+      title: 'Article',
+      canonicalUrl: 'https://example.com/original',
     });
   });
 
@@ -43,7 +57,17 @@ describe('toSeoPreviewMetadata', () => {
       socialMediaDescription: undefined,
       image: undefined,
       socialMediaImage: undefined,
+      canonicalUrl: undefined,
       url: undefined,
+    });
+  });
+});
+
+describe('seoContentTypes', () => {
+  it('previews every document kind like its classic editor', () => {
+    expect(seoContentTypes).toEqual({
+      page: SeoContentType.Page,
+      article: SeoContentType.Article,
     });
   });
 });

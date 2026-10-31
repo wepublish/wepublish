@@ -256,6 +256,30 @@ describe('BlockTimingButton', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
+  it('can be a labelled button that opens the same window', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <BlockTimingButton
+          timing={{ weekdays: [Weekday.Monday] }}
+          label="Edit schedule"
+          onChange={vi.fn()}
+        />
+      </ThemeProvider>
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'blockList.timeBlock' })
+    ).not.toBeInTheDocument();
+
+    const labelled = screen.getByRole('button', { name: 'Edit schedule' });
+
+    expect(labelled).toHaveAttribute('data-timed', 'true');
+
+    fireEvent.click(labelled);
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
   const weekday = (name: string) =>
     screen.getByRole('button', { name: `weekday.${name}` });
 

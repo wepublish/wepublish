@@ -1,6 +1,12 @@
 import { FieldLabel, FieldProps } from '@puckeditor/core';
 
 import { ColumnsField, columnsPresets, ColumnsValue } from './columns.field';
+import {
+  ColumnsPresetButton,
+  ColumnsPresetColumn,
+  ColumnsPresetGrid,
+  ColumnsPresetPercent,
+} from './columns.styles';
 
 const columnsEqual = (a: ColumnsValue, b: ColumnsValue) => {
   return a.length === b.length && a.every((value, index) => value === b[index]);
@@ -23,67 +29,37 @@ export const ColumnsFieldRender = ({
   const current = value ?? [1];
 
   const presets = (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: 16,
-      }}
-    >
+    <ColumnsPresetGrid>
       {columnsPresets.map((preset, index) => {
         const selected = columnsEqual(current, preset);
         const total = preset.reduce((sum, column) => sum + column, 0);
+        const percents = preset.map(column => formatPercent(column, total));
 
         return (
-          <button
+          <ColumnsPresetButton
             key={index}
             type="button"
+            aria-label={percents.join(' / ')}
+            aria-pressed={selected}
             disabled={readOnly}
             onClick={() => onChange(preset)}
-            style={{
-              display: 'flex',
-              gap: 4,
-              padding: selected ? 11 : 12,
-              borderRadius: 8,
-              border:
-                selected ?
-                  '2px solid var(--puck-color-interactive)'
-                : '1px solid var(--puck-color-border)',
-              background: 'var(--puck-color-surface)',
-              cursor: readOnly ? 'default' : 'pointer',
-            }}
           >
             {preset.map((column, index) => (
-              <div
+              <ColumnsPresetColumn
                 key={index}
-                css={{
-                  flex: column,
-                  height: 56,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 4,
-                  border: '1px solid var(--puck-color-border)',
-                  background:
-                    selected ?
-                      'var(--puck-color-surface)'
-                    : 'var(--puck-color-surface-subtle)',
-                  color: 'var(--puck-color-text)',
-                  fontSize: 14,
-                  fontWeight: 500,
-                }}
+                style={{ flex: column }}
               >
-                {selected ? formatPercent(column, total) : null}
-              </div>
+                {selected && (
+                  <ColumnsPresetPercent>{percents[index]}</ColumnsPresetPercent>
+                )}
+              </ColumnsPresetColumn>
             ))}
-          </button>
+          </ColumnsPresetButton>
         );
       })}
-    </div>
+    </ColumnsPresetGrid>
   );
 
-  // Without a label the presets are rendered bare, e.g. nested inside another
-  // field that already provides the heading.
   if (!field.label) {
     return presets;
   }

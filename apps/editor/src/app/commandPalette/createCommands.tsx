@@ -105,7 +105,14 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     titleKey: 'commandPalette.create.puckPage',
     icon: <MdDashboard />,
     permissions: [CanCreatePage.id],
-    perform: ({ navigate }) => navigate('/puck'),
+    perform: ({ navigate }) => navigate('/puck/pages/create'),
+  },
+  {
+    id: 'createPuckArticle',
+    titleKey: 'commandPalette.create.puckArticle',
+    icon: <MdDescription />,
+    permissions: [CanCreateArticle.id],
+    perform: ({ navigate }) => navigate('/puck/articles/create'),
   },
   {
     id: 'createPageTag',

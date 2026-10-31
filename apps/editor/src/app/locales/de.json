@@ -1189,7 +1189,29 @@
         "focalPoint": "Bildfokus",
         "focalPointInfo": "Ziehe den Punkt auf den wichtigsten Bereich des Bildes. Wird das Bild zugeschnitten, z.B. in Teasern, bleibt dieser Bereich sichtbar.",
         "descriptionInfo": "Beschreibe, was auf dem Bild zu sehen ist. Der Text dient als Alternativtext für Menschen mit Screenreader und für Suchmaschinen.",
-        "linkUrlInfo": "Webadresse, die sich öffnet, wenn Leser*innen auf das Bild klicken. Leer lassen, wenn das Bild kein Link sein soll."
+        "linkUrlInfo": "Webadresse, die sich öffnet, wenn Leser*innen auf das Bild klicken. Leer lassen, wenn das Bild kein Link sein soll.",
+        "addImages_one": "{{count}} Bild hinzufügen",
+        "addImages_other": "{{count}} Bilder hinzufügen",
+        "chooseImages": "Bilder wählen",
+        "clearFinished": "Abgeschlossene ausblenden",
+        "clearSelection": "Auswahl aufheben",
+        "deselectImage": "{{title}} abwählen",
+        "done": "Fertig",
+        "dropImages": "Bilder hier ablegen oder klicken zum Hochladen",
+        "removeUpload": "Entfernen",
+        "removeUploadOf": "{{name}} entfernen",
+        "retryUpload": "Erneut versuchen",
+        "retryUploadOf": "{{name}} erneut hochladen",
+        "selectedCount_one": "{{count}} ausgewählt",
+        "selectedCount_other": "{{count}} ausgewählt",
+        "selectedImages": "Ausgewählte Bilder",
+        "selectedOfMax": "{{count}} von {{max}} ausgewählt",
+        "unsupportedImage": "Dieses Bildformat wird nicht unterstützt.",
+        "uploadFailed": "Hochladen fehlgeschlagen",
+        "uploadQueued": "Wartet",
+        "uploaded": "Hochgeladen",
+        "uploading": "Wird hochgeladen…",
+        "uploads": "Uploads"
       }
     },
     "importableEvent": {
@@ -4578,6 +4600,7 @@
         "page": "Seite erstellen",
         "pageTemplate": "Seitenvorlage erstellen",
         "puckPage": "Seite mit Puck erstellen",
+        "puckArticle": "Artikel mit Puck erstellen",
         "pageTag": "Seiten-Tag erstellen",
         "crowdfunding": "Crowdfunding erstellen",
         "blockTemplate": "Block-Vorlage erstellen",
@@ -4829,6 +4852,7 @@
       }
     },
     "puck": {
+      "loadFailed": "Dieses Dokument lässt sich im Seitenbaukasten nicht öffnen.",
       "search": {
         "placeholder": "Blöcke suchen",
         "noResults": "Keine Blöcke gefunden"

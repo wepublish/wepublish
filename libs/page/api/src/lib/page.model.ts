@@ -19,6 +19,11 @@ import {
   HasBlockContent,
 } from '@wepublish/block-content/api';
 import { HasOptionalUserLc, User } from '@wepublish/user/api';
+import {
+  ApiBlock,
+  HasPuckBlocks,
+  PuckBlockInput,
+} from '@wepublish/puck-content/api';
 
 export enum PageSort {
   CreatedAt = 'CreatedAt',
@@ -35,10 +40,13 @@ registerEnumType(PageSort, {
 });
 
 @ObjectType({
-  implements: () => [HasBlockContent, HasOptionalUserLc],
+  implements: () => [HasBlockContent, HasPuckBlocks, HasOptionalUserLc],
 })
-export class PageRevision implements HasBlockContent, HasOptionalUserLc {
+export class PageRevision
+  implements HasBlockContent, HasPuckBlocks, HasOptionalUserLc
+{
   blocks!: Array<typeof BlockContent>;
+  puckBlocks?: ApiBlock[] | null;
 
   // The user who created this revision. `userId` is populated from the DB row;
   // `user` is resolved by the global HasOptionalUserLc resolver.
@@ -188,6 +196,7 @@ export class CreatePageInput extends OmitType(
     'image',
     'socialMediaImage',
     'blocks',
+    'puckBlocks',
     'properties',
   ] as const,
   ArgsType
@@ -204,8 +213,11 @@ export class CreatePageInput extends OmitType(
   @Field({ defaultValue: false })
   hideFooter?: boolean;
 
-  @Field(() => [BlockContentInput])
-  blocks!: BlockContentInput[];
+  @Field(() => [BlockContentInput], { defaultValue: [] })
+  blocks?: BlockContentInput[] | null;
+
+  @Field(() => [PuckBlockInput], { nullable: true })
+  puckBlocks?: PuckBlockInput[] | null;
 
   @Field(() => [String])
   tagIds!: string[];
@@ -217,7 +229,7 @@ export class CreatePageInput extends OmitType(
 @InputType()
 export class PageTemplateMetadataInput extends OmitType(
   CreatePageInput,
-  ['blocks', 'slug'] as const,
+  ['blocks', 'puckBlocks', 'slug'] as const,
   InputType
 ) {}
 
@@ -251,6 +263,9 @@ export class PageTemplateMetadata extends IntersectionType(
 export class UpdatePageInput extends CreatePageInput {
   @Field()
   id!: string;
+
+  @Field(() => [BlockContentInput], { nullable: true })
+  override blocks?: BlockContentInput[] | null;
 }
 
 @InputType()

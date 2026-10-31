@@ -11,17 +11,22 @@ const configs = { ImageConfig, QuoteConfig, BreakConfig } as Record<
 
 describe.each(Object.entries(configs))('%s', (_name, config) => {
   it('picks its image through a single image datasource', async () => {
-    const fields = await config.resolveFields?.(
-      { props: { id: 'a' } } as never,
-      { fields: config.fields ?? {} } as never
-    );
+    const fields =
+      config.resolveFields ?
+        await config.resolveFields(
+          { props: { id: 'a' } } as never,
+          { fields: config.fields ?? {} } as never
+        )
+      : config.fields;
 
     expect(fields?.['imageId']).toBeUndefined();
-    expect(fields?.['datasources']).toMatchObject({
+    expect(config.fields?.['datasources']).toMatchObject({
       type: 'datasource',
       models: ['image'],
       types: ['single'],
+      label: 'Image',
     });
+    expect(fields?.['datasources']).toEqual(config.fields?.['datasources']);
   });
 
   it('hides the resolved image field', () => {
@@ -30,14 +35,21 @@ describe.each(Object.entries(configs))('%s', (_name, config) => {
     expect(!image || image.visible === false).toBe(true);
   });
 
-  it('starts with an empty single image datasource', async () => {
-    const data = await config.resolveData?.(
-      { props: { id: 'a' } } as never,
+  it('starts with an empty single image datasource', () => {
+    expect(config.defaultProps?.['datasources']).toEqual({
+      image: { type: 'single', id: '' },
+    });
+  });
+
+  it('never resets the picked image while resolving', async () => {
+    const datasources = { image: { type: 'single', id: 'image-1' } };
+    const resolved = await config.resolveData?.(
+      { props: { id: 'a', datasources } } as never,
       {} as never
     );
 
-    expect(data?.props?.['datasources']).toEqual({
-      image: { type: 'single', id: '' },
-    });
+    expect(resolved?.props?.['datasources'] ?? datasources).toEqual(
+      datasources
+    );
   });
 });

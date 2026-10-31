@@ -20,9 +20,18 @@ export const tagSelectFieldAi: FieldAiParams = {
   schema: toAiSchema(tagSelectSchema),
 };
 
-export const pageTagSelectField = (label?: string): TagSelectField => ({
+export const tagSelectField = (
+  tagType: TagType,
+  label?: string
+): TagSelectField => ({
   type: 'tagSelect',
-  tagType: TagType.Page,
+  tagType,
   label,
   ai: tagSelectFieldAi,
 });
+
+export const pageTagSelectField = (label?: string) =>
+  tagSelectField(TagType.Page, label);
+
+export const articleTagSelectField = (label?: string) =>
+  tagSelectField(TagType.Article, label);
