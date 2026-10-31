@@ -301,6 +301,7 @@
         "libs/website/admin/**/*",
         "libs/website/api/**/*",
         "libs/website/builder/**/*",
+        "libs/website/form-builder/**/*",
         "libs/website/**/*",
         "libs/website/translations/**/*",
         "libs/website-revalidation/api/**/*"

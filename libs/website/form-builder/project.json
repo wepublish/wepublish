@@ -3,10 +3,23 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/website/form-builder/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:website"],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint"
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/website/form-builder",
+        "tsConfig": "libs/website/form-builder/tsconfig.lib.json",
+        "packageJson": "libs/website/form-builder/package.json",
+        "main": "libs/website/form-builder/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
     }
   }
 }

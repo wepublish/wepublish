@@ -1040,6 +1040,9 @@ importers:
       v0-sdk:
         specifier: 'catalog:'
         version: 0.15.3
+      valibot:
+        specifier: ^1.0.0
+        version: 1.4.2(typescript@6.0.3)
       write-excel-file:
         specifier: ^4.1.1
         version: 4.1.1
