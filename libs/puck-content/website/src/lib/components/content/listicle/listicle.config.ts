@@ -1,0 +1,51 @@
+import { ComponentConfig } from '@puckeditor/core';
+
+import { imageFieldAi, richtextFieldAi } from '@wepublish/puck-content/editor';
+import { placeholderRichText } from '../../placeholder-richtext';
+import { UserFields } from '../../../types';
+import { ListicleConfigProps, ListicleRender } from './listicle.component';
+
+export const ListicleConfig: ComponentConfig<{
+  props: ListicleConfigProps;
+  fields: UserFields;
+}> = {
+  ai: {
+    instructions:
+      'An ordered list of titled entries, each with its own title and rich text body. Use it for listicles, step-by-step breakdowns, rankings or any "top N" style content. Add one item per entry; every item needs a title and can hold formatted rich text.',
+  },
+  fields: {
+    items: {
+      type: 'array',
+      min: 1,
+      getItemSummary: item => item.title || 'Title',
+      arrayFields: {
+        title: {
+          type: 'text',
+          contentEditable: true,
+        },
+        richText: {
+          type: 'richtext',
+          ai: richtextFieldAi,
+        },
+        imageId: {
+          type: 'image',
+          ai: imageFieldAi,
+        },
+      },
+      defaultItemProps: {
+        title: 'Title',
+        richText: placeholderRichText(),
+      },
+    },
+  },
+  defaultProps: {
+    items: [
+      {
+        title: 'Title',
+        richText: placeholderRichText(),
+      },
+    ],
+  },
+
+  render: ListicleRender,
+};

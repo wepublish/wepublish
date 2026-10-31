@@ -924,6 +924,34 @@ every label.
 
 ---
 
+### ⚠️ A browser session in the Puck editor saves the document after 30s
+
+Autosave is on by default (`useAutosaveEnabled`, localStorage key
+`wepublish:editor:autosave`) and `usePuckAutosave` saves 30s after mount
+whenever the document is dirty. A Playwright audit that inserts a block and
+stays on the page that long writes a new revision of a real article — an audit
+of `/puck/articles/edit/…` did exactly that. Set the key to `'false'` in an
+init script before the first load (Playwright `context.addInitScript`), and
+insert test blocks on `/puck/pages/create`, which never autosaves.
+
+Nothing guards this — a regression here is silent.
+
+### ⚠️ Overrides of Puck's chrome need `.Puck` in the selector
+
+Puck's CSS modules load after Emotion's global styles, so a
+`[class*='_ViewportControls-actionsInner_']` rule loses to Puck's own
+single-class rule and only the properties Puck never sets apply. Scope global
+overrides under Puck's stable root class (`.Puck [class*='_…_']`), as
+`viewport-selection.styles.ts` and `field-tabs.styles.ts` do.
+
+### ⚠️ `usePuck` misses a `setUi` dispatched while Puck mounts
+
+`createUsePuck()` reads a mirror store that `<Puck>` subscribes to in its own
+(parent) effect, after the plugins' mount effects ran. A dispatch from a mount
+effect changes Puck's layout but every `usePuck` reader keeps the old value
+until the next change. `sidebar-layout.component.tsx` waits one animation
+frame before it corrects the sidebars.
+
 ### ⚠️ `useLocalStorage` broadcasts to every hook on the page
 
 `set` in `libs/ui/src/lib/hooks/use-local-storage.ts` ends with
@@ -1116,7 +1144,7 @@ so the media image ships `/wepublish/ca.crt` for `NODE_EXTRA_CA_CERTS`.
 the barrel, so the editor bundle never pulls in `react-dom/server`; and
 `apps/api-example/tsconfig.app.json` sets `jsx: react-jsx`, or the API build
 fails on the lib's TSX. The editor loads
-the newsletter routes with `React.lazy`: Puck's stylesheet `@import`s a font
+the newsletter and `/puck/*` routes with `React.lazy`: Puck's stylesheet `@import`s a font
 from rsms.me, and eagerly bundled it held up every editor page. Mail
 images are asked for as `format: 'jpeg'` (png/gif kept): the media server's
 default WebP is an empty frame in Outlook. `format` is deliberately not in the

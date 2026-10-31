@@ -1,0 +1,85 @@
+:root[data-mui-color-scheme='dark'] {
+  color-scheme: dark;
+  --puck-color-rose-09: #a81a66;
+  --puck-color-rose-10: #87114c;
+  --puck-color-rose-11: #670833;
+  --puck-color-rose-12: #4a001c;
+  --puck-color-green-09: #0c680c;
+  --puck-color-green-10: #084e08;
+  --puck-color-green-11: #043604;
+  --puck-color-green-12: #002000;
+  --puck-color-yellow-09: #645a00;
+  --puck-color-yellow-10: #4c4000;
+  --puck-color-yellow-11: #362700;
+  --puck-color-yellow-12: #211000;
+  --puck-color-red-09: #ac1f35;
+  --puck-color-red-10: #8a1422;
+  --puck-color-red-11: #6a0a10;
+  --puck-color-red-12: #4c0000;
+  --puck-color-azure-02: var(--mui-palette-primary-light);
+  --puck-color-azure-03: var(--mui-palette-primary-light);
+  --puck-color-azure-04: var(--mui-palette-primary-main);
+  --puck-color-azure-05: var(--mui-palette-primary-light);
+  --puck-color-azure-09: rgba(var(--mui-palette-primary-mainChannel) / 0.24);
+  --puck-color-azure-10: rgba(var(--mui-palette-primary-mainChannel) / 0.16);
+  --puck-color-azure-11: rgba(var(--mui-palette-primary-mainChannel) / 0.12);
+  --puck-color-azure-12: rgba(var(--mui-palette-primary-mainChannel) / 0.08);
+  --puck-color-grey-01: #f5f6f8;
+  --puck-color-grey-02: #e9ebf0;
+  --puck-color-grey-03: #c9ccd3;
+  --puck-color-grey-04: #a4a9b3;
+  --puck-color-grey-05: #8a8f99;
+  --puck-color-grey-06: #6a6f76;
+  --puck-color-grey-07: #555a62;
+  --puck-color-grey-08: #43474e;
+  --puck-color-grey-09: #3c3f43;
+  --puck-color-grey-10: #2a2e35;
+  --puck-color-grey-11: #1b1f26;
+  --puck-color-grey-12: #14181f;
+  --puck-color-black: var(--mui-palette-text-primary);
+  --puck-color-surface: var(--mui-palette-background-paper);
+  --puck-color-surface-muted: var(--mui-palette-background-default);
+  --puck-color-surface-subtle: var(--puck-color-grey-11);
+  --puck-color-surface-inverse: var(--mui-palette-text-primary);
+  --puck-color-border: var(--mui-palette-divider);
+  --puck-color-border-hover: var(--puck-color-grey-06);
+  --puck-color-border-muted: var(--puck-color-grey-10);
+  --puck-color-border-inverse: var(--puck-color-grey-06);
+  --puck-color-text: var(--mui-palette-text-primary);
+  --puck-color-text-secondary: var(--mui-palette-text-secondary);
+  --puck-color-text-muted: var(--puck-color-grey-05);
+  --puck-color-text-subtle: var(--mui-palette-text-disabled);
+  --puck-color-text-inverse: var(--mui-palette-background-default);
+  --puck-color-interactive: var(--mui-palette-primary-main);
+  --puck-color-interactive-hover: var(--mui-palette-primary-light);
+  --puck-color-interactive-active: var(--mui-palette-primary-light);
+  --puck-color-interactive-subtle: rgba(var(--mui-palette-primary-mainChannel) / 0.16);
+  --puck-color-interactive-soft: rgba(var(--mui-palette-primary-mainChannel) / 0.08);
+  --puck-color-interactive-soft-hover: rgba(var(--mui-palette-primary-mainChannel) / 0.12);
+  --puck-color-interactive-neutral-hover: var(--mui-palette-action-hover);
+  --puck-color-focus-ring: var(--mui-palette-primary-main);
+  --puck-color-bg-disabled: var(--puck-color-grey-08);
+  --puck-color-text-disabled: var(--mui-palette-text-disabled);
+  --puck-color-overlay-backdrop: rgba(0, 0, 0, 0.6);
+}
+
+:root[data-mui-color-scheme='dark'] [class*='_Chat_'] {
+  --chat-background-color: var(--puck-color-surface);
+}
+
+:root[data-mui-color-scheme='dark'] [class*='_Chat_'],
+:root[data-mui-color-scheme='dark'] [class*='_Chat--hasMessages_'],
+:root[data-mui-color-scheme='dark'] [class*='_Chat-form_'],
+:root[data-mui-color-scheme='dark'] [class*='_Chat-examplePrompt_'],
+:root[data-mui-color-scheme='dark'] [class*='_PromptForm-formInner_'],
+:root[data-mui-color-scheme='dark'] [class*='_Modal-modal_'],
+:root[data-mui-color-scheme='dark'] [class*='_Card_'],
+:root[data-mui-color-scheme='dark'] [class*='_CardSelectorOption_'],
+:root[data-mui-color-scheme='dark'] [class*='_Menu-sections_'],
+:root[data-mui-color-scheme='dark'] [class*='_Table_'] thead {
+  background-color: var(--puck-color-surface);
+}
+
+:root[data-mui-color-scheme='dark'] [class*='_Table_'] {
+  color: var(--puck-color-text);
+}

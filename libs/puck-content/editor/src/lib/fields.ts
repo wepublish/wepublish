@@ -1,0 +1,51 @@
+import { Config } from '@puckeditor/core';
+
+import { AlignmentField } from './alignment/alignment.field';
+import { ApiField } from './api/api.field';
+import { BlockVisibilityField } from './block-visibility/block-visibility.field';
+import { BorderField } from './border/border.field';
+import { BreakpointsField } from './breakpoints/breakpoints.field';
+import { ColorField } from './color/color.field';
+import { ColumnsField } from './columns/columns.field';
+import { DatasourceField } from './datasource/datasource.field';
+import { GapField } from './gap/gap.field';
+import { ImageField } from './image/image.field';
+import { ListField } from './list/list.field';
+import { PaddingField } from './padding/padding.field';
+import { PaletteField } from './palette/palette.field';
+import { RecordField } from './record/record.field';
+import { ResolvedField } from './resolved';
+import { RichtextField } from './richtext/richtext.field';
+import { StylingField } from './styling/styling.field';
+import { VisibilityField } from './visibility/visibility.field';
+import { SwitchField } from './switch/switch.field';
+import { TagField } from './tag/tag.field';
+import { TagSelectField } from './tag-select/tag-select.field';
+import { TypographyField } from './typography/typography.field';
+
+export type UserFields = {
+  api: ApiField;
+  datasource: DatasourceField;
+  record: RecordField;
+  padding: PaddingField;
+  border: BorderField;
+  gap: GapField;
+  styling: StylingField;
+  breakpoints: BreakpointsField;
+  columns: ColumnsField;
+  list: ListField;
+  tag: TagField;
+  tagSelect: TagSelectField;
+  alignment: AlignmentField;
+  palette: PaletteField;
+  richtext: RichtextField;
+  color: ColorField;
+  typography: TypographyField;
+  switch: SwitchField;
+  image: ImageField;
+  visibility: VisibilityField;
+  blockVisibility: BlockVisibilityField;
+  resolved: ResolvedField;
+};
+
+export type UserFieldsConfig = Config<{ fields: UserFields }>;

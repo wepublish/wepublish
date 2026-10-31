@@ -4,7 +4,13 @@ import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { Property } from '@wepublish/property/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
-import { BlockContent, BlockTreeLoader } from '@wepublish/block-content/api';
+import {
+  BlockContent,
+  BlockTreeLoader,
+  displayedPuckBlocks,
+  nextPuckBlocksTimingChange,
+} from '@wepublish/block-content/api';
+import { flattenPuckBlocks, PuckBlock } from '@wepublish/puck-content/api';
 import {
   limitAnswerCache,
   skipAnswerCache,
@@ -90,5 +96,53 @@ export class PageRevisionResolver {
   })
   async blocksChangeAt(@Parent() parent: PageRevision) {
     return this.blockTreeLoader.nextChange(parent.blocks);
+  }
+
+  @ResolveField(() => [PuckBlock], { nullable: true })
+  puckBlocks(
+    @Parent() parent: PageRevision,
+    @Args('onlyDisplayed', {
+      type: () => Boolean,
+      defaultValue: true,
+      description:
+        'Omits blocks that should be hidden, together with their children. Only users who can read pages may pass `false`, everyone else gets the displayed blocks.',
+    })
+    onlyDisplayed: boolean,
+    @Context() context: object,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    if (!onlyDisplayed) {
+      skipAnswerCache(context);
+    }
+
+    const { puckBlocks } = parent;
+
+    if (!puckBlocks) {
+      return null;
+    }
+
+    const { now } = this.blockTreeLoader;
+    const changeAt = nextPuckBlocksTimingChange(puckBlocks, now);
+
+    if (changeAt) {
+      limitAnswerCache(context, changeAt);
+    }
+
+    return flattenPuckBlocks(
+      onlyDisplayed || !hasPermission(CanGetPage, permissionsOf(user)) ?
+        displayedPuckBlocks(puckBlocks, now)
+      : puckBlocks
+    );
+  }
+
+  @ResolveField(() => Date, {
+    nullable: true,
+    description:
+      'When the set of displayed Puck blocks changes next, so caches can expire in time. Null while no block is timed.',
+  })
+  puckBlocksChangeAt(@Parent() parent: PageRevision) {
+    return parent.puckBlocks ?
+        nextPuckBlocksTimingChange(parent.puckBlocks, this.blockTreeLoader.now)
+      : null;
   }
 }

@@ -60,6 +60,7 @@ export const ListicleBlock = ({
 
           <H3 component={ListicleItemTitle}>{item.title}</H3>
           {item.image && <ListicleImage image={item.image} />}
+
           <ListicleRichtText richText={item.richText} />
         </ListicleBlockItem>
       ))}

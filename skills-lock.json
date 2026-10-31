@@ -13,6 +13,12 @@
       "skillPath": "skills/material-ui-theming/SKILL.md",
       "computedHash": "06f09d0152bf43a8f64d170a67418e7f33ac265bc995e2fed47adb5bcc979a54"
     },
+    "puck": {
+      "source": "puckeditor/skills",
+      "sourceType": "github",
+      "skillPath": "skills/puck/SKILL.md",
+      "computedHash": "c41bf408111ac2bcd7c44b7203e1c3b68e8c4bfb8d38fd4add6582f496ec645d"
+    },
     "tanstack-ai": {
       "source": "TanStack/ai",
       "sourceType": "github",

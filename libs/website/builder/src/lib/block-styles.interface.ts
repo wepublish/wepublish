@@ -1,3 +1,4 @@
+import { Ref } from 'react';
 import {
   BuilderBreakBlockProps, // IGNORE
   BuilderImageGalleryBlockProps,
@@ -15,12 +16,23 @@ export type BuilderSlidesPerView = Partial<{
   xl: number | 'auto';
 }>;
 
+export type BuilderSlideGap = Partial<{
+  xs: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+}>;
+
 export type BuilderSliderConfig = {
+  className?: string;
   slidesPerViewConfig?: BuilderSlidesPerView;
   dragDisabled?: boolean;
   detailsChanged?: (slider: any) => void;
-  slideGap?: number;
+  slideGapConfig?: BuilderSlideGap;
   origin?: 'auto' | 'center' | number;
+  loop?: boolean;
+  refs?: { control?: Ref<HTMLDivElement | null> };
 };
 
 export type BuilderLightboxConfig = {
@@ -31,7 +43,14 @@ export type BuilderLightboxConfig = {
 
 export type BuilderBlockStyleProps = {
   ImageSlider: BuilderImageGalleryBlockProps & BuilderSliderConfig;
-  Lightbox: BuilderImageGalleryBlockProps & BuilderLightboxConfig;
+  Lightbox: BuilderImageGalleryBlockProps &
+    BuilderLightboxConfig & {
+      refs?: {
+        prev?: Ref<HTMLButtonElement | null>;
+        next?: Ref<HTMLButtonElement | null>;
+        fullscreen?: Ref<HTMLButtonElement | null>;
+      };
+    };
   TeaserSlider: (
     | BuilderTeaserListBlockProps
     | BuilderTeaserGridBlockProps

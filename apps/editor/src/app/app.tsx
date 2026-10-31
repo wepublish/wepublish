@@ -132,6 +132,17 @@ const NewsletterCampaignPreview = withNewsletterFeature(
   lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignPreview })))
 );
 
+const PuckArticleEditor = lazy(() =>
+  import('./routes/puck/puck-article-editor').then(m => ({
+    default: m.PuckArticleEditor,
+  }))
+);
+const PuckPageEditor = lazy(() =>
+  import('./routes/puck/puck-page-editor').then(m => ({
+    default: m.PuckPageEditor,
+  }))
+);
+
 const LogoutMutation = gql`
   mutation Logout {
     revokeActiveSession
@@ -352,6 +363,47 @@ export function App() {
             <Route
               path="articles/edit/:id"
               element={<ArticleEditor />}
+            />
+            <Route
+              path="puck"
+              element={
+                <Navigate
+                  to="/puck/pages/create"
+                  replace
+                />
+              }
+            />
+            <Route
+              path="puck/articles/create"
+              element={
+                <Suspense>
+                  <PuckArticleEditor />
+                </Suspense>
+              }
+            />
+            <Route
+              path="puck/articles/edit/:id"
+              element={
+                <Suspense>
+                  <PuckArticleEditor />
+                </Suspense>
+              }
+            />
+            <Route
+              path="puck/pages/create"
+              element={
+                <Suspense>
+                  <PuckPageEditor />
+                </Suspense>
+              }
+            />
+            <Route
+              path="puck/pages/edit/:id"
+              element={
+                <Suspense>
+                  <PuckPageEditor />
+                </Suspense>
+              }
             />
             <Route
               path="articles/peer"

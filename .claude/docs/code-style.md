@@ -160,6 +160,27 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   User-facing strings go through react-i18next — never hardcode copy; see
   [Translations](#translations).
 
+### Puck record pickers
+
+Every Puck field that points at records (article, page, event, member plan,
+author, paywall) is the `record` field type (`recordField({model, multiple})`)
+rendered by `RecordSelect` / `RecordMultiSelect` in
+`libs/puck-content/editor/src/lib/record/` — never an id text input or a
+bespoke dialog.
+
+- **Single:** a search combobox; once chosen, the record is a row (thumbnail or
+  model icon, title, status pill, subtitle) with Replace and Remove buttons.
+- **Multiple:** the chosen records as an ordered list (drag handle, Move
+  up/down, Remove) above an "Add …" combobox that stays open and toggles
+  options with a checkmark. `max` disables the rest and shows `n / max`; `min`
+  is helper text only.
+- Search is debounced 300 ms, queries only while the list is open, and fetches
+  the next cursor page (`skip: 1`) when the list is scrolled to its end.
+- Data comes from one `RecordSource` per model in `record.sources.ts`
+  (`useSearch`, `useRecords`). A new model is a `recordModels` entry plus a
+  source; TypeScript then asks for its labels, icon and AI name. Specs swap
+  sources through `RecordSourcesContext` instead of mocking Apollo.
+
 ## Translations
 
 Editor copy lives in `apps/editor/src/app/locales/{en,de,fr}.json`; add every

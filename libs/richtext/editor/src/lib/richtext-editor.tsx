@@ -1,4 +1,5 @@
 import {
+  Editor,
   EditorContent,
   EditorContext,
   useEditor,
@@ -14,13 +15,13 @@ import { DragHandle } from './editor/drag-handle';
 import { CaretLinkPopover } from './editor/link-popover';
 import { FooterActions } from './editor/footer-actions';
 import { RichtextJSONDocument } from '@wepublish/richtext';
-import { forwardRef, useEffect, useMemo } from 'react';
+import { forwardRef, useEffect, useMemo, useRef } from 'react';
 import { equals } from 'ramda';
 import { useTranslation } from 'react-i18next';
 
 export const RichtextEditorWrapper = styled(Paper)``;
 
-const Editor = styled(EditorContent)`
+const StyledEditorContent = styled(EditorContent)`
   .tiptap {
     padding: ${({ theme }) => theme.spacing(3, 3, 3, 7)};
     outline: none;
@@ -165,6 +166,14 @@ const Editor = styled(EditorContent)`
   }
 `;
 
+const loadContent = (editor: Editor, content: UseEditorOptions['content']) => {
+  editor
+    .chain()
+    .setMeta('addToHistory', false)
+    .setContent(content ?? null, { emitUpdate: false })
+    .run();
+};
+
 type RichtextEditorProps = {
   defaultValue?: UseEditorOptions['content'];
   value?: UseEditorOptions['content'];
@@ -176,15 +185,19 @@ type RichtextEditorProps = {
 export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
   ({ defaultValue, value, onChange, disabled, autofocus }, ref) => {
     const { t } = useTranslation();
+    const emitted = useRef<RichtextJSONDocument | null>(null);
     const editor = useEditor({
       ...editorConfig,
       content: null,
       autofocus,
       editable: !disabled,
       onUpdate: arg => {
+        const json = arg.editor.getJSON() as RichtextJSONDocument;
+        emitted.current = json;
+
         onChange?.({
           html: arg.editor.getHTML(),
-          json: arg.editor.getJSON() as RichtextJSONDocument,
+          json,
         });
       },
     });
@@ -207,14 +220,18 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
 
     useEffect(() => {
       if (editorReady && defaultValue) {
-        editor.commands.setContent(defaultValue, { emitUpdate: false });
+        loadContent(editor, defaultValue);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-      if (editorReady && value && !equals(value, editor.getJSON())) {
-        editor.commands.setContent(value, { emitUpdate: false });
+      if (!editorReady || !value || equals(value, emitted.current)) {
+        return;
+      }
+
+      if (!equals(value, editor.getJSON())) {
+        loadContent(editor, value);
       }
     }, [value, editorReady, editor]);
 
@@ -252,7 +269,7 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
           {editorReady && <CaretLinkPopover />}
           {editorReady && <DragHandle />}
 
-          <Editor
+          <StyledEditorContent
             editor={editor}
             ref={ref}
           />

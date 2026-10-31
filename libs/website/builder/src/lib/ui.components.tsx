@@ -3,6 +3,9 @@ import {
   BuilderButtonProps,
   BuilderIconButtonProps,
   BuilderModalProps,
+  BuilderPaginationProps,
+  BuilderRatingProps,
+  BuilderTextFieldProps,
 } from './ui.interface';
 import { useWebsiteBuilder } from './website-builder.context';
 
@@ -36,4 +39,28 @@ export const Alert = (props: BuilderAlertProps) => {
   } = useWebsiteBuilder();
 
   return <Alert {...props} />;
+};
+
+export const Rating = (props: BuilderRatingProps) => {
+  const {
+    elements: { Rating },
+  } = useWebsiteBuilder();
+
+  return <Rating {...props} />;
+};
+
+export const TextField = (props: BuilderTextFieldProps) => {
+  const {
+    elements: { TextField },
+  } = useWebsiteBuilder();
+
+  return <TextField {...props} />;
+};
+
+export const Pagination = (props: BuilderPaginationProps) => {
+  const {
+    elements: { Pagination },
+  } = useWebsiteBuilder();
+
+  return <Pagination {...props} />;
 };

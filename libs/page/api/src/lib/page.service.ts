@@ -27,6 +27,7 @@ import {
   SortOrder,
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
+import { puckBlocksColumn } from '@wepublish/puck-content/api';
 
 @Injectable()
 export class PageService {
@@ -124,10 +125,14 @@ export class PageService {
       tagIds,
       properties,
       blocks,
+      puckBlocks,
       ...revision
     }: CreatePageInput,
     userId: string | null | undefined
   ) {
+    const mappedBlocks = (blocks ?? []).map(mapBlockUnionMap);
+    const storedPuckBlocks = puckBlocksColumn(puckBlocks);
+
     const result = await this.prisma.page.create({
       data: {
         slug,
@@ -146,7 +151,8 @@ export class PageService {
           create: {
             ...revision,
             userId,
-            blocks: blocks.map(mapBlockUnionMap) as any[],
+            blocks: mappedBlocks as any[],
+            puckBlocks: storedPuckBlocks,
             properties: properties as any,
           },
         },
@@ -168,6 +174,7 @@ export class PageService {
       tagIds,
       properties,
       blocks,
+      puckBlocks,
       ...revision
     }: UpdatePageInput,
     userId: string | null | undefined
@@ -176,12 +183,26 @@ export class PageService {
       where: { id },
       include: {
         tags: true,
+        revisions: {
+          where: { archivedAt: null },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: { blocks: true, puckBlocks: true },
+        },
       },
     });
 
     if (!page) {
       throw new NotFoundException(`Page with id ${id} not found`);
     }
+
+    const latest = page.revisions?.[0];
+    const mappedBlocks =
+      blocks ? (blocks.map(mapBlockUnionMap) as any[]) : (latest?.blocks ?? []);
+    const storedPuckBlocks =
+      puckBlocks === undefined ?
+        (latest?.puckBlocks ?? Prisma.DbNull)
+      : puckBlocksColumn(puckBlocks);
 
     const result = await this.prisma.page.update({
       where: { id },
@@ -203,7 +224,8 @@ export class PageService {
           create: {
             ...revision,
             userId,
-            blocks: blocks.map(mapBlockUnionMap) as any[],
+            blocks: mappedBlocks,
+            puckBlocks: storedPuckBlocks,
             properties: properties as any,
           },
         },
@@ -407,6 +429,7 @@ export class PageService {
         publishedAt: _publishedAt,
         pageId: _pageId,
         properties,
+        puckBlocks,
         ...revision
       },
     ] = page.revisions;
@@ -429,6 +452,7 @@ export class PageService {
             ...revision,
             userId,
             blocks: revision.blocks ?? [],
+            puckBlocks: puckBlocks ?? Prisma.DbNull,
             properties: properties as any,
           },
         },
@@ -590,6 +614,7 @@ export class PageService {
       userId: _userId,
       pageId: _pageId,
       properties,
+      puckBlocks,
       ...content
     } = revision;
 
@@ -611,6 +636,7 @@ export class PageService {
             ...content,
             userId,
             blocks: (content.blocks ?? []) as any[],
+            puckBlocks: puckBlocks ?? Prisma.DbNull,
             properties: properties as any,
           },
         },

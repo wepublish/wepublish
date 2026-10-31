@@ -14,6 +14,9 @@ const Wrapper = styled('div')`
   }
 `;
 
+const mark = markUrl as string | { src: string };
+const markSrc = typeof mark === 'string' ? mark : mark.src;
+
 export function TotpQrCode({ uri }: { uri: string }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -25,7 +28,7 @@ export function TotpQrCode({ uri }: { uri: string }) {
         type: 'svg',
         data: uri,
         margin: 10,
-        image: markUrl.src,
+        image: markSrc,
         qrOptions: { errorCorrectionLevel: 'H' },
         dotsOptions: { type: 'extra-rounded', color: '#000000' },
         cornersSquareOptions: { type: 'extra-rounded', color: '#000000' },
