@@ -5,6 +5,7 @@ import { PuckComponent, Slot } from '@puckeditor/core';
 import {
   breakpointsStyles,
   BreakpointsValue,
+  DatasourcesValue,
 } from '@wepublish/puck-content/editor';
 import { GapLayout, gapStyles } from '../gap';
 import { ItemsAlignment, itemsAlignmentStyles } from '../items-alignment';
@@ -15,6 +16,7 @@ export type RowProps = {
   className?: string;
   content: Slot;
   layout?: BreakpointsValue<RowLayout>;
+  datasources?: DatasourcesValue;
 };
 
 const RowContent = styled.div`
@@ -25,6 +27,7 @@ const RowContent = styled.div`
 export const RowRender: PuckComponent<RowProps> = ({
   content: Content,
   layout,
+  datasources,
   ...props
 }) => (
   <Content

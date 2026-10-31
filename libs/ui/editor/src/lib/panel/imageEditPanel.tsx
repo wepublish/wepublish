@@ -4,9 +4,7 @@ import { Autocomplete, Button, Link, TextField } from '@mui/material';
 import {
   FullImageFragment,
   ImageDocument,
-  ImageListDocument,
   UpdateImageDocument,
-  UploadImageDocument,
 } from '@wepublish/editor/api';
 import {
   CanCreateImage,
@@ -14,7 +12,6 @@ import {
   CanGetImage,
   CanGetImages,
 } from '@wepublish/permissions';
-import imageCompression from 'browser-image-compression';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
@@ -32,6 +29,7 @@ import {
   useAuthorisation,
 } from '../atoms/permissionControl';
 import { prepareImageForUpload } from '../atoms/prepareImageForUpload';
+import { useUploadImage } from '../atoms/useImageUpload';
 import { ImageBlockValue } from '../blocks';
 import {
   DrawerActions,
@@ -43,10 +41,6 @@ import {
   FormSectionTitle,
 } from '../drawer';
 import { enqueueSnackbar } from '../snackbar';
-import {
-  getImgMinSizeToCompress,
-  getOperationNameFromDocument,
-} from '../utility';
 
 export interface ImageEditPanelProps {
   block?: ImageBlockValue;
@@ -120,9 +114,7 @@ function ImageEditPanel({
     useMutation(UpdateImageDocument);
 
   const [uploadImage, { loading: isUploading, error: uploadError }] =
-    useMutation(UploadImageDocument, {
-      refetchQueries: [getOperationNameFromDocument(ImageListDocument)],
-    });
+    useUploadImage();
 
   const isAuthorized = useAuthorisation(CanCreateImage.id);
   const isUpload = file !== undefined;
@@ -273,17 +265,14 @@ function ImageEditPanel({
       focalPointY: values.focalPoint?.y ?? 0.5,
     };
 
-    if (isUpload) {
-      const optimizedImage: File = await resizeImage(preparedFile ?? file!);
-      const { data } = await uploadImage({
-        variables: {
-          file: optimizedImage!,
-          ...commonInput,
-        },
-      });
+    if (file) {
+      const uploadedImage = await uploadImage(
+        preparedFile ?? file,
+        commonInput
+      );
 
-      if (data?.uploadImage) {
-        onSave?.(data.uploadImage, values.imageBlock);
+      if (uploadedImage) {
+        onSave?.(uploadedImage, values.imageBlock);
       }
     } else {
       const { data } = await updateImage({
@@ -299,37 +288,6 @@ function ImageEditPanel({
         onSave?.(data.updateImage, values.imageBlock);
       }
     }
-  }
-
-  /**
-   * Resizes an image on client side, if larger than the IMG_MIN_SIZE_TO_COMPRESS env variable
-   * @param file
-   */
-  async function resizeImage(file: File): Promise<File> {
-    const imgMinSizeToCompress: number = getImgMinSizeToCompress();
-    // only resize image if larger than IMG_MIN_SIZE_TO_COMPRESS env variable
-    // ATTENTION: The MAX_UPLOAD_SIZE of the Media server must allow images of this size
-    if (!willImageResize(file, imgMinSizeToCompress)) {
-      return file; // do not resize
-    }
-    const options = {
-      maxSizeMB: imgMinSizeToCompress, // the max size in MB, defaults to 2MB
-    };
-    return imageCompression(file, options);
-  }
-
-  /**
-   * Decide whether an image will be automatically resized or not. The limit is given by the
-   * IMG_MIN_SIZE_TO_COMPRESS env variable
-   * @param file
-   * @param imgMinSizeToResize
-   */
-  function willImageResize(file: File, imgMinSizeToResize: number) {
-    const originalFileSize: number = file.size / (1024 * 1024);
-    if (originalFileSize > imgMinSizeToResize) {
-      return true;
-    }
-    return false;
   }
 
   return (

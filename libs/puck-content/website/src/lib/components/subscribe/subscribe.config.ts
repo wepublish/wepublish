@@ -27,7 +27,7 @@ export const SubscribeConfig: ComponentConfig<{
   {
     ai: {
       instructions:
-        'A membership subscription sign-up form that lets readers subscribe to a member plan. The fields array configures which extra input fields the form asks for (such as First name, Birthday or Address); member plans are loaded automatically. Use it on landing or paywall pages where you want visitors to become subscribers.',
+        'A membership subscription sign-up form that lets readers subscribe to a member plan. The fields array configures which extra input fields the form asks for (such as First name, Birthday or Address). The memberPlan datasource lists the offered member plans in display order; leave its ids empty to offer every active member plan. Use it on landing or paywall pages where you want visitors to become subscribers.',
     },
     fields: {
       memberPlans: {
@@ -94,21 +94,14 @@ export const SubscribeConfig: ComponentConfig<{
       goodieMinValueAppliesToUpgrade: false,
       hideRepeatGoodieOnUpgrade: false,
     },
-    resolveData(data, params) {
-      return {
-        props: {
-          memberPlans: [],
-        },
-      };
-    },
     render: SubscribeRender,
   },
   {
-    memberplan: { type: 'multiple', ids: [] },
+    memberPlan: { type: 'multiple', ids: [] },
   },
   {
-    models: ['memberplan'],
+    models: ['memberPlan'],
     types: ['multiple'],
-    label: 'Memberplans',
+    label: 'Member plans',
   }
 );

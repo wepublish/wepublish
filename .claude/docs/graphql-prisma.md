@@ -113,6 +113,9 @@ adds about 120 ms of `gql` parsing at module load to every page.
   document and regenerate.
 - A **new** codegen output must go into `.prettierignore`, or the pre-commit
   hook reformats it and every later codegen run shows a whole-file diff.
+- `codegen.yml` is env-interpolated: `${name}` becomes the env var, so a scalar
+  mapped to `` `${number}px` `` silently comes out as `` `undefinedpx` ``. Write
+  `${ number }` (with spaces) in template literal scalar types.
 - REST is only for external CMS connections. Everything internal is GraphQL.
 
 ## Blocks that are hidden or timed
@@ -147,6 +150,39 @@ boundaries.
 - **Don't use `getTimezoneOffset` from `date-fns-tz`** — it reports the old
   offset for the hour after a DST switch. Read the offset with
   `formatInTimeZone(date, tz, 'xxx')`.
+- **Puck content (`ArticleRevision.puckBlocks`, `PageRevision.puckBlocks`) is
+  pruned the same way**, with the same permission rule and cache handling,
+  plus `puckBlocksChangeAt`. It is stored and written (`puckBlocks:
+  [PuckBlockInput!]`) as a tree of API blocks, not Puck `Data`: the editor
+  converts. Each block is `{id, type, data, locked?, visibility?, styling?,
+  datasources?, slot?, children?}`: `type` is the component name, `data` the
+  component props without those block fields and with every slot emptied to
+  `[]`, `slot` the parent's slot path (`items[2].content`, omitted means
+  `content`). It is **read flat** (`[PuckBlock!]`, depth first, with
+  `parentId`/`slot`/`position`; `flattenPuckBlocks`), because a query cannot
+  select a tree of unknown depth. `visibility`/`styling`/`datasources` are
+  typed objects mirroring the editor's field values: enum values are named
+  exactly as stored, union values use the `PuckSpacing`, `PuckMinHeight`,
+  `PuckMaxWidth` and `PuckBackgroundPosition` scalars (mapped to template
+  literal types in `codegen.yml`). Root props live in the revision fields and
+  zones are not stored. The API never reads `data`; it only walks `children`.
+  A block hides with its subtree through `visibility.disabled` /
+  `visibility.timings` (plural, unlike `timing`) (`timing/puck-timing.ts`);
+  breakpoints are left to the website. `parsePuckBlocks` (zod + date-fns) in
+  `libs/puck-content/api` validates on save and normalises: nulls dropped,
+  timings stored as UTC ISO strings, `flattenPuckBlocks` turns them back into
+  `Date`. That lib must stay a leaf (only `authentication/api`), since
+  article, page and block-content import it, so it has its own `PuckWeekday`
+  instead of block-content's `Weekday`. Keep the website's `apiBlocksSchema`
+  (`puck-content/website` `api-blocks.ts`) in step with it, or the editor
+  cannot open what the API stored: the `storedBlockFormat` table is copied
+  verbatim into both specs, so change it in both. The editor selects
+  `...FullPuckBlock` (`editor/api` `schemas/puck-block.graphql`), rebuilds the
+  tree with `toPuckData`, and saves through `toPuckBlockInputs`
+  (`apps/editor/.../puck/puck-document-mapping.ts`), which maps the website's
+  string values onto the generated enums. On update, an omitted `puckBlocks` or
+  `blocks` carries over from the latest open revision, and an explicit
+  `puckBlocks: null` clears it.
 
 ## Full end-to-end change checklist
 

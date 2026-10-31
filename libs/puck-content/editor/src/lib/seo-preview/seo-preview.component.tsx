@@ -5,14 +5,17 @@ import { ImageDocument, PeerProfileDocument } from '@wepublish/editor/api';
 import {
   getSeoPreviewData,
   GooglePreview,
-  SeoContentType,
   SeoPreviewInfo,
   SocialPreviews,
 } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 
-import { RootMetadata } from '../seo/seo.field';
-import { toSeoPreviewMetadata } from './seo-preview-metadata';
+import { usePuckDocumentKind } from '../document-kind/document-kind';
+import {
+  seoContentTypes,
+  SeoPreviewRootProps,
+  toSeoPreviewMetadata,
+} from './seo-preview-metadata';
 
 const usePuck = createUsePuck();
 
@@ -27,8 +30,9 @@ const useImage = (id?: string) => {
 
 export function SeoPreview() {
   const { t } = useTranslation();
+  const kind = usePuckDocumentKind();
   const rootProps = usePuck(
-    puck => puck.appState.data.root.props as RootMetadata | undefined
+    puck => puck.appState.data.root.props as SeoPreviewRootProps | undefined
   );
   const { data: peerProfile } = useQuery(PeerProfileDocument);
   const profile = peerProfile?.peerProfile;
@@ -37,7 +41,7 @@ export function SeoPreview() {
   const socialMediaImage = useImage(rootProps?.socialMediaImageId);
 
   const previewData = getSeoPreviewData(
-    SeoContentType.Page,
+    seoContentTypes[kind],
     toSeoPreviewMetadata(
       rootProps,
       { image, socialMediaImage },

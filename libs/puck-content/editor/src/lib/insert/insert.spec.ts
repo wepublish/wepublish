@@ -90,15 +90,19 @@ describe('acceptingZones', () => {
 });
 
 describe('insertZones', () => {
-  it('targets the page root when no block is selected', () => {
-    expect(insertZones(config, null, 3)).toEqual([
-      { zone: 'root:default-zone', label: 'Page', count: 3 },
+  it('targets the document root when no block is selected', () => {
+    expect(insertZones(config, null, { count: 3, label: 'Article' })).toEqual([
+      { zone: 'root:default-zone', label: 'Article', count: 3 },
     ]);
   });
 
   it('targets the slots of the selected block', () => {
     expect(
-      insertZones(config, { type: 'Container', props: { id: 'c1' } }, 3)
+      insertZones(
+        config,
+        { type: 'Container', props: { id: 'c1' } },
+        { count: 3, label: 'Page' }
+      )
     ).toEqual([{ zone: 'c1:content', label: 'content', count: 0 }]);
   });
 });

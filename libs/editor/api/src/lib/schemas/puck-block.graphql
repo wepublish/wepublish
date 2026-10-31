@@ -1,0 +1,110 @@
+fragment FullPuckSpacingSides on PuckSpacingSides {
+  top
+  right
+  bottom
+  left
+}
+
+fragment FullPuckBlockDatasource on PuckBlockDatasource {
+  type
+  id
+  ids
+}
+
+fragment FullPuckBlock on PuckBlock {
+  id
+  type
+  parentId
+  slot
+  position
+  locked
+  data
+
+  visibility {
+    disabled
+    breakpoints
+
+    timings {
+      from
+      to
+      weekdays
+
+      timeOfDay {
+        from
+        to
+      }
+    }
+  }
+
+  styling {
+    typography
+    textAlign
+    color
+    fontWeight
+    textTransform
+    background
+    backgroundImage
+    backgroundSize
+    backgroundPosition
+    overlay
+    overlayOpacity
+
+    margin {
+      ...FullPuckSpacingSides
+    }
+
+    padding {
+      ...FullPuckSpacingSides
+    }
+
+    border {
+      style
+      color
+
+      width {
+        top
+        right
+        bottom
+        left
+      }
+    }
+
+    borderRadius {
+      topLeft
+      topRight
+      bottomRight
+      bottomLeft
+    }
+
+    minHeight
+    maxWidth
+    shadow
+    opacity
+  }
+
+  datasources {
+    article {
+      ...FullPuckBlockDatasource
+    }
+
+    page {
+      ...FullPuckBlockDatasource
+    }
+
+    event {
+      ...FullPuckBlockDatasource
+    }
+
+    image {
+      ...FullPuckBlockDatasource
+    }
+
+    memberPlan {
+      ...FullPuckBlockDatasource
+    }
+
+    userSubscription {
+      type
+    }
+  }
+}

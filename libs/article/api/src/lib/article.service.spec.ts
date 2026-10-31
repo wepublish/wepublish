@@ -5,10 +5,11 @@ import {
 } from '@wepublish/public-content-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArticleService, createArticleFilter } from './article.service';
-import { Article, PrismaClient, TaggedArticles } from '@prisma/client';
+import { Article, Prisma, PrismaClient, TaggedArticles } from '@prisma/client';
 import { ArticleDataloaderService } from './article-dataloader.service';
 import { DateFilterComparison, SortOrder } from '@wepublish/utils/api';
 import { ArticleSort } from './article.model';
+import type { PuckBlockInput } from '@wepublish/puck-content/api';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
@@ -1104,6 +1105,223 @@ describe('ArticleService', () => {
         BadRequestException
       );
       expect(prismaMock.articleRevision.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('puck blocks', () => {
+    const puckBlocks = [
+      {
+        id: 'grid-1',
+        type: 'Grid',
+        data: { items: [{ content: [] }] },
+        children: [
+          {
+            id: 'heading-1',
+            type: 'Heading',
+            data: { text: 'Hi' },
+            slot: 'items[0].content',
+          },
+        ],
+      },
+    ];
+
+    const input = {
+      breaking: false,
+      disableComments: false,
+      hidden: false,
+      hideAuthor: false,
+      shared: false,
+      properties: [],
+      socialMediaAuthorIds: [],
+      tagIds: [],
+      authors: [],
+    };
+
+    const createdRevision = () =>
+      prismaMock.article.create?.mock.calls[0][0].data.revisions.create;
+
+    const updatedRevision = () =>
+      prismaMock.article.update?.mock.calls[0][0].data.revisions.create;
+
+    beforeEach(() => {
+      prismaMock.article.create?.mockResolvedValue({ id: '1234' });
+      prismaMock.article.update?.mockResolvedValue({ id: '1234' });
+    });
+
+    it('stores the puck blocks of a new article', async () => {
+      await service.createArticle({ ...input, blocks: [], puckBlocks }, '1');
+
+      expect(createdRevision().puckBlocks).toEqual(puckBlocks);
+    });
+
+    it('stores the timings the DateTime scalar parsed as ISO strings', async () => {
+      await service.createArticle(
+        {
+          ...input,
+          puckBlocks: [
+            {
+              id: 'heading-1',
+              type: 'Heading',
+              data: {},
+              visibility: {
+                timings: { from: new Date('2026-01-05T08:00:00Z') },
+              },
+            },
+          ],
+        },
+        '1'
+      );
+
+      expect(createdRevision().puckBlocks).toEqual([
+        {
+          id: 'heading-1',
+          type: 'Heading',
+          data: {},
+          visibility: { timings: { from: '2026-01-05T08:00:00.000Z' } },
+        },
+      ]);
+    });
+
+    it('creates an article without legacy blocks', async () => {
+      await service.createArticle({ ...input, puckBlocks }, '1');
+
+      expect(createdRevision().blocks).toEqual([]);
+    });
+
+    it('stores no puck blocks for a new article without them', async () => {
+      await service.createArticle({ ...input, blocks: [] }, '1');
+
+      expect(createdRevision().puckBlocks).toBe(Prisma.DbNull);
+    });
+
+    it('rejects a new article with invalid puck blocks', async () => {
+      await expect(
+        service.createArticle(
+          {
+            ...input,
+            puckBlocks: [
+              { type: 'Heading', props: { id: 'a' } },
+            ] as unknown as PuckBlockInput[],
+          },
+          '1'
+        )
+      ).rejects.toThrow(BadRequestException);
+
+      expect(prismaMock.article.create).not.toHaveBeenCalled();
+    });
+
+    describe('when updating', () => {
+      const latest = {
+        blocks: [{ type: 'title', title: 'Old' }],
+        puckBlocks: [{ id: 'old-1', type: 'Heading', data: {} }],
+      };
+
+      beforeEach(() => {
+        prismaMock.article.findUnique?.mockResolvedValue({
+          id: '1234',
+          tags: [],
+          revisions: [latest],
+        });
+      });
+
+      it('loads the content of the latest open revision', async () => {
+        await service.updateArticle({ ...input, id: '1234', blocks: [] }, '1');
+
+        expect(
+          prismaMock.article.findUnique?.mock.calls[0][0].include.revisions
+        ).toEqual({
+          where: { archivedAt: null },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: { blocks: true, puckBlocks: true },
+        });
+      });
+
+      it('stores the given puck blocks', async () => {
+        await service.updateArticle(
+          { ...input, id: '1234', blocks: [], puckBlocks },
+          '1'
+        );
+
+        expect(updatedRevision().puckBlocks).toEqual(puckBlocks);
+      });
+
+      it('keeps the puck blocks of the latest revision when none are given', async () => {
+        await service.updateArticle({ ...input, id: '1234', blocks: [] }, '1');
+
+        expect(updatedRevision().puckBlocks).toBe(latest.puckBlocks);
+      });
+
+      it('clears the puck blocks when null is given', async () => {
+        await service.updateArticle(
+          { ...input, id: '1234', blocks: [], puckBlocks: null },
+          '1'
+        );
+
+        expect(updatedRevision().puckBlocks).toBe(Prisma.DbNull);
+      });
+
+      it('keeps the legacy blocks of the latest revision when none are given', async () => {
+        await service.updateArticle({ ...input, id: '1234', puckBlocks }, '1');
+
+        expect(updatedRevision().blocks).toBe(latest.blocks);
+        expect(mapBlockUnionMap).not.toHaveBeenCalled();
+      });
+
+      it('rejects invalid puck blocks', async () => {
+        await expect(
+          service.updateArticle(
+            {
+              ...input,
+              id: '1234',
+              puckBlocks: [{ id: 'a', data: {} }] as PuckBlockInput[],
+            },
+            '1'
+          )
+        ).rejects.toThrow(BadRequestException);
+
+        expect(prismaMock.article.update).not.toHaveBeenCalled();
+      });
+    });
+
+    it('copies the puck blocks when duplicating an article', async () => {
+      prismaMock.article.findUnique?.mockResolvedValue({
+        id: '1234',
+        tags: [],
+        revisions: [
+          {
+            id: 'rev',
+            properties: [],
+            authors: [],
+            socialMediaAuthors: [],
+            blocks: [],
+            puckBlocks,
+          },
+        ],
+      });
+
+      await service.duplicateArticle('1234', '1');
+
+      expect(createdRevision().puckBlocks).toEqual(puckBlocks);
+    });
+
+    it.each([
+      ['its puck blocks', puckBlocks, puckBlocks],
+      ['no puck blocks', null, Prisma.DbNull],
+    ])('restores a revision with %s', async (_, stored, expected) => {
+      prismaMock.articleRevision.findUnique?.mockResolvedValue({
+        id: 'rev-old',
+        articleId: '1234',
+        properties: [],
+        authors: [],
+        socialMediaAuthors: [],
+        blocks: [],
+        puckBlocks: stored,
+      });
+
+      await service.restoreArticleRevision('1234', 'rev-old', '1');
+
+      expect(updatedRevision().puckBlocks).toBe(expected);
     });
   });
 

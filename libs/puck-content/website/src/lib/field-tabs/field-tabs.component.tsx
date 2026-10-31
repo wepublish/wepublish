@@ -1,8 +1,10 @@
+import { Global } from '@emotion/react';
 import { FieldTab } from '@puckeditor/core';
 import { Fragment, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FieldTabsLayout, FieldTabValue, groupFieldTabs } from './field-tabs';
+import { fieldTabListStyles } from './field-tabs.styles';
 
 export const FieldTabs = ({
   fields,
@@ -19,6 +21,8 @@ export const FieldTabs = ({
     data: t('', 'Data'),
     visibility: t('', 'Visibility'),
     general: t('', 'General'),
+    byline: t('', 'Byline'),
+    publication: t('', 'Publication'),
     seo: t('', 'SEO'),
     socialMedia: t('', 'Social media'),
     properties: t('', 'Properties'),
@@ -31,13 +35,18 @@ export const FieldTabs = ({
     return renderTab(tabs[0].fields);
   }
 
-  return tabs.map(tab => (
-    <FieldTab
-      key={tab.value}
-      value={tab.value}
-      label={labels[tab.value]}
-    >
-      {renderTab(tab.fields)}
-    </FieldTab>
-  ));
+  return (
+    <>
+      <Global styles={fieldTabListStyles} />
+      {tabs.map(tab => (
+        <FieldTab
+          key={tab.value}
+          value={tab.value}
+          label={labels[tab.value]}
+        >
+          {renderTab(tab.fields)}
+        </FieldTab>
+      ))}
+    </>
+  );
 };

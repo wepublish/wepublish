@@ -21,6 +21,7 @@ model ArticleRevision {
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
+  puckBlocks             Json?
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
@@ -867,6 +868,7 @@ model PageRevision {
   socialMediaTitle       String?
   socialMediaDescription String?
   blocks                 Json
+  puckBlocks             Json?
 
   imageID String?
   image   Image?  @relation("pageRevisionImage", fields: [imageID], references: [id])

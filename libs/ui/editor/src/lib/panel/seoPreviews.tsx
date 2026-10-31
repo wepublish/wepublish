@@ -24,12 +24,14 @@ const toOgImage = (image?: FullImageFragment, square?: boolean) => {
 
 const Previews = styled.div`
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   min-width: 0;
 `;
 
 const Preview = styled.section`
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
   min-width: 0;
 `;
@@ -89,7 +91,7 @@ const LinkedIn = styled.div<{ dark: boolean }>`
   }}
   max-width: 552px;
   display: grid;
-  grid-template-columns: 128px 1fr;
+  grid-template-columns: 128px minmax(0, 1fr);
   gap: 16px;
   align-items: center;
   padding: 12px;
@@ -212,6 +214,7 @@ const Discord = styled.div<{ dark: boolean }>`
   }}
   max-width: 432px;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
   padding: 8px 16px 16px 12px;
   border-radius: 4px;
@@ -298,7 +301,7 @@ const Google = styled.div<{ dark: boolean }>`
 
 const GoogleSite = styled.div`
   display: grid;
-  grid-template-columns: 28px 1fr;
+  grid-template-columns: 28px minmax(0, 1fr);
   gap: 12px;
   align-items: center;
   font-size: 14px;

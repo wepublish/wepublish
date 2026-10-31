@@ -1,4 +1,11 @@
-import { RootMetadata } from '@wepublish/puck-content/editor';
+import { DocumentRootProps } from '@wepublish/puck-content/editor';
+
+import { PuckDocumentKind } from './document/document';
+
+export const rootOgTypes = {
+  page: 'website',
+  article: 'article',
+} as const satisfies Record<PuckDocumentKind, string>;
 
 export const resolveRootSEO = ({
   title,
@@ -7,7 +14,7 @@ export const resolveRootSEO = ({
   seoDescription,
   socialMediaTitle,
   socialMediaDescription,
-}: RootMetadata) => ({
+}: DocumentRootProps) => ({
   title: seoTitle || title || socialMediaTitle,
   description: seoDescription || lead || socialMediaDescription,
   socialMediaTitle: socialMediaTitle || seoTitle || title,

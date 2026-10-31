@@ -1,9 +1,8 @@
+import { Global } from '@emotion/react';
 import { PropsWithChildren, useEffect } from 'react';
 
-/**
- * Keeps the selected component selected when the viewport is switched via the
- * canvas controls, which puck otherwise treats as a click outside.
- */
+import { viewportControlsStyles } from './viewport-selection.styles';
+
 export const ViewportSelection = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
@@ -23,7 +22,10 @@ export const ViewportSelection = ({ children }: PropsWithChildren) => {
     return () => document.removeEventListener('click', onClick, true);
   }, []);
 
-  // Puck's override has to return an element, not a bare node
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <>{children}</>;
+  return (
+    <>
+      <Global styles={viewportControlsStyles} />
+      {children}
+    </>
+  );
 };

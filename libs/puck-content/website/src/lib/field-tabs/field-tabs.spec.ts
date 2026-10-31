@@ -1,19 +1,26 @@
 import {
+  articleRootFieldTabs,
   componentFieldTabs,
   contentDatasourceFieldTabs,
   groupFieldTabs,
-  rootFieldTabs,
+  pageRootFieldTabs,
   withFieldTabsAll,
 } from './field-tabs';
 
 describe('groupFieldTabs', () => {
   it('puts styling, visibility and datasources into their own tabs', () => {
     expect(
-      groupFieldTabs(['title', 'css', 'layout', 'visibility', 'datasources'])
+      groupFieldTabs([
+        'title',
+        'styling',
+        'layout',
+        'visibility',
+        'datasources',
+      ])
     ).toEqual([
       { value: 'layout', fields: ['layout'] },
       { value: 'content', fields: ['title'] },
-      { value: 'style', fields: ['css'] },
+      { value: 'style', fields: ['styling'] },
       { value: 'data', fields: ['datasources'] },
       { value: 'visibility', fields: ['visibility'] },
     ]);
@@ -33,7 +40,7 @@ describe('groupFieldTabs', () => {
   });
 });
 
-describe('rootFieldTabs', () => {
+describe('pageRootFieldTabs', () => {
   it('splits the page metadata like the page metadata panel', () => {
     expect(
       groupFieldTabs(
@@ -53,7 +60,7 @@ describe('rootFieldTabs', () => {
           'socialMediaImageId',
           'properties',
         ],
-        rootFieldTabs
+        pageRootFieldTabs
       )
     ).toEqual([
       {
@@ -83,16 +90,84 @@ describe('rootFieldTabs', () => {
   });
 });
 
+describe('articleRootFieldTabs', () => {
+  it('splits the article metadata like the article metadata panel', () => {
+    expect(
+      groupFieldTabs(
+        [
+          'preTitle',
+          'title',
+          'lead',
+          'imageId',
+          'slug',
+          'canonicalUrl',
+          'authorIds',
+          'hideAuthor',
+          'tags',
+          'paywallId',
+          'breaking',
+          'hidden',
+          'disableComments',
+          'shared',
+          'seoTitle',
+          'seoDescription',
+          'socialMediaTitle',
+          'socialMediaDescription',
+          'socialMediaImageId',
+          'socialMediaAuthorIds',
+          'properties',
+        ],
+        articleRootFieldTabs
+      )
+    ).toEqual([
+      {
+        value: 'general',
+        fields: [
+          'preTitle',
+          'title',
+          'lead',
+          'imageId',
+          'slug',
+          'canonicalUrl',
+        ],
+      },
+      { value: 'byline', fields: ['authorIds', 'hideAuthor'] },
+      {
+        value: 'publication',
+        fields: [
+          'tags',
+          'paywallId',
+          'breaking',
+          'hidden',
+          'disableComments',
+          'shared',
+        ],
+      },
+      { value: 'seo', fields: ['seoTitle', 'seoDescription'] },
+      {
+        value: 'socialMedia',
+        fields: [
+          'socialMediaTitle',
+          'socialMediaDescription',
+          'socialMediaImageId',
+          'socialMediaAuthorIds',
+        ],
+      },
+      { value: 'properties', fields: ['properties'] },
+    ]);
+  });
+});
+
 describe('contentDatasourceFieldTabs', () => {
   it('keeps the datasource next to the content', () => {
     expect(
       groupFieldTabs(
-        ['caption', 'datasources', 'css'],
+        ['caption', 'datasources', 'styling'],
         contentDatasourceFieldTabs
       )
     ).toEqual([
       { value: 'content', fields: ['caption', 'datasources'] },
-      { value: 'style', fields: ['css'] },
+      { value: 'style', fields: ['styling'] },
     ]);
   });
 });

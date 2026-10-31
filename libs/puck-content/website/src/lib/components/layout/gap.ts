@@ -29,7 +29,9 @@ export const gapFields = (axes?: GapAxis[]): { gap: GapField } => ({
 });
 
 export const gapSchema = (axes?: GapAxis[]) => ({
-  gap: gapValueSchema(axes).describe('Gap between the children in pixels'),
+  gap: gapValueSchema(axes).describe(
+    'Gap between the children, as a number of theme spacing units (usually 8px each) or an exact pixel string like "12px"'
+  ),
 });
 
 export const gapStyles = (

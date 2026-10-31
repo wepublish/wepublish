@@ -58,11 +58,17 @@ const FileDropInputWrapper = styled.div<{
     border-color: ${({ theme }) => theme.vars.palette.text.primary};
     color: ${({ theme }) => theme.vars.palette.text.primary};
   }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid ${({ theme }) => theme.vars.palette.primary.main};
+    outline-offset: 2px;
+  }
 `;
 
 export interface FileDropInputProps {
   disabled?: boolean;
   accept?: string;
+  multiple?: boolean;
 
   icon?: ReactElement;
   text?: string;
@@ -74,6 +80,7 @@ export interface FileDropInputProps {
 export function FileDropInput({
   disabled = false,
   accept,
+  multiple,
   onDrop,
   icon,
   text,
@@ -134,6 +141,8 @@ export function FileDropInput({
         type="file"
         value={''}
         accept={accept}
+        multiple={multiple}
+        aria-label={text}
         onChange={handleInputChange}
         disabled={disabled}
       />

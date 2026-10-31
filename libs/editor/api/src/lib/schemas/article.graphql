@@ -4,6 +4,10 @@ fragment FullArticleRevision on ArticleRevision {
   blocks(onlyDisplayed: false) {
     ...FullBlock
   }
+
+  puckBlocks(onlyDisplayed: false) {
+    ...FullPuckBlock
+  }
 }
 
 fragment FullArticle on Article {
@@ -63,7 +67,8 @@ query ArticleList(
 
 mutation CreateArticle(
   $authors: [ArticleRevisionAuthorInput!]!
-  $blocks: [BlockContentInput!]!
+  $blocks: [BlockContentInput!]
+  $puckBlocks: [PuckBlockInput!]
   $breaking: Boolean!
   $canonicalUrl: String!
   $disableComments: Boolean!
@@ -89,6 +94,7 @@ mutation CreateArticle(
   createArticle(
     authors: $authors
     blocks: $blocks
+    puckBlocks: $puckBlocks
     breaking: $breaking
     canonicalUrl: $canonicalUrl
     disableComments: $disableComments
@@ -118,7 +124,8 @@ mutation CreateArticle(
 mutation UpdateArticle(
   $id: String!
   $authors: [ArticleRevisionAuthorInput!]!
-  $blocks: [BlockContentInput!]!
+  $blocks: [BlockContentInput!]
+  $puckBlocks: [PuckBlockInput!]
   $breaking: Boolean!
   $canonicalUrl: String!
   $disableComments: Boolean!
@@ -144,6 +151,7 @@ mutation UpdateArticle(
     id: $id
     authors: $authors
     blocks: $blocks
+    puckBlocks: $puckBlocks
     breaking: $breaking
     canonicalUrl: $canonicalUrl
     disableComments: $disableComments

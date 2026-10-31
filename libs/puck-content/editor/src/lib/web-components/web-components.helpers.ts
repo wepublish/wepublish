@@ -1,0 +1,67 @@
+export const bridgeCustomElements = (frameDocument: Document) => {
+  const editorDocument = document;
+  const editorWindow = editorDocument.defaultView;
+
+  if (!editorWindow || frameDocument === editorDocument) {
+    return () => undefined;
+  }
+
+  const hadOwnCreateElement = Object.prototype.hasOwnProperty.call(
+    frameDocument,
+    'createElement'
+  );
+  const originalCreateElement = frameDocument.createElement;
+
+  frameDocument.createElement = function createElement(
+    this: Document,
+    tagName: string,
+    options?: ElementCreationOptions
+  ) {
+    const name = String(tagName).toLowerCase();
+
+    if (name.includes('-') && editorWindow.customElements.get(name)) {
+      return frameDocument.adoptNode(
+        editorDocument.createElement(name, options)
+      );
+    }
+
+    return originalCreateElement.call(this, tagName, options);
+  } as Document['createElement'];
+
+  return () => {
+    if (hadOwnCreateElement) {
+      frameDocument.createElement = originalCreateElement;
+    } else {
+      delete (frameDocument as Partial<Document>).createElement;
+    }
+  };
+};
+
+const bridgedDocuments = new Set<Document>();
+const bridgeListeners = new Set<() => void>();
+
+const notifyBridgeListeners = () =>
+  bridgeListeners.forEach(listener => listener());
+
+export const subscribeToBridgedDocuments = (listener: () => void) => {
+  bridgeListeners.add(listener);
+
+  return () => {
+    bridgeListeners.delete(listener);
+  };
+};
+
+export const isDocumentBridged = (frameDocument?: Document) =>
+  !!frameDocument && bridgedDocuments.has(frameDocument);
+
+export const bridgeDocument = (frameDocument: Document) => {
+  const restore = bridgeCustomElements(frameDocument);
+  bridgedDocuments.add(frameDocument);
+  notifyBridgeListeners();
+
+  return () => {
+    restore();
+    bridgedDocuments.delete(frameDocument);
+    notifyBridgeListeners();
+  };
+};

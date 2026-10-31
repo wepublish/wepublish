@@ -1,4 +1,8 @@
 import { ComponentConfig } from '@puckeditor/core';
+import {
+  ArticleRootProps,
+  PageRootProps,
+} from '@wepublish/puck-content/editor';
 import { createElement } from 'react';
 
 import { FieldTabs } from './field-tabs.component';
@@ -10,6 +14,8 @@ export type FieldTabValue =
   | 'data'
   | 'visibility'
   | 'general'
+  | 'byline'
+  | 'publication'
   | 'seo'
   | 'socialMedia'
   | 'properties';
@@ -25,7 +31,7 @@ export const componentFieldTabs: FieldTabsLayout = {
   fallback: 'content',
   tabOf: {
     layout: 'layout',
-    css: 'style',
+    styling: 'style',
     visibility: 'visibility',
     datasources: 'data',
   },
@@ -36,7 +42,7 @@ export const contentDatasourceFieldTabs: FieldTabsLayout = {
   tabOf: { ...componentFieldTabs.tabOf, datasources: 'content' },
 };
 
-export const rootFieldTabs: FieldTabsLayout = {
+export const pageRootFieldTabs: FieldTabsLayout = {
   order: ['general', 'seo', 'socialMedia', 'properties'],
   fallback: 'general',
   tabOf: {
@@ -46,7 +52,36 @@ export const rootFieldTabs: FieldTabsLayout = {
     socialMediaDescription: 'socialMedia',
     socialMediaImageId: 'socialMedia',
     properties: 'properties',
-  },
+  } satisfies Partial<Record<keyof PageRootProps, FieldTabValue>>,
+};
+
+export const articleRootFieldTabs: FieldTabsLayout = {
+  order: [
+    'general',
+    'byline',
+    'publication',
+    'seo',
+    'socialMedia',
+    'properties',
+  ],
+  fallback: 'general',
+  tabOf: {
+    authorIds: 'byline',
+    hideAuthor: 'byline',
+    tags: 'publication',
+    paywallId: 'publication',
+    breaking: 'publication',
+    hidden: 'publication',
+    disableComments: 'publication',
+    shared: 'publication',
+    seoTitle: 'seo',
+    seoDescription: 'seo',
+    socialMediaTitle: 'socialMedia',
+    socialMediaDescription: 'socialMedia',
+    socialMediaImageId: 'socialMedia',
+    socialMediaAuthorIds: 'socialMedia',
+    properties: 'properties',
+  } satisfies Partial<Record<keyof ArticleRootProps, FieldTabValue>>,
 };
 
 export const groupFieldTabs = (

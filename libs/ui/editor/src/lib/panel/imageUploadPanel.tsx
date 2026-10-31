@@ -69,6 +69,8 @@ export function ImageUploadPanel({ onClose, onUpload }: ImageUploadPanelProps) {
         title: t('articleEditor.panels.invalidImage'),
         autoHideDuration: 5000,
       });
+
+      return;
     }
 
     onUpload(file);

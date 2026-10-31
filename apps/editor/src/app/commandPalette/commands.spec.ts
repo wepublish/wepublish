@@ -4,7 +4,13 @@ import type { i18n as I18n, TFunction } from 'i18next';
 import { catalogs, lookup, routerPaths } from '../testing/routerPaths';
 import { allCommands, editorCommands } from './commands';
 
-const NOT_A_DESTINATION = [/^\/login/, /^\/$/, /:/, /^\/systemmails$/];
+const NOT_A_DESTINATION = [
+  /^\/login/,
+  /^\/$/,
+  /:/,
+  /^\/systemmails$/,
+  /^\/puck$/,
+];
 
 const commandPaths = () => {
   const paths: string[] = [];

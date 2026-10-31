@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Alert,
@@ -11,7 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FullImageFragment, ImageListDocument } from '@wepublish/editor/api';
+import { FullImageFragment } from '@wepublish/editor/api';
 import {
   CanDeleteImage,
   CanGetImage,
@@ -33,6 +32,7 @@ import {
 import { enqueueSnackbar } from '../snackbar';
 import { getImgMinSizeToCompress } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
+import { useImageList } from './useImageList';
 
 const Panel = styled.div`
   display: grid;
@@ -91,8 +91,6 @@ export interface ImageSelectPanelProps {
   onSelect(image: FullImageFragment): void;
 }
 
-const ImagesPerPage = 20;
-
 function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
   const [filter, setFilter] = useState('');
 
@@ -106,17 +104,11 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
   });
 
   const {
-    data,
-    fetchMore,
+    images,
+    hasMore,
     loading: isLoading,
-  } = useQuery(ImageListDocument, {
-    variables: {
-      filter,
-      take: ImagesPerPage,
-    },
-  });
-
-  const images = data?.images.nodes ?? [];
+    loadMore,
+  } = useImageList(filter);
 
   const { t } = useTranslation();
 
@@ -140,29 +132,6 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
     }
 
     setFile(file);
-  }
-
-  function loadMore() {
-    fetchMore({
-      variables: {
-        take: ImagesPerPage,
-        skip: 1,
-        cursorId: data?.images.pageInfo.endCursor,
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) {
-          return prev;
-        }
-
-        return {
-          __typename: 'Query',
-          images: {
-            ...fetchMoreResult.images,
-            nodes: [...prev.images.nodes, ...fetchMoreResult.images.nodes],
-          },
-        };
-      },
-    });
   }
 
   if (file) {
@@ -268,7 +237,7 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
                 })}
               </ImageGrid>
 
-              {data?.images.pageInfo.hasNextPage && (
+              {hasMore && (
                 <Button
                   variant="text"
                   onClick={loadMore}

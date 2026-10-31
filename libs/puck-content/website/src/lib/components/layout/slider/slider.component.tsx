@@ -60,6 +60,7 @@ export const SliderRender: PuckComponent<SliderProps> = ({
   items,
   settings,
   dragDisabled,
+  puck,
   ...props
 }) => {
   const theme = useTheme();
@@ -69,7 +70,7 @@ export const SliderRender: PuckComponent<SliderProps> = ({
   return (
     <Slider
       {...toSliderConfig(theme, settings ?? {})}
-      dragDisabled={true}
+      dragDisabled={!!dragDisabled || puck.isEditing}
       refs={{ control: controlRef }}
       origin={'auto'}
       loop={false}

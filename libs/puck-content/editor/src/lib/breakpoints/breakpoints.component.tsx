@@ -1,5 +1,11 @@
-import styled from '@emotion/styled';
-import { Breakpoint } from '@mui/material';
+import {
+  Breakpoint,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import {
   AutoField,
   createUsePuck,
@@ -16,15 +22,22 @@ import {
   resolveBreakpointValue,
   sortBreakpoints,
 } from './breakpoints.field';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  BreakpointActiveDot,
+  BreakpointAddButton,
+  BreakpointAddWrapper,
+  BreakpointFields,
+  BreakpointRemoveButton,
+  BreakpointTab,
+  BreakpointTabItem,
+  BreakpointTabs,
+} from './breakpoints.styles';
+import { Fragment, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdClose } from 'react-icons/md';
 
 const usePuck = createUsePuck();
 
-// Puck's public AutoField renders these built-in types without their label,
-// so we draw the heading ourselves. Custom field types (including our own
-// plugins) render their own FieldLabel from field.label.
 const unlabelledFieldTypes = new Set([
   'text',
   'textarea',
@@ -35,124 +48,6 @@ const unlabelledFieldTypes = new Set([
   'object',
   'external',
 ]);
-
-const Tabs = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
-  border-bottom: 1px solid var(--puck-color-border);
-  margin-bottom: 12px;
-`;
-
-const Tab = styled.button<{ active: boolean }>`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 10px;
-  border: 0;
-  border-bottom: 2px solid
-    ${({ active }) => (active ? 'var(--puck-color-text)' : 'transparent')};
-  margin-bottom: -1px;
-  background: transparent;
-  color: ${({ active }) =>
-    active ? 'var(--puck-color-text)' : 'var(--puck-color-text-secondary)'};
-  font: inherit;
-  font-weight: ${({ active }) => (active ? 600 : 400)};
-  cursor: pointer;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-`;
-
-const ActiveDot = styled.span`
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: ${({ theme }) => theme.vars.palette.success.main};
-`;
-
-const TabRemove = styled.span`
-  display: inline-flex;
-  align-items: center;
-  border-radius: 50%;
-  color: var(--puck-color-text-secondary);
-
-  &:hover {
-    color: var(--puck-color-text);
-  }
-`;
-
-const AddWrapper = styled.div`
-  position: relative;
-  margin-left: auto;
-`;
-
-const AddButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border: 1px solid var(--puck-color-border);
-  border-radius: 4px;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-`;
-
-const Menu = styled.ul`
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
-  z-index: 10;
-  min-width: 160px;
-  margin: 0;
-  padding: 4px;
-  list-style: none;
-  border: 1px solid var(--puck-color-border);
-  border-radius: 4px;
-  background: var(--puck-color-surface);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-`;
-
-const MenuItem = styled.button`
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  padding: 6px 8px;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-
-  &:hover {
-    background: var(--puck-color-interactive-neutral-hover);
-  }
-`;
-
-const Size = styled.span`
-  font-size: 0.85em;
-  color: var(--puck-color-text-secondary);
-`;
-
-const Fields = styled.div`
-  display: grid;
-  gap: 16px;
-`;
 
 export type BreakpointsFieldRenderProps = FieldProps<
   BreakpointsField,
@@ -167,7 +62,6 @@ export const BreakpointsFieldRender = ({
   value,
   onChange,
   readOnly,
-  name,
   id,
 }: BreakpointsFieldRenderProps) => {
   const { t } = useTranslation();
@@ -176,13 +70,13 @@ export const BreakpointsFieldRender = ({
     puck => puck.appState.ui.viewports.current.width
   );
   const current = value ?? {};
+  const menuId = useId();
+  const addButtonId = useId();
 
   const allBreakpoints = useMemo(
     () => sortBreakpoints(theme, theme.breakpoints.keys),
     [theme]
   );
-  // The smallest breakpoint is the base every other breakpoint inherits from,
-  // so it is always present and can never be removed.
   const baseBreakpoint = allBreakpoints[0];
   const activeBreakpoints = useMemo(
     () =>
@@ -194,9 +88,6 @@ export const BreakpointsFieldRender = ({
   const availableBreakpoints = allBreakpoints.filter(
     breakpoint => !activeBreakpoints.includes(breakpoint)
   );
-  // Breakpoint that currently applies in the preview. Unknown when the preview
-  // fills the available space ("100%") since the field has no access to its
-  // rendered width.
   const previewBreakpoint =
     typeof previewWidth === 'number' ?
       getActiveBreakpoint(theme, activeBreakpoints, previewWidth)
@@ -209,48 +100,31 @@ export const BreakpointsFieldRender = ({
     selectedState && activeBreakpoints.includes(selectedState) ?
       selectedState
     : activeBreakpoints[0];
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!menuOpen) {
-      return;
-    }
-
-    const onClick = (event: MouseEvent) => {
-      if (!menuRef.current?.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', onClick);
-
-    return () => document.removeEventListener('mousedown', onClick);
-  }, [menuOpen]);
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const tabButtons = useRef<
+    Partial<Record<Breakpoint, HTMLButtonElement | null>>
+  >({});
 
   const formatSize = (breakpoint: Breakpoint) =>
     `${theme.breakpoints.values[breakpoint]}px`;
 
   const addBreakpoint = (breakpoint: Breakpoint) => {
-    // Seed the new breakpoint with the resolved value so it starts identical
-    // to what is currently shown at that width.
     const seed = resolveBreakpointValue(theme, current, breakpoint) ?? {};
 
     onChange({ ...current, [breakpoint]: seed });
     setSelected(breakpoint);
-    setMenuOpen(false);
+    setMenuAnchor(null);
   };
 
   const removeBreakpoint = (breakpoint: Breakpoint) => {
     const rest = Object.fromEntries(
       Object.entries(current).filter(([key]) => key !== breakpoint)
     ) as BreakpointsValue;
+    const nextSelected = selected === breakpoint ? baseBreakpoint : selected;
 
+    tabButtons.current[nextSelected]?.focus();
     onChange(rest);
-
-    if (selected === breakpoint) {
-      setSelected(baseBreakpoint);
-    }
+    setSelected(nextSelected);
   };
 
   const changeSubField = (subName: string, subValue: unknown) => {
@@ -267,73 +141,106 @@ export const BreakpointsFieldRender = ({
     });
   };
 
+  const addLabel = t('', 'Add breakpoint');
+
   const content = (
     <>
-      <Tabs>
-        {activeBreakpoints.map(breakpoint => (
-          <Tab
-            key={breakpoint}
-            type="button"
-            active={selected === breakpoint}
-            disabled={readOnly}
-            title={
-              previewBreakpoint === breakpoint ?
-                t('', '{{size}} (active in preview)', {
-                  size: formatSize(breakpoint),
-                })
-              : formatSize(breakpoint)
-            }
-            onClick={() => setSelected(breakpoint)}
-          >
-            {previewBreakpoint === breakpoint && <ActiveDot />}
-            {breakpoint}
+      <BreakpointTabs>
+        {activeBreakpoints.map(breakpoint => {
+          const removeLabel = t('', 'Remove {{breakpoint}} breakpoint', {
+            breakpoint,
+          });
+          const removable = breakpoint !== baseBreakpoint && !readOnly;
 
-            {breakpoint !== baseBreakpoint && !readOnly && (
-              <TabRemove
-                role="button"
-                aria-label={t('', 'Remove breakpoint')}
-                onClick={event => {
-                  event.stopPropagation();
-                  removeBreakpoint(breakpoint);
+          return (
+            <BreakpointTabItem
+              key={breakpoint}
+              active={selected === breakpoint}
+            >
+              <BreakpointTab
+                ref={element => {
+                  tabButtons.current[breakpoint] = element;
                 }}
+                type="button"
+                active={selected === breakpoint}
+                removable={removable}
+                aria-pressed={selected === breakpoint}
+                disabled={readOnly}
+                title={
+                  previewBreakpoint === breakpoint ?
+                    t('', '{{size}} (active in preview)', {
+                      size: formatSize(breakpoint),
+                    })
+                  : formatSize(breakpoint)
+                }
+                onClick={() => setSelected(breakpoint)}
               >
-                <MdClose size={12} />
-              </TabRemove>
-            )}
-          </Tab>
-        ))}
+                {previewBreakpoint === breakpoint && <BreakpointActiveDot />}
+                {breakpoint}
+              </BreakpointTab>
 
-        <AddWrapper ref={menuRef}>
-          <AddButton
-            type="button"
-            aria-label={t('', 'Add breakpoint')}
-            aria-expanded={menuOpen}
-            disabled={readOnly || !availableBreakpoints.length}
-            onClick={() => setMenuOpen(open => !open)}
-          >
-            <MdAdd size={16} />
-          </AddButton>
-
-          {menuOpen && (
-            <Menu>
-              {availableBreakpoints.map(breakpoint => (
-                <li key={breakpoint}>
-                  <MenuItem
+              {removable && (
+                <Tooltip title={removeLabel}>
+                  <BreakpointRemoveButton
                     type="button"
-                    onClick={() => addBreakpoint(breakpoint)}
+                    aria-label={removeLabel}
+                    onClick={() => removeBreakpoint(breakpoint)}
                   >
-                    <span>{breakpoint}</span>
-                    <Size>{formatSize(breakpoint)}</Size>
-                  </MenuItem>
-                </li>
-              ))}
-            </Menu>
-          )}
-        </AddWrapper>
-      </Tabs>
+                    <MdClose size={12} />
+                  </BreakpointRemoveButton>
+                </Tooltip>
+              )}
+            </BreakpointTabItem>
+          );
+        })}
+
+        <Tooltip title={addLabel}>
+          <BreakpointAddWrapper>
+            <BreakpointAddButton
+              id={addButtonId}
+              type="button"
+              aria-label={addLabel}
+              aria-haspopup="menu"
+              aria-expanded={menuAnchor ? true : undefined}
+              aria-controls={menuAnchor ? menuId : undefined}
+              disabled={readOnly || !availableBreakpoints.length}
+              onClick={event => setMenuAnchor(event.currentTarget)}
+            >
+              <MdAdd size={16} />
+            </BreakpointAddButton>
+          </BreakpointAddWrapper>
+        </Tooltip>
+
+        <Menu
+          anchorEl={menuAnchor}
+          open={!!menuAnchor}
+          onClose={() => setMenuAnchor(null)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          slotProps={{
+            list: { id: menuId, 'aria-labelledby': addButtonId, dense: true },
+          }}
+        >
+          {availableBreakpoints.map(breakpoint => (
+            <MenuItem
+              key={breakpoint}
+              onClick={() => addBreakpoint(breakpoint)}
+            >
+              <ListItemText>{breakpoint}</ListItemText>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ ml: 3 }}
+              >
+                {formatSize(breakpoint)}
+              </Typography>
+            </MenuItem>
+          ))}
+        </Menu>
+      </BreakpointTabs>
 
       {selected && (
-        <Fields>
+        <BreakpointFields>
           {Object.entries(field.objectFields).map(([subName, subField]) => {
             const label = subField.label ?? subName;
             const autoField = (
@@ -363,7 +270,7 @@ export const BreakpointsFieldRender = ({
               </FieldLabel>
             );
           })}
-        </Fields>
+        </BreakpointFields>
       )}
     </>
   );

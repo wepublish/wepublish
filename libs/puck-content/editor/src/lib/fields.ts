@@ -13,6 +13,7 @@ import { ImageField } from './image/image.field';
 import { ListField } from './list/list.field';
 import { PaddingField } from './padding/padding.field';
 import { PaletteField } from './palette/palette.field';
+import { RecordField } from './record/record.field';
 import { ResolvedField } from './resolved';
 import { RichtextField } from './richtext/richtext.field';
 import { StylingField } from './styling/styling.field';
@@ -25,6 +26,7 @@ import { TypographyField } from './typography/typography.field';
 export type UserFields = {
   api: ApiField;
   datasource: DatasourceField;
+  record: RecordField;
   padding: PaddingField;
   border: BorderField;
   gap: GapField;

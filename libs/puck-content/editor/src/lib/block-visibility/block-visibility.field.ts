@@ -82,3 +82,17 @@ export const blockVisibilityFlags = (
   timed: isTimed(value?.timings),
   breakpoints: value?.breakpoints,
 });
+
+export const setBlockVisibility = (
+  value: BlockVisibilityValue | undefined,
+  change: BlockVisibilityValue
+): BlockVisibilityValue | undefined => {
+  const { disabled, timings, breakpoints } = { ...value, ...change };
+  const next: BlockVisibilityValue = {
+    ...(disabled ? { disabled } : {}),
+    ...(isTimed(timings) ? { timings } : {}),
+    ...(breakpoints ? { breakpoints } : {}),
+  };
+
+  return Object.keys(next).length ? next : undefined;
+};

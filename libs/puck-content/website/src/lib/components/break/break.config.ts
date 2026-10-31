@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker';
 import { ComponentConfig } from '@puckeditor/core';
 
 import { richtextFieldAi, switchFieldAi } from '@wepublish/puck-content/editor';
@@ -74,11 +73,11 @@ export const BreakConfig: ComponentConfig<{
     return params.fields;
   },
   defaultProps: {
-    text: faker.lorem.sentence(),
+    text: 'Hello, world',
     hideButton: false,
     linkText: 'Learn more',
-    linkURL: faker.internet.url(),
-    linkTarget: '_blank',
+    linkURL: '/',
+    linkTarget: '_self',
     richText: placeholderRichText(),
   },
 

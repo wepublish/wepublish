@@ -1,4 +1,4 @@
-import { resolveRootSEO } from './root-seo';
+import { resolveRootSEO, rootOgTypes } from './root-seo';
 
 describe('resolveRootSEO', () => {
   it('prefers the dedicated SEO and social media texts', () => {
@@ -40,5 +40,11 @@ describe('resolveRootSEO', () => {
       socialMediaTitle: 'Search title',
       socialMediaDescription: 'Search lead',
     });
+  });
+});
+
+describe('rootOgTypes', () => {
+  it('shares pages as websites and articles as articles', () => {
+    expect(rootOgTypes).toEqual({ page: 'website', article: 'article' });
   });
 });

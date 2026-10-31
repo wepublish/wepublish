@@ -39,6 +39,9 @@ exports[`ArticleService > should create an article 1`] = `
               "value": "value",
             },
           ],
+          "puckBlocks": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
           "socialMediaAuthors": {
             "createMany": {
               "data": [
@@ -1576,6 +1579,19 @@ exports[`ArticleService > should update an article 1`] = `
 [
   {
     "include": {
+      "revisions": {
+        "orderBy": {
+          "createdAt": "desc",
+        },
+        "select": {
+          "blocks": true,
+          "puckBlocks": true,
+        },
+        "take": 1,
+        "where": {
+          "archivedAt": null,
+        },
+      },
       "tags": true,
     },
     "where": {
@@ -1624,6 +1640,9 @@ exports[`ArticleService > should update an article 2`] = `
               "value": "value",
             },
           ],
+          "puckBlocks": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
           "socialMediaAuthors": {
             "createMany": {
               "data": [
@@ -1739,6 +1758,9 @@ exports[`ArticleService > version history > should restore a revision as a new d
               "value": "value",
             },
           ],
+          "puckBlocks": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
           "seoTitle": "Old seo",
           "socialMediaAuthors": {
             "createMany": {
