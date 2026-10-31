@@ -22,9 +22,8 @@ const mockTemplate2: UserFlowMail = {
 const prismaServiceMock = {
   userFlowMail: {
     findMany: vi.fn((): UserFlowMail[] => [mockTemplate1, mockTemplate2]),
-    findUnique: vi.fn(
-      ({ where: { event } }): UserFlowMail =>
-        [mockTemplate1, mockTemplate2].find(m => m.event === event)!
+    findUnique: vi.fn(({ where: { event } }): UserFlowMail =>
+      [mockTemplate1, mockTemplate2].find(m => m.event === event)!
     ),
     update: vi.fn((): void => undefined),
   },

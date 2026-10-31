@@ -256,7 +256,8 @@ export class MemberContext implements MemberContextInterface {
       const startDate = new Date(
         (
           paidUntil &&
-          paidUntil.getTime() > new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
+            paidUntil.getTime() >
+              new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
         ) ?
           paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
         : new Date().getTime()

@@ -155,10 +155,14 @@ const globalStyles = (
       html,
       body {
         scroll-padding-top: ${theme.spacing(7)};
-        font-family: ${(theme.typography as TypographyVariantsOptions)
-          .allVariants?.fontFamily};
-        font-weight: ${(theme.typography as TypographyVariantsOptions)
-          .allVariants?.fontWeight};
+        font-family: ${
+          (theme.typography as TypographyVariantsOptions).allVariants
+            ?.fontFamily
+        };
+        font-weight: ${
+          (theme.typography as TypographyVariantsOptions).allVariants
+            ?.fontWeight
+        };
         hyphens: auto;
         word-break: break-word;
 

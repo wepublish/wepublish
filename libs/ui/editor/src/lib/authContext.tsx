@@ -42,8 +42,7 @@ export interface AuthDispatchLogoutAction {
 }
 
 export type AuthDispatchAction =
-  | AuthDispatchLoginAction
-  | AuthDispatchLogoutAction;
+  AuthDispatchLoginAction | AuthDispatchLogoutAction;
 
 export const AuthDispatchContext = createContext<Dispatch<AuthDispatchAction>>(
   () => {

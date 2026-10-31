@@ -102,19 +102,16 @@ describe('InvoiceListContainer with its own list', () => {
     const checkFirst = checkMock(openOfFirst);
     const checkSecond = checkMock(second);
 
-    renderWithProviders(
-      <InvoiceListContainer List={() => null} />,
-      {
-        mocks: [
-          {
-            request: { query: InvoicesDocument },
-            result: { data: { userInvoices: [openOfFirst, second] } },
-          },
-          checkFirst.mock,
-          checkSecond.mock,
-        ],
-      }
-    );
+    renderWithProviders(<InvoiceListContainer List={() => null} />, {
+      mocks: [
+        {
+          request: { query: InvoicesDocument },
+          result: { data: { userInvoices: [openOfFirst, second] } },
+        },
+        checkFirst.mock,
+        checkSecond.mock,
+      ],
+    });
 
     await waitFor(() => expect(checkSecond.result).toHaveBeenCalled());
     await actWait(100);

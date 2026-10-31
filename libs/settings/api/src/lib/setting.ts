@@ -34,6 +34,7 @@ export enum SettingName {
   SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE = 'subscriptionUpgradeBillsFullDifference',
   SUBSCRIPTION_EXTEND_WINDOW_DAYS = 'subscriptionExtendWindowDays',
   PAYMENT_METHOD_CHANGE_EXPIRY_DAYS = 'paymentMethodChangeExpiryDays',
+  EMAIL_QUALITY = 'emailQuality',
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>;
