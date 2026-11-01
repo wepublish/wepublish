@@ -21,7 +21,6 @@ import { AlignmentFieldRender } from '../alignment/alignment.component';
 import { BorderFieldRender } from '../border/border.component';
 import { BoxModelInput } from '../box-model/box-model.component';
 import { BreakpointTabsBar } from '../breakpoints/breakpoints.component';
-import { resolveBreakpointValue } from '../breakpoints/breakpoints.field';
 import { useBreakpointSelection } from '../breakpoints/breakpoints.hooks';
 import { ColorFieldRender } from '../color/color.component';
 import { FieldSelect, FieldToggleGroup } from '../field-controls.component';
@@ -236,8 +235,7 @@ export const StylingFieldRender = ({
   const selection = useBreakpointSelection(value);
   const { selected } = selection;
   const own: StylingValue | undefined = value?.[selected];
-  const current: StylingValue =
-    resolveBreakpointValue(theme, value, selected) ?? {};
+  const current: StylingValue = own ?? {};
   const change = (styling: StylingValue | undefined) =>
     onChange(setBreakpointStyling(value, selected, styling));
   const update = (patch: Partial<StylingValue>) =>

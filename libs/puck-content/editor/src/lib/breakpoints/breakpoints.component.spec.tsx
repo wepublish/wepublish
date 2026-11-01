@@ -167,7 +167,7 @@ describe('BreakpointsFieldRender', () => {
     expect(parseFloat(style.marginLeft)).toBeGreaterThanOrEqual(0);
   });
 
-  it('adds a breakpoint from a menu seeded with the inherited value', () => {
+  it('adds an empty breakpoint from a menu', () => {
     const { onChange } = renderField({
       initialValue: { xs: { columns: 1 }, md: { columns: 2 } },
     });
@@ -189,7 +189,7 @@ describe('BreakpointsFieldRender', () => {
     expect(onChange).toHaveBeenLastCalledWith({
       xs: { columns: 1 },
       md: { columns: 2 },
-      lg: { columns: 2 },
+      lg: {},
     });
     expect(screen.getByRole('button', { name: 'lg' })).toHaveAttribute(
       'aria-pressed',

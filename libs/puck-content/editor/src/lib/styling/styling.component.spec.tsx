@@ -701,7 +701,7 @@ describe('StylingFieldRender', () => {
       });
     });
 
-    it('shows what a breakpoint inherits from the smaller ones', () => {
+    it('only shows what is set on the selected breakpoint', () => {
       renderBreakpointStyling({
         initialValue: { xs: { typography: 'h2', opacity: 30 }, md: {} },
       });
@@ -716,18 +716,18 @@ describe('StylingFieldRender', () => {
             name: 'Typography',
           }) as HTMLSelectElement
         ).value
-      ).toBe('h2');
+      ).toBe('');
       expect(
         screen
           .getByRole('slider', { name: 'Opacity' })
           .getAttribute('aria-valuenow')
-      ).toBe('30');
+      ).not.toBe('30');
       expect(
         screen.queryByRole('button', { name: 'Reset Effects' })
       ).toBeNull();
     });
 
-    it('resets a group of a larger breakpoint back to what it inherits', () => {
+    it('resets a group of a larger breakpoint', () => {
       const { onChange } = renderBreakpointStyling({
         initialValue: { xs: { opacity: 30 }, md: { opacity: 50, shadow: 2 } },
       });
@@ -744,10 +744,10 @@ describe('StylingFieldRender', () => {
         screen
           .getByRole('slider', { name: 'Opacity' })
           .getAttribute('aria-valuenow')
-      ).toBe('30');
+      ).not.toBe('30');
     });
 
-    it('adds a breakpoint seeded with the styling it inherits', () => {
+    it('adds an empty breakpoint', () => {
       const { onChange } = renderBreakpointStyling({
         initialValue: { xs: { opacity: 30 }, md: { typography: 'h2' } },
       });
@@ -758,7 +758,7 @@ describe('StylingFieldRender', () => {
       expect(onChange).toHaveBeenLastCalledWith({
         xs: { opacity: 30 },
         md: { typography: 'h2' },
-        lg: { opacity: 30, typography: 'h2' },
+        lg: {},
       });
       expect(screen.getByRole('button', { name: 'lg' })).toHaveAttribute(
         'aria-pressed',

@@ -9,11 +9,7 @@ import {
 import { AutoField, Field, FieldLabel, FieldProps } from '@puckeditor/core';
 
 import { useWebsiteTheme } from '../website-theme';
-import {
-  BreakpointsField,
-  BreakpointsValue,
-  resolveBreakpointValue,
-} from './breakpoints.field';
+import { BreakpointsField, BreakpointsValue } from './breakpoints.field';
 import {
   BreakpointSelection,
   useBreakpointSelection,
@@ -78,9 +74,7 @@ export const BreakpointTabsBar = <Value extends BreakpointsValue>({
     `${theme.breakpoints.values[breakpoint]}px`;
 
   const addBreakpoint = (breakpoint: Breakpoint) => {
-    const seed = resolveBreakpointValue(theme, current, breakpoint) ?? {};
-
-    onChange({ ...current, [breakpoint]: seed });
+    onChange({ ...current, [breakpoint]: {} });
     setSelected(breakpoint);
     setMenuAnchor(null);
   };
