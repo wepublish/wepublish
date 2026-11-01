@@ -14,6 +14,7 @@ import {
   TeaserTagsRender,
   TeaserTitleRender,
 } from '../teaser/teaser.render';
+import { TeaserRender } from '../teaser/teaser/teaser.component';
 import { CommentRender } from './comment/comment.render';
 import { CrowdfundingRender } from './crowdfunding/crowdfunding.render';
 import { DataBlockProps, dataBlockRegistry } from './data.registry';
@@ -31,6 +32,7 @@ describe('dataBlockRegistry', () => {
       Crowdfunding: { component: CrowdfundingRender },
       Poll: { component: PollRender },
       Event: { component: EventRender },
+      Teaser: { component: TeaserRender },
       TeaserTitle: { component: TeaserTitleRender },
       TeaserPreTitle: { component: TeaserPreTitleRender },
       TeaserLead: { component: TeaserLeadRender },
@@ -65,5 +67,11 @@ describe('dataBlockRegistry', () => {
       keyof DataBlockProps['TeaserDate']
     >().toEqualTypeOf<'showTime'>();
     expectTypeOf<keyof DataBlockProps['TeaserTags']>().toEqualTypeOf<'max'>();
+  });
+
+  it('stores whether the teaser links to its record and its content slot', () => {
+    expectTypeOf<keyof DataBlockProps['Teaser']>().toEqualTypeOf<
+      'linkToRecord' | 'content'
+    >();
   });
 });

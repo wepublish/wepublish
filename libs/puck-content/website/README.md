@@ -41,8 +41,16 @@ registry to `PuckBlocks`:
 `PuckBlocks` rebuilds the tree (`buildPuckBlockTree`), merges tenant
 `components` over `puckBlockRegistry`, gives the first three top-level blocks
 eager images and renders each block with `PuckBlockRenderer`. SEO and layout
-come from the revision fields (`pageRootProps`, `articleRootProps`,
-`RootSEO`, `DocumentLayout`), never from Puck root props.
+come from the revision fields, never from Puck root props: `PuckPage` and
+`PuckArticle` select `...FullPage` / `...FullArticle`, so tenants render SEO
+with the existing `PageSEO` / `ArticleSEO` from `@wepublish/website/builder`
+and the chrome with `DocumentLayout`. The editor canvas renders no SEO.
+
+A teaser part (`TeaserTitle`, `TeaserLead`, …) reads its record from the
+nearest `TeaserSlotContext.Provider`, which a block with a teaser datasource
+sets through `TeaserSlotBoundary`. There is no root provider: outside any
+teaser, `useTeaserSlot` throws and the block shows its error alert. Specs that
+need "no teaser" wrap in `<TeaserSlotContext.Provider value={null}>`.
 
 ## Generated blocks
 
@@ -91,9 +99,23 @@ A block is a `PuckBlockComponent<Props, Extra>` registered in its group's
 - `.tsx` files export components only; factories such as `builderBlock` and
   `plainBlock` live in `.ts` files.
 
-Teaser blocks read their teaser from `useTeaserSlot()`. `PuckBlocks` provides
-`null` at the root, and every block with an article, page or event `slot` or
-`single` datasource provides the record from its `data`.
+Teaser blocks read their teaser from `useTeaserSlot()`. Every block with an
+article, page or event `slot` or `single` datasource provides the record from
+its `data`; nothing provides one at the root (see above).
+
+The `Teaser` block is the usual provider: it renders its `content` slot (the
+teaser parts) in one `<article>`, or nothing when it has no record. With
+`linkToRecord` it links the whole teaser through one empty link placed before
+the content and stretched over the article (`position: absolute; inset: 0`),
+never by wrapping the content, because editors may put a Button or another
+interactive block inside and interactive content inside an `<a>` is invalid
+HTML. Interactive descendants of the content (`a`, `button`, form controls,
+`label`, `summary`, `[role="button"]`, `[tabindex]`) are lifted above the link
+(`position: relative; z-index: 1`, zero specificity so blocks that position
+their own buttons keep that position); everything else clicks through to the
+record. The link carries the same `teaser.ariaLabel` (title, lead, authors) and
+`selectTeaserTarget` as `BaseTeaser`, and draws the focus ring around the card.
+The teaser parts never link to the record themselves.
 
 `stylingToCss(theme, block.styling)` turns the codegen styling into an emotion
 CSS object, for example `<div css={theme => stylingToCss(theme, styling)} />`.

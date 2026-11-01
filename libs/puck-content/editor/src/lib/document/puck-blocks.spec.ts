@@ -1178,6 +1178,53 @@ describe('the round trip through the API', () => {
     });
   });
 
+  it('restores teasers with their datasources, link switch and the parts inside', () => {
+    const content = [
+      puckComponent('Grid', 1, {
+        layout: { xs: { columns: [1, 1, 1] } },
+        datasources: { article: { type: 'uniqueList' } },
+        content: [1, 2, 3].map(n =>
+          puckComponent('Teaser', 10 + n, {
+            linkToRecord: n !== 3,
+            datasources: { article: { type: 'slot' } },
+            styling: { padding: { top: 2 } },
+            content: [
+              puckComponent('TeaserImage', 20 + n),
+              puckComponent('TeaserTitle', 30 + n),
+            ],
+          })
+        ),
+      }),
+      puckComponent('Teaser', 4, {
+        linkToRecord: true,
+        datasources: { page: { type: 'single', id: 'page-1' } },
+        content: [
+          puckComponent('Container', 5, {
+            content: [puckComponent('TeaserLead', 6)],
+          }),
+        ],
+      }),
+    ];
+    const inputs = allInputs(toInputs(content));
+
+    expect(inputs.find(({ id }) => id === 'Teaser-11')).toMatchObject({
+      type: 'Teaser',
+      props: { linkToRecord: true, content: [] },
+      datasources: { article: { type: PuckDatasourceType.Slot } },
+      styling: { padding: { top: 2 } },
+      children: [
+        { id: 'TeaserImage-21', type: 'TeaserImage' },
+        { id: 'TeaserTitle-31', type: 'TeaserTitle' },
+      ],
+    });
+    expect(inputs.find(({ id }) => id === 'Teaser-4')).toMatchObject({
+      datasources: {
+        page: { type: PuckDatasourceType.Single, id: 'page-1' },
+      },
+    });
+    expect(roundTrip(content)).toEqual({ content });
+  });
+
   it('lifts the styling of every slot bearing layout component', () => {
     expect(
       Object.fromEntries(
@@ -1294,6 +1341,7 @@ describe('every component of the config', () => {
         'Slider',
         'Collapsible',
         'Form',
+        'Teaser',
       ])
     );
   });
@@ -1313,6 +1361,7 @@ describe('every component of the config', () => {
         Collapsible: ['content'],
         Slider: ['items[0].content'],
         DynamicGrid: ['items[0].content'],
+        Teaser: ['content'],
       })
     );
   });

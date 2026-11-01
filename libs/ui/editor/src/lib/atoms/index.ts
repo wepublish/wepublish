@@ -36,6 +36,7 @@ export * from './helpers';
 export * from './iconButtonTooltip';
 export * from './singleLineTooltip';
 export * from './imageMetaData';
+export * from './imagePlaceholderIcon';
 export * from './imageUploadQueue';
 export * from './imageUploadTile';
 export * from './infoMessage';

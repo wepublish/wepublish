@@ -21,6 +21,10 @@ import {
   TeaserTagsRender,
   TeaserTitleRender,
 } from '../teaser/teaser.render';
+import {
+  TeaserConfigProps,
+  TeaserRender,
+} from '../teaser/teaser/teaser.component';
 import { CommentRender } from './comment/comment.render';
 import { CrowdfundingRender } from './crowdfunding/crowdfunding.render';
 import { EventConfigProps, EventRender } from './event/event.component';
@@ -31,6 +35,7 @@ export type DataBlockProps = {
   Crowdfunding: BuilderCrowdfundingBlockProps;
   Poll: BuilderPollBlockProps;
   Event: EventConfigProps;
+  Teaser: TeaserConfigProps;
   TeaserTitle: Omit<TeaserTitleConfigProps, 'className'>;
   TeaserPreTitle: Omit<TeaserPreTitleConfigProps, 'className'>;
   TeaserLead: Omit<TeaserLeadConfigProps, 'className'>;
@@ -47,6 +52,7 @@ export const dataBlockRegistry: {
   Crowdfunding: { component: CrowdfundingRender },
   Poll: { component: PollRender },
   Event: { component: EventRender },
+  Teaser: { component: TeaserRender },
   TeaserTitle: { component: TeaserTitleRender },
   TeaserPreTitle: { component: TeaserPreTitleRender },
   TeaserLead: { component: TeaserLeadRender },
@@ -64,6 +70,8 @@ export * from '../teaser/teaser-pre-title/teaser-pre-title.component';
 export * from '../teaser/teaser-tags/teaser-tags.component';
 export * from '../teaser/teaser-title/teaser-title.component';
 export * from '../teaser/teaser.render';
+export * from '../teaser/teaser/teaser.component';
+export * from '../teaser/teaser/teaser.styles';
 export * from './comment/comment.render';
 export * from './crowdfunding/crowdfunding.render';
 export * from './event/event.component';

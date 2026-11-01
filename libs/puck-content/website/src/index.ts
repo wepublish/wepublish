@@ -19,8 +19,6 @@ export * from './lib/contexts/teaser-slot.context';
 export * from './lib/document/document-layout.component';
 export * from './lib/document/document-layout.styles';
 export * from './lib/document/document-props';
-export * from './lib/root-seo.component';
-export * from './lib/root-seo';
 export * from './lib/values/alignment';
 export * from './lib/values/breakpoints';
 export * from './lib/values/color';

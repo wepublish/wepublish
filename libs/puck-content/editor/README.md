@@ -32,6 +32,12 @@ render: editorRender(SliderRender, {
   `onSubmit`) while editing.
 - `decorate` adds editor chrome around the element, such as form warnings.
 
+A config whose editing view differs in structure renders its own editor
+component that composes the website parts, such as `TeaserEditorRender`:
+while editing, the Teaser never links (the link would swallow clicks meant for
+the blocks inside) and keeps its content slot with a hint when it has no
+record yet.
+
 `editorRender` turns Puck's slot functions into `slots`, strips the envelope
 keys (`puck`, `datasources`, `locked`, …), reads `data` for the block from
 `PuckBlockDataContext` and wraps the element in `TeaserSlotBoundary`.

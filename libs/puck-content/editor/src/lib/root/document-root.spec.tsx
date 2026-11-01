@@ -31,9 +31,6 @@ const TeaserProbe = () => (
   </output>
 );
 
-const metaContent = (selector: string) =>
-  document.querySelector(selector)?.getAttribute('content');
-
 const isInteractive = (element: HTMLElement) =>
   window.getComputedStyle(element).pointerEvents !== 'none';
 
@@ -55,40 +52,29 @@ describe('PageRoot', () => {
       isInteractive(screen.getByRole('contentinfo', { name: 'Footer' }))
     ).toBe(false);
   });
-
-  it('is shared as a website', () => {
-    renderWithProviders(
-      <PageRoot
-        id="root"
-        puck={puck}
-        title="About us"
-      >
-        {content}
-      </PageRoot>
-    );
-
-    expect(metaContent('meta[property="og:type"]')).toBe('website');
-    expect(metaContent('meta[property="og:title"]')).toBe('About us');
-  });
 });
 
 describe.each([
   ['PageRoot', PageRoot],
   ['ArticleRoot', ArticleRoot],
 ] as const)('%s', (_name, Root) => {
-  it('provides no teaser to blocks outside a datasource', () => {
-    renderWithProviders(
-      <Root
-        id="root"
-        puck={puck}
-      >
-        <TeaserProbe />
-      </Root>
-    );
+  it('provides no teaser slot, so a teaser part outside a teaser fails loudly', () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
 
-    expect(screen.getByRole('status', { name: 'Teaser' }).textContent).toBe(
-      'none'
-    );
+    expect(() =>
+      renderWithProviders(
+        <Root
+          id="root"
+          puck={puck}
+        >
+          <TeaserProbe />
+        </Root>
+      )
+    ).toThrow('useTeaserSlot must be used within');
+
+    consoleError.mockRestore();
   });
 });
 
@@ -110,23 +96,5 @@ describe('ArticleRoot', () => {
     expect(
       isInteractive(screen.getByRole('contentinfo', { name: 'Footer' }))
     ).toBe(false);
-  });
-
-  it('is shared as an article with its canonical URL', () => {
-    renderWithProviders(
-      <ArticleRoot
-        id="root"
-        puck={puck}
-        title="Breaking"
-        canonicalUrl="https://example.com/original"
-      >
-        {content}
-      </ArticleRoot>
-    );
-
-    expect(metaContent('meta[property="og:type"]')).toBe('article');
-    expect(
-      document.querySelector('link[rel="canonical"]')?.getAttribute('href')
-    ).toBe('https://example.com/original');
   });
 });

@@ -1,5 +1,5 @@
 import { ComponentConfig } from '@puckeditor/core';
-import { ImageConfigProps, ImageRender } from '@wepublish/puck-content/website';
+import { ImageConfigProps } from '@wepublish/puck-content/website';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
@@ -7,6 +7,7 @@ import {
   withImageDataSource,
   WithDataSource,
 } from '../../../blocks/with-datasource';
+import { ImageEditorRender } from './image-editor.component';
 
 export const ImageConfig: ComponentConfig<{
   props: WithDataSource<ImageConfigProps>;
@@ -26,5 +27,5 @@ export const ImageConfig: ComponentConfig<{
     },
   },
   defaultProps: {},
-  render: editorRender(ImageRender),
+  render: editorRender(ImageEditorRender),
 });

@@ -7,13 +7,13 @@ import {
 } from '@wepublish/mocks/website';
 import { renderToString } from 'react-dom/server';
 
-import { useTeaserSlot } from '../contexts/teaser-slot.context';
+import {
+  TeaserSlotContext,
+  useTeaserSlot,
+} from '../contexts/teaser-slot.context';
 import { TeaserTitle } from '../components/teaser/teaser-title/teaser-title.component';
 import { emptyPuckBlockData, PuckBlockData } from './block.types';
-import {
-  TeaserSlotBoundary,
-  TeaserSlotRoot,
-} from './teaser-slot-boundary.component';
+import { TeaserSlotBoundary } from './teaser-slot-boundary.component';
 
 const article = mockArticle({
   latest: mockArticleRevision({ title: 'Slotted article', blocks: [] }),
@@ -37,29 +37,39 @@ const Probe = ({ name }: { name: string }) => {
 
 const probe = (name: string) => screen.getByRole('status', { name });
 
-describe('TeaserSlotRoot', () => {
-  it('provides no teaser at the root', () => {
-    render(
-      <TeaserSlotRoot>
-        <Probe name="root" />
-      </TeaserSlotRoot>
+describe('useTeaserSlot', () => {
+  it('throws outside a teaser slot provider', () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    expect(() => render(<Probe name="outside" />)).toThrow(
+      'useTeaserSlot must be used within'
     );
 
-    expect(probe('root').textContent).toBe('none');
+    consoleError.mockRestore();
+  });
+
+  it('reads an explicit absence of a teaser', () => {
+    render(
+      <TeaserSlotContext.Provider value={null}>
+        <Probe name="none" />
+      </TeaserSlotContext.Provider>
+    );
+
+    expect(probe('none').textContent).toBe('none');
   });
 });
 
 describe('TeaserSlotBoundary', () => {
   it('provides the record of a slot datasource as teaser', () => {
     render(
-      <TeaserSlotRoot>
-        <TeaserSlotBoundary
-          datasources={{ article: { type: 'slot' } }}
-          data={withArticle}
-        >
-          <Probe name="slot" />
-        </TeaserSlotBoundary>
-      </TeaserSlotRoot>
+      <TeaserSlotBoundary
+        datasources={{ article: { type: 'slot' } }}
+        data={withArticle}
+      >
+        <Probe name="slot" />
+      </TeaserSlotBoundary>
     );
 
     expect(probe('slot').textContent).toBe('ArticleTeaser');
@@ -67,14 +77,12 @@ describe('TeaserSlotBoundary', () => {
 
   it('provides the pick of a single datasource as teaser', () => {
     render(
-      <TeaserSlotRoot>
-        <TeaserSlotBoundary
-          datasources={{ page: { type: 'single', id: page.id } }}
-          data={{ ...emptyPuckBlockData, pages: [page] }}
-        >
-          <Probe name="single" />
-        </TeaserSlotBoundary>
-      </TeaserSlotRoot>
+      <TeaserSlotBoundary
+        datasources={{ page: { type: 'single', id: page.id } }}
+        data={{ ...emptyPuckBlockData, pages: [page] }}
+      >
+        <Probe name="single" />
+      </TeaserSlotBoundary>
     );
 
     expect(probe('single').textContent).toBe('PageTeaser');
@@ -82,19 +90,17 @@ describe('TeaserSlotBoundary', () => {
 
   it('provides no teaser when the datasource yields no record', () => {
     render(
-      <TeaserSlotRoot>
+      <TeaserSlotBoundary
+        datasources={{ article: { type: 'slot' } }}
+        data={withArticle}
+      >
         <TeaserSlotBoundary
           datasources={{ article: { type: 'slot' } }}
-          data={withArticle}
+          data={emptyPuckBlockData}
         >
-          <TeaserSlotBoundary
-            datasources={{ article: { type: 'slot' } }}
-            data={emptyPuckBlockData}
-          >
-            <Probe name="exhausted" />
-          </TeaserSlotBoundary>
+          <Probe name="exhausted" />
         </TeaserSlotBoundary>
-      </TeaserSlotRoot>
+      </TeaserSlotBoundary>
     );
 
     expect(probe('exhausted').textContent).toBe('none');
@@ -102,26 +108,24 @@ describe('TeaserSlotBoundary', () => {
 
   it('passes the teaser of its parent on without such a datasource', () => {
     render(
-      <TeaserSlotRoot>
+      <TeaserSlotBoundary
+        datasources={{ article: { type: 'slot' } }}
+        data={withArticle}
+      >
         <TeaserSlotBoundary
-          datasources={{ article: { type: 'slot' } }}
-          data={withArticle}
+          datasources={{ article: { type: 'uniqueList' } }}
+          data={emptyPuckBlockData}
         >
-          <TeaserSlotBoundary
-            datasources={{ article: { type: 'uniqueList' } }}
-            data={emptyPuckBlockData}
-          >
-            <Probe name="list" />
-          </TeaserSlotBoundary>
-
-          <TeaserSlotBoundary
-            datasources={null}
-            data={emptyPuckBlockData}
-          >
-            <Probe name="plain" />
-          </TeaserSlotBoundary>
+          <Probe name="list" />
         </TeaserSlotBoundary>
-      </TeaserSlotRoot>
+
+        <TeaserSlotBoundary
+          datasources={null}
+          data={emptyPuckBlockData}
+        >
+          <Probe name="plain" />
+        </TeaserSlotBoundary>
+      </TeaserSlotBoundary>
     );
 
     expect(probe('list').textContent).toBe('ArticleTeaser');
@@ -131,21 +135,19 @@ describe('TeaserSlotBoundary', () => {
   it('renders a teaser title on the server without a teaser', () => {
     expect(() =>
       renderToString(
-        <TeaserSlotRoot>
+        <TeaserSlotContext.Provider value={null}>
           <TeaserTitle />
-        </TeaserSlotRoot>
+        </TeaserSlotContext.Provider>
       )
     ).not.toThrow();
     expect(() =>
       renderToString(
-        <TeaserSlotRoot>
-          <TeaserSlotBoundary
-            datasources={{ article: { type: 'slot' } }}
-            data={emptyPuckBlockData}
-          >
-            <TeaserTitle />
-          </TeaserSlotBoundary>
-        </TeaserSlotRoot>
+        <TeaserSlotBoundary
+          datasources={{ article: { type: 'slot' } }}
+          data={emptyPuckBlockData}
+        >
+          <TeaserTitle />
+        </TeaserSlotBoundary>
       )
     ).not.toThrow();
   });
@@ -153,14 +155,12 @@ describe('TeaserSlotBoundary', () => {
   it('renders the title of the slotted record on the server', () => {
     expect(
       renderToString(
-        <TeaserSlotRoot>
-          <TeaserSlotBoundary
-            datasources={{ article: { type: 'slot' } }}
-            data={withArticle}
-          >
-            <TeaserTitle />
-          </TeaserSlotBoundary>
-        </TeaserSlotRoot>
+        <TeaserSlotBoundary
+          datasources={{ article: { type: 'slot' } }}
+          data={withArticle}
+        >
+          <TeaserTitle />
+        </TeaserSlotBoundary>
       )
     ).toContain('Slotted article');
   });

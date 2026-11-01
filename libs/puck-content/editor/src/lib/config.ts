@@ -101,6 +101,7 @@ const categories: PuckConfig['categories'] = {
   teaser: {
     title: 'Teaser',
     components: [
+      'Teaser',
       'TeaserTitle',
       'TeaserPreTitle',
       'TeaserLead',

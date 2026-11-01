@@ -54,6 +54,10 @@ describe('categories', () => {
     ]);
   });
 
+  it('offers the Teaser first among the teaser blocks', () => {
+    expect(categories.teaser?.components?.[0]).toBe('Teaser');
+  });
+
   it('puts every component into a category', () => {
     const categorised = new Set(
       Object.entries(categories)

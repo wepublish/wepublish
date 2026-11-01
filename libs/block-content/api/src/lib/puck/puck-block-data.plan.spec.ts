@@ -353,6 +353,54 @@ describe('planPuckBlockData', () => {
       });
     });
 
+    it('hands every Teaser of a grid list its own record and the parts inside none, and lets a picked Teaser pin its record', () => {
+      const part = (id: string, type: string) =>
+        block(id, undefined, undefined, { type });
+      const teaser = (n: number) =>
+        block(
+          `teaser-${n}`,
+          { article: { type: 'slot' } },
+          [
+            part(`image-${n}`, 'TeaserImage'),
+            part(`title-${n}`, 'TeaserTitle'),
+          ],
+          { type: 'Teaser' }
+        );
+      const tree = [
+        block(
+          'grid',
+          { article: { type: 'uniqueList' } },
+          [teaser(1), teaser(2), teaser(3)],
+          { type: 'Grid' }
+        ),
+        block(
+          'picked',
+          { page: { type: 'single', id: 'p1' } },
+          [part('picked-title', 'TeaserTitle')],
+          { type: 'Teaser' }
+        ),
+      ];
+
+      expect(plan(tree).lists).toEqual([
+        { block: 'grid', model: 'article', unique: true, count: 3, shown: 3 },
+      ]);
+      expect(plan(tree).pinned.page).toEqual(['p1']);
+      expect(sourcesOf(tree)).toEqual({
+        grid: { article: { type: 'list', list: 0, consumes: null } },
+        'teaser-1': { article: { type: 'slot', provider: 'grid', index: 0 } },
+        'image-1': {},
+        'title-1': {},
+        'teaser-2': { article: { type: 'slot', provider: 'grid', index: 1 } },
+        'image-2': {},
+        'title-2': {},
+        'teaser-3': { article: { type: 'slot', provider: 'grid', index: 2 } },
+        'image-3': {},
+        'title-3': {},
+        picked: { page: { type: 'pick', ids: ['p1'] } },
+        'picked-title': {},
+      });
+    });
+
     it('leaves a consumer without a provider empty', () => {
       expect(
         sourcesOf([block('orphan', { article: { type: 'slot' } })])

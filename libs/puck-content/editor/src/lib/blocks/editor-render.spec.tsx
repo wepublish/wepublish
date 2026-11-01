@@ -7,7 +7,6 @@ import {
   PuckBlockData,
   PuckBlockRenderProps,
   PuckSlotValue,
-  TeaserSlotRoot,
   useTeaserSlot,
 } from '@wepublish/puck-content/website';
 import { createElement, ReactNode, Ref } from 'react';
@@ -206,16 +205,14 @@ describe('editorRender', () => {
     const slotWithProbe = vi.fn<SlotComponent>(() => <TeaserProbe />);
 
     render(
-      <TeaserSlotRoot>
-        {renderGrid(
-          editorRender(Grid),
-          {
-            content: slotWithProbe,
-            datasources: { article: { type: 'single', id: article.id } },
-          },
-          new Map([['Grid-1', { ...emptyPuckBlockData, articles: [article] }]])
-        )}
-      </TeaserSlotRoot>
+      renderGrid(
+        editorRender(Grid),
+        {
+          content: slotWithProbe,
+          datasources: { article: { type: 'single', id: article.id } },
+        },
+        new Map([['Grid-1', { ...emptyPuckBlockData, articles: [article] }]])
+      )
     );
 
     expect(screen.getByRole('status', { name: 'Teaser' }).textContent).toBe(

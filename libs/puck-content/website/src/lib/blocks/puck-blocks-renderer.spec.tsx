@@ -520,13 +520,11 @@ describe('PuckBlocks', () => {
     );
   });
 
-  it('gives no teaser at the root and none for an exhausted slot', () => {
+  it('gives no teaser for an exhausted slot', () => {
     const blocks = [
-      block({ id: 'root', type: 'TeaserProbe', props: { name: 'root' } }),
       block({
         id: 'box',
         type: 'Box',
-        position: 1,
         props: { content: [] },
         datasources: articleSlot,
       }),
@@ -543,11 +541,26 @@ describe('PuckBlocks', () => {
 
     renderBlocks(blocks);
 
-    expect(screen.getByRole('status', { name: 'root' }).textContent).toBe(
-      'none'
-    );
     expect(screen.getByRole('status', { name: 'exhausted' }).textContent).toBe(
       'none'
+    );
+  });
+
+  it('provides no teaser at the root, so a teaser outside any slot fails instead of rendering nothing', () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    onTestFinished(() => consoleError.mockRestore());
+
+    const blocks = [
+      block({ id: 'root', type: 'TeaserProbe', props: { name: 'root' } }),
+    ];
+
+    expect(() => renderToString(blocksUi(blocks))).toThrow(
+      'useTeaserSlot must be used within'
+    );
+    expect(() => renderBlocks(blocks)).toThrow(
+      'useTeaserSlot must be used within'
     );
   });
 

@@ -14,7 +14,6 @@ import {
   PuckBlockComponentsContext,
   puckBlockRegistry,
 } from './puck-block-registry';
-import { TeaserSlotRoot } from './teaser-slot-boundary.component';
 
 export type PuckBlocksProps = {
   blocks: readonly FullPuckBlockFragment[] | null | undefined;
@@ -44,22 +43,20 @@ export const PuckBlocks = memo(
 
     return (
       <PuckBlockComponentsContext.Provider value={blockComponents}>
-        <TeaserSlotRoot>
-          <GeneratedBlocksProvider registry={registry}>
-            {roots.map((node, index) => (
-              <ImageContext.Provider
-                key={node.block.id}
-                value={
-                  index < aboveTheFoldCount ? aboveTheFoldImages : (
-                    belowTheFoldImages
-                  )
-                }
-              >
-                <PuckBlockRenderer node={node} />
-              </ImageContext.Provider>
-            ))}
-          </GeneratedBlocksProvider>
-        </TeaserSlotRoot>
+        <GeneratedBlocksProvider registry={registry}>
+          {roots.map((node, index) => (
+            <ImageContext.Provider
+              key={node.block.id}
+              value={
+                index < aboveTheFoldCount ? aboveTheFoldImages : (
+                  belowTheFoldImages
+                )
+              }
+            >
+              <PuckBlockRenderer node={node} />
+            </ImageContext.Provider>
+          ))}
+        </GeneratedBlocksProvider>
       </PuckBlockComponentsContext.Provider>
     );
   }

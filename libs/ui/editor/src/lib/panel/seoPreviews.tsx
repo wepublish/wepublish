@@ -7,6 +7,7 @@ import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SocialPreview } from 'react-og-preview';
 
+import { ImagePlaceholderIcon } from '../atoms/imagePlaceholderIcon';
 import { useDarkMode } from '../useDarkMode';
 import { SeoPreviewData } from './seoPreviewData';
 
@@ -123,36 +124,6 @@ const LinkedInPlaceholder = styled.div`
   color: var(--linkedin-hostname);
   font-size: 20px;
 `;
-
-const PlaceholderIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    width="1em"
-    height="1em"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <rect
-      x="3"
-      y="3"
-      width="18"
-      height="18"
-      rx="2"
-      ry="2"
-    />
-    <circle
-      cx="8.5"
-      cy="8.5"
-      r="1.5"
-    />
-    <path d="M21 15l-5-5L5 21" />
-  </svg>
-);
 
 const VisuallyHidden = styled.span`
   position: absolute;
@@ -471,7 +442,7 @@ export function SocialPreviews({ data }: SocialPreviewsProps) {
               alt={social.image.alt}
             />
           : <LinkedInPlaceholder>
-              <PlaceholderIcon />
+              <ImagePlaceholderIcon />
               <VisuallyHidden>{t('seoPreviews.noImage')}</VisuallyHidden>
             </LinkedInPlaceholder>
           }
@@ -515,7 +486,7 @@ export function SocialPreviews({ data }: SocialPreviewsProps) {
               alt={social.image.alt}
             />
           : <DiscordPlaceholder>
-              <PlaceholderIcon />
+              <ImagePlaceholderIcon />
               <VisuallyHidden>{t('seoPreviews.noImage')}</VisuallyHidden>
             </DiscordPlaceholder>
           }

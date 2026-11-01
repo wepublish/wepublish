@@ -54,7 +54,12 @@ const articles = ['First story', 'Second story', 'Third story'].map(
   (title, index) =>
     mockArticle({
       id: `article-${index}`,
-      latest: mockArticleRevision({ title, blocks: [] }),
+      url: `https://example.com/a/story-${index}`,
+      latest: mockArticleRevision({
+        title,
+        lead: `Lead of story ${index}`,
+        blocks: [],
+      }),
     })
 );
 
@@ -142,5 +147,83 @@ describe('PuckBlocks with the website blocks', () => {
         .getAllByRole('heading', { level: 2 })
         .map(title => title.textContent)
     ).toEqual(['First story', 'Second story', 'Third story']);
+  });
+
+  it('shows one linked article per Teaser the grid hands a record to, with the parts inside reading it', () => {
+    const teaserBlocks = (index: number, records: typeof articles) => [
+      block({
+        id: `teaser-${index}`,
+        type: 'Teaser',
+        parentId: 'grid',
+        puckSlot: 'content',
+        position: index,
+        props: { linkToRecord: true, content: [] },
+        datasources: articleDatasource(PuckDatasourceType.Slot),
+        data: blockData({ articles: records }),
+      }),
+      block({
+        id: `teaser-title-${index}`,
+        type: 'TeaserTitle',
+        parentId: `teaser-${index}`,
+        puckSlot: 'content',
+        position: 0,
+      }),
+      block({
+        id: `teaser-lead-${index}`,
+        type: 'TeaserLead',
+        parentId: `teaser-${index}`,
+        puckSlot: 'content',
+        position: 1,
+      }),
+    ];
+    const { container } = renderWithProviders(
+      <PuckBlocks
+        blocks={[
+          teaserGrid[0],
+          ...articles.flatMap((article, index) =>
+            teaserBlocks(index, [article])
+          ),
+          ...teaserBlocks(3, []),
+        ]}
+      />
+    );
+    const grid = container.firstElementChild;
+
+    expect(grid?.childElementCount).toBe(3);
+
+    for (const [index, cell] of [...(grid?.children ?? [])].entries()) {
+      const teaser = within(cell as HTMLElement);
+
+      expect(cell.tagName).toBe('ARTICLE');
+      expect(teaser.getByRole('heading', { level: 2 })).toHaveTextContent(
+        articles[index].latest.title ?? ''
+      );
+      expect(teaser.getByText(`Lead of story ${index}`)).toBeTruthy();
+      expect(teaser.getAllByRole('link')).toHaveLength(1);
+      expect(
+        teaser.getByRole('link', {
+          name: name =>
+            name.startsWith(
+              `${articles[index].latest.title}. Lead of story ${index}.`
+            ),
+        })
+      ).toHaveAttribute('href', articles[index].url);
+    }
+  });
+
+  it('shows the error of a teaser part placed outside any teaser instead of hiding it', () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    onTestFinished(() => consoleError.mockRestore());
+
+    renderWithProviders(
+      <PuckBlocks blocks={[block({ id: 'title', type: 'TeaserTitle' })]} />
+    );
+
+    expect(screen.queryByRole('heading')).toBeNull();
+    expect(screen.getByRole('alert').textContent).toContain(
+      'useTeaserSlot must be used within'
+    );
   });
 });

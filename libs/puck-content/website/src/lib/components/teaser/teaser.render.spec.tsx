@@ -16,10 +16,8 @@ import {
   PuckBlockComponent,
   PuckBlockData,
 } from '../../blocks/block.types';
-import {
-  TeaserSlotBoundary,
-  TeaserSlotRoot,
-} from '../../blocks/teaser-slot-boundary.component';
+import { TeaserSlotBoundary } from '../../blocks/teaser-slot-boundary.component';
+import { TeaserSlotContext } from '../../contexts/teaser-slot.context';
 import {
   TeaserAuthorsRender,
   TeaserDateRender,
@@ -79,16 +77,16 @@ const renderTeaser = <Props,>(
   });
 
   return renderWithProviders(
-    <TeaserSlotRoot>
-      {slotted ?
-        <TeaserSlotBoundary
-          datasources={{ article: { type: 'slot' } }}
-          data={slotted}
-        >
-          {block}
-        </TeaserSlotBoundary>
-      : block}
-    </TeaserSlotRoot>
+    slotted ?
+      <TeaserSlotBoundary
+        datasources={{ article: { type: 'slot' } }}
+        data={slotted}
+      >
+        {block}
+      </TeaserSlotBoundary>
+    : <TeaserSlotContext.Provider value={null}>
+        {block}
+      </TeaserSlotContext.Provider>
   );
 };
 
@@ -134,6 +132,29 @@ describe('teaser renders', () => {
       const { container } = renderTeaser(Render, props, null);
 
       expect(container.childElementCount).toBe(0);
+    }
+  );
+
+  it.each(teaserRenders)(
+    '%s shows an error alert outside a teaser slot provider',
+    (_type, Render, props) => {
+      const consoleError = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+      onTestFinished(() => consoleError.mockRestore());
+
+      renderWithProviders(
+        createElement(Render, {
+          id: 'Teaser-1',
+          props,
+          data: emptyPuckBlockData,
+          slots: {},
+        })
+      );
+
+      expect(screen.getByRole('alert').textContent).toContain(
+        'useTeaserSlot must be used within'
+      );
     }
   );
 

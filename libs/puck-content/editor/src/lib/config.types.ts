@@ -45,6 +45,7 @@ import {
   SpaceProps,
   SubscribeConfigProps,
   TeaserAuthorsConfigProps,
+  TeaserConfigProps,
   TeaserDateConfigProps,
   TeaserImageConfigProps,
   TeaserLeadConfigProps,
@@ -105,6 +106,7 @@ type BaseComponents = {
   FormRadioGroup: FormRadioGroupProps;
   FormHidden: FormHiddenProps;
   FormSubmit: FormSubmitProps;
+  Teaser: WithDataSource<WithCSS<ToPuckSlots<TeaserConfigProps>>>;
   TeaserTitle: TeaserTitleConfigProps;
   TeaserPreTitle: TeaserPreTitleConfigProps;
   TeaserLead: TeaserLeadConfigProps;

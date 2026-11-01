@@ -5,16 +5,6 @@ import { PuckBlockData } from './block.types';
 import { PuckDatasources } from './graphql-shape';
 import { teaserFromData, teaserSlotModel } from './teaser-from-data';
 
-export type TeaserSlotRootProps = {
-  children?: ReactNode;
-};
-
-export const TeaserSlotRoot = ({ children }: TeaserSlotRootProps) => (
-  <TeaserSlotContext.Provider value={null}>
-    {children}
-  </TeaserSlotContext.Provider>
-);
-
 export type TeaserSlotBoundaryProps = {
   datasources: PuckDatasources | null | undefined;
   data: PuckBlockData;
