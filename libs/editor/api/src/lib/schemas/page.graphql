@@ -33,6 +33,12 @@ query PageList(
   pages(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageWithoutBlocks
+
+      latest {
+        puckBlocks(onlyDisplayed: false) {
+          id
+        }
+      }
     }
 
     pageInfo {

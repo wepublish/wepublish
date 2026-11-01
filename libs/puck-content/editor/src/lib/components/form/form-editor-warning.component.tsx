@@ -1,7 +1,7 @@
 import { useFormContext } from '@wepublish/puck-content/website';
 import { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 
+import { useEditorTranslation } from '../../website-translations/editor-translation';
 import { FormEditorHint } from './form-editor-warning.styles';
 
 export type FormEditorWarningProps = {
@@ -19,7 +19,7 @@ export const FormEditorWarning = ({ children }: FormEditorWarningProps) => (
 );
 
 export const FormPlacementWarning = () => {
-  const { t } = useTranslation();
+  const { t } = useEditorTranslation();
   const form = useFormContext();
 
   if (form) {
@@ -32,7 +32,7 @@ export const FormPlacementWarning = () => {
 };
 
 export const OwnFormWarning = () => {
-  const { t } = useTranslation();
+  const { t } = useEditorTranslation();
   const form = useFormContext();
 
   if (!form) {
@@ -47,7 +47,7 @@ export type FormHintsProps = {
 };
 
 export const FormHints = ({ action }: FormHintsProps) => {
-  const { t } = useTranslation();
+  const { t } = useEditorTranslation();
   const parentForm = useFormContext();
 
   return (

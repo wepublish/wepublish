@@ -4,9 +4,9 @@ import {
   FormHiddenRender,
   PuckBlockComponent,
 } from '@wepublish/puck-content/website';
-import { useTranslation } from 'react-i18next';
 import { MdVisibilityOff } from 'react-icons/md';
 
+import { useEditorTranslation } from '../../../website-translations/editor-translation';
 import {
   FormHiddenPlaceholder,
   FormHiddenPlaceholderLabel,
@@ -21,7 +21,7 @@ export const FormHiddenEditorRender: PuckBlockComponent<
   FormHiddenProps,
   FormHiddenEditorExtra
 > = ({ placeholder, className, ...renderProps }) => {
-  const { t } = useTranslation();
+  const { t } = useEditorTranslation();
   const { name, value } = renderProps.props;
 
   if (!placeholder) {

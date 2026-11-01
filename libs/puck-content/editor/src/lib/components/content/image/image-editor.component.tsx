@@ -5,14 +5,14 @@ import {
   ImageRender,
   PuckBlockComponent,
 } from '@wepublish/puck-content/website';
-import { useTranslation } from 'react-i18next';
 
+import { useEditorTranslation } from '../../../website-translations/editor-translation';
 import { ImageEditorPlaceholder } from './image-editor.styles';
 
 export const ImageEditorRender: PuckBlockComponent<
   ImageConfigProps
 > = props => {
-  const { t } = useTranslation();
+  const { t } = useEditorTranslation();
 
   if (firstDataImage(props.data)) {
     return <ImageRender {...props} />;

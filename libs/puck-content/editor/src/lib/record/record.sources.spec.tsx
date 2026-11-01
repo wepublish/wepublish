@@ -108,6 +108,7 @@ const articleNode = (
   latest: {
     __typename: 'ArticleRevision',
     id: `${id}-revision`,
+    puckBlocks: null,
     createdAt: timestamp,
     publishedAt: timestamp,
     archivedAt: null,
@@ -157,6 +158,7 @@ const pageNode = (
   latest: {
     __typename: 'PageRevision',
     id: `${id}-revision`,
+    puckBlocks: null,
     createdAt: timestamp,
     publishedAt: timestamp,
     archivedAt: null,

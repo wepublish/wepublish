@@ -1,8 +1,12 @@
 import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { CommentItemType, CreateCommentDocument } from '@wepublish/editor/api';
-import { MemoryRouter } from 'react-router-dom';
+import {
+  CommentItemType,
+  CreateCommentDocument,
+  DuplicatePageDocument,
+} from '@wepublish/editor/api';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import type { Mock } from 'vitest';
 
 import { PageList } from './pageList';
@@ -67,6 +71,7 @@ const page = {
     image: null,
     properties: [],
     tags: [],
+    puckBlocks: null as { __typename: 'PuckBlock'; id: string }[] | null,
   },
   tags: [],
 };
@@ -224,6 +229,107 @@ describe('PageList', () => {
 
       await waitFor(() =>
         expect(writeText).toHaveBeenCalledWith('https://example.com/about')
+      );
+    });
+  });
+
+  describe('opening a page', () => {
+    const LocationDisplay = () => (
+      <div data-testid="location">{useLocation().pathname}</div>
+    );
+
+    const renderWith = (puckBlocks: typeof page.latest.puckBlocks) => {
+      mockedUseQuery.mockReturnValue({
+        data: {
+          pages: {
+            nodes: [{ ...page, latest: { ...page.latest, puckBlocks } }],
+            totalCount: 1,
+            pageInfo: { hasNextPage: false, hasPreviousPage: false },
+          },
+        },
+        loading: false,
+        refetch: vi.fn(),
+      });
+
+      render(
+        <ThemeProvider theme={createTheme({ cssVariables: true })}>
+          <MemoryRouter initialEntries={['/pages']}>
+            <Routes>
+              <Route
+                path="/pages"
+                element={<PageList />}
+              />
+              <Route
+                path="*"
+                element={<LocationDisplay />}
+              />
+            </Routes>
+          </MemoryRouter>
+        </ThemeProvider>
+      );
+    };
+
+    it('links a page with puck blocks to the puck editor', () => {
+      renderWith([{ __typename: 'PuckBlock', id: 'heading-1' }]);
+
+      expect(
+        screen.getByRole('link', { name: 'About us' }).getAttribute('href')
+      ).toBe('/puck/pages/edit/page-1');
+    });
+
+    it('links a page with an empty puck document to the puck editor', () => {
+      renderWith([]);
+
+      expect(
+        screen.getByRole('link', { name: 'About us' }).getAttribute('href')
+      ).toBe('/puck/pages/edit/page-1');
+    });
+
+    it('links a page without puck blocks to the legacy editor', () => {
+      renderWith(null);
+
+      expect(
+        screen.getByRole('link', { name: 'About us' }).getAttribute('href')
+      ).toBe('/pages/edit/page-1');
+    });
+
+    it('opens the duplicate of a puck page in the puck editor', async () => {
+      mutationFor(DuplicatePageDocument).mockResolvedValue({
+        data: { duplicatePage: { id: 'page-2' } },
+      });
+      renderWith([]);
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'pageEditor.overview.duplicate' })
+      );
+      fireEvent.click(
+        screen.getByRole('button', { name: 'pages.panels.confirm' })
+      );
+
+      await waitFor(() =>
+        expect(screen.getByTestId('location').textContent).toBe(
+          '/puck/pages/edit/page-2'
+        )
+      );
+    });
+
+    it('opens the duplicate of a legacy page in the legacy editor', async () => {
+      mutationFor(DuplicatePageDocument).mockResolvedValue({
+        data: { duplicatePage: { id: 'page-2' } },
+      });
+      renderWith(null);
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'pageEditor.overview.duplicate' })
+      );
+      fireEvent.click(
+        screen.getByRole('button', { name: 'pages.panels.confirm' })
+      );
+
+      await waitFor(() =>
+        expect(screen.getByTestId('location').textContent).toBe(
+          '/pages/edit/page-2'
+        )
       );
     });
   });

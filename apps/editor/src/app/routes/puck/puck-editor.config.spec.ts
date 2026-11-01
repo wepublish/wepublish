@@ -57,11 +57,11 @@ describe('viewportPresets', () => {
 
   it('offers a small phone, every theme breakpoint and the ultra wide screens from narrow to wide', () => {
     expect(viewportPresets(breakpoints)).toEqual([
-      { width: 360, height: 780, label: 'Small', device: 'phone' },
-      { width: 600, height: 1300, label: 'sm', device: 'phone' },
-      { width: 900, height: 1950, label: 'md', device: 'tablet' },
-      { width: 1200, height: 675, label: 'lg', device: 'desktop' },
-      { width: 1536, height: 864, label: 'xl', device: 'desktop' },
+      { width: 360, height: 'auto', label: 'Small', device: 'phone' },
+      { width: 600, height: 'auto', label: 'sm', device: 'phone' },
+      { width: 900, height: 'auto', label: 'md', device: 'tablet' },
+      { width: 1200, height: 'auto', label: 'lg', device: 'desktop' },
+      { width: 1536, height: 'auto', label: 'xl', device: 'desktop' },
       { width: 2560, height: 'auto', label: 'Ultra wide', device: 'ultraWide' },
       { width: 3840, height: 'auto', label: '4k', device: '4k' },
     ]);

@@ -56,18 +56,13 @@ const breakpointDevices: Partial<Record<string, ViewportDevice>> = {
   xl: 'desktop',
 };
 
-const heightFor = (width: number, device: ViewportDevice) =>
-  device === 'phone' || device === 'tablet' ?
-    (width / 9) * 19.5
-  : (width / 16) * 9;
-
 export const viewportPresets = (
   breakpoints: Partial<Record<string, number>>
 ): ViewportPreset[] => {
   const presets: ViewportPreset[] = [
     {
       width: 360,
-      height: heightFor(360, 'phone'),
+      height: 'auto',
       label: 'Small',
       device: 'phone',
     },
@@ -78,7 +73,7 @@ export const viewportPresets = (
 
       const device = breakpointDevices[label] ?? 'desktop';
 
-      return { width, height: heightFor(width, device), label, device };
+      return { width, height: 'auto', label, device };
     }),
     { width: 2560, height: 'auto', label: 'Ultra wide', device: 'ultraWide' },
     { width: 3840, height: 'auto', label: '4k', device: '4k' },

@@ -6,8 +6,8 @@ import {
   TeaserRender,
   useTeaserSlot,
 } from '@wepublish/puck-content/website';
-import { useTranslation } from 'react-i18next';
 
+import { useEditorTranslation } from '../../../website-translations/editor-translation';
 import { TeaserEditorHint } from './teaser-editor.styles';
 
 export type TeaserEditorExtra = {
@@ -15,7 +15,7 @@ export type TeaserEditorExtra = {
 };
 
 export const TeaserEditorPlaceholder = () => {
-  const { t } = useTranslation();
+  const { t } = useEditorTranslation();
 
   return (
     <TeaserEditorHint role="status">
