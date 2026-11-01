@@ -9,6 +9,7 @@ export type SlotZone = {
   zone: string;
   label: string;
   count: number;
+  index?: number;
   allow?: string[];
   disallow?: string[];
 };
@@ -104,6 +105,63 @@ export const insertZones = (
   block ?
     slotZones(config, block)
   : [{ zone: 'root:default-zone', label: root.label, count: root.count }];
+
+const ROOT_ZONE = 'root:default-zone';
+
+export type InsertMode = 'end' | 'into' | 'below';
+
+export const insertMode = (
+  config: Config,
+  selected: InsertableBlock | null | undefined
+): InsertMode => {
+  if (!selected) {
+    return 'end';
+  }
+
+  return slotZones(config, selected).length ? 'into' : 'below';
+};
+
+export type InsertContext = {
+  selected: InsertableBlock | null | undefined;
+  selector?: { index: number; zone?: string } | null;
+  parent?: InsertableBlock | null;
+  root: Pick<SlotZone, 'label' | 'count'>;
+};
+
+const surroundingZone = (
+  config: Config,
+  { selector, parent, root }: InsertContext
+): SlotZone | undefined => {
+  if (!selector?.zone || selector.zone === ROOT_ZONE) {
+    return { zone: ROOT_ZONE, label: root.label, count: root.count };
+  }
+
+  return parent ?
+      slotZones(config, parent).find(({ zone }) => zone === selector.zone)
+    : undefined;
+};
+
+export const insertTargets = (
+  config: Config,
+  type: string,
+  context: InsertContext
+): SlotZone[] => {
+  if (!context.selected) {
+    return [{ zone: ROOT_ZONE, ...context.root }];
+  }
+
+  const into = acceptingZones(slotZones(config, context.selected), type);
+
+  if (into.length) {
+    return into;
+  }
+
+  const below = surroundingZone(config, context);
+
+  return below && isInsertable(type, below) ?
+      [{ ...below, index: (context.selector?.index ?? below.count - 1) + 1 }]
+    : [];
+};
 
 export const stopPointerDown = (element: HTMLElement | null) =>
   element?.addEventListener('pointerdown', event => event.stopPropagation());

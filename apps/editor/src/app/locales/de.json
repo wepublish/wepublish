@@ -4870,10 +4870,6 @@
         "restoredHint": "Sie ist noch nicht gespeichert. Speichere, um sie zu behalten, oder mache es rückgängig."
       },
       "loadFailed": "Dieses Dokument lässt sich im Seitenbaukasten nicht öffnen.",
-      "search": {
-        "placeholder": "Blöcke suchen",
-        "noResults": "Keine Blöcke gefunden"
-      },
       "actionBar": {
         "moveDown": "Nach unten",
         "moveUp": "Nach oben"
@@ -5111,9 +5107,6 @@
         "uploadedCount": "Hochgeladene Bilder: {{uploaded}}.",
         "uploading": "Wird hochgeladen…"
       },
-      "insert": {
-        "addToSelectedBlock": "Zum ausgewählten Block hinzufügen"
-      },
       "list": {
         "addItem": "Eintrag hinzufügen",
         "dragToReorder": "Zum Umsortieren ziehen",
@@ -5340,6 +5333,88 @@
       "visibilityOutline": {
         "disabled": "Deaktiviert",
         "timed": "Zeitgesteuert"
+      },
+      "blocks": {
+        "search": "Blöcke suchen",
+        "clearSearch": "Suche leeren",
+        "noResults": "Keine Blöcke passen zu «{{query}}».",
+        "results_one": "{{count}} Block",
+        "results_other": "{{count}} Blöcke",
+        "hintEnd": "Klicke auf einen Block, um ihn am Ende einzufügen, oder zieh ihn an die gewünschte Stelle.",
+        "hintInto": "Klicke auf einen Block, um ihn in «{{block}}» einzufügen, oder zieh ihn an die gewünschte Stelle.",
+        "hintBelow": "Klicke auf einen Block, um ihn unter «{{block}}» einzufügen, oder zieh ihn an die gewünschte Stelle.",
+        "notHere": "Kann hier nicht eingefügt werden. Zieh den Block an die gewünschte Stelle.",
+        "chooseSlot": "Einfügen in",
+        "categories": {
+          "text": "Text",
+          "media": "Medien",
+          "layout": "Layout",
+          "teaser": "Teaser",
+          "engagement": "Interaktion",
+          "form": "Formulare",
+          "embed": "Einbettungen",
+          "other": "Weitere"
+        },
+        "groups": {
+          "teaserParts": "Teaser-Bausteine",
+          "formFields": "Formularfelder"
+        },
+        "groupHints": {
+          "teaserParts": "Funktionieren nur in einem Teaser.",
+          "formFields": "Funktionieren nur in einem Formular."
+        },
+        "names": {
+          "Title": "Titel",
+          "RichText": "Text",
+          "Quote": "Zitat",
+          "Listicle": "Listicle",
+          "Button": "Button",
+          "Break": "Call-to-Action",
+          "Image": "Bild",
+          "Lightbox": "Galerie",
+          "YouTube": "YouTube",
+          "Vimeo": "Vimeo",
+          "FacebookVideo": "Facebook-Video",
+          "TikTok": "TikTok",
+          "Streamable": "Streamable",
+          "SoundCloud": "SoundCloud",
+          "Container": "Container",
+          "Grid": "Spalten",
+          "DynamicGrid": "Freies Raster",
+          "Row": "Reihe",
+          "Slider": "Slider",
+          "Collapsible": "Aufklappbereich",
+          "Space": "Abstand",
+          "Teaser": "Teaser",
+          "TeaserImage": "Teaser-Bild",
+          "TeaserPreTitle": "Teaser-Dachzeile",
+          "TeaserTitle": "Teaser-Titel",
+          "TeaserLead": "Teaser-Lead",
+          "TeaserAuthors": "Teaser-Autorschaft",
+          "TeaserDate": "Teaser-Datum",
+          "TeaserTags": "Teaser-Tags",
+          "Subscribe": "Abo-Anmeldung",
+          "MailchimpForm": "Newsletter-Anmeldung",
+          "Poll": "Umfrage",
+          "Comment": "Kommentare",
+          "Event": "Veranstaltungen",
+          "Crowdfunding": "Crowdfunding",
+          "Form": "Formular",
+          "FormInput": "Textfeld",
+          "FormTextarea": "Textbereich",
+          "FormCheckbox": "Checkbox",
+          "FormSelect": "Auswahlliste",
+          "FormRadioGroup": "Optionsfelder",
+          "FormHidden": "Verstecktes Feld",
+          "FormSubmit": "Senden-Button",
+          "Facebook": "Facebook-Beitrag",
+          "Instagram": "Instagram",
+          "Twitter": "X (Twitter)",
+          "Polis": "Polis",
+          "IFrame": "Webseite (iframe)",
+          "Html": "Eigenes HTML",
+          "BildwurfAd": "Bildwurf-Anzeige"
+        }
       }
     }
   }

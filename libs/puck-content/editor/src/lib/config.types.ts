@@ -55,6 +55,7 @@ import {
   TeaserTitleConfigProps,
 } from '@wepublish/puck-content/website';
 
+import type { BlockCategoryId } from './block-library/block-library.catalog';
 import { ToPuckSlots } from './blocks/puck-editor-props';
 import { WithCSS } from './blocks/with-css';
 import { WithDataSource } from './blocks/with-datasource';
@@ -127,15 +128,7 @@ export type PuckRootPropsByKind = {
   article: ArticleRootProps;
 };
 
-export type PuckCategories = [
-  'recommended',
-  'content',
-  'layout',
-  'form',
-  'data',
-  'embed',
-  'teaser',
-];
+export type PuckCategories = BlockCategoryId[];
 
 export type PuckConfig<K extends PuckDocumentKind = PuckDocumentKind> = Config<{
   components: Components;

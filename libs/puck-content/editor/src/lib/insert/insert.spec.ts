@@ -2,6 +2,8 @@ import { Config } from '@puckeditor/core';
 
 import {
   acceptingZones,
+  insertMode,
+  insertTargets,
   insertZones,
   slotZones,
   stopPointerDown,
@@ -104,6 +106,97 @@ describe('insertZones', () => {
         { count: 3, label: 'Page' }
       )
     ).toEqual([{ zone: 'c1:content', label: 'content', count: 0 }]);
+  });
+});
+
+describe('insertMode', () => {
+  it('adds at the end when nothing is selected', () => {
+    expect(insertMode(config, null)).toBe('end');
+  });
+
+  it('adds into a selected block that has slots', () => {
+    expect(insertMode(config, { type: 'Container', props: { id: 'c1' } })).toBe(
+      'into'
+    );
+  });
+
+  it('adds below a selected block without slots', () => {
+    expect(insertMode(config, { type: 'Title', props: { id: 't1' } })).toBe(
+      'below'
+    );
+  });
+});
+
+describe('insertTargets', () => {
+  const root = { count: 3, label: 'Page' };
+
+  it('targets the end of the document when nothing is selected', () => {
+    expect(insertTargets(config, 'Title', { selected: null, root })).toEqual([
+      { zone: 'root:default-zone', label: 'Page', count: 3 },
+    ]);
+  });
+
+  it('targets the accepting slots of the selected block', () => {
+    expect(
+      insertTargets(config, 'RichText', {
+        selected: { type: 'Grid', props: { id: 'g1' } },
+        root,
+      }).map(({ zone }) => zone)
+    ).toEqual(['g1:aside']);
+  });
+
+  it('targets the position below a selected block at the root', () => {
+    expect(
+      insertTargets(config, 'Image', {
+        selected: { type: 'Title', props: { id: 't1' } },
+        selector: { index: 1, zone: 'root:default-zone' },
+        root,
+      })
+    ).toEqual([
+      { zone: 'root:default-zone', label: 'Page', count: 3, index: 2 },
+    ]);
+  });
+
+  it('targets the position below a selected block inside a slot', () => {
+    expect(
+      insertTargets(config, 'Title', {
+        selected: { type: 'Title', props: { id: 't1' } },
+        selector: { index: 0, zone: 'g1:main' },
+        parent: { type: 'Grid', props: { id: 'g1', main: [{}] } },
+        root,
+      })
+    ).toEqual([
+      {
+        zone: 'g1:main',
+        label: 'Main',
+        count: 1,
+        allow: ['Title'],
+        index: 1,
+      },
+    ]);
+  });
+
+  it('falls back to below the selection when no slot accepts the block', () => {
+    expect(
+      insertTargets(config, 'Image', {
+        selected: { type: 'Grid', props: { id: 'g2' } },
+        selector: { index: 4, zone: 'root:default-zone' },
+        root,
+      })
+    ).toEqual([
+      { zone: 'root:default-zone', label: 'Page', count: 3, index: 5 },
+    ]);
+  });
+
+  it('has no target when the surrounding slot refuses the block', () => {
+    expect(
+      insertTargets(config, 'Image', {
+        selected: { type: 'Title', props: { id: 't1' } },
+        selector: { index: 0, zone: 'g1:main' },
+        parent: { type: 'Grid', props: { id: 'g1' } },
+        root,
+      })
+    ).toEqual([]);
   });
 });
 

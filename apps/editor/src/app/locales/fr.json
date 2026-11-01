@@ -4870,10 +4870,6 @@
         "restoredHint": "Elle n'est pas encore enregistrée. Enregistrez pour la conserver ou annulez pour revenir en arrière."
       },
       "loadFailed": "Ce document ne peut pas être ouvert dans le constructeur de pages.",
-      "search": {
-        "placeholder": "Rechercher des blocs",
-        "noResults": "Aucun bloc trouvé"
-      },
       "actionBar": {
         "moveDown": "Descendre",
         "moveUp": "Monter"
@@ -5111,9 +5107,6 @@
         "uploadedCount": "Images téléversées : {{uploaded}}.",
         "uploading": "Téléversement…"
       },
-      "insert": {
-        "addToSelectedBlock": "Ajouter au bloc sélectionné"
-      },
       "list": {
         "addItem": "Ajouter un élément",
         "dragToReorder": "Glisser pour réordonner",
@@ -5340,6 +5333,88 @@
       "visibilityOutline": {
         "disabled": "Désactivé",
         "timed": "Programmé"
+      },
+      "blocks": {
+        "search": "Rechercher des blocs",
+        "clearSearch": "Effacer la recherche",
+        "noResults": "Aucun bloc ne correspond à « {{query}} ».",
+        "results_one": "{{count}} bloc",
+        "results_other": "{{count}} blocs",
+        "hintEnd": "Cliquez sur un bloc pour l’ajouter à la fin, ou faites-le glisser à l’endroit voulu.",
+        "hintInto": "Cliquez sur un bloc pour l’ajouter dans « {{block}} », ou faites-le glisser à l’endroit voulu.",
+        "hintBelow": "Cliquez sur un bloc pour l’ajouter sous « {{block}} », ou faites-le glisser à l’endroit voulu.",
+        "notHere": "Ne peut pas être ajouté ici. Faites-le glisser à l’endroit voulu.",
+        "chooseSlot": "Ajouter dans",
+        "categories": {
+          "text": "Texte",
+          "media": "Médias",
+          "layout": "Mise en page",
+          "teaser": "Teasers",
+          "engagement": "Interaction",
+          "form": "Formulaires",
+          "embed": "Intégrations",
+          "other": "Autres"
+        },
+        "groups": {
+          "teaserParts": "Éléments du teaser",
+          "formFields": "Champs de formulaire"
+        },
+        "groupHints": {
+          "teaserParts": "Fonctionnent uniquement dans un teaser.",
+          "formFields": "Fonctionnent uniquement dans un formulaire."
+        },
+        "names": {
+          "Title": "Titre",
+          "RichText": "Texte",
+          "Quote": "Citation",
+          "Listicle": "Listicle",
+          "Button": "Bouton",
+          "Break": "Appel à l’action",
+          "Image": "Image",
+          "Lightbox": "Galerie",
+          "YouTube": "YouTube",
+          "Vimeo": "Vimeo",
+          "FacebookVideo": "Vidéo Facebook",
+          "TikTok": "TikTok",
+          "Streamable": "Streamable",
+          "SoundCloud": "SoundCloud",
+          "Container": "Conteneur",
+          "Grid": "Colonnes",
+          "DynamicGrid": "Grille libre",
+          "Row": "Rangée",
+          "Slider": "Carrousel",
+          "Collapsible": "Section repliable",
+          "Space": "Espacement",
+          "Teaser": "Teaser",
+          "TeaserImage": "Image du teaser",
+          "TeaserPreTitle": "Surtitre du teaser",
+          "TeaserTitle": "Titre du teaser",
+          "TeaserLead": "Chapeau du teaser",
+          "TeaserAuthors": "Auteurs du teaser",
+          "TeaserDate": "Date du teaser",
+          "TeaserTags": "Tags du teaser",
+          "Subscribe": "Inscription à l’abonnement",
+          "MailchimpForm": "Inscription à la newsletter",
+          "Poll": "Sondage",
+          "Comment": "Commentaires",
+          "Event": "Événements",
+          "Crowdfunding": "Financement participatif",
+          "Form": "Formulaire",
+          "FormInput": "Champ de texte",
+          "FormTextarea": "Zone de texte",
+          "FormCheckbox": "Case à cocher",
+          "FormSelect": "Liste déroulante",
+          "FormRadioGroup": "Boutons radio",
+          "FormHidden": "Champ masqué",
+          "FormSubmit": "Bouton d’envoi",
+          "Facebook": "Publication Facebook",
+          "Instagram": "Instagram",
+          "Twitter": "X (Twitter)",
+          "Polis": "Polis",
+          "IFrame": "Page web (iframe)",
+          "Html": "HTML personnalisé",
+          "BildwurfAd": "Annonce Bildwurf"
+        }
       }
     }
   }

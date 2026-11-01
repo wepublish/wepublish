@@ -187,6 +187,12 @@ READMEs.
   `onSubmit` arrive as `Extra`, editor warnings come from `decorate`.
 - Factories (`builderBlock`, `plainBlock`, `editorRender`) live in `.ts`;
   `.tsx` files export components only.
+- A new editor block also needs a place in the Blocks panel:
+  `block-library/block-library.catalog.ts` (category, or the "inside a
+  teaser/form" group), an icon in `block-library.icons.ts` and a name under
+  `puck.blocks.names.<Key>` in all three locales. The catalog also yields
+  Puck's `categories`; `block-library.catalog.spec.ts` fails on a missing one.
+  The Puck component key never changes, saved documents store it.
 
 ### Puck record pickers
 

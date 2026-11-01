@@ -4870,10 +4870,6 @@
         "restoredHint": "It's not saved yet. Save to keep it, or undo to go back."
       },
       "loadFailed": "This document cannot be opened in the page builder.",
-      "search": {
-        "placeholder": "Search blocks",
-        "noResults": "No blocks found"
-      },
       "actionBar": {
         "moveDown": "Move down",
         "moveUp": "Move up"
@@ -5111,9 +5107,6 @@
         "uploadedCount": "Images uploaded: {{uploaded}}.",
         "uploading": "Uploading…"
       },
-      "insert": {
-        "addToSelectedBlock": "Add to selected block"
-      },
       "list": {
         "addItem": "Add item",
         "dragToReorder": "Drag to reorder",
@@ -5340,6 +5333,88 @@
       "visibilityOutline": {
         "disabled": "Disabled",
         "timed": "Timed"
+      },
+      "blocks": {
+        "search": "Search blocks",
+        "clearSearch": "Clear search",
+        "noResults": "No blocks match “{{query}}”.",
+        "results_one": "{{count}} block",
+        "results_other": "{{count}} blocks",
+        "hintEnd": "Click a block to add it at the end, or drag it into place.",
+        "hintInto": "Click a block to add it to “{{block}}”, or drag it into place.",
+        "hintBelow": "Click a block to add it below “{{block}}”, or drag it into place.",
+        "notHere": "Can’t be added here. Drag it into place instead.",
+        "chooseSlot": "Add to",
+        "categories": {
+          "text": "Text",
+          "media": "Media",
+          "layout": "Layout",
+          "teaser": "Teasers",
+          "engagement": "Engagement",
+          "form": "Forms",
+          "embed": "Embeds",
+          "other": "Other"
+        },
+        "groups": {
+          "teaserParts": "Teaser parts",
+          "formFields": "Form fields"
+        },
+        "groupHints": {
+          "teaserParts": "Only work inside a teaser.",
+          "formFields": "Only work inside a form."
+        },
+        "names": {
+          "Title": "Title",
+          "RichText": "Text",
+          "Quote": "Quote",
+          "Listicle": "Listicle",
+          "Button": "Button",
+          "Break": "Call to action",
+          "Image": "Image",
+          "Lightbox": "Gallery",
+          "YouTube": "YouTube",
+          "Vimeo": "Vimeo",
+          "FacebookVideo": "Facebook video",
+          "TikTok": "TikTok",
+          "Streamable": "Streamable",
+          "SoundCloud": "SoundCloud",
+          "Container": "Container",
+          "Grid": "Columns",
+          "DynamicGrid": "Free grid",
+          "Row": "Row",
+          "Slider": "Slider",
+          "Collapsible": "Collapsible section",
+          "Space": "Spacer",
+          "Teaser": "Teaser",
+          "TeaserImage": "Teaser image",
+          "TeaserPreTitle": "Teaser pre-title",
+          "TeaserTitle": "Teaser title",
+          "TeaserLead": "Teaser lead",
+          "TeaserAuthors": "Teaser authors",
+          "TeaserDate": "Teaser date",
+          "TeaserTags": "Teaser tags",
+          "Subscribe": "Membership sign-up",
+          "MailchimpForm": "Newsletter sign-up",
+          "Poll": "Poll",
+          "Comment": "Comments",
+          "Event": "Events",
+          "Crowdfunding": "Crowdfunding",
+          "Form": "Form",
+          "FormInput": "Text field",
+          "FormTextarea": "Text area",
+          "FormCheckbox": "Checkbox",
+          "FormSelect": "Dropdown",
+          "FormRadioGroup": "Radio buttons",
+          "FormHidden": "Hidden field",
+          "FormSubmit": "Submit button",
+          "Facebook": "Facebook post",
+          "Instagram": "Instagram",
+          "Twitter": "X (Twitter)",
+          "Polis": "Polis",
+          "IFrame": "Web page (iframe)",
+          "Html": "Custom HTML",
+          "BildwurfAd": "Bildwurf ad"
+        }
       }
     }
   }

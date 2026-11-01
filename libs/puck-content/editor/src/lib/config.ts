@@ -1,5 +1,7 @@
 import { PuckDocumentKind } from '@wepublish/puck-content/website';
 
+import { blockCatalog } from './block-library/block-library.catalog';
+import { puckCategories } from './block-library/block-library.helpers';
 import { withLockAll } from './blocks/with-lock';
 import {
   contentComponents,
@@ -11,7 +13,6 @@ import {
   dataComponents,
 } from './components/data/data.blocks';
 import { formComponents } from './components/form/form.blocks';
-import { formComponentNames } from './components/form/form-components';
 import {
   layoutComponents,
   layoutFieldTabs,
@@ -37,88 +38,7 @@ const components: PuckConfig['components'] = withLockAll(
   )
 );
 
-const categories: PuckConfig['categories'] = {
-  recommended: {
-    components: ['Title', 'RichText', 'Subscribe'],
-  },
-  content: {
-    components: [
-      'Title',
-      'Quote',
-      'RichText',
-      'Image',
-      'Lightbox',
-      'Listicle',
-      'Button',
-      'Break',
-    ],
-    defaultExpanded: false,
-  },
-  layout: {
-    components: [
-      'Space',
-      'Grid',
-      'DynamicGrid',
-      'Row',
-      'Slider',
-      'Container',
-      'Collapsible',
-    ],
-    defaultExpanded: false,
-  },
-  form: {
-    title: 'Form',
-    components: [...formComponentNames],
-    defaultExpanded: false,
-  },
-  data: {
-    title: 'Data',
-    components: [
-      'Subscribe',
-      'MailchimpForm',
-      'Poll',
-      'Comment',
-      'Event',
-      'Crowdfunding',
-    ],
-    defaultExpanded: false,
-  },
-  embed: {
-    components: [
-      'IFrame',
-      'YouTube',
-      'FacebookVideo',
-      'Facebook',
-      'Instagram',
-      'TikTok',
-      'Vimeo',
-      'Twitter',
-      'SoundCloud',
-      'Streamable',
-      'Polis',
-      'BildwurfAd',
-      'Html',
-    ],
-    defaultExpanded: false,
-  },
-  teaser: {
-    title: 'Teaser',
-    components: [
-      'Teaser',
-      'TeaserTitle',
-      'TeaserPreTitle',
-      'TeaserLead',
-      'TeaserImage',
-      'TeaserAuthors',
-      'TeaserDate',
-      'TeaserTags',
-    ],
-    defaultExpanded: false,
-  },
-  other: {
-    defaultExpanded: false,
-  },
-};
+const categories: PuckConfig['categories'] = puckCategories(blockCatalog);
 
 export const puckConfigs: { [K in PuckDocumentKind]: PuckConfig<K> } = {
   page: { root: PageRootConfig, components, categories },

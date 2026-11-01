@@ -28,9 +28,9 @@ describe('categories', () => {
   const categories: Partial<Record<string, { components?: string[] }>> =
     config.categories ?? {};
 
-  it('groups forms and data driven components', () => {
+  it('groups forms and engagement components', () => {
     expect(categories).toHaveProperty('form');
-    expect(categories.data?.components).toEqual(
+    expect(categories.engagement?.components).toEqual(
       expect.arrayContaining([
         'Comment',
         'Event',
@@ -56,6 +56,14 @@ describe('categories', () => {
 
   it('offers the Teaser first among the teaser blocks', () => {
     expect(categories.teaser?.components?.[0]).toBe('Teaser');
+  });
+
+  it('lists no component twice', () => {
+    const listed = Object.values(categories).flatMap(
+      category => category?.components ?? []
+    );
+
+    expect(new Set(listed).size).toBe(listed.length);
   });
 
   it('puts every component into a category', () => {
