@@ -5,27 +5,13 @@ export const Library = styled.div`
   flex-direction: column;
   gap: var(--puck-space-4);
   font-family: var(--puck-font-family);
+  --plugin-panel-inset: var(--puck-drawer-space, var(--puck-space-4));
 
   [data-puck-drawer] {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
     gap: var(--puck-space-2);
   }
-`;
-
-export const SearchBar = styled.div`
-  position: sticky;
-  top: calc(-1 * var(--puck-drawer-space, var(--puck-space-4)));
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--puck-space-2);
-  margin: calc(-1 * var(--puck-drawer-space, var(--puck-space-4)))
-    calc(-1 * var(--puck-drawer-space, var(--puck-space-4))) 0;
-  padding: var(--puck-drawer-space, var(--puck-space-4));
-  padding-bottom: var(--puck-space-3);
-  border-bottom: 1px solid var(--puck-color-border);
-  background: var(--puck-color-surface);
 `;
 
 export const SearchField = styled.label`

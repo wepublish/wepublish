@@ -27,6 +27,7 @@ export * from './lib/list/list';
 export * from './lib/list/list.field';
 export * from './lib/overlay-portal';
 export * from './lib/padding/padding';
+export * from './lib/plugin-panel/plugin-panel-header.component';
 export * from './lib/padding/padding.field';
 export * from './lib/palette/palette';
 export * from './lib/palette/palette.field';

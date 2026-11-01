@@ -6,7 +6,7 @@ export type PuckRevisionContent = { data: Data; config?: Config };
 
 export type PuckRevisionHistory = Omit<
   VersionHistoryTimelineProps,
-  'onRestore' | 'onPreview' | 'previewingId' | 'restoringId' | 'confirmRestore'
+  'onPreview' | 'previewingId'
 > & {
   loadRevision?: (revisionId: string) => Promise<PuckRevisionContent>;
 };
@@ -14,6 +14,7 @@ export type PuckRevisionHistory = Omit<
 export const emptyRevisionHistory: PuckRevisionHistory = {
   revisions: [],
   canRestore: false,
+  onRestore: () => undefined,
 };
 
 export const PuckRevisionHistoryContext =

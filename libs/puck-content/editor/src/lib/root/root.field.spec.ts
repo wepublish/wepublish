@@ -86,7 +86,6 @@ describe('articleRootSchema', () => {
         'socialMediaTitle',
         'socialMediaDescription',
         'socialMediaImageId',
-        'socialMediaAuthorIds',
         'properties',
       ].sort()
     );

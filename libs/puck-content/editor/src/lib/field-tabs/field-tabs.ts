@@ -45,9 +45,12 @@ export const layoutItemsFieldTabs: FieldTabsLayout = {
 };
 
 export const pageRootFieldTabs: FieldTabsLayout = {
-  order: ['general', 'seo', 'socialMedia', 'properties'],
+  order: ['general', 'publication', 'seo', 'socialMedia', 'properties'],
   fallback: 'general',
   tabOf: {
+    slug: 'publication',
+    tags: 'publication',
+    hidden: 'publication',
     seoTitle: 'seo',
     seoDescription: 'seo',
     socialMediaTitle: 'socialMedia',
@@ -70,6 +73,7 @@ export const articleRootFieldTabs: FieldTabsLayout = {
   tabOf: {
     authorIds: 'byline',
     hideAuthor: 'byline',
+    slug: 'publication',
     tags: 'publication',
     paywallId: 'publication',
     breaking: 'publication',
@@ -78,10 +82,10 @@ export const articleRootFieldTabs: FieldTabsLayout = {
     shared: 'publication',
     seoTitle: 'seo',
     seoDescription: 'seo',
+    canonicalUrl: 'seo',
     socialMediaTitle: 'socialMedia',
     socialMediaDescription: 'socialMedia',
     socialMediaImageId: 'socialMedia',
-    socialMediaAuthorIds: 'socialMedia',
     properties: 'properties',
   } satisfies Partial<Record<keyof ArticleRootProps, FieldTabValue>>,
 };

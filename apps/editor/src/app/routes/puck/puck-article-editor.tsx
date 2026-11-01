@@ -5,6 +5,7 @@ import {
   ArticleRevisionPreviewDocument,
   CreateArticleDocument,
   PublishArticleDocument,
+  RestoreArticleRevisionDocument,
   UpdateArticleDocument,
 } from '@wepublish/editor/api';
 import {
@@ -61,6 +62,8 @@ function ArticleEditor() {
   const { t } = useTranslation();
   const [autosaveEnabled, setAutosaveEnabled] = useAutosaveEnabled();
   const [historyRequested, setHistoryRequested] = useState(false);
+  const [restoreCount, setRestoreCount] = useState(0);
+  const [restoringId, setRestoringId] = useState<string | null>(null);
   const [loadingMoreRevisions, setLoadingMoreRevisions] = useState(false);
 
   const canSave = useHasPermission([CanCreateArticle.id]);
@@ -93,6 +96,9 @@ function ArticleEditor() {
   );
   const [publishArticle, { loading: publishing }] = useMutation(
     PublishArticleDocument
+  );
+  const [restoreArticleRevision, { loading: restoring }] = useMutation(
+    RestoreArticleRevisionDocument
   );
   const client = useApolloClient();
 
@@ -226,6 +232,28 @@ function ArticleEditor() {
     await refresh();
   };
 
+  const restore = async (revisionId: string) => {
+    if (!article) {
+      return;
+    }
+
+    setRestoringId(revisionId);
+
+    try {
+      await restoreArticleRevision({
+        variables: { id: article.id, revisionId },
+      });
+      setRestoreCount(count => count + 1);
+      notifySuccess(t('versionHistory.restored'));
+    } catch (error) {
+      notifyFailure(error);
+    } finally {
+      setRestoringId(null);
+    }
+
+    await refresh();
+  };
+
   const loadRevision = async (revisionId: string) => {
     const { data: revisionData } = await client.query({
       query: ArticleRevisionPreviewDocument,
@@ -237,15 +265,13 @@ function ArticleEditor() {
       throw new Error(t('puck.loadFailed'));
     }
 
-    const articleAtRevision = { ...article, latest: revision };
-
     return toRevisionContent(
       'article',
       loadPuckDocument(
         'article',
         revision.puckBlocks,
         revision.puckRegistry,
-        articleToRootProps(articleAtRevision)
+        articleToRootProps({ ...article, latest: revision })
       ),
       t('puck.loadFailed')
     );
@@ -297,11 +323,13 @@ function ArticleEditor() {
         pendingId: article.pending?.id,
         publishedId: article.published?.id,
         loading: revisionsLoading && revisionNodes.length === 0,
+        restoringId,
         canRestore: canSave,
         totalCount: revisionsData?.articleRevisions?.totalCount,
         hasMore: !!revisionsData?.articleRevisions?.pageInfo?.hasNextPage,
         loadingMore: loadingMoreRevisions,
         onLoadMore: loadMoreRevisions,
+        onRestore: restore,
         loadRevision,
       }
     : undefined;
@@ -315,7 +343,7 @@ function ArticleEditor() {
     statusLabel: puckDocumentStatusLabel(t, 'article', article),
     lastSavedAt: article ? new Date(article.latest.createdAt) : undefined,
     isNew: !article,
-    busy: loading || creating || updating || publishing,
+    busy: loading || creating || updating || publishing || restoring,
     hasUnpublishedChanges: hasUnpublishedChanges(article),
     canSave,
     canPublish,
@@ -342,12 +370,13 @@ function ArticleEditor() {
 
   return (
     <PuckDocumentEditor
-      key={article?.id ?? 'new'}
+      key={`${article?.id ?? 'new'}:${restoreCount}`}
       kind="article"
       data={initialData}
       controller={controller}
       publishDialogOf={rootProps => articlePublishDialog(t, article, rootProps)}
       revisionHistory={revisionHistory}
+      initialPlugin={restoreCount ? RevisionHistoryPlugin.name : undefined}
       onPluginChange={plugin => {
         if (plugin === RevisionHistoryPlugin.name) {
           setHistoryRequested(true);

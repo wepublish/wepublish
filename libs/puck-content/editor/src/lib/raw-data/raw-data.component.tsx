@@ -1,6 +1,6 @@
 import { javascript } from '@codemirror/lang-javascript';
 import { EditorView } from '@codemirror/view';
-import { Alert, Box, Button, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ComponentData, createUsePuck, Data } from '@puckeditor/core';
 import CodeMirror from '@uiw/react-codemirror';
@@ -9,10 +9,12 @@ import { TFunction } from 'i18next';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { PluginPanelHeader } from '../plugin-panel/plugin-panel-header.component';
+
 const ROOT_ZONE = 'root:default-zone';
 
 const EditorWrapper = styled(Box)`
-  margin: ${({ theme }) => theme.spacing(0, 1.5, 1.5)};
+  margin: ${({ theme }) => theme.spacing(1.5)};
   border: 1px solid var(--puck-color-border);
   border-radius: 6px;
   overflow: hidden;
@@ -175,25 +177,14 @@ export const RawDataView = () => {
 
   return (
     <>
-      <Box sx={{ p: 2 }}>
-        <Typography
-          variant="h5"
-          component="div"
-          sx={{ fontWeight: 600 }}
-        >
-          {t('puck.rawData.title')}
-        </Typography>
-
-        <Typography
-          variant="body2"
-          component="div"
-          color="text.secondary"
-        >
-          {selectedItem ?
+      <PluginPanelHeader
+        title={t('puck.rawData.title')}
+        subtitle={
+          selectedItem ?
             t('puck.rawData.editingBlock', { type: selectedItem.type })
-          : t('puck.rawData.editingDocument')}
-        </Typography>
-      </Box>
+          : t('puck.rawData.editingDocument')
+        }
+      />
 
       <EditorWrapper>
         <CodeMirror

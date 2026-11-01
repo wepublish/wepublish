@@ -126,7 +126,7 @@ export const BottomBarCloseButton = styled.button`
   position: absolute;
   top: 8px;
   right: 8px;
-  z-index: 1;
+  z-index: 2;
   display: inline-flex;
   padding: 4px;
   border: 0;

@@ -22,13 +22,6 @@ import {
   RevisionPreviewFrame,
 } from './revision-preview.component';
 
-const snackbar = vi.hoisted(() => vi.fn());
-
-vi.mock('@wepublish/ui/editor', async importOriginal => ({
-  ...((await importOriginal()) as object),
-  enqueueSnackbar: (...args: unknown[]) => snackbar(...args),
-}));
-
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, opts?: Record<string, unknown>) =>
@@ -75,19 +68,6 @@ function EditorText() {
   return <output aria-label="Editor text">{text}</output>;
 }
 
-function UndoButton() {
-  const back = usePuck(puck => puck.history.back);
-
-  return (
-    <button
-      type="button"
-      onClick={back}
-    >
-      Undo
-    </button>
-  );
-}
-
 const history = (
   overrides: Partial<PuckRevisionHistory> = {}
 ): PuckRevisionHistory => ({
@@ -108,6 +88,7 @@ const history = (
   draftId: 'draft',
   publishedId: 'old',
   canRestore: true,
+  onRestore: vi.fn(),
   loadRevision: vi.fn(async () => ({ data: documentWith('Old text') })),
   ...overrides,
 });
@@ -128,7 +109,6 @@ const renderEditor = (value: PuckRevisionHistory, children?: ReactNode) =>
             <p>Editable canvas</p>
           </RevisionPreviewFrame>
           <EditorText />
-          <UndoButton />
           {children}
         </Puck>
       </PuckRevisionHistoryContext.Provider>
@@ -143,10 +123,6 @@ const banner = () =>
 
 const editorText = () =>
   screen.getByRole('status', { name: 'Editor text' }).textContent;
-
-beforeEach(() => {
-  snackbar.mockReset();
-});
 
 describe('Revision preview', () => {
   it('shows the chosen revision read-only in the canvas', async () => {
@@ -200,8 +176,9 @@ describe('Revision preview', () => {
     expect(screen.getByText('Editable canvas')).toBeInTheDocument();
   });
 
-  it('restores the previewed revision as undoable editor content', async () => {
-    renderEditor(history());
+  it('restores the previewed revision on the server after confirming', async () => {
+    const value = history();
+    renderEditor(value);
 
     fireEvent.click(previewButton());
     await screen.findByText('Old text');
@@ -212,33 +189,42 @@ describe('Revision preview', () => {
       })
     );
 
-    await waitFor(() => expect(editorText()).toBe('Old text'));
-    expect(screen.getByText('Editable canvas')).toBeInTheDocument();
-    expect(snackbar).toHaveBeenCalledWith(
-      'puck.revisionPreview.restoredHint',
-      expect.objectContaining({
-        variant: 'success',
-        title: 'puck.revisionPreview.restored(date)',
+    expect(value.onRestore).not.toHaveBeenCalled();
+
+    fireEvent.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'versionHistory.confirm.confirm',
       })
     );
 
-    await act(() => new Promise(resolve => setTimeout(resolve, 300)));
-    fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
-
+    await waitFor(() => expect(value.onRestore).toHaveBeenCalledWith('old'));
+    expect(
+      screen.queryByRole('region', { name: 'puck.revisionPreview.label' })
+    ).toBeNull();
+    expect(screen.getByText('Editable canvas')).toBeInTheDocument();
     expect(editorText()).toBe('Current text');
   });
 
-  it('restores from the list without asking for confirmation', async () => {
+  it('keeps previewing when the restore is cancelled', async () => {
     const value = history();
     renderEditor(value);
 
+    fireEvent.click(previewButton());
+    await screen.findByText('Old text');
+
     fireEvent.click(
-      screen.getByRole('button', { name: 'versionHistory.restore' })
+      within(banner()).getByRole('button', {
+        name: 'puck.revisionPreview.restore',
+      })
+    );
+    fireEvent.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'versionHistory.confirm.cancel',
+      })
     );
 
-    await waitFor(() => expect(editorText()).toBe('Old text'));
-    expect(screen.queryByRole('dialog')).toBeNull();
-    expect(value.loadRevision).toHaveBeenCalledWith('old');
+    expect(value.onRestore).not.toHaveBeenCalled();
+    expect(screen.getByText('Old text')).toBeInTheDocument();
   });
 
   it('shows the loading state and keeps restore disabled until loaded', async () => {
@@ -326,7 +312,7 @@ describe('Revision preview', () => {
       screen.queryByRole('button', { name: 'versionHistory.preview' })
     ).toBeNull();
     expect(
-      screen.queryByRole('button', { name: 'versionHistory.restore' })
-    ).toBeNull();
+      screen.getByRole('button', { name: 'versionHistory.restore' })
+    ).toBeInTheDocument();
   });
 });

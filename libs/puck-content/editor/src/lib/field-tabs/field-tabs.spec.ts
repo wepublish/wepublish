@@ -69,17 +69,9 @@ describe('pageRootFieldTabs', () => {
     ).toEqual([
       {
         value: 'general',
-        fields: [
-          'title',
-          'lead',
-          'imageId',
-          'slug',
-          'tags',
-          'hidden',
-          'showNavigation',
-          'showFooter',
-        ],
+        fields: ['title', 'lead', 'imageId', 'showNavigation', 'showFooter'],
       },
+      { value: 'publication', fields: ['slug', 'tags', 'hidden'] },
       { value: 'seo', fields: ['seoTitle', 'seoDescription'] },
       {
         value: 'socialMedia',
@@ -104,7 +96,6 @@ describe('articleRootFieldTabs', () => {
           'lead',
           'imageId',
           'slug',
-          'canonicalUrl',
           'authorIds',
           'hideAuthor',
           'tags',
@@ -115,10 +106,10 @@ describe('articleRootFieldTabs', () => {
           'shared',
           'seoTitle',
           'seoDescription',
+          'canonicalUrl',
           'socialMediaTitle',
           'socialMediaDescription',
           'socialMediaImageId',
-          'socialMediaAuthorIds',
           'properties',
         ],
         articleRootFieldTabs
@@ -126,19 +117,13 @@ describe('articleRootFieldTabs', () => {
     ).toEqual([
       {
         value: 'general',
-        fields: [
-          'preTitle',
-          'title',
-          'lead',
-          'imageId',
-          'slug',
-          'canonicalUrl',
-        ],
+        fields: ['preTitle', 'title', 'lead', 'imageId'],
       },
       { value: 'byline', fields: ['authorIds', 'hideAuthor'] },
       {
         value: 'publication',
         fields: [
+          'slug',
           'tags',
           'paywallId',
           'breaking',
@@ -147,14 +132,16 @@ describe('articleRootFieldTabs', () => {
           'shared',
         ],
       },
-      { value: 'seo', fields: ['seoTitle', 'seoDescription'] },
+      {
+        value: 'seo',
+        fields: ['seoTitle', 'seoDescription', 'canonicalUrl'],
+      },
       {
         value: 'socialMedia',
         fields: [
           'socialMediaTitle',
           'socialMediaDescription',
           'socialMediaImageId',
-          'socialMediaAuthorIds',
         ],
       },
       { value: 'properties', fields: ['properties'] },

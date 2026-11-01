@@ -203,7 +203,6 @@ describe('articleToRootProps', () => {
       shared: true,
       seoDescription: 'Seo description',
       socialMediaDescription: 'Social description',
-      socialMediaAuthorIds: ['author-2'],
       properties: [{ key: 'key', value: 'value', public: true }],
     });
   });

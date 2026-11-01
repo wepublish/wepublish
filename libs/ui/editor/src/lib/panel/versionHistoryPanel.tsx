@@ -89,7 +89,6 @@ export interface VersionHistoryProps {
   hasMore?: boolean;
   loadingMore?: boolean;
   onLoadMore?: () => void;
-  confirmRestore?: boolean;
   previewingId?: string | null;
   onRestore: (revisionId: string) => void | Promise<void>;
   onPreview?: (revisionId: string) => void;
@@ -262,7 +261,6 @@ export function VersionHistoryTimeline({
   hasMore = false,
   loadingMore = false,
   onLoadMore,
-  confirmRestore = true,
   previewingId,
   onRestore,
   onPreview,
@@ -430,11 +428,7 @@ export function VersionHistoryTimeline({
                                     color="primary"
                                     aria-label={t('versionHistory.restore')}
                                     disabled={!!restoringId}
-                                    onClick={() =>
-                                      confirmRestore ?
-                                        setPendingRestore(revision)
-                                      : onRestore(revision.id)
-                                    }
+                                    onClick={() => setPendingRestore(revision)}
                                   >
                                     {restoringId === revision.id ?
                                       <CircularProgress size={16} />

@@ -106,6 +106,7 @@ describe('PuckDocumentEditor', () => {
         ],
         draftId: 'revision-1',
         canRestore: true,
+        onRestore: vi.fn(),
       },
     });
 
@@ -132,6 +133,7 @@ describe('PuckDocumentEditor', () => {
         ],
         draftId: 'revision-2',
         canRestore: true,
+        onRestore: vi.fn(),
         loadRevision: async () => ({ data }),
       },
     });

@@ -1,18 +1,11 @@
-import { createUsePuck } from '@puckeditor/core';
-import { enqueueSnackbar, VersionHistoryRevision } from '@wepublish/ui/editor';
+import { VersionHistoryRevision } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
-import {
-  PuckRevisionContent,
-  usePuckRevisionHistory,
-} from './revision-history.context';
+import { usePuckRevisionHistory } from './revision-history.context';
 import {
   PuckRevisionPreview,
   PuckRevisionPreviewState,
 } from './revision-preview.context';
-
-const usePuck = createUsePuck();
 
 const isInsideOverlay = (target: EventTarget | null) =>
   target instanceof Element &&
@@ -44,13 +37,10 @@ export function useEscapeKey(
 }
 
 export function useRevisionPreviewController(): PuckRevisionPreview {
-  const { t } = useTranslation();
-  const { revisions, loadRevision } = usePuckRevisionHistory();
-  const dispatch = usePuck(puck => puck.dispatch);
+  const { revisions, loadRevision, onRestore } = usePuckRevisionHistory();
   const [state, setState] = useState<PuckRevisionPreviewState>({
     status: 'idle',
   });
-  const [restoringId, setRestoringId] = useState<string | null>(null);
   const requestedId = useRef<string | null>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
 
@@ -125,49 +115,15 @@ export function useRevisionPreviewController(): PuckRevisionPreview {
 
   const restore = useCallback(
     async (revisionId: string) => {
-      const revision = findRevision(revisionId);
-
-      if (!revision || !loadRevision) {
-        return;
-      }
-
-      let content: PuckRevisionContent | undefined =
-        state.status === 'ready' && state.revision.id === revisionId ?
-          state.content
-        : undefined;
-
-      if (!content) {
-        setRestoringId(revisionId);
-
-        try {
-          content = await loadRevision(revisionId);
-        } catch {
-          enqueueSnackbar(t('puck.revisionPreview.failed'), {
-            variant: 'error',
-          });
-
-          return;
-        } finally {
-          setRestoringId(null);
-        }
-      }
-
-      dispatch({ type: 'setUi', ui: { itemSelector: null } });
-      dispatch({ type: 'setData', data: content.data, recordHistory: true });
-      close();
-
-      enqueueSnackbar(t('puck.revisionPreview.restoredHint'), {
-        variant: 'success',
-        title: t('puck.revisionPreview.restored', {
-          date: new Date(revision.createdAt),
-        }),
-      });
+      end();
+      returnFocus.current = null;
+      await onRestore(revisionId);
     },
-    [close, dispatch, findRevision, loadRevision, state, t]
+    [end, onRestore]
   );
 
   return useMemo(
-    () => ({ state, restoringId, preview, retry, close, restore }),
-    [state, restoringId, preview, retry, close, restore]
+    () => ({ state, preview, retry, close, restore }),
+    [state, preview, retry, close, restore]
   );
 }

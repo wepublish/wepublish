@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { createUsePuck } from '@puckeditor/core';
 import { ImageDocument, PeerProfileDocument } from '@wepublish/editor/api';
 import {
@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { usePuckDocumentKind } from '../document-kind/document-kind';
+import { PluginPanelHeader } from '../plugin-panel/plugin-panel-header.component';
 import {
   seoContentTypes,
   SeoPreviewRootProps,
@@ -53,17 +54,7 @@ export function SeoPreview() {
 
   return (
     <>
-      <Box sx={{ p: 2 }}>
-        <Typography
-          variant="h5"
-          component="div"
-          sx={{ fontWeight: 600 }}
-        >
-          {t('puck.seoPreview.seoPreview')}
-        </Typography>
-      </Box>
-
-      <Divider />
+      <PluginPanelHeader title={t('puck.seoPreview.seoPreview')} />
 
       <Stack
         spacing={3}

@@ -193,7 +193,6 @@ describe('articlePublishDialog', () => {
       'articleEditor.panels.seoDescription',
       'articleEditor.panels.socialMediaTitle',
       'articleEditor.panels.socialMediaDescription',
-      'articleEditor.panels.socialMediaAuthors',
       'articleEditor.panels.socialMediaImage',
     ]);
   });
@@ -226,7 +225,6 @@ describe('articlePublishDialog', () => {
   it('names the authors, tags and images the article knows and shows the id of new ones', () => {
     const { checks } = articlePublishDialog(translate, article, {
       authorIds: ['author-1', 'author-9'],
-      socialMediaAuthorIds: ['author-2'],
       tags: ['tag-1'],
       imageId: 'image-1',
       socialMediaImageId: 'image-9',
@@ -236,8 +234,8 @@ describe('articlePublishDialog', () => {
       'Ada, author-9'
     );
     expect(
-      checkOf(checks, 'articleEditor.panels.socialMediaAuthors')?.value
-    ).toBe('Grace');
+      checkOf(checks, 'articleEditor.panels.socialMediaAuthors')
+    ).toBeUndefined();
     expect(checkOf(checks, 'articleEditor.panels.tags')?.value).toBe('News');
     expect(checkOf(checks, 'articleEditor.panels.image')?.value).toBe(
       'hero.jpg'

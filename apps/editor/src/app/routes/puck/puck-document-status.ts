@@ -77,9 +77,6 @@ const articleNames = (article?: FullArticleFragment): Names =>
     ...(article?.latest.authors ?? []).map(
       ({ author }) => [author.id, author.name] as const
     ),
-    ...(article?.latest.socialMediaAuthors ?? []).flatMap(author =>
-      author ? [[author.id, author.name] as const] : []
-    ),
     ...(article?.tags ?? []).map(({ id, tag }) => [id, tag ?? id] as const),
     ...imageNames(article?.latest.image, article?.latest.socialMediaImage),
   ]);
@@ -172,11 +169,6 @@ export const articlePublishDialog = (
         label: t('articleEditor.panels.socialMediaDescription'),
         value: props.socialMediaDescription,
         missing: t('articleEditor.panels.enterSocialMediaDescription'),
-      },
-      {
-        label: t('articleEditor.panels.socialMediaAuthors'),
-        value: namesOf(props.socialMediaAuthorIds, names),
-        missing: t('articleEditor.panels.enterSocialMediaAuthors'),
       },
       {
         label: t('articleEditor.panels.socialMediaImage'),

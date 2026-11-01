@@ -4860,14 +4860,12 @@
         "label": "Versionsvorschau",
         "viewing": "Version vom {{date, PPp}} von {{author}}",
         "viewingNoAuthor": "Version vom {{date, PPp}}",
-        "readOnly": "Nur lesen. Dein aktueller Inhalt bleibt unverändert, bis du diese Version wiederherstellst.",
+        "readOnly": "Nur lesen. Dein aktueller Inhalt bleibt unverändert.",
         "loading": "Version wird geladen …",
         "failed": "Diese Version konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
         "retry": "Erneut versuchen",
         "back": "Zurück zur aktuellen Version",
-        "restore": "Diese Version wiederherstellen",
-        "restored": "Version vom {{date, PPp}} wiederhergestellt",
-        "restoredHint": "Sie ist noch nicht gespeichert. Speichere, um sie zu behalten, oder mache es rückgängig."
+        "restore": "Diese Version wiederherstellen"
       },
       "loadFailed": "Dieses Dokument lässt sich im Seitenbaukasten nicht öffnen.",
       "actionBar": {
@@ -5415,6 +5413,10 @@
           "Html": "Eigenes HTML",
           "BildwurfAd": "Bildwurf-Anzeige"
         }
+      },
+      "headingAudit": {
+        "subtitle": "Überschriftenstruktur der Seite im Editor",
+        "title": "Überschriften-Audit"
       }
     }
   }

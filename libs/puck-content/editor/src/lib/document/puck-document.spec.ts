@@ -282,7 +282,6 @@ describe('fromPuckDocument', () => {
         paywallId: null,
         canonicalUrl: '',
         breaking: true,
-        socialMediaAuthorIds: ['author-2'],
       }).data?.root
     ).toEqual({
       props: {
@@ -290,7 +289,6 @@ describe('fromPuckDocument', () => {
         title: 'Article',
         authorIds: ['author-1', 'author-2'],
         breaking: true,
-        socialMediaAuthorIds: ['author-2'],
       },
     });
   });

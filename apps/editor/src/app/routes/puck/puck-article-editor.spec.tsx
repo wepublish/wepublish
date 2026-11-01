@@ -700,10 +700,23 @@ describe('PuckArticleEditor', () => {
     ).rejects.toThrow('puck.loadFailed');
   });
 
-  it('restores versions in the editor instead of saving them on the server', () => {
+  it('reopens the editor with the restored version and its history', async () => {
     renderEditor('/puck/articles/edit/article-1');
+    act(() =>
+      editor.props.onPluginChange?.(RevisionHistoryPlugin.name ?? null)
+    );
 
-    expect(editor.props.revisionHistory).not.toHaveProperty('onRestore');
-    expect(apollo.restoreArticleRevision).not.toHaveBeenCalled();
+    await act(() => editor.props.revisionHistory?.onRestore('revision-1'));
+
+    expect(apollo.restoreArticleRevision).toHaveBeenCalledWith({
+      variables: { id: 'article-1', revisionId: 'revision-1' },
+    });
+    expect(editor.mounts).toBe(2);
+    expect(editor.props.initialPlugin).toBe(RevisionHistoryPlugin.name);
+    expect(snackbar).toHaveBeenCalledWith('', {
+      variant: 'success',
+      title: 'versionHistory.restored',
+      autoHideDuration: 2000,
+    });
   });
 });

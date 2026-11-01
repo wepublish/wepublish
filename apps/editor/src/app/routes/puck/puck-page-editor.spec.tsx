@@ -479,7 +479,7 @@ describe('PuckPageEditor', () => {
     });
   });
 
-  it('loads the version history only once it is opened and previews from it', async () => {
+  it('loads a version with its own content and settings for the preview', async () => {
     renderEditor('/puck/pages/edit/page-1');
 
     expect(apollo.revisions).toHaveBeenLastCalledWith(
@@ -518,7 +518,33 @@ describe('PuckPageEditor', () => {
     expect(content?.data.root.props).toEqual(
       expect.objectContaining({ title: 'Old about us', slug: 'about' })
     );
-    expect(editor.props.revisionHistory).not.toHaveProperty('onRestore');
-    expect(apollo.restorePageRevision).not.toHaveBeenCalled();
+  });
+
+  it('loads the version history only once it is opened and restores from it', async () => {
+    renderEditor('/puck/pages/edit/page-1');
+
+    expect(apollo.revisions).toHaveBeenLastCalledWith(
+      expect.objectContaining({ skip: true })
+    );
+
+    act(() =>
+      editor.props.onPluginChange?.(RevisionHistoryPlugin.name ?? null)
+    );
+
+    expect(editor.props.revisionHistory?.revisions).toEqual([
+      expect.objectContaining({
+        id: 'revision-1',
+        title: 'About us',
+        subtitle: 'About the team',
+      }),
+    ]);
+
+    await act(() => editor.props.revisionHistory?.onRestore('revision-1'));
+
+    expect(apollo.restorePageRevision).toHaveBeenCalledWith({
+      variables: { id: 'page-1', revisionId: 'revision-1' },
+    });
+    expect(editor.mounts).toBe(2);
+    expect(editor.props.initialPlugin).toBe(RevisionHistoryPlugin.name);
   });
 });

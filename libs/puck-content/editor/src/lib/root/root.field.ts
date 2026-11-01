@@ -103,11 +103,6 @@ export const articleRootSchema = z.object({
   shared: switchSchema.describe(
     'Whether the article is shared with peered media outlets.'
   ),
-  socialMediaAuthorIds: z
-    .array(z.string())
-    .describe(
-      existingIds('authors shown when the article is shared on social media')
-    ),
 });
 
 export const rootSchemas = {

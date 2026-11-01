@@ -70,9 +70,6 @@ export const articleToRootProps = ({
     socialMediaTitle: latest.socialMediaTitle,
     socialMediaDescription: latest.socialMediaDescription,
     socialMediaImageId: latest.socialMediaImage?.id,
-    socialMediaAuthorIds: latest.socialMediaAuthors.flatMap(author =>
-      author ? [author.id] : []
-    ),
     properties: latest.properties.map(toProperty),
   });
 
@@ -102,7 +99,10 @@ export const articleRootPropsToInput = (
   properties: (props.properties ?? []).map(toProperty),
   socialMediaTitle: props.socialMediaTitle || undefined,
   socialMediaDescription: props.socialMediaDescription || undefined,
-  socialMediaAuthorIds: props.socialMediaAuthorIds ?? [],
+  socialMediaAuthorIds:
+    previous?.latest.socialMediaAuthors.flatMap(author =>
+      author ? [author.id] : []
+    ) ?? [],
   socialMediaImageID: props.socialMediaImageId || undefined,
 });
 

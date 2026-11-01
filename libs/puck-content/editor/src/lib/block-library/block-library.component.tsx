@@ -19,6 +19,7 @@ import {
 } from 'react-icons/md';
 
 import { useSlotInsert } from '../insert/insert.hooks';
+import { PluginPanelHeader } from '../plugin-panel/plugin-panel-header.component';
 import { BlockCategory, blockCatalog } from './block-library.catalog';
 import {
   countBlocks,
@@ -45,7 +46,6 @@ import {
   GroupTitle,
   Hint,
   Library,
-  SearchBar,
   SearchField,
   SearchInput,
   Tile,
@@ -310,7 +310,7 @@ export const BlockLibrary = () => {
         data-block-library
         lang={i18n.language}
       >
-        <SearchBar>
+        <PluginPanelHeader>
           <SearchField>
             <MdSearch
               size={18}
@@ -346,7 +346,7 @@ export const BlockLibrary = () => {
           </SearchField>
 
           <Hint>{hints[mode]}</Hint>
-        </SearchBar>
+        </PluginPanelHeader>
 
         <VisuallyHidden role="status">
           {searching ?

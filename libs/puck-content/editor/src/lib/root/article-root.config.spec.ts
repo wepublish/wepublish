@@ -24,7 +24,6 @@ describe('ArticleRootConfig', () => {
       'lead',
       'imageId',
       'slug',
-      'canonicalUrl',
       'authorIds',
       'hideAuthor',
       'tags',
@@ -35,10 +34,10 @@ describe('ArticleRootConfig', () => {
       'shared',
       'seoTitle',
       'seoDescription',
+      'canonicalUrl',
       'socialMediaTitle',
       'socialMediaDescription',
       'socialMediaImageId',
-      'socialMediaAuthorIds',
       'properties',
     ]);
   });
@@ -50,11 +49,7 @@ describe('ArticleRootConfig', () => {
       multiple: true,
       ai: rootFieldAi(articleRootSchema, 'authorIds'),
     });
-    expect(ArticleRootConfig.fields?.socialMediaAuthorIds).toMatchObject({
-      type: 'record',
-      model: 'author',
-      multiple: true,
-    });
+    expect(ArticleRootConfig.fields).not.toHaveProperty('socialMediaAuthorIds');
     expect(ArticleRootConfig.fields?.paywallId).toMatchObject({
       type: 'record',
       model: 'paywall',

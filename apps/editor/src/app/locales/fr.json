@@ -4860,14 +4860,12 @@
         "label": "Aperçu de version",
         "viewing": "Version du {{date, PPp}} par {{author}}",
         "viewingNoAuthor": "Version du {{date, PPp}}",
-        "readOnly": "Lecture seule. Votre contenu actuel reste inchangé tant que vous ne restaurez pas cette version.",
+        "readOnly": "Lecture seule. Votre contenu actuel reste inchangé.",
         "loading": "Chargement de cette version …",
         "failed": "Cette version n'a pas pu être chargée. Vérifiez votre connexion et réessayez.",
         "retry": "Réessayer",
         "back": "Revenir à la version actuelle",
-        "restore": "Restaurer cette version",
-        "restored": "Version du {{date, PPp}} restaurée",
-        "restoredHint": "Elle n'est pas encore enregistrée. Enregistrez pour la conserver ou annulez pour revenir en arrière."
+        "restore": "Restaurer cette version"
       },
       "loadFailed": "Ce document ne peut pas être ouvert dans le constructeur de pages.",
       "actionBar": {
@@ -5415,6 +5413,10 @@
           "Html": "HTML personnalisé",
           "BildwurfAd": "Annonce Bildwurf"
         }
+      },
+      "headingAudit": {
+        "subtitle": "Structure des titres de la page dans l’éditeur",
+        "title": "Audit des titres"
       }
     }
   }

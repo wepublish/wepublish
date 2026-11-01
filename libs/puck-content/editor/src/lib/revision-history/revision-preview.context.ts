@@ -14,7 +14,6 @@ export type PuckRevisionPreviewState =
 
 export type PuckRevisionPreview = {
   state: PuckRevisionPreviewState;
-  restoringId: string | null;
   preview: (revisionId: string) => void;
   retry: () => void;
   close: () => void;
@@ -23,7 +22,6 @@ export type PuckRevisionPreview = {
 
 export const idleRevisionPreview: PuckRevisionPreview = {
   state: { status: 'idle' },
-  restoringId: null,
   preview: () => undefined,
   retry: () => undefined,
   close: () => undefined,

@@ -4860,14 +4860,12 @@
         "label": "Version preview",
         "viewing": "Version of {{date, PPp}} by {{author}}",
         "viewingNoAuthor": "Version of {{date, PPp}}",
-        "readOnly": "Read-only. Your current content stays as it is until you restore this version.",
+        "readOnly": "Read-only. Your current content stays unchanged.",
         "loading": "Loading this version …",
         "failed": "This version couldn't be loaded. Check your connection and try again.",
         "retry": "Try again",
         "back": "Back to current version",
-        "restore": "Restore this version",
-        "restored": "Version of {{date, PPp}} restored",
-        "restoredHint": "It's not saved yet. Save to keep it, or undo to go back."
+        "restore": "Restore this version"
       },
       "loadFailed": "This document cannot be opened in the page builder.",
       "actionBar": {
@@ -5415,6 +5413,10 @@
           "Html": "Custom HTML",
           "BildwurfAd": "Bildwurf ad"
         }
+      },
+      "headingAudit": {
+        "subtitle": "Heading structure of the page on the canvas",
+        "title": "Heading audit"
       }
     }
   }

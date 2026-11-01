@@ -1,9 +1,21 @@
 import styled from '@emotion/styled';
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+} from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { createUsePuck, Render } from '@puckeditor/core';
 import { getAuthorName } from '@wepublish/ui/editor';
-import { ReactNode, SyntheticEvent } from 'react';
+import { format } from 'date-fns';
+import { de, enUS, fr } from 'date-fns/locale';
+import { ReactNode, SyntheticEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdErrorOutline, MdHistory } from 'react-icons/md';
 
@@ -56,6 +68,8 @@ const ReadOnly = styled('div')`
   display: contents;
 `;
 
+const dateLocales: Record<string, typeof enUS> = { en: enUS, de, fr };
+
 const preventInteraction = (event: SyntheticEvent) => event.preventDefault();
 
 function useRevisionPreviewMessages(preview: PuckRevisionPreview) {
@@ -107,9 +121,10 @@ export function RevisionPreviewProvider({ children }: { children: ReactNode }) {
 }
 
 export function RevisionPreviewBanner() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const preview = usePuckRevisionPreview();
   const messages = useRevisionPreviewMessages(preview);
+  const [confirming, setConfirming] = useState(false);
   const { state } = preview;
 
   if (state.status === 'idle' || !messages) {
@@ -117,6 +132,11 @@ export function RevisionPreviewBanner() {
   }
 
   const failed = state.status === 'failed';
+  const revisionDate = format(
+    new Date(state.revision.createdAt),
+    'dd MMM yyyy, HH:mm',
+    { locale: dateLocales[i18n.language] ?? enUS }
+  );
 
   return (
     <Banner aria-label={t('puck.revisionPreview.label')}>
@@ -167,12 +187,38 @@ export function RevisionPreviewBanner() {
         : <Button
             variant="contained"
             disabled={state.status !== 'ready'}
-            onClick={() => preview.restore(state.revision.id)}
+            onClick={() => setConfirming(true)}
           >
             {t('puck.revisionPreview.restore')}
           </Button>
         }
       </BannerActions>
+
+      <Dialog
+        open={confirming}
+        onClose={() => setConfirming(false)}
+      >
+        <DialogTitle>{t('versionHistory.confirm.title')}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {t('versionHistory.confirm.message', { date: revisionDate })}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirming(false)}>
+            {t('versionHistory.confirm.cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setConfirming(false);
+              preview.restore(state.revision.id);
+            }}
+          >
+            {t('versionHistory.confirm.confirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Banner>
   );
 }

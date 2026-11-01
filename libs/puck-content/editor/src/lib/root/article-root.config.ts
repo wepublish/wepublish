@@ -18,11 +18,6 @@ export const ArticleRootConfig = withFieldTabs<PuckRootConfig<'article'>>(
     fields: {
       preTitle: { type: 'text', label: 'Pre-title', ai: ai('preTitle') },
       ...rootGeneralFields(ai),
-      canonicalUrl: {
-        type: 'text',
-        label: 'Canonical URL',
-        ai: ai('canonicalUrl'),
-      },
       authorIds: {
         type: 'record',
         model: 'author',
@@ -51,14 +46,12 @@ export const ArticleRootConfig = withFieldTabs<PuckRootConfig<'article'>>(
       },
       shared: { type: 'switch', label: 'Share with peers', ai: ai('shared') },
       ...rootSeoFields(ai),
-      ...rootSocialMediaFields(ai),
-      socialMediaAuthorIds: {
-        type: 'record',
-        model: 'author',
-        multiple: true,
-        label: 'Social media authors',
-        ai: ai('socialMediaAuthorIds'),
+      canonicalUrl: {
+        type: 'text',
+        label: 'Canonical URL',
+        ai: ai('canonicalUrl'),
       },
+      ...rootSocialMediaFields(ai),
       ...rootPropertiesFields(ai),
     },
     render: ArticleRoot,

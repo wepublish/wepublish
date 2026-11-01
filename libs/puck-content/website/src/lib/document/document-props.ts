@@ -33,5 +33,4 @@ export type ArticleRootProps = DocumentRootProps & {
   breaking?: boolean;
   disableComments?: boolean;
   shared?: boolean;
-  socialMediaAuthorIds?: string[];
 };

@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { ReactNode } from 'react';
 
 import { RevisionHistory } from './revision-history.component';
@@ -39,6 +39,7 @@ const history = (
   ],
   draftId: 'draft',
   publishedId: 'published',
+  onRestore: vi.fn(),
   ...overrides,
 });
 
@@ -63,5 +64,26 @@ describe('RevisionHistory', () => {
     expect(screen.getByText('versionHistory.subtitle:7')).toBeInTheDocument();
     expect(screen.getByText('Working draft')).toBeInTheDocument();
     expect(screen.getByText('Live version')).toBeInTheDocument();
+  });
+
+  it('restores a revision through the provider after confirming', async () => {
+    const value = history();
+
+    renderHistory(
+      <PuckRevisionHistoryContext.Provider value={value}>
+        <RevisionHistory />
+      </PuckRevisionHistoryContext.Provider>
+    );
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'versionHistory.restore' })
+    );
+    fireEvent.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'versionHistory.confirm.confirm',
+      })
+    );
+
+    expect(value.onRestore).toHaveBeenCalledWith('published');
   });
 });
