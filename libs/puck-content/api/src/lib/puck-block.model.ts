@@ -23,6 +23,7 @@ import {
   puckBlockKinds,
   puckBorderStyles,
   puckBreakpoints,
+  puckCornerShapes,
   puckDatasourceTypes,
   puckFontWeights,
   puckListDatasourceTypes,
@@ -67,6 +68,9 @@ export type PuckBackgroundSize = (typeof puckBackgroundSizes)[number];
 export const PuckBorderStyle = enumOf(puckBorderStyles);
 export type PuckBorderStyle = (typeof puckBorderStyles)[number];
 
+export const PuckCornerShape = enumOf(puckCornerShapes);
+export type PuckCornerShape = (typeof puckCornerShapes)[number];
+
 registerEnumType(PuckBlockKind, {
   name: 'PuckBlockKind',
   description:
@@ -100,6 +104,11 @@ registerEnumType(PuckFontWeight, { name: 'PuckFontWeight' });
 registerEnumType(PuckTextTransform, { name: 'PuckTextTransform' });
 registerEnumType(PuckBackgroundSize, { name: 'PuckBackgroundSize' });
 registerEnumType(PuckBorderStyle, { name: 'PuckBorderStyle' });
+registerEnumType(PuckCornerShape, {
+  name: 'PuckCornerShape',
+  description:
+    'The CSS `corner-shape` of every corner. Only has an effect with a corner radius, browsers without support draw `round` corners.',
+});
 
 @ObjectType('PuckBlockTimeOfDay')
 @InputType('PuckBlockTimeOfDayInput')
@@ -353,6 +362,9 @@ export class PuckBlockStyling {
   @Field(() => PuckBorderRadius, { nullable: true })
   borderRadius?: PuckBorderRadius | null;
 
+  @Field(() => PuckCornerShape, { nullable: true })
+  cornerShape?: PuckCornerShape | null;
+
   @Field(() => PuckMinHeightScalar, { nullable: true })
   minHeight?: ApiBlockStyling['minHeight'] | null;
 
@@ -370,6 +382,28 @@ export class PuckBlockStyling {
     description: 'Opacity of the whole block in percent, 0 to 100.',
   })
   opacity?: number | null;
+}
+
+@ObjectType('PuckBlockBreakpointStyling', {
+  description:
+    'The styling of a Puck block per theme breakpoint, mobile first: a breakpoint applies from its minimum width up and inherits every key it leaves out from the smaller breakpoints.',
+})
+@InputType('PuckBlockBreakpointStylingInput')
+export class PuckBlockBreakpointStyling {
+  @Field(() => PuckBlockStyling, { nullable: true })
+  xs?: PuckBlockStyling | null;
+
+  @Field(() => PuckBlockStyling, { nullable: true })
+  sm?: PuckBlockStyling | null;
+
+  @Field(() => PuckBlockStyling, { nullable: true })
+  md?: PuckBlockStyling | null;
+
+  @Field(() => PuckBlockStyling, { nullable: true })
+  lg?: PuckBlockStyling | null;
+
+  @Field(() => PuckBlockStyling, { nullable: true })
+  xl?: PuckBlockStyling | null;
 }
 
 // Reads are flat on purpose. A GraphQL query has to spell out every level it
@@ -422,8 +456,8 @@ export class PuckBlock {
   @Field(() => PuckBlockVisibility, { nullable: true })
   visibility?: PuckBlockVisibility | null;
 
-  @Field(() => PuckBlockStyling, { nullable: true })
-  styling?: PuckBlockStyling | null;
+  @Field(() => PuckBlockBreakpointStyling, { nullable: true })
+  styling?: PuckBlockBreakpointStyling | null;
 
   @Field(() => PuckBlockDatasources, { nullable: true })
   datasources?: PuckBlockDatasources | null;
@@ -463,8 +497,8 @@ export class PuckBlockInput {
   @Field(() => PuckBlockVisibility, { nullable: true })
   visibility?: PuckBlockVisibility | null;
 
-  @Field(() => PuckBlockStyling, { nullable: true })
-  styling?: PuckBlockStyling | null;
+  @Field(() => PuckBlockBreakpointStyling, { nullable: true })
+  styling?: PuckBlockBreakpointStyling | null;
 
   @Field(() => PuckBlockDatasources, { nullable: true })
   datasources?: PuckBlockDatasources | null;

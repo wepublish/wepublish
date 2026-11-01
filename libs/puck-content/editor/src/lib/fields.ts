@@ -9,6 +9,7 @@ import { ColorField } from './color/color.field';
 import { ColumnsField } from './columns/columns.field';
 import { DatasourceField } from './datasource/datasource.field';
 import { GapField } from './gap/gap.field';
+import { GridPlacementField } from './grid-placement/grid-placement.field';
 import { ImageField } from './image/image.field';
 import { ListField } from './list/list.field';
 import { PaddingField } from './padding/padding.field';
@@ -30,6 +31,7 @@ export type UserFields = {
   padding: PaddingField;
   border: BorderField;
   gap: GapField;
+  gridPlacement: GridPlacementField;
   styling: StylingField;
   breakpoints: BreakpointsField;
   columns: ColumnsField;

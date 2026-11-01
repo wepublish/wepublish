@@ -25,6 +25,7 @@ export * from './lib/values/color';
 export * from './lib/values/columns';
 export * from './lib/values/datasource';
 export * from './lib/values/gap';
+export * from './lib/values/grid-placement';
 export * from './lib/values/sides';
 export * from './lib/values/spacing';
 export * from './lib/values/styling';

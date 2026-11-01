@@ -10,8 +10,8 @@ import {
 const scalars: [GraphQLScalarType, unknown[], unknown[]][] = [
   [
     PuckSpacingScalar,
-    [0, 2, 1.5, '0px', '12px', '12.5px'],
-    [-1, '1rem', '12', true],
+    [0, 2, 1.5, '0px', '12px', '12.5px', '1.5rem', '50lvh', '5%'],
+    [-1, '1foo', '12', true],
   ],
   [PuckMinHeightScalar, ['320px', '50vh', '12.5vh'], ['50%', '320', 320, 'md']],
   [PuckMaxWidthScalar, ['sm', 'xl', '640px', '80%'], ['xs', '50vh', 640, '']],

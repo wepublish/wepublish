@@ -78,3 +78,25 @@ describe('categories', () => {
     expect(listed.filter(name => !(name in components))).toEqual([]);
   });
 });
+
+describe('styling', () => {
+  const unstyled = ['FormHidden'];
+
+  it.each(
+    Object.keys(config.components).filter(name => !unstyled.includes(name))
+  )('%s has a styling tab', name => {
+    expect(config.components[name]?.fields).toHaveProperty(
+      'styling.type',
+      'styling'
+    );
+  });
+
+  it.each(['Title', 'RichText'])('%s has no text styling', name => {
+    const field = config.components[name]?.fields?.styling as {
+      groups?: string[];
+    };
+
+    expect(field.groups).toBeDefined();
+    expect(field.groups).not.toContain('text');
+  });
+});

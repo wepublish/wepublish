@@ -216,7 +216,7 @@ describe('BoxModelInput', () => {
   it('keeps invalid input local and flags it', () => {
     const { onPaddingChange } = renderBoxModel({ padding: { top: 1 } });
 
-    fireEvent.change(input('Padding top'), { target: { value: '2rem' } });
+    fireEvent.change(input('Padding top'), { target: { value: '2foo' } });
 
     expect(onPaddingChange).not.toHaveBeenCalled();
     expect(input('Padding top').getAttribute('aria-invalid')).toBe('true');

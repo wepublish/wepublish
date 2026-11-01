@@ -50,7 +50,7 @@ const puckScalar = <Schema extends z.ZodTypeAny>(
 
 export const PuckSpacingScalar = puckScalar(
   'PuckSpacing',
-  'A number of theme spacing units like `2`, or exact pixels as a string like `"12px"`.',
+  'A number of theme spacing units like `2`, or an exact css length as a string like `"12px"`, `"1.5rem"` or `"50vh"`.',
   puckSpacingSchema
 );
 

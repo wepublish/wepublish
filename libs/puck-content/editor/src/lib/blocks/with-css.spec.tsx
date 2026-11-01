@@ -35,10 +35,38 @@ const renderStyled = (
     options
   );
 
+const styleSheetText = () =>
+  Array.from(document.styleSheets)
+    .flatMap(sheet => Array.from(sheet.cssRules))
+    .map(rule => rule.cssText)
+    .join('\n');
+
 describe('withCSS', () => {
   it('adds the styling field under the styling prop', () => {
     expect(Styled.fields).toHaveProperty('styling.type', 'styling');
     expect(Styled.fields).not.toHaveProperty('css');
+  });
+
+  it('limits the styling field and its AI schema to the given groups', () => {
+    const Textless = withCSS<{ className?: string }>(
+      { render: () => <div /> },
+      { groups: ['background', 'spacing'] }
+    );
+    const field = Textless.fields?.styling as {
+      groups?: string[];
+      ai?: {
+        schema?: {
+          properties?: Record<string, { properties?: Record<string, unknown> }>;
+        };
+      };
+    };
+    const md = field.ai?.schema?.properties?.['md']?.properties;
+
+    expect(field.groups).toEqual(['background', 'spacing']);
+    expect(md).not.toHaveProperty('typography');
+    expect(md).not.toHaveProperty('opacity');
+    expect(md).toHaveProperty('background');
+    expect(md).toHaveProperty('padding');
   });
 
   it('keeps the styling prop away from the wrapped component', () => {
@@ -55,7 +83,7 @@ describe('withCSS', () => {
       createElement(Wrapped.render, {
         id: 'Wrapped-1',
         puck,
-        styling: { color: '#ff0000' },
+        styling: { xs: { color: '#ff0000' } },
       })
     );
 
@@ -64,7 +92,7 @@ describe('withCSS', () => {
   });
 
   it('styles the wrapped component', () => {
-    renderStyled({ color: '#ff0000', opacity: 50 });
+    renderStyled({ xs: { color: '#ff0000', opacity: 50 } });
 
     expect(screen.getByTestId('styled')).toHaveStyle({
       color: '#ff0000',
@@ -79,7 +107,7 @@ describe('withCSS', () => {
     });
 
     renderStyled(
-      { backgroundImage: 'image-1', backgroundSize: 'contain' },
+      { xs: { backgroundImage: 'image-1', backgroundSize: 'contain' } },
       {
         mocks: [
           mockOperation(ImageDocument, {
@@ -96,5 +124,55 @@ describe('withCSS', () => {
         backgroundSize: 'contain',
       })
     );
+  });
+
+  it('styles each breakpoint inside its media query', () => {
+    renderStyled({ xs: { opacity: 50 }, md: { opacity: 80 } });
+
+    expect(screen.getByTestId('styled')).toHaveStyle({ opacity: '0.8' });
+    expect(styleSheetText()).toMatch(/opacity:\s?0\.5/);
+    expect(styleSheetText()).toMatch(
+      /@media \(min-width:\s?900px\)\s?\{[^}]*opacity:\s?0\.8/
+    );
+  });
+
+  it('resolves the background image of every breakpoint', async () => {
+    renderStyled(
+      {
+        xs: { backgroundImage: 'image-1' },
+        md: { backgroundImage: 'image-2' },
+      },
+      {
+        mocks: [
+          mockOperation(ImageDocument, {
+            variables: { id: 'image-1' },
+            data: {
+              __typename: 'Query',
+              image: mockImage({
+                id: 'image-1',
+                xxl: 'https://example.com/small.webp',
+              }),
+            },
+          }),
+          mockOperation(ImageDocument, {
+            variables: { id: 'image-2' },
+            data: {
+              __typename: 'Query',
+              image: mockImage({
+                id: 'image-2',
+                xxl: 'https://example.com/large.webp',
+              }),
+            },
+          }),
+        ],
+      }
+    );
+
+    await waitFor(() => {
+      expect(styleSheetText()).toContain('https://example.com/small.webp');
+      expect(screen.getByTestId('styled')).toHaveStyle({
+        backgroundImage: 'url("https://example.com/large.webp")',
+      });
+    });
   });
 });

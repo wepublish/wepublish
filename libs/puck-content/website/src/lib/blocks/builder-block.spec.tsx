@@ -21,7 +21,7 @@ const renderBlock = (Block: ReturnType<typeof builderBlock<GreetingProps>>) =>
       props: { name: 'Ada' },
       data: emptyPuckBlockData,
       slots: {},
-      styling: { opacity: 50 },
+      styling: { xs: { opacity: 50 } },
       visibility: { disabled: false },
       className: 'styled',
     })

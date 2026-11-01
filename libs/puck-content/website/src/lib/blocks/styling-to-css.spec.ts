@@ -5,6 +5,7 @@ import {
 } from '@wepublish/website/api';
 
 import {
+  breakpointStylingToCss,
   puckBackgroundImageUrl,
   stylingToCss,
   StylingToCssOptions,
@@ -190,6 +191,21 @@ describe('stylingToCss', () => {
     });
   });
 
+  it('shapes the corners whenever a corner shape is set', () => {
+    expect(
+      stylingToCss(theme, {
+        borderRadius: { topLeft: 2 },
+        cornerShape: 'squircle',
+      })
+    ).toEqual({
+      borderTopLeftRadius: `${theme.shape.borderRadius * 2}px`,
+      cornerShape: 'squircle',
+    });
+    expect(stylingToCss(theme, { cornerShape: 'bevel' })).toEqual({
+      cornerShape: 'bevel',
+    });
+  });
+
   it('limits the size', () => {
     expect(stylingToCss(theme, { minHeight: '50vh', maxWidth: '80%' })).toEqual(
       {
@@ -266,6 +282,7 @@ describe('stylingToCss', () => {
         bottomRight: null,
         bottomLeft: null,
       },
+      cornerShape: null,
       minHeight: null,
       maxWidth: null,
       shadow: null,
@@ -316,7 +333,9 @@ describe('stylingToCss', () => {
     type Styling = Parameters<typeof stylingToCss>[1];
 
     expectTypeOf<PuckBlockStyling>().toExtend<Styling>();
-    expectTypeOf<FullPuckBlockFragment['styling']>().toExtend<Styling>();
+    expectTypeOf<
+      NonNullable<FullPuckBlockFragment['styling']>['md']
+    >().toExtend<Styling>();
     expectTypeOf<null>().toExtend<Styling>();
     expectTypeOf<undefined>().toExtend<Styling>();
     expectTypeOf<{
@@ -345,5 +364,99 @@ describe('puckBackgroundImageUrl', () => {
       undefined
     );
     expect(puckBackgroundImageUrl(undefined)).toBeUndefined();
+  });
+});
+
+describe('breakpointStylingToCss', () => {
+  it('styles the smallest breakpoint without and every larger one inside its media query, mobile first', () => {
+    expect(
+      breakpointStylingToCss(theme, {
+        xs: { color: 'primary.main', margin: { top: 1 } },
+        md: { opacity: 50 },
+        lg: { color: '#000000' },
+      })
+    ).toEqual({
+      color: theme.palette.primary.main,
+      marginTop: theme.spacing(1),
+      [theme.breakpoints.up('md')]: {
+        color: theme.palette.primary.main,
+        marginTop: theme.spacing(1),
+        opacity: 0.5,
+      },
+      [theme.breakpoints.up('lg')]: {
+        color: '#000000',
+        marginTop: theme.spacing(1),
+        opacity: 0.5,
+      },
+    });
+  });
+
+  it('keeps a styling without the smallest breakpoint inside the media queries', () => {
+    expect(breakpointStylingToCss(theme, { md: { opacity: 50 } })).toEqual({
+      [theme.breakpoints.up('md')]: { opacity: 0.5 },
+    });
+  });
+
+  it('treats the breakpoints and keys GraphQL returns as null like unset ones', () => {
+    expect(
+      breakpointStylingToCss(theme, {
+        xs: { color: 'primary.main', opacity: null },
+        sm: null,
+        md: { color: null, opacity: 50 },
+      })
+    ).toEqual({
+      color: theme.palette.primary.main,
+      [theme.breakpoints.up('md')]: {
+        color: theme.palette.primary.main,
+        opacity: 0.5,
+      },
+    });
+  });
+
+  it('draws the background image of each breakpoint', () => {
+    expect(
+      breakpointStylingToCss(
+        theme,
+        {
+          xs: {
+            backgroundImage: 'image-1',
+            backgroundImageObject: { url: '/one.jpg', xxl: '/one-xxl.webp' },
+          },
+          md: { backgroundImage: 'image-2' },
+          lg: { overlay: '#000000' },
+        },
+        { backgroundImageUrls: { 'image-2': '/two.webp' } }
+      )
+    ).toMatchObject({
+      backgroundImage: 'url("/one-xxl.webp")',
+      [theme.breakpoints.up('md')]: { backgroundImage: 'url("/two.webp")' },
+      [theme.breakpoints.up('lg')]: {
+        backgroundImage: expect.stringContaining('url("/two.webp")'),
+      },
+    });
+  });
+
+  it('allows the margin only on the sides the component does', () => {
+    expect(
+      breakpointStylingToCss(
+        theme,
+        { md: { margin: { top: 1, left: 2 } } },
+        { marginSides: ['top', 'bottom'] }
+      )
+    ).toEqual({
+      [theme.breakpoints.up('md')]: { marginTop: theme.spacing(1) },
+    });
+  });
+
+  it('renders nothing without a styling', () => {
+    expect(breakpointStylingToCss(theme, undefined)).toEqual({});
+    expect(breakpointStylingToCss(theme, null)).toEqual({});
+    expect(breakpointStylingToCss(theme, {})).toEqual({});
+  });
+
+  it('accepts the breakpoint styling of the website API', () => {
+    type Styling = Parameters<typeof breakpointStylingToCss>[1];
+
+    expectTypeOf<FullPuckBlockFragment['styling']>().toExtend<Styling>();
   });
 });

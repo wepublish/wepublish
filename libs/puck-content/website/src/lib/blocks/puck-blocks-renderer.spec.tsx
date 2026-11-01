@@ -31,7 +31,8 @@ import { getSlot } from './slots';
 
 const theme = createTheme();
 
-type Styling = NonNullable<FullPuckBlockFragment['styling']>;
+type BreakpointStyling = NonNullable<FullPuckBlockFragment['styling']>;
+type Styling = NonNullable<BreakpointStyling['xs']>;
 type Datasources = NonNullable<FullPuckBlockFragment['datasources']>;
 
 const blockData = (
@@ -59,7 +60,19 @@ const block = (
   ...fields,
 });
 
-const styling = (fields: Partial<Styling>): Styling => ({
+const breakpointStyling = (
+  breakpoints: Partial<Omit<BreakpointStyling, '__typename'>>
+): BreakpointStyling => ({
+  __typename: 'PuckBlockBreakpointStyling',
+  xs: null,
+  sm: null,
+  md: null,
+  lg: null,
+  xl: null,
+  ...breakpoints,
+});
+
+const stylingAt = (fields: Partial<Styling>): Styling => ({
   __typename: 'PuckBlockStyling',
   typography: null,
   textAlign: null,
@@ -76,6 +89,7 @@ const styling = (fields: Partial<Styling>): Styling => ({
   padding: null,
   border: null,
   borderRadius: null,
+  cornerShape: null,
   minHeight: null,
   maxWidth: null,
   shadow: null,
@@ -83,6 +97,9 @@ const styling = (fields: Partial<Styling>): Styling => ({
   backgroundImageObject: null,
   ...fields,
 });
+
+const styling = (fields: Partial<Styling>) =>
+  breakpointStyling({ xs: stylingAt(fields) });
 
 const articleSlot: Datasources = {
   __typename: 'PuckBlockDatasources',

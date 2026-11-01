@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
 import {
@@ -13,8 +13,10 @@ import {
   LuSquare,
 } from 'react-icons/lu';
 
+import { useFocusWithin } from '../focus-within';
 import {
   FieldNumberInput,
+  FieldSpacingHint,
   FieldSpacingInput,
   FieldToggleGroup,
 } from '../field-controls.component';
@@ -78,6 +80,7 @@ export type SidesInputProps = {
 
 type SideInputProps = {
   unit: 'spacing' | 'px';
+  describedBy?: string;
   label: string;
   icon: IconType;
   value: SpacingValue | undefined;
@@ -85,7 +88,7 @@ type SideInputProps = {
   readOnly?: boolean;
 };
 
-const SideInput = ({ unit, value, ...props }: SideInputProps) =>
+const SideInput = ({ unit, value, describedBy, ...props }: SideInputProps) =>
   unit === 'px' ?
     <FieldNumberInput
       {...props}
@@ -94,6 +97,7 @@ const SideInput = ({ unit, value, ...props }: SideInputProps) =>
   : <FieldSpacingInput
       {...props}
       value={value}
+      describedBy={describedBy}
     />;
 
 export const SidesInput = ({
@@ -105,6 +109,8 @@ export const SidesInput = ({
   allowed = sides,
 }: SidesInputProps) => {
   const labels = useSidesLabels();
+  const { focused, focusProps } = useFocusWithin();
+  const hintId = useId();
   const current = value ?? {};
   const [mode, setMode] = useState(() => getSidesMode(value, allowed));
   const isVertical =
@@ -122,7 +128,7 @@ export const SidesInput = ({
   };
 
   return (
-    <FieldStack>
+    <FieldStack {...focusProps}>
       <FieldToggleGroup
         name={`${name}-mode`}
         value={mode}
@@ -138,6 +144,7 @@ export const SidesInput = ({
       {mode === 'all' && (
         <SideInput
           unit={unit}
+          describedBy={hintId}
           label={isVertical ? labels.vertical : labels.all}
           icon={isVertical ? LuMoveVertical : LuSquare}
           value={current[allowed[0]]}
@@ -150,6 +157,7 @@ export const SidesInput = ({
         <FieldGrid columns={2}>
           <SideInput
             unit={unit}
+            describedBy={hintId}
             label={labels.vertical}
             icon={LuMoveVertical}
             value={current.top}
@@ -159,6 +167,7 @@ export const SidesInput = ({
 
           <SideInput
             unit={unit}
+            describedBy={hintId}
             label={labels.horizontal}
             icon={LuMoveHorizontal}
             value={current.left}
@@ -176,6 +185,7 @@ export const SidesInput = ({
             <SideInput
               key={side}
               unit={unit}
+              describedBy={hintId}
               label={labels.sides[side]}
               icon={sideIcons[side]}
               value={current[side]}
@@ -184,6 +194,13 @@ export const SidesInput = ({
             />
           ))}
         </FieldGrid>
+      )}
+
+      {unit === 'spacing' && (
+        <FieldSpacingHint
+          id={hintId}
+          visible={focused}
+        />
       )}
     </FieldStack>
   );

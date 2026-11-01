@@ -24,8 +24,11 @@ const slotWith =
 const props: DynamicGridProps = {
   layout: { xs: { gap: { row: '4px', column: '8px' } } },
   items: [
-    { span: { xs: { columnSpan: 8, rowSpan: 2 } }, content: [] },
-    { span: { xs: { columnSpan: 4 } }, visibility: [], content: [] },
+    {
+      placement: { xs: { column: { start: 3, span: 8 }, row: { span: 2 } } },
+      content: [],
+    },
+    { placement: { xs: { column: { span: 4 } } }, visibility: [], content: [] },
     { content: [] },
   ],
 };
@@ -71,11 +74,11 @@ describe('DynamicGridRender', () => {
     expect(third?.childElementCount).toBe(0);
   });
 
-  it('spans every cell over its stored columns and rows', () => {
+  it('places every cell on its stored grid lines', () => {
     renderDynamicGrid();
 
     expect(screen.getByText('First').parentElement).toHaveStyle({
-      gridColumn: 'span 8',
+      gridColumn: '3/span 8',
       gridRow: 'span 2',
     });
     expect(screen.getByText('Second').parentElement).toHaveStyle({

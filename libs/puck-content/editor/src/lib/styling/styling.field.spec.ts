@@ -1,19 +1,26 @@
-import { PuckBlockStylingLike } from '@wepublish/puck-content/website';
+import {
+  PuckBlockStylingLike,
+  PuckBreakpointStyling,
+} from '@wepublish/puck-content/website';
 import { z } from 'zod/v4';
 
 import {
   backgroundPositionValues,
+  BreakpointStylingValue,
   fromLengthParts,
   hasStylingValue,
   headingLevel,
   humanizeTypographyVariant,
   isStylingGroupModified,
   resetStylingGroup,
+  setBreakpointStyling,
   setStyling,
   stylingGroupKeys,
   stylingGroups,
+  stylingFieldAi,
   stylingSchema,
   StylingValue,
+  toBreakpointStyling,
 } from './styling.field';
 
 describe('styling groups', () => {
@@ -34,6 +41,7 @@ describe('styling groups', () => {
 
   it('stores what the website turns into CSS', () => {
     expectTypeOf<StylingValue>().toExtend<PuckBlockStylingLike>();
+    expectTypeOf<BreakpointStylingValue>().toExtend<PuckBreakpointStyling>();
   });
 
   it('detects whether a group holds any value', () => {
@@ -63,6 +71,20 @@ describe('styling groups', () => {
         'text'
       )
     ).toEqual({ background: '#ffffff', backgroundImage: 'image-1' });
+  });
+
+  it('resets the corner shape with the border', () => {
+    expect(
+      resetStylingGroup(
+        {
+          border: { width: { top: 1 } },
+          borderRadius: { topLeft: 2 },
+          cornerShape: 'squircle',
+          opacity: 50,
+        },
+        'border'
+      )
+    ).toEqual({ opacity: 50 });
   });
 
   it('returns nothing once the last group is reset', () => {
@@ -139,6 +161,7 @@ describe('stylingSchema', () => {
         overlay: '#00000080',
         overlayOpacity: 40,
         borderRadius: { topLeft: 2, bottomRight: '8px' },
+        cornerShape: 'squircle',
         minHeight: '50vh',
         maxWidth: 'md',
         shadow: 4,
@@ -157,10 +180,82 @@ describe('stylingSchema', () => {
     expect(schema.safeParse({ backgroundPosition: 'middle' }).success).toBe(
       false
     );
+    expect(schema.safeParse({ cornerShape: 'superellipse(2)' }).success).toBe(
+      false
+    );
+  });
+
+  it('tells the AI about the corner shape', () => {
+    expect(stylingFieldAi().instructions).toContain('corner shape');
+    expect(JSON.stringify(stylingFieldAi().schema)).toContain('squircle');
+  });
+
+  it('asks the AI for the styling per breakpoint, mobile first', () => {
+    const { instructions, schema } = stylingFieldAi(undefined, ['spacing']);
+    const properties = (
+      schema as {
+        properties: Record<string, { properties: Record<string, unknown> }>;
+      }
+    ).properties;
+
+    expect(Object.keys(properties)).toEqual(['xs', 'sm', 'md', 'lg', 'xl']);
+    expect(Object.keys(properties.md.properties)).toEqual([
+      'margin',
+      'padding',
+    ]);
+    expect(instructions).toContain('breakpoint');
   });
 
   it('offers a 3 by 3 grid of background positions', () => {
     expect(backgroundPositionValues).toHaveLength(9);
     expect(new Set(backgroundPositionValues).size).toBe(9);
+  });
+});
+
+describe('setBreakpointStyling', () => {
+  it('sets the styling of one breakpoint and keeps the others', () => {
+    expect(
+      setBreakpointStyling(
+        { xs: { color: 'primary.main' }, md: { opacity: 50 } },
+        'md',
+        { opacity: 80 }
+      )
+    ).toEqual({ xs: { color: 'primary.main' }, md: { opacity: 80 } });
+  });
+
+  it('keeps a larger breakpoint without values so its tab stays', () => {
+    expect(
+      setBreakpointStyling(
+        { xs: { color: 'primary.main' }, md: { opacity: 50 } },
+        'md',
+        undefined
+      )
+    ).toEqual({ xs: { color: 'primary.main' }, md: {} });
+  });
+
+  it('returns nothing once the smallest breakpoint is all that is left and empty', () => {
+    expect(
+      setBreakpointStyling({ xs: { opacity: 50 } }, 'xs', undefined)
+    ).toBeUndefined();
+    expect(setBreakpointStyling(undefined, 'xs', undefined)).toBeUndefined();
+    expect(setBreakpointStyling(undefined, 'xs', { opacity: 50 })).toEqual({
+      xs: { opacity: 50 },
+    });
+  });
+});
+
+describe('toBreakpointStyling', () => {
+  it('reads a styling saved before the breakpoints as the smallest breakpoint', () => {
+    expect(toBreakpointStyling({ color: 'primary.main' })).toEqual({
+      xs: { color: 'primary.main' },
+    });
+  });
+
+  it('keeps a styling split by breakpoint', () => {
+    const value = { xs: { color: 'primary.main' }, md: { opacity: 50 } };
+
+    expect(toBreakpointStyling(value)).toBe(value);
+    expect(toBreakpointStyling({})).toEqual({});
+    expect(toBreakpointStyling(undefined)).toBeUndefined();
   });
 });

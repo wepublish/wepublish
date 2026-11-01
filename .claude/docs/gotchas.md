@@ -934,6 +934,15 @@ updates another component…" must stay the first test in
 again when React replays it (React keeps the first promise and drops a new
 one), or React logs "did not call use() when it finished".
 
+### ⚠️ `--exclude-task-dependencies` builds against stale `dist/` API clients
+
+`@nx/js:tsc` resolves a buildable dependency from its `dist/` output when one
+exists, so after `pnpm run generate-api` a
+`nx build puck-content-website --exclude-task-dependencies` still type-checks
+against the old `dist/libs/website/api` and reports the previous GraphQL
+shape. Rebuild `website-api` and `editor-api` first (same flag), then the
+puck libs.
+
 ### ⚠️ The two codegen targets emit different enums
 
 `@wepublish/editor/api` and `@wepublish/website/api` each generate their own

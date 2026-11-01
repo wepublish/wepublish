@@ -91,7 +91,7 @@ describe.each(embeds)('%s', (_name, Render, block, props) => {
         props,
         data: emptyPuckBlockData,
         slots: {},
-        styling: { opacity: 50 },
+        styling: { xs: { opacity: 50 } },
         visibility: { disabled: false },
         className: 'styled-block',
       }),

@@ -1,5 +1,5 @@
 import { FieldProps } from '@puckeditor/core';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   LuColumns2,
@@ -9,7 +9,9 @@ import {
   LuUnlink2,
 } from 'react-icons/lu';
 
+import { useFocusWithin } from '../focus-within';
 import {
+  FieldSpacingHint,
   FieldSpacingInput,
   FieldToggleGroup,
   ToggleableField,
@@ -39,6 +41,8 @@ export const GapFieldRender = ({
   readOnly,
 }: GapFieldRenderProps) => {
   const { t } = useTranslation();
+  const { focused, focusProps } = useFocusWithin();
+  const hintId = useId();
   const current = value ?? {};
   const [linked, setLinked] = useState(() => isGapLinked(value));
   const labels: Record<GapAxis, string> = {
@@ -66,7 +70,7 @@ export const GapFieldRender = ({
       readOnly={readOnly}
       onChange={onChange}
     >
-      <FieldStack>
+      <FieldStack {...focusProps}>
         {both && (
           <FieldToggleGroup
             name={`${name}-mode`}
@@ -94,6 +98,7 @@ export const GapFieldRender = ({
             icon={LuGrid2X2}
             value={current.column}
             readOnly={readOnly}
+            describedBy={hintId}
             onChange={amount => onChange(setLinkedGap(amount))}
           />
         : <FieldGrid columns={axes.length}>
@@ -104,11 +109,17 @@ export const GapFieldRender = ({
                 icon={axisIcons[axis]}
                 value={current[axis]}
                 readOnly={readOnly}
+                describedBy={hintId}
                 onChange={amount => onChange(setGap(current, axis, amount))}
               />
             ))}
           </FieldGrid>
         }
+
+        <FieldSpacingHint
+          id={hintId}
+          visible={focused}
+        />
       </FieldStack>
     </ToggleableField>
   );

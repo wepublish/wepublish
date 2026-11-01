@@ -145,4 +145,13 @@ export const BoxModelHint = styled.p`
   color: var(--puck-color-text-muted);
   font-size: var(--puck-font-size-xxxs);
   line-height: var(--puck-line-height-s);
+
+  &[data-visible='false'] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 `;

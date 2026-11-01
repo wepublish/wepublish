@@ -16,10 +16,12 @@ describe('spacing values', () => {
     expect(fromSpacingParts(undefined, 'px')).toBeUndefined();
   });
 
-  it('accepts spacing units and pixel strings only', () => {
+  it('accepts spacing units and css lengths only', () => {
     expect(spacingSchema.safeParse(1.5).success).toBe(true);
     expect(spacingSchema.safeParse('12px').success).toBe(true);
-    expect(spacingSchema.safeParse('12rem').success).toBe(false);
+    expect(spacingSchema.safeParse('12rem').success).toBe(true);
+    expect(spacingSchema.safeParse('50lvh').success).toBe(true);
+    expect(spacingSchema.safeParse('12foo').success).toBe(false);
     expect(spacingSchema.safeParse(-1).success).toBe(false);
   });
 });

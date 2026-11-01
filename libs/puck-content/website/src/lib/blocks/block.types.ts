@@ -2,7 +2,8 @@ import type { FullPuckBlockDataFragment } from '@wepublish/website/api';
 import type { CSSProperties, ElementType, ReactNode, Ref } from 'react';
 
 import { Side } from '../values/sides';
-import { BlockVisibility, PuckStyling } from './graphql-shape';
+import { BlockVisibility } from './graphql-shape';
+import type { PuckBreakpointStyling } from './styling-to-css';
 
 export type PuckSlotValue = [];
 
@@ -36,7 +37,7 @@ export type PuckBlockRenderProps<
   props: Props;
   data: Data;
   slots: PuckSlots;
-  styling?: PuckStyling | null;
+  styling?: PuckBreakpointStyling | null;
   visibility?: BlockVisibility | null;
   className?: string;
   ref?: Ref<HTMLElement>;

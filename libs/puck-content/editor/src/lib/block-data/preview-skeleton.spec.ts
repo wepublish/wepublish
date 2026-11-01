@@ -38,7 +38,7 @@ const grid = (titles: string[]) =>
   document([
     puckComponent('Grid', 1, {
       layout: { xs: { columns: [6, 6] } },
-      styling: { color: 'primary.main' },
+      styling: { xs: { color: 'primary.main' } },
       locked: true,
       datasources: { article: { type: 'uniqueList' } },
       content: titles.map((title, index) =>

@@ -80,7 +80,7 @@ describe('splitPuckRenderProps', () => {
   });
 
   it('splits the envelope off the component props', () => {
-    const styling = { color: 'primary.main' };
+    const styling = { xs: { color: 'primary.main' } };
     const visibility = { breakpoints: ['md' as const] };
     const datasources = { article: { type: 'slot' as const } };
 

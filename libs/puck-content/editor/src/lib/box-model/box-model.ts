@@ -1,4 +1,6 @@
-import { SpacingValue } from '../spacing/spacing';
+import { cssLengthUnits } from '@wepublish/puck-content/website';
+
+import { CssLengthValue, SpacingValue } from '../spacing/spacing';
 
 export type SpacingInputResult =
   { valid: true; value: SpacingValue | undefined } | { valid: false };
@@ -8,7 +10,9 @@ export type SpacingKeysValue<Key extends string> = Partial<
 >;
 
 const unitsPattern = /^\d+(\.\d*)?$/;
-const pixelsPattern = /^(\d+(?:\.\d+)?)\s*px$/;
+const lengthPattern = new RegExp(
+  `^(\\d+(?:\\.\\d+)?)\\s*(${cssLengthUnits.join('|')})$`
+);
 
 export const parseSpacingInput = (raw: string): SpacingInputResult => {
   const input = raw.trim().toLowerCase().replace(',', '.');
@@ -21,10 +25,13 @@ export const parseSpacingInput = (raw: string): SpacingInputResult => {
     return { valid: true, value: parseFloat(input) };
   }
 
-  const pixels = input.match(pixelsPattern);
+  const length = input.match(lengthPattern);
 
-  if (pixels) {
-    return { valid: true, value: `${parseFloat(pixels[1])}px` };
+  if (length) {
+    return {
+      valid: true,
+      value: `${parseFloat(length[1])}${length[2]}` as CssLengthValue,
+    };
   }
 
   return { valid: false };
@@ -40,7 +47,9 @@ export const stepSpacingValue = (
   delta: number
 ): SpacingValue => {
   if (typeof value === 'string') {
-    return `${Math.max(0, roundStep(parseFloat(value) + delta))}px`;
+    const unit = value.replace(/^[\d.]+/, '');
+
+    return `${Math.max(0, roundStep(parseFloat(value) + delta))}${unit}` as CssLengthValue;
   }
 
   return Math.max(0, roundStep((value ?? 0) + delta));

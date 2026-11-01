@@ -5041,11 +5041,30 @@ type PuckBlock {
   The slot of the parent this block sits in. Null at the top level, `content` by default. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent.
   """
   puckSlot: String
-  styling: PuckBlockStyling
+  styling: PuckBlockBreakpointStyling
 
   """The component name."""
   type: String!
   visibility: PuckBlockVisibility
+}
+
+"""
+The styling of a Puck block per theme breakpoint, mobile first: a breakpoint applies from its minimum width up and inherits every key it leaves out from the smaller breakpoints.
+"""
+type PuckBlockBreakpointStyling {
+  lg: PuckBlockStyling
+  md: PuckBlockStyling
+  sm: PuckBlockStyling
+  xl: PuckBlockStyling
+  xs: PuckBlockStyling
+}
+
+input PuckBlockBreakpointStylingInput {
+  lg: PuckBlockStylingInput
+  md: PuckBlockStylingInput
+  sm: PuckBlockStylingInput
+  xl: PuckBlockStylingInput
+  xs: PuckBlockStylingInput
 }
 
 """
@@ -5125,7 +5144,7 @@ input PuckBlockInput {
   The slot of the parent this block sits in, omitted means `content`. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent.
   """
   puckSlot: String
-  styling: PuckBlockStylingInput
+  styling: PuckBlockBreakpointStylingInput
 
   """
   The component name. For a `generated` block, the name of a component in the registry.
@@ -5173,6 +5192,7 @@ type PuckBlockStyling {
   A theme colour path like `primary.main` or a hex colour like `#1a1a1a`.
   """
   color: String
+  cornerShape: PuckCornerShape
   fontWeight: PuckFontWeight
   margin: PuckSpacingSides
   maxWidth: PuckMaxWidth
@@ -5216,6 +5236,7 @@ input PuckBlockStylingInput {
   A theme colour path like `primary.main` or a hex colour like `#1a1a1a`.
   """
   color: String
+  cornerShape: PuckCornerShape
   fontWeight: PuckFontWeight
   margin: PuckSpacingSidesInput
   maxWidth: PuckMaxWidth
@@ -5394,6 +5415,18 @@ enum PuckBreakpoint {
 }
 
 """
+The CSS `corner-shape` of every corner. Only has an effect with a corner radius, browsers without support draw `round` corners.
+"""
+enum PuckCornerShape {
+  bevel
+  notch
+  round
+  scoop
+  square
+  squircle
+}
+
+"""
 How a Puck block loads its records: `list` loads the latest, `uniqueList` the latest not shown elsewhere on the page, `slot` takes them from the parent, `single` picks one by id and `multiple` several by ids.
 """
 enum PuckDatasourceType {
@@ -5462,7 +5495,7 @@ input PuckRegistryInput {
 }
 
 """
-A number of theme spacing units like `2`, or exact pixels as a string like `"12px"`.
+A number of theme spacing units like `2`, or an exact css length as a string like `"12px"`, `"1.5rem"` or `"50vh"`.
 """
 scalar PuckSpacing
 

@@ -33,6 +33,17 @@ export const corners: Corner[] = [
   'bottomLeft',
 ];
 
+export type CornerShapeValue =
+  'round' | 'squircle' | 'bevel' | 'scoop' | 'notch' | 'square';
+export const cornerShapes: CornerShapeValue[] = [
+  'round',
+  'squircle',
+  'bevel',
+  'scoop',
+  'notch',
+  'square',
+];
+
 export type LengthUnit = 'px' | 'vh' | '%';
 export type LengthValue<Unit extends LengthUnit = LengthUnit> =
   `${number}${Unit}`;

@@ -28,6 +28,7 @@ import {
   puckBlockKinds,
   puckBorderStyles,
   puckBreakpoints,
+  puckCornerShapes,
   puckDatasourceTypes,
   puckFontWeights,
   puckListDatasourceTypes,
@@ -110,7 +111,7 @@ describe('puck block schema', () => {
       props: 'JSONObject!',
       locked: 'Boolean',
       visibility: 'PuckBlockVisibility',
-      styling: 'PuckBlockStyling',
+      styling: 'PuckBlockBreakpointStyling',
       datasources: 'PuckBlockDatasources',
       consumes: 'Int',
     });
@@ -124,7 +125,7 @@ describe('puck block schema', () => {
       props: 'JSONObject!',
       locked: 'Boolean',
       visibility: 'PuckBlockVisibilityInput',
-      styling: 'PuckBlockStylingInput',
+      styling: 'PuckBlockBreakpointStylingInput',
       datasources: 'PuckBlockDatasourcesInput',
       consumes: 'Int',
       puckSlot: 'String',
@@ -209,6 +210,20 @@ describe('puck block schema', () => {
   });
 
   it.each([
+    ['PuckBlockBreakpointStyling', ''],
+    ['PuckBlockBreakpointStylingInput', 'Input'],
+  ])('splits the styling of %s by breakpoint', (name, suffix) => {
+    expect(fieldsOf(name)).toEqual(
+      Object.fromEntries(
+        puckBreakpoints.map(breakpoint => [
+          breakpoint,
+          `PuckBlockStyling${suffix}`,
+        ])
+      )
+    );
+  });
+
+  it.each([
     ['PuckBlockStyling', ''],
     ['PuckBlockStylingInput', 'Input'],
   ])('types every styling key of %s', (name, suffix) => {
@@ -228,6 +243,7 @@ describe('puck block schema', () => {
       padding: `PuckSpacingSides${suffix}`,
       border: `PuckBorder${suffix}`,
       borderRadius: `PuckBorderRadius${suffix}`,
+      cornerShape: 'PuckCornerShape',
       minHeight: 'PuckMinHeight',
       maxWidth: 'PuckMaxWidth',
       shadow: 'Int',
@@ -270,6 +286,7 @@ describe('puck block schema', () => {
     ['PuckTextTransform', puckTextTransforms],
     ['PuckBackgroundSize', puckBackgroundSizes],
     ['PuckBorderStyle', puckBorderStyles],
+    ['PuckCornerShape', puckCornerShapes],
   ])('names the %s values exactly as they are stored', (name, values) => {
     expect(enumValuesOf(name)).toEqual(values.map(value => [value, value]));
   });

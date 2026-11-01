@@ -3,9 +3,10 @@ import { KeyboardEvent, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LuLink2, LuLink2Off } from 'react-icons/lu';
 
+import { useFocusWithin } from '../focus-within';
+import { FieldSpacingHint } from '../field-controls.component';
 import { Side, sides, SidesValue } from '../sides/sides';
 import { SpacingValue } from '../spacing/spacing';
-import { useWebsiteTheme } from '../website-theme';
 import {
   areSpacingKeysUniform,
   formatSpacingInput,
@@ -18,7 +19,6 @@ import { useLinkedSpacingKeys } from './box-model.hooks';
 import {
   BoxModelContent,
   BoxModelFrame,
-  BoxModelHint,
   BoxModelInner,
   BoxModelLinkCell,
   BoxModelRing,
@@ -159,12 +159,6 @@ const useBoxModelLabels = () => {
       padding: t('', 'Link padding sides'),
     },
     unavailable: t('', 'Not available for this component'),
-    hint: (unit: number) =>
-      t(
-        '',
-        'Numbers are theme units (1 = {{unit}}px), add px for exact pixels. Arrow keys change the value.',
-        { unit }
-      ),
   };
 };
 
@@ -266,12 +260,11 @@ export const BoxModelInput = ({
   readOnly,
 }: BoxModelInputProps) => {
   const labels = useBoxModelLabels();
-  const theme = useWebsiteTheme();
-  const unit = parseFloat(theme.spacing(1)) || 8;
+  const { focused, focusProps } = useFocusWithin();
   const hintId = `${name}-hint`;
 
   return (
-    <BoxModelFrame>
+    <BoxModelFrame {...focusProps}>
       <SpacingRing
         kind="margin"
         value={margin}
@@ -292,7 +285,10 @@ export const BoxModelInput = ({
         </SpacingRing>
       </SpacingRing>
 
-      <BoxModelHint id={hintId}>{labels.hint(unit)}</BoxModelHint>
+      <FieldSpacingHint
+        id={hintId}
+        visible={focused}
+      />
     </BoxModelFrame>
   );
 };

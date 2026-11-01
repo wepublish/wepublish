@@ -55,10 +55,11 @@ const fullStyling: ApiBlockStyling = {
   backgroundPosition: 'left top',
   overlay: 'common.black',
   overlayOpacity: 40,
-  margin: { top: 2, bottom: '12px' },
+  margin: { top: 2, bottom: '12px', left: '1.5rem', right: '5lvh' },
   padding: { top: 1, right: 1.5, bottom: '8px', left: 0 },
   border: { width: { top: 1, bottom: 2 }, style: 'dashed', color: '#fff' },
   borderRadius: { topLeft: 1, bottomRight: '8px' },
+  cornerShape: 'squircle',
   minHeight: '50vh',
   maxWidth: 'md',
   shadow: 24,
@@ -82,7 +83,10 @@ describe('parsePuckBlocks', () => {
             },
             breakpoints: ['md'],
           },
-          styling: fullStyling,
+          styling: {
+            xs: fullStyling,
+            md: { color: '#000000', margin: { top: 4 } },
+          },
           datasources: {
             article: { type: 'list' },
             page: { type: 'single', id: 'page-1' },
@@ -187,7 +191,10 @@ describe('parsePuckBlocks', () => {
           props: {},
           locked: null,
           puckSlot: null,
-          styling: { color: null, margin: { top: 1, left: null } },
+          styling: {
+            xs: { color: null, margin: { top: 1, left: null } },
+            md: null,
+          },
           datasources: {
             article: null,
             page: { type: 'single', id: 'page-1', ids: null },
@@ -206,7 +213,7 @@ describe('parsePuckBlocks', () => {
         kind: 'puck',
         type: 'Grid',
         props: {},
-        styling: { margin: { top: 1 } },
+        styling: { xs: { margin: { top: 1 } } },
         datasources: { page: { type: 'single', id: 'page-1' } },
         visibility: { timings: {} },
       },
@@ -512,68 +519,93 @@ describe('parsePuckBlocks', () => {
     ],
     [
       'a colour that is neither a theme colour nor hex',
-      [{ ...block('a'), styling: { color: 'red' } }],
-      'blocks[0].styling.color must be a theme colour like primary.main or a hex colour like #1a1a1a',
+      [{ ...block('a'), styling: { md: { color: 'red' } } }],
+      'blocks[0].styling.md.color must be a theme colour like primary.main or a hex colour like #1a1a1a',
     ],
     [
       'a negative margin',
-      [{ ...block('a'), styling: { margin: { top: -1 } } }],
-      'blocks[0].styling.margin.top must be theme spacing units or pixels like 12px',
+      [{ ...block('a'), styling: { md: { margin: { top: -1 } } } }],
+      'blocks[0].styling.md.margin.top must be theme spacing units or a css length like 12px, 1.5rem or 50vh',
     ],
     [
-      'a padding in another unit',
-      [{ ...block('a'), styling: { padding: { left: '1rem' } } }],
-      'blocks[0].styling.padding.left must be theme spacing units or pixels like 12px',
+      'a padding in an unknown unit',
+      [{ ...block('a'), styling: { md: { padding: { left: '1foo' } } } }],
+      'blocks[0].styling.md.padding.left must be theme spacing units or a css length like 12px, 1.5rem or 50vh',
     ],
     [
       'a border width as a string',
-      [{ ...block('a'), styling: { border: { width: { top: '2px' } } } }],
-      'blocks[0].styling.border.width.top must be a number',
+      [
+        {
+          ...block('a'),
+          styling: { md: { border: { width: { top: '2px' } } } },
+        },
+      ],
+      'blocks[0].styling.md.border.width.top must be a number',
     ],
     [
       'an unknown border style',
-      [{ ...block('a'), styling: { border: { style: 'double' } } }],
-      'blocks[0].styling.border.style must be one of solid, dashed, dotted',
+      [{ ...block('a'), styling: { md: { border: { style: 'double' } } } }],
+      'blocks[0].styling.md.border.style must be one of solid, dashed, dotted',
     ],
     [
-      'a corner radius in another unit',
-      [{ ...block('a'), styling: { borderRadius: { topLeft: '8em' } } }],
-      'blocks[0].styling.borderRadius.topLeft must be theme spacing units or pixels like 12px',
+      'a corner radius in an unknown unit',
+      [
+        {
+          ...block('a'),
+          styling: { md: { borderRadius: { topLeft: '8foo' } } },
+        },
+      ],
+      'blocks[0].styling.md.borderRadius.topLeft must be theme spacing units or a css length like 12px, 1.5rem or 50vh',
     ],
     [
       'a minimum height in percent',
-      [{ ...block('a'), styling: { minHeight: '50%' } }],
-      'blocks[0].styling.minHeight must be pixels like 320px or viewport height like 50vh',
+      [{ ...block('a'), styling: { md: { minHeight: '50%' } } }],
+      'blocks[0].styling.md.minHeight must be pixels like 320px or viewport height like 50vh',
     ],
     [
       'a maximum width at the smallest breakpoint',
-      [{ ...block('a'), styling: { maxWidth: 'xs' } }],
-      'blocks[0].styling.maxWidth must be a breakpoint (sm, md, lg, xl), pixels like 640px or percent like 80%',
+      [{ ...block('a'), styling: { md: { maxWidth: 'xs' } } }],
+      'blocks[0].styling.md.maxWidth must be a breakpoint (sm, md, lg, xl), pixels like 640px or percent like 80%',
     ],
     [
       'a shadow above the highest elevation',
-      [{ ...block('a'), styling: { shadow: 25 } }],
-      'blocks[0].styling.shadow must be at most 24',
+      [{ ...block('a'), styling: { md: { shadow: 25 } } }],
+      'blocks[0].styling.md.shadow must be at most 24',
     ],
     [
       'a shadow between elevations',
-      [{ ...block('a'), styling: { shadow: 1.5 } }],
-      'blocks[0].styling.shadow must be an integer',
+      [{ ...block('a'), styling: { md: { shadow: 1.5 } } }],
+      'blocks[0].styling.md.shadow must be an integer',
     ],
     [
       'an opacity above 100 percent',
-      [{ ...block('a'), styling: { opacity: 101 } }],
-      'blocks[0].styling.opacity must be at most 100',
+      [{ ...block('a'), styling: { md: { opacity: 101 } } }],
+      'blocks[0].styling.md.opacity must be at most 100',
     ],
     [
       'a background position in the wrong order',
-      [{ ...block('a'), styling: { backgroundPosition: 'top left' } }],
-      'blocks[0].styling.backgroundPosition must be one of left top, center top, right top, left center, center center, right center, left bottom, center bottom, right bottom',
+      [{ ...block('a'), styling: { md: { backgroundPosition: 'top left' } } }],
+      'blocks[0].styling.md.backgroundPosition must be one of left top, center top, right top, left center, center center, right center, left bottom, center bottom, right bottom',
     ],
     [
       'an unknown styling key',
-      [{ ...block('a'), styling: { fontSize: '2rem' } }],
-      'blocks[0].styling must not have fontSize',
+      [{ ...block('a'), styling: { md: { fontSize: '2rem' } } }],
+      'blocks[0].styling.md must not have fontSize',
+    ],
+    [
+      'a styling that is not split by breakpoint',
+      [{ ...block('a'), styling: { color: 'primary.main' } }],
+      'blocks[0].styling must not have color',
+    ],
+    [
+      'a styling at an unknown breakpoint',
+      [{ ...block('a'), styling: { xxl: { color: 'primary.main' } } }],
+      'blocks[0].styling must not have xxl',
+    ],
+    [
+      'a breakpoint styling that is not an object',
+      [{ ...block('a'), styling: { sm: 'bold' } }],
+      'blocks[0].styling.sm must be an object',
     ],
   ])('rejects %s', (_, value, message) => {
     expect(() => parsePuckBlocks(value)).toThrow(
@@ -654,10 +686,11 @@ const everyStylingKey = {
   backgroundPosition: 'left top',
   overlay: 'common.black',
   overlayOpacity: 40,
-  margin: { top: 2, bottom: '12px' },
+  margin: { top: 2, bottom: '12px', left: '1.5rem', right: '5lvh' },
   padding: { top: 1, right: 1.5, bottom: '8px', left: 0 },
   border: { width: { top: 1, bottom: 2 }, style: 'dashed', color: '#fff' },
   borderRadius: { topLeft: 1, bottomRight: '8px' },
+  cornerShape: 'squircle',
   minHeight: '50vh',
   maxWidth: 'md',
   shadow: 24,
@@ -668,7 +701,9 @@ const timed = (timings: unknown) => [storedBlock({ visibility: { timings } })];
 
 const sourced = (datasources: unknown) => [storedBlock({ datasources })];
 
-const styled = (styling: unknown) => [storedBlock({ styling })];
+const styled = (styling: unknown) => [
+  storedBlock({ styling: { xs: styling } }),
+];
 
 const slotted = (puckSlot: unknown) => [
   storedBlock({ children: [storedBlock({ id: 'Title-2', puckSlot })] }),
@@ -1011,7 +1046,7 @@ const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
     ['margin as a single number', styled({ margin: 2 })],
     ['margin on an unknown side', styled({ margin: { start: 2 } })],
     ['a negative margin', styled({ margin: { top: -2 } })],
-    ['margin in rem', styled({ margin: { top: '1rem' } })],
+    ['margin in an unknown unit', styled({ margin: { top: '1foo' } })],
     [
       'padding with a negative pixel value',
       styled({ padding: { top: '-4px' } }),
@@ -1033,8 +1068,13 @@ const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
     ],
     ['a negative corner radius', styled({ borderRadius: { topLeft: -1 } })],
     [
-      'a corner radius in percent',
-      styled({ borderRadius: { topLeft: '50%' } }),
+      'a corner radius with a negative length',
+      styled({ borderRadius: { topLeft: '-50%' } }),
+    ],
+    ['an unknown corner shape', styled({ cornerShape: 'superellipse(2)' })],
+    [
+      'a corner shape per corner',
+      styled({ cornerShape: { topLeft: 'bevel' } }),
     ],
     ['a minimum height without a unit', styled({ minHeight: '320' })],
     ['a minimum height as a number', styled({ minHeight: 320 })],
@@ -1696,6 +1736,47 @@ describe('readStoredPuckBlocks', () => {
         }
       ),
     ]);
+  });
+
+  it('reads a styling stored before it was split by breakpoint as the smallest breakpoint', () => {
+    expect(
+      readStoredPuckBlocks([
+        {
+          ...block('grid'),
+          styling: { color: 'primary.main', margin: { top: 2 } },
+          children: [
+            { ...block('a'), styling: { shadow: 2, color: null } },
+            { ...block('b'), styling: { md: { shadow: 4 } } },
+            { ...block('c'), styling: {} },
+          ],
+        },
+      ])
+    ).toEqual([
+      block(
+        'grid',
+        {},
+        {
+          styling: { xs: { color: 'primary.main', margin: { top: 2 } } },
+          children: [
+            block('a', {}, { styling: { xs: { shadow: 2 } } }),
+            block('b', {}, { styling: { md: { shadow: 4 } } }),
+            block('c', {}, { styling: {} }),
+          ],
+        }
+      ),
+    ]);
+  });
+
+  it('accepts a styling stored before it was split by breakpoint', () => {
+    expect(
+      isStoredPuckBlocks([{ ...block('a'), styling: { opacity: 50 } }])
+    ).toBe(true);
+  });
+
+  it('still refuses an invalid styling stored before the breakpoints', () => {
+    expect(
+      readStoredPuckBlocks([{ ...block('a'), styling: { fontSize: '2rem' } }])
+    ).toBeNull();
   });
 
   it.each([

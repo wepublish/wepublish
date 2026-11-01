@@ -2,11 +2,15 @@ import { ComponentConfig, DefaultComponentProps } from '@puckeditor/core';
 import { createElement } from 'react';
 import { Side } from '@wepublish/puck-content/website';
 
-import { stylingFieldAi, StylingValue } from '../styling/styling.field';
+import {
+  BreakpointStylingValue,
+  StylingGroup,
+  stylingFieldAi,
+} from '../styling/styling.field';
 import { UserFields } from '../fields';
 import { CSSRender } from './css-render.component';
 
-export type CSSValue = StylingValue;
+export type CSSValue = BreakpointStylingValue;
 
 export type WithCSS<Props> = Props & {
   className?: string;
@@ -17,7 +21,10 @@ export function withCSS<
   Props extends DefaultComponentProps & { className?: string },
 >(
   config: ComponentConfig<{ props: Props; fields: UserFields }>,
-  { marginSides }: { marginSides?: Side[] } = {}
+  {
+    marginSides,
+    groups,
+  }: { marginSides?: Side[]; groups?: StylingGroup[] } = {}
 ): ComponentConfig<{ props: WithCSS<Props>; fields: UserFields }> {
   const Render = config.render;
 
@@ -29,7 +36,8 @@ export function withCSS<
         label: 'Styling',
         type: 'styling',
         marginSides,
-        ai: stylingFieldAi(marginSides),
+        groups,
+        ai: stylingFieldAi(marginSides, groups),
       },
     },
     render: ({ styling, className, ...props }) => (

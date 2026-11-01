@@ -1,7 +1,8 @@
-import { Slider, Tooltip } from '@mui/material';
+import { Link, Slider, Tooltip } from '@mui/material';
 import { ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
+import { LuCircle } from 'react-icons/lu';
 
 import {
   areSpacingKeysUniform,
@@ -14,7 +15,8 @@ import {
 } from '../box-model/box-model.component';
 import { useLinkedSpacingKeys } from '../box-model/box-model.hooks';
 import { BoxModelHint } from '../box-model/box-model.styles';
-import { FieldSelect } from '../field-controls.component';
+import { useFocusWithin } from '../focus-within';
+import { FieldSelect, FieldToggleGroup } from '../field-controls.component';
 import {
   FieldInput,
   NumberInputWrapper,
@@ -28,6 +30,8 @@ import {
   backgroundPositionValues,
   Corner,
   corners,
+  CornerShapeValue,
+  cornerShapes,
   fromLengthParts,
   isLengthValue,
   LengthUnit,
@@ -43,9 +47,13 @@ import {
 } from './styling.field';
 import {
   CornerCell,
+  CornerActions,
   CornerCenter,
   CornerGrid,
   CornerPreview,
+  CornerRoundToggle,
+  CornerShapeIcon,
+  CornerShapeNote,
   PercentSliderRow,
   PercentSliderValue,
   PositionDot,
@@ -423,6 +431,8 @@ export type CornerRadiusInputProps = {
   readOnly?: boolean;
 };
 
+const fullyRoundedRadius = '9999px';
+
 export const CornerRadiusInput = ({
   value,
   onChange,
@@ -431,6 +441,7 @@ export const CornerRadiusInput = ({
   const { t } = useTranslation();
   const theme = useWebsiteTheme();
   const hintId = useId();
+  const { focused, focusProps } = useFocusWithin();
   const [linked, setLinked] = useLinkedSpacingKeys(value, corners);
 
   const labels: Record<Corner, string> = {
@@ -452,6 +463,17 @@ export const CornerRadiusInput = ({
   const changeCorner = (corner: Corner, amount: SpacingValue | undefined) =>
     onChange(setSpacingKeys(value, linked ? corners : [corner], amount));
 
+  const rounded = corners.every(
+    corner => value?.[corner] === fullyRoundedRadius
+  );
+
+  const toggleRounded = () => {
+    setLinked(true);
+    onChange(
+      rounded ? {} : setSpacingKeys(undefined, corners, fullyRoundedRadius)
+    );
+  };
+
   const toggleLinked = () => {
     setLinked(!linked);
 
@@ -461,7 +483,7 @@ export const CornerRadiusInput = ({
   };
 
   return (
-    <StylingControlGroup>
+    <StylingControlGroup {...focusProps}>
       <CornerGrid>
         {corners.map(corner => (
           <CornerCell
@@ -493,13 +515,128 @@ export const CornerRadiusInput = ({
         </CornerCenter>
       </CornerGrid>
 
-      <BoxModelHint id={hintId}>
+      <CornerActions>
+        <CornerRoundToggle
+          type="button"
+          aria-pressed={rounded}
+          disabled={readOnly}
+          onClick={toggleRounded}
+        >
+          <LuCircle
+            size={14}
+            aria-hidden
+          />
+          {t('', 'Fully rounded')}
+        </CornerRoundToggle>
+      </CornerActions>
+
+      <BoxModelHint
+        id={hintId}
+        data-visible={focused}
+      >
         {t(
           '',
-          'Numbers are multiples of the theme radius ({{radius}}), add px for exact pixels.',
+          'Numbers are multiples of the theme radius ({{radius}}). Add a unit like px, rem or % for an exact size. Arrow keys change the value.',
           { radius: themeRadius }
         )}
       </BoxModelHint>
+    </StylingControlGroup>
+  );
+};
+
+const cornerShapePaths = {
+  round: 'M3 14V8A5 5 0 0 1 8 3H14',
+  squircle: 'M3 14V8C3 4.2 4.2 3 8 3H14',
+  bevel: 'M3 14V8L8 3H14',
+  scoop: 'M3 14V8A5 5 0 0 0 8 3H14',
+  notch: 'M3 14V8H8V3H14',
+  square: 'M3 14V3H14',
+} satisfies Record<CornerShapeValue, string>;
+
+const defaultCornerShape: CornerShapeValue = 'round';
+
+const cornerShapeSupportUrl = 'https://caniuse.com/wf-corner-shape';
+
+export type CornerShapeInputProps = {
+  name: string;
+  label: string;
+  value: CornerShapeValue | undefined;
+  hasRadius: boolean;
+  onChange: (value: CornerShapeValue | undefined) => void;
+  readOnly?: boolean;
+};
+
+export const CornerShapeInput = ({
+  name,
+  label,
+  value,
+  hasRadius,
+  onChange,
+  readOnly,
+}: CornerShapeInputProps) => {
+  const { t } = useTranslation();
+  const hintId = useId();
+  const labels: Record<CornerShapeValue, string> = {
+    round: t('', 'Round (default)'),
+    squircle: t('', 'Squircle'),
+    bevel: t('', 'Bevel'),
+    scoop: t('', 'Scoop'),
+    notch: t('', 'Notch'),
+    square: t('', 'Square'),
+  };
+
+  return (
+    <StylingControlGroup>
+      <FieldToggleGroup
+        name={name}
+        label={label}
+        describedBy={hasRadius ? undefined : hintId}
+        value={value ?? defaultCornerShape}
+        readOnly={readOnly}
+        onChange={shape =>
+          onChange(shape === defaultCornerShape ? undefined : shape)
+        }
+        deselectable
+        options={cornerShapes.map(shape => ({
+          value: shape,
+          label: labels[shape],
+          icon: (
+            <CornerShapeIcon
+              viewBox="0 0 16 16"
+              aria-hidden
+            >
+              <path d={cornerShapePaths[shape]} />
+            </CornerShapeIcon>
+          ),
+        }))}
+      />
+
+      {!hasRadius && (
+        <BoxModelHint id={hintId}>
+          {t(
+            '',
+            'The corner shape needs a corner radius, set one above to see it.'
+          )}
+        </BoxModelHint>
+      )}
+
+      <CornerShapeNote
+        severity="info"
+        variant="outlined"
+        role="note"
+      >
+        {t(
+          '',
+          'Corner shapes only work in some browsers, others show normal rounded corners.'
+        )}{' '}
+        <Link
+          href={cornerShapeSupportUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('', 'Browser support')}
+        </Link>
+      </CornerShapeNote>
     </StylingControlGroup>
   );
 };

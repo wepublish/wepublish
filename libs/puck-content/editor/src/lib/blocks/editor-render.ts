@@ -4,7 +4,7 @@ import { createElement, ReactNode } from 'react';
 
 import { BlockVisibilityValue } from '../block-visibility/block-visibility.field';
 import { DatasourcesValue } from '../datasource/datasource.field';
-import { StylingValue } from '../styling/styling.field';
+import { BreakpointStylingValue } from '../styling/styling.field';
 import { EditorBlock } from './editor-block.component';
 import { ToPuckSlots } from './puck-editor-props';
 
@@ -27,7 +27,7 @@ export type EditorRenderOptions<Props, Extra> = {
 
 export type EditorRenderProps<Props> = ToPuckSlots<Props> & {
   className?: string;
-  styling?: StylingValue;
+  styling?: BreakpointStylingValue;
   visibility?: BlockVisibilityValue;
   datasources?: DatasourcesValue;
   locked?: boolean;

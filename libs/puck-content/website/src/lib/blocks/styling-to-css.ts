@@ -1,5 +1,7 @@
 import { CSSObject, Theme } from '@emotion/react';
+import { Breakpoint } from '@mui/material';
 
+import { breakpointsStyles, BreakpointsValue } from '../values/breakpoints';
 import { resolveColor } from '../values/color';
 import { Side, sides } from '../values/sides';
 import { spacingToCss } from '../values/spacing';
@@ -27,9 +29,18 @@ export type PuckBlockStylingLike = PuckStyling & {
   backgroundImageObject?: PuckBackgroundImage | null;
 };
 
+export type PuckBreakpointStyling = Partial<
+  Record<Breakpoint, PuckBlockStylingLike | null>
+>;
+
 export type StylingToCssOptions = {
   marginSides?: readonly Side[];
   backgroundImageUrl?: string | null;
+};
+
+export type BreakpointStylingToCssOptions = {
+  marginSides?: readonly Side[];
+  backgroundImageUrls?: Partial<Record<string, string>>;
 };
 
 const capitalize = (key: string) =>
@@ -170,6 +181,10 @@ export const stylingToCss = (
     }
   }
 
+  if (styling.cornerShape) {
+    styles.cornerShape = styling.cornerShape;
+  }
+
   for (const side of marginSides) {
     const margin = spacingToCss(theme, styling.margin?.[side]);
 
@@ -210,4 +225,55 @@ export const stylingToCss = (
   }
 
   return styles;
+};
+
+const withoutNullEntries = (styling: PuckBlockStylingLike) =>
+  Object.fromEntries(
+    Object.entries(styling).filter(([, entry]) => entry !== null)
+  ) as PuckBlockStylingLike;
+
+const toBreakpointsValue = (
+  theme: Theme,
+  styling: PuckBreakpointStyling
+): BreakpointsValue<PuckBlockStylingLike> =>
+  Object.fromEntries([
+    [theme.breakpoints.keys[0], {}],
+    ...Object.entries(styling)
+      .filter(([, value]) => value)
+      .map(([breakpoint, value]) => [
+        breakpoint,
+        withoutNullEntries(value as PuckBlockStylingLike),
+      ]),
+  ]);
+
+export const breakpointStylingToCss = (
+  theme: Theme,
+  styling: PuckBreakpointStyling | null | undefined,
+  { marginSides, backgroundImageUrls }: BreakpointStylingToCssOptions = {}
+): CSSObject => {
+  if (!styling) {
+    return {};
+  }
+
+  const styles = breakpointsStyles(
+    theme,
+    toBreakpointsValue(theme, styling),
+    resolved =>
+      stylingToCss(theme, resolved, {
+        marginSides,
+        backgroundImageUrl:
+          resolved?.backgroundImage ?
+            backgroundImageUrls?.[resolved.backgroundImage]
+          : undefined,
+      })
+  );
+
+  return Object.fromEntries(
+    Object.entries(styles).filter(
+      ([, value]) =>
+        typeof value !== 'object' ||
+        value === null ||
+        Object.keys(value).length > 0
+    )
+  );
 };

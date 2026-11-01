@@ -29,10 +29,10 @@ const teaserDefaultDatasources: DatasourcesValue = {
 };
 
 export const dataComponents = {
-  Comment: withVisibility(CommentConfig),
-  Event: withVisibility(EventConfig),
-  Crowdfunding: withVisibility(CrowdfundingConfig),
-  Poll: withVisibility(PollConfig),
+  Comment: withVisibility(withCSS(CommentConfig)),
+  Event: withVisibility(withCSS(EventConfig)),
+  Crowdfunding: withVisibility(withCSS(CrowdfundingConfig)),
+  Poll: withVisibility(withCSS(PollConfig)),
   Teaser: withVisibility(
     withDataSource(
       withCSS(TeaserConfig),
@@ -40,13 +40,13 @@ export const dataComponents = {
       teaserDatasource
     )
   ),
-  TeaserTitle: withVisibility(TeaserTitleConfig),
-  TeaserPreTitle: withVisibility(TeaserPreTitleConfig),
-  TeaserLead: withVisibility(TeaserLeadConfig),
-  TeaserImage: withVisibility(TeaserImageConfig),
-  TeaserAuthors: withVisibility(TeaserAuthorsConfig),
-  TeaserDate: withVisibility(TeaserDateConfig),
-  TeaserTags: withVisibility(TeaserTagsConfig),
+  TeaserTitle: withVisibility(withCSS(TeaserTitleConfig)),
+  TeaserPreTitle: withVisibility(withCSS(TeaserPreTitleConfig)),
+  TeaserLead: withVisibility(withCSS(TeaserLeadConfig)),
+  TeaserImage: withVisibility(withCSS(TeaserImageConfig)),
+  TeaserAuthors: withVisibility(withCSS(TeaserAuthorsConfig)),
+  TeaserDate: withVisibility(withCSS(TeaserDateConfig)),
+  TeaserTags: withVisibility(withCSS(TeaserTagsConfig)),
 };
 
 export const dataBlockConsumes: PuckBlockConsumes = {

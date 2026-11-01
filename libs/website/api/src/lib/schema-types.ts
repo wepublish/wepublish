@@ -25,8 +25,8 @@ export type Scalars = {
   PuckMaxWidth: { input: 'sm' | 'md' | 'lg' | 'xl' | `${ number }px` | `${ number }%`; output: 'sm' | 'md' | 'lg' | 'xl' | `${ number }px` | `${ number }%`; }
   /** A minimum height in pixels like `"320px"` or in percent of the viewport height like `"50vh"`. */
   PuckMinHeight: { input: `${ number }px` | `${ number }vh`; output: `${ number }px` | `${ number }vh`; }
-  /** A number of theme spacing units like `2`, or exact pixels as a string like `"12px"`. */
-  PuckSpacing: { input: number | `${ number }px`; output: number | `${ number }px`; }
+  /** A number of theme spacing units like `2`, or an exact css length as a string like `"12px"`, `"1.5rem"` or `"50vh"`. */
+  PuckSpacing: { input: number | `${ number }${ 'px' | 'cm' | 'mm' | 'q' | 'in' | 'pc' | 'pt' | 'em' | 'rem' | 'ex' | 'rex' | 'cap' | 'rcap' | 'ch' | 'rch' | 'ic' | 'ric' | 'lh' | 'rlh' | 'vw' | 'vh' | 'vi' | 'vb' | 'vmin' | 'vmax' | 'svw' | 'svh' | 'svi' | 'svb' | 'svmin' | 'svmax' | 'lvw' | 'lvh' | 'lvi' | 'lvb' | 'lvmin' | 'lvmax' | 'dvw' | 'dvh' | 'dvi' | 'dvb' | 'dvmin' | 'dvmax' | 'cqw' | 'cqh' | 'cqi' | 'cqb' | 'cqmin' | 'cqmax' | '%' }`; output: number | `${ number }${ 'px' | 'cm' | 'mm' | 'q' | 'in' | 'pc' | 'pt' | 'em' | 'rem' | 'ex' | 'rex' | 'cap' | 'rcap' | 'ch' | 'rch' | 'ic' | 'ric' | 'lh' | 'rlh' | 'vw' | 'vh' | 'vi' | 'vb' | 'vmin' | 'vmax' | 'svw' | 'svh' | 'svi' | 'svb' | 'svmin' | 'svmax' | 'lvw' | 'lvh' | 'lvi' | 'lvb' | 'lvmin' | 'lvmax' | 'dvw' | 'dvh' | 'dvi' | 'dvb' | 'dvmin' | 'dvmax' | 'cqw' | 'cqh' | 'cqi' | 'cqb' | 'cqmin' | 'cqmax' | '%' }`; }
   RichText: { input: RichtextJSONDocument; output: RichtextJSONDocument; }
   Slug: { input: string; output: string; }
   /** The `Upload` scalar type represents a file upload. */
@@ -6308,10 +6308,28 @@ export type PuckBlock = {
   props: Scalars['JSONObject']['output'];
   /** The slot of the parent this block sits in. Null at the top level, `content` by default. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent. */
   puckSlot?: Maybe<Scalars['String']['output']>;
-  styling?: Maybe<PuckBlockStyling>;
+  styling?: Maybe<PuckBlockBreakpointStyling>;
   /** The component name. */
   type: Scalars['String']['output'];
   visibility?: Maybe<PuckBlockVisibility>;
+};
+
+/** The styling of a Puck block per theme breakpoint, mobile first: a breakpoint applies from its minimum width up and inherits every key it leaves out from the smaller breakpoints. */
+export type PuckBlockBreakpointStyling = {
+  __typename: 'PuckBlockBreakpointStyling';
+  lg?: Maybe<PuckBlockStyling>;
+  md?: Maybe<PuckBlockStyling>;
+  sm?: Maybe<PuckBlockStyling>;
+  xl?: Maybe<PuckBlockStyling>;
+  xs?: Maybe<PuckBlockStyling>;
+};
+
+export type PuckBlockBreakpointStylingInput = {
+  lg?: InputMaybe<PuckBlockStylingInput>;
+  md?: InputMaybe<PuckBlockStylingInput>;
+  sm?: InputMaybe<PuckBlockStylingInput>;
+  xl?: InputMaybe<PuckBlockStylingInput>;
+  xs?: InputMaybe<PuckBlockStylingInput>;
 };
 
 /** The records the datasources of a Puck block yield, resolved on read. A model is null when the block has no datasource for it. */
@@ -6376,7 +6394,7 @@ export type PuckBlockInput = {
   props: Scalars['JSONObject']['input'];
   /** The slot of the parent this block sits in, omitted means `content`. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent. */
   puckSlot?: InputMaybe<Scalars['String']['input']>;
-  styling?: InputMaybe<PuckBlockStylingInput>;
+  styling?: InputMaybe<PuckBlockBreakpointStylingInput>;
   /** The component name. For a `generated` block, the name of a component in the registry. */
   type: Scalars['String']['input'];
   visibility?: InputMaybe<PuckBlockVisibilityInput>;
@@ -6412,6 +6430,7 @@ export type PuckBlockStyling = {
   borderRadius?: Maybe<PuckBorderRadius>;
   /** A theme colour path like `primary.main` or a hex colour like `#1a1a1a`. */
   color?: Maybe<Scalars['String']['output']>;
+  cornerShape?: Maybe<PuckCornerShape>;
   fontWeight?: Maybe<PuckFontWeight>;
   margin?: Maybe<PuckSpacingSides>;
   maxWidth?: Maybe<Scalars['PuckMaxWidth']['output']>;
@@ -6442,6 +6461,7 @@ export type PuckBlockStylingInput = {
   borderRadius?: InputMaybe<PuckBorderRadiusInput>;
   /** A theme colour path like `primary.main` or a hex colour like `#1a1a1a`. */
   color?: InputMaybe<Scalars['String']['input']>;
+  cornerShape?: InputMaybe<PuckCornerShape>;
   fontWeight?: InputMaybe<PuckFontWeight>;
   margin?: InputMaybe<PuckSpacingSidesInput>;
   maxWidth?: InputMaybe<Scalars['PuckMaxWidth']['input']>;
@@ -6591,6 +6611,16 @@ export enum PuckBreakpoint {
   Sm = 'sm',
   Xl = 'xl',
   Xs = 'xs'
+}
+
+/** The CSS `corner-shape` of every corner. Only has an effect with a corner radius, browsers without support draw `round` corners. */
+export enum PuckCornerShape {
+  Bevel = 'bevel',
+  Notch = 'notch',
+  Round = 'round',
+  Scoop = 'scoop',
+  Square = 'square',
+  Squircle = 'squircle'
 }
 
 /** How a Puck block loads its records: `list` loads the latest, `uniqueList` the latest not shown elsewhere on the page, `slot` takes them from the parent, `single` picks one by id and `multiple` several by ids. */

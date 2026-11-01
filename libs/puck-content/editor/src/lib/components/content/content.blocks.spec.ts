@@ -1,8 +1,6 @@
-import { createTheme, ThemeProvider } from '@mui/material';
 import { PuckContext } from '@puckeditor/core';
-import { render } from '@testing-library/react';
 import * as website from '@wepublish/puck-content/website';
-import { mockImage } from '@wepublish/mocks/website';
+import { mockImage, renderWithProviders } from '@wepublish/mocks/website';
 import { ComponentType, createElement } from 'react';
 
 import { PuckBlockDataContext } from '../../block-data/puck-block-data.context';
@@ -78,19 +76,15 @@ describe('contentComponents', () => {
         images: [mockImage({ id: 'harbour' })],
       };
 
-      render(
+      renderWithProviders(
         createElement(
-          ThemeProvider,
-          { theme: createTheme() },
-          createElement(
-            PuckBlockDataContext.Provider,
-            { value: new Map([['Block-1', data]]) },
-            createElement(config.render as ComponentType<PuckRenderProps>, {
-              ...config.defaultProps,
-              id: 'Block-1',
-              puck,
-            })
-          )
+          PuckBlockDataContext.Provider,
+          { value: new Map([['Block-1', data]]) },
+          createElement(config.render as ComponentType<PuckRenderProps>, {
+            ...config.defaultProps,
+            id: 'Block-1',
+            puck,
+          })
         )
       );
 

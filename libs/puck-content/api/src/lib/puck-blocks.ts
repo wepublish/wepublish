@@ -69,6 +69,15 @@ export const puckBackgroundPositions = [
 
 export const puckBorderStyles = ['solid', 'dashed', 'dotted'] as const;
 
+export const puckCornerShapes = [
+  'round',
+  'squircle',
+  'bevel',
+  'scoop',
+  'notch',
+  'square',
+] as const;
+
 export const puckMaxWidthBreakpoints = ['sm', 'md', 'lg', 'xl'] as const;
 
 export const puckMaxShadow = 24;
@@ -86,11 +95,48 @@ const TIME_OF_DAY = /^([01]\d|2[0-3]):[0-5]\d$/;
 const ZONED_DATE_TIME = /T.+(Z|[+-]\d{2}:?\d{2})$/i;
 const THEME_COLOR_PATH = /^[a-z][a-z0-9]*\.[a-z0-9]+$/i;
 const HEX_COLOR = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
-const PIXELS = /^\d+(\.\d+)?px$/;
+const viewportUnits = ['vw', 'vh', 'vi', 'vb', 'vmin', 'vmax'];
+const CSS_LENGTH_UNITS = [
+  'px',
+  'cm',
+  'mm',
+  'q',
+  'in',
+  'pc',
+  'pt',
+  'em',
+  'rem',
+  'ex',
+  'rex',
+  'cap',
+  'rcap',
+  'ch',
+  'rch',
+  'ic',
+  'ric',
+  'lh',
+  'rlh',
+  ...viewportUnits,
+  ...['s', 'l', 'd'].flatMap(prefix =>
+    viewportUnits.map(unit => `${prefix}${unit}`)
+  ),
+  'cqw',
+  'cqh',
+  'cqi',
+  'cqb',
+  'cqmin',
+  'cqmax',
+  '%',
+];
+const CSS_LENGTH = new RegExp(
+  `^\\d+(\\.\\d+)?(${CSS_LENGTH_UNITS.join('|')})$`,
+  'i'
+);
 const MIN_HEIGHT = /^\d+(\.\d+)?(px|vh)$/;
 const MAX_WIDTH_LENGTH = /^\d+(\.\d+)?(px|%)$/;
 
-const spacingMessage = 'must be theme spacing units or pixels like 12px';
+const spacingMessage =
+  'must be theme spacing units or a css length like 12px, 1.5rem or 50vh';
 const minHeightMessage =
   'must be pixels like 320px or viewport height like 50vh';
 const maxWidthMessage = `must be a breakpoint (${puckMaxWidthBreakpoints.join(', ')}), pixels like 640px or percent like 80%`;
@@ -134,8 +180,8 @@ export const puckSpacingSchema = z.union(
     z.number().min(0, spacingMessage),
     z
       .string()
-      .regex(PIXELS, spacingMessage)
-      .transform(value => value as `${number}px`),
+      .regex(CSS_LENGTH, spacingMessage)
+      .transform(value => value as `${number}${string}`),
   ],
   { errorMap: messageFor(spacingMessage) }
 );
@@ -269,6 +315,7 @@ const apiBlockStylingShape = {
     bottomRight: puckSpacingSchema.optional(),
     bottomLeft: puckSpacingSchema.optional(),
   }).optional(),
+  cornerShape: z.enum(puckCornerShapes).optional(),
   minHeight: puckMinHeightSchema.optional(),
   maxWidth: puckMaxWidthSchema.optional(),
   shadow: z.number().int().min(0).max(puckMaxShadow).optional(),
@@ -280,6 +327,18 @@ export const apiBlockStylingKeys = Object.keys(
 ) as (keyof typeof apiBlockStylingShape)[];
 
 export const apiBlockStylingSchema = strictObject(apiBlockStylingShape);
+
+export const apiBlockBreakpointStylingSchema = strictObject(
+  Object.fromEntries(
+    puckBreakpoints.map(breakpoint => [
+      breakpoint,
+      apiBlockStylingSchema.optional(),
+    ])
+  ) as Record<
+    (typeof puckBreakpoints)[number],
+    z.ZodOptional<typeof apiBlockStylingSchema>
+  >
+);
 
 const componentPaths = (
   value: unknown,
@@ -322,7 +381,7 @@ const apiBlockShape = {
   props: apiBlockPropsSchema,
   locked: z.boolean().optional(),
   visibility: apiBlockVisibilitySchema.optional(),
-  styling: apiBlockStylingSchema.optional(),
+  styling: apiBlockBreakpointStylingSchema.optional(),
   datasources: apiBlockDatasourcesSchema.optional(),
   consumes: z.number().int().min(1).max(MAX_PUCK_BLOCK_CONSUMES).optional(),
   puckSlot: z
@@ -342,6 +401,9 @@ export type ApiBlockListDatasource = z.output<
 >;
 export type ApiBlockDatasources = z.output<typeof apiBlockDatasourcesSchema>;
 export type ApiBlockStyling = z.output<typeof apiBlockStylingSchema>;
+export type ApiBlockBreakpointStyling = z.output<
+  typeof apiBlockBreakpointStylingSchema
+>;
 export type ApiBlockProps = z.output<typeof apiBlockPropsSchema>;
 export type ApiBlockKind = (typeof puckBlockKinds)[number];
 
@@ -652,8 +714,35 @@ export function parsePuckDocument({
   return { blocks: parsedBlocks, registry: parsedRegistry };
 }
 
+const isBreakpoint = (key: string) =>
+  puckBreakpoints.some(breakpoint => breakpoint === key);
+
+const upgradeStoredStyling = (styling: unknown) =>
+  isRecord(styling) && !Object.keys(styling).every(isBreakpoint) ?
+    { xs: styling }
+  : styling;
+
+const upgradeStoredBlocks = (json: unknown): unknown =>
+  Array.isArray(json) ?
+    json.map(block =>
+      isRecord(block) ?
+        {
+          ...block,
+          ...('styling' in block && {
+            styling: upgradeStoredStyling(block['styling']),
+          }),
+          ...('children' in block && {
+            children: upgradeStoredBlocks(block['children']),
+          }),
+        }
+      : block
+    )
+  : json;
+
 export const readStoredPuckBlocks = (json: unknown): ApiBlock[] | null =>
-  blocksTooDeep(json) ? null : (apiBlocksSchema.safeParse(json).data ?? null);
+  blocksTooDeep(json) ? null : (
+    (apiBlocksSchema.safeParse(upgradeStoredBlocks(json)).data ?? null)
+  );
 
 export const readStoredPuckRegistry = (
   json: unknown

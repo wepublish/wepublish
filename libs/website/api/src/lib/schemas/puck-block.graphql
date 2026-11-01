@@ -48,6 +48,57 @@ fragment FullPuckSpacingSides on PuckSpacingSides {
   left
 }
 
+fragment FullPuckBlockStyling on PuckBlockStyling {
+  typography
+  textAlign
+  color
+  fontWeight
+  textTransform
+  background
+  backgroundImage
+  backgroundSize
+  backgroundPosition
+  overlay
+  overlayOpacity
+
+  margin {
+    ...FullPuckSpacingSides
+  }
+
+  padding {
+    ...FullPuckSpacingSides
+  }
+
+  border {
+    style
+    color
+
+    width {
+      top
+      right
+      bottom
+      left
+    }
+  }
+
+  borderRadius {
+    topLeft
+    topRight
+    bottomRight
+    bottomLeft
+  }
+
+  cornerShape
+  minHeight
+  maxWidth
+  shadow
+  opacity
+
+  backgroundImageObject {
+    ...FullImage
+  }
+}
+
 fragment FullPuckBlock on PuckBlock {
   id
   kind
@@ -63,52 +114,24 @@ fragment FullPuckBlock on PuckBlock {
   }
 
   styling {
-    typography
-    textAlign
-    color
-    fontWeight
-    textTransform
-    background
-    backgroundImage
-    backgroundSize
-    backgroundPosition
-    overlay
-    overlayOpacity
-
-    margin {
-      ...FullPuckSpacingSides
+    xs {
+      ...FullPuckBlockStyling
     }
 
-    padding {
-      ...FullPuckSpacingSides
+    sm {
+      ...FullPuckBlockStyling
     }
 
-    border {
-      style
-      color
-
-      width {
-        top
-        right
-        bottom
-        left
-      }
+    md {
+      ...FullPuckBlockStyling
     }
 
-    borderRadius {
-      topLeft
-      topRight
-      bottomRight
-      bottomLeft
+    lg {
+      ...FullPuckBlockStyling
     }
 
-    minHeight
-    maxWidth
-    shadow
-    opacity
-
-    backgroundImageObject {
-      ...FullImage
+    xl {
+      ...FullPuckBlockStyling
     }
   }
 

@@ -28,8 +28,21 @@ describe('parseSpacingInput', () => {
     expect(parseSpacingInput('  ')).toEqual({ valid: true, value: undefined });
   });
 
+  it('reads every css length unit', () => {
+    expect(parseSpacingInput('1.5rem')).toEqual({
+      valid: true,
+      value: '1.5rem',
+    });
+    expect(parseSpacingInput('2 EM')).toEqual({ valid: true, value: '2em' });
+    expect(parseSpacingInput('50lvh')).toEqual({ valid: true, value: '50lvh' });
+    expect(parseSpacingInput('10dvw')).toEqual({ valid: true, value: '10dvw' });
+    expect(parseSpacingInput('5%')).toEqual({ valid: true, value: '5%' });
+    expect(parseSpacingInput('3ch')).toEqual({ valid: true, value: '3ch' });
+    expect(parseSpacingInput('2cqi')).toEqual({ valid: true, value: '2cqi' });
+  });
+
   it('rejects anything else', () => {
-    expect(parseSpacingInput('12rem')).toEqual({ valid: false });
+    expect(parseSpacingInput('12foo')).toEqual({ valid: false });
     expect(parseSpacingInput('-2')).toEqual({ valid: false });
     expect(parseSpacingInput('px')).toEqual({ valid: false });
   });
@@ -49,6 +62,11 @@ describe('stepSpacingValue', () => {
     expect(stepSpacingValue(0.5, -1)).toBe(0);
     expect(stepSpacingValue('12px', 10)).toBe('22px');
     expect(stepSpacingValue('4px', -10)).toBe('0px');
+  });
+
+  it('keeps the css unit while stepping', () => {
+    expect(stepSpacingValue('1.5rem', 1)).toBe('2.5rem');
+    expect(stepSpacingValue('50lvh', -10)).toBe('40lvh');
   });
 
   it('starts from zero when the side is unset', () => {

@@ -39,6 +39,11 @@ export const contentDatasourceFieldTabs: FieldTabsLayout = {
   tabOf: { ...componentFieldTabs.tabOf, datasources: 'content' },
 };
 
+export const layoutItemsFieldTabs: FieldTabsLayout = {
+  ...componentFieldTabs,
+  tabOf: { ...componentFieldTabs.tabOf, items: 'layout' },
+};
+
 export const pageRootFieldTabs: FieldTabsLayout = {
   order: ['general', 'seo', 'socialMedia', 'properties'],
   fallback: 'general',

@@ -9,14 +9,15 @@ import {
   breakpointsStyles,
   BreakpointsValue,
 } from '../../../values/breakpoints';
+import { GridPlacementValue } from '../../../values/grid-placement';
 import { VisibilityValue } from '../../../values/visibility';
-import { columnSpanStyles, ColumnSpanValue } from '../column-span';
 import { GapLayout, gapStyles } from '../gap';
+import { gridPlacementStyles } from '../grid-placement';
 import { itemContentSlot } from '../item-slot';
 import { ItemsAlignment, itemsAlignmentStyles } from '../items-alignment';
 
 export type DynamicGridItem = {
-  span?: ColumnSpanValue;
+  placement?: BreakpointsValue<GridPlacementValue>;
   visibility?: VisibilityValue;
   content: PuckSlotValue;
 };
@@ -49,14 +50,14 @@ export const DynamicGridRender: PuckBlockComponent<DynamicGridProps> = ({
   >
     <ClassNames>
       {({ css, theme }) =>
-        items.map(({ span, visibility }, index) => (
+        items.map(({ placement, visibility }, index) => (
           <Fragment key={index}>
             {getSlot(
               slots,
               itemContentSlot(index)
             )({
               className: css({
-                ...columnSpanStyles(span)(theme),
+                ...gridPlacementStyles(theme, placement),
                 ...visibilityCss(theme, { breakpoints: visibility }),
               }),
             })}

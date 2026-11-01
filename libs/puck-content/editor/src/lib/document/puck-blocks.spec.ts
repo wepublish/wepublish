@@ -6,6 +6,7 @@ import {
   PuckBlockKind,
   PuckBorderStyle,
   PuckBreakpoint,
+  PuckCornerShape,
   PuckDatasourceType,
   PuckFontWeight,
   PuckListDatasourceType,
@@ -109,7 +110,7 @@ const flatBlock = (
   ...block,
 });
 
-const fullStyling = {
+const fullStylingAtXs = {
   typography: 'h2',
   textAlign: 'center',
   color: 'primary.main',
@@ -134,19 +135,33 @@ const fullStyling = {
     bottomRight: 0,
     bottomLeft: 1,
   },
+  cornerShape: 'squircle',
   minHeight: '50vh',
   maxWidth: 'md',
   shadow: 24,
   opacity: 100,
 } as const;
 
+const fullStyling = {
+  xs: fullStylingAtXs,
+  md: { textAlign: 'left', border: { style: 'dotted' }, opacity: 80 },
+} as const;
+
 const fullStylingInput = {
-  ...fullStyling,
-  textAlign: PuckTextAlign.Center,
-  fontWeight: PuckFontWeight.Bold,
-  textTransform: PuckTextTransform.Uppercase,
-  backgroundSize: PuckBackgroundSize.Contain,
-  border: { ...fullStyling.border, style: PuckBorderStyle.Dashed },
+  xs: {
+    ...fullStylingAtXs,
+    textAlign: PuckTextAlign.Center,
+    fontWeight: PuckFontWeight.Bold,
+    textTransform: PuckTextTransform.Uppercase,
+    backgroundSize: PuckBackgroundSize.Contain,
+    border: { ...fullStylingAtXs.border, style: PuckBorderStyle.Dashed },
+    cornerShape: PuckCornerShape.Squircle,
+  },
+  md: {
+    textAlign: PuckTextAlign.Left,
+    border: { style: PuckBorderStyle.Dotted },
+    opacity: 80,
+  },
 };
 
 const pageContent: ComponentData[] = [
@@ -158,7 +173,7 @@ const pageContent: ComponentData[] = [
     content: [
       puckComponent('Grid', 2, {
         locked: true,
-        styling: { padding: { top: 2, bottom: 2 } },
+        styling: { xs: { padding: { top: 2, bottom: 2 } } },
         layout: { xs: { columns: [6, 6], gap: { row: 2, column: 2 } } },
         content: [
           puckComponent('Container', 3, {
@@ -166,7 +181,7 @@ const pageContent: ComponentData[] = [
             content: [puckComponent('TeaserTitle', 4)],
           }),
           puckComponent('Row', 5, {
-            styling: { background: 'background.paper' },
+            styling: { xs: { background: 'background.paper' } },
             content: [],
           }),
         ],
@@ -174,16 +189,16 @@ const pageContent: ComponentData[] = [
     ],
   }),
   puckComponent('DynamicGrid', 6, {
-    styling: { maxWidth: '80%', borderRadius: { topLeft: '4px' } },
+    styling: { xs: { maxWidth: '80%', borderRadius: { topLeft: '4px' } } },
     items: [
       {
-        span: { xs: { columnSpan: 12 } },
+        placement: { xs: { column: { span: 12 } } },
         visibility: ['md'],
         content: [puckComponent('Quote', 7, { quote: 'Hi' })],
       },
-      { span: { xs: { columnSpan: 6 } }, content: [] },
+      { placement: { xs: { column: { span: 6 } } }, content: [] },
       {
-        span: { xs: { columnSpan: 6 } },
+        placement: { xs: { column: { span: 6 } } },
         content: [
           puckComponent('Image', 8, {
             datasources: { image: { type: 'single', id: 'image-1' } },
@@ -196,14 +211,16 @@ const pageContent: ComponentData[] = [
   puckComponent('Slider', 10, {
     settings: { xs: { perView: 1.4, gap: 16 } },
     dragDisabled: false,
-    styling: { shadow: 2, opacity: 90 },
+    styling: { xs: { shadow: 2, opacity: 90 } },
     items: [
       {
         content: [
           puckComponent('Collapsible', 11, {
             title: 'FAQ',
             defaultOpen: false,
-            styling: { border: { width: { bottom: 1 }, style: 'solid' } },
+            styling: {
+              xs: { border: { width: { bottom: 1 }, style: 'solid' } },
+            },
             content: [puckComponent('RichText', 12, { richText: [] })],
           }),
         ],
@@ -246,7 +263,7 @@ describe('toPuckBlockInputs', () => {
         puckComponent('Container', 1, {
           locked: true,
           visibility: { disabled: true },
-          styling: { color: 'primary.main', padding: { top: 2 } },
+          styling: { xs: { color: 'primary.main', padding: { top: 2 } } },
           datasources: { article: { type: 'list' } },
           maxWidth: 'md',
         }),
@@ -258,7 +275,7 @@ describe('toPuckBlockInputs', () => {
         type: 'Container',
         locked: true,
         visibility: { disabled: true },
-        styling: { color: 'primary.main', padding: { top: 2 } },
+        styling: { xs: { color: 'primary.main', padding: { top: 2 } } },
         datasources: { article: { type: PuckDatasourceType.List } },
         props: { maxWidth: 'md' },
       },
@@ -316,8 +333,12 @@ describe('toPuckBlockInputs', () => {
 
   it.each([
     ['an empty styling', {}],
-    ['a styling without values', { color: undefined, typography: '' }],
-    ['a styling with empty groups', { margin: {}, border: { width: {} } }],
+    ['breakpoints without styling', { xs: {}, md: {} }],
+    ['a styling without values', { xs: { color: undefined, typography: '' } }],
+    [
+      'a styling with empty groups',
+      { md: { margin: {}, border: { width: {} } } },
+    ],
     ['a cleared styling', undefined],
   ])('leaves out %s', (_, styling) => {
     expect(
@@ -336,19 +357,36 @@ describe('toPuckBlockInputs', () => {
     const [block] = toInputs([
       puckComponent('Container', 1, {
         styling: {
-          color: '',
-          margin: { top: 2, left: undefined },
-          border: { width: { top: 1 }, color: null },
-          padding: {},
-          shadow: 0,
+          xs: {},
+          md: {
+            color: '',
+            margin: { top: 2, left: undefined },
+            border: { width: { top: 1 }, color: null },
+            padding: {},
+            shadow: 0,
+          },
         },
       }),
     ]);
 
     expect(block.styling).toStrictEqual({
-      margin: { top: 2 },
-      border: { width: { top: 1 } },
-      shadow: 0,
+      md: {
+        margin: { top: 2 },
+        border: { width: { top: 1 } },
+        shadow: 0,
+      },
+    });
+  });
+
+  it('sends a styling saved before the breakpoints as the smallest breakpoint', () => {
+    const [block] = toInputs([
+      puckComponent('Container', 1, {
+        styling: { color: 'primary.main', textAlign: 'center' },
+      }),
+    ]);
+
+    expect(block.styling).toStrictEqual({
+      xs: { color: 'primary.main', textAlign: PuckTextAlign.Center },
     });
   });
 
@@ -434,11 +472,11 @@ describe('toPuckBlockInputs', () => {
       puckComponent('DynamicGrid', 1, {
         items: [
           {
-            span: { xs: { columnSpan: 12 } },
+            placement: { xs: { column: { span: 12 } } },
             content: [puckComponent('Title', 2)],
           },
           {
-            span: { xs: { columnSpan: 6 } },
+            placement: { xs: { column: { span: 6 } } },
             content: [puckComponent('Image', 3), puckComponent('Quote', 4)],
           },
         ],
@@ -447,8 +485,8 @@ describe('toPuckBlockInputs', () => {
 
     expect(grid.props).toEqual({
       items: [
-        { span: { xs: { columnSpan: 12 } }, content: [] },
-        { span: { xs: { columnSpan: 6 } }, content: [] },
+        { placement: { xs: { column: { span: 12 } } }, content: [] },
+        { placement: { xs: { column: { span: 6 } } }, content: [] },
       ],
     });
     expect(grid.children?.map(({ id, puckSlot }) => [id, puckSlot])).toEqual([
@@ -863,8 +901,8 @@ describe('fromPuckBlocks', () => {
           type: 'DynamicGrid',
           props: {
             items: [
-              { span: { xs: { columnSpan: 12 } }, content: [] },
-              { span: { xs: { columnSpan: 6 } }, content: [] },
+              { placement: { xs: { column: { span: 12 } } }, content: [] },
+              { placement: { xs: { column: { span: 6 } } }, content: [] },
             ],
           },
         }),
@@ -890,11 +928,11 @@ describe('fromPuckBlocks', () => {
             id: 'DynamicGrid-1',
             items: [
               {
-                span: { xs: { columnSpan: 12 } },
+                placement: { xs: { column: { span: 12 } } },
                 content: [{ type: 'Quote', props: { id: 'Quote-3' } }],
               },
               {
-                span: { xs: { columnSpan: 6 } },
+                placement: { xs: { column: { span: 6 } } },
                 content: [
                   { type: 'Image', props: { id: 'Image-2' } },
                   { type: 'Title', props: { id: 'Title-4' } },
@@ -1007,37 +1045,45 @@ describe('fromPuckBlocks', () => {
             },
           },
           styling: {
-            __typename: 'PuckBlockStyling',
-            typography: null,
-            textAlign: PuckTextAlign.Center,
-            color: 'primary.main',
-            fontWeight: null,
-            textTransform: null,
-            background: null,
-            backgroundImage: null,
-            backgroundSize: null,
-            backgroundPosition: null,
-            overlay: null,
-            overlayOpacity: null,
-            margin: {
-              __typename: 'PuckSpacingSides',
-              top: 2,
-              right: null,
-              bottom: '8px',
-              left: null,
+            __typename: 'PuckBlockBreakpointStyling',
+            xs: null,
+            sm: null,
+            lg: null,
+            xl: null,
+            md: {
+              __typename: 'PuckBlockStyling',
+              typography: null,
+              textAlign: PuckTextAlign.Center,
+              color: 'primary.main',
+              fontWeight: null,
+              textTransform: null,
+              background: null,
+              backgroundImage: null,
+              backgroundSize: null,
+              backgroundPosition: null,
+              overlay: null,
+              overlayOpacity: null,
+              margin: {
+                __typename: 'PuckSpacingSides',
+                top: 2,
+                right: null,
+                bottom: '8px',
+                left: null,
+              },
+              padding: null,
+              border: {
+                __typename: 'PuckBorder',
+                style: null,
+                color: null,
+                width: null,
+              },
+              borderRadius: null,
+              cornerShape: PuckCornerShape.Bevel,
+              minHeight: null,
+              maxWidth: null,
+              shadow: 0,
+              opacity: null,
             },
-            padding: null,
-            border: {
-              __typename: 'PuckBorder',
-              style: null,
-              color: null,
-              width: null,
-            },
-            borderRadius: null,
-            minHeight: null,
-            maxWidth: null,
-            shadow: 0,
-            opacity: null,
           },
           datasources: {
             __typename: 'PuckBlockDatasources',
@@ -1080,10 +1126,13 @@ describe('fromPuckBlocks', () => {
             },
           },
           styling: {
-            textAlign: 'center',
-            color: 'primary.main',
-            margin: { top: 2, bottom: '8px' },
-            shadow: 0,
+            md: {
+              textAlign: 'center',
+              color: 'primary.main',
+              margin: { top: 2, bottom: '8px' },
+              cornerShape: 'bevel',
+              shadow: 0,
+            },
           },
           datasources: {
             article: { type: 'single', id: 'article-1' },
@@ -1187,7 +1236,7 @@ describe('the round trip through the API', () => {
           puckComponent('Teaser', 10 + n, {
             linkToRecord: n !== 3,
             datasources: { article: { type: 'slot' } },
-            styling: { padding: { top: 2 } },
+            styling: { xs: { padding: { top: 2 } } },
             content: [
               puckComponent('TeaserImage', 20 + n),
               puckComponent('TeaserTitle', 30 + n),
@@ -1211,7 +1260,7 @@ describe('the round trip through the API', () => {
       type: 'Teaser',
       props: { linkToRecord: true, content: [] },
       datasources: { article: { type: PuckDatasourceType.Slot } },
-      styling: { padding: { top: 2 } },
+      styling: { xs: { padding: { top: 2 } } },
       children: [
         { id: 'TeaserImage-21', type: 'TeaserImage' },
         { id: 'TeaserTitle-31', type: 'TeaserTitle' },
@@ -1234,12 +1283,14 @@ describe('the round trip through the API', () => {
       )
     ).toEqual({
       'Container-1': fullStylingInput,
-      'Grid-2': { padding: { top: 2, bottom: 2 } },
-      'Row-5': { background: 'background.paper' },
-      'DynamicGrid-6': { maxWidth: '80%', borderRadius: { topLeft: '4px' } },
-      'Slider-10': { shadow: 2, opacity: 90 },
+      'Grid-2': { xs: { padding: { top: 2, bottom: 2 } } },
+      'Row-5': { xs: { background: 'background.paper' } },
+      'DynamicGrid-6': {
+        xs: { maxWidth: '80%', borderRadius: { topLeft: '4px' } },
+      },
+      'Slider-10': { xs: { shadow: 2, opacity: 90 } },
       'Collapsible-11': {
-        border: { width: { bottom: 1 }, style: PuckBorderStyle.Solid },
+        xs: { border: { width: { bottom: 1 }, style: PuckBorderStyle.Solid } },
       },
     });
   });
@@ -1267,9 +1318,8 @@ const slotPathsOf = (fields: FieldMap, parent = ''): string[] =>
   });
 
 const sampleStyling = {
-  color: 'primary.main',
-  padding: { top: 2, bottom: '12px' },
-  shadow: 1,
+  xs: { color: 'primary.main', padding: { top: 2, bottom: '12px' } },
+  lg: { shadow: 1 },
 };
 
 const samplePropsOf = (fields: FieldMap): Record<string, unknown> =>

@@ -39,10 +39,10 @@ export const layoutBlockRegistry: {
 };
 
 export * from './collapsible/collapsible.component';
-export * from './column-span';
 export * from './container/container.component';
 export * from './dynamic-grid/dynamic-grid.component';
 export * from './gap';
+export * from './grid-placement';
 export * from './grid/grid.component';
 export * from './items-alignment';
 export * from './row/row.component';

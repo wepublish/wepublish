@@ -1,4 +1,7 @@
 import styled from '@emotion/styled';
+import { Alert } from '@mui/material';
+
+import { SpacingLinkToggle } from '../box-model/box-model.styles';
 
 import type { Corner } from './styling.field';
 
@@ -109,19 +112,56 @@ export const CornerCell = styled.div<{ gridArea: Corner }>`
 export const CornerCenter = styled.div`
   grid-area: center;
   display: grid;
-  justify-items: center;
+  place-items: center;
+
+  > * {
+    grid-area: 1 / 1;
+  }
+`;
+
+export const CornerActions = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+export const CornerRoundToggle = styled(SpacingLinkToggle)`
+  width: auto;
   gap: var(--puck-space-1);
+  padding: 0 var(--puck-space-2);
+  font: inherit;
+  font-size: var(--puck-font-size-xxs);
 `;
 
 export const CornerPreview = styled.span<{
   radii: Partial<Record<Corner, string>>;
 }>`
-  width: 36px;
-  height: 36px;
+  width: 72px;
+  height: 72px;
   border: var(--puck-border-width-strong) solid var(--puck-color-text-secondary);
   border-top-left-radius: ${({ radii }) => radii.topLeft ?? 0};
   border-top-right-radius: ${({ radii }) => radii.topRight ?? 0};
   border-bottom-right-radius: ${({ radii }) => radii.bottomRight ?? 0};
   border-bottom-left-radius: ${({ radii }) => radii.bottomLeft ?? 0};
   box-sizing: border-box;
+`;
+
+export const CornerShapeIcon = styled.svg`
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+`;
+
+export const CornerShapeNote = styled(Alert)`
+  padding: 0 var(--puck-space-2);
+  font-size: var(--puck-font-size-xxxs);
+  line-height: var(--puck-line-height-s);
+
+  .MuiAlert-icon {
+    margin-right: var(--puck-space-2);
+    font-size: 16px;
+  }
 `;

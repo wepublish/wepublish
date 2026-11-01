@@ -18,6 +18,8 @@ export * from './lib/defaultPlugins';
 export * from './lib/fields';
 export * from './lib/gap/gap';
 export * from './lib/gap/gap.field';
+export * from './lib/grid-placement/grid-placement';
+export * from './lib/grid-placement/grid-placement.field';
 export * from './lib/heading-analyzer';
 export * from './lib/image/image';
 export * from './lib/image/image.field';

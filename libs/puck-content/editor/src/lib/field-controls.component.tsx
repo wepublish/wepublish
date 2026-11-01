@@ -1,15 +1,16 @@
 import { Switch, Tooltip } from '@mui/material';
 import { FieldLabel } from '@puckeditor/core';
-import { ComponentProps, ReactNode, useState } from 'react';
+import { ComponentProps, KeyboardEvent, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
 
 import {
-  fromSpacingParts,
-  SpacingUnit,
-  SpacingValue,
-  toSpacingParts,
-} from './spacing/spacing';
+  formatSpacingInput,
+  parseSpacingInput,
+  stepSpacingValue,
+} from './box-model/box-model';
+import { BoxModelHint } from './box-model/box-model.styles';
+import { SpacingValue } from './spacing/spacing';
 import { useWebsiteTheme } from './website-theme';
 import {
   FieldInput,
@@ -21,7 +22,6 @@ import {
   ToggleableFieldWrapper,
   ToggleOption,
   ToggleOptions,
-  UnitSelect,
 } from './field-controls';
 
 export const FieldSelect = (props: ComponentProps<typeof NativeSelect>) => (
@@ -50,6 +50,8 @@ export type FieldToggleGroupProps<Value extends string> = {
   onChange: (value: Value | undefined) => void;
   readOnly?: boolean;
   deselectable?: boolean;
+  label?: string;
+  describedBy?: string;
 };
 
 export const FieldToggleGroup = <Value extends string>({
@@ -59,8 +61,14 @@ export const FieldToggleGroup = <Value extends string>({
   onChange,
   readOnly,
   deselectable = false,
+  label,
+  describedBy,
 }: FieldToggleGroupProps<Value>) => (
-  <ToggleOptions role="radiogroup">
+  <ToggleOptions
+    role="radiogroup"
+    aria-label={label}
+    aria-describedby={describedBy}
+  >
     {options.map(option => {
       const active = value === option.value;
 
@@ -101,6 +109,9 @@ export type FieldNumberInputProps = {
   readOnly?: boolean;
   unit?: string;
   min?: number;
+  max?: number;
+  placeholder?: string;
+  describedBy?: string;
 };
 
 const toNumber = (raw: string) => {
@@ -121,6 +132,9 @@ export const FieldNumberInput = ({
   readOnly,
   unit = 'px',
   min = 0,
+  max,
+  placeholder,
+  describedBy,
 }: FieldNumberInputProps) => (
   <Tooltip
     title={label}
@@ -133,13 +147,16 @@ export const FieldNumberInput = ({
         type="number"
         inputMode="numeric"
         min={min}
+        max={max}
+        placeholder={placeholder}
         aria-label={label}
+        aria-describedby={describedBy}
         value={value ?? ''}
         disabled={readOnly}
         onChange={event => onChange(toNumber(event.currentTarget.value))}
       />
 
-      <NumberInputUnit>{unit}</NumberInputUnit>
+      {unit && <NumberInputUnit>{unit}</NumberInputUnit>}
     </NumberInputWrapper>
   </Tooltip>
 );
@@ -196,6 +213,7 @@ export type FieldSpacingInputProps = {
   value: SpacingValue | undefined;
   onChange: (value: SpacingValue | undefined) => void;
   readOnly?: boolean;
+  describedBy?: string;
 };
 
 export const FieldSpacingInput = ({
@@ -204,24 +222,33 @@ export const FieldSpacingInput = ({
   value,
   onChange,
   readOnly,
+  describedBy,
 }: FieldSpacingInputProps) => {
-  const { t } = useTranslation();
-  const theme = useWebsiteTheme();
-  const parts = toSpacingParts(value);
-  const [unit, setUnit] = useState<SpacingUnit>(parts.unit);
-  const unitPx = parseFloat(theme.spacing(1)) || 8;
+  const [draft, setDraft] = useState<string>();
+  const invalid = draft !== undefined && !parseSpacingInput(draft).valid;
 
-  const changeUnit = (next: SpacingUnit) => {
-    setUnit(next);
+  const change = (raw: string) => {
+    const result = parseSpacingInput(raw);
+    setDraft(raw);
 
-    if (parts.amount === undefined || next === parts.unit) {
+    if (result.valid && result.value !== value) {
+      onChange(result.value);
+    }
+  };
+
+  const step = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') {
       return;
     }
 
-    const amount =
-      next === 'px' ? parts.amount * unitPx : parts.amount / unitPx;
-
-    onChange(fromSpacingParts(Math.round(amount * 100) / 100, next));
+    event.preventDefault();
+    setDraft(undefined);
+    onChange(
+      stepSpacingValue(
+        value,
+        (event.key === 'ArrowUp' ? 1 : -1) * (event.shiftKey ? 10 : 1)
+      )
+    );
   };
 
   return (
@@ -233,32 +260,44 @@ export const FieldSpacingInput = ({
         <Icon aria-hidden />
 
         <FieldInput
-          type="number"
+          type="text"
           inputMode="decimal"
-          min={0}
-          step={unit === 'px' ? 1 : 0.5}
+          autoComplete="off"
           aria-label={label}
-          value={parts.amount ?? ''}
+          aria-describedby={describedBy}
+          aria-invalid={invalid || undefined}
+          value={draft ?? formatSpacingInput(value)}
           disabled={readOnly}
-          onChange={event =>
-            onChange(
-              fromSpacingParts(toNumber(event.currentTarget.value), unit)
-            )
-          }
+          onChange={event => change(event.currentTarget.value)}
+          onKeyDown={step}
+          onBlur={() => setDraft(undefined)}
         />
-
-        <UnitSelect
-          aria-label={t('', 'Unit')}
-          value={unit}
-          disabled={readOnly}
-          onChange={event =>
-            changeUnit(event.currentTarget.value as SpacingUnit)
-          }
-        >
-          <option value="spacing">{t('', 'units')}</option>
-          <option value="px">px</option>
-        </UnitSelect>
       </NumberInputWrapper>
     </Tooltip>
+  );
+};
+
+export const FieldSpacingHint = ({
+  id,
+  visible = true,
+}: {
+  id: string;
+  visible?: boolean;
+}) => {
+  const { t } = useTranslation();
+  const theme = useWebsiteTheme();
+  const unit = parseFloat(theme.spacing(1)) || 8;
+
+  return (
+    <BoxModelHint
+      id={id}
+      data-visible={visible}
+    >
+      {t(
+        '',
+        'Numbers are theme units (1 = {{unit}}px). Add a unit like px, rem or vh for an exact size. Arrow keys change the value.',
+        { unit }
+      )}
+    </BoxModelHint>
   );
 };

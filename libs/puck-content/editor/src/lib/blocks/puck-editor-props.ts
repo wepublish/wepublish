@@ -8,7 +8,7 @@ import { isValidElement } from 'react';
 
 import { BlockVisibilityValue } from '../block-visibility/block-visibility.field';
 import { DatasourcesValue } from '../datasource/datasource.field';
-import { StylingValue } from '../styling/styling.field';
+import { BreakpointStylingValue } from '../styling/styling.field';
 
 export type ToPuckSlots<T> =
   T extends PuckSlotValue ? Slot
@@ -25,7 +25,7 @@ export type SplitPuckRenderProps<Props> = {
   props: Props;
   slots: PuckSlots;
   className?: string;
-  styling?: StylingValue;
+  styling?: BreakpointStylingValue;
   visibility?: BlockVisibilityValue;
   datasources?: DatasourcesValue;
 };
@@ -33,7 +33,7 @@ export type SplitPuckRenderProps<Props> = {
 type PuckRenderProps = {
   id: string;
   className?: string;
-  styling?: StylingValue;
+  styling?: BreakpointStylingValue;
   visibility?: BlockVisibilityValue;
   datasources?: DatasourcesValue;
   [key: string]: unknown;

@@ -5,6 +5,7 @@ import {
   PuckBlockDatasourceInput,
   PuckBlockDatasourcesInput,
   PuckBlockInput,
+  PuckBlockBreakpointStylingInput,
   PuckBlockKind,
   PuckBlockStylingInput,
   PuckBlockTimingsInput,
@@ -12,6 +13,7 @@ import {
   PuckBorderInput,
   PuckBorderStyle,
   PuckBreakpoint,
+  PuckCornerShape,
   PuckDatasourceType,
   PuckFontWeight,
   PuckListDatasourceType,
@@ -32,7 +34,12 @@ import {
 import { BorderValue } from '../border/border.field';
 import { puckBlockConsumes, puckDerivedDatasources } from '../config';
 import { Datasource, DatasourcesValue } from '../datasource/datasource.field';
-import { hasStylingValue, StylingValue } from '../styling/styling.field';
+import {
+  BreakpointStylingValue,
+  hasStylingValue,
+  StylingValue,
+  toBreakpointStyling,
+} from '../styling/styling.field';
 import {
   compact,
   enumMember,
@@ -246,10 +253,16 @@ const withoutEmptyStyling = (value: unknown): unknown =>
     )
   : value;
 
-const toStoredStyling = (styling: unknown): StylingValue | undefined => {
-  const stored = withoutEmptyStyling(withoutGraphQLExtras(styling));
+const toStoredStyling = (
+  styling: unknown
+): BreakpointStylingValue | undefined => {
+  const stored = withoutEmptyStyling(
+    toBreakpointStyling(withoutGraphQLExtras(styling))
+  );
 
-  return hasStylingValue(stored) ? (stored as StylingValue) : undefined;
+  return hasStylingValue(stored) ?
+      (stored as BreakpointStylingValue)
+    : undefined;
 };
 
 const datasourceKeysOf = (type: unknown) =>
@@ -289,6 +302,7 @@ const toStylingInput = ({
   textTransform,
   backgroundSize,
   border,
+  cornerShape,
   ...styling
 }: StylingValue): PuckBlockStylingInput => ({
   ...styling,
@@ -304,8 +318,21 @@ const toStylingInput = ({
       enumMember(PuckBackgroundSize, value)
     ),
     border: ifPresent(border, toBorderInput),
+    cornerShape: ifPresent(cornerShape, value =>
+      enumMember(PuckCornerShape, value)
+    ),
   }),
 });
+
+const toBreakpointStylingInput = (
+  styling: BreakpointStylingValue
+): PuckBlockBreakpointStylingInput =>
+  Object.fromEntries(
+    Object.entries(styling).map(([breakpoint, value]) => [
+      breakpoint,
+      toStylingInput(value),
+    ])
+  );
 
 const toTimingsInput = ({
   from,
@@ -423,7 +450,7 @@ const toBlockInput = (
         visibility,
         toVisibilityInput
       ),
-      styling: ifPresent(toStoredStyling(styling), toStylingInput),
+      styling: ifPresent(toStoredStyling(styling), toBreakpointStylingInput),
       datasources: ifPresent(inputDatasources, toDatasourcesInput),
       consumes: consumesOf(
         kind,

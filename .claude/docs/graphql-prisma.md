@@ -158,7 +158,10 @@ boundaries.
   component props with slots emptied to `[]`, `puckSlot` the parent's slot.
   It is **read flat** (`[PuckBlock!]`, depth first,
   `parentId`/`puckSlot`/`position`), as a query cannot select an unbounded
-  tree. Union values use the `PuckSpacing`/`PuckMinHeight`/
+  tree. `styling` is per breakpoint (`PuckBlockBreakpointStyling`, `xs`–`xl`
+  each a `PuckBlockStyling`, mobile first, a breakpoint inherits every key
+  it leaves out); `readStoredPuckBlocks` reads a flat styling stored before
+  that as `xs`. Union values use the `PuckSpacing`/`PuckMinHeight`/
   `PuckMaxWidth`/`PuckBackgroundPosition` scalars (typed in `codegen.yml`). A
   block hides with its subtree through `visibility.disabled`/`timings`
   (`timing/puck-timing.ts`); breakpoints are left to the website.

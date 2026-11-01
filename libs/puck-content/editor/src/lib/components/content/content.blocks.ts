@@ -1,4 +1,6 @@
+import { withCSS } from '../../blocks/with-css';
 import { withVisibility } from '../../blocks/with-visibility';
+import { textlessStylingGroups } from '../../styling/styling.field';
 import { PuckDerivedDatasources } from '../../config.types';
 import { DatasourcesValue } from '../../datasource/datasource.field';
 import {
@@ -30,27 +32,31 @@ import { RichTextConfig } from './richtext/richtext.config';
 import { TitleConfig } from './title/title.config';
 
 export const contentComponents = {
-  Title: withVisibility(TitleConfig),
-  Quote: withVisibility(QuoteConfig),
-  Html: withVisibility(HtmlConfig),
-  Break: withVisibility(BreakConfig),
-  RichText: withVisibility(RichTextConfig),
-  Listicle: withVisibility(ListicleConfig),
-  IFrame: withVisibility(IFrameConfig),
-  YouTube: withVisibility(YouTubeConfig),
-  Vimeo: withVisibility(VimeoConfig),
-  TikTok: withVisibility(TikTokConfig),
-  FacebookVideo: withVisibility(FacebookVideoConfig),
-  Facebook: withVisibility(FacebookConfig),
-  Instagram: withVisibility(InstagramConfig),
-  Button: withVisibility(ButtonConfig),
-  Image: withVisibility(ImageConfig),
-  Lightbox: withVisibility(LightboxConfig),
-  Twitter: withVisibility(TwitterConfig),
-  SoundCloud: withVisibility(SoundCloudConfig),
-  Streamable: withVisibility(StreamableConfig),
-  Polis: withVisibility(PolisConfig),
-  BildwurfAd: withVisibility(BildwurfAdConfig),
+  Title: withVisibility(
+    withCSS(TitleConfig, { groups: textlessStylingGroups })
+  ),
+  Quote: withVisibility(withCSS(QuoteConfig)),
+  Html: withVisibility(withCSS(HtmlConfig)),
+  Break: withVisibility(withCSS(BreakConfig)),
+  RichText: withVisibility(
+    withCSS(RichTextConfig, { groups: textlessStylingGroups })
+  ),
+  Listicle: withVisibility(withCSS(ListicleConfig)),
+  IFrame: withVisibility(withCSS(IFrameConfig)),
+  YouTube: withVisibility(withCSS(YouTubeConfig)),
+  Vimeo: withVisibility(withCSS(VimeoConfig)),
+  TikTok: withVisibility(withCSS(TikTokConfig)),
+  FacebookVideo: withVisibility(withCSS(FacebookVideoConfig)),
+  Facebook: withVisibility(withCSS(FacebookConfig)),
+  Instagram: withVisibility(withCSS(InstagramConfig)),
+  Button: withVisibility(withCSS(ButtonConfig)),
+  Image: withVisibility(withCSS(ImageConfig)),
+  Lightbox: withVisibility(withCSS(LightboxConfig)),
+  Twitter: withVisibility(withCSS(TwitterConfig)),
+  SoundCloud: withVisibility(withCSS(SoundCloudConfig)),
+  Streamable: withVisibility(withCSS(StreamableConfig)),
+  Polis: withVisibility(withCSS(PolisConfig)),
+  BildwurfAd: withVisibility(withCSS(BildwurfAdConfig)),
 };
 
 export const contentFieldTabs: Partial<

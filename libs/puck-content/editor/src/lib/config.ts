@@ -12,7 +12,10 @@ import {
 } from './components/data/data.blocks';
 import { formComponents } from './components/form/form.blocks';
 import { formComponentNames } from './components/form/form-components';
-import { layoutComponents } from './components/layout/layout.blocks';
+import {
+  layoutComponents,
+  layoutFieldTabs,
+} from './components/layout/layout.blocks';
 import {
   PuckBlockConsumes,
   PuckConfig,
@@ -30,7 +33,7 @@ const components: PuckConfig['components'] = withLockAll(
       ...formComponents,
       ...dataComponents,
     },
-    contentFieldTabs
+    { ...layoutFieldTabs, ...contentFieldTabs }
   )
 );
 

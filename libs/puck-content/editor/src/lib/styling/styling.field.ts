@@ -7,6 +7,8 @@ import {
   BackgroundSizeValue,
   Corner,
   corners,
+  CornerShapeValue,
+  cornerShapes,
   FontWeightValue,
   LengthUnit,
   LengthValue,
@@ -19,8 +21,11 @@ import {
   TextTransformValue,
 } from '@wepublish/puck-content/website';
 
-import { toAiSchema } from '../ai-schema';
 import { alignmentSchema } from '../alignment/alignment.field';
+import {
+  breakpointsFieldAi,
+  BreakpointsValue,
+} from '../breakpoints/breakpoints.field';
 import { borderSchema, BorderValue } from '../border/border.field';
 import { colorSchema, ColorValue } from '../color/color.field';
 import { imageSchema, ImageValue } from '../image/image.field';
@@ -30,6 +35,7 @@ import { SpacingValue } from '../spacing/spacing';
 
 export {
   corners,
+  cornerShapes,
   defaultBackgroundPosition,
   defaultBackgroundSize,
   defaultOverlayOpacity,
@@ -44,6 +50,7 @@ export type {
   BackgroundPositionValue,
   BackgroundSizeValue,
   Corner,
+  CornerShapeValue,
   FontWeightValue,
   LengthUnit,
   LengthValue,
@@ -110,15 +117,19 @@ export type StylingValue = {
   padding?: PaddingValue;
   border?: BorderValue;
   borderRadius?: RadiusValue;
+  cornerShape?: CornerShapeValue;
   minHeight?: MinHeightValue;
   maxWidth?: MaxWidthValue;
   shadow?: number;
   opacity?: number;
 };
 
+export type BreakpointStylingValue = BreakpointsValue<StylingValue>;
+
 export type StylingField = BaseField & {
   type: 'styling';
   marginSides?: Side[];
+  groups?: StylingGroup[];
 };
 
 export type StylingGroup =
@@ -133,6 +144,10 @@ export const stylingGroups: StylingGroup[] = [
   'effects',
 ];
 
+export const textlessStylingGroups = stylingGroups.filter(
+  group => group !== 'text'
+);
+
 export const stylingGroupKeys: Record<StylingGroup, (keyof StylingValue)[]> = {
   text: ['typography', 'textAlign', 'color', 'fontWeight', 'textTransform'],
   background: [
@@ -144,7 +159,7 @@ export const stylingGroupKeys: Record<StylingGroup, (keyof StylingValue)[]> = {
     'overlayOpacity',
   ],
   spacing: ['margin', 'padding'],
-  border: ['border', 'borderRadius'],
+  border: ['border', 'borderRadius', 'cornerShape'],
   size: ['minHeight', 'maxWidth'],
   effects: ['shadow', 'opacity'],
 };
@@ -192,6 +207,34 @@ export const resetStylingGroup = (
       Object.entries(value ?? {}).filter(([key]) => !groupKeys.includes(key))
     )
   );
+};
+
+export const setBreakpointStyling = (
+  value: BreakpointStylingValue | undefined,
+  breakpoint: Breakpoint,
+  styling: StylingValue | undefined
+): BreakpointStylingValue | undefined => {
+  const next: BreakpointStylingValue = {
+    ...value,
+    [breakpoint]: styling ?? {},
+  };
+  const keepsBreakpoints = Object.keys(next).some(key => key !== 'xs');
+
+  return keepsBreakpoints || hasStylingValue(next) ? next : undefined;
+};
+
+const breakpointKeys: readonly string[] = ['xs', 'sm', 'md', 'lg', 'xl'];
+
+export const toBreakpointStyling = (
+  value: unknown
+): BreakpointStylingValue | undefined => {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return undefined;
+  }
+
+  return Object.keys(value).every(key => breakpointKeys.includes(key)) ?
+      (value as BreakpointStylingValue)
+    : { xs: value as StylingValue };
 };
 
 export const headingLevel = (variant: string): number | undefined => {
@@ -276,6 +319,11 @@ export const stylingSchema = (marginSides: Side[] = sides) =>
       padding: paddingSchema.describe('Inner spacing per side'),
       border: borderSchema.describe('Border of the component'),
       borderRadius: radiusSchema.describe('Corner radius per corner'),
+      cornerShape: z
+        .enum(cornerShapes)
+        .describe(
+          'Shape of every rounded corner, only visible together with a corner radius. Defaults to round; squircle is a smooth superellipse, bevel cuts the corner straight, scoop curves it inwards, notch cuts a square into it and square keeps it sharp. Browsers without support fall back to round corners.'
+        ),
       minHeight: lengthSchema(minHeightUnits).describe(
         'Minimum height in pixels like "320px" or in percent of the viewport height like "50vh"'
       ),
@@ -296,8 +344,29 @@ export const stylingSchema = (marginSides: Side[] = sides) =>
     })
     .partial();
 
-export const stylingFieldAi = (marginSides?: Side[]): FieldAiParams => ({
-  instructions:
-    'Styling of the component, grouped into text (typography variant, alignment, colour, weight, letter case), background (colour, image with size and position, overlay), spacing (margin outside the border, padding inside it), border (line and corner radius), size (minimum height, maximum width) and effects (shadow, opacity). Prefer theme values and leave out anything that should keep the component default.',
-  schema: toAiSchema(stylingSchema(marginSides)),
-});
+const pickStylingGroups = <Shape extends z.ZodRawShape>(
+  schema: z.ZodObject<Shape>,
+  groups: StylingGroup[]
+) => {
+  const keys = groups.flatMap(group => stylingGroupKeys[group]);
+
+  return schema.pick(
+    Object.fromEntries(keys.map(key => [key, true])) as Partial<
+      Record<keyof Shape, true>
+    >
+  );
+};
+
+export const stylingFieldAi = (
+  marginSides?: Side[],
+  groups: StylingGroup[] = stylingGroups
+): FieldAiParams => {
+  const perBreakpoint = breakpointsFieldAi(
+    pickStylingGroups(stylingSchema(marginSides), groups).shape
+  );
+
+  return {
+    instructions: `Styling of the component, grouped into text (typography variant, alignment, colour, weight, letter case), background (colour, image with size and position, overlay), spacing (margin outside the border, padding inside it), border (line, corner radius and corner shape), size (minimum height, maximum width) and effects (shadow, opacity). Prefer theme values and leave out anything that should keep the component default. ${perBreakpoint.instructions} A larger breakpoint only needs the keys that change there.`,
+    schema: perBreakpoint.schema,
+  };
+};

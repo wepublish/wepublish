@@ -6,6 +6,7 @@ import {
   componentFieldTabs,
   contentDatasourceFieldTabs,
   groupFieldTabs,
+  layoutItemsFieldTabs,
   pageRootFieldTabs,
   withFieldTabsAll,
 } from './field-tabs';
@@ -170,6 +171,17 @@ describe('contentDatasourceFieldTabs', () => {
       )
     ).toEqual([
       { value: 'content', fields: ['caption', 'datasources'] },
+      { value: 'style', fields: ['styling'] },
+    ]);
+  });
+});
+
+describe('layoutItemsFieldTabs', () => {
+  it('keeps the items next to the layout', () => {
+    expect(
+      groupFieldTabs(['layout', 'items', 'styling'], layoutItemsFieldTabs)
+    ).toEqual([
+      { value: 'layout', fields: ['layout', 'items'] },
       { value: 'style', fields: ['styling'] },
     ]);
   });

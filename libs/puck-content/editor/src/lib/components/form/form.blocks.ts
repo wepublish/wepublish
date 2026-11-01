@@ -12,16 +12,16 @@ import { FormTextareaConfig } from './form-textarea/form-textarea.config';
 import { FormConfig } from './form/form.config';
 
 export const formComponents = {
-  Subscribe: withVisibility(SubscribeConfig),
-  MailchimpForm: withVisibility(MailchimpFormConfig),
+  Subscribe: withVisibility(withCSS(SubscribeConfig)),
+  MailchimpForm: withVisibility(withCSS(MailchimpFormConfig)),
   Form: withVisibility(withCSS(FormConfig)),
-  FormInput: withVisibility(FormInputConfig),
-  FormTextarea: withVisibility(FormTextareaConfig),
-  FormCheckbox: withVisibility(FormCheckboxConfig),
-  FormSelect: withVisibility(FormSelectConfig),
-  FormRadioGroup: withVisibility(FormRadioGroupConfig),
+  FormInput: withVisibility(withCSS(FormInputConfig)),
+  FormTextarea: withVisibility(withCSS(FormTextareaConfig)),
+  FormCheckbox: withVisibility(withCSS(FormCheckboxConfig)),
+  FormSelect: withVisibility(withCSS(FormSelectConfig)),
+  FormRadioGroup: withVisibility(withCSS(FormRadioGroupConfig)),
   FormHidden: withVisibility(FormHiddenConfig),
-  FormSubmit: withVisibility(FormSubmitConfig),
+  FormSubmit: withVisibility(withCSS(FormSubmitConfig)),
 };
 
 export * from '../data/mailchimp-form/mailchimp-form.config';

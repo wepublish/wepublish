@@ -28,7 +28,7 @@ generates:
         Slug: string
         RichText: RichtextJSONDocument
         Upload: File
-        PuckSpacing: "number | `${ number }px`"
+        PuckSpacing: "number | `${ number }${ 'px' | 'cm' | 'mm' | 'q' | 'in' | 'pc' | 'pt' | 'em' | 'rem' | 'ex' | 'rex' | 'cap' | 'rcap' | 'ch' | 'rch' | 'ic' | 'ric' | 'lh' | 'rlh' | 'vw' | 'vh' | 'vi' | 'vb' | 'vmin' | 'vmax' | 'svw' | 'svh' | 'svi' | 'svb' | 'svmin' | 'svmax' | 'lvw' | 'lvh' | 'lvi' | 'lvb' | 'lvmin' | 'lvmax' | 'dvw' | 'dvh' | 'dvi' | 'dvb' | 'dvmin' | 'dvmax' | 'cqw' | 'cqh' | 'cqi' | 'cqb' | 'cqmin' | 'cqmax' | '%' }`"
         PuckMinHeight: "`${ number }px` | `${ number }vh`"
         PuckMaxWidth: "'sm' | 'md' | 'lg' | 'xl' | `${ number }px` | `${ number }%`"
         PuckBackgroundPosition: "`${'left' | 'center' | 'right'} ${'top' | 'center' | 'bottom'}`"
@@ -117,7 +117,7 @@ generates:
         Slug: string
         RichText: RichtextJSONDocument
         Upload: File
-        PuckSpacing: "number | `${ number }px`"
+        PuckSpacing: "number | `${ number }${ 'px' | 'cm' | 'mm' | 'q' | 'in' | 'pc' | 'pt' | 'em' | 'rem' | 'ex' | 'rex' | 'cap' | 'rcap' | 'ch' | 'rch' | 'ic' | 'ric' | 'lh' | 'rlh' | 'vw' | 'vh' | 'vi' | 'vb' | 'vmin' | 'vmax' | 'svw' | 'svh' | 'svi' | 'svb' | 'svmin' | 'svmax' | 'lvw' | 'lvh' | 'lvi' | 'lvb' | 'lvmin' | 'lvmax' | 'dvw' | 'dvh' | 'dvi' | 'dvb' | 'dvmin' | 'dvmax' | 'cqw' | 'cqh' | 'cqi' | 'cqb' | 'cqmin' | 'cqmax' | '%' }`"
         PuckMinHeight: "`${ number }px` | `${ number }vh`"
         PuckMaxWidth: "'sm' | 'md' | 'lg' | 'xl' | `${ number }px` | `${ number }%`"
         PuckBackgroundPosition: "`${'left' | 'center' | 'right'} ${'top' | 'center' | 'bottom'}`"
@@ -143,7 +143,7 @@ generates:
         Slug: string
         RichText: RichtextJSONDocument
         Upload: File
-        PuckSpacing: "number | `${ number }px`"
+        PuckSpacing: "number | `${ number }${ 'px' | 'cm' | 'mm' | 'q' | 'in' | 'pc' | 'pt' | 'em' | 'rem' | 'ex' | 'rex' | 'cap' | 'rcap' | 'ch' | 'rch' | 'ic' | 'ric' | 'lh' | 'rlh' | 'vw' | 'vh' | 'vi' | 'vb' | 'vmin' | 'vmax' | 'svw' | 'svh' | 'svi' | 'svb' | 'svmin' | 'svmax' | 'lvw' | 'lvh' | 'lvi' | 'lvb' | 'lvmin' | 'lvmax' | 'dvw' | 'dvh' | 'dvi' | 'dvb' | 'dvmin' | 'dvmax' | 'cqw' | 'cqh' | 'cqi' | 'cqb' | 'cqmin' | 'cqmax' | '%' }`"
         PuckMinHeight: "`${ number }px` | `${ number }vh`"
         PuckMaxWidth: "'sm' | 'md' | 'lg' | 'xl' | `${ number }px` | `${ number }%`"
         PuckBackgroundPosition: "`${'left' | 'center' | 'right'} ${'top' | 'center' | 'bottom'}`"
