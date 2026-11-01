@@ -61,7 +61,7 @@
       "currentVersion": "Aktuelle Version",
       "restore": "Wiederherstellen",
       "restored": "Version als neuer Entwurf wiederhergestellt",
-      "preview": "Vorschau",
+      "preview": "Version ansehen",
       "previewTitle": "Versionsvorschau",
       "readOnly": "Schreibgeschützt",
       "loadMore": "Mehr laden",
@@ -4856,6 +4856,19 @@
       }
     },
     "puck": {
+      "revisionPreview": {
+        "label": "Versionsvorschau",
+        "viewing": "Version vom {{date, PPp}} von {{author}}",
+        "viewingNoAuthor": "Version vom {{date, PPp}}",
+        "readOnly": "Nur lesen. Dein aktueller Inhalt bleibt unverändert, bis du diese Version wiederherstellst.",
+        "loading": "Version wird geladen …",
+        "failed": "Diese Version konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
+        "retry": "Erneut versuchen",
+        "back": "Zurück zur aktuellen Version",
+        "restore": "Diese Version wiederherstellen",
+        "restored": "Version vom {{date, PPp}} wiederhergestellt",
+        "restoredHint": "Sie ist noch nicht gespeichert. Speichere, um sie zu behalten, oder mache es rückgängig."
+      },
       "loadFailed": "Dieses Dokument lässt sich im Seitenbaukasten nicht öffnen.",
       "search": {
         "placeholder": "Blöcke suchen",

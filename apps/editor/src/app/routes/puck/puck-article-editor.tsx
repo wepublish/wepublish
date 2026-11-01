@@ -1,10 +1,10 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import {
   ArticleDocument,
   ArticleRevisionListDocument,
+  ArticleRevisionPreviewDocument,
   CreateArticleDocument,
   PublishArticleDocument,
-  RestoreArticleRevisionDocument,
   UpdateArticleDocument,
 } from '@wepublish/editor/api';
 import {
@@ -47,6 +47,7 @@ import {
   puckDocumentStatusLabel,
 } from './puck-document-status';
 import { PuckDocumentEditor } from './puck-editor';
+import { toRevisionContent } from './puck-editor.config';
 import {
   notifyFailure,
   notifySuccess,
@@ -60,8 +61,6 @@ function ArticleEditor() {
   const { t } = useTranslation();
   const [autosaveEnabled, setAutosaveEnabled] = useAutosaveEnabled();
   const [historyRequested, setHistoryRequested] = useState(false);
-  const [restoreCount, setRestoreCount] = useState(0);
-  const [restoringId, setRestoringId] = useState<string | null>(null);
   const [loadingMoreRevisions, setLoadingMoreRevisions] = useState(false);
 
   const canSave = useHasPermission([CanCreateArticle.id]);
@@ -95,9 +94,7 @@ function ArticleEditor() {
   const [publishArticle, { loading: publishing }] = useMutation(
     PublishArticleDocument
   );
-  const [restoreArticleRevision, { loading: restoring }] = useMutation(
-    RestoreArticleRevisionDocument
-  );
+  const client = useApolloClient();
 
   const {
     data: revisionsData,
@@ -229,26 +226,29 @@ function ArticleEditor() {
     await refresh();
   };
 
-  const restore = async (revisionId: string) => {
-    if (!article) {
-      return;
+  const loadRevision = async (revisionId: string) => {
+    const { data: revisionData } = await client.query({
+      query: ArticleRevisionPreviewDocument,
+      variables: { id: revisionId },
+    });
+    const revision = revisionData?.articleRevision;
+
+    if (!article || !revision) {
+      throw new Error(t('puck.loadFailed'));
     }
 
-    setRestoringId(revisionId);
+    const articleAtRevision = { ...article, latest: revision };
 
-    try {
-      await restoreArticleRevision({
-        variables: { id: article.id, revisionId },
-      });
-      setRestoreCount(count => count + 1);
-      notifySuccess(t('versionHistory.restored'));
-    } catch (error) {
-      notifyFailure(error);
-    } finally {
-      setRestoringId(null);
-    }
-
-    await refresh();
+    return toRevisionContent(
+      'article',
+      loadPuckDocument(
+        'article',
+        revision.puckBlocks,
+        revision.puckRegistry,
+        articleToRootProps(articleAtRevision)
+      ),
+      t('puck.loadFailed')
+    );
   };
 
   const revisionNodes = revisionsData?.articleRevisions?.nodes ?? [];
@@ -297,13 +297,12 @@ function ArticleEditor() {
         pendingId: article.pending?.id,
         publishedId: article.published?.id,
         loading: revisionsLoading && revisionNodes.length === 0,
-        restoringId,
         canRestore: canSave,
         totalCount: revisionsData?.articleRevisions?.totalCount,
         hasMore: !!revisionsData?.articleRevisions?.pageInfo?.hasNextPage,
         loadingMore: loadingMoreRevisions,
         onLoadMore: loadMoreRevisions,
-        onRestore: restore,
+        loadRevision,
       }
     : undefined;
 
@@ -316,7 +315,7 @@ function ArticleEditor() {
     statusLabel: puckDocumentStatusLabel(t, 'article', article),
     lastSavedAt: article ? new Date(article.latest.createdAt) : undefined,
     isNew: !article,
-    busy: loading || creating || updating || publishing || restoring,
+    busy: loading || creating || updating || publishing,
     hasUnpublishedChanges: hasUnpublishedChanges(article),
     canSave,
     canPublish,
@@ -343,13 +342,12 @@ function ArticleEditor() {
 
   return (
     <PuckDocumentEditor
-      key={`${article?.id ?? 'new'}:${restoreCount}`}
+      key={article?.id ?? 'new'}
       kind="article"
       data={initialData}
       controller={controller}
       publishDialogOf={rootProps => articlePublishDialog(t, article, rootProps)}
       revisionHistory={revisionHistory}
-      initialPlugin={restoreCount ? RevisionHistoryPlugin.name : undefined}
       onPluginChange={plugin => {
         if (plugin === RevisionHistoryPlugin.name) {
           setHistoryRequested(true);

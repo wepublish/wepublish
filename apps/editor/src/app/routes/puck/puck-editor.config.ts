@@ -6,9 +6,11 @@ import {
   getPuckConfig,
   HeadingAnalyzerPlugin,
   isCompactSidebarWidth,
+  LoadedPuckDocument,
   PUCK_MOBILE_LAYOUT_WIDTH,
   PuckConfig,
   PuckData,
+  PuckRevisionContent,
   RawDataPlugin,
   SEOPreviewPlugin,
 } from '@wepublish/puck-content/editor';
@@ -36,6 +38,20 @@ export const puckEditorConfig = (
   kind: PuckDocumentKind,
   data: Data
 ): PuckConfig => withDynamicConfig(getPuckConfig(kind), data);
+
+export const toRevisionContent = <K extends PuckDocumentKind>(
+  kind: K,
+  loaded: LoadedPuckDocument<K>,
+  failure: string
+): PuckRevisionContent => {
+  if (!loaded.data) {
+    throw new Error(failure);
+  }
+
+  const data = toEditorData(kind, loaded.data);
+
+  return { data, config: puckEditorConfig(kind, data) };
+};
 
 export type ViewportDevice =
   'phone' | 'tablet' | 'desktop' | 'ultraWide' | '4k';
@@ -73,7 +89,7 @@ export const viewportPresets = (
 
       const device = breakpointDevices[label] ?? 'desktop';
 
-      return { width, height: 'auto', label, device };
+      return { width, height: 'auto' as const, label, device };
     }),
     { width: 2560, height: 'auto', label: 'Ultra wide', device: 'ultraWide' },
     { width: 3840, height: 'auto', label: '4k', device: '4k' },

@@ -38,6 +38,7 @@ const apollo = vi.hoisted(() => ({
   updateArticle: vi.fn(),
   publishArticle: vi.fn(),
   restoreArticleRevision: vi.fn(),
+  query: vi.fn(),
 }));
 
 const snackbar = vi.hoisted(() => vi.fn());
@@ -62,25 +63,28 @@ vi.mock('@apollo/client/react', async importOriginal => {
   const { routeApolloByOperation } = await import('../templates/testUtils');
   const actual = await importOriginal<typeof import('@apollo/client/react')>();
 
-  return routeApolloByOperation(actual, {
-    queries: {
-      Article: options => apollo.article(options),
-      ArticleRevisionList: options => apollo.revisions(options),
-    },
-    mutations: {
-      CreateArticle: options => {
-        apollo.createOptions = options as typeof apollo.createOptions;
-
-        return [apollo.createArticle, { loading: false }];
+  return {
+    ...routeApolloByOperation(actual, {
+      queries: {
+        Article: options => apollo.article(options),
+        ArticleRevisionList: options => apollo.revisions(options),
       },
-      UpdateArticle: () => [apollo.updateArticle, { loading: false }],
-      PublishArticle: () => [apollo.publishArticle, { loading: false }],
-      RestoreArticleRevision: () => [
-        apollo.restoreArticleRevision,
-        { loading: false },
-      ],
-    },
-  });
+      mutations: {
+        CreateArticle: options => {
+          apollo.createOptions = options as typeof apollo.createOptions;
+
+          return [apollo.createArticle, { loading: false }];
+        },
+        UpdateArticle: () => [apollo.updateArticle, { loading: false }],
+        PublishArticle: () => [apollo.publishArticle, { loading: false }],
+        RestoreArticleRevision: () => [
+          apollo.restoreArticleRevision,
+          { loading: false },
+        ],
+      },
+    }),
+    useApolloClient: () => ({ query: apollo.query }),
+  };
 });
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
@@ -616,23 +620,90 @@ describe('PuckArticleEditor', () => {
     );
   });
 
-  it('reopens the editor with the restored version and its history', async () => {
+  it('loads a version with its own content and settings for the preview', async () => {
+    apollo.query.mockResolvedValue({
+      data: {
+        articleRevision: {
+          ...article.latest,
+          id: 'revision-1',
+          title: 'First draft',
+          lead: 'First lead',
+          puckBlocks: [
+            {
+              __typename: 'PuckBlock',
+              id: 'Title-1',
+              kind: 'puck',
+              type: 'Title',
+              parentId: null,
+              puckSlot: null,
+              position: 0,
+              locked: null,
+              visibility: null,
+              styling: null,
+              datasources: null,
+              props: { title: 'Old heading' },
+            },
+          ],
+          puckRegistry: null,
+        },
+      },
+    });
     renderEditor('/puck/articles/edit/article-1');
     act(() =>
       editor.props.onPluginChange?.(RevisionHistoryPlugin.name ?? null)
     );
 
-    await act(() => editor.props.revisionHistory?.onRestore('revision-1'));
+    const content =
+      await editor.props.revisionHistory?.loadRevision?.('revision-1');
 
-    expect(apollo.restoreArticleRevision).toHaveBeenCalledWith({
-      variables: { id: 'article-1', revisionId: 'revision-1' },
+    expect(apollo.query).toHaveBeenCalledWith(
+      expect.objectContaining({ variables: { id: 'revision-1' } })
+    );
+    expect(content?.data.root.props).toEqual(
+      expect.objectContaining({
+        title: 'First draft',
+        lead: 'First lead',
+        slug: 'the-slug',
+      })
+    );
+    expect(content?.data.content).toEqual([
+      { type: 'Title', props: { id: 'Title-1', title: 'Old heading' } },
+    ]);
+    expect(content?.config?.components).toHaveProperty('Title');
+  });
+
+  it('fails to load a version that cannot be opened in the page builder', async () => {
+    apollo.query.mockResolvedValue({
+      data: {
+        articleRevision: {
+          ...article.latest,
+          id: 'revision-1',
+          puckBlocks: [
+            {
+              __typename: 'PuckBlock',
+              id: 'Title-1',
+              kind: 'puck',
+              type: 'Title',
+              parentId: 'Grid-9',
+              puckSlot: 'content',
+              position: 0,
+              props: {},
+            },
+          ],
+        },
+      },
     });
-    expect(editor.mounts).toBe(2);
-    expect(editor.props.initialPlugin).toBe(RevisionHistoryPlugin.name);
-    expect(snackbar).toHaveBeenCalledWith('', {
-      variant: 'success',
-      title: 'versionHistory.restored',
-      autoHideDuration: 2000,
-    });
+    renderEditor('/puck/articles/edit/article-1');
+
+    await expect(
+      editor.props.revisionHistory?.loadRevision?.('revision-1')
+    ).rejects.toThrow('puck.loadFailed');
+  });
+
+  it('restores versions in the editor instead of saving them on the server', () => {
+    renderEditor('/puck/articles/edit/article-1');
+
+    expect(editor.props.revisionHistory).not.toHaveProperty('onRestore');
+    expect(apollo.restoreArticleRevision).not.toHaveBeenCalled();
   });
 });

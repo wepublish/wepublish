@@ -89,6 +89,8 @@ export interface VersionHistoryProps {
   hasMore?: boolean;
   loadingMore?: boolean;
   onLoadMore?: () => void;
+  confirmRestore?: boolean;
+  previewingId?: string | null;
   onRestore: (revisionId: string) => void | Promise<void>;
   onPreview?: (revisionId: string) => void;
 }
@@ -260,6 +262,8 @@ export function VersionHistoryTimeline({
   hasMore = false,
   loadingMore = false,
   onLoadMore,
+  confirmRestore = true,
+  previewingId,
   onRestore,
   onPreview,
 }: VersionHistoryTimelineProps) {
@@ -352,10 +356,12 @@ export function VersionHistoryTimeline({
                   pendingId,
                   publishedId,
                 });
+                const isPreviewing = revision.id === previewingId;
                 const isCurrent =
                   revision.id === draftId ||
                   revision.id === pendingId ||
                   revision.id === publishedId;
+                const highlighted = previewingId ? isPreviewing : isCurrent;
                 const isDraft = revision.id === draftId;
                 const restorable = canRestore && !isDraft;
                 const authorName = getAuthorName(revision.author);
@@ -367,10 +373,10 @@ export function VersionHistoryTimeline({
                         theme,
                         stateTextColors[stateColors[state]]
                       )}
-                      isCurrent={isCurrent}
+                      isCurrent={highlighted}
                     />
 
-                    <Entry isCurrent={isCurrent}>
+                    <Entry isCurrent={highlighted}>
                       <EntryHeader>
                         <Tooltip title={formatDate(revision.createdAt)}>
                           <Typography
@@ -407,6 +413,8 @@ export function VersionHistoryTimeline({
                                 <IconButton
                                   size="small"
                                   aria-label={t('versionHistory.preview')}
+                                  aria-pressed={isPreviewing}
+                                  color={isPreviewing ? 'primary' : 'default'}
                                   onClick={() => onPreview(revision.id)}
                                 >
                                   <MdVisibility />
@@ -422,7 +430,11 @@ export function VersionHistoryTimeline({
                                     color="primary"
                                     aria-label={t('versionHistory.restore')}
                                     disabled={!!restoringId}
-                                    onClick={() => setPendingRestore(revision)}
+                                    onClick={() =>
+                                      confirmRestore ?
+                                        setPendingRestore(revision)
+                                      : onRestore(revision.id)
+                                    }
                                   >
                                     {restoringId === revision.id ?
                                       <CircularProgress size={16} />

@@ -61,7 +61,7 @@
       "currentVersion": "Current version",
       "restore": "Restore",
       "restored": "Version restored as a new draft",
-      "preview": "Preview",
+      "preview": "Preview version",
       "previewTitle": "Version preview",
       "readOnly": "Read-only",
       "loadMore": "Load more",
@@ -4856,6 +4856,19 @@
       }
     },
     "puck": {
+      "revisionPreview": {
+        "label": "Version preview",
+        "viewing": "Version of {{date, PPp}} by {{author}}",
+        "viewingNoAuthor": "Version of {{date, PPp}}",
+        "readOnly": "Read-only. Your current content stays as it is until you restore this version.",
+        "loading": "Loading this version …",
+        "failed": "This version couldn't be loaded. Check your connection and try again.",
+        "retry": "Try again",
+        "back": "Back to current version",
+        "restore": "Restore this version",
+        "restored": "Version of {{date, PPp}} restored",
+        "restoredHint": "It's not saved yet. Save to keep it, or undo to go back."
+      },
       "loadFailed": "This document cannot be opened in the page builder.",
       "search": {
         "placeholder": "Search blocks",

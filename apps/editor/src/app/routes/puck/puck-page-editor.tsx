@@ -1,10 +1,10 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import {
   CreatePageDocument,
   PageDocument,
   PageRevisionListDocument,
+  PageRevisionPreviewDocument,
   PublishPageDocument,
-  RestorePageRevisionDocument,
   UpdatePageDocument,
 } from '@wepublish/editor/api';
 import {
@@ -47,6 +47,7 @@ import {
   puckDocumentStatusLabel,
 } from './puck-document-status';
 import { PuckDocumentEditor } from './puck-editor';
+import { toRevisionContent } from './puck-editor.config';
 import {
   notifyFailure,
   notifySuccess,
@@ -60,8 +61,6 @@ function PageEditor() {
   const { t } = useTranslation();
   const [autosaveEnabled, setAutosaveEnabled] = useAutosaveEnabled();
   const [historyRequested, setHistoryRequested] = useState(false);
-  const [restoreCount, setRestoreCount] = useState(0);
-  const [restoringId, setRestoringId] = useState<string | null>(null);
   const [loadingMoreRevisions, setLoadingMoreRevisions] = useState(false);
 
   const canSave = useHasPermission([CanCreatePage.id]);
@@ -89,9 +88,7 @@ function PageEditor() {
   const [updatePage, { loading: updating }] = useMutation(UpdatePageDocument);
   const [publishPage, { loading: publishing }] =
     useMutation(PublishPageDocument);
-  const [restorePageRevision, { loading: restoring }] = useMutation(
-    RestorePageRevisionDocument
-  );
+  const client = useApolloClient();
 
   const {
     data: revisionsData,
@@ -219,24 +216,29 @@ function PageEditor() {
     await refresh();
   };
 
-  const restore = async (revisionId: string) => {
-    if (!page) {
-      return;
+  const loadRevision = async (revisionId: string) => {
+    const { data: revisionData } = await client.query({
+      query: PageRevisionPreviewDocument,
+      variables: { id: revisionId },
+    });
+    const revision = revisionData?.pageRevision;
+
+    if (!page || !revision) {
+      throw new Error(t('puck.loadFailed'));
     }
 
-    setRestoringId(revisionId);
+    const pageAtRevision = { ...page, latest: revision };
 
-    try {
-      await restorePageRevision({ variables: { id: page.id, revisionId } });
-      setRestoreCount(count => count + 1);
-      notifySuccess(t('versionHistory.restored'));
-    } catch (error) {
-      notifyFailure(error);
-    } finally {
-      setRestoringId(null);
-    }
-
-    await refresh();
+    return toRevisionContent(
+      'page',
+      loadPuckDocument(
+        'page',
+        revision.puckBlocks,
+        revision.puckRegistry,
+        pageToRootProps(pageAtRevision)
+      ),
+      t('puck.loadFailed')
+    );
   };
 
   const revisionNodes = revisionsData?.pageRevisions?.nodes ?? [];
@@ -285,13 +287,12 @@ function PageEditor() {
         pendingId: page.pending?.id,
         publishedId: page.published?.id,
         loading: revisionsLoading && revisionNodes.length === 0,
-        restoringId,
         canRestore: canSave,
         totalCount: revisionsData?.pageRevisions?.totalCount,
         hasMore: !!revisionsData?.pageRevisions?.pageInfo?.hasNextPage,
         loadingMore: loadingMoreRevisions,
         onLoadMore: loadMoreRevisions,
-        onRestore: restore,
+        loadRevision,
       }
     : undefined;
 
@@ -304,7 +305,7 @@ function PageEditor() {
     statusLabel: puckDocumentStatusLabel(t, 'page', page),
     lastSavedAt: page ? new Date(page.latest.createdAt) : undefined,
     isNew: !page,
-    busy: loading || creating || updating || publishing || restoring,
+    busy: loading || creating || updating || publishing,
     hasUnpublishedChanges: hasUnpublishedChanges(page),
     canSave,
     canPublish,
@@ -331,13 +332,12 @@ function PageEditor() {
 
   return (
     <PuckDocumentEditor
-      key={`${page?.id ?? 'new'}:${restoreCount}`}
+      key={page?.id ?? 'new'}
       kind="page"
       data={initialData}
       controller={controller}
       publishDialogOf={rootProps => pagePublishDialog(t, page, rootProps)}
       revisionHistory={revisionHistory}
-      initialPlugin={restoreCount ? RevisionHistoryPlugin.name : undefined}
       onPluginChange={plugin => {
         if (plugin === RevisionHistoryPlugin.name) {
           setHistoryRequested(true);

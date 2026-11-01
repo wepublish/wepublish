@@ -38,6 +38,7 @@ const apollo = vi.hoisted(() => ({
   updatePage: vi.fn(),
   publishPage: vi.fn(),
   restorePageRevision: vi.fn(),
+  query: vi.fn(),
 }));
 
 const snackbar = vi.hoisted(() => vi.fn());
@@ -62,25 +63,28 @@ vi.mock('@apollo/client/react', async importOriginal => {
   const { routeApolloByOperation } = await import('../templates/testUtils');
   const actual = await importOriginal<typeof import('@apollo/client/react')>();
 
-  return routeApolloByOperation(actual, {
-    queries: {
-      Page: options => apollo.page(options),
-      PageRevisionList: options => apollo.revisions(options),
-    },
-    mutations: {
-      CreatePage: options => {
-        apollo.createOptions = options as typeof apollo.createOptions;
-
-        return [apollo.createPage, { loading: false }];
+  return {
+    ...routeApolloByOperation(actual, {
+      queries: {
+        Page: options => apollo.page(options),
+        PageRevisionList: options => apollo.revisions(options),
       },
-      UpdatePage: () => [apollo.updatePage, { loading: false }],
-      PublishPage: () => [apollo.publishPage, { loading: false }],
-      RestorePageRevision: () => [
-        apollo.restorePageRevision,
-        { loading: false },
-      ],
-    },
-  });
+      mutations: {
+        CreatePage: options => {
+          apollo.createOptions = options as typeof apollo.createOptions;
+
+          return [apollo.createPage, { loading: false }];
+        },
+        UpdatePage: () => [apollo.updatePage, { loading: false }],
+        PublishPage: () => [apollo.publishPage, { loading: false }],
+        RestorePageRevision: () => [
+          apollo.restorePageRevision,
+          { loading: false },
+        ],
+      },
+    }),
+    useApolloClient: () => ({ query: apollo.query }),
+  };
 });
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
@@ -475,7 +479,7 @@ describe('PuckPageEditor', () => {
     });
   });
 
-  it('loads the version history only once it is opened and restores from it', async () => {
+  it('loads the version history only once it is opened and previews from it', async () => {
     renderEditor('/puck/pages/edit/page-1');
 
     expect(apollo.revisions).toHaveBeenLastCalledWith(
@@ -494,12 +498,27 @@ describe('PuckPageEditor', () => {
       }),
     ]);
 
-    await act(() => editor.props.revisionHistory?.onRestore('revision-1'));
-
-    expect(apollo.restorePageRevision).toHaveBeenCalledWith({
-      variables: { id: 'page-1', revisionId: 'revision-1' },
+    apollo.query.mockResolvedValue({
+      data: {
+        pageRevision: {
+          ...page.latest,
+          title: 'Old about us',
+          puckBlocks: [],
+          puckRegistry: null,
+        },
+      },
     });
-    expect(editor.mounts).toBe(2);
-    expect(editor.props.initialPlugin).toBe(RevisionHistoryPlugin.name);
+
+    const content =
+      await editor.props.revisionHistory?.loadRevision?.('revision-1');
+
+    expect(apollo.query).toHaveBeenCalledWith(
+      expect.objectContaining({ variables: { id: 'revision-1' } })
+    );
+    expect(content?.data.root.props).toEqual(
+      expect.objectContaining({ title: 'Old about us', slug: 'about' })
+    );
+    expect(editor.props.revisionHistory).not.toHaveProperty('onRestore');
+    expect(apollo.restorePageRevision).not.toHaveBeenCalled();
   });
 });

@@ -106,7 +106,6 @@ describe('PuckDocumentEditor', () => {
         ],
         draftId: 'revision-1',
         canRestore: true,
-        onRestore: vi.fn(),
       },
     });
 
@@ -114,6 +113,41 @@ describe('PuckDocumentEditor', () => {
 
     expect(onPluginChange).toHaveBeenLastCalledWith('revisioning');
     expect(await screen.findByText('First draft')).toBeInTheDocument();
+  });
+
+  it('announces the previewed version in a banner below the header', async () => {
+    renderEditor({
+      revisionHistory: {
+        revisions: [
+          {
+            id: 'revision-2',
+            createdAt: '2026-10-02T08:00:00.000Z',
+            title: 'Second draft',
+          },
+          {
+            id: 'revision-1',
+            createdAt: '2026-10-01T08:00:00.000Z',
+            title: 'First draft',
+          },
+        ],
+        draftId: 'revision-2',
+        canRestore: true,
+        loadRevision: async () => ({ data }),
+      },
+    });
+
+    fireEvent.click(screen.getByText('History'));
+    fireEvent.click(
+      await screen.findByRole('button', { name: /versionHistory.preview/ })
+    );
+
+    const banner = await screen.findByRole('region', {
+      name: /revisionPreview.label/,
+    });
+
+    expect(
+      within(banner).getByRole('button', { name: /revisionPreview.restore/ })
+    ).toBeInTheDocument();
   });
 
   it('gives the blocks in the canvas the data of their datasources', () => {

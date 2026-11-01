@@ -61,7 +61,7 @@
       "currentVersion": "Version actuelle",
       "restore": "Restaurer",
       "restored": "Version restaurée en tant que nouveau brouillon",
-      "preview": "Aperçu",
+      "preview": "Voir la version",
       "previewTitle": "Aperçu de la version",
       "readOnly": "Lecture seule",
       "loadMore": "Charger plus",
@@ -4856,6 +4856,19 @@
       }
     },
     "puck": {
+      "revisionPreview": {
+        "label": "Aperçu de version",
+        "viewing": "Version du {{date, PPp}} par {{author}}",
+        "viewingNoAuthor": "Version du {{date, PPp}}",
+        "readOnly": "Lecture seule. Votre contenu actuel reste inchangé tant que vous ne restaurez pas cette version.",
+        "loading": "Chargement de cette version …",
+        "failed": "Cette version n'a pas pu être chargée. Vérifiez votre connexion et réessayez.",
+        "retry": "Réessayer",
+        "back": "Revenir à la version actuelle",
+        "restore": "Restaurer cette version",
+        "restored": "Version du {{date, PPp}} restaurée",
+        "restoredHint": "Elle n'est pas encore enregistrée. Enregistrez pour la conserver ou annulez pour revenir en arrière."
+      },
       "loadFailed": "Ce document ne peut pas être ouvert dans le constructeur de pages.",
       "search": {
         "placeholder": "Rechercher des blocs",

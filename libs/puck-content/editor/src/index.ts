@@ -37,6 +37,7 @@ export * from './lib/record/record.sources';
 export * from './lib/resolved';
 export * from './lib/revision-history/revision-history';
 export * from './lib/revision-history/revision-history.context';
+export * from './lib/revision-history/revision-preview.context';
 export * from './lib/search/search';
 export * from './lib/richtext/richtext';
 export * from './lib/richtext/richtext.field';

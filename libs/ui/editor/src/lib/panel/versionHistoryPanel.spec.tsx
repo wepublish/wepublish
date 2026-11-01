@@ -355,4 +355,49 @@ describe('VersionHistoryTimeline', () => {
 
     expect(onRestore).toHaveBeenCalledWith('pub-1');
   });
+
+  it('marks the revision that is being previewed', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <VersionHistoryTimeline
+          revisions={[draft, published, archived]}
+          draftId="draft-1"
+          publishedId="pub-1"
+          previewingId="arch-1"
+          onRestore={vi.fn()}
+          onPreview={vi.fn()}
+        />
+      </ThemeProvider>
+    );
+
+    const [publishedPreview, archivedPreview] = screen.getAllByRole('button', {
+      name: 'versionHistory.preview',
+    });
+
+    expect(publishedPreview.getAttribute('aria-pressed')).toBe('false');
+    expect(archivedPreview.getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('restores right away when the restore needs no confirmation', () => {
+    const onRestore = vi.fn();
+
+    render(
+      <ThemeProvider theme={theme}>
+        <VersionHistoryTimeline
+          revisions={[draft, published, archived]}
+          draftId="draft-1"
+          publishedId="pub-1"
+          confirmRestore={false}
+          onRestore={onRestore}
+        />
+      </ThemeProvider>
+    );
+
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'versionHistory.restore' })[1]
+    );
+
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(onRestore).toHaveBeenCalledWith('arch-1');
+  });
 });
