@@ -9,7 +9,9 @@ const i18n = i18next.createInstance();
 
 void i18n.use(initReactI18next).init({
   lng: 'en',
-  resources: { en: { translation: {} } },
+  resources: {
+    en: { translation: i18next.getResourceBundle('en', 'translation') },
+  },
   initImmediate: false,
   interpolation: { escapeValue: false },
 });

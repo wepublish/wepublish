@@ -21,7 +21,7 @@ export const ImageEditorRender: PuckBlockComponent<
   return (
     <ImageEditorPlaceholder
       role="img"
-      aria-label={t('', 'No image selected')}
+      aria-label={t('puck.image.noImageSelected')}
       className={props.className}
     >
       <ImagePlaceholderIcon />

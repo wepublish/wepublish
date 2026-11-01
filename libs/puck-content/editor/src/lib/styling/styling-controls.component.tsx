@@ -90,15 +90,15 @@ const useBackgroundPositionLabels = (): Record<
   const { t } = useTranslation();
 
   return {
-    'left top': t('', 'Top left'),
-    'center top': t('', 'Top'),
-    'right top': t('', 'Top right'),
-    'left center': t('', 'Left'),
-    'center center': t('', 'Centre'),
-    'right center': t('', 'Right'),
-    'left bottom': t('', 'Bottom left'),
-    'center bottom': t('', 'Bottom'),
-    'right bottom': t('', 'Bottom right'),
+    'left top': t('puck.styling.topLeft'),
+    'center top': t('puck.styling.top'),
+    'right top': t('puck.styling.topRight'),
+    'left center': t('puck.styling.left'),
+    'center center': t('puck.styling.center'),
+    'right center': t('puck.styling.right'),
+    'left bottom': t('puck.styling.bottomLeft'),
+    'center bottom': t('puck.styling.bottom'),
+    'right bottom': t('puck.styling.bottomRight'),
   };
 };
 
@@ -190,8 +190,8 @@ export const ShadowInput = ({
         const active = value === step;
         const stepLabel =
           step === 0 ?
-            t('', 'No shadow')
-          : t('', 'Elevation {{level}}', { level: step });
+            t('puck.styling.noShadow')
+          : t('puck.styling.elevationLevel', { level: step });
 
         return (
           <Tooltip
@@ -333,7 +333,7 @@ export const LengthInput = <Unit extends LengthUnit>({
       />
 
       <UnitSelect
-        aria-label={t('', '{{label}} unit', { label })}
+        aria-label={t('puck.styling.labelUnit', { label })}
         value={unit}
         disabled={readOnly}
         onChange={event => changeUnit(event.currentTarget.value)}
@@ -397,7 +397,7 @@ export const MaxWidthInput = ({
         disabled={readOnly}
         onChange={event => select(event.currentTarget.value)}
       >
-        <option value="">{t('', 'None')}</option>
+        <option value="">{t('puck.styling.none')}</option>
 
         {maxWidthBreakpoints.map(breakpoint => (
           <option
@@ -408,7 +408,7 @@ export const MaxWidthInput = ({
           </option>
         ))}
 
-        <option value={customMaxWidth}>{t('', 'Custom')}</option>
+        <option value={customMaxWidth}>{t('puck.styling.custom')}</option>
       </FieldSelect>
 
       {selected === customMaxWidth && (
@@ -445,10 +445,10 @@ export const CornerRadiusInput = ({
   const [linked, setLinked] = useLinkedSpacingKeys(value, corners);
 
   const labels: Record<Corner, string> = {
-    topLeft: t('', 'Top left radius'),
-    topRight: t('', 'Top right radius'),
-    bottomRight: t('', 'Bottom right radius'),
-    bottomLeft: t('', 'Bottom left radius'),
+    topLeft: t('puck.styling.topLeftRadius'),
+    topRight: t('puck.styling.topRightRadius'),
+    bottomRight: t('puck.styling.bottomRightRadius'),
+    bottomLeft: t('puck.styling.bottomLeftRadius'),
   };
   const themeRadius =
     typeof theme.shape.borderRadius === 'number' ?
@@ -507,7 +507,7 @@ export const CornerRadiusInput = ({
           />
 
           <SpacingLinkButton
-            label={t('', 'Link corners')}
+            label={t('puck.styling.linkCorners')}
             linked={linked}
             readOnly={readOnly}
             onToggle={toggleLinked}
@@ -526,7 +526,7 @@ export const CornerRadiusInput = ({
             size={14}
             aria-hidden
           />
-          {t('', 'Fully rounded')}
+          {t('puck.styling.fullyRounded')}
         </CornerRoundToggle>
       </CornerActions>
 
@@ -534,11 +534,7 @@ export const CornerRadiusInput = ({
         id={hintId}
         data-visible={focused}
       >
-        {t(
-          '',
-          'Numbers are multiples of the theme radius ({{radius}}). Add a unit like px, rem or % for an exact size. Arrow keys change the value.',
-          { radius: themeRadius }
-        )}
+        {t('puck.styling.radiusHint', { radius: themeRadius })}
       </BoxModelHint>
     </StylingControlGroup>
   );
@@ -577,12 +573,12 @@ export const CornerShapeInput = ({
   const { t } = useTranslation();
   const hintId = useId();
   const labels: Record<CornerShapeValue, string> = {
-    round: t('', 'Round (default)'),
-    squircle: t('', 'Squircle'),
-    bevel: t('', 'Bevel'),
-    scoop: t('', 'Scoop'),
-    notch: t('', 'Notch'),
-    square: t('', 'Square'),
+    round: t('puck.styling.roundDefault'),
+    squircle: t('puck.styling.squircle'),
+    bevel: t('puck.styling.bevel'),
+    scoop: t('puck.styling.scoop'),
+    notch: t('puck.styling.notch'),
+    square: t('puck.styling.square'),
   };
 
   return (
@@ -613,10 +609,7 @@ export const CornerShapeInput = ({
 
       {!hasRadius && (
         <BoxModelHint id={hintId}>
-          {t(
-            '',
-            'The corner shape needs a corner radius, set one above to see it.'
-          )}
+          {t('puck.styling.cornerShapeNeedsRadius')}
         </BoxModelHint>
       )}
 
@@ -625,16 +618,13 @@ export const CornerShapeInput = ({
         variant="outlined"
         role="note"
       >
-        {t(
-          '',
-          'Corner shapes only work in some browsers, others show normal rounded corners.'
-        )}{' '}
+        {t('puck.styling.cornerShapeSupport')}{' '}
         <Link
           href={cornerShapeSupportUrl}
           target="_blank"
           rel="noopener noreferrer"
         >
-          {t('', 'Browser support')}
+          {t('puck.styling.browserSupport')}
         </Link>
       </CornerShapeNote>
     </StylingControlGroup>

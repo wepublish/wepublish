@@ -4,6 +4,6 @@ import { RawDataView } from './raw-data.component';
 
 export const RawDataPlugin: Plugin = {
   name: 'raw-data',
-  label: 'Raw Data',
+  label: 'Raw data',
   render: RawDataView,
 };

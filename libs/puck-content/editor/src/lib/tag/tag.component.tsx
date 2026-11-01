@@ -66,7 +66,7 @@ export const TagFieldRender = <Item,>({
 
   return (
     <FieldLabel
-      label={field.label ?? t('', 'Tags')}
+      label={field.label ?? t('puck.tag.tags')}
       readOnly={readOnly}
       el="div"
     >
@@ -86,7 +86,7 @@ export const TagFieldRender = <Item,>({
         isOptionEqualToValue={(option, item) => isSameListItem(option, item)}
         onChange={(_event, next) => handleChange(next as Item[])}
         noOptionsText={
-          canAdd ? t('', 'No options') : t('', 'No more tags can be added')
+          canAdd ? t('puck.tag.noOptions') : t('puck.tag.limitReached')
         }
         renderValue={(tags, getItemProps) =>
           tags.map((tag, index) => {
@@ -109,8 +109,8 @@ export const TagFieldRender = <Item,>({
             placeholder={
               canAdd ?
                 hasOptions ?
-                  t('', 'Add tag…')
-                : t('', 'Type and press enter')
+                  t('puck.tag.addTag')
+                : t('puck.tag.typeAndPressEnter')
               : undefined
             }
           />

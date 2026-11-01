@@ -37,7 +37,7 @@ export const FormSubmitConfig: ComponentConfig<{
     },
     color: {
       type: 'palette',
-      label: 'Colour',
+      label: 'Color',
       ai: paletteFieldAi(),
     },
     variant: {

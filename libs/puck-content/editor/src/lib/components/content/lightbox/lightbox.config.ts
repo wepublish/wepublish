@@ -21,7 +21,7 @@ export const LightboxConfig: ComponentConfig<{
 }> = {
   ai: {
     instructions:
-      'An image gallery shown one image at a time with previous/next navigation, an image counter and a fullscreen mode. Use it for photo series or galleries. Add one item per image; imageId references an already uploaded image — keep the existing value and never invent one; caption is a short descriptive text or credit shown below the image.',
+      'An image gallery shown one image at a time with previous/next navigation, an image counter and a fullscreen mode. Use it for photo series or galleries. Add one item per image; imageId references an already uploaded image, so keep the existing value and never invent one; caption is a short descriptive text or credit shown below the image.',
   },
   fields: {
     images: {

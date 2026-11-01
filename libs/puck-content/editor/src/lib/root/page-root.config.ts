@@ -21,12 +21,12 @@ export const PageRootConfig = withFieldTabs<PuckRootConfig<'page'>>(
       hidden: { type: 'switch', label: 'Hidden', ai: ai('hidden') },
       showNavigation: {
         type: 'switch',
-        label: 'Show Navbar',
+        label: 'Show navigation bar',
         ai: ai('showNavigation'),
       },
       showFooter: {
         type: 'switch',
-        label: 'Show Footer',
+        label: 'Show footer',
         ai: ai('showFooter'),
       },
       ...rootSeoFields(ai),

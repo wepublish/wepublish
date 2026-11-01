@@ -46,8 +46,8 @@ export const GapFieldRender = ({
   const current = value ?? {};
   const [linked, setLinked] = useState(() => isGapLinked(value));
   const labels: Record<GapAxis, string> = {
-    row: t('', 'Row gap'),
-    column: t('', 'Column gap'),
+    row: t('puck.gap.rowGap'),
+    column: t('puck.gap.columnGap'),
   };
   const both = axes.length > 1;
 
@@ -65,7 +65,7 @@ export const GapFieldRender = ({
 
   return (
     <ToggleableField
-      label={field.label ?? t('', 'Gap')}
+      label={field.label ?? t('puck.gap.gap')}
       value={value}
       readOnly={readOnly}
       onChange={onChange}
@@ -80,12 +80,12 @@ export const GapFieldRender = ({
             options={[
               {
                 value: 'linked',
-                label: t('', 'Same gap for rows and columns'),
+                label: t('puck.gap.sameGapForRows'),
                 icon: <LuLink2 size={16} />,
               },
               {
                 value: 'separate',
-                label: t('', 'Separate row and column gaps'),
+                label: t('puck.gap.separateRowAndColumn'),
                 icon: <LuUnlink2 size={16} />,
               },
             ]}
@@ -94,7 +94,7 @@ export const GapFieldRender = ({
 
         {both && linked ?
           <FieldSpacingInput
-            label={t('', 'Gap')}
+            label={t('puck.gap.gap')}
             icon={LuGrid2X2}
             value={current.column}
             readOnly={readOnly}

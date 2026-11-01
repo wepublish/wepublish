@@ -138,27 +138,27 @@ const useBoxModelLabels = () => {
   const { t } = useTranslation();
 
   return {
-    margin: t('', 'Margin'),
-    padding: t('', 'Padding'),
+    margin: t('puck.boxModel.margin'),
+    padding: t('puck.boxModel.padding'),
     sides: {
       margin: {
-        top: t('', 'Margin top'),
-        right: t('', 'Margin right'),
-        bottom: t('', 'Margin bottom'),
-        left: t('', 'Margin left'),
+        top: t('puck.boxModel.marginTop'),
+        right: t('puck.boxModel.marginRight'),
+        bottom: t('puck.boxModel.marginBottom'),
+        left: t('puck.boxModel.marginLeft'),
       } satisfies Record<Side, string>,
       padding: {
-        top: t('', 'Padding top'),
-        right: t('', 'Padding right'),
-        bottom: t('', 'Padding bottom'),
-        left: t('', 'Padding left'),
+        top: t('puck.boxModel.paddingTop'),
+        right: t('puck.boxModel.paddingRight'),
+        bottom: t('puck.boxModel.paddingBottom'),
+        left: t('puck.boxModel.paddingLeft'),
       } satisfies Record<Side, string>,
     },
     link: {
-      margin: t('', 'Link margin sides'),
-      padding: t('', 'Link padding sides'),
+      margin: t('puck.boxModel.linkMarginSides'),
+      padding: t('puck.boxModel.linkPaddingSides'),
     },
-    unavailable: t('', 'Not available for this component'),
+    unavailable: t('puck.boxModel.notAvailableForThis'),
   };
 };
 

@@ -43,7 +43,7 @@ export const FormHiddenEditorRender: PuckBlockComponent<
         icon={<MdVisibilityOff aria-hidden />}
         label={
           <FormHiddenPlaceholderLabel>
-            <span>{t('', 'Hidden field')}</span>
+            <span>{t('puck.form.hiddenField')}</span>
             <FormHiddenPlaceholderValue>
               {`${name} = ${value}`}
             </FormHiddenPlaceholderValue>

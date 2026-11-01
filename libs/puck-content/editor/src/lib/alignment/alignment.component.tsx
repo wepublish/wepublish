@@ -33,15 +33,15 @@ const useAlignmentLabels = (): Record<AlignmentValue, string> => {
   const { t } = useTranslation();
 
   return {
-    start: t('', 'Start'),
-    left: t('', 'Left'),
-    center: t('', 'Center'),
-    right: t('', 'Right'),
-    end: t('', 'End'),
-    stretch: t('', 'Stretch'),
-    'space-between': t('', 'Space between'),
-    'space-around': t('', 'Space around'),
-    'space-evenly': t('', 'Space evenly'),
+    start: t('puck.alignment.start'),
+    left: t('puck.alignment.left'),
+    center: t('puck.alignment.center'),
+    right: t('puck.alignment.right'),
+    end: t('puck.alignment.end'),
+    stretch: t('puck.alignment.stretch'),
+    'space-between': t('puck.alignment.spaceBetween'),
+    'space-around': t('puck.alignment.spaceAround'),
+    'space-evenly': t('puck.alignment.spaceEvenly'),
   };
 };
 

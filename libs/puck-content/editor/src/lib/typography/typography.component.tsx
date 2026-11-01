@@ -38,26 +38,27 @@ const useTypographyLabels = () => {
   const { t } = useTranslation();
 
   return {
-    typography: t('', 'Typography'),
-    themeDefault: t('', 'Theme default'),
-    custom: t('', 'Custom'),
-    fontSize: t('', 'Font Size'),
-    lineHeight: t('', 'Line Height'),
-    fontFamily: t('', 'Font Family'),
-    fontWeight: t('', 'Font Weight'),
+    typography: t('puck.typography.typography'),
+    themeDefault: t('puck.typography.themeDefault'),
+    custom: t('puck.typography.custom'),
+    fontSize: t('puck.typography.fontSize'),
+    lineHeight: t('puck.typography.lineHeight'),
+    fontFamily: t('puck.typography.fontFamily'),
+    fontWeight: t('puck.typography.fontWeight'),
     weights: {
-      100: t('', 'Thin'),
-      200: t('', 'Extra light'),
-      300: t('', 'Light'),
-      400: t('', 'Regular'),
-      500: t('', 'Medium'),
-      600: t('', 'Semi bold'),
-      700: t('', 'Bold'),
-      800: t('', 'Extra bold'),
-      900: t('', 'Black'),
+      100: t('puck.typography.thin'),
+      200: t('puck.typography.extraLight'),
+      300: t('puck.typography.light'),
+      400: t('puck.typography.regular'),
+      500: t('puck.typography.medium'),
+      600: t('puck.typography.semiBold'),
+      700: t('puck.typography.bold'),
+      800: t('puck.typography.extraBold'),
+      900: t('puck.typography.black'),
     } as Record<number, string>,
-    fontSizePlaceholder: t('', 'e.g. 1.25rem'),
-    lineHeightPlaceholder: t('', 'e.g. 1.4'),
+    fontSizePlaceholder: t('puck.typography.fontSizePlaceholder'),
+    lineHeightPlaceholder: t('puck.typography.lineHeightPlaceholder'),
+    sample: t('puck.typography.sample'),
   };
 };
 
@@ -287,7 +288,7 @@ export const TypographyFieldRender = ({
 
         {!!current.variant && (
           <Preview font={resolveTypography(theme, current)}>
-            The quick brown fox jumps over the lazy dog
+            {labels.sample}
           </Preview>
         )}
       </Fields>

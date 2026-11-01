@@ -251,7 +251,7 @@ const SortableItem = ({
       <DragHandle
         ref={setActivatorNodeRef}
         type="button"
-        title={t('', 'Drag to reorder')}
+        title={t('puck.list.dragToReorder')}
         disabled={readOnly}
         {...attributes}
         {...listeners}
@@ -272,7 +272,7 @@ const SortableItem = ({
       <ItemActions>
         <IconButton
           type="button"
-          title={t('', 'Remove')}
+          title={t('puck.list.remove')}
           disabled={!canRemove}
           onClick={onRemove}
         >
@@ -360,7 +360,7 @@ export const ListFieldRender = <Item,>({
 
   return (
     <FieldLabel
-      label={field.label ?? t('', 'List')}
+      label={field.label ?? t('puck.list.list')}
       readOnly={readOnly}
       el="div"
     >
@@ -400,7 +400,7 @@ export const ListFieldRender = <Item,>({
 
         <AddButton
           type="button"
-          title={t('', 'Add item')}
+          title={t('puck.list.addItem')}
           hasItems={current.length > 0}
           disabled={!canAdd}
           onClick={addItem}

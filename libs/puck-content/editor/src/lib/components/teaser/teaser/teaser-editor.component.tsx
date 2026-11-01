@@ -19,10 +19,7 @@ export const TeaserEditorPlaceholder = () => {
 
   return (
     <TeaserEditorHint role="status">
-      {t(
-        '',
-        'No record yet. Pick one, or place this teaser in a block that lists records.'
-      )}
+      {t('puck.teaser.noRecord')}
     </TeaserEditorHint>
   );
 };

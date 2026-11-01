@@ -107,10 +107,10 @@ const useRecordTitle = (model: RecordModel) => {
 
   return (option: RecordOption | undefined, loading: boolean) => {
     if (option) {
-      return option.title || t('', 'Untitled');
+      return option.title || t('puck.record.untitled');
     }
 
-    return loading ? t('', 'Loading…') : labels.unknown;
+    return loading ? t('puck.record.loading') : labels.unknown;
   };
 };
 
@@ -289,10 +289,8 @@ const RecordSearch = ({
       getOptionDisabled={option => !canAdd && !selectedIds.includes(option.id)}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       loading={loading || query !== debouncedQuery}
-      loadingText={t('', 'Searching…')}
-      noOptionsText={
-        error ? t('', 'The search failed, try again.') : labels.empty
-      }
+      loadingText={t('puck.record.searching')}
+      noOptionsText={error ? t('puck.record.searchFailed') : labels.empty}
       renderOption={({ key, ...props }, option) => {
         const selected = selectedIds.includes(option.id);
 
@@ -434,8 +432,8 @@ const RecordSelectContent = ({
           <RecordActions>
             <span ref={replaceButton}>
               <RecordAction
-                label={t('', 'Replace {{title}}', { title })}
-                tooltip={t('', 'Replace')}
+                label={t('puck.record.replaceTitle', { title })}
+                tooltip={t('puck.record.replace')}
                 icon={MdSwapHoriz}
                 autoFocus={focusTarget === 'replace'}
                 onClick={() => setReplacing(true)}
@@ -443,8 +441,8 @@ const RecordSelectContent = ({
             </span>
 
             <RecordAction
-              label={t('', 'Remove {{title}}', { title })}
-              tooltip={t('', 'Remove')}
+              label={t('puck.record.removeTitle', { title })}
+              tooltip={t('puck.record.remove')}
               icon={MdClose}
               onClick={() => {
                 setReplacing(false);
@@ -537,7 +535,7 @@ const SortableRecord = ({
         <RecordDragHandle
           ref={setActivatorNodeRef}
           type="button"
-          aria-label={t('', 'Drag {{title}} to reorder', { title })}
+          aria-label={t('puck.record.dragTitleToReorder', { title })}
           {...attributes}
           {...listeners}
         >
@@ -555,24 +553,24 @@ const SortableRecord = ({
       {!readOnly && (
         <RecordItemActions>
           <RecordAction
-            label={t('', 'Move {{title}} up', { title })}
-            tooltip={t('', 'Move up')}
+            label={t('puck.record.moveTitleUp', { title })}
+            tooltip={t('puck.record.moveUp')}
             icon={MdArrowUpward}
             disabled={index === 0}
             onClick={() => onMove(index, index - 1)}
           />
 
           <RecordAction
-            label={t('', 'Move {{title}} down', { title })}
-            tooltip={t('', 'Move down')}
+            label={t('puck.record.moveTitleDown', { title })}
+            tooltip={t('puck.record.moveDown')}
             icon={MdArrowDownward}
             disabled={index === count - 1}
             onClick={() => onMove(index, index + 1)}
           />
 
           <RecordAction
-            label={t('', 'Remove {{title}}', { title })}
-            tooltip={t('', 'Remove')}
+            label={t('puck.record.removeTitle', { title })}
+            tooltip={t('puck.record.remove')}
             icon={MdClose}
             onClick={() => onRemove(recordId)}
           />
@@ -693,7 +691,9 @@ const RecordMultiSelectContent = ({
           id={id}
           label={labels.add}
           placeholder={
-            canAdd ? (placeholder ?? labels.search) : t('', 'Maximum reached')
+            canAdd ?
+              (placeholder ?? labels.search)
+            : t('puck.record.maximumReached')
           }
           selectedIds={ids}
           multiple
@@ -708,7 +708,7 @@ const RecordMultiSelectContent = ({
         <RecordFooter id={footerId}>
           {min !== undefined && (
             <FormHelperText error={belowMin}>
-              {t('', 'Select at least {{min}}', { min })}
+              {t('puck.record.selectAtLeastMin', { min })}
             </FormHelperText>
           )}
 

@@ -90,12 +90,12 @@ export const BreakpointTabsBar = <Value extends BreakpointsValue>({
     setSelected(nextSelected);
   };
 
-  const addLabel = t('', 'Add breakpoint');
+  const addLabel = t('puck.breakpoints.add');
 
   return (
     <BreakpointTabs>
       {activeBreakpoints.map(breakpoint => {
-        const removeLabel = t('', 'Remove {{breakpoint}} breakpoint', {
+        const removeLabel = t('puck.breakpoints.remove', {
           breakpoint,
         });
         const removable = breakpoint !== baseBreakpoint && !readOnly;
@@ -116,7 +116,7 @@ export const BreakpointTabsBar = <Value extends BreakpointsValue>({
               disabled={readOnly}
               title={
                 previewBreakpoint === breakpoint ?
-                  t('', '{{size}} (active in preview)', {
+                  t('puck.breakpoints.activeInPreview', {
                     size: formatSize(breakpoint),
                   })
                 : formatSize(breakpoint)
@@ -274,7 +274,7 @@ export const BreakpointsFieldRender = ({
 
   return (
     <FieldLabel
-      label={field.label ?? t('', 'Breakpoints')}
+      label={field.label ?? t('puck.breakpoints.breakpoints')}
       readOnly={readOnly}
       el="div"
     >

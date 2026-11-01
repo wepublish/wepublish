@@ -228,7 +228,9 @@ const photo = (name: string) => new File([name], name, { type: 'image/jpeg' });
 beforeAll(async () => {
   await i18next.use(initReactI18next).init({
     lng: 'en',
-    resources: { en: { translation: {} } },
+    resources: {
+      en: { translation: i18next.getResourceBundle('en', 'translation') },
+    },
     interpolation: { escapeValue: false },
   });
 });

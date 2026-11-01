@@ -73,7 +73,7 @@ export const PuckActionBar = ({
         <ActionBar.Separator />
 
         <ActionBar.Action
-          label={t('', 'Move up')}
+          label={t('puck.actionBar.moveUp')}
           onClick={() => move(-1)}
           disabled={!canMoveUp}
         >
@@ -81,7 +81,7 @@ export const PuckActionBar = ({
         </ActionBar.Action>
 
         <ActionBar.Action
-          label={t('', 'Move down')}
+          label={t('puck.actionBar.moveDown')}
           onClick={() => move(1)}
           disabled={!canMoveDown}
         >

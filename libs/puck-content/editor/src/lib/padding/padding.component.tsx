@@ -23,7 +23,7 @@ export const PaddingFieldRender = ({
 
   return (
     <ToggleableField
-      label={field.label ?? t('', 'Padding')}
+      label={field.label ?? t('puck.padding.padding')}
       value={value}
       readOnly={readOnly}
       onChange={onChange}

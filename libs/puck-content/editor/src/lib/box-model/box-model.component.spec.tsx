@@ -73,7 +73,9 @@ const input = (name: string) => screen.getByRole('textbox', { name });
 beforeAll(async () => {
   await i18next.use(initReactI18next).init({
     lng: 'en',
-    resources: { en: { translation: {} } },
+    resources: {
+      en: { translation: i18next.getResourceBundle('en', 'translation') },
+    },
     interpolation: { escapeValue: false },
   });
 });

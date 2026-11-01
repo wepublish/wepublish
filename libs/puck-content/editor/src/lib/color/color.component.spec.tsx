@@ -235,7 +235,7 @@ describe('ColorFieldRender', () => {
 
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(input).toHaveAccessibleDescription(
-      'Enter a hex colour such as #1A1A1A.'
+      'Enter a hex color such as #1A1A1A.'
     );
     expect(onChange).not.toHaveBeenCalled();
 
@@ -255,7 +255,7 @@ describe('ColorFieldRender', () => {
     fireEvent.blur(input);
 
     expect(
-      declaredStyles(screen.getByText('Enter a hex colour such as #1A1A1A.'))
+      declaredStyles(screen.getByText('Enter a hex color such as #1A1A1A.'))
     ).toMatch(/color:var\(--mui-palette-error-main,/);
   });
 
@@ -302,10 +302,10 @@ describe('ColorFieldRender', () => {
 
     expect(onChange).toHaveBeenLastCalledWith('#e91e63');
     expect(screen.getByRole('status')).toHaveTextContent(
-      'Matches the theme colour Primary · Main'
+      'Matches the theme color Primary · Main'
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Use theme colour' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Use theme color' }));
 
     expect(onChange).toHaveBeenLastCalledWith('primary.main');
     expect(screen.getByRole('tab', { name: 'Theme' })).toHaveAttribute(
@@ -324,7 +324,7 @@ describe('ColorFieldRender', () => {
     expect(screen.queryByRole('tablist')).toBeNull();
     expect(screen.queryByRole('tab', { name: 'Custom' })).toBeNull();
     expect(
-      screen.getByRole('radiogroup', { name: 'Theme colours' })
+      screen.getByRole('radiogroup', { name: 'Theme colors' })
     ).toBeTruthy();
   });
 

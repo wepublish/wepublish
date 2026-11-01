@@ -53,18 +53,18 @@ const useSidesLabels = () => {
 
   return {
     modes: {
-      all: t('', 'All sides'),
-      axis: t('', 'Vertical and horizontal'),
-      individual: t('', 'Individual sides'),
+      all: t('puck.sides.allSides'),
+      axis: t('puck.sides.verticalAndHorizontal'),
+      individual: t('puck.sides.individualSides'),
     } satisfies Record<SidesMode, string>,
-    all: t('', 'All sides'),
-    vertical: t('', 'Top and bottom'),
-    horizontal: t('', 'Left and right'),
+    all: t('puck.sides.allSides'),
+    vertical: t('puck.sides.topAndBottom'),
+    horizontal: t('puck.sides.leftAndRight'),
     sides: {
-      top: t('', 'Top'),
-      right: t('', 'Right'),
-      bottom: t('', 'Bottom'),
-      left: t('', 'Left'),
+      top: t('puck.sides.top'),
+      right: t('puck.sides.right'),
+      bottom: t('puck.sides.bottom'),
+      left: t('puck.sides.left'),
     } satisfies Record<Side, string>,
   };
 };

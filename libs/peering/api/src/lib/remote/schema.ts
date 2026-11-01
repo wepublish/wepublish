@@ -6521,7 +6521,7 @@ export type PuckBlockTimingsInput = {
 
 export type PuckBlockVisibility = {
   __typename?: 'PuckBlockVisibility';
-  /** The breakpoints the block is shown on. Omitted means every screen size. The website hides the block, the API never prunes by breakpoint. */
+  /** The breakpoints the block is shown on. Omitted means every screen size. The website hides the block; the API never prunes by breakpoint. */
   breakpoints?: Maybe<Array<PuckBreakpoint>>;
   /** Hides the block everywhere while keeping it in the document. */
   disabled?: Maybe<Scalars['Boolean']['output']>;
@@ -6529,7 +6529,7 @@ export type PuckBlockVisibility = {
 };
 
 export type PuckBlockVisibilityInput = {
-  /** The breakpoints the block is shown on. Omitted means every screen size. The website hides the block, the API never prunes by breakpoint. */
+  /** The breakpoints the block is shown on. Omitted means every screen size. The website hides the block; the API never prunes by breakpoint. */
   breakpoints?: InputMaybe<Array<PuckBreakpoint>>;
   /** Hides the block everywhere while keeping it in the document. */
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -6545,14 +6545,14 @@ export type PuckBlocksPreview = {
 
 export type PuckBorder = {
   __typename?: 'PuckBorder';
-  /** A theme colour path or a hex colour, defaults to the text colour. */
+  /** A theme colour path or a hex colour. Defaults to the text colour. */
   color?: Maybe<Scalars['String']['output']>;
   style?: Maybe<PuckBorderStyle>;
   width?: Maybe<PuckBorderWidth>;
 };
 
 export type PuckBorderInput = {
-  /** A theme colour path or a hex colour, defaults to the text colour. */
+  /** A theme colour path or a hex colour. Defaults to the text colour. */
   color?: InputMaybe<Scalars['String']['input']>;
   style?: InputMaybe<PuckBorderStyle>;
   width?: InputMaybe<PuckBorderWidthInput>;
@@ -6613,7 +6613,7 @@ export enum PuckBreakpoint {
   Xs = 'xs'
 }
 
-/** The CSS `corner-shape` of every corner. Only has an effect with a corner radius, browsers without support draw `round` corners. */
+/** The CSS `corner-shape` of every corner. Only has an effect with a corner radius. Browsers without support draw `round` corners. */
 export enum PuckCornerShape {
   Bevel = 'bevel',
   Notch = 'notch',

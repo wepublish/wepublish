@@ -36,14 +36,14 @@ export const BorderFieldRender = ({
   const { t } = useTranslation();
   const current = value ?? {};
   const styleLabels: Record<BorderStyle, string> = {
-    solid: t('', 'Solid'),
-    dashed: t('', 'Dashed'),
-    dotted: t('', 'Dotted'),
+    solid: t('puck.border.solid'),
+    dashed: t('puck.border.dashed'),
+    dotted: t('puck.border.dotted'),
   };
 
   return (
     <ToggleableField
-      label={field.label ?? t('', 'Border')}
+      label={field.label ?? t('puck.border.border')}
       value={value}
       readOnly={readOnly}
       onChange={onChange}
@@ -74,7 +74,7 @@ export const BorderFieldRender = ({
         <ColorFieldRender
           id={`${name}-color`}
           name={`${name}-color`}
-          field={{ type: 'color', label: t('', 'Colour') }}
+          field={{ type: 'color', label: t('puck.border.color') }}
           value={current.color}
           readOnly={readOnly}
           onChange={color => onChange({ ...current, color })}

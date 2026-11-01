@@ -14,7 +14,7 @@ export const QuoteConfig: ComponentConfig<{
 }> = withImageDataSource<QuoteConfigProps>({
   ai: {
     instructions:
-      'A highlighted pull quote with an attribution. Use it to emphasise a notable statement or citation. The quote field holds the quoted text and the author field holds the person or source it is attributed to. The image is referenced by the single image datasource — keep the existing value and never invent one.',
+      'A highlighted pull quote with an attribution. Use it to emphasise a notable statement or citation. The quote field holds the quoted text and the author field holds the person or source it is attributed to. The image is referenced by the single image datasource. Keep the existing value and never invent one.',
   },
   fields: {
     quote: {

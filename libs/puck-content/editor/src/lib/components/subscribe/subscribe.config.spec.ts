@@ -27,7 +27,7 @@ const subscribeInsideForm = (isEditing: boolean) =>
   );
 
 const nestedFormWarning =
-  'This block has its own form and cannot be placed inside a Form';
+  'This block has its own form and cannot go inside a Form block';
 
 describe('SubscribeConfig', () => {
   it('offers every active member plan unless editors pick some', () => {

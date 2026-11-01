@@ -28,7 +28,9 @@ const renderGap = (value: GapValue | undefined = { row: 2 }) => {
 beforeAll(async () => {
   await i18next.use(initReactI18next).init({
     lng: 'en',
-    resources: { en: { translation: {} } },
+    resources: {
+      en: { translation: i18next.getResourceBundle('en', 'translation') },
+    },
     interpolation: { escapeValue: false },
   });
 });

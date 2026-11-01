@@ -15,7 +15,7 @@ export const ImageConfig: ComponentConfig<{
 }> = withImageDataSource<ImageConfigProps>({
   ai: {
     instructions:
-      'A single image from the image library with an optional caption shown below it. Use it to illustrate the surrounding content. The image is referenced by the single image datasource — keep the existing id and never invent one; caption is a short descriptive text or credit.',
+      'A single image from the image library with an optional caption shown below it. Use it to illustrate the surrounding content. The image is referenced by the single image datasource. Keep the existing id and never invent one. The caption is a short descriptive text or credit.',
   },
   fields: {
     caption: {

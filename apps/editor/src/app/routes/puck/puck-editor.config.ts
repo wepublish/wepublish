@@ -80,7 +80,7 @@ export const viewportPresets = (
 
       return { width, height: heightFor(width, device), label, device };
     }),
-    { width: 2560, height: 'auto', label: 'Ultra Wide', device: 'ultraWide' },
+    { width: 2560, height: 'auto', label: 'Ultra wide', device: 'ultraWide' },
     { width: 3840, height: 'auto', label: '4k', device: '4k' },
   ];
 

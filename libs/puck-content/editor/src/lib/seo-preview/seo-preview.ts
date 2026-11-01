@@ -6,7 +6,7 @@ import { SeoPreview } from './seo-preview.component';
 
 export const SEOPreviewPlugin: Plugin = {
   icon: createElement(MdCardMembership, { size: 24 }),
-  label: 'SEO Audit',
+  label: 'SEO audit',
   name: 'seo-preview',
   render: SeoPreview,
 };

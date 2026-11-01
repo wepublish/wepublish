@@ -5313,7 +5313,7 @@ input PuckBlockTimingsInput {
 
 type PuckBlockVisibility {
   """
-  The breakpoints the block is shown on. Omitted means every screen size. The website hides the block, the API never prunes by breakpoint.
+  The breakpoints the block is shown on. Omitted means every screen size. The website hides the block; the API never prunes by breakpoint.
   """
   breakpoints: [PuckBreakpoint!]
 
@@ -5324,7 +5324,7 @@ type PuckBlockVisibility {
 
 input PuckBlockVisibilityInput {
   """
-  The breakpoints the block is shown on. Omitted means every screen size. The website hides the block, the API never prunes by breakpoint.
+  The breakpoints the block is shown on. Omitted means every screen size. The website hides the block; the API never prunes by breakpoint.
   """
   breakpoints: [PuckBreakpoint!]
 
@@ -5342,14 +5342,14 @@ type PuckBlocksPreview {
 }
 
 type PuckBorder {
-  """A theme colour path or a hex colour, defaults to the text colour."""
+  """A theme colour path or a hex colour. Defaults to the text colour."""
   color: String
   style: PuckBorderStyle
   width: PuckBorderWidth
 }
 
 input PuckBorderInput {
-  """A theme colour path or a hex colour, defaults to the text colour."""
+  """A theme colour path or a hex colour. Defaults to the text colour."""
   color: String
   style: PuckBorderStyle
   width: PuckBorderWidthInput
@@ -5415,7 +5415,7 @@ enum PuckBreakpoint {
 }
 
 """
-The CSS `corner-shape` of every corner. Only has an effect with a corner radius, browsers without support draw `round` corners.
+The CSS `corner-shape` of every corner. Only has an effect with a corner radius. Browsers without support draw `round` corners.
 """
 enum PuckCornerShape {
   bevel

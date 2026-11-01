@@ -28,7 +28,7 @@ const insideForm = (ui: ReactElement) =>
   );
 
 const nestedFormWarning =
-  'This block has its own form and cannot be placed inside a Form';
+  'This block has its own form and cannot go inside a Form block';
 
 describe('MailchimpFormConfig render', () => {
   it('warns in the editor instead of nesting its form inside a Form', () => {

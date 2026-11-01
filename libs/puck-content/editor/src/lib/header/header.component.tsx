@@ -130,7 +130,7 @@ export function PuckDocumentHeaderView({
     ...(previewUrl ?
       [
         {
-          label: t('', 'Open preview'),
+          label: t('puck.header.openPreview'),
           icon: <MdOpenInNew />,
           disabled: dirty,
           onClick: () =>
@@ -204,13 +204,13 @@ export function PuckDocumentHeaderView({
         secondaryActions={
           <>
             <HeaderIconAction
-              label={t('', 'Undo')}
+              label={t('puck.header.undo')}
               icon={<MdUndo />}
               disabled={!canUndo}
               onClick={onUndo}
             />
             <HeaderIconAction
-              label={t('', 'Redo')}
+              label={t('puck.header.redo')}
               icon={<MdRedo />}
               disabled={!canRedo}
               onClick={onRedo}
@@ -221,7 +221,7 @@ export function PuckDocumentHeaderView({
               label={
                 previewing ?
                   t('preview.backToEditor', 'Editor')
-                : t('', 'Preview')
+                : t('puck.header.preview')
               }
               onClick={onTogglePreview}
             />
@@ -278,13 +278,13 @@ export function PuckDocumentHeaderView({
                 hidden
                 id={unsavedId}
               >
-                {t('', 'Unsaved changes')}
+                {t('puck.header.unsavedChanges')}
               </span>
               <span
                 hidden
                 id={unpublishedId}
               >
-                {t('', 'Unpublished changes')}
+                {t('puck.header.unpublishedChanges')}
               </span>
             </>
         }
@@ -412,9 +412,9 @@ export function PuckDocumentHeader() {
       controller={
         controller ?? {
           backTo: '/',
-          backLabel: t('', 'Back'),
+          backLabel: t('puck.header.back'),
           status: 'none',
-          statusLabel: t('', 'Not saved'),
+          statusLabel: t('puck.header.notSaved'),
           isNew: true,
           hasUnpublishedChanges: false,
           canSave: false,

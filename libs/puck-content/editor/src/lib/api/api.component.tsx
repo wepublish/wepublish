@@ -176,20 +176,20 @@ const ApiFieldDialog = ({ field, onSelect }: ApiFieldDialogProps) => {
               type="submit"
               variant="contained"
             >
-              {t('', 'Search')}
+              {t('puck.api.search')}
             </Button>
 
             {hasFilterFields && (
               <IconButton
                 type="button"
-                title={t('', 'Toggle filters')}
+                title={t('puck.api.toggleFilters')}
                 onClick={() => setFiltersToggled(!filtersToggled)}
               >
                 <MdTune />
               </IconButton>
             )}
           </Stack>
-        : (field.placeholder ?? t('', 'Select data'))}
+        : (field.placeholder ?? t('puck.api.selectData'))}
       </DialogTitle>
 
       <DialogContent>
@@ -250,13 +250,13 @@ const ApiFieldDialog = ({ field, onSelect }: ApiFieldDialogProps) => {
             color="text.secondary"
             sx={{ flex: 1 }}
           >
-            {t('', '{{count}} results', { count: result?.totalCount ?? 0 })}
+            {t('puck.api.results', { count: result?.totalCount ?? 0 })}
           </Typography>
         }
 
         <IconButton
           type="button"
-          title={t('', 'Previous page')}
+          title={t('puck.api.previousPage')}
           disabled={cursors.length <= 1}
           onClick={() => setCursors(current => current.slice(0, -1))}
         >
@@ -265,7 +265,7 @@ const ApiFieldDialog = ({ field, onSelect }: ApiFieldDialogProps) => {
 
         <IconButton
           type="button"
-          title={t('', 'Next page')}
+          title={t('puck.api.nextPage')}
           disabled={!result?.pageInfo.hasNextPage}
           onClick={() =>
             setCursors(current => [...current, result?.pageInfo.endCursor])
@@ -291,7 +291,7 @@ export const ApiFieldRender = ({
 
   return (
     <FieldLabel
-      label={field.label ?? field.placeholder ?? t('', 'Select data')}
+      label={field.label ?? field.placeholder ?? t('puck.api.selectData')}
       readOnly={readOnly}
       el="div"
     >
@@ -304,10 +304,10 @@ export const ApiFieldRender = ({
           {value ?
             field.getItemSummary ?
               field.getItemSummary(value)
-            : t('', 'External item')
+            : t('puck.api.externalItem')
           : <>
               <MdLink size={16} />
-              <span>{field.placeholder ?? t('', 'Select data')}</span>
+              <span>{field.placeholder ?? t('puck.api.selectData')}</span>
             </>
           }
         </SelectButton>
@@ -316,7 +316,7 @@ export const ApiFieldRender = ({
           <DetachButton
             type="button"
             disabled={readOnly}
-            title={t('', 'Detach')}
+            title={t('puck.api.detach')}
             onClick={() => onChange(null)}
           >
             <MdLockOpen size={16} />

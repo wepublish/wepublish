@@ -10,16 +10,16 @@ const usePaletteLabels = () => {
   const { t } = useTranslation();
 
   return {
-    palette: t('', 'Palette'),
+    palette: t('puck.palette.palette'),
     palettes: {
-      primary: t('', 'Primary'),
-      secondary: t('', 'Secondary'),
-      accent: t('', 'Accent'),
+      primary: t('puck.palette.primary'),
+      secondary: t('puck.palette.secondary'),
+      accent: t('puck.palette.accent'),
 
-      success: t('', 'Success'),
-      error: t('', 'Error'),
-      info: t('', 'Info'),
-      warning: t('', 'Warning'),
+      success: t('puck.palette.success'),
+      error: t('puck.palette.error'),
+      info: t('puck.palette.info'),
+      warning: t('puck.palette.warning'),
     } satisfies Record<PaletteValue, string>,
   };
 };

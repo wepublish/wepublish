@@ -1,8 +1,9 @@
 # puck-content-editor
 
-Everything Puck-specific behind the editor's Puck route: the component
-configs, custom fields, AI schemas, field tabs, locking, edit-mode behaviour,
-the conversion between Puck data and the API, and the canvas data plugin.
+This lib holds everything Puck-specific behind the editor's Puck route: the
+component configs, custom fields, AI schemas, field tabs, locking, edit-mode
+behaviour, the conversion between Puck data and the API, and the canvas data
+plugin.
 The blocks themselves are rendered by `@wepublish/puck-content/website`; this
 lib imports it, never the other way round.
 

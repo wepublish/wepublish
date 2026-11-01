@@ -15,17 +15,17 @@ export const FieldTabs = ({
 }) => {
   const { t } = useTranslation();
   const labels: Record<FieldTabValue, string> = {
-    layout: t('', 'Layout'),
-    content: t('', 'Content'),
-    style: t('', 'Style'),
-    data: t('', 'Data'),
-    visibility: t('', 'Visibility'),
-    general: t('', 'General'),
-    byline: t('', 'Byline'),
-    publication: t('', 'Publication'),
-    seo: t('', 'SEO'),
-    socialMedia: t('', 'Social media'),
-    properties: t('', 'Properties'),
+    layout: t('puck.fieldTabs.layout'),
+    content: t('puck.fieldTabs.content'),
+    style: t('puck.fieldTabs.style'),
+    data: t('puck.fieldTabs.data'),
+    visibility: t('puck.fieldTabs.visibility'),
+    general: t('puck.fieldTabs.general'),
+    byline: t('puck.fieldTabs.byline'),
+    publication: t('puck.fieldTabs.publication'),
+    seo: t('puck.fieldTabs.seo'),
+    socialMedia: t('puck.fieldTabs.socialMedia'),
+    properties: t('puck.fieldTabs.properties'),
   };
   const tabs = groupFieldTabs(Object.keys(fields), layout);
   const renderTab = (names: string[]) =>

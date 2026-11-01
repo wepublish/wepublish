@@ -67,7 +67,9 @@ const i18n = i18next.createInstance();
 
 void i18n.use(initReactI18next).init({
   lng: 'en',
-  resources: {},
+  resources: {
+    en: { translation: i18next.getResourceBundle('en', 'translation') },
+  },
   initImmediate: false,
   interpolation: { escapeValue: false },
 });
@@ -173,7 +175,7 @@ describe('DatasourceFieldRender', () => {
     expect(screen.getAllByRole('region')).toHaveLength(1);
     expect(
       within(card).getByText(
-        'Hands the newest articles to the blocks inside set to "From parent", one each, skipping any already shown on the page.'
+        'Gives each block inside set to "From parent" one of the newest articles not yet shown on the page.'
       )
     ).toBeTruthy();
   });
@@ -187,7 +189,7 @@ describe('DatasourceFieldRender', () => {
 
     expect(
       within(screen.getByRole('region', { name: 'Events' })).getByText(
-        'Hands the newest events to the blocks inside set to "From parent", one each.'
+        'Gives each block inside set to "From parent" one of the newest events.'
       )
     ).toBeTruthy();
   });
@@ -218,7 +220,7 @@ describe('DatasourceFieldRender', () => {
     renderField({ field: { types: layoutTypes }, onChange: vi.fn() });
 
     expect(screen.queryAllByRole('region')).toHaveLength(0);
-    expect(screen.getByText('No data connected yet.')).toBeTruthy();
+    expect(screen.getByText('No data sources yet.')).toBeTruthy();
   });
 
   it('adds a data source from a menu of the remaining models', async () => {

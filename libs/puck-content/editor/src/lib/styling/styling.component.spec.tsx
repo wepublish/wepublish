@@ -150,7 +150,9 @@ const expand = (name: string) => {
 beforeAll(async () => {
   await i18next.use(initReactI18next).init({
     lng: 'en',
-    resources: { en: { translation: {} } },
+    resources: {
+      en: { translation: i18next.getResourceBundle('en', 'translation') },
+    },
     interpolation: { escapeValue: false },
   });
 });
@@ -268,7 +270,7 @@ describe('StylingFieldRender', () => {
     });
 
     fireEvent.click(
-      screen.getByRole('button', { name: 'Text colour: Default' })
+      screen.getByRole('button', { name: 'Text color: Default' })
     );
 
     expect(onChange).toHaveBeenLastCalledWith({
@@ -306,7 +308,7 @@ describe('StylingFieldRender', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Choose image' }));
 
     expect(
-      (screen.getByRole('radio', { name: 'Centre' }) as HTMLInputElement)
+      (screen.getByRole('radio', { name: 'Center' }) as HTMLInputElement)
         .checked
     ).toBe(true);
     expect(

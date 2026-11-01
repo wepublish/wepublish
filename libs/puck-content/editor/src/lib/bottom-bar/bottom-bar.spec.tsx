@@ -17,8 +17,8 @@ const setViewport = (width: number, height = 768) =>
 const usePuck = createUsePuck();
 
 const items = [
-  { name: 'seo', label: 'SEO Audit', render: () => <p>SEO panel</p> },
-  { name: 'raw', label: 'Raw Data', render: () => <p>Raw panel</p> },
+  { name: 'seo', label: 'SEO audit', render: () => <p>SEO panel</p> },
+  { name: 'raw', label: 'Raw data', render: () => <p>Raw panel</p> },
 ];
 
 const config: Config = {
@@ -73,19 +73,19 @@ describe('BottomBarLayout', () => {
     renderBar();
 
     expect(screen.getByText('Editor')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'SEO Audit' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Raw Data' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'SEO audit' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Raw data' })).toBeTruthy();
     expect(screen.queryByRole('region')).toBeNull();
   });
 
   it('opens the plugin in a bottom panel and switches between plugins', () => {
     renderBar();
 
-    fireEvent.click(screen.getByRole('button', { name: 'SEO Audit' }));
-    expect(screen.getByRole('region', { name: 'SEO Audit' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'SEO audit' }));
+    expect(screen.getByRole('region', { name: 'SEO audit' })).toBeTruthy();
     expect(screen.getByText('SEO panel')).toBeTruthy();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Raw Data' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Raw data' }));
     expect(screen.getByText('Raw panel')).toBeTruthy();
     expect(screen.queryByText('SEO panel')).toBeNull();
   });
@@ -93,15 +93,15 @@ describe('BottomBarLayout', () => {
   it('closes the panel from its button, the close button or escape', () => {
     renderBar();
 
-    fireEvent.click(screen.getByRole('button', { name: 'SEO Audit' }));
-    fireEvent.click(screen.getByRole('button', { name: 'SEO Audit' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO audit' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO audit' }));
     expect(screen.queryByRole('region')).toBeNull();
 
-    fireEvent.click(screen.getByRole('button', { name: 'SEO Audit' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO audit' }));
     fireEvent.click(screen.getByRole('button', { name: 'Close panel' }));
     expect(screen.queryByRole('region')).toBeNull();
 
-    fireEvent.click(screen.getByRole('button', { name: 'SEO Audit' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO audit' }));
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(screen.queryByRole('region')).toBeNull();
   });
@@ -116,7 +116,7 @@ describe('BottomBarLayout', () => {
       within(bar)
         .getAllByRole('button')
         .map(button => button.getAttribute('aria-label') ?? button.textContent)
-    ).toEqual(['SEO Audit', 'Raw Data', 'Left sidebar', 'Right sidebar']);
+    ).toEqual(['SEO audit', 'Raw data', 'Left sidebar', 'Right sidebar']);
     expect(
       within(sideBars)
         .getAllByRole('button')
@@ -166,9 +166,9 @@ describe('BottomBarLayout', () => {
   it('keeps the bottom panel next to the sidebars on a desktop', () => {
     renderBar();
 
-    fireEvent.click(screen.getByRole('button', { name: 'SEO Audit' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO audit' }));
 
-    expect(screen.getByRole('region', { name: 'SEO Audit' })).toBeTruthy();
+    expect(screen.getByRole('region', { name: 'SEO audit' })).toBeTruthy();
     expect(output('Left')).toBe('open');
   });
 
@@ -179,9 +179,9 @@ describe('BottomBarLayout', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open fields panel' }));
     expect(output('Left')).toBe('open');
 
-    fireEvent.click(screen.getByRole('button', { name: 'SEO Audit' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO audit' }));
 
-    expect(screen.getByRole('region', { name: 'SEO Audit' })).toBeTruthy();
+    expect(screen.getByRole('region', { name: 'SEO audit' })).toBeTruthy();
     expect(output('Left')).toBe('closed');
   });
 
@@ -189,12 +189,12 @@ describe('BottomBarLayout', () => {
     setViewport(375);
     renderBar();
 
-    fireEvent.click(screen.getByRole('button', { name: 'SEO Audit' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO audit' }));
     fireEvent.click(screen.getByRole('button', { name: 'Open fields panel' }));
 
     expect(output('Left')).toBe('open');
     expect(screen.queryByRole('region')).toBeNull();
-    expect(screen.getByRole('button', { name: 'SEO Audit' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'SEO audit' })).toHaveAttribute(
       'aria-pressed',
       'false'
     );
@@ -203,9 +203,9 @@ describe('BottomBarLayout', () => {
   it('opens the bottom panel at a fixed height on a desktop', () => {
     renderBar();
 
-    fireEvent.click(screen.getByRole('button', { name: 'SEO Audit' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO audit' }));
 
-    expect(screen.getByRole('region', { name: 'SEO Audit' })).toHaveStyle({
+    expect(screen.getByRole('region', { name: 'SEO audit' })).toHaveStyle({
       height: '320px',
     });
   });
@@ -214,9 +214,9 @@ describe('BottomBarLayout', () => {
     setViewport(375, 600);
     renderBar();
 
-    fireEvent.click(screen.getByRole('button', { name: 'SEO Audit' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO audit' }));
 
-    expect(screen.getByRole('region', { name: 'SEO Audit' })).toHaveStyle({
+    expect(screen.getByRole('region', { name: 'SEO audit' })).toHaveStyle({
       height: '240px',
     });
   });

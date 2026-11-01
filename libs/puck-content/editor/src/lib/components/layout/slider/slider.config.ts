@@ -63,7 +63,7 @@ export const Slider: ComponentConfig<{
           .number()
           .min(1)
           .describe(
-            'Slides visible at once, fractions show a peek of the next slide'
+            'Slides visible at once; fractions show a peek of the next slide'
           ),
         gap: z.number().min(0).describe('Gap between slides in pixels'),
       }),

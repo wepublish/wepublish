@@ -240,9 +240,7 @@ describe('PuckDocumentHeaderView', () => {
     expect(within(dialog).getByText('Title')).toBeInTheDocument();
     expect(onPublish).not.toHaveBeenCalled();
 
-    fireEvent.click(
-      within(dialog).getByRole('button', { name: 'publishDialog.publish' })
-    );
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Publish' }));
 
     expect(onPublish).toHaveBeenCalledWith(expect.any(Date));
   });

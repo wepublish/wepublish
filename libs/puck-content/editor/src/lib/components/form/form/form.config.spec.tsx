@@ -65,7 +65,7 @@ const getForm = (container: HTMLElement) => {
 
 const missingAction =
   'Set an action URL so the form knows where to send its data';
-const nestedForm = 'Forms cannot be placed inside another Form';
+const nestedForm = 'A Form block cannot go inside another Form block';
 
 describe('FormConfig render', () => {
   it('prevents submitting in the editor', () => {

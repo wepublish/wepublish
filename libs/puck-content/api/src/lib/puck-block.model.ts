@@ -107,7 +107,7 @@ registerEnumType(PuckBorderStyle, { name: 'PuckBorderStyle' });
 registerEnumType(PuckCornerShape, {
   name: 'PuckCornerShape',
   description:
-    'The CSS `corner-shape` of every corner. Only has an effect with a corner radius, browsers without support draw `round` corners.',
+    'The CSS `corner-shape` of every corner. Only has an effect with a corner radius. Browsers without support draw `round` corners.',
 });
 
 @ObjectType('PuckBlockTimeOfDay')
@@ -170,7 +170,7 @@ export class PuckBlockVisibility {
   @Field(() => [PuckBreakpoint], {
     nullable: true,
     description:
-      'The breakpoints the block is shown on. Omitted means every screen size. The website hides the block, the API never prunes by breakpoint.',
+      'The breakpoints the block is shown on. Omitted means every screen size. The website hides the block; the API never prunes by breakpoint.',
   })
   breakpoints?: PuckBreakpoint[] | null;
 }
@@ -270,7 +270,7 @@ export class PuckBorder {
   @Field(() => String, {
     nullable: true,
     description:
-      'A theme colour path or a hex colour, defaults to the text colour.',
+      'A theme colour path or a hex colour. Defaults to the text colour.',
   })
   color?: string | null;
 }

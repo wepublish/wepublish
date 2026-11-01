@@ -27,9 +27,7 @@ export const FormPlacementWarning = () => {
   }
 
   return (
-    <FormEditorWarning>
-      {t('', 'Place this inside a Form block')}
-    </FormEditorWarning>
+    <FormEditorWarning>{t('puck.form.placementWarning')}</FormEditorWarning>
   );
 };
 
@@ -41,11 +39,7 @@ export const OwnFormWarning = () => {
     return null;
   }
 
-  return (
-    <FormEditorWarning>
-      {t('', 'This block has its own form and cannot be placed inside a Form')}
-    </FormEditorWarning>
-  );
+  return <FormEditorWarning>{t('puck.form.ownFormWarning')}</FormEditorWarning>;
 };
 
 export type FormHintsProps = {
@@ -60,14 +54,12 @@ export const FormHints = ({ action }: FormHintsProps) => {
     <>
       {parentForm && (
         <FormEditorWarning>
-          {t('', 'Forms cannot be placed inside another Form')}
+          {t('puck.form.nestedFormWarning')}
         </FormEditorWarning>
       )}
 
       {!action && (
-        <FormEditorWarning>
-          {t('', 'Set an action URL so the form knows where to send its data')}
-        </FormEditorWarning>
+        <FormEditorWarning>{t('puck.form.missingAction')}</FormEditorWarning>
       )}
     </>
   );

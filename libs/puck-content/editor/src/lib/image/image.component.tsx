@@ -227,7 +227,7 @@ const SortableImageTile = ({
   const { t } = useTranslation();
   const { data } = useQuery(ImageDocument, { variables: { id } });
   const image = data?.image;
-  const title = image?.title || t('', 'Untitled image');
+  const title = image?.title || t('puck.image.untitledImage');
   const source =
     image?.squareURL ?? image?.thumbURL ?? image?.mediumURL ?? image?.url;
   const {
@@ -263,21 +263,21 @@ const SortableImageTile = ({
             type="button"
             {...attributes}
             {...listeners}
-            aria-label={t('', 'Move {{title}}', { title })}
+            aria-label={t('puck.image.moveTitle', { title })}
           >
             <MdDragIndicator />
           </ImageTileDragHandle>
 
           <ImageTileActions>
             <IconAction
-              label={t('', 'Edit {{title}}', { title })}
+              label={t('puck.image.editTitle', { title })}
               onClick={onEdit}
             >
               <MdEdit />
             </IconAction>
 
             <IconAction
-              label={t('', 'Remove {{title}}', { title })}
+              label={t('puck.image.removeTitle', { title })}
               buttonRef={removeRef}
               onClick={onRemove}
             >
@@ -307,7 +307,9 @@ const UploadTile = ({
   const { file, status, previewUrl, canRetry, errorMessage } = upload;
   const failed = status === 'failed';
   const statusText =
-    failed ? (errorMessage ?? t('', 'Upload failed')) : t('', 'Uploading…');
+    failed ?
+      (errorMessage ?? t('puck.image.uploadFailed'))
+    : t('puck.image.uploading');
 
   return (
     <ImageTile
@@ -342,7 +344,7 @@ const UploadTile = ({
         <ImageTileActions>
           {canRetry && (
             <IconAction
-              label={t('', 'Retry {{name}}', { name: file.name })}
+              label={t('puck.image.retryName', { name: file.name })}
               onClick={onRetry}
             >
               <MdRefresh />
@@ -350,7 +352,7 @@ const UploadTile = ({
           )}
 
           <IconAction
-            label={t('', 'Dismiss {{name}}', { name: file.name })}
+            label={t('puck.image.dismissName', { name: file.name })}
             onClick={onDismiss}
           >
             <MdClose />
@@ -458,20 +460,20 @@ export const ImageMultiPicker = ({
 
   const uploadStatus =
     pendingUploads > 0 ?
-      t('', 'Uploading images: {{finished}} of {{total}} finished.', {
+      t('puck.image.uploadProgress', {
         finished: finishedUploads,
         total: finishedUploads + pendingUploads,
       })
     : [
         uploadedCount > 0 &&
-          t('', 'Images uploaded: {{uploaded}}.', { uploaded: uploadedCount }),
+          t('puck.image.uploadedCount', { uploaded: uploadedCount }),
         failedUploads.length > 0 &&
-          t('', 'Uploads failed: {{failed}}.', {
+          t('puck.image.failedCount', {
             failed: failedUploads.length,
           }),
         ...failedUploads.map(
           ({ file, errorMessage }) =>
-            `${file.name}: ${errorMessage ?? t('', 'Upload failed')}`
+            `${file.name}: ${errorMessage ?? t('puck.image.uploadFailed')}`
         ),
       ]
         .filter(Boolean)
@@ -581,7 +583,7 @@ export const ImageMultiPicker = ({
     <>
       <ImageMultiPickerWrapper
         role="group"
-        aria-label={label ?? t('', 'Images')}
+        aria-label={label ?? t('puck.image.images')}
         data-dragging={dragging && canAdd}
         onDragOver={event => {
           if (carriesFiles(event) && canAdd) {
@@ -671,7 +673,7 @@ export const ImageMultiPicker = ({
                 onClick={() => setChooseOpen(true)}
               >
                 <MdAddPhotoAlternate aria-hidden />
-                {t('', 'Add images')}
+                {t('puck.image.addImages')}
               </ImageAddTile>
 
               <ImageAddTile
@@ -681,7 +683,7 @@ export const ImageMultiPicker = ({
                 onClick={() => fileInput.current?.click()}
               >
                 <MdFileUpload aria-hidden />
-                {t('', 'Upload')}
+                {t('puck.image.upload')}
               </ImageAddTile>
             </>
           )}
@@ -689,9 +691,7 @@ export const ImageMultiPicker = ({
 
         {(!readOnly || max !== undefined) && (
           <ImageMultiPickerFooter>
-            <span>
-              {readOnly ? null : t('', 'Drop images here to upload them.')}
-            </span>
+            <span>{readOnly ? null : t('puck.image.dropToUpload')}</span>
             {max !== undefined && <span>{`${value.length} / ${max}`}</span>}
           </ImageMultiPickerFooter>
         )}
@@ -704,7 +704,7 @@ export const ImageMultiPicker = ({
           accept="image/*"
           multiple
           hidden
-          aria-label={t('', 'Upload images')}
+          aria-label={t('puck.image.uploadImages')}
           value=""
           onChange={event => upload(Array.from(event.target.files ?? []))}
         />
@@ -751,7 +751,7 @@ export const ImageFieldRender = ({
 
   return (
     <FieldLabel
-      label={field.label ?? t('', 'Image')}
+      label={field.label ?? t('puck.image.image')}
       readOnly={readOnly}
       el="div"
     >

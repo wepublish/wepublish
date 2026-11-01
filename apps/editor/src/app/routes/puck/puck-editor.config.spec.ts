@@ -62,7 +62,7 @@ describe('viewportPresets', () => {
       { width: 900, height: 1950, label: 'md', device: 'tablet' },
       { width: 1200, height: 675, label: 'lg', device: 'desktop' },
       { width: 1536, height: 864, label: 'xl', device: 'desktop' },
-      { width: 2560, height: 'auto', label: 'Ultra Wide', device: 'ultraWide' },
+      { width: 2560, height: 'auto', label: 'Ultra wide', device: 'ultraWide' },
       { width: 3840, height: 'auto', label: '4k', device: '4k' },
     ]);
   });
@@ -90,7 +90,7 @@ describe('visibleViewportPresets', () => {
   it('hides the presets a narrow screen could only show below a third of their size', () => {
     expect(
       visibleViewportPresets(presets, 900).map(preset => preset.label)
-    ).toEqual(['Small', 'sm', 'md', 'lg', 'xl', 'Ultra Wide']);
+    ).toEqual(['Small', 'sm', 'md', 'lg', 'xl', 'Ultra wide']);
     expect(
       visibleViewportPresets(presets, 640).map(preset => preset.label)
     ).toEqual(['Small', 'sm', 'md', 'lg', 'xl']);

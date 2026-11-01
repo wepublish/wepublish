@@ -83,8 +83,8 @@ export const InsertDrawerItem = ({ children, name }: DrawerItemProps) => {
         <>
           <InsertButton
             type="button"
-            aria-label={t('', 'Add to selected block')}
-            title={t('', 'Add to selected block')}
+            aria-label={t('puck.insert.addToSelectedBlock')}
+            title={t('puck.insert.addToSelectedBlock')}
             ref={stopPointerDown}
             onMouseDown={stopPropagation}
             onClick={event => {

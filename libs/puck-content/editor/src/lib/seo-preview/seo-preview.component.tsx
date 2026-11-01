@@ -59,7 +59,7 @@ export function SeoPreview() {
           component="div"
           sx={{ fontWeight: 600 }}
         >
-          {t('', 'SEO Preview')}
+          {t('puck.seoPreview.seoPreview')}
         </Typography>
       </Box>
 

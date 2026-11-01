@@ -21,9 +21,12 @@ export const useBreakpointVisibility = (value: VisibilityValue | undefined) => {
   const hidden = hiddenBreakpoints(value, breakpoints);
 
   const summary =
-    !hidden.length ? t('', 'Shown on all screen sizes')
-    : hidden.length === breakpoints.length ? t('', 'Hidden on all screen sizes')
-    : t('', 'Hidden on {{breakpoints}}', { breakpoints: hidden.join(', ') });
+    !hidden.length ? t('puck.visibility.shownEverywhere')
+    : hidden.length === breakpoints.length ?
+      t('puck.visibility.hiddenEverywhere')
+    : t('puck.visibility.hiddenOnBreakpoints', {
+        breakpoints: hidden.join(', '),
+      });
 
   return { ranges, breakpoints, hidden, summary };
 };

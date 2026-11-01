@@ -13,8 +13,8 @@ export const usePuckDocumentKindLabel = () => {
   const { t } = useTranslation();
   const kind = usePuckDocumentKind();
   const labels: Record<PuckEditorDocumentKind, string> = {
-    page: t('', 'Page'),
-    article: t('', 'Article'),
+    page: t('puck.documentKind.page'),
+    article: t('puck.documentKind.article'),
   };
 
   return labels[kind];

@@ -81,10 +81,10 @@ function SideBarToggles() {
   return (
     <BottomBarSideBarToggles
       role="group"
-      aria-label={t('', 'Sidebars')}
+      aria-label={t('puck.bottomBar.sidebars')}
     >
       <SideBarToggle
-        label={t('', 'Left sidebar')}
+        label={t('puck.bottomBar.leftSidebar')}
         icon={<LuPanelLeft />}
         pressed={leftSideBarVisible}
         onToggle={() =>
@@ -95,7 +95,7 @@ function SideBarToggles() {
         }
       />
       <SideBarToggle
-        label={t('', 'Right sidebar')}
+        label={t('puck.bottomBar.rightSidebar')}
         icon={<LuPanelRight />}
         pressed={rightSideBarVisible}
         onToggle={() =>
@@ -191,7 +191,7 @@ export const BottomBarLayout = ({
 
           <BottomBarCloseButton
             type="button"
-            aria-label={t('', 'Close panel')}
+            aria-label={t('puck.bottomBar.closePanel')}
             onClick={() => setOpenName(undefined)}
           >
             <MdClose size={16} />

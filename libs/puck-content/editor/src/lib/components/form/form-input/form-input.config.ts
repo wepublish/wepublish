@@ -36,7 +36,7 @@ const autoCompleteOptions: {
   { label: 'Last name', value: 'family-name' },
   { label: 'Email', value: 'email' },
   { label: 'Phone', value: 'tel' },
-  { label: 'Organisation', value: 'organization' },
+  { label: 'Organization', value: 'organization' },
   { label: 'Street address', value: 'street-address' },
   { label: 'Postal code', value: 'postal-code' },
   { label: 'City', value: 'address-level2' },

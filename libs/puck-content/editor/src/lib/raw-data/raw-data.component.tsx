@@ -5,7 +5,9 @@ import { styled } from '@mui/material/styles';
 import { ComponentData, createUsePuck, Data } from '@puckeditor/core';
 import CodeMirror from '@uiw/react-codemirror';
 import { useDarkMode } from '@wepublish/ui/editor';
+import { TFunction } from 'i18next';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ROOT_ZONE = 'root:default-zone';
 
@@ -35,7 +37,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 const parseComponentData = (
   text: string,
-  original: ComponentData
+  original: ComponentData,
+  t: TFunction
 ): { data: ComponentData } | { error: string } => {
   let parsed: unknown;
 
@@ -46,26 +49,27 @@ const parseComponentData = (
   }
 
   if (!isRecord(parsed)) {
-    return { error: 'Component data must be an object.' };
+    return { error: t('puck.rawData.errors.componentObject') };
   }
 
   if (typeof parsed.type !== 'string') {
-    return { error: '"type" must be a string.' };
+    return { error: t('puck.rawData.errors.typeString') };
   }
 
   if (!isRecord(parsed.props)) {
-    return { error: '"props" must be an object.' };
+    return { error: t('puck.rawData.errors.propsObject') };
   }
 
   if (parsed.props.id !== original.props.id) {
-    return { error: '"props.id" must not be changed.' };
+    return { error: t('puck.rawData.errors.idChanged') };
   }
 
   return { data: parsed as ComponentData };
 };
 
 const parseDocumentData = (
-  text: string
+  text: string,
+  t: TFunction
 ): { data: Data } | { error: string } => {
   let parsed: unknown;
 
@@ -76,25 +80,26 @@ const parseDocumentData = (
   }
 
   if (!isRecord(parsed)) {
-    return { error: 'Document data must be an object.' };
+    return { error: t('puck.rawData.errors.documentObject') };
   }
 
   if (!isRecord(parsed.root)) {
-    return { error: '"root" must be an object.' };
+    return { error: t('puck.rawData.errors.rootObject') };
   }
 
   if (!Array.isArray(parsed.content)) {
-    return { error: '"content" must be an array.' };
+    return { error: t('puck.rawData.errors.contentArray') };
   }
 
   if (parsed.zones !== undefined && !isRecord(parsed.zones)) {
-    return { error: '"zones" must be an object if provided.' };
+    return { error: t('puck.rawData.errors.zonesObject') };
   }
 
   return { data: parsed as Data };
 };
 
 export const RawDataView = () => {
+  const { t } = useTranslation();
   const dark = useDarkMode();
   const selectedItem = usePuck(state => state.selectedItem);
   const itemSelector = usePuck(state => state.appState.ui.itemSelector);
@@ -137,7 +142,7 @@ export const RawDataView = () => {
 
   const handleApply = () => {
     if (selectedItem) {
-      const result = parseComponentData(value, selectedItem);
+      const result = parseComponentData(value, selectedItem, t);
 
       if ('error' in result) {
         setError(result.error);
@@ -151,7 +156,7 @@ export const RawDataView = () => {
         data: result.data,
       });
     } else {
-      const result = parseDocumentData(value);
+      const result = parseDocumentData(value, t);
 
       if ('error' in result) {
         setError(result.error);
@@ -176,7 +181,7 @@ export const RawDataView = () => {
           component="div"
           sx={{ fontWeight: 600 }}
         >
-          Raw Data
+          {t('puck.rawData.title')}
         </Typography>
 
         <Typography
@@ -185,8 +190,8 @@ export const RawDataView = () => {
           color="text.secondary"
         >
           {selectedItem ?
-            `Editing "${selectedItem.type}"`
-          : 'Editing the whole document'}
+            t('puck.rawData.editingBlock', { type: selectedItem.type })
+          : t('puck.rawData.editingDocument')}
         </Typography>
       </Box>
 
@@ -226,7 +231,7 @@ export const RawDataView = () => {
           disabled={!isDirty}
           onClick={handleApply}
         >
-          Apply
+          {t('puck.rawData.apply')}
         </Button>
 
         <Button
@@ -235,7 +240,7 @@ export const RawDataView = () => {
           disabled={!isDirty}
           onClick={handleReset}
         >
-          Reset
+          {t('puck.rawData.reset')}
         </Button>
       </Stack>
     </>

@@ -129,13 +129,13 @@ export const VisibilityOutline = ({ children }: { children: ReactNode }) => {
             {disabled && (
               <MdVisibilityOff
                 size={14}
-                title={t('', 'Disabled')}
+                title={t('puck.visibilityOutline.disabled')}
               />
             )}
             {timed && (
               <MdSchedule
                 size={14}
-                title={t('', 'Timed')}
+                title={t('puck.visibilityOutline.timed')}
               />
             )}
             {breakpoints.map(breakpoint => (

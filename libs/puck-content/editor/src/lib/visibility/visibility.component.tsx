@@ -123,7 +123,7 @@ export const ShowAllBreakpointsButton = ({
       onClick={onClick}
     >
       <LuRotateCcw aria-hidden />
-      {t('', 'All sizes')}
+      {t('puck.visibility.allSizes')}
     </VisibilityTextButton>
   );
 };
@@ -146,7 +146,7 @@ export const VisibilityFieldRender = ({
   const { ranges, hidden, summary } = useBreakpointVisibility(value);
   const { ref: controlRef, focusFirstControl } =
     useFirstControlFocus<HTMLDivElement>();
-  const label = field.label ?? t('', 'Screen sizes');
+  const label = field.label ?? t('puck.visibility.screenSizes');
 
   const showAll = () => {
     focusFirstControl();

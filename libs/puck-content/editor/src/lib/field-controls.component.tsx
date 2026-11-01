@@ -293,11 +293,7 @@ export const FieldSpacingHint = ({
       id={id}
       data-visible={visible}
     >
-      {t(
-        '',
-        'Numbers are theme units (1 = {{unit}}px). Add a unit like px, rem or vh for an exact size. Arrow keys change the value.',
-        { unit }
-      )}
+      {t('puck.fields.spacingHint', { unit })}
     </BoxModelHint>
   );
 };

@@ -22,7 +22,7 @@ export const TagSelectFieldRender = ({
 
   return (
     <FieldLabel
-      label={field.label ?? t('', 'Tags')}
+      label={field.label ?? t('puck.tagSelect.tags')}
       readOnly={readOnly}
       el="div"
     >

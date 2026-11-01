@@ -50,42 +50,42 @@ export const GridPlacementFieldRender = ({
   const labels =
     isColumn ?
       {
-        field: t('', 'Column placement'),
-        start: t('', 'Start column'),
-        span: t('', 'Column span'),
-        unit: t('', 'cols'),
+        field: t('puck.gridPlacement.columnPlacement'),
+        start: t('puck.gridPlacement.startColumn'),
+        span: t('puck.gridPlacement.columnSpan'),
+        unit: t('puck.gridPlacement.columnsUnit'),
       }
     : {
-        field: t('', 'Row placement'),
-        start: t('', 'Start row'),
-        span: t('', 'Row span'),
-        unit: t('', 'rows'),
+        field: t('puck.gridPlacement.rowPlacement'),
+        start: t('puck.gridPlacement.startRow'),
+        span: t('puck.gridPlacement.rowSpan'),
+        unit: t('puck.gridPlacement.rowsUnit'),
       };
 
   const hint = (() => {
     if (range && range.from === range.to) {
       return isColumn ?
-          t('', 'Column {{line}}', { line: range.from })
-        : t('', 'Row {{line}}', { line: range.from });
+          t('puck.gridPlacement.columnLine', { line: range.from })
+        : t('puck.gridPlacement.rowLine', { line: range.from });
     }
 
     if (range) {
       return isColumn ?
-          t('', 'Columns {{from}}–{{to}}', range)
-        : t('', 'Rows {{from}}–{{to}}', range);
+          t('puck.gridPlacement.columnsFromTo', range)
+        : t('puck.gridPlacement.rowsFromTo', range);
     }
 
     if (current.span) {
       return isColumn ?
-          t('', 'Spans {{count}} columns, placed automatically', {
+          t('puck.gridPlacement.spansColumns', {
             count: current.span,
           })
-        : t('', 'Spans {{count}} rows, placed automatically', {
+        : t('puck.gridPlacement.spansRows', {
             count: current.span,
           });
     }
 
-    return t('', 'Placed automatically');
+    return t('puck.gridPlacement.placedAutomatically');
   })();
 
   const change = (key: keyof GridLine, amount: number | undefined) =>
@@ -112,7 +112,7 @@ export const GridPlacementFieldRender = ({
             min={1}
             max={maxGridLineStart(axis, columns)}
             unit=""
-            placeholder={t('', 'auto')}
+            placeholder={t('puck.gridPlacement.auto')}
             describedBy={hintId}
             readOnly={readOnly}
             onChange={amount => change('start', amount)}

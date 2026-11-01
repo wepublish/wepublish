@@ -228,7 +228,7 @@ export const datasourceFieldAi = (
   types: readonly DatasourceType[] = datasourceTypes,
   models: readonly DatasourceModel[] = datasourceModels
 ): FieldAiParams => ({
-  instructions: `Connects the component to CMS data, one entry per model (${models.join(', ')}); leave a model out to not use it. Set type to one of: ${types.join(', ')}. "list" loads the newest records, "uniqueList" the newest records not already shown elsewhere on the page, "slot" takes the next record from the nearest surrounding component with data of the same model, "single" references one record by id and "multiple" several records by ids in display order. id and ids reference existing records — never invent them; only set them to values the user provided.`,
+  instructions: `Connects the component to CMS data, one entry per model (${models.join(', ')}); leave a model out to not use it. Set type to one of: ${types.join(', ')}. "list" loads the newest records, "uniqueList" the newest records not already shown elsewhere on the page, "slot" takes the next record from the nearest surrounding component with data of the same model, "single" references one record by id and "multiple" several records by ids in display order. id and ids reference existing records: never invent them, and only set them to values the user provided.`,
   schema: toAiSchema(
     z
       .object(

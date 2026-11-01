@@ -26,7 +26,7 @@ export const BreakConfig: ComponentConfig<{
 }> = withImageDataSource<BreakConfigProps>({
   ai: {
     instructions:
-      'A visually distinct call-to-action break that interrupts the article flow, typically to promote something. It shows a headline (text), an optional image (the image datasource), a rich text body and, unless hidden, a button. With an image, the image takes the place of the headline and the headline moves above the rich text body. Set hideButton to false and provide linkText (button label) and linkURL (button target) to show the button, or set hideButton to true to omit it. The image is referenced by the single image datasource — keep the existing value and never invent one.',
+      'A visually distinct call-to-action break that interrupts the article flow, typically to promote something. It shows a headline (text), an optional image (the image datasource), a rich text body and, unless hidden, a button. With an image, the image takes the place of the headline and the headline moves above the rich text body. Set hideButton to false and provide linkText (button label) and linkURL (button target) to show the button, or set hideButton to true to omit it. The image is referenced by the single image datasource. Keep the existing value and never invent one.',
   },
   fields: {
     text: {

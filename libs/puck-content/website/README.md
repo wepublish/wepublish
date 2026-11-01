@@ -7,14 +7,14 @@ directly.
 
 ## Rules
 
-- **No Puck, no editor.** Nothing here imports `@puckeditor/*`,
+- Nothing here imports `@puckeditor/*`,
   `@wepublish/puck-content/editor`, `@wepublish/editor/api` or
   `@wepublish/ui/editor`. The one exception is
   `src/lib/generated/generated-block.component.tsx`, which hands blocks the
   Puck AI generated (`kind: generated`) to Puck's `<Render>`. The lib's
   `eslint.config.mjs` enforces this; run lint with `pnpm nx lint
 puck-content-website`.
-- **Puck loads lazily.** Only `src/lib/generated/generated-blocks.component.tsx`
+- Puck loads lazily. Only `src/lib/generated/generated-blocks.component.tsx`
   loads `generated-block.component.tsx`, through `React.lazy`, and only when a
   document has a generated block its registry knows. No other file may import
   that module statically, or every consumer bundles Puck and plugin-ai. Lint
@@ -106,9 +106,9 @@ its `data`; nothing provides one at the root (see above).
 The `Teaser` block is the usual provider: it renders its `content` slot (the
 teaser parts) in one `<article>`, or nothing when it has no record. With
 `linkToRecord` it links the whole teaser through one empty link placed before
-the content and stretched over the article (`position: absolute; inset: 0`),
-never by wrapping the content, because editors may put a Button or another
-interactive block inside and interactive content inside an `<a>` is invalid
+the content and stretched over the article (`position: absolute; inset: 0`).
+It does not wrap the content in the link: editors may put a Button or another
+interactive block inside, and interactive content inside an `<a>` is invalid
 HTML. Interactive descendants of the content (`a`, `button`, form controls,
 `label`, `summary`, `[role="button"]`, `[tabindex]`) are lifted above the link
 (`position: relative; z-index: 1`, zero specificity so blocks that position

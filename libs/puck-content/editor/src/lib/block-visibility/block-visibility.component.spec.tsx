@@ -19,6 +19,7 @@ void i18n.use(initReactI18next).init({
   resources: {
     en: {
       translation: {
+        ...i18next.getResourceBundle('en', 'translation'),
         blockTiming: {
           title: 'Schedule this block',
           summary: {
@@ -135,7 +136,7 @@ describe('BlockVisibilityFieldRender', () => {
 
     expect(onChange).toHaveBeenLastCalledWith({ disabled: true });
     expect(
-      status.getByText('Hidden everywhere — still kept on the page')
+      status.getByText('Hidden everywhere but kept on the page')
     ).toBeTruthy();
 
     fireEvent.click(status.getByRole('radio', { name: 'Visible' }));
@@ -177,7 +178,7 @@ describe('BlockVisibilityFieldRender', () => {
         name: 'Edit schedule',
       })
     );
-    fireEvent.click(screen.getByRole('button', { name: 'weekday.Monday' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Monday' }));
 
     expect(onChange).toHaveBeenLastCalledWith({
       timings: { weekdays: [Weekday.Monday] },

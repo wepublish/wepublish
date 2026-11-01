@@ -123,8 +123,18 @@ export const BlockStatusToggle = ({
 }: BlockStatusToggleProps) => {
   const { t } = useTranslation();
   const options = [
-    { hidden: false, value: 'visible', label: t('', 'Visible'), Icon: LuEye },
-    { hidden: true, value: 'hidden', label: t('', 'Hidden'), Icon: LuEyeOff },
+    {
+      hidden: false,
+      value: 'visible',
+      label: t('puck.blockVisibility.visible'),
+      Icon: LuEye,
+    },
+    {
+      hidden: true,
+      value: 'hidden',
+      label: t('puck.blockVisibility.hidden'),
+      Icon: LuEyeOff,
+    },
   ];
 
   return (
@@ -176,7 +186,7 @@ export const BlockVisibilityFieldRender = ({
   const { t, i18n } = useTranslation();
   const id = useId();
   const current = value ?? {};
-  const label = field.label ?? t('', 'Visibility');
+  const label = field.label ?? t('puck.blockVisibility.visibility');
   const timed = isTimed(current.timings);
   const {
     ranges,
@@ -214,15 +224,12 @@ export const BlockVisibilityFieldRender = ({
         <VisibilitySection
           id={`${id}-status`}
           icon={current.disabled ? <LuEyeOff /> : <LuEye />}
-          title={t('', 'Status')}
-          description={t(
-            '',
-            'Hide the block without removing it from the page.'
-          )}
+          title={t('puck.blockVisibility.status')}
+          description={t('puck.blockVisibility.statusDescription')}
           summary={
             current.disabled ?
-              t('', 'Hidden everywhere — still kept on the page')
-            : t('', 'Shown wherever the schedule and screen sizes allow')
+              t('puck.blockVisibility.statusHidden')
+            : t('puck.blockVisibility.statusShown')
           }
           restricted={!!current.disabled}
         >
@@ -239,11 +246,8 @@ export const BlockVisibilityFieldRender = ({
           ref={scheduleRef}
           id={`${id}-schedule`}
           icon={<LuCalendarClock />}
-          title={t('', 'Schedule')}
-          description={t(
-            '',
-            'Limit the block to certain dates, weekdays or times of day.'
-          )}
+          title={t('puck.blockVisibility.schedule')}
+          description={t('puck.blockVisibility.scheduleDescription')}
           summary={describeTiming(
             current.timings,
             (key, options) => t(key, options ?? {}) as string,
@@ -258,14 +262,14 @@ export const BlockVisibilityFieldRender = ({
                 onClick={clearSchedule}
               >
                 <LuX aria-hidden />
-                {t('', 'Clear')}
+                {t('puck.blockVisibility.clear')}
               </VisibilityTextButton>
             )
           }
         >
           <BlockScheduleActions>
             <BlockTimingButton
-              label={t('', 'Edit schedule')}
+              label={t('puck.blockVisibility.editSchedule')}
               timing={current.timings}
               disabled={readOnly}
               onChange={timings => change({ timings })}
@@ -277,8 +281,8 @@ export const BlockVisibilityFieldRender = ({
           ref={sizesRef}
           id={`${id}-sizes`}
           icon={<LuMonitorSmartphone />}
-          title={t('', 'Screen sizes')}
-          description={t('', 'Pick the screen sizes the block appears on.')}
+          title={t('puck.blockVisibility.screenSizes')}
+          description={t('puck.blockVisibility.screenSizesDescription')}
           summary={breakpointSummary}
           restricted={hiddenBreakpoints.length > 0}
           action={

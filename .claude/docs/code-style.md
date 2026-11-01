@@ -215,7 +215,10 @@ Editor copy lives in `apps/editor/src/app/locales/{en,de,fr}.json`; add every
 key to all three. `locales.spec.ts` fails when a literal `t('…')` key is
 missing or the three catalogs drift apart. Zod messages live at module level,
 so use `lazyMessage('key')` from `apps/editor/src/app/utility.ts` instead of
-`t()`.
+`t()`. Puck editor copy sits under `puck.*`. `libs/puck-content/editor` specs
+load `en.json` through `vitest.setup-i18n.ts`; a spec that builds its own
+i18next instance passes `i18next.getResourceBundle('en', 'translation')` as
+its resources, or it renders keys.
 
 Website copy lives in `libs/website/translations/src/lib/{de,fr}.json`, and
 `catalogs.spec.ts` fails when the two drift apart. A tenant overrides single

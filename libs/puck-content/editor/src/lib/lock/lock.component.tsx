@@ -17,7 +17,7 @@ export const LockAction = () => {
   }
 
   const locked = isLocked(selectedItem);
-  const label = locked ? t('', 'Unlock block') : t('', 'Lock block');
+  const label = locked ? t('puck.lock.unlockBlock') : t('puck.lock.lockBlock');
 
   return (
     <ActionBar.Action
