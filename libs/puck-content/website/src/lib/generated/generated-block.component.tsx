@@ -8,11 +8,9 @@ import { PuckBlockNode } from '../blocks/block-tree';
 import { puckBlockProps } from '../blocks/puck-block-registry';
 import { createBoundedCache } from './bounded-cache';
 import {
-  generatedComponentScript,
   generatedDynamicConfig,
   GeneratedRegistry,
 } from './generated-registry';
-import { useGeneratedScript } from './generated-script';
 
 type GeneratedBlockNode = PuckBlockNode<FullPuckBlockFragment>;
 
@@ -103,6 +101,33 @@ const useGeneratedConfig = (registry: GeneratedRegistry) =>
     configOnServer(registry)
   : use(configAfterRender(registry));
 
+const globalsConfig = withDynamicConfig(childBlockConfig, puckData({}));
+
+const settledConfigs = new WeakMap<Promise<Config>, Promise<void>>();
+
+const settled = (config: Promise<Config>) => {
+  const known = settledConfigs.get(config);
+
+  if (known) {
+    return known;
+  }
+
+  const settling = config.then(
+    () => undefined,
+    () => undefined
+  );
+
+  settledConfigs.set(config, settling);
+
+  return settling;
+};
+
+const useAfterGeneratedConfig = (registry: GeneratedRegistry) => {
+  if (!renderedOnServer) {
+    use(settled(configAfterRender(registry)));
+  }
+};
+
 const toPuckItem = ({ block, slots }: GeneratedBlockNode): ComponentData => ({
   type: block.type,
   props: {
@@ -147,11 +172,6 @@ export const PuckGeneratedBlock = ({
     [node, ChildBlock]
   );
 
-  useGeneratedScript(
-    node.block.type,
-    generatedComponentScript(registry, node.block.type)
-  );
-
   return (
     <GeneratedChildrenContext.Provider value={children}>
       <div className={className}>
@@ -161,5 +181,28 @@ export const PuckGeneratedBlock = ({
         />
       </div>
     </GeneratedChildrenContext.Provider>
+  );
+};
+
+export const PuckGeneratedGlobals = ({
+  registry,
+}: {
+  registry: GeneratedRegistry;
+}) => {
+  useAfterGeneratedConfig(registry);
+
+  const data = useMemo(
+    () =>
+      puckData({
+        _dynamicConfig: { styles: registry.styles, script: registry.script },
+      }),
+    [registry]
+  );
+
+  return (
+    <Render
+      config={globalsConfig}
+      data={data}
+    />
   );
 };

@@ -10,6 +10,7 @@ import { GeneratedBlocksProvider } from '../generated/generated-blocks.component
 import { buildPuckBlockTree } from './block-tree';
 import { PuckBlockRenderer } from './puck-block.component';
 import {
+  isGeneratedPuckBlock,
   PuckBlockComponents,
   PuckBlockComponentsContext,
   puckBlockRegistry,
@@ -43,7 +44,9 @@ export const PuckBlocks = memo(
 
     return (
       <PuckBlockComponentsContext.Provider value={blockComponents}>
-        <GeneratedBlocksProvider registry={registry}>
+        <GeneratedBlocksProvider
+          registry={blocks?.some(isGeneratedPuckBlock) ? registry : null}
+        >
           {roots.map((node, index) => (
             <ImageContext.Provider
               key={node.block.id}

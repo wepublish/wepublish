@@ -1,5 +1,4 @@
 import { FullPuckRegistryFragment } from '@wepublish/website/api';
-import { omit } from 'ramda';
 
 export type GeneratedRegistryInput = Pick<
   FullPuckRegistryFragment,
@@ -86,23 +85,6 @@ export const hasGeneratedComponent = (
   type: string
 ) => Object.hasOwn(components, type);
 
-export const generatedComponentScript = (
-  registry: GeneratedRegistry,
-  type: string
-): string | null => {
-  const script =
-    hasGeneratedComponent(registry, type) ?
-      registry.components[type]['script']
-    : null;
-
-  return typeof script === 'string' && script ? script : null;
-};
-
 export const generatedDynamicConfig = ({ components }: GeneratedRegistry) => ({
-  components: Object.fromEntries(
-    Object.entries(components).map(([type, registration]) => [
-      type,
-      omit(['script'], registration),
-    ])
-  ),
+  components,
 });

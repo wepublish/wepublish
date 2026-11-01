@@ -27,6 +27,12 @@ vi.mock('@puckeditor/plugin-ai', async importOriginal => {
   return importOriginal();
 });
 
+vi.mock('../generated/generated-block.component', async importOriginal => {
+  loadedPuckModules.add('generated-block.component');
+
+  return importOriginal();
+});
+
 const block = (
   fields: Pick<FullPuckBlockFragment, 'id' | 'type'> &
     Partial<FullPuckBlockFragment>
@@ -111,6 +117,7 @@ describe('PuckBlocks loading Puck', () => {
     expect([...loadedPuckModules].sort()).toEqual([
       '@puckeditor/core/rsc',
       '@puckeditor/plugin-ai',
+      'generated-block.component',
     ]);
   });
 });

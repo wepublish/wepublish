@@ -66,14 +66,16 @@ our own blocks render through `PuckBlockRenderer` again.
   synchronously while rendering, in the browser in a microtask after render.
   Two documents mounted together that share a name both show whichever
   registry was applied last; that collision is accepted.
-- Scripts run in the browser only, never on the server, and are removed on
-  unmount. The registry's root script runs once every generated block of the
-  document has mounted (right away when there are none); a component's script
-  runs once per name and script while any instance is mounted. Puck itself
-  never sees a script.
+- plugin-ai runs the scripts, in the browser only, and removes them on
+  unmount. Each mounted instance of a component runs that component's script.
+  The registry's root styles and script are the `_dynamicConfig` root props of
+  one extra `<Render>` per document, which waits for the same registry as the
+  blocks, so the root script runs once per document after its generated blocks
+  have mounted. A document without generated blocks gets neither and never
+  loads Puck.
 - A block whose registry Puck cannot build renders nothing (`HideOnError`
-  reports it to Sentry) and counts as mounted, so the rest of the document and
-  the root script are unaffected.
+  reports it to Sentry); the rest of the document and the root styles and
+  script are unaffected.
 
 ## Writing a block
 

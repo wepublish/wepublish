@@ -366,7 +366,7 @@ describe('GeneratedBlock', () => {
     expect(screen.getByRole('heading', { name: 'Stored title' })).toBe(heading);
   });
 
-  it('runs a component script once for all its instances and removes it with the last', async () => {
+  it('runs a component script for every mounted instance and removes it with that instance', async () => {
     const script = 'window.__puckHeroScript = true;';
     const nodes = [heroNode('Hero', 'first'), heroNode('Hero', 'second')];
     const { rerender, unmount } = await renderSettled(
@@ -379,7 +379,7 @@ describe('GeneratedBlock', () => {
 
     const scripts = scriptsWith('__puckHeroScript');
 
-    expect(scripts).toHaveLength(1);
+    expect(scripts).toHaveLength(2);
 
     await settle(() =>
       rerender(generatedDocument(heroWith({ script }), nodes))
@@ -391,7 +391,7 @@ describe('GeneratedBlock', () => {
       rerender(generatedDocument(heroWith({ script }), nodes.slice(1)))
     );
 
-    expect(scriptsWith('__puckHeroScript')).toEqual(scripts);
+    expect(scriptsWith('__puckHeroScript')).toEqual([scripts[1]]);
 
     unmount();
 
@@ -445,7 +445,7 @@ describe('GeneratedBlocksProvider', () => {
     }
   });
 
-  it('runs the registry script only once every generated block has mounted in strict mode', async () => {
+  it('runs the registry script only after every generated block has mounted in strict mode', async () => {
     const value = registry({ script: 'window.__puckStrictBlocks = true;' });
     const heroes = countWhenScriptRuns('__puckStrictBlocks', '.hero');
 
@@ -459,7 +459,9 @@ describe('GeneratedBlocksProvider', () => {
         </StrictMode>
       );
 
-      await waitFor(() => expect(heroes.counts).toEqual([2]));
+      await waitFor(() => expect(heroes.counts).not.toHaveLength(0));
+      expect(heroes.counts.every(count => count === 2)).toBe(true);
+      expect(scriptsWith('__puckStrictBlocks')).toHaveLength(1);
 
       unmount();
     } finally {
@@ -510,7 +512,25 @@ describe('GeneratedBlocksProvider', () => {
     }
   });
 
-  it('runs the registry script once for all documents with the same registry', async () => {
+  it('renders the registry styles once for all generated blocks of a document', async () => {
+    const { container } = await renderSettled(
+      generatedDocument(registry({ styles: '.page{margin:0}' }), [
+        heroNode('Hero', 'first'),
+        heroNode('Hero', 'second'),
+      ])
+    );
+
+    expect(
+      screen.getAllByRole('heading', { name: 'Stored title' })
+    ).toHaveLength(2);
+    expect(
+      Array.from(container.querySelectorAll('style')).filter(
+        style => style.textContent === '.page{margin:0}'
+      )
+    ).toHaveLength(1);
+  });
+
+  it('runs the registry script once per document', async () => {
     const script = 'window.__puckSharedScript = true;';
     const documents = (count: number) => (
       <>
@@ -527,11 +547,11 @@ describe('GeneratedBlocksProvider', () => {
     const { rerender, unmount } = await renderSettled(documents(2));
     const scripts = scriptsWith('__puckSharedScript');
 
-    expect(scripts).toHaveLength(1);
+    expect(scripts).toHaveLength(2);
 
     await settle(() => rerender(documents(1)));
 
-    expect(scriptsWith('__puckSharedScript')).toEqual(scripts);
+    expect(scriptsWith('__puckSharedScript')).toEqual([scripts[0]]);
 
     unmount();
 

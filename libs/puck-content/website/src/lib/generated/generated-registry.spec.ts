@@ -1,7 +1,4 @@
-import { omit } from 'ramda';
-
 import {
-  generatedComponentScript,
   generatedDynamicConfig,
   GeneratedRegistryInput,
   hasGeneratedComponent,
@@ -73,24 +70,12 @@ describe('hasGeneratedComponent', () => {
 });
 
 describe('generatedDynamicConfig', () => {
-  it('hands Puck every registration under its own name without its script', () => {
+  it('hands Puck every registration under its own name with its script', () => {
     expect(generatedDynamicConfig(toGeneratedRegistry(input()))).toEqual({
       components: {
-        Hero: omit(['script'], hero),
+        Hero: hero,
         Card: { html: '<article></article>' },
       },
     });
-  });
-});
-
-describe('generatedComponentScript', () => {
-  it('reads the script of a component', () => {
-    const registry = toGeneratedRegistry(input());
-
-    expect(generatedComponentScript(registry, 'Hero')).toBe(
-      'document.title = "hero";'
-    );
-    expect(generatedComponentScript(registry, 'Card')).toBeNull();
-    expect(generatedComponentScript(registry, 'Unknown')).toBeNull();
   });
 });
