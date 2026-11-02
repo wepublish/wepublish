@@ -1,9 +1,10 @@
 import '@puckeditor/core/puck.css';
 import './puck-dark.css';
 
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client/react';
 import { createTheme, Link as MuiLink } from '@mui/material';
-import { Puck, Viewport } from '@puckeditor/core';
+import { Data, Puck, Viewport } from '@puckeditor/core';
 import { SessionTokenContext } from '@wepublish/authentication/website';
 import { getSettings, WebsiteSettingsDocument } from '@wepublish/editor/api';
 import {
@@ -24,6 +25,7 @@ import {
   gapPlugin,
   gridPlacementPlugin,
   groupPlugin,
+  imageFitPlugin,
   imagePlugin,
   listPlugin,
   OutlinePlugin,
@@ -40,6 +42,9 @@ import {
   resolvedPlugin,
   RevisionHistoryPlugin,
   revisionPreviewHeaderPlugin,
+  PuckBlockTemplateDocumentContext,
+  savedBlocksPlugin,
+  withTranslatedLabels,
   richtextPlugin,
   sidebarLayoutPlugin,
   stylingPlugin,
@@ -62,7 +67,14 @@ import {
   BuilderLinkProps,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
-import { ContextType, forwardRef, ReactNode, useMemo, useState } from 'react';
+import {
+  ContextType,
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import {
   Md2K,
   Md4K,
@@ -77,13 +89,16 @@ import {
   PuckPublishDialogOf,
 } from './puck-document-controller.context';
 import {
+  blockTemplateEditorConfig,
   bottomBarPlugin,
+  dynamicComponentsKey,
   initialPuckUi,
   puckEditorConfig,
   toEditorData,
   ViewportDevice,
   viewportPresets,
   visibleViewportPresets,
+  withTemplateFields,
 } from './puck-editor.config';
 
 const viewportIcons: Record<ViewportDevice, ReactNode> = {
@@ -120,6 +135,8 @@ export type PuckDocumentEditorProps<K extends PuckDocumentKind> = {
   revisionHistory?: PuckRevisionHistory;
   initialPlugin?: string | null;
   onPluginChange?: (plugin: string | null) => void;
+  templateNameLabel?: string;
+  blockTemplate?: boolean;
 };
 
 export function PuckDocumentEditor<K extends PuckDocumentKind>({
@@ -130,7 +147,10 @@ export function PuckDocumentEditor<K extends PuckDocumentKind>({
   revisionHistory,
   initialPlugin,
   onPluginChange,
+  templateNameLabel,
+  blockTemplate,
 }: PuckDocumentEditorProps<K>) {
+  const { t } = useTranslation();
   const { data: settings } = useQuery(WebsiteSettingsDocument);
   const [initialData] = useState(() => toEditorData(kind, data));
 
@@ -139,9 +159,34 @@ export function PuckDocumentEditor<K extends PuckDocumentKind>({
     [settings]
   );
 
-  const config = useMemo(
-    () => puckEditorConfig(kind, initialData),
-    [kind, initialData]
+  const [configData, setConfigData] = useState(initialData);
+
+  const config = useMemo(() => {
+    const rootLabel = t(
+      blockTemplate ?
+        'puck.documentKind.blockTemplate'
+      : `puck.documentKind.${kind}`
+    );
+    const documentConfig =
+      blockTemplate ?
+        blockTemplateEditorConfig(configData, templateNameLabel ?? '')
+      : templateNameLabel === undefined ? puckEditorConfig(kind, configData)
+      : withTemplateFields(
+          puckEditorConfig(kind, configData),
+          templateNameLabel
+        );
+    const labelled = withTranslatedLabels(documentConfig, t);
+
+    return { ...labelled, root: { ...labelled.root, label: rootLabel } };
+  }, [kind, configData, templateNameLabel, blockTemplate, t]);
+
+  const refreshConfig = useCallback(
+    (data: Data) => {
+      if (dynamicComponentsKey(data) !== dynamicComponentsKey(configData)) {
+        setConfigData(data);
+      }
+    },
+    [configData]
   );
 
   const aiPlugin = useMemo(
@@ -169,6 +214,7 @@ export function PuckDocumentEditor<K extends PuckDocumentKind>({
       documentHeaderPlugin,
       revisionPreviewHeaderPlugin,
       documentControllerPlugin,
+      savedBlocksPlugin,
       puckBlockDataPlugin,
       viewportSelectionPlugin,
       sidebarLayoutPlugin,
@@ -193,6 +239,7 @@ export function PuckDocumentEditor<K extends PuckDocumentKind>({
       resolvedPlugin,
       switchPlugin,
       imagePlugin,
+      imageFitPlugin,
       visibilityPlugin,
       blockVisibilityPlugin,
       visibilityOutlinePlugin,
@@ -230,23 +277,28 @@ export function PuckDocumentEditor<K extends PuckDocumentKind>({
         <WebsiteBuilderProvider elements={{ Link }}>
           <SessionTokenContext.Provider value={anonymousSession}>
             <PuckDocumentKindContext.Provider value={kind}>
-              <PuckDocumentControllerContext.Provider value={controller}>
-                <PuckDocumentEditorEventsContext.Provider value={events}>
-                  <PuckRevisionHistoryContext.Provider
-                    value={revisionHistory ?? null}
-                  >
-                    <Puck
-                      dnd={{ behavior: 'static', enableDragHandle: true }}
-                      iframe={{ syncHostStyles: false }}
-                      config={config}
-                      data={initialData}
-                      plugins={plugins}
-                      ui={ui}
-                      viewports={viewports}
-                    />
-                  </PuckRevisionHistoryContext.Provider>
-                </PuckDocumentEditorEventsContext.Provider>
-              </PuckDocumentControllerContext.Provider>
+              <PuckBlockTemplateDocumentContext.Provider
+                value={!!blockTemplate}
+              >
+                <PuckDocumentControllerContext.Provider value={controller}>
+                  <PuckDocumentEditorEventsContext.Provider value={events}>
+                    <PuckRevisionHistoryContext.Provider
+                      value={revisionHistory ?? null}
+                    >
+                      <Puck
+                        dnd={{ behavior: 'static', enableDragHandle: true }}
+                        iframe={{ syncHostStyles: false }}
+                        config={config}
+                        data={initialData}
+                        onChange={refreshConfig}
+                        plugins={plugins}
+                        ui={ui}
+                        viewports={viewports}
+                      />
+                    </PuckRevisionHistoryContext.Provider>
+                  </PuckDocumentEditorEventsContext.Provider>
+                </PuckDocumentControllerContext.Provider>
+              </PuckBlockTemplateDocumentContext.Provider>
             </PuckDocumentKindContext.Provider>
           </SessionTokenContext.Provider>
         </WebsiteBuilderProvider>

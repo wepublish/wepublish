@@ -63,6 +63,24 @@ const withArticle: PuckBlockData = {
   articles: [article],
 };
 
+const withEmptyArticle: PuckBlockData = {
+  ...emptyPuckBlockData,
+  articles: [
+    mockArticle({
+      publishedAt: null as unknown as string,
+      tags: [],
+      latest: mockArticleRevision({
+        title: '',
+        preTitle: null,
+        lead: null,
+        image: null,
+        authors: [],
+        blocks: [],
+      }),
+    }),
+  ],
+};
+
 const renderTeaser = <Props,>(
   Render: PuckBlockComponent<Props>,
   props: Props,
@@ -195,5 +213,64 @@ describe('teaser renders', () => {
     renderTeaser(TeaserTitleRender, {});
 
     expect(screen.getByRole('alert').textContent).toContain('Broken teaser');
+  });
+
+  it.each(teaserRenders)(
+    '%s renders nothing for an empty value by default',
+    (_type, Render, props) => {
+      const { container } = renderTeaser(Render, props, withEmptyArticle);
+
+      expect(container.childElementCount).toBe(0);
+    }
+  );
+
+  it.each(teaserRenders)(
+    '%s keeps the space of an empty value when it is not hidden',
+    (_type, Render, props) => {
+      const { container } = renderTeaser(
+        Render,
+        { ...props, hideWhenEmpty: false },
+        withEmptyArticle
+      );
+
+      expect(container.childElementCount).toBe(1);
+      expect(container.firstElementChild).toHaveClass('styled');
+      expect(container.firstElementChild).toHaveAttribute(
+        'aria-hidden',
+        'true'
+      );
+    }
+  );
+
+  it.each(textTeaserRenders)(
+    '%s still shows a value when empty values are not hidden',
+    (_type, Render, props, text) => {
+      const { container } = renderTeaser(Render, {
+        ...props,
+        hideWhenEmpty: false,
+      });
+
+      expect(container.firstElementChild?.textContent).toContain(text);
+      expect(container.firstElementChild).not.toHaveAttribute('aria-hidden');
+    }
+  );
+
+  it('crops the teaser image to the chosen ratio on its focal point', () => {
+    renderTeaser(TeaserImageRender, {
+      fit: { xs: { aspectRatio: '1:1', objectFit: 'contain' } },
+    });
+
+    expect(screen.getByRole('img', { name: 'Slotted image' })).toHaveStyle({
+      width: '100%',
+      objectFit: 'contain',
+    });
+  });
+
+  it('leaves the teaser image untouched without a ratio', () => {
+    renderTeaser(TeaserImageRender, { fit: { xs: { aspectRatio: 'auto' } } });
+
+    expect(screen.getByRole('img', { name: 'Slotted image' })).not.toHaveStyle({
+      width: '100%',
+    });
   });
 });

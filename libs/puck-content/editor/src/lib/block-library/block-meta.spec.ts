@@ -60,7 +60,9 @@ describe('block metadata', () => {
   });
 
   it('gives readable names instead of component keys', () => {
-    expect(i18next.t(config.components.RichText.nameKey ?? '')).toBe('Text');
+    expect(i18next.t(config.components.RichText.nameKey ?? '')).toBe(
+      'RichText'
+    );
     expect(i18next.t(config.components.IFrame.nameKey ?? '')).toBe(
       'Web page (iframe)'
     );

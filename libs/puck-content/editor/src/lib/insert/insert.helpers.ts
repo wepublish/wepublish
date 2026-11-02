@@ -156,12 +156,23 @@ export const insertTargets = (
     return into;
   }
 
+  const below = belowTarget(config, context);
+
+  return below && isInsertable(type, below) ? [below] : [];
+};
+
+export const belowTarget = (
+  config: Config,
+  context: InsertContext
+): SlotZone | undefined => {
   const below = surroundingZone(config, context);
 
-  return below && isInsertable(type, below) ?
-      [{ ...below, index: (context.selector?.index ?? below.count - 1) + 1 }]
-    : [];
+  return below ?
+      { ...below, index: (context.selector?.index ?? below.count - 1) + 1 }
+    : undefined;
 };
+
+export const isInsertableInto = isInsertable;
 
 export const stopPointerDown = (element: HTMLElement | null) =>
   element?.addEventListener('pointerdown', event => event.stopPropagation());

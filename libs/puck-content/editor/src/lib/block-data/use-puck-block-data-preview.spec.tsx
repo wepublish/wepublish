@@ -114,6 +114,30 @@ describe('usePuckBlockDataPreview', () => {
     );
   });
 
+  it('asks again when the editor comes back to the window, so linked templates edited elsewhere show up', async () => {
+    const { requests, wrapper } = setup();
+
+    renderHook(
+      () => usePuckBlockDataPreview(variablesFor(PuckDatasourceType.List)),
+      {
+        wrapper,
+      }
+    );
+
+    await wait(300);
+    expect(requests).toHaveLength(1);
+
+    requests[0].respond([]);
+    await flush();
+
+    act(() => {
+      window.dispatchEvent(new Event('focus'));
+    });
+    await wait(300);
+
+    expect(requests).toHaveLength(2);
+  });
+
   it('does not ask again for a document that only changed in what the preview ignores', async () => {
     const { requests, wrapper } = setup();
     const { rerender } = renderHook(

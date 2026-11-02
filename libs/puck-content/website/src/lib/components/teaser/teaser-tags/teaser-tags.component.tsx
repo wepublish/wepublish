@@ -1,26 +1,31 @@
 import { Chip } from '@mui/material';
-import styled from '@emotion/styled';
 import { selectTeaserTags } from '@wepublish/block-content/website';
 
 import { useTeaserSlot } from '../../../contexts/teaser-slot.context';
+import { HideWhenEmptyProps } from '../teaser-part';
+import { TagsWrapper } from './teaser-tags.styles';
 
-export type TeaserTagsConfigProps = {
+export type TeaserTagsConfigProps = HideWhenEmptyProps & {
   className?: string;
   max?: number;
 };
 
-const TagsWrapper = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  gap: ${({ theme }) => theme.spacing(1)};
-`;
-
-export const TeaserTags = ({ className, max = 5 }: TeaserTagsConfigProps) => {
+export const TeaserTags = ({
+  className,
+  max = 5,
+  hideWhenEmpty = true,
+}: TeaserTagsConfigProps) => {
   const teaser = useTeaserSlot();
   const tags = teaser ? selectTeaserTags(teaser) : [];
 
   if (!tags.length) {
-    return null;
+    return hideWhenEmpty ? null : (
+        <TagsWrapper
+          className={className}
+          empty
+          aria-hidden
+        />
+      );
   }
 
   return (

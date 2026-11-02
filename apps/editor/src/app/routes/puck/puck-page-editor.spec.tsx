@@ -25,6 +25,7 @@ const editor = vi.hoisted(() => ({
 
 const apollo = vi.hoisted(() => ({
   page: vi.fn(),
+  template: vi.fn(),
   revisions: vi.fn(),
   createOptions: undefined as
     | undefined
@@ -67,6 +68,7 @@ vi.mock('@apollo/client/react', async importOriginal => {
     ...routeApolloByOperation(actual, {
       queries: {
         Page: options => apollo.page(options),
+        PageTemplate: options => apollo.template(options),
         PageRevisionList: options => apollo.revisions(options),
       },
       mutations: {
@@ -138,6 +140,31 @@ const page = {
   },
 } as unknown as FullPageFragment;
 
+const template = {
+  __typename: 'PageTemplate',
+  id: 'page-template-1',
+  blockTemplate: {
+    __typename: 'BlockTemplate',
+    id: 'block-template-2',
+    name: 'Landing',
+    blocks: [],
+    puckBlocks: [],
+    puckRegistry: null,
+  },
+  metadata: {
+    __typename: 'PageTemplateMetadata',
+    title: 'Landing title',
+    description: 'Landing lead',
+    hidden: false,
+    hideHeader: true,
+    hideFooter: false,
+    tags: [],
+    image: null,
+    socialMediaImage: null,
+    properties: [],
+  },
+};
+
 const revisionNodes = [
   {
     __typename: 'PageRevision',
@@ -178,9 +205,9 @@ const editedDocument = {
 } as PuckData<'page'>;
 
 function CurrentLocation() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
-  return <output aria-label="Location">{pathname}</output>;
+  return <output aria-label="Location">{`${pathname}${search}`}</output>;
 }
 
 const renderEditor = (path: string) =>
@@ -208,6 +235,9 @@ beforeEach(() => {
   );
   apollo.revisions.mockImplementation(({ skip }: { skip?: boolean }) =>
     skip ? skipped : revisionsResult
+  );
+  apollo.template.mockImplementation(({ skip }: { skip?: boolean }) =>
+    skip ? skipped : { data: { pageTemplate: template }, loading: false }
   );
   apollo.updatePage.mockResolvedValue({ data: { updatePage: page } });
   apollo.publishPage.mockResolvedValue({ data: { publishPage: page } });
@@ -366,6 +396,57 @@ describe('PuckPageEditor', () => {
     expect(dialog?.title).toBe('pageEditor.panels.publishPage');
     expect(dialog?.checks[1]).toEqual(
       expect.objectContaining({ value: 'Who we are' })
+    );
+  });
+
+  it('starts a new page from a template without saving it', () => {
+    renderEditor('/puck/pages/create?templateId=page-template-1');
+
+    expect(apollo.template).toHaveBeenCalledWith(
+      expect.objectContaining({
+        variables: { id: 'page-template-1' },
+        skip: false,
+      })
+    );
+    expect(editor.props.data).toEqual({
+      root: {
+        props: {
+          title: 'Landing title',
+          lead: 'Landing lead',
+          hidden: false,
+          showNavigation: false,
+          showFooter: true,
+          tags: [],
+          properties: [],
+        },
+      },
+      content: [],
+    });
+    expect(editor.props.controller.isNew).toBe(true);
+    expect(apollo.createPage).not.toHaveBeenCalled();
+  });
+
+  it('says so when the template of a new page does not exist', () => {
+    apollo.template.mockReturnValue({ data: undefined, loading: false });
+
+    renderEditor('/puck/pages/create?templateId=missing');
+
+    expect(screen.getByText('puck.templates.notFound')).toBeInTheDocument();
+  });
+
+  it('offers to make a template of the saved page', () => {
+    renderEditor('/puck/pages/edit/page-1');
+
+    const action = editor.props.controller.menuActions?.find(
+      ({ label }) => label === 'pageEditor.panels.createTemplate'
+    );
+
+    expect(action?.needsSaved).toBe(true);
+
+    act(() => action?.onClick());
+
+    expect(screen.getByRole('status', { name: 'Location' })).toHaveTextContent(
+      '/puck/templates/pages/create?fromPage=page-1'
     );
   });
 

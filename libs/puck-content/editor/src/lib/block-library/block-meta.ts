@@ -14,5 +14,6 @@ declare module '@puckeditor/core' {
     group?: BlockGroupId;
     order?: number;
     nameKey?: BlockNameKey;
+    hidden?: boolean;
   }
 }

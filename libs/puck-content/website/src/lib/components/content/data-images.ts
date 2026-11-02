@@ -10,3 +10,7 @@ export const dataImageById = (
   imageId: string | null | undefined
 ): PuckDataImage | null =>
   (imageId && data.images?.find(image => image.id === imageId)) || null;
+
+export const withoutImageCredit = (
+  image: PuckDataImage | null
+): PuckDataImage | null => image && { ...image, source: null };

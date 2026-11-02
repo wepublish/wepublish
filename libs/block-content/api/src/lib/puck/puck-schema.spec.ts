@@ -70,6 +70,16 @@ describe('puck block data schema', () => {
       events: '[Event!]',
       images: '[Image!]',
       memberPlans: '[MemberPlan!]',
+      template: 'PuckBlockTemplateData',
+    });
+  });
+
+  it('carries the current content of a linked block template', () => {
+    expect(fieldsOf('PuckBlockTemplateData')).toEqual({
+      id: 'String!',
+      name: 'String!',
+      puckBlocks: '[PuckBlock!]!',
+      puckRegistry: 'PuckRegistry',
     });
   });
 

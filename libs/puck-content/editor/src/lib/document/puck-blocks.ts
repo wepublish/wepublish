@@ -102,14 +102,14 @@ const isFilledSlot = (value: unknown): value is ComponentData[] =>
 const propPath = (parent: string, key: string) =>
   parent ? `${parent}.${key}` : key;
 
-const toPathKeys = (path: string): PathKey[] =>
+export const toPathKeys = (path: string): PathKey[] =>
   path.split('.').flatMap(segment => {
     const [key, ...indexes] = segment.split('[');
 
     return [key, ...indexes.map(index => Number.parseInt(index, 10))];
   });
 
-const getAtPath = (target: unknown, keys: PathKey[]): unknown =>
+export const getAtPath = (target: unknown, keys: PathKey[]): unknown =>
   keys.reduce<unknown>(
     (value, key) =>
       typeof key === 'number' ?
@@ -121,7 +121,7 @@ const getAtPath = (target: unknown, keys: PathKey[]): unknown =>
     target
   );
 
-const setAtPath = (
+export const setAtPath = (
   target: unknown,
   keys: PathKey[],
   value: unknown

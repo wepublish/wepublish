@@ -33,12 +33,21 @@ vi.mock(
   async () => (await import('./testUtils')).translationMock
 );
 
-const template = (id: string, name: string) => ({
+const template = (
+  id: string,
+  name: string,
+  puckBlocks: { id: string }[] | null = null
+) => ({
   __typename: 'ArticleTemplate',
   id,
   createdAt: '2026-01-01T00:00:00.000Z',
   modifiedAt: '2026-01-01T00:00:00.000Z',
-  blockTemplate: { __typename: 'BlockTemplate', id: `block-${id}`, name },
+  blockTemplate: {
+    __typename: 'BlockTemplate',
+    id: `block-${id}`,
+    name,
+    puckBlocks,
+  },
 });
 
 beforeEach(() => {
@@ -47,8 +56,12 @@ beforeEach(() => {
   templateListQueryMock.mockReturnValue({
     data: {
       articleTemplates: {
-        nodes: [template('template-1', 'News'), template('template-2', '')],
-        totalCount: 2,
+        nodes: [
+          template('template-1', 'News'),
+          template('template-2', ''),
+          template('template-3', 'Built', []),
+        ],
+        totalCount: 3,
       },
     },
     loading: false,
@@ -77,6 +90,7 @@ const renderList = () =>
                 deleteDocument={DeleteArticleTemplateDocument}
                 selectTemplates={data => data?.articleTemplates}
                 basePath="/things/templates"
+                puckBasePath="/puck/templates/things"
                 permissions={{ create: 'CREATE', delete: 'DELETE' }}
                 i18nPrefix="thingTemplates"
               />
@@ -107,8 +121,30 @@ describe('TemplateList', () => {
     ).toHaveAttribute('href', '/things/templates/edit/template-2');
     expect(
       screen.getByRole('link', { name: /thingTemplates.list.newTemplate/ })
-    ).toHaveAttribute('href', '/things/templates/create');
+    ).toHaveAttribute('href', '/puck/templates/things/create');
     expect(screen.getByText('thingTemplates.list.title')).toBeInTheDocument();
+  });
+
+  it('should open templates built in the page builder in the page builder', async () => {
+    renderList();
+
+    expect(await screen.findByRole('link', { name: 'Built' })).toHaveAttribute(
+      'href',
+      '/puck/templates/things/edit/template-3'
+    );
+  });
+
+  it('should open a copy of a template built in the page builder in the page builder', async () => {
+    renderList();
+
+    const copyButtons = await screen.findAllByRole('button', {
+      name: 'thingTemplates.list.copy',
+    });
+    fireEvent.click(copyButtons[2]);
+
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/puck/templates/things/create?copyFrom=template-3'
+    );
   });
 
   it('should give the name most of the row and keep the actions compact', async () => {

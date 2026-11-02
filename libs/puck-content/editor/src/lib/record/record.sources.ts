@@ -22,9 +22,12 @@ import {
   PageSort,
   PageWithoutBlocksFragment,
   PaywallListDocument,
+  PuckBlockTemplateOptionsDocument,
   SortOrder,
 } from '@wepublish/editor/api';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
+
+import { useEditedBlockTemplate } from '../saved-blocks/edited-block-template.context';
 
 import {
   matchesRecordQuery,
@@ -506,6 +509,53 @@ const usePaywallRecords = (ids: RecordId[]): RecordLookupResult => {
   };
 };
 
+const blockTemplateToOption = ({
+  id,
+  name,
+}: {
+  id: string;
+  name: string;
+}): RecordOption => ({ id, title: name });
+
+const useBlockTemplateSearch = (
+  query: string,
+  { skip = false }: RecordSearchOptions = {}
+) => {
+  const editedId = useEditedBlockTemplate();
+  const { data, loading, error } = useQuery(PuckBlockTemplateOptionsDocument, {
+    skip,
+  });
+
+  return staticSearchResult(
+    (data?.blockTemplates.nodes ?? [])
+      .filter(
+        template =>
+          !editedId ||
+          (template.id !== editedId &&
+            !template.linkedTemplateIds.includes(editedId))
+      )
+      .filter(template => matchesRecordQuery(template.name, query))
+      .map(blockTemplateToOption),
+    loading,
+    error
+  );
+};
+
+const useBlockTemplateRecords = (ids: RecordId[]): RecordLookupResult => {
+  const { data, loading } = useQuery(PuckBlockTemplateOptionsDocument, {
+    skip: !ids.length,
+  });
+
+  return {
+    records: byId(
+      (data?.blockTemplates.nodes ?? [])
+        .filter(template => ids.includes(template.id))
+        .map(blockTemplateToOption)
+    ),
+    loading,
+  };
+};
+
 const usePageRecords = (ids: RecordId[]) => useRecordLookup(ids, lookupPage);
 
 const useEventRecords = (ids: RecordId[]) => useRecordLookup(ids, lookupEvent);
@@ -546,6 +596,11 @@ export const recordSources: RecordSources = {
     model: 'paywall',
     useSearch: usePaywallSearch,
     useRecords: usePaywallRecords,
+  },
+  blockTemplate: {
+    model: 'blockTemplate',
+    useSearch: useBlockTemplateSearch,
+    useRecords: useBlockTemplateRecords,
   },
 };
 

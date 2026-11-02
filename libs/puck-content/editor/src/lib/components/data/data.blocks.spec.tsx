@@ -51,14 +51,16 @@ describe('dataComponents', () => {
     expect(screen.getByRole('heading', { name: 'Slotted title' })).toBeTruthy();
   });
 
-  it('shows nothing for a teaser block in a slot without a teaser', () => {
-    const { container } = renderWithProviders(
+  it('keeps a teaser block selectable in a slot without a teaser', () => {
+    renderWithProviders(
       <TeaserSlotContext.Provider value={null}>
         {teaserTitle()}
       </TeaserSlotContext.Provider>
     );
 
-    expect(container.childElementCount).toBe(0);
+    expect(screen.getByRole('status').textContent).toBe(
+      'Teaser title is empty and hidden on the website.'
+    );
   });
 
   it('shows the error of a teaser block outside any teaser slot', () => {

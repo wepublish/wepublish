@@ -250,6 +250,47 @@ describe('toPreviewSkeleton', () => {
   });
 });
 
+describe('linked block templates in the preview', () => {
+  const linkedDocument = document([
+    puckComponent('LinkedTemplate', 1, {
+      templateId: 'tpl',
+      styling: { xs: { color: 'primary.main' } },
+    }),
+  ]);
+
+  it('keeps the template id, as the API resolves the template from it', () => {
+    expect(toPreviewSkeleton(linkedDocument, config).puckBlocks).toEqual([
+      expect.objectContaining({
+        type: 'LinkedTemplate',
+        props: { templateId: 'tpl' },
+      }),
+    ]);
+  });
+
+  it('asks for a preview even when nothing in the document has a datasource', () => {
+    expect(
+      hasPreviewDatasources(toPreviewSkeleton(linkedDocument, config))
+    ).toBe(true);
+  });
+
+  it('asks for a linked block nested in a slot', () => {
+    expect(
+      hasPreviewDatasources(
+        toPreviewSkeleton(
+          document([
+            puckComponent('Container', 1, {
+              content: [
+                puckComponent('LinkedTemplate', 2, { templateId: 'tpl' }),
+              ],
+            }),
+          ]),
+          config
+        )
+      )
+    ).toBe(true);
+  });
+});
+
 describe('hasPreviewDatasources', () => {
   it('is true when a block anywhere in the tree has a datasource', () => {
     expect(

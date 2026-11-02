@@ -996,6 +996,7 @@
       "uniqueEmail": "Cette adresse e-mail est déjà utilisée.",
       "uniqueField": "Cette valeur est déjà utilisée ({{field}}).",
       "inUse": "Cette entrée est encore utilisée et ne peut donc pas être supprimée.",
+      "circularBlockTemplate": "Un modèle de bloc ne peut pas se contenir lui-même, pas même via un autre modèle lié.",
       "forbidden": "Vous n’avez pas l’autorisation pour cette action.",
       "network": "Pas de connexion au serveur. Vérifiez votre connexion Internet et réessayez.",
       "unexpected": "Une erreur est survenue. Réessayez – si le problème persiste, contactez le support."
@@ -2797,7 +2798,8 @@
         "saveConfirmMessage": "L’enregistrement met immédiatement à jour le contenu de ce modèle dans tous les articles et pages qui l’utilisent, y compris ceux déjà publiés.",
         "saveConfirmTitle": "Enregistrer le modèle ?",
         "created": "Créé",
-        "empty": "Ce modèle n'a pas encore de blocs. Ajoute le premier avec +."
+        "empty": "Ce modèle n'a pas encore de blocs. Ajoute le premier avec +.",
+        "copyName": "{{name}} (copie)"
       }
     },
     "yes": "Oui",
@@ -4605,6 +4607,9 @@
         "pageTemplate": "Créer un modèle de page",
         "puckPage": "Créer une page avec Puck",
         "puckArticle": "Créer un article avec Puck",
+        "puckArticleTemplate": "Créer un modèle d'article avec Puck",
+        "puckPageTemplate": "Créer un modèle de page avec Puck",
+        "puckBlockTemplate": "Créer un modèle de bloc avec Puck",
         "pageTag": "Créer un tag de page",
         "crowdfunding": "Créer un crowdfunding",
         "blockTemplate": "Créer un modèle de bloc",
@@ -5022,6 +5027,7 @@
         }
       },
       "documentKind": {
+        "blockTemplate": "Modèle de bloc",
         "article": "Article",
         "page": "Page"
       },
@@ -5205,7 +5211,13 @@
         "unknownPage": "Page inconnue",
         "unknownPaywall": "Paywall inconnu",
         "unpublished": "Non publié",
-        "untitled": "Sans titre"
+        "untitled": "Sans titre",
+        "blockTemplate": "Modèle de bloc",
+        "blockTemplates": "Modèles de blocs",
+        "searchBlockTemplates": "Rechercher des modèles de blocs…",
+        "addBlockTemplate": "Ajouter un modèle de bloc",
+        "noBlockTemplatesFound": "Aucun modèle de bloc trouvé",
+        "unknownBlockTemplate": "Modèle de bloc inconnu"
       },
       "seoPreview": {
         "seoPreview": "Aperçu SEO"
@@ -5303,7 +5315,9 @@
         "tags": "Tags"
       },
       "teaser": {
-        "noRecord": "Pas encore d’enregistrement. Choisissez-en un ou placez ce teaser dans un bloc qui liste des enregistrements."
+        "noRecord": "Pas encore d’enregistrement. Choisissez-en un ou placez ce teaser dans un bloc qui liste des enregistrements.",
+        "emptyHidden": "{{part}} est vide et masqué sur le site web.",
+        "emptyKept": "{{part}} est vide. Le site web réserve son espace."
       },
       "typography": {
         "black": "Noir",
@@ -5368,7 +5382,7 @@
         },
         "names": {
           "Title": "Titre",
-          "RichText": "Texte",
+          "RichText": "RichText",
           "Quote": "Citation",
           "Listicle": "Listicle",
           "Button": "Bouton",
@@ -5416,12 +5430,70 @@
           "Polis": "Polis",
           "IFrame": "Page web (iframe)",
           "Html": "HTML personnalisé",
-          "BildwurfAd": "Annonce Bildwurf"
+          "BildwurfAd": "Annonce Bildwurf",
+          "LinkedTemplate": "Modèle lié"
         }
       },
       "headingAudit": {
         "subtitle": "Structure des titres de la page dans l’éditeur",
         "title": "Audit des titres"
+      },
+      "templates": {
+        "status": "Modèle",
+        "name": "Nom du modèle",
+        "nameRequired": "Donnez un nom au modèle avant de l'enregistrer.",
+        "notFound": "Ce modèle n'existe pas.",
+        "created": "Modèle créé",
+        "saved": "Modèle enregistré"
+      },
+      "imageFit": {
+        "aspectRatio": "Format",
+        "objectFit": "Ajustement",
+        "ratioWidth": "Largeur du format",
+        "ratioHeight": "Hauteur du format",
+        "ratios": {
+          "auto": "Original",
+          "square": "1:1 carré",
+          "landscape43": "4:3 paysage",
+          "landscape32": "3:2 paysage",
+          "widescreen": "16:9 grand écran",
+          "cinema": "21:9 cinéma",
+          "portrait34": "3:4 portrait",
+          "portrait23": "2:3 portrait",
+          "vertical": "9:16 vertical",
+          "custom": "Personnalisé"
+        },
+        "fits": {
+          "cover": "Couvrir : remplir le cadre et recadrer",
+          "contain": "Contenir : afficher l’image entière",
+          "fill": "Remplir : étirer jusqu’au cadre",
+          "none": "Aucun : taille d’origine, recadrée",
+          "scaleDown": "Réduire : comme contenir, jamais agrandie"
+        },
+        "fitHint": "S’applique dès qu’un format est défini."
+      },
+      "savedBlocks": {
+        "componentSkipped_one": "Le composant de modèle « {{names}} » a été ignoré : ce document contient déjà un autre composant portant ce nom.",
+        "componentSkipped_other": "Les composants de modèle « {{names}} » ont été ignorés : ce document contient déjà d'autres composants portant ces noms.",
+        "loadMore": "Charger d'autres blocs enregistrés",
+        "title": "Blocs enregistrés",
+        "empty": "Enregistrez un bloc depuis sa barre d'outils pour le réutiliser ici.",
+        "create": "Nouveau modèle de bloc",
+        "save": "Enregistrer comme modèle de bloc",
+        "name": "Nom",
+        "cancel": "Annuler",
+        "confirm": "Enregistrer",
+        "failed": "Le modèle de bloc n'a pas pu être enregistré."
+      },
+      "linkedTemplate": {
+        "badge": "Modèle lié : {{name}}",
+        "missing": "Le modèle de bloc lié n'existe plus.",
+        "loading": "Chargement du modèle de bloc lié…",
+        "edit": "Modifier le modèle",
+        "unlink": "Délier",
+        "insertLinked": "Insérer lié",
+        "insertCopy": "Insérer une copie",
+        "more": "Autres façons d'insérer « {{name}} »"
       }
     }
   }

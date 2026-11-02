@@ -2,8 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
 import { PublicContentCacheInvalidator } from '@wepublish/public-content-cache/api';
+import {
+  PuckDocumentInput,
+  puckDocumentColumns,
+} from '@wepublish/puck-content/api';
 import { BlockContentInput, mapBlockUnionMap } from '../block-content.model';
 import { BlockType } from '../block-type.model';
+import { linkedTemplateIdsOf } from '../puck/linked-template';
 import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
 import {
   BlockTemplateFilter,
@@ -12,6 +17,14 @@ import {
   CreateBlockTemplateInput,
   UpdateBlockTemplateInput,
 } from './block-template.model';
+
+type TemplateContent = PuckDocumentInput & {
+  blocks?: BlockContentInput[] | null;
+};
+
+type MappedTemplateContent = {
+  blocks: Prisma.InputJsonValue;
+} & ReturnType<typeof puckDocumentColumns>;
 
 @Injectable()
 export class BlockTemplateService {
@@ -66,11 +79,20 @@ export class BlockTemplateService {
   }
 
   @PrimeDataLoader(BlockTemplateDataloaderService)
-  public async createBlockTemplate({ name, blocks }: CreateBlockTemplateInput) {
+  public async createBlockTemplate({
+    name,
+    blocks,
+    puckBlocks,
+    puckRegistry,
+  }: CreateBlockTemplateInput) {
     return this.prisma.blockTemplate.create({
       data: {
         name,
-        blocks: await this.mapBlocks(blocks),
+        ...(await this.mapTemplateContent({
+          blocks,
+          puckBlocks,
+          puckRegistry,
+        })),
       },
     });
   }
@@ -80,6 +102,8 @@ export class BlockTemplateService {
     id,
     name,
     blocks,
+    puckBlocks,
+    puckRegistry,
   }: UpdateBlockTemplateInput) {
     await this.assertNotOwnedByTemplate(id);
 
@@ -89,7 +113,10 @@ export class BlockTemplateService {
       },
       data: {
         name,
-        blocks: await this.mapBlocks(blocks, id),
+        ...(await this.mapTemplateContent(
+          { blocks, puckBlocks, puckRegistry },
+          id
+        )),
       },
     });
 
@@ -140,6 +167,49 @@ export class BlockTemplateService {
     return blocks.map(mapBlockUnionMap) as unknown as Prisma.InputJsonValue;
   }
 
+  public async mapTemplateContent(
+    content: TemplateContent
+  ): Promise<MappedTemplateContent>;
+  public async mapTemplateContent(
+    content: TemplateContent,
+    id: string
+  ): Promise<Partial<MappedTemplateContent>>;
+  public async mapTemplateContent(
+    { blocks, puckBlocks, puckRegistry }: TemplateContent,
+    id?: string
+  ): Promise<Partial<MappedTemplateContent>> {
+    const stored =
+      id ?
+        await this.prisma.blockTemplate.findUnique({
+          where: { id },
+          select: { puckBlocks: true, puckRegistry: true },
+        })
+      : null;
+    const puckDocument = puckDocumentColumns(
+      { puckBlocks, puckRegistry },
+      stored
+    );
+
+    const linkedIDs = linkedTemplateIdsOf(puckBlocks);
+
+    if (linkedIDs.length) {
+      await this.assertNoTemplateReference(linkedIDs);
+    }
+
+    if (id && linkedIDs.length) {
+      await this.assertNoCircularReference(id, linkedIDs);
+    }
+
+    if (id && !blocks) {
+      return puckDocument;
+    }
+
+    return {
+      blocks: await this.mapBlocks(blocks ?? [], id),
+      ...puckDocument,
+    };
+  }
+
   private async assertNotOwnedByTemplate(id: string) {
     const [articleTemplates, pageTemplates] = await Promise.all([
       this.prisma.articleTemplate.count({
@@ -181,26 +251,39 @@ export class BlockTemplateService {
     }
   }
 
-  private async assertNoCircularReference(id: string, templateIds: string[]) {
+  public async linkedTemplateIds({
+    blocks,
+    puckBlocks,
+  }: {
+    blocks?: unknown;
+    puckBlocks?: unknown;
+  }): Promise<string[]> {
+    return this.referencedClosure(referencedTemplateIds(blocks, puckBlocks));
+  }
+
+  private async referencedClosure(
+    templateIds: string[],
+    stopAt?: string
+  ): Promise<string[]> {
+    const found = new Set<string>();
     let referencedIDs = new Set(templateIds);
-    const visitedIDs = new Set<string>();
 
     while (referencedIDs.size) {
-      if (referencedIDs.has(id)) {
+      if (stopAt && referencedIDs.has(stopAt)) {
         throw new BadRequestException(
           `Block templates can not contain circular references.`
         );
       }
 
       const idsToVisit = [...referencedIDs].filter(
-        referencedID => !visitedIDs.has(referencedID)
+        referencedID => !found.has(referencedID)
       );
 
       if (!idsToVisit.length) {
-        return;
+        break;
       }
 
-      idsToVisit.forEach(idToVisit => visitedIDs.add(idToVisit));
+      idsToVisit.forEach(idToVisit => found.add(idToVisit));
 
       const templates = await this.prisma.blockTemplate.findMany({
         where: {
@@ -210,14 +293,32 @@ export class BlockTemplateService {
         },
         select: {
           blocks: true,
+          puckBlocks: true,
         },
       });
 
       referencedIDs = new Set(
-        templates.flatMap(({ blocks }) => getStoredTemplateIDs(blocks))
+        templates.flatMap(({ blocks, puckBlocks }) =>
+          referencedTemplateIds(blocks, puckBlocks)
+        )
       );
     }
+
+    return [...found];
   }
+
+  private async assertNoCircularReference(id: string, templateIds: string[]) {
+    await this.referencedClosure(templateIds, id);
+  }
+}
+
+function referencedTemplateIds(blocks: unknown, puckBlocks: unknown) {
+  return [
+    ...new Set([
+      ...getStoredTemplateIDs(blocks),
+      ...linkedTemplateIdsOf(puckBlocks),
+    ]),
+  ];
 }
 
 function createBlockTemplateOrder(
@@ -249,6 +350,13 @@ function createBlockTemplateFilter(
   const conditions: Prisma.BlockTemplateWhereInput[] = [
     { articleTemplate: null, pageTemplate: null },
   ];
+
+  if (filter?.puck != null) {
+    conditions.push({
+      puckBlocks:
+        filter.puck ? { not: Prisma.DbNull } : { equals: Prisma.DbNull },
+    });
+  }
 
   if (filter?.name) {
     conditions.push({

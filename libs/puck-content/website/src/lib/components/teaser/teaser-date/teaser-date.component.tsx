@@ -3,8 +3,9 @@ import { selectTeaserDate } from '@wepublish/block-content/website';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 
 import { useTeaserSlot } from '../../../contexts/teaser-slot.context';
+import { HideWhenEmptyProps } from '../teaser-part';
 
-export type TeaserDateConfigProps = {
+export type TeaserDateConfigProps = HideWhenEmptyProps & {
   className?: string;
   showTime?: boolean;
 };
@@ -12,13 +13,23 @@ export type TeaserDateConfigProps = {
 export const TeaserDate = ({
   className,
   showTime = false,
+  hideWhenEmpty = true,
 }: TeaserDateConfigProps) => {
   const { date } = useWebsiteBuilder();
   const teaser = useTeaserSlot();
   const publishDate = teaser && selectTeaserDate(teaser);
 
   if (!publishDate) {
-    return null;
+    return hideWhenEmpty ? null : (
+        <Typography
+          className={className}
+          variant="teaserMeta"
+          component="span"
+          aria-hidden
+        >
+          {' '}
+        </Typography>
+      );
   }
 
   return (

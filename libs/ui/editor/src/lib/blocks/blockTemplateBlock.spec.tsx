@@ -207,6 +207,16 @@ describe('BlockTemplateBlock', () => {
       expect(blocks.map(({ value }) => value.disabled)).toEqual([false, true]);
     });
 
+    it('should only offer block templates of the block editor', () => {
+      renderBlock({ value: { template: null } });
+
+      expect(blockTemplateListQueryMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: expect.objectContaining({ filter: { puck: false } }),
+        })
+      );
+    });
+
     it('should only show the select label once while nothing is selected', () => {
       renderBlock({ value: { template: null } });
 

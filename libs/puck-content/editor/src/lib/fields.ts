@@ -11,6 +11,7 @@ import { DatasourceField } from './datasource/datasource.field';
 import { GapField } from './gap/gap.field';
 import { GridPlacementField } from './grid-placement/grid-placement.field';
 import { ImageField } from './image/image.field';
+import { AspectRatioField, ObjectFitField } from './image-fit/image-fit.field';
 import { ListField } from './list/list.field';
 import { PaddingField } from './padding/padding.field';
 import { PaletteField } from './palette/palette.field';
@@ -45,6 +46,8 @@ export type UserFields = {
   typography: TypographyField;
   switch: SwitchField;
   image: ImageField;
+  aspectRatio: AspectRatioField;
+  objectFit: ObjectFitField;
   visibility: VisibilityField;
   blockVisibility: BlockVisibilityField;
   resolved: ResolvedField;

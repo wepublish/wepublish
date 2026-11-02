@@ -8,6 +8,7 @@ export type SwitchValue = boolean;
 
 export type SwitchField = BaseField & {
   type: 'switch';
+  defaultValue?: boolean;
 };
 
 export const switchSchema = z.boolean();

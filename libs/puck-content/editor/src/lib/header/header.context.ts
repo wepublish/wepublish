@@ -20,6 +20,10 @@ export type PuckDocumentAutosave = {
   onToggle: (enabled: boolean) => void;
 };
 
+export type PuckDocumentMenuAction = EditorHeaderMenuAction & {
+  needsSaved?: boolean;
+};
+
 export type PuckDocumentController = {
   backTo: string;
   backLabel: string;
@@ -34,7 +38,7 @@ export type PuckDocumentController = {
   previewUrl?: string;
   publishDialog?: PuckPublishDialogConfig;
   autosave?: PuckDocumentAutosave;
-  menuActions?: EditorHeaderMenuAction[];
+  menuActions?: PuckDocumentMenuAction[];
   onSave(data: Data): Promise<void>;
   onPublish?(data: Data, publishedAt: Date): Promise<void>;
 };

@@ -6,12 +6,94 @@ import {
   puckEditorConfig,
   toEditorData,
   viewportPresets,
+  blockTemplateEditorConfig,
+  dynamicComponentsKey,
   visibleViewportPresets,
+  withTemplateFields,
 } from './puck-editor.config';
 
 const data: Data = { root: { props: {} }, content: [] };
 
+describe('withTemplateFields', () => {
+  it.each(['article', 'page'] as const)(
+    'puts the name of a %s template first and leaves out the slug',
+    kind => {
+      const root = withTemplateFields(
+        puckEditorConfig(kind, data),
+        'Name'
+      ).root;
+      const fields = Object.keys(root?.fields ?? {});
+
+      expect(fields[0]).toBe('templateName');
+      expect(root?.fields?.['templateName' as never]).toEqual(
+        expect.objectContaining({ type: 'custom', label: 'Name' })
+      );
+      expect(fields).not.toContain('slug');
+      expect(fields).toContain('title');
+      expect(fields).toContain('_dynamicConfig');
+    }
+  );
+
+  it('keeps the root rendering and field tabs of the document', () => {
+    const config = puckEditorConfig('article', data);
+    const template = withTemplateFields(config, 'Name');
+
+    expect(template.root?.render).toBe(config.root?.render);
+    expect(template.root?.renderFields).toBe(config.root?.renderFields);
+    expect(template.components).toBe(config.components);
+  });
+});
+
+describe('blockTemplateEditorConfig', () => {
+  it('only asks for the name of a block template', () => {
+    const fields = Object.keys(
+      blockTemplateEditorConfig(data, 'Name').root?.fields ?? {}
+    );
+
+    expect(fields).toEqual(['templateName', '_dynamicConfig']);
+  });
+
+  it('asks for the name in a field password managers leave alone', () => {
+    expect(
+      blockTemplateEditorConfig(data, 'Name').root?.fields?.[
+        'templateName' as never
+      ]
+    ).toEqual(expect.objectContaining({ type: 'custom', label: 'Name' }));
+  });
+
+  it('renders the blocks without the navigation and footer of a page', () => {
+    const page = puckEditorConfig('page', data);
+    const template = blockTemplateEditorConfig(data, 'Name');
+
+    expect(template.root?.render).not.toBe(page.root?.render);
+    expect(Object.keys(template.components)).toEqual(
+      Object.keys(page.components)
+    );
+  });
+});
+
+describe('dynamicComponentsKey', () => {
+  it('changes only when the generated components of the document change', () => {
+    const withHero = {
+      root: {
+        props: { _dynamicConfig: { components: { Hero: { html: '' } } } },
+      },
+      content: [],
+    } as Data;
+
+    expect(dynamicComponentsKey(data)).toBe('');
+    expect(dynamicComponentsKey(withHero)).toBe('Hero');
+  });
+});
+
 describe('puckEditorConfig', () => {
+  it('can drop saved blocks, but never lists the placeholder', () => {
+    expect(puckEditorConfig('article', data).components).toHaveProperty(
+      'SavedBlocks',
+      expect.objectContaining({ hidden: true })
+    );
+  });
+
   it('gives articles the article root fields', () => {
     const fields = Object.keys(
       puckEditorConfig('article', data).root?.fields ?? {}

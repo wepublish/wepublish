@@ -18,6 +18,7 @@ function ArticleTemplateList() {
       deleteDocument={DeleteArticleTemplateDocument}
       selectTemplates={data => data?.articleTemplates}
       basePath="/articles/templates"
+      puckBasePath="/puck/templates/articles"
       permissions={{
         create: CanCreateArticleTemplate.id,
         delete: CanDeleteArticleTemplate.id,

@@ -10,3 +10,6 @@ export const PuckBlockDataContext = createContext<PuckBlockDataMap>(new Map());
 
 export const usePuckBlockData = (id: string): PuckBlockData =>
   useContext(PuckBlockDataContext).get(id) ?? emptyPuckBlockData;
+
+export const useHasPuckBlockData = (id: string): boolean =>
+  useContext(PuckBlockDataContext).has(id);

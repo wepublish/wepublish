@@ -996,6 +996,7 @@
       "uniqueEmail": "This email address is already in use.",
       "uniqueField": "This value is already taken ({{field}}).",
       "inUse": "This entry is still in use and therefore can't be deleted.",
+      "circularBlockTemplate": "A block template can't contain itself, not even through another linked template.",
       "forbidden": "You don't have permission for this action.",
       "network": "No connection to the server. Please check your internet connection and try again.",
       "unexpected": "Something went wrong. Please try again – if the problem persists, contact support."
@@ -2857,7 +2858,8 @@
         "saveConfirmMessage": "Saving updates this template's content right away in every article and page that uses it, including published ones.",
         "saveConfirmTitle": "Save template?",
         "created": "Created",
-        "empty": "This template has no blocks yet. Add the first one with +."
+        "empty": "This template has no blocks yet. Add the first one with +.",
+        "copyName": "{{name}} (Copy)"
       }
     },
     "yes": "Yes",
@@ -4605,6 +4607,9 @@
         "pageTemplate": "Create page template",
         "puckPage": "Create page with Puck",
         "puckArticle": "Create article with Puck",
+        "puckArticleTemplate": "Create article template with Puck",
+        "puckPageTemplate": "Create page template with Puck",
+        "puckBlockTemplate": "Create block template with Puck",
         "pageTag": "Create page tag",
         "crowdfunding": "Create crowdfunding",
         "blockTemplate": "Create block template",
@@ -5022,6 +5027,7 @@
         }
       },
       "documentKind": {
+        "blockTemplate": "Block template",
         "article": "Article",
         "page": "Page"
       },
@@ -5205,7 +5211,13 @@
         "unknownPage": "Unknown page",
         "unknownPaywall": "Unknown paywall",
         "unpublished": "Unpublished",
-        "untitled": "Untitled"
+        "untitled": "Untitled",
+        "blockTemplate": "Block template",
+        "blockTemplates": "Block templates",
+        "searchBlockTemplates": "Search block templates…",
+        "addBlockTemplate": "Add block template",
+        "noBlockTemplatesFound": "No block templates found",
+        "unknownBlockTemplate": "Unknown block template"
       },
       "seoPreview": {
         "seoPreview": "SEO preview"
@@ -5303,7 +5315,9 @@
         "tags": "Tags"
       },
       "teaser": {
-        "noRecord": "No record yet. Pick one, or place this teaser in a block that lists records."
+        "noRecord": "No record yet. Pick one, or place this teaser in a block that lists records.",
+        "emptyHidden": "{{part}} is empty and hidden on the website.",
+        "emptyKept": "{{part}} is empty. The website keeps its space free."
       },
       "typography": {
         "black": "Black",
@@ -5368,7 +5382,7 @@
         },
         "names": {
           "Title": "Title",
-          "RichText": "Text",
+          "RichText": "RichText",
           "Quote": "Quote",
           "Listicle": "Listicle",
           "Button": "Button",
@@ -5416,12 +5430,70 @@
           "Polis": "Polis",
           "IFrame": "Web page (iframe)",
           "Html": "Custom HTML",
-          "BildwurfAd": "Bildwurf ad"
+          "BildwurfAd": "Bildwurf ad",
+          "LinkedTemplate": "Linked template"
         }
       },
       "headingAudit": {
         "subtitle": "Heading structure of the page on the canvas",
         "title": "Heading audit"
+      },
+      "templates": {
+        "status": "Template",
+        "name": "Template name",
+        "nameRequired": "Give the template a name before saving it.",
+        "notFound": "This template does not exist.",
+        "created": "Template created",
+        "saved": "Template saved"
+      },
+      "imageFit": {
+        "aspectRatio": "Aspect ratio",
+        "objectFit": "Fit",
+        "ratioWidth": "Ratio width",
+        "ratioHeight": "Ratio height",
+        "ratios": {
+          "auto": "Original",
+          "square": "1:1 square",
+          "landscape43": "4:3 landscape",
+          "landscape32": "3:2 landscape",
+          "widescreen": "16:9 widescreen",
+          "cinema": "21:9 cinema",
+          "portrait34": "3:4 portrait",
+          "portrait23": "2:3 portrait",
+          "vertical": "9:16 vertical",
+          "custom": "Custom"
+        },
+        "fits": {
+          "cover": "Cover: fill the frame and crop",
+          "contain": "Contain: show the whole image",
+          "fill": "Fill: stretch to the frame",
+          "none": "None: original size, cropped",
+          "scaleDown": "Scale down: like contain, never enlarged"
+        },
+        "fitHint": "Applies once a ratio is set."
+      },
+      "savedBlocks": {
+        "componentSkipped_one": "The template component “{{names}}” was skipped: this document already has a different component of that name.",
+        "componentSkipped_other": "The template components “{{names}}” were skipped: this document already has different components of those names.",
+        "loadMore": "Load more saved blocks",
+        "title": "Saved blocks",
+        "empty": "Save a block from its toolbar to reuse it here.",
+        "create": "New block template",
+        "save": "Save as block template",
+        "name": "Name",
+        "cancel": "Cancel",
+        "confirm": "Save",
+        "failed": "The block template could not be saved."
+      },
+      "linkedTemplate": {
+        "badge": "Linked template: {{name}}",
+        "missing": "The linked block template no longer exists.",
+        "loading": "Loading the linked block template…",
+        "edit": "Edit template",
+        "unlink": "Unlink",
+        "insertLinked": "Insert linked",
+        "insertCopy": "Insert as copy",
+        "more": "More ways to insert “{{name}}”"
       }
     }
   }

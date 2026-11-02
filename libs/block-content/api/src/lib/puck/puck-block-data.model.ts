@@ -5,6 +5,33 @@ import { Event } from '@wepublish/event/api';
 import { Image } from '@wepublish/image/api';
 import { MemberPlan } from '@wepublish/member-plan/api';
 import { Page } from '@wepublish/page/api';
+import {
+  ApiPuckRegistry,
+  FlatPuckBlock,
+  PuckBlock,
+  PuckRegistry,
+} from '@wepublish/puck-content/api';
+
+@ObjectType({
+  description:
+    'The current content of the block template a linked Puck block points at.',
+})
+export class PuckBlockTemplateData {
+  @Field()
+  id!: string;
+
+  @Field()
+  name!: string;
+
+  @Field(() => [PuckBlock], {
+    description:
+      'The blocks of the template, read flat like revision puckBlocks. Their ids are prefixed with the id of the linked block, and linked templates inside the template sit in the `template` slot of their linked block.',
+  })
+  puckBlocks!: FlatPuckBlock[];
+
+  @Field(() => PuckRegistry, { nullable: true })
+  puckRegistry!: ApiPuckRegistry | null;
+}
 
 @ObjectType({
   description:
@@ -27,6 +54,13 @@ export class PuckBlockData {
   memberPlans!: MemberPlan[] | null;
 
   userSubscriptions!: Subscription[] | null;
+
+  @Field(() => PuckBlockTemplateData, {
+    nullable: true,
+    description:
+      'For a linked block template: the template it points at, null when it is missing, links back to itself or is nested too deep.',
+  })
+  template?: PuckBlockTemplateData | null;
 }
 
 export const emptyPuckBlockData: PuckBlockData = {

@@ -115,6 +115,27 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     perform: ({ navigate }) => navigate('/puck/articles/create'),
   },
   {
+    id: 'createPuckArticleTemplate',
+    titleKey: 'commandPalette.create.puckArticleTemplate',
+    icon: <MdNoteAdd />,
+    permissions: [CanCreateArticleTemplate.id],
+    perform: ({ navigate }) => navigate('/puck/templates/articles/create'),
+  },
+  {
+    id: 'createPuckPageTemplate',
+    titleKey: 'commandPalette.create.puckPageTemplate',
+    icon: <MdNoteAdd />,
+    permissions: [CanCreatePageTemplate.id],
+    perform: ({ navigate }) => navigate('/puck/templates/pages/create'),
+  },
+  {
+    id: 'createPuckBlockTemplate',
+    titleKey: 'commandPalette.create.puckBlockTemplate',
+    icon: <MdContentCopy />,
+    permissions: [CanCreateBlockTemplate.id],
+    perform: ({ navigate }) => navigate('/puck/templates/blocks/create'),
+  },
+  {
     id: 'createPageTag',
     titleKey: 'commandPalette.create.pageTag',
     icon: <MdSell />,

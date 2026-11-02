@@ -65,7 +65,7 @@ const toConfig = ({
   ...(typeof script === 'string' && { script }),
 });
 
-const dynamicConfigKey = '_dynamicConfig';
+export const dynamicConfigKey = '_dynamicConfig';
 
 export const dynamicConfigOf = (rootProps: object | null | undefined) =>
   rootProps && dynamicConfigKey in rootProps ?

@@ -53,6 +53,14 @@ fragment FullArticleTemplate on ArticleTemplate {
 
   blockTemplate {
     ...FullBlockTemplate
+
+    puckBlocks(onlyDisplayed: false) {
+      ...FullPuckBlock
+    }
+
+    puckRegistry {
+      ...FullPuckRegistry
+    }
   }
 
   metadata {
@@ -84,6 +92,10 @@ query ArticleTemplateList(
       blockTemplate {
         id
         name
+
+        puckBlocks(onlyDisplayed: false) {
+          id
+        }
       }
     }
 
@@ -106,10 +118,18 @@ query ArticleTemplate($id: String!) {
 
 mutation CreateArticleTemplate(
   $name: String!
-  $blocks: [BlockContentInput!]!
+  $blocks: [BlockContentInput!] = []
+  $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
   $metadata: ArticleTemplateMetadataInput!
 ) {
-  createArticleTemplate(name: $name, blocks: $blocks, metadata: $metadata) {
+  createArticleTemplate(
+    name: $name
+    blocks: $blocks
+    puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
+    metadata: $metadata
+  ) {
     ...FullArticleTemplate
   }
 }
@@ -117,13 +137,17 @@ mutation CreateArticleTemplate(
 mutation UpdateArticleTemplate(
   $id: String!
   $name: String!
-  $blocks: [BlockContentInput!]!
+  $blocks: [BlockContentInput!]
+  $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
   $metadata: ArticleTemplateMetadataInput!
 ) {
   updateArticleTemplate(
     id: $id
     name: $name
     blocks: $blocks
+    puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
     metadata: $metadata
   ) {
     ...FullArticleTemplate

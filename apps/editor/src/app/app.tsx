@@ -148,6 +148,21 @@ const PuckPageEditor = lazy(() =>
     default: m.PuckPageEditor,
   }))
 );
+const PuckArticleTemplateEditor = lazy(() =>
+  import('./routes/puck/puck-article-template-editor').then(m => ({
+    default: m.PuckArticleTemplateEditor,
+  }))
+);
+const PuckBlockTemplateEditor = lazy(() =>
+  import('./routes/puck/puck-block-template-editor').then(m => ({
+    default: m.PuckBlockTemplateEditor,
+  }))
+);
+const PuckPageTemplateEditor = lazy(() =>
+  import('./routes/puck/puck-page-template-editor').then(m => ({
+    default: m.PuckPageTemplateEditor,
+  }))
+);
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -326,6 +341,54 @@ function AppRoutes() {
           element={
             <Suspense>
               <PuckPageEditor />
+            </Suspense>
+          }
+        />
+        <Route
+          path="puck/templates/articles/create"
+          element={
+            <Suspense>
+              <PuckArticleTemplateEditor />
+            </Suspense>
+          }
+        />
+        <Route
+          path="puck/templates/articles/edit/:id"
+          element={
+            <Suspense>
+              <PuckArticleTemplateEditor />
+            </Suspense>
+          }
+        />
+        <Route
+          path="puck/templates/pages/create"
+          element={
+            <Suspense>
+              <PuckPageTemplateEditor />
+            </Suspense>
+          }
+        />
+        <Route
+          path="puck/templates/pages/edit/:id"
+          element={
+            <Suspense>
+              <PuckPageTemplateEditor />
+            </Suspense>
+          }
+        />
+        <Route
+          path="puck/templates/blocks/create"
+          element={
+            <Suspense>
+              <PuckBlockTemplateEditor />
+            </Suspense>
+          }
+        />
+        <Route
+          path="puck/templates/blocks/edit/:id"
+          element={
+            <Suspense>
+              <PuckBlockTemplateEditor />
             </Suspense>
           }
         />

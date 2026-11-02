@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router-dom';
 
+import { hasPuckBlocks } from '../editorPath';
 import { DeleteBlockTemplateModal } from './deleteBlockTemplateModal';
 
 function BlockTemplateList() {
@@ -56,7 +57,7 @@ function BlockTemplateList() {
         <ListViewActions>
           <Button
             component={RouterLink}
-            to="/block-content/templates/create"
+            to="/puck/templates/blocks/create"
             variant="contained"
             startIcon={<MdAdd />}
           >
@@ -76,7 +77,13 @@ function BlockTemplateList() {
               alwaysVisible: true,
               label: t('blockTemplates.list.name'),
               render: rowData => (
-                <Link to={`/block-content/templates/edit/${rowData.id}`}>
+                <Link
+                  to={
+                    hasPuckBlocks(rowData) ?
+                      `/puck/templates/blocks/edit/${rowData.id}`
+                    : `/block-content/templates/edit/${rowData.id}`
+                  }
+                >
                   {rowData.name || t('blockTemplates.list.noName')}
                 </Link>
               ),

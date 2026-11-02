@@ -69,6 +69,7 @@ export * from '../teaser/teaser-lead/teaser-lead.component';
 export * from '../teaser/teaser-pre-title/teaser-pre-title.component';
 export * from '../teaser/teaser-tags/teaser-tags.component';
 export * from '../teaser/teaser-title/teaser-title.component';
+export * from '../teaser/teaser-part';
 export * from '../teaser/teaser.render';
 export * from '../teaser/teaser/teaser.component';
 export * from '../teaser/teaser/teaser.styles';

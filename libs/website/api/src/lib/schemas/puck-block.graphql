@@ -99,7 +99,7 @@ fragment FullPuckBlockStyling on PuckBlockStyling {
   }
 }
 
-fragment FullPuckBlock on PuckBlock {
+fragment PuckBlockFields on PuckBlock {
   id
   kind
   type
@@ -161,8 +161,39 @@ fragment FullPuckBlock on PuckBlock {
     }
   }
 
+}
+
+
+fragment TemplatePuckBlock on PuckBlock {
+  ...PuckBlockFields
+
   data {
     ...FullPuckBlockData
+  }
+}
+
+fragment PuckBlockTemplateContent on PuckBlockTemplateData {
+  id
+  name
+
+  puckBlocks {
+    ...TemplatePuckBlock
+  }
+
+  puckRegistry {
+    ...FullPuckRegistry
+  }
+}
+
+fragment FullPuckBlock on PuckBlock {
+  ...PuckBlockFields
+
+  data {
+    ...FullPuckBlockData
+
+    template {
+      ...PuckBlockTemplateContent
+    }
   }
 }
 

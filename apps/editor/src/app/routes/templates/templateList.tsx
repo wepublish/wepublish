@@ -21,7 +21,11 @@ import { useTranslation } from 'react-i18next';
 import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
-export type TemplateRow = { id: string; blockTemplate: { name: string } };
+import { EditableTemplate, isPuckTemplate } from '../editorPath';
+
+export type TemplateRow = EditableTemplate & {
+  blockTemplate: { name: string };
+};
 
 type TemplateListVariables = {
   take?: number | null;
@@ -34,8 +38,8 @@ export type TemplateListProps<Data> = {
   selectTemplates(
     data: Data | undefined
   ): { nodes: TemplateRow[]; totalCount: number } | undefined;
-  /** e.g. `/articles/templates`; rows link to `${basePath}/edit/:id`. */
   basePath: string;
+  puckBasePath: string;
   permissions: { create: string; delete: string };
   /** Translation namespace with `list.*` and `delete.*` keys. */
   i18nPrefix: string;
@@ -52,6 +56,7 @@ export function TemplateList<Data>({
   deleteDocument,
   selectTemplates,
   basePath,
+  puckBasePath,
   permissions,
   i18nPrefix,
 }: TemplateListProps<Data>) {
@@ -77,6 +82,8 @@ export function TemplateList<Data>({
     fetchPolicy: 'cache-and-network',
   });
   const templates = selectTemplates(data);
+  const basePathOf = (template: TemplateRow) =>
+    isPuckTemplate(template) ? puckBasePath : basePath;
 
   useEffect(() => {
     if (error) {
@@ -97,7 +104,7 @@ export function TemplateList<Data>({
           <ListViewActions>
             <Button
               component={RouterLink}
-              to={`${basePath}/create`}
+              to={`${puckBasePath}/create`}
               variant="contained"
               startIcon={<MdAdd />}
               disabled={loading}
@@ -120,7 +127,7 @@ export function TemplateList<Data>({
               label: t(`${i18nPrefix}.list.name`),
               width: 240,
               render: rowData => (
-                <Link to={`${basePath}/edit/${rowData.id}`}>
+                <Link to={`${basePathOf(rowData)}/edit/${rowData.id}`}>
                   {rowData.blockTemplate.name || t(`${i18nPrefix}.list.noName`)}
                 </Link>
               ),
@@ -142,7 +149,7 @@ export function TemplateList<Data>({
                         size="small"
                         onClick={() =>
                           navigate(
-                            `${basePath}/create?copyFrom=${encodeURIComponent(template.id)}`
+                            `${basePathOf(template)}/create?copyFrom=${encodeURIComponent(template.id)}`
                           )
                         }
                       >

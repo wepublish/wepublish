@@ -996,6 +996,7 @@
       "uniqueEmail": "Diese E-Mail-Adresse wird bereits verwendet.",
       "uniqueField": "Dieser Wert ist bereits vergeben ({{field}}).",
       "inUse": "Dieser Eintrag wird noch verwendet und kann deshalb nicht gelöscht werden.",
+      "circularBlockTemplate": "Eine Blockvorlage kann sich nicht selbst enthalten, auch nicht über eine andere verknüpfte Vorlage.",
       "forbidden": "Dir fehlt die Berechtigung für diese Aktion.",
       "network": "Keine Verbindung zum Server. Bitte prüfe deine Internetverbindung und versuche es erneut.",
       "unexpected": "Das hat leider nicht geklappt. Bitte versuche es erneut – falls das Problem bleibt, melde dich beim Support."
@@ -2797,7 +2798,8 @@
         "saveConfirmMessage": "Beim Speichern wird der Inhalt dieser Vorlage sofort in allen Artikeln und Seiten aktualisiert, die sie verwenden, auch in bereits veröffentlichten.",
         "saveConfirmTitle": "Vorlage speichern?",
         "created": "Erstellt",
-        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu.",
+        "copyName": "{{name}} (Kopie)"
       }
     },
     "yes": "Ja",
@@ -4605,6 +4607,9 @@
         "pageTemplate": "Seitenvorlage erstellen",
         "puckPage": "Seite mit Puck erstellen",
         "puckArticle": "Artikel mit Puck erstellen",
+        "puckArticleTemplate": "Artikelvorlage mit Puck erstellen",
+        "puckPageTemplate": "Seitenvorlage mit Puck erstellen",
+        "puckBlockTemplate": "Blockvorlage mit Puck erstellen",
         "pageTag": "Seiten-Tag erstellen",
         "crowdfunding": "Crowdfunding erstellen",
         "blockTemplate": "Block-Vorlage erstellen",
@@ -5022,6 +5027,7 @@
         }
       },
       "documentKind": {
+        "blockTemplate": "Blockvorlage",
         "article": "Artikel",
         "page": "Seite"
       },
@@ -5205,7 +5211,13 @@
         "unknownPage": "Unbekannte Seite",
         "unknownPaywall": "Unbekannte Paywall",
         "unpublished": "Nicht publiziert",
-        "untitled": "Ohne Titel"
+        "untitled": "Ohne Titel",
+        "blockTemplate": "Blockvorlage",
+        "blockTemplates": "Blockvorlagen",
+        "searchBlockTemplates": "Blockvorlagen suchen…",
+        "addBlockTemplate": "Blockvorlage hinzufügen",
+        "noBlockTemplatesFound": "Keine Blockvorlagen gefunden",
+        "unknownBlockTemplate": "Unbekannte Blockvorlage"
       },
       "seoPreview": {
         "seoPreview": "SEO-Vorschau"
@@ -5303,7 +5315,9 @@
         "tags": "Tags"
       },
       "teaser": {
-        "noRecord": "Noch kein Datensatz. Wähle einen aus oder setze diesen Teaser in einen Block, der Datensätze auflistet."
+        "noRecord": "Noch kein Datensatz. Wähle einen aus oder setze diesen Teaser in einen Block, der Datensätze auflistet.",
+        "emptyHidden": "{{part}} ist leer und wird auf der Website ausgeblendet.",
+        "emptyKept": "{{part}} ist leer. Die Website hält den Platz frei."
       },
       "typography": {
         "black": "Schwarz",
@@ -5368,7 +5382,7 @@
         },
         "names": {
           "Title": "Titel",
-          "RichText": "Text",
+          "RichText": "RichText",
           "Quote": "Zitat",
           "Listicle": "Listicle",
           "Button": "Button",
@@ -5416,12 +5430,70 @@
           "Polis": "Polis",
           "IFrame": "Webseite (iframe)",
           "Html": "Eigenes HTML",
-          "BildwurfAd": "Bildwurf-Anzeige"
+          "BildwurfAd": "Bildwurf-Anzeige",
+          "LinkedTemplate": "Verknüpfte Vorlage"
         }
       },
       "headingAudit": {
         "subtitle": "Überschriftenstruktur der Seite im Editor",
         "title": "Überschriften-Audit"
+      },
+      "templates": {
+        "status": "Vorlage",
+        "name": "Name der Vorlage",
+        "nameRequired": "Gib der Vorlage einen Namen, bevor du sie speicherst.",
+        "notFound": "Diese Vorlage gibt es nicht.",
+        "created": "Vorlage erstellt",
+        "saved": "Vorlage gespeichert"
+      },
+      "imageFit": {
+        "aspectRatio": "Seitenverhältnis",
+        "objectFit": "Einpassung",
+        "ratioWidth": "Breite des Verhältnisses",
+        "ratioHeight": "Höhe des Verhältnisses",
+        "ratios": {
+          "auto": "Original",
+          "square": "1:1 quadratisch",
+          "landscape43": "4:3 Querformat",
+          "landscape32": "3:2 Querformat",
+          "widescreen": "16:9 Breitbild",
+          "cinema": "21:9 Kino",
+          "portrait34": "3:4 Hochformat",
+          "portrait23": "2:3 Hochformat",
+          "vertical": "9:16 vertikal",
+          "custom": "Eigenes"
+        },
+        "fits": {
+          "cover": "Füllen: Rahmen ausfüllen und zuschneiden",
+          "contain": "Einpassen: ganzes Bild zeigen",
+          "fill": "Strecken: auf den Rahmen ziehen",
+          "none": "Keine: Originalgrösse, zugeschnitten",
+          "scaleDown": "Verkleinern: wie Einpassen, nie vergrössert"
+        },
+        "fitHint": "Gilt, sobald ein Seitenverhältnis gesetzt ist."
+      },
+      "savedBlocks": {
+        "componentSkipped_one": "Die Vorlagen-Komponente «{{names}}» wurde übersprungen: Dieses Dokument hat schon eine andere Komponente mit diesem Namen.",
+        "componentSkipped_other": "Die Vorlagen-Komponenten «{{names}}» wurden übersprungen: Dieses Dokument hat schon andere Komponenten mit diesen Namen.",
+        "loadMore": "Weitere gespeicherte Blöcke laden",
+        "title": "Gespeicherte Blöcke",
+        "empty": "Speichere einen Block über seine Werkzeugleiste, um ihn hier wiederzuverwenden.",
+        "create": "Neue Blockvorlage",
+        "save": "Als Blockvorlage speichern",
+        "name": "Name",
+        "cancel": "Abbrechen",
+        "confirm": "Speichern",
+        "failed": "Die Blockvorlage konnte nicht gespeichert werden."
+      },
+      "linkedTemplate": {
+        "badge": "Verknüpfte Vorlage: {{name}}",
+        "missing": "Die verknüpfte Blockvorlage gibt es nicht mehr.",
+        "loading": "Verknüpfte Blockvorlage wird geladen…",
+        "edit": "Vorlage bearbeiten",
+        "unlink": "Verknüpfung lösen",
+        "insertLinked": "Verknüpft einfügen",
+        "insertCopy": "Als Kopie einfügen",
+        "more": "Weitere Arten, «{{name}}» einzufügen"
       }
     }
   }

@@ -34,6 +34,7 @@ import {
   MdClose,
   MdDragIndicator,
   MdOutlineArticle,
+  MdOutlineBookmarks,
   MdOutlineCardMembership,
   MdOutlineEvent,
   MdOutlineLock,
@@ -92,6 +93,7 @@ const recordModelIcons: Record<RecordModel, IconType> = {
   memberPlan: MdOutlineCardMembership,
   author: MdOutlinePerson,
   paywall: MdOutlineLock,
+  blockTemplate: MdOutlineBookmarks,
 };
 
 const recordStatusColors: Record<RecordStatus, StateColor> = {

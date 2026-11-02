@@ -11,6 +11,7 @@ export const recordModels = [
   'memberPlan',
   'author',
   'paywall',
+  'blockTemplate',
 ] as const;
 
 export type RecordModel = (typeof recordModels)[number];
@@ -50,6 +51,7 @@ const recordModelNames = {
   memberPlan: 'member plan',
   author: 'author',
   paywall: 'paywall',
+  blockTemplate: 'block template',
 } satisfies Record<RecordModel, string>;
 
 export const recordSchema = (multiple: boolean, bounds: RecordBounds = {}) => {

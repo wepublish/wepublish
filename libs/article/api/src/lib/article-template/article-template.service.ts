@@ -73,9 +73,15 @@ export class ArticleTemplateService {
   public async createArticleTemplate({
     name,
     blocks,
+    puckBlocks,
+    puckRegistry,
     metadata,
   }: CreateArticleTemplateInput) {
-    const mappedBlocks = await this.blockTemplateService.mapBlocks(blocks);
+    const content = await this.blockTemplateService.mapTemplateContent({
+      blocks,
+      puckBlocks,
+      puckRegistry,
+    });
 
     try {
       return await this.prisma.articleTemplate.create({
@@ -84,7 +90,7 @@ export class ArticleTemplateService {
           blockTemplate: {
             create: {
               name,
-              blocks: mappedBlocks,
+              ...content,
             },
           },
         },
@@ -98,6 +104,8 @@ export class ArticleTemplateService {
     id,
     name,
     blocks,
+    puckBlocks,
+    puckRegistry,
     metadata,
   }: UpdateArticleTemplateInput) {
     const { blockTemplateId } =
@@ -107,8 +115,8 @@ export class ArticleTemplateService {
         },
       });
 
-    const mappedBlocks = await this.blockTemplateService.mapBlocks(
-      blocks,
+    const content = await this.blockTemplateService.mapTemplateContent(
+      { blocks, puckBlocks, puckRegistry },
       blockTemplateId
     );
 
@@ -122,7 +130,7 @@ export class ArticleTemplateService {
           blockTemplate: {
             update: {
               name,
-              blocks: mappedBlocks,
+              ...content,
             },
           },
         },

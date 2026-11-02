@@ -22,12 +22,32 @@ import {
   UpdateArticleInput,
 } from './article.model';
 import { ArticleRevisionResolver } from './article-revision.resolver';
+import {
+  CreateArticleTemplateInput,
+  UpdateArticleTemplateInput,
+} from './article-template/article-template.model';
+import { BlockTemplate } from '@wepublish/block-content/api';
 
 @Resolver()
 class ProbeResolver {
   @Query(() => ArticleRevision)
   revision() {
     return null as never;
+  }
+
+  @Query(() => BlockTemplate)
+  blockTemplate() {
+    return null as never;
+  }
+
+  @Mutation(() => Boolean)
+  createTemplate(@Args() input: CreateArticleTemplateInput) {
+    return !!input;
+  }
+
+  @Mutation(() => Boolean)
+  updateTemplate(@Args() input: UpdateArticleTemplateInput) {
+    return !!input;
   }
 
   @Mutation(() => Boolean)
@@ -151,5 +171,41 @@ describe('article puck blocks schema', () => {
     expect(metadata.getFields()['puckBlocks']).toBeUndefined();
     expect(metadata.getFields()['puckRegistry']).toBeUndefined();
     expect(metadata.getFields()['blocks']).toBeUndefined();
+  });
+  it('resolves the puck document of a template like the one of a revision', () => {
+    const template = schema.getType('BlockTemplate') as GraphQLObjectType;
+
+    expect(String(template.getFields()['puckBlocks'].type)).toBe(
+      '[PuckBlock!]'
+    );
+    expect(String(template.getFields()['puckRegistry'].type)).toBe(
+      'PuckRegistry'
+    );
+    expect(template.getInterfaces().map(String)).toContain('HasPuckBlocks');
+  });
+
+  it('accepts a puck document and makes legacy blocks optional when creating a template', () => {
+    expect(String(mutationArg('createTemplate', 'puckBlocks')?.type)).toBe(
+      '[PuckBlockInput!]'
+    );
+    expect(String(mutationArg('createTemplate', 'puckRegistry')?.type)).toBe(
+      'PuckRegistryInput'
+    );
+    expect(String(mutationArg('createTemplate', 'blocks')?.type)).toBe(
+      '[BlockContentInput!]!'
+    );
+    expect(mutationArg('createTemplate', 'blocks')?.defaultValue).toEqual([]);
+  });
+
+  it('carries the content of a template over when an update leaves it out', () => {
+    expect(String(mutationArg('updateTemplate', 'puckBlocks')?.type)).toBe(
+      '[PuckBlockInput!]'
+    );
+    expect(String(mutationArg('updateTemplate', 'puckRegistry')?.type)).toBe(
+      'PuckRegistryInput'
+    );
+    expect(String(mutationArg('updateTemplate', 'blocks')?.type)).toBe(
+      '[BlockContentInput!]'
+    );
   });
 });

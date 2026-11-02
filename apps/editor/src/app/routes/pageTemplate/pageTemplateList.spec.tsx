@@ -65,7 +65,7 @@ describe('PageTemplateList', () => {
     );
     expect(
       screen.getByRole('link', { name: /pageTemplates.list.newTemplate/ })
-    ).toHaveAttribute('href', '/pages/templates/create');
+    ).toHaveAttribute('href', '/puck/templates/pages/create');
     expect(screen.getByText('pageTemplates.list.title')).toBeInTheDocument();
   });
 });

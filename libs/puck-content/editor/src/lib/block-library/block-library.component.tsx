@@ -5,6 +5,7 @@ import {
   SyntheticEvent,
   useCallback,
   useId,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -21,6 +22,9 @@ import {
 
 import { useSlotInsert } from '../insert/insert.hooks';
 import { PluginPanelHeader } from '../plugin-panel/plugin-panel-header.component';
+import { matchesSavedBlocks } from '../saved-blocks/saved-blocks';
+import { useSavedBlocks } from '../saved-blocks/saved-blocks.context';
+import { SavedBlocksSection } from '../saved-blocks/saved-blocks-section.component';
 import { BlockCategory } from './block-library.catalog';
 import {
   catalogFromComponents,
@@ -73,6 +77,8 @@ const writeCollapsed = (ids: string[]) => {
     return;
   }
 };
+
+const SAVED_BLOCKS_SECTION = 'savedBlocks';
 
 const stopPropagation = (event: SyntheticEvent) => event.stopPropagation();
 
@@ -244,8 +250,15 @@ export const BlockLibrary = () => {
   const { t, i18n } = useTranslation();
   const components = usePuck(puck => puck.config.components);
   const { labelOf } = useBlockLabels();
-  const { mode, selected, targetsFor, insert } = useSlotInsert();
+  const { mode, selected, targetsFor, targetsForTypes, insert } =
+    useSlotInsert();
+  const saved = useSavedBlocks();
   const [query, setQuery] = useState('');
+  const searchSaved = saved?.search;
+
+  useEffect(() => {
+    searchSaved?.(query.trim());
+  }, [searchSaved, query]);
   const [collapsed, setCollapsed] = useState(readCollapsed);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -257,6 +270,14 @@ export const BlockLibrary = () => {
   const visible = useMemo(
     () => filterCatalog(catalog, query, labelOf),
     [catalog, query, labelOf]
+  );
+
+  const savedTemplates = useMemo(
+    () =>
+      (saved?.templates ?? []).filter(({ name }) =>
+        matchesSavedBlocks(name, query)
+      ),
+    [saved?.templates, query]
   );
 
   const toggle = useCallback((id: string) => {
@@ -342,11 +363,23 @@ export const BlockLibrary = () => {
 
         <VisuallyHidden role="status">
           {searching ?
-            t('puck.blocks.results', { count: countBlocks(visible) })
+            t('puck.blocks.results', {
+              count: countBlocks(visible) + savedTemplates.length,
+            })
           : ''}
         </VisuallyHidden>
 
-        {visible.length ?
+        <SavedBlocksSection
+          templates={savedTemplates}
+          expanded={searching || !collapsed.includes(SAVED_BLOCKS_SECTION)}
+          searching={searching}
+          onToggle={() => toggle(SAVED_BLOCKS_SECTION)}
+          targetsFor={targetsForTypes}
+          notHere={context.notHere}
+          chooseSlot={context.chooseSlot}
+        />
+
+        {visible.length || savedTemplates.length ?
           visible.map(category => (
             <BlockCategorySection
               key={category.id}

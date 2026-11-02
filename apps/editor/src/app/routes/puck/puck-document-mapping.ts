@@ -29,21 +29,26 @@ export type PageInput = DocumentInput<UpdatePageMutationVariables>;
 
 type Compact<T> = { [K in keyof T]?: Exclude<T[K], null> };
 
-const compact = <T extends Record<string, unknown>>(value: T) =>
+export const compact = <T extends Record<string, unknown>>(value: T) =>
   Object.fromEntries(
     Object.entries(value).filter(
       ([, entry]) => entry !== undefined && entry !== null && entry !== ''
     )
   ) as Compact<T>;
 
-const toProperty = ({ key, value, public: isPublic }: RootProperty) => ({
+export const toProperty = ({ key, value, public: isPublic }: RootProperty) => ({
   key,
   value,
   public: isPublic,
 });
 
-const roleOf = (previous: FullArticleFragment | undefined, authorId: string) =>
-  previous?.latest.authors.find(({ author }) => author.id === authorId)?.role ||
+export type ArticleByline = {
+  authors: ReadonlyArray<{ role?: string | null; author: { id: string } }>;
+  socialMediaAuthors: ReadonlyArray<{ id: string } | null | undefined>;
+};
+
+const roleOf = (byline: ArticleByline | undefined, authorId: string) =>
+  byline?.authors.find(({ author }) => author.id === authorId)?.role ||
   undefined;
 
 export const articleToRootProps = ({
@@ -75,7 +80,8 @@ export const articleToRootProps = ({
 
 export const articleRootPropsToInput = (
   props: ArticleRootProps,
-  previous?: FullArticleFragment
+  previous?: FullArticleFragment,
+  byline: ArticleByline | undefined = previous?.latest
 ): ArticleInput => ({
   preTitle: props.preTitle || undefined,
   title: props.title,
@@ -94,15 +100,14 @@ export const articleRootPropsToInput = (
   tagIds: props.tags ?? [],
   authors: (props.authorIds ?? []).map(authorId => ({
     authorId,
-    role: roleOf(previous, authorId),
+    role: roleOf(byline, authorId),
   })),
   properties: (props.properties ?? []).map(toProperty),
   socialMediaTitle: props.socialMediaTitle || undefined,
   socialMediaDescription: props.socialMediaDescription || undefined,
   socialMediaAuthorIds:
-    previous?.latest.socialMediaAuthors.flatMap(author =>
-      author ? [author.id] : []
-    ) ?? [],
+    byline?.socialMediaAuthors.flatMap(author => (author ? [author.id] : [])) ??
+    [],
   socialMediaImageID: props.socialMediaImageId || undefined,
 });
 
@@ -119,9 +124,10 @@ export const toUpdateArticleVariables = (
 
 export const toCreateArticleVariables = (
   { puckBlocks, puckRegistry, rootProps }: PuckDocument<'article'>,
-  previous?: FullArticleFragment
+  previous?: FullArticleFragment,
+  byline: ArticleByline | undefined = previous?.latest
 ): CreateArticleMutationVariables => ({
-  ...articleRootPropsToInput(rootProps, previous),
+  ...articleRootPropsToInput(rootProps, previous, byline),
   likes: previous?.likes ?? 0,
   puckBlocks,
   puckRegistry,

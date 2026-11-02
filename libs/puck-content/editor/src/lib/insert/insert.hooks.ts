@@ -2,6 +2,7 @@ import { createUsePuck } from '@puckeditor/core';
 import { useCallback, useMemo } from 'react';
 
 import { usePuckDocumentKindLabel } from '../document-kind/document-kind';
+import { savedBlocksTargets } from '../saved-blocks/saved-blocks';
 import {
   InsertContext,
   insertMode,
@@ -46,6 +47,11 @@ export const useSlotInsert = () => {
     [config, context]
   );
 
+  const targetsForTypes = useCallback(
+    (types: readonly string[]) => savedBlocksTargets(config, types, context),
+    [config, context]
+  );
+
   const insert = useCallback(
     (componentType: string, zone: SlotZone) => {
       const index = zone.index ?? zone.count;
@@ -65,5 +71,5 @@ export const useSlotInsert = () => {
     [dispatch]
   );
 
-  return { mode, selected, targetsFor, insert };
+  return { mode, selected, targetsFor, targetsForTypes, insert };
 };

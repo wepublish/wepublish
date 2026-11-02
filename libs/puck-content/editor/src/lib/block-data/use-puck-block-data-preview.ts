@@ -29,7 +29,16 @@ export const usePuckBlockDataPreview = (
   const client = useApolloClient();
   const key = variables ? JSON.stringify(variables) : null;
   const [data, setData] = useState(noData);
+  const [focusCount, setFocusCount] = useState(0);
   const latestRequest = useRef(0);
+
+  useEffect(() => {
+    const onFocus = () => setFocusCount(count => count + 1);
+
+    window.addEventListener('focus', onFocus);
+
+    return () => window.removeEventListener('focus', onFocus);
+  }, []);
 
   useEffect(() => {
     if (key === null) {
@@ -57,7 +66,7 @@ export const usePuckBlockDataPreview = (
     }, delay);
 
     return () => clearTimeout(timeout);
-  }, [client, key, delay]);
+  }, [client, key, delay, focusCount]);
 
   useEffect(
     () => () => {

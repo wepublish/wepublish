@@ -63,6 +63,14 @@ export const useRecordModelLabels = () => {
       empty: t('puck.record.noPaywallsFound'),
       unknown: t('puck.record.unknownPaywall'),
     },
+    blockTemplate: {
+      one: t('puck.record.blockTemplate'),
+      many: t('puck.record.blockTemplates'),
+      search: t('puck.record.searchBlockTemplates'),
+      add: t('puck.record.addBlockTemplate'),
+      empty: t('puck.record.noBlockTemplatesFound'),
+      unknown: t('puck.record.unknownBlockTemplate'),
+    },
   } satisfies Record<RecordModel, RecordModelLabels>;
 };
 

@@ -25,6 +25,7 @@ const editor = vi.hoisted(() => ({
 
 const apollo = vi.hoisted(() => ({
   article: vi.fn(),
+  template: vi.fn(),
   revisions: vi.fn(),
   createOptions: undefined as
     | undefined
@@ -67,6 +68,7 @@ vi.mock('@apollo/client/react', async importOriginal => {
     ...routeApolloByOperation(actual, {
       queries: {
         Article: options => apollo.article(options),
+        ArticleTemplate: options => apollo.template(options),
         ArticleRevisionList: options => apollo.revisions(options),
       },
       mutations: {
@@ -154,6 +156,52 @@ const article = {
   },
 } as unknown as FullArticleFragment;
 
+const template = {
+  __typename: 'ArticleTemplate',
+  id: 'article-template-1',
+  blockTemplate: {
+    __typename: 'BlockTemplate',
+    id: 'block-template-1',
+    name: 'News',
+    blocks: [],
+    puckBlocks: [
+      {
+        __typename: 'PuckBlock',
+        id: 'Heading-1',
+        kind: 'puck',
+        type: 'Heading',
+        parentId: null,
+        puckSlot: null,
+        position: 0,
+        props: { text: 'From the template' },
+      },
+    ],
+    puckRegistry: null,
+  },
+  metadata: {
+    __typename: 'ArticleTemplateMetadata',
+    preTitle: 'Kicker',
+    title: 'Template title',
+    breaking: true,
+    hideAuthor: false,
+    shared: false,
+    hidden: false,
+    disableComments: false,
+    tags: [],
+    authors: [
+      {
+        __typename: 'ArticleRevisionAuthor',
+        role: 'Photos',
+        author: author('author-3', 'Hedy'),
+      },
+    ],
+    socialMediaAuthors: [author('author-3', 'Hedy')],
+    image: null,
+    socialMediaImage: null,
+    properties: [],
+  },
+};
+
 const revisionNodes = [
   {
     __typename: 'ArticleRevision',
@@ -199,9 +247,9 @@ const editedDocument = {
 } as PuckData<'article'>;
 
 function CurrentLocation() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
-  return <output aria-label="Location">{pathname}</output>;
+  return <output aria-label="Location">{`${pathname}${search}`}</output>;
 }
 
 const renderEditor = (path: string) =>
@@ -229,6 +277,9 @@ beforeEach(() => {
   );
   apollo.revisions.mockImplementation(({ skip }: { skip?: boolean }) =>
     skip ? skipped : revisionsResult
+  );
+  apollo.template.mockImplementation(({ skip }: { skip?: boolean }) =>
+    skip ? skipped : { data: { articleTemplate: template }, loading: false }
   );
   apollo.updateArticle.mockResolvedValue({ data: { updateArticle: article } });
   apollo.publishArticle.mockResolvedValue({
@@ -406,6 +457,99 @@ describe('PuckArticleEditor', () => {
     expect(editor.props.controller).toEqual(
       expect.objectContaining({ isNew: true, status: 'draft' })
     );
+  });
+
+  it('starts a new article from a template without saving it', () => {
+    renderEditor('/puck/articles/create?templateId=article-template-1');
+
+    expect(apollo.template).toHaveBeenCalledWith(
+      expect.objectContaining({
+        variables: { id: 'article-template-1' },
+        skip: false,
+      })
+    );
+    expect(editor.props.data.root.props).toEqual({
+      preTitle: 'Kicker',
+      title: 'Template title',
+      breaking: true,
+      hideAuthor: false,
+      shared: false,
+      hidden: false,
+      disableComments: false,
+      tags: [],
+      authorIds: ['author-3'],
+      properties: [],
+    });
+    expect(editor.props.data.content).toEqual([
+      expect.objectContaining({
+        type: 'Heading',
+        props: expect.objectContaining({ text: 'From the template' }),
+      }),
+    ]);
+    expect(editor.props.controller.isNew).toBe(true);
+    expect(apollo.createArticle).not.toHaveBeenCalled();
+  });
+
+  it('keeps the roles and social media authors of the template when the article is created', async () => {
+    apollo.createArticle.mockResolvedValue({
+      data: { createArticle: { ...article, id: 'article-2' } },
+    });
+
+    renderEditor('/puck/articles/create?templateId=article-template-1');
+
+    await act(() =>
+      editor.props.controller.onSave({
+        root: { props: { title: 'From template', authorIds: ['author-3'] } },
+        content: [],
+      })
+    );
+
+    expect(apollo.createArticle.mock.calls[0][0].variables).toEqual(
+      expect.objectContaining({
+        authors: [{ authorId: 'author-3', role: 'Photos' }],
+        socialMediaAuthorIds: ['author-3'],
+      })
+    );
+  });
+
+  it('waits for the template before it starts the article', () => {
+    apollo.template.mockReturnValue({ data: undefined, loading: true });
+
+    renderEditor('/puck/articles/create?templateId=article-template-1');
+
+    expect(
+      screen.getByRole('progressbar', { name: 'loading' })
+    ).toBeInTheDocument();
+  });
+
+  it('says so when the template does not exist', () => {
+    apollo.template.mockReturnValue({ data: undefined, loading: false });
+
+    renderEditor('/puck/articles/create?templateId=missing');
+
+    expect(screen.getByText('puck.templates.notFound')).toBeInTheDocument();
+  });
+
+  it('offers to make a template of the saved article', () => {
+    renderEditor('/puck/articles/edit/article-1');
+
+    const action = editor.props.controller.menuActions?.find(
+      ({ label }) => label === 'articleEditor.panels.createTemplate'
+    );
+
+    expect(action?.needsSaved).toBe(true);
+
+    act(() => action?.onClick());
+
+    expect(screen.getByRole('status', { name: 'Location' })).toHaveTextContent(
+      '/puck/templates/articles/create?fromArticle=article-1'
+    );
+  });
+
+  it('cannot make a template of an article that was never saved', () => {
+    renderEditor('/puck/articles/create');
+
+    expect(editor.props.controller.menuActions).toEqual([]);
   });
 
   it('shows that the article is loading', () => {

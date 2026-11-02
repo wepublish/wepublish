@@ -93,7 +93,7 @@ export const BlockTemplateBlock = ({
   const [isConfirmOpen, setConfirmOpen] = useState(false);
 
   const { data, loading, refetch } = useQuery(BlockTemplateListDocument, {
-    variables: { take: 100 },
+    variables: { take: 100, filter: { puck: false } },
     fetchPolicy: 'cache-and-network',
   });
 

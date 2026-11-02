@@ -9,10 +9,12 @@ import {
   PageDocument,
   PageListDocument,
   PageSort,
+  PuckBlockTemplateOptionsDocument,
   SortOrder,
 } from '@wepublish/editor/api';
 import { ReactNode } from 'react';
 
+import { EditedBlockTemplateContext } from '../saved-blocks/edited-block-template.context';
 import { recordSources } from './record.sources';
 
 const timestamp = '2026-10-01T00:00:00.000Z';
@@ -250,6 +252,88 @@ const withMocks =
   );
 
 describe('record sources', () => {
+  describe('blockTemplate', () => {
+    const templates = {
+      request: { query: PuckBlockTemplateOptionsDocument },
+      result: {
+        data: {
+          blockTemplates: {
+            __typename: 'PaginatedBlockTemplate',
+            nodes: [
+              {
+                __typename: 'BlockTemplate',
+                id: 'tpl-1',
+                name: 'Rubric header',
+                linkedTemplateIds: [],
+              },
+              {
+                __typename: 'BlockTemplate',
+                id: 'tpl-2',
+                name: 'Footer teasers',
+                linkedTemplateIds: [],
+              },
+              {
+                __typename: 'BlockTemplate',
+                id: 'tpl-3',
+                name: 'Linking all',
+                linkedTemplateIds: ['tpl-2', 'tpl-1'],
+              },
+            ],
+          },
+        },
+      },
+      maxUsageCount: 5,
+    };
+
+    it('offers the block templates of the page builder by name', async () => {
+      const { result } = renderHook(
+        () => recordSources.blockTemplate.useSearch('rubric'),
+        { wrapper: withMocks([templates]) }
+      );
+
+      await waitFor(() =>
+        expect(result.current.options).toEqual([
+          { id: 'tpl-1', title: 'Rubric header' },
+        ])
+      );
+    });
+
+    it('never offers the edited template nor templates linking it', async () => {
+      const Mocks = withMocks([templates]);
+      const { result } = renderHook(
+        () => recordSources.blockTemplate.useSearch(''),
+        {
+          wrapper: ({ children }) => (
+            <Mocks>
+              <EditedBlockTemplateContext.Provider value="tpl-1">
+                {children}
+              </EditedBlockTemplateContext.Provider>
+            </Mocks>
+          ),
+        }
+      );
+
+      await waitFor(() =>
+        expect(result.current.options).toEqual([
+          { id: 'tpl-2', title: 'Footer teasers' },
+        ])
+      );
+    });
+
+    it('looks up block templates by id', async () => {
+      const { result } = renderHook(
+        () => recordSources.blockTemplate.useRecords(['tpl-2']),
+        { wrapper: withMocks([templates]) }
+      );
+
+      await waitFor(() =>
+        expect(result.current.records).toEqual({
+          'tpl-2': { id: 'tpl-2', title: 'Footer teasers' },
+        })
+      );
+    });
+  });
+
   describe('article', () => {
     it('searches by title, newest first, and maps the rows', async () => {
       const { result } = renderHook(

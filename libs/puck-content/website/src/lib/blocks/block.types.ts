@@ -1,4 +1,4 @@
-import type { FullPuckBlockDataFragment } from '@wepublish/website/api';
+import type { FullPuckBlockFragment } from '@wepublish/website/api';
 import type { CSSProperties, ElementType, ReactNode, Ref } from 'react';
 
 import { Side } from '../values/sides';
@@ -17,7 +17,7 @@ export type PuckSlotComponent = (props?: PuckSlotProps) => ReactNode;
 
 export type PuckSlots = Readonly<Record<string, PuckSlotComponent | undefined>>;
 
-export type PuckBlockData = Omit<FullPuckBlockDataFragment, '__typename'>;
+export type PuckBlockData = Omit<FullPuckBlockFragment['data'], '__typename'>;
 
 export const emptyPuckBlockData: PuckBlockData = {
   articles: null,
@@ -26,6 +26,7 @@ export const emptyPuckBlockData: PuckBlockData = {
   images: null,
   memberPlans: null,
   userSubscriptions: null,
+  template: null,
 };
 
 export type PuckBlockRenderProps<

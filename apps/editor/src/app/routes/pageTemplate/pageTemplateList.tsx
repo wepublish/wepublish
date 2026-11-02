@@ -18,6 +18,7 @@ function PageTemplateList() {
       deleteDocument={DeletePageTemplateDocument}
       selectTemplates={data => data?.pageTemplates}
       basePath="/pages/templates"
+      puckBasePath="/puck/templates/pages"
       permissions={{
         create: CanCreatePageTemplate.id,
         delete: CanDeletePageTemplate.id,

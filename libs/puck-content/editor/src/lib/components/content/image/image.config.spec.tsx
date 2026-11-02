@@ -17,13 +17,17 @@ const puck: PuckContext = {
   metadata: {},
 };
 
-const renderImage = (data: PuckBlockData = emptyPuckBlockData) =>
+const renderImage = (
+  data: PuckBlockData = emptyPuckBlockData,
+  props: Record<string, unknown> = {}
+) =>
   renderWithProviders(
     <PuckBlockDataContext.Provider value={new Map([['Image-1', data]])}>
       {createElement(
         ImageConfig.render as ComponentType<Record<string, unknown>>,
         {
           ...ImageConfig.defaultProps,
+          ...props,
           id: 'Image-1',
           puck,
         }
@@ -51,5 +55,45 @@ describe('ImageConfig', () => {
     expect(
       screen.getByRole('img', { name: 'Harbour at dawn' })
     ).toBeInTheDocument();
+  });
+
+  it('can hide the caption and the image credit', () => {
+    expect(ImageConfig.fields?.hideCaption).toMatchObject({
+      type: 'switch',
+      label: 'Hide caption',
+      ai: { instructions: expect.any(String) },
+    });
+    expect(ImageConfig.defaultProps?.hideCaption).toBe(false);
+  });
+
+  it('takes a ratio and object fit per breakpoint, original by default', () => {
+    expect(ImageConfig.fields?.fit).toMatchObject({
+      type: 'breakpoints',
+      objectFields: {
+        aspectRatio: { type: 'aspectRatio' },
+        objectFit: { type: 'objectFit' },
+      },
+      ai: { schema: expect.any(Object) },
+    });
+    expect(ImageConfig.defaultProps?.fit).toEqual({
+      xs: { aspectRatio: 'auto', objectFit: 'cover' },
+    });
+    expect(ImageConfig.ai?.instructions).toContain('hideCaption');
+    expect(ImageConfig.ai?.instructions).toContain('fit');
+  });
+
+  it('hides the caption in the canvas as well', () => {
+    const image = mockImage({
+      description: 'Harbour at dawn',
+      source: 'Keystone',
+    });
+
+    renderImage(
+      { ...emptyPuckBlockData, images: [image] },
+      { caption: 'Morning light', hideCaption: true }
+    );
+
+    expect(screen.queryByText('Morning light')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Keystone/)).not.toBeInTheDocument();
   });
 });

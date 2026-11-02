@@ -609,7 +609,7 @@ type BlockStyle {
   name: String!
 }
 
-type BlockTemplate implements HasBlockContent {
+type BlockTemplate implements HasBlockContent & HasPuckBlocks {
   blocks(
     """
     Omits blocks that are hidden or outside their timing. Pass `false` to edit the template, which only users who can edit block templates, articles or pages may do.
@@ -618,8 +618,20 @@ type BlockTemplate implements HasBlockContent {
   ): [BlockContent!]!
   createdAt: DateTime!
   id: String!
+
+  """
+  The ids of every block template this template links, directly or through other linked templates. A template must not be linked into any of them.
+  """
+  linkedTemplateIds: [String!]!
   modifiedAt: DateTime!
   name: String!
+  puckBlocks(
+    """
+    Omits blocks that are hidden or outside their timing, together with their children. Pass `false` to edit the template, which only users who can edit block templates, articles or pages may do.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [PuckBlock!]
+  puckRegistry: PuckRegistry
 }
 
 type BlockTemplateBlock implements BaseBlock {
@@ -653,6 +665,11 @@ input BlockTemplateBlockInput {
 
 input BlockTemplateFilter {
   name: String
+
+  """
+  Only templates built in the page builder (`true`) or in the block editor (`false`).
+  """
+  puck: Boolean
 }
 
 enum BlockTemplateSort {
@@ -3184,7 +3201,7 @@ type Mutation {
   createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]! = [], breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Creates a new article template."""
-  createArticleTemplate(blocks: [BlockContentInput!]!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
+  createArticleTemplate(blocks: [BlockContentInput!]! = [], metadata: ArticleTemplateMetadataInput!, name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): ArticleTemplate!
 
   """Creates a new author."""
   createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
@@ -3194,7 +3211,7 @@ type Mutation {
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
 
   """Creates a new block template."""
-  createBlockTemplate(blocks: [BlockContentInput!]!, name: String!): BlockTemplate!
+  createBlockTemplate(blocks: [BlockContentInput!]! = [], name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): BlockTemplate!
 
   """
   Sets up the challenge provider. Only possible while none is configured.
@@ -3266,7 +3283,7 @@ type Mutation {
   createPage(blocks: [BlockContentInput!]! = [], description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, imageID: String, properties: [PropertyInput!]!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Creates a new page template."""
-  createPageTemplate(blocks: [BlockContentInput!]!, metadata: PageTemplateMetadataInput!, name: String!): PageTemplate!
+  createPageTemplate(blocks: [BlockContentInput!]! = [], metadata: PageTemplateMetadataInput!, name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): PageTemplate!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
@@ -3727,7 +3744,7 @@ type Mutation {
   updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!], breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Updates an existing article template."""
-  updateArticleTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
+  updateArticleTemplate(blocks: [BlockContentInput!], id: String!, metadata: ArticleTemplateMetadataInput!, name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): ArticleTemplate!
 
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
@@ -3737,7 +3754,7 @@ type Mutation {
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
   """Updates an existing block template."""
-  updateBlockTemplate(blocks: [BlockContentInput!]!, id: String!, name: String!): BlockTemplate!
+  updateBlockTemplate(blocks: [BlockContentInput!], id: String!, name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): BlockTemplate!
 
   """Updates an existing challenge provider setting."""
   updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String, type: ChallengeProviderType): SettingChallengeProvider!
@@ -3816,7 +3833,7 @@ type Mutation {
   updatePage(blocks: [BlockContentInput!], description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, id: String!, imageID: String, properties: [PropertyInput!]!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Updates an existing page template."""
-  updatePageTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: PageTemplateMetadataInput!, name: String!): PageTemplate!
+  updatePageTemplate(blocks: [BlockContentInput!], id: String!, metadata: PageTemplateMetadataInput!, name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): PageTemplate!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
@@ -5079,6 +5096,11 @@ type PuckBlockData {
   pages: [Page!]
 
   """
+  For a linked block template: the template it points at, null when it is missing, links back to itself or is nested too deep.
+  """
+  template: PuckBlockTemplateData
+
+  """
   The subscriptions of the reader, empty for a reader who is not logged in.
   """
   userSubscriptions: [PublicSubscription!]
@@ -5263,6 +5285,20 @@ input PuckBlockStylingInput {
 
   """Name of a theme typography variant like `h2` or `body1`."""
   typography: String
+}
+
+"""
+The current content of the block template a linked Puck block points at.
+"""
+type PuckBlockTemplateData {
+  id: String!
+  name: String!
+
+  """
+  The blocks of the template, read flat like revision puckBlocks. Their ids are prefixed with the id of the linked block, and linked templates inside the template sit in the `template` slot of their linked block.
+  """
+  puckBlocks: [PuckBlock!]!
+  puckRegistry: PuckRegistry
 }
 
 type PuckBlockTimeOfDay {

@@ -5,8 +5,17 @@ import {
 } from '@wepublish/puck-content/website';
 import { MdImage } from 'react-icons/md';
 
-import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
+import {
+  defaultImageFit,
+  imageFitAiInstructions,
+  imageFitField,
+} from '../../../image-fit/image-fit.field';
+import {
+  hideWhenEmptyField,
+  hideWhenEmptyInstructions,
+  teaserPartRender,
+} from '../teaser-part/teaser-part';
 
 export const TeaserImageConfig: ComponentConfig<{
   props: TeaserImageConfigProps;
@@ -20,9 +29,17 @@ export const TeaserImageConfig: ComponentConfig<{
   nameKey: 'puck.blocks.names.TeaserImage',
   ai: {
     instructions:
-      'Renders the image of the teaser provided by the surrounding teaser slot. Only works inside a teaser slot; it has no content of its own.',
+      'Renders the image of the teaser provided by the surrounding teaser slot. Only works inside a teaser slot; it has no content of its own.' +
+      hideWhenEmptyInstructions('image') +
+      ` ${imageFitAiInstructions}`,
   },
-  fields: {},
-  defaultProps: {},
-  render: editorRender(TeaserImageRender),
+  fields: {
+    fit: imageFitField(),
+    hideWhenEmpty: hideWhenEmptyField,
+  },
+  defaultProps: {
+    fit: defaultImageFit,
+    hideWhenEmpty: true,
+  },
+  render: teaserPartRender('TeaserImage', TeaserImageRender),
 };

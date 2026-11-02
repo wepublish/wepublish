@@ -16,6 +16,8 @@ import { useTranslation } from 'react-i18next';
 import { MdContentCopy, MdNoteAdd, MdSearch } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
+import { EditableTemplate, isPuckTemplate } from '../editorPath';
+
 const Content = styled.div`
   display: grid;
   gap: 12px;
@@ -46,15 +48,15 @@ const Loading = styled.div`
 
 const SEARCH_THRESHOLD = 5;
 
-type TemplateOption = { id: string; blockTemplate: { name: string } };
+type TemplateOption = EditableTemplate & { blockTemplate: { name: string } };
 
 export type CreateFromTemplateModalProps<Data> = {
   open: boolean;
   onClose(): void;
   listDocument: TypedDocumentNode<Data, { take?: number | null }>;
   selectTemplates(data: Data | undefined): TemplateOption[] | undefined;
-  /** e.g. `/articles/create`; a chosen template is passed as `?templateId=`. */
   createPath: string;
+  puckCreatePath: string;
   /** Translation namespace with the `title`, `blank`, `search` and `noResults` keys. */
   i18nPrefix: string;
 };
@@ -65,6 +67,7 @@ export function CreateFromTemplateModal<Data>({
   listDocument,
   selectTemplates,
   createPath,
+  puckCreatePath,
   i18nPrefix,
 }: CreateFromTemplateModalProps<Data>) {
   const { t } = useTranslation();
@@ -92,11 +95,11 @@ export function CreateFromTemplateModal<Data>({
       )
     : nodes;
 
-  const create = (templateId?: string) => {
+  const create = (template?: TemplateOption) => {
     onClose();
     navigate(
-      templateId ?
-        `${createPath}?templateId=${encodeURIComponent(templateId)}`
+      template ?
+        `${isPuckTemplate(template) ? puckCreatePath : createPath}?templateId=${encodeURIComponent(template.id)}`
       : createPath
     );
   };
@@ -141,14 +144,14 @@ export function CreateFromTemplateModal<Data>({
           )}
 
           <Options>
-            {templates.map(({ id, blockTemplate }) => (
+            {templates.map(template => (
               <Option
-                key={id}
+                key={template.id}
                 variant="outlined"
                 startIcon={<MdContentCopy />}
-                onClick={() => create(id)}
+                onClick={() => create(template)}
               >
-                {blockTemplate.name}
+                {template.blockTemplate.name}
               </Option>
             ))}
 

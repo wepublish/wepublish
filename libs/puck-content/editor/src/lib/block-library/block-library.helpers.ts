@@ -9,6 +9,7 @@ export type BlockMeta = {
   category?: string;
   group?: string;
   order?: number;
+  hidden?: boolean;
 };
 
 export const blockCategoryKey = (id: string) => `puck.blocks.categories.${id}`;
@@ -83,7 +84,9 @@ const byOrder =
 export const catalogFromComponents = <Name extends string>(
   components: Record<Name, BlockMeta>
 ): BlockCategory<string, Name>[] => {
-  const names = (Object.keys(components) as Name[]).sort(byOrder(components));
+  const names = (Object.keys(components) as Name[])
+    .filter(name => !components[name].hidden)
+    .sort(byOrder(components));
   const known = new Set<string>(blockCatalog.map(({ id }) => id));
 
   const categories = blockCatalog.flatMap(

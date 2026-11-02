@@ -66,7 +66,7 @@ describe('categories', () => {
     expect(new Set(listed).size).toBe(listed.length);
   });
 
-  it('puts every component into a category', () => {
+  it('puts every component that is not hidden into a category', () => {
     const categorised = new Set(
       Object.entries(categories)
         .filter(([name]) => name !== 'other')
@@ -74,8 +74,20 @@ describe('categories', () => {
     );
 
     expect(
-      Object.keys(components).filter(name => !categorised.has(name))
+      Object.entries(components)
+        .filter(
+          ([name, component]) => !component.hidden && !categorised.has(name)
+        )
+        .map(([name]) => name)
     ).toEqual([]);
+  });
+
+  it('keeps hidden components out of the categories', () => {
+    const categorised = Object.values(categories).flatMap(
+      category => category?.components ?? []
+    );
+
+    expect(categorised).not.toContain('LinkedTemplate');
   });
 
   it('only lists components that exist', () => {

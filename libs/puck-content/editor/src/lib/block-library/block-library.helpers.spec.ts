@@ -102,6 +102,15 @@ describe('catalogFromComponents', () => {
     ]);
   });
 
+  it('leaves out hidden blocks', () => {
+    expect(
+      catalogFromComponents({
+        Image: components.Image,
+        SavedBlocks: { hidden: true },
+      })
+    ).toEqual([{ id: 'media', blocks: ['Image'] }]);
+  });
+
   it('leaves out categories without blocks', () => {
     expect(catalogFromComponents({ Image: components.Image })).toEqual([
       { id: 'media', blocks: ['Image'] },

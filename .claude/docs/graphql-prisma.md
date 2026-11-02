@@ -184,6 +184,59 @@ boundaries.
   `PuckBlockData.userSubscriptions` lives in `membership/api` (importing it
   into block-content is a cycle). Both Apollo clients set
   `PuckBlock: {keyFields: false}`, as ids are unique per revision only.
+- **Article and page templates carry Puck content too**:
+  `BlockTemplate.puckBlocks`/`puckRegistry` (own columns, same validation,
+  pruning and flat read; no preview mode). `create/updateArticleTemplate` and
+  `create/updatePageTemplate` take them like the revision mutations
+  (`BlockTemplateService.mapTemplateContent`), `blocks` defaults to `[]` on
+  create and carries over when an update omits it. A template with
+  `puckBlocks` (even `[]`) is a Puck template: the editor opens it under
+  `/puck/templates/{articles,pages}/edit/:id` (`isPuckTemplate` in
+  `editorPath.ts`), the template name is the root prop `templateName`, and
+  `/puck/{articles,pages}/create?templateId=` starts an unsaved document from
+  it. The template lists create Puck templates; the legacy template editor is
+  only reachable for legacy rows and from the command palette.
+- **Block templates work the same way** (`/puck/templates/blocks/...`, a
+  root with only `templateName` and no navbar/footer). In the Puck editors
+  they are the Blocks panel's "Saved blocks" (`PuckBlockTemplateList`,
+  `blockTemplates(filter: {puck: true})`; the legacy picker asks for
+  `puck: false`). Clicking or dragging a tile inserts it **linked** (like the
+  legacy `BlockTemplateBlock`); the tile's menu offers "Insert as copy",
+  which copies the blocks with fresh ids and merges the template's registry
+  into the document's `_dynamicConfig`. Drag uses the hidden `SavedBlocks`
+  placeholder component that the provider swaps for the inserted block in
+  the same (debounced) history entry, so a drop is one undo step. The panel
+  loads 100 templates a page ("Load more") and searches by name on the API.
+  A copied template component whose name the document already uses with a
+  different definition is skipped with a warning (the document's wins).
+  "Save as block template" in the action bar saves the selected block with
+  its subtree and the registry entries it uses.
+- **A linked block template is the hidden `LinkedTemplate` block**
+  (`props.templateId`, plus the styling/visibility envelope). Its content is
+  never stored on the document: `PuckBlockDataLoader.expandLinked` loads the
+  template rows once per document and splices their (pruned) blocks into the
+  planned tree under the linked block's `template` slot, with ids prefixed
+  `<linkedId>/`, so datasources inside resolve and `slot` teasers consume
+  lists around the linked block. `PuckBlock.data.template`
+  (`PuckBlockTemplateData {id, name, puckBlocks, puckRegistry}`) carries
+  them flat with their own `data`; nested linked templates sit inline in
+  their linked block's `template` slot and their registries are merged in.
+  Saving rejects cycles like the legacy blocks do
+  (`BlockTemplateService.referencedClosure` walks legacy `BlockTemplate`
+  blocks and `LinkedTemplate` props of the referenced rows; "Block templates
+  can not contain circular references.", humanized as
+  `errors.circularBlockTemplate`). `BlockTemplate.linkedTemplateIds` is that
+  closure, so the block template editor (`EditedBlockTemplateContext`) never
+  offers itself or a template linking it as "Insert linked" (nor as a copy
+  when the copy would link back) and the record picker leaves them out.
+  On read, a missing template, a template that links back into its own chain, or
+  nesting deeper than `MAX_LINKED_TEMPLATE_DEPTH` (5) resolves as
+  `template: null` and is logged. The website renders `data.template` with
+  the normal renderer and the template's registry; the canvas renders it
+  inert with a badge, and the action bar has "Edit template" (new tab) and
+  "Unlink" (copy of the current content, fresh ids). The editor's preview
+  refetches on window focus, so edits made to the template in another tab
+  show up.
 
 ## Full end-to-end change checklist
 

@@ -6,6 +6,8 @@ import { isInGroup } from '../group/group';
 import { GroupAction } from '../group/group.component';
 import { isLocked } from '../lock/lock';
 import { LockAction } from '../lock/lock.component';
+import { LinkedTemplateActions } from '../saved-blocks/linked-template-actions.component';
+import { SaveBlockTemplateAction } from '../saved-blocks/save-block-template.component';
 import { useEditorTranslation } from '../website-translations/editor-translation';
 
 const usePuck = createUsePuck();
@@ -76,6 +78,8 @@ export const PuckActionBar = ({
       <ActionBar.Group>
         <GroupAction />
         <LockAction />
+        <LinkedTemplateActions />
+        <SaveBlockTemplateAction />
         {children}
 
         <ActionBar.Separator />

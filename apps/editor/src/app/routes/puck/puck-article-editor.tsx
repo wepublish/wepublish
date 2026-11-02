@@ -3,6 +3,7 @@ import {
   ArticleDocument,
   ArticleRevisionListDocument,
   ArticleRevisionPreviewDocument,
+  ArticleTemplateDocument,
   CreateArticleDocument,
   PublishArticleDocument,
   RestoreArticleRevisionDocument,
@@ -30,8 +31,8 @@ import {
 } from '@wepublish/ui/editor';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdLink } from 'react-icons/md';
-import { useNavigate, useParams } from 'react-router-dom';
+import { MdLink, MdNoteAdd } from 'react-icons/md';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { copyLinkToClipboard } from '../../copyLink';
 import { useAutosaveEnabled } from '../../useAutosaveEnabled';
@@ -55,10 +56,13 @@ import {
   REVISIONS_PAGE_SIZE,
 } from './puck-editor.notify';
 import { PuckEditorError, PuckEditorLoading } from './puck-editor-status';
+import { articleTemplateToRootProps } from './puck-template-mapping';
 
 function ArticleEditor() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const templateId = id ? null : searchParams.get('templateId');
   const { t } = useTranslation();
   const [autosaveEnabled, setAutosaveEnabled] = useAutosaveEnabled();
   const [historyRequested, setHistoryRequested] = useState(false);
@@ -76,6 +80,16 @@ function ArticleEditor() {
     variables: { id: id ?? '' },
     skip: !id,
   });
+
+  const { data: templateData, loading: templateLoading } = useQuery(
+    ArticleTemplateDocument,
+    {
+      errorPolicy: 'all',
+      variables: { id: templateId ?? '' },
+      skip: !templateId,
+      fetchPolicy: 'network-only',
+    }
+  );
 
   const [createArticle, { loading: creating }] = useMutation(
     CreateArticleDocument,
@@ -116,17 +130,25 @@ function ArticleEditor() {
   });
 
   const article = data?.article ?? undefined;
+  const template = templateData?.articleTemplate ?? undefined;
 
-  const loaded = useMemo(
-    () =>
-      loadPuckDocument(
+  const loaded = useMemo(() => {
+    if (!article && template) {
+      return loadPuckDocument(
         'article',
-        article?.latest.puckBlocks,
-        article?.latest.puckRegistry,
-        article ? articleToRootProps(article) : {}
-      ),
-    [article]
-  );
+        template.blockTemplate.puckBlocks,
+        template.blockTemplate.puckRegistry,
+        articleTemplateToRootProps(template.metadata)
+      );
+    }
+
+    return loadPuckDocument(
+      'article',
+      article?.latest.puckBlocks,
+      article?.latest.puckRegistry,
+      article ? articleToRootProps(article) : {}
+    );
+  }, [article, template]);
 
   const backTo = '/articles';
   const backLabel = t('articleEditor.overview.back');
@@ -136,6 +158,16 @@ function ArticleEditor() {
         <PuckEditorLoading />
       : <PuckEditorError
           message={t('articleEditor.overview.notFound')}
+          backTo={backTo}
+          backLabel={backLabel}
+        />;
+  }
+
+  if (templateId && !template) {
+    return templateLoading ?
+        <PuckEditorLoading />
+      : <PuckEditorError
+          message={t('puck.templates.notFound')}
           backTo={backTo}
           backLabel={backLabel}
         />;
@@ -169,7 +201,11 @@ function ArticleEditor() {
 
       if (!article) {
         const { data: created } = await createArticle({
-          variables: toCreateArticleVariables(apiDocument),
+          variables: toCreateArticleVariables(
+            apiDocument,
+            undefined,
+            template?.metadata
+          ),
         });
 
         notifySuccess(t('articleEditor.overview.draftCreated'));
@@ -354,8 +390,8 @@ function ArticleEditor() {
       article ? articleToRootProps(article) : {}
     ),
     autosave: { enabled: autosaveEnabled, onToggle: setAutosaveEnabled },
-    menuActions:
-      publishedUrl ?
+    menuActions: [
+      ...(publishedUrl ?
         [
           {
             label: t('copyLink.button'),
@@ -363,14 +399,28 @@ function ArticleEditor() {
             onClick: () => copyLinkToClipboard(publishedUrl, t),
           },
         ]
-      : [],
+      : []),
+      ...(article ?
+        [
+          {
+            label: t('articleEditor.panels.createTemplate'),
+            icon: <MdNoteAdd />,
+            needsSaved: true,
+            onClick: () =>
+              navigate(
+                `/puck/templates/articles/create?fromArticle=${encodeURIComponent(article.id)}`
+              ),
+          },
+        ]
+      : []),
+    ],
     onSave: save,
     onPublish: publish,
   };
 
   return (
     <PuckDocumentEditor
-      key={`${article?.id ?? 'new'}:${restoreCount}`}
+      key={`${article?.id ?? template?.id ?? 'new'}:${restoreCount}`}
       kind="article"
       data={initialData}
       controller={controller}

@@ -329,6 +329,49 @@ describe('PuckDocumentHeaderView', () => {
     expect(screen.getByRole('button', { name: 'Open preview' })).toBeDisabled();
   });
 
+  it('offers an action on the saved document only while everything is saved', () => {
+    const onClick = vi.fn();
+    const controller = createController({
+      menuActions: [
+        {
+          label: 'Save as template',
+          icon: <MdHistory />,
+          needsSaved: true,
+          onClick,
+        },
+        { label: 'History', icon: <MdHistory />, onClick: vi.fn() },
+      ],
+    });
+
+    renderView({ dirty: true, controller });
+
+    expect(
+      screen.getByRole('button', { name: 'Save as template' })
+    ).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'History' })).toBeEnabled();
+  });
+
+  it('runs an action on the saved document once everything is saved', () => {
+    const onClick = vi.fn();
+
+    renderView({
+      controller: createController({
+        menuActions: [
+          {
+            label: 'Save as template',
+            icon: <MdHistory />,
+            needsSaved: true,
+            onClick,
+          },
+        ],
+      }),
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Save as template' }));
+
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
   it('turns autosave on and off', () => {
     const onToggle = vi.fn();
     renderView({

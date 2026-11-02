@@ -6,6 +6,7 @@ import {
   PuckBlockVisibilityInput,
   PuckRegistryInput,
 } from '@wepublish/editor/api';
+import { LINKED_TEMPLATE_TYPE } from '@wepublish/puck-content/website';
 
 import { compact, ifPresent } from '../document/graphql-values';
 import {
@@ -63,10 +64,20 @@ const toPreviewVisibility = ({
   }),
 });
 
+const previewProps = (type: string, props: unknown) => {
+  const templateId =
+    type === LINKED_TEMPLATE_TYPE ?
+      (props as Record<string, unknown> | null | undefined)?.['templateId']
+    : undefined;
+
+  return typeof templateId === 'string' ? { templateId } : {};
+};
+
 const toPreviewBlock = ({
   id,
   kind,
   type,
+  props,
   visibility,
   datasources,
   consumes,
@@ -76,7 +87,7 @@ const toPreviewBlock = ({
   id,
   kind,
   type,
-  props: {},
+  props: previewProps(type, props),
   ...compact({
     visibility: ifPresent(visibility, toPreviewVisibility),
     datasources,
@@ -126,9 +137,11 @@ export const toPreviewSkeleton = (
 };
 
 const hasDatasources = ({
+  type,
   datasources,
   children,
 }: PreviewBlockInput): boolean =>
+  type === LINKED_TEMPLATE_TYPE ||
   Object.keys(datasources ?? {}).length > 0 ||
   (children ?? []).some(hasDatasources);
 

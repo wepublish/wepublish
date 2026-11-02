@@ -6,6 +6,10 @@ import {
 import { BuilderImageProviderProps } from '@wepublish/website/builder';
 import { memo, useMemo } from 'react';
 
+import {
+  NestedPuckBlocksContext,
+  NestedPuckBlocksProps,
+} from '../contexts/nested-puck-blocks.context';
 import { GeneratedBlocksProvider } from '../generated/generated-blocks.component';
 import { buildPuckBlockTree } from './block-tree';
 import { PuckBlockRenderer } from './puck-block.component';
@@ -31,12 +35,39 @@ const aboveTheFoldImages: BuilderImageProviderProps = {
 
 const belowTheFoldImages: BuilderImageProviderProps = {};
 
+const noBlocks: readonly FullPuckBlockFragment[] = [];
+
+const PuckBlocksContent = memo(
+  ({ blocks, registry }: NestedPuckBlocksProps) => {
+    const roots = useMemo(() => buildPuckBlockTree(blocks).roots, [blocks]);
+
+    return (
+      <GeneratedBlocksProvider
+        registry={blocks.some(isGeneratedPuckBlock) ? registry : null}
+      >
+        {roots.map((node, index) => (
+          <ImageContext.Provider
+            key={node.block.id}
+            value={
+              index < aboveTheFoldCount ? aboveTheFoldImages : (
+                belowTheFoldImages
+              )
+            }
+          >
+            <PuckBlockRenderer node={node} />
+          </ImageContext.Provider>
+        ))}
+      </GeneratedBlocksProvider>
+    );
+  }
+);
+
+const renderNestedBlocks = (props: NestedPuckBlocksProps) => (
+  <PuckBlocksContent {...props} />
+);
+
 export const PuckBlocks = memo(
   ({ blocks, registry, components }: PuckBlocksProps) => {
-    const roots = useMemo(
-      () => buildPuckBlockTree(blocks ?? []).roots,
-      [blocks]
-    );
     const blockComponents = useMemo(
       () => ({ ...puckBlockRegistry, ...components }),
       [components]
@@ -44,22 +75,12 @@ export const PuckBlocks = memo(
 
     return (
       <PuckBlockComponentsContext.Provider value={blockComponents}>
-        <GeneratedBlocksProvider
-          registry={blocks?.some(isGeneratedPuckBlock) ? registry : null}
-        >
-          {roots.map((node, index) => (
-            <ImageContext.Provider
-              key={node.block.id}
-              value={
-                index < aboveTheFoldCount ? aboveTheFoldImages : (
-                  belowTheFoldImages
-                )
-              }
-            >
-              <PuckBlockRenderer node={node} />
-            </ImageContext.Provider>
-          ))}
-        </GeneratedBlocksProvider>
+        <NestedPuckBlocksContext.Provider value={renderNestedBlocks}>
+          <PuckBlocksContent
+            blocks={blocks ?? noBlocks}
+            registry={registry}
+          />
+        </NestedPuckBlocksContext.Provider>
       </PuckBlockComponentsContext.Provider>
     );
   }

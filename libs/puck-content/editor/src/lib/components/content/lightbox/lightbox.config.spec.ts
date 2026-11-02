@@ -54,4 +54,25 @@ describe('LightboxConfig', () => {
 
     expect(lastLightboxProps()).not.toHaveProperty('refs');
   });
+
+  it('can hide the captions and take a ratio and fit per breakpoint', () => {
+    expect(LightboxConfig.fields?.hideCaption).toMatchObject({
+      type: 'switch',
+      label: 'Hide captions',
+      ai: { instructions: expect.any(String) },
+    });
+    expect(LightboxConfig.fields?.fit).toMatchObject({
+      type: 'breakpoints',
+      objectFields: {
+        aspectRatio: { type: 'aspectRatio' },
+        objectFit: { type: 'objectFit' },
+      },
+    });
+    expect(LightboxConfig.defaultProps).toMatchObject({
+      hideCaption: false,
+      fit: { xs: { aspectRatio: 'auto', objectFit: 'cover' } },
+    });
+    expect(LightboxConfig.ai?.instructions).toContain('hideCaption');
+    expect(LightboxConfig.ai?.instructions).toContain('fit');
+  });
 });

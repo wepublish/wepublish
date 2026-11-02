@@ -1,20 +1,27 @@
 import { Data, UiState } from '@puckeditor/core';
 import { withDynamicConfig } from '@puckeditor/plugin-ai';
 import {
+  BlockTemplateRoot,
   BOTH_SIDEBARS_MIN_WIDTH,
   createBottomBarPlugin,
   getPuckConfig,
   HeadingAnalyzerPlugin,
   isCompactSidebarWidth,
   LoadedPuckDocument,
+  nameField,
   PUCK_MOBILE_LAYOUT_WIDTH,
   PuckConfig,
   PuckData,
   PuckRevisionContent,
   RawDataPlugin,
   SEOPreviewPlugin,
+  dynamicConfigOf,
+  readDynamicConfig,
+  withSavedBlocksPlaceholder,
 } from '@wepublish/puck-content/editor';
 import { PuckDocumentKind } from '@wepublish/puck-content/website';
+
+import { TEMPLATE_NAME_PROP } from './puck-template-mapping';
 
 export const bottomBarPlugin = createBottomBarPlugin([
   SEOPreviewPlugin,
@@ -37,7 +44,56 @@ export const toEditorData = <K extends PuckDocumentKind>(
 export const puckEditorConfig = (
   kind: PuckDocumentKind,
   data: Data
-): PuckConfig => withDynamicConfig(getPuckConfig(kind), data);
+): PuckConfig =>
+  withSavedBlocksPlaceholder(withDynamicConfig(getPuckConfig(kind), data));
+
+export const blockTemplateEditorConfig = (
+  data: Data,
+  nameLabel: string
+): PuckConfig => {
+  const config = getPuckConfig('page');
+
+  return withSavedBlocksPlaceholder(
+    withDynamicConfig(
+      {
+        ...config,
+        root: {
+          ...config.root,
+          fields: {
+            [TEMPLATE_NAME_PROP]: nameField(nameLabel),
+          } as NonNullable<PuckConfig['root']>['fields'],
+          render: BlockTemplateRoot,
+        },
+      },
+      data
+    )
+  );
+};
+
+export const dynamicComponentsKey = (data: Data) =>
+  Object.keys(
+    readDynamicConfig(dynamicConfigOf(data.root.props))?.components ?? {}
+  )
+    .sort()
+    .join(',');
+
+export const withTemplateFields = (
+  config: PuckConfig,
+  nameLabel: string
+): PuckConfig => {
+  const { slug, ...fields } = config.root?.fields ?? {};
+
+  return {
+    ...config,
+    root: {
+      ...config.root,
+      fields: {
+        [TEMPLATE_NAME_PROP]: nameField(nameLabel),
+        ...fields,
+      } as NonNullable<PuckConfig['root']>['fields'],
+    },
+  };
+};
 
 export const toRevisionContent = <K extends PuckDocumentKind>(
   kind: K,

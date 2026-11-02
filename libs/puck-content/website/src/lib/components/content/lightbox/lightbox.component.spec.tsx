@@ -105,4 +105,45 @@ describe('LightboxRender', () => {
 
     expect(lastReceived().refs).toBeUndefined();
   });
+
+  it('drops the captions and image credits when captions are hidden', () => {
+    const credited = mockImage({ id: 'summit', source: 'Keystone' });
+
+    renderLightbox(
+      { ...emptyPuckBlockData, images: [lake, credited] },
+      {
+        props: {
+          images: [{ imageId: 'summit', caption: 'The summit' }],
+          hideCaption: true,
+        },
+      }
+    );
+
+    expect(lastReceived().images).toEqual([
+      {
+        __typename: 'ImageGalleryImage',
+        caption: null,
+        image: { ...credited, source: null },
+      },
+    ]);
+  });
+
+  it('crops the gallery images to the chosen ratio', () => {
+    const { container } = renderWithProviders(
+      createElement(LightboxRender, {
+        id: 'Lightbox-1',
+        props: {
+          images: [{ imageId: 'summit' }],
+          fit: { xs: { aspectRatio: '4:3', objectFit: 'contain' } },
+        },
+        data: { ...emptyPuckBlockData, images: [summit] },
+        slots: {},
+      })
+    );
+
+    expect(container.querySelector('img')).toHaveStyle({
+      width: '100%',
+      objectFit: 'contain',
+    });
+  });
 });

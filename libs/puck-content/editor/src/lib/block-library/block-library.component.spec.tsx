@@ -107,9 +107,9 @@ describe('BlockLibrary', () => {
     expect(
       await within(text).findByRole('button', { name: 'Title' })
     ).toBeVisible();
-    expect(within(text).getAllByRole('button', { name: 'Text' })).toHaveLength(
-      2
-    );
+    expect(
+      await within(text).findByRole('button', { name: 'RichText' })
+    ).toBeVisible();
     expect(
       await within(screen.getByRole('region', { name: 'Media' })).findByRole(
         'button',

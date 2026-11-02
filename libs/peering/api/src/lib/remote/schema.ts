@@ -627,17 +627,26 @@ export type BlockStyle = {
   name: Scalars['String']['output'];
 };
 
-export type BlockTemplate = HasBlockContent & {
+export type BlockTemplate = HasBlockContent & HasPuckBlocks & {
   __typename?: 'BlockTemplate';
   blocks: Array<BlockContent>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
+  /** The ids of every block template this template links, directly or through other linked templates. A template must not be linked into any of them. */
+  linkedTemplateIds: Array<Scalars['String']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  puckBlocks?: Maybe<Array<PuckBlock>>;
+  puckRegistry?: Maybe<PuckRegistry>;
 };
 
 
 export type BlockTemplateBlocksArgs = {
+  onlyDisplayed?: Scalars['Boolean']['input'];
+};
+
+
+export type BlockTemplatePuckBlocksArgs = {
   onlyDisplayed?: Scalars['Boolean']['input'];
 };
 
@@ -666,6 +675,8 @@ export type BlockTemplateBlockInput = {
 
 export type BlockTemplateFilter = {
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Only templates built in the page builder (`true`) or in the block editor (`false`). */
+  puck?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export enum BlockTemplateSort {
@@ -3583,9 +3594,11 @@ export type MutationCreateArticleArgs = {
 
 
 export type MutationCreateArticleTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: Array<BlockContentInput>;
   metadata: ArticleTemplateMetadataInput;
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -3615,8 +3628,10 @@ export type MutationCreateBlockStyleArgs = {
 
 
 export type MutationCreateBlockTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: Array<BlockContentInput>;
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -3802,9 +3817,11 @@ export type MutationCreatePageArgs = {
 
 
 export type MutationCreatePageTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: Array<BlockContentInput>;
   metadata: PageTemplateMetadataInput;
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -4603,10 +4620,12 @@ export type MutationUpdateArticleArgs = {
 
 
 export type MutationUpdateArticleTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: InputMaybe<Array<BlockContentInput>>;
   id: Scalars['String']['input'];
   metadata: ArticleTemplateMetadataInput;
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -4638,9 +4657,11 @@ export type MutationUpdateBlockStyleArgs = {
 
 
 export type MutationUpdateBlockTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: InputMaybe<Array<BlockContentInput>>;
   id: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -4856,10 +4877,12 @@ export type MutationUpdatePageArgs = {
 
 
 export type MutationUpdatePageTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: InputMaybe<Array<BlockContentInput>>;
   id: Scalars['String']['input'];
   metadata: PageTemplateMetadataInput;
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -6341,6 +6364,8 @@ export type PuckBlockData = {
   images?: Maybe<Array<Image>>;
   memberPlans?: Maybe<Array<MemberPlan>>;
   pages?: Maybe<Array<Page>>;
+  /** For a linked block template: the template it points at, null when it is missing, links back to itself or is nested too deep. */
+  template?: Maybe<PuckBlockTemplateData>;
   /** The subscriptions of the reader, empty for a reader who is not logged in. */
   userSubscriptions?: Maybe<Array<PublicSubscription>>;
 };
@@ -6481,6 +6506,16 @@ export type PuckBlockStylingInput = {
   textTransform?: InputMaybe<PuckTextTransform>;
   /** Name of a theme typography variant like `h2` or `body1`. */
   typography?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The current content of the block template a linked Puck block points at. */
+export type PuckBlockTemplateData = {
+  __typename?: 'PuckBlockTemplateData';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  /** The blocks of the template, read flat like revision puckBlocks. Their ids are prefixed with the id of the linked block, and linked templates inside the template sit in the `template` slot of their linked block. */
+  puckBlocks: Array<PuckBlock>;
+  puckRegistry?: Maybe<PuckRegistry>;
 };
 
 export type PuckBlockTimeOfDay = {

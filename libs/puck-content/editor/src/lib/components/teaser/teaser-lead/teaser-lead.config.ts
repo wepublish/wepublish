@@ -5,8 +5,12 @@ import {
 } from '@wepublish/puck-content/website';
 import { MdSubject } from 'react-icons/md';
 
-import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
+import {
+  hideWhenEmptyField,
+  hideWhenEmptyInstructions,
+  teaserPartRender,
+} from '../teaser-part/teaser-part';
 
 export const TeaserLeadConfig: ComponentConfig<{
   props: TeaserLeadConfigProps;
@@ -20,9 +24,14 @@ export const TeaserLeadConfig: ComponentConfig<{
   nameKey: 'puck.blocks.names.TeaserLead',
   ai: {
     instructions:
-      'Renders the lead text of the teaser provided by the surrounding teaser slot. Only works inside a teaser slot; it has no content of its own.',
+      'Renders the lead text of the teaser provided by the surrounding teaser slot. Only works inside a teaser slot; it has no content of its own.' +
+      hideWhenEmptyInstructions('lead'),
   },
-  fields: {},
-  defaultProps: {},
-  render: editorRender(TeaserLeadRender),
+  fields: {
+    hideWhenEmpty: hideWhenEmptyField,
+  },
+  defaultProps: {
+    hideWhenEmpty: true,
+  },
+  render: teaserPartRender('TeaserLead', TeaserLeadRender),
 };

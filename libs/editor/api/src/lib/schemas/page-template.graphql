@@ -36,6 +36,14 @@ fragment FullPageTemplate on PageTemplate {
 
   blockTemplate {
     ...FullBlockTemplate
+
+    puckBlocks(onlyDisplayed: false) {
+      ...FullPuckBlock
+    }
+
+    puckRegistry {
+      ...FullPuckRegistry
+    }
   }
 
   metadata {
@@ -67,6 +75,10 @@ query PageTemplateList(
       blockTemplate {
         id
         name
+
+        puckBlocks(onlyDisplayed: false) {
+          id
+        }
       }
     }
 
@@ -89,10 +101,18 @@ query PageTemplate($id: String!) {
 
 mutation CreatePageTemplate(
   $name: String!
-  $blocks: [BlockContentInput!]!
+  $blocks: [BlockContentInput!] = []
+  $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
   $metadata: PageTemplateMetadataInput!
 ) {
-  createPageTemplate(name: $name, blocks: $blocks, metadata: $metadata) {
+  createPageTemplate(
+    name: $name
+    blocks: $blocks
+    puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
+    metadata: $metadata
+  ) {
     ...FullPageTemplate
   }
 }
@@ -100,13 +120,17 @@ mutation CreatePageTemplate(
 mutation UpdatePageTemplate(
   $id: String!
   $name: String!
-  $blocks: [BlockContentInput!]!
+  $blocks: [BlockContentInput!]
+  $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
   $metadata: PageTemplateMetadataInput!
 ) {
   updatePageTemplate(
     id: $id
     name: $name
     blocks: $blocks
+    puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
     metadata: $metadata
   ) {
     ...FullPageTemplate

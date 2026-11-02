@@ -5,8 +5,12 @@ import {
 } from '@wepublish/puck-content/website';
 import { MdLocalOffer } from 'react-icons/md';
 
-import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
+import {
+  hideWhenEmptyField,
+  hideWhenEmptyInstructions,
+  teaserPartRender,
+} from '../teaser-part/teaser-part';
 
 export const TeaserTagsConfig: ComponentConfig<{
   props: TeaserTagsConfigProps;
@@ -20,9 +24,11 @@ export const TeaserTagsConfig: ComponentConfig<{
   nameKey: 'puck.blocks.names.TeaserTags',
   ai: {
     instructions:
-      'Renders the main tags of the teaser provided by the surrounding teaser slot as chips. Only works inside a teaser slot; it has no content of its own. max limits how many tags are shown.',
+      'Renders the main tags of the teaser provided by the surrounding teaser slot as chips. Only works inside a teaser slot; it has no content of its own. max limits how many tags are shown.' +
+      hideWhenEmptyInstructions('main tags'),
   },
   fields: {
+    hideWhenEmpty: hideWhenEmptyField,
     max: {
       type: 'number',
       label: 'Max tags',
@@ -30,7 +36,8 @@ export const TeaserTagsConfig: ComponentConfig<{
     },
   },
   defaultProps: {
+    hideWhenEmpty: true,
     max: 5,
   },
-  render: editorRender(TeaserTagsRender),
+  render: teaserPartRender('TeaserTags', TeaserTagsRender),
 };

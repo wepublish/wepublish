@@ -65,7 +65,7 @@ describe('ArticleTemplateList', () => {
     );
     expect(
       screen.getByRole('link', { name: /articleTemplates.list.newTemplate/ })
-    ).toHaveAttribute('href', '/articles/templates/create');
+    ).toHaveAttribute('href', '/puck/templates/articles/create');
     expect(screen.getByText('articleTemplates.list.title')).toBeInTheDocument();
   });
 });

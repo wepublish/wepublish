@@ -4,6 +4,7 @@ import {
   PageDocument,
   PageRevisionListDocument,
   PageRevisionPreviewDocument,
+  PageTemplateDocument,
   PublishPageDocument,
   RestorePageRevisionDocument,
   UpdatePageDocument,
@@ -30,8 +31,8 @@ import {
 } from '@wepublish/ui/editor';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdLink } from 'react-icons/md';
-import { useNavigate, useParams } from 'react-router-dom';
+import { MdLink, MdNoteAdd } from 'react-icons/md';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { copyLinkToClipboard } from '../../copyLink';
 import { useAutosaveEnabled } from '../../useAutosaveEnabled';
@@ -55,10 +56,13 @@ import {
   REVISIONS_PAGE_SIZE,
 } from './puck-editor.notify';
 import { PuckEditorError, PuckEditorLoading } from './puck-editor-status';
+import { pageTemplateToRootProps } from './puck-template-mapping';
 
 function PageEditor() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const templateId = id ? null : searchParams.get('templateId');
   const { t } = useTranslation();
   const [autosaveEnabled, setAutosaveEnabled] = useAutosaveEnabled();
   const [historyRequested, setHistoryRequested] = useState(false);
@@ -76,6 +80,16 @@ function PageEditor() {
     variables: { id: id ?? '' },
     skip: !id,
   });
+
+  const { data: templateData, loading: templateLoading } = useQuery(
+    PageTemplateDocument,
+    {
+      errorPolicy: 'all',
+      variables: { id: templateId ?? '' },
+      skip: !templateId,
+      fetchPolicy: 'network-only',
+    }
+  );
 
   const [createPage, { loading: creating }] = useMutation(CreatePageDocument, {
     update: (cache, { data: created }) => {
@@ -110,17 +124,25 @@ function PageEditor() {
   });
 
   const page = data?.page ?? undefined;
+  const template = templateData?.pageTemplate ?? undefined;
 
-  const loaded = useMemo(
-    () =>
-      loadPuckDocument(
+  const loaded = useMemo(() => {
+    if (!page && template) {
+      return loadPuckDocument(
         'page',
-        page?.latest.puckBlocks,
-        page?.latest.puckRegistry,
-        page ? pageToRootProps(page) : {}
-      ),
-    [page]
-  );
+        template.blockTemplate.puckBlocks,
+        template.blockTemplate.puckRegistry,
+        pageTemplateToRootProps(template.metadata)
+      );
+    }
+
+    return loadPuckDocument(
+      'page',
+      page?.latest.puckBlocks,
+      page?.latest.puckRegistry,
+      page ? pageToRootProps(page) : {}
+    );
+  }, [page, template]);
 
   const backTo = '/pages';
   const backLabel = t('back');
@@ -130,6 +152,16 @@ function PageEditor() {
         <PuckEditorLoading />
       : <PuckEditorError
           message={t('pageEditor.overview.pageNotFound')}
+          backTo={backTo}
+          backLabel={backLabel}
+        />;
+  }
+
+  if (templateId && !template) {
+    return templateLoading ?
+        <PuckEditorLoading />
+      : <PuckEditorError
+          message={t('puck.templates.notFound')}
           backTo={backTo}
           backLabel={backLabel}
         />;
@@ -342,8 +374,8 @@ function PageEditor() {
       page ? pageToRootProps(page) : {}
     ),
     autosave: { enabled: autosaveEnabled, onToggle: setAutosaveEnabled },
-    menuActions:
-      publishedUrl ?
+    menuActions: [
+      ...(publishedUrl ?
         [
           {
             label: t('copyLink.button'),
@@ -351,14 +383,28 @@ function PageEditor() {
             onClick: () => copyLinkToClipboard(publishedUrl, t),
           },
         ]
-      : [],
+      : []),
+      ...(page ?
+        [
+          {
+            label: t('pageEditor.panels.createTemplate'),
+            icon: <MdNoteAdd />,
+            needsSaved: true,
+            onClick: () =>
+              navigate(
+                `/puck/templates/pages/create?fromPage=${encodeURIComponent(page.id)}`
+              ),
+          },
+        ]
+      : []),
+    ],
     onSave: save,
     onPublish: publish,
   };
 
   return (
     <PuckDocumentEditor
-      key={`${page?.id ?? 'new'}:${restoreCount}`}
+      key={`${page?.id ?? template?.id ?? 'new'}:${restoreCount}`}
       kind="page"
       data={initialData}
       controller={controller}

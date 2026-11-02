@@ -216,6 +216,7 @@ const result: PossibleTypesResultData = {
     ],
     "HasPuckBlocks": [
       "ArticleRevision",
+      "BlockTemplate",
       "PageRevision"
     ],
     "HasSubscriptionLc": [

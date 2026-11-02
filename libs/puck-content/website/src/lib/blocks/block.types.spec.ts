@@ -1,4 +1,4 @@
-import { FullPuckBlockDataFragment } from '@wepublish/website/api';
+import { FullPuckBlockFragment } from '@wepublish/website/api';
 
 import { emptyPuckBlockData, PuckBlockData } from './block.types';
 
@@ -9,10 +9,10 @@ describe('emptyPuckBlockData', () => {
     ).toBe(true);
   });
 
-  it('covers every model the website selects', () => {
+  it('covers every model the website selects and the linked template', () => {
     expectTypeOf(emptyPuckBlockData).toEqualTypeOf<PuckBlockData>();
     expectTypeOf<keyof PuckBlockData>().toEqualTypeOf<
-      Exclude<keyof FullPuckBlockDataFragment, '__typename'>
+      Exclude<keyof FullPuckBlockFragment['data'], '__typename'>
     >();
     expect(Object.keys(emptyPuckBlockData).sort()).toEqual([
       'articles',
@@ -20,6 +20,7 @@ describe('emptyPuckBlockData', () => {
       'images',
       'memberPlans',
       'pages',
+      'template',
       'userSubscriptions',
     ]);
   });

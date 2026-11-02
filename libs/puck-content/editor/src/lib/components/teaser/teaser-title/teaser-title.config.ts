@@ -5,8 +5,12 @@ import {
 } from '@wepublish/puck-content/website';
 import { MdTitle } from 'react-icons/md';
 
-import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
+import {
+  hideWhenEmptyField,
+  hideWhenEmptyInstructions,
+  teaserPartRender,
+} from '../teaser-part/teaser-part';
 
 export const TeaserTitleConfig: ComponentConfig<{
   props: TeaserTitleConfigProps;
@@ -20,9 +24,14 @@ export const TeaserTitleConfig: ComponentConfig<{
   nameKey: 'puck.blocks.names.TeaserTitle',
   ai: {
     instructions:
-      'Renders the title of the teaser provided by the surrounding teaser slot. Only works inside a teaser slot; it has no content of its own.',
+      'Renders the title of the teaser provided by the surrounding teaser slot. Only works inside a teaser slot; it has no content of its own.' +
+      hideWhenEmptyInstructions('title'),
   },
-  fields: {},
-  defaultProps: {},
-  render: editorRender(TeaserTitleRender),
+  fields: {
+    hideWhenEmpty: hideWhenEmptyField,
+  },
+  defaultProps: {
+    hideWhenEmpty: true,
+  },
+  render: teaserPartRender('TeaserTitle', TeaserTitleRender),
 };

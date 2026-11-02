@@ -2,6 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { ReactNode } from 'react';
 
 import {
+  PuckBlockTemplateDocumentContext,
   PuckDocumentKindContext,
   PuckEditorDocumentKind,
   usePuckDocumentKind,
@@ -41,5 +42,17 @@ describe('usePuckDocumentKindLabel', () => {
         wrapper: withKind('article'),
       }).result.current
     ).toBe('Article');
+  });
+
+  it('names a block template as such, although it is built like a page', () => {
+    expect(
+      renderHook(() => usePuckDocumentKindLabel(), {
+        wrapper: ({ children }) => (
+          <PuckBlockTemplateDocumentContext.Provider value>
+            {children}
+          </PuckBlockTemplateDocumentContext.Provider>
+        ),
+      }).result.current
+    ).toBe('Block template');
   });
 });

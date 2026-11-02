@@ -1,3 +1,4 @@
+import { LinkedTemplateProps } from '@wepublish/puck-content/website';
 import { Config, Data } from '@puckeditor/core';
 import {
   BuilderBildwurfAdBlockProps,
@@ -77,6 +78,7 @@ type BaseComponents = {
   Slider: WithDataSource<WithCSS<SliderProps>>;
   Container: WithDataSource<WithCSS<ContainerProps>>;
   Collapsible: WithCSS<CollapsibleConfigProps>;
+  LinkedTemplate: WithCSS<LinkedTemplateProps>;
   RichText: BuilderRichTextBlockProps;
   Listicle: ListicleConfigProps;
   IFrame: BuilderIFrameBlockProps;

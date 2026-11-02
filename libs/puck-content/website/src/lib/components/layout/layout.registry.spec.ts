@@ -3,6 +3,7 @@ import { ContainerRender } from './container/container.component';
 import { DynamicGridRender } from './dynamic-grid/dynamic-grid.component';
 import { GridRender } from './grid/grid.component';
 import { LayoutBlockProps, layoutBlockRegistry } from './layout.registry';
+import { LinkedTemplateRender } from './linked-template/linked-template.component';
 import { RowRender } from './row/row.component';
 import { SliderRender } from './slider/slider.component';
 import { SpaceRender } from './space/space.component';
@@ -32,6 +33,7 @@ describe('layoutBlockRegistry', () => {
       Slider: SliderRender,
       Container: ContainerRender,
       Collapsible: CollapsibleRender,
+      LinkedTemplate: LinkedTemplateRender,
     });
   });
 

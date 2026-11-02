@@ -7,7 +7,9 @@ import {
   PuckData,
   PuckDocumentController,
 } from '@wepublish/puck-content/editor';
-import { PropsWithChildren } from 'react';
+import { createInstance } from 'i18next';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
+import { PropsWithChildren, ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { PuckDocumentEditor, PuckDocumentEditorProps } from './puck-editor';
@@ -48,21 +50,24 @@ const controller: PuckDocumentController = {
 };
 
 const renderEditor = (
-  props: Partial<PuckDocumentEditorProps<'article'>> = {}
+  props: Partial<PuckDocumentEditorProps<'article'>> = {},
+  wrap: (children: ReactNode) => ReactNode = children => children
 ) =>
   render(
-    <MockedProvider>
-      <ThemeProvider theme={theme}>
-        <MemoryRouter>
-          <PuckDocumentEditor
-            kind="article"
-            data={data}
-            controller={controller}
-            {...props}
-          />
-        </MemoryRouter>
-      </ThemeProvider>
-    </MockedProvider>
+    wrap(
+      <MockedProvider>
+        <ThemeProvider theme={theme}>
+          <MemoryRouter>
+            <PuckDocumentEditor
+              kind="article"
+              data={data}
+              controller={controller}
+              {...props}
+            />
+          </MemoryRouter>
+        </ThemeProvider>
+      </MockedProvider>
+    )
   );
 
 describe('PuckDocumentEditor', () => {
@@ -73,6 +78,20 @@ describe('PuckDocumentEditor', () => {
       screen.getByRole('group', { name: 'Unpublished' })
     ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+  });
+
+  it('lets a template be named in the settings of the document', async () => {
+    renderEditor({
+      data: {
+        ...data,
+        root: { props: { title: 'Hello', templateName: 'News' } as never },
+      },
+      templateNameLabel: 'Template name',
+    });
+
+    expect(await screen.findAllByDisplayValue('News')).not.toHaveLength(0);
+    expect(screen.getAllByText('Template name')).not.toHaveLength(0);
+    expect(screen.queryByText('Slug')).not.toBeInTheDocument();
   });
 
   it('asks the route for the publish dialog of the root props being edited', () => {
@@ -150,6 +169,70 @@ describe('PuckDocumentEditor', () => {
     expect(
       within(banner).getByRole('button', { name: /revisionPreview.restore/ })
     ).toBeInTheDocument();
+  });
+
+  it('names the blocks in the outline by their translated name', async () => {
+    const i18n = createInstance();
+
+    await i18n.use(initReactI18next).init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            puck: { blocks: { names: { LinkedTemplate: 'Linked template' } } },
+          },
+        },
+      },
+    });
+
+    renderEditor(
+      {
+        data: {
+          ...data,
+          content: [
+            {
+              type: 'LinkedTemplate',
+              props: { id: 'LinkedTemplate-1', templateId: 'tpl' },
+            },
+          ],
+        },
+      },
+      children => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+    );
+
+    fireEvent.click(screen.getByText('Outline', { selector: 'span' }));
+
+    expect(
+      (await screen.findAllByText('Linked template'))[0]
+    ).toBeInTheDocument();
+    expect(screen.queryByText('LinkedTemplate')).toBeNull();
+  });
+
+  it('names the root of a block template a block template', async () => {
+    const i18n = createInstance();
+
+    await i18n.use(initReactI18next).init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            puck: {
+              documentKind: { page: 'Page', blockTemplate: 'Block template' },
+            },
+          },
+        },
+      },
+    });
+
+    renderEditor(
+      { blockTemplate: true, templateNameLabel: 'Name' },
+      children => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+    );
+
+    expect(
+      (await screen.findAllByText('Block template'))[0]
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Page')).toBeNull();
   });
 
   it('gives the blocks in the canvas the data of their datasources', () => {

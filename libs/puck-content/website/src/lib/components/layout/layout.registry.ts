@@ -12,6 +12,8 @@ import {
   DynamicGridRender,
 } from './dynamic-grid/dynamic-grid.component';
 import { GridProps, GridRender } from './grid/grid.component';
+import { LinkedTemplateProps } from './linked-template/linked-template';
+import { LinkedTemplateRender } from './linked-template/linked-template.component';
 import { RowProps, RowRender } from './row/row.component';
 import { SliderProps, SliderRender } from './slider/slider.component';
 import { SpaceProps, SpaceRender } from './space/space.component';
@@ -24,6 +26,7 @@ export type LayoutBlockProps = {
   Slider: SliderProps;
   Container: ContainerProps;
   Collapsible: CollapsibleConfigProps;
+  LinkedTemplate: LinkedTemplateProps;
 };
 
 export const layoutBlockRegistry: {
@@ -36,6 +39,10 @@ export const layoutBlockRegistry: {
   Slider: { component: SliderRender },
   Container: { component: ContainerRender, marginSides: ['top', 'bottom'] },
   Collapsible: { component: CollapsibleRender },
+  LinkedTemplate: {
+    component:
+      LinkedTemplateRender as PuckBlockDefinition<LinkedTemplateProps>['component'],
+  },
 };
 
 export * from './collapsible/collapsible.component';
@@ -44,6 +51,8 @@ export * from './dynamic-grid/dynamic-grid.component';
 export * from './gap';
 export * from './grid-placement';
 export * from './grid/grid.component';
+export * from './linked-template/linked-template';
+export * from './linked-template/linked-template.component';
 export * from './items-alignment';
 export * from './row/row.component';
 export * from './slider/slider.component';

@@ -31,7 +31,7 @@ export const SwitchFieldRender = ({
 
     <Switch
       size="small"
-      checked={!!value}
+      checked={value ?? !!field.defaultValue}
       disabled={readOnly}
       onChange={(_event, checked) => onChange(checked)}
       slotProps={{ input: { 'aria-label': field.label } }}

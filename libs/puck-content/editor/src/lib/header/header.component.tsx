@@ -138,7 +138,9 @@ export function PuckDocumentHeaderView({
         },
       ]
     : []),
-    ...menuActions,
+    ...menuActions.map(({ needsSaved, ...action }) =>
+      needsSaved ? { ...action, disabled: action.disabled || dirty } : action
+    ),
   ];
 
   const publish = () => {

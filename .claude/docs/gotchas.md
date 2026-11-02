@@ -919,6 +919,14 @@ While editing, Puck hands every `contentEditable` text prop (`title`, `quote`,
 and breaks only in the canvas. Render them as children, nothing else. Pinned by
 "passes contentEditable nodes through" in `editor-render.spec.tsx`.
 
+### ⚠️ A MUI dialog opened from the Puck action bar renders unstyled
+
+The action bar lives in the canvas iframe's React tree, so its Emotion cache
+writes into the iframe while MUI portals the dialog into the host `body`: the
+dialog shows up as bare HTML at the bottom of the page. Keep the dialog in a
+host-side `overrides.puck` provider and let the action only request it (see
+`saved-blocks.provider.component.tsx`).
+
 ### ⚠️ A block hidden on a breakpoint keeps its grid cell in the Puck canvas only
 
 Puck's drag wrapper is the grid item there; the website collapses the cell.
