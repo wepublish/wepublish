@@ -3014,7 +3014,11 @@
         "memberPlan": "Abo-Plan",
         "codeInfo": "Diesen Code geben Leser:innen beim Abschliessen eines Abos ein, um den Rabatt zu erhalten.",
         "discountPercentInfo": "Prozentsatz, der beim Einlösen vom Preis der ersten Zahlungsperiode abgezogen wird.",
-        "memberPlanInfo": "Der Code gilt nur für diesen Abo-Plan."
+        "memberPlanInfo": "Der Code gilt nur für diesen Abo-Plan.",
+        "conditions": "Bedingungen",
+        "conditionsInfo": "Optional: Nur Leser:innen, die diese Bedingungen erfüllen, können den Code einlösen.",
+        "minReferrals": "Mindestanzahl Empfehlungen",
+        "minReferralsInfo": "Wie viele andere Leser:innen die Person für ein bezahltes Abo geworben haben muss. Leer lassen für keine Bedingung."
       },
       "overview": {
         "title": "Rabattcodes",

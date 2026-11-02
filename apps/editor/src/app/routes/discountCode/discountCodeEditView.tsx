@@ -40,6 +40,7 @@ const mapApiDataToInput = (
   memberPlan: discountCode.memberPlan ?? undefined,
   validFrom: discountCode.validFrom,
   validTo: discountCode.validTo,
+  minReferrals: discountCode.minReferrals ?? null,
 });
 
 const DiscountCodeEditView = () => {

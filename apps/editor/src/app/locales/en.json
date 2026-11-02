@@ -3074,7 +3074,11 @@
         "memberPlan": "Subscription plan",
         "codeInfo": "Readers enter this code when they take out a subscription to get the discount.",
         "discountPercentInfo": "Percentage deducted from the price of the first payment period when the code is used.",
-        "memberPlanInfo": "The code only works for this subscription plan."
+        "memberPlanInfo": "The code only works for this subscription plan.",
+        "conditions": "Conditions",
+        "conditionsInfo": "Optional: only readers who meet these conditions can redeem the code.",
+        "minReferrals": "Minimum number of referrals",
+        "minReferralsInfo": "How many other readers the reader has to have referred to a paid subscription. Leave empty for no condition."
       },
       "overview": {
         "title": "Discount codes",

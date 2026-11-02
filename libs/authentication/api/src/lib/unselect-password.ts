@@ -7,6 +7,7 @@ export const unselectPassword: Record<
     | 'comments'
     | 'sessions'
     | 'subscriptions'
+    | 'referredSubscriptions'
     | 'invoices'
     | 'commentRatings'
     | 'pollVotes'

@@ -3006,7 +3006,11 @@
         "memberPlan": "Plan d’abonnement",
         "codeInfo": "Les lecteur·rice·s saisissent ce code lors de la souscription d’un abonnement pour obtenir la réduction.",
         "discountPercentInfo": "Pourcentage déduit du prix de la première période de paiement lorsque le code est utilisé.",
-        "memberPlanInfo": "Le code n’est valable que pour ce plan d’abonnement."
+        "memberPlanInfo": "Le code n’est valable que pour ce plan d’abonnement.",
+        "conditions": "Conditions",
+        "conditionsInfo": "Facultatif : seul·e·s les lecteur·trice·s qui remplissent ces conditions peuvent utiliser le code.",
+        "minReferrals": "Nombre minimum de parrainages",
+        "minReferralsInfo": "Combien d’autres lecteur·trice·s la personne doit avoir parrainé·e·s pour un abonnement payé. Laisse vide pour aucune condition."
       },
       "overview": {
         "title": "Codes de réduction",

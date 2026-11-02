@@ -40,6 +40,7 @@ const DiscountCodeCreateView = () => {
       memberPlanId: '',
       validFrom: '',
       validTo: '',
+      minReferrals: null,
     },
   });
 

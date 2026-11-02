@@ -1,11 +1,15 @@
 import styled from '@emotion/styled';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Card,
   CardContent,
   FormControl,
   FormLabel,
   TextField,
+  Typography,
 } from '@mui/material';
 import { FullMemberPlanFragment } from '@wepublish/editor/api';
 import {
@@ -14,6 +18,7 @@ import {
   SelectMemberPlan,
 } from '@wepublish/ui/editor';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { MdExpandMore } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
@@ -28,6 +33,8 @@ export const discountCodeSchema = z
       .optional(),
     validFrom: z.string().min(1),
     validTo: z.string().min(1),
+    // conditions, null means no condition
+    minReferrals: z.number().int().min(0).nullish(),
   })
   .refine(value => new Date(value.validTo) >= new Date(value.validFrom), {
     path: ['validTo'],
@@ -78,6 +85,7 @@ export const DiscountCodeForm = ({ create }: DiscountCodeFormProps) => {
   const { t } = useTranslation();
   const { control } = useFormContext<DiscountCodeFormValues>();
   const memberPlan = useWatch({ control, name: 'memberPlan' });
+  const minReferrals = useWatch({ control, name: 'minReferrals' });
 
   return (
     <DiscountCodeFormWrapper>
@@ -134,6 +142,55 @@ export const DiscountCodeForm = ({ create }: DiscountCodeFormProps) => {
             </CodeDiscountGrid>
           </CardContent>
         </Card>
+
+        <Accordion
+          variant="outlined"
+          disableGutters
+          defaultExpanded={minReferrals != null}
+        >
+          <AccordionSummary expandIcon={<MdExpandMore />}>
+            <div>
+              <Typography>{t('discountCode.form.conditions')}</Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+              >
+                {t('discountCode.form.conditionsInfo')}
+              </Typography>
+            </div>
+          </AccordionSummary>
+
+          <AccordionDetails>
+            <Controller
+              control={control}
+              name="minReferrals"
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  label={
+                    <>
+                      {t('discountCode.form.minReferrals')}{' '}
+                      <InfoTooltip
+                        text={t('discountCode.form.minReferralsInfo')}
+                      />
+                    </>
+                  }
+                  type="number"
+                  slotProps={{ htmlInput: { min: 0 } }}
+                  onChange={event =>
+                    field.onChange(
+                      event.target.value === '' ? null : +event.target.value
+                    )
+                  }
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                  fullWidth
+                />
+              )}
+            />
+          </AccordionDetails>
+        </Accordion>
       </DiscountCodeFormSection>
 
       <DiscountCodeFormSection>
