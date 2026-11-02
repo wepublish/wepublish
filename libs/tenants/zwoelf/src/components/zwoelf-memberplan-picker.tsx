@@ -3,6 +3,9 @@ import { FormControlLabel } from '@mui/material';
 import {
   findMemberPlanRenderSetting,
   getPlanPeriodicities,
+  MemberPlanItemAmountSpinner,
+  MemberPlanItemContent,
+  MemberPlanItemPicker,
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
 import { FullMemberPlanFragment } from '@wepublish/website/api';
@@ -48,6 +51,37 @@ const SupporterDescription = styled('p')`
 
 const StyledRadios = styled(MemberPlanPickerRadios)`
   grid-template-columns: 1fr;
+
+  /*
+   * Keep the radio next to name and price: the amount spinner of an open
+   * amount plan gets its own full-width row below instead of pushing the
+   * radio down to its middle.
+   */
+  ${MemberPlanItemPicker} {
+    align-items: center;
+  }
+
+  ${MemberPlanItemContent} {
+    display: contents;
+  }
+
+  ${MemberPlanItemContent} > * {
+    grid-column: 1;
+  }
+
+  ${MemberPlanItemPicker} > .MuiRadio-root {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  ${MemberPlanItemContent} > ${MemberPlanItemAmountSpinner} {
+    grid-column: 1 / -1;
+
+    input {
+      margin: 0;
+      text-align: center;
+    }
+  }
 `;
 
 /**

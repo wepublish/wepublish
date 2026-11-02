@@ -7,7 +7,7 @@
   },
   "subscribe": {
     "memberplan": {
-      "price": "{offerAmountMin, select, 0 {Gratis} other {{offerExactAmount, select, true {} other {Ab }}{offerPrice}}}"
+      "price": "{offerAmountMin, select, 0 {Gratis} other {{exactAmount, select, true {{offerPrice}} other {ab {minPrice}}}}}"
     }
   },
   "zwoelf": {
