@@ -176,7 +176,16 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
 
 - Create an API token (`wep_…`) in the editor under API tokens
   (`/api-tokens`) and pass it as
-  `E2E_API_TOKEN`; in CI it is the `E2E_API_TOKEN` secret.
+  `E2E_API_TOKEN`; in CI it is the `E2E_API_TOKEN` secret. Tokens from the
+  "Tokens" page are peering tokens and fail with "Forbidden resource". The
+  factories need these scopes: create, get and delete users' subscriptions
+  (`CAN_CREATE_SUBSCRIPTION`, `CAN_GET_SUBSCRIPTIONS`,
+  `CAN_DELETE_SUBSCRIPTION`), `CAN_CREATE_USER`, `CAN_DELETE_USER`,
+  `CAN_GET_INVOICES`, `CAN_GET_PAYMENT_METHODS`, `CAN_GET_SYSTEM_MAILS`,
+  `CAN_UPDATE_SYSTEM_MAILS`, `CAN_CREATE_ARTICLE`, `CAN_PUBLISH_ARTICLE`,
+  `CAN_DELETE_ARTICLE`, `CAN_CREATE_PAYWALL`, `CAN_DELETE_PAYWALL`,
+  `CAN_CREATE_PAGE`, `CAN_PUBLISH_PAGE`,
+  `CAN_UPDATE_CHALLENGE_PROVIDER_SETTINGS`.
 - `@mail` journeys read the mailbox the review's mail provider sends to,
   over IMAP (`support/imap-inbox.ts`): `E2E_IMAP_USER` and
   `E2E_IMAP_PASSWORD` (secrets of the same names in CI), optional

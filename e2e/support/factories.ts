@@ -414,29 +414,43 @@ export class TestData {
     return paymentMethod;
   }
 
-  /** Renews the subscription now, as the nightly job would: one open invoice. */
-  async createRenewalInvoice(subscriptionId: string) {
+  /**
+   * The subscription's open invoice. Creating a subscription already bills
+   * its first period; only without one is it renewed, as the nightly job
+   * would (the API refuses to renew while an invoice is open).
+   */
+  async openInvoice(subscriptionId: string) {
     const api = await this.api();
+    const findOpen = async () => {
+      const { invoices } = await api.gql<{
+        invoices: { nodes: { id: string; paidAt: string | null; canceledAt: string | null }[] };
+      }>(
+        `query Invoices($subscriptionID: String) {
+          invoices(filter: { subscriptionID: $subscriptionID }, take: 10) { nodes { id paidAt canceledAt } }
+        }`,
+        { subscriptionID: subscriptionId }
+      );
+
+      return invoices.nodes.find(i => !i.paidAt && !i.canceledAt);
+    };
+
+    const existing = await findOpen();
+
+    if (existing) {
+      return existing;
+    }
 
     await api.gql(`mutation Renew($id: String!) { renewSubscription(id: $id) { id } }`, {
       id: subscriptionId,
     });
 
-    const { invoices } = await api.gql<{
-      invoices: { nodes: { id: string; paidAt: string | null; canceledAt: string | null }[] };
-    }>(
-      `query Invoices($subscriptionID: String) {
-        invoices(filter: { subscriptionID: $subscriptionID }, take: 10) { nodes { id paidAt canceledAt } }
-      }`,
-      { subscriptionID: subscriptionId }
-    );
-    const open = invoices.nodes.find(i => !i.paidAt && !i.canceledAt);
+    const renewed = await findOpen();
 
-    if (!open) {
+    if (!renewed) {
       throw new Error(`Renewing subscription ${subscriptionId} left no open invoice.`);
     }
 
-    return open;
+    return renewed;
   }
 
   /**
