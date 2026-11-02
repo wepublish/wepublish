@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 
 import { createTheme, ThemeProvider } from '@mui/material';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
   InvoicesDocument,
   MemberPlanListDocument,
@@ -9,6 +9,7 @@ import {
   ReactivateSubscriptionDocument,
   RevertSubscriptionUpgradeDocument,
   SubscriptionDocument,
+  UpdateSubscriptionDocument,
 } from '@wepublish/editor/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import type { Mock } from 'vitest';
@@ -89,7 +90,8 @@ const paymentMethod = {
 const subscription = (
   deactivation: unknown,
   canRevertUpgrade = false,
-  pendingPaymentMethodChange: unknown = null
+  pendingPaymentMethodChange: unknown = null,
+  overrides: Record<string, unknown> = {}
 ) => ({
   canRevertUpgrade,
   pendingPaymentMethodChange,
@@ -115,13 +117,16 @@ const subscription = (
   extendable: true,
   currency: 'CHF',
   goodie: null,
+  referredBy: null,
   periods: [],
+  ...overrides,
 });
 
 const mockQueries = (
   deactivation: unknown,
   canRevertUpgrade = false,
-  pendingPaymentMethodChange: unknown = null
+  pendingPaymentMethodChange: unknown = null,
+  overrides: Record<string, unknown> = {}
 ) => {
   // The results have to be referentially stable, the view reacts to them in effects.
   const refetch = vi.fn();
@@ -135,7 +140,8 @@ const mockQueries = (
           subscription: subscription(
             deactivation,
             canRevertUpgrade,
-            pendingPaymentMethodChange
+            pendingPaymentMethodChange,
+            overrides
           ),
         },
       },
@@ -187,6 +193,7 @@ beforeEach(() => {
   mockedUseQuery.mockReset();
   mutationFor(ReactivateSubscriptionDocument).mockClear();
   mutationFor(RevertSubscriptionUpgradeDocument).mockClear();
+  mutationFor(UpdateSubscriptionDocument).mockClear();
 });
 
 describe('SubscriptionEditView', () => {
@@ -299,6 +306,57 @@ describe('SubscriptionEditView', () => {
 
     expect(revert).toHaveBeenCalledWith({
       variables: { id: 'subscription-1' },
+    });
+  });
+
+  describe('referred by', () => {
+    const referrer = { id: 'referrer-1', name: 'Referrer', firstName: 'Rita' };
+
+    it('shows who referred the subscription', async () => {
+      mockQueries(null, false, null, { referredBy: referrer });
+      renderEditView();
+
+      expect(await screen.findByDisplayValue(/Rita Referrer/)).toBeTruthy();
+    });
+
+    it('saves who referred the subscription', async () => {
+      mockQueries(null, false, null, { referredBy: referrer });
+      renderEditView();
+
+      fireEvent.click(await screen.findByRole('button', { name: 'save' }));
+
+      await waitFor(() =>
+        expect(mutationFor(UpdateSubscriptionDocument)).toHaveBeenCalledWith({
+          variables: expect.objectContaining({ referredByID: 'referrer-1' }),
+        })
+      );
+    });
+
+    it('saves a subscription nobody referred without a referrer', async () => {
+      mockQueries(null);
+      renderEditView();
+
+      fireEvent.click(await screen.findByRole('button', { name: 'save' }));
+
+      await waitFor(() =>
+        expect(mutationFor(UpdateSubscriptionDocument)).toHaveBeenCalledWith({
+          variables: expect.objectContaining({ referredByID: null }),
+        })
+      );
+    });
+
+    it('refuses a reader referring themselves', async () => {
+      mockQueries(null, false, null, {
+        referredBy: { id: 'user-1', name: 'Muster', firstName: 'Max' },
+      });
+      renderEditView();
+
+      fireEvent.click(await screen.findByRole('button', { name: 'save' }));
+
+      expect(
+        await screen.findByText('errorMessages.selfReferralErrorMessage')
+      ).toBeTruthy();
+      expect(mutationFor(UpdateSubscriptionDocument)).not.toHaveBeenCalled();
     });
   });
 });

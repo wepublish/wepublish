@@ -1014,7 +1014,8 @@
       "passwordCompromisedErrorMessage": "This password has appeared in a data breach. Please choose a different password.",
       "required": "This field is required",
       "invalidCountry": "Please select a valid country",
-      "invalidForm": "Please check the highlighted fields"
+      "invalidForm": "Please check the highlighted fields",
+      "selfReferralErrorMessage": "A reader can not refer themselves"
     },
     "event": {
       "create": {
@@ -2661,7 +2662,9 @@
       "startsAt": "Subscription Start",
       "uniqueSubscription": "Unique Subscription",
       "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible.",
-      "paidUntilInfo": "Set automatically as soon as an invoice is paid. The subscription is paid up to this date."
+      "paidUntilInfo": "Set automatically as soon as an invoice is paid. The subscription is paid up to this date.",
+      "referredBy": "Referred by",
+      "referredByHelper": "Who recommended this subscription to the reader. Counts towards discount codes that require referrals."
     },
     "userSubscriptionList": {
       "periodRange": "Period",

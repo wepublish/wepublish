@@ -1014,7 +1014,8 @@
       "passwordCompromisedErrorMessage": "Ce mot de passe est apparu dans une fuite de données. Veuillez choisir un autre mot de passe.",
       "required": "Ce champ est requis",
       "invalidCountry": "Veuillez sélectionner un pays valide",
-      "invalidForm": "Veuillez vérifier les champs signalés"
+      "invalidForm": "Veuillez vérifier les champs signalés",
+      "selfReferralErrorMessage": "Un·e lecteur·trice ne peut pas se parrainer soi-même"
     },
     "event": {
       "create": {
@@ -2613,7 +2614,9 @@
       "startsAt": "Début de l’abonnement",
       "uniqueSubscription": "Abonnement unique",
       "uniqueSubscriptionHelpText": "Un utilisateur ne peut souscrire qu’un seul abonnement par plan d’abonnement unique. Le renouvellement manuel par l’utilisateur n’est pas possible. Le renouvellement automatique est possible.",
-      "paidUntilInfo": "Défini automatiquement dès qu’une facture est payée. L’abonnement est payé jusqu’à cette date."
+      "paidUntilInfo": "Défini automatiquement dès qu’une facture est payée. L’abonnement est payé jusqu’à cette date.",
+      "referredBy": "Parrainé·e par",
+      "referredByHelper": "Qui a recommandé cet abonnement. Compte pour les codes de réduction qui exigent des parrainages."
     },
     "userSubscriptionList": {
       "periodRange": "Période",

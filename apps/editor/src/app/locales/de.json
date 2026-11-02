@@ -1014,7 +1014,8 @@
       "passwordCompromisedErrorMessage": "Dieses Passwort ist in einem Datenleck aufgetaucht. Bitte wähle ein anderes Passwort.",
       "required": "Dieses Feld ist erforderlich",
       "invalidCountry": "Bitte ein gültiges Land auswählen",
-      "invalidForm": "Bitte überprüfe die markierten Felder"
+      "invalidForm": "Bitte überprüfe die markierten Felder",
+      "selfReferralErrorMessage": "Ein:e Leser:in kann sich nicht selbst werben"
     },
     "event": {
       "create": {
@@ -2613,7 +2614,9 @@
       "startsAt": "Abonnements-Beginn",
       "uniqueSubscription": "Unique-Abo",
       "uniqueSubscriptionHelpText": "Ein Benutzer kann nur ein Abo pro Unique-Abo-Plan lösen. Die manuelle Verlängerung durch den Benutzer ist nicht möglich. Eine automatische Verlängerung ist möglich.",
-      "paidUntilInfo": "Wird automatisch gesetzt, sobald eine Rechnung bezahlt ist. Bis zu diesem Datum ist das Abo bezahlt."
+      "paidUntilInfo": "Wird automatisch gesetzt, sobald eine Rechnung bezahlt ist. Bis zu diesem Datum ist das Abo bezahlt.",
+      "referredBy": "Geworben von",
+      "referredByHelper": "Wer dieses Abo empfohlen hat. Zählt für Rabattcodes, die Empfehlungen voraussetzen."
     },
     "userSubscriptionList": {
       "periodRange": "Zeitraum",

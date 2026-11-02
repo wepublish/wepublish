@@ -133,6 +133,7 @@ export interface SubscriptionEditViewProps {
 
 const EMPTY_SUBSCRIPTION = {
   user: null as FullUserFragment | null,
+  referredBy: null as FullUserFragment | null,
   memberPlan: undefined as FullMemberPlanFragment | undefined,
   paymentMethod: undefined as FullPaymentMethodFragment | undefined,
   paymentPeriodicity: PaymentPeriodicity.Yearly,
@@ -195,6 +196,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const schema = z
     .object({
       user: z.custom<FullUserFragment>().nullish(),
+      referredBy: z.custom<FullUserFragment>().nullish(),
       memberPlan: z.custom<FullMemberPlanFragment>().nullish(),
       paymentMethod: z.custom<FullPaymentMethodFragment>().nullish(),
       paymentPeriodicity: z.nativeEnum(PaymentPeriodicity),
@@ -213,6 +215,17 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           code: z.ZodIssueCode.custom,
           path: ['user'],
           message: t('errorMessages.noUserErrorMessage'),
+        });
+      }
+
+      if (
+        subscription.referredBy &&
+        subscription.referredBy.id === subscription.user?.id
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['referredBy'],
+          message: t('errorMessages.selfReferralErrorMessage'),
         });
       }
 
@@ -274,6 +287,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           return {
             ...EMPTY_SUBSCRIPTION,
             user: subscription.user as unknown as FullUserFragment,
+            referredBy:
+              (subscription.referredBy as unknown as FullUserFragment) ?? null,
             memberPlan: subscription.memberPlan,
             paymentPeriodicity: subscription.paymentPeriodicity,
             monthlyAmount: subscription.monthlyAmount,
@@ -499,6 +514,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       startsAt: subscription.startsAt.toISOString(),
       properties: subscription.properties,
       extendable: subscription.extendable,
+      referredByID: subscription.referredBy?.id ?? null,
     };
 
     try {
@@ -945,6 +961,37 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </FormHelperText>
                       )}
                     </div>
+                  </TwoUp>
+
+                  <TwoUp>
+                    <div>
+                      <FormLabel>
+                        {t('userSubscriptionEdit.referredBy')}
+                      </FormLabel>
+
+                      <Controller
+                        control={control}
+                        name="referredBy"
+                        render={({ field, fieldState: { error } }) => (
+                          <>
+                            <UserSearch
+                              name={field.name}
+                              user={field.value}
+                              onUpdateUser={user =>
+                                field.onChange(user ?? null)
+                              }
+                            />
+
+                            <FormHelperText error={Boolean(error)}>
+                              {error?.message ??
+                                t('userSubscriptionEdit.referredByHelper')}
+                            </FormHelperText>
+                          </>
+                        )}
+                      />
+                    </div>
+
+                    <div />
                   </TwoUp>
 
                   <TwoUp>
