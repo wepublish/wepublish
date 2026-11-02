@@ -1,5 +1,8 @@
 {
   "navbar": {
     "subscribe": "Abo lösen"
+  },
+  "welcome": {
+    "title": "Willkommen in deinem Zwoelf-Account"
   }
 }

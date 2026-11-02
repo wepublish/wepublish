@@ -1,8 +1,5 @@
-import { useMutation } from '@apollo/client/react';
-import { useApolloClient } from '@apollo/client/react';
 import { PersonalDataFormContainer } from '@wepublish/user/website';
 import {
-  ConfirmEmailChangeDocument,
   FeaturesDocument,
   InvoicesDocument,
   MeDocument,
@@ -14,7 +11,7 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
-import { ComponentProps, useEffect } from 'react';
+import { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
 import { handleJwtLogin } from '../../handle-jwt-login';
 import { withAuthGuard } from '../../auth-guard';
@@ -36,37 +33,12 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const router = useRouter();
-  const client = useApolloClient();
-  const [confirmEmailChange, { data: confirmData, error: confirmError }] =
-    useMutation(ConfirmEmailChangeDocument);
-
-  useEffect(() => {
-    const newEmail = router.query.confirmEmailChange as string | undefined;
-
-    if (newEmail) {
-      const { confirmEmailChange: _, jwt: __, ...query } = router.query;
-      confirmEmailChange({ variables: { newEmail } })
-        .then(async () => {
-          await router.replace({ pathname: '/profile', query }, undefined, {
-            shallow: true,
-          });
-          await client.refetchQueries({ include: ['Me'] });
-        })
-        .catch(async () => {
-          await router.replace({ pathname: '/profile', query }, undefined, {
-            shallow: true,
-          });
-        });
-    }
-  }, [router.query.confirmEmailChange, confirmEmailChange, router, client]);
 
   return (
     <>
-      {confirmData && (
+      {router.query.emailConfirmed && (
         <Alert severity="success">{t('user.emailChangeConfirmed')}</Alert>
       )}
-
-      {confirmError && <Alert severity="error">{confirmError.message}</Alert>}
 
       <ProfileSubscriptions className={className} />
 
@@ -93,6 +65,10 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
   ]);
 
   await handleJwtLogin(ctx, client, !!process.env.HTTP_ONLY_COOKIE);
+
+  if (ctx.res?.headersSent) {
+    return {};
+  }
 
   const sessionProps = await getSessionTokenProps(ctx);
 

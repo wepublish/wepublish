@@ -68,11 +68,8 @@ describe('PersonalDataForm', () => {
   it('explains that the password fields are only for changing it', () => {
     renderForm();
 
-    expect(
-      screen.getByText(
-        'Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.'
-      )
-    ).toBeInTheDocument();
+    expect(screen.getByText(t('user.passwordWarning'))).toBeInTheDocument();
+    expect(screen.queryByText(/user\.password/)).toBeNull();
   });
 
   it('saves the changed data together with the new password', async () => {

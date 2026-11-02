@@ -90,7 +90,9 @@ export const AsyncSessionProvider = memo<
   }, [setupInitialSessionToken]);
 
   return (
-    <SessionTokenContext.Provider value={[user, !!token, setCookieAndToken]}>
+    <SessionTokenContext.Provider
+      value={[user, !!token, setCookieAndToken, fetchMe]}
+    >
       {children}
     </SessionTokenContext.Provider>
   );

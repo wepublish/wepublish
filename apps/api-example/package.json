@@ -60,6 +60,7 @@
     "passport-http-bearer": "catalog:",
     "pino": "catalog:",
     "prosemirror-model": "catalog:",
+    "qrcode-generator": "catalog:",
     "qs": "catalog:",
     "ramda": "catalog:",
     "react": "catalog:",

@@ -52,9 +52,7 @@ export const getStaticProps: GetStaticProps = (async () => {
   }
 
   let mailchimpResponse:
-    | mailchimp.campaigns.CampaignsSuccessResponse
-    | ErrorResponse
-    | null = null;
+    mailchimp.campaigns.CampaignsSuccessResponse | ErrorResponse | null = null;
   try {
     mailchimp.setConfig({
       apiKey: process.env.MAILCHIMP_API_KEY,

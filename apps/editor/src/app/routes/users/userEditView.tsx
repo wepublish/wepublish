@@ -2,6 +2,7 @@ import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Alert,
   Autocomplete,
   Box,
   Button,
@@ -15,6 +16,7 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
+  Stack,
   Switch,
   TextField,
   Typography,
@@ -25,10 +27,15 @@ import {
   FullImageFragment,
   FullUserFragment,
   FullUserRoleFragment,
+  LoginCodeSecondFactor,
+  ReissueUserLoginCodeDocument,
   ResetUserTotpDocument,
+  RevokeUserLoginCodeDocument,
+  SettingsListDocument,
   UpdateUserDocument,
   UserAddress,
   UserDocument,
+  UserLoginCodeDocument,
   UserRoleListDocument,
   UserSubscriptionListDocument,
 } from '@wepublish/editor/api';
@@ -36,6 +43,7 @@ import {
   SendMailToUserPanel,
   UserMailLogPanel,
 } from '@wepublish/membership/editor';
+import { isLoginCodeEnabled } from './login-code-enabled';
 import {
   CanCreateUser,
   CanDeleteUser,
@@ -289,6 +297,28 @@ function UserEditView() {
   const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
     ResetUserTotpDocument
   );
+  const { data: settingsData } = useQuery(SettingsListDocument);
+  // The panel only makes sense once the medium has login codes switched on.
+  const canManageLoginCodes =
+    useAuthorisation('CAN_MANAGE_USER_LOGIN_CODES') &&
+    isLoginCodeEnabled(settingsData?.settings);
+  const { data: loginCodeData, refetch: refetchLoginCode } = useQuery(
+    UserLoginCodeDocument,
+    {
+      variables: { userId: user?.id ?? '' },
+      skip: !user?.id || !canManageLoginCodes,
+    }
+  );
+  const [revokeUserLoginCode, { loading: isRevokingLoginCode }] = useMutation(
+    RevokeUserLoginCodeDocument
+  );
+  const [reissueUserLoginCode, { loading: isReissuingLoginCode }] = useMutation(
+    ReissueUserLoginCodeDocument
+  );
+  const [issuedLoginCode, setIssuedLoginCode] = useState<{
+    code: string;
+    purl: string;
+  } | null>(null);
 
   /**
    * Save or create new user
@@ -975,6 +1005,106 @@ function UserEditView() {
                   </Grid>
                 </CardContent>
               </Card>
+              {/* login code */}
+              {user && canManageLoginCodes && (
+                <Card>
+                  <CardHeader
+                    title={t('userCreateOrEditView.loginCode.header')}
+                  />
+
+                  <CardContent>
+                    <Typography style={{ marginBottom: 12 }}>
+                      {loginCodeData?.userLoginCode ?
+                        t('userCreateOrEditView.loginCode.status', {
+                          usesRemaining:
+                            loginCodeData.userLoginCode.usesRemaining,
+                          maxUses: loginCodeData.userLoginCode.maxUses,
+                          expiresAt: new Date(
+                            loginCodeData.userLoginCode.expiresAt
+                          ).toLocaleDateString(),
+                          lastUsedAt:
+                            loginCodeData.userLoginCode.lastUsedAt ?
+                              new Date(
+                                loginCodeData.userLoginCode.lastUsedAt
+                              ).toLocaleString()
+                            : t('userCreateOrEditView.loginCode.never'),
+                        })
+                      : t('userCreateOrEditView.loginCode.none')}
+                    </Typography>
+
+                    {loginCodeData?.userLoginCode &&
+                      loginCodeData.userLoginCode.secondFactor !==
+                        LoginCodeSecondFactor.None && (
+                        <Typography style={{ marginBottom: 12 }}>
+                          {t(
+                            loginCodeData.userLoginCode.secondFactorAvailable ?
+                              'userCreateOrEditView.loginCode.secondFactorAvailable'
+                            : 'userCreateOrEditView.loginCode.secondFactorMissing',
+                            {
+                              factor: t(
+                                `settingList.loginCodeSecondFactorOptions.${loginCodeData.userLoginCode.secondFactor}`
+                              ),
+                            }
+                          )}
+                        </Typography>
+                      )}
+
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      style={{ marginBottom: 16 }}
+                    >
+                      <Button
+                        variant="outlined"
+                        disabled={
+                          !loginCodeData?.userLoginCode || isRevokingLoginCode
+                        }
+                        onClick={async () => {
+                          await revokeUserLoginCode({
+                            variables: { userId: user.id },
+                          });
+                          setIssuedLoginCode(null);
+                          await refetchLoginCode();
+                        }}
+                      >
+                        {t('userCreateOrEditView.loginCode.revoke')}
+                      </Button>
+
+                      <Button
+                        variant="contained"
+                        disabled={isReissuingLoginCode}
+                        onClick={async () => {
+                          const result = await reissueUserLoginCode({
+                            variables: { userId: user.id },
+                          });
+
+                          if (result.data?.reissueUserLoginCode) {
+                            setIssuedLoginCode({
+                              code: result.data.reissueUserLoginCode.code,
+                              purl: result.data.reissueUserLoginCode.purl,
+                            });
+                          }
+
+                          await refetchLoginCode();
+                        }}
+                      >
+                        {t('userCreateOrEditView.loginCode.reissue')}
+                      </Button>
+                    </Stack>
+
+                    {issuedLoginCode && (
+                      <Alert severity="info">
+                        {t('userCreateOrEditView.loginCode.issued')}{' '}
+                        <strong>{issuedLoginCode.code}</strong>
+                        <br />
+                        <a href={issuedLoginCode.purl}>
+                          {issuedLoginCode.purl}
+                        </a>
+                      </Alert>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
               {/* two-factor authentication */}
               {user && canResetTotp && (
                 <Card>

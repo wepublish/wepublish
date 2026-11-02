@@ -81,6 +81,7 @@
       "@wepublish/kv-ttl-cache/api/testing": [
         "libs/kv-ttl-cache/api/src/testing.ts"
       ],
+      "@wepublish/login-code/api": ["libs/login-code/api/src/index.ts"],
       "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
       "@wepublish/media-transform-guard": [
         "libs/media-transform-guard/api/src/index.ts"
