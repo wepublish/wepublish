@@ -5022,6 +5022,7 @@ type PuckBlock {
   """The records the datasources of this block yield."""
   data: PuckBlockData!
   datasources: PuckBlockDatasources
+  grouped: Boolean
   id: String!
   kind: PuckBlockKind!
   locked: Boolean
@@ -5131,12 +5132,13 @@ input PuckBlockInput {
   """
   consumes: Int
   datasources: PuckBlockDatasourcesInput
+  grouped: Boolean
   id: String!
   kind: PuckBlockKind!
   locked: Boolean
 
   """
-  The component props without id, locked, visibility, styling and datasources, with every slot emptied to `[]`.
+  The component props without id, locked, grouped, visibility, styling and datasources, with every slot emptied to `[]`.
   """
   props: JSONObject!
 

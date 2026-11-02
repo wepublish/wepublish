@@ -66,6 +66,7 @@ fragment FullPuckBlock on PuckBlock {
   puckSlot
   position
   locked
+  grouped
   props
 
   visibility {

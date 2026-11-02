@@ -125,6 +125,15 @@ describe('insertMode', () => {
       'below'
     );
   });
+
+  it('adds into a selected group like into any block with slots', () => {
+    expect(
+      insertMode(config, {
+        type: 'Container',
+        props: { id: 'c1', grouped: true },
+      })
+    ).toBe('into');
+  });
 });
 
 describe('insertTargets', () => {
@@ -186,6 +195,16 @@ describe('insertTargets', () => {
     ).toEqual([
       { zone: 'root:default-zone', label: 'Page', count: 3, index: 5 },
     ]);
+  });
+
+  it('targets the slots of a selected group', () => {
+    expect(
+      insertTargets(config, 'Title', {
+        selected: { type: 'Container', props: { id: 'c1', grouped: true } },
+        selector: { index: 0, zone: 'root:default-zone' },
+        root,
+      }).map(({ zone }) => zone)
+    ).toEqual(['c1:content']);
   });
 
   it('has no target when the surrounding slot refuses the block', () => {

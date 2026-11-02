@@ -40,8 +40,19 @@ the blocks inside) and keeps its content slot with a hint when it has no
 record yet.
 
 `editorRender` turns Puck's slot functions into `slots`, strips the envelope
-keys (`puck`, `datasources`, `locked`, …), reads `data` for the block from
-`PuckBlockDataContext` and wraps the element in `TeaserSlotBoundary`.
+keys (`puck`, `datasources`, `locked`, `grouped`, …), reads `data` for the
+block from `PuckBlockDataContext` and wraps the element in `TeaserSlotBoundary`.
+
+Lock and group are opposites. `locked` freezes a block's own content and
+position but lets blocks be inserted into it. `grouped` (only offered for
+blocks with slots) freezes the structure below it and leaves content
+editable: `withGroupAll` takes drag, delete and duplicate from every block
+inside a group (move up/down is disabled too), and `groupPlugin` sends a
+canvas click inside a group to the outermost grouped block (a capture
+listener on the iframe document). Blocks can still be dropped or inserted
+into a group's slots; they become part of the group and are frozen from then
+on. Blocks inside a group stay selectable through the Outline, and inline
+text inside a group stays editable in the canvas while the group is selected.
 
 Fields follow `<field>/<field>.field.ts` (types, zod v4 schema, `*FieldAi`,
 pure helpers), `<field>.component.tsx` (React) and `<field>.ts` (the Puck

@@ -1,10 +1,12 @@
 import { ActionBar, createUsePuck, Plugin } from '@puckeditor/core';
 import { ComponentProps } from 'react';
-import { useTranslation } from 'react-i18next';
 import { MdArrowDownward, MdArrowUpward } from 'react-icons/md';
 
+import { isInGroup } from '../group/group';
+import { GroupAction } from '../group/group.component';
 import { isLocked } from '../lock/lock';
 import { LockAction } from '../lock/lock.component';
+import { useEditorTranslation } from '../website-translations/editor-translation';
 
 const usePuck = createUsePuck();
 
@@ -18,11 +20,16 @@ export const PuckActionBar = ({
   parentAction,
   dragHandle,
 }: PuckActionBarProps) => {
-  const { t } = useTranslation();
+  const { t } = useEditorTranslation();
   const dispatch = usePuck(puck => puck.dispatch);
   const itemSelector = usePuck(puck => puck.appState.ui.itemSelector);
   const getItemBySelector = usePuck(puck => puck.getItemBySelector);
-  const locked = usePuck(puck => isLocked(puck.selectedItem));
+  const locked = usePuck(
+    puck =>
+      isLocked(puck.selectedItem) ||
+      (!!puck.selectedItem &&
+        isInGroup(puck.appState.data, puck.selectedItem.props.id))
+  );
 
   const canMoveUp = !locked && itemSelector !== null && itemSelector.index > 0;
   const canMoveDown = !!(
@@ -67,6 +74,7 @@ export const PuckActionBar = ({
       </ActionBar.Group>
 
       <ActionBar.Group>
+        <GroupAction />
         <LockAction />
         {children}
 

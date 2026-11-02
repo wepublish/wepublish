@@ -85,6 +85,7 @@ export const puckMaxShadow = 24;
 const reservedPropKeys = [
   'id',
   'locked',
+  'grouped',
   'visibility',
   'styling',
   'datasources',
@@ -380,6 +381,7 @@ const apiBlockShape = {
   type: nonEmptyString,
   props: apiBlockPropsSchema,
   locked: z.boolean().optional(),
+  grouped: z.boolean().optional(),
   visibility: apiBlockVisibilitySchema.optional(),
   styling: apiBlockBreakpointStylingSchema.optional(),
   datasources: apiBlockDatasourcesSchema.optional(),

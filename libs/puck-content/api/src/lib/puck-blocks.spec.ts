@@ -74,6 +74,7 @@ describe('parsePuckBlocks', () => {
         { items: [{ content: [] }, { content: [] }], gap: 2 },
         {
           locked: true,
+          grouped: true,
           visibility: {
             disabled: false,
             timings: {
@@ -190,6 +191,7 @@ describe('parsePuckBlocks', () => {
           type: 'Grid',
           props: {},
           locked: null,
+          grouped: null,
           puckSlot: null,
           styling: {
             xs: { color: null, margin: { top: 1, left: null } },
@@ -278,6 +280,11 @@ describe('parsePuckBlocks', () => {
       'a lock that is not a boolean',
       [{ ...block('a'), locked: 'yes' }],
       'blocks[0].locked must be a boolean',
+    ],
+    [
+      'a group that is not a boolean',
+      [{ ...block('a'), grouped: 'yes' }],
+      'blocks[0].grouped must be a boolean',
     ],
     [
       'a visibility that is not an object',
@@ -721,6 +728,13 @@ const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
       ],
     ],
     [
+      'grouped and ungrouped blocks',
+      [
+        storedBlock({ grouped: true }),
+        storedBlock({ id: 'Title-2', grouped: false }),
+      ],
+    ],
+    [
       'a generated block',
       [storedBlock({ kind: 'generated', type: 'HeroBanner' })],
     ],
@@ -889,6 +903,7 @@ const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
       ],
     ],
     ['a lock that is not a boolean', [storedBlock({ locked: 'yes' })]],
+    ['a group that is not a boolean', [storedBlock({ grouped: 'yes' })]],
     [
       'a component inside the props',
       [storedBlock({ props: { content: [storedComponent] } })],
@@ -907,6 +922,7 @@ const storedBlockFormat: Record<'valid' | 'invalid', [string, unknown][]> = {
     ],
     ['the id inside the props', [storedBlock({ props: { id: 'Title-1' } })]],
     ['the lock inside the props', [storedBlock({ props: { locked: true } })]],
+    ['the group inside the props', [storedBlock({ props: { grouped: true } })]],
     [
       'the visibility inside the props',
       [storedBlock({ props: { visibility: {} } })],

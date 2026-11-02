@@ -53,6 +53,7 @@ const puckSlot = (label: string) =>
     <div
       aria-label={label}
       data-min-empty-height={props?.minEmptyHeight}
+      data-allow={props?.allow?.join(',')}
       className={props?.className}
     />
   ));
@@ -173,6 +174,7 @@ describe('editorRender', () => {
     render(
       renderGrid(editorRender(Grid), {
         locked: true,
+        grouped: true,
         editMode: true,
         datasources: { article: { type: 'slot' } },
         className: 'styled',
@@ -182,6 +184,7 @@ describe('editorRender', () => {
     expect(lastReceived().props).not.toHaveProperty('puck');
     expect(lastReceived().props).not.toHaveProperty('id');
     expect(lastReceived().props).not.toHaveProperty('locked');
+    expect(lastReceived().props).not.toHaveProperty('grouped');
     expect(lastReceived().props).not.toHaveProperty('editMode');
     expect(lastReceived().props).not.toHaveProperty('datasources');
     expect(lastReceived().props).not.toHaveProperty('className');
@@ -236,6 +239,14 @@ describe('editorRender', () => {
 
     expect(screen.getByText('Editor hint')).toBeTruthy();
     expect(screen.getByRole('region', { name: 'Grid' })).toBeTruthy();
+  });
+
+  it('keeps the slots of a grouped block open for new blocks', () => {
+    render(renderGrid(editorRender(Grid), { grouped: true }));
+
+    expect(screen.getByLabelText('Content').hasAttribute('data-allow')).toBe(
+      false
+    );
   });
 });
 

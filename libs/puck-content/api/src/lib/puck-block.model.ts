@@ -453,6 +453,9 @@ export class PuckBlock {
   @Field(() => Boolean, { nullable: true })
   locked?: boolean | null;
 
+  @Field(() => Boolean, { nullable: true })
+  grouped?: boolean | null;
+
   @Field(() => PuckBlockVisibility, { nullable: true })
   visibility?: PuckBlockVisibility | null;
 
@@ -487,12 +490,15 @@ export class PuckBlockInput {
 
   @Field(() => GraphQLJSONObject, {
     description:
-      'The component props without id, locked, visibility, styling and datasources, with every slot emptied to `[]`.',
+      'The component props without id, locked, grouped, visibility, styling and datasources, with every slot emptied to `[]`.',
   })
   props!: ApiBlockProps;
 
   @Field(() => Boolean, { nullable: true })
   locked?: boolean | null;
+
+  @Field(() => Boolean, { nullable: true })
+  grouped?: boolean | null;
 
   @Field(() => PuckBlockVisibility, { nullable: true })
   visibility?: PuckBlockVisibility | null;

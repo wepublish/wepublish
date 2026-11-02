@@ -5111,6 +5111,11 @@
         "list": "Liste",
         "remove": "Retirer"
       },
+      "group": {
+        "badge": "Groupe",
+        "groupBlock": "Grouper le bloc",
+        "ungroupBlock": "Dégrouper le bloc"
+      },
       "lock": {
         "lockBlock": "Verrouiller le bloc",
         "unlockBlock": "Déverrouiller le bloc"

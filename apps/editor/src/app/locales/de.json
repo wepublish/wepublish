@@ -5111,6 +5111,11 @@
         "list": "Liste",
         "remove": "Entfernen"
       },
+      "group": {
+        "badge": "Gruppe",
+        "groupBlock": "Block gruppieren",
+        "ungroupBlock": "Gruppierung aufheben"
+      },
       "lock": {
         "lockBlock": "Block sperren",
         "unlockBlock": "Block entsperren"

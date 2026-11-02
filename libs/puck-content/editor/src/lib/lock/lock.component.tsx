@@ -1,13 +1,13 @@
 import { ActionBar, createUsePuck } from '@puckeditor/core';
-import { useTranslation } from 'react-i18next';
 import { MdLock, MdLockOpen } from 'react-icons/md';
 
+import { useEditorTranslation } from '../website-translations/editor-translation';
 import { isLocked, toggleLock } from './lock';
 
 const usePuck = createUsePuck();
 
 export const LockAction = () => {
-  const { t } = useTranslation();
+  const { t } = useEditorTranslation();
   const dispatch = usePuck(puck => puck.dispatch);
   const itemSelector = usePuck(puck => puck.appState.ui.itemSelector);
   const selectedItem = usePuck(puck => puck.selectedItem);

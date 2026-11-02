@@ -20,6 +20,7 @@ export const useSlotInsert = () => {
   const selector = usePuck(puck => puck.appState.ui.itemSelector);
   const getItemById = usePuck(puck => puck.getItemById);
   const rootCount = usePuck(puck => puck.appState.data.content.length);
+
   const rootLabel = usePuckDocumentKindLabel();
 
   const parentKey = parentId(selector?.zone);

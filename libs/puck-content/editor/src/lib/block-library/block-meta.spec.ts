@@ -7,6 +7,7 @@ import { MdTitle } from 'react-icons/md';
 
 import { withCSS } from '../blocks/with-css';
 import { withDataSource, withImageDataSource } from '../blocks/with-datasource';
+import { withGroup, withGroupAll } from '../blocks/with-group';
 import { withLock, withLockAll } from '../blocks/with-lock';
 import { withVisibility } from '../blocks/with-visibility';
 import { config } from '../config';
@@ -203,6 +204,8 @@ describe('block metadata through the wrappers', () => {
     ['withLock', () => withLock(block)],
     ['withFieldTabs', () => withFieldTabs(block)],
     ['withLockAll', () => withLockAll({ Title: block }).Title],
+    ['withGroup', () => withGroup(block)],
+    ['withGroupAll', () => withGroupAll({ Title: block }).Title],
     ['withFieldTabsAll', () => withFieldTabsAll({ Title: block }).Title],
   ])('%s keeps the metadata', (_, wrap) => {
     expect(wrap()).toMatchObject(meta);

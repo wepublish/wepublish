@@ -6297,6 +6297,7 @@ export type PuckBlock = {
   /** The records the datasources of this block yield. */
   data: PuckBlockData;
   datasources?: Maybe<PuckBlockDatasources>;
+  grouped?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['String']['output'];
   kind: PuckBlockKind;
   locked?: Maybe<Scalars['Boolean']['output']>;
@@ -6387,10 +6388,11 @@ export type PuckBlockInput = {
   /** How many records the block shows itself from each of its own `list` and `uniqueList` datasources, before the blocks in its slots take theirs. Omitted means none, 1 to 50. Member plans and subscriptions always load all. */
   consumes?: InputMaybe<Scalars['Int']['input']>;
   datasources?: InputMaybe<PuckBlockDatasourcesInput>;
+  grouped?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['String']['input'];
   kind: PuckBlockKind;
   locked?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The component props without id, locked, visibility, styling and datasources, with every slot emptied to `[]`. */
+  /** The component props without id, locked, grouped, visibility, styling and datasources, with every slot emptied to `[]`. */
   props: Scalars['JSONObject']['input'];
   /** The slot of the parent this block sits in, omitted means `content`. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent. */
   puckSlot?: InputMaybe<Scalars['String']['input']>;

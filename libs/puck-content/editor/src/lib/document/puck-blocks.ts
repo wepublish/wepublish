@@ -81,7 +81,14 @@ type Slot = { slot: string; keys: PathKey[] };
 
 type SlotContent = { slot: string; content: ComponentData[] };
 
-const blockPropKeys = ['id', 'locked', 'visibility', 'styling', 'datasources'];
+const blockPropKeys = [
+  'id',
+  'locked',
+  'grouped',
+  'visibility',
+  'styling',
+  'datasources',
+];
 
 const isComponentData = (value: unknown): value is ComponentData =>
   isRecord(value) &&
@@ -420,7 +427,8 @@ const toBlockInput = (
   puckSlot: string,
   options: ToPuckBlockInputsOptions
 ): PuckBlockInput => {
-  const { id, locked, visibility, styling, datasources, ...rest } = props;
+  const { id, locked, grouped, visibility, styling, datasources, ...rest } =
+    props;
   const kind = kindOf(type, options.dynamicConfig);
   const declared = takeSlots(rest, declaredSlots(kind, type, rest, options));
   const remaining = takeSlots(
@@ -446,6 +454,7 @@ const toBlockInput = (
     type,
     ...compact({
       locked: locked ? true : undefined,
+      grouped: grouped ? true : undefined,
       visibility: ifPresent<BlockVisibilityValue, PuckBlockVisibilityInput>(
         visibility,
         toVisibilityInput
@@ -527,6 +536,7 @@ const toComponent = (
       ...withChildren,
       id: block.id,
       ...(block.locked && { locked: true }),
+      ...(block.grouped && { grouped: true }),
       ...(isRecord(block.visibility) && {
         visibility: withoutGraphQLExtras(block.visibility),
       }),

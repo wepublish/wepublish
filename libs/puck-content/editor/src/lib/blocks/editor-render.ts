@@ -31,6 +31,7 @@ export type EditorRenderProps<Props> = ToPuckSlots<Props> & {
   visibility?: BlockVisibilityValue;
   datasources?: DatasourcesValue;
   locked?: boolean;
+  grouped?: boolean;
 };
 
 export const editorRender =

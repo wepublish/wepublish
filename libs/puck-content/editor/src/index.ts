@@ -50,6 +50,8 @@ export * from './lib/styling/styling';
 export * from './lib/styling/styling.field';
 export * from './lib/bottom-bar/bottom-bar';
 export * from './lib/lock/lock';
+export * from './lib/group/group';
+export * from './lib/group/group.plugin';
 export * from './lib/block-library/block-library';
 export * from './lib/block-library/block-library.catalog';
 export * from './lib/block-library/block-meta';

@@ -35,6 +35,7 @@ const flatten = (
       children,
       puckSlot,
       locked,
+      grouped,
       visibility,
       styling,
       datasources,
@@ -53,6 +54,7 @@ const flatten = (
           puckSlot: parentId === null ? null : slot,
           position,
           locked: locked ?? null,
+          grouped: grouped ?? null,
           visibility: visibility ?? null,
           styling: styling ?? null,
           datasources: datasources ?? null,
@@ -105,6 +107,7 @@ const articleDocument: PuckData<'article'> = {
         id: 'Collapsible-1',
         title: 'More',
         locked: true,
+        grouped: true,
         content: [{ type: 'Title', props: { id: 'Title-2', title: 'Inside' } }],
       },
     },
@@ -138,6 +141,7 @@ describe('toPuckDocument', () => {
           kind: PuckBlockKind.Puck,
           type: 'Collapsible',
           locked: true,
+          grouped: true,
           props: { title: 'More', content: [] },
           children: [
             {

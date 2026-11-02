@@ -1,6 +1,7 @@
 import { PuckDocumentKind } from '@wepublish/puck-content/website';
 
 import { puckCategories } from './block-library/block-library.helpers';
+import { withGroupAll } from './blocks/with-group';
 import { withLockAll } from './blocks/with-lock';
 import {
   contentComponents,
@@ -25,15 +26,17 @@ import { withFieldTabsAll } from './field-tabs/field-tabs';
 import { ArticleRootConfig } from './root/article-root.config';
 import { PageRootConfig } from './root/page-root.config';
 
-const components: PuckConfig['components'] = withLockAll(
-  withFieldTabsAll(
-    {
-      ...layoutComponents,
-      ...contentComponents,
-      ...formComponents,
-      ...dataComponents,
-    },
-    { ...layoutFieldTabs, ...contentFieldTabs }
+const components: PuckConfig['components'] = withGroupAll(
+  withLockAll(
+    withFieldTabsAll(
+      {
+        ...layoutComponents,
+        ...contentComponents,
+        ...formComponents,
+        ...dataComponents,
+      },
+      { ...layoutFieldTabs, ...contentFieldTabs }
+    )
   )
 );
 

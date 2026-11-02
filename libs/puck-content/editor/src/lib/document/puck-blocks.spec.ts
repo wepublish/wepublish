@@ -103,6 +103,7 @@ const flatBlock = (
   puckSlot: null,
   position: 0,
   locked: null,
+  grouped: null,
   props: {},
   visibility: null,
   styling: null,
@@ -257,11 +258,12 @@ const generatedConfig: PuckDynamicConfig = {
 };
 
 describe('toPuckBlockInputs', () => {
-  it('splits the id, lock, visibility, styling and datasources off the component props', () => {
+  it('splits the id, lock, group, visibility, styling and datasources off the component props', () => {
     expect(
       toInputs([
         puckComponent('Container', 1, {
           locked: true,
+          grouped: true,
           visibility: { disabled: true },
           styling: { xs: { color: 'primary.main', padding: { top: 2 } } },
           datasources: { article: { type: 'list' } },
@@ -274,6 +276,7 @@ describe('toPuckBlockInputs', () => {
         kind: PuckBlockKind.Puck,
         type: 'Container',
         locked: true,
+        grouped: true,
         visibility: { disabled: true },
         styling: { xs: { color: 'primary.main', padding: { top: 2 } } },
         datasources: { article: { type: PuckDatasourceType.List } },
@@ -430,6 +433,12 @@ describe('toPuckBlockInputs', () => {
     const [block] = toInputs([puckComponent('Title', 1, { locked: false })]);
 
     expect(block).not.toHaveProperty('locked');
+  });
+
+  it('leaves ungrouped blocks without a group', () => {
+    const [block] = toInputs([puckComponent('Title', 1, { grouped: false })]);
+
+    expect(block).not.toHaveProperty('grouped');
   });
 
   it('moves the components of the content slot into children without a slot', () => {
@@ -1027,6 +1036,7 @@ describe('fromPuckBlocks', () => {
           id: 'Container-1',
           type: 'Container',
           locked: true,
+          grouped: true,
           props: { maxWidth: null, title: 'Kept as stored' },
           visibility: {
             __typename: 'PuckBlockVisibility',
@@ -1117,6 +1127,7 @@ describe('fromPuckBlocks', () => {
           title: 'Kept as stored',
           id: 'Container-1',
           locked: true,
+          grouped: true,
           visibility: {
             breakpoints: ['md'],
             timings: {
@@ -1147,7 +1158,12 @@ describe('fromPuckBlocks', () => {
   it('leaves out the lock, visibility, styling and datasources the block does not have', () => {
     expect(
       fromPuckBlocks([
-        flatBlock({ id: 'Title-1', type: 'Title', locked: false }),
+        flatBlock({
+          id: 'Title-1',
+          type: 'Title',
+          locked: false,
+          grouped: false,
+        }),
       ]).content
     ).toStrictEqual([{ type: 'Title', props: { id: 'Title-1' } }]);
   });
@@ -1161,6 +1177,7 @@ describe('fromPuckBlocks', () => {
           props: {
             id: 'other',
             locked: true,
+            grouped: true,
             visibility: { disabled: true },
             styling: { color: '#000000' },
             datasources: {},

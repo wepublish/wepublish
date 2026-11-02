@@ -91,6 +91,7 @@ describe('splitPuckRenderProps', () => {
           puck,
           editMode: true,
           locked: true,
+          grouped: true,
           className: 'styled',
           styling,
           visibility,

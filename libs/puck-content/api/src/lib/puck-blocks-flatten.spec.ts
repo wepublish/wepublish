@@ -144,6 +144,7 @@ describe('flattenPuckBlocks', () => {
       block('grid', {
         type: 'Grid',
         locked: true,
+        grouped: true,
         props: { gap: 2, items: [{ content: [] }] },
         styling: { xs: { color: 'primary.main' }, md: { margin: { top: 2 } } },
         datasources: { article: { type: 'list' } },
@@ -161,6 +162,7 @@ describe('flattenPuckBlocks', () => {
       puckSlot: null,
       position: 0,
       locked: true,
+      grouped: true,
       props: { gap: 2, items: [{ content: [] }] },
       styling: { xs: { color: 'primary.main' }, md: { margin: { top: 2 } } },
       datasources: { article: { type: 'list' } },

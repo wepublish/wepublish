@@ -109,6 +109,7 @@ export const splitPuckRenderProps = <Props>(
     puck,
     editMode,
     locked,
+    grouped,
     className,
     styling,
     visibility,

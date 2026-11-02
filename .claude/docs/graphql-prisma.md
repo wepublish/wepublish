@@ -153,8 +153,8 @@ boundaries.
 - **Puck content (`ArticleRevision.puckBlocks`, `PageRevision.puckBlocks`) is
   pruned the same way**, with the same permissions and caching, plus
   `puckBlocksChangeAt`. It is written as a tree (`[PuckBlockInput!]`) of
-  envelopes `{kind: puck|generated, id, type, props, locked?, visibility?,
-  styling?, datasources?, consumes?, puckSlot?, children?}`: `props` are the
+  envelopes `{kind: puck|generated, id, type, props, locked?, grouped?,
+  visibility?, styling?, datasources?, consumes?, puckSlot?, children?}`: `props` are the
   component props with slots emptied to `[]`, `puckSlot` the parent's slot.
   It is **read flat** (`[PuckBlock!]`, depth first,
   `parentId`/`puckSlot`/`position`), as a query cannot select an unbounded

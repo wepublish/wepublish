@@ -77,6 +77,71 @@ describe('PuckActionBar', () => {
   });
 });
 
+describe('PuckActionBar in a group', () => {
+  const groupConfig: Config = {
+    components: {
+      ...config.components,
+      Container: {
+        fields: { content: { type: 'slot' } },
+        render: ({ content: Content }) => <Content />,
+      },
+    },
+  };
+
+  const renderGroup = (itemSelector: { index: number; zone: string }) =>
+    render(
+      <Puck
+        config={groupConfig}
+        data={{
+          root: { props: {} },
+          content: [
+            {
+              type: 'Container',
+              props: {
+                id: `Container-${++documents}`,
+                content: [
+                  { type: 'Title', props: { id: `Inner-${documents}` } },
+                  { type: 'Title', props: { id: `Other-${documents}` } },
+                ],
+              },
+            },
+          ],
+        }}
+        ui={{ itemSelector }}
+      >
+        <PuckActionBar label="Block">
+          <button type="button">Duplicate</button>
+        </PuckActionBar>
+      </Puck>
+    );
+
+  it('groups and ungroups a block with slots', () => {
+    renderGroup({ index: 0, zone: 'root:default-zone' });
+
+    expect(names()).toEqual([
+      'Group block',
+      'Lock block',
+      'Duplicate',
+      'Move up',
+      'Move down',
+    ]);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Group block' }));
+
+    expect(
+      screen.getByRole('button', { name: 'Ungroup block' })
+    ).toBeInTheDocument();
+  });
+
+  it('offers no grouping for blocks without slots', () => {
+    renderActionBar(0);
+
+    expect(
+      screen.queryByRole('button', { name: 'Group block' })
+    ).not.toBeInTheDocument();
+  });
+});
+
 describe('actionBarPlugin', () => {
   it('only overrides the action bar of blocks', () => {
     expect(Object.keys(actionBarPlugin.overrides ?? {})).toEqual(['actionBar']);
