@@ -1,5 +1,44 @@
 {
   "navbar": {
     "subscribe": "Abo lösen"
+  },
+  "welcome": {
+    "title": "Willkommen in deinem Zwoelf-Account"
+  },
+  "subscribe": {
+    "memberplan": {
+      "price": "{offerAmountMin, select, 0 {Gratis} other {{offerExactAmount, select, true {} other {Ab }}{offerPrice}}}"
+    }
+  },
+  "zwoelf": {
+    "subscribe": {
+      "mode": {
+        "title": "Für wen ist das Abo?",
+        "self": "Für mich",
+        "selfDescription": "Das Abo läuft auf meinen Namen",
+        "gift": "Zum Verschenken",
+        "giftDescription": "Das Abo geht an eine andere Person",
+        "giftNotice": "Geschenk-Abos gibt es in unserem Shop.",
+        "giftLink": "Weiter zum Geschenk-Shop"
+      },
+      "periodicity": {
+        "title": "Laufzeit wählen",
+        "yearly": "1 Jahr",
+        "biennial": "2 Jahre",
+        "includes": "Inkl. {goodies}"
+      },
+      "supporter": {
+        "title": "Supporter-Abos",
+        "description": "Alle drei Supporter-Abos enthalten den Zugriff auf das Archiv (PDF) und ab und zu Gadgets. Sie unterscheiden sich nur im Betrag, mit dem du uns unterstützt."
+      },
+      "goodie": {
+        "included": "Inkl. {goodie}"
+      },
+      "summary": {
+        "chosen": "Gewählt:",
+        "next": "Weiter",
+        "back": "Zurück zur Auswahl"
+      }
+    }
   }
 }
