@@ -8,7 +8,7 @@ Given(
   async ({ data, ctx }, alias: string, memberPlanSlug: string) => {
     const reader = await data.createUser(alias);
     const subscription = await data.createSubscription({ reader, memberPlanSlug });
-    const invoice = await data.createRenewalInvoice(subscription.id);
+    const invoice = await data.openInvoice(subscription.id);
 
     ctx.openInvoices.set(alias, invoice.id);
   }
@@ -26,7 +26,7 @@ Given(
 
     const reader = await data.createUser(alias, { emailDomain: env.resend.domain });
     const subscription = await data.createSubscription({ reader, memberPlanSlug });
-    const invoice = await data.createRenewalInvoice(subscription.id);
+    const invoice = await data.openInvoice(subscription.id);
 
     ctx.openInvoices.set(alias, invoice.id);
   }
