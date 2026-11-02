@@ -71,6 +71,8 @@ development.
 | `E2E_ENV` is not `production`                                 | `@mutating`, `@payment` | production is never written to; it has no simulated payment |
 | `MAILPIT_URL`                                                 | `@mail`                 | set (and mailpit started) by local runs                     |
 | `E2E_IMAP_USER` + `E2E_IMAP_PASSWORD`                         | `@mail`                 | a real mailbox, Ethereal on review; Mailpit wins if both set |
+| `E2E_RESEND_API_KEY` + `E2E_RESEND_DOMAIN`                    | `@inbound-mail`         | mail from outside servers (bexio) on the Resend domain      |
+| `E2E_BEXIO_API_TOKEN` and not `production`                    | `@bexio`                | the bexio **test** company the target's provider writes to  |
 | `E2E_MAILCHIMP_API_KEY` + `_LIST_ID` + `_INTEREST_ID`        | `@mailchimp`            | a real test audience (no fake); never production            |
 
 Every scenario carries a domain tag (`@auth`, `@paywall`, …) and the
@@ -95,7 +97,13 @@ skip reason in the report (`pnpm run e2e:report`).
 - **`inbox`** (`support/inbox.ts`) polls for a mail to an address: Mailpit
   (`support/mailpit.ts`) when `MAILPIT_URL` is set, otherwise an IMAP mailbox
   (`support/imap-inbox.ts`, Ethereal on review). `extractLink` pulls a link
-  out of it. Unit specs of this support code: `pnpm nx test e2e`.
+  out of it. **`inboundInbox`** (`support/resend-inbox.ts`) is the same for
+  mail from outside servers, e.g. bexio's own invoice mails; using it skips
+  the scenario once `E2E_RESEND_DAILY_BUDGET` (90) mails arrived today.
+- **`bexio`** (`support/bexio.ts`) reads the bexio test company: the invoice
+  the provider created for a we.publish invoice (`api_reference`), and its
+  status. Invoices a scenario records in `ctx.bexioInvoices` are canceled
+  afterwards; the contacts bexio got stay. Unit specs of this support code: `pnpm nx test e2e`.
 - **`checkout`** (`support/simulated-payment.ts`) drives the SIMULATED payment
   provider's checkout page (Pay / Decline / Cancel). It is the only payment
   fake: Stripe and Payrexx are never mocked over HTTP. `@payment` scenarios
@@ -181,6 +189,21 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   per account and expires mails after hours to days;
   `E2E_IMAP_PURGE_OLDER_THAN_DAYS` deletes older mails once per worker (off by
   default, since others may use the account).
+- `@bexio` journeys check what the bexio provider did in the bexio test
+  company through bexio's API (`E2E_BEXIO_API_TOKEN`, the test company's
+  token as in the review seed). That costs no mail: prefer it to reading
+  bexio's invoice mail.
+- `@inbound-mail` journeys read mail that outside servers send, e.g. bexio's
+  own invoice mails: Ethereal takes none, so the reader gets an address on the
+  Resend receiving domain (`E2E_RESEND_DOMAIN`, `<id>.resend.app`, any local
+  part arrives) and `E2E_RESEND_API_KEY` (a full-access key) reads it; both
+  are CI secrets. Received mails cannot be deleted, so a scenario only takes
+  mails received after it started. **Budget:** the free plan takes 100 mails
+  a day, and bexio emails every invoice it creates, the review's nightly
+  renewals of seeded Resend readers included. Keep `@inbound-mail` to the
+  one journey per mail that needs it; the others check bexio's side with
+  `@bexio` and readers on `example.test` (bexio's mail to them goes nowhere).
+  The review's own mails to a Resend reader still land in Ethereal (`inbox`).
 - `@payment` needs the `simulated` payment method on the plan used (it only
   exists on non-production instances).
 - The database is a copy of production — cleanup matters. Search the editor

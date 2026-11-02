@@ -75,6 +75,11 @@ jobs:
       E2E_MAILCHIMP_INTEREST_ID: ${{ secrets.E2E_MAILCHIMP_INTEREST_ID }}
       E2E_IMAP_USER: ${{ secrets.E2E_IMAP_USER }}
       E2E_IMAP_PASSWORD: ${{ secrets.E2E_IMAP_PASSWORD }}
+      # @inbound-mail reads mail from outside servers (bexio) on Resend;
+      # @bexio checks the bexio test company the review's provider writes to.
+      E2E_RESEND_API_KEY: ${{ secrets.E2E_RESEND_API_KEY }}
+      E2E_RESEND_DOMAIN: ${{ secrets.E2E_RESEND_DOMAIN }}
+      E2E_BEXIO_API_TOKEN: ${{ secrets.E2E_BEXIO_API_TOKEN }}
 
     steps:
       - uses: actions/checkout@v7
