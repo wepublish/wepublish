@@ -200,8 +200,11 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   default, since others may use the account).
 - `@bexio` journeys check what the bexio provider did in the bexio test
   company through bexio's API (`E2E_BEXIO_API_TOKEN`, the test company's
-  token as in the review seed). That costs no mail: prefer it to reading
-  bexio's invoice mail.
+  token as in the review seed). During its trial bexio only emails its own
+  sender address, so the review's bexio provider has a test mailbox (the
+  sender, `E2E_BEXIO_TEST_MAILBOX`) that receives every invoice mail to the
+  Resend domain; a bexio reader therefore needs a Resend address, and the mail
+  check finds its mail by the subject's `(Ref <subscription id>)`.
 - `@inbound-mail` journeys read mail that outside servers send, e.g. bexio's
   own invoice mails: Ethereal takes none, so the reader gets an address on the
   Resend receiving domain (`E2E_RESEND_DOMAIN`, `<id>.resend.app`, any local
@@ -209,9 +212,7 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
   are CI secrets. Received mails cannot be deleted, so a scenario only takes
   mails received after it started. **Budget:** the free plan takes 100 mails
   a day, and bexio emails every invoice it creates, the review's nightly
-  renewals of seeded Resend readers included. Keep `@inbound-mail` to the
-  one journey per mail that needs it; the others check bexio's side with
-  `@bexio` and readers on `example.test` (bexio's mail to them goes nowhere).
+  renewals of seeded Resend readers included: one mail per bexio checkout.
   The review's own mails to a Resend reader still land in Ethereal (`inbox`).
 - `@payment` needs the `simulated` payment method on the plan used (it only
   exists on non-production instances).

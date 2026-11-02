@@ -1,18 +1,8 @@
 import { expect } from '@playwright/test';
+import { bexioMailFor } from '../support/bexio';
 import { extractLink, poll } from '../support/inbox';
 import { env } from '../support/env';
-import { Given, Then, When } from './fixtures';
-
-Given(
-  'a reader {string} with an open {string} invoice',
-  async ({ data, ctx }, alias: string, memberPlanSlug: string) => {
-    const reader = await data.createUser(alias);
-    const subscription = await data.createSubscription({ reader, memberPlanSlug });
-    const invoice = await data.openInvoice(subscription.id);
-
-    ctx.openInvoices.set(alias, invoice.id);
-  }
-);
+import { ScenarioContext, Given, Then, When } from './fixtures';
 
 Given(
   'a reader {string} with an inbound mailbox and an open {string} invoice',
@@ -28,7 +18,7 @@ Given(
     const subscription = await data.createSubscription({ reader, memberPlanSlug });
     const invoice = await data.openInvoice(subscription.id);
 
-    ctx.openInvoices.set(alias, invoice.id);
+    ctx.openInvoices.set(alias, { invoiceId: invoice.id, subscriptionId: subscription.id });
   }
 );
 
@@ -37,12 +27,12 @@ When(
   async ({ data, ctx }, alias: string, paymentMethodSlug: string) => {
     const reader = data.get('reader', alias);
 
-    await data.payInvoiceAs(reader, openInvoiceOf(ctx.openInvoices, alias), paymentMethodSlug);
+    await data.payInvoiceAs(reader, openInvoiceOf(ctx, alias).invoiceId, paymentMethodSlug);
   }
 );
 
 Then('bexio has an open invoice for {string}', async ({ bexio, ctx }, alias: string) => {
-  const invoiceId = openInvoiceOf(ctx.openInvoices, alias);
+  const { invoiceId } = openInvoiceOf(ctx, alias);
   const invoice = await poll(() => bexio.invoiceFor(invoiceId), {
     timeout: 20_000,
     interval: 2_000,
@@ -55,21 +45,30 @@ Then('bexio has an open invoice for {string}', async ({ bexio, ctx }, alias: str
 
 Then(
   '{string} receives the invoice from bexio by email',
-  async ({ data, inboundInbox }, alias: string) => {
-    const reader = data.get('reader', alias);
-    const mail = await inboundInbox.waitForMail({ to: reader.email });
+  async ({ ctx, inboundInbox }, alias: string) => {
+    // The provider sends invoice mails for the Resend domain to its test mailbox.
+    const to = env.bexio?.testMailbox;
+
+    if (!to) {
+      throw new Error('Needs E2E_BEXIO_TEST_MAILBOX, the bexio provider\'s test mailbox.');
+    }
+
+    const mail = await inboundInbox.waitForMail({
+      to,
+      subject: bexioMailFor(openInvoiceOf(ctx, alias).subscriptionId),
+    });
 
     // bexio replaces [Network Link] in the configured text with its invoice link.
-    expect(() => extractLink(mail, /bexio/i)).not.toThrow();
+    expect(() => extractLink(mail, /network\.bexio\.com\/invoice\//)).not.toThrow();
   }
 );
 
-function openInvoiceOf(openInvoices: Map<string, string>, alias: string) {
-  const invoiceId = openInvoices.get(alias);
+function openInvoiceOf(ctx: ScenarioContext, alias: string) {
+  const open = ctx.openInvoices.get(alias);
 
-  if (!invoiceId) {
+  if (!open) {
     throw new Error(`"${alias}" has no open invoice. Add a Given step that creates it.`);
   }
 
-  return invoiceId;
+  return open;
 }

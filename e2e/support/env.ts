@@ -50,7 +50,10 @@ export const env = {
   /** The bexio *test* company the target's bexio provider writes to. */
   bexio:
     process.env.E2E_BEXIO_API_TOKEN ?
-      ({ token: process.env.E2E_BEXIO_API_TOKEN } satisfies BexioConfig)
+      ({
+        token: process.env.E2E_BEXIO_API_TOKEN,
+        testMailbox: process.env.E2E_BEXIO_TEST_MAILBOX || undefined,
+      } satisfies BexioConfig)
     : undefined,
   /** A real Mailchimp test audience and one of its interests: there is no fake. */
   mailchimp:

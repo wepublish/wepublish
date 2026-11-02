@@ -22,8 +22,8 @@ export type ScenarioContext = {
   entities: Map<string, Entity>;
   /** Alias of the article the reader has open. */
   currentArticle?: string;
-  /** The open we.publish invoice of a reader, by reader alias. */
-  openInvoices: Map<string, string>;
+  /** The open we.publish invoice of a reader and its subscription, by reader alias. */
+  openInvoices: Map<string, { invoiceId: string; subscriptionId: string }>;
   /** bexio invoices the scenario made the provider create; canceled afterwards. */
   bexioInvoices: number[];
 };
