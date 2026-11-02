@@ -237,7 +237,8 @@ export class UpgradeSubscriptionService {
       const discountCodeObj =
         await this.discountCodeservice.getValidDiscountCode(
           discountCode,
-          memberPlanId
+          memberPlanId,
+          userId
         );
 
       const amountAfterLeftoverDiscount = Math.max(
@@ -479,7 +480,8 @@ export class UpgradeSubscriptionService {
     try {
       validDiscountCode = await this.discountCodeservice.getValidDiscountCode(
         discountCode,
-        memberPlanId
+        memberPlanId,
+        userId
       );
     } catch (e) {
       validDiscountCode = null;

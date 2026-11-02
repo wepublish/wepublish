@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
+import { CanGetSubscription } from '@wepublish/permissions';
+import { UserDataloaderService } from '@wepublish/user/api';
 import { PublicSubscriptionResolver } from './subscription.resolver';
 
-const makeResolver = (prisma: unknown) =>
+const makeResolver = (prisma: unknown, userDataloader: unknown = null) =>
   new PublicSubscriptionResolver(
     null as any,
     null as any,
@@ -13,7 +15,8 @@ const makeResolver = (prisma: unknown) =>
     null as any,
     null as any,
     null as any,
-    null as any
+    null as any,
+    userDataloader as UserDataloaderService
   );
 
 describe('PublicSubscriptionResolver', () => {
@@ -184,6 +187,40 @@ describe('PublicSubscriptionResolver', () => {
         } as any)
       ).toBe(true);
       expect(canRenew).toHaveBeenCalledWith('pm-card');
+    });
+  });
+
+  describe('referredBy', () => {
+    const referrer = { id: 'referrer-1', name: 'Referrer' };
+    const userDataloader = { load: vi.fn(async () => referrer) };
+    const subscription = { id: 'subscription-id', referredByID: 'referrer-1' };
+
+    it('resolves the referring user for someone who may see subscriptions', async () => {
+      const referredBy = await makeResolver(null, userDataloader).referredBy(
+        subscription as any,
+        { user: { id: 'editor' }, permissions: [CanGetSubscription.id] } as any
+      );
+
+      expect(userDataloader.load).toHaveBeenCalledWith('referrer-1');
+      expect(referredBy).toEqual(referrer);
+    });
+
+    it('hides the referring user from the reader', async () => {
+      const referredBy = await makeResolver(null, userDataloader).referredBy(
+        subscription as any,
+        { user: { id: 'reader' }, permissions: [] } as any
+      );
+
+      expect(referredBy).toBeNull();
+    });
+
+    it('is null for a subscription nobody referred', async () => {
+      const referredBy = await makeResolver(null, userDataloader).referredBy(
+        { id: 'subscription-id', referredByID: null } as any,
+        { user: { id: 'editor' }, permissions: [CanGetSubscription.id] } as any
+      );
+
+      expect(referredBy).toBeNull();
     });
   });
 });

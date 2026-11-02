@@ -24,6 +24,7 @@ describe('UserSubscriptionService', () => {
     subscription: { findUnique: Mock; update: Mock };
     settingPaymentProvider: { findMany: Mock };
     invoice: { findMany: Mock };
+    user: { count: Mock };
   };
 
   let memberContextMock: {
@@ -72,6 +73,7 @@ describe('UserSubscriptionService', () => {
       subscription: { findUnique: vi.fn(), update: vi.fn() },
       settingPaymentProvider: { findMany: vi.fn().mockResolvedValue([]) },
       invoice: { findMany: vi.fn().mockResolvedValue([]) },
+      user: { count: vi.fn().mockResolvedValue(0) },
     };
 
     memberContextMock = {
@@ -237,6 +239,47 @@ describe('UserSubscriptionService', () => {
             discountCodeId: 'discountCodeId',
           })
         );
+      });
+    });
+
+    describe('referral conditions', () => {
+      it('applies a referral discountCode once the subscriber referred enough readers', async () => {
+        prismaMock.discountCode.findUnique.mockResolvedValue({
+          ...validDiscountCode,
+          minReferrals: 2,
+        });
+        prismaMock.user.count.mockResolvedValue(2);
+
+        await service.createSubscription('userId', {
+          ...baseArgs,
+          discountCode: 'testdiscountCode',
+        });
+
+        expect(prismaMock.user.count).toHaveBeenCalledWith(
+          expect.objectContaining({
+            where: expect.objectContaining({ id: { not: 'userId' } }),
+          })
+        );
+        expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
+          expect.objectContaining({ discountCodeId: 'discountCodeId' })
+        );
+      });
+
+      it('refuses a referral discountCode when the subscriber referred too few readers', async () => {
+        memberContextMock.createSubscription.mockClear();
+        prismaMock.discountCode.findUnique.mockResolvedValue({
+          ...validDiscountCode,
+          minReferrals: 2,
+        });
+        prismaMock.user.count.mockResolvedValue(1);
+
+        await expect(
+          service.createSubscription('userId', {
+            ...baseArgs,
+            discountCode: 'testdiscountCode',
+          })
+        ).rejects.toThrow('DiscountCode requires 2 referrals.');
+        expect(memberContextMock.createSubscription).not.toHaveBeenCalled();
       });
     });
 

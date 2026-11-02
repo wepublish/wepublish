@@ -139,6 +139,8 @@ export class PublicSubscription
   userID!: string;
   user!: User;
 
+  referredByID?: string | null;
+
   paymentMethodID!: string;
   paymentMethod!: PaymentMethod;
 
@@ -184,6 +186,12 @@ export class CreatePublicSubscriptionInput extends PickType(
       'When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.',
   })
   skipMail?: boolean;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'The user who referred the reader to this subscription.',
+  })
+  referredByID?: string | null;
 }
 
 @ArgsType()

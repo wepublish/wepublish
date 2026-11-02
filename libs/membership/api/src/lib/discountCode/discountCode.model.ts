@@ -34,6 +34,13 @@ export class DiscountCode extends HasMemberPlanLc {
   validFrom!: Date;
   @Field()
   validTo!: Date;
+
+  @Field(() => Int, {
+    nullable: true,
+    description:
+      'Condition: the minimum number of readers the user has to have referred to a paid subscription to redeem this discountCode.',
+  })
+  minReferrals?: number | null;
 }
 
 @InputType()
@@ -98,7 +105,14 @@ export class DiscountCodeListArgs {
 @ArgsType()
 export class CreateDiscountCodeInput extends PickType(
   DiscountCode,
-  ['code', 'discountPercent', 'memberPlanId', 'validFrom', 'validTo'] as const,
+  [
+    'code',
+    'discountPercent',
+    'memberPlanId',
+    'validFrom',
+    'validTo',
+    'minReferrals',
+  ] as const,
   ArgsType
 ) {}
 

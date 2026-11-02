@@ -9,6 +9,11 @@ fragment FullSubscription on PublicSubscription {
     name
     firstName
   }
+  referredBy {
+    id
+    name
+    firstName
+  }
   memberPlan {
     ...FullMemberPlan
   }
@@ -182,6 +187,7 @@ mutation CreateSubscription(
   $paymentMethodID: String!
   $memberPlanID: String!
   $skipMail: Boolean
+  $referredByID: String
 ) {
   createSubscription(
     autoRenew: $autoRenew
@@ -195,6 +201,7 @@ mutation CreateSubscription(
     paymentMethodID: $paymentMethodID
     memberPlanID: $memberPlanID
     skipMail: $skipMail
+    referredByID: $referredByID
   ) {
     ...FullSubscription
   }
@@ -212,6 +219,7 @@ mutation UpdateSubscription(
   $userID: String
   $paymentMethodID: String
   $memberPlanID: String
+  $referredByID: String
 ) {
   updateSubscription(
     id: $id
@@ -225,6 +233,7 @@ mutation UpdateSubscription(
     userID: $userID
     paymentMethodID: $paymentMethodID
     memberPlanID: $memberPlanID
+    referredByID: $referredByID
   ) {
     ...FullSubscription
   }

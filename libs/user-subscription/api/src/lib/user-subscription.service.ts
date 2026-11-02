@@ -81,7 +81,8 @@ export class UserSubscriptionService {
       const discountCodeObj =
         await this.discountCodeservice.getValidDiscountCode(
           discountCode,
-          memberPlan.id
+          memberPlan.id,
+          userId
         );
 
       discount = Math.round(

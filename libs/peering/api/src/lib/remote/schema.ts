@@ -1097,6 +1097,8 @@ export type DiscountCode = HasMemberPlanLc & {
   id: Scalars['String']['output'];
   memberPlan: MemberPlan;
   memberPlanId: Scalars['String']['output'];
+  /** Condition: the minimum number of readers the user has to have referred to a paid subscription to redeem this discountCode. */
+  minReferrals?: Maybe<Scalars['Int']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   /** Number of redemptions of this discountCode on paid invoices. */
   paidUsageCount: Scalars['Int']['output'];
@@ -3391,6 +3393,7 @@ export type MutationCreateDiscountCodeArgs = {
   code: Scalars['String']['input'];
   discountPercent: Scalars['Int']['input'];
   memberPlanId: Scalars['String']['input'];
+  minReferrals?: InputMaybe<Scalars['Int']['input']>;
   validFrom: Scalars['DateTime']['input'];
   validTo: Scalars['DateTime']['input'];
 };
@@ -3663,6 +3666,7 @@ export type MutationCreateSubscriptionArgs = {
   paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertyInput>;
+  referredByID?: InputMaybe<Scalars['String']['input']>;
   skipMail?: InputMaybe<Scalars['Boolean']['input']>;
   startsAt: Scalars['DateTime']['input'];
   userID: Scalars['String']['input'];
@@ -4061,6 +4065,7 @@ export type MutationImportSubscriptionArgs = {
   paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertyInput>;
+  referredByID?: InputMaybe<Scalars['String']['input']>;
   skipMail?: InputMaybe<Scalars['Boolean']['input']>;
   startsAt: Scalars['DateTime']['input'];
   userID: Scalars['String']['input'];
@@ -4398,6 +4403,7 @@ export type MutationUpdateDiscountCodeArgs = {
   discountPercent?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['String']['input'];
   memberPlanId?: InputMaybe<Scalars['String']['input']>;
+  minReferrals?: InputMaybe<Scalars['Int']['input']>;
   validFrom?: InputMaybe<Scalars['DateTime']['input']>;
   validTo?: InputMaybe<Scalars['DateTime']['input']>;
 };
@@ -4687,6 +4693,7 @@ export type MutationUpdateSubscriptionArgs = {
   paymentMethodID?: InputMaybe<Scalars['String']['input']>;
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
   properties?: InputMaybe<Array<PropertyInput>>;
+  referredByID?: InputMaybe<Scalars['String']['input']>;
   startsAt?: InputMaybe<Scalars['DateTime']['input']>;
   userID?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5866,6 +5873,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   pendingPaymentMethodChange?: Maybe<SubscriptionPaymentMethodChange>;
   periods: Array<SubscriptionPeriod>;
   properties: Array<Property>;
+  /** The user who referred the reader to this subscription. Only visible to those who may see subscriptions. */
+  referredBy?: Maybe<User>;
   startsAt: Scalars['DateTime']['output'];
   url: Scalars['String']['output'];
   user: User;

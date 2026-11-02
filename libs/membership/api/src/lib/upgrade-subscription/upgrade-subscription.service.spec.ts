@@ -371,6 +371,56 @@ describe('UpgradeSubscriptionService', () => {
     });
   });
 
+  describe('discountCode conditions', () => {
+    it('checks the discountCode against the upgrading user', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        userID: 'userId',
+        currency: Currency.CHF,
+        paymentPeriodicity: PaymentPeriodicity.yearly,
+        extendable: true,
+        autoRenew: true,
+        periods: [
+          {
+            id: '1',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 600,
+            endsAt: new Date('2027-01-01'),
+            createdAt: new Date('2026-01-01'),
+            startsAt: new Date('2026-01-01'),
+            invoice: { paidAt: new Date('2026-01-01') },
+          },
+        ],
+      });
+      prismaMock.memberPlan.findUnique.mockResolvedValue({
+        currency: Currency.CHF,
+        availablePaymentMethods: [
+          {
+            paymentMethodIDs: ['paymentMethodId'],
+            paymentPeriodicities: [PaymentPeriodicity.yearly],
+            forceAutoRenewal: true,
+          },
+        ],
+      });
+      discountCodeserviceMock.getValidDiscountCode.mockRejectedValue(
+        new Error('DiscountCode requires 2 referrals.')
+      );
+
+      const result = await service.getInfo({
+        subscriptionId: 'subscriptionId',
+        memberPlanId: 'memberPlanId',
+        userId: 'userId',
+        discountCode: 'friends',
+      });
+
+      expect(discountCodeserviceMock.getValidDiscountCode).toHaveBeenCalledWith(
+        'friends',
+        'memberPlanId',
+        'userId'
+      );
+      expect(result.discountCodeValid).toBe(false);
+    });
+  });
+
   describe('full difference upgrade model', () => {
     const activeSubscription = {
       id: 'subscriptionId',

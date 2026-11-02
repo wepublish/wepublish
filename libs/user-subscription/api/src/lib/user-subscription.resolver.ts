@@ -44,14 +44,16 @@ export class UserSubscriptionResolver {
   })
   async createSubscriptionInfo(
     @Args('memberPlanId') memberPlanId: string,
-    @Args('discountCode', { nullable: true }) discountCode: string
+    @Args('discountCode', { nullable: true }) discountCode: string,
+    @CurrentUser() session?: UserSession
   ): Promise<CreateSubscriptionInfo> {
     let validDiscountCode: DiscountCode | null = null;
 
     try {
       validDiscountCode = await this.discountCodeservice.getValidDiscountCode(
         discountCode,
-        memberPlanId
+        memberPlanId,
+        session?.user.id
       );
     } catch (e) {
       //

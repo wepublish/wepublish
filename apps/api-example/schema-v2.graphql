@@ -1057,6 +1057,11 @@ type DiscountCode implements HasMemberPlanLc {
   id: String!
   memberPlan: MemberPlan!
   memberPlanId: String!
+
+  """
+  Condition: the minimum number of readers the user has to have referred to a paid subscription to redeem this discountCode.
+  """
+  minReferrals: Int
   modifiedAt: DateTime!
 
   """Number of redemptions of this discountCode on paid invoices."""
@@ -2839,7 +2844,18 @@ type Mutation {
   createCrowdfunding(input: CreateCrowdfundingInput!): Crowdfunding!
 
   """Creates a new discountCode."""
-  createDiscountCode(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): DiscountCode!
+  createDiscountCode(
+    code: String!
+    discountPercent: Int!
+    memberPlanId: String!
+
+    """
+    Condition: the minimum number of readers the user has to have referred to a paid subscription to redeem this discountCode.
+    """
+    minReferrals: Int
+    validFrom: DateTime!
+    validTo: DateTime!
+  ): DiscountCode!
 
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
@@ -2925,6 +2941,9 @@ type Mutation {
     paymentMethodID: String!
     paymentPeriodicity: PaymentPeriodicity!
     properties: [PropertyInput!]!
+
+    """The user who referred the reader to this subscription."""
+    referredByID: String
 
     """
     When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.
@@ -3169,6 +3188,9 @@ type Mutation {
     paymentPeriodicity: PaymentPeriodicity!
     properties: [PropertyInput!]!
 
+    """The user who referred the reader to this subscription."""
+    referredByID: String
+
     """
     When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.
     """
@@ -3359,7 +3381,19 @@ type Mutation {
   updateCurrentUser(address: UserAddressInput, birthday: DateTime, firstName: String, flair: String, name: String): SensitiveDataUser!
 
   """Updates an existing discountCode."""
-  updateDiscountCode(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): DiscountCode!
+  updateDiscountCode(
+    code: String
+    discountPercent: Int
+    id: String!
+    memberPlanId: String
+
+    """
+    Condition: the minimum number of readers the user has to have referred to a paid subscription to redeem this discountCode.
+    """
+    minReferrals: Int
+    validFrom: DateTime
+    validTo: DateTime
+  ): DiscountCode!
 
   """Updates an existing document."""
   updateDocument(description: String, id: String!, title: String): Document!
@@ -3441,7 +3475,22 @@ type Mutation {
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
   """Updates an existing subscription."""
-  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Float, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
+  updateSubscription(
+    autoRenew: Boolean
+    extendable: Boolean
+    id: String!
+    memberPlanID: String
+    monthlyAmount: Float
+    paidUntil: DateTime
+    paymentMethodID: String
+    paymentPeriodicity: PaymentPeriodicity
+    properties: [PropertyInput!]
+
+    """The user who referred the reader to this subscription."""
+    referredByID: String
+    startsAt: DateTime
+    userID: String
+  ): PublicSubscription!
 
   """Update an existing subscription flow"""
   updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
@@ -4461,6 +4510,11 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   pendingPaymentMethodChange: SubscriptionPaymentMethodChange
   periods: [SubscriptionPeriod!]!
   properties: [Property!]!
+
+  """
+  The user who referred the reader to this subscription. Only visible to those who may see subscriptions.
+  """
+  referredBy: User
   startsAt: DateTime!
   url: String!
   user: User!

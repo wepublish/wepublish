@@ -28,7 +28,10 @@ import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from '@wepublish/payment/api';
-import { SubscriptionWithRelations } from '../legacy/member-context';
+import {
+  assertNotSelfReferred,
+  SubscriptionWithRelations,
+} from '../legacy/member-context';
 import { unselectPassword } from '@wepublish/authentication/api';
 import { mapSubscriptionsAsCsv } from './subscription-as-csv';
 
@@ -111,6 +114,11 @@ export class SubscriptionService {
         'You are not allowed to change a deactivated subscription!'
       );
     }
+
+    assertNotSelfReferred({
+      userID: input.userID ?? originalSubscription.userID,
+      referredByID: input.referredByID,
+    });
 
     // handle remote managed subscriptions (Payrexx Subscription)
     const paymentMethod = originalSubscription.paymentMethod;

@@ -1171,6 +1171,9 @@ model Subscription {
   replacesSubscription   Subscription?  @relation(name: "ReplacementHistory", fields: [replacesSubscriptionID], references: [id])
   replacedBy             Subscription[] @relation("ReplacementHistory")
 
+  referredByID String?
+  referredBy   User?   @relation(name: "SubscriptionReferrals", fields: [referredByID], references: [id], onDelete: SetNull)
+
   invoices Invoice[]
 
   mailSendJobEntries MailSendJobRecipient[]
@@ -1179,6 +1182,7 @@ model Subscription {
 
   @@index([userID])
   @@index([memberPlanID, createdAt, id])
+  @@index([referredByID])
   @@map("subscriptions")
 }
 
@@ -1303,6 +1307,7 @@ model User {
   comments                  Comment[]
   sessions                  Session[]
   subscriptions             Subscription[]
+  referredSubscriptions     Subscription[]            @relation("SubscriptionReferrals")
   commentRatings            CommentRating[]
   pollVotes                 PollVote[]
   mailSent                  MailLog[]
@@ -2304,6 +2309,9 @@ model DiscountCode {
 
   validFrom DateTime @db.Timestamptz(3)
   validTo   DateTime @db.Timestamptz(3)
+
+  // conditions, null means no condition
+  minReferrals Int?
 
   memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   memberPlanId String

@@ -127,6 +127,20 @@ export function calculateAmountForPeriodicity(
   return calculatePeriodAmount(monthlyAmount, periodicity);
 }
 
+export function assertNotSelfReferred({
+  userID,
+  referredByID,
+}: {
+  userID?: string | null;
+  referredByID?: string | null;
+}) {
+  if (referredByID && referredByID === userID) {
+    throw new BadRequestException(
+      'A subscription can not be referred by its own user.'
+    );
+  }
+}
+
 export class MemberContext implements MemberContextInterface {
   paymentProviders: PaymentProvider[];
   prisma: PrismaClient;
@@ -256,7 +270,8 @@ export class MemberContext implements MemberContextInterface {
       const startDate = new Date(
         (
           paidUntil &&
-          paidUntil.getTime() > new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
+            paidUntil.getTime() >
+              new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
         ) ?
           paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
         : new Date().getTime()
@@ -771,6 +786,7 @@ export class MemberContext implements MemberContextInterface {
     discountCodeId,
     goodieId,
     skipMail,
+    referredByID,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -788,6 +804,8 @@ export class MemberContext implements MemberContextInterface {
     goodieId?: string;
     /** Set when an editor creates the subscription and chose not to mail the reader. */
     skipMail?: boolean;
+    /** The user who referred the reader to this subscription. */
+    referredByID?: string | null;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -797,6 +815,8 @@ export class MemberContext implements MemberContextInterface {
         "You can't create a non extendable subscription that is autoRenew!"
       );
     }
+
+    assertNotSelfReferred({ userID, referredByID });
 
     const memberPlan = await this.prisma.memberPlan.findUnique({
       where: { id: memberPlanID },
@@ -835,6 +855,7 @@ export class MemberContext implements MemberContextInterface {
         memberPlanID,
         properties,
         replacesSubscriptionID: replacedSubscriptionId,
+        referredByID,
         autoRenew,
         extendable,
         currency: memberPlan.currency,
@@ -924,6 +945,7 @@ export class MemberContext implements MemberContextInterface {
     startsAt = new Date(),
     paidUntil,
     skipMail,
+    referredByID,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -942,6 +964,7 @@ export class MemberContext implements MemberContextInterface {
      * symmetry and to defend against future hooks.
      */
     skipMail?: boolean;
+    referredByID?: string | null;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -951,6 +974,8 @@ export class MemberContext implements MemberContextInterface {
         "You can't create a non extendable subscription that is autoRenew!"
       );
     }
+
+    assertNotSelfReferred({ userID, referredByID });
 
     startsAt = new Date(startsAt);
     paidUntil = paidUntil ? new Date(paidUntil) : undefined;
@@ -994,6 +1019,7 @@ export class MemberContext implements MemberContextInterface {
         monthlyAmount,
         memberPlanID,
         properties,
+        referredByID,
         autoRenew,
         extendable,
         currency: memberPlan.currency,

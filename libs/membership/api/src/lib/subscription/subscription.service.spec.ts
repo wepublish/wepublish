@@ -125,4 +125,56 @@ describe('SubscriptionService', () => {
       expect(prisma.subscriptionDeactivation.delete).not.toHaveBeenCalled();
     });
   });
+
+  describe('updateSubscription', () => {
+    const original = {
+      id: 'subscription-id',
+      userID: 'user-1',
+      deactivation: null,
+      paymentMethod: { id: 'payment-method-1', paymentProviderID: 'stripe' },
+    };
+
+    it('stores who referred the subscription', async () => {
+      const prisma = {
+        subscription: {
+          findUnique: vi.fn(async () => original),
+          update: vi.fn(async () => original),
+        },
+        memberPlan: { findUnique: vi.fn(async () => ({ currency: 'CHF' })) },
+      };
+
+      await makeService(prisma, {
+        handleSubscriptionChange: vi.fn(async () => original),
+      }).updateSubscription({
+        id: 'subscription-id',
+        memberPlanID: 'plan-1',
+        referredByID: 'referrer-1',
+      });
+
+      expect(prisma.subscription.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ referredByID: 'referrer-1' }),
+        })
+      );
+    });
+
+    it('refuses a reader referring themselves', async () => {
+      const prisma = {
+        subscription: {
+          findUnique: vi.fn(async () => original),
+          update: vi.fn(),
+        },
+        memberPlan: { findUnique: vi.fn(async () => ({ currency: 'CHF' })) },
+      };
+
+      await expect(
+        makeService(prisma).updateSubscription({
+          id: 'subscription-id',
+          memberPlanID: 'plan-1',
+          referredByID: 'user-1',
+        })
+      ).rejects.toThrow(BadRequestException);
+      expect(prisma.subscription.update).not.toHaveBeenCalled();
+    });
+  });
 });

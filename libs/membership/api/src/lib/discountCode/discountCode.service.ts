@@ -13,11 +13,19 @@ import {
 const validateDiscountCode = ({
   validFrom,
   validTo,
+  minReferrals,
 }:
-  | Pick<DiscountCode, 'validFrom' | 'validTo'>
-  | Pick<CreateDiscountCodeInput, 'validFrom' | 'validTo'>) => {
+  | Pick<DiscountCode, 'validFrom' | 'validTo' | 'minReferrals'>
+  | Pick<
+      CreateDiscountCodeInput,
+      'validFrom' | 'validTo' | 'minReferrals'
+    >) => {
   if (new Date(validFrom) > new Date(validTo)) {
     throw new BadRequestException('validTo can not be earlier than validFrom');
+  }
+
+  if (minReferrals != null && minReferrals < 0) {
+    throw new BadRequestException('minReferrals can not be negative');
   }
 };
 
@@ -70,8 +78,15 @@ export class DiscountCodeService {
     };
   }
 
+  /**
+   * @param userId the user redeeming the code, needed for codes with conditions
+   */
   @PrimeDataLoader(DiscountCodeDataloader)
-  async getValidDiscountCode(discountCode: string, memberPlanId: string) {
+  async getValidDiscountCode(
+    discountCode: string,
+    memberPlanId: string,
+    userId?: string | null
+  ) {
     const discountCodeObj = await this.prisma.discountCode.findUnique({
       where: {
         code_memberPlanId: {
@@ -89,7 +104,31 @@ export class DiscountCodeService {
       throw new BadRequestException('DiscountCode has expired.');
     }
 
+    if (
+      discountCodeObj.minReferrals &&
+      (!userId ||
+        (await this.countReferrals(userId)) < discountCodeObj.minReferrals)
+    ) {
+      throw new BadRequestException(
+        `DiscountCode requires ${discountCodeObj.minReferrals} referrals.`
+      );
+    }
+
     return discountCodeObj;
+  }
+
+  /**
+   * Counts the other readers the user referred to a subscription that was paid at least once.
+   */
+  private async countReferrals(userId: string) {
+    return this.prisma.user.count({
+      where: {
+        id: { not: userId },
+        subscriptions: {
+          some: { referredByID: userId, paidUntil: { not: null } },
+        },
+      },
+    });
   }
 
   @PrimeDataLoader(DiscountCodeDataloader)

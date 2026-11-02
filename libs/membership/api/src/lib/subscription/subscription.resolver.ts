@@ -48,6 +48,7 @@ import { SettingDataloaderService, SettingName } from '@wepublish/settings/api';
 import { PendingPaymentMethodChangeDataloader } from '../payment-method-change/pending-payment-method-change.dataloader';
 import { SubscriptionPaymentMethodChange } from '../payment-method-change/payment-method-change.model';
 import { PaymentMethodChangeService } from '../payment-method-change/payment-method-change.service';
+import { User, UserDataloaderService } from '@wepublish/user/api';
 
 /** Used when the SUBSCRIPTION_EXTEND_WINDOW_DAYS setting has no value. */
 const DEFAULT_EXTEND_WINDOW_DAYS = 30;
@@ -65,7 +66,8 @@ export class PublicSubscriptionResolver {
     private memberPlanDataloader: MemberPlanDataloader,
     private settingDataloader: SettingDataloaderService,
     private pendingPaymentMethodChangeDataloader: PendingPaymentMethodChangeDataloader,
-    private paymentMethodChanges: PaymentMethodChangeService
+    private paymentMethodChanges: PaymentMethodChangeService,
+    private userDataloader: UserDataloaderService
   ) {}
 
   @Permissions(CanGetSubscription)
@@ -183,6 +185,24 @@ export class PublicSubscriptionResolver {
       prop =>
         prop.public || hasPermission(CanGetSubscription, permissionsOf(user))
     );
+  }
+
+  @ResolveField(() => User, {
+    nullable: true,
+    description: `The user who referred the reader to this subscription. Only visible to those who may see subscriptions.`,
+  })
+  async referredBy(
+    @Parent() { referredByID }: Subscription,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    if (
+      !referredByID ||
+      !hasPermission(CanGetSubscription, permissionsOf(user))
+    ) {
+      return null;
+    }
+
+    return this.userDataloader.load(referredByID);
   }
 
   @ResolveField(() => String)

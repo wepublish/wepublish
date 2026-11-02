@@ -49,7 +49,7 @@ const setup = () => {
     'template-1'
   );
 
-  return { context, mailContext };
+  return { context, mailContext, prisma };
 };
 
 const createInput = {
@@ -83,6 +83,32 @@ describe('MemberContext.createSubscription', () => {
       context.createSubscription({ ...createInput, skipMail: true })
     ).resolves.toEqual({ subscription, invoice });
     expect(mailContext.sendMail).not.toHaveBeenCalled();
+  });
+});
+
+describe('MemberContext.createSubscription referrals', () => {
+  it('stores who referred the subscription', async () => {
+    const { context, prisma } = setup();
+
+    await context.createSubscription({
+      ...createInput,
+      referredByID: 'referrer-1',
+    });
+
+    expect(prisma.subscription.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ referredByID: 'referrer-1' }),
+      })
+    );
+  });
+
+  it('refuses a reader referring themselves', async () => {
+    const { context, prisma } = setup();
+
+    await expect(
+      context.createSubscription({ ...createInput, referredByID: 'user-1' })
+    ).rejects.toThrow('A subscription can not be referred by its own user.');
+    expect(prisma.subscription.create).not.toHaveBeenCalled();
   });
 });
 

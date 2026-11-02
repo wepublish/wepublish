@@ -12,6 +12,8 @@ fragment FullDiscountCode on DiscountCode {
   validFrom
   validTo
 
+  minReferrals
+
   memberPlanId
   memberPlan {
     id
@@ -62,6 +64,7 @@ mutation CreateDiscountCode(
   $memberPlanId: String!
   $validFrom: DateTime!
   $validTo: DateTime!
+  $minReferrals: Int
 ) {
   createDiscountCode(
     code: $code
@@ -69,6 +72,7 @@ mutation CreateDiscountCode(
     memberPlanId: $memberPlanId
     validFrom: $validFrom
     validTo: $validTo
+    minReferrals: $minReferrals
   ) {
     ...FullDiscountCode
   }
@@ -81,6 +85,7 @@ mutation UpdateDiscountCode(
   $memberPlanId: String
   $validFrom: DateTime
   $validTo: DateTime
+  $minReferrals: Int
 ) {
   updateDiscountCode(
     id: $id
@@ -89,6 +94,7 @@ mutation UpdateDiscountCode(
     memberPlanId: $memberPlanId
     validFrom: $validFrom
     validTo: $validTo
+    minReferrals: $minReferrals
   ) {
     ...FullDiscountCode
   }
