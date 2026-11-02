@@ -292,6 +292,32 @@ describe('BexioPaymentProvider', () => {
       expect(mockBexioInvoiceShowPdf).not.toHaveBeenCalled();
     });
 
+    it('emails the invoice to the test mailbox when the reader is on its domain', async () => {
+      const env = process.env;
+      process.env = { ...env, APP_ENVIRONMENT: 'review' };
+      await testing.cache.setNs(
+        'settings:paymentprovider',
+        'bexio',
+        { ...bexioSettings, bexio_testMailbox: 'bexio@example.com' },
+        60
+      );
+
+      try {
+        await bexioPaymentProvider.createInvoice(
+          mockContact,
+          mockInvoice,
+          false
+        );
+      } finally {
+        process.env = env;
+      }
+
+      expect(mockBexioInvoiceSend).toHaveBeenCalledWith(
+        'testid',
+        expect.objectContaining({ recipient_email: 'bexio@example.com' })
+      );
+    });
+
     it('issues and renders the invoice instead of emailing it when the reader gets letters', async () => {
       const result = await bexioPaymentProvider.createInvoice(
         mockContact,
