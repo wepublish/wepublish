@@ -70,11 +70,12 @@ development.
 | `E2E_ALLOW_MUTATION` not `false`                              | `@mutating`             | on by default outside production; `false` opts out          |
 | `E2E_ENV` is not `production`                                 | `@mutating`, `@payment` | production is never written to; it has no simulated payment |
 | `MAILPIT_URL`                                                 | `@mail`                 | set (and mailpit started) by local runs                     |
+| `E2E_IMAP_USER` + `E2E_IMAP_PASSWORD`                         | `@mail`                 | a real mailbox, Ethereal on review; Mailpit wins if both set |
 | `E2E_MAILCHIMP_API_KEY` + `_LIST_ID` + `_INTEREST_ID`        | `@mailchimp`            | a real test audience (no fake); never production            |
 
 Every scenario carries a domain tag (`@auth`, `@paywall`, …) and the
 capability tags it needs. The `capabilities` fixture compares them with the
-target and calls `test.skip(…, 'needs MAILPIT_URL')` when one is missing.
+target and calls `test.skip(…, 'needs MAILPIT_URL, …')` when one is missing.
 The skip happens per test, after the run has migrated, seeded and started the
 local stack. A local `--grep` that only matches skipped scenarios still takes
 the full cold start (~1 min) and then reports `skipped`, not `passed`. Read the
@@ -91,8 +92,10 @@ skip reason in the report (`pnpm run e2e:report`).
 - **Named entities:** Gherkin calls things by a quoted alias
   (`a paywalled article "Paid story"`); the step stores the entity under that
   alias and later steps look it up with `data.get('article', alias)`.
-- **`inbox`** (`support/mailpit.ts`) polls mailpit for a mail to an address
-  and extracts links from it.
+- **`inbox`** (`support/inbox.ts`) polls for a mail to an address: Mailpit
+  (`support/mailpit.ts`) when `MAILPIT_URL` is set, otherwise an IMAP mailbox
+  (`support/imap-inbox.ts`, Ethereal on review). `extractLink` pulls a link
+  out of it. Unit specs of this support code: `pnpm nx test e2e`.
 - **`checkout`** (`support/simulated-payment.ts`) drives the SIMULATED payment
   provider's checkout page (Pay / Decline / Cancel). It is the only payment
   fake: Stripe and Payrexx are never mocked over HTTP. `@payment` scenarios
@@ -166,7 +169,18 @@ started (nor migrated) for a URL you override (`BASE_URL`, `E2E_EDITOR_URL`,
 - Create an API token (`wep_…`) in the editor under API tokens
   (`/api-tokens`) and pass it as
   `E2E_API_TOKEN`; in CI it is the `E2E_API_TOKEN` secret.
-- `@mail` journeys skip: there is no mailpit to read from.
+- `@mail` journeys read the mailbox the review's mail provider sends to,
+  over IMAP (`support/imap-inbox.ts`): `E2E_IMAP_USER` and
+  `E2E_IMAP_PASSWORD` (secrets of the same names in CI), optional
+  `E2E_IMAP_HOST` (default `imap.ethereal.email`) and `E2E_IMAP_PORT` (993).
+  On review the API sends through an Ethereal SMTP account, which keeps every
+  relayed mail, whatever the recipient, in that account's INBOX. Without the
+  credentials `@mail` journeys skip.
+- The mailbox is shared: a scenario only takes mails received after it
+  started (30 s slack) and deletes each mail it read. Ethereal allows 100 MB
+  per account and expires mails after hours to days;
+  `E2E_IMAP_PURGE_OLDER_THAN_DAYS` deletes older mails once per worker (off by
+  default, since others may use the account).
 - `@payment` needs the `simulated` payment method on the plan used (it only
   exists on non-production instances).
 - The database is a copy of production — cleanup matters. Search the editor

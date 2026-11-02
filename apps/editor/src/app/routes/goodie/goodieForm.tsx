@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import {
+  Autocomplete,
   Card,
   CardContent,
   Drawer,
@@ -12,8 +13,10 @@ import {
 import {
   FullImageFragment,
   FullMemberPlanFragment,
+  PaymentPeriodicity,
 } from '@wepublish/editor/api';
 import {
+  ALL_PAYMENT_PERIODICITIES,
   ChooseEditImage,
   DRAWER_WIDTHS,
   ImageEditPanel,
@@ -35,6 +38,7 @@ export const goodieSchema = z.object({
   active: z.boolean(),
   description: z.custom<RichTextBlockValue['richText']>().nullish(),
   memberPlanIDs: z.array(z.string()),
+  paymentPeriodicities: z.array(z.nativeEnum(PaymentPeriodicity)),
   memberPlans: z
     .array(z.custom<Pick<FullMemberPlanFragment, 'id' | 'name'>>())
     .optional(),
@@ -211,6 +215,32 @@ export const GoodieForm = ({ create }: GoodieFormProps) => {
                     )}
                   />
                 </div>
+
+                <Controller
+                  control={control}
+                  name="paymentPeriodicities"
+                  render={({ field }) => (
+                    <Autocomplete
+                      multiple
+                      disableCloseOnSelect
+                      options={ALL_PAYMENT_PERIODICITIES}
+                      getOptionLabel={periodicity =>
+                        t(`memberPlanList.paymentPeriodicity.${periodicity}`)
+                      }
+                      value={field.value ?? []}
+                      onChange={(_event, paymentPeriodicities) =>
+                        field.onChange(paymentPeriodicities)
+                      }
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          label={t('goodie.form.paymentPeriodicities')}
+                          helperText={t('goodie.form.paymentPeriodicitiesInfo')}
+                        />
+                      )}
+                    />
+                  )}
+                />
 
                 <div>
                   <FormLabel>{t('goodie.form.image')}</FormLabel>
