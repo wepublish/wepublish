@@ -311,7 +311,8 @@ const confirm = async (
   await user.click(subscribeButton(amount));
 };
 
-const withoutMarkup = (text: string) => text.replace(/<[^>]+>/g, '');
+const withoutMarkup = (text: string) =>
+  new DOMParser().parseFromString(text, 'text/html').body.textContent ?? '';
 
 const expectedSubscribe = {
   memberPlanId: standardPlan.id,

@@ -2,9 +2,17 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import {
   applyTenantTranslations,
   mockMemberPlan,
+  mockPeriodicityPrice,
+  mockSubscribeBlockRenderSetting,
   renderWithProviders,
   resetTranslations,
 } from '@wepublish/mocks/website';
+import { formatCurrency } from '@wepublish/membership/website';
+import {
+  Currency,
+  PaymentPeriodicity,
+  SubscribeBlockRenderLayout,
+} from '@wepublish/website/api';
 
 import { zwoelfTenant } from '../zwoelf-tenant';
 import { ZwoelfMemberPlanPicker } from './zwoelf-memberplan-picker';
@@ -52,6 +60,47 @@ describe('ZwoelfMemberPlanPicker', () => {
     );
 
     expect(onChange).toHaveBeenCalledWith(haupttribuene.id);
+  });
+
+  it('prices an open amount plan from its minimum, whatever amount is entered', () => {
+    const ehrenloge = mockMemberPlan({
+      name: '#12 - Ehrenloge',
+      tags: ['supporter'],
+      currency: Currency.Chf,
+      periodicityPricing: [
+        mockPeriodicityPrice({
+          periodicity: PaymentPeriodicity.Yearly,
+          amountMin: 16000,
+          amountTarget: 16000,
+          amountMax: null,
+        }),
+      ],
+    });
+    renderWithProviders(
+      <ZwoelfMemberPlanPicker
+        memberPlans={[basic, ehrenloge]}
+        value={ehrenloge.id}
+        amount={2000}
+        onChange={vi.fn()}
+        paymentPeriodicity={PaymentPeriodicity.Yearly}
+        memberPlanRenderSettings={[
+          mockSubscribeBlockRenderSetting({
+            memberPlanId: ehrenloge.id,
+            layout: {
+              __typename: 'SubscribeBlockLayoutNoneConfig',
+              type: SubscribeBlockRenderLayout.None,
+              showInput: true,
+            },
+          }),
+        ]}
+      />,
+      { tenant: zwoelfTenant }
+    );
+
+    const minimum = formatCurrency(160, Currency.Chf);
+
+    expect(screen.getByText(`ab ${minimum}`)).toBeInTheDocument();
+    expect(screen.getByText(`Mindestens ${minimum}`)).toBeInTheDocument();
   });
 
   it('does not render the group without supporter plans', () => {
