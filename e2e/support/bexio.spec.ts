@@ -1,6 +1,6 @@
 import { APIRequestContext } from '@playwright/test';
 import { describe, expect, it } from 'vitest';
-import { BexioTestCompany, bexioStatus } from './bexio';
+import { BexioTestCompany, bexioMailFor, bexioStatus } from './bexio';
 
 type Call = { method: string; url: string; auth?: string };
 
@@ -78,5 +78,20 @@ describe('BexioTestCompany', () => {
     expect(calls.map(c => `${c.method} ${c.url}`)).toEqual([
       'POST https://api.bexio.com/2.0/kb_invoice/11/cancel',
     ]);
+  });
+});
+
+describe('bexioMailFor', () => {
+  // The seeded subject ends in (Ref :subscription.id:).
+  it('matches the subject of the subscription it names', () => {
+    expect(bexioMailFor('0198-ab').test('Ihre Rechnung für Jahresabo (Ref 0198-ab)')).toBe(true);
+  });
+
+  it('does not match another subscription', () => {
+    expect(bexioMailFor('0198-ab').test('Ihre Rechnung für Jahresabo (Ref 0198-abc)')).toBe(false);
+  });
+
+  it('takes the id literally', () => {
+    expect(bexioMailFor('a.b').test('(Ref axb)')).toBe(false);
   });
 });

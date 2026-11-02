@@ -4,6 +4,11 @@ export type BexioConfig = {
   /** Token of the bexio *test* company the target's bexio provider uses. */
   token: string;
   apiUrl?: string;
+  /**
+   * The provider's test mailbox: during its trial bexio only emails its own
+   * sender, so invoice mails to the Resend domain go there.
+   */
+  testMailbox?: string;
 };
 
 // kb_item_status_id values the bexio payment provider maps.
@@ -18,12 +23,15 @@ const STATUS: Record<number, string> = {
 
 export const bexioStatus = (id: number) => STATUS[id] ?? `status ${id}`;
 
+/** bexio's invoice mail for a subscription: the subject ends in (Ref <id>). */
+export const bexioMailFor = (subscriptionId: string) =>
+  new RegExp(`\\(Ref ${subscriptionId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\)`);
+
 export type BexioInvoice = { id: number; status: string; documentNr: string };
 
 /**
  * Reads the bexio test company the way an accountant would see it, so a
- * journey can check what the provider did there without bexio sending mail
- * to a mailbox the suite reads.
+ * journey can check what the provider did there.
  */
 export class BexioTestCompany {
   private readonly apiUrl: string;
