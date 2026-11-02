@@ -5,6 +5,7 @@ import {
   FormInputRender,
   FormInputType,
 } from '@wepublish/puck-content/website';
+import { MdTextFields } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
@@ -49,6 +50,11 @@ export const FormInputConfig: ComponentConfig<{
   fields: UserFields;
 }> = {
   label: 'Input',
+  icon: MdTextFields,
+  category: 'form',
+  group: 'formFields',
+  order: 1,
+  nameKey: 'puck.blocks.names.FormInput',
   ai: {
     instructions:
       'A single-line input placed inside a Form. name is the key sent to the action URL (EMAIL, FNAME or LNAME for Mailchimp); use type email for e-mail addresses so browsers validate them, and set autoComplete so browsers can fill it in.',

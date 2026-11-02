@@ -56,6 +56,7 @@ import {
 } from '@wepublish/puck-content/website';
 
 import type { BlockCategoryId } from './block-library/block-library.catalog';
+import type {} from './block-library/block-meta';
 import { ToPuckSlots } from './blocks/puck-editor-props';
 import { WithCSS } from './blocks/with-css';
 import { WithDataSource } from './blocks/with-datasource';

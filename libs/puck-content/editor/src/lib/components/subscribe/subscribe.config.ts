@@ -5,6 +5,7 @@ import {
   SubscribeConfigProps,
   SubscribeRender,
 } from '@wepublish/puck-content/website';
+import { MdCardMembership } from 'react-icons/md';
 
 import { editorRender } from '../../blocks/editor-render';
 import { switchFieldAi } from '../../switch/switch.field';
@@ -27,6 +28,10 @@ export const SubscribeConfig: ComponentConfig<{
   fields: UserFields;
 }> = withDataSource<SubscribeConfigProps>(
   {
+    icon: MdCardMembership,
+    category: 'engagement',
+    order: 1,
+    nameKey: 'puck.blocks.names.Subscribe',
     ai: {
       instructions:
         'A membership subscription sign-up form that lets readers subscribe to a member plan. The fields array configures which extra input fields the form asks for (such as First name, Birthday or Address). The memberPlan datasource decides which member plans are offered: list offers every active member plan, multiple offers only the picked ones in display order. Use it on landing or paywall pages where you want visitors to become subscribers.',

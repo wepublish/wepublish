@@ -5,6 +5,7 @@ import {
   DynamicGridProps,
   DynamicGridRender,
 } from '@wepublish/puck-content/website';
+import { MdGridView } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { breakpointsFieldAi } from '../../../breakpoints/breakpoints.field';
@@ -32,6 +33,10 @@ type DynamicGridConfig = ComponentConfig<{
 }>;
 
 export const DynamicGrid: DynamicGridConfig = {
+  icon: MdGridView,
+  category: 'layout',
+  order: 3,
+  nameKey: 'puck.blocks.names.DynamicGrid',
   ai: {
     instructions:
       'A flexible 12-column grid layout. Each entry in items is a cell with a placement per breakpoint: column and row each take a start line (leave it out to flow after the previous cell, set it to offset the cell, e.g. start 3 to skip two columns) and a span (how many columns or rows it covers; start + span - 1 must not exceed 12 columns), an optional visibility list of the breakpoints the cell is shown on and a content slot for nested components. The layout field sets per breakpoint the column and row gap in theme spacing units (or exact pixel strings like "12px") and alignItems (start, center, end or stretch), the vertical alignment of the cells within a row, and justifyContent (start, center, end, space-between, space-around or space-evenly), the horizontal distribution of the columns. Use it for multi-column arrangements of mixed content.',

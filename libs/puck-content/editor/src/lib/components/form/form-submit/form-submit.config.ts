@@ -4,6 +4,7 @@ import {
   FormSubmitRender,
   FormSubmitVariant,
 } from '@wepublish/puck-content/website';
+import { MdSend } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { paletteFieldAi } from '../../../palette/palette.field';
@@ -22,6 +23,11 @@ export const FormSubmitConfig: ComponentConfig<{
   fields: UserFields;
 }> = {
   label: 'Submit button',
+  icon: MdSend,
+  category: 'form',
+  group: 'formFields',
+  order: 7,
+  nameKey: 'puck.blocks.names.FormSubmit',
   ai: {
     instructions:
       'The button that sends its Form to the action URL. Place exactly one as the last block of every Form and label it with the action, e.g. "Subscribe".',

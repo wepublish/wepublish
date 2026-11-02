@@ -3,6 +3,7 @@ import {
   ButtonConfigProps,
   ButtonRender,
 } from '@wepublish/puck-content/website';
+import { MdSmartButton } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { paletteFieldAi } from '../../../palette/palette.field';
@@ -13,6 +14,10 @@ export const ButtonConfig: ComponentConfig<{
   props: ButtonConfigProps;
   fields: UserFields;
 }> = {
+  icon: MdSmartButton,
+  category: 'text',
+  order: 5,
+  nameKey: 'puck.blocks.names.Button',
   ai: {
     instructions:
       'A call-to-action button. Use it to prompt the reader to take an action. The text field is the button label; variant chooses the visual style (contained, outlined or text), color picks a palette colour, and alignment positions the button (start, center or end).',

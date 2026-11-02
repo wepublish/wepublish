@@ -3,6 +3,7 @@ import {
   FormTextareaProps,
   FormTextareaRender,
 } from '@wepublish/puck-content/website';
+import { MdNotes } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
@@ -19,6 +20,11 @@ export const FormTextareaConfig: ComponentConfig<{
   fields: UserFields;
 }> = {
   label: 'Text area',
+  icon: MdNotes,
+  category: 'form',
+  group: 'formFields',
+  order: 2,
+  nameKey: 'puck.blocks.names.FormTextarea',
   ai: {
     instructions:
       'A multi-line input placed inside a Form for longer answers such as a message or comment. name is the key sent to the action URL.',

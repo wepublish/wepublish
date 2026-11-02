@@ -3,6 +3,7 @@ import {
   ContainerProps,
   ContainerRender,
 } from '@wepublish/puck-content/website';
+import { MdCropFree } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { UserConfig } from '../../../config.types';
@@ -12,6 +13,10 @@ export const ContainerConfig: ComponentConfig<{
   props: ContainerProps;
   fields: UserFields;
 }> = {
+  icon: MdCropFree,
+  category: 'layout',
+  order: 1,
+  nameKey: 'puck.blocks.names.Container',
   ai: {
     instructions:
       'A layout wrapper that horizontally centres its nested content and constrains it to a maximum width. Place other components inside its content slot. Use maxWidth (Auto, sm, md, lg or xl) to control how wide the content may grow. Containers cannot be nested inside one another.',

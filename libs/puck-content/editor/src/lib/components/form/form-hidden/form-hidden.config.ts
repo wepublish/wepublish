@@ -1,5 +1,6 @@
 import { ComponentConfig } from '@puckeditor/core';
 import { FormHiddenProps } from '@wepublish/puck-content/website';
+import { MdVisibilityOff } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
@@ -17,6 +18,11 @@ export const FormHiddenConfig: ComponentConfig<{
   fields: UserFields;
 }> = {
   label: 'Hidden field',
+  icon: MdVisibilityOff,
+  category: 'form',
+  group: 'formFields',
+  order: 6,
+  nameKey: 'puck.blocks.names.FormHidden',
   ai: {
     instructions:
       'An invisible input placed inside a Form that always sends a fixed value under name, e.g. a SOURCE or campaign tag for Mailchimp. Readers never see it.',

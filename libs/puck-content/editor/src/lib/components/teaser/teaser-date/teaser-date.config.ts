@@ -3,6 +3,7 @@ import {
   TeaserDateConfigProps,
   TeaserDateRender,
 } from '@wepublish/puck-content/website';
+import { MdCalendarToday } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { switchFieldAi } from '../../../switch/switch.field';
@@ -13,6 +14,11 @@ export const TeaserDateConfig: ComponentConfig<{
   fields: UserFields;
 }> = {
   label: 'Teaser Date',
+  icon: MdCalendarToday,
+  category: 'teaser',
+  group: 'teaserParts',
+  order: 6,
+  nameKey: 'puck.blocks.names.TeaserDate',
   ai: {
     instructions:
       'Renders the publish date of the teaser provided by the surrounding teaser slot. Only works inside a teaser slot; it has no content of its own. showTime additionally shows the time of day.',

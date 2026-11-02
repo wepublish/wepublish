@@ -3,6 +3,7 @@ import {
   TeaserImageConfigProps,
   TeaserImageRender,
 } from '@wepublish/puck-content/website';
+import { MdImage } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
@@ -12,6 +13,11 @@ export const TeaserImageConfig: ComponentConfig<{
   fields: UserFields;
 }> = {
   label: 'Teaser Image',
+  icon: MdImage,
+  category: 'teaser',
+  group: 'teaserParts',
+  order: 1,
+  nameKey: 'puck.blocks.names.TeaserImage',
   ai: {
     instructions:
       'Renders the image of the teaser provided by the surrounding teaser slot. Only works inside a teaser slot; it has no content of its own.',

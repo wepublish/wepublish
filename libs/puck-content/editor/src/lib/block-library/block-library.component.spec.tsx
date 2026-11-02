@@ -5,20 +5,57 @@ import { blockLibraryPlugin } from './block-library';
 
 const usePuck = createUsePuck();
 
+const CustomIcon = () => <svg data-testid="custom-icon" />;
+
 const config: Config = {
   components: {
-    Title: { render: () => <h1>Title</h1> },
-    RichText: { render: () => <p>Text</p> },
-    Image: { render: () => <img alt="" /> },
+    Title: {
+      category: 'text',
+      nameKey: 'puck.blocks.names.Title',
+      order: 1,
+      render: () => <h1>Title</h1>,
+    },
+    RichText: {
+      category: 'text',
+      nameKey: 'puck.blocks.names.RichText',
+      order: 2,
+      render: () => <p>Text</p>,
+    },
+    Image: {
+      category: 'media',
+      nameKey: 'puck.blocks.names.Image',
+      order: 1,
+      render: () => <img alt="" />,
+    },
+    Custom: {
+      category: 'media',
+      nameKey: 'puck.blocks.names.Lightbox',
+      order: 2,
+      icon: CustomIcon,
+      render: () => <div>Custom</div>,
+    },
     Container: {
+      category: 'layout',
+      nameKey: 'puck.blocks.names.Container',
+      order: 1,
       fields: { content: { type: 'slot' } },
       render: ({ content: Content }) => <Content />,
     },
     Teaser: {
+      category: 'teaser',
+      nameKey: 'puck.blocks.names.Teaser',
+      order: 1,
       fields: { content: { type: 'slot' } },
       render: ({ content: Content }) => <Content />,
     },
-    TeaserTitle: { render: () => <h2>Teaser title</h2> },
+    TeaserTitle: {
+      category: 'teaser',
+      group: 'teaserParts',
+      nameKey: 'puck.blocks.names.TeaserTitle',
+      order: 1,
+      render: () => <h2>Teaser title</h2>,
+    },
+    Legacy: { label: 'Legacy block', render: () => <div>Legacy</div> },
   },
 };
 
@@ -82,6 +119,27 @@ describe('BlockLibrary', () => {
     expect(
       screen.queryByRole('region', { name: 'Recommended' })
     ).not.toBeInTheDocument();
+  });
+
+  it('takes the name, icon and category from the component config', async () => {
+    renderLibrary();
+
+    const media = await screen.findByRole('region', { name: 'Media' });
+    const custom = await within(media).findByRole('button', {
+      name: 'Gallery',
+    });
+
+    expect(within(custom).getByTestId('custom-icon')).toBeInTheDocument();
+  });
+
+  it('lists blocks without a category under Other', async () => {
+    renderLibrary();
+
+    const other = await screen.findByRole('region', { name: 'Other' });
+
+    expect(
+      await within(other).findByRole('button', { name: 'Legacy block' })
+    ).toBeVisible();
   });
 
   it('offers each block once to assistive technology', async () => {

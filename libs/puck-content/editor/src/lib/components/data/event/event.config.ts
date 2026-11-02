@@ -1,6 +1,7 @@
 import { ComponentConfig } from '@puckeditor/core';
 import { z } from 'zod/v4';
 import { EventConfigProps, EventRender } from '@wepublish/puck-content/website';
+import { MdEvent } from 'react-icons/md';
 
 import { toAiSchema } from '../../../ai-schema';
 import { editorRender } from '../../../blocks/editor-render';
@@ -74,6 +75,10 @@ export const EventConfig: ComponentConfig<{
   props: WithDataSource<EventConfigProps>;
   fields: UserFields;
 }> = {
+  icon: MdEvent,
+  category: 'engagement',
+  order: 5,
+  nameKey: 'puck.blocks.names.Event',
   ...eventConfig,
   resolveFields: ({ props }, { fields }) => {
     if (listsEvents(props.datasources)) {

@@ -6,6 +6,7 @@ import {
   SliderProps,
   SliderRender,
 } from '@wepublish/puck-content/website';
+import { MdViewCarousel } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { breakpointsFieldAi } from '../../../breakpoints/breakpoints.field';
@@ -25,6 +26,10 @@ export const Slider: ComponentConfig<{
   props: SliderProps;
   fields: UserFields;
 }> = {
+  icon: MdViewCarousel,
+  category: 'layout',
+  order: 5,
+  nameKey: 'puck.blocks.names.Slider',
   ai: {
     instructions:
       'A horizontal carousel that shows its items as slides the reader swipes or clicks through, with dots and arrows for navigation. Each entry in items is one slide with a content slot for nested components. settings controls per breakpoint how many slides are visible at once (perView, fractions such as 1.4 show a peek of the next slide) and the gap between slides in pixels. Use it to present a series of equally important items in limited space, e.g. cards, teasers or images.',

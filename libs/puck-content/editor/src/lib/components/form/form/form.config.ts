@@ -10,6 +10,7 @@ import {
   FormTarget,
 } from '@wepublish/puck-content/website';
 import { FormEvent } from 'react';
+import { MdDynamicForm } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { ToPuckSlots } from '../../../blocks/puck-editor-props';
@@ -75,6 +76,10 @@ export const FormConfig: ComponentConfig<{
   fields: UserFields;
 }> = {
   label: 'Form',
+  icon: MdDynamicForm,
+  category: 'form',
+  order: 1,
+  nameKey: 'puck.blocks.names.Form',
   ai: {
     instructions:
       'Wraps inputs and a submit button into a plain HTML form that the browser sends to the action URL, without any JavaScript. For Mailchimp, set action to the embedded form URL (https://<dc>.list-manage.com/subscribe/post?u=…&id=…), method post, name the inputs EMAIL, FNAME and LNAME, and set honeypot to the b_<u>_<id> name from the embed code. Forms cannot be nested, and MailchimpForm and Subscribe bring their own form, so never place them inside a Form, not even inside a layout block within it.',

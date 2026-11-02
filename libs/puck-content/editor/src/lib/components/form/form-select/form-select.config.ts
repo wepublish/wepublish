@@ -4,6 +4,7 @@ import {
   FormSelectProps,
   FormSelectRender,
 } from '@wepublish/puck-content/website';
+import { MdArrowDropDownCircle } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
@@ -21,6 +22,11 @@ export const FormSelectConfig: ComponentConfig<{
   fields: UserFields;
 }> = {
   label: 'Select',
+  icon: MdArrowDropDownCircle,
+  category: 'form',
+  group: 'formFields',
+  order: 4,
+  nameKey: 'puck.blocks.names.FormSelect',
   ai: {
     instructions:
       'A dropdown placed inside a Form to pick exactly one of a fixed list of options; the chosen option value is sent under name. Prefer a FormRadioGroup for two to four options.',

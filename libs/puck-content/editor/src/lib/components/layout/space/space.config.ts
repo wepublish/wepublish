@@ -1,6 +1,7 @@
 import { ComponentConfig } from '@puckeditor/core';
 import { z } from 'zod/v4';
 import { SpaceProps, SpaceRender } from '@wepublish/puck-content/website';
+import { MdHeight } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { breakpointsFieldAi } from '../../../breakpoints/breakpoints.field';
@@ -18,6 +19,10 @@ export const Space: ComponentConfig<{
   props: SpaceProps;
   fields: UserFields;
 }> = {
+  icon: MdHeight,
+  category: 'layout',
+  order: 7,
+  nameKey: 'puck.blocks.names.Space',
   ai: {
     instructions:
       'Adds empty vertical spacing between other components. Set size per breakpoint to None, Small, Medium, Large or XL to control the gap height. Use it to separate blocks; it renders no visible content of its own.',

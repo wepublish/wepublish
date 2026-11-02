@@ -7,6 +7,7 @@ import {
   MailchimpFormRender,
   MailchimpFormStepConfig,
 } from '@wepublish/puck-content/website';
+import { MdMarkEmailRead } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { colorFieldAi } from '../../../color/color.field';
@@ -195,6 +196,10 @@ export const MailchimpFormConfig: ComponentConfig<{
   props: MailchimpFormConfigProps;
   fields: UserFields;
 }> = {
+  icon: MdMarkEmailRead,
+  category: 'engagement',
+  order: 2,
+  nameKey: 'puck.blocks.names.MailchimpForm',
   ai: {
     instructions:
       'A newsletter sign-up form that adds the reader to a Mailchimp audience. listId is the Mailchimp audience id and syncProviderId the configured Mailchimp integration. The form is split into steps, each with its own inputs; input names are Mailchimp merge field names such as EMAIL or FNAME. interests preselects interest group ids. Use it where readers should subscribe to a newsletter.',

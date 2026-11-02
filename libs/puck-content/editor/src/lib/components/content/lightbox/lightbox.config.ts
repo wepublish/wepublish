@@ -4,6 +4,7 @@ import {
   LightboxExtra,
   LightboxRender,
 } from '@wepublish/puck-content/website';
+import { MdCollections } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { imageFieldAi } from '../../../image/image.field';
@@ -19,6 +20,10 @@ export const LightboxConfig: ComponentConfig<{
   props: LightboxConfigProps;
   fields: UserFields;
 }> = {
+  icon: MdCollections,
+  category: 'media',
+  order: 2,
+  nameKey: 'puck.blocks.names.Lightbox',
   ai: {
     instructions:
       'An image gallery shown one image at a time with previous/next navigation, an image counter and a fullscreen mode. Use it for photo series or galleries. Add one item per image; imageId references an already uploaded image, so keep the existing value and never invent one; caption is a short descriptive text or credit shown below the image.',

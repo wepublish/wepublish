@@ -1,6 +1,7 @@
 import { Menu, MenuItem } from '@mui/material';
 import { createUsePuck, Drawer } from '@puckeditor/core';
 import {
+  createElement,
   SyntheticEvent,
   useCallback,
   useId,
@@ -20,19 +21,17 @@ import {
 
 import { useSlotInsert } from '../insert/insert.hooks';
 import { PluginPanelHeader } from '../plugin-panel/plugin-panel-header.component';
-import { BlockCategory, blockCatalog } from './block-library.catalog';
+import { BlockCategory } from './block-library.catalog';
 import {
+  catalogFromComponents,
   countBlocks,
   filterCatalog,
-  restrictCatalog,
 } from './block-library.helpers';
 import {
   BlockLibraryContext,
   useBlockLabels,
   useBlockLibrary,
-  useUncategorisedBlocks,
 } from './block-library.hooks';
-import { blockIcons } from './block-library.icons';
 import {
   Category,
   CategoryHeading,
@@ -85,7 +84,7 @@ const BlockTile = ({ name }: { name: string }) => {
   const [isSource, setIsSource] = useState(false);
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const label = labelOf(name);
-  const Icon = blockIcons[name] ?? MdWidgets;
+  const icon = usePuck(puck => puck.config.components[name]?.icon);
   const targets = useMemo(() => targetsFor(name), [targetsFor, name]);
 
   useLayoutEffect(() => {
@@ -135,10 +134,7 @@ const BlockTile = ({ name }: { name: string }) => {
         aria-hidden={isSource ? undefined : true}
         title={targets.length ? label : `${label}: ${notHere}`}
       >
-        <Icon
-          size={18}
-          aria-hidden
-        />
+        {createElement(icon ?? MdWidgets, { size: 18, 'aria-hidden': true })}
         <TileLabel>{label}</TileLabel>
       </Tile>
 
@@ -248,18 +244,14 @@ export const BlockLibrary = () => {
   const { t, i18n } = useTranslation();
   const components = usePuck(puck => puck.config.components);
   const { labelOf } = useBlockLabels();
-  const uncategorised = useUncategorisedBlocks();
   const { mode, selected, targetsFor, insert } = useSlotInsert();
   const [query, setQuery] = useState('');
   const [collapsed, setCollapsed] = useState(readCollapsed);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const catalog = useMemo(
-    () => [
-      ...restrictCatalog(blockCatalog, name => name in components),
-      ...(uncategorised.length ? [{ id: 'other', blocks: uncategorised }] : []),
-    ],
-    [components, uncategorised]
+    () => catalogFromComponents(components),
+    [components]
   );
 
   const visible = useMemo(

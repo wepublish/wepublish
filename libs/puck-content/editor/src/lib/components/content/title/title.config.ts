@@ -1,6 +1,7 @@
 import { ComponentConfig } from '@puckeditor/core';
 import { TitleRender } from '@wepublish/puck-content/website';
 import { BuilderTitleBlockProps } from '@wepublish/website/builder';
+import { MdTitle } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { UserFields } from '../../../fields';
@@ -9,6 +10,10 @@ export const TitleConfig: ComponentConfig<{
   props: BuilderTitleBlockProps;
   fields: UserFields;
 }> = {
+  icon: MdTitle,
+  category: 'text',
+  order: 1,
+  nameKey: 'puck.blocks.names.Title',
   ai: {
     instructions:
       'The main heading of an article or section. Renders a large title with an optional pre-title (an eyebrow/kicker shown above the title) and an optional lead paragraph (a short intro or teaser shown below the title). Use it to introduce content; there is usually only one Title at the top of a page.',

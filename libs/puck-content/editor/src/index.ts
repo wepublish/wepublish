@@ -52,6 +52,7 @@ export * from './lib/bottom-bar/bottom-bar';
 export * from './lib/lock/lock';
 export * from './lib/block-library/block-library';
 export * from './lib/block-library/block-library.catalog';
+export * from './lib/block-library/block-meta';
 export * from './lib/insert/insert.helpers';
 export * from './lib/block-visibility/block-visibility';
 export * from './lib/block-visibility/block-visibility.field';

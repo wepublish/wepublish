@@ -1,6 +1,16 @@
-import { BlockCategory, catalogBlockNames } from './block-library.catalog';
+import {
+  BlockCategory,
+  BlockCategoryId,
+  blockCatalog,
+  catalogBlockNames,
+} from './block-library.catalog';
 
-export const blockLabelKey = (name: string) => `puck.blocks.names.${name}`;
+export type BlockMeta = {
+  category?: string;
+  group?: string;
+  order?: number;
+};
+
 export const blockCategoryKey = (id: string) => `puck.blocks.categories.${id}`;
 export const blockGroupKey = (id: string) => `puck.blocks.groups.${id}`;
 export const blockGroupHintKey = (id: string) => `puck.blocks.groupHints.${id}`;
@@ -62,22 +72,67 @@ export const filterCatalog = (
   );
 };
 
-export const restrictCatalog = (
-  catalog: BlockCategory[],
-  available: (name: string) => boolean
-): BlockCategory[] =>
-  catalog.flatMap(category => pickBlocks(category, available));
-
 export const countBlocks = (catalog: BlockCategory[]) =>
   catalogBlockNames(catalog).length;
 
-export const puckCategories = <Id extends string, Name extends string>(
-  catalog: BlockCategory<Id, Name>[]
-) => {
-  const categories = {} as Record<Id, { components: Name[] }>;
+const byOrder =
+  (components: Record<string, BlockMeta>) => (a: string, b: string) =>
+    (components[a]?.order ?? Infinity) - (components[b]?.order ?? Infinity) ||
+    a.localeCompare(b);
 
-  for (const category of catalog) {
-    categories[category.id] = { components: catalogBlockNames([category]) };
+export const catalogFromComponents = <Name extends string>(
+  components: Record<Name, BlockMeta>
+): BlockCategory<string, Name>[] => {
+  const names = (Object.keys(components) as Name[]).sort(byOrder(components));
+  const known = new Set<string>(blockCatalog.map(({ id }) => id));
+
+  const categories = blockCatalog.flatMap(
+    (category): BlockCategory<string, Name>[] => {
+      const groupId = 'group' in category ? category.group : undefined;
+      const members = names.filter(
+        name => components[name].category === category.id
+      );
+      const grouped = members.filter(
+        name => groupId && components[name].group === groupId
+      );
+      const blocks = members.filter(name => !grouped.includes(name));
+
+      if (!members.length) {
+        return [];
+      }
+
+      return [
+        {
+          id: category.id,
+          blocks,
+          ...(groupId && grouped.length ?
+            { group: { id: groupId, blocks: grouped } }
+          : {}),
+        },
+      ];
+    }
+  );
+
+  const other = names.filter(
+    name => !known.has(components[name].category ?? '')
+  );
+
+  return other.length ?
+      [...categories, { id: 'other', blocks: other }]
+    : categories;
+};
+
+export const puckCategories = <Name extends string>(
+  components: Record<Name, BlockMeta>
+) => {
+  const categories = {} as Record<BlockCategoryId, { components: Name[] }>;
+
+  for (const category of catalogFromComponents(components)) {
+    if (category.id !== 'other') {
+      categories[category.id as BlockCategoryId] = {
+        components: catalogBlockNames([category]),
+      };
+    }
   }
 
   return { ...categories, other: { visible: false } };

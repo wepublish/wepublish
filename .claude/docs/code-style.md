@@ -187,11 +187,15 @@ READMEs.
   `onSubmit` arrive as `Extra`, editor warnings come from `decorate`.
 - Factories (`builderBlock`, `plainBlock`, `editorRender`) live in `.ts`;
   `.tsx` files export components only.
-- A new editor block also needs a place in the Blocks panel:
-  `block-library/block-library.catalog.ts` (category, or the "inside a
-  teaser/form" group), an icon in `block-library.icons.ts` and a name under
-  `puck.blocks.names.<Key>` in all three locales. The catalog also yields
-  Puck's `categories`; `block-library.catalog.spec.ts` fails on a missing one.
+- A new editor block carries its Blocks-panel metadata in its own
+  `<block>.config.ts`, next to `label`: `icon`, `category`, `group` (only for
+  the "inside a teaser/form" parts), `order` (position within its category or
+  group) and `nameKey` (`puck.blocks.names.<Key>`, present in all three
+  locales). These keys come from the `ComponentConfigExtensions` augmentation
+  in `block-library/block-meta.ts`; the wrappers spread the config and keep
+  them. `block-library.catalog.ts` only holds the category order and which
+  category has a group. Puck's `categories` are derived from the components;
+  `block-meta.spec.ts` fails on missing metadata or a missing translation.
   The Puck component key never changes, saved documents store it.
 
 ### Puck record pickers

@@ -1,5 +1,9 @@
 import { BlockCategory } from './block-library.catalog';
-import { filterCatalog, puckCategories } from './block-library.helpers';
+import {
+  catalogFromComponents,
+  filterCatalog,
+  puckCategories,
+} from './block-library.helpers';
 
 const catalog: BlockCategory[] = [
   { id: 'text', blocks: ['Title', 'RichText'] },
@@ -73,9 +77,41 @@ describe('filterCatalog', () => {
   });
 });
 
+const components = {
+  TeaserDate: { category: 'teaser', group: 'teaserParts', order: 2 },
+  YouTube: { category: 'media', order: 2 },
+  Title: { category: 'text', order: 1 },
+  Teaser: { category: 'teaser', order: 1 },
+  Legacy: {},
+  Image: { category: 'media', order: 1 },
+  TeaserTitle: { category: 'teaser', group: 'teaserParts', order: 1 },
+  RichText: { category: 'text', order: 2 },
+} as const;
+
+describe('catalogFromComponents', () => {
+  it('sorts the blocks into the catalog categories by their order', () => {
+    expect(catalogFromComponents(components)).toEqual([
+      { id: 'text', blocks: ['Title', 'RichText'] },
+      { id: 'media', blocks: ['Image', 'YouTube'] },
+      {
+        id: 'teaser',
+        blocks: ['Teaser'],
+        group: { id: 'teaserParts', blocks: ['TeaserTitle', 'TeaserDate'] },
+      },
+      { id: 'other', blocks: ['Legacy'] },
+    ]);
+  });
+
+  it('leaves out categories without blocks', () => {
+    expect(catalogFromComponents({ Image: components.Image })).toEqual([
+      { id: 'media', blocks: ['Image'] },
+    ]);
+  });
+});
+
 describe('puckCategories', () => {
-  it('turns the catalog into Puck categories including the group blocks', () => {
-    expect(puckCategories(catalog)).toEqual({
+  it('turns the components into Puck categories including the group blocks', () => {
+    expect(puckCategories(components)).toEqual({
       text: { components: ['Title', 'RichText'] },
       media: { components: ['Image', 'YouTube'] },
       teaser: { components: ['Teaser', 'TeaserTitle', 'TeaserDate'] },

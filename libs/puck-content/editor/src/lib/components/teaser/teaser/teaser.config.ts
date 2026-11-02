@@ -1,5 +1,6 @@
 import { ComponentConfig, Slot } from '@puckeditor/core';
 import { TeaserConfigProps } from '@wepublish/puck-content/website';
+import { MdArticle } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { ToPuckSlots } from '../../../blocks/puck-editor-props';
@@ -49,6 +50,10 @@ export const TeaserConfig: ComponentConfig<{
   fields: UserFields;
 }> = {
   label: 'Teaser',
+  icon: MdArticle,
+  category: 'teaser',
+  order: 1,
+  nameKey: 'puck.blocks.names.Teaser',
   ai: {
     instructions:
       'A teaser for one article, page or event that the teaser parts inside show. The datasource decides the record: slot (the default) takes the next record from the nearest surrounding block that lists records of the same model, for example a Grid with an article uniqueList holding one Teaser per cell; single picks one record by id. Put TeaserImage, TeaserPreTitle, TeaserTitle, TeaserLead, TeaserAuthors, TeaserDate and TeaserTags, or layout blocks holding them, into the content slot; a Button may go in as well. linkToRecord makes the whole teaser link to the record, while buttons and other interactive blocks inside stay clickable on their own. Teasers cannot be nested. A teaser without a record shows nothing on the website.',

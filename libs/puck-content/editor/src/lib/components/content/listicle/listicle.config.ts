@@ -3,6 +3,7 @@ import {
   ListicleConfigProps,
   ListicleRender,
 } from '@wepublish/puck-content/website';
+import { MdFormatListNumbered } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { imageFieldAi } from '../../../image/image.field';
@@ -14,6 +15,10 @@ export const ListicleConfig: ComponentConfig<{
   props: ListicleConfigProps;
   fields: UserFields;
 }> = {
+  icon: MdFormatListNumbered,
+  category: 'text',
+  order: 4,
+  nameKey: 'puck.blocks.names.Listicle',
   ai: {
     instructions:
       'An ordered list of titled entries, each with its own title and rich text body. Use it for listicles, step-by-step breakdowns, rankings or any "top N" style content. Add one item per entry; every item needs a title and can hold formatted rich text.',

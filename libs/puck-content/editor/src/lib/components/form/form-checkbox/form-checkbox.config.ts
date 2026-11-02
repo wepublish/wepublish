@@ -3,6 +3,7 @@ import {
   FormCheckboxProps,
   FormCheckboxRender,
 } from '@wepublish/puck-content/website';
+import { MdCheckBox } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { switchFieldAi } from '../../../switch/switch.field';
@@ -19,6 +20,11 @@ export const FormCheckboxConfig: ComponentConfig<{
   fields: UserFields;
 }> = {
   label: 'Checkbox',
+  icon: MdCheckBox,
+  category: 'form',
+  group: 'formFields',
+  order: 3,
+  nameKey: 'puck.blocks.names.FormCheckbox',
   ai: {
     instructions:
       'A single checkbox placed inside a Form, e.g. a consent or a Mailchimp group choice. It only sends value under name while ticked; make consent checkboxes required and never tick them by default.',

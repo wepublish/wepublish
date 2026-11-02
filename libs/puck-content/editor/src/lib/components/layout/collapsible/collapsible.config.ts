@@ -3,6 +3,7 @@ import {
   CollapsibleConfigProps,
   CollapsibleRender,
 } from '@wepublish/puck-content/website';
+import { MdUnfoldMore } from 'react-icons/md';
 
 import { editorRender } from '../../../blocks/editor-render';
 import { switchFieldAi } from '../../../switch/switch.field';
@@ -12,6 +13,10 @@ export const CollapsibleConfig: ComponentConfig<{
   props: CollapsibleConfigProps;
   fields: UserFields;
 }> = {
+  icon: MdUnfoldMore,
+  category: 'layout',
+  order: 6,
+  nameKey: 'puck.blocks.names.Collapsible',
   ai: {
     instructions:
       'An expandable section with a clickable title that reveals or hides its nested content, like an accordion item or FAQ entry. Place other components inside its content slot. Use defaultOpen to decide whether the content is visible before the reader interacts with it.',

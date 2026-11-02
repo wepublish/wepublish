@@ -1,20 +1,21 @@
 import { createUsePuck } from '@puckeditor/core';
-import { createContext, useCallback, useContext, useMemo } from 'react';
+import { createContext, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SlotZone } from '../insert/insert.helpers';
-import { blockCatalog, catalogBlockNames } from './block-library.catalog';
+import { blockCatalog } from './block-library.catalog';
 import {
   blockCategoryKey,
   blockGroupHintKey,
   blockGroupKey,
-  blockLabelKey,
 } from './block-library.helpers';
 
 const usePuck = createUsePuck();
 
-const groupIds = new Set(
-  blockCatalog.flatMap(({ group }) => (group ? [group.id] : []))
+const groupIds = new Set<string>(
+  blockCatalog.flatMap(category =>
+    'group' in category ? [category.group] : []
+  )
 );
 
 export const useBlockLabels = () => {
@@ -24,9 +25,10 @@ export const useBlockLabels = () => {
   const labelOf = useCallback(
     (key: string) => {
       if (key in components) {
-        return t(blockLabelKey(key), {
-          defaultValue: components[key]?.label ?? key,
-        });
+        const { nameKey, label } = components[key] ?? {};
+        const fallback = label ?? key;
+
+        return nameKey ? t(nameKey, { defaultValue: fallback }) : fallback;
       }
 
       return groupIds.has(key) ?
@@ -42,16 +44,6 @@ export const useBlockLabels = () => {
   );
 
   return { labelOf, hintOf };
-};
-
-export const useUncategorisedBlocks = () => {
-  const components = usePuck(puck => puck.config.components);
-
-  return useMemo(() => {
-    const listed = new Set<string>(catalogBlockNames(blockCatalog));
-
-    return Object.keys(components).filter(name => !listed.has(name));
-  }, [components]);
 };
 
 export type BlockLibraryContextValue = {

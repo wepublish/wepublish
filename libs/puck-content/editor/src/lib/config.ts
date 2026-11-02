@@ -1,6 +1,5 @@
 import { PuckDocumentKind } from '@wepublish/puck-content/website';
 
-import { blockCatalog } from './block-library/block-library.catalog';
 import { puckCategories } from './block-library/block-library.helpers';
 import { withLockAll } from './blocks/with-lock';
 import {
@@ -38,7 +37,7 @@ const components: PuckConfig['components'] = withLockAll(
   )
 );
 
-const categories: PuckConfig['categories'] = puckCategories(blockCatalog);
+const categories: PuckConfig['categories'] = puckCategories(components);
 
 export const puckConfigs: { [K in PuckDocumentKind]: PuckConfig<K> } = {
   page: { root: PageRootConfig, components, categories },
