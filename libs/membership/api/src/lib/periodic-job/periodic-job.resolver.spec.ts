@@ -1,7 +1,9 @@
 import { ConflictException, INestApplication, Module } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PeriodicJobResolver } from './periodic-job.resolver';
@@ -12,7 +14,7 @@ import type { PeriodicJob as StoredPeriodicJob } from '@prisma/client';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: NodeApolloDriver,
       autoSchemaFile: true,
       path: '/',
       cache: 'bounded',
@@ -101,7 +103,7 @@ describe('ConsentResolver', () => {
     }).compile();
 
     service = module.get<PeriodicJobService>(PeriodicJobService);
-    app = module.createNestApplication();
+    app = module.createNestApplication(new NodeAdapter());
     await app.listen(0, '127.0.0.1');
   });
 

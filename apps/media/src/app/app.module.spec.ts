@@ -1,12 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { Response as ExpressResponse } from 'express';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { DragonflyConnection } from '@wepublish/dragonfly/api';
 import { FakeDragonfly } from '@wepublish/dragonfly/api/testing';
 import { MediaService } from '@wepublish/media/api';
 import { AppController } from './app.controller';
 import { AppModule } from './app.module';
+import { NodeAdapter } from '@nestjs/platform-node';
 
 const ENV = {
   S3_ENDPOINT: 's3.example',
@@ -61,7 +62,7 @@ describe('AppModule', () => {
       .useValue(media)
       .compile();
 
-    app = module.createNestApplication();
+    app = module.createNestApplication(new NodeAdapter());
     await app.init();
 
     return app;
@@ -74,8 +75,8 @@ describe('AppModule', () => {
     await started
       .get(AppController)
       .transformImage(
-        createResponse() as unknown as ExpressResponse,
-        { url: '/v1/image-1' } as unknown as Request,
+        createResponse() as unknown as NodeResponse,
+        { url: '/v1/image-1' } as unknown as NodeRequest,
         'image-1',
         {}
       );
@@ -96,8 +97,8 @@ describe('AppModule', () => {
     await started
       .get(AppController)
       .transformImage(
-        createResponse() as unknown as ExpressResponse,
-        { url: '/v1/image-1' } as unknown as Request,
+        createResponse() as unknown as NodeResponse,
+        { url: '/v1/image-1' } as unknown as NodeRequest,
         'image-1',
         {}
       );

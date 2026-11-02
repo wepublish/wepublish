@@ -64,9 +64,11 @@ import {
   MdLink,
   MdUnpublished,
 } from 'react-icons/md';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { copyLinkToClipboard } from '../../copyLink';
+
+import { CreatePageModal } from './createPageModal';
 
 interface State {
   state: string;
@@ -111,6 +113,7 @@ function PageList() {
     useListViewState<PageFilter>('pages');
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<FullPageFragment>();
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>();
 
@@ -287,8 +290,8 @@ function PageList() {
         <PermissionControl qualifyingPermissions={[CanCreatePage.id]}>
           <ListViewActions>
             <Button
-              component={RouterLink}
-              to="/pages/create"
+              disabled={isLoading}
+              onClick={() => setCreateModalOpen(true)}
               variant="contained"
               startIcon={<MdAdd />}
             >
@@ -613,6 +616,11 @@ function PageList() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <CreatePageModal
+        open={isCreateModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+      />
     </>
   );
 }

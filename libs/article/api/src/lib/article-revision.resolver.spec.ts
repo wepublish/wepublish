@@ -1,3 +1,19 @@
+import { Test } from '@nestjs/testing';
+import {
+  limitAnswerCache,
+  skipAnswerCache,
+} from '@wepublish/public-content-cache/api';
+import { CanGetArticle } from '@wepublish/permissions';
+import type { UserSession } from '@wepublish/authentication/api';
+import { createMock } from '@wepublish/testing';
+import { BlockTreeLoader } from '@wepublish/block-content/api';
+import { ImageDataloaderService } from '@wepublish/image/api';
+import { ArticleRevisionResolver } from './article-revision.resolver';
+import {
+  ArticleAuthorDataloader,
+  ArticleSocialMediaAuthorDataloader,
+} from '@wepublish/author/api';
+import type { ArticleRevision } from './article.model';
 import type { Mock } from 'vitest';
 import {
   EngagementAudience,
@@ -11,8 +27,130 @@ import {
   EngagementRuleWithStages,
   ReaderContext,
 } from '@wepublish/engagement/api';
-import { ArticleRevisionResolver } from './article-revision.resolver';
 import { ArticleAccessService, ArticleRequest } from './article-access.service';
+
+vi.mock('@wepublish/public-content-cache/api', async importOriginal => ({
+  ...(await importOriginal<object>()),
+  limitAnswerCache: vi.fn(),
+  skipAnswerCache: vi.fn(),
+}));
+
+describe('ArticleRevisionResolver', () => {
+  let resolver: ArticleRevisionResolver;
+  let loader: BlockTreeLoader;
+
+  const now = new Date('2026-01-05T09:00:00Z');
+  const loaded = [{ type: 'title' }];
+
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    const module = await Test.createTestingModule({
+      providers: [
+        ArticleRevisionResolver,
+        {
+          provide: BlockTreeLoader,
+          useValue: {
+            ...createMock(BlockTreeLoader),
+            now,
+            loadBlocks: vi.fn(async () => loaded),
+            nextChange: vi.fn(async () => null),
+          },
+        },
+        {
+          provide: ArticleAuthorDataloader,
+          useValue: createMock(ArticleAuthorDataloader),
+        },
+        {
+          provide: ArticleSocialMediaAuthorDataloader,
+          useValue: createMock(ArticleSocialMediaAuthorDataloader),
+        },
+        {
+          provide: ImageDataloaderService,
+          useValue: createMock(ImageDataloaderService),
+        },
+        {
+          provide: ArticleAccessService,
+          useValue: { accessFor: vi.fn(async () => ({ granted: true })) },
+        },
+      ],
+    }).compile();
+
+    resolver = module.get(ArticleRevisionResolver);
+    loader = module.get(BlockTreeLoader);
+  });
+
+  const revision = { blocks: [] } as unknown as ArticleRevision;
+
+  const changesIn = (seconds: number) =>
+    vi
+      .mocked(loader.nextChange)
+      .mockResolvedValue(new Date(now.getTime() + seconds * 1000));
+
+  describe('blocksChangeAt', () => {
+    it('asks the loader when the displayed blocks change next', async () => {
+      changesIn(1800);
+
+      expect(await resolver.blocksChangeAt(revision)).toEqual(
+        new Date('2026-01-05T09:30:00Z')
+      );
+      expect(loader.nextChange).toHaveBeenCalledWith(revision.blocks);
+    });
+  });
+
+  describe('blocks', () => {
+    it('lets the answer cache expire when the blocks change next', async () => {
+      changesIn(1800);
+      const context = {};
+
+      await resolver.blocks(revision, true, context, undefined);
+
+      expect(limitAnswerCache).toHaveBeenCalledWith(
+        context,
+        new Date('2026-01-05T09:30:00Z')
+      );
+    });
+
+    it('leaves the answer cache alone for untimed blocks', async () => {
+      await resolver.blocks(revision, true, {}, undefined);
+
+      expect(limitAnswerCache).not.toHaveBeenCalled();
+    });
+
+    const editor = {
+      roles: [{ id: 'editor', permissionIDs: [CanGetArticle.id] }],
+    } as unknown as UserSession;
+
+    it('omits blocks that should not display by default', async () => {
+      expect(await resolver.blocks(revision, true, {}, undefined)).toBe(loaded);
+      expect(loader.loadBlocks).toHaveBeenCalledWith(revision.blocks, {
+        onlyDisplayed: true,
+      });
+      expect(skipAnswerCache).not.toHaveBeenCalled();
+    });
+
+    it('returns every block to a user allowed to edit them', async () => {
+      const context = {};
+
+      await resolver.blocks(revision, false, context, editor);
+
+      expect(loader.loadBlocks).toHaveBeenLastCalledWith(revision.blocks, {
+        onlyDisplayed: false,
+      });
+      expect(skipAnswerCache).toHaveBeenCalledWith(context);
+    });
+
+    it('never returns hidden blocks to anyone else', async () => {
+      const context = {};
+
+      await resolver.blocks(revision, false, context, undefined);
+
+      expect(loader.loadBlocks).toHaveBeenLastCalledWith(revision.blocks, {
+        onlyDisplayed: true,
+      });
+      expect(skipAnswerCache).toHaveBeenCalledWith(context);
+    });
+  });
+});
 
 const reader = (overrides: Partial<ReaderContext> = {}): ReaderContext => ({
   kind: 'anonymous',
@@ -78,7 +216,7 @@ const enforcedPaywall = {
   hideContentAfter: 2,
 };
 
-describe('ArticleRevisionResolver blocks', () => {
+describe('ArticleRevisionResolver access', () => {
   const revision = {
     id: 'revision-1',
     articleId: 'article-1',
@@ -89,12 +227,12 @@ describe('ArticleRevisionResolver blocks', () => {
   let article: Record<string, unknown>;
   let paywall: Record<string, unknown> | null;
   let rules: EngagementRuleWithStages[];
-  let slotTeasersLoader: { loadSlotTeasersIntoBlocks: Mock };
+  let blockTreeLoader: { loadBlocks: Mock; nextChange: Mock };
   let access: ArticleAccessService;
 
   const resolver = () =>
     new ArticleRevisionResolver(
-      slotTeasersLoader as never,
+      blockTreeLoader as never,
       {} as never,
       {} as never,
       {} as never,
@@ -112,10 +250,11 @@ describe('ArticleRevisionResolver blocks', () => {
     paywall = null;
     rules = [];
     // Block templates expand while loading: the cut must count what is sent.
-    slotTeasersLoader = {
-      loadSlotTeasersIntoBlocks: vi.fn(async (blocks: string[]) =>
+    blockTreeLoader = {
+      loadBlocks: vi.fn(async (blocks: string[]) =>
         blocks.flatMap(block => (block === 'a' ? ['a1', 'a2'] : [block]))
       ),
+      nextChange: vi.fn(async () => null),
     };
     access = new ArticleAccessService(
       { load: async () => article } as never,
@@ -129,7 +268,7 @@ describe('ArticleRevisionResolver blocks', () => {
   });
 
   const blocksFor = (req: ArticleRequest = {}) =>
-    resolver().blocks(revision, req, undefined);
+    resolver().blocks(revision, true, { req }, undefined);
 
   it('sends every block without a paywall or rule', async () => {
     expect(await blocksFor()).toEqual(['a1', 'a2', 'b', 'c', 'd']);
@@ -141,12 +280,10 @@ describe('ArticleRevisionResolver blocks', () => {
     paywall = enforcedPaywall;
 
     expect(await blocksFor()).toEqual(['a1', 'a2']);
-    expect(slotTeasersLoader.loadSlotTeasersIntoBlocks).toHaveBeenCalledWith([
-      'a',
-      'b',
-      'c',
-      'd',
-    ]);
+    expect(blockTreeLoader.loadBlocks).toHaveBeenCalledWith(
+      ['a', 'b', 'c', 'd'],
+      { onlyDisplayed: true }
+    );
     expect(await resolver().restricted(revision, {}, undefined)).toBe(true);
   });
 
@@ -203,7 +340,7 @@ describe('ArticleRevisionResolver blocks', () => {
   });
 
   it('no longer takes an unlockContentGate argument', () => {
-    expect(resolver().blocks.length).toBe(3);
+    expect(resolver().blocks.length).toBe(4);
     expect(
       Reflect.getMetadataKeys(ArticleRevisionResolver.prototype, 'blocks')
     ).not.toContain('unlockContentGate');

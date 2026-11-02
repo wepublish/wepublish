@@ -72,7 +72,6 @@ export const mockTitleBlock = (
 ): FullTitleBlockFragment => ({
   __typename: 'TitleBlock',
   blockStyle: null,
-  disabled: false,
   title: 'Title Block',
   lead: 'Lead',
   preTitle: 'Pre-Title',
@@ -85,7 +84,6 @@ export const mockImageBlock = ({
 }: Partial<FullImageBlockFragment> = {}): FullImageBlockFragment => ({
   __typename: 'ImageBlock',
   blockStyle: null,
-  disabled: false,
   caption: 'Caption',
   linkUrl: null,
   image,
@@ -98,7 +96,6 @@ export const mockRichTextBlock = ({
 }: Partial<FullRichTextBlockFragment> = {}): FullRichTextBlockFragment => ({
   __typename: 'RichTextBlock',
   blockStyle: null,
-  disabled: false,
   richText,
   ...definedOnly(overrides),
 });
@@ -109,7 +106,6 @@ export const mockQuoteBlock = ({
 }: Partial<FullQuoteBlockFragment> = {}): FullQuoteBlockFragment => ({
   __typename: 'QuoteBlock',
   blockStyle: null,
-  disabled: false,
   quote:
     'This is a quote that is very long so that we can make sure that linebreaks correctly happen.',
   author: 'John Doe',
@@ -124,7 +120,6 @@ export const mockBreakBlock = ({
 }: Partial<FullBreakBlockFragment> = {}): FullBreakBlockFragment => ({
   __typename: 'BreakBlock',
   blockStyle: null,
-  disabled: false,
   hideButton: true,
   linkTarget: '_blank',
   linkText: 'Button Text',
@@ -141,7 +136,6 @@ export const mockPollBlock = ({
 }: Partial<FullPollBlockFragment> = {}): FullPollBlockFragment => ({
   __typename: 'PollBlock',
   blockStyle: null,
-  disabled: false,
   poll,
   ...definedOnly(overrides),
 });
@@ -159,7 +153,6 @@ export const mockEventBlock = ({
 }: Partial<FullEventBlockFragment> = {}): FullEventBlockFragment => ({
   __typename: 'EventBlock',
   blockStyle: null,
-  disabled: false,
   events,
   ...definedOnly(overrides),
 });
@@ -169,7 +162,6 @@ export const mockHTMLBlock = (
 ): FullHtmlBlockFragment => ({
   __typename: 'HTMLBlock',
   blockStyle: null,
-  disabled: false,
   html: `<script>
     window.__niceDiv = document.createElement("div");
     with(window.__niceDiv.style) {
@@ -213,7 +205,6 @@ export const mockListicleBlock = ({
 }: Partial<FullListicleBlockFragment> = {}): FullListicleBlockFragment => ({
   __typename: 'ListicleBlock',
   blockStyle: null,
-  disabled: false,
   items,
   ...definedOnly(overrides),
 });
@@ -224,7 +215,6 @@ export const mockCommentBlock = ({
 }: Partial<FullCommentBlockFragment> = {}): FullCommentBlockFragment => ({
   __typename: 'CommentBlock',
   blockStyle: null,
-  disabled: false,
   comments,
   ...definedOnly(overrides),
 });
@@ -235,7 +225,6 @@ export const mockCrowdfundingBlock = ({
 }: Partial<FullCrowdfundingBlockFragment> = {}): FullCrowdfundingBlockFragment => ({
   __typename: 'CrowdfundingBlock',
   blockStyle: null,
-  disabled: false,
   crowdfunding,
   ...definedOnly(overrides),
 });
@@ -245,7 +234,6 @@ export const mockBildwurfBlock = (
 ): FullBildwurfAdBlockFragment => ({
   __typename: 'BildwurfAdBlock',
   blockStyle: null,
-  disabled: false,
   zoneID: '77348',
   ...definedOnly(overrides),
 });
@@ -255,7 +243,6 @@ export const mockFacebookPostBlock = (
 ): FullFacebookPostBlockFragment => ({
   __typename: 'FacebookPostBlock',
   blockStyle: null,
-  disabled: false,
   postID:
     'pfbid02JcJeoMg7KasRL8dNjgRJJDFiU8YzeBzEeGeXtqpsE2bnTmeH2y6LRsu7RnmhkPxel',
   userID: 'ladolcekita',
@@ -267,7 +254,6 @@ export const mockFacebookVideoBlock = (
 ): FullFacebookVideoBlockFragment => ({
   __typename: 'FacebookVideoBlock',
   blockStyle: null,
-  disabled: false,
   userID: '100064959061177',
   videoID: '1310370486335266',
   ...definedOnly(overrides),
@@ -278,7 +264,6 @@ export const mockInstagramPostBlock = (
 ): FullInstagramPostBlockFragment => ({
   __typename: 'InstagramPostBlock',
   blockStyle: null,
-  disabled: false,
   postID: 'CvACOxxIqT2',
   ...definedOnly(overrides),
 });
@@ -288,7 +273,6 @@ export const mockTikTokVideoBlock = (
 ): FullTikTokVideoBlockFragment => ({
   __typename: 'TikTokVideoBlock',
   blockStyle: null,
-  disabled: false,
   userID: 'scout2015',
   videoID: '6718335390845095173',
   ...definedOnly(overrides),
@@ -299,7 +283,6 @@ export const mockVimeoVideoBlock = (
 ): FullVimeoVideoBlockFragment => ({
   __typename: 'VimeoVideoBlock',
   blockStyle: null,
-  disabled: false,
   videoID: '104626862',
   ...definedOnly(overrides),
 });
@@ -309,7 +292,6 @@ export const mockStreamableVideoBlock = (
 ): FullStreamableVideoBlockFragment => ({
   __typename: 'StreamableVideoBlock',
   blockStyle: null,
-  disabled: false,
   videoID: 'abc123',
   ...definedOnly(overrides),
 });
@@ -319,7 +301,6 @@ export const mockYouTubeVideoBlock = (
 ): FullYouTubeVideoBlockFragment => ({
   __typename: 'YouTubeVideoBlock',
   blockStyle: null,
-  disabled: false,
   videoID: 'CCOdQsZa15o',
   ...definedOnly(overrides),
 });
@@ -329,7 +310,6 @@ export const mockSoundCloudTrackBlock = (
 ): FullSoundCloudTrackBlockFragment => ({
   __typename: 'SoundCloudTrackBlock',
   blockStyle: null,
-  disabled: false,
   trackID: '744469711',
   ...definedOnly(overrides),
 });
@@ -339,7 +319,6 @@ export const mockTwitterTweetBlock = (
 ): FullTwitterTweetBlockFragment => ({
   __typename: 'TwitterTweetBlock',
   blockStyle: null,
-  disabled: false,
   userID: 'WePublish_media',
   tweetID: '1600079498845863937',
   ...definedOnly(overrides),
@@ -350,7 +329,6 @@ export const mockPolisConversationBlock = (
 ): FullPolisConversationBlockFragment => ({
   __typename: 'PolisConversationBlock',
   blockStyle: null,
-  disabled: false,
   conversationID: '744469711',
   ...definedOnly(overrides),
 });
@@ -360,7 +338,6 @@ export const mockIFrameBlock = (
 ): FullIFrameBlockFragment => ({
   __typename: 'IFrameBlock',
   blockStyle: null,
-  disabled: false,
   url: 'https://www.example.com',
   title: 'Title',
   width: 560,
@@ -390,7 +367,6 @@ export const mockImageGalleryBlock = ({
 }: Partial<FullImageGalleryBlockFragment> = {}): FullImageGalleryBlockFragment => ({
   __typename: 'ImageGalleryBlock',
   blockStyle: null,
-  disabled: false,
   images,
   ...definedOnly(overrides),
 });
@@ -463,7 +439,6 @@ export const mockTeaserListBlock = ({
   __typename: 'TeaserListBlock',
   type: BlockType.TeaserList,
   blockStyle: null,
-  disabled: false,
   title: null,
   filter: {
     __typename: 'TeaserListBlockFilter',
@@ -487,7 +462,6 @@ export const mockTeaserGridBlock = ({
   __typename: 'TeaserGridBlock',
   type: BlockType.TeaserGrid,
   blockStyle: null,
-  disabled: false,
   title: null,
   numColumns: 3,
   teasers,
@@ -509,7 +483,6 @@ export const mockTeaserSlotsBlock = ({
   __typename: 'TeaserSlotsBlock',
   type: BlockType.TeaserSlots,
   blockStyle: null,
-  disabled: false,
   title: 'test title',
   teasers,
   ...definedOnly(overrides),
@@ -555,7 +528,6 @@ export const mockTeaserGridFlexBlock = ({
   __typename: 'TeaserGridFlexBlock',
   type: BlockType.TeaserGridFlex,
   blockStyle: null,
-  disabled: false,
   title: null,
   flexTeasers,
   ...definedOnly(overrides),
@@ -592,7 +564,6 @@ export const mockFlexBlock = ({
   __typename: 'FlexBlock',
   type: BlockType.FlexBlock,
   blockStyle: null,
-  disabled: false,
   blocks,
   ...definedOnly(overrides),
 });
@@ -633,7 +604,6 @@ export const mockSubscribeBlock = ({
 }: Partial<FullSubscribeBlockFragment> = {}): FullSubscribeBlockFragment => ({
   __typename: 'SubscribeBlock',
   blockStyle: null,
-  disabled: false,
   fields: [],
   periodicityDisplay: null,
   showGoodies: false,
@@ -694,7 +664,6 @@ export const mockMailchimpFormBlock = ({
 }: Partial<FullMailchimpFormBlockFragment> = {}): FullMailchimpFormBlockFragment => ({
   __typename: 'MailchimpFormBlock',
   blockStyle: null,
-  disabled: false,
   syncProviderId: 'sync-provider',
   listId: 'list-daily',
   interests: [],
@@ -795,7 +764,6 @@ export const mockBlockTemplateBlock = ({
   __typename: 'BlockTemplateBlock',
   type: BlockType.BlockTemplate,
   blockStyle: null,
-  disabled: false,
   templateId,
   template,
   ...definedOnly(overrides),

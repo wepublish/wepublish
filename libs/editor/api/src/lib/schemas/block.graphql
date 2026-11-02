@@ -1,4 +1,22 @@
+fragment FullBlockTiming on BlockTiming {
+  from
+  to
+  weekdays
+  timeOfDay {
+    from
+    to
+  }
+}
+
 fragment BlockWithoutTeaser on BlockContent {
+  ... on BaseBlock {
+    shouldDisplay
+
+    timing {
+      ...FullBlockTiming
+    }
+  }
+
   __typename
 
   ... on TitleBlock {
@@ -431,6 +449,14 @@ fragment FullTeaser on Teaser {
 }
 
 fragment FullBlock on BlockContent {
+  ... on BaseBlock {
+    shouldDisplay
+
+    timing {
+      ...FullBlockTiming
+    }
+  }
+
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {

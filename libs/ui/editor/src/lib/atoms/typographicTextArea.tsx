@@ -47,8 +47,7 @@ const StyledTextArea = styled('textarea', {
   }
 `;
 
-export interface TypographicTextAreaProps
-  extends ComponentPropsWithRef<'textarea'> {
+export interface TypographicTextAreaProps extends ComponentPropsWithRef<'textarea'> {
   variant?: TypographyVariant;
   align?: TypographyTextAlign;
 }
@@ -61,9 +60,10 @@ export const TypographicTextArea = forwardRef<
 
   useImperativeHandle(forwardRef, () => ref.current!, []);
 
+  // Also resize when the value is set from outside, e.g. after a query loads.
   useLayoutEffect(() => {
     handleResize();
-  }, []);
+  }, [props.value]);
 
   useEffect(() => {
     if (typeof ResizeObserver !== 'undefined') {

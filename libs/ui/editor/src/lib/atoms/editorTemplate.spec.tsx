@@ -1,7 +1,28 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen, waitFor } from '@testing-library/react';
+
 import { EditorTemplate } from './editorTemplate';
 
+const theme = createTheme({ cssVariables: true });
+
+function renderedCss() {
+  return Array.from(document.querySelectorAll('style'))
+    .map(style => style.textContent ?? '')
+    .join('');
+}
+
 describe('EditorTemplate', () => {
+  it('keeps a gutter wide enough for the block side columns', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <EditorTemplate>content</EditorTemplate>
+      </ThemeProvider>
+    );
+
+    expect(screen.getByText('content')).toBeTruthy();
+    expect(renderedCss()).toContain('width:min(80%, calc(100% - 340px))');
+  });
+
   it('tells sticky content how tall the sticky navigation is', async () => {
     const observers: ResizeObserverCallback[] = [];
     vi.stubGlobal(
@@ -28,9 +49,11 @@ describe('EditorTemplate', () => {
     );
 
     render(
-      <EditorTemplate navigationChildren={<nav>Save</nav>}>
-        <div data-testid="content" />
-      </EditorTemplate>
+      <ThemeProvider theme={theme}>
+        <EditorTemplate navigationChildren={<nav>Save</nav>}>
+          <div data-testid="content" />
+        </EditorTemplate>
+      </ThemeProvider>
     );
 
     await waitFor(() =>

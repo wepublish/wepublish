@@ -1,4 +1,6 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import { INestApplication } from '@nestjs/common';
 import { GraphQLModule, Query, Resolver } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -69,7 +71,7 @@ describe('SessionResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -90,7 +92,7 @@ describe('SessionResolver', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
+    app = module.createNestApplication(new NodeAdapter());
     await app.listen(0, '127.0.0.1');
   });
 

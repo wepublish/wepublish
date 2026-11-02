@@ -48,6 +48,7 @@ import {
   PanelWrapper,
 } from '../atoms/blockList';
 import { BlockMapType, BlockProps } from '../atoms/blockList';
+import { BlockTimingButton } from '../atoms/blockTiming';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import {
   FLEX_TILE_DRAG_CANCEL,
@@ -734,6 +735,17 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
                       : <MdVisibility />}
                     </MuiIconButton>
                   </IconButtonTooltip>
+
+                  <BlockTimingButton
+                    timing={currentBlock.value.timing}
+                    shouldDisplay={currentBlock.value.shouldDisplay}
+                    onChange={timing =>
+                      handleItemChange(editIndex, block => ({
+                        ...block,
+                        value: { ...block.value, timing },
+                      }))
+                    }
+                  />
 
                   <Button
                     variant="outlined"

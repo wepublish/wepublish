@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-http-bearer';
 import { AuthenticationService } from './authentication.service';
-import { Request } from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 
 export const PEER_USER_AGENT = 'We.Publish/1.0 Peering';
 export const INVALID_PEER_TOKEN = 'invalid-peer-token';
@@ -15,7 +15,7 @@ export class SessionStrategy extends PassportStrategy(Strategy, 'session') {
     });
   }
 
-  public async validate(req: Request, token: string) {
+  public async validate(req: NodeRequest, token: string) {
     const session =
       req.headers['user-agent'] === PEER_USER_AGENT ?
         await this.authService.getPeerSession(token)

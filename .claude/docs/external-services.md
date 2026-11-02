@@ -60,6 +60,9 @@ The periodic job expires pending changes after
 ## Email Provider
 
 - Mailgun
+- SMTP — Mailpit locally (`localhost:1025`); on review an Ethereal account
+  (`smtp.ethereal.email`), which keeps every relayed mail and delivers none.
+  The E2E suite reads that account over IMAP (`e2e/README.md`, Review instances)
 - Mailchimp — the newsletter editor (`libs/newsletter`, behind the
   `newsletter-editor` feature, `WEP_FEATURES=newsletter-editor` locally) pushes
   drafts, never sends, through the Marketing API key and list of the sync-provider integration

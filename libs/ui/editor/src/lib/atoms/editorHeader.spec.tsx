@@ -43,6 +43,34 @@ describe('EditorHeader', () => {
     expect(publish.textContent).toBe('Publish');
   });
 
+  it('only gives the actions a row of their own on narrow headers when there are secondary actions', () => {
+    const { unmount } = renderWithTheme(
+      <EditorHeader
+        state={StateColor.draft}
+        stateLabel="Draft"
+        primaryActions={<button>Save</button>}
+      />
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Save' }).closest('[data-own-row]')
+    ).toBeNull();
+    unmount();
+
+    renderWithTheme(
+      <EditorHeader
+        state={StateColor.draft}
+        stateLabel="Draft"
+        secondaryActions={<button>Metadata</button>}
+        primaryActions={<button>Save</button>}
+      />
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Save' }).closest('[data-own-row]')
+    ).not.toBeNull();
+  });
+
   it('keeps the status action beside the status, ahead of the buttons', () => {
     renderWithTheme(
       <EditorHeader

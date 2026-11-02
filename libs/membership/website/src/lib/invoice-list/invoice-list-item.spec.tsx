@@ -147,7 +147,7 @@ describe('InvoiceListItem', () => {
     expect(payButton()).toBeEnabled();
   });
 
-  it('explains that bexio invoices arrive as PDF', () => {
+  it('points bexio invoices to the payment details on the invoice', () => {
     renderInvoiceListItem({ paidAt: null, isBexio: true });
 
     expect(screen.getByRole('alert')).toHaveTextContent(

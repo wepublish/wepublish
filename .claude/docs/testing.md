@@ -31,8 +31,10 @@ type function fail. When setting up a new NestJS lib, copy the setup from
 `tsconfig.spec.json`).
 
 `libs/block-content/api`, `libs/image/api` and `libs/mocks/website` are in
-`.nxignore` (load-bearing: circular imports), so `nx test` doesn't run their
-specs — run `pnpm vitest run --config libs/<lib>/vitest.config.ts` yourself.
+`.nxignore` (load-bearing: circular imports), so `nx test` and `nx affected`
+skip their specs — run `pnpm vitest run --config libs/<lib>/vitest.config.ts`
+yourself. CI runs them through that same command (`.github/workflows/test.yml`),
+so their specs belong next to the code, not in another lib.
 
 ## Test-driven development is mandatory
 

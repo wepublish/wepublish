@@ -1,7 +1,7 @@
 fragment FullArticleRevision on ArticleRevision {
   ...FullArticleRevisionWithoutBlocks
 
-  blocks {
+  blocks(onlyDisplayed: false) {
     ...FullBlock
   }
 }

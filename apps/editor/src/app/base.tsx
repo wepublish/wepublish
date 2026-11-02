@@ -12,6 +12,7 @@ import {
   CanGetEngagementRule,
   CanGetEngagementRules,
   CanUpdateEngagementRule,
+  CanCreateArticleTemplate,
   CanCreateAuthor,
   CanCreateBlockStyle,
   CanCreateBlockTemplate,
@@ -26,6 +27,7 @@ import {
   CanCreateMemberPlan,
   CanCreateNavigation,
   CanCreatePage,
+  CanCreatePageTemplate,
   CanCreatePaymentMethod,
   CanCreatePaywall,
   CanCreatePeer,
@@ -36,6 +38,7 @@ import {
   CanCreateUser,
   CanCreateUserRole,
   CanDeleteArticle,
+  CanDeleteArticleTemplate,
   CanDeleteAuthor,
   CanDeleteBlockStyle,
   CanDeleteBlockTemplate,
@@ -48,6 +51,7 @@ import {
   CanDeleteMemberPlan,
   CanDeleteNavigation,
   CanDeletePage,
+  CanDeletePageTemplate,
   CanDeletePaymentMethod,
   CanDeletePeer,
   CanDeletePoll,
@@ -113,6 +117,7 @@ import {
   CanSendMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
+  CanUpdateArticleTemplate,
   CanUpdateBlockTemplate,
   CanUpdateCommentRatingSystem,
   CanUpdateComments,
@@ -124,6 +129,7 @@ import {
   CanUpdateGoodie,
   CanUpdateMailTemplates,
   CanUpdatePaywall,
+  CanUpdatePageTemplate,
   CanUpdateSettings,
   CanUpdateSystemMails,
   CanUpdateTag,
@@ -175,6 +181,7 @@ import {
   MdNewspaper,
   MdMoney,
   MdMultilineChart,
+  MdNoteAdd,
   MdNotificationsNone,
   MdOutgoingMail,
   MdOutlineGridView,
@@ -569,6 +576,21 @@ export function Base({ children }: BaseProps) {
 
                   <PermissionControl
                     qualifyingPermissions={[
+                      CanCreateArticleTemplate.id,
+                      CanUpdateArticleTemplate.id,
+                      CanDeleteArticleTemplate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/articles/templates"
+                      icon={<MdNoteAdd />}
+                    >
+                      {t('navbar.articleTemplates')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
                       CanGetPeerArticles.id,
                       CanGetPeerArticle.id,
                     ]}
@@ -653,6 +675,21 @@ export function Base({ children }: BaseProps) {
                       icon={<MdDashboard />}
                     >
                       {t('navbar.pages')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreatePageTemplate.id,
+                      CanUpdatePageTemplate.id,
+                      CanDeletePageTemplate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/pages/templates"
+                      icon={<MdNoteAdd />}
+                    >
+                      {t('navbar.pageTemplates')}
                     </SidebarNavItem>
                   </PermissionControl>
 

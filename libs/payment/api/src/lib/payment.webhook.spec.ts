@@ -1,6 +1,6 @@
 import type { Mock } from 'vitest';
 import { PaymentState } from '@prisma/client';
-import { Request, Response } from 'express';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { InvoicePaidNotifier } from './invoice-paid.listener';
 import { PaymentAuthorizationNotifier } from './payment-authorization.notifier';
 import { PaymentMethodConfig } from './payment-method/payment-method.config';
@@ -24,8 +24,8 @@ function fakeProvider(
   } as unknown as PaymentProvider;
 }
 
-function fakeResponse(): Response {
-  const res = {} as Response;
+function fakeResponse(): NodeResponse {
+  const res = {} as NodeResponse;
   res.status = vi.fn().mockReturnValue(res);
   res.send = vi.fn().mockReturnValue(res);
   res.type = vi.fn().mockReturnValue(res);
@@ -33,8 +33,8 @@ function fakeResponse(): Response {
   return res;
 }
 
-function fakeRequest(): Request {
-  return { get: vi.fn() } as unknown as Request;
+function fakeRequest(): NodeRequest {
+  return { get: vi.fn() } as unknown as NodeRequest;
 }
 
 describe('PaymentWebhookController.receiveWebhook', () => {

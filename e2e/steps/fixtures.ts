@@ -1,14 +1,16 @@
 import { APIResponse, request as playwrightRequest } from '@playwright/test';
 import { test as base, createBdd } from 'playwright-bdd';
 import { ApiClient, createAdminClient } from '../support/api-client';
-import { missingCapabilities } from '../support/env';
+import { env, missingCapabilities } from '../support/env';
 import {
   Entity,
   nextRunId,
   seededFaker,
   TestData,
 } from '../support/factories';
-import { Inbox } from '../support/mailpit';
+import { ImapInbox } from '../support/imap-inbox';
+import { Inbox, mailBackend } from '../support/inbox';
+import { MailpitInbox } from '../support/mailpit';
 import { SimulatedCheckout } from '../support/simulated-payment';
 
 /** Per-scenario state shared between steps. Extend as new steps need it. */
@@ -93,7 +95,25 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
   },
 
   inbox: async ({ request }, use) => {
-    await use(new Inbox(request));
+    // Some slack for the clock of the mail server and its whole-second dates.
+    const since = new Date(Date.now() - 30_000);
+    const inbox =
+      mailBackend(env) === 'mailpit' && env.mailpitUrl ?
+        new MailpitInbox(request, env.mailpitUrl)
+      : env.imap ?
+        new ImapInbox(env.imap, since, {
+          purgeOlderThanDays: env.imapPurgeOlderThanDays,
+        })
+      : undefined;
+
+    if (!inbox) {
+      throw new Error(
+        'No inbox configured; tag the scenario with @mail (see e2e/README.md).'
+      );
+    }
+
+    await use(inbox);
+    await inbox.close();
   },
 
   checkout: async ({ page }, use) => {

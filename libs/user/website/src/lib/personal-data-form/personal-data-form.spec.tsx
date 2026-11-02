@@ -65,6 +65,16 @@ describe('PersonalDataForm', () => {
     expect(field('user.email')).toBeDisabled();
   });
 
+  it('explains that the password fields are only for changing it', () => {
+    renderForm();
+
+    expect(
+      screen.getByText(
+        'Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.'
+      )
+    ).toBeInTheDocument();
+  });
+
   it('saves the changed data together with the new password', async () => {
     const { user: reader, onUpdate } = renderForm();
 

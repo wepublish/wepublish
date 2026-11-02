@@ -656,7 +656,10 @@ describe('SubscriptionListItem', () => {
         name: t('subscription.extendEarly', { type }),
       });
       expect(extendDialog).toHaveTextContent(
-        t('subscription.extendChargedWith', { paymentMethod: 'Rechnung' })
+        // the payment method is in bold
+        t('subscription.extendChargedWith', {
+          paymentMethod: 'Rechnung',
+        }).replace(/<\/?strong>/g, '')
       );
 
       await user.click(

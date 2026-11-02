@@ -48,6 +48,39 @@ describe('TypographicTextArea', () => {
     expect(screen.getByRole('textbox', { name: 'Title' })).toBeTruthy();
   });
 
+  it('grows to fit a value that arrives after mounting', () => {
+    const scrollHeight = vi
+      .spyOn(HTMLTextAreaElement.prototype, 'scrollHeight', 'get')
+      .mockReturnValue(40);
+
+    const { rerender } = render(
+      <ThemeProvider theme={theme}>
+        <TypographicTextArea
+          aria-label="Name"
+          value=""
+          onChange={() => undefined}
+        />
+      </ThemeProvider>
+    );
+
+    scrollHeight.mockReturnValue(120);
+    rerender(
+      <ThemeProvider theme={theme}>
+        <TypographicTextArea
+          aria-label="Name"
+          value="A template name long enough to wrap onto several lines"
+          onChange={() => undefined}
+        />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByRole('textbox', { name: 'Name' }).style.height).toBe(
+      '122px'
+    );
+
+    scrollHeight.mockRestore();
+  });
+
   it('does not leak its styling props onto the textarea element', () => {
     render(
       <ThemeProvider theme={theme}>

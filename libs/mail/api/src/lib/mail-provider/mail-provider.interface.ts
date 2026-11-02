@@ -1,9 +1,9 @@
 import { MailLogState, MailProviderType } from '@prisma/client';
 import { NextHandleFunction } from 'connect';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 
 export interface WebhookForSendMailProps {
-  req: express.Request;
+  req: NodeRequest;
 }
 
 export interface SendMailProps {

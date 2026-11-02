@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { Response as ExpressResponse } from 'express';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import {
   DragonflyTestingModule,
   FakeDragonfly,
@@ -66,7 +66,7 @@ const createController = async (
     { get: () => fallbackUrl } as unknown as ConfigService
   );
 
-const request = (url: string) => ({ url }) as unknown as Request;
+const request = (url: string) => ({ url }) as unknown as NodeRequest;
 
 describe('AppController images', () => {
   it('does not write the shared cache again when a link is found', async () => {
@@ -84,7 +84,7 @@ describe('AppController images', () => {
 
     for (let i = 0; i < 3; i++) {
       await controller.transformImage(
-        createResponse() as unknown as ExpressResponse,
+        createResponse() as unknown as NodeResponse,
         request('/v1/image-1'),
         'image-1',
         {}
@@ -106,7 +106,7 @@ describe('AppController images', () => {
     };
     const transform = async (media: typeof rejecting) =>
       (await createController(media, undefined, dragonfly)).transformImage(
-        createResponse() as unknown as ExpressResponse,
+        createResponse() as unknown as NodeResponse,
         request('/v1/image-2?quality=90'),
         'image-2',
         { quality: 90, sig: 'signed' }
@@ -136,7 +136,7 @@ describe('AppController images', () => {
     const controller = await createController(media);
     const transform = () =>
       controller.transformImage(
-        createResponse() as unknown as ExpressResponse,
+        createResponse() as unknown as NodeResponse,
         request('/v1/image-3'),
         'image-3',
         {}
@@ -145,7 +145,7 @@ describe('AppController images', () => {
     await transform();
 
     await controller.deleteImage(
-      createResponse() as unknown as ExpressResponse,
+      createResponse() as unknown as NodeResponse,
       'image-3'
     );
     await transform();
@@ -174,7 +174,7 @@ describe('AppController documents', () => {
     const controller = await createController(media);
     const get = () =>
       controller.getDocument(
-        createResponse() as unknown as ExpressResponse,
+        createResponse() as unknown as NodeResponse,
         request('/v1/document/doc-9'),
         'doc-9'
       );
@@ -182,7 +182,7 @@ describe('AppController documents', () => {
     await get();
 
     await controller.deleteDocument(
-      createResponse() as unknown as ExpressResponse,
+      createResponse() as unknown as NodeResponse,
       'doc-9'
     );
     await get();
@@ -201,7 +201,7 @@ describe('AppController documents', () => {
     await (
       await createController(media, FALLBACK_URL)
     ).getDocument(
-      res as unknown as ExpressResponse,
+      res as unknown as NodeResponse,
       request('/v1/document/doc-1'),
       'doc-1'
     );
@@ -225,7 +225,7 @@ describe('AppController documents', () => {
     await (
       await createController(media, FALLBACK_URL)
     ).getDocumentThumbnail(
-      res as unknown as ExpressResponse,
+      res as unknown as NodeResponse,
       request('/v1/document/doc-1/thumbnail'),
       'doc-1'
     );
@@ -252,7 +252,7 @@ describe('AppController documents', () => {
     await (
       await createController(media)
     ).getDocument(
-      res as unknown as ExpressResponse,
+      res as unknown as NodeResponse,
       request('/v1/document/doc-2'),
       'doc-2'
     );
@@ -280,7 +280,7 @@ describe('AppController documents', () => {
     await Promise.all(
       ['doc-3', 'doc-4', 'doc-5'].map(id =>
         controller.getDocument(
-          createResponse() as unknown as ExpressResponse,
+          createResponse() as unknown as NodeResponse,
           request(`/v1/document/${id}`),
           id
         )
