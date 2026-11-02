@@ -59,7 +59,7 @@ Then(
     });
 
     // bexio replaces [Network Link] in the configured text with its invoice link.
-    expect(() => extractLink(mail, /network\.bexio\.com\/invoice\//)).not.toThrow();
+    expect(() => extractLink(mail, /^https?:\/\/network\.bexio\.com\/invoice\//)).not.toThrow();
   }
 );
 
