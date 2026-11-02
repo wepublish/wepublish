@@ -15,13 +15,21 @@ import {
   HasOptionalArticleLcResolver,
   HasOptionalArticleResolver,
 } from './has-article/has-article.resolver';
-import { BlockContentModule } from '@wepublish/block-content/api';
+import {
+  BlockContentModule,
+  BlockTemplateModule,
+} from '@wepublish/block-content/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { TagModule } from '@wepublish/tag/api';
 import { EngagementModule } from '@wepublish/engagement/api';
 import { PaywallModule } from '@wepublish/paywall/api';
 import { ArticleAccessService } from './article-access.service';
 import { ViewArticleResolver } from './view-article.resolver';
+import {
+  ArticleTemplateMetadataResolver,
+  ArticleTemplateResolver,
+} from './article-template/article-template.resolver';
+import { ArticleTemplateService } from './article-template/article-template.service';
 
 @Module({
   imports: [
@@ -34,6 +42,7 @@ import { ViewArticleResolver } from './view-article.resolver';
     EngagementModule,
     PaywallModule,
     forwardRef(() => BlockContentModule),
+    forwardRef(() => BlockTemplateModule),
   ],
   providers: [
     ArticlePublicationWatcher,
@@ -44,6 +53,9 @@ import { ViewArticleResolver } from './view-article.resolver';
     ArticleRevisionResolver,
     ArticleAccessService,
     ViewArticleResolver,
+    ArticleTemplateService,
+    ArticleTemplateResolver,
+    ArticleTemplateMetadataResolver,
 
     HasArticleResolver,
     HasArticleLcResolver,

@@ -80,7 +80,12 @@ import {
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import {
+  Link as RouterLink,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 
 import { AutosaveToggle } from '../../autosaveToggle';
 import { copyLinkToClipboard } from '../../copyLink';
@@ -92,6 +97,10 @@ import {
 } from '../../previewFrame';
 import { useAutosave } from '../../useAutosave';
 import { useAutosaveEnabled } from '../../useAutosaveEnabled';
+import { usePageTemplatePrefill } from '../pageTemplate/pageTemplatePrefill';
+import { TemplateLoadingBackdrop } from '../templates/templateLoadingBackdrop';
+import { emptyPageMetadata } from './pageDefaults';
+import { pageMetadataToMetadataInput, pageToPageMetadata } from './pageMapping';
 
 const EditorContent = styled.div`
   display: flex;
@@ -118,6 +127,7 @@ function PageEditor() {
   const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
+  const [searchParams] = useSearchParams();
 
   const [
     createPage,
@@ -151,27 +161,20 @@ function PageEditor() {
   const [previewDevice, setPreviewDevice] = useState<PreviewDevice>('desktop');
 
   const [publishedAt, setPublishedAt] = useState<Date>();
-  const [metadata, setMetadata] = useState<PageMetadata>({
-    slug: '',
-    title: '',
-    description: '',
-    seoTitle: '',
-    seoDescription: '',
-    tags: [],
-    defaultTags: [],
-    url: '',
-    properties: [],
-    hidden: false,
-    hideHeader: false,
-    hideFooter: false,
-    image: undefined,
-    socialMediaTitle: undefined,
-    socialMediaDescription: undefined,
-    socialMediaImage: undefined,
-  });
+  const [metadata, setMetadata] = useState<PageMetadata>(emptyPageMetadata);
 
   const isNew = id === undefined;
+  const [hasChanged, setChanged] = useState(false);
   const [blocks, setBlocks] = useState<BlockValue[]>([]);
+
+  const { loading: isLoadingTemplate } = usePageTemplatePrefill(
+    isNew ? searchParams.get('templateId') : null,
+    useCallback(({ blocks, metadata: templateMetadata }) => {
+      setBlocks(blocks);
+      setMetadata(meta => ({ ...meta, ...templateMetadata }));
+      setChanged(true);
+    }, [])
+  );
 
   const seoContext = useMemo(
     () => (isMetaDrawerOpen ? getSeoBlockContext(blocks) : undefined),
@@ -275,6 +278,7 @@ function PageEditor() {
     isPublishing ||
     isRestoring ||
     isDiscarding ||
+    isLoadingTemplate ||
     isNotFound;
   // Autosaving must not disable the blocks, as that would blur whatever the user is typing in.
   const isDisabled = isBusy || isAutosaving;
@@ -284,7 +288,6 @@ function PageEditor() {
     pageData?.page?.pending
   );
 
-  const [hasChanged, setChanged] = useState(false);
   const changeVersion = useRef(0);
   const skipRepopulate = useRef(false);
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
@@ -306,46 +309,14 @@ function PageEditor() {
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (pageData?.page && !hasChanged && !skipRepopulate.current) {
-      const { latest, tags, hidden, hideHeader, hideFooter, slug, url } =
-        pageData.page;
-      const {
-        title,
-        description,
-        seoTitle,
-        seoDescription,
-        image,
-        blocks,
-        properties,
-        socialMediaTitle,
-        socialMediaDescription,
-        socialMediaImage,
-        publishedAt,
-      } = latest;
+      const { latest } = pageData.page;
 
-      if (publishedAt) {
-        setPublishedAt(new Date(publishedAt));
+      if (latest.publishedAt) {
+        setPublishedAt(new Date(latest.publishedAt));
       }
 
-      setMetadata({
-        slug: slug ?? '',
-        title: title ?? '',
-        description: description ?? '',
-        seoTitle: seoTitle ?? '',
-        seoDescription: seoDescription ?? '',
-        tags: tags.map(({ id }) => id),
-        defaultTags: tags,
-        url,
-        properties,
-        hidden,
-        hideHeader,
-        hideFooter,
-        image: image || undefined,
-        socialMediaTitle: socialMediaTitle || '',
-        socialMediaDescription: socialMediaDescription || '',
-        socialMediaImage: socialMediaImage || undefined,
-      });
-
-      setBlocks(blocks.map(blockForQueryBlock));
+      setMetadata(pageToPageMetadata(pageData.page));
+      setBlocks(latest.blocks.map(blockForQueryBlock));
     }
   }, [pageData]);
   /* eslint-enable react-hooks/set-state-in-effect */
@@ -456,20 +427,8 @@ function PageEditor() {
 
   function createInput(): CreatePageMutationVariables {
     return {
+      ...pageMetadataToMetadataInput(metadata),
       slug: metadata.slug ?? '',
-      title: metadata.title ?? '',
-      description: metadata.description,
-      seoTitle: metadata.seoTitle || undefined,
-      seoDescription: metadata.seoDescription || undefined,
-      hidden: metadata.hidden ?? false,
-      hideHeader: metadata.hideHeader ?? false,
-      hideFooter: metadata.hideFooter ?? false,
-      imageID: metadata.image?.id,
-      tagIds: metadata.tags,
-      properties: metadata.properties,
-      socialMediaTitle: metadata.socialMediaTitle || undefined,
-      socialMediaDescription: metadata.socialMediaDescription || undefined,
-      socialMediaImageID: metadata.socialMediaImage?.id || undefined,
       blocks: blocks.map(mapBlockValueToBlockInput),
     };
   }
@@ -819,6 +778,11 @@ function PageEditor() {
         </EditorContent>
       </EditorTemplate>
 
+      <TemplateLoadingBackdrop
+        open={isLoadingTemplate}
+        label={t('pageEditor.overview.loadingTemplate')}
+      />
+
       <Drawer
         anchor="right"
         slotProps={{
@@ -845,6 +809,17 @@ function PageEditor() {
             changeVersion.current++;
             setChanged(true);
           }}
+          onCreateTemplate={
+            pageID ?
+              () => {
+                if (unsavedChangesDialog()) {
+                  navigate(
+                    `/pages/templates/create?fromPage=${encodeURIComponent(pageID)}`
+                  );
+                }
+              }
+            : undefined
+          }
         />
       </Drawer>
 

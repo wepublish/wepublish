@@ -149,14 +149,18 @@ describe('viewArticle', () => {
       undefined
     );
     const blocks = await new ArticleRevisionResolver(
-      { loadSlotTeasersIntoBlocks: async (b: unknown[]) => b } as never,
+      {
+        loadBlocks: async (b: unknown[]) => b,
+        nextChange: async () => null,
+      } as never,
       {} as never,
       {} as never,
       {} as never,
       access
     ).blocks(
       { articleId, blocks: ['b1', 'b2', 'b3'] } as never,
-      req,
+      true,
+      { req },
       undefined
     );
 

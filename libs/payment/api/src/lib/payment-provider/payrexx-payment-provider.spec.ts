@@ -2,7 +2,7 @@ import { Gateway, GatewayClient } from '../payrexx/gateway-client';
 import { TransactionClient, Transaction } from '../payrexx/transaction-client';
 import { PayrexxPaymentProvider } from './payrexx-payment-provider';
 import { IntentState, InvoiceWithItems } from './payment-provider';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 import { prismaDecimalCodec } from '@wepublish/kv-ttl-cache/api/prisma';
 import {
   createNamespacedCacheTesting,
@@ -89,7 +89,7 @@ describe('PayrexxPaymentProvider', () => {
       const response = await payrexx.webhookForPaymentIntent({
         req: {
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(403);
     });
@@ -102,7 +102,7 @@ describe('PayrexxPaymentProvider', () => {
             'content-type': 'text/plain',
           },
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(415);
       expect(response.message).toEqual(
@@ -118,7 +118,7 @@ describe('PayrexxPaymentProvider', () => {
             'content-type': 'application/json',
           },
           body: 'invalid-string-body',
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
 
       expect(response.status).toEqual(415);
@@ -135,7 +135,7 @@ describe('PayrexxPaymentProvider', () => {
             'content-type': 'application/json',
           },
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.message).toContain('Skipping non-transaction webhook');
@@ -158,7 +158,7 @@ describe('PayrexxPaymentProvider', () => {
           },
           query: { apiKey: 'secret' },
           body: { transaction },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.message).toContain(
@@ -183,7 +183,7 @@ describe('PayrexxPaymentProvider', () => {
           },
           query: { apiKey: 'secret' },
           body: { transaction },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([
@@ -211,7 +211,7 @@ describe('PayrexxPaymentProvider', () => {
           },
           query: { apiKey: 'secret' },
           body: { transaction },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([]);
@@ -233,7 +233,7 @@ describe('PayrexxPaymentProvider', () => {
           },
           query: { apiKey: 'secret' },
           body: { transaction },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([

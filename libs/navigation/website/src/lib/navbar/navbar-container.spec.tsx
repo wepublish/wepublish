@@ -17,8 +17,10 @@ import {
   InvoicesDocument,
   NavigationListDocument,
   PeerProfileDocument,
+  FeaturesDocument,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
+import { actWait } from '@wepublish/testing';
 import { t } from 'i18next';
 import { FooterContainer } from '../footer/footer-container';
 import { NavbarContainer } from './navbar-container';
@@ -44,6 +46,13 @@ const subscriptions = (userSubscriptions: FullSubscriptionFragment[]) =>
   mockOperation(SubscriptionsDocument, {
     variables: {},
     data: { __typename: 'Query', userSubscriptions },
+  });
+
+// a logged in reader's navbar asks which features the medium has
+const features = (enabled: string[] = []) =>
+  mockOperation(FeaturesDocument, {
+    maxUsageCount: Number.POSITIVE_INFINITY,
+    data: { __typename: 'Query', features: enabled },
   });
 
 const cacheAndNetwork = {
@@ -113,6 +122,7 @@ describe('NavbarContainer', () => {
         mockPeerProfileQuery(),
         invoices([mockInvoice({ paidAt: null, canceledAt: null })]),
         subscriptions([mockSubscription()]),
+        features(),
       ],
     });
 
@@ -131,6 +141,7 @@ describe('NavbarContainer', () => {
           mockInvoice({ paidAt: null, canceledAt: '2024-01-01T00:00:00.000Z' }),
         ]),
         subscriptions([mockSubscription({ deactivation: null })]),
+        features(),
       ],
     });
 
@@ -143,6 +154,125 @@ describe('NavbarContainer', () => {
     expect(
       screen.queryByRole('link', { name: t('navbar.subscribe') })
     ).not.toBeInTheDocument();
+  });
+
+  describe('which open invoices it warns about', () => {
+    const subscription = mockSubscription({ deactivation: null });
+    // open since 2023, while the reader paid 2024: left over, not owed
+    const leftOver = mockInvoice({
+      id: 'left-over',
+      subscription,
+      dueAt: '2023-10-07T00:00:00.000Z',
+      paidAt: null,
+      canceledAt: null,
+    });
+    const paidLater = mockInvoice({
+      id: 'paid-later',
+      subscription,
+      dueAt: '2024-10-07T00:00:00.000Z',
+      paidAt: '2024-10-09T00:00:00.000Z',
+      canceledAt: null,
+    });
+    const renderOnHome = (
+      userInvoices: FullInvoiceFragment[],
+      enabled: string[]
+    ) =>
+      renderContainer({
+        user: mockSensitiveDataUser(),
+        router: { pathname: '/', asPath: '/' },
+        mocks: [
+          navigationList,
+          mockPeerProfileQuery(),
+          invoices(userInvoices),
+          subscriptions([subscription]),
+          features(enabled),
+        ],
+      });
+
+    it('leaves out invoices that are left over, with the subscription history', async () => {
+      renderOnHome([leftOver, paidLater], ['profile-subscription-history']);
+      await actWait(150);
+
+      expect(
+        screen.queryByRole('link', { name: new RegExp(t('navbar.invoice')) })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: t('navbar.myAccount') })
+      ).toBeInTheDocument();
+    });
+
+    it('warns about a due invoice, with the subscription history', async () => {
+      renderOnHome([leftOver], ['profile-subscription-history']);
+
+      expect(
+        await screen.findByRole('link', {
+          name: new RegExp(t('navbar.invoice')),
+        })
+      ).toBeInTheDocument();
+    });
+
+    it('warns about any open invoice without it', async () => {
+      renderOnHome([leftOver, paidLater], []);
+
+      expect(
+        await screen.findByRole('link', {
+          name: new RegExp(t('navbar.invoice')),
+        })
+      ).toBeInTheDocument();
+    });
+  });
+
+  describe('in the account, with the subscription history', () => {
+    const renderInAccount = (
+      path: string,
+      {
+        unpaid = false,
+        enabled = ['profile-subscription-history'],
+      }: { unpaid?: boolean; enabled?: string[] } = {}
+    ) =>
+      renderContainer({
+        user: mockSensitiveDataUser(),
+        router: { pathname: path, asPath: path },
+        mocks: [
+          navigationList,
+          mockPeerProfileQuery(),
+          invoices(
+            unpaid ? [mockInvoice({ paidAt: null, canceledAt: null })] : []
+          ),
+          subscriptions([mockSubscription({ deactivation: null })]),
+          features(enabled),
+        ],
+      });
+
+    it.each(['/profile', '/profile/subscription/abc'])(
+      'leaves out the link to the account on %s',
+      async path => {
+        renderInAccount(path);
+        await actWait(150);
+
+        expect(
+          screen.queryByRole('link', { name: t('navbar.myAccount') })
+        ).not.toBeInTheDocument();
+      }
+    );
+
+    it('still warns about an unpaid invoice there', async () => {
+      renderInAccount('/profile', { unpaid: true });
+
+      expect(
+        await screen.findByRole('link', {
+          name: new RegExp(t('navbar.invoice')),
+        })
+      ).toHaveAttribute('href', '/profile');
+    });
+
+    it('keeps the link to the account without the subscription history', async () => {
+      renderInAccount('/profile', { enabled: [] });
+
+      expect(
+        await screen.findByRole('link', { name: t('navbar.myAccount') })
+      ).toHaveAttribute('href', '/profile');
+    });
   });
 
   it('reuses the navigations and the peer profile from the cache on the next page', async () => {

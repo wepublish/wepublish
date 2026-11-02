@@ -16,6 +16,8 @@ fragment FullArticleRevision on ArticleRevision {
     ...FullImage
   }
 
+  blocksChangeAt
+
   blocks {
     ...FullBlock
   }

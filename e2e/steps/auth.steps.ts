@@ -4,6 +4,7 @@ import {
   createSession,
   websiteSessionCookie,
 } from '../support/api-client';
+import { extractLink } from '../support/inbox';
 import { Given, Then, When } from './fixtures';
 
 // Shared website copy (libs/website/translations, de + fr), not tenant copy.
@@ -50,7 +51,7 @@ When(
   async ({ page, data, inbox }, alias: string) => {
     const reader = data.get('reader', alias);
     const mail = await inbox.waitForMail({ to: reader.email });
-    const link = new URL(inbox.extractLink(mail, /\/login\?jwt=/));
+    const link = new URL(extractLink(mail, /\/login\?jwt=/));
 
     // The API builds the link from its WEBSITE_URL; stay on the site under test.
     await page.goto(`${link.pathname}${link.search}`);

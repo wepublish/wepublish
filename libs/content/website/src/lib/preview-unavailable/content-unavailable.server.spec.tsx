@@ -1,7 +1,6 @@
 // @vitest-environment node
 import { createTheme, ThemeProvider } from '@mui/material';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import { HeadManagerContext } from 'next/dist/shared/lib/head-manager-context.shared-runtime';
 import {
   ComponentProps,
   isValidElement,
@@ -25,20 +24,22 @@ const elements = {
 
 describe('ContentUnavailable on the server', () => {
   it('keeps search engines from indexing the empty page in the server html, without any note', () => {
-    const heads: ReactNode[][] = [];
-    const headManager = {
-      mountedInstances: new Set(),
-      updateHead: (head: ReactNode[]) => heads.push(head),
+    const heads: ReactNode[] = [];
+    const Head = ({ children }: PropsWithChildren) => {
+      heads.push(children);
+
+      return null;
     };
 
     const html = renderToString(
-      <HeadManagerContext.Provider value={headManager as never}>
-        <ThemeProvider theme={createTheme()}>
-          <WebsiteBuilderProvider elements={elements as BuilderElements}>
-            <ContentUnavailable />
-          </WebsiteBuilderProvider>
-        </ThemeProvider>
-      </HeadManagerContext.Provider>
+      <ThemeProvider theme={createTheme()}>
+        <WebsiteBuilderProvider
+          Head={Head}
+          elements={elements as BuilderElements}
+        >
+          <ContentUnavailable />
+        </WebsiteBuilderProvider>
+      </ThemeProvider>
     );
 
     expect(

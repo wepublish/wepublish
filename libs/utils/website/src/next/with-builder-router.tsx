@@ -6,9 +6,9 @@ export const withBuilderRouter = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {
-    const { query } = useRouter();
+    const { query, asPath } = useRouter();
 
-    const contextValue = useMemo(() => ({ query }), [query]);
+    const contextValue = useMemo(() => ({ query, asPath }), [query, asPath]);
 
     return (
       <BuilderRouterContext.Provider value={contextValue}>

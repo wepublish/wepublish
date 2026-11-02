@@ -31,7 +31,6 @@ fragment FullArticleTeaser on ArticleTeaser {
         __typename
 
         ... on PollBlock {
-          disabled
           blockStyle: blockStyleName
           poll {
             ...FullPoll
@@ -58,7 +57,6 @@ fragment FullEventTeaser on EventTeaser {
 }
 
 fragment FullImageBlock on ImageBlock {
-  disabled
   blockStyle: blockStyleName
   caption
   linkUrl
@@ -68,7 +66,6 @@ fragment FullImageBlock on ImageBlock {
 }
 
 fragment FullImageGalleryBlock on ImageGalleryBlock {
-  disabled
   blockStyle: blockStyleName
   images {
     caption
@@ -79,7 +76,6 @@ fragment FullImageGalleryBlock on ImageGalleryBlock {
 }
 
 fragment FullTitleBlock on TitleBlock {
-  disabled
   blockStyle: blockStyleName
   preTitle
   title
@@ -87,7 +83,6 @@ fragment FullTitleBlock on TitleBlock {
 }
 
 fragment FullQuoteBlock on QuoteBlock {
-  disabled
   blockStyle: blockStyleName
   quote
   author
@@ -97,19 +92,16 @@ fragment FullQuoteBlock on QuoteBlock {
 }
 
 fragment FullRichTextBlock on RichTextBlock {
-  disabled
   blockStyle: blockStyleName
   richText
 }
 
 fragment FullHTMLBlock on HTMLBlock {
-  disabled
   blockStyle: blockStyleName
   html
 }
 
 fragment FullSubscribeBlock on SubscribeBlock {
-  disabled
   blockStyle: blockStyleName
   memberPlanIds
   periodicityDisplay
@@ -149,7 +141,6 @@ fragment FullSubscribeBlock on SubscribeBlock {
 }
 
 fragment FullMailchimpFormBlock on MailchimpFormBlock {
-  disabled
   blockStyle: blockStyleName
   syncProviderId
   listId
@@ -197,7 +188,6 @@ fragment FullMailchimpFormBlock on MailchimpFormBlock {
 }
 
 fragment FullEventBlock on EventBlock {
-  disabled
   blockStyle: blockStyleName
   events {
     ...FullEvent
@@ -205,7 +195,6 @@ fragment FullEventBlock on EventBlock {
 }
 
 fragment FullCommentBlock on CommentBlock {
-  disabled
   blockStyle: blockStyleName
   comments {
     ...FullComment
@@ -213,7 +202,6 @@ fragment FullCommentBlock on CommentBlock {
 }
 
 fragment FullPollBlock on PollBlock {
-  disabled
   blockStyle: blockStyleName
   poll {
     ...FullPoll
@@ -221,7 +209,6 @@ fragment FullPollBlock on PollBlock {
 }
 
 fragment FullCrowdfundingBlock on CrowdfundingBlock {
-  disabled
   blockStyle: blockStyleName
   crowdfunding {
     ...FullCrowdfunding
@@ -229,7 +216,6 @@ fragment FullCrowdfundingBlock on CrowdfundingBlock {
 }
 
 fragment FullListicleBlock on ListicleBlock {
-  disabled
   blockStyle: blockStyleName
   items {
     title
@@ -241,7 +227,6 @@ fragment FullListicleBlock on ListicleBlock {
 }
 
 fragment FullBreakBlock on BreakBlock {
-  disabled
   blockStyle: blockStyleName
   text
   richText
@@ -255,77 +240,65 @@ fragment FullBreakBlock on BreakBlock {
 }
 
 fragment FullFacebookPostBlock on FacebookPostBlock {
-  disabled
   blockStyle: blockStyleName
   userID
   postID
 }
 
 fragment FullFacebookVideoBlock on FacebookVideoBlock {
-  disabled
   blockStyle: blockStyleName
   userID
   videoID
 }
 
 fragment FullInstagramPostBlock on InstagramPostBlock {
-  disabled
   blockStyle: blockStyleName
   postID
 }
 
 fragment FullTwitterTweetBlock on TwitterTweetBlock {
-  disabled
   blockStyle: blockStyleName
   userID
   tweetID
 }
 
 fragment FullVimeoVideoBlock on VimeoVideoBlock {
-  disabled
   blockStyle: blockStyleName
   videoID
 }
 
 fragment FullYouTubeVideoBlock on YouTubeVideoBlock {
-  disabled
   blockStyle: blockStyleName
   videoID
 }
 
 fragment FullStreamableVideoBlock on StreamableVideoBlock {
-  disabled
   blockStyle: blockStyleName
   videoID
 }
 
 fragment FullSoundCloudTrackBlock on SoundCloudTrackBlock {
-  disabled
   blockStyle: blockStyleName
   trackID
 }
 
 fragment FullPolisConversationBlock on PolisConversationBlock {
-  disabled
   blockStyle: blockStyleName
   conversationID
 }
 
 fragment FullTikTokVideoBlock on TikTokVideoBlock {
-  disabled
   blockStyle: blockStyleName
   userID
   videoID
 }
 
 fragment FullBildwurfAdBlock on BildwurfAdBlock {
-  disabled
   blockStyle: blockStyleName
   zoneID
 }
 
 fragment FullIFrameBlock on IFrameBlock {
-  disabled
   blockStyle: blockStyleName
   url
   title
@@ -511,7 +484,6 @@ fragment FullTeaser on Teaser {
 }
 
 fragment FullFlexBlock on FlexBlock {
-  disabled
   blockStyle: blockStyleName
   type
   blocks {
@@ -547,7 +519,6 @@ fragment FullFlexTeaser on FlexTeaser {
 fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
   title
   type
-  disabled
   blockStyle: blockStyleName
   flexTeasers {
     ...FullFlexTeaser
@@ -557,7 +528,6 @@ fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
 fragment FullTeaserGridBlock on TeaserGridBlock {
   title
   type
-  disabled
   blockStyle: blockStyleName
   teasers {
     ...FullTeaser
@@ -568,7 +538,6 @@ fragment FullTeaserGridBlock on TeaserGridBlock {
 fragment FullTeaserListBlock on TeaserListBlock {
   title
   type
-  disabled
   blockStyle: blockStyleName
   filter {
     tags
@@ -581,7 +550,6 @@ fragment FullTeaserListBlock on TeaserListBlock {
 fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
   title
   type
-  disabled
   blockStyle: blockStyleName
   teasers {
     ...FullTeaser
@@ -589,7 +557,6 @@ fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
 }
 
 fragment FullBlockTemplateBlock on BlockTemplateBlock {
-  disabled
   blockStyle: blockStyleName
   type
   templateId

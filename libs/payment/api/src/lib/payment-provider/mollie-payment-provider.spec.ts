@@ -4,7 +4,7 @@ import {
   IntentState,
   PaymentProviderProps,
 } from './payment-provider';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 import {
   calculateAndFormatAmount,
   mapMollieEventToPaymentStatus,
@@ -154,7 +154,7 @@ describe('MolliePaymentProvider', () => {
       const response = await mollieOffSession.webhookForPaymentIntent({
         req: {
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(403);
     });
@@ -164,7 +164,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: {},
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([]);
@@ -177,7 +177,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: { id: transaction.id }, // Pass the transaction id as form data
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([
@@ -201,7 +201,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: { id: transaction.id }, // Pass the transaction id as form data
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([
@@ -642,7 +642,7 @@ describe('MolliePaymentProvider', () => {
         req: {
           query: { key: 'secret' },
           body: { id: 'tr_1' },
-        } as unknown as express.Request,
+        } as unknown as NodeRequest,
       });
 
       expect(response.paymentStates?.[0]?.state).toEqual(

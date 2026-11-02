@@ -6,11 +6,15 @@ import {
 } from '@wepublish/website/api';
 import { BuilderContainerProps } from '@wepublish/website/builder';
 import { useCallback } from 'react';
-import { TotpSetup } from './totp-setup';
+import { TotpSetup, TotpSetupProps } from './totp-setup';
 
-export type TotpSetupContainerProps = BuilderContainerProps;
+export type TotpSetupContainerProps = BuilderContainerProps &
+  Pick<TotpSetupProps, 'titleComponent'>;
 
-export function TotpSetupContainer({ className }: TotpSetupContainerProps) {
+export function TotpSetupContainer({
+  className,
+  titleComponent,
+}: TotpSetupContainerProps) {
   const { user } = useUser();
   const [generateTotpSetup] = useMutation(GenerateTotpSetupDocument);
   const [enableTotp] = useMutation(EnableTotpDocument);
@@ -44,6 +48,7 @@ export function TotpSetupContainer({ className }: TotpSetupContainerProps) {
   return (
     <TotpSetup
       className={className}
+      titleComponent={titleComponent}
       totpEnabled={user.totpEnabled}
       onSetup={handleSetup}
       onEnable={handleEnable}

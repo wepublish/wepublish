@@ -3,7 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { ApolloDriverConfig } from '@nestjs/apollo';
+import { NodeAdapter } from '@nestjs/platform-node';
+import { NodeApolloDriver } from '@wepublish/utils/api';
 import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import { PublicContentCacheModule } from '@wepublish/public-content-cache/api';
 import {
@@ -27,7 +29,7 @@ describe('HotAndTrendingResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -48,7 +50,7 @@ describe('HotAndTrendingResolver', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
+    app = module.createNestApplication(new NodeAdapter());
     await app.listen(0, '127.0.0.1');
   });
 
@@ -81,7 +83,7 @@ describe('HotAndTrendingResolver anonymous answers', () => {
         NamespacedCacheTestingModule.forRoot(),
         PublicContentCacheModule,
         GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
+          driver: NodeApolloDriver,
           autoSchemaFile: true,
           path: '/',
           cache: 'bounded',
@@ -96,7 +98,7 @@ describe('HotAndTrendingResolver anonymous answers', () => {
       ],
     }).compile();
 
-    app = module.createNestApplication();
+    app = module.createNestApplication(new NodeAdapter());
     await app.listen(0, '127.0.0.1');
   });
 

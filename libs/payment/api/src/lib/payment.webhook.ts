@@ -13,7 +13,8 @@ import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from './payment-method/payment-method.config';
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction } from 'connect';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { Public } from '@wepublish/authentication/api';
 import { PaymentState } from '@prisma/client';
 import { InvoicePaidNotifier } from './invoice-paid.listener';
@@ -36,8 +37,8 @@ export class PaymentWebhookController {
   @All(':providerId')
   async receiveWebhook(
     @Param('providerId') providerId: string,
-    @Req() req: Request,
-    @Res() res: Response
+    @Req() req: NodeRequest,
+    @Res() res: NodeResponse
   ) {
     this.logger.log(
       `Received webhook from ${req.get('origin')} for paymentProvider ${providerId}`
@@ -114,7 +115,7 @@ export class PaymentWebhookMiddleware implements NestMiddleware {
     private config: PaymentMethodConfig
   ) {}
 
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: NodeRequest, res: NodeResponse, next: NextFunction) {
     const providerId = req.params['providerId'];
 
     const provider = this.config.paymentProviders.find(

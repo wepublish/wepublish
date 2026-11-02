@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import {
   Button,
   Chip,
-  ChipProps,
   IconButton,
   Table,
   TableBody,
@@ -24,6 +23,13 @@ import {
   CanGetSubscription,
   CanGetSubscriptions,
 } from '@wepublish/permissions';
+import {
+  compareSubscriptions,
+  getSubscriptionState,
+  InvoiceStatusIcon,
+  SUBSCRIPTION_STATE_CHIP,
+  SubscriptionState,
+} from '@wepublish/ui';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -41,7 +47,6 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 
 import { enqueueSnackbar } from '../../snackbar/snackbar';
-import { InvoiceStatusIcon } from '../invoiceStatusIcon';
 import {
   createCheckedPermissionComponent,
   useAuthorisation,
@@ -140,41 +145,16 @@ const formatDate = (date: string | Date) =>
 
 type SubscriptionStatus = {
   label: string;
-  color: 'red' | 'blue' | 'green' | 'orange' | 'yellow';
-};
-
-const STATUS_CHIP: Record<
-  SubscriptionStatus['color'],
-  { color: ChipProps['color']; variant: ChipProps['variant'] }
-> = {
-  red: { color: 'error', variant: 'filled' },
-  blue: { color: 'info', variant: 'filled' },
-  green: { color: 'success', variant: 'filled' },
-  orange: { color: 'warning', variant: 'filled' },
-  yellow: { color: 'warning', variant: 'outlined' },
+  state: SubscriptionState;
 };
 
 export function getSubscriptionStatus(
   subscription: UserSubscriptionFragment,
   now = new Date()
 ): SubscriptionStatus {
-  if (subscription.deactivation) {
-    return { label: 'userSubscriptionList.table.deactivated', color: 'red' };
-  }
+  const state = getSubscriptionState(subscription, now);
 
-  if (new Date(subscription.startsAt) > now) {
-    return { label: 'userSubscriptionList.table.planned', color: 'blue' };
-  }
-
-  if (!subscription.paidUntil) {
-    return { label: 'userSubscriptionList.table.unpaid', color: 'yellow' };
-  }
-
-  if (new Date(subscription.paidUntil) < now) {
-    return { label: 'userSubscriptionList.table.expired', color: 'orange' };
-  }
-
-  return { label: 'userSubscriptionList.table.active', color: 'green' };
+  return { label: `userSubscriptionList.table.${state}`, state };
 }
 
 type SubscriptionPeriod = UserSubscriptionFragment['periods'][0];
@@ -271,19 +251,10 @@ function UserSubscriptionsList({
   }
 
   const rows = useMemo<Row[]>(() => {
-    const isActive = (subscription: UserSubscriptionFragment) =>
-      getSubscriptionStatus(subscription).label ===
-      'userSubscriptionList.table.active';
-    const paidUntilTime = (subscription: UserSubscriptionFragment) =>
-      subscription.paidUntil ? new Date(subscription.paidUntil).getTime() : 0;
+    const now = new Date();
 
     return [...(subscriptions ?? [])]
-      .sort(
-        (a, b) =>
-          Number(isActive(b)) - Number(isActive(a)) ||
-          paidUntilTime(b) - paidUntilTime(a) ||
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      )
+      .sort((a, b) => compareSubscriptions(a, b, now))
       .map(subscription => ({
         subscription,
         periods: [...subscription.periods].sort(
@@ -346,8 +317,8 @@ function UserSubscriptionsList({
                 <Chip
                   size="small"
                   label={t(status.label)}
-                  color={STATUS_CHIP[status.color].color}
-                  variant={STATUS_CHIP[status.color].variant}
+                  color={SUBSCRIPTION_STATE_CHIP[status.state].color}
+                  variant={SUBSCRIPTION_STATE_CHIP[status.state].variant}
                 />
               );
 

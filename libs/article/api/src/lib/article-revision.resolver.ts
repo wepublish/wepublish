@@ -1,4 +1,4 @@
-import { Context, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Context, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { ArticleRevision, ArticleRevisionAuthor } from './article.model';
 import {
   ArticleAuthorDataloader,
@@ -13,7 +13,11 @@ import {
 } from '@wepublish/authentication/api';
 import { CanGetArticle } from '@wepublish/permissions';
 import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
-import { SlotTeasersLoader, BlockContent } from '@wepublish/block-content/api';
+import { BlockTreeLoader, BlockContent } from '@wepublish/block-content/api';
+import {
+  limitAnswerCache,
+  skipAnswerCache,
+} from '@wepublish/public-content-cache/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
 import { ArticleAccessService, ArticleRequest } from './article-access.service';
@@ -22,8 +26,8 @@ import { isRestricted } from './article-access';
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {
   constructor(
-    @Inject(forwardRef(() => SlotTeasersLoader))
-    private slotTeasersLoader: SlotTeasersLoader,
+    @Inject(forwardRef(() => BlockTreeLoader))
+    private blockTreeLoader: BlockTreeLoader,
     private authorDataLoader: ArticleAuthorDataloader,
     private socialMediaAuthorDataLoader: ArticleSocialMediaAuthorDataloader,
     private imageDataloaderService: ImageDataloaderService,
@@ -35,15 +39,34 @@ export class ArticleRevisionResolver {
   })
   async blocks(
     @Parent() parent: ArticleRevision,
-    @Context('req') req: ArticleRequest,
+    @Args('onlyDisplayed', {
+      type: () => Boolean,
+      defaultValue: true,
+      description:
+        'Omits blocks that should be hidden. Only users who can read articles may pass `false`, everyone else gets the displayed blocks.',
+    })
+    onlyDisplayed: boolean,
+    @Context() context: { req: ArticleRequest },
     @CurrentUser() session: AuthSession | undefined
   ) {
-    // Cut after loading: block templates expand into the blocks a reader sees.
-    const blocks = await this.slotTeasersLoader.loadSlotTeasersIntoBlocks(
-      parent.blocks
-    );
+    if (!onlyDisplayed) {
+      skipAnswerCache(context);
+    }
+
+    const changeAt = await this.blockTreeLoader.nextChange(parent.blocks);
+
+    if (changeAt) {
+      limitAnswerCache(context, changeAt);
+    }
+
+    // Cut after loading: block templates expand into the blocks a reader
+    // sees, and hidden blocks do not count towards the preview.
+    const blocks = await this.blockTreeLoader.loadBlocks(parent.blocks, {
+      onlyDisplayed:
+        onlyDisplayed || !hasPermission(CanGetArticle, permissionsOf(session)),
+    });
     const access = await this.articleAccess.accessFor(
-      req,
+      context.req,
       session,
       parent.articleId
     );
@@ -51,6 +74,15 @@ export class ArticleRevisionResolver {
     return isRestricted(access) ?
         blocks.slice(0, access.previewBlocks)
       : blocks;
+  }
+
+  @ResolveField(() => Date, {
+    nullable: true,
+    description:
+      'When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed.',
+  })
+  async blocksChangeAt(@Parent() parent: ArticleRevision) {
+    return this.blockTreeLoader.nextChange(parent.blocks);
   }
 
   @ResolveField(() => Boolean, {

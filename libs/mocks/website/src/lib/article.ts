@@ -46,6 +46,7 @@ export const mockArticleRevision = ({
   socialMediaImage,
   image,
   authors,
+  blocksChangeAt: null,
   blocks,
   properties: [],
   canonicalUrl: 'https://example.com',
