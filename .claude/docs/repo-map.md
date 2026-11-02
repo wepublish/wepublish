@@ -73,4 +73,4 @@ Do not import from another project's internals; import from its entry point.
 | Change public site rendering | `libs/<domain>/website` (+ a spec) |
 | Change admin UI | `libs/<domain>/editor` |
 | Tenant-specific look | `libs/tenants/<tenant>` theme / Builder override |
-| Payment/email/analytics integration | `libs/payment`, `libs/mail`, `libs/google-analytics` — see [external-services.md](external-services.md) |
+| Payment/email/letter/analytics integration | `libs/payment`, `libs/mail`, `libs/letter` (Pingen, pdf renderers, letter layouts), `libs/google-analytics` — see [external-services.md](external-services.md) |

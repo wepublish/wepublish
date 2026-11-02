@@ -478,4 +478,95 @@ describe('SubscriptionFlowService', () => {
     };
     expect(t).rejects.toThrow(Error);
   });
+
+  describe('SubscriptionFlowService letter switch', () => {
+    const flow = {
+      id: 'flow-1',
+      default: false,
+      memberPlanId: 'plan-1',
+      periodicities: [PaymentPeriodicity.monthly],
+      autoRenewal: [true],
+      intervals: [],
+      paymentMethods: [],
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+    };
+
+    const existingInterval = {
+      id: 'interval-1',
+      event: SubscriptionEvent.INVOICE_CREATION,
+      mailTemplateId: mockMailTemplate.id,
+      daysAwayFromEnding: -3,
+      sendAsLetter: false,
+      subscriptionFlowId: flow.id,
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+    };
+
+    const lastUpdateData = () => {
+      const calls = prismaMock.subscriptionInterval.update!.mock.calls;
+
+      return calls[calls.length - 1][0].data;
+    };
+
+    beforeEach(() => {
+      prismaMock.subscriptionFlow.findUnique!.mockResolvedValue(flow);
+      prismaMock.subscriptionFlow.findMany!.mockResolvedValue([flow]);
+      prismaMock.mailTemplate.findUnique!.mockResolvedValue(mockMailTemplate);
+      prismaMock.subscriptionInterval.findUnique!.mockResolvedValue(
+        existingInterval
+      );
+      prismaMock.subscriptionInterval.findFirst!.mockResolvedValue(
+        existingInterval
+      );
+      prismaMock.subscriptionInterval.findMany!.mockResolvedValue([]);
+      prismaMock.subscriptionInterval.create!.mockResolvedValue(
+        existingInterval
+      );
+      prismaMock.subscriptionInterval.update!.mockResolvedValue(
+        existingInterval
+      );
+      (prismaMock as any).$transaction.mockImplementation(
+        async (operations: any) => Promise.all(operations)
+      );
+    });
+
+    it('stores whether a new interval also prints letters', async () => {
+      prismaMock.subscriptionInterval.findFirst!.mockResolvedValue(null);
+
+      await service.createInterval({
+        subscriptionFlowId: flow.id,
+        mailTemplateId: mockMailTemplate.id,
+        event: SubscriptionEvent.SUBSCRIBE,
+        sendAsLetter: true,
+      });
+
+      expect(prismaMock.subscriptionInterval.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ sendAsLetter: true }),
+        })
+      );
+    });
+
+    it('switches letters on for an existing interval', async () => {
+      await service.updateInterval({
+        id: existingInterval.id,
+        sendAsLetter: true,
+      });
+
+      expect(lastUpdateData()).toEqual(
+        expect.objectContaining({ sendAsLetter: true })
+      );
+    });
+
+    // The flow editor updates days and template without mentioning the switch.
+    it('leaves the switch alone when an update does not mention it', async () => {
+      await service.updateInterval({
+        id: existingInterval.id,
+        daysAwayFromEnding: -5,
+      });
+
+      expect(lastUpdateData()).not.toHaveProperty('sendAsLetter');
+    });
+  });
 });

@@ -176,6 +176,7 @@ import {
   MdLocationPin,
   MdLogout,
   MdMail,
+  MdMarkunreadMailbox,
   MdMenu,
   MdNewspaper,
   MdMoney,
@@ -1168,6 +1169,18 @@ export function Base({ children }: BaseProps) {
                     </SidebarNavItem>
                   </PermissionControl>
 
+                  {/* Right after the messages whose way it decides. */}
+                  <FeatureControl feature="paper-letter-flow">
+                    <PermissionControl qualifyingPermissions={[CanGetUsers.id]}>
+                      <SidebarNavItem
+                        href="/deliverychannel"
+                        icon={<MdMarkunreadMailbox />}
+                      >
+                        {t('navbar.deliverySuggestions')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
+
                   <PermissionControl
                     qualifyingPermissions={[
                       CanGetMailTemplates.id,
@@ -1191,6 +1204,22 @@ export function Base({ children }: BaseProps) {
                         icon={<MdNewspaper />}
                       >
                         {t('newsletter.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
+
+                  <FeatureControl feature="paper-letters">
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetMailTemplates.id,
+                        CanUpdateMailTemplates.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/letterlayouts"
+                        icon={<MdDescription />}
+                      >
+                        {t('navbar.letterLayouts')}
                       </SidebarNavItem>
                     </PermissionControl>
                   </FeatureControl>

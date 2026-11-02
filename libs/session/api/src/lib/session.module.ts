@@ -22,6 +22,7 @@ import { TotpService } from './totp.service';
 import { TotpResolver } from './totp.resolver';
 import { WebsiteTokenController } from './website-token.controller';
 import {
+  AuthenticationModule,
   SessionCacheModule,
   SCOPED_JWT_VERIFIER,
   ScopedJwtGuard,
@@ -51,6 +52,7 @@ export interface SessionModuleAsyncOptions extends Pick<
     UserModule,
     ChallengeModule,
     SettingModule,
+    AuthenticationModule,
     SessionCacheModule,
   ],
   exports: [SessionService, JwtService, SCOPED_JWT_VERIFIER, ScopedJwtGuard],

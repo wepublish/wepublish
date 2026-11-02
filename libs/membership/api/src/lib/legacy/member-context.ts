@@ -28,6 +28,7 @@ import {
   LookupActionInput,
 } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
+import { TemplateAction } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { add, format } from 'date-fns';
 import {
   BadRequestException,
@@ -495,14 +496,14 @@ export class MemberContext implements MemberContextInterface {
         return false;
       }
 
-      const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
+      const action = await this.getSubscriptionTemplateAction(
         subscription,
         SubscriptionEvent.RENEWAL_FAILED
       );
 
-      if (remoteTemplate) {
+      if (action) {
         await this.mailContext.sendMail({
-          mailTemplateId: remoteTemplate,
+          mailTemplateId: action.mailTemplateId,
           recipient: user,
           optionalData: {
             invoice,
@@ -510,6 +511,7 @@ export class MemberContext implements MemberContextInterface {
             errorCode: intent.errorCode,
           },
           mailType: mailLogType.UserFlow,
+          asLetter: action.sendAsLetter,
         });
       } else {
         logger('memberContext').info(
@@ -884,13 +886,13 @@ export class MemberContext implements MemberContextInterface {
     };
   }
 
-  async getSubscriptionTemplateIdentifier(
+  async getSubscriptionTemplateAction(
     subscription: Subscription,
     subscriptionEvent: SubscriptionEvent
-  ): Promise<string | undefined> {
+  ): Promise<TemplateAction | undefined> {
     return new SubscriptionEventDictionary(
       this.prisma
-    ).getSubsciptionTemplateIdentifier(subscription, subscriptionEvent);
+    ).getSubscriptionTemplateAction(subscription, subscriptionEvent);
   }
 
   async getActionsForSubscriptions(
@@ -1112,12 +1114,12 @@ export class MemberContext implements MemberContextInterface {
       return;
     }
 
-    const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
+    const action = await this.getSubscriptionTemplateAction(
       subscription,
       subscriptionEvent
     );
 
-    if (!remoteTemplate) {
+    if (!action) {
       logger('MemberContext').warn(
         `RemoteTemplate <%s> for subscription <%s> not found!`,
         subscriptionEvent,
@@ -1128,13 +1130,14 @@ export class MemberContext implements MemberContextInterface {
     }
 
     await this.mailContext.sendMail({
-      mailTemplateId: remoteTemplate,
+      mailTemplateId: action.mailTemplateId,
       recipient: user,
       optionalData: {
         subscription,
         ...optionalData,
       },
       mailType: mailLogType.UserFlow,
+      asLetter: action.sendAsLetter,
     });
   }
 }

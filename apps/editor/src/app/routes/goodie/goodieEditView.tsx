@@ -36,6 +36,7 @@ const mapApiDataToInput = (goodie: FullGoodieFragment): GoodieFormValues => ({
   imageID: goodie.image?.id,
   memberPlans: goodie.memberPlans,
   memberPlanIDs: goodie.memberPlans.map(memberPlan => memberPlan.id),
+  paymentPeriodicities: goodie.paymentPeriodicities,
 });
 
 const GoodieEditView = () => {

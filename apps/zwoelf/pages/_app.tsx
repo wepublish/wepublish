@@ -24,6 +24,7 @@ import {
 import {
   RoutedAdminBar,
   withBuilderRouter,
+  withRestrictedSessionRedirect,
 } from '@wepublish/utils/website/next';
 import { TenantProviders } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
@@ -130,10 +131,7 @@ function CustomApp({
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
-                subscribeBtn={{
-                  href: 'https://shop.zwoelf.ch/produkt-kategorie/abos/',
-                  target: '_blank',
-                }}
+                subscribeBtn={{ href: '/mitmachen' }}
               />
             )}
 
@@ -190,7 +188,11 @@ const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(
-      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+      withPaywallBypassToken(
+        withSessionProvider(
+          withRestrictedSessionRedirect('/welcome')(withJwtHandler(CustomApp))
+        )
+      )
     )
   )
 );

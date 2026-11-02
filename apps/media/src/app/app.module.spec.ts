@@ -17,6 +17,8 @@ const ENV = {
   S3_PUBLIC_HOST: 'https://media.example',
   API_URL: 'https://api.example',
   APP_RELEASE_ID: '2026.10.1',
+  // Nx loads a local .env.local, which may point at a fallback media server.
+  MEDIA_FALLBACK_URL: '',
 };
 
 const createResponse = () => {

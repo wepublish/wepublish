@@ -526,6 +526,13 @@ export const CanSendJWTLogin: Permission = {
   deprecated: false,
 };
 
+export const CanManageUserLoginCodes: Permission = {
+  id: 'CAN_MANAGE_USER_LOGIN_CODES',
+  description:
+    'Allows to inspect, revoke and reissue personal login links of users',
+  deprecated: false,
+};
+
 export const CanLoginEditor: Permission = {
   id: 'CAN_LOGIN_EDITOR',
   description: 'Allows to login editor',
@@ -869,6 +876,13 @@ export const CanSendMailTemplates: Permission = {
 export const CanGetMailLogs: Permission = {
   id: 'CAN_GET_MAIL-LOGS',
   description: 'Allows to view sent mails and mail send jobs.',
+  deprecated: false,
+};
+
+export const CanManageUserDeliveryMode: Permission = {
+  id: 'CAN_MANAGE_USER-DELIVERY-MODE',
+  description:
+    'Allows to switch users between mailed and printed subscription mails, singly or by audience, and to confirm suggestions.',
   deprecated: false,
 };
 
@@ -1217,6 +1231,60 @@ export const CanDeleteMailProviderSettings: Permission = {
 };
 
 /**
+ * Letter Provider Settings
+ */
+export const CanGetLetterProviderSettings: Permission = {
+  id: 'CAN_GET_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to get letter provider settings',
+  deprecated: false,
+};
+
+export const CanCreateLetterProviderSettings: Permission = {
+  id: 'CAN_CREATE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to create letter provider settings',
+  deprecated: false,
+};
+
+export const CanUpdateLetterProviderSettings: Permission = {
+  id: 'CAN_UPDATE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to update letter provider settings',
+  deprecated: false,
+};
+
+export const CanDeleteLetterProviderSettings: Permission = {
+  id: 'CAN_DELETE_LETTER_PROVIDER_SETTINGS',
+  description: 'Allows to delete letter provider settings',
+  deprecated: false,
+};
+
+/**
+ * PDF Renderer Settings
+ */
+export const CanGetPdfRendererSettings: Permission = {
+  id: 'CAN_GET_PDF_RENDERER_SETTINGS',
+  description: 'Allows to get pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanCreatePdfRendererSettings: Permission = {
+  id: 'CAN_CREATE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to create pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanUpdatePdfRendererSettings: Permission = {
+  id: 'CAN_UPDATE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to update pdf renderer settings',
+  deprecated: false,
+};
+
+export const CanDeletePdfRendererSettings: Permission = {
+  id: 'CAN_DELETE_PDF_RENDERER_SETTINGS',
+  description: 'Allows to delete pdf renderer settings',
+  deprecated: false,
+};
+
+/**
  * Analytics Provider Settings Permissions
  */
 export const CanGetAnalyticsProviderSettings: Permission = {
@@ -1380,6 +1448,7 @@ export const AllPermissions = [
   CanGetPayments,
   CanGetPaymentProviders,
   CanSendJWTLogin,
+  CanManageUserLoginCodes,
   CanLoginEditor,
   CanCreateSubscription,
   CanGetSubscription,
@@ -1430,6 +1499,7 @@ export const AllPermissions = [
   CanSendTestMailTemplates,
   CanSendMailTemplates,
   CanGetMailLogs,
+  CanManageUserDeliveryMode,
   CanGetSystemMails,
   CanUpdateSystemMails,
   CanTestSystemMails,
@@ -1476,6 +1546,14 @@ export const AllPermissions = [
   CanCreateMailProviderSettings,
   CanUpdateMailProviderSettings,
   CanDeleteMailProviderSettings,
+  CanGetLetterProviderSettings,
+  CanCreateLetterProviderSettings,
+  CanUpdateLetterProviderSettings,
+  CanDeleteLetterProviderSettings,
+  CanGetPdfRendererSettings,
+  CanCreatePdfRendererSettings,
+  CanUpdatePdfRendererSettings,
+  CanDeletePdfRendererSettings,
   CanCreateExternalApp,
   CanUpdateExternalApp,
   CanDeleteExternalApp,
@@ -1557,6 +1635,7 @@ export const EditorPermissions = [
   CanGetSubscriptionFlows,
   CanGetMailTemplates,
   CanGetMailLogs,
+  CanManageUserDeliveryMode,
   CanGetPeriodicJobLog,
   CanCreateApprovedComment,
   CanCreateBlockTemplate,

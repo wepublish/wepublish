@@ -31,7 +31,7 @@ import {
 } from '@wepublish/permissions/api';
 import { NotFoundException } from '@nestjs/common';
 import {
-  Authenticated,
+  RequiresFullSession,
   CurrentUser,
   UserSession,
 } from '@wepublish/authentication/api';
@@ -93,7 +93,7 @@ export class UserResolver {
     });
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => SensitiveDataUser, {
     description: `Updates the current logged in user.`,
   })
@@ -101,9 +101,15 @@ export class UserResolver {
     @Args() input: UpdateCurrentUserInput,
     @CurrentUser() { user }: UserSession
   ) {
+    const { name, firstName, birthday, flair, address } = input;
+
     return this.service.updateUser({
-      ...input,
       id: user.id,
+      name,
+      firstName,
+      birthday,
+      flair,
+      address,
     });
   }
 

@@ -10,6 +10,8 @@ import {
   CheckLoginOtpDocument,
   LoginWithCredentialsDocument,
   LoginWithEmailDocument,
+  SettingListDocument,
+  SettingName,
 } from '@wepublish/website/api';
 import { t } from 'i18next';
 import { LoginFormContainer } from './login-form-container';
@@ -28,6 +30,21 @@ const loginWithCredentials = mockOperation(LoginWithCredentialsDocument, {
   variables: { email, password: '12345678' },
   data: { __typename: 'Mutation', createSession: session },
 });
+
+const loginCodeSetting = (enabled: boolean) =>
+  mockOperation(SettingListDocument, {
+    data: {
+      __typename: 'Query',
+      settings: [
+        {
+          __typename: 'Setting',
+          id: 'login-code-enabled',
+          name: SettingName.LoginCodeEnabled,
+          value: enabled,
+        },
+      ],
+    },
+  });
 
 const button = (key: string, options?: Record<string, unknown>) =>
   screen.getByRole('button', { name: t(key, options) });
@@ -53,6 +70,7 @@ describe('LoginFormContainer', () => {
 
     renderWithProviders(<LoginFormContainer />, {
       mocks: [
+        loginCodeSetting(false),
         mockCheckLoginOtpQuery(),
         mockOperation(LoginWithEmailDocument, {
           variables: { email },
@@ -78,6 +96,7 @@ describe('LoginFormContainer', () => {
 
     renderWithProviders(<LoginFormContainer />, {
       mocks: [
+        loginCodeSetting(false),
         mockCheckLoginOtpQuery(),
         mockOperation(LoginWithEmailDocument, {
           variables: { email },
@@ -102,7 +121,13 @@ describe('LoginFormContainer', () => {
 
     const { setToken } = renderWithProviders(
       <LoginFormContainer afterLoginCallback={afterLoginCallback} />,
-      { mocks: [mockCheckLoginOtpQuery(), loginWithCredentials] }
+      {
+        mocks: [
+          loginCodeSetting(false),
+          mockCheckLoginOtpQuery(),
+          loginWithCredentials,
+        ],
+      }
     );
 
     await logInWithPassword(user);
@@ -124,6 +149,7 @@ describe('LoginFormContainer', () => {
       <LoginFormContainer afterLoginCallback={afterLoginCallback} />,
       {
         mocks: [
+          loginCodeSetting(false),
           mockCheckLoginOtpQuery(),
           mockOperation(LoginWithCredentialsDocument, {
             variables: { email, password: '12345678' },
@@ -146,7 +172,7 @@ describe('LoginFormContainer', () => {
     const user = userEvent.setup();
 
     renderWithProviders(<LoginFormContainer />, {
-      mocks: [checkLoginOtp(true)],
+      mocks: [loginCodeSetting(false), checkLoginOtp(true)],
     });
 
     await user.click(button('login.loginWithPassword'));
@@ -160,12 +186,41 @@ describe('LoginFormContainer', () => {
   it('starts with password and 2FA code after a failed login link of a 2FA account', () => {
     window.history.replaceState(null, '', '/login?totpRequired=1');
 
-    renderWithProviders(<LoginFormContainer />);
+    renderWithProviders(<LoginFormContainer />, {
+      mocks: [loginCodeSetting(false)],
+    });
 
     expect(screen.getByLabelText(t('login.password'))).toBeInTheDocument();
     expect(screen.getByLabelText(t('login.totp.code'))).toBeInTheDocument();
     expect(screen.getByRole('alert')).toHaveTextContent(
       t('login.totp.emailLoginDisabled')
     );
+  });
+
+  it('offers the login code when login codes are enabled', async () => {
+    renderWithProviders(<LoginFormContainer />, {
+      mocks: [loginCodeSetting(true)],
+    });
+
+    expect(
+      await screen.findByText(t('login.code.haveCode'))
+    ).toBeInTheDocument();
+  });
+
+  it('falls back to the normal login, even from a link carrying a code, when login codes are disabled', async () => {
+    renderWithProviders(
+      <LoginFormContainer
+        defaults={{ useLoginCode: true, loginCode: 'ABCDE-FGHJK' }}
+      />,
+      { mocks: [loginCodeSetting(false)] }
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: t('login.loginWithPassword') })
+      ).toBeInTheDocument()
+    );
+    expect(screen.queryByText(t('login.code.haveCode'))).toBeNull();
+    expect(screen.queryByDisplayValue('ABCDE-FGHJK')).toBeNull();
   });
 });

@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { MailContext } from './mail-context';
+import { EMPTY_PURL_DATA } from './mail-data';
 
 const createContext = (prisma: unknown) =>
   new MailContext({
@@ -52,6 +53,29 @@ describe('MailContext', () => {
         expect(args).toHaveProperty('select', { mailTemplateId: true });
         expect(args).not.toHaveProperty('include');
       }
+    });
+  });
+
+  describe('buildMailData', () => {
+    it('keeps the login link (jwt) while personal login codes are switched off', async () => {
+      const context = new MailContext({
+        prisma: {} as PrismaClient,
+        mailProvider: {} as any,
+        kv: {} as any,
+        jwtGenerator: async userId => `jwt-for-${userId}`,
+        // What the login code service hands out while the medium has them off.
+        purlProvider: { purlFor: async () => EMPTY_PURL_DATA },
+      });
+
+      const data = await context.buildMailData({
+        recipient: { id: 'user-1' },
+        optionalData: {},
+        mode: 'send',
+      });
+
+      expect(data.jwt).toBe('jwt-for-user-1');
+      expect(data.purl).toBe('');
+      expect(data.purlCode).toBe('');
     });
   });
 });
