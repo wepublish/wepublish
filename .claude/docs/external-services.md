@@ -33,6 +33,12 @@
   a 429 ends the night's run. The run's time and first error land in
   `bexio_contactSyncAt` / `bexio_contactSyncError`, shown in the editor's
   bexio form.
+  **Test mailbox (test instances only):** a bexio company in its trial only
+  emails its own sender address. `bexio_testMailbox` sends invoice mails to
+  recipients on the mailbox's domain to the mailbox instead
+  (`invoiceMailRecipient`); the contact keeps the reader's address. Ignored,
+  refused on save and hidden in the editor unless `APP_ENVIRONMENT` is set and
+  not `production` (`isTestEnvironment`, `libs/utils/api`).
 
 - Simulated (`simulated` type) — no external service: `createIntent` sends the
   customer to a checkout page served by the API at

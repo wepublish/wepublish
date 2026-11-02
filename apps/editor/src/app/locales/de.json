@@ -3434,6 +3434,8 @@
         "bexioInvoiceMailBodyInfo": "Der Text der E-Mail, mit der Bexio die Rechnung verschickt; das PDF wird angehängt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt. Bexio verlangt den Platzhalter [Network Link] im Text.",
         "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen.",
         "bexioContactSyncInfo": "Wenn aktiv, überträgt We.Publish jede Nacht Name, Firma, E-Mail und Adresse geänderter Leser:innen in ihren Bexio-Kontakt und legt für Abos mit Bexio-Zahlung fehlende Kontakte an. Gruppen, Telefon und alles Weitere im Kontakt bleiben, wie sie in Bexio sind.",
+        "bexioTestMailbox": "Test-Postfach (nur Testinstanzen)",
+        "bexioTestMailboxInfo": "Bexio-Firmen in der Testphase senden Rechnungsmails nur an die eigene Absenderadresse. Rechnungsmails an eine Adresse auf der Domain dieses Postfachs gehen stattdessen an dieses Postfach, z. B. bexio@<id>.resend.app für Leser*innen nw-00001@<id>.resend.app. Auf Produktion nicht verfügbar.",
         "bexioContactSyncNeverRan": "Noch nie gelaufen.",
         "bexioContactSyncLastRun": "Letzter Lauf: {{date}}, ohne Fehler.",
         "bexioContactSyncLastRunFailed": "Letzter Lauf: {{date}}. Fehler: {{error}}"
