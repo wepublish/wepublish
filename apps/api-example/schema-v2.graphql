@@ -1848,6 +1848,11 @@ type Goodie implements HasImage {
   memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!
   name: String!
+
+  """
+  Payment periodicities the goodie is offered with. Empty means every periodicity of the member plan.
+  """
+  paymentPeriodicities: [PaymentPeriodicity!]!
   stock: Int
 }
 
@@ -3660,7 +3665,19 @@ type Mutation {
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
 
   """Creates a new goodie."""
-  createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
+  createGoodie(
+    active: Boolean!
+    description: RichText
+    imageID: String
+    memberPlanIDs: [String!]!
+    name: String!
+
+    """
+    Payment periodicities the goodie is offered with. Empty or omitted means every periodicity of the member plan.
+    """
+    paymentPeriodicities: [PaymentPeriodicity!]
+    stock: Int
+  ): Goodie!
   createImpersonationGrant(durationMinutes: Int!, impersonatedBy: String!, reason: String!, userId: String!): ImpersonationGrantResult!
 
   """Creates a new invoice."""
@@ -4266,7 +4283,20 @@ type Mutation {
   ): ExternalApp!
 
   """Updates an existing goodie."""
-  updateGoodie(active: Boolean, description: RichText, id: String!, imageID: String, memberPlanIDs: [String!], name: String, stock: Int): Goodie!
+  updateGoodie(
+    active: Boolean
+    description: RichText
+    id: String!
+    imageID: String
+    memberPlanIDs: [String!]
+    name: String
+
+    """
+    Payment periodicities the goodie is offered with. Empty or omitted means every periodicity of the member plan.
+    """
+    paymentPeriodicities: [PaymentPeriodicity!]
+    stock: Int
+  ): Goodie!
 
   """Updates an existing image."""
   updateImage(description: String, filename: String, focalPointX: Float = 0.5, focalPointY: Float = 0.5, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!

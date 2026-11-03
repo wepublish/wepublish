@@ -9,7 +9,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { TemplateEditorLayout } from './templateEditorLayout';
 
-const unsavedChangesDialog = vi.fn(() => true);
+const useUnsavedChangesDialog = vi.fn();
 
 vi.mock('@apollo/client/react', async importOriginal => {
   const { routeApolloByOperation } = await import('./testUtils');
@@ -38,7 +38,8 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
       {children as never}
     </div>
   ),
-  useUnsavedChangesDialog: () => unsavedChangesDialog,
+  useUnsavedChangesDialog: (hasChanges: boolean) =>
+    useUnsavedChangesDialog(hasChanges),
 }));
 
 vi.mock(
@@ -95,7 +96,6 @@ const renderLayout = (
 
 beforeEach(() => {
   vi.clearAllMocks();
-  unsavedChangesDialog.mockReturnValue(true);
 });
 
 describe('TemplateEditorLayout', () => {
@@ -177,8 +177,6 @@ describe('TemplateEditorLayout', () => {
     fireEvent.click(
       await screen.findByRole('button', { name: 'metadata panel' })
     );
-
-    expect(unsavedChangesDialog).not.toHaveBeenCalled();
   });
 
   it('should not offer metadata without a metadata panel', () => {
@@ -189,18 +187,13 @@ describe('TemplateEditorLayout', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('should go back to the list unless unsaved changes are kept', () => {
-    unsavedChangesDialog.mockReturnValue(false);
+  it('should guard navigation while there are unsaved changes', () => {
     renderLayout({ hasChanged: true });
 
-    const back = screen.getByRole('link', {
-      name: 'thingTemplates.edit.backToList',
-    });
-    expect(back).toHaveAttribute('href', '/things/templates');
-
-    fireEvent.click(back);
-
-    expect(unsavedChangesDialog).toHaveBeenCalled();
+    expect(
+      screen.getByRole('link', { name: 'thingTemplates.edit.backToList' })
+    ).toHaveAttribute('href', '/things/templates');
+    expect(useUnsavedChangesDialog).toHaveBeenCalledWith(true);
   });
 
   it('should explain how to start a template without blocks', () => {
