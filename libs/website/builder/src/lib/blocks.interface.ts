@@ -1,3 +1,4 @@
+import { BuilderSubscribeProps } from './membership.interface';
 import {
   FullImageGalleryBlockFragment,
   FullBreakBlockFragment,
@@ -112,7 +113,8 @@ export type BuilderListicleBlockProps =
   WithBlockProps<FullListicleBlockFragment>;
 export type BuilderCommentBlockProps = WithBlockProps<FullCommentBlockFragment>;
 export type BuilderSubscribeBlockProps =
-  WithBlockProps<FullSubscribeBlockFragment>;
+  WithBlockProps<FullSubscribeBlockFragment> &
+    Pick<BuilderSubscribeProps, 'hiddenAreas' | 'onInvalid'>;
 export type BuilderTeaserGridFlexBlockProps =
   WithBlockProps<FullTeaserGridFlexBlockFragment>;
 export type BuilderTeaserGridBlockProps =
