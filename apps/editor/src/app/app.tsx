@@ -80,10 +80,10 @@ import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { DocumentList } from './routes/documents/documentList';
 import { AudioEditRoute } from './routes/audio/audioEditRoute';
-import { AudioList } from './routes/audio/audioList';
+import { AudioList as UncheckedAudioList } from './routes/audio/audioList';
 import { AudioUploadRoute } from './routes/audio/audioUploadRoute';
 import { VideoEditRoute } from './routes/videos/videoEditRoute';
-import { VideoList } from './routes/videos/videoList';
+import { VideoList as UncheckedVideoList } from './routes/videos/videoList';
 import { VideoUploadRoute } from './routes/videos/videoUploadRoute';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
@@ -143,6 +143,12 @@ const NewsletterCampaignEditor = withNewsletterFeature(
 const NewsletterCampaignPreview = withNewsletterFeature(
   lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignPreview })))
 );
+
+const withMediaUploadsFeature = createCheckedFeatureComponent(
+  'video-audio-uploads'
+);
+const VideoList = withMediaUploadsFeature(UncheckedVideoList);
+const AudioList = withMediaUploadsFeature(UncheckedAudioList);
 
 const LogoutMutation = gql`
   mutation Logout {
