@@ -24,6 +24,7 @@ export const mockPageRevision = ({
   socialMediaImage,
   image,
   blocks,
+  blocksChangeAt: null,
   properties: [],
   ...definedOnly(overrides),
 });

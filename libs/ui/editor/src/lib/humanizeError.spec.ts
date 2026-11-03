@@ -53,6 +53,15 @@ describe('humanizeError', () => {
     ).toBe('errors.inUse');
   });
 
+  it('explains a block template that would contain itself', () => {
+    expect(
+      humanizeError(
+        graphQLError('Block templates can not contain circular references.'),
+        t
+      )
+    ).toBe('errors.circularBlockTemplate');
+  });
+
   it('hides other internal database errors', () => {
     expect(
       humanizeError(

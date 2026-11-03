@@ -5,10 +5,11 @@ import {
 } from '@wepublish/public-content-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PageService } from './page.service';
-import { Page, PrismaClient, TaggedPages } from '@prisma/client';
+import { Page, Prisma, PrismaClient, TaggedPages } from '@prisma/client';
 import { PageDataloaderService } from './page-dataloader.service';
 import { DateFilterComparison, SortOrder } from '@wepublish/utils/api';
 import { PageSort } from './page.model';
+import type { PuckBlockInput } from '@wepublish/puck-content/api';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import type { Mock } from 'vitest';
@@ -632,6 +633,379 @@ describe('PageService', () => {
       expect(prismaMock.page.create?.mock.calls[0][0].data).toMatchObject({
         hideHeader: true,
         hideFooter: false,
+      });
+    });
+  });
+
+  describe('puck blocks', () => {
+    const puckBlocks: PuckBlockInput[] = [
+      {
+        id: 'grid-1',
+        kind: 'puck',
+        type: 'Grid',
+        props: { items: [{ content: [] }] },
+        children: [
+          {
+            id: 'heading-1',
+            kind: 'puck',
+            type: 'Heading',
+            props: { text: 'Hi' },
+            puckSlot: 'items[0].content',
+          },
+        ],
+      },
+    ];
+
+    const input = { hidden: false, properties: [], tagIds: [] };
+
+    const createdRevision = () =>
+      prismaMock.page.create?.mock.calls[0][0].data.revisions.create;
+
+    const updatedRevision = () =>
+      prismaMock.page.update?.mock.calls[0][0].data.revisions.create;
+
+    beforeEach(() => {
+      prismaMock.page.create?.mockResolvedValue({ id: '1234' });
+      prismaMock.page.update?.mockResolvedValue({ id: '1234' });
+    });
+
+    it('stores the puck blocks of a new page', async () => {
+      await service.createPage({ ...input, blocks: [], puckBlocks }, '1');
+
+      expect(createdRevision().puckBlocks).toEqual(puckBlocks);
+    });
+
+    it('stores the timings the DateTime scalar parsed as ISO strings', async () => {
+      await service.createPage(
+        {
+          ...input,
+          puckBlocks: [
+            {
+              id: 'heading-1',
+              kind: 'puck',
+              type: 'Heading',
+              props: {},
+              visibility: {
+                timings: { from: new Date('2026-01-05T08:00:00Z') },
+              },
+            },
+          ],
+        },
+        '1'
+      );
+
+      expect(createdRevision().puckBlocks).toEqual([
+        {
+          id: 'heading-1',
+          kind: 'puck',
+          type: 'Heading',
+          props: {},
+          visibility: { timings: { from: '2026-01-05T08:00:00.000Z' } },
+        },
+      ]);
+    });
+
+    it('creates a page without legacy blocks', async () => {
+      await service.createPage({ ...input, puckBlocks }, '1');
+
+      expect(createdRevision().blocks).toEqual([]);
+    });
+
+    it('stores no puck blocks for a new page without them', async () => {
+      await service.createPage({ ...input, blocks: [] }, '1');
+
+      expect(createdRevision().puckBlocks).toBe(Prisma.DbNull);
+    });
+
+    it('rejects a new page with invalid puck blocks', async () => {
+      await expect(
+        service.createPage(
+          {
+            ...input,
+            puckBlocks: [
+              { type: 'Heading', props: { id: 'a' } },
+            ] as unknown as PuckBlockInput[],
+          },
+          '1'
+        )
+      ).rejects.toThrow(BadRequestException);
+
+      expect(prismaMock.page.create).not.toHaveBeenCalled();
+    });
+
+    describe('when updating', () => {
+      const latest = {
+        blocks: [{ type: 'title', title: 'Old' }],
+        puckBlocks: [{ id: 'old-1', kind: 'puck', type: 'Heading', props: {} }],
+      };
+
+      beforeEach(() => {
+        prismaMock.page.findUnique?.mockResolvedValue({
+          id: '1234',
+          tags: [],
+          revisions: [latest],
+        });
+      });
+
+      it('loads the content of the latest open revision', async () => {
+        await service.updatePage({ ...input, id: '1234', blocks: [] }, '1');
+
+        expect(
+          prismaMock.page.findUnique?.mock.calls[0][0].include.revisions
+        ).toEqual({
+          where: { archivedAt: null },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: { blocks: true, puckBlocks: true, puckRegistry: true },
+        });
+      });
+
+      it('stores the given puck blocks', async () => {
+        await service.updatePage(
+          { ...input, id: '1234', blocks: [], puckBlocks },
+          '1'
+        );
+
+        expect(updatedRevision().puckBlocks).toEqual(puckBlocks);
+      });
+
+      it('keeps the puck blocks of the latest revision when none are given', async () => {
+        await service.updatePage({ ...input, id: '1234', blocks: [] }, '1');
+
+        expect(updatedRevision().puckBlocks).toBe(latest.puckBlocks);
+      });
+
+      it('clears the puck blocks when null is given', async () => {
+        await service.updatePage(
+          { ...input, id: '1234', blocks: [], puckBlocks: null },
+          '1'
+        );
+
+        expect(updatedRevision().puckBlocks).toBe(Prisma.DbNull);
+      });
+
+      it('keeps the legacy blocks of the latest revision when none are given', async () => {
+        await service.updatePage({ ...input, id: '1234', puckBlocks }, '1');
+
+        expect(updatedRevision().blocks).toBe(latest.blocks);
+        expect(mapBlockUnionMap).not.toHaveBeenCalled();
+      });
+
+      it('rejects invalid puck blocks', async () => {
+        await expect(
+          service.updatePage(
+            {
+              ...input,
+              id: '1234',
+              puckBlocks: [{ id: 'a', props: {} }] as PuckBlockInput[],
+            },
+            '1'
+          )
+        ).rejects.toThrow(BadRequestException);
+
+        expect(prismaMock.page.update).not.toHaveBeenCalled();
+      });
+    });
+
+    it('copies the puck blocks when duplicating a page', async () => {
+      prismaMock.page.findUnique?.mockResolvedValue({
+        id: '1234',
+        tags: [],
+        revisions: [{ id: 'rev', properties: [], blocks: [], puckBlocks }],
+      });
+
+      await service.duplicatePage('1234', '1');
+
+      expect(createdRevision().puckBlocks).toEqual(puckBlocks);
+    });
+
+    it.each([
+      ['its puck blocks', puckBlocks, puckBlocks],
+      ['no puck blocks', null, Prisma.DbNull],
+    ])('restores a revision with %s', async (_, stored, expected) => {
+      prismaMock.pageRevision.findUnique?.mockResolvedValue({
+        id: 'rev-old',
+        pageId: '1234',
+        properties: [],
+        blocks: [],
+        puckBlocks: stored,
+      });
+
+      await service.restorePageRevision('1234', 'rev-old', '1');
+
+      expect(updatedRevision().puckBlocks).toBe(expected);
+    });
+
+    describe('puck registry', () => {
+      const hero: PuckBlockInput = {
+        id: 'hero-1',
+        kind: 'generated',
+        type: 'HeroBanner',
+        props: { title: 'Hi' },
+      };
+      const puckRegistry = {
+        components: {
+          HeroBanner: {
+            html: '<section data-puck-field-name="title"></section>',
+          },
+        },
+        styles: '.hero {}',
+        script: 'boot()',
+      };
+      const stored = {
+        blocks: [],
+        puckBlocks: [hero],
+        puckRegistry,
+      };
+
+      it('stores the registry of a new page as parsed, script included', async () => {
+        await service.createPage(
+          {
+            ...input,
+            puckBlocks: [hero],
+            puckRegistry: {
+              ...puckRegistry,
+              components: {
+                HeroBanner: {
+                  ...puckRegistry.components.HeroBanner,
+                  label: null,
+                },
+              },
+            } as never,
+          },
+          '1'
+        );
+
+        expect(createdRevision().puckBlocks).toEqual([hero]);
+        expect(createdRevision().puckRegistry).toEqual(puckRegistry);
+      });
+
+      it('stores no registry for a new page without one', async () => {
+        await service.createPage({ ...input, puckBlocks }, '1');
+
+        expect(createdRevision().puckRegistry).toBe(Prisma.DbNull);
+      });
+
+      it('rejects a new page with generated blocks the registry lacks', async () => {
+        await expect(
+          service.createPage({ ...input, puckBlocks: [hero] }, '1')
+        ).rejects.toThrow(BadRequestException);
+
+        expect(prismaMock.page.create).not.toHaveBeenCalled();
+      });
+
+      describe('when updating', () => {
+        beforeEach(() => {
+          prismaMock.page.findUnique?.mockResolvedValue({
+            id: '1234',
+            tags: [],
+            revisions: [stored],
+          });
+        });
+
+        it('loads the registry of the latest open revision too', async () => {
+          await service.updatePage({ ...input, id: '1234' }, '1');
+
+          expect(
+            prismaMock.page.findUnique?.mock.calls[0][0].include.revisions
+              .select
+          ).toEqual({ blocks: true, puckBlocks: true, puckRegistry: true });
+        });
+
+        it('keeps the registry of the latest revision when none is given', async () => {
+          await service.updatePage({ ...input, id: '1234', puckBlocks }, '1');
+
+          expect(updatedRevision().puckRegistry).toBe(puckRegistry);
+        });
+
+        it('clears the registry when null is given and no block needs it', async () => {
+          await service.updatePage(
+            { ...input, id: '1234', puckBlocks, puckRegistry: null },
+            '1'
+          );
+
+          expect(updatedRevision().puckRegistry).toBe(Prisma.DbNull);
+        });
+
+        it('checks the given blocks against the registry it keeps', async () => {
+          await service.updatePage(
+            { ...input, id: '1234', puckBlocks: [hero, ...puckBlocks] },
+            '1'
+          );
+
+          expect(updatedRevision().puckBlocks).toEqual([hero, ...puckBlocks]);
+        });
+
+        it('rejects a registry that drops a component the kept blocks use', async () => {
+          await expect(
+            service.updatePage(
+              { ...input, id: '1234', puckRegistry: { components: {} } },
+              '1'
+            )
+          ).rejects.toThrow(BadRequestException);
+
+          expect(prismaMock.page.update).not.toHaveBeenCalled();
+        });
+
+        it('rejects a registry with a script that is not text', async () => {
+          await expect(
+            service.updatePage(
+              {
+                ...input,
+                id: '1234',
+                puckRegistry: { components: {}, script: 1 } as never,
+              },
+              '1'
+            )
+          ).rejects.toThrow(BadRequestException);
+        });
+      });
+
+      it('copies the registry when duplicating a page', async () => {
+        prismaMock.page.findUnique?.mockResolvedValue({
+          id: '1234',
+          tags: [],
+          revisions: [{ id: 'rev', properties: [], ...stored }],
+        });
+
+        await service.duplicatePage('1234', '1');
+
+        expect(createdRevision().puckRegistry).toEqual(puckRegistry);
+      });
+
+      it.each([
+        ['its registry', puckRegistry, puckRegistry],
+        ['no registry', null, Prisma.DbNull],
+      ])('restores a revision with %s', async (_, registry, expected) => {
+        prismaMock.pageRevision.findUnique?.mockResolvedValue({
+          id: 'rev-old',
+          pageId: '1234',
+          properties: [],
+          blocks: [],
+          puckBlocks: [],
+          puckRegistry: registry,
+        });
+
+        await service.restorePageRevision('1234', 'rev-old', '1');
+
+        expect(updatedRevision().puckRegistry).toBe(expected);
+      });
+
+      it('publishes the latest revision as it is, registry included', async () => {
+        prismaMock.page.findUnique?.mockResolvedValue({
+          id: '1234',
+          publishedAt: null,
+          revisions: [{ id: 'rev-1', ...stored }],
+        });
+
+        await service.publishPage('1234', new Date('2023-01-01'));
+
+        expect(
+          prismaMock.page.update?.mock.calls[0][0].data.revisions.update
+        ).toEqual({
+          where: { id: 'rev-1' },
+          data: { publishedAt: new Date('2023-01-01') },
+        });
       });
     });
   });

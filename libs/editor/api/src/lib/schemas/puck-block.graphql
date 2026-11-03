@@ -1,0 +1,141 @@
+fragment FullPuckSpacingSides on PuckSpacingSides {
+  top
+  right
+  bottom
+  left
+}
+
+fragment FullPuckBlockDatasource on PuckBlockDatasource {
+  type
+  id
+  ids
+}
+
+fragment FullPuckBlockStyling on PuckBlockStyling {
+  typography
+  textAlign
+  color
+  fontWeight
+  textTransform
+  background
+  backgroundImage
+  backgroundSize
+  backgroundPosition
+  overlay
+  overlayOpacity
+
+  margin {
+    ...FullPuckSpacingSides
+  }
+
+  padding {
+    ...FullPuckSpacingSides
+  }
+
+  border {
+    style
+    color
+
+    width {
+      top
+      right
+      bottom
+      left
+    }
+  }
+
+  borderRadius {
+    topLeft
+    topRight
+    bottomRight
+    bottomLeft
+  }
+
+  cornerShape
+  minHeight
+  maxWidth
+  shadow
+  opacity
+}
+
+fragment FullPuckBlock on PuckBlock {
+  id
+  kind
+  type
+  parentId
+  puckSlot
+  position
+  locked
+  grouped
+  props
+
+  visibility {
+    disabled
+    breakpoints
+
+    timings {
+      from
+      to
+      weekdays
+
+      timeOfDay {
+        from
+        to
+      }
+    }
+  }
+
+  styling {
+    xs {
+      ...FullPuckBlockStyling
+    }
+
+    sm {
+      ...FullPuckBlockStyling
+    }
+
+    md {
+      ...FullPuckBlockStyling
+    }
+
+    lg {
+      ...FullPuckBlockStyling
+    }
+
+    xl {
+      ...FullPuckBlockStyling
+    }
+  }
+
+  datasources {
+    article {
+      ...FullPuckBlockDatasource
+    }
+
+    page {
+      ...FullPuckBlockDatasource
+    }
+
+    event {
+      ...FullPuckBlockDatasource
+    }
+
+    image {
+      ...FullPuckBlockDatasource
+    }
+
+    memberPlan {
+      ...FullPuckBlockDatasource
+    }
+
+    userSubscription {
+      type
+    }
+  }
+}
+
+fragment FullPuckRegistry on PuckRegistry {
+  components
+  styles
+  script
+}

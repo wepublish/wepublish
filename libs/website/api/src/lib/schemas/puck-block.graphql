@@ -1,0 +1,262 @@
+fragment TeaserArticle on Article {
+  ...SlimArticle
+
+  latest {
+    blocks {
+      __typename
+
+      ... on PollBlock {
+        blockStyle: blockStyleName
+        poll {
+          ...FullPoll
+        }
+      }
+    }
+  }
+}
+
+fragment FullPuckBlockData on PuckBlockData {
+  articles {
+    ...TeaserArticle
+  }
+
+  pages {
+    ...SlimPage
+  }
+
+  events {
+    ...FullEvent
+  }
+
+  images {
+    ...FullImage
+  }
+
+  memberPlans {
+    ...FullMemberPlan
+  }
+
+  userSubscriptions {
+    ...FullSubscription
+  }
+}
+
+fragment FullPuckSpacingSides on PuckSpacingSides {
+  top
+  right
+  bottom
+  left
+}
+
+fragment FullPuckBlockStyling on PuckBlockStyling {
+  typography
+  textAlign
+  color
+  fontWeight
+  textTransform
+  background
+  backgroundImage
+  backgroundSize
+  backgroundPosition
+  overlay
+  overlayOpacity
+
+  margin {
+    ...FullPuckSpacingSides
+  }
+
+  padding {
+    ...FullPuckSpacingSides
+  }
+
+  border {
+    style
+    color
+
+    width {
+      top
+      right
+      bottom
+      left
+    }
+  }
+
+  borderRadius {
+    topLeft
+    topRight
+    bottomRight
+    bottomLeft
+  }
+
+  cornerShape
+  minHeight
+  maxWidth
+  shadow
+  opacity
+
+  backgroundImageObject {
+    ...FullImage
+  }
+}
+
+fragment PuckBlockFields on PuckBlock {
+  id
+  kind
+  type
+  parentId
+  puckSlot
+  position
+  props
+
+  visibility {
+    disabled
+    breakpoints
+  }
+
+  styling {
+    xs {
+      ...FullPuckBlockStyling
+    }
+
+    sm {
+      ...FullPuckBlockStyling
+    }
+
+    md {
+      ...FullPuckBlockStyling
+    }
+
+    lg {
+      ...FullPuckBlockStyling
+    }
+
+    xl {
+      ...FullPuckBlockStyling
+    }
+  }
+
+  datasources {
+    article {
+      type
+    }
+
+    page {
+      type
+    }
+
+    event {
+      type
+    }
+
+    image {
+      type
+    }
+
+    memberPlan {
+      type
+    }
+
+    userSubscription {
+      type
+    }
+  }
+
+}
+
+
+fragment TemplatePuckBlock on PuckBlock {
+  ...PuckBlockFields
+
+  data {
+    ...FullPuckBlockData
+  }
+}
+
+fragment PuckBlockTemplateContent on PuckBlockTemplateData {
+  id
+  name
+
+  puckBlocks {
+    ...TemplatePuckBlock
+  }
+
+  puckRegistry {
+    ...FullPuckRegistry
+  }
+}
+
+fragment FullPuckBlock on PuckBlock {
+  ...PuckBlockFields
+
+  data {
+    ...FullPuckBlockData
+
+    template {
+      ...PuckBlockTemplateContent
+    }
+  }
+}
+
+fragment FullPuckRegistry on PuckRegistry {
+  components
+  styles
+  script
+}
+
+fragment PuckPageRevision on PageRevision {
+  seoTitle
+  seoDescription
+
+  puckBlocks {
+    ...FullPuckBlock
+  }
+
+  puckRegistry {
+    ...FullPuckRegistry
+  }
+}
+
+fragment PuckArticleRevision on ArticleRevision {
+  puckBlocks {
+    ...FullPuckBlock
+  }
+
+  puckRegistry {
+    ...FullPuckRegistry
+  }
+}
+
+query PuckPage($slug: String, $id: String) {
+  page(slug: $slug, id: $id) {
+    ...FullPage
+
+    latest {
+      ...PuckPageRevision
+    }
+  }
+}
+
+query PuckArticle($slug: String, $id: String) {
+  article(slug: $slug, id: $id) {
+    ...FullArticle
+
+    latest {
+      ...PuckArticleRevision
+    }
+  }
+}
+
+query PuckBlocksPreview(
+  $puckBlocks: [PuckBlockInput!]!
+  $puckRegistry: PuckRegistryInput
+) {
+  puckBlocksPreview(puckBlocks: $puckBlocks, puckRegistry: $puckRegistry) {
+    puckBlocks {
+      ...FullPuckBlock
+    }
+
+    puckRegistry {
+      ...FullPuckRegistry
+    }
+  }
+}

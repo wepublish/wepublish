@@ -21,6 +21,7 @@ import {
   SortOrder,
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
+import { puckDocumentColumns } from '@wepublish/puck-content/api';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
 import { NamespacedCache } from '@wepublish/kv-ttl-cache/api';
 import {
@@ -151,12 +152,15 @@ export class ArticleService {
       tagIds,
       properties,
       blocks,
+      puckBlocks,
+      puckRegistry,
       paywallId,
       ...revision
     }: CreateArticleInput,
     userId: string | null | undefined
   ) {
-    const mappedBlocks = blocks.map(mapBlockUnionMap);
+    const mappedBlocks = (blocks ?? []).map(mapBlockUnionMap);
+    const puckDocument = puckDocumentColumns({ puckBlocks, puckRegistry });
 
     const article = await this.prisma.article.create({
       data: {
@@ -179,6 +183,7 @@ export class ArticleService {
             ...revision,
             userId,
             blocks: mappedBlocks as any[],
+            ...puckDocument,
             properties: properties as any,
             authors: {
               createMany: {
@@ -224,6 +229,8 @@ export class ArticleService {
       tagIds,
       properties,
       blocks,
+      puckBlocks,
+      puckRegistry,
       ...revision
     }: UpdateArticleInput,
     userId: string | null | undefined
@@ -232,6 +239,12 @@ export class ArticleService {
       where: { id },
       include: {
         tags: true,
+        revisions: {
+          where: { archivedAt: null },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: { blocks: true, puckBlocks: true, puckRegistry: true },
+        },
       },
     });
 
@@ -239,7 +252,13 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`);
     }
 
-    const mappedBlocks = blocks.map(mapBlockUnionMap);
+    const latest = article.revisions?.[0];
+    const mappedBlocks =
+      blocks ? (blocks.map(mapBlockUnionMap) as any[]) : (latest?.blocks ?? []);
+    const puckDocument = puckDocumentColumns(
+      { puckBlocks, puckRegistry },
+      latest
+    );
 
     const result = await this.prisma.article.update({
       where: { id },
@@ -262,7 +281,8 @@ export class ArticleService {
           },
           create: {
             ...revision,
-            blocks: mappedBlocks as any[],
+            blocks: mappedBlocks,
+            ...puckDocument,
             userId,
             properties: properties as any,
             authors: {
@@ -488,6 +508,8 @@ export class ArticleService {
         properties,
         authors,
         socialMediaAuthors,
+        puckBlocks,
+        puckRegistry,
         ...revision
       },
     ] = article.revisions;
@@ -511,6 +533,8 @@ export class ArticleService {
             ...revision,
             userId,
             blocks: revision.blocks || [],
+            puckBlocks: puckBlocks ?? Prisma.DbNull,
+            puckRegistry: puckRegistry ?? Prisma.DbNull,
             properties: properties as any,
             authors: {
               createMany: {
@@ -629,6 +653,8 @@ export class ArticleService {
       properties,
       authors,
       socialMediaAuthors,
+      puckBlocks,
+      puckRegistry,
       ...content
     } = revision;
 
@@ -650,6 +676,8 @@ export class ArticleService {
             ...content,
             userId,
             blocks: (content.blocks ?? []) as any[],
+            puckBlocks: puckBlocks ?? Prisma.DbNull,
+            puckRegistry: puckRegistry ?? Prisma.DbNull,
             properties: properties as any,
             authors: {
               createMany: {

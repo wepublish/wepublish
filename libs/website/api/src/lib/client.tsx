@@ -36,6 +36,10 @@ declare global {
 
 let CACHED_CLIENT: ApolloClient;
 
+const puckBlocksByRevision: TypePolicies = {
+  PuckBlock: { keyFields: false },
+};
+
 const isFile = (value: unknown): boolean =>
   Boolean(
     (typeof File !== 'undefined' && value instanceof File) ||
@@ -129,8 +133,11 @@ const createApiClient = (
         : ({} as TypePolicies),
         mergeDeepRight(
           mergeDeepRight(
-            mergeDeepRight(flattenBlockTemplates, mergeBlockSelections),
-            omitSensitiveData
+            mergeDeepRight(
+              mergeDeepRight(flattenBlockTemplates, mergeBlockSelections),
+              omitSensitiveData
+            ),
+            puckBlocksByRevision
           ),
           cacheConfig?.typePolicies ?? ({} as TypePolicies)
         )

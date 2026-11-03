@@ -1,0 +1,28 @@
+{
+  "name": "puck-content-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/puck-content/api/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/puck-content/api",
+        "tsConfig": "libs/puck-content/api/tsconfig.lib.json",
+        "main": "libs/puck-content/api/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

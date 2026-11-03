@@ -24,7 +24,17 @@ import {
   Public,
   UserSession,
 } from '@wepublish/authentication/api';
-import { skipAnswerCache } from '@wepublish/public-content-cache/api';
+import {
+  limitAnswerCache,
+  skipAnswerCache,
+} from '@wepublish/public-content-cache/api';
+import {
+  ApiBlock,
+  PuckBlock,
+  PuckRegistry,
+  readStoredPuckBlocks,
+  readStoredPuckRegistry,
+} from '@wepublish/puck-content/api';
 import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
 import {
   BlockTemplate,
@@ -39,10 +49,16 @@ import {
   BadRequestException,
   forwardRef,
   Inject,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { BlockContent } from '../block-content.model';
 import { BlockTreeLoader } from '../block-tree/block-tree-loader';
+import { PuckBlockDataLoader } from '../puck/puck-block-data.loader';
+import {
+  displayedPuckBlocks,
+  nextPuckBlocksTimingChange,
+} from '../timing/puck-timing';
 
 const SEES_HIDDEN_BLOCKS = [
   CanCreateBlockTemplate,
@@ -51,13 +67,25 @@ const SEES_HIDDEN_BLOCKS = [
   CanGetPage,
 ];
 
+const seesHiddenBlocks = (user: UserSession | undefined) => {
+  const permissions = permissionsOf(user);
+
+  return SEES_HIDDEN_BLOCKS.some(permission =>
+    hasPermission(permission, permissions)
+  );
+};
+
 @Resolver(() => BlockTemplate)
 export class BlockTemplateResolver {
+  private readonly logger = new Logger(BlockTemplateResolver.name);
+
   constructor(
     private blockTemplateService: BlockTemplateService,
     private blockTemplateDataLoader: BlockTemplateDataloaderService,
     @Inject(forwardRef(() => BlockTreeLoader))
-    private blockTreeLoader: BlockTreeLoader
+    private blockTreeLoader: BlockTreeLoader,
+    @Inject(forwardRef(() => PuckBlockDataLoader))
+    private puckBlockData: PuckBlockDataLoader
   ) {}
 
   @Public()
@@ -125,15 +153,88 @@ export class BlockTemplateResolver {
       skipAnswerCache(context);
     }
 
-    const permissions = permissionsOf(user);
-
     return this.blockTreeLoader.loadTemplateBlocks(template, {
-      onlyDisplayed:
-        onlyDisplayed ||
-        !SEES_HIDDEN_BLOCKS.some(permission =>
-          hasPermission(permission, permissions)
-        ),
+      onlyDisplayed: onlyDisplayed || !seesHiddenBlocks(user),
     });
+  }
+
+  @ResolveField(() => [String], {
+    description:
+      'The ids of every block template this template links, directly or through other linked templates. A template must not be linked into any of them.',
+  })
+  public linkedTemplateIds(@Parent() template: BlockTemplate) {
+    return this.blockTemplateService.linkedTemplateIds(template);
+  }
+
+  @ResolveField(() => [PuckBlock], { nullable: true })
+  public puckBlocks(
+    @Parent() template: BlockTemplate,
+    @Args('onlyDisplayed', {
+      type: () => Boolean,
+      defaultValue: true,
+      description:
+        'Omits blocks that are hidden or outside their timing, together with their children. Pass `false` to edit the template, which only users who can edit block templates, articles or pages may do.',
+    })
+    onlyDisplayed: boolean,
+    @Context() context: object,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    if (!onlyDisplayed) {
+      skipAnswerCache(context);
+    }
+
+    const puckBlocks = this.readPuckBlocks(template);
+
+    if (!puckBlocks) {
+      return null;
+    }
+
+    const { now } = this.blockTreeLoader;
+    const changeAt = nextPuckBlocksTimingChange(puckBlocks, now);
+
+    if (changeAt) {
+      limitAnswerCache(context, changeAt);
+    }
+
+    const pruned = onlyDisplayed || !seesHiddenBlocks(user);
+
+    return this.puckBlockData.flatten(
+      pruned ? displayedPuckBlocks(puckBlocks, now) : puckBlocks,
+      { pruned, now, preview: false }
+    );
+  }
+
+  @ResolveField(() => PuckRegistry, { nullable: true })
+  public puckRegistry(@Parent() { id, puckRegistry }: BlockTemplate) {
+    if (puckRegistry == null) {
+      return null;
+    }
+
+    const stored = readStoredPuckRegistry(puckRegistry);
+
+    if (!stored) {
+      this.logger.warn(
+        `Block template ${id} has a Puck registry that does not parse, reading it as null.`
+      );
+    }
+
+    return stored;
+  }
+
+  private readPuckBlocks({ id, puckBlocks }: BlockTemplate): ApiBlock[] | null {
+    if (puckBlocks == null) {
+      return null;
+    }
+
+    const stored = readStoredPuckBlocks(puckBlocks);
+
+    if (!stored) {
+      this.logger.warn(
+        `Block template ${id} has Puck blocks that do not parse, reading them as null.`
+      );
+    }
+
+    return stored;
   }
 }
 

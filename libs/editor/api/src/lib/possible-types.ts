@@ -214,6 +214,11 @@ const result: PossibleTypesResultData = {
     "HasPoll": [
       "PollStartedAction"
     ],
+    "HasPuckBlocks": [
+      "ArticleRevision",
+      "BlockTemplate",
+      "PageRevision"
+    ],
     "HasSubscriptionLc": [
       "SubscriptionCreatedAction"
     ],

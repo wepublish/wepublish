@@ -14,6 +14,7 @@ export function CreatePageModal(props: CreatePageModalProps) {
       listDocument={PageTemplateListDocument}
       selectTemplates={data => data?.pageTemplates.nodes}
       createPath="/pages/create"
+      puckCreatePath="/puck/pages/create"
       i18nPrefix="pages.createModal"
     />
   );

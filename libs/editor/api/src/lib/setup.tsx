@@ -88,8 +88,8 @@ let client: ApolloClient;
 const isFile = (value: unknown): boolean =>
   Boolean(
     (typeof File !== 'undefined' && value instanceof File) ||
-      (typeof Blob !== 'undefined' && value instanceof Blob) ||
-      (value && typeof value === 'object' && Object.values(value).some(isFile))
+    (typeof Blob !== 'undefined' && value instanceof Blob) ||
+    (value && typeof value === 'object' && Object.values(value).some(isFile))
   );
 
 export function getApiClientV2() {
@@ -113,6 +113,9 @@ export function getApiClientV2() {
 
       cache: new InMemoryCache({
         possibleTypes: possibleTypes.possibleTypes,
+        typePolicies: {
+          PuckBlock: { keyFields: false },
+        },
       }),
 
       defaultOptions: {

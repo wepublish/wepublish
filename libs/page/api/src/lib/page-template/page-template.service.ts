@@ -73,9 +73,15 @@ export class PageTemplateService {
   public async createPageTemplate({
     name,
     blocks,
+    puckBlocks,
+    puckRegistry,
     metadata,
   }: CreatePageTemplateInput) {
-    const mappedBlocks = await this.blockTemplateService.mapBlocks(blocks);
+    const content = await this.blockTemplateService.mapTemplateContent({
+      blocks,
+      puckBlocks,
+      puckRegistry,
+    });
 
     try {
       return await this.prisma.pageTemplate.create({
@@ -84,7 +90,7 @@ export class PageTemplateService {
           blockTemplate: {
             create: {
               name,
-              blocks: mappedBlocks,
+              ...content,
             },
           },
         },
@@ -98,6 +104,8 @@ export class PageTemplateService {
     id,
     name,
     blocks,
+    puckBlocks,
+    puckRegistry,
     metadata,
   }: UpdatePageTemplateInput) {
     const { blockTemplateId } =
@@ -107,8 +115,8 @@ export class PageTemplateService {
         },
       });
 
-    const mappedBlocks = await this.blockTemplateService.mapBlocks(
-      blocks,
+    const content = await this.blockTemplateService.mapTemplateContent(
+      { blocks, puckBlocks, puckRegistry },
       blockTemplateId
     );
 
@@ -122,7 +130,7 @@ export class PageTemplateService {
           blockTemplate: {
             update: {
               name,
-              blocks: mappedBlocks,
+              ...content,
             },
           },
         },

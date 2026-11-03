@@ -6,6 +6,8 @@ type Translate = (key: string, options?: Record<string, unknown>) => string;
 const UNIQUE_CONSTRAINT = /Unique constraint failed on the fields: \(`([^`]+)`/;
 const FOREIGN_KEY_CONSTRAINT = /Foreign key constraint/i;
 const DATABASE_INTERNALS = /Invalid `[^`]+` invocation|prisma/i;
+const CIRCULAR_BLOCK_TEMPLATE =
+  /Block templates can not contain circular references/i;
 const NETWORK_FAILURE = /Failed to fetch|NetworkError|Load failed/i;
 const ACCESS_DENIED_CODES = ['FORBIDDEN', 'UNAUTHENTICATED'];
 const ACCESS_DENIED_STATUS = [401, 403];
@@ -20,6 +22,10 @@ function explain(message: string, t: Translate) {
     return unique[1] === 'email' ?
         t('errors.uniqueEmail')
       : t('errors.uniqueField', { field: unique[1] });
+  }
+
+  if (CIRCULAR_BLOCK_TEMPLATE.test(text)) {
+    return t('errors.circularBlockTemplate');
   }
 
   if (FOREIGN_KEY_CONSTRAINT.test(text)) {

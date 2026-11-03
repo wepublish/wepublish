@@ -69,6 +69,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { copyLinkToClipboard } from '../../copyLink';
+import { editorPath } from '../editorPath';
 import { CreateArticleModal } from './createArticleModal';
 
 interface State {
@@ -239,7 +240,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
         alwaysVisible: true,
         render: article => (
           <PeerAvatar peer={article.peer}>
-            <Link to={`/articles/edit/${article.id}`}>
+            <Link to={editorPath('articles', article)}>
               {article.latest.title || t('articles.overview.untitled')}
             </Link>
           </PeerAvatar>
@@ -622,7 +623,10 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                   }).then(output => {
                     if (output.data) {
                       navigate(
-                        `/articles/edit/${output.data?.duplicateArticle.id}`,
+                        editorPath('articles', {
+                          id: output.data.duplicateArticle.id,
+                          latest: currentArticle.latest,
+                        }),
                         {
                           replace: true,
                         }

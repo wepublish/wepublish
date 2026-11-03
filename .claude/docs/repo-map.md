@@ -38,6 +38,7 @@ the schema and generated types flow downstream from it.
 | `libs/testing` | API test helpers — see [testing.md](testing.md) |
 | `libs/mocks/website` | `@wepublish/mocks/website`: seeded fake API data, Apollo mocks and `renderWithProviders` for website specs. Hidden from Nx: [README](../../libs/mocks/website/README.md) |
 | `libs/richtext` | Slate-based richtext, with `api`/`editor`/`website` variants |
+| `libs/puck-content` | Puck pages, articles and their templates: `api` validates the stored blocks and registry (a leaf lib), `website` renders them without Puck (`PuckBlocks`), `editor` holds the Puck configs, fields, `editorRender` and save/load. `PuckBlock.data` is resolved in `block-content/api` `puck/`. Rules: [code-style.md](code-style.md#puck-content) |
 | `libs/nest-modules`, `libs/permissions`, `libs/session`, `libs/authentication` | Backend plumbing, auth, permission guards |
 | `libs/tenants/<tenant>` | One per tenant site (`@wepublish/tenant/<tenant>`, project `tenant-<tenant>`): theme, fonts, builder overrides, block styles, translation overrides, exported as a `WebsiteTenantConfig`. See [libs/tenants/README.md](../../libs/tenants/README.md) |
 

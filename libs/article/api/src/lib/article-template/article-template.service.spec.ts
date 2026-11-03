@@ -24,6 +24,14 @@ const metadata: ArticleTemplateMetadataInput = {
 
 const blocks = [{ [BlockType.Title]: { title: 'Title' } }];
 const mappedBlocks = [{ type: BlockType.Title, title: 'Title' }];
+const puckBlocks = [
+  { id: 'heading-1', kind: 'puck', type: 'Heading', props: {} },
+];
+const mappedContent = {
+  blocks: mappedBlocks,
+  puckBlocks,
+  puckRegistry: Prisma.DbNull,
+};
 
 describe('ArticleTemplateService', () => {
   let service: ArticleTemplateService;
@@ -39,7 +47,7 @@ describe('ArticleTemplateService', () => {
     >;
     blockTemplate: Record<'delete', Mock>;
   };
-  let blockTemplateService: { mapBlocks: Mock };
+  let blockTemplateService: { mapTemplateContent: Mock };
 
   beforeEach(async () => {
     prismaMock = {
@@ -59,7 +67,7 @@ describe('ArticleTemplateService', () => {
       },
     };
     blockTemplateService = {
-      mapBlocks: vi.fn().mockResolvedValue(mappedBlocks),
+      mapTemplateContent: vi.fn().mockResolvedValue(mappedContent),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -112,14 +120,23 @@ describe('ArticleTemplateService', () => {
   });
 
   it('should create an article template with its content as block template', async () => {
-    await service.createArticleTemplate({ name: 'Template', blocks, metadata });
+    await service.createArticleTemplate({
+      name: 'Template',
+      blocks,
+      puckBlocks: puckBlocks as never,
+      metadata,
+    });
 
-    expect(blockTemplateService.mapBlocks).toHaveBeenCalledWith(blocks);
+    expect(blockTemplateService.mapTemplateContent).toHaveBeenCalledWith({
+      blocks,
+      puckBlocks,
+      puckRegistry: undefined,
+    });
     expect(prismaMock.articleTemplate.create).toHaveBeenCalledWith({
       data: {
         metadata,
         blockTemplate: {
-          create: { name: 'Template', blocks: mappedBlocks },
+          create: { name: 'Template', ...mappedContent },
         },
       },
     });
@@ -133,8 +150,8 @@ describe('ArticleTemplateService', () => {
       metadata,
     });
 
-    expect(blockTemplateService.mapBlocks).toHaveBeenCalledWith(
-      blocks,
+    expect(blockTemplateService.mapTemplateContent).toHaveBeenCalledWith(
+      { blocks, puckBlocks: undefined, puckRegistry: undefined },
       'block-template'
     );
     expect(prismaMock.articleTemplate.update).toHaveBeenCalledWith({
@@ -142,14 +159,16 @@ describe('ArticleTemplateService', () => {
       data: {
         metadata,
         blockTemplate: {
-          update: { name: 'Template', blocks: mappedBlocks },
+          update: { name: 'Template', ...mappedContent },
         },
       },
     });
   });
 
   it('should not update an article template with invalid content', async () => {
-    blockTemplateService.mapBlocks.mockRejectedValue(new Error('Invalid'));
+    blockTemplateService.mapTemplateContent.mockRejectedValue(
+      new Error('Invalid')
+    );
 
     await expect(
       service.updateArticleTemplate({

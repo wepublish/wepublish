@@ -67,7 +67,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { copyLinkToClipboard } from '../../copyLink';
-
+import { editorPath } from '../editorPath';
 import { CreatePageModal } from './createPageModal';
 
 interface State {
@@ -223,7 +223,7 @@ function PageList() {
         width: 400,
         alwaysVisible: true,
         render: page => (
-          <Link to={`/pages/edit/${page.id}`}>
+          <Link to={editorPath('pages', page)}>
             {page.latest.title || t('pages.overview.untitled')}
           </Link>
         ),
@@ -601,9 +601,15 @@ function PageList() {
                     },
                   }).then(output => {
                     if (output.data) {
-                      navigate(`/pages/edit/${output.data?.duplicatePage.id}`, {
-                        replace: true,
-                      });
+                      navigate(
+                        editorPath('pages', {
+                          id: output.data.duplicatePage.id,
+                          latest: currentPage.latest,
+                        }),
+                        {
+                          replace: true,
+                        }
+                      );
                     }
                   });
                   break;

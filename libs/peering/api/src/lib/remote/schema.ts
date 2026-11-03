@@ -19,6 +19,14 @@ export type Scalars = {
   GraphQLSettingValueType: { input: unknown; output: unknown; }
   /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSONObject: { input: unknown; output: unknown; }
+  /** Anchor point of a background image as `"<x> <y>"`, x one of left, center, right and y one of top, center, bottom. */
+  PuckBackgroundPosition: { input: `${'left' | 'center' | 'right'} ${'top' | 'center' | 'bottom'}`; output: `${'left' | 'center' | 'right'} ${'top' | 'center' | 'bottom'}`; }
+  /** A maximum width: a theme breakpoint (`"sm"`, `"md"`, `"lg"`, `"xl"`), pixels like `"640px"` or percent like `"80%"`. */
+  PuckMaxWidth: { input: 'sm' | 'md' | 'lg' | 'xl' | `${ number }px` | `${ number }%`; output: 'sm' | 'md' | 'lg' | 'xl' | `${ number }px` | `${ number }%`; }
+  /** A minimum height in pixels like `"320px"` or in percent of the viewport height like `"50vh"`. */
+  PuckMinHeight: { input: `${ number }px` | `${ number }vh`; output: `${ number }px` | `${ number }vh`; }
+  /** A number of theme spacing units like `2`, or an exact css length as a string like `"12px"`, `"1.5rem"` or `"50vh"`. */
+  PuckSpacing: { input: number | `${ number }${ 'px' | 'cm' | 'mm' | 'q' | 'in' | 'pc' | 'pt' | 'em' | 'rem' | 'ex' | 'rex' | 'cap' | 'rcap' | 'ch' | 'rch' | 'ic' | 'ric' | 'lh' | 'rlh' | 'vw' | 'vh' | 'vi' | 'vb' | 'vmin' | 'vmax' | 'svw' | 'svh' | 'svi' | 'svb' | 'svmin' | 'svmax' | 'lvw' | 'lvh' | 'lvi' | 'lvb' | 'lvmin' | 'lvmax' | 'dvw' | 'dvh' | 'dvi' | 'dvb' | 'dvmin' | 'dvmax' | 'cqw' | 'cqh' | 'cqi' | 'cqb' | 'cqmin' | 'cqmax' | '%' }`; output: number | `${ number }${ 'px' | 'cm' | 'mm' | 'q' | 'in' | 'pc' | 'pt' | 'em' | 'rem' | 'ex' | 'rex' | 'cap' | 'rcap' | 'ch' | 'rch' | 'ic' | 'ric' | 'lh' | 'rlh' | 'vw' | 'vh' | 'vi' | 'vb' | 'vmin' | 'vmax' | 'svw' | 'svh' | 'svi' | 'svb' | 'svmin' | 'svmax' | 'lvw' | 'lvh' | 'lvi' | 'lvb' | 'lvmin' | 'lvmax' | 'dvw' | 'dvh' | 'dvi' | 'dvb' | 'dvmin' | 'dvmax' | 'cqw' | 'cqh' | 'cqi' | 'cqb' | 'cqmin' | 'cqmax' | '%' }`; }
   RichText: { input: RichtextJSONDocument; output: RichtextJSONDocument; }
   Slug: { input: string; output: string; }
   /** The `Upload` scalar type represents a file upload. */
@@ -176,7 +184,7 @@ export type ArticleNavigationLink = BaseNavigationLink & HasArticle & {
   type: NavigationLinkType;
 };
 
-export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
+export type ArticleRevision = HasBlockContent & HasOptionalUserLc & HasPuckBlocks & {
   __typename?: 'ArticleRevision';
   archivedAt?: Maybe<Scalars['DateTime']['output']>;
   authors: Array<ArticleRevisionAuthor>;
@@ -194,6 +202,10 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   preTitle?: Maybe<Scalars['String']['output']>;
   properties: Array<Property>;
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  puckBlocks?: Maybe<Array<PuckBlock>>;
+  /** When the set of displayed Puck blocks changes next, so caches can expire in time. Null while no block is timed. */
+  puckBlocksChangeAt?: Maybe<Scalars['DateTime']['output']>;
+  puckRegistry?: Maybe<PuckRegistry>;
   seoDescription?: Maybe<Scalars['String']['output']>;
   seoTitle?: Maybe<Scalars['String']['output']>;
   socialMediaAuthors: Array<Author>;
@@ -208,6 +220,11 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
 
 
 export type ArticleRevisionBlocksArgs = {
+  onlyDisplayed?: Scalars['Boolean']['input'];
+};
+
+
+export type ArticleRevisionPuckBlocksArgs = {
   onlyDisplayed?: Scalars['Boolean']['input'];
 };
 
@@ -610,17 +627,26 @@ export type BlockStyle = {
   name: Scalars['String']['output'];
 };
 
-export type BlockTemplate = HasBlockContent & {
+export type BlockTemplate = HasBlockContent & HasPuckBlocks & {
   __typename?: 'BlockTemplate';
   blocks: Array<BlockContent>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
+  /** The ids of every block template this template links, directly or through other linked templates. A template must not be linked into any of them. */
+  linkedTemplateIds: Array<Scalars['String']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  puckBlocks?: Maybe<Array<PuckBlock>>;
+  puckRegistry?: Maybe<PuckRegistry>;
 };
 
 
 export type BlockTemplateBlocksArgs = {
+  onlyDisplayed?: Scalars['Boolean']['input'];
+};
+
+
+export type BlockTemplatePuckBlocksArgs = {
   onlyDisplayed?: Scalars['Boolean']['input'];
 };
 
@@ -649,6 +675,8 @@ export type BlockTemplateBlockInput = {
 
 export type BlockTemplateFilter = {
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Only templates built in the page builder (`true`) or in the block editor (`false`). */
+  puck?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export enum BlockTemplateSort {
@@ -1795,6 +1823,11 @@ export type HasPaymentMethod = {
 export type HasPoll = {
   poll: FullPoll;
   pollId: Scalars['String']['output'];
+};
+
+export type HasPuckBlocks = {
+  puckBlocks?: Maybe<Array<PuckBlock>>;
+  puckRegistry?: Maybe<PuckRegistry>;
 };
 
 export type HasSubscriptionLc = {
@@ -3533,7 +3566,7 @@ export type MutationCreateApiTokenArgs = {
 
 export type MutationCreateArticleArgs = {
   authors: Array<ArticleRevisionAuthorInput>;
-  blocks: Array<BlockContentInput>;
+  blocks?: Array<BlockContentInput>;
   breaking: Scalars['Boolean']['input'];
   canonicalUrl?: InputMaybe<Scalars['String']['input']>;
   disableComments: Scalars['Boolean']['input'];
@@ -3545,6 +3578,8 @@ export type MutationCreateArticleArgs = {
   paywallId?: InputMaybe<Scalars['String']['input']>;
   preTitle?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
   seoTitle?: InputMaybe<Scalars['String']['input']>;
   shared: Scalars['Boolean']['input'];
@@ -3559,9 +3594,11 @@ export type MutationCreateArticleArgs = {
 
 
 export type MutationCreateArticleTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: Array<BlockContentInput>;
   metadata: ArticleTemplateMetadataInput;
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -3591,8 +3628,10 @@ export type MutationCreateBlockStyleArgs = {
 
 
 export type MutationCreateBlockTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: Array<BlockContentInput>;
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -3757,13 +3796,15 @@ export type MutationCreateNewsletterCampaignArgs = {
 
 
 export type MutationCreatePageArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']['input']>;
   hidden: Scalars['Boolean']['input'];
   hideFooter?: Scalars['Boolean']['input'];
   hideHeader?: Scalars['Boolean']['input'];
   imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
   seoTitle?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -3776,9 +3817,11 @@ export type MutationCreatePageArgs = {
 
 
 export type MutationCreatePageTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: Array<BlockContentInput>;
   metadata: PageTemplateMetadataInput;
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -4548,7 +4591,7 @@ export type MutationUpdateAnalyticsProviderSettingArgs = {
 
 export type MutationUpdateArticleArgs = {
   authors: Array<ArticleRevisionAuthorInput>;
-  blocks: Array<BlockContentInput>;
+  blocks?: InputMaybe<Array<BlockContentInput>>;
   breaking: Scalars['Boolean']['input'];
   canonicalUrl?: InputMaybe<Scalars['String']['input']>;
   disableComments: Scalars['Boolean']['input'];
@@ -4561,6 +4604,8 @@ export type MutationUpdateArticleArgs = {
   paywallId?: InputMaybe<Scalars['String']['input']>;
   preTitle?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
   seoTitle?: InputMaybe<Scalars['String']['input']>;
   shared: Scalars['Boolean']['input'];
@@ -4575,10 +4620,12 @@ export type MutationUpdateArticleArgs = {
 
 
 export type MutationUpdateArticleTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: InputMaybe<Array<BlockContentInput>>;
   id: Scalars['String']['input'];
   metadata: ArticleTemplateMetadataInput;
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -4610,9 +4657,11 @@ export type MutationUpdateBlockStyleArgs = {
 
 
 export type MutationUpdateBlockTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: InputMaybe<Array<BlockContentInput>>;
   id: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -4806,7 +4855,7 @@ export type MutationUpdateNewsletterCampaignArgs = {
 
 
 export type MutationUpdatePageArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: InputMaybe<Array<BlockContentInput>>;
   description?: InputMaybe<Scalars['String']['input']>;
   hidden: Scalars['Boolean']['input'];
   hideFooter?: Scalars['Boolean']['input'];
@@ -4814,6 +4863,8 @@ export type MutationUpdatePageArgs = {
   id: Scalars['String']['input'];
   imageID?: InputMaybe<Scalars['String']['input']>;
   properties: Array<PropertyInput>;
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
   seoTitle?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -4826,10 +4877,12 @@ export type MutationUpdatePageArgs = {
 
 
 export type MutationUpdatePageTemplateArgs = {
-  blocks: Array<BlockContentInput>;
+  blocks?: InputMaybe<Array<BlockContentInput>>;
   id: Scalars['String']['input'];
   metadata: PageTemplateMetadataInput;
   name: Scalars['String']['input'];
+  puckBlocks?: InputMaybe<Array<PuckBlockInput>>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 
@@ -5329,7 +5382,7 @@ export type PageNavigationLink = BaseNavigationLink & HasPage & {
   type: NavigationLinkType;
 };
 
-export type PageRevision = HasBlockContent & HasOptionalUserLc & {
+export type PageRevision = HasBlockContent & HasOptionalUserLc & HasPuckBlocks & {
   __typename?: 'PageRevision';
   archivedAt?: Maybe<Scalars['DateTime']['output']>;
   blocks: Array<BlockContent>;
@@ -5342,6 +5395,10 @@ export type PageRevision = HasBlockContent & HasOptionalUserLc & {
   imageID?: Maybe<Scalars['String']['output']>;
   properties: Array<Property>;
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  puckBlocks?: Maybe<Array<PuckBlock>>;
+  /** When the set of displayed Puck blocks changes next, so caches can expire in time. Null while no block is timed. */
+  puckBlocksChangeAt?: Maybe<Scalars['DateTime']['output']>;
+  puckRegistry?: Maybe<PuckRegistry>;
   seoDescription?: Maybe<Scalars['String']['output']>;
   seoTitle?: Maybe<Scalars['String']['output']>;
   socialMediaDescription?: Maybe<Scalars['String']['output']>;
@@ -5355,6 +5412,11 @@ export type PageRevision = HasBlockContent & HasOptionalUserLc & {
 
 
 export type PageRevisionBlocksArgs = {
+  onlyDisplayed?: Scalars['Boolean']['input'];
+};
+
+
+export type PageRevisionPuckBlocksArgs = {
   onlyDisplayed?: Scalars['Boolean']['input'];
 };
 
@@ -6244,6 +6306,442 @@ export type PublicSubscriptionConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export enum PuckBackgroundSize {
+  Auto = 'auto',
+  Contain = 'contain',
+  Cover = 'cover'
+}
+
+/** A Puck block in a flat list, parents before their children. Rebuild the tree by grouping on `parentId` and `puckSlot` and sorting by `position`. */
+export type PuckBlock = {
+  __typename?: 'PuckBlock';
+  /** How many records the block shows itself from each of its own `list` and `uniqueList` datasources, before the blocks in its slots take theirs. Omitted means none, 1 to 50. Member plans and subscriptions always load all. */
+  consumes?: Maybe<Scalars['Int']['output']>;
+  /** The records the datasources of this block yield. */
+  data: PuckBlockData;
+  datasources?: Maybe<PuckBlockDatasources>;
+  grouped?: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['String']['output'];
+  kind: PuckBlockKind;
+  locked?: Maybe<Scalars['Boolean']['output']>;
+  /** The block this one is nested in, null at the top level. */
+  parentId?: Maybe<Scalars['String']['output']>;
+  /** The index of the block within its parent slot. */
+  position: Scalars['Int']['output'];
+  /** The component props, with every slot emptied to `[]`: the blocks of a slot are the ones pointing at it. */
+  props: Scalars['JSONObject']['output'];
+  /** The slot of the parent this block sits in. Null at the top level, `content` by default. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent. */
+  puckSlot?: Maybe<Scalars['String']['output']>;
+  styling?: Maybe<PuckBlockBreakpointStyling>;
+  /** The component name. */
+  type: Scalars['String']['output'];
+  visibility?: Maybe<PuckBlockVisibility>;
+};
+
+/** The styling of a Puck block per theme breakpoint, mobile first: a breakpoint applies from its minimum width up and inherits every key it leaves out from the smaller breakpoints. */
+export type PuckBlockBreakpointStyling = {
+  __typename?: 'PuckBlockBreakpointStyling';
+  lg?: Maybe<PuckBlockStyling>;
+  md?: Maybe<PuckBlockStyling>;
+  sm?: Maybe<PuckBlockStyling>;
+  xl?: Maybe<PuckBlockStyling>;
+  xs?: Maybe<PuckBlockStyling>;
+};
+
+export type PuckBlockBreakpointStylingInput = {
+  lg?: InputMaybe<PuckBlockStylingInput>;
+  md?: InputMaybe<PuckBlockStylingInput>;
+  sm?: InputMaybe<PuckBlockStylingInput>;
+  xl?: InputMaybe<PuckBlockStylingInput>;
+  xs?: InputMaybe<PuckBlockStylingInput>;
+};
+
+/** The records the datasources of a Puck block yield, resolved on read. A model is null when the block has no datasource for it. */
+export type PuckBlockData = {
+  __typename?: 'PuckBlockData';
+  articles?: Maybe<Array<Article>>;
+  events?: Maybe<Array<Event>>;
+  images?: Maybe<Array<Image>>;
+  memberPlans?: Maybe<Array<MemberPlan>>;
+  pages?: Maybe<Array<Page>>;
+  /** For a linked block template: the template it points at, null when it is missing, links back to itself or is nested too deep. */
+  template?: Maybe<PuckBlockTemplateData>;
+  /** The subscriptions of the reader, empty for a reader who is not logged in. */
+  userSubscriptions?: Maybe<Array<PublicSubscription>>;
+};
+
+export type PuckBlockDatasource = {
+  __typename?: 'PuckBlockDatasource';
+  /** The picked record, only with `single`. */
+  id?: Maybe<Scalars['String']['output']>;
+  /** The picked records in display order, only with `multiple`. */
+  ids?: Maybe<Array<Scalars['String']['output']>>;
+  type: PuckDatasourceType;
+};
+
+export type PuckBlockDatasourceInput = {
+  /** The picked record, only with `single`. */
+  id?: InputMaybe<Scalars['String']['input']>;
+  /** The picked records in display order, only with `multiple`. */
+  ids?: InputMaybe<Array<Scalars['String']['input']>>;
+  type: PuckDatasourceType;
+};
+
+/** The CMS records a Puck block shows, one entry per model. The API resolves them into `PuckBlock.data`. */
+export type PuckBlockDatasources = {
+  __typename?: 'PuckBlockDatasources';
+  article?: Maybe<PuckBlockDatasource>;
+  event?: Maybe<PuckBlockDatasource>;
+  image?: Maybe<PuckBlockDatasource>;
+  memberPlan?: Maybe<PuckBlockDatasource>;
+  page?: Maybe<PuckBlockDatasource>;
+  userSubscription?: Maybe<PuckBlockListDatasource>;
+};
+
+export type PuckBlockDatasourcesInput = {
+  article?: InputMaybe<PuckBlockDatasourceInput>;
+  event?: InputMaybe<PuckBlockDatasourceInput>;
+  image?: InputMaybe<PuckBlockDatasourceInput>;
+  memberPlan?: InputMaybe<PuckBlockDatasourceInput>;
+  page?: InputMaybe<PuckBlockDatasourceInput>;
+  userSubscription?: InputMaybe<PuckBlockListDatasourceInput>;
+};
+
+/** A Puck block with its children, nested as deep as needed. */
+export type PuckBlockInput = {
+  children?: InputMaybe<Array<PuckBlockInput>>;
+  /** How many records the block shows itself from each of its own `list` and `uniqueList` datasources, before the blocks in its slots take theirs. Omitted means none, 1 to 50. Member plans and subscriptions always load all. */
+  consumes?: InputMaybe<Scalars['Int']['input']>;
+  datasources?: InputMaybe<PuckBlockDatasourcesInput>;
+  grouped?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['String']['input'];
+  kind: PuckBlockKind;
+  locked?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The component props without id, locked, grouped, visibility, styling and datasources, with every slot emptied to `[]`. */
+  props: Scalars['JSONObject']['input'];
+  /** The slot of the parent this block sits in, omitted means `content`. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent. */
+  puckSlot?: InputMaybe<Scalars['String']['input']>;
+  styling?: InputMaybe<PuckBlockBreakpointStylingInput>;
+  /** The component name. For a `generated` block, the name of a component in the registry. */
+  type: Scalars['String']['input'];
+  visibility?: InputMaybe<PuckBlockVisibilityInput>;
+};
+
+/** Where the component of a Puck block comes from: `puck` is one of the components the website ships, `generated` one the Puck AI designed and the document registry holds. */
+export enum PuckBlockKind {
+  Generated = 'generated',
+  Puck = 'puck'
+}
+
+export type PuckBlockListDatasource = {
+  __typename?: 'PuckBlockListDatasource';
+  type: PuckListDatasourceType;
+};
+
+export type PuckBlockListDatasourceInput = {
+  type: PuckListDatasourceType;
+};
+
+/** The styling tab of a Puck block. Omitted keys keep the component default. */
+export type PuckBlockStyling = {
+  __typename?: 'PuckBlockStyling';
+  /** A theme colour path like `primary.main` or a hex colour like `#1a1a1a`. */
+  background?: Maybe<Scalars['String']['output']>;
+  /** Id of the image shown as background. */
+  backgroundImage?: Maybe<Scalars['String']['output']>;
+  /** The image `backgroundImage` points at. */
+  backgroundImageObject?: Maybe<Image>;
+  backgroundPosition?: Maybe<Scalars['PuckBackgroundPosition']['output']>;
+  backgroundSize?: Maybe<PuckBackgroundSize>;
+  border?: Maybe<PuckBorder>;
+  borderRadius?: Maybe<PuckBorderRadius>;
+  /** A theme colour path like `primary.main` or a hex colour like `#1a1a1a`. */
+  color?: Maybe<Scalars['String']['output']>;
+  cornerShape?: Maybe<PuckCornerShape>;
+  fontWeight?: Maybe<PuckFontWeight>;
+  margin?: Maybe<PuckSpacingSides>;
+  maxWidth?: Maybe<Scalars['PuckMaxWidth']['output']>;
+  minHeight?: Maybe<Scalars['PuckMinHeight']['output']>;
+  /** Opacity of the whole block in percent, 0 to 100. */
+  opacity?: Maybe<Scalars['Float']['output']>;
+  /** Colour laid over the background. A theme colour path like `primary.main` or a hex colour like `#1a1a1a`. */
+  overlay?: Maybe<Scalars['String']['output']>;
+  /** Opacity of the overlay in percent, 0 to 100. */
+  overlayOpacity?: Maybe<Scalars['Float']['output']>;
+  padding?: Maybe<PuckSpacingSides>;
+  /** Theme shadow elevation, 0 to 24. */
+  shadow?: Maybe<Scalars['Int']['output']>;
+  textAlign?: Maybe<PuckTextAlign>;
+  textTransform?: Maybe<PuckTextTransform>;
+  /** Name of a theme typography variant like `h2` or `body1`. */
+  typography?: Maybe<Scalars['String']['output']>;
+};
+
+export type PuckBlockStylingInput = {
+  /** A theme colour path like `primary.main` or a hex colour like `#1a1a1a`. */
+  background?: InputMaybe<Scalars['String']['input']>;
+  /** Id of the image shown as background. */
+  backgroundImage?: InputMaybe<Scalars['String']['input']>;
+  backgroundPosition?: InputMaybe<Scalars['PuckBackgroundPosition']['input']>;
+  backgroundSize?: InputMaybe<PuckBackgroundSize>;
+  border?: InputMaybe<PuckBorderInput>;
+  borderRadius?: InputMaybe<PuckBorderRadiusInput>;
+  /** A theme colour path like `primary.main` or a hex colour like `#1a1a1a`. */
+  color?: InputMaybe<Scalars['String']['input']>;
+  cornerShape?: InputMaybe<PuckCornerShape>;
+  fontWeight?: InputMaybe<PuckFontWeight>;
+  margin?: InputMaybe<PuckSpacingSidesInput>;
+  maxWidth?: InputMaybe<Scalars['PuckMaxWidth']['input']>;
+  minHeight?: InputMaybe<Scalars['PuckMinHeight']['input']>;
+  /** Opacity of the whole block in percent, 0 to 100. */
+  opacity?: InputMaybe<Scalars['Float']['input']>;
+  /** Colour laid over the background. A theme colour path like `primary.main` or a hex colour like `#1a1a1a`. */
+  overlay?: InputMaybe<Scalars['String']['input']>;
+  /** Opacity of the overlay in percent, 0 to 100. */
+  overlayOpacity?: InputMaybe<Scalars['Float']['input']>;
+  padding?: InputMaybe<PuckSpacingSidesInput>;
+  /** Theme shadow elevation, 0 to 24. */
+  shadow?: InputMaybe<Scalars['Int']['input']>;
+  textAlign?: InputMaybe<PuckTextAlign>;
+  textTransform?: InputMaybe<PuckTextTransform>;
+  /** Name of a theme typography variant like `h2` or `body1`. */
+  typography?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The current content of the block template a linked Puck block points at. */
+export type PuckBlockTemplateData = {
+  __typename?: 'PuckBlockTemplateData';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  /** The blocks of the template, read flat like revision puckBlocks. Their ids are prefixed with the id of the linked block, and linked templates inside the template sit in the `template` slot of their linked block. */
+  puckBlocks: Array<PuckBlock>;
+  puckRegistry?: Maybe<PuckRegistry>;
+};
+
+export type PuckBlockTimeOfDay = {
+  __typename?: 'PuckBlockTimeOfDay';
+  /** Start of the daily window, as `HH:MM` in the site timezone. */
+  from: Scalars['String']['output'];
+  /** End of the daily window, as `HH:MM` in the site timezone. An end before the start wraps over midnight. */
+  to: Scalars['String']['output'];
+};
+
+export type PuckBlockTimeOfDayInput = {
+  /** Start of the daily window, as `HH:MM` in the site timezone. */
+  from: Scalars['String']['input'];
+  /** End of the daily window, as `HH:MM` in the site timezone. An end before the start wraps over midnight. */
+  to: Scalars['String']['input'];
+};
+
+export type PuckBlockTimings = {
+  __typename?: 'PuckBlockTimings';
+  /** The block is hidden before this moment. */
+  from?: Maybe<Scalars['DateTime']['output']>;
+  /** The block is only shown during this daily window. */
+  timeOfDay?: Maybe<PuckBlockTimeOfDay>;
+  /** The block is hidden from this moment on. Has to be after `from`. */
+  to?: Maybe<Scalars['DateTime']['output']>;
+  /** The block is only shown on these weekdays. Empty means every day. */
+  weekdays?: Maybe<Array<PuckWeekday>>;
+};
+
+export type PuckBlockTimingsInput = {
+  /** The block is hidden before this moment. */
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The block is only shown during this daily window. */
+  timeOfDay?: InputMaybe<PuckBlockTimeOfDayInput>;
+  /** The block is hidden from this moment on. Has to be after `from`. */
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The block is only shown on these weekdays. Empty means every day. */
+  weekdays?: InputMaybe<Array<PuckWeekday>>;
+};
+
+export type PuckBlockVisibility = {
+  __typename?: 'PuckBlockVisibility';
+  /** The breakpoints the block is shown on. Omitted means every screen size. The website hides the block; the API never prunes by breakpoint. */
+  breakpoints?: Maybe<Array<PuckBreakpoint>>;
+  /** Hides the block everywhere while keeping it in the document. */
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  timings?: Maybe<PuckBlockTimings>;
+};
+
+export type PuckBlockVisibilityInput = {
+  /** The breakpoints the block is shown on. Omitted means every screen size. The website hides the block; the API never prunes by breakpoint. */
+  breakpoints?: InputMaybe<Array<PuckBreakpoint>>;
+  /** Hides the block everywhere while keeping it in the document. */
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+  timings?: InputMaybe<PuckBlockTimingsInput>;
+};
+
+/** Unsaved Puck blocks and registry, read exactly as a saved revision would read them. Nothing is saved. */
+export type PuckBlocksPreview = {
+  __typename?: 'PuckBlocksPreview';
+  puckBlocks: Array<PuckBlock>;
+  puckRegistry?: Maybe<PuckRegistry>;
+};
+
+export type PuckBorder = {
+  __typename?: 'PuckBorder';
+  /** A theme colour path or a hex colour. Defaults to the text colour. */
+  color?: Maybe<Scalars['String']['output']>;
+  style?: Maybe<PuckBorderStyle>;
+  width?: Maybe<PuckBorderWidth>;
+};
+
+export type PuckBorderInput = {
+  /** A theme colour path or a hex colour. Defaults to the text colour. */
+  color?: InputMaybe<Scalars['String']['input']>;
+  style?: InputMaybe<PuckBorderStyle>;
+  width?: InputMaybe<PuckBorderWidthInput>;
+};
+
+/** Corner radius per corner, in multiples of the theme radius or pixels. */
+export type PuckBorderRadius = {
+  __typename?: 'PuckBorderRadius';
+  bottomLeft?: Maybe<Scalars['PuckSpacing']['output']>;
+  bottomRight?: Maybe<Scalars['PuckSpacing']['output']>;
+  topLeft?: Maybe<Scalars['PuckSpacing']['output']>;
+  topRight?: Maybe<Scalars['PuckSpacing']['output']>;
+};
+
+export type PuckBorderRadiusInput = {
+  bottomLeft?: InputMaybe<Scalars['PuckSpacing']['input']>;
+  bottomRight?: InputMaybe<Scalars['PuckSpacing']['input']>;
+  topLeft?: InputMaybe<Scalars['PuckSpacing']['input']>;
+  topRight?: InputMaybe<Scalars['PuckSpacing']['input']>;
+};
+
+export enum PuckBorderStyle {
+  Dashed = 'dashed',
+  Dotted = 'dotted',
+  Solid = 'solid'
+}
+
+/** Border width per side. */
+export type PuckBorderWidth = {
+  __typename?: 'PuckBorderWidth';
+  /** In pixels. */
+  bottom?: Maybe<Scalars['Float']['output']>;
+  /** In pixels. */
+  left?: Maybe<Scalars['Float']['output']>;
+  /** In pixels. */
+  right?: Maybe<Scalars['Float']['output']>;
+  /** In pixels. */
+  top?: Maybe<Scalars['Float']['output']>;
+};
+
+export type PuckBorderWidthInput = {
+  /** In pixels. */
+  bottom?: InputMaybe<Scalars['Float']['input']>;
+  /** In pixels. */
+  left?: InputMaybe<Scalars['Float']['input']>;
+  /** In pixels. */
+  right?: InputMaybe<Scalars['Float']['input']>;
+  /** In pixels. */
+  top?: InputMaybe<Scalars['Float']['input']>;
+};
+
+/** A theme breakpoint, from the smallest to the largest screen. */
+export enum PuckBreakpoint {
+  Lg = 'lg',
+  Md = 'md',
+  Sm = 'sm',
+  Xl = 'xl',
+  Xs = 'xs'
+}
+
+/** The CSS `corner-shape` of every corner. Only has an effect with a corner radius. Browsers without support draw `round` corners. */
+export enum PuckCornerShape {
+  Bevel = 'bevel',
+  Notch = 'notch',
+  Round = 'round',
+  Scoop = 'scoop',
+  Square = 'square',
+  Squircle = 'squircle'
+}
+
+/** How a Puck block loads its records: `list` loads the latest, `uniqueList` the latest not shown elsewhere on the page, `slot` takes them from the parent, `single` picks one by id and `multiple` several by ids. */
+export enum PuckDatasourceType {
+  List = 'list',
+  Multiple = 'multiple',
+  Single = 'single',
+  Slot = 'slot',
+  UniqueList = 'uniqueList'
+}
+
+export enum PuckFontWeight {
+  Bold = 'bold',
+  Light = 'light',
+  Medium = 'medium',
+  Regular = 'regular'
+}
+
+/** The datasource types that load records instead of picking them by id. */
+export enum PuckListDatasourceType {
+  List = 'list',
+  Slot = 'slot',
+  UniqueList = 'uniqueList'
+}
+
+/** The components the Puck AI designed for a document, kept exactly as Puck keeps them in `_dynamicConfig`. */
+export type PuckRegistry = {
+  __typename?: 'PuckRegistry';
+  /** The designed components by name, each with its annotated `html` and optionally `label`, `styles`, `script`, `fields`, `defaultProps`, `streaming` and any other key Puck AI keeps. */
+  components: Scalars['JSONObject']['output'];
+  /** A script the document runs in the browser once it is mounted, never on the server. */
+  script?: Maybe<Scalars['String']['output']>;
+  /** Styles every designed component of the document shares. */
+  styles?: Maybe<Scalars['String']['output']>;
+};
+
+export type PuckRegistryInput = {
+  /** The designed components by name, each with its annotated `html` and optionally `label`, `styles`, `script`, `fields`, `defaultProps`, `streaming` and any other key Puck AI keeps. */
+  components: Scalars['JSONObject']['input'];
+  /** A script the document runs in the browser once it is mounted, never on the server. */
+  script?: InputMaybe<Scalars['String']['input']>;
+  /** Styles every designed component of the document shares. */
+  styles?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PuckSpacingSides = {
+  __typename?: 'PuckSpacingSides';
+  bottom?: Maybe<Scalars['PuckSpacing']['output']>;
+  left?: Maybe<Scalars['PuckSpacing']['output']>;
+  right?: Maybe<Scalars['PuckSpacing']['output']>;
+  top?: Maybe<Scalars['PuckSpacing']['output']>;
+};
+
+export type PuckSpacingSidesInput = {
+  bottom?: InputMaybe<Scalars['PuckSpacing']['input']>;
+  left?: InputMaybe<Scalars['PuckSpacing']['input']>;
+  right?: InputMaybe<Scalars['PuckSpacing']['input']>;
+  top?: InputMaybe<Scalars['PuckSpacing']['input']>;
+};
+
+export enum PuckTextAlign {
+  Center = 'center',
+  Left = 'left',
+  Right = 'right'
+}
+
+export enum PuckTextTransform {
+  Capitalize = 'capitalize',
+  Lowercase = 'lowercase',
+  None = 'none',
+  Uppercase = 'uppercase'
+}
+
+/** A day of the week, used to time Puck blocks. */
+export enum PuckWeekday {
+  Friday = 'Friday',
+  Monday = 'Monday',
+  Saturday = 'Saturday',
+  Sunday = 'Sunday',
+  Thursday = 'Thursday',
+  Tuesday = 'Tuesday',
+  Wednesday = 'Wednesday'
+}
+
 export type Query = {
   __typename?: 'Query';
   /** The mail createUser would send, or why it sends none. */
@@ -6535,6 +7033,8 @@ export type Query = {
   primaryBanner?: Maybe<Banner>;
   promptHTML: Chat;
   provider: MailProviderModel;
+  /** Reads unsaved Puck blocks and registry exactly as a saved revision would read them, without saving anything: hidden blocks included, unpublished records only in preview mode. For users who can create articles or pages. */
+  puckBlocksPreview: PuckBlocksPreview;
   /** This query returns the comment rating system. */
   ratingSystem: CommentRatingSystem;
   /** Returns a remote peer profile based on hostURL and token supplied. */
@@ -7301,6 +7801,12 @@ export type QueryPrimaryBannerArgs = {
 export type QueryPromptHtmlArgs = {
   chatId?: InputMaybe<Scalars['String']['input']>;
   query: Scalars['String']['input'];
+};
+
+
+export type QueryPuckBlocksPreviewArgs = {
+  puckBlocks: Array<PuckBlockInput>;
+  puckRegistry?: InputMaybe<PuckRegistryInput>;
 };
 
 

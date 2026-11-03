@@ -159,7 +159,7 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
   type: NavigationLinkType!
 }
 
-type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
+type ArticleRevision implements HasBlockContent & HasOptionalUserLc & HasPuckBlocks {
   archivedAt: DateTime
   authors: [ArticleRevisionAuthor!]!
   blocks(
@@ -184,6 +184,18 @@ type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   preTitle: String
   properties: [Property!]!
   publishedAt: DateTime
+  puckBlocks(
+    """
+    Omits blocks that should be hidden, together with their children. Only users who can read articles may pass `false`, everyone else gets the displayed blocks.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [PuckBlock!]
+
+  """
+  When the set of displayed Puck blocks changes next, so caches can expire in time. Null while no block is timed.
+  """
+  puckBlocksChangeAt: DateTime
+  puckRegistry: PuckRegistry
   seoDescription: String
   seoTitle: String
   socialMediaAuthors: [Author!]!
@@ -597,7 +609,7 @@ type BlockStyle {
   name: String!
 }
 
-type BlockTemplate implements HasBlockContent {
+type BlockTemplate implements HasBlockContent & HasPuckBlocks {
   blocks(
     """
     Omits blocks that are hidden or outside their timing. Pass `false` to edit the template, which only users who can edit block templates, articles or pages may do.
@@ -606,8 +618,20 @@ type BlockTemplate implements HasBlockContent {
   ): [BlockContent!]!
   createdAt: DateTime!
   id: String!
+
+  """
+  The ids of every block template this template links, directly or through other linked templates. A template must not be linked into any of them.
+  """
+  linkedTemplateIds: [String!]!
   modifiedAt: DateTime!
   name: String!
+  puckBlocks(
+    """
+    Omits blocks that are hidden or outside their timing, together with their children. Pass `false` to edit the template, which only users who can edit block templates, articles or pages may do.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [PuckBlock!]
+  puckRegistry: PuckRegistry
 }
 
 type BlockTemplateBlock implements BaseBlock {
@@ -641,6 +665,11 @@ input BlockTemplateBlockInput {
 
 input BlockTemplateFilter {
   name: String
+
+  """
+  Only templates built in the page builder (`true`) or in the block editor (`false`).
+  """
+  puck: Boolean
 }
 
 enum BlockTemplateSort {
@@ -1832,6 +1861,11 @@ interface HasPaymentMethod {
 interface HasPoll {
   poll: FullPoll!
   pollId: String!
+}
+
+interface HasPuckBlocks {
+  puckBlocks: [PuckBlock!]
+  puckRegistry: PuckRegistry
 }
 
 interface HasSubscriptionLc {
@@ -3164,10 +3198,10 @@ type Mutation {
   ): CreatedApiToken!
 
   """Creates an article."""
-  createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]! = [], breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Creates a new article template."""
-  createArticleTemplate(blocks: [BlockContentInput!]!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
+  createArticleTemplate(blocks: [BlockContentInput!]! = [], metadata: ArticleTemplateMetadataInput!, name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): ArticleTemplate!
 
   """Creates a new author."""
   createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
@@ -3177,7 +3211,7 @@ type Mutation {
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
 
   """Creates a new block template."""
-  createBlockTemplate(blocks: [BlockContentInput!]!, name: String!): BlockTemplate!
+  createBlockTemplate(blocks: [BlockContentInput!]! = [], name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): BlockTemplate!
 
   """
   Sets up the challenge provider. Only possible while none is configured.
@@ -3246,10 +3280,10 @@ type Mutation {
   createNewsletterCampaign(document: JSONObject, title: String!): NewsletterCampaign!
 
   """Creates an page."""
-  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  createPage(blocks: [BlockContentInput!]! = [], description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, imageID: String, properties: [PropertyInput!]!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Creates a new page template."""
-  createPageTemplate(blocks: [BlockContentInput!]!, metadata: PageTemplateMetadataInput!, name: String!): PageTemplate!
+  createPageTemplate(blocks: [BlockContentInput!]! = [], metadata: PageTemplateMetadataInput!, name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): PageTemplate!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
@@ -3707,10 +3741,10 @@ type Mutation {
   updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
 
   """Updates an article."""
-  updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!], breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Updates an existing article template."""
-  updateArticleTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
+  updateArticleTemplate(blocks: [BlockContentInput!], id: String!, metadata: ArticleTemplateMetadataInput!, name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): ArticleTemplate!
 
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
@@ -3720,7 +3754,7 @@ type Mutation {
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
   """Updates an existing block template."""
-  updateBlockTemplate(blocks: [BlockContentInput!]!, id: String!, name: String!): BlockTemplate!
+  updateBlockTemplate(blocks: [BlockContentInput!], id: String!, name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): BlockTemplate!
 
   """Updates an existing challenge provider setting."""
   updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String, type: ChallengeProviderType): SettingChallengeProvider!
@@ -3796,10 +3830,10 @@ type Mutation {
   updateNewsletterCampaign(document: JSONObject!, id: String!, title: String): NewsletterCampaign!
 
   """Updates an page."""
-  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  updatePage(blocks: [BlockContentInput!], description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, id: String!, imageID: String, properties: [PropertyInput!]!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Updates an existing page template."""
-  updatePageTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: PageTemplateMetadataInput!, name: String!): PageTemplate!
+  updatePageTemplate(blocks: [BlockContentInput!], id: String!, metadata: PageTemplateMetadataInput!, name: String!, puckBlocks: [PuckBlockInput!], puckRegistry: PuckRegistryInput): PageTemplate!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
@@ -4084,7 +4118,7 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
   type: NavigationLinkType!
 }
 
-type PageRevision implements HasBlockContent & HasOptionalUserLc {
+type PageRevision implements HasBlockContent & HasOptionalUserLc & HasPuckBlocks {
   archivedAt: DateTime
   blocks(
     """
@@ -4104,6 +4138,18 @@ type PageRevision implements HasBlockContent & HasOptionalUserLc {
   imageID: String
   properties: [Property!]!
   publishedAt: DateTime
+  puckBlocks(
+    """
+    Omits blocks that should be hidden, together with their children. Only users who can read pages may pass `false`, everyone else gets the displayed blocks.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [PuckBlock!]
+
+  """
+  When the set of displayed Puck blocks changes next, so caches can expire in time. Null while no block is timed.
+  """
+  puckBlocksChangeAt: DateTime
+  puckRegistry: PuckRegistry
   seoDescription: String
   seoTitle: String
   socialMediaDescription: String
@@ -4970,6 +5016,565 @@ type PublicSubscriptionConnection {
   totalCount: Int!
 }
 
+"""
+Anchor point of a background image as `"<x> <y>"`, x one of left, center, right and y one of top, center, bottom.
+"""
+scalar PuckBackgroundPosition
+
+enum PuckBackgroundSize {
+  auto
+  contain
+  cover
+}
+
+"""
+A Puck block in a flat list, parents before their children. Rebuild the tree by grouping on `parentId` and `puckSlot` and sorting by `position`.
+"""
+type PuckBlock {
+  """
+  How many records the block shows itself from each of its own `list` and `uniqueList` datasources, before the blocks in its slots take theirs. Omitted means none, 1 to 50. Member plans and subscriptions always load all.
+  """
+  consumes: Int
+
+  """The records the datasources of this block yield."""
+  data: PuckBlockData!
+  datasources: PuckBlockDatasources
+  grouped: Boolean
+  id: String!
+  kind: PuckBlockKind!
+  locked: Boolean
+
+  """The block this one is nested in, null at the top level."""
+  parentId: String
+
+  """The index of the block within its parent slot."""
+  position: Int!
+
+  """
+  The component props, with every slot emptied to `[]`: the blocks of a slot are the ones pointing at it.
+  """
+  props: JSONObject!
+
+  """
+  The slot of the parent this block sits in. Null at the top level, `content` by default. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent.
+  """
+  puckSlot: String
+  styling: PuckBlockBreakpointStyling
+
+  """The component name."""
+  type: String!
+  visibility: PuckBlockVisibility
+}
+
+"""
+The styling of a Puck block per theme breakpoint, mobile first: a breakpoint applies from its minimum width up and inherits every key it leaves out from the smaller breakpoints.
+"""
+type PuckBlockBreakpointStyling {
+  lg: PuckBlockStyling
+  md: PuckBlockStyling
+  sm: PuckBlockStyling
+  xl: PuckBlockStyling
+  xs: PuckBlockStyling
+}
+
+input PuckBlockBreakpointStylingInput {
+  lg: PuckBlockStylingInput
+  md: PuckBlockStylingInput
+  sm: PuckBlockStylingInput
+  xl: PuckBlockStylingInput
+  xs: PuckBlockStylingInput
+}
+
+"""
+The records the datasources of a Puck block yield, resolved on read. A model is null when the block has no datasource for it.
+"""
+type PuckBlockData {
+  articles: [Article!]
+  events: [Event!]
+  images: [Image!]
+  memberPlans: [MemberPlan!]
+  pages: [Page!]
+
+  """
+  For a linked block template: the template it points at, null when it is missing, links back to itself or is nested too deep.
+  """
+  template: PuckBlockTemplateData
+
+  """
+  The subscriptions of the reader, empty for a reader who is not logged in.
+  """
+  userSubscriptions: [PublicSubscription!]
+}
+
+type PuckBlockDatasource {
+  """The picked record, only with `single`."""
+  id: String
+
+  """The picked records in display order, only with `multiple`."""
+  ids: [String!]
+  type: PuckDatasourceType!
+}
+
+input PuckBlockDatasourceInput {
+  """The picked record, only with `single`."""
+  id: String
+
+  """The picked records in display order, only with `multiple`."""
+  ids: [String!]
+  type: PuckDatasourceType!
+}
+
+"""
+The CMS records a Puck block shows, one entry per model. The API resolves them into `PuckBlock.data`.
+"""
+type PuckBlockDatasources {
+  article: PuckBlockDatasource
+  event: PuckBlockDatasource
+  image: PuckBlockDatasource
+  memberPlan: PuckBlockDatasource
+  page: PuckBlockDatasource
+  userSubscription: PuckBlockListDatasource
+}
+
+input PuckBlockDatasourcesInput {
+  article: PuckBlockDatasourceInput
+  event: PuckBlockDatasourceInput
+  image: PuckBlockDatasourceInput
+  memberPlan: PuckBlockDatasourceInput
+  page: PuckBlockDatasourceInput
+  userSubscription: PuckBlockListDatasourceInput
+}
+
+"""A Puck block with its children, nested as deep as needed."""
+input PuckBlockInput {
+  children: [PuckBlockInput!]
+
+  """
+  How many records the block shows itself from each of its own `list` and `uniqueList` datasources, before the blocks in its slots take theirs. Omitted means none, 1 to 50. Member plans and subscriptions always load all.
+  """
+  consumes: Int
+  datasources: PuckBlockDatasourcesInput
+  grouped: Boolean
+  id: String!
+  kind: PuckBlockKind!
+  locked: Boolean
+
+  """
+  The component props without id, locked, grouped, visibility, styling and datasources, with every slot emptied to `[]`.
+  """
+  props: JSONObject!
+
+  """
+  The slot of the parent this block sits in, omitted means `content`. A path like `items[2].content` under a `puck` parent, the slot name as it is under a `generated` parent.
+  """
+  puckSlot: String
+  styling: PuckBlockBreakpointStylingInput
+
+  """
+  The component name. For a `generated` block, the name of a component in the registry.
+  """
+  type: String!
+  visibility: PuckBlockVisibilityInput
+}
+
+"""
+Where the component of a Puck block comes from: `puck` is one of the components the website ships, `generated` one the Puck AI designed and the document registry holds.
+"""
+enum PuckBlockKind {
+  generated
+  puck
+}
+
+type PuckBlockListDatasource {
+  type: PuckListDatasourceType!
+}
+
+input PuckBlockListDatasourceInput {
+  type: PuckListDatasourceType!
+}
+
+"""
+The styling tab of a Puck block. Omitted keys keep the component default.
+"""
+type PuckBlockStyling {
+  """
+  A theme colour path like `primary.main` or a hex colour like `#1a1a1a`.
+  """
+  background: String
+
+  """Id of the image shown as background."""
+  backgroundImage: String
+
+  """The image `backgroundImage` points at."""
+  backgroundImageObject: Image
+  backgroundPosition: PuckBackgroundPosition
+  backgroundSize: PuckBackgroundSize
+  border: PuckBorder
+  borderRadius: PuckBorderRadius
+
+  """
+  A theme colour path like `primary.main` or a hex colour like `#1a1a1a`.
+  """
+  color: String
+  cornerShape: PuckCornerShape
+  fontWeight: PuckFontWeight
+  margin: PuckSpacingSides
+  maxWidth: PuckMaxWidth
+  minHeight: PuckMinHeight
+
+  """Opacity of the whole block in percent, 0 to 100."""
+  opacity: Float
+
+  """
+  Colour laid over the background. A theme colour path like `primary.main` or a hex colour like `#1a1a1a`.
+  """
+  overlay: String
+
+  """Opacity of the overlay in percent, 0 to 100."""
+  overlayOpacity: Float
+  padding: PuckSpacingSides
+
+  """Theme shadow elevation, 0 to 24."""
+  shadow: Int
+  textAlign: PuckTextAlign
+  textTransform: PuckTextTransform
+
+  """Name of a theme typography variant like `h2` or `body1`."""
+  typography: String
+}
+
+input PuckBlockStylingInput {
+  """
+  A theme colour path like `primary.main` or a hex colour like `#1a1a1a`.
+  """
+  background: String
+
+  """Id of the image shown as background."""
+  backgroundImage: String
+  backgroundPosition: PuckBackgroundPosition
+  backgroundSize: PuckBackgroundSize
+  border: PuckBorderInput
+  borderRadius: PuckBorderRadiusInput
+
+  """
+  A theme colour path like `primary.main` or a hex colour like `#1a1a1a`.
+  """
+  color: String
+  cornerShape: PuckCornerShape
+  fontWeight: PuckFontWeight
+  margin: PuckSpacingSidesInput
+  maxWidth: PuckMaxWidth
+  minHeight: PuckMinHeight
+
+  """Opacity of the whole block in percent, 0 to 100."""
+  opacity: Float
+
+  """
+  Colour laid over the background. A theme colour path like `primary.main` or a hex colour like `#1a1a1a`.
+  """
+  overlay: String
+
+  """Opacity of the overlay in percent, 0 to 100."""
+  overlayOpacity: Float
+  padding: PuckSpacingSidesInput
+
+  """Theme shadow elevation, 0 to 24."""
+  shadow: Int
+  textAlign: PuckTextAlign
+  textTransform: PuckTextTransform
+
+  """Name of a theme typography variant like `h2` or `body1`."""
+  typography: String
+}
+
+"""
+The current content of the block template a linked Puck block points at.
+"""
+type PuckBlockTemplateData {
+  id: String!
+  name: String!
+
+  """
+  The blocks of the template, read flat like revision puckBlocks. Their ids are prefixed with the id of the linked block, and linked templates inside the template sit in the `template` slot of their linked block.
+  """
+  puckBlocks: [PuckBlock!]!
+  puckRegistry: PuckRegistry
+}
+
+type PuckBlockTimeOfDay {
+  """Start of the daily window, as `HH:MM` in the site timezone."""
+  from: String!
+
+  """
+  End of the daily window, as `HH:MM` in the site timezone. An end before the start wraps over midnight.
+  """
+  to: String!
+}
+
+input PuckBlockTimeOfDayInput {
+  """Start of the daily window, as `HH:MM` in the site timezone."""
+  from: String!
+
+  """
+  End of the daily window, as `HH:MM` in the site timezone. An end before the start wraps over midnight.
+  """
+  to: String!
+}
+
+type PuckBlockTimings {
+  """The block is hidden before this moment."""
+  from: DateTime
+
+  """The block is only shown during this daily window."""
+  timeOfDay: PuckBlockTimeOfDay
+
+  """The block is hidden from this moment on. Has to be after `from`."""
+  to: DateTime
+
+  """The block is only shown on these weekdays. Empty means every day."""
+  weekdays: [PuckWeekday!]
+}
+
+input PuckBlockTimingsInput {
+  """The block is hidden before this moment."""
+  from: DateTime
+
+  """The block is only shown during this daily window."""
+  timeOfDay: PuckBlockTimeOfDayInput
+
+  """The block is hidden from this moment on. Has to be after `from`."""
+  to: DateTime
+
+  """The block is only shown on these weekdays. Empty means every day."""
+  weekdays: [PuckWeekday!]
+}
+
+type PuckBlockVisibility {
+  """
+  The breakpoints the block is shown on. Omitted means every screen size. The website hides the block; the API never prunes by breakpoint.
+  """
+  breakpoints: [PuckBreakpoint!]
+
+  """Hides the block everywhere while keeping it in the document."""
+  disabled: Boolean
+  timings: PuckBlockTimings
+}
+
+input PuckBlockVisibilityInput {
+  """
+  The breakpoints the block is shown on. Omitted means every screen size. The website hides the block; the API never prunes by breakpoint.
+  """
+  breakpoints: [PuckBreakpoint!]
+
+  """Hides the block everywhere while keeping it in the document."""
+  disabled: Boolean
+  timings: PuckBlockTimingsInput
+}
+
+"""
+Unsaved Puck blocks and registry, read exactly as a saved revision would read them. Nothing is saved.
+"""
+type PuckBlocksPreview {
+  puckBlocks: [PuckBlock!]!
+  puckRegistry: PuckRegistry
+}
+
+type PuckBorder {
+  """A theme colour path or a hex colour. Defaults to the text colour."""
+  color: String
+  style: PuckBorderStyle
+  width: PuckBorderWidth
+}
+
+input PuckBorderInput {
+  """A theme colour path or a hex colour. Defaults to the text colour."""
+  color: String
+  style: PuckBorderStyle
+  width: PuckBorderWidthInput
+}
+
+"""Corner radius per corner, in multiples of the theme radius or pixels."""
+type PuckBorderRadius {
+  bottomLeft: PuckSpacing
+  bottomRight: PuckSpacing
+  topLeft: PuckSpacing
+  topRight: PuckSpacing
+}
+
+input PuckBorderRadiusInput {
+  bottomLeft: PuckSpacing
+  bottomRight: PuckSpacing
+  topLeft: PuckSpacing
+  topRight: PuckSpacing
+}
+
+enum PuckBorderStyle {
+  dashed
+  dotted
+  solid
+}
+
+"""Border width per side."""
+type PuckBorderWidth {
+  """In pixels."""
+  bottom: Float
+
+  """In pixels."""
+  left: Float
+
+  """In pixels."""
+  right: Float
+
+  """In pixels."""
+  top: Float
+}
+
+input PuckBorderWidthInput {
+  """In pixels."""
+  bottom: Float
+
+  """In pixels."""
+  left: Float
+
+  """In pixels."""
+  right: Float
+
+  """In pixels."""
+  top: Float
+}
+
+"""A theme breakpoint, from the smallest to the largest screen."""
+enum PuckBreakpoint {
+  lg
+  md
+  sm
+  xl
+  xs
+}
+
+"""
+The CSS `corner-shape` of every corner. Only has an effect with a corner radius. Browsers without support draw `round` corners.
+"""
+enum PuckCornerShape {
+  bevel
+  notch
+  round
+  scoop
+  square
+  squircle
+}
+
+"""
+How a Puck block loads its records: `list` loads the latest, `uniqueList` the latest not shown elsewhere on the page, `slot` takes them from the parent, `single` picks one by id and `multiple` several by ids.
+"""
+enum PuckDatasourceType {
+  list
+  multiple
+  single
+  slot
+  uniqueList
+}
+
+enum PuckFontWeight {
+  bold
+  light
+  medium
+  regular
+}
+
+"""The datasource types that load records instead of picking them by id."""
+enum PuckListDatasourceType {
+  list
+  slot
+  uniqueList
+}
+
+"""
+A maximum width: a theme breakpoint (`"sm"`, `"md"`, `"lg"`, `"xl"`), pixels like `"640px"` or percent like `"80%"`.
+"""
+scalar PuckMaxWidth
+
+"""
+A minimum height in pixels like `"320px"` or in percent of the viewport height like `"50vh"`.
+"""
+scalar PuckMinHeight
+
+"""
+The components the Puck AI designed for a document, kept exactly as Puck keeps them in `_dynamicConfig`.
+"""
+type PuckRegistry {
+  """
+  The designed components by name, each with its annotated `html` and optionally `label`, `styles`, `script`, `fields`, `defaultProps`, `streaming` and any other key Puck AI keeps.
+  """
+  components: JSONObject!
+
+  """
+  A script the document runs in the browser once it is mounted, never on the server.
+  """
+  script: String
+
+  """Styles every designed component of the document shares."""
+  styles: String
+}
+
+input PuckRegistryInput {
+  """
+  The designed components by name, each with its annotated `html` and optionally `label`, `styles`, `script`, `fields`, `defaultProps`, `streaming` and any other key Puck AI keeps.
+  """
+  components: JSONObject!
+
+  """
+  A script the document runs in the browser once it is mounted, never on the server.
+  """
+  script: String
+
+  """Styles every designed component of the document shares."""
+  styles: String
+}
+
+"""
+A number of theme spacing units like `2`, or an exact css length as a string like `"12px"`, `"1.5rem"` or `"50vh"`.
+"""
+scalar PuckSpacing
+
+type PuckSpacingSides {
+  bottom: PuckSpacing
+  left: PuckSpacing
+  right: PuckSpacing
+  top: PuckSpacing
+}
+
+input PuckSpacingSidesInput {
+  bottom: PuckSpacing
+  left: PuckSpacing
+  right: PuckSpacing
+  top: PuckSpacing
+}
+
+enum PuckTextAlign {
+  center
+  left
+  right
+}
+
+enum PuckTextTransform {
+  capitalize
+  lowercase
+  none
+  uppercase
+}
+
+"""A day of the week, used to time Puck blocks."""
+enum PuckWeekday {
+  Friday
+  Monday
+  Saturday
+  Sunday
+  Thursday
+  Tuesday
+  Wednesday
+}
+
 type Query {
   """The mail createUser would send, or why it sends none."""
   accountCreationMail: ActionMail!
@@ -5472,6 +6077,11 @@ type Query {
   primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasPaywallBypass: Boolean!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
   promptHTML(chatId: String, query: String!): Chat!
   provider: MailProviderModel!
+
+  """
+  Reads unsaved Puck blocks and registry exactly as a saved revision would read them, without saving anything: hidden blocks included, unpublished records only in preview mode. For users who can create articles or pages.
+  """
+  puckBlocksPreview(puckBlocks: [PuckBlockInput!]!, puckRegistry: PuckRegistryInput): PuckBlocksPreview!
 
   """This query returns the comment rating system."""
   ratingSystem: CommentRatingSystem!

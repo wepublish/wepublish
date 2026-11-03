@@ -14,6 +14,7 @@ export function CreateArticleModal(props: CreateArticleModalProps) {
       listDocument={ArticleTemplateListDocument}
       selectTemplates={data => data?.articleTemplates.nodes}
       createPath="/articles/create"
+      puckCreatePath="/puck/articles/create"
       i18nPrefix="articles.createModal"
     />
   );

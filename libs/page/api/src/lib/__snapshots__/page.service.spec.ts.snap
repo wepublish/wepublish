@@ -20,6 +20,12 @@ exports[`PageService > should create an page 1`] = `
               "value": "value",
             },
           ],
+          "puckBlocks": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
+          "puckRegistry": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
           "userId": "1234",
         },
       },
@@ -754,6 +760,20 @@ exports[`PageService > should update an page 1`] = `
 [
   {
     "include": {
+      "revisions": {
+        "orderBy": {
+          "createdAt": "desc",
+        },
+        "select": {
+          "blocks": true,
+          "puckBlocks": true,
+          "puckRegistry": true,
+        },
+        "take": 1,
+        "where": {
+          "archivedAt": null,
+        },
+      },
       "tags": true,
     },
     "where": {
@@ -783,6 +803,12 @@ exports[`PageService > should update an page 2`] = `
               "value": "value",
             },
           ],
+          "puckBlocks": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
+          "puckRegistry": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
           "userId": "1234",
         },
         "updateMany": {
@@ -865,6 +891,12 @@ exports[`PageService > version history > should restore a revision as a new draf
               "value": "value",
             },
           ],
+          "puckBlocks": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
+          "puckRegistry": DbNull {
+            Symbol(prisma.objectEnumValue): true,
+          },
           "socialMediaDescription": "Old sm description",
           "socialMediaImageID": "image-2",
           "socialMediaTitle": "Old sm title",

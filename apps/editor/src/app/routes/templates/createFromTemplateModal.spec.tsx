@@ -24,12 +24,21 @@ vi.mock(
   async () => (await import('./testUtils')).translationMock
 );
 
-const articleTemplate = (id: string, name: string) => ({
+const articleTemplate = (
+  id: string,
+  name: string,
+  puckBlocks: { id: string }[] | null = null
+) => ({
   __typename: 'ArticleTemplate',
   id,
   createdAt: '2026-01-01T00:00:00.000Z',
   modifiedAt: '2026-01-01T00:00:00.000Z',
-  blockTemplate: { __typename: 'BlockTemplate', id: `block-${id}`, name },
+  blockTemplate: {
+    __typename: 'BlockTemplate',
+    id: `block-${id}`,
+    name,
+    puckBlocks,
+  },
 });
 
 const mockTemplates = (count: number) =>
@@ -58,6 +67,7 @@ const renderModal = (onClose = vi.fn()) =>
         listDocument={ArticleTemplateListDocument}
         selectTemplates={data => data?.articleTemplates.nodes}
         createPath="/things/create"
+        puckCreatePath="/puck/things/create"
         i18nPrefix="things.createModal"
         open
         onClose={onClose}
@@ -79,8 +89,9 @@ beforeEach(() => {
         nodes: [
           articleTemplate('template-1', 'News'),
           articleTemplate('template-2', 'Interview'),
+          articleTemplate('template-3', 'Built', [{ id: 'Heading-1' }]),
         ],
-        totalCount: 2,
+        totalCount: 3,
       },
     },
     loading: false,
@@ -146,6 +157,16 @@ describe('CreateFromTemplateModal', () => {
 
     expect(screen.getByTestId('location')).toHaveTextContent(
       '/things/create?templateId=template-2'
+    );
+  });
+
+  it('should create a document from a template built in the page builder in the page builder', async () => {
+    renderModal();
+
+    fireEvent.click(await screen.findByRole('button', { name: /Built/ }));
+
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/puck/things/create?templateId=template-3'
     );
   });
 

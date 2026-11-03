@@ -11,6 +11,12 @@ exports[`BlockTemplateService > should create a block template 1`] = `
         },
       ],
       "name": "Name",
+      "puckBlocks": DbNull {
+        Symbol(prisma.objectEnumValue): true,
+      },
+      "puckRegistry": DbNull {
+        Symbol(prisma.objectEnumValue): true,
+      },
     },
   },
 ]
@@ -27,6 +33,12 @@ exports[`BlockTemplateService > should create a block template containing anothe
         },
       ],
       "name": "Name",
+      "puckBlocks": DbNull {
+        Symbol(prisma.objectEnumValue): true,
+      },
+      "puckRegistry": DbNull {
+        Symbol(prisma.objectEnumValue): true,
+      },
     },
   },
 ]
@@ -53,6 +65,12 @@ exports[`BlockTemplateService > should update a block template 1`] = `
         },
       ],
       "name": "Name",
+      "puckBlocks": DbNull {
+        Symbol(prisma.objectEnumValue): true,
+      },
+      "puckRegistry": DbNull {
+        Symbol(prisma.objectEnumValue): true,
+      },
     },
     "where": {
       "id": "123",
@@ -72,6 +90,12 @@ exports[`BlockTemplateService > should update a block template containing a non 
         },
       ],
       "name": "Name",
+      "puckBlocks": DbNull {
+        Symbol(prisma.objectEnumValue): true,
+      },
+      "puckRegistry": DbNull {
+        Symbol(prisma.objectEnumValue): true,
+      },
     },
     "where": {
       "id": "123",

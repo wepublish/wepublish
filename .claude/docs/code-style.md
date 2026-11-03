@@ -160,13 +160,75 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   User-facing strings go through react-i18next — never hardcode copy; see
   [Translations](#translations).
 
+### Puck content
+
+`libs/puck-content/website` renders Puck documents without Puck;
+`libs/puck-content/editor` holds everything Puck (configs, fields, edit mode,
+save/load). The editor lib imports the website lib, never the reverse: the
+website lib's `eslint.config.mjs` bans `@puckeditor/*` and the editor libs, and
+lets only `generated/generated-block.component.tsx` import Puck, to hand
+AI-generated blocks to Puck's `<Render>`. Only
+`generated/generated-blocks.component.tsx` loads that module, via `React.lazy`;
+a static import from any other website file bundles Puck into every tenant,
+and only `puck-blocks-renderer.lazy.spec.tsx` catches it. Details are in both
+READMEs.
+
+- A block is a `PuckBlockComponent` in its group's `<group>.registry.ts`. It
+  gets `{id, props, data, slots, styling, visibility, className}` and renders
+  one root element that takes `className`, or `null`; a Fragment root breaks
+  grid placement.
+- It never reads editor state (`puck`, `isEditing`, datasources, `locked`), and
+  its records come from `data`, never from a query in the component.
+- Slots are components: call `getSlot(slots, 'content')({ className })`.
+  Assigning one to a capitalised const fails lint ("Cannot create components
+  during render").
+- Edit-mode behaviour lives in the editor config, `render: editorRender(XRender,
+  {inline, minEmptyHeight, editingProps, useExtra, decorate})`: refs and
+  `onSubmit` arrive as `Extra`, editor warnings come from `decorate`.
+- Factories (`builderBlock`, `plainBlock`, `editorRender`) live in `.ts`;
+  `.tsx` files export components only.
+- A new editor block carries its Blocks-panel metadata in its own
+  `<block>.config.ts`, next to `label`: `icon`, `category`, `group` (only for
+  the "inside a teaser/form" parts), `order` (position within its category or
+  group) and `nameKey` (`puck.blocks.names.<Key>`, present in all three
+  locales). These keys come from the `ComponentConfigExtensions` augmentation
+  in `block-library/block-meta.ts`; the wrappers spread the config and keep
+  them. `block-library.catalog.ts` only holds the category order and which
+  category has a group. Puck's `categories` are derived from the components;
+  `block-meta.spec.ts` fails on missing metadata or a missing translation.
+  The Puck component key never changes, saved documents store it.
+
+### Puck record pickers
+
+Every Puck field that points at records (article, page, event, member plan,
+author, paywall) is the `record` field type (`recordField({model, multiple})`)
+rendered by `RecordSelect` / `RecordMultiSelect` in
+`libs/puck-content/editor/src/lib/record/` — never an id text input or a
+bespoke dialog.
+
+- **Single:** a search combobox; once chosen, the record is a row (thumbnail or
+  model icon, title, status pill, subtitle) with Replace and Remove buttons.
+- **Multiple:** the chosen records as an ordered list (drag handle, Move
+  up/down, Remove) above an "Add …" combobox that stays open and toggles
+  options with a checkmark. `max` disables the rest and shows `n / max`; `min`
+  is helper text only.
+- Search is debounced 300 ms, queries only while the list is open, and fetches
+  the next cursor page (`skip: 1`) when the list is scrolled to its end.
+- Data comes from one `RecordSource` per model in `record.sources.ts`
+  (`useSearch`, `useRecords`). A new model is a `recordModels` entry plus a
+  source; TypeScript then asks for its labels, icon and AI name. Specs swap
+  sources through `RecordSourcesContext` instead of mocking Apollo.
+
 ## Translations
 
 Editor copy lives in `apps/editor/src/app/locales/{en,de,fr}.json`; add every
 key to all three. `locales.spec.ts` fails when a literal `t('…')` key is
 missing or the three catalogs drift apart. Zod messages live at module level,
 so use `lazyMessage('key')` from `apps/editor/src/app/utility.ts` instead of
-`t()`.
+`t()`. Puck editor copy sits under `puck.*`. `libs/puck-content/editor` specs
+load `en.json` through `vitest.setup-i18n.ts`; a spec that builds its own
+i18next instance passes `i18next.getResourceBundle('en', 'translation')` as
+its resources, or it renders keys.
 
 Website copy lives in `libs/website/translations/src/lib/{de,fr}.json`, and
 `catalogs.spec.ts` fails when the two drift apart. A tenant overrides single

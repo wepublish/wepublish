@@ -128,13 +128,16 @@ function countRichtextChars(
   richtext?: RichtextJSONDocument | RichtextElements | null
 ): number {
   return (
-    richtext?.content?.reduce((charLength: number, node: RichtextElements) => {
-      if (node.type === 'text') {
-        return charLength + node.text.length;
-      }
+    (richtext?.content as RichtextElements[] | undefined)?.reduce(
+      (charLength: number, node: RichtextElements) => {
+        if (node.type === 'text') {
+          return charLength + node.text.length;
+        }
 
-      return countRichtextChars(charLength, node);
-    }, blocksCharLength) ?? blocksCharLength
+        return countRichtextChars(charLength, node);
+      },
+      blocksCharLength
+    ) ?? blocksCharLength
   );
 }
 

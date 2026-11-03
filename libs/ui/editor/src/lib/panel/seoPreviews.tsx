@@ -1,12 +1,14 @@
 import 'react-og-preview/styles.css';
 
 import styled from '@emotion/styled';
-import { Alert, useTheme } from '@mui/material';
+import { Alert } from '@mui/material';
 import { FullImageFragment } from '@wepublish/editor/api';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SocialPreview } from 'react-og-preview';
 
+import { ImagePlaceholderIcon } from '../atoms/imagePlaceholderIcon';
+import { useDarkMode } from '../useDarkMode';
 import { SeoPreviewData } from './seoPreviewData';
 
 export const GOOGLE_TITLE_LIMIT = 60;
@@ -23,12 +25,16 @@ const toOgImage = (image?: FullImageFragment, square?: boolean) => {
 
 const Previews = styled.div`
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
+  min-width: 0;
 `;
 
 const Preview = styled.section`
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
+  min-width: 0;
 `;
 
 const PreviewTitle = styled.h6`
@@ -53,6 +59,173 @@ const Clamp = styled.div<{ lines: number }>`
   -webkit-box-orient: vertical;
   overflow: hidden;
   overflow-wrap: anywhere;
+`;
+
+const linkedInColors = {
+  light: {
+    background: '#fff',
+    border: '#e0dfdc',
+    title: 'rgba(0, 0, 0, 0.9)',
+    hostname: 'rgba(0, 0, 0, 0.6)',
+    placeholder: '#eef3f8',
+  },
+  dark: {
+    background: '#1b1f23',
+    border: '#38434f',
+    title: 'rgba(255, 255, 255, 0.9)',
+    hostname: 'rgba(255, 255, 255, 0.6)',
+    placeholder: '#38434f',
+  },
+};
+
+const LinkedIn = styled.div<{ dark: boolean }>`
+  ${({ dark }) => {
+    const colors = linkedInColors[dark ? 'dark' : 'light'];
+
+    return `
+      --linkedin-title: ${colors.title};
+      --linkedin-hostname: ${colors.hostname};
+      --linkedin-placeholder: ${colors.placeholder};
+      border: 1px solid ${colors.border};
+      background: ${colors.background};
+    `;
+  }}
+  max-width: 552px;
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+
+  &:hover > div:last-of-type > div:first-of-type {
+    text-decoration: underline;
+  }
+`;
+
+const LinkedInImage = styled.img`
+  display: block;
+  width: 128px;
+  aspect-ratio: 1.91;
+  object-fit: cover;
+  border-radius: 8px;
+`;
+
+const LinkedInPlaceholder = styled.div`
+  display: grid;
+  place-items: center;
+  width: 128px;
+  aspect-ratio: 1.91;
+  border-radius: 8px;
+  background: var(--linkedin-placeholder);
+  color: var(--linkedin-hostname);
+  font-size: 20px;
+`;
+
+const VisuallyHidden = styled.span`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+`;
+
+const LinkedInTitle = styled(Clamp)`
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  color: var(--linkedin-title);
+`;
+
+const LinkedInHostname = styled.div`
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.33;
+  color: var(--linkedin-hostname);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const discordColors = {
+  light: {
+    background: '#f2f3f5',
+    border: '#e3e5e8',
+    title: '#006ce7',
+    description: '#2e3338',
+    placeholder: '#e3e5e8',
+    icon: '#80848e',
+  },
+  dark: {
+    background: '#2b2d31',
+    border: '#1e1f22',
+    title: '#00a8fc',
+    description: '#dbdee1',
+    placeholder: '#1e1f22',
+    icon: '#80848e',
+  },
+};
+
+const Discord = styled.div<{ dark: boolean }>`
+  ${({ dark }) => {
+    const colors = discordColors[dark ? 'dark' : 'light'];
+
+    return `
+      --discord-title: ${colors.title};
+      --discord-description: ${colors.description};
+      --discord-placeholder: ${colors.placeholder};
+      --discord-icon: ${colors.icon};
+      border-left: 4px solid ${colors.border};
+      background: ${colors.background};
+    `;
+  }}
+  max-width: 432px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px 16px 16px 12px;
+  border-radius: 4px;
+  font-family:
+    'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+`;
+
+const DiscordTitle = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.375;
+  color: var(--discord-title);
+  overflow-wrap: anywhere;
+`;
+
+const DiscordDescription = styled.div`
+  font-size: 14px;
+  line-height: 1.43;
+  color: var(--discord-description);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+`;
+
+const DiscordImage = styled.img`
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.91;
+  object-fit: cover;
+  border-radius: 4px;
+`;
+
+const DiscordPlaceholder = styled.div`
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1.91;
+  border-radius: 4px;
+  background: var(--discord-placeholder);
+  color: var(--discord-icon);
+  font-size: 20px;
 `;
 
 const googleColors = {
@@ -90,6 +263,7 @@ const Google = styled.div<{ dark: boolean }>`
       background: ${colors.background};
     `;
   }}
+  min-width: 0;
   font-family: Arial, sans-serif;
   max-width: 600px;
   padding: 12px 16px;
@@ -98,7 +272,7 @@ const Google = styled.div<{ dark: boolean }>`
 
 const GoogleSite = styled.div`
   display: grid;
-  grid-template-columns: 28px 1fr;
+  grid-template-columns: 28px minmax(0, 1fr);
   gap: 12px;
   align-items: center;
   font-size: 14px;
@@ -167,7 +341,7 @@ export interface GooglePreviewProps {
 
 export function GooglePreview({ data, siteName, favicon }: GooglePreviewProps) {
   const { t } = useTranslation();
-  const dark = useTheme().palette.mode === 'dark';
+  const dark = useDarkMode();
 
   const domain = data.domain ?? '';
   const path = data.url?.replace(/^https?:\/\/[^/]+/, '').replace(/\//g, ' › ');
@@ -220,6 +394,12 @@ export function GooglePreview({ data, siteName, favicon }: GooglePreviewProps) {
   );
 }
 
+export function SeoPreviewInfo() {
+  const { t } = useTranslation();
+
+  return <Alert severity="info">{t('seoPreviews.info')}</Alert>;
+}
+
 export interface SocialPreviewsProps {
   data: SeoPreviewData;
 }
@@ -227,7 +407,7 @@ export interface SocialPreviewsProps {
 export function SocialPreviews({ data }: SocialPreviewsProps) {
   const { t } = useTranslation();
   // react-og-preview switches to its dark card styles under a `.dark` parent
-  const dark = useTheme().palette.mode === 'dark';
+  const dark = useDarkMode();
 
   const social = {
     url: data.url ?? '',
@@ -239,8 +419,6 @@ export function SocialPreviews({ data }: SocialPreviewsProps) {
 
   return (
     <Previews className={dark ? 'dark' : undefined}>
-      <Alert severity="info">{t('seoPreviews.info')}</Alert>
-
       <PreviewSection title={t('seoPreviews.facebook')}>
         <SocialCard
           maxWidth={500}
@@ -254,15 +432,28 @@ export function SocialPreviews({ data }: SocialPreviewsProps) {
       </PreviewSection>
 
       <PreviewSection title={t('seoPreviews.linkedIn')}>
-        <SocialCard
-          maxWidth={550}
+        <LinkedIn
+          dark={dark}
           data-testid="seo-preview-linkedin"
         >
-          <SocialPreview
-            provider="linkedin"
-            {...social}
-          />
-        </SocialCard>
+          {social.image ?
+            <LinkedInImage
+              src={social.image.url}
+              alt={social.image.alt}
+            />
+          : <LinkedInPlaceholder>
+              <ImagePlaceholderIcon />
+              <VisuallyHidden>{t('seoPreviews.noImage')}</VisuallyHidden>
+            </LinkedInPlaceholder>
+          }
+
+          <div>
+            <LinkedInTitle lines={2}>
+              {social.title || data.domain}
+            </LinkedInTitle>
+            <LinkedInHostname>{data.domain}</LinkedInHostname>
+          </div>
+        </LinkedIn>
       </PreviewSection>
 
       <PreviewSection title={t('seoPreviews.whatsApp')}>
@@ -273,20 +464,33 @@ export function SocialPreviews({ data }: SocialPreviewsProps) {
           <SocialPreview
             provider="whatsapp"
             {...social}
+            image={social.image ?? { url: '' }}
           />
         </SocialCard>
       </PreviewSection>
 
       <PreviewSection title={t('seoPreviews.discord')}>
-        <SocialCard
-          maxWidth={432}
+        <Discord
+          dark={dark}
           data-testid="seo-preview-discord"
         >
-          <SocialPreview
-            provider="discord"
-            {...social}
-          />
-        </SocialCard>
+          <DiscordTitle>{social.title || data.domain}</DiscordTitle>
+
+          {social.description && (
+            <DiscordDescription>{social.description}</DiscordDescription>
+          )}
+
+          {social.image ?
+            <DiscordImage
+              src={social.image.url}
+              alt={social.image.alt}
+            />
+          : <DiscordPlaceholder>
+              <ImagePlaceholderIcon />
+              <VisuallyHidden>{t('seoPreviews.noImage')}</VisuallyHidden>
+            </DiscordPlaceholder>
+          }
+        </Discord>
       </PreviewSection>
 
       <PreviewSection title={t('seoPreviews.xLarge')}>

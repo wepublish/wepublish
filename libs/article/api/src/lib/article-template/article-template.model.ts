@@ -7,6 +7,7 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { BlockContentInput, BlockTemplate } from '@wepublish/block-content/api';
+import { PuckBlockInput, PuckRegistry } from '@wepublish/puck-content/api';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 import {
   ArticleTemplateMetadata,
@@ -89,8 +90,14 @@ export class CreateArticleTemplateInput {
   @Field()
   name!: string;
 
-  @Field(() => [BlockContentInput])
-  blocks!: BlockContentInput[];
+  @Field(() => [BlockContentInput], { defaultValue: [] })
+  blocks?: BlockContentInput[] | null;
+
+  @Field(() => [PuckBlockInput], { nullable: true })
+  puckBlocks?: PuckBlockInput[] | null;
+
+  @Field(() => PuckRegistry, { nullable: true })
+  puckRegistry?: PuckRegistry | null;
 
   @Field(() => ArticleTemplateMetadataInput)
   metadata!: ArticleTemplateMetadataInput;
@@ -100,4 +107,7 @@ export class CreateArticleTemplateInput {
 export class UpdateArticleTemplateInput extends CreateArticleTemplateInput {
   @Field()
   id!: string;
+
+  @Field(() => [BlockContentInput], { nullable: true })
+  override blocks?: BlockContentInput[] | null;
 }

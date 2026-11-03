@@ -160,6 +160,10 @@ query BlockTemplateList(
   ) {
     nodes {
       ...FullBlockTemplate
+
+      puckBlocks(onlyDisplayed: false) {
+        id
+      }
     }
 
     pageInfo {
@@ -179,8 +183,18 @@ query BlockTemplate($id: String!) {
   }
 }
 
-mutation CreateBlockTemplate($name: String!, $blocks: [BlockContentInput!]!) {
-  createBlockTemplate(name: $name, blocks: $blocks) {
+mutation CreateBlockTemplate(
+  $name: String!
+  $blocks: [BlockContentInput!] = []
+  $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
+) {
+  createBlockTemplate(
+    name: $name
+    blocks: $blocks
+    puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
+  ) {
     ...FullBlockTemplate
   }
 }
@@ -188,15 +202,105 @@ mutation CreateBlockTemplate($name: String!, $blocks: [BlockContentInput!]!) {
 mutation UpdateBlockTemplate(
   $id: String!
   $name: String!
-  $blocks: [BlockContentInput!]!
+  $blocks: [BlockContentInput!]
+  $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
 ) {
-  updateBlockTemplate(id: $id, name: $name, blocks: $blocks) {
+  updateBlockTemplate(
+    id: $id
+    name: $name
+    blocks: $blocks
+    puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
+  ) {
     ...FullBlockTemplate
+  }
+}
+
+fragment PuckBlockTemplate on BlockTemplate {
+  id
+  createdAt
+  modifiedAt
+  name
+
+  puckBlocks(onlyDisplayed: false) {
+    ...FullPuckBlock
+  }
+
+  puckRegistry {
+    ...FullPuckRegistry
+  }
+
+  linkedTemplateIds
+}
+
+query PuckBlockTemplateList($take: Int, $skip: Int, $name: String) {
+  blockTemplates(
+    filter: { puck: true, name: $name }
+    take: $take
+    skip: $skip
+    sort: Name
+  ) {
+    nodes {
+      ...PuckBlockTemplate
+    }
+
+    totalCount
+
+    pageInfo {
+      hasNextPage
+    }
+  }
+}
+
+query PuckBlockTemplate($id: String!) {
+  blockTemplate(id: $id) {
+    ...PuckBlockTemplate
+  }
+}
+
+mutation CreatePuckBlockTemplate(
+  $name: String!
+  $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
+) {
+  createBlockTemplate(
+    name: $name
+    puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
+  ) {
+    ...PuckBlockTemplate
+  }
+}
+
+mutation UpdatePuckBlockTemplate(
+  $id: String!
+  $name: String!
+  $puckBlocks: [PuckBlockInput!]
+  $puckRegistry: PuckRegistryInput
+) {
+  updateBlockTemplate(
+    id: $id
+    name: $name
+    puckBlocks: $puckBlocks
+    puckRegistry: $puckRegistry
+  ) {
+    ...PuckBlockTemplate
   }
 }
 
 mutation DeleteBlockTemplate($id: String!) {
   deleteBlockTemplate(id: $id) {
     ...FullBlockTemplate
+  }
+}
+
+query PuckBlockTemplateOptions($name: String) {
+  blockTemplates(filter: { puck: true, name: $name }, take: 100, sort: Name) {
+    nodes {
+      id
+      name
+      linkedTemplateIds
+    }
   }
 }

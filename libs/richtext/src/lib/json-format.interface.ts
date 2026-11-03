@@ -1,4 +1,4 @@
-import { MarkType, NodeType } from '@tiptap/core';
+import { JSONContent, MarkType } from '@tiptap/core';
 
 type Bold = MarkType<'bold'>;
 type Italic = MarkType<'italic'>;
@@ -37,23 +37,32 @@ export type RichtextMarks =
   | Link
   | TextStyle;
 
-export type Text = NodeType<'text', undefined, any, RichtextMarks[]> & {
+type NestedContent = JSONContent[];
+
+type RichtextNode<Type extends string, Attrs = undefined, Content = never> = {
+  type: Type;
+  attrs: Attrs;
+  marks?: RichtextMarks[];
+  content?: Content;
+};
+
+export type Text = RichtextNode<'text', undefined> & {
   text: string;
 };
-type Paragraph = NodeType<
+type Paragraph = RichtextNode<
   'paragraph',
   { textAlign?: 'left' | 'right' | 'center' | null },
-  any,
   Text[]
 >;
-type Heading = NodeType<
+type Heading = RichtextNode<
   'heading',
-  { level: 1 | 2 | 3 | 4 | 5 | 6; id?: string | null } & Paragraph['attrs']
+  { level: 1 | 2 | 3 | 4 | 5 | 6; id?: string | null } & Paragraph['attrs'],
+  Text[]
 >;
-type HardBreak = NodeType<'hardBreak', undefined>;
-type Blockquote = NodeType<'blockquote', undefined>;
-type Codeblock = NodeType<'codeBlock', { language: string }>;
-type Image = NodeType<
+type HardBreak = RichtextNode<'hardBreak', undefined>;
+type Blockquote = RichtextNode<'blockquote', undefined, NestedContent>;
+type Codeblock = RichtextNode<'codeBlock', { language: string }, Text[]>;
+type Image = RichtextNode<
   'image',
   {
     src?: HTMLImageElement['src'];
@@ -62,39 +71,39 @@ type Image = NodeType<
   }
 >;
 
-type TableHeader = NodeType<
+type TableHeader = RichtextNode<
   'tableHeader',
   {
     colspan: number;
     rowspan: number;
     colwidth: number[] | null;
     borderColor: string;
-  }
+  },
+  NestedContent
 >;
-type TableCell = NodeType<
+type TableCell = RichtextNode<
   'tableCell',
   {
     colspan: number;
     rowspan: number;
     colwidth: number[] | null;
     borderColor?: string | null;
-  }
+  },
+  NestedContent
 >;
-type TableRow = NodeType<
+type TableRow = RichtextNode<
   'tableRow',
   undefined,
-  any,
   Array<TableHeader | TableCell>
 >;
-type Table = NodeType<'table', undefined, any, TableRow[]>;
+type Table = RichtextNode<'table', undefined, TableRow[]>;
 export type RichtextTableElements = Table | TableRow | TableHeader | TableCell;
 
-type ListItem = NodeType<'listItem', undefined>;
-type BulletList = NodeType<'bulletList', undefined, any, ListItem[]>;
-type OrderedList = NodeType<
+type ListItem = RichtextNode<'listItem', undefined, NestedContent>;
+type BulletList = RichtextNode<'bulletList', undefined, ListItem[]>;
+type OrderedList = RichtextNode<
   'orderedList',
   { start: number; type?: string | null },
-  any,
   ListItem[]
 >;
 export type RichtextListElements = ListItem | BulletList | OrderedList;
@@ -110,9 +119,8 @@ export type RichtextElements =
   | RichtextListElements
   | RichtextTableElements;
 
-export type RichtextJSONDocument = NodeType<
+export type RichtextJSONDocument = RichtextNode<
   'doc',
   undefined,
-  never,
   RichtextElements[]
 >;
