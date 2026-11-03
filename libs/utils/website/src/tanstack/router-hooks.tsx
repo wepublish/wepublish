@@ -60,7 +60,8 @@ export const useReplaceSearch = () => {
 /** Replacement for `withBuilderRouter` from `@wepublish/utils/website`. */
 export const BuilderRouterProvider = ({ children }: PropsWithChildren) => {
   const query = useQueryParams();
-  const value = useMemo(() => ({ query }), [query]);
+  const asPath = useAsPath();
+  const value = useMemo(() => ({ query, asPath }), [query, asPath]);
 
   return (
     <BuilderRouterContext.Provider value={value}>
