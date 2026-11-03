@@ -368,6 +368,77 @@ export class MediaService {
     return await this.uploads.delete(`images/${imageId}`);
   }
 
+  public async saveVideo(
+    videoId: string,
+    video: Buffer,
+    mimeType: string,
+    originalFilename: string
+  ) {
+    const objectKey = `videos/${videoId}/${originalFilename}`;
+    await this.uploads.put(objectKey, video, {
+      contentType: mimeType,
+      contentLength: video.length,
+    });
+    return { size: video.length };
+  }
+
+  public async saveVideoPoster(videoId: string, poster: Buffer) {
+    await this.transformations.put(`videos/${videoId}/poster.jpg`, poster, {
+      contentType: 'image/jpeg',
+      contentLength: poster.length,
+    });
+  }
+
+  public async getVideoPosterUri(videoId: string): Promise<ImageURIObject> {
+    const uri = `videos/${videoId}/poster.jpg`;
+
+    return { uri, exists: await this.transformations.exists(uri) };
+  }
+
+  public async getVideoUri(videoId: string): Promise<ImageURIObject> {
+    const keys = await this.listKeys(this.uploads, `videos/${videoId}/`);
+    const objectUri = keys[0];
+    if (!objectUri) {
+      return { uri: `videos/${videoId}`, exists: false };
+    }
+
+    return { uri: objectUri, exists: true };
+  }
+
+  public async deleteVideo(videoId: string) {
+    await this.deleteKeys(this.transformations, `videos/${videoId}/`);
+    await this.deleteKeys(this.uploads, `videos/${videoId}/`);
+  }
+
+  public async saveAudio(
+    audioId: string,
+    audio: Buffer,
+    mimeType: string,
+    originalFilename: string
+  ) {
+    const objectKey = `audios/${audioId}/${originalFilename}`;
+    await this.uploads.put(objectKey, audio, {
+      contentType: mimeType,
+      contentLength: audio.length,
+    });
+    return { size: audio.length };
+  }
+
+  public async getAudioUri(audioId: string): Promise<ImageURIObject> {
+    const keys = await this.listKeys(this.uploads, `audios/${audioId}/`);
+    const objectUri = keys[0];
+    if (!objectUri) {
+      return { uri: `audios/${audioId}`, exists: false };
+    }
+
+    return { uri: objectUri, exists: true };
+  }
+
+  public async deleteAudio(audioId: string) {
+    await this.deleteKeys(this.transformations, `audios/${audioId}/`);
+    await this.deleteKeys(this.uploads, `audios/${audioId}/`);
+  }
+
   public async saveDocument(
     documentId: string,
     document: Buffer,
