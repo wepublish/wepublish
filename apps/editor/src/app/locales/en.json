@@ -3305,9 +3305,12 @@
         "countSubscriptionsUntil": "Include only subscriptions paid until date",
         "revenue": "Already CHF {{revenue}} financed",
         "subscriptions": "Already {{subscriptions}} subscribed",
+        "progress": "Progress",
         "goalType": "Goal type",
-        "goalType_Revenue": "Revenue",
-        "goalType_Subscription": "Subscription count",
+        "goalTypes": {
+          "Revenue": "Revenue",
+          "Subscription": "Subscription count"
+        },
         "goals": "Goals",
         "crowdfunding": "Crowdfunding",
         "additionalRevenueInfo": "Money raised outside of We.Publish, e.g. by direct bank transfer. It is added to the revenue in the progress bar.",
@@ -3321,7 +3324,6 @@
         "description": "Description",
         "amount": "Target amount",
         "amountSubscriptions": "Target subscription count",
-        "remove": "Remove",
         "add": "Add Target"
       }
     },

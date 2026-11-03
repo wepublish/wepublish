@@ -104,9 +104,13 @@ export function FormBody() {
   const { controller } = useFormViewContext();
   const sections: readonly FormViewSection<AnyFormSchema>[] =
     controller.view.sections;
+  const shown = sections.filter(
+    section =>
+      section.modes === undefined || section.modes.includes(controller.mode)
+  );
   const wide =
     controller.view.layout === 'cards' ||
-    sections.some(section => section.placement === 'aside');
+    shown.some(section => section.placement === 'aside');
 
   return (
     <Body data-wide={wide}>

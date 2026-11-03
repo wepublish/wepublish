@@ -3245,11 +3245,14 @@
         "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
         "revenue": "Bereits CHF {{revenue}} finanziert",
         "subscriptions": "Bereits {{subscriptions}} abonniert",
+        "progress": "Fortschritt",
         "goals": "Ziele",
         "crowdfunding": "Crowdfunding",
         "goalType": "Zieltyp",
-        "goalType_Revenue": "Einnahmen",
-        "goalType_Subscription": "Anzahl Abos",
+        "goalTypes": {
+          "Revenue": "Einnahmen",
+          "Subscription": "Anzahl Abos"
+        },
         "additionalRevenueInfo": "Geld, das ausserhalb von We.Publish eingenommen wurde, z.B. per direkter Banküberweisung. Es wird zu den Einnahmen im Fortschrittsbalken dazugezählt.",
         "additionalSubscriptionsInfo": "Abos, die ausserhalb von We.Publish verkauft wurden, z.B. per direkter Banküberweisung bezahlt. Sie werden zur Anzahl im Fortschrittsbalken dazugezählt.",
         "memberPlansInfo": "Nur Abos der gewählten Abo-Pläne zählen für das Crowdfunding. Mit den Daten darunter kannst du den Zeitraum weiter eingrenzen.",
@@ -3261,7 +3264,6 @@
         "description": "Beschreibung",
         "amount": "Zielbetrag",
         "amountSubscriptions": "Zielanzahl Abos",
-        "remove": "Entfernen",
         "add": "Ziel hinzufügen"
       }
     },
