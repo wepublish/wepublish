@@ -1171,7 +1171,6 @@
       "noPasswordErrorMessage": "Bitte Passwort eingeben",
       "noPaymentMethodErrorMessage": "Bitte gib eine Zahlungsmethode ein",
       "noPaymentPeriodicityErrorMessage": "Bitte gib die Zahlungsperiodizität ein",
-      "noPaymentProviderErrorMessage": "Bitte gib den Zahlungsanbieter ein",
       "noTokenErrorMessage": "Bitte gib den Token ein",
       "noUrlErrorMessage": "Bitte URL eingeben",
       "noUserErrorMessage": "Bitte wähle eine:n Benutzer:in",
@@ -2297,7 +2296,8 @@
       "name": "Name",
       "slug": "Slug",
       "title": "Zahlungsmethoden",
-      "selectImage": "Vorschaubild auswählen",
+      "image": "Vorschaubild",
+      "payment": "Zahlung",
       "paymentProviderStatusInfo": "✅ heisst, diese Zahlungsmethode ist mit einem eingerichteten Zahlungsanbieter verbunden. ❌ heisst, der Anbieter fehlt – mit dieser Methode können Leser:innen nicht bezahlen.",
       "slugInfo": "Wird automatisch aus dem Namen erstellt. Die Website erkennt die Zahlungsmethode daran.",
       "adapterInfo": "Der Zahlungsanbieter, der die Zahlungen dieser Methode abwickelt, z.B. ein Anbieter für Karte oder TWINT oder die Rechnung. Es werden nur Anbieter angezeigt, die für dein Medium eingerichtet sind."

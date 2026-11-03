@@ -1165,8 +1165,8 @@ For each remaining editor form:
    `setFieldError(context.form, …)` inside `save` for anything a rule cannot
    describe; let the rest throw. Remove the old `onError` toasts.
 7. **Panels in `libs/ui/editor`** cannot use the library. Move a panel next to
-   its only route in the same change that migrates it
-   (`PaymentMethodEditPanel`, `NavigationEditPanel`). `ImageEditPanel` stays;
+   its only route in the same change that migrates it (done for
+   `NavigationEditPanel`, `UserRoleEditPanel`, `PaymentMethodEditPanel`). `ImageEditPanel` stays;
    the portal guard covers it.
 8. **Partial saves** use `getChangedValues`; write-only secrets use
    `formFields.secret()`.
