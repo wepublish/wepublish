@@ -58,6 +58,12 @@ import {
   UserRoleDrawer,
   UserRoleEditForm,
 } from './routes/userRoles/userRoleDrawer';
+import { UserAccessActions } from './routes/users/userAccessActions';
+import { UserCreateForm } from './routes/users/userCreateView';
+import { UserEditForm } from './routes/users/userEditView';
+import { UserMails } from './routes/users/userMails';
+import { UserPropertyRow } from './routes/users/userPropertyRow';
+import { UserSubscriptions } from './routes/users/userSubscriptions';
 import { FontPickerField } from './routes/website-settings/font-picker';
 import { WebsiteAds } from './routes/website-settings/website-ads';
 import { WebsiteAnalytics } from './routes/website-settings/website-analytics';
@@ -110,6 +116,12 @@ describe('the editor under test', () => {
     ['UserRoleEditForm', UserRoleEditForm],
     ['UserRoleDrawer', UserRoleDrawer],
     ['SystemRoleNotice', SystemRoleNotice],
+    ['UserCreateForm', UserCreateForm],
+    ['UserEditForm', UserEditForm],
+    ['UserAccessActions', UserAccessActions],
+    ['UserPropertyRow', UserPropertyRow],
+    ['UserSubscriptions', UserSubscriptions],
+    ['UserMails', UserMails],
     ['WebsiteAnalytics', WebsiteAnalytics],
     ['WebsiteAds', WebsiteAds],
     ['WebsiteFonts', WebsiteFonts],

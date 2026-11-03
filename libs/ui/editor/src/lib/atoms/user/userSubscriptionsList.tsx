@@ -431,6 +431,7 @@ function UserSubscriptionsList({
                   <TableCell>
                     <ConfirmedIcon
                       isConfirmed={subscription.confirmed}
+                      role="img"
                       aria-label={
                         subscription.confirmed ?
                           t('userSubscriptionList.confirmed')

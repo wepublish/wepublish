@@ -23,6 +23,7 @@ export type {
   ViewFields,
 } from './form-view';
 export { useFormView } from './form-view-context';
+export { cancelSave } from './save-cancelled';
 export { uniqueConstraint, uniqueViolationOf } from './unique-constraint';
 export type { UniqueViolation } from './unique-constraint';
 export {

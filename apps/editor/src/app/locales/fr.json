@@ -912,9 +912,6 @@
       "sendLoginLink": "Envoyer le lien de login par e-mail ?",
       "sendLoginLinkContent": "Voulez-vous envoyer un lien à {{email}} avec lequel {{firstName}} {{name}} peut se connecter avec ses autorisations existantes ?"
     },
-    "createOrUpdateUserPassword": {
-      "unexpectedErrorNoUserFound": "Erreur inattendue : aucun·e utilisateur·trice trouvé·e"
-    },
     "currency": {
       "chf": "chf"
     },
@@ -1163,7 +1160,6 @@
       "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} {{currency}}.",
       "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
       "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 si le champ est laissé vide",
-      "noEmailErrorMessage": "Veuillez entrer une adresse e-mail",
       "noMemberPlanErrorMessage": "Veuillez sélectionner un plan d’abonnement",
       "noNameErrorMessage": "Veuillez entrer un nom",
       "noQuestionErrorMessage": "Veuillez saisir une question",
@@ -2823,9 +2819,9 @@
       "confirm": "Confirmer",
       "country": "Pays",
       "createNewUser": "Créer un·e nouvel·le utilisateur·trice",
+      "editTitle": "Modifier {{name}}",
       "deleteUser": "Supprimer l’utilisateur·trice ?",
       "email": "E-mail",
-      "errorCreatingUser": "L’utilisateur·trice n’a pas pu être créé·e. Erreur inattendue : {{error}}",
       "errorOnUpdate": "Erreur lors de la mise à jour de l’utilisateur·trice : {{error}}",
       "firstName": "Prénom",
       "flair": "Flair",
@@ -2850,7 +2846,6 @@
       "streetAddress2": "Rue 2",
       "streetAddress2Number": "Numéro de maison",
       "subscriptionsHeader": "Abonnements",
-      "successfullyCreatedUser": "Utilisateur·trice créé·e avec succès",
       "successfullyUpdatedUser": "Utilisateur·trice mis·e à jour avec succès",
       "Unknown": "Inconnu",
       "userDataTitle": "Données de l’utilisateur·trice",
@@ -2861,6 +2856,7 @@
       "noteHelpText": "Non visible pour l’utilisateur.",
       "sendWebsiteLoginFailureMessage": "Le lien de connexion n’a pas pu être envoyé : {{error}}",
       "properties": "Propriétés",
+      "addProperty": "Ajouter une propriété",
       "activeInfo": "Les utilisateur·trice·s inactif·ve·s ne peuvent plus se connecter, ni sur le site web ni dans l’éditeur.",
       "flairInfo": "Brève description de la fonction, p. ex. « Rédactrice en chef ». Elle s’affiche à côté du nom dans les commentaires sur le site web.",
       "propertiesInfo": "Données supplémentaires sous forme de clé et de valeur, p. ex. issues d’importations. Les propriétés publiques peuvent aussi être lues par le site web, les privées uniquement dans l’éditeur.",

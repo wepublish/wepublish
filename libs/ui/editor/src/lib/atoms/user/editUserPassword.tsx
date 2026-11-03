@@ -7,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
 } from '@mui/material';
 import {
   FullUserFragment,
@@ -18,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 import { MdReplay, MdSend } from 'react-icons/md';
 
 import { enqueueSnackbar } from '../../snackbar';
-import { toggleRequiredLabel } from '../../toggleRequiredLabel';
 import { ResetUserPasswordForm } from './resetUserPasswordForm';
 
 const ReplayIcon = styled(MdReplay)`
@@ -36,19 +34,12 @@ const ButtonWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-interface CreateOrUpdateuserPasswordProps {
-  user?: FullUserFragment | null;
-  password?: string;
-  setPassword(password: string): void;
+interface EditUserPasswordProps {
+  user: FullUserFragment;
   isDisabled: boolean;
 }
 
-export function EditUserPassword({
-  user,
-  password,
-  setPassword,
-  isDisabled,
-}: CreateOrUpdateuserPasswordProps) {
+export function EditUserPassword({ user, isDisabled }: EditUserPasswordProps) {
   const { t } = useTranslation();
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] =
     useState<boolean>(false);
@@ -57,13 +48,6 @@ export function EditUserPassword({
   const [sendWebsiteLogin] = useMutation(SendWebsiteLoginDocument);
 
   async function sendLoginLink() {
-    if (!user) {
-      enqueueSnackbar(
-        t('createOrUpdateUserPassword.unexpectedErrorNoUserFound'),
-        { variant: 'error', autoHideDuration: 8000 }
-      );
-      return;
-    }
     try {
       await sendWebsiteLogin({ variables: { email: user.email } });
       // close modal
@@ -85,57 +69,9 @@ export function EditUserPassword({
   /**
    * UI helpers
    */
-  function createOrResetPasswordView() {
-    // edit form
-    if (user) {
-      return (
-        <Box sx={{ marginBottom: 3 }}>
-          <ButtonWrapper>
-            <Button
-              variant="contained"
-              onClick={() => setIsResetUserPasswordOpen(true)}
-            >
-              <ReplayIcon />
-              {t('userCreateOrEditView.resetPassword')}
-            </Button>
-            <Button
-              variant="contained"
-              disabled={isDisabled || !user.email || !user.active}
-              onClick={() => setSendLoginModalOpen(true)}
-            >
-              <SendIcon />
-              {t('userCreateOrEditView.sendWebsiteLogin')}
-            </Button>
-          </ButtonWrapper>
-        </Box>
-      );
-    }
-
-    // create new password form
-    return (
-      <TextField
-        label={toggleRequiredLabel(t('userCreateOrEditView.password'))}
-        type="password"
-        name="password"
-        value={password}
-        disabled={isDisabled}
-        onChange={event => {
-          setPassword(event.target.value);
-        }}
-        fullWidth
-      />
-    );
-  }
-
   function resetPasswordModal() {
-    const userId = user?.id;
-
-    if (!userId) {
-      return null;
-    }
-
     const userName =
-      user?.firstName ? `${user.firstName} ${user.name}` : user.name;
+      user.firstName ? `${user.firstName} ${user.name}` : user.name;
 
     return (
       <Dialog
@@ -146,7 +82,7 @@ export function EditUserPassword({
 
         <DialogContent>
           <ResetUserPasswordForm
-            userID={userId}
+            userID={user.id}
             userName={userName}
             onClose={() => setIsResetUserPasswordOpen(false)}
           />
@@ -173,9 +109,9 @@ export function EditUserPassword({
         <DialogTitle>{t('createOrEditUserPassword.sendLoginLink')}</DialogTitle>
         <DialogContent>
           {t('createOrEditUserPassword.sendLoginLinkContent', {
-            email: user?.email,
-            firstName: user?.firstName,
-            name: user?.name,
+            email: user.email,
+            firstName: user.firstName,
+            name: user.name,
           })}
         </DialogContent>
         <DialogActions>
@@ -198,7 +134,25 @@ export function EditUserPassword({
 
   return (
     <>
-      {createOrResetPasswordView()}
+      <Box>
+        <ButtonWrapper>
+          <Button
+            variant="contained"
+            onClick={() => setIsResetUserPasswordOpen(true)}
+          >
+            <ReplayIcon />
+            {t('userCreateOrEditView.resetPassword')}
+          </Button>
+          <Button
+            variant="contained"
+            disabled={isDisabled || !user.email || !user.active}
+            onClick={() => setSendLoginModalOpen(true)}
+          >
+            <SendIcon />
+            {t('userCreateOrEditView.sendWebsiteLogin')}
+          </Button>
+        </ButtonWrapper>
+      </Box>
       {resetPasswordModal()}
       {sendLoginLinkModal()}
     </>

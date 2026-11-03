@@ -112,6 +112,27 @@ describe('UserSubscriptionsList', () => {
     expect(names).toEqual(['Current-Abo', 'Lapsed-Abo', 'Old-Abo']);
   });
 
+  it('names the confirmation icon as an image', () => {
+    renderWithTheme(
+      <MemoryRouter>
+        <UserSubscriptionsList
+          subscriptions={[
+            subscription('current', 'Current-Abo', {
+              paidUntil: '2999-12-31T00:00:00.000Z',
+            }),
+          ]}
+          userId="user-1"
+        />
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByRole('img', {
+        name: /^userSubscriptionList\.(un)?confirmed$/,
+      })
+    ).toBeInTheDocument();
+  });
+
   it('says there are no subscriptions in a row spanning every column', () => {
     renderWithTheme(
       <MemoryRouter>

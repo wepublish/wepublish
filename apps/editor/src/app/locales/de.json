@@ -912,9 +912,6 @@
       "sendLoginLink": "Login-Link per E-Mail versenden?",
       "sendLoginLinkContent": "Willst du {{email}} einen Link senden, mit dem sich {{firstName}} {{name}} mit den bestehenden Rechten einloggen kann?"
     },
-    "createOrUpdateUserPassword": {
-      "unexpectedErrorNoUserFound": "Unerwarteter Fehler: kein User gefunden"
-    },
     "currency": {
       "chf": "chf"
     },
@@ -1163,7 +1160,6 @@
       "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} {{currency}}.",
       "amountTooLowErrorMessage": "Der Betrag liegt unter dem Minimum dieses Abos",
       "noAmountErrorMessage": "Der Betrag ist 5, wenn du nichts eingibst",
-      "noEmailErrorMessage": "Bitte E-Mail eingeben",
       "noMemberPlanErrorMessage": "Bitte gib den Abo-Plan ein",
       "noNameErrorMessage": "Bitte Namen eingeben",
       "noQuestionErrorMessage": "Bitte gib eine Frage ein",
@@ -2823,9 +2819,9 @@
       "confirm": "Bestätigen",
       "country": "Land",
       "createNewUser": "Neue:n Benutzer:in erstellen",
+      "editTitle": "{{name}} bearbeiten",
       "deleteUser": "Benutzer:in löschen?",
       "email": "E-Mail",
-      "errorCreatingUser": "Benutzer:in konnte nicht erstellt werden. Unerwarteter Fehler: {{error}}",
       "errorOnUpdate": "Fehler beim Aktualisieren der Benutzerdaten: {{error}}",
       "firstName": "Vorname",
       "flair": "Funktionsbeschreibung",
@@ -2841,6 +2837,7 @@
       "totpExemptLabel": "Von 2FA-Pflicht befreien",
       "totpExemptWarning": "⚠️ SICHERHEITSWARNUNG ⚠️\n\nDu bist dabei, die Zwei-Faktor-Authentifizierungspflicht für diesen Benutzer zu DEAKTIVIEREN!\n\nDies reduziert die Sicherheit dieses Kontos erheblich. Der Benutzer kann sich nur mit einem Passwort im Editor anmelden, ohne einen zweiten Faktor.\n\nDies sollte nur in Ausnahmefällen verwendet werden.\n\nBist du sicher, dass du fortfahren möchtest?",
       "properties": "Eigenschaften",
+      "addProperty": "Eigenschaft hinzufügen",
       "resetPassword": "Passwort zurücksetzen",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
       "selectUserImage": "Profilbild wählen",
@@ -2851,7 +2848,6 @@
       "streetAddress2": "Strasse 2",
       "streetAddress2Number": "Hausnummer",
       "subscriptionsHeader": "Abonnements",
-      "successfullyCreatedUser": "Benutzer:in erstellt",
       "successfullyUpdatedUser": "Benutzerdaten aktualisiert",
       "Unknown": "Unbekannt",
       "userDataTitle": "Benutzerdaten",
