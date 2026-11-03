@@ -31,6 +31,8 @@ import {
   getMimeTypeForExtension,
   DocumentCategory,
 } from './supported-documents-validator';
+import { getMimeTypeForAudioExtension } from './supported-audios-validator';
+import { getMimeTypeForVideoExtension } from './supported-videos-validator';
 
 export const UPLOAD_DISK = 'upload';
 
@@ -402,7 +404,46 @@ export class MediaService {
       return { uri: `videos/${videoId}`, exists: false };
     }
 
-    return { uri: objectUri, exists: true };
+    const [contentType, copiedContentType] = await Promise.all([
+      this.getVideoContentType(objectUri),
+      this.getStoredContentType(this.transformations, objectUri),
+    ]);
+    if (copiedContentType === contentType) {
+      return { uri: objectUri, exists: true };
+    }
+
+    try {
+      const video = await this.uploads.getBuffer(objectUri);
+
+      await this.transformations.put(objectUri, video, {
+        contentType,
+        contentLength: video.length,
+      });
+
+      return { uri: objectUri, exists: true };
+    } catch (e: any) {
+      if (e instanceof StorageFileNotFoundError) {
+        return { uri: objectUri, exists: false };
+      }
+      throw e;
+    }
+  }
+
+  private async getVideoContentType(objectUri: string): Promise<string> {
+    const uploadedContentType = await this.getStoredContentType(
+      this.uploads,
+      objectUri
+    );
+    if (
+      uploadedContentType &&
+      !GENERIC_CONTENT_TYPES.includes(uploadedContentType)
+    ) {
+      return uploadedContentType;
+    }
+    return (
+      getMimeTypeForVideoExtension(path.extname(objectUri)) ??
+      GENERIC_CONTENT_TYPE
+    );
   }
 
   public async deleteVideo(videoId: string) {
@@ -431,7 +472,46 @@ export class MediaService {
       return { uri: `audios/${audioId}`, exists: false };
     }
 
-    return { uri: objectUri, exists: true };
+    const [contentType, copiedContentType] = await Promise.all([
+      this.getAudioContentType(objectUri),
+      this.getStoredContentType(this.transformations, objectUri),
+    ]);
+    if (copiedContentType === contentType) {
+      return { uri: objectUri, exists: true };
+    }
+
+    try {
+      const audio = await this.uploads.getBuffer(objectUri);
+
+      await this.transformations.put(objectUri, audio, {
+        contentType,
+        contentLength: audio.length,
+      });
+
+      return { uri: objectUri, exists: true };
+    } catch (e: any) {
+      if (e instanceof StorageFileNotFoundError) {
+        return { uri: objectUri, exists: false };
+      }
+      throw e;
+    }
+  }
+
+  private async getAudioContentType(objectUri: string): Promise<string> {
+    const uploadedContentType = await this.getStoredContentType(
+      this.uploads,
+      objectUri
+    );
+    if (
+      uploadedContentType &&
+      !GENERIC_CONTENT_TYPES.includes(uploadedContentType)
+    ) {
+      return uploadedContentType;
+    }
+    return (
+      getMimeTypeForAudioExtension(path.extname(objectUri)) ??
+      GENERIC_CONTENT_TYPE
+    );
   }
 
   public async deleteAudio(audioId: string) {
