@@ -48,7 +48,11 @@ import {
   UserRoleDrawer,
   UserRoleEditForm,
 } from './routes/userRoles/userRoleDrawer';
+import { FontPickerField } from './routes/website-settings/font-picker';
+import { WebsiteAds } from './routes/website-settings/website-ads';
 import { WebsiteAnalytics } from './routes/website-settings/website-analytics';
+import { WebsiteFontRow } from './routes/website-settings/website-font-row';
+import { WebsiteFonts } from './routes/website-settings/website-fonts';
 
 const isCompiled = (code: string) => /\$\[\d+\]/.test(code);
 
@@ -91,6 +95,10 @@ describe('the editor under test', () => {
     ['UserRoleDrawer', UserRoleDrawer],
     ['SystemRoleNotice', SystemRoleNotice],
     ['WebsiteAnalytics', WebsiteAnalytics],
+    ['WebsiteAds', WebsiteAds],
+    ['WebsiteFonts', WebsiteFonts],
+    ['WebsiteFontRow', WebsiteFontRow],
+    ['FontPickerField', FontPickerField],
   ])(
     'runs %s through the React Compiler like the production build',
     (_name, component) => {

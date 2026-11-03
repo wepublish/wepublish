@@ -3853,7 +3853,9 @@
           "enable": "SparkLoop aktivieren",
           "sparkLoop": "<url>SparkLoop</url> ist eine Plattform für Newsletter-Empfehlungen und Weiterempfehlungen, die dir hilft, dein Publikum zu vergrössern.",
           "idLocator": "Du findest deine ID im <url>Skript-Bereich</url> deines SparkLoop-Dashboards.",
-          "idInvalid": "Muss eine gültige SparkLoop-ID sein (z.B. pub_xxxxxxxxxxxx)"
+          "idInvalid": "Muss eine gültige SparkLoop-ID sein (z.B. pub_xxxxxxxxxxxx)",
+          "id": "SparkLoop-ID",
+          "idPlaceholder": "pub_xxxxxxxxxxxx"
         }
       },
       "theme": {
@@ -4014,8 +4016,10 @@
         "title": "Schriften",
         "addFont": "Schrift hinzufügen",
         "default": "Standard",
-        "description": "Verwendet <Link>Google Fonts</Link>. Die Suche nach einer idealen Schrift geht am besten direkt dort.",
-        "searchPlaceholder": "Google Fonts durchsuchen …"
+        "description": "Verwendet <url>Google Fonts</url>. Die Suche nach einer idealen Schrift geht am besten direkt dort.",
+        "searchPlaceholder": "Google Fonts durchsuchen …",
+        "googleFonts": "Google Fonts",
+        "font": "Schrift"
       },
       "saveSuccess": "Die Website-Einstellungen wurden erfolgreich gespeichert"
     },

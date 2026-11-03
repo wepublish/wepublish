@@ -1,200 +1,41 @@
-import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@apollo/client/react';
 import {
-  Box,
-  Button,
-  CircularProgress,
-  IconButton,
-  Stack,
-  Typography,
-} from '@mui/material';
-import {
-  FontStyle,
-  FontWeight,
   UpdateWebsiteSettingsDocument,
-  WebsiteRemoteFontInput,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import {
-  enqueueSnackbar,
-  humanizeError,
-  IconButtonTooltip,
-  Link,
-} from '@wepublish/ui/editor';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { Trans, useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete } from 'react-icons/md';
-import { z } from 'zod';
+  type ViewFields,
+  FormPage,
+  useQueryLoader,
+  useSingletonForm,
+} from '@wepublish/form/editor';
 
-import { WebsiteSettingsHeader } from './website-settings-header';
+import { websiteFontsSchema } from './website-fonts.schema';
+import { websiteFontsView } from './website-fonts.view';
+import { settingsHint } from './website-settings-hint';
 
-import { FontPicker } from './theme/font-picker';
-import { WebsiteAnalyticsWrapper } from './website-settings-layout';
-
-const fontsSchema = z.array(
-  z
-    .object({
-      name: z.string(),
-      weight: z.array(
-        z.enum([
-          FontWeight.Thin,
-          FontWeight.ExtraLight,
-          FontWeight.Light,
-          FontWeight.Regular,
-          FontWeight.Medium,
-          FontWeight.SemiBold,
-          FontWeight.Bold,
-          FontWeight.ExtraBold,
-          FontWeight.Black,
-          FontWeight.Variable,
-        ])
-      ),
-      style: z.array(z.enum([FontStyle.Normal, FontStyle.Italic])),
-    })
-    .nullish()
-);
-
-const formSchema = z.object({ fonts: fontsSchema });
-type FormValues = z.infer<typeof formSchema>;
+const hints: ViewFields<typeof websiteFontsSchema> = {
+  fonts: {
+    helperText: settingsHint(
+      'websiteSettings.fonts.description',
+      'https://fonts.google.com/'
+    ),
+  },
+};
 
 export const WebsiteFonts = () => {
-  const { t } = useTranslation();
-  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
-  const [updateWebsiteSettings, { loading: saving }] = useMutation(
-    UpdateWebsiteSettingsDocument,
-    {
-      onCompleted: () => {
-        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
-          variant: 'success',
-          autoHideDuration: 3000,
-        });
-      },
-      onError: error => {
-        enqueueSnackbar(humanizeError(error), {
-          variant: 'error',
-          autoHideDuration: 3000,
-        });
-      },
-    }
-  );
-
-  const {
-    control,
-    handleSubmit,
-    formState: { isLoading },
-  } = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    mode: 'onTouched',
-    defaultValues: async () => {
-      const data = await loadSettings();
-
-      return { fonts: data.data?.websiteSettings.fonts ?? [] };
-    },
+  const load = useQueryLoader(WebsiteSettingsDocument, {}, data => ({
+    fonts: data.websiteSettings.fonts,
+  }));
+  const [updateWebsiteSettings] = useMutation(UpdateWebsiteSettingsDocument);
+  const fonts = useSingletonForm(websiteFontsView, {
+    title: 'websiteSettings.fonts.title',
+    closePath: '/settings/website',
+    fields: hints,
+    load,
+    save: values =>
+      updateWebsiteSettings({ variables: { fonts: values.fonts } }),
   });
 
-  const { fields, append, remove } = useFieldArray({ control, name: 'fonts' });
-
-  const onSubmit = handleSubmit(data => {
-    updateWebsiteSettings({
-      variables: {
-        fonts: data.fonts.filter((font): font is WebsiteRemoteFontInput =>
-          Boolean(font)
-        ),
-      },
-    });
-  }, console.warn);
-
-  if (isLoading) {
-    return (
-      <CircularProgress
-        size={14}
-        color="inherit"
-        sx={{ mr: 1 }}
-      />
-    );
-  }
-
-  return (
-    <WebsiteAnalyticsWrapper onSubmit={onSubmit}>
-      <WebsiteSettingsHeader title={t('websiteSettings.fonts.title')}>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          loading={saving}
-        >
-          {t('save')}
-        </Button>
-      </WebsiteSettingsHeader>
-      <Typography
-        variant="body2"
-        color={'gray'}
-      >
-        <Trans
-          i18nKey="websiteSettings.fonts.description"
-          components={{
-            Link: (
-              <Link
-                to="https://fonts.google.com/"
-                target="_blank"
-                rel="noreferrer"
-              />
-            ),
-          }}
-        />
-      </Typography>
-      <Stack spacing={2}>
-        {fields.map((field, index) => (
-          <Stack
-            key={field.id}
-            direction="row"
-            spacing={1}
-            sx={{
-              alignItems: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                flex: 1,
-                maxWidth: 300,
-              }}
-            >
-              <Controller
-                name={`fonts.${index}`}
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <FontPicker
-                    {...field}
-                    value={field.value?.name}
-                    error={error}
-                  />
-                )}
-              />
-            </Box>
-
-            <IconButtonTooltip caption={t('delete')}>
-              <IconButton
-                onClick={() => remove(index)}
-                size="small"
-                color="error"
-                aria-label={t('delete')}
-              >
-                <MdDelete />
-              </IconButton>
-            </IconButtonTooltip>
-          </Stack>
-        ))}
-      </Stack>
-      <Box>
-        <Button
-          variant="text"
-          size="small"
-          startIcon={<MdAdd />}
-          onClick={() => append({ name: '', weight: [], style: [] })}
-        >
-          {t('websiteSettings.fonts.addFont')}
-        </Button>
-      </Box>
-    </WebsiteAnalyticsWrapper>
-  );
+  return <FormPage controller={fonts} />;
 };

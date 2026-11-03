@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client/react';
-import { Link } from '@mui/material';
 import {
   UpdateWebsiteSettingsDocument,
   WebsiteSettingsDocument,
@@ -10,29 +9,10 @@ import {
   useQueryLoader,
   useSingletonForm,
 } from '@wepublish/form/editor';
-import { Trans } from 'react-i18next';
 
 import { websiteAnalyticsSchema } from './website-analytics.schema';
 import { websiteAnalyticsView } from './website-analytics.view';
-
-const hint = (i18nKey: string, href?: string) => (
-  <Trans
-    i18nKey={i18nKey}
-    components={
-      href === undefined ? undefined : (
-        {
-          url: (
-            <Link
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-            />
-          ),
-        }
-      )
-    }
-  />
-);
+import { settingsHint as hint } from './website-settings-hint';
 
 const hints: ViewFields<typeof websiteAnalyticsSchema> = {
   'googleAnalytics.enabled': {
