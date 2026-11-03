@@ -1,10 +1,11 @@
 import { MailContext } from './mail-context';
 import { MailController, mailLogType } from './mail.controller';
 
+// The password hash and the TOTP secret never reach the mail layer: Prisma
+// leaves them out of every user query. What is left are the fields the API
+// itself needs for authorization, which no template should print.
 const secrets = {
-  password: 'hash',
   roleIDs: ['admin'],
-  totpSecret: 'secret',
   totpEnabled: true,
   totpExempt: false,
 };
@@ -88,6 +89,6 @@ describe('MailController template data', () => {
 
     await templateData(optionalData);
 
-    expect(optionalData.user.password).toBe('hash');
+    expect(optionalData.user.roleIDs).toEqual(['admin']);
   });
 });

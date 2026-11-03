@@ -220,7 +220,7 @@ logic belongs in a lib and is tested there. What the app itself needs is a
 36 snapshot directories exist, mostly for website components. Update them with:
 
 ```bash
-pnpm nx test <project> --configuration=update    # single project
+pnpm nx test <project> -- -u                    # single project (--configuration=update does not exist)
 pnpm run test-u                                  # entire workspace
 ```
 
