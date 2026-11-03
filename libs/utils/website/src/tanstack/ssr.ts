@@ -100,6 +100,7 @@ export type RuntimePublicEnv = {
   APP_RELEASE_ID: string;
   SSR_FETCH_TIMEOUT_MS: string;
   SENTRY_DSN: string;
+  STRIPE_PUBLIC_KEY: string;
   WEBSITE_URL: string;
 };
 
@@ -114,6 +115,7 @@ export const getPublicEnv = (): RuntimePublicEnv => {
     APP_RELEASE_ID: process.env.APP_RELEASE_ID ?? '',
     SSR_FETCH_TIMEOUT_MS: process.env.SSR_FETCH_TIMEOUT_MS ?? '',
     SENTRY_DSN: process.env.SENTRY_DSN ?? '',
+    STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY ?? '',
     // The browser needs this to tell a link to this very site from a link to
     // another one; see `toInternalHref`. Falling back to the request host
     // keeps it correct without every deployment having to set the variable.

@@ -1,32 +1,18 @@
-import { createTheme, Theme, ThemeOptions } from '@mui/material';
+import {
+  createTheme,
+  css,
+  GlobalStyles,
+  Theme,
+  ThemeOptions,
+} from '@mui/material';
 import { theme as WePTheme } from '@wepublish/ui';
-import localFont from 'next/font/local';
 import { PartialDeep } from 'type-fest';
 
-const Faro = localFont({
-  src: [
-    {
-      path: './fonts/FaroWeb-DisplayLucky.woff2',
-      weight: '800',
-      style: 'normal',
-    },
-    {
-      path: './fonts/FaroWeb-SemiBoldLucky.woff2',
-      weight: '600',
-      style: 'normal',
-    },
-  ],
-});
+const fontUrl = (file: string) =>
+  new URL(`./fonts/${file}`, import.meta.url).href;
 
-const Signifier = localFont({
-  src: [
-    {
-      path: './fonts/SignifierMedium-Italic.woff2',
-      weight: '400',
-      style: 'italic',
-    },
-  ],
-});
+export const Faro = { family: 'Faro' };
+export const Signifier = { family: 'Signifier' };
 
 const {
   palette: { augmentColor },
@@ -44,52 +30,52 @@ const theme = createTheme(WePTheme, {
   },
   typography: {
     h1: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
       fontWeight: '800',
     },
     h2: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
       fontWeight: '800',
     },
     h3: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
       fontWeight: '800',
     },
     h4: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
       fontWeight: '800',
     },
     h5: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
     },
     h6: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
     },
     body1: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
       fontWeight: '600',
     },
     body2: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
       fontWeight: '600',
     },
     button: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
     },
     caption: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
     },
     overline: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
     },
     subtitle1: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
     },
     subtitle2: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
     },
     allVariants: {
-      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Faro.family, 'sans-serif'].join(','),
     },
     teaserTitle: {
       fontWeight: 800,
@@ -120,20 +106,17 @@ const theme = createTheme(WePTheme, {
     MuiCssBaseline: {
       styleOverrides: {
         'em, i': {
-          fontFamily:
-            [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+          fontFamily: [Signifier.family, 'serif'].join(',') + ' !important',
           fontWeight: '400',
           fontStyle: 'italic',
         },
         'em[style*="font-style: normal"]': {
-          fontFamily:
-            [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+          fontFamily: [Signifier.family, 'serif'].join(',') + ' !important',
           fontWeight: '400',
           fontStyle: 'italic !important',
         },
         blockquote: {
-          fontFamily:
-            [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+          fontFamily: [Signifier.family, 'serif'].join(',') + ' !important',
           fontWeight: '400',
           fontStyle: 'italic',
         },
@@ -146,8 +129,7 @@ const theme = createTheme(WePTheme, {
       styleOverrides: {
         root: {
           '& p': {
-            fontFamily:
-              [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+            fontFamily: [Signifier.family, 'serif'].join(',') + ' !important',
             fontWeight: '400',
             fontStyle: 'italic',
           },
@@ -159,8 +141,7 @@ const theme = createTheme(WePTheme, {
         root: {
           '&.MuiTypography-root': {
             '&:is(blockquote, blockquote *)': {
-              fontFamily:
-                [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+              fontFamily: [Signifier.family, 'serif'].join(',') + ' !important',
               fontWeight: '400',
               fontStyle: 'italic',
             },
@@ -168,8 +149,7 @@ const theme = createTheme(WePTheme, {
         },
         h4: {
           '&:is(blockquote, blockquote *)': {
-            fontFamily:
-              [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+            fontFamily: [Signifier.family, 'serif'].join(',') + ' !important',
             fontWeight: '400',
             fontStyle: 'italic',
           },
@@ -180,3 +160,33 @@ const theme = createTheme(WePTheme, {
 } as PartialDeep<Theme> | ThemeOptions);
 
 export { theme as default };
+
+export const WntiGlobalStyles = () => (
+  <GlobalStyles
+    styles={css`
+      @font-face {
+        font-family: ${Faro.family};
+        src: url('${fontUrl('FaroWeb-DisplayLucky.woff2')}') format('woff2');
+        font-weight: 800;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${Faro.family};
+        src: url('${fontUrl('FaroWeb-SemiBoldLucky.woff2')}') format('woff2');
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${Signifier.family};
+        src: url('${fontUrl('SignifierMedium-Italic.woff2')}') format('woff2');
+        font-weight: 400;
+        font-style: italic;
+        font-display: swap;
+      }
+    `}
+  />
+);
