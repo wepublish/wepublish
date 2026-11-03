@@ -290,7 +290,7 @@ function PageEditor() {
 
   const changeVersion = useRef(0);
   const skipRepopulate = useRef(false);
-  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+  useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = pageData?.page?.previewUrl;
   const publishedUrl =
@@ -598,11 +598,6 @@ function PageEditor() {
                 to="/pages"
                 title={t('back')}
                 aria-label={t('back')}
-                onClick={e => {
-                  if (!unsavedChangesDialog()) {
-                    e.preventDefault();
-                  }
-                }}
               >
                 <MdKeyboardBackspace />
               </IconButton>
@@ -812,11 +807,9 @@ function PageEditor() {
           onCreateTemplate={
             pageID ?
               () => {
-                if (unsavedChangesDialog()) {
-                  navigate(
-                    `/pages/templates/create?fromPage=${encodeURIComponent(pageID)}`
-                  );
-                }
+                navigate(
+                  `/pages/templates/create?fromPage=${encodeURIComponent(pageID)}`
+                );
               }
             : undefined
           }

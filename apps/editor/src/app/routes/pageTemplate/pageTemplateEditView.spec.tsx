@@ -70,7 +70,7 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
       component,
   PermissionControl: ({ children }: { children?: unknown }) => children,
   useAuthorisation: (permission: string) => isAuthorised(permission),
-  useUnsavedChangesDialog: () => () => true,
+  useUnsavedChangesDialog: () => undefined,
 }));
 
 vi.mock('react-i18next', () => ({
