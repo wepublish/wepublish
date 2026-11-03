@@ -11,7 +11,7 @@ import { responseBackReference } from '@wepublish/api-token/api';
 import helmet from 'helmet';
 
 import { graphqlUploadExpress } from 'graphql-upload';
-import { useBodyParsers } from './body-parsers';
+import { getBodyParsers } from './body-parsers';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
@@ -27,7 +27,7 @@ async function bootstrap() {
   nestApp.use(responseBackReference);
   nestApp.use(helmet());
 
-  useBodyParsers(nestApp);
+  nestApp.use(...getBodyParsers());
   nestApp.use(graphqlUploadExpress());
 
   if (process.env.RUN_SEED === 'true') {

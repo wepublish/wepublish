@@ -1,5 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import {
+  Prisma,
+  PrismaClient,
+  SubscriptionDeactivationReason,
+} from '@prisma/client';
 import { ok } from 'assert';
 import {
   DailySubscriptionStats,
@@ -268,6 +272,30 @@ export class DashboardSubscriptionService {
     date: Date,
     memberPlanIds: string[] = []
   ) {
+    return this.getDailyPaidSubscriptionsCreated(date, memberPlanIds, {
+      replacesSubscriptionID: null,
+    });
+  }
+
+  // An upgrade creates a subscription that replaces the old one. The reader is
+  // not new, so these only count as "replaced".
+  private async getDailyReplacedSubscriptions(
+    date: Date,
+    memberPlanIds: string[] = []
+  ) {
+    return this.getDailyPaidSubscriptionsCreated(date, memberPlanIds, {
+      replacesSubscriptionID: { not: null },
+    });
+  }
+
+  private async getDailyPaidSubscriptionsCreated(
+    date: Date,
+    memberPlanIds: string[],
+    replacementFilter: Pick<
+      Prisma.SubscriptionWhereInput,
+      'replacesSubscriptionID'
+    >
+  ) {
     if (date > new Date(new Date().getTime() + 24 * 60 * 60 * 1000)) {
       return [];
     }
@@ -285,7 +313,6 @@ export class DashboardSubscriptionService {
     return this.prisma.subscription.findMany({
       select: {
         id: true,
-        replacesSubscriptionID: true,
         user: {
           select: {
             id: true,
@@ -303,6 +330,7 @@ export class DashboardSubscriptionService {
         paidUntil: {
           not: null,
         },
+        ...replacementFilter,
         ...memberPlanFilter,
       },
     });
@@ -346,6 +374,11 @@ export class DashboardSubscriptionService {
           date: {
             gte: start,
             lte: end,
+          },
+          // An upgrade closes the old subscription with this reason. The
+          // reader stays, so it is not a cancellation.
+          reason: {
+            not: SubscriptionDeactivationReason.userReplacedSubscription,
           },
         },
         paidUntil: {
@@ -635,6 +668,7 @@ export class DashboardSubscriptionService {
     const [
       totalActiveSubscriptionCount,
       createdSubscriptions,
+      replacedSubscriptions,
       renewedSubscriptions,
       deactivatedSubscriptions,
       dailyOverdueSubscriptions,
@@ -644,6 +678,7 @@ export class DashboardSubscriptionService {
     ] = await Promise.all([
       this.getDailyTotalActiveSubscriptionCount(current, sortedPlanIds),
       this.getDailyCreatedSubscriptions(current, sortedPlanIds),
+      this.getDailyReplacedSubscriptions(current, sortedPlanIds),
       this.getDailyRenewedSubscriptions(current, sortedPlanIds),
       this.getDailyDeactivatedSubscriptions(current, sortedPlanIds),
       this.getDailyOverdueSubscriptions(current, sortedPlanIds),
@@ -655,10 +690,6 @@ export class DashboardSubscriptionService {
       this.getDailyPredictedSubscriptionRenewals(current, sortedPlanIds),
       this.getDailyEndingSubscriptions(current, sortedPlanIds),
     ]);
-
-    const replacedSubscriptions = createdSubscriptions.filter(
-      createdSubscription => createdSubscription.replacesSubscriptionID
-    );
 
     const summarizedHighProbabilityRenewals =
       dailySummarizedPredictedSubscriptionRenewals.filter(subscription =>

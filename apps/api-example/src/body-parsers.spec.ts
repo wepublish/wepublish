@@ -11,7 +11,7 @@ import {
 import { NestFactory } from '@nestjs/core';
 import { NodeAdapter } from '@nestjs/platform-node';
 import bodyParser from 'body-parser';
-import { useBodyParsers } from './body-parsers';
+import { getBodyParsers } from './body-parsers';
 
 @Controller()
 class EchoController {
@@ -32,7 +32,7 @@ class EchoModule implements NestModule {
   }
 }
 
-describe('useBodyParsers', () => {
+describe('getBodyParsers', () => {
   let app: INestApplication | undefined;
   let base: string;
 
@@ -41,7 +41,7 @@ describe('useBodyParsers', () => {
       bodyParser: false,
       logger: false,
     });
-    useBodyParsers(app);
+    app.use(...getBodyParsers());
     await app.listen(0);
 
     const { port } = app.getHttpServer().address() as AddressInfo;

@@ -227,6 +227,11 @@ export const MemberPlanItem = forwardRef<
                 ),
                 offerPeriodicity: cheapestOffer.periodicity,
                 offerExactAmount: cheapestOfferFixed,
+                minPrice: formatCurrency(
+                  cheapestOffer.amountMin / 100,
+                  currency,
+                  locale
+                ),
               })}
             </MemberPlanItemPrice>
 

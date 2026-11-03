@@ -1,4 +1,3 @@
-import { INestApplication } from '@nestjs/common';
 import {
   json,
   urlencoded,
@@ -25,17 +24,15 @@ const isWebhook = (req: NodeRequest) => {
  * `_body` flag that tells the providers' body-parser it is already read.
  */
 const exceptWebhooks =
-  (
-    parser: (req: NodeRequest, res: NodeResponse, next: Next) => void
-  ) =>
+  (parser: (req: NodeRequest, res: NodeResponse, next: Next) => void) =>
   (req: NodeRequest, res: NodeResponse, next: Next) =>
     isWebhook(req) ? next() : parser(req, res, next);
 
 type Next = (err?: unknown) => void;
 
-export function useBodyParsers(nestApp: INestApplication) {
-  nestApp.use(exceptWebhooks(json({ limit: MAX_PAYLOAD_SIZE })));
-  nestApp.use(
-    exceptWebhooks(urlencoded({ extended: true, limit: MAX_PAYLOAD_SIZE }))
-  );
+export function getBodyParsers() {
+  return [
+    exceptWebhooks(json({ limit: MAX_PAYLOAD_SIZE })),
+    exceptWebhooks(urlencoded({ extended: true, limit: MAX_PAYLOAD_SIZE })),
+  ];
 }
