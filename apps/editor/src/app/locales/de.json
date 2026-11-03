@@ -373,15 +373,16 @@
         "showForLoginStatusInfo": "Wähle, welche Besucher*innen den Banner sehen, z.B. nur solche ohne Abo. Passen mehrere aktive Banner, wird jener mit der genauesten Zielgruppe angezeigt.",
         "showOnPagesInfo": "Der Banner erscheint auf den hier gewählten Seiten. Leer lassen, wenn er auf keiner Seite erscheinen soll.",
         "ctaInfo": "Kurzer Satz über den Buttons, der Leser*innen zum Handeln auffordert, z.B. «Unterstütze uns mit einem Abo».",
-        "htmlInfo": "Optional: eigener HTML-Code für den Banner. Wenn ausgefüllt, ersetzt er Titel, Text, Call to Action und Buttons."
+        "htmlInfo": "Optional: eigener HTML-Code für den Banner. Wenn ausgefüllt, ersetzt er Titel, Text, Call to Action und Buttons.",
+        "customContent": "Eigener Code",
+        "timing": "Zeitsteuerung"
       },
       "list": {
         "title": "Banner",
         "text": "Text",
         "createNew": "Neu erstellen",
         "active": "Aktiv",
-        "edit": "Bearbeiten",
-        "delete": "Löschen"
+        "edit": "Bearbeiten"
       },
       "actions": {
         "add": "Aktion hinzufügen",
@@ -1193,22 +1194,30 @@
         "title": "Event bearbeiten"
       },
       "form": {
-        "cancelled": "Abgesagt",
         "description": "Beschreibung",
         "endsAt": "Endet um",
-        "endsBeforeStart": "Das Ende darf nicht vor dem Beginn liegen",
+        "endsBeforeStart": "Das Ende darf nicht vor dem Start liegen",
         "externalSource": "Externe Quelle (für importierte Events)",
         "image": "Bild",
         "location": "Veranstaltungsort",
         "name": "Name",
         "lead": "Lead",
-        "postponed": "Verschoben",
-        "rescheduled": "Verlegt",
-        "scheduled": "Geplant",
         "startsAt": "Startet um",
         "status": "Status",
         "tags": "Tags",
-        "statusInfo": "Zeigt Suchmaschinen, ob der Event wie geplant stattfindet oder abgesagt, verschoben oder auf ein neues Datum gelegt wurde."
+        "statusInfo": "Zeigt Suchmaschinen, ob der Event wie geplant stattfindet oder abgesagt, verschoben oder auf ein neues Datum gelegt wurde.",
+        "statuses": {
+          "Scheduled": "Geplant",
+          "Cancelled": "Abgesagt",
+          "Postponed": "Verschoben",
+          "Rescheduled": "Verlegt"
+        },
+        "sections": {
+          "details": "Details",
+          "schedule": "Zeitplan",
+          "content": "Inhalt",
+          "media": "Medien & Tags"
+        }
       },
       "list": {
         "create": "Neues Event erstellen",
@@ -2132,8 +2141,16 @@
         "linkTypeArticle": "Artikel",
         "linkTypePage": "Seite",
         "linkTypeExternal": "Externer Link",
-        "linkType": "Linktyp",
-        "keyInfo": "Technischer Name, über den deine Website diese Navigation findet, z.B. «main» oder «footer». Nur in Absprache mit den Entwickler*innen deiner Website ändern."
+        "linkType": "Link-Typ",
+        "keyInfo": "Technischer Name, über den deine Website diese Navigation findet, z.B. «main» oder «footer». Nur in Absprache mit den Entwickler*innen deiner Website ändern.",
+        "linkTypes": {
+          "External": "Externer Link",
+          "Page": "Seite",
+          "Article": "Artikel"
+        },
+        "links": "Links",
+        "addLink": "Link hinzufügen",
+        "keyTaken": "Eine Navigation mit dem Key «{{key}}» existiert bereits. Bitte wähle einen anderen Key."
       }
     },
     "notifications": {
@@ -2545,6 +2562,8 @@
     "save": "Speichern",
     "saveAndClose": "Speichern & Schliessen",
     "settingList": {
+      "commentsAndPolls": "Kommentare & Umfragen",
+      "confirmTitle": "Diese Einstellungen speichern?",
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
       "comments": "Kommentare",
       "days": "Tage",
@@ -2609,7 +2628,12 @@
         "loginMinutes": "Wie lange per E-Mail verschickte Login-Links gültig bleiben, in Minuten (60 = 1 Stunde, 1440 = 1 Tag, 10080 = 1 Woche). Danach muss ein neuer Link angefordert werden.",
         "passwordToken": "Wie lange der E-Mail-Link zum Zurücksetzen des Passworts gültig bleibt, in Minuten (60 = 1 Stunde, 1440 = 1 Tag).",
         "peerToken": "Wie lange beim Laden von Artikeln auf Partnermedien (Peers) gewartet wird, in Millisekunden (1000 = 1 Sekunde). Danach wird die Anfrage abgebrochen."
-      }
+      },
+      "errors": {
+        "invalid": "Der Server hat diesen Wert abgelehnt."
+      },
+      "publicApi": "Öffentliche Statistik-API",
+      "publicApiInfo": "Macht Zahlen eines gewählten Zeitraums ohne Login über die öffentliche API verfügbar, z. B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass eine Zahl aus, wenn du sie nicht brauchst."
     },
     "automaticMails": {
       "title": "Automatische E-Mails",
@@ -2742,6 +2766,14 @@
         "colorInfo": "Manche Website-Designs heben den Tag in dieser Farbe hervor, z. B. als Hintergrund des Tag-Labels.",
         "descriptionInfo": "Erscheint oben auf der Tag-Seite deiner Website, die alle Inhalte mit diesem Tag auflistet. Auch Suchmaschinen verwenden den Text.",
         "markAsMainInfo": "Haupt-Tags stehen für ein Thema. Manche Website-Designs zeigen sie prominent an, z. B. als Themen-Label über einem Artikel."
+      },
+      "form": {
+        "sections": {
+          "details": "Details",
+          "display": "Darstellung auf der Website"
+        },
+        "titleCreate": "Tag erstellen",
+        "uniqueConstraint": "Einen Tag «{{tag}}» gibt es hier bereits."
       }
     },
     "tokenList": {
@@ -2775,7 +2807,13 @@
       "titleEdit": "Benutzer-Einwilligung bearbeiten",
       "user": "Benutzer",
       "value": "Wert",
-      "uniqueConstraint": "Eine Benutzer-Einwilligung mit dem Slug «{{slug}}» existiert bereits. Bitte wähle einen anderen Slug."
+      "uniqueConstraint": "Eine Benutzer-Einwilligung mit dem Slug «{{slug}}» existiert bereits. Bitte wähle einen anderen Slug.",
+      "sections": {
+        "assignment": "Zuordnung",
+        "assignmentInfo": "Benutzer:in und Einwilligung lassen sich nach dem Erstellen nicht mehr ändern.",
+        "decision": "Entscheidung"
+      },
+      "alreadyExists": "Diese Person hat diese Einwilligung bereits beantwortet."
     },
     "userCreateOrEditView": {
       "addressTitle": "Adresse",
@@ -3367,18 +3405,26 @@
         "bypassToken": "Bypass-Token",
         "memberPlans": "Die Paywall entfällt nur mit spezifischen Abos",
         "newBypassToken": "Neuen Bypass-Token erstellen",
-        "addBypass": "Hinzufügen",
+        "addBypass": "Bypass-Token hinzufügen",
         "qrCodeTitle": "QR-Code für Bypass-Token",
         "downloadSvg": "SVG herunterladen",
         "baseUrl": "Website-URL (Base-URL). Z.B. https://wepublish.ch",
         "upgrade": "Texte, wenn die Paywall ein Upgrade unterstützt und zulässt",
+        "upgradeDescription": "Upgrade-Text (sichtbar für Benutzer:innen)",
+        "upgradeCircumventDescription": "Upgrade-Text, wenn der Artikel-Inhalt nicht versteckt ist (sichtbar für Benutzer:innen)",
+        "nameTaken": "Eine Paywall «{{name}}» gibt es bereits.",
         "display": "Anzeigeoptionen",
         "hideContentAfter": "Inhalt nach X Blöcken ausblenden",
         "fadeout": "Ausgeblendete Blöcke mit Überblendung ausblenden",
         "fadeoutHelpText": "Die Überblendung ermöglicht eine Vorschau auf den restlichen Inhalt.",
         "bypassesInfo": "Geheime Codes, mit denen man Artikel hinter dieser Paywall ohne Abo lesen kann, z.B. für eine Print- oder Event-Aktion. Teile den Link oder QR-Code: Wer ihn öffnet, hat für einige Stunden freien Zugang.",
         "showQrCode": "QR-Code anzeigen",
-        "hideContentAfterInfo": "Wie viele Blöcke des Artikels (z.B. Titel, Lead, Absätze) Leser:innen ohne Zugang noch sehen, bevor der Rest ausgeblendet wird. Standard: 3."
+        "hideContentAfterInfo": "Wie viele Blöcke des Artikels (z.B. Titel, Lead, Absätze) Leser:innen ohne Zugang noch sehen, bevor der Rest ausgeblendet wird. Standard: 3.",
+        "sections": {
+          "general": "Allgemein",
+          "texts": "Paywall-Texte",
+          "access": "Zugang"
+        }
       },
       "overview": {
         "areYouSure": "Bist du sicher?",
@@ -3755,21 +3801,28 @@
           "gtm": "<url>Google Tag Manager</url> ist ein Tool von Google, mit dem du Tracking- und Marketing-Skripte auf deiner Website verwalten kannst, ohne jedes Mal den Code zu ändern.",
           "gtmLocator": "Du findest es im <url>Admin-Dashboard</url> unter Google-Tag",
           "gaInvalid": "Muss eine gültige GA-ID sein (z.B. G-XXXXXXXXXX oder UA-XXXXXXXX-X)",
-          "gtmInvalid": "Muss eine gültige GTM-ID sein (z.B. GTM-XXXXXXX)"
+          "gtmInvalid": "Muss eine gültige GTM-ID sein (z.B. GTM-XXXXXXX)",
+          "gaId": "Google-Analytics-ID",
+          "gaPlaceholder": "G-XXXXXXXXXX",
+          "gtmId": "Google-Tag-Manager-ID",
+          "gtmPlaceholder": "GTM-XXXXXXX"
         },
         "plausible": {
           "title": "Plausible",
           "enable": "Plausible aktivieren",
           "pa": "<url>Plausible Analytics</url> ist eine datenschutzfreundliche Alternative zu Google Analytics.",
           "paLocator": "Du findest es in den <url>Website-Einstellungen</url> im Admin-Dashboard",
-          "paInvalid": "Muss eine gültige PA-ID sein (z.B. pa-XXXXXXXXXXXXXXXXXXXX)"
+          "paInvalid": "Muss eine gültige PA-ID sein (z.B. pa-XXXXXXXXXXXXXXXXXXXX)",
+          "paId": "Plausible-ID",
+          "paPlaceholder": "pa-XXXXXXXXXXXXXXXXXXXXX"
         },
         "piwik": {
           "title": "Piwik PRO",
           "enable": "Piwik PRO aktivieren",
           "pro": "<url>Piwik PRO</url> ist eine datenschutzfreundliche Analyse-Plattform und eine Alternative zu Google Analytics.",
           "proLocator": "Du findest es im Menü > Administration > Site > ID in deinem Verwaltungsbereich",
-          "proInvalid": "Muss eine gültige Piwik-ID sein (z.B. xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
+          "proId": "Piwik-PRO-ID",
+          "proPlaceholder": "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
         }
       },
       "mail": {

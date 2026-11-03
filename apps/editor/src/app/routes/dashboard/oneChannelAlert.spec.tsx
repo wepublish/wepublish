@@ -19,7 +19,7 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const mockedUseQuery = useQuery as Mock;
+const mockedUseQuery = useQuery as unknown as Mock;
 
 const mockStatus = (
   status: {

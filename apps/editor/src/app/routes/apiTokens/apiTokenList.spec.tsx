@@ -49,7 +49,7 @@ const apiToken = {
   prefix: 'wep_abcd1234',
   scopes: ['CAN_GET_ARTICLE'],
   expiresAt: '2027-12-31T10:00:00.000Z',
-  revokedAt: null,
+  revokedAt: null as string | null,
   lastUsedAt: null,
   createdById: 'user-1',
   createdBy: { id: 'user-1', name: 'Ada Lovelace' },

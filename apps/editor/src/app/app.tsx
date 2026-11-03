@@ -318,7 +318,7 @@ function AppRoutes() {
           path="articles/tags/edit/:id"
           element={
             <Base>
-              <TagEditView />
+              <TagEditView type={TagType.Article} />
             </Base>
           }
         />
@@ -399,7 +399,7 @@ function AppRoutes() {
           path="pages/tags/edit/:id"
           element={
             <Base>
-              <TagEditView />
+              <TagEditView type={TagType.Page} />
             </Base>
           }
         />
@@ -521,7 +521,7 @@ function AppRoutes() {
           path="comments/tags/edit/:id"
           element={
             <Base>
-              <TagEditView />
+              <TagEditView type={TagType.Comment} />
             </Base>
           }
         />
@@ -583,7 +583,7 @@ function AppRoutes() {
           path="events/tags/edit/:id"
           element={
             <Base>
-              <TagEditView />
+              <TagEditView type={TagType.Event} />
             </Base>
           }
         />
@@ -805,7 +805,7 @@ function AppRoutes() {
           path="authors/tags/edit/:id"
           element={
             <Base>
-              <TagEditView />
+              <TagEditView type={TagType.Author} />
             </Base>
           }
         />

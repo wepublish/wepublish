@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 
+import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 import {
@@ -63,7 +64,6 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
   useAuthorisation: () => true,
 }));
 
-const { useQuery } = await import('@apollo/client/react');
 const mockedUseQuery = useQuery as unknown as Mock;
 
 const memberPlan = {

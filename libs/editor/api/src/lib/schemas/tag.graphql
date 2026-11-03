@@ -45,8 +45,20 @@ query TagList(
   }
 }
 
-mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $color: Color) {
-  createTag(tag: $tag, description: $description, type: $type, color: $color) {
+mutation CreateTag(
+  $tag: String
+  $description: RichText
+  $type: TagType!
+  $main: Boolean
+  $color: Color
+) {
+  createTag(
+    tag: $tag
+    description: $description
+    type: $type
+    main: $main
+    color: $color
+  ) {
     ...FullTag
   }
 }

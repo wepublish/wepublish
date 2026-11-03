@@ -1,100 +1,66 @@
-import { useApolloClient, useMutation } from '@apollo/client/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { TagDocument, UpdateTagDocument } from '@wepublish/editor/api';
-import { CanUpdateTag } from '@wepublish/permissions';
+import { useMutation } from '@apollo/client/react';
 import {
-  createCheckedPermissionComponent,
-  enqueueSnackbar,
-  humanizeError,
-  SingleViewTitle,
-} from '@wepublish/ui/editor';
-import { useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import { z } from 'zod';
+  type TagType,
+  TagDocument,
+  UpdateTagDocument,
+} from '@wepublish/editor/api';
+import { FormPage, useEditForm, useQueryLoader } from '@wepublish/form/editor';
+import { CanGetTags, CanUpdateTag } from '@wepublish/permissions';
+import { PermissionControl } from '@wepublish/ui/editor';
+import { useParams } from 'react-router-dom';
 
-import { TagForm } from './tagForm';
+import { useWebsiteThemeColors } from '../website-settings/theme/theme-colors';
+import {
+  fromTag,
+  tagPaths,
+  tagTitleParams,
+  toUpdateTagVariables,
+} from './tag.schema';
+import { tagView } from './tag.view';
 
-const onErrorToast = (error: Error) => {
-  enqueueSnackbar(humanizeError(error), {
-    variant: 'error',
-    autoHideDuration: 8000,
-  });
+const VIEW_PERMISSIONS = [CanGetTags.id, CanUpdateTag.id];
+
+const WRITE_PERMISSIONS = [CanUpdateTag.id];
+
+type TagEditFormProps = {
+  id: string;
+  type: TagType;
 };
 
-const TagEditView = () => {
-  const { t } = useTranslation();
-  const [shouldClose, setShouldClose] = useState(false);
-  const closePath = './../..';
-  const navigate = useNavigate();
-  const { id } = useParams();
-
-  const client = useApolloClient();
-
-  const schema = z.object({
-    id: z.string().min(1),
-    tag: z.string().min(1, t('errorMessages.required')),
-    color: z.string().nullish(),
-    description: z.any().nullish(),
-    main: z.boolean(),
+export const TagEditForm = ({ id, type }: TagEditFormProps) => {
+  const presetColors = useWebsiteThemeColors();
+  const load = useQueryLoader(TagDocument, { id }, data => fromTag(data.tag));
+  const [updateTag] = useMutation(UpdateTagDocument);
+  const tag = useEditForm(tagView, {
+    title: 'tags.overview.editTag',
+    titleParams: tagTitleParams,
+    paths: tagPaths(type),
+    writePermissions: WRITE_PERMISSIONS,
+    load,
+    fields: { color: { props: { presetColors } } },
+    save: values => updateTag({ variables: toUpdateTagVariables(id, values) }),
   });
 
-  const { control, handleSubmit, formState } = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: async () => {
-      const { data } = await client.query({
-        query: TagDocument,
-        variables: { id: id! },
-      });
+  return <FormPage controller={tag} />;
+};
 
-      return data!.tag as z.infer<typeof schema>;
-    },
-  });
+export type TagEditViewProps = {
+  type: TagType;
+};
 
-  const tag = useWatch({ control, name: 'tag' });
-
-  const [updateTag, { loading: updateLoading }] = useMutation(
-    UpdateTagDocument,
-    {
-      onError: onErrorToast,
-      onCompleted: data => {
-        if (data.updateTag) {
-          if (shouldClose) {
-            navigate(closePath);
-          }
-        }
-      },
-    }
-  );
-
-  const onSubmit = handleSubmit(values => updateTag({ variables: values }));
-
-  if (formState.isLoading) {
-    return null;
-  }
+export const TagEditView = ({ type }: TagEditViewProps) => {
+  const { id = '' } = useParams();
 
   return (
-    <form onSubmit={onSubmit}>
-      <SingleViewTitle
-        loading={updateLoading}
-        title={t('tags.overview.editTag', { tag })}
-        loadingTitle={t('loading')}
-        saveBtnTitle={t('save')}
-        saveAndCloseBtnTitle={t('saveAndClose')}
-        closePath={closePath}
-        setCloseFn={setShouldClose}
+    <PermissionControl
+      qualifyingPermissions={VIEW_PERMISSIONS}
+      showRejectionMessage
+    >
+      <TagEditForm
+        key={id}
+        id={id}
+        type={type}
       />
-
-      <TagForm
-        control={control}
-        disabled={updateLoading}
-      />
-    </form>
+    </PermissionControl>
   );
 };
-
-const CheckedPermissionComponent = createCheckedPermissionComponent([
-  CanUpdateTag.id,
-])(TagEditView);
-export { CheckedPermissionComponent as TagEditView };

@@ -14,7 +14,7 @@ describe('ConsentList', () => {
     vi.spyOn(v2Client, 'getApiClientV2').mockReturnValue(
       new ApolloClient({
         cache: new InMemoryCache(),
-        link: new MockLink([], true, { showWarnings: false }),
+        link: new MockLink([], { showWarnings: false }),
       })
     );
   });

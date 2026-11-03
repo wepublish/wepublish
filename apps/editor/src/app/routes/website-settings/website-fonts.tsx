@@ -29,7 +29,7 @@ import { z } from 'zod';
 import { WebsiteSettingsHeader } from './website-settings-header';
 
 import { FontPicker } from './theme/font-picker';
-import { WebsiteAnalyticsWrapper } from './website-analytics';
+import { WebsiteAnalyticsWrapper } from './website-settings-layout';
 
 const fontsSchema = z.array(
   z

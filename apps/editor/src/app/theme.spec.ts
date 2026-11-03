@@ -1,8 +1,9 @@
+import type { CssVarsTheme, Theme } from '@mui/material';
 import { getContrastRatio } from '@mui/material/styles';
 
 import { createEditorTheme } from './theme';
 
-const theme = createEditorTheme();
+const theme = createEditorTheme() as Theme & CssVarsTheme;
 
 describe('createEditorTheme', () => {
   it('builds both colour schemes into one theme', () => {
@@ -37,6 +38,15 @@ describe('createEditorTheme', () => {
         ).toBeGreaterThanOrEqual(4.5);
       }
     );
+
+    it('keeps success text readable on the page and on paper', () => {
+      expect(
+        getContrastRatio(palette.success.main, palette.background.default)
+      ).toBeGreaterThanOrEqual(4.5);
+      expect(
+        getContrastRatio(palette.success.main, palette.background.paper)
+      ).toBeGreaterThanOrEqual(4.5);
+    });
 
     it('keeps primary text readable on the page and on paper', () => {
       expect(
