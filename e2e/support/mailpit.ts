@@ -1,7 +1,7 @@
-import { APIRequestContext, expect } from '@playwright/test';
-import { env } from './env';
+import { APIRequestContext } from '@playwright/test';
+import { Inbox, Mail, MailQuery, poll } from './inbox';
 
-export type Mail = {
+type MailpitMessage = {
   ID: string;
   Subject: string;
   To: { Address: string }[];
@@ -10,65 +10,41 @@ export type Mail = {
 };
 
 /** Reads mails the API sent to mailpit (docker-compose service `mailpit`). */
-export class Inbox {
-  constructor(private readonly request: APIRequestContext) {}
+export class MailpitInbox implements Inbox {
+  constructor(
+    private readonly request: APIRequestContext,
+    private readonly url: string
+  ) {}
 
-  private get url() {
-    if (!env.mailpitUrl) {
-      throw new Error('MAILPIT_URL is not set; tag the scenario with @mail.');
-    }
+  async waitForMail({ to, subject, timeout = 30_000 }: MailQuery): Promise<Mail> {
+    const id = await poll(
+      async () => {
+        const response = await this.request.get(`${this.url}/api/v1/search`, {
+          params: { query: `to:"${to}"` },
+        });
+        const { messages } = (await response.json()) as {
+          messages: { ID: string; Subject: string }[];
+        };
 
-    return env.mailpitUrl;
-  }
-
-  /** Polls until a mail to `to` (and matching `subject`) arrives. */
-  async waitForMail({
-    to,
-    subject,
-    timeout = 30_000,
-  }: {
-    to: string;
-    subject?: RegExp;
-    timeout?: number;
-  }) {
-    let id: string | undefined;
-
-    await expect
-      .poll(
-        async () => {
-          const response = await this.request.get(`${this.url}/api/v1/search`, {
-            params: { query: `to:"${to}"` },
-          });
-          const { messages } = (await response.json()) as {
-            messages: { ID: string; Subject: string }[];
-          };
-          id = messages.find(m => !subject || subject.test(m.Subject))?.ID;
-
-          return id;
-        },
-        { message: `no mail to ${to} arrived in mailpit`, timeout }
-      )
-      .toBeTruthy();
+        return messages.find(m => !subject || subject.test(m.Subject))?.ID;
+      },
+      { timeout, interval: 500, message: `no mail to ${to} arrived in mailpit` }
+    );
 
     const response = await this.request.get(`${this.url}/api/v1/message/${id}`);
+    const message = (await response.json()) as MailpitMessage;
 
-    return (await response.json()) as Mail;
+    return {
+      id: message.ID,
+      subject: message.Subject,
+      to: message.To.map(({ Address }) => Address),
+      html: message.HTML,
+      text: message.Text,
+    };
   }
 
-  /** First link in the mail whose URL matches `pattern`. */
-  extractLink(mail: Mail, pattern: RegExp) {
-    const links = [
-      ...mail.HTML.matchAll(/href="([^"]+)"/g),
-      ...mail.Text.matchAll(/https?:\/\/\S+/g),
-    ].map(match => (match[1] ?? match[0]).replace(/&amp;/g, '&'));
-    const link = links.find(url => pattern.test(url));
-
-    if (!link) {
-      throw new Error(
-        `No link matching ${pattern} in mail "${mail.Subject}". Links: ${links.join(', ')}`
-      );
-    }
-
-    return link;
+  close() {
+    // Plain HTTP requests: nothing to release.
+    return Promise.resolve();
   }
 }

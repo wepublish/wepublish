@@ -8,6 +8,7 @@ import {
   PickType,
   registerEnumType,
 } from '@nestjs/graphql';
+import { PaymentPeriodicity } from '@prisma/client';
 import { HasImage } from '@wepublish/image/api';
 import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
@@ -37,6 +38,12 @@ export class Goodie extends HasImage {
 
   @Field()
   active!: boolean;
+
+  @Field(() => [PaymentPeriodicity], {
+    description:
+      'Payment periodicities the goodie is offered with. Empty means every periodicity of the member plan.',
+  })
+  paymentPeriodicities!: PaymentPeriodicity[];
 }
 
 @InputType()
@@ -106,6 +113,13 @@ export class CreateGoodieInput extends PickType(
 ) {
   @Field(() => [String])
   memberPlanIDs!: string[];
+
+  @Field(() => [PaymentPeriodicity], {
+    nullable: true,
+    description:
+      'Payment periodicities the goodie is offered with. Empty or omitted means every periodicity of the member plan.',
+  })
+  paymentPeriodicities?: PaymentPeriodicity[] | null;
 }
 
 @ArgsType()

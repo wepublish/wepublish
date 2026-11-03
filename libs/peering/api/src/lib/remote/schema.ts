@@ -1759,6 +1759,8 @@ export type Goodie = HasImage & {
   memberPlans: Array<MemberPlan>;
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** Payment periodicities the goodie is offered with. Empty means every periodicity of the member plan. */
+  paymentPeriodicities: Array<PaymentPeriodicity>;
   stock?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -4028,6 +4030,7 @@ export type MutationCreateGoodieArgs = {
   imageID?: InputMaybe<Scalars['String']['input']>;
   memberPlanIDs: Array<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+  paymentPeriodicities?: InputMaybe<Array<PaymentPeriodicity>>;
   stock?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -5140,6 +5143,7 @@ export type MutationUpdateGoodieArgs = {
   imageID?: InputMaybe<Scalars['String']['input']>;
   memberPlanIDs?: InputMaybe<Array<Scalars['String']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
+  paymentPeriodicities?: InputMaybe<Array<PaymentPeriodicity>>;
   stock?: InputMaybe<Scalars['Int']['input']>;
 };
 

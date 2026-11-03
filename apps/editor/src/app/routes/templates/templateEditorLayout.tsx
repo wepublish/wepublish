@@ -72,7 +72,7 @@ export function TemplateEditorLayout({
 }: TemplateEditorLayoutProps) {
   const { t } = useTranslation();
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
-  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+  useUnsavedChangesDialog(hasChanged);
 
   const [tagTitle, stateColor] =
     isNew ? [t(`${i18nPrefix}.edit.new`), StateColor.none]
@@ -92,11 +92,6 @@ export function TemplateEditorLayout({
                 to={backPath}
                 title={t(`${i18nPrefix}.edit.backToList`)}
                 aria-label={t(`${i18nPrefix}.edit.backToList`)}
-                onClick={e => {
-                  if (!unsavedChangesDialog()) {
-                    e.preventDefault();
-                  }
-                }}
               >
                 <MdKeyboardBackspace />
               </IconButton>
