@@ -4,7 +4,7 @@ A reader buys a gift code (Geschenkgutschein) for one member plan and one
 periodicity, for example "Jahresabo Digital, 1 Jahr", and pays for it like a
 subscription. The code is issued once the payment is confirmed, or right at
 the order when the offer is set to issue before payment. The buyer hands it to
-someone else, who will later redeem it for a CHF 0.00 subscription. Admins
+someone else, who redeems it for a subscription period paid by the code. Admins
 can also create codes without a purchase, for example to hand out at an
 event. The product spec is the German pitch "Geschenkgutscheine für We.Publish" from
 20 October 2026.
@@ -37,9 +37,12 @@ This change covers the API and the editor for buying a gift code:
   source filters, the buyer and the redeemer side by side, and a dialog that
   creates up to 500 issued codes without a purchase
   ([D34](decisions.md#d34-admins-can-create-codes-without-a-purchase))
-- paying an open subscription invoice with a gift code for the same plan and
-  periodicity (`payInvoiceWithGiftCode`, API and editor list only;
-  [D36](decisions.md#d36-gift-codes-pay-open-subscription-invoices))
+- redeeming a code with one mutation, `redeemGiftCode` (API and editor list
+  only; [D38](decisions.md#d38-one-redeem-endpoint)). When the reader has an
+  extendable, uncanceled subscription with the same plan and periodicity,
+  the code pays its open invoice or its next period; a lifetime
+  subscription refuses the code. Otherwise it starts a new subscription with
+  the code's renewal settings.
 - CHF 0 invoices. A 100 % discount code makes a gift free, and the order is
   paid at once without a provider. The same branch fixes new subscriptions and
   upgrades that come to CHF 0, which used to go to the provider with an
@@ -51,9 +54,8 @@ Left for later:
   profile, and a separate gift block that shows offers on a page. Karl builds
   these later; the subscribe block stays as it is
   ([D32](decisions.md#d32-website-and-gift-block-come-later)).
-- redemption (entering a code and getting a CHF 0.00 subscription). The data
-  model already has the columns for it; see
-  [02-data-model.md](02-data-model.md#what-redemption-will-use).
+- redeeming on the website: a field where the reader enters the code. The
+  API side is done; see [04-api.md](04-api.md#redeemgiftcode).
 - every email and the PDF voucher. The spec's PDF template, the mail template,
   "PDF herunterladen" and "E-Mail erneut senden" are all out of scope. Today
   an admin sees the code in the editor list, and the buyer can read it through
@@ -103,7 +105,8 @@ while the flag is off, so a profile page can query it on every tenant
 without a failing request. The gift code handler's
 `isAvailable` also reads the flag, so switching it off stops payments of open
 orders too. The flag stays off until
-redemption exists, because a medium must not sell codes nobody can redeem
+readers can redeem on the website, because a medium must not sell codes
+nobody can redeem
 ([D17](decisions.md#d17-ship-dark-behind-the-gift-codes-feature)).
 
 The sellable contract and the payment changes are not behind the flag. The
@@ -113,7 +116,7 @@ every medium as soon as this ships.
 
 ## Files
 
-- [decisions.md](decisions.md): decision log, D1 to D37, including the
+- [decisions.md](decisions.md): decision log, D1 to D38, including the
   defaults picked for open questions and Karl's later changes.
 - [01-selling-things.md](01-selling-things.md): the sellable contract in
   `libs/payment/api` and how to sell a new kind of thing.

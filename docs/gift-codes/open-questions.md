@@ -13,7 +13,7 @@ on the answer, but changing a default later means the change listed under it.
 | 4 | May a member plan be deleted when only canceled or expired codes exist? The spec says only unredeemed codes block it. | Any sold code blocks it, via FK `Restrict` ([D22](decisions.md#d22-any-sold-code-blocks-member-plan-deletion)) | An app-level check plus a different delete rule on `GiftCode.memberPlanId`, which needs a migration and a decision on what happens to the codes' plan reference |
 | 5 | Should gift purchases count as revenue in the dashboard and medium stats? | Counted as-is, without a plan ([D23](decisions.md#d23-gift-revenue-counts-as-is-in-dashboards)) | Filtering or a per-kind breakdown in `DashboardInvoiceService` and `MediumStatsService` |
 | 6 | Admin and custom roles only, or also the built-in editor role? | Admin and custom roles only ([D24](decisions.md#d24-permissions-are-admin-and-custom-roles-only)) | Add the three ids to `EditorPermissions` and update `permissions.spec.ts` |
-| 7 | Ship dark behind the `gift-codes` flag until redemption exists? | Yes ([D17](decisions.md#d17-ship-dark-behind-the-gift-codes-feature)) | Flip the feature per medium |
+| 7 | Ship dark behind the `gift-codes` flag until readers can redeem on the website? | Yes ([D17](decisions.md#d17-ship-dark-behind-the-gift-codes-feature)) | Flip the feature per medium |
 | 8 | When an editor cancels a paid code, is it fine that only the code is canceled and the refund happens outside We.Publish? | Yes ([D25](decisions.md#d25-cancelling-a-paid-code-does-not-refund)) | Provider refund calls, which no provider in We.Publish implements today |
 | 9 | Should editors see the full code in the admin list, or a masked code with a reveal action? | Full code ([D26](decisions.md#d26-admins-see-the-full-code)) | A reveal mutation or a second permission, and the `GiftCode.code` field check |
 
@@ -47,9 +47,15 @@ Each offer says whether the subscription a code starts renews automatically,
 and with which of the plan's payment methods; every code keeps the values it
 was sold or created with
 ([D35](decisions.md#d35-gift-offers-decide-how-the-redeemed-subscription-renews)).
-A code also pays the open invoice of a subscription with the same plan and
-periodicity, whatever the code cost
-([D36](decisions.md#d36-gift-codes-pay-open-subscription-invoices)).
+One mutation redeems a code: it pays the open invoice or the next period of
+a fitting subscription with the same plan and periodicity, whatever the code
+cost, or starts a new subscription when none fits
+([D38](decisions.md#d38-one-redeem-endpoint)). A subscription with any
+deactivation, even one in the future, does not fit. A charge of the open
+invoice that is still `processing` does not block the code: the invoice is
+paid, and a warning names the invoice and those payments so a double charge
+can be refunded. A code whose fitting subscription is a lifetime one is
+refused.
 
 ## Not decided yet
 
@@ -84,26 +90,49 @@ periodicity, whatever the code cost
 - The spec asks for a distinct message for invalid, expired, already redeemed
   and canceled codes. The security rule in [04-api.md](04-api.md#security-rules)
   asks for one generic error to make guessing harder. Both cannot hold for an
-  anonymous caller; that needs a decision before redemption is built.
-  `payInvoiceWithGiftCode` already returns the generic error
-  ([D36](decisions.md#d36-gift-codes-pay-open-subscription-invoices)).
+  anonymous caller. `redeemGiftCode` returns the generic error for all of
+  them ([D38](decisions.md#d38-one-redeem-endpoint)); the website has to
+  live with one message unless this changes.
 - Is 10 attempts per user per hour the right limit for codes? It only
   counts logged-in users; many accounts can still guess in parallel.
-- Where does the website offer "pay with a gift code" for an open invoice:
-  in the profile's invoice list, on the payment page, or both?
+- Where does the website offer the "redeem a code" field: in the profile, on
+  the payment page of an open invoice, on a page of its own, or several of
+  these? The mutation is the same everywhere.
 - The spec merges the discount code field into "Gutschein- oder Rabattcode".
   The design has not looked at how that field and the redemption mutation fit
   together.
-- A redeemed subscription needs a payment method. The `no-charge` provider is
-  seeded, but `apps/api-example/prisma/seed.ts` has no payment method for it.
 - Deleting an offer's renewal payment method sets it to null but leaves
   `autoRenew` true, and codes sold or created after that copy `autoRenew`
-  true with no method. Should redemption fall back to no renewal, or should
-  `purchaseGiftCode` and `createGiftCodes` refuse such an offer?
+  true with no method. A code that renews automatically and has no renewal
+  method cannot start a new subscription today: redemption refuses it with
+  the generic error and the code stays unused. Should it fall back to no
+  renewal instead, or should `purchaseGiftCode` and `createGiftCodes` refuse
+  such an offer?
 - A code keeps the renewal settings it was given, even if the plan later
-  stops being extendable or drops that payment method. Redemption has to
-  check them again. Does such a code then start a subscription without
-  renewal, or is it refused?
+  stops being extendable or drops that payment method. Redemption checks
+  them again and, for a new subscription, refuses such a code with the
+  generic error. Should it start a subscription without renewal instead?
+- Offers accept a renewal method whose provider manages subscriptions
+  remotely (Payrexx subscriptions). Redemption cannot pay a first invoice
+  through such a provider without charging, so those codes cannot start a
+  new subscription. Should the offer form refuse such a method?
+- A non-extendable subscription of the same plan and periodicity never fits,
+  so redeeming starts a second subscription for that reader (if `maxCount`
+  allows it). Is that right, or should such a code be refused?
+- A reader who canceled but still has paid time gets a new subscription
+  from the code, and its first period starts on the day of redemption, not
+  when the canceled one ends. The two overlap, so the reader loses the
+  overlapping days of the gift. Should the new period start the day after
+  the canceled subscription's `paidUntil` instead? With `maxCount` 1 the
+  same reader is refused, because the canceled subscription still counts.
+- A new subscription gets the plan's `SUBSCRIBE` mail after the code paid
+  it, the same mail a normal new subscription gets. Does gift redemption
+  need its own mail event?
+- When `createSubscription` creates the subscription but cannot create its
+  first invoice (no `DEACTIVATION_UNPAID` subscription flow, for example), it
+  throws and leaves the subscription without an invoice. That is older than
+  gift codes; redemption refuses with the generic error and keeps the code,
+  but the empty subscription stays.
 - Every offer save checks the stored renewal settings again, even a save
   that only deactivates the offer. Once the renewal method is inactive,
   retired or no longer on the plan, an admin has to fix renewal before any

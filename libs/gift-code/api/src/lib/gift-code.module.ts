@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
+import { MemberContextModule } from '@wepublish/membership/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import {
   PaymentMethodModule,
@@ -9,12 +10,12 @@ import {
 import { UserModule } from '@wepublish/user/api';
 import { GiftCodeAttemptLimiter } from './gift-code-attempt-limiter';
 import { GiftCodeInvoiceDataloader } from './gift-code-invoice.dataloader';
-import { GiftCodeInvoiceResolver } from './gift-code-invoice.resolver';
-import { GiftCodeInvoiceService } from './gift-code-invoice.service';
 import { GiftCodeOfferDataloader } from './gift-code-offer.dataloader';
 import { GiftCodeOfferResolver } from './gift-code-offer.resolver';
 import { GiftCodeOfferService } from './gift-code-offer.service';
 import { GiftCodePurchaseDataloader } from './gift-code-purchase.dataloader';
+import { GiftCodeRedemptionResolver } from './gift-code-redemption.resolver';
+import { GiftCodeRedemptionService } from './gift-code-redemption.service';
 import { GiftCodeSellableHandler } from './gift-code-sellable.handler';
 import { GiftCodeResolver } from './gift-code.resolver';
 import { GiftCodeService } from './gift-code.service';
@@ -26,6 +27,7 @@ import { GiftCodeService } from './gift-code.service';
     PaymentMethodModule,
     SellableModule,
     MemberPlanModule,
+    MemberContextModule,
     UserModule,
   ],
   providers: [
@@ -38,8 +40,8 @@ import { GiftCodeService } from './gift-code.service';
     GiftCodeSellableHandler,
     GiftCodeAttemptLimiter,
     GiftCodeInvoiceDataloader,
-    GiftCodeInvoiceService,
-    GiftCodeInvoiceResolver,
+    GiftCodeRedemptionService,
+    GiftCodeRedemptionResolver,
   ],
   exports: [GiftCodeOfferService, GiftCodeOfferDataloader, GiftCodeService],
 })
