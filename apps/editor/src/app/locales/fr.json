@@ -3443,7 +3443,13 @@
         "memberPlan": "Plan d’abonnement",
         "codeInfo": "Les lecteur·rice·s saisissent ce code lors de la souscription d’un abonnement pour obtenir la réduction.",
         "discountPercentInfo": "Pourcentage déduit du prix de la première période de paiement lorsque le code est utilisé.",
-        "memberPlanInfo": "Le code n’est valable que pour ce plan d’abonnement."
+        "memberPlanInfo": "Le code n’est valable que pour ce plan d’abonnement.",
+        "validToBeforeValidFrom": "« Valable jusqu’au » ne peut pas précéder « Valable dès le »",
+        "codeTaken": "Le code « {{code}} » existe déjà pour ce plan d’abonnement.",
+        "sections": {
+          "discount": "Réduction",
+          "validity": "Validité"
+        }
       },
       "overview": {
         "title": "Codes de réduction",

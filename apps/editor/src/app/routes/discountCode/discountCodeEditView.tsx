@@ -1,119 +1,56 @@
-import { useApolloClient, useMutation } from '@apollo/client/react';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@apollo/client/react';
 import {
   DiscountCodeDocument,
-  FullDiscountCodeFragment,
   UpdateDiscountCodeDocument,
 } from '@wepublish/editor/api';
+import { FormPage, useEditForm, useQueryLoader } from '@wepublish/form/editor';
 import { CanUpdateDiscountCode } from '@wepublish/permissions';
-import {
-  createCheckedPermissionComponent,
-  enqueueSnackbar,
-  humanizeError,
-  SingleViewTitle,
-} from '@wepublish/ui/editor';
-import { useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { PermissionControl } from '@wepublish/ui/editor';
+import { useParams } from 'react-router-dom';
 
 import {
-  DiscountCodeForm,
-  DiscountCodeFormValues,
-  discountCodeSchema,
-} from './discountCodeForm';
+  discountCodeTitleParams,
+  fromDiscountCode,
+  toUpdateDiscountCodeVariables,
+} from './discountCode.schema';
+import { discountCodeView } from './discountCode.view';
 
-const onErrorToast = (error: Error) => {
-  enqueueSnackbar(humanizeError(error), {
-    variant: 'error',
-    autoHideDuration: 8000,
-  });
+const UPDATE_PERMISSIONS = [CanUpdateDiscountCode.id];
+
+type DiscountCodeEditFormProps = {
+  id: string;
 };
 
-const mapApiDataToInput = (
-  discountCode: FullDiscountCodeFragment
-): DiscountCodeFormValues => ({
-  id: discountCode.id,
-  code: discountCode.code,
-  discountPercent: discountCode.discountPercent,
-  memberPlanId: discountCode.memberPlanId,
-  memberPlan: discountCode.memberPlan ?? undefined,
-  validFrom: discountCode.validFrom,
-  validTo: discountCode.validTo,
-});
-
-const DiscountCodeEditView = () => {
-  const { t } = useTranslation();
-  const [shouldClose, setShouldClose] = useState(false);
-  const navigate = useNavigate();
-  const params = useParams();
-  const { id } = params;
-  const closePath = './../..';
-
-  const client = useApolloClient();
-
-  const [updateDiscountCode, { loading: updateLoading }] = useMutation(
-    UpdateDiscountCodeDocument,
-    {
-      onError: onErrorToast,
-      onCompleted: data => {
-        if (data.updateDiscountCode) {
-          if (shouldClose) {
-            navigate(closePath);
-          } else {
-            form.reset(mapApiDataToInput(data.updateDiscountCode));
-          }
-        }
-      },
-    }
+export const DiscountCodeEditForm = ({ id }: DiscountCodeEditFormProps) => {
+  const load = useQueryLoader(DiscountCodeDocument, { id }, data =>
+    fromDiscountCode(data.discountCode)
   );
-
-  const form = useForm<DiscountCodeFormValues>({
-    resolver: zodResolver(discountCodeSchema),
-    defaultValues: async () => {
-      const { data } = await client.query({
-        query: DiscountCodeDocument,
-        variables: { id: id as string },
-      });
-
-      return mapApiDataToInput(data!.discountCode);
-    },
+  const [updateDiscountCode] = useMutation(UpdateDiscountCodeDocument);
+  const discountCode = useEditForm(discountCodeView, {
+    title: 'discountCode.form.editTitle',
+    titleParams: discountCodeTitleParams,
+    load,
+    save: values =>
+      updateDiscountCode({
+        variables: toUpdateDiscountCodeVariables(id, values),
+      }),
   });
 
-  const code = useWatch({ control: form.control, name: 'code' });
+  return <FormPage controller={discountCode} />;
+};
 
-  if (form.formState.isLoading) {
-    return null;
-  }
+export const DiscountCodeEditView = () => {
+  const { id = '' } = useParams();
 
   return (
-    <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit(({ memberPlan, ...discountCode }) =>
-          updateDiscountCode({
-            variables: { ...discountCode, id: id as string },
-          })
-        )}
-      >
-        <SingleViewTitle
-          loading={updateLoading}
-          title={t('discountCode.form.editTitle', {
-            discountCode: code,
-          })}
-          loadingTitle={t('loading')}
-          saveBtnTitle={t('save')}
-          saveAndCloseBtnTitle={t('saveAndClose')}
-          closePath={closePath}
-          setCloseFn={setShouldClose}
-        />
-
-        <DiscountCodeForm />
-      </form>
-    </FormProvider>
+    <PermissionControl
+      qualifyingPermissions={UPDATE_PERMISSIONS}
+      showRejectionMessage
+    >
+      <DiscountCodeEditForm
+        key={id}
+        id={id}
+      />
+    </PermissionControl>
   );
 };
-
-const CheckedPermissionComponent = createCheckedPermissionComponent([
-  CanUpdateDiscountCode.id,
-])(DiscountCodeEditView);
-export { CheckedPermissionComponent as DiscountCodeEditView };

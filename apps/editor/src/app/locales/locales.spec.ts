@@ -380,6 +380,8 @@ export const useDemo = () =>
         'paywall.form.sections.access',
         'tags.form.uniqueConstraint',
         'tags.form.sections.display',
+        'discountCode.form.codeTaken',
+        'discountCode.form.sections.validity',
         'event.create.title',
         'settingList.publicApi',
         'websiteSettings.analytics.plausible.paPlaceholder',
