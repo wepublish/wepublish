@@ -303,6 +303,40 @@ enum ArticleTemplateSort {
   Name
 }
 
+type Audio {
+  createdAt: DateTime!
+  description: String
+
+  """Length in seconds, as the browser reported it on upload."""
+  duration: Float
+  extension: String!
+  fileSize: Int!
+  filename: String
+  id: String!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  source: String
+  title: String
+  url: String!
+}
+
+input AudioFilter {
+  title: String
+}
+
+enum AudioSort {
+  CreatedAt
+  ModifiedAt
+}
+
+type AudioStorageUsage {
+  audioCount: Int!
+  limitBytes: Float!
+  usedBytes: Float!
+}
+
 type AuditLog {
   action: AuditLogAction!
   actorType: AuditLogActorType!
@@ -3880,6 +3914,9 @@ type Mutation {
   """Deletes an existing article template."""
   deleteArticleTemplate(id: String!): ArticleTemplate!
 
+  """Deletes an existing audio."""
+  deleteAudio(id: String!): String!
+
   """Deletes an existing author."""
   deleteAuthor(id: String!): Author!
   deleteBanner(id: String!): Boolean
@@ -4002,6 +4039,9 @@ type Mutation {
 
   """Deletes an existing userrole."""
   deleteUserRole(id: String!): UserRole!
+
+  """Deletes an existing video."""
+  deleteVideo(id: String!): String!
 
   """
   Discards the current draft and reverts to the latest published revision.
@@ -4278,6 +4318,9 @@ type Mutation {
   """Updates an existing article template."""
   updateArticleTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
 
+  """Updates an existing audio."""
+  updateAudio(description: String, id: String!, license: String, link: String, source: String, title: String): Audio!
+
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
   updateBanner(input: UpdateBannerInput!): Banner!
@@ -4438,6 +4481,18 @@ type Mutation {
   """Update an existing subscription interval"""
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String, sendAsLetter: Boolean): [SubscriptionFlowModel!]!
 
+  """
+  Data correction: moves a subscription that is still on fromPaymentMethodId to toPaymentMethodId and changes nothing else. Unlike updateSubscription it also takes deactivated subscriptions and never touches invoices, periods or the payment provider. Returns whether it moved the subscription; swap the payment methods to undo it.
+  """
+  updateSubscriptionPaymentMethod(
+    """
+    The payment method the subscription is expected to be on; it is only moved while it still is.
+    """
+    fromPaymentMethodId: String!
+    subscriptionId: String!
+    toPaymentMethodId: String!
+  ): Boolean!
+
   """Updates an existing sync provider setting."""
   updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
 
@@ -4483,11 +4538,28 @@ type Mutation {
   """
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
+  """Updates an existing video."""
+  updateVideo(description: String, id: String!, license: String, link: String, source: String, title: String): Video!
+
   """Updates the website settings."""
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Float!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+
+  """Uploads a new audio."""
+  uploadAudio(
+    description: String
+
+    """Length in seconds, as the browser reported it on upload."""
+    duration: Float
+    file: Upload!
+    filename: String
+    license: String
+    link: String
+    source: String
+    title: String
+  ): Audio!
 
   """Uploads a new document."""
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
@@ -4497,6 +4569,25 @@ type Mutation {
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float! = 0.5, focalPointY: Float! = 0.5, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
+
+  """Uploads a new video."""
+  uploadVideo(
+    description: String
+
+    """Length in seconds, as the browser reported it on upload."""
+    duration: Float
+    file: Upload!
+    filename: String
+    height: Int
+    license: String
+    link: String
+
+    """A frame grabbed from the video in the browser, used as its thumbnail."""
+    poster: Upload
+    source: String
+    title: String
+    width: Int
+  ): Video!
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -4827,6 +4918,12 @@ type PaginatedArticles {
   totalCount: Int!
 }
 
+type PaginatedAudios {
+  nodes: [Audio!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedAuditLogs {
   nodes: [AuditLog!]!
   pageInfo: PageInfo!
@@ -4993,6 +5090,12 @@ type PaginatedTags {
 
 type PaginatedUserRoles {
   nodes: [UserRole!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedVideos {
+  nodes: [Video!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -5668,6 +5771,15 @@ type Query {
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
 
+  """Returns a audio by id."""
+  audio(id: String!): Audio!
+
+  """Returns the current audio storage usage and limit."""
+  audioStorageUsage: AudioStorageUsage!
+
+  """Returns a paginated list of audios based on the filters given."""
+  audios(cursorId: String, filter: AudioFilter, order: SortOrder = Descending, skip: Int = 0, sort: AudioSort = ModifiedAt, take: Int = 10): PaginatedAudios!
+
   """
   Returns a paginated list of audit log entries based on the filters given.
   """
@@ -6291,6 +6403,15 @@ type Query {
   """The people on one channel, by name, with how they got there"""
   usersByDeliveryChannel(channel: MailChannel!, search: String, skip: Int, take: Int): PaginatedDeliveryChannelUsers!
   versionInformation: VersionInformation!
+
+  """Returns a video by id."""
+  video(id: String!): Video!
+
+  """Returns the current video storage usage and limit."""
+  videoStorageUsage: VideoStorageUsage!
+
+  """Returns a paginated list of videos based on the filters given."""
+  videos(cursorId: String, filter: VideoFilter, order: SortOrder = Descending, skip: Int = 0, sort: VideoSort = ModifiedAt, take: Int = 10): PaginatedVideos!
 
   """
   Returns the website settings, requires authentication to get sensitive settings.
@@ -7715,6 +7836,44 @@ enum UserSubscriptionStatus {
 
 type VersionInformation {
   version: String!
+}
+
+type Video {
+  createdAt: DateTime!
+  description: String
+
+  """Length in seconds, as the browser reported it on upload."""
+  duration: Float
+  extension: String!
+  fileSize: Int!
+  filename: String
+  hasPoster: Boolean!
+  height: Int
+  id: String!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  posterUrl: String
+  source: String
+  title: String
+  url: String!
+  width: Int
+}
+
+input VideoFilter {
+  title: String
+}
+
+enum VideoSort {
+  CreatedAt
+  ModifiedAt
+}
+
+type VideoStorageUsage {
+  limitBytes: Float!
+  usedBytes: Float!
+  videoCount: Int!
 }
 
 type VimeoVideoBlock implements BaseBlock {

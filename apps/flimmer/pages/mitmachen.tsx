@@ -1,35 +1,10 @@
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl, ssrAuthLink } from '@wepublish/utils/website';
-import {
-  getSessionTokenProps,
-  SubscribePage,
-} from '@wepublish/utils/website/next';
-import { getApiClient, PageDocument } from '@wepublish/website/api';
+import { SubscribePage } from '@wepublish/utils/website/next';
 import { NextPageContext } from 'next';
 
 export default function Mitmachen() {
   return <PageContainer slug={'mitmachen'} />;
 }
 
-Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
-  if (typeof window !== 'undefined') {
-    return {};
-  }
-
-  const client = getApiClient(getApiUrl(), [
-    ssrAuthLink(
-      async () => (await getSessionTokenProps(ctx)).sessionToken?.token
-    ),
-  ]);
-
-  await Promise.all([
-    client.query({
-      query: PageDocument,
-      variables: {
-        slug: 'mitmachen',
-      },
-    }),
-  ]);
-
-  return SubscribePage.getInitialProps(ctx);
-};
+Mitmachen.getInitialProps = (ctx: NextPageContext) =>
+  SubscribePage.getInitialProps(ctx, { pageSlug: 'mitmachen' });

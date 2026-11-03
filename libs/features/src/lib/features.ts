@@ -51,6 +51,11 @@ export const FEATURES = [
       'Editor renew and reactivate: the invoice is created at the payment provider and the invoice-creation mail or letter is sent, as the nightly job does',
     stage: 'alpha',
   },
+  {
+    key: 'video-audio-uploads',
+    description: 'Media: video and audio libraries with uploads',
+    stage: 'alpha',
+  },
 ] as const satisfies readonly Feature[];
 
 export type FeatureKey = (typeof FEATURES)[number]['key'];

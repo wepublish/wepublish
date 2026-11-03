@@ -42,6 +42,14 @@ import {
   CanDeleteCommentRatingSystem,
   CanDeleteConsent,
   CanDeleteDocument,
+  CanCreateAudio,
+  CanCreateVideo,
+  CanDeleteAudio,
+  CanDeleteVideo,
+  CanGetAudio,
+  CanGetAudios,
+  CanGetVideo,
+  CanGetVideos,
   CanDeleteEvent,
   CanDeleteExternalApp,
   CanDeleteImage,
@@ -164,6 +172,8 @@ import {
   MdDarkMode,
   MdDashboard,
   MdDescription,
+  MdAudiotrack,
+  MdVideoLibrary,
   MdEvent,
   MdExtension,
   MdFactCheck,
@@ -964,6 +974,40 @@ export function Base({ children }: BaseProps) {
                       {t('navbar.documentLibrary')}
                     </SidebarNavItem>
                   </PermissionControl>
+
+                  <FeatureControl feature="video-audio-uploads">
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetVideos.id,
+                        CanGetVideo.id,
+                        CanCreateVideo.id,
+                        CanDeleteVideo.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/videos"
+                        icon={<MdVideoLibrary />}
+                      >
+                        {t('navbar.videoLibrary')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetAudios.id,
+                        CanGetAudio.id,
+                        CanCreateAudio.id,
+                        CanDeleteAudio.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/audio"
+                        icon={<MdAudiotrack />}
+                      >
+                        {t('navbar.audioLibrary')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
                 </SidebarNavMenu>
               </PermissionControl>
 
