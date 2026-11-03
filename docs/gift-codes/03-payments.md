@@ -155,19 +155,30 @@ and `member-context.chargeInvoice` still call `createIntent` directly; a 0
 renewal only happens with a plan amount of 0 and behaves as before.
 
 `settleSubscriptionInvoiceWithoutCharge(invoiceId)` is the public entry to
-the same branch, used by `payInvoiceWithGiftCode`
-([D36](decisions.md#d36-gift-codes-pay-open-subscription-invoices)). It
+the same branch, used by `redeemGiftCode`
+([D38](decisions.md#d38-one-redeem-endpoint)). It
 accepts only an open subscription invoice (BadRequest for a missing, sellable,
 paid or canceled one), refuses while another payment of the invoice is
-running, takes the subscription's payment method (active or not) and its
+running (created in the last minute, the same rule as a normal checkout),
+takes the subscription's payment method (active or not) and its
 configured provider (BadRequest "paymentProvider not found" otherwise),
 refuses a provider with `remoteManagedSubscription`, and pays the invoice
 whatever its total. It never changes the subscription's payment method and
-never reads or stores a provider customer.
+never reads or stores a provider customer. A payment of the invoice that is
+still `processing` after that minute does not stop it: a SEPA debit or a
+Payrexx `waiting` payment can take days. The invoice is paid, and
+`PaymentsService` logs a warning (Nest `Logger.warn`) with the invoice id and
+the ids of the processing payments, so that a charge that still goes through
+can be found and refunded. The gift code is not in the warning.
 `assertSubscriptionInvoiceSettleable(invoiceId)` runs the same checks without
-paying, so a caller can refuse before it changes anything. Specs: the
-`settleSubscriptionInvoiceWithoutCharge` and
-`assertSubscriptionInvoiceSettleable` blocks in
+paying, so a caller can refuse before it changes anything.
+`assertPaymentMethodSettleableWithoutCharge(paymentMethodId)` runs only the
+payment method part (configured provider, not `remoteManagedSubscription`),
+for a caller that has no invoice yet: `redeemGiftCode` checks it before it
+creates the next period or a new subscription. Specs: the
+`settleSubscriptionInvoiceWithoutCharge`,
+`assertSubscriptionInvoiceSettleable` and
+`assertPaymentMethodSettleableWithoutCharge` blocks in
 `payments.service.zero-total.spec.ts`.
 
 ### `InvoiceService` (`libs/membership/api/src/lib/invoice/invoice.service.ts`)
@@ -214,7 +225,7 @@ the plan caches on failure.
 | Lost webhook | Reconciler step A | Polled for 30 days. |
 | Crash between settle and notify, or a listener error | Reconciler step C | Re-notified for 90 days. |
 | Checkout code collision | `GiftCode.code @unique` | Whole transaction retried, up to 5 attempts. |
-| Gift code pays a subscription invoice | `giftCode.updateMany where issuedAt not null, canceledAt null, redeemedAt null, not expired`, plus `GiftCode.redeemedInvoiceId @unique` | The same code cannot be used twice, and two codes cannot pay the same invoice. A failed settle releases the claim. |
+| Gift code redemption | `giftCode.updateMany where id, issuedAt not null, canceledAt null, redeemedAt null, not expired`, plus `GiftCode.redeemedInvoiceId @unique` | The same code cannot be used twice, and two codes cannot pay the same invoice. A failed settle releases the claim. A next-period invoice or a subscription created for the redemption is removed again when the claim is lost or settling fails, unless it got paid or another code claimed it. A next-period invoice whose period overlaps another period of the subscription with an invoice that is not canceled is removed before the claim, so two codes redeemed at once cannot pay the same period twice. |
 
 Invoice and gift code state cannot regress. The `Payment` row can: the
 unconditional `payment.update` at the top of `updatePaymentWithIntentState`
@@ -251,6 +262,10 @@ Only the label can be wrong; the code is revoked either way.
 - A payment that arrives after the order was canceled is captured but issues
   no code. It shows up in the editor (code canceled, payment paid) and must be
   refunded by hand.
+- A gift code pays an open subscription invoice even while an earlier charge
+  of it is still `processing`. If that charge goes through, the reader has
+  paid twice. The `PaymentsService` warning names the invoice and the
+  payments; the refund is done by hand at the provider.
 - Without Bexio, media that sell "Rechnung" only through Bexio cannot sell
   gift codes.
 - Dashboard revenue, expected revenue and `MediumStatsService` money include

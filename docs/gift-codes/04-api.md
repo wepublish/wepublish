@@ -86,10 +86,10 @@ uses the price at submit time.
 | `payGiftCode(...): Payment` | `@Authenticated` | Pay an open order: an `ordered` code, or one issued before payment |
 | `cancelGiftCode(id): GiftCode` | `@Permissions(CanUpdateGiftCodes)` | BadRequest "Gift code cannot be canceled" when already canceled or redeemed |
 | `createGiftCodes(offerId, count, recipientName): [GiftCode]` | `@Permissions(CanUpdateGiftCodes)` | See below |
-| `payInvoiceWithGiftCode(invoiceId, code): Invoice` | `@Authenticated` | In `gift-code-invoice.resolver.ts`. See below |
+| `redeemGiftCode(code): GiftCodeRedemption` | `@Authenticated` | In `gift-code-redemption.resolver.ts`. See below |
 
-`myGiftCodes`, `purchaseGiftCode`, `payGiftCode`, `cancelGiftCode` and
-`createGiftCodes` need a user session. An API token or other session without a user gets Forbidden
+`myGiftCodes`, `purchaseGiftCode`, `payGiftCode`, `cancelGiftCode`,
+`createGiftCodes` and `redeemGiftCode` need a user session. An API token or other session without a user gets Forbidden
 ("Only users can do this.").
 
 `paid: true` lists codes whose purchase invoice has `paidAt`, `paid: false`
@@ -214,33 +214,100 @@ Args: `offerId!`, `count!` (an integer from 1 to 500), `recipientName`
 4. Returns the created codes. The sellable reconciler and fulfilment never
    see them, because they have no invoice.
 
-### payInvoiceWithGiftCode
+### redeemGiftCode
 
-Args: `invoiceId!`, `code!`. Needs a user session (Forbidden "Only users can
-do this." otherwise). `GiftCodeInvoiceService.payInvoice`
-([D36](decisions.md#d36-gift-codes-pay-open-subscription-invoices)):
+Args: `code!`. Needs a user session (Forbidden "Only users can do this."
+otherwise). Returns `GiftCodeRedemption { action, subscription, invoice }`:
+`action` is `paidInvoice`, `extendedSubscription` or `createdSubscription`,
+`subscription` is a `PublicSubscription` and `invoice` the `Invoice` the code
+paid. It never returns the `GiftCode`. This is the only mutation that takes a
+code from a reader; it replaced `payInvoiceWithGiftCode`
+([D38](decisions.md#d38-one-redeem-endpoint)).
+`GiftCodeRedemptionService.redeem`:
 
 1. Counts the attempt in `GiftCodeAttemptLimiter` (10 per user per hour);
    the 11th gets Forbidden.
-2. Loads the invoice with its subscription. BadRequest "This invoice cannot
-   be paid with a gift code." when it is missing, has no subscription,
-   belongs to another user's subscription, is a sellable invoice, or is paid
-   or canceled.
-3. Calls `PaymentsService.assertSubscriptionInvoiceSettleable`, so a
-   running payment, a missing provider or a remotely managed subscription is
-   refused before the code is touched.
-4. Normalizes the code with `normalizeGiftCode` and claims it with one
-   `updateMany` where the code is issued, not canceled, not redeemed, not
-   expired, and has the subscription's `memberPlanID` and
-   `paymentPeriodicity`. Anything else, including input that is no code,
-   gets BadRequest "This gift code cannot pay this invoice.". A P2002 on
-   `redeemedInvoiceId` (another code won the race) gets the invoice error.
-5. Pays the invoice with
+2. Normalizes the input with `normalizeGiftCode` and looks the code up where
+   it is issued, not canceled, not redeemed and `expiresAt` is null or in the
+   future. Input that is no code and every code that fails this lookup get
+   BadRequest "This gift code cannot be redeemed.".
+3. Looks for a fitting subscription: one of the session user's
+   subscriptions with the code's `memberPlanId` and `periodicity`,
+   `extendable` true and no `SubscriptionDeactivation` row at all. A
+   deactivation that only takes effect later (the reader canceled but still
+   has paid time) rules the subscription out too. When several fit, one with
+   an open invoice (unpaid and not canceled) wins, otherwise the one with the
+   latest `paidUntil`, then the oldest.
+4. With a fitting subscription whose `paymentPeriodicity` is `lifetime`, it
+   refuses right away with the generic error, before anything is created or
+   paid, and the code stays unused. A lifetime subscription with a
+   deactivation does not fit (step 3), so such a reader gets a new
+   subscription. With any other fitting subscription:
+   1. `PaymentsService.assertPaymentMethodSettleableWithoutCharge` checks the
+      subscription's payment method: its provider must be configured and must
+      not manage the subscription remotely (Payrexx subscriptions).
+   2. `MemberContext.renewSubscriptionForUser` returns the invoice to pay. It
+      returns the open invoice of the latest unpaid period, or creates the
+      next period and its invoice, starting the day after `paidUntil`.
+   3. An invoice the subscription already had means `paidInvoice`, and
+      `assertSubscriptionInvoiceSettleable` refuses it when it is not open
+      or another payment of it was started in the last minute. An older
+      charge that is still `processing` (an off-session SEPA debit, for
+      example) does not block the code; see step 7. A new invoice means
+      `extendedSubscription`.
+   4. For a new invoice it loads the new period and refuses when another
+      period of the subscription, with an invoice that is not canceled,
+      overlaps it. That happens when a second code or the renewal job
+      created the same period at the same moment; the new invoice is removed
+      again, and the reader can simply retry. A new invoice without a period
+      is refused and removed the same way.
+5. Without one, it starts a new subscription (`createdSubscription`). It
+   loads the plan with its prices and `availablePaymentMethods` and refuses
+   when the plan is gone or inactive, when the code renews automatically but
+   the plan is no longer extendable, when the user already has `maxCount`
+   subscriptions of the plan, or when the price for the periodicity
+   (`amountTarget ?? amountMin`, as for offers) is 0. The payment method:
+   - `autoRenew` true: the code's `renewalPaymentMethodId`, which the plan
+     must still offer for the periodicity.
+   - `autoRenew` false: the first method in `availablePaymentMethods` order
+     whose row offers the periodicity and does not force auto renewal.
+
+   Either way the method must be active, not retired, and pass
+   `assertPaymentMethodSettleableWithoutCharge`; otherwise the next one is
+   tried, or the code is refused when none is left. The method is recorded
+   only; it is what a manual extension would use later. Then
+   `MemberContext.createSubscription` creates the subscription with
+   `monthlyAmount` = `monthlyAmountFromPeriodAmount(price, periodicity)`,
+   the code's `autoRenew`, the plan's `extendable`, no properties and
+   `skipMail: true`. Its first invoice is the one to pay.
+6. Claims the code with one `updateMany` on its id and the same conditions
+   as the lookup, setting `redeemedAt`, `redeemedByUserId`,
+   `redeemedSubscriptionId` and `redeemedInvoiceId`. A claim that hits no
+   row (the code was used or canceled in the meantime), or that fails on a
+   unique or foreign key constraint (another code took the invoice), gets the
+   generic error.
+7. Pays the invoice with
    `PaymentsService.settleSubscriptionInvoiceWithoutCharge`
-   ([03-payments.md](03-payments.md#chf-0-invoices)). On an error it releases
-   the claim and rethrows, unless the invoice is already paid; then it logs
-   the error and carries on.
-6. Resets the attempt count and returns the paid invoice with its items.
+   ([03-payments.md](03-payments.md#chf-0-invoices)). The subscription's
+   payment method never changes. If a payment of the invoice is still
+   `processing`, the invoice is paid anyway, and a warning with the invoice
+   id and the ids of those payments (never the code) lets an admin find and
+   refund a charge that goes through later. On an error it releases the
+   claim and rethrows, unless the invoice is already paid; then it logs the
+   error and carries on.
+8. Resets the attempt count and returns the action, the subscription and the
+   paid invoice with its items. For a new subscription it then sends the
+   `SUBSCRIBE` mail, which `createSubscription` skipped; a failing mail is
+   logged and does not fail the redemption.
+
+Every check that can refuse a valid code runs before the claim and answers
+with the same generic error, so the mutation tells a guesser nothing, and a
+refused code stays unused. When the claim is lost or settling fails after
+step 4 or 5 created something, the service removes the new invoice, its
+period, items and payments, and for `createdSubscription` the subscription.
+It skips that removal when the invoice is paid or another code has claimed
+the invoice or the new subscription in the meantime. An open invoice the
+subscription had before is never removed.
 
 ## Other additions
 
@@ -271,16 +338,17 @@ Rules for anyone extending this:
   `userInvoices` or a future `HasInvoice` implementer that would reach the
   code without passing a guarded root. `GiftCode` is reachable today only from
   `giftCodes`, `giftCode`, `myGiftCodes`, `cancelGiftCode` and
-  `createGiftCodes`. `payInvoiceWithGiftCode` returns the `Invoice`, never
-  the code. If a new path
+  `createGiftCodes`. `redeemGiftCode` returns `GiftCodeRedemption` (action,
+  subscription, invoice), never the code. If a new path
   is unavoidable, it must keep the inline checks above.
 - Never log a code, in services, errors or debug output. They are stored in
   plain text, so the database is sensitive too.
-- `payInvoiceWithGiftCode` is the only endpoint that accepts a code. It
-  normalizes the input with `normalizeGiftCode`, returns one generic error
-  and counts attempts per user in `GiftCodeAttemptLimiter`. The redemption
-  mutation must do the same, reusing that limiter. The spec asks for a
-  separate message per case (invalid, expired, redeemed, canceled), which
-  conflicts with the generic error; see
-  [open-questions.md](open-questions.md#for-the-redemption-step). It must
-  return its own `GiftCodeRedemptionInfo` type, never `GiftCode`.
+- `redeemGiftCode` is the only endpoint that accepts a code. It normalizes
+  the input with `normalizeGiftCode`, returns one generic error for every
+  refusal a valid code could reach, and counts attempts per user in
+  `GiftCodeAttemptLimiter`. A new check belongs before the claim and must
+  throw that same error. The spec asks for a separate message per case
+  (invalid, expired, redeemed, canceled), which conflicts with the generic
+  error; see [open-questions.md](open-questions.md#for-the-redemption-step).
+- `redeemGiftCode` only ever pays or extends subscriptions of the session
+  user. The code itself is bound to no one: whoever enters it first gets it.

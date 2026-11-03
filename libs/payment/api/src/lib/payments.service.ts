@@ -22,6 +22,7 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { SESSION_CACHE_NAMESPACE } from '@wepublish/authentication/api';
@@ -84,6 +85,7 @@ const isZeroTotal = (invoice: InvoiceWithItems) =>
 @Injectable()
 export class PaymentsService {
   private readonly paymentProviders = this.config.paymentProviders;
+  private readonly logger = new Logger('PaymentsService');
 
   constructor(
     private prisma: PrismaClient,
@@ -706,6 +708,18 @@ export class PaymentsService {
   ): Promise<Payment> {
     const { invoice, paymentMethod, paymentProvider } =
       await this.subscriptionInvoiceToSettle(invoiceId);
+    const processing = await this.prisma.payment.findMany({
+      where: { invoiceID: invoice.id, state: PaymentState.processing },
+      select: { id: true },
+    });
+
+    if (processing.length) {
+      const paymentIds = processing.map(({ id }) => id).join(', ');
+
+      this.logger.warn(
+        `Paying invoice ${invoice.id} without a charge while these payments of it are still processing: ${paymentIds}. Refund any of them that gets paid.`
+      );
+    }
 
     return this.settleWithoutCharge(paymentProvider, paymentMethod, invoice);
   }
@@ -739,8 +753,22 @@ export class PaymentsService {
 
     await this.assertNoRunningPayment(invoice.id);
 
+    const { paymentMethod, paymentProvider } = await this.paymentMethodToSettle(
+      subscription.paymentMethodID
+    );
+
+    return { invoice, paymentMethod, paymentProvider };
+  }
+
+  async assertPaymentMethodSettleableWithoutCharge(
+    paymentMethodId: string
+  ): Promise<void> {
+    await this.paymentMethodToSettle(paymentMethodId);
+  }
+
+  private async paymentMethodToSettle(paymentMethodId: string) {
     const paymentMethod = await this.prisma.paymentMethod.findUnique({
-      where: { id: subscription.paymentMethodID },
+      where: { id: paymentMethodId },
     });
     const paymentProvider =
       paymentMethod && this.findById(paymentMethod.paymentProviderID);
@@ -751,11 +779,11 @@ export class PaymentsService {
 
     if (paymentProvider.remoteManagedSubscription) {
       throw new BadRequestException(
-        `Invoice ${invoiceId} is charged by its payment provider`
+        `Payment method ${paymentMethodId} is charged by its payment provider`
       );
     }
 
-    return { invoice, paymentMethod, paymentProvider };
+    return { paymentMethod, paymentProvider };
   }
 
   private async settleWithoutCharge(

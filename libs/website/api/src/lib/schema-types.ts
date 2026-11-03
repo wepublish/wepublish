@@ -1549,6 +1549,22 @@ export type GiftCodePrice = {
   currency: Currency;
 };
 
+export type GiftCodeRedemption = {
+  __typename: 'GiftCodeRedemption';
+  action: GiftCodeRedemptionAction;
+  invoice: Invoice;
+  subscription: PublicSubscription;
+};
+
+export enum GiftCodeRedemptionAction {
+  /** The code started a new subscription and paid its first period. */
+  CreatedSubscription = 'createdSubscription',
+  /** The code paid the next period of an existing subscription. */
+  ExtendedSubscription = 'extendedSubscription',
+  /** The code paid the open invoice of an existing subscription. */
+  PaidInvoice = 'paidInvoice'
+}
+
 export enum GiftCodeSort {
   CreatedAt = 'CreatedAt',
   IssuedAt = 'IssuedAt'
@@ -3137,8 +3153,6 @@ export type Mutation = {
   markNotificationRead: NotificationRead;
   /** Starts a new payment for an unpaid gift code. */
   payGiftCode: Payment;
-  /** Pays an open invoice of one of your subscriptions with a gift code for the same member plan and payment periodicity. */
-  payInvoiceWithGiftCode: Invoice;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   publishNewsletterCampaign: NewsletterPublishResult;
@@ -3152,6 +3166,8 @@ export type Mutation = {
   reactivateSubscription: PublicSubscription;
   /** Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created. */
   reactivateUserSubscription: PublicSubscription;
+  /** Redeems a gift code for your own subscriptions. It pays the open invoice of a subscription with the same member plan and payment periodicity, pays the next period of such a subscription, or starts a new subscription. */
+  redeemGiftCode: GiftCodeRedemption;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Rejects a comment */
@@ -4266,12 +4282,6 @@ export type MutationPayGiftCodeArgs = {
 };
 
 
-export type MutationPayInvoiceWithGiftCodeArgs = {
-  code: Scalars['String']['input'];
-  invoiceId: Scalars['String']['input'];
-};
-
-
 export type MutationPublishArticleArgs = {
   id: Scalars['String']['input'];
   publishedAt: Scalars['DateTime']['input'];
@@ -4314,6 +4324,11 @@ export type MutationReactivateSubscriptionArgs = {
 
 export type MutationReactivateUserSubscriptionArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationRedeemGiftCodeArgs = {
+  code: Scalars['String']['input'];
 };
 
 

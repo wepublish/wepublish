@@ -6,22 +6,23 @@ the sellable contract in `libs/payment/api`. `GiftCodeSellableHandler` issues
 a code once its invoice is paid, cancels it on chargeback or unpaid timeout,
 and limits payment to the offer's methods. Admins can also create issued
 codes without a purchase (`createGiftCodes`); those have no invoice item, so
-the sellable contract never sees them. A reader can pay an open invoice of
-their own subscription with a matching code (`payInvoiceWithGiftCode`,
-`GiftCodeInvoiceService`), limited to 10 attempts per hour by
-`GiftCodeAttemptLimiter`. Everything is behind the `gift-codes` feature.
-Redemption into a new subscription, the website side and the gift block are
-not built yet; the purchase and list operations wait for the website.
+the sellable contract never sees them. A reader redeems a code with
+`redeemGiftCode` (`GiftCodeRedemptionService`): it pays the open invoice or
+the next period of their own subscription with the same plan and
+periodicity, or starts a new subscription, limited to 10 attempts per hour
+by `GiftCodeAttemptLimiter`. Everything is behind the `gift-codes` feature.
+The website side and the gift block are not built yet; the purchase, list
+and redeem operations wait for the website.
 
 Details live in [docs/gift-codes/](../../../docs/gift-codes/README.md): the
 data model, the GraphQL API and its security rules, and the decision log.
 
 Rules that hold here:
 
-- This lib never imports `block-content`. From `membership` it imports only
-  the GraphQL `Invoice` type, for `payInvoiceWithGiftCode` and
-  `GiftCode.redeemedInvoice`; it uses no membership module or service.
-  Nothing imports
+- This lib never imports `block-content`. From `membership` it imports the
+  GraphQL `Invoice` and `PublicSubscription` types and `MemberContextModule`,
+  whose `MemberContextService` renews and creates subscriptions for
+  `redeemGiftCode`. `membership` must never import this lib. Nothing imports
   this lib except `app.module.ts`, so `MemberPlanModule` and
   `MemberPlanDataloader` come in without `forwardRef`. The planned gift block
   in `block-content` will close the loop member-plan → page → block-content →
@@ -34,5 +35,9 @@ Rules that hold here:
   check access inside
   their resolvers, because guards do not run on `@ResolveField`. Never expose
   `GiftCode` from another type, and never log a code.
+- `redeemGiftCode` is the only mutation that takes a code from a reader.
+  Every refusal a valid code could reach runs before the claim and throws
+  the one generic error (`GIFT_CODE_REJECTED`), so the mutation is no
+  oracle and a refused code stays unused.
 
 Tests: `pnpm nx test gift-code-api`.

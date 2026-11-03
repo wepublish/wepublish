@@ -1511,6 +1511,23 @@ type GiftCodePrice {
   currency: Currency!
 }
 
+type GiftCodeRedemption {
+  action: GiftCodeRedemptionAction!
+  invoice: Invoice!
+  subscription: PublicSubscription!
+}
+
+enum GiftCodeRedemptionAction {
+  """The code started a new subscription and paid its first period."""
+  createdSubscription
+
+  """The code paid the next period of an existing subscription."""
+  extendedSubscription
+
+  """The code paid the open invoice of an existing subscription."""
+  paidInvoice
+}
+
 enum GiftCodeSort {
   CreatedAt
   IssuedAt
@@ -3348,11 +3365,6 @@ type Mutation {
   """Starts a new payment for an unpaid gift code."""
   payGiftCode(failureURL: String, id: String!, paymentMethodId: String, paymentMethodSlug: Slug, successURL: String): Payment!
 
-  """
-  Pays an open invoice of one of your subscriptions with a gift code for the same member plan and payment periodicity.
-  """
-  payInvoiceWithGiftCode(code: String!, invoiceId: String!): Invoice!
-
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
   publishNewsletterCampaign(id: String!): NewsletterPublishResult!
@@ -3375,6 +3387,11 @@ type Mutation {
   Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created.
   """
   reactivateUserSubscription(id: String!): PublicSubscription!
+
+  """
+  Redeems a gift code for your own subscriptions. It pays the open invoice of a subscription with the same member plan and payment periodicity, pays the next period of such a subscription, or starts a new subscription.
+  """
+  redeemGiftCode(code: String!): GiftCodeRedemption!
 
   """
   This mutation registers a new member by providing name, email, and other required information.
