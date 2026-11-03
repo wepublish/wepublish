@@ -115,6 +115,7 @@ describe('FormErrorSummary', () => {
 
     expect(relativeTo(forms)).toEqual(
       expect.arrayContaining([
+        'apps/editor/src/app/routes/authors/authorDrawer.tsx',
         'apps/editor/src/app/routes/events/eventCreateView.tsx',
         'apps/editor/src/app/routes/events/eventEditView.tsx',
         'apps/editor/src/app/routes/navigations/navigationDrawer.tsx',

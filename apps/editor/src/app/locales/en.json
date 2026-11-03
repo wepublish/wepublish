@@ -307,14 +307,15 @@
       },
       "panels": {
         "bioInformation": "Biographical Information",
-        "close": "Close",
         "createAuthor": "Create Author",
         "editAuthor": "Edit Author",
         "image": "Image",
         "jobTitle": "Job Title",
         "link": "Link",
         "links": "Links",
+        "addLink": "Add link",
         "name": "Name",
+        "slugTaken": "The URL \"{{slug}}\" made from this name is already taken. Please choose a different name.",
         "title": "Title",
         "tags": "Tags"
       }
@@ -3260,7 +3261,7 @@
       }
     },
     "authorEditPanel": {
-      "hideAuthor": "Hide authors",
+      "hideAuthor": "Hide author",
       "hideOnTeam": "Hide on team page",
       "hideOnArticle": "Hide on articles",
       "hideOnTeaser": "Hide on teasers"

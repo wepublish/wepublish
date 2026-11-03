@@ -2,7 +2,6 @@ export * from './apiTokenGeneratePanel';
 export * from './articleAuthorList';
 export * from './articleMetadataPanel';
 export * from './authorCheckPicker';
-export * from './authorEditPanel';
 export * from './authorSelectPicker';
 export * from './documentEditPanel';
 export * from './documentUploadAndEditPanel';

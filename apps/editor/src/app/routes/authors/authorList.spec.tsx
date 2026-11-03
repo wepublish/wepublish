@@ -1,12 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { AuthorSort, SortOrder } from '@wepublish/editor/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import type { Mock } from 'vitest';
@@ -37,14 +31,6 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
-  AuthorEditPanel: ({ id, onClose }: { id?: string; onClose: () => void }) => (
-    <button
-      type="button"
-      onClick={onClose}
-    >
-      {`close ${id ?? 'new'}`}
-    </button>
-  ),
 }));
 
 const mockedUseQuery = useQuery as unknown as Mock;
@@ -107,25 +93,6 @@ beforeEach(() => {
 });
 
 describe('AuthorList', () => {
-  it('opens the edit drawer again for an author that was just closed', async () => {
-    renderAt('/authors/edit/author-1');
-
-    fireEvent.click(
-      within(screen.getByRole('dialog')).getByRole('button', {
-        name: 'close author-1',
-      })
-    );
-    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
-
-    fireEvent.click(screen.getByRole('link', { name: 'Ada Lovelace' }));
-
-    expect(
-      within(await screen.findByRole('dialog')).getByRole('button', {
-        name: 'close author-1',
-      })
-    ).toBeInTheDocument();
-  });
-
   it('names the image column header', () => {
     renderList();
 

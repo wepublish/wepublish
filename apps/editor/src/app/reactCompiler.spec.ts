@@ -1,3 +1,8 @@
+import {
+  AuthorCreateForm,
+  AuthorDrawer,
+  AuthorEditForm,
+} from './routes/authors/authorDrawer';
 import { DiscountCodeCreateForm } from './routes/discountCode/discountCodeCreateView';
 import { DiscountCodeEditForm } from './routes/discountCode/discountCodeEditView';
 import { EventCreateView } from './routes/events/eventCreateView';
@@ -32,6 +37,9 @@ const isCompiled = (code: string) => /\$\[\d+\]/.test(code);
 
 describe('the editor under test', () => {
   it.each([
+    ['AuthorCreateForm', AuthorCreateForm],
+    ['AuthorEditForm', AuthorEditForm],
+    ['AuthorDrawer', AuthorDrawer],
     ['DiscountCodeCreateForm', DiscountCodeCreateForm],
     ['DiscountCodeEditForm', DiscountCodeEditForm],
     ['EventCreateView', EventCreateView],
