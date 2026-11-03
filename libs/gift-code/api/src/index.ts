@@ -13,7 +13,8 @@ export * from './lib/gift-code.resolver';
 export * from './lib/gift-code-sellable.handler';
 export * from './lib/gift-code-attempt-limiter';
 export * from './lib/gift-code-invoice.dataloader';
-export * from './lib/gift-code-invoice.service';
-export * from './lib/gift-code-invoice.resolver';
+export * from './lib/gift-code-redemption.model';
+export * from './lib/gift-code-redemption.service';
+export * from './lib/gift-code-redemption.resolver';
 
 export * from './lib/gift-code.module';

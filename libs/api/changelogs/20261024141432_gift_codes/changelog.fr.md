@@ -1,6 +1,6 @@
 ---
 title: Codes cadeaux, et abonnements gratuits avec un code de réduction de 100 %
-lead: Les abonnements et les changements d’abonnement rendus gratuits par un code de réduction de 100 % fonctionnent désormais. Les codes cadeaux sont prêts dans l’éditeur ; le site web et l’utilisation d’un code suivront, la fonction reste donc désactivée d’ici là.
+lead: Les abonnements et les changements d’abonnement rendus gratuits par un code de réduction de 100 % fonctionnent désormais. Les codes cadeaux sont prêts dans l’éditeur ; l’achat et l’utilisation d’un code sur le site web suivront, la fonction reste donc désactivée d’ici là.
 ---
 
 Déjà actif sur tous les médias : un nouvel abonnement ou un changement
@@ -9,10 +9,11 @@ ou parce que le crédit de l’abonnement actuel couvre tout le changement, est
 maintenant confirmé immédiatement, sans passer par le prestataire de paiement.
 Jusqu’ici, ces commandes échouaient chez le prestataire.
 
-Les codes cadeaux sont activés par média dès qu’un code peut être utilisé.
-D’ici là, rien ne change pour eux ni dans l’éditeur ni sur votre site. Les
-lecteur·rice·s ne peuvent pas encore acheter de cadeau sur le site ; le
-formulaire d’achat et un bloc cadeau séparé suivront.
+Les codes cadeaux sont activés par média dès que les lecteur·rice·s peuvent
+utiliser un code sur le site web. D’ici là, rien ne change pour les codes
+cadeaux, ni dans l’éditeur ni sur votre site. Les lecteur·rice·s ne peuvent pas encore
+acheter de cadeau sur le site ; le formulaire d’achat et un bloc cadeau
+séparé suivront.
 
 Une fois les codes cadeaux activés :
 
@@ -42,9 +43,12 @@ Une fois les codes cadeaux activés :
   exemple lors d’événements : choisissez une offre, le nombre de codes
   (jusqu’à 500) et, si vous le souhaitez, le nom du destinataire. Les codes
   sont valables tout de suite et se copient en une fois.
-- Un code peut aussi payer la facture ouverte d’un abonnement existant avec
-  le même plan et la même durée. Le site web ne le propose pas encore. La
-  liste indique quelle facture un code a payée, avec un lien vers
-  l’abonnement.
+- À l’utilisation, We.Publish choisit lui-même ce qui se passe. Si la
+  personne a déjà un abonnement non résilié avec le même plan et la même
+  durée, le code paie sa facture ouverte ou la période suivante. Sinon, le
+  code démarre un nouvel abonnement avec le réglage de renouvellement de
+  l’offre. La méthode de paiement d’un abonnement ne change jamais. Le site
+  web ne propose pas encore l’utilisation d’un code. La liste indique quelle
+  facture un code a payée, avec un lien vers l’abonnement.
 
 Il n’y a pas encore d’e-mails ni de bons PDF pour les codes cadeaux.

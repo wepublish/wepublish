@@ -1,6 +1,6 @@
 ---
 title: Geschenkcodes, und Gratis-Abos mit einem Rabattcode von 100 %
-lead: Abos und Abo-Wechsel, die ein Rabattcode von 100 % gratis macht, klappen jetzt. Geschenkcodes sind im Editor bereit; Website und Einlösen folgen später, bis dahin bleibt die Funktion ausgeschaltet.
+lead: Abos und Abo-Wechsel, die ein Rabattcode von 100 % gratis macht, klappen jetzt. Geschenkcodes sind im Editor bereit; Kaufen und Einlösen auf der Website folgen später, bis dahin bleibt die Funktion ausgeschaltet.
 ---
 
 Ab sofort auf allen Medien: Kostet ein neues Abo oder ein Abo-Wechsel
@@ -9,10 +9,11 @@ bisherigen Abos den ganzen Wechsel deckt, wird es direkt bestätigt, ohne
 Umweg über den Zahlungsanbieter. Bisher scheiterten solche Bestellungen beim
 Anbieter.
 
-Geschenkcodes werden pro Medium eingeschaltet, sobald sich ein Code einlösen
-lässt. Bis dahin ändert sich für sie weder im Editor noch auf eurer Website
-etwas. Auf der Website können Leser:innen noch nichts verschenken; das
-Kaufformular und ein eigener Geschenk-Block kommen später.
+Geschenkcodes werden pro Medium eingeschaltet, sobald Leser:innen einen Code
+auf der Website einlösen können. Bis dahin ändert sich bei den Geschenkcodes
+weder im Editor noch auf eurer Website etwas. Auf der Website können Leser:innen noch
+nichts verschenken; das Kaufformular und ein eigener Geschenk-Block kommen
+später.
 
 Wenn Geschenkcodes eingeschaltet sind:
 
@@ -43,8 +44,12 @@ Wenn Geschenkcodes eingeschaltet sind:
   zum Beispiel an Anlässen: Angebot wählen, Anzahl (bis 500) und optional den
   Namen der beschenkten Person. Die Codes gelten sofort und lassen sich auf
   einmal kopieren.
-- Ein Code kann auch die offene Rechnung eines bestehenden Abos mit demselben
-  Plan und derselben Laufzeit bezahlen. Die Website bietet das noch nicht an.
-  Die Liste zeigt, welche Rechnung ein Code bezahlt hat, mit Link zum Abo.
+- Beim Einlösen entscheidet We.Publish selbst, was passiert. Hat die
+  einlösende Person bereits ein nicht gekündigtes Abo mit demselben Plan und
+  derselben Laufzeit, bezahlt der Code dessen offene Rechnung oder die
+  nächste Laufzeit. Sonst startet der Code ein neues Abo mit der
+  Verlängerungseinstellung des Angebots. Die Zahlungsmethode eines Abos
+  ändert sich dabei nie. Die Website bietet das Einlösen noch nicht an. Die
+  Liste zeigt, welche Rechnung ein Code bezahlt hat, mit Link zum Abo.
 
 E-Mails und PDF-Gutscheine für Geschenkcodes gibt es noch nicht.
