@@ -16,7 +16,8 @@ Given('a reader {string}', async ({ data }, alias: string) => {
 
 Given(
   'a signed-in reader {string}',
-  async ({ data, request, context, baseURL }, alias: string) => {
+  async ({ data, request, readers, baseURL }, alias: string) => {
+    const { context } = await readers.of(alias);
     const reader = await data.createUser(alias);
     const session = await createSession(
       new ApiClient(request),
@@ -37,7 +38,8 @@ Given(
 
 When(
   '{string} requests a login link on the login page',
-  async ({ page, data }, alias: string) => {
+  async ({ readers, data }, alias: string) => {
+    const page = await readers.page(alias);
     const reader = data.get('reader', alias);
 
     await page.goto('/login');
@@ -51,7 +53,8 @@ When(
 
 When(
   '{string} follows the login link from the email',
-  async ({ page, data, inbox }, alias: string) => {
+  async ({ readers, data, inbox }, alias: string) => {
+    const page = await readers.page(alias);
     const reader = data.get('reader', alias);
     const mail = await inbox.waitForMail({ to: reader.email });
     const link = new URL(inbox.extractLink(mail, /\/login\?jwt=/));
@@ -63,7 +66,8 @@ When(
 
 Then(
   '{string} is signed in and sees their profile',
-  async ({ page, data }, alias: string) => {
+  async ({ readers, data }, alias: string) => {
+    const page = await readers.page(alias);
     const reader = data.get('reader', alias);
 
     await expect(page).toHaveURL(/\/profile/);

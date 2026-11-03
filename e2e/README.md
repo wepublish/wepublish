@@ -93,8 +93,13 @@ skip reason in the report (`pnpm run e2e:report`).
   alias and later steps look it up with `data.get('article', alias)`.
 - **`inbox`** (`support/mailpit.ts`) polls mailpit for a mail to an address
   and extracts links from it.
-- **`checkout`** (`support/simulated-payment.ts`) drives the SIMULATED payment
-  provider's checkout page (Pay / Decline / Cancel). It is the only payment
+- **`readers`** (`support/reader-browsers.ts`) gives every reader alias its
+  own browser context, so several readers can act in one scenario
+  (`await readers.page('Lea')`). The first reader gets the test's own `page`.
+  Steps that name a reader act in that reader's page, never in `page`.
+- **`SimulatedCheckout`** (`support/simulated-payment.ts`, built on a reader's
+  page) drives the SIMULATED payment provider's checkout page (Pay / Decline /
+  Cancel). It is the only payment
   fake: Stripe and Payrexx are never mocked over HTTP. `@payment` scenarios
   run with `bypassCSP`: the checkout page's CSP (`form-action 'self'`) makes
   Chrome block its redirect back to the website when API and website are

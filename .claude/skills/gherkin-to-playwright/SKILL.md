@@ -127,8 +127,9 @@ Full details and recipes: [`e2e/README.md`](../../../e2e/README.md).
   stores the entity in `ctx.entities` and later steps resolve it with
   `data.get('reader', alias)`. Never hard-code seed content in steps.
 - **Fakes:** mail is read from mailpit (`inbox` fixture), payment goes through
-  the SIMULATED provider's checkout (`checkout` fixture, Pay / Decline /
-  Cancel). Analytics, ads, Sentry and tracking pixels are blocked
+  the SIMULATED provider's checkout (`SimulatedCheckout` on the reader's
+  page, Pay / Decline / Cancel). Several readers in one scenario each get
+  their own browser from the `readers` fixture. Analytics, ads, Sentry and tracking pixels are blocked
   automatically; Turnstile uses the always-pass test keys and stays reachable.
 - **Any other external provider has no fake** (Mailchimp, Stripe, Payrexx, …).
   Never mock it over HTTP and don't build a stand-in server. Either the user

@@ -9,7 +9,7 @@ import {
   TestData,
 } from '../support/factories';
 import { Inbox } from '../support/mailpit';
-import { SimulatedCheckout } from '../support/simulated-payment';
+import { ReaderBrowsers } from '../support/reader-browsers';
 
 /** Per-scenario state shared between steps. Extend as new steps need it. */
 export type ScenarioContext = {
@@ -18,6 +18,10 @@ export type ScenarioContext = {
   entities: Map<string, Entity>;
   /** Alias of the article the reader has open. */
   currentArticle?: string;
+  /** Alias of the reader who acted last, for steps that do not name one. */
+  currentReader?: string;
+  /** Referral links readers copied from their profile, by reader alias. */
+  referralLinks: Map<string, string>;
 };
 
 type TestFixtures = {
@@ -27,7 +31,8 @@ type TestFixtures = {
   /** Creates synthetic data through the API and deletes it after the scenario. */
   data: TestData;
   inbox: Inbox;
-  checkout: SimulatedCheckout;
+  /** A browser per reader alias, for journeys with several readers. */
+  readers: ReaderBrowsers;
 };
 
 type WorkerFixtures = {
@@ -43,7 +48,7 @@ type WorkerFixtures = {
 export const test = base.extend<TestFixtures, WorkerFixtures>({
   // eslint-disable-next-line no-empty-pattern
   ctx: async ({}, use) => {
-    await use({ entities: new Map() });
+    await use({ entities: new Map(), referralLinks: new Map() });
   },
 
   capabilities: [
@@ -96,8 +101,18 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
     await use(new Inbox(request));
   },
 
-  checkout: async ({ page }, use) => {
-    await use(new SimulatedCheckout(page));
+  readers: async (
+    { browser, page, context, baseURL, bypassCSP, viewport, userAgent, locale },
+    use
+  ) => {
+    const readers = new ReaderBrowsers(
+      browser,
+      { context, page },
+      { baseURL, bypassCSP, viewport, userAgent, locale }
+    );
+
+    await use(readers);
+    await readers.close();
   },
 });
 

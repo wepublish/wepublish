@@ -1,20 +1,38 @@
-@membership @mutating
+@membership @mutating @payment
 Feature: Referral discount codes
-  A discount code can be reserved for readers who referred others to a paid
-  subscription.
+  Readers share the referral link from their profile. Whoever subscribes
+  through it and pays counts as their referral, and enough referrals unlock a
+  discount code reserved for referrers.
 
   Background:
     Given a subscribe page that accepts discount codes
     And a discount code "FRIENDS" of 20% for the plan "test-abo-chf" that requires 2 referrals
 
-  Scenario: A reader who referred enough readers gets the referral discount
+  Scenario: A reader who brought two paying readers gets the referral discount
     Given a signed-in reader "Noah"
-    And "Noah" referred 2 readers to a paid subscription
-    When "Noah" enters the discount code "FRIENDS" for the plan "test-abo-chf"
+    And a signed-in reader "Lea"
+    And a signed-in reader "Tim"
+    When "Noah" copies their referral link from their profile
+    And "Lea" opens the referral link of "Noah"
+    Then "Lea" sees the referral code of "Noah" filled in
+    When "Lea" subscribes to the plan "test-abo-chf"
+    And "Lea" pays on the simulated checkout
+    And "Tim" opens the referral link of "Noah"
+    And "Tim" subscribes to the plan "test-abo-chf"
+    And "Tim" pays on the simulated checkout
+    And "Noah" enters the discount code "FRIENDS" for the plan "test-abo-chf"
     Then "Noah" sees a discount of 20% applied
 
-  Scenario: A reader who referred too few readers can not redeem the referral discount
+  Scenario: A referral who never paid does not count towards the referral discount
     Given a signed-in reader "Mia"
-    And "Mia" referred 1 reader to a paid subscription
-    When "Mia" enters the discount code "FRIENDS" for the plan "test-abo-chf"
+    And a signed-in reader "Lea"
+    And a signed-in reader "Tim"
+    When "Mia" copies their referral link from their profile
+    And "Lea" opens the referral link of "Mia"
+    And "Lea" subscribes to the plan "test-abo-chf"
+    And "Lea" pays on the simulated checkout
+    And "Tim" opens the referral link of "Mia"
+    And "Tim" subscribes to the plan "test-abo-chf"
+    And "Tim" declines the payment on the simulated checkout
+    And "Mia" enters the discount code "FRIENDS" for the plan "test-abo-chf"
     Then "Mia" is told the discount code is invalid

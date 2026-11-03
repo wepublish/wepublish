@@ -453,50 +453,6 @@ export class TestData {
   }
 
   /**
-   * A new reader with a paid subscription that `referrer` referred. Imported,
-   * because only imports take `paidUntil`, and only paid referrals count.
-   */
-  async createPaidReferral({
-    referrer,
-    memberPlanSlug,
-    paymentMethodSlug = 'simulated',
-  }: {
-    referrer: Reader;
-    memberPlanSlug: string;
-    paymentMethodSlug?: string;
-  }) {
-    const api = await this.api();
-    const reader = await this.createUser();
-    const plan = await this.memberPlan(memberPlanSlug);
-    const paymentMethod = plan.paymentMethods.find(
-      ({ slug }) => slug === paymentMethodSlug
-    );
-
-    if (!paymentMethod) {
-      throw new Error(`Plan "${memberPlanSlug}" does not offer "${paymentMethodSlug}".`);
-    }
-
-    await api.gql(
-      `mutation ImportSubscription($userID: String!, $memberPlanID: String!, $paymentMethodID: String!, $startsAt: DateTime!, $paidUntil: DateTime, $referredByID: String) {
-        importSubscription(userID: $userID, memberPlanID: $memberPlanID, paymentMethodID: $paymentMethodID,
-          startsAt: $startsAt, paidUntil: $paidUntil, monthlyAmount: 1000, paymentPeriodicity: yearly,
-          autoRenew: true, extendable: true, properties: [], skipMail: true, referredByID: $referredByID) { id }
-      }`,
-      {
-        userID: reader.id,
-        memberPlanID: plan.id,
-        paymentMethodID: paymentMethod.id,
-        startsAt: new Date(Date.now() - 86_400_000).toISOString(),
-        paidUntil: new Date(Date.now() + 365 * 86_400_000).toISOString(),
-        referredByID: referrer.id,
-      }
-    );
-
-    // The subscription goes with the reader (deleteUser).
-    return reader;
-  }
-
-  /**
    * Real tenants assign a template to every system mail; a freshly seeded
    * stack has the templates (`seed-*`) but leaves them unassigned. Assigns
    * `fallbackTemplateId` only if nothing is assigned yet, and keeps it.

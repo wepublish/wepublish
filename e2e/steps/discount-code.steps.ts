@@ -32,23 +32,15 @@ Given(
   }
 );
 
-Given(
-  '{string} referred {int} reader(s) to a paid subscription',
-  async ({ data }, alias: string, count: number) => {
-    const referrer = data.get('reader', alias);
-
-    for (let i = 0; i < count; i++) {
-      await data.createPaidReferral({
-        referrer,
-        memberPlanSlug: 'test-abo-chf',
-      });
-    }
-  }
-);
-
 When(
   '{string} enters the discount code {string} for the plan {string}',
-  async ({ page, data }, _reader: string, alias: string, memberPlanSlug: string) => {
+  async (
+    { readers, data, ctx },
+    reader: string,
+    alias: string,
+    memberPlanSlug: string
+  ) => {
+    const page = await readers.page(reader);
     const { code } = data.get('discountCode', alias);
     const plan = await data.memberPlan(memberPlanSlug);
 
@@ -65,12 +57,15 @@ When(
     );
     await page.getByRole('textbox', { name: discountCodeField }).fill(code);
     await checked;
+    ctx.currentReader = reader;
   }
 );
 
 Then(
   '{string} sees a discount of {int}% applied',
-  async ({ page }, _reader: string, discountPercent: number) => {
+  async ({ readers }, reader: string, discountPercent: number) => {
+    const page = await readers.page(reader);
+
     await expect(
       page
         .getByRole('alert')
@@ -84,7 +79,9 @@ Then(
 
 Then(
   '{string} is told the discount code is invalid',
-  async ({ page }, _reader: string) => {
+  async ({ readers }, reader: string) => {
+    const page = await readers.page(reader);
+
     await expect(
       page.getByRole('alert').filter({ hasText: discountCodeInvalid })
     ).toBeVisible();

@@ -1,9 +1,8 @@
 import { expect, Page } from '@playwright/test';
 import { Article } from '../support/factories';
+import { SimulatedCheckout } from '../support/simulated-payment';
+import { subscribeWithSimulatedPayment } from '../support/subscribe-form';
 import { Given, Then, When } from './fixtures';
-
-const escapeRegExp = (text: string) =>
-  text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /**
  * The paywall has no landmark, so it is found by the unique description the
@@ -34,16 +33,19 @@ Given(
 
 When(
   '{string} opens the article {string}',
-  async ({ page, data, ctx }, _reader: string, alias: string) => {
+  async ({ readers, data, ctx }, reader: string, alias: string) => {
+    const page = await readers.page(reader);
     const article = data.get('article', alias);
 
     await page.goto(article.path);
     await expect(page.getByText(article.title).first()).toBeVisible();
     ctx.currentArticle = alias;
+    ctx.currentReader = reader;
   }
 );
 
-Then('the paywall hides the rest of the article', async ({ page, data, ctx }) => {
+Then('the paywall hides the rest of the article', async ({ readers, data, ctx }) => {
+  const page = await readers.page(ctx.currentReader ?? '');
   const article = data.get('article', ctx.currentArticle ?? '');
 
   await expect(paywallOf(page, article)).toBeVisible();
@@ -52,51 +54,27 @@ Then('the paywall hides the rest of the article', async ({ page, data, ctx }) =>
 
 When(
   '{string} subscribes to the plan {string} from the paywall',
-  async ({ page, data, ctx }, _reader: string, memberPlanSlug: string) => {
+  async ({ readers, data, ctx }, reader: string, memberPlanSlug: string) => {
+    const page = await readers.page(reader);
     const article = data.get('article', ctx.currentArticle ?? '');
     const plan = await data.memberPlan(memberPlanSlug);
-    const simulated = plan.paymentMethods.find(
-      ({ slug }) => slug === 'simulated'
-    );
-
-    if (!simulated) {
-      throw new Error(
-        `Plan "${memberPlanSlug}" does not offer the simulated payment method.`
-      );
-    }
 
     await paywallOf(page, article).getByRole('link').first().click();
-
-    // The radio's name also holds price and description, so pick it by the
-    // plan name inside its label (rendered twice, both select the plan).
-    await page.getByText(plan.name, { exact: true }).first().click();
-    // The payment radios are `visibility: hidden` (PaymentRadio), so they are
-    // missing from the a11y tree; click the label that wraps them instead.
-    const paymentMethod = page.getByRole('radio', {
-      name: new RegExp(escapeRegExp(simulated.name)),
-      includeHidden: true,
-    });
-    await page.locator('label', { has: paymentMethod }).click();
-    await expect(paymentMethod).toBeChecked();
-
-    await page
-      .locator('form')
-      .filter({ has: paymentMethod })
-      .locator('button[type="submit"]')
-      .click();
+    await subscribeWithSimulatedPayment(page, plan);
   }
 );
 
 When(
   '{string} pays on the simulated checkout',
-  async ({ checkout }, _reader: string) => {
-    await checkout.pay();
+  async ({ readers }, reader: string) => {
+    await new SimulatedCheckout(await readers.page(reader)).pay();
   }
 );
 
 Then(
   '{string} can read the article {string} in full',
-  async ({ page, data }, _reader: string, alias: string) => {
+  async ({ readers, data }, reader: string, alias: string) => {
+    const page = await readers.page(reader);
     const article = data.get('article', alias);
 
     await expect(page.getByText(article.ending)).toBeVisible();
