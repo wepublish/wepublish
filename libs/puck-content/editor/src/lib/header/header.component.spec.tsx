@@ -8,9 +8,13 @@ import {
   waitFor,
   within,
 } from '@testing-library/react';
-import { ReactNode } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 import { MdHistory } from 'react-icons/md';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import {
+  createMemoryRouter,
+  RouterProvider,
+  useLocation,
+} from 'react-router-dom';
 
 import { documentHeaderPlugin } from './header';
 import {
@@ -34,13 +38,29 @@ function Location() {
   return <output aria-label="Location">{pathname}</output>;
 }
 
+const RoutedChildren = createContext<ReactNode>(null);
+
+function Routed() {
+  return (
+    <>
+      {useContext(RoutedChildren)}
+      <Location />
+    </>
+  );
+}
+
 function Providers({ children }: { children: ReactNode }) {
+  const [router] = useState(() =>
+    createMemoryRouter([{ path: '*', element: <Routed /> }], {
+      initialEntries: ['/pages/edit/1'],
+    })
+  );
+
   return (
     <ThemeProvider theme={theme}>
-      <MemoryRouter initialEntries={['/pages/edit/1']}>
-        {children}
-        <Location />
-      </MemoryRouter>
+      <RoutedChildren.Provider value={children}>
+        <RouterProvider router={router} />
+      </RoutedChildren.Provider>
     </ThemeProvider>
   );
 }

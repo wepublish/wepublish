@@ -10,7 +10,12 @@ import { OutsideFormOnly } from '../form/outside-form-only.component';
 
 export type SubscribeConfigProps = Omit<
   BuilderSubscribeBlockProps,
-  'memberPlans' | 'memberPlanIds' | 'memberPlanRenderSettings' | 'className'
+  | 'memberPlans'
+  | 'memberPlanIds'
+  | 'memberPlanRenderSettings'
+  | 'className'
+  | 'hiddenAreas'
+  | 'onInvalid'
 >;
 
 const noMemberPlans: BuilderSubscribeBlockProps['memberPlans'] = [];

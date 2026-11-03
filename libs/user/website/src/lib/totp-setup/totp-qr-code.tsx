@@ -16,9 +16,6 @@ const Wrapper = styled('div')`
   }
 `;
 
-const mark = markUrl as string | { src: string };
-const markSrc = typeof mark === 'string' ? mark : mark.src;
-
 export function TotpQrCode({ uri }: { uri: string }) {
   const ref = useRef<HTMLDivElement>(null);
 

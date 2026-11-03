@@ -105,7 +105,7 @@ export function PuckDocumentHeaderView({
   const unsavedId = useId();
   const unpublishedId = useId();
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
-  const confirmLeave = useUnsavedChangesDialog(dirty);
+  useUnsavedChangesDialog(dirty);
 
   const {
     backTo,
@@ -169,11 +169,6 @@ export function PuckDocumentHeaderView({
               component={RouterLink}
               to={backTo}
               aria-label={backLabel}
-              onClick={event => {
-                if (!confirmLeave()) {
-                  event.preventDefault();
-                }
-              }}
             >
               <MdKeyboardBackspace />
             </IconButton>
