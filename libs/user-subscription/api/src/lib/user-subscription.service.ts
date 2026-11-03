@@ -106,7 +106,11 @@ export class UserSubscriptionService {
     } = args;
 
     if (goodieId) {
-      await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
+      await this.goodieService.getValidGoodie(
+        goodieId,
+        memberPlan.id,
+        paymentPeriodicity
+      );
     }
 
     // Check if subscription which should be deactivated exists
@@ -194,7 +198,11 @@ export class UserSubscriptionService {
       } = args;
 
       if (goodieId) {
-        await this.goodieService.getValidGoodie(goodieId, memberPlan.id);
+        await this.goodieService.getValidGoodie(
+          goodieId,
+          memberPlan.id,
+          paymentPeriodicity
+        );
       }
 
       const properties = await this.memberContext.processSubscriptionProperties(

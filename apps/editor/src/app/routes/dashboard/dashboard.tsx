@@ -67,6 +67,11 @@ const DashboardCard = styled.div`
     min-height: 0;
   }
 
+  &[data-dashboard-card='notifications'] .MuiCardContent-root {
+    max-height: 520px;
+    overflow-y: auto;
+  }
+
   &[data-dashboard-card='network'] .MuiCardContent-root {
     min-height: 360px;
     overflow: hidden;

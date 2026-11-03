@@ -2542,6 +2542,9 @@ model Goodie {
   stock       Int?
   active      Boolean @default(true)
 
+  /// Empty = offered with every payment periodicity of the member plan
+  paymentPeriodicities PaymentPeriodicity[] @default([])
+
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id], onDelete: SetNull)
 

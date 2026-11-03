@@ -130,10 +130,7 @@ function CustomApp({
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
-                subscribeBtn={{
-                  href: 'https://shop.zwoelf.ch/produkt-kategorie/abos/',
-                  target: '_blank',
-                }}
+                subscribeBtn={{ href: '/mitmachen' }}
               />
             )}
 

@@ -59,6 +59,8 @@ export interface NotificationItemProps {
   sourceTag?: string;
   actions?: ReactNode;
   children?: ReactNode;
+  /** Leaves out the body, so only the title row and the actions remain */
+  compact?: boolean;
   onClick?: () => void;
 }
 
@@ -68,9 +70,12 @@ export function NotificationItem({
   tags,
   sourceTag,
   actions,
-  children,
+  children: body,
+  compact,
   onClick,
 }: NotificationItemProps) {
+  const children = compact ? undefined : body;
+
   return (
     <Wrapper
       clickable={!!onClick}
