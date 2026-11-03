@@ -1,4 +1,3 @@
-import { INestApplication } from '@nestjs/common';
 import {
   json,
   urlencoded,
@@ -33,9 +32,9 @@ const exceptWebhooks =
 
 type Next = (err?: unknown) => void;
 
-export function useBodyParsers(nestApp: INestApplication) {
-  nestApp.use(exceptWebhooks(json({ limit: MAX_PAYLOAD_SIZE })));
-  nestApp.use(
-    exceptWebhooks(urlencoded({ extended: true, limit: MAX_PAYLOAD_SIZE }))
-  );
+export function getBodyParsers() {
+  return [
+    exceptWebhooks(json({ limit: MAX_PAYLOAD_SIZE })),
+    exceptWebhooks(urlencoded({ extended: true, limit: MAX_PAYLOAD_SIZE })),
+  ];
 }
