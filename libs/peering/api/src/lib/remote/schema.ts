@@ -7736,6 +7736,8 @@ export type SettingFilter = {
 
 export type SettingMailProvider = SettingProvider & {
   __typename?: 'SettingMailProvider';
+  /** Whether an API key is stored. The key itself is never returned. */
+  apiKeySet: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   fromAddress?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
@@ -7752,6 +7754,8 @@ export type SettingMailProvider = SettingProvider & {
   smtp_secure?: Maybe<Scalars['Boolean']['output']>;
   smtp_user?: Maybe<Scalars['String']['output']>;
   type: MailProviderType;
+  /** Whether a webhook signing secret is stored. The secret itself is never returned. */
+  webhookEndpointSecretSet: Scalars['Boolean']['output'];
 };
 
 export type SettingMailProviderFilter = {

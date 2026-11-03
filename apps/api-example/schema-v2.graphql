@@ -5876,6 +5876,8 @@ input SettingFilter {
 }
 
 type SettingMailProvider implements SettingProvider {
+  """Whether an API key is stored. The key itself is never returned."""
+  apiKeySet: Boolean!
   createdAt: DateTime!
   fromAddress: String
   id: String!
@@ -5892,6 +5894,11 @@ type SettingMailProvider implements SettingProvider {
   smtp_secure: Boolean
   smtp_user: String
   type: MailProviderType!
+
+  """
+  Whether a webhook signing secret is stored. The secret itself is never returned.
+  """
+  webhookEndpointSecretSet: Boolean!
 }
 
 input SettingMailProviderFilter {

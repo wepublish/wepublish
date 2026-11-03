@@ -3246,6 +3246,8 @@
         "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon."
       },
       "placeholderSecret": "Inchangé (masqué)",
+      "secretNotSet": "Non défini",
+      "secretStored": "Enregistré (masqué) – laisser vide pour le conserver",
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l’expéditeur",

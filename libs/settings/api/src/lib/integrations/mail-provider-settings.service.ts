@@ -26,21 +26,22 @@ export class MailProviderSettingsService {
     private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
+  /**
+   * The form never shows a stored secret, so an empty one means "keep it":
+   * it is dropped rather than written over the stored value.
+   */
   private encryptSecretsIfPresent<
     T extends { apiKey?: string | null; webhookEndpointSecret?: string | null },
   >(data: T): T {
-    let result = { ...data };
-    if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
-      result = { ...result, apiKey: this.crypto.encrypt(data.apiKey) };
-    }
-    if (
-      typeof data.webhookEndpointSecret === 'string' &&
-      data.webhookEndpointSecret.length > 0
-    ) {
-      result = {
-        ...result,
-        webhookEndpointSecret: this.crypto.encrypt(data.webhookEndpointSecret),
-      };
+    const result = { ...data };
+    for (const key of ['apiKey', 'webhookEndpointSecret'] as const) {
+      const value = data[key];
+
+      if (value === '') {
+        delete result[key];
+      } else if (typeof value === 'string') {
+        result[key] = this.crypto.encrypt(value) as T[typeof key];
+      }
     }
     return result;
   }

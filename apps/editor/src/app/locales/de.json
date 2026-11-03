@@ -3254,6 +3254,8 @@
         "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen."
       },
       "placeholderSecret": "Unverändert (versteckt)",
+      "secretNotSet": "Nicht gesetzt",
+      "secretStored": "Gespeichert (versteckt) – leer lassen, um ihn zu behalten",
       "mailSettings": {
         "type": "Typ",
         "fromAddress": "Absenderadresse",
