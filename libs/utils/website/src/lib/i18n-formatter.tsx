@@ -14,6 +14,38 @@ const translations: Resource = {
   fr,
 };
 
+const reportedMissingKeys = new Set<string>();
+
+function reportMissingTranslation(
+  languages: readonly string[],
+  namespace: string,
+  key: string
+) {
+  if (!i18next.hasLoadedNamespace(namespace)) {
+    return;
+  }
+
+  for (const language of languages) {
+    const id = `${language}:${namespace}:${key}`;
+
+    if (reportedMissingKeys.has(id)) {
+      continue;
+    }
+
+    reportedMissingKeys.add(id);
+
+    void import('@sentry/core')
+      .then(Sentry =>
+        Sentry.captureMessage(`Missing translation "${key}"`, {
+          level: 'error',
+          tags: { 'i18n.language': language, 'i18n.namespace': namespace },
+          extra: { key },
+        })
+      )
+      .catch(() => undefined);
+  }
+}
+
 export function initWePublishTranslator(overrides: object = {}) {
   i18next
     .use(ICU)
@@ -32,6 +64,9 @@ export function initWePublishTranslator(overrides: object = {}) {
       interpolation: {
         escapeValue: false,
       },
+      saveMissing: true,
+      saveMissingTo: 'current',
+      missingKeyHandler: reportMissingTranslation,
       resources: map(pick(['zod']), translations) as Resource,
     });
 
