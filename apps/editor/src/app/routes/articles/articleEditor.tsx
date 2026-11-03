@@ -318,7 +318,7 @@ function ArticleEditor() {
   const changeVersion = useRef(0);
   const skipRepopulate = useRef(false);
 
-  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+  useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = articleData?.article?.previewUrl;
   const publishedUrl =
@@ -716,11 +716,6 @@ function ArticleEditor() {
                 to="/articles"
                 title={t('articleEditor.overview.back')}
                 aria-label={t('articleEditor.overview.back')}
-                onClick={e => {
-                  if (!unsavedChangesDialog()) {
-                    e.preventDefault();
-                  }
-                }}
               >
                 <MdKeyboardBackspace />
               </IconButton>
@@ -933,11 +928,9 @@ function ArticleEditor() {
           onCreateTemplate={
             articleID ?
               () => {
-                if (unsavedChangesDialog()) {
-                  navigate(
-                    `/articles/templates/create?fromArticle=${encodeURIComponent(articleID)}`
-                  );
-                }
+                navigate(
+                  `/articles/templates/create?fromArticle=${encodeURIComponent(articleID)}`
+                );
               }
             : undefined
           }
