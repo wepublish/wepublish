@@ -64,6 +64,7 @@ import { LetterPreview } from './letter-preview';
 import { MailPreview } from './mail-preview';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
 import { PlaceholderPicker } from './placeholder-picker';
+import { testMailInput } from './test-mail-input';
 import {
   CanCreateMailTemplates,
   CanGetMailTemplates,
@@ -388,7 +389,7 @@ function MailTemplateEdit() {
     const ctx = effectiveContext();
     await sendTest({
       variables: {
-        input: previewInput(ctx),
+        input: testMailInput(previewInput(ctx)),
       },
     });
     enqueueSnackbar(t('mailTemplates.edit.testSent'), { variant: 'success' });
