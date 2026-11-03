@@ -45,8 +45,7 @@ function SignUp() {
         sx={{ marginBottom: '16px' }}
       >
         (Falls du schon einen Account hast,{' '}
-        <Link href={'/login'}>klicke hier</Link> und falls du ein Abo lösen
-        willst, <Link href={'/abo'}>klicke hier.</Link>)
+        <Link href={'/login'}>klicke hier.</Link>)
       </Typography>
       <RegistrationFormContainer />
     </SignupWrapper>

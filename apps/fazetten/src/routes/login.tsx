@@ -82,8 +82,7 @@ function Login() {
         sx={{ marginBottom: '16px' }}
       >
         (Falls du noch keinen Account hast,{' '}
-        <Link href={'/signup'}>klicke hier</Link> und falls du ein Abo lösen
-        willst, <Link href={'/abo'}>klicke hier.</Link>)
+        <Link href={'/signup'}>klicke hier.</Link>)
       </Typography>
       <LoginFormContainer
         defaults={{
