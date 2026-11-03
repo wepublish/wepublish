@@ -1,9 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { createSitemapFetchHandlers } from '@wepublish/feed/website';
-import {
-  createSsrClient,
-  getSiteUrl,
-} from '@wepublish/utils/website/tanstack/server';
+import { createSsrClient } from '@wepublish/utils/website/tanstack/server';
 
 import { sitemapConfig } from '../../sitemap';
 
@@ -18,11 +15,10 @@ import { sitemapConfig } from '../../sitemap';
 export const Route = createFileRoute('/sitemap/$chunk')({
   server: {
     handlers: {
-      GET: ({ params }) =>
+      GET: ({ request, params }) =>
         createSitemapFetchHandlers(sitemapConfig, {
           getClient: createSsrClient,
-          getSiteUrl,
-        }).sitemapChunk(params.chunk),
+        }).sitemapChunk(request, params.chunk),
     },
   },
 });
