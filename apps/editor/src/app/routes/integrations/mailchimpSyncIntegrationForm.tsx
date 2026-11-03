@@ -1081,7 +1081,7 @@ function SyncProviderSettingCard({
                       type="password"
                       autoComplete="one-time-code"
                       placeholder={secretPlaceholder(
-                        setting.mailchimp_apiKeySet,
+                        setting.mailchimp_isApiKeySet,
                         t
                       )}
                       fullWidth

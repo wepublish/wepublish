@@ -89,14 +89,14 @@ export class PaymentProviderSettingsResolver {
   @ResolveField(() => Boolean, {
     description: 'Whether an API key is stored. It is never returned itself.',
   })
-  apiKeySet(@Parent() setting: SettingRow) {
+  isApiKeySet(@Parent() setting: SettingRow) {
     return !!setting.apiKey;
   }
 
   @ResolveField(() => Boolean, {
     description: 'Whether a webhook signing secret is stored. It is never returned itself.',
   })
-  webhookEndpointSecretSet(@Parent() setting: SettingRow) {
+  isWebhookEndpointSecretSet(@Parent() setting: SettingRow) {
     return !!setting.webhookEndpointSecret;
   }
 }

@@ -1,7 +1,7 @@
 query SyncProviderSettings {
   syncProviderSettings {
     id
-    mailchimp_apiKeySet
+    mailchimp_isApiKeySet
     createdAt
     modifiedAt
     lastLoadedAt
@@ -41,7 +41,7 @@ mutation UpdateSyncProviderSetting(
     mailchimp_extensions: $mailchimp_extensions
   ) {
     id
-    mailchimp_apiKeySet
+    mailchimp_isApiKeySet
     createdAt
     modifiedAt
     lastLoadedAt

@@ -1,7 +1,7 @@
 query SettingsIntegrationsAnalytics {
   analyticsProviderSettings {
     id
-    credentialsSet
+    isCredentialsSet
     createdAt
     modifiedAt
     lastLoadedAt
@@ -29,7 +29,7 @@ mutation UpdateAnalyticsProviderSetting(
     credentials: $credentials
   ) {
     id
-    credentialsSet
+    isCredentialsSet
     createdAt
     modifiedAt
     lastLoadedAt

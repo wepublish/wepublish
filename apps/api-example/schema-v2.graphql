@@ -5815,10 +5815,11 @@ type Setting {
 }
 
 type SettingAIProvider implements SettingProvider {
-  """Whether an API key is stored. It is never returned itself."""
-  apiKeySet: Boolean!
   createdAt: DateTime!
   id: String!
+
+  """Whether an API key is stored. It is never returned itself."""
+  isApiKeySet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
@@ -5844,12 +5845,12 @@ input SettingAnalyticsCredentialsInput {
 type SettingAnalyticsProvider implements SettingProvider {
   articlePrefix: String
   createdAt: DateTime!
+  id: String!
 
   """
   Whether service account credentials are stored. They are never returned.
   """
-  credentialsSet: Boolean!
-  id: String!
+  isCredentialsSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
@@ -5866,12 +5867,12 @@ input SettingAnalyticsProviderFilter {
 type SettingChallengeProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
+
+  """Whether a secret is stored. It is never returned itself."""
+  isSecretSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
-
-  """Whether a secret is stored. It is never returned itself."""
-  secretSet: Boolean!
   type: ChallengeProviderType!
 }
 
@@ -5886,11 +5887,17 @@ input SettingFilter {
 }
 
 type SettingMailProvider implements SettingProvider {
-  """Whether an API key is stored. The key itself is never returned."""
-  apiKeySet: Boolean!
   createdAt: DateTime!
   fromAddress: String
   id: String!
+
+  """Whether an API key is stored. The key itself is never returned."""
+  isApiKeySet: Boolean!
+
+  """
+  Whether a webhook signing secret is stored. The secret itself is never returned.
+  """
+  isWebhookEndpointSecretSet: Boolean!
   lastLoadedAt: DateTime!
   mailchimp_baseURL: String
   mailgun_baseDomain: String
@@ -5904,11 +5911,6 @@ type SettingMailProvider implements SettingProvider {
   smtp_secure: Boolean
   smtp_user: String
   type: MailProviderType!
-
-  """
-  Whether a webhook signing secret is stored. The secret itself is never returned.
-  """
-  webhookEndpointSecretSet: Boolean!
 }
 
 input SettingMailProviderFilter {
@@ -5943,8 +5945,6 @@ enum SettingName {
 }
 
 type SettingPaymentProvider implements SettingProvider {
-  """Whether an API key is stored. It is never returned itself."""
-  apiKeySet: Boolean!
   bexio_accountId: Float
   bexio_countryId: Float
   bexio_invoiceMailBodyNewMembership: String
@@ -5962,6 +5962,14 @@ type SettingPaymentProvider implements SettingProvider {
   createdAt: DateTime!
   deletedAt: DateTime
   id: String!
+
+  """Whether an API key is stored. It is never returned itself."""
+  isApiKeySet: Boolean!
+
+  """
+  Whether a webhook signing secret is stored. It is never returned itself.
+  """
+  isWebhookEndpointSecretSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   mollie_apiBaseUrl: String
@@ -5975,11 +5983,6 @@ type SettingPaymentProvider implements SettingProvider {
   simulated_declineRenewals: Boolean
   stripe_methods: [StripePaymentMethod!]
   type: PaymentProviderType!
-
-  """
-  Whether a webhook signing secret is stored. It is never returned itself.
-  """
-  webhookEndpointSecretSet: Boolean!
 }
 
 input SettingPaymentProviderFilter {
@@ -6010,12 +6013,12 @@ type SettingSyncProvider implements SettingProvider {
   lastLoadedAt: DateTime!
   lastSyncAt: DateTime
   lastSyncError: String
-
-  """Whether a Mailchimp API key is stored. It is never returned itself."""
-  mailchimp_apiKeySet: Boolean!
   mailchimp_defaultInterestGroupIds: [String!]
   mailchimp_extensions: JSONObject
   mailchimp_interestGroupMappings: [JSONObject!]
+
+  """Whether a Mailchimp API key is stored. It is never returned itself."""
+  mailchimp_isApiKeySet: Boolean!
   mailchimp_listId: String
   mailchimp_mergeFieldMappings: [JSONObject!]
   modifiedAt: DateTime!
@@ -6043,11 +6046,11 @@ type SettingTrackingPixelProvider implements SettingProvider {
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
-  prolitteris_memberNr: String
-  prolitteris_onlyPaidContentAccess: Boolean
 
   """Whether a ProLitteris password is stored. It is never returned itself."""
-  prolitteris_passwordSet: Boolean!
+  prolitteris_isPasswordSet: Boolean!
+  prolitteris_memberNr: String
+  prolitteris_onlyPaidContentAccess: Boolean
   prolitteris_publisherInternalKeyDomain: String
   prolitteris_usePublisherInternalKey: Boolean
   prolitteris_username: String

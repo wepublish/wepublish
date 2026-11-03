@@ -11,20 +11,20 @@ const build = <T>(Resolver: new (...args: never[]) => T) =>
 // Every provider says whether each of its secrets is stored, without ever
 // returning the secret: the editor shows it as the field's placeholder.
 const cases = [
-  [AISettingsResolver, 'apiKey', 'apiKeySet'],
-  [AnalyticsProviderSettingsResolver, 'credentials', 'credentialsSet'],
-  [ChallengeProviderSettingsResolver, 'secret', 'secretSet'],
-  [PaymentProviderSettingsResolver, 'apiKey', 'apiKeySet'],
+  [AISettingsResolver, 'apiKey', 'isApiKeySet'],
+  [AnalyticsProviderSettingsResolver, 'credentials', 'isCredentialsSet'],
+  [ChallengeProviderSettingsResolver, 'secret', 'isSecretSet'],
+  [PaymentProviderSettingsResolver, 'apiKey', 'isApiKeySet'],
   [
     PaymentProviderSettingsResolver,
     'webhookEndpointSecret',
-    'webhookEndpointSecretSet',
+    'isWebhookEndpointSecretSet',
   ],
-  [SyncProviderSettingsResolver, 'mailchimp_apiKey', 'mailchimp_apiKeySet'],
+  [SyncProviderSettingsResolver, 'mailchimp_apiKey', 'mailchimp_isApiKeySet'],
   [
     TrackingPixelProviderSettingsResolver,
     'prolitteris_password',
-    'prolitteris_passwordSet',
+    'prolitteris_isPasswordSet',
   ],
 ] as const;
 

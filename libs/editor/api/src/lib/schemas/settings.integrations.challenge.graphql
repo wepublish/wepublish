@@ -2,7 +2,7 @@ query SettingsIntegrationsChallenge {
   challengeProviderSettings {
     createdAt
     id
-    secretSet
+    isSecretSet
     lastLoadedAt
     modifiedAt
     name
@@ -26,7 +26,7 @@ mutation UpdateSettingsIntegrationsChallenge(
   ) {
     createdAt
     id
-    secretSet
+    isSecretSet
     lastLoadedAt
     modifiedAt
     name

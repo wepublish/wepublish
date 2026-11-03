@@ -42,7 +42,7 @@ export function AIIntegrationForm() {
           info: t('integrations.aiSettings.apiKeyInfo'),
           type: 'password',
           autoComplete: 'one-time-code',
-          placeholder: secretPlaceholder(setting.apiKeySet, t),
+          placeholder: secretPlaceholder(setting.isApiKeySet, t),
         },
         {
           name: 'systemPrompt',

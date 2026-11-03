@@ -91,7 +91,7 @@ export class ChallengeProviderSettingsResolver {
   @ResolveField(() => Boolean, {
     description: 'Whether a secret is stored. It is never returned itself.',
   })
-  secretSet(@Parent() setting: SettingRow) {
+  isSecretSet(@Parent() setting: SettingRow) {
     return !!setting.secret;
   }
 }

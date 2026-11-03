@@ -11,14 +11,14 @@ describe('MailProviderSettingsResolver', () => {
   it('says a secret is stored without giving it away', () => {
     const setting = row({ apiKey: 'encrypted', webhookEndpointSecret: 'x' });
 
-    expect(resolver.apiKeySet(setting)).toBe(true);
-    expect(resolver.webhookEndpointSecretSet(setting)).toBe(true);
+    expect(resolver.isApiKeySet(setting)).toBe(true);
+    expect(resolver.isWebhookEndpointSecretSet(setting)).toBe(true);
   });
 
   it.each([null, ''])('says a secret of %j is not stored', value => {
     const setting = row({ apiKey: value, webhookEndpointSecret: value });
 
-    expect(resolver.apiKeySet(setting)).toBe(false);
-    expect(resolver.webhookEndpointSecretSet(setting)).toBe(false);
+    expect(resolver.isApiKeySet(setting)).toBe(false);
+    expect(resolver.isWebhookEndpointSecretSet(setting)).toBe(false);
   });
 });

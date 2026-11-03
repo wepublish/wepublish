@@ -92,7 +92,7 @@ export class AnalyticsProviderSettingsResolver {
     description:
       'Whether service account credentials are stored. They are never returned.',
   })
-  credentialsSet(@Parent() setting: SettingRow) {
+  isCredentialsSet(@Parent() setting: SettingRow) {
     return !!setting.credentials;
   }
 }

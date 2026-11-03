@@ -72,7 +72,7 @@ export class MailProviderSettingsResolver {
     description:
       'Whether an API key is stored. The key itself is never returned.',
   })
-  apiKeySet(@Parent() setting: SettingMailProviderRow) {
+  isApiKeySet(@Parent() setting: SettingMailProviderRow) {
     return !!setting.apiKey;
   }
 
@@ -80,7 +80,7 @@ export class MailProviderSettingsResolver {
     description:
       'Whether a webhook signing secret is stored. The secret itself is never returned.',
   })
-  webhookEndpointSecretSet(@Parent() setting: SettingMailProviderRow) {
+  isWebhookEndpointSecretSet(@Parent() setting: SettingMailProviderRow) {
     return !!setting.webhookEndpointSecret;
   }
 

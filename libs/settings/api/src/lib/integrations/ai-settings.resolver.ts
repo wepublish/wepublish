@@ -81,7 +81,7 @@ export class AISettingsResolver {
   @ResolveField(() => Boolean, {
     description: 'Whether an API key is stored. It is never returned itself.',
   })
-  apiKeySet(@Parent() setting: SettingRow) {
+  isApiKeySet(@Parent() setting: SettingRow) {
     return !!setting.apiKey;
   }
 }

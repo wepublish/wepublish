@@ -3,7 +3,7 @@ query TrackingPixelSettings {
     deletedAt
     createdAt
     id
-    prolitteris_passwordSet
+    prolitteris_isPasswordSet
     lastLoadedAt
     modifiedAt
     name
@@ -38,7 +38,7 @@ mutation UpdateTrackingPixelSetting(
   ) {
     createdAt
     id
-    prolitteris_passwordSet
+    prolitteris_isPasswordSet
     lastLoadedAt
     modifiedAt
     name

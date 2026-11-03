@@ -72,7 +72,7 @@ export function ChallengeIntegrationForm() {
           label: t('integrations.challengeSettings.secret'),
           info: t('integrations.challengeSettings.secretInfo'),
           type: 'password',
-          placeholder: secretPlaceholder(setting.secretSet, t),
+          placeholder: secretPlaceholder(setting.isSecretSet, t),
           autoComplete: 'one-time-code',
         },
       ]}

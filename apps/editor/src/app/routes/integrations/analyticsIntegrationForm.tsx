@@ -209,7 +209,7 @@ export function AnalyticsIntegrationForm() {
           info: t('integrations.analyticsSettings.credentialsInfo'),
           type: 'custom',
           render:
-            setting.credentialsSet ? StoredCredentialsDropzone : CustomDropzone,
+            setting.isCredentialsSet ? StoredCredentialsDropzone : CustomDropzone,
         },
       ]}
     />
