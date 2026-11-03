@@ -23,6 +23,7 @@ fragment FullGoodie on Goodie {
   name
   description
   stock
+  paymentPeriodicities
   image {
     ...FullImage
   }
