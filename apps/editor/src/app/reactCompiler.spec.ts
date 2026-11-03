@@ -2,6 +2,8 @@ import { DiscountCodeCreateForm } from './routes/discountCode/discountCodeCreate
 import { DiscountCodeEditForm } from './routes/discountCode/discountCodeEditView';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
+import { GoodieCreateForm } from './routes/goodie/goodieCreateView';
+import { GoodieEditForm } from './routes/goodie/goodieEditView';
 import {
   NavigationCreateForm,
   NavigationDrawer,
@@ -29,6 +31,8 @@ describe('the editor under test', () => {
     ['DiscountCodeEditForm', DiscountCodeEditForm],
     ['EventCreateView', EventCreateView],
     ['EventEditView', EventEditView],
+    ['GoodieCreateForm', GoodieCreateForm],
+    ['GoodieEditForm', GoodieEditForm],
     ['NavigationCreateForm', NavigationCreateForm],
     ['NavigationEditForm', NavigationEditForm],
     ['NavigationDrawer', NavigationDrawer],

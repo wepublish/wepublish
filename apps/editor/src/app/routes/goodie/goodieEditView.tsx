@@ -1,110 +1,51 @@
-import { useApolloClient, useMutation } from '@apollo/client/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  FullGoodieFragment,
-  GoodieDocument,
-  UpdateGoodieDocument,
-} from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { GoodieDocument, UpdateGoodieDocument } from '@wepublish/editor/api';
+import { FormPage, useEditForm, useQueryLoader } from '@wepublish/form/editor';
 import { CanUpdateGoodie } from '@wepublish/permissions';
+import { PermissionControl } from '@wepublish/ui/editor';
+import { useParams } from 'react-router-dom';
+
 import {
-  createCheckedPermissionComponent,
-  enqueueSnackbar,
-  humanizeError,
-  SingleViewTitle,
-} from '@wepublish/ui/editor';
-import { useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+  fromGoodie,
+  goodieTitleParams,
+  toUpdateGoodieVariables,
+} from './goodie.schema';
+import { goodieView } from './goodie.view';
 
-import { GoodieForm, GoodieFormValues, goodieSchema } from './goodieForm';
+const updatePermissions = [CanUpdateGoodie.id];
 
-const onErrorToast = (error: Error) => {
-  enqueueSnackbar(humanizeError(error), {
-    variant: 'error',
-    autoHideDuration: 8000,
-  });
+type GoodieEditFormProps = {
+  id: string;
 };
 
-const mapApiDataToInput = (goodie: FullGoodieFragment): GoodieFormValues => ({
-  id: goodie.id,
-  name: goodie.name,
-  stock: goodie.stock,
-  active: goodie.active,
-  description: goodie.description,
-  image: goodie.image,
-  imageID: goodie.image?.id,
-  memberPlans: goodie.memberPlans,
-  memberPlanIDs: goodie.memberPlans.map(memberPlan => memberPlan.id),
-  paymentPeriodicities: goodie.paymentPeriodicities,
-});
-
-const GoodieEditView = () => {
-  const { t } = useTranslation();
-  const [shouldClose, setShouldClose] = useState(false);
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const closePath = './../..';
-  const client = useApolloClient();
-
-  const form = useForm<GoodieFormValues>({
-    resolver: zodResolver(goodieSchema),
-    defaultValues: async () => {
-      const { data } = await client.query({
-        query: GoodieDocument,
-        variables: { id: id as string },
-      });
-
-      return mapApiDataToInput(data!.goodie);
-    },
+export const GoodieEditForm = ({ id }: GoodieEditFormProps) => {
+  const load = useQueryLoader(GoodieDocument, { id }, data =>
+    fromGoodie(data.goodie)
+  );
+  const [updateGoodie] = useMutation(UpdateGoodieDocument);
+  const goodie = useEditForm(goodieView, {
+    title: 'goodie.form.editTitle',
+    titleParams: goodieTitleParams,
+    load,
+    save: values =>
+      updateGoodie({ variables: toUpdateGoodieVariables(id, values) }),
   });
 
-  const name = useWatch({ control: form.control, name: 'name' });
+  return <FormPage controller={goodie} />;
+};
 
-  const [updateGoodie, { loading: updateLoading }] = useMutation(
-    UpdateGoodieDocument,
-    {
-      onError: onErrorToast,
-      onCompleted: data => {
-        if (data.updateGoodie) {
-          if (shouldClose) {
-            navigate(closePath);
-          } else {
-            form.reset(mapApiDataToInput(data.updateGoodie));
-          }
-        }
-      },
-    }
-  );
-
-  if (form.formState.isLoading) {
-    return null;
-  }
+export const GoodieEditView = () => {
+  const { id = '' } = useParams();
 
   return (
-    <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit(({ image, memberPlans, ...goodie }) =>
-          updateGoodie({ variables: { ...goodie, id: id as string } })
-        )}
-      >
-        <SingleViewTitle
-          loading={updateLoading}
-          title={t('goodie.form.editTitle', { goodie: name })}
-          loadingTitle={t('loading')}
-          saveBtnTitle={t('save')}
-          saveAndCloseBtnTitle={t('saveAndClose')}
-          closePath={closePath}
-          setCloseFn={setShouldClose}
-        />
-
-        <GoodieForm />
-      </form>
-    </FormProvider>
+    <PermissionControl
+      qualifyingPermissions={updatePermissions}
+      showRejectionMessage
+    >
+      <GoodieEditForm
+        key={id}
+        id={id}
+      />
+    </PermissionControl>
   );
 };
-
-const CheckedPermissionComponent = createCheckedPermissionComponent([
-  CanUpdateGoodie.id,
-])(GoodieEditView);
-export { CheckedPermissionComponent as GoodieEditView };

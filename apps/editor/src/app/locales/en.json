@@ -3567,7 +3567,12 @@
         "stockInfo": "Total number of pieces you can give away. Once all of them are taken, the goodie is no longer offered. Leave empty for an unlimited number.",
         "memberPlansInfo": "The goodie is only offered with these subscription plans.",
         "paymentPeriodicities": "Payment periodicities",
-        "paymentPeriodicitiesInfo": "The goodie is only offered with these payment periodicities, e.g. only with a 2-year subscription. Leave empty to offer it with every periodicity of the subscription plan."
+        "paymentPeriodicitiesInfo": "The goodie is only offered with these payment periodicities, e.g. only with a 2-year subscription. Leave empty to offer it with every periodicity of the subscription plan.",
+        "sections": {
+          "details": "Details",
+          "availability": "Availability",
+          "media": "Media"
+        }
       },
       "overview": {
         "title": "Goodies",
