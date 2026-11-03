@@ -56,6 +56,7 @@ export const SubscribeBlock = ({
       userId,
       discountCode,
       periodicity,
+      referrer,
     },
   } = useContext(BuilderRouterContext);
 
@@ -139,6 +140,7 @@ export const SubscribeBlock = ({
             memberPlanSlug: memberPlanBySlug as string | undefined,
             paymentPeriodicity: defaultPaymentPeriodicity,
             discountCode: discountCode as string | undefined,
+            referrer: referrer as string | undefined,
           }}
           fetchSubscribeInfo={fetchSubscribeInfo}
           subscribeInfo={subscribeInfo}

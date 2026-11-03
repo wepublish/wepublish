@@ -794,6 +794,12 @@ describe('Subscribe', () => {
       },
     ];
 
+    // every textbox but the referral code
+    const amountInputs = () =>
+      screen
+        .queryAllByRole('textbox')
+        .filter(box => box.getAttribute('name') !== 'referrer');
+
     it('lets the reader choose the amount for a plan with a price range', () => {
       renderLoggedIn({
         periodicityDisplay: SubscribePeriodicityDisplay.Toggle,
@@ -801,7 +807,7 @@ describe('Subscribe', () => {
         memberPlanRenderSettings: pickerWithInput(standardPlan.id),
       });
 
-      expect(screen.getByRole('textbox')).toBeInTheDocument();
+      expect(amountInputs()).toHaveLength(1);
     });
 
     it('offers no amount choice for a fixed price', () => {
@@ -811,7 +817,7 @@ describe('Subscribe', () => {
         memberPlanRenderSettings: pickerWithInput(fixedPricePlan.id),
       });
 
-      expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+      expect(amountInputs()).toHaveLength(0);
       expect(subscribeButton(10)).toBeInTheDocument();
     });
 
@@ -970,6 +976,74 @@ describe('Subscribe', () => {
           }),
         })
       ).toBeInTheDocument();
+    });
+  });
+
+  describe('referrer', () => {
+    const referrerField = () =>
+      screen.getByRole('textbox', { name: t('subscribe.referrer.label') });
+
+    it('subscribes without a referrer, the field is optional', async () => {
+      const { user, onSubscribe } = renderLoggedIn();
+
+      expect(referrerField()).not.toBeRequired();
+      expect(referrerField()).toHaveValue('');
+
+      await confirm(user);
+
+      await waitFor(() =>
+        expect(onSubscribe).toHaveBeenCalledWith(expectedSubscribe)
+      );
+      expect(onSubscribe.mock.calls[0][0].referrer).toBeUndefined();
+    });
+
+    it('subscribes with the referral code the reader entered', async () => {
+      const { user, onSubscribe } = renderLoggedIn();
+
+      await user.type(referrerField(), ' K7QX2M9P ');
+      await confirm(user);
+
+      await waitFor(() =>
+        expect(onSubscribe).toHaveBeenCalledWith({
+          ...expectedSubscribe,
+          referrer: 'K7QX2M9P',
+        })
+      );
+    });
+
+    it('takes the referral code from the referral link', async () => {
+      const { user, onSubscribe } = renderLoggedIn({
+        defaults: { referrer: 'K7QX2M9P' },
+      });
+
+      expect(referrerField()).toHaveValue('K7QX2M9P');
+
+      await confirm(user);
+
+      await waitFor(() =>
+        expect(onSubscribe).toHaveBeenCalledWith({
+          ...expectedSubscribe,
+          referrer: 'K7QX2M9P',
+        })
+      );
+    });
+
+    it('passes the referrer on when a new reader registers', async () => {
+      const { user, onSubscribeWithRegister } = renderSubscribe({
+        fields: [],
+        defaults: { referrer: 'K7QX2M9P' },
+      });
+
+      await fillNameAndEmail(user);
+      await submitWhenCaptchaSolved(user);
+
+      await waitFor(() =>
+        expect(onSubscribeWithRegister).toHaveBeenCalledWith(
+          expect.objectContaining({
+            subscribe: { ...expectedSubscribe, referrer: 'K7QX2M9P' },
+          })
+        )
+      );
     });
   });
 });

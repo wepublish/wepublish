@@ -272,6 +272,8 @@ export type BuilderSubscribeProps<
     name: string;
     firstName: string;
     discountCode: string;
+    /** Referral code of the reader who referred the subscriber, e.g. from a referral link. */
+    referrer: string;
   }>;
   periodicityDisplay?: SubscribePeriodicityDisplay | null;
   deactivateSubscriptionId?: string;

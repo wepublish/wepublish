@@ -77,6 +77,10 @@
       "confirmationTitle": "Êtes-vous sûr ?",
       "openInvoices": "Vous avez déjà un abonnement avec des factures impayées. Vous pouvez consulter vos factures impayées dans votre <Link href=\"/profile\">profil</Link>.",
       "alreadyHasSubscription": "Vous avez déjà cet abonnement, êtes-vous sûr ? Vous pouvez consulter vos abonnements dans votre <Link href=\"/profile\">profil</Link>."
+    },
+    "referrer": {
+      "label": "Code de parrainage",
+      "helper": "Facultatif : le code de la personne qui vous a recommandé l'abonnement."
     }
   },
   "login": {
@@ -263,6 +267,14 @@
       "suggested": "Suggéré",
       "occupation": "Fonction / Profession",
       "passwordsDoNotMatch": "Les mots de passe ne correspondent pas."
+    },
+    "referral": {
+      "title": "Votre lien de parrainage",
+      "description": "Partagez ce lien avec vos ami·e·s. Chaque abonnement souscrit par ce lien compte comme votre parrainage.",
+      "link": "Lien de parrainage",
+      "copy": "Copier",
+      "copied": "Lien copié",
+      "copyError": "Le lien n'a pas pu être copié. Veuillez le copier manuellement."
     }
   },
   "article": {

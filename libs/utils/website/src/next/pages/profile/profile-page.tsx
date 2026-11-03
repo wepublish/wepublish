@@ -15,6 +15,7 @@ import {
 } from '@wepublish/membership/website';
 import {
   PersonalDataFormContainer,
+  ReferralLinkContainer,
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import {
@@ -228,6 +229,8 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
         <H4 component={'h1'}>{t('navbar.profile')}</H4>
 
         <PersonalDataFormContainer {...props} />
+
+        <ReferralLinkContainer />
 
         <TotpSetupContainer />
       </ProfileWrapper>

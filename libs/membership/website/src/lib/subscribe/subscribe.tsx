@@ -71,6 +71,7 @@ export const subscribeSchema = z.object({
   payTransactionFee: z.boolean(),
   discountCode: z.string().nullish(),
   goodieId: z.string().nullish(),
+  referrer: z.string().nullish(),
 });
 
 export const SubscribeWrapper = styled('form')`
@@ -343,6 +344,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     defaultValues: {
       ...defaults,
       discountCode: defaults?.discountCode ?? '',
+      referrer: defaults?.referrer ?? '',
       goodieId: null,
       monthlyAmount: 0,
       autoRenew: true,
@@ -530,6 +532,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       autoRenew: data.autoRenew,
       discountCode: data.discountCode,
       goodieId: data.goodieId,
+      referrer: data.referrer?.trim() || undefined,
     };
 
     if (hasUser) {
@@ -1082,6 +1085,24 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             />
           </SubscribeNarrowSection>
         )}
+
+        <SubscribeNarrowSection area="referrer">
+          <Controller
+            name={'referrer'}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                value={field.value ?? ''}
+                label={t('subscribe.referrer.label')}
+                helperText={error?.message ?? t('subscribe.referrer.helper')}
+                error={!!error}
+                autoComplete="off"
+                sx={{ maxWidth: 300 }}
+              />
+            )}
+          />
+        </SubscribeNarrowSection>
 
         {!hasUserContext && (
           <SubscribeSection area="challenge">

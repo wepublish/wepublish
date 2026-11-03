@@ -137,10 +137,14 @@ describe('SubscribeBlock', () => {
         mail: 'jane@example.com',
         firstName: 'Jane',
         lastName: 'Doe',
+        referrer: 'K7QX2M9P',
       },
     });
 
     expect(screen.getByLabelText('Premium', { exact: false })).toBeChecked();
+    expect(screen.getByLabelText(t('subscribe.referrer.label'))).toHaveValue(
+      'K7QX2M9P'
+    );
     expect(screen.getByLabelText(t('user.form.email'))).toHaveValue(
       'jane@example.com'
     );
