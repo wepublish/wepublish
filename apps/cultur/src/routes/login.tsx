@@ -76,14 +76,13 @@ function Login() {
 
   return (
     <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
+      <H3 component="h1">Login für Member</H3>
       <Typography
         variant="body1"
         sx={{ marginBottom: '16px' }}
       >
         (Falls du noch keinen Account hast,{' '}
-        <Link href={'/signup'}>klicke hier</Link> und falls du ein Abo lösen
-        willst, <Link href={'/abo'}>klicke hier.</Link>)
+        <Link href={'/mitmachen'}>klicke hier.</Link>)
       </Typography>
       <LoginFormContainer
         defaults={{
