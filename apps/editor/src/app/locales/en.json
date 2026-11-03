@@ -2956,15 +2956,16 @@
       },
       "panels": {
         "cancel": "Cancel",
-        "close": "Close",
         "confirm": "Confirm",
         "createUserRole": "Create User Role",
         "deleteUserRole": "Delete User Role?",
         "description": "Description",
         "editUserRole": "Edit User Role",
         "name": "Name",
+        "nameTaken": "A user role named “{{name}}” already exists.",
         "permissions": "Permissions",
-        "systemRole": "is a system role and cannot be edited",
+        "selectPermissions": "Select permissions",
+        "systemRole": "This is a system role and cannot be edited.",
         "Unknown": "Unknown"
       }
     },

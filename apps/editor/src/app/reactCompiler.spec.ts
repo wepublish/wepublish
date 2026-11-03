@@ -11,6 +11,12 @@ import { PaywallCreateForm } from './routes/paywall/paywallCreateView';
 import { PaywallEditForm } from './routes/paywall/paywallEditView';
 import { TagCreateForm } from './routes/tags/tagCreateView';
 import { TagEditForm } from './routes/tags/tagEditView';
+import { SystemRoleNotice } from './routes/userRoles/systemRoleNotice';
+import {
+  UserRoleCreateForm,
+  UserRoleDrawer,
+  UserRoleEditForm,
+} from './routes/userRoles/userRoleDrawer';
 import { WebsiteAnalytics } from './routes/website-settings/website-analytics';
 
 const isCompiled = (code: string) => /\$\[\d+\]/.test(code);
@@ -28,6 +34,10 @@ describe('the editor under test', () => {
     ['BypassQrDialog', BypassQrDialog],
     ['TagCreateForm', TagCreateForm],
     ['TagEditForm', TagEditForm],
+    ['UserRoleCreateForm', UserRoleCreateForm],
+    ['UserRoleEditForm', UserRoleEditForm],
+    ['UserRoleDrawer', UserRoleDrawer],
+    ['SystemRoleNotice', SystemRoleNotice],
     ['WebsiteAnalytics', WebsiteAnalytics],
   ])(
     'runs %s through the React Compiler like the production build',
