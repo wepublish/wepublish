@@ -65,6 +65,16 @@ describe('PersonalDataForm', () => {
     expect(field('user.email')).toBeDisabled();
   });
 
+  it('shows the translated password change warning', () => {
+    renderForm();
+
+    expect(
+      screen.getByText(
+        'Nur ausfüllen, wenn du das Passwort ändern möchtest. Ansonsten leer lassen.'
+      )
+    ).toBeInTheDocument();
+  });
+
   it('saves the changed data together with the new password', async () => {
     const { user: reader, onUpdate } = renderForm();
 
