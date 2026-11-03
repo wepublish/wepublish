@@ -16,6 +16,7 @@ import {
 } from './video.model';
 import { MediaAdapter } from '@wepublish/image/api';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Feature } from '@wepublish/features/api';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   CanCreateVideo,
@@ -27,6 +28,7 @@ import { VideoService } from './video.service';
 import { VideoUploadService } from './video-upload.service';
 import { PrismaClient } from '@prisma/client';
 
+@Feature('video-audio-uploads')
 @Resolver(() => Video)
 export class VideoResolver {
   constructor(

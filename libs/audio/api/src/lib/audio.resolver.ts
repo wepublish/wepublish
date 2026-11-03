@@ -16,6 +16,7 @@ import {
 } from './audio.model';
 import { MediaAdapter } from '@wepublish/image/api';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Feature } from '@wepublish/features/api';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   CanCreateAudio,
@@ -27,6 +28,7 @@ import { AudioService } from './audio.service';
 import { AudioUploadService } from './audio-upload.service';
 import { PrismaClient } from '@prisma/client';
 
+@Feature('video-audio-uploads')
 @Resolver(() => Audio)
 export class AudioResolver {
   constructor(
