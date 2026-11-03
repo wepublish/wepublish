@@ -25,6 +25,7 @@ export type SitemapSiteConfig = {
   lang?: string;
   mode?: 'single' | 'index';
   pageUrls?: string[];
+  sitemapPath?: string;
   homepageSlug?: string;
   newsMaxAgeDays?: number;
   maxArticles?: number;
@@ -52,6 +53,7 @@ const DEFAULTS = {
   lang: 'de',
   mode: 'single',
   pageUrls: [] as string[],
+  sitemapPath: SITEMAP_PATH,
   homepageSlug: '',
   newsMaxAgeDays: 2,
   maxArticles: 1000,
@@ -276,12 +278,14 @@ const periodsWithArticles = async (context: SitemapContext) => {
   return periods;
 };
 
-const renderIndex = async (context: SitemapContext) => {
+const renderIndex = async (config: Resolved, context: SitemapContext) => {
   const periods = await periodsWithArticles(context);
   const chunks = ['news', 'pages', ...periods.reverse().map(articleChunk)];
 
   return buildSitemapIndex(
-    chunks.map(chunk => ({ loc: `${context.siteUrl}${SITEMAP_PATH}/${chunk}` }))
+    chunks.map(chunk => ({
+      loc: `${context.siteUrl}${config.sitemapPath}/${chunk}`,
+    }))
   );
 };
 
@@ -294,7 +298,7 @@ export const renderSitemap = (
   const resolved = resolve(config);
 
   return resolved.mode === 'index' ?
-      renderIndex(context)
+      renderIndex(resolved, context)
     : renderSingle(resolved, context);
 };
 
