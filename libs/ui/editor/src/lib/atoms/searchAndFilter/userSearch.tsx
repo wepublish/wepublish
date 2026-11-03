@@ -1,23 +1,31 @@
 import { useQuery } from '@apollo/client/react';
-import { Autocomplete, Box, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  AutocompleteRenderInputParams,
+  Box,
+  TextField,
+} from '@mui/material';
 import { FullUserFragment, UserListDocument } from '@wepublish/editor/api';
 import { ReactNode, useMemo, useState } from 'react';
 
-export interface UserSearchProps {
-  user?: FullUserFragment | null;
+export type UserSearchValue = Pick<FullUserFragment, 'id' | 'name'> &
+  Partial<Pick<FullUserFragment, 'firstName' | 'email' | 'address'>>;
+
+export interface UserSearchProps<T extends UserSearchValue = FullUserFragment> {
+  user?: T | null;
   placeholder?: string;
   name: string;
   disableClearable?: boolean;
-  onUpdateUser(user: FullUserFragment | undefined | null): void;
+  disabled?: boolean;
+  readOnly?: boolean;
+  id?: string;
+  onUpdateUser(user: T | FullUserFragment | undefined | null): void;
   label?: ReactNode;
   'aria-labelledby'?: string;
+  renderInput?: (params: AutocompleteRenderInputParams) => ReactNode;
 }
 
-/**
- * UI helper to provide a meaningful user labeling.
- * @param user
- */
-function getUserLabel(user: FullUserFragment | null | undefined): string {
+function getUserLabel(user: UserSearchValue | null | undefined): string {
   if (!user) {
     return '';
   }
@@ -43,15 +51,19 @@ function getUserLabel(user: FullUserFragment | null | undefined): string {
   return userLabel;
 }
 
-export function UserSearch({
+export function UserSearch<T extends UserSearchValue = FullUserFragment>({
   user,
   placeholder,
   name,
   disableClearable,
+  disabled,
+  readOnly,
+  id,
   onUpdateUser,
   label,
   'aria-labelledby': ariaLabelledby,
-}: UserSearchProps) {
+  renderInput,
+}: UserSearchProps<T>) {
   const [userSearch, setUserSearch] = useState<string>('');
   const [open, setOpen] = useState(false);
 
@@ -70,9 +82,9 @@ export function UserSearch({
   });
 
   const users = useMemo(() => {
-    const found = (userData?.users?.nodes ?? []).filter(
-      usr => usr.id !== user?.id
-    );
+    const found: (T | FullUserFragment)[] = (
+      userData?.users?.nodes ?? []
+    ).filter(usr => usr.id !== user?.id);
 
     return user ? [...found, user] : found;
   }, [userData?.users?.nodes, user]);
@@ -92,8 +104,10 @@ export function UserSearch({
   );
 
   return (
-    <Box sx={{ marginBottom: 3 }}>
+    <Box sx={renderInput ? undefined : { marginBottom: 3 }}>
       <Autocomplete
+        id={id}
+        readOnly={readOnly}
         disableClearable={disableClearable}
         options={formData}
         filterOptions={options => options}
@@ -118,21 +132,24 @@ export function UserSearch({
           const userId = option?.value ?? null;
           setUser(userId);
         }}
-        disabled={!!error}
-        renderInput={params => (
-          <TextField
-            {...params}
-            label={label}
-            slotProps={{
-              ...params.slotProps,
-              htmlInput: {
-                ...params.slotProps.htmlInput,
-                'aria-labelledby': ariaLabelledby,
-              },
-            }}
-            placeholder={placeholder}
-          />
-        )}
+        disabled={disabled || !!error}
+        renderInput={
+          renderInput ??
+          (params => (
+            <TextField
+              {...params}
+              label={label}
+              slotProps={{
+                ...params.slotProps,
+                htmlInput: {
+                  ...params.slotProps.htmlInput,
+                  'aria-labelledby': ariaLabelledby,
+                },
+              }}
+              placeholder={placeholder}
+            />
+          ))
+        }
       />
     </Box>
   );

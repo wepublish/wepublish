@@ -1009,6 +1009,145 @@
       "network": "Pas de connexion au serveur. Vérifiez votre connexion Internet et réessayez.",
       "unexpected": "Une erreur est survenue. Réessayez – si le problème persiste, contactez le support."
     },
+    "form": {
+      "loading": "Chargement …",
+      "loadError": {
+        "title": "Les données n’ont pas pu être chargées",
+        "retry": "Réessayer"
+      },
+      "errorSummary": {
+        "title": "Veuillez corriger ces informations avant d’enregistrer"
+      },
+      "field": {
+        "moreInfo": "Plus d’informations"
+      },
+      "select": {
+        "empty": "Aucune sélection"
+      },
+      "password": {
+        "show": "Afficher le mot de passe",
+        "hide": "Masquer le mot de passe"
+      },
+      "array": {
+        "add": "Ajouter une entrée",
+        "remove": "Supprimer l’entrée {{position}}",
+        "moveUp": "Déplacer l’entrée {{position}} vers le haut",
+        "moveDown": "Déplacer l’entrée {{position}} vers le bas",
+        "empty": "Aucune entrée pour l’instant",
+        "actions": "Actions"
+      },
+      "union": {
+        "type": "Type"
+      },
+      "autocomplete": {
+        "noOptions": "Aucune option",
+        "clear": "Effacer",
+        "open": "Ouvrir la liste",
+        "close": "Fermer la liste",
+        "loading": "Chargement …"
+      },
+      "date": {
+        "today": "Aujourd’hui",
+        "tomorrow": "Demain",
+        "now": "Maintenant"
+      },
+      "color": {
+        "pick": "Choisir la couleur",
+        "invalid": "Veuillez entrer une couleur hexadécimale, par exemple #1a2b3c"
+      },
+      "secret": {
+        "show": "Afficher la valeur",
+        "hide": "Masquer la valeur"
+      },
+      "view": {
+        "readOnly": "Lecture seule",
+        "discard": "Annuler les modifications",
+        "discardChanges": {
+          "title": "Abandonner les modifications non enregistrées ?",
+          "body": "Vos modifications ne sont pas enregistrées et seront perdues.",
+          "keep": "Continuer l’édition",
+          "discard": "Abandonner"
+        },
+        "sectionErrors_one": "{{count}} erreur",
+        "sectionErrors_other": "{{count}} erreurs"
+      },
+      "value": {
+        "on": "Activé",
+        "off": "Désactivé",
+        "empty": "(vide)",
+        "changed": "modifié"
+      },
+      "units": {
+        "seconds": "secondes",
+        "seconds_one": "seconde",
+        "minutes": "minutes",
+        "minutes_one": "minute",
+        "days": "jours",
+        "days_one": "jour",
+        "milliseconds": "millisecondes",
+        "milliseconds_one": "milliseconde"
+      },
+      "errors": {
+        "required": "Ce champ est requis",
+        "invalid": "Cette valeur n’est pas valide",
+        "invalid_value": "Veuillez choisir l’une des options proposées",
+        "not_multiple_of": "Veuillez entrer un multiple de {{divisor}}",
+        "unexpected": "Le formulaire n’a pas pu être vérifié. Veuillez réessayer.",
+        "server": "L’enregistrement a échoué. Veuillez réessayer.",
+        "invalid_type": {
+          "string": "Veuillez entrer un texte",
+          "number": "Veuillez entrer un nombre",
+          "int": "Veuillez entrer un nombre entier",
+          "boolean": "Veuillez choisir oui ou non",
+          "date": "Veuillez entrer une date valide",
+          "array": "Veuillez entrer une liste de valeurs",
+          "object": "Ces informations sont incomplètes"
+        },
+        "invalid_format": {
+          "default": "Le format n’est pas valide",
+          "email": "Veuillez entrer une adresse e-mail valide",
+          "url": "Veuillez entrer une URL valide",
+          "regex": "Le format n’est pas valide",
+          "uuid": "Veuillez entrer un UUID valide"
+        },
+        "too_small": {
+          "string": {
+            "min": "Veuillez entrer au moins {{minimum}} caractères",
+            "exact": "Veuillez entrer exactement {{minimum}} caractères"
+          },
+          "array": {
+            "min": "Veuillez ajouter au moins {{minimum}} entrées",
+            "exact": "Veuillez ajouter exactement {{minimum}} entrées"
+          },
+          "number": {
+            "inclusive": "Veuillez entrer {{minimum}} ou plus",
+            "exclusive": "Veuillez entrer une valeur supérieure à {{minimum}}"
+          },
+          "date": {
+            "inclusive": "Veuillez choisir le {{minimum, P}} ou une date ultérieure",
+            "exclusive": "Veuillez choisir une date postérieure au {{minimum, P}}"
+          }
+        },
+        "too_big": {
+          "string": {
+            "max": "Veuillez entrer au maximum {{maximum}} caractères",
+            "exact": "Veuillez entrer exactement {{maximum}} caractères"
+          },
+          "array": {
+            "max": "Veuillez ajouter au maximum {{maximum}} entrées",
+            "exact": "Veuillez ajouter exactement {{maximum}} entrées"
+          },
+          "number": {
+            "inclusive": "Veuillez entrer {{maximum}} ou moins",
+            "exclusive": "Veuillez entrer une valeur inférieure à {{maximum}}"
+          },
+          "date": {
+            "inclusive": "Veuillez choisir le {{maximum, P}} ou une date antérieure",
+            "exclusive": "Veuillez choisir une date antérieure au {{maximum, P}}"
+          }
+        }
+      }
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Veuillez entrer une adresse e-mail valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",

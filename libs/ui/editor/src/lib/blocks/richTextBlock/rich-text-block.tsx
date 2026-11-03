@@ -10,6 +10,8 @@ export interface RichTextBlockProps extends Omit<
   'onChange'
 > {
   defaultValue?: RichTextBlockProps['value'];
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
   onChange(value: RichTextBlockValue['richText']): void;
   'aria-label'?: string;
   'aria-labelledby'?: string;
@@ -33,6 +35,8 @@ export const RichTextBlock = memo(function RichTextBlock({
       aria-labelledby={ariaLabelledBy}
       autofocus={!!autofocus}
       disabled={disabled}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
       value={value}
       onChange={({ json }) => onChange(json)}
     />
