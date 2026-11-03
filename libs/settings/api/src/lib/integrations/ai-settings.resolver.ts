@@ -1,4 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import type { SettingAIProvider as SettingRow } from '@prisma/client';
 import {
   CanCreateAISettings,
   CanGetAISettings,
@@ -14,7 +22,7 @@ import {
 import { AISettingsService } from './ai-settings.service';
 import { AISettingsDataloaderService } from './ai-settings-dataloader.service';
 
-@Resolver()
+@Resolver(() => SettingAIProvider)
 export class AISettingsResolver {
   constructor(
     private aiSettingsService: AISettingsService,
@@ -69,4 +77,11 @@ export class AISettingsResolver {
     return this.aiSettingsService.deleteAISetting(id);
   }
     **/
+
+  @ResolveField(() => Boolean, {
+    description: 'Whether an API key is stored. It is never returned itself.',
+  })
+  apiKeySet(@Parent() setting: SettingRow) {
+    return !!setting.apiKey;
+  }
 }

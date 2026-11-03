@@ -3362,6 +3362,7 @@
         "analytics": "Analytics",
         "invalidFile": "Google Analytics credentials file is invalid",
         "credentialsReadyToBeSaved": "Credentials are ready to be saved!",
+        "credentialsStored": "Credentials stored – drag and drop a new file here to replace them",
         "dropCredentialsFile": "Drop the credential file here!",
         "dragCredentialsFileHere": "Drag and drop the Google Analytics credential file here",
         "articlePrefix": "We.Publish article URL prefix (usually /a/)",

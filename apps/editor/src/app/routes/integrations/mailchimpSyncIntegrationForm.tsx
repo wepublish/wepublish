@@ -57,6 +57,7 @@ import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdExpandMore, MdSync } from 'react-icons/md';
 import { z } from 'zod';
+import { secretPlaceholder } from './secretPlaceholder';
 
 import { lazyMessage } from '../../utility';
 import mailChimpLogo from './assets/mailchimp.webp';
@@ -1079,7 +1080,10 @@ function SyncProviderSettingCard({
                       onChange={onChange}
                       type="password"
                       autoComplete="one-time-code"
-                      placeholder={t('integrations.placeholderSecret')}
+                      placeholder={secretPlaceholder(
+                        setting.mailchimp_apiKeySet,
+                        t
+                      )}
                       fullWidth
                       {...rest}
                     />

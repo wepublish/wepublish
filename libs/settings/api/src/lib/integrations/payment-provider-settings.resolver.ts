@@ -1,4 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import type { SettingPaymentProvider as SettingRow } from '@prisma/client';
 import {
   CanCreatePaymentProviderSettings,
   CanDeletePaymentProviderSettings,
@@ -15,7 +23,7 @@ import {
 import { PaymentProviderSettingsService } from './payment-provider-settings.service';
 import { PaymentProviderSettingsDataloaderService } from './payment-provider-settings-dataloader.service';
 
-@Resolver()
+@Resolver(() => SettingPaymentProvider)
 export class PaymentProviderSettingsResolver {
   constructor(
     private paymentProviderSettingsService: PaymentProviderSettingsService,
@@ -76,5 +84,19 @@ export class PaymentProviderSettingsResolver {
   })
   deletePaymentProviderSetting(@Args('id') id: string) {
     return this.paymentProviderSettingsService.deletePaymentProviderSetting(id);
+  }
+
+  @ResolveField(() => Boolean, {
+    description: 'Whether an API key is stored. It is never returned itself.',
+  })
+  apiKeySet(@Parent() setting: SettingRow) {
+    return !!setting.apiKey;
+  }
+
+  @ResolveField(() => Boolean, {
+    description: 'Whether a webhook signing secret is stored. It is never returned itself.',
+  })
+  webhookEndpointSecretSet(@Parent() setting: SettingRow) {
+    return !!setting.webhookEndpointSecret;
   }
 }

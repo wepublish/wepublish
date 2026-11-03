@@ -15,6 +15,7 @@ import { NamespaceResets } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { clearProviderConfig } from './clear-provider-config';
+import { encryptSecrets } from './encrypt-secrets';
 
 @Injectable()
 export class MailProviderSettingsService {
@@ -26,24 +27,12 @@ export class MailProviderSettingsService {
     private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
-  /**
-   * The form never shows a stored secret, so an empty one means "keep it":
-   * it is dropped rather than written over the stored value.
-   */
   private encryptSecretsIfPresent<
     T extends { apiKey?: string | null; webhookEndpointSecret?: string | null },
   >(data: T): T {
-    const result = { ...data };
-    for (const key of ['apiKey', 'webhookEndpointSecret'] as const) {
-      const value = data[key];
-
-      if (value === '') {
-        delete result[key];
-      } else if (typeof value === 'string') {
-        result[key] = this.crypto.encrypt(value) as T[typeof key];
-      }
-    }
-    return result;
+    return encryptSecrets(data, ['apiKey', 'webhookEndpointSecret'], value =>
+      this.crypto.encrypt(value)
+    );
   }
 
   @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')

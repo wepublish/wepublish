@@ -7672,6 +7672,8 @@ export type Setting = {
 
 export type SettingAiProvider = SettingProvider & {
   __typename: 'SettingAIProvider';
+  /** Whether an API key is stored. It is never returned itself. */
+  apiKeySet: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
@@ -7700,6 +7702,8 @@ export type SettingAnalyticsProvider = SettingProvider & {
   __typename: 'SettingAnalyticsProvider';
   articlePrefix?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  /** Whether service account credentials are stored. They are never returned. */
+  credentialsSet: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
   modifiedAt: Scalars['DateTime']['output'];
@@ -7721,6 +7725,8 @@ export type SettingChallengeProvider = SettingProvider & {
   lastLoadedAt: Scalars['DateTime']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
+  /** Whether a secret is stored. It is never returned itself. */
+  secretSet: Scalars['Boolean']['output'];
   type: ChallengeProviderType;
 };
 
@@ -7791,6 +7797,8 @@ export enum SettingName {
 
 export type SettingPaymentProvider = SettingProvider & {
   __typename: 'SettingPaymentProvider';
+  /** Whether an API key is stored. It is never returned itself. */
+  apiKeySet: Scalars['Boolean']['output'];
   bexio_accountId?: Maybe<Scalars['Float']['output']>;
   bexio_countryId?: Maybe<Scalars['Float']['output']>;
   bexio_invoiceMailBodyNewMembership?: Maybe<Scalars['String']['output']>;
@@ -7821,6 +7829,8 @@ export type SettingPaymentProvider = SettingProvider & {
   simulated_declineRenewals?: Maybe<Scalars['Boolean']['output']>;
   stripe_methods?: Maybe<Array<StripePaymentMethod>>;
   type: PaymentProviderType;
+  /** Whether a webhook signing secret is stored. It is never returned itself. */
+  webhookEndpointSecretSet: Scalars['Boolean']['output'];
 };
 
 export type SettingPaymentProviderFilter = {
@@ -7853,6 +7863,8 @@ export type SettingSyncProvider = SettingProvider & {
   lastLoadedAt: Scalars['DateTime']['output'];
   lastSyncAt?: Maybe<Scalars['DateTime']['output']>;
   lastSyncError?: Maybe<Scalars['String']['output']>;
+  /** Whether a Mailchimp API key is stored. It is never returned itself. */
+  mailchimp_apiKeySet: Scalars['Boolean']['output'];
   mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']['output']>>;
   mailchimp_extensions?: Maybe<Scalars['JSONObject']['output']>;
   mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
@@ -7886,6 +7898,8 @@ export type SettingTrackingPixelProvider = SettingProvider & {
   name?: Maybe<Scalars['String']['output']>;
   prolitteris_memberNr?: Maybe<Scalars['String']['output']>;
   prolitteris_onlyPaidContentAccess?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether a ProLitteris password is stored. It is never returned itself. */
+  prolitteris_passwordSet: Scalars['Boolean']['output'];
   prolitteris_publisherInternalKeyDomain?: Maybe<Scalars['String']['output']>;
   prolitteris_usePublisherInternalKey?: Maybe<Scalars['Boolean']['output']>;
   prolitteris_username?: Maybe<Scalars['String']['output']>;

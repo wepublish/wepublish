@@ -13,6 +13,7 @@ import { z } from 'zod';
 import proLitterisLogo from './assets/proLitteris.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { secretPlaceholder } from './secretPlaceholder';
 
 // The stored password is never sent to the editor and an empty one keeps it,
 // so only the fields the provider cannot work without are required.
@@ -125,6 +126,7 @@ export function TrackingPixelIntegrationForm() {
             info: t('integrations.trackingPixelSettings.prolitterisLoginInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
+            placeholder: secretPlaceholder(setting.prolitteris_passwordSet, t),
           });
           commonFields.push({
             name: 'prolitteris_onlyPaidContentAccess',

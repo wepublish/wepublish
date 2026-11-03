@@ -2,6 +2,7 @@ query SettingsIntegrationsAI {
   aiSettings {
     createdAt
     id
+    apiKeySet
     lastLoadedAt
     modifiedAt
     name
@@ -24,6 +25,7 @@ mutation UpdateSettingsIntegrationsAI(
   ) {
     createdAt
     id
+    apiKeySet
     lastLoadedAt
     modifiedAt
     name

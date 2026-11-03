@@ -1,4 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import type { SettingSyncProvider as SettingRow } from '@prisma/client';
 import {
   CanGetMailchimpSyncSettings,
   CanUpdateMailchimpSyncSettings,
@@ -13,7 +21,7 @@ import {
 import { SyncProviderSettingsService } from './sync-provider-settings.service';
 import { SyncProviderSettingsDataloaderService } from './sync-provider-settings-dataloader.service';
 
-@Resolver()
+@Resolver(() => SettingSyncProvider)
 export class SyncProviderSettingsResolver {
   constructor(
     private syncProviderSettingsService: SyncProviderSettingsService,
@@ -57,5 +65,12 @@ export class SyncProviderSettingsResolver {
   })
   updateSyncProviderSetting(@Args() input: UpdateSettingSyncProviderInput) {
     return this.syncProviderSettingsService.updateSyncProviderSetting(input);
+  }
+
+  @ResolveField(() => Boolean, {
+    description: 'Whether a Mailchimp API key is stored. It is never returned itself.',
+  })
+  mailchimp_apiKeySet(@Parent() setting: SettingRow) {
+    return !!setting.mailchimp_apiKey;
   }
 }

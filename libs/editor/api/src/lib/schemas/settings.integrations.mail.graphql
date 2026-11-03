@@ -58,6 +58,8 @@ mutation UpdateMailProviderSetting(
     createdAt
     fromAddress
     id
+    apiKeySet
+    webhookEndpointSecretSet
     lastLoadedAt
     mailchimp_baseURL
     mailgun_baseDomain

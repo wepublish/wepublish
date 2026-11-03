@@ -86,10 +86,26 @@ const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`
     `}
 `;
 
+/** Credentials never come back from the API; `stored` says whether some are. */
+export const credentialsDropzoneText = (
+  {
+    dragging,
+    newFile,
+    stored,
+  }: { dragging: boolean; newFile: boolean; stored: boolean },
+  t: (key: string) => string
+) =>
+  dragging ? t('integrations.analyticsSettings.dropCredentialsFile')
+  : newFile ? t('integrations.analyticsSettings.credentialsReadyToBeSaved')
+  : stored ? t('integrations.analyticsSettings.credentialsStored')
+  : t('integrations.analyticsSettings.dragCredentialsFileHere');
+
 const CustomDropzone = forwardRef<
   HTMLInputElement,
-  ComponentProps<CustomField<IntegrationFormValues['credentials']>['render']>
->(({ onChange, disabled, value }, ref) => {
+  ComponentProps<
+    CustomField<IntegrationFormValues['credentials']>['render']
+  > & { stored?: boolean }
+>(({ onChange, disabled, value, stored = false }, ref) => {
   const { t } = useTranslation();
 
   const onDrop = useCallback(
@@ -137,14 +153,24 @@ const CustomDropzone = forwardRef<
     >
       <input {...getInputProps()} />
 
-      {isDragActive ?
-        t('integrations.analyticsSettings.dropCredentialsFile')
-      : value ?
-        t('integrations.analyticsSettings.credentialsReadyToBeSaved')
-      : t('integrations.analyticsSettings.dragCredentialsFileHere')}
+      {credentialsDropzoneText(
+        { dragging: isDragActive, newFile: !!value, stored },
+        t
+      )}
     </CustomDropzoneWrapper>
   );
 });
+
+const StoredCredentialsDropzone = forwardRef<
+  HTMLInputElement,
+  ComponentProps<CustomField<IntegrationFormValues['credentials']>['render']>
+>((props, ref) => (
+  <CustomDropzone
+    {...props}
+    ref={ref}
+    stored
+  />
+));
 
 export function AnalyticsIntegrationForm() {
   const { t } = useTranslation();
@@ -162,7 +188,7 @@ export function AnalyticsIntegrationForm() {
         createMutation: CreateAnalyticsProviderSettingDocument,
       }}
       getLogo={() => googleLogo}
-      fields={[
+      fields={setting => [
         {
           name: 'articlePrefix',
           label: t('integrations.analyticsSettings.articlePrefix'),
@@ -182,7 +208,8 @@ export function AnalyticsIntegrationForm() {
           label: t('integrations.analyticsSettings.credentials'),
           info: t('integrations.analyticsSettings.credentialsInfo'),
           type: 'custom',
-          render: CustomDropzone,
+          render:
+            setting.credentialsSet ? StoredCredentialsDropzone : CustomDropzone,
         },
       ]}
     />
