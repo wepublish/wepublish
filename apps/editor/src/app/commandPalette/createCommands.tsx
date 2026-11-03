@@ -11,6 +11,7 @@ import {
   CanCreateAudio,
   CanCreateDocument,
   CanCreateEvent,
+  CanCreateExternalApp,
   CanCreateGoodie,
   CanCreateImage,
   CanCreateMailTemplates,
@@ -43,6 +44,7 @@ import {
   MdAudiotrack,
   MdDescription,
   MdEvent,
+  MdExtension,
   MdFactCheck,
   MdGroup,
   MdKey,
@@ -294,5 +296,12 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdKey />,
     permissions: [CanCreateApiToken.id],
     perform: ({ navigate }) => navigate('/api-tokens/generate'),
+  },
+  {
+    id: 'createApp',
+    titleKey: 'commandPalette.create.app',
+    icon: <MdExtension />,
+    permissions: [CanCreateExternalApp.id],
+    perform: ({ navigate }) => navigate('/dashboard/apps/create'),
   },
 ];

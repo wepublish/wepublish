@@ -250,6 +250,22 @@ function AppRoutes() {
           }
         />
         <Route
+          path="dashboard/apps/create"
+          element={
+            <Base>
+              <ExternalApps />
+            </Base>
+          }
+        />
+        <Route
+          path="dashboard/apps/edit/:id"
+          element={
+            <Base>
+              <ExternalApps />
+            </Base>
+          }
+        />
+        <Route
           path="external-app/:id"
           element={
             <Base>

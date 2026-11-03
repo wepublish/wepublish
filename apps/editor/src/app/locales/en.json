@@ -1991,6 +1991,8 @@
       "auditLog": "Audit log",
       "apps": "Apps",
       "externalApp": "App",
+      "appCreate": "New app",
+      "appEdit": "Edit app",
       "articles": "Articles",
       "articleCreate": "New article",
       "articleEdit": "Edit article",
@@ -4083,34 +4085,30 @@
       },
       "apps": "Apps",
       "noAppsFound": "No external apps configured.",
+      "createNew": "New app",
       "notFound": "External app not found",
       "appsInfo": "Shortcuts to external tools that appear on the dashboard under «We.Publish Apps». «Target» decides whether an app opens in a new browser tab or inside the editor. Some websites can't be shown inside the editor – open those in a new tab."
     },
     "externalAppForm": {
       "apiKey": "API key",
       "apiKeyOption": "{{name}} ({{prefix}}…)",
-      "noApiKey": "No API key",
       "apiKeyHelp": "The API key the app reads the We.Publish API with. The editor then shows when it expires or has been revoked. The key itself is stored in the app.",
       "apiKeyDetails": "{{prefix}}… · {{scopes}} permissions · expires on {{expiresAt, PP}}",
-      "create": "Create",
-      "update": "Update",
       "delete": "Delete",
       "name": "Name",
       "description": "Description",
       "url": "URL",
       "target": "Target",
-      "successUpdate": "External app updated successfully",
-      "errorUpdate": "Failed to update external app",
-      "successCreate": "External app created successfully",
-      "errorCreate": "Failed to create external app",
       "successDelete": "External app deleted successfully",
-      "errorDelete": "Failed to delete external app",
       "deleteConfirmationTitle": "Delete External App",
       "deleteConfirmationText": "Are you sure you want to delete this external app? This action cannot be undone.",
-      "icon": "Icon URL",
-      "targetBlank": "New browser tab",
-      "targetIframe": "Inside the editor",
-      "selectIcon": "Select icon"
+      "icon": "Icon",
+      "targets": {
+        "BLANK": "New browser tab",
+        "IFRAME": "Inside the editor"
+      },
+      "createTitle": "Create app",
+      "editTitle": "Edit app"
     },
     "networkContentDashboard": {
       "errorLoading": "Failed to load network articles.",
@@ -4994,7 +4992,8 @@
         "peer": "Create peer",
         "userRole": "Create user role",
         "token": "Generate token",
-        "apiToken": "Generate API key"
+        "apiToken": "Generate API key",
+        "app": "Create app"
       },
       "trigger": "Search or jump to…",
       "keys": {

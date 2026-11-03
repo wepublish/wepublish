@@ -11,6 +11,8 @@ export const PAGE_TITLES: Record<string, string> = {
   '/notifications': 'pageTitles.notifications',
   '/audit-log': 'pageTitles.auditLog',
   '/dashboard/apps': 'pageTitles.apps',
+  '/dashboard/apps/create': 'pageTitles.appCreate',
+  '/dashboard/apps/edit/:id': 'pageTitles.appEdit',
   '/external-app/:id': 'pageTitles.externalApp',
   '/articles': 'pageTitles.articles',
   '/articles/create': 'pageTitles.articleCreate',
