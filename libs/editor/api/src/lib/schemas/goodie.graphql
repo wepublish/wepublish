@@ -8,6 +8,7 @@ fragment FullGoodie on Goodie {
   stock
   availableStock
   active
+  paymentPeriodicities
 
   imageID
   image {
@@ -63,6 +64,7 @@ mutation CreateGoodie(
   $stock: Int
   $active: Boolean!
   $imageID: String
+  $paymentPeriodicities: [PaymentPeriodicity!]
   $memberPlanIDs: [String!]!
 ) {
   createGoodie(
@@ -71,6 +73,7 @@ mutation CreateGoodie(
     stock: $stock
     active: $active
     imageID: $imageID
+    paymentPeriodicities: $paymentPeriodicities
     memberPlanIDs: $memberPlanIDs
   ) {
     ...FullGoodie
@@ -84,6 +87,7 @@ mutation UpdateGoodie(
   $stock: Int
   $active: Boolean
   $imageID: String
+  $paymentPeriodicities: [PaymentPeriodicity!]
   $memberPlanIDs: [String!]
 ) {
   updateGoodie(
@@ -93,6 +97,7 @@ mutation UpdateGoodie(
     stock: $stock
     active: $active
     imageID: $imageID
+    paymentPeriodicities: $paymentPeriodicities
     memberPlanIDs: $memberPlanIDs
   ) {
     ...FullGoodie
