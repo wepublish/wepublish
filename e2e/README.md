@@ -116,7 +116,8 @@ skip reason in the report (`pnpm run e2e:report`).
 
 What stays behind on purpose:
 
-- the `mitmachen` subscribe page and the `LOGIN_LINK` system-mail template,
+- the `mitmachen` subscribe page, the `e2e-rabattcode` subscribe page (with
+  the discount code field) and the `LOGIN_LINK` system-mail template,
   created once when a freshly seeded stack lacks them;
 - invoices (and their payment / subscription period) of e2e readers who
   paid: the API cannot delete subscription periods, which block invoice

@@ -75,7 +75,14 @@ export type MemberPlan = {
   paymentMethods: { id: string; slug: string; name: string }[];
 };
 
-export type Entity = Reader | Article | Paywall;
+export type DiscountCode = {
+  kind: 'discountCode';
+  id: string;
+  /** What the reader types; unique per run, the alias is only the Gherkin name. */
+  code: string;
+};
+
+export type Entity = Reader | Article | Paywall | DiscountCode;
 
 type Cleanup = { label: string; run: () => Promise<unknown> };
 
@@ -401,6 +408,94 @@ export class TestData {
     return createSubscription;
   }
 
+  async createDiscountCode({
+    alias,
+    memberPlanSlug,
+    discountPercent,
+    minReferrals,
+  }: {
+    alias?: string;
+    memberPlanSlug: string;
+    discountPercent: number;
+    minReferrals?: number;
+  }) {
+    const api = await this.api();
+    const plan = await this.memberPlan(memberPlanSlug);
+    // stored lowercased by the API
+    const code = this.runId();
+
+    const { createDiscountCode } = await api.gql<{
+      createDiscountCode: { id: string };
+    }>(
+      `mutation CreateDiscountCode($code: String!, $discountPercent: Int!, $memberPlanId: String!, $validFrom: DateTime!, $validTo: DateTime!, $minReferrals: Int) {
+        createDiscountCode(code: $code, discountPercent: $discountPercent, memberPlanId: $memberPlanId,
+          validFrom: $validFrom, validTo: $validTo, minReferrals: $minReferrals) { id }
+      }`,
+      {
+        code,
+        discountPercent,
+        memberPlanId: plan.id,
+        validFrom: new Date(Date.now() - 86_400_000).toISOString(),
+        validTo: new Date(Date.now() + 86_400_000).toISOString(),
+        minReferrals,
+      }
+    );
+
+    this.onCleanup(`discount code ${code}`, () =>
+      api.gql(`mutation { deleteDiscountCode(id: "${createDiscountCode.id}") { id } }`)
+    );
+
+    return this.remember(alias, {
+      kind: 'discountCode',
+      id: createDiscountCode.id,
+      code,
+    } satisfies DiscountCode);
+  }
+
+  /**
+   * A new reader with a paid subscription that `referrer` referred. Imported,
+   * because only imports take `paidUntil`, and only paid referrals count.
+   */
+  async createPaidReferral({
+    referrer,
+    memberPlanSlug,
+    paymentMethodSlug = 'simulated',
+  }: {
+    referrer: Reader;
+    memberPlanSlug: string;
+    paymentMethodSlug?: string;
+  }) {
+    const api = await this.api();
+    const reader = await this.createUser();
+    const plan = await this.memberPlan(memberPlanSlug);
+    const paymentMethod = plan.paymentMethods.find(
+      ({ slug }) => slug === paymentMethodSlug
+    );
+
+    if (!paymentMethod) {
+      throw new Error(`Plan "${memberPlanSlug}" does not offer "${paymentMethodSlug}".`);
+    }
+
+    await api.gql(
+      `mutation ImportSubscription($userID: String!, $memberPlanID: String!, $paymentMethodID: String!, $startsAt: DateTime!, $paidUntil: DateTime, $referredByID: String) {
+        importSubscription(userID: $userID, memberPlanID: $memberPlanID, paymentMethodID: $paymentMethodID,
+          startsAt: $startsAt, paidUntil: $paidUntil, monthlyAmount: 1000, paymentPeriodicity: yearly,
+          autoRenew: true, extendable: true, properties: [], skipMail: true, referredByID: $referredByID) { id }
+      }`,
+      {
+        userID: reader.id,
+        memberPlanID: plan.id,
+        paymentMethodID: paymentMethod.id,
+        startsAt: new Date(Date.now() - 86_400_000).toISOString(),
+        paidUntil: new Date(Date.now() + 365 * 86_400_000).toISOString(),
+        referredByID: referrer.id,
+      }
+    );
+
+    // The subscription goes with the reader (deleteUser).
+    return reader;
+  }
+
   /**
    * Real tenants assign a template to every system mail; a freshly seeded
    * stack has the templates (`seed-*`) but leaves them unassigned. Assigns
@@ -429,7 +524,10 @@ export class TestData {
    * tenants have it; a freshly seeded stack does not, so it is created once and
    * kept, like seed data (removing it would break scenarios running in parallel).
    */
-  async ensureSubscribePage(slug = 'mitmachen') {
+  async ensureSubscribePage(
+    slug = 'mitmachen',
+    { showDiscountCodes = false }: { showDiscountCodes?: boolean } = {}
+  ) {
     const api = await this.api();
     const exists = await api
       .gql(`query Page($slug: String) { page(slug: $slug) { id } }`, { slug })
@@ -442,11 +540,11 @@ export class TestData {
 
     try {
       const { createPage } = await api.gql<{ createPage: { id: string } }>(
-        `mutation CreatePage($slug: String) {
+        `mutation CreatePage($slug: String, $showDiscountCodes: Boolean!) {
           createPage(slug: $slug, title: "Mitmachen", hidden: false, properties: [], tagIds: [],
-            blocks: [{ subscribe: { memberPlanRenderSettings: [] } }]) { id }
+            blocks: [{ subscribe: { memberPlanRenderSettings: [], showDiscountCodes: $showDiscountCodes } }]) { id }
         }`,
-        { slug }
+        { slug, showDiscountCodes }
       );
       await api.gql(
         `mutation PublishPage($id: String!, $publishedAt: DateTime!) {
