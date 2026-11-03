@@ -51,4 +51,5 @@ export const unselectPassword: Record<
   totpEnabled: true,
   totpExempt: true,
   properties: true,
+  referralCode: true,
 } as const;

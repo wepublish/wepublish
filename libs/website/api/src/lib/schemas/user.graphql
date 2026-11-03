@@ -68,6 +68,14 @@ query Me {
   }
 }
 
+# Separate from Me: the code is created on first read, only readers who look at it get one.
+query ReferralCode {
+  me {
+    id
+    referralCode
+  }
+}
+
 query CheckLoginOtp($email: String!) {
   checkLoginOtp(email: $email)
 }

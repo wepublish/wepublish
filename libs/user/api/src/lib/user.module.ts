@@ -30,6 +30,7 @@ import { UserResolver } from './user.resolver';
 import { HibpService } from './hibp.service';
 import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
 import { UserSubscriptionOverviewDataloader } from './user-subscription-overview.dataloader';
+import { ReferralCodeService } from './referral/referral-code.service';
 
 @Module({
   imports: [
@@ -62,7 +63,13 @@ import { UserSubscriptionOverviewDataloader } from './user-subscription-overview
     UserRoleService,
     UserRoleDataloader,
     UserResolver,
+    ReferralCodeService,
   ],
-  exports: [UserDataloaderService, UserRoleDataloader, UserService],
+  exports: [
+    UserDataloaderService,
+    UserRoleDataloader,
+    UserService,
+    ReferralCodeService,
+  ],
 })
 export class UserModule {}

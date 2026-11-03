@@ -51,6 +51,12 @@ export class CreateSubscriptionArgs {
   @Field({ nullable: true })
   discountCode?: string;
 
+  @Field({
+    nullable: true,
+    description: 'Referral code of the reader who referred the subscriber.',
+  })
+  referrer?: string;
+
   @Field({ nullable: true })
   memberPlanID?: string;
 

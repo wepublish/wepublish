@@ -3775,6 +3775,7 @@ export type MutationCreateUserSubscriptionArgs = {
   paymentMethodID?: InputMaybe<Scalars['String']['input']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']['input']>;
   paymentPeriodicity: PaymentPeriodicity;
+  referrer?: InputMaybe<Scalars['String']['input']>;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   successURL?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3790,6 +3791,7 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   paymentMethodID?: InputMaybe<Scalars['String']['input']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']['input']>;
   paymentPeriodicity: PaymentPeriodicity;
+  referrer?: InputMaybe<Scalars['String']['input']>;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   userId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -7185,6 +7187,8 @@ export type SensitiveDataUser = BaseUser & {
   pendingEmail?: Maybe<Scalars['String']['output']>;
   permissions: Array<Scalars['String']['output']>;
   properties: Array<Property>;
+  /** The code for the referral link of the current user, created on first use. Null for other users. */
+  referralCode?: Maybe<Scalars['String']['output']>;
   roleIDs: Array<Scalars['String']['output']>;
   roles: Array<UserRole>;
   subscriptionCount: Scalars['Int']['output'];

@@ -1307,6 +1307,8 @@ model User {
   comments                  Comment[]
   sessions                  Session[]
   subscriptions             Subscription[]
+  /// Short code readers share in their referral link, created on first use.
+  referralCode              String?                   @unique
   referredSubscriptions     Subscription[]            @relation("SubscriptionReferrals")
   commentRatings            CommentRating[]
   pollVotes                 PollVote[]

@@ -204,6 +204,7 @@ mutation Subscribe(
   $deactivateSubscriptionId: String
   $discountCode: String
   $goodieId: String
+  $referrer: String
 ) {
   createUserSubscription(
     memberPlanID: $memberPlanId
@@ -219,6 +220,7 @@ mutation Subscribe(
     deactivateSubscriptionId: $deactivateSubscriptionId
     discountCode: $discountCode
     goodieId: $goodieId
+    referrer: $referrer
   ) {
     ...FullPayment
   }
@@ -236,6 +238,7 @@ mutation Resubscribe(
   $subscriptionProperties: [PropertyInput!]
   $discountCode: String
   $goodieId: String
+  $referrer: String
 ) {
   createUserSubscriptionWithConfirmation(
     userId: $userId
@@ -249,6 +252,7 @@ mutation Resubscribe(
     subscriptionProperties: $subscriptionProperties
     discountCode: $discountCode
     goodieId: $goodieId
+    referrer: $referrer
   )
 }
 

@@ -33,6 +33,7 @@ import {
   logger,
 } from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
+import { ReferralCodeService } from '@wepublish/user/api';
 import {
   calculateAmountForPeriodicity,
   GoodieService,
@@ -56,7 +57,8 @@ export class UserSubscriptionService {
     private memberContext: MemberContextService,
     private discountCodeservice: DiscountCodeService,
     private goodieService: GoodieService,
-    private subscriptionService: SubscriptionService
+    private subscriptionService: SubscriptionService,
+    private referralCodeService: ReferralCodeService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
@@ -69,10 +71,11 @@ export class UserSubscriptionService {
 
   async createSubscription(
     userId: string,
-    { discountCode, ...args }: CreateSubscriptionArgs
+    { discountCode, referrer, ...args }: CreateSubscriptionArgs
   ) {
     const { memberPlan, paymentMethod } =
       await this.validateSubscriptionInput(args);
+    const referredByID = await this.resolveReferrer(referrer);
 
     let discount: number | undefined = undefined;
     let discountCodeId: string | undefined = undefined;
@@ -150,6 +153,7 @@ export class UserSubscriptionService {
         discount,
         discountCodeId,
         goodieId,
+        referredByID,
       });
 
     if (!invoice) {
@@ -185,6 +189,7 @@ export class UserSubscriptionService {
     try {
       const { memberPlan, paymentMethod } =
         await this.validateSubscriptionInput(args);
+      const referredByID = await this.resolveReferrer(args.referrer);
 
       const {
         autoRenew,
@@ -216,6 +221,7 @@ export class UserSubscriptionService {
           startsAt: undefined,
           needsConfirmation: true,
           goodieId,
+          referredByID,
         });
 
       if (!invoice) {
@@ -571,6 +577,24 @@ export class UserSubscriptionService {
     }
 
     return this.subscriptionService.reactivateSubscription(subscriptionId);
+  }
+
+  /**
+   * The user a referral code belongs to. No code means no referrer, an unknown one is refused.
+   */
+  private async resolveReferrer(referrer?: string | null) {
+    if (!referrer?.trim()) {
+      return undefined;
+    }
+
+    const referredByID =
+      await this.referralCodeService.findReferrerId(referrer);
+
+    if (!referredByID) {
+      throw new BadRequestException('Referrer not found.');
+    }
+
+    return referredByID;
   }
 
   private async validateSubscriptionInput({

@@ -9,6 +9,7 @@ import {
   SubscriptionService,
 } from '@wepublish/membership/api';
 import { PaymentsService } from '@wepublish/payment/api';
+import { ReferralCodeService } from '@wepublish/user/api';
 import {
   MemberPlanDataloader,
   MemberPlanService,
@@ -52,6 +53,10 @@ describe('UserSubscriptionService', () => {
 
   let subscriptionServiceMock: {
     reactivateSubscription: Mock;
+  };
+
+  let referralCodeServiceMock: {
+    findReferrerId: Mock;
   };
 
   beforeAll(() => {
@@ -117,6 +122,10 @@ describe('UserSubscriptionService', () => {
       reactivateSubscription: vi.fn(),
     };
 
+    referralCodeServiceMock = {
+      findReferrerId: vi.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserSubscriptionService,
@@ -138,6 +147,7 @@ describe('UserSubscriptionService', () => {
         },
         { provide: PrismaClient, useValue: prismaMock },
         { provide: SubscriptionService, useValue: subscriptionServiceMock },
+        { provide: ReferralCodeService, useValue: referralCodeServiceMock },
       ],
     }).compile();
 
@@ -239,6 +249,45 @@ describe('UserSubscriptionService', () => {
             discountCodeId: 'discountCodeId',
           })
         );
+      });
+    });
+
+    describe('referrer', () => {
+      it('stores the reader whose referral code was given', async () => {
+        referralCodeServiceMock.findReferrerId.mockResolvedValue('referrer-1');
+
+        await service.createSubscription('userId', {
+          ...baseArgs,
+          referrer: 'K7QX2M9P',
+        });
+
+        expect(referralCodeServiceMock.findReferrerId).toHaveBeenCalledWith(
+          'K7QX2M9P'
+        );
+        expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
+          expect.objectContaining({ referredByID: 'referrer-1' })
+        );
+      });
+
+      it('subscribes without a referrer when none was given', async () => {
+        await service.createSubscription('userId', baseArgs);
+
+        expect(referralCodeServiceMock.findReferrerId).not.toHaveBeenCalled();
+        expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
+          expect.objectContaining({ referredByID: undefined })
+        );
+      });
+
+      it('refuses an unknown referral code', async () => {
+        referralCodeServiceMock.findReferrerId.mockResolvedValue(null);
+
+        await expect(
+          service.createSubscription('userId', {
+            ...baseArgs,
+            referrer: 'NOPE2345',
+          })
+        ).rejects.toThrow('Referrer not found.');
+        expect(memberContextMock.createSubscription).not.toHaveBeenCalled();
       });
     });
 

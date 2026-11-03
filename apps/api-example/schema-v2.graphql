@@ -3001,12 +3001,44 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, discountCode: String, failureURL: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
+  createUserSubscription(
+    autoRenew: Boolean!
+    deactivateSubscriptionId: String
+    discountCode: String
+    failureURL: String
+    goodieId: String
+    memberPlanID: String
+    memberPlanSlug: Slug
+    monthlyAmount: Float!
+    paymentMethodID: String
+    paymentMethodSlug: Slug
+    paymentPeriodicity: PaymentPeriodicity!
+
+    """Referral code of the reader who referred the subscriber."""
+    referrer: String
+    subscriptionProperties: [PropertyInput!]
+    successURL: String
+  ): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, discountCode: String, goodieId: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Float!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
+  createUserSubscriptionWithConfirmation(
+    autoRenew: Boolean!
+    discountCode: String
+    goodieId: String
+    memberPlanID: String
+    memberPlanSlug: Slug
+    monthlyAmount: Float!
+    paymentMethodID: String
+    paymentMethodSlug: Slug
+    paymentPeriodicity: PaymentPeriodicity!
+
+    """Referral code of the reader who referred the subscriber."""
+    referrer: String
+    subscriptionProperties: [PropertyInput!]
+    userId: String
+  ): Boolean!
 
   """Deletes all sync errors for a config so all contacts will be retried."""
   deleteAllMailchimpSyncErrors(configId: String!): Boolean!
@@ -5226,6 +5258,11 @@ type SensitiveDataUser implements BaseUser {
   pendingEmail: String
   permissions: [String!]!
   properties: [Property!]!
+
+  """
+  The code for the referral link of the current user, created on first use. Null for other users.
+  """
+  referralCode: String
   roleIDs: [String!]!
   roles: [UserRole!]!
   subscriptionCount: Int!

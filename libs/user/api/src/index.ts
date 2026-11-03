@@ -6,3 +6,4 @@ export * from './lib/user-dataloader.service';
 export * from './lib/user.module';
 export * from './lib/user.service';
 export * from './lib/hibp.service';
+export * from './lib/referral/referral-code.service';
