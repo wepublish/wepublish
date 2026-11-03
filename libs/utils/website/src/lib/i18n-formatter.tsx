@@ -1,4 +1,9 @@
-import i18next, { i18n, Resource } from 'i18next';
+import i18next, {
+  i18n,
+  PostProcessorModule,
+  Resource,
+  TFunctionDetailedResult,
+} from 'i18next';
 
 import LanguageDetector from 'i18next-browser-languagedetector';
 import ICU from 'i18next-icu';
@@ -16,6 +21,37 @@ const translations: Resource = {
 
 const reportedMissingKeys = new Set<string>();
 
+function captureMissingTranslation(
+  language: string,
+  namespace: string,
+  key: string,
+  fallbackLanguage?: string
+) {
+  const id = `${language}:${namespace}:${key}`;
+
+  if (reportedMissingKeys.has(id)) {
+    return;
+  }
+
+  reportedMissingKeys.add(id);
+
+  void import('@sentry/core')
+    .then(Sentry =>
+      Sentry.captureMessage(`Missing translation "${key}"`, {
+        level: 'error',
+        tags: {
+          'i18n.language': language,
+          'i18n.namespace': namespace,
+          ...(fallbackLanguage && {
+            'i18n.fallbackLanguage': fallbackLanguage,
+          }),
+        },
+        extra: { key },
+      })
+    )
+    .catch(() => undefined);
+}
+
 function reportMissingTranslation(
   languages: readonly string[],
   namespace: string,
@@ -26,31 +62,49 @@ function reportMissingTranslation(
   }
 
   for (const language of languages) {
-    const id = `${language}:${namespace}:${key}`;
-
-    if (reportedMissingKeys.has(id)) {
-      continue;
-    }
-
-    reportedMissingKeys.add(id);
-
-    void import('@sentry/core')
-      .then(Sentry =>
-        Sentry.captureMessage(`Missing translation "${key}"`, {
-          level: 'error',
-          tags: { 'i18n.language': language, 'i18n.namespace': namespace },
-          extra: { key },
-        })
-      )
-      .catch(() => undefined);
+    captureMissingTranslation(language, namespace, key);
   }
 }
+
+const reportFallbackTranslation: PostProcessorModule = {
+  type: 'postProcessor',
+  name: 'reportFallbackTranslation',
+  process(value, key, options, translator) {
+    const resolved = options.i18nResolved as
+      Partial<TFunctionDetailedResult<unknown>> | undefined;
+
+    if (
+      !resolved?.res ||
+      !resolved.usedLng ||
+      !resolved.usedNS ||
+      !resolved.usedKey
+    ) {
+      return value;
+    }
+
+    const [language] = translator.languageUtils.toResolveHierarchy(
+      options.lng || translator.language
+    );
+
+    if (language && resolved.usedLng !== language) {
+      captureMissingTranslation(
+        language,
+        resolved.usedNS,
+        resolved.usedKey,
+        resolved.usedLng
+      );
+    }
+
+    return value;
+  },
+};
 
 export function initWePublishTranslator(overrides: object = {}) {
   i18next
     .use(ICU)
     .use(LanguageDetector)
     .use(initReactI18next)
+    .use(reportFallbackTranslation)
     .use(
       resourcesToBackend((locale: string) =>
         mergeDeepRight(translations[locale], overrides)
@@ -67,6 +121,8 @@ export function initWePublishTranslator(overrides: object = {}) {
       saveMissing: true,
       saveMissingTo: 'current',
       missingKeyHandler: reportMissingTranslation,
+      postProcess: [reportFallbackTranslation.name],
+      postProcessPassResolved: true,
       resources: map(pick(['zod']), translations) as Resource,
     });
 

@@ -143,9 +143,37 @@ describe('missing translations', () => {
     expect(captureMessage).not.toHaveBeenCalled();
   });
 
-  it('should not report keys found in the fallback language', async () => {
+  it('should report keys that only resolve through the fallback language', async () => {
     await i18n.changeLanguage('fr');
     i18n.t('paymentMethod', { paymentMethod: 'bexio' });
+
+    await vi.waitFor(() =>
+      expect(captureMessage).toHaveBeenCalledWith(
+        'Missing translation "paymentMethod"',
+        {
+          level: 'error',
+          tags: {
+            'i18n.language': 'fr',
+            'i18n.namespace': 'translation',
+            'i18n.fallbackLanguage': 'de',
+          },
+          extra: { key: 'paymentMethod' },
+        }
+      )
+    );
+  });
+
+  it('should not report keys the current language has', async () => {
+    await i18n.changeLanguage('fr');
+    i18n.t('lang');
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(captureMessage).not.toHaveBeenCalled();
+  });
+
+  it('should not report fallbacks for an unsupported language', async () => {
+    await i18n.changeLanguage('es');
+    i18n.t('cancel', { type: 'Subscription' });
 
     await new Promise(resolve => setTimeout(resolve, 0));
     expect(captureMessage).not.toHaveBeenCalled();
