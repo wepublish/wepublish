@@ -217,7 +217,7 @@ code stores an empty or blank name as null, never as `""`.
 | `Invoice.userID` | `SetNull` | Same reasoning for the order. The buyer's ownership checks then fail, which is correct for a deleted user. |
 | `GiftCode.createdByUserId` | `SetNull` | Deleting the admin keeps the codes they created. |
 | `GiftCode.redeemedByUserId` | `SetNull` | Who used the code. |
-| `GiftCode.redeemedSubscriptionId` | `SetNull`, indexed, not unique | The subscription the code paid or will start. Several codes can pay invoices of the same subscription over the years ([D36](decisions.md#d36-gift-codes-pay-open-subscription-invoices)). |
+| `GiftCode.redeemedSubscriptionId` | `SetNull`, indexed, not unique | The subscription the code paid, extended or started. Several codes can pay invoices of the same subscription over the years ([D38](decisions.md#d38-one-redeem-endpoint)). |
 | `GiftCode.redeemedInvoiceId` | `@unique`, `SetNull` | The subscription invoice the code paid. Unique, so two codes cannot pay the same invoice. |
 
 ## CHECK constraints
@@ -299,27 +299,29 @@ matches the code exactly.
 Codes are stored in plain text, so database dumps and logs that include this
 table are sensitive.
 
-## What redemption will use
+## Redemption
 
-Paying an open subscription invoice with a code already exists and claims the
-code the same way, with `memberPlanId` and `periodicity` added to the `where`
-and `redeemedSubscriptionId` and `redeemedInvoiceId` to the data
-([D36](decisions.md#d36-gift-codes-pay-open-subscription-invoices)).
-Redemption into a new subscription is a later step, and needs no migration:
+`redeemGiftCode` ([D38](decisions.md#d38-one-redeem-endpoint)) needed no
+migration. It claims the code with
+`giftCode.updateMany({where: {id, issuedAt: {not: null}, canceledAt: null, redeemedAt: null, OR: [{expiresAt: null}, {expiresAt: {gt: now}}]}, data: {redeemedAt, redeemedByUserId, redeemedSubscriptionId, redeemedInvoiceId}})`,
+whichever of its three actions it takes:
 
-- It claims the code with
-  `giftCode.updateMany({where: {code, issuedAt: {not: null}, canceledAt: null, redeemedAt: null, OR: [{expiresAt: null}, {expiresAt: {gt: now}}]}, data: {redeemedAt, redeemedByUserId}})`.
-- It creates the subscription from the snapshotted `memberPlanId` and
-  `periodicity`, with `autoRenew` false and a CHF 0 subscription invoice
-  marked paid without a provider, then sets `redeemedSubscriptionId`.
-- `gift-codes_redeemed_requires_issued_check` already makes redeeming a code
-  that was never issued impossible at the database level. A code issued
-  before payment counts as issued, so it can be redeemed while unpaid
+- `paidInvoice`: the subscription that already existed and its open invoice.
+- `extendedSubscription`: that subscription and the next period's invoice
+  created for the code.
+- `createdSubscription`: the new subscription and its first invoice.
+
+So `redeemedSubscriptionId` and `redeemedInvoiceId` are always set together
+on a redeemed code, and the editor list can link every redeemed code to the
+invoice it paid.
+
+- `gift-codes_redeemed_requires_issued_check` makes redeeming a code that was
+  never issued impossible at the database level. A code issued before
+  payment counts as issued, so it can be redeemed while unpaid
   ([D27](decisions.md#d27-codes-can-be-issued-before-payment-per-offer)).
-- A chargeback after redemption will also deactivate `redeemedSubscriptionId`
-  with `SubscriptionDeactivationReason.chargeback`. Today
-  `cancelForInvoiceItem` only logs a warning when the code is already
-  redeemed.
+- A chargeback of the gift purchase after redemption cancels the code
+  (`cancelForInvoiceItem` logs a warning for a redeemed code). The invoice
+  it paid stays paid, and the subscription is not deactivated.
 
 ## Seed
 

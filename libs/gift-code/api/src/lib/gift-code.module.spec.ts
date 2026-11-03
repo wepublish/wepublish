@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { PrismaClient, SellableKind } from '@prisma/client';
 import { FeaturesService } from '@wepublish/features/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
+import { MemberContextModule } from '@wepublish/membership/api';
 import {
   InvoicePaidNotifier,
   PaymentsModule,
@@ -13,13 +14,13 @@ import {
 import {
   GiftCodeAttemptLimiter,
   GiftCodeInvoiceDataloader,
-  GiftCodeInvoiceResolver,
-  GiftCodeInvoiceService,
   GiftCodeModule,
   GiftCodeOfferDataloader,
   GiftCodeOfferResolver,
   GiftCodeOfferService,
   GiftCodePurchaseDataloader,
+  GiftCodeRedemptionResolver,
+  GiftCodeRedemptionService,
   GiftCodeResolver,
   GiftCodeSellableHandler,
   GiftCodeService,
@@ -57,15 +58,19 @@ describe('GiftCodeModule', () => {
     ]);
   });
 
-  it('provides paying invoices with a gift code', () => {
+  it('provides redeeming a gift code', () => {
     expect(metadata('providers')).toEqual(
       expect.arrayContaining([
         GiftCodeAttemptLimiter,
         GiftCodeInvoiceDataloader,
-        GiftCodeInvoiceService,
-        GiftCodeInvoiceResolver,
+        GiftCodeRedemptionService,
+        GiftCodeRedemptionResolver,
       ])
     );
+  });
+
+  it('imports the member context to renew and create subscriptions', () => {
+    expect(metadata('imports')).toContain(MemberContextModule);
   });
 
   it('registers the gift code handler when the app starts', async () => {

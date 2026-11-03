@@ -1,6 +1,6 @@
 ---
 title: Gift codes, and free subscriptions with a 100 % discount code
-lead: Subscriptions and upgrades that a 100 % discount code makes free now go through. Gift codes are ready in the editor; the website side and redeeming a code come later, so gift codes stay switched off until then.
+lead: Subscriptions and upgrades that a 100 % discount code makes free now go through. Gift codes are ready in the editor; buying and redeeming them on the website come later, so gift codes stay switched off until then.
 actionRequired: false
 ---
 
@@ -10,10 +10,10 @@ current subscription covers the whole upgrade, is now confirmed right away
 without going to the payment provider. Until now these orders failed at the
 provider.
 
-Gift codes are switched on per medium once a code can be redeemed. Until then,
-nothing about them changes in the editor or on your website. Readers cannot
-buy a gift on the website yet; the purchase form and a separate gift block
-follow later.
+Gift codes are switched on per medium once readers can redeem a code on the
+website. Until then, nothing about gift codes changes in the editor or on
+your website. Readers cannot buy a gift on the website yet; the purchase form and
+a separate gift block follow later.
 
 Once gift codes are switched on:
 
@@ -39,8 +39,11 @@ Once gift codes are switched on:
   example at events: pick an offer, how many codes (up to 500) and optionally
   a recipient name. The codes are valid right away and can be copied in one
   go.
-- A code can also pay the open invoice of an existing subscription with the
-  same plan and duration. The website does not offer this yet. The code list
-  shows which invoice a code paid, linked to the subscription.
+- Redeeming a code works out what to do. If the reader already has a
+  subscription with the same plan and duration that is not canceled, the
+  code pays its open invoice or its next period. Otherwise the code starts a
+  new subscription with the offer's renewal setting. The subscription's
+  payment method never changes. The website does not offer redeeming yet.
+  The code list shows which invoice a code paid, linked to the subscription.
 
 There are no emails or PDF vouchers for gift codes yet.

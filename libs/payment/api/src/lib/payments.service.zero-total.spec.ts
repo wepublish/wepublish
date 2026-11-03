@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Logger } from '@nestjs/common';
 import bodyParser from 'body-parser';
 import {
   Currency,
@@ -65,6 +65,7 @@ const buildPrisma = (
     },
     payment: {
       findFirst: vi.fn().mockResolvedValue(null),
+      findMany: vi.fn().mockResolvedValue([]),
       create: vi.fn().mockImplementation(async ({ data }: any) => {
         const payment = {
           id: 'pay-1',
@@ -336,6 +337,73 @@ describe('PaymentsService.settleSubscriptionInvoiceWithoutCharge', () => {
     expect(prisma.payment.create).not.toHaveBeenCalled();
   });
 
+  it('pays an invoice whose charge started long ago and is still processing', async () => {
+    vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    const { prisma, createIntent, notifier, service } = setup(
+      MolliePaymentProvider,
+      openInvoice
+    );
+    prisma.payment.findFirst.mockImplementation(
+      async ({ where }: { where: { state?: unknown } }) =>
+        where.state === PaymentState.processing ?
+          { id: 'debit', state: PaymentState.processing }
+        : null
+    );
+    prisma.payment.findMany.mockResolvedValue([{ id: 'debit' }]);
+
+    const payment =
+      await service.settleSubscriptionInvoiceWithoutCharge('inv-1');
+
+    expect(payment).toMatchObject({
+      state: PaymentState.paid,
+      intentSecret: '',
+      invoiceID: 'inv-1',
+    });
+    expect(createIntent).not.toHaveBeenCalled();
+    expect(prisma.invoice.update).toHaveBeenCalledWith({
+      where: { id: 'inv-1' },
+      data: { paidAt: expect.any(Date), canceledAt: null },
+    });
+    expect(prisma.subscription.update).toHaveBeenCalledWith({
+      where: { id: 'sub-1' },
+      data: { paidUntil: endsAt },
+    });
+    expect(notifier.notify).toHaveBeenCalledWith('inv-1');
+  });
+
+  it('warns with the invoice and every processing payment when it pays an invoice whose charge is still processing', async () => {
+    const warn = vi
+      .spyOn(Logger.prototype, 'warn')
+      .mockImplementation(() => undefined);
+    const { prisma, service } = setup(MolliePaymentProvider, openInvoice);
+    prisma.payment.findMany.mockResolvedValue([
+      { id: 'debit-1' },
+      { id: 'debit-2' },
+    ]);
+
+    await service.settleSubscriptionInvoiceWithoutCharge('inv-1');
+
+    expect(prisma.payment.findMany).toHaveBeenCalledWith({
+      where: { invoiceID: 'inv-1', state: PaymentState.processing },
+      select: { id: true },
+    });
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(
+      'Paying invoice inv-1 without a charge while these payments of it are still processing: debit-1, debit-2. Refund any of them that gets paid.'
+    );
+  });
+
+  it('does not warn when no charge of the invoice is processing', async () => {
+    const warn = vi
+      .spyOn(Logger.prototype, 'warn')
+      .mockImplementation(() => undefined);
+    const { service } = setup(MolliePaymentProvider, openInvoice);
+
+    await service.settleSubscriptionInvoiceWithoutCharge('inv-1');
+
+    expect(warn).not.toHaveBeenCalled();
+  });
+
   it('leaves the payment method and the stored customers of the subscription alone', async () => {
     const { prisma, service } = setup(MolliePaymentProvider, openInvoice);
     prisma.subscription.findUnique.mockResolvedValue({
@@ -430,6 +498,30 @@ describe('PaymentsService.assertSubscriptionInvoiceSettleable', () => {
     ).rejects.toThrow(BadRequestException);
   });
 
+  it('accepts an invoice whose charge started long ago and is still processing', async () => {
+    const warn = vi
+      .spyOn(Logger.prototype, 'warn')
+      .mockImplementation(() => undefined);
+    const { prisma, notifier, service } = setup(
+      MolliePaymentProvider,
+      openInvoice
+    );
+    prisma.payment.findFirst.mockImplementation(
+      async ({ where }: { where: { state?: unknown } }) =>
+        where.state === PaymentState.processing ?
+          { id: 'debit', state: PaymentState.processing }
+        : null
+    );
+    prisma.payment.findMany.mockResolvedValue([{ id: 'debit' }]);
+
+    await expect(
+      service.assertSubscriptionInvoiceSettleable('inv-1')
+    ).resolves.toBeUndefined();
+    expect(prisma.payment.create).not.toHaveBeenCalled();
+    expect(notifier.notify).not.toHaveBeenCalled();
+    expect(warn).not.toHaveBeenCalled();
+  });
+
   it('rejects a subscription that its payment provider charges on its own', async () => {
     const { service } = setup(PayrexxSubscriptionPaymentProvider, openInvoice);
 
@@ -448,6 +540,63 @@ describe('PaymentsService.assertSubscriptionInvoiceSettleable', () => {
 
     await expect(
       service.assertSubscriptionInvoiceSettleable('inv-1')
+    ).rejects.toThrow(BadRequestException);
+  });
+});
+
+describe('PaymentsService.assertPaymentMethodSettleableWithoutCharge', () => {
+  it('accepts a payment method whose provider leaves the charging to us', async () => {
+    const { prisma, notifier, service } = setup(
+      MolliePaymentProvider,
+      subscriptionInvoice
+    );
+
+    await expect(
+      service.assertPaymentMethodSettleableWithoutCharge('pm-1')
+    ).resolves.toBeUndefined();
+    expect(prisma.paymentMethod.findUnique).toHaveBeenCalledWith({
+      where: { id: 'pm-1' },
+    });
+    expect(prisma.payment.create).not.toHaveBeenCalled();
+    expect(notifier.notify).not.toHaveBeenCalled();
+  });
+
+  it('rejects a payment method whose provider charges subscriptions on its own', async () => {
+    const { service } = setup(
+      PayrexxSubscriptionPaymentProvider,
+      subscriptionInvoice
+    );
+
+    await expect(
+      service.assertPaymentMethodSettleableWithoutCharge('pm-1')
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('rejects a missing payment method', async () => {
+    const { prisma, service } = setup(
+      MolliePaymentProvider,
+      subscriptionInvoice
+    );
+    prisma.paymentMethod.findUnique.mockResolvedValue(null);
+
+    await expect(
+      service.assertPaymentMethodSettleableWithoutCharge('pm-1')
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('rejects a payment method whose provider is not configured', async () => {
+    const { prisma, service } = setup(
+      MolliePaymentProvider,
+      subscriptionInvoice
+    );
+    prisma.paymentMethod.findUnique.mockResolvedValue({
+      id: 'pm-1',
+      paymentProviderID: 'unknown',
+      active: true,
+    });
+
+    await expect(
+      service.assertPaymentMethodSettleableWithoutCharge('pm-1')
     ).rejects.toThrow(BadRequestException);
   });
 });

@@ -116,9 +116,11 @@ dash for admin codes), source, buyer and redeemer next to each other (names
 linked to `/users/edit/:id` when the user still exists, from the admin-only
 `buyer` and `redeemedBy` fields; for an admin code the buyer cell shows the
 admin from `createdBy` with the caption "Creator"), the paid invoice right
-after the redeemer (for a code that paid a subscription invoice: "Invoice of
-<date>" from `redeemedInvoice.createdAt`, linked to
-`/subscriptions/edit/:id`; a dash otherwise; exported as the date), recipient name (a dash
+after the redeemer (for a redeemed code: "Invoice of <date>" from
+`redeemedInvoice.createdAt`, linked to `/subscriptions/edit/:id`; a dash
+otherwise; exported as the date). Every redemption sets the invoice, whether
+the code paid an open invoice, the next period or the first invoice of a new
+subscription. Then come recipient name (a dash
 when empty), offer and plan with duration, amount and currency (a dash for
 admin codes), created, issued, expires, redeemed, canceled with reason.
 There is no buyer email column and no personal message; the search still
@@ -173,6 +175,12 @@ exists yet. The subscribe block, the profile page, the builder and the
 website translations are as on master. What is already in place for that
 step:
 
+- `redeemGiftCode(code)` is the one mutation a "redeem a code" field needs.
+  Its `action` says what happened (`paidInvoice`, `extendedSubscription` or
+  `createdSubscription`), so the page can show the right confirmation and
+  link `subscription`. A refused code always gets the same message, "This
+  gift code cannot be redeemed.", and the 11th attempt in an hour gets
+  Forbidden ([04-api.md](04-api.md#redeemgiftcode)).
 - `purchaseGiftCode` and `payGiftCode` return a `Payment`. Hooks built like
   `useSubscribe` in `libs/payment/website/src/lib/handle-payment.tsx` can pass
   it to the file's internal `handlePayment`, which already covers Stripe

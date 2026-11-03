@@ -212,12 +212,3 @@ export class PayGiftCodeInput {
   @Field({ nullable: true })
   failureURL?: string;
 }
-
-@ArgsType()
-export class PayInvoiceWithGiftCodeInput {
-  @Field()
-  invoiceId!: string;
-
-  @Field()
-  code!: string;
-}

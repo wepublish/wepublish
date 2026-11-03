@@ -6,7 +6,8 @@ competing designs were scored and the risk-first one was built with two parts
 taken from the others. D18 to D26 are defaults chosen for open questions. They
 are built that way now and are marked "default, confirm with Karl" until he
 answers; [open-questions.md](open-questions.md) lists them as questions. D19
-and D27 to D37 are Karl's changes after the design. D11 was dropped by D32.
+and D27 to D38 are Karl's changes after the design. D11 was dropped by D32,
+and D38 replaced the separate pay mutation of D36.
 
 ## D1: Standalone sellable invoices with a guarded early return
 
@@ -212,9 +213,10 @@ membership until redemption needs it.
 
 Consequences. `gift-code/api` must never import `block-content`, and
 imports `image/api` narrowly because of the image/peering cycle. From
-`membership` it imports only the GraphQL `Invoice` type, since paying an
-invoice with a code ([D36](#d36-gift-codes-pay-open-subscription-invoices))
-returns one; no membership module or service. Once a gift block in `block-content` imports `gift-code/api`, the loop
+`membership` it imports the GraphQL `Invoice` and `PublicSubscription` types
+and `MemberContextModule`, which redemption uses to renew and create
+subscriptions ([D38](#d38-one-redeem-endpoint)). `membership` never imports
+`gift-code`, so this is no cycle. Once a gift block in `block-content` imports `gift-code/api`, the loop
 gift-code → member-plan → page → block-content → gift-code is back, and
 `MemberPlanModule` and `MemberPlanDataloader` have to come in through
 `forwardRef` again.
@@ -700,7 +702,9 @@ Consequences.
 
 ## D36: Gift codes pay open subscription invoices
 
-Decided by Karl.
+Decided by Karl. The separate `payInvoiceWithGiftCode` mutation is gone;
+[D38](#d38-one-redeem-endpoint) folded it into `redeemGiftCode`. The claim,
+the settling and most consequences below still hold there.
 
 Context. A reader who already has a subscription and receives a gift code for
 the same plan should be able to use it for the next invoice, instead of only
@@ -796,3 +800,80 @@ Consequences.
 - Changing a plan's payment config so it stops selling an offer's
   periodicity does not touch the offer, but its next save is rejected until
   the duration is changed.
+
+## D38: One redeem endpoint
+
+Decided by Karl. Replaces the separate pay mutation of
+[D36](#d36-gift-codes-pay-open-subscription-invoices).
+
+Context. With `payInvoiceWithGiftCode` the reader had to pick the invoice,
+and a code for someone without a subscription had no way in. Three entry
+points (pay an invoice, extend, start a subscription) would have been three
+places that accept a code.
+
+Decision. `redeemGiftCode(code): GiftCodeRedemption`, `@Authenticated` and
+`@Feature('gift-codes')`, works out what to do. A subscription of the session
+user fits when it has the code's `memberPlanId` and `periodicity`, is
+`extendable`, and has no `SubscriptionDeactivation` row, not even one dated
+in the future. If several fit, one with an open invoice wins, otherwise the
+one with the latest `paidUntil`. For a fitting subscription
+`MemberContext.renewSubscriptionForUser` returns the open invoice
+(`paidInvoice`) or creates the next period's invoice right after
+`paidUntil` (`extendedSubscription`). Without one,
+`MemberContext.createSubscription` starts a new subscription
+(`createdSubscription`) with the code's plan, periodicity and `autoRenew`,
+the code's renewal method when it renews automatically, otherwise the first
+usable method the plan offers for the periodicity, the plan's `extendable`,
+and a `monthlyAmount` from the plan's current price (`amountTarget ??
+amountMin`). Then the code is claimed and the invoice settled exactly as in
+D36. The result says which of the three happened and returns the
+subscription and the paid invoice, never the code.
+
+Why. One endpoint keeps a single place that takes a code, with one generic
+error and one attempt limit. Reusing `renewSubscriptionForUser` and
+`createSubscription` keeps periods, invoices and the plan's `maxCount` rule
+the same as for any other subscription.
+
+Consequences.
+- Every refusal a valid code could reach runs before the claim and gives the
+  same error, "This gift code cannot be redeemed.": a fitting lifetime
+  subscription, a remotely managed subscription (Payrexx subscriptions), an
+  open invoice with a payment started in the last minute, a next period that
+  overlaps another period of the subscription, an inactive or missing plan,
+  `maxCount` reached, no price, no usable payment method, a renewal method
+  the plan no longer offers, or renewal on a plan that is no longer
+  extendable. The code stays unused.
+- Decided by Karl: a charge that is still `processing` does not block the
+  code. An off-session charge can stay `processing` for days (SEPA debit,
+  Payrexx `waiting`), longer than the one-minute running-payment window. The
+  code pays the invoice, and `settleSubscriptionInvoiceWithoutCharge` logs a
+  warning with the invoice id and the ids of the processing payments (never
+  the code). If one of those charges goes through later, the reader has paid
+  twice and is refunded by hand.
+- Decided by Karl: when the fitting subscription is a lifetime one, the code
+  is refused before anything is created or paid, and it stays unused.
+  Renewing a lifetime subscription would add another 1200 months on top. A
+  lifetime subscription with a deactivation does not fit, so that reader gets
+  a new subscription, as for any other periodicity.
+- Two codes redeemed at the same moment for the same subscription would
+  each create the same next period from the same `paidUntil`, and both
+  would be paid. After creating its next period, redemption therefore
+  checks for another overlapping period whose invoice is not canceled and
+  backs out if there is one. Of two parallel redemptions at most one goes
+  on. The renewal job can still create its own invoice for that period
+  right after the check; that race is not closed.
+- The next period's invoice and a new subscription are created before the
+  claim. If the claim is lost or settling fails, they are deleted again with
+  their periods, items and payments, unless the invoice got paid or another
+  code claimed it meanwhile. An invoice the subscription had before is never
+  deleted.
+- The subscription's payment method never changes. A new subscription's
+  method is recorded for later manual extensions only; a renewal method
+  whose provider manages subscriptions remotely is refused.
+- A non-extendable subscription never fits, so a reader who has one gets a
+  second subscription, if `maxCount` allows it.
+- `createSubscription` runs with `skipMail`; the `SUBSCRIBE` mail goes out
+  only after the code paid the new subscription, so a redemption that is
+  rolled back sends nothing.
+- `GiftCodeModule` imports `MemberContextModule`. `membership` does not
+  import `gift-code`, so there is no module cycle.
