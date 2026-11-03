@@ -1,4 +1,3 @@
-export * from './apiTokenGeneratePanel';
 export * from './articleAuthorList';
 export * from './articleMetadataPanel';
 export * from './authorCheckPicker';
@@ -39,7 +38,6 @@ export * from './subscriptionsExport';
 export * from './teaserEditPanel';
 export * from './teaserSelectAndEditPanel';
 export * from './teaserSelectPanel';
-export * from './tokenGeneratePanel';
 export * from './userCheckPicker';
 export * from './userSubscriptionDeactivatePanel';
 export * from './versionHistoryPanel';

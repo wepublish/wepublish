@@ -1,4 +1,9 @@
 import {
+  ApiTokenGenerateForm,
+  ApiTokenGenerateRoute,
+} from './routes/apiTokens/apiTokenGenerateRoute';
+import { LongLivedWarning } from './routes/apiTokens/longLivedWarning';
+import {
   AuthorCreateForm,
   AuthorDrawer,
   AuthorEditForm,
@@ -42,6 +47,11 @@ import {
 import { RemotePeerProfile } from './routes/peers/remotePeerProfile';
 import { TagCreateForm } from './routes/tags/tagCreateView';
 import { TagEditForm } from './routes/tags/tagEditView';
+import { GeneratedToken } from './routes/tokens/generatedToken';
+import {
+  TokenGenerateDrawer,
+  TokenGenerateForm,
+} from './routes/tokens/tokenGenerateDrawer';
 import { SystemRoleNotice } from './routes/userRoles/systemRoleNotice';
 import {
   UserRoleCreateForm,
@@ -58,6 +68,9 @@ const isCompiled = (code: string) => /\$\[\d+\]/.test(code);
 
 describe('the editor under test', () => {
   it.each([
+    ['ApiTokenGenerateForm', ApiTokenGenerateForm],
+    ['ApiTokenGenerateRoute', ApiTokenGenerateRoute],
+    ['LongLivedWarning', LongLivedWarning],
     ['AuthorCreateForm', AuthorCreateForm],
     ['AuthorEditForm', AuthorEditForm],
     ['AuthorDrawer', AuthorDrawer],
@@ -90,6 +103,9 @@ describe('the editor under test', () => {
     ['PeerProfileDrawer', PeerProfileDrawer],
     ['TagCreateForm', TagCreateForm],
     ['TagEditForm', TagEditForm],
+    ['TokenGenerateForm', TokenGenerateForm],
+    ['TokenGenerateDrawer', TokenGenerateDrawer],
+    ['GeneratedToken', GeneratedToken],
     ['UserRoleCreateForm', UserRoleCreateForm],
     ['UserRoleEditForm', UserRoleEditForm],
     ['UserRoleDrawer', UserRoleDrawer],

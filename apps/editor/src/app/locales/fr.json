@@ -2781,14 +2781,16 @@
       },
       "panels": {
         "cancel": "Annuler",
-        "close": "Fermer",
         "confirm": "Confirmer",
+        "copy": "Copier le token",
+        "copied": "Token copié",
         "creationSuccess": "Token créé avec succès",
         "deleteToken": "Supprimer le token ?",
         "deleteTokenText": "Voulez-vous supprimer {{name}} ?",
         "generate": "Générer",
         "generateToken": "Générer un token",
         "name": "Nom",
+        "nameTaken": "Un token « {{name}} » existe déjà.",
         "tokenWarning": "Les tokens ne peuvent pas être récupérés ultérieurement. Il est recommandé de copier et d’enregistrer votre token dans un endroit sûr."
       }
     },
@@ -5036,19 +5038,17 @@
       "panels": {
         "generateToken": "Créer une clé API",
         "generate": "Créer",
-        "close": "Fermer",
         "name": "Nom",
         "scopes": "Droits",
         "scopesHelp": "Vous ne pouvez accorder que les droits que vous possédez vous-même.",
         "creationSuccess": "Votre clé API a été créée.",
         "copy": "Copier la clé",
         "copied": "Clé copiée",
-        "tokenWarning": "Copiez cette clé maintenant. Elle n'est affichée qu'une fois et ne peut pas être récupérée — si vous la perdez, créez-en une nouvelle.",
+        "tokenWarning": "Copiez cette clé maintenant. Elle n’est affichée qu’une fois et ne peut pas être récupérée — si vous la perdez, créez-en une nouvelle.",
         "revokeToken": "Révoquer la clé API",
         "revokeTokenText": "Révoquer « {{name}} » ? Tout ce qui utilise cette clé cessera immédiatement de fonctionner.",
         "cancel": "Annuler",
         "confirm": "Révoquer",
-        "noScopes": "Choisissez au moins une autorisation.",
         "expiresAt": "Expire le",
         "expiresAtHelp": "Trois ans au maximum à partir d’aujourd’hui.",
         "expiresInThePast": "Cette date est déjà passée.",
@@ -5056,7 +5056,6 @@
         "in90Days": "90 jours",
         "inAYear": "Un an",
         "in3Years": "3 ans",
-        "expiresRequired": "Choisissez une date. Une clé doit expirer.",
         "expiresTooLate": "Une clé ne peut pas durer plus de trois ans.",
         "longLivedWarning": "Une clé valable plus d’un an n’est pas recommandée. Plus elle existe longtemps, plus une clé divulguée reste utilisable."
       }

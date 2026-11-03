@@ -77,6 +77,10 @@ export type {
 export type { ColorFieldProps } from './lib/fields/color-field';
 export type { ColorKindParams } from './lib/fields/color-format';
 export type { CurrencyFieldProps } from './lib/fields/currency-field';
+export type {
+  DateFieldProps,
+  DateShortcut,
+} from './lib/fields/date-field';
 export { DiscriminatedUnionField } from './lib/fields/discriminated-union-field';
 export type { DiscriminatedUnionFieldProps } from './lib/fields/discriminated-union-field';
 export type { DiscriminatorControl } from './lib/fields/discriminator-field';

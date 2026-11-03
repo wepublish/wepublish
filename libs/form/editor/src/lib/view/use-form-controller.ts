@@ -68,6 +68,8 @@ export type CreateFormOptions<S extends AnyFormSchema> =
   ControllerOptions<S> & {
     readonly paths?: FormPaths;
     readonly defaultValues?: FormDefaultValues<S>;
+    readonly submitLabel?: string;
+    readonly result?: ReactNode;
     readonly save: (
       values: FormOutput<S>,
       context: SaveContext<S>
@@ -121,11 +123,15 @@ export type FormController<S extends AnyFormSchema> = {
   readonly closePath: string | undefined;
   readonly confirmation: FormConfirmation<S> | undefined;
   readonly headerActions: ReactNode;
+  readonly submitLabel: string | undefined;
+  readonly result: ReactNode;
 };
 
 type SharedOptions<S extends AnyFormSchema> = ControllerOptions<S> & {
   readonly paths?: FormPaths;
   readonly closePath?: string;
+  readonly submitLabel?: string;
+  readonly result?: ReactNode;
   readonly save: (
     values: FormOutput<S>,
     context: SaveContext<S>
@@ -173,10 +179,15 @@ export function useSingletonForm<S extends AnyFormSchema>(
   return useFormController(view, 'singleton', handle, options);
 }
 
-function requirePaths(paths: FormPaths | undefined, mode: FormMode) {
+function requirePaths(
+  paths: FormPaths | undefined,
+  mode: FormMode,
+  staying: boolean
+) {
   if (
     paths === undefined &&
     mode !== 'singleton' &&
+    !staying &&
     process.env.NODE_ENV !== 'production'
   ) {
     throw new Error(
@@ -198,8 +209,9 @@ function useFormController<S extends AnyFormSchema>(
   );
   const [pending, setPending] = useState<PendingConfirmation | null>(null);
   const paths = options.paths ?? view.paths;
+  const staying = options.submitLabel !== undefined;
 
-  requirePaths(paths, mode);
+  requirePaths(paths, mode, staying);
 
   const readOnly =
     options.readOnly === true ||
@@ -246,7 +258,8 @@ function useFormController<S extends AnyFormSchema>(
       );
     }
 
-    const destination = destinationAfterSave(mode, intent, paths, saved);
+    const destination =
+      staying ? undefined : destinationAfterSave(mode, intent, paths, saved);
 
     if (destination !== undefined) {
       navigate(destination);
@@ -279,6 +292,8 @@ function useFormController<S extends AnyFormSchema>(
           close: () => setPending(null),
         },
     headerActions: options.headerActions,
+    submitLabel: options.submitLabel,
+    result: options.result,
   };
 }
 

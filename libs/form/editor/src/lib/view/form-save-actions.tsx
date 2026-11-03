@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { SubmitContext } from '../editor-form';
+import { hasResult } from './create-result';
 import { describeChanges } from './describe-changes';
 import { useFormViewContext } from './form-view-context';
 import type { FormConfirmation } from './use-form-controller';
@@ -116,8 +117,20 @@ export function FormSaveActions() {
   const { controller } = useFormViewContext();
   const { t } = useTranslation();
 
-  if (controller.readOnly) {
+  if (controller.readOnly || hasResult(controller.result)) {
     return null;
+  }
+
+  if (controller.submitLabel !== undefined) {
+    return (
+      <SaveButton
+        intent="save"
+        variant="contained"
+        testId="saveButton"
+      >
+        {t(controller.submitLabel)}
+      </SaveButton>
+    );
   }
 
   if (controller.mode === 'singleton') {

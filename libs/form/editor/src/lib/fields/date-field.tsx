@@ -22,6 +22,15 @@ import { fieldAnatomy, textFieldProps } from '../field-anatomy';
 
 const CALENDAR = '.react-datepicker';
 
+export type DateShortcut = {
+  readonly label: string;
+  readonly date: () => Date;
+};
+
+export type DateFieldProps = {
+  readonly shortcuts?: readonly DateShortcut[];
+};
+
 const isValidDate = (value: unknown): value is Date =>
   value instanceof Date && !Number.isNaN(value.getTime());
 
@@ -60,7 +69,13 @@ const clockNow = (selected: Date | null) => {
   return day;
 };
 
-function DatePickerField({ withTime }: { withTime: boolean }) {
+function DatePickerField({
+  withTime,
+  shortcuts,
+}: {
+  withTime: boolean;
+  shortcuts?: readonly DateShortcut[];
+}) {
   const { t } = useTranslation();
   const { ref, ...field } = useField<Date | null | undefined>();
   const anatomy = fieldAnatomy(field);
@@ -151,14 +166,36 @@ function DatePickerField({ withTime }: { withTime: boolean }) {
             </DatePickerShortcuts>
             <DatePickerDone />
           </DatePickerFooter>
+        : shortcuts !== undefined && shortcuts.length > 0 ?
+          <DatePickerFooter>
+            <DatePickerShortcuts>
+              {shortcuts.map(shortcut => (
+                <Button
+                  key={shortcut.label}
+                  size="small"
+                  variant="text"
+                  onMouseDown={event => event.preventDefault()}
+                  onClick={() => change(shortcut.date())}
+                >
+                  {t(shortcut.label)}
+                </Button>
+              ))}
+            </DatePickerShortcuts>
+            <DatePickerDone />
+          </DatePickerFooter>
         : null}
       </DatePicker>
     </Box>
   );
 }
 
-export function DateField() {
-  return <DatePickerField withTime={false} />;
+export function DateField({ shortcuts }: DateFieldProps) {
+  return (
+    <DatePickerField
+      withTime={false}
+      shortcuts={shortcuts}
+    />
+  );
 }
 
 export function DateTimeField() {
