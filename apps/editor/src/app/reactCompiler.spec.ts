@@ -17,6 +17,13 @@ import {
 import { CommentThread } from './routes/comments/commentThread';
 import { DiscountCodeCreateForm } from './routes/discountCode/discountCodeCreateView';
 import { DiscountCodeEditForm } from './routes/discountCode/discountCodeEditView';
+import {
+  DocumentDrawer,
+  DocumentEditForm,
+  DocumentUpload,
+  DocumentUploadForm,
+} from './routes/documents/documentDrawer';
+import { DocumentFileDetails } from './routes/documents/documentFileDetails';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import {
@@ -105,6 +112,11 @@ describe('the editor under test', () => {
     ['RatingOverrideRow', RatingOverrideRow],
     ['DiscountCodeCreateForm', DiscountCodeCreateForm],
     ['DiscountCodeEditForm', DiscountCodeEditForm],
+    ['DocumentUploadForm', DocumentUploadForm],
+    ['DocumentUpload', DocumentUpload],
+    ['DocumentEditForm', DocumentEditForm],
+    ['DocumentDrawer', DocumentDrawer],
+    ['DocumentFileDetails', DocumentFileDetails],
     ['EventCreateView', EventCreateView],
     ['EventEditView', EventEditView],
     ['ExternalAppCreateForm', ExternalAppCreateForm],

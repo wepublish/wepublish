@@ -2,8 +2,6 @@ export * from './articleAuthorList';
 export * from './articleMetadataPanel';
 export * from './authorCheckPicker';
 export * from './authorSelectPicker';
-export * from './documentEditPanel';
-export * from './documentUploadAndEditPanel';
 export * from './documentUploadPanel';
 export * from './audioEditPanel';
 export * from './audioUploadAndEditPanel';

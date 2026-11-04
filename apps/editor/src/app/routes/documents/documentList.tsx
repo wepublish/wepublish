@@ -6,7 +6,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Drawer,
   InputAdornment,
   TextField,
   Typography,
@@ -27,9 +26,6 @@ import {
 import {
   createCheckedPermissionComponent,
   DataTable,
-  DocumentEditPanel,
-  DocumentUploadAndEditPanel,
-  DRAWER_WIDTHS,
   enqueueSnackbar,
   IconButton,
   IconButtonTooltip,
@@ -38,11 +34,11 @@ import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PageTitle,
   Pagination,
   PermissionControl,
   TableWrapper,
   useListViewState,
-  PageTitle,
 } from '@wepublish/ui/editor';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
@@ -55,12 +51,9 @@ import {
   MdOutlineUploadFile,
   MdSearch,
 } from 'react-icons/md';
-import {
-  Link as RouterLink,
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
+
+import { DocumentDrawer } from './documentDrawer';
 
 const Thumbnail = styled.img`
   height: 70px;
@@ -72,12 +65,6 @@ const Thumbnail = styled.img`
 
 function DocumentList() {
   const location = useLocation();
-  const params = useParams();
-  const navigate = useNavigate();
-  const { id } = params;
-
-  const isUploadRoute = location.pathname.includes('upload');
-  const isEditRoute = location.pathname.includes('edit');
 
   const { filter, setFilter, limit, setLimit } = useListViewState<string>(
     'documents',
@@ -89,11 +76,6 @@ function DocumentList() {
     useState<FullDocumentFragment>();
 
   const [activePage, setActivePage] = useState(1);
-
-  const isUploadModalOpen = isUploadRoute;
-  const isEditModalOpen = isEditRoute;
-  const editID = isEditRoute ? id : undefined;
-  const closeDrawer = () => navigate('/documents');
 
   const listVariables = {
     filter: filter || undefined,
@@ -387,46 +369,7 @@ function DocumentList() {
         />
       </TableWrapper>
 
-      <Drawer
-        anchor="right"
-        slotProps={{
-          paper: {
-            sx: {
-              width: DRAWER_WIDTHS.sm,
-              maxWidth: '100vw',
-            },
-          },
-        }}
-        open={isUploadModalOpen}
-        onClose={closeDrawer}
-      >
-        <DocumentUploadAndEditPanel
-          onClose={closeDrawer}
-          onUpload={() => {
-            refetchStorage();
-            closeDrawer();
-          }}
-        />
-      </Drawer>
-
-      <Drawer
-        anchor="right"
-        slotProps={{
-          paper: {
-            sx: {
-              width: DRAWER_WIDTHS.sm,
-              maxWidth: '100vw',
-            },
-          },
-        }}
-        open={isEditModalOpen}
-        onClose={closeDrawer}
-      >
-        <DocumentEditPanel
-          id={editID!}
-          onClose={closeDrawer}
-        />
-      </Drawer>
+      <DocumentDrawer />
 
       <Dialog
         open={isConfirmationDialogOpen}

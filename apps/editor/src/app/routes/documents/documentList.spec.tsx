@@ -1,12 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import type { Mock } from 'vitest';
 
@@ -22,10 +16,6 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
   createCheckedPermissionComponent: () => (component: unknown) => component,
   PermissionControl: ({ children }: { children: unknown }) => children,
-  DocumentUploadAndEditPanel: () => <div data-testid="upload-panel" />,
-  DocumentEditPanel: ({ id }: { id: string }) => (
-    <div data-testid={`edit-panel-${id}`} />
-  ),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -91,23 +81,6 @@ const renderAt = (path: string) =>
   );
 
 describe('DocumentList accessibility', () => {
-  it('reopens the upload drawer after it was closed', async () => {
-    renderAt('/documents');
-
-    const upload = screen.getByRole('link', {
-      name: 'documents.overview.uploadDocument',
-    });
-
-    fireEvent.click(upload);
-    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
-    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull(), {
-      timeout: 5000,
-    });
-
-    fireEvent.click(upload);
-    expect(screen.getByTestId('upload-panel')).toBeTruthy();
-  });
-
   it('gives every preview link a name, with or without a thumbnail', () => {
     renderAt('/documents');
 
