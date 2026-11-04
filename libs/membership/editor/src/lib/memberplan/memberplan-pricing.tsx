@@ -1,67 +1,118 @@
 import styled from '@emotion/styled';
-import { PaymentPeriodicity } from '@wepublish/editor/api';
-import { useId, useMemo, useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import {
-  enabledPeriodicitiesOf,
-  materializePricing,
-  MemberPlanFormValues,
-  PeriodicityPriceValue,
-} from './memberplan-schema';
-import { FieldLabel } from '../field-label';
-import { MdPriceCheck } from 'react-icons/md';
-import {
-  CurrencyInput,
-  InfoTooltip,
-  PAYMENT_PERIODICITY_MONTHS,
-} from '@wepublish/ui/editor';
-import {
-  Card,
-  CardContent,
-  CardHeader,
   FormControlLabel,
   FormHelperText,
-  Grid,
+  InputAdornment,
   Switch,
   Tab,
   Tabs,
   TextField,
 } from '@mui/material';
+import { PaymentPeriodicity } from '@wepublish/editor/api';
+import { fieldComponent, FormRow, useField } from '@wepublish/form/editor';
+import {
+  InfoTooltip,
+  PAYMENT_PERIODICITY_MONTHS,
+} from '@wepublish/ui/editor';
+import { type FocusEvent, type ReactNode, useState } from 'react';
+import { useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { MdPriceCheck } from 'react-icons/md';
 
-const TAB_PERIODICITY_ORDER = [
-  PaymentPeriodicity.Monthly,
-  PaymentPeriodicity.Quarterly,
-  PaymentPeriodicity.Biannual,
-  PaymentPeriodicity.Yearly,
-  PaymentPeriodicity.Biennial,
-  PaymentPeriodicity.Lifetime,
-];
+import {
+  enabledPeriodicitiesOf,
+  materializePricing,
+  type MemberPlanFormValues,
+  type PeriodicityPrice,
+} from './memberplan.schema';
 
-const PanelWidth100 = styled(Card)`
-  width: 100%;
+type PriceWithoutPeriodicity = Omit<PeriodicityPrice, 'periodicity'>;
+
+type PricingValue = MemberPlanFormValues['periodicityPricing'];
+
+type StoredPrice = NonNullable<PricingValue>[number];
+
+const Pricing = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: ${({ theme }) => theme.spacing(2)};
+  min-width: 0;
 `;
 
-const ToggleCol = styled(Grid)`
-  text-align: end;
+const DeriveRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-// keeps the row height stable while switching between tabs
-const ToggleColReserved = styled(ToggleCol)`
-  visibility: hidden;
-`;
+const noPricing: PricingValue = [];
 
-const TabContent = styled('div')`
-  padding-top: 12px;
-`;
+const hasPeriodicity = (price: StoredPrice): price is PeriodicityPrice =>
+  price.periodicity != null;
 
-const RowPaddingTop = styled(Grid)`
-  padding-top: 12px;
-`;
+const staysInside = (event: FocusEvent<HTMLElement>) =>
+  event.relatedTarget instanceof Node &&
+  event.currentTarget.contains(event.relatedTarget);
 
-const ErrorHelpText = styled(FormHelperText)`
-  color: ${({ theme }) => theme.vars.palette.error.main};
-`;
+const amountText = (raw: string) => raw.match(/\d*[.,]?\d{0,2}/)?.[0] ?? '';
+
+const centsFrom = (text: string): number | null => {
+  const amount = Number(text.replace(',', '.'));
+
+  return text === '' || Number.isNaN(amount) ? null : Math.round(amount * 100);
+};
+
+const textFrom = (cents: number | null) =>
+  cents == null ? '' : (cents / 100).toFixed(2);
+
+type AmountInputProps = {
+  name: string;
+  label: ReactNode;
+  currency: string;
+  centAmount: number | null;
+  disabled: boolean;
+  onChange: (centAmount: number | null) => void;
+};
+
+function AmountInput({
+  name,
+  label,
+  currency,
+  centAmount,
+  disabled,
+  onChange,
+}: AmountInputProps) {
+  const [draft, setDraft] = useState<string | null>(null);
+
+  return (
+    <TextField
+      name={name}
+      label={label}
+      value={draft ?? textFrom(centAmount)}
+      disabled={disabled}
+      onChange={event => setDraft(amountText(event.target.value))}
+      onBlur={() => {
+        if (draft !== null) {
+          onChange(centsFrom(draft));
+        }
+
+        setDraft(null);
+      }}
+      slotProps={{
+        inputLabel: { shrink: true },
+        input: {
+          endAdornment: (
+            <InputAdornment position="end">{currency}</InputAdornment>
+          ),
+        },
+        htmlInput: { inputMode: 'decimal' },
+      }}
+      fullWidth
+    />
+  );
+}
 
 function derivePeriodAmount(
   monthlyAmount: number | null | undefined,
@@ -76,109 +127,70 @@ function derivePeriodAmount(
 
 function formatDelta(delta: number, derived: number, currency: string): string {
   const percent = derived > 0 ? ((delta / derived) * 100).toFixed(1) : '0';
+  const amount = (Math.abs(delta) / 100).toFixed(2);
 
-  return `${delta >= 0 ? '−' : '+'} ${currency} ${(Math.abs(delta) / 100).toFixed(2)} (${percent}%)`;
+  return `${delta >= 0 ? '−' : '+'} ${currency} ${amount} (${percent}%)`;
 }
 
-interface MemberPlanPricingProps {
-  loading: boolean;
-}
+const isEmptyPrice = (price: PriceWithoutPeriodicity) =>
+  price.label == null &&
+  price.amountMin == null &&
+  price.amountTarget == null &&
+  price.amountMax == null;
 
-export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
+function PricingEditor() {
   const { t } = useTranslation();
-  const {
-    control,
-    setValue,
-    formState: { errors },
-  } = useFormContext<MemberPlanFormValues>();
-
-  const currency = useWatch({ control, name: 'currency' }) ?? 'CHF';
-  const availablePaymentMethods = useWatch({
-    control,
-    name: 'availablePaymentMethods',
-  });
-  const storedPricing = useWatch({ control, name: 'periodicityPricing' });
+  const { ref, ...field } = useField<PricingValue>();
+  const currency =
+    useWatch<MemberPlanFormValues, 'currency'>({ name: 'currency' }) ?? 'CHF';
+  const availablePaymentMethods = useWatch<
+    MemberPlanFormValues,
+    'availablePaymentMethods'
+  >({ name: 'availablePaymentMethods' });
   const [activeTab, setActiveTab] = useState<PaymentPeriodicity | null>(null);
-  const fieldId = useId();
-  const ids = {
-    min: `${fieldId}-min`,
-    target: `${fieldId}-target`,
-    max: `${fieldId}-max`,
-    label: `${fieldId}-label`,
-    labelHelp: `${fieldId}-label-help`,
-    panel: `${fieldId}-panel`,
-    tab: (tabPeriodicity: PaymentPeriodicity) =>
-      `${fieldId}-tab-${tabPeriodicity}`,
-  };
 
-  const enabledPeriodicities = useMemo(
-    () =>
-      enabledPeriodicitiesOf(availablePaymentMethods, TAB_PERIODICITY_ORDER),
-    [availablePaymentMethods]
-  );
-
+  const enabledPeriodicities = enabledPeriodicitiesOf(availablePaymentMethods);
   const monthlyEnabled = enabledPeriodicities.includes(
     PaymentPeriodicity.Monthly
   );
-
-  const pricing: PeriodicityPriceValue[] = useMemo(
-    () => materializePricing(storedPricing ?? [], enabledPeriodicities),
-    [storedPricing, enabledPeriodicities]
+  const pricing = materializePricing(
+    (field.value ?? noPricing).filter(hasPeriodicity),
+    enabledPeriodicities
   );
+  const helperTextId = `${field.id}-helper-text`;
+  const errorId = `${field.id}-error`;
+
+  if (!enabledPeriodicities.length) {
+    return (
+      <FormHelperText id={helperTextId}>
+        {t('memberplanForm.periodicityPricingNoPeriodicities')}
+      </FormHelperText>
+    );
+  }
 
   const periodicity =
     activeTab && enabledPeriodicities.includes(activeTab) ?
       activeTab
     : enabledPeriodicities[0];
 
-  function setPeriodicityPrice(
-    price: Omit<PeriodicityPriceValue, 'periodicity'> | null
-  ) {
+  const setPeriodicityPrice = (price: PriceWithoutPeriodicity) => {
     const withoutPeriodicity = pricing.filter(
-      p => p.periodicity !== periodicity
+      entry => entry.periodicity !== periodicity
     );
 
-    const isEmpty =
-      !price ||
-      (price.label == null &&
-        price.amountMin == null &&
-        price.amountTarget == null &&
-        price.amountMax == null);
-
-    setValue(
-      'periodicityPricing',
-      !isEmpty ?
-        [...withoutPeriodicity, { periodicity, ...price }]
-      : withoutPeriodicity,
-      { shouldValidate: true }
+    field.onChange(
+      isEmptyPrice(price) ?
+        withoutPeriodicity
+      : [...withoutPeriodicity, { ...price, periodicity }]
     );
-  }
-
-  if (!enabledPeriodicities.length) {
-    return (
-      <PanelWidth100>
-        <CardContent>
-          <CardHeader
-            title={t('memberplanForm.periodicityPricing')}
-            slotProps={{ title: { component: 'h2' } }}
-          />
-
-          <CardContent>
-            <FormHelperText>
-              {t('memberplanForm.periodicityPricingNoPeriodicities')}
-            </FormHelperText>
-          </CardContent>
-        </CardContent>
-      </PanelWidth100>
-    );
-  }
+  };
 
   const isMonthlyTab = periodicity === PaymentPeriodicity.Monthly;
   const monthlyRow = pricing.find(
-    p => p.periodicity === PaymentPeriodicity.Monthly
+    price => price.periodicity === PaymentPeriodicity.Monthly
   );
   const monthlyPriced = monthlyRow?.amountMin != null;
-  const override = pricing.find(p => p.periodicity === periodicity);
+  const override = pricing.find(price => price.periodicity === periodicity);
   const derivedMin = derivePeriodAmount(
     monthlyRow?.amountMin ?? 0,
     periodicity
@@ -189,19 +201,25 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
   );
   const derivedMax = derivePeriodAmount(monthlyRow?.amountMax, periodicity);
   const showDeriveToggle = !isMonthlyTab && monthlyEnabled && monthlyPriced;
-  const ToggleWrapper = showDeriveToggle ? ToggleCol : ToggleColReserved;
   const hasOverride = override?.amountMin != null;
   const fieldsEditable = isMonthlyTab || !showDeriveToggle || hasOverride;
-  const overrideBase: Omit<PeriodicityPriceValue, 'periodicity'> =
-    hasOverride ? override : (
+  const disabled = field.disabled || field.readOnly;
+  const amountsDisabled = disabled || !fieldsEditable;
+  const derived: PriceWithoutPeriodicity = {
+    label: override?.label ?? null,
+    amountMin: derivedMin ?? 0,
+    amountTarget: derivedTarget,
+    amountMax: derivedMax,
+  };
+  const overrideBase: PriceWithoutPeriodicity =
+    override && hasOverride ?
       {
-        __typename: 'PeriodicityPrice',
-        label: override?.label ?? null,
-        amountMin: derivedMin ?? 0,
-        amountTarget: derivedTarget,
-        amountMax: derivedMax,
+        label: override.label,
+        amountMin: override.amountMin,
+        amountTarget: override.amountTarget,
+        amountMax: override.amountMax,
       }
-    );
+    : derived;
 
   const shownMin = override?.amountMin ?? derivedMin ?? 0;
   const shownTarget =
@@ -212,16 +230,6 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
     (shownTarget < shownMin || (shownMax != null && shownTarget > shownMax));
   const maxInvalid = shownMax != null && shownMax < shownMin;
 
-  function setPeriodicityLabel(label: string | null) {
-    setPeriodicityPrice({
-      __typename: 'PeriodicityPrice',
-      amountMin: override?.amountMin ?? null,
-      amountTarget: override?.amountTarget ?? null,
-      amountMax: override?.amountMax ?? null,
-      label,
-    });
-  }
-
   const referenceDerived = derivedTarget ?? derivedMin;
   const referenceOverride =
     hasOverride ?
@@ -231,251 +239,220 @@ export function MemberPlanPricing({ loading }: MemberPlanPricingProps) {
     referenceDerived != null && referenceOverride != null ?
       referenceDerived - referenceOverride
     : null;
+  const deltaText =
+    delta != null && delta !== 0 && referenceDerived != null ?
+      t('memberplanForm.periodicityPricingDelta', {
+        delta: formatDelta(delta, referenceDerived, currency),
+      })
+    : null;
+
+  const amountLabel = (monthly: string, period: string, help: string) => (
+    <>
+      {t(isMonthlyTab ? monthly : period)} <InfoTooltip text={t(help)} />
+    </>
+  );
 
   return (
-    <PanelWidth100>
-      <CardContent>
-        <CardHeader
-          title={t('memberplanForm.periodicityPricing')}
-          slotProps={{ title: { component: 'h2' } }}
-        />
+    <Pricing
+      role="group"
+      aria-label={typeof field.label === 'string' ? field.label : undefined}
+      aria-describedby={field.error ? errorId : helperTextId}
+      ref={(element: HTMLDivElement | null) => {
+        if (element) {
+          ref({
+            focus: () =>
+              element.querySelector<HTMLElement>('[role="tab"]')?.focus(),
+          });
+        }
+      }}
+      onBlur={(event: FocusEvent<HTMLDivElement>) => {
+        if (!staysInside(event)) {
+          field.onBlur();
+        }
+      }}
+    >
+      <FormHelperText id={helperTextId}>
+        {t(
+          monthlyEnabled ?
+            'memberplanForm.periodicityPricingHelpText'
+          : 'memberplanForm.periodicityPricingHelpTextNoMonthly'
+        )}
+      </FormHelperText>
 
-        <CardContent>
-          <FormHelperText>
-            {t(
-              monthlyEnabled ?
-                'memberplanForm.periodicityPricingHelpText'
-              : 'memberplanForm.periodicityPricingHelpTextNoMonthly'
-            )}
-          </FormHelperText>
+      {field.error ?
+        <FormHelperText
+          id={errorId}
+          error
+        >
+          {field.error}
+        </FormHelperText>
+      : null}
 
-          {errors.periodicityPricing?.message && (
-            <ErrorHelpText>
-              {errors.periodicityPricing.message as string}
-            </ErrorHelpText>
-          )}
-
-          <Tabs
-            value={periodicity}
-            aria-label={t('memberplanForm.periodicityPricing')}
-            onChange={(_event, eventKey) =>
-              setActiveTab(eventKey as PaymentPeriodicity)
+      <Tabs
+        value={periodicity}
+        variant="scrollable"
+        allowScrollButtonsMobile
+        onChange={(_event, eventKey: PaymentPeriodicity) =>
+          setActiveTab(eventKey)
+        }
+      >
+        {enabledPeriodicities.map(tabPeriodicity => (
+          <Tab
+            key={tabPeriodicity}
+            value={tabPeriodicity}
+            icon={
+              (
+                monthlyEnabled &&
+                tabPeriodicity !== PaymentPeriodicity.Monthly &&
+                pricing.some(
+                  price =>
+                    price.periodicity === tabPeriodicity &&
+                    price.amountMin != null
+                )
+              ) ?
+                <MdPriceCheck />
+              : undefined
             }
-          >
-            {enabledPeriodicities.map(tabPeriodicity => (
-              <Tab
-                key={tabPeriodicity}
-                value={tabPeriodicity}
-                id={ids.tab(tabPeriodicity)}
-                aria-controls={ids.panel}
-                icon={
-                  (
-                    monthlyEnabled &&
-                    tabPeriodicity !== PaymentPeriodicity.Monthly &&
-                    pricing.some(
-                      p =>
-                        p.periodicity === tabPeriodicity && p.amountMin != null
-                    )
-                  ) ?
-                    <MdPriceCheck />
-                  : undefined
-                }
-                iconPosition="start"
-                label={
-                  <>
-                    {t(`memberPlanList.paymentPeriodicity.${tabPeriodicity}`)}
-                  </>
-                }
-              />
-            ))}
-          </Tabs>
+            iconPosition="start"
+            label={t(`memberPlanList.paymentPeriodicity.${tabPeriodicity}`)}
+          />
+        ))}
+      </Tabs>
 
-          <TabContent
-            role="tabpanel"
-            id={ids.panel}
-            aria-labelledby={ids.tab(periodicity)}
-          >
-            {monthlyEnabled && (
-              <Grid
-                container
-                spacing={2}
-              >
-                <Grid size={{ xs: 12, sm: 9 }}>
-                  {delta != null && delta !== 0 && referenceDerived != null && (
-                    <FormHelperText>
-                      {t('memberplanForm.periodicityPricingDelta', {
-                        delta: formatDelta(delta, referenceDerived, currency),
-                      })}
-                    </FormHelperText>
-                  )}
-                </Grid>
+      {showDeriveToggle || deltaText !== null ?
+        <DeriveRow>
+          <FormHelperText>{deltaText}</FormHelperText>
 
-                <ToggleWrapper
-                  size={{ xs: 12, sm: 3 }}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  <FormControlLabel
-                    sx={{ marginRight: 0 }}
-                    control={
-                      <Switch
-                        checked={hasOverride}
-                        disabled={loading}
-                        onChange={(_event, enabled) =>
-                          setPeriodicityPrice(
-                            enabled ?
-                              {
-                                __typename: 'PeriodicityPrice',
-                                label: override?.label ?? null,
-                                amountMin: derivedMin ?? 0,
-                                amountTarget: derivedTarget,
-                                amountMax: derivedMax,
-                              }
-                            : {
-                                __typename: 'PeriodicityPrice',
-                                label: override?.label ?? null,
-                                amountMin: null,
-                                amountTarget: null,
-                                amountMax: null,
-                              }
-                          )
+          {showDeriveToggle ?
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={hasOverride}
+                  disabled={disabled}
+                  onChange={(_event, enabled) =>
+                    setPeriodicityPrice(
+                      enabled ? derived : (
+                        {
+                          label: override?.label ?? null,
+                          amountMin: null,
+                          amountTarget: null,
+                          amountMax: null,
                         }
-                      />
-                    }
-                    label={t('memberplanForm.periodicityPricingCustom')}
-                  />
-                  <InfoTooltip
-                    text={t('memberplanForm.periodicityPricingCustomHelp')}
-                  />
-                </ToggleWrapper>
-              </Grid>
-            )}
-
-            <Grid
-              container
-              spacing={2}
-            >
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <FieldLabel
-                  id={ids.min}
-                  label={t(
-                    isMonthlyTab ?
-                      'memberPlanEdit.amountPerMonthMin'
-                    : 'memberplanForm.periodicityPricingMin'
-                  )}
-                  help={t('memberplanForm.periodicityPricingMinHelpText')}
-                />
-                <CurrencyInput
-                  aria-labelledby={ids.min}
-                  name={`periodicityPricing.${periodicity}.amountMin`}
-                  currency={currency}
-                  centAmount={shownMin}
-                  disabled={loading || !fieldsEditable}
-                  onChange={centAmount => {
-                    setPeriodicityPrice({
-                      ...overrideBase,
-                      amountMin: Math.round(centAmount || 0),
-                    });
-                  }}
-                />
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <FieldLabel
-                  id={ids.target}
-                  label={t(
-                    isMonthlyTab ?
-                      'memberplanForm.amountPerMonthTarget'
-                    : 'memberplanForm.periodicityPricingTarget'
-                  )}
-                  help={t('memberplanForm.periodicityPricingTargetHelpText')}
-                />
-                <CurrencyInput
-                  aria-labelledby={ids.target}
-                  name={`periodicityPricing.${periodicity}.amountTarget`}
-                  currency={currency}
-                  centAmount={shownTarget}
-                  disabled={loading || !fieldsEditable}
-                  onChange={centAmount => {
-                    setPeriodicityPrice({
-                      ...overrideBase,
-                      amountTarget:
-                        centAmount != null ? Math.round(centAmount) : null,
-                    });
-                  }}
-                />
-                {targetInvalid && (
-                  <ErrorHelpText>
-                    {t('memberPlanEdit.targetPriceMustBeGreaterThanMin')}
-                  </ErrorHelpText>
-                )}
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <FieldLabel
-                  id={ids.max}
-                  label={t(
-                    isMonthlyTab ?
-                      'memberPlanEdit.amountPerMonthMax'
-                    : 'memberplanForm.periodicityPricingMax'
-                  )}
-                  help={t('memberplanForm.periodicityPricingMaxHelpText')}
-                />
-                <CurrencyInput
-                  aria-labelledby={ids.max}
-                  name={`periodicityPricing.${periodicity}.amountMax`}
-                  currency={currency}
-                  centAmount={shownMax}
-                  disabled={loading || !fieldsEditable}
-                  onChange={centAmount => {
-                    setPeriodicityPrice({
-                      ...overrideBase,
-                      amountMax:
-                        centAmount != null ? Math.round(centAmount) : null,
-                    });
-                  }}
-                />
-                {maxInvalid && (
-                  <ErrorHelpText>
-                    {t('memberPlanEdit.maxPriceMustBeGreaterThanMin')}
-                  </ErrorHelpText>
-                )}
-              </Grid>
-            </Grid>
-
-            <RowPaddingTop>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <FieldLabel
-                  id={ids.label}
-                  label={t('memberplanForm.periodicityPricingLabel')}
-                />
-                <TextField
-                  value={override?.label ?? ''}
-                  disabled={loading}
-                  slotProps={{
-                    htmlInput: {
-                      maxLength: 60,
-                      'aria-labelledby': ids.label,
-                      'aria-describedby': ids.labelHelp,
-                    },
-                  }}
-                  onChange={event =>
-                    setPeriodicityLabel(
-                      event.target.value?.trim() ? event.target.value : null
+                      )
                     )
                   }
                 />
-                <FormHelperText id={ids.labelHelp}>
-                  {t('memberplanForm.periodicityPricingLabelHelpText')}
-                </FormHelperText>
-              </Grid>
-            </RowPaddingTop>
-          </TabContent>
-        </CardContent>
-      </CardContent>
-    </PanelWidth100>
+              }
+              label={
+                <>
+                  {t('memberplanForm.periodicityPricingCustom')}{' '}
+                  <InfoTooltip
+                    text={t('memberplanForm.periodicityPricingCustomHelp')}
+                  />
+                </>
+              }
+            />
+          : null}
+        </DeriveRow>
+      : null}
+
+      <FormRow>
+        <div>
+          <AmountInput
+            key={`${periodicity}-min`}
+            name={`periodicityPricing.${periodicity}.amountMin`}
+            label={amountLabel(
+              'memberPlanEdit.amountPerMonthMin',
+              'memberplanForm.periodicityPricingMin',
+              'memberplanForm.periodicityPricingMinHelpText'
+            )}
+            currency={currency}
+            centAmount={shownMin}
+            disabled={amountsDisabled}
+            onChange={centAmount =>
+              setPeriodicityPrice({
+                ...overrideBase,
+                amountMin: Math.round(centAmount || 0),
+              })
+            }
+          />
+        </div>
+
+        <div>
+          <AmountInput
+            key={`${periodicity}-target`}
+            name={`periodicityPricing.${periodicity}.amountTarget`}
+            label={amountLabel(
+              'memberplanForm.amountPerMonthTarget',
+              'memberplanForm.periodicityPricingTarget',
+              'memberplanForm.periodicityPricingTargetHelpText'
+            )}
+            currency={currency}
+            centAmount={shownTarget}
+            disabled={amountsDisabled}
+            onChange={centAmount =>
+              setPeriodicityPrice({
+                ...overrideBase,
+                amountTarget:
+                  centAmount != null ? Math.round(centAmount) : null,
+              })
+            }
+          />
+          {targetInvalid ?
+            <FormHelperText error>
+              {t('memberPlanEdit.targetPriceMustBeGreaterThanMin')}
+            </FormHelperText>
+          : null}
+        </div>
+
+        <div>
+          <AmountInput
+            key={`${periodicity}-max`}
+            name={`periodicityPricing.${periodicity}.amountMax`}
+            label={amountLabel(
+              'memberPlanEdit.amountPerMonthMax',
+              'memberplanForm.periodicityPricingMax',
+              'memberplanForm.periodicityPricingMaxHelpText'
+            )}
+            currency={currency}
+            centAmount={shownMax}
+            disabled={amountsDisabled}
+            onChange={centAmount =>
+              setPeriodicityPrice({
+                ...overrideBase,
+                amountMax: centAmount != null ? Math.round(centAmount) : null,
+              })
+            }
+          />
+          {maxInvalid ?
+            <FormHelperText error>
+              {t('memberPlanEdit.maxPriceMustBeGreaterThanMin')}
+            </FormHelperText>
+          : null}
+        </div>
+      </FormRow>
+
+      <TextField
+        key={`${periodicity}-label`}
+        name={`periodicityPricing.${periodicity}.label`}
+        label={t('memberplanForm.periodicityPricingLabel')}
+        helperText={t('memberplanForm.periodicityPricingLabelHelpText')}
+        value={override?.label ?? ''}
+        disabled={disabled}
+        onChange={event =>
+          setPeriodicityPrice({
+            amountMin: override?.amountMin ?? null,
+            amountTarget: override?.amountTarget ?? null,
+            amountMax: override?.amountMax ?? null,
+            label: event.target.value.trim() ? event.target.value : null,
+          })
+        }
+        slotProps={{ htmlInput: { maxLength: 60 } }}
+        fullWidth
+      />
+    </Pricing>
   );
 }
+
+export const MemberPlanPricingField =
+  fieldComponent<PricingValue>()(PricingEditor);

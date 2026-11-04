@@ -135,10 +135,9 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   `Field`s, and `<FormErrorSummary/>` + `<LoadState/>` in the layout (worked
   examples: `libs/consent/editor`, `libs/banner/editor`). Forms not yet
   migrated keep the old pattern until they are: `Controller`s, a schema
-  factory taking `t` (`createMemberPlanSchema(t)`), a derived field written
-  with `setValue`, and nothing rendered until `formState.isLoading` clears
-  (before that every list-valued field is `undefined` and throws); the worked
-  example is `memberplan-form.tsx` in `libs/membership/editor`. Two traps either way: the Save
+  factory taking `t`, a derived field written with `setValue`, and nothing
+  rendered until `formState.isLoading` clears (before that every list-valued
+  field is `undefined` and throws). Two traps either way: the Save
   button is `type="submit"` *only* — an `onClick` that calls the save as well
   bypasses validation entirely; and a panel with `useAuthorisation` needs an
   `AuthContext` in its tests or every control renders disabled. Read fields

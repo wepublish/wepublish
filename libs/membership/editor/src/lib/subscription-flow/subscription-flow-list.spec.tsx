@@ -79,7 +79,7 @@ const interval = (
 const flow = (
   id: string,
   isDefault: boolean,
-  intervals: ReturnType<typeof interval>[]
+  intervals: SubscriptionFlowFragment['intervals']
 ) =>
   ({
     __typename: 'SubscriptionFlowModel',

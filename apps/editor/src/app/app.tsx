@@ -30,7 +30,8 @@ import {
   MailSendPage,
   MailTemplateEdit,
   MailTemplateList,
-  MemberPlanEdit,
+  MemberPlanCreateView,
+  MemberPlanEditView,
   SubscriptionFlowList,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
@@ -926,7 +927,7 @@ function AppRoutes() {
           path="memberplans/create"
           element={
             <Base>
-              <MemberPlanEdit />
+              <MemberPlanCreateView />
             </Base>
           }
         />
@@ -934,7 +935,7 @@ function AppRoutes() {
           path="memberplans/edit/:id"
           element={
             <Base>
-              <MemberPlanEdit />
+              <MemberPlanEditView />
             </Base>
           }
         />
