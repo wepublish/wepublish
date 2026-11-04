@@ -8,280 +8,280 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root';
-import { Route as IndexRouteImport } from './routes/index';
-import { Route as SplatRouteImport } from './routes/$';
-import { Route as SlugRouteImport } from './routes/$slug';
-import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml';
-import { Route as FeedDotjsonRouteImport } from './routes/feed[.]json';
-import { Route as LoginRouteImport } from './routes/login';
-import { Route as MitmachenRouteImport } from './routes/mitmachen';
-import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml';
-import { Route as SearchRouteImport } from './routes/search';
-import { Route as SignupRouteImport } from './routes/signup';
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml';
-import { Route as AIndexRouteImport } from './routes/a/index';
-import { Route as ASlugRouteImport } from './routes/a/$slug';
-import { Route as ApiAtomFeedRouteImport } from './routes/api/atom-feed';
-import { Route as ApiHealthRouteImport } from './routes/api/health';
-import { Route as ApiJsonFeedRouteImport } from './routes/api/json-feed';
-import { Route as ApiRssFeedRouteImport } from './routes/api/rss-feed';
-import { Route as ApiSitemapRouteImport } from './routes/api/sitemap';
-import { Route as AuthorIndexRouteImport } from './routes/author/index';
-import { Route as AuthorSlugRouteImport } from './routes/author/$slug';
-import { Route as EventIndexRouteImport } from './routes/event/index';
-import { Route as EventIdRouteImport } from './routes/event/$id';
-import { Route as IdIdRouteImport } from './routes/id/$id';
-import { Route as ProfileIndexRouteImport } from './routes/profile/index';
-import { Route as SitemapChunkRouteImport } from './routes/sitemap/$chunk';
-import { Route as AIdIdRouteImport } from './routes/a/id/$id';
-import { Route as ATagTagRouteImport } from './routes/a/tag/$tag';
-import { Route as ProfileSubscriptionIdRouteImport } from './routes/profile/subscription/$id';
-import { Route as ProfileSubscriptionDeactivatedRouteImport } from './routes/profile/subscription/deactivated';
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as SplatRouteImport } from './routes/$'
+import { Route as SlugRouteImport } from './routes/$slug'
+import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
+import { Route as FeedDotjsonRouteImport } from './routes/feed[.]json'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as MitmachenRouteImport } from './routes/mitmachen'
+import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as AIndexRouteImport } from './routes/a/index'
+import { Route as ASlugRouteImport } from './routes/a/$slug'
+import { Route as ApiAtomFeedRouteImport } from './routes/api/atom-feed'
+import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as ApiJsonFeedRouteImport } from './routes/api/json-feed'
+import { Route as ApiRssFeedRouteImport } from './routes/api/rss-feed'
+import { Route as ApiSitemapRouteImport } from './routes/api/sitemap'
+import { Route as AuthorIndexRouteImport } from './routes/author/index'
+import { Route as AuthorSlugRouteImport } from './routes/author/$slug'
+import { Route as EventIndexRouteImport } from './routes/event/index'
+import { Route as EventIdRouteImport } from './routes/event/$id'
+import { Route as IdIdRouteImport } from './routes/id/$id'
+import { Route as ProfileIndexRouteImport } from './routes/profile/index'
+import { Route as SitemapChunkRouteImport } from './routes/sitemap/$chunk'
+import { Route as AIdIdRouteImport } from './routes/a/id/$id'
+import { Route as ATagTagRouteImport } from './routes/a/tag/$tag'
+import { Route as ProfileSubscriptionIdRouteImport } from './routes/profile/subscription/$id'
+import { Route as ProfileSubscriptionDeactivatedRouteImport } from './routes/profile/subscription/deactivated'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SlugRoute = SlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AtomDotxmlRoute = AtomDotxmlRouteImport.update({
   id: '/atom.xml',
   path: '/atom.xml',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const FeedDotjsonRoute = FeedDotjsonRouteImport.update({
   id: '/feed.json',
   path: '/feed.json',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const MitmachenRoute = MitmachenRouteImport.update({
   id: '/mitmachen',
   path: '/mitmachen',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const RssDotxmlRoute = RssDotxmlRouteImport.update({
   id: '/rss.xml',
   path: '/rss.xml',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AIndexRoute = AIndexRouteImport.update({
   id: '/a/',
   path: '/a/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ASlugRoute = ASlugRouteImport.update({
   id: '/a/$slug',
   path: '/a/$slug',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ApiAtomFeedRoute = ApiAtomFeedRouteImport.update({
   id: '/api/atom-feed',
   path: '/api/atom-feed',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
   path: '/api/health',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ApiJsonFeedRoute = ApiJsonFeedRouteImport.update({
   id: '/api/json-feed',
   path: '/api/json-feed',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ApiRssFeedRoute = ApiRssFeedRouteImport.update({
   id: '/api/rss-feed',
   path: '/api/rss-feed',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ApiSitemapRoute = ApiSitemapRouteImport.update({
   id: '/api/sitemap',
   path: '/api/sitemap',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthorIndexRoute = AuthorIndexRouteImport.update({
   id: '/author/',
   path: '/author/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthorSlugRoute = AuthorSlugRouteImport.update({
   id: '/author/$slug',
   path: '/author/$slug',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const EventIndexRoute = EventIndexRouteImport.update({
   id: '/event/',
   path: '/event/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const EventIdRoute = EventIdRouteImport.update({
   id: '/event/$id',
   path: '/event/$id',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IdIdRoute = IdIdRouteImport.update({
   id: '/id/$id',
   path: '/id/$id',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ProfileIndexRoute = ProfileIndexRouteImport.update({
   id: '/profile/',
   path: '/profile/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SitemapChunkRoute = SitemapChunkRouteImport.update({
   id: '/sitemap/$chunk',
   path: '/sitemap/$chunk',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AIdIdRoute = AIdIdRouteImport.update({
   id: '/a/id/$id',
   path: '/a/id/$id',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ATagTagRoute = ATagTagRouteImport.update({
   id: '/a/tag/$tag',
   path: '/a/tag/$tag',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ProfileSubscriptionIdRoute = ProfileSubscriptionIdRouteImport.update({
   id: '/profile/subscription/$id',
   path: '/profile/subscription/$id',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ProfileSubscriptionDeactivatedRoute =
   ProfileSubscriptionDeactivatedRouteImport.update({
     id: '/profile/subscription/deactivated',
     path: '/profile/subscription/deactivated',
     getParentRoute: () => rootRouteImport,
-  } as any);
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute;
-  '/$': typeof SplatRoute;
-  '/$slug': typeof SlugRoute;
-  '/atom.xml': typeof AtomDotxmlRoute;
-  '/feed.json': typeof FeedDotjsonRoute;
-  '/login': typeof LoginRoute;
-  '/mitmachen': typeof MitmachenRoute;
-  '/rss.xml': typeof RssDotxmlRoute;
-  '/search': typeof SearchRoute;
-  '/signup': typeof SignupRoute;
-  '/sitemap.xml': typeof SitemapDotxmlRoute;
-  '/a/$slug': typeof ASlugRoute;
-  '/api/atom-feed': typeof ApiAtomFeedRoute;
-  '/api/health': typeof ApiHealthRoute;
-  '/api/json-feed': typeof ApiJsonFeedRoute;
-  '/api/rss-feed': typeof ApiRssFeedRoute;
-  '/api/sitemap': typeof ApiSitemapRoute;
-  '/author/$slug': typeof AuthorSlugRoute;
-  '/event/$id': typeof EventIdRoute;
-  '/id/$id': typeof IdIdRoute;
-  '/sitemap/$chunk': typeof SitemapChunkRoute;
-  '/a/': typeof AIndexRoute;
-  '/author/': typeof AuthorIndexRoute;
-  '/event/': typeof EventIndexRoute;
-  '/profile/': typeof ProfileIndexRoute;
-  '/a/id/$id': typeof AIdIdRoute;
-  '/a/tag/$tag': typeof ATagTagRoute;
-  '/profile/subscription/$id': typeof ProfileSubscriptionIdRoute;
-  '/profile/subscription/deactivated': typeof ProfileSubscriptionDeactivatedRoute;
+  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/$slug': typeof SlugRoute
+  '/atom.xml': typeof AtomDotxmlRoute
+  '/feed.json': typeof FeedDotjsonRoute
+  '/login': typeof LoginRoute
+  '/mitmachen': typeof MitmachenRoute
+  '/rss.xml': typeof RssDotxmlRoute
+  '/search': typeof SearchRoute
+  '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/a/$slug': typeof ASlugRoute
+  '/api/atom-feed': typeof ApiAtomFeedRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/json-feed': typeof ApiJsonFeedRoute
+  '/api/rss-feed': typeof ApiRssFeedRoute
+  '/api/sitemap': typeof ApiSitemapRoute
+  '/author/$slug': typeof AuthorSlugRoute
+  '/event/$id': typeof EventIdRoute
+  '/id/$id': typeof IdIdRoute
+  '/sitemap/$chunk': typeof SitemapChunkRoute
+  '/a/': typeof AIndexRoute
+  '/author/': typeof AuthorIndexRoute
+  '/event/': typeof EventIndexRoute
+  '/profile/': typeof ProfileIndexRoute
+  '/a/id/$id': typeof AIdIdRoute
+  '/a/tag/$tag': typeof ATagTagRoute
+  '/profile/subscription/$id': typeof ProfileSubscriptionIdRoute
+  '/profile/subscription/deactivated': typeof ProfileSubscriptionDeactivatedRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute;
-  '/$': typeof SplatRoute;
-  '/$slug': typeof SlugRoute;
-  '/atom.xml': typeof AtomDotxmlRoute;
-  '/feed.json': typeof FeedDotjsonRoute;
-  '/login': typeof LoginRoute;
-  '/mitmachen': typeof MitmachenRoute;
-  '/rss.xml': typeof RssDotxmlRoute;
-  '/search': typeof SearchRoute;
-  '/signup': typeof SignupRoute;
-  '/sitemap.xml': typeof SitemapDotxmlRoute;
-  '/a/$slug': typeof ASlugRoute;
-  '/api/atom-feed': typeof ApiAtomFeedRoute;
-  '/api/health': typeof ApiHealthRoute;
-  '/api/json-feed': typeof ApiJsonFeedRoute;
-  '/api/rss-feed': typeof ApiRssFeedRoute;
-  '/api/sitemap': typeof ApiSitemapRoute;
-  '/author/$slug': typeof AuthorSlugRoute;
-  '/event/$id': typeof EventIdRoute;
-  '/id/$id': typeof IdIdRoute;
-  '/sitemap/$chunk': typeof SitemapChunkRoute;
-  '/a': typeof AIndexRoute;
-  '/author': typeof AuthorIndexRoute;
-  '/event': typeof EventIndexRoute;
-  '/profile': typeof ProfileIndexRoute;
-  '/a/id/$id': typeof AIdIdRoute;
-  '/a/tag/$tag': typeof ATagTagRoute;
-  '/profile/subscription/$id': typeof ProfileSubscriptionIdRoute;
-  '/profile/subscription/deactivated': typeof ProfileSubscriptionDeactivatedRoute;
+  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/$slug': typeof SlugRoute
+  '/atom.xml': typeof AtomDotxmlRoute
+  '/feed.json': typeof FeedDotjsonRoute
+  '/login': typeof LoginRoute
+  '/mitmachen': typeof MitmachenRoute
+  '/rss.xml': typeof RssDotxmlRoute
+  '/search': typeof SearchRoute
+  '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/a/$slug': typeof ASlugRoute
+  '/api/atom-feed': typeof ApiAtomFeedRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/json-feed': typeof ApiJsonFeedRoute
+  '/api/rss-feed': typeof ApiRssFeedRoute
+  '/api/sitemap': typeof ApiSitemapRoute
+  '/author/$slug': typeof AuthorSlugRoute
+  '/event/$id': typeof EventIdRoute
+  '/id/$id': typeof IdIdRoute
+  '/sitemap/$chunk': typeof SitemapChunkRoute
+  '/a': typeof AIndexRoute
+  '/author': typeof AuthorIndexRoute
+  '/event': typeof EventIndexRoute
+  '/profile': typeof ProfileIndexRoute
+  '/a/id/$id': typeof AIdIdRoute
+  '/a/tag/$tag': typeof ATagTagRoute
+  '/profile/subscription/$id': typeof ProfileSubscriptionIdRoute
+  '/profile/subscription/deactivated': typeof ProfileSubscriptionDeactivatedRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  '/': typeof IndexRoute;
-  '/$': typeof SplatRoute;
-  '/$slug': typeof SlugRoute;
-  '/atom.xml': typeof AtomDotxmlRoute;
-  '/feed.json': typeof FeedDotjsonRoute;
-  '/login': typeof LoginRoute;
-  '/mitmachen': typeof MitmachenRoute;
-  '/rss.xml': typeof RssDotxmlRoute;
-  '/search': typeof SearchRoute;
-  '/signup': typeof SignupRoute;
-  '/sitemap.xml': typeof SitemapDotxmlRoute;
-  '/a/$slug': typeof ASlugRoute;
-  '/api/atom-feed': typeof ApiAtomFeedRoute;
-  '/api/health': typeof ApiHealthRoute;
-  '/api/json-feed': typeof ApiJsonFeedRoute;
-  '/api/rss-feed': typeof ApiRssFeedRoute;
-  '/api/sitemap': typeof ApiSitemapRoute;
-  '/author/$slug': typeof AuthorSlugRoute;
-  '/event/$id': typeof EventIdRoute;
-  '/id/$id': typeof IdIdRoute;
-  '/sitemap/$chunk': typeof SitemapChunkRoute;
-  '/a/': typeof AIndexRoute;
-  '/author/': typeof AuthorIndexRoute;
-  '/event/': typeof EventIndexRoute;
-  '/profile/': typeof ProfileIndexRoute;
-  '/a/id/$id': typeof AIdIdRoute;
-  '/a/tag/$tag': typeof ATagTagRoute;
-  '/profile/subscription/$id': typeof ProfileSubscriptionIdRoute;
-  '/profile/subscription/deactivated': typeof ProfileSubscriptionDeactivatedRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/$slug': typeof SlugRoute
+  '/atom.xml': typeof AtomDotxmlRoute
+  '/feed.json': typeof FeedDotjsonRoute
+  '/login': typeof LoginRoute
+  '/mitmachen': typeof MitmachenRoute
+  '/rss.xml': typeof RssDotxmlRoute
+  '/search': typeof SearchRoute
+  '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/a/$slug': typeof ASlugRoute
+  '/api/atom-feed': typeof ApiAtomFeedRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/json-feed': typeof ApiJsonFeedRoute
+  '/api/rss-feed': typeof ApiRssFeedRoute
+  '/api/sitemap': typeof ApiSitemapRoute
+  '/author/$slug': typeof AuthorSlugRoute
+  '/event/$id': typeof EventIdRoute
+  '/id/$id': typeof IdIdRoute
+  '/sitemap/$chunk': typeof SitemapChunkRoute
+  '/a/': typeof AIndexRoute
+  '/author/': typeof AuthorIndexRoute
+  '/event/': typeof EventIndexRoute
+  '/profile/': typeof ProfileIndexRoute
+  '/a/id/$id': typeof AIdIdRoute
+  '/a/tag/$tag': typeof ATagTagRoute
+  '/profile/subscription/$id': typeof ProfileSubscriptionIdRoute
+  '/profile/subscription/deactivated': typeof ProfileSubscriptionDeactivatedRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/$'
@@ -311,8 +311,8 @@ export interface FileRouteTypes {
     | '/a/id/$id'
     | '/a/tag/$tag'
     | '/profile/subscription/$id'
-    | '/profile/subscription/deactivated';
-  fileRoutesByTo: FileRoutesByTo;
+    | '/profile/subscription/deactivated'
+  fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$'
@@ -342,7 +342,7 @@ export interface FileRouteTypes {
     | '/a/id/$id'
     | '/a/tag/$tag'
     | '/profile/subscription/$id'
-    | '/profile/subscription/deactivated';
+    | '/profile/subscription/deactivated'
   id:
     | '__root__'
     | '/'
@@ -373,246 +373,246 @@ export interface FileRouteTypes {
     | '/a/id/$id'
     | '/a/tag/$tag'
     | '/profile/subscription/$id'
-    | '/profile/subscription/deactivated';
-  fileRoutesById: FileRoutesById;
+    | '/profile/subscription/deactivated'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  SplatRoute: typeof SplatRoute;
-  SlugRoute: typeof SlugRoute;
-  AtomDotxmlRoute: typeof AtomDotxmlRoute;
-  FeedDotjsonRoute: typeof FeedDotjsonRoute;
-  LoginRoute: typeof LoginRoute;
-  MitmachenRoute: typeof MitmachenRoute;
-  RssDotxmlRoute: typeof RssDotxmlRoute;
-  SearchRoute: typeof SearchRoute;
-  SignupRoute: typeof SignupRoute;
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute;
-  ASlugRoute: typeof ASlugRoute;
-  ApiAtomFeedRoute: typeof ApiAtomFeedRoute;
-  ApiHealthRoute: typeof ApiHealthRoute;
-  ApiJsonFeedRoute: typeof ApiJsonFeedRoute;
-  ApiRssFeedRoute: typeof ApiRssFeedRoute;
-  ApiSitemapRoute: typeof ApiSitemapRoute;
-  AuthorSlugRoute: typeof AuthorSlugRoute;
-  EventIdRoute: typeof EventIdRoute;
-  IdIdRoute: typeof IdIdRoute;
-  SitemapChunkRoute: typeof SitemapChunkRoute;
-  AIndexRoute: typeof AIndexRoute;
-  AuthorIndexRoute: typeof AuthorIndexRoute;
-  EventIndexRoute: typeof EventIndexRoute;
-  ProfileIndexRoute: typeof ProfileIndexRoute;
-  AIdIdRoute: typeof AIdIdRoute;
-  ATagTagRoute: typeof ATagTagRoute;
-  ProfileSubscriptionIdRoute: typeof ProfileSubscriptionIdRoute;
-  ProfileSubscriptionDeactivatedRoute: typeof ProfileSubscriptionDeactivatedRoute;
+  IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
+  SlugRoute: typeof SlugRoute
+  AtomDotxmlRoute: typeof AtomDotxmlRoute
+  FeedDotjsonRoute: typeof FeedDotjsonRoute
+  LoginRoute: typeof LoginRoute
+  MitmachenRoute: typeof MitmachenRoute
+  RssDotxmlRoute: typeof RssDotxmlRoute
+  SearchRoute: typeof SearchRoute
+  SignupRoute: typeof SignupRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ASlugRoute: typeof ASlugRoute
+  ApiAtomFeedRoute: typeof ApiAtomFeedRoute
+  ApiHealthRoute: typeof ApiHealthRoute
+  ApiJsonFeedRoute: typeof ApiJsonFeedRoute
+  ApiRssFeedRoute: typeof ApiRssFeedRoute
+  ApiSitemapRoute: typeof ApiSitemapRoute
+  AuthorSlugRoute: typeof AuthorSlugRoute
+  EventIdRoute: typeof EventIdRoute
+  IdIdRoute: typeof IdIdRoute
+  SitemapChunkRoute: typeof SitemapChunkRoute
+  AIndexRoute: typeof AIndexRoute
+  AuthorIndexRoute: typeof AuthorIndexRoute
+  EventIndexRoute: typeof EventIndexRoute
+  ProfileIndexRoute: typeof ProfileIndexRoute
+  AIdIdRoute: typeof AIdIdRoute
+  ATagTagRoute: typeof ATagTagRoute
+  ProfileSubscriptionIdRoute: typeof ProfileSubscriptionIdRoute
+  ProfileSubscriptionDeactivatedRoute: typeof ProfileSubscriptionDeactivatedRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
-      id: '/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$': {
-      id: '/$';
-      path: '/$';
-      fullPath: '/$';
-      preLoaderRoute: typeof SplatRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$slug': {
-      id: '/$slug';
-      path: '/$slug';
-      fullPath: '/$slug';
-      preLoaderRoute: typeof SlugRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/$slug'
+      path: '/$slug'
+      fullPath: '/$slug'
+      preLoaderRoute: typeof SlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/atom.xml': {
-      id: '/atom.xml';
-      path: '/atom.xml';
-      fullPath: '/atom.xml';
-      preLoaderRoute: typeof AtomDotxmlRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/atom.xml'
+      path: '/atom.xml'
+      fullPath: '/atom.xml'
+      preLoaderRoute: typeof AtomDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/feed.json': {
-      id: '/feed.json';
-      path: '/feed.json';
-      fullPath: '/feed.json';
-      preLoaderRoute: typeof FeedDotjsonRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/feed.json'
+      path: '/feed.json'
+      fullPath: '/feed.json'
+      preLoaderRoute: typeof FeedDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
-      id: '/login';
-      path: '/login';
-      fullPath: '/login';
-      preLoaderRoute: typeof LoginRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mitmachen': {
-      id: '/mitmachen';
-      path: '/mitmachen';
-      fullPath: '/mitmachen';
-      preLoaderRoute: typeof MitmachenRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/mitmachen'
+      path: '/mitmachen'
+      fullPath: '/mitmachen'
+      preLoaderRoute: typeof MitmachenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rss.xml': {
-      id: '/rss.xml';
-      path: '/rss.xml';
-      fullPath: '/rss.xml';
-      preLoaderRoute: typeof RssDotxmlRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/rss.xml'
+      path: '/rss.xml'
+      fullPath: '/rss.xml'
+      preLoaderRoute: typeof RssDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
-      id: '/search';
-      path: '/search';
-      fullPath: '/search';
-      preLoaderRoute: typeof SearchRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
-      id: '/signup';
-      path: '/signup';
-      fullPath: '/signup';
-      preLoaderRoute: typeof SignupRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
-      id: '/sitemap.xml';
-      path: '/sitemap.xml';
-      fullPath: '/sitemap.xml';
-      preLoaderRoute: typeof SitemapDotxmlRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/a/': {
-      id: '/a/';
-      path: '/a';
-      fullPath: '/a/';
-      preLoaderRoute: typeof AIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/a/'
+      path: '/a'
+      fullPath: '/a/'
+      preLoaderRoute: typeof AIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/a/$slug': {
-      id: '/a/$slug';
-      path: '/a/$slug';
-      fullPath: '/a/$slug';
-      preLoaderRoute: typeof ASlugRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/a/$slug'
+      path: '/a/$slug'
+      fullPath: '/a/$slug'
+      preLoaderRoute: typeof ASlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/atom-feed': {
-      id: '/api/atom-feed';
-      path: '/api/atom-feed';
-      fullPath: '/api/atom-feed';
-      preLoaderRoute: typeof ApiAtomFeedRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/api/atom-feed'
+      path: '/api/atom-feed'
+      fullPath: '/api/atom-feed'
+      preLoaderRoute: typeof ApiAtomFeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/health': {
-      id: '/api/health';
-      path: '/api/health';
-      fullPath: '/api/health';
-      preLoaderRoute: typeof ApiHealthRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/json-feed': {
-      id: '/api/json-feed';
-      path: '/api/json-feed';
-      fullPath: '/api/json-feed';
-      preLoaderRoute: typeof ApiJsonFeedRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/api/json-feed'
+      path: '/api/json-feed'
+      fullPath: '/api/json-feed'
+      preLoaderRoute: typeof ApiJsonFeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/rss-feed': {
-      id: '/api/rss-feed';
-      path: '/api/rss-feed';
-      fullPath: '/api/rss-feed';
-      preLoaderRoute: typeof ApiRssFeedRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/api/rss-feed'
+      path: '/api/rss-feed'
+      fullPath: '/api/rss-feed'
+      preLoaderRoute: typeof ApiRssFeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/sitemap': {
-      id: '/api/sitemap';
-      path: '/api/sitemap';
-      fullPath: '/api/sitemap';
-      preLoaderRoute: typeof ApiSitemapRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/api/sitemap'
+      path: '/api/sitemap'
+      fullPath: '/api/sitemap'
+      preLoaderRoute: typeof ApiSitemapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/author/': {
-      id: '/author/';
-      path: '/author';
-      fullPath: '/author/';
-      preLoaderRoute: typeof AuthorIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/author/'
+      path: '/author'
+      fullPath: '/author/'
+      preLoaderRoute: typeof AuthorIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/author/$slug': {
-      id: '/author/$slug';
-      path: '/author/$slug';
-      fullPath: '/author/$slug';
-      preLoaderRoute: typeof AuthorSlugRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/author/$slug'
+      path: '/author/$slug'
+      fullPath: '/author/$slug'
+      preLoaderRoute: typeof AuthorSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/event/': {
-      id: '/event/';
-      path: '/event';
-      fullPath: '/event/';
-      preLoaderRoute: typeof EventIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/event/'
+      path: '/event'
+      fullPath: '/event/'
+      preLoaderRoute: typeof EventIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/event/$id': {
-      id: '/event/$id';
-      path: '/event/$id';
-      fullPath: '/event/$id';
-      preLoaderRoute: typeof EventIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/event/$id'
+      path: '/event/$id'
+      fullPath: '/event/$id'
+      preLoaderRoute: typeof EventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/id/$id': {
-      id: '/id/$id';
-      path: '/id/$id';
-      fullPath: '/id/$id';
-      preLoaderRoute: typeof IdIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/id/$id'
+      path: '/id/$id'
+      fullPath: '/id/$id'
+      preLoaderRoute: typeof IdIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile/': {
-      id: '/profile/';
-      path: '/profile';
-      fullPath: '/profile/';
-      preLoaderRoute: typeof ProfileIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap/$chunk': {
-      id: '/sitemap/$chunk';
-      path: '/sitemap/$chunk';
-      fullPath: '/sitemap/$chunk';
-      preLoaderRoute: typeof SitemapChunkRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/sitemap/$chunk'
+      path: '/sitemap/$chunk'
+      fullPath: '/sitemap/$chunk'
+      preLoaderRoute: typeof SitemapChunkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/a/id/$id': {
-      id: '/a/id/$id';
-      path: '/a/id/$id';
-      fullPath: '/a/id/$id';
-      preLoaderRoute: typeof AIdIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/a/id/$id'
+      path: '/a/id/$id'
+      fullPath: '/a/id/$id'
+      preLoaderRoute: typeof AIdIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/a/tag/$tag': {
-      id: '/a/tag/$tag';
-      path: '/a/tag/$tag';
-      fullPath: '/a/tag/$tag';
-      preLoaderRoute: typeof ATagTagRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/a/tag/$tag'
+      path: '/a/tag/$tag'
+      fullPath: '/a/tag/$tag'
+      preLoaderRoute: typeof ATagTagRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile/subscription/$id': {
-      id: '/profile/subscription/$id';
-      path: '/profile/subscription/$id';
-      fullPath: '/profile/subscription/$id';
-      preLoaderRoute: typeof ProfileSubscriptionIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/profile/subscription/$id'
+      path: '/profile/subscription/$id'
+      fullPath: '/profile/subscription/$id'
+      preLoaderRoute: typeof ProfileSubscriptionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile/subscription/deactivated': {
-      id: '/profile/subscription/deactivated';
-      path: '/profile/subscription/deactivated';
-      fullPath: '/profile/subscription/deactivated';
-      preLoaderRoute: typeof ProfileSubscriptionDeactivatedRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/profile/subscription/deactivated'
+      path: '/profile/subscription/deactivated'
+      fullPath: '/profile/subscription/deactivated'
+      preLoaderRoute: typeof ProfileSubscriptionDeactivatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -646,17 +646,17 @@ const rootRouteChildren: RootRouteChildren = {
   ATagTagRoute: ATagTagRoute,
   ProfileSubscriptionIdRoute: ProfileSubscriptionIdRoute,
   ProfileSubscriptionDeactivatedRoute: ProfileSubscriptionDeactivatedRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from './router.tsx';
-import type { startInstance } from './start.ts';
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }
