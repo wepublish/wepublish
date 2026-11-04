@@ -16,6 +16,8 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 
+import { translatedError } from './error-text';
+
 const ThemeColorReel = styled.div`
   display: flex;
   flex-flow: row wrap;
@@ -118,7 +120,7 @@ export const PaletteListItem = <
                         )}
                       />
                     }
-                    error={error}
+                    error={translatedError(t, error)}
                   />
                 )}
               />
@@ -134,7 +136,7 @@ export const PaletteListItem = <
                   <ColorPicker
                     {...field}
                     label={t(`websiteSettings.theme.${name}`)}
-                    error={error}
+                    error={translatedError(t, error)}
                     helperText={t(`websiteSettings.theme.${name}HelperText`)}
                   />
                 )}

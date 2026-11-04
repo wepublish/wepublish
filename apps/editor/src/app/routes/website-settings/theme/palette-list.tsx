@@ -1,9 +1,9 @@
 import { List } from '@mui/material';
 import { useState } from 'react';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 import { PaletteListItem } from './palette-list-item';
-import { paletteSchema } from './schema';
+import { paletteSchema } from './theme.schema';
 
 type PaletteListProps = {
   name: string;

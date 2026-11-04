@@ -1,91 +1,61 @@
-import i18n from 'i18next';
-
 import {
   normalizeTheme,
   normalizeValues,
   paletteSchema,
   typographyItem,
   typographySchema,
-} from './schema';
+} from './theme.schema';
 import { mediaQuery } from './typography-breakpoints';
 
 const sm = mediaQuery('sm');
 const md = mediaQuery('md');
 const xl = mediaQuery('xl');
 
-const messages = (result: { error?: { issues: { message: string }[] } }) =>
-  result.error?.issues.map(issue => issue.message);
+type Issue = { message: string; params?: Record<string, unknown> };
+
+const issues = (result: { error?: { issues: Issue[] } }) =>
+  result.error?.issues.map(({ message, params }) =>
+    params ? { message, params } : { message }
+  );
 
 describe('theme schema validation messages', () => {
-  beforeAll(async () => {
-    await i18n.init({
-      lng: 'en',
-      fallbackLng: 'en',
-      resources: {
-        en: {
-          translation: {
-            websiteSettings: {
-              theme: {
-                invalidColor: 'Invalid colour',
-                invalidLength: 'Needs a unit',
-                lengthOutOfRange: 'Between {{min}} and {{max}}',
-              },
-            },
-          },
-        },
-        de: {
-          translation: {
-            websiteSettings: {
-              theme: {
-                invalidColor: 'Ungültige Farbe',
-                invalidLength: 'Braucht eine Einheit',
-                lengthOutOfRange: 'Zwischen {{min}} und {{max}}',
-              },
-            },
-          },
-        },
-      },
-    });
-  });
-
-  afterEach(() => i18n.changeLanguage('en'));
-
   const invalidColor = () =>
     paletteSchema.shape.divider.safeParse('not-a-colour');
 
-  it('translates an invalid colour', () => {
-    expect(messages(invalidColor())).toEqual(['Invalid colour']);
+  it('names an invalid colour by its translation key', () => {
+    expect(issues(invalidColor())).toEqual([
+      { message: 'websiteSettings.theme.invalidColor' },
+    ]);
   });
 
-  it('translates a length without a unit', () => {
-    expect(messages(typographyItem.shape.fontSize.safeParse('big'))).toContain(
-      'Needs a unit'
-    );
+  it('names a length without a unit by its translation key, once', () => {
+    expect(issues(typographyItem.shape.fontSize.safeParse('big'))).toEqual([
+      { message: 'websiteSettings.theme.invalidLength' },
+    ]);
   });
 
   it('names the allowed range of a length that is out of range', () => {
-    expect(messages(typographyItem.shape.fontSize.safeParse('100em'))).toEqual([
-      'Between 0.5em and 6.5em',
+    expect(issues(typographyItem.shape.fontSize.safeParse('100em'))).toEqual([
+      {
+        message: 'websiteSettings.theme.lengthOutOfRange',
+        params: { min: '0.5em', max: '6.5em' },
+      },
     ]);
   });
 
   it('allows the same line height range on the base as on every style', () => {
     const base = typographySchema.shape.allVariants.shape.lineHeight;
 
-    expect(messages(base.safeParse('0.5em'))).toEqual(['Between 1em and 3em']);
-    expect(base.safeParse('3em').success).toBe(true);
-    expect(messages(base.safeParse('4em'))).toEqual(
-      messages(typographyItem.shape.lineHeight.safeParse('4em'))
-    );
-  });
-
-  it('follows the language at validation time, not at import time', async () => {
-    await i18n.changeLanguage('de');
-
-    expect(messages(invalidColor())).toEqual(['Ungültige Farbe']);
-    expect(messages(typographyItem.shape.fontSize.safeParse('100em'))).toEqual([
-      'Zwischen 0.5em und 6.5em',
+    expect(issues(base.safeParse('0.5em'))).toEqual([
+      {
+        message: 'websiteSettings.theme.lengthOutOfRange',
+        params: { min: '1em', max: '3em' },
+      },
     ]);
+    expect(base.safeParse('3em').success).toBe(true);
+    expect(issues(base.safeParse('4em'))).toEqual(
+      issues(typographyItem.shape.lineHeight.safeParse('4em'))
+    );
   });
 });
 

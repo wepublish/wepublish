@@ -27,6 +27,8 @@ import {
 import { FieldError } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { errorText } from './error-text';
+
 type CssUnit = 'em' | 'rem' | 'px';
 export type UnitConfig = Record<
   CssUnit,
@@ -165,7 +167,7 @@ export const LengthSlider = forwardRef<HTMLInputElement, CssLengthSliderProps>(
 
     const config = unitConfig[unit];
     const shown = roundCssLength(num, unit);
-    const errorMessage = error?.message;
+    const errorMessage = errorText(t, error);
     const ariaDescribedBy =
       [describedBy, errorMessage ? errorId : undefined]
         .filter(Boolean)

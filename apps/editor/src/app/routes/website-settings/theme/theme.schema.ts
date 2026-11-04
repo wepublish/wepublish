@@ -1,36 +1,30 @@
-import i18n from 'i18next';
+import { FontStyle, FontWeight } from '@wepublish/editor/api';
 import { parseToRgb } from 'polished';
 import { RgbaColor } from 'polished/lib/types/color';
 import { CSSProperties } from 'react';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
-import { lazyMessage } from '../../../utility';
 import { mediaQuery, screenSizes } from './typography-breakpoints';
 
 const hexColor = z
-  .string({ errorMap: lazyMessage('websiteSettings.theme.invalidColor') })
-  .regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/)
+  .string({ error: 'websiteSettings.theme.invalidColor' })
+  .regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, {
+    error: 'websiteSettings.theme.invalidColor',
+  })
   .nullish();
 
+const paletteColor = () =>
+  z.object({
+    main: hexColor,
+    light: hexColor,
+    dark: hexColor,
+    contrastText: hexColor,
+  });
+
 export const paletteSchema = z.object({
-  primary: z.object({
-    main: hexColor,
-    light: hexColor,
-    dark: hexColor,
-    contrastText: hexColor,
-  }),
-  secondary: z.object({
-    main: hexColor,
-    light: hexColor,
-    dark: hexColor,
-    contrastText: hexColor,
-  }),
-  accent: z.object({
-    main: hexColor,
-    light: hexColor,
-    dark: hexColor,
-    contrastText: hexColor,
-  }),
+  primary: paletteColor(),
+  secondary: paletteColor(),
+  accent: paletteColor(),
   background: z.object({
     default: hexColor,
     paper: hexColor,
@@ -39,64 +33,40 @@ export const paletteSchema = z.object({
     primary: hexColor,
   }),
   divider: hexColor,
-  info: z.object({
-    main: hexColor,
-    light: hexColor,
-    dark: hexColor,
-    contrastText: hexColor,
-  }),
-  success: z.object({
-    main: hexColor,
-    light: hexColor,
-    dark: hexColor,
-    contrastText: hexColor,
-  }),
-  error: z.object({
-    main: hexColor,
-    light: hexColor,
-    dark: hexColor,
-    contrastText: hexColor,
-  }),
-  warning: z.object({
-    main: hexColor,
-    light: hexColor,
-    dark: hexColor,
-    contrastText: hexColor,
-  }),
+  info: paletteColor(),
+  success: paletteColor(),
+  error: paletteColor(),
+  warning: paletteColor(),
 });
 
 type CssUnit = 'em' | 'rem' | 'px';
 type UnitRanges = Record<CssUnit, { min: number; max: number }>;
 
+const cssLength = /^(-?(?:\d+\.?\d*|\.\d+))(em|rem|px)$/;
+
 function cssLengthValue(ranges: UnitRanges) {
   return z
-    .string({ errorMap: lazyMessage('websiteSettings.theme.invalidLength') })
-    .regex(/^-?(\d+\.?\d*|\.\d+)(em|rem|px)$/)
-    .refine(
-      val => {
-        const match = val.match(/^(-?[\d.]+)(em|rem|px)$/);
+    .string({ error: 'websiteSettings.theme.invalidLength' })
+    .regex(cssLength, { error: 'websiteSettings.theme.invalidLength' })
+    .superRefine((value, context) => {
+      const match = value.match(cssLength);
 
-        if (!match) {
-          return false;
-        }
-
-        const num = parseFloat(match[1]);
-        const unit = match[2] as CssUnit;
-
-        return num >= ranges[unit].min && num <= ranges[unit].max;
-      },
-      val => {
-        const match = val.match(/^(-?[\d.]+)(em|rem|px)$/);
-        const unit = (match?.[2] ?? 'em') as CssUnit;
-
-        return {
-          message: i18n.t('websiteSettings.theme.lengthOutOfRange', {
-            min: `${ranges[unit].min}${unit}`,
-            max: `${ranges[unit].max}${unit}`,
-          }),
-        };
+      if (!match) {
+        return;
       }
-    )
+
+      const unit = match[2] as CssUnit;
+      const { min, max } = ranges[unit];
+      const length = parseFloat(match[1]);
+
+      if (length < min || length > max) {
+        context.addIssue({
+          code: 'custom',
+          message: 'websiteSettings.theme.lengthOutOfRange',
+          params: { min: `${min}${unit}`, max: `${max}${unit}` },
+        });
+      }
+    })
     .nullish();
 }
 
@@ -146,20 +116,9 @@ const typographyBase = z.object({
   fontStyle: z.enum(['normal', 'italic']).nullish(),
 });
 
-type TypographyItem = z.infer<typeof typographyBase> & {
-  [query: ReturnType<typeof mediaQuery>]:
-    z.infer<typeof breakpointOverride> | undefined;
-};
-
 export const typographyItem = typographyBase.extend(
   mediaQueryOverrides
-) as unknown as z.ZodObject<
-  (typeof typographyBase)['shape'],
-  'strip',
-  z.ZodTypeAny,
-  TypographyItem,
-  TypographyItem
->;
+) as unknown as typeof typographyBase;
 
 export const typographySchema = z.object({
   allVariants: z.object({
@@ -203,6 +162,29 @@ export const typographySchema = z.object({
 export const themeSchema = z.object({
   palette: paletteSchema,
   typography: typographySchema,
+});
+
+type TypographyItem = z.output<typeof typographyBase> & {
+  [query: ReturnType<typeof mediaQuery>]:
+    | z.output<typeof breakpointOverride>
+    | undefined;
+};
+
+type Typography = {
+  [K in keyof z.output<typeof typographySchema>]: K extends 'allVariants' ?
+    z.output<typeof typographySchema>[K]
+  : TypographyItem;
+};
+
+export type Theme = {
+  palette: z.output<typeof paletteSchema>;
+  typography: Typography;
+};
+
+export const themeFontSchema = z.object({
+  name: z.string().min(1),
+  weight: z.array(z.enum(FontWeight)),
+  style: z.array(z.enum(FontStyle)),
 });
 
 function decimalToHex(dec: number) {
@@ -275,9 +257,7 @@ export const normalizeValues = (
   return value;
 };
 
-export const normalizeTheme = <T extends object>(
-  theme: T
-): z.infer<typeof themeSchema> => {
+export const normalizeTheme = <T extends object>(theme: T): Theme => {
   return Object.fromEntries(
     Object.entries(theme).map(([k, v]) => {
       if (v && typeof v === 'object') {
@@ -286,5 +266,5 @@ export const normalizeTheme = <T extends object>(
 
       return [k, normalizeValues(v, k as keyof CSSProperties)];
     })
-  ) as z.infer<typeof themeSchema>;
+  ) as Theme;
 };

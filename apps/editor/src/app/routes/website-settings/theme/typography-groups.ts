@@ -1,6 +1,6 @@
-import type { z } from 'zod';
+import type { z } from 'zod/v4';
 
-import type { typographySchema } from './schema';
+import type { typographySchema } from './theme.schema';
 
 export type TypographyVariant = Exclude<
   keyof z.infer<typeof typographySchema>,
