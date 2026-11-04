@@ -28,6 +28,7 @@ import { FaBluesky, FaInstagram, FaTiktok } from 'react-icons/fa6';
 import { MdFacebook, MdSearch } from 'react-icons/md';
 
 import { PURModel } from './cookie-or-pay/pur-model';
+import { initOneSignal } from './one-signal';
 
 let oneSignalInitialized = false;
 
@@ -52,19 +53,7 @@ function AppShell({ websiteSettings, children }: AppShellProps) {
     }
 
     oneSignalInitialized = true;
-
-    // `react-onesignal` pulls in the whole web SDK and touches `window` on
-    // import, so it is loaded here rather than at module scope: this module is
-    // evaluated on the server too.
-    import('react-onesignal').then(({ default: OneSignal }) => {
-      OneSignal.init({
-        appId: '71c06630-2d7c-487d-b261-e718bb8ef25f',
-        notifyButton: { enable: true } as NonNullable<
-          Parameters<typeof OneSignal.init>[0]['notifyButton']
-        >,
-        allowLocalhostAsSecureOrigin: true,
-      });
-    });
+    void initOneSignal();
   }, []);
 
   return (
