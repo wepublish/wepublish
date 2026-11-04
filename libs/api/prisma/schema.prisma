@@ -319,7 +319,7 @@ model ApiToken {
   modifiedAt DateTime @updatedAt @db.Timestamptz(3)
 
   name      String
-  tokenHash String   @unique
+  tokenHash String
   prefix    String
   scopes    String[]
 
@@ -334,6 +334,7 @@ model ApiToken {
 
   @@index([createdAt])
   @@index([createdById])
+  @@index([prefix])
   @@map("api-tokens.tokens")
 }
 

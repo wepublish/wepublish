@@ -33,6 +33,7 @@ export * from './tanstack/website-shell';
 export * from './tanstack/routes';
 
 export * from './tanstack/pages/404-page';
+export * from './tanstack/pages/daily-briefing';
 export * from './tanstack/pages/article-list-page';
 export * from './tanstack/pages/article-page';
 export * from './tanstack/pages/author-list-page';
@@ -40,6 +41,7 @@ export * from './tanstack/pages/event-list-page';
 export * from './tanstack/pages/author-page';
 export * from './tanstack/pages/deactivated-subscriptions-page';
 export * from './tanstack/pages/login-page';
+export * from './tanstack/pages/page-page';
 export * from './tanstack/pages/profile-page';
 export * from './tanstack/pages/search-page';
 export * from './tanstack/pages/subscribe-page';

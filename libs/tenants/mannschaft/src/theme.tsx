@@ -1,25 +1,19 @@
-import { createTheme, CSSObject, Theme, ThemeOptions } from '@mui/material';
+import {
+  createTheme,
+  css,
+  CSSObject,
+  GlobalStyles,
+  Theme,
+  ThemeOptions,
+} from '@mui/material';
 import { theme as WePTheme } from '@wepublish/ui';
-import localFont from 'next/font/local';
 import { PartialDeep } from 'type-fest';
 
-const plainFont = localFont({
-  src: [
-    {
-      path: './fonts/Plain-Light.otf',
-      weight: '400',
-    },
-    {
-      path: './fonts/Plain-Light-Italic.otf',
-      weight: '400',
-      style: 'italic',
-    },
-    {
-      path: './fonts/Plain-Medium.otf',
-      weight: '600',
-    },
-  ],
-});
+import plainLightItalic from './fonts/Plain-Light-Italic.otf';
+import plainLight from './fonts/Plain-Light.otf';
+import plainMedium from './fonts/Plain-Medium.otf';
+
+export const plainFont = { family: 'Plain' };
 
 const {
   palette: { augmentColor },
@@ -37,85 +31,85 @@ const theme = createTheme(WePTheme, {
   },
   typography: {
     h1: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     h2: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     h3: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     h4: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     h5: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     h6: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     body1: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     body2: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     button: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     caption: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     overline: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     subtitle1: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     subtitle2: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     allVariants: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     // Article
     articleAuthors: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     // Blocks
     blockBreakTitle: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     blockBreakBody: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     blockQuote: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     blockTitlePreTitle: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     teaserTitle: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     teaserLead: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     teaserMeta: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     teaserPretitle: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     // Banner
     bannerCta: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     bannerText: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
     bannerTitle: {
-      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [plainFont.family, 'sans-serif'].join(','),
     },
   },
   components: {
@@ -134,3 +128,33 @@ const theme = createTheme(WePTheme, {
 } as PartialDeep<Theme> | ThemeOptions);
 
 export { theme as default };
+
+export const MannschaftFontFaces = () => (
+  <GlobalStyles
+    styles={css`
+      @font-face {
+        font-family: ${plainFont.family};
+        src: url('${plainLight}') format('opentype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${plainFont.family};
+        src: url('${plainLightItalic}') format('opentype');
+        font-weight: 400;
+        font-style: italic;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: ${plainFont.family};
+        src: url('${plainMedium}') format('opentype');
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+      }
+    `}
+  />
+);
