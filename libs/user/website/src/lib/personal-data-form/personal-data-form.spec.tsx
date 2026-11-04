@@ -70,8 +70,19 @@ describe('PersonalDataForm', () => {
 
     expect(
       screen.getByText(
-        'Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.'
+        'Nur ausfüllen, wenn du das Passwort ändern möchtest. Ansonsten leer lassen.'
       )
+    ).toBeInTheDocument();
+  });
+
+  it('labels the password fields as setting a new password', () => {
+    renderForm();
+
+    expect(
+      screen.getByLabelText('Neues Passwort festlegen')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Neues Passwort wiederholen')
     ).toBeInTheDocument();
   });
 
