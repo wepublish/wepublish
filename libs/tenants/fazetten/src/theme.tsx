@@ -5,8 +5,10 @@ import { responsiveProperty, theme as WePTheme } from '@wepublish/ui';
 import { mergeDeepRight, reduce } from 'ramda';
 import { PartialDeep } from 'type-fest';
 
-const fontUrl = (file: string) =>
-  new URL(`./fonts/${file}`, import.meta.url).href;
+import fFFAcidGroteskRegular from './fonts/fff-acid-grotesk/FFF-AcidGrotesk-Regular.woff2';
+import gTSuperTextBold from './fonts/gt-super-text/GT-Super-Text-Bold.woff2';
+import gTSuperTextBookItalic from './fonts/gt-super-text/GT-Super-Text-Book-Italic.woff2';
+import gTSuperTextBook from './fonts/gt-super-text/GT-Super-Text-Book.woff2';
 
 export const gtSuperText = { family: 'GT Super Text' };
 export const fffAcidGrotesk = { family: 'FFF Acid Grotesk' };
@@ -462,8 +464,7 @@ export const FazettenGlobalStyles = () => (
     styles={theme => css`
       @font-face {
         font-family: ${gtSuperText.family};
-        src: url(${fontUrl('gt-super-text/GT-Super-Text-Book.woff2')})
-          format('woff2');
+        src: url(${gTSuperTextBook}) format('woff2');
         font-weight: 400;
         font-style: normal;
         font-display: swap;
@@ -471,8 +472,7 @@ export const FazettenGlobalStyles = () => (
 
       @font-face {
         font-family: ${gtSuperText.family};
-        src: url(${fontUrl('gt-super-text/GT-Super-Text-Book-Italic.woff2')})
-          format('woff2');
+        src: url(${gTSuperTextBookItalic}) format('woff2');
         font-weight: 400;
         font-style: italic;
         font-display: swap;
@@ -480,8 +480,7 @@ export const FazettenGlobalStyles = () => (
 
       @font-face {
         font-family: ${gtSuperText.family};
-        src: url(${fontUrl('gt-super-text/GT-Super-Text-Bold.woff2')})
-          format('woff2');
+        src: url(${gTSuperTextBold}) format('woff2');
         font-weight: 600;
         font-style: normal;
         font-display: swap;
@@ -489,8 +488,7 @@ export const FazettenGlobalStyles = () => (
 
       @font-face {
         font-family: ${fffAcidGrotesk.family};
-        src: url(${fontUrl('fff-acid-grotesk/FFF-AcidGrotesk-Regular.woff2')})
-          format('woff2');
+        src: url(${fFFAcidGroteskRegular}) format('woff2');
         font-weight: 400;
         font-style: normal;
         font-display: swap;
