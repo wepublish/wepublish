@@ -269,6 +269,14 @@ because a *nonexistent* slug 404s before the component renders.
 
 **Always parity-check at least one URL whose content actually exists.**
 
+**And check it against an API on master's schema.** A production API
+(`api-<tenant>.wepublish.cloud`) usually lags master, so every content query
+fails with `GRAPHQL_VALIDATION_FAILED`. The symptoms look like an app bug:
+articles and tags render an empty shell, and unknown slugs answer 200 instead
+of 404, because there is no `extensions.status === 404` to detect. If
+gruppetto's build shows the same failures against its own production API,
+the cause is the API, not your port.
+
 ### 6.2 `"Readable" is not exported by "__vite-browser-external"`
 
 Server-only code reached the client bundle. The plugin strips the client build
