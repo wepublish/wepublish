@@ -4,5 +4,5 @@
  */
 export const secretPlaceholder = (
   stored: boolean | null | undefined,
-  t: (key: string) => string
+  t: (key: string) => string = key => key
 ) => t(stored ? 'integrations.secretStored' : 'integrations.secretNotSet');

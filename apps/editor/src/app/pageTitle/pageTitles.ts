@@ -133,6 +133,7 @@ export const PAGE_TITLES: Record<string, string> = {
   '/tokens/generate': 'pageTitles.tokenGenerate',
   '/integrations': 'pageTitles.integrations',
   '/integrations/:type': 'pageTitles.integrationEdit',
+  '/integrations/:type/edit/:id': 'pageTitles.integrationEdit',
   '/settings': 'pageTitles.settings',
   '/settings/website': 'pageTitles.websiteSettings',
   '/settings/website/:category': 'pageTitles.websiteSettings',

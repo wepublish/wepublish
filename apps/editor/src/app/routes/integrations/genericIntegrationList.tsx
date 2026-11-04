@@ -1,75 +1,23 @@
-import { useQuery } from '@apollo/client/react';
-import styled from '@emotion/styled';
-import {
-  Alert,
-  Box,
-  CircularProgress,
-  InputAdornment,
-  TextField,
-} from '@mui/material';
 import { SettingProvider } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
-import { DocumentNode } from 'graphql';
-import { useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { MdSearch } from 'react-icons/md';
 
 import {
   GenericIntegrationFormProps,
   SingleGenericIntegrationForm,
 } from './genericIntegrationForm';
 import {
-  AddIntegrationButton,
-  CreateFixedIntegrationButton,
-  DeleteIntegrationButton,
-  ProviderTypeOption,
-} from './integrationRegistryActions';
+  IntegrationSettingList,
+  IntegrationSettingListProps,
+} from './integrationSettingList';
 
-interface GenericIntegrationListProps<
+type GenericIntegrationListProps<
   TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
-> extends Omit<
+> = Omit<
   GenericIntegrationFormProps<TSetting, TFormValues>,
   'setting' | 'renderActions'
-> {
-  query: DocumentNode;
-  dataKey: string;
-
-  registry?: {
-    createMutation: DocumentNode;
-    deleteMutation: DocumentNode;
-    types: ProviderTypeOption[];
-  };
-
-  fixedProvider?: {
-    id: string;
-    type: string;
-    name: string;
-    createMutation: DocumentNode;
-  };
-
-  setup?: {
-    createMutation: DocumentNode;
-    types: ProviderTypeOption[];
-  };
-}
-
-const StyledSearch = styled(TextField)`
-  margin-bottom: 20px;
-`;
-
-const Toolbar = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-`;
-
-const GenericIntegrationGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-  gap: 20px;
-`;
+> &
+  Omit<IntegrationSettingListProps<TSetting>, 'renderSetting' | 'children'>;
 
 export function GenericIntegrationList<
   TSetting extends SettingProvider & { type?: string },
@@ -82,139 +30,20 @@ export function GenericIntegrationList<
   setup,
   ...formProps
 }: GenericIntegrationListProps<TSetting, TFormValues>) {
-  const { t } = useTranslation();
-  const [searchValue, setSearchValue] = useState('');
-
-  const { data, loading, error } = useQuery<Record<string, unknown>>(query, {});
-
-  const settings = data?.[dataKey] as TSetting[] | undefined;
-
-  const sortedSettings = useMemo(() => {
-    if (!settings) {
-      return undefined;
-    }
-
-    return settings
-      .filter(setting => {
-        const name = setting.name || setting.type || '';
-        return name.toLowerCase().includes(searchValue.toLowerCase());
-      })
-      .sort((a, b) => {
-        const nameA = a.name || a.type || '';
-        const nameB = b.name || b.type || '';
-
-        return nameA.localeCompare(nameB);
-      });
-  }, [settings, searchValue]);
-
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          gap: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return <Alert severity="error">{humanizeError(error)}</Alert>;
-  }
-
-  const addButton = registry && (
-    <AddIntegrationButton
-      types={registry.types}
-      mutation={registry.createMutation}
-      refetchQuery={query}
-      existingIds={settings?.map(setting => setting.id) ?? []}
-    />
-  );
-
-  if (!settings?.length) {
-    return (
-      <>
-        <Alert severity="warning">
-          {setup ?
-            t('integrations.setUpHint')
-          : t('integrations.noSettingsFound')}
-        </Alert>
-
-        {(addButton || fixedProvider || setup) && (
-          <Toolbar>
-            {addButton}
-
-            {setup && (
-              <AddIntegrationButton
-                types={setup.types}
-                mutation={setup.createMutation}
-                refetchQuery={query}
-                existingIds={[]}
-                label={t('integrations.setUp')}
-              />
-            )}
-
-            {fixedProvider && (
-              <CreateFixedIntegrationButton
-                id={fixedProvider.id}
-                type={fixedProvider.type}
-                name={fixedProvider.name}
-                mutation={fixedProvider.createMutation}
-                refetchQuery={query}
-              />
-            )}
-          </Toolbar>
-        )}
-      </>
-    );
-  }
-
   return (
-    <>
-      {addButton && <Toolbar>{addButton}</Toolbar>}
-
-      {settings?.length > 3 && (
-        <StyledSearch
-          value={searchValue}
-          onChange={event => setSearchValue(event.target.value)}
-          placeholder={t('search')}
-          slotProps={{
-            htmlInput: { 'aria-label': t('search') },
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <MdSearch />
-                </InputAdornment>
-              ),
-            },
-          }}
+    <IntegrationSettingList<TSetting>
+      query={query}
+      dataKey={dataKey}
+      registry={registry}
+      fixedProvider={fixedProvider}
+      setup={setup}
+      renderSetting={(setting, actions) => (
+        <SingleGenericIntegrationForm
+          setting={setting}
+          renderActions={actions ? () => actions : undefined}
+          {...formProps}
         />
       )}
-
-      <GenericIntegrationGrid>
-        {sortedSettings?.map(setting => (
-          <SingleGenericIntegrationForm
-            key={setting.id}
-            setting={setting}
-            renderActions={
-              registry ?
-                current => (
-                  <DeleteIntegrationButton
-                    id={current.id}
-                    mutation={registry.deleteMutation}
-                    refetchQuery={query}
-                  />
-                )
-              : undefined
-            }
-            {...formProps}
-          />
-        ))}
-      </GenericIntegrationGrid>
-    </>
+    />
   );
 }

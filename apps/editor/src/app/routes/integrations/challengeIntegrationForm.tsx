@@ -1,81 +1,95 @@
+import { useMutation } from '@apollo/client/react';
 import {
   ChallengeProviderType,
   CreateSettingsIntegrationsChallengeDocument,
-  SettingChallengeProvider,
   SettingsIntegrationsChallengeDocument,
   UpdateSettingsIntegrationsChallengeDocument,
 } from '@wepublish/editor/api';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import {
+  cancelSave,
+  FormDrawerPanel,
+  useEditForm,
+  useQueryLoader,
+} from '@wepublish/form/editor';
+import { CanUpdateChallengeProviderSettings } from '@wepublish/permissions';
 
 import cloudflareLogo from './assets/cloudflare.svg';
 import hcaptchaLogo from './assets/hcaptcha.webp';
-import { GenericIntegrationList } from './genericIntegrationList';
+import {
+  type ChallengeSetting,
+  fromChallengeSetting,
+} from './challengeIntegration.schema';
+import { challengeSettingView } from './challengeIntegration.view';
+import { findSetting, settingName } from './integrationPaths';
+import { IntegrationSettings } from './integrationSettings';
 import { secretPlaceholder } from './secretPlaceholder';
+import { useTypeChangeQuestion } from './typeChangeDialog';
 
-const challengeSettingsSchema = z.object({
-  name: z.string().nullish().or(z.literal('')),
-  type: z.nativeEnum(ChallengeProviderType).nullish(),
-  secret: z.string().nullish().or(z.literal('')),
-  siteKey: z.string().nullish().or(z.literal('')),
-});
+const writePermissions = [CanUpdateChallengeProviderSettings.id];
 
-type IntegrationFormValues = z.infer<typeof challengeSettingsSchema>;
+const challengeTypes = Object.values(ChallengeProviderType).map(type => ({
+  label: type,
+  value: type,
+}));
 
-export function ChallengeIntegrationForm() {
-  const { t } = useTranslation();
+const challengeLogo = (setting: ChallengeSetting) =>
+  setting.type === ChallengeProviderType.Hcaptcha ?
+    hcaptchaLogo
+  : cloudflareLogo;
+
+export function ChallengeSettingForm({
+  setting,
+}: {
+  setting: ChallengeSetting;
+}) {
+  const [askTypeChange, typeChangeDialog] = useTypeChangeQuestion();
+  const load = useQueryLoader(
+    SettingsIntegrationsChallengeDocument,
+    {},
+    data =>
+      fromChallengeSetting(
+        findSetting(data.challengeProviderSettings, setting.id)
+      )
+  );
+  const [updateSetting] = useMutation(
+    UpdateSettingsIntegrationsChallengeDocument
+  );
+  const controller = useEditForm(challengeSettingView, {
+    title: 'integrations.editSetting',
+    titleParams: () => ({ name: settingName(setting) }),
+    writePermissions,
+    fields: { secret: { placeholder: secretPlaceholder(setting.isSecretSet) } },
+    load,
+    save: async (values, { changedKeys }) => {
+      if (changedKeys.includes('type') && !(await askTypeChange())) {
+        cancelSave();
+      }
+
+      return updateSetting({ variables: { id: setting.id, ...values } });
+    },
+  });
 
   return (
-    <GenericIntegrationList<SettingChallengeProvider, IntegrationFormValues>
+    <>
+      <FormDrawerPanel controller={controller} />
+      {typeChangeDialog}
+    </>
+  );
+}
+
+export function ChallengeIntegrationForm() {
+  return (
+    <IntegrationSettings<ChallengeSetting>
+      type="challenge"
       query={SettingsIntegrationsChallengeDocument}
-      mutation={UpdateSettingsIntegrationsChallengeDocument}
       dataKey="challengeProviderSettings"
       setup={{
         createMutation: CreateSettingsIntegrationsChallengeDocument,
-        types: Object.values(ChallengeProviderType).map(type => ({
-          label: type,
-          value: type,
-        })),
+        types: challengeTypes,
       }}
-      schema={challengeSettingsSchema}
-      getLogo={setting =>
-        setting.type === ChallengeProviderType.Hcaptcha ?
-          hcaptchaLogo
-        : cloudflareLogo
-      }
-      fields={setting => [
-        {
-          name: 'type',
-          label: t('integrations.challengeSettings.type'),
-          info: t('integrations.challengeSettings.typeInfo'),
-          type: 'select',
-          options: Object.values(ChallengeProviderType).map(v => ({
-            label: v,
-            value: v,
-          })),
-        },
-        {
-          type: 'text',
-          name: 'name',
-          label: t('name'),
-        },
-        {
-          type: 'text',
-          name: 'siteKey',
-          label: t('integrations.challengeSettings.siteKey'),
-          info: t('integrations.challengeSettings.siteKeyInfo'),
-          placeholder: t('integrations.placeholderSecret'),
-          autoComplete: 'one-time-code',
-        },
-        {
-          name: 'secret',
-          label: t('integrations.challengeSettings.secret'),
-          info: t('integrations.challengeSettings.secretInfo'),
-          type: 'password',
-          placeholder: secretPlaceholder(setting.isSecretSet, t),
-          autoComplete: 'one-time-code',
-        },
-      ]}
-    />
+      getLogo={challengeLogo}
+    >
+      {setting => <ChallengeSettingForm setting={setting} />}
+    </IntegrationSettings>
   );
 }

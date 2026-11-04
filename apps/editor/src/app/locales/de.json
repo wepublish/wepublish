@@ -3555,6 +3555,7 @@
       "updateError": "Fehler beim Aktualisieren der Einstellungen",
       "noSettingsFound": "Keine Einstellungen gefunden",
       "lastLoaded": "Zuletzt geladen",
+      "editSetting": "{{name}} bearbeiten",
       "aiSettings": {
         "apiKey": "API-Schlüssel",
         "systemPrompt": "System-Prompt",
@@ -3581,6 +3582,10 @@
         "vatRate": "Mehrwertsteuersatz",
         "declineRenewals": "Verlängerungen ablehnen (fehlgeschlagene wiederkehrende Zahlungen simulieren)",
         "webhookEndpointSecret": "Webhook-Endpoint-Secret",
+        "credentials": "Zugangsdaten",
+        "provider": "Anbietereinstellungen",
+        "bexioAccounting": "Bexio-Buchhaltung",
+        "bexioInvoice": "Bexio-Rechnung",
         "bexioUserId": "Bexio-Benutzer-ID",
         "bexioCountryId": "Bexio-Länder-ID",
         "bexioUnitId": "Bexio-Einheits-ID",

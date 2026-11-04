@@ -1,8 +1,6 @@
 import { TrackingPixelProviderType } from '@wepublish/editor/api';
 
-import { createTrackingPixelSettingsSchema } from './trackingPixelIntegrationForm';
-
-const schema = createTrackingPixelSettingsSchema(key => key);
+import { trackingPixelSettingSchema } from './trackingPixelIntegration.schema';
 
 const prolitteris = {
   type: TrackingPixelProviderType.Prolitteris,
@@ -14,12 +12,12 @@ const prolitteris = {
 };
 
 const failingFields = (values: object) => {
-  const result = schema.safeParse(values);
+  const result = trackingPixelSettingSchema.safeParse(values);
 
   return result.success ? [] : result.error.issues.map(({ path }) => path[0]);
 };
 
-describe('trackingPixelSettingsSchema', () => {
+describe('trackingPixelSettingSchema', () => {
   it('accepts a ProLitteris login without re-entering the stored password', () => {
     expect(failingFields(prolitteris)).toEqual([]);
   });
@@ -44,5 +42,14 @@ describe('trackingPixelSettingsSchema', () => {
         prolitteris_usePublisherInternalKey: true,
       })
     ).toEqual(['prolitteris_publisherInternalKeyDomain']);
+  });
+
+  it('leaves the stored password out when it is not re-entered', () => {
+    const result = trackingPixelSettingSchema.parse({
+      ...prolitteris,
+      prolitteris_password: '',
+    });
+
+    expect(result).not.toHaveProperty('prolitteris_password', '');
   });
 });

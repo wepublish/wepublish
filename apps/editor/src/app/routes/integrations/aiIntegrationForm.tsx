@@ -1,33 +1,49 @@
+import { useMutation } from '@apollo/client/react';
 import {
   AiProviderType,
   CreateAiSettingDocument,
-  SettingAiProvider,
   SettingsIntegrationsAiDocument,
   UpdateSettingsIntegrationsAiDocument,
 } from '@wepublish/editor/api';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import {
+  FormDrawerPanel,
+  useEditForm,
+  useQueryLoader,
+} from '@wepublish/form/editor';
+import { CanUpdateAISettings } from '@wepublish/permissions';
 
+import { type AiSetting, fromAiSetting } from './aiIntegration.schema';
+import { aiSettingView } from './aiIntegration.view';
 import vercelLogo from './assets/vercel.svg';
-import { GenericIntegrationList } from './genericIntegrationList';
+import { findSetting, settingName } from './integrationPaths';
+import { IntegrationSettings } from './integrationSettings';
 import { secretPlaceholder } from './secretPlaceholder';
 
-const aiSettingsSchema = z.object({
-  apiKey: z.string().nullish().or(z.literal('')),
-  systemPrompt: z.string().nullish().or(z.literal('')),
-});
+const writePermissions = [CanUpdateAISettings.id];
 
-type IntegrationFormValues = z.infer<typeof aiSettingsSchema>;
+export function AISettingForm({ setting }: { setting: AiSetting }) {
+  const load = useQueryLoader(SettingsIntegrationsAiDocument, {}, data =>
+    fromAiSetting(findSetting(data.aiSettings, setting.id))
+  );
+  const [updateSetting] = useMutation(UpdateSettingsIntegrationsAiDocument);
+  const controller = useEditForm(aiSettingView, {
+    title: 'integrations.editSetting',
+    titleParams: () => ({ name: settingName(setting) }),
+    writePermissions,
+    fields: { apiKey: { placeholder: secretPlaceholder(setting.isApiKeySet) } },
+    load,
+    save: values => updateSetting({ variables: { id: setting.id, ...values } }),
+  });
+
+  return <FormDrawerPanel controller={controller} />;
+}
 
 export function AIIntegrationForm() {
-  const { t } = useTranslation();
-
   return (
-    <GenericIntegrationList<SettingAiProvider, IntegrationFormValues>
+    <IntegrationSettings<AiSetting>
+      type="ai"
       query={SettingsIntegrationsAiDocument}
-      mutation={UpdateSettingsIntegrationsAiDocument}
       dataKey="aiSettings"
-      schema={aiSettingsSchema}
       fixedProvider={{
         id: 'v0',
         type: AiProviderType.V0,
@@ -35,23 +51,8 @@ export function AIIntegrationForm() {
         createMutation: CreateAiSettingDocument,
       }}
       getLogo={() => vercelLogo}
-      fields={setting => [
-        {
-          name: 'apiKey',
-          label: t('integrations.aiSettings.apiKey'),
-          info: t('integrations.aiSettings.apiKeyInfo'),
-          type: 'password',
-          autoComplete: 'one-time-code',
-          placeholder: secretPlaceholder(setting.isApiKeySet, t),
-        },
-        {
-          name: 'systemPrompt',
-          label: t('integrations.aiSettings.systemPrompt'),
-          info: t('integrations.aiSettings.systemPromptInfo'),
-          type: 'textarea',
-          rows: 5,
-        },
-      ]}
-    />
+    >
+      {setting => <AISettingForm setting={setting} />}
+    </IntegrationSettings>
   );
 }
