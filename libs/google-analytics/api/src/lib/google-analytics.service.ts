@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ResiliencePolicy, ResilienceService } from '@nestjs/resilience';
 import { PrismaClient } from '@prisma/client';
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import { JWTInput } from 'google-auth-library';
@@ -6,8 +7,8 @@ import { format } from 'date-fns';
 import { createHash } from 'crypto';
 import {
   ArticleViewMap,
-  CircuitBreaker,
   findMostViewedArticles,
+  HOT_AND_TRENDING_CIRCUIT_BREAKER,
   HotAndTrendingDataSource,
   toArticleViewMap,
 } from '@wepublish/article/api';
@@ -32,14 +33,20 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
   private cachedClient: BetaAnalyticsDataClient | null = null;
   private cachedClientKey: string | null = null;
 
-  private readonly circuitBreaker = new CircuitBreaker('GA4', this.logger);
+  private readonly policy: ResiliencePolicy;
 
   constructor(
     private prisma: PrismaClient,
     @Inject(GA_CLIENT_OPTIONS)
     private configProvider: GoogleAnalyticsDbConfig,
-    private kv: NamespacedCache
-  ) {}
+    private kv: NamespacedCache,
+    resilience: ResilienceService
+  ) {
+    this.policy = resilience.create(
+      { circuitBreaker: { ...HOT_AND_TRENDING_CIRCUIT_BREAKER, name: 'ga4' } },
+      'ga4'
+    );
+  }
 
   private getClient(credentials: JWTInput): BetaAnalyticsDataClient {
     const clientKey = `${credentials.client_email}:${createHash('sha256')
@@ -64,11 +71,6 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     },
     start?: Date | null
   ): Promise<ArticleViewMap> {
-    if (this.circuitBreaker.isOpen()) {
-      this.logger.warn('Circuit breaker is open, skipping GA4 call');
-      throw new Error('Circuit breaker is open');
-    }
-
     const analyticsDataClient = this.getClient(config.credentials);
 
     const thirtyDaysAgo = new Date(
@@ -77,34 +79,34 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
 
     let rows;
     try {
-      const [result] = await analyticsDataClient.runReport(
-        {
-          property: `properties/${config.property}`,
-          dateRanges: [
-            {
-              startDate: format(start ?? thirtyDaysAgo, 'yyyy-MM-dd'),
-              endDate: 'today',
-            },
-          ],
-          dimensions: [
-            {
-              name: 'pagePath',
-            },
-          ],
-          metrics: [
-            {
-              name: 'activeUsers',
-            },
-          ],
-        },
-        {
-          timeout: GA_TIMEOUT_MS,
-        }
+      const [result] = await this.policy.execute(() =>
+        analyticsDataClient.runReport(
+          {
+            property: `properties/${config.property}`,
+            dateRanges: [
+              {
+                startDate: format(start ?? thirtyDaysAgo, 'yyyy-MM-dd'),
+                endDate: 'today',
+              },
+            ],
+            dimensions: [
+              {
+                name: 'pagePath',
+              },
+            ],
+            metrics: [
+              {
+                name: 'activeUsers',
+              },
+            ],
+          },
+          {
+            timeout: GA_TIMEOUT_MS,
+          }
+        )
       );
-      this.circuitBreaker.recordSuccess();
       rows = result.rows ?? [];
     } catch (error) {
-      this.circuitBreaker.recordFailure();
       this.logger.error(
         `GA4 runReport failed: ${error instanceof Error ? error.message : error}`
       );

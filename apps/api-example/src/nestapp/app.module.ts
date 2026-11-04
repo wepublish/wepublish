@@ -3,6 +3,7 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
+import { ResilienceModule } from '@nestjs/resilience';
 import { ScheduleModule } from '@nestjs/schedule';
 
 import { PrismaClient } from '@prisma/client';
@@ -326,6 +327,7 @@ import { API_SHARED_NAMESPACES } from './shared-namespaces';
       inject: [AgendaBaselService, KulturZueriService],
     }),
     ScheduleModule.forRoot(),
+    ResilienceModule.forRoot(),
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,

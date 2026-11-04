@@ -1,10 +1,11 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ResiliencePolicy, ResilienceService } from '@nestjs/resilience';
 import { PrismaClient } from '@prisma/client';
 import { format } from 'date-fns';
 import {
   ArticleViewMap,
-  CircuitBreaker,
   findMostViewedArticles,
+  HOT_AND_TRENDING_CIRCUIT_BREAKER,
   HotAndTrendingDataSource,
   toArticleViewMap,
 } from '@wepublish/article/api';
@@ -33,24 +34,28 @@ const RESULT_CACHE_TTL_S = 5 * 60;
 @Injectable()
 export class UmamiService implements HotAndTrendingDataSource {
   private readonly logger = new Logger(UmamiService.name);
-  private readonly circuitBreaker = new CircuitBreaker('Umami', this.logger);
+  private readonly policy: ResiliencePolicy;
 
   constructor(
     private prisma: PrismaClient,
     @Inject(UMAMI_CLIENT_OPTIONS)
     private configProvider: UmamiDbConfig,
-    private kv: NamespacedCache
-  ) {}
+    private kv: NamespacedCache,
+    resilience: ResilienceService
+  ) {
+    this.policy = resilience.create(
+      {
+        timeout: UMAMI_TIMEOUT_MS,
+        circuitBreaker: { ...HOT_AND_TRENDING_CIRCUIT_BREAKER, name: 'umami' },
+      },
+      'umami'
+    );
+  }
 
   private async loadArticleViewMap(
     config: UmamiConfig & { apiKey: string; websiteId: string },
     start?: Date | null
   ): Promise<ArticleViewMap> {
-    if (this.circuitBreaker.isOpen()) {
-      this.logger.warn('Circuit breaker is open, skipping Umami call');
-      throw new Error('Circuit breaker is open');
-    }
-
     const thirtyDaysAgo = new Date(
       new Date().getTime() - 60 * 60 * 24 * 31 * 1000
     );
@@ -62,27 +67,27 @@ export class UmamiService implements HotAndTrendingDataSource {
 
     let metrics: UmamiMetricsResponse;
     try {
-      const response = await fetch(
-        `${config.url.replace(/\/+$/, '')}/websites/${encodeURIComponent(config.websiteId)}/metrics?${params}`,
-        {
-          headers: {
-            Authorization: `Bearer ${config.apiKey}`,
-            Accept: 'application/json',
-          },
-          signal: AbortSignal.timeout(UMAMI_TIMEOUT_MS),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `Umami responded with ${response.status}: ${await response.text()}`
+      metrics = await this.policy.execute(async ({ signal }) => {
+        const response = await fetch(
+          `${config.url.replace(/\/+$/, '')}/websites/${encodeURIComponent(config.websiteId)}/metrics?${params}`,
+          {
+            headers: {
+              Authorization: `Bearer ${config.apiKey}`,
+              Accept: 'application/json',
+            },
+            signal,
+          }
         );
-      }
 
-      metrics = (await response.json()) as UmamiMetricsResponse;
-      this.circuitBreaker.recordSuccess();
+        if (!response.ok) {
+          throw new Error(
+            `Umami responded with ${response.status}: ${await response.text()}`
+          );
+        }
+
+        return (await response.json()) as UmamiMetricsResponse;
+      });
     } catch (error) {
-      this.circuitBreaker.recordFailure();
       this.logger.error(
         `Umami metrics failed: ${error instanceof Error ? error.message : error}`
       );

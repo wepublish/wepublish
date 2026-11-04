@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CircuitOpenError, ResilienceModule } from '@nestjs/resilience';
 import { PrismaClient } from '@prisma/client';
 import { NamespacedCacheTestingModule } from '@wepublish/kv-ttl-cache/api/testing';
 import type { Mock } from 'vitest';
@@ -53,6 +54,7 @@ describe('PlausibleService', () => {
 
     module = await Test.createTestingModule({
       imports: [
+        ResilienceModule.forRoot(),
         NamespacedCacheTestingModule.forRoot({
           sharedNamespaces: PLAUSIBLE_SHARED_NAMESPACES,
         }),
@@ -167,8 +169,23 @@ describe('PlausibleService', () => {
     await failingLookup();
 
     await expect(service.getMostViewedArticles({})).rejects.toThrow(
-      'Circuit breaker is open'
+      CircuitOpenError
     );
     expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+
+  it('contacts Plausible again once the breaker has been open for 5 minutes', async () => {
+    fetchMock.mockRejectedValue(new Error('timeout'));
+
+    await failingLookup();
+    await failingLookup();
+    await failingLookup();
+
+    vi.setSystemTime(new Date('2023-01-01T10:06:00'));
+    fetchMock.mockImplementation(() => response(['/a/foo', 10]));
+
+    await service.getMostViewedArticles({});
+
+    expect(fetchMock).toHaveBeenCalledTimes(4);
   });
 });

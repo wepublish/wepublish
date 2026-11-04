@@ -1,10 +1,11 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ResiliencePolicy, ResilienceService } from '@nestjs/resilience';
 import { PrismaClient } from '@prisma/client';
 import { format } from 'date-fns';
 import {
   ArticleViewMap,
-  CircuitBreaker,
   findMostViewedArticles,
+  HOT_AND_TRENDING_CIRCUIT_BREAKER,
   HotAndTrendingDataSource,
   toArticleViewMap,
 } from '@wepublish/article/api';
@@ -31,68 +32,72 @@ const RESULT_CACHE_TTL_S = 5 * 60;
 @Injectable()
 export class PlausibleService implements HotAndTrendingDataSource {
   private readonly logger = new Logger(PlausibleService.name);
-  private readonly circuitBreaker = new CircuitBreaker(
-    'Plausible',
-    this.logger
-  );
+  private readonly policy: ResiliencePolicy;
 
   constructor(
     private prisma: PrismaClient,
     @Inject(PLAUSIBLE_CLIENT_OPTIONS)
     private configProvider: PlausibleDbConfig,
-    private kv: NamespacedCache
-  ) {}
+    private kv: NamespacedCache,
+    resilience: ResilienceService
+  ) {
+    this.policy = resilience.create(
+      {
+        timeout: PLAUSIBLE_TIMEOUT_MS,
+        circuitBreaker: {
+          ...HOT_AND_TRENDING_CIRCUIT_BREAKER,
+          name: 'plausible',
+        },
+      },
+      'plausible'
+    );
+  }
 
   private async loadArticleViewMap(
     config: PlausibleConfig & { apiKey: string; siteId: string },
     start?: Date | null
   ): Promise<ArticleViewMap> {
-    if (this.circuitBreaker.isOpen()) {
-      this.logger.warn('Circuit breaker is open, skipping Plausible call');
-      throw new Error('Circuit breaker is open');
-    }
-
     const thirtyDaysAgo = new Date(
       new Date().getTime() - 60 * 60 * 24 * 31 * 1000
     );
 
     let results: PlausibleQueryResponse['results'];
     try {
-      const response = await fetch(
-        `${config.url.replace(/\/+$/, '')}/api/v2/query`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${config.apiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            site_id: config.siteId,
-            metrics: ['visitors'],
-            date_range: [
-              format(start ?? thirtyDaysAgo, 'yyyy-MM-dd'),
-              format(new Date(), 'yyyy-MM-dd'),
-            ],
-            dimensions: ['event:page'],
-            ...(config.articlePrefix && {
-              filters: [['contains', 'event:page', [config.articlePrefix]]],
+      results = await this.policy.execute(async ({ signal }) => {
+        const response = await fetch(
+          `${config.url.replace(/\/+$/, '')}/api/v2/query`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${config.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              site_id: config.siteId,
+              metrics: ['visitors'],
+              date_range: [
+                format(start ?? thirtyDaysAgo, 'yyyy-MM-dd'),
+                format(new Date(), 'yyyy-MM-dd'),
+              ],
+              dimensions: ['event:page'],
+              ...(config.articlePrefix && {
+                filters: [['contains', 'event:page', [config.articlePrefix]]],
+              }),
+              order_by: [['visitors', 'desc']],
             }),
-            order_by: [['visitors', 'desc']],
-          }),
-          signal: AbortSignal.timeout(PLAUSIBLE_TIMEOUT_MS),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `Plausible responded with ${response.status}: ${await response.text()}`
+            signal,
+          }
         );
-      }
 
-      results = ((await response.json()) as PlausibleQueryResponse).results;
-      this.circuitBreaker.recordSuccess();
+        if (!response.ok) {
+          throw new Error(
+            `Plausible responded with ${response.status}: ${await response.text()}`
+          );
+        }
+
+        return ((await response.json()) as PlausibleQueryResponse).results;
+      });
     } catch (error) {
-      this.circuitBreaker.recordFailure();
       this.logger.error(
         `Plausible query failed: ${error instanceof Error ? error.message : error}`
       );
