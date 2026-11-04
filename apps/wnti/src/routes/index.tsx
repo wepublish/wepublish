@@ -9,7 +9,7 @@ export const Route = createFileRoute('/')({
   ...homePageRoute(),
   component: () => (
     <LinkContext.Provider value={{ prefetch: true }}>
-      <ContentWidthProvider fullWidth>
+      <ContentWidthProvider fullWidth={false}>
         <PageContainer slug={''} />
       </ContentWidthProvider>
     </LinkContext.Provider>
