@@ -44,6 +44,7 @@ const MainSpacer = styled(Container)`
 
 type AppShellProps = PropsWithChildren<{
   websiteSettings: WebsiteSettingsFragment | undefined;
+  stripeKey: string | undefined;
 }>;
 
 /**
@@ -54,13 +55,18 @@ type AppShellProps = PropsWithChildren<{
  * always beat the per-page `PageSEO`/`ArticleSEO` title. Routes without an SEO
  * component set their own title through the route's `head()`.
  */
-function AppShell({ websiteSettings, children }: AppShellProps) {
+function AppShell({ websiteSettings, stripeKey, children }: AppShellProps) {
   const shell = useWebsiteShell();
 
   return (
     <TenantProviders
       config={flimmerConfig}
-      extra={{ Head, Script, elements: { Link: WepublishLink } }}
+      extra={{
+        Head,
+        Script,
+        elements: { Link: WepublishLink },
+        thirdParty: { stripe: stripeKey },
+      }}
     >
       <CssBaseline />
 

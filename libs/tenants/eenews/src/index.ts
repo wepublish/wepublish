@@ -8,5 +8,6 @@ export { EenewsSubscriptionDetail } from './components/eenews-subscription-detai
 export { EenewsTagPage } from './components/eenews-tag-page';
 export { ReviveScript } from './components/revive-script';
 export { resolveWhitelistTagIds } from './components/teasers/eenews-teaser-selectors';
+export * from './eenews-config';
 export * from './eenews-tenant';
 export { default as eenewsTheme } from './theme';
