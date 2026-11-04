@@ -2392,7 +2392,8 @@
       "insertYourNewAnswer": "Neue Antwort eingeben",
       "urlCopied": "Abstimmungs-Link in die Zwischenablage kopiert.",
       "urlCopyingFailed": "Abstimmungs-Link konnte nicht kopiert werden.",
-      "votes": "Stimmen",
+      "votes_one": "Stimme",
+      "votes_other": "Stimmen",
       "answerLabel": "Antwort {{number}}",
       "deleteAnswer": "Antwort «{{answer}}» löschen"
     },

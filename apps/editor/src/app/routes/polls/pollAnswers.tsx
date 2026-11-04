@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  InputAdornment,
   TextField,
 } from '@mui/material';
 import {
@@ -15,15 +16,17 @@ import {
 } from '@wepublish/editor/api';
 import {
   type ItemLayoutProps,
+  bindComponent,
   editorForm,
   useArrayField,
+  useField,
   useFormView,
 } from '@wepublish/form/editor';
 import { IconButtonTooltip } from '@wepublish/ui/editor';
 import { type KeyboardEvent, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDeleteOutline } from 'react-icons/md';
+import { MdAdd, MdDelete } from 'react-icons/md';
 
 import { type PollValues, pollSchema } from './poll.schema';
 import { showMutationError, usePollId, useReloadPollRows } from './pollRows';
@@ -38,15 +41,61 @@ const Rows = styled.div`
 const Line = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
+  align-items: center;
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-const AddLine = styled(Line)`
-  align-items: center;
-`;
+type AnswerInputProps = {
+  votes: number;
+};
+
+function AnswerInput({ votes }: AnswerInputProps) {
+  const { t } = useTranslation();
+  const { ref, ...field } = useField<string | null | undefined>();
+
+  return (
+    <TextField
+      id={field.id}
+      name={field.name}
+      label={field.label}
+      error={field.invalid}
+      helperText={field.invalid ? field.error : undefined}
+      disabled={field.disabled}
+      placeholder={field.placeholder}
+      fullWidth
+      inputRef={ref}
+      value={field.value ?? ''}
+      onChange={event => field.onChange(event.target.value)}
+      onBlur={field.onBlur}
+      slotProps={{
+        input: {
+          readOnly: field.readOnly,
+          endAdornment: (
+            <InputAdornment position="end">
+              {`${votes} ${t('pollAnswer.votes', { count: votes })}`}
+            </InputAdornment>
+          ),
+        },
+      }}
+    />
+  );
+}
+
+const focusAnswerNear = (index: number) => {
+  const answerAt = (position: number) =>
+    document.querySelector<HTMLInputElement>(
+      `input[name="answers.${position}.answer"]`
+    );
+
+  (
+    answerAt(index) ??
+    answerAt(index - 1) ??
+    document.querySelector<HTMLInputElement>('input[name="newAnswer"]')
+  )?.focus();
+};
 
 type DeleteAnswerDialogProps = {
+  index: number;
   answerId: string;
   answer: string;
   open: boolean;
@@ -54,6 +103,7 @@ type DeleteAnswerDialogProps = {
 };
 
 function DeleteAnswerDialog({
+  index,
   answerId,
   answer,
   open,
@@ -62,6 +112,7 @@ function DeleteAnswerDialog({
   const { t } = useTranslation();
   const reload = useReloadPollRows();
   const [deleteAnswer, { loading }] = useMutation(DeletePollAnswerDocument);
+  const [deleted, setDeleted] = useState(false);
 
   const confirm = async () => {
     try {
@@ -73,8 +124,10 @@ function DeleteAnswerDialog({
       return;
     }
 
+    setDeleted(true);
     onClose();
     await reload();
+    setTimeout(() => focusAnswerNear(index));
   };
 
   return (
@@ -82,6 +135,7 @@ function DeleteAnswerDialog({
       fullWidth
       open={open}
       maxWidth="xs"
+      disableRestoreFocus={deleted}
       onClose={onClose}
     >
       <DialogTitle>{t('pollAnswer.deleteModalTitle')}</DialogTitle>
@@ -92,6 +146,7 @@ function DeleteAnswerDialog({
         <Button
           variant="text"
           onClick={onClose}
+          autoFocus
         >
           {t('cancel')}
         </Button>
@@ -140,22 +195,24 @@ export function PollAnswerRow({ index }: ItemLayoutProps) {
       <AnswerItem.Field
         name="answer"
         label={t('pollEditView.answerLabel', { position: index + 1 })}
-        helperText={`${total} ${t('pollAnswer.votes')}`}
+        component={bindComponent(AnswerInput, { votes: total })}
       />
       {readOnly ? null : (
         <>
           <IconButtonTooltip caption={t('delete')}>
             <IconButton
               size="small"
+              color="error"
               aria-label={t('pollEditView.deleteAnswer', {
                 position: index + 1,
               })}
               onClick={() => setOpen(true)}
             >
-              <MdDeleteOutline />
+              <MdDelete />
             </IconButton>
           </IconButtonTooltip>
           <DeleteAnswerDialog
+            index={index}
             answerId={answerId ?? ''}
             answer={answer ?? ''}
             open={open}
@@ -202,8 +259,9 @@ function AddAnswer() {
   };
 
   return (
-    <AddLine>
+    <Line>
       <TextField
+        name="newAnswer"
         label={t('pollAnswer.insertYourNewAnswer')}
         value={answer}
         error={missing}
@@ -222,7 +280,7 @@ function AddAnswer() {
       >
         {t('pollEditView.addAndSaveNewAnswer')}
       </Button>
-    </AddLine>
+    </Line>
   );
 }
 

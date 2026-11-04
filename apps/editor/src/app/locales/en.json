@@ -2393,7 +2393,8 @@
       "insertYourNewAnswer": "Enter a new answer",
       "urlCopied": "Voting link copied to the clipboard.",
       "urlCopyingFailed": "Voting link could not be copied.",
-      "votes": "votes",
+      "votes_one": "vote",
+      "votes_other": "votes",
       "answerLabel": "Answer {{number}}",
       "deleteAnswer": "Delete answer \"{{answer}}\""
     },

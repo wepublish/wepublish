@@ -297,6 +297,34 @@ const question = () => getFieldByLabel(/^pollEditView\.questionPanelHeader/);
 const answerFields = () =>
   screen.queryAllByRole('textbox', { name: /^pollEditView\.answerLabel/ });
 
+const answerInput = (index: number) => {
+  const root = answerFields()[index].closest<HTMLElement>('.MuiInputBase-root');
+
+  if (root === null) {
+    throw new Error(`answer ${index} has no input root`);
+  }
+
+  return within(root);
+};
+
+const answerRow = (index: number) => {
+  const field = answerFields()[index];
+  const [button] = screen.getAllByRole('button', {
+    name: 'pollEditView.deleteAnswer',
+  }).slice(index);
+  let row = button.parentElement;
+
+  while (row !== null && !row.contains(field)) {
+    row = row.parentElement;
+  }
+
+  if (row === null) {
+    throw new Error(`answer ${index} has no row`);
+  }
+
+  return { row, field, button };
+};
+
 const sourceGroup = (source: string) =>
   within(screen.getByRole('group', { name: source }));
 
@@ -364,16 +392,9 @@ describe('PollEditView', () => {
     expect(answerFields()[0]).toHaveValue('Rot');
     expect(answerFields()[1]).toHaveValue('Blau');
     expect(answerFields()).toHaveLength(2);
-    expect(
-      formSectionOf('pollEditView.answerPanelHeader').getByText(
-        '5 pollAnswer.votes'
-      )
-    ).toBeInTheDocument();
-    expect(
-      formSectionOf('pollEditView.answerPanelHeader').getByText(
-        '1 pollAnswer.votes'
-      )
-    ).toBeInTheDocument();
+    expect(answerInput(0).getByText('5 pollAnswer.votes')).toBeInTheDocument();
+    expect(answerInput(1).getByText('1 pollAnswer.votes')).toBeInTheDocument();
+    expect(answerFields()[0]).not.toHaveAttribute('aria-describedby');
     expect(votesOf('Facebook', 'Rot')).toHaveValue(2);
     expect(votesOf('Facebook', 'Blau')).toHaveValue(0);
   });
@@ -401,11 +422,7 @@ describe('PollEditView', () => {
     await user.clear(votesOf('Facebook', 'Blau'));
     await user.type(votesOf('Facebook', 'Blau'), '7');
 
-    expect(
-      formSectionOf('pollEditView.answerPanelHeader').getByText(
-        '8 pollAnswer.votes'
-      )
-    ).toBeInTheDocument();
+    expect(answerInput(1).getByText('8 pollAnswer.votes')).toBeInTheDocument();
 
     await user.click(save());
 
@@ -533,6 +550,16 @@ describe('PollEditView', () => {
     expect(createdAnswers).not.toHaveBeenCalled();
   });
 
+  it('shows a red delete button centred on each answer', async () => {
+    renderEdit();
+
+    await loaded();
+    const { row, button } = answerRow(0);
+
+    expect(button).toHaveClass('MuiIconButton-colorError');
+    expect(row).toHaveStyle({ alignItems: 'center' });
+  });
+
   it('deletes an answer straight away after confirming', async () => {
     const { user } = renderEdit();
 
@@ -541,17 +568,20 @@ describe('PollEditView', () => {
       name: 'pollEditView.deleteAnswer',
     });
     await user.click(deleteRed);
-    await user.click(
-      within(await screen.findByRole('dialog')).getByRole('button', {
-        name: 'delete',
-      })
+
+    const dialog = within(await screen.findByRole('dialog'));
+
+    await waitFor(() =>
+      expect(dialog.getByRole('button', { name: 'cancel' })).toHaveFocus()
     );
+    await user.click(dialog.getByRole('button', { name: 'delete' }));
 
     await waitFor(() => expect(answerFields()).toHaveLength(1));
     expect(deletedAnswers).toHaveBeenCalledWith({
       deletePollAnswerId: 'answer-red',
     });
     expect(answerFields()[0]).toHaveValue('Blau');
+    await waitFor(() => expect(answerFields()[0]).toHaveFocus());
     expect(
       sourceGroup('Facebook').queryByRole('spinbutton', { name: /^Rot/ })
     ).toBeNull();

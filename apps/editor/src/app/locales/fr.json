@@ -2392,7 +2392,8 @@
       "insertYourNewAnswer": "Saisir une nouvelle réponse",
       "urlCopied": "Lien de vote copié dans le presse-papiers.",
       "urlCopyingFailed": "Le lien de vote n’a pas pu être copié.",
-      "votes": "votes",
+      "votes_one": "vote",
+      "votes_other": "votes",
       "answerLabel": "Réponse {{number}}",
       "deleteAnswer": "Supprimer la réponse « {{answer}} »"
     },
