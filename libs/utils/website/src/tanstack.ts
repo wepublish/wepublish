@@ -29,6 +29,7 @@ export * from './tanstack/router-hooks';
 export * from './tanstack/internal-href';
 export * from './tanstack/pages/error-page';
 export * from './tanstack/session-token';
+export * from './tanstack/stale-chunk';
 export * from './tanstack/website-shell';
 export * from './tanstack/routes';
 

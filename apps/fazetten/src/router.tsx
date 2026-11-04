@@ -4,6 +4,7 @@ import {
   createRouterApolloClient,
   ErrorPage,
   FourOhFourPage,
+  registerStaleChunkReload,
 } from '@wepublish/utils/website/tanstack';
 
 import { registerSentryClient } from '@wepublish/utils/website/tanstack/sentry/client';
@@ -58,6 +59,7 @@ export function getRouter() {
 
   if (typeof window !== 'undefined') {
     void registerSentryClient(router);
+    registerStaleChunkReload();
   }
 
   return router;

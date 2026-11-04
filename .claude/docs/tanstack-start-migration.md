@@ -133,7 +133,13 @@ Order matters; several steps leave the repo un-typecheckable if done early.
    touching the app's `src/sitemap.ts`, or that file will not typecheck.
 8. Swap the app: delete `pages/`, `next.config.js`, `next-env.d.ts`,
    `instrumentation*.ts`; add `vite.config.mts`, `src/routes/**`, `src/start.ts`,
-   `src/server.ts`, `src/router.tsx`.
+   `src/server.ts`, `src/router.tsx`. Copy `router.tsx` from an existing
+   tenant: its browser branch calls `registerSentryClient(router)` **and**
+   `registerStaleChunkReload()`. Without the second, every deploy turns open
+   tabs' next navigation into a "Failed to fetch dynamically imported module"
+   error page (the hashed chunks they reference are gone) instead of one
+   reload; `ErrorPage` uses the same reloader and skips the Sentry report when
+   it reloads.
 9. Patch the stragglers the pre-flight finds (§6.1).
 10. Build, boot, `tools/tanstack-route-parity.mjs`.
 11. `node tools/tanstack-shell-parity.mjs <tenant>` — the route check proves

@@ -3,9 +3,14 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { ErrorPage } from './error-page';
 
 const reportError = vi.fn();
+const reloadForStaleChunk = vi.fn((_error: unknown) => false);
 
 vi.mock('../sentry/report-error', () => ({
   reportRenderError: (...args: unknown[]) => reportError(...args),
+}));
+
+vi.mock('../stale-chunk', () => ({
+  reloadForStaleChunk: (error: unknown) => reloadForStaleChunk(error),
 }));
 
 vi.mock('@wepublish/website/builder', () => ({
@@ -27,7 +32,10 @@ vi.mock('@wepublish/website/builder', () => ({
 }));
 
 describe('ErrorPage', () => {
-  beforeEach(() => reportError.mockReset());
+  beforeEach(() => {
+    reportError.mockReset();
+    reloadForStaleChunk.mockReset().mockReturnValue(false);
+  });
 
   it('tells the reader something went wrong', () => {
     render(
@@ -62,6 +70,23 @@ describe('ErrorPage', () => {
     );
 
     expect(reportError).toHaveBeenCalledWith(error);
+  });
+
+  it('reloads instead of reporting when a deploy removed the chunk', () => {
+    const error = new TypeError(
+      'Failed to fetch dynamically imported module: https://x/assets/a.js'
+    );
+    reloadForStaleChunk.mockReturnValue(true);
+
+    render(
+      <ErrorPage
+        error={error}
+        reset={vi.fn()}
+      />
+    );
+
+    expect(reloadForStaleChunk).toHaveBeenCalledWith(error);
+    expect(reportError).not.toHaveBeenCalled();
   });
 
   it('lets the reader retry, which is what `reset` is for', () => {

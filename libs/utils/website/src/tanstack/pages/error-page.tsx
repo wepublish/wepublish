@@ -2,6 +2,7 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { useEffect } from 'react';
 
 import { reportRenderError } from '../sentry/report-error';
+import { reloadForStaleChunk } from '../stale-chunk';
 
 export type ErrorPageProps = {
   /** Whatever was thrown — `unknown`, because anything can be. */
@@ -30,6 +31,10 @@ export const ErrorPage = ({ error, reset }: ErrorPageProps) => {
   } = useWebsiteBuilder();
 
   useEffect(() => {
+    if (reloadForStaleChunk(error)) {
+      return;
+    }
+
     reportRenderError(error);
   }, [error]);
 
