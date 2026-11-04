@@ -10,8 +10,11 @@ import { theme as WePTheme } from '@wepublish/ui';
 import { PartialDeep } from 'type-fest';
 import { CSSProperties } from 'react';
 
-const fontUrl = (file: string) =>
-  new URL(`./assets/fonts/gilroy/${file}`, import.meta.url).href;
+import gilroyBold from './assets/fonts/gilroy/Gilroy-Bold.woff2';
+import gilroyExtrabold from './assets/fonts/gilroy/Gilroy-Extrabold.woff2';
+import gilroyLight from './assets/fonts/gilroy/Gilroy-Light.woff2';
+import gilroyMedium from './assets/fonts/gilroy/Gilroy-Medium.woff2';
+import gilroyRegular from './assets/fonts/gilroy/Gilroy.woff2';
 
 export const gilroy = { family: 'Gilroy' };
 const cactus = { family: 'Cactus Classical Serif' };
@@ -304,7 +307,7 @@ export const EenewsFontFaces = () => (
     styles={css`
       @font-face {
         font-family: ${gilroy.family};
-        src: url('${fontUrl('Gilroy-Light.woff2')}') format('woff2');
+        src: url('${gilroyLight}') format('woff2');
         font-weight: 300;
         font-style: normal;
         font-display: swap;
@@ -312,7 +315,7 @@ export const EenewsFontFaces = () => (
 
       @font-face {
         font-family: ${gilroy.family};
-        src: url('${fontUrl('Gilroy.woff2')}') format('woff2');
+        src: url('${gilroyRegular}') format('woff2');
         font-weight: 400;
         font-style: normal;
         font-display: swap;
@@ -320,7 +323,7 @@ export const EenewsFontFaces = () => (
 
       @font-face {
         font-family: ${gilroy.family};
-        src: url('${fontUrl('Gilroy-Medium.woff2')}') format('woff2');
+        src: url('${gilroyMedium}') format('woff2');
         font-weight: 500;
         font-style: normal;
         font-display: swap;
@@ -328,7 +331,7 @@ export const EenewsFontFaces = () => (
 
       @font-face {
         font-family: ${gilroy.family};
-        src: url('${fontUrl('Gilroy-Bold.woff2')}') format('woff2');
+        src: url('${gilroyBold}') format('woff2');
         font-weight: 700;
         font-style: normal;
         font-display: swap;
@@ -336,7 +339,7 @@ export const EenewsFontFaces = () => (
 
       @font-face {
         font-family: ${gilroy.family};
-        src: url('${fontUrl('Gilroy-Extrabold.woff2')}') format('woff2');
+        src: url('${gilroyExtrabold}') format('woff2');
         font-weight: 800;
         font-style: normal;
         font-display: swap;
