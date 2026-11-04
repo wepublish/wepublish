@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import type { ElementType } from 'react';
 import {
   Card,
   CardContent,
@@ -31,7 +32,13 @@ export const PageForm = styled('form')`
 
 export const StickyHeader = styled.div`
   position: sticky;
-  top: calc(-1 * var(--wep-page-padding-y, 0px));
+  top: calc(
+    -1 *
+      var(--wep-page-padding-y, 0px) - max(
+        var(--wep-page-padding-y, 0px) - 16px,
+        0px
+      )
+  );
   z-index: 10;
   display: flex;
   flex-wrap: wrap;
@@ -40,15 +47,23 @@ export const StickyHeader = styled.div`
   gap: ${({ theme }) => theme.spacing(1, 3)};
   margin: calc(-1 * var(--wep-page-padding-y, 0px))
     calc(-1 * var(--wep-page-padding-x, 0px)) 0;
-  padding: ${({ theme }) => theme.spacing(2)} var(--wep-page-padding-x, 0px);
+  padding-top: var(--wep-page-padding-y, 0px);
+  padding-right: var(--wep-page-padding-x, 0px);
+  padding-bottom: 16px;
+  padding-left: var(--wep-page-padding-x, 0px);
   background: ${({ theme }) => theme.vars.palette.background.paper};
-  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    flex-wrap: nowrap;
+  }
 `;
 
 export const TitleGroup = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing(1)};
+  flex: 0 1 auto;
   min-width: 0;
 `;
 
@@ -64,6 +79,8 @@ export const Subtitle = styled(Typography)`
 
 export const BackAnchor = styled(Link)`
   display: flex;
+  flex-shrink: 0;
+  margin-inline: -10px;
   color: inherit;
 
   svg {
@@ -77,6 +94,10 @@ export const Actions = styled.div`
   align-items: center;
   gap: ${({ theme }) => theme.spacing(1)};
   margin-left: auto;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    flex-shrink: 0;
+  }
 `;
 
 export const Body = styled.div`
@@ -116,7 +137,7 @@ export const MainColumn = styled.div`
 `;
 
 export const AsidePanel = styled.div`
-  flex: 1 1 320px;
+  flex: 1 1 420px;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -138,13 +159,13 @@ export const CardGrid = styled.div`
   }
 `;
 
-export const SectionCard = styled(Card)`
+export const SectionCard = styled(Card)<{ component?: ElementType }>`
   min-width: 0;
 
   &[data-span='full'] {
     grid-column: 1 / -1;
   }
-` as typeof Card;
+`;
 
 export const SectionCardContent = styled(CardContent)`
   display: flex;
@@ -262,6 +283,15 @@ export const ToggleGroupTitle = styled(FormLabel)`
 
 export const PanelHeader = styled(DrawerHeader)`
   flex-wrap: wrap;
+
+  & > h2 {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    flex-wrap: nowrap;
+  }
 `;
 
 export const PanelBody = styled(DrawerBody)`

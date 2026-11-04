@@ -1,4 +1,4 @@
-import { renderEditorForm } from '../../testing';
+import { renderEditorForm, stubSortableRowRects } from '../../testing';
 import { screen, waitFor, within } from '@testing-library/react';
 import {
   bindComponent,
@@ -214,7 +214,7 @@ describe('ArrayField', () => {
     ]);
   });
 
-  it('removes an item and moves the focus to the add button', async () => {
+  it('removes an item and moves the focus to the remove button of the next one', async () => {
     const onSubmit = vi.fn();
     const { user } = renderEditorForm(<View onSubmit={onSubmit} />);
 
@@ -226,7 +226,9 @@ describe('ArrayField', () => {
 
     expect(rowsOf(actionsGroup())).toHaveLength(1);
     expect(
-      within(actionsGroup()).getByRole('button', { name: 'form.array.add' })
+      within(rowsOf(actionsGroup())[0]).getByRole('button', {
+        name: 'form.array.remove',
+      })
     ).toHaveFocus();
 
     await user.click(screen.getByRole('button', { name: 'save' }));
@@ -237,7 +239,23 @@ describe('ArrayField', () => {
     ]);
   });
 
-  it('moves the focus to the add button after removing from a full list', async () => {
+  it('moves the focus to the previous row and then to the add button as the last rows go', async () => {
+    const { user } = renderEditorForm(<View />);
+    const removeIn = (row: HTMLElement) =>
+      within(row).getByRole('button', { name: 'form.array.remove' });
+
+    await user.click(removeIn(rowsOf(actionsGroup())[1]));
+
+    expect(removeIn(rowsOf(actionsGroup())[0])).toHaveFocus();
+
+    await user.click(removeIn(rowsOf(actionsGroup())[0]));
+
+    expect(
+      within(actionsGroup()).getByRole('button', { name: 'form.array.add' })
+    ).toHaveFocus();
+  });
+
+  it('enables the add button again after removing from a full list', async () => {
     const { user } = renderEditorForm(
       <View
         defaultValues={{
@@ -259,20 +277,38 @@ describe('ArrayField', () => {
     );
 
     expect(add).toBeEnabled();
-    expect(add).toHaveFocus();
   });
 
-  it('offers move buttons only when sortable and keeps the first and last item in bounds', async () => {
-    const { unmount } = renderEditorForm(<View />);
+  it('offers a drag handle per row unless sorting is turned off, and no move buttons', () => {
+    const { unmount } = renderEditorForm(<View sortable={false} />);
 
     expect(
       within(actionsGroup()).queryByRole('button', {
-        name: 'form.array.moveUp',
+        name: 'form.array.dragHandle',
       })
     ).not.toBeInTheDocument();
 
     unmount();
 
+    renderEditorForm(<View sortable />);
+
+    const rows = rowsOf(actionsGroup());
+
+    expect(
+      within(rows[0]).getByRole('button', { name: 'form.array.dragHandle' })
+    ).toHaveAttribute('aria-roledescription', 'form.array.roleDescription');
+    expect(
+      within(rows[1]).getByRole('button', { name: 'form.array.dragHandle' })
+    ).toBeInTheDocument();
+    expect(
+      within(actionsGroup()).queryByRole('button', {
+        name: /^form\.array\.move/,
+      })
+    ).not.toBeInTheDocument();
+  });
+
+  it('reorders rows from the keyboard through the drag handle', async () => {
+    const rects = stubSortableRowRects();
     const onSubmit = vi.fn();
     const { user } = renderEditorForm(
       <View
@@ -280,20 +316,17 @@ describe('ArrayField', () => {
         sortable
       />
     );
-    const [first, last] = rowsOf(actionsGroup());
 
-    expect(
-      within(first).getByRole('button', { name: 'form.array.moveUp' })
-    ).toBeDisabled();
-    expect(
-      within(last).getByRole('button', { name: 'form.array.moveDown' })
-    ).toBeDisabled();
+    within(rowsOf(actionsGroup())[0])
+      .getByRole('button', { name: 'form.array.dragHandle' })
+      .focus();
+    await user.keyboard('[Space]');
+    await user.keyboard('[ArrowDown]');
+    await user.keyboard('[Space]');
 
-    await user.click(
-      within(first).getByRole('button', { name: 'form.array.moveDown' })
+    await waitFor(() =>
+      expect(actionLabelIn(rowsOf(actionsGroup())[0])).toHaveValue('Abo')
     );
-
-    expect(actionLabelIn(rowsOf(actionsGroup())[0])).toHaveValue('Abo');
 
     await user.click(screen.getByRole('button', { name: 'save' }));
 
@@ -302,9 +335,28 @@ describe('ArrayField', () => {
       'Abo',
       'Mehr lesen',
     ]);
+
+    rects.mockRestore();
   });
 
-  it('names the row buttons by position', async () => {
+  it('keeps the order when a keyboard drag is cancelled', async () => {
+    const rects = stubSortableRowRects();
+    const { user } = renderEditorForm(<View sortable />);
+
+    within(rowsOf(actionsGroup())[0])
+      .getByRole('button', { name: 'form.array.dragHandle' })
+      .focus();
+    await user.keyboard('[Space]');
+    await user.keyboard('[ArrowDown]');
+    await user.keyboard('[Escape]');
+
+    expect(actionLabelIn(rowsOf(actionsGroup())[0])).toHaveValue('Mehr lesen');
+
+    rects.mockRestore();
+  });
+
+  it('names the row buttons by position and announces a keyboard drag', async () => {
+    const rects = stubSortableRowRects();
     const i18n = i18next.createInstance();
 
     await i18n.init({
@@ -316,8 +368,13 @@ describe('ArrayField', () => {
               array: {
                 add: 'Add entry',
                 remove: 'Remove entry {{position}}',
-                moveUp: 'Move entry {{position}} up',
-                moveDown: 'Move entry {{position}} down',
+                dragHandle: 'Reorder entry {{position}}',
+                roleDescription: 'sortable entry',
+                dragInstructions: 'Press Space to pick up an entry.',
+                dragStart: 'Picked up entry {{position}}.',
+                dragOver: 'Entry {{position}} is over position {{target}}.',
+                dragEnd: 'Entry {{position}} dropped at position {{target}}.',
+                dragCancel: 'Entry {{position}} is back in its place.',
               },
             },
           },
@@ -325,26 +382,70 @@ describe('ArrayField', () => {
       },
     });
 
-    renderEditorForm(
+    const { user } = renderEditorForm(
       <I18nextProvider i18n={i18n}>
         <View sortable />
       </I18nextProvider>
     );
 
+    const announcements = () =>
+      screen
+        .getAllByRole('status')
+        .map(region => region.textContent)
+        .join(' ');
     const group = actionsGroup();
+    const handle = within(group).getByRole('button', {
+      name: 'Reorder entry 1',
+    });
 
     expect(
       within(group).getByRole('button', { name: 'Remove entry 2' })
     ).toBeInTheDocument();
     expect(
-      within(group).getByRole('button', { name: 'Move entry 1 down' })
-    ).toBeInTheDocument();
-    expect(
-      within(group).getByRole('button', { name: 'Move entry 2 up' })
+      within(group).getByRole('button', { name: 'Reorder entry 2' })
     ).toBeInTheDocument();
     expect(
       within(group).getByRole('button', { name: 'Add entry' })
     ).toBeInTheDocument();
+    expect(handle).toHaveAttribute('aria-roledescription', 'sortable entry');
+    expect(handle).toHaveAccessibleDescription(
+      'Press Space to pick up an entry.'
+    );
+
+    handle.focus();
+    await user.keyboard('[Space]');
+
+    await waitFor(() =>
+      expect(announcements()).toContain('Picked up entry 1.')
+    );
+
+    await user.keyboard('[ArrowDown]');
+
+    await waitFor(() =>
+      expect(announcements()).toContain('Entry 1 is over position 2.')
+    );
+
+    await user.keyboard('[Space]');
+
+    await waitFor(() =>
+      expect(announcements()).toContain('Entry 1 dropped at position 2.')
+    );
+
+    rects.mockRestore();
+  });
+
+  it('shows the rows without a box around each item and a text add button', () => {
+    renderEditorForm(<View sortable />);
+
+    const [first, second] = rowsOf(actionsGroup());
+
+    expect(getComputedStyle(first).borderLeftStyle).not.toBe('solid');
+    expect(getComputedStyle(second).borderLeftStyle).not.toBe('solid');
+    expect(getComputedStyle(first).borderTopStyle).not.toBe('solid');
+    expect(getComputedStyle(second).borderTopStyle).toBe('solid');
+    expect(
+      within(actionsGroup()).getByRole('button', { name: 'form.array.add' })
+    ).toHaveClass('MuiButton-text');
   });
 
   it('uses the given add label and shows an empty state', () => {
@@ -454,6 +555,7 @@ describe('ArrayField', () => {
           .getAllByRole('columnheader')
           .map(header => header.textContent)
       ).toEqual([
+        'form.array.reorder',
         'banner.form.actionLabel',
         'banner.form.actionUrl',
         'form.array.actions',
@@ -472,7 +574,7 @@ describe('ArrayField', () => {
     it('explains a column in its header when the item key has a description', () => {
       renderEditorForm(<DescribedTableView />);
 
-      const [label, style] = within(
+      const [, label, style] = within(
         screen.getByRole('table', { name: 'banner.form.actions' })
       ).getAllByRole('columnheader');
 
@@ -486,6 +588,7 @@ describe('ArrayField', () => {
     });
 
     it('edits, adds and removes rows', async () => {
+      const rects = stubSortableRowRects();
       const onSubmit = vi.fn();
       const { user } = renderEditorForm(
         <View
@@ -510,8 +613,18 @@ describe('ArrayField', () => {
       await user.click(
         within(rows[0]).getByRole('button', { name: 'form.array.remove' })
       );
-      await user.click(
-        within(table()).getAllByRole('button', { name: 'form.array.moveUp' })[1]
+      within(within(table()).getAllByRole('row')[2])
+        .getByRole('button', { name: 'form.array.dragHandle' })
+        .focus();
+      await user.keyboard('[Space]');
+      await user.keyboard('[ArrowUp]');
+      await user.keyboard('[Space]');
+      await waitFor(() =>
+        expect(
+          within(within(table()).getAllByRole('row')[1]).getByRole('textbox', {
+            name: 'banner.form.actionLabel',
+          })
+        ).toHaveValue('Spenden')
       );
       await user.click(screen.getByRole('button', { name: 'save' }));
 
@@ -520,6 +633,8 @@ describe('ArrayField', () => {
         { label: 'Spenden', url: '' },
         { label: 'Abo', url: '/abo' },
       ]);
+
+      rects.mockRestore();
     });
 
     it('shows cell errors in the cell', async () => {
@@ -587,6 +702,7 @@ describe('ArrayField', () => {
           .getAllByRole('columnheader')
           .map(header => header.textContent)
       ).toEqual([
+        'form.array.reorder',
         'navigation.linkType',
         'navigation.linkLabel',
         'navigation.page',
@@ -596,7 +712,7 @@ describe('ArrayField', () => {
 
       const row = within(links).getAllByRole('row')[1];
 
-      expect(within(row).getAllByRole('cell')[2]).toBeEmptyDOMElement();
+      expect(within(row).getAllByRole('cell')[3]).toBeEmptyDOMElement();
       expect(
         within(row).getByRole('textbox', { name: 'navigation.url' })
       ).toHaveValue('https://blog.ch');

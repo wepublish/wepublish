@@ -1,5 +1,6 @@
 import { getFieldByLabel, renderEditorForm } from '../../testing';
 import { screen, waitFor } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { z } from 'zod/v4';
 
 import { editorForm } from '../editor-form';
@@ -26,11 +27,13 @@ function View({
   disabled,
   readOnly,
   hideLabel,
+  endAdornment,
 }: {
   onSubmit?: (values: Values) => unknown;
   disabled?: boolean;
   readOnly?: boolean;
   hideLabel?: boolean;
+  endAdornment?: ReactNode;
 }) {
   const handle = editorForm.useSchemaForm(schema);
 
@@ -44,6 +47,7 @@ function View({
         disabled={disabled}
         readOnly={readOnly}
         hideLabel={hideLabel}
+        props={{ endAdornment }}
       />
       <Field name="email" />
       <Field name="website" />
@@ -151,6 +155,15 @@ describe('TextField', () => {
     );
 
     expect(password).toHaveAttribute('type', 'password');
+  });
+
+  it('shows an end adornment inside the input and announces it with the value', () => {
+    renderEditorForm(<View endAdornment={<span>12 Stimmen</span>} />);
+
+    const title = getFieldByLabel('event.title*');
+
+    expect(title.parentElement).toHaveTextContent('12 Stimmen');
+    expect(title).toHaveAccessibleDescription('12 Stimmen event.titleHelp');
   });
 
   it('turns a cleared field with a default into a required one', async () => {

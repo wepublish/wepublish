@@ -5,7 +5,13 @@ import {
   PageTitle,
   useMeasuredHeight,
 } from '@wepublish/ui/editor';
-import { useRef, useState, type CSSProperties, type Ref } from 'react';
+import {
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import { useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdChevronLeft } from 'react-icons/md';
@@ -32,30 +38,48 @@ export type FormPageProps<S extends AnyFormSchema> = {
 
 type TitleParams = (values: Record<string, unknown>) => Record<string, unknown>;
 
+type RenderTitle = (text: string) => ReactNode;
+
+const renderText: RenderTitle = text => text;
+
 function LiveTitle({
   title,
   titleParams,
+  render,
 }: {
   title: string;
   titleParams: TitleParams;
+  render: RenderTitle;
 }) {
   const { t } = useTranslation();
   const values: Record<string, unknown> | undefined = useWatch();
 
-  return <>{t(title, titleParams(values ?? {}))}</>;
+  return <>{render(t(title, titleParams(values ?? {})))}</>;
 }
 
-export function FormTitle() {
+export function FormTitle({ render = renderText }: { render?: RenderTitle }) {
   const { controller } = useFormViewContext();
   const { t } = useTranslation();
   const titleParams = controller.titleParams as TitleParams | undefined;
 
   return titleParams === undefined ?
-      <>{t(controller.title)}</>
+      <>{render(t(controller.title))}</>
     : <LiveTitle
         title={controller.title}
         titleParams={titleParams}
+        render={render}
       />;
+}
+
+function pageHeading(text: string) {
+  return (
+    <PageTitle
+      noWrap
+      title={text}
+    >
+      {text}
+    </PageTitle>
+  );
 }
 
 export function ReadOnlyChip() {
@@ -123,9 +147,7 @@ export function FormPageHeader({
           <BackLink to={controller.closePath} />
         )}
         <TitleText>
-          <PageTitle>
-            <FormTitle />
-          </PageTitle>
+          <FormTitle render={pageHeading} />
           {subtitle === undefined || subtitle === null ? null : (
             <Subtitle variant="body2">
               {typeof subtitle === 'string' ? t(subtitle) : subtitle}
@@ -144,6 +166,9 @@ export function FormPageHeader({
   );
 }
 
+const HIDDEN_WHEN_STUCK =
+  'var(--wep-page-padding-y, 0px) - max(var(--wep-page-padding-y, 0px) - 16px, 0px)';
+
 export function FormPage<S extends AnyFormSchema>({
   controller,
 }: FormPageProps<S>) {
@@ -154,7 +179,7 @@ export function FormPage<S extends AnyFormSchema>({
     <PageRoot
       style={
         {
-          '--wep-sticky-top': `calc(${headerHeight}px - var(--wep-page-padding-y, 0px))`,
+          '--wep-sticky-top': `calc(${headerHeight}px - ${HIDDEN_WHEN_STUCK})`,
         } as CSSProperties
       }
     >

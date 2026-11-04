@@ -113,9 +113,17 @@ function DrawerPanelHeader() {
 
   return (
     <PanelHeader>
-      <DrawerTitle id={drawer === null ? undefined : drawer.titleId}>
-        <FormTitle />
-      </DrawerTitle>
+      <FormTitle
+        render={text => (
+          <DrawerTitle
+            id={drawer === null ? undefined : drawer.titleId}
+            noWrap
+            title={text}
+          >
+            {text}
+          </DrawerTitle>
+        )}
+      />
       <DrawerActions>
         {controller.headerActions}
         {controller.readOnly ?

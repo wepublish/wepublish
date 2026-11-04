@@ -1,3 +1,20 @@
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type Announcements,
+  type DragEndEvent,
+  type UniqueIdentifier,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
 import {
   Box,
@@ -19,14 +36,9 @@ import {
   useUnionField,
   type ChildOverride,
 } from '@wepublish/form/core';
-import { useRef, type ReactNode } from 'react';
+import { useId, useRef, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
-import {
-  MdAdd,
-  MdArrowDownward,
-  MdArrowUpward,
-  MdDeleteOutline,
-} from 'react-icons/md';
+import { MdAdd, MdDelete, MdDragIndicator } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 
 import { FieldDescription } from '../field-anatomy';
@@ -55,13 +67,19 @@ const Rows = styled.ol`
 `;
 
 const Row = styled.li`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
+  display: flex;
+  align-items: center;
   gap: ${({ theme }) => theme.spacing(1)};
-  padding: ${({ theme }) => theme.spacing(2)};
-  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
-  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+
+  & + & {
+    padding-top: ${({ theme }) => theme.spacing(2)};
+    border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  }
+`;
+
+const RowContent = styled.div`
+  flex: 1 1 auto;
+  min-width: 0;
 `;
 
 const Actions = styled.div`
@@ -71,60 +89,173 @@ const Actions = styled.div`
 `;
 
 const Cell = styled(TableCell)`
-  vertical-align: top;
+  vertical-align: middle;
 `;
 
 type RowActionsProps = {
   index: number;
-  count: number;
-  sortable: boolean;
   disabled: boolean;
-  onMove: (from: number, to: number) => void;
+  listId: string;
   onRemove: (index: number) => void;
 };
 
-function RowActions({
-  index,
-  count,
-  sortable,
-  disabled,
-  onMove,
-  onRemove,
-}: RowActionsProps) {
+function RowActions({ index, disabled, listId, onRemove }: RowActionsProps) {
   const { t } = useTranslation();
-  const position = { position: index + 1 };
 
   return (
     <Actions>
-      {sortable ?
-        <>
-          <IconButton
-            size="small"
-            aria-label={t('form.array.moveUp', position)}
-            disabled={disabled || index === 0}
-            onClick={() => onMove(index, index - 1)}
-          >
-            <MdArrowUpward />
-          </IconButton>
-          <IconButton
-            size="small"
-            aria-label={t('form.array.moveDown', position)}
-            disabled={disabled || index === count - 1}
-            onClick={() => onMove(index, index + 1)}
-          >
-            <MdArrowDownward />
-          </IconButton>
-        </>
-      : null}
       <IconButton
         size="small"
-        aria-label={t('form.array.remove', position)}
+        color="error"
+        aria-label={t('form.array.remove', { position: index + 1 })}
+        data-array-remove={listId}
         disabled={disabled}
         onClick={() => onRemove(index)}
       >
-        <MdDeleteOutline />
+        <MdDelete />
       </IconButton>
     </Actions>
+  );
+}
+
+type RowFrameProps = {
+  id: string;
+  index: number;
+  table: boolean;
+  disabled: boolean;
+  children: (handle: ReactNode) => ReactNode;
+};
+
+function StaticRowFrame({ table, children }: RowFrameProps) {
+  return table ?
+      <TableRow>{children(null)}</TableRow>
+    : <Row>{children(null)}</Row>;
+}
+
+function SortableRowFrame({
+  id,
+  index,
+  table,
+  disabled,
+  children,
+}: RowFrameProps) {
+  const { t } = useTranslation();
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id,
+    disabled,
+    attributes: { roleDescription: t('form.array.roleDescription') },
+  });
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    position: 'relative' as const,
+    zIndex: isDragging ? 1 : undefined,
+  };
+  const handle = (
+    <IconButton
+      ref={setActivatorNodeRef}
+      size="small"
+      disabled={disabled}
+      {...attributes}
+      {...listeners}
+      aria-label={t('form.array.dragHandle', { position: index + 1 })}
+      sx={{ cursor: disabled ? undefined : 'grab', touchAction: 'none' }}
+    >
+      <MdDragIndicator />
+    </IconButton>
+  );
+
+  return table ?
+      <TableRow
+        ref={setNodeRef}
+        style={style}
+      >
+        {children(handle)}
+      </TableRow>
+    : <Row
+        ref={setNodeRef}
+        style={style}
+      >
+        {children(handle)}
+      </Row>;
+}
+
+type SortableRowsProps = {
+  ids: string[];
+  onMove: (from: number, to: number) => void;
+  children: ReactNode;
+};
+
+function SortableRows({ ids, onMove, children }: SortableRowsProps) {
+  const { t } = useTranslation();
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  const position = (id: UniqueIdentifier) => ids.indexOf(String(id)) + 1;
+  const announcements: Announcements = {
+    onDragStart: ({ active }) =>
+      t('form.array.dragStart', { position: position(active.id) }),
+    onDragOver: ({ active, over }) =>
+      over && over.id !== active.id ?
+        t('form.array.dragOver', {
+          position: position(active.id),
+          target: position(over.id),
+        })
+      : undefined,
+    onDragEnd: ({ active, over }) =>
+      over ?
+        t('form.array.dragEnd', {
+          position: position(active.id),
+          target: position(over.id),
+        })
+      : t('form.array.dragCancel', { position: position(active.id) }),
+    onDragCancel: ({ active }) =>
+      t('form.array.dragCancel', { position: position(active.id) }),
+  };
+
+  const onDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const from = ids.indexOf(String(active.id));
+    const to = ids.indexOf(String(over.id));
+
+    if (from >= 0 && to >= 0) {
+      onMove(from, to);
+    }
+  };
+
+  return (
+    <DndContext
+      sensors={sensors}
+      onDragEnd={onDragEnd}
+      accessibility={{
+        container: document.body,
+        announcements,
+        screenReaderInstructions: {
+          draggable: t('form.array.dragInstructions'),
+        },
+      }}
+    >
+      <SortableContext
+        items={ids}
+        strategy={verticalListSortingStrategy}
+      >
+        {children}
+      </SortableContext>
+    </DndContext>
   );
 }
 
@@ -171,12 +302,13 @@ function ItemCells({ keys }: ItemCellsProps) {
 
 export function ArrayField({
   variant = 'list',
-  sortable = false,
+  sortable = true,
   addLabel,
 }: ArrayFieldProps) {
   const { t } = useTranslation();
   const list = useArrayField();
   const addRef = useRef<HTMLButtonElement>(null);
+  const listId = useId();
   const editable = !list.readOnly;
   const full =
     list.info.maxLength !== undefined && list.count >= list.info.maxLength;
@@ -184,26 +316,74 @@ export function ArrayField({
   const keys = list.itemKeys.map(item => item.key);
   const hasTitle = hasGroupTitle(list);
 
+  const reorderable = sortable && editable;
+  const Frame = reorderable ? SortableRowFrame : StaticRowFrame;
+
   const remove = (index: number) => {
     flushSync(() => list.remove(index));
-    addRef.current?.focus();
+
+    const removeButtons = document.querySelectorAll<HTMLButtonElement>(
+      `[data-array-remove="${listId}"]`
+    );
+    const next = removeButtons[Math.min(index, removeButtons.length - 1)];
+
+    (next ?? addRef.current)?.focus();
   };
 
   const actions = (index: number) =>
     editable ?
       <RowActions
         index={index}
-        count={list.count}
-        sortable={sortable}
         disabled={list.disabled}
-        onMove={list.move}
+        listId={listId}
         onRemove={remove}
       />
     : null;
 
+  const rows = list.items.map(item => (
+    <Frame
+      key={item.key}
+      id={item.key}
+      index={item.index}
+      table={variant === 'table'}
+      disabled={list.disabled}
+    >
+      {handle =>
+        variant === 'table' ?
+          <>
+            {reorderable ?
+              <Cell>{handle}</Cell>
+            : null}
+            {list.renderItem(item.index, {
+              ...child,
+              component: bindComponent(ItemCells, { keys }),
+            })}
+            {editable ?
+              <Cell>{actions(item.index)}</Cell>
+            : null}
+          </>
+        : <>
+            {handle}
+            <RowContent>{list.renderItem(item.index, child)}</RowContent>
+            {actions(item.index)}
+          </>
+      }
+    </Frame>
+  ));
+
+  const body =
+    reorderable ?
+      <SortableRows
+        ids={list.items.map(item => item.key)}
+        onMove={list.move}
+      >
+        {rows}
+      </SortableRows>
+    : rows;
+
   const items =
     variant === 'table' ?
-      <TableContainer>
+      <TableContainer sx={{ position: 'relative' }}>
         <Table
           size="small"
           aria-labelledby={hasTitle ? groupTitleId(list) : undefined}
@@ -213,6 +393,16 @@ export function ArrayField({
         >
           <TableHead>
             <TableRow>
+              {reorderable ?
+                <Cell>
+                  <Box
+                    component="span"
+                    sx={visuallyHidden}
+                  >
+                    {t('form.array.reorder')}
+                  </Box>
+                </Cell>
+              : null}
               {list.itemKeys.map(item => (
                 <Cell key={item.key}>
                   {item.label}
@@ -231,29 +421,10 @@ export function ArrayField({
               : null}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {list.items.map(item => (
-              <TableRow key={item.key}>
-                {list.renderItem(item.index, {
-                  ...child,
-                  component: bindComponent(ItemCells, { keys }),
-                })}
-                {editable ?
-                  <Cell>{actions(item.index)}</Cell>
-                : null}
-              </TableRow>
-            ))}
-          </TableBody>
+          <TableBody>{body}</TableBody>
         </Table>
       </TableContainer>
-    : <Rows>
-        {list.items.map(item => (
-          <Row key={item.key}>
-            <div>{list.renderItem(item.index, child)}</div>
-            {actions(item.index)}
-          </Row>
-        ))}
-      </Rows>;
+    : <Rows>{body}</Rows>;
 
   return (
     <FieldGroup
@@ -271,7 +442,7 @@ export function ArrayField({
       {editable ?
         <Button
           ref={addRef}
-          variant="outlined"
+          variant="text"
           size="small"
           startIcon={<MdAdd />}
           disabled={list.disabled || full}

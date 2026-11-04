@@ -1031,8 +1031,14 @@
       "array": {
         "add": "Ajouter une entrée",
         "remove": "Supprimer l’entrée {{position}}",
-        "moveUp": "Déplacer l’entrée {{position}} vers le haut",
-        "moveDown": "Déplacer l’entrée {{position}} vers le bas",
+        "reorder": "Réorganiser",
+        "dragHandle": "Glisser pour réordonner l’entrée {{position}}",
+        "roleDescription": "entrée triable",
+        "dragInstructions": "Pour saisir une entrée, appuyez sur Espace ou Entrée. Déplacez-la avec les flèches, puis appuyez à nouveau sur Espace ou Entrée pour la déposer, ou sur Échap pour annuler.",
+        "dragStart": "Entrée {{position}} saisie.",
+        "dragOver": "L’entrée {{position}} est au-dessus de la position {{target}}.",
+        "dragEnd": "Entrée {{position}} déposée à la position {{target}}.",
+        "dragCancel": "Déplacement annulé. L’entrée {{position}} est revenue à sa place.",
         "empty": "Aucune entrée pour l’instant",
         "actions": "Actions"
       },

@@ -122,6 +122,21 @@ describe('FormDrawer', () => {
     ).toBeInTheDocument();
   });
 
+  it('keeps a long title on one line with the full text on hover', async () => {
+    renderList('/demo/edit/demo-1');
+
+    await loaded();
+
+    const title = within(screen.getByRole('presentation')).getByRole(
+      'heading',
+      { level: 2, name: 'demo.titleEdit' }
+    );
+
+    expect(title).toHaveAttribute('title', 'demo.titleEdit');
+    expect(getComputedStyle(title).whiteSpace).toBe('nowrap');
+    expect(getComputedStyle(title).textOverflow).toBe('ellipsis');
+  });
+
   it('closes a clean form through the close button without asking', async () => {
     const { user, currentPath } = renderList('/demo/edit/demo-1');
 

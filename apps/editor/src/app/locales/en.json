@@ -1031,8 +1031,14 @@
       "array": {
         "add": "Add entry",
         "remove": "Remove entry {{position}}",
-        "moveUp": "Move entry {{position}} up",
-        "moveDown": "Move entry {{position}} down",
+        "reorder": "Reorder",
+        "dragHandle": "Drag to reorder entry {{position}}",
+        "roleDescription": "sortable entry",
+        "dragInstructions": "To pick up an entry, press Space or Enter. Move it with the arrow keys, then press Space or Enter again to drop it, or Escape to cancel.",
+        "dragStart": "Picked up entry {{position}}.",
+        "dragOver": "Entry {{position}} is over position {{target}}.",
+        "dragEnd": "Entry {{position}} dropped at position {{target}}.",
+        "dragCancel": "Moving cancelled. Entry {{position}} is back in its place.",
         "empty": "No entries yet",
         "actions": "Actions"
       },

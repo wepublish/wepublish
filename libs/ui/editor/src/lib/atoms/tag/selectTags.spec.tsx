@@ -62,8 +62,8 @@ const picker = (
   props: { label?: string; 'aria-labelledby'?: string } = {}
 ) => (
   <ThemeProvider theme={theme}>
+    <span id="tags-label">Event tags</span>
     <MockedProvider mocks={mocks}>
-      <span id="tags-label">Event tags</span>
       <SelectTags
         {...props}
         tagType={TagType.Event}

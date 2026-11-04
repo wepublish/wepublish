@@ -85,6 +85,11 @@ const renderPicker = (picker: ReactElement) =>
     </ThemeProvider>
   );
 
+const pageButton = (page: number) =>
+  screen
+    .getAllByRole('button', { name: 'listView.pagination.page' })
+    .find(button => button.textContent === String(page)) as HTMLElement;
+
 beforeEach(() => {
   requests.length = 0;
 });
@@ -119,7 +124,7 @@ describe.each([
 
     await screen.findByRole('option', { name: 'Plan 1' });
 
-    await user.click(screen.getByRole('button', { name: 'Go to page 2' }));
+    await user.click(pageButton(2));
 
     await screen.findByRole('option', { name: 'Plan 51' });
     expect(
@@ -137,7 +142,7 @@ describe.each([
 
     await user.click(input);
     await screen.findByRole('option', { name: 'Plan 1' });
-    await user.click(screen.getByRole('button', { name: 'Go to page 2' }));
+    await user.click(pageButton(2));
     await screen.findByRole('option', { name: 'Plan 51' });
     await user.type(input, 'Plan 11');
 

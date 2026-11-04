@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 import i18next from 'i18next';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { z } from 'zod/v4';
 
@@ -191,6 +191,62 @@ describe('FormPage', () => {
     ).toBeInTheDocument();
   });
 
+  it('keeps a long title on one line with the full text on hover and in its name', async () => {
+    const question =
+      'Wie oft sollte die Gemeinde die Strassenbeleuchtung in der Nacht abschalten, um Energie zu sparen?';
+    const { user } = renderEditorForm(
+      <Translated>
+        <EditView
+          load={loadStored}
+          live
+        />
+      </Translated>
+    );
+
+    await loaded();
+    await user.clear(getFieldByLabel('demo.name*'));
+    await user.type(getFieldByLabel('demo.name*'), question);
+
+    const title = screen.getByRole('heading', {
+      level: 1,
+      name: `Edit ${question}`,
+    });
+
+    expect(title).toHaveAttribute('title', `Edit ${question}`);
+    expect(getComputedStyle(title).whiteSpace).toBe('nowrap');
+    expect(getComputedStyle(title).textOverflow).toBe('ellipsis');
+    expect(getComputedStyle(title).overflow).toBe('hidden');
+  });
+
+  it('draws the header without a rule below it', () => {
+    renderEditorForm(<CreateView />);
+
+    expect(
+      getComputedStyle(screen.getByTestId('formHeader')).borderBottomStyle
+    ).not.toBe('solid');
+  });
+
+  it('places the title where a list page places its title', () => {
+    renderEditorForm(
+      <div
+        style={
+          {
+            '--wep-page-padding-y': '32px',
+            '--wep-page-padding-x': '24px',
+          } as CSSProperties
+        }
+      >
+        <CreateView />
+      </div>
+    );
+
+    const header = getComputedStyle(screen.getByTestId('formHeader'));
+
+    expect(header.paddingTop).toBe('32px');
+    expect(header.paddingLeft).toBe('24px');
+    expect(header.paddingRight).toBe('24px');
+  });
+
   it('disables the save buttons while loading and after a failed load', async () => {
     const { unmount } = renderEditorForm(
       <EditView load={() => new Promise(() => undefined)} />
@@ -269,7 +325,9 @@ describe('FormPage', () => {
         getFieldByLabel('demo.name*')
           .closest<HTMLElement>('[style*="--wep-sticky-top"]')
           ?.style.getPropertyValue('--wep-sticky-top')
-      ).toBe('calc(66px - var(--wep-page-padding-y, 0px))')
+      ).toBe(
+        'calc(66px - var(--wep-page-padding-y, 0px) - max(var(--wep-page-padding-y, 0px) - 16px, 0px))'
+      )
     );
 
     vi.unstubAllGlobals();

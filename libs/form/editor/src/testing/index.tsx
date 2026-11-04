@@ -24,6 +24,7 @@ import {
 
 export * from './autocomplete';
 export * from './picker-mocks';
+export * from './sortable';
 
 export type RenderEditorFormOptions = {
   mocks?: MockedProviderProps['mocks'];

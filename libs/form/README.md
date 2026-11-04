@@ -206,8 +206,8 @@ Options shared by all three:
 
 | Piece | Renders |
 | --- | --- |
-| `<FormPage controller />` | The page form: a sticky header (back link, title, read-only chip, `headerActions`, save buttons) and the body. It publishes the header height as `--wep-sticky-top`. |
-| `<FormDrawer open onClose width?>` + `<FormDrawerPanel controller />` | A right drawer (`width` from `DRAWER_WIDTHS`, default `md`) whose header holds the title, the save buttons and a close button; section titles are `h3`. The drawer mounts its form only while open. |
+| `<FormPage controller />` | The page form: a sticky header (back link, title, read-only chip, `headerActions`, save buttons) and the body. The header puts the title exactly where a list page's `ListViewContainer` puts its `PageTitle` (the shell's `--wep-page-padding-y`/`-x`, no rule below); from `md` the back link hangs in the left gutter so the title does not move between list and edit. A long title stays on one line with an ellipsis and the full text in `title`; from `md` the actions never wrap under it. When stuck, the header keeps a 16px top padding. It publishes the header height as `--wep-sticky-top`. |
+| `<FormDrawer open onClose width?>` + `<FormDrawerPanel controller />` | A right drawer (`width` from `DRAWER_WIDTHS`, default `md`) whose header holds the title (one line, ellipsis, full text in `title`), the save buttons and a close button; section titles are `h3`. The drawer mounts its form only while open. |
 | `useRouteDrawer({ list, create, edit: '…/:id' })` | `{ open, mode, id, close }` from the route. `mode` and `id` keep the last match, so the content stays during the close animation. |
 | `<FormRoot controller as? headingLevel?>` | The form element and the view context, for a hand-made shell. Inside it: `<FormPageHeader />`, `<FormBody />` (summary, server error, load state, sections, confirmation dialog), `<FormSaveActions />`. |
 | `<FormSection title? description? collapsible? errorPaths? variant? span?>`, `<FormRow>`, `<FormToggleGroup title?>` | The exact primitives sections, rows and toggle groups render with. Use them in section components, item layouts and hand-made bodies so custom parts look the same. `variant="card"` (default `'section'`) and `span="full"` are what the cards layout passes. |
@@ -443,14 +443,14 @@ runtime `Field` throws `No component for kind "<kind>" at "<path>"`.
 
 | Kind | Schema | Component | Props | Value |
 | --- | --- | --- | --- | --- |
-| `string` | `z.string()`, `z.email()`, `z.url()`, other string formats | `TextField` | `type?: 'text' \| 'email' \| 'url' \| 'password'` (email/url otherwise follow the format; password gets a show/hide button), `autoComplete?` | string |
+| `string` | `z.string()`, `z.email()`, `z.url()`, other string formats | `TextField` | `type?: 'text' \| 'email' \| 'url' \| 'password'` (email/url otherwise follow the format; password gets a show/hide button), `autoComplete?`, `endAdornment?: ReactNode` (shown as is at the end of the input, e.g. a vote count, and linked by `aria-describedby`) | string |
 | `number` | `z.number()`, `z.int()` | `NumberField` | `unit?: ReactNode` (a string is a key, e.g. `form.units.days`; an end adornment linked by `aria-describedby`) | number; empty is the cleared value, never `NaN`; `min`/`max`/`step` come from the schema |
 | `boolean` | `z.boolean()` | `CheckboxField` | none | boolean |
 | `date` | `z.date()` | `DateField` | none | `Date`; `.min()`/`.max()` limit the calendar |
 | `enum` | `z.enum([...])`, `z.enum(NativeEnum)`, `z.literal()`, a union of literals | `SelectField` | `searchable?` (an Autocomplete for long lists) | the option value; an empty choice (`form.select.empty`) appears only when the field is not required |
 | `enumArray` | `z.array(z.enum(...))` | `MultiSelectField` | none | values in the order picked; `[]` when cleared |
 | `primitiveArray` | `z.array(z.string())` | `ChipsField` | none | `string[]`, trimmed, empty entries dropped, duplicates removed |
-| `array` | an array of objects, discriminated unions or custom kinds | `ArrayField` | `variant?: 'list' \| 'table'`, `sortable?`, `addLabel?` (a key or a ReactNode) | items in on-screen order; RHF's row ids never reach the value |
+| `array` | an array of objects, discriminated unions or custom kinds | `ArrayField` | `variant?: 'list' \| 'table'`, `sortable?` (default `true`; `false` turns it off; a drag handle at the start of each row, a labelled first column in tables: drag with the pointer, or focus it and press Space, the arrow keys and Space again; announced through `form.array.drag*`), `addLabel?` (a key or a ReactNode; a text button). Adding focuses the new row; removing focuses the next row's remove button, else the previous one's, else Add | items in on-screen order; RHF's row ids never reach the value |
 | `object` | `z.object(...)` inside the schema | `ObjectField` | none | the nested object |
 | `discriminatedUnion` | `z.discriminatedUnion('type', [...])` | `DiscriminatedUnionField` | `control?: 'select' \| 'radio'` (default: radio up to 3 options) | the active branch; switching keeps the keys the new branch accepts |
 | kind of `X` | `X.or(z.literal(''))` | as for `X` | | |
@@ -605,8 +605,9 @@ scoped fields made with `fieldsFor(schema, '<array>.*')`. A layout is rendered
 as a component with `{ index, count, remove, move }`, so it may use hooks.
 Define it at module level; an inline function is a new component type on
 every render of an uncompiled host, and the row would remount. In the editor
-`ArrayField` still draws the row frame and the remove/move buttons around the
-layout.
+`ArrayField` still draws the row around the layout: plain rows divided by
+rules (no box per item), with the drag handle first (unless `sortable={false}`) and the red remove
+button at the end.
 
 ```tsx
 const ActionRow = editorForm.fieldsFor(bannerSchema, 'actions.*');
@@ -1054,6 +1055,7 @@ Write the failing spec first (repo rule). Spec helpers come from
 | `getFieldByLabel(label)` / `queryFieldByLabel(label)` | Finds the `input`/`textarea` for a label. Use it whenever the field has a description: the tooltip button sits inside the `<label>`, so plain `getByLabelText` finds two elements. |
 | `drawerClosed(options?)` | Waits until no MUI drawer is open. |
 | `autocompleteOf(input)`, `clearButtonOf(user, input)` | Reach an Autocomplete's root and its Clear button (hidden until focus). |
+| `stubSortableRowRects()` | Gives `li`/`tr` rows stacked boxes so dnd-kit's keyboard sensor can reorder a `sortable` `ArrayField` in jsdom: focus a row's `form.array.dragHandle` button, press `[Space]`, `[ArrowDown]`/`[ArrowUp]`, `[Space]`. Returns the spy; call `mockRestore()` at the end. |
 | `imageFixture`, `imageListMock`, `imageMock`, `updateImageMock`, `tagFixture`, `tagListMock`, `tagMock`, `pageFixture`, `pageListMock`, `paywallFixture`, `paywallListMock`, `memberPlanFixture`, `memberPlanListMock`, `userFixture`, `userListMock` | Typed picker data and reusable Apollo mocks that match any variables and honour search and paging. |
 
 There is no i18n mock: texts render as their keys, and a required label reads

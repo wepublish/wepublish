@@ -1031,8 +1031,14 @@
       "array": {
         "add": "Eintrag hinzufügen",
         "remove": "Eintrag {{position}} entfernen",
-        "moveUp": "Eintrag {{position}} nach oben verschieben",
-        "moveDown": "Eintrag {{position}} nach unten verschieben",
+        "reorder": "Sortieren",
+        "dragHandle": "Eintrag {{position}} zum Sortieren ziehen",
+        "roleDescription": "sortierbarer Eintrag",
+        "dragInstructions": "Drücke die Leertaste oder Enter, um einen Eintrag aufzunehmen. Verschiebe ihn mit den Pfeiltasten und drücke erneut die Leertaste oder Enter, um ihn abzulegen, oder Escape, um abzubrechen.",
+        "dragStart": "Eintrag {{position}} aufgenommen.",
+        "dragOver": "Eintrag {{position}} ist über Position {{target}}.",
+        "dragEnd": "Eintrag {{position}} an Position {{target}} abgelegt.",
+        "dragCancel": "Verschieben abgebrochen. Eintrag {{position}} ist wieder an seinem Platz.",
         "empty": "Noch keine Einträge",
         "actions": "Aktionen"
       },

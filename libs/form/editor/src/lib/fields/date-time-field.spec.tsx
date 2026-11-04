@@ -201,7 +201,7 @@ describe('DateTimeField', () => {
     );
 
     const [clearStart, clearEnd] = screen.getAllByRole('button', {
-      name: 'clear',
+      name: 'dateTimePicker.clear',
     });
 
     await user.click(clearEnd);
@@ -233,7 +233,9 @@ describe('DateTimeField', () => {
 
     expect(startsAt()).toHaveAttribute('readonly');
     expect(startsAt()).toHaveValue('24.12.2026 18:30');
-    expect(screen.queryAllByRole('button', { name: 'clear' })).toHaveLength(0);
+    expect(
+      screen.queryAllByRole('button', { name: 'dateTimePicker.clear' })
+    ).toHaveLength(0);
 
     await user.click(startsAt());
 
