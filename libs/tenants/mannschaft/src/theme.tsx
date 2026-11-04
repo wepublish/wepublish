@@ -9,8 +9,9 @@ import {
 import { theme as WePTheme } from '@wepublish/ui';
 import { PartialDeep } from 'type-fest';
 
-const fontUrl = (file: string) =>
-  new URL(`./fonts/${file}`, import.meta.url).href;
+import plainLightItalic from './fonts/Plain-Light-Italic.otf';
+import plainLight from './fonts/Plain-Light.otf';
+import plainMedium from './fonts/Plain-Medium.otf';
 
 export const plainFont = { family: 'Plain' };
 
@@ -133,7 +134,7 @@ export const MannschaftFontFaces = () => (
     styles={css`
       @font-face {
         font-family: ${plainFont.family};
-        src: url('${fontUrl('Plain-Light.otf')}') format('opentype');
+        src: url('${plainLight}') format('opentype');
         font-weight: 400;
         font-style: normal;
         font-display: swap;
@@ -141,7 +142,7 @@ export const MannschaftFontFaces = () => (
 
       @font-face {
         font-family: ${plainFont.family};
-        src: url('${fontUrl('Plain-Light-Italic.otf')}') format('opentype');
+        src: url('${plainLightItalic}') format('opentype');
         font-weight: 400;
         font-style: italic;
         font-display: swap;
@@ -149,7 +150,7 @@ export const MannschaftFontFaces = () => (
 
       @font-face {
         font-family: ${plainFont.family};
-        src: url('${fontUrl('Plain-Medium.otf')}') format('opentype');
+        src: url('${plainMedium}') format('opentype');
         font-weight: 600;
         font-style: normal;
         font-display: swap;

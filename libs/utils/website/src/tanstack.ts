@@ -40,6 +40,7 @@ export * from './tanstack/pages/event-list-page';
 export * from './tanstack/pages/author-page';
 export * from './tanstack/pages/deactivated-subscriptions-page';
 export * from './tanstack/pages/login-page';
+export * from './tanstack/pages/page-page';
 export * from './tanstack/pages/profile-page';
 export * from './tanstack/pages/search-page';
 export * from './tanstack/pages/subscribe-page';
