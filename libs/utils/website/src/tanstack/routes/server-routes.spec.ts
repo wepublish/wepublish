@@ -29,7 +29,9 @@ describe('server routes', () => {
 
       expect(response.headers.get('cache-control')).toBe(SHARED_CACHE);
       expect(response.headers.get('cdn-cache-control')).toBe(SHARED_CACHE);
-      expect(response.headers.get('vercel-cdn-cache-control')).toBe(SHARED_CACHE);
+      expect(response.headers.get('vercel-cdn-cache-control')).toBe(
+        SHARED_CACHE
+      );
     }
   );
 

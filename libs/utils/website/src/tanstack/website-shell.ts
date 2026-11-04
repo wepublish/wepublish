@@ -13,8 +13,12 @@ export const useWebsiteShell = (): WebsiteShell => {
   return useMemo(() => {
     const deepest = [...matches]
       .reverse()
-      .find(match => (match.loaderData as WebsiteShellProps | undefined)?.shell);
+      .find(
+        match => (match.loaderData as WebsiteShellProps | undefined)?.shell
+      );
 
-    return getWebsiteShell(deepest?.loaderData as WebsiteShellProps | undefined);
+    return getWebsiteShell(
+      deepest?.loaderData as WebsiteShellProps | undefined
+    );
   }, [matches]);
 };

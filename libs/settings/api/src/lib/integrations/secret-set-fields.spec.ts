@@ -38,7 +38,10 @@ describe.each(cases)('%o', (Resolver, column, field) => {
     expect(resolver[field]({ [column]: 'encrypted' })).toBe(true);
   });
 
-  it.each([null, ''])(`resolves ${field} from ${column} %j as not stored`, value => {
-    expect(resolver[field]({ [column]: value })).toBe(false);
-  });
+  it.each([null, ''])(
+    `resolves ${field} from ${column} %j as not stored`,
+    value => {
+      expect(resolver[field]({ [column]: value })).toBe(false);
+    }
+  );
 });

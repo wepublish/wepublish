@@ -4,9 +4,9 @@ const encrypt = (value: string) => `enc(${value})`;
 
 describe('encryptSecrets', () => {
   it('encrypts a secret that was typed in', () => {
-    expect(encryptSecrets({ id: 'x', apiKey: 'key' }, ['apiKey'], encrypt)).toEqual(
-      { id: 'x', apiKey: 'enc(key)' }
-    );
+    expect(
+      encryptSecrets({ id: 'x', apiKey: 'key' }, ['apiKey'], encrypt)
+    ).toEqual({ id: 'x', apiKey: 'enc(key)' });
   });
 
   it('drops an empty secret, so the stored one stays', () => {

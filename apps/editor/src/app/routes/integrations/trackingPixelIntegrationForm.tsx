@@ -126,7 +126,10 @@ export function TrackingPixelIntegrationForm() {
             info: t('integrations.trackingPixelSettings.prolitterisLoginInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
-            placeholder: secretPlaceholder(setting.prolitteris_isPasswordSet, t),
+            placeholder: secretPlaceholder(
+              setting.prolitteris_isPasswordSet,
+              t
+            ),
           });
           commonFields.push({
             name: 'prolitteris_onlyPaidContentAccess',

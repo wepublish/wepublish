@@ -4,8 +4,12 @@ import { MailProviderSettingsResolver } from './mail-provider-settings.resolver'
 const resolver = new MailProviderSettingsResolver({} as never, {} as never);
 
 const row = (secrets: Partial<SettingMailProvider>) =>
-  ({ id: 'mail', apiKey: null, webhookEndpointSecret: null, ...secrets }) as
-    | SettingMailProvider;
+  ({
+    id: 'mail',
+    apiKey: null,
+    webhookEndpointSecret: null,
+    ...secrets,
+  }) as SettingMailProvider;
 
 describe('MailProviderSettingsResolver', () => {
   it('says a secret is stored without giving it away', () => {

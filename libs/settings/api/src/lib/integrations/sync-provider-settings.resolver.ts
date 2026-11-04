@@ -68,7 +68,8 @@ export class SyncProviderSettingsResolver {
   }
 
   @ResolveField(() => Boolean, {
-    description: 'Whether a Mailchimp API key is stored. It is never returned itself.',
+    description:
+      'Whether a Mailchimp API key is stored. It is never returned itself.',
   })
   mailchimp_isApiKeySet(@Parent() setting: SettingRow) {
     return !!setting.mailchimp_apiKey;

@@ -24,9 +24,7 @@ const isWebhook = (req: NodeRequest) => {
  * `_body` flag that tells the providers' body-parser it is already read.
  */
 const exceptWebhooks =
-  (
-    parser: (req: NodeRequest, res: NodeResponse, next: Next) => void
-  ) =>
+  (parser: (req: NodeRequest, res: NodeResponse, next: Next) => void) =>
   (req: NodeRequest, res: NodeResponse, next: Next) =>
     isWebhook(req) ? next() : parser(req, res, next);
 

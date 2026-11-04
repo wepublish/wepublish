@@ -114,7 +114,10 @@ export function MailIntegrationForm() {
             info: t('integrations.mailSettings.webhookEndpointSecretInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
-            placeholder: secretPlaceholder(setting.isWebhookEndpointSecretSet, t),
+            placeholder: secretPlaceholder(
+              setting.isWebhookEndpointSecretSet,
+              t
+            ),
           });
           commonFields.push({
             type: 'text',
@@ -138,7 +141,10 @@ export function MailIntegrationForm() {
             info: t('integrations.mailSettings.webhookEndpointSecretInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
-            placeholder: secretPlaceholder(setting.isWebhookEndpointSecretSet, t),
+            placeholder: secretPlaceholder(
+              setting.isWebhookEndpointSecretSet,
+              t
+            ),
           });
           commonFields.push({
             type: 'text',

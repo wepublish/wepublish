@@ -82,7 +82,8 @@ export class TrackingPixelProviderSettingsResolver {
   }
 
   @ResolveField(() => Boolean, {
-    description: 'Whether a ProLitteris password is stored. It is never returned itself.',
+    description:
+      'Whether a ProLitteris password is stored. It is never returned itself.',
   })
   prolitteris_isPasswordSet(@Parent() setting: SettingRow) {
     return !!setting.prolitteris_password;
