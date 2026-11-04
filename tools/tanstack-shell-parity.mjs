@@ -51,6 +51,9 @@ const MARKERS = [
   { name: 'sparkLoop', pattern: /sparkLoop/, sharedWithAnalytics: true },
 ];
 
+/** Reindentation is not a change; compare what the code says, not how it wraps. */
+const squash = value => value.replace(/\s+/g, ' ').trim();
+
 const arg = name => {
   const i = process.argv.indexOf(`--${name}`);
   return i === -1 ? undefined : process.argv[i + 1];
@@ -130,8 +133,8 @@ for (const { label, old: oldPath, now: nowPath } of PAIRS) {
 
     if (!got) {
       missing.push(name);
-    } else if (wanted[0] !== got[0]) {
-      changed.push(`${name}: ${wanted[0]} -> ${got[0]}`);
+    } else if (squash(wanted[0]) !== squash(got[0])) {
+      changed.push(`${name}: ${squash(wanted[0])} -> ${squash(got[0])}`);
     }
   }
 
