@@ -1,353 +1,51 @@
-import { useApolloClient, useMutation } from '@apollo/client/react';
-import styled from '@emotion/styled';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  FormLabel,
-  Stack,
-  TextField,
-} from '@mui/material';
-import {
-  FullPollFragment,
-  PollDocument,
-  PollExternalVote,
-  PollExternalVoteSourceFragment,
-  UpdatePollDocument,
-} from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { PollDocument, UpdatePollDocument } from '@wepublish/editor/api';
+import { FormPage, useEditForm, useQueryLoader } from '@wepublish/form/editor';
 import { CanGetPoll, CanUpdatePoll } from '@wepublish/permissions';
-import { RichtextJSONDocument } from '@wepublish/richtext';
+import { PermissionControl } from '@wepublish/ui/editor';
+import { useParams } from 'react-router-dom';
+
 import {
-  createCheckedPermissionComponent,
-  DatePicker,
-  enqueueSnackbar,
-  humanizeError,
-  InfoTooltip,
-  PollAnswers,
-  PollExternalVotes,
-  RichTextBlock,
-  SingleViewTitle,
-} from '@wepublish/ui/editor';
-import { useId, useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import { z } from 'zod';
+  fromPoll,
+  pollTitleParams,
+  toUpdatePollVariables,
+} from './poll.schema';
+import { pollView } from './poll.view';
 
-const DateLabel = styled(FormLabel)`
-  margin-right: 8px;
-`;
+const VIEW_PERMISSIONS = [CanGetPoll.id, CanUpdatePoll.id];
 
-const PollEditor = styled.div`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-auto-rows: auto;
-  align-items: start;
-  gap: 16px;
+type PollEditFormProps = {
+  id: string;
+};
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-`;
-
-const DatesWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 12px;
-`;
-
-const DateItem = styled.div``;
-
-const InfoText = styled.div`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(1)};
-  align-content: start;
-`;
-
-function PollEditView() {
-  const params = useParams();
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  const client = useApolloClient();
-  const pollId = params.id!;
-  const [close, setClose] = useState<boolean>(false);
-  const closePath = '/polls';
-  const opensAtLabelId = useId();
-  const closesAtLabelId = useId();
-  const infoTextLabelId = useId();
-
-  /**
-   * Handling toasts
-   */
-  const onErrorToast = (error: Error) => {
-    enqueueSnackbar(humanizeError(error), {
-      variant: 'error',
-      autoHideDuration: 8000,
-    });
-  };
-  const onCompletedToast = () => {
-    enqueueSnackbar(t('pollEditView.savedSuccessfully'), {
-      variant: 'success',
-      autoHideDuration: 3000,
-    });
-  };
-
-  const schema = z.object({
-    poll: z.custom<FullPollFragment>().superRefine((poll, ctx) => {
-      if (!poll?.question) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['question'],
-          message: t('errorMessages.noQuestionErrorMessage'),
-        });
-      }
-    }),
-  });
-
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { isLoading },
-  } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: async () => {
-      const { data } = await client.query({
-        query: PollDocument,
-        variables: { id: pollId },
-      });
-
-      return { poll: data!.poll! };
-    },
-  });
-
-  const poll = useWatch({ control, name: 'poll' });
-
-  // updating poll
-  const [updatePoll, { loading: updateLoading }] = useMutation(
-    UpdatePollDocument,
-    {
-      onError: onErrorToast,
-      onCompleted: data => {
-        setValue('poll', data.updatePoll as FullPollFragment);
-        onCompletedToast();
-      },
-    }
+export const PollEditForm = ({ id }: PollEditFormProps) => {
+  const load = useQueryLoader(PollDocument, { id }, data =>
+    fromPoll(data.poll)
   );
-  const loading = isLoading || updateLoading;
+  const [updatePoll] = useMutation(UpdatePollDocument);
+  const poll = useEditForm(pollView, {
+    title: 'pollEditView.title',
+    titleParams: pollTitleParams,
+    load,
+    save: values =>
+      updatePoll({ variables: toUpdatePollVariables(id, values) }),
+  });
 
-  /**
-   * FUNCTIONS
-   */
-  async function saveOrUpdate({ poll }: z.infer<typeof schema>): Promise<void> {
-    const opensAt = poll.opensAt ? new Date(poll.opensAt).toISOString() : null;
-    const closedAt =
-      poll.closedAt ? new Date(poll.closedAt).toISOString() : null;
-    const externalSources = poll.externalVoteSources?.map(
-      (voteSource: PollExternalVoteSourceFragment) => ({
-        ...voteSource,
-        __typename: undefined,
-        voteAmounts: voteSource.voteAmounts?.map(
-          (voteAmount: PollExternalVote) => ({
-            id: voteAmount.id,
-            amount: voteAmount.amount,
-          })
-        ),
-      })
-    );
+  return <FormPage controller={poll} />;
+};
 
-    await updatePoll({
-      variables: {
-        id: poll.id,
-        question: poll.question,
-        infoText: poll.infoText,
-        opensAt,
-        closedAt,
-        answers: poll.answers?.map(answer => {
-          return {
-            id: answer.id,
-            answer: answer.answer,
-          };
-        }),
-        externalVoteSources: externalSources || [],
-      },
-    });
-
-    if (close) {
-      navigate(closePath);
-    }
-  }
-
-  if (isLoading) {
-    return null;
-  }
+export const PollEditView = () => {
+  const { id = '' } = useParams();
 
   return (
-    <form onSubmit={handleSubmit(saveOrUpdate)}>
-      <SingleViewTitle
-        loading={loading}
-        title={poll?.question || t('pollList.noQuestion')}
-        loadingTitle={t('pollEditView.loadingTitle')}
-        saveBtnTitle={t('pollEditView.saveTitle')}
-        saveAndCloseBtnTitle={t('pollEditView.saveAndCloseTitle')}
-        closePath={closePath}
-        setCloseFn={setClose}
+    <PermissionControl
+      qualifyingPermissions={VIEW_PERMISSIONS}
+      showRejectionMessage
+    >
+      <PollEditForm
+        key={id}
+        id={id}
       />
-
-      <PollEditor>
-        <Card
-          variant="outlined"
-          css={{ gridColumn: '-1/1' }}
-        >
-          <CardContent>
-            <Stack
-              spacing={3}
-              sx={{ width: '100%' }}
-            >
-              <Controller
-                control={control}
-                name="poll.question"
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    value={field.value ?? ''}
-                    label={t('pollEditView.questionPanelHeader')}
-                    placeholder={t('pollEditView.toBeOrNotToBe')}
-                    error={Boolean(error)}
-                    helperText={error?.message}
-                    fullWidth
-                  />
-                )}
-              />
-
-              <DatesWrapper>
-                <DateItem>
-                  <DateLabel id={opensAtLabelId}>
-                    {t('pollEditView.opensAtLabel')}
-                  </DateLabel>
-
-                  <Controller
-                    control={control}
-                    name="poll.opensAt"
-                    render={({ field }) => (
-                      <DatePicker
-                        withTime
-                        aria-labelledby={opensAtLabelId}
-                        value={field.value ? new Date(field.value) : null}
-                        onChange={opensAt =>
-                          field.onChange(
-                            opensAt?.toISOString() || new Date().toISOString()
-                          )
-                        }
-                        fullWidth
-                      />
-                    )}
-                  />
-                </DateItem>
-
-                <DateItem>
-                  <DateLabel>
-                    <span id={closesAtLabelId}>
-                      {t('pollEditView.closesAtLabel')}
-                    </span>{' '}
-                    <InfoTooltip text={t('pollEditView.closesAtInfo')} />
-                  </DateLabel>
-
-                  <Controller
-                    control={control}
-                    name="poll.closedAt"
-                    render={({ field }) => (
-                      <DatePicker
-                        withTime
-                        aria-labelledby={closesAtLabelId}
-                        value={field.value ? new Date(field.value) : null}
-                        onChange={closedAt =>
-                          field.onChange(closedAt?.toISOString() ?? null)
-                        }
-                        fullWidth
-                      />
-                    )}
-                  />
-                </DateItem>
-              </DatesWrapper>
-            </Stack>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader title={t('pollEditView.answerPanelHeader')} />
-
-          <CardContent>
-            <Controller
-              control={control}
-              name="poll"
-              render={({ field }) => (
-                <PollAnswers
-                  poll={field.value}
-                  onPollChange={field.onChange}
-                />
-              )}
-            />
-          </CardContent>
-        </Card>
-
-        <InfoText>
-          <FormLabel>
-            <span id={infoTextLabelId}>{t('pollEditView.infoText')}</span>{' '}
-            <InfoTooltip text={t('pollEditView.infoTextInfo')} />
-          </FormLabel>
-
-          <Controller
-            control={control}
-            name="poll.infoText"
-            render={({ field }) => (
-              <RichTextBlock
-                aria-labelledby={infoTextLabelId}
-                value={field.value}
-                onChange={value =>
-                  field.onChange(value as RichtextJSONDocument)
-                }
-              />
-            )}
-          />
-        </InfoText>
-
-        <Card
-          variant="outlined"
-          css={{ gridColumn: '-1/1' }}
-        >
-          <CardHeader
-            title={
-              <>
-                {t('pollEditView.pollExternalVotesPanelHeader')}{' '}
-                <InfoTooltip text={t('pollEditView.pollExternalVotesInfo')} />
-              </>
-            }
-          />
-
-          <CardContent>
-            <Controller
-              control={control}
-              name="poll"
-              render={({ field }) => (
-                <PollExternalVotes
-                  poll={field.value}
-                  onPollChange={field.onChange}
-                />
-              )}
-            />
-          </CardContent>
-        </Card>
-      </PollEditor>
-    </form>
+    </PermissionControl>
   );
-}
-
-const CheckedPermissionComponent = createCheckedPermissionComponent([
-  CanGetPoll.id,
-  CanUpdatePoll.id,
-])(PollEditView);
-export { CheckedPermissionComponent as PollEditView };
+};

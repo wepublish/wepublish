@@ -66,6 +66,14 @@ import {
   PeerProfileForm,
 } from './routes/peers/peerProfileDrawer';
 import { RemotePeerProfile } from './routes/peers/remotePeerProfile';
+import { PollAnswerRow, PollAnswers } from './routes/polls/pollAnswers';
+import { PollEditForm } from './routes/polls/pollEditView';
+import {
+  ExternalVoteAmountRow,
+  ExternalVoteAmounts,
+  ExternalVoteSourceRow,
+  ExternalVoteSources,
+} from './routes/polls/pollExternalVotes';
 import { PeriodAmountField } from './routes/subscriptions/periodAmountField';
 import { SubscriptionActions } from './routes/subscriptions/subscriptionActions';
 import {
@@ -156,6 +164,13 @@ describe('the editor under test', () => {
     ['RemotePeerProfile', RemotePeerProfile],
     ['PeerProfileForm', PeerProfileForm],
     ['PeerProfileDrawer', PeerProfileDrawer],
+    ['PollEditForm', PollEditForm],
+    ['PollAnswers', PollAnswers],
+    ['PollAnswerRow', PollAnswerRow],
+    ['ExternalVoteSources', ExternalVoteSources],
+    ['ExternalVoteSourceRow', ExternalVoteSourceRow],
+    ['ExternalVoteAmounts', ExternalVoteAmounts],
+    ['ExternalVoteAmountRow', ExternalVoteAmountRow],
     ['SubscriptionCreateForm', SubscriptionCreateForm],
     ['SubscriptionEditForm', SubscriptionEditForm],
     ['SubscriptionActions', SubscriptionActions],

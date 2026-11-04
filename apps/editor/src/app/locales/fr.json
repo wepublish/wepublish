@@ -1161,7 +1161,6 @@
       "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
       "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 si le champ est laissé vide",
       "noNameErrorMessage": "Veuillez entrer un nom",
-      "noQuestionErrorMessage": "Veuillez saisir une question",
       "noPasswordErrorMessage": "Veuillez entrer un mot de passe",
       "noPaymentPeriodicityErrorMessage": "Veuillez sélectionner une périodicité de paiement",
       "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 12 caractères.",
@@ -2400,20 +2399,22 @@
     "pollEditView": {
       "addAndSaveNewAnswer": "Ajouter une réponse",
       "answerPanelHeader": "Réponses possibles",
+      "answerLabel": "Réponse {{position}}",
       "closesAtLabel": "Clôture le",
+      "deleteAnswer": "Supprimer la réponse {{position}}",
+      "deleteSource": "Supprimer la source « {{source}} »",
       "infoText": "Texte d’information",
-      "loadingTitle": "Chargement du sondage …",
       "opensAtLabel": "Commence le",
       "pollExternalVotesPanelHeader": "Sources de vote externes",
       "questionPanelHeader": "Question",
-      "questionRequired": "Veuillez saisir votre question.",
-      "saveAndCloseTitle": "Enregistrer et fermer",
-      "savedSuccessfully": "Sondage enregistré.",
-      "saveTitle": "Enregistrer",
-      "toBeOrNotToBe": "Être ou ne pas être ?",
       "closesAtInfo": "À partir de ce moment, plus personne ne peut voter et seul le résultat est affiché. Laissez vide pour que le sondage reste ouvert.",
       "infoTextInfo": "Texte facultatif affiché sous la question sur votre site, p. ex. des informations de contexte sur le sondage.",
-      "pollExternalVotesInfo": "Saisissez les votes recueillis ailleurs, p. ex. lors d’un événement ou sur les réseaux sociaux. Ils s’ajoutent aux votes en ligne dans le résultat."
+      "pollExternalVotesInfo": "Saisissez les votes recueillis ailleurs, p. ex. lors d’un événement ou sur les réseaux sociaux. Ils s’ajoutent aux votes en ligne dans le résultat.",
+      "sections": {
+        "general": "Général",
+        "schedule": "Période de vote"
+      },
+      "title": "Modifier le sondage « {{question}} »"
     },
     "pollExternalVotes": {
       "addSourceBtn": "Ajouter une source",
@@ -2422,8 +2423,6 @@
       "deleteTitle": "Supprimer ?",
       "emptySource": "Veuillez saisir le nom de la source.",
       "newSourcePlaceholder": "Nom de la source du vote (p. ex. Facebook)",
-      "sourceHeaderCell": "Source",
-      "noPollAvailable": "Aucun sondage disponible.",
       "deleteSource": "Supprimer la source « {{source}} »",
       "votesFor": "Votes pour « {{answer}} » de la source {{source}}"
     },

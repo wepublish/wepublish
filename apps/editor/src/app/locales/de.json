@@ -1161,7 +1161,6 @@
       "amountTooLowErrorMessage": "Der Betrag liegt unter dem Minimum dieses Abos",
       "noAmountErrorMessage": "Der Betrag ist 5, wenn du nichts eingibst",
       "noNameErrorMessage": "Bitte Namen eingeben",
-      "noQuestionErrorMessage": "Bitte gib eine Frage ein",
       "noPasswordErrorMessage": "Bitte Passwort eingeben",
       "noPaymentPeriodicityErrorMessage": "Bitte gib die Zahlungsperiodizität ein",
       "passwordTooShortErrorMessage": "Das Passwort muss mindestens 12 Zeichen lang sein",
@@ -2400,20 +2399,22 @@
     "pollEditView": {
       "addAndSaveNewAnswer": "Antwort hinzufügen",
       "answerPanelHeader": "Mögliche Antworten",
+      "answerLabel": "Antwort {{position}}",
       "closesAtLabel": "Schliesst am",
+      "deleteAnswer": "Antwort {{position}} löschen",
+      "deleteSource": "Quelle «{{source}}» löschen",
       "infoText": "Info-Text",
-      "loadingTitle": "Umfrage wird geladen …",
       "opensAtLabel": "Startet am",
       "pollExternalVotesPanelHeader": "Externe Abstimmungsquellen",
       "questionPanelHeader": "Frage",
-      "questionRequired": "Bitte gib deine Frage ein.",
-      "saveAndCloseTitle": "Speichern & Schliessen",
-      "savedSuccessfully": "Umfrage gespeichert.",
-      "saveTitle": "Speichern",
-      "toBeOrNotToBe": "Sein oder nicht sein?",
       "closesAtInfo": "Ab diesem Zeitpunkt kann niemand mehr abstimmen und es wird nur noch das Resultat angezeigt. Leer lassen, damit die Umfrage offen bleibt.",
       "infoTextInfo": "Optionaler Text, der auf deiner Website unter der Frage erscheint, z. B. Hintergrundinfos zur Umfrage.",
-      "pollExternalVotesInfo": "Erfasse Stimmen, die du anderswo gesammelt hast, z. B. an einem Anlass oder auf Social Media. Sie werden im Resultat zu den Online-Stimmen dazugezählt."
+      "pollExternalVotesInfo": "Erfasse Stimmen, die du anderswo gesammelt hast, z. B. an einem Anlass oder auf Social Media. Sie werden im Resultat zu den Online-Stimmen dazugezählt.",
+      "sections": {
+        "general": "Allgemein",
+        "schedule": "Abstimmungszeitraum"
+      },
+      "title": "Umfrage «{{question}}» bearbeiten"
     },
     "pollExternalVotes": {
       "addSourceBtn": "Hinzufügen",
@@ -2422,8 +2423,6 @@
       "deleteTitle": "Löschen?",
       "emptySource": "Bitte Name der Quelle eingeben.",
       "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",
-      "sourceHeaderCell": "Quelle",
-      "noPollAvailable": "Keine Umfrage verfügbar.",
       "deleteSource": "Quelle «{{source}}» löschen",
       "votesFor": "Stimmen für «{{answer}}» aus {{source}}"
     },

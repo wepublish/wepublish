@@ -1161,7 +1161,6 @@
       "amountTooLowErrorMessage": "The amount is below the minimum of this subscription plan",
       "noAmountErrorMessage": "Default amount will be set to 5.00 if empty",
       "noNameErrorMessage": "Please enter a name",
-      "noQuestionErrorMessage": "Please enter a question",
       "noPasswordErrorMessage": "Please enter a password",
       "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
       "passwordTooShortErrorMessage": "Password must be at least 12 characters long",
@@ -2401,20 +2400,22 @@
     "pollEditView": {
       "addAndSaveNewAnswer": "Add Answer",
       "answerPanelHeader": "Possible answers",
+      "answerLabel": "Answer {{position}}",
       "closesAtLabel": "Closed at",
+      "deleteAnswer": "Delete answer {{position}}",
+      "deleteSource": "Delete source «{{source}}»",
       "infoText": "Info text",
-      "loadingTitle": "Loading poll...",
       "opensAtLabel": "Opened at",
       "pollExternalVotesPanelHeader": "External Vote Sources",
       "questionPanelHeader": "Question",
-      "questionRequired": "Please enter your poll question.",
-      "saveAndCloseTitle": "Save & Close",
-      "savedSuccessfully": "Poll saved.",
-      "saveTitle": "Save",
-      "toBeOrNotToBe": "To be or not to be?",
       "closesAtInfo": "From this time on, nobody can vote anymore and only the result is shown. Leave empty to keep the poll open.",
       "infoTextInfo": "Optional text shown below the question on your website, e.g. background information on the poll.",
-      "pollExternalVotesInfo": "Add votes you collected elsewhere, e.g. at an event or on social media. They are added to the online votes in the result."
+      "pollExternalVotesInfo": "Add votes you collected elsewhere, e.g. at an event or on social media. They are added to the online votes in the result.",
+      "sections": {
+        "general": "General",
+        "schedule": "Voting period"
+      },
+      "title": "Edit poll «{{question}}»"
     },
     "pollExternalVotes": {
       "addSourceBtn": "Add Source",
@@ -2423,8 +2424,6 @@
       "deleteTitle": "Delete?",
       "emptySource": "Please enter the source name.",
       "newSourcePlaceholder": "Enter a new external vote source (e.g. Facebook)",
-      "sourceHeaderCell": "Source",
-      "noPollAvailable": "No poll available.",
       "deleteSource": "Delete source \"{{source}}\"",
       "votesFor": "Votes for \"{{answer}}\" from {{source}}"
     },
