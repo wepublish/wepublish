@@ -84,6 +84,12 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 The Next `onRequestError` drops Next's own 4xx `ApiError`s (malformed or
 oversized bodies) so they do not reach Sentry.
 
+**Feeds:** Next tenants export `createFeedHandler(getFeed, format)` from
+`@wepublish/feed/website` in `pages/api/{rss,atom,json}-feed.ts` (with
+`api: { bodyParser: false }` in `config`); TanStack tenants use `feedHandler`
+from `@wepublish/utils/website/tanstack`. Both answer a failed feed query with
+an uncached 502 and report the error to Sentry instead of throwing.
+
 ### Business Domain Libraries
 
 `membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`
