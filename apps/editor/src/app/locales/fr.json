@@ -3373,6 +3373,8 @@
         "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon."
       },
       "placeholderSecret": "Inchangé (masqué)",
+      "secretNotSet": "Non défini",
+      "secretStored": "Enregistré (masqué) – laisser vide pour le conserver",
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l’expéditeur",
@@ -3418,6 +3420,7 @@
         "analytics": "Analytique",
         "invalidFile": "Le fichier d’identifiants Google Analytics est invalide",
         "credentialsReadyToBeSaved": "Les identifiants sont prêts à être enregistrés !",
+        "credentialsStored": "Identifiants enregistrés – glissez-déposez un nouveau fichier ici pour les remplacer",
         "dropCredentialsFile": "Déposez le fichier d’identifiants ici !",
         "dragCredentialsFileHere": "Glissez-déposez le fichier d’identifiants Google Analytics ici",
         "articlePrefix": "Préfixe d’URL des articles We.Publish (généralement /a/)",

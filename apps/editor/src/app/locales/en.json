@@ -3442,6 +3442,8 @@
         "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft."
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "secretNotSet": "Not set",
+      "secretStored": "Stored (hidden) – leave empty to keep it",
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
@@ -3487,6 +3489,7 @@
         "analytics": "Analytics",
         "invalidFile": "Google Analytics credentials file is invalid",
         "credentialsReadyToBeSaved": "Credentials are ready to be saved!",
+        "credentialsStored": "Credentials stored – drag and drop a new file here to replace them",
         "dropCredentialsFile": "Drop the credential file here!",
         "dragCredentialsFileHere": "Drag and drop the Google Analytics credential file here",
         "articlePrefix": "We.Publish article URL prefix (usually /a/)",

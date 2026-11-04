@@ -3381,6 +3381,8 @@
         "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen."
       },
       "placeholderSecret": "Unverändert (versteckt)",
+      "secretNotSet": "Nicht gesetzt",
+      "secretStored": "Gespeichert (versteckt) – leer lassen, um ihn zu behalten",
       "mailSettings": {
         "type": "Typ",
         "fromAddress": "Absenderadresse",
@@ -3426,6 +3428,7 @@
         "analytics": "Analytics",
         "invalidFile": "Die Google-Analytics-Anmeldedatei ist ungültig",
         "credentialsReadyToBeSaved": "Die Anmeldedaten sind bereit zum Speichern!",
+        "credentialsStored": "Anmeldedaten gespeichert – neue Datei hierher ziehen, um sie zu ersetzen",
         "dropCredentialsFile": "Anmeldedatei hier ablegen!",
         "dragCredentialsFileHere": "Google-Analytics-Anmeldedatei hierher ziehen und ablegen",
         "articlePrefix": "We.Publish-Artikel-URL-Präfix (normalerweise /a/)",
