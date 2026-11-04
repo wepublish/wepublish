@@ -8,8 +8,9 @@ import {
 import { theme as WePTheme } from '@wepublish/ui';
 import { PartialDeep } from 'type-fest';
 
-const fontUrl = (file: string) =>
-  new URL(`./fonts/${file}`, import.meta.url).href;
+import faroWebDisplayLucky from './fonts/FaroWeb-DisplayLucky.woff2';
+import faroWebSemiBoldLucky from './fonts/FaroWeb-SemiBoldLucky.woff2';
+import signifierMediumItalic from './fonts/SignifierMedium-Italic.woff2';
 
 export const Faro = { family: 'Faro' };
 export const Signifier = { family: 'Signifier' };
@@ -166,7 +167,7 @@ export const WntiGlobalStyles = () => (
     styles={css`
       @font-face {
         font-family: ${Faro.family};
-        src: url('${fontUrl('FaroWeb-DisplayLucky.woff2')}') format('woff2');
+        src: url('${faroWebDisplayLucky}') format('woff2');
         font-weight: 800;
         font-style: normal;
         font-display: swap;
@@ -174,7 +175,7 @@ export const WntiGlobalStyles = () => (
 
       @font-face {
         font-family: ${Faro.family};
-        src: url('${fontUrl('FaroWeb-SemiBoldLucky.woff2')}') format('woff2');
+        src: url('${faroWebSemiBoldLucky}') format('woff2');
         font-weight: 600;
         font-style: normal;
         font-display: swap;
@@ -182,7 +183,7 @@ export const WntiGlobalStyles = () => (
 
       @font-face {
         font-family: ${Signifier.family};
-        src: url('${fontUrl('SignifierMedium-Italic.woff2')}') format('woff2');
+        src: url('${signifierMediumItalic}') format('woff2');
         font-weight: 400;
         font-style: italic;
         font-display: swap;
