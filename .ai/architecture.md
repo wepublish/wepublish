@@ -81,6 +81,9 @@ hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
 documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 `ArticleList`, and leave peered articles out. `generateSitemap` is deprecated.
 
+The Next `onRequestError` drops Next's own 4xx `ApiError`s (malformed or
+oversized bodies) so they do not reach Sentry.
+
 ### Business Domain Libraries
 
 `membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`
