@@ -907,7 +907,6 @@
       "checkedByDefault": "Standardmässig angekreuzt"
     },
     "create": "Erstellen",
-    "createAndClose": "Erstellen & Schliessen",
     "createOrEditUserPassword": {
       "sendLoginLink": "Login-Link per E-Mail versenden?",
       "sendLoginLinkContent": "Willst du {{email}} einen Link senden, mit dem sich {{firstName}} {{name}} mit den bestehenden Rechten einloggen kann?"
@@ -1160,13 +1159,10 @@
       "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} {{currency}}.",
       "amountTooLowErrorMessage": "Der Betrag liegt unter dem Minimum dieses Abos",
       "noAmountErrorMessage": "Der Betrag ist 5, wenn du nichts eingibst",
-      "noMemberPlanErrorMessage": "Bitte gib den Abo-Plan ein",
       "noNameErrorMessage": "Bitte Namen eingeben",
       "noQuestionErrorMessage": "Bitte gib eine Frage ein",
       "noPasswordErrorMessage": "Bitte Passwort eingeben",
-      "noPaymentMethodErrorMessage": "Bitte gib eine Zahlungsmethode ein",
       "noPaymentPeriodicityErrorMessage": "Bitte gib die Zahlungsperiodizität ein",
-      "noUserErrorMessage": "Bitte wähle eine:n Benutzer:in",
       "passwordTooShortErrorMessage": "Das Passwort muss mindestens 12 Zeichen lang sein",
       "passwordCompromisedErrorMessage": "Dieses Passwort ist in einem Datenleck aufgetaucht. Bitte wähle ein anderes Passwort.",
       "required": "Dieses Feld ist erforderlich",
@@ -2934,7 +2930,6 @@
         },
         "date": "Deaktivierungsdatum",
         "help": "Deaktivierte Abonnements können bis zum «bezahlt bis»-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert, auch wenn die automatische Erneuerung gewählt ist. Eine Deaktivierung kann im Editor wieder aufgehoben werden.",
-        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Grund: {{reason}}. Es kann reaktiviert werden oder es kann ein neues Abo gelöst werden.",
         "cancellation": "Stornierungsdatum",
         "modalMessage": {
           "activated": "Willst du das Abonnement von «{{userName}}» mit der E-Mail-Adresse «{{userEmail}}» deaktivieren?"
@@ -2950,8 +2945,7 @@
         "reasonUserSelfDeactivated": "Benutzer:in will deaktivieren",
         "title": {
           "activated": "Abonnement deaktivieren"
-        },
-        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
+        }
       },
       "revertUpgrade": {
         "title": "Upgrade rückgängig",
@@ -3169,6 +3163,8 @@
     },
     "subscriptionEditView": {
       "detailsTitle": "Plan und Zahlung",
+      "openUser": "Benutzer:in öffnen",
+      "openMemberPlan": "Abo-Plan öffnen",
       "renewalTitle": "Laufzeit und Verlängerung",
       "trialSubscriptionConfigured": "Dieses Abo ist als Probeabo konfiguriert.",
       "nonExtendableNotCompatibleWithAutoRenew": "Ein sich automatisch erneuerndes Abo muss verlängerbar sein. Ändere einen dieser Parameter.",

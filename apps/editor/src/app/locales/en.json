@@ -907,7 +907,6 @@
       "checkedByDefault": "Checked by default"
     },
     "create": "Create",
-    "createAndClose": "Create & Close",
     "createOrEditUserPassword": {
       "sendLoginLink": "Send login link by email?",
       "sendLoginLinkContent": "Do you want to send {{email}} a link that {{firstName}} {{name}} can use to log in with their existing permissions?"
@@ -1160,13 +1159,10 @@
       "minimalAmountPerMonth": "The minimum amount per month is {{amount}} {{currency}}.",
       "amountTooLowErrorMessage": "The amount is below the minimum of this subscription plan",
       "noAmountErrorMessage": "Default amount will be set to 5.00 if empty",
-      "noMemberPlanErrorMessage": "Please enter a subscription plan",
       "noNameErrorMessage": "Please enter a name",
       "noQuestionErrorMessage": "Please enter a question",
       "noPasswordErrorMessage": "Please enter a password",
-      "noPaymentMethodErrorMessage": "Please enter a payment method",
       "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
-      "noUserErrorMessage": "Please select a user",
       "passwordTooShortErrorMessage": "Password must be at least 12 characters long",
       "passwordCompromisedErrorMessage": "This password has appeared in a data breach. Please choose a different password.",
       "required": "This field is required",
@@ -2982,7 +2978,6 @@
         },
         "date": "Deactivation Date",
         "help": "Deactivated subscriptions can still be used until the paid-until date, but they will not be renewed automatically, even if auto renew is enabled. A deactivation can be removed again in the editor.",
-        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. It can be reactivated, or a new subscription can be created.",
         "modalMessage": {
           "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
         },
@@ -2998,8 +2993,7 @@
         "reasonUserSelfDeactivated": "User wants to deactivate",
         "title": {
           "activated": "Deactivate subscription"
-        },
-        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
+        }
       },
       "revertUpgrade": {
         "title": "Undo upgrade",
@@ -3229,6 +3223,8 @@
     },
     "subscriptionEditView": {
       "detailsTitle": "Plan and payment",
+      "openUser": "Open user",
+      "openMemberPlan": "Open subscription plan",
       "renewalTitle": "Term and renewal",
       "trialSubscriptionConfigured": "This subscription is configured as a trial subscription.",
       "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
