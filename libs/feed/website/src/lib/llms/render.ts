@@ -7,9 +7,13 @@ import { SitemapClient, SitemapSiteConfig } from '../sitemap';
 
 export type LlmsTxtSiteConfig = Pick<
   SitemapSiteConfig,
-  'title' | 'homepageSlug' | 'filterArticle' | 'articleUrl' | 'pageUrl'
+  | 'title'
+  | 'description'
+  | 'homepageSlug'
+  | 'filterArticle'
+  | 'articleUrl'
+  | 'pageUrl'
 > & {
-  description?: string;
   llmsArticleCount?: number;
 };
 
