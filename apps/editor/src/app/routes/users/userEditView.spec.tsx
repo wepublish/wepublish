@@ -174,6 +174,33 @@ describe('UserEditView', () => {
     );
   });
 
+  it('marks the name and email fields as required without native validation', async () => {
+    mockQueries([[UserDocument, { user }]]);
+    const { container } = renderAt('/users/edit/user-1');
+
+    expect(
+      await screen.findByRole('textbox', { name: 'userCreateOrEditView.name' })
+    ).toBeRequired();
+    expect(
+      screen.getByRole('textbox', { name: 'userCreateOrEditView.email' })
+    ).toBeRequired();
+    expect(container.querySelector('form')).toHaveAttribute('novalidate');
+  });
+
+  it('names the country and role pickers', async () => {
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    expect(
+      await screen.findByRole('combobox', {
+        name: 'userCreateOrEditView.country',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', { name: 'userCreateOrEditView.userRoles' })
+    ).toBeInTheDocument();
+  });
+
   it('offers the active flag as a checkbox', async () => {
     mockQueries([[UserDocument, { user }]]);
     renderAt('/users/edit/user-1');

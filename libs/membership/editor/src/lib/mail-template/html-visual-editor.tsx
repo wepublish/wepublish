@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import { KeyboardEvent, ReactNode, useEffect, useId } from 'react';
 import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import {
   Box,
@@ -121,6 +121,52 @@ const SQUARE_BUTTON_SX = {
   height: CONTROL_SIZE,
   p: 0,
 } as const;
+
+const FORMAT_COMMANDS = [
+  'bold',
+  'italic',
+  'underline',
+  'strikeThrough',
+  'insertUnorderedList',
+  'insertOrderedList',
+  'justifyLeft',
+  'justifyCenter',
+  'justifyRight',
+] as const;
+
+type FormatState = {
+  commands: Partial<Record<string, boolean>>;
+  block: string;
+};
+
+const TOOLBAR_KEYS = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
+
+const moveToolbarFocus = (event: KeyboardEvent<HTMLElement>) => {
+  if (!TOOLBAR_KEYS.includes(event.key)) {
+    return;
+  }
+
+  const controls = Array.from(
+    event.currentTarget.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), [role="button"]:not([aria-disabled="true"])'
+    )
+  );
+  const index = controls.indexOf(
+    event.currentTarget.ownerDocument.activeElement as HTMLElement
+  );
+
+  if (index === -1) {
+    return;
+  }
+
+  event.preventDefault();
+  const next =
+    event.key === 'Home' ? 0
+    : event.key === 'End' ? controls.length - 1
+    : (index + (event.key === 'ArrowRight' ? 1 : -1) + controls.length) %
+      controls.length;
+  controls[next]?.focus();
+};
 
 const LABEL_BUTTON_SX = {
   minWidth: CONTROL_SIZE,
@@ -336,6 +382,13 @@ const HtmlVisualEditorComponent = forwardRef<
     null
   );
   const frameRef = useRef<HTMLIFrameElement>(null);
+  const [formatState, setFormatState] = useState<FormatState>({
+    commands: {},
+    block: '',
+  });
+  const fontSizeMenuId = useId();
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const dialogApplied = useRef(false);
 
   // The iframe listeners are registered once per load, so read the callback
   // through a ref to avoid calling a stale one.
@@ -363,6 +416,36 @@ const HtmlVisualEditorComponent = forwardRef<
     if (doc) {
       onChange(serializeDocument(doc));
     }
+  };
+
+  const readFormatState = () => {
+    const doc = getDoc();
+    if (!doc) {
+      return;
+    }
+    try {
+      setFormatState({
+        commands: Object.fromEntries(
+          FORMAT_COMMANDS.map(command => [
+            command,
+            doc.queryCommandState(command),
+          ])
+        ),
+        block: String(doc.queryCommandValue('formatBlock') ?? '').toUpperCase(),
+      });
+    } catch {
+      setFormatState({ commands: {}, block: '' });
+    }
+  };
+
+  const restoreFocusAfterDialog = () => {
+    if (dialogApplied.current) {
+      dialogApplied.current = false;
+      getEditable()?.focus();
+      restoreSelection();
+      return;
+    }
+    returnFocusRef.current?.focus();
   };
 
   const handleLoad = () => {
@@ -396,6 +479,7 @@ const HtmlVisualEditorComponent = forwardRef<
     // outside the iframe (toolbar dialogs, the placeholder picker) drops the
     // iframe's selection, and we need it back to insert at the right spot.
     doc.addEventListener('selectionchange', saveSelection);
+    doc.addEventListener('selectionchange', readFormatState);
     const activate = () => onActivateRef.current?.();
     doc.addEventListener('mousedown', activate);
     doc.addEventListener('keydown', activate);
@@ -408,8 +492,10 @@ const HtmlVisualEditorComponent = forwardRef<
       return;
     }
     getEditable()?.focus();
+    restoreSelection();
     doc.execCommand(command, false, argument);
     emit();
+    readFormatState();
   };
 
   // Walks up from the current selection to find the enclosing <a>, so an
@@ -521,6 +607,7 @@ const HtmlVisualEditorComponent = forwardRef<
     setLinkDialog(state => ({ ...state, open: false }));
 
   const applyLink = () => {
+    dialogApplied.current = true;
     const doc = getDoc();
     if (!doc) {
       closeLinkDialog();
@@ -595,6 +682,7 @@ const HtmlVisualEditorComponent = forwardRef<
     setImageDialog(state => ({ ...state, open: false }));
 
   const applyImage = () => {
+    dialogApplied.current = true;
     const doc = getDoc();
     const url = imageDialog.url.trim();
     if (!doc || !url) {
@@ -640,6 +728,7 @@ const HtmlVisualEditorComponent = forwardRef<
     setButtonDialog(state => ({ ...state, open: false }));
 
   const applyButton = () => {
+    dialogApplied.current = true;
     const doc = getDoc();
     const url = buttonDialog.url.trim();
     const text = buttonDialog.text.trim();
@@ -779,22 +868,26 @@ const HtmlVisualEditorComponent = forwardRef<
     icon: ReactNode,
     command: string,
     argument?: string
-  ) => (
-    <Tooltip title={title}>
-      <ToggleButton
-        size="small"
-        value={command + (argument ?? '')}
-        aria-label={title}
-        sx={SQUARE_BUTTON_SX}
-        onMouseDown={event => {
-          event.preventDefault();
-          exec(command, argument);
-        }}
-      >
-        {icon}
-      </ToggleButton>
-    </Tooltip>
-  );
+  ) => {
+    const isToggle = (FORMAT_COMMANDS as readonly string[]).includes(command);
+
+    return (
+      <Tooltip title={title}>
+        <ToggleButton
+          size="small"
+          value={command + (argument ?? '')}
+          aria-label={title}
+          selected={isToggle && !!formatState.commands[command]}
+          aria-pressed={isToggle ? !!formatState.commands[command] : undefined}
+          sx={SQUARE_BUTTON_SX}
+          onMouseDown={event => event.preventDefault()}
+          onClick={() => exec(command, argument)}
+        >
+          {icon}
+        </ToggleButton>
+      </Tooltip>
+    );
+  };
 
   const headingButton = (label: string, block: string, title: string) => (
     <Tooltip title={title}>
@@ -802,11 +895,10 @@ const HtmlVisualEditorComponent = forwardRef<
         size="small"
         value={block}
         aria-label={title}
+        selected={formatState.block === block}
         sx={LABEL_BUTTON_SX}
-        onMouseDown={event => {
-          event.preventDefault();
-          exec('formatBlock', block);
-        }}
+        onMouseDown={event => event.preventDefault()}
+        onClick={() => exec('formatBlock', block)}
       >
         {label}
       </ToggleButton>
@@ -815,7 +907,11 @@ const HtmlVisualEditorComponent = forwardRef<
 
   return (
     <EditorWrapper>
-      <Toolbar>
+      <Toolbar
+        role="toolbar"
+        aria-label={t('mailTemplates.editor.toolbar')}
+        onKeyDown={moveToolbarFocus}
+      >
         {toolButton(t('mailTemplates.editor.undo', 'Undo'), <MdUndo />, 'undo')}
         {toolButton(t('mailTemplates.editor.redo', 'Redo'), <MdRedo />, 'redo')}
 
@@ -907,9 +1003,13 @@ const HtmlVisualEditorComponent = forwardRef<
             size="small"
             value="fontSize"
             aria-label={t('mailTemplates.editor.fontSize', 'Size')}
+            aria-pressed={undefined}
+            aria-haspopup="menu"
+            aria-expanded={Boolean(fontSizeAnchor)}
+            aria-controls={fontSizeAnchor ? fontSizeMenuId : undefined}
             sx={SQUARE_BUTTON_SX}
-            onMouseDown={event => {
-              event.preventDefault();
+            onMouseDown={event => event.preventDefault()}
+            onClick={event => {
               saveSelection();
               setFontSizeAnchor(event.currentTarget);
             }}
@@ -918,6 +1018,7 @@ const HtmlVisualEditorComponent = forwardRef<
           </ToggleButton>
         </Tooltip>
         <Menu
+          id={fontSizeMenuId}
           anchorEl={fontSizeAnchor}
           open={Boolean(fontSizeAnchor)}
           onClose={() => setFontSizeAnchor(null)}
@@ -955,9 +1056,12 @@ const HtmlVisualEditorComponent = forwardRef<
             size="small"
             value="link"
             aria-label={t('mailTemplates.editor.link', 'Link')}
+            aria-pressed={undefined}
+            aria-haspopup="dialog"
             sx={SQUARE_BUTTON_SX}
-            onMouseDown={event => {
-              event.preventDefault();
+            onMouseDown={event => event.preventDefault()}
+            onClick={event => {
+              returnFocusRef.current = event.currentTarget;
               openLinkDialog();
             }}
           >
@@ -970,9 +1074,12 @@ const HtmlVisualEditorComponent = forwardRef<
             size="small"
             value="image"
             aria-label={t('mailTemplates.editor.image', 'Image')}
+            aria-pressed={undefined}
+            aria-haspopup="dialog"
             sx={SQUARE_BUTTON_SX}
-            onMouseDown={event => {
-              event.preventDefault();
+            onMouseDown={event => event.preventDefault()}
+            onClick={event => {
+              returnFocusRef.current = event.currentTarget;
               openImageDialog();
             }}
           >
@@ -985,9 +1092,12 @@ const HtmlVisualEditorComponent = forwardRef<
             size="small"
             value="button"
             aria-label={t('mailTemplates.editor.button', 'Button')}
+            aria-pressed={undefined}
+            aria-haspopup="dialog"
             sx={SQUARE_BUTTON_SX}
-            onMouseDown={event => {
-              event.preventDefault();
+            onMouseDown={event => event.preventDefault()}
+            onClick={event => {
+              returnFocusRef.current = event.currentTarget;
               openButtonDialog();
             }}
           >
@@ -1046,6 +1156,8 @@ const HtmlVisualEditorComponent = forwardRef<
       <Dialog
         open={linkDialog.open}
         onClose={closeLinkDialog}
+        disableRestoreFocus
+        slotProps={{ transition: { onExited: restoreFocusAfterDialog } }}
         fullWidth
         maxWidth="sm"
       >
@@ -1108,6 +1220,16 @@ const HtmlVisualEditorComponent = forwardRef<
       <Dialog
         open={imageDialog.open && !libraryOpen}
         onClose={closeImageDialog}
+        disableRestoreFocus
+        slotProps={{
+          transition: {
+            onExited: () => {
+              if (!libraryOpen) {
+                restoreFocusAfterDialog();
+              }
+            },
+          },
+        }}
         fullWidth
         maxWidth="sm"
       >
@@ -1195,6 +1317,8 @@ const HtmlVisualEditorComponent = forwardRef<
       <Dialog
         open={buttonDialog.open}
         onClose={closeButtonDialog}
+        disableRestoreFocus
+        slotProps={{ transition: { onExited: restoreFocusAfterDialog } }}
         fullWidth
         maxWidth="sm"
       >

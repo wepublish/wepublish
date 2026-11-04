@@ -16,14 +16,19 @@ import { lookupImage, rememberImages } from './images';
 function MediaPicker({
   value,
   onChange,
+  label,
 }: {
   value: string;
   onChange: (next: string) => void;
+  label: string;
 }) {
   const [choosing, setChoosing] = useState(false);
 
   return (
-    <>
+    <div
+      role="group"
+      aria-label={label}
+    >
       <ChooseEditImage
         image={lookupImage(value)}
         disabled={false}
@@ -49,7 +54,7 @@ function MediaPicker({
           }}
         />
       </Drawer>
-    </>
+    </div>
   );
 }
 
@@ -61,6 +66,7 @@ export function mediaField(label: string): CustomField<string> {
       <MediaPicker
         value={value ?? ''}
         onChange={onChange}
+        label={label}
       />
     ),
   };

@@ -1,6 +1,6 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Button, Stack, TextField } from '@mui/material';
+import { Alert, Button, Stack, TextField } from '@mui/material';
 import {
   CheckLoginOtpDocument,
   CreateSessionDocument,
@@ -102,6 +102,8 @@ export function Login() {
   const [otpChecked, setOtpChecked] = useState(false);
   const [totpUri, setTotpUri] = useState('');
   const [totpSecret, setTotpSecret] = useState('');
+  const [error, setError] = useState('');
+  const [setupError, setSetupError] = useState('');
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const totpInputRef = useRef<HTMLInputElement>(null);
@@ -136,10 +138,7 @@ export function Login() {
       }, [] as string[]);
 
       if (!permissions.includes(CanLoginEditor.id)) {
-        enqueueSnackbar(t('login.unauthorized'), {
-          variant: 'error',
-          autoHideDuration: null,
-        });
+        setError(t('login.unauthorized'));
         return;
       }
 
@@ -191,6 +190,7 @@ export function Login() {
 
   async function handleLogin(e: FormEvent) {
     e.preventDefault();
+    setError('');
 
     try {
       const response = await authenticate({
@@ -213,10 +213,7 @@ export function Login() {
         forceTotpSetup(token);
       }
     } catch (error: any) {
-      enqueueSnackbar(error?.message || t('login.unauthorized'), {
-        variant: 'error',
-        autoHideDuration: 8000,
-      });
+      setError(error?.message || t('login.unauthorized'));
       setTotpToken('');
     }
   }
@@ -231,16 +228,14 @@ export function Login() {
         setTotpUri(setupResponse.data.generateTotpSetup.uri);
         setTotpSecret(setupResponse.data.generateTotpSetup.secret);
       }
-    } catch (error) {
-      enqueueSnackbar(t('login.totp.setupError'), {
-        variant: 'error',
-        autoHideDuration: 8000,
-      });
+    } catch {
+      setSetupError(t('login.totp.setupError'));
     }
   }
 
   async function handleTotpSetup(e: FormEvent) {
     e.preventDefault();
+    setError('');
 
     try {
       const response = await enableTotp({
@@ -269,10 +264,7 @@ export function Login() {
         navigate('/', { replace: true });
       }
     } catch (error: any) {
-      enqueueSnackbar(error?.message || t('login.totp.invalidCode'), {
-        variant: 'error',
-        autoHideDuration: 8000,
-      });
+      setError(error?.message || t('login.totp.invalidCode'));
       setTotpToken('');
     }
   }
@@ -280,7 +272,10 @@ export function Login() {
   // --- TOTP Setup Screen ---
   if (loginStep === 'totp-setup') {
     return (
-      <LoginTemplate backgroundChildren={<Background />}>
+      <LoginTemplate
+        title={t('login.login')}
+        backgroundChildren={<Background />}
+      >
         <Form>
           <Stack
             direction="column"
@@ -320,15 +315,23 @@ export function Login() {
               </>
             )}
 
+            {setupError && <Alert severity="error">{setupError}</Alert>}
+
             <TextField
               label={<>{t('login.totp.code')}</>}
               inputRef={totpInputRef}
               name="totpCode"
               value={totpToken}
               autoComplete="one-time-code"
-              onChange={event => setTotpToken(event.target.value)}
+              error={Boolean(error)}
+              onChange={event => {
+                setTotpToken(event.target.value);
+                setError('');
+              }}
               fullWidth
             />
+
+            {error && <Alert severity="error">{error}</Alert>}
 
             <Button
               variant="contained"
@@ -346,7 +349,10 @@ export function Login() {
 
   // --- Login Screen ---
   return (
-    <LoginTemplate backgroundChildren={<Background />}>
+    <LoginTemplate
+      title={t('login.login')}
+      backgroundChildren={<Background />}
+    >
       <Form>
         <Stack
           direction="column"
@@ -358,7 +364,11 @@ export function Login() {
             name="username"
             value={email}
             autoComplete="username"
-            onChange={event => setEmail(event.target.value)}
+            error={Boolean(error)}
+            onChange={event => {
+              setEmail(event.target.value);
+              setError('');
+            }}
             fullWidth
           />
 
@@ -368,7 +378,11 @@ export function Login() {
             type="password"
             value={password}
             autoComplete="current-password"
-            onChange={event => setPassword(event.target.value)}
+            error={Boolean(error)}
+            onChange={event => {
+              setPassword(event.target.value);
+              setError('');
+            }}
             fullWidth
           />
 
@@ -378,10 +392,16 @@ export function Login() {
               name="totpCode"
               value={totpToken}
               autoComplete="one-time-code"
-              onChange={event => setTotpToken(event.target.value)}
+              error={Boolean(error)}
+              onChange={event => {
+                setTotpToken(event.target.value);
+                setError('');
+              }}
               fullWidth
             />
           )}
+
+          {error && <Alert severity="error">{error}</Alert>}
 
           <Button
             variant="contained"

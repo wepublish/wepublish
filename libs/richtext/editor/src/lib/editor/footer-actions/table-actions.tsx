@@ -52,7 +52,7 @@ export function TableActions() {
       aria-label={t('richtext.table.label')}
       sx={{ display: 'contents' }}
     >
-      <ButtonGroup>
+      <ButtonGroup aria-label={t('richtext.table.columns')}>
         <IconButton
           size="small"
           aria-label={t('richtext.table.addColumnBefore')}
@@ -81,7 +81,7 @@ export function TableActions() {
         </IconButton>
       </ButtonGroup>
 
-      <ButtonGroup>
+      <ButtonGroup aria-label={t('richtext.table.rows')}>
         <IconButton
           size="small"
           aria-label={t('richtext.table.addRowBefore')}
@@ -110,7 +110,7 @@ export function TableActions() {
         </IconButton>
       </ButtonGroup>
 
-      <ButtonGroup>
+      <ButtonGroup aria-label={t('richtext.table.cells')}>
         <IconButton
           size="small"
           aria-label={t('richtext.table.mergeCells')}
@@ -135,6 +135,9 @@ export function TableActions() {
           size="small"
           aria-label={t('richtext.table.headerCell')}
           aria-pressed={editorState.isHeader}
+          sx={{
+            '&[aria-pressed="true"]': { backgroundColor: 'action.selected' },
+          }}
           color={editorState.isHeader ? 'primary' : undefined}
           onClick={() => editor.commands.toggleHeaderCell()}
           onMouseDown={e => e.preventDefault()}

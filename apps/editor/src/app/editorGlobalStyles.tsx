@@ -10,7 +10,7 @@ const lightTokens = css`
   --wep-nav-hover-text: #121212;
   --wep-nav-hover-bg: rgb(16 24 40 / 5%);
   --wep-nav-active-bg: rgb(52 152 255 / 12%);
-  --wep-nav-active-text: #1675e0;
+  --wep-nav-active-text: #1360b5;
   --wep-nav-active-ring: #1a7ee0;
   --wep-state-pending: #f8def2;
   --wep-state-published: #e1f8de;

@@ -158,6 +158,20 @@ describe('BlockTemplateEditView', () => {
     expect(screen.queryByDisplayValue('Saved Title')).not.toBeInTheDocument();
   });
 
+  it('announces unsaved changes in the save button name', () => {
+    renderView();
+
+    expect(screen.getByRole('button', { name: 'save' })).toBeInTheDocument();
+
+    fireEvent.change(nameInput(), { target: { value: 'Renamed Template' } });
+
+    expect(
+      screen.getByRole('button', {
+        name: 'save, articleEditor.unsavedChanges',
+      })
+    ).toBeInTheDocument();
+  });
+
   it('should take over the block template again once it has been saved', async () => {
     renderView();
 
@@ -175,6 +189,17 @@ describe('BlockTemplateEditView', () => {
 
     expect(
       await screen.findByDisplayValue('Header Template')
+    ).toBeInTheDocument();
+  });
+
+  it('has a page heading', () => {
+    renderView();
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'blockTemplates.edit.title',
+      })
     ).toBeInTheDocument();
   });
 });
