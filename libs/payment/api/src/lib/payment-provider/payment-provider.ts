@@ -12,7 +12,7 @@ import {
 } from '@prisma/client';
 import bodyParser from 'body-parser';
 import { NextHandleFunction } from 'connect';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 import DataLoader from 'dataloader';
 import { timingSafeEqual } from 'crypto';
 import { sub } from 'date-fns';
@@ -28,7 +28,7 @@ export type InvoicesByID = DataLoader<string, InvoiceWithItems | null>;
 export type PaymentsByID = DataLoader<string, Payment | null>;
 
 export interface WebhookForPaymentIntentProps {
-  req: express.Request;
+  req: NodeRequest;
 }
 
 export interface IntentState {

@@ -271,6 +271,64 @@ describe('UpgradeSubscriptionService', () => {
       }).toMatchSnapshot();
     });
 
+    it('validates a chosen goodie against the new member plan and the kept periodicity', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        id: 'subscriptionId',
+        userID: 'userId',
+        currency: Currency.CHF,
+        paymentPeriodicity: PaymentPeriodicity.yearly,
+        extendable: true,
+        autoRenew: false,
+        periods: [
+          {
+            id: '1',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 700,
+            endsAt: new Date('2027-01-01'),
+            createdAt: new Date('2026-01-01'),
+            startsAt: new Date('2026-01-01'),
+            invoice: {
+              paidAt: new Date('2026-01-01'),
+            },
+          },
+        ],
+      });
+      prismaMock.memberPlan.findUnique.mockResolvedValue({
+        id: 'memberPlanId',
+        currency: Currency.CHF,
+        availablePaymentMethods: [
+          {
+            paymentMethodIDs: ['paymentMethodId'],
+            paymentPeriodicities: [PaymentPeriodicity.yearly],
+            forceAutoRenewal: true,
+          },
+        ],
+      });
+      memberContextMock.createSubscription.mockResolvedValue({
+        invoice: {
+          id: 'invoiceId',
+        },
+      });
+
+      await service.upgradeSubscription({
+        subscriptionId: 'subscriptionId',
+        memberPlanId: 'memberPlanId',
+        paymentMethodId: 'paymentMethodId',
+        userId: 'userId',
+        monthlyAmount: 80,
+        goodieId: 'goodieId',
+      });
+
+      expect(goodieServiceMock.getValidGoodie).toHaveBeenCalledWith(
+        'goodieId',
+        'memberPlanId',
+        PaymentPeriodicity.yearly
+      );
+      expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
+        expect.objectContaining({ goodieId: 'goodieId' })
+      );
+    });
+
     it('should calculate the correct discount', async () => {
       prismaMock.subscription.findUnique.mockResolvedValue({
         userID: 'userId',

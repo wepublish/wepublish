@@ -101,6 +101,7 @@
       "saveValidationFailed": "Speichern fehlgeschlagen",
       "publishValidationFailed": "Publizieren fehlgeschlagen",
       "overview": {
+        "loadingTemplate": "Vorlage wird geladen…",
         "articlePending": "Artikel geplant",
         "articlePublished": "Artikel publiziert",
         "back": "Zurück",
@@ -126,6 +127,7 @@
         "warningLabel": "Warnung"
       },
       "panels": {
+        "createTemplate": "Vorlage aus Artikel erstellen",
         "firstPublishedAtDate": "Erstpublikation am {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Artikel wurde noch nicht publiziert",
         "addSlug": "Bitte Slug erfassen",
@@ -246,6 +248,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "Neuer Artikel",
+        "blank": "Leerer Artikel",
+        "search": "Vorlagen durchsuchen",
+        "noResults": "Keine Vorlagen gefunden"
+      },
       "overview": {
         "slug": "Slug",
         "articles": "Artikel",
@@ -941,6 +949,8 @@
       "newUser": "Neuer <0>User</0> erfasst",
       "dashboard": "Dashboard",
       "notifications": "Mitteilungen",
+      "moreNotifications_one": "+{{count}} weitere Mitteilung",
+      "moreNotifications_other": "+{{count}} weitere Mitteilungen",
       "showAllNotifications": "Alle anzeigen",
       "greeting": "Hallo, {{name}}!",
       "noData": "Keine aktuellen Abo-Daten",
@@ -1129,7 +1139,126 @@
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Hochladen",
         "uploadDocument": "Dokument hochladen",
-        "uploadFailed": "Upload fehlgeschlagen. Bitte versuche es erneut."
+        "uploadFailed": "Upload fehlgeschlagen. Bitte versuche es erneut.",
+        "openOriginal": "Original öffnen",
+        "replaceFile": "Andere Datei wählen"
+      }
+    },
+    "videos": {
+      "overview": {
+        "description": "Beschreibung",
+        "videoLibrary": "Videobibliothek",
+        "copyLink": "Link kopieren",
+        "edit": "Bearbeiten",
+        "fileSize": "Dateigrösse",
+        "filename": "Dateiname",
+        "noDescription": "Keine Beschreibung",
+        "openLink": "Öffnen",
+        "preview": "Vorschau",
+        "storageFull": "Speicherlimit erreicht",
+        "storageUsage": "{{used}} / {{limit}} verwendet ({{count}} Dateien)",
+        "storageWarning": "Speicher fast voll",
+        "title": "Titel",
+        "unlimited": "Unbegrenzt",
+        "untitled": "Ohne Titel",
+        "uploadVideo": "Video hochladen",
+        "storageUsageInfo": "Gesamtgrösse aller hochgeladenen Videos. Ist das Limit erreicht, kannst du erst wieder neue Videos hochladen, wenn du alte löschst."
+      },
+      "panels": {
+        "cancel": "Abbrechen",
+        "close": "Schliessen",
+        "confirm": "Bestätigen",
+        "created": "Erstellt",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteVideo": "Video löschen?",
+        "description": "Beschreibung",
+        "videoUpdated": "Video aktualisiert",
+        "dropVideo": "Datei hier ablegen oder klicken zum Auswählen",
+        "editVideo": "Video bearbeiten",
+        "fileSize": "Dateigrösse",
+        "fileTooLarge": "Datei ist zu gross. Maximale Grösse ist {{maxSize}} MB.",
+        "filename": "Dateiname",
+        "information": "Informationen",
+        "maxFileSize": "Maximale Dateigrösse: {{maxSize}} MB",
+        "invalidVideo": "Nicht unterstützter Dateityp. Unterstützt: MP4, WebM, OGG, MOV, M4V, MPEG",
+        "linkCopied": "Link in Zwischenablage kopiert",
+        "notFound": "Video nicht gefunden!",
+        "publicLink": "Öffentlicher Link",
+        "title": "Titel",
+        "untitled": "Ohne Titel",
+        "updated": "Aktualisiert",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Hochladen",
+        "uploadVideo": "Video hochladen",
+        "uploadFailed": "Upload fehlgeschlagen. Bitte versuche es erneut.",
+        "attribution": "Quellenangabe",
+        "source": "Quelle",
+        "link": "Link",
+        "license": "Lizenz",
+        "urlPlaceholder": "https://",
+        "sourceLink": "Link zur Originalquelle der Datei.",
+        "openOriginal": "Original öffnen",
+        "bitrate": "Bitrate",
+        "dimensions": "Abmessungen",
+        "dimensionsValue": "{{width}} × {{height}}",
+        "replaceFile": "Andere Datei wählen"
+      }
+    },
+    "audio": {
+      "overview": {
+        "description": "Beschreibung",
+        "audioLibrary": "Audiobibliothek",
+        "copyLink": "Link kopieren",
+        "edit": "Bearbeiten",
+        "fileSize": "Dateigrösse",
+        "filename": "Dateiname",
+        "noDescription": "Keine Beschreibung",
+        "openLink": "Öffnen",
+        "storageFull": "Speicherlimit erreicht",
+        "storageUsage": "{{used}} / {{limit}} verwendet ({{count}} Dateien)",
+        "storageWarning": "Speicher fast voll",
+        "title": "Titel",
+        "unlimited": "Unbegrenzt",
+        "untitled": "Ohne Titel",
+        "uploadAudio": "Audio hochladen",
+        "storageUsageInfo": "Gesamtgrösse aller hochgeladenen Audiodateien. Ist das Limit erreicht, kannst du erst wieder neue Dateien hochladen, wenn du alte löschst."
+      },
+      "panels": {
+        "cancel": "Abbrechen",
+        "close": "Schliessen",
+        "confirm": "Bestätigen",
+        "created": "Erstellt",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteAudio": "Audiodatei löschen?",
+        "description": "Beschreibung",
+        "audioUpdated": "Audio aktualisiert",
+        "dropAudio": "Datei hier ablegen oder klicken zum Auswählen",
+        "editAudio": "Audio bearbeiten",
+        "fileSize": "Dateigrösse",
+        "fileTooLarge": "Datei ist zu gross. Maximale Grösse ist {{maxSize}} MB.",
+        "filename": "Dateiname",
+        "information": "Informationen",
+        "maxFileSize": "Maximale Dateigrösse: {{maxSize}} MB",
+        "invalidAudio": "Nicht unterstützter Dateityp. Unterstützt: MP3, OGG, WAV, WebM, AAC, M4A, FLAC",
+        "linkCopied": "Link in Zwischenablage kopiert",
+        "notFound": "Audiodatei nicht gefunden!",
+        "publicLink": "Öffentlicher Link",
+        "title": "Titel",
+        "untitled": "Ohne Titel",
+        "updated": "Aktualisiert",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Hochladen",
+        "uploadAudio": "Audio hochladen",
+        "uploadFailed": "Upload fehlgeschlagen. Bitte versuche es erneut.",
+        "attribution": "Quellenangabe",
+        "source": "Quelle",
+        "link": "Link",
+        "license": "Lizenz",
+        "urlPlaceholder": "https://",
+        "sourceLink": "Link zur Originalquelle der Datei.",
+        "openOriginal": "Original öffnen",
+        "bitrate": "Bitrate",
+        "replaceFile": "Andere Datei wählen"
       }
     },
     "images": {
@@ -1629,6 +1758,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Blockvorlagen"
       },
+      "articleTemplates": "Artikelvorlagen",
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
       "commentTags": "Tags",
@@ -1640,6 +1770,7 @@
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Dokumente",
+      "videoLibrary": "Videos",
       "imageLibrary": "Bilder",
       "importableEvents": "Importierbare Events",
       "media": "Dateien",
@@ -1655,6 +1786,7 @@
       "memberPlans": "Abo-Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
+      "pageTemplates": "Seitenvorlagen",
       "paymentMethods": "Zahlungsmethoden",
       "peerArticles": "Peerbare Artikel",
       "networkContent": "We.Publish-Netzwerk",
@@ -1678,7 +1810,8 @@
       "mailLog": "Gesendete E-Mails",
       "communication": "Kommunikation",
       "auditLog": "Audit-Log",
-      "language": "Sprache"
+      "language": "Sprache",
+      "audioLibrary": "Audio"
     },
     "pageTitles": {
       "login": "Anmelden",
@@ -1710,6 +1843,12 @@
       "blockTemplates": "Blockvorlagen",
       "blockTemplateCreate": "Neue Blockvorlage",
       "blockTemplateEdit": "Blockvorlage bearbeiten",
+      "articleTemplates": "Artikelvorlagen",
+      "articleTemplateCreate": "Neue Artikelvorlage",
+      "articleTemplateEdit": "Artikelvorlage bearbeiten",
+      "pageTemplates": "Seitenvorlagen",
+      "pageTemplateCreate": "Neue Seitenvorlage",
+      "pageTemplateEdit": "Seitenvorlage bearbeiten",
       "crowdfundings": "Crowdfundings",
       "crowdfundingCreate": "Neues Crowdfunding",
       "crowdfundingEdit": "Crowdfunding bearbeiten",
@@ -1735,6 +1874,12 @@
       "documents": "Dokumente",
       "documentUpload": "Dokumente hochladen",
       "documentEdit": "Dokument bearbeiten",
+      "videos": "Videos",
+      "videoUpload": "Videos hochladen",
+      "videoEdit": "Video bearbeiten",
+      "audio": "Audio",
+      "audioUpload": "Audio hochladen",
+      "audioEdit": "Audio bearbeiten",
       "navigations": "Navigationen",
       "navigationCreate": "Neue Navigation",
       "navigationEdit": "Navigation bearbeiten",
@@ -1865,7 +2010,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
-        "unpublished": "Nicht publiziert"
+        "unpublished": "Nicht publiziert",
+        "loadingTemplate": "Vorlage wird geladen…"
       },
       "panels": {
         "close": "Schliessen",
@@ -1913,7 +2059,8 @@
         "hideHeaderInfo": "Blendet den Header der Website auf dieser Seite aus, z.B. für Landingpages.",
         "hideFooter": "Footer ausblenden",
         "hideFooterInfo": "Blendet den Footer der Website auf dieser Seite aus, z.B. für Landingpages.",
-        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
+        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
+        "createTemplate": "Vorlage aus Seite erstellen"
       }
     },
     "pages": {
@@ -1946,6 +2093,12 @@
         "untitled": "Ohne Titel",
         "updatedAt": "Aktualisiert am",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "Neue Seite",
+        "blank": "Leere Seite",
+        "search": "Vorlagen durchsuchen",
+        "noResults": "Keine Vorlagen gefunden"
       }
     },
     "paymentMethodList": {
@@ -2674,6 +2827,62 @@
       "subscriptionStartsAt": "Abo startet am {{date}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
     },
+    "articleTemplates": {
+      "list": {
+        "action": "Aktion",
+        "copy": "Kopieren",
+        "title": "Artikelvorlagen",
+        "newTemplate": "Neue Artikelvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "info": "Artikelvorlagen legen den Inhalt und die Metadaten fest, mit denen ein neuer Artikel beginnt. Änderungen an einer Vorlage wirken sich nicht auf bereits daraus erstellte Artikel aus."
+      },
+      "edit": {
+        "loadingTemplate": "Vorlage wird geladen…",
+        "loadingArticle": "Artikel wird geladen…",
+        "copyName": "{{name}} (Kopie)",
+        "name": "Name",
+        "backToList": "Zurück zur Liste",
+        "metadata": "Metadaten",
+        "saved": "Gespeichert",
+        "created": "Erstellt",
+        "new": "Neu",
+        "editing": "In Bearbeitung",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
+      },
+      "delete": {
+        "title": "Artikelvorlage löschen?",
+        "body": "Möchtest du die Artikelvorlage \"{{name}}\" wirklich löschen? Daraus erstellte Artikel sind nicht betroffen."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Aktion",
+        "copy": "Kopieren",
+        "title": "Seitenvorlagen",
+        "newTemplate": "Neue Seitenvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "info": "Seitenvorlagen legen den Inhalt und die Metadaten fest, mit denen eine neue Seite beginnt. Änderungen an einer Vorlage wirken sich nicht auf bereits daraus erstellte Seiten aus."
+      },
+      "edit": {
+        "loadingTemplate": "Vorlage wird geladen…",
+        "loadingPage": "Seite wird geladen…",
+        "copyName": "{{name}} (Kopie)",
+        "name": "Name",
+        "backToList": "Zurück zur Liste",
+        "metadata": "Metadaten",
+        "saved": "Gespeichert",
+        "created": "Erstellt",
+        "new": "Neu",
+        "editing": "In Bearbeitung",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
+      },
+      "delete": {
+        "title": "Seitenvorlage löschen?",
+        "body": "Möchtest du die Seitenvorlage \"{{name}}\" wirklich löschen? Daraus erstellte Seiten sind nicht betroffen."
+      }
+    },
     "blockTemplates": {
       "list": {
         "title": "Blockvorlagen",
@@ -2694,7 +2903,8 @@
         "editing": "In Bearbeitung",
         "saveConfirmMessage": "Beim Speichern wird der Inhalt dieser Vorlage sofort in allen Artikeln und Seiten aktualisiert, die sie verwenden, auch in bereits veröffentlichten.",
         "saveConfirmTitle": "Vorlage speichern?",
-        "created": "Erstellt"
+        "created": "Erstellt",
+        "empty": "Diese Vorlage hat noch keine Blöcke. Füge mit + den ersten hinzu."
       }
     },
     "yes": "Ja",
@@ -2886,9 +3096,9 @@
           "totalActiveSubscriptionCount": "Abos, die am Stichtag aktiv und bezahlt waren oder künftig bezahlt werden und möglicherweise noch aktiv sind.",
           "overdueSubscriptionCount": "Erneuerte Abos, deren Bezahlung fällig und offen ist. Nicht eingerechnet sind erstmalig gelöste Abos, die nicht bezahlt wurden.",
           "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert und bezahlt wurden.",
-          "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
-          "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
-          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probeabos).",
+          "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden. Ohne Abos, die ein anderes Abo ersetzen (Upgrades).",
+          "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden. Ohne Abos, die durch ein Upgrade ersetzt wurden.",
+          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden, z.B. bei einem Upgrade. Das ersetzte Abo zählt nicht als deaktiviert, das neue nicht als neues Abo.",
           "predictedSubscriptionRenewalCount": "Anzahl Abos, die am Ende ihrer Laufzeit zur Erneuerung anstehen.\n Erstmalige Abo-Erneuerungen sowie\n Abo-Erneuerungen von Stammkunden: Abos, die in der Vergangenheit bereits ein oder mehrmals erneuert worden sind\n Abo-Erneuerungen werden beginnend ab dem gewählten Startdatum (oder ab dem aktuellen Datum, falls der gewählte Zeitraum in der Vergangenheit beginnt) dargestellt.\n Als anstehende Abo-Erneuerungen werden die zurzeit bezahlten und aktiven Abos mit aktivierter automatischer Verlängerung gezählt.",
           "endingSubscriptionCount": "Abos, die am Ende ihrer Laufzeit auslaufen werden, d.h. ohne Abos mit automatischer Verlängerung."
         },
@@ -2944,8 +3154,8 @@
       "showUsers": "Details anzeigen",
       "byDate": "Per",
       "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
-      "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
-      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden.",
+      "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden, gezählt am Tag des Entscheids. Einberechnet werden die erneuerten, ersetzten und deaktivierten Abos; ein Upgrade zählt einmal als Erneuerung. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
+      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden, gezählt am Tag des Entscheids. Einberechnet werden die erneuerten, ersetzten und deaktivierten Abos; ein Upgrade zählt einmal als Erneuerung. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden.",
       "predictedSubscriptionRenewalCountPerDay": {
         "highProbabilityInfo": "Bezahlte Abos mit automatischer Verlängerung, die bereits ein- oder mehrmals erneuert wurden und am Ende ihrer Laufzeit wieder zur Erneuerung anstehen.",
         "lowProbabilityInfo": "Bezahlte Abos mit automatischer Verlängerung, die am Ende ihrer ersten Laufzeit zum ersten Mal zur Erneuerung anstehen."
@@ -3066,7 +3276,9 @@
         "memberPlans": "Abo-Pläne",
         "activeInfo": "Nur aktive Goodies werden Leser:innen beim Abschliessen eines Abos angeboten.",
         "stockInfo": "Gesamtzahl Stück, die du vergeben kannst. Sind alle vergeben, wird das Goodie nicht mehr angeboten. Leer lassen für eine unbegrenzte Anzahl.",
-        "memberPlansInfo": "Das Goodie wird nur bei diesen Abo-Plänen angeboten."
+        "memberPlansInfo": "Das Goodie wird nur bei diesen Abo-Plänen angeboten.",
+        "paymentPeriodicities": "Zahlungsintervalle",
+        "paymentPeriodicitiesInfo": "Das Goodie wird nur bei diesen Zahlungsintervallen angeboten, z.B. nur bei einem 2-Jahres-Abo. Leer lassen, damit es bei jedem Intervall des Abo-Plans angeboten wird."
       },
       "overview": {
         "title": "Goodies",
@@ -3176,6 +3388,8 @@
         "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen."
       },
       "placeholderSecret": "Unverändert (versteckt)",
+      "secretNotSet": "Nicht gesetzt",
+      "secretStored": "Gespeichert (versteckt) – leer lassen, um ihn zu behalten",
       "mailSettings": {
         "type": "Typ",
         "fromAddress": "Absenderadresse",
@@ -3221,6 +3435,7 @@
         "analytics": "Analytics",
         "invalidFile": "Die Google-Analytics-Anmeldedatei ist ungültig",
         "credentialsReadyToBeSaved": "Die Anmeldedaten sind bereit zum Speichern!",
+        "credentialsStored": "Anmeldedaten gespeichert – neue Datei hierher ziehen, um sie zu ersetzen",
         "dropCredentialsFile": "Anmeldedatei hier ablegen!",
         "dragCredentialsFileHere": "Google-Analytics-Anmeldedatei hierher ziehen und ablegen",
         "articlePrefix": "We.Publish-Artikel-URL-Präfix (normalerweise /a/)",
@@ -4359,10 +4574,65 @@
       "addBlock": "Block hinzufügen",
       "hideBlock": "Block auf der Website ausblenden",
       "showBlock": "Block auf der Website wieder anzeigen",
+      "timeBlock": "Festlegen, wann dieser Block erscheint",
       "deleteBlock": "Block löschen",
       "moveBlockUp": "Block nach oben verschieben",
       "moveBlockDown": "Block nach unten verschieben",
       "styleHelp": "Ändert, wie dieser Block auf der Website aussieht. Leer lassen für die Standarddarstellung. Die Styles verwaltest du unter «Block Styling»."
+    },
+    "blockTiming": {
+      "title": "Block zeitlich steuern",
+      "offAir": "Derzeit auf der Website ausgeblendet, weil er ausserhalb seines Zeitplans liegt.",
+      "dateRange": "Zeitraum",
+      "dateRangeEmpty": "Beliebiges Datum",
+      "dateRangeHelp": "Der Block erscheint vom Beginn des ersten bis zum Ende des letzten Tags.",
+      "weekdays": "Wochentage",
+      "weekdaysHelp": "Keinen wählen, damit der Block jeden Tag erscheint.",
+      "timeOfDay": "Tageszeit",
+      "timeOfDayFrom": "Von",
+      "timeOfDayTo": "bis",
+      "timeOfDayHelp": "Die Zeiten gelten in der Zeitzone der Website. Liegt das Ende vor dem Beginn, läuft das Fenster über Mitternacht, z. B. 22:00 bis 02:00.",
+      "sameTimes": "Beginn und Ende sind gleich, so erscheint der Block nie. Ändere eine der Zeiten oder wähle «Ganztägig».",
+      "clearTimeOfDay": "Ganztägig",
+      "clear": "Zeitplan entfernen",
+      "done": "Fertig",
+      "summary": {
+        "always": "Erscheint immer. Lege einen Zeitraum, Wochentage oder eine Tageszeit fest, um das einzuschränken.",
+        "never": "Erscheint nie, weil Beginn und Ende gleich sind.",
+        "shows": "Erscheint {{conditions}}.",
+        "between": "vom {{from}} bis {{to}}",
+        "since": "ab {{from}}",
+        "until": "bis {{to}}",
+        "days": "{{days}}",
+        "hours": "von {{from}} bis {{to}} Uhr"
+      }
+    },
+    "weekday": {
+      "Monday": "Montag",
+      "Tuesday": "Dienstag",
+      "Wednesday": "Mittwoch",
+      "Thursday": "Donnerstag",
+      "Friday": "Freitag",
+      "Saturday": "Samstag",
+      "Sunday": "Sonntag"
+    },
+    "weekdayRecurring": {
+      "Monday": "montags",
+      "Tuesday": "dienstags",
+      "Wednesday": "mittwochs",
+      "Thursday": "donnerstags",
+      "Friday": "freitags",
+      "Saturday": "samstags",
+      "Sunday": "sonntags"
+    },
+    "weekdayShort": {
+      "Monday": "Mo",
+      "Tuesday": "Di",
+      "Wednesday": "Mi",
+      "Thursday": "Do",
+      "Friday": "Fr",
+      "Saturday": "Sa",
+      "Sunday": "So"
     },
     "placeholderInput": {
       "add": "Hinzufügen"
@@ -4441,9 +4711,11 @@
       },
       "create": {
         "article": "Artikel erstellen",
+        "articleTemplate": "Artikelvorlage erstellen",
         "articleTag": "Artikel-Tag erstellen",
         "paywall": "Paywall erstellen",
         "page": "Seite erstellen",
+        "pageTemplate": "Seitenvorlage erstellen",
         "pageTag": "Seiten-Tag erstellen",
         "crowdfunding": "Crowdfunding erstellen",
         "blockTemplate": "Block-Vorlage erstellen",
@@ -4452,6 +4724,8 @@
         "eventTag": "Event-Tag erstellen",
         "image": "Bild hochladen",
         "document": "Dokument hochladen",
+        "video": "Video hochladen",
+        "audio": "Audio hochladen",
         "navigation": "Navigation erstellen",
         "banner": "Banner erstellen",
         "author": "Autor:in erstellen",

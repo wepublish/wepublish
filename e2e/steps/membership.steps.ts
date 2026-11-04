@@ -1,8 +1,10 @@
 import { expect, Page } from '@playwright/test';
-import { Article } from '../support/factories';
+import { target } from '../support/env';
+import { Article, TestData } from '../support/factories';
 import { SimulatedCheckout } from '../support/simulated-payment';
 import { subscribeWithSimulatedPayment } from '../support/subscribe-form';
-import { Given, Then, When } from './fixtures';
+import { subscribePlanOf } from '../support/targets';
+import { Given, ScenarioContext, Then, When } from './fixtures';
 
 /**
  * The paywall has no landmark, so it is found by the unique description the
@@ -20,15 +22,31 @@ const paywallOf = (page: Page, article: Article) => {
     .last();
 };
 
+/** The tenant's plan for journeys that buy one: see `subscribePlanOf`. */
+const subscribePlan = () => subscribePlanOf(target.app);
+
+async function createPaywalledArticle(
+  data: TestData,
+  alias: string,
+  memberPlanSlug: string
+) {
+  await data.ensureSubscribePage();
+  await data.createPaywalledArticle({
+    alias,
+    memberPlanSlugs: [memberPlanSlug],
+  });
+}
+
 Given(
   'a paywalled article {string} for the plan {string}',
-  async ({ data }, alias: string, memberPlanSlug: string) => {
-    await data.ensureSubscribePage();
-    await data.createPaywalledArticle({
-      alias,
-      memberPlanSlugs: [memberPlanSlug],
-    });
-  }
+  async ({ data }, alias: string, memberPlanSlug: string) =>
+    createPaywalledArticle(data, alias, memberPlanSlug)
+);
+
+Given(
+  "a paywalled article {string} for the tenant's subscribe plan",
+  async ({ data }, alias: string) =>
+    createPaywalledArticle(data, alias, subscribePlan())
 );
 
 When(
@@ -52,16 +70,33 @@ Then('the paywall hides the rest of the article', async ({ readers, data, ctx })
   await expect(page.getByText(article.ending)).toBeHidden();
 });
 
+async function subscribeFromPaywall(
+  { page, data, ctx }: { page: Page; data: TestData; ctx: ScenarioContext },
+  memberPlanSlug: string
+) {
+  const article = data.get('article', ctx.currentArticle ?? '');
+  const plan = await data.memberPlan(memberPlanSlug);
+
+  await paywallOf(page, article).getByRole('link').first().click();
+  await subscribeWithSimulatedPayment(page, plan);
+}
+
 When(
   '{string} subscribes to the plan {string} from the paywall',
-  async ({ readers, data, ctx }, reader: string, memberPlanSlug: string) => {
-    const page = await readers.page(reader);
-    const article = data.get('article', ctx.currentArticle ?? '');
-    const plan = await data.memberPlan(memberPlanSlug);
+  async ({ readers, data, ctx }, reader: string, memberPlanSlug: string) =>
+    subscribeFromPaywall(
+      { page: await readers.page(reader), data, ctx },
+      memberPlanSlug
+    )
+);
 
-    await paywallOf(page, article).getByRole('link').first().click();
-    await subscribeWithSimulatedPayment(page, plan);
-  }
+When(
+  "{string} subscribes to the tenant's subscribe plan from the paywall",
+  async ({ readers, data, ctx }, reader: string) =>
+    subscribeFromPaywall(
+      { page: await readers.page(reader), data, ctx },
+      subscribePlan()
+    )
 );
 
 When(

@@ -162,7 +162,17 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
 type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
   authors: [ArticleRevisionAuthor!]!
-  blocks: [BlockContent!]!
+  blocks(
+    """
+    Omits blocks that should be hidden. Only users who can read articles may pass `false`, everyone else gets the displayed blocks.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [BlockContent!]!
+
+  """
+  When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed.
+  """
+  blocksChangeAt: DateTime
   breaking: Boolean!
   canonicalUrl: String
   createdAt: DateTime!
@@ -223,6 +233,108 @@ input ArticleTeaserInput {
   lead: String
   preTitle: String
   title: String
+}
+
+type ArticleTemplate {
+  """The content (name and blocks) of the article template."""
+  blockTemplate: BlockTemplate!
+  blockTemplateId: String!
+  createdAt: DateTime!
+  id: String!
+  metadata: ArticleTemplateMetadata!
+  modifiedAt: DateTime!
+}
+
+input ArticleTemplateFilter {
+  name: String
+}
+
+type ArticleTemplateMetadata {
+  authors: [ArticleRevisionAuthor!]!
+  breaking: Boolean!
+  canonicalUrl: String
+  disableComments: Boolean!
+  hidden: Boolean!
+  hideAuthor: Boolean!
+  image: Image
+  imageID: String
+  lead: String
+  paywallId: String
+  preTitle: String
+  properties: [Property!]!
+  seoDescription: String
+  seoTitle: String
+  shared: Boolean!
+  socialMediaAuthors: [Author!]!
+  socialMediaDescription: String
+  socialMediaImage: Image
+  socialMediaImageID: String
+  socialMediaTitle: String
+  tags: [Tag!]!
+  title: String
+}
+
+input ArticleTemplateMetadataInput {
+  authors: [ArticleRevisionAuthorInput!]!
+  breaking: Boolean!
+  canonicalUrl: String
+  disableComments: Boolean!
+  hidden: Boolean!
+  hideAuthor: Boolean!
+  imageID: String
+  lead: String
+  paywallId: String
+  preTitle: String
+  properties: [PropertyInput!]!
+  seoDescription: String
+  seoTitle: String
+  shared: Boolean!
+  socialMediaAuthorIds: [String!]!
+  socialMediaDescription: String
+  socialMediaImageID: String
+  socialMediaTitle: String
+  tagIds: [String!]!
+  title: String
+}
+
+enum ArticleTemplateSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
+type Audio {
+  createdAt: DateTime!
+  description: String
+
+  """Length in seconds, as the browser reported it on upload."""
+  duration: Float
+  extension: String!
+  fileSize: Int!
+  filename: String
+  id: String!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  source: String
+  title: String
+  url: String!
+}
+
+input AudioFilter {
+  title: String
+}
+
+enum AudioSort {
+  CreatedAt
+  ModifiedAt
+}
+
+type AudioStorageUsage {
+  audioCount: Int!
+  limitBytes: Float!
+  usedBytes: Float!
 }
 
 type AuditLog {
@@ -390,6 +502,14 @@ interface BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -442,6 +562,14 @@ type BildwurfAdBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   zoneID: String
 }
@@ -450,6 +578,11 @@ input BildwurfAdBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   zoneID: String
 }
 
@@ -499,7 +632,12 @@ type BlockStyle {
 }
 
 type BlockTemplate implements HasBlockContent {
-  blocks: [BlockContent!]!
+  blocks(
+    """
+    Omits blocks that are hidden or outside their timing. Pass `false` to edit the template, which only users who can edit block templates, articles or pages may do.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [BlockContent!]!
   createdAt: DateTime!
   id: String!
   modifiedAt: DateTime!
@@ -510,8 +648,16 @@ type BlockTemplateBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   template: BlockTemplate
   templateId: String!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -520,6 +666,11 @@ input BlockTemplateBlockInput {
   blockStyleName: String
   disabled: Boolean
   templateId: String!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 input BlockTemplateFilter {
@@ -530,6 +681,54 @@ enum BlockTemplateSort {
   CreatedAt
   ModifiedAt
   Name
+}
+
+type BlockTimeOfDay {
+  """Start of the daily window, as `HH:mm` in the site timezone."""
+  from: String!
+
+  """
+  End of the daily window, as `HH:mm` in the site timezone. An end before the start wraps over midnight.
+  """
+  to: String!
+}
+
+input BlockTimeOfDayInput {
+  """Start of the daily window, as `HH:mm` in the site timezone."""
+  from: String!
+
+  """
+  End of the daily window, as `HH:mm` in the site timezone. An end before the start wraps over midnight.
+  """
+  to: String!
+}
+
+type BlockTiming {
+  """The block is hidden before this moment."""
+  from: DateTime
+
+  """The block is only displayed during this daily window."""
+  timeOfDay: BlockTimeOfDay
+
+  """The block is hidden from this moment on."""
+  to: DateTime
+
+  """The block is only displayed on these weekdays. Empty means every day."""
+  weekdays: [Weekday!]
+}
+
+input BlockTimingInput {
+  """The block is hidden before this moment."""
+  from: DateTime
+
+  """The block is only displayed during this daily window."""
+  timeOfDay: BlockTimeOfDayInput
+
+  """The block is hidden from this moment on."""
+  to: DateTime
+
+  """The block is only displayed on these weekdays. Empty means every day."""
+  weekdays: [Weekday!]
 }
 
 enum BlockType {
@@ -588,7 +787,15 @@ type BreakBlock implements BaseBlock & HasImage {
   linkText: String
   linkURL: String
   richText: RichText
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   text: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -603,6 +810,11 @@ input BreakBlockInput {
   linkURL: String
   richText: RichText
   text: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type CalculatedRating {
@@ -704,6 +916,14 @@ type CommentBlock implements BaseBlock {
   comments: [Comment!]!
   disabled: Boolean
   filter: CommentBlockFilter!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -724,6 +944,11 @@ input CommentBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: CommentBlockFilterInput!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type CommentCreatedAction implements BaseAction & HasComment {
@@ -908,6 +1133,14 @@ type CrowdfundingBlock implements BaseBlock & HasOptionalCrowdfunding {
   crowdfunding: Crowdfunding
   crowdfundingId: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -916,6 +1149,11 @@ input CrowdfundingBlockInput {
   blockStyleName: String
   crowdfundingId: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type CrowdfundingGoal implements BaseCrowdfundingGoal {
@@ -1164,6 +1402,14 @@ type EventBlock implements BaseBlock {
   disabled: Boolean
   events: [Event!]!
   filter: EventBlockFilter!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1182,6 +1428,11 @@ input EventBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: EventBlockFilterInput!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type EventCreatedAction implements BaseAction & HasEventLc {
@@ -1298,6 +1549,14 @@ type FacebookPostBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   userID: String
 }
@@ -1307,6 +1566,11 @@ input FacebookPostBlockInput {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   userID: String
 }
 
@@ -1314,6 +1578,14 @@ type FacebookVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   userID: String
   videoID: String
@@ -1323,6 +1595,11 @@ input FacebookVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   userID: String
   videoID: String
 }
@@ -1350,6 +1627,14 @@ type FlexBlock implements BaseBlock {
   blockStyleName: String
   blocks: [BlockWithAlignment!]!
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1358,6 +1643,11 @@ input FlexBlockInput {
   blockStyleName: String
   blocks: [BlockWithAlignmentInput!]!
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type FlexTeaser {
@@ -1409,6 +1699,11 @@ type Goodie implements HasImage {
   memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!
   name: String!
+
+  """
+  Payment periodicities the goodie is offered with. Empty means every periodicity of the member plan.
+  """
+  paymentPeriodicities: [PaymentPeriodicity!]!
   stock: Int
 }
 
@@ -1432,6 +1727,14 @@ type HTMLBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   html: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1440,6 +1743,11 @@ input HTMLBlockInput {
   blockStyleName: String
   disabled: Boolean
   html: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 interface HasArticle {
@@ -1586,7 +1894,15 @@ type IFrameBlock implements BaseBlock {
   disabled: Boolean
   height: Int
   sandbox: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   styleCustom: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
   url: String
@@ -1600,6 +1916,11 @@ input IFrameBlockInput {
   height: Int
   sandbox: String
   styleCustom: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
   url: String
   width: Int
@@ -1638,6 +1959,14 @@ type ImageBlock implements BaseBlock & HasImage {
   image: Image
   imageID: String
   linkUrl: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1648,6 +1977,11 @@ input ImageBlockInput {
   disabled: Boolean
   imageID: String
   linkUrl: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 input ImageFilter {
@@ -1660,6 +1994,14 @@ type ImageGalleryBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   images: [ImageGalleryImage!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1668,6 +2010,11 @@ input ImageGalleryBlockInput {
   blockStyleName: String
   disabled: Boolean
   images: [ImageGalleryImageInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type ImageGalleryImage implements HasImage {
@@ -1756,6 +2103,14 @@ type InstagramPostBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1764,6 +2119,11 @@ input InstagramPostBlockInput {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type Invoice implements HasOptionalSubscription {
@@ -1851,6 +2211,14 @@ type ListicleBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   items: [ListicleItem!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1859,6 +2227,11 @@ input ListicleBlockInput {
   blockStyleName: String
   disabled: Boolean
   items: [ListicleItemInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type ListicleItem implements HasImage {
@@ -2239,11 +2612,19 @@ type MailchimpFormBlock implements BaseBlock {
   doubleOptIn: Boolean
   interests: [String!]!
   listId: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   steps: [MailchimpFormStep!]!
   submitButtonLabel: String
   successPage: MailchimpFormSuccessPage
   successUrl: String
   syncProviderId: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -2262,6 +2643,11 @@ input MailchimpFormBlockInput {
   successPage: MailchimpFormSuccessPageInput
   successUrl: String
   syncProviderId: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type MailchimpFormFieldConfig {
@@ -2819,6 +3205,9 @@ type Mutation {
   """Creates an article."""
   createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
+  """Creates a new article template."""
+  createArticleTemplate(blocks: [BlockContentInput!]!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
+
   """Creates a new author."""
   createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
   createBanner(input: CreateBannerInput!): Banner!
@@ -2869,7 +3258,19 @@ type Mutation {
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
 
   """Creates a new goodie."""
-  createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
+  createGoodie(
+    active: Boolean!
+    description: RichText
+    imageID: String
+    memberPlanIDs: [String!]!
+    name: String!
+
+    """
+    Payment periodicities the goodie is offered with. Empty or omitted means every periodicity of the member plan.
+    """
+    paymentPeriodicities: [PaymentPeriodicity!]
+    stock: Int
+  ): Goodie!
   createImpersonationGrant(durationMinutes: Int!, impersonatedBy: String!, reason: String!, userId: String!): ImpersonationGrantResult!
 
   """Creates a new invoice."""
@@ -2896,6 +3297,9 @@ type Mutation {
 
   """Creates an page."""
   createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
+  """Creates a new page template."""
+  createPageTemplate(blocks: [BlockContentInput!]!, metadata: PageTemplateMetadataInput!, name: String!): PageTemplate!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
@@ -3046,6 +3450,11 @@ type Mutation {
   """Deletes an article."""
   deleteArticle(id: String!): String!
 
+  """Deletes an existing article template."""
+  deleteArticleTemplate(id: String!): ArticleTemplate!
+  """Deletes an existing audio."""
+  deleteAudio(id: String!): String!
+
   """Deletes an existing author."""
   deleteAuthor(id: String!): Author!
   deleteBanner(id: String!): Boolean
@@ -3098,6 +3507,9 @@ type Mutation {
 
   """Deletes an page."""
   deletePage(id: String!): String!
+
+  """Deletes an existing page template."""
+  deletePageTemplate(id: String!): PageTemplate!
 
   """Deletes an existing payment method."""
   deletePaymentMethod(id: String!): PaymentMethod!
@@ -3152,6 +3564,9 @@ type Mutation {
 
   """Deletes an existing userrole."""
   deleteUserRole(id: String!): UserRole!
+
+  """Deletes an existing video."""
+  deleteVideo(id: String!): String!
 
   """
   Discards the current draft and reverts to the latest published revision.
@@ -3387,6 +3802,11 @@ type Mutation {
   """Updates an article."""
   updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
+  """Updates an existing article template."""
+  updateArticleTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
+  """Updates an existing audio."""
+  updateAudio(description: String, id: String!, license: String, link: String, source: String, title: String): Audio!
+
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
   updateBanner(input: UpdateBannerInput!): Banner!
@@ -3448,7 +3868,20 @@ type Mutation {
   ): ExternalApp!
 
   """Updates an existing goodie."""
-  updateGoodie(active: Boolean, description: RichText, id: String!, imageID: String, memberPlanIDs: [String!], name: String, stock: Int): Goodie!
+  updateGoodie(
+    active: Boolean
+    description: RichText
+    id: String!
+    imageID: String
+    memberPlanIDs: [String!]
+    name: String
+
+    """
+    Payment periodicities the goodie is offered with. Empty or omitted means every periodicity of the member plan.
+    """
+    paymentPeriodicities: [PaymentPeriodicity!]
+    stock: Int
+  ): Goodie!
 
   """Updates an existing image."""
   updateImage(description: String, filename: String, focalPointX: Float = 0.5, focalPointY: Float = 0.5, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
@@ -3471,6 +3904,9 @@ type Mutation {
 
   """Updates an page."""
   updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, hideFooter: Boolean! = false, hideHeader: Boolean! = false, id: String!, imageID: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
+  """Updates an existing page template."""
+  updatePageTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: PageTemplateMetadataInput!, name: String!): PageTemplate!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
@@ -3564,11 +4000,28 @@ type Mutation {
   """
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
+  """Updates an existing video."""
+  updateVideo(description: String, id: String!, license: String, link: String, source: String, title: String): Video!
+
   """Updates the website settings."""
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(discountCode: String, failureURL: String, goodieId: String, memberPlanId: String!, monthlyAmount: Float!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+
+  """Uploads a new audio."""
+  uploadAudio(
+    description: String
+
+    """Length in seconds, as the browser reported it on upload."""
+    duration: Float
+    file: Upload!
+    filename: String
+    license: String
+    link: String
+    source: String
+    title: String
+  ): Audio!
 
   """Uploads a new document."""
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
@@ -3578,6 +4031,25 @@ type Mutation {
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float! = 0.5, focalPointY: Float! = 0.5, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
+
+  """Uploads a new video."""
+  uploadVideo(
+    description: String
+
+    """Length in seconds, as the browser reported it on upload."""
+    duration: Float
+    file: Upload!
+    filename: String
+    height: Int
+    license: String
+    link: String
+
+    """A frame grabbed from the video in the browser, used as its thumbnail."""
+    poster: Upload
+    source: String
+    title: String
+    width: Int
+  ): Video!
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -3772,7 +4244,17 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
 
 type PageRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
-  blocks: [BlockContent!]!
+  blocks(
+    """
+    Omits blocks that should be hidden. Only users who can read pages may pass `false`, everyone else gets the displayed blocks.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [BlockContent!]!
+
+  """
+  When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed.
+  """
+  blocksChangeAt: DateTime
   createdAt: DateTime!
   description: String
   id: String!
@@ -3820,6 +4302,60 @@ input PageTeaserInput {
   title: String
 }
 
+type PageTemplate {
+  """The content (name and blocks) of the page template."""
+  blockTemplate: BlockTemplate!
+  blockTemplateId: String!
+  createdAt: DateTime!
+  id: String!
+  metadata: PageTemplateMetadata!
+  modifiedAt: DateTime!
+}
+
+input PageTemplateFilter {
+  name: String
+}
+
+type PageTemplateMetadata {
+  description: String
+  hidden: Boolean!
+  hideFooter: Boolean!
+  hideHeader: Boolean!
+  image: Image
+  imageID: String
+  properties: [Property!]!
+  seoDescription: String
+  seoTitle: String
+  socialMediaDescription: String
+  socialMediaImage: Image
+  socialMediaImageID: String
+  socialMediaTitle: String
+  tags: [Tag!]!
+  title: String
+}
+
+input PageTemplateMetadataInput {
+  description: String
+  hidden: Boolean!
+  hideFooter: Boolean! = false
+  hideHeader: Boolean! = false
+  imageID: String
+  properties: [PropertyInput!]!
+  seoDescription: String
+  seoTitle: String
+  socialMediaDescription: String
+  socialMediaImageID: String
+  socialMediaTitle: String
+  tagIds: [String!]!
+  title: String
+}
+
+enum PageTemplateSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
 type PaginatedApiTokens {
   nodes: [ApiToken!]!
   pageInfo: PageInfo!
@@ -3832,8 +4368,20 @@ type PaginatedArticleRevisions {
   totalCount: Int!
 }
 
+type PaginatedArticleTemplate {
+  nodes: [ArticleTemplate!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedArticles {
   nodes: [Article!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedAudios {
+  nodes: [Audio!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -3945,6 +4493,12 @@ type PaginatedPageRevisions {
   totalCount: Int!
 }
 
+type PaginatedPageTemplate {
+  nodes: [PageTemplate!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedPages {
   nodes: [Page!]!
   pageInfo: PageInfo!
@@ -3983,6 +4537,12 @@ type PaginatedTags {
 
 type PaginatedUserRoles {
   nodes: [UserRole!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedVideos {
+  nodes: [Video!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4372,6 +4932,14 @@ type PolisConversationBlock implements BaseBlock {
   blockStyleName: String
   conversationID: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -4380,6 +4948,11 @@ input PolisConversationBlockInput {
   blockStyleName: String
   conversationID: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type Poll {
@@ -4413,6 +4986,14 @@ type PollBlock implements BaseBlock & HasOptionalPoll {
   disabled: Boolean
   poll: FullPoll
   pollId: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -4421,6 +5002,11 @@ input PollBlockInput {
   blockStyleName: String
   disabled: Boolean
   pollId: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type PollExternalVote {
@@ -4611,8 +5197,35 @@ type Query {
   """
   articleRevisions(articleId: String!, cursorId: String, filter: ArticleRevisionFilter, order: SortOrder = Descending, skip: Int = 0, take: Int = 10): PaginatedArticleRevisions!
 
+  """Returns a single article template by ID."""
+  articleTemplate(id: String!): ArticleTemplate!
+
+  """Returns a paginated list of article templates."""
+  articleTemplates(
+    """Cursor for pagination"""
+    cursorId: String
+    filter: ArticleTemplateFilter
+    order: SortOrder = Ascending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+    sort: ArticleTemplateSort! = Name
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedArticleTemplate!
+
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
+
+  """Returns a audio by id."""
+  audio(id: String!): Audio!
+
+  """Returns the current audio storage usage and limit."""
+  audioStorageUsage: AudioStorageUsage!
+
+  """Returns a paginated list of audios based on the filters given."""
+  audios(cursorId: String, filter: AudioFilter, order: SortOrder = Descending, skip: Int = 0, sort: AudioSort = ModifiedAt, take: Int = 10): PaginatedAudios!
 
   """
   Returns a paginated list of audit log entries based on the filters given.
@@ -4969,6 +5582,24 @@ type Query {
   """Returns a paginated list of revisions (version history) for a page."""
   pageRevisions(cursorId: String, filter: PageRevisionFilter, order: SortOrder = Descending, pageId: String!, skip: Int = 0, take: Int = 10): PaginatedPageRevisions!
 
+  """Returns a single page template by ID."""
+  pageTemplate(id: String!): PageTemplate!
+
+  """Returns a paginated list of page templates."""
+  pageTemplates(
+    """Cursor for pagination"""
+    cursorId: String
+    filter: PageTemplateFilter
+    order: SortOrder = Ascending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+    sort: PageTemplateSort! = Name
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedPageTemplate!
+
   """Returns a paginated list of pages based on the filters given."""
   pages(cursorId: String, filter: PageFilter, order: SortOrder = Descending, skip: Int = 0, sort: PageSort = PublishedAt, take: Int = 10): PaginatedPages!
 
@@ -5162,6 +5793,15 @@ type Query {
   ): PaginatedSensitiveDataUsers!
   versionInformation: VersionInformation!
 
+  """Returns a video by id."""
+  video(id: String!): Video!
+
+  """Returns the current video storage usage and limit."""
+  videoStorageUsage: VideoStorageUsage!
+
+  """Returns a paginated list of videos based on the filters given."""
+  videos(cursorId: String, filter: VideoFilter, order: SortOrder = Descending, skip: Int = 0, sort: VideoSort = ModifiedAt, take: Int = 10): PaginatedVideos!
+
   """
   Returns the website settings, requires authentication to get sensitive settings.
   """
@@ -5176,6 +5816,14 @@ type QuoteBlock implements BaseBlock & HasImage {
   image: Image
   imageID: String
   quote: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -5186,6 +5834,11 @@ input QuoteBlockInput {
   disabled: Boolean
   imageID: String
   quote: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 enum RatingSystemType {
@@ -5221,6 +5874,14 @@ type RichTextBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   richText: RichText
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -5229,6 +5890,11 @@ input RichTextBlockInput {
   blockStyleName: String
   disabled: Boolean
   richText: RichText
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 input SendTestMailTemplateInput {
@@ -5349,6 +6015,9 @@ type Setting {
 type SettingAIProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
+
+  """Whether an API key is stored. It is never returned itself."""
+  isApiKeySet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
@@ -5375,6 +6044,11 @@ type SettingAnalyticsProvider implements SettingProvider {
   articlePrefix: String
   createdAt: DateTime!
   id: String!
+
+  """
+  Whether service account credentials are stored. They are never returned.
+  """
+  isCredentialsSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
@@ -5391,6 +6065,9 @@ input SettingAnalyticsProviderFilter {
 type SettingChallengeProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
+
+  """Whether a secret is stored. It is never returned itself."""
+  isSecretSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
@@ -5411,6 +6088,14 @@ type SettingMailProvider implements SettingProvider {
   createdAt: DateTime!
   fromAddress: String
   id: String!
+
+  """Whether an API key is stored. The key itself is never returned."""
+  isApiKeySet: Boolean!
+
+  """
+  Whether a webhook signing secret is stored. The secret itself is never returned.
+  """
+  isWebhookEndpointSecretSet: Boolean!
   lastLoadedAt: DateTime!
   mailchimp_baseURL: String
   mailgun_baseDomain: String
@@ -5475,6 +6160,14 @@ type SettingPaymentProvider implements SettingProvider {
   createdAt: DateTime!
   deletedAt: DateTime
   id: String!
+
+  """Whether an API key is stored. It is never returned itself."""
+  isApiKeySet: Boolean!
+
+  """
+  Whether a webhook signing secret is stored. It is never returned itself.
+  """
+  isWebhookEndpointSecretSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   mollie_apiBaseUrl: String
@@ -5521,6 +6214,9 @@ type SettingSyncProvider implements SettingProvider {
   mailchimp_defaultInterestGroupIds: [String!]
   mailchimp_extensions: JSONObject
   mailchimp_interestGroupMappings: [JSONObject!]
+
+  """Whether a Mailchimp API key is stored. It is never returned itself."""
+  mailchimp_isApiKeySet: Boolean!
   mailchimp_listId: String
   mailchimp_mergeFieldMappings: [JSONObject!]
   modifiedAt: DateTime!
@@ -5548,6 +6244,9 @@ type SettingTrackingPixelProvider implements SettingProvider {
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
+
+  """Whether a ProLitteris password is stored. It is never returned itself."""
+  prolitteris_isPasswordSet: Boolean!
   prolitteris_memberNr: String
   prolitteris_onlyPaidContentAccess: Boolean
   prolitteris_publisherInternalKeyDomain: String
@@ -5572,6 +6271,14 @@ type SoundCloudTrackBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   trackID: String
   type: BlockType!
 }
@@ -5580,6 +6287,11 @@ input SoundCloudTrackBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   trackID: String
 }
 
@@ -5603,6 +6315,14 @@ type StreamableVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   videoID: String
 }
@@ -5611,6 +6331,11 @@ input StreamableVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   videoID: String
 }
 
@@ -5651,8 +6376,16 @@ type SubscribeBlock implements BaseBlock {
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
   memberPlans: [MemberPlan!]!
   periodicityDisplay: SubscribePeriodicityDisplay
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   showDiscountCodes: Boolean!
   showGoodies: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -5678,6 +6411,11 @@ input SubscribeBlockInput {
   periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean! = false
   showGoodies: Boolean! = false
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 interface SubscribeBlockLayoutConfig {
@@ -5898,7 +6636,15 @@ type TeaserGridBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   numColumns: Int!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   teasers: [Teaser]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -5909,6 +6655,11 @@ input TeaserGridBlockInput {
   disabled: Boolean
   numColumns: Int!
   teasers: [TeaserInput]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -5917,6 +6668,14 @@ type TeaserGridFlexBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   flexTeasers: [FlexTeaser!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -5926,6 +6685,11 @@ input TeaserGridFlexBlockInput {
   blockStyleName: String
   disabled: Boolean
   flexTeasers: [FlexTeaserInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -5941,11 +6705,19 @@ type TeaserListBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   filter: TeaserListBlockFilter!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   skip: Int
   sort: TeaserListBlockSort
   take: Int
   teaserType: TeaserType!
   teasers: [Teaser]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -5968,6 +6740,11 @@ input TeaserListBlockInput {
   sort: TeaserListBlockSort
   take: Int
   teaserType: TeaserType!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -5998,8 +6775,16 @@ type TeaserSlotsAutofillConfig implements BaseBlock {
   disabled: Boolean
   enabled: Boolean!
   filter: TeaserListBlockFilter
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   sort: TeaserListBlockSort
   teaserType: TeaserType
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -6016,8 +6801,16 @@ type TeaserSlotsBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   slots: [TeaserSlot!]!
   teasers: [Teaser]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -6028,6 +6821,11 @@ input TeaserSlotsBlockInput {
   blockStyleName: String
   disabled: Boolean
   slots: [TeaserSlotInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -6042,6 +6840,14 @@ type TikTokVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   userID: String
   videoID: String
@@ -6051,6 +6857,11 @@ input TikTokVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   userID: String
   videoID: String
 }
@@ -6061,6 +6872,14 @@ type TitleBlock implements BaseBlock {
   disabled: Boolean
   lead: String
   preTitle: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -6071,6 +6890,11 @@ input TitleBlockInput {
   disabled: Boolean
   lead: String
   preTitle: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -6119,6 +6943,14 @@ type TwitterTweetBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   tweetID: String
   type: BlockType!
   userID: String
@@ -6128,6 +6960,11 @@ input TwitterTweetBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   tweetID: String
   userID: String
 }
@@ -6136,6 +6973,14 @@ type UnknownBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -6307,10 +7152,56 @@ type VersionInformation {
   version: String!
 }
 
+type Video {
+  createdAt: DateTime!
+  description: String
+
+  """Length in seconds, as the browser reported it on upload."""
+  duration: Float
+  extension: String!
+  fileSize: Int!
+  filename: String
+  hasPoster: Boolean!
+  height: Int
+  id: String!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  posterUrl: String
+  source: String
+  title: String
+  url: String!
+  width: Int
+}
+
+input VideoFilter {
+  title: String
+}
+
+enum VideoSort {
+  CreatedAt
+  ModifiedAt
+}
+
+type VideoStorageUsage {
+  limitBytes: Float!
+  usedBytes: Float!
+  videoCount: Int!
+}
+
 type VimeoVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   videoID: String
 }
@@ -6319,6 +7210,11 @@ input VimeoVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   videoID: String
 }
 
@@ -6375,10 +7271,29 @@ type WebsiteSettings {
   theme: JSONObject!
 }
 
+"""A day of the week, used to time blocks."""
+enum Weekday {
+  Friday
+  Monday
+  Saturday
+  Sunday
+  Thursday
+  Tuesday
+  Wednesday
+}
+
 type YouTubeVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   videoID: String
 }
@@ -6387,5 +7302,10 @@ input YouTubeVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   videoID: String
 }

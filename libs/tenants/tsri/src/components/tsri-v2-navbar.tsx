@@ -82,8 +82,9 @@ const AnimatedLoadingDots = styled('span')`
 
 const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
-    ${isHomePage ?
-      `
+    ${
+      isHomePage ?
+        `
         --navbar-height: -10px;
         --navbar-aspect-ratio: 3.7 / 1;
         --scrolled-navbar-aspect-ratio: 3.7 / 1;
@@ -95,7 +96,7 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
         --scrolled-navbar-aspect-ratio: 9 / 1;
       }
     `
-    : `
+      : `
     --navbar-aspect-ratio: 3.1 / 1;
     --scrolled-navbar-aspect-ratio: 3.1 / 1;
 
@@ -103,10 +104,13 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
         --navbar-aspect-ratio: 8 / 1;
         --scrolled-navbar-aspect-ratio: 9.5 / 1;
       }
-    `}
-    --changing-aspect-ratio: ${state.includes(NavbarState.Low) ?
-      'var(--navbar-aspect-ratio)'
-    : 'var(--scrolled-navbar-aspect-ratio)'};
+    `
+    }
+    --changing-aspect-ratio: ${
+      state.includes(NavbarState.Low) ?
+        'var(--navbar-aspect-ratio)'
+      : 'var(--scrolled-navbar-aspect-ratio)'
+    };
   }
 `;
 

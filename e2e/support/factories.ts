@@ -139,13 +139,14 @@ export class TestData {
     }
   }
 
-  async createUser(alias?: string) {
+  /** `emailDomain`: a mailbox outside servers can deliver to, e.g. the Resend domain. */
+  async createUser(alias?: string, { emailDomain = 'example.test' } = {}) {
     const api = await this.api();
     const runId = this.runId();
     const firstName = this.faker.person.firstName();
     const name = this.faker.person.lastName();
     const password = `${this.faker.internet.password({ length: 16 })}-Aa1`;
-    const email = `e2e+${runId}@example.test`;
+    const email = `e2e+${runId}@${emailDomain}`;
 
     const { createUser } = await api.gql<{ createUser: { id: string } }>(
       `mutation CreateUser($email: String!, $firstName: String, $name: String!, $password: String) {
@@ -375,13 +376,11 @@ export class TestData {
   }) {
     const api = await this.api();
     const plan = await this.memberPlan(memberPlanSlug);
-    const paymentMethod = plan.paymentMethods.find(
-      ({ slug }) => slug === paymentMethodSlug
-    );
-
-    if (!paymentMethod) {
-      throw new Error(`Plan "${memberPlanSlug}" does not offer "${paymentMethodSlug}".`);
-    }
+    // Admins may put a subscription on a method the plan does not offer in
+    // the checkout (Neue Wege: bexio, for readers who pay by invoice).
+    const paymentMethod =
+      plan.paymentMethods.find(({ slug }) => slug === paymentMethodSlug) ??
+      (await this.paymentMethod(paymentMethodSlug));
 
     const { createSubscription } = await api.gql<{
       createSubscription: { id: string };
@@ -450,6 +449,82 @@ export class TestData {
       id: createDiscountCode.id,
       code,
     } satisfies DiscountCode);
+  }
+
+  async paymentMethod(slug: string) {
+    const api = await this.api();
+    const { paymentMethods } = await api.gql<{
+      paymentMethods: { id: string; slug: string; name: string; active: boolean }[];
+    }>(`query { paymentMethods { id slug name active } }`);
+    const paymentMethod = paymentMethods.find(m => m.slug === slug && m.active);
+
+    if (!paymentMethod) {
+      throw new Error(`No active payment method "${slug}".`);
+    }
+
+    return paymentMethod;
+  }
+
+  /**
+   * The subscription's open invoice. Creating a subscription already bills
+   * its first period; only without one is it renewed, as the nightly job
+   * would (the API refuses to renew while an invoice is open).
+   */
+  async openInvoice(subscriptionId: string) {
+    const api = await this.api();
+    const findOpen = async () => {
+      const { invoices } = await api.gql<{
+        invoices: { nodes: { id: string; paidAt: string | null; canceledAt: string | null }[] };
+      }>(
+        `query Invoices($subscriptionID: String) {
+          invoices(filter: { subscriptionID: $subscriptionID }, take: 10) { nodes { id paidAt canceledAt } }
+        }`,
+        { subscriptionID: subscriptionId }
+      );
+
+      return invoices.nodes.find(i => !i.paidAt && !i.canceledAt);
+    };
+
+    const existing = await findOpen();
+
+    if (existing) {
+      return existing;
+    }
+
+    await api.gql(`mutation Renew($id: String!) { renewSubscription(id: $id) { id } }`, {
+      id: subscriptionId,
+    });
+
+    const renewed = await findOpen();
+
+    if (!renewed) {
+      throw new Error(`Renewing subscription ${subscriptionId} left no open invoice.`);
+    }
+
+    return renewed;
+  }
+
+  /**
+   * What the website does when the reader pays an open invoice: as the
+   * reader, start a payment with the given method. For bexio the provider
+   * creates the invoice in bexio and has bexio email it.
+   */
+  async payInvoiceAs(reader: Reader, invoiceId: string, paymentMethodSlug: string) {
+    const api = await (await this.api()).as(reader.email, reader.password);
+    const { createPaymentFromInvoice } = await api.gql<{
+      createPaymentFromInvoice: { id: string; state: string } | null;
+    }>(
+      `mutation Pay($input: PaymentFromInvoiceInput!) {
+        createPaymentFromInvoice(input: $input) { id state }
+      }`,
+      { input: { invoiceID: invoiceId, paymentMethodSlug } }
+    );
+
+    if (!createPaymentFromInvoice) {
+      throw new Error(`No payment for invoice ${invoiceId} with "${paymentMethodSlug}".`);
+    }
+
+    return createPaymentFromInvoice;
   }
 
   /**

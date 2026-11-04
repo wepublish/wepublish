@@ -54,9 +54,11 @@ const cssVariables = (state: NavbarState[]) => (theme: Theme) => css`
   :root {
     --navbar-height: 80px;
     --scrolled-navbar-height: 55px;
-    --changing-navbar-height: ${state.includes(NavbarState.Regular) ?
-      'var(--navbar-height)'
-    : 'var(--scrolled-navbar-height)'};
+    --changing-navbar-height: ${
+      state.includes(NavbarState.Regular) ?
+        'var(--navbar-height)'
+      : 'var(--scrolled-navbar-height)'
+    };
 
     ${theme.breakpoints.up('sm')} {
       --navbar-height: 109px;

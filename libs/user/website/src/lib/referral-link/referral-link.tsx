@@ -20,12 +20,15 @@ export type ReferralLinkProps = {
   className?: string;
   referralLink: string;
   onCopy: (referralLink: string) => Promise<void>;
+  /** For a surrounding section that already names it. */
+  hideTitle?: boolean;
 };
 
 export function ReferralLink({
   className,
   referralLink,
   onCopy,
+  hideTitle,
 }: ReferralLinkProps) {
   const {
     elements: { TextField, Button, H5, Paragraph, Alert },
@@ -47,7 +50,7 @@ export function ReferralLink({
 
   return (
     <Wrapper className={className}>
-      <H5 component="h2">{t('user.referral.title')}</H5>
+      {!hideTitle && <H5 component="h2">{t('user.referral.title')}</H5>}
       <Paragraph gutterBottom={false}>
         {t('user.referral.description')}
       </Paragraph>

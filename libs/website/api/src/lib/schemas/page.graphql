@@ -11,6 +11,8 @@ fragment FullPageRevision on PageRevision {
     ...FullImage
   }
 
+  blocksChangeAt
+
   blocks {
     ...FullBlock
   }

@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import {
   CanCreateArticle,
+  CanCreateArticleTemplate,
   CanCreateAuthor,
   CanCreateBanner,
   CanCreateBlockStyle,
@@ -22,6 +23,7 @@ import {
   CanCreateMemberPlan,
   CanCreateNavigation,
   CanCreatePage,
+  CanCreatePageTemplate,
   CanCreatePaymentMethod,
   CanCreatePaywall,
   CanCreatePeer,
@@ -32,6 +34,7 @@ import {
   CanCreateUser,
   CanCreateUserRole,
   CanDeleteArticle,
+  CanDeleteArticleTemplate,
   CanDeleteAuthor,
   CanDeleteBanner,
   CanDeleteBlockStyle,
@@ -39,12 +42,21 @@ import {
   CanDeleteCommentRatingSystem,
   CanDeleteConsent,
   CanDeleteDocument,
+  CanCreateAudio,
+  CanCreateVideo,
+  CanDeleteAudio,
+  CanDeleteVideo,
+  CanGetAudio,
+  CanGetAudios,
+  CanGetVideo,
+  CanGetVideos,
   CanDeleteEvent,
   CanDeleteExternalApp,
   CanDeleteImage,
   CanDeleteMemberPlan,
   CanDeleteNavigation,
   CanDeletePage,
+  CanDeletePageTemplate,
   CanDeletePaymentMethod,
   CanDeletePeer,
   CanDeletePoll,
@@ -112,6 +124,7 @@ import {
   CanSendMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
+  CanUpdateArticleTemplate,
   CanUpdateBlockTemplate,
   CanUpdateCommentRatingSystem,
   CanUpdateComments,
@@ -123,6 +136,7 @@ import {
   CanUpdateGoodie,
   CanUpdateMailTemplates,
   CanUpdatePaywall,
+  CanUpdatePageTemplate,
   CanUpdateSettings,
   CanUpdateSystemMails,
   CanUpdateTag,
@@ -158,6 +172,8 @@ import {
   MdDarkMode,
   MdDashboard,
   MdDescription,
+  MdAudiotrack,
+  MdVideoLibrary,
   MdEvent,
   MdExtension,
   MdFactCheck,
@@ -174,6 +190,7 @@ import {
   MdNewspaper,
   MdMoney,
   MdMultilineChart,
+  MdNoteAdd,
   MdNotificationsNone,
   MdOutgoingMail,
   MdOutlineGridView,
@@ -568,6 +585,21 @@ export function Base({ children }: BaseProps) {
 
                   <PermissionControl
                     qualifyingPermissions={[
+                      CanCreateArticleTemplate.id,
+                      CanUpdateArticleTemplate.id,
+                      CanDeleteArticleTemplate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/articles/templates"
+                      icon={<MdNoteAdd />}
+                    >
+                      {t('navbar.articleTemplates')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
                       CanGetPeerArticles.id,
                       CanGetPeerArticle.id,
                     ]}
@@ -652,6 +684,21 @@ export function Base({ children }: BaseProps) {
                       icon={<MdDashboard />}
                     >
                       {t('navbar.pages')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreatePageTemplate.id,
+                      CanUpdatePageTemplate.id,
+                      CanDeletePageTemplate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/pages/templates"
+                      icon={<MdNoteAdd />}
+                    >
+                      {t('navbar.pageTemplates')}
                     </SidebarNavItem>
                   </PermissionControl>
 
@@ -926,6 +973,40 @@ export function Base({ children }: BaseProps) {
                       {t('navbar.documentLibrary')}
                     </SidebarNavItem>
                   </PermissionControl>
+
+                  <FeatureControl feature="video-audio-uploads">
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetVideos.id,
+                        CanGetVideo.id,
+                        CanCreateVideo.id,
+                        CanDeleteVideo.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/videos"
+                        icon={<MdVideoLibrary />}
+                      >
+                        {t('navbar.videoLibrary')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetAudios.id,
+                        CanGetAudio.id,
+                        CanCreateAudio.id,
+                        CanDeleteAudio.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/audio"
+                        icon={<MdAudiotrack />}
+                      >
+                        {t('navbar.audioLibrary')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
                 </SidebarNavMenu>
               </PermissionControl>
 

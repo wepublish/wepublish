@@ -15,7 +15,6 @@ import {
   User,
 } from '@prisma/client';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
-import { unselectPassword } from '@wepublish/authentication/api';
 import { InvoiceWithItems, PaymentProvider } from '@wepublish/payment/api';
 import {
   calculatePeriodAmount,
@@ -292,7 +291,7 @@ export class MemberContext implements MemberContextInterface {
         where: {
           id: subscription.userID,
         },
-        select: unselectPassword,
+        include: { address: true, paymentProviderCustomers: true },
       });
 
       if (!user) {
@@ -1046,7 +1045,7 @@ export class MemberContext implements MemberContextInterface {
         where: {
           id: subscription.userID,
         },
-        select: unselectPassword,
+        include: { address: true, paymentProviderCustomers: true },
       });
 
       if (!user) {
@@ -1130,7 +1129,7 @@ export class MemberContext implements MemberContextInterface {
       where: {
         id: subscription.userID,
       },
-      select: unselectPassword,
+      include: { address: true, paymentProviderCustomers: true },
     });
 
     if (!user) {

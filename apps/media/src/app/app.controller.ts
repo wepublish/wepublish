@@ -10,16 +10,21 @@ import {
   Res,
   Req,
   UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
   NotFoundException,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-node';
 import {
   MediaService,
   SupportedImagesValidator,
   SupportedDocumentsValidator,
+  SupportedAudiosValidator,
+  SupportedVideosValidator,
   getExtensionForMimeType,
+  getExtensionForAudioMimeType,
+  getExtensionForVideoMimeType,
   JwtAuthGuard,
   LinkCache,
   MISSING_LINK_TTL,
@@ -30,7 +35,7 @@ import {
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
 import { ConfigService } from '@nestjs/config';
-import { Response } from 'express';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import 'multer';
 import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
 
@@ -39,6 +44,22 @@ const HTTP_CODE_NOT_FOUND = 307;
 
 /** Sanitize user-provided IDs to prevent path traversal */
 const sanitizeId = (id: string): string => id.replace(/[^a-zA-Z0-9_-]/g, '');
+
+const VIDEO_MAX_BYTES =
+  (() => {
+    const mb = parseInt(process.env['VIDEO_MAX_UPLOAD_MB'] ?? '', 10);
+    return isNaN(mb) || mb <= 0 ? 500 : mb;
+  })() *
+  1000 *
+  1000;
+
+const AUDIO_MAX_BYTES =
+  (() => {
+    const mb = parseInt(process.env['AUDIO_MAX_UPLOAD_MB'] ?? '', 10);
+    return isNaN(mb) || mb <= 0 ? 200 : mb;
+  })() *
+  1000 *
+  1000;
 
 @Controller({
   version: '1',
@@ -65,7 +86,7 @@ export class AppController {
     await this.publicHostCheck;
   }
 
-  private setProductionCacheHeaders(res: Response) {
+  private setProductionCacheHeaders(res: NodeResponse) {
     if (process.env['NODE_ENV'] === 'production') {
       // max-age = 12hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
       res.setHeader(
@@ -76,12 +97,12 @@ export class AppController {
   }
 
   @Get('/health')
-  async healthCheck(@Res() res: Response) {
+  async healthCheck(@Res() res: NodeResponse) {
     res.status(200).send({ status: 'ok' });
   }
 
   @Get('/favicon.ico')
-  async favicon(@Res() res: Response) {
+  async favicon(@Res() res: NodeResponse) {
     throw new NotFoundException();
   }
 
@@ -89,7 +110,7 @@ export class AppController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
-    @Res() res: Response,
+    @Res() res: NodeResponse,
     @Query('imageId') imageId: string,
     @UploadedFile(
       new ParseFilePipe({
@@ -115,8 +136,8 @@ export class AppController {
 
   @Get(':imageId')
   async transformImage(
-    @Res() res: Response,
-    @Req() req: Request,
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
     @Param('imageId') imageId: string,
     @Query() transformations: TransformationsDto
   ) {
@@ -193,9 +214,125 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':imageId')
-  async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
+  async deleteImage(
+    @Res() res: NodeResponse,
+    @Param('imageId') imageId: string
+  ) {
     await this.media.deleteImage(imageId);
     await this.linkCache.forget(imageId);
+
+    return res.sendStatus(204);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('video')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'file', maxCount: 1 },
+        { name: 'poster', maxCount: 1 },
+      ],
+      { limits: { fileSize: VIDEO_MAX_BYTES } }
+    )
+  )
+  async uploadVideo(
+    @Res() res: NodeResponse,
+    @Query('videoId') videoId: string,
+    @UploadedFiles()
+    files: {
+      file?: Express.Multer.File[];
+      poster?: Express.Multer.File[];
+    }
+  ) {
+    const uploadedFile = files.file?.[0];
+
+    if (!uploadedFile) {
+      throw new BadRequestException('A video file is required.');
+    }
+
+    if (!(await new SupportedVideosValidator().isValid(uploadedFile))) {
+      throw new BadRequestException(
+        new SupportedVideosValidator().buildErrorMessage(uploadedFile)
+      );
+    }
+
+    const safeVideoId = sanitizeId(videoId);
+    const { size } = await this.media.saveVideo(
+      safeVideoId,
+      uploadedFile.buffer,
+      uploadedFile.mimetype,
+      uploadedFile.originalname
+    );
+
+    const poster = files.poster?.[0];
+
+    if (poster) {
+      await this.media.saveVideoPoster(safeVideoId, poster.buffer);
+    }
+
+    res.status(201).send({
+      id: safeVideoId,
+      filename: uploadedFile.originalname,
+      fileSize: size,
+      mimeType: uploadedFile.mimetype,
+      extension: getExtensionForVideoMimeType(uploadedFile.mimetype),
+      hasPoster: Boolean(poster),
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('video/:videoId')
+  async deleteVideo(
+    @Res() res: NodeResponse,
+    @Param('videoId') videoId: string
+  ) {
+    await this.media.deleteVideo(sanitizeId(videoId));
+    await this.linkCache.forget(`video:${sanitizeId(videoId)}`);
+
+    return res.sendStatus(204);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('audio')
+  @UseInterceptors(
+    FileInterceptor('file', { limits: { fileSize: AUDIO_MAX_BYTES } })
+  )
+  async uploadAudio(
+    @Res() res: NodeResponse,
+    @Query('audioId') audioId: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: true,
+        validators: [new SupportedAudiosValidator()],
+      })
+    )
+    uploadedFile: Express.Multer.File
+  ) {
+    const safeAudioId = sanitizeId(audioId);
+    const { size } = await this.media.saveAudio(
+      safeAudioId,
+      uploadedFile.buffer,
+      uploadedFile.mimetype,
+      uploadedFile.originalname
+    );
+
+    res.status(201).send({
+      id: safeAudioId,
+      filename: uploadedFile.originalname,
+      fileSize: size,
+      mimeType: uploadedFile.mimetype,
+      extension: getExtensionForAudioMimeType(uploadedFile.mimetype),
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('audio/:audioId')
+  async deleteAudio(
+    @Res() res: NodeResponse,
+    @Param('audioId') audioId: string
+  ) {
+    await this.media.deleteAudio(sanitizeId(audioId));
+    await this.linkCache.forget(`audio:${sanitizeId(audioId)}`);
 
     return res.sendStatus(204);
   }
@@ -204,7 +341,7 @@ export class AppController {
   @Post('document')
   @UseInterceptors(FileInterceptor('file'))
   async uploadDocument(
-    @Res() res: Response,
+    @Res() res: NodeResponse,
     @Query('documentId') documentId: string,
     @UploadedFile(
       new ParseFilePipe({
@@ -233,8 +370,8 @@ export class AppController {
 
   @Get('document/:documentId/thumbnail')
   async getDocumentThumbnail(
-    @Res() res: Response,
-    @Req() req: Request,
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
     @Param('documentId') documentId: string
   ) {
     const safeId = sanitizeId(documentId);
@@ -293,8 +430,8 @@ export class AppController {
 
   @Get('document/:documentId/:filename')
   async getDocumentWithFilename(
-    @Res() res: Response,
-    @Req() req: Request,
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
     @Param('documentId') documentId: string
   ) {
     return this.getDocument(res, req, documentId);
@@ -302,8 +439,8 @@ export class AppController {
 
   @Get('document/:documentId')
   async getDocument(
-    @Res() res: Response,
-    @Req() req: Request,
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
     @Param('documentId') documentId: string
   ) {
     const safeId = sanitizeId(documentId);
@@ -360,10 +497,167 @@ export class AppController {
     res.redirect(HTTP_CODE_FOUND, url);
   }
 
+  @Get('video/:videoId/poster')
+  async getVideoPoster(
+    @Res() res: NodeResponse,
+    @Param('videoId') videoId: string
+  ) {
+    const { uri, exists } = await this.media.getVideoPosterUri(
+      sanitizeId(videoId)
+    );
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.sendStatus(HTTP_CODE_NOT_FOUND);
+      return;
+    }
+
+    this.setProductionCacheHeaders(res);
+    res.redirect(HTTP_CODE_FOUND, `${process.env['S3_PUBLIC_HOST']}/${uri}`);
+  }
+
+  @Get('video/:videoId/:filename')
+  async getVideoWithFilename(
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
+    @Param('videoId') videoId: string
+  ) {
+    return this.getVideo(res, req, videoId);
+  }
+
+  @Get('video/:videoId')
+  async getVideo(
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
+    @Param('videoId') videoId: string
+  ) {
+    const safeId = sanitizeId(videoId);
+    const cacheKey = `video:${safeId}`;
+    const variant = 'file';
+
+    const uriFromCache = await this.linkCache.get(cacheKey, variant);
+
+    if (uriFromCache) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+        return;
+      }
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        this.setProductionCacheHeaders(res);
+      }
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
+      return;
+    }
+
+    const { uri, exists } = await this.media.getVideoUri(safeId);
+
+    if (!exists && this.fallbackUrl) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+      return;
+    }
+
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      await this.linkCache.set(
+        cacheKey,
+        variant,
+        { uri, exists: false },
+        MISSING_LINK_TTL
+      );
+      return;
+    }
+
+    await this.checkPublicHost(url);
+    await this.linkCache.set(cacheKey, variant, { uri, exists: true });
+    this.setProductionCacheHeaders(res);
+    res.redirect(HTTP_CODE_FOUND, url);
+  }
+
+  @Get('audio/:audioId/:filename')
+  async getAudioWithFilename(
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
+    @Param('audioId') audioId: string
+  ) {
+    return this.getAudio(res, req, audioId);
+  }
+
+  @Get('audio/:audioId')
+  async getAudio(
+    @Res() res: NodeResponse,
+    @Req() req: NodeRequest,
+    @Param('audioId') audioId: string
+  ) {
+    const safeId = sanitizeId(audioId);
+    const cacheKey = `audio:${safeId}`;
+    const variant = 'file';
+
+    const uriFromCache = await this.linkCache.get(cacheKey, variant);
+
+    if (uriFromCache) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+        return;
+      }
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        this.setProductionCacheHeaders(res);
+      }
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
+      return;
+    }
+
+    const { uri, exists } = await this.media.getAudioUri(safeId);
+
+    if (!exists && this.fallbackUrl) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+      return;
+    }
+
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      await this.linkCache.set(
+        cacheKey,
+        variant,
+        { uri, exists: false },
+        MISSING_LINK_TTL
+      );
+      return;
+    }
+
+    await this.checkPublicHost(url);
+    await this.linkCache.set(cacheKey, variant, { uri, exists: true });
+    this.setProductionCacheHeaders(res);
+    res.redirect(HTTP_CODE_FOUND, url);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Delete('document/:documentId')
   async deleteDocument(
-    @Res() res: Response,
+    @Res() res: NodeResponse,
     @Param('documentId') documentId: string
   ) {
     await this.media.deleteDocument(sanitizeId(documentId));

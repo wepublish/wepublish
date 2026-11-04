@@ -101,6 +101,7 @@
       "saveValidationFailed": "Saving failed",
       "publishValidationFailed": "Publishing failed",
       "overview": {
+        "loadingTemplate": "Loading template…",
         "articlePending": "Article Pending",
         "articlePublished": "Article Published",
         "back": "Back",
@@ -126,6 +127,7 @@
         "warningLabel": "Warning"
       },
       "panels": {
+        "createTemplate": "Create template from article",
         "firstPublishedAtDate": "First published on {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Article not yet published",
         "addSlug": "Please add a slug",
@@ -246,6 +248,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "New Article",
+        "blank": "Blank article",
+        "search": "Search templates",
+        "noResults": "No templates found"
+      },
       "overview": {
         "slug": "Slug",
         "articles": "Articles",
@@ -941,6 +949,8 @@
       "newUser": "New <0>user</0> added",
       "dashboard": "Dashboard",
       "notifications": "Notifications",
+      "moreNotifications_one": "+{{count}} more notification",
+      "moreNotifications_other": "+{{count}} more notifications",
       "showAllNotifications": "Show all",
       "greeting": "Hello, {{name}}!",
       "noData": "No current subscriber data",
@@ -1129,7 +1139,126 @@
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
         "uploadDocument": "Upload Document",
-        "uploadFailed": "Upload failed. Please try again."
+        "uploadFailed": "Upload failed. Please try again.",
+        "openOriginal": "Open original",
+        "replaceFile": "Choose a different file"
+      }
+    },
+    "videos": {
+      "overview": {
+        "description": "Description",
+        "videoLibrary": "Video Library",
+        "copyLink": "Copy Link",
+        "edit": "Edit",
+        "fileSize": "File Size",
+        "filename": "Filename",
+        "noDescription": "No Description",
+        "openLink": "Open",
+        "preview": "Preview",
+        "storageFull": "Storage limit reached",
+        "storageUsage": "{{used}} / {{limit}} used ({{count}} files)",
+        "storageWarning": "Storage almost full",
+        "title": "Title",
+        "unlimited": "Unlimited",
+        "untitled": "Untitled",
+        "uploadVideo": "Upload Video",
+        "storageUsageInfo": "Total size of all uploaded videos. Once the limit is reached, you can only upload new videos after deleting old ones."
+      },
+      "panels": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "created": "Created",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteVideo": "Delete video?",
+        "description": "Description",
+        "videoUpdated": "Video Updated",
+        "dropVideo": "Drop file here or click to select",
+        "editVideo": "Edit Video",
+        "fileSize": "File size",
+        "fileTooLarge": "File is too large. Maximum size is {{maxSize}} MB.",
+        "filename": "Filename",
+        "information": "Information",
+        "maxFileSize": "Maximum file size: {{maxSize}} MB",
+        "invalidVideo": "Unsupported file type. Supported: MP4, WebM, OGG, MOV, M4V, MPEG",
+        "linkCopied": "Link copied to clipboard",
+        "notFound": "Video not found!",
+        "publicLink": "Public Link",
+        "title": "Title",
+        "untitled": "Untitled",
+        "updated": "Updated",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Upload",
+        "uploadVideo": "Upload Video",
+        "uploadFailed": "Upload failed. Please try again.",
+        "attribution": "Attribution",
+        "source": "Source",
+        "link": "Link",
+        "license": "License",
+        "urlPlaceholder": "https://",
+        "sourceLink": "Link to the original source of the file.",
+        "openOriginal": "Open original",
+        "bitrate": "Bitrate",
+        "dimensions": "Dimensions",
+        "dimensionsValue": "{{width}} × {{height}}",
+        "replaceFile": "Choose a different file"
+      }
+    },
+    "audio": {
+      "overview": {
+        "description": "Description",
+        "audioLibrary": "Audio Library",
+        "copyLink": "Copy Link",
+        "edit": "Edit",
+        "fileSize": "File Size",
+        "filename": "Filename",
+        "noDescription": "No Description",
+        "openLink": "Open",
+        "storageFull": "Storage limit reached",
+        "storageUsage": "{{used}} / {{limit}} used ({{count}} files)",
+        "storageWarning": "Storage almost full",
+        "title": "Title",
+        "unlimited": "Unlimited",
+        "untitled": "Untitled",
+        "uploadAudio": "Upload Audio",
+        "storageUsageInfo": "Total size of all uploaded audio files. Once the limit is reached, you can only upload new audio after deleting old files."
+      },
+      "panels": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "created": "Created",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteAudio": "Delete audio file?",
+        "description": "Description",
+        "audioUpdated": "Audio Updated",
+        "dropAudio": "Drop file here or click to select",
+        "editAudio": "Edit Audio",
+        "fileSize": "File size",
+        "fileTooLarge": "File is too large. Maximum size is {{maxSize}} MB.",
+        "filename": "Filename",
+        "information": "Information",
+        "maxFileSize": "Maximum file size: {{maxSize}} MB",
+        "invalidAudio": "Unsupported file type. Supported: MP3, OGG, WAV, WebM, AAC, M4A, FLAC",
+        "linkCopied": "Link copied to clipboard",
+        "notFound": "Audio file not found!",
+        "publicLink": "Public Link",
+        "title": "Title",
+        "untitled": "Untitled",
+        "updated": "Updated",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Upload",
+        "uploadAudio": "Upload Audio",
+        "uploadFailed": "Upload failed. Please try again.",
+        "attribution": "Attribution",
+        "source": "Source",
+        "link": "Link",
+        "license": "License",
+        "urlPlaceholder": "https://",
+        "sourceLink": "Link to the original source of the file.",
+        "openOriginal": "Open original",
+        "bitrate": "Bitrate",
+        "replaceFile": "Choose a different file"
       }
     },
     "images": {
@@ -1630,6 +1759,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Block Templates"
       },
+      "articleTemplates": "Article Templates",
       "commentRating": "Rating System",
       "comments": "Comments",
       "commentTags": "Tags",
@@ -1641,6 +1771,7 @@
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
+      "videoLibrary": "Videos",
       "imageLibrary": "Images",
       "importableEvents": "Importable Events",
       "media": "Files",
@@ -1656,6 +1787,7 @@
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
+      "pageTemplates": "Page Templates",
       "paymentMethods": "Payment Methods",
       "peerArticles": "Peerable Articles",
       "networkContent": "We.Publish Network",
@@ -1679,7 +1811,8 @@
       "mailLog": "Sent emails",
       "communication": "Communication",
       "auditLog": "Audit log",
-      "language": "Language"
+      "language": "Language",
+      "audioLibrary": "Audio"
     },
     "pageTitles": {
       "login": "Log in",
@@ -1711,6 +1844,12 @@
       "blockTemplates": "Block templates",
       "blockTemplateCreate": "New block template",
       "blockTemplateEdit": "Edit block template",
+      "articleTemplates": "Article templates",
+      "articleTemplateCreate": "New article template",
+      "articleTemplateEdit": "Edit article template",
+      "pageTemplates": "Page templates",
+      "pageTemplateCreate": "New page template",
+      "pageTemplateEdit": "Edit page template",
       "crowdfundings": "Crowdfundings",
       "crowdfundingCreate": "New crowdfunding",
       "crowdfundingEdit": "Edit crowdfunding",
@@ -1736,6 +1875,12 @@
       "documents": "Documents",
       "documentUpload": "Upload documents",
       "documentEdit": "Edit document",
+      "videos": "Videos",
+      "videoUpload": "Upload videos",
+      "videoEdit": "Edit video",
+      "audio": "Audio",
+      "audioUpload": "Upload audio",
+      "audioEdit": "Edit audio",
       "navigations": "Navigations",
       "navigationCreate": "New navigation",
       "navigationEdit": "Edit navigation",
@@ -1866,7 +2011,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Unpublish",
-        "unpublished": "Unpublished"
+        "unpublished": "Unpublished",
+        "loadingTemplate": "Loading template…"
       },
       "panels": {
         "chooseBlock": "Choose Block",
@@ -1914,7 +2060,8 @@
         "hideHeaderInfo": "Hides the website's header on this page, e.g. for landing pages.",
         "hideFooter": "Hide footer",
         "hideFooterInfo": "Hides the website's footer on this page, e.g. for landing pages.",
-        "enterSocialMediaImage": "Please add an image for social media"
+        "enterSocialMediaImage": "Please add an image for social media",
+        "createTemplate": "Create template from page"
       }
     },
     "pages": {
@@ -1947,6 +2094,12 @@
         "untitled": "Untitled",
         "updatedAt": "Updated At",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "New Page",
+        "blank": "Blank page",
+        "search": "Search templates",
+        "noResults": "No templates found"
       }
     },
     "paymentMethodList": {
@@ -2734,6 +2887,62 @@
       "blockTypesPlaceholder": "Available for block types",
       "noStyle": "No style"
     },
+    "articleTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Article Templates",
+        "newTemplate": "New Article Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Article templates define the content and metadata a new article starts with. Changing a template does not affect articles that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingArticle": "Loading article…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
+      },
+      "delete": {
+        "title": "Delete article template?",
+        "body": "Do you really want to delete the article template \"{{name}}\"? Articles created from it are not affected."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Page Templates",
+        "newTemplate": "New Page Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Page templates define the content and metadata a new page starts with. Changing a template does not affect pages that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingPage": "Loading page…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing",
+        "empty": "This template has no blocks yet. Add the first one with +."
+      },
+      "delete": {
+        "title": "Delete page template?",
+        "body": "Do you really want to delete the page template \"{{name}}\"? Pages created from it are not affected."
+      }
+    },
     "blockTemplates": {
       "list": {
         "title": "Block Templates",
@@ -2754,7 +2963,8 @@
         "editing": "Editing",
         "saveConfirmMessage": "Saving updates this template's content right away in every article and page that uses it, including published ones.",
         "saveConfirmTitle": "Save template?",
-        "created": "Created"
+        "created": "Created",
+        "empty": "This template has no blocks yet. Add the first one with +."
       }
     },
     "yes": "Yes",
@@ -2946,9 +3156,9 @@
           "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date, or that will be paid and potentially still be active in the future.",
           "overdueSubscriptionCount": "Renewed subscriptions for which payment is due and outstanding. Subscriptions created for the first time that have not been paid for are not included.",
           "renewedSubscriptionCount": "Subscriptions that have been renewed and paid for another period.",
-          "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
-          "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
-          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions).",
+          "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far. Subscriptions that replace another one (upgrades) are not included.",
+          "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed. Subscriptions replaced by an upgrade are not included.",
+          "replacedSubscriptionCount": "Subscriptions that have been replaced by another, e.g. through an upgrade. The replaced subscription does not count as deactivated, the new one not as new.",
           "predictedSubscriptionRenewalCount": "Number of subscriptions that are ready to be renewed at the end of their term.\n First-time subscriptions vs. \n Subscriptions with a history of renewal (subsequent renewals)\n Renewals are shown from the start of the selected period (or the current date, if the period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
           "endingSubscriptionCount": "Subscriptions that will expire at the end of their term, excluding those set to auto-renew."
         },
@@ -3004,8 +3214,8 @@
       "showUsers": "Show details",
       "byDate": "By",
       "totalNewSubscriptionsInfo": "Sum of replaced, new, and renewed subscriptions. Only the active columns are summed.",
-      "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
-      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions increase the cancellation rate until they are paid.",
+      "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term, counted on the day of the decision. Renewed, replaced, and deactivated subscriptions are included; an upgrade counts once as a renewal. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
+      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term, counted on the day of the decision. Renewed, replaced, and deactivated subscriptions are included; an upgrade counts once as a renewal. Renewed unpaid subscriptions increase the cancellation rate until they are paid.",
       "predictedSubscriptionRenewalCountPerDay": {
         "highProbabilityInfo": "Paid subscriptions with automatic renewal that have already been renewed at least once and are due for renewal again at the end of their term.",
         "lowProbabilityInfo": "Paid subscriptions with automatic renewal that are due for renewal for the first time at the end of their first term."
@@ -3126,7 +3336,9 @@
         "memberPlans": "Subscription plans",
         "activeInfo": "Only active goodies are offered to readers when they take out a subscription.",
         "stockInfo": "Total number of pieces you can give away. Once all of them are taken, the goodie is no longer offered. Leave empty for an unlimited number.",
-        "memberPlansInfo": "The goodie is only offered with these subscription plans."
+        "memberPlansInfo": "The goodie is only offered with these subscription plans.",
+        "paymentPeriodicities": "Payment periodicities",
+        "paymentPeriodicitiesInfo": "The goodie is only offered with these payment periodicities, e.g. only with a 2-year subscription. Leave empty to offer it with every periodicity of the subscription plan."
       },
       "overview": {
         "title": "Goodies",
@@ -3237,6 +3449,8 @@
         "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft."
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "secretNotSet": "Not set",
+      "secretStored": "Stored (hidden) – leave empty to keep it",
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
@@ -3282,6 +3496,7 @@
         "analytics": "Analytics",
         "invalidFile": "Google Analytics credentials file is invalid",
         "credentialsReadyToBeSaved": "Credentials are ready to be saved!",
+        "credentialsStored": "Credentials stored – drag and drop a new file here to replace them",
         "dropCredentialsFile": "Drop the credential file here!",
         "dragCredentialsFileHere": "Drag and drop the Google Analytics credential file here",
         "articlePrefix": "We.Publish article URL prefix (usually /a/)",
@@ -4359,10 +4574,65 @@
       "addBlock": "Add block",
       "hideBlock": "Hide block on the website",
       "showBlock": "Show block on the website again",
+      "timeBlock": "Schedule when this block shows",
       "deleteBlock": "Delete block",
       "moveBlockUp": "Move block up",
       "moveBlockDown": "Move block down",
       "styleHelp": "Changes how this block looks on the website. Leave it empty to use the default look. Styles are managed under «Block Styling»."
+    },
+    "blockTiming": {
+      "title": "Schedule this block",
+      "offAir": "Hidden on the website right now, because it is outside its schedule.",
+      "dateRange": "Dates",
+      "dateRangeEmpty": "Any date",
+      "dateRangeHelp": "The block shows from the start of the first day to the end of the last.",
+      "weekdays": "Days",
+      "weekdaysHelp": "Pick none to show the block every day.",
+      "timeOfDay": "Time of day",
+      "timeOfDayFrom": "From",
+      "timeOfDayTo": "until",
+      "timeOfDayHelp": "Times are in the site's time zone. An end before the start runs past midnight, e.g. 22:00 until 02:00.",
+      "sameTimes": "Start and end are the same, so the block never shows. Change one of them or pick «All day».",
+      "clearTimeOfDay": "All day",
+      "clear": "Remove schedule",
+      "done": "Done",
+      "summary": {
+        "always": "Always shows. Add dates, days or a time of day to limit when.",
+        "never": "Never shows, because its start and end time are the same.",
+        "shows": "Shows {{conditions}}.",
+        "between": "from {{from}} to {{to}}",
+        "since": "from {{from}}",
+        "until": "until {{to}}",
+        "days": "on {{days}}",
+        "hours": "between {{from}} and {{to}}"
+      }
+    },
+    "weekday": {
+      "Monday": "Monday",
+      "Tuesday": "Tuesday",
+      "Wednesday": "Wednesday",
+      "Thursday": "Thursday",
+      "Friday": "Friday",
+      "Saturday": "Saturday",
+      "Sunday": "Sunday"
+    },
+    "weekdayRecurring": {
+      "Monday": "Mondays",
+      "Tuesday": "Tuesdays",
+      "Wednesday": "Wednesdays",
+      "Thursday": "Thursdays",
+      "Friday": "Fridays",
+      "Saturday": "Saturdays",
+      "Sunday": "Sundays"
+    },
+    "weekdayShort": {
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat",
+      "Sunday": "Sun"
     },
     "placeholderInput": {
       "add": "Add"
@@ -4441,9 +4711,11 @@
       },
       "create": {
         "article": "Create article",
+        "articleTemplate": "Create article template",
         "articleTag": "Create article tag",
         "paywall": "Create paywall",
         "page": "Create page",
+        "pageTemplate": "Create page template",
         "pageTag": "Create page tag",
         "crowdfunding": "Create crowdfunding",
         "blockTemplate": "Create block template",
@@ -4452,6 +4724,8 @@
         "eventTag": "Create event tag",
         "image": "Upload image",
         "document": "Upload document",
+        "video": "Upload video",
+        "audio": "Upload audio",
         "navigation": "Create navigation",
         "banner": "Create banner",
         "author": "Create author",

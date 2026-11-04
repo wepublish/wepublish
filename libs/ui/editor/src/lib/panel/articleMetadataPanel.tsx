@@ -38,6 +38,7 @@ import {
   MdAutoFixHigh,
   MdComment,
   MdListAlt,
+  MdNoteAdd,
   MdSettings,
   MdShare,
   MdTrackChanges,
@@ -147,10 +148,12 @@ export interface ArticleMetadataPanelProps {
   peerId: string | null | undefined;
   value: ArticleMetadata;
   infoData: InfoData;
+  isTemplate?: boolean;
   seoContext?: SeoBlockContext;
 
   onSave?(): void;
   onClose?(): void;
+  onCreateTemplate?(): void;
   onChange?(value: ArticleMetadata): void;
 }
 
@@ -159,9 +162,11 @@ function ArticleMetadataPanel({
   peerId,
   value,
   infoData,
+  isTemplate,
   seoContext,
   onSave,
   onClose,
+  onCreateTemplate,
   onChange,
 }: ArticleMetadataPanelProps) {
   const {
@@ -477,60 +482,64 @@ function ArticleMetadataPanel({
               fullWidth
             />
 
-            <TextField
-              id="articleSlug"
-              name="slug"
-              label={
-                <>
-                  {t('articleEditor.panels.slug')}{' '}
-                  <InfoTooltip text={t('articleEditor.panels.slugInfo')} />
-                </>
-              }
-              value={slug}
-              onChange={event =>
-                onChange?.({ ...value, slug: event.target.value })
-              }
-              onBlur={() =>
-                onChange?.({ ...value, slug: slug ? slugify(slug) : null })
-              }
-              helperText={
-                <>
-                  {t('articleEditor.panels.dontChangeSlug')}{' '}
-                  <a
-                    href="https://wepublish.ch/just-another-page-2/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {t('articleEditor.panels.slugGuide')}
-                  </a>
-                </>
-              }
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButtonTooltip
-                        caption={t('articleEditor.panels.slugifySeoTitle')}
-                      >
-                        <IconButton
-                          aria-label={t('articleEditor.panels.slugifySeoTitle')}
-                          onClick={() => {
-                            onChange?.({
-                              ...value,
-                              title,
-                              slug: slugify(seoTitle),
-                            });
-                          }}
+            {!isTemplate && (
+              <TextField
+                id="articleSlug"
+                name="slug"
+                label={
+                  <>
+                    {t('articleEditor.panels.slug')}{' '}
+                    <InfoTooltip text={t('articleEditor.panels.slugInfo')} />
+                  </>
+                }
+                value={slug}
+                onChange={event =>
+                  onChange?.({ ...value, slug: event.target.value })
+                }
+                onBlur={() =>
+                  onChange?.({ ...value, slug: slug ? slugify(slug) : null })
+                }
+                helperText={
+                  <>
+                    {t('articleEditor.panels.dontChangeSlug')}{' '}
+                    <a
+                      href="https://wepublish.ch/just-another-page-2/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {t('articleEditor.panels.slugGuide')}
+                    </a>
+                  </>
+                }
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButtonTooltip
+                          caption={t('articleEditor.panels.slugifySeoTitle')}
                         >
-                          <MdAutoFixHigh />
-                        </IconButton>
-                      </IconButtonTooltip>
-                    </InputAdornment>
-                  ),
-                },
-              }}
-              fullWidth
-            />
+                          <IconButton
+                            aria-label={t(
+                              'articleEditor.panels.slugifySeoTitle'
+                            )}
+                            onClick={() => {
+                              onChange?.({
+                                ...value,
+                                title,
+                                slug: slugify(seoTitle),
+                              });
+                            }}
+                          >
+                            <MdAutoFixHigh />
+                          </IconButton>
+                        </IconButtonTooltip>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                fullWidth
+              />
+            )}
 
             <TextField
               id="articleCanonicalUrl"
@@ -686,29 +695,53 @@ function ArticleMetadataPanel({
               )}
             </FormGroup>
 
-            <FormSectionTitle>{t('metadataSections.stats')}</FormSectionTitle>
+            {!isTemplate && (
+              <>
+                <FormSectionTitle>
+                  {t('metadataSections.stats')}
+                </FormSectionTitle>
 
-            <Stats>
-              {t('articleEditor.panels.totalCharCount', {
-                totalCharCount: infoData.charCount,
-              })}
-            </Stats>
+                <Stats>
+                  {t('articleEditor.panels.totalCharCount', {
+                    totalCharCount: infoData.charCount,
+                  })}
+                </Stats>
 
-            <TextField
-              label={
-                <>
-                  {t('articleEditor.panels.likeCount', { likeCount: likes })}{' '}
-                  <InfoTooltip text={t('articleEditor.panels.likeCountInfo')} />
-                </>
-              }
-              type="number"
-              name="likes"
-              value={likes}
-              onChange={event =>
-                onChange?.({ ...value, likes: +event.target.value })
-              }
-              fullWidth
-            />
+                <TextField
+                  label={
+                    <>
+                      {t('articleEditor.panels.likeCount', {
+                        likeCount: likes,
+                      })}{' '}
+                      <InfoTooltip
+                        text={t('articleEditor.panels.likeCountInfo')}
+                      />
+                    </>
+                  }
+                  type="number"
+                  name="likes"
+                  value={likes}
+                  onChange={event =>
+                    onChange?.({ ...value, likes: +event.target.value })
+                  }
+                  fullWidth
+                />
+              </>
+            )}
+
+            {onCreateTemplate && !isTemplate && (
+              <PermissionControl
+                qualifyingPermissions={['CAN_CREATE_ARTICLE_TEMPLATE']}
+              >
+                <Button
+                  variant="outlined"
+                  startIcon={<MdNoteAdd />}
+                  onClick={onCreateTemplate}
+                >
+                  {t('articleEditor.panels.createTemplate')}
+                </Button>
+              </PermissionControl>
+            )}
           </FormFields>
         );
 
@@ -871,22 +904,24 @@ function ArticleMetadataPanel({
             label={<>{t('articleEditor.panels.comments')}</>}
           />
         )}
-        <Tab
-          value={MetaDataType.Tracking}
-          icon={
-            <Badge
-              variant="dot"
-              color="error"
-              invisible={
-                !trackingPixels?.find(trackingPixel => !!trackingPixel?.error)
-              }
-            >
-              <MdTrackChanges />
-            </Badge>
-          }
-          iconPosition="start"
-          label={<>{t('articleEditor.panels.tracking')}</>}
-        />
+        {!isTemplate && (
+          <Tab
+            value={MetaDataType.Tracking}
+            icon={
+              <Badge
+                variant="dot"
+                color="error"
+                invisible={
+                  !trackingPixels?.find(trackingPixel => !!trackingPixel?.error)
+                }
+              >
+                <MdTrackChanges />
+              </Badge>
+            }
+            iconPosition="start"
+            label={<>{t('articleEditor.panels.tracking')}</>}
+          />
+        )}
       </Tabs>
       <DrawerBody>{currentContent()}</DrawerBody>
 

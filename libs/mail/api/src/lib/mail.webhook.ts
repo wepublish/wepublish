@@ -10,15 +10,35 @@ import {
   Res,
 } from '@nestjs/common';
 
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction } from 'connect';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { Public } from '@wepublish/authentication/api';
 import {
   MAILS_MODULE_OPTIONS,
   MailsModuleOptions,
 } from './mails-module-options';
-import { PrismaClient } from '@prisma/client';
+import { MailLogState, PrismaClient } from '@prisma/client';
 
 export const MAIL_WEBHOOK_PATH_PREFIX = 'mail-webhooks';
+
+// Partial: letter states (neuewege) never arrive through this webhook
+const MAIL_LOG_STATE_RANK: Partial<Record<MailLogState, number>> = {
+  [MailLogState.submitted]: 0,
+  [MailLogState.accepted]: 1,
+  [MailLogState.deferred]: 2,
+  [MailLogState.delivered]: 3,
+  [MailLogState.bounced]: 4,
+  [MailLogState.rejected]: 4,
+};
+
+/**
+ * Provider events arrive out of order and get retried: a late `send` must not
+ * turn a bounced mail back into a delivered one. A state only moves forward.
+ */
+export const shouldUpdateMailLogState = (
+  current: MailLogState,
+  next: MailLogState
+) => (MAIL_LOG_STATE_RANK[next] ?? 0) >= (MAIL_LOG_STATE_RANK[current] ?? 0);
 
 @Controller(MAIL_WEBHOOK_PATH_PREFIX)
 export class MailWebhookController {
@@ -34,8 +54,8 @@ export class MailWebhookController {
   @All(':providerId')
   async receiveWebhook(
     @Param('providerId') providerId: string,
-    @Req() req: Request,
-    @Res() res: Response
+    @Req() req: NodeRequest,
+    @Res() res: NodeResponse
   ) {
     this.logger.log(
       `Received webhook from ${req.get('origin')} for mailProvider ${providerId}`
@@ -68,6 +88,10 @@ export class MailWebhookController {
           continue; // TODO: handle missing mailLog
         }
 
+        if (!shouldUpdateMailLogState(mailLog.state, mailLogStatus.state)) {
+          continue;
+        }
+
         await this.prisma.mailLog.update({
           where: { id: mailLog.id },
           data: {
@@ -98,7 +122,7 @@ export class MailWebhookMiddleware implements NestMiddleware {
     private config: MailsModuleOptions
   ) {}
 
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: NodeRequest, res: NodeResponse, next: NextFunction) {
     const providerId = req.params['providerId'];
 
     const provider =
