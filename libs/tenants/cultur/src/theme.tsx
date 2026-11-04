@@ -1,15 +1,8 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
 import { theme as WePTheme } from '@wepublish/ui';
-import { Open_Sans } from 'next/font/google';
 import { PartialDeep } from 'type-fest';
 
-const openSans = Open_Sans({
-  weight: ['300', '400', '500', '600', '700'],
-  style: ['italic', 'normal'],
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true,
-});
+const openSans = { family: 'Open Sans' };
 
 const {
   palette: { augmentColor },
@@ -23,46 +16,46 @@ const theme = createTheme(WePTheme, {
   },
   typography: {
     h1: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     h2: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     h3: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     h4: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     h5: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     h6: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     body1: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     body2: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     button: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     caption: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     overline: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     subtitle1: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     subtitle2: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
     allVariants: {
-      fontFamily: [openSans.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [openSans.family, 'sans-serif'].join(','),
     },
   },
   components: {
