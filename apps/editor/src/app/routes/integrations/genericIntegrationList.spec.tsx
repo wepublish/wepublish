@@ -68,4 +68,48 @@ describe('GenericIntegrationList', () => {
       screen.queryByRole('button', { name: 'integrations.setUp' })
     ).toBeNull();
   });
+  it('shows a setting that was changed by saving another one', () => {
+    const setting = (hotAndTrending: boolean, modifiedAt: string) => ({
+      data: {
+        analyticsProviderSettings: [
+          {
+            id: 'google-analytics',
+            type: 'GOOGLE',
+            name: 'Google Analytics',
+            hotAndTrending,
+            modifiedAt,
+          },
+        ],
+      },
+      loading: false,
+    });
+    const list = () => (
+      <GenericIntegrationList
+        query={MailProviderSettingsDocument}
+        mutation={UpdateMailProviderSettingDocument}
+        dataKey="analyticsProviderSettings"
+        schema={z.object({ hotAndTrending: z.boolean().nullish() })}
+        fields={[
+          {
+            name: 'hotAndTrending',
+            label: 'integrations.analyticsSettings.hotAndTrending',
+            type: 'checkbox',
+          },
+        ]}
+      />
+    );
+
+    mockedUseQuery.mockReturnValue(setting(true, '2026-01-01T00:00:00.000Z'));
+    const { rerender } = render(list());
+    expect((screen.getByRole('checkbox') as HTMLInputElement).checked).toBe(
+      true
+    );
+
+    mockedUseQuery.mockReturnValue(setting(false, '2026-01-02T00:00:00.000Z'));
+    rerender(list());
+
+    expect((screen.getByRole('checkbox') as HTMLInputElement).checked).toBe(
+      false
+    );
+  });
 });

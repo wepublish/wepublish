@@ -126,6 +126,8 @@ export interface GenericIntegrationFormProps<
     | FieldDefinition<TFormValues>[]
     | ((setting: TSetting) => FieldDefinition<TFormValues>[]);
   getLogo?: (setting: TSetting) => string | undefined;
+  /** Queries to refetch after saving, e.g. when saving changes other settings */
+  refetchQueries?: DocumentNode[];
 
   renderActions?: (setting: TSetting) => ReactNode;
 }
@@ -139,11 +141,14 @@ export function SingleGenericIntegrationForm<
   mutation,
   fields,
   getLogo,
+  refetchQueries,
   renderActions,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
 
-  const [updateSettings, { loading: updating }] = useMutation(mutation, {});
+  const [updateSettings, { loading: updating }] = useMutation(mutation, {
+    refetchQueries: refetchQueries?.map(query => ({ query })),
+  });
 
   const formatLastLoaded = (date?: Date | string) => {
     if (!date) {

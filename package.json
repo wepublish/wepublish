@@ -253,6 +253,7 @@
     "@nestjs/graphql": "catalog:",
     "@nestjs/passport": "catalog:",
     "@nestjs/platform-node": "catalog:",
+    "@nestjs/resilience": "^0.0.3",
     "@nestjs/schedule": "catalog:",
     "@nestjs/storage": "^0.0.3",
     "@nestjs/terminus": "catalog:",
