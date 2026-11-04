@@ -202,6 +202,16 @@ Options shared by all three:
 | `paths?` | Overrides the view's paths. A create or edit form with paths in neither the view nor the hook throws outside production. |
 | `save(values, context)` | `values` is the schema output. `context` is `{ intent, mode, form, changed, changedKeys }`: `changed`/`changedKeys` come from `getChangedValues`, `form` is RHF's form for `setFieldError` on errors one rule cannot describe. Errors set inside `save` suppress the toast and the navigation. |
 
+`useCreateForm` also takes `submitLabel` (a key: one submit button with that
+label, no Save & close, no navigation and no paths needed) and `result` (a
+node; once non-null it replaces the body and the buttons). Together they make
+a show-once result such as a generated token: `save` stores the result in
+state and returns `null`.
+
+`cancelSave()` inside `save` (for example when the user cancels a dialog that
+`save` awaits) ends the save quietly: no toast, no error, no navigation. Core
+still resets the defaults to the submitted values, so the form turns clean.
+
 ### Containers and primitives
 
 | Piece | Renders |
@@ -224,7 +234,8 @@ summary, load state, confirmation and discard prompts are the same.
   separated by 1px rules, not cards (`subtitle1` titles). Only the aside is a
   bordered panel; it sits beside the main column when the body is wide enough
   and wraps under it otherwise (flexbox, no media queries). The body is 760px
-  wide, 1200px with an aside, and unlimited in a drawer.
+  wide, 1200px with an aside, and unlimited in a drawer; an aside counts only
+  when one of its sections has `modes` that include the current mode.
 - **`'cards'`** (`formView(schema, { layout: 'cards', … })`): every section is
   an outlined `Card` with an `h4`-styled title, its description, then the
   fields 16px apart. The cards sit in a grid in declaration order, one column
@@ -446,7 +457,7 @@ runtime `Field` throws `No component for kind "<kind>" at "<path>"`.
 | `string` | `z.string()`, `z.email()`, `z.url()`, other string formats | `TextField` | `type?: 'text' \| 'email' \| 'url' \| 'password'` (email/url otherwise follow the format; password gets a show/hide button), `autoComplete?`, `endAdornment?: ReactNode` (shown as is at the end of the input, e.g. a vote count, and linked by `aria-describedby`) | string |
 | `number` | `z.number()`, `z.int()` | `NumberField` | `unit?: ReactNode` (a string is a key, e.g. `form.units.days`; an end adornment linked by `aria-describedby`) | number; empty is the cleared value, never `NaN`; `min`/`max`/`step` come from the schema |
 | `boolean` | `z.boolean()` | `CheckboxField` | none | boolean |
-| `date` | `z.date()` | `DateField` | none | `Date`; `.min()`/`.max()` limit the calendar |
+| `date` | `z.date()` | `DateField` | `shortcuts?: readonly DateShortcut[]` (`{ label: key, date: () => Date }`, buttons in the picker) | `Date`; `.min()`/`.max()` limit the calendar |
 | `enum` | `z.enum([...])`, `z.enum(NativeEnum)`, `z.literal()`, a union of literals | `SelectField` | `searchable?` (an Autocomplete for long lists) | the option value; an empty choice (`form.select.empty`) appears only when the field is not required |
 | `enumArray` | `z.array(z.enum(...))` | `MultiSelectField` | none | values in the order picked; `[]` when cleared |
 | `primitiveArray` | `z.array(z.string())` | `ChipsField` | none | `string[]`, trimmed, empty entries dropped, duplicates removed |
@@ -484,7 +495,9 @@ mixed unions, and arrays of numbers, dates or booleans. Give those a
   add `.min(1)`.
 - `CurrencyField` (amounts in cents, rounded) is not in the map; bind it per
   field: `const CHF = bindComponent(CurrencyField, { currency: 'CHF' })` at
-  module level, then `<Field name="amount" component={CHF} />`.
+  module level, then `<Field name="amount" component={CHF} />`. `scale`
+  shows the value times `scale` and stores the input divided by it (a monthly
+  amount edited per period).
 - A schema helper takes arguments only for real parameters (`tags(tagType)`,
   `radio(enum)`); everything else chains on the result:
   `formFields.textarea().min(1).meta({ label: 'banner.form.text' })`.
@@ -1166,8 +1179,11 @@ For each remaining editor form:
    describe; let the rest throw. Remove the old `onError` toasts.
 7. **Panels in `libs/ui/editor`** cannot use the library. Move a panel next to
    its only route in the same change that migrates it (done for
-   `NavigationEditPanel`, `UserRoleEditPanel`, `PaymentMethodEditPanel`). `ImageEditPanel` stays;
-   the portal guard covers it.
+   `NavigationEditPanel`, `UserRoleEditPanel`, `PaymentMethodEditPanel`,
+   `AuthorEditPanel`, `PeerEditPanel`, `PeerInfoEditPanel`,
+   `ApiTokenGeneratePanel`, `TokenGeneratePanel`, `DocumentEditPanel`,
+   `DocumentUploadAndEditPanel`). `ImageEditPanel` stays (shared with ~15
+   article/page blocks and pickers); the portal guard covers it.
 8. **Partial saves** use `getChangedValues`; write-only secrets use
    `formFields.secret()`.
 9. **Project and texts.** Apply the project setup above; add the view to
@@ -1189,6 +1205,50 @@ For each remaining editor form:
 | Navigations | `apps/editor/src/app/routes/navigations/navigation.schema.ts`, `navigation.view.ts`, `navigationDrawer.tsx`, `navigationList.tsx`, specs | a route drawer (`useRouteDrawer`, `FormDrawer`, `FormDrawerPanel`) with the discard prompt, a links array of a discriminated union (external, page, article) |
 | Website analytics | `apps/editor/src/app/routes/website-settings/website-analytics.schema.ts`, `website-analytics.view.ts`, `website-analytics.tsx`, spec | a singleton sub-page: `useSingletonForm` + `FormPage` with a `closePath` back link, nested paths (`'plausible.key'`) as section entries, a `crossField` per provider group, keys hidden until enabled (view `fields`), `<Trans>` helper texts as hook `fields` |
 | Settings | `libs/settings/editor/src/lib/settings.schema.ts`, `settings.view.ts`, `settings-page.tsx`, spec | the only cards layout (`layout: 'cards'`, `span: 'full'` on wide cards), a singleton with `confirm` and a `format` for the paywall id, enum-keyed paths, one mutation per changed key with `setFieldError` for the rejected ones |
+| User roles | `apps/editor/src/app/routes/userRoles/userRole.schema.ts`, `userRole.view.ts`, `userRoleDrawer.tsx`, `systemRoleNotice.tsx`, specs | a route drawer (create + edit), an untitled section with a `component` next to its fields, permissions as a label-less enum array with view `options` |
+| Discount codes | `apps/editor/src/app/routes/discountCode/discountCode.schema.ts`, `discountCode.view.ts`, `discountCodeCreateView.tsx`, `discountCodeEditView.tsx`, specs | `normalize` (upper-case code), rows of two, a composite `(code, memberPlanId)` unique rule |
+| Goodies | `apps/editor/src/app/routes/goodie/goodie.schema.ts`, `goodie.view.ts`, `goodieCreateView.tsx`, `goodieEditView.tsx`, specs | the plainest page form with an aside image, `memberPlans()` ids |
+| Payment methods | `apps/editor/src/app/routes/paymentMethods/paymentMethod.schema.ts`, `paymentMethod.view.ts`, `paymentMethodDrawer.tsx`, specs | a drawer, `onValueChange` filling a read-only slug, a bound `SelectField` for runtime provider options, a number `unit` |
+| Authors | `apps/editor/src/app/routes/authors/author.schema.ts`, `author.view.ts`, `authorDrawer.tsx`, specs | a drawer with an aside toggle group, a hidden slug from the name, a sortable links array, `uniqueConstraint()` without columns for the hand-made `authors_slug_no_peerId` index |
+| Peers, peer profile | `apps/editor/src/app/routes/peers/peer.schema.ts`, `peer.view.ts`, `peerDrawer.tsx`, `peerProfile.schema.ts`, `peerProfile.view.ts`, `peerProfileDrawer.tsx`, `remotePeerProfile.tsx`, specs | separate create/edit schemas sharing sections, a `SecretField` only on create, a fields-less component section; a singleton drawer (`useSingletonForm`, `useMatch` + navigate to the list) |
+| External apps | `apps/editor/src/app/routes/externalApps/externalApp.schema.ts`, `externalApp.view.ts`, `externalAppDrawer.tsx`, `iconPicker.tsx`, `linkedApiKeyWarning.tsx`, specs | a route drawer replacing an inline card list, a custom icon picker bound per field, a warning component reading the form values |
+| Crowdfunding | `libs/crowdfunding/editor/src/lib/crowdfunding.schema.ts`, `crowdfunding.view.ts`, `create-crowdfunding-form.tsx`, `edit-crowdfunding-form.tsx`, `crowdfunding-goal-row.tsx`, specs | Dynamic `label`/`description` by goal type, an item layout with a per-item component, an edit-only aside (`modes: ['edit']`) |
+| Website ads, fonts | `apps/editor/src/app/routes/website-settings/website-ads.*`, `website-fonts.*`, `website-font-row.tsx`, `font-picker.tsx`, specs | singleton sub-pages: a nested path hidden until enabled; an array with an item layout whose font picker fills sibling fields (`onValueChange` passed per call inside the layout) |
+| API tokens, tokens | `apps/editor/src/app/routes/apiTokens/apiToken.schema.ts`, `apiToken.view.ts`, `apiTokenGenerateRoute.tsx`, `apps/editor/src/app/routes/tokens/token.schema.ts`, `token.view.ts`, `tokenGenerateDrawer.tsx`, `generatedToken.tsx`, specs | `submitLabel` + `result` for a show-once token, `DateField` `shortcuts` with a `normalize` to end of day, singleton drawers via `useMatch` |
+| Users | `apps/editor/src/app/routes/users/user.schema.ts`, `user.view.ts`, `userCreateView.tsx`, `userEditView.tsx`, `userPropertyRow.tsx`, specs | create/edit views from shared section constants, nested `address.*` rows, an item layout, edit-only component sections (subscriptions, mails, access actions), `cancelSave()` after the account-mail question |
+| Subscriptions | `apps/editor/src/app/routes/subscriptions/subscription.schema.ts`, `subscription.view.ts`, `subscriptionEditView.tsx`, `subscriptionSections.tsx`, `periodAmountField.tsx`, specs | Dynamic `disabled`/`hidden`, `CurrencyField` `scale` (monthly amount per period), `headerActions`, an edit-only invoices section, `cancelSave()` |
+| Comments | `apps/editor/src/app/routes/comments/comment.schema.ts`, `comment.view.ts`, `commentEditView.tsx`, `commentThread.tsx`, `commentActions.tsx`, `commentRatingOverrides.tsx`, spec | an edit-only form with rich text, several aside sections (one component-only, one Dynamic `hidden`), a custom array component with an item layout |
+| Member plans | `libs/membership/editor/src/lib/memberplan/memberplan.schema.ts`, `memberplan.view.ts`, `memberplan-create-view.tsx`, `memberplan-edit-view.tsx`, `memberplan-pricing.tsx`, `memberplan-trial.tsx`, spec | Dynamic `options` from another field, `optionLabel`, a slug `normalize`, a pricing component per periodicity, a compiled/uncompiled vitest split (`vitest.config.ts`) |
+| Documents | `apps/editor/src/app/routes/documents/document.schema.ts`, `document.view.ts`, `documentDrawer.tsx`, `documentFileDetails.tsx`, spec | an upload drawer (create) and an edit drawer from one view, an aside component for the file |
+| Integrations | `apps/editor/src/app/routes/integrations/<ai\|analytics\|challenge\|payment\|trackingPixel>Integration.schema.ts`, `.view.ts`, `…IntegrationForm.tsx`, `integrationSettings.tsx`, `integrationPaths.ts`, spec | one `/integrations/:type/edit/:id` drawer per setting, sections and keys hidden per provider type, `required` overrides, `cancelSave()` after a type-change dialog |
+| Polls | `apps/editor/src/app/routes/polls/poll.schema.ts`, `poll.view.ts`, `pollEditView.tsx`, `pollAnswers.tsx`, `pollExternalVotes.tsx`, `pollRows.ts`, spec | nested item layouts (`externalVoteSources.*.voteAmounts.*`), immediate row mutations inside an edit form (`useReloadPollRows`) |
+| Website theme | `apps/editor/src/app/routes/website-settings/website-theme.schema.ts`, `website-theme.view.ts`, `website-theme.tsx`, `website-theme-tabs.tsx`, `theme/theme.schema.ts`, spec | one component section covering opaque values (`editedWhole`), `headerActions` for import/export |
+
+**Patterns and gotchas from the migrations**
+
+- `optionLabelPrefix` must end in `.` (`locales.spec` checks it); otherwise
+  use `optionLabel`.
+- A path without a kind needs its `component` in the hook `fields`, not the
+  view `fields`.
+- An item layout only gets its own index: a nested `a.*.b.*` layout needs a
+  context for the outer index (polls), and an `onValueChange` that fills
+  sibling item fields must be passed per call inside the item layout
+  (website fonts).
+- Immediate row mutations inside an edit form: the section component calls
+  create/delete, refetches and `resetField`s the saved rows as defaults while
+  keeping unsaved edits (polls `useReloadPollRows`).
+- Opaque values edited by a section component (website theme `editedWhole`)
+  get a custom kind at runtime that the type casts away; a kit helper is a
+  candidate follow-up.
+- Singleton drawers without `:id` use `useMatch(path)` and navigate to the
+  list on close (peer profile, token generate).
+- Rich-text fixtures in specs need `attrs` on every node; compare variables
+  against a JSON round-tripped copy.
+- An Autocomplete with thousands of options in a spec: `fireEvent.focus` +
+  `fireEvent.change`, not `user.type`.
+- A lib whose existing specs break when compiled can split vitest into
+  compiled and uncompiled projects (membership: subscription-flow specs stay
+  uncompiled; one fails compiled, a likely production bug to follow up).
 
 ## Verify
 
@@ -1218,8 +1278,13 @@ Not built:
 - **Blocking in-app navigation** on unsaved changes; `BrowserRouter` has no
   `useBlocker`, so it needs a data-router migration.
 - Autosave and immediate-mutation sub-editors (flow filters, system mails, the
-  SEO checklist, block styles, poll answers), the mail-send wizard, list
-  filter bars.
+  SEO checklist, block styles (an inline editable list), comment ratings
+  (answers are added and deleted immediately; `updateRatingSystem` cannot
+  create or delete rows)), the mail-send wizard, list filter bars.
+- The image edit panel (`ImageEditPanel`, shared with the article/page
+  blocks and pickers) and the generic integration form (runtime field
+  definitions, still used by mail).
+- Mail, Mailchimp sync, newsletters and subscription flows.
 - The article and page editors, and the remaining editor forms (the recipe
   above).
 - A website mapping of the core.
@@ -1242,3 +1307,9 @@ Known limits of what is built:
 - `CurrencyField` has no negative amounts; `EntitySelectField` selects one
   object, not several.
 - The reset after save uses the submitted values, not the server response.
+- `MemberPlansField` / `MemberPlanField` show a raw id for plans outside the
+  first page (no default label hints).
+- `FormDrawerPanel` ignores the controller's `subtitle`; only `FormPage`
+  renders it.
+- `cancelSave()` still leaves the form clean (core resets the defaults before
+  the cancel is seen).
