@@ -73,7 +73,9 @@ libs/<domain>/
 **Sitemaps:** every website serves `/api/sitemap` (plus `/api/sitemap/[chunk]`:
 `news`, `pages`, `articles-YYYY` per past year, `articles-YYYY-MM` per month
 of the current year in `index` mode) through
-`createSitemapHandlers` from `@wepublish/feed/website`. Per-media settings
+`createSitemapHandlers` from `@wepublish/feed/website` — TanStack tenants serve
+`/sitemap.xml` + `/sitemap/<chunk>` through its Fetch API twin
+`createSitemapFetchHandlers`, with `/api/sitemap` 301ing there. Per-media settings
 (`mode: 'single' | 'index'`, `pageUrls`, `homepageSlug`, `filterArticle`, url
 hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
 documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never

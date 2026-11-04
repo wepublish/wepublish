@@ -6626,6 +6626,9 @@ type Setting {
 type SettingAIProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
+
+  """Whether an API key is stored. It is never returned itself."""
+  isApiKeySet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
@@ -6652,6 +6655,11 @@ type SettingAnalyticsProvider implements SettingProvider {
   articlePrefix: String
   createdAt: DateTime!
   id: String!
+
+  """
+  Whether service account credentials are stored. They are never returned.
+  """
+  isCredentialsSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
@@ -6668,6 +6676,9 @@ input SettingAnalyticsProviderFilter {
 type SettingChallengeProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
+
+  """Whether a secret is stored. It is never returned itself."""
+  isSecretSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
@@ -6716,6 +6727,14 @@ type SettingMailProvider implements SettingProvider {
   createdAt: DateTime!
   fromAddress: String
   id: String!
+
+  """Whether an API key is stored. The key itself is never returned."""
+  isApiKeySet: Boolean!
+
+  """
+  Whether a webhook signing secret is stored. The secret itself is never returned.
+  """
+  isWebhookEndpointSecretSet: Boolean!
   lastLoadedAt: DateTime!
 
   """When the provider was last asked for delivery states."""
@@ -6796,6 +6815,14 @@ type SettingPaymentProvider implements SettingProvider {
   createdAt: DateTime!
   deletedAt: DateTime
   id: String!
+
+  """Whether an API key is stored. It is never returned itself."""
+  isApiKeySet: Boolean!
+
+  """
+  Whether a webhook signing secret is stored. It is never returned itself.
+  """
+  isWebhookEndpointSecretSet: Boolean!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   mollie_apiBaseUrl: String
@@ -6864,6 +6891,9 @@ type SettingSyncProvider implements SettingProvider {
   mailchimp_defaultInterestGroupIds: [String!]
   mailchimp_extensions: JSONObject
   mailchimp_interestGroupMappings: [JSONObject!]
+
+  """Whether a Mailchimp API key is stored. It is never returned itself."""
+  mailchimp_isApiKeySet: Boolean!
   mailchimp_listId: String
   mailchimp_mergeFieldMappings: [JSONObject!]
 
@@ -6895,6 +6925,9 @@ type SettingTrackingPixelProvider implements SettingProvider {
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
+
+  """Whether a ProLitteris password is stored. It is never returned itself."""
+  prolitteris_isPasswordSet: Boolean!
   prolitteris_memberNr: String
   prolitteris_onlyPaidContentAccess: Boolean
   prolitteris_publisherInternalKeyDomain: String

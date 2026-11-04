@@ -71,20 +71,19 @@ export type MailControllerConfig = {
   letterAttachment?: LetterAttachment;
 };
 
-/** What a user row carries that no template may ever print. */
-const SECRET_FIELDS = new Set([
-  'password',
-  'roleIDs',
-  'totpSecret',
-  'totpEnabled',
-  'totpExempt',
-]);
+/**
+ * What a user row carries that no template may print. The password hash and
+ * the TOTP secret are not among them: Prisma leaves those out of every query
+ * (see `PrismaService`), so they never reach a template. These fields stay on
+ * the row because the API needs them for authorization.
+ */
+const SECRET_FIELDS = new Set(['roleIDs', 'totpEnabled', 'totpExempt']);
 
 /**
- * A copy of template data without a user's secrets, wherever a user row ended
- * up in it: the recipient, or a subscription's `user` relation the nightly job
- * hands in with the invoice. Only plain objects and arrays are walked; dates,
- * buffers and other instances are kept as they are.
+ * A copy of template data without a user's authorization fields, wherever a
+ * user row ended up in it: the recipient, or a subscription's `user` relation
+ * the nightly job hands in with the invoice. Only plain objects and arrays are
+ * walked; dates, buffers and other instances are kept as they are.
  */
 export function withoutSecrets<T>(value: T): T {
   if (Array.isArray(value)) {
@@ -148,7 +147,7 @@ export class MailController {
    */
   private async buildData() {
     // Cloned, so the caller's objects are not touched and no template sees a
-    // user's secrets, nested ones included.
+    // user's authorization fields, nested ones included.
     const recipient = withoutSecrets(
       JSON.parse(JSON.stringify(this.config.recipient))
     );

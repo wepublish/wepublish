@@ -217,9 +217,21 @@ routes must spell the block out and call a shared handler:
 
 ```ts
 export const Route = createFileRoute('/sitemap.xml')({
-  server: { handlers: { GET: () => sitemapHandler(getSitemap, getSiteUrl) } },
+  server: {
+    handlers: {
+      GET: ({ request }) =>
+        createSitemapFetchHandlers(sitemapConfig, {
+          getClient: createSsrClient,
+        }).sitemap(request),
+    },
+  },
 });
 ```
+
+Pass the `request` through: the sitemap handlers read the public site URL off
+it (`WEBSITE_URL`, else `x-forwarded-host`/`-proto`, else `host`) exactly as the
+Next handler does. `getSiteUrl()` from `tanstack/server` ignores the proxy
+headers, always says `https` and keeps a trailing slash on `WEBSITE_URL`.
 
 ### 6.3 Pages render with a complete shell but **no content**
 

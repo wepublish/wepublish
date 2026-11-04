@@ -20,6 +20,7 @@ import payrexxLogo from './assets/payrexx.webp';
 import stripeLogo from './assets/stripe.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+import { secretPlaceholder } from './secretPlaceholder';
 
 // Mirrors the API's `isTestEnvironment`.
 const isTestEnvironment = (appEnvironment?: string) =>
@@ -30,7 +31,8 @@ const isTestEnvironment = (appEnvironment?: string) =>
 export const creatablePaymentProviderTypes = (appEnvironment?: string) =>
   Object.values(PaymentProviderType).filter(
     type =>
-      type !== PaymentProviderType.Simulated || isTestEnvironment(appEnvironment)
+      type !== PaymentProviderType.Simulated ||
+      isTestEnvironment(appEnvironment)
   );
 
 const paymentSettingsSchema = z.object({
@@ -182,7 +184,7 @@ export function PaymentIntegrationForm() {
             info: t('integrations.paymentSettings.apiKeyInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
-            placeholder: t('integrations.placeholderSecret'),
+            placeholder: secretPlaceholder(setting.isApiKeySet, t),
           },
           {
             name: 'webhookEndpointSecret',
@@ -190,7 +192,10 @@ export function PaymentIntegrationForm() {
             info: t('integrations.paymentSettings.webhookEndpointSecretInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
-            placeholder: t('integrations.placeholderSecret'),
+            placeholder: secretPlaceholder(
+              setting.isWebhookEndpointSecretSet,
+              t
+            ),
           },
         ];
 

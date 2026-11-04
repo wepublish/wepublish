@@ -8549,6 +8549,8 @@ export type SettingAiProvider = SettingProvider & {
   __typename?: 'SettingAIProvider';
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
+  /** Whether an API key is stored. It is never returned itself. */
+  isApiKeySet: Scalars['Boolean']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
@@ -8576,6 +8578,8 @@ export type SettingAnalyticsProvider = SettingProvider & {
   articlePrefix?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
+  /** Whether service account credentials are stored. They are never returned. */
+  isCredentialsSet: Scalars['Boolean']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
@@ -8593,6 +8597,8 @@ export type SettingChallengeProvider = SettingProvider & {
   __typename?: 'SettingChallengeProvider';
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
+  /** Whether a secret is stored. It is never returned itself. */
+  isSecretSet: Scalars['Boolean']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
@@ -8640,6 +8646,10 @@ export type SettingMailProvider = SettingProvider & {
   createdAt: Scalars['DateTime']['output'];
   fromAddress?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  /** Whether an API key is stored. The key itself is never returned. */
+  isApiKeySet: Scalars['Boolean']['output'];
+  /** Whether a webhook signing secret is stored. The secret itself is never returned. */
+  isWebhookEndpointSecretSet: Scalars['Boolean']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
   /** When the provider was last asked for delivery states. */
   lastPollAt?: Maybe<Scalars['DateTime']['output']>;
@@ -8718,6 +8728,10 @@ export type SettingPaymentProvider = SettingProvider & {
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
+  /** Whether an API key is stored. It is never returned itself. */
+  isApiKeySet: Scalars['Boolean']['output'];
+  /** Whether a webhook signing secret is stored. It is never returned itself. */
+  isWebhookEndpointSecretSet: Scalars['Boolean']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   mollie_apiBaseUrl?: Maybe<Scalars['String']['output']>;
@@ -8788,6 +8802,8 @@ export type SettingSyncProvider = SettingProvider & {
   mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']['output']>>;
   mailchimp_extensions?: Maybe<Scalars['JSONObject']['output']>;
   mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
+  /** Whether a Mailchimp API key is stored. It is never returned itself. */
+  mailchimp_isApiKeySet: Scalars['Boolean']['output'];
   mailchimp_listId?: Maybe<Scalars['String']['output']>;
   mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']['output']>>;
   /** Id of the audience webhook the api registered at Mailchimp. */
@@ -8819,6 +8835,8 @@ export type SettingTrackingPixelProvider = SettingProvider & {
   lastLoadedAt: Scalars['DateTime']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name?: Maybe<Scalars['String']['output']>;
+  /** Whether a ProLitteris password is stored. It is never returned itself. */
+  prolitteris_isPasswordSet: Scalars['Boolean']['output'];
   prolitteris_memberNr?: Maybe<Scalars['String']['output']>;
   prolitteris_onlyPaidContentAccess?: Maybe<Scalars['Boolean']['output']>;
   prolitteris_publisherInternalKeyDomain?: Maybe<Scalars['String']['output']>;

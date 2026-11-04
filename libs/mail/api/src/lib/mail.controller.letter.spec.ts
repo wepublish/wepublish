@@ -27,7 +27,7 @@ const user = () =>
     email: 'jane@example.com',
     firstName: 'Jane',
     name: 'Doe',
-    password: 'secret',
+    roleIDs: ['admin'],
   }) as any;
 
 const config = (
@@ -118,14 +118,16 @@ describe('MailController letter mode', () => {
     expect(prisma.mailLog.create).not.toHaveBeenCalled();
   });
 
-  it('leaves the password out of the letter data', async () => {
+  // The password hash never gets this far: Prisma leaves it out of every
+  // user query. The role IDs do, and no letter may print them.
+  it('leaves the role IDs out of the letter data', async () => {
     const { send, letterSender } = setup();
 
     await send();
 
     const { data } = letterSender.sendLetter.mock.calls[0][0];
 
-    expect(data.user.password).toBeUndefined();
+    expect(data.user.roleIDs).toBeUndefined();
   });
 
   it('keeps mailing an event that is not switched to letters', async () => {
