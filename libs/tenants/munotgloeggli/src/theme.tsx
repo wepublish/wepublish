@@ -1,8 +1,16 @@
 import { css, GlobalStyles, Theme, ThemeOptions } from '@mui/material';
 import { PartialDeep } from 'type-fest';
 
-const fontUrl = (file: string) =>
-  new URL(`./fonts/${file}`, import.meta.url).href;
+import linotypeSabonNextLTProBold from './fonts/sabon/Linotype - SabonNextLTPro-Bold.otf';
+import linotypeSabonNextLTProBoldItalic from './fonts/sabon/Linotype - SabonNextLTPro-BoldItalic.otf';
+import linotypeSabonNextLTProItalic from './fonts/sabon/Linotype - SabonNextLTPro-Italic.otf';
+import linotypeSabonNextLTProRegular from './fonts/sabon/Linotype - SabonNextLTPro-Regular.otf';
+import typeTypeTTNormsBoldItalic from './fonts/tt-norms/TypeType - TT Norms Bold Italic.otf';
+import typeTypeTTNormsBold from './fonts/tt-norms/TypeType - TT Norms Bold.otf';
+import typeTypeTTNormsItalic from './fonts/tt-norms/TypeType - TT Norms Italic.otf';
+import typeTypeTTNormsMediumItalic from './fonts/tt-norms/TypeType - TT Norms Medium Italic.otf';
+import typeTypeTTNormsMedium from './fonts/tt-norms/TypeType - TT Norms Medium.otf';
+import typeTypeTTNormsRegular from './fonts/tt-norms/TypeType - TT Norms Regular.otf';
 
 export const sabon = { family: 'Sabon Next LT Pro' };
 export const ttNorms = { family: 'TT Norms' };
@@ -104,8 +112,7 @@ export const MunotgloeggliGlobalStyles = () => (
     styles={css`
       @font-face {
         font-family: ${sabon.family};
-        src: url('${fontUrl('sabon/Linotype - SabonNextLTPro-Regular.otf')}')
-          format('opentype');
+        src: url('${linotypeSabonNextLTProRegular}') format('opentype');
         font-weight: 400;
         font-style: normal;
         font-display: swap;
@@ -113,8 +120,7 @@ export const MunotgloeggliGlobalStyles = () => (
 
       @font-face {
         font-family: ${sabon.family};
-        src: url('${fontUrl('sabon/Linotype - SabonNextLTPro-Italic.otf')}')
-          format('opentype');
+        src: url('${linotypeSabonNextLTProItalic}') format('opentype');
         font-weight: 400;
         font-style: italic;
         font-display: swap;
@@ -122,8 +128,7 @@ export const MunotgloeggliGlobalStyles = () => (
 
       @font-face {
         font-family: ${sabon.family};
-        src: url('${fontUrl('sabon/Linotype - SabonNextLTPro-Bold.otf')}')
-          format('opentype');
+        src: url('${linotypeSabonNextLTProBold}') format('opentype');
         font-weight: 600;
         font-style: normal;
         font-display: swap;
@@ -131,8 +136,7 @@ export const MunotgloeggliGlobalStyles = () => (
 
       @font-face {
         font-family: ${sabon.family};
-        src: url('${fontUrl('sabon/Linotype - SabonNextLTPro-BoldItalic.otf')}')
-          format('opentype');
+        src: url('${linotypeSabonNextLTProBoldItalic}') format('opentype');
         font-weight: 600;
         font-style: italic;
         font-display: swap;
@@ -140,8 +144,7 @@ export const MunotgloeggliGlobalStyles = () => (
 
       @font-face {
         font-family: ${ttNorms.family};
-        src: url('${fontUrl('tt-norms/TypeType - TT Norms Regular.otf')}')
-          format('opentype');
+        src: url('${typeTypeTTNormsRegular}') format('opentype');
         font-weight: 400;
         font-style: normal;
         font-display: swap;
@@ -149,8 +152,7 @@ export const MunotgloeggliGlobalStyles = () => (
 
       @font-face {
         font-family: ${ttNorms.family};
-        src: url('${fontUrl('tt-norms/TypeType - TT Norms Italic.otf')}')
-          format('opentype');
+        src: url('${typeTypeTTNormsItalic}') format('opentype');
         font-weight: 400;
         font-style: italic;
         font-display: swap;
@@ -158,8 +160,7 @@ export const MunotgloeggliGlobalStyles = () => (
 
       @font-face {
         font-family: ${ttNorms.family};
-        src: url('${fontUrl('tt-norms/TypeType - TT Norms Medium.otf')}')
-          format('opentype');
+        src: url('${typeTypeTTNormsMedium}') format('opentype');
         font-weight: 500;
         font-style: normal;
         font-display: swap;
@@ -167,8 +168,7 @@ export const MunotgloeggliGlobalStyles = () => (
 
       @font-face {
         font-family: ${ttNorms.family};
-        src: url('${fontUrl('tt-norms/TypeType - TT Norms Medium Italic.otf')}')
-          format('opentype');
+        src: url('${typeTypeTTNormsMediumItalic}') format('opentype');
         font-weight: 500;
         font-style: italic;
         font-display: swap;
@@ -176,8 +176,7 @@ export const MunotgloeggliGlobalStyles = () => (
 
       @font-face {
         font-family: ${ttNorms.family};
-        src: url('${fontUrl('tt-norms/TypeType - TT Norms Bold.otf')}')
-          format('opentype');
+        src: url('${typeTypeTTNormsBold}') format('opentype');
         font-weight: 600;
         font-style: normal;
         font-display: swap;
@@ -185,8 +184,7 @@ export const MunotgloeggliGlobalStyles = () => (
 
       @font-face {
         font-family: ${ttNorms.family};
-        src: url('${fontUrl('tt-norms/TypeType - TT Norms Bold Italic.otf')}')
-          format('opentype');
+        src: url('${typeTypeTTNormsBoldItalic}') format('opentype');
         font-weight: 600;
         font-style: italic;
         font-display: swap;
