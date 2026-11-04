@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { css, IconButton, Modal as MUIModal } from '@mui/material';
-import { captureException } from '@sentry/react';
 import { Link as BuilderLink } from '@wepublish/ui';
 import { BuilderLinkProps } from '@wepublish/website/builder';
 import NextLink from 'next/link';
@@ -97,7 +96,7 @@ type QueryParams = {
   popText?: string;
 };
 
-const parseQueryParams: (url: string) => QueryParams = (
+export const parseQueryParams: (url: string) => QueryParams = (
   url: string
 ): QueryParams => {
   const queryParams: QueryParams = {
@@ -107,16 +106,18 @@ const parseQueryParams: (url: string) => QueryParams = (
     tf_id: '',
   };
 
-  try {
-    const urlObj = new URL(url, process.env.WEBSITE_URL || 'http://localhost');
+  const [withoutHash] = url.split('#');
+  const searchStart = withoutHash.indexOf('?');
 
-    urlObj.searchParams.forEach((value: string, key: string) => {
-      queryParams[key as keyof QueryParams] = value;
-    });
-  } catch (e) {
-    console.error(e);
-    captureException(e);
+  if (searchStart === -1) {
+    return queryParams;
   }
+
+  new URLSearchParams(withoutHash.slice(searchStart)).forEach(
+    (value: string, key: string) => {
+      queryParams[key as keyof QueryParams] = value;
+    }
+  );
 
   return queryParams;
 };
