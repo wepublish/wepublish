@@ -1,7 +1,7 @@
 fragment FullPageRevision on PageRevision {
   ...FullPageRevisionWithoutBlocks
 
-  blocks {
+  blocks(onlyDisplayed: false) {
     ...FullBlock
   }
 }

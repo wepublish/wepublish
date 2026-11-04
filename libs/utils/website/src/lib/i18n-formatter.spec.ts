@@ -19,6 +19,10 @@ vi.mock('@wepublish/website/translations/fr.json', () => ({
   },
 }));
 
+const { captureMessage } = vi.hoisted(() => ({ captureMessage: vi.fn() }));
+
+vi.mock('@sentry/core', () => ({ captureMessage }));
+
 import type { i18n } from 'i18next';
 import type * as I18nFormatter from './i18n-formatter';
 
@@ -27,9 +31,8 @@ let applyTranslationOverrides: typeof I18nFormatter.applyTranslationOverrides;
 
 beforeAll(async () => {
   vi.resetModules();
-  ({ initWePublishTranslator, applyTranslationOverrides } = await import(
-    './i18n-formatter'
-  ));
+  ({ initWePublishTranslator, applyTranslationOverrides } =
+    await import('./i18n-formatter'));
 });
 
 describe('initWePublishTranslator', () => {
@@ -83,6 +86,104 @@ describe('initWePublishTranslator', () => {
     });
     i18nextInstance.changeLanguage('fr');
     expect(i18nextInstance.t('zod.required')).toBe(required);
+  });
+});
+
+describe('missing translations', () => {
+  let i18n: i18n;
+  beforeEach(async () => {
+    captureMessage.mockClear();
+    i18n = initWePublishTranslator();
+    await i18n.changeLanguage('de');
+  });
+
+  it('should report a missing key to Sentry', async () => {
+    i18n.t('doesNotExist');
+
+    await vi.waitFor(() =>
+      expect(captureMessage).toHaveBeenCalledWith(
+        'Missing translation "doesNotExist"',
+        {
+          level: 'error',
+          tags: { 'i18n.language': 'de', 'i18n.namespace': 'translation' },
+          extra: { key: 'doesNotExist' },
+        }
+      )
+    );
+  });
+
+  it('should report the language that was rendered', async () => {
+    await i18n.changeLanguage('fr');
+    i18n.t('missingInFrench');
+
+    await vi.waitFor(() =>
+      expect(captureMessage).toHaveBeenCalledWith(
+        'Missing translation "missingInFrench"',
+        expect.objectContaining({
+          tags: { 'i18n.language': 'fr', 'i18n.namespace': 'translation' },
+        })
+      )
+    );
+  });
+
+  it('should report a missing key only once', async () => {
+    i18n.t('reportedOnce');
+    i18n.t('reportedOnce');
+
+    await vi.waitFor(() => expect(captureMessage).toHaveBeenCalled());
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(captureMessage).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not report keys that exist', async () => {
+    i18n.t('lang');
+    i18n.t('zod.required');
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(captureMessage).not.toHaveBeenCalled();
+  });
+
+  it('should report keys that only resolve through the fallback language', async () => {
+    await i18n.changeLanguage('fr');
+    i18n.t('paymentMethod', { paymentMethod: 'bexio' });
+
+    await vi.waitFor(() =>
+      expect(captureMessage).toHaveBeenCalledWith(
+        'Missing translation "paymentMethod"',
+        {
+          level: 'error',
+          tags: {
+            'i18n.language': 'fr',
+            'i18n.namespace': 'translation',
+            'i18n.fallbackLanguage': 'de',
+          },
+          extra: { key: 'paymentMethod' },
+        }
+      )
+    );
+  });
+
+  it('should not report keys the current language has', async () => {
+    await i18n.changeLanguage('fr');
+    i18n.t('lang');
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(captureMessage).not.toHaveBeenCalled();
+  });
+
+  it('should not report fallbacks for an unsupported language', async () => {
+    await i18n.changeLanguage('es');
+    i18n.t('cancel', { type: 'Subscription' });
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(captureMessage).not.toHaveBeenCalled();
+  });
+
+  it('should not report keys of a namespace that has not loaded', async () => {
+    i18n.t('anything', { ns: 'notLoaded' });
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(captureMessage).not.toHaveBeenCalled();
   });
 });
 

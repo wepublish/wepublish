@@ -475,9 +475,12 @@ peer at runtime — Nest's `loadPackage` / `loadAdapter`, `ApolloDriver`,
 terminus's `import.meta.resolve` + `await import(...)` — never show up there,
 so unless the peer is listed too, `pnpm deploy` leaves it out and the image
 dies on boot with `No driver (HTTP) has been selected` or _The "<pkg>" package
-is missing_. The API lists three such peers: `@nestjs/platform-express`
-(`@nestjs/core`), `@as-integrations/express5` (`@nestjs/apollo`) and
-`@nestjs/axios` (`@nestjs/terminus`). `docker/check-runtime-deps.js` accepts a
+is missing_. The API lists two such peers: `@as-integrations/express5`
+(`@nestjs/apollo`) and `@nestjs/axios` (`@nestjs/terminus`). The HTTP adapter
+used to be a third — `@nestjs/core` still declares `@nestjs/platform-express`
+as an optional peer and resolves it through `loadAdapter` — but both apps now
+pass `new NodeAdapter()` to `NestFactory.create`, so the bundle names
+`@nestjs/platform-node` outright. `docker/check-runtime-deps.js` accepts a
 listed package the bundle never loads when a loaded package declares it as a
 peer (`peerDependencies` or `peerDependenciesMeta`), so they pass the check.
 
@@ -514,6 +517,48 @@ builds fine; every tenant uses it.
 
 ---
 
+### ⚠️ node:http has no `req.res` back-reference
+
+Express assigns `req.res` (and `res.req`) on every request. Raw `node:http`
+does not, and `@nestjs/platform-node` does not add it — `NodeRequest` only
+extends `IncomingMessage`. Anything reaching the response through the request
+silently stops working, and because the call sites were written
+`req.res?.setHeader(...)`, the optional chain swallows it: no crash, just
+headers that never get sent.
+
+[api-token.strategy.ts](../../libs/api-token/api/src/lib/api-token.strategy.ts)
+needs it, since a passport `validate()` gets the request and nothing else.
+[responseBackReference](../../libs/api-token/api/src/lib/response-back-reference.ts)
+restores the link and api-example installs it in `main.ts` before helmet.
+
+**A unit test cannot catch this** — the existing strategy spec fakes
+`{ res: { setHeader } }` and passes either way. Only an HTTP-level test on a
+real `NodeAdapter` app shows it, which is what
+[response-back-reference.spec.ts](../../libs/api-token/api/src/lib/response-back-reference.spec.ts)
+does: one case asserts the link is *absent* without the middleware.
+
+---
+
+### ⚠️ `@nestjs/apollo` refuses the node:http adapter
+
+`ApolloDriver.registerServer()` switches on `httpAdapter.getType()` and handles
+exactly `express` and `fastify`. `@nestjs/platform-node` reports `node`, so the
+whole API dies on boot with _No support for current HttpAdapter: node_ — the
+error comes from `GraphQLModule.onModuleInit`, not from anything we wrote.
+
+[libs/utils/api/src/lib/graphql/node-apollo.driver.ts](../../libs/utils/api/src/lib/graphql/node-apollo.driver.ts)
+overrides `registerServer` to call the `protected registerExpress` directly.
+That path only needs `getInstance().use(path, handler)` and Express-shaped
+`req`/`res`, both of which platform-node provides, so Apollo runs unmodified on
+top of it — `@as-integrations/express5` stays a runtime dependency.
+
+**Drop the subclass once Apollo knows the adapter.** It depends on a protected
+method, so a `@nestjs/apollo` bump can break it; the failure is loud and caught
+by
+[app.module.http.spec.ts](../../apps/api-example/src/nestapp/app.module.http.spec.ts).
+
+---
+
 ### ⚠️ Express 5 has no bare `*` route
 
 [apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
@@ -544,11 +589,11 @@ and block-content imports them back. Every block-content provider that takes
 `ArticleService`, `PageService` or `HOT_AND_TRENDING_DATA_SOURCE` therefore
 uses `@Inject(forwardRef(() => …))` — see
 [teaser-list.resolver.ts](../../libs/block-content/api/src/lib/teaser/teaser-list.resolver.ts)
-and [slot-teasers-loader.ts](../../libs/block-content/api/src/lib/teaser/slot-teasers-loader.ts).
+and [block-tree-loader.ts](../../libs/block-content/api/src/lib/block-tree/block-tree-loader.ts).
 
 Without it the class or token is still `undefined` when the decorator runs,
 and the API dies at boot: `Nest can't resolve dependencies of the
-SlotTeasersLoader (EventService, ?, BlockTemplateDataloaderService)`. Whether
+BlockTreeLoader (EventService, ?, BlockTemplateDataloaderService)`. Whether
 it dies depends on module load order: until 2026-10-07 the `ActionModule`
 happened to import `ArticleModule` early enough to hide two missing
 `forwardRef`s; deleting that module exposed both.
@@ -556,7 +601,7 @@ happened to import `ArticleModule` early enough to hide two missing
 **Load-bearing:** the `forwardRef` wrappers. Removing or reordering a module in
 `app.module.ts` can make a cycle that "worked" fail at the next start.
 
-Guarded for `SlotTeasersLoader` only: `slot-teasers-loader.spec.ts` starts with
+Guarded for `BlockTreeLoader` only: `block-tree-loader.spec.ts` starts with
 `import './article.service';`, which enters the cycle from the article side and
 reproduces the boot error in a unit test. A new injection site needs the same
 trick or nothing catches it before `nx serve api-example`.
@@ -800,6 +845,9 @@ a case in `use-seeded-state.spec.tsx`.
 
 The same render guards the cure: a view with async `defaultValues` should
 return nothing until `formState.isLoading` clears.
+
+Don't reach for the hook in new code at all — see code-style.md. It is kept
+for the views that still use it.
 
 ---
 
@@ -1084,6 +1132,103 @@ Pinned by `render.spec.tsx`, `newsletter-render.service.spec.ts`,
 `react-dom`, `@react-email/components`, and `tslib`, because the API's webpack
 gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
 `apps/api-example/package.json` — see [infrastructure.md](infrastructure.md).
+
+---
+
+### ⚠️ An inline script in a route's `head()` re-runs on every navigation
+
+`head()` can return `scripts`, and `RouterManagedScriptTag` takes `children`,
+so an inline snippet type-checks and server-renders correctly. It is still the
+wrong home for anything that must run once.
+
+`HeadContent` is a `"use client"` component that renders those tags from
+reactive router state, on the server *and* the client. Measured on the built
+server: a counter in the root route's `head().scripts` read 1 after hydration,
+then 2 and 3 after two client-side navigations, with the `<script>` tags
+piling up in `<head>`. Being identical across routes does not help — the tag
+is re-rendered per match.
+
+So analytics initialisers (`gtag('config')`, the GTM IIFE, the Plausible
+shim) stay in the `Analytics` component. They are not idempotent, and moving
+them would double-fire them on every navigation.
+
+For a one-shot bootstrap — `window.PUBLIC_ENV`, `window.WEBSITE_SETTINGS` —
+use `ScriptOnce` from `@tanstack/react-router`. It renders server-side only,
+carries the CSP nonce from `router.options.ssr.nonce`, and appends
+`document.currentScript.remove()` so nothing survives in the hydrated DOM.
+
+---
+
+### ⚠️ A TanStack build that works locally can still ship a broken `.output`
+
+[`apps/gruppetto/vite.config.mts`](../../apps/gruppetto/vite.config.mts) aliases
+two specifiers to their ESM equivalents in `resolve.alias`. They look
+redundant — nothing in the app imports React from a CJS module, and the build
+is green without them.
+
+Vite externalises `react` for the SSR environment. Rolldown then inlines any
+CJS dependency it cannot externalise safely and emits a literal
+`__require("react")` inside it, which nitro's second pass cannot rewrite. The
+call resolves against `node_modules` on disk, and `.output` ships without one,
+so every SSR render dies with `Cannot find module 'react'` — while `nx build`
+exits 0. The offenders here are `react-transition-group/cjs` (reached through
+MUI) and `use-sync-external-store/shim` (reached through `swr` and
+`@tanstack/react-store`). Upstream closed this as working-as-intended:
+[rolldown#10643](https://github.com/rolldown/rolldown/issues/10643).
+
+Whether it happens depends on whether the package is reachable from the **root**
+`node_modules`. A workspace carrying hoisted leftovers from the npm era
+resolves them to their ESM builds and never reproduces it; CI's clean
+`pnpm install --frozen-lockfile` does. To reproduce a CI build locally,
+`git archive` the branch into a temp directory and install there — do not trust
+your own `node_modules`.
+
+Do **not** "fix" it by adding `react` to the nitro `traceDeps`. The require then
+resolves to a second React copy, hooks fail against the bundled copy's
+dispatcher, and SSR degrades to an empty shell while still returning 200.
+`ssr.noExternal: ['react']` removes the require too, but hands react-dom/server
+its own copy and every render dies on a null hook dispatcher — hence the
+aliases.
+
+[`docker/check-nitro-output.js`](../../docker/check-nitro-output.js) runs in the
+`build-website-tanstack` stage and fails the image build on any specifier —
+`require()`, dynamic `import()` or static `import ... from` — that is neither
+bundled, traced, nor a node builtin. The same bug hid
+`@sentry/server-runtime-injection`, which `@sentry/node` imports and nitro did
+not trace, and later `@sentry/tanstackstart-react`, which the `--import`
+preload resolves at runtime from a build of its own.
+
+### ⚠️ A migrated tenant can pass every gate and still render the wrong page
+
+mannschaft.com, cültür.ch and ganzgraz.at each shipped a regression that
+survived `nx build`, `lint`, `typecheck`, the specs,
+[`docker/check-nitro-output.js`](../../docker/check-nitro-output.js) and
+[`tools/tanstack-route-parity.mjs`](../../tools/tanstack-route-parity.mjs).
+Verified live on 2026-11-04: munotgloeggli.ch and ganzgraz.at served MUI's
+default pink `#e91e63` ten and twelve times in their rendered `<style>`, with
+their configured primary (`#dc0d15`, `#4E2996`) present only inside the
+`WEBSITE_SETTINGS` JSON; mannschaft.com logged `Not allowed to load local
+resource: file:///wepublish/.output/server/_ssr/fonts/Plain-Light.otf`.
+
+The route check asks whether every URL still answers. None of these changed a
+status code. What was lost each time was something the Next `pages/_app.tsx`
+or `pages/index.tsx` did that the shared route factories do not:
+`settingsTheme` on `TenantProviders`, `thirdParty: {stripe}`, a
+`DailyBriefingContext.Provider` that only the home page mounted, a
+`styled(PageContainer)` wrapper, and a `fullWidth={false}` that a grep for the
+component name read as "present, so copy the usual one".
+
+**Load-bearing:** [`tools/tanstack-shell-parity.mjs`](../../tools/tanstack-shell-parity.mjs)
+diffs those two file pairs per tenant and fails on anything the Next side
+mentions and the TanStack side does not. Run it for every migration; it would
+have caught five of the six. The sixth is the font URL — emotion emits
+`@font-face` during SSR, where `import.meta.url` is a path on disk, so fonts
+must be static asset imports and the proof is
+`grep -r "file://" dist/apps/<tenant>/.output/server` finding nothing.
+
+Only `ganzgraz` and `munotgloeggli` take `settingsTheme`; every other tenant's
+`createTheme: () => theme` ignores it deliberately, so wiring the prop
+elsewhere is a behaviour change, not a fix.
 
 ---
 

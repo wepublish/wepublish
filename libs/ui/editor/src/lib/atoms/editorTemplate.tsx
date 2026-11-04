@@ -5,10 +5,13 @@ const Children = styled('div', {
   shouldForwardProp: propName => propName !== 'maxWidth',
 })<{ maxWidth: string }>`
   display: flex;
-  width: 80%;
+  // Leaves room on each side for the block list's absolutely positioned
+  // move buttons and style select (150px select + margins).
+  width: min(80%, calc(100% - 340px));
   max-width: ${({ maxWidth }) => maxWidth};
 
-  @media (max-width: 899px) {
+  // The block list stacks those columns below lg, so use the full width.
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     width: 100%;
   }
 `;

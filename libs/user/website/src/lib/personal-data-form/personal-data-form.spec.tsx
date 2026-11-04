@@ -65,7 +65,7 @@ describe('PersonalDataForm', () => {
     expect(field('user.email')).toBeDisabled();
   });
 
-  it('shows the translated password change warning', () => {
+  it('explains that the password fields are only for changing it', () => {
     renderForm();
 
     expect(

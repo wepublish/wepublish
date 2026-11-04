@@ -96,6 +96,24 @@ describe('MailProviderSettingsService', () => {
     });
   });
 
+  test('keeps the stored secrets when the form sends them empty', async () => {
+    vi.spyOn(prisma.settingMailProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    const update = vi
+      .spyOn(prisma.settingMailProvider, 'update')
+      .mockResolvedValue(existing);
+
+    await service.updateMailProviderSetting({
+      id: 'mail',
+      name: 'Renamed',
+      apiKey: '',
+      webhookEndpointSecret: '',
+    } as never);
+
+    expect(update.mock.calls[0][0].data).toEqual({ name: 'Renamed' });
+  });
+
   test('refuses to delete the only mail provider', async () => {
     vi.spyOn(prisma.settingMailProvider, 'findUnique').mockResolvedValue(
       existing

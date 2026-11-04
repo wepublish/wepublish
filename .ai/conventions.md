@@ -91,12 +91,15 @@ Ship unfinished work on master behind a flag instead of on a deploy branch:
 2. Gate the API with `@Feature('key')` (`@wepublish/features/api`).
 3. Gate the editor with `<FeatureControl feature="key">` around nav items and
    `createCheckedFeatureComponent('key')` around routes (`@wepublish/ui/editor`).
+   Gate a website page with `useWebsiteFeature('key')` (`@wepublish/utils/website`).
+   The `features` query needs a session, so only use it on pages behind the auth
+   guard, and prefetch `FeaturesDocument` in their `getInitialProps`.
 4. Once the CMS reports the key, staff switch it on per medium in One
    (Clients → features); see [external-services.md](../.claude/docs/external-services.md).
 
 The schema and the migrations stay the same for every medium; only access is
 gated. When the feature is ready for every medium, delete the entry and its
-`@Feature` / `FeatureControl` checks in the same change. `FeatureKey` is typed
+`@Feature` / `FeatureControl` / `useWebsiteFeature` checks in the same change. `FeatureKey` is typed
 from the registry, so a forgotten check fails to compile.
 
 ### Settings (per instance, edited in the editor)

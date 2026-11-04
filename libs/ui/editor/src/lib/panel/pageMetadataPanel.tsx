@@ -30,6 +30,7 @@ import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdListAlt,
+  MdNoteAdd,
   MdSettings,
   MdShare,
   MdTravelExplore,
@@ -110,19 +111,23 @@ export interface PageMetadata {
 
 export interface PageMetadataPanelProps {
   value: PageMetadata;
+  isTemplate?: boolean;
   seoContext?: SeoBlockContext;
 
   onSave?(): void;
   onClose?(): void;
+  onCreateTemplate?(): void;
 
   onChange?(value: PageMetadata): void;
 }
 
 function PageMetadataPanel({
   value,
+  isTemplate,
   seoContext,
   onSave,
   onClose,
+  onCreateTemplate,
   onChange,
 }: PageMetadataPanelProps) {
   const {
@@ -361,22 +366,24 @@ function PageMetadataPanel({
               fullWidth
             />
 
-            <TextField
-              id="pageSlug"
-              name="slug"
-              label={
-                <>
-                  {t('pageEditor.panels.slug')}{' '}
-                  <InfoTooltip text={t('pageEditor.panels.slugInfo')} />
-                </>
-              }
-              disabled={!isAuthorized}
-              value={slug}
-              onChange={event =>
-                onChange?.({ ...value, slug: event.target.value })
-              }
-              fullWidth
-            />
+            {!isTemplate && (
+              <TextField
+                id="pageSlug"
+                name="slug"
+                label={
+                  <>
+                    {t('pageEditor.panels.slug')}{' '}
+                    <InfoTooltip text={t('pageEditor.panels.slugInfo')} />
+                  </>
+                }
+                disabled={!isAuthorized}
+                value={slug}
+                onChange={event =>
+                  onChange?.({ ...value, slug: event.target.value })
+                }
+                fullWidth
+              />
+            )}
 
             <FormSectionTitle>
               {t('metadataSections.publication')}
@@ -450,6 +457,20 @@ function PageMetadataPanel({
                 }
               />
             </FormGroup>
+
+            {onCreateTemplate && !isTemplate && (
+              <PermissionControl
+                qualifyingPermissions={['CAN_CREATE_PAGE_TEMPLATE']}
+              >
+                <Button
+                  variant="outlined"
+                  startIcon={<MdNoteAdd />}
+                  onClick={onCreateTemplate}
+                >
+                  {t('pageEditor.panels.createTemplate')}
+                </Button>
+              </PermissionControl>
+            )}
           </FormFields>
         );
 

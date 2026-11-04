@@ -3,7 +3,7 @@ import {
   createNamespacedCacheTesting,
   type NamespacedCacheTesting,
 } from '@wepublish/kv-ttl-cache/api/testing';
-import express from 'express';
+import type { NodeRequest } from '@nestjs/platform-node';
 import { MolliePaymentProvider } from './mollie-payment-provider';
 
 const harnesses: NamespacedCacheTesting[] = [];
@@ -153,7 +153,7 @@ describe('MolliePaymentProvider authorization', () => {
       req: {
         query: { key: 'secret' },
         body: { id: 'tr_1' },
-      } as unknown as express.Request,
+      } as unknown as NodeRequest,
     });
 
     expect(response.paymentStates).toEqual([]);

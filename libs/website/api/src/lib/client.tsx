@@ -19,7 +19,7 @@ import { ComponentType, createElement, memo, useMemo } from 'react';
 import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
 import { absoluteUrlToRelative } from './absolute-url-to-relative';
 import { flattenBlockTemplates } from './flatten-block-templates';
-import { omitDisabledBlocks } from './omit-disabled-blocks';
+import { mergeBlockSelections } from './merge-block-selections';
 import { omitSensitiveData } from './omit-sensitive-data';
 
 export const V1_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V1__';
@@ -39,10 +39,10 @@ let CACHED_CLIENT: ApolloClient;
 const isFile = (value: unknown): boolean =>
   Boolean(
     (typeof File !== 'undefined' && value instanceof File) ||
-      (typeof Blob !== 'undefined' && value instanceof Blob) ||
-      (typeof value === 'object' &&
-        value !== null &&
-        Object.values(value).some(isFile))
+    (typeof Blob !== 'undefined' && value instanceof Blob) ||
+    (typeof value === 'object' &&
+      value !== null &&
+      Object.values(value).some(isFile))
   );
 
 const SSR_FETCH_TIMEOUT_MS = Number(process.env.SSR_FETCH_TIMEOUT_MS) || 10_000;
@@ -129,7 +129,7 @@ const createApiClient = (
         : ({} as TypePolicies),
         mergeDeepRight(
           mergeDeepRight(
-            mergeDeepRight(omitDisabledBlocks, flattenBlockTemplates),
+            mergeDeepRight(flattenBlockTemplates, mergeBlockSelections),
             omitSensitiveData
           ),
           cacheConfig?.typePolicies ?? ({} as TypePolicies)

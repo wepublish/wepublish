@@ -52,7 +52,14 @@ const NEXT_ONLY = new Set([
   'TagPageGetStaticProps',
   'ProfilePage',
   'ProfileWrapper',
+  'ProfileDetails',
+  'ProfileDetailsProps',
+  'ProfileDetailsWrapper',
+  'ProfileDetailsColumns',
+  'ProfilePersonalData',
+  'ProfileSecurityPart',
   'SubscriptionPage',
+  'ProfileSubscription',
   'DeactivatedSubscriptionsPage',
 ]);
 

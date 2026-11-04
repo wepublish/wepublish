@@ -39,6 +39,11 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+vi.mock('./createPageModal', () => ({
+  CreatePageModal: ({ open }: { open: boolean }) =>
+    open ? <div data-testid="create-page-modal" /> : null,
+}));
+
 const mockedUseQuery = useQuery as unknown as Mock;
 const refetch = vi.fn();
 
@@ -161,6 +166,18 @@ describe('PageList', () => {
         variables: { itemID: 'page-1', itemType: CommentItemType.Page },
       })
     );
+  });
+
+  it('offers to create a page from a template', () => {
+    renderList();
+
+    expect(screen.queryByTestId('create-page-modal')).toBeNull();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /pages.overview.newPage/ })
+    );
+
+    expect(screen.getByTestId('create-page-modal')).toBeTruthy();
   });
 
   describe('copy link', () => {

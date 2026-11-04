@@ -128,13 +128,15 @@ export const ArticleWrapper = styled(ContentWrapper)<{
         display: none;
       }
 
-      ${fadeout &&
-      css`
-        // fade out the third block (usually richtext) to indicate the user that a paywall is hitting.
-        > :nth-child(${hideContentAfter}) {
-          ${fadeoutStyles}
-        }
-      `}
+      ${
+        fadeout &&
+        css`
+          // fade out the third block (usually richtext) to indicate the user that a paywall is hitting.
+          > :nth-child(${hideContentAfter}) {
+            ${fadeoutStyles}
+          }
+        `
+      }
     `}
 
   ${({ theme }) => theme.breakpoints.up('md')} {

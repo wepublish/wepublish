@@ -16,6 +16,7 @@ import {
   PaymentAuthorizationNotifier,
 } from '@wepublish/payment/api';
 import { AppModule } from './app.module';
+import { createPrismaStub } from './testing/prisma-stub';
 
 const keys = generateKeyPairSync('ed25519', {
   privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
@@ -45,62 +46,6 @@ const LIFECYCLE_HOOKS = [
 // not export the constant.
 const SCHEDULER_TYPE = 'SCHEDULER_TYPE';
 
-const resultFor = (method: string) => {
-  if (method === 'findMany' || method === 'groupBy') {
-    return [];
-  }
-
-  if (method === 'count') {
-    return 0;
-  }
-
-  return null;
-};
-
-const createPrisma = (): PrismaService => {
-  const models = new Map<string, unknown>();
-  const prisma: object = new Proxy(
-    {},
-    {
-      get: (_target, property) => {
-        if (typeof property !== 'string' || property === 'then') {
-          return undefined;
-        }
-
-        if (property === '$transaction') {
-          return async (work: unknown) =>
-            typeof work === 'function' ?
-              work(prisma)
-            : Promise.all(work as Promise<unknown>[]);
-        }
-
-        if (property.startsWith('$')) {
-          return async () => [];
-        }
-
-        if (!models.has(property)) {
-          models.set(
-            property,
-            new Proxy(
-              {},
-              {
-                get: (_model, method) =>
-                  typeof method === 'string' && method !== 'then' ?
-                    async () => resultFor(method)
-                  : undefined,
-              }
-            )
-          );
-        }
-
-        return models.get(property);
-      },
-    }
-  );
-
-  return prisma as PrismaService;
-};
-
 describe('AppModule', () => {
   let module: TestingModule | undefined;
 
@@ -109,7 +54,7 @@ describe('AppModule', () => {
 
     module = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PrismaService)
-      .useValue(createPrisma())
+      .useValue(createPrismaStub())
       .compile();
     await module.init();
   }, 60_000);

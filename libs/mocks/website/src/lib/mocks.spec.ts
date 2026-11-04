@@ -194,8 +194,7 @@ describe('website mocks', () => {
       ratingSystem: mocks.mockCommentRatingSystem(),
       subscription: mocks.mockSubscription(),
       subscriptionWithPendingChange: mocks.mockSubscription({
-        pendingPaymentMethodChange:
-          mocks.mockSubscriptionPaymentMethodChange(),
+        pendingPaymentMethodChange: mocks.mockSubscriptionPaymentMethodChange(),
       }),
       invoice: mocks.mockInvoice(),
       sensitiveUser: mocks.mockSensitiveDataUser(),

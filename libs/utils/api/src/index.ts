@@ -19,3 +19,4 @@ export * from './lib/graphql/paginated-type';
 export * from './lib/graphql/date-comparison';
 export * from './lib/graphql/slug';
 export * from './lib/graphql/color.scalar';
+export * from './lib/graphql/node-apollo.driver';

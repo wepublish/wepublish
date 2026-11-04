@@ -14,8 +14,16 @@ import {
   HasPageLcResolver,
   HasPageResolver,
 } from './has-page/has-page.resolver';
-import { BlockContentModule } from '@wepublish/block-content/api';
+import {
+  BlockContentModule,
+  BlockTemplateModule,
+} from '@wepublish/block-content/api';
 import { TagModule } from '@wepublish/tag/api';
+import {
+  PageTemplateMetadataResolver,
+  PageTemplateResolver,
+} from './page-template/page-template.resolver';
+import { PageTemplateService } from './page-template/page-template.service';
 
 @Module({
   imports: [
@@ -24,6 +32,7 @@ import { TagModule } from '@wepublish/tag/api';
     ImageModule,
     TagModule,
     forwardRef(() => BlockContentModule),
+    forwardRef(() => BlockTemplateModule),
   ],
   providers: [
     PagePublicationWatcher,
@@ -32,6 +41,9 @@ import { TagModule } from '@wepublish/tag/api';
     PageService,
     PageResolver,
     PageRevisionResolver,
+    PageTemplateService,
+    PageTemplateResolver,
+    PageTemplateMetadataResolver,
     HasPageResolver,
     HasPageLcResolver,
     HasOptionalPageResolver,

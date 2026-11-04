@@ -43,6 +43,10 @@ RUN chmod -R g=u /wepublish
 #######
 
 FROM ${BUILD_IMAGE} AS  build-website
+# Declared but unused: the shared publish workflow passes PRERENDER for the
+# TanStack stage, and an undeclared build-arg is a docker warning on every
+# Next build.
+ARG PRERENDER
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_ORG
 ARG SENTRY_PROJECT
@@ -98,6 +102,91 @@ ENV ADDRESS=0.0.0.0
 ENV PORT=4000
 WORKDIR /wepublish
 COPY --from=website-setup /wepublish /wepublish
+EXPOSE 4001
+USER 1001
+CMD ["node", "/wepublish/map-secrets.js", "restore", "--start"]
+
+#######
+## Website (TanStack Start)
+#######
+## Separate from the Next stages because the build output is shaped
+## differently: nitro emits a self-contained server at
+## `dist/apps/<app>/.output/server/index.mjs` plus static assets under
+## `.output/public`, instead of `.next/standalone` + `.next/static`.
+## `on-demand-publish-docker-image-website.yml` picks the target automatically
+## by looking for `apps/<app>/vite.config.mts`.
+
+FROM ${BUILD_IMAGE} AS build-website-tanstack
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG SENTRY_DSN
+ARG APP_RELEASE_ID
+ARG SSR_FETCH_TIMEOUT_MS
+ARG PRERENDER
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+ENV SENTRY_ORG=${SENTRY_ORG}
+ENV SENTRY_PROJECT=${SENTRY_PROJECT}
+ENV SENTRY_RELEASE=${SENTRY_RELEASE}
+ENV SENTRY_DSN=${SENTRY_DSN}
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
+ENV SSR_FETCH_TIMEOUT_MS=${SSR_FETCH_TIMEOUT_MS}
+ENV PRERENDER=${PRERENDER}
+### FRONT_ARG_REPLACER ###
+
+COPY . .
+# Rollup plus nitro need more than the default heap on a workspace this size.
+ENV NODE_OPTIONS=--max-old-space-size=8192
+# NX_NEXT_PROJECT_BUILD_OPTIONS is deliberately NOT forwarded: the publish
+# workflow puts Next-only flags in it (`--experimental-build-mode compile`),
+# which Nx would pass straight through to `vite build`.
+# `version` must land in the app's public dir BEFORE the build: nitro bakes a
+# build-time glob of `.output/public` into the server bundle, so anything
+# copied in afterwards is never served and the deploy workflow's
+# /deployed_version poll times out.
+RUN cp version apps/${NEXT_PROJECT}/public/deployed_version && \
+    pnpm exec prisma generate && \
+    pnpm exec nx build ${NEXT_PROJECT} --skip-nx-cache && \
+    node docker/check-nitro-output.js dist/apps/${NEXT_PROJECT}/.output && \
+    test -f dist/apps/${NEXT_PROJECT}/.output/server/instrument.server.mjs && \
+    node /wepublish/deployment/map-secrets.js clean
+
+FROM ${PLAIN_BUILD_IMAGE} AS website-tanstack-setup
+LABEL org.opencontainers.image.authors="WePublish Foundation"
+ENV NODE_ENV=production
+ENV HOSTNAME=0.0.0.0
+ENV ADDRESS=0.0.0.0
+ENV PORT=4000
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
+### FRONT_ARG_REPLACER ###
+
+WORKDIR /wepublish
+# `.output` is self-contained: server bundle, traced node_modules and the
+# static assets nitro serves itself.
+COPY --chown=1001:0 --from=build-website-tanstack /wepublish/dist/apps/${NEXT_PROJECT}/.output /wepublish/.output
+COPY --chown=1001:0 --from=build-website-tanstack /wepublish/secrets_name.list /wepublish/secrets_name.list
+COPY --chown=1001:0 --from=build-website-tanstack /wepublish/deployment/map-secrets.js /wepublish/map-secrets.js
+COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
+RUN printf '{"serverPath":"/wepublish/.output/server/index.mjs"}' > /wepublish/startup-config.json && \
+    chmod -R g=u /wepublish
+
+FROM ${RUNTIME_IMAGE} AS website-tanstack
+ENV NODE_ENV=production
+ENV HOSTNAME=0.0.0.0
+ENV ADDRESS=0.0.0.0
+ENV PORT=4000
+# Sentry initialises here, not inside the server bundle: `Sentry.init` has to
+# run before the modules it instruments are imported, and `map-secrets.js`
+# spawns `node <serverPath>` with the environment it inherits, so this is the
+# only place the flag can be set. Without it the SDK never starts at all —
+# nothing else calls `init` any more — so treat a missing
+# `instrument.server.mjs` as a build failure rather than losing observability
+# quietly.
+ENV NODE_OPTIONS="--import /wepublish/.output/server/instrument.server.mjs"
+WORKDIR /wepublish
+COPY --from=website-tanstack-setup /wepublish /wepublish
 EXPOSE 4001
 USER 1001
 CMD ["node", "/wepublish/map-secrets.js", "restore", "--start"]

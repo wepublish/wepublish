@@ -31,8 +31,10 @@ type function fail. When setting up a new NestJS lib, copy the setup from
 `tsconfig.spec.json`).
 
 `libs/block-content/api`, `libs/image/api` and `libs/mocks/website` are in
-`.nxignore` (load-bearing: circular imports), so `nx test` doesn't run their
-specs — run `pnpm vitest run --config libs/<lib>/vitest.config.ts` yourself.
+`.nxignore` (load-bearing: circular imports), so `nx test` and `nx affected`
+skip their specs — run `pnpm vitest run --config libs/<lib>/vitest.config.ts`
+yourself. CI runs them through that same command (`.github/workflows/test.yml`),
+so their specs belong next to the code, not in another lib.
 
 ## Test-driven development is mandatory
 
@@ -194,12 +196,16 @@ config spec, an `index.spec.ts` that catches circular imports, and a
 
 ### Editor libs (Vitest + Apollo mocks)
 
-The editor is a React Router SPA talking to Apollo. Wrap in `BrowserRouter` and
-`MockedProvider`, and stub `getApiClientV2` when the component uses the v2 client:
+The editor is a React Router SPA talking to Apollo, on a data router
+(`createBrowserRouter`) so `useBlocker` works — `useUnsavedChangesDialog` throws
+under a plain `BrowserRouter`. Render with
+`<RouterProvider router={createMemoryRouter([{ path: '*', element: <X /> }])} />`
+and `MockedProvider`, and stub `getApiClientV2` when the component uses the v2
+client:
 
 ```tsx
 import { MockedProvider, MockLink } from '@apollo/client/testing';
-import { BrowserRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import * as v2Client from '@wepublish/editor/api';
 
 vi.spyOn(v2Client, 'getApiClientV2').mockReturnValue(
@@ -218,7 +224,7 @@ logic belongs in a lib and is tested there. What the app itself needs is a
 36 snapshot directories exist, mostly for website components. Update them with:
 
 ```bash
-pnpm nx test <project> --configuration=update    # single project
+pnpm nx test <project> -- -u                    # single project (--configuration=update does not exist)
 pnpm run test-u                                  # entire workspace
 ```
 
