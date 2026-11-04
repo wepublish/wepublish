@@ -38,6 +38,12 @@ export const FEATURES = [
     description: 'Media: video and audio libraries with uploads',
     stage: 'alpha',
   },
+  {
+    key: 'referrals',
+    description:
+      'Referrals: referral links in the profile, the referrer on subscriptions, and discount codes that require referrals',
+    stage: 'alpha',
+  },
 ] as const satisfies readonly Feature[];
 
 export type FeatureKey = (typeof FEATURES)[number]['key'];

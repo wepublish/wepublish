@@ -5,19 +5,35 @@ import {
   mockSensitiveDataUser,
   renderWithProviders,
 } from '@wepublish/mocks/website';
-import { FeaturesDocument } from '@wepublish/website/api';
+import { FeaturesDocument, ReferralCodeDocument } from '@wepublish/website/api';
 import { z } from 'zod';
 
 import { ProfileDetails } from './profile-details';
 
+const user = mockSensitiveDataUser();
+
+const referralCodeQuery = mockOperation(ReferralCodeDocument, {
+  variables: {},
+  data: {
+    __typename: 'Query',
+    me: {
+      __typename: 'SensitiveDataUser',
+      id: user.id,
+      referralCode: 'K7QX2M9P',
+    },
+  },
+});
+
 const renderWith = (features: string[]) =>
   renderWithProviders(<ProfileDetails />, {
-    user: mockSensitiveDataUser(),
+    user,
     mocks: [
       mockOperation(FeaturesDocument, {
         maxUsageCount: Number.POSITIVE_INFINITY,
         data: { __typename: 'Query', features },
       }),
+      // a query without its mock fails the test, so without referrals the code is never asked for
+      ...(features.includes('referrals') ? [referralCodeQuery] : []),
     ],
   });
 
@@ -112,6 +128,36 @@ describe('ProfileDetails', () => {
           'Globale Meldung'
         )
       );
+    });
+  });
+
+  describe('referrals', () => {
+    const referralLink = `${window.location.origin}/mitmachen?referrer=K7QX2M9P`;
+
+    it('shows the referral link in a section of its own with the subscription history', async () => {
+      renderWith(['profile-subscription-history', 'referrals']);
+
+      const referral = await screen.findByRole('region', {
+        name: 'Dein Empfehlungslink',
+      });
+      expect(
+        await within(referral).findByDisplayValue(referralLink)
+      ).toBeInTheDocument();
+    });
+
+    it('shows the referral link in the single form', async () => {
+      renderWith(['referrals']);
+
+      expect(await screen.findByDisplayValue(referralLink)).toBeInTheDocument();
+    });
+
+    it('offers no referral link while referrals are switched off', async () => {
+      renderWith(['profile-subscription-history']);
+      await screen.findByRole('region', { name: 'Sicherheit' });
+
+      expect(
+        screen.queryByRole('region', { name: 'Dein Empfehlungslink' })
+      ).not.toBeInTheDocument();
     });
   });
 

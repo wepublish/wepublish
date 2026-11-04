@@ -13,6 +13,7 @@ import { User as PUser } from '@prisma/client';
 import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
 import { UserSubscriptionOverviewDataloader } from './user-subscription-overview.dataloader';
 import { ReferralCodeService } from './referral/referral-code.service';
+import { FeaturesService } from '@wepublish/features/api';
 
 @Resolver(() => SensitiveDataUser)
 export class SensitiveDataUserResolver {
@@ -21,7 +22,8 @@ export class SensitiveDataUserResolver {
     private userRoleDataloader: UserRoleDataloader,
     private subscriptionCountDataloader: UserSubscriptionCountDataloader,
     private subscriptionOverviewDataloader: UserSubscriptionOverviewDataloader,
-    private referralCodeService: ReferralCodeService
+    private referralCodeService: ReferralCodeService,
+    private features: FeaturesService
   ) {}
 
   @ResolveField(() => UserAddress, { nullable: true })
@@ -63,13 +65,13 @@ export class SensitiveDataUserResolver {
   @ResolveField(() => String, {
     nullable: true,
     description:
-      'The code for the referral link of the current user, created on first use. Null for other users.',
+      'The code for the referral link of the current user, created on first use. Null for other users and while referrals are switched off.',
   })
   public async referralCode(
     @CurrentUser() user: UserSession | undefined,
     @Parent() { id }: SensitiveDataUser
   ) {
-    if (user?.user.id !== id) {
+    if (user?.user.id !== id || !(await this.features.isEnabled('referrals'))) {
       return null;
     }
 

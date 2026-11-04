@@ -33,6 +33,7 @@ import {
   logger,
 } from '@wepublish/utils/api';
 import { ReferralCodeService } from '@wepublish/user/api';
+import { FeaturesService } from '@wepublish/features/api';
 import {
   calculateAmountForPeriodicity,
   GoodieService,
@@ -57,7 +58,8 @@ export class UserSubscriptionService {
     private discountCodeservice: DiscountCodeService,
     private goodieService: GoodieService,
     private subscriptionService: SubscriptionService,
-    private referralCodeService: ReferralCodeService
+    private referralCodeService: ReferralCodeService,
+    private features: FeaturesService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
@@ -588,9 +590,10 @@ export class UserSubscriptionService {
 
   /**
    * The user a referral code belongs to. No code means no referrer, an unknown one is refused.
+   * While referrals are switched off for the medium, a code from an old link is ignored.
    */
   private async resolveReferrer(referrer?: string | null) {
-    if (!referrer?.trim()) {
+    if (!referrer?.trim() || !(await this.features.isEnabled('referrals'))) {
       return undefined;
     }
 

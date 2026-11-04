@@ -146,6 +146,7 @@ export function ProfileDetails({
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const split = useWebsiteFeature('profile-subscription-history');
+  const referrals = useWebsiteFeature('referrals');
   // plainer messages than the global ones, for now only with the history
   const errorMap = useMemo(() => formErrorMap(t), [t]);
 
@@ -159,7 +160,7 @@ export function ProfileDetails({
           schema={schema}
         />
 
-        <ReferralLinkContainer />
+        {referrals && <ReferralLinkContainer />}
 
         <TotpSetupContainer />
       </ProfileWrapper>
@@ -197,9 +198,11 @@ export function ProfileDetails({
           </ProfileSecurityPart>
         </SectionBox>
 
-        <SectionBox title={t('user.referral.title')}>
-          <ReferralLinkContainer hideTitle />
-        </SectionBox>
+        {referrals && (
+          <SectionBox title={t('user.referral.title')}>
+            <ReferralLinkContainer hideTitle />
+          </SectionBox>
+        )}
       </ProfileDetailsColumns>
     </ProfileDetailsWrapper>
   );

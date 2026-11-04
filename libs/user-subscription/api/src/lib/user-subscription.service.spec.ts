@@ -10,6 +10,7 @@ import {
 } from '@wepublish/membership/api';
 import { PaymentsService } from '@wepublish/payment/api';
 import { ReferralCodeService } from '@wepublish/user/api';
+import { FeaturesService } from '@wepublish/features/api';
 import {
   MemberPlanDataloader,
   MemberPlanService,
@@ -57,6 +58,10 @@ describe('UserSubscriptionService', () => {
 
   let referralCodeServiceMock: {
     findReferrerId: Mock;
+  };
+
+  let featuresMock: {
+    isEnabled: Mock;
   };
 
   let goodieServiceMock: {
@@ -130,6 +135,10 @@ describe('UserSubscriptionService', () => {
       findReferrerId: vi.fn(),
     };
 
+    featuresMock = {
+      isEnabled: vi.fn(),
+    };
+
     goodieServiceMock = {
       getValidGoodie: vi.fn(),
     };
@@ -153,6 +162,7 @@ describe('UserSubscriptionService', () => {
         { provide: PrismaClient, useValue: prismaMock },
         { provide: SubscriptionService, useValue: subscriptionServiceMock },
         { provide: ReferralCodeService, useValue: referralCodeServiceMock },
+        { provide: FeaturesService, useValue: featuresMock },
       ],
     }).compile();
 
@@ -275,6 +285,26 @@ describe('UserSubscriptionService', () => {
     });
 
     describe('referrer', () => {
+      beforeEach(() => {
+        featuresMock.isEnabled.mockImplementation(
+          async (key: string) => key === 'referrals'
+        );
+      });
+
+      it('ignores the referrer while referrals are switched off for the medium', async () => {
+        featuresMock.isEnabled.mockResolvedValue(false);
+
+        await service.createSubscription('userId', {
+          ...baseArgs,
+          referrer: 'K7QX2M9P',
+        });
+
+        expect(referralCodeServiceMock.findReferrerId).not.toHaveBeenCalled();
+        expect(memberContextMock.createSubscription).toHaveBeenCalledWith(
+          expect.objectContaining({ referredByID: undefined })
+        );
+      });
+
       it('stores the reader whose referral code was given', async () => {
         referralCodeServiceMock.findReferrerId.mockResolvedValue('referrer-1');
 

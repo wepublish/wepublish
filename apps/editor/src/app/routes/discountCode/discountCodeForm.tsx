@@ -16,6 +16,7 @@ import {
   DateTimePicker,
   InfoTooltip,
   SelectMemberPlan,
+  useFeature,
 } from '@wepublish/ui/editor';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { MdExpandMore } from 'react-icons/md';
@@ -86,6 +87,8 @@ export const DiscountCodeForm = ({ create }: DiscountCodeFormProps) => {
   const { control } = useFormContext<DiscountCodeFormValues>();
   const memberPlan = useWatch({ control, name: 'memberPlan' });
   const minReferrals = useWatch({ control, name: 'minReferrals' });
+  // referrals are the only condition so far
+  const referrals = useFeature('referrals');
 
   return (
     <DiscountCodeFormWrapper>
@@ -143,54 +146,56 @@ export const DiscountCodeForm = ({ create }: DiscountCodeFormProps) => {
           </CardContent>
         </Card>
 
-        <Accordion
-          variant="outlined"
-          disableGutters
-          defaultExpanded={minReferrals != null}
-        >
-          <AccordionSummary expandIcon={<MdExpandMore />}>
-            <div>
-              <Typography>{t('discountCode.form.conditions')}</Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-              >
-                {t('discountCode.form.conditionsInfo')}
-              </Typography>
-            </div>
-          </AccordionSummary>
+        {referrals && (
+          <Accordion
+            variant="outlined"
+            disableGutters
+            defaultExpanded={minReferrals != null}
+          >
+            <AccordionSummary expandIcon={<MdExpandMore />}>
+              <div>
+                <Typography>{t('discountCode.form.conditions')}</Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  {t('discountCode.form.conditionsInfo')}
+                </Typography>
+              </div>
+            </AccordionSummary>
 
-          <AccordionDetails>
-            <Controller
-              control={control}
-              name="minReferrals"
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  value={field.value ?? ''}
-                  label={
-                    <>
-                      {t('discountCode.form.minReferrals')}{' '}
-                      <InfoTooltip
-                        text={t('discountCode.form.minReferralsInfo')}
-                      />
-                    </>
-                  }
-                  type="number"
-                  slotProps={{ htmlInput: { min: 0 } }}
-                  onChange={event =>
-                    field.onChange(
-                      event.target.value === '' ? null : +event.target.value
-                    )
-                  }
-                  error={Boolean(error)}
-                  helperText={error?.message}
-                  fullWidth
-                />
-              )}
-            />
-          </AccordionDetails>
-        </Accordion>
+            <AccordionDetails>
+              <Controller
+                control={control}
+                name="minReferrals"
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    label={
+                      <>
+                        {t('discountCode.form.minReferrals')}{' '}
+                        <InfoTooltip
+                          text={t('discountCode.form.minReferralsInfo')}
+                        />
+                      </>
+                    }
+                    type="number"
+                    slotProps={{ htmlInput: { min: 0 } }}
+                    onChange={event =>
+                      field.onChange(
+                        event.target.value === '' ? null : +event.target.value
+                      )
+                    }
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                )}
+              />
+            </AccordionDetails>
+          </Accordion>
+        )}
       </DiscountCodeFormSection>
 
       <DiscountCodeFormSection>

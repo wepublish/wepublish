@@ -69,6 +69,7 @@ import {
   toggleRequiredLabel,
   useActionMailQuestion,
   useAuthorisation,
+  useFeature,
   UserSearch,
   UserSubscriptionDeactivatePanel,
 } from '@wepublish/ui/editor';
@@ -180,6 +181,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const { id } = params;
 
   const isAuthorized = useAuthorisation(CanCreateSubscription.id);
+  const referrals = useFeature('referrals');
 
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] =
     useState<boolean>(false);
@@ -514,7 +516,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       startsAt: subscription.startsAt.toISOString(),
       properties: subscription.properties,
       extendable: subscription.extendable,
-      referredByID: subscription.referredBy?.id ?? null,
+      // without the field, an existing referrer is left as it is
+      ...(referrals && { referredByID: subscription.referredBy?.id ?? null }),
     };
 
     try {
@@ -963,36 +966,38 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                     </div>
                   </TwoUp>
 
-                  <TwoUp>
-                    <div>
-                      <FormLabel>
-                        {t('userSubscriptionEdit.referredBy')}
-                      </FormLabel>
+                  {referrals && (
+                    <TwoUp>
+                      <div>
+                        <FormLabel>
+                          {t('userSubscriptionEdit.referredBy')}
+                        </FormLabel>
 
-                      <Controller
-                        control={control}
-                        name="referredBy"
-                        render={({ field, fieldState: { error } }) => (
-                          <>
-                            <UserSearch
-                              name={field.name}
-                              user={field.value}
-                              onUpdateUser={user =>
-                                field.onChange(user ?? null)
-                              }
-                            />
+                        <Controller
+                          control={control}
+                          name="referredBy"
+                          render={({ field, fieldState: { error } }) => (
+                            <>
+                              <UserSearch
+                                name={field.name}
+                                user={field.value}
+                                onUpdateUser={user =>
+                                  field.onChange(user ?? null)
+                                }
+                              />
 
-                            <FormHelperText error={Boolean(error)}>
-                              {error?.message ??
-                                t('userSubscriptionEdit.referredByHelper')}
-                            </FormHelperText>
-                          </>
-                        )}
-                      />
-                    </div>
+                              <FormHelperText error={Boolean(error)}>
+                                {error?.message ??
+                                  t('userSubscriptionEdit.referredByHelper')}
+                              </FormHelperText>
+                            </>
+                          )}
+                        />
+                      </div>
 
-                    <div />
-                  </TwoUp>
+                      <div />
+                    </TwoUp>
+                  )}
 
                   <TwoUp>
                     <div>

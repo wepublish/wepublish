@@ -18,12 +18,19 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+const features = vi.hoisted(() => ({ referrals: true }));
+
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
   // Both would otherwise query the API.
   SelectMemberPlan: () => null,
   DateTimePicker: () => null,
+  useFeature: (key: string) => key === 'referrals' && features.referrals,
 }));
+
+beforeEach(() => {
+  features.referrals = true;
+});
 
 const values: DiscountCodeFormValues = {
   code: 'friends',
@@ -67,6 +74,20 @@ const conditionsToggle = () =>
   screen.getByRole('button', { name: /discountCode.form.conditions/ });
 
 describe('DiscountCodeForm conditions', () => {
+  it('offers no conditions while referrals are switched off for the medium', () => {
+    features.referrals = false;
+    render(
+      <Form
+        defaultValues={values}
+        onSubmit={vi.fn()}
+      />
+    );
+
+    expect(
+      screen.queryByRole('button', { name: /discountCode.form.conditions/ })
+    ).not.toBeInTheDocument();
+  });
+
   it('keeps the conditions closed for a code without conditions', () => {
     render(
       <Form

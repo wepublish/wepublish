@@ -56,8 +56,11 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+const features = vi.hoisted(() => ({ referrals: true }));
+
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  useFeature: (key: string) => key === 'referrals' && features.referrals,
   // The permission wrappers would otherwise need an authenticated session.
   createCheckedPermissionComponent: () => (component: unknown) => component,
   PermissionControl: ({ children }: { children: React.ReactNode }) => children,
@@ -194,6 +197,7 @@ beforeEach(() => {
   mutationFor(ReactivateSubscriptionDocument).mockClear();
   mutationFor(RevertSubscriptionUpgradeDocument).mockClear();
   mutationFor(UpdateSubscriptionDocument).mockClear();
+  features.referrals = true;
 });
 
 describe('SubscriptionEditView', () => {
@@ -343,6 +347,22 @@ describe('SubscriptionEditView', () => {
           variables: expect.objectContaining({ referredByID: null }),
         })
       );
+    });
+
+    it('keeps the referrer untouched while referrals are switched off for the medium', async () => {
+      features.referrals = false;
+      mockQueries(null, false, null, { referredBy: referrer });
+      renderEditView();
+
+      fireEvent.click(await screen.findByRole('button', { name: 'save' }));
+
+      await waitFor(() =>
+        expect(mutationFor(UpdateSubscriptionDocument)).toHaveBeenCalled()
+      );
+      expect(screen.queryByText('userSubscriptionEdit.referredBy')).toBeNull();
+      expect(
+        mutationFor(UpdateSubscriptionDocument).mock.calls[0][0].variables
+      ).not.toHaveProperty('referredByID');
     });
 
     it('refuses a reader referring themselves', async () => {
