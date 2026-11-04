@@ -19,6 +19,7 @@ import { produce } from 'immer';
 import { getMonthlyEquivalentRange } from '../formatters/format-payment-period';
 import { sortBy } from 'ramda';
 import { useMemo } from 'react';
+import { useReferrals } from './use-referrals';
 
 /**
  * If you pass the "deactivateSubscriptionId" prop, this specific subscription will be canceled when
@@ -91,6 +92,7 @@ export const SubscribeContainer = <
     register: [register],
     challenge,
   } = useRegister();
+  const referrals = useReferrals();
 
   const filteredMemberPlans = useMemo(() => {
     return produce(memberPlanList, draftList => {
@@ -116,6 +118,7 @@ export const SubscribeContainer = <
         memberPlans={filteredMemberPlans}
         fetchSubscribeInfo={fetchSubscribeInfo}
         subscribeInfo={subscribeInfo}
+        showReferrer={referrals}
         {...props}
         onSubscribe={async formData => {
           const selectedMemberplan =

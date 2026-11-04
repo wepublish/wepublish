@@ -5,6 +5,7 @@ import { ssrAuthLink } from '../../lib/auth-link';
 import { getSessionTokenProps } from '../get-session-token-props';
 import { handleJwtLogin } from '../handle-jwt-login';
 import {
+  FeaturesDocument,
   InvoicesDocument,
   MeDocument,
   MemberPlanListDocument,
@@ -172,6 +173,10 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
         }),
         client.query({
           query: InvoicesDocument,
+        }),
+        // whether to ask for the referrer, so the field does not pop in
+        client.query({
+          query: FeaturesDocument,
         }),
       ]
     );

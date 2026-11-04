@@ -1133,7 +1133,7 @@ describe('Subscribe', () => {
       screen.getByRole('textbox', { name: t('subscribe.referrer.label') });
 
     it('subscribes without a referrer, the field is optional', async () => {
-      const { user, onSubscribe } = renderLoggedIn();
+      const { user, onSubscribe } = renderLoggedIn({ showReferrer: true });
 
       expect(referrerField()).not.toBeRequired();
       expect(referrerField()).toHaveValue('');
@@ -1147,7 +1147,7 @@ describe('Subscribe', () => {
     });
 
     it('subscribes with the referral code the reader entered', async () => {
-      const { user, onSubscribe } = renderLoggedIn();
+      const { user, onSubscribe } = renderLoggedIn({ showReferrer: true });
 
       await user.type(referrerField(), ' K7QX2M9P ');
       await confirm(user);
@@ -1162,10 +1162,30 @@ describe('Subscribe', () => {
 
     it('takes the referral code from the referral link', async () => {
       const { user, onSubscribe } = renderLoggedIn({
+        showReferrer: true,
         defaults: { referrer: 'K7QX2M9P' },
       });
 
       expect(referrerField()).toHaveValue('K7QX2M9P');
+
+      await confirm(user);
+
+      await waitFor(() =>
+        expect(onSubscribe).toHaveBeenCalledWith({
+          ...expectedSubscribe,
+          referrer: 'K7QX2M9P',
+        })
+      );
+    });
+
+    it('asks for no referrer without showReferrer, but keeps the code of a referral link', async () => {
+      const { user, onSubscribe } = renderLoggedIn({
+        defaults: { referrer: 'K7QX2M9P' },
+      });
+
+      expect(
+        screen.queryByRole('textbox', { name: t('subscribe.referrer.label') })
+      ).not.toBeInTheDocument();
 
       await confirm(user);
 

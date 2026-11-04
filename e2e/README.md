@@ -57,6 +57,12 @@ them both projects of `E2E_APP` run. `--app`, `--environment` and
 only when `E2E_APP` is one of them and skip otherwise; untagged scenarios are
 generic and run for every tenant. Keep generic scenarios free of tenant copy.
 
+**Scenarios of a flagged feature** carry `@feature:<key>` (a key from
+`libs/features`). The `capabilities` fixture asks the target's API (`features`)
+and skips them while the medium has the feature off; the local stack starts its
+API with every `@feature:` key of the feature files in `WEP_FEATURES`, so they
+always run locally.
+
 The `E2E_` prefixes are deliberate: `pnpm run e2e` goes through Nx, which
 loads the root `.env`, and that file sets `API_URL` / `EDITOR_URL` for local
 development.

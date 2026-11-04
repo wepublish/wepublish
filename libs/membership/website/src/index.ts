@@ -17,6 +17,7 @@ export * from './lib/subscribe/subscribe-texts';
 export * from './lib/subscribe/member-plan-render-settings';
 export * from './lib/goodie-picker/goodie-picker';
 export * from './lib/subscribe/subscribe-container';
+export * from './lib/subscribe/use-referrals';
 
 export * from './lib/upgrade/upgrade';
 export * from './lib/upgrade/upgrade-container';

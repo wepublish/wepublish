@@ -277,6 +277,12 @@ export type BuilderSubscribeProps<
   memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
   showGoodies?: boolean;
   showDiscountCodes?: boolean;
+  /**
+   * Asks for the referral code of who referred the reader (referrals switched
+   * on for the medium). Without the field, a code from a referral link is
+   * still passed on.
+   */
+  showReferrer?: boolean;
   goodieMinValue?: number | null;
   subscribeInfo: Pick<
     useQuery.Result<

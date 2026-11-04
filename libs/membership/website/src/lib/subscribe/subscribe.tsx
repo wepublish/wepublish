@@ -197,6 +197,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   memberPlanRenderSettings,
   showGoodies = false,
   showDiscountCodes = false,
+  showReferrer = false,
   challenge,
   userSubscriptions,
   userInvoices,
@@ -1149,23 +1150,27 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             </SubscribeNarrowSection>
           )}
 
-          <SubscribeNarrowSection area="referrer">
-            <Controller
-              name={'referrer'}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  value={field.value ?? ''}
-                  label={t('subscribe.referrer.label')}
-                  helperText={error?.message ?? t('subscribe.referrer.helper')}
-                  error={!!error}
-                  autoComplete="off"
-                  sx={{ maxWidth: 300 }}
-                />
-              )}
-            />
-          </SubscribeNarrowSection>
+          {showReferrer && (
+            <SubscribeNarrowSection area="referrer">
+              <Controller
+                name={'referrer'}
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={field.value ?? ''}
+                    label={t('subscribe.referrer.label')}
+                    helperText={
+                      error?.message ?? t('subscribe.referrer.helper')
+                    }
+                    error={!!error}
+                    autoComplete="off"
+                    sx={{ maxWidth: 300 }}
+                  />
+                )}
+              />
+            </SubscribeNarrowSection>
+          )}
 
           {!hasUserContext && (
             <SubscribeSection area="challenge">

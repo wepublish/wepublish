@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { featureKeysIn } from './feature-tags';
 
 /**
  * Which deployment the suite runs against. `E2E_APP` picks the tenant (an
@@ -30,6 +31,22 @@ export type Target = {
 };
 
 const appsDir = join(__dirname, '..', '..', 'apps');
+const featuresDir = join(__dirname, '..', 'features');
+
+const parseList = (raw: string | undefined) =>
+  (raw ?? '')
+    .split(',')
+    .map(item => item.trim())
+    .filter(Boolean);
+
+/** The text of every `.feature` file of the suite. */
+const featureFiles = (dir = featuresDir): string[] =>
+  readdirSync(dir, { withFileTypes: true }).flatMap(entry =>
+    entry.isDirectory() ? featureFiles(join(dir, entry.name))
+    : entry.name.endsWith('.feature') ?
+      [readFileSync(join(dir, entry.name), 'utf8')]
+    : []
+  );
 
 const readJson = (path: string) =>
   existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : undefined;
@@ -288,6 +305,11 @@ export function localDevServers(
         WEBSITE_URL: target.websiteUrl,
         ...(target.editorUrl && { EDITOR_URL: target.editorUrl }),
         ...(redisUrl && { REDIS_URL: redisUrl.toString() }),
+        // every feature a journey needs (`@feature:`), so none is skipped locally
+        WEP_FEATURES: [
+          ...parseList(env.WEP_FEATURES),
+          ...featureKeysIn(featureFiles()),
+        ].join(','),
       },
     });
   }

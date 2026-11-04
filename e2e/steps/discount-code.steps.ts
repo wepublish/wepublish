@@ -1,4 +1,6 @@
 import { expect } from '@playwright/test';
+import { target } from '../support/env';
+import { subscribePlanOf } from '../support/targets';
 import { Given, Then, When } from './fixtures';
 
 // Shared website copy (libs/website/translations, de + fr), not tenant copy.
@@ -15,17 +17,16 @@ Given('a subscribe page that accepts discount codes', async ({ data }) => {
 });
 
 Given(
-  'a discount code {string} of {int}% for the plan {string} that requires {int} referrals',
+  "a discount code {string} of {int}% for the tenant's subscribe plan that requires {int} referrals",
   async (
     { data },
     alias: string,
     discountPercent: number,
-    memberPlanSlug: string,
     minReferrals: number
   ) => {
     await data.createDiscountCode({
       alias,
-      memberPlanSlug,
+      memberPlanSlug: subscribePlanOf(target.app),
       discountPercent,
       minReferrals,
     });
@@ -33,16 +34,11 @@ Given(
 );
 
 When(
-  '{string} enters the discount code {string} for the plan {string}',
-  async (
-    { readers, data, ctx },
-    reader: string,
-    alias: string,
-    memberPlanSlug: string
-  ) => {
+  "{string} enters the discount code {string} for the tenant's subscribe plan",
+  async ({ readers, data, ctx }, reader: string, alias: string) => {
     const page = await readers.page(reader);
     const { code } = data.get('discountCode', alias);
-    const plan = await data.memberPlan(memberPlanSlug);
+    const plan = await data.memberPlan(subscribePlanOf(target.app));
 
     await page.goto(`/${discountSubscribePage}`);
     // The radio's name also holds price and description, so pick it by the

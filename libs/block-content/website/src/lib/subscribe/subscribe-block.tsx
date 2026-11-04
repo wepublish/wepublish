@@ -13,6 +13,7 @@ import {
 import { replace, toLower } from 'ramda';
 import { useCallback, useContext, useMemo } from 'react';
 import { useSubscribeBlock } from './subscribe-block.context';
+import { useReferrals } from '@wepublish/membership/website';
 import { PaymentForm } from '@wepublish/payment/website';
 
 export const isSubscribeBlock = (
@@ -46,6 +47,7 @@ export const SubscribeBlock = ({
     redirectPages,
     ...subscribeProps
   } = useSubscribeBlock();
+  const referrals = useReferrals();
   const { userSubscriptions } = subscribeProps;
   const {
     query: {
@@ -133,6 +135,7 @@ export const SubscribeBlock = ({
           memberPlanRenderSettings={memberPlanRenderSettings}
           showGoodies={showGoodies}
           showDiscountCodes={showDiscountCodes}
+          showReferrer={referrals}
           goodieMinValue={goodieMinValue}
           periodicityDisplay={periodicityDisplay}
           hiddenAreas={hiddenAreas}

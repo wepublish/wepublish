@@ -1,6 +1,8 @@
 import { expect } from '@playwright/test';
 import { SimulatedCheckout } from '../support/simulated-payment';
+import { target } from '../support/env';
 import { subscribeWithSimulatedPayment } from '../support/subscribe-form';
+import { subscribePlanOf } from '../support/targets';
 import { Then, When } from './fixtures';
 
 // Shared website copy (libs/website/translations, de + fr), not tenant copy.
@@ -67,11 +69,11 @@ Then(
 );
 
 When(
-  '{string} subscribes to the plan {string}',
-  async ({ readers, data, ctx }, reader: string, memberPlanSlug: string) => {
+  "{string} subscribes to the tenant's subscribe plan",
+  async ({ readers, data, ctx }, reader: string) => {
     await subscribeWithSimulatedPayment(
       await readers.page(reader),
-      await data.memberPlan(memberPlanSlug)
+      await data.memberPlan(subscribePlanOf(target.app))
     );
     ctx.currentReader = reader;
   }

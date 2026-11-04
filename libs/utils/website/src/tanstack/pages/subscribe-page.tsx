@@ -7,6 +7,7 @@ import {
   UpgradeContainer,
 } from '@wepublish/membership/website';
 import {
+  FeaturesDocument,
   InvoicesDocument,
   MeDocument,
   MemberPlanListDocument,
@@ -55,7 +56,9 @@ export const loadSubscribe = createServerFn({ method: 'GET' })
     if (sessionToken) {
       queries.push(
         client.query({ query: MeDocument }),
-        client.query({ query: InvoicesDocument })
+        client.query({ query: InvoicesDocument }),
+        // whether to ask for the referrer, so the field does not pop in
+        client.query({ query: FeaturesDocument })
       );
     }
 
@@ -78,6 +81,7 @@ export function SubscribePage(props: SubscribePageProps) {
     upgradeSubscriptionId,
     userId,
     discountCode,
+    referrer,
   } = useQueryParams();
 
   const { hasUser } = useUser();
@@ -129,6 +133,7 @@ export function SubscribePage(props: SubscribePageProps) {
             name: lastName as string | undefined,
             memberPlanSlug: memberPlanBySlug as string | undefined,
             discountCode: discountCode as string | undefined,
+            referrer: referrer as string | undefined,
             ...props.defaults,
           }}
           filter={filterMemberPlans}

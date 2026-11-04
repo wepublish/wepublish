@@ -23,6 +23,7 @@ import {
 import {
   ChallengeDocument,
   CreateSubscriptionInfoDocument,
+  FeaturesDocument,
   Currency,
   FullMemberPlanFragment,
   InvoicesDocument,
@@ -125,7 +126,15 @@ const subscribeInfoQuery = (plan: FullMemberPlanFragment) =>
     },
   });
 
+// signed-in readers are asked which features are switched on
+const featuresQuery = (features: string[] = []) =>
+  mockOperation(FeaturesDocument, {
+    maxUsageCount: Number.POSITIVE_INFINITY,
+    data: { __typename: 'Query', features },
+  });
+
 const userDataQueries = [
+  featuresQuery(),
   mockOperation(SubscriptionsDocument, {
     data: { __typename: 'Query', userSubscriptions: [subscription] },
   }),
@@ -245,6 +254,48 @@ describe('SubscribeContainer', () => {
     expect(
       screen.queryByRole('heading', { name: t('subscribe.spamProtection') })
     ).not.toBeInTheDocument();
+  });
+
+  describe('referrer', () => {
+    const referrerField = () =>
+      screen.queryByRole('textbox', { name: t('subscribe.referrer.label') });
+
+    it('asks a signed-in reader for the referrer while referrals are switched on', async () => {
+      renderContainer(
+        [
+          memberPlanListQuery,
+          featuresQuery(['referrals']),
+          ...userDataQueries.slice(1),
+          subscribeInfoQuery(standardPlan),
+        ],
+        {},
+        true
+      );
+
+      await waitFor(() => expect(referrerField()).toBeInTheDocument(), {
+        timeout: 10_000,
+      });
+    });
+
+    it('asks for no referrer while referrals are switched off', async () => {
+      renderContainer(
+        [
+          memberPlanListQuery,
+          ...userDataQueries,
+          subscribeInfoQuery(standardPlan),
+        ],
+        {},
+        true
+      );
+
+      await waitFor(
+        () => expect(screen.getAllByRole('alert')).toHaveLength(2),
+        {
+          timeout: 10_000,
+        }
+      );
+      expect(referrerField()).not.toBeInTheDocument();
+    });
   });
 
   it('registers, logs the reader in and subscribes with the absolute redirect pages', async () => {

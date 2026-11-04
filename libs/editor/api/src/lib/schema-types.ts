@@ -7762,7 +7762,7 @@ export type SensitiveDataUser = BaseUser & {
   pendingEmail?: Maybe<Scalars['String']['output']>;
   permissions: Array<Scalars['String']['output']>;
   properties: Array<Property>;
-  /** The code for the referral link of the current user, created on first use. Null for other users. */
+  /** The code for the referral link of the current user, created on first use. Null for other users and while referrals are switched off. */
   referralCode?: Maybe<Scalars['String']['output']>;
   roleIDs: Array<Scalars['String']['output']>;
   roles: Array<UserRole>;

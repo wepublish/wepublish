@@ -141,6 +141,7 @@ one next to it.
 
 Every scenario gets a **domain tag** (`@paywall`, `@auth`, `@membership`,
 `@comments`, `@seo`, …), `@app:<tenant>` if it only applies to some tenants,
+`@feature:<key>` if it needs a feature flag (`libs/features`) switched on,
 plus **every capability tag** it needs, so runs that lack the capability skip
 it with a reason instead of failing:
 

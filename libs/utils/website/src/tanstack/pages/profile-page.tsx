@@ -14,10 +14,12 @@ import {
 } from '@wepublish/membership/website';
 import {
   PersonalDataFormContainer,
+  ReferralLinkContainer,
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import {
   ConfirmEmailChangeDocument,
+  FeaturesDocument,
   InvoicesDocument,
   MeDocument,
   NavigationListDocument,
@@ -34,6 +36,7 @@ import {
   getRequestSessionToken,
   handleJwtLogin,
 } from '../ssr';
+import { useWebsiteFeature } from '../../lib/use-website-feature';
 import { withAuthGuard } from '../auth-guard';
 import { useQueryParams } from '../router-hooks';
 
@@ -111,6 +114,7 @@ export const loadProfile = createServerFn({ method: 'GET' })
         client.query({ query: NavigationListDocument }),
         client.query({ query: InvoicesDocument }),
         client.query({ query: SubscriptionsDocument }),
+        client.query({ query: FeaturesDocument }),
       ]);
     }
 
@@ -127,6 +131,7 @@ function ProfilePageComponent({ className, ...props }: ProfilePageProps) {
     elements: { H4, Alert },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
+  const referrals = useWebsiteFeature('referrals');
   const navigate = useNavigate();
   const query = useQueryParams();
   const client = useApolloClient();
@@ -275,6 +280,8 @@ function ProfilePageComponent({ className, ...props }: ProfilePageProps) {
         <H4 component={'h1'}>{t('navbar.profile')}</H4>
 
         <PersonalDataFormContainer {...props} />
+
+        {referrals && <ReferralLinkContainer />}
 
         <TotpSetupContainer />
       </ProfileWrapper>

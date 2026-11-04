@@ -3,6 +3,7 @@ import { test as base, createBdd } from 'playwright-bdd';
 import { ApiClient, createAdminClient } from '../support/api-client';
 import { BexioTestCompany } from '../support/bexio';
 import { env, missingCapabilities } from '../support/env';
+import { featureKeysOf } from '../support/feature-tags';
 import {
   Entity,
   nextRunId,
@@ -72,11 +73,25 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
   },
 
   capabilities: [
-    async ({ $tags }, use, testInfo) => {
+    async ({ $tags, adminApi }, use, testInfo) => {
       const missing = missingCapabilities($tags);
 
       if (!testInfo.project.use.baseURL) {
         missing.push(`no ${testInfo.project.name} URL for this target`);
+      }
+
+      // Asked only when everything else is there: it needs the API.
+      const features = featureKeysOf($tags);
+
+      if (!missing.length && features.length) {
+        const { features: enabled } = await (
+          await adminApi()
+        ).gql<{ features: string[] }>(`query { features }`);
+        const off = features.filter(key => !enabled.includes(key));
+
+        if (off.length) {
+          missing.push(`feature ${off.join(', ')} is switched off for this medium`);
+        }
       }
 
       testInfo.skip(missing.length > 0, missing.join(', '));

@@ -96,6 +96,8 @@ Ship unfinished work on master behind a flag instead of on a deploy branch:
    guard, and prefetch `FeaturesDocument` in their `getInitialProps`.
 4. Once the CMS reports the key, staff switch it on per medium in One
    (Clients → features); see [external-services.md](../.claude/docs/external-services.md).
+5. Tag its e2e journeys `@feature:key`: they skip where the medium has it off,
+   and the local e2e stack switches it on (`e2e/README.md`).
 
 The schema and the migrations stay the same for every medium; only access is
 gated. When the feature is ready for every medium, delete the entry and its

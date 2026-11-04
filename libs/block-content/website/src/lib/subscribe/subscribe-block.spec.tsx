@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import {
   mockChallenge,
   mockMemberPlan,
+  mockOperation,
   mockPeriodicityPrice,
   mockSensitiveDataUser,
   mockSubscribeBlock,
@@ -15,6 +16,7 @@ import {
   FullSubscriptionFragment,
   PaymentPeriodicity,
   SubscribeBlockField,
+  FeaturesDocument,
 } from '@wepublish/website/api';
 import { t } from 'i18next';
 import { SubscribeBlock } from './subscribe-block';
@@ -61,6 +63,7 @@ const renderSubscribeBlock = ({
   loggedIn = false,
   subscriptions = [],
   query,
+  features = [],
   ...context
 }: TestSubscribeBlockOptions & {
   fields?: SubscribeBlockField[];
@@ -68,6 +71,8 @@ const renderSubscribeBlock = ({
   loggedIn?: boolean;
   subscriptions?: FullSubscriptionFragment[];
   query?: Record<string, string>;
+  /** Switched on for the medium; only asked for with a session. */
+  features?: string[];
 } = {}) => {
   const subscribeBlock = createSubscribeBlockContext({
     challenge: loaded({ __typename: 'Query', challenge: mockChallenge() }),
@@ -85,6 +90,15 @@ const renderSubscribeBlock = ({
       subscribeBlock,
       user: loggedIn ? mockSensitiveDataUser() : null,
       router: { query },
+      mocks:
+        loggedIn ?
+          [
+            mockOperation(FeaturesDocument, {
+              maxUsageCount: Number.POSITIVE_INFINITY,
+              data: { __typename: 'Query', features },
+            }),
+          ]
+        : [],
     }
   );
 
@@ -137,19 +151,41 @@ describe('SubscribeBlock', () => {
         mail: 'jane@example.com',
         firstName: 'Jane',
         lastName: 'Doe',
-        referrer: 'K7QX2M9P',
       },
     });
 
     expect(screen.getByLabelText('Premium', { exact: false })).toBeChecked();
-    expect(screen.getByLabelText(t('subscribe.referrer.label'))).toHaveValue(
-      'K7QX2M9P'
-    );
     expect(screen.getByLabelText(t('user.form.email'))).toHaveValue(
       'jane@example.com'
     );
     expect(screen.getByLabelText(t('user.form.firstName'))).toHaveValue('Jane');
     expect(screen.getByLabelText(t('user.form.lastName'))).toHaveValue('Doe');
+  });
+
+  describe('referrer', () => {
+    it('fills in the referral code from the URL while referrals are switched on', async () => {
+      renderSubscribeBlock({
+        loggedIn: true,
+        features: ['referrals'],
+        query: { referrer: 'K7QX2M9P' },
+      });
+
+      expect(
+        await screen.findByLabelText(t('subscribe.referrer.label'))
+      ).toHaveValue('K7QX2M9P');
+    });
+
+    it('asks for no referrer while referrals are switched off', async () => {
+      renderSubscribeBlock({
+        loggedIn: true,
+        query: { referrer: 'K7QX2M9P' },
+      });
+
+      await screen.findByLabelText('Premium', { exact: false });
+      expect(
+        screen.queryByLabelText(t('subscribe.referrer.label'))
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('subscribes a logged in user to the selected member plan', async () => {
