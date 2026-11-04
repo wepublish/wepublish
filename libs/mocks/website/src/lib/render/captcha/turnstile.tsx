@@ -6,7 +6,7 @@ import { TestCaptcha } from './test-captcha';
 export type { TurnstileInstance } from '@marsidev/react-turnstile';
 
 export const Turnstile: typeof ReactTurnstile.Turnstile = forwardRef(
-  ({ siteKey, options, onSuccess }, ref) => {
+  ({ siteKey, onSuccess }, ref) => {
     const [attempt, setAttempt] = useState(0);
 
     useImperativeHandle(
@@ -28,7 +28,6 @@ export const Turnstile: typeof ReactTurnstile.Turnstile = forwardRef(
         siteKey={siteKey}
         onSolve={onSuccess}
         attempt={attempt}
-        language={options?.language}
       />
     );
   }

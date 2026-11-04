@@ -10,6 +10,7 @@ export const LLMS_TXT_CACHE_CONTROL =
 
 type Options = {
   getClient?: () => SitemapClient;
+  now?: () => Date;
 };
 
 export const createLlmsTxtHandler =
@@ -17,6 +18,7 @@ export const createLlmsTxtHandler =
     config: LlmsTxtSiteConfig,
     {
       getClient = () => getApiClient(getApiUrl(), [], { typePolicies: {} }),
+      now = () => new Date(),
     }: Options = {}
   ) =>
   async (req: NextApiRequest, res: NextApiResponse) => {
@@ -24,6 +26,7 @@ export const createLlmsTxtHandler =
       const txt = await renderLlmsTxt(config, {
         client: getClient(),
         siteUrl: siteUrlFor(name => req.headers[name]),
+        now: now(),
       });
 
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');

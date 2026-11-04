@@ -37,4 +37,8 @@ query LlmsContent($articleCount: Int!, $pageCount: Int!) {
       ...LlmsPage
     }
   }
+
+  navigations {
+    ...FullNavigation
+  }
 }

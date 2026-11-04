@@ -520,7 +520,7 @@ export const CommentEditor = ({
                     onClick={registerRedirect}
                   >
                     <MdLogin
-                      aria-hidden
+                      aria-label="Register"
                       css={iconStyles}
                     />
 

@@ -5,15 +5,17 @@ import { LlmsTxtSiteConfig, renderLlmsTxt } from './render';
 
 type Options = {
   getClient: () => SitemapClient;
+  now?: () => Date;
 };
 
 export const createLlmsTxtFetchHandler =
-  (config: LlmsTxtSiteConfig, { getClient }: Options) =>
+  (config: LlmsTxtSiteConfig, { getClient, now = () => new Date() }: Options) =>
   async (request: Request) => {
     try {
       const txt = await renderLlmsTxt(config, {
         client: getClient(),
         siteUrl: siteUrlFor(name => request.headers.get(name)),
+        now: now(),
       });
 
       return new Response(txt, {
