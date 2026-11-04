@@ -8,6 +8,13 @@ import {
   AuthorDrawer,
   AuthorEditForm,
 } from './routes/authors/authorDrawer';
+import { CommentActions } from './routes/comments/commentActions';
+import { CommentEditForm } from './routes/comments/commentEditView';
+import {
+  RatingOverrideRow,
+  RatingOverrides,
+} from './routes/comments/commentRatingOverrides';
+import { CommentThread } from './routes/comments/commentThread';
 import { DiscountCodeCreateForm } from './routes/discountCode/discountCodeCreateView';
 import { DiscountCodeEditForm } from './routes/discountCode/discountCodeEditView';
 import { EventCreateView } from './routes/events/eventCreateView';
@@ -91,6 +98,11 @@ describe('the editor under test', () => {
     ['AuthorCreateForm', AuthorCreateForm],
     ['AuthorEditForm', AuthorEditForm],
     ['AuthorDrawer', AuthorDrawer],
+    ['CommentEditForm', CommentEditForm],
+    ['CommentActions', CommentActions],
+    ['CommentThread', CommentThread],
+    ['RatingOverrides', RatingOverrides],
+    ['RatingOverrideRow', RatingOverrideRow],
     ['DiscountCodeCreateForm', DiscountCodeCreateForm],
     ['DiscountCodeEditForm', DiscountCodeEditForm],
     ['EventCreateView', EventCreateView],
