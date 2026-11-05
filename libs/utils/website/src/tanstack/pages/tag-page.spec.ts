@@ -31,6 +31,34 @@ describe('prefetchTag', () => {
     await expect(prefetchTag(client, { tag: 'unknown' })).resolves.toBeNull();
   });
 
+  it('prefetches the first page of 25 articles by default', async () => {
+    const tag = { id: 'tag-1', tag: 'klima' };
+    const { client, query } = clientReturning({ data: { tag } });
+
+    await prefetchTag(client, { tag: 'klima' });
+
+    expect(query).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: ArticleListDocument,
+        variables: expect.objectContaining({ take: 25, skip: 0 }),
+      })
+    );
+  });
+
+  it('prefetches the page size the tenant asks for', async () => {
+    const tag = { id: 'tag-1', tag: 'klima' };
+    const { client, query } = clientReturning({ data: { tag } });
+
+    await prefetchTag(client, { tag: 'klima', take: 50 });
+
+    expect(query).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: ArticleListDocument,
+        variables: expect.objectContaining({ take: 50, skip: 0 }),
+      })
+    );
+  });
+
   it('prefetches the articles of an existing tag', async () => {
     const tag = { id: 'tag-1', tag: 'klima' };
     const { client, query } = clientReturning({ data: { tag } });

@@ -3401,6 +3401,7 @@ type Mutation {
 
   """Deletes an existing article template."""
   deleteArticleTemplate(id: String!): ArticleTemplate!
+
   """Deletes an existing audio."""
   deleteAudio(id: String!): String!
 
@@ -3750,6 +3751,7 @@ type Mutation {
 
   """Updates an existing article template."""
   updateArticleTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
+
   """Updates an existing audio."""
   updateAudio(description: String, id: String!, license: String, link: String, source: String, title: String): Audio!
 

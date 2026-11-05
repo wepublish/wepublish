@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { useQueryParams, useReplaceSearch } from '../router-hooks';
 import { runContentQueries } from '../ssr';
 
-const take = 25;
+export const DEFAULT_TAG_TAKE = 25;
 
 const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional().default(1),
@@ -20,7 +20,7 @@ const pageSchema = z.object({
 
 /** Server-side half of the tag loader. See `runContentQueries`. */
 export const loadTag = createServerFn({ method: 'GET' })
-  .validator((data: { tag: string }) => data)
+  .validator((data: { tag: string; take?: number }) => data)
   .handler(async ({ data }) => {
     let found = false;
 
@@ -42,7 +42,7 @@ export const loadTag = createServerFn({ method: 'GET' })
  */
 export const prefetchTag = async (
   client: ApolloClient,
-  { tag }: { tag: string }
+  { tag, take = DEFAULT_TAG_TAKE }: { tag: string; take?: number }
 ) => {
   const tagResult = await client.query({
     query: TagDocument,
@@ -66,7 +66,13 @@ export const prefetchTag = async (
 };
 
 /** TanStack port of `TagPage`. */
-export function TagPage({ className }: { className?: string }) {
+export function TagPage({
+  className,
+  take = DEFAULT_TAG_TAKE,
+}: {
+  className?: string;
+  take?: number;
+}) {
   const replaceSearch = useReplaceSearch();
   const { page, tag } = pageSchema.parse(useQueryParams());
 

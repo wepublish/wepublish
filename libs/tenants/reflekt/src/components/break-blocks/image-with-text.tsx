@@ -40,9 +40,7 @@ const StyledImageWithTextBreakBlock = styled(BreakBlock)`
 
     li,
     li p {
-      font-family: ${[euclidCircularB.style.fontFamily, 'sans-serif'].join(
-        ','
-      )};
+      font-family: ${[euclidCircularB.family, 'sans-serif'].join(',')};
       font-size: 1.125rem;
 
       ${theme.breakpoints.up('md')} {
