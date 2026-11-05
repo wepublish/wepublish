@@ -653,3 +653,150 @@ describe('MediaService images', () => {
     });
   });
 });
+
+describe('MediaService transformation lifetime', () => {
+  const DAY = 24 * 60 * 60 * 1000;
+
+  const createImage = () =>
+    sharp({
+      create: {
+        width: 10,
+        height: 10,
+        channels: 3,
+        background: { r: 200, g: 100, b: 50 },
+      },
+    })
+      .png()
+      .toBuffer();
+
+  const passDays = (days: number) => vi.setSystemTime(Date.now() + days * DAY);
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllEnvs();
+  });
+
+  it('serves a young variant without transforming it again', async () => {
+    const { service, transformations } = createService();
+    await service.saveImage('image-1', await createImage());
+    await service.getImageUri('image-1', {} as TransformationsDto);
+
+    passDays(25);
+    await service.getImageUri('image-1', {} as TransformationsDto);
+
+    expect(transformations.writes).toEqual(['images/image-1/{}']);
+  });
+
+  it('transforms a variant again before the bucket lifecycle deletes it', async () => {
+    const { service, transformations } = createService();
+    await service.saveImage('image-1', await createImage());
+    await service.getImageUri('image-1', {} as TransformationsDto);
+
+    passDays(26);
+    const { exists } = await service.getImageUri(
+      'image-1',
+      {} as TransformationsDto
+    );
+
+    expect(exists).toBe(true);
+    expect(transformations.writes).toEqual([
+      'images/image-1/{}',
+      'images/image-1/{}',
+    ]);
+  });
+
+  it('follows S3_TRANSFORMATION_MAX_AGE_DAYS', async () => {
+    vi.stubEnv('S3_TRANSFORMATION_MAX_AGE_DAYS', '7');
+    const { service, transformations } = createService();
+    await service.saveImage('image-1', await createImage());
+    await service.getImageUri('image-1', {} as TransformationsDto);
+
+    passDays(2);
+    await service.getImageUri('image-1', {} as TransformationsDto);
+    passDays(1);
+    await service.getImageUri('image-1', {} as TransformationsDto);
+
+    expect(transformations.writes).toEqual([
+      'images/image-1/{}',
+      'images/image-1/{}',
+    ]);
+  });
+
+  it('copies a document to the public disk again before it expires', async () => {
+    const { service, transformations } = createService();
+    await service.saveDocument(
+      'doc-1',
+      Buffer.from('{}'),
+      'application/json',
+      'payload.json'
+    );
+    await service.getDocumentUri('doc-1');
+
+    passDays(26);
+    await service.getDocumentUri('doc-1');
+
+    expect(transformations.writes).toEqual([
+      'documents/doc-1/payload.json',
+      'documents/doc-1/payload.json',
+    ]);
+  });
+
+  it('copies a video to the public disk again before it expires', async () => {
+    const { service, transformations } = createService();
+    await service.saveVideo('video-1', Buffer.from('mp4'), 'video/mp4', 'a.mp4');
+    await service.getVideoUri('video-1');
+
+    passDays(25);
+    await service.getVideoUri('video-1');
+    passDays(1);
+    await service.getVideoUri('video-1');
+
+    expect(transformations.writes).toEqual([
+      'videos/video-1/a.mp4',
+      'videos/video-1/a.mp4',
+    ]);
+  });
+
+  it('copies an audio file to the public disk again before it expires', async () => {
+    const { service, transformations } = createService();
+    await service.saveAudio(
+      'audio-1',
+      Buffer.from('mp3'),
+      'audio/mpeg',
+      'a.mp3'
+    );
+    await service.getAudioUri('audio-1');
+
+    passDays(26);
+    await service.getAudioUri('audio-1');
+
+    expect(transformations.writes).toEqual([
+      'audios/audio-1/a.mp3',
+      'audios/audio-1/a.mp3',
+    ]);
+  });
+
+  it('renders a document thumbnail again before it expires', async () => {
+    const { service, uploads, transformations } = createService();
+    await service.saveDocument(
+      'doc-2',
+      Buffer.from('archive'),
+      'application/zip',
+      'Archiv'
+    );
+    await transformations.seed('documents/doc-2/thumbnail', 'image/webp');
+    const listUploads = vi.spyOn(uploads, 'listAll');
+
+    passDays(25);
+    await service.getDocumentThumbnailUri('doc-2');
+    expect(listUploads).not.toHaveBeenCalled();
+
+    passDays(1);
+    await service.getDocumentThumbnailUri('doc-2');
+    expect(listUploads).toHaveBeenCalledOnce();
+  });
+});

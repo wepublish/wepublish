@@ -26,6 +26,7 @@ import {
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
 import { JwksClientService } from '../authentication/jwks-client.service';
+import { LINK_TTL } from '../link-cache/link-cache';
 import {
   getDocumentCategory,
   getMimeTypeForExtension,
@@ -33,6 +34,32 @@ import {
 } from './supported-documents-validator';
 import { getMimeTypeForAudioExtension } from './supported-audios-validator';
 import { getMimeTypeForVideoExtension } from './supported-videos-validator';
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// How long the CDN keeps a redirect to a stored object: max-age (12 h) plus
+// stale-while-revalidate (1 day), see `setProductionCacheHeaders` in apps/media.
+const CDN_REDIRECT_TTL_MS = 36 * 60 * 60 * 1000;
+
+/**
+ * The transformation bucket's lifecycle rule deletes every object a fixed
+ * number of days after its upload (`storage.tf` in application-configuration:
+ * 30 in production, 7 in staging). The link cache and the CDN keep pointing at
+ * an object after we checked it, so one that would not outlive them is written
+ * again instead of being served.
+ */
+const transformationRefreshAge = () =>
+  Number(process.env['S3_TRANSFORMATION_MAX_AGE_DAYS'] || 30) * DAY_MS -
+  LINK_TTL -
+  CDN_REDIRECT_TTL_MS;
+
+const outlivesCaches = (lastModified: Date) =>
+  Date.now() - lastModified.getTime() < transformationRefreshAge();
+
+const isFreshCopy = (
+  copy: { contentType?: string; lastModified: Date } | undefined,
+  contentType: string
+) => copy?.contentType === contentType && outlivesCaches(copy.lastModified);
 
 export const UPLOAD_DISK = 'upload';
 
@@ -128,6 +155,18 @@ export class MediaService {
     return keys;
   }
 
+  private async isFresh(objectUri: string): Promise<boolean> {
+    try {
+      const { lastModified } = await this.transformations.stat(objectUri);
+      return outlivesCaches(lastModified);
+    } catch (e) {
+      if (e instanceof StorageFileNotFoundError) {
+        return false;
+      }
+      throw e;
+    }
+  }
+
   private async deleteKeys(disk: StorageDisk, prefix: string): Promise<void> {
     const keys = await this.listKeys(disk, prefix);
     if (keys.length) {
@@ -165,7 +204,7 @@ export class MediaService {
     objectUri: string,
     transformations: TransformationsDto
   ): Promise<ImageURIObject> {
-    if (await this.transformations.exists(objectUri)) {
+    if (await this.isFresh(objectUri)) {
       return { uri: objectUri, exists: true };
     }
 
@@ -255,9 +294,7 @@ export class MediaService {
 
     if (
       !imageExists &&
-      (await this.transformations.exists(
-        `images/fallback/${transformationsKey}`
-      ))
+      (await this.isFresh(`images/fallback/${transformationsKey}`))
     ) {
       return { uri: `images/fallback/${transformationsKey}`, exists: false };
     }
@@ -404,11 +441,11 @@ export class MediaService {
       return { uri: `videos/${videoId}`, exists: false };
     }
 
-    const [contentType, copiedContentType] = await Promise.all([
+    const [contentType, copy] = await Promise.all([
       this.getVideoContentType(objectUri),
-      this.getStoredContentType(this.transformations, objectUri),
+      this.statCopy(objectUri),
     ]);
-    if (copiedContentType === contentType) {
+    if (isFreshCopy(copy, contentType)) {
       return { uri: objectUri, exists: true };
     }
 
@@ -472,11 +509,11 @@ export class MediaService {
       return { uri: `audios/${audioId}`, exists: false };
     }
 
-    const [contentType, copiedContentType] = await Promise.all([
+    const [contentType, copy] = await Promise.all([
       this.getAudioContentType(objectUri),
-      this.getStoredContentType(this.transformations, objectUri),
+      this.statCopy(objectUri),
     ]);
-    if (copiedContentType === contentType) {
+    if (isFreshCopy(copy, contentType)) {
       return { uri: objectUri, exists: true };
     }
 
@@ -542,11 +579,11 @@ export class MediaService {
     }
 
     // Check if already copied to transformation bucket with the current content type
-    const [contentType, copiedContentType] = await Promise.all([
+    const [contentType, copy] = await Promise.all([
       this.getDocumentContentType(objectUri),
-      this.getStoredContentType(this.transformations, objectUri),
+      this.statCopy(objectUri),
     ]);
-    if (copiedContentType === contentType) {
+    if (isFreshCopy(copy, contentType)) {
       return { uri: objectUri, exists: true };
     }
 
@@ -566,6 +603,10 @@ export class MediaService {
       }
       throw e;
     }
+  }
+
+  private async statCopy(objectUri: string) {
+    return await this.transformations.stat(objectUri).catch(() => undefined);
   }
 
   private async getStoredContentType(
@@ -608,7 +649,7 @@ export class MediaService {
     const thumbnailUri = `documents/${documentId}/thumbnail`;
 
     // Return cached thumbnail if it exists
-    if (await this.transformations.exists(thumbnailUri)) {
+    if (await this.isFresh(thumbnailUri)) {
       return { uri: thumbnailUri, exists: true };
     }
 
