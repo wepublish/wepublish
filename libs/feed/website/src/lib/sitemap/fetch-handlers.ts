@@ -6,10 +6,10 @@ import {
   SitemapContext,
   SitemapSiteConfig,
 } from './render';
+import { siteUrlFor } from './site-url';
 
 type Options = {
   getClient: () => SitemapClient;
-  getSiteUrl: () => string;
   now?: () => Date;
 };
 
@@ -24,19 +24,26 @@ const NOT_FOUND = () => new Response(null, { status: 404 });
  * policy are the same modules the Next tenants run, so a sitemap looks the
  * same on either stack.
  *
- * The client and the site URL come from the caller because they are
- * framework specific — TanStack reads the host off the ambient request, Next
- * off `req.headers`.
+ * The client comes from the caller because it is framework specific. The
+ * site URL does not: it is read off the request exactly as the Next handlers
+ * read it — `WEBSITE_URL`, else the proxy's `x-forwarded-host` and
+ * `x-forwarded-proto`, else `host` — so a sitemap behind the ingress names the
+ * public host, not the pod's.
  */
 export const createSitemapFetchHandlers = (
   config: SitemapSiteConfig,
-  { getClient, getSiteUrl, now = () => new Date() }: Options
+  { getClient, now = () => new Date() }: Options
 ) => {
   const respond = async (
+    request: Request,
     sitemap: CacheableSitemap,
     render: (context: SitemapContext) => Promise<string | null>
   ) => {
-    const context = { client: getClient(), siteUrl: getSiteUrl(), now: now() };
+    const context = {
+      client: getClient(),
+      siteUrl: siteUrlFor(name => request.headers.get(name)),
+      now: now(),
+    };
 
     try {
       const xml = await render(context);
@@ -69,14 +76,18 @@ export const createSitemapFetchHandlers = (
   };
 
   return {
-    sitemap: () =>
-      respond({ type: 'index' }, context => renderSitemap(config, context)),
+    sitemap: (request: Request) =>
+      respond(request, { type: 'index' }, context =>
+        renderSitemap(config, context)
+      ),
 
-    sitemapChunk: async (name: string | undefined) => {
+    sitemapChunk: async (request: Request, name: string | undefined) => {
       const chunk = parseChunk(name);
 
       return chunk ?
-          respond(chunk, context => renderSitemapChunk(config, chunk, context))
+          respond(request, chunk, context =>
+            renderSitemapChunk(config, chunk, context)
+          )
         : NOT_FOUND();
     },
   };

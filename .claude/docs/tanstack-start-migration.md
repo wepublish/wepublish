@@ -136,6 +136,8 @@ Order matters; several steps leave the repo un-typecheckable if done early.
    `src/server.ts`, `src/router.tsx`.
 9. Patch the stragglers the pre-flight finds (§6.1).
 10. Build, boot, `tools/tanstack-route-parity.mjs`.
+11. `node tools/tanstack-shell-parity.mjs <tenant>` — the route check proves
+    every URL answers, not that the page still renders what it did. §6.0.
 
 **PR3 — the playbook** (this file plus the scripts; no runtime impact)
 
@@ -197,6 +199,65 @@ no equivalent. Two things replace it:
 
 Grep the error string.
 
+### 6.0 The ones that ship green and break production
+
+Every bug in this section passed `nx build`, `lint`, `typecheck`, the specs,
+`check-nitro-output.js` **and** `tanstack-route-parity.mjs`, then broke a live
+site. They are all the same shape: the Next page or `_app.tsx` did something
+the shared factories do not, and the migration quietly dropped it.
+
+Run `node tools/tanstack-shell-parity.mjs <tenant>` — it diffs
+`pages/_app.tsx` against `src/app.tsx` and `pages/index.tsx` against
+`src/routes/index.tsx` and names what went missing. It would have caught five
+of the six below.
+
+| What was lost | Symptom | Caught by |
+| --- | --- | --- |
+| `settingsTheme` on `TenantProviders` | the CMS palette does not apply; MUI's default pink shows up | shell parity |
+| `thirdParty: {stripe}` in `extra` | payment forms have no publishable key | shell parity |
+| `DailyBriefingContext.Provider` on the home page | the "latest newsletters" teaser renders empty | shell parity |
+| `styled(PageContainer)` wrapper | the home page loses its column span | shell parity |
+| `fullWidth={false}` read as "wrapper present" | the home page goes full-bleed | shell parity |
+| `new URL(f, import.meta.url)` for fonts | `file:///…/.output/server/_ssr/fonts/…`, no webfont | §6.17 |
+
+Two rules follow:
+
+1. **Read the prop, not the identifier.** Checking that `ContentWidthProvider`
+   appears in the Next page says nothing: `fullWidth` and `fullWidth={false}`
+   are opposite instructions and both match a grep for the component name.
+2. **Only `ganzgraz` and `munotgloeggli` take `settingsTheme`.** Their
+   `createTheme` merges it; every other tenant's is `createTheme: () => theme`
+   and ignores the argument on purpose. Do not wire the prop into a tenant
+   whose config does not read it — that is a behaviour change dressed as a fix.
+
+`gruppetto` composes `WebsiteProvider` + `WebsiteBuilderProvider` by hand
+instead of `TenantProviders`, so the shell-parity markers for the providers do
+not apply to it.
+
+### 6.17 `@font-face` resolves to a `file://` URL
+
+The browser logs `Not allowed to load local resource:
+file:///wepublish/.output/server/_ssr/fonts/<file>` and the page renders in a
+fallback face.
+
+`next/font/local` has no equivalent here, so the faces are declared by hand —
+but **not** with `new URL('./fonts/x.woff2', import.meta.url).href`. Emotion
+emits the `@font-face` block during SSR, and in the server bundle
+`import.meta.url` is a path on disk, so that is what lands in the CSS.
+
+Import the file instead:
+
+```ts
+import plainLight from './fonts/Plain-Light.otf';
+// …
+src: url('${plainLight}') format('opentype');
+```
+
+Vite rewrites a static asset import to the built URL at bundle time,
+identically in the client and the server build. Verify on the output, not in
+dev: `grep -r "file://" dist/apps/<tenant>/.output/server` must find nothing.
+
+
 ### 6.1 "it worked last time" — master drifted
 
 Run `node tools/tanstack-preflight.mjs` first. On the most recent replay it
@@ -208,6 +269,14 @@ because a *nonexistent* slug 404s before the component renders.
 
 **Always parity-check at least one URL whose content actually exists.**
 
+**And check it against an API on master's schema.** A production API
+(`api-<tenant>.wepublish.cloud`) usually lags master, so every content query
+fails with `GRAPHQL_VALIDATION_FAILED`. The symptoms look like an app bug:
+articles and tags render an empty shell, and unknown slugs answer 200 instead
+of 404, because there is no `extensions.status === 404` to detect. If
+gruppetto's build shows the same failures against its own production API,
+the cause is the API, not your port.
+
 ### 6.2 `"Readable" is not exported by "__vite-browser-external"`
 
 Server-only code reached the client bundle. The plugin strips the client build
@@ -217,9 +286,21 @@ routes must spell the block out and call a shared handler:
 
 ```ts
 export const Route = createFileRoute('/sitemap.xml')({
-  server: { handlers: { GET: () => sitemapHandler(getSitemap, getSiteUrl) } },
+  server: {
+    handlers: {
+      GET: ({ request }) =>
+        createSitemapFetchHandlers(sitemapConfig, {
+          getClient: createSsrClient,
+        }).sitemap(request),
+    },
+  },
 });
 ```
+
+Pass the `request` through: the sitemap handlers read the public site URL off
+it (`WEBSITE_URL`, else `x-forwarded-host`/`-proto`, else `host`) exactly as the
+Next handler does. `getSiteUrl()` from `tanstack/server` ignores the proxy
+headers, always says `https` and keeps a trailing slash on `WEBSITE_URL`.
 
 ### 6.3 Pages render with a complete shell but **no content**
 

@@ -15,10 +15,7 @@ import {
   UseInterceptors,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-} from '@nestjs/platform-node';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-node';
 import {
   MediaService,
   SupportedImagesValidator,

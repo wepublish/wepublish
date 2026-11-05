@@ -35,6 +35,7 @@ const TemplateContent = styled.div`
 type TemplateEditorLayoutProps = {
   /** Translation namespace with the `edit.*` keys. */
   i18nPrefix: string;
+  title: string;
   backPath: string;
   permissions: { create: string; update: string };
   /** Whether the template has not been created yet. */
@@ -55,6 +56,7 @@ type TemplateEditorLayoutProps = {
 
 export function TemplateEditorLayout({
   i18nPrefix,
+  title,
   backPath,
   permissions,
   isNew,
@@ -82,6 +84,7 @@ export function TemplateEditorLayout({
   return (
     <>
       <EditorTemplate
+        title={title}
         navigationChildren={
           <EditorHeader
             state={stateColor}
@@ -129,6 +132,11 @@ export function TemplateEditorLayout({
                       variant="contained"
                       icon={<MdSave />}
                       label={t('save')}
+                      aria-label={
+                        hasChanged ?
+                          `${t('save')}, ${t('articleEditor.unsavedChanges')}`
+                        : t('save')
+                      }
                       collapse={false}
                       disabled={disabled}
                       onClick={() => onSave()}

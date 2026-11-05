@@ -33,10 +33,9 @@ import {
   ListViewContainer,
   ListViewHeader,
   NavigationEditPanel,
+  PageTitle,
   PermissionControl,
   TableWrapper,
-  useSeededState,
-  PageTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -58,13 +57,13 @@ function NavigationList() {
   const isCreateRoute = location.pathname.includes('create');
   const isEditRoute = location.pathname.includes('edit');
 
-  const [isEditModalOpen, setEditModalOpen] = useState(
-    isEditRoute || isCreateRoute
-  );
-
-  const [editID, setEditID] = useState<string | undefined>(
-    isEditRoute ? id : undefined
-  );
+  const isEditModalOpen = isEditRoute || isCreateRoute;
+  const routeEditID = isEditRoute ? id : undefined;
+  const [editID, setEditID] = useState(routeEditID);
+  if (isEditModalOpen && editID !== routeEditID) {
+    setEditID(routeEditID);
+  }
+  const closeDrawer = () => navigate('/navigations');
 
   const [filter, setFilter] = useState('');
 
@@ -82,14 +81,6 @@ function NavigationList() {
 
   const [deleteNavigation, { loading: isDeleting }] = useMutation(
     DeleteNavigationDocument
-  );
-
-  useSeededState(
-    isCreateRoute || isEditRoute ? location.pathname : undefined,
-    () => {
-      setEditID(isEditRoute ? id : undefined);
-      setEditModalOpen(true);
-    }
   );
 
   return (
@@ -163,7 +154,7 @@ function NavigationList() {
                 >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
-                      aria-label={t('delete')}
+                      aria-label={`${t('delete')} ${rowData.name || t('navigation.overview.unknown')}`}
                       size="small"
                       color="error"
                       onClick={() => {
@@ -192,21 +183,12 @@ function NavigationList() {
           },
         }}
         open={isEditModalOpen}
-        onClose={() => {
-          setEditModalOpen(false);
-          navigate('/navigations');
-        }}
+        onClose={closeDrawer}
       >
         <NavigationEditPanel
           id={editID}
-          onClose={() => {
-            setEditModalOpen(false);
-            navigate('/navigations');
-          }}
-          onSave={() => {
-            setEditModalOpen(false);
-            navigate('/navigations');
-          }}
+          onClose={closeDrawer}
+          onSave={closeDrawer}
         />
       </Drawer>
 

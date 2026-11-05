@@ -1,5 +1,6 @@
 query MailProviderSettings {
   mailProviderSettings {
+    isApiKeySet
     createdAt
     fromAddress
     id
@@ -16,6 +17,7 @@ query MailProviderSettings {
     smtp_secure
     smtp_user
     type
+    isWebhookEndpointSecretSet
   }
 }
 
@@ -56,6 +58,8 @@ mutation UpdateMailProviderSetting(
     createdAt
     fromAddress
     id
+    isApiKeySet
+    isWebhookEndpointSecretSet
     lastLoadedAt
     mailchimp_baseURL
     mailgun_baseDomain
