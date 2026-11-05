@@ -1328,6 +1328,38 @@ bundled, traced, nor a node builtin. The same bug hid
 not trace, and later `@sentry/tanstackstart-react`, which the `--import`
 preload resolves at runtime from a build of its own.
 
+### ⚠️ A migrated tenant can pass every gate and still render the wrong page
+
+mannschaft.com, cültür.ch and ganzgraz.at each shipped a regression that
+survived `nx build`, `lint`, `typecheck`, the specs,
+[`docker/check-nitro-output.js`](../../docker/check-nitro-output.js) and
+[`tools/tanstack-route-parity.mjs`](../../tools/tanstack-route-parity.mjs).
+Verified live on 2026-11-04: munotgloeggli.ch and ganzgraz.at served MUI's
+default pink `#e91e63` ten and twelve times in their rendered `<style>`, with
+their configured primary (`#dc0d15`, `#4E2996`) present only inside the
+`WEBSITE_SETTINGS` JSON; mannschaft.com logged `Not allowed to load local
+resource: file:///wepublish/.output/server/_ssr/fonts/Plain-Light.otf`.
+
+The route check asks whether every URL still answers. None of these changed a
+status code. What was lost each time was something the Next `pages/_app.tsx`
+or `pages/index.tsx` did that the shared route factories do not:
+`settingsTheme` on `TenantProviders`, `thirdParty: {stripe}`, a
+`DailyBriefingContext.Provider` that only the home page mounted, a
+`styled(PageContainer)` wrapper, and a `fullWidth={false}` that a grep for the
+component name read as "present, so copy the usual one".
+
+**Load-bearing:** [`tools/tanstack-shell-parity.mjs`](../../tools/tanstack-shell-parity.mjs)
+diffs those two file pairs per tenant and fails on anything the Next side
+mentions and the TanStack side does not. Run it for every migration; it would
+have caught five of the six. The sixth is the font URL — emotion emits
+`@font-face` during SSR, where `import.meta.url` is a path on disk, so fonts
+must be static asset imports and the proof is
+`grep -r "file://" dist/apps/<tenant>/.output/server` finding nothing.
+
+Only `ganzgraz` and `munotgloeggli` take `settingsTheme`; every other tenant's
+`createTheme: () => theme` ignores it deliberately, so wiring the prop
+elsewhere is a behaviour change, not a fix.
+
 ---
 
 ## Adding an entry

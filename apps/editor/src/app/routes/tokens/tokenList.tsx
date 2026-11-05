@@ -35,7 +35,6 @@ import {
   TableWrapper,
   TokenGeneratePanel,
   TokenRolePicker,
-  useSeededState,
   PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
@@ -49,8 +48,7 @@ function TokenList() {
 
   const isGenerateRoute = location.pathname.includes('generate');
 
-  const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] =
-    useState(isGenerateRoute);
+  const closeDrawer = () => navigate('/tokens');
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentToken, setCurrentToken] = useState<FullTokenFragment>();
   const [tokenToEdit, setTokenToEdit] = useState<FullTokenFragment>();
@@ -90,10 +88,6 @@ function TokenList() {
       enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
     }
   }, [tokenListError, deleteTokenError, updateTokenError]);
-
-  useSeededState(isGenerateRoute ? location.pathname : undefined, () =>
-    setTokenGeneratePanelOpen(true)
-  );
 
   return (
     <>
@@ -203,18 +197,10 @@ function TokenList() {
             },
           },
         }}
-        open={isTokenGeneratePanelOpen}
-        onClose={() => {
-          setTokenGeneratePanelOpen(false);
-          navigate('/tokens');
-        }}
+        open={isGenerateRoute}
+        onClose={closeDrawer}
       >
-        <TokenGeneratePanel
-          onClose={() => {
-            setTokenGeneratePanelOpen(false);
-            navigate('/tokens');
-          }}
-        />
+        <TokenGeneratePanel onClose={closeDrawer} />
       </Drawer>
 
       <Dialog

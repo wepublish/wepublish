@@ -5,6 +5,8 @@ import {
   StepButton,
   Stepper,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -50,10 +52,15 @@ export function WizardStepper({
   canGoTo: (target: number) => boolean;
   onStep: (target: number) => void;
 }) {
+  // Side by side, the step titles would be squeezed unreadable on a phone.
+  const theme = useTheme();
+  const vertical = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Stepper
       activeStep={step}
       nonLinear
+      orientation={vertical ? 'vertical' : 'horizontal'}
       sx={{ marginTop: 3, marginBottom: 1 }}
     >
       {steps.map(({ title, description }, index) => (

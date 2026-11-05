@@ -73,7 +73,7 @@ export function RecipientSummary({
             sx={{ alignItems: 'center' }}
             spacing={1.5}
           >
-            <span>
+            <span role="status">
               {loading ?
                 t('mailSend.counting')
               : (headline ?? t(countKey, { count, people: userCount }))}

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Container, CssBaseline } from '@mui/material';
+import { Container, CssBaseline, ThemeOptions } from '@mui/material';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import { FooterContainer } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
@@ -62,6 +62,7 @@ function AppShell({ websiteSettings, children }: AppShellProps) {
   return (
     <TenantProviders
       config={ganzgrazConfig}
+      settingsTheme={websiteSettings?.theme as ThemeOptions | undefined}
       extra={{ Head, Script, elements: { Link: WepublishLink } }}
     >
       <CssBaseline />

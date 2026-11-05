@@ -351,3 +351,59 @@ describe('MailSendPage (characterisation)', () => {
     });
   });
 });
+
+describe('MailSendPage (accessibility)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    queries.mockImplementation((name: string) => answer(name));
+  });
+
+  afterEach(cleanup);
+
+  it('labels the template select with its step title', () => {
+    renderPage();
+
+    expect(
+      screen.getByRole('combobox', { name: /^mailSend\.template/ })
+    ).toBeTruthy();
+  });
+
+  it('moves focus to the title of the step it goes to', () => {
+    renderPage();
+    goToAudience();
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'mailSend.audience.title' })
+    ).toHaveFocus();
+  });
+
+  it('names the audience choice', () => {
+    renderPage();
+    goToAudience();
+
+    expect(
+      screen.getByRole('radiogroup', { name: 'mailSend.base.label' })
+    ).toBeTruthy();
+  });
+
+  it('announces the recipient count politely', () => {
+    renderPage();
+    goToAudience();
+
+    expect(
+      screen
+        .getAllByRole('status')
+        .some(status =>
+          /^mailSend\.recipientsCount/.test(status.textContent ?? '')
+        )
+    ).toBe(true);
+  });
+
+  it('keeps the static preview hints out of the alert role', () => {
+    renderPage();
+    goToAudience();
+    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+});

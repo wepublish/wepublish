@@ -1,5 +1,11 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
+import {
+  CanGetAISettings,
+  CanGetLetterProviderSettings,
+  CanGetMailProviderSettings,
+  CanGetPdfRendererSettings,
+} from '@wepublish/permissions';
 import { AuthContext, FeaturesProvider } from '@wepublish/ui/editor';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -12,24 +18,36 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   useQuery: (_document: unknown, options?: unknown) => featuresQuery(options),
 }));
 
-vi.mock('@wepublish/ui/editor', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
-  PermissionControl: ({ children }: { children?: React.ReactNode }) => children,
-  InfoTooltip: () => null,
-}));
-
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { language: 'en' },
+  }),
 }));
 
-const session = { session: { email: 'karl@wepublish.ch', sessionToken: 't' } };
-
-const renderWith = (features: string[]) => {
+const renderWith = (
+  features: string[],
+  permissions = [
+    CanGetMailProviderSettings.id,
+    CanGetLetterProviderSettings.id,
+    CanGetPdfRendererSettings.id,
+  ]
+) => {
   featuresQuery.mockReturnValue({ data: { features }, loading: false });
 
   return render(
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
-      <AuthContext.Provider value={session}>
+      <AuthContext.Provider
+        value={
+          {
+            session: {
+              sessionRoles: [
+                { id: 'role', permissions: permissions.map(id => ({ id })) },
+              ],
+            },
+          } as never
+        }
+      >
         <FeaturesProvider>
           <MemoryRouter>
             <IntegrationList />
@@ -54,5 +72,30 @@ describe('IntegrationList', () => {
 
     expect(screen.getByText('integrations.letterProvider')).toBeTruthy();
     expect(screen.getByText('integrations.pdfRenderer')).toBeTruthy();
+  });
+
+  it('titles the page and each integration as headings', () => {
+    renderWith([], [CanGetAISettings.id]);
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: /integrations.title/ })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: /integrations.ai/ })
+    ).toBeInTheDocument();
+  });
+
+  it('ties each edit link to the integration it opens', () => {
+    renderWith([], [CanGetAISettings.id]);
+
+    expect(
+      screen.getByRole('link', { name: 'edit' })
+    ).toHaveAccessibleDescription('integrations.ai');
+  });
+
+  it('names the supported providers', () => {
+    renderWith([], [CanGetAISettings.id]);
+
+    expect(screen.getByRole('img', { name: 'Vercel' })).toBeInTheDocument();
   });
 });

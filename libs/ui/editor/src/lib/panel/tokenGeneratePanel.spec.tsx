@@ -80,9 +80,10 @@ const renderPanel = () =>
   );
 
 const typeName = (name: string) =>
-  fireEvent.change(screen.getByPlaceholderText('tokenList.panels.name'), {
-    target: { value: name },
-  });
+  fireEvent.change(
+    screen.getByRole('textbox', { name: 'tokenList.panels.name' }),
+    { target: { value: name } }
+  );
 
 describe('TokenGeneratePanel', () => {
   it('creates the token with the roles that were picked', async () => {
@@ -113,5 +114,13 @@ describe('TokenGeneratePanel', () => {
         variables: { name: 'peer', roleIDs: [] },
       })
     );
+  });
+
+  it('labels the name field', () => {
+    renderPanel();
+
+    expect(
+      screen.getByRole('textbox', { name: 'tokenList.panels.name' })
+    ).toBeInTheDocument();
   });
 });

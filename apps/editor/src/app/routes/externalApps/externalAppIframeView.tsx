@@ -1,7 +1,9 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Box, CircularProgress, Typography } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import { ExternalAppDocument } from '@wepublish/editor/api';
+import { PageTitle } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -29,7 +31,7 @@ export function ExternalAppIframeView() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
 
-  const { data, loading, error } = useQuery(ExternalAppDocument, {
+  const { data, loading } = useQuery(ExternalAppDocument, {
     variables: { externalAppId: id! },
     skip: !id,
   });
@@ -56,16 +58,14 @@ export function ExternalAppIframeView() {
     );
   }
 
-  if (error || !app) {
+  if (!app) {
     return (
       <Box
         sx={{
           p: 3,
         }}
       >
-        <Typography color="error">
-          {error?.message || t('externalApps.notFound')}
-        </Typography>
+        <PageTitle>{t('externalApps.notFound')}</PageTitle>
       </Box>
     );
   }
@@ -87,6 +87,7 @@ export function ExternalAppIframeView() {
 
   return (
     <IframeWrapper>
+      <PageTitle sx={visuallyHidden}>{app.name}</PageTitle>
       <StyledIframe
         src={src}
         title={app.name}

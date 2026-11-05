@@ -46,6 +46,7 @@ import {
   useReportQueryErrors,
 } from '@wepublish/ui/editor';
 import { lazy, Suspense, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   createBrowserRouter,
   Navigate,
@@ -1306,6 +1307,7 @@ const router = createBrowserRouter([{ path: '*', element: <AppRoutes /> }]);
 
 export function App() {
   const { session } = useContext(AuthContext);
+  const { t } = useTranslation();
 
   useReportQueryErrors();
 
@@ -1386,7 +1388,7 @@ export function App() {
         `}
       />
       <EditorGlobalStyles />
-      <SnackbarHost />
+      <SnackbarHost label={t('navbar.notifications')} />
       <RouterProvider router={router} />
     </>
   );

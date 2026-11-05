@@ -1,4 +1,5 @@
 // @vitest-environment-options {"settings":{"disableIframePageLoading":true}}
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 import { CreateExternalAppTokenDocument } from '@wepublish/editor/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -30,7 +31,10 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 }));
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { language: 'en' },
+  }),
 }));
 
 const { useQuery } = await import('@apollo/client/react');
@@ -50,14 +54,16 @@ const externalApp = {
 
 const renderView = () =>
   render(
-    <MemoryRouter initialEntries={['/external-app/app-1']}>
-      <Routes>
-        <Route
-          path="/external-app/:id"
-          element={<ExternalAppIframeView />}
-        />
-      </Routes>
-    </MemoryRouter>
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <MemoryRouter initialEntries={['/external-app/app-1']}>
+        <Routes>
+          <Route
+            path="/external-app/:id"
+            element={<ExternalAppIframeView />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 beforeEach(() => {
@@ -110,5 +116,29 @@ describe('ExternalAppIframeView', () => {
     expect(await screen.findByText('boom')).toBeTruthy();
     expect(screen.queryByTitle('Tool')).toBeNull();
     expect(screen.queryByRole('progressbar')).toBeNull();
+  });
+
+  it('titles the page after the app it shows', async () => {
+    renderView();
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Tool' })
+    ).toBeInTheDocument();
+  });
+
+  it('explains a missing app in words instead of a database error', () => {
+    mockedUseQuery.mockReturnValue({
+      loading: false,
+      data: undefined,
+      error: new Error(
+        'Invalid `this.prisma.externalApps.findMany()` invocation'
+      ),
+    });
+    renderView();
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'externalApps.notFound' })
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/prisma/)).toBeNull();
   });
 });

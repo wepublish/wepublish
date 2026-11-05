@@ -47,7 +47,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdEdit, MdSend } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -165,6 +165,31 @@ function MailSendPage() {
   const [recipientsOpen, setRecipientsOpen] = useState(false);
   const [jobId, setJobId] = useState<string | null>(null);
   const [step, setStep] = useState(STEP_CONTENT);
+  const fieldId = useId();
+  const templateTitleId = `${fieldId}-template-title`;
+  const stepTitleRef = useRef<HTMLHeadingElement>(null);
+  const focusStepTitle = useRef(false);
+
+  const goToStep = (target: number) => {
+    focusStepTitle.current = true;
+    setStep(target);
+  };
+
+  useEffect(() => {
+    if (focusStepTitle.current) {
+      focusStepTitle.current = false;
+      stepTitleRef.current?.focus();
+    }
+  }, [step]);
+
+  const stepTitleProps = {
+    title: {
+      component: 'h2',
+      tabIndex: -1,
+      ref: stepTitleRef,
+      sx: { outline: 'none' },
+    },
+  } as const;
 
   const { data: templateData, refetch: refetchTemplates } =
     useQuery(MailTemplateDocument);
@@ -337,7 +362,12 @@ function MailSendPage() {
                 variant="outlined"
                 style={{ marginTop: 16 }}
               >
-                <CardHeader title={t('mailSend.template')} />
+                <CardHeader
+                  title={t('mailSend.template')}
+                  slotProps={{
+                    title: { ...stepTitleProps.title, id: templateTitleId },
+                  }}
+                />
 
                 <CardContent>
                   <div
@@ -348,7 +378,12 @@ function MailSendPage() {
                       value={templateId ?? ''}
                       onChange={event => setTemplateId(event.target.value)}
                       fullWidth
-                      slotProps={{ select: { displayEmpty: true } }}
+                      slotProps={{
+                        select: {
+                          displayEmpty: true,
+                          labelId: templateTitleId,
+                        },
+                      }}
                     >
                       <MenuItem value="">
                         {t('mailSend.selectTemplate')}
@@ -386,7 +421,7 @@ function MailSendPage() {
               )}
 
               <StepNav
-                onNext={() => setStep(STEP_AUDIENCE)}
+                onNext={() => goToStep(STEP_AUDIENCE)}
                 nextDisabled={!stepComplete[STEP_CONTENT]}
               />
             </>
@@ -398,7 +433,10 @@ function MailSendPage() {
                 variant="outlined"
                 style={{ marginTop: 16 }}
               >
-                <CardHeader title={t('mailSend.audience.title')} />
+                <CardHeader
+                  title={t('mailSend.audience.title')}
+                  slotProps={stepTitleProps}
+                />
 
                 <CardContent>
                   <AudienceFilter
@@ -422,8 +460,8 @@ function MailSendPage() {
               {recipientSummary({ showMissing: false })}
 
               <StepNav
-                onBack={() => setStep(STEP_CONTENT)}
-                onNext={() => setStep(STEP_SEND)}
+                onBack={() => goToStep(STEP_CONTENT)}
+                onNext={() => goToStep(STEP_SEND)}
                 nextDisabled={!stepComplete[STEP_AUDIENCE]}
               />
             </>
@@ -435,7 +473,10 @@ function MailSendPage() {
                 variant="outlined"
                 style={{ marginTop: 16 }}
               >
-                <CardHeader title={t('mailSend.summary.title')} />
+                <CardHeader
+                  title={t('mailSend.summary.title')}
+                  slotProps={stepTitleProps}
+                />
 
                 <CardContent>
                   <Stack
@@ -493,7 +534,7 @@ function MailSendPage() {
               {jobId && <JobProgress jobId={jobId} />}
 
               <StepNav
-                onBack={jobId ? undefined : () => setStep(STEP_AUDIENCE)}
+                onBack={jobId ? undefined : () => goToStep(STEP_AUDIENCE)}
               />
             </>
           )}
@@ -510,10 +551,16 @@ function MailSendPage() {
                 print={print}
               />
             : <Card variant="outlined">
-                <CardHeader title={t('mailSend.preview.title')} />
+                <CardHeader
+                  title={t('mailSend.preview.title')}
+                  slotProps={{ title: { component: 'h2' } }}
+                />
 
                 <CardContent>
-                  <Alert severity="info">
+                  <Alert
+                    severity="info"
+                    role="status"
+                  >
                     {t('mailSend.selectTemplateHint')}
                   </Alert>
                 </CardContent>
@@ -718,6 +765,7 @@ function TemplatePreview({
 }) {
   const { t } = useTranslation();
   const [recipientId, setRecipientId] = useState<string | null>(null);
+  const recipientLabelId = useId();
 
   // A different audience resolves to different people, so the pinned recipient
   // must not survive it.
@@ -791,11 +839,19 @@ function TemplatePreview({
 
       <CardContent>
         {recipientCount === 0 ?
-          <Alert severity="info">{t('mailSend.preview.noRecipients')}</Alert>
+          <Alert
+            severity="info"
+            role="status"
+          >
+            {t('mailSend.preview.noRecipients')}
+          </Alert>
         : <>
             <div style={{ marginBottom: 12 }}>
               <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                <FormLabel style={{ margin: 0 }}>
+                <FormLabel
+                  id={recipientLabelId}
+                  style={{ margin: 0 }}
+                >
                   {t('mailSend.preview.recipient')}
                 </FormLabel>
                 <Autocomplete
@@ -819,6 +875,13 @@ function TemplatePreview({
                     <TextField
                       {...params}
                       placeholder={t('mailSend.preview.firstRecipient')}
+                      slotProps={{
+                        ...params.slotProps,
+                        htmlInput: {
+                          ...params.slotProps.htmlInput,
+                          'aria-labelledby': recipientLabelId,
+                        },
+                      }}
                     />
                   )}
                 />

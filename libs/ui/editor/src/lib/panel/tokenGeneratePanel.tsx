@@ -96,7 +96,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
           </>
         : <Stack spacing={2}>
             <TextField
-              placeholder={t('tokenList.panels.name')}
+              label={t('tokenList.panels.name')}
               value={name}
               disabled={isDisabled}
               onChange={event => {
